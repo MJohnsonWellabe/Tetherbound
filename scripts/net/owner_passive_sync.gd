@@ -14,7 +14,7 @@ const CLOUD_MAP := preload("res://scripts/world/cloudreach_map_state.gd")
 const DATA := preload("res://scripts/data/redesign_data.gd")
 const REQUEST_KINDS := ["foundation_request", "altar_spend", "manual_refine", "altar_traits", "portal_arrival"]
 const REQUEST_ACTIONS := ["station_craft", "feast_cook", "feast_feed", "relic_hang", "master_chest", "essence_release"]
-const RETAINED_ACTIONS := ["research_event", "master_win", "boss_relic", "combat_mastery", "combat_round_reward", "wild_defeat"]
+const RETAINED_ACTIONS := ["research_event", "master_win", "boss_relic", "combat_mastery", "combat_round_reward", "wild_defeat_share"]
 const MAX_BUFFER := 120000
 const MAX_BATCH := 64
 const MAX_PEERS := 4
@@ -38,6 +38,8 @@ var hosts: Dictionary = {}
 ## reason is re-sent to that owner rather than left as silence.
 var refused: Dictionary = {}
 var pending: Dictionary = {}
+## Host: rejoin admissions waiting for that character's in-flight vitals ACK.
+var deferred: Dictionary = {}
 var committing: Dictionary = {}
 var saving := false
 var _left := 0.0
@@ -178,6 +180,14 @@ func admitted(peer: int, summary: Dictionary) -> void:
 	# reason the owner receives, never silently.
 	var core_matches: bool = declared is Dictionary and HASH.fingerprint(declared) == declaration.get("baseline_hash") \
 		and E._equivalent(REPLAY._core(before), REPLAY._core(declared))
+	if not core_matches and not (authority.call("pending_creature_vitals", character) as Dictionary).is_empty():
+		# The owner left with a host vitals row it saved but never ACKed: its
+		# settled escrow is ahead of this authority only by that ACK, which the
+		# ledger re-delivers now. Admit once it lands (retry_deferred).
+		deferred[character] = {"peer": peer, "summary": summary.duplicate(true)}
+		print("[owner-passive] admission of %s waits for its in-flight vitals ACK" % character.left(18))
+		return
+	deferred.erase(character)
 	if not core_matches:
 		var reason := "owner_passive_admission_conflict: %s" % ", ".join(_differing_paths("", before, declared, 0, []).slice(0, 8))
 		refused[character] = {"id": str(declaration.id), "reason": reason, "peer": peer}
@@ -195,12 +205,22 @@ func admitted(peer: int, summary: Dictionary) -> void:
 ## stream stays for `_recovery_admitted`; anything else would shadow the
 ## owner's next stream forever (re-proof: rejoin left admission pending).
 func peer_departed(peer: int) -> void:
+	for character: String in deferred.keys():
+		if int(deferred[character].get("peer", 0)) == peer: deferred.erase(character)
 	for character: String in hosts.keys():
 		var stream: Dictionary = hosts[character]
 		if int(stream.get("peer", 0)) == peer and stream.get("departed") != true:
 			_drop_host(character)
 	for character: String in refused.keys():
 		if int(refused[character].get("peer", 0)) == peer: refused.erase(character)
+
+
+## Host: re-run a rejoin admission parked behind in-flight vitals.
+func retry_deferred(character: String) -> void:
+	var parked: Dictionary = deferred.get(character, {})
+	if parked.is_empty(): return
+	deferred.erase(character)
+	admitted(int(parked.peer), parked.summary)
 
 
 func _drop_host(character: String) -> void:
@@ -536,6 +556,9 @@ func capture_gate(peer: int, envelope: Dictionary, context: Dictionary) -> Dicti
 	return _checkpoint(peer, stream, binding, retained, matching[0])
 
 func _checkpoint(peer: int, stream: Dictionary, binding: Dictionary, retained: Dictionary, duty: Dictionary) -> Dictionary:
+	# A rejoined owner adopts the host's baseline first; a freeze sent before
+	# that would park on the owner and make it ignore the readmit (deadlock).
+	if stream.has("readmit"): return _deny("owner_passive_readmit_pending")
 	if stream.checkpoint.is_empty():
 		var authority: RefCounted = owner().get("_character_authority")
 		if authority.call("creature_training_is_pending", str(stream.character)) == true: return _deny("owner_passive_prior_transaction_pending")
@@ -564,6 +587,7 @@ func action_gate(peer: int, source_kind: String, request: Dictionary, context: D
 	var world: RefCounted = _game().get("world")
 	if request.get("character_id") != character or request.get("session_epoch") != session.call("_altar_current_epoch") \
 		or request.get("world_namespace") != world.reward_delivery_namespace: return _deny("owner_passive_request_scope_changed")
+	if stream.has("readmit"): return _deny("owner_passive_readmit_pending")
 	var binding := {"character": character, "action": request.get("op"), "source_kind": source_kind,
 		"envelope": request.duplicate(true), "event": context.duplicate(true)}
 	if stream.checkpoint.is_empty():
@@ -749,6 +773,8 @@ func _prepare_host(peer: int, stream: Dictionary) -> void:
 	var projected: Dictionary = stream.cursor.state
 	if checkpoint.get("duty", {}).get("action") == "combat_round_reward":
 		projected = preload("res://scripts/net/combat_round_reward.gd").settled_before(projected, checkpoint.duty.intent, checkpoint.duty.context)
+	elif checkpoint.get("duty", {}).get("action") == "wild_defeat_share":
+		projected = preload("res://scripts/net/wild_actor_scope.gd").settled_before(projected, checkpoint.duty.context)
 	if stream.cursor.sequence != frozen.sequence or stream.cursor.prefix_hash != frozen.prefix_hash \
 		or projected.is_empty() or HASH.fingerprint(projected) != frozen.hash:
 		stream.error = "owner_passive_exact_projection_conflict"; return

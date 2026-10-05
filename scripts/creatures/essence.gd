@@ -542,11 +542,8 @@ static func stage_defeat(admitted: Dictionary, character_id: String, host_event:
 	var types := _species_types(host_event.enemy_record)
 	if types.is_empty() or eligible.is_empty():
 		return _refuse("invalid_defeat_participants")
-	var signature := JSON.stringify([host_event.world_namespace, host_event.encounter_id,
-		host_event.enemy_uid, host_event.enemy_record.species_id, host_event.enemy_record.level,
-		types, host_event.active_uid, eligible, host_event.xp_mode]).sha256_text()
 	var prefix := "defeat:%s:%s:" % [character_id, _defeat_action_component(host_event.world_namespace, host_event.event_id)]
-	var receipt := prefix + signature
+	var receipt := defeat_receipt(character_id, host_event)
 	var duplicate := false
 	for old: String in admitted.redesign_character.transaction_receipts:
 		if not old.begins_with(prefix): continue
@@ -590,6 +587,18 @@ static func stage_defeat(admitted: Dictionary, character_id: String, host_event:
 	return {"ok": true, "duplicate": false, "before": admitted.duplicate(true), "state": next,
 		"expected_character_revision": character_revision, "receipt": receipt,
 		"payout": payout, "xp_awards": xp.awards.duplicate(true), "shed_outputs": shed_outputs.duplicate(true)}
+
+
+## The one personal receipt a validated host wild defeat event earns this
+## character (stage_defeat). Retained guest duties use it to recognise an
+## already-applied event without restaging.
+static func defeat_receipt(character_id: String, host_event: Dictionary) -> String:
+	var eligible: Array = (host_event.get("eligible_uids", []) as Array).duplicate()
+	eligible.sort()
+	var signature := JSON.stringify([host_event.world_namespace, host_event.encounter_id,
+		host_event.enemy_uid, host_event.enemy_record.species_id, host_event.enemy_record.level,
+		_species_types(host_event.enemy_record), host_event.active_uid, eligible, host_event.xp_mode]).sha256_text()
+	return "defeat:%s:%s:" % [character_id, _defeat_action_component(host_event.world_namespace, host_event.event_id)] + signature
 
 
 ## F32#4 win shed for one participant of one host wild defeat. The roll is
@@ -709,7 +718,10 @@ static func next_training_delivery(world_id: String, world_namespace: String, se
 			or not accepted.get("intent") is Dictionary: return {}
 	var journal_revision := 1
 	if previous != null:
-		if not training_row_valid(previous, character, world_namespace) or previous.world_id != world_id \
+		# The latest row may be any version (a v2/v3 action, e.g. this host's
+		# own research duty); it only orders this one. Validate it as its own kind.
+		if not load("res://autoload/world_state.gd").call("training_row_valid", previous, world_namespace, world_id) \
+				or previous.get("character_id") != character \
 				or previous.status != "accepted" or int(previous.character_revision) >= int(accepted.character_revision): return {}
 		journal_revision = int(previous.journal_revision) + 1
 	var row := {"version": 1, "kind": TRAINING_KIND, "delivery_id": training_delivery_id(world_namespace, character),
