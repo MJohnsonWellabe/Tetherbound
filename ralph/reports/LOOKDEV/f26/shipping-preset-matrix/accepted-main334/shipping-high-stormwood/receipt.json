@@ -1,0 +1,49 @@
+{
+  "source_commit": "33431f9abab32c28898d52daecbd24f48012c490",
+  "biome": "stormwood",
+  "preset": "High",
+  "command": [
+    "D:\\tetherbound\\.artifacts\\pr2\\main334\\package\\Tetherbound.exe",
+    "--rendering-method",
+    "forward_plus",
+    "--resolution",
+    "1920x1080",
+    "--fullscreen",
+    "--log-file",
+    "D:\\tetherbound\\.artifacts\\pr2\\main334\\shipping-high-stormwood\\engine.log",
+    "--audio-driver",
+    "Dummy",
+    "--",
+    "--f26-route",
+    "--biome=stormwood",
+    "--preset=High",
+    "--source-commit=33431f9abab32c28898d52daecbd24f48012c490",
+    "--output=D:/tetherbound/.artifacts/pr2/main334/shipping-high-stormwood/route"
+  ],
+  "exit_code": 0,
+  "stop_reason": null,
+  "supervisor_elapsed_seconds": 291.656,
+  "native_elapsed_seconds": 283.141,
+  "native_started_utc": "2026-10-05T16:20:23.200095+00:00",
+  "profile": "D:\\tetherbound\\.artifacts\\pr2\\main334\\shipping-high-stormwood\\profile",
+  "payload": [
+    {
+      "path": "D:\\tetherbound\\.artifacts\\pr2\\main334\\package\\Tetherbound.exe",
+      "size": 109052928,
+      "sha256": "a3e6b1cbd46ad153e7dfb24a5c0ee2b9187e0fb21fa7c0610fa8754ba5939d9c"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\pr2\\main334\\package\\Tetherbound.pck",
+      "size": 1135760212,
+      "sha256": "ea6ddca0ac0dce521ddd31709592d33d7572c47c4489c5775fdda7d4fe2b4165"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\pr2\\main334\\package\\libterrain.windows.release.x86_64.dll",
+      "size": 3549184,
+      "sha256": "40900e649c3c6c7619c383d28732c3e2e8dc87c2938de43b29122a668aedcf86"
+    }
+  ],
+  "TB_BACKGROUND_WORK_TRACE": "unset",
+  "scope": "Actual shipping release EXE/PCK same accepted-main334 payload as prior4core routes. Existing packaged route, no debug/EngineProfiler/gpu-profile. New cases fullscreen1920x1080; desktop GTX1060, not Ally/earned campaign.",
+  "measurement_limitations": "Wall intervals plus cached Performance TIME_PROCESS/TIME_PHYSICS_PROCESS only. Embedded route lacks newer frame_limit/uncapping receipt. Runtime FPS/VSync/time settings not explicitly verified; no per-frame true CPU/GPU/draw attribution. New cases use fullscreen; prior four core cases lacked fullscreen flag. No performance recovery or regression onset established."
+}
