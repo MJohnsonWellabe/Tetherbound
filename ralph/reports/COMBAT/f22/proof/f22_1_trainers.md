@@ -186,3 +186,35 @@ Rows passing: 5/15 at 1.0 -> 6/15 at 1.15. §7 reader win 1.00. Worst single hit
 F22#1 rows failed by Terrapup and Galewisp are recorded as **per-starter balance, owner item**, not defects. The §7 pilot stays as specified (no earlier-rotation rule).
 - **Terrapup:** reading costs the slowest, widest body more than mashing. In Meadows the reader takes 0.070 hits/s vs the masher's 0.137, but fights 77 s vs 36 s, so its median lead cost is 0.53 vs 0.40. It switches 0.53 times per fight, so the spent-lead rule rarely triggers.
 - **Galewisp:** the fastest starter lets mashing win before the lead falls (Tidewake masher clear time 43 s, lead faint 0.29).
+
+## Cloudreach and Stormwood floor trainers 1.0 -> 1.3 (interrupt pilot)
+```
+ta_cloudreach13 rows passing 5/9 {'MASHER': 'stag 12.5 worst 0.12', 'SWITCH_READER': 'stag 8.3 worst 0.09'}
+  cloudreach/gate_lower_cliffs   terrapup  M faint0.00 lead0.57 win1.00 | S faint0.00 lead0.74 win1.00 
+  cloudreach/gate_lower_cliffs   ripplet   M faint1.00 lead1.00 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  cloudreach/gate_lower_cliffs   galewisp  M faint0.92 lead1.00 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  cloudreach/broken_causeways    terrapup  M faint0.00 lead0.37 win1.00 | S faint0.00 lead0.58 win1.00 
+  cloudreach/broken_causeways    ripplet   M faint0.67 lead1.00 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  cloudreach/broken_causeways    galewisp  M faint0.08 lead0.90 win1.00 | S faint0.00 lead0.00 win1.00 
+  cloudreach/upper_cloudreach    terrapup  M faint0.00 lead0.58 win1.00 | S faint0.00 lead0.69 win1.00 
+  cloudreach/upper_cloudreach    ripplet   M faint1.00 lead1.00 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  cloudreach/upper_cloudreach    galewisp  M faint1.00 lead1.00 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+ta_stormwood13 rows passing 10/15 {'MASHER': 'stag 13.8 worst 0.10', 'SWITCH_READER': 'stag 9.4 worst 0.07'}
+  stormwood/cinder_verge         terrapup  M faint0.00 lead0.45 win1.00 | S faint0.00 lead0.40 win1.00 
+  stormwood/cinder_verge         ripplet   M faint0.42 lead0.87 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  stormwood/cinder_verge         galewisp  M faint0.42 lead0.92 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  stormwood/glowmoss_hollows     terrapup  M faint0.00 lead0.55 win1.00 | S faint0.00 lead0.71 win1.00 
+  stormwood/glowmoss_hollows     ripplet   M faint0.33 lead0.84 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  stormwood/glowmoss_hollows     galewisp  M faint0.67 lead1.00 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  stormwood/conductor_run        terrapup  M faint0.00 lead0.64 win1.00 | S faint0.00 lead0.71 win1.00 
+  stormwood/conductor_run        ripplet   M faint0.42 lead0.98 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  stormwood/conductor_run        galewisp  M faint0.92 lead1.00 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  stormwood/hollow_crown         terrapup  M faint0.00 lead0.47 win1.00 | S faint0.00 lead0.40 win1.00 
+  stormwood/hollow_crown         ripplet   M faint0.58 lead1.00 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  stormwood/hollow_crown         galewisp  M faint0.75 lead1.00 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  stormwood/deepwood             terrapup  M faint0.00 lead0.62 win1.00 | S faint0.00 lead0.70 win1.00 
+  stormwood/deepwood             ripplet   M faint0.42 lead0.94 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  stormwood/deepwood             galewisp  M faint1.00 lead1.00 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+```
+Rows passing: Cloudreach 4/9 -> 5/9; Stormwood 3/15 -> 10/15. §7 reader win 1.00; worst single hit 0.12 (cap 0.50). Kept at 1.3.
+Remaining failures: every Terrapup row (per-starter owner item) and Cloudreach Broken Causeways Galewisp (masher lead faint 0.08).

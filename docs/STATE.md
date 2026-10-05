@@ -1,27 +1,25 @@
 # State — live status against the release plan
 
-Read first; update in place, under 25KB. No dated status/goal/directive/handoff documents. Evidence: `ralph/reports/<LANE>/`; history: Git and `archive/`.
+Read first; update in place, under 25KB. No dated status/goal/handoff documents. Evidence: `ralph/reports/<LANE>/`; history: Git, `archive/`.
 
 ## 0. Current integration (coordinator: Claude)
 
-**Main:** PR #530 landed (F32, F17); PR #531 landed (F26 Low far floor, F17#4, F04#4, guest rejoin, v28 proof save, CI tiers, delivery plan). PRs need the `full-ci` label: a PR without it skips every engine job and auto-merges on a docs-only green.
+**Main:** PRs #532–#536 landed 2026-10-04/05 (F22 trainers and staging, F17 bed/relic/Hall, F27 essence and leveling, F30#1, CI segmentation with affected-only selection and caches). #537 (F22 a8125751, rematch stutter fix) is in full CI. PRs need the `full-ci` label: a PR without it skips every engine job and auto-merges on a docs-only green.
 
-**Critical path:** F18 portal runtime is OFF (`multiplayer.json session.redesign_portal_runtime_enabled=false`) until the F18 flip lands; travel uses the legacy order and the F20 credits aren't reachable in normal play. Smokes needing it carry `# requires-flag:` headers.
+**Critical path:** F18 portal runtime is OFF (`multiplayer.json session.redesign_portal_runtime_enabled=false`) until the F18 flip lands; travel uses the legacy order and the F20 credits aren't reachable in normal play. Dependent smokes carry `# requires-flag:`.
 
-**Criterion audit (2026-10-04, against the consolidated code):** prior evidence counts only where its code is unchanged. 271 live criteria; 10 superseded rows dropped with citations. F01–F16 open items fold into the redesign rows that own them. Tables: `ralph/reports/INTEGRATION/criterion-audit/`. Board (hourly): `ralph/reports/COORDINATOR/dashboard/` (`criteria.json`, `status.json`, `tetherbound_dashboard.html`).
+**Criterion audit (2026-10-04, against the consolidated code):** prior evidence counts only where its code is unchanged. 271 live criteria; 10 superseded rows dropped with citations. Tables: `ralph/reports/INTEGRATION/criterion-audit/`. Board (hourly): `ralph/reports/COORDINATOR/dashboard/`.
 
 **Lanes (owner restructure 2026-10-04):** Claude feature lanes `tb/f17`, `tb/f18`, `tb/f22`, `tb/f27` (one feature to done, then the next in plan.json order), plus `tb/perf` (frame rate) and `tb/ci-segments` (segmented CI). Codex: `tb/lookdev` (GPU render service and F26), `tb/creature-art`, `tb/visual-*`. Batches land through `tb/integration` with full CI.
-
-**Re-proof sweep (retired 2026-10-04):** verdicts stay under `ralph/reports/INTEGRATION/reproof/` on `tb/reproof-*`; open items moved to the owning feature lanes.
 
 **F25:** owner 2026-10-04 rejected cartoon hit markers. The shared `hit_spark` is OFF and each move's impact carries contact. The library stays OFF and F25 is open (`ralph/reports/VFX/f25/PROOF.md`).
 
 **Feature status (batch landings):**
 - **F32:** #0, #1, #2, #3 PASS; #5 PASS for 2 characters (4-claimant nightly still open). #4: lexicon and Den sheds PASS; win sheds await F27 patch C. Evidence: ralph/reports/HOMESTEAD/f32/.
 - **F17:** #2, #3, #4 (M1 seed-4 chain, CI render 37232841924; margin fragile) #5 and F01#2 PASS. #6 Bars A/B depend on F26 plus Codex hero assets. Evidence: ralph/reports/HUB/f17/.
-- **Re-proof fixes (#529):** F06#4, F07#1, F08#2 and F03#3 PASS. Batch 531: F04#4 hit/avoid witness passes all four named fights (reach mutant fails 0/4); debug travel refuses unwalkable ground (Crown Arch). Guest rejoin: a rejoined guest's owner-passive stream is re-admitted on the host's recovered authority, a conflicting guest state is refused with the differing paths, and its clocks reset (owner_passive_rejoin smoke green twice).
+- **Re-proof fixes (#529, #531):** F06#4, F07#1, F08#2, F03#3 and F04#4 PASS; guest rejoin re-admits the owner-passive stream on the host's recovered authority. Verdicts: `ralph/reports/INTEGRATION/reproof/`.
 - **F26 Low:** every realm camera keeps its authored far plane as a draw-distance floor (was cut to 320 m); blinded A/B 18/0. Labels, lure smoke and debug stands proven (blinded A/B 16/1/1, ralph/reports/LOOKDEV/f26-low/verify/); Veilfall wash still open.
-- **Fixtures:** `host_meadows_stormwood_route_open` proof save rebuilt at v28 from a declarative spec (`tools/net/build_proof_save.sh`).
+- **Fixtures:** v28 proof save via `tools/net/build_proof_save.sh`.
 
 **Owner rulings 2026-10-04:**
 - Visual cards judge High/Medium for the target look and confirm Low/Compatibility for no breakage until the Ally test passes.
@@ -35,38 +33,38 @@ Read first; update in place, under 25KB. No dated status/goal/directive/handoff 
 - Owner 2026-10-04 (7:50 PM CT): frame rate is a release blocker. Codex's GTX 1060 Medium 1080p routes average Meadows 11, Tidewake 7, Stormwood 17 fps. A performance lane (tb/perf) fixes it without clipping the world; the desktop proxy target is ≥60 fps avg with 1% lows ≥40 at Medium.
 - Owner 2026-10-04 (8:15–8:25 PM CT): build the game, not test equipment. Equipment is built only where a criterion has no existing way to verify it; co-op, save and economy changes still ship with a new or extended test; visuals, feel, content and balance use a code-blind judge or a playtest. A product change that legitimately changes an asserted behaviour updates that test in the same commit; a CI test blocking a landing goes to the coordinator. Long CI playthroughs are proven as segments plus handoff checks (each segment starts from the previous one's real end-state save); one unbroken playthrough stays on the scheduled 8-hourly tier (non-blocking), and one unbroken F49 run happens before release.
 
+**Owner rulings 2026-10-05 (coordinator interview on the behind-plan bars):**
+- **Codex:** the owner restarts the Codex lane. It works the #525 queue in this order: the perf retime on main after #537, then F17/F22 captures, then F26.
+- **Blocked criteria:** when a feature's only remaining criteria are blocked (on Codex, a flag flip or an owner decision), the lane records them BLOCKED-with-ask, starts its next feature in plan order, and returns when the blocker clears. 
+- **F18 lands per criterion:** portals turn on behind their flag for the proven parts (Home Key gift, one-tap use) now. #4 (guest regional ack) closes after. Each criterion counts as it lands.
+- **F22#2** (switching value) is proven when F24's tag-switch combo lands. F22 closes without it.
+- **Per-starter balance (F22#1):** tune Galewisp up until mashing loses the lead as often as with the other starters. F22#1 closes on all starters.
+- **Forced break (COMBAT §4):** only a charge started after its tell can be broken, with a 0.1 s grace window.
+- **Home arch (F18, former open decision #11):** the Crossing Hall home arch returns to the last Meadows waystone the player touched.
+- **Co-op rejoin authority:** the host world's held record wins inside it (anti-rollback); the guest file counts only where the world has no record.
+- **Review gate:** independent code review stays mandatory for co-op, save, economy and world-visibility (culling, streaming) changes. Pure tuning, data and visual changes go straight to their tests or code-blind judge without a separate code review.
+- **Schedule:** rebaseline the delivery plan to the measured pace; scope kept, old baseline shown as a ghost.
+- **Combat controller map (former open decision #10; COMBAT §1, UX §2.2):** confirmed as written. The ultimate and Tether Commands are tap-then-tap sequences, orb aim is on LT, flee is on RT, the LB+face layout is an optional preset, and the commands unlock at the practice catch and the first two-creature fight.
+
 ACCEPTANCE was reconciled with RD-01..RD-37 (PR #527). Eleven legacy-path tests are labelled for retirement when F18 turns portals on.
 
-**Owner-blocked:** F26#5 ROG Ally test (Forward+ becomes the default only after it passes), plus the other `blocked` rows on the board.
-
-**Repo size:** owner proposal pending (archive `ralph/reports` images to a release; evidence images to CI artifacts).
+**Owner-blocked:** F26#5 Ally test (parked) and the F47/F49 owner play pass, plus the other `blocked` rows on the board.
 
 **Board:** [private board](https://tetherbound-acceptance-board.mattjohnson912.chatgpt.site); flags/fixtures do not close acceptance.
 
-### Open owner decisions
+### Owner decisions (all answered 2026-10-05; Codex restarted by the owner)
 
-Recommended defaults: keep Compatibility until the Ally gate; retain the 30/night cap and Stormursa name; keep Steam packaging off without an AppID; keep the tap-then-tap controller map and §8.1 defaults. Recommend scoped installed-source Stormwood audio with owner listen, Stormheart as final relay, and existing PRODUCT defaults; these decisions remain open. Human play/device proof uses the passing integrated build.
-
-1. **ROG Ally test (F26#5):** run one Forward+ test build on the Ally (Medium preset, handheld, the scripted route) when `tb/lookdev` posts the checklist here. Forward+ becomes the default only after this passes.
-2. **Meshy credits:** the overnight cap is 30 generations per night (RD-26) unless the owner sets another number.
-3. **Storm bear name:** the working name is *Stormursa* (RD-28).
-4. **Internet co-op proof:** real Steam AppID and partner access, four accounts, at least 2 on separate home networks. `steam_api64.dll` redistribution is approved; packaging (`ship_steam_runtime`) stays off until an AppID exists.
-5. **Stormwood audio:** whether to author the nine missing `assets/audio/stormwood/*.wav` from installed sources under AUDIO §10. Agents cannot listen, so acceptance would rest on spectral and loop checks plus an owner listen.
-6. **Owner play pass (F47/F49):** a human play pass at the end of Wave 3.
-
-7. **Story framing of the final relay:** Tidewake was written as the supply network's final relay. With Stormwood last, the recommended reading is: Stormwood's Stormheart is the final relay; Tidewake's regional link is one of four; the dock exchange stays Tidewake's chapter close. WORLD keeps the current wording conservative until the owner confirms.
-8. **PRODUCT proposals to confirm:** the cut order within owner-decided systems, the "Build the best five" sub-line, a demo that includes the village, the Hall and the first homestead loop, and keeping US$19.99 at 15–25 h.
-
-9. **Design defaults taken in the doc pass** (conservative, the owner may override): listed in CODEX_START_HERE §8.1.
-
-10. **Controller map for the new combat (COMBAT §1, UX §2.2): please confirm.**
-    - The ultimate and commands are tap-then-tap sequences (tap RB, then a face button), not chords, to respect the no-held rule.
-    - Orb aim moves to LT and flee to RT.
-    - Ordinary consumable use stays free, and the Tether Command item throw only buys an instant throw (default).
-    - The LB+face command layout is an optional preset only.
-    - Command unlock: item throw and Snare at the practice catch; Rally and Tag-switch at the first two-creature fight.
-
-11. **Meadows waystones (F18):** recommend home arch returns to last Meadows waystone; keep home-only until owner confirms.
+1. **ROG Ally test (F26#5):** stays parked until the owner playtests the built game. Compatibility stays the default; Forward+ becomes the default only after that test passes.
+2. **Meshy:** keep the cap of 30 generations per night (RD-26).
+3. **Storm bear:** the name *Stormursa* is locked (RD-28).
+4. **Internet co-op:** finish and prove the existing Steam invite path (MULTIPLAYER §1) with Valve's development AppID 480, at no cost. The US$100 product AppID is decided only at ship time, and `ship_steam_runtime` packaging stays off until then. No Epic or other relay work. The two-network proof still needs real accounts, at least two on separate home networks.
+5. **Stormwood audio:** author the nine missing `assets/audio/stormwood/*.wav` from installed sources (AUDIO §10). Acceptance rests on spectral and loop checks; no owner listen is required.
+6. **Owner play pass (F47/F49):** one pass, at F49, on the complete four-chapter build.
+7. **Final relay:** Stormwood's Stormheart is the final relay. Tidewake's regional link is one of four, and the dock exchange stays Tidewake's chapter close (WORLD follows).
+8. **PRODUCT:** the "Build the best five" sub-line, the demo scope (Meadows, village road, Hall, first homestead loop) and the §6 cut order are confirmed. Price stays open (personal/friends for now). This authorizes no launch or spending.
+9. **Design defaults:** every CODEX_START_HERE §8.1 default is owner-confirmed.
+10. **Controller map** and 11. **home arch:** settled; see §0 owner rulings 2026-10-05.
+12. **Repo size:** approved. Existing `ralph/reports` images move to a GitHub release archive with links preserved, and new evidence images go to CI artifacts. Text evidence stays, and history is not rewritten.
 
 **Settled and kept (history in Git):** the Capacitor Alpha no-stagger ruling and storm strikes sparing trainers in fights (owner, 2026-09-27 23:55); harder Meadows trainers, starter parity and the female officer Vess (batch 68); the C2 masher rule (ruling 12, option c).
 
@@ -95,7 +93,7 @@ Recommended defaults: keep Compatibility until the Ally gate; retain the 30/nigh
    - **The 326 m walk from the Hall exit after the finale is acceptable** (exempt from A7 and WORLD §3.1 spacing; M2).
    - **Codex does the Cloudreach aerie art** (F08#3). The Codex lane is shut down; the owner assigns this when the next round of work starts.
    - **Vess, the female officer,** gets the female officer body and portrait. Add a `defeated` clip to `officer_b`.
-12. **Meadows top-fight bar (owner 2026-09-28, F04#7 option c; delegated to the Balance lane, coordinator agreed).** Per top fight and starter, 24 seeds: reader win ≥75%, masher loses its lead every run, reader party cost ≤55% of the masher's. Chapter reading (the lane's reading of the owner's intent, not the owner's words): a masher loses ≥1 named trainer fight in ≥25% of playthroughs; measured 1.00/0.97/0.94, observed 24/24, 24/24, 22/24. Per-fight masher loss: Oreth 100/96/83%, Halder 8/25/29%, Warden 0/4/33%, Hald 0/0/25%, Vance and Vess 0% (L12 pin; DIVER ending). Fixed harness party ends on Trailpup (conservative bias). Owner option: raise the Band 3 pin for Vance for a per-fight 25%. The form applies to Tidewake F14#0 (Tidewake lane measures). COMBAT §7, BOSSES §9, ACCEPTANCE C2.
+12. **Meadows top-fight bar (owner 2026-09-28, F04#7 option c; delegated to the Balance lane, coordinator agreed).** Per top fight and starter, 24 seeds: reader win ≥75%, masher loses its lead every run, reader party cost ≤55% of the masher's. Chapter reading (the lane's reading of the owner's intent): a masher loses ≥1 named trainer fight in ≥25% of playthroughs; measured 0.94–1.00, per-fight data in the F04#7 evidence. Owner option: raise the Band 3 pin for Vance for a per-fight 25%. The form applies to Tidewake F14#0 (Tidewake lane measures). COMBAT §7, BOSSES §9, ACCEPTANCE C2.
 
 **Owner, 2026-09-26 (still in force):**
 - The tournament creature grant is a non-starter species; starters stay player-exclusive.
