@@ -1286,3 +1286,17 @@ func test_rejoin_with_matching_landmarks_still_admits_directly() -> void:
 	assert_true(service.hosts.has(character))
 	assert_true(session.messages.filter(func(m: Dictionary) -> bool: return m.get("op") == "readmit").is_empty(),
 		"an exact rejoin needs no readmit")
+
+func test_an_unreplayed_reward_delivery_holds_the_home_key_request() -> void:
+	# render.yml 37378022226 + review: a find can be accepted before its
+	# replay credits the host's admitted record; the owner's Home Key
+	# request (a full-record row) waits for that replay.
+	assert_false(service.reward_replay_pending(), "a fresh stream has nothing to replay")
+	service.record_input(_input(0.5))
+	assert_false(service.reward_replay_pending(), "care inputs are not reward deliveries")
+	var row := {"character_id": service.local.character, "delivery_id": "d".repeat(64),
+		"stacks": [{"id": "berries", "n": 2}]}
+	assert_true(service.record_delivery(row))
+	assert_true(service.reward_replay_pending(), "an applied find not yet replayed holds it")
+	service.local.inputs = service.local.inputs.filter(func(input: Dictionary) -> bool: return input.op != "reward_delivery_applied")
+	assert_false(service.reward_replay_pending(), "once replayed (acked inputs leave the buffer) the request goes")

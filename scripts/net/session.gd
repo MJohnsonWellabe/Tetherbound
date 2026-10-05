@@ -6120,6 +6120,9 @@ var _home_key_delivery_retry_at: Dictionary = {}
 func _request_home_key_delivery(delivery: Dictionary) -> void:
 	var game := _game()
 	if not portal_runtime_ready() or game == null or game.get("local") == null or game.get("world") == null: return
+	# The host stages a full-record Home Key row: wait until every find this
+	# owner applied has been replayed into the host's admitted record.
+	if not is_host() and _owner_passive != null and _owner_passive.call("reward_replay_pending") == true: return
 	var character: String = game.get("local").character_id
 	var id: String = str(delivery.get("delivery_id", ""))
 	var origin: String = str(delivery.get("world_namespace", ""))

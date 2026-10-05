@@ -159,7 +159,9 @@ static func host_grant(session: Node, peer: int, request: Dictionary) -> Diction
 		or starter_uid(bound.personal, session.call("_foundation_flags", peer)).is_empty():
 		return {"durable": false, "code": "opening_context_changed"}
 	var gift := _journal_prepared(session, peer, bound)
-	if gift.get("durable") == true:
+	# A guest's own delivery request settles it (after its finds have
+	# replayed); only the host's own character reconciles here at once.
+	if gift.get("durable") == true and peer == session.call("local_peer_id"):
 		var reconcile := request.duplicate(true)
 		reconcile.delivery_id = gift.delivery_id
 		reconcile.origin_namespace = bound.world.reward_delivery_namespace
@@ -212,7 +214,9 @@ static func host_legacy_grant(session: Node, peer: int) -> Dictionary:
 	var bound := _binding(session, peer, request)
 	if bound.is_empty(): return {"durable": false, "code": "not_admitted"}
 	var gift := _journal_prepared(session, peer, bound)
-	if gift.get("durable") == true:
+	# A guest's own delivery request settles it (after its finds have
+	# replayed); only the host's own character reconciles here at once.
+	if gift.get("durable") == true and peer == session.call("local_peer_id"):
 		var reconcile := request.duplicate(true)
 		reconcile.delivery_id = gift.delivery_id
 		reconcile.origin_namespace = world.reward_delivery_namespace

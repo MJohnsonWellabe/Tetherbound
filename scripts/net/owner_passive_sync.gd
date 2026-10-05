@@ -126,6 +126,13 @@ func record_delivery(row: Dictionary) -> bool:
 		"stacks_hash": HASH.fingerprint({"stacks": row.get("stacks")})})
 	return true
 
+## An applied reward delivery this owner has not yet replayed to the host:
+## the host's admitted record does not hold it yet (owner side only).
+func reward_replay_pending() -> bool:
+	for input: Variant in local.get("inputs", []):
+		if input is Dictionary and input.get("op") == "reward_delivery_applied": return true
+	return false
+
 func recording_active() -> bool:
 	return not local.is_empty() and pending.is_empty() and str(local.error).is_empty()
 
