@@ -139,6 +139,19 @@ func _print_home_key_wait(frame: int) -> void:
 		str(_home_result.get("ok", "none")), str(game.current_realm), str(game.pending_realm_entry),
 		str(tree.current_scene != null and bool(game.call("_realm_scene_ready", tree.current_scene, "meadows"))),
 		str(owner.get_path()) if owner != null else "none"])
+	var session: Node = game.get("session")
+	var passive: Variant = session.get("_owner_passive") if session != null else null
+	if passive is RefCounted:
+		var local: Dictionary = passive.get("local")
+		var ops: Array = []
+		for input: Variant in local.get("inputs", []): ops.append(str(input.get("op", "")) if input is Dictionary else "?")
+		var pending: Dictionary = passive.get("pending")
+		var deliveries: Array = []
+		for row: Dictionary in preload("res://scripts/net/reward_delivery.gd").pending_for_character(game.get("world"), str(game.get("local").character_id)):
+			deliveries.append("%s:%s" % [str(row.get("source", row.get("kind", ""))), str(row.get("status", ""))])
+		print("F49 HOME WAIT owner_passive inputs=%s error='%s' rebase=%s pending_phase=%s block='%s' replay_pending=%s deliveries=%s" % [str(ops),
+			str(local.get("error", "")), str(not (local.get("rebase", {}) as Dictionary).is_empty()), str(pending.get("phase", "")),
+			str(session.call("_owner_snapshot_block_reason", game.get("local"))), str(passive.call("reward_replay_pending")), str(deliveries)])
 
 func _ready_world(realm: String) -> bool:
 	return tree.current_scene != null and str(game.current_realm) == realm \

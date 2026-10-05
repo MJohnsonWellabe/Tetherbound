@@ -43,6 +43,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		return await _relic_power_attempt(args)
 	if action == "craft_home_key_trip":
 		return await _craft_home_key_trip()
+	if action == "owner_passive_host_state":
+		return _owner_passive_host_state(str(args.get("character_id", "")))
 	if action == "seed_opening_complete":
 		return _seed_opening_complete()
 	return await super._execute_step(msg)
@@ -656,6 +658,27 @@ func _relic_power_attempt(args: Dictionary) -> Dictionary:
 ## opening. Before its first save and admission this offline character gains
 ## every opening beat flag (through free_play) and every configured onboarding
 ## lesson's seen flag, the flags the opening and the lessons write in play.
+## Diagnostic only: the host's owner-passive stream and pending rows for one
+## character (station craft Home Key trip).
+func _owner_passive_host_state(character: String) -> Dictionary:
+	var game := root.get_node("Game")
+	var session := _session()
+	var passive: Variant = session.get("_owner_passive")
+	var stream: Dictionary = (passive.get("hosts") as Dictionary).get(character, {}) if passive is RefCounted else {}
+	var rows: Array = []
+	for raw: Variant in game.get("world").reward_deliveries.values():
+		if raw is Dictionary and raw.get("character_id") == character and str(raw.get("status", "")) != "settled":
+			rows.append("%s:%s:%s" % [str(raw.get("kind", "reward")), str(raw.get("source", raw.get("action", ""))), str(raw.get("status", ""))])
+	var checkpoint: Dictionary = stream.get("checkpoint", {})
+	var line := "F18 HOST PASSIVE stream=%s cursor_seq=%s error='%s' checkpoint=%s readmit=%s committing=%s training_locked=%s rows=%s" % [
+		str(not stream.is_empty()), str(stream.get("cursor", {}).get("sequence", "-")), str(stream.get("error", "")),
+		str(checkpoint.get("source_kind", "none")) + ("/" + str(checkpoint.get("binding", {}).get("action", "")) if not checkpoint.is_empty() else ""),
+		str(stream.has("readmit")), str(not (passive.get("committing") as Dictionary).is_empty()) if passive is RefCounted else "-",
+		str(session.get("_character_authority").call("_training_locked", character)), str(rows)]
+	print(line)
+	return {"verdict": "PASS", "detail": line}
+
+
 func _seed_opening_complete() -> Dictionary:
 	var game := root.get_node("Game")
 	var session := _session()
