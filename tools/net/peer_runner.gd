@@ -6179,9 +6179,22 @@ func _original_starter_ownership(args: Dictionary) -> Dictionary:
 			"party": fp.fingerprint({"party": core.get("party", [])}),
 			"creatures": fp.fingerprint({"redesign_character": core.get("redesign_character", {})}),
 			"inventory": fp.fingerprint({"inventory": core.get("inventory", [])})}
+	# The host's EFFECTIVE view of a guest is its owner-passive replay cursor:
+	# the admitted record plus every replayed care, travel and
+	# reward_delivery_applied input. A host-staged action checkpoints that state,
+	# so it -- not the raw admitted record -- is what owner_plan compares against.
+	var replayed_core: Dictionary = {}
+	if not admitted.is_empty() and session != null:
+		var passive: Variant = session.get("_owner_passive")
+		var hosts: Variant = passive.get("hosts") if passive is Object else null
+		var stream: Variant = (hosts as Dictionary).get(str(admitted.get("character_id", "")), {}) if hosts is Dictionary else {}
+		var cursor: Variant = (stream as Dictionary).get("cursor", {}) if stream is Dictionary else {}
+		if cursor is Dictionary and (cursor as Dictionary).get("state") is Dictionary:
+			replayed_core = essence_rules._without_passive((cursor as Dictionary).state)
 	return {
 		"own_fingerprints": fingerprints.call(own_core),
 		"admitted_fingerprints": fingerprints.call(admitted_core),
+		"replayed_fingerprints": fingerprints.call(replayed_core),
 		"own_starter_receipts": own_starter_receipts,
 		"portable_projection": preload("res://scripts/net/character_record_rules.gd").portable_projection(local.call("save_data")) if local != null else {},
 		"admitted_starter_receipts": admitted_starter_receipts,

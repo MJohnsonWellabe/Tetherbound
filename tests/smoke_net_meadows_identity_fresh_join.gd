@@ -195,7 +195,7 @@ func _run() -> void:
 			_check(rows.size() == 1 and str(rows[0]).begins_with(chosen + "@"),
 				"peer %d holds the starter it picked in the real picker, %s (%s)" % [peer, chosen, str(rows)])
 			await _assert_named_starter(peer, "after the opening")
-		await _assert_host_admits_guest_starter(client_peer_id, "after the opening")
+		await _assert_host_admits_guest_starter(client_peer_id, "after the opening", true)
 	var first_party: Array = client_identity.get("party", []) as Array
 	_check(int(client_identity.get("party_size", -1)) == 1 and first_party.size() == 1,
 		("the completed opening left the fresh client exactly one starter (%s)" if _opening_together \
@@ -400,13 +400,18 @@ func _assert_host_admits_guest_starter(client_peer_id: int, when: String, full_r
 			and mine.get("creatures") == theirs.get("creatures"),
 		"the guest's party and creature record equal the host's admitted copy %s (diff hint: %s)"
 			% [when, str(host.get("admitted_differing_paths", []))])
-	var whole: bool = not mine.is_empty() and mine.get("whole") == theirs.get("whole")
+	# The record a host-staged action checkpoints is the host's owner-passive
+	# replay of this guest (admitted record + replayed care, travel and
+	# reward_delivery_applied inputs). Equal to the guest's own record means
+	# the guest's next host-staged action meets no owner_action_baseline_conflict.
+	var replayed: Dictionary = host.get("replayed_fingerprints", {}) as Dictionary
+	var whole: bool = not mine.is_empty() and mine.get("whole") == replayed.get("whole")
 	if full_record:
-		_check(whole, "the guest's whole record equals the host's admitted copy %s: no owner_action_baseline_conflict (diff hint: %s)"
-			% [when, str(host.get("admitted_differing_paths", []))])
+		_check(whole, "the guest's whole record equals the host's replayed view of it %s: no owner_action_baseline_conflict (inventory %s; diff hint vs admitted: %s)"
+			% [when, str(mine.get("inventory") == replayed.get("inventory")), str(host.get("admitted_differing_paths", []))])
 	else:
-		print("opening admitted baseline %s: whole-record match=%s inventory match=%s diff hint=%s" % [when,
-			str(whole), str(mine.get("inventory") == theirs.get("inventory")), str(host.get("admitted_differing_paths", []))])
+		print("opening replayed baseline %s: whole-record match=%s inventory match=%s admitted-inventory match=%s" % [when,
+			str(whole), str(mine.get("inventory") == replayed.get("inventory")), str(mine.get("inventory") == theirs.get("inventory"))])
 
 
 func _opening(peer: int) -> Dictionary:
