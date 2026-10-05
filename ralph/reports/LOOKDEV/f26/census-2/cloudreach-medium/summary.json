@@ -1,0 +1,285 @@
+{
+  "source_commit": "b586b706316631466172c20ed14a0f3358179549",
+  "command": [
+    "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\redesign-lookdev",
+    "--rendering-method",
+    "forward_plus",
+    "--audio-driver",
+    "Dummy",
+    "--resolution",
+    "1920x1080",
+    "--fullscreen",
+    "--script",
+    "tools/capture_renderer_material_census.gd",
+    "--",
+    "--biome=cloudreach",
+    "--preset=Medium",
+    "--source-commit=b586b706316631466172c20ed14a0f3358179549",
+    "--times=day",
+    "--output=D:/tetherbound/.artifacts/f26-census-2/cloudreach-medium/frames"
+  ],
+  "exit_code": 0,
+  "stop_reason": null,
+  "native_elapsed_seconds": 701.562,
+  "supervisor_elapsed_seconds": 710.015,
+  "runtime_errors": [],
+  "native_complete": true,
+  "frame_count": 12,
+  "planned_frame_count": 12,
+  "native_failures": [],
+  "graphics_capture": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "Medium",
+    "renderer": "forward_plus",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "source_commit": "b586b706316631466172c20ed14a0f3358179549"
+  },
+  "png_dimensions": {
+    "cloudreach__broken_causeways__03__three_bells_bridge__day.png": [
+      1920,
+      1080
+    ],
+    "cloudreach__broken_causeways__04__broken_skyroad_arch__day.png": [
+      1920,
+      1080
+    ],
+    "cloudreach__gate_lower_cliffs__01__realm_gate_crag__day.png": [
+      1920,
+      1080
+    ],
+    "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day.png": [
+      1920,
+      1080
+    ],
+    "cloudreach__high_roost_sky_shrine__07__sky_shrine__day.png": [
+      1920,
+      1080
+    ],
+    "cloudreach__high_roost_sky_shrine__08__the_high_perches__day.png": [
+      1920,
+      1080
+    ],
+    "cloudreach__summit_final_stronghold__11__summit_eyrie__day.png": [
+      1920,
+      1080
+    ],
+    "cloudreach__summit_final_stronghold__12__stormward_overlook__day.png": [
+      1920,
+      1080
+    ],
+    "cloudreach__upper_cloudreach__09__cliffhold__day.png": [
+      1920,
+      1080
+    ],
+    "cloudreach__upper_cloudreach__10__old_wind_observatory__day.png": [
+      1920,
+      1080
+    ],
+    "cloudreach__windscar_ravine__05__windscar_beacon__day.png": [
+      1920,
+      1080
+    ],
+    "cloudreach__windscar_ravine__06__windscar_flight_aerie__day.png": [
+      1920,
+      1080
+    ]
+  },
+  "material_snapshots": [
+    {
+      "frame_id": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__day",
+      "binding_count": 29733,
+      "classifications": {
+        "other": 9,
+        "unbound_primitive_default_requires_source_review": 6,
+        "bound_material_requires_visual_review": 27451,
+        "untextured_material_may_be_authored_requires_source_review": 2267
+      },
+      "resource_count": 1370
+    },
+    {
+      "frame_id": "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day",
+      "binding_count": 29749,
+      "classifications": {
+        "other": 9,
+        "unbound_primitive_default_requires_source_review": 6,
+        "bound_material_requires_visual_review": 27467,
+        "untextured_material_may_be_authored_requires_source_review": 2267
+      },
+      "resource_count": 1380
+    },
+    {
+      "frame_id": "cloudreach__broken_causeways__03__three_bells_bridge__day",
+      "binding_count": 29757,
+      "classifications": {
+        "other": 9,
+        "unbound_primitive_default_requires_source_review": 6,
+        "bound_material_requires_visual_review": 27475,
+        "untextured_material_may_be_authored_requires_source_review": 2267
+      },
+      "resource_count": 1388
+    },
+    {
+      "frame_id": "cloudreach__broken_causeways__04__broken_skyroad_arch__day",
+      "binding_count": 29757,
+      "classifications": {
+        "other": 9,
+        "unbound_primitive_default_requires_source_review": 6,
+        "bound_material_requires_visual_review": 27475,
+        "untextured_material_may_be_authored_requires_source_review": 2267
+      },
+      "resource_count": 1388
+    },
+    {
+      "frame_id": "cloudreach__windscar_ravine__05__windscar_beacon__day",
+      "binding_count": 29765,
+      "classifications": {
+        "other": 9,
+        "unbound_primitive_default_requires_source_review": 6,
+        "bound_material_requires_visual_review": 27483,
+        "untextured_material_may_be_authored_requires_source_review": 2267
+      },
+      "resource_count": 1398
+    },
+    {
+      "frame_id": "cloudreach__windscar_ravine__06__windscar_flight_aerie__day",
+      "binding_count": 29769,
+      "classifications": {
+        "other": 9,
+        "unbound_primitive_default_requires_source_review": 6,
+        "bound_material_requires_visual_review": 27487,
+        "untextured_material_may_be_authored_requires_source_review": 2267
+      },
+      "resource_count": 1398
+    },
+    {
+      "frame_id": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day",
+      "binding_count": 29769,
+      "classifications": {
+        "other": 9,
+        "unbound_primitive_default_requires_source_review": 6,
+        "bound_material_requires_visual_review": 27487,
+        "untextured_material_may_be_authored_requires_source_review": 2267
+      },
+      "resource_count": 1398
+    },
+    {
+      "frame_id": "cloudreach__high_roost_sky_shrine__08__the_high_perches__day",
+      "binding_count": 29769,
+      "classifications": {
+        "other": 9,
+        "unbound_primitive_default_requires_source_review": 6,
+        "bound_material_requires_visual_review": 27487,
+        "untextured_material_may_be_authored_requires_source_review": 2267
+      },
+      "resource_count": 1398
+    },
+    {
+      "frame_id": "cloudreach__upper_cloudreach__09__cliffhold__day",
+      "binding_count": 29769,
+      "classifications": {
+        "other": 9,
+        "unbound_primitive_default_requires_source_review": 6,
+        "bound_material_requires_visual_review": 27487,
+        "untextured_material_may_be_authored_requires_source_review": 2267
+      },
+      "resource_count": 1398
+    },
+    {
+      "frame_id": "cloudreach__upper_cloudreach__10__old_wind_observatory__day",
+      "binding_count": 29769,
+      "classifications": {
+        "other": 9,
+        "unbound_primitive_default_requires_source_review": 6,
+        "bound_material_requires_visual_review": 27487,
+        "untextured_material_may_be_authored_requires_source_review": 2267
+      },
+      "resource_count": 1398
+    },
+    {
+      "frame_id": "cloudreach__summit_final_stronghold__11__summit_eyrie__day",
+      "binding_count": 29769,
+      "classifications": {
+        "other": 9,
+        "unbound_primitive_default_requires_source_review": 6,
+        "bound_material_requires_visual_review": 27487,
+        "untextured_material_may_be_authored_requires_source_review": 2267
+      },
+      "resource_count": 1398
+    },
+    {
+      "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__day",
+      "binding_count": 29769,
+      "classifications": {
+        "other": 9,
+        "unbound_primitive_default_requires_source_review": 6,
+        "bound_material_requires_visual_review": 27487,
+        "untextured_material_may_be_authored_requires_source_review": 2267
+      },
+      "resource_count": 1398
+    }
+  ],
+  "unbound_bindings_requiring_source_review": [
+    {
+      "node": "Player/Model/Body",
+      "surface": 0,
+      "classification": "unbound_primitive_default_requires_source_review",
+      "owner_script": "",
+      "mesh_class": "CapsuleMesh",
+      "mesh_path": "res://scenes/player/player.tscn::Mesh_1",
+      "visible_in_tree": false
+    },
+    {
+      "node": "Player/Model/Nose",
+      "surface": 0,
+      "classification": "unbound_primitive_default_requires_source_review",
+      "owner_script": "",
+      "mesh_class": "CapsuleMesh",
+      "mesh_path": "res://scenes/player/player.tscn::Mesh_1",
+      "visible_in_tree": false
+    },
+    {
+      "node": "MasterT4/@MeshInstance3D@6100",
+      "surface": 0,
+      "classification": "unbound_primitive_default_requires_source_review",
+      "owner_script": "",
+      "mesh_class": "CylinderMesh",
+      "mesh_path": "",
+      "visible_in_tree": false
+    },
+    {
+      "node": "MasterT4/@MeshInstance3D@6101",
+      "surface": 0,
+      "classification": "unbound_primitive_default_requires_source_review",
+      "owner_script": "",
+      "mesh_class": "CylinderMesh",
+      "mesh_path": "",
+      "visible_in_tree": false
+    },
+    {
+      "node": "MasterT4/@MeshInstance3D@6102",
+      "surface": 0,
+      "classification": "unbound_primitive_default_requires_source_review",
+      "owner_script": "",
+      "mesh_class": "CylinderMesh",
+      "mesh_path": "",
+      "visible_in_tree": false
+    },
+    {
+      "node": "MasterT4/@MeshInstance3D@6103",
+      "surface": 0,
+      "classification": "unbound_primitive_default_requires_source_review",
+      "owner_script": "",
+      "mesh_class": "CylinderMesh",
+      "mesh_path": "",
+      "visible_in_tree": false
+    }
+  ],
+  "truncated_resource_graphs": 0,
+  "qualification": "Capture completeness and binding inventory only; full visual/material acceptance OPEN. Mounted/visible flags are not pixel or fallback proof. No FPS, travel, campaign or handheld claim."
+}

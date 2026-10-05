@@ -1,0 +1,136 @@
+{
+  "archives": [
+    {
+      "path": "raw-evidence-01.zip",
+      "size": 28577630,
+      "sha256": "adce5338e11fac8b007e9167d521a7d94f74fee5a6b8d9d9ab6bef602ea034dd"
+    },
+    {
+      "path": "raw-evidence-02.zip",
+      "size": 3988660,
+      "sha256": "76e4db9747cf41aeafd4e04ab371002b7e32b449e25edb1a4c45828dcadf0544"
+    },
+    {
+      "path": "raw-evidence-03.zip",
+      "size": 3988631,
+      "sha256": "3a6446b4f1d98de7a7ce2f5ff393af15ee047c1deef2c42ddb6c7be9e9376b4f"
+    }
+  ],
+  "files": [
+    {
+      "path": "native.log",
+      "archive": "raw-evidence-01.zip",
+      "size": 11156,
+      "sha256": "b74460f76fd92cedbc60a89e8d3a442241d43c8599b8dab8b54a762dc33d4b70"
+    },
+    {
+      "path": "receipt.json",
+      "archive": "raw-evidence-01.zip",
+      "size": 1038,
+      "sha256": "a62932008ce4653bc92bf757a394ba308460222c4389a09b36f0a5a551f076ca"
+    },
+    {
+      "path": "preset.log",
+      "archive": "raw-evidence-01.zip",
+      "size": 112,
+      "sha256": "5c177f17a34517ce3912c7dc0572a31a19f72d09d9ef241ca5ea2c359878f75e"
+    },
+    {
+      "path": "preset-receipt.json",
+      "archive": "raw-evidence-01.zip",
+      "size": 387,
+      "sha256": "cf91a1ebfdb79462fd527ebdf67430511a74e56bfc472b259a232d259f6dc252"
+    },
+    {
+      "path": "frames/cloudreach__broken_causeways__03__three_bells_bridge__day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2349603,
+      "sha256": "52785bd1936ffc21cf829896462e9602e3469e6ccbdd6ab7b3d5ca86fd6bd5a4"
+    },
+    {
+      "path": "frames/cloudreach__broken_causeways__04__broken_skyroad_arch__day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2591865,
+      "sha256": "cefaea6005b55df73f5998525ac0951de07e5a641099332513a3ad7fde60e1bc"
+    },
+    {
+      "path": "frames/cloudreach__gate_lower_cliffs__01__realm_gate_crag__day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2149405,
+      "sha256": "7ffded9b2a82712c06bf107a9e5f568bdfb8d0654cbe80a610eb1e282c6f83c1"
+    },
+    {
+      "path": "frames/cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2286522,
+      "sha256": "8597f53d5d494871dd4057d246bfde52078b6d47b9c48c6e443d521c9f0eb151"
+    },
+    {
+      "path": "frames/cloudreach__high_roost_sky_shrine__07__sky_shrine__day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2552137,
+      "sha256": "13876532927d18c3f3451479d2580e7788a060e3e2da2456f19f29b026e34a27"
+    },
+    {
+      "path": "frames/cloudreach__high_roost_sky_shrine__08__the_high_perches__day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2419489,
+      "sha256": "611768ff6474dbf37fbeb6706689d339d55552b5ee6c2d2b92b539aad71baa8b"
+    },
+    {
+      "path": "frames/cloudreach__summit_final_stronghold__11__summit_eyrie__day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2508846,
+      "sha256": "534cc03e4ddc0f9c69f7e88324db5bc24bf6c9a94e3f4d65e3894ecce4fc0d4b"
+    },
+    {
+      "path": "frames/cloudreach__summit_final_stronghold__12__stormward_overlook__day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2397069,
+      "sha256": "a784c2dcab27a188db2557b791581657071af9ff162d2f0365fb352a5006c20e"
+    },
+    {
+      "path": "frames/cloudreach__upper_cloudreach__09__cliffhold__day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2551725,
+      "sha256": "642b3c9620df71a70746a8940c710618f20e299271164e37bc12a3ffe973f669"
+    },
+    {
+      "path": "frames/cloudreach__upper_cloudreach__10__old_wind_observatory__day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2508407,
+      "sha256": "b74c6e577e9b630a985e2fb15d6a4faeb5cde0361fec36b89526f1f2cda14f7c"
+    },
+    {
+      "path": "frames/cloudreach__windscar_ravine__05__windscar_beacon__day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2325914,
+      "sha256": "4f28eeb10e374477f2eb92c6627b0711fb680e74d8ca00a3e4e4dac9c5b195dd"
+    },
+    {
+      "path": "frames/cloudreach__windscar_ravine__06__windscar_flight_aerie__day.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 1925505,
+      "sha256": "7106a53d6425f9293f50ae6f8423c9539b146bdfb2bc88aa75309c39e5bae698"
+    },
+    {
+      "path": "frames/manifest.json",
+      "archive": "raw-evidence-02.zip",
+      "size": 212863276,
+      "sha256": "7d56f8d6f3b3691197a52fb4d33498826c65e12ce6d4c4731f19afd9245760c4"
+    },
+    {
+      "path": "frames/manifest.json.previous",
+      "archive": "raw-evidence-03.zip",
+      "size": 212863172,
+      "sha256": "192903c1cf86903a45d6402890ae4fd388514b16487a08b74f348f8660e49258"
+    }
+  ],
+  "additional_files_outside_archives": [
+    {
+      "path": "graphics_override.cfg",
+      "size": 133,
+      "sha256": "54443c56eb16b246b6071257bcead2a835c1f77fd5c165d7affc5aee4afe039e"
+    }
+  ]
+}
