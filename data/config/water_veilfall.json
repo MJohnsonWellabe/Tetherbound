@@ -20,7 +20,7 @@
       {"id": "east_face_fall", "bearing_deg": -40.0, "top_y_m": 390.0, "foot_y_m": 1.0, "width_m": 40.0, "taper": 0.35, "opacity": 0.75, "spray": [{"offset": [0, 7, 8], "radius_m": 30.0}, {"offset": [14, 3, 16], "radius_m": 18.0}]}
     ],
     "column_shader": {"foam_colour": "#f6fcfd", "shade_colour": "#b4d2da", "flow_speed": 7.0, "opacity": 0.95, "edge_feather": 0.45, "min_angular_width": 0.02, "depth_pull_fraction": 0.016, "depth_pull_max_m": 70.0, "fog_keep": 0.35, "detail_fade_start_m": 500.0, "detail_fade_end_m": 1600.0, "night_lift": 0.06},
-    "spray_shader": {"mist_colour": "#f2f8fa", "opacity": 0.6, "drift_speed": 0.05, "min_angular_size": 0.014, "depth_pull_fraction": 0.018, "depth_pull_max_m": 80.0, "fog_keep": 0.35, "night_lift": 0.06, "near_fade_inside": 0.6, "near_fade_clear": 1.6, "_near_fade": "F26 judge veilfall__15: a player at the waterfall entrance stood inside a 38 m puff and the frame washed white. Camera distance / puff size below near_fade_clear fades the puff, gone at near_fade_inside."}
+    "spray_shader": {"mist_colour": "#f2f8fa", "opacity": 0.6, "drift_speed": 0.05, "min_angular_size": 0.014, "depth_pull_fraction": 0.018, "depth_pull_max_m": 80.0, "fog_keep": 0.35, "night_lift": 0.06}
   },
   "silhouette": {
     "_comment": "F13#5 far silhouette (scripts/world/water_veilfall_silhouette.gd): a coarse polar copy of the baked mountain shown only beyond visible_from_m, pulled toward the camera over the distant terrain LOD, with its own reduced fog (environment colour and density, amount scaled from fog_keep_near to fog_keep_far) so the mountain keeps a toned dark value at 1.5-4 km. One draw call.",
