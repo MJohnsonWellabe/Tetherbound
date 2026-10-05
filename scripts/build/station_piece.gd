@@ -58,14 +58,14 @@ func build(id: String, ghost: bool = false) -> void:
 				_cylinder(0.12,0.34,Vector3(0,1.42,0),Color("6fe3d6"),2.2)
 				_glow(Vector3(0,1.5,0),Color("7ff0e2"))
 			"den":
-				# Thatched A-frame shelter with a back wall and straw beds.
-				for x: float in [-2.0,2.0]:
-					for z: float in [-1.4,1.4]: _box(Vector3(0.16,1.4,0.16),Vector3(x,0.7,z),Color("785a3c"))
+				# Creature hut: a steep thatched A-frame, ridge running front to back,
+				# so the open front gable shows the straw nests; closed back gable.
 				for side: float in [-1.0,1.0]:
-					var roof := _box(Vector3(4.6,0.16,1.95),Vector3(0,1.95,side*0.78),Color("c9a95a"))
-					roof.rotation.x = side*deg_to_rad(38.0)
-				_box(Vector3(4.2,1.4,0.1),Vector3(0,0.7,-1.42),Color("8a6a46"))
-				for x: float in [-2.02,2.02]: _box(Vector3(0.1,1.4,1.2),Vector3(x,0.7,-0.8),Color("8a6a46"))
+					var roof := _box(Vector3(3.1,0.16,3.3),Vector3(side*1.1,1.4,0),Color("a8843a"))
+					roof.rotation.z = -side*deg_to_rad(45.0)
+				_box(Vector3(0.18,0.18,3.4),Vector3(0,2.5,0),Color("6e5228"))
+				for row: Array in [[4.2,0.3],[3.2,0.9],[2.0,1.5],[0.8,2.1]]: # [width, centre height] stepped gable
+					_box(Vector3(float(row[0]),0.6,0.12),Vector3(0,float(row[1]),-1.55),Color("7a5c3a"))
 				# Straw nests: a dark rim with a heaped golden centre, one per resting companion.
 				for i: int in 3:
 					var at := Vector3(-1.3+i*1.3,0.0,-0.2)
