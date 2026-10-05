@@ -28,6 +28,8 @@ static func run(runner: SceneTree, action: String, args: Dictionary) -> Dictiona
 		"f27_title_rejoin": return await _title_rejoin(runner, args)
 		"f27_passive_state": return _passive_state(runner, str(args.get("character_id", "")))
 		"f27_ceremony_release": return await _ceremony_release(runner, args)
+		"f27_passive_projection": return _passive_projection(runner, str(args.get("character_id", "")))
+		"f27_wild_runtime": return _wild_runtime(runner)
 	return {"verdict": "ERROR", "detail": "unknown F27 action '%s'" % action}
 
 
@@ -119,6 +121,7 @@ static func _summary(record: Dictionary) -> Dictionary:
 	var receipts: Array = personal.get("transaction_receipts", [])
 	return {"party": party, "items": _counts(record.get("inventory", [])),
 		"spend_receipts": receipts.filter(func(r: Variant) -> bool: return str(r).begins_with("essence_spend:")),
+		"defeat_receipts": receipts.filter(func(r: Variant) -> bool: return str(r).begins_with("defeat:")),
 		"release_receipts": personal.get("release_receipts", []).duplicate(),
 		"receipt_count": receipts.size()}
 
@@ -392,3 +395,47 @@ static func _ceremony_release(runner: SceneTree, args: Dictionary) -> Dictionary
 	if menu.call("is_open") == true: menu.call("close") # Leave the Team screen as a player would.
 	for f in 12: await runner.process_frame
 	return _ok("ceremony release ended at stage %s" % data.stage, data)
+
+
+## Diagnostic: the guest's own owner-passive projection, or the host's
+## replayed cursor state for that character (what an exact freeze compares).
+static func _passive_projection(runner: SceneTree, character_id: String) -> Dictionary:
+	var game := _game(runner)
+	var session: Node = game.get("session") if game != null else null
+	var service: Variant = session.get("_owner_passive") if session != null else null
+	if service == null: return _fail("no owner passive service")
+	if session.call("is_host") == true:
+		var stream: Dictionary = (service.get("hosts") as Dictionary).get(character_id, {})
+		return _ok("host cursor", {"state": (stream.get("cursor", {}) as Dictionary).get("state", {}), "error": stream.get("error")})
+	return _ok("owner projection", {"state": service.call("_projection")})
+
+
+## Diagnostic (host): each canonical wild runtime's settlement state, the
+## director's pending guest-vitals proposals and every peer's pending vitals.
+static func _wild_runtime(runner: SceneTree) -> Dictionary:
+	var game := _game(runner)
+	var session: Node = game.get("session") if game != null else null
+	var out := {}
+	for director: Node in runner.root.find_children("*", "Node", true, false):
+		var fights: Variant = director.get("_shared_host_fights")
+		if not fights is Dictionary or not director.has_method("_shared_host_fight"): continue
+		var proposals: Variant = director.get("_ordinary_actor_vitals_proposals")
+		var rows: Array = []
+		if proposals is Dictionary:
+			for key: Variant in proposals:
+				var original: Dictionary = proposals[key]
+				rows.append({"id": str(key).right(12), "peer": original.get("peer_id"), "committed": original.get("committed"), "presented": original.get("presented")})
+		for id: Variant in fights:
+			var runtime: Node = director.call("_shared_host_fight", str(id))
+			if runtime == null: continue
+			var host: Variant = director.get("_encounter_host")
+			var record: Dictionary = host.call("record", str(id)) if host != null else {}
+			var peers := {}
+			for peer: Variant in record.get("participants", {}):
+				peers[str(peer)] = {"pending_vitals": str(session.call("admitted_pending_vitals", int(peer))).left(200) if session != null else "",
+					"actor": str(record.participants[peer].get("actor_vitals", {})).left(200)}
+			out[str(id)] = {"result": runtime.get_meta(&"wild_victory_result", {}), "resolved": runtime.get_meta(&"wild_victory_resolved", null),
+				"has_source": runtime.has_meta(&"wild_victory_source"), "phase": str(host.call("phase", str(id))) if host != null else "",
+				"wild_owner": record.has("wild_actor_owner"), "pending_actor": str(host.call("pending_actor_vitals", str(id))).left(200) if host != null else "",
+				"proposals": rows, "peers": peers}
+	return _ok("wild runtime", out)

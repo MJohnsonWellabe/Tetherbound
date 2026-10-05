@@ -77,6 +77,7 @@ func _init() -> void:
 func _run() -> void:
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
+	current_scene = _world # As the shipping boot does; the canonical wild settlement reads it.
 	for i in SETTLE_FRAMES:
 		await physics_frame
 
@@ -146,9 +147,14 @@ func _run() -> void:
 ## is unaffected — this file never drives the opening.
 func _ensure_ally() -> void:
 	var director := _world.get_node_or_null(^"EncounterDirector")
-	if director == null or director.call("ally_instance") != null:
-		return
-	await director.call("adopt_starter", "ripplet")
+	if director == null: return
+	if director.call("ally_instance") == null: await director.call("adopt_starter", "ripplet")
+	# The opening's own ownership step (sequence_director._own_the_late_arrival):
+	# the adopted body is a companion only once it is in this character's party.
+	# With combat.json actor_vitals on, a wild fight refuses an unowned fighter.
+	var party: RefCounted = root.get_node(^"Game").get("party")
+	if party != null and int(party.call("size")) == 0 and director.call("ally_instance") != null:
+		party.call("add", director.call("ally_instance"))
 
 ## The opening's staging wakes the player in Grandpa's bed; this test bypasses
 ## the opening and needs open meadow between it and the wild creatures, not a

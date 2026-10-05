@@ -6,9 +6,9 @@ WARNING: instance_reset_physics_interpolation() is deprecated.
          [0] _build_terrain (res://scripts/world/playground_world.gd:1180)
          [1] _ready (res://scripts/world/playground_world.gd:806)
 [playground] spawned at 0.0, 2.9, 0.0
-[scatter bake] load phases (ms): read[256 regions, 387893 placements, 431212 skipped]=1210 reorder[16 layers]=3177
+[scatter bake] load phases (ms): read[256 regions, 387893 placements, 431212 skipped]=1231 reorder[16 layers]=3907
 [vegetation] grass field is on; 431212 placements across 2 layers left unbuilt (grass, flowers)
-[vegetation] boot phases (ms): placements=4654 mark_harvestable=165 group_by_model=605 register_mesh_assets=38 build_batches_total=6893 (of which harvest_points[56283 nodes]=4157, initial_collision_stream[51210 solid]=226) update_mmis=1154
+[vegetation] boot phases (ms): placements=5417 mark_harvestable=184 group_by_model=674 register_mesh_assets=47 build_batches_total=6930 (of which harvest_points[56283 nodes]=4553, initial_collision_stream[51210 solid]=224) update_mmis=1023
 [grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
 [grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
 [grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
@@ -119,13 +119,13 @@ WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
 [stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
 [stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
 [stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 78.7), enclosing LargeTower
-[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 78.7), enclosing _MeshInstance3D_66330
-[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 101.7), enclosing _MeshInstance3D_66331
-[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 101.7), enclosing _MeshInstance3D_66332
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 78.7), enclosing _MeshInstance3D_66332
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 101.7), enclosing _MeshInstance3D_66333
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 101.7), enclosing _MeshInstance3D_66334
 [stronghold] tower pier in legendary_chamber: 5.0 x 5.1 m at local (-43.5, 78.7), enclosing PointyTower
-[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-20.0, 102.2), enclosing _MeshInstance3D_66333
-[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-44.0, 102.2), enclosing _MeshInstance3D_66334
-[stronghold] tower pier in legendary_chamber: 3.5 x 3.6 m at local (-19.7, 77.9), enclosing _MeshInstance3D_66335
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-20.0, 102.2), enclosing _MeshInstance3D_66335
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-44.0, 102.2), enclosing _MeshInstance3D_66336
+[stronghold] tower pier in legendary_chamber: 3.5 x 3.6 m at local (-19.7, 77.9), enclosing _MeshInstance3D_66337
 [stronghold] 8 tower pier(s) enclosing massing that reached inside a roofed chamber
 [stronghold] 87 interior dressing prop(s) in the roofed rooms
 [trainers] placed 3 trainer(s) for group 'stronghold'
@@ -141,17 +141,18 @@ outside a fight, combat_quick says: 'Can't attack outside a fight.'
 outside a fight, combat_throw stays quiet
 with a build armed, the same press stays quiet
 approached to 3.3m (engage range 6.0m)
-camera 14.3m from the creature, line of sight clear
-creature moved 4.3m on the stick
-pushed to 11.0m from the arena centre (radius 11.0m)
+camera 14.8m from the creature, line of sight clear
+creature moved 4.2m on the stick
+pushed to 15.7m from the arena centre (radius 11.0m)
 a swing from out of range missed, as it should
-quick attack: enemy 106.2 -> 93.4 hp
-enemy dealt damage: ally 63.8 -> 54.2 hp
-type chart reached the fight: 8 verdicts, ally water vs foe ground (hit 1 / -1, arrow 1)
-enemy fainted after 233 action frames; outcome 'won'
-tally: 5 hits on the enemy, 7 on the ally, 2 misses
-5 blows landed for 109.3 damage (the chart says 112.5; a chart-less fight would say 90.0)
-post-fight HP held at 54.2, no auto-heal
+quick attack: enemy 106.2 -> 92.1 hp
+enemy dealt damage: ally 73.7 -> 63.9 hp
+type chart reached the fight: 7 verdicts, ally water vs foe ground (hit 1 / -1, arrow 1)
+enemy fainted after 252 action frames; outcome 'won'
+tally: 5 hits on the enemy, 6 on the ally, 2 misses
+5 blows landed for 114.0 damage (the chart says 112.5; a chart-less fight would say 90.0)
+post-fight HP held at 63.9, no auto-heal
 
-combat: OK — a fight can be entered, piloted, won and left.
-exit 0
+combat FAIL: the camera's followed anchor is still on the trainer (1.5m) not the creature (3.0m)
+combat FAIL: the creature reached 15.7m from the centre of an 11.0m arena; the boundary leaks
+exit 1

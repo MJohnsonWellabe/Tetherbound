@@ -1,0 +1,329 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_actor_vitals_authority,test_altar_building_recovery,test_altar_essence_quote_bridge,test_altar_recipe_catalogue,test_altar_traits_transport,test_background_training_combat,test_bounty_board,test_combat_mastery_delivery,test_combat_progression,test_combat_round_reward,test_den_groom_saved_transaction,test_den_saved_transaction,test_f18_arrival_lifecycle,test_f18_waystones,test_f19_boss_delivery,test_f19_participant_delivery,test_f27_altar_first_send,test_f27_essence_rules,test_f27_guest_release_service,test_f27_guest_wild_share,test_f32_catalogue_registration,test_f32_essence_census,test_f32_held_tool,test_f32_material_census,test_f32_no_butchery_lexicon,test_f32_refusal_text,test_f32_type_crops,test_f32_water_registration,test_f32_win_shed,test_foundation_capture_scope,test_foundation_combat_manager_context,test_foundation_forge_units,test_foundation_rematch_bosses,test_foundation_resource_save,test_foundation_resources,test_foundation_retry_admission,test_foundation_retry_order,test_foundation_travel_protocol,test_guest_groom_passive_sync,test_home_key_action,test_ordinary_actor_vitals_recovery,test_owner_passive_game_hooks,test_owner_passive_preparation,test_owner_passive_replay,test_owner_passive_sync,test_prepared_training_owner_identity,test_research_log,test_research_passive_authority,test_research_passive_preparation,test_tm_teach_transaction,test_trait_ui,test_traits_inactive_runtime: 52 of 784 test files
+  ok    test_actor_vitals_authority.gd :: test_actor_alias_and_pooled_body_rejoin_require_current_unique_generation
+  ok    test_actor_vitals_authority.gd :: test_actual_heal_stages_no_cost_then_commits_once_with_per_creature_cooldown
+  ok    test_actor_vitals_authority.gd :: test_actual_personal_stat_carriers_admit_defaults_and_refuse_bad_identity_shapes
+  ok    test_actor_vitals_authority.gd :: test_departed_actor_hp_waits_for_exact_durable_handoff_and_stays_private
+  ok    test_actor_vitals_authority.gd :: test_lost_ack_cumulative_recovery_and_latest_ack_reject_foreign_healthy_reseed
+  ok    test_actor_vitals_authority.gd :: test_owner_write_loss_keeps_accepted_hp_and_requires_real_retry_write
+  ok    test_actor_vitals_authority.gd :: test_prepared_writer_never_flushes_a_reentrant_replacement_fallback
+  ok    test_actor_vitals_authority.gd :: test_private_stage_world_failure_restores_hp_revision_and_replay_history
+  ok    test_actor_vitals_authority.gd :: test_same_admission_retains_personal_sources_but_exposes_only_proved_actor_power
+  ok    test_altar_building_recovery.gd :: test_actual_owner_and_world_files_retain_exact_altar_carriers_and_recover_without_second_debit
+  ok    test_altar_building_recovery.gd :: test_invalid_or_conflicting_paid_altar_journal_preserves_original_admitted_state
+  ok    test_altar_building_recovery.gd :: test_projection_version_dispatch_preserves_integral_json_versions_without_coercing_invalid_versions
+  ok    test_altar_building_recovery.gd :: test_real_paid_altar_three_field_journal_recovers_before_and_after_without_replacing_other_admitted_fields
+  ok    test_altar_building_recovery.gd :: test_real_v2_and_v3_pending_journals_recover_the_exact_full_admitted_projection
+ALTAR_QUOTE_BRIDGE_RESULT={"assertions":157,"case_assertions":[12,11,12,7,18,48,29,20],"cases":["host_quote_uses_three_arguments_and_builds_actual_payment_without_mutating_owner","guest_quote_rebuilds_from_correlated_actual_session_reply_once","quote_rejects_wrong_id_key_uid_source_and_session_transport_scope","inline_quote_signal_is_not_overwritten_by_pending_return","malformed_correlated_quote_never_enables_payment","quote_rejects_same_session_new_epoch_or_changed_character_world_context","closed_reopened_or_reselected_panel_rejects_previous_quote","spend_keeps_original_five_fields_and_requests_fresh_quote_after_terminal_result"],"failures":[]}
+ALTAR_QUOTE_FOCUS_RESULT={"assertions":12,"completed":true,"failures":[]}
+  ok    test_altar_essence_quote_bridge.gd :: test_initialized_native_tree_preserves_all_altar_quote_bridge_assertions
+  ok    test_altar_essence_quote_bridge.gd :: test_native_count_guard_compares_json_numbers_without_rounding_or_coercion
+  ok    test_altar_recipe_catalogue.gd :: test_duplicate_altar_identity_in_either_catalogue_table_refuses
+  ok    test_altar_recipe_catalogue.gd :: test_real_homestead_altar_resolves_exact_settled_price_without_mutating_source
+  ok    test_altar_recipe_catalogue.gd :: test_wrong_identity_price_and_malformed_catalogue_refuse
+  ok    test_altar_traits_transport.gd :: test_async_quote_accepts_only_original_scope_and_notifies_existing_ui_signal
+  ok    test_altar_traits_transport.gd :: test_guest_checkpoint_precedes_stage_and_foreign_or_changed_requests_refuse
+  ok    test_altar_traits_transport.gd :: test_release_world_bool_failure_retains_original_and_retries_one_journal
+  ok    test_background_training_combat.gd :: test_bounty_event_authenticated_scope_combat_and_postbattle_retry
+  ok    test_background_training_combat.gd :: test_bounty_missing_or_nonboolean_combat_witness_refuses_fresh
+  ok    test_background_training_combat.gd :: test_bounty_pending_other_action_is_exact_and_never_claims_fresh_bounty
+  ok    test_background_training_combat.gd :: test_bounty_rotation_fresh_waits_and_original_pending_redelivers_in_combat
+  ok    test_background_training_combat.gd :: test_research_fresh_waits_for_combat_then_retries_same_event
+  ok    test_background_training_combat.gd :: test_research_missing_or_malformed_combat_witness_refuses_fresh
+  ok    test_background_training_combat.gd :: test_research_pending_and_accepted_receipt_precede_combat_deferral
+  ok    test_bounty_board.gd :: test_alpha_rematch_candy_and_trait_seed_paths_with_stale_event_refusal
+  ok    test_bounty_board.gd :: test_confirmed_participant_event_matches_trait_and_frozen_instances_only
+  ok    test_bounty_board.gd :: test_delivery_debit_reward_and_receipt_atomic_inventory_full_and_wrong_board_refuse
+  ok    test_bounty_board.gd :: test_empty_board_survives_character_json_reload_without_accepting_partial_state
+  ok    test_bounty_board.gd :: test_existing_journal_replays_exactly_and_registry_rolls_back_failed_world_write
+  ok    test_bounty_board.gd :: test_four_kinds_reward_catalog_and_additive_save_shape
+  ok    test_bounty_board.gd :: test_rotation_exactly_three_unlocked_deterministic_personal_and_no_reroll
+  ok    test_bounty_board.gd :: test_world_hop_reanchors_without_new_reward_instances_or_offline_day_catchup
+  ok    test_combat_mastery_delivery.gd :: test_character_snapshot_without_world_id_accepts_a_valid_retained_event
+  ok    test_combat_mastery_delivery.gd :: test_first_noncombat_resource_stage_initializes_same_real_arbiter
+  ok    test_combat_mastery_delivery.gd :: test_passive_care_gained_between_stage_and_apply_is_kept
+  ok    test_combat_mastery_delivery.gd :: test_remote_shell_retains_failed_hit_and_retries_before_release
+  ok    test_combat_mastery_delivery.gd :: test_retained_hit_rejects_forged_binding_damage_or_epoch_and_preserves_hp
+  ok    test_combat_mastery_delivery.gd :: test_world_and_owner_save_refusal_retry_retains_one_landed_use
+  ok    test_combat_progression.gd :: test_actual_fixture_provider_refuses_non_runner_tree_and_detached_request
+  ok    test_combat_progression.gd :: test_award_victory_credits_battles_fought_to_every_non_fainted_member
+  ok    test_combat_progression.gd :: test_award_victory_does_nothing_with_no_enemy_recorded
+  ok    test_combat_progression.gd :: test_award_victory_records_last_xp_award_for_the_hud
+  ok    test_combat_progression.gd :: test_award_victory_splits_xp_between_the_active_creature_and_its_bench
+  ok    test_combat_progression.gd :: test_can_switch_false_when_not_fighting
+  ok    test_combat_progression.gd :: test_can_switch_false_while_resolving_a_catch
+  ok    test_combat_progression.gd :: test_can_switch_false_while_the_creature_is_committed
+  ok    test_combat_progression.gd :: test_can_switch_respects_the_lockout
+  ok    test_combat_progression.gd :: test_cycle_active_returns_false_with_nothing_to_switch_to
+  ok    test_combat_progression.gd :: test_cycle_active_wraps_and_skips_fainted_members
+  ok    test_combat_progression.gd :: test_disclosed_original_full_topup_uses_exact_actor_receipt_and_survives_terminal
+  ok    test_combat_progression.gd :: test_exact_durable_trainer_round_never_duplicates_local_xp_or_history
+  ok    test_combat_progression.gd :: test_original_typed_damage_survives_terminal_but_rejects_changed_body_and_duplicate
+  ok    test_combat_progression.gd :: test_original_typed_damage_targets_same_retained_actor_after_actual_leave
+  ok    test_combat_progression.gd :: test_owned_pending_health_refuses_switch_without_changing_party
+  ok    test_combat_progression.gd :: test_owned_round_finish_retains_actual_enemy_and_link_until_saved_ack
+  ok    test_combat_progression.gd :: test_request_switch_preserves_the_switched_out_creatures_hp_and_energy
+  ok    test_combat_progression.gd :: test_request_switch_refuses_a_fainted_target
+  ok    test_combat_progression.gd :: test_request_switch_refuses_an_invalid_index
+  ok    test_combat_progression.gd :: test_request_switch_swaps_the_active_index_and_starts_the_lockout
+  ok    test_combat_progression.gd :: test_switchable_indices_excludes_the_active_and_fainted_members
+  ok    test_combat_progression.gd :: test_trainer_fight_auto_switches_when_the_active_creature_faints
+  ok    test_combat_progression.gd :: test_trainer_fight_still_ends_once_the_whole_party_has_fainted
+  ok    test_combat_progression.gd :: test_unowned_or_malformed_durable_answer_preserves_ordinary_award
+  ok    test_combat_progression.gd :: test_validated_owned_binding_never_downgrades_after_writer_or_epoch_change
+  ok    test_combat_progression.gd :: test_wild_encounter_still_ends_on_the_first_faint_d32_unchanged
+  ok    test_combat_round_reward.gd :: test_actual_settled_HP_and_reduced_round_award_keep_all_five_original_cards
+  ok    test_combat_round_reward.gd :: test_authored_completion_bonus_is_separate_without_an_extra_victory
+  ok    test_combat_round_reward.gd :: test_full_care_replay_plus_typed_terminal_HP_checkpoint_has_exact_authority_CAS
+[owner-passive] host resource-owner: input 4 waits: actor_vitals_saved has no host vitals proof yet (t=29391ms)
+  ok    test_combat_round_reward.gd :: test_interleaved_real_care_typed_HP_disk_retry_ACK_and_round_checkpoint_preserve_stream
+  ok    test_combat_round_reward.gd :: test_original_round_owner_BOOL_failure_retries_disk_once_without_replacing_creatures
+  ok    test_combat_round_reward.gd :: test_round_priority_keeps_all_190_originals_and_pending_or_invalid_order
+  FAIL  test_combat_round_reward.gd :: test_terminal_source_and_complete_owner_baseline_refuse_forged_fields
+          expected false, got true  (happiness)
+          expected false, got true  (distance_m_together)
+  ok    test_combat_round_reward.gd :: test_typed_faint_applies_original_condition_once_with_full_core_CAS
+  ok    test_combat_round_reward.gd :: test_typed_faint_owner_disk_loss_retry_and_recovery_do_not_repeat_condition
+  ok    test_den_groom_saved_transaction.gd :: test_disk_failures_original_replay_and_real_saved_ack_never_pay_twice
+  ok    test_den_groom_saved_transaction.gd :: test_first_quote_follows_passive_tick_but_failed_original_never_rebases
+  ok    test_den_groom_saved_transaction.gd :: test_foreign_uid_forged_context_and_care_cap_refuse_without_mutation
+  ok    test_den_groom_saved_transaction.gd :: test_full_bag_refuses_before_consuming_care_or_shed_receipts
+  ok    test_den_groom_saved_transaction.gd :: test_groom_combines_care_shed_and_empty_miss_once_per_owned_uid_day
+  ok    test_den_groom_saved_transaction.gd :: test_groom_journal_rejects_a_different_world_even_with_same_slot_name
+  FAIL  test_den_groom_saved_transaction.gd :: test_guest_passive_drift_remains_an_explicit_owner_baseline_refusal
+          expected owner_action_baseline_conflict, got <null>  (guest packet-transit drift is an outstanding shared-carrier gap, never a Groom success)
+  ok    test_den_groom_saved_transaction.gd :: test_unsent_source_deletion_keeps_original_until_real_missing_source_refusal
+  ok    test_den_saved_transaction.gd :: test_den_index_rejects_fraction_boolean_negative_and_nonfinite_context
+  ok    test_den_saved_transaction.gd :: test_den_rest_journal_survives_json_and_keeps_the_same_owned_creature_and_bed
+  ok    test_f18_arrival_lifecycle.gd :: test_actual_session_save_waiting_requires_its_producer_exact_pending_and_seated_binding
+  ok    test_f18_arrival_lifecycle.gd :: test_durable_original_retries_after_movement_without_second_pose_or_receipt
+  ok    test_f18_arrival_lifecycle.gd :: test_forged_other_permit_session_character_and_destination_rows_do_not_retain_arrival
+  ok    test_f18_arrival_lifecycle.gd :: test_non_durable_journal_cannot_replace_contact_even_after_owner_pose_save
+  ok    test_f18_arrival_lifecycle.gd :: test_permanent_bool_save_failure_retains_original_and_notifies_once
+  ok    test_f18_arrival_lifecycle.gd :: test_retained_row_cannot_survive_live_session_or_world_identity_change
+  ok    test_f18_waystones.gd :: test_only_host_validated_canonical_touch_can_change_a_character
+  ok    test_f18_waystones.gd :: test_touch_failed_world_save_rolls_back_and_reloaded_decision_waits_for_owner_save
+  ok    test_f18_waystones.gd :: test_touch_preserves_inventory_party_and_other_biomes_and_journal_replays_once
+  ok    test_f18_waystones.gd :: test_view_distinguishes_host_unlock_from_portable_unlock_and_names_last_stone
+  ok    test_f19_boss_delivery.gd :: test_captured_boss_duty_keeps_original_epoch_through_real_prepared_and_owner_save_retry
+[session] boss_relic duty for character-a held: declared_test_writer_refusal (t=40787ms)
+  ok    test_f19_boss_delivery.gd :: test_paid_legacy_boss_duty_never_starves_the_next_owed_duty_for_that_character
+  ok    test_f19_participant_delivery.gd :: test_all_four_handoffs_save_each_participants_entire_personal_key_and_relic
+  ok    test_f27_altar_first_send.gd :: test_altar_first_send_cases_in_initialized_tree
+  ok    test_f27_essence_rules.gd :: test_altar_spend_id_replays_as_duplicate_and_conflicts_cannot_mint
+  ok    test_f27_essence_rules.gd :: test_altar_spend_stops_at_cap_and_refuses_without_payment
+  ok    test_f27_essence_rules.gd :: test_automatic_combat_xp_is_reduced_but_never_zero
+  ok    test_f27_essence_rules.gd :: test_care_trickle_is_capped_per_character_per_host_day
+  ok    test_f27_essence_rules.gd :: test_ceremony_release_action_pays_type_essence_and_removes_one
+  ok    test_f27_essence_rules.gd :: test_ceremony_release_requires_the_ceremony_and_a_full_belt
+  ok    test_f27_essence_rules.gd :: test_defeat_payout_is_typed_level_scaled_and_dual_split
+  ok    test_f27_essence_rules.gd :: test_dual_type_may_pay_with_either_essence_or_candy
+  ok    test_f27_essence_rules.gd :: test_eight_type_essences_and_tether_candy_are_stackable_items
+  ok    test_f27_essence_rules.gd :: test_every_type_crop_harvest_pays_its_configured_essence
+  ok    test_f27_essence_rules.gd :: test_no_creature_expedition_or_automation_source_exists
+  ok    test_f27_essence_rules.gd :: test_owner_passive_merge_keeps_the_rows_change_and_the_owners_drift
+  ok    test_f27_essence_rules.gd :: test_passive_care_fields_mirror_the_owner_passive_replay_list
+  ok    test_f27_essence_rules.gd :: test_pending_spend_delivers_once_despite_passive_drift_before_rejoin
+  ok    test_f27_essence_rules.gd :: test_real_conflicts_are_still_refused
+  ok    test_f27_essence_rules.gd :: test_release_pays_the_released_creatures_type_once
+  ok    test_f27_essence_rules.gd :: test_starters_level_through_their_own_type_essence
+  ok    test_f27_essence_rules.gd :: test_wild_defeat_stages_essence_and_reduced_xp_once
+  ok    test_f27_guest_release_service.gd :: test_a_refusal_while_the_owner_guard_is_closed_retries_until_it_opens
+  ok    test_f27_guest_release_service.gd :: test_a_saved_host_row_finishes_paid_and_is_never_also_released_unpaid
+  ok    test_f27_guest_release_service.gd :: test_a_terminal_ceremony_refusal_releases_unpaid
+  ok    test_f27_guest_release_service.gd :: test_an_unchanging_stale_refusal_releases_unpaid_after_the_bound
+  ok    test_f27_guest_wild_share.gd :: test_a_creature_knocked_out_in_the_fight_earns_no_share
+  ok    test_f27_guest_wild_share.gd :: test_a_v1_training_row_follows_an_accepted_v3_action_row
+  ok    test_f27_guest_wild_share.gd :: test_owner_plan_accepts_only_the_owner_holding_the_settled_vitals
+  ok    test_f27_guest_wild_share.gd :: test_retained_share_duty_validates_and_rejects_tampering
+  ok    test_f27_guest_wild_share.gd :: test_settlement_applies_host_saved_hp_and_faint_only
+  ok    test_f27_guest_wild_share.gd :: test_share_action_requires_the_host_frozen_win
+  ok    test_f27_guest_wild_share.gd :: test_share_pays_once_on_the_settled_record_with_battle_credit_and_mood
+  ok    test_f27_guest_wild_share.gd :: test_wild_scope_is_never_a_trainer_round_scope
+  ok    test_f32_catalogue_registration.gd :: test_compatible_duplicate_metadata_merges_but_real_conflicts_refuse
+  ok    test_f32_catalogue_registration.gd :: test_production_overlay_preserves_canonical_economy_and_item_metadata
+  ok    test_f32_essence_census.gd :: test_every_node_is_a_registered_site_on_the_configured_host_day_timer
+  ok    test_f32_essence_census.gd :: test_nodes_are_mostly_off_the_main_route_in_every_biome
+  ok    test_f32_essence_census.gd :: test_one_or_two_nodes_per_type_per_live_biome
+  ok    test_f32_held_tool.gd :: test_bare_hands_still_refuse_tool_sites_with_a_clear_reason
+  ok    test_f32_held_tool.gd :: test_owned_working_tool_is_kept
+  ok    test_f32_held_tool.gd :: test_unowned_or_worn_tool_gathers_as_bare_hands
+  ok    test_f32_material_census.gd :: test_every_live_tier_raw_is_gatherable_in_its_biome
+  ok    test_f32_material_census.gd :: test_f32_runtime_is_the_one_renewable_gate
+  ok    test_f32_material_census.gd :: test_meadows_sunleaf_and_tidewake_pearl_candidates_are_live
+  ok    test_f32_no_butchery_lexicon.gd :: test_runtime_item_text_never_implies_hunting_or_butchery
+  ok    test_f32_no_butchery_lexicon.gd :: test_shed_items_are_registered_and_described_as_naturally_shed
+  ok    test_f32_no_butchery_lexicon.gd :: test_the_scan_catches_butchery_wording
+  ok    test_f32_refusal_text.gd :: test_contention_refusals_read_as_sentences
+  ok    test_f32_refusal_text.gd :: test_existing_sentences_and_pending_fallbacks_are_kept
+  ok    test_f32_type_crops.gd :: test_all_eight_type_crops_are_defined_with_registered_seeds_and_outputs
+  ok    test_f32_type_crops.gd :: test_each_type_crop_grows_through_the_host_transaction_on_the_authored_plot
+  ok    test_f32_type_crops.gd :: test_each_type_crop_ripens_only_on_its_host_day
+  ok    test_f32_type_crops.gd :: test_greenhouse_is_a_farm_buildable_in_the_real_catalogue_not_an_attachment
+  ok    test_f32_type_crops.gd :: test_harvest_is_manual_and_days_never_move_produce_into_inventory
+  ok    test_f32_type_crops.gd :: test_native_types_grow_outdoors_and_off_biome_types_need_the_greenhouse
+  ok    test_f32_water_registration.gd :: test_production_item_db_registers_all_water_proposals
+  ok    test_f32_water_registration.gd :: test_water_crafting_config_has_exactly_ten_recipes
+  ok    test_f32_win_shed.gd :: test_configured_cloudreach_galecrest_win_sheds_skyplume_once
+  ok    test_f32_win_shed.gd :: test_frozen_shed_is_used_as_is_and_malformed_sheds_are_refused
+  ok    test_f32_win_shed.gd :: test_full_satchel_skips_the_shed_but_pays_victory_xp_and_essence
+  ok    test_f32_win_shed.gd :: test_misses_wrong_realms_and_unlisted_species_shed_nothing
+  ok    test_f32_win_shed.gd :: test_nine_key_legacy_event_validates_without_shed_and_keeps_its_receipt
+  ok    test_foundation_capture_scope.gd :: test_completed_alpha_service_does_not_block_the_next_free_slot_catch
+  ok    test_foundation_capture_scope.gd :: test_completed_alpha_service_does_not_steal_the_next_full_roster_ceremony
+  ok    test_foundation_capture_scope.gd :: test_submitted_typed_decision_cannot_fall_back_when_its_offer_disappears
+  ok    test_foundation_combat_manager_context.gd :: test_each_production_manager_allows_idle_and_refuses_active_or_resolving
+  ok    test_foundation_combat_manager_context.gd :: test_hosted_sibling_manager_cannot_answer_for_local_owner
+  ok    test_foundation_combat_manager_context.gd :: test_missing_or_method_only_manager_cannot_authorize_local_action
+  ok    test_foundation_forge_units.gd :: test_exact_refining_recipe_is_typed_only_and_cannot_be_crafted_without_completed_ticket
+  ok    test_foundation_forge_units.gd :: test_unit_completion_requires_owner_saved_decision_and_never_counts_pending_or_wrong_ticket
+  ok    test_foundation_rematch_bosses.gd :: test_halda_lookup_resolves_all_four_real_boss_rosters
+  ok    test_foundation_resource_save.gd :: test_resource_world_bool_failure_rolls_back_then_owner_disk_retry_never_pays_twice
+  ok    test_foundation_resources.gd :: test_authored_farm_till_uses_same_world_and_owner_commit
+  ok    test_foundation_resources.gd :: test_host_stock_and_inventory_share_one_journal_and_survive_json_reload_without_repaying
+  ok    test_foundation_resources.gd :: test_legacy_depletion_wait_is_saved_once_and_does_not_move_when_reloaded
+  ok    test_foundation_resources.gd :: test_resource_refusals_and_forged_stock_ops_leave_both_records_unchanged
+  ok    test_foundation_retry_admission.gd :: test_retry_invalid_original_cannot_enter_no_progress_bucket
+  ok    test_foundation_retry_admission.gd :: test_retry_no_progress_uses_post_admission_revision_and_each_scan_admits_fresh
+  ok    test_foundation_retry_admission.gd :: test_retry_pending_receipt_redelivers_original_before_no_progress_exclusion
+[session] research_event duty for resource-owner held: fixture_no_write (t=72351ms)
+  ok    test_foundation_retry_admission.gd :: test_retry_revision_change_rechecks_previously_saturated_semantics
+[session] research_event duty for resource-owner held: fixture_no_write (t=72456ms)
+  ok    test_foundation_retry_admission.gd :: test_retry_saturated_cast_bucket_keeps_different_move_signature_progress
+[session] research_event duty for resource-owner held: fixture_no_write (t=72580ms)
+  ok    test_foundation_retry_admission.gd :: test_retry_saturated_casts_bound_admission_without_starving_later_catch
+  ok    test_foundation_retry_admission.gd :: test_retry_skips_fighting_and_accepted_duties_before_projection_but_admits_pending
+  ok    test_foundation_retry_admission.gd :: test_trainer_send_out_gap_defers_mastery_and_preserves_original_pending_delivery
+[session] combat_mastery duty for resource-owner held: fixture_no_write (t=73182ms)
+[session] combat_mastery duty for resource-owner held: fixture_no_write (t=73370ms)
+  ok    test_foundation_retry_order.gd :: test_accepted_progression_does_not_starve_remaining_mastery
+[session] boss_relic duty for resource-owner held: fixture_no_write (t=73591ms)
+[session] master_win duty for resource-owner held: fixture_no_write (t=73797ms)
+  ok    test_foundation_retry_order.gd :: test_completed_boss_and_master_precede_190_mastery_originals
+  ok    test_foundation_retry_order.gd :: test_missing_invalid_or_foreign_latest_keeps_original_order
+[session] boss_relic duty for resource-owner held: fixture_no_write (t=74168ms)
+[session] boss_relic duty for resource-owner held: fixture_no_write (t=74462ms)
+  ok    test_foundation_retry_order.gd :: test_pending_original_recovers_before_later_boss_without_new_admission
+  ok    test_foundation_retry_order.gd :: test_priority_is_stable_and_preserves_exact_event_and_duty_references
+[session] combat_mastery duty for resource-owner held: fixture_no_write (t=74788ms)
+  ok    test_foundation_retry_order.gd :: test_unsettled_boss_ceremony_preserves_ordinary_mastery_progress
+  ok    test_foundation_travel_protocol.gd :: test_consumed_guest_permit_survives_failed_save_and_requires_correlated_notice
+  ok    test_foundation_travel_protocol.gd :: test_guest_ending_fields_require_original_personal_answer_home_receipt_and_canonical_party
+  ok    test_foundation_travel_protocol.gd :: test_lifecycle_has_no_action_or_coordinates_and_requires_every_observation
+  ok    test_foundation_travel_protocol.gd :: test_local_swimming_observation_matches_actual_realm_controller_lifecycle
+  ok    test_guest_groom_passive_sync.gd :: test_actual_locked_landmark_refuses_before_counter_or_disk_ack
+  ok    test_guest_groom_passive_sync.gd :: test_native_delayed_preparation_and_bool_retry_enter_existing_groom_journal
+  ok    test_guest_groom_passive_sync.gd :: test_observation_preserves_pending_visits_but_refuses_time_across_feed_or_new_uid
+  ok    test_guest_groom_passive_sync.gd :: test_owner_bool_save_precedes_ack_retries_keep_uid_and_restart_uses_disk_baseline
+  ok    test_guest_groom_passive_sync.gd :: test_reservation_protects_core_and_admission_discoveries_survive_replacement
+  ok    test_guest_groom_passive_sync.gd :: test_same_host_reoffers_original_until_seat_expiry_without_touching_saved_world_row
+  ok    test_home_key_action.gd :: test_actual_portable_projection_carries_only_strict_finite_home_key_debt_without_synthetic_receipts
+  ok    test_home_key_action.gd :: test_cross_world_delivery_uses_admitted_original_escrow_and_host_capacity_once
+  ok    test_home_key_action.gd :: test_existing_physical_key_suppresses_duplicate_without_adding_another
+  ok    test_home_key_action.gd :: test_json_numeric_equivalence_keeps_exact_finite_debt_schema_owner_and_hash
+  ok    test_home_key_action.gd :: test_legacy_alias_of_full_bag_debt_survives_save_reload_and_admission_without_becoming_a_second_gift
+  ok    test_home_key_action.gd :: test_legacy_alias_of_saved_given_flag_preserves_one_physical_key_and_all_saved_receipts
+  ok    test_home_key_action.gd :: test_malformed_aliases_and_wrong_escrow_keys_are_not_silently_excluded_from_admission_validation
+  ok    test_home_key_action.gd :: test_owe_action_durably_carries_full_bag_debt_without_mutating_inventory
+  ok    test_home_key_action.gd :: test_real_registry_hides_inventory_cas_until_saved_delivery_ack_and_rolls_back_failed_world_save
+  ok    test_ordinary_actor_vitals_recovery.gd :: test_accepted_duplicate_repairs_lost_actual_arbiter_ack_without_world_write
+  ok    test_ordinary_actor_vitals_recovery.gd :: test_actual_prepared_damage_fixture_heal_BOOL_retry_next_damage_and_round_projection
+  ok    test_ordinary_actor_vitals_recovery.gd :: test_completion_replays_exact_accepted_round_actor_promotion_without_new_body
+  ok    test_ordinary_actor_vitals_recovery.gd :: test_fixture_full_heal_refuses_foreign_peer_generation_epoch_amount_pending_and_terminal_sources
+  ok    test_ordinary_actor_vitals_recovery.gd :: test_rejoined_stable_owner_repairs_original_ack_and_rejects_foreign_proofs
+  ok    test_ordinary_actor_vitals_recovery.gd :: test_terminal_actual_leave_composes_original_ack_with_global_sequence_proof
+  ok    test_ordinary_actor_vitals_recovery.gd :: test_terminal_full_record_requires_exact_original_accepted_hp_transition
+PASSIVE_NATIVE_RESULT={"assertions":5.0,"case":"_native_case_backpack_target_guard_precedes_any_care_or_item_write","completed":true,"failures":[]}
+  ok    test_owner_passive_game_hooks.gd :: test_actual_backpack_target_fence
+PASSIVE_NATIVE_RESULT={"assertions":10.0,"case":"_native_case_game_fence_blocks_recording_but_disabled_recorder_keeps_care","completed":true,"failures":[]}
+  ok    test_owner_passive_game_hooks.gd :: test_actual_game_existing_fence_and_disabled_recorder
+PASSIVE_NATIVE_RESULT={"assertions":34.0,"case":"_native_case_game_records_exact_ticks_discoveries_and_replays_live_record","completed":true,"failures":[]}
+  ok    test_owner_passive_game_hooks.gd :: test_actual_game_input_hooks_replay_identically
+PASSIVE_NATIVE_RESULT={"assertions":25.0,"case":"_native_case_game_same_stream_fence_reset_replays_exactly","completed":true,"failures":[]}
+  ok    test_owner_passive_game_hooks.gd :: test_actual_game_same_stream_fence_reset
+  ok    test_owner_passive_preparation.gd :: test_capture_checkpoint_binds_original_offer_without_granting_its_creature
+  ok    test_owner_passive_preparation.gd :: test_exact_cas_retry_after_failed_real_research_stage_and_stale_ack
+  ok    test_owner_passive_preparation.gd :: test_owner_requires_full_exact_checkpoint_and_original_source
+  ok    test_owner_passive_preparation.gd :: test_request_cas_preserves_quote_then_original_altar_stage_advances_once_and_retries
+  ok    test_owner_passive_preparation.gd :: test_request_codec_preserves_distinct_authenticated_source_kinds_and_exact_owner_state
+  ok    test_owner_passive_preparation.gd :: test_reservation_requires_local_cursor_and_same_existing_lock
+  ok    test_owner_passive_preparation.gd :: test_same_revision_request_checkpoint_rejects_stale_before_and_other_transaction_locks
+  ok    test_owner_passive_replay.gd :: test_clone_isolation_and_trusted_realm_transition_start_new_travel_baseline
+  ok    test_owner_passive_replay.gd :: test_complete_roster_order_is_required_and_all_existing_cards_tick
+  ok    test_owner_passive_replay.gd :: test_confirmed_reset_keeps_landmark_range_and_one_visit_per_poll
+  ok    test_owner_passive_replay.gd :: test_discovery_refuses_bad_cadence_speed_realm_geometry_and_replayed_ids
+  ok    test_owner_passive_replay.gd :: test_discovery_uses_original_polyline_and_one_credit_per_poll
+  ok    test_owner_passive_replay.gd :: test_exact_original_condition_steps_cross_threshold_and_preserve_full_core
+  ok    test_owner_passive_replay.gd :: test_only_trusted_long_discontinuity_bypasses_speed_without_walking_credit
+  ok    test_owner_passive_replay.gd :: test_rejects_bad_sequence_roster_time_and_replacement_without_mutation
+  ok    test_owner_passive_replay.gd :: test_same_stream_reset_requires_exact_host_endpoint_and_preserves_original_credit
+  ok    test_owner_passive_sync.gd :: test_capture_choice_checkpoint_keeps_original_and_only_saved_ack_reenters_handler
+  ok    test_owner_passive_sync.gd :: test_cloud_portal_navigation_bind_rebases_only_host_proved_discoveries_before_next_portal
+  ok    test_owner_passive_sync.gd :: test_core_change_before_checkpoint_refuses_without_owner_write
+  ok    test_owner_passive_sync.gd :: test_failed_bool_save_never_acks_or_installs_and_success_is_exact
+  ok    test_owner_passive_sync.gd :: test_gate_binds_a_remote_boss_relic_duty_with_its_world_namespace
+  ok    test_owner_passive_sync.gd :: test_gate_binds_real_retained_duty_and_reuses_original_checkpoint
+  ok    test_owner_passive_sync.gd :: test_host_accepted_travel_reset_is_exact_single_use_and_grants_no_distance
+  ok    test_owner_passive_sync.gd :: test_host_duplicate_input_is_idempotent_and_conflict_does_not_promote
+  ok    test_owner_passive_sync.gd :: test_host_sequence_gap_and_initial_remote_pose_refused
+  ok    test_owner_passive_sync.gd :: test_legacy_typed_accepted_row_rebases_full_record_and_duplicate_keeps_progress
+[owner-passive] host resource-owner: input 2 waits: no host body for this owner in meadows (t=132922ms)
+  ok    test_owner_passive_sync.gd :: test_missing_remote_body_defers_exact_discovery_without_poisoning_stream
+  ok    test_owner_passive_sync.gd :: test_no_progress_exact_reply_releases_fence_into_retryable_rebase
+  ok    test_owner_passive_sync.gd :: test_portal_codec_binds_consumed_permit_without_faking_grounded_departure
+  ok    test_owner_passive_sync.gd :: test_portal_known_origin_save_disconnect_preserves_rejoin_baseline_without_arrival
+  ok    test_owner_passive_sync.gd :: test_portal_lost_origin_ack_rejoin_requires_fresh_bool_and_replays_new_care
+  ok    test_owner_passive_sync.gd :: test_portal_origin_checkpoint_reserves_without_promoting_until_actual_ground
+  ok    test_owner_passive_sync.gd :: test_portal_owner_freeze_blocks_new_inputs_and_pose_save_requires_exact_saved_token
+  ok    test_owner_passive_sync.gd :: test_portal_recovery_refuses_changed_hello_and_old_scope_without_discarding_original
+  ok    test_owner_passive_sync.gd :: test_portal_refusal_owner_fence_releases_only_after_exact_no_effect_rebase
+  ok    test_owner_passive_sync.gd :: test_portal_refusal_preserves_saved_care_and_immutable_journal
+  ok    test_owner_passive_sync.gd :: test_portal_repeated_recovery_bool_ack_loss_keeps_only_exact_latest_candidates
+  ok    test_owner_passive_sync.gd :: test_portal_unsaved_origin_rejoin_cancels_original_only_after_fresh_bool
+[owner-passive] ignored inputs_ack for another session_epoch
+  ok    test_owner_passive_sync.gd :: test_recording_reset_and_authenticated_ordered_ack
+  ok    test_owner_passive_sync.gd :: test_request_host_preserves_original_scope_and_same_revision_on_failed_world_retry
+  ok    test_owner_passive_sync.gd :: test_request_owner_requires_existing_exact_request_and_actual_bool_save
+  ok    test_owner_passive_sync.gd :: test_terminal_request_refusal_rebases_only_the_exact_saved_checkpoint
+  ok    test_owner_passive_sync.gd :: test_typed_vitals_records_host_journal_epoch_independently_of_transport_and_guest_writer
+  ok    test_owner_passive_sync.gd :: test_typed_vitals_requires_current_transport_scope_and_exact_original_host_journal
+  ok    test_prepared_training_owner_identity.gd :: test_actual_prepared_altar_owner_write_uses_local_identity_and_preserves_original_bool_retry
+  ok    test_prepared_training_owner_identity.gd :: test_actual_prepared_writer_preserves_full_v2_and_v3_pending_owner_projection
+  ok    test_research_log.gd :: test_all_tasks_complete_biome_title_and_no_combat_reward
+  ok    test_research_log.gd :: test_cast_signature_catch_history_and_unconfirmed_events_refuse
+  ok    test_research_log.gd :: test_claim_atomic_capacity_replay_and_existing_journal_owner_plan
+  ok    test_research_log.gd :: test_every_registered_species_tasks_types_and_no_unknown_catalog_ids
+  ok    test_research_log.gd :: test_personal_replay_progress_released_and_never_owned_serialization
+  ok    test_research_passive_authority.gd :: test_commit_and_failed_world_write_retry_preserve_exact_original
+  ok    test_research_passive_authority.gd :: test_research_and_existing_transaction_reservations_exclude_each_other
+  ok    test_research_passive_authority.gd :: test_reserve_does_not_promote_before_bool_ack_and_rejoin_cannot_replace_it
+  ok    test_research_passive_authority.gd :: test_revision_core_hash_and_retained_source_changes_refuse_without_mutation
+  ok    test_research_passive_preparation.gd :: test_exact_retained_duty_derivation_and_input_isolation
+  ok    test_research_passive_preparation.gd :: test_hash_keeps_large_integral_floats_without_int64_conversion
+  ok    test_research_passive_preparation.gd :: test_hash_retains_float_bits_and_lossless_document_roundtrip
+  ok    test_research_passive_preparation.gd :: test_malformed_shapes_revisions_observations_and_discoveries_refuse
+  ok    test_research_passive_preparation.gd :: test_owner_plan_preserves_progress_maps_and_every_nonpassive_field
+  ok    test_research_passive_preparation.gd :: test_passive_counters_keep_existing_storage_range_and_exact_owner_progress
+  ok    test_research_passive_preparation.gd :: test_passive_field_omissions_and_invalid_scalars_refuse_cleanly
+  ok    test_research_passive_preparation.gd :: test_rejects_unretained_foreign_operation_identity_and_tampering
+  ok    test_tm_teach_transaction.gd :: test_actual_owner_installer_preserves_instances_and_failed_bool_write_retries_without_second_debit_or_ack
+  ok    test_tm_teach_transaction.gd :: test_backpack_restarts_original_tm_intent_and_never_reports_unsaved_or_unacknowledged_success
+  ok    test_tm_teach_transaction.gd :: test_tm_existing_registry_failed_world_write_rolls_back_then_original_json_row_recovers_and_requires_owner_ack
+  ok    test_tm_teach_transaction.gd :: test_tm_refuses_foreign_target_bad_intent_missing_disc_combat_and_stale_revision_without_mutation
+  ok    test_tm_teach_transaction.gd :: test_tm_stage_consumes_one_disc_teaches_only_chosen_uid_and_preserves_every_equipped_and_mastery_field
+  ok    test_trait_ui.gd :: test_every_trait_has_a_non_empty_description
+  ok    test_trait_ui.gd :: test_the_creature_detail_panel_builds_a_trait_description_label
+  ok    test_trait_ui.gd :: test_the_empty_slot_state_clears_the_trait_description
+  ok    test_trait_ui.gd :: test_the_trait_description_label_is_actually_filled_from_trait_db
+  ok    test_traits_inactive_runtime.gd :: test_initialized_projection_does_not_enable_passive_traits
+  ok    test_traits_inactive_runtime.gd :: test_initialized_shipped_traits_apply_once_and_preserve_hp_fraction
+  ok    test_traits_inactive_runtime.gd :: test_legacy_gentle_does_not_activate_new_healing_bonus
+  ok    test_traits_inactive_runtime.gd :: test_legacy_sturdy_does_not_add_new_defence_multiplier
+
+296 tests, 7324 assertions, 2 failed
+
+  test_combat_round_reward.gd :: test_terminal_source_and_complete_owner_baseline_refuse_forged_fields — expected false, got true  (happiness)
+  test_combat_round_reward.gd :: test_terminal_source_and_complete_owner_baseline_refuse_forged_fields — expected false, got true  (distance_m_together)
+  test_den_groom_saved_transaction.gd :: test_guest_passive_drift_remains_an_explicit_owner_baseline_refusal — expected owner_action_baseline_conflict, got <null>  (guest packet-transit drift is an outstanding shared-carrier gap, never a Groom success)
+exit 1

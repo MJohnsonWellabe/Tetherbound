@@ -344,7 +344,7 @@ func test_first_quote_follows_passive_tick_but_failed_original_never_rebases() -
 	session.free()
 	game.free()
 
-func test_guest_passive_drift_remains_an_explicit_owner_baseline_refusal() -> void:
+func test_guest_passive_drift_in_transit_is_merged_not_refused() -> void:
 	var player := _player()
 	var before := RECORD.portable_projection(player.save_data())
 	var row := _row(before, _intent(before), _context())
@@ -354,6 +354,12 @@ func test_guest_passive_drift_remains_an_explicit_owner_baseline_refusal() -> vo
 	condition.tick(player.party.at(0), condition.config(), 1.0)
 	var arrived := RECORD.portable_projection(player.save_data())
 	assert_false(E._equivalent(arrived, before))
-	assert_eq(DELIVERY.owner_plan(arrived, row, RECORD.errors).get("code"), "owner_action_baseline_conflict",
-		"guest packet-transit drift is an outstanding shared-carrier gap, never a Groom success")
+	# Formerly an outstanding shared-carrier gap (a refusal); passive care
+	# accrued in transit is now merged at install (essence.merge_owner_passive).
+	var plan := DELIVERY.owner_plan(arrived, row, RECORD.errors)
+	assert_true(plan.get("ok") == true and plan.get("duplicate") == false, "packet-transit care drift is the owner's, not a conflict " + str(plan))
+	var merged := E.merge_owner_passive(row.after, row.before, arrived)
+	assert_true(E.owner_matches_after(merged, row.after), "the groom's decided result stands")
+	assert_eq(merged.party[0].nourishment, arrived.party[0].nourishment + row.after.party[0].nourishment - row.before.party[0].nourishment,
+		"with the owner's own drift kept")
 	assert_eq(player.inventory.count("fiber"), 0)

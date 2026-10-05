@@ -3422,7 +3422,9 @@ func apply_host_enemy_hit(payload: Dictionary) -> void:
 	var creature := active_creature()
 	if creature == null:
 		return
-	var canonical: bool = _durable_trainer_reward_owned()
+	# F27: a guest's hit in a canonical wild fight arrives only after its owner
+	# saved the host's vitals row, carrying that receipt (wild_actor_scope.gd).
+	var canonical: bool = _durable_trainer_reward_owned() or payload.get("actor_vitals_receipt") is Dictionary
 	if canonical and not _saved_actor_vitals_matches(creature, payload): return
 	if canonical and not _admit_host_feedback(_seen_impact_actions, payload.get("impact", {})): return
 	# Host rolls the base strike; this character's one active relic applies

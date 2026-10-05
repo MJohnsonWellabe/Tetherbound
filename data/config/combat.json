@@ -2,8 +2,8 @@
   "_comment": "Combat tuning. ALL of it is TUNABLE and none of it is a mechanic. M2 exists to answer one question: is the fight worth repeating? The expected feedback is 'too slow', 'too spongy', 'the charged attack isn't worth waiting for', 'I keep missing' \u2014 every one of those has to be answerable by editing this file.",
   "_comment_model": "Combat is PILOTED, not commanded: see docs/decisions/D07-combat-is-piloted-not-commanded.md. The player takes over their creature, both fighters move inside a bounded arena, and attacks are aimed and can miss.",
   "actor_vitals": {
-    "_scope": "Canonical admitted actor/prepared world/owner-save pipeline. Remains disabled until actual solo/local/guest callers and failure/rejoin paths are integrated and verified.",
-    "runtime_enabled": false
+    "_scope": "Canonical admitted actor/prepared world/owner-save pipeline. On since F27: solo/host wild fights (smoke_combat, smoke_f27_wild_defeat_essence) and guest wild wins with a mid-settlement drop and rejoin (smoke_net_f27_guest_wild_win) are integrated and verified.",
+    "runtime_enabled": true
   },
   "utility_limits": {
     "_scope": "Host encounter action receipts; fail closed at the bound without evicting replay history.",
