@@ -4,8 +4,11 @@ extends "res://tools/capture_lookdev_route.gd"
 ## production route, floor, camera and navigation are inherited unchanged.
 ## Both packages receive identical uncapping and monitor instrumentation.
 const PROFILE_WRITER := preload("capture_manifest_writer.gd")
+const ENGINE_PROFILE := preload("packaged_engine_profiler.gd")
 var _profile_rows: Array[Dictionary] = []
+var _engine_rows: Array[Dictionary] = []
 var _profile_started := false
+var _profiler: EngineProfiler
 
 
 func _run() -> void:
@@ -20,11 +23,23 @@ func _run() -> void:
 	Engine.max_fps = 0
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_DISABLED)
 	RenderingServer.viewport_set_measure_render_time(root.get_viewport_rid(), true)
+	if not EngineDebugger.is_active():
+		print("Packaged diagnostic profile requires --debug engine iteration callbacks")
+		quit(2)
+		return
+	_profiler = ENGINE_PROFILE.new()
+	_profiler.set("capture", _record_engine_iteration)
+	EngineDebugger.register_profiler(&"tetherbound_perf", _profiler)
+	EngineDebugger.profiler_enable(&"tetherbound_perf", true)
 	await super._run()
+	EngineDebugger.profiler_enable(&"tetherbound_perf", false)
+	EngineDebugger.unregister_profiler(&"tetherbound_perf")
+	_profiler = null
 
 
 func _capture_route_case() -> void:
 	_profile_rows.clear()
+	_engine_rows.clear()
 	_profile_started = false
 	await super._capture_route_case()
 
@@ -52,9 +67,20 @@ func _record_frame() -> void:
 	_profile_rows.append(row)
 
 
-func _write_route_receipt(complete: bool) -> void:
-	if _profile_started:
+func _record_engine_iteration(row: Dictionary) -> void:
+	# Exclude the iteration containing start.png and any partial tail.
+	if _measuring and _profile_started and not _profile_rows.is_empty() \
+			and int(_profile_rows.back().process_frame) == int(row.process_frame):
+		_engine_rows.append(row)
+
+
+func _route_still(label: String) -> void:
+	if label == "end" and _profile_started:
 		print("PERF_ROUTE_END biome=", _biome_id, " frames=", _profile_rows.size())
+	await super._route_still(label)
+
+
+func _write_route_receipt(complete: bool) -> void:
 	super._write_route_receipt(complete)
 	var document := {
 		"complete": complete and _failures.is_empty() and _profile_rows.size() == _samples.size(),
@@ -66,7 +92,9 @@ func _write_route_receipt(complete: bool) -> void:
 		"physics_ticks_per_second": Engine.physics_ticks_per_second, "time_scale": Engine.time_scale,
 		"render_loop_enabled": RenderingServer.render_loop_enabled, "debug_build": OS.is_debug_build(),
 		"instrumentation_sha256": FileAccess.get_sha256(get_script().resource_path),
-		"rows": _profile_rows, "failures": _failures,
+		"engine_profiler_sha256": FileAccess.get_sha256(get_script().resource_path.get_base_dir().path_join("packaged_engine_profiler.gd")),
+		"writer_sha256": FileAccess.get_sha256(get_script().resource_path.get_base_dir().path_join("capture_manifest_writer.gd")),
+		"rows": _profile_rows, "engine_iterations": _engine_rows, "failures": _failures,
 		"scope": "Same pinned packaged production routes with an external monitor-only overlay. Godot 4.7 TIME_PROCESS/TIME_PHYSICS_PROCESS are cached roughly one-second maxima, not frame-specific or step-specific costs. Correlated slowest-1% means rows selected by wall_ms with those cached readings, not each monitor's independent maximum. GPU timestamp measurement and --gpu-profile have identical instrumentation overhead in A/B. No scene edits, clip override, owner Ally acceptance or earned-campaign proof.",
 	}
 	if PROFILE_WRITER.write_json(_output_dir.path_join("performance.json"), document) != OK:
