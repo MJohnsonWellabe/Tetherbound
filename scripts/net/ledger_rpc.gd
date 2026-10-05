@@ -398,7 +398,11 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 		if session == null: return _pending(intent, false, "Altar building is not ready yet.")
 		return session.call("host_altar_building", peer_id, altar.request)
 	var satchel_transaction := kind in ["death_satchel_create", "death_satchel_transfer"]
-	var durable_world_transaction := satchel_transaction or kind in ["reward_grant", "water_dock_action", "river_nest_clear", "ripplet_sunken_claim"]
+	# A guest's one-time find pays through a journaled reward delivery
+	# (world_ledger._claim_pickup), so it saves like any other reward.
+	var guest_pickup := kind == "claim_pickup" and peer_id != _local_peer_id() and not str(intent.get("item", "")).is_empty() \
+		and WORLD_LEDGER.guest_pickup_routed(str(intent.get("flag", ""))) and not _registered_character(peer_id).is_empty()
+	var durable_world_transaction := satchel_transaction or guest_pickup or kind in ["reward_grant", "water_dock_action", "river_nest_clear", "ripplet_sunken_claim"]
 	var before_satchel: Dictionary = {}
 	if durable_world_transaction:
 		before_satchel = {"world": ledger.world.save_data(), "seq": ledger.seq,
@@ -458,7 +462,7 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 		# Reward and dock publication always require a durable world file. Death-
 		# satchel fixtures historically allow an unnamed session, so preserve only
 		# that legacy path.
-		if kind in ["reward_grant", "water_dock_action", "river_nest_clear", "ripplet_sunken_claim"] or not world_id.is_empty():
+		if guest_pickup or kind in ["reward_grant", "water_dock_action", "river_nest_clear", "ripplet_sunken_claim"] or not world_id.is_empty():
 			var saver: RefCounted = satchel_game.get("save_system")
 			if saver == null or not bool(saver.call("save_world", satchel_game, world_id)):
 				# No personal settlement or publication happened yet. Roll back
@@ -476,6 +480,7 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 							"The world could not save Doss's repair. Your items remain safe." \
 							if kind == "river_nest_clear" else "The world could not save this satchel move. Your items remain safe."))
 				if kind == "ripplet_sunken_claim": failure_reason = "The sunken find could not save. Nothing was claimed."
+				if guest_pickup: failure_reason = "The world could not save this find. Nothing was claimed."
 				return {"ok": false, "pending": false, "kind": str(intent.kind), "peer": peer_id,
 					"code": "journal_failed", "reason": failure_reason,
 					"world_instance_id": SATCHEL_ESCROW.world_instance(ledger.world),
@@ -483,7 +488,7 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 	# A host recipient can durably ACK while its player op is applied. Publish
 	# the pending journal first so its later acceptance delta cannot overtake it
 	# on the same reliable ledger channel.
-	if kind in ["reward_grant", "river_nest_clear", "ripplet_sunken_claim"]:
+	if guest_pickup or kind in ["reward_grant", "river_nest_clear", "ripplet_sunken_claim"]:
 		delta_applied.emit(delta)
 		if _can_rpc() and _is_multi_peer():
 			rpc("_rpc_delta", delta)

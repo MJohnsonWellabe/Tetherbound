@@ -29,10 +29,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		return await _craft_at_host_kitchen(args)
 	if action == "craft_count":
 		return _craft_count(args)
-	if action == "craft_fund":
-		return _craft_fund(args)
-	if action == "craft_host_new_world":
-		return await _craft_host_new_world(args)
+	if action == "craft_authority_count":
+		return _craft_authority_count(args)
 	if action == "relic_power_attempt":
 		return await _relic_power_attempt(args)
 	return await super._execute_step(msg)
@@ -407,11 +405,12 @@ func _home_bed_status() -> Dictionary:
 ## F31#5 homestead craft actions (tests/smoke_net_homestead_station_craft.gd).
 ## Disclosed fixtures: the host stands at the paid-path smoke's open
 ## homestead stance, the host's station costs are added to its own
-## inventory, the guest's ingredients are added to its own portable character
-## and saved by a production leave before it visits a fresh host world, and
-## the guest stands beside the host's Kitchen. Placement, admission, crafting
-## and saving use the ordinary paths (build placer press, returning join,
-## Session.homestead_submit_action, production leave).
+## inventory, the guest's ingredients are world finds the smoke stands
+## (peer_runner pickup_stand) and the guest claims through the host's ledger,
+## and the guest stands beside the host's Kitchen. Placement, gathering,
+## crafting and saving use the ordinary paths (build placer press, ledger
+## claim and reward delivery, Session.homestead_submit_action, production
+## leave).
 const CRAFT_STANCE := Vector3(-6.0, 1.4, 22.0)
 const CRAFT_DELIVERY := preload("res://scripts/net/homestead_building_delivery.gd")
 const CRAFT_STATION_RULES := preload("res://scripts/build/station_rules.gd")
@@ -419,41 +418,25 @@ const CRAFT_STATION_RULES := preload("res://scripts/build/station_rules.gd")
 func _inventory_count(id: String) -> int:
 	return int(root.get_node("Game").get("inventory").call("count", id))
 
-## Fixture stock on the guest's own portable character (local add, then the
-## production leave saves it). A world admits a guest's record once and keeps
-## it in its own save, so the smoke brings this saved stock into a world the
-## guest has never visited (craft_host_new_world), as a player brings
-## supplies from home.
-func _craft_fund(args: Dictionary) -> Dictionary:
-	var inventory: RefCounted = root.get_node("Game").get("inventory")
-	for row: Variant in args.get("items", []):
-		inventory.call("add", str(row[0]), int(row[1]))
-	return _craft_count({"ids": args.get("ids", [])})
-
-## The host leaves its current world (guest already departed), returns to the
-## real title and hosts a fresh world through the ordinary New Game path.
-func _craft_host_new_world(args: Dictionary) -> Dictionary:
+## Host: the guest's item counts on the host's own CharacterAuthority record,
+## the record every station craft reads (read-only).
+func _craft_authority_count(args: Dictionary) -> Dictionary:
 	var sess := _session()
-	if sess == null or not bool(sess.call("is_host")) or int(sess.call("peer_count")) != 1:
-		return {"verdict": "FAIL", "detail": "a new world requires the actual host with the guest departed"}
-	var old_world := str(root.get_node("Game").get("world").get("world_id"))
-	var left: Dictionary = await _step_leave({})
-	if str(left.get("verdict", "")) != "PASS":
-		return left
-	if change_scene_to_file(TITLE_SCENE) != OK:
-		return {"verdict": "FAIL", "detail": "could not return host to title"}
-	for frame in 120:
-		await physics_frame
-		if current_scene != null and current_scene.is_in_group("title_screen"):
-			break
-	var started: Dictionary = await _step_production_host(args)
-	if str(started.get("verdict", "")) != "PASS":
-		return started
-	var ready: Dictionary = await _hall_wait_host_ready(started)
-	var new_world := str(root.get_node("Game").get("world").get("world_id"))
-	if str(ready.get("verdict", "")) == "PASS" and new_world == old_world:
-		return {"verdict": "FAIL", "detail": "the host re-entered the same world %s" % old_world}
-	return ready
+	if sess == null or not bool(sess.call("is_host")):
+		return {"verdict": "FAIL", "detail": "authority counts are read on the host"}
+	var authority: RefCounted = sess.get("_character_authority")
+	var character := str(args.get("character_id", ""))
+	var state: Dictionary = authority.call("state", character) if authority != null else {}
+	if state.is_empty() or not state.get("inventory") is Array:
+		return {"verdict": "FAIL", "detail": "no host authority record for %s" % character}
+	var counts := {}
+	for id: Variant in args.get("ids", []):
+		var n := 0
+		for slot: Variant in state.inventory:
+			if slot is Dictionary and str(slot.get("id", "")) == str(id):
+				n += int(slot.get("n", 0))
+		counts[str(id)] = n
+	return {"verdict": "PASS", "detail": "host authority counts read", "data": {"counts": counts, "character_id": character}}
 
 func _craft_count(args: Dictionary) -> Dictionary:
 	var out := {}

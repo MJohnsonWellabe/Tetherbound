@@ -153,6 +153,7 @@ const MULTIPLAYER_CONFIG := "res://data/config/multiplayer.json"
 ## entry such as "stormwood:" cannot silently lock ordinary world flags.
 const OWNED_FLAG_PREFIX_MARK := "legendary_resolution:"
 const HOST_PEER := preload("res://scripts/net/peer_registry.gd").HOST_PEER_ID
+const DROPPED_FLAG_PREFIX := "dropped:" # dropped_item.gd FLAG_PREFIX
 ## `reward_grant` sources only host code may journal. These trainers' delivery
 ## rows are the Guardian's and the Warden climax's participant journals, and
 ## since client trainer wins are host-journaled (`trainer_victory`) the host is
@@ -486,8 +487,53 @@ func _claim_pickup(intent: Dictionary, peer_id: int, realm: String) -> Dictionar
 	var item := str(intent.get("item", ""))
 	var count := maxi(1, int(intent.get("count", 1)))
 	if not item.is_empty():
-		ops.append(_item_grant(peer_id, item, count))
+		var character_id := str(intent.get("_actor_character_id", ""))
+		# Without an admitted character (no session identity to key the receipt
+		# on) the claim keeps the direct grant, as before.
+		if peer_id != HOST_PEER and guest_pickup_routed(flag) and not character_id.is_empty():
+			# A guest's find is a personal grant from a world source: a journaled
+			# reward delivery, so the host's character authority gains it exactly
+			# once when the guest applies and saves it (owner_passive_sync's
+			# reward_delivery_applied). A bare item_grant would reach only the
+			# guest's local satchel. The host and solo keep the direct grant.
+			# _commit's flag gates decide first, as for any flag writer.
+			var gated := _flag_gate(ops, "claim_pickup", peer_id)
+			if not gated.is_empty():
+				return gated
+			var delivery := guest_pickup_delivery(world, flag, character_id, item, count)
+			if delivery.is_empty():
+				return _refuse("claim_pickup", peer_id, "world_not_ready", "Save this world before gathering.")
+			if (world.get("reward_deliveries") as Dictionary).has(str(delivery.delivery_id)):
+				return _refuse("claim_pickup", peer_id, "already_taken", "Someone else got there first.")
+			ops.append({"op": "reward_delivery_journal", "scope": "world", "realm": realm,
+				"delivery_id": delivery.delivery_id, "delivery": delivery})
+			ops.append({"op": "reward_delivery", "scope": "player", "realm": realm,
+				"peers": [peer_id], "delivery": delivery})
+		else:
+			ops.append(_item_grant(peer_id, item, count))
 	return _commit(ops, "claim_pickup", peer_id, realm)
+
+
+## Whether a guest's claim of this find pays through a reward delivery. A
+## player-dropped stack (dropped_item.gd) is excluded: its drop left only the
+## dropper's local satchel, so granting its pickup to the character authority
+## would mint an item the authority never lost.
+static func guest_pickup_routed(flag: String) -> bool:
+	return not flag.is_empty() and not flag.begins_with(DROPPED_FLAG_PREFIX)
+
+
+## The reward-delivery record for a guest's one-time find: receipt
+## (world-instance namespace, "claim_pickup:<flag>", character_id). Empty when
+## the world has no saved identity or the guest's character is unknown.
+static func guest_pickup_delivery(world_state: RefCounted, flag: String, character_id: String,
+		item: String, count: int) -> Dictionary:
+	if world_state == null or character_id.is_empty() or flag.is_empty() or item.is_empty():
+		return {}
+	var namespace_id := str(world_state.get("reward_delivery_namespace"))
+	var world_id := str(world_state.get("world_id"))
+	if namespace_id.is_empty() or world_id.is_empty():
+		return {}
+	return REWARD_DELIVERY.make_record(world_id, namespace_id, "claim_pickup:" + flag, character_id, item, count)
 
 func _ripplet_sunken_claim(intent: Dictionary, peer_id: int, realm: String) -> Dictionary:
 	var actor: Dictionary = intent.get("_ripplet_actor", {})
@@ -1326,8 +1372,22 @@ func _position(raw: Variant) -> Array:
 ## mutating here is deliberate: the host and every client then run the exact
 ## same apply code over the exact same ops.
 func _commit(ops: Array, kind: String, peer_id: int, realm: String) -> Dictionary:
-	# One gate for every intent kind that writes a world flag: an owned receipt
-	# can only be written (or cleared) by the character it names.
+	var gated := _flag_gate(ops, kind, peer_id)
+	if not gated.is_empty():
+		return gated
+	seq += 1
+	var delta := {"seq": seq, "realm": realm, "ops": ops}
+	apply(delta)
+	return {
+		"ok": true, "kind": kind, "peer": peer_id, "code": "", "reason": "",
+		"pending": false, "delta": delta,
+	}
+
+
+## One gate for every intent kind that writes a world flag: an owned receipt
+## can only be written (or cleared) by the character it names. Empty when the
+## ops pass; otherwise the refusal.
+func _flag_gate(ops: Array, kind: String, peer_id: int) -> Dictionary:
 	for op: Variant in ops:
 		if op is Dictionary and str(op.get("op", "")) == "flag" \
 				and str(op.get("scope", "")) == "world" \
@@ -1342,13 +1402,7 @@ func _commit(ops: Array, kind: String, peer_id: int, realm: String) -> Dictionar
 				and str((op as Dictionary).get("scope", "")) == "world" \
 				and not host_only_allowed(str((op as Dictionary).get("id", "")), peer_id, HOST_ONLY_FLAG_PREFIXES):
 			return _refuse(kind, peer_id, "host_only", "Only the host can record that.")
-	seq += 1
-	var delta := {"seq": seq, "realm": realm, "ops": ops}
-	apply(delta)
-	return {
-		"ok": true, "kind": kind, "peer": peer_id, "code": "", "reason": "",
-		"pending": false, "delta": delta,
-	}
+	return {}
 
 
 func _refuse(kind: String, peer_id: int, code: String, reason: String) -> Dictionary:

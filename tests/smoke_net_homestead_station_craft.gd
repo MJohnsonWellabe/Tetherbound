@@ -5,7 +5,9 @@ extends "res://tests/smoke_net_crossing_hall_agreement.gd"
 ## host's station at the host's tier and keeps what they craft. Real ENet over
 ## loopback. The host plants a Kitchen and its Spice rack through the paid
 ## build press; the guest, with no attachment of its own, crafts a Small
-## Potion there from its own ingredients through Session.homestead_submit_action;
+## Potion there from ingredients it gathered through the host's ledger (each
+## find a journaled reward delivery the host's character record gains once),
+## through Session.homestead_submit_action;
 ## the potion is the guest's, the host's stock is untouched, and the guest's
 ## craft survives a production leave and returning-character rejoin.
 ## Disclosed fixtures: tests/helpers/hall_agreement_net_peer.gd (F31#5 block).
@@ -17,7 +19,6 @@ func _run() -> void:
 	require_peer_logs_without(["SCRIPT ERROR", "Parse Error", "Invalid call"], "station craft peer logs have no script errors")
 	world_build_allowance_floor_s["production_host"] = 150.0
 	world_build_allowance_floor_s["production_join"] = 150.0
-	world_build_allowance_floor_s["craft_host_new_world"] = 150.0
 	if not await launch(2, "title"):
 		quit(await finish())
 		return
@@ -26,17 +27,22 @@ func _run() -> void:
 	if not await _craft_step(0, "production_host", {"port": port, "appearance_id": "trainer", "display_name": "CraftHost"}, 9000): return
 	if not await _craft_step(1, "production_join", {"host": "127.0.0.1", "port": port,
 		"returning_route": false, "character": {"appearance_id": "lyra", "display_name": "CraftGuest"}}, 9000): return
-	# The guest's own ingredients: stock on its portable character, saved by a
-	# production leave, then brought into a host world it has never visited
-	# (a world admits a guest's record once and keeps it in its own save, and
-	# legacy world-find grants never reach that record; see the F31#5 notes).
-	var funded := await _craft_data(1, "craft_fund", {"items": [["berries", 4], ["fiber", 1]], "ids": COUNTED})
-	var crafter_id := str(funded.get("character_id", ""))
-	if not await _craft_step(1, "hall_leave_guest", {}): return
-	if not await _craft_step(0, "expect_peers", {"count": 1}): return
-	if not await _craft_step(0, "craft_host_new_world", {"port": port, "appearance_id": "trainer", "display_name": "CraftHost"}, 9000): return
-	if not await _craft_step(1, "production_join", {"host": "127.0.0.1", "port": port,
-		"returning_route": true, "character": {"character_id": crafter_id}}, 9000): return
+	# The guest's own ingredients, gathered the ordinary co-op way: world finds
+	# the smoke stands (disclosed setup), claimed through the host's ledger. A
+	# guest's find pays through a journaled reward delivery, so the host's own
+	# character record (what station crafts read) must gain exactly the find.
+	for find: Array in [["f31_craft_berries", "berries", 4], ["f31_craft_fiber", "fiber", 1]]:
+		if not await _craft_step(1, "pickup_stand", {"id": find[0], "item": find[1], "realm": "meadows", "count": find[2]}): return
+		if not await _craft_step(1, "pickup_take", {}): return
+		await step(1, "wait", {"frames": 180})
+	var gathered := await _craft_data(1, "craft_count", {"ids": COUNTED})
+	var crafter_id := str(gathered.get("character_id", ""))
+	var held := await _craft_data(0, "craft_authority_count", {"character_id": crafter_id, "ids": COUNTED})
+	if gathered.is_empty() or held.is_empty():
+		await _craft_finish()
+		return
+	check(int(gathered.counts.berries) == 4 and int(gathered.counts.fiber) == 1, "the guest's satchel holds exactly its finds %s" % str(gathered.counts))
+	check(held.counts == gathered.counts, "the host's authority record gained exactly the guest's finds %s" % str(held.counts))
 	var placed := await _craft_data(0, "craft_place_kitchen", {}, 3000)
 	if placed.is_empty():
 		await _craft_finish()
@@ -59,6 +65,11 @@ func _run() -> void:
 	if not back.is_empty():
 		check(str(back.character_id) == guest_id, "same saved guest character rejoined")
 		check(int(back.counts.potion_small) == int(crafted.after.potion_small), "the crafted potion persisted with the guest's portable character")
+		check(int(back.counts.berries) == int(crafted.after.berries) and int(back.counts.fiber) == int(crafted.after.fiber),
+			"the reconnect re-granted no find %s" % str(back.counts))
+		var held_back := await _craft_data(0, "craft_authority_count", {"character_id": guest_id, "ids": COUNTED})
+		if not held_back.is_empty():
+			check(held_back.counts == back.counts, "the host's authority record matches the guest after the reconnect %s" % str(held_back.counts))
 	# F31#2 co-op rule: the guest's relic power choice is the host's to save.
 	# Shipping keeps F18's portal runtime off, so the host refuses and nothing
 	# changes, before and after the reconnect. The accepted path joins this
