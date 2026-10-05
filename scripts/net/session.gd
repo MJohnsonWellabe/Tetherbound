@@ -4730,7 +4730,7 @@ func _retain_owner_training_retry(player: RefCounted, world: RefCounted, row: Di
 		"delivery_id": row.delivery_id, "journal_revision": row.journal_revision, "receipt": row.receipt,
 		"saved": _owner_training_retry.get("saved", false), "release_instance": released}
 	if capture_originals is Array: _owner_training_retry.capture_originals = capture_originals
-	if row.get("action") == "wild_capture" and not _owner_training_retry.has("capture_originals"):
+	if row.get("action") in ["wild_capture", "starter_choice"] and not _owner_training_retry.has("capture_originals"):
 		var originals: Array = []
 		for member: RefCounted in player.get("party").call("members"): originals.append(weakref(member))
 		_owner_training_retry.capture_originals = originals
@@ -5945,20 +5945,40 @@ static func _weak_capture_roster_allowed(members: Array, rollback: bool, owner: 
 func _capture_roster_allowed(members: Array, rollback: bool, player: RefCounted) -> bool:
 	var row := _owner_training_row()
 	if not _owner_training_install or rollback != _owner_training_install_rollback or row.get("version") != 3 \
-		or row.get("action") != "wild_capture" or row.get("status") != "pending" or _owner_training_retry.is_empty() \
+		or row.get("action") not in ["wild_capture", "starter_choice"] or row.get("status") != "pending" or _owner_training_retry.is_empty() \
 		or _owner_training_retry.player.get_ref() != player or _owner_training_retry.receipt != row.receipt: return false
+	# F01#6a: an original starter is admitted only onto the empty roster.
+	if row.action == "starter_choice" and not (row.before.party as Array).is_empty(): return false
 	var expected: Array = (row.before if rollback else row.after).party
 	var originals: Array = _owner_training_retry.get("capture_originals", [])
 	if members.size() != expected.size() or members.size() > 5 or originals.size() != row.before.party.size(): return false
 	for index: int in members.size():
 		var member: Variant = members[index]
-		if not member is RefCounted or preload("res://scripts/save/water_capture_codec.gd").encode(member, (row.before if rollback else row.after).redesign_character) != expected[index]: return false
+		if not member is RefCounted: return false
+		# Compare the same portable projection the row was staged from: it
+		# carries no in-fight energy meter (character_record_rules), and passive
+		# care keeps accruing between the host's stage and this install (the
+		# owner apply keeps it: ESSENCE.merge_owner_passive). Identity, stats
+		# and loadout stay exact.
+		var live_card: Dictionary = preload("res://scripts/save/water_capture_codec.gd").encode(member, (row.before if rollback else row.after).redesign_character)
+		var expected_card: Dictionary = expected[index].duplicate(true)
+		live_card.erase("energy")
+		expected_card.erase("energy") # A newcomer's staged card is the raw capture card.
+		if not ESSENCE.owner_matches_after({"party": [live_card]}, {"party": [expected_card]}): return false
 		var old_index := -1
 		for old: int in row.before.party.size():
 			if row.before.party[old].uid == expected[index].uid: old_index = old
 		if old_index >= 0 and originals[old_index].get_ref() != member: return false
-		if old_index < 0 and (rollback or expected[index].uid != row.host_context.creature.uid): return false
+		if old_index < 0 and (rollback or expected[index].uid != _capture_newcomer_uid(row)): return false
 	return true
+
+
+## The one creature a roster install may add: a capture's offered card, or
+## (F01#6a) the original starter the guest asked the host to stage.
+func _capture_newcomer_uid(row: Dictionary) -> String:
+	if row.get("action") == "starter_choice":
+		return str(row.get("intent", {}).get("creature", {}).get("uid", ""))
+	return str(row.get("host_context", {}).get("creature", {}).get("uid", ""))
 
 func _foundation_capture_context(peer: int, key: String) -> Dictionary:
 	if preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true \

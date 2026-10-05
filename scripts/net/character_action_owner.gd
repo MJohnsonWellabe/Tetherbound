@@ -2,6 +2,7 @@ extends RefCounted
 
 ## Runtime installer for the same saved per-character training carrier.
 ## It changes preserved live UID instances; it never loads/rebuilds a party.
+const STARTER_FLAG := "opening:starter_granted"
 const DELIVERY := preload("res://scripts/net/character_action_delivery.gd")
 const RECORD := preload("res://scripts/net/character_record_rules.gd")
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
@@ -37,7 +38,13 @@ static func apply_owner(game: Node, row: Dictionary) -> Dictionary:
 	var target := ESSENCE.merge_owner_passive(row.after, row.after if proposal.get("duplicate") == true else row.before, current)
 	var applied := row.duplicate(true)
 	applied.after = target
-	var plan := _live_plan(roster.members, current, applied)
+	# F01#6a: an original starter is the guest's own live instance -- the one its
+	# follower body already pilots -- never a second decoded copy.
+	var starter_live: RefCounted = null
+	if row.action == "starter_choice" and proposal.get("duplicate") != true:
+		starter_live = game.call("pending_original_starter_instance") if game.has_method("pending_original_starter_instance") else null
+		if starter_live == null: return _deny("owner_starter_instance_missing")
+	var plan := _live_plan(roster.members, current, applied, starter_live)
 	if plan.get("ok") != true: return plan
 	if session.call("_retain_owner_training_retry", player, world, row) != true \
 		or session.call("_begin_owner_training_install", player, world, row) != true: return _deny("owner_install_refused")
@@ -56,8 +63,10 @@ static func apply_owner(game: Node, row: Dictionary) -> Dictionary:
 			if not ESSENCE._equivalent(snapshot.inventory[slot], stack):
 				inventory.call("set_slot", slot, stack.duplicate(true) if stack is Dictionary else null)
 		player.set("redesign_character", row.after.redesign_character.duplicate(true))
-		if row.action == "wild_capture" and party.call("install_owner_capture_roster", plan.capture_members) != true:
+		if row.action in ["wild_capture", "starter_choice"] and party.call("install_owner_capture_roster", plan.capture_members) != true:
 			return _rollback(game, player, world, session, row, snapshot, roster, plan, "owner_capture_roster_refused")
+		if row.action == "starter_choice":
+			player.flags.call("set_flag", STARTER_FLAG, true)
 		if not ESSENCE._equivalent(current.equipment, row.after.equipment):
 			player.get("equipment").call("load_data", row.after.equipment)
 	if not preload("res://scripts/net/home_key_action.gd").install_owner(player, row):
@@ -85,10 +94,12 @@ static func apply_owner(game: Node, row: Dictionary) -> Dictionary:
 		"character_revision": row.character_revision, "action": row.action, "action_id": row.action_id}
 
 
-static func _live_plan(members: Array, current: Dictionary, row: Dictionary) -> Dictionary:
+static func _live_plan(members: Array, current: Dictionary, row: Dictionary, starter_live: RefCounted = null) -> Dictionary:
 	if members.size() != current.party.size(): return _deny("owner_party_changed")
-	if row.action == "wild_capture" and ESSENCE._equivalent(current, row.after):
+	if row.action in ["wild_capture", "starter_choice"] and ESSENCE._equivalent(current, row.after):
 		return {"ok": true, "changes": [], "traits": [], "release_index": -1, "release_instance": null, "capture_members": members}
+	if row.action == "starter_choice":
+		return _starter_plan(members, row, starter_live)
 	var changes: Array[Dictionary] = []
 	var projections: Array[Dictionary] = []
 	var release_index := -1
@@ -141,6 +152,22 @@ static func _live_plan(members: Array, current: Dictionary, row: Dictionary) -> 
 	return {"ok": true, "changes": changes, "traits": projections, "release_index": release_index, "release_instance": release_instance, "capture_members": capture_members}
 
 
+## F01#6a. The staged starter joins an EMPTY roster, and the only newcomer is
+## the guest's own pending live instance, proved equal to the staged card in the
+## same energy-free portable form the host staged it from.
+static func _starter_plan(members: Array, row: Dictionary, starter_live: RefCounted) -> Dictionary:
+	if not members.is_empty() or (row.after.party as Array).size() != 1: return _deny("owner_starter_shape_changed")
+	var card: Dictionary = row.after.party[0]
+	if starter_live == null or str(starter_live.get("uid")) != str(card.get("uid")) \
+		or str(card.get("uid")) != str(row.get("intent", {}).get("creature", {}).get("uid", "")):
+		return _deny("owner_starter_uid_changed")
+	var live_card: Variant = RECORD.portable_card(preload("res://scripts/save/water_capture_codec.gd").encode(starter_live, row.after.redesign_character))
+	if not live_card is Dictionary or not ESSENCE.owner_matches_after({"party": [live_card]}, {"party": [card]}):
+		return _deny("owner_starter_card_changed")
+	return {"ok": true, "changes": [], "traits": [], "release_index": -1, "release_instance": null,
+		"capture_members": [starter_live]}
+
+
 static func _rollback(game: Node, player: RefCounted, world: RefCounted, session: Node,
 		row: Dictionary, snapshot: Dictionary, roster: Dictionary, plan: Dictionary, code: String) -> Dictionary:
 	if game.get("local") != player or game.get("world") != world \
@@ -156,6 +183,12 @@ static func _rollback(game: Node, player: RefCounted, world: RefCounted, session
 	if row.action in preload("res://scripts/net/home_key_action.gd").ACTIONS:
 		player.set("satchel_escrow", snapshot.satchel_escrow.duplicate(true))
 		player.flags.call("load_data", snapshot.flags)
+	if row.action == "starter_choice":
+		player.flags.call("load_data", snapshot.flags)
+		# Back to the empty roster through the guarded install (rollback=true);
+		# the live instance stays the follower's, owned by the pending adoption.
+		if player.get("party").call("install_owner_capture_roster", [], true) != true:
+			return _end_refused(session, "owner_roster_rollback_failed")
 	if not ESSENCE._equivalent(snapshot.equipment, row.after.equipment):
 		player.get("equipment").call("load_data", snapshot.equipment)
 	if (plan.release_index >= 0 or row.action == "wild_capture") and party_restore(player, roster) != true: return _end_refused(session, "owner_roster_rollback_failed")

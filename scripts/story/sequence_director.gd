@@ -1968,8 +1968,10 @@ func _adopt(index: int, chosen: String) -> void:
 	var added := bool(game.call("commit_original_starter", self, _encounter.call("ally_instance"), chosen)) if typed_adoption else _give_to_party(_encounter.call("ally_instance"), chosen)
 	if not added:
 		if typed_adoption:
-			_pending_starter_adoption = {"instance": _encounter.call("ally_instance"), "nickname": chosen, "character_id": game.get("local").character_id, "world_instance_id": game.get("world").reward_delivery_namespace, "session_epoch": game.get("session").call("_altar_current_epoch"), "retry_at": Time.get_ticks_msec() + 3000}
+			_pending_starter_adoption = {"instance": _encounter.call("ally_instance"), "nickname": chosen, "character_id": game.get("local").character_id, "world_instance_id": game.get("world").reward_delivery_namespace, "session_epoch": game.get("session").call("_altar_current_epoch"), "retry_at": Time.get_ticks_msec() + 3000,
+				"started_ms": Time.get_ticks_msec(), "notice_at": Time.get_ticks_msec() + _starter_wait_notice_ms()}
 			game.call("push_world_message", "Your chosen companion is waiting for the opening save.")
+			_listen_for_starter_refusal(game.get("session"))
 		else:
 			_adopting = false
 			push_error("the chosen %s is beside the trainer but not in the party" % species)
@@ -1985,10 +1987,55 @@ func _retry_original_starter_save() -> void:
 	if game == null or game.get("session") == null or _encounter.call("ally_instance") != _pending_starter_adoption.instance: return
 	if game.get("local").character_id != _pending_starter_adoption.character_id or game.get("world").reward_delivery_namespace != _pending_starter_adoption.world_instance_id or game.get("session").call("_altar_current_epoch") != _pending_starter_adoption.session_epoch: return
 	_pending_starter_adoption.retry_at = Time.get_ticks_msec() + 3000
-	if game.call("commit_original_starter", self, _pending_starter_adoption.instance, _pending_starter_adoption.nickname) != true: return
+	if game.call("commit_original_starter", self, _pending_starter_adoption.instance, _pending_starter_adoption.nickname) != true:
+		# Bounded, never silent: every interval the player is told the host is
+		# still being asked (the request retries itself and is idempotent).
+		if Time.get_ticks_msec() >= int(_pending_starter_adoption.get("notice_at", 0)):
+			_pending_starter_adoption.notice_at = Time.get_ticks_msec() + _starter_wait_notice_ms()
+			game.call("push_world_message", "Still waiting for the host to save your companion. Trying again...")
+		return
 	var chosen: String = _pending_starter_adoption.nickname
 	_pending_starter_adoption.clear()
 	_finish_original_starter_adoption(chosen, true)
+
+
+## F01#6a. How often a guest whose starter the host has not yet recorded is
+## told it is still being asked (opening.json `starters.admission_notice_seconds`).
+func _starter_wait_notice_ms() -> int:
+	return int(1000.0 * maxf(1.0, float(BEATS.config().get("starters", {}).get("admission_notice_seconds", 10.0))))
+
+
+func _listen_for_starter_refusal(session: Variant) -> void:
+	if session is Object and (session as Object).has_signal("homestead_action_completed") \
+			and not (session as Object).is_connected("homestead_action_completed", _on_starter_action_completed):
+		(session as Object).connect("homestead_action_completed", _on_starter_action_completed)
+
+
+## The host refused to stage this starter outright (a terminal refusal: it
+## journaled nothing, so no row can still arrive for it). Release the choice so
+## the player is never left with an empty party and a follower nobody owns: the
+## follower is dismissed, the instance forgotten and the picker offered again.
+func _on_starter_action_completed(op: String, intent: Dictionary, result: Dictionary) -> void:
+	if op != "starter_choice" or _pending_starter_adoption.is_empty() or result.get("terminal_refusal") != true:
+		return
+	var creature: Variant = intent.get("creature", {})
+	if not creature is Dictionary or str((creature as Dictionary).get("uid", "")) != str(_pending_starter_adoption.instance.get("uid")):
+		return
+	cancel_starter_adoption(str(result.get("code", "refused")))
+
+
+func cancel_starter_adoption(code: String) -> void:
+	var game := _effect_game()
+	if game != null and game.has_method("cancel_original_starter_request"):
+		game.call("cancel_original_starter_request")
+	_pending_starter_adoption.clear()
+	_adopting = false
+	_choice = -1
+	if _encounter != null and _encounter.has_method("dismiss_active_creature"):
+		_encounter.call("dismiss_active_creature")
+	_picker_pending = _beat == BEATS.CHOOSE
+	if game != null and game.has_method("push_world_message"):
+		game.call("push_world_message", "The host could not record that companion (%s). Choose again." % code)
 
 
 ## Whether `_pending_starter_adoption` is still the live choice for the

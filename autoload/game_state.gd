@@ -3175,6 +3175,8 @@ func commit_original_starter(source: Node, instance: RefCounted, nickname: Strin
 		if prior.begins_with(prefix):
 			return prior == receipt and local.flags.call("has", "opening:starter_granted") == true \
 				and _original_starter_admitted(instance, receipt)
+	if not is_host():
+		return _request_original_starter(instance, nickname)
 	if party.size() != 0 or session.call("_owner_training_mutation_blocked", local) == true: return false
 	if not bool(save_system.call("finish_fallback")) or save_system.call("fallback_busy") == true: return false
 	# Flush callbacks cannot turn this into another character's adoption.
@@ -3196,30 +3198,52 @@ func commit_original_starter(source: Node, instance: RefCounted, nickname: Strin
 		local.redesign_character = before_personal
 		local.flags.call("load_data", before_flags)
 		return false
-	return _original_starter_admitted(instance, receipt)
+	return true
 
 
-## F01#6a. A guest's starter is not finished when its own file holds it: the
-## host's admitted copy of that character must hold the same receipt at the same
-## revision, or the next host-staged action for this guest would meet
-## `owner_action_baseline_conflict`. So after the local commit the guest asks the
-## host to stage `starter_choice` (`scripts/net/starter_choice_action.gd`), which
-## validates the card against the host's own admitted record and config. The
-## journalled row then reaches this owner already equal to its after-state, takes
-## `owner_plan`'s existing duplicate path (save + ACK, no mutation), and the host
-## accepts it. Until the row reads accepted the opening director keeps the
-## adoption pending, so nothing else can be staged in between. Re-asking is
-## idempotent: the host answers an identical request from its existing row.
-## The host is its own admitted record and needs none of this.
+## F01#6a. A guest never writes its own original starter. It names its live
+## starter instance -- the one its follower body already pilots -- and asks the
+## host to stage `starter_choice` (scripts/net/starter_choice_action.gd), which
+## validates the card against the host's own admitted record and config. Its
+## party stays empty while the stage is in flight, so its owner-passive inputs
+## stay on the host's roster. The journalled row is installed by
+## character_action_owner.gd, which appends exactly this pending instance, saves,
+## ACKs and re-arms the passive stream; the opening finishes once the row reads
+## accepted. Re-asking is idempotent: the host answers an identical request
+## from its existing row.
+var _original_starter_pending: RefCounted = null
+
+
+func _request_original_starter(instance: RefCounted, nickname: String) -> bool:
+	if party.size() != 0 or session == null or not session.has_method("request_original_starter"): return false
+	if _original_starter_pending != null and _original_starter_pending != instance: return false
+	if _original_starter_pending == null:
+		instance.set("nickname", nickname)
+		_original_starter_pending = instance
+	var card: Dictionary = preload("res://scripts/save/water_capture_codec.gd").encode(instance)
+	if card.is_empty(): return false
+	session.call("request_original_starter", card)
+	return false
+
+
+## The installer's only source for the newcomer (character_action_owner.gd).
+func pending_original_starter_instance() -> RefCounted:
+	return _original_starter_pending
+
+
+## The opening gave up on this request (the host refused it): forget the
+## instance so a fresh choice can be made. Never called once the row exists.
+func cancel_original_starter_request() -> void:
+	_original_starter_pending = null
+
+
 func _original_starter_admitted(instance: RefCounted, receipt: String) -> bool:
 	if is_host(): return true
 	var row: Variant = world.reward_deliveries.get(preload("res://scripts/creatures/essence.gd").training_delivery_id(world.reward_delivery_namespace, local.character_id))
 	if row is Dictionary and row.get("action") == "starter_choice" and row.get("receipt") == receipt \
 			and row.get("status") == "accepted":
+		_original_starter_pending = null
 		return true
-	var card: Dictionary = preload("res://scripts/save/water_capture_codec.gd").encode(instance)
-	if card.is_empty() or not session.has_method("request_original_starter"): return false
-	session.call("request_original_starter", card)
 	return false
 
 

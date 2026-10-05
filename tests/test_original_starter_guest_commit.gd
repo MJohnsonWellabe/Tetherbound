@@ -117,12 +117,12 @@ func test_the_guest_write_is_its_own_character_file_and_never_a_world() -> void:
 	game.relinquish_world_save_ownership()
 	assert_true(game.original_starter_writer_ready())
 	assert_true(bool(saver.call("save_character_prepared", game, GUEST)),
-		"the starter commit's prepared write succeeds on an admitted guest")
+		"an admitted guest's prepared owner write (the starter row's install) succeeds")
 	assert_true(saver.characters().has(GUEST), "the guest's own character file was written")
 	assert_false(saver.has_slot(game.autosave_slot()), "a guest's starter commit never writes a world slot")
 
 
-## --- F01#6a staged half: the guest's local commit is not the end ------------
+## --- F01#6a host-first: the guest asks, the host stages, the owner installs --
 
 class RequestingClient extends Node:
 	var requests: Array = []
@@ -142,28 +142,45 @@ func _fresh_starter() -> RefCounted:
 	return creature
 
 
-func test_a_guest_is_not_finished_until_the_host_admits_the_same_receipt() -> void:
+func test_a_guest_asks_with_its_live_instance_and_never_writes_its_own_party() -> void:
 	var client := RequestingClient.new()
 	game.session = client
 	game.local.character_id = GUEST
-	game.world.reward_delivery_namespace = "starter-world"
 	var starter := _fresh_starter()
-	var receipt := "starter_choice:%s:%s" % [GUEST, str(starter.get("uid"))]
-	assert_false(game._original_starter_admitted(starter, receipt),
-		"a guest's local commit alone leaves the opening pending")
-	assert_eq(client.requests.size(), 1, "the guest asks the host to stage the same starter")
+	assert_false(game._request_original_starter(starter, "Bud"), "a request is pending, never finished on its own")
+	assert_eq(game.party.size(), 0, "the guest's party stays empty while the host stages it")
+	assert_true(game.pending_original_starter_instance() == starter,
+		"the installer will append this very instance, the follower's own object")
+	assert_eq(str(starter.get("nickname")), "Bud")
+	assert_eq(client.requests.size(), 1)
 	assert_eq(client.requests[0], preload("res://scripts/save/water_capture_codec.gd").encode(starter),
 		"the request carries exactly the live starter's card")
+	assert_false(game._request_original_starter(starter, "Bud"))
+	assert_eq(client.requests.size(), 2, "re-asking is how a lost reply recovers; the host answers from its row")
+	assert_false(game._request_original_starter(_fresh_starter(), "Other"),
+		"a second, different starter cannot replace the one in flight")
+	assert_eq(client.requests.size(), 2)
+	game.cancel_original_starter_request()
+	assert_eq(game.pending_original_starter_instance(), null, "a refused request releases the instance")
+
+
+func test_a_guest_is_finished_only_when_the_host_row_reads_accepted() -> void:
+	game.session = RequestingClient.new()
+	game.local.character_id = GUEST
+	game.world.reward_delivery_namespace = "starter-world"
+	var starter := _fresh_starter()
+	game._request_original_starter(starter, "Bud")
+	var receipt := "starter_choice:%s:%s" % [GUEST, str(starter.get("uid"))]
 	var delivery_id := preload("res://scripts/creatures/essence.gd").training_delivery_id("starter-world", GUEST)
+	assert_false(game._original_starter_admitted(starter, receipt), "nothing journaled is not admission")
 	game.world.reward_deliveries[delivery_id] = {"action": "starter_choice", "receipt": receipt, "status": "pending"}
 	assert_false(game._original_starter_admitted(starter, receipt), "a pending host row is not yet admission")
-	assert_eq(client.requests.size(), 2, "re-asking is how a lost reply recovers; the host answers from its row")
+	game.world.reward_deliveries[delivery_id] = {"action": "starter_choice", "receipt": "starter_choice:%s:other" % GUEST, "status": "accepted"}
+	assert_false(game._original_starter_admitted(starter, receipt), "a different starter's receipt is not this one's admission")
 	game.world.reward_deliveries[delivery_id] = {"action": "starter_choice", "receipt": receipt, "status": "accepted"}
 	assert_true(game._original_starter_admitted(starter, receipt),
 		"the host's accepted row means its admitted copy holds the same receipt")
-	assert_eq(client.requests.size(), 2, "an admitted starter is never re-requested")
-	game.world.reward_deliveries[delivery_id] = {"action": "starter_choice", "receipt": "starter_choice:%s:other" % GUEST, "status": "accepted"}
-	assert_false(game._original_starter_admitted(starter, receipt), "a different starter's receipt is not this one's admission")
+	assert_eq(game.pending_original_starter_instance(), null, "an admitted starter is no longer pending")
 
 
 func test_the_host_is_its_own_admitted_record() -> void:

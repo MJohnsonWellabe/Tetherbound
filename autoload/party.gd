@@ -343,8 +343,11 @@ func restore_owner_training_release(snapshot: Dictionary) -> bool:
 	return true
 
 ## Exact typed catch promotion only; survivors keep their original objects.
-func install_owner_capture_roster(members: Array) -> bool:
-	if not _owner_capture_roster_guard.is_valid() or _owner_capture_roster_guard.call(members, false) != true: return false
+## `rollback` asks the guard for the row's BEFORE roster (F01#6a: a starter's
+## failed install rolls back to the empty roster this way, rather than through
+## restore_owner_training_release, which refuses an empty snapshot on purpose).
+func install_owner_capture_roster(members: Array, rollback := false) -> bool:
+	if not _owner_capture_roster_guard.is_valid() or _owner_capture_roster_guard.call(members, rollback) != true: return false
 	var active_uid := str(at(_active).get("uid")) if at(_active) != null else ""
 	var best_uid := str(at(_best).get("uid")) if at(_best) != null else ""
 	var next: Array[RefCounted] = []
