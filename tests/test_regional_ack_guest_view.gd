@@ -135,3 +135,20 @@ func test_guest_resends_on_a_fresh_view_while_the_caller_still_waits() -> void:
 	session.reply({"registry_revision": 7})
 	assert_eq(session.sent.size(), 2, "no resend after the caller's window")
 	game.free()
+
+func test_guest_window_outlasts_the_host_window_for_a_slow_round_trip() -> void:
+	var homecoming := preload("res://scripts/story/regional_homecoming.gd")
+	var guest := _game(false)
+	var host := _game(true)
+	assert_true(homecoming.ack_timeout_ms(guest) > homecoming.ack_timeout_ms(host),
+		"a guest's host round trip gets the longer window")
+	assert_eq(homecoming.ack_timeout_ms(host), int(float(homecoming._settings().ack_timeout_seconds) * 1000.0))
+	# CI 37298008163 shard 5: at ~1 fps the first view reply came after 8 s,
+	# so the guest dropped its ack unsent. 12 s later it still sends.
+	var session: SessionProbe = guest.session
+	guest._queue_regional_ack(_intent())
+	guest._regional_ack_waiting[_intent().transaction_id] = Time.get_ticks_msec() - 12000
+	session.reply({"registry_revision": 9})
+	assert_eq(session.sent.size(), 1, "a slow first reply inside the guest window still sends")
+	guest.free()
+	host.free()

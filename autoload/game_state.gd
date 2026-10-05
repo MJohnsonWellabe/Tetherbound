@@ -3303,7 +3303,7 @@ func _queue_regional_ack(intent: Dictionary) -> Dictionary:
 		# A guest's personal view is the host's async reply; its cache may be
 		# empty or predate the arrival that bumped the revision. Send against
 		# the next reply only, and only while the caller is still waiting
-		# (regional_homecoming polls for ack_timeout_seconds).
+		# (regional_homecoming polls for its ack_timeout_ms).
 		_regional_ack_waiting[intent.transaction_id] = Time.get_ticks_msec()
 		_regional_ack_queued_at[intent.transaction_id] = Time.get_ticks_msec()
 		var drain := Callable(self, "_drain_regional_ack_waiting")
@@ -3326,8 +3326,7 @@ var _regional_ack_sent_at: Dictionary = {}
 const REGIONAL_ACK_RESEND_MS := 1500
 
 func _drain_regional_ack_waiting() -> void:
-	var settings: Dictionary = preload("res://scripts/story/regional_homecoming.gd")._settings()
-	var window_ms := int(float(settings.get("ack_timeout_seconds", 8.0)) * 1000.0)
+	var window_ms: int = preload("res://scripts/story/regional_homecoming.gd").ack_timeout_ms(self)
 	var waiting := _regional_ack_waiting.duplicate()
 	_regional_ack_waiting.clear()
 	for transaction_id: String in waiting:
@@ -3344,8 +3343,7 @@ func _drain_regional_ack_waiting() -> void:
 ## not journalled the row, ask for a fresh view and send again.
 func _resend_regional_ack(transaction_id: String) -> void:
 	if session == null or bool(session.call("is_host")) or _regional_ack_waiting.has(transaction_id): return
-	var settings: Dictionary = preload("res://scripts/story/regional_homecoming.gd")._settings()
-	var window_ms := int(float(settings.get("ack_timeout_seconds", 8.0)) * 1000.0)
+	var window_ms: int = preload("res://scripts/story/regional_homecoming.gd").ack_timeout_ms(self)
 	var now := Time.get_ticks_msec()
 	if not _regional_ack_queued_at.has(transaction_id) or now - int(_regional_ack_queued_at[transaction_id]) > window_ms: return
 	if now - int(_regional_ack_sent_at.get(transaction_id, now)) < REGIONAL_ACK_RESEND_MS: return

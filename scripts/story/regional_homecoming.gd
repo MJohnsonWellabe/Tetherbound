@@ -334,8 +334,7 @@ static func _acknowledge(game: Object, id: String, expected: Dictionary, flag: S
 		return false
 	var intent := acknowledgement_intent(expected, flag)
 	var raw: Variant = game.call("commit_regional_ending_ack", intent.duplicate(true))
-	var settings := _settings()
-	var deadline := Time.get_ticks_msec() + int(float(settings.get("ack_timeout_seconds", 8.0)) * 1000.0)
+	var deadline := Time.get_ticks_msec() + ack_timeout_ms(game)
 	while raw is Dictionary and raw.get("status") == "pending":
 		if not context_matches(game, expected) or Time.get_ticks_msec() >= deadline \
 				or not game is Node or not game.is_inside_tree() \
@@ -406,6 +405,17 @@ static func _name(member: Object) -> String:
 
 static func _prose() -> Dictionary:
 	return _settings().get("homecoming", {})
+
+
+## How long an acknowledgement may stay pending. A guest's is a host round
+## trip, so it gets its own (longer) window; the host's commits in-frame.
+static func ack_timeout_ms(game: Object) -> int:
+	var settings := _settings()
+	var session: Variant = game.get("session") if game != null else null
+	var guest: bool = session is Node and session.has_method("is_host") and session.call("is_host") != true
+	var seconds: Variant = settings.get("guest_ack_timeout_seconds" if guest else "ack_timeout_seconds", 8.0)
+	if not (seconds is float or seconds is int): seconds = 8.0
+	return int(float(seconds) * 1000.0)
 
 
 static func _settings() -> Dictionary:
