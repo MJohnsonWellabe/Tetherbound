@@ -740,6 +740,9 @@ var _trainer_cleanup_delay: float = 0.0
 ## How many of their creatures have been sent out, ever. Names the bodies; see
 ## `_send_out_next_creature()` for why it is not derived from a list that empties.
 var _trainer_sent: int = 0
+## Send-outs in the CURRENT trainer battle only; `_trainer_sent` above never
+## resets (it names bodies). F22 named patterns index send-outs from this.
+var _trainer_battle_sent: int = 0
 
 ## T3-COMBAT. Where the trainer was standing when this battle was accepted, and
 ## where every round of it re-forms from.
@@ -6983,6 +6986,7 @@ func begin_trainer_battle(spec: Dictionary, trainer: Node3D = null) -> bool:
 		return false
 
 	_trainer_spec = spec
+	_trainer_battle_sent = 0
 	_tournament_members.clear()
 	_tournament_entry_condition.clear()
 	if tournament_round:
@@ -7071,6 +7075,7 @@ func _send_out_next_creature() -> bool:
 	# line, remote-tree screenshot or smoke test can match against, which is
 	# exactly how this was found.
 	_trainer_sent += 1
+	_trainer_battle_sent += 1
 	body.name = "TrainerCreature_%s_%d" % [str(_trainer_spec.get("id", "trainer")), _trainer_sent]
 	body.set_script(WILD_SCRIPT)
 	get_parent().add_child(body)
@@ -7422,6 +7427,7 @@ func _finish_trainer_battle(won: bool) -> void:
 	if _manager != null and _manager.has_method("end_round_hold"):
 		_manager.call("end_round_hold")
 	_trainer_spec = {}
+	_trainer_battle_sent = 0
 	# F04#3: kept for the victory lines' camera, which opens a frame later.
 	var victory_speaker := _trainer_node
 	_trainer_node = null
@@ -8290,7 +8296,7 @@ func _configure_f22_patterns(wild: Node3D, opponent_owned: bool) -> void:
 	var context := {"species_id": str(creature.get("species_id")), "role": role,
 		"trainer_owned": opponent_owned, "chapter": chapter, "band": band,
 		"after_south_bridge": after_bridge, "pattern_id": pattern_id,
-		"sendout_index": maxi(0, _trainer_sent - 1) if opponent_owned else 0,
+		"sendout_index": maxi(0, _trainer_battle_sent - 1) if opponent_owned and not _trainer_spec.is_empty() else 0,
 		"move_quick": str(creature.get("move_quick")),
 		"move_charged": str(creature.get("move_charged"))}
 	wild.call("configure_patterns", patterns.duplicate(true), context, _f22_visible_observation.bind(wild))
