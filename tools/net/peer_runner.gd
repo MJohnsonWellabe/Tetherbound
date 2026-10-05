@@ -214,6 +214,8 @@ var _strike_transaction: RefCounted
 var _f22_enemy_staggers := 0
 ## F22 forced-break smoke: host strike verdicts that triggered a break.
 var _f22_host_breaks := 0
+## F22 forced-break smoke: host strike verdicts that landed a hit.
+var _f22_host_hits := 0
 ## The last live snapshot the pin saw, reported if the fight later vanishes.
 var _f22_last_seen := {}
 var _strike_observed_director: Node
@@ -4910,8 +4912,9 @@ func _step_f22_pin_tell(args: Dictionary) -> Dictionary:
 	if not director.has_meta("f22_break_watch"):
 		director.set_meta("f22_break_watch", true)
 		director.connect("host_strike_finished", func(_intent: Dictionary, _peer: int, verdict: Dictionary) -> void:
-			if bool((verdict.get("delta", {}) as Dictionary).get("stagger_triggered", false)):
-				_f22_host_breaks += 1)
+			var landed_delta: Dictionary = verdict.get("delta", {})
+			if bool(landed_delta.get("hit", false)): _f22_host_hits += 1
+			if bool(landed_delta.get("stagger_triggered", false)): _f22_host_breaks += 1)
 	var seen_rec: Dictionary = (director.get("_encounter_host") as RefCounted).call("record", encounter_id)
 	var cards := {}
 	for peer: Variant in (seen_rec.get("participants", {}) as Dictionary).keys():
@@ -4943,7 +4946,7 @@ func _step_f22_pin_tell(args: Dictionary) -> Dictionary:
 	return {"verdict": "PASS", "detail": "tell pinned" if not bool(args.get("read_only", false)) else "tell state",
 		"data": {"host_now_ms": Time.get_ticks_msec(), "since_ms": int(body.call("tell_visible_since_ms")),
 			"winding_up": bool(body.call("is_winding_up")), "staggered": bool(body.get("_staggered")),
-			"host_breaks": _f22_host_breaks,
+			"host_breaks": _f22_host_breaks, "host_hits": _f22_host_hits,
 			"poise": float(body.get("_poise")),
 			"hp": float(runtime.get("_enemy").get("hp")) if runtime.get("_enemy") != null else -1.0, "centre": [body.call("centre").x, body.call("centre").y, body.call("centre").z]}}
 

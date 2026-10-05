@@ -156,7 +156,9 @@ func _charge_case(tell_first: bool) -> Dictionary:
 		await step(1, "wait", {"frames": 30})
 		if await _host_hp() < hp_was - 0.001: landed += 1
 	out["energy_hits"] = landed
-	var breaks_before := int(((await _pin(true)).get("data", {}) as Dictionary).get("host_breaks", 0))
+	var tally: Dictionary = (await _pin(true)).get("data", {})
+	var breaks_before := int(tally.get("host_breaks", 0))
+	var hits_before := int(tally.get("host_hits", 0))
 	var guest_before := int(((await step(1, "f22_enemy_staggers", {})).get("data", {}) as Dictionary).get("count", 0))
 	var hp_before := -1.0
 	if tell_first:
@@ -186,14 +188,16 @@ func _charge_case(tell_first: bool) -> Dictionary:
 	var state: Dictionary = {}
 	for _poll in STAGGER_POLLS:
 		state = (await _pin(true)).get("data", {})
-		if int(state.get("host_breaks", 0)) > breaks_before or float(state.get("poise", 0.0)) < float(out.poise_before) - 0.001:
+		if int(state.get("host_hits", 0)) > hits_before:
 			break
 		await step(0, "wait", {"frames": 4})
 	# Counted from the host's own strike verdicts (`host_strike_finished`), so
 	# a 0.6 s stagger that ended before this read still counts.
 	out.host_staggered = int(state.get("host_breaks", 0)) > breaks_before
 	out.poise_after = float(state.get("poise", 0.0))
-	out.landed = float(state.get("hp", -1.0)) < hp_before - 0.001
+	# Landed per the host's own strike verdict (`delta.hit`), not an HP read.
+	out.landed = int(state.get("host_hits", 0)) > hits_before
+	out["hp"] = [hp_before, float(state.get("hp", -1.0))]
 	# The guest's announcement arrives with the host's strike payload.
 	var guest_after := guest_before
 	for _poll in STAGGER_POLLS:
