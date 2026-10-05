@@ -2974,6 +2974,10 @@ func _host_move_start(intent: Dictionary, peer: int) -> Dictionary:
 	var frozen := preload("res://scripts/creatures/move_mastery.gd").freeze_action(
 		preload("res://scripts/creatures/move_mastery.gd").owned_record(owned), slot, actor, tiers, moves)
 	if frozen.get("ok") != true: return deny
+	# F33: the owner's equipped Charm enters this accepted action exactly once,
+	# here on the host, from the admitted record (never an intent or a card).
+	var gear := preload("res://scripts/creatures/creature_gear.gd")
+	frozen.move = gear.freeze_move_profile(frozen.move, gear.gear_for(admitted, str(binding.creature_uid)), gear.config())
 	var move := COMBAT_MANAGER.host_move_profile(moves, "player_" + slot, move_id,
 		_body_radius(body), _body_radius(wild), host_card_cooldown_multiplier(card), CONTACT_SPACING.pair_reach_need(body, wild), frozen.move)
 	move["mastery_context"] = {"world_namespace": _session.call("_game").get("world").reward_delivery_namespace,

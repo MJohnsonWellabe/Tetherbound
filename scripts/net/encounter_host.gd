@@ -680,7 +680,8 @@ func credit_move_hit(id: String, peer: int, action: int, actual_hp_debit: float,
 	var energy: Dictionary = MATH.config().get("energy", {})
 	var ultimate: Dictionary = MATH.config().get("ultimate", {})
 	if started.slot == "quick": actor.energy = minf(float(energy.get("max", 100.0)), float(actor.energy) + float(started.move.get("energy_gain", energy.get("gain_per_quick", 26.0))))
-	actor.ultimate_meter = minf(float(ultimate.get("maximum", 100.0)), float(actor.ultimate_meter) + float(ultimate.get("landed_gain", {}).get(started.slot, 0.0)))
+	actor.ultimate_meter = minf(float(ultimate.get("maximum", 100.0)), float(actor.ultimate_meter)
+		+ float(ultimate.get("landed_gain", {}).get(started.slot, 0.0)) * _gear_gain(started.move))
 	started.credited = true
 	if int(started.get("mastery_uses", 300)) < 300 and not target_uid.is_empty() \
 		and target_uid != started.creature_uid and is_finite(target_hp_before) and target_hp_before >= actual_hp_debit:
@@ -691,6 +692,15 @@ func credit_move_hit(id: String, peer: int, action: int, actual_hp_debit: float,
 	seq += 1
 	encounters[id].seq = seq
 	return move_resource_snapshot(id, peer, str(started.creature_uid))
+
+
+## F33: the Charm's ultimate gain, frozen into the accepted action on the
+## host, bounded by gear.json limits (never above the cap, never below one).
+static func _gear_gain(move: Variant) -> float:
+	var raw: Variant = move.get("gear_ultimate_gain_multiplier", 1.0) if move is Dictionary else 1.0
+	var cap: Variant = preload("res://scripts/creatures/creature_gear.gd").config().get("limits", {}).get("ultimate_gain_multiplier_cap", 1.0)
+	if not (raw is int or raw is float) or not is_finite(float(raw)) or not (cap is int or cap is float): return 1.0
+	return clampf(float(raw), 1.0, maxf(1.0, float(cap)))
 
 
 func move_mastery_outcome(id: String, peer: Variant, action: int) -> Dictionary:

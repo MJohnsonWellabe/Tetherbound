@@ -3346,7 +3346,7 @@ static func host_move_profile(moves: RefCounted, block: String, move_id: String,
 		profile["energy_cost"] = float(move.get("energy_cost", 0.0))
 		profile["energy_gain"] = float(move.get("energy_gain", 0.0))
 		profile["power"] = float(move.get("base_power", profile.get("power", 9.0))) * float(move.get("power_multiplier", 1.0))
-		for key: String in ["base_power", "utility", "ultimate", "actor_binding", "action_id", "mastery_rank", "breakthrough_count", "power_multiplier"]:
+		for key: String in ["base_power", "utility", "ultimate", "actor_binding", "action_id", "mastery_rank", "breakthrough_count", "power_multiplier", "gear_ultimate_gain_multiplier"]:
 			if move.has(key): profile[key] = move[key]
 	profile = MATH.with_player_pace(profile, block)
 	if profile.get("slot") == "ultimate":

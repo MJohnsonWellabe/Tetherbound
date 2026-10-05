@@ -168,3 +168,26 @@ func test_host_prepare_applies_equipped_gear_once_and_keeps_portable_hp_intrinsi
 	var back := GEAR.intrinsic_vitals(float(prepared.stats.max_hp) * 0.5, prepared.stats.max_hp, card.max_hp)
 	assert_almost_eq(float(back.hp), float(card.max_hp) * 0.5, 0.001, "half geared HP is half intrinsic HP on the portable row")
 	assert_eq(float(back.max_hp), float(card.max_hp))
+
+
+func test_charm_reaches_strike_power_through_the_real_freeze_and_host_profile() -> void:
+	# The encounter director's host move start: F23 freeze_action, then the
+	# F33 Charm freeze, then COMBAT_MANAGER.host_move_profile (what the host
+	# strikes with). The Charm raises the profile's power by its multiplier.
+	var cfg := GEAR.config()
+	var creature: RefCounted = preload("res://scripts/creatures/creature_species.gd").spawn("terrapup")
+	var moves := preload("res://scripts/creatures/move_db.gd").load_default()
+	var actor := {"character_id": CHARACTER, "creature_uid": str(creature.get("uid")), "encounter_id": "gear-encounter",
+		"generation": 1, "action": 1}
+	var frozen := preload("res://scripts/creatures/move_mastery.gd").freeze_action(creature, "quick", actor, [], moves)
+	assert_true(frozen.get("ok") == true, str(frozen))
+	if frozen.get("ok") != true: return
+	var manager := preload("res://scripts/combat/combat_manager.gd")
+	var move_id := str(creature.get("move_quick"))
+	var plain: Dictionary = manager.host_move_profile(moves, "player_quick", move_id, 0.5, 0.5, 1.0, 0.0,
+		GEAR.freeze_move_profile(frozen.move, GEAR.empty_slots(), cfg))
+	var charmed: Dictionary = manager.host_move_profile(moves, "player_quick", move_id, 0.5, 0.5, 1.0, 0.0,
+		GEAR.freeze_move_profile(frozen.move, {"harness": "", "charm": "tidesteel_charm_plus_1"}, cfg))
+	var mods := GEAR.modifiers({"harness": "", "charm": "tidesteel_charm_plus_1"}, cfg)
+	assert_almost_eq(float(charmed.power), float(plain.power) * float(mods.move_power), 0.0001, "the Charm scales strike power once")
+	assert_eq(float(charmed.gear_ultimate_gain_multiplier), float(mods.ultimate_gain), "and carries its ultimate gain to the host credit")
