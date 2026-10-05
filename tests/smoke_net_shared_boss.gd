@@ -229,12 +229,10 @@ const SWING_REACH_M := 4.0
 ## Half the widest quick arc (100 deg) plus margin: a boss farther off the
 ## swing line than this cannot be the body the host resolves it onto.
 const FRIENDLY_BOSS_CLEAR_DEG := 65.0
-## Inside-the-ring staging (see `_inside_friendly_line`): candidate rays, the
-## striker's distance out from the boss (clear of its contact spacing), and how
-## far inside the live arena radius both stands must be.
+## Inside-the-ring staging (see `_inside_friendly_side`): candidate directions
+## and how far inside the live arena radius the teammate's stand must be.
 const FRIENDLY_RAYS := 24
-const FRIENDLY_STRIKER_OFF_M := 3.5
-const FRIENDLY_RING_MARGIN_M := 0.5
+const FRIENDLY_RING_MARGIN_M := 0.3
 
 ## `smoke_boss.gd`'s allowance, by its own name and for its own stated reason.
 ## The Warden fields five creatures at levels 18-20 and a headless peer fights
@@ -788,27 +786,17 @@ func _run() -> void:
 		var boss_at := _vec((boss_view.get("record", {}) as Dictionary).get("position", []))
 		var side: Vector3 = FRIENDLY_SIDES[(staged - 1) % FRIENDLY_SIDES.size()]
 		var ring: Dictionary = boss_view.get("arena", {}) as Dictionary
-		var inside := _inside_friendly_line(boss_at, _vec(ring.get("centre", [])),
+		var inside := _inside_friendly_side(guest_at, boss_at, _vec(ring.get("centre", [])),
 			float(ring.get("radius", -1.0)), staged)
-		if not inside.is_empty():
-			# Both stands on ONE ray out from the boss, inside the live ring:
-			# the striker nearer, the teammate APART_Z past it. The boss is then
-			# directly behind the swing, and neither stand is beyond the radius
-			# `combat_arena.hold_inside` returns a fighter to (CI 37314849247:
-			# every "away from the boss" stand was outside it, so the host's
-			# creature was returned to the ring edge before the swing).
-			var striker_at: Vector3 = inside.striker
-			var moved: Dictionary = await step(1, "place_creature",
-				{"at": [striker_at.x, guest_at.y, striker_at.z], "exact": true,
-				 "face": [inside.teammate.x, guest_at.y, inside.teammate.z], "settle": FRIENDLY_SETTLE})
-			if str(moved.get("verdict", "")) == "PASS":
-				guest_at = await _host_view_of_guest_creature()
-				if guest_at != Vector3.INF:
-					var outward := guest_at - boss_at
-					outward.y = 0.0
-					if outward.length() > 0.05:
-						side = outward.normalized()
-						boss_at = Vector3.INF
+		if inside != Vector3.INF:
+			# A teammate stand inside the live ring, as far off the boss's line
+			# as the ring allows. CI 37314849247: every "away from the boss"
+			# stand was outside the 6.84 m ring, and `combat_arena.hold_inside`
+			# returned the host's creature to its edge before the swing. Only
+			# the host's own creature is placed: a guest's creature is held to
+			# the guest's local stand-in, so moving it does not move the host's.
+			side = inside
+			boss_at = Vector3.INF
 		if boss_at != Vector3.INF:
 			# Stand the teammate on the far side of the striker from the boss,
 			# so the swing line points away from it; retries fan out +-30 deg.
@@ -1904,27 +1892,27 @@ func _tournament_accepted_characters(deliveries: Dictionary, source: String) -> 
 ## This peer's view of the boss fight, from `tools/net/peer_runner.gd`'s `boss`
 ## probe: the host record, the creature actually on the field, the same team
 ## entry rebuilt UNSCALED, and the last refusal this peer was given.
-## The friendly-fire staging line, when the host reports its live ring: a unit
-## ray `w` out from the boss on which the striker stands FRIENDLY_STRIKER_OFF_M
-## from the boss and the teammate APART_Z farther out, BOTH at least
-## FRIENDLY_RING_MARGIN_M inside the ring's radius. Among the rays that fit,
-## attempt n takes the n-th roomiest (cycling), so a retry is a different line.
-## Empty when the ring or boss is unknown or no ray fits.
-func _inside_friendly_line(boss_at: Vector3, centre: Vector3, radius: float, attempt: int) -> Dictionary:
-	if boss_at == Vector3.INF or centre == Vector3.INF or radius <= 0.0:
-		return {}
+## A unit direction from the striker (`guest_at`) for the teammate's stand
+## APART_Z away, keeping that stand at least FRIENDLY_RING_MARGIN_M inside the
+## live ring's radius. Among the directions that fit, attempt n takes the n-th
+## farthest off the boss's line (cycling through the best three), so a retry is
+## a different stand. INF when the ring, boss or striker is unknown or none fits.
+func _inside_friendly_side(guest_at: Vector3, boss_at: Vector3, centre: Vector3, radius: float, attempt: int) -> Vector3:
+	if guest_at == Vector3.INF or boss_at == Vector3.INF or centre == Vector3.INF or radius <= 0.0:
+		return Vector3.INF
+	var to_boss := boss_at - guest_at
+	to_boss.y = 0.0
 	var fits: Array = []
 	for k in FRIENDLY_RAYS:
-		var w := Vector3.FORWARD.rotated(Vector3.UP, TAU * float(k) / float(FRIENDLY_RAYS))
-		var striker := boss_at + w * FRIENDLY_STRIKER_OFF_M
-		var teammate := striker + w * APART_Z
-		var room := radius - maxf(_planar(striker - centre), _planar(teammate - centre))
-		if room >= FRIENDLY_RING_MARGIN_M:
-			fits.append({"striker": striker, "teammate": teammate, "room": room})
+		var u := Vector3.FORWARD.rotated(Vector3.UP, TAU * float(k) / float(FRIENDLY_RAYS))
+		if _planar(guest_at + u * APART_Z - centre) > radius - FRIENDLY_RING_MARGIN_M:
+			continue
+		var off := 180.0 if to_boss.length() < 0.05 else rad_to_deg(u.angle_to(to_boss))
+		fits.append({"u": u, "off": off})
 	if fits.is_empty():
-		return {}
-	fits.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return float(a.room) > float(b.room))
-	return fits[(attempt - 1) % mini(3, fits.size())]
+		return Vector3.INF
+	fits.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return float(a.off) > float(b.off))
+	return fits[(attempt - 1) % mini(3, fits.size())].u
 
 
 static func _planar(v: Vector3) -> float:
