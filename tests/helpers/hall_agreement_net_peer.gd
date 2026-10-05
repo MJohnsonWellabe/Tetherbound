@@ -43,6 +43,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		return await _relic_power_attempt(args)
 	if action == "craft_home_key_trip":
 		return await _craft_home_key_trip()
+	if action == "seed_opening_complete":
+		return _seed_opening_complete()
 	return await super._execute_step(msg)
 
 func _hall_guard(expected_peers: int = 2) -> Dictionary:
@@ -650,6 +652,25 @@ func _relic_power_attempt(args: Dictionary) -> Dictionary:
 ## Key trip home (production Satchel Use, f49_portal_travel) and arrives before
 ## its owner-gated craft. Portals off (shipping until F18): skipped, with the
 ## reason returned. Disclosed fixture when on: one home_key and its given flag.
+## Disclosed fixture (station craft): a returning player after a played
+## opening. Before its first save and admission this offline character gains
+## every opening beat flag (through free_play) and every configured onboarding
+## lesson's seen flag, the flags the opening and the lessons write in play.
+func _seed_opening_complete() -> Dictionary:
+	var game := root.get_node("Game")
+	var session := _session()
+	if session != null and bool(session.call("is_active")):
+		return {"verdict": "FAIL", "detail": "seed the opening before the first admission, not in a session"}
+	var flags: RefCounted = game.get("local").get("flags")
+	var set_ids: Array[String] = []
+	for beat: String in preload("res://scripts/story/opening_beats.gd").order():
+		set_ids.append("opening:beat:" + beat)
+	for lesson: Dictionary in preload("res://scripts/onboarding/lesson_rules.gd").config().get("lessons", []):
+		set_ids.append(preload("res://scripts/onboarding/lesson_rules.gd").PREFIX + str(lesson.id))
+	for id: String in set_ids: flags.call("set_flag", id, true)
+	return {"verdict": "PASS", "detail": "opening complete: %d beat and lesson flags" % set_ids.size()}
+
+
 func _craft_home_key_trip() -> Dictionary:
 	var game := root.get_node("Game")
 	var session := _session()

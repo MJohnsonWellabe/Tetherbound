@@ -15,7 +15,9 @@ extends "res://tests/smoke_net_crossing_hall_agreement.gd"
 ## (one Terrapup, peer_runner party_grant, saved with save_character_here
 ## before its first admission, as the F27 net smokes seed theirs), so it
 ## joins like a real player after the opening: a Home Key holder always
-## owns a creature.
+## owns a creature. The same saved character has played the opening: every
+## opening:beat:<beat> flag through free_play and every onboarding
+## opening:lesson:<id> seen flag are set before its save (seed_opening_complete).
 const COUNTED := ["potion_small", "berries", "fiber"]
 
 
@@ -35,6 +37,7 @@ func _run() -> void:
 	# Disclosed fixture (see header): the guest's saved character owns its
 	# starter before the host first admits it.
 	if not await _craft_step(1, "party_grant", {"species": "terrapup"}): return
+	if not await _craft_step(1, "seed_opening_complete", {}): return
 	var seeded := await _craft_data(1, "save_character_here", {})
 	if seeded.is_empty():
 		await _craft_finish()
