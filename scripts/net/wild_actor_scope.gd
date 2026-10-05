@@ -83,8 +83,6 @@ static func stage(current: Dictionary, intent: Dictionary, context: Dictionary) 
 	if context.get("validated_host_outcome") != "win" or not E._equivalent(context.get("defeat_event"), intent) \
 		or intent.get("world_namespace") != context.get("world_namespace"):
 		return {"ok": false, "code": "actual_host_wild_defeat_required", "durable": false, "resolved": false}
-	if settled_before(current, context).is_empty():
-		return {"ok": false, "code": "actual_settled_vitals_required", "durable": false, "resolved": false}
 	var proposal := E.stage_core_defeat(current, str(current.character_id), intent, int(context.get("expected_revision", 0)),
 		E.config(), preload("res://scripts/creatures/progression.gd").config(),
 		preload("res://scripts/creatures/teaching.gd").available_moves, preload("res://scripts/creatures/teaching.gd").character_loadout_mirror)

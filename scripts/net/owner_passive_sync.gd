@@ -532,6 +532,9 @@ func capture_gate(peer: int, envelope: Dictionary, context: Dictionary) -> Dicti
 		return {"ok": true} if PREP.exact(expected, context) else _terminal("owner_passive_source_changed")
 	if envelope.get("op") != "wild_capture" or not envelope.get("intent") is Dictionary \
 		or not hosts.has(character): return _deny("owner_passive_recording_unavailable")
+	if session.has_method("_guest_wild_share_outstanding") \
+		and session.call("_guest_wild_share_outstanding", character, _game().get("world")) == true:
+		return _deny("owner_passive_wild_share_settling")
 	var stream: Dictionary = hosts[character]
 	if not str(stream.error).is_empty(): return _deny(str(stream.error))
 	var world: RefCounted = _game().get("world")

@@ -802,7 +802,8 @@ static func merge_owner_passive(after: Dictionary, before: Dictionary, current: 
 			if not now.has(field) or not was.has(field) or not card.has(field) or _equivalent(now[field], was[field]): continue
 			if field == "rested" or not (now[field] is int or now[field] is float) or not (was[field] is int or was[field] is float) \
 					or not (card[field] is int or card[field] is float):
-				card[field] = now[field]
+				# A row that itself decided this field (a camp bed's rest) keeps it.
+				if _equivalent(card[field], was[field]): card[field] = now[field]
 				continue
 			var value := maxf(0.0, float(card[field]) + float(now[field]) - float(was[field]))
 			if field == "happiness" and (mood_max is int or mood_max is float): value = minf(value, float(mood_max))

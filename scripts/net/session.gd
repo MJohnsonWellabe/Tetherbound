@@ -5245,9 +5245,17 @@ func _commit_host_wild_victory(frozen: Dictionary) -> Dictionary:
 	return {"ok": true, "durable": true, "resolved": false, "receipt": committed.receipt,
 		"delivery_id": committed.delivery_id, "code": "awaiting_saved_decision"}
 
-## A canonical wild victory this guest took part in has not yet retained its
-## `wild_defeat_share` (its vitals are still settling): its other duties wait.
+## A canonical wild victory this guest took part in has not yet DELIVERED its
+## `wild_defeat_share`: still settling vitals, or journaled but not yet
+## accepted into the authority record. Its other duties and requests wait, so
+## nothing changes the record the share stages on in between.
 func _guest_wild_share_outstanding(character: String, world: RefCounted) -> bool:
+	var receipts: Array = (_character_authority.call("state", character) as Dictionary).get("redesign_character", {}).get("transaction_receipts", [])
+	for raw: Variant in world.reward_deliveries.values():
+		if not raw is Dictionary or raw.get("kind") != "foundation_event" or not str(raw.get("source_id", "")).begins_with("wild_xp:"): continue
+		for duty: Variant in raw.get("duties", []):
+			if duty is Dictionary and duty.get("action") == "wild_defeat_share" and duty.get("character_id") == character \
+				and not receipts.has(ESSENCE.defeat_receipt(character, duty.intent)): return true
 	for director: Node in _foundation_directors_under(_foundation_realm_roots()):
 		var fights: Variant = director.get("_shared_host_fights")
 		if not fights is Dictionary or not director.has_method("_shared_host_fight"): continue

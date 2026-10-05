@@ -416,3 +416,18 @@ func test_owner_passive_merge_keeps_the_rows_change_and_the_owners_drift() -> vo
 	var cap: float = float(preload("res://scripts/creatures/creature_condition.gd").config().happiness.max)
 	assert_true(float(E.merge_owner_passive(after, before, high).party[0].happiness) <= cap, "mood stays within its maximum")
 	assert_eq(E.merge_owner_passive(after, before, before), after, "no drift: exactly the row")
+
+
+## A row that itself decided `rested` (a camp bed) keeps it over the owner's
+## older value; the owner's newer drift only fills fields the row left alone.
+func test_owner_passive_merge_keeps_a_rows_own_rest() -> void:
+	var before := {"party": [{"uid": "a", "rested": true, "rested_seconds_left": 10.0}]}
+	var after := {"party": [{"uid": "a", "rested": true, "rested_seconds_left": 600.0}]}
+	var row_rest := {"party": [{"uid": "a", "rested": false, "rested_seconds_left": 0.0}]}
+	var bed_before := {"party": [{"uid": "a", "rested": false, "rested_seconds_left": 0.0}]}
+	var bed_after := {"party": [{"uid": "a", "rested": true, "rested_seconds_left": 600.0}]}
+	var expired := {"party": [{"uid": "a", "rested": false, "rested_seconds_left": 0.0}]}
+	var merged := E.merge_owner_passive(bed_after, bed_before, expired)
+	assert_true(merged.party[0].rested == true and float(merged.party[0].rested_seconds_left) == 600.0, "the bed's rest stands " + str(merged))
+	var drifted := E.merge_owner_passive(after, before, row_rest)
+	assert_true(drifted.party[0].rested == false, "a field the row left alone takes the owner's newer value (rest expired)")
