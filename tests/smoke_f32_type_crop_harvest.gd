@@ -140,7 +140,8 @@ func _check_sequence_directors_are_grouped() -> void:
 ## PERF (2026-10-05): a realm mount with every site still to place (as at world
 ## entry, on host and guest) scanned all ~180k world nodes again for each site,
 ## ~5 s per call. A throwaway mount re-runs that whole path after the crop
-## cycle, so it cannot disturb the checks above.
+## cycle, so it cannot disturb the checks above. Its ~150 duplicate nodes live
+## until quit(): keep it (and the read-only grouping check) last.
 func _check_fresh_mount_time() -> void:
 	var probe: Node3D = preload("res://scripts/world/f32_world_mount.gd").new()
 	_world.add_child(probe)
