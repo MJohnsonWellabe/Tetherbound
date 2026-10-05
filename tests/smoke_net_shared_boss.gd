@@ -1894,9 +1894,9 @@ func _tournament_accepted_characters(deliveries: Dictionary, source: String) -> 
 ## entry rebuilt UNSCALED, and the last refusal this peer was given.
 ## A unit direction from the striker (`guest_at`) for the teammate's stand
 ## APART_Z away, keeping that stand at least FRIENDLY_RING_MARGIN_M inside the
-## live ring's radius. Among the directions that fit, attempt n takes the n-th
-## farthest off the boss's line (cycling through the best three), so a retry is
-## a different stand. INF when the ring, boss or striker is unknown or none fits.
+## live ring's radius and counting as a clean swing (boss off the line or
+## farther). Among those, attempt n takes the n-th roomiest (cycling through
+## the best three), so a retry is a different stand. INF when the ring, boss or striker is unknown or none fits.
 func _inside_friendly_side(guest_at: Vector3, boss_at: Vector3, centre: Vector3, radius: float, attempt: int) -> Vector3:
 	if guest_at == Vector3.INF or boss_at == Vector3.INF or centre == Vector3.INF or radius <= 0.0:
 		return Vector3.INF
@@ -1908,10 +1908,17 @@ func _inside_friendly_side(guest_at: Vector3, boss_at: Vector3, centre: Vector3,
 		if _planar(guest_at + u * APART_Z - centre) > radius - FRIENDLY_RING_MARGIN_M:
 			continue
 		var off := 180.0 if to_boss.length() < 0.05 else rad_to_deg(u.angle_to(to_boss))
-		fits.append({"u": u, "off": off})
+		# Only a stand the attempt below would count as clean: the boss off the
+		# swing line, or farther than the teammate.
+		if off <= FRIENDLY_BOSS_CLEAR_DEG and to_boss.length() <= APART_Z + 0.5:
+			continue
+		fits.append({"u": u, "room": radius - _planar(guest_at + u * APART_Z - centre)})
 	if fits.is_empty():
 		return Vector3.INF
-	fits.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return float(a.off) > float(b.off))
+	# Roomiest first: the ring is centred on the fight, so its middle is open
+	# floor. A stand near the rim can still be inside a room wall (the Warden
+	# Arena's +Z face cuts the ring), which pushes the creature off it.
+	fits.sort_custom(func(a: Dictionary, b: Dictionary) -> bool: return float(a.room) > float(b.room))
 	return fits[(attempt - 1) % mini(3, fits.size())].u
 
 
