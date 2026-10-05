@@ -153,3 +153,36 @@ ta_stormwood10 gaps ['stormwood/dynamo'] rows passing 3/15 {'MASHER': 'stag/figh
   stormwood/deepwood             ripplet   M faint0.17 lead0.68 win1.00 | S faint0.00 lead0.00 win1.00 
   stormwood/deepwood             galewisp  M faint0.33 lead0.93 win1.00 | S faint0.00 lead0.00 win1.00 PASS
 ```
+
+## Meadows floor trainers 1.0 -> 1.15 (accepted, held; no higher in onboarding)
+```
+rows passing 6/15
+  band1_lower_meadows            terrapup  M faint0.17 lead0.30 win1.00 | S faint0.00 lead0.36 win1.00 
+  band1_lower_meadows            ripplet   M faint0.25 lead0.37 win1.00 | S faint0.00 lead0.11 win1.00 PASS
+  band1_lower_meadows            galewisp  M faint0.75 lead1.00 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  band2_stone_and_root           terrapup  M faint0.00 lead0.40 win1.00 | S faint0.00 lead0.60 win1.00 
+  band2_stone_and_root           ripplet   M faint0.00 lead0.39 win1.00 | S faint0.00 lead0.14 win1.00 
+  band2_stone_and_root           galewisp  M faint0.83 lead1.00 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  band3_the_river_lock           terrapup  M faint0.00 lead0.29 win1.00 | S faint0.00 lead0.62 win1.00 
+  band3_the_river_lock           ripplet   M faint0.00 lead0.42 win1.00 | S faint0.00 lead0.16 win1.00 
+  band3_the_river_lock           galewisp  M faint0.75 lead1.00 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  band4_upper_meadows_ironwood   terrapup  M faint0.00 lead0.41 win1.00 | S faint0.00 lead0.60 win1.00 
+  band4_upper_meadows_ironwood   ripplet   M faint0.00 lead0.57 win1.00 | S faint0.00 lead0.11 win1.00 
+  band4_upper_meadows_ironwood   galewisp  M faint0.92 lead1.00 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  band5_stronghold_approach      terrapup  M faint0.00 lead0.44 win1.00 | S faint0.00 lead0.46 win1.00 
+  band5_stronghold_approach      ripplet   M faint0.00 lead0.48 win1.00 | S faint0.00 lead0.20 win1.00 
+  band5_stronghold_approach      galewisp  M faint0.50 lead0.99 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+galewisp MASHER switches 0.00 lead 1.00 sec 40 in/s 0.191 maxhit 0.26 interrupts 0.0 esc 0
+galewisp SWITCH_READER switches 2.02 lead 0.00 sec 51 in/s 0.017 maxhit 0.22 interrupts 4.7 esc 325
+ripplet MASHER switches 0.00 lead 0.45 sec 34 in/s 0.164 maxhit 0.27 interrupts 0.0 esc 0
+ripplet SWITCH_READER switches 0.57 lead 0.15 sec 58 in/s 0.038 maxhit 0.18 interrupts 2.9 esc 365
+terrapup MASHER switches 0.00 lead 0.40 sec 36 in/s 0.137 maxhit 0.22 interrupts 0.0 esc 0
+terrapup SWITCH_READER switches 0.53 lead 0.53 sec 77 in/s 0.070 maxhit 0.18 interrupts 3.1 esc 596
+
+```
+Rows passing: 5/15 at 1.0 -> 6/15 at 1.15. §7 reader win 1.00. Worst single hit 0.27. Reader lead cost 0.00–0.62.
+
+## Per-starter balance, owner item (coordinator 2026-10-05)
+F22#1 rows failed by Terrapup and Galewisp are recorded as **per-starter balance, owner item**, not defects. The §7 pilot stays as specified (no earlier-rotation rule).
+- **Terrapup:** reading costs the slowest, widest body more than mashing. In Meadows the reader takes 0.070 hits/s vs the masher's 0.137, but fights 77 s vs 36 s, so its median lead cost is 0.53 vs 0.40. It switches 0.53 times per fight, so the spent-lead rule rarely triggers.
+- **Galewisp:** the fastest starter lets mashing win before the lead falls (Tidewake masher clear time 43 s, lead faint 0.29).
