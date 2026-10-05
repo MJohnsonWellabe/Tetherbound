@@ -111,9 +111,17 @@ func _read(_policy: String) -> void:
 			_walk(_escape_dir)
 			# The burst is a fixed hop that nothing follows up: walk first and
 			# spend it to finish the exit, or as the last chance before release.
-			var hop := float(MATH.config().get("burst", {}).get("distance", 3.0)) - 0.2
+			var burst: Dictionary = _manager.call("_burst_config") if _manager.has_method("_burst_config") else MATH.config().get("burst", {})
+			var hop := float(burst.get("distance", 3.0)) - 0.2
 			var finishes := float(escape.distance) <= hop and float(escape.walk_s) > float(escape.time_left) - 0.05
-			var last_chance := float(escape.time_left) <= 0.35 and float(escape.walk_s) > float(escape.time_left) - 0.05
+			# Dodge in time: when walking alone cannot clear the shape, spend
+			# the burst while the burst plus the walk left after it still
+			# finishes before release (a fixed 0.35 s "last chance" is too late
+			# whenever the exit is longer than one hop). Same rule for every
+			# creature; only the measured exit distance differs.
+			var after_hop := maxf(0.0, float(escape.distance) - hop) / maxf(0.1, _speed())
+			var deadline := float(burst.get("duration", 0.2)) + after_hop + 0.1
+			var last_chance := float(escape.time_left) <= maxf(0.35, deadline) and float(escape.walk_s) > float(escape.time_left) - 0.05
 			if locked and (finishes or last_chance) \
 					and _manager.wind_value() >= _manager.wind_cost("burst"):
 				_press("jump")
