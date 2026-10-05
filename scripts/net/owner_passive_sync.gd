@@ -94,6 +94,10 @@ func record_input(input: Dictionary) -> void:
 		local.error = "owner_passive_buffer_full"
 		return # Never discard an unacknowledged transition.
 	var packet := input.duplicate(true)
+	if packet.get("op") == "discovery" and packet.get("new_landmarks") is Array and local.get("discovered") is Dictionary:
+		# The host replays only landmarks its set lacks (it refuses a known one).
+		var known: Array = (local.discovered as Dictionary).get(str(packet.get("realm", "")), [])
+		packet.new_landmarks = (packet.new_landmarks as Array).filter(func(id: Variant) -> bool: return not known.has(id))
 	packet.version = 1
 	packet.sequence = int(local.sequence) + 1
 	local.sequence = packet.sequence
@@ -952,7 +956,13 @@ func _completion(peer: int, stream: Dictionary) -> void:
 	var op := "journaled"
 	if checkpoint.get("no_effect") == true: op = "no_effect"
 	elif checkpoint.result.get("code") == "research_no_progress": op = "no_progress"
-	_send_owner(peer, stream, {"op": op, "id": checkpoint.id, "hash": checkpoint.prepared.hash, "result": checkpoint.result})
+	var packet := {"op": op, "id": checkpoint.id, "hash": checkpoint.prepared.hash, "result": checkpoint.result}
+	# The host's proven first-arrival navigation reveal, sent exactly when its
+	# _rebase_host will seed from it; the owner adopts it, never its own map.
+	if checkpoint.get("source_kind") == "portal_arrival" and checkpoint.get("grounded") == true \
+		and checkpoint.get("arrival_discoveries") is Dictionary and checkpoint.result.get("durable") == true:
+		packet["arrival_discoveries"] = checkpoint.arrival_discoveries.duplicate(true)
+	_send_owner(peer, stream, packet)
 
 func receive_owner(packet: Dictionary) -> void:
 	if local.is_empty():
@@ -1097,6 +1107,11 @@ func receive_owner(packet: Dictionary) -> void:
 		"journaled":
 			if not pending.is_empty() and pending.id == packet.get("id"):
 				pending.phase = "journaled" # Existing original owner-row settlement releases the fence.
+			# The host's proven arrival reveal for this stream's arrival receipt;
+			# used only by the settlement of that exact receipt (owner_settled).
+			var proven: Variant = packet.get("arrival_discoveries")
+			if proven is Dictionary and packet.get("result", {}).get("receipt") is String:
+				local.arrival_proof = {"receipt": packet.result.receipt, "discovered": (proven as Dictionary).duplicate(true)}
 		"no_progress", "no_effect":
 			if pending.is_empty() or pending.id != packet.get("id") or not pending.has("prepared") \
 				or packet.get("hash") != pending.prepared.hash \
@@ -1252,12 +1267,11 @@ func owner_settled(row: Dictionary) -> void:
 		or not PREP.exact(RECORD.training_projection(_projection(), row, E.training_projection), row.after): return
 	var previous := local.duplicate(true)
 	var discoveries := _discoveries()
-	if row.get("action") == "portal_arrival" and row.get("intent", {}).get("realm") == "cloudreach":
-		# The host proves a first Cloudreach arrival's navigation reveal
-		# (checkpoint.arrival_discoveries, the same sync_navigation the owner's map
-		# ran); only then does the arrival realm's map set join the identity.
-		var revealed: Variant = owner().call("_groom_service").call("admission_landmarks").get("cloudreach")
-		if revealed is Array: discoveries.cloudreach = (revealed as Array).duplicate()
+	var proof: Variant = local.get("arrival_proof")
+	if row.get("action") == "portal_arrival" and proof is Dictionary and proof.get("receipt") == row.get("receipt"):
+		# Only the host's own proven arrival reveal (journaled packet) joins the
+		# identity; without that proof the host rebases on its replayed set too.
+		discoveries = (proof.discovered as Dictionary).duplicate(true)
 	var declaration := arm_owner(_projection(), discoveries)
 	if declaration.is_empty(): return
 	local.last_settlement = row.receipt
