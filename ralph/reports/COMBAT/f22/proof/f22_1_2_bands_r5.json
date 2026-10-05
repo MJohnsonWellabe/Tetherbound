@@ -1,0 +1,1724 @@
+{
+ "kind": "F22#1/#2 wild band sweep with the new READER/SWITCH_READER at pilot commit a31ab858 (BEFORE review fix 934c5da4: switch-back-to-<0.3HP bug present). 12 seeds/band, 3 starters, smoke_f22_pattern_bands.gd. F24 tag combo OFF (switch half = matchup + spent-lead rescue only).",
+ "chapters": {
+  "r5_band": {
+   "switch_value": {
+    "fixed": {
+     "errors": 0,
+     "lead_faint_rate": 0.00555555555555556,
+     "median_cost": 0.0328479434724359,
+     "runs": 180,
+     "tags": 0,
+     "win_rate": 0.994444444444444
+    },
+    "pass": true,
+    "switched": {
+     "errors": 0,
+     "lead_faint_rate": 0.0,
+     "median_cost": 0.0171932606732192,
+     "runs": 180,
+     "tags": 0,
+     "win_rate": 1.0
+    },
+    "tag_combo_live": false
+   },
+   "rows": [
+    {
+     "band": "band1_lower_meadows",
+     "starter": "terrapup",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0691259925965576,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0833333333333333,
+      "median_cost": 0.0225161766982848,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.916666666666667
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "band1_lower_meadows",
+     "starter": "ripplet",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.00890398842566231,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "band1_lower_meadows",
+     "starter": "galewisp",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0833333333333333,
+      "median_cost": 0.0797835508594552,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.916666666666667
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "band2_stone_and_root",
+     "starter": "terrapup",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.040594102447248,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0149923927959197,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0149923927959197,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "band2_stone_and_root",
+     "starter": "ripplet",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0179164475356122,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0142916440931427,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0142916440931427,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "band2_stone_and_root",
+     "starter": "galewisp",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0755409851537525,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0361567404629801,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0066646361025427,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "band3_the_river_lock",
+     "starter": "terrapup",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0336668314113584,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0358017731451425,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0297469505981734,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "band3_the_river_lock",
+     "starter": "ripplet",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0171845055953118,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0340520046806717,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0291721060106798,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "band3_the_river_lock",
+     "starter": "galewisp",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0592399935459378,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0379435898140127,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0217457996270943,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "band4_upper_meadows_ironwood",
+     "starter": "terrapup",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0347152902433769,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0219223043589947,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0219223043589947,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "band4_upper_meadows_ironwood",
+     "starter": "ripplet",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0227555171385179,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0434880997860938,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0333508295492749,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "band4_upper_meadows_ironwood",
+     "starter": "galewisp",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0851017896954123,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.067306334510091,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0330363710634408,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "band5_stronghold_approach",
+     "starter": "terrapup",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0364334176259423,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "band5_stronghold_approach",
+     "starter": "ripplet",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0330794026460578,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0469391359710286,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0327063635380748,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "band5_stronghold_approach",
+     "starter": "galewisp",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0831531736577397,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0564332267919069,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.026992466615205,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    }
+   ]
+  },
+  "r5_tidewake": {
+   "switch_value": {
+    "fixed": {
+     "errors": 0,
+     "lead_faint_rate": 0.0324074074074074,
+     "median_cost": 0.0514174418841652,
+     "runs": 216,
+     "tags": 0,
+     "win_rate": 0.967592592592593
+    },
+    "pass": false,
+    "switched": {
+     "errors": 1,
+     "lead_faint_rate": 0.0,
+     "median_cost": 0.0,
+     "runs": 216,
+     "tags": 0,
+     "win_rate": 0.99537037037037
+    },
+    "tag_combo_live": false
+   },
+   "rows": [
+    {
+     "band": "tidewake/first_shores",
+     "starter": "terrapup",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0909437331095345,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.102101446609357,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "tidewake/first_shores",
+     "starter": "ripplet",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0447897008655025,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0426893393006693,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "tidewake/first_shores",
+     "starter": "galewisp",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0411844763093273,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0274694267928048,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0274694267928048,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "tidewake/marsh_channels",
+     "starter": "terrapup",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0947064913187339,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0833333333333333,
+      "median_cost": 0.102970237334671,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.916666666666667
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "tidewake/marsh_channels",
+     "starter": "ripplet",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0392450695273818,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0383296349981002,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "tidewake/marsh_channels",
+     "starter": "galewisp",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0356625650568933,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0288691213114032,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0288691213114032,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "tidewake/tidal_cradle",
+     "starter": "terrapup",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0784779510080227,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0824938911926837,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "tidewake/tidal_cradle",
+     "starter": "ripplet",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0370958197269842,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0267556804623313,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "tidewake/tidal_cradle",
+     "starter": "galewisp",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0433695358723428,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0198052589717704,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0198052589717704,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "tidewake/outer_reaches",
+     "starter": "terrapup",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.098623703611656,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.166666666666667,
+      "median_cost": 0.149663403540491,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.833333333333333
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0100947220149367,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "reader win rate below .9",
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "tidewake/outer_reaches",
+     "starter": "ripplet",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0503388662237197,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0850517622312121,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "tidewake/outer_reaches",
+     "starter": "galewisp",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0488475754127265,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0407879969263297,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0407879969263297,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "tidewake/tether_current",
+     "starter": "terrapup",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.107644008190025,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.25,
+      "median_cost": 0.137825528743649,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.75
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "reader win rate below .9",
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "tidewake/tether_current",
+     "starter": "ripplet",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0447742270295214,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0366698435121982,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "tidewake/tether_current",
+     "starter": "galewisp",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0336093353434004,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0393339752450055,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0393339752450055,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "tidewake/veilfall",
+     "starter": "terrapup",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0969224458308384,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0833333333333333,
+      "median_cost": 0.135516848441359,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.916666666666667
+     },
+     "switch_reader": {
+      "errors": 1,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.916666666666667
+     },
+     "pass": false,
+     "reasons": [
+      "SWITCH_READER incomplete or invalid actual fixture",
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "tidewake/veilfall",
+     "starter": "ripplet",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0529916116030908,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0447440451864735,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "tidewake/veilfall",
+     "starter": "galewisp",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.035500903824827,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0185750715331,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0185750715331,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    }
+   ]
+  },
+  "r5_cloudreach": {
+   "switch_value": {
+    "fixed": {
+     "errors": 0,
+     "lead_faint_rate": 0.222222222222222,
+     "median_cost": 0.0982026019603411,
+     "runs": 216,
+     "tags": 0,
+     "win_rate": 0.777777777777778
+    },
+    "pass": false,
+    "switched": {
+     "errors": 4,
+     "lead_faint_rate": 0.0,
+     "median_cost": 0.0345050142782912,
+     "runs": 216,
+     "tags": 0,
+     "win_rate": 0.981481481481482
+    },
+    "tag_combo_live": false
+   },
+   "rows": [
+    {
+     "band": "cloudreach/gate_lower_cliffs",
+     "starter": "terrapup",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.018119323415724,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.00810861895490528,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.00810861895490528,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "cloudreach/gate_lower_cliffs",
+     "starter": "ripplet",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0697072044324718,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.127239617112691,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0322938786349025,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "cloudreach/gate_lower_cliffs",
+     "starter": "galewisp",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0606766834472142,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0609231809820468,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0330972272267436,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "cloudreach/broken_causeways",
+     "starter": "terrapup",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0380141772814002,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.108828737688044,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.108828737688044,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "cloudreach/broken_causeways",
+     "starter": "ripplet",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.104210891842632,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.833333333333333,
+      "median_cost": 0.225409836065574,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.166666666666667
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0917737314186212,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "reader win rate below .9",
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "cloudreach/broken_causeways",
+     "starter": "galewisp",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0644477375252396,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.333333333333333,
+      "median_cost": 0.167021301397871,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.666666666666667
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0884109084912489,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "reader win rate below .9",
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "cloudreach/windscar_ravine",
+     "starter": "terrapup",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0175013678124288,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0184057985907702,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0184057985907702,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "cloudreach/windscar_ravine",
+     "starter": "ripplet",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.052816895149709,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.125621279990218,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0178224808800498,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "cloudreach/windscar_ravine",
+     "starter": "galewisp",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0572109691314164,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0679606757490586,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0173958512769766,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "cloudreach/high_roost_sky_shrine",
+     "starter": "terrapup",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0365199591754645,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.25,
+      "median_cost": 0.110452398505533,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.75
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.110452398505533,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "reader win rate below .9",
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "cloudreach/high_roost_sky_shrine",
+     "starter": "ripplet",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.106911932757708,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.583333333333333,
+      "median_cost": 0.225409836065574,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.416666666666667
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.112390588718867,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "reader win rate below .9",
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "cloudreach/high_roost_sky_shrine",
+     "starter": "galewisp",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.07334680993438,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.333333333333333,
+      "median_cost": 0.143540437758384,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.666666666666667
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.102856449391817,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "reader win rate below .9",
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "cloudreach/upper_cloudreach",
+     "starter": "terrapup",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.031030506748255,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0465739643181255,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0465739643181255,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "cloudreach/upper_cloudreach",
+     "starter": "ripplet",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0881219403251746,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.333333333333333,
+      "median_cost": 0.128105394568122,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.666666666666667
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "reader win rate below .9",
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "cloudreach/upper_cloudreach",
+     "starter": "galewisp",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0578982238006135,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0395733615713019,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "pass": false,
+     "reasons": [
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "cloudreach/summit_final_stronghold",
+     "starter": "terrapup",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0205404295368016,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.333333333333333,
+      "median_cost": 0.141597601389438,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.666666666666667
+     },
+     "switch_reader": {
+      "errors": 1,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.141597601389438,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.916666666666667
+     },
+     "pass": false,
+     "reasons": [
+      "SWITCH_READER incomplete or invalid actual fixture",
+      "reader win rate below .9",
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "cloudreach/summit_final_stronghold",
+     "starter": "ripplet",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0939270753667227,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.666666666666667,
+      "median_cost": 0.225409836065574,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.333333333333333
+     },
+     "switch_reader": {
+      "errors": 2,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.082057279922544,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.833333333333333
+     },
+     "pass": false,
+     "reasons": [
+      "SWITCH_READER incomplete or invalid actual fixture",
+      "reader win rate below .9",
+      "masher lead losses insufficiently different"
+     ]
+    },
+    {
+     "band": "cloudreach/summit_final_stronghold",
+     "starter": "galewisp",
+     "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0618927605136865,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+     },
+     "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.333333333333333,
+      "median_cost": 0.147929896781737,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.666666666666667
+     },
+     "switch_reader": {
+      "errors": 1,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.0815426534635718,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 0.916666666666667
+     },
+     "pass": false,
+     "reasons": [
+      "SWITCH_READER incomplete or invalid actual fixture",
+      "reader win rate below .9",
+      "masher lead losses insufficiently different"
+     ]
+    }
+   ]
+  }
+ }
+}
