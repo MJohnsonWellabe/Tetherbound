@@ -1,0 +1,20 @@
+frame_01.png: start of the walk, just outside Grandpa's house after the opening
+frame_02.png: arrival: Grandpa (indoors)
+frame_03.png: arrival: Tam (blacksmith)
+frame_04.png: arrival: Mira (shop, indoors)
+frame_05.png: arrival: Bram (shop, indoors)
+frame_06.png: arrival: Nessa
+frame_07.png: arrival: Maren
+frame_08.png: arrival: Oskar
+frame_09.png: arrival: the old key, about to take it
+frame_10.png: travel: on the road toward the Practice Meadow camp
+frame_11.png: approach: walking into the Practice Meadow camp
+frame_12.png: arrival: Practice Meadow camp
+frame_13.png: arrival: RoadGate ("The Rise"), still closed
+frame_14.png: arrival: RoadGate ("The Rise"), after opening it with the key
+frame_15.png: arrival: TrailGate (South Bridge exit)
+frame_16.png: arrival: PondGate ("The Pond")
+frame_17.png: travel frame on the village roads
+frame_18.png: travel frame on the village roads
+frame_19.png: travel frame on the village roads
+frame_20.png: travel frame on the village roads
