@@ -1,0 +1,37 @@
+{
+  "path": "raw-evidence.zip",
+  "size_bytes": 5840663,
+  "sha256": "5337478dab9aa6bf75ea7dfa1da03403299e1d9b8008eb3d43e9cfc83f2b81ab",
+  "files": [
+    {
+      "path": "native.log",
+      "size_bytes": 1737406,
+      "sha256": "50e2be63b7cd3fbe64c2b54c8922aa30275e9b05ea71ff21b1482994614b5f8e"
+    },
+    {
+      "path": "receipt.json",
+      "size_bytes": 41684,
+      "sha256": "51d88385ad993dc1c949c70265b828c477e178f3a398f1781f1c8564df93933e"
+    },
+    {
+      "path": "route/end.png",
+      "size_bytes": 2816483,
+      "sha256": "0c321510589579834af6d4235d036ebfc254750d389cfd027ac12d86c60b2c43"
+    },
+    {
+      "path": "route/performance.json",
+      "size_bytes": 121119,
+      "sha256": "638925fa0367c6be17ffc91908567789baf1616f5e5a0e126beac4f17b54f19b"
+    },
+    {
+      "path": "route/route.json",
+      "size_bytes": 28606,
+      "sha256": "a0adcf5308821a424a7851cff78ec20879f35087ce27315db2e41175dd0d8e5b"
+    },
+    {
+      "path": "route/start.png",
+      "size_bytes": 2794052,
+      "sha256": "bb98925f836525bee06a611851ce6077861c31f130b6df341625895f47131968"
+    }
+  ]
+}
