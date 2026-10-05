@@ -1,0 +1,9 @@
+Independent delivery audit: PASS for evidence integrity and failure reporting. All three capture passes remain FAIL; neither requested visual qualification is established.
+
+The native and preset receipts identify source `f06b679a45601313b6772cf229cdd5302d2aaa87`, Medium/Forward+, and the requested 1920x1080 commands. High-perch uses `--fixed-fps 60`; day/night use the frame matrix with `--active=terrapup`, with `--night` only for night. The source checkout HEAD matches the pin and has no tracked diff. Import and preset selection exit 0 with no recorded ERRORs. Each native log identifies the GTX 1060 3GB using Forward+.
+
+High-perch exits 1 after 217.609 seconds with `ERROR: HIGH PERCH LIVE: EncounterDirector never appeared` and `HIGH PERCH LIVE FAIL: 0/12 frames, 1 failures`. Day and night exit 1 after 217.610 and 222.593 seconds with `ERROR: frame matrix: EncounterDirector never appeared; refusing partial-scene evidence`. The full native logs retain these errors and backtraces. All three outputs contain zero PNGs: the requested 12/37/37 frames and contact sheets are absent, so actual image resolution cannot be verified.
+
+The high-perch `manifest.native.json` retains `complete: false`, the failure, and empty records. Every native field is unchanged in the annotated `manifest.json`; only service provenance is added. Day/night produced no frame manifests, and the service manifest reports their absence. The README and service manifest correctly retain overall failure. The known `fly_tutorial_completed` error was not observed in these runs and is not substituted for the actual failure.
+
+All 21 pre-review inventory entries matched their recorded lengths and SHA-256 hashes. The inventory was refreshed to include this review. No engine, import, render, test, workaround or rerun was performed for this audit; no images were viewed or judged. Runtime failures remain open, with no performance, Ally or full acceptance claim.

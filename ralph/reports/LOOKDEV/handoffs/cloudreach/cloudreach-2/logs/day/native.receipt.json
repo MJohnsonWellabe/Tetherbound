@@ -1,0 +1,33 @@
+{
+  "request_id": "cloudreach-2",
+  "source_commit": "f06b679a45601313b6772cf229cdd5302d2aaa87",
+  "preset": "Medium",
+  "command": [
+    "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\render-cloudreach-f06b679a",
+    "--rendering-method",
+    "forward_plus",
+    "--audio-driver",
+    "Dummy",
+    "--resolution",
+    "1920x1080",
+    "--script",
+    "tools/capture_cloudreach_frame_matrix.gd",
+    "--",
+    "--active=terrapup",
+    "--output=D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-2/medium/day"
+  ],
+  "exit_code": 1,
+  "stop_reason": null,
+  "elapsed_seconds": 217.61,
+  "log": "native.log",
+  "log_sha256": "f70d363ec68bddc6e7ce774281dde5d9b5f04fdb5365fcd7d5ac495341d9e7b5",
+  "errors": [
+    "ERROR: frame matrix: EncounterDirector never appeared; refusing partial-scene evidence"
+  ],
+  "gpu_header": [
+    "Vulkan 1.3.280 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce GTX 1060 3GB"
+  ],
+  "completion_lines": []
+}

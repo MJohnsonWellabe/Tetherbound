@@ -1,0 +1,73 @@
+{
+  "camera": "production CameraRig, processing on throughout; yaw written as the right stick; no evidence camera",
+  "complete": false,
+  "departure_repeated_ground_presses": 0,
+  "failures": [
+    "EncounterDirector never appeared"
+  ],
+  "finished_utc": "2026-10-05T03:31:12",
+  "fixture_disclosure": "reset_for_new_game; realm cloudreach; scene instantiated directly; Act I-II flags incl. fly_traversal_unlocked (frame matrix BOOT_FLAGS); party terrapup/bramblebun/mudsnout/brooktail (no flier: Maela's loaner carries every flight); trainer teleported to the arrival start in the air once per time of day, then Jump launches the glide; yaw written each physics frame as the stick; pitch -32 deg for the rim-out frame only; clock pinned; HUD hidden for each frame.",
+  "named_location": "The High Perches",
+  "records": [],
+  "scene": "res://scenes/world/cloudreach_cliffs.tscn",
+  "schema_version": 1,
+  "tool": "tools/capture_cloudreach_high_perch_live.gd",
+  "render_service": {
+    "case": "high-perch",
+    "source_commit": "f06b679a45601313b6772cf229cdd5302d2aaa87",
+    "preset": "Medium",
+    "requested_resolution": [
+      1920,
+      1080
+    ],
+    "output": "medium/high-perch",
+    "command": [
+      "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+      "--path",
+      "D:\\tetherbound\\render-cloudreach-f06b679a",
+      "--fixed-fps",
+      "60",
+      "--rendering-method",
+      "forward_plus",
+      "--audio-driver",
+      "Dummy",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "tools/capture_cloudreach_high_perch_live.gd",
+      "--",
+      "--output=D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/handoffs/cloudreach/cloudreach-2/medium/high-perch"
+    ],
+    "gpu_header": [
+      "Vulkan 1.3.280 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce GTX 1060 3GB"
+    ],
+    "exit_code": 1,
+    "elapsed_seconds": 217.609,
+    "runtime_errors": [
+      "ERROR: HIGH PERCH LIVE: EncounterDirector never appeared"
+    ],
+    "completion_lines": [
+      "HIGH PERCH LIVE FAIL: 0/12 frames, 1 failures"
+    ],
+    "expected_frames": 12,
+    "actual_frames": 0,
+    "png_count": 0,
+    "frame_manifest_present": true,
+    "qualification": "FAIL",
+    "reason": "EncounterDirector never appeared; no frames.",
+    "log_tail": [
+      "[shell_build] CloudreachCliffs complete:bridges total=96533ms slice=333ms",
+      "[shell_build] CloudreachCliffs complete:landmarks total=99884ms slice=2ms",
+      "[shell_build] CloudreachCliffs complete:return_gate total=100166ms slice=144ms",
+      "[shell_build] CloudreachCliffs complete:route_details total=100318ms slice=9ms",
+      "[shell_build] CloudreachCliffs complete:resource_patches total=100921ms slice=7ms",
+      "[shell_build] CloudreachCliffs complete:environment total=101243ms slice=187ms",
+      "ERROR: HIGH PERCH LIVE: EncounterDirector never appeared",
+      "   at: push_error (core/variant/variant_utility.cpp:1023)",
+      "   GDScript backtrace (most recent call first):",
+      "       [0] _fail (res://tools/capture_cloudreach_high_perch_live.gd:390)",
+      "       [1] _boot (res://tools/capture_cloudreach_high_perch_live.gd:135)",
+      "HIGH PERCH LIVE FAIL: 0/12 frames, 1 failures"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "request_id": "cloudreach-2",
+  "source_commit": "f06b679a45601313b6772cf229cdd5302d2aaa87",
+  "preset": "Medium",
+  "command": [
+    "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+    "--headless",
+    "--editor",
+    "--path",
+    "D:\\tetherbound\\render-cloudreach-f06b679a",
+    "--import"
+  ],
+  "exit_code": 0,
+  "stop_reason": null,
+  "elapsed_seconds": 354.421,
+  "log": "serialized-import.log",
+  "log_sha256": "d1ded486b2822cbe9f70b0702292f19873a6f369a37bb57c6292cdd0673f7604",
+  "errors": [],
+  "gpu_header": [],
+  "completion_lines": []
+}
