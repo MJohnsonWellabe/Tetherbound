@@ -25,7 +25,18 @@ func _tracking_enabled() -> bool:
 	return MATH.config().get("actor_vitals", {}).get("runtime_enabled") == true
 
 
+## Encounters whose owner does not run the actor-binding pipeline (Stormwood's
+## hosted trainers bind no actor and pass no f22 binding). They keep the
+## untracked strike path the flag-off build uses instead of refusing every
+## guest strike as stale_actor. Integrating them is separate work.
+var _untracked_encounters: Dictionary = {}
+
+func exclude_from_actor_tracking(id: String) -> void:
+	if not id.is_empty(): _untracked_encounters[id] = true
+
+
 func _tracking_enabled_for(id: String) -> bool:
+	if _untracked_encounters.has(id): return false
 	if _tracking_enabled(): return true
 	var rec: Dictionary = encounters.get(id, {})
 	var scope: Variant = rec.get("ordinary_combat_reward_owner")
@@ -233,6 +244,7 @@ func forget(id: String) -> void:
 		for started: Dictionary in state.get("move_starts", {}).values():
 			if started.get("mastery_pending") == true: return
 	super.forget(id)
+	_untracked_encounters.erase(id)
 
 
 func leave(id: String, peer: int) -> Dictionary:
