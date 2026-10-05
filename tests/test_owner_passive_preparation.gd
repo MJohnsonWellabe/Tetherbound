@@ -288,3 +288,46 @@ func test_waystone_touch_request_binds_its_own_envelope_and_frozen_host_context(
 			"a changed touch binding never prepares")
 	assert_true(PREP.make_action(parts.request, parts.context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN, "foundation_request").is_empty(),
 		"a touch cannot masquerade as another request source")
+
+func _home_key_parts() -> Dictionary:
+	var grant := preload("res://scripts/net/reward_delivery.gd").make_record("resource-slot", "resource-namespace",
+		"home_key:grant:" + DATA.CHARACTER, DATA.CHARACTER, "home_key", 1, "home_key_given")
+	var record := preload("res://scripts/net/home_key_action.gd").due(grant, DATA.CHARACTER)
+	var envelope := {"character_id": DATA.CHARACTER, "world_instance_id": "resource-namespace", "session_epoch": "current-epoch",
+		"delivery_id": grant.delivery_id, "origin_namespace": "resource-namespace"}
+	var context := {"character_id": DATA.CHARACTER, "expected_revision": 0, "in_range": true, "in_combat": false,
+		"foundation_runtime_authorized": true, "home_key_authorized": true, "home_key_record": record,
+		"source_key": "opening_home_key:" + grant.delivery_id}
+	return {"request": PREP.home_key_request(envelope), "context": context}
+
+func test_home_key_request_binds_its_own_reconcile_request_and_frozen_host_context() -> void:
+	# F18 (render.yml 37383201956): a guest's Home Key owe/deliver row staged
+	# against a stale admitted record stranded its owner-passive stream. The
+	# reconcile is frozen/replayed like every other owner request.
+	var f := _action_fixture()
+	var parts := _home_key_parts()
+	var prepared := PREP.make_action(parts.request, parts.context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN, "home_key")
+	assert_false(prepared.is_empty(), "the exact reconcile request and host context prepare")
+	assert_true(PREP.valid_action_host(prepared, f.cursor))
+	assert_true(PREP.owner_plan(f.cursor.state, prepared, {}, {}).ok, "the owner's replayed state is the baseline")
+	assert_false(PREP.owner_plan(f.before, prepared, {}, {}).ok, "a stale owner record is still refused")
+	for mutate: Callable in [
+		func(r: Dictionary, c: Dictionary) -> void: c.source_key = "opening_home_key:" + "0".repeat(64),
+		func(r: Dictionary, c: Dictionary) -> void: c.home_key_authorized = false,
+		func(r: Dictionary, c: Dictionary) -> void: c.expected_revision = 1,
+		func(r: Dictionary, c: Dictionary) -> void: c.home_key_record.character_id = "someone-else",
+		func(r: Dictionary, c: Dictionary) -> void: c.home_key_record = {},
+		func(r: Dictionary, c: Dictionary) -> void: r.envelope.delivery_id = "0".repeat(64),
+		func(r: Dictionary, c: Dictionary) -> void: r.envelope.origin_namespace = "another-world",
+		func(r: Dictionary, c: Dictionary) -> void: r.envelope.session_epoch = "another-epoch",
+		func(r: Dictionary, c: Dictionary) -> void: r.envelope.character_id = "someone-else",
+		func(r: Dictionary, c: Dictionary) -> void: r.envelope.extra = true,
+		func(r: Dictionary, c: Dictionary) -> void: r.op = "waystone_touch",
+	]:
+		var request: Dictionary = parts.request.duplicate(true)
+		var context: Dictionary = parts.context.duplicate(true)
+		mutate.call(request, context)
+		assert_true(PREP.make_action(request, context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN, "home_key").is_empty(),
+			"a changed reconcile binding never prepares")
+	assert_true(PREP.make_action(parts.request, parts.context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN, "waystone_touch").is_empty(),
+		"a reconcile cannot masquerade as another request source")

@@ -325,3 +325,54 @@ func test_reconcile_waits_while_another_owner_delivery_is_unsettled() -> void:
 	find.status = "accepted"
 	_game.world.reward_deliveries[find.delivery_id] = find
 	assert_eq(OPENING.host_reconcile(_session, 7, request).get("code"), "actor_in_combat", "an accepted find no longer blocks")
+
+
+class GateRecorder extends RefCounted:
+	var calls: Array = []
+	func action_gate(peer: int, source_kind: String, request: Dictionary, context: Dictionary) -> Dictionary:
+		calls.append({"peer": peer, "source_kind": source_kind, "request": request.duplicate(true), "context": context.duplicate(true)})
+		return {"ok": false, "code": "owner_passive_checkpoint_pending"}
+
+
+class RevisionAuthority extends Authority:
+	func revision(_character: String) -> int: return 4
+
+
+class GatedSession extends SessionFixture:
+	var gate := GateRecorder.new()
+	func _altar_peer_in_combat(_peer: int) -> bool: return false
+	func _owner_passive_service() -> RefCounted: return gate
+
+
+func test_a_guest_reconcile_freezes_its_owner_passive_stream_before_staging() -> void:
+	# render.yml 37383201956: the guest's home_key_owe row staged straight onto
+	# the admitted record while its owner-passive stream kept replaying care
+	# and finds; the stream's base went stale and the next find's replay
+	# stopped it (owner_passive_delivery_authority_changed). The reconcile now
+	# asks the owner-passive gate first, as waystone touches do.
+	var gated := GatedSession.new()
+	gated.game = _game
+	gated._character_authority = RevisionAuthority.new()
+	gated.flags = {OPENING.PAST_FIRST_CATCH_FLAG: true}
+	_session.remove_child(_transport)
+	gated.add_child(_transport)
+	_game.add_child(gated)
+	assert_true(OPENING.host_legacy_grant(gated, 7).get("durable") == true)
+	var request := _settlement()
+	request.origin_namespace = NAMESPACE
+	var result: Dictionary = OPENING.host_reconcile(gated, 7, request)
+	assert_eq(result.get("code"), "owner_passive_checkpoint_pending", "nothing stages until the owner is frozen")
+	assert_eq(gated.gate.calls.size(), 1)
+	var call: Dictionary = gated.gate.calls[0]
+	assert_eq(call.source_kind, "home_key")
+	assert_true(_same(call.request, preload("res://scripts/net/owner_passive_preparation.gd").home_key_request(request)),
+		"the gate binds the owner's exact request")
+	assert_eq(call.context.expected_revision, 4)
+	assert_eq(call.context.home_key_record.status, "grant_due", "a first debt is the host's own saved grant")
+	assert_eq(call.context.source_key, "opening_home_key:" + request.delivery_id)
+	assert_false(_game.world.reward_deliveries.keys().any(func(id: String) -> bool: return id.begins_with("creature_training")),
+		"no full-record row was staged")
+
+
+func _same(a: Variant, b: Variant) -> bool:
+	return preload("res://scripts/creatures/essence.gd")._equivalent(a, b)

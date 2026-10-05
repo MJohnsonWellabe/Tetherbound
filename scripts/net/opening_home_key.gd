@@ -294,19 +294,9 @@ static func host_reconcile(session: Node, peer: int, request: Dictionary) -> Dic
 	if _owner_delivery_unsettled(bound.world, bound.character, request.delivery_id):
 		return {"ok": false, "code": "owner_delivery_pending"}
 	if session.call("_altar_peer_in_combat", peer) == true: return {"ok": false, "code": "actor_in_combat"}
-	var source: Variant = bound.personal.get("portal_escrow", {}).get(request.delivery_id)
-	var action := "home_key_deliver"
-	if source == null:
-		# A first debt comes only from this host's actual saved opening producer.
-		# An old world's ID without its admitted finite escrow is refused.
-		if request.origin_namespace != bound.world.reward_delivery_namespace:
-			return {"ok": false, "code": "admitted_home_key_debt_required"}
-		var canonical: Variant = bound.world.reward_deliveries.get(request.delivery_id)
-		if not valid_row(canonical, bound.world, bound.character): return {"ok": false, "code": "finite_home_key_source_required"}
-		source = HOME_ACTION.due(canonical, bound.character)
-		action = "home_key_owe"
-	if not HOME_ACTION.valid_escrow(source, bound.character) or source.world_namespace != request.origin_namespace:
-		return {"ok": false, "code": "admitted_home_key_debt_required"}
+	var found := _source(bound, request)
+	if found.has("code"): return {"ok": false, "code": found.code}
+	var source: Dictionary = found.source
 	# A copied packet cannot introduce another world's escrow. The source is
 	# the host's admitted baseline or its own saved original opening decision.
 	var mirrored := _journal_prepared(session, peer, bound)
@@ -316,14 +306,69 @@ static func host_reconcile(session: Node, peer: int, request: Dictionary) -> Dic
 		return {"ok": false, "code": "owner_action_pending"}
 	if source.status == "settled":
 		return {"ok": HOME_ACTION.key_count(bound.personal) == 1, "durable": true, "resolved": true}
-	var intent := {"delivery_id": request.delivery_id, "origin_namespace": request.origin_namespace}
 	var context := {"character_id": bound.character, "expected_revision": int(authority.call("revision", bound.character)),
 		"in_range": true, "in_combat": false, "foundation_runtime_authorized": true,
 		"home_key_authorized": true, "home_key_record": source.duplicate(true),
 		"source_key": "opening_home_key:" + request.delivery_id}
+	# A guest's portable record keeps drifting (care, walking, finds) between
+	# host samples, and a full-record row staged against a stale admitted
+	# record strands its owner-passive stream. Freeze and replay the owner's
+	# exact inputs first, as every other guest owner request does; the
+	# checkpoint commits through commit_reconcile.
+	if peer != session.call("local_peer_id"):
+		var ready: Dictionary = session.call("_owner_passive_service").call("action_gate", peer, "home_key",
+			preload("res://scripts/net/owner_passive_preparation.gd").home_key_request(request), context)
+		if ready.get("ok") != true: return ready
+	return commit_reconcile(session, peer, request, context)
+
+
+## Stages the owe/deliver row with exactly the context that was (for a guest)
+## checkpointed. The admitted source must still be the one frozen.
+static func commit_reconcile(session: Node, peer: int, request: Dictionary, context: Dictionary) -> Dictionary:
+	var identity := request.duplicate()
+	identity.erase("delivery_id")
+	identity.erase("origin_namespace")
+	var bound := _binding(session, peer, identity)
+	if bound.is_empty(): return _terminal("not_admitted")
+	var authority: RefCounted = session.get("_character_authority")
+	if authority == null or authority.call("_training_locked", bound.character) == true:
+		return {"ok": false, "code": "owner_action_pending"}
+	var found := _source(bound, request)
+	if found.has("code"): return _terminal(found.code)
+	if not ESSENCE._equivalent(found.source, context.get("home_key_record")) or found.source.status == "settled":
+		return _terminal("home_key_source_changed")
+	var intent := {"delivery_id": request.delivery_id, "origin_namespace": request.origin_namespace}
 	var actions: Script = load("res://scripts/net/foundation_actions.gd")
-	return actions.commit(authority, session.get_node(^"LedgerRpc"), peer, bound.character,
-		context.expected_revision, action, intent, context)
+	var result: Dictionary = actions.commit(authority, session.get_node(^"LedgerRpc"), peer, bound.character,
+		int(context.get("expected_revision", -1)), found.action, intent, context)
+	if result.get("durable") == true or str(result.get("code", "")) in TRANSIENT_CODES: return result
+	return _terminal(str(result.get("code", result.get("reason", "home_key_refused"))))
+
+
+## A refusal that leaves the record untouched: a checkpointed owner rebases
+## and its next delivery request retries from the live admitted record.
+const TRANSIENT_CODES := ["transaction_busy", "stage_changed", "world_save_failed",
+	"training_journal_failed", "world_not_prepared", "fallback_busy", "character_busy"]
+
+static func _terminal(code: String) -> Dictionary:
+	return {"ok": false, "resolved": true, "durable": false, "terminal_refusal": true, "code": code, "reason": code}
+
+
+## The admitted escrow row (deliver), or this host's own saved opening grant as
+## a first debt (owe). An old world's ID without its admitted escrow is refused.
+static func _source(bound: Dictionary, request: Dictionary) -> Dictionary:
+	var source: Variant = bound.personal.get("portal_escrow", {}).get(request.delivery_id)
+	var action := "home_key_deliver"
+	if source == null:
+		if request.origin_namespace != bound.world.reward_delivery_namespace:
+			return {"code": "admitted_home_key_debt_required"}
+		var canonical: Variant = bound.world.reward_deliveries.get(request.delivery_id)
+		if not valid_row(canonical, bound.world, bound.character): return {"code": "finite_home_key_source_required"}
+		source = HOME_ACTION.due(canonical, bound.character)
+		action = "home_key_owe"
+	if not HOME_ACTION.valid_escrow(source, bound.character) or source.world_namespace != request.origin_namespace:
+		return {"code": "admitted_home_key_debt_required"}
+	return {"source": source, "action": action}
 
 
 ## A reward delivery (a find, a gather batch) the owner may already hold but

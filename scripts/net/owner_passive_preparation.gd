@@ -79,6 +79,7 @@ static func _action_request_valid(raw: Dictionary) -> bool:
 	var request: Dictionary = raw.request
 	if raw.source_kind == "portal_arrival": return _portal_request_valid(raw)
 	if raw.source_kind == "waystone_touch": return _waystone_request_valid(raw)
+	if raw.source_kind == "home_key": return _home_key_request_valid(raw)
 	var fields := ["op", "session_epoch", "world_namespace", "character_id", "station_key", "intent"]
 	if raw.source_kind in ["foundation_request", "manual_refine"]: fields.append("revision")
 	if not _fields(request, fields) or not request.intent is Dictionary \
@@ -179,6 +180,37 @@ static func _waystone_request_valid(raw: Dictionary) -> bool:
 		and context.source_key == "waystone:" + str(envelope.payload.waystone_id) \
 		and BASE._hex(context.touch_id, 32) and context.realm is String and not str(context.realm).is_empty() \
 		and context.world_namespace == raw.world_namespace
+
+## F18 Home Key owe/deliver: the owner's own reconcile request (its identity
+## fences plus the gift's delivery ID) and the exact host context
+## opening_home_key.commit_reconcile stages.
+static func home_key_request(request: Dictionary) -> Dictionary:
+	return {"op": "home_key_reconcile", "session_epoch": request.get("session_epoch"),
+		"world_namespace": request.get("world_instance_id"), "character_id": request.get("character_id"),
+		"envelope": request.duplicate(true)}
+
+static func _home_key_request_valid(raw: Dictionary) -> bool:
+	var request: Dictionary = raw.request
+	if not _fields(request, ["op", "session_epoch", "world_namespace", "character_id", "envelope"]) \
+		or request.op != "home_key_reconcile" or request.session_epoch != raw.session_epoch \
+		or request.world_namespace != raw.world_namespace or request.character_id != raw.character_id \
+		or not request.envelope is Dictionary: return false
+	var envelope: Dictionary = request.envelope
+	if not _fields(envelope, ["character_id", "world_instance_id", "session_epoch", "delivery_id", "origin_namespace"]) \
+		or envelope.session_epoch != raw.session_epoch or envelope.world_instance_id != raw.world_namespace \
+		or envelope.character_id != raw.character_id or not BASE._hex(envelope.delivery_id, 64) \
+		or not envelope.origin_namespace is String or envelope.origin_namespace.is_empty(): return false
+	var context: Dictionary = raw.host_context
+	var HOME: Script = preload("res://scripts/net/home_key_action.gd")
+	return _fields(context, ["character_id", "expected_revision", "in_range", "in_combat",
+			"foundation_runtime_authorized", "home_key_authorized", "home_key_record", "source_key"]) \
+		and context.character_id == raw.character_id and context.expected_revision == raw.revision \
+		and context.in_range == true and context.in_combat == false \
+		and context.foundation_runtime_authorized == true and context.home_key_authorized == true \
+		and HOME.valid_escrow(context.home_key_record, raw.character_id) \
+		and context.home_key_record.delivery_id == envelope.delivery_id \
+		and context.home_key_record.world_namespace == envelope.origin_namespace \
+		and context.source_key == "opening_home_key:" + envelope.delivery_id
 
 static func valid_action_host(raw: Variant, cursor: Variant) -> bool:
 	return valid_action(raw) and cursor is Dictionary \

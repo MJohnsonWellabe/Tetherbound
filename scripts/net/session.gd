@@ -66,6 +66,9 @@ func _owner_passive_request_matches(source_kind: String, request: Dictionary) ->
 		return request.get("envelope") is Dictionary \
 			and preload("res://scripts/net/owner_passive_preparation.gd").exact(_portal_requests.get(request.envelope.get("request_id")), request.envelope) \
 			and request.envelope.get("payload") is Dictionary and request.envelope.payload.get("kind") == "waystone_touch"
+	if source_kind == "home_key":
+		return request.get("envelope") is Dictionary \
+			and preload("res://scripts/net/owner_passive_preparation.gd").exact(_home_key_requests_sent.get(request.envelope.get("delivery_id")), request.envelope)
 	if source_kind == "altar_spend":
 		return preload("res://scripts/net/owner_passive_preparation.gd").exact(_owner_passive_altar_original, request)
 	if source_kind == "altar_traits": return _altar_traits_service().call("owner_request_matches", request) == true
@@ -83,6 +86,7 @@ func _owner_passive_commit_request(peer: int, source_kind: String, request: Dict
 			return result
 		"foundation_request": return _foundation_handle(peer, request)
 		"waystone_touch": return _waystone_commit_prepared(peer, request.envelope, context)
+		"home_key": return OPENING_HOME_KEY.commit_reconcile(self, peer, request.envelope, context)
 		"altar_spend": return _handle_altar_spend(peer, request)
 		"altar_traits": return _altar_traits_service().call("commit_prepared", peer, request)
 		"manual_refine":
@@ -6116,6 +6120,9 @@ func _rpc_opening_home_key(request: Dictionary) -> void:
 
 
 var _home_key_delivery_retry_at: Dictionary = {}
+## This owner's latest Home Key reconcile request per gift: the host's
+## owner-passive freeze must name exactly the request this owner sent.
+var _home_key_requests_sent: Dictionary = {}
 
 func _request_home_key_delivery(delivery: Dictionary) -> void:
 	var game := _game()
@@ -6136,7 +6143,9 @@ func _request_home_key_delivery(delivery: Dictionary) -> void:
 	request.delivery_id = id
 	request.origin_namespace = origin
 	if is_host(): OPENING_HOME_KEY.host_reconcile(self, local_peer_id(), request)
-	elif is_active() and handshake_snapshot_applied(): rpc_id(HOST_PEER_ID, "_rpc_home_key_delivery", request)
+	elif is_active() and handshake_snapshot_applied():
+		_home_key_requests_sent[id] = request.duplicate(true)
+		rpc_id(HOST_PEER_ID, "_rpc_home_key_delivery", request)
 
 
 @rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
