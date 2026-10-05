@@ -1,0 +1,5 @@
+Independent bounded audit: PASS for archive integrity and wall-frame arithmetic. Actual desktop release average is below10FPS; owner20FPS remains FAIL. No Ally/earned-campaign or isolated causal acceptance follows.
+
+Verified the 5,304,839-byte ZIP hash, six entry sizes/hashes/original bytes and separate Low config hash. Payload/source-entry records match the previously independently verified shipping Meadows package; that proof is reused without payload rehash. Source33431f9a, Low/gl_compatibility with explicit opengl3, native1920x1080 and far6500 agree. Packaged --f26-route uses no script/debug/gpu-profile flags. Native/engine logs have no ERROR/trace lines; exit0/Low PASS/complete=true agree. Both PNG headers are1080p; no images were judged.
+
+All120 wall samples reproduce min/average/ceiling-1%low FPS4.797406/8.384639/5.257720 and both cached CPU monitor means/correlated slow-row means. No true CPU/GPU/draw metrics exist. The older packaged entry provides no frame_limit receipt or explicit uncapping, leaving runtime cap/VSync/physics/time settings unverified. No engine/test/source work was performed. CPU audit is finished.
