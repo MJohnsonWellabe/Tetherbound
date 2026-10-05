@@ -158,8 +158,19 @@ func _on_hit(on_enemy: bool, damage: float) -> void:
 		_tally.incoming_hits += 1
 		var creature: RefCounted = _manager.active_creature()
 		if _incoming_windup and not creature.fainted: _tally.player_windup_cancellations += 1
-		_tally.max_hit_frac = maxf(float(_tally.max_hit_frac), damage / maxf(1.0,
-			float(_entry_maxima[creature.get_instance_id()])))
+		var frac := damage / maxf(1.0, float(_entry_maxima[creature.get_instance_id()]))
+		if frac > float(_tally.max_hit_frac):
+			# Which opponent landed the worst hit, on whom, at what matchup:
+			# C3 is judged on a neutral matchup, so a super-effective worst
+			# hit and a neutral one are different findings.
+			var foe: RefCounted = _wild.get("instance") if is_instance_valid(_wild) else null
+			var move_id := str((_wild.combat_config() as Dictionary).get("move_id", foe.get("move_quick") if foe != null else ""))
+			var moves: RefCounted = load("res://scripts/creatures/move_db.gd").new()
+			_tally["max_hit_by"] = {"foe": str(foe.get("species_id")) if foe != null else "",
+				"target": str(creature.get("species_id")), "move": move_id,
+				"type_mult": load("res://scripts/combat/type_chart.gd").multiplier_dual(str(moves.call("type_of", move_id)),
+					str(creature.get("creature_type")), str(creature.get("secondary_type")))}
+		_tally.max_hit_frac = maxf(float(_tally.max_hit_frac), frac)
 	_tally.events.append({"frame": _frames, "on_enemy": on_enemy, "damage": damage,
 		"event": "hit", "ally_position": _ally.global_position, "enemy_position": _wild.global_position,
 		"gap": _ally.global_position.distance_to(_wild.global_position),
