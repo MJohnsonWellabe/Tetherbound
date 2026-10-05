@@ -6,6 +6,7 @@ const POPULATION_SPAWNING_META := &"wild_population_spawning"
 ## SceneTree maintains this live index on enter/exit. Portal views need only
 ## actual directors, rather than every terrain/harvest node in the world.
 const PORTAL_DIRECTOR_GROUP := &"foundation_portal_directors"
+const WILD_ACTOR_SCOPE := preload("res://scripts/net/wild_actor_scope.gd")
 
 ## Synchronous observation only: emitted around the complete authoritative
 ## strike handler. Copies keep diagnostic subscribers away from live intents.
@@ -521,7 +522,7 @@ func start_master_duel(site: Node3D, character_id: String, uid: String, definiti
 	_master_duel = {"character_id": character_id, "creature_uid": uid, "master_id": definition.id,
 		"world_namespace": _session.call("_game").get("world").reward_delivery_namespace,
 		"session_id": _session.call("_game").get("world").world_id}
-	var spec := {"id": definition.id, "name": definition.name, "master": true,
+	var spec := {"id": definition.id, "name": definition.name, "master": true, "role": str(definition.get("profile", "")),
 		"team": [{"species": definition.species_id, "level": definition.cap_level, "combat": definition.combat.duplicate(true)}]}
 	if not begin_trainer_battle(spec, site.get_node(^"Master")):
 		_master_duel.clear()
@@ -613,6 +614,7 @@ func start_guest_master_duel(site: Node3D, peer: int, character: String, uid: St
 	runtime.connect("telegraph", _on_shared_host_telegraph.bind(id))
 	runtime.connect("swung", _on_shared_host_strike.bind(id))
 	if body.has_signal("route_cue_started"): body.connect("route_cue_started", _on_shared_host_route.bind(id))
+	body.set_meta(&"f22_master_role", str(definition.get("profile", "")))
 	_configure_f22_patterns(body, true)
 	runtime.call("start_shared", body, selected, site.global_position, float(definition.arena_radius_m), self, id, 1, "trainer")
 	_refresh_shared_record_presentation(rec)
@@ -743,6 +745,9 @@ var _trainer_cleanup_delay: float = 0.0
 ## How many of their creatures have been sent out, ever. Names the bodies; see
 ## `_send_out_next_creature()` for why it is not derived from a list that empties.
 var _trainer_sent: int = 0
+## Send-outs in the CURRENT trainer battle only; `_trainer_sent` above never
+## resets (it names bodies). F22 named patterns index send-outs from this.
+var _trainer_battle_sent: int = 0
 
 ## T3-COMBAT. Where the trainer was standing when this battle was accepted, and
 ## where every round of it re-forms from.
@@ -2506,12 +2511,13 @@ func _rpc_encounter_intent(intent: Dictionary) -> void:
 		# An accepted strike or throw carries numbers only its own author needs
 		# (the damage it did, the wobble it earned). Everybody else gets the
 		# record. An accepted `trainer_victory` tells its sender to stop retrying.
-		_send_realm_rpc(sender, "_rpc_encounter_verdict", [verdict])
+		_send_realm_rpc(sender, "_rpc_encounter_verdict", [_with_host_xp_owner(str(verdict.get("encounter_id", intent.get("encounter_id", ""))), verdict)])
 
 
 ## Host -> the one peer whose intent it answers.
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
 func _rpc_encounter_verdict(verdict: Dictionary) -> void:
+	_note_host_xp_owner(verdict)
 	if str(verdict.get("kind", "")) == "engage" and not _pending_tournament_join_id.is_empty():
 		if str(verdict.get("encounter_id", "")) != _pending_tournament_join_id:
 			return
@@ -2534,6 +2540,7 @@ func _rpc_encounter_verdict(verdict: Dictionary) -> void:
 ## that changes a client's copy of them.
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
 func _rpc_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
+	_note_host_xp_owner(rec)
 	if str(rec.get("kind", "")) != "wild" and not _record_is_local_guest_master(rec) and not _record_is_remote_rematch(rec):
 		var encounter_id := str(rec.get("encounter_id", ""))
 		if _manager != null and bool(_manager.call("is_fighting")) \
@@ -2759,12 +2766,8 @@ func _host_engage(intent: Dictionary, peer_id: int) -> Dictionary:
 	var canonical_id := str(intent.get("encounter_id", ""))
 	var rematch := _remote_rematch(canonical_id)
 	if rematch != null: return rematch.call("join", peer_id)
-	if peer_id != _local_peer_id() and _owns_canonical_wild(canonical_id):
-		# The initial importer is local-owner only. Admitting a contributor then
-		# refusing their full-state reward would lose an earned victory.
-		return {"ok": false, "kind": "engage", "peer": peer_id, "pending": false,
-			"code": "canonical_training_solo_scope", "delta": {},
-			"reason": "This encounter is waiting for shared training reconciliation."}
+	# F27: a guest contributor to a canonical wild fight is paid by its own
+	# retained `wild_defeat_share` (session._journal_guest_wild_defeats).
 	var encounter_id := str(intent.get("encounter_id", ""))
 	if encounter_id.is_empty():
 		return {"ok": false, "kind": "engage", "peer": peer_id, "code": "malformed",
@@ -3208,7 +3211,7 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 	if deliver:
 		host_strike_finished.emit(intent.duplicate(true), peer_id, verdict.duplicate(true))
 		if peer_id == _local_peer_id(): _deliver_encounter_verdict(verdict)
-		elif _can_encounter_rpc(): _send_realm_rpc(peer_id, "_rpc_encounter_verdict", [verdict])
+		elif _can_encounter_rpc(): _send_realm_rpc(peer_id, "_rpc_encounter_verdict", [_with_host_xp_owner(encounter_id, verdict)])
 	if publication.get("tracked") == true and not _encounter_host.call("acknowledge_move_action_publication",
 			encounter_id, peer_id, str(publication.action_id), verdict): return verdict
 	if bool(rolled.get("killed", false)): _finalize_shared_host_fight(encounter_id, "won")
@@ -3608,7 +3611,8 @@ func _rpc_encounter_enemy_launch(encounter_id: String, launch: Dictionary) -> vo
 
 
 func host_deliver_enemy_hit(encounter_id: String, peer_id: int, payload: Dictionary) -> void:
-	if uses_durable_trainer_rewards(encounter_id):
+	if uses_durable_trainer_rewards(encounter_id) \
+			or (peer_id != _local_peer_id() and uses_wild_actor_vitals(encounter_id)):
 		_stage_ordinary_enemy_hit(encounter_id, peer_id, payload)
 		return
 	if _encounter_host != null and float(payload.get("damage", 0.0)) > 0.0:
@@ -3822,7 +3826,7 @@ func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0,
 		# The author still receives the authoritative record, but renders from
 		# its richer verdict. Marking that copy quiet prevents the record and
 		# verdict from flinching/announcing the same strike twice.
-		_send_realm_rpc(peer_id, "_rpc_encounter_record", [rec, peer_id == author_peer_id])
+		_send_realm_rpc(peer_id, "_rpc_encounter_record", [_with_host_xp_owner(encounter_id, rec), peer_id == author_peer_id])
 
 
 ## §5 step 3's history, taken on the host's own clock from the host's own body.
@@ -4101,6 +4105,14 @@ func uses_durable_rematch_rewards(id: String) -> bool:
 
 ## Only the actual host producer's scoped ownership excludes the local award.
 ## Guest copies arrive on the existing authenticated encounter record RPC.
+## F27: host-owned guest vitals in a canonical wild fight. Never a trainer
+## scope, so no round reward is ever installed for it.
+func uses_wild_actor_vitals(id: String) -> bool:
+	if id.is_empty() or not _is_host() or _encounter_host == null or not _owns_canonical_wild(id): return false
+	var record: Dictionary = _encounter_host.call("record", id)
+	return WILD_ACTOR_SCOPE.owns(record.get("wild_actor_owner"), record, id)
+
+
 func uses_durable_trainer_rewards(id: String) -> bool:
 	if id.is_empty() or _session == null: return false
 	var record: Dictionary = _encounter_host.call("record", id) if _is_host() and _encounter_host != null else _encounter
@@ -4759,25 +4771,114 @@ func _named_trainer_grounds() -> Array[Vector2]:
 ## destination on a named trainer's fight ground, so the captain's and the
 ## Warden's fights frame the two fighters and nothing else.
 func _clear_of_named_trainer_grounds(pos: Vector3) -> bool:
+	var here := Vector2(pos.x, pos.z)
+	if _meadows_ground():
+		for zone: Dictionary in _wild_keep_clear_zones():
+			if here.distance_to(zone.at) < float(zone.radius):
+				return false
+		if not _clear_of_village_fence(here):
+			return false
 	var clear := float((MATH.config().get("arena", {}) as Dictionary).get(
 		"named_trainer_wild_clear_m", 0.0))
 	if clear <= 0.0:
 		return true
-	var here := Vector2(pos.x, pos.z)
 	for stand: Vector2 in _named_trainer_grounds():
 		if here.distance_to(stand) < clear:
 			return false
 	return true
 
+
+## F17/F02 (combat.json `arena.wild_keep_clear`): authored places the player
+## must work in -- the Practice Meadow camp site the objectives send the player
+## to build at -- where wild bodies neither spawn nor settle a wander target,
+## through the same checks as a named trainer's ground.
+var _keep_clear: Array[Dictionary] = []
+var _keep_clear_read := false
+
+
+## A wild fought against the village fence pinned the tutorial fight (F02#3 r4:
+## 2 hits dealt, 39 taken at the south fence corner). Wild bodies neither spawn
+## nor settle a wander target within `arena.wild_fence_clear_m` of the village
+## boundary outline (village_boundary.json), on either side of it.
+var _fence_segments: Array[PackedVector2Array] = []
+var _fence_read := false
+
+
+## The keep-clear zones and the village fence are Meadows coordinates
+## (independent review m6): another realm's director must not test its own
+## wilds against them. Cached; a director's world realm never changes.
+var _meadows_ground_cached := -1
+
+
+func _meadows_ground() -> bool:
+	if _meadows_ground_cached < 0:
+		_meadows_ground_cached = 1 if _encounter_realm() == "meadows" else 0
+	return _meadows_ground_cached == 1
+
+
+func _clear_of_village_fence(here: Vector2) -> bool:
+	var clear := float((MATH.config().get("arena", {}) as Dictionary).get("wild_fence_clear_m", 0.0))
+	if clear <= 0.0:
+		return true
+	if not _fence_read:
+		_fence_read = true
+		var raw: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/village_boundary.json"))
+		var points: Array = ((raw as Dictionary).get("outline", {}) as Dictionary).get("points", []) if raw is Dictionary else []
+		for index in points.size():
+			var a: Array = points[index]
+			var b: Array = points[(index + 1) % points.size()]
+			_fence_segments.append(PackedVector2Array([Vector2(float(a[0]), float(a[1])), Vector2(float(b[0]), float(b[1]))]))
+	for segment: PackedVector2Array in _fence_segments:
+		if here.distance_to(Geometry2D.get_closest_point_to_segment(here, segment[0], segment[1])) < clear:
+			return false
+	return true
+
+
+func _wild_keep_clear_zones() -> Array[Dictionary]:
+	if _keep_clear_read:
+		return _keep_clear
+	_keep_clear_read = true
+	for raw: Variant in ((MATH.config().get("arena", {}) as Dictionary).get("wild_keep_clear", []) as Array):
+		if not raw is Dictionary:
+			continue
+		var at: Array = (raw as Dictionary).get("at", []) as Array
+		var radius := float((raw as Dictionary).get("radius_m", 0.0))
+		if at.size() >= 2 and radius > 0.0:
+			_keep_clear.append({"at": Vector2(float(at[0]), float(at[1])), "radius": radius})
+	return _keep_clear
+
 ## `pos` moved radially to just outside any named trainer's ground it stands
 ## on (unchanged when it is already clear). The last resort after every
 ## placement attempt landed inside one.
 func _out_of_named_trainer_grounds(pos: Vector3) -> Vector3:
+	var out := pos
+	var meadows := _meadows_ground()
+	for zone: Dictionary in (_wild_keep_clear_zones() if meadows else [] as Array[Dictionary]):
+		var here := Vector2(out.x, out.z)
+		var centre: Vector2 = zone.at
+		if here.distance_to(centre) >= float(zone.radius):
+			continue
+		var away := here - centre
+		if away.length() < 0.01:
+			away = Vector2(1.0, 0.0)
+		var moved := centre + away.normalized() * (float(zone.radius) + 1.0)
+		out = Vector3(moved.x, out.y, moved.y)
+	var fence_clear := float((MATH.config().get("arena", {}) as Dictionary).get("wild_fence_clear_m", 0.0))
+	if meadows and fence_clear > 0.0 and not _clear_of_village_fence(Vector2(out.x, out.z)):
+		for segment: PackedVector2Array in _fence_segments:
+			var here := Vector2(out.x, out.z)
+			var nearest := Geometry2D.get_closest_point_to_segment(here, segment[0], segment[1])
+			var away := here - nearest
+			if away.length() >= fence_clear:
+				continue
+			if away.length() < 0.01:
+				away = (segment[1] - segment[0]).orthogonal()
+			var moved := nearest + away.normalized() * (fence_clear + 0.5)
+			out = Vector3(moved.x, out.y, moved.y)
 	var clear := float((MATH.config().get("arena", {}) as Dictionary).get(
 		"named_trainer_wild_clear_m", 0.0))
 	if clear <= 0.0:
-		return pos
-	var out := pos
+		return out
 	for stand: Vector2 in _named_trainer_grounds():
 		var here := Vector2(out.x, out.z)
 		if here.distance_to(stand) >= clear:
@@ -5792,7 +5893,7 @@ func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
 	wild.set_meta(&"canonical_wild_runtime", bool(canonical.get("ready", false)))
 	if not bool(_manager.call(
 		"begin", _player, wild, _ally_body, _fight_party(), _camera_rig, best,
-		opponent_owned, shared_host_wild
+		opponent_owned, shared_host_wild, shared_host_wild
 	)):
 		return
 	_engaged_with = wild
@@ -5922,6 +6023,11 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 				return
 			runtime.set_meta(&"canonical_wild_context", canonical.context.duplicate(true))
 			_manager.set_meta(&"canonical_wild_encounter", _shared_active_id)
+			# F27: a joining guest's creature vitals are host-owned in this fight
+			# (wild_actor_scope.gd), so the guest's win share settles on them.
+			var live: Dictionary = _encounter_host.call("record", _shared_active_id)
+			live["wild_actor_owner"] = WILD_ACTOR_SCOPE.make(str(canonical.context.world_namespace),
+				str(canonical.context.session_id), _encounter_realm(), _shared_active_id)
 	if opponent_owned:
 		_note_trainer_participants(str(rec["encounter_id"]))
 	_freeze_bounty_instances(str(rec["encounter_id"]), _local_peer_id())
@@ -6950,6 +7056,7 @@ func begin_trainer_battle(spec: Dictionary, trainer: Node3D = null) -> bool:
 		return false
 
 	_trainer_spec = spec
+	_trainer_battle_sent = 0
 	_tournament_members.clear()
 	_tournament_entry_condition.clear()
 	if tournament_round:
@@ -7038,6 +7145,7 @@ func _send_out_next_creature() -> bool:
 	# line, remote-tree screenshot or smoke test can match against, which is
 	# exactly how this was found.
 	_trainer_sent += 1
+	_trainer_battle_sent += 1
 	body.name = "TrainerCreature_%s_%d" % [str(_trainer_spec.get("id", "trainer")), _trainer_sent]
 	body.set_script(WILD_SCRIPT)
 	get_parent().add_child(body)
@@ -7389,6 +7497,7 @@ func _finish_trainer_battle(won: bool) -> void:
 	if _manager != null and _manager.has_method("end_round_hold"):
 		_manager.call("end_round_hold")
 	_trainer_spec = {}
+	_trainer_battle_sent = 0
 	# F04#3: kept for the victory lines' camera, which opens a frame later.
 	var victory_speaker := _trainer_node
 	_trainer_node = null
@@ -8254,10 +8363,20 @@ func _configure_f22_patterns(wild: Node3D, opponent_owned: bool) -> void:
 				after_bridge = not band in ["band1_lower_meadows", "band2_stone_and_root"]
 				break
 	var role := COMBAT_AI.species_role(str(creature.get("species_id")), patterns)
+	# Masters (host duel through the trainer battle, or a guest duel tagged on
+	# its body) fight in their authored masters.json profile role.
+	var is_master := opponent_owned and (bool(_trainer_spec.get("master", false)) or wild.has_meta(&"f22_master_role"))
+	var master_role := str(wild.get_meta(&"f22_master_role", _trainer_spec.get("role", ""))) if is_master else ""
+	if not master_role.is_empty():
+		role = master_role
+	# COMBAT §7 floor trainer: an ordinary trainer's body, not a named fight,
+	# a Master or an officer/captain rank (F22 trainer_power_scale scope).
+	var floor_trainer := opponent_owned and pattern_id.is_empty() and not is_master \
+		and not str(_trainer_spec.get("rank", "")) in ["captain", "officer", "lieutenant", "elite", "mentor", "ace"]
 	var context := {"species_id": str(creature.get("species_id")), "role": role,
-		"trainer_owned": opponent_owned, "chapter": chapter, "band": band,
+		"trainer_owned": opponent_owned, "floor_trainer": floor_trainer, "chapter": chapter, "band": band,
 		"after_south_bridge": after_bridge, "pattern_id": pattern_id,
-		"sendout_index": maxi(0, _trainer_sent - 1) if opponent_owned else 0,
+		"sendout_index": maxi(0, _trainer_battle_sent - 1) if opponent_owned and not _trainer_spec.is_empty() else 0,
 		"move_quick": str(creature.get("move_quick")),
 		"move_charged": str(creature.get("move_charged"))}
 	wild.call("configure_patterns", patterns.duplicate(true), context, _f22_visible_observation.bind(wild))
@@ -8378,8 +8497,40 @@ func _has_canonical_wild_runtime() -> bool:
 	return false
 
 
+## True only once the host retained this fight's frozen victory source; a
+## refused capture leaves the legacy award in place so a win always pays.
 func canonical_wild_encounter(encounter_id: String) -> bool:
-	return _owns_canonical_wild(encounter_id)
+	# The host said it pays this guest's share: true even if this session has
+	# since dropped, so a legacy award is never paid on top of the share.
+	if _host_owned_xp.has(encounter_id): return true
+	if _is_guest(): return false
+	var runtime := _shared_host_fight(encounter_id)
+	return _owns_canonical_wild(encounter_id) and runtime != null and runtime.has_meta(&"wild_victory_source")
+
+
+## F27: a guest learns from the host's own copies that its wild win is paid
+## by the host's retained `wild_defeat_share`, so its combat manager skips the
+## legacy local award. Only a captured canonical source is ever stamped.
+var _host_owned_xp: Dictionary = {}
+
+
+## A connected guest; solo play has no active session and stays host-side.
+func _is_guest() -> bool:
+	return is_inside_tree() and _session != null and _session.has_method("is_active") \
+		and bool(_session.call("is_active")) and not bool(_session.call("is_host"))
+
+
+func _with_host_xp_owner(encounter_id: String, payload: Dictionary) -> Dictionary:
+	if not canonical_wild_encounter(encounter_id): return payload
+	var stamped := payload.duplicate()
+	stamped["host_owns_xp"] = encounter_id
+	return stamped
+
+
+func _note_host_xp_owner(payload: Dictionary) -> void:
+	# Only the host sends these (authority RPCs); the stamp names its encounter.
+	if _is_guest() and payload.get("host_owns_xp") is String and not str(payload.host_owns_xp).is_empty():
+		_host_owned_xp[payload.host_owns_xp] = true
 
 
 func _capture_wild_victory_source(encounter_id: String, accepted: Dictionary) -> void:

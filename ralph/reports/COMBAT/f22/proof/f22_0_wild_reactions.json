@@ -1,0 +1,130 @@
+{
+	"dodges": 11,
+	"errors": [],
+	"kind": "F22#0 live wild-behaviour witness (flat fixture, production bodies/manager/AI)",
+	"pass": true,
+	"punishes": 2,
+	"roles": {
+		"ACE": {
+			"authored": [
+				"ace_lane",
+				"ace_exam"
+			],
+			"dodges": 3,
+			"fights": 6,
+			"floor_breaches": [],
+			"min_tell_s": 1.1,
+			"pass": true,
+			"punishes": 0,
+			"reasons": [],
+			"recoveries": 65,
+			"repositions_moved": 65,
+			"shapes": {
+				"ace_exam": "cone",
+				"ace_lane": "lane"
+			},
+			"tells": {
+				"ace_exam": 31,
+				"ace_lane": 33
+			}
+		},
+		"CHARGER": {
+			"authored": [
+				"charger_rush",
+				"charger_double_rush",
+				"charger_check"
+			],
+			"dodges": 3,
+			"fights": 6,
+			"floor_breaches": [],
+			"min_tell_s": 0.9,
+			"pass": true,
+			"punishes": 1,
+			"reasons": [],
+			"recoveries": 110,
+			"repositions_moved": 77,
+			"shapes": {
+				"charger_check": "cone",
+				"charger_double_rush": "lane",
+				"charger_rush": "lane"
+			},
+			"tells": {
+				"charger_check": 25,
+				"charger_double_rush": 49,
+				"charger_rush": 31
+			}
+		},
+		"CURRENT": {
+			"authored": [
+				"current_volley",
+				"current_zone"
+			],
+			"dodges": 3,
+			"fights": 6,
+			"floor_breaches": [],
+			"min_tell_s": 0.9,
+			"pass": true,
+			"punishes": 0,
+			"reasons": [],
+			"recoveries": 112,
+			"repositions_moved": 108,
+			"shapes": {
+				"current_volley": "fan",
+				"current_zone": "field"
+			},
+			"tells": {
+				"current_volley": 52,
+				"current_zone": 50
+			}
+		},
+		"DIVER": {
+			"authored": [
+				"diver_retreat",
+				"diver_leap"
+			],
+			"dodges": 0,
+			"fights": 6,
+			"floor_breaches": [],
+			"min_tell_s": 0.9,
+			"pass": true,
+			"punishes": 0,
+			"reasons": [],
+			"recoveries": 56,
+			"repositions_moved": 55,
+			"shapes": {
+				"diver_leap": "marker",
+				"diver_retreat": "cone"
+			},
+			"tells": {
+				"diver_leap": 30,
+				"diver_retreat": 30
+			}
+		},
+		"WALL": {
+			"authored": [
+				"wall_check",
+				"wall_slam",
+				"wall_quake"
+			],
+			"dodges": 2,
+			"fights": 6,
+			"floor_breaches": [],
+			"min_tell_s": 0.9,
+			"pass": true,
+			"punishes": 1,
+			"reasons": [],
+			"recoveries": 145,
+			"repositions_moved": 141,
+			"shapes": {
+				"wall_check": "cone",
+				"wall_quake": "ring",
+				"wall_slam": "cone"
+			},
+			"tells": {
+				"wall_check": 51,
+				"wall_quake": 48,
+				"wall_slam": 48
+			}
+		}
+	}
+}

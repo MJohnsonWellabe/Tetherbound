@@ -1,0 +1,73 @@
+{
+ "name": "F06: two-peer MID-RIDE rejoin keeps the rider sane, the party whole and Cloudreach's closed counterweight gate shut -- segment 0 (host setup)",
+ "claim": "The host's world: fresh Meadows, Cloudreach key, crossed into Cloudreach; gate closed. Writes checkpoint midride/setup:host. Segment of tools/net/proof_scenarios/f06_cloudreach_midride_rejoin.json (CI segments: tests/helpers/ci_segments.gd).",
+ "_comment_segment": {
+  "original": "tools/net/proof_scenarios/f06_cloudreach_midride_rejoin.json",
+  "peer_map": {
+   "0": 0
+  }
+ },
+ "peers": 1,
+ "scene": "title",
+ "budget_s": 1500,
+ "steps": [
+  {
+   "peer": 0,
+   "action": "legacy_physical_crossings_fixture",
+   "args": {
+    "regression": "cloudreach_midride_rejoin"
+   },
+   "label": "disclosed retired realm-key crossing fixture; shipping flag remains off",
+   "_comment": "orig #1"
+  },
+  {
+   "peer": 0,
+   "action": "boot",
+   "args": {
+    "scene": "world"
+   },
+   "label": "each peer boots its own fresh Meadows world",
+   "budget_frames": 20000,
+   "_comment": "orig #2"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "realm_key_cloudreach",
+    "scope": "world"
+   },
+   "label": "setup: both worlds hold the Cloudreach key",
+   "_comment": "orig #3"
+  },
+  {
+   "peer": 0,
+   "action": "enter_realm",
+   "args": {
+    "realm": "cloudreach"
+   },
+   "label": "host enters Cloudreach in its own world",
+   "budget_frames": 20000,
+   "_comment": "orig #11"
+  },
+  {
+   "peer": 0,
+   "action": "capture_saves",
+   "args": {
+    "label": "checkpoint"
+   },
+   "_comment": "SEGMENT: the production save at the end of this segment"
+  },
+  {
+   "peer": 0,
+   "action": "seg_checkpoint",
+   "args": {
+    "boundary": "midride/setup",
+    "role": "host",
+    "label": "checkpoint"
+   },
+   "label": "checkpoint midride/setup:host",
+   "_comment": "SEGMENT: segment end meets the next segment's start contract and reproduces the committed checkpoint"
+  }
+ ]
+}

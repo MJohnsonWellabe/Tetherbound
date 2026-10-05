@@ -202,3 +202,41 @@ func test_strike_authors_record_sync_quietly_before_their_verdict() -> void:
 	manager.free()
 	wild.free()
 	link.free()
+
+
+## F22 / COMBAT §4: role pools, authored precedence, post-stagger resistance
+## and the guest's mirror of the host's pool (co-op HUD agreement).
+func test_role_pool_precedence_and_break_resistance() -> void:
+	var poise: Dictionary = MATH.config().get("poise", {})
+	var pools: Dictionary = poise.get("role_pools", {})
+	var wild := WILD.new()
+	wild.set("instance", preload("res://scripts/creatures/creature_species.gd").spawn("mosshell"))
+	wild.set("_combat_cfg", MATH.config().get("enemy", {}).duplicate(true))
+	assert_almost_eq(float(wild.call("poise_max")), float(pools.WALL), 0.001, "species role picks its pool")
+	wild.set("_patterns", MATH.config().get("patterns", {}))
+	wild.set("_pattern_context", {"role": "CURRENT", "species_id": "mosshell"})
+	assert_almost_eq(float(wild.call("poise_max")), float(pools.CURRENT), 0.001, "authored role beats species role")
+	var authored: Dictionary = (wild.get("_combat_cfg") as Dictionary).duplicate()
+	authored["poise_max"] = 77.0
+	wild.set("_combat_cfg", authored)
+	assert_almost_eq(float(wild.call("poise_max")), 77.0, 0.001, "an encounter's own poise_max still wins")
+	wild.call("_reset_poise")
+	wild.set("_poise_resist_left", float(poise.get("break_resist_seconds", 0.8)))
+	assert_false(bool(wild.call("apply_poise_damage", 1000.0, true)), "no break, forced or not, inside resistance")
+	assert_almost_eq(float(wild.call("poise_fraction")), 1.0, 0.001, "the refilled pool is not drained in resistance")
+	wild.call("_tick_poise", float(poise.get("break_resist_seconds", 0.8)) + 0.01)
+	assert_true(bool(wild.call("apply_poise_damage", 1000.0, false)), "breaks again once resistance has run out")
+	wild.free()
+
+
+func test_guest_stand_in_reads_the_hosts_pool() -> void:
+	var proxy := WILD.new()
+	proxy.set("instance", preload("res://scripts/creatures/creature_species.gd").spawn("riptusk"))
+	proxy.call("sync_poise", 50.0, false, true, -1.0, 60.0)
+	assert_almost_eq(float(proxy.call("poise_max")), 60.0, 0.001, "host's ACE pool, not the species default")
+	assert_almost_eq(float(proxy.call("poise_fraction")), 50.0 / 60.0, 0.001, "bar matches the host's fraction")
+	proxy.call("_reset_poise")
+	var species_role := AI.species_role("riptusk", MATH.config().get("patterns", {}))
+	assert_almost_eq(float(proxy.call("poise_max")), float(MATH.config().poise.role_pools[species_role]), 0.001,
+		"a new engagement forgets the mirrored pool")
+	proxy.free()

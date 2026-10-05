@@ -478,6 +478,7 @@ const MINIMAP_SIZE := Vector2(184.0, 184.0)
 ## exists to hold a quest line without wrapping past its own box, so it tracks
 ## the font it was fitted to rather than being cut independently.
 const OBJECTIVE_MAX_WIDTH := 348.0
+const OBJECTIVE_BACKING_ALPHA := 0.94
 ## HUD-POPUP task 3: grown from 90 to hold the quest subtext at
 ## `HUD_READABLE_FONT_SIZE` (38) without wrapping past its own box -- see
 ## `_build_objective_block()`'s header for the rest of that fix.
@@ -2923,7 +2924,12 @@ func _build_objective_block() -> void:
 	backing.size = block.size
 	# GATE3-HUD-HIERARCHY: WARNING accent -- the "what the game is telling
 	# you to do" tier. See `UITokens.panel_box_accent()`'s own header.
-	backing.add_theme_stylebox_override("panel", UITokens.panel_box_accent(UITokens.WARNING))
+	# F17#6 r4 judge: world signs behind the translucent backing ("The
+	# Stormwood", "Locked") read through it and competed with the objective
+	# text. This one panel is near-opaque; the shared token is unchanged.
+	var objective_box := UITokens.panel_box_accent(UITokens.WARNING)
+	objective_box.bg_color.a = maxf(objective_box.bg_color.a, OBJECTIVE_BACKING_ALPHA)
+	backing.add_theme_stylebox_override("panel", objective_box)
 	block.add_child(backing)
 	_objective_backing = backing
 

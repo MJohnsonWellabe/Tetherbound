@@ -40,7 +40,7 @@
           "display_name": "Band 4 — Upper Meadows / Ironwood",
           "spots": [
             { "display_name": "The Ironwood Grove", "position": [-345.0, 5060.0] },
-            { "display_name": "The Ridgeline Watch", "position": [-250.0, 6490.0] }
+            { "display_name": "The Ridgeline Watch", "position": [-243.0, 6504.4], "view_heading_deg": 26.1, "_comment": "F26 Low judge: the landmark centre put a tree trunk against the production spring arm (camera 2.2 m from the trainer). 16 m along the same northbound bearing gives a full 5.8 m arm on open meadow with the range visible." }
           ]
         },
         {
@@ -147,7 +147,7 @@
           "id": "deepwood",
           "display_name": "Region 5 — The Deepwood",
           "spots": [
-            { "display_name": "Lantern Hollow", "position": [-450.0, 3960.0] },
+            { "display_name": "Lantern Hollow", "position": [-451.35, 3956.77], "view_heading_deg": 22.6, "_comment": "F26 Low judge: stormwood_pickup_route_14 sits exactly on the landmark centre and rendered inside the trainer's legs. Stand 3.5 m back along the same bearing so the pickup is in view ahead." },
             { "display_name": "The Fallen Giant", "position": [-240.0, 4463.6], "view_heading_deg": 92.3, "_comment": "Deepwood Road west approach, 90 m before the shared Fallen Giant arch/Blackwater elder seat. Keeps the trainer off the named creature while facing the landmark." }
           ]
         },
@@ -155,8 +155,8 @@
           "id": "dynamo",
           "display_name": "Region 6 — The Dynamo",
           "spots": [
-            { "display_name": "The Glass Field", "position": [-310.0, 5050.0] },
-            { "display_name": "The Stormheart Tree", "position": [-100.0, 5470.0] }
+            { "display_name": "The Glass Field", "position": [-311.56, 5046.87], "view_heading_deg": 26.6, "_comment": "F26 Low judge: stormwood_pickup_route_17 sits exactly on the landmark centre (inside the trainer's legs). Stand 3.5 m back along the same bearing." },
+            { "display_name": "The Stormheart Tree", "position": [-101.56, 5466.87], "view_heading_deg": 26.6, "_comment": "F26 Low judge: stormwood_pickup_route_19 sits exactly on the landmark centre (inside the trainer's legs). Stand 3.5 m back along the same bearing." }
           ]
         }
       ]
@@ -226,7 +226,7 @@
           "display_name": "Island 8 — The Veilfall",
           "spots": [
             { "display_name": "The Veilfall Cascade", "position": [335.208, 3885.711] },
-            { "display_name": "Veilfall Mountain Crown", "position": [200.0, 4140.0] }
+            { "display_name": "Veilfall Mountain Crown", "position": [199.0, 4132.1], "view_heading_deg": -172.9, "_comment": "F26 Low judge: the crown centre sat between two sandstone masses, so the spring arm collapsed to 2.5 m and rock filled the frame. 8 m along the same bearing gives a full arm on the open crown." }
           ]
         },
         {

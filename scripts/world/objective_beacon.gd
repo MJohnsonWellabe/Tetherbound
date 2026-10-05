@@ -18,6 +18,8 @@ const QUEST_LOG := preload("res://scripts/world/quest_log.gd")
 const CONFIG_PATH := "res://data/config/objective_beacon.json"
 const MAP_OWNER_META := &"regional_objective_beacon_owner"
 const PRESENTATION_HOLD := preload("res://scripts/ui/presentation_hold.gd")
+const INTERIOR_GROUP := &"objective_beacon_interiors"
+const INTERIOR_BOXES_META := &"objective_beacon_interior_boxes"
 
 var _log: RefCounted = null
 var _config: Dictionary = {}
@@ -194,7 +196,7 @@ func _set_active(active: bool) -> void:
 func _apply_visibility() -> void:
 	if _visual != null:
 		_visual.visible = _has_target and not (is_inside_tree() and PRESENTATION_HOLD.active(get_tree())) \
-			and not _fight_on_screen() and not _camera_inside_beam()
+			and not _fight_on_screen() and not _camera_inside_beam() and not _camera_indoors()
 
 
 ## F01#2/#3 (code-blind walk judge, day_070/night_070): arriving at the
@@ -213,6 +215,29 @@ func _camera_inside_beam() -> bool:
 	var offset := camera.global_position - global_position
 	offset.y = 0.0
 	return offset.length() < clear
+
+
+## F17#6 r4: the beam read as a cyan column through a roof and through the
+## creature's face inside the Crossing Hall. Interiors that know their extents
+## join INTERIOR_GROUP with local AABBs under INTERIOR_BOXES_META; while the
+## camera is inside one, the beam stands down (the map marker is untouched).
+func _camera_indoors() -> bool:
+	if not is_inside_tree():
+		return false
+	var camera := get_viewport().get_camera_3d()
+	return camera != null and point_indoors(get_tree(), camera.global_position)
+
+
+static func point_indoors(tree: SceneTree, at: Vector3) -> bool:
+	for node: Node in tree.get_nodes_in_group(INTERIOR_GROUP):
+		var interior := node as Node3D
+		if interior == null or not interior.is_inside_tree():
+			continue
+		var local := interior.to_local(at)
+		for box: AABB in interior.get_meta(INTERIOR_BOXES_META, []):
+			if box.has_point(local):
+				return true
+	return false
 
 
 ## F04: a live fight owns the screen. The beam (whose target is often that very

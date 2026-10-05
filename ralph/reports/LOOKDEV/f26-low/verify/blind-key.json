@@ -1,0 +1,110 @@
+{
+ "pair_00": {
+  "frame": "meadows__cand_01_313.4_939.2_0",
+  "after_is": "X",
+  "before": "smoke-before/frames/meadows__cand_01_313.4_939.2_0.png",
+  "after": "verify/smoke-after/meadows__cand_01_313.4_939.2_0.png"
+ },
+ "pair_01": {
+  "frame": "meadows__cand_02_-23.5_4120.5_0",
+  "after_is": "Y",
+  "before": "smoke-before/frames/meadows__cand_02_-23.5_4120.5_0.png",
+  "after": "verify/smoke-after/meadows__cand_02_-23.5_4120.5_0.png"
+ },
+ "pair_02": {
+  "frame": "meadows__cand_03_-353.0_2570.0_-10",
+  "after_is": "Y",
+  "before": "smoke-before/frames/meadows__cand_03_-353.0_2570.0_-10.png",
+  "after": "verify/smoke-after/meadows__cand_03_-353.0_2570.0_-10.png"
+ },
+ "pair_03": {
+  "frame": "meadows__band2_stone_and_root__04__the_burrow_warrens__day",
+  "after_is": "Y",
+  "before": "judge/frames/meadows__band2_stone_and_root__04__the_burrow_warrens__day.png",
+  "after": "verify/census-meadows/meadows__band2_stone_and_root__04__the_burrow_warrens__day.png"
+ },
+ "pair_04": {
+  "frame": "meadows__band4_upper_meadows_ironwood__08__the_ridgeline_watch__day",
+  "after_is": "Y",
+  "before": "judge/frames/meadows__band4_upper_meadows_ironwood__08__the_ridgeline_watch__day.png",
+  "after": "verify/census-meadows/meadows__band4_upper_meadows_ironwood__08__the_ridgeline_watch__day.png"
+ },
+ "pair_05": {
+  "frame": "stormwood__deepwood__09__lantern_hollow__day",
+  "after_is": "Y",
+  "before": "judge/frames/stormwood__deepwood__09__lantern_hollow__day.png",
+  "after": "verify/census-stormwood/stormwood__deepwood__09__lantern_hollow__day.png"
+ },
+ "pair_06": {
+  "frame": "stormwood__dynamo__11__the_glass_field__day",
+  "after_is": "X",
+  "before": "judge/frames/stormwood__dynamo__11__the_glass_field__day.png",
+  "after": "verify/census-stormwood/stormwood__dynamo__11__the_glass_field__day.png"
+ },
+ "pair_07": {
+  "frame": "stormwood__dynamo__12__the_stormheart_tree__day",
+  "after_is": "Y",
+  "before": "judge/frames/stormwood__dynamo__12__the_stormheart_tree__day.png",
+  "after": "verify/census-stormwood/stormwood__dynamo__12__the_stormheart_tree__day.png"
+ },
+ "pair_08": {
+  "frame": "meadows__route_00__day",
+  "after_is": "X",
+  "before": "judge/frames/meadows__route_00__day.png",
+  "after": "verify/stills-meadows/meadows__route_00__day.png"
+ },
+ "pair_09": {
+  "frame": "meadows__route_00__night",
+  "after_is": "Y",
+  "before": "judge/frames/meadows__route_00__night.png",
+  "after": "verify/stills-meadows/meadows__route_00__night.png"
+ },
+ "pair_10": {
+  "frame": "meadows__route_01__day",
+  "after_is": "X",
+  "before": "judge/frames/meadows__route_01__day.png",
+  "after": "verify/stills-meadows/meadows__route_01__day.png"
+ },
+ "pair_11": {
+  "frame": "meadows__route_01__night",
+  "after_is": "Y",
+  "before": "judge/frames/meadows__route_01__night.png",
+  "after": "verify/stills-meadows/meadows__route_01__night.png"
+ },
+ "pair_12": {
+  "frame": "meadows__route_02__day",
+  "after_is": "Y",
+  "before": "judge/frames/meadows__route_02__day.png",
+  "after": "verify/stills-meadows/meadows__route_02__day.png"
+ },
+ "pair_13": {
+  "frame": "meadows__route_02__night",
+  "after_is": "Y",
+  "before": "judge/frames/meadows__route_02__night.png",
+  "after": "verify/stills-meadows/meadows__route_02__night.png"
+ },
+ "pair_14": {
+  "frame": "meadows__route_03__day",
+  "after_is": "Y",
+  "before": "judge/frames/meadows__route_03__day.png",
+  "after": "verify/stills-meadows/meadows__route_03__day.png"
+ },
+ "pair_15": {
+  "frame": "meadows__route_03__night",
+  "after_is": "X",
+  "before": "judge/frames/meadows__route_03__night.png",
+  "after": "verify/stills-meadows/meadows__route_03__night.png"
+ },
+ "pair_16": {
+  "frame": "cloudreach__high_roost_sky_shrine__08__the_high_perches__day",
+  "after_is": "Y",
+  "before": "judge/frames/cloudreach__high_roost_sky_shrine__08__the_high_perches__day.png",
+  "after": "verify/census-cloudreach/cloudreach__high_roost_sky_shrine__08__the_high_perches__day.png"
+ },
+ "pair_17": {
+  "frame": "water__veilfall__16__veilfall_mountain_crown__day",
+  "after_is": "X",
+  "before": "judge/frames/water__veilfall__16__veilfall_mountain_crown__day.png",
+  "after": "verify/census-water/water__veilfall__16__veilfall_mountain_crown__day.png"
+ }
+}

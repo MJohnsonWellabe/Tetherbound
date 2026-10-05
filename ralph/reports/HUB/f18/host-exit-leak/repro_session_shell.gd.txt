@@ -1,0 +1,20 @@
+extends SceneTree
+var frames := 0
+var stop := int(OS.get_environment("STOP_AT")) if OS.get_environment("STOP_AT") != "" else 600
+func _process(_d: float) -> bool:
+	frames += 1
+	if frames == 3: change_scene_to_file("res://scenes/world/meadows_playground.tscn")
+	if frames == 100:
+		var sess: Node = root.get_node("Game").get("session")
+		print("TMP_HOST ", sess.call("host", 39998, 0))
+	if frames == 150 and OS.get_environment("SKIP") != "1":
+		var realms: Node = root.get_node("Game").get("session").call("realms")
+		print("TMP_REALMS ", realms)
+		realms.call("_stand_up", OS.get_environment("SHELL_REALM") if OS.get_environment("SHELL_REALM") != "" else "cloudreach")
+	if frames > 150 and frames < 200 and frames % 10 == 0 and OS.get_environment("SKIP") != "1":
+		var realms: Node = root.get_node("Game").get("session").call("realms")
+		realms.call("_stand_up", OS.get_environment("SHELL_REALM") if OS.get_environment("SHELL_REALM") != "" else "cloudreach")
+	if frames == stop - 60 and OS.get_environment("RELEASE") == "1":
+		print("TMP_RELEASE")
+		root.get_node("Game").get("session").call("realms").call("release_all")
+	return frames > stop

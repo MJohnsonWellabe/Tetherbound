@@ -94,7 +94,7 @@ add('captain_ridge','meadows','Endurance with a flank/landing ace',[
 add('stronghold_elite','meadows','Movement, reset, patient punish',[
   ['diver_leap','diver_retreat'],['hald_reset','wall_slam'],['diver_retreat','diver_leap'],['current_volley','current_zone'],['hald_reset','wall_quake']]);
 add('warden_aldis','meadows','Four learned shapes then Earth Fist exam',[
-  ['wall_check','wall_quake'],['diver_retreat','diver_leap'],['charger_rush','charger_double_rush'],['current_volley','current_zone'],['guardian_earth_fist','charger_rush','ace_exam']]);
+  ['wall_check','wall_quake'],['diver_retreat','diver_leap'],['current_volley','current_zone'],['charger_rush','charger_double_rush'],['guardian_earth_fist','charger_rush','ace_exam']]);
 add('water_aquaryn_alpha','water','Three visible shore/wake phases',[['diver_retreat','aquaryn_wake','diver_leap']],{controller:'aquaryn',phases:['shore','wake','surface_routes']});
 add('water_deep_watch_tidecoil','water','Lateral sweep and sheltered eddy',[['tidecoil_sweep']],{controller:'tidecoil',hp_threshold:0.5});
 add('water_trainer_venn','water','Wall space, charge lane, current finish',[
@@ -134,6 +134,8 @@ for (const [file,chapter] of [['data/config/cloudreach_encounters.json','cloudre
     }),{controller:'existing_relay',relay_id:row.id});
   }
 }
+// BOSSES §4.5 gives every Warden member a role; the poise pool follows it.
+['WALL','DIVER','CURRENT','CHARGER'].forEach((role,i)=>{named.named_warden_aldis.sendouts[i].role=role;});
 for(const id of ['warden_aldis','water_trainer_nerissa','captain_veyra_storm_anchor','captain_marrow_dynamo_core']) {
   const rows=named['named_'+id].sendouts;
   rows[rows.length-1].role='ACE';

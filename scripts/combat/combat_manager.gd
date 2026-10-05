@@ -585,7 +585,8 @@ var aftermath_focus: Node3D = null
 func begin(
 	player: Node3D, wild: Node3D, ally_body: Node3D, party: Array[RefCounted],
 	camera_rig: Node = null, best_creature: RefCounted = null,
-	opponent_owned: bool = false, realm_owned_opponent: bool = false
+	opponent_owned: bool = false, realm_owned_opponent: bool = false,
+	host_started: bool = false
 ) -> bool:
 	if is_fighting():
 		return false
@@ -657,7 +658,13 @@ func begin(
 	_victory_awarded = false
 
 	_open_arena()
-	if realm_owned_opponent:
+	# A realm fight THIS process is starting as its host (a canonical solo wild
+	# with actor_vitals on, or a multi-peer host's own wild) has nobody to defer
+	# to yet: stage it like any local fight so the trainer stands aside and the
+	# camera's ally is seated in formation. Only a participant JOINING someone
+	# else's realm fight keeps the hands-off realm seat below.
+	var joining_realm := realm_owned_opponent and not host_started
+	if joining_realm:
 		# Joining a shared realm encounter must not reposition its enemy or
 		# constrain it to this participant's disposable presentation arena.
 		# The local follower can legitimately arrive here after snagging on world
@@ -675,7 +682,7 @@ func begin(
 	if not realm_owned_opponent:
 		_wild.call("set_engaged", true, _ally_body)
 		_wild.set("arena", _arena)
-	_ally_body.set("arena", null if realm_owned_opponent else _arena)
+	_ally_body.set("arena", null if joining_realm else _arena)
 	_bind_contact_spacing(realm_owned_opponent)
 
 	_target_marker = TARGET_MARKER.begin(_arena, _wild, MATH.config().get("target_marker", {}))
@@ -2454,6 +2461,8 @@ func _player_poise_max() -> float:
 
 
 func _enemy_poise_max() -> float:
+	if _wild != null and _wild.has_method("poise_max"):
+		return float(_wild.call("poise_max"))
 	if _wild != null and _wild.has_method("combat_config"):
 		return maxf(1.0, float((_wild.call("combat_config") as Dictionary).get(
 			"poise_max", _poise_config().get("max", 40.0))))
@@ -2800,7 +2809,7 @@ func apply_host_strike_verdict(payload: Dictionary) -> void:
 	if _wild != null and _wild.has_method("sync_poise") and payload.has("poise"):
 		_wild.call("sync_poise", float(payload["poise"]),
 			bool(payload.get("staggered", false)), bool(payload.get("critical_ready", true)),
-			float(payload.get("stagger_left", -1.0)))
+			float(payload.get("stagger_left", -1.0)), float(payload.get("poise_max", -1.0)))
 	_perform_player_strike(bool(payload.get("hit", false)),
 		float(payload.get("damage", 0.0)), bool(payload.get("killed", false)),
 		bool(payload.get("stagger_crit", false)), bool(payload.get("stagger_triggered", false)), impact)
@@ -3045,7 +3054,7 @@ func apply_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
 		_wild.call("sync_poise", float(opponent["poise"]),
 			bool(opponent.get("staggered", false)),
 			bool(opponent.get("critical_ready", true)),
-			float(opponent.get("stagger_left", -1.0)))
+			float(opponent.get("stagger_left", -1.0)), float(opponent.get("poise_max", -1.0)))
 		if not quiet and not was_staggered and bool(opponent.get("staggered", false)):
 			_announce_stagger(true)
 		state_changed.emit()
@@ -3413,7 +3422,9 @@ func apply_host_enemy_hit(payload: Dictionary) -> void:
 	var creature := active_creature()
 	if creature == null:
 		return
-	var canonical: bool = _durable_trainer_reward_owned()
+	# F27: a guest's hit in a canonical wild fight arrives only after its owner
+	# saved the host's vitals row, carrying that receipt (wild_actor_scope.gd).
+	var canonical: bool = _durable_trainer_reward_owned() or payload.get("actor_vitals_receipt") is Dictionary
 	if canonical and not _saved_actor_vitals_matches(creature, payload): return
 	if canonical and not _admit_host_feedback(_seen_impact_actions, payload.get("impact", {})): return
 	# Host rolls the base strike; this character's one active relic applies
@@ -3533,15 +3544,24 @@ func _award_victory() -> void:
 	var condition_cfg: Dictionary = CONDITION.config()
 	var award: int = PROGRESSION.xp_award_for(_enemy.level, cfg)
 	var share: int = PROGRESSION.party_share(award, cfg)
+	# F27: a canonical host wild victory pays its reduced XP and essence in the
+	# host training transaction, staged from this party. That staged party also
+	# carries the win's battle credit, victory mood and level-up condition
+	# (progression.staged_training_condition), so the legacy loop below must
+	# not touch the members at all, or each would be counted twice.
+	var host_owns_xp: bool = _encounter_link != null and not _encounter_id.is_empty() \
+		and _encounter_link.has_method("canonical_wild_encounter") \
+		and _encounter_link.call("canonical_wild_encounter", _encounter_id) == true
 
 	last_xp_award.clear()
 	for i in _party.size():
 		var member: RefCounted = _party[i]
-		if member == null or member.fainted:
+		if member == null or member.fainted or host_owns_xp:
 			continue
-		var amount: int = award if i == _active_index else share
-		var levels_gained: int = member.gain_xp(amount, cfg)
-		last_xp_award[member.label()] = {"xp": amount, "levels": levels_gained}
+		var amount: int = 0 if host_owns_xp else (award if i == _active_index else share)
+		var levels_gained: int = member.gain_xp(amount, cfg) if amount > 0 else 0
+		if not host_owns_xp:
+			last_xp_award[member.label()] = {"xp": amount, "levels": levels_gained}
 		# Prompt 67's history, recorded where the facts already are. This loop
 		# already skips a fainted member ("it did not fight"), so the same rule
 		# decides what counts as a battle fought -- one definition, one place.

@@ -1,0 +1,63 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=5832 control_port=40431 home=/tmp/claude-0/net-f27-release/home-0 log=/tmp/claude-0/net-f27-release/peer-0.log
+coordinator: launched peer 1 (client) pid=5833 control_port=36553 home=/tmp/claude-0/net-f27-release/home-1 log=/tmp/claude-0/net-f27-release/peer-1.log
+coordinator: peer 0 hello: {"enet_port":35081.0,"godot_version":"4.7-stable (official)","main_sha":"66475937cc2e","peer":0.0,"pid":5832.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/net-f27-release/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":35082.0,"godot_version":"4.7-stable (official)","main_sha":"66475937cc2e","peer":1.0,"pid":5833.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/net-f27-release/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: peer 0 boot: booted world (240 settle frames)
+PASS: peer 1 boot: booted world (240 settle frames)
+PASS: peer 0 party_grant: 'bramblebun' at level 5 joined the party (1 member(s))
+PASS: peer 1 party_grant: 'bramblebun' at level 5 joined the party (1 member(s))
+PASS: peer 1 party_grant: 'terrapup' at level 5 joined the party (2 member(s))
+PASS: peer 1 party_grant: 'galecrest' at level 6 joined the party (3 member(s))
+PASS: peer 1 party_grant: 'bramblebun' at level 7 joined the party (4 member(s))
+PASS: peer 1 party_grant: 'terrapup' at level 8 joined the party (5 member(s))
+PASS: peer 1 storage_grant: granted 300 essence_ground (0 did not fit; waited 0 guard frame(s))
+PASS: peer 0 saved its seeded character: character 'character-8e07c528d6e90caa2a66196e8626c122' is on disk (wrote_world=true)
+PASS: peer 1 saved its seeded character: character 'character-34d17ba03a5e7754b97ad9a638b7b47f' is on disk (wrote_world=true)
+PASS: peer 0 host: hosting udp/35081 as peer 1
+PASS: peer 1 join: joined 127.0.0.1:35081 as peer 235422100 after 47 frames; snapshot applied; 2 peer(s) in registry
+PASS: peer 0 expect_peers: registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: peer 1 expect_peers: registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: peer 0 f27_dismiss_modals: no modal owns input (0 confirms)
+PASS: host placed a real paid Altar: paid Altar altar:meadows:b1 at (-16.0, 1.143825, 10.0)
+PASS: peer 0 f27_dismiss_modals: no modal owns input (0 confirms)
+PASS: peer 1 f27_dismiss_modals: no modal owns input (4 confirms)
+PASS: R: guest ceremony release runs: ceremony release ended at stage done
+PASS: R: the ceremony finished ({ "diag": { "quote": "{ \"ok\": true, \"pending_uid\": \"creature-58e1e5933f30c9f5a73b992ea1b4b6b5\", \"released_uid\": \"creature-2bba082f42eff1f4e9bf7757f1c4cebe\", \"ceremony_id\": \"release_ceremony:creature-58e1e5933f30c9f5a73b992ea1b4b6b5\", \"expected_character_revision\": 0, \"payout\": [{ \"id\": \"essence_ground\", \"n\": 5 }] }", "requests": "{  }", "service": true, "view_revision": 0.0 }, "message": "", "newcomer_uid": "creature-58e1e5933f30c9f5a73b992ea1b4b6b5", "owned": ["creature-78ee7688be76c99bf6b19fbc60579ca2", "creature-13f67fd4fb8a20b533fadd09350e28a6", "creature-48bf39e471e3ea5d76760f562dd78f59", "creature-ebac0d037183828588299c9c9c919999", "creature-58e1e5933f30c9f5a73b992ea1b4b6b5"], "payout": [{ "id": "essence_ground", "n": 5.0 }], "pending_left": false, "released_uid": "creature-2bba082f42eff1f4e9bf7757f1c4cebe", "stage": "done", "unpaid_reason": "" })
+PASS: R: the host-admitted creature quotes a payout ({ "diag": { "quote": "{ \"ok\": true, \"pending_uid\": \"creature-58e1e5933f30c9f5a73b992ea1b4b6b5\", \"released_uid\": \"creature-2bba082f42eff1f4e9bf7757f1c4cebe\", \"ceremony_id\": \"release_ceremony:creature-58e1e5933f30c9f5a73b992ea1b4b6b5\", \"expected_character_revision\": 0, \"payout\": [{ \"id\": \"essence_ground\", \"n\": 5 }] }", "requests": "{  }", "service": true, "view_revision": 0.0 }, "message": "", "newcomer_uid": "creature-58e1e5933f30c9f5a73b992ea1b4b6b5", "owned": ["creature-78ee7688be76c99bf6b19fbc60579ca2", "creature-13f67fd4fb8a20b533fadd09350e28a6", "creature-48bf39e471e3ea5d76760f562dd78f59", "creature-ebac0d037183828588299c9c9c919999", "creature-58e1e5933f30c9f5a73b992ea1b4b6b5"], "payout": [{ "id": "essence_ground", "n": 5.0 }], "pending_left": false, "released_uid": "creature-2bba082f42eff1f4e9bf7757f1c4cebe", "stage": "done", "unpaid_reason": "" })
+PASS: R: exactly 5 essence_ground paid once (300 -> 305)
+PASS: R: exactly one new release receipt (["release:creature-2bba082f42eff1f4e9bf7757f1c4cebe"])
+PASS: R: the released creature left and the newcomer took its holder (["creature-78ee7688be76c99bf6b19fbc60579ca2", "creature-13f67fd4fb8a20b533fadd09350e28a6", "creature-48bf39e471e3ea5d76760f562dd78f59", "creature-ebac0d037183828588299c9c9c919999", "creature-58e1e5933f30c9f5a73b992ea1b4b6b5"])
+PASS: R: host row is the accepted essence_release ({ "action": "essence_release", "action_id": "513c8306331a07dac6c9f907e51628150d9975077769ce3b4993e6ae9ca2612f", "receipt": "release:creature-2bba082f42eff1f4e9bf7757f1c4cebe", "status": "accepted" })
+PASS: R: host admitted items/receipts equal the guest's ({ "essence_air": 0.0, "essence_dark": 0.0, "essence_electric": 0.0, "essence_fire": 0.0, "essence_ground": 305.0, "essence_ice": 0.0, "essence_psychic": 0.0, "essence_water": 0.0, "tether_candy": 0.0 } / ["release:creature-2bba082f42eff1f4e9bf7757f1c4cebe"])
+PASS: R: host admitted party lost exactly the released creature ([{ "level": 5.0, "species_id": "terrapup", "uid": "creature-78ee7688be76c99bf6b19fbc60579ca2", "xp": 0.0 }, { "level": 6.0, "species_id": "galecrest", "uid": "creature-13f67fd4fb8a20b533fadd09350e28a6", "xp": 0.0 }, { "level": 7.0, "species_id": "bramblebun", "uid": "creature-48bf39e471e3ea5d76760f562dd78f59", "xp": 0.0 }, { "level": 8.0, "species_id": "terrapup", "uid": "creature-ebac0d037183828588299c9c9c919999", "xp": 0.0 }])
+PASS: peer 1 f27_dismiss_modals: no modal owns input (4 confirms)
+PASS: R2: guest releases its unadmitted newcomer: ceremony release ended at stage done
+PASS: R2: released the first newcomer (creature-58e1e5933f30c9f5a73b992ea1b4b6b5)
+PASS: R2: the release still happened ({ "diag": { "quote": "{ \"ok\": true, \"pending_uid\": \"creature-846b69e1e2633b81a29817fd428a1f9d\", \"released_uid\": \"creature-58e1e5933f30c9f5a73b992ea1b4b6b5\", \"ceremony_id\": \"release_ceremony:creature-846b69e1e2633b81a29817fd428a1f9d\", \"expected_character_revision\": 1, \"payout\": [], &\"unpaid_reason\": \"the host has not saved this creature with your team\" }", "requests": "{  }", "service": true, "view_revision": 1.0 }, "message": "Released with no essence: the host has not saved this creature with your team.", "newcomer_uid": "creature-846b69e1e2633b81a29817fd428a1f9d", "owned": ["creature-78ee7688be76c99bf6b19fbc60579ca2", "creature-13f67fd4fb8a20b533fadd09350e28a6", "creature-48bf39e471e3ea5d76760f562dd78f59", "creature-ebac0d037183828588299c9c9c919999", "creature-846b69e1e2633b81a29817fd428a1f9d"], "payout": [], "pending_left": false, "released_uid": "creature-58e1e5933f30c9f5a73b992ea1b4b6b5", "stage": "done", "unpaid_reason": "the host has not saved this creature with your team" })
+PASS: R2: no payout, with a readable reason (the host has not saved this creature with your team)
+PASS: R2: items and release receipts unchanged ({ "essence_air": 0.0, "essence_dark": 0.0, "essence_electric": 0.0, "essence_fire": 0.0, "essence_ground": 305.0, "essence_ice": 0.0, "essence_psychic": 0.0, "essence_water": 0.0, "tether_candy": 0.0 })
+PASS: peer 1 f27_dismiss_modals: no modal owns input (0 confirms)
+PASS: peer 1 save_character_here: character 'character-34d17ba03a5e7754b97ad9a638b7b47f' is on disk (wrote_world=false)
+PASS: peer 1 leave: client left cleanly after 0 frames
+PASS: peer 0 expect_peers: registry reports 1 peer(s) after 9 frames (0.2 s)
+PASS: peer 1 production_join: title returning entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:35081 as peer 39379340 after 190 frames
+PASS: R after reconnect: party unchanged ([{ "level": 5.0, "species_id": "terrapup", "uid": "creature-78ee7688be76c99bf6b19fbc60579ca2", "xp": 0.0 }, { "level": 6.0, "species_id": "galecrest", "uid": "creature-13f67fd4fb8a20b533fadd09350e28a6", "xp": 0.0 }, { "level": 7.0, "species_id": "bramblebun", "uid": "creature-48bf39e471e3ea5d76760f562dd78f59", "xp": 0.0 }, { "level": 8.0, "species_id": "terrapup", "uid": "creature-ebac0d037183828588299c9c9c919999", "xp": 0.0 }, { "level": 1.0, "species_id": "bramblebun", "uid": "creature-846b69e1e2633b81a29817fd428a1f9d", "xp": 0.0 }] vs [{ "level": 5.0, "species_id": "terrapup", "uid": "creature-78ee7688be76c99bf6b19fbc60579ca2", "xp": 0.0 }, { "level": 6.0, "species_id": "galecrest", "uid": "creature-13f67fd4fb8a20b533fadd09350e28a6", "xp": 0.0 }, { "level": 7.0, "species_id": "bramblebun", "uid": "creature-48bf39e471e3ea5d76760f562dd78f59", "xp": 0.0 }, { "level": 8.0, "species_id": "terrapup", "uid": "creature-ebac0d037183828588299c9c9c919999", "xp": 0.0 }, { "level": 1.0, "species_id": "bramblebun", "uid": "creature-846b69e1e2633b81a29817fd428a1f9d", "xp": 0.0 }])
+PASS: R after reconnect: items unchanged ({ "essence_air": 0.0, "essence_dark": 0.0, "essence_electric": 0.0, "essence_fire": 0.0, "essence_ground": 305.0, "essence_ice": 0.0, "essence_psychic": 0.0, "essence_water": 0.0, "tether_candy": 0.0 } vs { "essence_air": 0.0, "essence_dark": 0.0, "essence_electric": 0.0, "essence_fire": 0.0, "essence_ground": 305.0, "essence_ice": 0.0, "essence_psychic": 0.0, "essence_water": 0.0, "tether_candy": 0.0 })
+PASS: R after reconnect: spend_receipts unchanged ([] vs [])
+PASS: R after reconnect: release_receipts unchanged (["release:creature-2bba082f42eff1f4e9bf7757f1c4cebe"] vs ["release:creature-2bba082f42eff1f4e9bf7757f1c4cebe"])
+coordinator: peer 1 hello: {"enet_port":35082.0,"godot_version":"4.7-stable (official)","main_sha":"66475937cc2e","peer":1.0,"pid":6283.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/net-f27-release/home-1/godot/app_userdata/Tetherbound"}
+PASS: guest process restarted (hard): peer 1 pid 5833 killed; fresh pid 6283 said hello
+PASS: peer 1 f27_title_rejoin: title rejoin as character-34d17ba03a5e7754b97ad9a638b7b47f after 1036 frames, 2 attempt(s)
+PASS: peer 0 expect_peers: registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: peer 1 expect_peers: registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: R after reload: party unchanged ([{ "level": 5.0, "species_id": "terrapup", "uid": "creature-78ee7688be76c99bf6b19fbc60579ca2", "xp": 0.0 }, { "level": 6.0, "species_id": "galecrest", "uid": "creature-13f67fd4fb8a20b533fadd09350e28a6", "xp": 0.0 }, { "level": 7.0, "species_id": "bramblebun", "uid": "creature-48bf39e471e3ea5d76760f562dd78f59", "xp": 0.0 }, { "level": 8.0, "species_id": "terrapup", "uid": "creature-ebac0d037183828588299c9c9c919999", "xp": 0.0 }, { "level": 1.0, "species_id": "bramblebun", "uid": "creature-846b69e1e2633b81a29817fd428a1f9d", "xp": 0.0 }] vs [{ "level": 5.0, "species_id": "terrapup", "uid": "creature-78ee7688be76c99bf6b19fbc60579ca2", "xp": 0.0 }, { "level": 6.0, "species_id": "galecrest", "uid": "creature-13f67fd4fb8a20b533fadd09350e28a6", "xp": 0.0 }, { "level": 7.0, "species_id": "bramblebun", "uid": "creature-48bf39e471e3ea5d76760f562dd78f59", "xp": 0.0 }, { "level": 8.0, "species_id": "terrapup", "uid": "creature-ebac0d037183828588299c9c9c919999", "xp": 0.0 }, { "level": 1.0, "species_id": "bramblebun", "uid": "creature-846b69e1e2633b81a29817fd428a1f9d", "xp": 0.0 }])
+PASS: R after reload: items unchanged ({ "essence_air": 0.0, "essence_dark": 0.0, "essence_electric": 0.0, "essence_fire": 0.0, "essence_ground": 305.0, "essence_ice": 0.0, "essence_psychic": 0.0, "essence_water": 0.0, "tether_candy": 0.0 } vs { "essence_air": 0.0, "essence_dark": 0.0, "essence_electric": 0.0, "essence_fire": 0.0, "essence_ground": 305.0, "essence_ice": 0.0, "essence_psychic": 0.0, "essence_water": 0.0, "tether_candy": 0.0 })
+PASS: R after reload: spend_receipts unchanged ([] vs [])
+PASS: R after reload: release_receipts unchanged (["release:creature-2bba082f42eff1f4e9bf7757f1c4cebe"] vs ["release:creature-2bba082f42eff1f4e9bf7757f1c4cebe"])
+PASS: R after reload: host holds one receipt and the same items ({ "essence_air": 0.0, "essence_dark": 0.0, "essence_electric": 0.0, "essence_fire": 0.0, "essence_ground": 305.0, "essence_ice": 0.0, "essence_psychic": 0.0, "essence_water": 0.0, "tether_candy": 0.0 })
+F27_NET_NO_DUP: 52 assertions over cases ["release"]
+ALL CHECKS PASSED
+exit 0

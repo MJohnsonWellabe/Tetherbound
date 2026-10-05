@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-04T22:40:56.606476+00:00",
+ "generated_at": "2026-10-05T01:16:58.453032+00:00",
  "main_sha": "946bb39e5 (PR #530 head)",
  "batch4_sha": "648643576 (PR #531, CI running)",
  "rows": [
@@ -254,10 +254,10 @@
    "criteria": [
     {
      "text": "Warrens guardian: named tactical question visible at normal distance",
-     "status": "partial",
-     "evidence": "ralph/reports/MEADOWS-CORE/f04/guardian_03b7a17b/@229f70d4 (judge G)",
+     "status": "failing",
+     "evidence": "tb/reproof-captures: | F04#0 Warrens guardian | FAIL | F04-0/ | Smoke FAIL (tell/recovery 1.00/0.90 vs expected 0.85/1.10; Earth Fist cone/lunge not from MoveDB); both attacks share one magenta-ring tell, question only in HUD text, camera too close/occluded in ",
      "gap": "Re-capture the guardian fight at normal camera; redo the code-blind judge. Folds into F22#4.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Visual verdict. combat_hud.gd, vfx.json, move_effect.gd and camera_rig.gd changed (F21/F25) after 229f70d4.",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
      "audit_index": 0
     },
     {
@@ -278,10 +278,10 @@
     },
     {
      "text": "Warden: named tactical question visible at normal distance",
-     "status": "partial",
-     "evidence": "ralph/reports/MEADOWS/f04/warden_3b6f965a/@3b6f965a (JUDGE_r3 PASS)",
+     "status": "met",
+     "evidence": "tb/reproof-captures: - Items: 22 assigned. Recorded: 18 (PASS 3, FAIL 13, ERROR 2). Not run: 4 (F04#3, F22#4, F10#2, F14#0).",
      "gap": "Re-capture the Warden fight on the current HUD/VFX; redo the code-blind judge. Folds into F22#4.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Visual verdict. Since 3b6f965a, combat_hud (178 lines), vfx.json (1852) and camera_rig changed, and hit_spark is now off.",
+     "note": "Re-proof 2026-10-04: PASS on tb/reproof-captures.",
      "audit_index": 3
     },
     {
@@ -651,10 +651,10 @@
     },
     {
      "text": "Two peers and reload retain the same world gates",
-     "status": "partial",
-     "evidence": "ralph/reports/STORMWOOD-PROGRESS/two_peer/stormwood_f09_arch_gates_two_peer_reload@5c8948ea",
+     "status": "met",
+     "evidence": "tb/reproof-retest: | F09#4 | PASS (v28 save) | F09-4.md |",
      "gap": "Re-run tools/net/run_two_peer_proof.sh stormwood_f09_arch_gates_two_peer_reload.json; independent re-check Folds into F48#1.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. The proof runner is not in CI. Arch runtime/world/save/net diff since 5c8948ea: 14 files, +5338.",
+     "note": "Re-proof 2026-10-04: PASS on tb/reproof-retest.",
      "audit_index": 4
     }
    ]
@@ -683,10 +683,10 @@
     },
     {
      "text": "Persistent receipts for each chain",
-     "status": "partial",
-     "evidence": "ralph/reports/STORMWOOD-PROGRESS/two_peer/stormwood_f10_side_chain_receipts@749634d9",
+     "status": "failing",
+     "evidence": "tb/reproof-retest: | F10#1 | FAIL (v28 save) | F10-1.md |",
      "gap": "Re-run stormwood_f10_side_chain_receipts proof scenario (now including Rook TM) Folds into F48#1.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. The two-process receipt proof is not in CI. Only 3 of 6 chain units round-trip save/load. Stormwood paths changed since.",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-retest.",
      "audit_index": 1
     },
     {
@@ -755,10 +755,10 @@
     },
     {
      "text": "Eligible peers accept/refuse independently at space and capacity",
-     "status": "partial",
-     "evidence": "ralph/reports/STORMWOOD-PROGRESS/two_peer/stormwood_f11_mirror_*, *_capacity_*@5132387d",
+     "status": "failing",
+     "evidence": "tb/reproof-retest: | F11#1 | FAIL (v28 save; 3 of 4 scenarios pass) | F11-1.md |",
      "gap": "Re-run mirror and both capacity proof scenarios; finish and gate smoke_net_stormwood_stormheart_offers Folds into F19#4, F48#2.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. The proof runner is not in CI. The net smoke is a failing WIP. CI single-process smokes skip full capacity. stormwood_ending.gd +314 since.",
+     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-retest.",
      "audit_index": 1
     },
     {
@@ -1906,10 +1906,10 @@
     },
     {
      "text": "The new storm bear exists via an agent-drafted reference and Meshy, larger than Staticub and taller than the trainer, with provenance recorded and an in-engine code-blind PASS; flag-gated until then.",
-     "status": "blocked",
+     "status": "not_started",
      "evidence": "assets/creatures/tetherbound/stormursa/reference/f36-three-quarter-v1.png; source/provenance.json",
      "gap": "Codex Meshy: generate, rig, scale-check and judge the Stormursa model, then fill the provenance gates.",
-     "note": "Audit 2026-10-04 on b4e4897d5: BLOCKED_OWNER. Only the drafted reference exists. There is no Meshy model, rig, scale check or judge. The flag gate holds.",
+     "note": "Relabelled 2026-10-04: agent work (Codex/lane), not waiting on the owner.",
      "audit_index": 3
     },
     {
@@ -2305,10 +2305,10 @@
    "criteria": [
     {
      "text": "About 25–30 priority assets (starters, most-seen main-path creatures, boss aces, legendaries, the six most repeated NPC faces) are regenerated or confirmed with drafted references and provenance; each passes a before/after code-blind judge or stays flagged off.",
-     "status": "blocked",
+     "status": "not_started",
      "evidence": "ralph/reports/R2-F36/priority-source-audit.json, meshy-night-ledger.json (0 submissions)@b4e4897d5",
-     "gap": "Codex Meshy lane: run the attended batch, with before/after code-blind judges and provenance rows in ART_DIRECTION.",
-     "note": "Audit 2026-10-04 on b4e4897d5: BLOCKED_OWNER. Only the inventory and one drafted Stormursa reference exist. There is no Meshy credential and nothing has been generated.",
+     "gap": "Codex Meshy lane: run the attended batch; owner ruling 2026-10-04 allows the six most-repeated NPC faces as identity-preserving refinements of the installed cast.",
+     "note": "Relabelled 2026-10-04: agent work (Codex/lane), not waiting on the owner.",
      "audit_index": 0
     },
     {
@@ -2329,10 +2329,10 @@
     },
     {
      "text": "The nightly Meshy cap (30 generations) is respected and logged with task ids.",
-     "status": "blocked",
+     "status": "not_started",
      "evidence": "tools/art_pipeline/f36_meshy_guard.py; meshy-night-ledger.json tasks=[]@b4e4897d5",
      "gap": "Codex Meshy: run the batch through f36_meshy_guard.py and commit a ledger with the real task IDs.",
-     "note": "Audit 2026-10-04 on b4e4897d5: BLOCKED_OWNER. The cap guard exists but has never been used. There are zero task IDs. Python contract test not in CI.",
+     "note": "Relabelled 2026-10-04: agent work (Codex/lane), not waiting on the owner.",
      "audit_index": 3
     }
    ]
@@ -2908,10 +2908,10 @@
    "criteria": [
     {
      "text": "An agent-piloted normal route estimates a 15–25 hour clear; the owner's play pass confirms the range.",
-     "status": "blocked",
+     "status": "not_started",
      "evidence": "ralph/reports/R3-F47/implementation-evidence.json (route command queued, never run)",
-     "gap": "Run tools/f47_capture_route.gd on the new-order route first, then the owner play pass.",
-     "note": "Audit 2026-10-04 on b4e4897d5: BLOCKED_OWNER. Closure needs the owner play pass (STATE open decision 6). The agent estimate is also missing.",
+     "gap": "Agent half first: run tools/f47_capture_route.gd on the new-order route. Only the owner play-pass half then waits on the owner.",
+     "note": "Relabelled 2026-10-04: agent work (Codex/lane), not waiting on the owner.",
      "audit_index": 0
     },
     {

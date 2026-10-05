@@ -19,6 +19,10 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		return await _hall_reload_host(args)
 	if action == "hall_leave_guest":
 		return await _hall_leave_guest()
+	if action == "home_bed_rest":
+		return await _home_bed_rest(args)
+	if action == "home_bed_status":
+		return _home_bed_status()
 	return await super._execute_step(msg)
 
 func _hall_guard(expected_peers: int = 2) -> Dictionary:
@@ -332,3 +336,57 @@ func _hall_leave_guest() -> Dictionary:
 	var valid: bool = not saved.is_empty() and bool(load_result.get("ok", false)) and str(saved.get("character_id", "")) == character_id
 	return {"verdict": "PASS" if valid else "FAIL", "detail": "production client leave saved its own portable character; production reader confirmed disk payload", "data": {
 		"character_id": character_id, "character_disk_path": path, "character_disk_sha256": FileAccess.get_sha256(path), "load_result": load_result}}
+
+
+## Home creature bed, two peers (owner ruling 2026-10-04; coordinator co-op
+## rule: one two-peer occupancy case). Each peer rests ITS OWN portable party
+## creature in the same world bed through the bed's own assign_creature and
+## heals through Game's own bed-recovery tick. Disclosed fixtures: a starter is
+## added only when the fresh character's party is empty, its HP is set to 10%,
+## and the 120 s recovery is stepped through `_tick_creature_bed_recovery` (the
+## same seam smoke_home_creature_bed.gd uses) rather than waited in real time.
+func _home_bed() -> Node:
+	return current_scene.get_node_or_null("GrandpaHouse/HomeCreatureBed") if current_scene != null else null
+
+func _home_bed_rest(args: Dictionary) -> Dictionary:
+	if _hall_guard(2).is_empty():
+		return {"verdict": "FAIL", "detail": "home bed rest requires the admitted two-peer meadows session"}
+	var game := root.get_node_or_null("Game")
+	var bed := _home_bed()
+	if bed == null:
+		return {"verdict": "FAIL", "detail": "GrandpaHouse/HomeCreatureBed missing on this peer"}
+	var party: RefCounted = game.get("party")
+	var added := false
+	if int(party.call("size")) == 0:
+		added = bool(party.call("add", game.call("make_creature", str(args.get("species", "terrapup")))))
+	var creature: RefCounted = party.call("at", 0)
+	if creature == null:
+		return {"verdict": "FAIL", "detail": "no party creature to rest"}
+	var max_hp := float(creature.get("max_hp"))
+	creature.set("hp", max_hp * 0.1)
+	var occupied_before := bool(bed.call("is_occupied"))
+	var assigned := bool(bed.call("assign_creature", 0))
+	var resting := bool(creature.get("resting")) and int(creature.get("rest_bed_index")) == int(bed.call("build_index"))
+	var seconds := float(preload("res://scripts/creatures/progression.gd").creature_bed_full_heal_seconds(preload("res://scripts/creatures/progression.gd").config()))
+	for _i in 60:
+		game.call("_tick_creature_bed_recovery", seconds / 60.0)
+	await physics_frame
+	var healed := is_equal_approx(float(creature.get("hp")), max_hp)
+	var ok := assigned and resting and healed and not occupied_before
+	return {"verdict": "PASS" if ok else "FAIL", "detail": "own creature rested in the shared home bed and healed to full", "data": {
+		"character_id": str(game.get("local").get("character_id")), "hosting": bool(_session().call("is_host")),
+		"starter_added_fixture": added, "occupied_by_own_party_before": occupied_before, "assigned": assigned,
+		"resting": resting, "bed_index": int(bed.call("build_index")), "hp": float(creature.get("hp")), "max_hp": max_hp,
+		"heal_seconds": seconds}}
+
+func _home_bed_status() -> Dictionary:
+	var game := root.get_node_or_null("Game")
+	var bed := _home_bed()
+	var party: RefCounted = game.get("party") if game != null else null
+	var creature: RefCounted = party.call("at", 0) if party != null and int(party.call("size")) > 0 else null
+	if bed == null or creature == null:
+		return {"verdict": "FAIL", "detail": "home bed or party creature missing"}
+	return {"verdict": "PASS", "detail": "home bed status read", "data": {
+		"character_id": str(game.get("local").get("character_id")), "resting": bool(creature.get("resting")),
+		"rest_bed_index": int(creature.get("rest_bed_index")), "occupied": bool(bed.call("is_occupied")),
+		"hp": float(creature.get("hp")), "max_hp": float(creature.get("max_hp"))}}

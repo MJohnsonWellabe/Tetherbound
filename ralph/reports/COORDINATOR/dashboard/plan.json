@@ -4,7 +4,10 @@
  "start": "2026-10-04T23:00:00Z",
  "sprint_hours": 8,
  "sprints": 13,
- "rebaselines": [],
+ "rebaselines": [
+  "2026-10-04 6:50 PM CDT, before any tracking: baseline measurement corrected. F29#3, F36#0, F36#3 and F47#0 (agent half) were labelled blocked but are agent work. The F49 bars now also measure the 13 chapter cards and the 4 release-wide requirements. Bar dates unchanged.",
+  "2026-10-04 7:50 PM CDT (owner): added lane P, a temporary performance lane for sprints 1–4. Codex's desktop timings showed Meadows 11, Tidewake 7 and Stormwood 17 fps average at Medium 1080p. No other bar moved."
+ ],
  "lanes": [
   {
    "id": "A",
@@ -102,16 +105,18 @@
      "baseline_pct": 8.3
     },
     {
-     "label": "F49 integrated run + chapter cards",
+     "label": "F49 run, 13 chapter cards, release-wide",
      "features": [
-      "F49"
+      "F49",
+      "CARDS",
+      "XCUT"
      ],
      "depends": [
       "all"
      ],
      "start": 11,
      "end": 13,
-     "baseline_pct": 56.2
+     "baseline_pct": 63.1
     }
    ]
   },
@@ -192,16 +197,18 @@
      "baseline_pct": 6.2
     },
     {
-     "label": "F49 integrated run + chapter cards",
+     "label": "F49 run, 13 chapter cards, release-wide",
      "features": [
-      "F49"
+      "F49",
+      "CARDS",
+      "XCUT"
      ],
      "depends": [
       "all"
      ],
      "start": 11,
      "end": 13,
-     "baseline_pct": 56.2
+     "baseline_pct": 63.1
     }
    ]
   },
@@ -280,16 +287,18 @@
      "baseline_pct": 75.0
     },
     {
-     "label": "F49 integrated run + chapter cards",
+     "label": "F49 run, 13 chapter cards, release-wide",
      "features": [
-      "F49"
+      "F49",
+      "CARDS",
+      "XCUT"
      ],
      "depends": [
       "all"
      ],
      "start": 11,
      "end": 13,
-     "baseline_pct": 56.2
+     "baseline_pct": 63.1
     }
    ]
   },
@@ -369,7 +378,7 @@
      "start": 5.5,
      "end": 7,
      "note": "Needs the storm bear from lane E early in F36",
-     "baseline_pct": 25.0
+     "baseline_pct": 5.0
     },
     {
      "label": "F42 HUD + new-system screens",
@@ -396,19 +405,21 @@
      ],
      "start": 8.5,
      "end": 11,
-     "baseline_pct": 20.0
+     "baseline_pct": 0.0
     },
     {
-     "label": "F49 integrated run + chapter cards",
+     "label": "F49 run, 13 chapter cards, release-wide",
      "features": [
-      "F49"
+      "F49",
+      "CARDS",
+      "XCUT"
      ],
      "depends": [
       "all"
      ],
      "start": 11,
      "end": 13,
-     "baseline_pct": 56.2
+     "baseline_pct": 63.1
     }
    ]
   },
@@ -437,7 +448,7 @@
      "note": "Includes the F29#3 storm bear; RD-26 cap of 30 generations/night",
      "start": 3,
      "end": 6.5,
-     "baseline_pct": 56.2
+     "baseline_pct": 6.2
     },
     {
      "label": "F39 Tidewake visual burn-down",
@@ -492,14 +503,34 @@
     {
      "label": "F49 release frames + owner Ally playtest prep",
      "features": [
-      "F49"
+      "F49",
+      "CARDS",
+      "XCUT"
      ],
      "depends": [
       "all"
      ],
      "start": 12,
      "end": 13,
-     "baseline_pct": 56.2
+     "baseline_pct": 63.1
+    }
+   ]
+  },
+  {
+   "id": "P",
+   "name": "Lane P · Claude (performance)",
+   "session": "tb/perf",
+   "bars": [
+    {
+     "label": "Performance to target: Medium ≥60 fps avg on GTX 1060 (Ally ≥30 proxy)",
+     "features": [
+      "XPERF",
+      "F26"
+     ],
+     "start": 0.1,
+     "end": 4,
+     "note": "Added 2026-10-04 after Codex measured 7–17 fps avg in three realms. Measure (Claude probe plus Codex GPU A/B), then fix the top costs without clipping the world.",
+     "baseline_pct": 50.0
     }
    ]
   }
