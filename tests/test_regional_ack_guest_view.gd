@@ -26,8 +26,16 @@ class SessionProbe extends Node:
 		_foundation_personal_cache = view.duplicate(true)
 		homestead_personal_view_completed.emit()
 
+## The ending context itself is covered by test_regional_homecoming; here the
+## owner's "same ending, still owed" and "at Grandpa, safe" answers are set.
+class GameProbe extends "res://autoload/game_state.gd":
+	var owed := true
+	var sendable := true
+	func _regional_ack_still_owed(transaction_id: String) -> bool: return owed and _regional_ack_intents.has(transaction_id)
+	func _regional_ack_sendable(_transaction_id: String) -> bool: return sendable
+
 func _game(hosting: bool) -> Node:
-	var game := GAME.new()
+	var game := GameProbe.new()
 	game.reset_for_new_game()
 	game.local.character_id = "character-ack"
 	var session := SessionProbe.new()
@@ -105,14 +113,24 @@ func test_guest_two_pending_stages_each_send_once_on_the_next_reply() -> void:
 	assert_eq(session.sent.size(), 2, "a later unrelated view reply resends nothing")
 	game.free()
 
-func test_guest_abandoned_wait_never_sends_late() -> void:
+func test_guest_ack_no_longer_owed_is_forgotten_unsent() -> void:
 	var game := _game(false)
 	var session: SessionProbe = game.session
 	game._queue_regional_ack(_intent())
-	game._regional_ack_waiting[_intent().transaction_id] = Time.get_ticks_msec() - 60000
+	game.owed = false # Another party, character, world or session: a new presentation.
 	session.reply({"registry_revision": 12})
 	assert_eq(session.sent.size(), 0)
 	assert_true(game._regional_ack_intents.is_empty())
+	game.free()
+
+func test_guest_waits_to_send_until_it_is_back_at_grandpa() -> void:
+	var game := _game(false)
+	var session: SessionProbe = game.session
+	game._queue_regional_ack(_intent())
+	game.sendable = false
+	session.reply({"registry_revision": 12})
+	assert_eq(session.sent.size(), 0, "the host would refuse away from Grandpa")
+	assert_false(game._regional_ack_intents.is_empty(), "still owed: kept")
 	game.free()
 
 func test_guest_resends_on_a_fresh_view_while_the_caller_still_waits() -> void:
@@ -133,7 +151,12 @@ func test_guest_resends_on_a_fresh_view_while_the_caller_still_waits() -> void:
 	game._regional_ack_queued_at[tid] = Time.get_ticks_msec() - 60000
 	game.regional_ending_ack_result(tid)
 	session.reply({"registry_revision": 7})
-	assert_eq(session.sent.size(), 2, "no resend after the caller's window")
+	assert_eq(session.sent.size(), 3, "past the scene's window an owed ack still resends")
+	game.owed = false
+	game._regional_ack_sent_at[tid] = Time.get_ticks_msec() - game.REGIONAL_ACK_RESEND_MS - 1
+	game.regional_ending_ack_result(tid)
+	session.reply({"registry_revision": 8})
+	assert_eq(session.sent.size(), 3, "an ack no longer owed stops")
 	game.free()
 
 func test_guest_window_outlasts_the_host_window_for_a_slow_round_trip() -> void:
@@ -152,3 +175,46 @@ func test_guest_window_outlasts_the_host_window_for_a_slow_round_trip() -> void:
 	assert_eq(session.sent.size(), 1, "a slow first reply inside the guest window still sends")
 	guest.free()
 	host.free()
+
+
+class SettlingSession extends SessionProbe:
+	var row: Dictionary = {}
+	var commits := 0
+	func _owner_training_row() -> Dictionary: return row.duplicate(true)
+	func _training_decision(_peer: int, current: Dictionary) -> Dictionary:
+		return {"ok": true, "saved": true} if current.get("action") == "regional_ack" else {}
+	func _foundation_send(op: String, key: String, intent: Dictionary, revision: int) -> Dictionary:
+		sent.append({"op": op, "key": key, "intent": intent.duplicate(true), "revision": revision})
+		# The host journals one row per transaction id; a repeat returns it.
+		if row.get("intent") != intent: commits += 1
+		row = {"action": "regional_ack", "intent": intent.duplicate(true)}
+		return {"ok": false, "resolved": false}
+
+## Coordinator #4 design check: a guest whose presentation window expires
+## before any reply (slow machine, ending transition) still has its
+## homecoming settle, and exactly once.
+func test_an_expired_guest_ack_still_settles_exactly_once() -> void:
+	var game := GameProbe.new()
+	game.reset_for_new_game()
+	game.local.character_id = "character-ack"
+	var session := SettlingSession.new()
+	game.add_child(session)
+	game.session = session
+	var tid: String = _intent().transaction_id
+	game._queue_regional_ack(_intent())
+	# The scene's window passes with no reply at all.
+	game._regional_ack_queued_at[tid] = Time.get_ticks_msec() - 120000
+	game._regional_ack_waiting[tid] = Time.get_ticks_msec() - 120000
+	session.reply({"registry_revision": 3})
+	assert_eq(session.sent.size(), 1, "the late reply still sends the owed ack")
+	assert_eq(session.commits, 1)
+	game._regional_ack_tick_left = 0.0
+	game._tick_orphaned_regional_acks(0.0)
+	assert_true(game._regional_ack_intents.is_empty(), "settled: the background ack is done")
+	for _i in 3:
+		game._regional_ack_tick_left = 0.0
+		game._tick_orphaned_regional_acks(0.0)
+		session.reply({"registry_revision": 4})
+	assert_eq(session.sent.size(), 1, "nothing is sent after it settles")
+	assert_eq(session.commits, 1, "settled exactly once")
+	game.free()
