@@ -1,0 +1,79 @@
+{
+  "case": "voice27-medium-meadows",
+  "source_commit": "27ec0b9be80ef718e9f96a7eeafb9a0fa0d6b1f4",
+  "complete": true,
+  "exit_code": 0,
+  "frames": 624,
+  "average_fps": 32.52683633408168,
+  "one_percent_low_fps": 22.409107061109637,
+  "minimum_fps": 19.84284467021192,
+  "slow_one_percent_frames": 7,
+  "wall_sum_ms": 19184.159,
+  "adapter": "NVIDIA GeForce GTX 1060 3GB",
+  "renderer": "forward_plus",
+  "resolution": [
+    1920,
+    1080
+  ],
+  "camera": {
+    "far": 2000.0,
+    "fov": 70.0,
+    "near": 0.0500000007450581,
+    "path": "CameraRig/Camera3D"
+  },
+  "waypoints_reached": 3,
+  "route_config_sha256": "099262d6119cbe092ff3540e493454e5bfba41fcbc676a1fbc16caf6c7e4e355",
+  "native_errors": [],
+  "native_warnings": [
+    "WARNING: instance_reset_physics_interpolation() is deprecated.",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: 'res://scenes/masters/master_t1.tscn': In external resource #0, invalid UID: 'uid://blgils8p4f722' - using text path instead: 'res://scripts/masters/master_site.gd'.",
+    "WARNING: 'res://scenes/masters/master_t2.tscn': In external resource #0, invalid UID: 'uid://blgils8p4f722' - using text path instead: 'res://scripts/masters/master_site.gd'."
+  ],
+  "environment_start": {
+    "hour": 8.04432622666667,
+    "position": [
+      9.5,
+      0.900942862033844,
+      14.0
+    ],
+    "time_of_day": "day",
+    "weather": "clear"
+  },
+  "environment_end": {
+    "hour": 8.81646890666662,
+    "position": [
+      105.82544708252,
+      0.910842657089233,
+      14.0
+    ],
+    "time_of_day": "day",
+    "weather": "clear"
+  },
+  "meets_current_medium_target": false,
+  "payload": [
+    {
+      "path": "D:\\tetherbound\\.artifacts\\f26-perf-voice-27ec0b9b\\release\\package\\Tetherbound.exe",
+      "size": 109052928,
+      "sha256": "a3e6b1cbd46ad153e7dfb24a5c0ee2b9187e0fb21fa7c0610fa8754ba5939d9c"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\f26-perf-voice-27ec0b9b\\release\\package\\Tetherbound.pck",
+      "size": 1123171296,
+      "sha256": "be4a8bbc8ae6eed859a4ac3174736ed7952d6b3c8b66a23a322e53fdc338cbb5"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\f26-perf-voice-27ec0b9b\\release\\package\\libterrain.windows.release.x86_64.dll",
+      "size": 3549184,
+      "sha256": "40900e649c3c6c7619c383d28732c3e2e8dc87c2938de43b29122a668aedcf86"
+    }
+  ],
+  "inventory_path": "voice27-medium-meadows/inventory.json"
+}
