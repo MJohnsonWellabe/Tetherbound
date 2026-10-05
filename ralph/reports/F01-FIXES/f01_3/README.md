@@ -15,3 +15,34 @@ Not in scope and left as found: the judge's other notes, namely the flat campfir
 
 - **Unit:** `test_f32_material_census`, `test_f32_essence_census`, `test_harvest`, `test_harvest_permanence`, `test_signpost_geometry`, `test_village_road_topology` and `test_meadows_named_location_ledger_0912`: 84 tests, 0 failed. The census counts are unchanged. The essence census asserts each node's recorded route distance, so the moved node's distance was updated to the value it measures.
 - **Placement proof for the moved essence node:** `godot --headless --path . --script tests/smoke_f32_material_sites.gd -- --realm=meadows --essence --site=essence_meadows_ground_01` PASS. It walks to the node, gathers it, saves the owner and ACK, and reloads it at the new spot.
+
+## Final night capture and fresh code-blind judge
+
+- **Capture:** tb/f01-fixes at 9ad7461a, local 4 vCPU, Xvfb, Mesa llvmpipe, Compatibility renderer:
+
+  ```
+  xvfb-run -a -s "-screen 0 1920x1080x24" godot --path . --rendering-driver opengl3 --resolution 1280x720 --script tests/capture_village_walk.gd -- --time=night --route=visits --from-title --capture-dir=<abs dir>
+  ```
+
+  Exit 0, `PASS route=visits time=night captures=105 max_off_road_m=0.00 visited=12` (`night-walk-receipts.txt`).
+- **Judge:** a fresh agent saw only 20 frames, the manifest (`judge-frame-manifest.txt`) and the criterion text. It saw no code. The frames are not committed (owner decision #12).
+
+**Verdict: PASS, but barely.** Every target was reached, and none was NO, CAN'T TELL or POOR. The table compares with row3:
+
+| Target | Row3 judge | This judge |
+|---|---|---|
+| Practice Meadow camp | CAN'T TELL / MARGINAL | **reached YES**. The approach frame reads "Practice Meadow Camp" on the signpost. The arrival frame is still MARGINAL: tent, bed and fire show, but the camera faces the village, no camp label is in view, and the fire sits in the foreground. |
+| Nessa | MARGINAL (hidden behind the trainer) | **GOOD**: beside the trainer, light apron |
+| Maren | MARGINAL | **GOOD**: clear against the hillside |
+| Tam | MARGINAL | still **MARGINAL**: dark blue against the dark forge, half behind the trainer |
+| others | YES | YES; Bram is MARGINAL because the camera clips into the shop ceiling |
+
+**Remaining defects the judge named, worst first:**
+1. Bram (indoors): the camera clips into the ceiling beam and a half-wall.
+2. Tam: low contrast against the forge, half behind the trainer. The fill light could be stronger or offset toward the camera; this is config-only (`night_light` dictionary override on Tam).
+3. Camp arrival: no label in view, the camera faces away, and the fire is in the foreground over the HUD.
+4. PondGate looks like daytime at 23:00.
+5. The quest beam shows through interior ceilings.
+6. Small sign text.
+
+Points 1 and 3–6 are camera, lighting or quest-marker issues outside this lane's approved files.
