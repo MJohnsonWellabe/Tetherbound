@@ -3334,6 +3334,7 @@ func _drain_regional_ack_waiting() -> void:
 		if Time.get_ticks_msec() - int(waiting[transaction_id]) <= window_ms:
 			_send_regional_ack(transaction_id)
 		else:
+			print("[regional_ack] %s expired without a durable answer" % transaction_id)
 			_regional_ack_intents.erase(transaction_id) # The caller already gave up.
 
 
@@ -3354,8 +3355,8 @@ func _resend_regional_ack(transaction_id: String) -> void:
 
 ## A host refusal is otherwise silent on a guest; name it in the log.
 func _on_regional_ack_reply(action: String, original: Dictionary, result: Dictionary) -> void:
-	if action != "regional_ack" or result.get("ok") == true or result.get("resolved") == false: return
-	print("[regional_ack] host refused %s: %s" % [str(original.get("stage", "")), str(result.get("code", result.get("reason", "")))])
+	if action != "regional_ack" or result.get("ok") == true: return
+	print("[regional_ack] host %s %s: %s" % ["deferred" if result.get("resolved") == false else "refused", str(original.get("stage", "")), str(result.get("code", result.get("reason", "")))])
 
 
 func _send_regional_ack(transaction_id: String) -> bool:
@@ -3363,8 +3364,11 @@ func _send_regional_ack(transaction_id: String) -> bool:
 	if intent.is_empty() or session == null: return false
 	var cache: Variant = session.get("_foundation_personal_cache") if not bool(session.call("is_host")) else null
 	var view: Dictionary = cache.duplicate(true) if cache is Dictionary else session.call("homestead_personal_view")
-	if view.is_empty() or not view.has("registry_revision"): return false
-	session.call("_foundation_send", "regional_ack", "regional_ending:" + local.character_id, intent, int(view.registry_revision))
+	if view.is_empty() or not view.has("registry_revision"):
+		print("[regional_ack] no personal view to send against")
+		return false
+	var sent: Variant = session.call("_foundation_send", "regional_ack", "regional_ending:" + local.character_id, intent, int(view.registry_revision))
+	if sent is Dictionary and sent.get("ok") != true and sent.get("code") != "awaiting_saved_decision": print("[regional_ack] send refused locally: " + str(sent.get("code", "")))
 	_regional_ack_sent_at[transaction_id] = Time.get_ticks_msec()
 	return true
 

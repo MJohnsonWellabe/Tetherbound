@@ -354,6 +354,8 @@ func _rpc_foundation_action(envelope: Dictionary) -> void:
 	if not is_host(): return
 	var peer := multiplayer.get_remote_sender_id()
 	var result := _foundation_handle(peer, envelope)
+	if envelope.get("op") == "regional_ack" and result.get("ok") != true:
+		print("[regional_ack] host answered peer %d %s: %s resolved=%s" % [peer, str(envelope.get("intent", {}).get("stage", "")), str(result.get("code", result.get("reason", ""))), str(result.get("resolved"))])
 	if bool(_registry.call("has", peer)): rpc_id(peer, "_rpc_foundation_reply", envelope, result)
 
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
@@ -365,7 +367,9 @@ func _rpc_foundation_reply(envelope: Dictionary, result: Dictionary) -> void:
 	if not ESSENCE._equivalent(_foundation_requests.get(correlation), envelope): return
 	if result.get("ok") == true and result.get("resolved") == true:
 		var row := _owner_training_row()
-		if row.get("receipt") != result.get("receipt") or _training_decision(local_peer_id(), row).get("ok") != true: return
+		if row.get("receipt") != result.get("receipt") or _training_decision(local_peer_id(), row).get("ok") != true:
+			if envelope.op == "regional_ack": print("[regional_ack] committed reply ahead of the local row: local=%s/%s" % [str(row.get("action", "")), str(row.get("status", ""))])
+			return
 	if envelope.op in ["groom_prepare", "groom_commit", "groom_resume", "groom_cancel"]:
 		_groom_service().call("receive", envelope, result)
 		_foundation_requests.erase(correlation)
