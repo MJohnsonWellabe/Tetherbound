@@ -1,0 +1,36 @@
+{
+  "source_commit": "1d537ff1d8fa67d9245d8293e3b5ad97d9d1c28d",
+  "case": "meadows-medium",
+  "preset": "Medium",
+  "biome": "meadows",
+  "command": [
+    "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\redesign-lookdev",
+    "--rendering-method",
+    "forward_plus",
+    "--audio-driver",
+    "Dummy",
+    "--resolution",
+    "1920x1080",
+    "--fullscreen",
+    "--script",
+    "tools/capture_renderer_material_census.gd",
+    "--",
+    "--biome=meadows",
+    "--preset=Medium",
+    "--source-commit=1d537ff1d8fa67d9245d8293e3b5ad97d9d1c28d",
+    "--times=day",
+    "--output=D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/f26/census-1d537ff1d/meadows-medium"
+  ],
+  "exit_code": 0,
+  "stop_reason": null,
+  "elapsed_seconds": 638.11,
+  "log": "native.log",
+  "log_sha256": "44850199ec61ce33a76605c2e792152da0e64cf3fa0817cce6738cf73eff69af",
+  "errors": [],
+  "gpu_header": [
+    "Vulkan 1.3.280 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce GTX 1060 3GB"
+  ],
+  "completion_lines": []
+}

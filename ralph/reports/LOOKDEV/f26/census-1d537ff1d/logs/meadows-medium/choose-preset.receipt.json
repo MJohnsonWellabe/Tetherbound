@@ -1,0 +1,24 @@
+{
+  "source_commit": "1d537ff1d8fa67d9245d8293e3b5ad97d9d1c28d",
+  "case": "meadows-medium",
+  "preset": "Medium",
+  "biome": "meadows",
+  "command": [
+    "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+    "--headless",
+    "--path",
+    "D:\\tetherbound\\redesign-lookdev",
+    "--script",
+    "D:\\tetherbound\\.artifacts\\render_service_choose_preset.gd",
+    "--",
+    "--preset=Medium"
+  ],
+  "exit_code": 0,
+  "stop_reason": null,
+  "elapsed_seconds": 20.281,
+  "log": "choose-preset.log",
+  "log_sha256": "5c177f17a34517ce3912c7dc0572a31a19f72d09d9ef241ca5ea2c359878f75e",
+  "errors": [],
+  "gpu_header": [],
+  "completion_lines": []
+}

@@ -1,0 +1,315 @@
+{
+  "source_commit": "1d537ff1d8fa67d9245d8293e3b5ad97d9d1c28d",
+  "biome": "meadows",
+  "preset": "Medium",
+  "command": [
+    "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\redesign-lookdev",
+    "--rendering-method",
+    "forward_plus",
+    "--audio-driver",
+    "Dummy",
+    "--resolution",
+    "1920x1080",
+    "--fullscreen",
+    "--script",
+    "tools/capture_renderer_material_census.gd",
+    "--",
+    "--biome=meadows",
+    "--preset=Medium",
+    "--source-commit=1d537ff1d8fa67d9245d8293e3b5ad97d9d1c28d",
+    "--times=day",
+    "--output=D:/tetherbound/redesign-lookdev/ralph/reports/LOOKDEV/f26/census-1d537ff1d/meadows-medium"
+  ],
+  "gpu_header": [
+    "Vulkan 1.3.280 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce GTX 1060 3GB"
+  ],
+  "exit_code": 0,
+  "elapsed_seconds": 638.11,
+  "runtime_errors": [],
+  "native_complete": true,
+  "frame_count": 10,
+  "planned_frame_count": 10,
+  "material_snapshot_count": 10,
+  "native_failures": [],
+  "graphics_capture": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "Medium",
+    "renderer": "forward_plus",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "source_commit": "1d537ff1d8fa67d9245d8293e3b5ad97d9d1c28d"
+  },
+  "png_dimensions": [
+    {
+      "width": 1920,
+      "height": 1080,
+      "count": 10
+    }
+  ],
+  "warnings": [
+    "WARNING: instance_reset_physics_interpolation() is deprecated.",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: 7 RIDs of type \"Texture\" were leaked."
+  ],
+  "snapshots": [
+    {
+      "frame_id": "meadows__band1_lower_meadows__01__grandpas_village__day",
+      "binding_count": 56255,
+      "classifications": {
+        "non_surface_binding": 77,
+        "unbound_primitive_default_requires_source_review": 4,
+        "bound_material_requires_visual_review": 52234,
+        "untextured_material_may_be_authored_requires_source_review": 3939,
+        "unbound_surface_requires_source_review": 1
+      },
+      "hall_binding_nodes": 2018,
+      "village_binding_nodes": 4115
+    },
+    {
+      "frame_id": "meadows__band1_lower_meadows__02__the_south_bridge__day",
+      "binding_count": 56255,
+      "classifications": {
+        "non_surface_binding": 77,
+        "unbound_primitive_default_requires_source_review": 4,
+        "bound_material_requires_visual_review": 52234,
+        "untextured_material_may_be_authored_requires_source_review": 3939,
+        "unbound_surface_requires_source_review": 1
+      },
+      "hall_binding_nodes": 2018,
+      "village_binding_nodes": 4115
+    },
+    {
+      "frame_id": "meadows__band2_stone_and_root__03__the_old_quarry__day",
+      "binding_count": 56255,
+      "classifications": {
+        "non_surface_binding": 77,
+        "unbound_primitive_default_requires_source_review": 4,
+        "bound_material_requires_visual_review": 52234,
+        "untextured_material_may_be_authored_requires_source_review": 3939,
+        "unbound_surface_requires_source_review": 1
+      },
+      "hall_binding_nodes": 2018,
+      "village_binding_nodes": 4115
+    },
+    {
+      "frame_id": "meadows__band2_stone_and_root__04__the_burrow_warrens__day",
+      "binding_count": 56255,
+      "classifications": {
+        "non_surface_binding": 77,
+        "unbound_primitive_default_requires_source_review": 4,
+        "bound_material_requires_visual_review": 52234,
+        "untextured_material_may_be_authored_requires_source_review": 3939,
+        "unbound_surface_requires_source_review": 1
+      },
+      "hall_binding_nodes": 2018,
+      "village_binding_nodes": 4115
+    },
+    {
+      "frame_id": "meadows__band3_the_river_lock__05__the_tether_relay__day",
+      "binding_count": 56255,
+      "classifications": {
+        "non_surface_binding": 77,
+        "unbound_primitive_default_requires_source_review": 4,
+        "bound_material_requires_visual_review": 52234,
+        "untextured_material_may_be_authored_requires_source_review": 3939,
+        "unbound_surface_requires_source_review": 1
+      },
+      "hall_binding_nodes": 2018,
+      "village_binding_nodes": 4115
+    },
+    {
+      "frame_id": "meadows__band3_the_river_lock__06__old_mill_crossing__day",
+      "binding_count": 56255,
+      "classifications": {
+        "non_surface_binding": 77,
+        "unbound_primitive_default_requires_source_review": 4,
+        "bound_material_requires_visual_review": 52234,
+        "untextured_material_may_be_authored_requires_source_review": 3939,
+        "unbound_surface_requires_source_review": 1
+      },
+      "hall_binding_nodes": 2018,
+      "village_binding_nodes": 4115
+    },
+    {
+      "frame_id": "meadows__band4_upper_meadows_ironwood__07__the_ironwood_grove__day",
+      "binding_count": 56255,
+      "classifications": {
+        "non_surface_binding": 77,
+        "unbound_primitive_default_requires_source_review": 4,
+        "bound_material_requires_visual_review": 52234,
+        "untextured_material_may_be_authored_requires_source_review": 3939,
+        "unbound_surface_requires_source_review": 1
+      },
+      "hall_binding_nodes": 2018,
+      "village_binding_nodes": 4115
+    },
+    {
+      "frame_id": "meadows__band4_upper_meadows_ironwood__08__the_ridgeline_watch__day",
+      "binding_count": 56255,
+      "classifications": {
+        "non_surface_binding": 77,
+        "unbound_primitive_default_requires_source_review": 4,
+        "bound_material_requires_visual_review": 52234,
+        "untextured_material_may_be_authored_requires_source_review": 3939,
+        "unbound_surface_requires_source_review": 1
+      },
+      "hall_binding_nodes": 2018,
+      "village_binding_nodes": 4115
+    },
+    {
+      "frame_id": "meadows__band5_stronghold_approach__09__stronghold_approach__day",
+      "binding_count": 56255,
+      "classifications": {
+        "non_surface_binding": 77,
+        "unbound_primitive_default_requires_source_review": 4,
+        "bound_material_requires_visual_review": 52234,
+        "untextured_material_may_be_authored_requires_source_review": 3939,
+        "unbound_surface_requires_source_review": 1
+      },
+      "hall_binding_nodes": 2018,
+      "village_binding_nodes": 4115
+    },
+    {
+      "frame_id": "meadows__band5_stronghold_approach__10__meadows_hall__day",
+      "binding_count": 56255,
+      "classifications": {
+        "non_surface_binding": 77,
+        "unbound_primitive_default_requires_source_review": 4,
+        "bound_material_requires_visual_review": 52234,
+        "untextured_material_may_be_authored_requires_source_review": 3939,
+        "unbound_surface_requires_source_review": 1
+      },
+      "hall_binding_nodes": 2018,
+      "village_binding_nodes": 4115
+    }
+  ],
+  "scope": "Execution and native mounted binding evidence only. Classification requires material/source review; no missing-material or code-blind full-bar acceptance. Other Medium/High biome cases remain open; interrupted by higher-priority perf-retime-1 after this completed case.",
+  "execution_complete": true,
+  "raw_files": [
+    {
+      "path": "meadows-medium/manifest.json",
+      "bytes": 336661152,
+      "sha256": "c310ed2263def54a613b0c2f43db0525a2ee3fcfcc1536ff4bd9e87fcb6f0827"
+    },
+    {
+      "path": "meadows-medium/manifest.json.previous",
+      "bytes": 336661048,
+      "sha256": "7c7097f37f8439543d718a48368966d0c02ffc3a4ce2a4ed2fd29bb8d6cbc43f"
+    },
+    {
+      "path": "meadows-medium/meadows__band1_lower_meadows__01__grandpas_village__day.png",
+      "bytes": 2848278,
+      "sha256": "e14411d22874ef06ded195358cf0b3a2403c88b3337e89db49960f4ebd4b8579"
+    },
+    {
+      "path": "meadows-medium/meadows__band1_lower_meadows__02__the_south_bridge__day.png",
+      "bytes": 2726681,
+      "sha256": "c60a5cf93944bfce86c012d719dc86a3e80c1501ecfbd3d71b1963cecef80f8d"
+    },
+    {
+      "path": "meadows-medium/meadows__band2_stone_and_root__03__the_old_quarry__day.png",
+      "bytes": 3190273,
+      "sha256": "2c149c801fad133a5f33732ab0a55e73dcdbee17e7953f01077ac072b332a0ce"
+    },
+    {
+      "path": "meadows-medium/meadows__band2_stone_and_root__04__the_burrow_warrens__day.png",
+      "bytes": 2883723,
+      "sha256": "0c6b1da634010e0c248624b17368afd95f995db3981cef264ef50ca94e0327b1"
+    },
+    {
+      "path": "meadows-medium/meadows__band3_the_river_lock__05__the_tether_relay__day.png",
+      "bytes": 2961320,
+      "sha256": "027fd808d8b6edf23bb6a3ecb08197a137ad92a51911a45fa95d6aeaf3845355"
+    },
+    {
+      "path": "meadows-medium/meadows__band3_the_river_lock__06__old_mill_crossing__day.png",
+      "bytes": 2953413,
+      "sha256": "a57ddfd619b08b220c269845a7eb96ea8dce49eaa2ab291af22ecbd57694bb62"
+    },
+    {
+      "path": "meadows-medium/meadows__band4_upper_meadows_ironwood__07__the_ironwood_grove__day.png",
+      "bytes": 3255276,
+      "sha256": "4d4add55145121257273905efa93a17601fb41a6011c0c607aa08ebf8fc2e70f"
+    },
+    {
+      "path": "meadows-medium/meadows__band4_upper_meadows_ironwood__08__the_ridgeline_watch__day.png",
+      "bytes": 2779071,
+      "sha256": "04d300e08291a21fb3d6ad5a4ba9c45455df41f19d1e52a2cd302fdc0f5aa1e6"
+    },
+    {
+      "path": "meadows-medium/meadows__band5_stronghold_approach__09__stronghold_approach__day.png",
+      "bytes": 2870015,
+      "sha256": "df9880a1f0d28fd46d40f751d228131732d9cde508403ca414a33eeb278fe1c3"
+    },
+    {
+      "path": "meadows-medium/meadows__band5_stronghold_approach__10__meadows_hall__day.png",
+      "bytes": 2417397,
+      "sha256": "1970c0526804bb51c05a657d56c4e40cf446964d417bfe1874286b4f19ac5eef"
+    },
+    {
+      "path": "logs/meadows-medium/choose-preset.log",
+      "bytes": 112,
+      "sha256": "5c177f17a34517ce3912c7dc0572a31a19f72d09d9ef241ca5ea2c359878f75e"
+    },
+    {
+      "path": "logs/meadows-medium/choose-preset.receipt.json",
+      "bytes": 682,
+      "sha256": "d89464843174bec30bef1edbee471f3c20fc6863dcb4b8d34c0a6bf00b1923b5"
+    },
+    {
+      "path": "logs/meadows-medium/native.log",
+      "bytes": 227765,
+      "sha256": "44850199ec61ce33a76605c2e792152da0e64cf3fa0817cce6738cf73eff69af"
+    },
+    {
+      "path": "logs/meadows-medium/native.receipt.json",
+      "bytes": 1091,
+      "sha256": "aefd2cd72ef25f44d3de8371305731c3920811c38f8250a756d15831aef0da95"
+    }
+  ],
+  "archive": {
+    "path": "meadows-medium-raw.zip",
+    "bytes": 41386106,
+    "sha256": "f897af52d28f0abd8bdf15a89a3bb55dfbd1c9a339fe6af22ec7ef8dc4f7cf6b",
+    "contains": "Unmodified canonical and previous native manifests, all10PNGs, full logs/receipts. PNGs also tracked individually; >100MiB manifests retained through archive."
+  },
+  "delivery_files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 9,
+      "sha256": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 18,
+      "sha256": "5087d017576040c13c33127ebc602d3abc30ea0f609b0bc299a9bb02a0afaf81"
+    },
+    {
+      "path": "README.md",
+      "bytes": 1151,
+      "sha256": "44246008e7f00229bb7c06801e058aef7cb5ed7f0880b83ced8a38e28fffdc9d"
+    },
+    {
+      "path": "census-delivery-review.md",
+      "bytes": 2927,
+      "sha256": "49e86d6c596024deb137b5387a1c100762535c78fe9df0d6b2b832bb871759c8"
+    },
+    {
+      "path": "logs/meadows-medium/graphics_override.cfg",
+      "bytes": 133,
+      "sha256": "54443c56eb16b246b6071257bcead2a835c1f77fd5c165d7affc5aee4afe039e"
+    }
+  ]
+}
