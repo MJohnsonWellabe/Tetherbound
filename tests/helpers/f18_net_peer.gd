@@ -75,7 +75,19 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 	return result
 
 func _f18_verdict(ok: bool, detail: String, data: Dictionary = {}) -> Dictionary:
+	if not ok: detail += " [" + _f18_owner_diagnosis() + "]"
 	return {"verdict": "PASS" if ok else "FAIL", "detail": detail, "data": data}
+
+## Diagnostic only: why the local owner record may still be held.
+func _f18_owner_diagnosis() -> String:
+	var session: Node = _session()
+	var game := root.get_node_or_null(^"Game")
+	if session == null or game == null or game.get("local") == null: return "no session/local"
+	var row: Dictionary = session.call("_owner_training_row")
+	var passive: Variant = session.get("_owner_passive")
+	var phase: Variant = passive.get("pending").get("phase") if passive != null and passive.get("pending") is Dictionary else ""
+	return "block=%s row=%s/%s passive_phase=%s" % [str(session.call("_owner_snapshot_block_reason", game.get("local"))),
+		str(row.get("action", "")), str(row.get("status", "")), str(phase)]
 
 func _f18_note(result: Dictionary) -> void:
 	_f18_results.append(result.duplicate(true))
