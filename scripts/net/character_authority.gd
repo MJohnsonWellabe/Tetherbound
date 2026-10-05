@@ -290,7 +290,7 @@ func apply_owner_reward_delivery(character: String, before: Dictionary, after: D
 ## file counts only where the world has no record. A returning owner's held
 ## record may still lag host-accepted payouts: the owner applied host-journaled
 ## deliveries and left before the host replayed their owner-passive inputs.
-## `rejoin_admission` folds those in from the host's OWN accepted world rows
+## `rejoin_admission` folds those in from the host's OWN journaled world rows
 ## (host-validated, amounts never read from the declaration). Any other
 ## difference (an offline change) keeps the held record; the owner adopts it
 ## through the owner-passive readmit (owner_passive_sync `adopt`).
@@ -346,33 +346,47 @@ func restore_record(character: String, snapshot: Dictionary) -> void:
 
 func rejoin_admission(character: String, declared: Dictionary, deliveries: Dictionary) -> Dictionary:
 	if not _records.has(character): return {"ok": false, "code": "not_admitted"}
+	_records[character].erase("rejoin_folded")
 	var held: Dictionary = state(character)
 	var core := preload("res://scripts/net/owner_passive_replay.gd")
 	if ESSENCE._equivalent(core._core(held), core._core(declared)): return {"ok": true, "code": "held"}
-	# (1) Host-proven payouts the held satchel has not absorbed, in journal order.
+	# (1) Host-proven payouts the held satchel has not absorbed: accepted ones,
+	# and pending ones (host-authored; the owner may have applied one and lost
+	# its ACK to the disconnect). Each row lands whole or not at all (review M1).
 	var absorbed := _absorbed(character)
 	var candidate := held.duplicate(true)
 	var bag := RULES.inventory_from(candidate.get("inventory", []))
 	var applied: Array[String] = []
+	var folded: Array = []
 	for id: Variant in deliveries:
 		var row: Variant = deliveries[id]
-		if not owner_applied_row(row, character) or row.get("status") != "accepted" or absorbed.has(str(id)): continue
+		if not owner_applied_row(row, character) or not row.get("status") in ["accepted", "pending"] or absorbed.has(str(id)): continue
+		var trial := RULES.inventory_from(RULES.slots(bag))
 		var fits := true
 		for stack: Variant in row.stacks:
-			fits = fits and stack is Dictionary and RULES.give_stack(bag, stack)
-		if not fits: break
+			fits = fits and stack is Dictionary and RULES.give_stack(trial, stack)
+		if not fits: continue
+		bag = trial
 		applied.append(str(id))
+		folded.append((row as Dictionary).duplicate(true))
 	candidate.inventory = RULES.slots(bag)
-	# The held record includes every payout this world accepted, whatever else
-	# the declaration says: they are host-proven, and absorbed never twice.
+	# The held record includes every payout this world journaled for it,
+	# whatever else the declaration says, never twice (absorbed). The owner
+	# marks the folded rows settled when it adopts (owner_passive_sync).
 	if not applied.is_empty():
 		_records[character].state = candidate
+		_records[character].rejoin_folded = folded
 		for id: String in applied: absorbed[id] = true
 	if ESSENCE._equivalent(core._core(candidate), core._core(declared)):
 		return {"ok": true, "code": "replayed_deliveries", "applied": applied}
 	# (2) Anything else (an offline change): the held record wins.
 	var paths: Array = preload("res://scripts/net/owner_passive_sync.gd")._differing_paths("", core._core(candidate), core._core(declared), 0, []).slice(0, 8)
 	return {"ok": true, "code": "held_wins", "applied": applied, "detail": ", ".join(paths)}
+
+
+## The payout rows this hello's rejoin_admission folded into the held record.
+func rejoin_folded(character: String) -> Array:
+	return (_records.get(character, {}).get("rejoin_folded", []) as Array).duplicate(true)
 
 func state(character_id: String) -> Dictionary:
 	return _records[character_id].state.duplicate(true) if _records.has(character_id) else {}

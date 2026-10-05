@@ -58,13 +58,12 @@ func test_deliver_then_leave_is_rebuilt_from_host_rows_and_never_twice() -> void
 	var authority := _authority(record, deliveries)
 	var character: String = record.character_id
 	# Two finds the owner applied, saved and ACKed (accepted), then left before
-	# their owner-passive inputs replayed; one still pending (not in its satchel).
+	# their owner-passive inputs replayed. (A pending row folds too: see
+	# test_a_row_lands_whole_or_not_at_all_and_pending_rows_fold_too.)
 	var first := _row("pickup:a", "berries", 3, "accepted")
 	var second := _row("pickup:b", "fiber", 2, "accepted")
-	var pending := _row("pickup:c", "stone", 5, "pending")
 	deliveries[first.delivery_id] = first
 	deliveries[second.delivery_id] = second
-	deliveries[pending.delivery_id] = pending
 	var declared := _with(_with(record, "berries", 3), "fiber", 2)
 	# Passive drift on the card is the owner-passive readmit's business, not this one.
 	declared.party[0].nourishment = float(declared.party[0].get("nourishment", 100.0)) - 7.0
@@ -182,3 +181,37 @@ func test_home_key_rows_and_duplicate_payouts_are_never_credited_again() -> void
 	assert_false((authority.get("_vitals_pending") as Dictionary).has(character), "the vitals map is restored with it")
 	assert_eq(int(authority.call("revision", character)), 0, "a refused hello restores the exact held record")
 	assert_true(preload("res://scripts/creatures/essence.gd")._equivalent(authority.call("state", character), after), "with its state")
+
+
+func test_a_row_lands_whole_or_not_at_all_and_pending_rows_fold_too() -> void:
+	# Review M1: a multi-stack row that only partly fits never leaves a partial
+	# stack in the held record (it would be paid again on the next rejoin).
+	# Review M3: a pending row (the owner's ACK lost to the disconnect) is
+	# host-authored, so it folds as well and is handed to the owner to settle.
+	var record := _record()
+	var deliveries := {}
+	var authority := _authority(record, deliveries)
+	var character: String = record.character_id
+	var held: Dictionary = authority.call("state", character)
+	# Every slot full but one, with full stacks (stone), so of a two-stack row
+	# only the first stack fits.
+	var bag := preload("res://scripts/world/death_satchel_rules.gd").inventory_from([])
+	var stone := int(preload("res://scripts/world/death_satchel_rules.gd").db().call("stack_size", "stone"))
+	for slot in int(bag.call("slot_count")) - 1: bag.call("set_slot", slot, {"id": "stone", "n": stone})
+	held.inventory = preload("res://scripts/world/death_satchel_rules.gd").slots(bag)
+	authority.call("_replace_record", character, 0, held)
+	var two_stacks := REWARD.make_record("world-1", NS, "gather:big", "character-rejoin-owner", "", 0)
+	two_stacks.status = "accepted"
+	two_stacks.stacks = [{"id": "potion_small", "n": 1}, {"id": "orb_basic", "n": 1}]
+	deliveries[two_stacks.delivery_id] = two_stacks
+	var pending := _row("pickup:p", "berries", 1, "pending")
+	deliveries[pending.delivery_id] = pending
+	var declared := record.duplicate(true)
+	declared.party[0].level = int(declared.party[0].level) + 1
+	var result: Dictionary = authority.call("rejoin_admission", character, declared, deliveries)
+	var after_bag := preload("res://scripts/world/death_satchel_rules.gd").inventory_from((authority.call("state", character) as Dictionary).inventory)
+	assert_false((result.get("applied", []) as Array).has(two_stacks.delivery_id), "the half-fitting row is not folded: %s" % str(result))
+	assert_eq(int(after_bag.call("count", "potion_small")) + int(after_bag.call("count", "orb_basic")), 0, "and no partial stack of it is held")
+	var folded: Array = authority.call("rejoin_folded", character)
+	assert_eq(folded.map(func(r: Dictionary) -> String: return r.delivery_id).has(pending.delivery_id),
+		(result.get("applied", []) as Array).has(pending.delivery_id), "rejoin_folded hands the owner exactly the folded rows")
