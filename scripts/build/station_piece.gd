@@ -30,7 +30,9 @@ func build(id: String, ghost: bool = false) -> void:
 		_build_attachment(attachment)
 	else:
 		match id:
-			"workbench": _table(2.0,1.2); _box(Vector3(1.6,0.18,0.16),Vector3(0,1.2,-0.4),Color("8c6b46"))
+			"workbench":
+				if ghost: # Placed, the kit Workbench (DRESSING) is the whole visual.
+					_table(2.0,1.2); _box(Vector3(1.6,0.18,0.16),Vector3(0,1.2,-0.4),Color("8c6b46"))
 			"forge":
 				_box(Vector3(1.8,1.4,1.4),Vector3(0,0.7,0),Color("6a6d72"))
 				_box(Vector3(0.55,1.4,0.6),Vector3(0.6,2.1,-0.4),Color("81868b"))
@@ -60,6 +62,8 @@ func build(id: String, ghost: bool = false) -> void:
 				for x: float in [-1.5,1.5]:
 					for z: float in [-1.2,1.2]: _box(Vector3(0.12,2.6,0.12),Vector3(x,1.3,z),Color("b4a17b"))
 				_box(Vector3(3.2,0.12,2.6),Vector3(0,2.65,0),Color(0.63,0.8,0.77,0.48))
+	if not ghost and attachment.is_empty():
+		_dress(id)
 	if not ghost:
 		var size: Array = attachment.get("size_m",_cfg.pieces.get(id,{}).get("size_m",[1,1,1]))
 		var body := StaticBody3D.new()
@@ -186,6 +190,31 @@ func _build_attachment(def: Dictionary) -> void:
 		"kitchen": _table(1.1,1.1); _box(Vector3(0.8,0.3,0.25),Vector3(0,1.17,-0.3),color)
 		"altar": _cylinder(0.35,0.8,Vector3(0,0.4,0),Color("7a8290")); _cylinder(0.42,0.15,Vector3(0,0.88,0),color)
 		"den": _cylinder(0.53,0.18,Vector3(0,0.1,0),color); _box(Vector3(0.15,1.1,0.15),Vector3(0,0.65,-0.4),Color("8c7751"))
+
+## F31#6: the primitive massing alone read as grey boxes, every station
+## alike. Each placed station also wears installed Fantasy Props kit pieces
+## that say what it is at the normal camera (an anvil at the forge, a cauldron
+## and shelf at the kitchen, the kit workbench). Visual only: no collider
+## (the station's own box keeps footprint and prompt); never on the ghost.
+const DRESSING := {
+	"workbench": [["Workbench", Vector3(0, 0, 0.05), 0.0]],
+	"forge": [["Anvil_Log", Vector3(-0.35, 0, 1.25), 15.0], ["Bucket_Metal", Vector3(0.75, 0, 1.0), 0.0]],
+	"kitchen": [["Cauldron", Vector3(1.75, 0, 0.35), 0.0], ["Shelf_Simple", Vector3(-0.2, 0, -0.95), 0.0],
+		["Barrel", Vector3(-1.6, 0, 0.4), 20.0]],
+	"altar": [["Pot_1", Vector3(0.55, 0, 0.35), 0.0]],
+}
+const PROPS_DIR := "res://assets/props/quaternius_fantasy/"
+
+func _dress(id: String) -> void:
+	for row: Array in DRESSING.get(id, []):
+		var path := PROPS_DIR + str(row[0]) + ".gltf"
+		if not ResourceLoader.exists(path):
+			continue
+		var prop := (load(path) as PackedScene).instantiate() as Node3D
+		prop.name = "Dressing_" + str(row[0])
+		prop.position = row[1]
+		prop.rotation.y = deg_to_rad(float(row[2]))
+		add_child(prop)
 
 func _box(size: Vector3, at: Vector3, color: Color) -> void:
 	var mesh := BoxMesh.new()
