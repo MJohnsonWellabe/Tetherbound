@@ -336,6 +336,15 @@ func _complete_fresh_opening(peer: int) -> bool:
 			"the two peers typed different names ('%s', '%s')" % [_typed_names[0], _typed_names[1]])
 	if not await _press_opening(peer, "menu_confirm", "finished naming the starter"):
 		return false
+	# F01#6a. A guest's starter is committed only once the host has staged and
+	# accepted it; until then the opening is modal ("waiting for the opening
+	# save") and a press is swallowed exactly as it would be for a player. Wait
+	# for the real admitted state, bounded, rather than pressing into the modal.
+	opening = await _wait_starter_admitted(peer, STARTER_ADMISSION_ATTEMPTS)
+	_check(str(opening.get("beat", "")) == "return_starter" and not bool(opening.get("starter_commit_pending", true)) \
+			and not bool(opening.get("owns_input", true)) and not bool(opening.get("session_owns_input", true)),
+		"peer %d's starter was admitted and the opening handed input back (beat %s, pending %s)" % [
+			peer, str(opening.get("beat", "")), str(opening.get("starter_commit_pending", ""))])
 	opening = await _opening(peer)
 	if not await _move_to_opening_point(peer, opening.get("grandpa_prompt", []), "return to Grandpa", 0.9):
 		return false
@@ -398,6 +407,22 @@ func _assert_host_admits_guest_starter(client_peer_id: int, when: String, full_r
 func _opening(peer: int) -> Dictionary:
 	var value: Variant = await probe(peer, "meadows_opening")
 	return value as Dictionary if value is Dictionary else {}
+
+
+## Up to STARTER_ADMISSION_ATTEMPTS x 2 frames for the host round trip (personal
+## view, staged request, journal, owner save and ACK, accept). A host commits
+## synchronously and passes on the first read.
+const STARTER_ADMISSION_ATTEMPTS := 600
+
+func _wait_starter_admitted(peer: int, attempts: int) -> Dictionary:
+	var state: Dictionary = {}
+	for _attempt in attempts:
+		state = await _opening(peer)
+		if str(state.get("beat", "")) == "return_starter" and not bool(state.get("starter_commit_pending", true)) \
+				and not bool(state.get("owns_input", true)) and not bool(state.get("session_owns_input", false)):
+			return state
+		await step(peer, "wait", {"frames": 2})
+	return state
 
 
 func _wait_opening_modal(peer: int, key: String, attempts: int) -> Dictionary:
