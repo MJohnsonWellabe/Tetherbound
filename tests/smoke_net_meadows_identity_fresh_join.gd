@@ -393,15 +393,15 @@ func _assert_host_admits_guest_starter(client_peer_id: int, when: String, full_r
 	_check(bool(host.get("admitted_starter_flag", false)) and bool(guest.get("starter_granted", false)),
 		"host and guest both record opening:starter_granted for the guest %s" % when)
 	_check(bool(host.get("admitted_starter_fields_match", false)),
-		"the guest's party and creature record equal the host's admitted copy %s (differing fields: %s)"
-			% [when, str(host.get("admitted_differing_fields", []))])
+		"the guest's party and creature record equal the host's admitted copy %s (differing: %s)"
+			% [when, str(host.get("admitted_differing_paths", []))])
 	if full_record:
 		_check(bool(host.get("admitted_baseline_matches", false)),
 			"the guest's whole record equals the host's admitted copy %s: no owner_action_baseline_conflict (differing: %s)"
-				% [when, str(host.get("admitted_differing_fields", []))])
+				% [when, str(host.get("admitted_differing_paths", []))])
 	else:
 		print("opening admitted baseline %s: whole-record match=%s differing=%s" % [when,
-			str(host.get("admitted_baseline_matches", false)), str(host.get("admitted_differing_fields", []))])
+			str(host.get("admitted_baseline_matches", false)), str(host.get("admitted_differing_paths", []))])
 
 
 func _opening(peer: int) -> Dictionary:
