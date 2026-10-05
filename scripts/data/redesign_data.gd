@@ -16,6 +16,8 @@ static var _json_cache: Dictionary = {}
 
 
 static func json(path: String) -> Variant:
+	if not FileAccess.file_exists(path):
+		return JSON.parse_string(FileAccess.get_file_as_string(path)) # unchanged missing-file behaviour
 	var stamp := "%d:%d" % [FileAccess.get_modified_time(path), FileAccess.get_size(path)]
 	var entry: Variant = _json_cache.get(path)
 	if not entry is Array or (entry as Array)[0] != stamp:
