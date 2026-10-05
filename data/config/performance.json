@@ -34,5 +34,7 @@
       "severed_spokes": {"visibility_range_end": 500.0, "visibility_range_end_margin": 60.0}
     },
     "skip_name_contains": ["square_oak", "Bush_", "Grass_", "Plant_", "CommonTree", "Fern", "Flower", "Leaves"]
-  }
+  },
+  "_comment_renewable_stock_poll": "PERF lane (F26#5, 2026-10-05). harvest_node.gd re-reads a renewable source's stock from its source service on this interval instead of every frame. Gathers still update at once through the ledger delta listener; the poll only catches day rollover and host snapshots. Measured: the per-frame poll across Tidewake's renewable nodes cost ~26 ms of main-thread time at the F26 start stand.",
+  "renewable_stock_poll_s": 1.0
 }

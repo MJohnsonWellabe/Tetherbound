@@ -1,0 +1,17 @@
+{
+  "base": "e2fa5e4e6bb0060e5f98f9129f2f2e949f8a37f3",
+  "existing_dependency_source": "863e20ccecddcd7c236524b0c131df760e80f486",
+  "reused_game_files": [
+    "scripts/world/harvest_node.gd",
+    "scripts/creatures/move_db.gd",
+    "scripts/creatures/tm_db.gd"
+  ],
+  "reused_existing_check": "tests/test_move_tm_db_shared.gd",
+  "only_added_performance_config_keys": [
+    "_comment_renewable_stock_poll",
+    "renewable_stock_poll_s"
+  ],
+  "f32_flag_cache": "EXCLUDED: integer-second mtime can retain stale runtime_enabled; existing per-query behavior unchanged.",
+  "geometry": "No detail cull, static batching, lights, LOD, density, geography, materials or physics configuration changes.",
+  "validation": "Named existing checks and native shipping comparison pending; no recovery or CPU-bound claim."
+}
