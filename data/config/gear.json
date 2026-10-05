@@ -1376,9 +1376,9 @@
   },
   "accent": {
     "refresh_ms": 100,
-    "band_center": 0.56,
+    "band_center": 0.42,
     "band_width": 0.045,
-    "charm_band_center": 0.78,
+    "charm_band_center": 0.6,
     "charm_band_width": 0.028,
     "emission_energy": 1.1,
     "tier_emission_step": 0.45,
