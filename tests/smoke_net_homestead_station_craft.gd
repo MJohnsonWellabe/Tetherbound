@@ -10,11 +10,7 @@ extends "res://tests/smoke_net_crossing_hall_agreement.gd"
 ## through Session.homestead_submit_action;
 ## the potion is the guest's, the host's stock is untouched, and the guest's
 ## craft survives a production leave and returning-character rejoin.
-## Disclosed fixtures: tests/helpers/hall_agreement_net_peer.gd (F31#5 block);
-## the fresh guest is given one owned Terrapup (peer_runner party_grant ->
-## party_seam.add), then leaves and rejoins on the returning route so the
-## host admits a record that already holds it. A Home Key holder always owns
-## a creature; the F49 travel helper refuses an empty party.
+## Disclosed fixtures: tests/helpers/hall_agreement_net_peer.gd (F31#5 block).
 const COUNTED := ["potion_small", "berries", "fiber"]
 
 
@@ -31,15 +27,6 @@ func _run() -> void:
 	if not await _craft_step(0, "production_host", {"port": port, "appearance_id": "trainer", "display_name": "CraftHost"}, 9000): return
 	if not await _craft_step(1, "production_join", {"host": "127.0.0.1", "port": port,
 		"returning_route": false, "character": {"appearance_id": "lyra", "display_name": "CraftGuest"}}, 9000): return
-	# Disclosed fixture (see header): one owned creature, admitted by the host
-	# through an ordinary save, leave and returning rejoin.
-	if not await _craft_step(1, "await_owner_unblocked", {}, 1500): return
-	if not await _craft_step(1, "party_grant", {"species": "terrapup"}): return
-	var fresh_id := str((await _craft_data(1, "craft_count", {"ids": COUNTED})).get("character_id", ""))
-	if not await _craft_step(1, "hall_leave_guest", {}): return
-	if not await _craft_step(0, "expect_peers", {"count": 1}): return
-	if not await _craft_step(1, "production_join", {"host": "127.0.0.1", "port": port,
-		"returning_route": true, "character": {"character_id": fresh_id}}, 9000): return
 	# The guest's own ingredients, gathered the ordinary co-op way through the
 	# host's ledger (disclosed setup: the smoke stands the nodes and finds on
 	# both peers). Harvests pay through one batched delivery, the fiber find
