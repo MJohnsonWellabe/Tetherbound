@@ -1,0 +1,160 @@
+{
+  "archive": {
+    "path": "native-export-records.zip",
+    "bytes": 241257,
+    "sha256": "28faefce3aff6a4e7d39513e319bd489998b65a03ecb14e61c1afdabead9969b",
+    "entries": 7
+  },
+  "files": [
+    {
+      "archive_path": "cpu-292/export-release.log",
+      "raw_path": "D:\\tetherbound\\.artifacts\\f26-perf-cpu-29237b\\release\\export-release.log",
+      "bytes": 1152768,
+      "sha256": "34d709b1ff3ea14efc843861c866c625d29ed3428d2ec7b2584cf87c62382702"
+    },
+    {
+      "archive_path": "cpu-292/export_presets.original.cfg",
+      "raw_path": "D:\\tetherbound\\.artifacts\\f26-perf-cpu-29237b\\release\\export_presets.original.cfg",
+      "bytes": 2694,
+      "sha256": "c3ea6e64c1f9c3398c6a7144e228bb90f26e1699a91e23d681fbaa15f5397219"
+    },
+    {
+      "archive_path": "cpu-292/receipt.json",
+      "raw_path": "D:\\tetherbound\\.artifacts\\f26-perf-cpu-29237b\\release\\receipt.json",
+      "bytes": 1523,
+      "sha256": "1540a8c488a4c931022ca4b1c439f76aa3d2d3512539c91f955208589adb982d"
+    },
+    {
+      "archive_path": "main-e2/export-release.log",
+      "raw_path": "D:\\tetherbound\\.artifacts\\f26-perf-main-e2\\release\\export-release.log",
+      "bytes": 1152569,
+      "sha256": "a0ea95575fb27cd3e95c7b9b48ed5515d43a9eef6b325fa95cb2d6ea63b0f4b6"
+    },
+    {
+      "archive_path": "main-e2/export_presets.original.cfg",
+      "raw_path": "D:\\tetherbound\\.artifacts\\f26-perf-main-e2\\release\\export_presets.original.cfg",
+      "bytes": 2694,
+      "sha256": "c3ea6e64c1f9c3398c6a7144e228bb90f26e1699a91e23d681fbaa15f5397219"
+    },
+    {
+      "archive_path": "main-e2/import.log",
+      "raw_path": "D:\\tetherbound\\.artifacts\\f26-perf-main-e2\\release\\import.log",
+      "bytes": 294106,
+      "sha256": "c397b0b9f55cb2687f196d9dd4a043541e2353cf7198b9970b50cd94e56b4dac"
+    },
+    {
+      "archive_path": "main-e2/receipt.json",
+      "raw_path": "D:\\tetherbound\\.artifacts\\f26-perf-main-e2\\release\\receipt.json",
+      "bytes": 2081,
+      "sha256": "432d0895f844bf4832ba0538dc30814f95d5b8ed5dac394c2a30c0654a6cf165"
+    }
+  ],
+  "packages": [
+    {
+      "label": "cpu-292",
+      "receipt": {
+        "source_commit": "29237b38efd3c011b88a5588e92e319b05b90c98",
+        "checkout_head": "4462368b49552bfb102ddd5743f04bc0beefae81",
+        "command": [
+          "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+          "--headless",
+          "--verbose",
+          "--path",
+          "D:\\tetherbound\\codex-perf-cpu",
+          "--export-release",
+          "Windows Desktop",
+          "D:\\tetherbound\\.artifacts\\f26-perf-cpu-29237b\\release\\package\\Tetherbound.exe"
+        ],
+        "exit_code": 0,
+        "stop_reason": null,
+        "elapsed_seconds": 432.906,
+        "errors": [],
+        "export_cfg_sha256": "c3ea6e64c1f9c3398c6a7144e228bb90f26e1699a91e23d681fbaa15f5397219",
+        "export_settings_unchanged": true,
+        "payload": [
+          {
+            "path": "D:\\tetherbound\\.artifacts\\f26-perf-cpu-29237b\\release\\package\\Tetherbound.exe",
+            "size": 109052928,
+            "sha256": "a3e6b1cbd46ad153e7dfb24a5c0ee2b9187e0fb21fa7c0610fa8754ba5939d9c"
+          },
+          {
+            "path": "D:\\tetherbound\\.artifacts\\f26-perf-cpu-29237b\\release\\package\\Tetherbound.pck",
+            "size": 1123170992,
+            "sha256": "06f7c06b220d064d130c5fe9234e20996bacf4ac66bfc1b1abc49bc59840d368"
+          },
+          {
+            "path": "D:\\tetherbound\\.artifacts\\f26-perf-cpu-29237b\\release\\package\\libterrain.windows.release.x86_64.dll",
+            "size": 3549184,
+            "sha256": "40900e649c3c6c7619c383d28732c3e2e8dc87c2938de43b29122a668aedcf86"
+          }
+        ],
+        "scope": "Original Windows Desktop release preset, script_export_mode2 unchanged. Packaging only, no FPS or GPU acceptance."
+      }
+    },
+    {
+      "label": "main-e2",
+      "receipt": {
+        "source_commit": "e2fa5e4e6bb0060e5f98f9129f2f2e949f8a37f3",
+        "checkout_head": "e2fa5e4e6bb0060e5f98f9129f2f2e949f8a37f3",
+        "steps": [
+          {
+            "name": "import",
+            "command": [
+              "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+              "--headless",
+              "--editor",
+              "--path",
+              "D:\\tetherbound\\render-perf-main-e2",
+              "--audio-driver",
+              "Dummy",
+              "--quit"
+            ],
+            "exit_code": 0,
+            "stop_reason": null,
+            "elapsed_seconds": 310.328,
+            "errors": []
+          },
+          {
+            "name": "export-release",
+            "command": [
+              "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+              "--headless",
+              "--verbose",
+              "--path",
+              "D:\\tetherbound\\render-perf-main-e2",
+              "--export-release",
+              "Windows Desktop",
+              "D:\\tetherbound\\.artifacts\\f26-perf-main-e2\\release\\package\\Tetherbound.exe"
+            ],
+            "exit_code": 0,
+            "stop_reason": null,
+            "elapsed_seconds": 422.266,
+            "errors": []
+          }
+        ],
+        "export_cfg_sha256": "c3ea6e64c1f9c3398c6a7144e228bb90f26e1699a91e23d681fbaa15f5397219",
+        "export_settings_unchanged": true,
+        "payload": [
+          {
+            "path": "D:\\tetherbound\\.artifacts\\f26-perf-main-e2\\release\\package\\Tetherbound.exe",
+            "size": 109052928,
+            "sha256": "a3e6b1cbd46ad153e7dfb24a5c0ee2b9187e0fb21fa7c0610fa8754ba5939d9c"
+          },
+          {
+            "path": "D:\\tetherbound\\.artifacts\\f26-perf-main-e2\\release\\package\\Tetherbound.pck",
+            "size": 1123167960,
+            "sha256": "66ae5866241f795382753657b941b88b884d4ff7e7aa3dcb50413956fb9e5f7d"
+          },
+          {
+            "path": "D:\\tetherbound\\.artifacts\\f26-perf-main-e2\\release\\package\\libterrain.windows.release.x86_64.dll",
+            "size": 3549184,
+            "sha256": "40900e649c3c6c7619c383d28732c3e2e8dc87c2938de43b29122a668aedcf86"
+          }
+        ],
+        "all_complete": true,
+        "scope": "Original Windows Desktop release preset, script_export_mode2 unchanged. Packaging only, no FPS or GPU acceptance."
+      }
+    }
+  ],
+  "binary_packages_retained_locally": true
+}
