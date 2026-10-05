@@ -82,6 +82,10 @@ func _walk_to_grandpa(prompt: Node3D) -> bool:
 	for frame in 2: await tree.process_frame
 	if int(_player.get("_unstick_count")) != recoveries_before or not _player.is_on_floor() \
 			or arbiter.call("winning_provider") != prompt:
+		var winning: Variant = arbiter.call("winning_provider")
+		print("F20 APPROACH unstick=%d->%d on_floor=%s winner=%s at=%s prompt=%s" % [recoveries_before,
+			int(_player.get("_unstick_count")), str(_player.is_on_floor()),
+			str(winning.get_path()) if winning is Node else "none", str(_player.global_position), str(prompt.global_position)])
 		return _fail("F20 Grandpa approach requires grounded exact provider without recovery")
 	var offer: Dictionary = arbiter.call("winner")
 	return offer.get("actionable") == true or _fail("F20 actual Grandpa approach refused its action")

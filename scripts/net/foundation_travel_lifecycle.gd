@@ -38,12 +38,23 @@ func _process(delta: float) -> void:
 func publish_now() -> bool:
 	var owner: Node = session()
 	if owner.call("is_host") == true or owner.call("is_active") != true: return false
+	if not host_link_open(owner.multiplayer.multiplayer_peer): return false
 	var sample := local_sample()
 	if sample.is_empty(): return false
 	_serial += 1
 	sample.sequence = _serial
 	owner.call("publish_travel_lifecycle", self, sample)
 	return true
+
+## A graceful disconnect can be in flight: the ENet link to the host stops
+## taking packets before the multiplayer status catches up on its next poll,
+## and a send then fails in the engine. Other transports defer to the
+## session's own connection checks.
+static func host_link_open(transport: MultiplayerPeer) -> bool:
+	if not transport is ENetMultiplayerPeer: return true
+	if transport.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED: return false
+	var link: ENetPacketPeer = (transport as ENetMultiplayerPeer).get_peer(1)
+	return link != null and link.get_state() == ENetPacketPeer.STATE_CONNECTED
 
 func local_sample() -> Dictionary:
 	var owner: Node = session()

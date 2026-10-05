@@ -253,3 +253,27 @@ func test_ending_fields_decode_the_portable_party_without_its_energy() -> void:
 	sample.party_identity = "0".repeat(64)
 	assert_true(LIFECYCLE.ending_fields(personal, flags, sample).is_empty(), "another party is still refused")
 	game.free()
+
+func test_lifecycle_publish_skips_a_host_link_that_is_disconnecting() -> void:
+	# smoke_net_f20_ending (render f18-f20-ending-fix3): a guest dropping its
+	# link sent a lifecycle sample after its graceful disconnect began, and
+	# the engine refused it ("Unable to send packet ... max channels: 0").
+	assert_true(LIFECYCLE.host_link_open(null), "no ENet transport: the session decides")
+	var server := ENetMultiplayerPeer.new()
+	var client := ENetMultiplayerPeer.new()
+	var port := 39000 + randi() % 2000
+	assert_eq(server.create_server(port), OK)
+	assert_eq(client.create_client("127.0.0.1", port), OK)
+	for i in 200:
+		server.poll()
+		client.poll()
+		if client.get_connection_status() == MultiplayerPeer.CONNECTION_CONNECTED: break
+		OS.delay_msec(5)
+	assert_eq(client.get_connection_status(), MultiplayerPeer.CONNECTION_CONNECTED)
+	assert_true(LIFECYCLE.host_link_open(client), "a connected host link publishes")
+	client.get_peer(1).peer_disconnect()
+	assert_eq(client.get_connection_status(), MultiplayerPeer.CONNECTION_CONNECTED, "the status has not caught up yet")
+	assert_false(LIFECYCLE.host_link_open(client), "a disconnecting host link does not")
+	client.close()
+	assert_false(LIFECYCLE.host_link_open(client), "a closed transport does not")
+	server.close()
