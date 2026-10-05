@@ -23,9 +23,9 @@
   "qualifications": [
     "Original JPEG quality0.85 from unchanged existing tool; no image conversion/resizing.",
     "Staged visual frames only; no FPS, earned fights/campaign, Ally hardware or full-bar acceptance.",
-    "HUD is forced visible by derived matrix; parent receipt hud field retains false and is not authoritative for actual pixels.",
     "Source includes unverified night-rain ambient followup; this unrelated Stormwood capture does not approve that change.",
-    "Retained native deprecation and wild-cluster placement warnings."
+    "Retained native deprecation and wild-cluster placement warnings.",
+    "Derived capture sets HUD visible; actual final manifest records hud=true for all320 frames. Earlier stale-HUD note was incorrect."
   ],
-  "verdict": "Native matrix completed; independent byte audit and code-blind art judge pending."
+  "verdict": "Native completion and independent original-byte/full-axis coverage PASS; code-blind visual review pending. No full-bar/FPS acceptance."
 }
