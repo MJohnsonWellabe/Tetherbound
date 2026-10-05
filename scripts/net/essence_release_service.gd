@@ -324,7 +324,13 @@ func _release_unpaid(id: String, reason: String) -> void:
 	var index := -1
 	for i: int in int(party.call("size")):
 		if str((party.call("at", i) as RefCounted).get("uid")) == request.released_uid: index = i
-	if index < 0 or party.call("remove_at", index) == null: return
+	if index < 0:
+		# The chosen creature already left (and no saved host row explains it):
+		# nothing to free, so the newcomer stays on its seam; say so, once.
+		_requests.erase(id)
+		release_completed.emit(id, {"ok": false, "resolved": true, "code": "release_target_missing"})
+		return
+	if party.call("remove_at", index) == null: return
 	party.call("add", pending)
 	_game.set("pending_catch", null)
 	_requests.erase(id)
