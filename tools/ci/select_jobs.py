@@ -43,7 +43,12 @@ autoload, all of data/ JSON, assets' scenes/resources, shaders, tests incl.
 fixture scripts, tools, project.godot). A referrer that is CORE, or game code
 outside the starting realm family, makes the change select everything; a
 referrer test/tool adds the jobs that run it, and the walk continues from
-every referrer. More than MAX_REACH files on the walk selects everything.
+every referrer. Game or core text that names a test/tool only in a GDScript
+comment line, a JSON `_why`/`_comment*`/`_note(s)`/`_doc(s)` prose key or by
+bare file name is
+skipped: loading one needs its res:// path or its class_name in code, and
+either counts. More than MAX_REACH files on the walk
+selects everything.
 
 Realm families: a directory or file name equal to the realm prefix or
 starting `<prefix>_` (cloudreach, stormwood/stormheart, water/tidewake).
@@ -216,6 +221,35 @@ def realm_jobs(realm, jobs, corpus):
     return out
 
 
+COMMENT_LINE = re.compile(r"(?m)^\s*#.*$")
+# Only the repo's prose keys; any other key may be data the game reads.
+JSON_PROSE = re.compile(r'"_(?:why|comment|comment_[A-Za-z0-9_]*|note|notes|doc|docs)"\s*:\s*"(?:[^"\\]|\\.)*"')
+
+
+def code_text(corpus, ref):
+    """`ref`'s text without what cannot load anything: GDScript comment lines
+    and JSON `_why`/`_comment`-style prose keys."""
+    cache = corpus.__dict__.setdefault("_code", {})
+    if ref not in cache:
+        text = corpus.files.get(ref, "")
+        if ref.endswith(".gd"):
+            text = COMMENT_LINE.sub("", text)
+        elif ref.endswith(".json"):
+            text = JSON_PROSE.sub('""', text)
+        cache[ref] = text
+    return cache[ref]
+
+
+def loads_by_path(corpus, ref, node):
+    """Does `ref`'s code (comments and prose keys removed) name `node` by
+    repository path or by class_name?"""
+    text = code_text(corpus, ref)
+    if node in text:
+        return True
+    cls = corpus.class_of.get(node)
+    return bool(cls) and re.search(r"\b%s\b" % re.escape(cls), text) is not None
+
+
 def reach(path, jobs, corpus, family):
     """Walk the files that name `path`, transitively. Returns ('all', why) or
     (jobs, why)."""
@@ -229,6 +263,12 @@ def reach(path, jobs, corpus, family):
             if len(seen) > MAX_REACH:
                 return "all", "reach of %s exceeds %d files" % (path, MAX_REACH)
             if DOC_RE.search(ref):
+                continue
+            if is_test_or_tool(node) and (is_game(ref) or CORE_RE.search(ref)) \
+                    and not loads_by_path(corpus, ref, node):
+                # Game or core text that only mentions a test/tool (a comment,
+                # a `_why` string) cannot load it: Godot needs its res:// path
+                # or its class_name.
                 continue
             if CORE_RE.search(ref):
                 return "all", "%s reaches core %s (via %s)" % (path, ref, node)

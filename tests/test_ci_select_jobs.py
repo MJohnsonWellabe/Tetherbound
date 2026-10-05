@@ -199,6 +199,14 @@ class RealRepository(unittest.TestCase):
         self.assertEverything("tests/test_save_format.gd")  # preloaded by tests/helpers/ci_segments.gd
         self.assertSelects("tests/test_meadows_earned_material_segment.gd", "verify-regions-shard")
 
+    def test_game_code_loading_a_tool_by_path_selects_everything(self):
+        # scripts/ui/title_screen.gd: load("res://tools/f26_export_bootstrap.gd")
+        self.assertEverything("tools/f26_export_bootstrap.gd")
+
+    def test_a_smoke_only_named_in_prose_selects_its_jobs(self):
+        jobs, every, why = self.sel("tests/smoke_relay.gd")
+        self.assertTrue(every or "verify-regions-relay" in jobs, why)
+
     def test_media_follow_their_users(self):
         self.assertSelects("assets/ui/input_prompts/keyboard_r.png", "verify-gate-a-ui-build-shard")
 
