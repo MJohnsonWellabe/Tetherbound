@@ -71,6 +71,9 @@ func _run() -> void:
 	if not await _dep_step(1, "pickup_take", {}): return
 	await step(1, "wait", {"frames": 180})
 	var crafted := await _dep_data(1, "craft_at_host_kitchen", {"kitchen_uid": placed.kitchen_uid}, 3000)
+	# Diagnostic: both peers' owner-passive state right after the craft.
+	await _dep_data(1, "owner_passive_probe", {"character_id": guest_id})
+	await _dep_data(0, "owner_passive_probe", {"character_id": guest_id})
 	if not crafted.is_empty():
 		check(int(crafted.after.potion_small) == int(crafted.before.potion_small) + 1,
 			"the rejoined guest's owner-passive stream is alive: it crafts at the host's Kitchen")

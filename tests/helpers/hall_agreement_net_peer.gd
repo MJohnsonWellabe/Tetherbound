@@ -37,6 +37,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		return await _gather_node_take(args)
 	if action == "gather_rows":
 		return _gather_rows(args)
+	if action == "owner_passive_probe":
+		return _owner_passive_probe(args)
 	if action == "relic_power_attempt":
 		return await _relic_power_attempt(args)
 	return await super._execute_step(msg)
@@ -481,6 +483,28 @@ func _gather_rows(args: Dictionary) -> Dictionary:
 			rows += 1
 	return {"verdict": "PASS", "detail": "gather rows read", "data": {"rows": rows,
 		"batch": gather.call("batch", world.redesign_world, character)}}
+
+## Diagnostic (read-only): this peer's owner-passive state, to explain a
+## stalled checkpoint. Owner: local stream error/pending/inputs; host: the
+## stream for `character_id` and its checkpoint keys.
+func _owner_passive_probe(args: Dictionary) -> Dictionary:
+	var sess := _session()
+	var service: RefCounted = sess.call("_owner_passive_service") if sess != null else null
+	if service == null:
+		return {"verdict": "PASS", "detail": "no owner-passive service", "data": {}}
+	var local: Dictionary = service.get("local")
+	var pending: Dictionary = service.get("pending")
+	var hosts: Dictionary = service.get("hosts")
+	var stream: Dictionary = hosts.get(str(args.get("character_id", "")), {})
+	var data := {"owner": {"armed": not local.is_empty(), "error": str(local.get("error", "")),
+			"admission_pending": local.get("admission_pending"), "inputs": (local.get("inputs", []) as Array).size(),
+			"sequence": local.get("sequence"), "acked": local.get("acked"),
+			"pending_phase": str(pending.get("phase", "")), "pending_kind": str(pending.get("source_kind", ""))},
+		"host": {"has_stream": not stream.is_empty(), "error": str(stream.get("error", "")),
+			"checkpoint": (stream.get("checkpoint", {}) as Dictionary).keys(),
+			"cursor_sequence": (stream.get("cursor", {}) as Dictionary).get("sequence"),
+			"refused": (service.get("refused") as Dictionary).keys()}}
+	return {"verdict": "PASS", "detail": "owner-passive state", "data": data}
 
 func _craft_count(args: Dictionary) -> Dictionary:
 	var out := {}
