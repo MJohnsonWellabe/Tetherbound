@@ -17,7 +17,13 @@ func spawns_config() -> Dictionary:
 	return _spawns_cfg
 
 func _spawn_creatures() -> void:
+	var world := get_parent()
+	var tree := get_tree()
+	var generation := _population_generation
 	await super._spawn_creatures()
+	# A sliced spawn that stopped for a changed lifetime is not a ready realm.
+	if not _population_lifetime_matches(world, tree, generation):
+		return
 	population_ready = true
 	print("STORMWOOD ENCOUNTERS READY wild=", _wild_creatures.size())
 

@@ -14,7 +14,11 @@ extends SceneTree
 ## - every wild still spawns, with its deterministic authored name
 ##   (Wild_<species>_<order>_<n>, or Named_<id> for the realm's named
 ##   residents, all unique), so wild identity, and with it
-##   host authority over which wilds exist, is unchanged by the slicing.
+##   host authority over which wilds exist, is unchanged by the slicing;
+## - while the sliced build runs, the director carries the population-build
+##   marker that holds back a foundation alpha publish (which would otherwise
+##   spawn a retained alpha the build is about to spawn itself), and the
+##   marker is gone once the population is ready.
 
 const SCENE := "res://scenes/world/stormwood.tscn"
 ## The co-op heartbeat window is 15 s; the target is a single gap far under it.
@@ -43,6 +47,7 @@ func _run() -> void:
 	var worst := 0
 	var previous := Time.get_ticks_msec()
 	var director: Node = null
+	var marked_while_slicing := false
 	while true:
 		await process_frame
 		var now := Time.get_ticks_msec()
@@ -52,6 +57,8 @@ func _run() -> void:
 			director = world.get_node_or_null(^"EncounterDirector")
 		if director != null and director.get("population_ready") == true:
 			break
+		if director != null and director.has_meta(&"wild_population_spawning"):
+			marked_while_slicing = true
 		if now - started > BOOT_LIMIT_MSEC:
 			_failures.append("population never became ready within %d ms" % BOOT_LIMIT_MSEC)
 			break
@@ -60,6 +67,10 @@ func _run() -> void:
 	if worst > MAX_GAP_MSEC:
 		_failures.append("longest main-thread gap %d ms exceeds %d ms" % [worst, MAX_GAP_MSEC])
 	if director != null:
+		if not marked_while_slicing:
+			_failures.append("the sliced population build never carried its spawning marker")
+		if director.has_meta(&"wild_population_spawning"):
+			_failures.append("the spawning marker outlived the population build")
 		var wilds: Array = director.get("_wild_creatures")
 		var names := {}
 		var pattern := RegEx.new()

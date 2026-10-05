@@ -1,6 +1,8 @@
 extends Node
 
 const PERF_SPAWN_CONFIG := preload("res://scripts/world/performance_config.gd")
+## Set while the sliced main population build runs (see _spawn_authored_creatures).
+const POPULATION_SPAWNING_META := &"wild_population_spawning"
 ## SceneTree maintains this live index on enter/exit. Portal views need only
 ## actual directors, rather than every terrain/harvest node in the world.
 const PORTAL_DIRECTOR_GROUP := &"foundation_portal_directors"
@@ -993,6 +995,10 @@ func foundation_publish_alpha(site_id: String, packet: Dictionary) -> void:
 		if is_instance_valid(wild) and wild.get_meta("foundation_alpha_site", "") == site_id \
 			and wild.get_meta("foundation_alpha_generation", 0) == packet.captured_from.spawn_generation: return
 	if has_meta("foundation_alpha_spawning_" + site_id): return
+	# The sliced population build reaches this site's entry later and spawns
+	# its retained generation itself; publishing now would make a second body.
+	# The publisher retries every second, so it resumes once the build is done.
+	if has_meta(POPULATION_SPAWNING_META): return
 	var entry: Dictionary = {}
 	for raw: Dictionary in spawns_config().get("spawns", []):
 		if (site.has("source_order") and raw.get("order") == site.source_order) or raw.get("stormwood_named_id") == site_id:
@@ -1025,6 +1031,8 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 	var slice_world := get_parent()
 	var slice_tree := get_tree()
 	var slice_generation := _population_generation
+	var population_build := repeat_packet.is_empty()
+	if population_build: set_meta(POPULATION_SPAWNING_META, true)
 
 	for index in entries.size():
 		var spawn: Dictionary = entries[index] as Dictionary
@@ -1112,6 +1120,7 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 				# than spawning into its next lifetime.
 				if not _population_lifetime_matches(slice_world, slice_tree, slice_generation):
 					if not spawn_packet.is_empty(): remove_meta("foundation_alpha_spawning_" + alpha_site)
+					if population_build: remove_meta(POPULATION_SPAWNING_META)
 					return
 				slice_started = Time.get_ticks_usec()
 			# The named individual is always the cluster's first member
@@ -1358,6 +1367,7 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 
 		if not spawn_packet.is_empty(): remove_meta("foundation_alpha_spawning_" + alpha_site)
 		_clusters.append(cluster)
+	if population_build: remove_meta(POPULATION_SPAWNING_META)
 
 	# Set every cluster's real activation state against the player's actual
 	# starting position, rather than leaving the whole freshly spawned meadow
