@@ -43,6 +43,7 @@ const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const NIGHT_REST := preload("res://scripts/world/night_rest.gd")
 const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
+const REST_POINT := preload("res://scripts/world/rest_point.gd")
 const VILLAGE_CONFIG := "res://data/config/village.json"
 
 const FURNITURE_DIR := "res://assets/props/quaternius_furniture"
@@ -209,8 +210,8 @@ func _build_home_creature_bed() -> void:
 	if at.size() < 2:
 		return
 	var index := int(spec.get("bed_index", -40))
-	if index > -10:
-		push_error("home creature bed index %d is outside the authored range (<= -10)" % index)
+	if index > REST_POINT.AUTHORED_BED_INDEX_CEILING:
+		push_error("home creature bed index %d is outside the authored range (<= %d)" % [index, REST_POINT.AUTHORED_BED_INDEX_CEILING])
 		return
 	var x := float(at[0])
 	var z := float(at[1])
@@ -302,7 +303,11 @@ func _dress_home_creature_bed(bed: Node3D, spec: Dictionary) -> void:
 	post.material_override = _material(Color("#5a4330"))
 	post.position = Vector3(float(lamp.at[0]), post_h * 0.5, float(lamp.at[1]))
 	bed.add_child(post)
-	var lantern := (load("%s/Lantern_Wall.gltf" % FANTASY_DIR) as PackedScene).instantiate() as Node3D
+	var lantern_path := "%s/Lantern_Wall.gltf" % FANTASY_DIR
+	if not ResourceLoader.exists(lantern_path):
+		push_warning("home creature bed lantern missing: %s" % lantern_path)
+		return
+	var lantern := (load(lantern_path) as PackedScene).instantiate() as Node3D
 	lantern.name = "HomeBedLantern"
 	lantern.position = post.position + Vector3(0.0, post_h * 0.5 - 0.15, 0.07)
 	lantern.rotation.y = deg_to_rad(float(lamp.get("yaw_deg", 0.0)))

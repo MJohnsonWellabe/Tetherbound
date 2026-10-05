@@ -552,11 +552,11 @@ func _motion(pose: Transform3D, motion: Vector3, recover: bool = false) -> Dicti
 	if not _registered_body_contract():
 		_stop_geometry("native query body identity changed")
 		return {"blocked": true, "hit": null}
-	if Time.get_ticks_usec() > _deadline:
-		_defer_deadline("native query cooperative frame deadline")
-		return {"blocked": true, "hit": null}
 	if hit.get_collision_count() >= CONTACTS:
 		_stop_geometry("native query contact saturation (%d contacts)" % hit.get_collision_count())
+		return {"blocked": true, "hit": null}
+	if Time.get_ticks_usec() > _deadline:
+		_defer_deadline("native query cooperative frame deadline")
 		return {"blocked": true, "hit": null}
 	var safe := hit.get_collision_safe_fraction()
 	var unsafe := hit.get_collision_unsafe_fraction()
@@ -1813,7 +1813,13 @@ func _production_observe() -> void:
 	var contract_ok: bool = _trainer_contract()
 	var contract_us: int = Time.get_ticks_usec() - contract_began
 	var slides_began: int = Time.get_ticks_usec()
-	if not contract_ok or not _production_live_check(true):
+	var live_ok: bool = contract_ok and _production_live_check(true)
+	# A deadline deferral in the live query defers ONLY that query. Every check
+	# below reads cached controller state (no native query), so it still runs
+	# this frame and still refuses hard (independent review M1).
+	var live_deferred := _deferred
+	_deferred = false
+	if not contract_ok or (not live_ok and not live_deferred):
 		_stop_geometry("invalid actual production landing/registration")
 	elif not _body.is_on_floor():
 		_stop_geometry("actual production walk lost grounded floor")
@@ -1876,7 +1882,7 @@ func _production_observe() -> void:
 				_retry_at = STALL_FRAMES
 			if _stalled > 90:
 				_stop_geometry("real production stick travel made no progress within 90 requested frames")
-		_checked_start = not _halted() # Only AFTER actual controller movement.
+		_checked_start = not _halted() and not live_deferred # Only AFTER actual controller movement.
 	var movement_us: int = Time.get_ticks_usec() - movement_began
 	var snapshot_began: int = Time.get_ticks_usec()
 	var record: Dictionary = _production_record()

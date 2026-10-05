@@ -41,3 +41,19 @@ contact-saturation guards stay hard refusals."
     105 and 31 deferrals, then the bounded refusal after 31 consecutive frames. This shows the
     bound holds and the refusal is logged with its total.
 - F02#1 (Oskar), on the earned harness, runs in the earned session against this SHA.
+
+## Independent review M1 fix (post-merge head)
+
+The final independent review (`../final-independent-review.md`) found that a deferral in the post-physics observation's
+live query also skipped that frame's grounded-floor, slide/contact-cap and movement-bound checks. Those read cached
+controller state and make no native query. Fix: only the live query defers. Those checks now run and refuse hard after a
+deferral (`live_deferred`), and `_checked_start` stays false for that frame. `_motion` now checks contact saturation before
+the deadline, so a late saturated query still refuses.
+
+Re-proof:
+- Unit deferral 3/9 and low-prop 2/8 pass. `smoke_home_creature_bed` OK.
+- `circle_after_m1.keylines.txt`, shipped 10 ms cap: PASS with 1 deferral.
+- `circle_1600_after_m1.keylines.txt`, forced 1.6 ms cap (local only): refuses after 40 deferrals with
+  `actual production walk lost grounded floor` at the raised Cloudreach relic plinth (body y 2.96, stick driven, on an
+  on-time frame). This is the hard guard working: the frequent stick releases forced by the artificial cap change the
+  approach path. **The earlier 1.6 ms PASS above was partly M1 masking this guard, so treat it as superseded.**
