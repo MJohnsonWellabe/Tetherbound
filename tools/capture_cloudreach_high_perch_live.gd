@@ -55,7 +55,10 @@ const OVER_EDGE_PITCH_DEG := -32.0
 const ARRIVAL_START := Vector3(905.0, 1034.0, 2620.0)
 const NORTH_OUT := Vector3(900.0, 1020.0, 2800.0)
 const HOURS := {"day": 10.0, "night": 23.0}
-const BOOT_MAX_FRAMES := 900
+## Wall-clock boot budget, not a frame count: on Forward+ Medium a GTX 1060
+## draws the booting world at ~0.24 s/frame, so 900 frames (217 s) ran out
+## before EncounterDirector appeared (Codex cloudreach-2).
+const BOOT_MAX_SECONDS := 600.0
 const STEP_LIMIT := 60 * 30
 const RENDERED_FRAMES := 4
 
@@ -124,11 +127,14 @@ func _boot() -> bool:
 	if _player == null or _rig == null or _camera == null:
 		return _fail("production Player/CameraRig/Camera3D missing")
 	var booted := false
-	for i in BOOT_MAX_FRAMES:
+	var boot_start := Time.get_ticks_msec()
+	var boot_i := -1
+	while Time.get_ticks_msec() - boot_start < int(BOOT_MAX_SECONDS * 1000.0):
+		boot_i += 1
 		await process_frame
 		_director = _world.get_node_or_null(^"EncounterDirector")
 		var runtime := _world.get_node_or_null(^"CloudreachRuntime")
-		if _director != null and (runtime == null or bool(runtime.get("_mounted"))) and i >= 20:
+		if _director != null and (runtime == null or bool(runtime.get("_mounted"))) and boot_i >= 20:
 			booted = true
 			break
 	if not booted:
