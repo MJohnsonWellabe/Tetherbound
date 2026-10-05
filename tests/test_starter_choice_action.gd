@@ -143,3 +143,32 @@ func test_host_context_is_required() -> void:
 	var unauthorized := _context()
 	unauthorized.erase("foundation_runtime_authorized")
 	assert_true(ACTIONS.stage(before, 0, "starter_choice", STARTER.intent(_card()), unauthorized, RECORD.errors).get("ok") != true)
+
+
+## The exact baseline condition the live smoke tripped over: the guest commits
+## its starter locally first, so when the host's row arrives the guest's own
+## projection must already equal the row's after-state, or `owner_plan` reports
+## `owner_action_baseline_conflict` and the opening never finishes.
+func test_the_guests_own_post_commit_record_equals_the_staged_after_state() -> void:
+	var player := _player()
+	var before := _admitted(player)
+	var creature: RefCounted = SPECIES.spawn("terrapup")
+	creature.set_level(_starter_level(), PROGRESSION.config())
+	creature.nickname = "Bud"
+	var card := CODEC.encode(creature)
+	player.party.add(creature)
+	player.redesign_character.transaction_receipts.append(STARTER.receipt(CHARACTER, str(creature.get("uid"))))
+	var guest_after_local_commit := RECORD.portable_projection(player.save_data())
+	var staged := _stage(before, card)
+	assert_true(staged.get("ok") == true, str(staged))
+	if staged.get("ok") != true:
+		return
+	assert_true(ESSENCE.owner_matches_after(guest_after_local_commit, staged.state),
+		"the host's staged after-state is exactly the guest's own committed record")
+	staged.character_revision = 1
+	var row := DELIVERY.make_record(WORLD, NAMESPACE, EPOCH, staged, null, RECORD.errors)
+	var plan := DELIVERY.owner_plan(guest_after_local_commit, row, RECORD.errors)
+	assert_true(plan.get("ok") == true and plan.get("duplicate") == true,
+		"the committed guest takes owner_plan's duplicate path: save and ACK, no rebuilt instance (%s)" % str(plan))
+	assert_true(player.party.call("at", 0) == creature,
+		"the party still holds the very instance the follower pilots")

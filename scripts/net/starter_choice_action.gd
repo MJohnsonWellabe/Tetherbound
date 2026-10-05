@@ -79,7 +79,11 @@ static func stage(current: Dictionary, intent_value: Dictionary, context: Dictio
 	if not ESSENCE._equivalent(codec().call("encode", creature), card):
 		return ESSENCE._refuse("invalid_starter_card")
 	var next := current.duplicate(true)
-	next.party = [card.duplicate(true)]
+	# The portable projection both sides compare leaves the in-fight move meter
+	# out of every party card (character_record_rules.portable_projection).
+	var admitted_card := card.duplicate(true)
+	admitted_card.erase("energy")
+	next.party = [admitted_card]
 	next.redesign_character = TEACHING.character_loadout_mirror(next.party, next.redesign_character)
 	if not next.redesign_character.get("creatures", {}).has(uid):
 		return ESSENCE._refuse("starter_loadout_missing")
