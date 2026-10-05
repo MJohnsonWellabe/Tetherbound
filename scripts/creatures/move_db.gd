@@ -22,11 +22,22 @@ func _init(moves_path: String = MOVES_PATH) -> void:
 	_moves = _read(moves_path).get("moves", {})
 
 
-## Convenience constructor for a one-off caller that does not want to hold an
-## instance around -- mirrors the load-once-per-call convenience the static
-## loaders elsewhere in scripts/creatures/ and scripts/combat/ already offer.
+## Convenience accessor for a caller that does not want to hold an instance
+## around. One parsed table per process, re-read only when the file changes:
+## party validation calls this once per creature on every save, snapshot and
+## character check, and re-parsing moves.json each time held a co-op host's
+## frame for seconds after world facts landed (PERF, 2026-10-05). Read-only
+## for callers: `move()` hands out copies.
+static var _shared: RefCounted = null
+static var _shared_stamp := -1
+
+
 static func load_default() -> RefCounted:
-	return (load("res://scripts/creatures/move_db.gd") as GDScript).new()
+	var stamp := FileAccess.get_modified_time(MOVES_PATH)
+	if _shared == null or stamp != _shared_stamp:
+		_shared = (load("res://scripts/creatures/move_db.gd") as GDScript).new()
+		_shared_stamp = stamp
+	return _shared
 
 
 func _read(path: String) -> Dictionary:
@@ -49,7 +60,12 @@ func move_ids() -> Array:
 	return _moves.keys()
 
 
+## A copy: the table behind `load_default()` is shared by every caller.
 func move(id: String) -> Dictionary:
+	return _move(id).duplicate(true)
+
+
+func _move(id: String) -> Dictionary:
 	var value: Variant = _moves.get(id, {})
 	return value as Dictionary if typeof(value) == TYPE_DICTIONARY else {}
 
@@ -57,11 +73,11 @@ func move(id: String) -> Dictionary:
 ## Display name, falling back to the raw id so a mis-typed move id is still
 ## identifiable on screen instead of appearing blank.
 func display_name(id: String) -> String:
-	return str(move(id).get("display_name", id))
+	return str(_move(id).get("display_name", id))
 
 
 func power(id: String) -> float:
-	return float(move(id).get("power", UNKNOWN_POWER))
+	return float(_move(id).get("power", UNKNOWN_POWER))
 
 
 ## The move's own elemental type (ground|water|air, and whatever the board's
@@ -78,8 +94,8 @@ func power(id: String) -> float:
 ## `type_chart.gd::multiplier` resolves to neutral — the same "an unknown move
 ## reads as ordinary, not broken" position `UNKNOWN_POWER` takes above.
 func type_of(id: String) -> String:
-	return str(move(id).get("type", ""))
+	return str(_move(id).get("type", ""))
 
 
 func slot(id: String) -> String:
-	return str(move(id).get("slot", ""))
+	return str(_move(id).get("slot", ""))
