@@ -117,3 +117,44 @@ Columns: masher lead-faint (lf), masher median lead cost (lc), switching-reader 
    satisfies the COMBAT §7 floor-trainer form: reader median lead cost ≤ 0.55×
    the masher's, reader win ≥ 0.9, and "masher may still win at meaningful
    cost".
+
+## Terrapup per-starter tuning (coordinator ruling 2026-10-05, item 2): progress
+
+Burst-distance lever (`combat.json` `burst.species_distance`, read by one
+`burst_profile()` for solo, host and the Stormwood hosted fight). Measured in
+Cloudreach, 12 seeds, with the switching reader's median lead cost:
+
+| Band | 3.0 m (shipped) | 4.0 m | 5.0 m | Bar (≤0.55× masher) |
+|---|---|---|---|---|
+| gate_lower_cliffs | 0.74 | 0.72 | 0.73 | ≤0.31 |
+| broken_causeways | 0.58 | 0.50 | 0.44 | ≤0.20 |
+| upper_cloudreach | 0.69 | 0.59 | 0.53 | ≤0.32 |
+
+Not sufficient after two attempts, so the approach changed. No override is
+authored.
+
+### Attribution
+
+Cloudreach `gate_lower_cliffs`, 12 seeds. The pilot hit events now record the
+attack that landed.
+
+- With Terrapup, the switching reader takes 123 `current_zone` field hits and
+  56 `current_volley` fan hits.
+- With Galewisp, it takes 30 field hits and 26 fan hits.
+- Per second of fight, that is about 0.09 field hits/s for Terrapup against
+  0.015/s for Galewisp.
+- Both starters share the same move speed and burst.
+
+### Hypothesis under test
+
+`current_zone`'s marker tracks the target for the first 30% of its 1.1 s tell
+(`marker_tracks_fraction` 0.3). That leaves about 0.77 s after it locks to
+clear the marker radius plus the body radius:
+
+- Terrapup needs (2.5 + 1.46) m at 5 m/s, which is 0.79 s: not escapable on
+  foot.
+- Galewisp needs (2.5 + 1.23) m, which is 0.75 s: just escapable.
+
+A burst would cover the gap, but the burst trial above barely helped, so the
+cause is still unconfirmed. Next step: a per-tell pilot log of the distance
+to the marker at strike and the action the reader took.
