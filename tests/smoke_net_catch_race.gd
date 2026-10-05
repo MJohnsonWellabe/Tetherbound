@@ -63,10 +63,10 @@ extends "res://tests/helpers/net_harness.gd"
 ## shipping host arbiter consume it. The simultaneous race is pinned to break
 ## out; a second guest throw in that same released encounter is pinned to catch.
 ##
-## **Handover:** the belts are also EMPTY in this fixture — `deploy_creature`
-## brings a body out without the party gaining a row. Both peers start at
-## `party_size` 0; the successful guest catch must raise it to 1. This does not
-## exercise a full belt or its release ceremony.
+## **Handover:** each peer owns exactly its deployed starter (`deploy_creature`
+## with `owned: true`, as the opening owns it; actor_vitals refuses an unowned
+## fighter). The successful guest catch must raise that peer's count by one.
+## This does not exercise a full belt or its release ceremony.
 ##
 ## ## Setup is granted explicitly and says so
 ##
@@ -154,7 +154,9 @@ func _run() -> void:
 	# Granted explicitly. See the header on why this block is loud about being
 	# setup rather than the thing under test.
 	for i in 2:
-		var deployed: Dictionary = await step(i, "deploy_creature", {})
+		# Owned, as the opening owns its starter: with combat.json actor_vitals
+		# on, a wild fight refuses an unowned fighter. Counts stay relative.
+		var deployed: Dictionary = await step(i, "deploy_creature", {"owned": true})
 		want(str(deployed.get("verdict", "")) == "PASS",
 			"setup: peer %d deployed its own creature (%s)" % [i, str(deployed.get("detail", ""))])
 
