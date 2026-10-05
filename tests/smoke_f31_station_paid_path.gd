@@ -230,10 +230,22 @@ func _check_host_station_craft_settles_the_panel() -> void:
 	if panel == null or not bool(panel.call("is_open")):
 		_fail("the Kitchen's station panel did not open")
 		return
+	var announced: Array[int] = [0]
+	var count_completion := func(op: String, _intent: Dictionary, _result: Dictionary) -> void:
+		if op == "station_craft": announced[0] += 1
+	_game.get("session").connect("homestead_action_completed", count_completion)
 	panel.call("_station_action", "station_craft", {"recipe_id": "potion_small"})
 	for i in 300:
 		if (panel.get("_station_intent") as Dictionary).is_empty(): break
 		await physics_frame
+	# Several background polls (0.5 s each) re-deliver the accepted row; the
+	# completion must still be announced exactly once.
+	for i in 150: await physics_frame
+	_game.get("session").disconnect("homestead_action_completed", count_completion)
+	if announced[0] != 1:
+		_fail("the host's craft completion was announced %d times, not once" % announced[0])
+	else:
+		print("host craft completion announced exactly once across later polls")
 	if not (panel.get("_station_intent") as Dictionary).is_empty():
 		_fail("the host's station craft never settled the panel (status '%s')" % str(panel.get("_status").text))
 	elif int(_game.get("inventory").call("count", "potion_small")) != potions + 1:

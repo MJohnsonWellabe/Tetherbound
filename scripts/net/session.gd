@@ -4506,10 +4506,23 @@ func _deliver_training_decision(peer: int, row: Dictionary) -> void:
 		# station panel stayed on "awaiting_saved_decision" with its buttons off.
 		# Guests hear theirs through _rpc_foundation_reply; groom has its own.
 		var action := str(row.get("action", ""))
-		if settled and action in FOUNDATION_ACTIONS.ACTIONS and action != "groom":
+		if settled and action in FOUNDATION_ACTIONS.ACTIONS and action != "groom" and _homestead_completion_once(row):
 			homestead_action_completed.emit(action, (row.get("intent", {}) as Dictionary).duplicate(true), _foundation_decision(peer, row))
 	elif bool(_registry.call("has", peer)):
 		rpc_id(peer, "_rpc_training_decision", _altar_epoch, row.delivery_id, int(row.journal_revision), row.receipt)
+
+
+## The accepted row is re-delivered by the background poll and replays, so
+## its completion is announced once per receipt (review: a later toast or
+## sound would otherwise repeat every poll).
+var _homestead_completed_receipts: Dictionary = {}
+
+func _homestead_completion_once(row: Dictionary) -> bool:
+	var key := str(row.get("receipt", "")) + "|" + str(row.get("delivery_id", ""))
+	if _homestead_completed_receipts.has(key): return false
+	if _homestead_completed_receipts.size() >= 256: _homestead_completed_receipts.clear()
+	_homestead_completed_receipts[key] = true
+	return true
 
 
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
@@ -4526,7 +4539,7 @@ func _rpc_training_decision(epoch: String, id: String, revision: int, receipt: S
 		# "awaiting" marker; this saved settlement is the terminal answer its
 		# station panel waits for (groom keeps its own completion path).
 		var action := str(row.get("action", ""))
-		if settled and action in FOUNDATION_ACTIONS.ACTIONS and action != "groom":
+		if settled and action in FOUNDATION_ACTIONS.ACTIONS and action != "groom" and _homestead_completion_once(row):
 			homestead_action_completed.emit(action, (row.get("intent", {}) as Dictionary).duplicate(true),
 				{"ok": true, "resolved": true, "durable": true, "saved": true, "settled": true,
 					"owner_saved": true, "owner_acknowledged": true, "receipt": row.receipt})
