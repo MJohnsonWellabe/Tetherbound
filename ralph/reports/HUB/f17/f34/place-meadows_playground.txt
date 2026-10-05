@@ -1,16 +1,18 @@
 PASS: the real world has a Player and a BuildPlacer (res://scenes/world/meadows_playground.tscn)
 PASS: valid camp ground found in meadows at (18.0, 0.9, 14.0)
 PASS: one forward-camp record placed (1)
-PASS: it carries the placer's character id and realm (character-a0179acd5364cdecc739524c8b01d996, meadows)
+PASS: it carries the placer's character id and realm (character-10012ec63303eb4eec588e6460e1d733, meadows)
 PASS: exactly one kit spent (2 -> 1)
 PASS: one ForwardCamp planted in the world (1)
 rest settled after 2 press(es)
 PASS: resting at the camp bed recovered the team to full and woke it (1 member(s))
 PASS: the rest passed the night (day 1 -> 2)
+PASS: the camp workbench opens the team loadout panel (1 panel(s))
+PASS: away from the camp no loadout panel opens
 PASS: a second camp in meadows is refused at first and keeps its kit
 PASS: the player is offered to pack up the first camp ("You already have a camp in The Meadows. Press Place again to pack it up (kit refunded) and pitch here.")
 PASS: the second press packed the first camp up and pitched the new one here (1 camp(s))
 PASS: the old camp's kit was refunded and the new one spent (1)
 PASS: one ForwardCamp stands in the world (1)
 PASS: the world saves through the autosave path
-F34 FORWARD CAMP (meadows): 14 checks, 0 failures
+F34 FORWARD CAMP (meadows): 16 checks, 0 failures

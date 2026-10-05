@@ -162,6 +162,28 @@ func _run() -> void:
 		var day_after := int(game.get("world").get("day")) if game.get("world") != null else -1
 		_check(day_after > day_before, "the rest passed the night (day %d -> %d)" % [day_before, day_after])
 
+	# Loadouts are changed at the camp's field workbench (F34#2): the real
+	# open_loadouts opens the companion panel on the Foundation loadout service.
+	if nodes.size() == 1 and is_instance_valid(nodes[0]):
+		var camp: Node3D = nodes[0]
+		player.global_position = camp.global_transform * Vector3(2.0, 0.0, 1.1) + Vector3(0.0, 0.5, 1.0)
+		for _frame in 10:
+			await physics_frame
+		camp.call("open_loadouts")
+		await process_frame
+		var panels := game.get_children().filter(func(n: Node) -> bool:
+			return n.get_script() == preload("res://scripts/ui/companion_details_panel.gd"))
+		_check(panels.size() == 1 and (panels[0] as CanvasLayer).visible,
+			"the camp workbench opens the team loadout panel (%d panel(s))" % panels.size())
+		for panel: Node in panels: panel.queue_free()
+		await process_frame
+		player.global_position = camp.global_position + Vector3(0.0, 40.0, 0.0)
+		camp.call("open_loadouts")
+		await process_frame
+		var far := game.get_children().filter(func(n: Node) -> bool:
+			return n.get_script() == preload("res://scripts/ui/companion_details_panel.gd") and not n.is_queued_for_deletion())
+		_check(far.is_empty(), "away from the camp no loadout panel opens")
+
 	# One per character per biome (HOMESTEAD §8): the first press on a second
 	# spot refuses and offers to pack the first up; the second press packs it
 	# (kit refunded) and pitches here. Kits end where they were before.
