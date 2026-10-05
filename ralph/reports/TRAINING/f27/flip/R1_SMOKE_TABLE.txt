@@ -1,0 +1,89 @@
+R1 existing smoke coverage (OPEN; no flip acceptance claim)
+Product head: 374601578f99f49e579ed3cba0efbf620cc95b9d
+Config committed OFF. See R1_PROGRESS.txt for first-attempt receipts.
+
+Fighting net inventory: handoff item2; OFF inventory: its owned-fighter parity list.
+smoke | ON | OFF
+boss_rewards_each_participant | MAIN DEBT / out of scope | MAIN DEBT per handoff / out of scope
+catch_race | OPEN | OPEN
+client_trainer_rewards | OPEN | OPEN
+cloudreach_riding | OPEN | OPEN
+deploy_two_creatures | OPEN | OPEN (unowned exception)
+f22_forced_break | OPEN | OPEN
+f27_guest_wild_win | OPEN | N/A: manual flag-ON authority proof
+fly | OPEN | OPEN
+gate_opens_for_both | OPEN | OPEN
+hearts | OPEN | OPEN
+host_exit_saves | OPEN | OPEN
+realm_owner_disconnect_mid_fight | OPEN | OPEN
+riding | FIRST FAIL startup/exit2; retry OPEN | OPEN
+shared_boss | OPEN | OPEN
+shared_wild_fight | OPEN | OPEN
+split_realms | OPEN | OPEN
+stormwood_finalized_death | OPEN | OPEN
+stormwood_hosted_trainers | OPEN | OPEN
+stormwood_livewire | OPEN | OPEN
+veridian_choices | OPEN | OPEN
+veridian_relic_key | OPEN | OPEN
+
+shared_boss --tournament | ON OPEN
+F27 wild_defeat_essence | ON OPEN
+F27 essence_node | ON OPEN
+F27 net essence_no_dup | ON OPEN
+
+CI SMOKE names from unchanged .github/workflows/ci.yml; every ON check OPEN.
+aggression | ON OPEN
+arena_contain | ON OPEN
+art | ON OPEN
+audio | ON OPEN
+authored_camps | ON OPEN
+backpack_player_eats | ON OPEN
+boss | ON OPEN
+bramblebun_colourway_binding | ON OPEN
+build_owns_creature_cycle | ON OPEN
+build_two_creature_beds | ON OPEN
+catch_aim_slowdown | ON OPEN
+catching | ON OPEN
+cloudreach_arrival_walk | ON OPEN
+combat | ON OPEN
+combat_hud_left_column | ON OPEN
+dialogue_clears_the_world_hud | ON OPEN
+encounter_scaling | ON OPEN
+f27_altar_spend | ON OPEN
+f31_station_paid_path | ON OPEN
+free_build | ON OPEN
+gate_a_build_house | ON OPEN
+gate_a_opening_segment | ON OPEN
+gate_a_rest_torch | ON OPEN
+gate_e_finale | ON OPEN
+hud_freed_combat_prompt_lifecycle | ON OPEN
+input | ON OPEN
+menu | ON OPEN
+menu_open_does_not_offer_to_drop | ON OPEN
+modal_stacking | ON OPEN
+night_ecology | ON OPEN
+objective_hint_card | ON OPEN
+opening | ON OPEN
+party_count_after_catches | ON OPEN
+playground | ON OPEN
+post_modal_control | ON OPEN
+relay | ON OPEN
+relay_station | ON OPEN
+release | ON OPEN
+riding | ON OPEN
+satchel_owns_hotbar | ON OPEN
+settings | ON OPEN
+starter_picker | ON OPEN
+station_panels_hide_world_hud | ON OPEN
+stormwood_deepwood_circuit_wiring | ON OPEN
+stronghold | ON OPEN
+title_load_game | ON OPEN
+title_new_game | ON OPEN
+trainer_battle | ON OPEN
+trainer_battle_camera | ON OPEN
+trainer_no_usable_ally | ON OPEN
+traversal | ON OPEN
+unstick | ON OPEN
+veridian_offer_choice | ON OPEN
+warrens | ON OPEN
+wild_streaming | ON OPEN

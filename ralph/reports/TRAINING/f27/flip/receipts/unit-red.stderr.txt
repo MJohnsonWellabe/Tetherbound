@@ -1,0 +1,34 @@
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _local_character_id (res://scripts/combat/encounter_director.gd:2211)
+       [1] _resume_trainer_encounter (res://scripts/combat/encounter_director.gd:8211)
+       [2] test_trainer_round_waits_for_original_vitals_before_reseat_and_send_out (res://tests/test_actor_vitals_authority.gd:467)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _local_character_id (res://scripts/combat/encounter_director.gd:2211)
+       [1] _resume_trainer_encounter (res://scripts/combat/encounter_director.gd:8211)
+       [2] test_trainer_round_waits_for_original_vitals_before_reseat_and_send_out (res://tests/test_actor_vitals_authority.gd:479)
+       [3] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Cannot call method 'add_child' on a null value.
+   at: _send_out_next_creature (res://scripts/combat/encounter_director.gd:7119)
+   GDScript backtrace (most recent call first):
+       [0] _send_out_next_creature (res://scripts/combat/encounter_director.gd:7119)
+       [1] _tick_trainer_battle (res://scripts/combat/encounter_director.gd:7413)
+       [2] test_trainer_round_waits_for_original_vitals_before_reseat_and_send_out (res://tests/test_actor_vitals_authority.gd:481)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _local_character_id (res://scripts/combat/encounter_director.gd:2211)
+       [1] _resume_trainer_encounter (res://scripts/combat/encounter_director.gd:8211)
+       [2] test_trainer_round_waits_for_original_vitals_before_reseat_and_send_out (res://tests/test_actor_vitals_authority.gd:485)
+       [3] _init (res://tests/run_tests.gd:120)
+WARNING: 12 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2535)
+ERROR: 3 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
+ERROR: Pages in use exist at exit in PagedAllocator: N12VariantPools12BucketMediumE
+   at: ~PagedAllocator (./core/templates/paged_allocator.h:170)

@@ -1,0 +1,7 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_meadows_named_location_ledger_0912.gd: 1 of 799 test files
+  ok    test_meadows_named_location_ledger_0912.gd :: test_final_polish_locations_have_complete_accepted_evidence_rounds
+  ok    test_meadows_named_location_ledger_0912.gd :: test_meadows_review_ledger_is_exactly_twenty_four_unique_places
+
+2 tests, 28 assertions, 0 failed

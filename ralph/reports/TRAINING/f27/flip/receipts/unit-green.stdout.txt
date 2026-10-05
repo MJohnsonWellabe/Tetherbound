@@ -1,0 +1,8 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_actor_vitals_authority.gd::test_trainer_round_waits_for_original_vitals_before_reseat_and_send_out,test_director_join_snapshot.gd::test_native_realm_rpc_reaches_connected_peer_and_refuses_departed_or_unready_receiver,test_director_join_snapshot.gd::test_native_guest_killing_strike_advances_host_trainer_round_once: 2 of 799 test files
+  ok    test_actor_vitals_authority.gd :: test_trainer_round_waits_for_original_vitals_before_reseat_and_send_out
+  ok    test_director_join_snapshot.gd :: test_native_guest_killing_strike_advances_host_trainer_round_once
+  ok    test_director_join_snapshot.gd :: test_native_realm_rpc_reaches_connected_peer_and_refuses_departed_or_unready_receiver
+
+3 tests, 33 assertions, 0 failed

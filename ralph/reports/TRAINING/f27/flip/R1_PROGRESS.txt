@@ -67,3 +67,31 @@ Original first runs and cleanup error receipts retained; no retry relabeled.
 Final pending product/test source review: PASS (review_r1), no actionable
 finding, inherited production methods and identity assertions retained.
 Scratch flag restored false after parity. World smokes/all fixtures still OPEN.
+Existing riding flag-ON FIRST attempt on374601578f (run r1-riding-on-20261005T230443Z):
+FAIL / exit2 / not every peer said hello within180s. Peers were still building
+worlds; no gameplay check or guest-wild result. No peer ERROR/SCRIPT ERROR.
+Owner Valheim/GPU reservation active, and R2 CPU full12 sweep also active.
+Failure receipt/logs retained at net-riding-on-first; own run-ID peers cleaned,
+scratch flag restored false and R1 lock released. Do not relabel as PASS.
+Further world smokes wait for an uncontended machine; deadlines unchanged.
+Single-process full unit suite is next. No render/import/export during owner play.
+Independent read-only F27 assertion contract audit (runtime reproduction OPEN):
+Essence.training_delivery_id is latest per character. WorldState permits its
+replacement only after old acceptance, retaining old exact receipt in the new
+before state. Accepted FoundationEvent duties retire. No historical share row
+is exposed by the existing world_snapshot probe. Existing F48 proof checks
+accepted successors retaining prior receipts. If latest combat_mastery occurs,
+existing guest-wild assertion must prove exact new defeat receipt preservation
+in a valid accepted same-character/world row, once in before and after (direct
+share row instead requires exact receipt and observed encounter). Keep every
+XP/essence/equality/reconnect/reload/no-dup check; match both participants' new
+receipt event component where possible. No smoke/tool edit made before repro.
+Full OFF first attempt (HEAD374601578f, imported headless runner, private APPDATA)
+is still running. Its first assertion failure was the existing Meadows0912
+accepted-evidence ledger: eight historical tracked manifest/review files were
+excluded by the inherited sparse checkout. Materialized those exact HEAD blobs
+with git restore --ignore-skip-worktree-bits; no source/assertion edit, image
+checkout, import or render. Unchanged ledger OFF rerun PASS2 tests/28 assertions/
+0 failed/exit0/empty stderr (ledger-off.*). First full-suite failure retained;
+no clean full-suite PASS yet. Full ON and clean full OFF checks remain OPEN.
+Completed focused/parity/ledger raw receipts copied byte-for-byte into receipts/; SHA256SUMS.txt matches their local originals. R1_SMOKE_TABLE.txt tracks every remaining check as OPEN, preserving the failed riding first attempt. Full OFF first attempt still running at 4318 passes/one sparse-evidence failure (corrected targeted rerun PASS).

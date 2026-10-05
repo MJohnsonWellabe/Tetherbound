@@ -1,0 +1,127 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_actor_vitals_authority.gd::test_trainer_round_waits_for_original_vitals_before_reseat_and_send_out,test_director_join_snapshot.gd::test_native_realm_rpc_reaches_connected_peer_and_refuses_departed_or_unready_receiver,test_director_join_snapshot.gd::test_native_guest_killing_strike_advances_host_trainer_round_once: 2 of 799 test files
+  FAIL  test_actor_vitals_authority.gd :: test_trainer_round_waits_for_original_vitals_before_reseat_and_send_out
+          expected false, got true  (an unpublished original cannot cross the round boundary)
+          expected 0.0, got 1.6  (the next creature is not scheduled while a hit is pending)
+          expected { "encounter_id": "1:1", "outcome": "won" }, got {  }
+          expected false, got true  (a departed actor still waits for its exact durable ACK)
+          expected { "encounter_id": "1:1", "realm": "meadows", "kind": "trainer", "opponent": { "species_id": "", "display_name": "", "level": 1, "hp": 100.0, "hp_max": 100.0, "moves": [], "owner_npc": "tournament_quarter_mira", "position": [0.0, 0.0, 0.0], "samples": [] }, "participants": { 1: { "character_id": "owner_host", "creature_uid": "host_uid", "joined_seq": 1 } }, "phase": "done", "seq": 5, "scaling": { "stat_multiplier": 1.0, "attack_cooldown_multiplier": 1.0 }, "retained_actor_participants": { "owner_guest": { "character_id": "owner_guest", "creature_uid": "creature-1764734224e8f73eac017dd6ca358302", "joined_seq": 1, "actor_vitals": { "creature-1764734224e8f73eac017dd6ca358302": { "creature_uid": "creature-1764734224e8f73eac017dd6ca358302", "hp": 113.0, "max_hp": 120.0, "fainted": false, "body_generation": 1, "revision": 1, "receipts": { "last_round_hit": true }, "settled_revision": 0, "settlement_receipt": { "receipt_id": "2372e1872a4e2bb4769e18de06c28a0c:32cb87f6e8531c47d93f72ff7cb86a73a81e7c09d321305dc3b6e7003c35a5dc", "encounter_id": "1:1", "creature_uid": "creature-1764734224e8f73eac017dd6ca358302", "body_generation": 1, "vitals_revision": 1 }, "body_instance_id": 246557967943 } }, "actor_bound_uid": "creature-1764734224e8f73eac017dd6ca358302", "actor_generation": 1 } } }, got { "encounter_id": "1:1", "realm": "meadows", "kind": "trainer", "opponent": { "species_id": "", "display_name": "", "level": 1, "hp": 100.0, "hp_max": 100.0, "moves": [], "owner_npc": "tournament_quarter_mira", "position": [0.0, 0.0, 0.0], "samples": [] }, "participants": { 1: { "character_id": "owner_host", "creature_uid": "host_uid", "joined_seq": 1 }, 7: { "character_id": "owner_guest", "creature_uid": "creature-1764734224e8f73eac017dd6ca358302", "joined_seq": 1, "actor_vitals": { "creature-1764734224e8f73eac017dd6ca358302": { "creature_uid": "creature-1764734224e8f73eac017dd6ca358302", "hp": 113.0, "max_hp": 120.0, "fainted": false, "body_generation": 1, "revision": 1, "receipts": { "last_round_hit": true }, "settled_revision": 0, "settlement_receipt": { "receipt_id": "2372e1872a4e2bb4769e18de06c28a0c:32cb87f6e8531c47d93f72ff7cb86a73a81e7c09d321305dc3b6e7003c35a5dc", "encounter_id": "1:1", "creature_uid": "creature-1764734224e8f73eac017dd6ca358302", "body_generation": 1, "vitals_revision": 1 }, "body_instance_id": 246557967943 } }, "actor_bound_uid": "creature-1764734224e8f73eac017dd6ca358302", "actor_generation": 1 } }, "phase": "active", "seq": 7, "scaling": { "stat_multiplier": 1.1, "attack_cooldown_multiplier": 0.85 }, "retained_actor_participants": {  } }  (a pending ACK cannot reactivate or re-seat the record)
+          expected [<RefCounted#-9223371790263253394>], got []
+          expected true, got false  (the existing send-out beat resumes after settlement)
+          expected [<RefCounted#-9223371790263253394>], got []
+  FAIL  test_director_join_snapshot.gd :: test_native_guest_killing_strike_advances_host_trainer_round_once
+          expected [], got ["expected false, got true  (resolved round reward cannot bypass an unpublished health original)"]  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+[encounter] strike_intent refused: move_start_required (That attack has no current committed start.)
+[encounter] strike_intent refused: unknown_encounter (That fight is over.)
+ERROR: cannot begin combat without a player, a wild creature, a deployed body and a party
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] begin (res://scripts/combat/combat_manager.gd:594)
+       [1] _start_fight (res://scripts/combat/encounter_director.gd:5862)
+       [2] _case_native_guest_kill_advances_host_trainer_round (res://tests/test_director_join_snapshot.gd:910)
+       [3] _native_prepare_quick_start (res://tests/test_director_join_snapshot.gd:427)
+       [4] _native_projectile_until (res://tests/test_director_join_snapshot.gd:402)
+DIRECTOR_GUEST_TRAINER_RESULT={"assertions":109,"completed":true,"failures":["expected false, got true  (resolved round reward cannot bypass an unpublished health original)"],"observation":{"author":1618354008,"enemy_fainted":true,"enemy_hp":0.0,"guest_id":1618354008,"guest_round_awards":1,"guest_state":2,"host_exits":["won"],"host_round_awards":1,"host_state":2,"host_state_after_pause":0,"queued":1,"record_phase":"done","send_delay":1.6,"tracked_runtime":false}}
+)
+          expected false, got true  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+[encounter] strike_intent refused: move_start_required (That attack has no current committed start.)
+[encounter] strike_intent refused: unknown_encounter (That fight is over.)
+ERROR: cannot begin combat without a player, a wild creature, a deployed body and a party
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] begin (res://scripts/combat/combat_manager.gd:594)
+       [1] _start_fight (res://scripts/combat/encounter_director.gd:5862)
+       [2] _case_native_guest_kill_advances_host_trainer_round (res://tests/test_director_join_snapshot.gd:910)
+       [3] _native_prepare_quick_start (res://tests/test_director_join_snapshot.gd:427)
+       [4] _native_projectile_until (res://tests/test_director_join_snapshot.gd:402)
+DIRECTOR_GUEST_TRAINER_RESULT={"assertions":109,"completed":true,"failures":["expected false, got true  (resolved round reward cannot bypass an unpublished health original)"],"observation":{"author":1618354008,"enemy_fainted":true,"enemy_hp":0.0,"guest_id":1618354008,"guest_round_awards":1,"guest_state":2,"host_exits":["won"],"host_round_awards":1,"host_state":2,"host_state_after_pause":0,"queued":1,"record_phase":"done","send_delay":1.6,"tracked_runtime":false}}
+)
+          expected 0, got 1  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+[encounter] strike_intent refused: move_start_required (That attack has no current committed start.)
+[encounter] strike_intent refused: unknown_encounter (That fight is over.)
+ERROR: cannot begin combat without a player, a wild creature, a deployed body and a party
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] begin (res://scripts/combat/combat_manager.gd:594)
+       [1] _start_fight (res://scripts/combat/encounter_director.gd:5862)
+       [2] _case_native_guest_kill_advances_host_trainer_round (res://tests/test_director_join_snapshot.gd:910)
+       [3] _native_prepare_quick_start (res://tests/test_director_join_snapshot.gd:427)
+       [4] _native_projectile_until (res://tests/test_director_join_snapshot.gd:402)
+DIRECTOR_GUEST_TRAINER_RESULT={"assertions":109,"completed":true,"failures":["expected false, got true  (resolved round reward cannot bypass an unpublished health original)"],"observation":{"author":1618354008,"enemy_fainted":true,"enemy_hp":0.0,"guest_id":1618354008,"guest_round_awards":1,"guest_state":2,"host_exits":["won"],"host_round_awards":1,"host_state":2,"host_state_after_pause":0,"queued":1,"record_phase":"done","send_delay":1.6,"tracked_runtime":false}}
+)
+  FAIL  test_director_join_snapshot.gd :: test_native_realm_rpc_reaches_connected_peer_and_refuses_departed_or_unready_receiver
+          expected [], got ["expected { \"enabled\": false, \"ready\": false }, got { \"enabled\": true, \"ready\": false }  (a guest\'s local wild retains legacy admission with tracking true)"]  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+DIRECTOR_TRANSPORT_RESULT={"assertions":35,"failures":["expected { \"enabled\": false, \"ready\": false }, got { \"enabled\": true, \"ready\": false }  (a guest's local wild retains legacy admission with tracking true)"]}
+)
+          expected 0, got 1  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+DIRECTOR_TRANSPORT_RESULT={"assertions":35,"failures":["expected { \"enabled\": false, \"ready\": false }, got { \"enabled\": true, \"ready\": false }  (a guest's local wild retains legacy admission with tracking true)"]}
+)
+
+3 tests, 33 assertions, 3 failed
+
+  test_actor_vitals_authority.gd :: test_trainer_round_waits_for_original_vitals_before_reseat_and_send_out — expected false, got true  (an unpublished original cannot cross the round boundary)
+  test_actor_vitals_authority.gd :: test_trainer_round_waits_for_original_vitals_before_reseat_and_send_out — expected 0.0, got 1.6  (the next creature is not scheduled while a hit is pending)
+  test_actor_vitals_authority.gd :: test_trainer_round_waits_for_original_vitals_before_reseat_and_send_out — expected { "encounter_id": "1:1", "outcome": "won" }, got {  }
+  test_actor_vitals_authority.gd :: test_trainer_round_waits_for_original_vitals_before_reseat_and_send_out — expected false, got true  (a departed actor still waits for its exact durable ACK)
+  test_actor_vitals_authority.gd :: test_trainer_round_waits_for_original_vitals_before_reseat_and_send_out — expected { "encounter_id": "1:1", "realm": "meadows", "kind": "trainer", "opponent": { "species_id": "", "display_name": "", "level": 1, "hp": 100.0, "hp_max": 100.0, "moves": [], "owner_npc": "tournament_quarter_mira", "position": [0.0, 0.0, 0.0], "samples": [] }, "participants": { 1: { "character_id": "owner_host", "creature_uid": "host_uid", "joined_seq": 1 } }, "phase": "done", "seq": 5, "scaling": { "stat_multiplier": 1.0, "attack_cooldown_multiplier": 1.0 }, "retained_actor_participants": { "owner_guest": { "character_id": "owner_guest", "creature_uid": "creature-1764734224e8f73eac017dd6ca358302", "joined_seq": 1, "actor_vitals": { "creature-1764734224e8f73eac017dd6ca358302": { "creature_uid": "creature-1764734224e8f73eac017dd6ca358302", "hp": 113.0, "max_hp": 120.0, "fainted": false, "body_generation": 1, "revision": 1, "receipts": { "last_round_hit": true }, "settled_revision": 0, "settlement_receipt": { "receipt_id": "2372e1872a4e2bb4769e18de06c28a0c:32cb87f6e8531c47d93f72ff7cb86a73a81e7c09d321305dc3b6e7003c35a5dc", "encounter_id": "1:1", "creature_uid": "creature-1764734224e8f73eac017dd6ca358302", "body_generation": 1, "vitals_revision": 1 }, "body_instance_id": 246557967943 } }, "actor_bound_uid": "creature-1764734224e8f73eac017dd6ca358302", "actor_generation": 1 } } }, got { "encounter_id": "1:1", "realm": "meadows", "kind": "trainer", "opponent": { "species_id": "", "display_name": "", "level": 1, "hp": 100.0, "hp_max": 100.0, "moves": [], "owner_npc": "tournament_quarter_mira", "position": [0.0, 0.0, 0.0], "samples": [] }, "participants": { 1: { "character_id": "owner_host", "creature_uid": "host_uid", "joined_seq": 1 }, 7: { "character_id": "owner_guest", "creature_uid": "creature-1764734224e8f73eac017dd6ca358302", "joined_seq": 1, "actor_vitals": { "creature-1764734224e8f73eac017dd6ca358302": { "creature_uid": "creature-1764734224e8f73eac017dd6ca358302", "hp": 113.0, "max_hp": 120.0, "fainted": false, "body_generation": 1, "revision": 1, "receipts": { "last_round_hit": true }, "settled_revision": 0, "settlement_receipt": { "receipt_id": "2372e1872a4e2bb4769e18de06c28a0c:32cb87f6e8531c47d93f72ff7cb86a73a81e7c09d321305dc3b6e7003c35a5dc", "encounter_id": "1:1", "creature_uid": "creature-1764734224e8f73eac017dd6ca358302", "body_generation": 1, "vitals_revision": 1 }, "body_instance_id": 246557967943 } }, "actor_bound_uid": "creature-1764734224e8f73eac017dd6ca358302", "actor_generation": 1 } }, "phase": "active", "seq": 7, "scaling": { "stat_multiplier": 1.1, "attack_cooldown_multiplier": 0.85 }, "retained_actor_participants": {  } }  (a pending ACK cannot reactivate or re-seat the record)
+  test_actor_vitals_authority.gd :: test_trainer_round_waits_for_original_vitals_before_reseat_and_send_out — expected [<RefCounted#-9223371790263253394>], got []
+  test_actor_vitals_authority.gd :: test_trainer_round_waits_for_original_vitals_before_reseat_and_send_out — expected true, got false  (the existing send-out beat resumes after settlement)
+  test_actor_vitals_authority.gd :: test_trainer_round_waits_for_original_vitals_before_reseat_and_send_out — expected [<RefCounted#-9223371790263253394>], got []
+  test_director_join_snapshot.gd :: test_native_guest_killing_strike_advances_host_trainer_round_once — expected [], got ["expected false, got true  (resolved round reward cannot bypass an unpublished health original)"]  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+[encounter] strike_intent refused: move_start_required (That attack has no current committed start.)
+[encounter] strike_intent refused: unknown_encounter (That fight is over.)
+ERROR: cannot begin combat without a player, a wild creature, a deployed body and a party
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] begin (res://scripts/combat/combat_manager.gd:594)
+       [1] _start_fight (res://scripts/combat/encounter_director.gd:5862)
+       [2] _case_native_guest_kill_advances_host_trainer_round (res://tests/test_director_join_snapshot.gd:910)
+       [3] _native_prepare_quick_start (res://tests/test_director_join_snapshot.gd:427)
+       [4] _native_projectile_until (res://tests/test_director_join_snapshot.gd:402)
+DIRECTOR_GUEST_TRAINER_RESULT={"assertions":109,"completed":true,"failures":["expected false, got true  (resolved round reward cannot bypass an unpublished health original)"],"observation":{"author":1618354008,"enemy_fainted":true,"enemy_hp":0.0,"guest_id":1618354008,"guest_round_awards":1,"guest_state":2,"host_exits":["won"],"host_round_awards":1,"host_state":2,"host_state_after_pause":0,"queued":1,"record_phase":"done","send_delay":1.6,"tracked_runtime":false}}
+)
+  test_director_join_snapshot.gd :: test_native_guest_killing_strike_advances_host_trainer_round_once — expected false, got true  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+[encounter] strike_intent refused: move_start_required (That attack has no current committed start.)
+[encounter] strike_intent refused: unknown_encounter (That fight is over.)
+ERROR: cannot begin combat without a player, a wild creature, a deployed body and a party
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] begin (res://scripts/combat/combat_manager.gd:594)
+       [1] _start_fight (res://scripts/combat/encounter_director.gd:5862)
+       [2] _case_native_guest_kill_advances_host_trainer_round (res://tests/test_director_join_snapshot.gd:910)
+       [3] _native_prepare_quick_start (res://tests/test_director_join_snapshot.gd:427)
+       [4] _native_projectile_until (res://tests/test_director_join_snapshot.gd:402)
+DIRECTOR_GUEST_TRAINER_RESULT={"assertions":109,"completed":true,"failures":["expected false, got true  (resolved round reward cannot bypass an unpublished health original)"],"observation":{"author":1618354008,"enemy_fainted":true,"enemy_hp":0.0,"guest_id":1618354008,"guest_round_awards":1,"guest_state":2,"host_exits":["won"],"host_round_awards":1,"host_state":2,"host_state_after_pause":0,"queued":1,"record_phase":"done","send_delay":1.6,"tracked_runtime":false}}
+)
+  test_director_join_snapshot.gd :: test_native_guest_killing_strike_advances_host_trainer_round_once — expected 0, got 1  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+[encounter] strike_intent refused: move_start_required (That attack has no current committed start.)
+[encounter] strike_intent refused: unknown_encounter (That fight is over.)
+ERROR: cannot begin combat without a player, a wild creature, a deployed body and a party
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] begin (res://scripts/combat/combat_manager.gd:594)
+       [1] _start_fight (res://scripts/combat/encounter_director.gd:5862)
+       [2] _case_native_guest_kill_advances_host_trainer_round (res://tests/test_director_join_snapshot.gd:910)
+       [3] _native_prepare_quick_start (res://tests/test_director_join_snapshot.gd:427)
+       [4] _native_projectile_until (res://tests/test_director_join_snapshot.gd:402)
+DIRECTOR_GUEST_TRAINER_RESULT={"assertions":109,"completed":true,"failures":["expected false, got true  (resolved round reward cannot bypass an unpublished health original)"],"observation":{"author":1618354008,"enemy_fainted":true,"enemy_hp":0.0,"guest_id":1618354008,"guest_round_awards":1,"guest_state":2,"host_exits":["won"],"host_round_awards":1,"host_state":2,"host_state_after_pause":0,"queued":1,"record_phase":"done","send_delay":1.6,"tracked_runtime":false}}
+)
+  test_director_join_snapshot.gd :: test_native_realm_rpc_reaches_connected_peer_and_refuses_departed_or_unready_receiver — expected [], got ["expected { \"enabled\": false, \"ready\": false }, got { \"enabled\": true, \"ready\": false }  (a guest\'s local wild retains legacy admission with tracking true)"]  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+DIRECTOR_TRANSPORT_RESULT={"assertions":35,"failures":["expected { \"enabled\": false, \"ready\": false }, got { \"enabled\": true, \"ready\": false }  (a guest's local wild retains legacy admission with tracking true)"]}
+)
+  test_director_join_snapshot.gd :: test_native_realm_rpc_reaches_connected_peer_and_refuses_departed_or_unready_receiver — expected 0, got 1  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+DIRECTOR_TRANSPORT_RESULT={"assertions":35,"failures":["expected { \"enabled\": false, \"ready\": false }, got { \"enabled\": true, \"ready\": false }  (a guest's local wild retains legacy admission with tracking true)"]}
+)
+ERROR: 1 RID allocations of type 'P11GodotBody3D' were leaked at exit.
+ERROR: 2 RID allocations of type 'N17RendererSceneCull8InstanceE' were leaked at exit.

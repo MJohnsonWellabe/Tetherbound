@@ -1,0 +1,7 @@
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _local_character_id (res://scripts/combat/encounter_director.gd:2211)
+       [1] _resume_trainer_encounter (res://scripts/combat/encounter_director.gd:8228)
+       [2] test_trainer_round_waits_for_original_vitals_before_reseat_and_send_out (res://tests/test_actor_vitals_authority.gd:485)
+       [3] _init (res://tests/run_tests.gd:120)
