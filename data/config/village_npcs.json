@@ -3,6 +3,14 @@
   "_comment_greeting_when": "OF30. `greeting` is what a villager says by default and never stops being that. `greeting_when` is an OPTIONAL, ORDERED list of branches checked ahead of it, each `{ if_flag | unless_flag, conversation }` against autoload/progression_state.gd -- first match wins, no match falls through to `greeting`. Deliberately additive: a villager who gains a role gains a list entry, and nobody's greeting is ever replaced (D39's dual-role rule -- SC12 adds Tam's battle offer as a THIRD entry here, and OF31 gives Mira and Oskar their own lists, without touching this one). Either key may hold a single flag id or an array of them, all of which must hold. No `and`/`or`/`not` beyond that, and no nesting: this is a lookup table, not a quest engine (spec sec19 bans one, and progression_state.gd's own header says so twice).",
   "_comment_sc12_sc13": "SC12/SC13. Mira, Oskar and Tam are the Meadows' three Band-1 trainers (spec sec3, D39's dual-role rule made real): once each one's vendor/gift branch has actually been spent, greeting them again offers a CHALLENGE conversation instead -- and keeps offering it, every greeting, for as long as their defeat flag (`defeated_mira`/`defeated_oskar`/`defeated_tam`, encounter_director.gd's SB9 write) is unset. The challenge's last line carries `battle:<trainer_id>` (sequence_director.gd), the same fight `data/config/trainers.json`'s matching `placed_by: \"village_npcs\"` entry runs. Once beaten, a `_beaten` conversation takes over as their permanent steady state and is inserted ABOVE their old standing vendor branch -- Mira's and Oskar's `_beaten` lines carry the exact same `shop:`/`shop:creatures:` effect their old standing branch always did, so the store/swap stays reachable forever even though the old branch entry below it is now unreachable in practice (kept verbatim rather than deleted, per D39: a vendor branch is never rewritten, only superseded). Tam has no such branch to carry -- his gifts are one-time and both already spent by the time he is challengeable -- so his `_beaten` line is flavour only.",
   "_comment_positions": "OWNER-0912 / C3 V-6/V-7. The opening street keeps exactly five functional people inside the village boundary: Mira in her south-leg shop, Oskar at the creature pen behind it, Tam at his workshop bay, Bram in the west-leg inn and Halda at the tournament board. Grandpa remains in his house and is not counted. Every other installed villager is retained and resited to a role on the authored Meadows route rather than deleted. The same VillageNPCs placer owns all world-space positions, so moving a person beyond the village fence does not require another spawning system.",
+  "_comment_night_light": "F01#3 (reproof row3 night walk, code-blind judge): dark-clothed villagers against dark walls or trees (Tam by the forge stone, Maren under the trees) lost their face and silhouette at 23:00 under Compatibility. A villager with `night_light: true` gets this soft fill (scripts/world/villager_night_light.gd): night-only, no shadows, no visible source, a cool moonlit colour (never red; oxblood is Team Tether's), short range so it lifts the person rather than the wall. A dictionary `night_light` overrides any field. TUNABLE.",
+  "night_light_default": {
+    "energy": 0.7,
+    "range": 2.4,
+    "attenuation": 1.4,
+    "colour": "#c9d6ee",
+    "offset": [0.0, 1.5, 0.9]
+  },
   "villagers": [
     {
       "name": "Mira",
@@ -115,6 +123,7 @@
     },
     {
       "name": "Tam",
+      "night_light": true,
       "config_key": "villager_smith",
       "position": [
         26,
@@ -470,10 +479,11 @@
       "name": "Nessa",
       "config_key": "inn_helper",
       "position": [
-        62,
-        7
+        60.0,
+        10.6
       ],
-      "facing_deg": 180,
+      "facing_deg": 125,
+      "_why_f01_3": "F01#3 (reproof row3 night walk, code-blind judge): at (62,7) she stood in the research house doorway, 0.9 m from research_house_walk, so a player walking up stopped 0.8 m from her and the trainer hid her at prompt distance. Moved into the open yard, 2 m clear of both walk segments, facing the walk she is approached from.",
       "greeting": "village_nessa_overlook",
       "greeting_when": [
         {
@@ -486,6 +496,7 @@
     },
     {
       "name": "Maren",
+      "night_light": true,
       "config_key": "field_researcher",
       "position": [
         66,
