@@ -219,6 +219,25 @@ static func placement(cfg: Dictionary, records: Array, id: String, realm: String
 			or absf(wrapf(yaw-float(parent.record.yaw_deg),-180,180)) > 0.01: return deny("attachment_snap_required")
 	return {"ok": true,"parent_uid":parent_uid,"slot":int(def.tier)}
 
+## F31#2: the attachment blueprints a hung relic grants. Biome N's tier is
+## the tier its own attachments sit at; the grant is every station's
+## attachment one tier above (Meadows -> Tidewake ... Stormwood -> reserved
+## tier 5, which placement still refuses as `attachment_reserved`).
+static func next_tier_blueprints(cfg: Dictionary, hung_biome: String) -> Array[String]:
+	var out: Array[String] = []
+	var tier := 0
+	for row: Variant in cfg.get("attachments", []):
+		if row is Dictionary and str(row.get("biome", "")) == hung_biome:
+			tier = int(row.get("tier", 0))
+			break
+	if tier <= 0:
+		return out
+	for row: Variant in cfg.get("attachments", []):
+		if row is Dictionary and int(row.get("tier", 0)) == tier + 1:
+			out.append(str(row.get("id", "")))
+	return out
+
+
 static func dismantle(cfg: Dictionary, records: Array, uid: String) -> Dictionary:
 	var target := record(cfg,records,uid)
 	if target.get("ok") != true: return target
@@ -267,7 +286,9 @@ static func reason(code: String) -> String:
 	return {"station_home_only":"Build this at Grandpa's homestead, clear of the house, road and crop beds.",
 		"station_disabled":"Homestead stations are awaiting integration.",
 		"station_host_only":"Only the host can build homestead stations in a shared world for now.",
-		"station_materials":"You need the listed materials to build this.","attachment_recipe_unknown":"Hang the previous biome's relic in the Shrine Room.",
+		"station_materials":"You need the listed materials to build this.",
+		"station_occupied":"Something is in the way; move to open ground.","station_slope":"The ground is too steep; find a flatter spot.",
+		"station_ground":"The ground here is uneven; find a flatter spot.","station_reach":"Move closer to place this.","attachment_recipe_unknown":"Hang the previous biome's relic in the Shrine Room.",
 		"attachment_slot_occupied":"That biome's attachment is already built.","attachment_previous_tier":"Build the previous attachment first.",
 		"attachment_snap_required":"Place the attachment at its station's marked socket.","attachment_reserved":"This biome is reserved for later.",
 		"remove_attachments_first":"Dismantle this station's attachments first.","remove_later_attachment_first":"Dismantle the later attachment first.",

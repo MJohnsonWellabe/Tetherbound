@@ -293,6 +293,18 @@
       "transaction": "portal_unlock:fifth:<character_id>; idempotent visual fact; never opens arch",
       "persistence": "atomic world document; rollback on failure; replay receipt on reconnect"
     },
+    "redesign_world.retained_settlement": {
+      "scope": "world",
+      "authority": "host",
+      "transaction": "per retained foundation event: '<character>|<action>' keys added by the creature_training_accept op for combat_mastery and combat_round_reward duties; the event row and its entry are erased together once every duty is settled; optional key, absent reads as empty",
+      "persistence": "atomic world document with the accept op; deterministic on every peer"
+    },
+    "redesign_world.gather_batches": {
+      "scope": "world",
+      "authority": "host",
+      "transaction": "per guest character: gather_accrue into one open batch; gather_flush journals reward delivery gather_batch:<seq> (durable world save before publication); gather_mark advances acked (guest ACK) and replayed (owner-passive credit) marks, monotonic; rows at or below both marks are pruned; optional key, absent reads as empty",
+      "persistence": "atomic world document; flush rolls back on save failure; the pending delivery replays to the character on reconnect"
+    },
     "redesign_character.portal_unlocks": {
       "scope": "character",
       "authority": "host validates; owning peer persists character",

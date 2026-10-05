@@ -243,6 +243,9 @@ jobs:
       - name: Verify affected-only job selection rules
         run: python3 tests/test_ci_select_jobs.py
 
+      - name: Verify the net-shard plan (exact one-time cover, budget, matrix)
+        run: python3 tests/test_ci_net_shards.py
+
       - name: Decide whether anything but documentation changed
         id: filter
         env:
@@ -371,7 +374,7 @@ jobs:
           fi
 
           # MULTIPLAYER GROUP SKIP (owner, 2026-10-04: skip jobs a change
-          # cannot affect). The net group (discover-net-smokes, the ten
+          # cannot affect). The net group (discover-net-smokes, the eighteen
           # verify-multiplayer-shard jobs, veridian-offer and the Cloudreach
           # mid-ride rejoin) is the longest queue in a full run. It is skipped ONLY
           # when every non-documentation path changed is presentation that a
@@ -439,10 +442,37 @@ jobs:
   # failing here means a human or a lane runs `godot --headless --path .
   # --script scripts/world/bake_playground_scatter.gd` and commits the
   # result, same as today.
+  # QUEUE ORDER (CI-SEGMENTS, 2026-10-05). A full run is throughput-bound
+  # (~20 runners for ~60 jobs), and GitHub hands out runners in the order jobs
+  # are QUEUED -- jobs queued together go in no fixed order, whatever their
+  # place in this file. So the queue is drained longest-first by `needs`:
+  #   1. needs only `changes`: the ~15-17-min jobs (gate-evidence-shard,
+  #      regions-relay, veg-corridor) and the net shards;
+  #   2. needs queue-after-longest: the 10-14-min jobs;
+  #   3. needs queue-after-long: everything shorter.
+  # These two jobs do nothing and take seconds; they only make each later
+  # tier queue after the one before. Both are in ci-gate's `needs`, so a
+  # failure here (which would skip a whole tier) cannot pass the gate.
+  queue-after-longest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    needs: changes
+    steps:
+      - run: echo "tier 2 (10-14 min jobs) queues now"
+
+  queue-after-long:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    needs: queue-after-longest
+    steps:
+      - run: echo "tier 3 (shorter jobs) queues now"
+
   verify-bake-freshness:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    needs: changes
+    needs:
+      - changes
+      - queue-after-long
     if: needs.changes.outputs.code == 'true'
 
     steps:
@@ -522,7 +552,9 @@ jobs:
         # 37187293215) with every test passing; shard 1 took ~6 min.
         shard: [1, 2, 3]
     timeout-minutes: 12
-    needs: changes
+    needs:
+      - changes
+      - queue-after-long
     if: needs.changes.outputs.code == 'true'
 
     steps:
@@ -745,7 +777,9 @@ jobs:
   verify-scatter-rules:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    needs: changes
+    needs:
+      - changes
+      - queue-after-longest
     if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-scatter-rules|'))
 
     steps:
@@ -795,7 +829,9 @@ jobs:
   verify-harvest:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    needs: changes
+    needs:
+      - changes
+      - queue-after-longest
     if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-harvest|'))
 
     steps:
@@ -878,7 +914,9 @@ jobs:
     # added 2026-09-02 is short (one fight, two ~1s measurement windows) and
     # fits comfortably in that margin.
     timeout-minutes: 35
-    needs: changes
+    needs:
+      - changes
+      - queue-after-longest
     if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-core-verb-shard|'))
     steps:
       - uses: actions/checkout@v4
@@ -1024,7 +1062,9 @@ jobs:
     # added 2026-09-02 is short (one fight, two ~1s measurement windows) and
     # fits comfortably in that margin.
     timeout-minutes: 35
-    needs: changes
+    needs:
+      - changes
+      - queue-after-long
     if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-catching|'))
     steps:
       - uses: actions/checkout@v4
@@ -1100,7 +1140,9 @@ jobs:
     # Sum of these ten tests' own run time measured 2026-09-01: 1,259s
     # (21 min). 30 min leaves margin for checkout/setup plus retries.
     timeout-minutes: 30
-    needs: changes
+    needs:
+      - changes
+      - queue-after-longest
     if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-gate-a-ui-build-shard|'))
     steps:
       - uses: actions/checkout@v4
@@ -1345,7 +1387,9 @@ jobs:
     # (17.6 min), each with a 2-retry budget. 35 min covers checkout/setup
     # plus a day where several of the five need a second attempt.
     timeout-minutes: 35
-    needs: changes
+    needs:
+      - changes
+      - queue-after-longest
     if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-combat-shard|'))
     steps:
       - uses: actions/checkout@v4
@@ -1517,7 +1561,9 @@ jobs:
     # Sum of these six tests' own run time measured 2026-09-01: 1,034s
     # (17.2 min). 25 min covers checkout/setup with margin.
     timeout-minutes: 35
-    needs: changes
+    needs:
+      - changes
+      - queue-after-longest
     if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-regions-shard|'))
     steps:
       - uses: actions/checkout@v4
@@ -2043,7 +2089,9 @@ jobs:
     # (AUDIT-K §K2a) folded back in as an eighth sequential step; its own
     # run time is short relative to the margin already held here.
     timeout-minutes: 28
-    needs: changes
+    needs:
+      - changes
+      - queue-after-longest
     if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-owner-regressions-shard|'))
     steps:
       - uses: actions/checkout@v4
@@ -2471,7 +2519,9 @@ jobs:
       matrix:
         group: [bracket-to-semi, bracket-final]
     timeout-minutes: 40
-    needs: changes
+    needs:
+      - changes
+      - queue-after-long
     if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-gate-evidence-finale|'))
     steps:
       - uses: actions/checkout@v4
@@ -2553,7 +2603,9 @@ jobs:
     # minutes leaves headroom for checkout/setup and a slow CI runner without
     # inviting the full chain back in by accident.
     timeout-minutes: 20
-    needs: changes
+    needs:
+      - changes
+      - queue-after-long
     if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-gate-b-core|'))
     steps:
       - uses: actions/checkout@v4
@@ -2609,7 +2661,9 @@ jobs:
   verify-continuous-core-known-red:
     runs-on: ubuntu-latest
     timeout-minutes: 25
-    needs: changes
+    needs:
+      - changes
+      - queue-after-long
     # This is an investigation probe, not a release gate: it is explicitly
     # allowed to fail and currently repeats a costly whole-world opening drive
     # already covered by the two required opening smoke jobs above. Running it
@@ -2681,7 +2735,9 @@ jobs:
   verify-gate-b-full-known-red:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    needs: changes
+    needs:
+      - changes
+      - queue-after-long
     # Owner, 2026-10-04: known-red probes run only on the scheduled full
     # tier and on manual dispatch, never on a `full-ci` pull request. They
     # cannot block a merge (continue-on-error), so on a PR they only held two
@@ -2736,10 +2792,10 @@ jobs:
   discover-net-smokes:
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    needs: changes
+    needs:
+      - changes
+      - queue-after-long
     if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|discover-net-smokes|'))
-    outputs:
-      files: ${{ steps.discover.outputs.files }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -2752,173 +2808,30 @@ jobs:
             !/shots/
             !/assets_raw/
             !/archive/
-      - name: Discover peers:2 net smokes
-        id: discover
-        run: |
-          set -uo pipefail
-          files=""
-          count=0
-          held=0
-          for f in tests/smoke_net_*.gd; do
-            [ -f "$f" ] || continue
-            if head -5 "$f" | grep -qE '^#\s*peers:\s*2\s*$'; then
-              # A smoke for a feature that ships switched off declares the
-              # production flag it needs ("# requires-flag: <config file>
-              # <dotted.key>"). It is held off the gate only while that flag
-              # is false in data/config, and rejoins on its own the moment the
-              # feature is turned on (same treatment as the owner's F48 hold,
-              # 2026-10-03). The notice below names every held smoke.
-              need=$(head -8 "$f" | sed -nE 's/^#\s*requires-flag:\s*(\S+)\s+(\S+)\s*$/\1 \2/p')
-              if [ -n "$need" ]; then
-                cfg=${need%% *}; key=${need#* }
-                on=$(python3 -c "import json,sys; d=json.load(open('data/config/'+sys.argv[1])); [d := d.get(k, {}) if isinstance(d, dict) else {} for k in sys.argv[2].split('.')]; print('yes' if d is True else 'no')" "$cfg" "$key")
-                if [ "$on" != yes ]; then
-                  echo "::notice::held off the gate until ${cfg} ${key} is on: ${f}"
-                  held=$((held + 1))
-                  continue
-                fi
-              fi
-              files="$files $f"
-              count=$((count + 1))
-            fi
-          done
-          echo "held (${held}) smokes whose required production flag is off"
-          echo "found (${count}):${files}"
-          # Review item 6: a renamed/deleted header must not make this shard
-          # go green without actually running a peer -- fewer than the smokes
-          # the tree actually ships fails the job outright rather than
-          # silently skipping the run step.
-          #
-          # The floor is the TRUE count of files declaring the header, not a
-          # lane's guess at it, and it is REGENERATED from the files on disk at
-          # every landing rather than incremented from whatever the previous
-          # line said -- several lanes add a smoke at once, and a bumped guess
-          # reconciles to whichever lane's conflict resolution won:
-          #
-          #   for f in tests/smoke_net_*.gd; do
-          #     head -5 "$f" | grep -qE '^#[[:space:]]*peers:[[:space:]]*2$' && echo "$f"
-          #   done | wc -l
-          #
-          # The `for required in` roster below is the authority the count must
-          # match. This comment deliberately does not narrate which lane added
-          # which smoke: lanes resolving this same conflict in turn each
-          # restated the lanes before them, and the block accumulated four
-          # duplicated fragments before anyone noticed. The roster is the
-          # record; prose about it only rots.
-          # FIXED, lane 7.A: this block was TWO `if` opens with ONE `fi`,
-          # left by two lanes resolving the same conflict in turn -- a bash
-          # syntax error, so this whole step exited 2 and the multiplayer
-          # shard ran no smoke at all. `bash -n` over the step's own script
-          # is what found it; see MP-7A-RELIABILITY-0906 finding F1.
-          #
-          # The floor is REGENERATED from the files on disk at every landing,
-          # never incremented from whatever the previous line said -- several
-          # lanes add a smoke at once, and a bumped guess reconciles to the
-          # wrong number:
-          #
-          #   for f in tests/smoke_net_*.gd; do
-          #     head -5 "$f" | grep -qE '^#[[:space:]]*peers:[[:space:]]*2$' && echo "$f"
-          #   done | wc -l
-          #
-          # The `for required in` roster below is the authority the count has
-          # to match. This comment deliberately does not list which lane added
-          # which smoke: four lanes resolving this same conflict in turn each
-          # restated the lanes before them, and the block had accumulated four
-          # duplicated fragments before lane 2.B noticed. The roster is the
-          # record; prose about it only rots.
-          # The number is the TRUE count of files declaring the header, not a
-          # lane's guess at it. Regenerated from the FILES ON DISK at every
-          # landing, which is what the shard's own comment above asks for:
-          # several lanes add smokes into one wave and an incremented guess
-          # reconciles to whichever lane's conflict resolution won, not to the
-          # tree. Two landings running: one branch said 26, another 24, another
-          # 27 -- none of them right for the merged tree, which is the whole
-          # argument for regenerating rather than incrementing.
-          if [ "$count" -lt 36 ]; then
-            echo "::error::expected at least 36 tests/smoke_net_*.gd files declaring '# peers: 2', found ${count}"
-            exit 1
-          fi
-          # Named registration, on top of the count. Discovery alone would let a
-          # smoke drop out of CI by losing its `# peers: 2` header in a rebase
-          # and nobody would notice, because the count is satisfied by whatever
-          # else happens to be in the directory. Each lane that ships a net
-          # smoke adds its file here.
-          #
-          # Surveyed 2026-09-06 for genuine duplicates before this shard was
-          # split (owner direction): every one of these 36 has a distinct
-          # player-visible claim tied to a distinct lane/directive item --
-          # `host_join_leave` (a quiet host exit) and `host_exit_saves` (host
-          # exits MID-FIGHT) look like a pair but are deliberately different
-          # scenarios per their own headers, and no other pair is even that
-          # close. None dropped.
-          for required in \
-            tests/smoke_net_behind_character_joins_ahead_world.gd \
-            tests/smoke_net_boss_rewards_each_participant.gd \
-            tests/smoke_net_catch_race.gd \
-            tests/smoke_net_deploy_two_creatures.gd \
-            tests/smoke_net_farm_race.gd \
-            tests/smoke_net_fly.gd \
-            tests/smoke_net_fog_is_personal.gd \
-            tests/smoke_net_gate_opens_for_both.gd \
-            tests/smoke_net_hearts.gd \
-            tests/smoke_net_host_exit_saves.gd \
-            tests/smoke_net_host_join_leave.gd \
-            tests/smoke_net_join_by_address.gd \
-            tests/smoke_net_late_join_modified_world.gd \
-            tests/smoke_net_menu_does_not_freeze_peer.gd \
-            tests/smoke_net_movement_two_peers.gd \
-            tests/smoke_net_peer_death.gd \
-            tests/smoke_net_pickup_race.gd \
-            tests/smoke_net_realm_owner_disconnect_mid_fight.gd \
-            tests/smoke_net_reconnect_keeps_character.gd \
-            tests/smoke_net_revive.gd \
-            tests/smoke_net_riding.gd \
-            tests/smoke_net_shared_boss.gd \
-            tests/smoke_net_shared_building.gd \
-            tests/smoke_net_shared_wild_fight.gd \
-            tests/smoke_net_sleep_vote.gd \
-            tests/smoke_net_split_realms.gd \
-            tests/smoke_net_storage_concurrency.gd \
-            tests/smoke_net_stormwood_hosted_trainers.gd \
-            tests/smoke_net_stormwood_livewire.gd \
-            tests/smoke_net_stormwood_realms.gd \
-            tests/smoke_net_trade.gd \
-            tests/smoke_net_two_peers_boot.gd \
-            tests/smoke_net_water_alpha.gd \
-            tests/smoke_net_water_mounted_swimming.gd \
-            tests/smoke_net_water_swim_stone_late_join.gd \
-            tests/smoke_net_water_swimming.gd
-          do
-            case " $files " in
-              *" $required "*) ;;
-              *)
-                echo "::error::${required} is not being discovered as a 'peers: 2' net smoke"
-                exit 1
-                ;;
-            esac
-          done
-          echo "files=${files}" >> "$GITHUB_OUTPUT"
+      - name: Discover peers:2 net smokes and check the shard plan
+        # Discovery (header + requires-flag holds), the floor, the named
+        # roster and the exact one-time cover all live in
+        # tools/ci/net_shards.py; every verify-multiplayer-shard runs the same
+        # checks, so this job is the plan's readable record in the run.
+        run: python3 tools/ci/net_shards.py --check
 
   verify-multiplayer-shard:
     runs-on: ubuntu-latest
-    # Eleven-way scheduling: ten ordinary LPT bins, then split_realms alone.
-    # (Nine-way overflowed the 1200-second budget once F17-F20 added its
-    # unmeasured smokes: eight bins at 1186-1228 s. Ten-way overflowed once
-    # the F18 portal flip added f18_fixture_teaching, f20_ending and
-    # f20_home_diagnostic to the gate: four bins at 1209-1218 s.)
-    # Completed case timestamps from run 37120921415 replace stale weights;
-    # failed elapsed times are only scheduling lower bounds, never successful
-    # runtime measurements. The original 1200-second smoke budget and
-    # 30-minute job limit remain. The F48 co-op suites (owner, 2026-10-03)
+    # Eighteen shards: seventeen longest-processing-time first on MEASURED
+    # durations (tools/ci/net_shards.py: the slowest of three green full runs
+    # per smoke), so the longest shard's job stays under ~13 minutes, then
+    # split_realms alone (a hang cannot take other smokes down with it). The
+    # original 30-minute job limit stays. Each shard discovers the smokes
+    # itself, so this matrix needs only `changes` and queues in the FIRST
+    # wave rather than behind discover-net-smokes (it used to wait ~6 min for
+    # a runner behind ~30 jobs). The F48 co-op suites (owner, 2026-10-03)
     # live on `tb/coop` until F48 itself is built; they return with it.
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
     timeout-minutes: 30
-    needs:
-      - changes
-      - discover-net-smokes
+    needs: changes
     if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-multiplayer-shard|'))
     steps:
       - uses: actions/checkout@v4
@@ -2932,152 +2845,10 @@ jobs:
             !/shots/
             !/assets_raw/
             !/archive/
-      - uses: ./.github/actions/setup-godot
       - name: Select this shard's net smokes
         id: select
-        env:
-          ALL_FILES: ${{ needs.discover-net-smokes.outputs.files }}
-          SHARD: ${{ matrix.shard }}
-          SHARD_COUNT: 11
-          # Smoke wall time only. This leaves ten minutes of the unchanged
-          # 30-minute job for checkout, Godot setup, upload and runner drift.
-          MEASURED_SHARD_BUDGET_SECONDS: 1200
-        run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          import os
-          import sys
-
-          # Ceil seconds from original wrapper group start through return in
-          # run 37120921415. Nine cases lacking a new successful completion keep
-          # their earlier successful 34158919494/local measurement. Raw timing
-          # provenance is retained in the existing main-green PROOF directory.
-          successful_costs = {
-              "tests/smoke_net_behind_character_joins_ahead_world.gd": 110,
-              "tests/smoke_net_boss_rewards_each_participant.gd": 110,
-              "tests/smoke_net_catch_race.gd": 118,
-              "tests/smoke_net_client_trainer_rewards.gd": 225,
-              "tests/smoke_net_deploy_two_creatures.gd": 111,
-              "tests/smoke_net_farm_race.gd": 96,
-              "tests/smoke_net_fly.gd": 109,
-              "tests/smoke_net_fog_is_personal.gd": 100,
-              "tests/smoke_net_gate_opens_for_both.gd": 130,
-              "tests/smoke_net_hearts.gd": 112,
-              "tests/smoke_net_host_exit_saves.gd": 137,
-              "tests/smoke_net_host_join_leave.gd": 102,
-              "tests/smoke_net_identity_admission.gd": 128,
-              "tests/smoke_net_join_by_address.gd": 127,
-              "tests/smoke_net_join_version_mismatch.gd": 123,
-              "tests/smoke_net_late_join_modified_world.gd": 124,
-              "tests/smoke_net_meadows_identity_fresh_join.gd": 169,
-              "tests/smoke_net_menu_does_not_freeze_peer.gd": 160,
-              "tests/smoke_net_movement_two_peers.gd": 136,
-              "tests/smoke_net_peer_death.gd": 99,
-              "tests/smoke_net_pickup_race.gd": 115,
-              "tests/smoke_net_realm_owner_disconnect_mid_fight.gd": 306,
-              "tests/smoke_net_reconnect_keeps_character.gd": 171,
-              "tests/smoke_net_revive.gd": 164,
-              "tests/smoke_net_riding.gd": 153,
-              "tests/smoke_net_shared_boss.gd": 117,
-              "tests/smoke_net_shared_building.gd": 129,
-              "tests/smoke_net_shared_wild_fight.gd": 89,
-              "tests/smoke_net_sleep_vote.gd": 94,
-              "tests/smoke_net_split_realms.gd": 409,
-              "tests/smoke_net_storage_concurrency.gd": 135,
-              "tests/smoke_net_stormwood_hosted_trainers.gd": 122,
-              "tests/smoke_net_stormwood_realms.gd": 116,
-              "tests/smoke_net_trade.gd": 140,
-              "tests/smoke_net_two_peers_boot.gd": 83,
-              "tests/smoke_net_veridian_full_refusal.gd": 132,
-              "tests/smoke_net_veridian_mixed.gd": 100,
-              "tests/smoke_net_water_alpha.gd": 86,
-              "tests/smoke_net_water_local_chains.gd": 74,
-              "tests/smoke_net_water_mounted_swimming.gd": 85,
-              "tests/smoke_net_water_swim_stone_late_join.gd": 63,
-              "tests/smoke_net_water_swimming.gd": 95,
-          }
-          # Completed FAILED attempts from 37120921415: lower bounds only.
-          failed_elapsed_lower_bounds = {
-              "tests/smoke_net_boss_rewards_each_participant.gd": 108,
-              "tests/smoke_net_catch_race.gd": 202,
-              "tests/smoke_net_cloudreach_riding.gd": 127,
-              "tests/smoke_net_foundations.gd": 234,
-              "tests/smoke_net_session_host_first_realm.gd": 133,
-              "tests/smoke_net_shared_boss.gd": 153,
-              "tests/smoke_net_shared_wild_fight.gd": 159,
-              "tests/smoke_net_stormwood_finalized_death.gd": 122,
-              "tests/smoke_net_stormwood_glass_for_bryn.gd": 128,
-              "tests/smoke_net_stormwood_hosted_trainers.gd": 123,
-              "tests/smoke_net_stormwood_livewire.gd": 123,
-              "tests/smoke_net_stormwood_realms.gd": 99,
-              "tests/smoke_net_veridian_choices.gd": 110,
-              "tests/smoke_net_veridian_relic_key.gd": 137,
-              "tests/smoke_net_veridian_same_five.gd": 473,
-              "tests/smoke_net_water_alpha.gd": 86,
-              "tests/smoke_net_water_deep_watch_chart.gd": 104,
-              "tests/smoke_net_water_return.gd": 228,
-          }
-          # Slowest successful ordinary smoke, excluding isolated split_realms.
-          # An unknown discovery gets this explicit reservation until measured.
-          ordinary_fallback = 306
-          isolated = [
-              "tests/smoke_net_split_realms.gd",
-          ]
-          files = os.environ["ALL_FILES"].split()
-          shard = int(os.environ["SHARD"])
-          shard_count = int(os.environ["SHARD_COUNT"])
-          budget = int(os.environ["MEASURED_SHARD_BUDGET_SECONDS"])
-          ordinary_count = shard_count - len(isolated)
-          if ordinary_count < 1 or not 1 <= shard <= shard_count:
-              sys.exit("invalid shard configuration")
-          missing = sorted(set(isolated) - set(files))
-          if missing:
-              sys.exit(f"required isolated net smokes were not discovered: {missing}")
-
-          unknown = sorted(set(files) - successful_costs.keys() - set(isolated))
-          for path in unknown:
-              print(f"::warning::{path} has no successful measurement; reserving at least {ordinary_fallback}s")
-          weights = {
-              path: max(successful_costs.get(path, ordinary_fallback),
-                        failed_elapsed_lower_bounds.get(path, 0))
-              for path in files
-          }
-          for path in isolated[1:]:
-              weights[path] = budget  # Capacity reservation, NOT measured wall time.
-
-          bins = [[] for _ in range(shard_count)]
-          loads = [0 for _ in range(shard_count)]
-          for offset, path in enumerate(isolated, start=ordinary_count):
-              bins[offset].append(path)
-              loads[offset] = weights[path]
-          weighted = sorted(
-              (path for path in files if path not in isolated),
-              key=lambda path: (-weights[path], path),
-          )
-          for path in weighted:
-              target = min(range(ordinary_count), key=lambda i: (loads[i], i))
-              bins[target].append(path)
-              loads[target] += weights[path]
-
-          # Deterministic complete one-time cover, unchanged setup/teardown
-          # reserve, and no other case sharing an isolated suite's bin.
-          assigned = [path for group in bins for path in group]
-          if sorted(assigned) != sorted(files) or len(assigned) != len(set(assigned)):
-              sys.exit("net-shard plan is not an exact one-time cover")
-          for offset, path in enumerate(isolated, start=ordinary_count):
-              if bins[offset] != [path]:
-                  sys.exit(f"{path} must be the only smoke on its shard")
-          overloaded = [i + 1 for i, load in enumerate(loads) if load > budget]
-          if overloaded:
-              sys.exit(f"net-shard scheduling budget exceeded by shard(s) {overloaded}: {loads}")
-
-          for index, (group, load) in enumerate(zip(bins, loads), start=1):
-              print(f"plan shard {index}/{shard_count}: scheduling_weight={load}s files={' '.join(group)}")
-          mine = " ".join(bins[shard - 1])
-          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
-              output.write(f"files={mine}\n")
-              output.write(f"scheduling_weight_seconds={loads[shard - 1]}\n")
-          PY
+        run: python3 tools/ci/net_shards.py --shard ${{ matrix.shard }}
+      - uses: ./.github/actions/setup-godot
       - name: Run net smokes
         if: ${{ !cancelled() && steps.select.outputs.files != '' }}
         env:
@@ -3176,6 +2947,7 @@ jobs:
     # requires every verify job and export == success before a merge.
     needs:
       - changes
+      - queue-after-long
     if: |
       needs.changes.outputs.code == 'true'
 
@@ -3282,7 +3054,9 @@ jobs:
       matrix:
         group: [space, capacity, recovery]
     timeout-minutes: 50
-    needs: changes
+    needs:
+      - changes
+      - queue-after-longest
     if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-veridian-offer|'))
     steps:
       - uses: actions/checkout@v4
@@ -3349,7 +3123,9 @@ jobs:
     # are run locally and recorded under ralph/reports/CLOUDREACH-LANE/f08-persistence/.
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    needs: changes
+    needs:
+      - changes
+      - queue-after-long
     if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-cloudreach-persistence|'))
     steps:
       - uses: actions/checkout@v4
@@ -3403,7 +3179,9 @@ jobs:
         # under the account's ~20 concurrent-job cap.
         segment: [s0_setup_and_control, s1_ride_a, s2_ride_b]
     timeout-minutes: 30
-    needs: changes
+    needs:
+      - changes
+      - queue-after-longest
     if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-cloudreach-midride-rejoin|'))
     steps:
       - uses: actions/checkout@v4
@@ -3470,7 +3248,9 @@ jobs:
       matrix:
         chain: [midride, bracket]
     timeout-minutes: 45
-    needs: changes
+    needs:
+      - changes
+      - queue-after-long
     if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-unbroken-chains|'))
     continue-on-error: true
     steps:
@@ -3515,7 +3295,9 @@ jobs:
     runs-on: ubuntu-latest
     # One job for every chain (each check is ~1 s; the job is setup).
     timeout-minutes: 15
-    needs: changes
+    needs:
+      - changes
+      - queue-after-long
     if: needs.changes.outputs.full == 'true'
     steps:
       - uses: actions/checkout@v4
@@ -3552,6 +3334,8 @@ jobs:
     if: always()
     needs:
       - changes
+      - queue-after-longest
+      - queue-after-long
       - verify-veridian-offer
       - verify-cloudreach-midride-rejoin
       - verify-segment-handoffs

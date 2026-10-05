@@ -211,7 +211,10 @@ func _run() -> void:
 						pilot.context = {"chapter": "water", "band": "water_named", "after_south_bridge": true,
 							"pattern_id": named_id if NAMED_PATTERNS.has(named_id) else ""}
 					var result: Dictionary = await pilot.fight(self, party, foes, bool(entry.owned),
-						hash("%s/%s/%d" % [entry.id, starter, seed_index]), policy)
+						hash("%s/%s/%d" % [entry.id, starter, seed_index]),
+						# COMBAT §7's reader switches (coordinator ruling 2026-10-05); the
+						# alpha's own pilot keeps its policy name.
+						"SWITCH_READER" if policy == "READER" and entry.kind != "alpha" else policy)
 					var tells: Array = []
 					for event: Dictionary in result.get("events", []):
 						if str(event.get("event", "")) == "telegraph": tells.append(float(event.seconds))

@@ -33,7 +33,15 @@ class Writer extends RefCounted:
 		writes += 1
 		return accepted
 
+class PartyMember extends RefCounted:
+	var uid := ""
+
+class PartyFixture extends RefCounted:
+	var list: Array = []
+	func members() -> Array: return list
+
 class GameFixture extends Node:
+	var party: RefCounted = PartyFixture.new()
 	var local: RefCounted
 	var world: RefCounted
 	var save_system: RefCounted
@@ -43,6 +51,9 @@ class GameFixture extends Node:
 class Discoveries extends RefCounted:
 	var value := {}
 	func admission_landmarks() -> Dictionary: return value.duplicate(true)
+	func adopt_landmarks(discovered: Dictionary) -> bool:
+		value = discovered.duplicate(true)
+		return true
 
 class Session extends Node:
 	var game: Node
@@ -1222,3 +1233,56 @@ func test_host_minted_arrival_reset_tolerates_its_body_view_once_and_grants_no_d
 		"travel_valid": false, "new_landmarks": []})
 	service.receive_host(2, _envelope({"op": "inputs", "inputs": service.local.inputs.slice(4).duplicate(true)}))
 	assert_eq(stream.error, "travel_baseline_mismatch", "a replayed arrival proof is refused")
+
+func test_rejoin_with_unreplayed_landmarks_readmits_on_the_hosts_held_set_and_prefixes_match() -> void:
+	# Review G1 (render g1-departure-2peer-r6): a guest that discovered a
+	# landmark the host never replayed before it left rejoins with a larger set.
+	# The host keeps its held set (seed_discovered_landmarks), so admission must
+	# readmit on it and the owner adopt it; otherwise both cursors seed their
+	# input prefix differently and every later checkpoint ends
+	# owner_passive_exact_projection_conflict with identical states.
+	var character: String = before.character_id
+	var held: Dictionary = session._character_authority.discovered_landmarks(character)
+	var owner_seen := {"meadows": ["g1-landmark-the-host-never-replayed"]}
+	var hash := preload("res://scripts/net/research_passive_preparation.gd")
+	session.host = true
+	service.hosts.clear()
+	session.messages.clear()
+	var declaration := {"id": "0123456789abcdef0123456789abcdef", "baseline_hash": hash.fingerprint(before)}
+	service.admitted(2, {"portable_authority": before.duplicate(true), "discovered_landmarks": owner_seen,
+		"owner_passive_stream": declaration})
+	assert_true(service.hosts.has(character), "the host admits the rejoined stream")
+	var readmits := session.messages.filter(func(m: Dictionary) -> bool: return m.get("op") == "readmit")
+	assert_eq(readmits.size(), 1, "a landmark mismatch alone forces a readmit")
+	if readmits.size() != 1: return
+	var readmit: Dictionary = readmits[0]
+	assert_eq(readmit.get("discovered"), held, "carrying the host's held landmarks")
+	var host_prefix: String = service.hosts[character].cursor.prefix_hash
+	assert_eq(host_prefix, REPLAY.begin(before, held).prefix_hash, "the host seeds from its held set")
+	# The owner side of the same exchange.
+	session.host = false
+	session.maps.value = owner_seen.duplicate(true)
+	for card: Dictionary in before.party:
+		var member := PartyMember.new()
+		member.uid = str(card.uid)
+		game.party.list.append(member)
+	service.arm_owner(before, owner_seen)
+	assert_ne(service.local.prefix_hash, host_prefix, "before the readmit the two seeds differ (the G1 failure)")
+	service._readmit_owner(readmit)
+	assert_eq(session.maps.value, held, "the owner adopts the host's held landmarks")
+	assert_eq(service.local.prefix_hash, host_prefix, "and both input prefixes now start equal")
+	assert_eq(session.messages.back().get("op"), "readmitted")
+
+
+func test_rejoin_with_matching_landmarks_still_admits_directly() -> void:
+	var character: String = before.character_id
+	var held: Dictionary = session._character_authority.discovered_landmarks(character)
+	var hash := preload("res://scripts/net/research_passive_preparation.gd")
+	session.host = true
+	service.hosts.clear()
+	session.messages.clear()
+	service.admitted(2, {"portable_authority": before.duplicate(true), "discovered_landmarks": held,
+		"owner_passive_stream": {"id": "fedcba9876543210fedcba9876543210", "baseline_hash": hash.fingerprint(before)}})
+	assert_true(service.hosts.has(character))
+	assert_true(session.messages.filter(func(m: Dictionary) -> bool: return m.get("op") == "readmit").is_empty(),
+		"an exact rejoin needs no readmit")

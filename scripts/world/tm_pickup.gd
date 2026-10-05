@@ -32,6 +32,7 @@ const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
 ## store SB9 documents. Set once the pickup is actually taken (OF29: "taken
 ## from the world", no longer "this move is teachable forever").
 const FLAG_PREFIX := "tm:"
+const PICKUP_SPECS := preload("res://scripts/net/pickup_spec_registry.gd")
 
 ## A `kind: "tm"` item id is the SAME string as its data/moves/tms.json id
 ## (see items.json's own `_comment_tm`), so this prop hands `_tm_id` straight
@@ -53,6 +54,8 @@ var _taken := false
 func setup(tm_id: String, realm_id: String = "meadows") -> void:
 	_tm_id = tm_id
 	_realm_id = realm_id
+	# Host-side truth for a guest's claim (pickup_spec_registry.gd).
+	PICKUP_SPECS.register(flag_id(_tm_id), _tm_id, 1)
 	add_to_group("progression_restore")
 	_tms = TM_DB.load_default()
 	_build_visual()

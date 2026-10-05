@@ -143,6 +143,8 @@ var _route_cue_left := 0.0
 ## F10#2: the `guard_stance` frontal cone drawn for the current tell.
 var _guard_cone: MeshInstance3D = null
 var _lunge_tell_total := 0.0
+## Host tick (ms) the current tell proper became visible; -1 when none.
+var _tell_visible_since_ms := -1
 
 ## OWNER PLAYTEST 2026-09-02 finding #6: "aiming at the creature is too hard...
 ## they should move a little less or in slow motion once you go into catch
@@ -1189,6 +1191,7 @@ func _announce_tell() -> void:
 	# retain the existing impact-time animation.
 	if _animator != null and _animator.has_method("begin_attack_telegraph"):
 		_animator.call("begin_attack_telegraph", _beat_left)
+	_tell_visible_since_ms = Time.get_ticks_msec()
 	telegraph_started.emit(_beat_left)
 
 
@@ -1440,6 +1443,23 @@ static func swept_contact(a: Vector2, b: Vector2, target: Vector2, reach: float)
 ## a fight that has already ended costs nothing.
 func set_catch_aim_active(value: bool) -> void:
 	_catch_aim_active = value
+
+
+## Seconds the current tell proper has been visible (route cue excluded), or
+## -1 when no tell is showing. COMBAT §4's forced-break read test uses it.
+func tell_visible_s() -> float:
+	if not is_winding_up():
+		return -1.0
+	return maxf(0.0, _lunge_tell_total - _beat_left)
+
+
+## The host tick (ms) at which the current tell proper became visible, or -1
+## when no tell is showing. The host compares a guest's committed charge
+## start against it, so link latency never widens the read window.
+func tell_visible_since_ms() -> int:
+	if not is_winding_up():
+		return -1
+	return _tell_visible_since_ms
 
 
 func is_winding_up() -> bool:

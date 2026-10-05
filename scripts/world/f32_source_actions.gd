@@ -3,6 +3,7 @@ extends RefCounted
 ## F32 typed staging inside Foundation's EXISTING character/world transaction.
 ## All context comes from registered live host placements and admitted records.
 ## This never promotes state, writes a save, grants items, or creates a journal.
+const RECEIPT_WINDOWS := preload("res://scripts/creatures/receipt_windows.gd")
 const INVENTORY := preload("res://autoload/inventory.gd")
 const ITEM_DB := preload("res://autoload/item_db.gd")
 const HARVEST := preload("res://scripts/world/harvest_logic.gd")
@@ -77,7 +78,15 @@ static func stage(current: Dictionary, revision: int, op: String, intent: Dictio
 	for index: int in inventory.slot_count():
 		var stack := inventory.stack_at(index)
 		next.inventory.append(null if stack.is_empty() else stack)
-	var limit := int(_read("res://data/config/f32_runtime.json").get("maximum_transaction_receipts", 0))
+	var runtime := _read("res://data/config/f32_runtime.json")
+	# Coordinator ruling: F32 receipts stay bounded instead of refusing after
+	# 4096 gathers. Only the newest `f32_receipt_window` survive; an evicted one
+	# cannot replay, because every F32 op has a stronger primary guard (node
+	# stock revision, plot revision, the forge's completed-channel ticket,
+	# groom's own care/shed receipts) that its original commit already advanced.
+	next.redesign_character.transaction_receipts = compact_f32_receipts(
+		next.redesign_character.transaction_receipts, str(current.character_id), int(runtime.get("f32_receipt_window", 0)))
+	var limit := int(runtime.get("maximum_transaction_receipts", 0))
 	if limit < 1 or next.redesign_character.transaction_receipts.size() >= limit:
 		return _deny("receipt_budget")
 	next.redesign_character.transaction_receipts.append(receipt)
@@ -88,6 +97,26 @@ static func stage(current: Dictionary, revision: int, op: String, intent: Dictio
 		"source_identity": {"world_id": context.world_id, "realm": context.realm,
 			"source_id": context.source_id, "generation": context.source_generation},
 		"outputs": plan.get("outputs", {}).duplicate(true)}
+
+
+## `receipts` with the oldest of this character's F32 receipts dropped so at
+## most `window - 1` remain (room for the one being appended). Receipts are
+## appended in order, so the front is the oldest. Other receipt kinds and an
+## unset window (< 2) are left untouched.
+static func compact_f32_receipts(receipts: Array, character_id: String, window: int) -> Array:
+	if window < 2: return receipts
+	var prefix := "craft:%s:f32:" % character_id
+	var drop := -(window - 1)
+	for raw: Variant in receipts:
+		if str(raw).begins_with(prefix): drop += 1
+	if drop <= 0: return receipts
+	var out: Array = []
+	for raw: Variant in receipts:
+		if drop > 0 and str(raw).begins_with(prefix):
+			drop -= 1
+			continue
+		out.append(raw)
+	return out
 
 
 static func _node(intent: Dictionary, host: Dictionary) -> Dictionary:
@@ -188,6 +217,7 @@ static func _groom(current: Dictionary, revision: int, intent: Dictionary,
 	if care.get("ok") != true: return _deny(str(care.get("code", "care_stage_refused")))
 	if care.get("duplicate") == true: return _deny("already_groomed")
 	var next: Dictionary = care.state.duplicate(true)
+	next.redesign_character.transaction_receipts = RECEIPT_WINDOWS.compact(next.redesign_character.transaction_receipts, "groom", str(current.character_id))
 	next.redesign_character.transaction_receipts.append(shed.receipt_id)
 	return {"ok": true, "state": next, "outputs": shed.outputs}
 

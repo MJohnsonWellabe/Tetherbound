@@ -64,6 +64,8 @@ const ACTOR_VITALS := preload("res://scripts/net/actor_vitals_delivery.gd")
 ## channel, so a joiner's world snapshot cannot queue behind somebody's gather.
 
 const WORLD_LEDGER := preload("res://scripts/net/world_ledger.gd")
+const PICKUP_SPECS := preload("res://scripts/net/pickup_spec_registry.gd")
+const GATHER_BATCHES := preload("res://scripts/net/gather_batches.gd")
 const SESSION := preload("res://scripts/net/session.gd")
 ## OP-0905-18: a no-op unless the granted item is a known evolution catalyst.
 ## Called from `_apply_player_ops()`'s `item_grant` case, which is already
@@ -175,6 +177,7 @@ func journal_foundation_event(source: String, duties: Array) -> Dictionary:
 	return {"ok": true, "durable": true, "delivery_id": row.delivery_id}
 
 func _process(delta: float) -> void:
+	_gather_poll()
 	_satchel_poll -= delta
 	if _satchel_poll > 0.0:
 		return
@@ -398,7 +401,13 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 		if session == null: return _pending(intent, false, "Altar building is not ready yet.")
 		return session.call("host_altar_building", peer_id, altar.request)
 	var satchel_transaction := kind in ["death_satchel_create", "death_satchel_transfer"]
-	var durable_world_transaction := satchel_transaction or kind in ["reward_grant", "water_dock_action", "river_nest_clear", "ripplet_sunken_claim"]
+	# A guest's one-time find pays through a journaled reward delivery
+	# (world_ledger._claim_pickup), so it saves like any other reward.
+	var guest_pickup := kind == "claim_pickup" and peer_id != _local_peer_id() and not str(intent.get("item", "")).is_empty() \
+		and WORLD_LEDGER.guest_pickup_routed(str(intent.get("flag", ""))) and not _registered_character(peer_id).is_empty() \
+		and not PICKUP_SPECS.lookup(str(intent.get("flag", ""))).is_empty() \
+		and not (str(intent.get("flag", "")).begins_with(WORLD_LEDGER.FELLED_FLAG_PREFIX) and GATHER_BATCHES.enabled())
+	var durable_world_transaction := satchel_transaction or guest_pickup or kind in ["reward_grant", "water_dock_action", "river_nest_clear", "ripplet_sunken_claim", "gather_flush"]
 	var before_satchel: Dictionary = {}
 	if durable_world_transaction:
 		before_satchel = {"world": ledger.world.save_data(), "seq": ledger.seq,
@@ -434,6 +443,11 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 				service = node
 				break
 		if service != null: intent["_ripplet_actor"] = service.actor_context(peer_id, str(intent.get("creature_uid", "")))
+	if kind == "harvest" and peer_id != _local_peer_id():
+		# Ruling (b) / review S5: a guest's tool-gated harvest is checked against
+		# the tools in its ADMITTED record, never the request.
+		intent = intent.duplicate(true)
+		intent["_actor_item_ids"] = _admitted_item_ids(peer_id)
 	# Every kind can write world flags, so every intent carries the admitted
 	# identity; a claimed `_actor_character_id` is always overwritten.
 	intent = with_host_actor(intent, _registered_character(peer_id))
@@ -458,7 +472,7 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 		# Reward and dock publication always require a durable world file. Death-
 		# satchel fixtures historically allow an unnamed session, so preserve only
 		# that legacy path.
-		if kind in ["reward_grant", "water_dock_action", "river_nest_clear", "ripplet_sunken_claim"] or not world_id.is_empty():
+		if guest_pickup or kind in ["reward_grant", "water_dock_action", "river_nest_clear", "ripplet_sunken_claim", "gather_flush"] or not world_id.is_empty():
 			var saver: RefCounted = satchel_game.get("save_system")
 			if saver == null or not bool(saver.call("save_world", satchel_game, world_id)):
 				# No personal settlement or publication happened yet. Roll back
@@ -476,6 +490,8 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 							"The world could not save Doss's repair. Your items remain safe." \
 							if kind == "river_nest_clear" else "The world could not save this satchel move. Your items remain safe."))
 				if kind == "ripplet_sunken_claim": failure_reason = "The sunken find could not save. Nothing was claimed."
+				if guest_pickup: failure_reason = "The world could not save this find. Nothing was claimed."
+				if kind == "gather_flush": failure_reason = "The world could not save your gathering yet; it stays on its way."
 				return {"ok": false, "pending": false, "kind": str(intent.kind), "peer": peer_id,
 					"code": "journal_failed", "reason": failure_reason,
 					"world_instance_id": SATCHEL_ESCROW.world_instance(ledger.world),
@@ -483,7 +499,7 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 	# A host recipient can durably ACK while its player op is applied. Publish
 	# the pending journal first so its later acceptance delta cannot overtake it
 	# on the same reliable ledger channel.
-	if kind in ["reward_grant", "river_nest_clear", "ripplet_sunken_claim"]:
+	if guest_pickup or kind in ["reward_grant", "river_nest_clear", "ripplet_sunken_claim", "gather_flush"]:
 		delta_applied.emit(delta)
 		if _can_rpc() and _is_multi_peer():
 			rpc("_rpc_delta", delta)
@@ -495,7 +511,126 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 		delta_applied.emit(delta)
 		if _can_rpc() and _is_multi_peer():
 			rpc("_rpc_delta", delta)
+	_gather_after_commit(delta)
 	return verdict
+
+
+# --- coordinator ruling (b): a guest's batched gathers --------------------------
+
+## Host bookkeeping only (the open batch itself is the durable world carrier):
+## when each character's open batch received its first gather.
+var _gather_open_since: Dictionary = {}
+
+func _gather_after_commit(delta: Dictionary) -> void:
+	var game := _game()
+	if game == null or not bool(game.call("is_host")): return
+	for raw: Variant in delta.get("ops", []):
+		if not raw is Dictionary or str(raw.get("op", "")) != "gather_accrue": continue
+		var character := str(raw.get("character_id", ""))
+		if not _gather_open_since.has(character): _gather_open_since[character] = Time.get_ticks_msec()
+		var row := GATHER_BATCHES.batch(game.get("world").redesign_world, character)
+		if not row.is_empty() and int(row.hits) >= GATHER_BATCHES.max_hits(): flush_gather_batch(character)
+
+
+var _gather_scan_ms := 0
+
+func _gather_poll() -> void:
+	var game := _game()
+	if game == null or not bool(game.call("is_host")): return
+	# A saved open batch (host reload or restart) has no in-memory timer yet:
+	# pick it up so it flushes without waiting for the guest's next gather.
+	if Time.get_ticks_msec() - _gather_scan_ms >= 2000:
+		_gather_scan_ms = Time.get_ticks_msec()
+		var all: Variant = game.get("world").redesign_world.get(GATHER_BATCHES.FIELD, {})
+		if all is Dictionary:
+			for character: String in all:
+				var row := GATHER_BATCHES.batch(game.get("world").redesign_world, character)
+				if not row.is_empty() and not (row.open as Dictionary).is_empty() and not _gather_open_since.has(character):
+					_gather_open_since[character] = Time.get_ticks_msec()
+	if _gather_open_since.is_empty(): return
+	var due := GATHER_BATCHES.flush_seconds() * 1000.0
+	for character: String in _gather_open_since.keys():
+		if float(Time.get_ticks_msec() - int(_gather_open_since[character])) >= due:
+			flush_gather_batch(character)
+
+
+## Host: journal `character`'s open batch as one durable reward delivery to
+## its connected peer (or to nobody when it has left). Also called on leave
+## and before a guest's foundation action. True when nothing is left open.
+func flush_gather_batch(character: String) -> bool:
+	var game := _game()
+	if game == null or not bool(game.call("is_host")) or ledger == null: return false
+	var row := GATHER_BATCHES.batch(game.get("world").redesign_world, character)
+	if row.is_empty() or (row.open as Dictionary).is_empty():
+		_gather_open_since.erase(character)
+		return row.is_empty() == false
+	var verdict := _commit_here({"kind": "gather_flush", "realm": "meadows", "character_id": character,
+		"target_peer": _peer_for_character(character)}, _local_peer_id())
+	if bool(verdict.get("ok", false)):
+		_gather_open_since.erase(character)
+		return true
+	# A failed save rolled back: keep the batch open and retry on the next poll.
+	_gather_open_since[character] = Time.get_ticks_msec()
+	return false
+
+
+## Host: the owner-passive replay credited this batch to the character
+## authority, so the row may be pruned once the guest's ACK has also landed.
+func mark_gather_replayed(character: String, delivery: Dictionary) -> void:
+	var seq_replayed := GATHER_BATCHES.seq_of(str(delivery.get("source", "")))
+	var game := _game()
+	if seq_replayed < 1 or game == null or not bool(game.call("is_host")) or ledger == null: return
+	_commit_here({"kind": "gather_replayed", "realm": "meadows", "character_id": character,
+		"seq": seq_replayed}, _local_peer_id())
+
+
+func _admitted_item_ids(peer_id: int) -> Array:
+	var game := _game()
+	var session: Variant = game.get("session") if game != null else null
+	var authority: Variant = session.get("_character_authority") if session != null else null
+	var character := _registered_character(peer_id)
+	var state: Dictionary = authority.call("state", character) if authority != null and not character.is_empty() else {}
+	var ids: Array = []
+	for slot: Variant in state.get("inventory", []):
+		if slot is Dictionary and not ids.has(str(slot.get("id", ""))): ids.append(str(slot.get("id", "")))
+	return ids
+
+
+func _peer_for_character(character: String) -> int:
+	var game := _game()
+	var session: Variant = game.get("session") if game != null else null
+	var registry: Variant = session.call("registry") if session != null and session.has_method("registry") else null
+	if registry == null: return 0
+	for row: Variant in (registry as RefCounted).call("rows"):
+		if row is Dictionary and str(row.get("character_id", "")) == character:
+			return int(row.get("peer_id", 0))
+	return 0
+
+
+## Guest: an "incoming" note at the hit (presentation only; the satchel fills
+## when the batch's delivery lands). A settled batch escrow row is pruned only
+## when it belongs to THIS world and the host's row for it is gone (pruned
+## there once accepted and credited), so a pending or foreign-world row is
+## never dropped and paid again (review B2).
+func _gather_guest_view(delta: Dictionary) -> void:
+	var game := _game()
+	if game == null or bool(game.call("is_host")) or game.get("local") == null: return
+	var character := str(game.get("local").character_id)
+	var prune := false
+	for raw: Variant in delta.get("ops", []):
+		if not raw is Dictionary: continue
+		var op := str(raw.get("op", ""))
+		if op == "gather_accrue" and str(raw.get("character_id", "")) == character:
+			var items: Variant = game.get("items")
+			var label := str(items.call("item_name", str(raw.item))) if items != null else str(raw.item)
+			game.call("push_world_message", "+%d %s on its way" % [int(raw.count), label])
+		elif op in ["gather_replayed", "reward_delivery_accept"] and str(raw.get("character_id", "")) == character:
+			prune = true
+	if not prune: return
+	var world: RefCounted = game.get("world")
+	var escrow: Dictionary = game.get("local").satchel_escrow
+	for id: String in GATHER_BATCHES.guest_prunable(escrow, world.reward_deliveries, str(world.reward_delivery_namespace), character):
+		escrow.erase(id)
 
 
 func _reward_recipients(intent: Dictionary, requesting_peer: int) -> Array:
@@ -830,6 +965,7 @@ func apply_remote_delta(delta: Dictionary) -> void:
 	_apply_player_ops(delta)
 	_settle_satchel_receipts()
 	_restore_progression()
+	_gather_guest_view(delta)
 	delta_applied.emit(delta)
 
 

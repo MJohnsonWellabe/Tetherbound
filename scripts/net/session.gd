@@ -1,4 +1,5 @@
 extends Node
+const RETAINED_SETTLEMENT := preload("res://scripts/net/retained_settlement.gd")
 const ALTAR_TRACE := preload("res://scripts/net/altar_commit_trace.gd")
 const BACKGROUND_TRACE := preload("res://scripts/net/background_work_trace.gd")
 
@@ -530,6 +531,7 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 	else: context = _foundation_source(peer, envelope.station_key, part)
 	if envelope.op == "wild_capture": context = _foundation_capture_context(peer, envelope.station_key)
 	if envelope.op == "relic_hang": context = _foundation_relic_context(peer, str(envelope.intent.get("biome", "")))
+	if envelope.op == "relic_power": context = _foundation_relic_power_context(peer)
 	if envelope.op == "regional_ack":
 		var ending := preload("res://scripts/story/regional_homecoming.gd")
 		var expected: Dictionary = ending.context(_game()) if peer == local_peer_id() else {}
@@ -755,6 +757,30 @@ func foundation_grounded_arrival(producer: Node, envelope: Dictionary, permit: D
 	if result.get("durable") != true: return result
 	return _foundation_decision(peer, world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character), {}))
 
+## F31#2: the relic power screen opens at ANY Shrine Room pedestal outside
+## combat (UX §shrine). Same actual-position proof as a hang, any pedestal.
+func _foundation_relic_power_context(peer: int) -> Dictionary:
+	if not portal_runtime_ready() or _altar_peer_in_combat(peer): return {}
+	var writer := get_node_or_null(^"LedgerRpc")
+	if writer == null: return {}
+	var actor: Dictionary = writer.call("_water_actor_context", peer, {})
+	if actor.get("realm") != "meadows" or not actor.get("position") is Vector3: return {}
+	var meadows := _portal_world_node("meadows")
+	if meadows == null: return {}
+	var radius := float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.interaction_radius_m)
+	for pedestal: Node in get_tree().get_nodes_in_group("crossing_hall_pedestals"):
+		if meadows.is_ancestor_of(pedestal) and actor.position.distance_to((pedestal as Node3D).global_position) <= radius:
+			return {"character_id": _authority_character(peer), "expected_revision": int(_character_authority.call("revision", _authority_character(peer))),
+				"in_range": true, "in_combat": false, "shrine_power": true, "realm": "meadows", "source_key": "shrine_power"}
+	return {}
+
+
+func request_relic_power(heart_id: String) -> Dictionary:
+	var view := homestead_personal_view()
+	var edit_id := Crypto.new().generate_random_bytes(16).hex_encode()
+	return _foundation_send("relic_power", "shrine_power", {"heart_id": heart_id, "edit_id": edit_id}, int(view.get("registry_revision", -1)))
+
+
 func _foundation_relic_context(peer: int, biome: String) -> Dictionary:
 	if not portal_runtime_ready() or _altar_peer_in_combat(peer): return {}
 	var writer := get_node_or_null(^"LedgerRpc")
@@ -938,6 +964,8 @@ func _retry_foundation_events() -> void:
 		var raw: Dictionary = work.event
 		var duty: Dictionary = work.duty
 		if duty.action == "capture_offer": continue # Requires the owner's real five-slot choice.
+		# Ruling R2: settled durably in the world, whatever its receipt's fate.
+		if RETAINED_SETTLEMENT.duty_settled(world.redesign_world, str(raw.delivery_id), duty): continue
 		if duty.action == "boss_relic":
 			var handoff := preload("res://scripts/net/encounter_rewards.gd").chapter_hand_off(str(duty.intent.trainer_id), str(duty.context.realm))
 			if not preload("res://scripts/net/encounter_rewards.gd").chapter_delivery_ready(handoff, world.flags.all_set()): continue
@@ -3431,6 +3459,10 @@ func _on_peer_disconnected(peer_id: int) -> void:
 	if not is_host():
 		return
 	var lost_character := str((_registry.call("row", peer_id) as Dictionary).get("character_id", ""))
+	# Ruling (b): a departing guest's open gather batch is journaled now; its
+	# rejoin's reward reconciliation applies it.
+	var gather_writer := get_node_or_null(^"LedgerRpc")
+	if gather_writer != null and not lost_character.is_empty(): gather_writer.call("flush_gather_batch", lost_character)
 	if _groom_passive != null: _groom_passive.call("departed", lost_character)
 	# The departed transport's owner-passive stream ends with it, so the
 	# character's next stream is admitted instead of shadowed (re-proof).
@@ -4565,9 +4597,29 @@ func _deliver_training_decision(peer: int, row: Dictionary) -> void:
 	OPENING_HOME_KEY.accepted(self, peer, row)
 	if row.get("action") == "waystone_touch": _waystone_delivery_accepted(peer, row)
 	if peer == local_peer_id():
-		_settle_owner_training_accepted(_game().get("local"), _game().get("world"), row)
+		var settled := _settle_owner_training_accepted(_game().get("local"), _game().get("world"), row)
+		# A host's own homestead action (solo too) is answered "awaiting" by
+		# _foundation_send and settles here; nothing else announced it, so a
+		# station panel stayed on "awaiting_saved_decision" with its buttons off.
+		# Guests hear theirs through _rpc_foundation_reply; groom has its own.
+		var action := str(row.get("action", ""))
+		if settled and action in FOUNDATION_ACTIONS.ACTIONS and action != "groom" and _homestead_completion_once(row):
+			homestead_action_completed.emit(action, (row.get("intent", {}) as Dictionary).duplicate(true), _foundation_decision(peer, row))
 	elif bool(_registry.call("has", peer)):
 		rpc_id(peer, "_rpc_training_decision", _altar_epoch, row.delivery_id, int(row.journal_revision), row.receipt)
+
+
+## The accepted row is re-delivered by the background poll and replays, so
+## its completion is announced once per receipt (review: a later toast or
+## sound would otherwise repeat every poll).
+var _homestead_completed_receipts: Dictionary = {}
+
+func _homestead_completion_once(row: Dictionary) -> bool:
+	var key := str(row.get("receipt", "")) + "|" + str(row.get("delivery_id", ""))
+	if _homestead_completed_receipts.has(key): return false
+	if _homestead_completed_receipts.size() >= 256: _homestead_completed_receipts.clear()
+	_homestead_completed_receipts[key] = true
+	return true
 
 
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
@@ -4579,7 +4631,15 @@ func _rpc_training_decision(epoch: String, id: String, revision: int, receipt: S
 		_finalize_snapshot_receive()
 	var row := _owner_training_row()
 	if row.get("delivery_id") == id and row.get("journal_revision") == revision and row.get("receipt") == receipt:
-		_settle_owner_training_accepted(_game().get("local"), _game().get("world"), row)
+		var settled := _settle_owner_training_accepted(_game().get("local"), _game().get("world"), row)
+		# The guest's _rpc_foundation_reply carried only the host's immediate
+		# "awaiting" marker; this saved settlement is the terminal answer its
+		# station panel waits for (groom keeps its own completion path).
+		var action := str(row.get("action", ""))
+		if settled and action in FOUNDATION_ACTIONS.ACTIONS and action != "groom" and _homestead_completion_once(row):
+			homestead_action_completed.emit(action, (row.get("intent", {}) as Dictionary).duplicate(true),
+				{"ok": true, "resolved": true, "durable": true, "saved": true, "settled": true,
+					"owner_saved": true, "owner_acknowledged": true, "receipt": row.receipt})
 
 
 ## The input-owner graph asks `_owner_training_row()` many times a frame
