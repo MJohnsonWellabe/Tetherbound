@@ -88,6 +88,24 @@ func _walk_to_grandpa(prompt: Node3D) -> bool:
 			str(winning.get_path()) if winning is Node else "none", str(_player.global_position), str(prompt.global_position)])
 		var ending: Variant = game.call("regional_ending_context") if game.has_method("regional_ending_context") else {}
 		var lifecycle: Node = game.get("session").get_node_or_null(^"FoundationComposition/TravelLifecycle") if game.get("session") != null else null
+		var director: Node = prompt.get_parent().get_parent().get_node_or_null("SequenceDirector") if prompt.get_parent() != null else null
+		if director == null:
+			for node: Node in tree.current_scene.find_children("*", "Node", true, false):
+				if node.get_script() != null and node.get_script().resource_path == "res://scripts/story/sequence_director.gd": director = node
+		var ray_hit := {}
+		var space := (prompt as Node3D).get_world_3d().direct_space_state if (prompt as Node3D).get_world_3d() != null else null
+		if space != null:
+			var query := PhysicsRayQueryParameters3D.create(prompt.global_position, _player.global_position + Vector3.UP * 1.5)
+			query.collide_with_areas = false
+			query.exclude = [_player.get_rid()]
+			query.collision_mask = 0x7FFFFFFF
+			ray_hit = space.intersect_ray(query)
+		print("F20 APPROACH prompt_enabled=%s offer_here=%s ray_hit=%s director_conversation=%s pending_starter=%s pending_home_key=%s" % [
+			str(prompt.get("enabled")), str(prompt.call("interaction_offer", _player.global_position)),
+			str(ray_hit.get("collider").get_path()) + " at " + str(ray_hit.get("position")) if ray_hit.get("collider") is Node else "none",
+			str(director.call("_grandpa_conversation_id")) if director != null else "no_director",
+			str(director.get("_pending_starter_adoption")) if director != null else "-",
+			str(director.get("_f18_pending_home_key")) if director != null else "-"])
 		print("F20 APPROACH ending=%s sample=%s offer=%s" % [str(ending), str(lifecycle.call("local_sample")) if lifecycle != null else "none",
 			str(arbiter.call("winner"))])
 		return _fail("F20 Grandpa approach requires grounded exact provider without recovery")
