@@ -4,9 +4,9 @@ extends Node
 ## (AUDIO §4.3, §9 captions, §12.1 routing). It changes no gameplay: it only
 ## watches what the Surge and the lightning already do and, for each cue in
 ## data/config/stormwood_audio.json, appends a row to `cue_log` and plays the
-## cue's asset IF that asset exists. Today no Stormwood asset exists, so every
-## row records `asset_present: false, played: false`; the same code plays the
-## cues once real files land at the contract's paths. No audio is invented.
+## cue's asset IF that asset exists. The nine assets are authored from installed
+## sources by tools/audio/gen_stormwood.py (owner, 2026-10-05); a missing file
+## stays silent and logs `asset_present: false`.
 ##
 ## Owners (AUDIO §8, §12.1 "fires once from the correct owner"):
 ## - Phase beds follow THIS peer's own presentation of the replicated Surge

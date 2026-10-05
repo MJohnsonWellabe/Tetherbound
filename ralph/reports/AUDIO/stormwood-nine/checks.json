@@ -1,0 +1,663 @@
+{
+  "checks": [
+    {
+      "asset": "(contract)",
+      "check": "referenced assets exist",
+      "pass": true,
+      "value": "9/9",
+      "threshold": "9/9"
+    },
+    {
+      "asset": "surge_calm_bed",
+      "check": "format 16-bit mono at project rate",
+      "pass": true,
+      "value": "22050 Hz/1 ch/16-bit",
+      "threshold": "22050 Hz/1 ch/16-bit"
+    },
+    {
+      "asset": "surge_calm_bed",
+      "check": "no clipping (peak, full-scale samples)",
+      "pass": true,
+      "value": "-14.13 dBFS, 0 samples",
+      "threshold": "<= -0.5 dBFS, 0"
+    },
+    {
+      "asset": "surge_calm_bed",
+      "check": "DC offset",
+      "pass": true,
+      "value": "0.00000",
+      "threshold": "<= 0.002"
+    },
+    {
+      "asset": "surge_calm_bed",
+      "check": "smpl forward loop = whole clip",
+      "pass": true,
+      "value": "(0, 529199)",
+      "threshold": "(0, 529199)"
+    },
+    {
+      "asset": "surge_calm_bed",
+      "check": "seamless loop: wrap step",
+      "pass": true,
+      "value": "0.01199",
+      "threshold": "<= interior p99.9 step 0.06491"
+    },
+    {
+      "asset": "surge_calm_bed",
+      "check": "seamless loop: RMS across wrap",
+      "pass": true,
+      "value": "0.12 dB",
+      "threshold": "<= 3.0 dB from median 100 ms window"
+    },
+    {
+      "asset": "surge_calm_bed",
+      "check": "seamless loop: spectral flux at wrap",
+      "pass": true,
+      "value": "47.99",
+      "threshold": "<= interior p99.0 306.33"
+    },
+    {
+      "asset": "surge_building_bed",
+      "check": "format 16-bit mono at project rate",
+      "pass": true,
+      "value": "22050 Hz/1 ch/16-bit",
+      "threshold": "22050 Hz/1 ch/16-bit"
+    },
+    {
+      "asset": "surge_building_bed",
+      "check": "no clipping (peak, full-scale samples)",
+      "pass": true,
+      "value": "-11.37 dBFS, 0 samples",
+      "threshold": "<= -0.5 dBFS, 0"
+    },
+    {
+      "asset": "surge_building_bed",
+      "check": "DC offset",
+      "pass": true,
+      "value": "0.00000",
+      "threshold": "<= 0.002"
+    },
+    {
+      "asset": "surge_building_bed",
+      "check": "smpl forward loop = whole clip",
+      "pass": true,
+      "value": "(0, 529199)",
+      "threshold": "(0, 529199)"
+    },
+    {
+      "asset": "surge_building_bed",
+      "check": "seamless loop: wrap step",
+      "pass": true,
+      "value": "0.00336",
+      "threshold": "<= interior p99.9 step 0.10970"
+    },
+    {
+      "asset": "surge_building_bed",
+      "check": "seamless loop: RMS across wrap",
+      "pass": true,
+      "value": "1.89 dB",
+      "threshold": "<= 3.0 dB from median 100 ms window"
+    },
+    {
+      "asset": "surge_building_bed",
+      "check": "seamless loop: spectral flux at wrap",
+      "pass": true,
+      "value": "125.51",
+      "threshold": "<= interior p99.0 528.37"
+    },
+    {
+      "asset": "surge_break_bed",
+      "check": "format 16-bit mono at project rate",
+      "pass": true,
+      "value": "22050 Hz/1 ch/16-bit",
+      "threshold": "22050 Hz/1 ch/16-bit"
+    },
+    {
+      "asset": "surge_break_bed",
+      "check": "no clipping (peak, full-scale samples)",
+      "pass": true,
+      "value": "-9.12 dBFS, 0 samples",
+      "threshold": "<= -0.5 dBFS, 0"
+    },
+    {
+      "asset": "surge_break_bed",
+      "check": "DC offset",
+      "pass": true,
+      "value": "0.00000",
+      "threshold": "<= 0.002"
+    },
+    {
+      "asset": "surge_break_bed",
+      "check": "smpl forward loop = whole clip",
+      "pass": true,
+      "value": "(0, 529199)",
+      "threshold": "(0, 529199)"
+    },
+    {
+      "asset": "surge_break_bed",
+      "check": "seamless loop: wrap step",
+      "pass": true,
+      "value": "0.06293",
+      "threshold": "<= interior p99.9 step 0.14975"
+    },
+    {
+      "asset": "surge_break_bed",
+      "check": "seamless loop: RMS across wrap",
+      "pass": true,
+      "value": "0.84 dB",
+      "threshold": "<= 3.0 dB from median 100 ms window"
+    },
+    {
+      "asset": "surge_break_bed",
+      "check": "seamless loop: spectral flux at wrap",
+      "pass": true,
+      "value": "176.72",
+      "threshold": "<= interior p99.0 859.25"
+    },
+    {
+      "asset": "surge_fading_decay",
+      "check": "format 16-bit mono at project rate",
+      "pass": true,
+      "value": "22050 Hz/1 ch/16-bit",
+      "threshold": "22050 Hz/1 ch/16-bit"
+    },
+    {
+      "asset": "surge_fading_decay",
+      "check": "no clipping (peak, full-scale samples)",
+      "pass": true,
+      "value": "-14.97 dBFS, 0 samples",
+      "threshold": "<= -0.5 dBFS, 0"
+    },
+    {
+      "asset": "surge_fading_decay",
+      "check": "DC offset",
+      "pass": true,
+      "value": "0.00000",
+      "threshold": "<= 0.002"
+    },
+    {
+      "asset": "surge_fading_decay",
+      "check": "smpl forward loop = whole clip",
+      "pass": true,
+      "value": "(0, 529199)",
+      "threshold": "(0, 529199)"
+    },
+    {
+      "asset": "surge_fading_decay",
+      "check": "seamless loop: wrap step",
+      "pass": true,
+      "value": "0.00238",
+      "threshold": "<= interior p99.9 step 0.05596"
+    },
+    {
+      "asset": "surge_fading_decay",
+      "check": "seamless loop: RMS across wrap",
+      "pass": true,
+      "value": "0.49 dB",
+      "threshold": "<= 3.0 dB from median 100 ms window"
+    },
+    {
+      "asset": "surge_fading_decay",
+      "check": "seamless loop: spectral flux at wrap",
+      "pass": true,
+      "value": "2.50",
+      "threshold": "<= interior p99.0 383.38"
+    },
+    {
+      "asset": "release_forest_sky_bed",
+      "check": "format 16-bit mono at project rate",
+      "pass": true,
+      "value": "22050 Hz/1 ch/16-bit",
+      "threshold": "22050 Hz/1 ch/16-bit"
+    },
+    {
+      "asset": "release_forest_sky_bed",
+      "check": "no clipping (peak, full-scale samples)",
+      "pass": true,
+      "value": "-13.96 dBFS, 0 samples",
+      "threshold": "<= -0.5 dBFS, 0"
+    },
+    {
+      "asset": "release_forest_sky_bed",
+      "check": "DC offset",
+      "pass": true,
+      "value": "0.00000",
+      "threshold": "<= 0.002"
+    },
+    {
+      "asset": "release_forest_sky_bed",
+      "check": "smpl forward loop = whole clip",
+      "pass": true,
+      "value": "(0, 529199)",
+      "threshold": "(0, 529199)"
+    },
+    {
+      "asset": "release_forest_sky_bed",
+      "check": "seamless loop: wrap step",
+      "pass": true,
+      "value": "0.00058",
+      "threshold": "<= interior p99.9 step 0.05682"
+    },
+    {
+      "asset": "release_forest_sky_bed",
+      "check": "seamless loop: RMS across wrap",
+      "pass": true,
+      "value": "2.67 dB",
+      "threshold": "<= 3.0 dB from median 100 ms window"
+    },
+    {
+      "asset": "release_forest_sky_bed",
+      "check": "seamless loop: spectral flux at wrap",
+      "pass": true,
+      "value": "9.54",
+      "threshold": "<= interior p99.0 328.75"
+    },
+    {
+      "asset": "strike_warning",
+      "check": "format 16-bit mono at project rate",
+      "pass": true,
+      "value": "44100 Hz/1 ch/16-bit",
+      "threshold": "44100 Hz/1 ch/16-bit"
+    },
+    {
+      "asset": "strike_warning",
+      "check": "no clipping (peak, full-scale samples)",
+      "pass": true,
+      "value": "-4.00 dBFS, 0 samples",
+      "threshold": "<= -0.5 dBFS, 0"
+    },
+    {
+      "asset": "strike_warning",
+      "check": "DC offset",
+      "pass": true,
+      "value": "0.00004",
+      "threshold": "<= 0.002"
+    },
+    {
+      "asset": "strike_warning",
+      "check": "one-shot: no loop chunk",
+      "pass": true,
+      "value": "None",
+      "threshold": "None"
+    },
+    {
+      "asset": "strike_crack",
+      "check": "format 16-bit mono at project rate",
+      "pass": true,
+      "value": "44100 Hz/1 ch/16-bit",
+      "threshold": "44100 Hz/1 ch/16-bit"
+    },
+    {
+      "asset": "strike_crack",
+      "check": "no clipping (peak, full-scale samples)",
+      "pass": true,
+      "value": "-1.00 dBFS, 0 samples",
+      "threshold": "<= -0.5 dBFS, 0"
+    },
+    {
+      "asset": "strike_crack",
+      "check": "DC offset",
+      "pass": true,
+      "value": "0.00001",
+      "threshold": "<= 0.002"
+    },
+    {
+      "asset": "strike_crack",
+      "check": "one-shot: no loop chunk",
+      "pass": true,
+      "value": "None",
+      "threshold": "None"
+    },
+    {
+      "asset": "strike_body",
+      "check": "format 16-bit mono at project rate",
+      "pass": true,
+      "value": "44100 Hz/1 ch/16-bit",
+      "threshold": "44100 Hz/1 ch/16-bit"
+    },
+    {
+      "asset": "strike_body",
+      "check": "no clipping (peak, full-scale samples)",
+      "pass": true,
+      "value": "-1.50 dBFS, 0 samples",
+      "threshold": "<= -0.5 dBFS, 0"
+    },
+    {
+      "asset": "strike_body",
+      "check": "DC offset",
+      "pass": true,
+      "value": "0.00009",
+      "threshold": "<= 0.002"
+    },
+    {
+      "asset": "strike_body",
+      "check": "one-shot: no loop chunk",
+      "pass": true,
+      "value": "None",
+      "threshold": "None"
+    },
+    {
+      "asset": "strike_decay",
+      "check": "format 16-bit mono at project rate",
+      "pass": true,
+      "value": "44100 Hz/1 ch/16-bit",
+      "threshold": "44100 Hz/1 ch/16-bit"
+    },
+    {
+      "asset": "strike_decay",
+      "check": "no clipping (peak, full-scale samples)",
+      "pass": true,
+      "value": "-4.00 dBFS, 0 samples",
+      "threshold": "<= -0.5 dBFS, 0"
+    },
+    {
+      "asset": "strike_decay",
+      "check": "DC offset",
+      "pass": true,
+      "value": "0.00001",
+      "threshold": "<= 0.002"
+    },
+    {
+      "asset": "strike_decay",
+      "check": "one-shot: no loop chunk",
+      "pass": true,
+      "value": "None",
+      "threshold": "None"
+    },
+    {
+      "asset": "surge_calm_bed",
+      "check": "bed loudness vs installed ambience",
+      "pass": true,
+      "value": "-30.2 LUFS",
+      "threshold": "installed ambience -52.3..-29.5 LUFS +/- 6.0 LU"
+    },
+    {
+      "asset": "surge_building_bed",
+      "check": "bed loudness vs installed ambience",
+      "pass": true,
+      "value": "-29.9 LUFS",
+      "threshold": "installed ambience -52.3..-29.5 LUFS +/- 6.0 LU"
+    },
+    {
+      "asset": "surge_break_bed",
+      "check": "bed loudness vs installed ambience",
+      "pass": true,
+      "value": "-23.9 LUFS",
+      "threshold": "installed ambience -52.3..-29.5 LUFS +/- 6.0 LU"
+    },
+    {
+      "asset": "surge_fading_decay",
+      "check": "bed loudness vs installed ambience",
+      "pass": true,
+      "value": "-34.6 LUFS",
+      "threshold": "installed ambience -52.3..-29.5 LUFS +/- 6.0 LU"
+    },
+    {
+      "asset": "release_forest_sky_bed",
+      "check": "bed loudness vs installed ambience",
+      "pass": true,
+      "value": "-35.9 LUFS",
+      "threshold": "installed ambience -52.3..-29.5 LUFS +/- 6.0 LU"
+    },
+    {
+      "asset": "strike_warning",
+      "check": "strike loudness vs installed impacts",
+      "pass": true,
+      "value": "-19.4 LUFS",
+      "threshold": "impact_super -25.3..-24.3 LUFS +/- 8.0 LU"
+    },
+    {
+      "asset": "strike_crack",
+      "check": "strike loudness vs installed impacts",
+      "pass": true,
+      "value": "-19.1 LUFS",
+      "threshold": "impact_super -25.3..-24.3 LUFS +/- 8.0 LU"
+    },
+    {
+      "asset": "strike_body",
+      "check": "strike loudness vs installed impacts",
+      "pass": true,
+      "value": "-22.1 LUFS",
+      "threshold": "impact_super -25.3..-24.3 LUFS +/- 8.0 LU"
+    },
+    {
+      "asset": "strike_decay",
+      "check": "strike loudness vs installed impacts",
+      "pass": true,
+      "value": "-23.1 LUFS",
+      "threshold": "impact_super -25.3..-24.3 LUFS +/- 8.0 LU"
+    },
+    {
+      "asset": "calm_bed|building_bed",
+      "check": "phase pair distinct (centroid, energy)",
+      "pass": true,
+      "value": "3358/2936 Hz, -28.5/-26.0 dB",
+      "threshold": "centroid gap >= 150 Hz and energy gap >= 1.5 dB"
+    },
+    {
+      "asset": "calm_bed|break_bed",
+      "check": "phase pair distinct (centroid, energy)",
+      "pass": true,
+      "value": "3358/4356 Hz, -28.5/-24.0 dB",
+      "threshold": "centroid gap >= 150 Hz and energy gap >= 1.5 dB"
+    },
+    {
+      "asset": "calm_bed|fading_decay",
+      "check": "phase pair distinct (centroid, energy)",
+      "pass": true,
+      "value": "3358/4026 Hz, -28.5/-31.0 dB",
+      "threshold": "centroid gap >= 150 Hz and energy gap >= 1.5 dB"
+    },
+    {
+      "asset": "building_bed|break_bed",
+      "check": "phase pair distinct (centroid, energy)",
+      "pass": true,
+      "value": "2936/4356 Hz, -26.0/-24.0 dB",
+      "threshold": "centroid gap >= 150 Hz and energy gap >= 1.5 dB"
+    },
+    {
+      "asset": "building_bed|fading_decay",
+      "check": "phase pair distinct (centroid, energy)",
+      "pass": true,
+      "value": "2936/4026 Hz, -26.0/-31.0 dB",
+      "threshold": "centroid gap >= 150 Hz and energy gap >= 1.5 dB"
+    },
+    {
+      "asset": "break_bed|fading_decay",
+      "check": "phase pair distinct (centroid, energy)",
+      "pass": true,
+      "value": "4356/4026 Hz, -24.0/-31.0 dB",
+      "threshold": "centroid gap >= 150 Hz and energy gap >= 1.5 dB"
+    },
+    {
+      "asset": "(phases)",
+      "check": "energy ordering calm<building<break>fading",
+      "pass": true,
+      "value": "calm_bed -28.5, building_bed -26.0, break_bed -24.0, fading_decay -31.0",
+      "threshold": "monotonic rise to Break, Fading below Break"
+    },
+    {
+      "asset": "surge_building_bed",
+      "check": "copper-vine ticks (2.5-4.5 kHz onsets/s)",
+      "pass": true,
+      "value": "5.21/s vs calm 0.00/s",
+      "threshold": ">= 2/s and > 2x Calm"
+    },
+    {
+      "asset": "surge_building_bed",
+      "check": "electrical bed (90-210 Hz share)",
+      "pass": true,
+      "value": "0.331 vs calm 0.025",
+      "threshold": ">= 3x Calm"
+    },
+    {
+      "asset": "release_forest_sky_bed",
+      "check": "no oppressive low electrical/thunder bed",
+      "pass": true,
+      "value": "80-220 Hz fraction 0.022 vs break 0.135",
+      "threshold": "< half of Break"
+    },
+    {
+      "asset": "strike_crack",
+      "check": "sharp transient (10->90% attack)",
+      "pass": true,
+      "value": "2.81 ms",
+      "threshold": "<= 5 ms"
+    },
+    {
+      "asset": "strike_crack",
+      "check": "broadband/bright (centroid)",
+      "pass": true,
+      "value": "11743 Hz",
+      "threshold": ">= 1500 Hz"
+    },
+    {
+      "asset": "strike_crack",
+      "check": "crest factor (peak in first 50 ms over RMS)",
+      "pass": true,
+      "value": "23.7 dB",
+      "threshold": ">= 10 dB"
+    },
+    {
+      "asset": "strike_body",
+      "check": "low rumble (energy below 250 Hz)",
+      "pass": true,
+      "value": "0.96",
+      "threshold": ">= 0.60"
+    },
+    {
+      "asset": "strike_decay",
+      "check": "low rumble (energy below 250 Hz)",
+      "pass": true,
+      "value": "0.90",
+      "threshold": ">= 0.60"
+    },
+    {
+      "asset": "strike_decay",
+      "check": "tail persists 1-4 s",
+      "pass": true,
+      "value": "-2.1 dB vs first second",
+      "threshold": ">= -12 dB"
+    },
+    {
+      "asset": "strike chain",
+      "check": "transient then low rumble tail",
+      "pass": true,
+      "value": "attack 3.63 ms, tail<250 Hz 0.91",
+      "threshold": "attack <= 5 ms, tail >= 0.60"
+    },
+    {
+      "asset": "strike_warning",
+      "check": "rises toward impact (last vs first third)",
+      "pass": true,
+      "value": "11.7 dB",
+      "threshold": ">= 6 dB"
+    },
+    {
+      "asset": "strike_warning",
+      "check": "length matches telegraph",
+      "pass": true,
+      "value": "1.200 s",
+      "threshold": "1.2 s +/- 0.02"
+    },
+    {
+      "asset": "surge_calm_bed",
+      "check": "distinct from the other eight",
+      "pass": true,
+      "value": "nearest surge_break_bed 3.76 dB",
+      "threshold": ">= 2.0 dB mean 1/3-oct shape gap"
+    },
+    {
+      "asset": "surge_calm_bed",
+      "check": "distinct from installed beds/music",
+      "pass": true,
+      "value": "nearest music/music_combat 5.25 dB",
+      "threshold": ">= 2.0 dB"
+    },
+    {
+      "asset": "surge_building_bed",
+      "check": "distinct from the other eight",
+      "pass": true,
+      "value": "nearest release_forest_sky_bed 5.88 dB",
+      "threshold": ">= 2.0 dB mean 1/3-oct shape gap"
+    },
+    {
+      "asset": "surge_building_bed",
+      "check": "distinct from installed beds/music",
+      "pass": true,
+      "value": "nearest ironwood_canopy 4.40 dB",
+      "threshold": ">= 2.0 dB"
+    },
+    {
+      "asset": "surge_break_bed",
+      "check": "distinct from the other eight",
+      "pass": true,
+      "value": "nearest surge_calm_bed 3.76 dB",
+      "threshold": ">= 2.0 dB mean 1/3-oct shape gap"
+    },
+    {
+      "asset": "surge_break_bed",
+      "check": "distinct from installed beds/music",
+      "pass": true,
+      "value": "nearest music/music_combat 4.82 dB",
+      "threshold": ">= 2.0 dB"
+    },
+    {
+      "asset": "surge_fading_decay",
+      "check": "distinct from the other eight",
+      "pass": true,
+      "value": "nearest surge_break_bed 6.30 dB",
+      "threshold": ">= 2.0 dB mean 1/3-oct shape gap"
+    },
+    {
+      "asset": "surge_fading_decay",
+      "check": "distinct from installed beds/music",
+      "pass": true,
+      "value": "nearest music/music_combat 9.28 dB",
+      "threshold": ">= 2.0 dB"
+    },
+    {
+      "asset": "release_forest_sky_bed",
+      "check": "distinct from the other eight",
+      "pass": true,
+      "value": "nearest surge_building_bed 5.88 dB",
+      "threshold": ">= 2.0 dB mean 1/3-oct shape gap"
+    },
+    {
+      "asset": "release_forest_sky_bed",
+      "check": "distinct from installed beds/music",
+      "pass": true,
+      "value": "nearest river_water 3.86 dB",
+      "threshold": ">= 2.0 dB"
+    },
+    {
+      "asset": "strike_warning",
+      "check": "distinct from the other eight",
+      "pass": true,
+      "value": "nearest strike_crack 10.08 dB",
+      "threshold": ">= 2.0 dB mean 1/3-oct shape gap"
+    },
+    {
+      "asset": "strike_crack",
+      "check": "distinct from the other eight",
+      "pass": true,
+      "value": "nearest surge_break_bed 7.36 dB",
+      "threshold": ">= 2.0 dB mean 1/3-oct shape gap"
+    },
+    {
+      "asset": "strike_body",
+      "check": "distinct from the other eight",
+      "pass": true,
+      "value": "nearest strike_decay 5.39 dB",
+      "threshold": ">= 2.0 dB mean 1/3-oct shape gap"
+    },
+    {
+      "asset": "strike_decay",
+      "check": "distinct from the other eight",
+      "pass": true,
+      "value": "nearest strike_body 5.39 dB",
+      "threshold": ">= 2.0 dB mean 1/3-oct shape gap"
+    }
+  ],
+  "failed": 0
+}

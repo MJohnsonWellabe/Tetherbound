@@ -56,13 +56,13 @@ ACCEPTANCE was reconciled with RD-01..RD-37 (PR #527). Eleven legacy-path tests 
 
 ### Open owner decisions
 
-Recommended defaults: keep Compatibility until the Ally gate; retain the 30/night cap and Stormursa name; keep Steam packaging off without an AppID; keep the tap-then-tap controller map and §8.1 defaults. Recommend scoped installed-source Stormwood audio with owner listen, Stormheart as final relay, and existing PRODUCT defaults; these decisions remain open. Human play/device proof uses the passing integrated build.
+Recommended defaults: keep Compatibility until the Ally gate; retain the 30/night cap and Stormursa name; keep Steam packaging off without an AppID; keep the tap-then-tap controller map and §8.1 defaults. Recommend Stormheart as final relay, and existing PRODUCT defaults; these decisions remain open. Human play/device proof uses the passing integrated build.
 
 1. **ROG Ally test (F26#5):** run one Forward+ test build on the Ally (Medium preset, handheld, the scripted route) when `tb/lookdev` posts the checklist here. Forward+ becomes the default only after this passes.
 2. **Meshy credits:** the overnight cap is 30 generations per night (RD-26) unless the owner sets another number.
 3. **Storm bear name:** the working name is *Stormursa* (RD-28).
 4. **Internet co-op proof:** real Steam AppID and partner access, four accounts, at least 2 on separate home networks. `steam_api64.dll` redistribution is approved; packaging (`ship_steam_runtime`) stays off until an AppID exists.
-5. **Stormwood audio:** whether to author the nine missing `assets/audio/stormwood/*.wav` from installed sources under AUDIO §10. Agents cannot listen, so acceptance would rest on spectral and loop checks plus an owner listen.
+5. **Stormwood audio: decided (owner, 2026-10-05).** Author the nine `assets/audio/stormwood/*.wav` from sound sources already installed in the repository (AUDIO §10); no purchase, download or text-to-audio service; acceptance is spectral and loop checks, no owner listen. Built on `tb/audio` by `tools/audio/gen_stormwood.py` (provenance `assets/audio/stormwood/MANIFEST.json`), checked by `tools/audio/check_stormwood.py`; evidence `ralph/reports/AUDIO/stormwood-nine/`.
 6. **Owner play pass (F47/F49):** a human play pass at the end of Wave 3.
 
 7. **Story framing of the final relay:** Tidewake was written as the supply network's final relay. With Stormwood last, the recommended reading is: Stormwood's Stormheart is the final relay; Tidewake's regional link is one of four; the dock exchange stays Tidewake's chapter close. WORLD keeps the current wording conservative until the owner confirms.
