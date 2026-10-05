@@ -101,7 +101,7 @@ class SelectJobs(unittest.TestCase):
         jobs, _every, why = pick("tests/smoke_relay.gd")  # named only as `SMOKE: relay`
         self.assertIn("verify-regions-relay", jobs, why)
 
-    def test_a_shared_harness_smoke_selects_everything_its_users_run(self):
+    def test_a_shared_harness_smoke_selects_the_jobs_its_users_run(self):
         jobs, every, why = pick("tests/smoke_net_proof_two_peer.gd")
         self.assertIn("verify-cloudreach-midride-rejoin", jobs, why)
         self.assertIn("verify-multiplayer-shard", jobs, why)
@@ -129,12 +129,81 @@ class SelectJobs(unittest.TestCase):
         for name in S.ALWAYS_JOBS | S.NET_JOBS | S.PRESENTATION_JOBS | set().union(*S.REALM_JOBS.values()):
             self.assertIn(name, EVERY, "%s is not a ci.yml job" % name)
 
-    def test_against_the_real_repository(self):
-        corpus = S.load_corpus(ROOT)
-        self.assertGreater(len(corpus), 500)
-        # The real save code is core.
-        jobs, every, _ = S.select(["scripts/save/save_game.gd"], "pull_request", CI, corpus)
-        self.assertTrue(every)
+    def test_main_prints_the_all_sentinel_and_net(self):
+        import subprocess
+        out = subprocess.run([sys.executable, os.path.join(ROOT, "tools", "ci", "select_jobs.py"), "--all",
+                              "--event", "schedule", "--ci", os.path.join(ROOT, ".github", "workflows", "ci.yml")],
+                             capture_output=True, text=True, check=True).stdout
+        self.assertIn("jobs=|ALL|", out)
+        self.assertIn("all=true", out)
+        self.assertIn("net=true", out)
+
+
+REAL = None
+
+
+def real():
+    global REAL
+    if REAL is None:
+        REAL = S.load_corpus(ROOT)
+    return REAL
+
+
+class RealRepository(unittest.TestCase):
+    """Regression cases from the independent selection review (each was a
+    silent miss before the transitive walk): every one must select every job,
+    or at least the named suite that loads it."""
+
+    def sel(self, path):
+        return S.select([path], "pull_request", CI, real())
+
+    def assertEverything(self, path):
+        jobs, every, why = self.sel(path)
+        self.assertTrue(every, "%s must select everything: %s" % (path, why))
+
+    def assertSelects(self, path, job):
+        jobs, every, why = self.sel(path)
+        self.assertTrue(every or job in jobs, "%s must select %s: %s" % (path, job, why))
+
+    def test_corpus_covers_data_assets_and_shaders(self):
+        files = real().files
+        self.assertGreater(len(files), 2000)
+        self.assertIn("data/creatures/species.json", files)
+        self.assertIn("project.godot", files)
+
+    def test_core(self):
+        for path in ["scripts/save/save_game.gd", "scripts/save/water_capture_codec.gd",
+                     "scripts/save/water_traversal_save.gd"]:
+            self.assertEverything(path)
+
+    def test_transitive_reach_into_shared_code(self):
+        # water_roster.json -> water_species_catalog.gd -> creature_species.gd (every lookup).
+        self.assertEverything("data/config/water_roster.json")
+        # operator_harness.gd -> tools/net/peer_runner.gd -> tests/helpers/net_harness.gd.
+        self.assertEverything("tools/gate_f/catch_outcome.gd")
+        # cloudreach director <- water director: game code outside the family.
+        self.assertEverything("scripts/combat/cloudreach_combat_surface.gd")
+
+    def test_realm_file_reaching_a_meadows_suite(self):
+        # water_alpha.gd preloads it; smoke_water_alpha_retirement.gd runs in verify-combat-shard.
+        self.assertSelects("scripts/combat/water_alpha_state.gd", "verify-combat-shard")
+
+    def test_ripplet_is_a_starter_not_a_realm(self):
+        self.assertEverything("assets/creatures/tetherbound/ripplet/models/creature_ripplet_lod0.glb")
+        self.assertEverything("data/config/ripplet_traversal.json")
+
+    def test_unit_tests_follow_their_users(self):
+        self.assertSelects("tests/test_harvest.gd", "verify-harvest")  # --skip'd from the unit shards
+        self.assertSelects("tests/test_veg_corridor.gd", "verify-veg-corridor")
+        self.assertSelects("tests/test_scatter_rules.gd", "verify-scatter-rules")
+        self.assertEverything("tests/test_save_format.gd")  # preloaded by tests/helpers/ci_segments.gd
+        self.assertSelects("tests/test_meadows_earned_material_segment.gd", "verify-regions-shard")
+
+    def test_media_follow_their_users(self):
+        self.assertSelects("assets/ui/input_prompts/keyboard_r.png", "verify-gate-a-ui-build-shard")
+
+    def test_realm_jobs_include_every_job_running_a_realm_smoke(self):
+        self.assertIn("verify-combat-shard", S.realm_jobs("tidewake", S.ci_jobs(CI), real()))
 
 
 if __name__ == "__main__":

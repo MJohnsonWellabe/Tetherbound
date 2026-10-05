@@ -1,48 +1,54 @@
 #!/usr/bin/env python3
 """Affected-only CI job selection (owner-approved, 2026-10-04).
 
-    python3 tools/ci/select_jobs.py --event <name> --ci .github/workflows/ci.yml \
-        [--all] < changed-paths.txt     # prints `jobs=|a|b|` and `all=...`
+    git diff --name-only --no-renames <base> HEAD \
+      | python3 tools/ci/select_jobs.py --event <name> [--ci .github/workflows/ci.yml]
+    python3 tools/ci/select_jobs.py --all --event <name>
+        # prints `jobs=|a|b|` (or `jobs=|ALL|...`), `all=...`, `net=...`
 
-ci.yml's `changes` job runs this on the paths a change touches and each
-full-tier verify job runs only if its name is in `jobs`. The rule the table
-below implements is CONSERVATIVE: a miss may only cost speed, never a missed
-bug. So a path selects EVERYTHING unless a rule proves it can only reach a
-named subset of jobs, and every test still runs on the 8-hourly full tier.
+ci.yml's `changes` job runs this on the paths a change touches; each
+full-tier verify job runs only if its name (or ALL) is in `jobs`. The rule is
+CONSERVATIVE (owner): a miss may only cost speed, never a missed bug. So a path
+selects EVERYTHING unless the rules prove it can only reach a named subset of
+jobs; every suite still runs on the 8-hourly full tier.
 
 EVERYTHING is selected for:
-  * a schedule or a dispatch (`--all`), an empty diff, a missing base;
-  * more than MAX_PATHS non-documentation paths (a large change);
-  * any CORE path (shared engine of every suite: autoloads, save, session,
-    ledger, encounter director, combat manager, project/export settings,
-    workflows, test helpers and fixtures, CI tools, addons, boot/player/story);
-  * gameplay code and data outside a realm family (combat, creatures, ui,
+  * a schedule or a dispatch (`--all`), an empty diff, a missing base, more
+    than MAX_PATHS non-documentation paths, or a selector failure (ci.yml then
+    fails the `changes` job rather than selecting nothing);
+  * any CORE path: autoloads, save, session, ledger, encounter director,
+    combat manager, project/export settings, workflows, test helpers and
+    fixtures, CI tools, addons, boot/player/story/data scripts;
+  * gameplay code or data outside a realm family (combat, creatures, ui,
     homestead/build, training/masters, Meadows world, economy, npcs, ...):
     every world-booting smoke, the net smokes included, boots the Meadows
-    playground or crosses through it, fights and opens the HUD, so none of
-    those areas can be shown to stay inside a subset of suites;
-  * a realm-family file that anything outside its own family references
-    (then it is shared, e.g. a water_* script the Meadows ponds use);
-  * a test/tool file another file references (a shared harness piece);
-  * anything no rule recognises.
+    playground or crosses through it, fights and opens the HUD;
+  * anything no rule recognises;
+  * any file that is reached -- TRANSITIVELY -- from core or from gameplay
+    outside its own realm family (see "reach" below).
 
-A NAMED SUBSET is selected for:
-  * a realm-family file (basename or a directory starting cloudreach_,
-    stormwood_/stormheart_, water_/tidewake_/ripplet_, or exactly the
-    realm name) referenced only inside
-    its own family -> that realm's jobs (REALM_JOBS) plus the net group, which
-    holds realm net smokes;
-  * tools/net/** and tests/smoke_net_*.gd -> the net group;
-  * image/audio media, their .import sidecars and .gdshader files ->
-    PRESENTATION_JOBS (unit tests, bake freshness, import errors and the
-    export always run on a code change anyway);
-  * any other unreferenced test/tool file -> exactly the jobs whose ci.yml
-    block names it (nothing, if no job runs it);
-  * tests/test_*.gd -> nothing extra (the unit shards always run).
+A NAMED SUBSET is selected for a realm-family file, a test or tool, or media,
+when its reach stays bounded: that realm's jobs (every job that runs a smoke
+carrying the realm in its name, plus REALM_JOBS) and the net group; the jobs
+that run each test/tool on the reach (by file stem, `SMOKE: <name>` or
+`--only=<name>`); the net group for tools/net and net smokes; PRESENTATION_JOBS
+for media. The ALWAYS_JOBS (unit shards, bake freshness, export, handoffs)
+run on every code change regardless.
 
-ALWAYS_JOBS run whenever their own tier/code gate says so; selection never
-removes them. Documentation-only changes are decided earlier (`code=false`).
-tests/test_ci_select_jobs.py classifies sample paths, unmapped ones included.
+REACH: a breadth-first walk over the files that name a file. A file is named
+by its stem as a whole word (`cloudreach_bell` in "res://.../cloudreach_bell.gd",
+`preload`, `extends`, a JSON path or a bare id) or by its `class_name` (global
+classes need no path). Text is scanned in SCAN_ROOTS (scripts, scenes,
+autoload, all of data/ JSON, assets' scenes/resources, shaders, tests incl.
+fixture scripts, tools, project.godot). A referrer that is CORE, or game code
+outside the starting realm family, makes the change select everything; a
+referrer test/tool adds the jobs that run it, and the walk continues from
+every referrer. More than MAX_REACH files on the walk selects everything.
+
+Realm families: a directory or file name equal to the realm prefix or
+starting `<prefix>_` (cloudreach, stormwood/stormheart, water/tidewake).
+Renamed files are diffed with --no-renames so the old path is classified too.
+tests/test_ci_select_jobs.py checks sample and real-repository paths.
 """
 import argparse
 import os
@@ -50,8 +56,9 @@ import re
 import sys
 
 MAX_PATHS = 200
+MAX_REACH = 400
 
-DOC_RE = re.compile(r"(\.md$|^site/|^docs/|^ralph/|^archive/|^\.claude/|^\.agents/)")
+DOC_RE = re.compile(r"(\.md$|^site/|^docs/|^ralph/|^archive/|^\.claude/)")
 
 CORE_RE = re.compile(
     r"^(autoload/|scripts/save/|scripts/net/session\.gd|scripts/net/ledger_rpc\.gd|"
@@ -65,10 +72,10 @@ MEDIA_RE = re.compile(r"\.(png|jpe?g|webp|ktx2|exr|hdr|svg|ogg|wav|mp3|gdshader)
 REALMS = {
     "cloudreach": ("cloudreach",),
     "stormwood": ("stormwood", "stormheart"),
-    "tidewake": ("water", "tidewake", "ripplet"),
+    "tidewake": ("water", "tidewake"),
 }
 
-# Jobs that run a realm's own smokes (beyond the net group).
+# Realm jobs that do not carry a realm smoke's name in their steps.
 REALM_JOBS = {
     "cloudreach": {"verify-regions-shard", "verify-cloudreach-persistence", "verify-cloudreach-midride-rejoin",
                    "verify-unbroken-chains"},
@@ -83,8 +90,17 @@ ALWAYS_JOBS = {"changes", "ci-gate", "verify-bake-freshness", "verify-unit-tests
                "verify-segment-handoffs"}
 
 # Where the reference scan looks (text only).
-SCAN_ROOTS = ("scripts/", "scenes/", "autoload/", "data/config/", "tests/", "tools/")
-SCAN_EXT = (".gd", ".tscn", ".tres", ".json", ".py", ".sh", ".cfg")
+SCAN_ROOTS = ("scripts/", "scenes/", "autoload/", "data/", "tests/", "tools/", "shaders/", "assets/")
+SCAN_EXT = {
+    "assets/": (".tscn", ".tres"),
+    "data/": (".json", ".tres", ".cfg"),
+    "tests/fixtures/": (".gd",),
+}
+DEFAULT_EXT = (".gd", ".tscn", ".tres", ".json", ".py", ".sh", ".cfg", ".gdshader", ".gdshaderinc")
+SCAN_FILES = ("project.godot",)
+
+WORD = re.compile(r"[A-Za-z0-9_]+")
+CLASS_NAME = re.compile(r"^class_name\s+([A-Za-z_][A-Za-z0-9_]*)", re.M)
 
 
 def ci_jobs(ci_text):
@@ -109,70 +125,124 @@ def ci_jobs(ci_text):
     return jobs
 
 
+class Corpus:
+    """Repository text, indexed by word -> files containing it."""
+
+    def __init__(self, files):
+        self.files = files
+        self.index = {}
+        self.class_of = {}
+        for path, text in files.items():
+            for word in set(WORD.findall(text)):
+                self.index.setdefault(word, set()).add(path)
+            if path.endswith(".gd"):
+                m = CLASS_NAME.search(text)
+                if m:
+                    self.class_of[path] = m.group(1)
+
+    def referrers(self, path):
+        names = {stem_of(path)}
+        if path in self.class_of:
+            names.add(self.class_of[path])
+        out = set()
+        for name in names:
+            out |= self.index.get(name, set())
+        out.discard(path)
+        return out
+
+
 def stem_of(path):
+    """File name without extensions (.import/.uid sidecars and the type)."""
     base = os.path.basename(path)
     for ext in (".import", ".uid"):
         base = base[: -len(ext)] if base.endswith(ext) else base
-    return base
+    return base.split(".")[0]
 
 
 def realm_of(path):
     """A realm when a directory or file name below the top level IS the realm
     prefix or starts with `<prefix>_` (cloudreach_world.gd, data/terrain/water/)."""
-    parts = path.split("/")
     for realm, prefixes in REALMS.items():
-        for part in parts[1:]:
+        for part in path.split("/")[1:]:
             name = part.split(".")[0]
             if any(name == p or name.startswith(p + "_") for p in prefixes):
                 return realm
     return None
 
 
-def is_game(path):
-    return path.split("/")[0] in ("scripts", "scenes", "autoload", "data", "assets")
-
-
-def is_unit_test(path):
-    return re.match(r"^tests/test_[A-Za-z0-9_]+\.gd$", path) is not None
-
-
-def referenced_by(path, corpus):
-    """Files in `corpus` (path -> text) other than `path` that name its file."""
+def realm_of_test(path):
+    """A test/tool carries a realm when its file name does (smoke_cloudreach_*,
+    smoke_net_water_*, proof_steps_stormwood)."""
     stem = stem_of(path)
-    return [other for other, text in corpus.items() if other != path and stem in text]
+    for realm, prefixes in REALMS.items():
+        if any(stem.startswith(p + "_") or ("_" + p + "_") in stem or stem.endswith("_" + p) for p in prefixes):
+            return realm
+    return None
+
+
+def is_game(path):
+    return path.split("/")[0] in ("scripts", "scenes", "autoload", "data", "assets", "shaders") \
+        or path in SCAN_FILES
+
+
+def is_test_or_tool(path):
+    return path.startswith("tests/") or path.startswith("tools/")
+
+
+def is_net(path):
+    return path.startswith("tools/net/") or path.startswith("tests/smoke_net_")
 
 
 def jobs_running(path, jobs):
-    """ci.yml jobs whose block names this test/tool: by file stem, or as
-    `SMOKE: <name>` (the retry-loop steps run tests/smoke_${SMOKE}.gd)."""
-    stem = stem_of(path).split(".")[0]
-    short = stem[len("smoke_"):] if stem.startswith("smoke_") else None
+    """ci.yml jobs whose block names this test/tool: by file stem, as
+    `SMOKE: <name>` (tests/smoke_${SMOKE}.gd) or `--only=<name>` lists."""
+    stem = stem_of(path)
+    short = re.sub(r"^(smoke|test)_", "", stem)
     out = set()
     for job, block in jobs.items():
-        if stem in block or (short and re.search(r"SMOKE: %s\b" % re.escape(short), block)):
+        if re.search(r"\b%s\b" % re.escape(stem), block) \
+                or re.search(r"SMOKE: %s\b" % re.escape(short), block) \
+                or re.search(r"--only=[^\s]*\b%s\b" % re.escape(short), block):
             out.add(job)
     return out
 
 
-def widen(path, jobs, corpus, family=None):
-    """What the files referencing `path` add: ('all', culprit) when game code
-    outside `family`, or a core/shared file, uses it; else the set of jobs that
-    run the tests/tools using it (net smokes and tools/net add the net group).
-    Unit tests add nothing: the unit shards always run."""
-    out = set()
-    for ref in referenced_by(path, corpus):
-        if is_unit_test(ref):
-            continue
-        if is_game(ref):
-            if family and realm_of(ref) == family:
+def realm_jobs(realm, jobs, corpus):
+    """Every job running a smoke that carries the realm, plus REALM_JOBS."""
+    out = set(REALM_JOBS[realm])
+    for path in corpus.files:
+        if path.startswith("tests/smoke_") and realm_of_test(path) == realm:
+            out |= jobs_running(path, jobs)
+    return out
+
+
+def reach(path, jobs, corpus, family):
+    """Walk the files that name `path`, transitively. Returns ('all', why) or
+    (jobs, why)."""
+    chosen, seen, queue = set(), {path}, [path]
+    while queue:
+        node = queue.pop(0)
+        for ref in sorted(corpus.referrers(node)):
+            if ref in seen:
                 continue
-            return "all", ref
-        if CORE_RE.search(ref):
-            return "all", ref
-        if ref.startswith("tools/net/") or ref.startswith("tests/smoke_net_"):
-            out |= NET_JOBS
-        out |= jobs_running(ref, jobs)
-    return out, None
+            seen.add(ref)
+            if len(seen) > MAX_REACH:
+                return "all", "reach of %s exceeds %d files" % (path, MAX_REACH)
+            if DOC_RE.search(ref):
+                continue
+            if CORE_RE.search(ref):
+                return "all", "%s reaches core %s (via %s)" % (path, ref, node)
+            if is_game(ref):
+                if family is None or realm_of(ref) != family:
+                    return "all", "%s reaches game code %s (via %s)" % (path, ref, node)
+            elif is_test_or_tool(ref):
+                chosen |= jobs_running(ref, jobs)
+                if is_net(ref):
+                    chosen |= NET_JOBS
+            else:
+                return "all", "%s reaches unmapped %s" % (path, ref)
+            queue.append(ref)
+    return chosen, "reach of %s: %d files" % (path, len(seen))
 
 
 def classify(path, jobs, corpus):
@@ -181,23 +251,25 @@ def classify(path, jobs, corpus):
         return set(), "documentation"
     if CORE_RE.search(path):
         return "all", "core/shared path"
-    if re.match(r"^tests/test_[A-Za-z0-9_]+\.gd(\.uid)?$", path):
-        return set(), "unit test (the unit shards always run)"
     if MEDIA_RE.search(path):
-        return set(PRESENTATION_JOBS), "presentation media/shader"
-    if path.startswith("tests/") or path.startswith("tools/"):
-        chosen = set(NET_JOBS) if (path.startswith("tools/net/") or path.startswith("tests/smoke_net_")) else set()
-        extra, culprit = widen(path, jobs, corpus)
+        family = realm_of(path)
+        extra, why = reach(path, jobs, corpus, family)
         if extra == "all":
-            return "all", "test/tool used by %s" % culprit
-        chosen |= jobs_running(path, jobs) | extra
-        return chosen, "test/tool run by %s" % (",".join(sorted(chosen)) or "no CI job")
-    realm = realm_of(path)
-    if realm and is_game(path):
-        extra, culprit = widen(path, jobs, corpus, family=realm)
+            return "all", why
+        base = set(PRESENTATION_JOBS) | ((realm_jobs(family, jobs, corpus) | NET_JOBS) if family else set())
+        return base | extra, "presentation media/shader; " + why
+    if is_test_or_tool(path):
+        extra, why = reach(path, jobs, corpus, None)
         if extra == "all":
-            return "all", "%s file used outside its family by %s" % (realm, culprit)
-        return set(REALM_JOBS[realm]) | set(NET_JOBS) | extra, "%s family" % realm
+            return "all", why
+        chosen = jobs_running(path, jobs) | extra | (NET_JOBS if is_net(path) else set())
+        return chosen, "test/tool run by %s; %s" % (",".join(sorted(chosen)) or "no CI job", why)
+    family = realm_of(path)
+    if family and is_game(path):
+        extra, why = reach(path, jobs, corpus, family)
+        if extra == "all":
+            return "all", why
+        return realm_jobs(family, jobs, corpus) | NET_JOBS | extra, "%s family; %s" % (family, why)
     return "all", "gameplay code/data outside a realm family, or unmapped"
 
 
@@ -205,7 +277,7 @@ def select(changed, event, ci_text, corpus, force_all=False):
     """Returns (jobs_selected:set, everything:bool, explanation:list)."""
     jobs = ci_jobs(ci_text)
     every = set(jobs)
-    changed = [p for p in changed if p.strip()]
+    changed = [p.strip() for p in changed if p.strip()]
     if force_all or event in ("schedule", "workflow_dispatch"):
         return every, True, ["%s: everything" % (event or "forced")]
     if not changed:
@@ -213,6 +285,8 @@ def select(changed, event, ci_text, corpus, force_all=False):
     code = [p for p in changed if not DOC_RE.search(p)]
     if len(code) > MAX_PATHS:
         return every, True, ["%d code paths > %d: everything" % (len(code), MAX_PATHS)]
+    if not isinstance(corpus, Corpus):
+        corpus = Corpus(corpus)
     chosen, why = set(ALWAYS_JOBS & every), []
     for path in changed:
         result, reason = classify(path, jobs, corpus)
@@ -224,21 +298,29 @@ def select(changed, event, ci_text, corpus, force_all=False):
 
 
 def load_corpus(root="."):
-    corpus = {}
+    files = {}
     for scan in SCAN_ROOTS:
-        base = os.path.join(root, scan)
-        for dirpath, _dirs, files in os.walk(base):
-            if "/tests/fixtures" in dirpath.replace(os.sep, "/"):
-                continue
-            for f in files:
-                if f.endswith(SCAN_EXT):
+        for dirpath, _dirs, names in os.walk(os.path.join(root, scan)):
+            rel_dir = os.path.relpath(dirpath, root).replace(os.sep, "/") + "/"
+            exts = DEFAULT_EXT
+            for prefix, allowed in SCAN_EXT.items():
+                if rel_dir.startswith(prefix):
+                    exts = allowed
+            for f in names:
+                if f.endswith(exts):
                     full = os.path.join(dirpath, f)
                     try:
                         with open(full, encoding="utf-8", errors="ignore") as fh:
-                            corpus[os.path.relpath(full, root).replace(os.sep, "/")] = fh.read()
+                            files[os.path.relpath(full, root).replace(os.sep, "/")] = fh.read()
                     except OSError:
                         pass
-    return corpus
+    for f in SCAN_FILES:
+        try:
+            with open(os.path.join(root, f), encoding="utf-8", errors="ignore") as fh:
+                files[f] = fh.read()
+        except OSError:
+            pass
+    return Corpus(files)
 
 
 def main(argv):
@@ -247,16 +329,20 @@ def main(argv):
     ap.add_argument("--ci", default=".github/workflows/ci.yml")
     ap.add_argument("--all", action="store_true")
     args = ap.parse_args(argv)
-    changed = [] if args.all else sys.stdin.read().splitlines()
     with open(args.ci) as fh:
         ci_text = fh.read()
-    corpus = {} if args.all else load_corpus()
-    chosen, everything, why = select(changed, args.event, ci_text, corpus, force_all=args.all)
+    if args.all:
+        chosen, everything, why = select([], args.event, ci_text, {}, force_all=True)
+    else:
+        changed = sys.stdin.read().splitlines()
+        chosen, everything, why = select(changed, args.event, ci_text, load_corpus())
     for line in why:
         print("select: " + line, file=sys.stderr)
-    # `|a|b|`: ci.yml tests `contains(jobs, '|<job>|')`; no whitespace to trim.
-    print("jobs=|%s|" % "|".join(sorted(chosen)))
+    # `|a|b|`: ci.yml tests `contains(jobs, '|ALL|') || contains(jobs, '|<job>|')`.
+    names = (["ALL"] if everything else []) + sorted(chosen)
+    print("jobs=|%s|" % "|".join(names))
     print("all=%s" % ("true" if everything else "false"))
+    print("net=%s" % ("true" if everything or (chosen & NET_JOBS) else "false"))
     return 0
 
 
