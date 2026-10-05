@@ -177,6 +177,14 @@ static func _relic(current: Dictionary, action: String, intent: Dictionary, cont
 		if not next.redesign_character.relics_held.has(intent.biome): return deny("personal_relic_required")
 		next.redesign_character.relics_held.erase(intent.biome)
 		if not next.redesign_character.relics_hung.has(intent.biome): next.redesign_character.relics_hung.append(intent.biome)
+		# F31#2 (HOMESTEAD §4, RD-20 "next tier"): hanging biome N's relic
+		# grants biome N+1's attachment blueprints (Stormwood's: reserved tier
+		# 5), inside this same once-per-character relic_hang receipt.
+		var known: Array = next.redesign_character.get("attachment_recipes", [])
+		for id: String in preload("res://scripts/build/station_rules.gd").next_tier_blueprints(
+				preload("res://scripts/build/station_rules.gd").config(), intent.biome):
+			if not known.has(id): known.append(id)
+		next.redesign_character.attachment_recipes = known
 	else:
 		var grant := preload("res://scripts/net/encounter_rewards.gd").chapter_hand_off(str(intent.get("trainer_id", "")), str(context.get("realm", "")))
 		if intent.size() != 3 or grant.is_empty() or grant.relic_biome != intent.biome \

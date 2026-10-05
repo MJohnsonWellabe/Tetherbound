@@ -219,6 +219,25 @@ static func placement(cfg: Dictionary, records: Array, id: String, realm: String
 			or absf(wrapf(yaw-float(parent.record.yaw_deg),-180,180)) > 0.01: return deny("attachment_snap_required")
 	return {"ok": true,"parent_uid":parent_uid,"slot":int(def.tier)}
 
+## F31#2: the attachment blueprints a hung relic grants. Biome N's tier is
+## the tier its own attachments sit at; the grant is every station's
+## attachment one tier above (Meadows -> Tidewake ... Stormwood -> reserved
+## tier 5, which placement still refuses as `attachment_reserved`).
+static func next_tier_blueprints(cfg: Dictionary, hung_biome: String) -> Array[String]:
+	var out: Array[String] = []
+	var tier := 0
+	for row: Variant in cfg.get("attachments", []):
+		if row is Dictionary and str(row.get("biome", "")) == hung_biome:
+			tier = int(row.get("tier", 0))
+			break
+	if tier <= 0:
+		return out
+	for row: Variant in cfg.get("attachments", []):
+		if row is Dictionary and int(row.get("tier", 0)) == tier + 1:
+			out.append(str(row.get("id", "")))
+	return out
+
+
 static func dismantle(cfg: Dictionary, records: Array, uid: String) -> Dictionary:
 	var target := record(cfg,records,uid)
 	if target.get("ok") != true: return target
