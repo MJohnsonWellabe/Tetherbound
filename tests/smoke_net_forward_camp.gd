@@ -38,8 +38,10 @@ func _run() -> void:
 	for i in 2:
 		var granted: Dictionary = await step(i, "party_grant", {"species": "terrapup"})
 		check(granted.get("verdict") == "PASS", "peer %d owns a creature" % i)
-		var kit: Dictionary = await _cstep(i, "camp_grant_kit", {"n": 1})
-		check(int(kit.get("kits", 0)) == 1, "peer %d holds one forward-camp kit" % i)
+		# The guest brings two: one for its camp, one to place a second (the
+		# pack-up offer applies when a kit is in hand to place).
+		var kit: Dictionary = await _cstep(i, "camp_grant_kit", {"n": 1 + i})
+		check(int(kit.get("kits", 0)) == 1 + i, "peer %d holds %d forward-camp kit(s)" % [i, 1 + i])
 	var hosted: Dictionary = await step(0, "host", {})
 	check(hosted.get("verdict") == "PASS", "peer 0 hosts (%s)" % str(hosted.get("detail", "")))
 	var host_session = await probe(0, "session")
@@ -63,7 +65,7 @@ func _run() -> void:
 		"the guest receives the host's camp record and planted camp (%s)" % str(guest_view.get("detail", "")))
 
 	var guest_held := await _cstep(1, "camp_records")
-	check(int(guest_held.get("kits", -1)) == 1, "after joining the guest still holds its kit (%d)" % int(guest_held.get("kits", -1)))
+	check(int(guest_held.get("kits", -1)) == 2, "after joining the guest still holds its kits (%d)" % int(guest_held.get("kits", -1)))
 
 	# --- the guest places -----------------------------------------------------
 	await step(1, "teleport", {"at": _offset(host_place.get("spot", []), 30.0)})
@@ -74,14 +76,30 @@ func _run() -> void:
 		"the host holds the guest's camp with the guest's character id (%s)" % str(host_view.get("detail", "")))
 	guest_view = await _await_records(1, 2)
 	check(_owners(guest_view).has(guest_id) and _owners(guest_view).has(host_id), "the guest holds both camps")
-	var guest_kits := await _await_kits(1, 0)
-	check(guest_kits == 0, "the host debited the guest's own kit (%d left)" % guest_kits)
+	var guest_kits := await _await_kits(1, 1)
+	check(guest_kits == 1, "the host debited one of the guest's own kits (%d left)" % guest_kits)
 	var settled := {}
 	for _poll in 20:
 		settled = await _cstep(1, "camp_records")
 		if settled.get("pending") == false: break
 		await step(1, "wait", {"frames": 30})
 	check(settled.get("pending") == false, "the guest's camp request settles (no pending original left)")
+
+	# --- the guest moves its camp (HOMESTEAD §8 pack-up offer) ------------------
+	var old_guest_uid := ""
+	for row: Dictionary in guest_view.get("records", []):
+		if row.character_id == guest_id: old_guest_uid = str(row.uid)
+	# Searched from beside the old camp (terrain collision streams around the
+	# player); 12 m clears the old camp's footprint, which still stands while
+	# the new ghost is validated.
+	var moved: Dictionary = await _cstep(1, "camp_place", {"away": 12.0, "presses": 2}, STEP_BUDGET)
+	check(moved.get("verdict") == "PASS" and str((moved.get("messages", [""]) as Array)[0]).contains("Press Place again to pack it up"),
+		"the guest is offered a pack-up and, pressing again, pitches a new camp (%s)" % str(moved.get("detail", "")).left(160))
+	host_view = await _await_records(0, 2)
+	var guest_uids := (host_view.get("records", []) as Array).filter(func(r: Dictionary) -> bool: return r.character_id == guest_id)
+	check(guest_uids.size() == 1 and str(guest_uids[0].uid) != old_guest_uid,
+		"the host holds exactly one guest camp, the new one (%s)" % str(host_view.get("detail", "")))
+	check(await _await_kits(1, 1) == 1, "the old camp's kit was refunded and one spent on the new camp (one left)")
 
 	# --- host save and reload -------------------------------------------------
 	var reload: Dictionary = await step(0, "save_reload_here", {}, STEP_BUDGET)

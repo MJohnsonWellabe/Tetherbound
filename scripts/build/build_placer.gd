@@ -146,7 +146,9 @@ func _station_pose_valid(game: Node, id: String, realm: String, at: Vector3, yaw
 
 ## Same host geometry probe used by preview and Foundation's paid stage.
 ## Nine footprint samples avoid treating a centre on shore as a dry camp.
-func validate_forward_camp_ground(game: Node, realm: String, at: Vector3, yaw: float) -> Dictionary:
+## `placer_body`: the host validates a guest's camp with that guest's own
+## trainer standing beside it; only that body is no obstacle (F34#4).
+func validate_forward_camp_ground(game: Node, realm: String, at: Vector3, yaw: float, placer_body: Node3D = null) -> Dictionary:
 	var cfg := CAMP_RULES.config()
 	var world := get_parent() as Node3D
 	if cfg.get("runtime_enabled") != true: return CAMP_RULES.deny("camp_disabled")
@@ -165,7 +167,7 @@ func validate_forward_camp_ground(game: Node, realm: String, at: Vector3, yaw: f
 			if preload("res://scripts/data/biome_order.gd").canonical_id(realm) == "tidewake" and not world.has_method("water_depth_at"): return CAMP_RULES.deny("camp_ground")
 			# Actual support must exist, independently of analytic terrain height.
 			var ray := PhysicsRayQueryParameters3D.create(sample+Vector3.UP*0.5,sample-Vector3.UP*0.5,1)
-			ray.exclude=_bodies_that_are_not_buildings()
+			ray.exclude=_camp_exclusions(placer_body)
 			var hit := world.get_world_3d().direct_space_state.intersect_ray(ray)
 			if hit.is_empty() or (hit.position as Vector3).distance_to(sample) > float(cfg.ground_tolerance_m): return CAMP_RULES.deny("camp_ground")
 	var shape := BoxShape3D.new()
@@ -175,9 +177,16 @@ func validate_forward_camp_ground(game: Node, realm: String, at: Vector3, yaw: f
 	query.transform=Transform3D(Basis(Vector3.UP,deg_to_rad(yaw)),at+Vector3(0,float(size[1])*0.5+0.05,0))
 	query.collision_mask=3
 	query.collide_with_areas=true
-	query.exclude=_bodies_that_are_not_buildings()
+	query.exclude=_camp_exclusions(placer_body)
 	if not world.get_world_3d().direct_space_state.intersect_shape(query,1).is_empty(): return CAMP_RULES.deny("camp_ground")
 	return {"ok":true}
+
+
+func _camp_exclusions(placer_body: Node3D) -> Array[RID]:
+	var out := _bodies_that_are_not_buildings()
+	if placer_body is CollisionObject3D and is_instance_valid(placer_body):
+		out.append((placer_body as CollisionObject3D).get_rid())
+	return out
 
 
 ## Foundation calls this with the sender's admitted inventory, personal
@@ -1436,6 +1445,7 @@ func _place(game: Node, armed: String) -> void:
 		var at: Vector3 = preview.position
 		var intent := {"action":"place","action_id":Crypto.new().generate_random_bytes(16).hex_encode(),
 			"realm":WORLD_RECORDS.active(game),"position":[at.x,at.y,at.z],"yaw_deg":_yaw_deg}
+		_connect_camp_answers(producer)
 		var existing := own_camp_uid(game, WORLD_RECORDS.active(game))
 		if not existing.is_empty():
 			_offer_camp_repack(game, producer, existing, intent)
@@ -1632,6 +1642,9 @@ func _uproot_from_delta(game: Node, op: Dictionary) -> void:
 				if get_parent().is_ancestor_of(node) and str(node.get_meta(BUILDING_UID_META, "")) == str(op.uid) \
 						and str(node.get_meta(BUILDING_ID_META, "")) == CAMP_RULES.ID:
 					if node == _dismantle_target: _clear_dismantle_target()
+					# Out of the tree now, so its collider cannot refuse a new camp
+					# validated before the frame ends.
+					node.get_parent().remove_child(node)
 					node.queue_free()
 		return
 	var realm := str(op.get("realm", "meadows"))
@@ -1832,6 +1845,23 @@ func own_camp_uid(game: Node, realm: String) -> String:
 
 ## First press: say what a second press does. Second press inside the window:
 ## pack the old camp up (its kit refunded by the host), then place this one.
+## The host's answer to this player's camp requests (a guest's arrives later
+## than the press): a refusal is said in words, and the repack follows its pack.
+func _connect_camp_answers(producer: Node) -> void:
+	if producer != null and producer.has_signal("homestead_action_completed") \
+			and not producer.is_connected("homestead_action_completed", _on_camp_answer):
+		producer.connect("homestead_action_completed", _on_camp_answer)
+
+
+func _on_camp_answer(op: String, intent: Dictionary, result: Dictionary) -> void:
+	if op != "camp_build" or result.get("ok") == true or result.get("terminal_refusal") != true: return
+	var game := _game()
+	if not _camp_after_pack.is_empty() and intent.get("action_id") == _camp_after_pack.get("pack_id"):
+		_camp_after_pack = {}
+	if game != null:
+		game.call("push_world_message", CAMP_RULES.deny(str(result.get("code", ""))).reason)
+
+
 func _offer_camp_repack(game: Node, producer: Node, existing: String, intent: Dictionary) -> void:
 	var now := Time.get_ticks_msec()
 	if _camp_repack.get("uid") != existing or now > int(_camp_repack.get("until_ms", 0)):
@@ -1841,11 +1871,15 @@ func _offer_camp_repack(game: Node, producer: Node, existing: String, intent: Di
 		return
 	_camp_repack = {}
 	var pack := {"action":"pack","action_id":Crypto.new().generate_random_bytes(16).hex_encode(),"uid":existing}
+	_connect_camp_answers(producer)
 	var result: Variant = producer.call("forward_camp_submit_build", pack, self)
-	if result is Dictionary and result.get("terminal_refusal") == true:
-		game.call("push_world_message", str(result.get("reason", CAMP_RULES.deny("camp_unavailable").reason)))
+	# Sent (settled here, or awaiting the host's saved decision) or not at all.
+	var sent: bool = result is Dictionary and (result.get("ok") == true \
+		or result.get("code") == "awaiting_saved_decision" or result.get("settled") == true)
+	if not sent:
+		game.call("push_world_message", CAMP_RULES.deny(str((result as Dictionary).get("code", "camp_unavailable")) if result is Dictionary else "camp_unavailable").reason)
 		return
-	_camp_after_pack = {"old_uid": existing, "intent": intent, "until_ms": now + CAMP_REPACK_TIMEOUT_MS}
+	_camp_after_pack = {"old_uid": existing, "intent": intent, "pack_id": pack.action_id, "until_ms": now + CAMP_REPACK_TIMEOUT_MS}
 
 
 ## Once the old camp's record is gone, the new one goes to the host as an
@@ -1854,8 +1888,10 @@ func _advance_camp_repack(game: Node) -> void:
 	if _camp_after_pack.is_empty(): return
 	var producer: Node = game.get("session") as Node
 	if Time.get_ticks_msec() > int(_camp_after_pack.until_ms):
+		var packed: bool = own_camp_uid(game, str(_camp_after_pack.intent.realm)) != str(_camp_after_pack.old_uid)
 		_camp_after_pack = {}
-		game.call("push_world_message", "The old camp could not be packed up; nothing was placed.")
+		game.call("push_world_message", "The old camp was packed up (kit refunded); press Place to pitch the new one." if packed \
+			else "The old camp could not be packed up; nothing was placed.")
 		return
 	if own_camp_uid(game, str(_camp_after_pack.intent.realm)) == _camp_after_pack.old_uid: return
 	if producer == null or producer.call("forward_camp_placement_available") != true: return
@@ -2025,11 +2061,6 @@ func _bodies_that_are_not_buildings() -> Array[RID]:
 	if tree == null:
 		return out
 	for body in tree.get_nodes_in_group(DEPLOYED_CREATURE_GROUP):
-		if body is CollisionObject3D and is_instance_valid(body):
-			out.append((body as CollisionObject3D).get_rid())
-	# F34#4: a teammate's trainer body is no more an obstacle than this one's;
-	# the host validates a guest's camp with that guest standing beside it.
-	for body in tree.get_nodes_in_group(&"remote_trainer"):
 		if body is CollisionObject3D and is_instance_valid(body):
 			out.append((body as CollisionObject3D).get_rid())
 	return out

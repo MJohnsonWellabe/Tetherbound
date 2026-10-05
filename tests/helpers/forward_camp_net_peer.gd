@@ -10,6 +10,7 @@ extends "res://tools/net/peer_runner.gd"
 ##     teleport), aims the ghost there and
 ##     presses Place through the PRODUCTION BuildPlacer._place (-> Session
 ##     forward_camp_submit_build -> host Foundation camp_build).
+##     `presses: 2` presses twice (the pack-up offer, then its acceptance).
 ##   * `camp_records`: this peer's forward-camp records and planted nodes.
 
 const KIT := "forward_camp_kit"
@@ -45,7 +46,7 @@ func _camp_dispatch(action: String, args: Dictionary) -> Dictionary:
 		"camp_records":
 			return _records(game)
 		"camp_place":
-			return await _place(game, float(args.get("away", 20.0)))
+			return await _place(game, float(args.get("away", 20.0)), int(args.get("presses", 1)))
 	return {"verdict": "ERROR", "detail": "unknown action " + action}
 
 
@@ -65,7 +66,7 @@ func _records(game: Node) -> Dictionary:
 		"character_id": str(game.get("local").get("character_id"))}
 
 
-func _place(game: Node, away: float) -> Dictionary:
+func _place(game: Node, away: float, presses: int = 1) -> Dictionary:
 	var placer: Node = null
 	for node: Node in get_nodes_in_group("build_placer"):
 		placer = node
@@ -103,7 +104,9 @@ func _place(game: Node, away: float) -> Dictionary:
 				spot = preview.position
 				break
 		if spot != Vector3.INF: break
-	if spot == Vector3.INF: return {"verdict": "FAIL", "detail": "no valid camp ground"}
+	if spot == Vector3.INF:
+		return {"verdict": "FAIL", "detail": "no valid camp ground (placement available %s, %d kit(s))" % [
+			str(session.call("forward_camp_placement_available")), int(game.get("local").get("inventory").call("count", KIT))]}
 	# The runner's own teleport (teleport_body + owner-passive catch-up), so the
 	# host's view of this trainer follows it.
 	var stood := spot + Vector3(0.0, 0.5, 3.0)
@@ -113,12 +116,20 @@ func _place(game: Node, away: float) -> Dictionary:
 		await physics_frame
 	placer.set("_yaw_deg", 0.0)
 	(placer.get("_ghost") as Node3D).global_position = spot
-	placer.call("_place", game, "forward_camp")
+	var before: Array = (_records(game).records as Array).filter(func(r: Dictionary) -> bool:
+		return r.character_id == str(game.get("local").get("character_id"))).map(func(r: Dictionary) -> String: return r.uid)
+	var messages: Array = []
+	for press in presses:
+		game.set("_pending_world_message", "")
+		placer.call("_place", game, "forward_camp")
+		messages.append(str(game.get("_pending_world_message")))
+		for _frame in 10:
+			await physics_frame
 	var settled := false
-	for _frame in 240:
+	for _frame in 900:
 		await physics_frame
 		var mine: Array = (_records(game).records as Array).filter(func(r: Dictionary) -> bool:
-			return r.character_id == str(game.get("local").get("character_id")))
+			return r.character_id == str(game.get("local").get("character_id")) and not before.has(r.uid))
 		if not mine.is_empty():
 			settled = true
 			break
@@ -128,4 +139,5 @@ func _place(game: Node, away: float) -> Dictionary:
 	out.verdict = "PASS" if settled else "FAIL"
 	out.detail = "placed at %s: %s; pending %s; answers %s" % [str(spot), str(out.detail), JSON.stringify(pending), JSON.stringify(_camp_answers)]
 	out.spot = [spot.x, spot.y, spot.z]
+	out.messages = messages
 	return out

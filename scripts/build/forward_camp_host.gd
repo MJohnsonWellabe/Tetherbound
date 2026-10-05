@@ -19,7 +19,7 @@ static func placement_context(placer: Node, game: Node, actor: Node3D, character
 	var p: Array = original.position
 	var at := Vector3(p[0],p[1],p[2])
 	if actor.global_position.distance_to(at) > float(cfg.maximum_place_distance_m): return {}
-	var checked: Variant = placer.call("validate_forward_camp_ground",game,realm,at,original.get("yaw_deg",NAN))
+	var checked: Variant = placer.call("validate_forward_camp_ground",game,realm,at,original.get("yaw_deg",NAN),actor)
 	if not checked is Dictionary or checked.get("ok") != true: return {}
 	return {"character_id":character,"expected_revision":revision,"realm":realm,
 		"in_range":true,"in_combat":false,"host_ground_valid":true}

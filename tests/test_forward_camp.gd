@@ -122,6 +122,15 @@ func test_atomic_kit_place_pack_replay_and_stale_revision() -> void:
 	context.character_id="guest"
 	context.all_parties_awake=true
 	assert_eq(ACTIONS._stage_build(cfg,guest,0,stage.placed_buildings,2,pack,context).code,"camp_owner")
+	# F34#4 review: a request without a kit, or naming a realm other than the
+	# host's validated one, plants nothing.
+	var broke: Dictionary = before.duplicate(true)
+	broke.inventory=[]
+	context.character_id="owner"
+	assert_eq(ACTIONS._stage_build(cfg,broke,0,[],1,place,context).code,"camp_kit_missing")
+	var elsewhere := place.duplicate(true)
+	elsewhere.realm="stormwood"
+	assert_eq(ACTIONS._stage_build(cfg,before,0,[],1,elsewhere,context).code,"camp_ground")
 
 func test_real_recipe_book_splits_travel_tier_from_homestead_only() -> void:
 	# F34#1 over the shipped recipe book (ItemDB): the field allowlist crafts at

@@ -31,7 +31,10 @@ static func deny(code: String, station: String = "Workbench") -> Dictionary:
 		"camp_owner":"Only the character who placed this camp can pack it up.",
 		"camp_occupied":"Wake the team before packing up this camp.",
 		"camp_home_only":"Needs the homestead — use the %s." % station,
-		"camp_unavailable":"This camp is unavailable; wait for its saved transaction."}
+		"camp_unavailable":"This camp is unavailable; wait for its saved transaction.",
+		"camp_kit_missing":"You need a forward-camp kit; craft one at the Workbench.",
+		"satchel_full":"Make room in your satchel for the camp kit first.",
+		"source_or_revision_changed":"Your camp request crossed a newer save; press Place again."}
 	return {"ok":false,"code":code,"reason":reasons.get(code,"The camp transaction was refused; nothing was spent.")}
 
 static func record(records: Array, uid: String) -> Dictionary:

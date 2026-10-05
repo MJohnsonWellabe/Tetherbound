@@ -1,24 +1,27 @@
 ALL CHECKS PASSED
-PASS: after joining the guest still holds its kit (1)
+PASS: after joining the guest still holds its kits (2)
 PASS: after rejoining the guest receives both camps (2 record(s), 2 node(s))
 PASS: after the host reload both camps are in the world (2 record(s), 2 node(s))
-PASS: peer 0 holds one forward-camp kit
-PASS: peer 0 hosts (hosting udp/29621 as peer 1)
+PASS: peer 0 holds 1 forward-camp kit(s)
+PASS: peer 0 hosts (hosting udp/30121 as peer 1)
 PASS: peer 0 owns a creature
 PASS: peer 0 sees both players
-PASS: peer 1 holds one forward-camp kit
-PASS: peer 1 joins (joined 127.0.0.1:29621 as peer 2077380034 after 30 frames; snapshot applied; 2 peer(s) in registry)
+PASS: peer 1 holds 2 forward-camp kit(s)
+PASS: peer 1 joins (joined 127.0.0.1:30121 as peer 214706491 after 28 frames; snapshot applied; 2 peer(s) in registry)
 PASS: peer 1 owns a creature
 PASS: peer 1 sees both players
 PASS: the guest holds both camps
+PASS: the guest is offered a pack-up and, pressing again, pitches a new camp (placed at (72.0, 0.9, 0.0): 2 record(s), 2 node(s); pending {"character_id":"character-b0a479f83df7ff1dae774bcf1b2f24b8","original":{"action":"place","action_id)
 PASS: the guest leaves (client left cleanly after 0 frames)
-PASS: the guest places its own camp (placed at (52.0, 0.9, 16.0): 2 record(s), 2 node(s); pending {"character_id":"character-07f87e7ec605988eae86a7ae79ca83d2","original":{"action":"place","action_id":"eacfd4c5e0686e46c24515889d52fa15","position":[52.0,0.899999976158142,16.0],"realm":"meadows","yaw_deg":0.0},"revision":0,"world_namespace":"edcf585d460ef2e6d0fdc7baae63e70d"}; answers [{"code":"awaiting_saved_decision","durable":true,"ok":false,"owner_acknowledged":false,"owner_saved":false,"receipt":"craft:character-07f87e7ec605988eae86a7ae79ca83d2:camp:eacfd4c5e0686e46c24515889d52fa15","resolved":false,"saved":false,"settled":false}])
+PASS: the guest places its own camp (placed at (52.0, 0.9, 16.0): 2 record(s), 2 node(s); pending {"character_id":"character-b0a479f83df7ff1dae774bcf1b2f24b8","original":{"action":"place","action_id":"e714429dbac0842c8b7dc1e9df07640d","position":[52.0,0.899999976158142,16.0],"realm":"meadows","yaw_deg":0.0},"revision":0,"world_namespace":"a8bbec5591c1e2f781a332c575ef2393"}; answers [{"code":"awaiting_saved_decision","durable":true,"ok":false,"owner_acknowledged":false,"owner_saved":false,"receipt":"craft:character-b0a479f83df7ff1dae774bcf1b2f24b8:camp:e714429dbac0842c8b7dc1e9df07640d","resolved":false,"saved":false,"settled":false}])
 PASS: the guest receives the host's camp record and planted camp (1 record(s), 1 node(s))
-PASS: the guest rejoins (joined 127.0.0.1:29621 as peer 327193861 after 96 frames; snapshot applied; 2 peer(s) in registry)
+PASS: the guest rejoins (joined 127.0.0.1:30121 as peer 1612719519 after 102 frames; snapshot applied; 2 peer(s) in registry)
 PASS: the guest's camp request settles (no pending original left)
-PASS: the host debited the guest's own kit (0 left)
+PASS: the host debited one of the guest's own kits (1 left)
+PASS: the host holds exactly one guest camp, the new one (2 record(s), 2 node(s))
 PASS: the host holds the guest's camp with the guest's character id (2 record(s), 2 node(s))
-PASS: the host places its camp (placed at (18.0, 0.9, 14.0): 1 record(s), 1 node(s); pending {"character_id":"character-e60c6629106736f14d06be45b7078c7c","original":{"action":"place","action_id":"be6c061fe0f7bd22332592ae5aba15a1","position":[18.0,0.899999976158142,14.0],"realm":"meadows","yaw_deg":0.0},"revision":5,"world_namespace":"edcf585d460ef2e6d0fdc7baae63e70d"}; answers [{"character_revision":6,"durable":true,"journal_revision":1,"ok":true,"owner_acknowledged":true,"owner_saved":true,"receipt":"craft:character-e60c6629106736f14d06be45b7078c7c:camp:be6c061fe0f7bd22332592ae5aba15a1","resolved":true,"saved":true,"settled":true}])
+PASS: the host places its camp (placed at (18.0, 0.9, 14.0): 1 record(s), 1 node(s); pending {"character_id":"character-cd64b8121a2be91a3807680b931c63f8","original":{"action":"place","action_id":"735295322a010ba6167e5975206a12cd","position":[18.0,0.899999976158142,14.0],"realm":"meadows","yaw_deg":0.0},"revision":4,"world_namespace":"a8bbec5591c1e2f781a332c575ef2393"}; answers [{"character_revision":5,"durable":true,"journal_revision":1,"ok":true,"owner_acknowledged":true,"owner_saved":true,"receipt":"craft:character-cd64b8121a2be91a3807680b931c63f8:camp:735295322a010ba6167e5975206a12cd","resolved":true,"saved":true,"settled":true}])
 PASS: the host saves and reloads its world (host slot reload preserved party=true selection=true hosted_world=true)
 PASS: the host's kit is spent
+PASS: the old camp's kit was refunded and one spent on the new camp (one left)
 PASS: two distinct characters

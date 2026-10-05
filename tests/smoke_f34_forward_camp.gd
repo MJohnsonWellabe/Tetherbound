@@ -8,7 +8,7 @@ extends SceneTree
 ##   one camp per character per biome (a second is refused, kit kept);
 ##   #2 resting at the camp bed is the saved team rest (party recovers).
 ##
-##   godot --headless --path . --script tests/smoke_f34_forward_camp.gd -- [--scene=<world tscn> --realm=<id>]
+##   godot --headless --path . --script tests/smoke_f34_forward_camp.gd -- [--scene=<world tscn> --realm=<id>] [--shot=<png>]
 ##
 ## Disclosed fixtures: the kit is added straight to the satchel (the Workbench
 ## craft is test_forward_camp / station-craft territory); the spot is found by
@@ -24,12 +24,14 @@ var failures := 0
 var checks := 0
 var _scene := DEFAULT_SCENE
 var _realm := ""
+var _shot := ""
 
 
 func _initialize() -> void:
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--scene="): _scene = arg.trim_prefix("--scene=")
 		elif arg.begins_with("--realm="): _realm = arg.trim_prefix("--realm=")
+		elif arg.begins_with("--shot="): _shot = arg.trim_prefix("--shot=")
 	_run.call_deferred()
 
 
@@ -69,7 +71,7 @@ func _find_spot(game: Node, placer: Node, player: Node3D, realm: String, away_fr
 var _last_message := ""
 
 
-func _place_at(game: Node, placer: Node, player: Node3D, at: Vector3, read_message := false) -> void:
+func _place_at(game: Node, placer: Node, player: Node3D, at: Vector3, read_message := false, presses := 1) -> void:
 	player.global_position = at + Vector3(0.0, 0.5, 3.0)
 	player.velocity = Vector3.ZERO
 	game.set("pending_build", "forward_camp")
@@ -78,9 +80,12 @@ func _place_at(game: Node, placer: Node, player: Node3D, at: Vector3, read_messa
 		player.global_position = at + Vector3(0.0, 0.5, 3.0)
 	placer.set("_yaw_deg", 0.0)
 	(placer.get("_ghost") as Node3D).global_position = at
-	game.set("_pending_world_message", "")
-	placer.call("_place", game, "forward_camp")
-	if read_message: _last_message = str(game.get("_pending_world_message"))
+	for press in presses:
+		game.set("_pending_world_message", "")
+		placer.call("_place", game, "forward_camp")
+		if read_message and press == 0: _last_message = str(game.get("_pending_world_message"))
+		for _frame in 2:
+			await physics_frame
 	for _frame in 30:
 		await physics_frame
 	game.set("pending_build", "")
@@ -128,6 +133,12 @@ func _run() -> void:
 	_check(int(inventory.call("count", KIT)) == kits_before - 1, "exactly one kit spent (%d -> %d)" % [kits_before, int(inventory.call("count", KIT))])
 	var nodes := _camp_nodes()
 	_check(nodes.size() == 1, "one ForwardCamp planted in the world (%d)" % nodes.size())
+	if nodes.size() == 1:
+		var prompts: Array = nodes[0].get("_prompts")
+		var labels := prompts.map(func(n: Node) -> String: return str(n.get("label")) if "label" in n else n.name)
+		_check((nodes[0].get("_pieces") as Array).size() == 4 and prompts.size() == 3,
+			"it stands as tent-sheltered bed, cookpot and field workbench with three prompts (%d pieces)" % (nodes[0].get("_pieces") as Array).size())
+		if not _shot.is_empty(): await _capture(nodes[0])
 
 	# Rest at the camp bed: the saved team rest recovers the party.
 	if nodes.size() == 1:
@@ -220,13 +231,13 @@ func _run() -> void:
 	# (kit refunded) and pitches here. Kits end where they were before.
 	if second != Vector3.INF:
 		var first_uid := str(_camps(game)[0].get("uid", "")) if _camps(game).size() == 1 else ""
-		await _place_at(game, placer, player, second, true)
-		_check(_camps(game).size() == 1 and int(inventory.call("count", KIT)) == kits_before - 1,
-			"a second camp in %s is refused at first and keeps its kit" % realm)
+		# Both presses inside the offer's window, as a player presses twice.
+		await _place_at(game, placer, player, second, true, 2)
 		_check(_last_message.contains("Press Place again to pack it up"),
-			"the player is offered to pack up the first camp (\"%s\")" % _last_message)
-		await _place_at(game, placer, player, second)
-		for _frame in 240:
+			"a second camp in %s is not placed at first: the player is offered to pack up the first (\"%s\")" % [realm, _last_message])
+		# The pack waits for its saved decision (retried once a second), then the
+		# placement follows; within the placer's own 15 s repack timeout.
+		for _frame in 900:
 			await physics_frame
 			var now := _camps(game)
 			if now.size() == 1 and str(now[0].get("uid")) != first_uid: break
@@ -241,6 +252,27 @@ func _run() -> void:
 	_check(bool(game.call("autosave_here")), "the world saves through the autosave path")
 	print("F34 FORWARD CAMP (%s): %d checks, %d failures" % [realm, checks, failures])
 	_finish()
+
+
+## `--shot=<png>` (render mode only): a three-quarter view of the placed camp.
+func _capture(camp: Node3D) -> void:
+	# The player's rig reclaims `current` each frame; it is paused for the shot.
+	var rig := current_scene.get_node_or_null("CameraRig")
+	if rig != null: rig.process_mode = Node.PROCESS_MODE_DISABLED
+	var camera := Camera3D.new()
+	camp.get_parent().add_child(camera)
+	camera.global_position = camp.global_transform * Vector3(9.0, 6.0, 11.0)
+	camera.look_at(camp.global_position + Vector3(0.0, 0.8, 0.0))
+	camera.current = true
+	for _frame in 20:
+		await process_frame
+	await RenderingServer.frame_post_draw
+	var image := root.get_texture().get_image()
+	var saved := image != null and image.save_png(_shot) == OK
+	print("shot %s: %s" % [_shot, str(saved)])
+	camera.current = false
+	camera.queue_free()
+	if rig != null: rig.process_mode = Node.PROCESS_MODE_INHERIT
 
 
 func _finish() -> void:

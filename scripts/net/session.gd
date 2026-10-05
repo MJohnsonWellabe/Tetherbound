@@ -381,7 +381,7 @@ func _rpc_foundation_reply(envelope: Dictionary, result: Dictionary) -> void:
 			and (result.get("settled") == true or result.get("terminal_refusal") == true):
 			_foundation_camp_pending.clear()
 			_foundation_requests.erase(correlation)
-			_foundation_personal_cache["registry_revision"] = -1
+			_foundation_personal_cache.erase("registry_revision")
 			homestead_personal_view()
 		homestead_action_completed.emit(envelope.op, envelope.intent, result)
 	elif envelope.op == "refine_start" and result.get("ok") != true:
