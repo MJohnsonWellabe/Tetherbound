@@ -76,6 +76,9 @@ const STRIKE_SETTLE := 15
 ## cross-peer position read is therefore a bounded proximity check, not an
 ## exact equality. The shared harness uses 1.5 m for near/rest state.
 const PROXY_POSE_TOLERANCE_M := 1.5
+## Reads of the guest proxy allowed to close a fresh pose's gap. Each is a
+## coordinator round trip, far longer than the proxy's 0.05 s half-life.
+const PROXY_CONVERGE_POLLS := 10
 ## How many swings each player gets at a creature that is actively running
 ## around. See the loop's own comment for why this is a swing budget and not a
 ## retry budget.
@@ -479,12 +482,26 @@ func _run() -> void:
 		"peer 1's presentation species matches the host record (guest '%s', host '%s')"
 			% [str(guest_after.get("presentation_species", "")),
 				str(after_join_host.get("opponent_species", ""))])
+	# FOLLOWS, as convergence: one read can land the frame a fresh host pose
+	# arrives, before the 0.05 s interpolation has closed a burst (a host that
+	# stalled under load sends a step of over 1.5 m). A proxy that does not
+	# follow never closes it, so the same bound still fails it on every poll.
 	var guest_centre := _vec(guest_after.get("presentation_centre", []))
 	var guest_target_centre := _vec(guest_after.get("presentation_target_centre", []))
+	var first_gap := guest_centre.distance_to(guest_target_centre) \
+		if guest_centre != Vector3.INF and guest_target_centre != Vector3.INF else INF
+	var pose_polls := 1
+	while pose_polls < PROXY_CONVERGE_POLLS and not (guest_centre != Vector3.INF \
+			and guest_target_centre != Vector3.INF \
+			and guest_centre.distance_to(guest_target_centre) <= PROXY_POSE_TOLERANCE_M):
+		pose_polls += 1
+		var pose_view: Dictionary = await _encounter(1)
+		guest_centre = _vec(pose_view.get("presentation_centre", []))
+		guest_target_centre = _vec(pose_view.get("presentation_target_centre", []))
 	check(guest_centre != Vector3.INF and guest_target_centre != Vector3.INF
 		and guest_centre.distance_to(guest_target_centre) <= PROXY_POSE_TOLERANCE_M,
-		"peer 1's presentation centre follows its last host pose (target %s, actual %s)"
-			% [str(guest_target_centre), str(guest_centre)])
+		"peer 1's presentation centre follows its last host pose (target %s, actual %s; first read %.2f m, %d poll(s))"
+			% [str(guest_target_centre), str(guest_centre), first_gap, pose_polls])
 	check(not bool(guest_after.get("presentation_engaged", true)),
 		"peer 1's shared presentation proxy has no local enemy AI")
 	check(int(guest_after.get("presentation_last_pose_seq", 0)) >= 1,
@@ -631,6 +648,7 @@ func _run() -> void:
 	# `strike_at_ms` is `stale_move_start`). The guest's forged zero cooldown
 	# and damage remain the claim.
 	var authority_not_before_ms := int((await _host_authority(guest_peer_id)).get("host_now_ms", 0))
+	var refusals_before := ((await _encounter(1)).get("refusals", []) as Array).size()
 	var forged: Dictionary = await step(1, "strike", {
 		"facing": [action_facing.x, action_facing.y, action_facing.z], "slot": "quick",
 		"action": 9001, "cooldown": 0.0, "cooldown_multiplier": 0.0,
@@ -639,9 +657,13 @@ func _run() -> void:
 	check(str(forged.get("verdict", "")) == "PASS", "client sent a forged rapid-action payload")
 	check(int((forged.get("data", {}) as Dictionary).get("rapid_action", 0)) == 9002,
 		"client sent a fresh id before host cooldown")
-	var rapid_refusal := await _await_refusal("recovering")
+	# Read from the guest's refusal HISTORY since the send, not its one-slot
+	# `last_encounter_refusal`: under load a later refusal can replace the
+	# answer between two coordinator polls, which read as no refusal at all.
+	var rapid_refusal := await _await_new_refusal("move_start", "recovering", refusals_before)
 	check(str(rapid_refusal.get("code", "")) == "recovering",
-		"host refused a fresh rapid intent against its own deadline")
+		"host refused a fresh rapid intent against its own deadline (new refusals: %s)"
+			% str(rapid_refusal.get("seen", [])))
 	var landed_strike: Dictionary = await step(1, "strike", {
 		"facing": [action_facing.x, action_facing.y, action_facing.z], "slot": "quick",
 		"action": 9001, "cooldown": 0.0, "cooldown_multiplier": 0.0,
@@ -1220,6 +1242,19 @@ func _await_refusal(code: String) -> Dictionary:
 		if str(last.get("code", "")) == code:
 			return last
 	return last
+
+
+## The first refusal of `kind`/`code` that arrived after the guest's history
+## held `since` entries; otherwise everything new, under `seen`.
+func _await_new_refusal(kind: String, code: String, since: int) -> Dictionary:
+	var fresh: Array = []
+	for poll in REFUSAL_POLLS:
+		var history: Array = (await _encounter(1)).get("refusals", []) as Array
+		fresh = history.slice(mini(since, history.size()))
+		for row: Variant in fresh:
+			if row is Dictionary and str(row.get("kind", "")) == kind and str(row.get("code", "")) == code:
+				return (row as Dictionary).merged({"seen": fresh})
+	return {"seen": fresh}
 
 
 ## An `[x, y, z]` from a probe. `Vector3.INF` when the field is missing, so

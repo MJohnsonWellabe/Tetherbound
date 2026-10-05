@@ -16,8 +16,8 @@ extends SceneTree
 ## Party.add), the respawn timer and `_tick_respawn` -> `revive_at_home()` are
 ## all the real code. The real throw minigame is covered by
 ## `smoke_party_count_after_catches.gd`, which catches a respawning Bramblebun
-## three times. The host-authoritative shared-fight branch
-## (`_finalize_shared_host_fight`) calls the same refill and is not driven here.
+## three times. With actor_vitals on, the fight is the host-authoritative
+## shared runtime, and its `_finalize_shared_host_fight` refill is driven too.
 ##
 ##   godot --headless --path . --script tests/smoke_catch_respawn_fresh_individual.gd
 
@@ -109,6 +109,12 @@ func _run() -> void:
 	if not _require(party != null, "no production Party to receive the catch"):
 		_report()
 		return
+	# The opening's own ownership step (sequence_director._own_the_late_arrival):
+	# the adopted starter is a companion only once it is in this character's
+	# party. With combat.json actor_vitals on, a wild fight refuses an unowned
+	# fighter, as smoke_combat's fixture already does.
+	if int(party.call("size")) == 0 and _director.call("ally_instance") != null:
+		party.call("add", _director.call("ally_instance"))
 	var party_before := (party.call("members") as Array).size()
 
 	# The creature keeps wandering while seats are tried, so a clear moment can
@@ -138,6 +144,14 @@ func _run() -> void:
 		_report()
 		return
 
+	# With combat.json actor_vitals on, a solo wild fight is the host-owned
+	# shared runtime. There the host's catch verdict (`_host_catch_finished`)
+	# runs `_finalize_shared_host_fight(CAUGHT)` BEFORE the manager exits, and
+	# that refills the spawn. Drive that same production step first; only the
+	# verdict itself is chosen, as the "caught" seam below already does.
+	var fight_id := str((_director.get("_encounter") as Dictionary).get("encounter_id", ""))
+	if not fight_id.is_empty() and _director.call("_shared_host_fight", fight_id) != null:
+		_director.call("_finalize_shared_host_fight", fight_id, "caught")
 	_manager.call("_begin_resolve", "caught")
 	for _frame in EXIT_WAIT_FRAMES:
 		if not bool(_manager.call("is_fighting")):

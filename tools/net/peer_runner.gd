@@ -210,6 +210,17 @@ const SAVE_SCRATCH_SLOT := 3
 
 const STRIKE_TRANSACTION := preload("res://tools/net/strike_transaction_observer.gd")
 var _strike_transaction: RefCounted
+## F22 forced-break smoke: enemy staggers this peer's own manager announced.
+var _f22_enemy_staggers := 0
+## F22 forced-break smoke: host strike verdicts that triggered a break.
+var _f22_host_breaks := 0
+## F22 forced-break smoke: host strike verdicts that landed a hit.
+var _f22_host_hits := 0
+## The last live snapshot the pin saw, reported if the fight later vanishes.
+var _f22_last_seen := {}
+## Refusal history for the `encounter` probe (see `_encounter_refusal_history`).
+var _refusal_history: Array = []
+var _refusal_seen := {}
 var _strike_observed_director: Node
 var _role := ""
 var _peer_index := -1
@@ -810,6 +821,10 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_place_creature(args)
 		"strike":
 			out = await _step_strike(args)
+		"f22_pin_tell":
+			out = _step_f22_pin_tell(args)
+		"f22_enemy_staggers":
+			out = _step_f22_enemy_staggers()
 		"observe_strike_transaction":
 			out = _step_observe_strike_transaction(args)
 		"go_down":
@@ -4921,6 +4936,109 @@ func _step_catch_throw(args: Dictionary) -> Dictionary:
 	return _throw_orb()
 
 
+## Starts (once) recording every refusal this peer's CombatManager notes, by
+## snapshotting `last_encounter_refusal` on each `state_changed` (the manager
+## emits it from `note_encounter_refusal`). Returns the history, capped at 256.
+func _encounter_refusal_history(manager: Node) -> Array:
+	if manager == null:
+		return []
+	if not manager.has_meta("refusal_watch"):
+		manager.set_meta("refusal_watch", true)
+		manager.connect("state_changed", func() -> void:
+			var now: Dictionary = manager.get("last_encounter_refusal")
+			# Identity, not value: each refusal is a fresh dictionary, so a
+			# repeat of the same code is still a new arrival.
+			if not now.is_empty() and not is_same(now, _refusal_seen):
+				_refusal_seen = now
+				_refusal_history.append({"kind": str(now.get("kind", "")), "code": str(now.get("code", "")),
+					"at_ms": Time.get_ticks_msec()})
+				if _refusal_history.size() > 256: _refusal_history.pop_front())
+	return _refusal_history.duplicate(true)
+
+
+## This peer's live combat arena: centre and radius, or {} with none open.
+func _arena_row(manager: Node) -> Dictionary:
+	if manager == null or not manager.has_method("arena"):
+		return {}
+	var ring: Variant = manager.call("arena")
+	if ring == null or not is_instance_valid(ring):
+		return {}
+	var at: Vector3 = (ring as Node3D).global_position
+	return {"centre": [at.x, at.y, at.z], "radius": float((ring as Node3D).get("radius"))}
+
+
+## Test-fixture only (F22 forced break): pin the host's real shared wild body in
+## a long tell proper that becomes visible NOW on the host's clock, with a pool
+## too deep to break by drain, so only a forced break can stagger it.
+## `read_only` just reports the body's state. Damage and the verdict still
+## travel through the production `_host_strike` -> `host_roll_damage` path.
+func _step_f22_pin_tell(args: Dictionary) -> Dictionary:
+	var director := _encounter_director()
+	var manager := _combat_manager()
+	if director == null or manager == null or not bool(director.call("is_encounter_host")):
+		return {"verdict": "ERROR", "detail": "tell pin requires the encounter host"}
+	var encounter_id := str(args.get("encounter_id", manager.call("encounter_id")))
+	var runtime: Variant = director.call("_shared_host_fight", encounter_id)
+	var body: Node3D = runtime.call("body") as Node3D if runtime != null and is_instance_valid(runtime) else null
+	if body == null or not is_instance_valid(body):
+		return {"verdict": "FAIL", "detail": "no live shared wild body to pin in %s; last seen %s" % [encounter_id, str(_f22_last_seen)]}
+	if not director.has_meta("f22_break_watch"):
+		director.set_meta("f22_break_watch", true)
+		director.connect("host_strike_finished", func(_intent: Dictionary, _peer: int, verdict: Dictionary) -> void:
+			var landed_delta: Dictionary = verdict.get("delta", {})
+			if bool(landed_delta.get("hit", false)): _f22_host_hits += 1
+			if bool(landed_delta.get("stagger_triggered", false)): _f22_host_breaks += 1)
+	var seen_rec: Dictionary = (director.get("_encounter_host") as RefCounted).call("record", encounter_id)
+	var cards := {}
+	for peer: Variant in (seen_rec.get("participants", {}) as Dictionary).keys():
+		cards[str(peer)] = float((director.call("_creature_card_for", int(peer)) as Dictionary).get("hp", -1.0))
+	_f22_last_seen = {"t": Time.get_ticks_msec(), "phase": str(seen_rec.get("phase", "")),
+		"hp": float((seen_rec.get("opponent", {}) as Dictionary).get("hp", -1.0)), "cards": cards,
+		"intent": int(body.get("_intent")), "staggered": bool(body.get("_staggered"))}
+	if not bool(args.get("read_only", false)):
+		body.set("_synced_poise_max", 1000000.0)
+		body.set("_poise", 1000000.0)
+		body.set("_poise_resist_left", 0.0)
+		body.set("_staggered", false)
+		body.set("_stagger_critical_ready", false)
+		(body.get("_selected_attack") as Dictionary).clear()
+		body.set("_route_cue_left", 0.0)
+		body.set("_intent", preload("res://scripts/combat/combat_ai.gd").Intent.TELEGRAPH)
+		body.set("_lunge_tell_total", float(args.get("seconds", 30.0)))
+		body.set("_beat_left", float(args.get("seconds", 30.0)))
+		body.set("_tell_visible_since_ms", Time.get_ticks_msec())
+		# A low-level ambient wild has too little HP to outlive the Energy
+		# build-up; the fixture gives it a deep pool, as it does poise. The
+		# runtime's opponent, the body's instance and the host record are all
+		# refilled.
+		for opponent: Variant in [runtime.get("_enemy"), body.get("instance")]:
+			if opponent == null: continue
+			opponent.set("max_hp", maxf(float(opponent.get("max_hp")), 100000.0))
+			opponent.set("hp", float(opponent.get("max_hp")))
+		(director.get("_encounter_host") as RefCounted).call("set_opponent_hp", encounter_id, 100000.0, 100000.0)
+	return {"verdict": "PASS", "detail": "tell pinned" if not bool(args.get("read_only", false)) else "tell state",
+		"data": {"host_now_ms": Time.get_ticks_msec(), "since_ms": int(body.call("tell_visible_since_ms")),
+			"winding_up": bool(body.call("is_winding_up")), "staggered": bool(body.get("_staggered")),
+			"host_breaks": _f22_host_breaks, "host_hits": _f22_host_hits,
+			"poise": float(body.get("_poise")),
+			"hp": float(runtime.get("_enemy").get("hp")) if runtime.get("_enemy") != null else -1.0, "centre": [body.call("centre").x, body.call("centre").y, body.call("centre").z]}}
+
+
+## Counts the enemy staggers this peer's own CombatManager announces (a guest's
+## come only from the host's strike payload). The first call starts watching.
+func _step_f22_enemy_staggers() -> Dictionary:
+	var manager := _combat_manager()
+	if manager == null:
+		return {"verdict": "ERROR", "detail": "no CombatManager"}
+	var counter := func(on_enemy: bool) -> void:
+		if on_enemy: _f22_enemy_staggers += 1
+	if not manager.has_meta("f22_stagger_watch"):
+		manager.set_meta("f22_stagger_watch", true)
+		manager.connect("staggered", counter)
+	return {"verdict": "PASS", "detail": "enemy staggers %d" % _f22_enemy_staggers,
+		"data": {"count": _f22_enemy_staggers}}
+
+
 ## Test-fixture only: pause the real host runtime, then choose an RNG state whose
 ## *next* normal runtime roll falls on the requested side of the real current
 ## catch chance.  The catch itself still travels through `_host_catch`.
@@ -6705,6 +6823,11 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				# to prove the observation window was isolated from enemy damage.
 				"struck_counts": rec.get("struck_counts", {}),
 				"refusal": emanager.get("last_encounter_refusal"),
+				# Every distinct refusal since this peer was first probed, in
+				# arrival order: `last_encounter_refusal` is one slot, so a later
+				# refusal can replace the one a smoke is waiting for between
+				# two coordinator polls.
+				"refusals": _encounter_refusal_history(emanager),
 				"joinable": joinable,
 			}
 			# Shared wild fights must expose the actual opponent presentation body,
@@ -6938,6 +7061,9 @@ func _execute_probe(msg: Dictionary) -> Variant:
 					"struck_counts": brec.get("struck_counts", {}),
 				},
 				"local_peer_id": bdirector.call("_local_peer_id"),
+				# The live fight ring (`combat_arena.hold_inside` returns any
+				# fighter past `radius`), so staging can stay inside it.
+				"arena": _arena_row(bmanager),
 				"my_creature_hp": combat_sample["my_creature_hp"],
 				"strike_geometry": boss_strike_geometry(bdirector, bmanager, brec) \
 					if bargs.get("strike_geometry", false) == true else [],
