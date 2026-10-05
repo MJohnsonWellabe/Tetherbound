@@ -41,6 +41,16 @@ extends SceneTree
 ##   9. the marshal's champion line takes over, and greeting her again pays
 ##      nothing a second time
 ##
+## ## CI segments (owner, 2026-10-04)
+##
+## `-- --segment=to-semi` plays 1-7 through the semi-final, then saves through
+## `Game.save_game` and checks that save against the `bracket/after_semi`
+## contract and committed checkpoint (tests/helpers/ci_segments.gd).
+## `-- --segment=final` starts from that committed checkpoint through
+## `Game.load_game`, asserts the same contract on the loaded game, and plays the
+## final and 8-9. No flag runs the whole bracket in one process, unchanged.
+## Both segment modes need an isolated user:// (XDG_DATA_HOME), as CI gives.
+##
 ## The fights are driven with real input actions rather than by calling the
 ## manager's methods, so a broken binding fails here rather than on the
 ## handheld — the same contract `smoke_trainer_battle.gd` and
@@ -114,6 +124,13 @@ var _hud: Node = null
 var _game: Node = null
 
 var _felled := 0
+## "" (whole bracket), "to-semi" or "final"; see the header.
+var _segment := ""
+const SEGMENTS := preload("res://tests/helpers/ci_segments.gd")
+const SEGMENT_BOUNDARY := "bracket/after_semi"
+const SEGMENT_ROLE := "solo"
+const SEGMENT_SLOT := 0
+const SEGMENT_WORK := "user://ci_segment_scratch/"
 var _exit_connected := false
 
 ## `combat.json`'s `player_quick.lunge`: how close the harness closes before
@@ -127,6 +144,22 @@ func _init() -> void:
 
 
 func _run() -> void:
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--segment="):
+			_segment = arg.substr("--segment=".length())
+	if not _segment in ["", "to-semi", "final"]:
+		_fail("unknown --segment=%s (to-semi | final)" % _segment)
+		_report()
+		return
+	if not _segment.is_empty() and OS.get_environment("XDG_DATA_HOME").is_empty():
+		_fail("--segment needs an isolated user:// (set XDG_DATA_HOME); it writes and loads save slot %d" % SEGMENT_SLOT)
+		_report()
+		return
+	if _segment == "final":
+		await process_frame
+	if _segment == "final" and not _resume_from_checkpoint():
+		_report()
+		return
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
 	current_scene = _world
@@ -137,6 +170,10 @@ func _run() -> void:
 		_report()
 		return
 	_load_attack_ranges()
+
+	if _segment == "final":
+		await _final_segment()
+		return
 
 	_clear_the_slate()
 	# The first Halda conversation is covered as data by test_tournament. This
@@ -163,18 +200,26 @@ func _run() -> void:
 		_report()
 		return
 
-	for entry: Variant in TOURNAMENT.rounds():
-		if not await _fight_and_win(entry as Dictionary):
+	var rounds: Array = TOURNAMENT.rounds()
+	for i in rounds.size():
+		if _segment == "to-semi" and i == rounds.size() - 1:
+			_write_checkpoint()
+			_report()
+			return
+		if not await _fight_and_win(rounds[i] as Dictionary):
 			_report()
 			return
 
+	await _the_champion_beats()
+	_report()
+
+
+## 8-9: the champion's reward, line and no second payout.
+func _the_champion_beats() -> void:
 	_the_champion_holds_the_saddle_pattern()
 	if not await _the_marshal_congratulates_the_champion():
-		_report()
 		return
 	await _the_champions_line_pays_nothing_twice()
-
-	_report()
 
 
 func _collect_nodes() -> bool:
@@ -314,6 +359,62 @@ func _stand_in_the_clear_spot() -> void:
 	_player.global_position = Vector3(CLEAR_SPOT.x, y, CLEAR_SPOT.y)
 	_player.velocity = Vector3.ZERO
 	_rig.set("yaw", 0.0)
+
+
+## --- CI segments -------------------------------------------------------------
+
+## End of `--segment=to-semi`: the production save of the state the semi-final
+## left, checked against the boundary contract and the committed checkpoint.
+func _write_checkpoint() -> void:
+	if not bool(_game.call("save_game", SEGMENT_SLOT)):
+		_fail("Game.save_game(%d) refused at the end of the to-semi segment" % SEGMENT_SLOT)
+		return
+	var out := OS.get_environment("TB_SEGMENT_OUT")
+	if out.is_empty():
+		out = OS.get_user_data_dir().path_join("ci_segment_out")
+	var dir := out.path_join("checkpoint")
+	var captured := SEGMENTS.capture_slot(SEGMENT_SLOT, dir)
+	if not bool(captured.ok):
+		_fail("checkpoint capture: %s" % str(captured.detail))
+		return
+	var verdict := SEGMENTS.check_produced(SEGMENT_BOUNDARY, SEGMENT_ROLE, dir, SEGMENT_WORK)
+	print("segment checkpoint: %s" % str(verdict.detail))
+	if verdict.verdict != "PASS":
+		_fail(str(verdict.detail))
+
+
+## Start of `--segment=final`: the committed checkpoint must be fresh and meet
+## its contract; then it is put on this process's disk and loaded through the
+## production `Game.load_game` before the world boots, as the title's Load does.
+func _resume_from_checkpoint() -> bool:
+	var start := SEGMENTS.check_start(SEGMENT_BOUNDARY, SEGMENT_ROLE, SEGMENT_WORK)
+	print("segment start: %s" % str(start.detail))
+	if start.verdict != "PASS":
+		_fail(str(start.detail))
+		return false
+	if SEGMENTS.seed_user(SEGMENT_BOUNDARY, SEGMENT_ROLE) < 3:
+		_fail("could not put checkpoint %s on disk" % SEGMENT_BOUNDARY)
+		return false
+	var game := root.get_node_or_null(^"Game")
+	if game == null or not bool(game.call("load_game", SEGMENT_SLOT)):
+		_fail("Game.load_game(%d) refused checkpoint %s" % [SEGMENT_SLOT, SEGMENT_BOUNDARY])
+		return false
+	var failures := SEGMENTS.evaluate(SEGMENT_BOUNDARY, SEGMENT_ROLE, game)
+	if not failures.is_empty():
+		_fail("the loaded game misses the %s start contract: %s" % [SEGMENT_BOUNDARY, "; ".join(failures)])
+		return false
+	return true
+
+
+## `--segment=final`: the final round (6-7 for its own round) and 8-9.
+func _final_segment() -> void:
+	_stand_in_the_clear_spot()
+	var rounds: Array = TOURNAMENT.rounds()
+	if not await _fight_and_win(rounds[rounds.size() - 1] as Dictionary):
+		_report()
+		return
+	await _the_champion_beats()
+	_report()
 
 
 ## --- 1: too few creatures ------------------------------------------------------
@@ -905,7 +1006,13 @@ func _fail(message: String) -> void:
 
 func _report() -> void:
 	print("")
-	if _failures.is_empty():
+	if _failures.is_empty() and _segment == "to-semi":
+		print("smoke: OK (segment to-semi) — entered, lost, retried, quarter- and semi-final won; checkpoint %s written." % SEGMENT_BOUNDARY)
+		quit(0)
+	elif _failures.is_empty() and _segment == "final":
+		print("smoke: OK (segment final) — from checkpoint %s, the final won and the champion paid once." % SEGMENT_BOUNDARY)
+		quit(0)
+	elif _failures.is_empty():
 		print("smoke: OK — the tournament can be entered, lost, retried, fought through all three rounds and won, once.")
 		quit(0)
 	else:

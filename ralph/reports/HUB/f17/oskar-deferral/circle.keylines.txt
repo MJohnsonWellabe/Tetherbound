@@ -1,0 +1,2 @@
+F17 actual farmhouse door -> straight Main Street -> Hall nave PASS: player=(106.5666, 0.910843, 14.16209) Halllocal=(-0.162086, 0.060843, -0.433434) maximum_offroad=0.000
+F17 LEGACY CIRCLE physical location PASS: all four actual grounded models/existing colliders/prompt components approached via production joypad steering, after farmhouse-road-Hall traversal. Visual and earned state remain separate.

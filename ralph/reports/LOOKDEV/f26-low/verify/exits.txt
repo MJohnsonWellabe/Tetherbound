@@ -1,0 +1,8 @@
+sha=fca481547d26a663ecbd4145687d0c88bede11b1
+census-meadows exit=0
+census-water exit=0
+stills-meadows exit=0
+census-stormwood exit=0
+smoke-after exit=0
+census-cloudreach exit=0
+ALLDONE

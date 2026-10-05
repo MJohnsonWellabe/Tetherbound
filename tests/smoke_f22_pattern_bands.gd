@@ -9,6 +9,12 @@ const PILOT := preload("res://tests/helpers/f22_pattern_pilot.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
+const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
+## --trainers (coordinator ruling on F22#1, 2026-10-04): each band's ORDINARY
+## trainer fights (COMBAT §7 floor trainer) instead of its wilds. Named
+## pattern fights and boss ranks are excluded; a band without a roster in data
+## is reported as a data gap, never filled with wilds.
+const BOSS_RANKS := ["captain", "officer", "lieutenant", "elite"]
 const STARTERS := ["terrapup", "ripplet", "galewisp"]
 const RETAINED := ["bramblebun", "mudsnout", "pipwing", "trailpup"]
 const EXPECTED_REGIONS := {
@@ -18,6 +24,7 @@ const EXPECTED_REGIONS := {
 var _seeds := 12
 var _selection := ""
 var _json := ""
+var _trainers := false
 
 
 func _init() -> void:
@@ -25,6 +32,7 @@ func _init() -> void:
 		if arg.begins_with("--seeds="): _seeds = int(arg.trim_prefix("--seeds="))
 		elif arg.begins_with("--band="): _selection = arg.trim_prefix("--band=")
 		elif arg.begins_with("--json="): _json = arg.trim_prefix("--json=")
+		elif arg == "--trainers": _trainers = true
 	_run.call_deferred()
 
 
@@ -85,6 +93,41 @@ func _cases(errors: Array[String]) -> Array[Dictionary]:
 	return out
 
 
+## band id -> Array of ordinary trainer teams (each an Array of creature_for
+## entries), from each chapter's own trainer data.
+func _trainer_rosters(patterns: Dictionary) -> Dictionary:
+	var named := {}
+	for id: String in patterns.get("named", {}):
+		named[str(patterns.named[id].get("encounter_id", ""))] = true
+	var out := {}
+	var add := func(band: String, id: String, rank: String, team: Array) -> void:
+		if named.has(id) or BOSS_RANKS.has(rank) or team.is_empty(): return
+		if not out.has(band): out[band] = []
+		(out[band] as Array).append(team)
+	for dir: String in DirAccess.get_directories_at("res://data/config/bands"):
+		for row: Dictionary in _read("data/config/bands/%s/trainers.json" % dir).get("trainers", []):
+			add.call(dir, str(row.id), str(row.get("rank", "")), row.get("team", []))
+	var island_band := {}
+	for region: Dictionary in (_read("data/config/chapter_curve.json").get("biomes", {}) as Dictionary).get("tidewake", {}).get("regional_targets", []):
+		for table: String in region.get("tables", []):
+			island_band[table.trim_prefix("water_").trim_suffix("_land").trim_suffix("_shallows")] = "tidewake/" + str(region.region_id)
+	for row: Dictionary in _read("data/config/water_characters.json").get("trainers", []):
+		if island_band.has(str(row.get("island_id", ""))):
+			add.call(str(island_band[row.island_id]), str(row.id), str(row.get("rank", "")), row.get("team", []))
+	for row: Dictionary in _read("data/config/cloudreach_chapter.json").get("trainer_ladder", []):
+		var team: Array = []
+		for slot: Dictionary in (row.get("team_contract", {}) as Dictionary).get("slots", []):
+			team.append({"species": slot.get("placeholder_species", ""), "level": slot.get("level", 1)})
+		add.call("cloudreach/" + str(row.region_id), str(row.id), str(row.get("rank", "")), team)
+	for row: Dictionary in _read("data/config/stormwood_trainers.json").get("trainers", []):
+		var team: Array = []
+		for member: Dictionary in row.get("party", []):
+			team.append({"species": member.get("placeholder_species", ""), "level": member.get("level", 1),
+				"combat": member.get("combat", {})})
+		add.call("stormwood/" + str(row.region_id), str(row.id), str(row.get("rank", "")), team)
+	return out
+
+
 func _party(level: int, starter: String) -> Array[RefCounted]:
 	var party: Array[RefCounted] = []
 	for id: String in [starter] + RETAINED:
@@ -106,24 +149,41 @@ func _run() -> void:
 	var cases := _cases(errors)
 	var rows: Array[Dictionary] = []
 	var runs: Array[Dictionary] = []
+	var rosters := _trainer_rosters(patterns) if _trainers else {}
+	var gaps: Array[String] = []
 	if errors.is_empty():
 		for entry: Dictionary in cases:
 			if not _selection.is_empty() and not str(entry.id).contains(_selection): continue
+			if _trainers and (rosters.get(entry.id, []) as Array).is_empty():
+				gaps.append(str(entry.id))
+				continue
 			for starter: String in STARTERS:
 				var scores := {"MASHER": [], "READER": [], "SWITCH_READER": []}
 				for seed_index: int in _seeds:
 					var sid := str(entry.species[seed_index % entry.species.size()])
 					for policy: String in scores:
 						var party := _party(int(entry.level), starter)
-						var foe: RefCounted = SPECIES.spawn(sid)
-						if party.size() != 5 or foe == null:
+						var foes: Array = []
+						if _trainers:
+							var teams: Array = rosters[entry.id]
+							var team: Array = teams[seed_index % teams.size()]
+							sid = str(seed_index % teams.size())
+							for member: Dictionary in team:
+								var built: RefCounted = TRAINERS.creature_for(member)
+								if built != null: foes.append(built)
+							if foes.size() != team.size(): foes.clear()
+						else:
+							var foe: RefCounted = SPECIES.spawn(sid)
+							if foe != null:
+								foe.call("set_level", int(entry.foe_level), PROGRESSION.config())
+								foes.append(foe)
+						if party.size() != 5 or foes.is_empty():
 							errors.append("missing actual species in " + str(entry.id))
 							continue
-						foe.call("set_level", int(entry.foe_level), PROGRESSION.config())
 						var pilot := PILOT.new()
-						pilot.context = {"chapter": entry.chapter, "band": entry.id,
+						pilot.context = {"chapter": entry.chapter, "band": entry.id, "floor_trainer": _trainers,
 							"after_south_bridge": bool(entry.get("after_south_bridge", true))}
-						var result: Dictionary = await pilot.fight(self, party, [foe], false,
+						var result: Dictionary = await pilot.fight(self, party, foes, _trainers,
 							hash("f22/%s/%s/%d" % [entry.id, starter, seed_index]), policy)
 						result["lead_fainted"] = bool(party[0].get("fainted"))
 						result["band"] = entry.id
@@ -139,13 +199,19 @@ func _run() -> void:
 					var scored := _score(scores[policy])
 					if int(scored.runs) != _seeds or int(scored.errors) > 0:
 						reasons.append(policy + " incomplete or invalid actual fixture")
-				if float(reader.win_rate) < float(proof.get("reader_win_min", 0.9)):
+				# Trainer mode applies the coordinator's three-part F22#1 bar to
+				# the COMBAT §7 reader, which switches on a real mismatch.
+				var judged: Dictionary = switch_reader if _trainers else reader
+				if float(judged.win_rate) < float(proof.get("reader_win_min", 0.9)):
 					reasons.append("reader win rate below .9")
-				if float(masher.lead_faint_rate) - float(reader.lead_faint_rate) < float(proof.get("masher_lead_faint_gap_min", 0.25)):
+				if float(masher.lead_faint_rate) - float(judged.lead_faint_rate) < float(proof.get("masher_lead_faint_gap_min", 0.25)):
 					reasons.append("masher lead losses insufficiently different")
+				if _trainers and float(judged.median_lead_cost) > float(masher.median_lead_cost) * 0.55:
+					reasons.append("reader median lead cost above .55x masher")
 				rows.append({"band": entry.id, "starter": starter, "masher": masher,
 					"reader": reader, "switch_reader": switch_reader, "pass": reasons.is_empty(), "reasons": reasons})
 	if rows.is_empty(): errors.append("no valid band cohort completed")
+	if not gaps.is_empty(): print("F22_PATTERN_BANDS data gaps (no ordinary trainer roster): " + ", ".join(gaps))
 	var passed := errors.is_empty()
 	for row: Dictionary in rows: passed = passed and bool(row.pass)
 	var paired := {"READER": [], "SWITCH_READER": []}
@@ -153,17 +219,24 @@ func _run() -> void:
 		if paired.has(str(run.pilot)): (paired[str(run.pilot)] as Array).append(run)
 	var fixed_total := _score(paired.READER)
 	var switched_total := _score(paired.SWITCH_READER)
-	var switch_value := int(switched_total.tags) > 0 \
+	# F24's tag combo is one of three switching sources (COMBAT §12.3); while
+	# its runtime flag is off the comparison measures the other two and says so.
+	var combo_live := false
+	for run: Dictionary in paired.SWITCH_READER: combo_live = combo_live or bool(run.get("tag_combo_available", false))
+	var switch_value := (int(switched_total.tags) > 0 or not combo_live) \
 		and int(switched_total.errors) == 0 \
 		and float(switched_total.win_rate) >= float(fixed_total.win_rate) \
 		and float(switched_total.median_cost) < float(fixed_total.median_cost) \
 		and float(switched_total.median_cost) <= float(fixed_total.median_cost) * float(proof.get("switch_reader_hp_ratio_max", 0.9))
 	passed = passed and switch_value
-	var coverage := _selection.is_empty() and rows.size() == cases.size() * STARTERS.size()
+	var coverage := _selection.is_empty() and rows.size() + gaps.size() * STARTERS.size() == cases.size() * STARTERS.size()
 	var receipt := {"kind": "actual flat-fixture C2; world/C3/authority proofs separate",
 		"pass": passed and coverage, "coverage": coverage, "seeds_per_band": _seeds,
+		"mode": "trainers" if _trainers else "wilds", "data_gaps": gaps,
 		"acceptance": false, "policy_scope": "quick/charged/spatial diagnostic; full F23/F24 policy and actual admission fixture required",
-		"switch_value": {"pass": switch_value, "fixed": fixed_total, "switched": switched_total},
+		"switch_value": {"pass": switch_value, "tag_combo_live": combo_live,
+			"status": "full" if combo_live else "partial_no_f24: type matchup and per-identity HP only; F24 tag combo off, F22#2 not fully measured",
+			"fixed": fixed_total, "switched": switched_total},
 		"errors": errors, "rows": rows, "runs": runs}
 	if not _json.is_empty():
 		var output := FileAccess.open(_json, FileAccess.WRITE)
@@ -179,7 +252,9 @@ func _score(runs: Array) -> Dictionary:
 	var errors := 0
 	var tags := 0
 	var costs: Array[float] = []
+	var lead_costs: Array[float] = []
 	for row: Dictionary in runs:
+		lead_costs.append(float(row.get("lead_lost_frac", 1.0)))
 		wins += int(bool(row.get("won", false)))
 		faints += int(bool(row.get("lead_fainted", false)))
 		errors += int(row.has("fixture_error") or bool(row.get("stalled", false)))
@@ -191,5 +266,11 @@ func _score(runs: Array) -> Dictionary:
 		var middle := int(costs.size() / 2)
 		median = costs[middle] if costs.size() % 2 == 1 else (costs[middle - 1] + costs[middle]) * 0.5
 	var count := maxf(1.0, runs.size())
+	lead_costs.sort()
+	var lead_median := 1.0
+	if not lead_costs.is_empty():
+		var half := int(lead_costs.size() / 2)
+		lead_median = lead_costs[half] if lead_costs.size() % 2 == 1 else (lead_costs[half - 1] + lead_costs[half]) * 0.5
 	return {"runs": runs.size(), "win_rate": wins / count, "lead_faint_rate": faints / count,
+		"median_lead_cost": lead_median,
 		"median_cost": median, "tags": tags, "errors": errors}
