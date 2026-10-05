@@ -106,6 +106,7 @@ func _f18_owner_diagnosis() -> String:
 		str(row.get("action", "")), str(row.get("status", "")), str(phase)]
 
 func _f18_note(result: Dictionary) -> void:
+	if result.get("ok") != true: print("F18 REFUSED kind=%s reason=%s code=%s" % [str(result.get("kind", "")), str(result.get("reason", "")), str(result.get("code", ""))])
 	_f18_results.append(result.duplicate(true))
 
 func _f18_fixture(game: Node, args: Dictionary) -> Dictionary:

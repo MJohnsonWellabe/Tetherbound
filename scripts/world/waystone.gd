@@ -277,8 +277,12 @@ func _process(delta: float) -> void:
 
 
 func _on_action_result(result: Dictionary) -> void:
+	# The request id is this stone's own, unique per send. Host and guest
+	# refusals do not echo the stone id, so it is checked only when present;
+	# otherwise a refusal would hold the stone silent until ack_timeout_s.
+	var echoed := str(result.get("waystone_id", result.get("id", "")))
 	if not _pending or str(result.get("kind", "")) != "waystone_touch" \
-			or str(result.get("waystone_id", result.get("id", ""))) != waystone_id:
+			or (not echoed.is_empty() and echoed != waystone_id):
 		return
 	if _pending_request_id.is_empty() \
 			or str(result.get("request_id", "")) != _pending_request_id:
@@ -292,6 +296,7 @@ func _on_action_result(result: Dictionary) -> void:
 	_pending = false
 	_pending_request_id = ""
 	if not bool(result.get("ok", false)):
+		print("[waystone] %s touch refused: %s %s" % [waystone_id, str(result.get("reason", "")), str(result.get("code", ""))])
 		_message(str(result.get("reason", "Waystone could not be saved. Touch it again.")))
 		return
 	_touch_committed = true
