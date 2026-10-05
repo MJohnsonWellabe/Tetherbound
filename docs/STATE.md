@@ -170,6 +170,7 @@ ACCEPTANCE was reconciled with RD-01..RD-37 (PR #527). Eleven legacy-path tests 
 - **Visual verdicts.** Software-GL proves composition/scale/colour, not fine lighting/performance. After two rounds without progress, change asset/approach, not tint (ART_DIRECTION §9).
 - **Accepted art:** camp set, pickups, South Bridge gate and lost rigs retain ART_DIRECTION §7 dispositions unless gameplay evidence reopens them.
 - **Owner reports.** Fresh owner repros reopen ledger-fixed items; first check the played build.
+- **Forward camps (F34, lane A).** Tidewake has no BuildPlacer (`water_world.gd`), so no camp, tent or campfire can be placed there yet (ownership asked of the coordinator). A co-op guest places a camp only in the host's loaded realm; elsewhere the host refuses with a reason. The second-camp pack-up offer applies when a kit is in hand. Evidence: `ralph/reports/HUB/f17/f34/`.
 
 ## 5. Dependencies and still-open design questions
 
