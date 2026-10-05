@@ -35,6 +35,27 @@ Branch `tb/perf`. Target: the GTX 1060 at Medium, 1080p, averages ≥60 FPS with
 
 **Device re-time (Codex perf-retime-1, Meadows, at `6632f2fd`):** average FPS 5.81 → 7.36, true process mean 138 → 110 ms, draws 2170 → 1917, GPU 28.0 → 27.1 ms. Still far from the target.
 
+## Co-op host stalls after the world facts land (#540 regressions, 2026-10-05)
+
+Found through veridian_same_five and smoke_party_count_after_catches failing on #540. The host's `player_identity` probe timed out, because the host ran ~1 s frames for 60–100 s after the facts. The realm id was always correct.
+
+| Commit | Cause and fix | Evidence |
+|---|---|---|
+| `2e21a1be`, `9404d3f3` | `teaching.gd::allowed_saved_moves` re-parsed moves.json (70 KB) and tms.json for every creature on every party validation. `move_db`/`tm_db` `load_default()` now return one shared table, keyed on file time and size; accessors return copies. | Native gdb samples showed tms.json being opened mid-frame. Unit test: shared instance, copies never leak. |
+| `33e131af` | Wild spawn slicing now runs only in host shells and live sessions. Solo boots spawn in one frame as before. smoke_party_count_after_catches took `wild_creatures()[0..2]` mid-slice and got Warrens bodies 2.7 km away. **No production consumer depends on the list order**: nearest-instance lookups, once-id matches, deterministic node names, no index access. | party_count passes. The Stormwood shell still slices (worst gap 773 ms). |
+| `020be38b` | **The single 12.8 s freeing frame** (`meadow_healing.gd::apply`, on host and solo alike). The regreen build called `path_factor` (which walks every road band) for each of ~69k corners. It now asks only the bands whose reach contains the corner, via `playground_heightfield.gd::path_factor_over`. | Regreen 7.7 → 1.35 s; the frame 12.8 → 6.0 s. The regreen mesh checksum (223,824 vertices) is identical. smoke_meadow_healing_land_heals now asserts a frame under 9 s: it fails at 12,848 ms on the old code. |
+| `3b0c6319` | **The session-only slow frames.** Under Godot's script profiler (`-d --profiling` on the host), each applied guest passive input ran three full character-record validations. The validators also re-parsed species.json and configs through `redesign_data.gd::json()`, 42k times. `json()` now caches by file stamp and returns copies; `owner_passive_replay._record_valid` memoises by exact content. | Host slow frames per veridian run: ~100 → 5–6 (main: 15). veridian_same_five 3/3 pass; it was failing 3/3. |
+
+The world_audio fix (c641da40) exposed this: faster guest frames meant more passive inputs per second for the host to replay.
+
+Still about 6 s in the freeing frame: `_kill_the_tether_lights` and `_topple_the_pylons` (~1.1 s each, each walking the whole ~180k-node world several times), the regreen (1.35 s), and the scatter regrowth (0.6 s). Sharing one world walk across the steps broke them, because steps free nodes that later steps would read. Slicing the remainder is the next step.
+
+**Stale tests, not in CI, failing identically on default physics and with or without the PERF changes:**
+- `smoke_step_up`: "the trainer reached z=-16.88 without standing on the step (y=0.00)";
+- `smoke_riding_saddle`: "the party would not take a veridian (it holds 5)";
+- `smoke_combat_baseline`: band2/band4 wild lead-HP cost 15%, and the W-1 Warden vs elite cost;
+- `smoke_fireball_teaching`: "real backpack teaching did not consume exactly the claimed disc and preserve quick move".
+
 ## Top costs per realm (current read)
 
 The Cost, Evidence, Fix and Visual risk columns follow the brief's format. "Open" means not yet fixed.
