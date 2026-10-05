@@ -71,7 +71,6 @@ func _process(delta: float) -> void:
 	_left -= delta
 	if _left > 0.0: return
 	_left = 0.5
-	if preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true: return
 	var game: Node = session().call("_game")
 	if game == null or game.local == null or game.world == null: return
 	for id: String in _requests.keys(): reconcile_release(id)
