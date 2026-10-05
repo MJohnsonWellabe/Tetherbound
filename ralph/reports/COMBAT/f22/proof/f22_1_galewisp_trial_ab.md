@@ -158,3 +158,27 @@ clear the marker radius plus the body radius:
 A burst would cover the gap, but the burst trial above barely helped, so the
 cause is still unconfirmed. Next step: a per-tell pilot log of the distance
 to the marker at strike and the action the reader took.
+
+### Further Terrapup levers, measured in memory with `--config-patch` (Cloudreach, 12 seeds)
+
+Each value is the switching reader's median lead cost.
+
+| Patch | gate_lower_cliffs | broken_causeways | upper_cloudreach | `current_zone` reader hits |
+|---|---|---|---|---|
+| none (shipped) | 0.74 | 0.58 | 0.69 | 123 |
+| `current_zone.marker_tracks_fraction` = 0 | 0.72 | 0.58 | 0.69 | — |
+| `current_zone.field_duration_s` = 0.3 | 0.73 | 0.58 | 0.69 | 111 |
+| `creature_movement.speed` = 6.2 (player only) | 0.73 | 0.63 | 0.62 | 120 |
+
+None of these changes the verdict. A longer burst, a static field marker, a
+0.3 s field and +11% move speed each make escaping easier, yet the reader
+still takes the same field hits.
+
+The remaining hits also come from the CHARGER rushes. In the 6.2 m/s run,
+`charger_double_rush` landed 169 times and `charger_rush` 70.
+
+Reading: the cost is not an escape-distance shortfall. The likeliest cause is
+how the switching reader plays a melee, large-bodied starter, which is test
+equipment. The other possibility is a matchup property of Terrapup's kit.
+Three levers have now failed, so this is escalated for a decision instead of
+another guess.
