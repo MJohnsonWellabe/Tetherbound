@@ -29,6 +29,10 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		return await _craft_at_host_kitchen(args)
 	if action == "craft_count":
 		return _craft_count(args)
+	if action == "craft_fund":
+		return _craft_fund(args)
+	if action == "relic_power_attempt":
+		return await _relic_power_attempt(args)
 	return await super._execute_step(msg)
 
 func _hall_guard(expected_peers: int = 2) -> Dictionary:
@@ -411,6 +415,16 @@ const CRAFT_STATION_RULES := preload("res://scripts/build/station_rules.gd")
 func _inventory_count(id: String) -> int:
 	return int(root.get_node("Game").get("inventory").call("count", id))
 
+## Fixture stock on the guest's OWN portable character. The host only trusts
+## what it admitted, so the smoke saves this through a production leave and
+## returning rejoin before crafting (a local add alone is refused as
+## ingredients_missing, correctly).
+func _craft_fund(args: Dictionary) -> Dictionary:
+	var inventory: RefCounted = root.get_node("Game").get("inventory")
+	for row: Variant in args.get("items", []):
+		inventory.call("add", str(row[0]), int(row[1]))
+	return _craft_count({"ids": args.get("ids", [])})
+
 func _craft_count(args: Dictionary) -> Dictionary:
 	var out := {}
 	for id: Variant in args.get("ids", []):
@@ -482,8 +496,6 @@ func _craft_at_host_kitchen(args: Dictionary) -> Dictionary:
 		return {"verdict": "FAIL", "detail": "the host's Kitchen never replicated to the guest world"}
 	var player := current_scene.get_node("Player") as Node3D
 	player.global_position = kitchen.global_position + Vector3(1.6, 0.6, 1.6)
-	game.get("inventory").call("add", "berries", 4)
-	game.get("inventory").call("add", "fiber", 1)
 	for i in 60:
 		await physics_frame
 	var before := {"potion_small": _inventory_count("potion_small"), "berries": _inventory_count("berries"), "fiber": _inventory_count("fiber")}
@@ -510,3 +522,24 @@ func _craft_at_host_kitchen(args: Dictionary) -> Dictionary:
 		and int(after.berries) == int(before.berries) - 4 and int(after.fiber) == int(before.fiber) - 1
 	return {"verdict": "PASS" if ok else "FAIL", "detail": "guest crafted at the host's Kitchen and kept the output", "data": {
 		"sent": sent, "reply": reply.result, "before": before, "after": after, "view_revision": int(view.get("registry_revision", -1))}}
+
+
+## F31#2 co-op: a guest's relic power choice goes to the host, which saves or
+## refuses it. While F18's redesign_portal_runtime_enabled is off (shipping),
+## the host has no shrine context and must refuse; nothing changes locally.
+func _relic_power_attempt(args: Dictionary) -> Dictionary:
+	var game := root.get_node("Game")
+	var session := _session()
+	var reply := {"result": {}}
+	session.connect("homestead_action_completed", func(op: String, _intent: Dictionary, result: Dictionary) -> void:
+		if op == "relic_power": reply.result = result)
+	var sent: Dictionary = session.call("request_relic_power", str(args.get("heart_id", "meadows")))
+	for i in 600:
+		if not (reply.result as Dictionary).is_empty() or sent.get("code") != "awaiting_saved_decision":
+			break
+		await physics_frame
+	var verdict: Dictionary = reply.result if not (reply.result as Dictionary).is_empty() else sent
+	return {"verdict": "PASS", "detail": "guest relic power request answered by the host", "data": {
+		"runtime_ready": bool(session.call("portal_runtime_ready")), "result": verdict,
+		"local_active": str(game.get("realm_hearts").call("active_id"))}}
+

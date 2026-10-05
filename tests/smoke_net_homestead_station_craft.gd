@@ -30,6 +30,14 @@ func _run() -> void:
 		await _craft_finish()
 		return
 	check(int(placed.effective_tier) == 1, "the host's Kitchen stands at tier 1 with its Spice rack")
+	# The guest's own ingredients, admitted by the host through the ordinary
+	# portable save: fund, production leave, returning rejoin.
+	var funded := await _craft_data(1, "craft_fund", {"items": [["berries", 4], ["fiber", 1]], "ids": COUNTED})
+	var crafter_id := str(funded.get("character_id", ""))
+	if not await _craft_step(1, "hall_leave_guest", {}): return
+	if not await _craft_step(0, "expect_peers", {"count": 1}): return
+	if not await _craft_step(1, "production_join", {"host": "127.0.0.1", "port": port,
+		"returning_route": true, "character": {"character_id": crafter_id}}, 9000): return
 	var host_before := await _craft_data(0, "craft_count", {"ids": COUNTED})
 	var crafted := await _craft_data(1, "craft_at_host_kitchen", {"kitchen_uid": placed.kitchen_uid}, 3000)
 	var host_after := await _craft_data(0, "craft_count", {"ids": COUNTED})
@@ -47,6 +55,14 @@ func _run() -> void:
 	if not back.is_empty():
 		check(str(back.character_id) == guest_id, "same saved guest character rejoined")
 		check(int(back.counts.potion_small) == int(crafted.after.potion_small), "the crafted potion persisted with the guest's portable character")
+	# F31#2 co-op rule: the guest's relic power choice is the host's to save.
+	# Shipping keeps F18's portal runtime off, so the host refuses and nothing
+	# changes, before and after the reconnect. The accepted path joins this
+	# smoke when F18 turns the runtime on.
+	var power := await _craft_data(1, "relic_power_attempt", {"heart_id": "meadows"})
+	if not power.is_empty():
+		check(not bool(power.runtime_ready) and power.result.get("ok") != true, "with the portal runtime off the host refuses the guest's relic power choice")
+		check(str(power.local_active) == "", "a refused choice leaves the guest without a power")
 	await _craft_finish()
 
 
