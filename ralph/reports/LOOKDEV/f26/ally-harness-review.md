@@ -150,3 +150,18 @@ Independent final scoped review by `/root/f26_lookbar_review`: **PASS** for the
 two text-mode edits, receipt publication verification and isolated CPU probe.
 The reviewer confirmed the support host contains only the actual PCK and debug
 DLL, and corroborated its recorded zero-error refusal of the defective PCK.
+
+## Fresh packaged native delivery
+
+Runtime and launcher `1b85fb4d985b7d622e022867055770b2f0de6b18`: fresh release
+export exit 0, actual packed-bake freshness exit 0, exported headless refusal
+exit 2, package integrity/ZIP CRC/payload hashes PASS. Four native Medium1080p
+Forward+ routes on GTX1060 3GB completed with native exit 0 and no ERRORs.
+[Report](ally-desktop-preflight.md), [machine receipt](ally-desktop-preflight.json).
+
+Final independent verdict by `/root/f26_lookbar_review`: **PASS for bounded
+desktop delivery**, including all 28 raw hashes, independently recomputed
+timings/hitches, source/profile/resolution/uncapped timing and all four vista
+floors. All eight start/end PNGs show populated worlds. Three desktop biomes
+average below 30 FPS. F26#5 remains BLOCKED_OWNER; Compatibility stays default.
+Full visual-bar acceptance and later handoff items remain open.

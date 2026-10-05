@@ -1,0 +1,410 @@
+{
+  "scope": "Actual fresh far-floor packaged native Medium1080p Forward+ desktop routes only; no Ally identity/15W/owner acceptance or full visual-bar claim.",
+  "source_commit": "1b85fb4d985b7d622e022867055770b2f0de6b18",
+  "launcher_source_commit": "1b85fb4d985b7d622e022867055770b2f0de6b18",
+  "package": {
+    "source_commit": "1b85fb4d985b7d622e022867055770b2f0de6b18",
+    "launcher_source_commit": "1b85fb4d985b7d622e022867055770b2f0de6b18",
+    "scope": "CPU-only Windows release export, actual PCK scatter freshness and exported-script refusal proof. No native visuals, performance, floor witness or Ally result.",
+    "steps": [
+      {
+        "name": "export-release",
+        "command": [
+          "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64_console.exe",
+          "--headless",
+          "--verbose",
+          "--path",
+          "D:\\tetherbound\\redesign-lookdev",
+          "--export-release",
+          "Windows Desktop",
+          "D:\\tetherbound\\.artifacts\\f26-ally-1b85fb4d9-20261004T235918Z\\package\\Tetherbound.exe"
+        ],
+        "exit_code": 0,
+        "expected_exit_code": 0,
+        "timed_out": false,
+        "errors": [],
+        "elapsed_seconds": 451.3280000000959,
+        "log": "D:\\tetherbound\\.artifacts\\f26-ally-1b85fb4d9-20261004T235918Z\\export-release.log",
+        "log_sha256": "30d0925193edf8bb470a3c375d72e79feb3d7ffe4c0fc1cf4d143b8164c4f43c",
+        "pass": true
+      },
+      {
+        "name": "exported-scatter-freshness",
+        "command": [
+          "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64_console.exe",
+          "--headless",
+          "--path",
+          "D:\\tetherbound\\.artifacts\\f26-ally-1b85fb4d9-20261004T235918Z\\probe-host",
+          "--main-pack",
+          "D:\\tetherbound\\.artifacts\\f26-ally-1b85fb4d9-20261004T235918Z\\probe-host\\Tetherbound.pck",
+          "--script",
+          "D:\\tetherbound\\redesign-lookdev\\tools\\check_exported_stormwood_scatter.gd",
+          "--",
+          "--output=D:/tetherbound/.artifacts/f26-ally-1b85fb4d9-20261004T235918Z/exported-scatter-freshness.json"
+        ],
+        "exit_code": 0,
+        "expected_exit_code": 0,
+        "timed_out": false,
+        "errors": [],
+        "elapsed_seconds": 7.343999999924563,
+        "log": "D:\\tetherbound\\.artifacts\\f26-ally-1b85fb4d9-20261004T235918Z\\exported-scatter-freshness.log",
+        "log_sha256": "d37febc99aa335329ac1265aec9b215be4a720f83169ae713f25070fd492f1a3",
+        "pass": true
+      },
+      {
+        "name": "exported-route-refusal",
+        "command": [
+          "D:\\tetherbound\\.artifacts\\f26-ally-1b85fb4d9-20261004T235918Z\\package\\Tetherbound.exe",
+          "--headless",
+          "--",
+          "--f26-route",
+          "--biome=meadows",
+          "--preset=Medium",
+          "--source-commit=1b85fb4d985b7d622e022867055770b2f0de6b18",
+          "--output=D:/tetherbound/.artifacts/f26-ally-1b85fb4d9-20261004T235918Z/refused-headless-route"
+        ],
+        "exit_code": 2,
+        "expected_exit_code": 2,
+        "timed_out": false,
+        "errors": [],
+        "elapsed_seconds": 3.875,
+        "log": "D:\\tetherbound\\.artifacts\\f26-ally-1b85fb4d9-20261004T235918Z\\exported-route-refusal.log",
+        "log_sha256": "ad1ddc995414448704df1830a57e36276953c67f51d83800e2348cfa04afa20c",
+        "pass": true
+      },
+      {
+        "name": "package-integrity",
+        "command": [
+          "C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe",
+          "-NoProfile",
+          "-ExecutionPolicy",
+          "Bypass",
+          "-File",
+          "D:\\tetherbound\\.artifacts\\f26-ally-1b85fb4d9-20261004T235918Z\\package\\f26_ally.ps1",
+          "-PackageRoot",
+          "D:\\tetherbound\\.artifacts\\f26-ally-1b85fb4d9-20261004T235918Z\\package",
+          "-VerifyOnly"
+        ],
+        "exit_code": 0,
+        "expected_exit_code": 0,
+        "timed_out": false,
+        "errors": [],
+        "elapsed_seconds": 6.842999999993481,
+        "log": "D:\\tetherbound\\.artifacts\\f26-ally-1b85fb4d9-20261004T235918Z\\package-integrity.log",
+        "log_sha256": "4b73e96c2f0ea15e4662c661a1bafbd05316f5b39275f94b256573096439dd69",
+        "pass": true
+      }
+    ],
+    "export_templates": [
+      {
+        "installed": "C:\\Users\\mattj\\AppData\\Roaming\\Godot\\export_templates\\4.7.stable\\windows_debug_x86_64.exe",
+        "sha256": "6b580a72cca9c31922ff4f7f1519a42debdd856e6852eec39ae46ce0e709231d"
+      },
+      {
+        "installed": "C:\\Users\\mattj\\AppData\\Roaming\\Godot\\export_templates\\4.7.stable\\windows_release_x86_64.exe",
+        "sha256": "c42eb5d17f683eb8bcd52c19a9f36ebf811b1788623878d5276a7d9ffc09f95c"
+      }
+    ],
+    "cpu_probe_support": {
+      "scope": "Outside shipping package; no plaintext fingerprint inputs on probe filesystem.",
+      "debug_dll": "D:\\tetherbound\\.artifacts\\f26-ally-1b85fb4d9-20261004T235918Z\\probe-host\\addons\\terrain_3d\\bin\\libterrain.windows.debug.x86_64.dll",
+      "debug_dll_sha256": "bf72686a7e1d8d8370ba9ba5eaa70c59375ee2cb5638d63b8942f1ad7d448cda",
+      "read_only_pck_link": "D:\\tetherbound\\.artifacts\\f26-ally-1b85fb4d9-20261004T235918Z\\probe-host\\Tetherbound.pck"
+    },
+    "exported_scatter_receipt_sha256": "ab823a53c3236da8259ba3f9037fa7d6d1b80d86a17650e292a2c05e6c40b4fd",
+    "package": "D:\\tetherbound\\.artifacts\\f26-ally-1b85fb4d9-20261004T235918Z\\package",
+    "archive": "D:\\tetherbound\\.artifacts\\f26-ally-1b85fb4d9-20261004T235918Z\\Tetherbound-F26-Ally-1b85fb4d9.zip",
+    "archive_sha256": "499f29739f3797abcb21efc3fe3c4dd78586ed0b7b6856fbbd15795ee7172eda",
+    "archive_size_bytes": 763043470,
+    "zip_crc_pass": true,
+    "embedded_payload_sha256_pass": true,
+    "staged_extensions": [
+      {
+        "path": "addons/terrain_3d/bin/libterrain.windows.release.x86_64.dll",
+        "sha256": "40900e649c3c6c7619c383d28732c3e2e8dc87c2938de43b29122a668aedcf86"
+      }
+    ],
+    "package_manifest_sha256": "7043ba0f85a623482d07efd5a5c3a59dda7a8b34ad5e508c8cebe6094d312b9f",
+    "cpu_preflight_pass": true,
+    "native_exported_routes": "MISSING",
+    "owner_ally_result": "BLOCKED_OWNER"
+  },
+  "native_run": {
+    "source_commit": "1b85fb4d985b7d622e022867055770b2f0de6b18",
+    "package": "D:\\tetherbound\\.artifacts\\f26-ally-1b85fb4d9-20261004T235918Z\\package",
+    "launcher_source_commit": "1b85fb4d985b7d622e022867055770b2f0de6b18",
+    "scope": "Actual exported four Medium1080p Forward+ routes on recorded desktop hardware only. No Ally identity,15W or owner acceptance.",
+    "command": [
+      "C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe",
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      "D:\\tetherbound\\.artifacts\\f26-ally-1b85fb4d9-20261004T235918Z\\package\\f26_ally.ps1",
+      "-PackageRoot",
+      "D:\\tetherbound\\.artifacts\\f26-ally-1b85fb4d9-20261004T235918Z\\package",
+      "-Output",
+      "D:\\tetherbound\\.artifacts\\f26-native-20261005T000915Z",
+      "-DesktopPreflight"
+    ],
+    "log": "D:\\tetherbound\\.artifacts\\f26-ally-1b85fb4d9-20261004T235918Z\\desktop-preflight-20261005T000915Z.launcher.log",
+    "output": "D:\\tetherbound\\.artifacts\\f26-native-20261005T000915Z",
+    "exit_code": 0,
+    "timed_out": false,
+    "elapsed_seconds": 984.219000000041,
+    "log_sha256": "db46dc98c2f721ba9528c41b07d120467cce30fc7065670b2ebb3eee2d73f912",
+    "result_path": "D:\\tetherbound\\.artifacts\\f26-native-20261005T000915Z\\ALLY_RESULT.json",
+    "result": "DESKTOP_PREFLIGHT_COMPLETE",
+    "pass_structure": true
+  },
+  "desktop_result": {
+    "result": "DESKTOP_PREFLIGHT_COMPLETE",
+    "source_commit": "1b85fb4d985b7d622e022867055770b2f0de6b18",
+    "package_manifest_sha256": "7043ba0f85a623482d07efd5a5c3a59dda7a8b34ad5e508c8cebe6094d312b9f",
+    "started_utc": "2026-10-05T00:09:21.8946795Z",
+    "cases": [
+      {
+        "biome": "meadows",
+        "route_complete": true,
+        "timed_frames": 212,
+        "mean_ms": 90.65300943396231,
+        "p50_ms": 84.975,
+        "p95_ms": 144.24095,
+        "p99_ms": 148.96725999999998,
+        "maximum_ms": 151.692,
+        "average_fps": 11.031073389002785,
+        "minimum_fps": 6.592305461065844,
+        "one_percent_low_fps": 6.663024213429992,
+        "hitches_over_100ms": 19,
+        "camera_far_m": 2000.0,
+        "required_vista_far_floor_m": 2000.0,
+        "meets_30fps_timing_target": false,
+        "meets_preferred_40fps_timing_target": false,
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "renderer": "forward_plus",
+        "receipt": "meadows/route.json",
+        "native_exit_code": 0,
+        "raw_files": [
+          {
+            "sha256": "f548725e6cd341c8b8ce988856afb9419fc0fe9929e348e164489ec028b8d7aa",
+            "path": "meadows.stdout.log"
+          },
+          {
+            "sha256": "f5c7f3b0768a62376f5e01be6e48afebc6e82bc860377c3f6f5f27d6593cf8ce",
+            "path": "meadows.stderr.log"
+          },
+          {
+            "sha256": "7e5bead5b115f3131fd831a53cfd91118e176bc2e47924f46cc9400eafd49451",
+            "path": "meadows.engine.log"
+          },
+          {
+            "sha256": "32f907b3e47a7b95cc173f00f59e44f7b66f73db0df0067313c0576da30f828b",
+            "path": "meadows.exit.json"
+          },
+          {
+            "sha256": "d65d8c855ab55131171f3f6d3ed9fc66ff4b4164c6edf24bb5071dd5e0f1cc5b",
+            "path": "meadows/route.json"
+          },
+          {
+            "sha256": "73a2bce4a090e26e873b016bc3d32cc8accaad2e61389d6473c879dcf5f8f19b",
+            "path": "meadows/start.png"
+          },
+          {
+            "sha256": "ede8cd6af43e7135e4e0fa7d6671aaa2cd04a01f7ce1a984f60e4be4cddcff5f",
+            "path": "meadows/end.png"
+          }
+        ]
+      },
+      {
+        "biome": "water",
+        "route_complete": true,
+        "timed_frames": 120,
+        "mean_ms": 136.28345833333336,
+        "p50_ms": 136.2755,
+        "p95_ms": 169.7936,
+        "p99_ms": 186.02389000000002,
+        "maximum_ms": 189,
+        "average_fps": 7.337647666337593,
+        "minimum_fps": 5.291005291005291,
+        "one_percent_low_fps": 5.331186642178749,
+        "hitches_over_100ms": 113,
+        "camera_far_m": 6500.0,
+        "required_vista_far_floor_m": 6500.0,
+        "meets_30fps_timing_target": false,
+        "meets_preferred_40fps_timing_target": false,
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "renderer": "forward_plus",
+        "receipt": "water/route.json",
+        "native_exit_code": 0,
+        "raw_files": [
+          {
+            "sha256": "3a1b0e51adfa57a6a2102a3000c32c22af7ea0a57c34dcf4cf34e0f07ba95aba",
+            "path": "water.stdout.log"
+          },
+          {
+            "sha256": "881de259f454c2b631320977189a616d55f0547fc2917ffa738cebe15400f8c1",
+            "path": "water.stderr.log"
+          },
+          {
+            "sha256": "eee70482a43b8b4775bf2f9e95eb1fc9064d67bd6d4675dea8223202a52b7641",
+            "path": "water.engine.log"
+          },
+          {
+            "sha256": "fd2ead0f75c13a28587169566627c8d471fb8d9ca7838162e12e9618f72cc99e",
+            "path": "water.exit.json"
+          },
+          {
+            "sha256": "e36544e36d307b91e5f88fca1bf8bba1f8a1bc487e7a40e5aabe3580e4ff815c",
+            "path": "water/route.json"
+          },
+          {
+            "sha256": "ceb657cde2b8dbf106e951b68580e5b940203438b6d56212fa5cd901f1a54872",
+            "path": "water/start.png"
+          },
+          {
+            "sha256": "251f8abe1a2c39203b4fee09bec7a64c8657616f89f5a68548ce20122930987a",
+            "path": "water/end.png"
+          }
+        ]
+      },
+      {
+        "biome": "cloudreach",
+        "route_complete": true,
+        "timed_frames": 12998,
+        "mean_ms": 13.470102708108998,
+        "p50_ms": 13.804,
+        "p95_ms": 16.28115,
+        "p99_ms": 18.931,
+        "maximum_ms": 79.055,
+        "average_fps": 74.23848367525812,
+        "minimum_fps": 12.64942128897603,
+        "one_percent_low_fps": 43.4274115826252,
+        "hitches_over_100ms": 0,
+        "camera_far_m": 3500.0,
+        "required_vista_far_floor_m": 3500.0,
+        "meets_30fps_timing_target": true,
+        "meets_preferred_40fps_timing_target": true,
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "renderer": "forward_plus",
+        "receipt": "cloudreach/route.json",
+        "native_exit_code": 0,
+        "raw_files": [
+          {
+            "sha256": "38375222a18b7a7b6a938a1138553fb201758f2f6e6fad642261ffd9f8244007",
+            "path": "cloudreach.stdout.log"
+          },
+          {
+            "sha256": "a1a0d79c079699e11f939bd814203c72f1f001225585fbb76b607aebdacc21d1",
+            "path": "cloudreach.stderr.log"
+          },
+          {
+            "sha256": "595f22e74b3d4119508882fbd72a520a82699056c18b8dc419ec1847fe59378c",
+            "path": "cloudreach.engine.log"
+          },
+          {
+            "sha256": "f081d841a9c7030969ccd09b816ecb9ba3c4b509d906e0edfde5a3cd911ba5bd",
+            "path": "cloudreach.exit.json"
+          },
+          {
+            "sha256": "68bb4c5ca57f03e5c312339078db13fb9c1b6817ab1715825dbae70f5613a21e",
+            "path": "cloudreach/route.json"
+          },
+          {
+            "sha256": "8d939a8396ecb68a1bf98894206f3c6adb857b090d54ba23b1bc305722827e23",
+            "path": "cloudreach/start.png"
+          },
+          {
+            "sha256": "4053420790eef3fe2bc12a9efef2c48851fe98b621297dea6b58df4a88a50506",
+            "path": "cloudreach/end.png"
+          }
+        ]
+      },
+      {
+        "biome": "stormwood",
+        "route_complete": true,
+        "timed_frames": 2595,
+        "mean_ms": 58.44214450867057,
+        "p50_ms": 55.936,
+        "p95_ms": 79.09229999999997,
+        "p99_ms": 94.93141999999997,
+        "maximum_ms": 162.922,
+        "average_fps": 17.110939518169776,
+        "minimum_fps": 6.1379064828568275,
+        "one_percent_low_fps": 9.689528861566075,
+        "hitches_over_100ms": 13,
+        "camera_far_m": 9000.0,
+        "required_vista_far_floor_m": 9000.0,
+        "meets_30fps_timing_target": false,
+        "meets_preferred_40fps_timing_target": false,
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "renderer": "forward_plus",
+        "receipt": "stormwood/route.json",
+        "native_exit_code": 0,
+        "raw_files": [
+          {
+            "sha256": "0541c62f3b50c30c46f5c2408261b40334d014e15eaff2242aeebc399f8be003",
+            "path": "stormwood.stdout.log"
+          },
+          {
+            "sha256": "138d76bf823a955ac7f409f2e720d53987e2ebbd4290f87877019bfefbf7b92f",
+            "path": "stormwood.stderr.log"
+          },
+          {
+            "sha256": "8549799617ebf3b57016a32b648a0a25839ef0d50b3b48b83e12e47f71ca10f7",
+            "path": "stormwood.engine.log"
+          },
+          {
+            "sha256": "5360bc51a81db0042b24927187012994cce756597e71fe215f78bfbd7acd83ab",
+            "path": "stormwood.exit.json"
+          },
+          {
+            "sha256": "ecbfdfcf000158e4749a1bbb0486baea4ee5d745dc185a531c1e5e52ada2e187",
+            "path": "stormwood/route.json"
+          },
+          {
+            "sha256": "1830b217000c7c943c94380a53db04cd9a5412ebe5ead2da93b63e10e93e973a",
+            "path": "stormwood/start.png"
+          },
+          {
+            "sha256": "8f2b0360ab9c321a4bc1e8d7b0d0593e3ed81cc316089ab11695208411fb3e5e",
+            "path": "stormwood/end.png"
+          }
+        ]
+      }
+    ],
+    "evidence_kind": "DESKTOP_PREFLIGHT",
+    "device": {
+      "os_version": "10.0.19045",
+      "manufacturer": "System manufacturer",
+      "owner_declared_variant": null,
+      "graphics": [
+        {
+          "Name": "NVIDIA GeForce GTX 1060 3GB",
+          "DriverVersion": "32.0.15.6094"
+        }
+      ],
+      "model": "System Product Name",
+      "owner_declared_power_watts": null,
+      "os": "Microsoft Windows 10 Home"
+    },
+    "scope": "Four exported Medium native 1080p scripted render routes. Manual device/power verification required; no release endurance, earned campaign, combat or invitation co-op claim. Desktop hardware only; no Ally hardware, 15 W or owner acceptance claim.",
+    "fps_definition": "Minimum=1000/max wall_ms; average=1000/mean wall_ms; 1% low=1000/mean slowest ceiling(1% of frames) wall_ms.",
+    "below_30fps_timing_target": true,
+    "finished_utc": "2026-10-05T00:25:39.4130085Z"
+  },
+  "independent_fps_recomputation_pass": true,
+  "raw_file_hash_verification_pass": true,
+  "raw_bundle": "far-floor-packaged-native.zip",
+  "raw_bundle_sha256": "8e4f4da224ba390902f69ef2234a923f039634099b4fa03bccc6537cacae4483",
+  "owner_gate": "BLOCKED_OWNER; Compatibility default unchanged.",
+  "old_failed_attempt_preserved": "D:\\tetherbound\\.artifacts\\f26-ally-a799297b2-20261004T225752Z\\desktop-preflight-20261004T231048Z.receipt.json",
+  "long_output_failed_attempt_preserved": "D:\\tetherbound\\.artifacts\\f26-ally-launcher-ac76f19c6-20261004T232608Z\\desktop-preflight-20261004T232815Z.receipt.json",
+  "compressed_scripts_failed_attempt_preserved": "D:\\tetherbound\\.artifacts\\f26-ally-launcher-ac76f19c6-20261004T232608Z\\desktop-preflight-20261004T233322Z.receipt.json",
+  "profile_path_scope": "Final serial run uses a fresh short evidence Output. Long custom Output previously produced Water shader-cache errors and was strictly refused; unchanged normal Ally default is shorter.",
+  "independent_review": {
+    "reviewer": "/root/f26_lookbar_review",
+    "verdict": "PASS for bounded desktop delivery",
+    "verified": "All four native exits and zero ERRORs; all28 raw hashes; independently recomputed FPS/hitches; source/Medium/Forward+/1080p/uncapping/far floors; all8 PNGs show populated worlds.",
+    "limits": "Three desktop biomes below30fps; F26#5BLOCKED_OWNER; full visual-bar and later items open."
+  }
+}
