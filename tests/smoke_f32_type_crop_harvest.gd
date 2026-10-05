@@ -27,6 +27,8 @@ const FARM := preload("res://scripts/world/farm_logic.gd")
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const PLOT_ID := "authored:0"
 const CROP := "ground"
+## A whole-realm F32 mount from scratch; it held ~5 s per call before PERF.
+const MAX_MOUNT_MS := 2000
 var _report := {"checks": [], "fixture": "see header", "two_peer": false}
 var _game: Node
 var _world: Node3D
@@ -111,7 +113,24 @@ func _run() -> void:
 	_driver.set("_nav", NAV.new(self, _player, rig, Callable(_driver, "_send_stick")))
 	await _frames(30)
 	await _crop_cycle(config, crop)
+	if not _failed: _check_fresh_mount_time()
 	_finish()
+
+
+## PERF (2026-10-05): a realm mount with every site still to place (as at world
+## entry, on host and guest) scanned all ~180k world nodes again for each site,
+## ~5 s per call. A throwaway mount re-runs that whole path after the crop
+## cycle, so it cannot disturb the checks above.
+func _check_fresh_mount_time() -> void:
+	var probe: Node3D = preload("res://scripts/world/f32_world_mount.gd").new()
+	_world.add_child(probe)
+	var started := Time.get_ticks_msec()
+	var census: Dictionary = probe.call("mount", _world, _player, _resources.get("_service"))
+	var took := Time.get_ticks_msec() - started
+	print("F32 fresh realm mount: %d ms for %d sites" % [took, (census.get("mounted_ids", []) as Array).size()])
+	_check((census.get("mounted_ids", []) as Array).size() > 0, "the fresh mount placed sites (the slow path ran)")
+	_check(took <= MAX_MOUNT_MS, "a fresh realm mount stays within %d ms (took %d ms)" % [MAX_MOUNT_MS, took])
+	probe.queue_free()
 
 
 func _crop_cycle(config: Dictionary, crop: Dictionary) -> void:
