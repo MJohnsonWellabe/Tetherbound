@@ -1,6 +1,6 @@
 extends "res://tests/helpers/net_harness.gd"
 
-# (dispatch-only until its first CI pass; then restore the two-peer discovery header)
+# peers: 2
 
 ## F33#3 / owner RD-14: Stormwood's charged ground (the glass sink) is
 ## host-authoritative and personal, proven across two real processes.

@@ -5,7 +5,7 @@
 | 0 | Harness and Charm in four tiers, +1..+3 | PASS (unit) | `test_creature_gear` 7/297: tiers, slots and +0..+3 chains; real `stage_core` equip/upgrade; refusals; prepare applies gear once |
 | 1 | Gear shows as a trim/glow accent | PASS (code-blind judge, r4) | `f33-accent-r4/judge.md`: by day and night, front and side, a bare creature is distinct from the four tiers (gold/green/blue/violet straps); reads as harness trim; face clear; no red. Path: r1 slab (PARTIAL) -> narrow trim with tier-scaled glow -> bands moved off the face -> side recapture. Bound to the local deployed body (`companion_presence`); `gear.json` `visual_enabled` now true. Not shown: other players' creatures (no record held), the charm as a separate visible piece. |
 | 2 | Boss sims per tier pass C2 | Open | Next after the landmark follow-up (coordinator order) |
-| 3 | Trainer gear mitigates real hazards, each tested | PASS except hazard terrain (BLOCKED-with-ask) | See "Hazards" below |
+| 3 | Trainer gear mitigates real hazards, each tested | PASS | See "Hazards" below |
 | 4 | Pouch tiers extend Tether Commands; gear persists, personal in co-op | BLOCKED on F24 | `tether_commands.json` `runtime_enabled` is F24's flag (coordinator ruling). Gear persistence is on the character record; two-peer gear smoke pending |
 
 ## Combat hooks (coordinator scope a)
@@ -30,7 +30,7 @@
 | Drowning (pond submersion, `water_hazard.json`) | `water.gd _apply_hazard_damage` | 10 → 6.8 (Tidesteel) | `smoke_f33_trainer_hazards` |
 | Drowning (swim) | `swim_controller.physics_step` | 4.00 → 2.72 hp | `smoke_f33_swim_hazards` |
 | Currents | `swim_controller.physics_step` | 6.00 → 4.08 m/s | `smoke_f33_swim_hazards` |
-| Hazard terrain (Stormwood charged ground) | none | — | BLOCKED-with-ask: nothing in the game makes charged ground damage the trainer. The only Stormwood write to trainer health is lightning, which is already mitigated. Per the coordinator, no damage is added |
+| Hazard terrain (Stormwood charged ground; owner RD-14) | host `stormwood_lightning._tick_charged_ground` → receiver `_receive_charged_ground` (`stormwood_charged_ground.gd`) | 2 hp per 1 s tick; never below a 30% floor; Stormglass 2.00 → 1.20 per hit; Rootiron reduces it too | `test_stormwood_charged_ground` 2/7; lightning fixture 54/54; **two-peer ENet** `smoke_net_stormwood_charged_ground` (render 37325105092, 46/46): guest −12.0 over 6 hits, host 0; Stormglass −1.20 vs −2.00 per hit; 32 → 30.00 at the floor; swapped: host −12.0, guest 0 |
 
 **Player-visible effect.** Enabling hazard mitigation (`gear.json` `hazards_enabled`) also activates the authored Upper Cloudreach cold zone. Stamina regenerates at ×0.65 there. It has no meter and never drains, and Skyglass travel gear eases it. The coordinator confirmed this matches the spec ("cold heights" is a zone effect, never a meter).
 
