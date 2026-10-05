@@ -37,7 +37,7 @@ func test_the_creature_detail_panel_builds_a_trait_description_label() -> void:
 		+ "still shown with nothing explaining what it does")
 
 
-func test_the_trait_description_label_is_actually_filled_from_trait_db() -> void:
+func test_the_trait_description_label_is_actually_filled_from_the_trait_rows() -> void:
 	var file := FileAccess.open("res://scripts/ui/tab_creatures.gd", FileAccess.READ)
 	if file == null:
 		return
@@ -51,8 +51,11 @@ func test_the_trait_description_label_is_actually_filled_from_trait_db() -> void
 	assert_true(body.contains("_detail_trait_desc.text"),
 		"_describe never assigns _detail_trait_desc.text; the label exists but "
 		+ "stays blank")
-	assert_true(body.contains("_traits.call(\"description\""),
-		"_describe does not pull from trait_db's description() accessor, so "
+	# F30#1 (ACCEPTANCE §6.2): inspect names the creature's active traits from
+	# the one F30 pool (traits.gd rows, which carry each config description),
+	# replacing the legacy trait_db primary/secondary lookup.
+	assert_true(body.contains("TRAIT_RULES.rows(creature)") and body.contains("row.get(\"description\""),
+		"_describe does not pull descriptions from the F30 trait rows, so "
 		+ "the label would need its own (drifting) copy of the trait text")
 
 
@@ -71,3 +74,19 @@ func test_the_empty_slot_state_clears_the_trait_description() -> void:
 	assert_true(body.contains("_detail_trait_desc.text = \"\""),
 		"an empty slot leaves the previous creature's trait description on "
 		+ "screen instead of clearing it")
+
+
+## F30#1: the catch readout names the caught creature's active F30 traits
+## (rolled, never a hidden bond secondary) and says so when it rolled none.
+func test_the_catch_readout_names_rolled_traits_and_a_zero_roll() -> void:
+	var readout := preload("res://scripts/ui/creature_trait_readout.gd")
+	var rolled := preload("res://scripts/creatures/creature_species.gd").spawn("terrapup")
+	rolled.set("trait_secondary", "hardy")
+	rolled.set("traits_initialized", true)
+	rolled.set("rolled_traits", ["bold", "hardy"])
+	assert_eq(readout.summary(rolled), "Traits: Bold (Common), Hardy (Common)")
+	var none := preload("res://scripts/creatures/creature_species.gd").spawn("terrapup")
+	none.set("traits_initialized", true)
+	none.set("rolled_traits", [])
+	none.set("trait_secondary", "bold")
+	assert_eq(readout.summary(none), "No traits", "an unrevealed bond secondary stays hidden")
