@@ -2729,11 +2729,19 @@ func _step_join_encounter(args: Dictionary, command_budget_frames: int = NET_STE
 	var shared := str(director.get("_pending_shared_join_id")) == id \
 		or str(director.get("_shared_active_id")) == id
 	var admission_deadline := int(director.get("_pending_shared_join_deadline_ms")) if shared else 0
+	# A tournament join is the same asynchronous host admission with its own
+	# producer deadline (`_pending_tournament_join_deadline_ms`). Observe that
+	# deadline and report how the admission ended instead of a bare frame count.
+	var tournament := not shared and str(director.get("_pending_tournament_join_id")) == id
+	if tournament:
+		admission_deadline = int(director.get("_pending_tournament_join_deadline_ms"))
 	var frames := maxi(1, int(args.get("settle", 120)))
-	if shared:
+	if shared or tournament:
 		frames = maxi(1, command_budget_frames)
 		if args.has("settle"):
 			frames = mini(frames, maxi(1, int(args["settle"])))
+	var join_started_ms := Time.get_ticks_msec()
+	var bound_after_ms := -1
 	var manager := _combat_manager()
 	var bound := false
 	var failure := ""
@@ -2781,7 +2789,20 @@ func _step_join_encounter(args: Dictionary, command_budget_frames: int = NET_STE
 					and str(creature.get("uid")) == str(card.get("uid", "")) \
 					and str(creature.get("species_id")) == str(opponent.get("species_id", ""))
 			if bound:
+				bound_after_ms = Time.get_ticks_msec() - join_started_ms
 				break
+		if tournament and str(director.get("_pending_tournament_join_id")) != id:
+			var tgame := root.get_node_or_null(^"Game")
+			if tgame != null:
+				observed_world_message = str(tgame.get("_pending_world_message"))
+			# Admission resolved; give a successful begin the frame it binds in.
+			manager = _combat_manager()
+			if manager == null or not bool(manager.call("is_fighting")) or str(manager.call("encounter_id")) != id:
+				failure = "tournament admission ended without binding"
+				break
+		if tournament and (admission_deadline <= 0 or Time.get_ticks_msec() >= admission_deadline + 100):
+			failure = "tournament admission passed its original producer deadline"
+			break
 		if shared:
 			if str(director.get("_pending_shared_join_id")) != id:
 				failure = "shared admission ended without a matching host record and presentation"
@@ -2794,6 +2815,11 @@ func _step_join_encounter(args: Dictionary, command_budget_frames: int = NET_STE
 			return {"verdict": "FAIL", "detail": failure if not failure.is_empty() else "shared admission reached the caller frame limit",
 				"data": {"encounter_id": id, "producer_deadline_ms": admission_deadline,
 					"frame_limit": frames, "observed_world_message": observed_world_message}}
+		if tournament:
+			return {"verdict": "FAIL", "detail": "%s after %d ms (world message: '%s')" % [
+				failure if not failure.is_empty() else "tournament admission reached the caller frame limit",
+				Time.get_ticks_msec() - join_started_ms, observed_world_message],
+				"data": {"encounter_id": id, "producer_deadline_ms": admission_deadline, "frame_limit": frames}}
 		if manager == null or not bool(manager.call("is_fighting")):
 			return {"verdict": "FAIL", "detail": "the join did not put this peer in a fight"}
 		return {"verdict": "FAIL", "detail": "the join is fighting, but is bound to '%s' instead of '%s'"
@@ -2806,8 +2832,9 @@ func _step_join_encounter(args: Dictionary, command_budget_frames: int = NET_STE
 	if body != null and is_instance_valid(body):
 		species = str((body as Node3D).get("species_id"))
 		where = (body as Node3D).global_position
-	return {"verdict": "PASS", "detail": "joined %s beside '%s' at (%.1f, %.1f)"
-		% [id, species, where.x, where.z]}
+	return {"verdict": "PASS", "detail": "joined %s beside '%s' at (%.1f, %.1f)%s"
+		% [id, species, where.x, where.z,
+			(" after %d ms" % bound_after_ms) if bound_after_ms >= 0 else ""]}
 
 
 ## Stand this peer's OWN deployed creature somewhere. A peer owns its creature's
