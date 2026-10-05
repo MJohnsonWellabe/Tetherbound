@@ -1,0 +1,5 @@
+Independent bounded audit: PASS for integrity and wall-frame arithmetic. Actual desktop release average is below10FPS and the owner20FPS floor is FAIL; no Ally/earned-campaign or isolated causal acceptance follows.
+
+Verified the 4,471,099-byte ZIP hash, six entry sizes/hashes/original bytes and separate Medium config hash. Payload/source-entry records exactly match the previously independently hashed shipping Meadows package; this audit reuses that proof without rehashing the payload. Source33431f9a, Medium/Forward+, native1920x1080 and far6500 agree. Command uses packaged --f26-route without script/debug/gpu-profile; logs have no ERROR or trace lines, and exit0/route PASS/complete=true agree. Both PNG headers are1080p; no images were judged.
+
+All120 wall samples reproduce minimum/average/ceiling-1%low FPS6.191567/9.614674/6.223918 and both cached CPU monitor means/correlated slow-row means. No true CPU/GPU/draw measurements exist. The older embedded entry has no frame_limit receipt or explicit uncapping; runtime cap/VSync/physics/time settings remain unverified. No engine/test/source work was performed. CPU audit is finished.
