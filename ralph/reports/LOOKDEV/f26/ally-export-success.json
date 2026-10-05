@@ -1,0 +1,93 @@
+{
+  "source_commit": "925821adc22527d3251c53df757a56d251b007a2",
+  "scope": "CPU-only Windows release export and exported-script refusal proof. No native visuals, performance, floor witness or Ally result.",
+  "steps": [
+    {
+      "name": "export-release",
+      "command": [
+        "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--verbose",
+        "--path",
+        "D:\\tetherbound\\redesign-lookdev",
+        "--export-release",
+        "Windows Desktop",
+        "D:\\tetherbound\\.artifacts\\f26-ally-925821adc-20261004T181841Z\\package\\Tetherbound.exe"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "timed_out": false,
+      "errors": [],
+      "elapsed_seconds": 417.28100000007544,
+      "log": "D:\\tetherbound\\.artifacts\\f26-ally-925821adc-20261004T181841Z\\export-release.log",
+      "log_sha256": "1b16c6c3f52af7bdb0e18bc1f4333993a4215d404b23dffe5ce7fc1c64e4277d",
+      "pass": true
+    },
+    {
+      "name": "exported-route-refusal",
+      "command": [
+        "D:\\tetherbound\\.artifacts\\f26-ally-925821adc-20261004T181841Z\\package\\Tetherbound.exe",
+        "--headless",
+        "--",
+        "--f26-route",
+        "--biome=meadows",
+        "--preset=Medium",
+        "--source-commit=925821adc22527d3251c53df757a56d251b007a2",
+        "--output=D:/tetherbound/.artifacts/f26-ally-925821adc-20261004T181841Z/refused-headless-route"
+      ],
+      "exit_code": 2,
+      "expected_exit_code": 2,
+      "timed_out": false,
+      "errors": [],
+      "elapsed_seconds": 4.937000000034459,
+      "log": "D:\\tetherbound\\.artifacts\\f26-ally-925821adc-20261004T181841Z\\exported-route-refusal.log",
+      "log_sha256": "ad1ddc995414448704df1830a57e36276953c67f51d83800e2348cfa04afa20c",
+      "pass": true
+    },
+    {
+      "name": "package-integrity",
+      "command": [
+        "C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "D:\\tetherbound\\.artifacts\\f26-ally-925821adc-20261004T181841Z\\package\\f26_ally.ps1",
+        "-PackageRoot",
+        "D:\\tetherbound\\.artifacts\\f26-ally-925821adc-20261004T181841Z\\package",
+        "-VerifyOnly"
+      ],
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "timed_out": false,
+      "errors": [],
+      "elapsed_seconds": 8.108999999938533,
+      "log": "D:\\tetherbound\\.artifacts\\f26-ally-925821adc-20261004T181841Z\\package-integrity.log",
+      "log_sha256": "f3dbb7948d61ae5d38214da60bbe8012b1423a7563e5bba774873dbc4cd7cc6f",
+      "pass": true
+    }
+  ],
+  "export_templates": [
+    {
+      "installed": "C:\\Users\\mattj\\AppData\\Roaming\\Godot\\export_templates\\4.7.stable\\windows_debug_x86_64.exe",
+      "sha256": "6b580a72cca9c31922ff4f7f1519a42debdd856e6852eec39ae46ce0e709231d"
+    },
+    {
+      "installed": "C:\\Users\\mattj\\AppData\\Roaming\\Godot\\export_templates\\4.7.stable\\windows_release_x86_64.exe",
+      "sha256": "c42eb5d17f683eb8bcd52c19a9f36ebf811b1788623878d5276a7d9ffc09f95c"
+    }
+  ],
+  "package": "D:\\tetherbound\\.artifacts\\f26-ally-925821adc-20261004T181841Z\\package",
+  "archive": "D:\\tetherbound\\.artifacts\\f26-ally-925821adc-20261004T181841Z\\Tetherbound-F26-Ally-925821adc.zip",
+  "archive_sha256": "30a4fbd1eb052c99f5f3aca474fb2b68047830c97f56c17c78f20959baeb07a8",
+  "staged_extensions": [
+    {
+      "path": "addons/terrain_3d/bin/libterrain.windows.release.x86_64.dll",
+      "sha256": "40900e649c3c6c7619c383d28732c3e2e8dc87c2938de43b29122a668aedcf86"
+    }
+  ],
+  "package_manifest_sha256": "b0e2d1ec9b971627a2d7dd206ac28ca6ead070514fbc0df624fb6b44a6f151df",
+  "cpu_preflight_pass": true,
+  "native_exported_routes": "MISSING",
+  "owner_ally_result": "BLOCKED_OWNER"
+}

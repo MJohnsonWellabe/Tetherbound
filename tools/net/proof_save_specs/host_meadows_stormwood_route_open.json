@@ -1,0 +1,18 @@
+{
+  "fixture": "host_meadows_stormwood_route_open",
+  "_comment": "Declared start: LEGACY chapter order (Meadows, then the Stormwood route open), as the v27 hand-captured save held it. Every field below except `realm` is a disclosed write; see the fixture's README.md.",
+  "slot": 0,
+  "character": {
+    "id": "character-f41f4a49223483d6bfdf56715944bb7b",
+    "chosen_character": "trainer",
+    "display_name": "Trainer"
+  },
+  "world": {
+    "namespace": "39191e30aa1d9fb699f1f8f2fde5042a",
+    "seed": 1423549592
+  },
+  "realm": "meadows",
+  "world_flags": ["realm_key_stormwood", "realm_gate_stormwood_unlocked"],
+  "player_flags": ["opening:beat:wake"],
+  "party": []
+}

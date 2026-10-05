@@ -1,0 +1,4 @@
+PASS warden_aldis: player_hits=14 stand_strikes_landed=4 dodges_avoided=1/4 strikes=8
+exit=0
+PASS warden_aldis: player_hits=12 stand_strikes_landed=4 dodges_avoided=2/4 strikes=8
+exit=0
