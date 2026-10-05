@@ -1,0 +1,32 @@
+{
+  "asset": "Crossing Hall reusable portal arch",
+  "source_brief": "tb/f17:ralph/reports/HUB/f17/meshy-handoff/README.md",
+  "brief_git_blob": "f3878c3bbffd004559ebaeab7a474c37421f25c2",
+  "generator": "Built-in ImageGen",
+  "prompts": [
+    "Use case: stylized-concept. Asset type: inspected single-object image-to-3D reference for Tetherbound Crossing Hall portal arch. Create one isolated freestanding carved stone portal arch, shown completely from a nearly frontal shallow three-quarter view, transparent background. Established warm plaster / dark timber / uneven warm sandstone game-kit aesthetic, carefully authored stylized game asset, readable chunky beveled masonry, tactile stone, no photorealism. Hollow clear arch opening at least 2.4m wide and 3.6m high, overall width at most3.2m, total height about4.2m, depth about0.45m. Broad opening about twice a1.8m human height; slender but substantial jambs. Carved keystone with a recessed circular biome emblem slot, one single inset carved name plaque above opening intended for interchangeable biome names; blank neutral inset plaque surface in this reusable base reference. Strong coherent stone mass suited to civic Hall, modest warm stone ornament; no oxblood/red, no neon/glow/light membrane and no stone infill so the reusable arch body and empty aperture are obvious. Even neutral studio illumination showing front and inside jambs, low contrast dark crevices, no cast background, no other building, no human/creature, no props, no text, no dimension labels, no contact sheet, no duplicate views. Do not make a household door, tomb, temple ruin or fantasy spiked gateway. One single intact arch body including top plaque and emblem recess; flat-bottomed two feet at same ground plane, no separate pedestal/base blocking passage.",
+    "Edit this portal arch reference only. Preserve its warm stylized uneven sandstone, restrained carved bands, single top name-plaque blank and circular recessed biome-emblem blank, transparent background and single-object shallow front three-quarter view. Correct the geometry proportions: outer total width3.2m, overall height4.2m; unobstructed opening2.4m wide and3.6m high. Therefore the jambs together take only25% of overall width (each12.5%), and the stone/plaque above the opening takes onlyabout14% of overall height. Widen and raise the empty aperture, slender solid jambs and shorten the top assembly; keep the distinctive blank plaque and emblem compact above the arch. The two feet stand on the same ground plane, passage remains hollow, no pedestal. Show the entire asset with5% transparent margin on EVERY side; no cropping. Eliminate all yellow or red fringe/outline artifacts; edges are natural warm sandstone against clean alpha. No labels, measurements, people, extra objects, new decorative theme or second view. This is a single reusable stone arch for image-to-3D, not a collection."
+  ],
+  "references": [
+    {
+      "file": "portal-arch-v1.png",
+      "sha256": "97dd906d3dbe8a74a2212653d3e795c7675ab832f01fd49fab304a4b79e59bc2"
+    },
+    {
+      "file": "portal-arch-v2.png",
+      "sha256": "0aec3cbccbd16c3f5419dc1ec77d8c1f6a77d3377ae7360d3c6f4fe99036676f"
+    }
+  ],
+  "status": "HOLD after independent reference suitability review: aperture too narrow, excessive ornament and colored cutout fringes",
+  "intended_dimensions_m": {
+    "outer_max_width": 3.2,
+    "opening_min_width": 2.4,
+    "opening_min_height": 3.6,
+    "concept_outer_height": 4.2,
+    "concept_depth": 0.45
+  },
+  "scale_qualification": "No measured 3D asset exists; image appearance does not certify the dimensional constraints. Opening appears narrow relative frame; independent review pending.",
+  "meshy_posts": 0,
+  "purchase": false,
+  "review": "reference-review.md"
+}
