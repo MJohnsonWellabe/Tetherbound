@@ -54,7 +54,7 @@ func _run() -> void:
 	var look := world.get_node("WorldLook")
 	look.call("set_clock_frozen", true)
 	var mid := ORIGIN + Vector3(SPACING * (ROW.size() - 1) * 0.5, 0, 0)
-	var stands := {"row": [mid + Vector3(0, 1.2, 8.0), mid], "forge_kitchen": [ORIGIN + Vector3(8.25, 1.2, 5.5), ORIGIN + Vector3(8.25, 0, 0)], "altar": [ORIGIN + Vector3(16.5, 1.2, 4.5), ORIGIN + Vector3(16.5, 0, 0)], "den_farm": [ORIGIN + Vector3(22.0, 1.2, 6.5), ORIGIN + Vector3(23.5, 0, 0)]}
+	var stands := {"row": [mid + Vector3(0, 1.2, 8.0), mid], "forge_kitchen": [ORIGIN + Vector3(8.25, 1.2, 5.5), ORIGIN + Vector3(8.25, 0, 0)], "altar": [ORIGIN + Vector3(19.0, 1.2, 4.5), ORIGIN + Vector3(19.0, 0, 0)], "den_farm": [ORIGIN + Vector3(22.0, 1.2, 6.5), ORIGIN + Vector3(23.5, 0, 0)]}
 	for stand: String in stands:
 		var at: Vector3 = stands[stand][0]
 		var aim: Vector3 = stands[stand][1]

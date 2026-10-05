@@ -41,10 +41,8 @@ func build(id: String, ghost: bool = false) -> void:
 				_box(Vector3(0.9,0.16,0.7),Vector3(-0.45,1.48,0.2),Color("8d8f93"))
 				_glow(Vector3(0,0.75,1.1),Color("ff8a3d"))
 			"kitchen":
-				# Prep table and spice shelf, plus a stone hearth with a hanging pot.
+				# Prep table (the kit shelf stands behind it) and a stone hearth with a hanging pot.
 				_table(1.4,1.4,Vector3(-0.5,0,0))
-				_box(Vector3(1.4,0.16,0.2),Vector3(-0.5,1.9,-0.55),Color("99744c"))
-				for x: float in [-1.1,0.1]: _box(Vector3(0.12,1.0,0.12),Vector3(x,1.5,-0.55),Color("99744c"))
 				_cylinder(0.5,0.32,Vector3(0.95,0.16,0.1),Color("6e6760"))
 				_cylinder(0.36,0.06,Vector3(0.95,0.34,0.1),Color("ff7a2a"),2.0)
 				for x: float in [0.5,1.4]: _box(Vector3(0.08,1.6,0.08),Vector3(x,0.8,0.1),Color("5b4632"))
