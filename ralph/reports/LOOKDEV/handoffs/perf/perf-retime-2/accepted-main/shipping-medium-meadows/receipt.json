@@ -1,0 +1,81 @@
+{
+  "source_commit": "33431f9abab32c28898d52daecbd24f48012c490",
+  "biome": "meadows",
+  "preset": "Medium",
+  "command": [
+    "D:\\tetherbound\\.artifacts\\pr2\\main334\\package\\Tetherbound.exe",
+    "--rendering-method",
+    "forward_plus",
+    "--resolution",
+    "1920x1080",
+    "--log-file",
+    "D:\\tetherbound\\.artifacts\\pr2\\main334\\shipping-medium-meadows\\engine.log",
+    "--audio-driver",
+    "Dummy",
+    "--",
+    "--f26-route",
+    "--biome=meadows",
+    "--preset=Medium",
+    "--source-commit=33431f9abab32c28898d52daecbd24f48012c490",
+    "--output=D:/tetherbound/.artifacts/pr2/main334/shipping-medium-meadows/route"
+  ],
+  "exit_code": 0,
+  "stop_reason": null,
+  "elapsed_seconds": 188.984,
+  "TB_BACKGROUND_WORK_TRACE": "unset",
+  "payload": [
+    {
+      "path": "D:\\tetherbound\\.artifacts\\pr2\\main334\\package\\Tetherbound.exe",
+      "size": 109052928,
+      "sha256": "a3e6b1cbd46ad153e7dfb24a5c0ee2b9187e0fb21fa7c0610fa8754ba5939d9c"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\pr2\\main334\\package\\Tetherbound.pck",
+      "size": 1135760212,
+      "sha256": "ea6ddca0ac0dce521ddd31709592d33d7572c47c4489c5775fdda7d4fe2b4165"
+    },
+    {
+      "path": "D:\\tetherbound\\.artifacts\\pr2\\main334\\package\\libterrain.windows.release.x86_64.dll",
+      "size": 3549184,
+      "sha256": "40900e649c3c6c7619c383d28732c3e2e8dc87c2938de43b29122a668aedcf86"
+    }
+  ],
+  "scope": "Actual shipping release EXE/PCK, packaged existing f26 route entry, no debug/EngineProfiler/gpu-profile. Desktop GTX1060 route proof, not Ally or earned campaign.",
+  "complete": true,
+  "errors": [],
+  "metrics": {
+    "frames": 235,
+    "minimum_fps": 9.928514694201748,
+    "average_fps": 12.266413557487514,
+    "one_percent_low_fps": 10.379294000422092,
+    "slowest_one_percent_frames": 3,
+    "monitors": {
+      "process_ms": {
+        "average": 85.58547659574468,
+        "slowest_one_percent_mean": 72.43033333333334
+      },
+      "physics_ms": {
+        "average": 4.582697872340425,
+        "slowest_one_percent_mean": 5.009333333333333
+      }
+    }
+  },
+  "camera_far_m": 2000,
+  "adapter": "NVIDIA GeForce GTX 1060 3GB",
+  "route_sha256": "943029da0602fac9b83b29ca9b4c993d80b4badfa7cba437c5522ccc52c6cd89",
+  "source_entry_hashes": [
+    {
+      "path": "tools/capture_lookdev_route.gd",
+      "sha256": "97364eae4b84bea96207bd53f991ce51d89cb0e9e55507dbb14ae5d0bc097b25"
+    },
+    {
+      "path": "tools/f26_export_bootstrap.gd",
+      "sha256": "3a9899d20c9a899099d65a7bc2d54503c68b8e929fbc87678b80aa9263b91b59"
+    },
+    {
+      "path": "scripts/ui/title_screen.gd",
+      "sha256": "bdac26ab69aa2e6de3205d636aad8c989c059cfbf0d27f117336ad2a3cf96f4a"
+    }
+  ],
+  "measurement_limitations": "Actual shipping binary/PCK. Ordinary packaged route only wall_ms plus TIME_PROCESS/TIME_PHYSICS_PROCESS cached monitors; no per-frame true CPU, GPU/draw or EngineProfiler data. Embedded main route lacks newer frame_limit fields/uncapping code: runtime maxFPS/VSync/physics/time settings not explicitly verified. No acceleration flags, normal production route. Cannot assert uncapped or isolate diagnostic overhead from sequential variance/entry differences. Desktop GTX1060, not Ally/earned campaign."
+}
