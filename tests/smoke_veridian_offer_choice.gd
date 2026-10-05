@@ -86,6 +86,12 @@ func _run() -> void:
 		print("veridian-offer-choice FAIL: no Game autoload")
 		quit(1)
 		return
+	# A run's live world is named after the slot it saves to (game_state
+	# reset_for_new_game: "slot-<autosave>"). Bind it to this smoke's SLOT
+	# before any scenario: a typed transaction (F27's release payout) journals
+	# rows owned by the live world id, and save_game refuses to rebind those to
+	# a different slot's world (save_game.gd "target slot conflicts").
+	_game.get("world").set("world_id", "slot-%d" % SLOT)
 
 	if selected.has("space-accept"):
 		await _scenario("space-accept", 4, "accept", "")
@@ -287,6 +293,9 @@ func _to_chamber(climax: Node) -> void:
 
 ## The real lever: stand on the control and press interact.
 func _pull_the_lever(climax: Node, label: String) -> bool:
+	# A paid release (F27) records the first release receipt, which makes the
+	# onboarding "traits" lesson due; its modal owns input until continued.
+	await _continue_open_lessons()
 	_to_chamber(climax)
 	for i in 20:
 		await _frame()
@@ -493,6 +502,18 @@ func _drive_ceremony(mode: String, label: String) -> bool:
 		_fail("(%s) the ceremony ended with the offer still parked" % label)
 		return false
 	return true
+
+
+func _continue_open_lessons() -> void:
+	var lessons := root.get_node_or_null(^"Game/OnboardingLessons")
+	for attempt in 40:
+		var open := false
+		if lessons != null:
+			for child: Node in lessons.get_children():
+				if child is CanvasLayer and (child as CanvasLayer).visible: open = true
+		if not open: return
+		await _press("ui_accept")
+	_fail("an onboarding lesson stayed open after 40 confirm presses")
 
 
 func _creatures_tab(menu: CanvasLayer) -> Node:

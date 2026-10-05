@@ -34,6 +34,7 @@ var _game: Node
 var _requests: Dictionary = {}
 var _prefetched: RefCounted
 const STALE_RETRIES := 3
+const REFRESH_FRAMES := 600
 
 
 static func attach(game: Node) -> Node:
@@ -252,6 +253,9 @@ func _reconcile_guest(id: String) -> void:
 	if receipts is Array and receipts.has("release:" + request.released_uid) and not owned:
 		_finish(id, {"ok": true, "resolved": true}) # The owner applied and saved the host's row.
 		return
+	if request.has("unpaid_reason"):
+		_release_unpaid(id, str(request.unpaid_reason)) # Retried until the owner guard opens.
+		return
 	if request.submitted: return
 	var session := _session()
 	if request.has("refresh_from") and session != null:
@@ -259,7 +263,13 @@ func _reconcile_guest(id: String) -> void:
 		if quote.has("unpaid_reason"):
 			_release_unpaid(id, str(quote.unpaid_reason))
 			return
-		if int(quote.expected_character_revision) == int(request.refresh_from): return # Fresh view not here yet.
+		if int(quote.expected_character_revision) == int(request.refresh_from):
+			# Fresh view not here yet. An unchanged revision past the bound means
+			# the refusal was not staleness: release unpaid rather than wait.
+			request.refresh_frames = int(request.get("refresh_frames", 0)) + 1
+			if int(request.refresh_frames) > REFRESH_FRAMES:
+				_release_unpaid(id, "the host could not confirm your saved team")
+			return
 		request.expected_revision = int(quote.expected_character_revision)
 		request.erase("refresh_from")
 	if session == null or session.call("is_active") != true:
@@ -290,6 +300,7 @@ func _on_guest_result(id: String, result: Dictionary) -> void:
 		# Refused with no effect: re-read the admitted revision, send once more.
 		request.stale_retries = int(request.get("stale_retries", 0)) + 1
 		request.refresh_from = request.expected_revision
+		request.refresh_frames = 0
 		request.submitted = false
 		_session().call("homestead_personal_view")
 		return
@@ -299,9 +310,16 @@ func _on_guest_result(id: String, result: Dictionary) -> void:
 ## The release itself is never refused: the legacy local release, no payout.
 func _release_unpaid(id: String, reason: String) -> void:
 	var request: Dictionary = _requests[id]
+	# Remembered first: every early return below is retried each frame by
+	# _reconcile_guest, so a refused payout can never hold the release.
+	request.unpaid_reason = reason
 	var pending: RefCounted = request.pending.get_ref()
 	var party: RefCounted = _game.get("party")
-	if pending == null or _game.get("pending_catch") != pending or party == null: return
+	if pending == null or _game.get("pending_catch") != pending:
+		_requests.erase(id)
+		release_completed.emit(id, {"ok": false, "resolved": true, "code": "newcomer_unavailable"})
+		return
+	if party == null: return
 	if party.has_method("owner_mutation_blocked") and party.call("owner_mutation_blocked") == true: return
 	var index := -1
 	for i: int in int(party.call("size")):
@@ -339,6 +357,12 @@ func _finish(id: String, decision: Dictionary) -> void:
 		var settled: Dictionary = water.call("complete_pending_capture", PARTY.MAX_CREATURES if request.released_uid.is_empty() else -1)
 		if settled.get("ok") != true: return
 		_seat_in_released_holder(pending, int(request.get("holder", -1)))
+	elif pending.has_meta(&"water_capture_claim"):
+		# The claim service no longer owns it: only its saved receipt may grant
+		# this newcomer (tab_creatures._drop_stale_claim); the host re-presents.
+		_requests.erase(id)
+		release_completed.emit(id, {"ok": false, "resolved": true, "code": "capture_claim_pending"})
+		return
 	else:
 		if not request.released_uid.is_empty():
 			if party.has_method("owner_mutation_blocked") and party.call("owner_mutation_blocked") == true: return

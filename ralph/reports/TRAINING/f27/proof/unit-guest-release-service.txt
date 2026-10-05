@@ -1,0 +1,9 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_f27_guest_release_service: 1 of 783 test files
+  ok    test_f27_guest_release_service.gd :: test_a_refusal_while_the_owner_guard_is_closed_retries_until_it_opens
+  ok    test_f27_guest_release_service.gd :: test_a_saved_host_row_finishes_paid_and_is_never_also_released_unpaid
+  ok    test_f27_guest_release_service.gd :: test_a_terminal_ceremony_refusal_releases_unpaid
+  ok    test_f27_guest_release_service.gd :: test_an_unchanging_stale_refusal_releases_unpaid_after_the_bound
+
+4 tests, 28 assertions, 0 failed

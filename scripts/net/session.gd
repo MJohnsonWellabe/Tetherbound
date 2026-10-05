@@ -532,6 +532,7 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 			and not _altar_peer_in_combat(peer):
 			context = {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
 				"source_key": envelope.station_key, "in_range": true, "in_combat": false, "release_ceremony": true}
+		if context.is_empty(): return _foundation_refusal("release_ceremony_unavailable") # Terminal: the guest releases unpaid.
 	if context.is_empty() or context.expected_revision != envelope.revision: return _foundation_refusal("source_or_revision_changed")
 	var cfg := STATION_RULES.config()
 	if envelope.op == "boss_relic": return _foundation_refusal("host_outcome_required")
