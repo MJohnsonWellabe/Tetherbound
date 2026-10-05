@@ -83,3 +83,27 @@ t_stormwood data gaps (no ordinary trainer roster): ['stormwood/dynamo']
   stormwood/deepwood                 ripplet   M faint0.17 lead0.68 win1.00 | S faint0.00 lead0.00 win1.00 FAIL
   stormwood/deepwood                 galewisp  M faint0.33 lead0.93 win1.00 | S faint0.00 lead0.00 win0.92 FAIL
 ```
+
+## Galewisp (Tidewake at 1.3, per-starter, same pilot)
+```
+starter   pilot          median s  hits/s  incoming/s  switches  lead cost  lead faint  bursts
+galewisp  MASHER         43        0.99    0.19        0         0.78       0.29        0
+galewisp  SWITCH_READER  87        0.45    0.06        0.5       0.41       0.00        32
+ripplet   MASHER         53        1.04    0.21        0         0.88       0.31        0
+ripplet   SWITCH_READER  64        0.57    0.02        2.2       0.00       0.00        11
+terrapup  MASHER         68        1.16    0.20        0         1.00       0.94        0
+terrapup  SWITCH_READER  61        0.57    0.03        2.2       0.00       0.00        10
+```
+
+Galewisp's failures have two parts.
+
+1. Pilot. The reader keeps Galewisp in because its visible type matchup is the best available against Tidewake teams (0.5 switches per fight vs 2.2). It then plays slowly: 87 s fights and 32 bursts, spent escaping fans and fields. Its lead cost of 0.41 lands just above 0.55× the masher's (0.43).
+2. Game. A masher with Galewisp finishes trainer teams fastest (43 s), so its lead faints in only 29% of runs, against 94% with Terrapup. Galewisp's speed and offence let blind pressure win before the lead falls. This is a real "mashing works with the fastest starter" finding. It is not a trainer-data defect.
+
+## Bands with no ordinary trainer roster: by design
+- **Cloudreach Windscar Ravine:** only `keeper_maela_trial` (rank "mentor"; named pattern fight; WORLD §4.3 "Keeper Maela's Windscar trial teaches flight").
+- **Cloudreach High Roost:** no trainer in `cloudreach_chapter.json::trainer_ladder`. WORLD §4 gives High Roost its payoff through bells and aeries, not fights.
+- **Cloudreach Summit:** only `officer_voss_summit_approach` (elite) and `captain_veyra_storm_anchor` (captain), the WORLD §4.3 story fights.
+- **Stormwood Dynamo:** only `outerworks_lieutenant_sera`, `officer_kestrel_outer_works` and `captain_marrow_dynamo_core` (`stormwood_trainers.json`, the finale region).
+
+These bands are covered by F22#4's named fights, not by the ordinary-trainer sweep.
