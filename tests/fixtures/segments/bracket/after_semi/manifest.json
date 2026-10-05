@@ -1,11 +1,16 @@
 {
  "boundary": "bracket/after_semi",
  "generated_by": "tools/ci/segments/regen.sh bracket/after_semi",
- "produced_at_commit": "fbcd0c4415c2883e0df8a135b715d6369abf7b95+dirty",
+ "produced_at_commit": "3c1747db2090dfe047dc2e3fbcf363000553ad18+dirty",
  "roles": {
   "solo": {
-   "character_id": "character-79ecd15ce6fd40d9a0fb824c804ba517",
+   "character_id": "character-f2d58547c5e35bedf9cda327ef414b70",
    "digest": "1a922c6d9097922d82e9a2c6e7f6580962664860654260c84f15b80b8c90ffe6",
+   "files": {
+    "characters/redesign-v28/character-f2d58547c5e35bedf9cda327ef414b70/character.json.gz": "75ad915696e9c5f61d58ea6435dd1614c12857d29424164a243d01458335449b",
+    "saves/redesign-v28/slot_0.json.gz": "ba278d2bc4fe1bcb470d0897fd544ac6c840cf9a94069c416a3e70c593ff91df",
+    "worlds/redesign-v28/slot-0/world.json.gz": "24b034a2f25ce8c0939fc23fb28a528dbffec93de4bbb244ea1bb466ebc3a76d"
+   },
    "producer": "tests/smoke_tournament_bracket.gd",
    "producer_fingerprint": "0691c12355fbd3b111e1509b681f496abf79f60c5a9456d5e0f104c338400ab3",
    "producer_peer": 0,

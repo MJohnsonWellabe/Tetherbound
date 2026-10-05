@@ -1,11 +1,16 @@
 {
  "boundary": "midride/setup",
  "generated_by": "tools/ci/segments/regen.sh midride/setup",
- "produced_at_commit": "fbcd0c4415c2883e0df8a135b715d6369abf7b95+dirty",
+ "produced_at_commit": "d46a575018992b1ab948bea4a02e796e02274093",
  "roles": {
   "guest": {
-   "character_id": "character-23540bc9d51de3c2cb633af621c23caa",
+   "character_id": "character-c7f553cef8e3f49c3bfede6d67745a92",
    "digest": "1aeb8480f898335c34162904fda989a84efb1767fb33e05013a20d91a88fc0a6",
+   "files": {
+    "characters/redesign-v28/character-c7f553cef8e3f49c3bfede6d67745a92/character.json.gz": "a8238af953f91b1a480e3333f18c9fd93e2eab0d16bc4932df129d07c791cda2",
+    "saves/redesign-v28/slot_0.json.gz": "d1097b30d041265298bff335b46ed0afcdf01eaa048a22ac6cbb4dfbda582510",
+    "worlds/redesign-v28/slot-0/world.json.gz": "0d64b6b2b8c29ffe30169706953ec1cea7372dae5ad38a9ccf81400057a553a9"
+   },
    "producer": "tools/net/proof_scenarios/segments/midride/s0_setup_guest.json",
    "producer_fingerprint": "2340eca83fe023c88099bdd3fb2a29dae8450ff6aed471c0644917321dc3619c",
    "producer_peer": 0,
@@ -121,8 +126,13 @@
    }
   },
   "host": {
-   "character_id": "character-794fb504a7e8df3c24ad2b7286bade8c",
+   "character_id": "character-69a9e043a032eae942b4abea73bdf727",
    "digest": "edaff325803b1ce562ec61212e8bdc5037c69bb75ce647ed04177899b39285d6",
+   "files": {
+    "characters/redesign-v28/character-69a9e043a032eae942b4abea73bdf727/character.json.gz": "d3f9026e04160c2efe89d7feca705e5697f0a2127669d06d9ff68ae8f5d394b6",
+    "saves/redesign-v28/slot_0.json.gz": "c2751474fcd719bffa8473574accc192d3d8773e42220b0c02c0186a911cd1b4",
+    "worlds/redesign-v28/slot-0/world.json.gz": "31ee045c66d24c9de864133b1641b31f0bb1251745192ad881663383e1cb403d"
+   },
    "producer": "tools/net/proof_scenarios/segments/midride/s0_setup_host.json",
    "producer_fingerprint": "28044659d2f9a6c397f21d3beeb8783841ee064965123bf839068597ddf05f1e",
    "producer_peer": 0,

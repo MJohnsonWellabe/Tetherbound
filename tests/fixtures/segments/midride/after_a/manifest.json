@@ -1,11 +1,17 @@
 {
  "boundary": "midride/after_a",
  "generated_by": "tools/ci/segments/regen.sh midride/after_a",
- "produced_at_commit": "3c30f5b8fbeaa8d1284f020671481752801e5017+dirty",
+ "produced_at_commit": "d46a575018992b1ab948bea4a02e796e02274093",
  "roles": {
   "guest": {
-   "character_id": "character-23540bc9d51de3c2cb633af621c23caa",
+   "character_id": "character-c7f553cef8e3f49c3bfede6d67745a92",
    "digest": "b2aa76cc0791495e49061d89777195528599644a9f582901bda8b9528c88bac9",
+   "files": {
+    "characters/redesign-v28/character-c7f553cef8e3f49c3bfede6d67745a92/character.json.gz": "354993dbfca6513348699b933be89ff035d650cea18ad015932fae2abbb36663",
+    "saves/redesign-v28/characters/character-c7f553cef8e3f49c3bfede6d67745a92/character.json.gz": "161dbdac7b351c09cba6779ac91ce854eec6454b41daee28b6ae07084908c9aa",
+    "saves/redesign-v28/slot_0.json.gz": "d1097b30d041265298bff335b46ed0afcdf01eaa048a22ac6cbb4dfbda582510",
+    "worlds/redesign-v28/slot-0/world.json.gz": "0d64b6b2b8c29ffe30169706953ec1cea7372dae5ad38a9ccf81400057a553a9"
+   },
    "producer": "tools/net/proof_scenarios/segments/midride/s1_ride_a.json",
    "producer_fingerprint": "40ba27f69265bc333f48a7d823e6c629a6c0a9242d74a71675df395ac8b07e34",
    "producer_peer": 1,
@@ -122,8 +128,15 @@
    }
   },
   "host": {
-   "character_id": "character-794fb504a7e8df3c24ad2b7286bade8c",
+   "character_id": "character-69a9e043a032eae942b4abea73bdf727",
    "digest": "edaff325803b1ce562ec61212e8bdc5037c69bb75ce647ed04177899b39285d6",
+   "files": {
+    "characters/redesign-v28/character-69a9e043a032eae942b4abea73bdf727/character.json.gz": "f9e79250d77ce26abe1ece6252beb04798f0a8e358c8567580d8376169fb1413",
+    "saves/redesign-v28/characters/character-69a9e043a032eae942b4abea73bdf727/character.json.gz": "231aa5049ada5095676783658b39c44d5d727aa0ffa6c0176238e6ad159b20b6",
+    "saves/redesign-v28/slot_0.json.gz": "69efe31b8ef760222ed7dd606c7732802969b8af67e4b8712cef480da7088a76",
+    "saves/redesign-v28/worlds/slot-0/world.json.gz": "7eea96693f5ffb645c16ee1bc025770fb00d6291d6aed76cf9d57c542db51793",
+    "worlds/redesign-v28/slot-0/world.json.gz": "0c97b790a5f92149e9ac0ba44352aa97ef49c53abc0144ef68fef79ff47a774b"
+   },
    "producer": "tools/net/proof_scenarios/segments/midride/s1_ride_a.json",
    "producer_fingerprint": "4e69425213cb5cad4f780f82aaeb68321ecc72b9615e060aab976fe2efc1f79d",
    "producer_peer": 0,
