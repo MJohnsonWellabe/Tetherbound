@@ -85,8 +85,12 @@ func local_sample() -> Dictionary:
 			if node != owner: other_dialogue = true
 	var ending_owner: bool = false
 	if realm == "meadows" and input_owner != null:
-		for source: Node in world_node.find_children("*", "Node", true, false):
-			if source.get_script() != preload("res://scripts/story/sequence_director.gd"): continue
+		# Every SequenceDirector joins `progression_restore` in its _ready, so the
+		# group holds them all; walking the ~180k-node world for them every
+		# sample cost a guest ~170 ms a call (PERF, 2026-10-05).
+		for source: Node in get_tree().get_nodes_in_group("progression_restore"):
+			if source.get_script() != preload("res://scripts/story/sequence_director.gd") \
+				or not world_node.is_ancestor_of(source): continue
 			var prompt: Node3D = source.get("_grandpa_prompt")
 			if prompt == null or actor.global_position.distance_to(prompt.global_position) > float(prompt.get("radius")): continue
 			var credits: Node = source.get("_regional_credits")
@@ -284,8 +288,10 @@ func host_ending_context(peer: int, at_msec: int = -1) -> Dictionary:
 	if (safety.dialogue or safety.cutscene) and sample.ending_owner != true: return {}
 	var world_node: Node3D = owner.call("_portal_world_node", "meadows")
 	var nearby: bool = false
-	for source: Node in world_node.find_children("*", "Node", true, false):
-		if source.get_script() != preload("res://scripts/story/sequence_director.gd"): continue
+	# By group, as in local_sample(): every SequenceDirector joins it in _ready.
+	for source: Node in get_tree().get_nodes_in_group("progression_restore"):
+		if source.get_script() != preload("res://scripts/story/sequence_director.gd") \
+			or not world_node.is_ancestor_of(source): continue
 		var prompt: Node3D = source.get("_grandpa_prompt")
 		if prompt != null and safety.position.distance_to(prompt.global_position) <= float(prompt.get("radius")): nearby = true
 	var world: RefCounted = owner.call("_game").get("world")

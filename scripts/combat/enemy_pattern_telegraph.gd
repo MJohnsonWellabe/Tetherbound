@@ -12,6 +12,13 @@ var _lift := 0.09
 var _segments := 48
 var _fill_alpha := 0.18
 var _edge_width := 0.12
+## Ground heights sampled during one aim(), by exact (x, z): neighbouring
+## quads and each quad's two triangles share corners. The last aim()'s inputs:
+## an aim() with identical inputs would rebuild the identical mesh. A wild
+## creature re-aims every physics tick of its telegraph, and each rebuild
+## sampled the ground ~400 times (PERF, 2026-10-05: ~125 ms a call on a host).
+var _ground_seen: Dictionary = {}
+var _aimed: Array = []
 
 
 static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
@@ -44,6 +51,11 @@ static func begin(body: Node3D, profile: Dictionary, origin: Vector3,
 
 
 func aim(origin: Vector3, heading: Vector3, marker: Vector3) -> void:
+	var inputs := [origin, heading, marker]
+	if inputs == _aimed:
+		return
+	_aimed = inputs
+	_ground_seen.clear()
 	_origin = origin
 	_heading = Vector3(heading.x, 0.0, heading.z).normalized()
 	_marker = marker
@@ -98,7 +110,13 @@ func _quad(a: Vector3, b: Vector3, c: Vector3, d: Vector3, alpha: float) -> void
 	for point: Vector3 in [a, b, c, a, c, d]:
 		var ground := point.y
 		if is_instance_valid(_body) and _body.has_method("_ground_height"):
-			var measured := float(_body.call("_ground_height", point.x, point.z))
+			var key := Vector2(point.x, point.z)
+			var measured: float
+			if _ground_seen.has(key):
+				measured = float(_ground_seen[key])
+			else:
+				measured = float(_body.call("_ground_height", point.x, point.z))
+				_ground_seen[key] = measured
 			if is_finite(measured):
 				ground = measured
 		_mesh.surface_set_color(Color(1.0, 1.0, 1.0, alpha))

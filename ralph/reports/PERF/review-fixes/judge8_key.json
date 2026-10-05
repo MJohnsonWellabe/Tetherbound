@@ -1,0 +1,26 @@
+{
+ "pond_from_village_side__day": {
+  "X": "after",
+  "Y": "before"
+ },
+ "pond_from_village_side__night": {
+  "X": "before",
+  "Y": "after"
+ },
+ "pond_shore_west__day": {
+  "X": "after",
+  "Y": "before"
+ },
+ "pond_shore_west__night": {
+  "X": "after",
+  "Y": "before"
+ },
+ "west_perimeter__day": {
+  "X": "after",
+  "Y": "before"
+ },
+ "west_perimeter__night": {
+  "X": "after",
+  "Y": "before"
+ }
+}

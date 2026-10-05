@@ -1,0 +1,26 @@
+{
+ "water__route_00__day": {
+  "X": "after",
+  "Y": "before"
+ },
+ "water__route_00__night": {
+  "X": "after",
+  "Y": "before"
+ },
+ "water__route_01__day": {
+  "X": "before",
+  "Y": "after"
+ },
+ "water__route_01__night": {
+  "X": "before",
+  "Y": "after"
+ },
+ "water__route_02__day": {
+  "X": "after",
+  "Y": "before"
+ },
+ "water__route_02__night": {
+  "X": "after",
+  "Y": "before"
+ }
+}

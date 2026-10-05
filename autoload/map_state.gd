@@ -152,6 +152,13 @@ var minimap_span_m: float = 90.0
 
 var _visited: PackedByteArray = PackedByteArray()
 var _visited_count: int = 0
+## `save_data()`'s encoded fog, reused while [epoch, count, size] is unchanged.
+## Gameplay only ever sets cells 0 -> 1 (each changes the count); anything that
+## replaces the grid wholesale (configure, load, reveal-all) bumps the epoch.
+## Every owner action and save re-encoded every realm's grid (PERF, 2026-10-05).
+var _visited_epoch: int = 0
+var _visited_b64 := ""
+var _visited_b64_key: Array = []
 
 ## Fog dirty tracking, for the minimap/full-map texture builders.
 ##
@@ -251,6 +258,7 @@ func configure(config: Dictionary) -> void:
 	_visited.resize(grid_x() * grid_z())
 	_visited.fill(0)
 	_visited_count = 0
+	_visited_epoch += 1
 	_mark_fog_dirty_all()
 
 	_landmark_defs.clear()
@@ -833,6 +841,14 @@ func objective_marker() -> Dictionary:
 ## the WRONG ground as already-explored. A save written by a build old
 ## enough to predate this field carries none of it; `load_data()` below
 ## falls back to the pre-existing length-only check for exactly that case.
+func _encoded_visited() -> String:
+	var key := [_visited_epoch, _visited_count, _visited.size()]
+	if key != _visited_b64_key:
+		_visited_b64 = Marshalls.raw_to_base64(_visited)
+		_visited_b64_key = key
+	return _visited_b64
+
+
 func save_data() -> Dictionary:
 	var markers: Array = []
 	for id: String in _dynamic.keys():
@@ -846,7 +862,7 @@ func save_data() -> Dictionary:
 		})
 	var o := origin()
 	return {
-		"visited_b64": Marshalls.raw_to_base64(_visited),
+		"visited_b64": _encoded_visited(),
 		"grid_x": grid_x(),
 		"grid_z": grid_z(),
 		"cell": cell_size(),
@@ -887,6 +903,7 @@ func save_data() -> Dictionary:
 func load_data(data: Dictionary) -> void:
 	_visited.fill(0)
 	_visited_count = 0
+	_visited_epoch += 1
 	_mark_fog_dirty_all()
 	_discovered.clear()
 	_dynamic.clear()
@@ -965,6 +982,7 @@ func reveal_all() -> void:
 		return
 	_visited.fill(1)
 	_visited_count = total
+	_visited_epoch += 1
 	_mark_fog_dirty_all()
 	revision += 1
 

@@ -17,6 +17,8 @@ extends SceneTree
 ##    build (snap, no fade, no fall).
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
+## The single frame the freeing lands in (see the live phase below).
+const MAX_HEAL_FRAME_MS := 9000
 const SETTLE_FRAMES := 240
 const SLOT := 4
 const FLAG := "legendary_freed"
@@ -76,8 +78,18 @@ func _run() -> void:
 
 	# --- 1. live: the flag lands ---------------------------------------------
 	_game.get("progression").call("set_flag", FLAG)
+	# PERF (2026-10-05): the freeing used to hold one frame for 11-13 s, most
+	# of it road lookups in the regreen build. The host's guests are waiting
+	# on that frame; keep it bounded.
+	var landed := Time.get_ticks_msec()
+	var heal_frame_ms := 0
 	while not bool(healing.call("applied")):
 		await process_frame
+		heal_frame_ms = maxi(heal_frame_ms, Time.get_ticks_msec() - landed)
+		landed = Time.get_ticks_msec()
+	print("(live) longest frame while the freeing landed: %d ms" % heal_frame_ms)
+	if heal_frame_ms > MAX_HEAL_FRAME_MS:
+		_fail("(live) the freeing held one frame for %d ms (limit %d ms)" % [heal_frame_ms, MAX_HEAL_FRAME_MS])
 	var report: Dictionary = healing.call("report")
 	print("live report: %s" % str(report))
 	if not bool(healing.call("holding_presentation")):

@@ -96,10 +96,17 @@ func _ready() -> void:
 	add_child(_terrain)
 	await get_tree().process_frame
 	_build_note("terrain attached")
+	# PERF / co-op heartbeat: the region load and the collision build are each
+	# indivisible (~0.3 s here, over 1 s on a slow runner). Held as one slice
+	# with the attach, they were the longest main-thread gap of the whole
+	# shell boot, so each gets its own budget release.
+	await budget.call("breathe")
 	_terrain.set("data_directory","res://data/terrain/stormwood")
 	_build_note("terrain regions loaded")
+	await budget.call("breathe")
 	_terrain.set("collision_mode",3)
 	_build_note("collision configured")
+	await budget.call("breathe")
 	await _apply_ground_materials(budget)
 	_build_note("materials configured")
 	await budget.call("step","terrain")

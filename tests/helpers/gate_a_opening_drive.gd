@@ -500,10 +500,16 @@ func _fight_until_catchable() -> bool:
 			_checkpoint("Bramblebun naturally weakened to %.0f/%d HP" % [foe.hp, foe.max_hp])
 			return true
 		await _drive_body_toward(ally, _wild.global_position, 1)
-		# COMBAT §5 contact spacing holds the pair apart by their rendered
-		# extents, so the strike gate follows that separation (plus the same
-		# 0.5 m the reach floors add) instead of a fixed 4 m.
+		# Tap when the game itself says the quick move reaches:
+		# CombatManager.combat_move_reach is the size-aware rule the impact
+		# resolver uses, provided for combat drivers. The earlier hand-rolled
+		# gate (contact pair need + 0.5 = 4.85 m for Terrapup) sat inside the
+		# opponent's own floored stand-off (5.86 m since F22), so a run where the
+		# Bramblebun held its spacing never tapped and timed out (main CI
+		# 37346752715). The bound and the assertion are unchanged.
 		var strike_gate := maxf(4.0, CONTACT_SPACING.pair_reach_need(ally, _wild) + 0.5)
+		if _combat.has_method("combat_move_reach"):
+			strike_gate = maxf(strike_gate, float(_combat.call("combat_move_reach", "quick")))
 		if ally.global_position.distance_to(_wild.global_position) < strike_gate and _i % 35 == 0:
 			await _tap_action("combat_quick")
 	_stop_left_stick()

@@ -42,6 +42,22 @@ class GroundableWild extends Node3D:
 		global_position = Vector3(pos.x, 4.0, pos.z)
 		return true
 
+## Night-gate cases (PERF c5e139d6): night controlled directly, base _ready
+## skipped so the director can sit in the tree and see `remote_trainer`
+## (guest) bodies the way a host does.
+class NightDirector extends "res://scripts/combat/encounter_director.gd":
+	var night := false
+	func _ready() -> void:
+		pass
+	func _is_night() -> bool:
+		return night
+
+## A body whose physics follows its visibility, as creature_body.gd's own
+## `_on_visibility_changed()` does.
+class GatedWild extends Node3D:
+	func _ready() -> void:
+		visibility_changed.connect(func() -> void: set_physics_process(visible))
+
 var _failures: Array[String] = []
 
 
@@ -64,6 +80,8 @@ func _run() -> void:
 	_test_deactivate_reactivate_round_trip_identical()
 	_test_active_cluster_recovers_a_delayed_fall()
 	_test_gated_invisible_left_alone()
+	_test_night_reveal_keeps_a_far_cluster_asleep()
+	_test_a_guest_wakes_a_night_cluster_the_host_is_far_from()
 	_report()
 
 
@@ -288,10 +306,72 @@ func _test_gated_invisible_left_alone() -> void:
 	_cleanup(director, player, [gated])
 
 
+# --- night gates: a reveal never wakes a cluster nobody is near (co-op) -----
+
+func _night_setup(host_at: Vector3) -> Dictionary:
+	var director := NightDirector.new()
+	root.add_child(director)
+	var player := _fake_player(host_at)
+	var gated := GatedWild.new()
+	gated.name = "Wild_duskhush_1053_1"
+	root.add_child(gated)
+	gated.global_position = Vector3(200, 0, 0)
+	gated.visible = false
+	gated.set_physics_process(false)
+	var cluster := _cluster(Vector3(200, 0, 0), 10.0, [gated] as Array[Node3D])
+	cluster["active"] = false
+	director.set("_player", player)
+	director.set("_wild_gates", {gated: {"time": "night"}})
+	director.set("_clusters", [cluster] as Array[Dictionary])
+	director.set("_wild_cluster", {gated: cluster})
+	return {"director": director, "player": player, "gated": gated, "cluster": cluster}
+
+
+func _test_night_reveal_keeps_a_far_cluster_asleep() -> void:
+	var setup := _night_setup(Vector3.ZERO)
+	var director: NightDirector = setup.director
+	var gated: Node3D = setup.gated
+	director.night = true
+	director.call("_sync_spawn_gates")
+	if not gated.visible:
+		_fail("a night gate must still reveal its creature at night")
+	if gated.is_physics_processing():
+		_fail("a night creature revealed in a cluster nobody is near must stay asleep")
+	director.night = false
+	director.call("_sync_spawn_gates")
+	if gated.visible:
+		_fail("the night gate must hide its creature again by day")
+	_cleanup(director, setup.player, [gated])
+
+
+func _test_a_guest_wakes_a_night_cluster_the_host_is_far_from() -> void:
+	var setup := _night_setup(Vector3.ZERO)
+	var director: NightDirector = setup.director
+	var gated: Node3D = setup.gated
+	var identity := [gated.get_instance_id(), str(gated.name), gated.global_position]
+	director.night = true
+	director.call("_sync_spawn_gates")
+	# A guest's replicated trainer body stands beside the cluster; the host
+	# stays 200 m away. Streaming wakes clusters for ANY occupant of the realm.
+	var guest := Node3D.new()
+	guest.add_to_group(&"remote_trainer")
+	root.add_child(guest)
+	guest.global_position = Vector3(203, 0, 0)
+	director.call("_tick_streaming")
+	if not bool((setup.cluster as Dictionary).get("active")):
+		_fail("a guest beside a night cluster must activate it on the host")
+	if not gated.is_physics_processing():
+		_fail("a revealed night creature must wake when a guest brings its cluster into range")
+	if [gated.get_instance_id(), str(gated.name), gated.global_position] != identity:
+		_fail("waking a night cluster must not change the creature's identity or place")
+	guest.free()
+	_cleanup(director, setup.player, [gated])
+
+
 func _report() -> void:
 	print("")
 	if _failures.is_empty():
-		print("wild streaming: OK — distant clusters sleep, near ones tick and recover delayed falls, engaged/fainting/respawning are never touched, and a round trip changes nothing about a creature's identity.")
+		print("wild streaming: OK — distant clusters sleep, near ones tick and recover delayed falls, engaged/fainting/respawning are never touched, a round trip changes nothing about a creature's identity, and a night reveal wakes a cluster only when the host or a guest is near.")
 		quit(0)
 		return
 	for line in _failures:
