@@ -123,6 +123,8 @@ func _run_initialized_cases() -> void:
 	manager._reset_player_poise()
 	manager.apply_host_enemy_hit({"damage": 100.0, "move_id": "", "type_mult": 1.0, "lunge": 0.0, "hp_scale": host_s})
 	assert_almost_eq(base_max * 0.5 - creature.hp, 100.0 / host_s, 0.0001, "session hit: stored HP loses damage / host s")
+	assert_almost_eq(base_max * 0.5 * host_s - manager.display_hp(creature).x, 100.0, 0.0001,
+		"session hit: a rolled hit of 100 drops the displayed bar by exactly 100")
 	assert_almost_eq(manager.display_hp(creature).y, base_max * host_s, 0.001, "session hit: the bar shows the host's maximum")
 	manager._party_hp_scale.clear()
 	manager.apply_host_enemy_hit({"damage": 100.0, "move_id": "", "type_mult": 1.0, "lunge": 0.0, "hp_scale": 99.0})

@@ -3550,6 +3550,10 @@ func host_pick_struck_participant(encounter_id: String, cfg: Dictionary,
 func _geared_card(peer_id: int, card: Dictionary) -> Dictionary:
 	var gear := preload("res://scripts/creatures/creature_gear.gd")
 	var cfg: Dictionary = gear.config()
+	if card.has("hp_scale"):
+		# s is the host's alone: a value on the announced card is discarded.
+		card = card.duplicate(true)
+		card.erase("hp_scale")
 	if card.is_empty() or not gear._runtime_enabled(cfg): return card
 	var record: Dictionary = {}
 	if peer_id == _local_peer_id():

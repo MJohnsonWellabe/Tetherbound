@@ -246,6 +246,6 @@ func test_harness_max_hp_scale_comes_from_the_admitted_record_on_the_host() -> v
 	assert_almost_eq(float(director.call("_host_hp_scale", 2)), s, 0.0001, "durable vitals stage damage / the admitted s")
 	assert_eq(float(card.max_hp), 100.0, "the announced card's HP is untouched")
 	session.record = _record()
-	assert_eq(float(director.call("_host_hp_scale", 2)), 1.0, "no Harness: s = 1")
+	assert_eq(float(director.call("_host_hp_scale", 2)), 1.0, "no Harness: s = 1, though the announced card said 1.7")
 	director.free()
 	session.free()
