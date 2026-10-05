@@ -88,6 +88,7 @@ func record_input(input: Dictionary) -> void:
 	local.sequence = packet.sequence
 	local.prefix_hash = HASH.fingerprint({"previous": local.prefix_hash, "packet": packet})
 	local.inputs.append(packet)
+	_trail(local, packet)
 
 func record_vitals(row: Dictionary, saved: bool) -> bool:
 	if local.is_empty(): return false
@@ -459,6 +460,7 @@ func _inputs_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 				"cursor_sequence": stream.cursor.sequence, "sampled_ms": Time.get_ticks_msec()}
 			stream.error = str(applied.get("code", "owner_passive_replay_refused")); return
 		stream.cursor = applied.cursor
+		_trail(stream, input, stream.cursor.prefix_hash)
 		if input.get("op") == "actor_vitals_applied": stream.revision = applied.revision
 		stream.seen[sequence] = digest
 		if reset: stream.erase("travel_reset") # Only successful exact replay consumes it.
@@ -1150,6 +1152,16 @@ func _flush() -> void:
 ## Diagnostic only, once per character and reason: a host checkpoint that
 ## silently waits leaves the fight's round reward held with no other trace.
 var _host_notes: Dictionary = {}
+
+## Diagnostic only: the last TRAIL_SIZE inputs as [sequence, op, digest,
+## prefix], so a prefix conflict between owner and host names its input.
+const TRAIL_SIZE := 64
+static func _trail(holder: Dictionary, input: Dictionary, prefix: Variant = null) -> void:
+	var trail: Array = holder.get("trail", [])
+	trail.append([input.get("sequence"), str(input.get("op", "")), HASH.fingerprint(input).left(12),
+		str(prefix if prefix != null else holder.get("prefix_hash", "")).left(12)])
+	if trail.size() > TRAIL_SIZE: trail.pop_front()
+	holder.trail = trail
 
 func _note_host(stream: Dictionary, reason: String) -> void:
 	var character := str(stream.get("character", ""))

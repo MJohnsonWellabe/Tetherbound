@@ -507,9 +507,17 @@ func _owner_passive_probe(args: Dictionary) -> Dictionary:
 	# The states the two sides fingerprint, so a projection conflict names its field.
 	if not local.is_empty():
 		data.owner["projection"] = service.call("_projection")
+		data.owner["stream_id"] = str(local.get("id", ""))
+		data.owner["trail"] = local.get("trail", [])
+		data.owner["prefix_hash"] = str(local.get("prefix_hash", "")).left(12)
+		data.owner["base_hash"] = str(local.get("base_hash", "")).left(12)
 	if not stream.is_empty():
 		var checkpoint: Dictionary = stream.get("checkpoint", {})
 		data.host["cursor_state"] = (stream.get("cursor", {}) as Dictionary).get("state", {})
+		data.host["trail"] = stream.get("trail", [])
+		data.host["stream_id"] = str(stream.get("id", ""))
+		data.host["base_hash"] = str(preload("res://scripts/net/research_passive_preparation.gd").fingerprint((stream.get("cursor", {}) as Dictionary).get("base", {}))).left(12)
+		data.host["frozen_prefix"] = str((checkpoint.get("frozen", {}) as Dictionary).get("prefix_hash", "")).left(12)
 		data.host["prefix_match"] = str((checkpoint.get("frozen", {}) as Dictionary).get("prefix_hash", "")) \
 			== str((stream.get("cursor", {}) as Dictionary).get("prefix_hash", "-"))
 	return {"verdict": "PASS", "detail": "owner-passive state", "data": data}
