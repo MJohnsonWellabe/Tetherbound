@@ -27,6 +27,7 @@ static func run(runner: SceneTree, action: String, args: Dictionary) -> Dictiona
 		"f27_altar_replay": return await _altar_replay(runner, args)
 		"f27_title_rejoin": return await _title_rejoin(runner, args)
 		"f27_passive_state": return _passive_state(runner, str(args.get("character_id", "")))
+		"f27_ceremony_release": return await _ceremony_release(runner, args)
 	return {"verdict": "ERROR", "detail": "unknown F27 action '%s'" % action}
 
 
@@ -338,3 +339,56 @@ static func _passive_state(runner: SceneTree, character_id: String) -> Dictionar
 			"checkpoint_keys": checkpoint.keys(), "cursor_sequence": (stream.get("cursor", {}) as Dictionary).get("sequence"),
 			"keys": stream.keys()}
 	return _ok("owner passive state", data)
+
+
+## Any peer. Disclosed fixture: one caught result parked on the full belt's
+## `pending_catch` seam (as smoke_release does). Then the shipping path: Game
+## opens the Team screen's ceremony itself, the step presses the holder's row
+## and the farewell button, and waits (bounded) for the asynchronous settle
+## through EssenceReleaseService (a guest: Foundation request -> host stage ->
+## owner apply/save -> ACK). Returns the quote and the final result.
+static func _ceremony_release(runner: SceneTree, args: Dictionary) -> Dictionary:
+	var game := _game(runner)
+	if game == null or game.get("party") == null: return _fail("no local party")
+	var party: RefCounted = game.get("party")
+	if party.call("is_full") != true: return _fail("the belt is not full (%d)" % int(party.call("size")))
+	var index := int(args.get("index", 0))
+	var released_uid := str((party.call("at", index) as RefCounted).get("uid"))
+	var newcomer: RefCounted = game.call("make_creature", str(args.get("species", "bramblebun")), str(args.get("nickname", "Newcomer")))
+	game.set("pending_catch", newcomer)
+	var menu: Node = game.call("menu")
+	var tab: Node = null
+	for i in (menu.get("_tabs") as Array).size():
+		if str((menu.get("_tabs") as Array)[i].id) == "creatures": tab = (menu.get("_bodies") as Array)[i]
+	for f in 600:
+		if menu.call("is_open") == true and tab != null and tab.get("_release_stage") == "choose": break
+		await runner.process_frame
+	if tab == null or tab.get("_release_stage") != "choose": return _fail("the ceremony never opened (stage %s)" % str(tab.get("_release_stage") if tab != null else "-"))
+	# The guest's quote reads the host's admitted view; give it time to arrive.
+	for f in 240: await runner.process_frame
+	(tab.get("_rows") as Array)[index].pressed.emit()
+	for f in 6: await runner.process_frame
+	if tab.get("_release_stage") != "confirm": return _fail("the holder row did not open the farewell (stage %s)" % str(tab.get("_release_stage")))
+	var quote: Dictionary = tab.get("_release_quote") if tab.get("_release_quote") is Dictionary else {}
+	(tab.get("_farewell_release") as BaseButton).pressed.emit()
+	for f in int(args.get("budget_frames", 1800)):
+		if tab.get("_release_stage") not in ["waiting", "confirm"]: break
+		await runner.process_frame
+	var service: Node = game.get_node_or_null(^"EssenceReleaseService")
+	var requests: Variant = service.get("_requests") if service != null else null
+	var diag := {"service": service != null, "requests": str(requests).left(600),
+		"view_revision": (game.get("session").get("_foundation_personal_cache") as Dictionary).get("registry_revision"),
+		"quote": str(quote).left(400)}
+	var owned: Array = []
+	for creature: RefCounted in party.call("members"): owned.append(str(creature.get("uid")))
+	var data := {"released_uid": released_uid, "newcomer_uid": str(newcomer.get("uid")), "stage": str(tab.get("_release_stage")),
+		"payout": quote.get("payout", []), "unpaid_reason": str(quote.get("unpaid_reason", "")), "owned": owned,
+		"pending_left": game.get("pending_catch") != null,
+		"message": str(game.call("take_pending_world_message")) if game.has_method("take_pending_world_message") else "",
+		"diag": diag}
+	if tab.get("_release_stage") == "done":
+		(tab.get("_farewell_done") as BaseButton).pressed.emit()
+		for f in 12: await runner.process_frame
+	if menu.call("is_open") == true: menu.call("close") # Leave the Team screen as a player would.
+	for f in 12: await runner.process_frame
+	return _ok("ceremony release ended at stage %s" % data.stage, data)

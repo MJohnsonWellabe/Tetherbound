@@ -1973,7 +1973,7 @@ func _maybe_begin_release() -> void:
 			say("%s joins the belt." % str(pending.call("label")))
 		return
 
-	if capture_service == null: _bind_ordinary_release(pending)
+	_bind_ordinary_release(pending)
 	_release_stage = "choose"
 	_release_for = pending
 	_release_target = -1
@@ -2565,7 +2565,9 @@ func _begin_farewell(index: int) -> void:
 			_farewell_body.text += " Release is unavailable. Your team and items stay unchanged."
 		else:
 			var payout := _release_payout_text(_release_quote.get("payout", []))
-			_farewell_body.text += " " + ("No essence is paid for a newcomer you never kept." if index >= PARTY.MAX_CREATURES else "Release payout: " + payout + ".")
+			if index >= PARTY.MAX_CREATURES: _farewell_body.text += " No essence is paid for a newcomer you never kept."
+			elif payout.is_empty(): _farewell_body.text += " No essence is paid: " + str(_release_quote.get("unpaid_reason", "")) + "."
+			else: _farewell_body.text += " Release payout: " + payout + "."
 	_farewell_keep.grab_focus()
 
 
@@ -2720,7 +2722,9 @@ func _quote_release_choice() -> Dictionary:
 			or not raw.get("payout") is Array: return {}
 	if released_uid.is_empty():
 		if not raw.payout.is_empty(): return {}
-	elif _release_payout_text(raw.payout).is_empty(): return {}
+	elif _release_payout_text(raw.payout).is_empty():
+		# A guest's creature the host cannot pay for still goes free, unpaid.
+		if not raw.payout.is_empty() or not raw.get("unpaid_reason") is String or str(raw.unpaid_reason).is_empty(): return {}
 	return raw.duplicate(true)
 
 
@@ -2788,6 +2792,7 @@ func _on_release_completed(release_id: String, result: Dictionary) -> void:
 			say("Your saved choice is still arriving. Reconnect if it does not finish.")
 			return
 	var context := _release_context
+	if result.has("unpaid_reason"): context.payout_text = "" # Released, but no essence was paid.
 	_release_request_id = ""
 	_release_context = {}
 	_release_quote = {}

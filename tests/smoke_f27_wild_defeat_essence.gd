@@ -51,6 +51,7 @@ func _run() -> void:
 	var ally_before: RefCounted = _director.call("ally_instance")
 	var level_before := int(ally_before.level)
 	var xp_before := int(ally_before.xp)
+	var battles_before := int(ally_before.battles_fought)
 	print("before: essence %s, receipts %d, ally L%d xp %d" % [essence_before, receipts_before, level_before, xp_before])
 
 	await _walk_to_the_wild_creature()
@@ -94,6 +95,10 @@ func _run() -> void:
 	if xp_gain <= 0:
 		_fail("the reduced automatic combat XP was zero (L%d xp %d -> L%d xp %d)" % [level_before, xp_before, int(ally_after.level), int(ally_after.xp)])
 	print("ally L%d xp %d -> L%d xp %d" % [level_before, xp_before, int(ally_after.level), int(ally_after.xp)])
+	# One win is one battle fought, credited once (by the host transaction when
+	# it owns the award, never also by the legacy local award loop).
+	if int(ally_after.battles_fought) != battles_before + 1:
+		_fail("one win credited %d battles fought, expected 1" % (int(ally_after.battles_fought) - battles_before))
 	# The sole fighter is the active member: exactly the reduced hybrid award,
 	# never the legacy full award on top of it.
 	var hybrid := PROGRESSION.scaled_combat_xp(foe_level, PROGRESSION.config(), ESSENCE.config())

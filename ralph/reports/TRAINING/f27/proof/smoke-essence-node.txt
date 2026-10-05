@@ -1,15 +1,16 @@
 Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
 
-DISCLOSED FIXTURE: combat.json actor_vitals.runtime_enabled forced true in memory (shipped: false)
+F32 MATERIAL PASS: essence_meadows_ground_01 is a shipped essence node
+F32 MATERIAL PASS: request actual baked realm scene
 WARNING: instance_reset_physics_interpolation() is deprecated.
      at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
      GDScript backtrace (most recent call first):
-         [0] _build_terrain (res://scripts/world/playground_world.gd:1172)
-         [1] _ready (res://scripts/world/playground_world.gd:798)
+         [0] _build_terrain (res://scripts/world/playground_world.gd:1180)
+         [1] _ready (res://scripts/world/playground_world.gd:806)
 [playground] spawned at 0.0, 2.9, 0.0
-[scatter bake] load phases (ms): read[256 regions, 387893 placements, 431212 skipped]=1661 reorder[16 layers]=4858
+[scatter bake] load phases (ms): read[256 regions, 387893 placements, 431212 skipped]=1722 reorder[16 layers]=4461
 [vegetation] grass field is on; 431212 placements across 2 layers left unbuilt (grass, flowers)
-[vegetation] boot phases (ms): placements=6934 mark_harvestable=261 group_by_model=875 register_mesh_assets=67 build_batches_total=10796 (of which harvest_points[56283 nodes]=7242, initial_collision_stream[51210 solid]=334) update_mmis=1499
+[vegetation] boot phases (ms): placements=6548 mark_harvestable=249 group_by_model=709 register_mesh_assets=52 build_batches_total=7512 (of which harvest_points[56283 nodes]=4463, initial_collision_stream[51210 solid]=286) update_mmis=579
 [grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
 [grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
 [grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
@@ -30,57 +31,57 @@ WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
      GDScript backtrace (most recent call first):
          [0] place (res://scripts/world/props.gd:286)
          [1] build (res://scripts/world/props.gd:65)
-         [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
-         [3] _ready (res://scripts/world/playground_world.gd:855)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+         [3] _ready (res://scripts/world/playground_world.gd:863)
 WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
      at: push_warning (core/variant/variant_utility.cpp:1033)
      GDScript backtrace (most recent call first):
          [0] place (res://scripts/world/props.gd:286)
          [1] build (res://scripts/world/props.gd:65)
-         [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
-         [3] _ready (res://scripts/world/playground_world.gd:855)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+         [3] _ready (res://scripts/world/playground_world.gd:863)
 WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
      at: push_warning (core/variant/variant_utility.cpp:1033)
      GDScript backtrace (most recent call first):
          [0] place (res://scripts/world/props.gd:286)
          [1] build (res://scripts/world/props.gd:65)
-         [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
-         [3] _ready (res://scripts/world/playground_world.gd:855)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+         [3] _ready (res://scripts/world/playground_world.gd:863)
 WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
      at: push_warning (core/variant/variant_utility.cpp:1033)
      GDScript backtrace (most recent call first):
          [0] place (res://scripts/world/props.gd:286)
          [1] build (res://scripts/world/props.gd:65)
-         [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
-         [3] _ready (res://scripts/world/playground_world.gd:855)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+         [3] _ready (res://scripts/world/playground_world.gd:863)
 WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
      at: push_warning (core/variant/variant_utility.cpp:1033)
      GDScript backtrace (most recent call first):
          [0] place (res://scripts/world/props.gd:286)
          [1] build (res://scripts/world/props.gd:65)
-         [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
-         [3] _ready (res://scripts/world/playground_world.gd:855)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+         [3] _ready (res://scripts/world/playground_world.gd:863)
 WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
      at: push_warning (core/variant/variant_utility.cpp:1033)
      GDScript backtrace (most recent call first):
          [0] place (res://scripts/world/props.gd:286)
          [1] build (res://scripts/world/props.gd:65)
-         [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
-         [3] _ready (res://scripts/world/playground_world.gd:855)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+         [3] _ready (res://scripts/world/playground_world.gd:863)
 WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
      at: push_warning (core/variant/variant_utility.cpp:1033)
      GDScript backtrace (most recent call first):
          [0] place (res://scripts/world/props.gd:286)
          [1] build (res://scripts/world/props.gd:65)
-         [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
-         [3] _ready (res://scripts/world/playground_world.gd:855)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+         [3] _ready (res://scripts/world/playground_world.gd:863)
 WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
      at: push_warning (core/variant/variant_utility.cpp:1033)
      GDScript backtrace (most recent call first):
          [0] place (res://scripts/world/props.gd:286)
          [1] build (res://scripts/world/props.gd:65)
-         [2] _build_settlement (res://scripts/world/playground_world.gd:1533)
-         [3] _ready (res://scripts/world/playground_world.gd:855)
+         [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+         [3] _ready (res://scripts/world/playground_world.gd:863)
 [props] placed 434 props in 54 clusters (6 usable rest points)
 [village_npcs] placed 18 of 20
 [relay_site] placed 3 of 3
@@ -137,15 +138,25 @@ WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
 [climax] the freed stand is 6.00 m from the machine's axis, inside its 8.05 m plinth on that bearing; moved out to 10.55 m
 [climax] the legendary stands inside the machine: dais 4.06 m up, void 7.67 m tall, body 7.08 m, headroom 0.59 m
 [meadow] the land lies drained: 15161 quads over 8 groups, grass field thinned
-wild creature at 41, -1, -48
-before: essence { "essence_ground": 0, "essence_water": 0, "essence_air": 0, "essence_electric": 0, "essence_fire": 0, "essence_dark": 0, "essence_ice": 0, "essence_psychic": 0 }, receipts 0, ally L3 xp 0
-approached to 3.3m (engage range 6.0m)
-enemy fainted after 243 action frames; outcome 'won'
-tally: 5 hits on the enemy, 0 on the ally, 0 misses
-victory runtime: none retained
-after: foe bramblebun L2 types ["ground"], essence gained { "essence_ground": 1 }
-ally L3 xp 0 -> L3 xp 21
-F27_WILD_DEFEAT_ESSENCE: PASS real wild fight paid { "essence_ground": 1 } and reduced XP via the host transaction
-
-combat: OK — a fight can be entered, piloted, won and left.
-exit 0
+F32 MATERIAL PASS: actual realm procedural build completed
+F32 MATERIAL PASS: production player and resource adapter mounted
+F32 MATERIAL PASS: physical controller driver resolves production camera and arbiter
+F32 MATERIAL PASS: essence_meadows_ground_01 production world mount placed the essence node
+F32 MATERIAL PASS: essence_meadows_ground_01 actual gather prompt exists
+EARNED WALK START phase=materials purpose=material route target=(22.0, 0.767824, -28.0) tolerance=1.6 budget=600 frame=126 player=(21.79777, 0.90094, -21.8584)
+EARNED WALK END phase=materials purpose=material route target=(22.0, 0.767824, -28.0) tolerance=1.6 budget=600 start_frame=126 end_frame=205 start_player=(21.79777, 0.90094, -21.8584) player=(21.5532, 0.842133, -26.53467) arrived=true distance=1.5319356918335
+F32 MATERIAL PASS: essence_meadows_ground_01 controller approach walked 4.7m
+F32 MATERIAL PASS: essence_meadows_ground_01 the essence prompt wins ordinary interaction
+F32 MATERIAL PASS: essence_meadows_ground_01 pre-gather owner and world saved to isolated disk
+F32 MATERIAL PASS: before_essence_meadows_ground_01 retains exact world bytes
+F32 MATERIAL PASS: before_essence_meadows_ground_01 decodes world save document
+F32 MATERIAL PASS: before_essence_meadows_ground_01 retains exact character bytes
+F32 MATERIAL PASS: before_essence_meadows_ground_01 decodes character save document
+F32 MATERIAL PASS: essence_meadows_ground_01 gather reaches real owner save and ACK
+F32 MATERIAL PASS: after_essence_meadows_ground_01 retains exact world bytes
+F32 MATERIAL PASS: after_essence_meadows_ground_01 decodes world save document
+F32 MATERIAL PASS: after_essence_meadows_ground_01 retains exact character bytes
+F32 MATERIAL PASS: after_essence_meadows_ground_01 decodes character save document
+F32 MATERIAL PASS: essence_meadows_ground_01 disk gained exactly { "essence_ground": 3.0, "attuned_ground": 1.0 } with an accepted journal and receipt (gained { "essence_ground": 3, "attuned_ground": 1 })
+F27_ESSENCE_NODE: PASS essence_meadows_ground_01 paid { "essence_ground": 3, "attuned_ground": 1 } on the production gather path
+F32 MATERIAL REPORT /root/.local/share/godot/app_userdata/Tetherbound/f27_essence_node_15946_8593017/report.json

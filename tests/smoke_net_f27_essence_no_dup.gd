@@ -1,6 +1,6 @@
 extends "res://tests/helpers/net_harness.gd"
 
-# peers: 2 -- MANUAL until the owner-passive rejoin fix (#531) lands; run: tools/net/run_net_smoke.sh f27_essence_no_dup
+# peers: 2 -- MANUAL: about 40 min with hard process restarts; run: tools/net/run_net_smoke.sh f27_essence_no_dup
 
 ## F27#4: a guest's Altar essence spend cannot duplicate, or lose its debit,
 ## through reconnect or reload. Two real ENet peers, the host's real paid
@@ -24,8 +24,13 @@ extends "res://tests/helpers/net_harness.gd"
 ## Disclosed fixtures: party_grant/storage_grant seed both homes before
 ## networking; the Altar recipe is granted to the host; the guest is
 ## teleported beside the Altar; onboarding modals are continued with confirm.
-## Release payouts are covered at unit level (test_f27_essence_rules) and by
-## the capture transaction's receipts; this smoke does not drive a release.
+##   release:        (--case=release, also in "all") the guest's belt is
+##                   five host-admitted creatures; a caught result is parked
+##                   on its pending seam (fixture) and the shipping Team-screen
+##                   ceremony releases one: the host pays its type essence
+##                   once. Releasing that untyped newcomer at once is a free,
+##                   unpaid release with a reason. Reconnect and reload change
+##                   nothing.
 const SPECIES := "bramblebun"
 const START_LEVEL := 5
 const PAYMENT := "essence_ground"
@@ -60,27 +65,31 @@ func _run() -> void:
 	# Each case builds two worlds and restarts processes, as
 	# smoke_net_cloudreach_activity_payoffs does for its long run.
 	_step_phase_deadline_ms = Time.get_ticks_msec() + 7200.0 * 1000.0
-	var cases: Array = ["settled", "host_before_delivery", "owner_before_ack"] if selected == "all" else [selected]
+	var cases: Array = ["settled", "host_before_delivery", "owner_before_ack", "release"] if selected == "all" else [selected]
 	for index: int in cases.size():
 		# Every case is the FIRST guest spend of a brand-new session on wiped
 		# homes, so one case's leftovers cannot hide another's duplication.
 		if index > 0 and not await _fresh_processes(str(cases[index])): break
-		if not await _start_session(): break
+		if not await _start_session(5 if str(cases[index]) == "release" else 1): break
 		match str(cases[index]):
 			"settled": await _case_settled()
 			"reconnect_spend": await _case_reconnect_spend()
+			"release": await _case_release()
 			_: await _case_cut(str(cases[index]))
 	print("F27_NET_NO_DUP: %d assertions over cases %s" % [_asserts, str(cases)])
 	quit(await finish())
 
 
 ## Boot, seed (fixture), save, host, join and place the host's paid Altar.
-func _start_session() -> bool:
+func _start_session(guest_party: int = 1) -> bool:
 	for peer in 2:
 		if not await _pass(peer, "boot", {"scene": "world"}, 30000): return false
 	_host_port = int(((_peers[0] as Dictionary).get("hello", {}) as Dictionary).get("enet_port", 0))
 	for peer in 2:
 		if not await _pass(peer, "party_grant", {"species": SPECIES, "level": START_LEVEL}): return false
+	for extra in guest_party - 1:
+		if not await _pass(1, "party_grant", {"species": ["terrapup", "galecrest", "bramblebun", "terrapup"][extra],
+				"level": START_LEVEL + extra}): return false
 	if not await _pass(1, "storage_grant", {"item": PAYMENT, "n": ESSENCE_STOCK}): return false
 	for peer in 2:
 		var saved: Dictionary = await step(peer, "save_character_here", {})
@@ -210,6 +219,68 @@ func _case_cut(cut: String) -> void:
 		_want_same(recovered, await _guest(), label + " after replaying the original request")
 
 
+func _case_release() -> void:
+	if not await _pass(1, "f27_dismiss_modals", {}): return
+	var before := await _guest()
+	var hosted := await _host(_guest_id)
+	var paid: Dictionary = await step(1, "f27_ceremony_release", {"index": 0, "nickname": "Kept Newcomer"}, 6000)
+	if paid.get("verdict") == "PASS" and paid.data.stage != "done":
+		print("R diag: %s" % str(paid.data))
+		await _passive_report("R")
+	if not _ok(paid, "R: guest ceremony release runs"): return
+	var released := str(paid.data.released_uid)
+	var payout: Array = paid.data.payout
+	want(paid.data.stage == "done" and not paid.data.pending_left, "R: the ceremony finished (%s)" % str(paid.data))
+	want(not payout.is_empty() and str(paid.data.unpaid_reason).is_empty(), "R: the host-admitted creature quotes a payout (%s)" % str(paid.data))
+	var after := await _guest()
+	for stack: Dictionary in payout:
+		want(int(after.items[stack.id]) - int(before.items[stack.id]) == int(stack.n),
+			"R: exactly %d %s paid once (%d -> %d)" % [int(stack.n), stack.id, int(before.items[stack.id]), int(after.items[stack.id])])
+	want((after.release_receipts as Array).count("release:" + released) == 1 and (after.release_receipts as Array).size() == (before.release_receipts as Array).size() + 1,
+		"R: exactly one new release receipt (%s)" % str(after.release_receipts))
+	want(not (paid.data.owned as Array).has(released) and (paid.data.owned as Array).has(paid.data.newcomer_uid) and (paid.data.owned as Array).size() == 5,
+		"R: the released creature left and the newcomer took its holder (%s)" % str(paid.data.owned))
+	var view := await _host(_guest_id)
+	for i in 20:
+		if (view.get("row", {}) as Dictionary).get("status") == "accepted": break
+		await step(0, "wait", {"frames": 30})
+		view = await _host(_guest_id)
+	want((view.get("row", {}) as Dictionary).get("action") == "essence_release" and (view.get("row", {}) as Dictionary).get("status") == "accepted",
+		"R: host row is the accepted essence_release (%s)" % str(view.get("row")))
+	want(str(view.get("items")) == str(after.items) and str(view.get("release_receipts")) == str(after.release_receipts),
+		"R: host admitted items/receipts equal the guest's (%s / %s)" % [str(view.get("items")), str(view.get("release_receipts"))])
+	want(not str(view.get("party")).contains(released) and (view.get("party", []) as Array).size() == (hosted.get("party", []) as Array).size() - 1,
+		"R: host admitted party lost exactly the released creature (%s)" % str(view.get("party")))
+	# The newcomer is the guest's own untyped catch: releasing it pays nothing,
+	# says why, and still lets it go.
+	if not await _pass(1, "f27_dismiss_modals", {}): return
+	var unpaid: Dictionary = await step(1, "f27_ceremony_release", {"index": 4, "nickname": "Second Newcomer"}, 6000)
+	if not _ok(unpaid, "R2: guest releases its unadmitted newcomer"): return
+	want(unpaid.data.released_uid == paid.data.newcomer_uid, "R2: released the first newcomer (%s)" % str(unpaid.data.released_uid))
+	want(unpaid.data.stage == "done" and not unpaid.data.pending_left and not (unpaid.data.owned as Array).has(unpaid.data.released_uid),
+		"R2: the release still happened (%s)" % str(unpaid.data))
+	want((unpaid.data.payout as Array).is_empty() and not str(unpaid.data.unpaid_reason).is_empty(),
+		"R2: no payout, with a readable reason (%s)" % str(unpaid.data.unpaid_reason))
+	var settled := await _guest()
+	want(str(settled.items) == str(after.items) and str(settled.release_receipts) == str(after.release_receipts),
+		"R2: items and release receipts unchanged (%s)" % str(settled.items))
+	if not await _pass(1, "f27_dismiss_modals", {}): return
+	if not await _pass(1, "save_character_here", {}): return
+	settled = await _guest()
+	# Reconnect, then a hard reload: nothing is paid or released again.
+	if not await _pass(1, "leave", {"reason": "f27_reconnect"}): return
+	if not await _pass(0, "expect_peers", {"count": 1}): return
+	if not await _pass(1, "production_join", {"host": "127.0.0.1", "port": _host_port, "budget_frames": 14000,
+			"returning_route": true, "character": {"character_id": _guest_id}}, 15000): return
+	await step(1, "wait", {"frames": SETTLE_FRAMES})
+	_want_same(settled, await _guest(), "R after reconnect")
+	if not await _restart_and_rejoin(): return
+	_want_same(settled, await _guest(), "R after reload")
+	var final_view := await _host(_guest_id)
+	want((final_view.get("release_receipts", []) as Array).count("release:" + released) == 1 and str(final_view.get("items")) == str(settled.items),
+		"R after reload: host holds one receipt and the same items (%s)" % str(final_view.get("items")))
+
+
 ## Expected price from the guest's actual level, independent of the steps.
 func E_cost(before: Dictionary) -> int:
 	var essence := preload("res://scripts/creatures/essence.gd")
@@ -271,8 +342,8 @@ func _restart_and_rejoin() -> bool:
 	# A killed process sends no disconnect: the host first refuses the same
 	# character (`character_in_use`), then holds its seat for the returning
 	# character. f27_title_rejoin retries Join as a player would.
-	if not await _pass(1, "f27_title_rejoin", {"host": "127.0.0.1", "port": _host_port, "budget_frames": 20000,
-			"character_id": _guest_id}, 22000): return false
+	if not await _pass(1, "f27_title_rejoin", {"host": "127.0.0.1", "port": _host_port, "budget_frames": 40000,
+			"character_id": _guest_id}, 42000): return false
 	for peer in 2:
 		if not await _pass(peer, "expect_peers", {"count": 2}): return false
 	await step(1, "wait", {"frames": SETTLE_FRAMES})
