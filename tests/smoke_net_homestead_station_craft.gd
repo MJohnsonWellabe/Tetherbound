@@ -24,7 +24,9 @@ func _run() -> void:
 	require_peer_logs_without(["SCRIPT ERROR", "Parse Error", "Invalid call"], "station craft peer logs have no script errors")
 	world_build_allowance_floor_s["production_host"] = 150.0
 	world_build_allowance_floor_s["production_join"] = 150.0
-	if not await launch(2, "title"):
+	# The guest launches straight into the world (as the F27 net smokes do)
+	# so it can seed its saved character before it first joins (header).
+	if not await launch(2, "title", [], {1: ["--scene=world"]}):
 		quit(await finish())
 		return
 	_step_phase_deadline_ms = Time.get_ticks_msec() + 600000.0
@@ -32,7 +34,6 @@ func _run() -> void:
 	if not await _craft_step(0, "production_host", {"port": port, "appearance_id": "trainer", "display_name": "CraftHost"}, 9000): return
 	# Disclosed fixture (see header): the guest's saved character owns its
 	# starter before the host first admits it.
-	if not await _craft_step(1, "boot", {"scene": "world"}, 30000): return
 	if not await _craft_step(1, "party_grant", {"species": "terrapup"}): return
 	var seeded := await _craft_data(1, "save_character_here", {})
 	if seeded.is_empty():
