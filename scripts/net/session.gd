@@ -5913,7 +5913,17 @@ func _capture_roster_allowed(members: Array, rollback: bool, player: RefCounted)
 	if members.size() != expected.size() or members.size() > 5 or originals.size() != row.before.party.size(): return false
 	for index: int in members.size():
 		var member: Variant = members[index]
-		if not member is RefCounted or preload("res://scripts/save/water_capture_codec.gd").encode(member, (row.before if rollback else row.after).redesign_character) != expected[index]: return false
+		if not member is RefCounted: return false
+		# Compare the same portable projection the row was staged from: it
+		# carries no in-fight energy meter (character_record_rules), and passive
+		# care keeps accruing between the host's stage and this install (the
+		# owner apply keeps it: ESSENCE.merge_owner_passive). Identity, stats
+		# and loadout stay exact.
+		var live_card: Dictionary = preload("res://scripts/save/water_capture_codec.gd").encode(member, (row.before if rollback else row.after).redesign_character)
+		var expected_card: Dictionary = expected[index].duplicate(true)
+		live_card.erase("energy")
+		expected_card.erase("energy") # A newcomer's staged card is the raw capture card.
+		if not ESSENCE.owner_matches_after({"party": [live_card]}, {"party": [expected_card]}): return false
 		var old_index := -1
 		for old: int in row.before.party.size():
 			if row.before.party[old].uid == expected[index].uid: old_index = old

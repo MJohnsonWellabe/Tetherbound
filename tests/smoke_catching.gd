@@ -43,6 +43,7 @@ func _init() -> void:
 func _run() -> void:
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
+	current_scene = _world # As the shipping boot does; the canonical catch's owner context reads it.
 	for i in SETTLE_FRAMES:
 		await physics_frame
 
@@ -450,11 +451,18 @@ func _a_weakened_creature_can_be_caught() -> void:
 	if str(_manager.call("outcome")) != "caught":
 		_fail("caught a creature but the fight ended as '%s'" % str(_manager.call("outcome")))
 	# R4.10: an ordinary catch lands in the REAL party — the M3 `caught()` list
-	# this used to check was a dead end nothing ever read. The sandbox ally
-	# comes from adopt_starter() and is not in the party, so the party was
-	# empty before this catch and holds exactly the caught creature now.
+	# this used to check was a dead end nothing ever read. The fixture owns the
+	# adopted starter (actor_vitals), so the caught creature is the newest.
 	var game := root.get_node_or_null(^"/root/Game")
 	var party: RefCounted = game.get("party") if game != null else null
+	# A canonical catch joins the belt through the host's retained offer and
+	# its owner-saved install, a few frames after the fight ends: wait for that
+	# arrival (bounded). The assertions below are unchanged.
+	for i in 600:
+		if party == null: break
+		var newest_now: RefCounted = party.call("at", int(party.call("size")) - 1) if int(party.call("size")) > 0 else null
+		if newest_now != null and str(newest_now.get("species_id")) != "terrapup": break
+		await physics_frame
 	if party == null or int(party.call("size")) == 0:
 		_fail("the caught creature never reached Game.party; catching is a dead end again")
 	else:

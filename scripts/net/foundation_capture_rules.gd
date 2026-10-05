@@ -45,7 +45,12 @@ static func stage(current: Dictionary, intent: Dictionary, context: Dictionary) 
 			payout = released.payout.duplicate(true)
 		elif not intent.released_uid.is_empty(): return ESSENCE._refuse("capture_has_free_slot")
 		if next.party.size() >= 5: return ESSENCE._refuse("five_owned_slots")
-		next.party.append(offer.creature.duplicate(true))
+		# Owner authority projections carry no in-fight energy meter
+		# (character_record_rules.portable_projection, ESSENCE.training_projection),
+		# so the staged roster card leaves it out like every other owned card.
+		var newcomer: Dictionary = offer.creature.duplicate(true)
+		newcomer.erase("energy")
+		next.party.append(newcomer)
 		next.redesign_character = TEACHING.character_loadout_mirror(next.party, next.redesign_character)
 		if not next.redesign_character.creatures.has(uid): return ESSENCE._refuse("capture_loadout_missing")
 		next.redesign_character = preload("res://scripts/creatures/breakthrough.gd").initialize_caught(next.redesign_character, offer.creature)
