@@ -1,0 +1,256 @@
+{
+  "source_commit": "1d54458d5814b7b27eed8c24015faa1a53e4baeb",
+  "command": [
+    "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\redesign-lookdev",
+    "--rendering-method",
+    "forward_plus",
+    "--audio-driver",
+    "Dummy",
+    "--resolution",
+    "1920x1080",
+    "--fullscreen",
+    "--script",
+    "tools/capture_renderer_material_census.gd",
+    "--",
+    "--biome=meadows",
+    "--preset=High",
+    "--source-commit=1d54458d5814b7b27eed8c24015faa1a53e4baeb",
+    "--times=day",
+    "--output=D:/tetherbound/.artifacts/f26-census-2/meadows-high/frames"
+  ],
+  "exit_code": 0,
+  "stop_reason": null,
+  "native_elapsed_seconds": 509.234,
+  "supervisor_elapsed_seconds": 517.797,
+  "runtime_errors": [],
+  "native_complete": true,
+  "frame_count": 10,
+  "planned_frame_count": 10,
+  "native_failures": [],
+  "graphics_capture": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "High",
+    "renderer": "forward_plus",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "source_commit": "1d54458d5814b7b27eed8c24015faa1a53e4baeb"
+  },
+  "png_dimensions": {
+    "meadows__band1_lower_meadows__01__grandpas_village__day.png": [
+      1920,
+      1080
+    ],
+    "meadows__band1_lower_meadows__02__the_south_bridge__day.png": [
+      1920,
+      1080
+    ],
+    "meadows__band2_stone_and_root__03__the_old_quarry__day.png": [
+      1920,
+      1080
+    ],
+    "meadows__band2_stone_and_root__04__the_burrow_warrens__day.png": [
+      1920,
+      1080
+    ],
+    "meadows__band3_the_river_lock__05__the_tether_relay__day.png": [
+      1920,
+      1080
+    ],
+    "meadows__band3_the_river_lock__06__old_mill_crossing__day.png": [
+      1920,
+      1080
+    ],
+    "meadows__band4_upper_meadows_ironwood__07__the_ironwood_grove__day.png": [
+      1920,
+      1080
+    ],
+    "meadows__band4_upper_meadows_ironwood__08__the_ridgeline_watch__day.png": [
+      1920,
+      1080
+    ],
+    "meadows__band5_stronghold_approach__09__stronghold_approach__day.png": [
+      1920,
+      1080
+    ],
+    "meadows__band5_stronghold_approach__10__meadows_hall__day.png": [
+      1920,
+      1080
+    ]
+  },
+  "material_snapshots": [
+    {
+      "frame_id": "meadows__band1_lower_meadows__01__grandpas_village__day",
+      "binding_count": 56366,
+      "classifications": {
+        "other": 77,
+        "unbound_primitive_default_requires_source_review": 4,
+        "bound_material_requires_visual_review": 52302,
+        "untextured_material_may_be_authored_requires_source_review": 3982,
+        "unbound_surface_requires_source_review": 1
+      },
+      "resource_count": 5385
+    },
+    {
+      "frame_id": "meadows__band1_lower_meadows__02__the_south_bridge__day",
+      "binding_count": 56366,
+      "classifications": {
+        "other": 77,
+        "unbound_primitive_default_requires_source_review": 4,
+        "bound_material_requires_visual_review": 52302,
+        "untextured_material_may_be_authored_requires_source_review": 3982,
+        "unbound_surface_requires_source_review": 1
+      },
+      "resource_count": 5385
+    },
+    {
+      "frame_id": "meadows__band2_stone_and_root__03__the_old_quarry__day",
+      "binding_count": 56366,
+      "classifications": {
+        "other": 77,
+        "unbound_primitive_default_requires_source_review": 4,
+        "bound_material_requires_visual_review": 52302,
+        "untextured_material_may_be_authored_requires_source_review": 3982,
+        "unbound_surface_requires_source_review": 1
+      },
+      "resource_count": 5385
+    },
+    {
+      "frame_id": "meadows__band2_stone_and_root__04__the_burrow_warrens__day",
+      "binding_count": 56366,
+      "classifications": {
+        "other": 77,
+        "unbound_primitive_default_requires_source_review": 4,
+        "bound_material_requires_visual_review": 52302,
+        "untextured_material_may_be_authored_requires_source_review": 3982,
+        "unbound_surface_requires_source_review": 1
+      },
+      "resource_count": 5385
+    },
+    {
+      "frame_id": "meadows__band3_the_river_lock__05__the_tether_relay__day",
+      "binding_count": 56366,
+      "classifications": {
+        "other": 77,
+        "unbound_primitive_default_requires_source_review": 4,
+        "bound_material_requires_visual_review": 52302,
+        "untextured_material_may_be_authored_requires_source_review": 3982,
+        "unbound_surface_requires_source_review": 1
+      },
+      "resource_count": 5385
+    },
+    {
+      "frame_id": "meadows__band3_the_river_lock__06__old_mill_crossing__day",
+      "binding_count": 56366,
+      "classifications": {
+        "other": 77,
+        "unbound_primitive_default_requires_source_review": 4,
+        "bound_material_requires_visual_review": 52302,
+        "untextured_material_may_be_authored_requires_source_review": 3982,
+        "unbound_surface_requires_source_review": 1
+      },
+      "resource_count": 5385
+    },
+    {
+      "frame_id": "meadows__band4_upper_meadows_ironwood__07__the_ironwood_grove__day",
+      "binding_count": 56366,
+      "classifications": {
+        "other": 77,
+        "unbound_primitive_default_requires_source_review": 4,
+        "bound_material_requires_visual_review": 52302,
+        "untextured_material_may_be_authored_requires_source_review": 3982,
+        "unbound_surface_requires_source_review": 1
+      },
+      "resource_count": 5385
+    },
+    {
+      "frame_id": "meadows__band4_upper_meadows_ironwood__08__the_ridgeline_watch__day",
+      "binding_count": 56366,
+      "classifications": {
+        "other": 77,
+        "unbound_primitive_default_requires_source_review": 4,
+        "bound_material_requires_visual_review": 52302,
+        "untextured_material_may_be_authored_requires_source_review": 3982,
+        "unbound_surface_requires_source_review": 1
+      },
+      "resource_count": 5385
+    },
+    {
+      "frame_id": "meadows__band5_stronghold_approach__09__stronghold_approach__day",
+      "binding_count": 56366,
+      "classifications": {
+        "other": 77,
+        "unbound_primitive_default_requires_source_review": 4,
+        "bound_material_requires_visual_review": 52302,
+        "untextured_material_may_be_authored_requires_source_review": 3982,
+        "unbound_surface_requires_source_review": 1
+      },
+      "resource_count": 5385
+    },
+    {
+      "frame_id": "meadows__band5_stronghold_approach__10__meadows_hall__day",
+      "binding_count": 56366,
+      "classifications": {
+        "other": 77,
+        "unbound_primitive_default_requires_source_review": 4,
+        "bound_material_requires_visual_review": 52302,
+        "untextured_material_may_be_authored_requires_source_review": 3982,
+        "unbound_surface_requires_source_review": 1
+      },
+      "resource_count": 5385
+    }
+  ],
+  "unbound_bindings_requiring_source_review": [
+    {
+      "node": "Player/Model/Body",
+      "surface": 0,
+      "classification": "unbound_primitive_default_requires_source_review",
+      "owner_script": "",
+      "mesh_class": "CapsuleMesh",
+      "mesh_path": "res://scenes/player/player.tscn::Mesh_1",
+      "visible_in_tree": false
+    },
+    {
+      "node": "Player/Model/Nose",
+      "surface": 0,
+      "classification": "unbound_primitive_default_requires_source_review",
+      "owner_script": "",
+      "mesh_class": "CapsuleMesh",
+      "mesh_path": "res://scenes/player/player.tscn::Mesh_1",
+      "visible_in_tree": false
+    },
+    {
+      "node": "BurrowWarrens/BankSurfaceCollisionCarrier",
+      "surface": 0,
+      "classification": "unbound_surface_requires_source_review",
+      "owner_script": "",
+      "mesh_class": "ArrayMesh",
+      "mesh_path": "",
+      "visible_in_tree": false
+    },
+    {
+      "node": "MasterSignpost/@MeshInstance3D@67272",
+      "surface": 0,
+      "classification": "unbound_primitive_default_requires_source_review",
+      "owner_script": "",
+      "mesh_class": "BoxMesh",
+      "mesh_path": "",
+      "visible_in_tree": true
+    },
+    {
+      "node": "@Node3D@67282/@MeshInstance3D@67283",
+      "surface": 0,
+      "classification": "unbound_primitive_default_requires_source_review",
+      "owner_script": "",
+      "mesh_class": "BoxMesh",
+      "mesh_path": "",
+      "visible_in_tree": true
+    }
+  ],
+  "truncated_resource_graphs": 0,
+  "qualification": "Capture completeness and binding inventory only; full visual/material acceptance OPEN. Mounted/visible flags are not pixel or fallback proof. No FPS, travel, campaign or handheld claim."
+}

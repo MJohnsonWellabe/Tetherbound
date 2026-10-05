@@ -1,0 +1,31 @@
+{
+  "source_commit": "1d54458d5814b7b27eed8c24015faa1a53e4baeb",
+  "command": [
+    "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\redesign-lookdev",
+    "--rendering-method",
+    "forward_plus",
+    "--audio-driver",
+    "Dummy",
+    "--resolution",
+    "1920x1080",
+    "--fullscreen",
+    "--script",
+    "tools/capture_renderer_material_census.gd",
+    "--",
+    "--biome=meadows",
+    "--preset=High",
+    "--source-commit=1d54458d5814b7b27eed8c24015faa1a53e4baeb",
+    "--times=day",
+    "--output=D:/tetherbound/.artifacts/f26-census-2/meadows-high/frames"
+  ],
+  "exit_code": 0,
+  "stop_reason": null,
+  "supervisor_elapsed_seconds": 517.797,
+  "native_elapsed_seconds": 509.234,
+  "native_started_utc": "2026-10-05T14:31:59.549093+00:00",
+  "preset": "High",
+  "profile": "D:\\tetherbound\\.artifacts\\f26-census-2\\meadows-high\\profile",
+  "scope": "Owned F26 production material census visual capture; no FPS/image-quality claim."
+}
