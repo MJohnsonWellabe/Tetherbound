@@ -59,8 +59,9 @@ func _owner_passive_request_matches(source_kind: String, request: Dictionary) ->
 			and preload("res://scripts/net/owner_passive_preparation.gd").exact(_portal_requests.get(request.envelope.get("request_id")), request.envelope) \
 			and arrival.call("owner_request_matches", request) == true
 	if source_kind == "waystone_touch":
-		return request.get("envelope") is Dictionary and request.envelope.get("payload", {}).get("kind") == "waystone_touch" \
-			and preload("res://scripts/net/owner_passive_preparation.gd").exact(_portal_requests.get(request.envelope.get("request_id")), request.envelope)
+		return request.get("envelope") is Dictionary \
+			and preload("res://scripts/net/owner_passive_preparation.gd").exact(_portal_requests.get(request.envelope.get("request_id")), request.envelope) \
+			and request.envelope.get("payload") is Dictionary and request.envelope.payload.get("kind") == "waystone_touch"
 	if source_kind == "altar_spend":
 		return preload("res://scripts/net/owner_passive_preparation.gd").exact(_owner_passive_altar_original, request)
 	if source_kind == "altar_traits": return _altar_traits_service().call("owner_request_matches", request) == true
@@ -5472,6 +5473,14 @@ func _commit_waystone_touch(peer: int, envelope: Dictionary, result: Dictionary)
 	# owner request does, so the staged before equals the owner's own baseline.
 	# The touch itself commits from _owner_passive_commit_request; a retry with
 	# a new envelope while that original is pending gets no second mutation.
+	# Stage first, as foundation requests do: a semantic refusal (e.g. the
+	# receipt limit) replies now instead of freezing the owner in a checkpoint.
+	var preview: Dictionary = preload("res://scripts/net/waystone_action.gd").stage(current,
+		{"waystone_id": stone.id, "touch_id": touch_id}, context)
+	if preview.get("ok") != true:
+		_portal_reply(peer, envelope, {"ok": false, "reason": "Your waystone could not save. Touch it again.",
+			"waystone_id": stone.id, "code": str(preview.get("code", ""))})
+		return
 	if peer != local_peer_id():
 		var request := preload("res://scripts/net/owner_passive_preparation.gd").waystone_request(envelope)
 		var ready: Dictionary = _owner_passive_service().call("action_gate", peer, "waystone_touch", request, context)
@@ -5502,7 +5511,7 @@ func _waystone_commit_prepared(peer: int, envelope: Dictionary, context: Diction
 	var committed := FOUNDATION_ACTIONS.commit(_character_authority, writer, peer, character,
 		int(context.expected_revision), "waystone_touch", {"waystone_id": stone.id, "touch_id": context.touch_id}, context)
 	if committed.get("durable") != true: _portal_waiters.erase(receipt)
-	return committed
+	return preload("res://scripts/net/waystone_action.gd").commit_outcome(committed)
 
 func _waystone_delivery_accepted(peer: int, row: Dictionary) -> void:
 	var waiter: Dictionary = _portal_waiters.get(row.get("receipt"), {})

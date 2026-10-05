@@ -124,3 +124,21 @@ func test_view_distinguishes_host_unlock_from_portable_unlock_and_names_last_sto
 		player.redesign_character.waystones_activated.tidewake = [stone.id]
 		assert_eq(VIEW.build(player, world, arch).destination_label, stone.display_name)
 		break
+
+func test_semantic_commit_refusal_is_terminal_and_transient_stays_retryable() -> void:
+	# A guest touch commits from an owner-passive checkpoint. A refusal the
+	# same touch will always meet must be terminal, or the checkpoint is
+	# retained and the guest stays frozen; a transient one must stay retryable.
+	const ACTION := preload("res://scripts/net/waystone_action.gd")
+	var durable := {"ok": true, "durable": true, "resolved": false, "receipt": "craft:waystone_x:c"}
+	assert_eq(ACTION.commit_outcome(durable), durable)
+	for code: String in ["transaction_receipt_limit", "waystone_context_changed", "waystone_unavailable",
+			"waystone_envelope_changed", "reconcile_original_decision"]:
+		var out := ACTION.commit_outcome({"ok": false, "code": code, "durable": false, "resolved": false})
+		assert_eq(out.get("terminal_refusal"), true, code + " is terminal")
+		assert_eq(out.get("resolved"), true, code + " resolves the request")
+		assert_eq(out.get("durable"), false)
+		assert_eq(out.get("code"), code)
+	for code: String in ACTION.TRANSIENT_CODES:
+		var out := ACTION.commit_outcome({"ok": false, "code": code, "durable": false, "resolved": false})
+		assert_ne(out.get("terminal_refusal"), true, code + " stays retryable")

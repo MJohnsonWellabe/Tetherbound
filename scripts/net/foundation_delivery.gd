@@ -78,7 +78,9 @@ static func owner_plan(current: Dictionary, row: Dictionary, schema_check: Calla
 ## between the host's stage and the owner's apply; that drift is not a
 ## conflicting transaction (same rule as essence.stage_training_owner, F27).
 ## Every other field, inventory and progression included, compares exactly.
-## The applied state is still the row's exact after, so host and owner agree.
+## The applied state is still the row's exact after, so host and owner agree;
+## the cost is that care accrued between stage and apply (seconds in normal
+## play) reverts to the staged values rather than being kept.
 ## Only for a transaction that leaves every passive-care field unchanged; one
 ## that writes care itself (Groom, feeding, rest) still compares exactly, so
 ## drift there stays an explicit owner-baseline refusal (Groom has its own

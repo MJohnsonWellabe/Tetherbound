@@ -113,7 +113,10 @@ static func _opening_source(session: Node, peer: int) -> Node:
 	# to Grandpa from beyond his talk radius (sequence_director
 	# _refresh_door_gate). Accept exactly that authored geometry too.
 	var house: Node3D = found.get("_house")
-	var callout: Variant = (found.get_script() as Script).get_script_constant_map().get("DOOR_CALLOUT_RADIUS")
+	var constants: Dictionary = (found.get_script() as Script).get_script_constant_map()
+	var callout: Variant = constants.get("DOOR_CALLOUT_RADIUS")
+	var callout_beats: Variant = constants.get("DOOR_CALLOUT_BEATS")
+	if not callout_beats is Array or not found.has_method("beat") or not (callout_beats as Array).has(found.call("beat")): return null
 	if house == null or not world_node.is_ancestor_of(house) or house.is_queued_for_deletion() \
 		or not house.has_method("marker") or not (callout is float or callout is int) or float(callout) <= 0.0: return null
 	var door: Variant = house.call("marker", "door")
