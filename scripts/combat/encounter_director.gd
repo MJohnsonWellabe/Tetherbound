@@ -8412,6 +8412,8 @@ func _f22_visible_observation(wild: Node3D) -> Dictionary:
 ## Never toggle Session mode, invent a host/character, or accept a guest claim.
 func _canonical_wild_start_state(wild: Node3D) -> Dictionary:
 	var disabled := {"enabled": false, "ready": false}
+	# A guest's own wild stays local; canonical readiness is host-only.
+	if _is_guest(): return disabled
 	if (MATH.config().get("actor_vitals", {}) as Dictionary).get("runtime_enabled") != true:
 		return disabled
 	var essence: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/essence.json")) \
