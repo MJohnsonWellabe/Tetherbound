@@ -218,6 +218,9 @@ var _f22_host_breaks := 0
 var _f22_host_hits := 0
 ## The last live snapshot the pin saw, reported if the fight later vanishes.
 var _f22_last_seen := {}
+## Refusal history for the `encounter` probe (see `_watch_refusals`).
+var _refusal_history: Array = []
+var _refusal_seen := {}
 var _strike_observed_director: Node
 var _role := ""
 var _peer_index := -1
@@ -4894,6 +4897,26 @@ func _step_catch_throw(args: Dictionary) -> Dictionary:
 	return _throw_orb()
 
 
+## Starts (once) recording every refusal this peer's CombatManager notes, by
+## snapshotting `last_encounter_refusal` on each `state_changed` (the manager
+## emits it from `note_encounter_refusal`). Returns the history, capped at 256.
+func _watch_refusals(manager: Node) -> Array:
+	if manager == null:
+		return []
+	if not manager.has_meta("refusal_watch"):
+		manager.set_meta("refusal_watch", true)
+		manager.connect("state_changed", func() -> void:
+			var now: Dictionary = manager.get("last_encounter_refusal")
+			# Identity, not value: each refusal is a fresh dictionary, so a
+			# repeat of the same code is still a new arrival.
+			if not now.is_empty() and not is_same(now, _refusal_seen):
+				_refusal_seen = now
+				_refusal_history.append({"kind": str(now.get("kind", "")), "code": str(now.get("code", "")),
+					"at_ms": Time.get_ticks_msec()})
+				if _refusal_history.size() > 256: _refusal_history.pop_front())
+	return _refusal_history.duplicate(true)
+
+
 ## This peer's live combat arena: centre and radius, or {} with none open.
 func _arena_row(manager: Node) -> Dictionary:
 	if manager == null or not manager.has_method("arena"):
@@ -6761,6 +6784,11 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				# to prove the observation window was isolated from enemy damage.
 				"struck_counts": rec.get("struck_counts", {}),
 				"refusal": emanager.get("last_encounter_refusal"),
+				# Every distinct refusal since this peer was first probed, in
+				# arrival order: `last_encounter_refusal` is one slot, so a later
+				# refusal can replace the one a smoke is waiting for between
+				# two coordinator polls.
+				"refusals": _watch_refusals(emanager),
 				"joinable": joinable,
 			}
 			# Shared wild fights must expose the actual opponent presentation body,
