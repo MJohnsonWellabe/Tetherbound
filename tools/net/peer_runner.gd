@@ -4904,7 +4904,10 @@ func _step_f22_pin_tell(args: Dictionary) -> Dictionary:
 	var runtime: Variant = director.call("_shared_host_fight", encounter_id)
 	var body: Node3D = runtime.call("body") as Node3D if runtime != null and is_instance_valid(runtime) else null
 	if body == null or not is_instance_valid(body):
-		return {"verdict": "FAIL", "detail": "no live shared wild body to pin in %s" % encounter_id}
+		var gone: Dictionary = (director.get("_encounter_host") as RefCounted).call("record", encounter_id) if director.get("_encounter_host") != null else {}
+		return {"verdict": "FAIL", "detail": "no live shared wild body to pin in %s (phase=%s hp=%s outcome=%s keys=%s)" % [encounter_id,
+			str(gone.get("phase", "")), str((gone.get("opponent", {}) as Dictionary).get("hp", "")),
+			str(gone.get("outcome", gone.get("result", ""))), str((director.get("_shared_host_fights") as Dictionary).keys())]}
 	if not director.has_meta("f22_break_watch"):
 		director.set_meta("f22_break_watch", true)
 		director.connect("host_strike_finished", func(_intent: Dictionary, _peer: int, verdict: Dictionary) -> void:
