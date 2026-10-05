@@ -1,0 +1,565 @@
+{
+ "frame_count": 28,
+ "flagged": [],
+ "thresholds": {
+  "magenta_fraction": 0.001,
+  "near_black_fraction": 0.25,
+  "top_quarter_std": 1.5
+ },
+ "sheets": [
+  {
+   "sheet": "route-stills-low-01.jpg",
+   "frames": [
+    "cloudreach__route_00__day",
+    "cloudreach__route_00__night",
+    "cloudreach__route_01__day",
+    "cloudreach__route_01__night",
+    "cloudreach__route_02__day",
+    "cloudreach__route_02__night",
+    "cloudreach__route_03__day",
+    "cloudreach__route_03__night"
+   ]
+  },
+  {
+   "sheet": "route-stills-low-02.jpg",
+   "frames": [
+    "meadows__route_00__day",
+    "meadows__route_00__night",
+    "meadows__route_01__day",
+    "meadows__route_01__night",
+    "meadows__route_02__day",
+    "meadows__route_02__night",
+    "meadows__route_03__day",
+    "meadows__route_03__night"
+   ]
+  },
+  {
+   "sheet": "route-stills-low-03.jpg",
+   "frames": [
+    "stormwood__route_00__day",
+    "stormwood__route_00__night",
+    "stormwood__route_01__day",
+    "stormwood__route_01__night",
+    "stormwood__route_02__day",
+    "stormwood__route_02__night",
+    "water__route_00__day",
+    "water__route_00__night"
+   ]
+  },
+  {
+   "sheet": "route-stills-low-04.jpg",
+   "frames": [
+    "water__route_01__day",
+    "water__route_01__night",
+    "water__route_02__day",
+    "water__route_02__night"
+   ]
+  }
+ ],
+ "frames": [
+  {
+   "file": "cloudreach__route_00__day.png",
+   "size": [
+    1920,
+    1080
+   ],
+   "magenta_fraction": 0.0,
+   "near_black_fraction": 0.0005,
+   "top_quarter_mean_rgb": [
+    113.7,
+    131.2,
+    125.9
+   ],
+   "top_quarter_std": 69.89,
+   "mean_luma": 109.2,
+   "flags": [],
+   "dir": "cloudreach"
+  },
+  {
+   "file": "cloudreach__route_00__night.png",
+   "size": [
+    1920,
+    1080
+   ],
+   "magenta_fraction": 0.0,
+   "near_black_fraction": 0.0129,
+   "top_quarter_mean_rgb": [
+    29.5,
+    48.1,
+    71.3
+   ],
+   "top_quarter_std": 37.65,
+   "mean_luma": 55.5,
+   "flags": [],
+   "dir": "cloudreach"
+  },
+  {
+   "file": "cloudreach__route_01__day.png",
+   "size": [
+    1920,
+    1080
+   ],
+   "magenta_fraction": 0.0,
+   "near_black_fraction": 0.0002,
+   "top_quarter_mean_rgb": [
+    129.1,
+    154.7,
+    149.0
+   ],
+   "top_quarter_std": 61.89,
+   "mean_luma": 115.1,
+   "flags": [],
+   "dir": "cloudreach"
+  },
+  {
+   "file": "cloudreach__route_01__night.png",
+   "size": [
+    1920,
+    1080
+   ],
+   "magenta_fraction": 0.0,
+   "near_black_fraction": 0.0024,
+   "top_quarter_mean_rgb": [
+    28.1,
+    51.3,
+    74.8
+   ],
+   "top_quarter_std": 33.94,
+   "mean_luma": 41.3,
+   "flags": [],
+   "dir": "cloudreach"
+  },
+  {
+   "file": "cloudreach__route_02__day.png",
+   "size": [
+    1920,
+    1080
+   ],
+   "magenta_fraction": 0.0,
+   "near_black_fraction": 0.0005,
+   "top_quarter_mean_rgb": [
+    113.1,
+    139.1,
+    138.5
+   ],
+   "top_quarter_std": 65.57,
+   "mean_luma": 101.7,
+   "flags": [],
+   "dir": "cloudreach"
+  },
+  {
+   "file": "cloudreach__route_02__night.png",
+   "size": [
+    1920,
+    1080
+   ],
+   "magenta_fraction": 0.0,
+   "near_black_fraction": 0.01,
+   "top_quarter_mean_rgb": [
+    33.2,
+    54.0,
+    80.5
+   ],
+   "top_quarter_std": 40.07,
+   "mean_luma": 44.6,
+   "flags": [],
+   "dir": "cloudreach"
+  },
+  {
+   "file": "cloudreach__route_03__day.png",
+   "size": [
+    1920,
+    1080
+   ],
+   "magenta_fraction": 0.0,
+   "near_black_fraction": 0.0006,
+   "top_quarter_mean_rgb": [
+    129.5,
+    145.8,
+    146.2
+   ],
+   "top_quarter_std": 60.49,
+   "mean_luma": 106.5,
+   "flags": [],
+   "dir": "cloudreach"
+  },
+  {
+   "file": "cloudreach__route_03__night.png",
+   "size": [
+    1920,
+    1080
+   ],
+   "magenta_fraction": 0.0,
+   "near_black_fraction": 0.0167,
+   "top_quarter_mean_rgb": [
+    30.1,
+    48.2,
+    80.0
+   ],
+   "top_quarter_std": 36.04,
+   "mean_luma": 44.9,
+   "flags": [],
+   "dir": "cloudreach"
+  },
+  {
+   "file": "meadows__route_00__day.png",
+   "size": [
+    1920,
+    1080
+   ],
+   "magenta_fraction": 0.0,
+   "near_black_fraction": 0.0022,
+   "top_quarter_mean_rgb": [
+    89.5,
+    102.6,
+    102.0
+   ],
+   "top_quarter_std": 57.97,
+   "mean_luma": 105.1,
+   "flags": [],
+   "dir": "meadows"
+  },
+  {
+   "file": "meadows__route_00__night.png",
+   "size": [
+    1920,
+    1080
+   ],
+   "magenta_fraction": 0.0,
+   "near_black_fraction": 0.0989,
+   "top_quarter_mean_rgb": [
+    25.3,
+    39.6,
+    62.9
+   ],
+   "top_quarter_std": 33.3,
+   "mean_luma": 46.0,
+   "flags": [],
+   "dir": "meadows"
+  },
+  {
+   "file": "meadows__route_01__day.png",
+   "size": [
+    1920,
+    1080
+   ],
+   "magenta_fraction": 0.0,
+   "near_black_fraction": 0.0008,
+   "top_quarter_mean_rgb": [
+    87.3,
+    114.2,
+    115.8
+   ],
+   "top_quarter_std": 54.17,
+   "mean_luma": 108.0,
+   "flags": [],
+   "dir": "meadows"
+  },
+  {
+   "file": "meadows__route_01__night.png",
+   "size": [
+    1920,
+    1080
+   ],
+   "magenta_fraction": 0.0,
+   "near_black_fraction": 0.0797,
+   "top_quarter_mean_rgb": [
+    25.4,
+    44.4,
+    69.3
+   ],
+   "top_quarter_std": 32.23,
+   "mean_luma": 37.0,
+   "flags": [],
+   "dir": "meadows"
+  },
+  {
+   "file": "meadows__route_02__day.png",
+   "size": [
+    1920,
+    1080
+   ],
+   "magenta_fraction": 0.0,
+   "near_black_fraction": 0.0008,
+   "top_quarter_mean_rgb": [
+    112.9,
+    104.7,
+    86.6
+   ],
+   "top_quarter_std": 36.61,
+   "mean_luma": 86.8,
+   "flags": [],
+   "dir": "meadows"
+  },
+  {
+   "file": "meadows__route_02__night.png",
+   "size": [
+    1920,
+    1080
+   ],
+   "magenta_fraction": 0.0,
+   "near_black_fraction": 0.0133,
+   "top_quarter_mean_rgb": [
+    91.6,
+    78.8,
+    84.9
+   ],
+   "top_quarter_std": 49.45,
+   "mean_luma": 65.0,
+   "flags": [],
+   "dir": "meadows"
+  },
+  {
+   "file": "meadows__route_03__day.png",
+   "size": [
+    1920,
+    1080
+   ],
+   "magenta_fraction": 0.0,
+   "near_black_fraction": 0.0007,
+   "top_quarter_mean_rgb": [
+    93.8,
+    89.9,
+    72.4
+   ],
+   "top_quarter_std": 44.67,
+   "mean_luma": 87.2,
+   "flags": [],
+   "dir": "meadows"
+  },
+  {
+   "file": "meadows__route_03__night.png",
+   "size": [
+    1920,
+    1080
+   ],
+   "magenta_fraction": 0.0,
+   "near_black_fraction": 0.0287,
+   "top_quarter_mean_rgb": [
+    56.3,
+    57.2,
+    70.5
+   ],
+   "top_quarter_std": 55.02,
+   "mean_luma": 56.9,
+   "flags": [],
+   "dir": "meadows"
+  },
+  {
+   "file": "stormwood__route_00__day.png",
+   "size": [
+    1920,
+    1080
+   ],
+   "magenta_fraction": 0.0,
+   "near_black_fraction": 0.013,
+   "top_quarter_mean_rgb": [
+    58.2,
+    62.9,
+    71.8
+   ],
+   "top_quarter_std": 44.44,
+   "mean_luma": 48.3,
+   "flags": [],
+   "dir": "stormwood"
+  },
+  {
+   "file": "stormwood__route_00__night.png",
+   "size": [
+    1920,
+    1080
+   ],
+   "magenta_fraction": 0.0,
+   "near_black_fraction": 0.0134,
+   "top_quarter_mean_rgb": [
+    57.6,
+    62.3,
+    71.5
+   ],
+   "top_quarter_std": 43.01,
+   "mean_luma": 48.1,
+   "flags": [],
+   "dir": "stormwood"
+  },
+  {
+   "file": "stormwood__route_01__day.png",
+   "size": [
+    1920,
+    1080
+   ],
+   "magenta_fraction": 0.0,
+   "near_black_fraction": 0.0021,
+   "top_quarter_mean_rgb": [
+    53.8,
+    58.2,
+    64.8
+   ],
+   "top_quarter_std": 45.84,
+   "mean_luma": 50.9,
+   "flags": [],
+   "dir": "stormwood"
+  },
+  {
+   "file": "stormwood__route_01__night.png",
+   "size": [
+    1920,
+    1080
+   ],
+   "magenta_fraction": 0.0,
+   "near_black_fraction": 0.0022,
+   "top_quarter_mean_rgb": [
+    53.8,
+    58.2,
+    64.8
+   ],
+   "top_quarter_std": 45.86,
+   "mean_luma": 50.8,
+   "flags": [],
+   "dir": "stormwood"
+  },
+  {
+   "file": "stormwood__route_02__day.png",
+   "size": [
+    1920,
+    1080
+   ],
+   "magenta_fraction": 0.0,
+   "near_black_fraction": 0.0174,
+   "top_quarter_mean_rgb": [
+    69.3,
+    73.7,
+    86.3
+   ],
+   "top_quarter_std": 46.81,
+   "mean_luma": 56.4,
+   "flags": [],
+   "dir": "stormwood"
+  },
+  {
+   "file": "stormwood__route_02__night.png",
+   "size": [
+    1920,
+    1080
+   ],
+   "magenta_fraction": 0.0,
+   "near_black_fraction": 0.0174,
+   "top_quarter_mean_rgb": [
+    70.2,
+    74.7,
+    87.0
+   ],
+   "top_quarter_std": 47.59,
+   "mean_luma": 57.2,
+   "flags": [],
+   "dir": "stormwood"
+  },
+  {
+   "file": "water__route_00__day.png",
+   "size": [
+    1920,
+    1080
+   ],
+   "magenta_fraction": 0.0,
+   "near_black_fraction": 0.0006,
+   "top_quarter_mean_rgb": [
+    102.5,
+    138.0,
+    156.6
+   ],
+   "top_quarter_std": 27.89,
+   "mean_luma": 165.3,
+   "flags": [],
+   "dir": "water"
+  },
+  {
+   "file": "water__route_00__night.png",
+   "size": [
+    1920,
+    1080
+   ],
+   "magenta_fraction": 0.0,
+   "near_black_fraction": 0.0041,
+   "top_quarter_mean_rgb": [
+    29.0,
+    55.1,
+    94.9
+   ],
+   "top_quarter_std": 20.55,
+   "mean_luma": 87.7,
+   "flags": [],
+   "dir": "water"
+  },
+  {
+   "file": "water__route_01__day.png",
+   "size": [
+    1920,
+    1080
+   ],
+   "magenta_fraction": 0.0,
+   "near_black_fraction": 0.0007,
+   "top_quarter_mean_rgb": [
+    120.3,
+    143.9,
+    150.9
+   ],
+   "top_quarter_std": 42.88,
+   "mean_luma": 163.3,
+   "flags": [],
+   "dir": "water"
+  },
+  {
+   "file": "water__route_01__night.png",
+   "size": [
+    1920,
+    1080
+   ],
+   "magenta_fraction": 0.0,
+   "near_black_fraction": 0.0006,
+   "top_quarter_mean_rgb": [
+    38.6,
+    61.5,
+    96.2
+   ],
+   "top_quarter_std": 35.9,
+   "mean_luma": 89.3,
+   "flags": [],
+   "dir": "water"
+  },
+  {
+   "file": "water__route_02__day.png",
+   "size": [
+    1920,
+    1080
+   ],
+   "magenta_fraction": 0.0,
+   "near_black_fraction": 0.0007,
+   "top_quarter_mean_rgb": [
+    119.3,
+    144.7,
+    150.6
+   ],
+   "top_quarter_std": 40.91,
+   "mean_luma": 167.6,
+   "flags": [],
+   "dir": "water"
+  },
+  {
+   "file": "water__route_02__night.png",
+   "size": [
+    1920,
+    1080
+   ],
+   "magenta_fraction": 0.0,
+   "near_black_fraction": 0.0005,
+   "top_quarter_mean_rgb": [
+    35.4,
+    59.5,
+    93.1
+   ],
+   "top_quarter_std": 32.54,
+   "mean_luma": 92.6,
+   "flags": [],
+   "dir": "water"
+  }
+ ]
+}

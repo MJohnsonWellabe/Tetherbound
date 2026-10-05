@@ -173,6 +173,8 @@ jobs:
       actions: read
     outputs:
       code: ${{ steps.filter.outputs.code }}
+      # Whether the multiplayer group must run (see `net` in the filter step).
+      net: ${{ steps.filter.outputs.net }}
       # The FULL tier (see `on:`): scheduled runs, manual dispatches and PRs
       # labelled `full-ci`. Everything else runs the fast tier.
       full: ${{ steps.tier.outputs.full }}
@@ -223,6 +225,7 @@ jobs:
           if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ] || [ "$GITHUB_EVENT_NAME" = "schedule" ]; then
             echo "Explicit full verification requested."
             echo "code=true" >> "$GITHUB_OUTPUT"
+            echo "net=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
@@ -278,6 +281,7 @@ jobs:
           if [ -z "$base" ]; then
             echo "No usable base commit; building."
             echo "code=true" >> "$GITHUB_OUTPUT"
+            echo "net=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
@@ -311,6 +315,28 @@ jobs:
           else
             echo "Documentation only; skipping the build."
             echo "code=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          # MULTIPLAYER GROUP SKIP (owner, 2026-10-04: skip jobs a change
+          # cannot affect). The net group (discover-net-smokes, the ten
+          # verify-multiplayer-shard jobs, veridian-offer and the Cloudreach
+          # mid-ride rejoin) is the longest queue in a full run. It is skipped ONLY
+          # when every non-documentation path changed is presentation that a
+          # two-peer smoke cannot observe: image/audio media and their .import
+          # sidecars, .gdshader files, data/config/*_{visual,atmosphere,
+          # horizon,camera,lighting,presentation,audio}.json, unit/capture
+          # test files (unit tests still run in verify-unit-tests), and tools/
+          # outside tools/net/ and tools/ci/. Meshes (.glb/.gltf/.tscn) are NOT
+          # on the list: their collision can move a body. An empty diff, a
+          # missing base, a schedule or a dispatch always runs the group.
+          # Same SIGPIPE-safe capture as `noncode` above.
+          netrelevant="$(printf '%s\n' "$noncode" \
+            | grep -vE '(\.(png|jpe?g|webp|ktx2|exr|hdr|svg|ogg|wav|mp3)(\.import)?$|\.gdshader(\.uid)?$|^data/config/[a-z0-9_]+_(visual|atmosphere|horizon|camera|lighting|presentation|audio)\.json$|^tests/(test|capture)_[a-z0-9_]+\.gd(\.uid)?$|^tools/([^nc]|n[^e]|ne[^t]|net[^/]|c[^i]|ci[^/]))' || true)"
+          if [ -z "$changed" ] || [ -n "$netrelevant" ]; then
+            echo "net=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Presentation-only change; the multiplayer group will skip."
+            echo "net=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Decide the tier (fast on every PR/push, full every 8 hours)
@@ -2482,7 +2508,11 @@ jobs:
     # on every push made normal CI slower while producing no actionable pass/
     # fail signal. Keep the exact command available to a deliberate manual
     # dispatch, where a developer can inspect its known-red result.
-    if: needs.changes.outputs.full == 'true'
+    # Owner, 2026-10-04: known-red probes run only on the scheduled full
+    # tier and on manual dispatch, never on a `full-ci` pull request. They
+    # cannot block a merge (continue-on-error), so on a PR they only held two
+    # runners for ~9 minutes each.
+    if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
@@ -2544,7 +2574,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     needs: changes
-    if: needs.changes.outputs.full == 'true'
+    # Owner, 2026-10-04: known-red probes run only on the scheduled full
+    # tier and on manual dispatch, never on a `full-ci` pull request. They
+    # cannot block a merge (continue-on-error), so on a PR they only held two
+    # runners for ~9 minutes each.
+    if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
@@ -2595,7 +2629,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     needs: changes
-    if: needs.changes.outputs.full == 'true'
+    if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true'
     outputs:
       files: ${{ steps.discover.outputs.files }}
     steps:
@@ -2775,7 +2809,7 @@ jobs:
     needs:
       - changes
       - discover-net-smokes
-    if: needs.changes.outputs.full == 'true'
+    if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -3139,7 +3173,7 @@ jobs:
         group: [space, capacity, recovery]
     timeout-minutes: 50
     needs: changes
-    if: needs.changes.outputs.full == 'true'
+    if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -3236,7 +3270,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     needs: changes
-    if: needs.changes.outputs.full == 'true'
+    if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true'
     steps:
       - uses: actions/checkout@v4
         with:

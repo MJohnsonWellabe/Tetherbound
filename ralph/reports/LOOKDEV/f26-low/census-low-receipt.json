@@ -1,0 +1,1162 @@
+{
+ "scenes": [
+  {
+   "biome_id": "meadows",
+   "scene": "res://scenes/world/meadows_playground.tscn",
+   "manifest": "manifest.json.gz",
+   "manifest_sha256": "a226f996e6655a12cb6967d4a1babe4871200721155fa0ff2ab375e514aa32dc",
+   "complete": true,
+   "failures": [],
+   "graphics_capture": {
+    "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "Low",
+    "renderer": "gl_compatibility",
+    "resolution": [
+     1920,
+     1080
+    ],
+    "source_commit": "4d75308a995fe7522d280b8ea6bc4d7447e5e482"
+   },
+   "rendering_method": "gl_compatibility",
+   "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+   "captured_frame_count": 10,
+   "planned_frame_count": 10,
+   "capture_started_utc": "2026-10-04T19:20:08",
+   "capture_finished_utc": "2026-10-04T19:46:50",
+   "frames": [
+    {
+     "frame_id": "meadows__band1_lower_meadows__01__grandpas_village__day",
+     "destination": "Grandpa's Village",
+     "player_position": [
+      6.0,
+      0.900943577289581,
+      -22.0
+     ]
+    },
+    {
+     "frame_id": "meadows__band1_lower_meadows__02__the_south_bridge__day",
+     "destination": "The South Bridge",
+     "player_position": [
+      9.0,
+      -0.421007633209229,
+      1300.0
+     ]
+    },
+    {
+     "frame_id": "meadows__band2_stone_and_root__03__the_old_quarry__day",
+     "destination": "The Old Quarry",
+     "player_position": [
+      403.0,
+      -0.498958349227905,
+      1794.0
+     ]
+    },
+    {
+     "frame_id": "meadows__band2_stone_and_root__04__the_burrow_warrens__day",
+     "destination": "The Burrow Warrens",
+     "player_position": [
+      -328.700012207031,
+      4.3543758392334,
+      2581.69995117188
+     ]
+    },
+    {
+     "frame_id": "meadows__band3_the_river_lock__05__the_tether_relay__day",
+     "destination": "The Tether Relay",
+     "player_position": [
+      350.0,
+      4.38508319854736,
+      3760.0
+     ]
+    },
+    {
+     "frame_id": "meadows__band3_the_river_lock__06__old_mill_crossing__day",
+     "destination": "Old Mill Crossing",
+     "player_position": [
+      -152.0,
+      -4.78810262680054,
+      4170.0
+     ]
+    },
+    {
+     "frame_id": "meadows__band4_upper_meadows_ironwood__07__the_ironwood_grove__day",
+     "destination": "The Ironwood Grove",
+     "player_position": [
+      -345.0,
+      2.32788944244385,
+      5060.0
+     ]
+    },
+    {
+     "frame_id": "meadows__band4_upper_meadows_ironwood__08__the_ridgeline_watch__day",
+     "destination": "The Ridgeline Watch",
+     "player_position": [
+      -250.0,
+      6.04385566711426,
+      6490.0
+     ]
+    },
+    {
+     "frame_id": "meadows__band5_stronghold_approach__09__stronghold_approach__day",
+     "destination": "Stronghold Approach",
+     "player_position": [
+      0.0,
+      -1.79419982433319,
+      7000.0
+     ]
+    },
+    {
+     "frame_id": "meadows__band5_stronghold_approach__10__meadows_hall__day",
+     "destination": "Meadows Hall",
+     "player_position": [
+      8.0,
+      6.17288398742676,
+      7590.0
+     ]
+    }
+   ],
+   "census": {
+    "frames_with_census": 10,
+    "per_frame": [
+     {
+      "frame_id": "meadows__band1_lower_meadows__01__grandpas_village__day",
+      "binding_count": 56118,
+      "unbound_surfaces": 5
+     },
+     {
+      "frame_id": "meadows__band1_lower_meadows__02__the_south_bridge__day",
+      "binding_count": 56118,
+      "unbound_surfaces": 5
+     },
+     {
+      "frame_id": "meadows__band2_stone_and_root__03__the_old_quarry__day",
+      "binding_count": 56118,
+      "unbound_surfaces": 5
+     },
+     {
+      "frame_id": "meadows__band2_stone_and_root__04__the_burrow_warrens__day",
+      "binding_count": 56118,
+      "unbound_surfaces": 5
+     },
+     {
+      "frame_id": "meadows__band3_the_river_lock__05__the_tether_relay__day",
+      "binding_count": 56118,
+      "unbound_surfaces": 5
+     },
+     {
+      "frame_id": "meadows__band3_the_river_lock__06__old_mill_crossing__day",
+      "binding_count": 56118,
+      "unbound_surfaces": 5
+     },
+     {
+      "frame_id": "meadows__band4_upper_meadows_ironwood__07__the_ironwood_grove__day",
+      "binding_count": 56118,
+      "unbound_surfaces": 5
+     },
+     {
+      "frame_id": "meadows__band4_upper_meadows_ironwood__08__the_ridgeline_watch__day",
+      "binding_count": 56118,
+      "unbound_surfaces": 5
+     },
+     {
+      "frame_id": "meadows__band5_stronghold_approach__09__stronghold_approach__day",
+      "binding_count": 56118,
+      "unbound_surfaces": 5
+     },
+     {
+      "frame_id": "meadows__band5_stronghold_approach__10__meadows_hall__day",
+      "binding_count": 56118,
+      "unbound_surfaces": 5
+     }
+    ],
+    "classification_counts": {
+     "unbound_primitive_default_requires_source_review": 40,
+     "bound_material_requires_visual_review": 521050,
+     "untextured_material_may_be_authored_requires_source_review": 39310,
+     "unbound_surface_requires_source_review": 10
+    },
+    "unbound_surface_count": 5,
+    "visible_unbound_surfaces": {
+     "MasterSignpost/@MeshInstance3D@67128#0": {
+      "mesh_class": "BoxMesh",
+      "visible_in_tree": true,
+      "owner_script": "",
+      "classification": "unbound_primitive_default_requires_source_review"
+     },
+     "@Node3D@67138/@MeshInstance3D@67139#0": {
+      "mesh_class": "BoxMesh",
+      "visible_in_tree": true,
+      "owner_script": "",
+      "classification": "unbound_primitive_default_requires_source_review"
+     }
+    },
+    "hidden_unbound_surface_count": 3,
+    "missing_source_resources": {},
+    "empty_shaders": {},
+    "null_texture_uniforms_without_live_binding": {},
+    "scene_node_probes": {
+     "village": {
+      "binding_nodes": 2444,
+      "examples": [
+       "Props/village_lookback_overlook/VillageLookbackApples/FarmCrate_Apple ",
+       "Props/village_lookback_overlook/VillageLookbackBag/Bag ",
+       "Props/village_lookback_overlook/VillageLookbackBench/Bench ",
+       "Village/PrefabTemplates/cottage_a/@Node3D@58773/Wall_Plaster_WoodGrid "
+      ]
+     },
+     "crossing_hall": {
+      "binding_nodes": 641,
+      "examples": [
+       "Village/PrefabTemplates/crossing_hall_shell/@Node3D@59179/Floor_UnevenBrick ",
+       "Village/PrefabTemplates/crossing_hall_shell/@Node3D@59180/Floor_UnevenBrick ",
+       "Village/PrefabTemplates/crossing_hall_shell/@Node3D@59181/Floor_UnevenBrick ",
+       "Village/PrefabTemplates/crossing_hall_shell/@Node3D@59182/Floor_UnevenBrick "
+      ]
+     }
+    }
+   },
+   "manifest_gz_sha256": "308ebdd629df8b5837dac19f1d59ed2854a6c785ea2cfe1de4e94f9cc4f7fcb5",
+   "manifest_gz_bytes": 5504651,
+   "process_exit": "meadows exit=0 seconds=1641",
+   "native_log": "logs/census-meadows.log",
+   "native_log_sha256": "7a61895c9d285fc2fad24e2c78a620ea400c6c1ee5d96c97a831a7dd599bdd55",
+   "native_error_lines": []
+  },
+  {
+   "biome_id": "water",
+   "scene": "res://scenes/world/water_archipelago.tscn",
+   "manifest": "manifest.json.gz",
+   "manifest_sha256": "7e72e6e68bd272908cce8d141a58a15595ef37d72ed118c9b13c27b34efa3bc7",
+   "complete": true,
+   "failures": [],
+   "graphics_capture": {
+    "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "Low",
+    "renderer": "gl_compatibility",
+    "resolution": [
+     1920,
+     1080
+    ],
+    "source_commit": "4d75308a995fe7522d280b8ea6bc4d7447e5e482"
+   },
+   "rendering_method": "gl_compatibility",
+   "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+   "captured_frame_count": 24,
+   "planned_frame_count": 24,
+   "capture_started_utc": "2026-10-04T19:47:30",
+   "capture_finished_utc": "2026-10-04T20:03:09",
+   "frames": [
+    {
+     "frame_id": "water__first_shore__01__first_shore_welcome_beacon__day",
+     "destination": "First Shore Welcome Beacon",
+     "player_position": [
+      35.7070007324219,
+      23.7282409667969,
+      98.1039962768555
+     ]
+    },
+    {
+     "frame_id": "water__first_shore__02__first_shore_horizon_stones__day",
+     "destination": "First Shore Horizon Stones",
+     "player_position": [
+      -63.6360015869141,
+      18.0512447357178,
+      75.8379974365234
+     ]
+    },
+    {
+     "frame_id": "water__reedhaven__03__reedhaven_woven_hall__day",
+     "destination": "Reedhaven Woven Hall",
+     "player_position": [
+      -54.0,
+      22.1950416564941,
+      440.0
+     ]
+    },
+    {
+     "frame_id": "water__reedhaven__04__reedhaven_root_walk__day",
+     "destination": "Reedhaven Root Walk",
+     "player_position": [
+      98.2070007324219,
+      8.49644947052002,
+      496.700012207031
+     ]
+    },
+    {
+     "frame_id": "water__brine_steps__05__the_tidal_stairstones__day",
+     "destination": "The Tidal Stairstones",
+     "player_position": [
+      329.72900390625,
+      44.3182754516602,
+      723.2080078125
+     ]
+    },
+    {
+     "frame_id": "water__brine_steps__06__brine_steps_east_beach__day",
+     "destination": "Brine Steps East Beach",
+     "player_position": [
+      383.462005615234,
+      1.93191742897034,
+      828.073974609375
+     ]
+    },
+    {
+     "frame_id": "water__shellwatch__07__shellwatch_rescue_jetty__day",
+     "destination": "Shellwatch Rescue Jetty",
+     "player_position": [
+      267.003997802734,
+      16.7401313781738,
+      1006.34899902344
+     ]
+    },
+    {
+     "frame_id": "water__shellwatch__08__shellwatch_cradle_beach__day",
+     "destination": "Shellwatch Cradle Beach",
+     "player_position": [
+      436.920013427734,
+      1.93188953399658,
+      1246.15002441406
+     ]
+    },
+    {
+     "frame_id": "water__tidal_cradle__09__aquaryn_tidal_basin__day",
+     "destination": "Aquaryn Tidal Basin",
+     "player_position": [
+      602.347778320312,
+      38.9414520263672,
+      1389.02062988281
+     ]
+    },
+    {
+     "frame_id": "water__tidal_cradle__10__tidal_cradle_saddle_camp__day",
+     "destination": "Tidal Cradle Saddle Camp",
+     "player_position": [
+      848.562561035156,
+      38.637809753418,
+      1598.40649414062
+     ]
+    },
+    {
+     "frame_id": "water__salt_crown__11__salt_crown_tide_shrine__day",
+     "destination": "Salt Crown Tide Shrine",
+     "player_position": [
+      211.080001831055,
+      74.1864852905273,
+      2332.23095703125
+     ]
+    },
+    {
+     "frame_id": "water__salt_crown__12__salt_crown_return_bell__day",
+     "destination": "Salt Crown Return Bell",
+     "player_position": [
+      291.855010986328,
+      35.3664169311523,
+      2228.10009765625
+     ]
+    },
+    {
+     "frame_id": "water__sluice_isle__13__sluice_isle_twin_pumps__day",
+     "destination": "Sluice Isle Twin Pumps",
+     "player_position": [
+      905.099975585938,
+      34.3079948425293,
+      2864.56396484375
+     ]
+    },
+    {
+     "frame_id": "water__sluice_isle__14__sluice_channel_bridge__day",
+     "destination": "Sluice Channel Bridge",
+     "player_position": [
+      819.784973144531,
+      20.5853481292725,
+      3131.35693359375
+     ]
+    },
+    {
+     "frame_id": "water__veilfall__15__the_veilfall_cascade__day",
+     "destination": "The Veilfall Cascade",
+     "player_position": [
+      335.2080078125,
+      139.406982421875,
+      3885.7109375
+     ]
+    },
+    {
+     "frame_id": "water__veilfall__16__veilfall_mountain_crown__day",
+     "destination": "Veilfall Mountain Crown",
+     "player_position": [
+      200.0,
+      620.001098632812,
+      4140.0
+     ]
+    },
+    {
+     "frame_id": "water__lantern_cove__17__lantern_cove_drift_arch__day",
+     "destination": "Lantern Cove Drift Arch",
+     "player_position": [
+      -292.114990234375,
+      17.0596904754639,
+      191.067993164062
+     ]
+    },
+    {
+     "frame_id": "water__lantern_cove__18__lantern_cove_beach__day",
+     "destination": "Lantern Cove Beach",
+     "player_position": [
+      -267.244995117188,
+      1.93184542655945,
+      129.804992675781
+     ]
+    },
+    {
+     "frame_id": "water__gull_rest__19__gull_rest_signal_spire__day",
+     "destination": "Gull Rest Signal Spire",
+     "player_position": [
+      -72.6149978637695,
+      28.8498287200928,
+      899.885986328125
+     ]
+    },
+    {
+     "frame_id": "water__gull_rest__20__gull_rest_beach__day",
+     "destination": "Gull Rest Beach",
+     "player_position": [
+      -56.8250007629395,
+      1.93182849884033,
+      789.065002441406
+     ]
+    },
+    {
+     "frame_id": "water__drowned_garden__21__drowned_garden_terraces__day",
+     "destination": "Drowned Garden Terraces",
+     "player_position": [
+      1105.4580078125,
+      28.353853225708,
+      2223.330078125
+     ]
+    },
+    {
+     "frame_id": "water__drowned_garden__22__drowned_garden_beach__day",
+     "destination": "Drowned Garden Beach",
+     "player_position": [
+      1058.31494140625,
+      1.93190765380859,
+      2249.44604492188
+     ]
+    },
+    {
+     "frame_id": "water__deep_watch__23__deep_watch_lookout__day",
+     "destination": "Deep Watch Lookout",
+     "player_position": [
+      1300.0,
+      22.1140422821045,
+      3490.0
+     ]
+    },
+    {
+     "frame_id": "water__deep_watch__24__deep_watch_beach__day",
+     "destination": "Deep Watch Beach",
+     "player_position": [
+      1260.31799316406,
+      1.93191123008728,
+      3403.14404296875
+     ]
+    }
+   ],
+   "census": {
+    "frames_with_census": 24,
+    "per_frame": [
+     {
+      "frame_id": "water__first_shore__01__first_shore_welcome_beacon__day",
+      "binding_count": 4345,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "water__first_shore__02__first_shore_horizon_stones__day",
+      "binding_count": 4351,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "water__reedhaven__03__reedhaven_woven_hall__day",
+      "binding_count": 4371,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "water__reedhaven__04__reedhaven_root_walk__day",
+      "binding_count": 4367,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "water__brine_steps__05__the_tidal_stairstones__day",
+      "binding_count": 4368,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "water__brine_steps__06__brine_steps_east_beach__day",
+      "binding_count": 4369,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "water__shellwatch__07__shellwatch_rescue_jetty__day",
+      "binding_count": 4384,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "water__shellwatch__08__shellwatch_cradle_beach__day",
+      "binding_count": 4395,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "water__tidal_cradle__09__aquaryn_tidal_basin__day",
+      "binding_count": 4413,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "water__tidal_cradle__10__tidal_cradle_saddle_camp__day",
+      "binding_count": 4409,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "water__salt_crown__11__salt_crown_tide_shrine__day",
+      "binding_count": 4435,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "water__salt_crown__12__salt_crown_return_bell__day",
+      "binding_count": 4436,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "water__sluice_isle__13__sluice_isle_twin_pumps__day",
+      "binding_count": 4446,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "water__sluice_isle__14__sluice_channel_bridge__day",
+      "binding_count": 4454,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "water__veilfall__15__the_veilfall_cascade__day",
+      "binding_count": 4502,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "water__veilfall__16__veilfall_mountain_crown__day",
+      "binding_count": 4457,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "water__lantern_cove__17__lantern_cove_drift_arch__day",
+      "binding_count": 4487,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "water__lantern_cove__18__lantern_cove_beach__day",
+      "binding_count": 4490,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "water__gull_rest__19__gull_rest_signal_spire__day",
+      "binding_count": 4496,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "water__gull_rest__20__gull_rest_beach__day",
+      "binding_count": 4504,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "water__drowned_garden__21__drowned_garden_terraces__day",
+      "binding_count": 4506,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "water__drowned_garden__22__drowned_garden_beach__day",
+      "binding_count": 4500,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "water__deep_watch__23__deep_watch_lookout__day",
+      "binding_count": 4510,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "water__deep_watch__24__deep_watch_beach__day",
+      "binding_count": 4508,
+      "unbound_surfaces": 3
+     }
+    ],
+    "classification_counts": {
+     "unbound_primitive_default_requires_source_review": 72,
+     "bound_material_requires_visual_review": 82488,
+     "untextured_material_may_be_authored_requires_source_review": 21783
+    },
+    "unbound_surface_count": 3,
+    "visible_unbound_surfaces": {
+     "MasterSignpost/@MeshInstance3D@2142#0": {
+      "mesh_class": "BoxMesh",
+      "visible_in_tree": true,
+      "owner_script": "",
+      "classification": "unbound_primitive_default_requires_source_review"
+     }
+    },
+    "hidden_unbound_surface_count": 2,
+    "missing_source_resources": {},
+    "empty_shaders": {},
+    "null_texture_uniforms_without_live_binding": {},
+    "scene_node_probes": {
+     "village": {
+      "binding_nodes": 0,
+      "examples": []
+     },
+     "crossing_hall": {
+      "binding_nodes": 0,
+      "examples": []
+     }
+    }
+   },
+   "manifest_gz_sha256": "ff908b8452b5f94ad995d5a89e0f22dc0257269d8312bc76b1ba63b31f9e26e7",
+   "manifest_gz_bytes": 2700609,
+   "process_exit": "water exit=0 seconds=956",
+   "native_log": "logs/census-water.log",
+   "native_log_sha256": "55ec82a1de7e7ba0c637c0c9038f45d834a5160655c21498a9d8b1e0a9369fa5",
+   "native_error_lines": []
+  },
+  {
+   "biome_id": "cloudreach",
+   "scene": "res://scenes/world/cloudreach_cliffs.tscn",
+   "manifest": "manifest.json.gz",
+   "manifest_sha256": "9f5da031dde2a2d8ee823b04ed322dd7abd1d552030aa194bc2549add5702fa9",
+   "complete": true,
+   "failures": [],
+   "graphics_capture": {
+    "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "Low",
+    "renderer": "gl_compatibility",
+    "resolution": [
+     1920,
+     1080
+    ],
+    "source_commit": "4d75308a995fe7522d280b8ea6bc4d7447e5e482"
+   },
+   "rendering_method": "gl_compatibility",
+   "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+   "captured_frame_count": 12,
+   "planned_frame_count": 12,
+   "capture_started_utc": "2026-10-04T20:03:25",
+   "capture_finished_utc": "2026-10-04T20:18:04",
+   "frames": [
+    {
+     "frame_id": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__day",
+     "destination": "Realm Gate Crag",
+     "player_position": [
+      -15.5,
+      109.528518676758,
+      -202.0
+     ]
+    },
+    {
+     "frame_id": "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day",
+     "destination": "Galefoot Waycamp",
+     "player_position": [
+      -286.0,
+      180.000946044922,
+      535.0
+     ]
+    },
+    {
+     "frame_id": "cloudreach__broken_causeways__03__three_bells_bridge__day",
+     "destination": "Three Bells Bridge",
+     "player_position": [
+      -535.0,
+      330.030944824219,
+      1274.5
+     ]
+    },
+    {
+     "frame_id": "cloudreach__broken_causeways__04__broken_skyroad_arch__day",
+     "destination": "Broken Skyroad Arch",
+     "player_position": [
+      365.0,
+      444.978607177734,
+      1925.0
+     ]
+    },
+    {
+     "frame_id": "cloudreach__windscar_ravine__05__windscar_beacon__day",
+     "destination": "Windscar Beacon",
+     "player_position": [
+      -260.0,
+      500.130981445312,
+      2680.0
+     ]
+    },
+    {
+     "frame_id": "cloudreach__windscar_ravine__06__windscar_flight_aerie__day",
+     "destination": "Windscar Flight Aerie",
+     "player_position": [
+      373.0,
+      610.031005859375,
+      3262.53564453125
+     ]
+    },
+    {
+     "frame_id": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day",
+     "destination": "Sky Shrine",
+     "player_position": [
+      1110.0,
+      1020.03082275391,
+      2885.0
+     ]
+    },
+    {
+     "frame_id": "cloudreach__high_roost_sky_shrine__08__the_high_perches__day",
+     "destination": "The High Perches",
+     "player_position": [
+      900.0,
+      1020.13098144531,
+      2700.0
+     ]
+    },
+    {
+     "frame_id": "cloudreach__upper_cloudreach__09__cliffhold__day",
+     "destination": "Cliffhold",
+     "player_position": [
+      -340.0,
+      830.031005859375,
+      3970.0
+     ]
+    },
+    {
+     "frame_id": "cloudreach__upper_cloudreach__10__old_wind_observatory__day",
+     "destination": "Old Wind Observatory",
+     "player_position": [
+      430.0,
+      920.031005859375,
+      4500.0
+     ]
+    },
+    {
+     "frame_id": "cloudreach__summit_final_stronghold__11__summit_eyrie__day",
+     "destination": "Summit Eyrie",
+     "player_position": [
+      211.300003051758,
+      1172.91784667969,
+      5395.0498046875
+     ]
+    },
+    {
+     "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__day",
+     "destination": "Stormward Overlook",
+     "player_position": [
+      -418.000823974609,
+      1109.06335449219,
+      5634.0
+     ]
+    }
+   ],
+   "census": {
+    "frames_with_census": 12,
+    "per_frame": [
+     {
+      "frame_id": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__day",
+      "binding_count": 29400,
+      "unbound_surfaces": 7
+     },
+     {
+      "frame_id": "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day",
+      "binding_count": 29416,
+      "unbound_surfaces": 7
+     },
+     {
+      "frame_id": "cloudreach__broken_causeways__03__three_bells_bridge__day",
+      "binding_count": 29424,
+      "unbound_surfaces": 7
+     },
+     {
+      "frame_id": "cloudreach__broken_causeways__04__broken_skyroad_arch__day",
+      "binding_count": 29424,
+      "unbound_surfaces": 7
+     },
+     {
+      "frame_id": "cloudreach__windscar_ravine__05__windscar_beacon__day",
+      "binding_count": 29432,
+      "unbound_surfaces": 7
+     },
+     {
+      "frame_id": "cloudreach__windscar_ravine__06__windscar_flight_aerie__day",
+      "binding_count": 29436,
+      "unbound_surfaces": 7
+     },
+     {
+      "frame_id": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day",
+      "binding_count": 29436,
+      "unbound_surfaces": 7
+     },
+     {
+      "frame_id": "cloudreach__high_roost_sky_shrine__08__the_high_perches__day",
+      "binding_count": 29436,
+      "unbound_surfaces": 7
+     },
+     {
+      "frame_id": "cloudreach__upper_cloudreach__09__cliffhold__day",
+      "binding_count": 29436,
+      "unbound_surfaces": 7
+     },
+     {
+      "frame_id": "cloudreach__upper_cloudreach__10__old_wind_observatory__day",
+      "binding_count": 29436,
+      "unbound_surfaces": 7
+     },
+     {
+      "frame_id": "cloudreach__summit_final_stronghold__11__summit_eyrie__day",
+      "binding_count": 29436,
+      "unbound_surfaces": 7
+     },
+     {
+      "frame_id": "cloudreach__summit_final_stronghold__12__stormward_overlook__day",
+      "binding_count": 29436,
+      "unbound_surfaces": 7
+     }
+    ],
+    "classification_counts": {
+     "unbound_primitive_default_requires_source_review": 84,
+     "bound_material_requires_visual_review": 325896,
+     "untextured_material_may_be_authored_requires_source_review": 27060
+    },
+    "unbound_surface_count": 7,
+    "visible_unbound_surfaces": {
+     "MasterT4/@MeshInstance3D@5953#0": {
+      "mesh_class": "CylinderMesh",
+      "visible_in_tree": true,
+      "owner_script": "",
+      "classification": "unbound_primitive_default_requires_source_review"
+     },
+     "MasterT4/@MeshInstance3D@5954#0": {
+      "mesh_class": "CylinderMesh",
+      "visible_in_tree": true,
+      "owner_script": "",
+      "classification": "unbound_primitive_default_requires_source_review"
+     },
+     "MasterT4/@MeshInstance3D@5955#0": {
+      "mesh_class": "CylinderMesh",
+      "visible_in_tree": true,
+      "owner_script": "",
+      "classification": "unbound_primitive_default_requires_source_review"
+     },
+     "MasterT4/@MeshInstance3D@5956#0": {
+      "mesh_class": "CylinderMesh",
+      "visible_in_tree": true,
+      "owner_script": "",
+      "classification": "unbound_primitive_default_requires_source_review"
+     },
+     "MasterSignpost/@MeshInstance3D@5962#0": {
+      "mesh_class": "BoxMesh",
+      "visible_in_tree": true,
+      "owner_script": "",
+      "classification": "unbound_primitive_default_requires_source_review"
+     }
+    },
+    "hidden_unbound_surface_count": 2,
+    "missing_source_resources": {},
+    "empty_shaders": {},
+    "null_texture_uniforms_without_live_binding": {
+     "ShaderMaterial::device_tex": "Nil",
+     "ShaderMaterial::grass_texture": "Nil"
+    },
+    "scene_node_probes": {
+     "village": {
+      "binding_nodes": 5,
+      "examples": [
+       "SuspendedBridges/FirstRopeSpan/DeckSection0/VillageTimberDeckModules ",
+       "SuspendedBridges/FirstRopeSpan/DeckSection1/VillageTimberDeckModules ",
+       "SuspendedBridges/FirstRopeSpan/DeckSection2/VillageTimberDeckModules ",
+       "SuspendedBridges/WestWatchRopeway/DeckSection0/VillageTimberDeckModules "
+      ]
+     },
+     "crossing_hall": {
+      "binding_nodes": 0,
+      "examples": []
+     }
+    }
+   },
+   "manifest_gz_sha256": "9b172ad769b3fee822627b6b09b9e0669a07f9d544327bb4bb6b7bf39f5aea4c",
+   "manifest_gz_bytes": 3427777,
+   "process_exit": "cloudreach exit=0 seconds=902",
+   "native_log": "logs/census-cloudreach.log",
+   "native_log_sha256": "788706a95513e1b2388ca76cfd1b98c4a273705b6f9b588ead8e4ad57041a14e",
+   "native_error_lines": []
+  },
+  {
+   "biome_id": "stormwood",
+   "scene": "res://scenes/world/stormwood.tscn",
+   "manifest": "manifest.json.gz",
+   "manifest_sha256": "ad27b1cc831630adf73079ba1cf80b1ea9d3baae31af030c1281bfcb3cfc608f",
+   "complete": true,
+   "failures": [],
+   "graphics_capture": {
+    "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "Low",
+    "renderer": "gl_compatibility",
+    "resolution": [
+     1920,
+     1080
+    ],
+    "source_commit": "4d75308a995fe7522d280b8ea6bc4d7447e5e482"
+   },
+   "rendering_method": "gl_compatibility",
+   "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+   "captured_frame_count": 12,
+   "planned_frame_count": 12,
+   "capture_started_utc": "2026-10-04T20:18:28",
+   "capture_finished_utc": "2026-10-04T20:32:51",
+   "frames": [
+    {
+     "frame_id": "stormwood__cinder_verge__01__the_struck_sentinel__day",
+     "destination": "The Struck Sentinel",
+     "player_position": [
+      -320.0,
+      31.548978805542,
+      240.0
+     ]
+    },
+    {
+     "frame_id": "stormwood__cinder_verge__02__verge_rod_station__day",
+     "destination": "Verge Rod Station",
+     "player_position": [
+      -604.0,
+      24.862865447998,
+      772.0
+     ]
+    },
+    {
+     "frame_id": "stormwood__glowmoss_hollows__03__the_lantern_pools__day",
+     "destination": "The Lantern Pools",
+     "player_position": [
+      -380.0,
+      33.7817687988281,
+      1400.0
+     ]
+    },
+    {
+     "frame_id": "stormwood__glowmoss_hollows__04__crown_overlook__day",
+     "destination": "Crown Overlook",
+     "player_position": [
+      160.0,
+      27.2948875427246,
+      1980.0
+     ]
+    },
+    {
+     "frame_id": "stormwood__conductor_run__05__rodline_post__day",
+     "destination": "Rodline Post",
+     "player_position": [
+      -700.0,
+      45.6818542480469,
+      2300.0
+     ]
+    },
+    {
+     "frame_id": "stormwood__conductor_run__06__the_capacitor_grove__day",
+     "destination": "The Capacitor Grove",
+     "player_position": [
+      -1080.0908203125,
+      78.0619583129883,
+      3019.99975585938
+     ]
+    },
+    {
+     "frame_id": "stormwood__hollow_crown__07__the_crown_arch__day",
+     "destination": "The Crown Arch",
+     "player_position": [
+      451.673919677734,
+      20.8535346984863,
+      2700.00903320312
+     ]
+    },
+    {
+     "frame_id": "stormwood__hollow_crown__08__the_crown_heartstone__day",
+     "destination": "The Crown Heartstone",
+     "player_position": [
+      650.0,
+      74.0009460449219,
+      2700.0
+     ]
+    },
+    {
+     "frame_id": "stormwood__deepwood__09__lantern_hollow__day",
+     "destination": "Lantern Hollow",
+     "player_position": [
+      -450.0,
+      57.4897346496582,
+      3960.0
+     ]
+    },
+    {
+     "frame_id": "stormwood__deepwood__10__the_fallen_giant__day",
+     "destination": "The Fallen Giant",
+     "player_position": [
+      -240.0,
+      62.5196495056152,
+      4463.60009765625
+     ]
+    },
+    {
+     "frame_id": "stormwood__dynamo__11__the_glass_field__day",
+     "destination": "The Glass Field",
+     "player_position": [
+      -310.0,
+      65.3041381835938,
+      5050.0
+     ]
+    },
+    {
+     "frame_id": "stormwood__dynamo__12__the_stormheart_tree__day",
+     "destination": "The Stormheart Tree",
+     "player_position": [
+      -100.0,
+      112.060157775879,
+      5470.0
+     ]
+    }
+   ],
+   "census": {
+    "frames_with_census": 12,
+    "per_frame": [
+     {
+      "frame_id": "stormwood__cinder_verge__01__the_struck_sentinel__day",
+      "binding_count": 32436,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "stormwood__cinder_verge__02__verge_rod_station__day",
+      "binding_count": 32436,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "stormwood__glowmoss_hollows__03__the_lantern_pools__day",
+      "binding_count": 32436,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "stormwood__glowmoss_hollows__04__crown_overlook__day",
+      "binding_count": 32436,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "stormwood__conductor_run__05__rodline_post__day",
+      "binding_count": 32436,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "stormwood__conductor_run__06__the_capacitor_grove__day",
+      "binding_count": 32436,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "stormwood__hollow_crown__07__the_crown_arch__day",
+      "binding_count": 32436,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "stormwood__hollow_crown__08__the_crown_heartstone__day",
+      "binding_count": 32436,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "stormwood__deepwood__09__lantern_hollow__day",
+      "binding_count": 32436,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "stormwood__deepwood__10__the_fallen_giant__day",
+      "binding_count": 32436,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "stormwood__dynamo__11__the_glass_field__day",
+      "binding_count": 32436,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "stormwood__dynamo__12__the_stormheart_tree__day",
+      "binding_count": 32436,
+      "unbound_surfaces": 3
+     }
+    ],
+    "classification_counts": {
+     "unbound_primitive_default_requires_source_review": 36,
+     "bound_material_requires_visual_review": 351132,
+     "untextured_material_may_be_authored_requires_source_review": 37980
+    },
+    "unbound_surface_count": 3,
+    "visible_unbound_surfaces": {
+     "MasterSignpost/@MeshInstance3D@22524#0": {
+      "mesh_class": "BoxMesh",
+      "visible_in_tree": true,
+      "owner_script": "",
+      "classification": "unbound_primitive_default_requires_source_review"
+     }
+    },
+    "hidden_unbound_surface_count": 2,
+    "missing_source_resources": {},
+    "empty_shaders": {},
+    "null_texture_uniforms_without_live_binding": {},
+    "scene_node_probes": {
+     "village": {
+      "binding_nodes": 33,
+      "examples": [
+       "RodfolkSettlements/well_12/VillageWellPresentation/SingleStoneCurb/CurbCap ",
+       "RodfolkSettlements/well_12/VillageWellPresentation/SingleStoneCurb/CurbWall ",
+       "RodfolkSettlements/well_12/VillageWellPresentation/SingleStoneCurb/WellWater ",
+       "RodfolkSettlements/well_12/VillageWellPresentation/SquarePathLights/SouthStreetLight/InstalledMetalTorch/Torch_Metal "
+      ]
+     },
+     "crossing_hall": {
+      "binding_nodes": 0,
+      "examples": []
+     }
+    }
+   },
+   "manifest_gz_sha256": "3dec80c90b7ae2e371b299eb6cee6ec92c3ae5efd05018dc30373ec077fef7d6",
+   "manifest_gz_bytes": 3047298,
+   "process_exit": "stormwood exit=0 seconds=888",
+   "native_log": "logs/census-stormwood.log",
+   "native_log_sha256": "c6261e5ac2424726079f8b129c0e879847cfaeb46cd8fc7fcc79b6a892e7e0ef",
+   "native_error_lines": []
+  }
+ ],
+ "criterion": "F26#0 Low half (Compatibility path materials)",
+ "preset": "Low",
+ "renderer": "gl_compatibility",
+ "driver": "opengl3 under Xvfb, Mesa llvmpipe (no GPU in container)",
+ "source_commit": "4d75308a995fe7522d280b8ea6bc4d7447e5e482",
+ "source_note": "Codex tb/lookdev 8593c488 plus Low-lane tooling only (no runtime/game source change).",
+ "harness": "tools/capture_renderer_material_census.gd (unchanged Codex harness), --times=day",
+ "times_scope": "Day only: raw census manifests are ~335 MB per biome and container disk is limited; night lighting is covered by route stills.",
+ "raw_manifests": "Retained gzipped in the lane container only (sha256 recorded); too large for git.",
+ "village_and_hall": "Village and Crossing Hall are mounted inside the Meadows production scene; see scenes[0].census.scene_node_probes (Village/crossing_hall_shell_12 with Arch_home/tidewake/cloudreach...).",
+ "performance": "None recorded or claimed. llvmpipe timings are meaningless.",
+ "findings": [
+  {
+   "id": "LOW-C1",
+   "severity": "defect, not Compatibility-specific",
+   "what": "Master signpost pole BoxMesh has no material (engine default grey on every renderer) in all four biomes; plus one anonymous BoxMesh in Meadows and four MasterT4 fly-support CylinderMesh in Cloudreach.",
+   "source": "scripts/masters/master_site.gd:_build_sign / _build_fly_supports",
+   "disposition": "Reported to owner of F28 Masters; not a Compatibility fallback issue, not fixed in this lane."
+  },
+  {
+   "id": "LOW-C2",
+   "severity": "benign",
+   "what": "Cloudreach ShaderMaterials with null device_tex (banner_cloth with use_device=0) and null grass_texture (ground-cover Flowers/Understorey with turf_match=0): both uniforms are behind a disabled branch, never sampled.",
+   "source": "scripts/world/cloudreach_world.gd:4793, cloudreach_world_payoffs.gd:433, cloudreach_ground_cover.gd _cover_material",
+   "disposition": "No action."
+  }
+ ],
+ "verdict": "No missing source resources, no empty shaders, no unsampled-but-required null textures, zero native ERROR lines and zero magenta-flagged frames at Low across village/Hall (Meadows), Tidewake, Cloudreach and Stormwood. Visual judgement of the frames is separate (judge verdict)."
+}

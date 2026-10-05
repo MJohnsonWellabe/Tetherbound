@@ -10,12 +10,14 @@ extends "res://tools/catalogue_survey.gd"
 ## Native stdout/stderr must be retained by the caller beside this JSON.
 
 const BOOTSTRAP := preload("res://tools/lookdev_capture_bootstrap.gd")
+const RECEIPT_WRITER := preload("res://tools/capture_manifest_writer.gd")
 const CONTAINER_DEPTH_LIMIT := 6
 const CONTAINER_VALUE_LIMIT := 1024
 var _graphics_capture: Dictionary = {}
 var _census: Array[Dictionary] = []
 var _resources: Dictionary = {}
 var _resource_ids: Dictionary = {}
+var _publication_failed := false
 
 
 func _run() -> void:
@@ -257,15 +259,30 @@ func _write_manifest() -> void:
 	_manifest["native_error_evidence"] = "Caller must retain actual process stdout/stderr and exit receipt. This inspector cannot infer shader compilation success or prior silent fallback from bound-resource presence."
 	_manifest["frames"] = _records
 	_manifest["failures"] = _failures
-	var file := FileAccess.open("%s/manifest.json" % _output_dir, FileAccess.WRITE)
-	if file == null:
-		push_error("Material census receipt could not be opened")
-		quit(1)
-		return
-	file.store_string(JSON.stringify(_manifest, "\t") + "\n")
-	file.flush()
-	var error := file.get_error()
-	file.close()
+	_manifest["receipt_recovery"] = {"previous": "manifest.json.previous",
+		"pending": "manifest.json.pending",
+		"scope": "Previous generation may retain partial capture evidence after interruption; it does not prove census completion. Pending bytes are unpublished and must not be used as acceptance evidence."}
+	var error := RECEIPT_WRITER.write_json("%s/manifest.json" % _output_dir, _manifest)
 	if error != OK:
-		push_error("Material census receipt flush failed")
+		_publication_failed = true
+		_manifest["complete"] = false
+		var message := "Material census receipt publication failed: %s. Preserve current/previous/pending files." % error_string(error)
+		_failures.append(message)
+		push_error(message)
 		quit(1)
+
+
+func _finish(complete: bool) -> void:
+	# The parent's precomputed completion flag must not overwrite a quit(1)
+	# requested by a failed final receipt write.
+	_manifest["capture_finished_utc"] = Time.get_datetime_string_from_system(true)
+	_manifest["complete"] = complete and not _publication_failed
+	_manifest["captured_frame_count"] = _records.size()
+	_manifest["planned_frame_count"] = _planned.size()
+	_write_manifest()
+	var succeeded := complete and not _publication_failed
+	if not succeeded:
+		for failure: String in _failures:
+			push_error("catalogue survey: %s" % failure)
+	print("CATALOGUE SURVEY %s: %d/%d frames in %s" % ["OK" if succeeded else "FAILED", _records.size(), _planned.size(), _output_dir])
+	quit(0 if succeeded else 1)

@@ -1,0 +1,81 @@
+{
+  "source_commit": "826d273c3dbdcb1002034812041b1dfb59d84120",
+  "steps": [
+    {
+      "name": "import",
+      "command": [
+        "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64_console.exe",
+        "--path",
+        "D:\\tetherbound\\redesign-lookdev",
+        "--headless",
+        "--editor",
+        "--import"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 174.06299999996554,
+      "errors": [],
+      "log": "D:\\tetherbound\\.artifacts\\f26-initial-826d273c3\\import.log",
+      "pass": true,
+      "log_sha256": "172ff580e59a5d03329bcb4b1ea02473a809f8a0a2c3c3b6e27d894e916ab77c",
+      "checks_passed": 0,
+      "native_adapter_header": []
+    },
+    {
+      "name": "settings-low",
+      "command": [
+        "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64_console.exe",
+        "--path",
+        "D:\\tetherbound\\redesign-lookdev",
+        "--rendering-method",
+        "gl_compatibility",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "tests/smoke_graphics_settings.gd",
+        "--",
+        "--graphics-proof"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 13.969000000040978,
+      "errors": [],
+      "log": "D:\\tetherbound\\.artifacts\\f26-initial-826d273c3\\settings-low.log",
+      "pass": true,
+      "log_sha256": "f129d95c99fce2ce81d562c1719e19fb34692726f6db36c167898b2569a6a80a",
+      "checks_passed": 19,
+      "native_adapter_header": [
+        "OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB"
+      ]
+    },
+    {
+      "name": "settings-reload",
+      "command": [
+        "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64_console.exe",
+        "--path",
+        "D:\\tetherbound\\redesign-lookdev",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "tests/smoke_graphics_settings.gd",
+        "--",
+        "--graphics-proof",
+        "--graphics-reload-only"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "elapsed_seconds": 11.295999999972992,
+      "errors": [],
+      "log": "D:\\tetherbound\\.artifacts\\f26-initial-826d273c3\\settings-reload.log",
+      "pass": true,
+      "log_sha256": "e86dfcc9585cee2169997a0d89b4fb3d94bbc70c01aa5973e9ef6ba0cba9fcc1",
+      "checks_passed": 2,
+      "native_adapter_header": [
+        "Vulkan 1.3.280 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce GTX 1060 3GB"
+      ]
+    }
+  ],
+  "scope": "Native computer graphics Settings proof; no biome bar, Ally or earned campaign claim."
+}
