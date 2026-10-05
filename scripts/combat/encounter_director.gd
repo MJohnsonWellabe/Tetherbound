@@ -4733,11 +4733,12 @@ func _named_trainer_grounds() -> Array[Vector2]:
 ## Warden's fights frame the two fighters and nothing else.
 func _clear_of_named_trainer_grounds(pos: Vector3) -> bool:
 	var here := Vector2(pos.x, pos.z)
-	for zone: Dictionary in _wild_keep_clear_zones():
-		if here.distance_to(zone.at) < float(zone.radius):
+	if _meadows_ground():
+		for zone: Dictionary in _wild_keep_clear_zones():
+			if here.distance_to(zone.at) < float(zone.radius):
+				return false
+		if not _clear_of_village_fence(here):
 			return false
-	if not _clear_of_village_fence(here):
-		return false
 	var clear := float((MATH.config().get("arena", {}) as Dictionary).get(
 		"named_trainer_wild_clear_m", 0.0))
 	if clear <= 0.0:
@@ -4762,6 +4763,18 @@ var _keep_clear_read := false
 ## boundary outline (village_boundary.json), on either side of it.
 var _fence_segments: Array[PackedVector2Array] = []
 var _fence_read := false
+
+
+## The keep-clear zones and the village fence are Meadows coordinates
+## (independent review m6): another realm's director must not test its own
+## wilds against them. Cached; a director's world realm never changes.
+var _meadows_ground_cached := -1
+
+
+func _meadows_ground() -> bool:
+	if _meadows_ground_cached < 0:
+		_meadows_ground_cached = 1 if _encounter_realm() == "meadows" else 0
+	return _meadows_ground_cached == 1
 
 
 func _clear_of_village_fence(here: Vector2) -> bool:
@@ -4800,7 +4813,8 @@ func _wild_keep_clear_zones() -> Array[Dictionary]:
 ## placement attempt landed inside one.
 func _out_of_named_trainer_grounds(pos: Vector3) -> Vector3:
 	var out := pos
-	for zone: Dictionary in _wild_keep_clear_zones():
+	var meadows := _meadows_ground()
+	for zone: Dictionary in (_wild_keep_clear_zones() if meadows else [] as Array[Dictionary]):
 		var here := Vector2(out.x, out.z)
 		var centre: Vector2 = zone.at
 		if here.distance_to(centre) >= float(zone.radius):
@@ -4811,7 +4825,7 @@ func _out_of_named_trainer_grounds(pos: Vector3) -> Vector3:
 		var moved := centre + away.normalized() * (float(zone.radius) + 1.0)
 		out = Vector3(moved.x, out.y, moved.y)
 	var fence_clear := float((MATH.config().get("arena", {}) as Dictionary).get("wild_fence_clear_m", 0.0))
-	if fence_clear > 0.0 and not _clear_of_village_fence(Vector2(out.x, out.z)):
+	if meadows and fence_clear > 0.0 and not _clear_of_village_fence(Vector2(out.x, out.z)):
 		for segment: PackedVector2Array in _fence_segments:
 			var here := Vector2(out.x, out.z)
 			var nearest := Geometry2D.get_closest_point_to_segment(here, segment[0], segment[1])

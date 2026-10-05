@@ -699,8 +699,18 @@ func _release_all() -> void:
 		_pad_release(action)
 
 
+## Opt-in position arrival (F17#2 circuit, coordinator 2026-10-05): when > 0,
+## a leg completes only with the body within this many metres of the path's
+## end; arc progress steers but never completes the leg on its own, and
+## closing on the end counts as progress for the stall clock. 0 (default)
+## keeps the original arc completion for every other walk.
+var _arrive_within_m := 0.0
+
+
 func _walk() -> void:
 	var total := _arcs[_arcs.size() - 1]
+	var end_point := _path[_path.size() - 1]
+	var best_end := INF
 	var progress := 0.0
 	var best_progress := 0.0
 	var best_at_s := 0.0
@@ -754,8 +764,11 @@ func _walk() -> void:
 				_failed = "left the painted road band by %.2fm at (%.1f,%.1f), arc %.1f" % [off, here.x, here.y, progress]
 				return
 
-		if progress > best_progress + STUCK_PROGRESS_M:
-			best_progress = progress
+		var to_end := here.distance_to(end_point)
+		if progress > best_progress + STUCK_PROGRESS_M \
+				or (_arrive_within_m > 0.0 and to_end < best_end - STUCK_PROGRESS_M):
+			best_progress = maxf(best_progress, progress)
+			best_end = minf(best_end, to_end)
 			best_at_s = clock
 		elif clock - best_at_s > STUCK_S * 0.5 and door_presses < DOOR_PRESSES_MAX and _door_prompt_wins():
 			_release_all()
@@ -797,7 +810,7 @@ func _walk() -> void:
 		while next_event < _events.size() and progress >= float(_events[next_event].arc):
 			await _capture(str(_events[next_event].label))
 			next_event += 1
-		var arrived := progress >= total - 0.5
+		var arrived := to_end <= _arrive_within_m if _arrive_within_m > 0.0 else progress >= total - 0.5
 		if not _subarea.is_empty():
 			arrived = arrived or here.distance_to(_v(_subarea.get("centre", []))) <= _arrival_radius()
 		if arrived:
