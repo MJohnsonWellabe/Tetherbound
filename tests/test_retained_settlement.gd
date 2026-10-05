@@ -21,6 +21,7 @@ const SETTLE := preload("res://scripts/net/retained_settlement.gd")
 const RW := preload("res://scripts/creatures/receipt_windows.gd")
 const STATE := preload("res://scripts/data/redesign_state.gd")
 const F32 := preload("res://scripts/world/f32_source_actions.gd")
+const RETRY := preload("res://tests/test_foundation_retry_admission.gd")
 
 
 func _duty(before: Dictionary, action_id: String, character: String = DATA.CHARACTER) -> Dictionary:
@@ -147,3 +148,62 @@ func test_settled_then_evicted_receipt_never_restages() -> void:
 	assert_eq(evicted.size(), (state.redesign_character.transaction_receipts as Array).size() - 1, "the receipt is gone from the record")
 	assert_true(RETRY_ORDER.ordered(world.reward_deliveries, "resource-namespace", "resource-slot").is_empty(),
 		"nothing is owed, so nothing re-stages")
+
+
+func test_two_peers_reconnect_after_compaction_and_the_real_retry_scan_pays_nothing_twice() -> void:
+	# Ruling R2's reconnect proof on the host's real retry scan
+	# (session._retry_foundation_events, via test_foundation_retry_admission's
+	# CountedSession seam). Two peers: the host (another character) and the
+	# guest. The guest's mastery duty is settled, its receipt evicted by the
+	# window, then the guest disconnects and reconnects on a new peer id. The
+	# scan must neither admit nor redeliver anything for it; a live, unsettled
+	# duty on the same scan is admitted (so the scan is not simply idle).
+	var fixture := DATA.new()
+	var before: Dictionary = fixture._before()
+	var world: RefCounted = fixture._world()
+	var ledger: RefCounted = LEDGER.new(world)
+	var duty := _duty(before, "reconnect-1")
+	var event := _journal_event(world, [duty], "mastery:reconnect-1")
+	var settled := _settle_one(world, ledger, before, 0, duty, event)
+	assert_false(settled.has("refused"), str(settled))
+	# A later hit replaces the character's one training row (review R1's
+	# precondition), so only the durable settlement still covers duty 1.
+	var later := _duty(settled.get("state", before), "reconnect-2")
+	var later_event := _journal_event(world, [later], "mastery:reconnect-2")
+	var replaced := _settle_one(world, ledger, settled.get("state", before), 1, later, later_event)
+	assert_false(replaced.has("refused"), str(replaced))
+	var state: Dictionary = replaced.get("state", {})
+	var receipts: Array = state.get("redesign_character", {}).get("transaction_receipts", [])
+	for i in RW.window("combat_mastery") + 8:
+		receipts = RW.compact(receipts, "combat_mastery", DATA.CHARACTER)
+		receipts.append("craft:combat_mastery_%s:%s" % [str(i).sha256_text(), DATA.CHARACTER])
+	assert_false(receipts.any(func(r: Variant) -> bool: return str(r).contains(str(duty.intent.action_id))),
+		"the settled duty's receipt has been evicted")
+	# Disclosed fixture: the character's one training row as it stands after
+	# those later windowed hits (its `after` no longer carries duty 1's receipt).
+	var latest: Dictionary = world.reward_deliveries[preload("res://scripts/creatures/essence.gd").training_delivery_id("resource-namespace", DATA.CHARACTER)]
+	latest.after.redesign_character.transaction_receipts = receipts
+	var game := RETRY.FixtureGame.new()
+	game.world = world
+	var session := RETRY.CountedSession.new()
+	session.fixture = game
+	var redelivery := RETRY.DeliveryRecorder.new()
+	redelivery.name = "LedgerRpc"
+	session.add_child(redelivery)
+	session.set("_character_authority", preload("res://scripts/net/character_authority.gd").new())
+	var peers: RefCounted = session.get("_registry")
+	peers.call("add", 1, "host-character-0123456789abcdef0123456789ab")
+	peers.call("add", 2, DATA.CHARACTER)
+	session._retry_foundation_events()
+	assert_eq(session.admission_calls, 0, "connected: nothing owed for the settled duty")
+	peers.call("remove", 2)
+	peers.call("add", 3, DATA.CHARACTER) # Reconnect on a fresh peer id.
+	session._retry_foundation_events()
+	assert_eq(session.admission_calls, 0, "after reconnect the settled, evicted duty is not re-admitted")
+	assert_true(redelivery.rows.is_empty(), "and nothing is redelivered, so nothing pays twice")
+	var live := _journal_event(world, [_duty(before, "reconnect-live")], "mastery:reconnect-live")
+	assert_false(live.is_empty())
+	session._retry_foundation_events()
+	assert_eq(session.admission_calls, 1, "control: an unsettled duty on the same scan is admitted")
+	session.free()
+	game.free()
