@@ -212,6 +212,15 @@ func test_a_row_lands_whole_or_not_at_all_and_pending_rows_fold_too() -> void:
 	var after_bag := preload("res://scripts/world/death_satchel_rules.gd").inventory_from((authority.call("state", character) as Dictionary).inventory)
 	assert_false((result.get("applied", []) as Array).has(two_stacks.delivery_id), "the half-fitting row is not folded: %s" % str(result))
 	assert_eq(int(after_bag.call("count", "potion_small")) + int(after_bag.call("count", "orb_basic")), 0, "and no partial stack of it is held")
-	var folded: Array = authority.call("rejoin_folded", character)
-	assert_eq(folded.map(func(r: Dictionary) -> String: return r.delivery_id).has(pending.delivery_id),
-		(result.get("applied", []) as Array).has(pending.delivery_id), "rejoin_folded hands the owner exactly the folded rows")
+	assert_true((result.get("applied", []) as Array).has(pending.delivery_id), "the pending row folded")
+	# Re-review H1: the rows to settle are computed from durable state, so a
+	# record rewrite (recover_durable_vitals in the real hello) and a second
+	# rejoin still hand them to the owner, until its ACK makes them accepted.
+	var ids := func() -> Array: return (authority.call("folded_pending", character, deliveries) as Array).map(func(r: Dictionary) -> String: return r.delivery_id)
+	assert_eq(ids.call(), [pending.delivery_id], "folded_pending names the pending row the held record holds")
+	authority.call("_replace_record", character, 1, authority.call("state", character))
+	assert_eq(ids.call(), [pending.delivery_id], "after a record rewrite")
+	authority.call("rejoin_admission", character, declared, deliveries)
+	assert_eq(ids.call(), [pending.delivery_id], "and on a second rejoin that folds nothing new")
+	deliveries[pending.delivery_id].status = "accepted"
+	assert_eq(ids.call(), [], "the owner's ACK (accepted) ends it")

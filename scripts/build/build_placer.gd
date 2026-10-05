@@ -155,7 +155,7 @@ func validate_forward_camp_ground(game: Node, realm: String, at: Vector3, yaw: f
 	if game != _game() or world == null or not is_inside_tree() or world.get_world_3d() == null \
 			or realm != WORLD_RECORDS.active(game) or not at.is_finite() or not is_finite(yaw): return CAMP_RULES.deny("camp_ground")
 	var size: Array = cfg.size_m
-	var ground: Array[RID] = _camp_exclusions(placer_body) # + the bodies that actually support the camp
+	var ground := {} # "rid:shape" of the exact shapes that support the camp
 	var base := _ground_height(at)
 	if not is_finite(base) or absf(base-at.y) > float(cfg.ground_tolerance_m): return CAMP_RULES.deny("camp_ground")
 	for x: float in [-float(size[0])*0.5,0.0,float(size[0])*0.5]:
@@ -171,16 +171,16 @@ func validate_forward_camp_ground(game: Node, realm: String, at: Vector3, yaw: f
 			ray.exclude=_camp_exclusions(placer_body)
 			var hit := world.get_world_3d().direct_space_state.intersect_ray(ray)
 			if hit.is_empty() or (hit.position as Vector3).distance_to(sample) > float(cfg.ground_tolerance_m): return CAMP_RULES.deny("camp_ground")
-			if not ground.has(hit.rid): ground.append(hit.rid)
+			ground["%s:%d" % [str(hit.rid), int(hit.shape)]] = true
 	# Clearance from the higher of the sampled base and the placement. Ground
 	# inside the allowed rise is not an obstruction, so a camp fits rolling
 	# ground (Tidewake's domed islands), not only peaks: below the lift only
-	# the supporting ground is ignored, every other low collider still blocks.
+	# the exact shapes the support rays hit are ignored (a batched body's other
+	# rocks and stumps still block), every other low collider still blocks.
 	var floor_y := maxf(base, at.y)
 	var lift := float(cfg.maximum_slope_rise_m)+0.05
 	var footprint := Vector2(size[0]+2*float(cfg.clearance_m),size[2]+2*float(cfg.clearance_m))
-	var bands := [[0.05, lift, ground], [lift, lift+float(size[1]), _camp_exclusions(placer_body)]]
-	for band: Array in bands:
+	for band: Array in [[0.05, lift], [lift, lift+float(size[1])]]:
 		var shape := BoxShape3D.new()
 		shape.size=Vector3(footprint.x,float(band[1])-float(band[0]),footprint.y)
 		var query := PhysicsShapeQueryParameters3D.new()
@@ -188,8 +188,10 @@ func validate_forward_camp_ground(game: Node, realm: String, at: Vector3, yaw: f
 		query.transform=Transform3D(Basis(Vector3.UP,deg_to_rad(yaw)),Vector3(at.x,floor_y+(float(band[0])+float(band[1]))*0.5,at.z))
 		query.collision_mask=3
 		query.collide_with_areas=true
-		query.exclude=band[2]
-		if not world.get_world_3d().direct_space_state.intersect_shape(query,1).is_empty(): return CAMP_RULES.deny("camp_ground")
+		query.exclude=_camp_exclusions(placer_body)
+		var low: bool = band[0] < lift
+		for hit: Dictionary in world.get_world_3d().direct_space_state.intersect_shape(query,64 if low else 1):
+			if not low or not ground.has("%s:%d" % [str(hit.rid), int(hit.shape)]): return CAMP_RULES.deny("camp_ground")
 	return {"ok":true}
 
 

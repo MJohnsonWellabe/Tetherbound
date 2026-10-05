@@ -1303,6 +1303,35 @@ func test_rejoin_with_an_offline_change_readmits_with_the_held_record_to_adopt()
 	assert_true(service.refused.has(character), "a malformed declaration is refused")
 
 
+func test_a_pending_payout_the_held_record_holds_forces_a_readmit_that_settles_it() -> void:
+	# Re-review H1/M1: even an exact rejoin is readmitted while a payout the
+	# held record absorbed is still pending, carrying that row to settle; the
+	# owner's deliveries wait for admission so the readmit always comes first.
+	var character: String = before.character_id
+	var held: Dictionary = session._character_authority.discovered_landmarks(character)
+	var hash := preload("res://scripts/net/research_passive_preparation.gd")
+	var row := preload("res://scripts/net/reward_delivery.gd").make_record(event.world_id, event.world_namespace, "pickup:folded", character, "berries", 2)
+	row.status = "pending"
+	game.world.reward_deliveries[row.delivery_id] = row
+	session._character_authority.call("_absorbed", character)[row.delivery_id] = true
+	session.host = true
+	service.hosts.clear()
+	session.messages.clear()
+	service.admitted(2, {"portable_authority": before.duplicate(true), "discovered_landmarks": held,
+		"owner_passive_stream": {"id": "0f1e2d3c4b5a69788796a5b4c3d2e1f0", "baseline_hash": hash.fingerprint(before)}})
+	var readmits := session.messages.filter(func(m: Dictionary) -> bool: return m.get("op") == "readmit")
+	assert_eq(readmits.size(), 1, "an exact rejoin is readmitted while the folded row is pending")
+	if readmits.size() != 1: return
+	assert_eq(readmits[0].get("adopt"), false, "not an adoption")
+	assert_eq((readmits[0].get("folded", []) as Array).map(func(r: Dictionary) -> String: return r.delivery_id), [row.delivery_id],
+		"carrying the row to settle")
+	session.host = false
+	service.arm_owner(before, held)
+	assert_false(service.delivery_ready(), "the owner's deliveries wait while admission is pending")
+	service.local.admission_pending = false
+	assert_true(service.delivery_ready(), "and run once admitted")
+
+
 func test_a_landmark_revealed_without_an_input_never_changes_the_owner_passive_identity() -> void:
 	# G1 follow-up (review-g1-landmarks.md finding 1): a manual landmark
 	# (Meadowhart herd) or a story-revealed one (Cloudreach sync_navigation)

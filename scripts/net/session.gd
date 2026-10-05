@@ -188,7 +188,7 @@ func owner_passive_discoveries() -> Variant:
 
 func _owner_passive_delivery_ready() -> bool:
 	if is_host() or _owner_passive == null or (_owner_passive.get("local") as Dictionary).is_empty(): return true
-	return _owner_passive.call("recording_active") == true
+	return _owner_passive.call("delivery_ready") == true
 
 func _owner_passive_delivery_record(row: Dictionary) -> void:
 	if is_host() or _owner_passive == null or (_owner_passive.get("local") as Dictionary).is_empty(): return
@@ -2898,6 +2898,7 @@ func _rpc_hello(summary: Dictionary) -> void:
 			"That character is already connected to this world.")
 		return
 	var held_snapshot: Dictionary = _character_authority.call("snapshot_record", character_id)
+	var rejoin_applied: Array = []
 	var seeded: Dictionary = _character_authority.call("seed_admitted_character", portable, character_id)
 	if seeded.get("ok") == true and seeded.get("already_seeded") != true:
 		_character_authority.call("seed_absorbed_deliveries", character_id, _game().get("world").reward_deliveries)
@@ -2909,6 +2910,7 @@ func _rpc_hello(summary: Dictionary) -> void:
 		var rejoin: Dictionary = _character_authority.call("rejoin_admission", character_id, portable,
 			_game().get("world").reward_deliveries)
 		last_rejoin_admission[character_id] = str(rejoin.get("code", ""))
+		rejoin_applied = rejoin.get("applied", [])
 		if rejoin.get("code") != "held":
 			print("[session] rejoin of %s: %s %s" % [character_id.left(18), str(rejoin.get("code", "")), str(rejoin.get("detail", ""))])
 	if seeded.get("ok") == true and _character_authority.call("seed_personal_flags", character_id, summary.get("personal_flags", {"flags": []})) != true: seeded = {"ok": false}
@@ -2923,6 +2925,12 @@ func _rpc_hello(summary: Dictionary) -> void:
 		_registry.call("remove", sender)
 		_reject_hello(sender, "invalid_character", "That portable character could not be admitted. Your files remain unchanged.")
 		return
+	# A gather batch folded into the held record is credited, as its live
+	# replay would mark it (re-review L1), so its row can be pruned once ACKed.
+	var gather_writer: Node = get_node_or_null(^"LedgerRpc")
+	for delivery_id: Variant in rejoin_applied:
+		var folded_row: Variant = _game().get("world").reward_deliveries.get(delivery_id)
+		if gather_writer != null and folded_row is Dictionary: gather_writer.call("mark_gather_replayed", character_id, folded_row)
 	_groom_service().call("admitted", character_id, _character_authority.call("discovered_landmarks", character_id))
 	_owner_passive_service().call("admitted", sender, summary)
 	if realm_transition != null and bool(realm_transition.call("prepare_joined_sender", sender)):

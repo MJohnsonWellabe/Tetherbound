@@ -151,6 +151,11 @@ func record_delivery(row: Dictionary) -> bool:
 func recording_active() -> bool:
 	return not local.is_empty() and pending.is_empty() and str(local.error).is_empty()
 
+## A reward delivery waits until the host has admitted this stream (and any
+## readmit settled the payouts its held record already holds, _settle_folded).
+func delivery_ready() -> bool:
+	return recording_active() and local.get("admission_pending", false) != true
+
 func _scope() -> Dictionary:
 	var game := _game()
 	if game == null or game.get("world") == null or game.get("local") == null or owner() == null: return {}
@@ -197,7 +202,11 @@ func admitted(peer: int, summary: Dictionary) -> void:
 	var declared_discoveries: Variant = summary.get("discovered_landmarks", {})
 	var discoveries_match: bool = declared_discoveries is Dictionary \
 		and HASH.fingerprint({"discovered": declared_discoveries}) == HASH.fingerprint({"discovered": discoveries})
-	if E._equivalent(before, declared) and HASH.fingerprint(before) == declaration.get("baseline_hash") and discoveries_match:
+	# Payouts the held record holds while their world row is still pending:
+	# the owner marks them settled on the readmit before it may process their
+	# redelivery (re-review H1), so any such row forces a readmit.
+	var folded: Array = authority.call("folded_pending", character, _game().get("world").reward_deliveries)
+	if E._equivalent(before, declared) and HASH.fingerprint(before) == declaration.get("baseline_hash") and discoveries_match and folded.is_empty():
 		_add_host(peer, character, str(declaration.id), before, discoveries)
 		return
 	# Rejoin: the declaration differs from the host's held record. Passive
@@ -229,8 +238,7 @@ func admitted(peer: int, summary: Dictionary) -> void:
 	if not _add_host(peer, character, str(declaration.id), before, discoveries): return
 	hosts[character].readmit = {"op": "readmit", "baseline": before.duplicate(true),
 		"baseline_hash": HASH.fingerprint(before), "discoveries_hash": HASH.fingerprint({"discovered": discoveries}),
-		"discovered": discoveries.duplicate(true), "adopt": adopt}
-	if adopt: hosts[character].readmit.folded = authority.call("rejoin_folded", character)
+		"discovered": discoveries.duplicate(true), "adopt": adopt, "folded": folded}
 	if adopt:
 		print("[owner-passive] %s adopts the host's held record: %s" % [character.left(18), ", ".join(_differing_paths("", before, declared, 0, []).slice(0, 8))])
 	else:
@@ -1235,7 +1243,7 @@ func _readmit_owner(packet: Dictionary) -> void:
 	if pending.is_empty() and game != null and packet.get("adopt") == true \
 		and not E._equivalent(REPLAY._core(baseline), REPLAY._core(_projection())):
 		# Owner ruling (STATE §0): this world's held record wins; adopt it whole.
-		var outcome := _adopt_held_record(baseline, packet.get("folded", []))
+		var outcome := _adopt_held_record(baseline)
 		if outcome != "ok":
 			_note_ignored("held-record adoption deferred: " + outcome)
 			if not local.get("adopt_wait_told", false):
@@ -1277,7 +1285,35 @@ func _readmit_owner(packet: Dictionary) -> void:
 	# the host's replay as discovery_cadence (re-proof run 2026-10-04T22:09:55Z).
 	game.set("_travel_pos_valid", false)
 	game.set("_discovery_elapsed", 0.0)
+	_settle_folded(packet.get("folded", []))
 	_send_host({"op": "readmitted", "baseline_hash": packet.baseline_hash})
+
+
+## Owner, on every readmit: the payout rows the host's held record already
+## holds while their world row is pending are marked settled here, before this
+## owner may process their redelivery (delivery waits for admission,
+## session._owner_passive_delivery_ready), so it acknowledges without paying a
+## second time (re-review H1). A row this owner already settled is untouched.
+func _settle_folded(folded: Variant) -> void:
+	if not folded is Array or (folded as Array).is_empty(): return
+	var player: RefCounted = _game().get("local")
+	if player == null or not player.get("satchel_escrow") is Dictionary: return
+	var escrow: Dictionary = player.get("satchel_escrow")
+	var settled_count := 0
+	for row: Variant in folded:
+		if not row is Dictionary or str(row.get("character_id", "")) != str(player.get("character_id")) \
+			or str(row.get("delivery_id", "")) != REWARD.delivery_id(str(row.get("world_namespace", "")), str(row.get("source", "")), str(row.get("character_id", ""))): continue
+		if str((escrow.get(row.delivery_id, {}) as Dictionary).get("status", "")) == "settled" if escrow.get(row.delivery_id) is Dictionary else false: continue
+		var settled: Dictionary = (row as Dictionary).duplicate(true)
+		settled.kind = "reward_delivery"
+		settled.status = "settled"
+		var flag := str(settled.get("completion_flag", ""))
+		if not flag.is_empty() and player.get("flags") != null: (player.get("flags") as RefCounted).call("set_flag", flag, true)
+		settled.erase("stacks")
+		settled.erase("completion_flag")
+		escrow[row.delivery_id] = settled
+		settled_count += 1
+	if settled_count > 0: print("[owner-passive] %d payout(s) this world already holds marked settled" % settled_count)
 
 
 ## Owner, on a readmit marked `adopt`: replace this character's portable
@@ -1285,13 +1321,12 @@ func _readmit_owner(packet: Dictionary) -> void:
 ## receipts, portal/vitals escrow, heart selection). Creatures the record keeps
 ## are updated in place, so a deployed body still drives the same instance; a
 ## creature the record lacks (an offline catch) leaves the party, its body put
-## away first. The payout rows the host folded into that record are marked
-## settled here, so their redelivery acknowledges without paying twice.
+## away first. (The payouts the record holds are settled by _settle_folded.)
 ## All or nothing: a failed attempt restores the owner's state exactly (review
 ## M2). Returns "ok", or why it must wait (the host resends the readmit).
 const _RUNTIME_ONLY := ["active_buffs", "combat_override"] # never saved; kept per instance
 
-func _adopt_held_record(baseline: Dictionary, folded: Variant) -> String:
+func _adopt_held_record(baseline: Dictionary) -> String:
 	var game := _game()
 	var player: RefCounted = game.get("local")
 	var party: RefCounted = game.get("party")
@@ -1303,11 +1338,13 @@ func _adopt_held_record(baseline: Dictionary, folded: Variant) -> String:
 	var kept := {}
 	for card: Variant in baseline.get("party", []):
 		if card is Dictionary: kept[str(card.get("uid", ""))] = true
+	# Bodies of creatures the record lacks are put away only once it applies
+	# (review L4). A freed body is checked before its type (review L3).
+	var away: Array = []
 	for director: Node in _portal_directors(game):
 		var ally: Variant = director.get("_ally")
 		var body: Variant = director.get("_ally_body")
-		if ally is RefCounted and body is Node and is_instance_valid(body) and not kept.has(str((ally as RefCounted).get("uid"))) \
-			and director.call("dismiss_active_creature") != true: return "a companion this world does not know is in a fight"
+		if ally is RefCounted and is_instance_valid(body) and not kept.has(str((ally as RefCounted).get("uid"))): away.append(director)
 	var restore: Dictionary = player.call("save_data")
 	var data: Dictionary = restore.duplicate(true)
 	var energy := {}
@@ -1330,19 +1367,6 @@ func _adopt_held_record(baseline: Dictionary, folded: Variant) -> String:
 		if not (mine.portal_escrow as Dictionary).has(key) and not (mine.vitals_escrow as Dictionary).has(key): escrow[key] = data.satchel_escrow[key]
 	for key: Variant in baseline.get("portal_escrow", {}): escrow[key] = baseline.portal_escrow[key]
 	for key: Variant in baseline.get("vitals_escrow", {}): escrow[key] = baseline.vitals_escrow[key]
-	var completion_flags: Array[String] = []
-	for row: Variant in (folded if folded is Array else []):
-		if not row is Dictionary or str(row.get("character_id", "")) != str(data.get("character_id")) \
-			or str(row.get("delivery_id", "")) != REWARD.delivery_id(str(row.get("world_namespace", "")), str(row.get("source", "")), str(row.get("character_id", ""))): continue
-		if str((escrow.get(row.delivery_id, {}) as Dictionary).get("status", "")) == "settled": continue
-		var settled: Dictionary = (row as Dictionary).duplicate(true)
-		settled.kind = "reward_delivery"
-		settled.status = "settled"
-		if not str(settled.get("completion_flag", "")).is_empty(): completion_flags.append(str(settled.completion_flag))
-		settled.erase("stacks")
-		settled.erase("completion_flag")
-		settled.erase("status_ms")
-		escrow[row.delivery_id] = settled
 	data.satchel_escrow = escrow
 	var before := {}
 	for member: RefCounted in party.call("members"): before[str(member.get("uid"))] = member
@@ -1353,18 +1377,18 @@ func _adopt_held_record(baseline: Dictionary, folded: Variant) -> String:
 	party.set("_active", maxi(0, uids.find(active_uid)))
 	party.set("_best", uids.find(best_uid) if not best_uid.is_empty() else -1)
 	party.set("revision", int(party.get("revision")) + 1)
-	if not E._equivalent(REPLAY._core(_projection()), REPLAY._core(baseline)):
+	var refused := "" if E._equivalent(REPLAY._core(_projection()), REPLAY._core(baseline)) else "the record could not be applied here"
+	for director: Node in away:
+		if refused.is_empty() and director.call("dismiss_active_creature") != true: refused = "a companion this world does not know is in a fight"
+	if not refused.is_empty():
 		var back := _load_keeping_instances(player, party, restore, before)
 		var back_uids := back.map(func(m: RefCounted) -> String: return str(m.get("uid")))
 		party.set("_active", maxi(0, back_uids.find(active_uid)))
 		party.set("_best", back_uids.find(best_uid) if not best_uid.is_empty() else -1)
 		party.set("revision", int(party.get("revision")) + 1)
-		return "the record could not be applied here"
-	var flags: Variant = player.get("flags")
-	for flag: String in completion_flags:
-		if flags != null: (flags as RefCounted).call("set_flag", flag, true)
+		return refused
 	game.call("push_world_message", "This world keeps your character as it was here; changes made elsewhere are not used in it.")
-	print("[owner-passive] adopted this world's held record (%d creature(s), %d payout(s) settled)" % [ordered.size(), (folded as Array).size() if folded is Array else 0])
+	print("[owner-passive] adopted this world's held record (%d creature(s))" % ordered.size())
 	return "ok"
 
 

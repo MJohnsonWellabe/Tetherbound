@@ -8,8 +8,8 @@ extends "res://tests/test_case.gd"
 ##   offline levels revert; kept creatures stay the SAME instances (a deployed
 ##   body drives them) and keep their runtime-only buffs; the active slot
 ##   follows its creature;
-## - the payout rows the host folded into the held record are marked settled,
-##   so their redelivery cannot pay twice;
+## - the payout rows the host folded into the held record are marked settled
+##   (_settle_folded, on every readmit), so their redelivery cannot pay twice;
 ## - all or nothing: with a saved companion decision settling it waits and
 ##   changes nothing; a record that cannot be applied restores the owner exactly.
 ## Disclosed fixtures: a Game node with the real local character, a director
@@ -98,7 +98,7 @@ func test_adopts_the_held_record_keeping_instances_and_dropping_the_offline_catc
 	assert_eq((first.get("active_buffs") as Array).size(), 1, "fixture: a tonic is active")
 	game.party.set("_active", 1)
 	var second: RefCounted = game.party.at(1)
-	var outcome: String = service.call("_adopt_held_record", held, [])
+	var outcome: String = service.call("_adopt_held_record", held)
 	assert_eq(outcome, "ok", "adopted")
 	assert_true(E._equivalent(_core(service.call("_projection")), _core(held)), "the owner now holds the host's record")
 	assert_eq(game.party.call("members").size(), 2, "the offline catch left the party")
@@ -117,7 +117,8 @@ func test_folded_payouts_are_marked_settled_and_never_paid_twice() -> void:
 	var bag := SATCHEL.inventory_from(held.inventory)
 	bag.call("add", "berries", 3)
 	held.inventory = SATCHEL.slots(bag)
-	assert_eq(service.call("_adopt_held_record", held, [row]), "ok")
+	assert_eq(service.call("_adopt_held_record", held), "ok")
+	service.call("_settle_folded", [row]) # the readmit's folded rows
 	var escrow: Dictionary = game.local.satchel_escrow.get(row.delivery_id, {})
 	assert_eq(escrow.get("status"), "settled", "the folded payout is settled in the owner's escrow")
 	assert_eq(int(game.local.inventory.call("count", "berries")), 3, "its berries came with the held record")
@@ -130,12 +131,12 @@ func test_waits_without_change_while_a_companion_decision_settles() -> void:
 	var blocked := [true] # a box: a lambda captures locals by value
 	game.party.call("bind_owner_mutation_guard", func() -> bool: return blocked[0])
 	var before: Dictionary = game.local.save_data()
-	var outcome: String = service.call("_adopt_held_record", held, [])
+	var outcome: String = service.call("_adopt_held_record", held)
 	assert_true(outcome != "ok", "it waits (%s)" % outcome)
 	assert_true(E._equivalent(game.local.save_data(), before), "and changed nothing")
 	assert_eq(director.dismissed, 0, "no body was put away")
 	blocked[0] = false
-	assert_eq(service.call("_adopt_held_record", held, []), "ok", "once settled it adopts")
+	assert_eq(service.call("_adopt_held_record", held), "ok", "once settled it adopts")
 
 
 func test_a_record_that_cannot_apply_restores_the_owner_exactly() -> void:
@@ -143,7 +144,7 @@ func test_a_record_that_cannot_apply_restores_the_owner_exactly() -> void:
 	var before: Dictionary = game.local.save_data()
 	var broken := held.duplicate(true)
 	broken.inventory = [{"id": "berries", "n": 3}, {"id": "not-an-item-anywhere", "n": 1}]
-	var outcome: String = service.call("_adopt_held_record", broken, [])
+	var outcome: String = service.call("_adopt_held_record", broken)
 	assert_true(outcome != "ok", "refused (%s)" % outcome)
 	var after: Dictionary = game.local.save_data()
 	assert_true(E._equivalent(_core(RECORD.portable_projection(after)), _core(RECORD.portable_projection(before))),
@@ -156,9 +157,9 @@ func test_a_record_that_cannot_apply_restores_the_owner_exactly() -> void:
 func test_a_companion_fighting_waits_and_changes_nothing() -> void:
 	director.fighting = true
 	var before: Dictionary = game.local.save_data()
-	assert_true(service.call("_adopt_held_record", held, []) != "ok", "it waits while the catch fights")
+	assert_true(service.call("_adopt_held_record", held) != "ok", "it waits while the catch fights")
 	assert_true(E._equivalent(game.local.save_data(), before), "nothing changed")
 	# A stale ally reference with no body never blocks (review L1).
 	director._ally_body.free()
 	director._ally_body = null
-	assert_eq(service.call("_adopt_held_record", held, []), "ok", "no body: adoption proceeds")
+	assert_eq(service.call("_adopt_held_record", held), "ok", "no body: adoption proceeds")
