@@ -1,0 +1,144 @@
+{
+  "archives": [
+    {
+      "path": "raw-evidence-01.zip",
+      "size": 42312309,
+      "sha256": "f4b29a0921c450f8931c051d6ffb5b234ad1d59a3f12305d3903ee1c749ee698"
+    }
+  ],
+  "files": [
+    {
+      "path": "native.log",
+      "archive": "raw-evidence-01.zip",
+      "size": 225457,
+      "sha256": "9e064303691492df515347bcf359273a811b77c86aeeae5aca5838748c6400cf"
+    },
+    {
+      "path": "receipt.json",
+      "archive": "raw-evidence-01.zip",
+      "size": 1051,
+      "sha256": "742bce1ad62a72ca4ccc9cfd7dbe684f1ebf1fc48e7acba7d87013bc8082bded"
+    },
+    {
+      "path": "preset.log",
+      "archive": "raw-evidence-01.zip",
+      "size": 112,
+      "sha256": "5c177f17a34517ce3912c7dc0572a31a19f72d09d9ef241ca5ea2c359878f75e"
+    },
+    {
+      "path": "preset-receipt.json",
+      "archive": "raw-evidence-01.zip",
+      "size": 383,
+      "sha256": "dca47de32f60a444e142e2db776a79fcf120f00031cd61bb9190bbafee83c434"
+    },
+    {
+      "path": "frames/0000-travel-day-clear-medium.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2624708,
+      "sha256": "3bfd389695da636899b39f1d854d55775b6cb3c62d1472e6f994646f8aeb9d1d"
+    },
+    {
+      "path": "frames/0001-travel-day-clear-high.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2613647,
+      "sha256": "52d27d6181c5e820a7905c690c3a0f094de1c6374b5972cdfe3655b1de2879a2"
+    },
+    {
+      "path": "frames/0002-travel-night-clear-medium.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2833130,
+      "sha256": "de844e5f38de377edb9ca2dae4649bac4e1a11ca4b3a0db53a8844aaf682a2c2"
+    },
+    {
+      "path": "frames/0003-travel-night-clear-high.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2828933,
+      "sha256": "2c3b02837dac279508a2510fb8cffe3ad4879075532f7efe65d957afe5bea24f"
+    },
+    {
+      "path": "frames/0004-travel-day-rain-medium.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2558907,
+      "sha256": "ae782a786c43b46dba42b6ee6f556076562915363859d503f092ed442ce243af"
+    },
+    {
+      "path": "frames/0005-travel-day-rain-high.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2544084,
+      "sha256": "581c9bb3c16a48b9ee2d9fab5c4e4ee4803001e13c96fc6bb8853b58b0c8143f"
+    },
+    {
+      "path": "frames/0006-travel-night-rain-medium.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2769061,
+      "sha256": "df5cecdefc5407a1f247ba6b17b9e68f26fcdb47807f965b3d4c41f05e51321f"
+    },
+    {
+      "path": "frames/0007-travel-night-rain-high.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2771995,
+      "sha256": "36cf05d396ff10046f4b17cb6455055c72edf407dc8ad46c78167a506be47d6f"
+    },
+    {
+      "path": "frames/0008-travel-day-clear-medium.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2558794,
+      "sha256": "b72c8fc6136f32e74e55bbcd795eb854c101866240f4959b48ea8e0e7ded8708"
+    },
+    {
+      "path": "frames/0009-travel-day-clear-high.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2535486,
+      "sha256": "807ff8e4500d188518b3350162ee8a32d32f96aa1942dcdbf5da17231eacc6d8"
+    },
+    {
+      "path": "frames/0010-travel-night-clear-medium.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2634250,
+      "sha256": "5336a64cdd65115c8f06995278cb6c07d57298f77a509e0f67b77acc65c855f5"
+    },
+    {
+      "path": "frames/0011-travel-night-clear-high.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2620054,
+      "sha256": "240dfe35e49252d86a31352747aa1e4ee312e704f5c6fcd1a74431c333196569"
+    },
+    {
+      "path": "frames/0012-travel-day-rain-medium.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2472246,
+      "sha256": "4aa3097b093a283d5b0bd248bdb8407953f541f88be2246013ed9c6fe5813c19"
+    },
+    {
+      "path": "frames/0013-travel-day-rain-high.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2446929,
+      "sha256": "3707e6e1f753d208bf56f77b9854c2a6399e23a34833b9cd85ddb2155c8c116b"
+    },
+    {
+      "path": "frames/0014-travel-night-rain-medium.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2615726,
+      "sha256": "bae1eadce89e00964500ed81344b5699a54a889abb33d67646b3bc5ca42183b0"
+    },
+    {
+      "path": "frames/0015-travel-night-rain-high.png",
+      "archive": "raw-evidence-01.zip",
+      "size": 2605032,
+      "sha256": "07de740321e2e6f3dc5c3b7d0480990ed0f94b0b5848224e86d9a88175594df3"
+    },
+    {
+      "path": "frames/manifest.json",
+      "archive": "raw-evidence-01.zip",
+      "size": 49332,
+      "sha256": "ffc9c7d7b80d42ccec9d5f530589f1b49e0a5014c23d9a2cd0c16fc64671a31c"
+    }
+  ],
+  "additional_files_outside_archives": [
+    {
+      "path": "graphics_override.cfg",
+      "size": 133,
+      "sha256": "54443c56eb16b246b6071257bcead2a835c1f77fd5c165d7affc5aee4afe039e"
+    }
+  ]
+}

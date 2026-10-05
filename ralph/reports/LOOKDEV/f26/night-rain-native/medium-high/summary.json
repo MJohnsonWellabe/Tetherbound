@@ -1,0 +1,191 @@
+{
+  "source_commit": "5288f84dfe0cba5801ce674bbe5e68000665ae81",
+  "command": [
+    "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\redesign-lookdev",
+    "--rendering-method",
+    "forward_plus",
+    "--audio-driver",
+    "Dummy",
+    "--resolution",
+    "1920x1080",
+    "--fullscreen",
+    "--script",
+    "tools/capture_f17_visual.gd",
+    "--",
+    "--preset=Medium",
+    "--source-commit=5288f84dfe0cba5801ce674bbe5e68000665ae81",
+    "--paired-high",
+    "--farm-diagnostic-only",
+    "--output=D:/tetherbound/.artifacts/f26-night-rain/medium-high/frames"
+  ],
+  "native_exit_code": 1,
+  "native_elapsed_seconds": 471.125,
+  "runtime_errors": [],
+  "manifest_failure": "ordinary body/camera pose changed between paired time/weather/preset views",
+  "requested_diagnostic_matrix_complete": false,
+  "tool_complete": false,
+  "diagnostic_only": true,
+  "normal_lit_views": 16,
+  "light_off_diagnostic_views_excluded_from_quality": 0,
+  "actual_keys": [
+    [
+      "High",
+      "day",
+      "clear"
+    ],
+    [
+      "High",
+      "day",
+      "rain"
+    ],
+    [
+      "High",
+      "night",
+      "clear"
+    ],
+    [
+      "High",
+      "night",
+      "rain"
+    ],
+    [
+      "Medium",
+      "day",
+      "clear"
+    ],
+    [
+      "Medium",
+      "day",
+      "rain"
+    ],
+    [
+      "Medium",
+      "night",
+      "clear"
+    ],
+    [
+      "Medium",
+      "night",
+      "rain"
+    ]
+  ],
+  "expected_keys": [
+    [
+      "High",
+      "day",
+      "clear"
+    ],
+    [
+      "High",
+      "day",
+      "rain"
+    ],
+    [
+      "High",
+      "night",
+      "clear"
+    ],
+    [
+      "High",
+      "night",
+      "rain"
+    ],
+    [
+      "Medium",
+      "day",
+      "clear"
+    ],
+    [
+      "Medium",
+      "day",
+      "rain"
+    ],
+    [
+      "Medium",
+      "night",
+      "clear"
+    ],
+    [
+      "Medium",
+      "night",
+      "rain"
+    ]
+  ],
+  "png_dimensions": {
+    "0000-travel-day-clear-medium.png": [
+      1920,
+      1080
+    ],
+    "0001-travel-day-clear-high.png": [
+      1920,
+      1080
+    ],
+    "0002-travel-night-clear-medium.png": [
+      1920,
+      1080
+    ],
+    "0003-travel-night-clear-high.png": [
+      1920,
+      1080
+    ],
+    "0004-travel-day-rain-medium.png": [
+      1920,
+      1080
+    ],
+    "0005-travel-day-rain-high.png": [
+      1920,
+      1080
+    ],
+    "0006-travel-night-rain-medium.png": [
+      1920,
+      1080
+    ],
+    "0007-travel-night-rain-high.png": [
+      1920,
+      1080
+    ],
+    "0008-travel-day-clear-medium.png": [
+      1920,
+      1080
+    ],
+    "0009-travel-day-clear-high.png": [
+      1920,
+      1080
+    ],
+    "0010-travel-night-clear-medium.png": [
+      1920,
+      1080
+    ],
+    "0011-travel-night-clear-high.png": [
+      1920,
+      1080
+    ],
+    "0012-travel-day-rain-medium.png": [
+      1920,
+      1080
+    ],
+    "0013-travel-day-rain-high.png": [
+      1920,
+      1080
+    ],
+    "0014-travel-night-rain-medium.png": [
+      1920,
+      1080
+    ],
+    "0015-travel-night-rain-high.png": [
+      1920,
+      1080
+    ]
+  },
+  "missing_images": [],
+  "presets": [
+    "Medium",
+    "High"
+  ],
+  "scope": "partial farm-door light diagnostic only; no Hall circuit, motion or acceptance claim",
+  "qualification": "Failed before the actual farmhouse doorway. Sixteen native normal-lit travel views in two matched eight-view blocks retained, zero doorway/light-off views. No requested farmhouse matrix, Hall circuit, motion, full-bar, earned campaign, co-op, handheld or FPS acceptance. Travel-only sky diagnosis may be bounded by each matched block.",
+  "requested_farmhouse_normal_lit_views": 0,
+  "travel_normal_lit_views": 16
+}

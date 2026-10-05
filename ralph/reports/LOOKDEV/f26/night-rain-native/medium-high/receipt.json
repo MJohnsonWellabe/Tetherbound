@@ -1,0 +1,31 @@
+{
+  "source_commit": "5288f84dfe0cba5801ce674bbe5e68000665ae81",
+  "command": [
+    "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+    "--path",
+    "D:\\tetherbound\\redesign-lookdev",
+    "--rendering-method",
+    "forward_plus",
+    "--audio-driver",
+    "Dummy",
+    "--resolution",
+    "1920x1080",
+    "--fullscreen",
+    "--script",
+    "tools/capture_f17_visual.gd",
+    "--",
+    "--preset=Medium",
+    "--source-commit=5288f84dfe0cba5801ce674bbe5e68000665ae81",
+    "--paired-high",
+    "--farm-diagnostic-only",
+    "--output=D:/tetherbound/.artifacts/f26-night-rain/medium-high/frames"
+  ],
+  "exit_code": 1,
+  "stop_reason": null,
+  "supervisor_elapsed_seconds": 479.687,
+  "native_elapsed_seconds": 471.125,
+  "native_started_utc": "2026-10-05T15:16:38.364701+00:00",
+  "preset": "Medium",
+  "profile": "D:\\tetherbound\\.artifacts\\f26-night-rain\\medium-high\\profile",
+  "scope": "Owned Night rain paired native farm-door diagnostic; no Hall/full-art acceptance; no FPS/image-quality claim."
+}
