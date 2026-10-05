@@ -3301,6 +3301,7 @@ func _queue_regional_ack(intent: Dictionary) -> Dictionary:
 		# the next reply only, and only while the caller is still waiting
 		# (regional_homecoming polls for ack_timeout_seconds).
 		_regional_ack_waiting[intent.transaction_id] = Time.get_ticks_msec()
+		_regional_ack_queued_at[intent.transaction_id] = Time.get_ticks_msec()
 		var drain := Callable(self, "_drain_regional_ack_waiting")
 		if not session.is_connected("homestead_personal_view_completed", drain):
 			session.connect("homestead_personal_view_completed", drain)
@@ -3313,6 +3314,9 @@ func _queue_regional_ack(intent: Dictionary) -> Dictionary:
 
 
 var _regional_ack_waiting: Dictionary = {}
+var _regional_ack_queued_at: Dictionary = {}
+var _regional_ack_sent_at: Dictionary = {}
+const REGIONAL_ACK_RESEND_MS := 1500
 
 func _drain_regional_ack_waiting() -> void:
 	var settings: Dictionary = preload("res://scripts/story/regional_homecoming.gd")._settings()
@@ -3326,6 +3330,21 @@ func _drain_regional_ack_waiting() -> void:
 			_regional_ack_intents.erase(transaction_id) # The caller already gave up.
 
 
+## A guest's send carries the revision from one personal-view reply, and that
+## reply has no request id: a stale one yields a revision-conflict refusal
+## that nothing reports back. While the caller still polls and the host has
+## not journalled the row, ask for a fresh view and send again.
+func _resend_regional_ack(transaction_id: String) -> void:
+	if session == null or bool(session.call("is_host")) or _regional_ack_waiting.has(transaction_id): return
+	var settings: Dictionary = preload("res://scripts/story/regional_homecoming.gd")._settings()
+	var window_ms := int(float(settings.get("ack_timeout_seconds", 8.0)) * 1000.0)
+	var now := Time.get_ticks_msec()
+	if not _regional_ack_queued_at.has(transaction_id) or now - int(_regional_ack_queued_at[transaction_id]) > window_ms: return
+	if now - int(_regional_ack_sent_at.get(transaction_id, now)) < REGIONAL_ACK_RESEND_MS: return
+	_regional_ack_waiting[transaction_id] = int(_regional_ack_queued_at[transaction_id])
+	session.call("homestead_personal_view")
+
+
 func _send_regional_ack(transaction_id: String) -> bool:
 	var intent: Dictionary = _regional_ack_intents.get(transaction_id, {})
 	if intent.is_empty() or session == null: return false
@@ -3333,6 +3352,7 @@ func _send_regional_ack(transaction_id: String) -> bool:
 	var view: Dictionary = cache.duplicate(true) if cache is Dictionary else session.call("homestead_personal_view")
 	if view.is_empty() or not view.has("registry_revision"): return false
 	session.call("_foundation_send", "regional_ack", "regional_ending:" + local.character_id, intent, int(view.registry_revision))
+	_regional_ack_sent_at[transaction_id] = Time.get_ticks_msec()
 	return true
 
 
@@ -3342,7 +3362,9 @@ func regional_ending_ack_result(transaction_id: String) -> Dictionary:
 	var row: Dictionary = session.call("_owner_training_row")
 	var decision: Dictionary = session.call("_training_decision", session.call("local_peer_id"), row)
 	if row.get("action") != "regional_ack" or row.get("intent") != intent \
-		or decision.get("ok") != true or decision.get("saved") != true: return {"status": "pending"}
+		or decision.get("ok") != true or decision.get("saved") != true:
+		if not (row.get("action") == "regional_ack" and row.get("intent") == intent): _resend_regional_ack(transaction_id)
+		return {"status": "pending"}
 	var result := intent.duplicate(true)
 	result.merge({"status": "committed", "durable": true}, true)
 	return result

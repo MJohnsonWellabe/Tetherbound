@@ -3751,6 +3751,7 @@ func _teardown(linger_transport: bool = false) -> void:
 		if travel_service != null: travel_service.call("reset")
 	_portal_policy.call("bind_world", "")
 	_portal_requests.clear()
+	_portal_request_at.clear()
 	_portal_waiters.clear()
 	var had_transport := _peer != null
 	if realm_transition != null:
@@ -5223,6 +5224,20 @@ const PORTAL_RECEIPT := preload("res://scripts/net/portal_delivery.gd")
 var _portal_policy: RefCounted = PORTAL_POLICY.new()
 var _portal_request_serial := 0
 var _portal_requests: Dictionary = {}
+## Touch retries are fire-and-forget: one the host never answers (e.g. its
+## owner-passive gate retained it and a later retry won) would otherwise stay
+## here for the session. Travel requests keep their own lifecycle.
+var _portal_request_at: Dictionary = {}
+const PORTAL_TOUCH_REQUEST_TTL_MS := 120000
+
+func _prune_portal_touch_requests() -> void:
+	var now := Time.get_ticks_msec()
+	for id: Variant in _portal_request_at.keys():
+		var frozen: Dictionary = _portal_requests.get(id, {})
+		if frozen.is_empty(): _portal_request_at.erase(id)
+		elif frozen.get("payload", {}).get("kind") == "waystone_touch" and now - int(_portal_request_at[id]) > PORTAL_TOUCH_REQUEST_TTL_MS:
+			_portal_requests.erase(id)
+			_portal_request_at.erase(id)
 var _portal_waiters: Dictionary = {}
 
 
@@ -5262,7 +5277,9 @@ func request_portal_action(payload: Dictionary) -> Dictionary:
 	var id := "%s:%d" % [generation, _portal_request_serial]
 	var frozen := {"request_id": id, "world_instance_id": world.reward_delivery_namespace,
 		"session_epoch": generation, "character_id": character, "payload": payload.duplicate(true)}
+	_prune_portal_touch_requests()
 	_portal_requests[id] = frozen.duplicate(true)
+	_portal_request_at[id] = Time.get_ticks_msec()
 	if is_host(): _host_portal_action.call_deferred(local_peer_id(), frozen)
 	else: _send_portal_action.call_deferred(frozen)
 	return {"ok": true, "request_id": id}

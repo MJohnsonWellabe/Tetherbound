@@ -114,3 +114,24 @@ func test_guest_abandoned_wait_never_sends_late() -> void:
 	assert_eq(session.sent.size(), 0)
 	assert_true(game._regional_ack_intents.is_empty())
 	game.free()
+
+func test_guest_resends_on_a_fresh_view_while_the_caller_still_waits() -> void:
+	var game := _game(false)
+	var session: SessionProbe = game.session
+	var tid: String = _intent().transaction_id
+	game._queue_regional_ack(_intent())
+	session.reply({"registry_revision": 5}) # Stale revision: the host refuses silently.
+	assert_eq(session.sent.size(), 1)
+	assert_eq(game.regional_ending_ack_result(tid).get("status"), "pending")
+	assert_eq(session.sent.size(), 1, "no resend inside the resend interval")
+	game._regional_ack_sent_at[tid] = Time.get_ticks_msec() - game.REGIONAL_ACK_RESEND_MS - 1
+	assert_eq(game.regional_ending_ack_result(tid).get("status"), "pending")
+	session.reply({"registry_revision": 6})
+	assert_eq(session.sent.size(), 2)
+	assert_eq(session.sent[1].revision, 6, "the resend uses the fresh view")
+	game._regional_ack_sent_at[tid] = Time.get_ticks_msec() - game.REGIONAL_ACK_RESEND_MS - 1
+	game._regional_ack_queued_at[tid] = Time.get_ticks_msec() - 60000
+	game.regional_ending_ack_result(tid)
+	session.reply({"registry_revision": 7})
+	assert_eq(session.sent.size(), 2, "no resend after the caller's window")
+	game.free()
