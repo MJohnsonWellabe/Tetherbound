@@ -4,4 +4,4 @@ Native exit0/no ERROR; 350.703s including production boot. GTX1060 3GB, gl_compa
 
 164 wall frames/164 correlated EngineProfiler iterations. FPS minimum/average/1%low: 0.567/5.139/0.599. True process mean/max: 155.684/1721.357ms. Maximum individual physics step mean/max: 6.072/21.788ms. GPU monitor mean: 56.459ms; timestamp availability: True; draws mean: 3769.33.
 
-Owner20 FPS floor FAIL. All raw rows/logs/PNGs/callbacks/command archived with hashes. Independent completed-case review pending. GPU zero without timestamps is unavailable, not a measured zero-cost result.
+Owner20 FPS floor FAIL. All raw rows/logs/PNGs/callbacks/command archived with hashes. Independent completed-case review PASS for archive integrity and all reported calculations; 20 FPS remains FAIL. Compatibility profiler anonymous vp_end brackets have no per-mesh attribution. GPU zero without timestamps is unavailable, not a measured zero-cost result.
