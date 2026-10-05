@@ -154,11 +154,33 @@ func travel(tree: SceneTree, args: Dictionary, started: int, budget: int) -> Dic
 		game.disconnect("portal_action_result", _completed)
 	if not reply.is_empty():
 		print("PORTAL_SMOKE_ACTUAL_COMPLETION " + JSON.stringify(reply))
-		return {"ok": reply.get("ok") == true and reply.get("saved") == true and reply.get("durable") == true \
+		var ok: bool = reply.get("ok") == true and reply.get("saved") == true and reply.get("durable") == true \
 			and reply.get("arrived") == true and reply.get("arrival_applied") == true \
-			and reply.get("permit_id") is String and not str(reply.permit_id).is_empty(),
-			"reason": str(reply.get("reason", "")), "completion": reply.duplicate(true)}
+			and reply.get("permit_id") is String and not str(reply.permit_id).is_empty()
+		var reason := str(reply.get("reason", ""))
+		if ok and args.has("arrival_ground_tolerance_m"):
+			var ground_reason: String = await _arrival_ground(tree, str(args.get("realm", "")), float(args.arrival_ground_tolerance_m))
+			if not ground_reason.is_empty():
+				ok = false
+				reason = ground_reason
+		return {"ok": ok, "reason": reason, "completion": reply.duplicate(true)}
 	return {"ok": false, "reason": str(accepted.get("reason", "Actual correlated saved/arrived completion missing within original budget"))}
+
+## Arrival must stand on the destination's own ground under its slot, not only
+## near it: |player.y - ground_height_at(player.x, player.z)| <= tolerance.
+func _arrival_ground(tree: SceneTree, realm: String, tolerance: float) -> String:
+	for _frame in 600:
+		var world := tree.current_scene
+		var player := world.get_node_or_null(^"Player") as CharacterBody3D if world != null else null
+		if world != null and player != null and world.has_method("ground_height_at") \
+				and (not world.has_method("world_realm") or str(world.call("world_realm")) == realm) and player.is_on_floor():
+			var at := player.global_position
+			var ground := float(world.call("ground_height_at", at.x, at.z))
+			if not is_finite(ground): return "arrival has no ground under %s" % str(at)
+			if absf(at.y - ground) > tolerance: return "arrival %.2f m from the ground under its slot (at %s, ground %.2f)" % [at.y - ground, str(at), ground]
+			return ""
+		await tree.physics_frame
+	return "arrival never stood on the destination's floor"
 
 func _completed(value: Dictionary) -> void:
 	if value.get("request_id") == request_id and not request_id.is_empty(): reply = value.duplicate(true)

@@ -3305,6 +3305,9 @@ func _queue_regional_ack(intent: Dictionary) -> Dictionary:
 		var drain := Callable(self, "_drain_regional_ack_waiting")
 		if not session.is_connected("homestead_personal_view_completed", drain):
 			session.connect("homestead_personal_view_completed", drain)
+		var replied := Callable(self, "_on_regional_ack_reply")
+		if session.has_signal("homestead_action_completed") and not session.is_connected("homestead_action_completed", replied):
+			session.connect("homestead_action_completed", replied)
 		session.call("homestead_personal_view")
 		return regional_ending_ack_result(intent.transaction_id)
 	if not _send_regional_ack(intent.transaction_id):
@@ -3343,6 +3346,12 @@ func _resend_regional_ack(transaction_id: String) -> void:
 	if now - int(_regional_ack_sent_at.get(transaction_id, now)) < REGIONAL_ACK_RESEND_MS: return
 	_regional_ack_waiting[transaction_id] = int(_regional_ack_queued_at[transaction_id])
 	session.call("homestead_personal_view")
+
+
+## A host refusal is otherwise silent on a guest; name it in the log.
+func _on_regional_ack_reply(action: String, original: Dictionary, result: Dictionary) -> void:
+	if action != "regional_ack" or result.get("ok") == true or result.get("resolved") == false: return
+	print("[regional_ack] host refused %s: %s" % [str(original.get("stage", "")), str(result.get("code", result.get("reason", "")))])
 
 
 func _send_regional_ack(transaction_id: String) -> bool:

@@ -138,6 +138,7 @@ func _run() -> void:
 	# Home Key to the Hall, walk to the Stormwood arch, public portal request.
 	var travelled: Dictionary = await step(1, "enter_realm", {"realm": STORMWOOD,
 		"actual_portal_fixture": FIXTURE, "portal_regression": REGRESSION,
+		"arrival_ground_tolerance_m": 0.5,
 		"budget_frames": REALM_STEP_BUDGET}, REALM_STEP_BUDGET)
 	if not _require(_passed(travelled),
 			"retired gate refused; the client reached Stormwood by Home Key and the Hall's Stormwood arch (%s)"
@@ -158,10 +159,11 @@ func _run() -> void:
 	if arrival_raw is Array and (arrival_raw as Array).size() == 3:
 		var values := arrival_raw as Array
 		arrival = Vector3(float(values[0]), float(values[1]), float(values[2]))
-	var slot_distance := _nearest_portal_slot_m(arrival)
+	var slot := _nearest_portal_slot(arrival)
+	var slot_distance := Vector2(arrival.x, arrival.z).distance_to(Vector2(slot.x, slot.z)) if slot.is_finite() else INF
 	if not _require(slot_distance <= ARRIVAL_TOLERANCE_M
 			and on_floor is bool and bool(on_floor),
-			"client arrival is grounded at the authored Stormwood portal entry or one of its co-op slots (%.2f m, at %s)"
+			"client arrival is grounded at the authored Stormwood portal entry or one of its co-op slots (%.2f m, at %s); its height on that ground is checked on the client (arrival_ground_tolerance_m)"
 				% [slot_distance, str(arrival)]):
 		quit(await finish())
 		return
@@ -254,9 +256,9 @@ func _await_client_completion() -> Dictionary:
 ## Distance from `at` (XZ) to the nearest production arrival slot of the
 ## Stormwood arch's authored entry: the anchor first, then portals.json's
 ## co-op ring (foundation_portal_arrival.gd::arrival_slots).
-func _nearest_portal_slot_m(at: Vector3) -> float:
+func _nearest_portal_slot(at: Vector3) -> Vector3:
 	if not at.is_finite():
-		return INF
+		return Vector3.INF
 	var portals: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/portals.json"))
 	var entry_id := ""
 	if portals is Dictionary:
@@ -274,10 +276,11 @@ func _nearest_portal_slot_m(at: Vector3) -> float:
 				if raw.size() >= 3:
 					anchor = Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
 	if not anchor.is_finite():
-		return INF
-	var best := INF
+		return Vector3.INF
+	var best := Vector3.INF
 	for slot: Vector3 in preload("res://scripts/net/foundation_portal_arrival.gd").arrival_slots(anchor):
-		best = minf(best, Vector2(at.x, at.z).distance_to(Vector2(slot.x, slot.z)))
+		if not best.is_finite() or Vector2(at.x, at.z).distance_to(Vector2(slot.x, slot.z)) < Vector2(at.x, at.z).distance_to(Vector2(best.x, best.z)):
+			best = slot
 	return best
 
 
