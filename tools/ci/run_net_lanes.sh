@@ -38,12 +38,12 @@ results="$out/results.tsv"
 : > "$results"
 print_lock="$out/print.lock"
 
-show() {  # lane name rc tries: one smoke's verdict and log, atomically
-  local lane=$1 name=$2 rc=$3 tries=$4 verdict
+show() {  # lane name rc tries secs: one smoke's verdict and log, atomically
+  local lane=$1 name=$2 rc=$3 tries=$4 secs=$5 verdict
   if [ "$rc" = 0 ]; then verdict=PASS; elif [ "$rc" = 124 ]; then verdict="FAIL (timed out after ${NET_SMOKE_TIMEOUT_S} s)"; else verdict="FAIL (exit ${rc})"; fi
   {
     flock 9
-    echo "::group::smoke_net_${name}.gd lane ${lane}: ${verdict}"
+    echo "::group::smoke_net_${name}.gd lane ${lane}: ${verdict} (${secs} s)"
     cat "$out/logs/${lane}-${name}.log" 2>/dev/null || true
     echo "::endgroup::"
   } 9>"$print_lock"
@@ -68,13 +68,14 @@ run_lane() {
     active=""
   }
   trap 'cleanup_active_group; exit 130' INT TERM HUP
-  local f name log n rc
+  local f name log n rc started secs
   for f in $files; do
     name="$(basename "$f" .gd)"
     name="${name#smoke_net_}"
     log="$out/logs/${lane}-${name}.log"
     n=0
     rc=1
+    started=$(date +%s)
     until [ "$n" -ge "$RETRIES" ]; do
       n=$((n + 1))
       echo "=== smoke_net_${name}.gd attempt ${n}/${RETRIES} (lane ${lane}, ENet base ${base})" >> "$log"
@@ -85,8 +86,11 @@ run_lane() {
       cleanup_active_group
       [ "$rc" -eq 0 ] && break
     done
-    printf '%s\t%s\t%s\t%s\n' "$lane" "$name" "$rc" "$n" >> "$results"
-    show "$lane" "$name" "$rc" "$n"
+    secs=$(( $(date +%s) - started ))
+    # lane, smoke, exit code, attempts, seconds (the per-smoke time a pairing
+    # slowdown is judged by).
+    printf '%s\t%s\t%s\t%s\t%s\n' "$lane" "$name" "$rc" "$n" "$secs" >> "$results"
+    show "$lane" "$name" "$rc" "$n" "$secs"
   done
 }
 
