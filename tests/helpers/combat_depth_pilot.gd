@@ -23,6 +23,10 @@ var _incoming_windup := false
 var _enemy_windup_before_tick := false
 var _last_action: int = MANAGER.Action.READY
 var _entry_maxima: Dictionary = {}
+## Test-only A/B lever: {move_id: {key: value}} written over the fight
+## manager's own in-memory move table (never moves.json), e.g. to measure a
+## data trial against the value it replaced on the same head.
+var move_patch: Dictionary = {}
 
 
 func fight(tree: SceneTree, party: Array[RefCounted], foes: Array,
@@ -58,6 +62,7 @@ func fight(tree: SceneTree, party: Array[RefCounted], foes: Array,
 	world.add_child(_ally)
 	_manager = MANAGER.new()
 	world.add_child(_manager)
+	patch_moves(_manager.get("_moves") as RefCounted)
 	_manager.hit_landed.connect(_on_hit)
 	_manager.state_changed.connect(_on_state_changed)
 	_manager.attack_missed.connect(func(on_enemy: bool) -> void:
@@ -146,6 +151,16 @@ func fight(tree: SceneTree, party: Array[RefCounted], foes: Array,
 	world.queue_free()
 	await tree.process_frame
 	return _tally.duplicate(true)
+
+
+## Applies `move_patch` to one MoveDB instance's table.
+func patch_moves(db: RefCounted) -> void:
+	if db == null or move_patch.is_empty():
+		return
+	var table: Dictionary = db.get("_moves")
+	for move_id: String in move_patch:
+		if table.has(move_id):
+			(table[move_id] as Dictionary).merge(move_patch[move_id], true)
 
 
 ## The blow the opponent just landed, re-rolled at the top of the variance
