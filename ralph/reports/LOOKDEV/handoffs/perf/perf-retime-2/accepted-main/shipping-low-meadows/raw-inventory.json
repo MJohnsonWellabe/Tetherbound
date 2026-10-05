@@ -1,0 +1,43 @@
+{
+  "zip_sha256": "70ed0b233f035ca512a4f7126f60a26fd2b311070dcb9edfe78a0ad29297d729",
+  "zip_size": 6688183,
+  "files": [
+    {
+      "path": "native.log",
+      "size": 7690,
+      "sha256": "ca3329ade9d2c20f609042420267c8eb822df580ec4a89e8ecc7a20afb2683f7"
+    },
+    {
+      "path": "engine.log",
+      "size": 7588,
+      "sha256": "e0ca2852ecb89c79ad09c5edb38477788542f6aadc0a98d8077e1214fd860834"
+    },
+    {
+      "path": "receipt.json",
+      "size": 3357,
+      "sha256": "7337838b0ec285a0674bb489fcc246489f330925759d8c926fc721e842527ba5"
+    },
+    {
+      "path": "route/route.json",
+      "size": 35653,
+      "sha256": "cd096055199fac3b660b29b0c7bcaa6a769ab9b2c9fa443129e05001f872c5b1"
+    },
+    {
+      "path": "route/start.png",
+      "size": 3485144,
+      "sha256": "8d721c11488306cd0ffb416b1b6d41338077a22a435b98a33030da4aa8b45784"
+    },
+    {
+      "path": "route/end.png",
+      "size": 3187624,
+      "sha256": "4b93afd1cc8d396a7aae1b994f527fced6636188987713e9d9e18d2c5aad2e05"
+    }
+  ],
+  "additional_files_outside_zip": [
+    {
+      "path": "graphics_override.cfg",
+      "size": 131,
+      "sha256": "4b4444e6a6974fa5ec7cc83d2c4f98c4d1d1480560bdbaedf04df552ffc6ae30"
+    }
+  ]
+}
