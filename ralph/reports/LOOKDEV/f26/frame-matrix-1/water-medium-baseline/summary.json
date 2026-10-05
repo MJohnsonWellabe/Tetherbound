@@ -1,0 +1,21 @@
+{
+  "source_commit": "068b5b040a013a9405ace70a813c2a2ef78720f7",
+  "native_exit_code": 1,
+  "native_elapsed_seconds": 391.046,
+  "planned_frames": 240,
+  "captured_frames": 0,
+  "png_count": 1,
+  "manifest_complete": false,
+  "failure_counts": {
+    "F39 production weather service unavailable": 181
+  },
+  "external_stop": {
+    "reason": "Existing F39 tool cannot bind required production weather service; zero valid frames, repeated identical failures. Stopped owned process to free renderer; no source/tool/guard workaround.",
+    "utc": "2026-10-05T17:16:17.183866+00:00",
+    "owned_pid": 15796,
+    "failures_at_stop": 181,
+    "valid_frames": 0
+  },
+  "scope": "Owned F26 Tidewake baseline full frame matrix using existingF39tool:24catalogue stands x5headings xday/night clear=240planned. Default-offfall/flowvisuals remainoff(process-localdefaultfalsematchesauthoredflags). Debugtravel/isolatedsave/seed/frozenclock/weather; noearnedroute/fight/FPS/Ally orqualityPASS claim. Sourceincludesunverifiedambientfollowup; exactpinpreserved.",
+  "verdict": "FAIL: missing required weather binding; no valid native frame evidence. Stop reason in separate external-stop receipt; supervisor stop_reason null is not a natural completion."
+}

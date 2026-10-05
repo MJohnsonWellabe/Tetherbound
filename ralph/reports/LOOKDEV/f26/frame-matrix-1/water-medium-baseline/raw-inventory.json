@@ -1,0 +1,72 @@
+{
+  "archives": [
+    {
+      "path": "raw-evidence-01.zip",
+      "size": 21336,
+      "sha256": "38a9ce3a4a7e453d6102080c3dd638dda72ad8e2106dbc11b1b8fbe18d3c27a9"
+    }
+  ],
+  "entries": [
+    {
+      "path": "external-stop-receipt.json",
+      "size": 326,
+      "sha256": "872f82a8769fbff08a9cbeefae4d2aec93fa2ef46f64d354ac1237e92d34a460"
+    },
+    {
+      "path": "frames/manifest.json",
+      "size": 28268,
+      "sha256": "1a551cdf047e7a364ad80b588b17f7569e92a5f9f1a403ec42df76b50c0f9543"
+    },
+    {
+      "path": "native.log",
+      "size": 2642,
+      "sha256": "b6f1be556f3d64d272d50c683a0aa8a391bee75160d29eda4a07cf82279a0f6c"
+    },
+    {
+      "path": "preset-receipt.json",
+      "size": 397,
+      "sha256": "747d8e5d3c420f247dc8f94e0c0a4d5b569ec7ad93398f1071ca1289252ab2cc"
+    },
+    {
+      "path": "preset.log",
+      "size": 112,
+      "sha256": "5c177f17a34517ce3912c7dc0572a31a19f72d09d9ef241ca5ea2c359878f75e"
+    },
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/f39_capture_1791220201_7_15796/characters/character-b2420189d68b6a1aeeb5b25259f058cb/character.json",
+      "size": 2776394,
+      "sha256": "84fdd3b329e818d9b24f0832a1ba126f828df42970237c2738d4bf522a81786c"
+    },
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/f39_capture_1791220201_7_15796/slot_0.json",
+      "size": 3126891,
+      "sha256": "8211a98c357d4149cffd0f9468cc156237c4bba8cc1716ddde50b28f226bab05"
+    },
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/f39_capture_1791220201_7_15796/worlds/slot-0/world.json",
+      "size": 922,
+      "sha256": "af926029224f269fce19ff513543db34f042a679c6ee9f606101ba8ed94adec1"
+    },
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/graphics_override.cfg",
+      "size": 133,
+      "sha256": "54443c56eb16b246b6071257bcead2a835c1f77fd5c165d7affc5aee4afe039e"
+    },
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/logs/godot.log",
+      "size": 2619,
+      "sha256": "bb514163beba96a75722a0a9183eff4ac903f4f7a56a610e581306c8bb24e75c"
+    },
+    {
+      "path": "profile/Godot/app_userdata/Tetherbound/logs/godot2026-10-05T12.09.48.log",
+      "size": 109,
+      "sha256": "7f94e8f11cb0f02d605b9fc4669776a1af0ef310c3289b6046f39c2aec49ae7f"
+    },
+    {
+      "path": "receipt.json",
+      "size": 1341,
+      "sha256": "94238c9a651315bff0d8e4566b27509bcb716f6738a2f6686615e950384a7caf"
+    }
+  ],
+  "excluded": "Profile binary shader/cache files omitted; all output PNG/JSON/log/config/receipt and profile text JSON/config/log files preserved byte-identically. No PNG exists."
+}

@@ -1,0 +1,7 @@
+{
+  "reason": "Existing F39 tool cannot bind required production weather service; zero valid frames, repeated identical failures. Stopped owned process to free renderer; no source/tool/guard workaround.",
+  "utc": "2026-10-05T17:16:17.183866+00:00",
+  "owned_pid": 15796,
+  "failures_at_stop": 181,
+  "valid_frames": 0
+}
