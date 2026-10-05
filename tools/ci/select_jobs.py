@@ -94,7 +94,10 @@ PRESENTATION_JOBS = {"verify-regions-shard"}
 ALWAYS_JOBS = {"changes", "ci-gate", "verify-bake-freshness", "verify-unit-tests", "export",
                "verify-segment-handoffs",
                # Queue-order jobs (ci.yml QUEUE ORDER): ungated, they only sequence tiers.
-               "queue-after-longest", "queue-after-long"}
+               "queue-after-longest", "queue-after-long",
+               # Runs the packed suites; each suite keeps its own selection
+               # (tools/ci/packed.py evaluates its original `if:`).
+               "verify-packed"}
 
 # Where the reference scan looks (text only).
 SCAN_ROOTS = ("scripts/", "scenes/", "autoload/", "data/", "tests/", "tools/", "shaders/", "assets/")
@@ -120,25 +123,47 @@ CLASS_NAME = re.compile(r"^class_name\s+([A-Za-z_][A-Za-z0-9_]*)", re.M)
 
 
 def ci_jobs(ci_text):
-    """Job ids in ci.yml, with the text of each job's block."""
+    """Job ids in ci.yml, with the text of each job's block. The text may also
+    hold .github/ci/suites.yml (`suites:`): a packed suite keeps its job id, and
+    a job split between both files (verify-regions-shard) gets both texts."""
     jobs, name, buf = {}, None, []
     in_jobs = False
+
+    def flush():
+        if name:
+            jobs[name] = (jobs[name] + "\n" if name in jobs else "") + "\n".join(buf)
     for line in ci_text.splitlines():
-        if line.startswith("jobs:"):
+        if re.match(r"^(jobs|suites):\s*$", line):
+            flush()
+            name, buf = None, []
             in_jobs = True
+            continue
+        if re.match(r"^\S", line) and not line.startswith("#"):
+            flush()
+            name, buf = None, []
+            in_jobs = False
             continue
         if not in_jobs:
             continue
         m = re.match(r"^  ([a-z0-9][a-z0-9-]*):\s*$", line)
         if m:
-            if name:
-                jobs[name] = "\n".join(buf)
+            flush()
             name, buf = m.group(1), []
         elif name:
             buf.append(line)
-    if name:
-        jobs[name] = "\n".join(buf)
+    flush()
     return jobs
+
+
+def ci_text_with_suites(ci_path):
+    """ci.yml plus the packed suites file beside it (.github/ci/suites.yml)."""
+    with open(ci_path) as fh:
+        text = fh.read()
+    suites = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(ci_path))), "ci", "suites.yml")
+    if os.path.exists(suites):
+        with open(suites) as fh:
+            text += "\n" + fh.read()
+    return text
 
 
 class Corpus:
@@ -398,8 +423,7 @@ def main(argv):
     ap.add_argument("--ci", default=".github/workflows/ci.yml")
     ap.add_argument("--all", action="store_true")
     args = ap.parse_args(argv)
-    with open(args.ci) as fh:
-        ci_text = fh.read()
+    ci_text = ci_text_with_suites(args.ci)
     if args.all:
         chosen, everything, why = select([], args.event, ci_text, {}, force_all=True)
     else:

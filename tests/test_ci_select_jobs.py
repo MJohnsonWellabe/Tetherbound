@@ -15,7 +15,7 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, os.path.join(ROOT, "tools", "ci"))
 import select_jobs as S  # noqa: E402
 
-CI = open(os.path.join(ROOT, ".github", "workflows", "ci.yml")).read()
+CI = S.ci_text_with_suites(os.path.join(ROOT, ".github", "workflows", "ci.yml"))
 EVERY = set(S.ci_jobs(CI))
 
 CORPUS = {
