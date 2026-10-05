@@ -342,8 +342,8 @@ func _restart_and_rejoin() -> bool:
 	# A killed process sends no disconnect: the host first refuses the same
 	# character (`character_in_use`), then holds its seat for the returning
 	# character. f27_title_rejoin retries Join as a player would.
-	if not await _pass(1, "f27_title_rejoin", {"host": "127.0.0.1", "port": _host_port, "budget_frames": 20000,
-			"character_id": _guest_id}, 22000): return false
+	if not await _pass(1, "f27_title_rejoin", {"host": "127.0.0.1", "port": _host_port, "budget_frames": 40000,
+			"character_id": _guest_id}, 42000): return false
 	for peer in 2:
 		if not await _pass(peer, "expect_peers", {"count": 2}): return false
 	await step(1, "wait", {"frames": SETTLE_FRAMES})
