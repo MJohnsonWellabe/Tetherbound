@@ -66,11 +66,13 @@ class Recorder:
 
 
 var _out := ""
+var _only: PackedStringArray = []
 
 
 func _init() -> void:
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--out="): _out = arg.trim_prefix("--out=")
+		elif arg.begins_with("--only="): _only = arg.trim_prefix("--only=").split(",", false)
 	_run.call_deferred()
 
 
@@ -103,6 +105,7 @@ func _run() -> void:
 	camera.make_current()
 	var key := {}
 	for spec: Array in CASES:
+		if not _only.is_empty() and not _only.has(str(spec[0])): continue
 		var party: Array[RefCounted] = []
 		for id: String in ["terrapup"] + RETAINED:
 			var creature: RefCounted = SPECIES.spawn(id)
@@ -120,7 +123,7 @@ func _run() -> void:
 		var result: Dictionary = await pilot.fight(self, party, [foe], bool(spec[3]), hash("f22roles/" + str(spec[0])), "READER")
 		key[spec[0]] = {"species": spec[1], "role_override": spec[2], "frames": pilot.saved, "won": result.get("won")}
 		print("F22_ROLES captured ", spec[0], " frames=", pilot.saved)
-	var file := FileAccess.open(_out + "/KEY_DO_NOT_SHOW_JUDGE.json", FileAccess.WRITE)
+	var file := FileAccess.open(_out + "/KEY_DO_NOT_SHOW_JUDGE%s.json" % ("" if _only.is_empty() else "_" + "_".join(_only)), FileAccess.WRITE)
 	file.store_string(JSON.stringify(key, "\t"))
 	file.close()
 	quit(0)
