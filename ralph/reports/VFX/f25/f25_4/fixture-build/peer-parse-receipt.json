@@ -1,0 +1,17 @@
+{
+  "name": "peer-parse-r3",
+  "command": [
+    "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+    "--headless",
+    "--path",
+    "D:/tetherbound/codex-c2",
+    "--check-only",
+    "--script",
+    "res://tests/helpers/f25_four_creature_peer.gd"
+  ],
+  "exit_code": 0,
+  "stop_reason": null,
+  "elapsed_seconds": 15.702999999979511,
+  "errors": [],
+  "native_log": "D:\\tetherbound\\.artifacts\\c2-peer-parse-r3\\stdout-stderr.log"
+}

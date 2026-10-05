@@ -1,0 +1,17 @@
+{
+  "name": "coordinator-parse",
+  "command": [
+    "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+    "--headless",
+    "--path",
+    "D:/tetherbound/codex-c2",
+    "--check-only",
+    "--script",
+    "res://tests/capture_f25_four_creature_fight.gd"
+  ],
+  "exit_code": 0,
+  "stop_reason": null,
+  "elapsed_seconds": 10.406000000191852,
+  "errors": [],
+  "native_log": "D:\\tetherbound\\.artifacts\\c2-coordinator-parse\\stdout-stderr.log"
+}
