@@ -58,21 +58,22 @@ func build(id: String, ghost: bool = false) -> void:
 				_cylinder(0.12,0.34,Vector3(0,1.42,0),Color("6fe3d6"),2.2)
 				_glow(Vector3(0,1.5,0),Color("7ff0e2"))
 			"den":
-				# Creature hutch: low plank walls, pitched shingle roof, a dark round
-				# doorway at creature height and a paw-print sign; a straw nest and
-				# bowls spill out front.
-				_box(Vector3(3.8,1.3,2.8),Vector3(0,0.65,-0.15),Color("8a6440"))
+				# Creature hutch: low and wide (not a house), thatched roof (never red:
+				# reserved for Team Tether), a recessed arched doorway at creature
+				# height and a big paw print on the gable that reads from 10 m; a
+				# straw nest and bowls spill out front.
+				_box(Vector3(4.2,0.95,2.8),Vector3(0,0.475,-0.15),Color("8a6440"))
 				for side: float in [-1.0,1.0]:
-					var roof := _box(Vector3(4.2,0.14,1.9),Vector3(0,1.75,-0.15+side*0.72),Color("7a3f2a"))
-					roof.rotation.x = side*deg_to_rad(35.0)
-				var gable := _box(Vector3(1.2,1.2,0.1),Vector3(0,1.3,1.26),Color("8a6440"))
+					var roof := _box(Vector3(4.6,0.16,1.85),Vector3(0,1.32,-0.15+side*0.74),Color("b08a3e"))
+					roof.rotation.x = side*deg_to_rad(30.0)
+				var gable := _box(Vector3(1.4,1.4,0.1),Vector3(0,0.95,1.26),Color("8a6440"))
 				gable.rotation.z = deg_to_rad(45.0)
-				var door := _cylinder(0.55,0.06,Vector3(0,0.62,1.27),Color("1c1410"))
-				door.rotation.x = deg_to_rad(90.0)
-				_box(Vector3(0.1,0.9,0.1),Vector3(1.55,0.45,1.5),Color("6e5228"))
-				_box(Vector3(0.62,0.48,0.06),Vector3(1.55,1.05,1.5),Color("d9c08a"))
-				for pad: Vector3 in [Vector3(0,-0.06,0), Vector3(-0.13,0.09,0), Vector3(-0.04,0.15,0), Vector3(0.06,0.15,0), Vector3(0.14,0.09,0)]:
-					var toe := _cylinder(0.05 if pad.y > 0.0 else 0.09,0.03,Vector3(1.55,1.05,1.54)+pad,Color("3a2a1c"))
+				_box(Vector3(1.1,0.62,0.32),Vector3(0,0.31,1.14),Color("140e0a"))
+				var arch := _cylinder(0.55,0.32,Vector3(0,0.62,1.14),Color("140e0a"))
+				arch.rotation.x = deg_to_rad(90.0)
+				_box(Vector3(1.3,0.08,0.06),Vector3(0,0.02,1.3),Color("5b4632"))
+				for pad: Array in [[Vector3(0,-0.1,0),0.17], [Vector3(-0.21,0.12,0),0.08], [Vector3(-0.07,0.22,0),0.08], [Vector3(0.07,0.22,0),0.08], [Vector3(0.21,0.12,0),0.08]]:
+					var toe := _cylinder(float(pad[1]),0.04,Vector3(0,1.42,1.33)+(pad[0] as Vector3),Color("f2e6c8"))
 					toe.rotation.x = deg_to_rad(90.0)
 				_cylinder(0.62,0.16,Vector3(-0.9,0.08,1.75),Color("8a6a2a"))
 				_cylinder(0.46,0.12,Vector3(-0.9,0.2,1.75),Color("c99a3a"))
@@ -227,8 +228,8 @@ const DRESSING := {
 	"workbench": [["Workbench", Vector3(0, 0, 0.05), 0.0]],
 	"forge": [["Anvil_Log", Vector3(-0.35, 0, 1.25), 15.0], ["Bucket_Metal", Vector3(0.75, 0, 1.0), 0.0]],
 	"kitchen": [["Cauldron", Vector3(0.95, 0.36, 0.1), 0.0], ["Shelf_Simple", Vector3(-0.15, 0, -0.75), 0.0]],
-	"den": [["Bucket_Wooden_1", Vector3(0.75, 0, 1.75), 0.0], ["Pot_1", Vector3(0.3, 0, 1.85), 0.0],
-		["Barrel_Apples", Vector3(-2.1, 0, 1.0), 15.0]],
+	"den": [["Bucket_Wooden_1", Vector3(1.0, 0, 1.75), 0.0], ["Pot_1", Vector3(1.45, 0, 1.85), 0.0],
+		["Barrel_Apples", Vector3(-2.3, 0, 1.0), 15.0]],
 	"altar": [["CandleStick_Stand", Vector3(-0.75, 0, 0.3), 0.0], ["CandleStick_Stand", Vector3(0.75, 0, 0.3), 0.0]],
 	"farm": [["FarmCrate_Apple", Vector3(1.15, 0, 0.5), 15.0]],
 }
