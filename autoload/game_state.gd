@@ -3290,11 +3290,34 @@ func regional_ending_context() -> Dictionary:
 func commit_regional_ending_ack(intent: Dictionary) -> Dictionary:
 	var ending := preload("res://scripts/story/regional_homecoming.gd")
 	if session == null or ending.acknowledgement_intent(ending.context(self), str(intent.get("stage", ""))) != intent: return {"status": "refused"}
-	var view: Dictionary = session.call("homestead_personal_view")
-	if view.is_empty(): return {"status": "refused"}
+	return _queue_regional_ack(intent)
+
+
+func _queue_regional_ack(intent: Dictionary) -> Dictionary:
 	_regional_ack_intents[intent.transaction_id] = intent.duplicate(true)
-	session.call("_foundation_send", "regional_ack", "regional_ending:" + local.character_id, intent, int(view.registry_revision))
+	if not bool(session.call("is_host")):
+		# A guest's personal view is the host's async reply; its cache may be
+		# empty or predate the arrival that bumped the revision. Send against
+		# the fresh reply only. The caller polls regional_ending_ack_result.
+		var fresh := Callable(self, "_send_regional_ack").bind(intent.transaction_id)
+		if not session.is_connected("homestead_personal_view_completed", fresh):
+			session.connect("homestead_personal_view_completed", fresh, CONNECT_ONE_SHOT)
+		session.call("homestead_personal_view")
+		return regional_ending_ack_result(intent.transaction_id)
+	if not _send_regional_ack(intent.transaction_id):
+		_regional_ack_intents.erase(intent.transaction_id)
+		return {"status": "refused"}
 	return regional_ending_ack_result(intent.transaction_id)
+
+
+func _send_regional_ack(transaction_id: String) -> bool:
+	var intent: Dictionary = _regional_ack_intents.get(transaction_id, {})
+	if intent.is_empty() or session == null: return false
+	var cache: Variant = session.get("_foundation_personal_cache") if not bool(session.call("is_host")) else null
+	var view: Dictionary = cache.duplicate(true) if cache is Dictionary else session.call("homestead_personal_view")
+	if view.is_empty() or not view.has("registry_revision"): return false
+	session.call("_foundation_send", "regional_ack", "regional_ending:" + local.character_id, intent, int(view.registry_revision))
+	return true
 
 
 func regional_ending_ack_result(transaction_id: String) -> Dictionary:
