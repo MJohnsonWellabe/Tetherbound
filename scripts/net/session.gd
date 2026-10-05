@@ -470,7 +470,7 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 			if card.uid == envelope.intent.get("creature_uid"):
 				return {"ok": true, "creature_uid": card.uid, "loadout_revision": card.get("loadout_revision", 0), "registry_revision": view.registry_revision}
 		return FOUNDATION_ACTIONS.deny("not_owned")
-	if envelope.op not in FOUNDATION_ACTIONS.ACTIONS and envelope.op not in ["feast_cook", "feast_feed", "master_chest"]: return FOUNDATION_ACTIONS.deny("action_unavailable")
+	if envelope.op not in FOUNDATION_ACTIONS.ACTIONS and envelope.op not in ["feast_cook", "feast_feed", "master_chest", "essence_release"]: return FOUNDATION_ACTIONS.deny("action_unavailable")
 	var character := _authority_character(peer)
 	var world: RefCounted = _game().get("world")
 	var row: Variant = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character))
@@ -522,6 +522,16 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 	if envelope.op == "feast_feed" and STATION_RULES.config().get("runtime_enabled") == true and not _altar_peer_in_combat(peer):
 		context = {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
 			"in_range": true, "in_combat": false, "owns_character": true, "source_key": "personal_feast_feed"}
+	if envelope.op == "essence_release":
+		# F27#1 guest release: the host pays only for a creature in this
+		# admitted record (essence.stage_release); the newcomer stays the
+		# owner's own untyped catch. The ceremony itself is owner-local.
+		context = {}
+		if peer != local_peer_id() and ESSENCE.config().get("ordinary_release_payout_enabled") == true \
+			and str(envelope.station_key).begins_with("release_ceremony:") and str(envelope.station_key).length() <= 128 \
+			and not _altar_peer_in_combat(peer):
+			context = {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
+				"source_key": envelope.station_key, "in_range": true, "in_combat": false, "release_ceremony": true}
 	if context.is_empty() or context.expected_revision != envelope.revision: return _foundation_refusal("source_or_revision_changed")
 	var cfg := STATION_RULES.config()
 	if envelope.op == "boss_relic": return _foundation_refusal("host_outcome_required")
@@ -663,6 +673,12 @@ func foundation_dock_conclusion(source: Node, original: Dictionary) -> Dictionar
 		context.expected_revision, "dock_conclusion", original, context)
 	if result.get("durable") != true: return result
 	return _foundation_decision(local_peer_id(), world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character), {}))
+
+## F27#1: a guest's ordinary catch-overflow release, paid by the host from
+## its admitted record (scripts/net/essence_release_service.gd).
+func request_essence_release(pending_uid: String, intent: Dictionary, revision: int) -> Dictionary:
+	if is_host(): return _foundation_refusal("host_release_is_local")
+	return _foundation_send("essence_release", "release_ceremony:" + pending_uid, intent, revision)
 
 func request_research_claim(intent: Dictionary) -> Dictionary:
 	return _foundation_send("research_claim", "research_journal", intent, -1)
