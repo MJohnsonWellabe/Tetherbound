@@ -5400,7 +5400,19 @@ func _sync_spawn_gates() -> void:
 		if wild == _engaged_with or not _shared_host_id_for_body(wild).is_empty() \
 				or _faint_timers.has(wild) or _respawn_timers.has(wild):
 			continue
-		wild.visible = _gate_active(_wild_gates[wild])
+		var open := _gate_active(_wild_gates[wild])
+		if wild.visible == open:
+			continue
+		wild.visible = open
+		# Showing a body turns its physics back on (creature_body ties process
+		# to visibility). A night-gated creature in a cluster nobody is near
+		# must stay asleep like its neighbours, exactly as the respawn path
+		# above does; otherwise every night creature on the map ticks all night
+		# (PERF, 2026-10-05: Meadows CPU frame 34 -> 66 ms from 22:00 to 03:00).
+		if open:
+			var cluster: Dictionary = _wild_cluster.get(wild, {})
+			if not cluster.is_empty() and not bool(cluster.get("active", true)):
+				wild.set_physics_process(false)
 
 
 ## Distance beyond a cluster's own scatter radius at which its members start

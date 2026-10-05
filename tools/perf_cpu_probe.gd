@@ -75,6 +75,17 @@ func _run() -> void:
 	}
 	var census := _animation_census()
 	_report["animation_census"] = census
+	if OS.get_cmdline_user_args().has("--soak"):
+		await _soak()
+		_save()
+		quit(0)
+		return
+	if OS.get_cmdline_user_args().has("--walk"):
+		await _walk_rows(route)
+		_save()
+		print("PERF CPU %s -> %s" % [_biome_id, _out_path])
+		quit(0)
+		return
 	await _row("baseline")
 	var paused := _set_dormant_animation(false)
 	await _row("dormant_creature_animation_paused", {"players_paused": paused.size()})
@@ -186,6 +197,111 @@ static func _family(node_name: String) -> String:
 	while joined.length() > 0 and joined.right(1).is_valid_int():
 		joined = joined.left(-1)
 	return joined if joined != "" else node_name
+
+
+## Walk the trainer along the F26 route at walking pace (position driven, so
+## every streaming system sees ordinary movement) and record frame wall time:
+## mean, p99 and max. Then repeat with one suspect family disabled at a time.
+const WALK_SPEED := 5.0
+const WALK_SUSPECTS := ["GrassField", "Vegetation", "Terrain", "EncounterDirector", "Water",
+	"River", "PlaygroundHUD", "InteractionArbiter", "WorldAudio", "WorldLook", "Village",
+	"VillageNPCs", "CameraRig", "/root/Game"]
+
+
+## Stand still for ten minutes of wall time with nothing toggled; every 30 s
+## record frame wall time and the counts a per-frame leak would grow.
+func _soak() -> void:
+	var rows: Array = []
+	for sample in 20:
+		var started := Time.get_ticks_usec()
+		var frames := 0
+		while Time.get_ticks_usec() - started < 30000000:
+			await process_frame
+			frames += 1
+		var groups := {}
+		for group: String in ["creature_voice", "interaction_provider", "remote_trainer"]:
+			groups[group] = get_nodes_in_group(group).size()
+		var row := {"t_s": (sample + 1) * 30, "ms_per_frame": 30000.0 / maxf(1.0, frames),
+			"nodes": Performance.get_monitor(Performance.OBJECT_NODE_COUNT),
+			"objects": Performance.get_monitor(Performance.OBJECT_COUNT),
+			"resources": Performance.get_monitor(Performance.OBJECT_RESOURCE_COUNT),
+			"orphans": Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT),
+			"static_mem_mb": Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0,
+			"groups": groups}
+		var look := _world.get_node_or_null(^"WorldLook")
+		if look != null and look.has_method("hour"):
+			row["hour"] = float(look.call("hour"))
+		rows.append(row)
+		print("PERF CPU SOAK t=%ds %.2f ms/frame nodes=%d objects=%d orphans=%d mem=%.0fMB hour=%s" % [
+			row.t_s, row.ms_per_frame, row.nodes, row.objects, row.orphans, row.static_mem_mb,
+			str(row.get("hour", "?"))])
+	_report["soak"] = rows
+
+
+func _walk_rows(route: Dictionary) -> void:
+	var points: Array[Vector3] = []
+	var raws: Array = [route.start]
+	raws.append_array(route.waypoints)
+	for raw: Array in raws:
+		var at := Vector3(float(raw[0]), 0.0, float(raw[raw.size() - 1]))
+		at.y = float(raw[1]) if raw.size() == 3 else float(_world.call("ground_height_at", at.x, at.z))
+		points.append(at)
+	var rows: Array = []
+	var base := await _walk(points)
+	base["label"] = "walk_baseline"
+	rows.append(base)
+	print("PERF CPU WALK baseline mean=%.2f p99=%.2f max=%.2f ms" % [base.mean_ms, base.p99_ms, base.max_ms])
+	for suspect: String in WALK_SUSPECTS:
+		var node: Node = root.get_node_or_null(NodePath(suspect.trim_prefix("/root/"))) if suspect.begins_with("/root/") \
+			else _world.get_node_or_null(NodePath(suspect))
+		if node == null:
+			continue
+		var mode := node.process_mode
+		node.process_mode = Node.PROCESS_MODE_DISABLED
+		var row := await _walk(points)
+		node.process_mode = mode
+		row["label"] = "walk_without_" + suspect
+		rows.append(row)
+		print("PERF CPU WALK without %s mean=%.2f p99=%.2f max=%.2f ms" % [suspect, row.mean_ms, row.p99_ms, row.max_ms])
+	var again := await _walk(points)
+	again["label"] = "walk_baseline_again"
+	rows.append(again)
+	print("PERF CPU WALK baseline_again mean=%.2f p99=%.2f max=%.2f ms" % [again.mean_ms, again.p99_ms, again.max_ms])
+	_report["walk"] = rows
+
+
+func _walk(points: Array[Vector3]) -> Dictionary:
+	var frames: Array[float] = []
+	var previous := Time.get_ticks_usec()
+	for leg in range(points.size() - 1):
+		var from := points[leg]
+		var to := points[leg + 1]
+		var length := Vector2(to.x - from.x, to.z - from.z).length()
+		var travelled := 0.0
+		while travelled < length:
+			await process_frame
+			var now := Time.get_ticks_usec()
+			var dt := float(now - previous) / 1000.0
+			previous = now
+			frames.append(dt)
+			# Pace by simulated 60 Hz time, not wall time: the same distance
+			# per frame on every run, whatever this CPU's frame rate.
+			travelled = minf(length, travelled + WALK_SPEED / 60.0)
+			var at := from.lerp(to, travelled / maxf(length, 0.001))
+			at.y = float(_world.call("ground_height_at", at.x, at.z))
+			_player.global_position = at + Vector3.UP * TRAINER_CLEARANCE
+			_player.velocity = Vector3.ZERO
+	# Walk back to the start so every row begins at the same place.
+	_player.global_position = points[0] + Vector3.UP * TRAINER_CLEARANCE
+	for _frame in 30:
+		await process_frame
+	frames.sort()
+	var total := 0.0
+	for value: float in frames:
+		total += value
+	return {"frames": frames.size(), "mean_ms": total / maxf(1.0, frames.size()),
+		"p99_ms": frames[int(frames.size() * 0.99)] if not frames.is_empty() else 0.0,
+		"max_ms": frames.back() if not frames.is_empty() else 0.0}
 
 
 func _owner_body(node: Node) -> CharacterBody3D:
