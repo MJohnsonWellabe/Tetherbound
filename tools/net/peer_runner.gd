@@ -218,7 +218,7 @@ var _f22_host_breaks := 0
 var _f22_host_hits := 0
 ## The last live snapshot the pin saw, reported if the fight later vanishes.
 var _f22_last_seen := {}
-## Refusal history for the `encounter` probe (see `_watch_refusals`).
+## Refusal history for the `encounter` probe (see `_encounter_refusal_history`).
 var _refusal_history: Array = []
 var _refusal_seen := {}
 var _strike_observed_director: Node
@@ -4900,7 +4900,7 @@ func _step_catch_throw(args: Dictionary) -> Dictionary:
 ## Starts (once) recording every refusal this peer's CombatManager notes, by
 ## snapshotting `last_encounter_refusal` on each `state_changed` (the manager
 ## emits it from `note_encounter_refusal`). Returns the history, capped at 256.
-func _watch_refusals(manager: Node) -> Array:
+func _encounter_refusal_history(manager: Node) -> Array:
 	if manager == null:
 		return []
 	if not manager.has_meta("refusal_watch"):
@@ -6788,7 +6788,7 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				# arrival order: `last_encounter_refusal` is one slot, so a later
 				# refusal can replace the one a smoke is waiting for between
 				# two coordinator polls.
-				"refusals": _watch_refusals(emanager),
+				"refusals": _encounter_refusal_history(emanager),
 				"joinable": joinable,
 			}
 			# Shared wild fights must expose the actual opponent presentation body,
