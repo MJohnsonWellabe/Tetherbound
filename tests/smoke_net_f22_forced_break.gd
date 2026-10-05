@@ -36,8 +36,8 @@ const PLACE_SETTLE := 20
 const EARLY_START_FRAMES := 30
 const COOLDOWN_FRAMES := 150
 ## A charged move costs a full Energy meter, earned only by LANDED quick hits.
-const ENERGY_HITS := 4
-const QUICK_SWINGS := 8
+const ENERGY_HITS := 6
+const QUICK_SWINGS := 12
 
 ## Explicit, monotonic action ids: each start and its strike share one, so the
 ## host matches the strike to its own committed start.
