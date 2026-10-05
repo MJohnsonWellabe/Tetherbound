@@ -301,3 +301,59 @@ func test_first_noncombat_resource_stage_initializes_same_real_arbiter() -> void
 	remote.free()
 	session.free()
 	game.free()
+
+
+## Passive care the owner accrues between the host's stage and the owner apply
+## (walking bond, landmarks, nourishment) survives the install and its save;
+## the row's own decided change still lands.
+func test_passive_care_gained_between_stage_and_apply_is_kept() -> void:
+	var fixture := DATA.new()
+	var directory := "user://test_mastery_passive_%s/" % Crypto.new().generate_random_bytes(12).hex_encode()
+	var game := SAVE.FixtureGame.new()
+	game.local = fixture._player()
+	game.world = fixture._world()
+	var session := SAVE.FixtureSession.new()
+	session.fixture = game
+	game.session = session
+	var authority := AUTHORITY.new()
+	session.set("_character_authority", authority)
+	var writer := SAVE.BoolWriter.new()
+	writer.world_store = preload("res://scripts/save/world_save.gd").new(directory.path_join("worlds"))
+	writer.character_store = preload("res://scripts/save/character_save.gd").new(directory.path_join("characters"))
+	game.save_system = writer
+	var rpc := SAVE.FixtureRpc.new()
+	rpc.fixture = game
+	rpc.ledger = preload("res://scripts/net/world_ledger.gd").new(game.world)
+	var before := RECORD.portable_projection(game.local.save_data())
+	assert_true(authority.bind_world("resource-namespace"))
+	assert_true(authority.seed_admitted_character(before, DATA.CHARACTER).ok)
+	assert_true(writer.save_world_prepared(game, "resource-slot"))
+	var duty := _duty(before)
+	var retained: Dictionary = rpc.journal_foundation_event("mastery:" + ACTION_ID, [duty])
+	var event: Dictionary = game.world.reward_deliveries[retained.delivery_id]
+	var token := authority.stage_character_action(DATA.CHARACTER, 0, "combat_mastery", duty.intent, _context(duty, event))
+	var journal: Dictionary = rpc.journal_creature_training_prepared(1, DATA.CHARACTER, authority.staged_creature_training(token))
+	assert_true(authority.finish_creature_training(token, journal.get("durable") == true))
+	if journal.get("durable") != true:
+		SAVE.new()._close(game, rpc, directory)
+		return
+	var row: Dictionary = game.world.reward_deliveries[journal.delivery_id]
+	# The stage -> apply window: the owner keeps walking and getting hungry.
+	var creature: RefCounted = game.local.party.at(0)
+	var walked := float(creature.distance_m_together) + 37.5
+	var landmarks := int(creature.landmarks_visited_together) + 2
+	var fed := maxf(0.0, float(creature.nourishment) - 4.25)
+	creature.distance_m_together = walked
+	creature.landmarks_visited_together = landmarks
+	creature.nourishment = fed
+	var applied := OWNER.apply_owner(game, row)
+	assert_true(applied.get("ok") == true and applied.get("saved") == true, "the row installs and saves over passive drift " + str(applied))
+	var move: String = before.party[0].move_quick
+	assert_eq(int(game.local.party.at(0).move_mastery_uses.get(move, 0)), 1, "the row's decided change landed")
+	assert_eq(float(game.local.party.at(0).distance_m_together), walked, "walking bond is not rolled back")
+	assert_eq(int(game.local.party.at(0).landmarks_visited_together), landmarks, "landmarks are not rolled back")
+	assert_eq(float(game.local.party.at(0).nourishment), fed, "nourishment is not rolled back")
+	var saved: Dictionary = writer.character_store.call("read", DATA.CHARACTER)
+	assert_eq(float(saved.party[0].distance_m_together), walked, "the saved owner keeps it too")
+	assert_true(E.owner_matches_after(RECORD.portable_projection(saved), row.after), "and is otherwise exactly the row")
+	SAVE.new()._close(game, rpc, directory)

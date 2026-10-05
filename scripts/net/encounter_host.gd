@@ -1737,7 +1737,7 @@ func stage_actor_training_baseline(training: Dictionary, admitted: Dictionary,
 							or int(actor.get("settled_revision", -1)) != int(actor.get("revision", -2)):
 							return {"ok":false,"code":"retired_actor_lineage_conflict"}
 						continue
-					var releasing: bool = full_action and ((training.action == "trait_release" and training.intent.creature_uid == uid) \
+					var releasing: bool = full_action and ((training.action in ["trait_release", "essence_release"] and training.intent.creature_uid == uid) \
 						or (training.action == "wild_capture" and training.intent.released_uid == uid)) \
 						and old_party.has(uid) and not next_party.has(uid) and not current_party.has(uid)
 					if releasing:

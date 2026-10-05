@@ -1,0 +1,48 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=11376 control_port=43963 home=/tmp/claude-0/net-f27-win/home-0 log=/tmp/claude-0/net-f27-win/peer-0.log
+coordinator: launched peer 1 (client) pid=11377 control_port=39895 home=/tmp/claude-0/net-f27-win/home-1 log=/tmp/claude-0/net-f27-win/peer-1.log
+coordinator: peer 1 hello: {"enet_port":32782.0,"godot_version":"4.7-stable (official)","main_sha":"edf017ff83c7","peer":1.0,"pid":11377.0,"role":"client","type":"hello","user_data_dir":"/tmp/claude-0/net-f27-win/home-1/godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":32781.0,"godot_version":"4.7-stable (official)","main_sha":"edf017ff83c7","peer":0.0,"pid":11376.0,"role":"host","type":"hello","user_data_dir":"/tmp/claude-0/net-f27-win/home-0/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: peer 0 boot: booted world (240 settle frames)
+PASS: peer 1 boot: booted world (240 settle frames)
+PASS: peer 0 party_grant: 'terrapup' at level 9 joined the party (1 member(s))
+PASS: peer 1 party_grant: 'terrapup' at level 9 joined the party (1 member(s))
+PASS: peer 0 host: hosting udp/32781 as peer 1
+PASS: peer 1 join: joined 127.0.0.1:32781 as peer 1354134723 after 52 frames; snapshot applied; 2 peer(s) in registry
+PASS: peer 0 expect_peers: registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: peer 1 expect_peers: registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: peer 0 deploy_creature: deployed AllyCreature
+PASS: peer 1 deploy_creature: deployed AllyCreature
+PASS: peer 0 engage_wild: engaged bramblebun as encounter 1:1 (bound after 0 frame(s))
+PASS: host minted a shared wild record
+PASS: the guest was told the fight exists and can be joined
+PASS: guest joined the host's wild record (joined 1:1 beside 'bramblebun' at (-7.8, 64.2))
+PASS: the guest's strikes brought the shared opponent down
+projection diff (host stream error owner_passive_exact_projection_conflict):
+  .party[0].battles_fought owner=1.0 host=0.0
+  .party[0].happiness owner=59.8433015191668 host=54.8433015191668
+  .party[0].hp owner=166.307900838322 host=177.6
+FAIL: the guest holds exactly one new defeat receipt ([])
+FAIL: the host's row for the guest is its accepted wild_defeat share ({  })
+FAIL: the guest received its type essence (+0)
+FAIL: the guest's creature gained XP from the host share
+PASS: host admitted party equals the guest's: no legacy local award on top ([{ "level": 9.0, "species_id": "terrapup", "uid": "creature-f3ec63737cfaf0f0c12d9f87f81f8d44", "xp": 0.0 }] vs [{ "level": 9.0, "species_id": "terrapup", "uid": "creature-f3ec63737cfaf0f0c12d9f87f81f8d44", "xp": 0.0 }])
+PASS: host admitted items equals the guest's: no legacy local award on top ({ "essence_air": 0.0, "essence_dark": 0.0, "essence_electric": 0.0, "essence_fire": 0.0, "essence_ground": 0.0, "essence_ice": 0.0, "essence_psychic": 0.0, "essence_water": 0.0, "tether_candy": 0.0 } vs { "essence_air": 0.0, "essence_dark": 0.0, "essence_electric": 0.0, "essence_fire": 0.0, "essence_ground": 0.0, "essence_ice": 0.0, "essence_psychic": 0.0, "essence_water": 0.0, "tether_candy": 0.0 })
+PASS: host admitted defeat_receipts equals the guest's: no legacy local award on top ([] vs [])
+PASS: peer 1 leave: client left cleanly after 0 frames
+PASS: peer 0 expect_peers: registry reports 1 peer(s) after 9 frames (1.2 s)
+PASS: peer 1 production_join: title returning entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:32781 as peer 324661641 after 201 frames
+PASS: after reconnect party unchanged ([{ "level": 9.0, "species_id": "terrapup", "uid": "creature-f3ec63737cfaf0f0c12d9f87f81f8d44", "xp": 0.0 }])
+PASS: after reconnect items unchanged ({ "essence_air": 0.0, "essence_dark": 0.0, "essence_electric": 0.0, "essence_fire": 0.0, "essence_ground": 0.0, "essence_ice": 0.0, "essence_psychic": 0.0, "essence_water": 0.0, "tether_candy": 0.0 })
+PASS: after reconnect defeat_receipts unchanged ([])
+PASS: peer 1 save_reload_here: client character reload preserved party=true selection=true hosted_world=true
+PASS: after reload party unchanged ([{ "level": 9.0, "species_id": "terrapup", "uid": "creature-f3ec63737cfaf0f0c12d9f87f81f8d44", "xp": 0.0 }])
+PASS: after reload items unchanged ({ "essence_air": 0.0, "essence_dark": 0.0, "essence_electric": 0.0, "essence_fire": 0.0, "essence_ground": 0.0, "essence_ice": 0.0, "essence_psychic": 0.0, "essence_water": 0.0, "tether_candy": 0.0 })
+PASS: after reload defeat_receipts unchanged ([])
+FAIL: the guest holds exactly one new defeat receipt ([])
+FAIL: the host's row for the guest is its accepted wild_defeat share ({  })
+FAIL: the guest received its type essence (+0)
+FAIL: the guest's creature gained XP from the host share
+exit 1

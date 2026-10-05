@@ -5,6 +5,7 @@ const BACKGROUND_TRACE := preload("res://scripts/net/background_work_trace.gd")
 
 const FOUNDATION_ACTIONS := preload("res://scripts/net/foundation_actions.gd")
 const FOUNDATION_RETRY_ORDER := preload("res://scripts/net/foundation_retry_order.gd")
+const WILD_ACTOR_SCOPE := preload("res://scripts/net/wild_actor_scope.gd")
 const COMBAT_ROUND_REWARD := preload("res://scripts/net/combat_round_reward.gd")
 const STATION_RULES := preload("res://scripts/build/station_rules.gd")
 const HOMESTEAD_BUILDING := preload("res://scripts/net/homestead_building_delivery.gd")
@@ -144,7 +145,7 @@ func _ordinary_actor_vitals_owned_origin(director: Node, row: Dictionary) -> boo
 		if proof.get("proposal", {}).get("encounter_id") == id or proof.get("scope", {}).get("encounter_id") == id: return true
 	else:
 		var record: Dictionary = director.get("_encounter")
-		if record.get("encounter_id") == id and record.has("ordinary_combat_reward_owner"): return true
+		if record.get("encounter_id") == id and (record.has("ordinary_combat_reward_owner") or record.has("wild_actor_owner")): return true
 	var manager: Node = director.get("_manager") as Node
 	return is_instance_valid(manager) and manager.get_script() != null \
 		and FOUNDATION_COMBAT_MANAGERS.has(manager.get_script().resource_path) \
@@ -242,7 +243,7 @@ func _owner_passive_actor_vitals_context(peer: int, binding: Dictionary) -> Dict
 
 func _owner_passive_commit_retained(peer: int, binding: Dictionary) -> Dictionary:
 	if not is_host() or binding.get("character") != _authority_character(peer) \
-		or binding.get("action") not in ["master_win", "boss_relic", "combat_mastery", "combat_round_reward"]:
+		or binding.get("action") not in ["master_win", "boss_relic", "combat_mastery", "combat_round_reward", "wild_defeat_share"]:
 		return FOUNDATION_ACTIONS.deny("owner_passive_original_duty_required")
 	var world: RefCounted = _game().get("world")
 	if binding.action == "boss_relic":
@@ -471,7 +472,7 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 			if card.uid == envelope.intent.get("creature_uid"):
 				return {"ok": true, "creature_uid": card.uid, "loadout_revision": card.get("loadout_revision", 0), "registry_revision": view.registry_revision}
 		return FOUNDATION_ACTIONS.deny("not_owned")
-	if envelope.op not in FOUNDATION_ACTIONS.ACTIONS and envelope.op not in ["feast_cook", "feast_feed", "master_chest"]: return FOUNDATION_ACTIONS.deny("action_unavailable")
+	if envelope.op not in FOUNDATION_ACTIONS.ACTIONS and envelope.op not in ["feast_cook", "feast_feed", "master_chest", "essence_release"]: return FOUNDATION_ACTIONS.deny("action_unavailable")
 	var character := _authority_character(peer)
 	var world: RefCounted = _game().get("world")
 	var row: Variant = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character))
@@ -524,6 +525,17 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 	if envelope.op == "feast_feed" and STATION_RULES.config().get("runtime_enabled") == true and not _altar_peer_in_combat(peer):
 		context = {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
 			"in_range": true, "in_combat": false, "owns_character": true, "source_key": "personal_feast_feed"}
+	if envelope.op == "essence_release":
+		# F27#1 guest release: the host pays only for a creature in this
+		# admitted record (essence.stage_release); the newcomer stays the
+		# owner's own untyped catch. The ceremony itself is owner-local.
+		context = {}
+		if peer != local_peer_id() and ESSENCE.config().get("ordinary_release_payout_enabled") == true \
+			and str(envelope.station_key).begins_with("release_ceremony:") and str(envelope.station_key).length() <= 128 \
+			and not _altar_peer_in_combat(peer):
+			context = {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
+				"source_key": envelope.station_key, "in_range": true, "in_combat": false, "release_ceremony": true}
+		if context.is_empty(): return _foundation_refusal("release_ceremony_unavailable") # Terminal: the guest releases unpaid.
 	if context.is_empty() or context.expected_revision != envelope.revision: return _foundation_refusal("source_or_revision_changed")
 	var cfg := STATION_RULES.config()
 	if envelope.op == "boss_relic": return _foundation_refusal("host_outcome_required")
@@ -665,6 +677,12 @@ func foundation_dock_conclusion(source: Node, original: Dictionary) -> Dictionar
 		context.expected_revision, "dock_conclusion", original, context)
 	if result.get("durable") != true: return result
 	return _foundation_decision(local_peer_id(), world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character), {}))
+
+## F27#1: a guest's ordinary catch-overflow release, paid by the host from
+## its admitted record (scripts/net/essence_release_service.gd).
+func request_essence_release(pending_uid: String, intent: Dictionary, revision: int) -> Dictionary:
+	if is_host(): return _foundation_refusal("host_release_is_local")
+	return _foundation_send("essence_release", "release_ceremony:" + pending_uid, intent, revision)
 
 func request_research_claim(intent: Dictionary) -> Dictionary:
 	return _foundation_send("research_claim", "research_journal", intent, -1)
@@ -905,6 +923,7 @@ func _retry_foundation_events() -> void:
 	var research_no_progress := {}
 	var ordinary_waiting: Dictionary = _ordinary_round_pending_characters()
 	var combat_held := {}
+	var share_wait := {}
 	for work: Dictionary in FOUNDATION_RETRY_ORDER.ordered(world.reward_deliveries, world.reward_delivery_namespace, world.world_id):
 		var raw: Dictionary = work.event
 		var duty: Dictionary = work.duty
@@ -916,7 +935,12 @@ func _retry_foundation_events() -> void:
 			if not preload("res://scripts/net/encounter_rewards.gd").chapter_delivery_ready(handoff, world.flags.all_set()): continue
 		var peer := int(_registry.call("peer_for_character", duty.character_id))
 		if peer < 1 or handled.has(duty.character_id): continue
-		if combat_held.has(duty.character_id) and duty.action != "combat_round_reward": continue
+		if combat_held.has(duty.character_id) and duty.action not in ["combat_round_reward", "wild_defeat_share"]: continue
+		# F27: a guest's wild-win share settles its fight HP first; that fight's
+		# research/bounty duties wait behind it, as trainer rounds' do.
+		if duty.action != "wild_defeat_share" and peer != local_peer_id():
+			if not share_wait.has(duty.character_id): share_wait[duty.character_id] = _guest_wild_share_outstanding(duty.character_id, world)
+			if share_wait[duty.character_id] == true: continue
 		if duty.action == "combat_mastery" and _altar_peer_in_combat(peer): continue
 		var latest: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, duty.character_id), {})
 		var receipt := _foundation_duty_receipt(duty, world.reward_delivery_namespace)
@@ -964,7 +988,7 @@ func _retry_foundation_events() -> void:
 		else:
 			context.in_combat = false
 			context.foundation_runtime_authorized = true
-			if peer != local_peer_id() and duty.action in ["master_win", "boss_relic", "combat_mastery", "combat_round_reward"]:
+			if peer != local_peer_id() and duty.action in ["master_win", "boss_relic", "combat_mastery", "combat_round_reward", "wild_defeat_share"]:
 				var ready: Dictionary = _owner_passive_service().call("gate", peer, duty.action, duty.intent, context)
 				if ready.get("ok") != true:
 					_note_duty_hold(duty, "owner passive gate " + str(ready.get("code", "")))
@@ -973,6 +997,14 @@ func _retry_foundation_events() -> void:
 			if duty.action in FOUNDATION_ACTIONS.ACTIONS:
 				result = FOUNDATION_ACTIONS.commit(_character_authority, get_node(^"LedgerRpc"), peer, duty.character_id, context.expected_revision, duty.action, duty.intent, context)
 			else: result = preload("res://scripts/net/character_action_rules.gd").commit_host_action(_character_authority, get_node(^"LedgerRpc"), peer, duty.character_id, context.expected_revision, duty.action, duty.intent, context)
+		if duty.action == "wild_defeat_share" and result.get("ok") != true and result.get("durable") != true \
+			and _wild_share_permanent(str(result.get("code", ""))):
+			# Bounded release: a share that can never stage stops holding this
+			# guest's requests and duties (logged once; never paid twice).
+			var refused_key: String = str(raw.delivery_id) + "|" + str(duty.character_id)
+			if not _wild_share_refused.has(refused_key):
+				_wild_share_refused[refused_key] = str(result.code)
+				push_warning("[session] wild_defeat_share for %s refused for good: %s" % [duty.character_id, str(result.code)])
 		if duty.action == "research_event" and result.get("code") == "research_no_progress":
 			# Admission inside the real research adapter may refresh the local
 			# record; remember its resulting revision, never a character state.
@@ -1013,6 +1045,7 @@ func _foundation_duty_receipt(duty: Dictionary, world_namespace: String = "") ->
 	if duty.action == "combat_mastery": return "craft:combat_mastery_%s:%s" % [str(duty.intent.action_id).sha256_text(), duty.character_id]
 	if duty.action == "rematch_win": return "rematch:%s:%s:%s:win:%s:%s:%s" % [duty.intent.trainer_id, duty.intent.tier, duty.character_id, duty.context.world_namespace, duty.context.session_id, str(duty.intent.encounter_id).sha256_text()]
 	if duty.action == "master_win": return "master_recipe:%s:%s:win" % [duty.intent.master_id, duty.character_id]
+	if duty.action == "wild_defeat_share": return ESSENCE.defeat_receipt(duty.character_id, duty.intent)
 	if duty.action == "boss_relic": return FOUNDATION_ACTIONS.boss_receipt(world_namespace, duty.intent.trainer_id, duty.character_id)
 	if duty.action == "research_event":
 		var event: Dictionary = duty.context
@@ -1151,7 +1184,14 @@ func _ordinary_actor_vitals_commit_source(director: Node, encounter_id: String, 
 	var scope: Dictionary = scopes.get(encounter_id, {})
 	var world: RefCounted = _game().get("world")
 	var host: RefCounted = director.get("_encounter_host")
-	if world == null or host == null or not COMBAT_ROUND_REWARD.scope_valid(scope) \
+	# F27: a guest's vitals in a canonical wild fight use the same carrier
+	# under their own encounter-keyed scope (never a trainer/round scope).
+	var wild_scope := false
+	if scope.is_empty() and host != null and director.has_method("uses_wild_actor_vitals") \
+		and director.call("uses_wild_actor_vitals", encounter_id) == true:
+		scope = (host.call("record", encounter_id) as Dictionary).get("wild_actor_owner", {}).duplicate(true)
+		wild_scope = WILD_ACTOR_SCOPE.scope_valid(scope)
+	if world == null or host == null or not (wild_scope or COMBAT_ROUND_REWARD.scope_valid(scope)) \
 		or scope.world_namespace != world.get("reward_delivery_namespace") or scope.session_id != _altar_current_epoch() \
 		or host.get_script() not in [preload("res://scripts/net/encounter_host.gd"), preload("res://scripts/combat/accepted_action_host.gd")]: return refused
 	var pending: Dictionary = director.get("_ordinary_actor_vitals_proposals")
@@ -1177,7 +1217,8 @@ func _ordinary_actor_vitals_commit_source(director: Node, encounter_id: String, 
 	if character.is_empty() or member.get("character_id") != character \
 		or source_record.get("encounter_id") != encounter_id or source_record.get("phase") != "active" \
 		or preload("res://scripts/data/biome_order.gd").canonical_id(str(record.get("realm"))) != scope.realm \
-		or record.get("opponent", {}).get("owner_npc") != scope.trainer_id \
+		or (wild_scope and not WILD_ACTOR_SCOPE.owns(record.get("wild_actor_owner"), record, encounter_id)) \
+		or (not wild_scope and record.get("opponent", {}).get("owner_npc") != scope.trainer_id) \
 		or source_member.get("actor_bound_uid") != uid or member.get("actor_bound_uid") != uid \
 		or int(actor.get("body_instance_id", 0)) <= 0 \
 		or actor.get("body_instance_id") != source_member.get("actor_vitals", {}).get(uid, {}).get("body_instance_id") \
@@ -4102,6 +4143,11 @@ func host_ack_creature_vitals(peer_id: int, creature_uid: String,
 			proof["accepted"] = true
 			proof["accepted_row"] = row.duplicate(true)
 		director.set_meta("foundation_ordinary_vitals_commits", proofs)
+	# A rejoin admission parked behind this character's in-flight vitals can
+	# now compare the settled markers the owner already saved (the owner's own
+	# traffic re-checks too: owner_passive_sync.receive_host).
+	if (_character_authority.call("pending_creature_vitals", character) as Dictionary).is_empty():
+		_owner_passive_service().call("retry_deferred", character)
 	return true
 
 
@@ -4670,7 +4716,7 @@ func _retain_owner_training_retry(player: RefCounted, world: RefCounted, row: Di
 		or _owner_training_retry.world.get_ref() != world or _owner_training_retry.receipt != row.receipt): return false
 	var capture_originals: Variant = _owner_training_retry.get("capture_originals")
 	var released: Variant = _owner_training_retry.get("release_instance")
-	if preload("res://scripts/net/character_record_rules.gd").training_version(row) in [2, 3] and row.get("action") == "trait_release" and released == null:
+	if preload("res://scripts/net/character_record_rules.gd").training_version(row) in [2, 3] and row.get("action") in ["trait_release", "essence_release"] and released == null:
 		# Bind identity while the real original instance is still owned. A weak
 		# identity is not a sixth creature or a second authoritative roster.
 		if ESSENCE._equivalent(preload("res://scripts/net/character_record_rules.gd").portable_projection(player.call("save_data")), row.before):
@@ -4714,7 +4760,7 @@ func _mark_owner_training_saved(player: RefCounted, world: RefCounted, row: Dict
 	if _owner_training_retry.is_empty() or _owner_training_retry.player.get_ref() != player \
 			or _owner_training_retry.world.get_ref() != world or _owner_training_retry.receipt != row.receipt \
 			or not ESSENCE._equivalent(_owner_training_row(), row) \
-			or not ESSENCE._equivalent(preload("res://scripts/net/character_record_rules.gd").training_projection(player.call("save_data"), row, ESSENCE.training_projection), row.after): return false
+			or not ESSENCE.owner_matches_after(preload("res://scripts/net/character_record_rules.gd").training_projection(player.call("save_data"), row, ESSENCE.training_projection), row.after): return false
 	_owner_training_retry.saved = true
 	return true
 
@@ -4727,7 +4773,7 @@ func _owner_training_snapshot_allowed(player: RefCounted, payload: Dictionary) -
 	if not _owner_training_mutation_blocked(player): return true
 	var row := _owner_training_row()
 	return not row.is_empty() and payload.get("character_id") == player.get("character_id") \
-		and ESSENCE._equivalent(preload("res://scripts/net/character_record_rules.gd").training_projection(payload, row, ESSENCE.training_projection), row.after) \
+		and ESSENCE.owner_matches_after(preload("res://scripts/net/character_record_rules.gd").training_projection(payload, row, ESSENCE.training_projection), row.after) \
 		and payload.redesign_character.transaction_receipts.has(row.receipt)
 
 
@@ -4739,7 +4785,7 @@ func _settle_owner_training_accepted(player: RefCounted, world: RefCounted, row:
 	if not _owner_training_retry.is_empty():
 		if _owner_training_retry.player.get_ref() != player or _owner_training_retry.world.get_ref() != world \
 			or _owner_training_retry.receipt != row.receipt or _owner_training_retry.saved != true \
-			or not ESSENCE._equivalent(preload("res://scripts/net/character_record_rules.gd").training_projection(player.call("save_data"), row, ESSENCE.training_projection), row.after): return false
+			or not ESSENCE.owner_matches_after(preload("res://scripts/net/character_record_rules.gd").training_projection(player.call("save_data"), row, ESSENCE.training_projection), row.after): return false
 		_owner_training_retry = {}
 	if _owner_passive != null: _owner_passive.call("owner_settled", row)
 	if _owner_passive_altar_original.get("intent", {}).get("spend_id") == row.action_id:
@@ -5216,11 +5262,13 @@ func _commit_host_wild_victory(frozen: Dictionary) -> Dictionary:
 	if source.is_empty() or not frozen.get("record", {}).get("participants") is Dictionary \
 		or not frozen.get("deployments") is Array: return refused
 	var participants: Dictionary = frozen.record.participants
-	# Current full-state care/bond/condition reconciliation remains a remote
-	# activation blocker. Do not pay only the host and silently discard peers.
-	if participants.size() != 1 or not participants.has(local_peer_id()):
-		refused.code = "remote_training_baseline_not_ready"
-		return refused
+	# Every guest participant's share is retained FIRST, as its own durable
+	# owner duty (the owner-passive gate, owner save and ACK), so the host's
+	# own row below never pays the host and silently drops a peer.
+	var guests := _journal_guest_wild_defeats(frozen, source.get("current", {}))
+	if guests.get("durable") != true: return guests
+	if not participants.has(local_peer_id()):
+		return {"ok": true, "durable": true, "resolved": true, "code": "guest_shares_retained"}
 	var peer := local_peer_id()
 	var character := _authority_character(peer)
 	var participant: Variant = participants[peer]
@@ -5264,6 +5312,91 @@ func _commit_host_wild_victory(frozen: Dictionary) -> Dictionary:
 	transport.call("publish_creature_training", peer, character, committed.receipt)
 	return {"ok": true, "durable": true, "resolved": false, "receipt": committed.receipt,
 		"delivery_id": committed.delivery_id, "code": "awaiting_saved_decision"}
+
+## A canonical wild victory this guest took part in has not yet DELIVERED its
+## `wild_defeat_share`: still settling vitals, or journaled but not yet
+## accepted into the authority record. Its other duties and requests wait, so
+## nothing changes the record the share stages on in between.
+func _guest_wild_share_outstanding(character: String, world: RefCounted) -> bool:
+	var receipts: Array = (_character_authority.call("state", character) as Dictionary).get("redesign_character", {}).get("transaction_receipts", [])
+	for raw: Variant in world.reward_deliveries.values():
+		if not raw is Dictionary or raw.get("kind") != "foundation_event" or not str(raw.get("source_id", "")).begins_with("wild_xp:") \
+			or not preload("res://scripts/net/foundation_event.gd").valid(raw, world.reward_delivery_namespace, world.world_id): continue
+		if _wild_share_refused.has(str(raw.delivery_id) + "|" + character): continue
+		for duty: Variant in raw.get("duties", []):
+			if duty is Dictionary and duty.get("action") == "wild_defeat_share" and duty.get("character_id") == character \
+				and not receipts.has(ESSENCE.defeat_receipt(character, duty.intent)): return true
+	for director: Node in _foundation_directors_under(_foundation_realm_roots()):
+		var fights: Variant = director.get("_shared_host_fights")
+		if not fights is Dictionary or not director.has_method("_shared_host_fight"): continue
+		for id: Variant in fights:
+			var runtime: Node = director.call("_shared_host_fight", str(id))
+			if runtime == null or not runtime.has_meta(&"wild_victory_source") \
+				or bool(runtime.get_meta(&"wild_victory_resolved", false)): continue
+			var original: Variant = runtime.get_meta(&"wild_victory_source")
+			if not original is Dictionary or not original.get("record", {}).get("participants") is Dictionary: continue
+			for peer: Variant in original.record.participants:
+				if peer == local_peer_id() or original.record.participants[peer].get("character_id") != character: continue
+				var share := preload("res://scripts/net/foundation_event.gd").identity({"world_namespace": world.reward_delivery_namespace,
+					"session_id": _altar_current_epoch(), "source_id": "wild_xp:" + str(original.get("source_id", ""))})
+				if not world.reward_deliveries.has(share): return true
+	return false
+
+## Retained shares the host found can never stage (event+character -> code).
+var _wild_share_refused: Dictionary = {}
+
+static func _wild_share_permanent(code: String) -> bool:
+	return code in ["receipt_budget", "receipt_conflict", "owned_enemy_refused", "actual_host_wild_defeat_required",
+		"not_actual_wild_defeat", "invalid_defeat_event", "invalid_defeat_identity", "invalid_defeat_participants",
+		"invalid_defeat_active_uid", "invalid_defeat_XP_or_cap", "invalid_defeat_payout", "invalid_defeat",
+		"defeat_schema_or_candidate_unavailable", "inventory_full"]
+
+## F27: each guest participant of a host wild victory gets one retained
+## `wild_defeat_share` duty, its event staged once here from the SAME frozen capture
+## (actual killing hit, deployments, mode) against that guest's admitted
+## record. Retries find the retained event and never restage it.
+func _journal_guest_wild_defeats(frozen: Dictionary, live: Dictionary) -> Dictionary:
+	var world: RefCounted = _game().get("world")
+	var participants: Dictionary = frozen.record.participants
+	var characters: Array[String] = []
+	var peers: Array = participants.keys()
+	peers.sort()
+	for peer: Variant in peers:
+		characters.append(str((participants[peer] as Dictionary).get("character_id", "")))
+	var source := "wild_xp:" + str(frozen.get("source_id", ""))
+	var existing := preload("res://scripts/net/foundation_event.gd").identity(
+		{"world_namespace": world.reward_delivery_namespace, "session_id": _altar_current_epoch(), "source_id": source})
+	if world.reward_deliveries.has(existing): return {"ok": true, "durable": true}
+	var duties: Array = []
+	for peer: Variant in peers:
+		if peer == local_peer_id(): continue
+		var character := str((participants[peer] as Dictionary).get("character_id", ""))
+		var admitted: Dictionary = _character_authority.call("state", character) if not character.is_empty() else {}
+		var member: Dictionary = live.get("participants", {}).get(peer, {})
+		if member.is_empty(): member = live.get("retained_actor_participants", {}).get(character, {})
+		var vitals: Array = WILD_ACTOR_SCOPE.settled_vitals(admitted, member) if not admitted.is_empty() else []
+		# Every fight hit must already be owner-saved into the authority record,
+		# so eligibility, the owner and the frozen vitals all agree. Otherwise
+		# retry the whole set later; a partial set is never journaled (one
+		# stamped guest would lose its award).
+		if admitted.is_empty() or not ESSENCE._equivalent(WILD_ACTOR_SCOPE.settled_before(admitted, {"settled_vitals": vitals}), admitted):
+			return {"ok": false, "durable": false, "resolved": false, "code": "guest_wild_vitals_settling"}
+		var staged := ESSENCE.stage_captured_host_victory(admitted, character,
+			int(_character_authority.call("revision", character)), int(peer), frozen,
+			ESSENCE.config(), PROGRESSION.config(), TEACHING.available_moves, TEACHING.character_loadout_mirror)
+		if staged.get("duplicate") == true: continue # Already holds this win's receipt.
+		if staged.get("ok") != true:
+			# An invalid admitted state for this event (never a transient hold).
+			push_warning("[session] wild_defeat_share for %s refused: %s" % [character, str(staged.get("code", ""))])
+			continue
+		duties.append({"character_id": character, "action": "wild_defeat_share", "intent": staged.intent.duplicate(true),
+			"context": {"source_key": source, "validated_host_outcome": "win", "defeat_event": staged.intent.duplicate(true),
+				"settled_vitals": vitals, "participants": characters.duplicate(),
+				"world_namespace": world.reward_delivery_namespace, "session_id": _altar_current_epoch()}})
+	if duties.is_empty(): return {"ok": true, "durable": true}
+	var journal: Dictionary = get_node(^"LedgerRpc").call("journal_foundation_event", source, duties)
+	if journal.get("durable") != true: return {"ok": false, "durable": false, "resolved": false, "code": "guest_wild_shares_pending"}
+	return journal
 
 ## Appended to the existing Session; all state remains its existing admission
 ## registry, WorldState.reward_deliveries and the owner's transaction receipts.
@@ -5768,7 +5901,7 @@ func _begin_owner_training_rollback(player: RefCounted, world: RefCounted, row: 
 func _owner_training_release_write_allowed(index: int, player: RefCounted) -> bool:
 	var row := _owner_training_row()
 	if not _owner_training_install or _owner_training_install_rollback or preload("res://scripts/net/character_record_rules.gd").training_version(row) not in [2, 3] \
-		or row.get("action") != "trait_release" or row.get("status") != "pending" or _owner_training_retry.is_empty() \
+		or not row.get("action") in ["trait_release", "essence_release"] or row.get("status") != "pending" or _owner_training_retry.is_empty() \
 		or _owner_training_retry.player.get_ref() != player or _owner_training_retry.receipt != row.receipt: return false
 	var original: Variant = _owner_training_retry.get("release_instance")
 	var member: RefCounted = player.get("party").call("at", index)
@@ -5781,7 +5914,7 @@ func _owner_training_release_rollback_allowed(snapshot: Dictionary, player: RefC
 	if _owner_training_install_rollback and _owner_training_row().get("action") == "wild_capture": return _capture_roster_allowed(snapshot.get("members", []), true, player)
 	var row := _owner_training_row()
 	if not _owner_training_install or not _owner_training_install_rollback or preload("res://scripts/net/character_record_rules.gd").training_version(row) not in [2, 3] \
-		or row.get("action") != "trait_release" or row.get("status") != "pending" or _owner_training_retry.is_empty() \
+		or not row.get("action") in ["trait_release", "essence_release"] or row.get("status") != "pending" or _owner_training_retry.is_empty() \
 		or _owner_training_retry.player.get_ref() != player or _owner_training_retry.receipt != row.receipt \
 		or not snapshot.get("members") is Array or snapshot.members.size() != row.before.party.size(): return false
 	var original: Variant = _owner_training_retry.get("release_instance")

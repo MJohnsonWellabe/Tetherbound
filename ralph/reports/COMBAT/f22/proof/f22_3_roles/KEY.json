@@ -1,0 +1,6 @@
+{"creature_a": {"species": "reedwing", "role": "CURRENT"},
+ "creature_b": {"species": "tuskroot", "role": "CHARGER"},
+ "creature_c": {"species": "meadowhart", "role": "ACE (trainer-owned, role override; ace_lane + ace_exam)"},
+ "creature_d": {"species": "mosshell", "role": "WALL"},
+ "creature_e": {"species": "brooktail", "role": "DIVER"},
+ "capture": "tests/capture_f22_roles.gd, xvfb opengl3 Compatibility 960x540, flat C2 fixture, READER pilot, water chapter, L24 foes vs L28 party, 36 frames/fight at 0.4 s"}

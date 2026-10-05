@@ -66,9 +66,12 @@ const FOCUS_INTERVAL_S := 0.5
 
 ## realm id -> the world node standing for it (a child of the tree root).
 var _shells: Dictionary = {}
-## realm id -> the scene path `ResourceLoader.load_threaded_request()` was
-## asked for and has not yet been collected. See `_stand_up()`.
+## realm id -> {"scene": path, "thread": Thread} for a shell scene still
+## being read off the main thread. See `_collect_scene()`.
 var _loading: Dictionary = {}
+## Reads nobody wants any more, still running. Every worker Thread is joined
+## (`wait_to_finish`) once done, and at exit, so nothing is left behind.
+var _abandoned: Array[Thread] = []
 ## realm id -> {"attach_ms", "static_delta_kb", "started_ms", "build_ms"},
 ## kept for the lane's own measurement against spike S2 and for `report()`.
 ## `attach_ms` is the walk to the world's first yield; `build_ms` is the whole
@@ -91,7 +94,12 @@ func _exit_tree() -> void:
 		if node is Node and is_instance_valid(node):
 			(node as Node).queue_free()
 	_shells.clear()
-	_loading.clear()
+	for realm: String in _loading.keys().duplicate():
+		_abandon(realm)
+	# Shutting down: join any read still in flight (blocks once, at exit).
+	for thread: Thread in _abandoned:
+		thread.wait_to_finish()
+	_abandoned.clear()
 
 
 # --- public API ---------------------------------------------------------------
@@ -122,7 +130,7 @@ func reconcile() -> void:
 	# nobody and immediately tearing it down through a world save.
 	for realm: String in _loading.keys().duplicate():
 		if not wanted.has(realm):
-			_loading.erase(realm)
+			_abandon(realm)
 
 
 func _local_realm_scene_ready() -> bool:
@@ -148,7 +156,8 @@ static func scene_ready_for_realm(scene: Node, here: String) -> bool:
 func release_all() -> void:
 	for realm: String in _shells.keys().duplicate():
 		_tear_down(realm)
-	_loading.clear()
+	for realm: String in _loading.keys().duplicate():
+		_abandon(realm)
 
 
 ## The realms this process is currently simulating for somebody else.
@@ -300,32 +309,55 @@ func _stand_up(realm: String) -> void:
 ## Ask for the realm's scene on a background thread, and answer with it only
 ## once it is actually there. Returns null while the read is still running,
 ## which is not a failure -- `reconcile()` asks again on the next tick.
+##
+## A plain `ResourceLoader.load()` on a worker Thread, not
+## `load_threaded_request()`: under Godot 4.7 a threaded request whose
+## dependencies are already cached (the host's own live world shares most
+## scripts) never releases those dependency load tokens, even after
+## `load_threaded_get()` -- 73 RefCounted leaked per Cloudreach shell on the
+## host (ralph/reports/HUB/f18/host-exit-leak/). The blocking loader on our own
+## thread releases them and still keeps the multi-second read off the frame.
 func _collect_scene(realm: String, scene: String) -> PackedScene:
 	if not _loading.has(realm):
-		var started := ResourceLoader.load_threaded_request(scene)
+		var thread := Thread.new()
+		var started := thread.start(_read_scene.bind(scene))
 		if started != OK:
-			# A threaded request the engine declined (an unknown path, no
-			# free loader thread). Fall back to the blocking read rather than
-			# never standing the shell up at all: a freeze is worse than a
-			# threaded load and better than a realm nobody simulates.
-			push_warning("[realms] threaded load of '%s' declined (%d); reading it inline" % [scene, started])
+			# No worker available. A freeze is worse than a threaded load and
+			# better than a realm nobody simulates.
+			push_warning("[realms] background read of '%s' declined (%d); reading it inline" % [scene, started])
 			return load(scene) as PackedScene
-		_loading[realm] = scene
+		_loading[realm] = {"scene": scene, "thread": thread}
 		print("[realms] reading '%s' for realm '%s' off the loader thread" % [scene, realm])
 		return null
-	match ResourceLoader.load_threaded_get_status(scene):
-		ResourceLoader.THREAD_LOAD_IN_PROGRESS:
-			return null
-		ResourceLoader.THREAD_LOAD_LOADED:
-			_loading.erase(realm)
-			var packed := ResourceLoader.load_threaded_get(scene) as PackedScene
-			if packed == null:
-				push_warning("[realms] '%s' loaded but is not a PackedScene" % scene)
-			return packed
-		_:
-			_loading.erase(realm)
-			push_warning("[realms] threaded load of '%s' failed for realm '%s'" % [scene, realm])
-			return null
+	var row: Dictionary = _loading[realm]
+	var running: Thread = row.thread
+	if running.is_alive():
+		return null
+	_loading.erase(realm)
+	var packed := running.wait_to_finish() as PackedScene
+	if packed == null:
+		push_warning("[realms] background read of '%s' failed for realm '%s'" % [scene, realm])
+	return packed
+
+
+static func _read_scene(scene: String) -> PackedScene:
+	return ResourceLoader.load(scene) as PackedScene
+
+
+## Drop a pending read for `realm`: its thread is joined once it finishes
+## (`_join_abandoned`), never left running or unjoined.
+func _abandon(realm: String) -> void:
+	var row: Variant = _loading.get(realm)
+	_loading.erase(realm)
+	if row is Dictionary and row.get("thread") is Thread:
+		_abandoned.append(row.thread)
+
+
+func _join_abandoned() -> void:
+	for thread: Thread in _abandoned.duplicate():
+		if not thread.is_alive():
+			thread.wait_to_finish()
+			_abandoned.erase(thread)
 
 
 ## Deliverable 5. The last occupant of a realm has gone -- possibly by
@@ -338,7 +370,7 @@ func _tear_down(realm: String) -> void:
 	if node != null and not _outcomes_settled(node): return
 	_shells.erase(realm)
 	_cost.erase(realm)
-	_loading.erase(realm)
+	_abandon(realm)
 	if node == null:
 		return
 	var game := _game()
@@ -374,6 +406,7 @@ static func _outcomes_settled(world: Node) -> bool:
 ## in it -- otherwise a creature the host simulates for a client two kilometres
 ## away has no ground under it.
 func _process(delta: float) -> void:
+	_join_abandoned()
 	if _shells.is_empty() and not _is_host():
 		return
 	# A scene still being read off the loader thread is polled EVERY frame,

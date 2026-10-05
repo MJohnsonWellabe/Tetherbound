@@ -362,7 +362,12 @@ func _validated_station(requested: Vector3, leader_position: Vector3, validator:
 	var offset := requested - leader_position
 	var due := not _station_requested.is_finite()
 	if not due and frame - _station_checked_frame >= STATION_VALIDATE_FRAMES:
-		due = _station_requested.distance_to(offset) > STATION_VALIDATE_MOVE_M \
+		# Also re-ask while the last answer was "no station": after a teleport
+		# the first check can run before the floor's colliders exist, and a
+		# trainer who then stands still would otherwise keep the companion on
+		# the close-on-trainer fallback indefinitely.
+		due = not _station_offset.is_finite() \
+			or _station_requested.distance_to(offset) > STATION_VALIDATE_MOVE_M \
 			or _station_leader.distance_to(leader_position) > STATION_VALIDATE_MOVE_M
 	if due:
 		_station_checked_frame = frame

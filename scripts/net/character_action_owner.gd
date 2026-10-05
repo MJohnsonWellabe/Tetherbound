@@ -32,7 +32,12 @@ static func apply_owner(game: Node, row: Dictionary) -> Dictionary:
 		or not party.has_method("owner_training_release_snapshot") or not party.has_method("restore_owner_training_release") \
 		or not inventory.has_method("set_slot"): return _deny("owner_containers_unavailable")
 	var roster: Dictionary = party.call("owner_training_release_snapshot")
-	var plan := _live_plan(roster.members, current, row)
+	# The decided row plus the passive care accrued since its stage: owner
+	# walking/nourishment between stage and apply is never rolled back.
+	var target := ESSENCE.merge_owner_passive(row.after, row.after if proposal.get("duplicate") == true else row.before, current)
+	var applied := row.duplicate(true)
+	applied.after = target
+	var plan := _live_plan(roster.members, current, applied)
 	if plan.get("ok") != true: return plan
 	if session.call("_retain_owner_training_retry", player, world, row) != true \
 		or session.call("_begin_owner_training_install", player, world, row) != true: return _deny("owner_install_refused")
@@ -58,7 +63,7 @@ static func apply_owner(game: Node, row: Dictionary) -> Dictionary:
 	if not preload("res://scripts/net/home_key_action.gd").install_owner(player, row):
 		return _rollback(game, player, world, session, row, snapshot, roster, plan, "owner_home_key_install_refused")
 	var installed: Dictionary = player.call("save_data")
-	if not ESSENCE._equivalent(RECORD.portable_projection(installed), row.after):
+	if not ESSENCE._equivalent(RECORD.portable_projection(installed), target):
 		return _rollback(game, player, world, session, row, snapshot, roster, plan, "owner_action_install_conflict") if proposal.get("duplicate") != true else _end_refused(session, "owner_action_install_conflict")
 	if row.action == "wild_capture" and row.intent.keep and proposal.get("duplicate") != true:
 		# The same owner BOOL write includes the ordinary owned-catch skill XP.
@@ -93,7 +98,7 @@ static func _live_plan(members: Array, current: Dictionary, row: Dictionary) -> 
 		var instance: Variant = members[index]
 		var prior: Dictionary = current.party[index]
 		if not instance is RefCounted or instance.get("uid") != prior.uid: return _deny("owner_party_changed")
-		if ((row.action == "trait_release" and prior.uid == row.intent.creature_uid) or (row.action == "wild_capture" and prior.uid == row.intent.released_uid)) and not _has_uid(row.after.party, prior.uid):
+		if ((row.action in ["trait_release", "essence_release"] and prior.uid == row.intent.creature_uid) or (row.action == "wild_capture" and prior.uid == row.intent.released_uid)) and not _has_uid(row.after.party, prior.uid):
 			if release_index >= 0: return _deny("ambiguous_release")
 			release_index = index
 			release_instance = instance
@@ -131,7 +136,7 @@ static func _live_plan(members: Array, current: Dictionary, row: Dictionary) -> 
 			capture_members.append(newcomer)
 			next_index += 1
 	if next_index != row.after.party.size(): return _deny("owner_roster_import_refused")
-	if row.action == "trait_release" and not ESSENCE._equivalent(current, row.after) \
+	if row.action in ["trait_release", "essence_release"] and not ESSENCE._equivalent(current, row.after) \
 		and (release_index < 0 or members.size() <= 1 or row.after.party.size() != members.size() - 1): return _deny("owner_release_changed")
 	return {"ok": true, "changes": changes, "traits": projections, "release_index": release_index, "release_instance": release_instance, "capture_members": capture_members}
 
@@ -157,7 +162,7 @@ static func _rollback(game: Node, player: RefCounted, world: RefCounted, session
 	var expected: Dictionary = row.before
 	if row.action == "combat_round_reward":
 		expected = preload("res://scripts/net/combat_round_reward.gd").settled_before(row.before, row.intent, row.host_context)
-	var restored := ESSENCE._equivalent(RECORD.portable_projection(player.call("save_data")), expected)
+	var restored := ESSENCE.owner_matches_after(RECORD.portable_projection(player.call("save_data")), expected)
 	session.call("_end_owner_training_install")
 	return {"ok": false, "saved": false, "pending": true, "durable": true, "code": code if restored else "owner_rollback_conflict"}
 
