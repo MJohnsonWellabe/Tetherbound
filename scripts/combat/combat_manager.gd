@@ -3534,8 +3534,10 @@ func _award_victory() -> void:
 	var award: int = PROGRESSION.xp_award_for(_enemy.level, cfg)
 	var share: int = PROGRESSION.party_share(award, cfg)
 	# F27: a canonical host wild victory pays its reduced XP and essence in the
-	# host training transaction, staged from this party. A legacy award here
-	# would be counted on top of it, so only the non-XP credit below remains.
+	# host training transaction, staged from this party. That staged party also
+	# carries the win's battle credit, victory mood and level-up condition
+	# (progression.staged_training_condition), so the legacy loop below must
+	# not touch the members at all, or each would be counted twice.
 	var host_owns_xp: bool = _encounter_link != null and not _encounter_id.is_empty() \
 		and _encounter_link.has_method("canonical_wild_encounter") \
 		and _encounter_link.call("canonical_wild_encounter", _encounter_id) == true
@@ -3543,7 +3545,7 @@ func _award_victory() -> void:
 	last_xp_award.clear()
 	for i in _party.size():
 		var member: RefCounted = _party[i]
-		if member == null or member.fainted:
+		if member == null or member.fainted or host_owns_xp:
 			continue
 		var amount: int = 0 if host_owns_xp else (award if i == _active_index else share)
 		var levels_gained: int = member.gain_xp(amount, cfg) if amount > 0 else 0
