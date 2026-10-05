@@ -1,0 +1,31 @@
+{
+  "source_commit": "6fef64c02d8812f711d052a47e31759d7ec4d720",
+  "native_exit_code": 0,
+  "native_elapsed_seconds": 707.203,
+  "stop_reason": null,
+  "preset": "High",
+  "planned_frames": 320,
+  "frame_records": 320,
+  "native_jpeg_count": 320,
+  "dimensions": {
+    "(1920, 1080)": 320
+  },
+  "manifest_complete": true,
+  "failures": [],
+  "native_error_lines": [],
+  "adapters": [
+    "NVIDIA GeForce GTX 1060 3GB"
+  ],
+  "renderer_drivers": [
+    "vulkan"
+  ],
+  "scope": "Owned F26 Stormwood existingF41 nativeJPEG matrix:5stands x4headings x4Surgephases xbefore/afterrelease xday/nightclock=320planned. Stagedteleports/flags/health/cosmeticclock/Surgepins; existingmaxphysicscatchup30 retained. Defaultpresentationflagsunchanged; noearnedfight/FPS/Ally/qualityPASS claim.",
+  "qualifications": [
+    "Original JPEG quality0.85 from unchanged existing tool; no image conversion/resizing.",
+    "Staged visual frames only; no FPS, earned fights/campaign, Ally hardware or full-bar acceptance.",
+    "Final manifest correctly records hud=true for all320 frames.",
+    "Source includes unverified night-rain ambient followup; this unrelated Stormwood capture does not approve that change.",
+    "Retained native deprecation and wild-cluster placement warnings."
+  ],
+  "verdict": "Native matrix completed; independent byte audit and code-blind art judge pending."
+}
