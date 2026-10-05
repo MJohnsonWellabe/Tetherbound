@@ -1,0 +1,47 @@
+{
+  "biome": "cloudreach",
+  "source_commit": "6632f2fd5af9b1de173ee919560a46ac9dd65cdb",
+  "command": [
+    "D:\\tetherbound\\.artifacts\\perf-diag-retime-6632f2fd5\\Tetherbound.exe",
+    "--rendering-method",
+    "forward_plus",
+    "--path",
+    "D:\\tetherbound\\.artifacts\\perf-diag-retime-6632f2fd5",
+    "--main-pack",
+    "D:\\tetherbound\\.artifacts\\perf-diag-retime-6632f2fd5\\Tetherbound.pck",
+    "--resolution",
+    "1920x1080",
+    "--gpu-profile",
+    "--debug",
+    "--ignore-error-breaks",
+    "--audio-driver",
+    "Dummy",
+    "--script",
+    "D:\\tetherbound\\redesign-lookdev\\tools\\profile_packaged_route.gd",
+    "--",
+    "--biome=cloudreach",
+    "--preset=Medium",
+    "--source-commit=6632f2fd5af9b1de173ee919560a46ac9dd65cdb",
+    "--output=D:/tetherbound/.artifacts/pr1/cloudreach/route"
+  ],
+  "exit_code": null,
+  "stop_reason": "execution_session_ended_before_receipt; both owned process IDs verified absent",
+  "last_log_write_seconds_after_start": 881.846,
+  "elapsed_seconds": null,
+  "errors": [],
+  "complete": false,
+  "route_begin_marker_seen": false,
+  "route_manifest_present": false,
+  "performance_manifest_present": false,
+  "log_sha256": "efecef0ef52d14a1dee06f8e407a9c7f4b2e2f8c3497225ba59a071c065cb06a",
+  "gpu_header": [
+    "Vulkan 1.3.280 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce GTX 1060 3GB"
+  ],
+  "boot_markers": [
+    "CATALOGUE BOOT cloudreach load begin t=32793",
+    "CATALOGUE BOOT cloudreach instantiate begin t=65806",
+    "CATALOGUE BOOT cloudreach attach begin t=65837",
+    "CATALOGUE BOOT cloudreach attached t=66135"
+  ],
+  "scope": "Interrupted boot attempt, no measured FPS/CPU/GPU route data. No exit-code or timeout assertion; logs and original command retained. No source workaround or rerun."
+}
