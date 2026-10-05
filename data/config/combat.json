@@ -1878,6 +1878,8 @@
     "wild_power_scale": {"meadows": 1.0, "water": 1.0, "cloudreach": 1.0, "stormwood": 1.0},
     "_comment_trainer_power_scale": "F22#1 (COMBAT §7 floor trainer): multiplies the selected pattern power of ORDINARY trainer-owned bodies (no named pattern) per chapter, so a masher that ignores tells loses its lead materially more often than a reader. Meadows trial 1.15 (home bed landed, coordinator 2026-10-05; onboarding chapter, conservative). Evidence: ralph/reports/COMBAT/f22/proof/f22_1_trainers.md. TUNABLE.",
     "trainer_power_scale": {"meadows": 1.15, "water": 1.3, "cloudreach": 1.3, "stormwood": 1.3},
+    "_comment_tutorial_overrides": "The opening's authored practice fight (SequenceDirector -> CombatManager.configure_tutorial_catch_assist -> wild_creature.set_tutorial_pattern). COMBAT §7 exempts it from the wild bars but it must never be a wall for any starter. Merged over the selected pattern attack, so its tells, shapes and chapter floors are unchanged: the practice Bramblebun stands at contact spacing (preferred_range is floored by the two bodies) instead of a CURRENT's 6 m picket, steps back half as far and attacks less often, so a melee starter's quick hits reach it. Main CI 37346752715: the piloted Terrapup ran out of its 1800-frame budget against the kiting picket. TUNABLE.",
+    "tutorial_overrides": {"preferred_range": 2.1, "reposition_speed": 2.0, "attack_cooldown": 2.0},
     "heavy_tell_floor_s": 1.1,
     "chapter_floors": {
       "meadows": {

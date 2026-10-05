@@ -567,6 +567,16 @@ func configure_patterns(patterns: Dictionary, context: Dictionary, observe: Call
 	_pattern_geometry.clear()
 
 
+## The opening's authored practice fight (SequenceDirector decides which
+## fight that is, through CombatManager): every later attack selection merges
+## `patterns.tutorial_overrides`, a gentler profile, until the flag is cleared.
+func set_tutorial_pattern(enabled: bool) -> void:
+	if enabled:
+		_pattern_context["tutorial"] = true
+	else:
+		_pattern_context.erase("tutorial")
+
+
 func pattern_geometry() -> Dictionary:
 	return _pattern_geometry.duplicate(true)
 

@@ -209,6 +209,8 @@ static func select_pattern(patterns: Dictionary, base: Dictionary, context: Dict
 		return {}
 	var out := base.duplicate(true)
 	out.merge(row.duplicate(true), true)
+	if bool(context.get("tutorial", false)):
+		out.merge((patterns.get("tutorial_overrides", {}) as Dictionary).duplicate(true), true)
 	out["pattern_attack_id"] = id
 	out["combat_role"] = role
 	out["pattern_id"] = str(context.get("pattern_id", ""))

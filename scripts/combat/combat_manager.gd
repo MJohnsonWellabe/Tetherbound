@@ -506,6 +506,11 @@ func active_matchup() -> int:
 ## Re-enabling an already-active policy preserves failures across a run and
 ## retry; changing or disabling it starts the next context cleanly.
 func configure_tutorial_catch_assist(enabled: bool, max_failures: int = 1) -> void:
+	# The same decision softens the practice opponent's pattern profile
+	# (combat.json patterns.tutorial_overrides): the opening must be easily
+	# winnable by every starter (COMBAT §7 exempts it from the wild bars).
+	if _wild != null and is_instance_valid(_wild) and _wild.has_method("set_tutorial_pattern"):
+		_wild.call("set_tutorial_pattern", enabled)
 	var next_bound := maxi(max_failures, 0) if enabled else -1
 	if next_bound == _tutorial_catch_failure_bound:
 		return

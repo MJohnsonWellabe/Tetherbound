@@ -146,3 +146,24 @@ func test_it_circles_rather_than_walking_in_while_it_waits() -> void:
 	assert_almost_eq(AI.speed_for(AI.Intent.CLOSE, cfg, true), float(cfg.get("circle_speed", 1.2)), 0.0001)
 	assert_true(AI.speed_for(AI.Intent.CLOSE, cfg, true) < AI.speed_for(AI.Intent.REPOSITION, cfg),
 		"waiting is a prowl, slower than a reposition")
+
+
+## The opening's practice fight merges `patterns.tutorial_overrides` over the
+## selected attack; every other fight keeps the authored profile, and the
+## chapter tell floor still applies to the tutorial one.
+func test_tutorial_context_merges_the_gentle_overrides_only() -> void:
+	var patterns: Dictionary = preload("res://scripts/combat/combat_math.gd").config().get("patterns", {})
+	var overrides: Dictionary = patterns.get("tutorial_overrides", {})
+	assert_false(overrides.is_empty(), "tutorial overrides are authored")
+	var base := {"move_id": "", "power": 8.0}
+	var context := {"species_id": "bramblebun", "chapter": "meadows", "move_quick": "tackle", "move_charged": "tackle"}
+	var ai := preload("res://scripts/combat/combat_ai.gd")
+	var plain: Dictionary = ai.select_pattern(patterns, base, context, 0)
+	var tutorial_context := context.duplicate()
+	tutorial_context["tutorial"] = true
+	var gentle: Dictionary = ai.select_pattern(patterns, base, tutorial_context, 0)
+	assert_false(plain.is_empty() or gentle.is_empty(), "both contexts select an attack")
+	for key: String in overrides:
+		assert_almost_eq(float(gentle[key]), float(overrides[key]), 0.0001, "tutorial %s" % key)
+	assert_true(float(plain.get("preferred_range", 0.0)) > float(overrides.preferred_range), "ordinary fight keeps the authored picket")
+	assert_almost_eq(float(gentle.telegraph), float(plain.telegraph), 0.0001, "same tell under the same floor")
