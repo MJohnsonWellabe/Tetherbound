@@ -143,7 +143,7 @@ func apply(body_art: Node3D, gear: Dictionary, cfg: Dictionary) -> bool:
 	for mesh: MeshInstance3D in meshes:
 		if mesh.material_override != null:
 			var before := mesh.material_override
-			var copy := _with_pass(before, mesh, body_inverse, bounds, harness, charm, cfg)
+			var copy := _with_pass(before, mesh, body_inverse, bounds, harness, charm, cfg, [gear.harness, gear.charm])
 			if copy != null:
 				_restore.append({"mesh": mesh, "surface": -1, "before": before, "applied": copy})
 				mesh.material_override = copy
@@ -152,7 +152,7 @@ func apply(body_art: Node3D, gear: Dictionary, cfg: Dictionary) -> bool:
 			var source := mesh.get_active_material(surface)
 			if source == null:
 				continue
-			var copy := _with_pass(source, mesh, body_inverse, bounds, harness, charm, cfg)
+			var copy := _with_pass(source, mesh, body_inverse, bounds, harness, charm, cfg, [gear.harness, gear.charm])
 			if copy == null:
 				continue
 			_restore.append({"mesh": mesh, "surface": surface,
@@ -175,8 +175,17 @@ static func _color(id: String, cfg: Dictionary) -> Color:
 	var raw: Array = tier.get("color", [0.0, 0.0, 0.0, 0.0])
 	return Color(float(raw[0]), float(raw[1]), float(raw[2]), float(raw[3]))
 
+## Glow multiplier for one piece: rises with its tier and its upgrade.
+static func _glow(id: String, cfg: Dictionary) -> float:
+	var item: Dictionary = cfg.get("items", {}).get(id, {})
+	if item.is_empty():
+		return 1.0
+	var accent: Dictionary = cfg.get("accent", {})
+	return 1.0 + float(accent.get("tier_emission_step", 0.45)) * (int(item.gear_tier) - 1) \
+		+ float(accent.get("upgrade_emission_step", 0.1)) * int(item.get("gear_upgrade", 0))
+
 static func _with_pass(source: Material, mesh: MeshInstance3D, body_inverse: Transform3D,
-		bounds: AABB, harness: Color, charm: Color, cfg: Dictionary) -> Material:
+		bounds: AABB, harness: Color, charm: Color, cfg: Dictionary, gear_ids: Array = ["", ""]) -> Material:
 	# Transparent faces/eyes keep their original alpha; don't paint invisible
 	# cards or contact shadows into opaque body trim.
 	if source is BaseMaterial3D and source.transparency != BaseMaterial3D.TRANSPARENCY_DISABLED:
@@ -196,6 +205,9 @@ static func _with_pass(source: Material, mesh: MeshInstance3D, body_inverse: Tra
 	pass_material.set_shader_parameter("mesh_to_body", body_inverse * mesh.global_transform)
 	pass_material.set_shader_parameter("body_min_y", bounds.position.y)
 	pass_material.set_shader_parameter("body_height", bounds.size.y)
+	# Higher tiers and upgrades glow brighter, so the colour also reads as rank.
+	pass_material.set_shader_parameter("harness_glow", _glow(gear_ids[0], cfg))
+	pass_material.set_shader_parameter("charm_glow", _glow(gear_ids[1], cfg))
 	for key: String in ["band_center", "band_width", "charm_band_center", "charm_band_width", "emission_energy"]:
 		if cfg.get("accent", {}).has(key):
 			pass_material.set_shader_parameter(key, cfg.accent[key])

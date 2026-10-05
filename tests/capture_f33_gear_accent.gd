@@ -59,7 +59,7 @@ func _run() -> void:
 		world.add_child(body)
 		body.global_position = Vector3(x, float(world.call("ground_height_at", x, ORIGIN.z)) + 0.05, ORIGIN.z)
 		body.call("setup", SPECIES)
-		body.rotation.y = PI
+		body.rotation.y = 0.0 # Facing the row camera.
 		for _frame in 4:
 			await process_frame
 		var uid := "gear-capture-%d" % i
@@ -76,7 +76,8 @@ func _run() -> void:
 	var look := world.get_node("WorldLook")
 	look.call("set_clock_frozen", true)
 	var mid := ORIGIN + Vector3(SPACING * (TIERS.size() - 1) * 0.5, 0, 0)
-	var stands := {"row": [mid + Vector3(0.0, 1.2, 7.5), mid], "close": [ORIGIN + Vector3(SPACING * 3.5, 1.2, 4.0), ORIGIN + Vector3(SPACING * 3.5, 0, 0)]}
+	var stands := {"row": [mid + Vector3(0.0, 1.2, 7.5), mid], "close": [ORIGIN + Vector3(SPACING * 3.5, 1.2, 4.0), ORIGIN + Vector3(SPACING * 3.5, 0, 0)],
+		"side": [ORIGIN + Vector3(-6.0, 1.2, 0.5), ORIGIN + Vector3(SPACING, 0, 0)]}
 	for stand: String in stands:
 		var at: Vector3 = stands[stand][0]
 		var aim: Vector3 = stands[stand][1]
