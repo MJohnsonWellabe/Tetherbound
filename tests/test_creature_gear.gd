@@ -224,3 +224,28 @@ func test_harness_raises_the_defence_the_host_rolls_a_guest_hit_against() -> voi
 	assert_eq(float(director.call("_geared_card", 2, card).defence), 20.0, "no Harness, no change")
 	director.free()
 	session.free()
+
+
+func test_harness_max_hp_scale_comes_from_the_admitted_record_on_the_host() -> void:
+	# F33 Harness max HP (coordinator ruling 2026-10-05): the host's s for a
+	# guest's deployed creature rides on its struck card and stages durable
+	# vitals as damage / s; the announced card cannot name it.
+	var cfg := GEAR.config()
+	var record := _record()
+	var uid := str(record.party[0].uid)
+	record.redesign_character.creatures[uid]["gear"] = {"harness": "tidesteel_harness_plus_2", "charm": ""}
+	var director: Node = preload("res://scripts/combat/encounter_director.gd").new()
+	var session := AdmittedSession.new()
+	session.record = record
+	director.set("_session", session)
+	var card := {"creature_uid": uid, "defence": 20.0, "hp": 50.0, "max_hp": 100.0, "hp_scale": 1.7}
+	director.set("_deployed_by", {2: {"card": card}})
+	var s := float(GEAR.modifiers(record.redesign_character.creatures[uid].gear, cfg).max_hp)
+	assert_true(s > 1.24, "Tidesteel +2 raises max HP above its +0 (s=%.3f)" % s)
+	assert_almost_eq(float(director.call("_geared_card", 2, card).hp_scale), s, 0.0001, "the struck card carries the admitted s")
+	assert_almost_eq(float(director.call("_host_hp_scale", 2)), s, 0.0001, "durable vitals stage damage / the admitted s")
+	assert_eq(float(card.max_hp), 100.0, "the announced card's HP is untouched")
+	session.record = _record()
+	assert_eq(float(director.call("_host_hp_scale", 2)), 1.0, "no Harness: s = 1")
+	director.free()
+	session.free()

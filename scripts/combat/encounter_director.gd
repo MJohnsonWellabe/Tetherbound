@@ -3561,7 +3561,15 @@ func _geared_card(peer_id: int, card: Dictionary) -> Dictionary:
 	var mods: Dictionary = gear.modifiers(gear.gear_for(record, str(card.get("creature_uid", ""))), cfg)
 	var geared := card.duplicate(true)
 	geared["defence"] = float(card.get("defence", 1.0)) * float(mods.defence)
+	# Harness max HP (creature_gear.hp_scale): the host's s rides on the hit.
+	geared["hp_scale"] = maxf(1.0, float(mods.max_hp))
 	return geared
+
+
+## Harness max HP for the participant's deployed creature, from the admitted
+## record (the host's own record for itself). Durable vitals lose damage / s.
+func _host_hp_scale(peer_id: int) -> float:
+	return maxf(1.0, float(_geared_card(peer_id, _creature_card_for(peer_id)).get("hp_scale", 1.0)))
 
 
 func _f22_enemy_connects(encounter_id: String, profile: Dictionary, origin: Vector3,
@@ -3671,7 +3679,7 @@ func _stage_ordinary_enemy_hit(id: String, peer: int, payload: Dictionary) -> vo
 	if resolved.is_empty(): return
 	var proposal: Dictionary = _encounter_host.call("stage_actor_vitals", id, peer,
 		str(binding.creature_uid), int(binding.actor_generation), int(actor.revision),
-		action_id, "damage", float(resolved.damage), limit)
+		action_id, "damage", float(resolved.damage) / _host_hp_scale(peer), limit)
 	if proposal.get("ok") != true: return
 	var retained: Dictionary = {"encounter_id": id, "peer_id": peer,
 		"proposal": preload("res://scripts/combat/accepted_action_host.gd")._original(proposal),
@@ -8652,6 +8660,7 @@ func host_resolve_enemy_hit(encounter_id: String, peer_id: int, payload: Diction
 	resolved["critical"] = bool(defence.critical)
 	resolved["defence"] = defence
 	resolved["host_resolved_defence"] = true
+	resolved["hp_scale"] = _host_hp_scale(peer_id)
 	resolved["impact"] = HIT_FEEDBACK.with_defence(impact, defence)
 	return resolved
 
