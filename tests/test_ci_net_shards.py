@@ -53,7 +53,30 @@ class RealRepository(unittest.TestCase):
 
     def test_every_discovered_smoke_is_measured_and_every_shard_fits_the_budget(self):
         self.assertEqual([p for p in self.files if N.smoke_name(p) not in N.MEASURED_SECONDS], [])
-        self.assertLessEqual(max(load for _, load in N.plan(self.files)), N.SHARD_SMOKE_BUDGET_SECONDS)
+        self.assertLessEqual(max(load for _, load in N.plan(self.files)), N.BIN_SMOKE_BUDGET_SECONDS)
+
+    def test_job_lanes_cover_every_bin_exactly_once(self):
+        bins = N.plan(self.files)
+        self.assertEqual(N.BIN_COUNT, N.SHARD_COUNT * N.LANES)
+        lanes = [id(b) for job in range(1, N.SHARD_COUNT + 1) for b in N.job_lanes(bins, job)]
+        self.assertEqual(sorted(lanes), sorted(id(b) for b in bins))
+        self.assertEqual(len(lanes), len(set(lanes)))
+
+    def test_lane_output_names_every_smoke_of_the_job(self):
+        out = os.path.join(os.environ.get("TMPDIR", "/tmp"), "net_shards_test_output")
+        bins = N.plan(self.files)
+        seen = []
+        for job in range(1, N.SHARD_COUNT + 1):
+            open(out, "w").close()
+            os.environ["GITHUB_OUTPUT"] = out
+            try:
+                self.assertEqual(N.main(["--shard", str(job)]), 0)
+            finally:
+                del os.environ["GITHUB_OUTPUT"]
+            kv = dict(line.rstrip("\n").split("=", 1) for line in open(out))
+            seen += kv["files_a"].split() + kv["files_b"].split()
+        os.remove(out)
+        self.assertEqual(sorted(seen), sorted(self.files))
 
     def test_isolated_smokes_run_alone(self):
         shards = N.plan(self.files)

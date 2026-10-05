@@ -3,16 +3,20 @@
 verify-multiplayer-shard matrix (.github/workflows/ci.yml).
 
     net_shards.py --check              discover-net-smokes: roster, floor, plan
-    net_shards.py --shard N            one shard: the same checks, then this
-                                       shard's files to $GITHUB_OUTPUT
+    net_shards.py --shard N            one shard job: the same checks, then its
+                                       two lanes' files to $GITHUB_OUTPUT
+                                       (files_a, files_b)
 
 Every shard runs the discovery itself, so the shards need only `changes` and
 queue with the first wave of jobs instead of behind discover-net-smokes.
 Discovery reads only the checkout, so every shard computes the same plan.
 
 The plan is longest-processing-time first over MEASURED_SECONDS. It fails if
-any discovered smoke is unassigned or assigned twice. A shard over
-SHARD_SMOKE_BUDGET_SECONDS is a warning: it costs wall time, not coverage.
+any discovered smoke is unassigned or assigned twice. A bin over
+BIN_SMOKE_BUDGET_SECONDS is a warning: it costs wall time, not coverage.
+
+Each job runs LANES plan bins side by side (tools/ci/run_net_lanes.sh): two
+two-peer smokes on one 4-vCPU runner each took 1.10x as long as one alone.
 """
 import argparse
 import glob
@@ -23,11 +27,14 @@ import sys
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
-# Must equal the `shard:` matrix in ci.yml (tests/test_ci_net_shards.py).
-SHARD_COUNT = 18
-# Smoke time per shard: a 13-minute job less ~140 s of checkout, Godot setup
-# and upload (measured: 81-133 s before the first smoke, ~10 s after).
-SHARD_SMOKE_BUDGET_SECONDS = 640
+# Plan bins, run LANES at a time per job. SHARD_COUNT jobs must equal the
+# `shard:` matrix in ci.yml (tests/test_ci_net_shards.py).
+BIN_COUNT = 20
+LANES = 2
+SHARD_COUNT = BIN_COUNT // LANES
+# Smoke time per bin: a 13-minute job is ~140 s of checkout, Godot setup and
+# upload plus the slower lane at 1.10x (1.10 x 580 + 140 = 778 s).
+BIN_SMOKE_BUDGET_SECONDS = 580
 
 # Seconds per smoke: the SLOWEST of the three green full runs 37289058162,
 # 37282220875 and 37270789359 (2026-10-05), from one smoke's
@@ -175,7 +182,7 @@ def weight(path):
     return MEASURED_SECONDS.get(smoke_name(path), UNMEASURED_SECONDS)
 
 
-def plan(files, shard_count=SHARD_COUNT, isolated=ISOLATED):
+def plan(files, shard_count=BIN_COUNT, isolated=ISOLATED):
     """[(files, seconds)] per shard: each ISOLATED smoke alone on the last
     shards, the rest longest first onto the lightest ordinary shard."""
     alone = [p for p in files if smoke_name(p) in isolated]
@@ -196,6 +203,11 @@ def plan(files, shard_count=SHARD_COUNT, isolated=ISOLATED):
         if len(group) != 1:
             raise PlanError("%s must be the only smoke on its shard" % group)
     return list(zip(bins, loads))
+
+
+def job_lanes(bins, job):
+    """The LANES bins job `job` (1-based) runs side by side."""
+    return bins[(job - 1) * LANES:job * LANES]
 
 
 def check_cover(files, bins):
@@ -235,17 +247,19 @@ def main(argv=None):
         print("::error::%s" % e)
         return 1
     for i, (group, load) in enumerate(shards, start=1):
-        if load > SHARD_SMOKE_BUDGET_SECONDS:
-            print("::warning::net shard %d is planned at %d s, over the %d s budget: refresh MEASURED_SECONDS "
-                  "or raise SHARD_COUNT in tools/ci/net_shards.py" % (i, load, SHARD_SMOKE_BUDGET_SECONDS))
-        print("plan shard %d/%d: %d s: %s" % (i, SHARD_COUNT, load, " ".join(group)))
+        if load > BIN_SMOKE_BUDGET_SECONDS:
+            print("::warning::net bin %d is planned at %d s, over the %d s budget: refresh MEASURED_SECONDS "
+                  "or raise BIN_COUNT in tools/ci/net_shards.py" % (i, load, BIN_SMOKE_BUDGET_SECONDS))
+        print("plan bin %d/%d (shard %d lane %s): %d s: %s"
+              % (i, BIN_COUNT, (i - 1) // LANES + 1, "ab"[(i - 1) % LANES], load, " ".join(group)))
     if args.shard is not None:
-        group, load = shards[args.shard - 1]
+        lanes = job_lanes(shards, args.shard)
         out = os.environ.get("GITHUB_OUTPUT")
         if out:
             with open(out, "a", encoding="utf-8") as f:
-                f.write("files=%s\n" % " ".join(group))
-                f.write("scheduling_weight_seconds=%d\n" % load)
+                for name, (group, load) in zip("ab", lanes):
+                    f.write("files_%s=%s\n" % (name, " ".join(group)))
+                f.write("scheduling_weight_seconds=%d\n" % max(load for _, load in lanes))
     return 0
 
 
