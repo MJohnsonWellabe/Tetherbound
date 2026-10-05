@@ -62,7 +62,9 @@
     "_comment_role_pools": "COMBAT §4 base profile pools by combat role (patterns.species_roles / named send-out role). An encounter's own poise_max still wins. TUNABLE.",
     "role_pools": {"WALL": 60.0, "CHARGER": 40.0, "DIVER": 30.0, "CURRENT": 35.0, "ACE": 60.0},
     "_comment_break_resist": "COMBAT §4: after a stagger ends the pool resets and the body cannot be broken again for this long; hits still deal HP damage. TUNABLE.",
-    "break_resist_seconds": 0.8
+    "break_resist_seconds": 0.8,
+    "_comment_forced_break_grace": "COMBAT §4 (owner 2026-10-05): a charged hit forces a break only if its windup started after the opponent's tell became visible, minus this grace. TUNABLE.",
+    "forced_break_grace_s": 0.1
   },
   "hitstop": {
     "_comment": "COMBAT-1 presentation. Freeze the two creature bodies and combat clocks only; the camera and the rest of the world keep running.",

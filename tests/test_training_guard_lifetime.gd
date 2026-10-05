@@ -10,7 +10,7 @@ class SessionFixture extends "res://scripts/net/session.gd":
 	var mutation_blocked := false
 	func _game() -> Node:
 		return fixture_game
-	func _owner_training_mutation_blocked(player: RefCounted) -> bool:
+	func _owner_training_mutation_blocked(player: RefCounted, _ignore_untouched_groom: bool = false) -> bool:
 		return player == fixture_game.local and mutation_blocked
 	func _owner_training_inventory_write_allowed(index: int, stack: Variant, player: RefCounted) -> bool:
 		return player == fixture_game.local and index == 2 and stack == {"id": "stone", "count": 1}

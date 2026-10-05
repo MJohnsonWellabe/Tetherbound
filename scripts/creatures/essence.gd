@@ -6,6 +6,7 @@ extends RefCounted
 ## same-record CAS must recompute a proposal from its own record, commit the
 ## inventory/party/receipt together, then settle the portable owner's save.
 ## No balance bag, second receipt ledger, scene mutation or optimistic debit.
+const RECEIPT_WINDOWS := preload("res://scripts/creatures/receipt_windows.gd")
 const DATA := preload("res://scripts/data/redesign_data.gd")
 const STATE := preload("res://scripts/data/redesign_state.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
@@ -256,7 +257,7 @@ static func stage_spend(admitted: Dictionary, character_id: String, uid: String,
 	if not permitted or not RULES.db().has(payment_item): return _refuse("wrong_payment_type")
 	var cost := int(cfg.tether_candy_cost) if candy else level_cost(expected_level, cfg, progression_cfg)
 	if cost < 1: return _refuse("invalid_cost")
-	if admitted.redesign_character.transaction_receipts.size() >= int(cfg.maximum_transaction_receipts):
+	if RECEIPT_WINDOWS.compact(admitted.redesign_character.transaction_receipts, "essence_spend", character_id).size() >= int(cfg.maximum_transaction_receipts):
 		return _refuse("receipt_budget")
 	var inventory := RULES.inventory_from(admitted.inventory)
 	if not inventory.remove(payment_item, cost): return _refuse("insufficient_items")
@@ -268,6 +269,7 @@ static func stage_spend(admitted: Dictionary, character_id: String, uid: String,
 	next.party[index] = next_row
 	next.inventory = RULES.slots(inventory).duplicate(true)
 	var receipt := prefix + "%s:%d:%s:%d:%d" % [uid, expected_level, payment_item, cost, character_revision]
+	next.redesign_character.transaction_receipts = RECEIPT_WINDOWS.compact(next.redesign_character.transaction_receipts, "essence_spend", character_id)
 	next.redesign_character.transaction_receipts.append(receipt)
 	if not _baseline_errors(next, character_id).is_empty(): return _refuse("invalid_candidate")
 	return {"ok": true, "duplicate": false, "expected_character_revision": character_revision,
@@ -555,7 +557,7 @@ static func stage_defeat(admitted: Dictionary, character_id: String, host_event:
 	if _owned_index(admitted, host_event.active_uid) < 0: return _refuse("invalid_defeat_active_uid")
 	for uid: String in eligible:
 		if _owned_index(admitted, uid) < 0: return _refuse("invalid_defeat_participants")
-	if admitted.redesign_character.transaction_receipts.size() >= int(cfg.maximum_transaction_receipts):
+	if RECEIPT_WINDOWS.compact(admitted.redesign_character.transaction_receipts, "wild_defeat", character_id).size() >= int(cfg.maximum_transaction_receipts):
 		return _refuse("receipt_budget")
 	var caps: Dictionary = {}
 	for uid: String in eligible:
@@ -580,6 +582,7 @@ static func stage_defeat(admitted: Dictionary, character_id: String, host_event:
 	var next := admitted.duplicate(true)
 	next.party = xp.party.duplicate(true)
 	next.inventory = RULES.slots(inventory).duplicate(true)
+	next.redesign_character.transaction_receipts = RECEIPT_WINDOWS.compact(next.redesign_character.transaction_receipts, "wild_defeat", character_id)
 	next.redesign_character.transaction_receipts.append(receipt)
 	# The foundation owner must admit the explicit defeat namespace; never
 	# disguise defeat XP as an Altar spend or bypass REDESIGN validation.

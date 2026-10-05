@@ -24,7 +24,7 @@ import sys
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 # Must equal the `shard:` matrix in ci.yml (tests/test_ci_net_shards.py).
-SHARD_COUNT = 18
+SHARD_COUNT = 20
 # Smoke time per shard: a 13-minute job less ~140 s of checkout, Godot setup
 # and upload (measured: 81-133 s before the first smoke, ~10 s after).
 SHARD_SMOKE_BUDGET_SECONDS = 640
@@ -35,6 +35,12 @@ SHARD_SMOKE_BUDGET_SECONDS = 640
 # of a shard ends at the upload step).
 # Refresh it from newer full runs when a shard drifts past the budget.
 MEASURED_SECONDS = {
+    # Provisional (coordinator, 2026-10-05): smokes new in batch #542, planned at a
+    # conservative 330 s until three green full runs give real durations.
+    "f22_forced_break": 330,
+    "f27_guest_wild_win": 330,
+    "gather_departure": 330,
+    "homestead_station_craft": 330,
     "behind_character_joins_ahead_world": 129,
     "boss_rewards_each_participant": 228,
     "catch_race": 158,
