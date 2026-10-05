@@ -2026,8 +2026,12 @@ func _on_starter_action_completed(op: String, intent: Dictionary, result: Dictio
 
 func cancel_starter_adoption(code: String) -> void:
 	var game := _effect_game()
-	if game != null and game.has_method("cancel_original_starter_request"):
-		game.call("cancel_original_starter_request")
+	# A refusal of a re-ask once the host has already journalled this
+	# character's starter is not a release: keep the follower and wait for
+	# that row to install (game_state.gd `cancel_original_starter_request`).
+	if game != null and game.has_method("cancel_original_starter_request") \
+			and game.call("cancel_original_starter_request") == false:
+		return
 	_pending_starter_adoption.clear()
 	_adopting = false
 	_choice = -1

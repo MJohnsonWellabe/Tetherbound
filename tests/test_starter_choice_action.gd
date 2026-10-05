@@ -134,6 +134,40 @@ func test_a_tampered_card_is_refused() -> void:
 	assert_true(_stage(before, extra).get("ok") != true, "an extra field cannot ride into the admitted record")
 
 
+## Review finding (F01#6a): a card that round-trips exactly can still carry
+## inflated base stats, IVs, boosts, xp, bond, shiny or shared history, because
+## the codec recomputes stats from them. Each tampered card here is made
+## self-consistent through the real codec first, so only the freshness rule can
+## refuse it.
+func test_an_inflated_card_that_round_trips_is_refused() -> void:
+	var before := _admitted(_player())
+	var tampering := {"base_attack": 400.0, "iv_attack": 10.0, "boost_attack": 50, "bond": 999,
+		"shiny": true, "xp": 40, "distance_m_together": 5000.0, "battles_fought": 30,
+		"happiness": 100.0, "nourishment": 100.0, "trait_primary": "sturdy"}
+	var exercised := 0
+	for field: String in tampering:
+		var raw := _card()
+		raw[field] = tampering[field]
+		var creature: RefCounted = CODEC.decode(raw)
+		if creature == null:
+			continue # the codec itself refuses it; nothing to admit
+		var card := CODEC.encode(creature)
+		if card.get(field) == _card().get(field):
+			continue # the codec normalised the field back to the fresh value
+		exercised += 1
+		var staged := _stage(before, card)
+		assert_true(staged.get("ok") != true,
+			"a starter carrying %s=%s is not the opening's fresh starter (%s)" % [field, str(card.get(field)), str(staged.get("code", ""))])
+	assert_true(exercised >= 8, "the tampered fields really reached the host's check (%d of %d)" % [exercised, tampering.size()])
+
+
+func test_the_nickname_and_uid_are_the_only_free_fields() -> void:
+	var before := _admitted(_player())
+	var card := _card()
+	card.nickname = "Pebble"
+	assert_true(_stage(before, card).get("ok") == true, "the player's chosen nickname is theirs to choose")
+
+
 func test_host_context_is_required() -> void:
 	var before := _admitted(_player())
 	var context := _context()
@@ -145,11 +179,11 @@ func test_host_context_is_required() -> void:
 	assert_true(ACTIONS.stage(before, 0, "starter_choice", STARTER.intent(_card()), unauthorized, RECORD.errors).get("ok") != true)
 
 
-## The exact baseline condition the live smoke tripped over: the guest commits
-## its starter locally first, so when the host's row arrives the guest's own
-## projection must already equal the row's after-state, or `owner_plan` reports
-## `owner_action_baseline_conflict` and the opening never finishes.
-func test_the_guests_own_post_commit_record_equals_the_staged_after_state() -> void:
+## Once the owner installer has appended the live starter and the receipt, the
+## guest's own projection must equal the row's after-state exactly, or a replay
+## of the same row meets `owner_action_baseline_conflict` instead of
+## `owner_plan`'s duplicate path.
+func test_the_installed_guest_record_equals_the_staged_after_state() -> void:
 	var player := _player()
 	var before := _admitted(player)
 	var creature: RefCounted = SPECIES.spawn("terrapup")

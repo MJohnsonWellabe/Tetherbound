@@ -1187,6 +1187,8 @@ const DIALOGUE_DIR := "res://data/dialogue"
 const DIALOGUE_GIVE_GATES := {
 	"grandpa_first_catch": {"class": "consumable", "requires_any": [],
 		"_why": "the opening's catch supplies (orb_basic, potion_small, berries, revive)"},
+	"village_nessa_overlook_gift": {"class": "consumable", "requires_any": [],
+		"_why": "Nessa's look-back bench, band1 (village_npcs.json greeting_when: unless nessa_overlook_gift_taken, which this conversation sets). Three berries of trail food, once per trainer"},
 	"village_mira_shop_intro": {"class": "progression", "requires_any": [],
 		"_why": "Mira's first greeting, offered from the first visit (village_npcs.json greeting_when: unless opening:mira_visited, which this conversation sets). Axe and pickaxe with coin and fiber; nothing earlier gates it, so the per-character receipt is the whole prerequisite"},
 	"village_tam_tools": {"class": "progression", "requires_any": [],
@@ -1209,14 +1211,13 @@ static func dialogue_gives() -> Array[Dictionary]:
 	if not _dialogue_gives.is_empty():
 		return _dialogue_gives
 	var out: Array[Dictionary] = []
-	var dir := DirAccess.open(DIALOGUE_DIR)
-	if dir == null:
-		return out
-	var files: Array = Array(dir.get_files())
+	# Recursive: the runner also plays `data/dialogue/bands/*.json`
+	# (dialogue_runner.gd EXTRA_DIALOGUE_PATHS), and a give authored there is
+	# a gift a guest must be able to claim (or be refused) like any other.
+	var files: Array[String] = []
+	_dialogue_files(DIALOGUE_DIR, "", files)
 	files.sort()
 	for file: String in files:
-		if not file.ends_with(".json"):
-			continue
 		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("%s/%s" % [DIALOGUE_DIR, file]))
 		var conversations: Variant = (parsed as Dictionary).get("conversations", {}) if parsed is Dictionary else {}
 		if not conversations is Dictionary:
@@ -1231,6 +1232,18 @@ static func dialogue_gives() -> Array[Dictionary]:
 						"item": parts[1], "count": int(parts[2])})
 	_dialogue_gives = out
 	return out
+
+
+## Every `.json` under `root`, as paths relative to it.
+static func _dialogue_files(root: String, relative: String, out: Array[String]) -> void:
+	var dir := DirAccess.open(root if relative.is_empty() else "%s/%s" % [root, relative])
+	if dir == null:
+		return
+	for file: String in dir.get_files():
+		if file.ends_with(".json"):
+			out.append(file if relative.is_empty() else "%s/%s" % [relative, file])
+	for sub: String in dir.get_directories():
+		_dialogue_files(root, sub if relative.is_empty() else "%s/%s" % [relative, sub], out)
 
 
 static func _collect_give_effects(value: Variant, out: Array[String]) -> void:

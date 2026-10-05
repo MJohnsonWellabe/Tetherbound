@@ -47,6 +47,10 @@ func test_every_authored_dialogue_gift_is_classified() -> void:
 		var source := WORLD_LEDGER.dialogue_give_source(conversation, str(give.item))
 		assert_false(seen.has(source), "%s gives %s once, so its source is unambiguous" % [conversation, give.item])
 		seen[source] = true
+	# The scan reaches the band files the runner also plays (review finding:
+	# a non-recursive scan never saw data/dialogue/bands/*.json).
+	assert_true(seen.has(WORLD_LEDGER.dialogue_give_source("village_nessa_overlook_gift", "berries")),
+		"Nessa's band1 trail-food gift (data/dialogue/bands) is among the scanned gifts")
 
 
 func test_an_authored_opening_gift_is_journaled_once_for_the_guest() -> void:

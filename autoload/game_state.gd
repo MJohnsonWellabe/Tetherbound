@@ -3153,12 +3153,12 @@ func use_home_key() -> bool:
 ## Appended to Game. Only the mounted opening director may call these local
 ## producer doors. They are not RPCs and do not accept an imported roster.
 ##
-## F01#6a: the starter is a CHARACTER fact, not a world fact. A guest commits its
-## own starter into its own party and receipts and writes only its own character
-## file (`save_character_prepared` is character-only), exactly as a client's
-## autosave does, once the host's snapshot has made that character file a valid
-## save candidate. Gating this on `is_host()` held every guest's adoption
-## pending forever, which kept the opening modal and Grandpa unreachable
+## F01#6a: the starter is a CHARACTER fact the HOST decides. Once the host's
+## snapshot has made a guest's character file a valid save candidate, the guest
+## asks the host to stage its starter (`_request_original_starter` below) and
+## never writes its own party; the host commits its own locally. Refusing every
+## non-host outright held each guest's adoption pending forever, which kept the
+## opening modal and Grandpa unreachable
 ## (`ralph/reports/INTEGRATION/reproof/f01-current/row6/VERDICT.md on tb/reproof-f01 f5e2b5cb` §1).
 func commit_original_starter(source: Node, instance: RefCounted, nickname: String) -> bool:
 	if not original_starter_writer_ready() or source == null or instance == null: return false
@@ -3209,9 +3209,11 @@ func commit_original_starter(source: Node, instance: RefCounted, nickname: Strin
 ## stay on the host's roster. The journalled row is installed by
 ## character_action_owner.gd, which appends exactly this pending instance, saves,
 ## ACKs and re-arms the passive stream; the opening finishes once the row reads
-## accepted. Re-asking is idempotent: the host answers an identical request
-## from its existing row.
+## accepted. Re-asking is idempotent: every retry re-sends the card the first
+## request carried, so the host answers an identical request from its existing
+## row even if the live instance has since moved on.
 var _original_starter_pending: RefCounted = null
+var _original_starter_pending_card: Dictionary = {}
 
 
 func _request_original_starter(instance: RefCounted, nickname: String) -> bool:
@@ -3219,10 +3221,11 @@ func _request_original_starter(instance: RefCounted, nickname: String) -> bool:
 	if _original_starter_pending != null and _original_starter_pending != instance: return false
 	if _original_starter_pending == null:
 		instance.set("nickname", nickname)
+		var first: Dictionary = preload("res://scripts/save/water_capture_codec.gd").encode(instance)
+		if first.is_empty(): return false
 		_original_starter_pending = instance
-	var card: Dictionary = preload("res://scripts/save/water_capture_codec.gd").encode(instance)
-	if card.is_empty(): return false
-	session.call("request_original_starter", card)
+		_original_starter_pending_card = first
+	session.call("request_original_starter", _original_starter_pending_card.duplicate(true))
 	return false
 
 
@@ -3232,9 +3235,16 @@ func pending_original_starter_instance() -> RefCounted:
 
 
 ## The opening gave up on this request (the host refused it): forget the
-## instance so a fresh choice can be made. Never called once the row exists.
-func cancel_original_starter_request() -> void:
+## instance so a fresh choice can be made. Refused (false) once the host has
+## journalled a `starter_choice` row for this character: that row is the
+## decision, and the installer needs this exact instance when it arrives.
+func cancel_original_starter_request() -> bool:
+	var row: Variant = world.reward_deliveries.get(preload("res://scripts/creatures/essence.gd").training_delivery_id(world.reward_delivery_namespace, local.character_id))
+	if row is Dictionary and row.get("action") == "starter_choice":
+		return false
 	_original_starter_pending = null
+	_original_starter_pending_card = {}
+	return true
 
 
 func _original_starter_admitted(instance: RefCounted, receipt: String) -> bool:
@@ -3243,6 +3253,7 @@ func _original_starter_admitted(instance: RefCounted, receipt: String) -> bool:
 	if row is Dictionary and row.get("action") == "starter_choice" and row.get("receipt") == receipt \
 			and row.get("status") == "accepted":
 		_original_starter_pending = null
+		_original_starter_pending_card = {}
 		return true
 	return false
 

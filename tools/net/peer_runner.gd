@@ -5535,10 +5535,12 @@ func _clear_open_dialogue(presses_allowed: int) -> String:
 	for i in maxi(1, presses_allowed):
 		if not bool(panel.call("is_open")):
 			break
-		await _press_edge("interact", true)
-		for f in 2:
-			await physics_frame
-		await _press_edge("interact", false)
+		# F01#6a (op14/op16, two runs sharing the CPU): raw edges here let a slow
+		# process frame flush the queued physical press after this loop had
+		# already re-read `is_open`, so one press too many landed on a closed
+		# box and reopened Grandpa's walk-out hint. `_inject` is the F11#3 tap:
+		# the physical press flushes while the polled press still holds.
+		await _inject("interact", 2)
 		for f in 6:
 			await physics_frame
 		presses += 1

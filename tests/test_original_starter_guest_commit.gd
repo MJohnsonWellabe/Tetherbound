@@ -85,11 +85,11 @@ func _client_session(snapshot_applied: bool) -> Node:
 	return session
 
 
-func test_an_admitted_guest_may_write_its_own_starter() -> void:
+func test_an_admitted_guest_is_ready_to_ask_for_its_starter() -> void:
 	game.session = _client_session(true)
 	assert_false(game.is_host(), "the fixture is a real client session")
 	assert_true(game.original_starter_writer_ready(),
-		"an admitted guest commits its own starter instead of waiting forever on a host-only gate")
+		"an admitted guest may ask the host for its starter instead of waiting forever on a host-only gate")
 
 
 func test_a_joiner_whose_snapshot_has_not_landed_may_not_write() -> void:
@@ -111,7 +111,7 @@ func test_no_session_or_no_saver_refuses() -> void:
 	game.save_system = saver
 
 
-func test_the_guest_write_is_its_own_character_file_and_never_a_world() -> void:
+func test_the_guest_install_save_is_its_own_character_file_and_never_a_world() -> void:
 	game.session = AdmittedClient.new()
 	game.local.character_id = GUEST
 	game.relinquish_world_save_ownership()
@@ -155,13 +155,34 @@ func test_a_guest_asks_with_its_live_instance_and_never_writes_its_own_party() -
 	assert_eq(client.requests.size(), 1)
 	assert_eq(client.requests[0], preload("res://scripts/save/water_capture_codec.gd").encode(starter),
 		"the request carries exactly the live starter's card")
+	var first: Dictionary = client.requests[0]
+	starter.set("happiness", float(starter.get("happiness")) - 1.0)
 	assert_false(game._request_original_starter(starter, "Bud"))
 	assert_eq(client.requests.size(), 2, "re-asking is how a lost reply recovers; the host answers from its row")
+	assert_eq(client.requests[1], first,
+		"a retry re-sends the first request's card, so it stays the identical request the host already staged")
 	assert_false(game._request_original_starter(_fresh_starter(), "Other"),
 		"a second, different starter cannot replace the one in flight")
 	assert_eq(client.requests.size(), 2)
-	game.cancel_original_starter_request()
+	assert_true(game.cancel_original_starter_request())
 	assert_eq(game.pending_original_starter_instance(), null, "a refused request releases the instance")
+
+
+## Review finding (F01#6a): a terminal refusal of a RE-ask must not release a
+## starter the host already journalled, or the arriving row finds no instance.
+func test_a_journalled_starter_is_never_released_by_a_late_refusal() -> void:
+	game.session = RequestingClient.new()
+	game.local.character_id = GUEST
+	game.world.reward_delivery_namespace = "starter-world"
+	var starter := _fresh_starter()
+	game._request_original_starter(starter, "Bud")
+	var delivery_id := preload("res://scripts/creatures/essence.gd").training_delivery_id("starter-world", GUEST)
+	game.world.reward_deliveries[delivery_id] = {"action": "starter_choice",
+		"receipt": "starter_choice:%s:%s" % [GUEST, str(starter.get("uid"))], "status": "pending"}
+	assert_false(game.cancel_original_starter_request(), "the host's row is the decision; the cancel is refused")
+	assert_true(game.pending_original_starter_instance() == starter, "the installer still has the follower's own instance")
+	game.world.reward_deliveries[delivery_id] = {"action": "wild_capture", "receipt": "x", "status": "accepted"}
+	assert_true(game.cancel_original_starter_request(), "another action's row does not hold a starter request")
 
 
 func test_a_guest_is_finished_only_when_the_host_row_reads_accepted() -> void:

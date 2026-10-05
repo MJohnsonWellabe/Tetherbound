@@ -10,7 +10,9 @@ extends RefCounted
 ## fresh creature at the configured starter level, the admitted party must be
 ## empty, and no `starter_choice:<character>:` receipt may already exist -- so a
 ## character can never be granted a second original starter, nor a conflicting
-## one, through this or any other world. Pure and static: the host stages it
+## one, through this or any other world. "Fresh" is exact: the card must equal
+## the starter the host rebuilds from its own species data and starter level,
+## apart from uid and nickname. Pure and static: the host stages it
 ## through `foundation_actions.gd`, and every owner re-runs the same callback
 ## against the frozen pre-decision record (`character_action_delivery.valid`).
 
@@ -78,9 +80,23 @@ static func stage(current: Dictionary, intent_value: Dictionary, context: Dictio
 	# can ride into the admitted record.
 	if not ESSENCE._equivalent(codec().call("encode", creature), card):
 		return ESSENCE._refuse("invalid_starter_card")
+	# Fresh means exactly what a fresh opening builds. The host rebuilds the
+	# starter the way `encounter_director.adopt_starter()` does and requires the
+	# same portable card but for the uid and the chosen nickname, so no base
+	# stat, IV, boost, xp, bond, shiny or shared history can ride in on a card
+	# that otherwise round-trips (save_game recomputes stats from those fields).
+	var rules: Script = load("res://scripts/net/character_record_rules.gd")
+	var fresh: RefCounted = load("res://scripts/creatures/creature_species.gd").spawn(str(creature.get("species_id")))
+	if fresh == null:
+		return ESSENCE._refuse("not_a_starter_species")
+	fresh.call("set_level", int(context.starter_level), load("res://scripts/creatures/progression.gd").config())
+	fresh.set("uid", uid)
+	fresh.set("nickname", str(creature.get("nickname")))
+	if not ESSENCE._equivalent(rules.portable_card(codec().call("encode", fresh)), rules.portable_card(card)):
+		return ESSENCE._refuse("starter_not_fresh")
 	var next := current.duplicate(true)
 	# The admitted card is the portable one both sides compare (no in-fight energy).
-	next.party = [load("res://scripts/net/character_record_rules.gd").portable_card(card)]
+	next.party = [rules.portable_card(card)]
 	next.redesign_character = TEACHING.character_loadout_mirror(next.party, next.redesign_character)
 	if not next.redesign_character.get("creatures", {}).has(uid):
 		return ESSENCE._refuse("starter_loadout_missing")
