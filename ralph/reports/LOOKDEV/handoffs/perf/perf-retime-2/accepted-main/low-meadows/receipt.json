@@ -1,0 +1,470 @@
+{
+  "source_commit": "33431f9abab32c28898d52daecbd24f48012c490",
+  "biome": "meadows",
+  "preset": "Low",
+  "command": [
+    "D:\\tetherbound\\.artifacts\\perf-diag-main-33431f9ab\\Tetherbound.exe",
+    "--rendering-method",
+    "gl_compatibility",
+    "--rendering-driver",
+    "opengl3",
+    "--path",
+    "D:\\tetherbound\\.artifacts\\perf-diag-main-33431f9ab",
+    "--main-pack",
+    "D:\\tetherbound\\.artifacts\\perf-diag-main-33431f9ab\\Tetherbound.pck",
+    "--resolution",
+    "1920x1080",
+    "--gpu-profile",
+    "--debug",
+    "--ignore-error-breaks",
+    "--audio-driver",
+    "Dummy",
+    "--script",
+    "D:/tetherbound/redesign-lookdev/tools/profile_packaged_route.gd",
+    "--",
+    "--biome=meadows",
+    "--preset=Low",
+    "--source-commit=33431f9abab32c28898d52daecbd24f48012c490",
+    "--output=D:/tetherbound/.artifacts/pr2/main334/low-meadows/route"
+  ],
+  "exit_code": 0,
+  "stop_reason": null,
+  "elapsed_seconds": 350.703,
+  "TB_BACKGROUND_WORK_TRACE": "unset",
+  "scope": "Same diagnostic host/PCK and existing overlay; not shipping EXE or Ally FPS.",
+  "errors": [],
+  "complete": true,
+  "metrics": {
+    "frames": 164,
+    "minimum_fps": 0.5669027438659706,
+    "average_fps": 5.13949723683079,
+    "one_percent_low_fps": 0.598933658514381,
+    "slowest_one_percent_frames": 2,
+    "monitors": {
+      "draw_calls": {
+        "average": 3769.329268292683,
+        "slowest_one_percent_mean": 4539.5
+      },
+      "primitives": {
+        "average": 4095957.451219512,
+        "slowest_one_percent_mean": 4901557.0
+      },
+      "objects_in_frame": {
+        "average": 3441.451219512195,
+        "slowest_one_percent_mean": 4234.5
+      },
+      "physics_ms": {
+        "average": 8.514914634146342,
+        "slowest_one_percent_mean": 7.353
+      },
+      "process_ms": {
+        "average": 428.79143902439023,
+        "slowest_one_percent_mean": 1119.565
+      },
+      "video_memory_bytes": {
+        "average": 1668644500.902439,
+        "slowest_one_percent_mean": 1668641787.0
+      },
+      "node_count": {
+        "average": 183727.55487804877,
+        "slowest_one_percent_mean": 183943.0
+      },
+      "render_gpu_ms": {
+        "average": 56.45903042467632,
+        "slowest_one_percent_mean": 218.39350509643563
+      },
+      "render_cpu_ms": {
+        "average": 36.995951068110614,
+        "slowest_one_percent_mean": 204.875503540039
+      },
+      "render_setup_cpu_ms": {
+        "average": 1.0928475609756096,
+        "slowest_one_percent_mean": 1.0365
+      }
+    }
+  },
+  "gpu_profile": {
+    "raw_blocks": [
+      {
+        "total_last_frame_ms": 35.021,
+        "tasks_ms": {
+          "Prepare Render Frame": 0.07033333182335,
+          "Update GPUParticles": 0.30500000715256,
+          "Cull DirectionalLight3D, Split 1": 0.07716666658719,
+          "Setup 3D Scene": 0.01683333391945,
+          "Render Shadows": 3.41566689809163,
+          "Setup Sky": 0.76083334287008,
+          "Depth Prepass": 3.69883346557617,
+          "Render Opaque Pass": 24.3464991251628,
+          "Render Sky": 0.18649999300639,
+          "Render 3D Transparent Pass": 1.21750005086263,
+          "Render CanvasItems": 0.53766667842865,
+          "vp_end_326417514496": 13.4853337605794
+        }
+      },
+      {
+        "total_last_frame_ms": 415.632,
+        "tasks_ms": {
+          "Prepare Render Frame": 0.07000000029802,
+          "Update GPUParticles": 0.30550000071526,
+          "Cull DirectionalLight3D, Split 1": 0.07699999958277,
+          "Setup 3D Scene": 0.01750000007451,
+          "Render Shadows": 3.28550004959106,
+          "Setup Sky": 0.7664999961853,
+          "Depth Prepass": 135.078994750977,
+          "Render Opaque Pass": 77.9359970092773,
+          "Render Sky": 0.2035000026226,
+          "Render 3D Transparent Pass": 1.23849999904633,
+          "Render CanvasItems": 0.58850002288818,
+          "vp_end_326417514496": 5.84600019454956
+        }
+      },
+      {
+        "total_last_frame_ms": 33.58,
+        "tasks_ms": {
+          "Prepare Render Frame": 0.07000000029802,
+          "Update GPUParticles": 0.30399999022484,
+          "Cull DirectionalLight3D, Split 1": 0.07800000160933,
+          "Setup 3D Scene": 0.01700000092387,
+          "Render Shadows": 3.16199994087219,
+          "Setup Sky": 0.7620000243187,
+          "Depth Prepass": 3.67700004577637,
+          "Render Opaque Pass": 23.3239994049072,
+          "Render Sky": 0.22100000083447,
+          "Render 3D Transparent Pass": 1.22500002384186,
+          "Render CanvasItems": 0.52600002288818,
+          "vp_end_326417514496": 0.16099999845028
+        }
+      },
+      {
+        "total_last_frame_ms": 43.505,
+        "tasks_ms": {
+          "Prepare Render Frame": 0.0701666623354,
+          "Update GPUParticles": 0.30533331632614,
+          "Cull DirectionalLight3D, Split 1": 0.07750000059605,
+          "Cull OmniLight3D Shadow Cube, Side 5": 0.02800000458956,
+          "Setup 3D Scene": 0.01699999968211,
+          "Render Shadows": 143.700500488281,
+          "Setup Sky": 1.19966665903727,
+          "Depth Prepass": 189.945678710938,
+          "Render Opaque Pass": 63.867670694987,
+          "Render Sky": 0.25150001049042,
+          "Render 3D Transparent Pass": 1.27466662724813,
+          "Render CanvasItems": 0.51850008964539,
+          "vp_end_326417514496": 231.245157877604
+        }
+      },
+      {
+        "total_last_frame_ms": 114.318,
+        "tasks_ms": {
+          "Prepare Render Frame": 0.08224999904633,
+          "Update GPUParticles": 0.33500000834465,
+          "Cull DirectionalLight3D, Split 1": 0.12337500602007,
+          "Setup 3D Scene": 0.0202500000596,
+          "Render Shadows": 3.62725019454956,
+          "Setup Sky": 1.2022500038147,
+          "Depth Prepass": 29.66575050354,
+          "Render Opaque Pass": 51.3707466125488,
+          "Render Sky": 0.32624998688698,
+          "Render 3D Transparent Pass": 1.50987493991852,
+          "Render CanvasItems": 0.55849999189377,
+          "vp_end_326417514496": 85.7471237182617
+        }
+      },
+      {
+        "total_last_frame_ms": 39.913,
+        "tasks_ms": {
+          "Prepare Render Frame": 0.08500000503328,
+          "Update GPUParticles": 0.34511110517714,
+          "Cull DirectionalLight3D, Split 1": 0.13188887967004,
+          "Setup 3D Scene": 0.02133333351877,
+          "Render Shadows": 3.60588879055447,
+          "Setup Sky": 0.93022219340007,
+          "Depth Prepass": 5.58955510457357,
+          "Render Opaque Pass": 29.8175557454427,
+          "Render Sky": 0.33611112170749,
+          "Render 3D Transparent Pass": 1.39333332909478,
+          "Render CanvasItems": 0.46933354271783,
+          "vp_end_326417514496": 60.3098822699653
+        }
+      },
+      {
+        "total_last_frame_ms": 100.125,
+        "tasks_ms": {
+          "Prepare Render Frame": 0.07011111577352,
+          "Update GPUParticles": 0.29377778371175,
+          "Cull DirectionalLight3D, Split 1": 0.11644444200728,
+          "Setup 3D Scene": 0.01722222235468,
+          "Render Shadows": 3.47177780999078,
+          "Setup Sky": 0.76966667175293,
+          "Depth Prepass": 3.96711095174154,
+          "Render Opaque Pass": 23.9064432779948,
+          "Render Sky": 0.25811110602485,
+          "Render 3D Transparent Pass": 1.12655554877387,
+          "Render CanvasItems": 0.52244435416328,
+          "vp_end_326417514496": 74.2047797309028
+        }
+      },
+      {
+        "total_last_frame_ms": 46.327,
+        "tasks_ms": {
+          "Prepare Render Frame": 0.07087500393391,
+          "Update GPUParticles": 0.24637499451637,
+          "Cull DirectionalLight3D, Split 1": 0.11687500029802,
+          "Setup 3D Scene": 0.01825000159442,
+          "Render Shadows": 3.56962490081787,
+          "Setup Sky": 0.76512503623962,
+          "Depth Prepass": 3.93374991416931,
+          "Render Opaque Pass": 21.3252506256104,
+          "Render Sky": 0.22462499141693,
+          "Render 3D Transparent Pass": 0.99662494659424,
+          "Render CanvasItems": 0.53212511539459,
+          "vp_end_326417514496": 70.3975067138672
+        }
+      },
+      {
+        "total_last_frame_ms": 96.355,
+        "tasks_ms": {
+          "Prepare Render Frame": 0.06977777348624,
+          "Update GPUParticles": 0.24666666984558,
+          "Cull DirectionalLight3D, Split 1": 0.11677777767181,
+          "Setup 3D Scene": 0.01800000170867,
+          "Render Shadows": 3.60477786593967,
+          "Setup Sky": 0.76499997244941,
+          "Depth Prepass": 3.79788886176215,
+          "Render Opaque Pass": 38.541998969184,
+          "Render Sky": 0.18311111132304,
+          "Render 3D Transparent Pass": 1.18211121029324,
+          "Render CanvasItems": 0.59433359569973,
+          "vp_end_326417514496": 66.0147772894965
+        }
+      },
+      {
+        "total_last_frame_ms": 179.834,
+        "tasks_ms": {
+          "Prepare Render Frame": 0.0701249986887,
+          "Update GPUParticles": 0.24737499654293,
+          "Cull DirectionalLight3D, Split 1": 0.12725000083447,
+          "Setup 3D Scene": 0.0181250013411,
+          "Render Shadows": 5.35475015640259,
+          "Setup Sky": 0.76412504911423,
+          "Depth Prepass": 3.70662498474121,
+          "Render Opaque Pass": 43.260124206543,
+          "Render Sky": 0.16224999725819,
+          "Render 3D Transparent Pass": 1.2121250629425,
+          "Render CanvasItems": 0.56062507629395,
+          "vp_end_326417514496": 103.334991455078
+        }
+      },
+      {
+        "total_last_frame_ms": 38.871,
+        "tasks_ms": {
+          "Prepare Render Frame": 0.07011110915078,
+          "Update GPUParticles": 0.24655556678772,
+          "Cull DirectionalLight3D, Split 1": 0.15699999862247,
+          "Cull OmniLight3D Shadow Cube, Side 2": 0.0177777790361,
+          "Setup 3D Scene": 0.01766666769981,
+          "Render Shadows": 3.74933327568902,
+          "Setup Sky": 0.76644447114733,
+          "Depth Prepass": 3.81188922458225,
+          "Render Opaque Pass": 26.1115553114149,
+          "Render Sky": 0.15488888157739,
+          "Render 3D Transparent Pass": 1.14455562167697,
+          "Render CanvasItems": 0.52033339606391,
+          "vp_end_326417514496": 64.1564466688368
+        }
+      },
+      {
+        "total_last_frame_ms": 37.003,
+        "tasks_ms": {
+          "Prepare Render Frame": 0.07074999809265,
+          "Update GPUParticles": 0.24912498891354,
+          "Cull DirectionalLight3D, Split 1": 0.15150000154972,
+          "Cull OmniLight3D Shadow Cube, Side 2": 0.03725000098348,
+          "Cull OmniLight3D Shadow Cube, Side 5": 0.01400000043213,
+          "Setup 3D Scene": 0.01762500032783,
+          "Render Shadows": 3.79975008964539,
+          "Setup Sky": 0.76650005578995,
+          "Depth Prepass": 3.91662502288818,
+          "Render Opaque Pass": 24.6536235809326,
+          "Render Sky": 0.14237500727177,
+          "Render 3D Transparent Pass": 1.1065000295639,
+          "Render CanvasItems": 0.50337493419647,
+          "vp_end_326417514496": 79.1933822631836
+        }
+      },
+      {
+        "total_last_frame_ms": 36.455,
+        "tasks_ms": {
+          "Prepare Render Frame": 0.07055556111866,
+          "Update GPUParticles": 0.24744444423252,
+          "Cull DirectionalLight3D, Split 1": 0.15144443511963,
+          "Setup 3D Scene": 0.01744444502725,
+          "Render Shadows": 3.45977783203125,
+          "Setup Sky": 0.76666667726305,
+          "Depth Prepass": 3.82555558946398,
+          "Render Opaque Pass": 42.9978875054253,
+          "Render Sky": 0.16533332400852,
+          "Render 3D Transparent Pass": 1.21688885158963,
+          "Render CanvasItems": 0.49499999152289,
+          "vp_end_326417514496": 108.750779893663
+        }
+      },
+      {
+        "total_last_frame_ms": 35.796,
+        "tasks_ms": {
+          "Prepare Render Frame": 0.07019999623299,
+          "Update GPUParticles": 0.24660000801086,
+          "Cull DirectionalLight3D, Split 1": 0.15190000534058,
+          "Setup 3D Scene": 0.01770000010729,
+          "Render Shadows": 3.24259986877441,
+          "Setup Sky": 0.92550001144409,
+          "Depth Prepass": 3.7523998260498,
+          "Render Opaque Pass": 25.0779998779297,
+          "Render Sky": 0.1857999920845,
+          "Render 3D Transparent Pass": 1.17049999237061,
+          "Render CanvasItems": 0.56420021057129,
+          "vp_end_326417514496": 76.9751037597656
+        }
+      },
+      {
+        "total_last_frame_ms": 33.142,
+        "tasks_ms": {
+          "Prepare Render Frame": 0.07009999752045,
+          "Update GPUParticles": 0.24700000286102,
+          "Cull DirectionalLight3D, Split 1": 0.13479999303818,
+          "Cull OmniLight3D Shadow Cube, Side 5": 0.01520000100136,
+          "Setup 3D Scene": 0.0177000015974,
+          "Render Shadows": 3.17279987335205,
+          "Setup Sky": 0.76549997329712,
+          "Depth Prepass": 3.80130004882813,
+          "Render Opaque Pass": 22.8974014282227,
+          "Render Sky": 0.19800000190735,
+          "Render 3D Transparent Pass": 1.06769990921021,
+          "Render CanvasItems": 0.53600010871887,
+          "vp_end_326417514496": 67.0433959960938
+        }
+      },
+      {
+        "total_last_frame_ms": 249.462,
+        "tasks_ms": {
+          "Prepare Render Frame": 0.06971428649766,
+          "Update GPUParticles": 0.24699999604906,
+          "Cull DirectionalLight3D, Split 1": 0.11314284801483,
+          "Cull OmniLight3D Shadow Cube, Side 2": 0.01057142870767,
+          "Cull OmniLight3D Shadow Cube, Side 5": 0.01057142977204,
+          "Setup 3D Scene": 0.01714285675968,
+          "Render Shadows": 2.04142842973982,
+          "Setup Sky": 18.1011428833008,
+          "Depth Prepass": 34.9367130824498,
+          "Render Opaque Pass": 24.4055698939732,
+          "Render Sky": 0.19457144396646,
+          "Render 3D Transparent Pass": 0.98514291218349,
+          "Render CanvasItems": 0.54999995231628,
+          "vp_end_326417514496": 73.8797171456473
+        }
+      },
+      {
+        "total_last_frame_ms": 32.129,
+        "tasks_ms": {
+          "Prepare Render Frame": 0.06990000009537,
+          "Update GPUParticles": 0.24750001430511,
+          "Cull DirectionalLight3D, Split 1": 0.06060000061989,
+          "Setup 3D Scene": 0.01780000180006,
+          "Render Shadows": 0.95110006332397,
+          "Setup Sky": 2.5640998840332,
+          "Depth Prepass": 4.25940017700195,
+          "Render Opaque Pass": 21.4386978149414,
+          "Render Sky": 0.18539998531342,
+          "Render 3D Transparent Pass": 0.894700050354,
+          "Render CanvasItems": 0.47490010261536,
+          "vp_end_326417514496": 66.7730041503906
+        }
+      },
+      {
+        "total_last_frame_ms": 97.452,
+        "tasks_ms": {
+          "Prepare Render Frame": 0.06988888978958,
+          "Update GPUParticles": 0.24899999300639,
+          "Cull DirectionalLight3D, Split 1": 0.02588888671663,
+          "Setup 3D Scene": 0.01722222235468,
+          "Render Shadows": 0.90555561913384,
+          "Setup Sky": 1.25022220611572,
+          "Depth Prepass": 14.7855546739366,
+          "Render Opaque Pass": 17.320556640625,
+          "Render Sky": 0.16999999682109,
+          "Render 3D Transparent Pass": 0.79644446902805,
+          "Render CanvasItems": 0.5451111263699,
+          "vp_end_326417514496": 84.7514444986979
+        }
+      },
+      {
+        "total_last_frame_ms": 32.989,
+        "tasks_ms": {
+          "Prepare Render Frame": 0.06999999947018,
+          "Update GPUParticles": 0.23555556933085,
+          "Cull DirectionalLight3D, Split 1": 0.02588888837232,
+          "Setup 3D Scene": 0.01699999968211,
+          "Render Shadows": 0.89511108398438,
+          "Setup Sky": 1.3849999109904,
+          "Depth Prepass": 4.22188907199436,
+          "Render Opaque Pass": 12.5958896213108,
+          "Render Sky": 0.11044444640477,
+          "Render 3D Transparent Pass": 0.72911108864678,
+          "Render CanvasItems": 0.49288892745972,
+          "vp_end_326417514496": 57.7800021701389
+        }
+      },
+      {
+        "total_last_frame_ms": 31.735,
+        "tasks_ms": {
+          "Prepare Render Frame": 0.06977778010898,
+          "Update GPUParticles": 0.18588888645172,
+          "Cull DirectionalLight3D, Split 1": 0.02488889131281,
+          "Setup 3D Scene": 0.01888888908757,
+          "Render Shadows": 0.8257777955797,
+          "Setup Sky": 0.76544449064467,
+          "Depth Prepass": 12.1458884345161,
+          "Render Opaque Pass": 10.0185555352105,
+          "Render Sky": 0.01944444411331,
+          "Render 3D Transparent Pass": 0.64755556318495,
+          "Render CanvasItems": 0.5764446788364,
+          "vp_end_326417514496": 64.9004448784722
+        }
+      }
+    ],
+    "cost_blocks": 19,
+    "mean_task_ms": {
+      "Cull DirectionalLight3D, Split 1": 0.1032718451051,
+      "Cull OmniLight3D Shadow Cube, Side 2": 0.0034525899330131575,
+      "Cull OmniLight3D Shadow Cube, Side 5": 0.0035669176734257897,
+      "Depth Prepass": 24.674714156838437,
+      "Prepare Render Frame": 0.07154227247214316,
+      "Render 3D Transparent Pass": 1.100941588187477,
+      "Render CanvasItems": 0.5330850126450521,
+      "Render Opaque Pass": 31.624606513499014,
+      "Render Shadows": 10.338173901487,
+      "Render Sky": 0.19435346589650263,
+      "Setup 3D Scene": 0.01794056030007421,
+      "Setup Sky": 1.8937408510704505,
+      "Update GPUParticles": 0.2647793860712342,
+      "vp_end_326417514496": 75.86657582489816
+    },
+    "top_task": "vp_end_326417514496",
+    "scope": "Godot --gpu-profile one-second task means; total is the last frame. First timed block excluded because it can include warmup. GPU passes do not identify individual scene meshes."
+  },
+  "engine_cpu": {
+    "iteration_count": 164,
+    "true_process_ms_mean": 155.6842256097561,
+    "true_process_ms_max": 1721.357,
+    "physics_max_step_ms_mean": 6.072207317073171,
+    "physics_max_step_ms_max": 21.788,
+    "scope": "Maximum individual physics step per render iteration, not all-step mean; callback subset disclosed."
+  },
+  "log_sha256": "9231661f3b9cadd85868138c750253254c98b16abf23ceced13f9625200a1c28",
+  "route_sha256": "87dd71d3240bb6752c79ede3519d9fa0c6a6e7338d226629d153ff86af71b6e5",
+  "performance_sha256": "348d73c8b944aa860f794a6840b99a521f85f8286573f2d9b3c9e77f59979fa2",
+  "camera_far_m": 2000,
+  "adapter": "NVIDIA GeForce GTX 1060 3GB",
+  "gpu_measurement_available": true
+}
