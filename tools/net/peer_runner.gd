@@ -210,6 +210,8 @@ const SAVE_SCRATCH_SLOT := 3
 
 const STRIKE_TRANSACTION := preload("res://tools/net/strike_transaction_observer.gd")
 var _strike_transaction: RefCounted
+## F22 forced-break smoke: enemy staggers this peer's own manager announced.
+var _f22_enemy_staggers := 0
 var _strike_observed_director: Node
 var _role := ""
 var _peer_index := -1
@@ -810,6 +812,10 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_place_creature(args)
 		"strike":
 			out = await _step_strike(args)
+		"f22_pin_tell":
+			out = _step_f22_pin_tell(args)
+		"f22_enemy_staggers":
+			out = _step_f22_enemy_staggers()
 		"observe_strike_transaction":
 			out = _step_observe_strike_transaction(args)
 		"go_down":
@@ -4880,6 +4886,53 @@ func _step_catch_throw(args: Dictionary) -> Dictionary:
 		_throw_orb_at.call_deferred(at)
 		return {"verdict": "PASS", "detail": "armed a throw at %s for %.0f" % [id, at]}
 	return _throw_orb()
+
+
+## Test-fixture only (F22 forced break): pin the host's real shared wild body in
+## a long tell proper that becomes visible NOW on the host's clock, with a pool
+## too deep to break by drain, so only a forced break can stagger it.
+## `read_only` just reports the body's state. Damage and the verdict still
+## travel through the production `_host_strike` -> `host_roll_damage` path.
+func _step_f22_pin_tell(args: Dictionary) -> Dictionary:
+	var director := _encounter_director()
+	var manager := _combat_manager()
+	if director == null or manager == null or not bool(director.call("is_encounter_host")):
+		return {"verdict": "ERROR", "detail": "tell pin requires the encounter host"}
+	var runtime: Variant = director.call("_shared_host_fight", str(manager.call("encounter_id")))
+	var body: Node3D = runtime.call("body") as Node3D if runtime != null and is_instance_valid(runtime) else null
+	if body == null or not is_instance_valid(body):
+		return {"verdict": "FAIL", "detail": "no live shared wild body to pin"}
+	if not bool(args.get("read_only", false)):
+		body.set("_synced_poise_max", 1000000.0)
+		body.set("_poise", 1000000.0)
+		body.set("_poise_resist_left", 0.0)
+		body.set("_staggered", false)
+		body.set("_stagger_critical_ready", false)
+		(body.get("_selected_attack") as Dictionary).clear()
+		body.set("_route_cue_left", 0.0)
+		body.set("_intent", preload("res://scripts/combat/combat_ai.gd").Intent.TELEGRAPH)
+		body.set("_lunge_tell_total", float(args.get("seconds", 30.0)))
+		body.set("_beat_left", float(args.get("seconds", 30.0)))
+		body.set("_tell_visible_since_ms", Time.get_ticks_msec())
+	return {"verdict": "PASS", "detail": "tell pinned" if not bool(args.get("read_only", false)) else "tell state",
+		"data": {"host_now_ms": Time.get_ticks_msec(), "since_ms": int(body.call("tell_visible_since_ms")),
+			"winding_up": bool(body.call("is_winding_up")), "staggered": bool(body.get("_staggered")),
+			"poise": float(body.get("_poise")), "centre": [body.call("centre").x, body.call("centre").y, body.call("centre").z]}}
+
+
+## Counts the enemy staggers this peer's own CombatManager announces (a guest's
+## come only from the host's strike payload). The first call starts watching.
+func _step_f22_enemy_staggers() -> Dictionary:
+	var manager := _combat_manager()
+	if manager == null:
+		return {"verdict": "ERROR", "detail": "no CombatManager"}
+	var counter := func(on_enemy: bool) -> void:
+		if on_enemy: _f22_enemy_staggers += 1
+	if not manager.has_meta("f22_stagger_watch"):
+		manager.set_meta("f22_stagger_watch", true)
+		manager.connect("staggered", counter)
+	return {"verdict": "PASS", "detail": "enemy staggers %d" % _f22_enemy_staggers,
+		"data": {"count": _f22_enemy_staggers}}
 
 
 ## Test-fixture only: pause the real host runtime, then choose an RNG state whose
