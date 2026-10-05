@@ -2,7 +2,7 @@ extends SceneTree
 
 ## F33#1 evidence: does equipped creature gear show on the creature as a trim
 ## or glow accent at the normal camera? Real Meadows world and the ordinary rig.
-## Five real creature bodies (creature_body.gd, the deployed-body class) stand
+## Five real creature bodies (scenes/creatures/creature.tscn) stand
 ## in a row as a disclosed VISUAL-ONLY placement: no gear, then Rootiron,
 ## Tidesteel, Skyglass and Stormglass (Harness and Charm at +3). Each is bound
 ## through the production accent (creature_gear_accent.bind_projection) with the
@@ -13,7 +13,8 @@ extends SceneTree
 ##     --audio-driver Dummy --resolution 1920x1080 \
 ##     --script tests/capture_f33_gear_accent.gd -- --capture-dir=/abs/out
 const SCENE := "res://scenes/world/meadows_playground.tscn"
-const BODY := preload("res://scripts/creatures/creature_body.gd")
+const BODY := preload("res://scenes/creatures/creature.tscn")
+const BODY_SCRIPT := preload("res://scripts/creatures/creature_body.gd")
 const ACCENT := preload("res://scripts/creatures/creature_gear_accent.gd")
 const GEAR := preload("res://scripts/creatures/creature_gear.gd")
 const TIERS := ["", "rootiron", "tidesteel", "skyglass", "stormglass"]
@@ -51,7 +52,8 @@ func _run() -> void:
 	var cfg := GEAR.config()
 	cfg.feature_flags.visual_enabled = true # Capture only; production stays flag-off until judged.
 	for i in TIERS.size():
-		var body: Node3D = BODY.new()
+		var body: Node3D = BODY.instantiate()
+		body.set_script(BODY_SCRIPT) # As encounter_director does for the player's creature.
 		body.name = "Gear_" + (TIERS[i] if not TIERS[i].is_empty() else "none")
 		var x := ORIGIN.x + i * SPACING
 		world.add_child(body)
