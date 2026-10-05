@@ -1,0 +1,67 @@
+{
+  "archive": {
+    "path": "native-export-records.zip",
+    "bytes": 114957,
+    "sha256": "8390e801ea71755f9c2df49c2d7dbdb17f7a39afda6349e2045c496f77dec2a1",
+    "entries": 3
+  },
+  "files": [
+    {
+      "archive_path": "export-release.log",
+      "raw_path": "D:\\tetherbound\\.artifacts\\f26-perf-flag-bd761aaa\\release\\export-release.log",
+      "bytes": 1152768,
+      "sha256": "34d709b1ff3ea14efc843861c866c625d29ed3428d2ec7b2584cf87c62382702"
+    },
+    {
+      "archive_path": "export_presets.original.cfg",
+      "raw_path": "D:\\tetherbound\\.artifacts\\f26-perf-flag-bd761aaa\\release\\export_presets.original.cfg",
+      "bytes": 2694,
+      "sha256": "c3ea6e64c1f9c3398c6a7144e228bb90f26e1699a91e23d681fbaa15f5397219"
+    },
+    {
+      "archive_path": "receipt.json",
+      "raw_path": "D:\\tetherbound\\.artifacts\\f26-perf-flag-bd761aaa\\release\\receipt.json",
+      "bytes": 1535,
+      "sha256": "04fb0a5cbc63a3986d56d4c9f4d1f22c5e6add93d70b8758bc96b38a7ac15dc7"
+    }
+  ],
+  "package_receipt": {
+    "source_commit": "bd761aaa24babd5c537abf6e6f85bdf663702385",
+    "checkout_head": "afecf718231c557a3e6874455be07e500af1763e",
+    "command": [
+      "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+      "--headless",
+      "--verbose",
+      "--path",
+      "D:\\tetherbound\\codex-perf-cpu",
+      "--export-release",
+      "Windows Desktop",
+      "D:\\tetherbound\\.artifacts\\f26-perf-flag-bd761aaa\\release\\package\\Tetherbound.exe"
+    ],
+    "exit_code": 0,
+    "stop_reason": null,
+    "elapsed_seconds": 478.937,
+    "errors": [],
+    "export_cfg_sha256": "c3ea6e64c1f9c3398c6a7144e228bb90f26e1699a91e23d681fbaa15f5397219",
+    "export_settings_unchanged": true,
+    "payload": [
+      {
+        "path": "D:\\tetherbound\\.artifacts\\f26-perf-flag-bd761aaa\\release\\package\\Tetherbound.exe",
+        "size": 109052928,
+        "sha256": "a3e6b1cbd46ad153e7dfb24a5c0ee2b9187e0fb21fa7c0610fa8754ba5939d9c"
+      },
+      {
+        "path": "D:\\tetherbound\\.artifacts\\f26-perf-flag-bd761aaa\\release\\package\\Tetherbound.pck",
+        "size": 1123171248,
+        "sha256": "6ce9561b67769d652897bc054bca09ecd4d1a19a96f9dda1600c348437b36169"
+      },
+      {
+        "path": "D:\\tetherbound\\.artifacts\\f26-perf-flag-bd761aaa\\release\\package\\libterrain.windows.release.x86_64.dll",
+        "size": 3549184,
+        "sha256": "40900e649c3c6c7619c383d28732c3e2e8dc87c2938de43b29122a668aedcf86"
+      }
+    ],
+    "scope": "Original Windows Desktop release preset, script_export_mode2 unchanged. Packaging only, no FPS or GPU acceptance."
+  },
+  "large_payloads_retained_locally": true
+}

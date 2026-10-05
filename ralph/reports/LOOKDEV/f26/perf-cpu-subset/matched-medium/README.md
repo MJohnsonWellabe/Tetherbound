@@ -19,6 +19,6 @@ Eight original native start/end PNGs, route wall samples/logs/commands/preset ev
 - Older334 mode0 numbers are context; matching e2/292 pair is the relevant comparison.
 - Regression onset and full performance acceptance unproven.
 
-Independent delivery/math/frame audit pending; no art/full F26/Ally/earned campaign acceptance.
+Independent original-byte, frame-format and arithmetic audit PASS; no art/full F26/Ally/earned campaign acceptance.
 
 Primary directly viewed all eight native frames: expected terrain, village/Hall, Tidewake props and route views remain visible. Candidate start frames show blank quickslot 1-5 glyph numbers; both candidate ending frames show numbers. Baseline start/end show numbers. Startup/input readiness cause remains under source review; no complete UI or visual preservation claim. Normal clock hours and final Tidewake pose differ as recorded in original route receipts.

@@ -1,0 +1,130 @@
+{
+  "source_commit": "bd761aaa24babd5c537abf6e6f85bdf663702385",
+  "checkout_head": "afecf718231c557a3e6874455be07e500af1763e",
+  "archive": {
+    "path": "native-checks.zip",
+    "bytes": 47114,
+    "sha256": "bfcffced7b3dc261467408edf6178367cb4ea249aca89425b279cbc8544b5c04",
+    "entries": 20
+  },
+  "files": [
+    {
+      "path": "contention/native.log",
+      "bytes": 25848,
+      "sha256": "416b542d8d155f5076857cb3407e46b1fb7efe03c8e392047780a7b4e00eeec1"
+    },
+    {
+      "path": "contention/net-results/f32_contention_peer.gd",
+      "bytes": 13351,
+      "sha256": "00fe7380d3523b42ddbbaa36d48cc04277620577c58d60fc39a77dd6b515ae1d"
+    },
+    {
+      "path": "contention/net-results/home-0/Godot/app_userdata/Tetherbound/boot_log.txt",
+      "bytes": 2672,
+      "sha256": "cb68420e5451c924e2a06748882c8741d623219cb1e15fcd0e9b2e1923e1afb9"
+    },
+    {
+      "path": "contention/net-results/home-0/Godot/app_userdata/Tetherbound/characters/redesign-v28/character-99d61381211a291e34776b69e7fece66/character.json",
+      "bytes": 2776071,
+      "sha256": "66ce4d8921bbd09f520a5c3eafe7092025a1f697101986039a75c53563add6c8"
+    },
+    {
+      "path": "contention/net-results/home-0/Godot/app_userdata/Tetherbound/saves/redesign-v28/slot_0.json",
+      "bytes": 4190180,
+      "sha256": "51d1106ff9ce587fd02b3cb4edfc69fd048bb0438369a4238768e9a8dee41c2a"
+    },
+    {
+      "path": "contention/net-results/home-0/Godot/app_userdata/Tetherbound/worlds/redesign-v28/slot-0/world.json",
+      "bytes": 30007,
+      "sha256": "3e6d1c04f2cc0f95173b5e706e2530ab2c3b38f8b73873695c8e5ec19fb6c9c2"
+    },
+    {
+      "path": "contention/net-results/home-1/Godot/app_userdata/Tetherbound/boot_log.txt",
+      "bytes": 2672,
+      "sha256": "b95e0d8f8490520706881cdfa3fac0b1f4f080b6731da67352358120c5420d82"
+    },
+    {
+      "path": "contention/net-results/home-1/Godot/app_userdata/Tetherbound/characters/redesign-v28/character-1da92eedb5899df828eeeac6e838ad7b/character.json",
+      "bytes": 2776073,
+      "sha256": "d2799a1ddf3333cfb3fb43cc5baab5041711eebb9bfd940f93beeacb9ff8b2fc"
+    },
+    {
+      "path": "contention/net-results/NET_RUN.json",
+      "bytes": 2620,
+      "sha256": "3665a4acb75d130f83eac92252393062a277b6ccdb355e303f3079e458dbda4b"
+    },
+    {
+      "path": "contention/net-results/peer-0.log",
+      "bytes": 11104,
+      "sha256": "068091ee6e993dd9ec7be30d9e8c5d836cefa2bc330f21689cd7b145914272fc"
+    },
+    {
+      "path": "contention/net-results/peer-1.log",
+      "bytes": 10843,
+      "sha256": "e5ddf5a80d19f601a46d35d9cc2e7fefbd162fc542fe7fc504b7d8c100b593c9"
+    },
+    {
+      "path": "contention/net-results/SUMMARY.md",
+      "bytes": 245,
+      "sha256": "aaafb3d8bfa7962cc2c74ee2aac6c8167fb54da1330cf6a385f8ed7808dbbd19"
+    },
+    {
+      "path": "contention/profile/Godot/app_userdata/Tetherbound/boot_log.txt",
+      "bytes": 219,
+      "sha256": "f962be095923f25e0d40686d04c78ba5570105217be38e83f1256c74801bdadd"
+    },
+    {
+      "path": "contention/profile/Godot/app_userdata/Tetherbound/logs/godot.log",
+      "bytes": 25757,
+      "sha256": "ab2ed190782498d1a20ae8e69ac6cf973d52a2bac152fec2a5953c70cdef2526"
+    },
+    {
+      "path": "contention/receipt.json",
+      "bytes": 608,
+      "sha256": "5c61c0b8adcdbfe2c6144e1cb814207624d5a2f30a5cceb11c08bf894ec05730"
+    },
+    {
+      "path": "presentation/native.log",
+      "bytes": 132,
+      "sha256": "fb942df79177788a1b5fdad3756ac96698631e89fecbb7ed293286b596d8eacb"
+    },
+    {
+      "path": "presentation/profile/Godot/app_userdata/Tetherbound/boot_log.txt",
+      "bytes": 219,
+      "sha256": "b123a25905397818cff38653c56e487b06fcb86e0f123625bf94f3e465a3bc6c"
+    },
+    {
+      "path": "presentation/profile/Godot/app_userdata/Tetherbound/logs/godot.log",
+      "bytes": 129,
+      "sha256": "1c28e59a8ed0ec2270e76f442222004060324febb582c7765d4fbe87eb003d71"
+    },
+    {
+      "path": "presentation/receipt.json",
+      "bytes": 614,
+      "sha256": "bb033ac7591881c3054befe20e471c9e7bca87677d9f66a00e6547344613abf7"
+    },
+    {
+      "path": "receipt.json",
+      "bytes": 1696,
+      "sha256": "4ee3902b7127fcd78e72e20d0c83fe43e0862e1dc7dbd46f01a8717899b3837a"
+    }
+  ],
+  "excluded_cache_files": [
+    {
+      "path": "contention/net-results/home-0/Godot/app_userdata/Tetherbound/cache/map_meadows.png",
+      "bytes": 916609
+    },
+    {
+      "path": "contention/net-results/home-0/Godot/app_userdata/Tetherbound/cache/map_meadows.png.key",
+      "bytes": 48
+    },
+    {
+      "path": "contention/net-results/home-1/Godot/app_userdata/Tetherbound/cache/map_meadows.png",
+      "bytes": 916609
+    },
+    {
+      "path": "contention/net-results/home-1/Godot/app_userdata/Tetherbound/cache/map_meadows.png.key",
+      "bytes": 48
+    }
+  ]
+}

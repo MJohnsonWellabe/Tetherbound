@@ -1,0 +1,45 @@
+{
+  "source_commit": "bd761aaa24babd5c537abf6e6f85bdf663702385",
+  "checkout_head": "afecf718231c557a3e6874455be07e500af1763e",
+  "steps": [
+    {
+      "step": "presentation",
+      "source_commit": "bd761aaa24babd5c537abf6e6f85bdf663702385",
+      "checkout_head": "afecf718231c557a3e6874455be07e500af1763e",
+      "command": [
+        "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\codex-perf-cpu",
+        "--script",
+        "tests/smoke_f19_renewable_presentation.gd"
+      ],
+      "profile": "D:\\tetherbound\\.artifacts\\f26-perf-flag-bd761aaa\\validation\\presentation\\profile",
+      "exit_code": 0,
+      "stop_reason": null,
+      "elapsed_seconds": 11.125,
+      "started_utc": "2026-10-05T19:23:36.248381+00:00"
+    },
+    {
+      "step": "contention",
+      "source_commit": "bd761aaa24babd5c537abf6e6f85bdf663702385",
+      "checkout_head": "afecf718231c557a3e6874455be07e500af1763e",
+      "command": [
+        "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+        "--headless",
+        "--path",
+        "D:\\tetherbound\\codex-perf-cpu",
+        "--script",
+        "tests/smoke_net_f32_node_contention.gd"
+      ],
+      "profile": "D:\\tetherbound\\.artifacts\\f26-perf-flag-bd761aaa\\validation\\contention\\profile",
+      "exit_code": 0,
+      "stop_reason": null,
+      "elapsed_seconds": 245.984,
+      "started_utc": "2026-10-05T19:23:47.369082+00:00"
+    }
+  ],
+  "all_two_completed": true,
+  "all_exit_zero": true,
+  "scope": "Existing focused correctness checks; no FPS, GPU performance, four-peer or earned-campaign acceptance."
+}
