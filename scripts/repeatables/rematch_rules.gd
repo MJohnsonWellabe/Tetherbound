@@ -15,14 +15,23 @@ const PATH := "res://data/config/rematches.json"
 static var _cache: Dictionary = {}
 
 static func config() -> Dictionary:
+	return _raw().duplicate(true)
+
+## The cached document itself, reloaded when the file changes. Read-only:
+## callers inside this file read from it and duplicate only what they return.
+## Every public read used to deep-copy the whole document; the rematch poll
+## makes dozens of reads per second, which cost the Meadows ~50 ms each
+## second (PERF, 2026-10-05).
+static func _raw() -> Dictionary:
 	var stamp := FileAccess.get_modified_time(PATH)
 	if not _cache.has("raw") or _cache.get("stamp") != stamp:
 		var raw: Variant = DATA.json(PATH)
 		_cache = {"stamp": stamp, "raw": raw if raw is Dictionary else {}}
-	return (_cache.raw as Dictionary).duplicate(true)
+	return _cache.raw as Dictionary
 
 static func profile(id: String) -> Dictionary:
-	return config().get("profiles", {}).get(id, {}).duplicate(true)
+	var profiles: Variant = _raw().get("profiles", {})
+	return (profiles as Dictionary).get(id, {}).duplicate(true) if profiles is Dictionary else {}
 
 static func master_spec(id: String) -> Dictionary:
 	var row := BREAKTHROUGH.master(id)
@@ -33,9 +42,9 @@ static func master_spec(id: String) -> Dictionary:
 static func available(id: String, tier: String, world_flags: Array, personal_flags: Array) -> bool:
 	var row := profile(id)
 	if row.is_empty(): return false
-	if tier == "endgame": return personal_flags.has(str(config().get("credits_flag", "")))
+	if tier == "endgame": return personal_flags.has(str(_raw().get("credits_flag", "")))
 	if tier != "r1" or row.biome == "stormwood" or row.kind == "boss": return false
-	var gate: String = config().biomes[row.biome].climax_flag
+	var gate: String = _raw().biomes[row.biome].climax_flag
 	return world_flags.has(gate) or personal_flags.has(gate)
 
 ## Canonical spec from the live director, never an RPC roster. Preserve identity,
