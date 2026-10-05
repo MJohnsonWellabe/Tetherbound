@@ -5,7 +5,8 @@
   "generator": "Built-in ImageGen",
   "prompts": [
     "Use case: stylized-concept. Asset type: inspected single-object image-to-3D reference for Tetherbound Crossing Hall portal arch. Create one isolated freestanding carved stone portal arch, shown completely from a nearly frontal shallow three-quarter view, transparent background. Established warm plaster / dark timber / uneven warm sandstone game-kit aesthetic, carefully authored stylized game asset, readable chunky beveled masonry, tactile stone, no photorealism. Hollow clear arch opening at least 2.4m wide and 3.6m high, overall width at most3.2m, total height about4.2m, depth about0.45m. Broad opening about twice a1.8m human height; slender but substantial jambs. Carved keystone with a recessed circular biome emblem slot, one single inset carved name plaque above opening intended for interchangeable biome names; blank neutral inset plaque surface in this reusable base reference. Strong coherent stone mass suited to civic Hall, modest warm stone ornament; no oxblood/red, no neon/glow/light membrane and no stone infill so the reusable arch body and empty aperture are obvious. Even neutral studio illumination showing front and inside jambs, low contrast dark crevices, no cast background, no other building, no human/creature, no props, no text, no dimension labels, no contact sheet, no duplicate views. Do not make a household door, tomb, temple ruin or fantasy spiked gateway. One single intact arch body including top plaque and emblem recess; flat-bottomed two feet at same ground plane, no separate pedestal/base blocking passage.",
-    "Edit this portal arch reference only. Preserve its warm stylized uneven sandstone, restrained carved bands, single top name-plaque blank and circular recessed biome-emblem blank, transparent background and single-object shallow front three-quarter view. Correct the geometry proportions: outer total width3.2m, overall height4.2m; unobstructed opening2.4m wide and3.6m high. Therefore the jambs together take only25% of overall width (each12.5%), and the stone/plaque above the opening takes onlyabout14% of overall height. Widen and raise the empty aperture, slender solid jambs and shorten the top assembly; keep the distinctive blank plaque and emblem compact above the arch. The two feet stand on the same ground plane, passage remains hollow, no pedestal. Show the entire asset with5% transparent margin on EVERY side; no cropping. Eliminate all yellow or red fringe/outline artifacts; edges are natural warm sandstone against clean alpha. No labels, measurements, people, extra objects, new decorative theme or second view. This is a single reusable stone arch for image-to-3D, not a collection."
+    "Edit this portal arch reference only. Preserve its warm stylized uneven sandstone, restrained carved bands, single top name-plaque blank and circular recessed biome-emblem blank, transparent background and single-object shallow front three-quarter view. Correct the geometry proportions: outer total width3.2m, overall height4.2m; unobstructed opening2.4m wide and3.6m high. Therefore the jambs together take only25% of overall width (each12.5%), and the stone/plaque above the opening takes onlyabout14% of overall height. Widen and raise the empty aperture, slender solid jambs and shorten the top assembly; keep the distinctive blank plaque and emblem compact above the arch. The two feet stand on the same ground plane, passage remains hollow, no pedestal. Show the entire asset with5% transparent margin on EVERY side; no cropping. Eliminate all yellow or red fringe/outline artifacts; edges are natural warm sandstone against clean alpha. No labels, measurements, people, extra objects, new decorative theme or second view. This is a single reusable stone arch for image-to-3D, not a collection.",
+    "Create a clean stylized game-asset reference: ONE freestanding simple warm sandstone civic portal arch on a plain pale-gray studio background. Whole object in straight front orthographic view, entirely in frame with generous margins. Thin substantial stone jambs, generous very wide and tall empty curved aperture, no door, membrane or infill. Opening occupies75% of the TOTAL arch width and86% of its total height: opening2.4m wide3.6m tall; outside width3.2m height4.2m. Simple chunky uneven stone blocks with restrained bevels, warm village-kit material style, a high-quality crafted civic object. No base across the open passage. At the crown only one small circular carved emblem recess and one small blank rectangular carved name band, inset into the existing stone, no added pediment/cornice/crown structure. Plain jambs, no panels, vegetation motifs, pillars, buttresses or ornate trim. No temple/tomb feel, no red or yellow edges or glows. Uniform soft neutral studio light. No people, props, labels, text, dimensions, duplicate views, captions or diagram. Favor accurate big open aperture and compact simple stone frame over ornamental detail. This is image-to-3D reference, not an illustration of a building."
   ],
   "references": [
     {
@@ -15,9 +16,13 @@
     {
       "file": "portal-arch-v2.png",
       "sha256": "0aec3cbccbd16c3f5419dc1ec77d8c1f6a77d3377ae7360d3c6f4fe99036676f"
+    },
+    {
+      "file": "portal-arch-v3.png",
+      "sha256": "aa6844721192687b07ab72e6f6ef6d7e9683d4545974b1b4cc74adb34ffd0b0e"
     }
   ],
-  "status": "HOLD after independent reference suitability review: aperture too narrow, excessive ornament and colored cutout fringes",
+  "status": "HOLD all three drafts after independent review: v3 improves style/framing but aperture remains too narrow for specified outer-width/clearance relationship",
   "intended_dimensions_m": {
     "outer_max_width": 3.2,
     "opening_min_width": 2.4,
@@ -25,8 +30,10 @@
     "concept_outer_height": 4.2,
     "concept_depth": 0.45
   },
-  "scale_qualification": "No measured 3D asset exists; image appearance does not certify the dimensional constraints. Opening appears narrow relative frame; independent review pending.",
+  "scale_qualification": "Actual 3D dimensions, collision clearance, material-state variants and in-engine acceptance OPEN. No candidate submitted or integrated.",
   "meshy_posts": 0,
   "purchase": false,
-  "review": "reference-review.md"
+  "review": "reference-review.md",
+  "approach_change": "Fresh simplified stone arch with compact carved recesses and pale-gray opaque studio background; no reused ornate cutout target",
+  "review_v3": "reference-review-v3.md"
 }

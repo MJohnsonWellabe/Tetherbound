@@ -1,0 +1,11 @@
+# Portal arch v3 reference review
+
+**Verdict: HOLD against the full Hall brief.** V3 is useful as a stone/material and identity reference, but its aperture still reads too narrow for the specified compact outer width. This independent review inspected only `portal-arch-v3.png` with the image viewer; no mesh, engine, generation service, or physical measurements were inspected.
+
+The plain warm stone, chunky blocks, worn edges, and uneven surface fit the Hall family. The compact crown incorporates one circular emblem recess and one blank rectangular name band without competing ornament. The silhouette is clear at ordinary viewing distance and appropriate for a reusable architectural asset. The entire arch is framed with margin, the gray studio background is unobtrusive, and no conspicuous colored cutout fringe is visible.
+
+The straight opening appears roughly two-thirds of the complete outer width, rather than the intended three-quarters. Its height appears broadly consistent with the intended high opening-to-total-height proportion, but that does not resolve the width constraint. An opening of at least 2.4 m within an outer width of at most 3.2 m requires a width ratio of at least 75%; this draft does not visibly establish that relationship. These are approximate image-proportion observations, not a measurement or certification of actual metres. The opening still reads tall and slender.
+
+For a reference that satisfies the whole brief, slim the two piers relative to the opening while retaining the simple crown and warm block treatment. The near-frontal view communicates the front silhouette and some inner depth, but leaves the rear construction and full thickness ambiguous for image-to-3D generation. The name band is clearly singular, although its eventual legibility and usable label area require a candidate check.
+
+**OPEN:** Candidate bounds must prove total width at most 3.2 m and clear opening at least 2.4 m wide by 3.6 m high. A 1.8 m trainer comparison, collision clearance, topology, back/thickness, emblem/name modularity, three material-state variants, and native appearance remain unproved. V3 does not supersede the earlier drafts' HOLD reviews or grant full art acceptance.
