@@ -4933,11 +4933,13 @@ func _step_f22_pin_tell(args: Dictionary) -> Dictionary:
 		body.set("_tell_visible_since_ms", Time.get_ticks_msec())
 		# A low-level ambient wild has too little HP to outlive the Energy
 		# build-up; the fixture gives it a deep pool, as it does poise. The
-		# runtime's opponent and the body's instance are both refilled.
+		# runtime's opponent, the body's instance and the host record are all
+		# refilled.
 		for opponent: Variant in [runtime.get("_enemy"), body.get("instance")]:
 			if opponent == null: continue
 			opponent.set("max_hp", maxf(float(opponent.get("max_hp")), 100000.0))
 			opponent.set("hp", float(opponent.get("max_hp")))
+		(director.get("_encounter_host") as RefCounted).call("set_opponent_hp", encounter_id, 100000.0, 100000.0)
 	return {"verdict": "PASS", "detail": "tell pinned" if not bool(args.get("read_only", false)) else "tell state",
 		"data": {"host_now_ms": Time.get_ticks_msec(), "since_ms": int(body.call("tell_visible_since_ms")),
 			"winding_up": bool(body.call("is_winding_up")), "staggered": bool(body.get("_staggered")),
