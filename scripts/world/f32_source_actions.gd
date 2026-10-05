@@ -3,6 +3,7 @@ extends RefCounted
 ## F32 typed staging inside Foundation's EXISTING character/world transaction.
 ## All context comes from registered live host placements and admitted records.
 ## This never promotes state, writes a save, grants items, or creates a journal.
+const RECEIPT_WINDOWS := preload("res://scripts/creatures/receipt_windows.gd")
 const INVENTORY := preload("res://autoload/inventory.gd")
 const ITEM_DB := preload("res://autoload/item_db.gd")
 const HARVEST := preload("res://scripts/world/harvest_logic.gd")
@@ -216,6 +217,7 @@ static func _groom(current: Dictionary, revision: int, intent: Dictionary,
 	if care.get("ok") != true: return _deny(str(care.get("code", "care_stage_refused")))
 	if care.get("duplicate") == true: return _deny("already_groomed")
 	var next: Dictionary = care.state.duplicate(true)
+	next.redesign_character.transaction_receipts = RECEIPT_WINDOWS.compact(next.redesign_character.transaction_receipts, "groom", str(current.character_id))
 	next.redesign_character.transaction_receipts.append(shed.receipt_id)
 	return {"ok": true, "state": next, "outputs": shed.outputs}
 
@@ -247,6 +249,7 @@ static func compose_wild_shed(victory_stage: Dictionary, host_outcome: Dictionar
 		var stack := inventory.stack_at(index)
 		next.inventory.append(null if stack.is_empty() else stack)
 	var limit := int(_read("res://data/config/f32_runtime.json").get("maximum_transaction_receipts", 0))
+	next.redesign_character.transaction_receipts = RECEIPT_WINDOWS.compact(next.redesign_character.transaction_receipts, "shed_win", str(next.get("character_id", "")))
 	if next.redesign_character.transaction_receipts.size() >= limit: return _deny("receipt_budget")
 	next.redesign_character.transaction_receipts.append(shed.receipt_id)
 	var result := victory_stage.duplicate(true)

@@ -3,6 +3,7 @@ extends RefCounted
 ## Detached F43 proposals. Only host-derived context enters this function;
 ## requests contain no progress, day, unlocks, prices or inventory. Foundation's
 ## character_action registry journals inventory + board + receipt atomically.
+const RECEIPT_WINDOWS := preload("res://scripts/creatures/receipt_windows.gd")
 const DATA := preload("res://scripts/data/redesign_data.gd")
 const RULES := preload("res://scripts/world/death_satchel_rules.gd")
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
@@ -186,6 +187,7 @@ static func stage(current: Dictionary, revision: int, action: String, intent: Di
 	if personal.transaction_receipts.size() >= int(cfg.maximum_receipts) \
 		or personal.bounty_receipts.size() >= int(cfg.maximum_receipts): return _deny("receipt_budget")
 	next.redesign_character["bounties"] = board
+	next.redesign_character.transaction_receipts = RECEIPT_WINDOWS.compact(next.redesign_character.transaction_receipts, "bounty_decision", str(current.character_id))
 	next.redesign_character.transaction_receipts.append(receipt)
 	return {"ok": true, "before": current.duplicate(true), "state": next, "receipt": receipt,
 		"expected_character_revision": revision}

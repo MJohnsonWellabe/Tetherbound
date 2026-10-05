@@ -6,6 +6,7 @@ extends RefCounted
 ## same-record CAS must recompute a proposal from its own record, commit the
 ## inventory/party/receipt together, then settle the portable owner's save.
 ## No balance bag, second receipt ledger, scene mutation or optimistic debit.
+const RECEIPT_WINDOWS := preload("res://scripts/creatures/receipt_windows.gd")
 const DATA := preload("res://scripts/data/redesign_data.gd")
 const STATE := preload("res://scripts/data/redesign_state.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
@@ -268,6 +269,7 @@ static func stage_spend(admitted: Dictionary, character_id: String, uid: String,
 	next.party[index] = next_row
 	next.inventory = RULES.slots(inventory).duplicate(true)
 	var receipt := prefix + "%s:%d:%s:%d:%d" % [uid, expected_level, payment_item, cost, character_revision]
+	next.redesign_character.transaction_receipts = RECEIPT_WINDOWS.compact(next.redesign_character.transaction_receipts, "essence_spend", character_id)
 	next.redesign_character.transaction_receipts.append(receipt)
 	if not _baseline_errors(next, character_id).is_empty(): return _refuse("invalid_candidate")
 	return {"ok": true, "duplicate": false, "expected_character_revision": character_revision,
@@ -567,6 +569,7 @@ static func stage_defeat(admitted: Dictionary, character_id: String, host_event:
 	var next := admitted.duplicate(true)
 	next.party = xp.party.duplicate(true)
 	next.inventory = RULES.slots(inventory).duplicate(true)
+	next.redesign_character.transaction_receipts = RECEIPT_WINDOWS.compact(next.redesign_character.transaction_receipts, "wild_defeat", character_id)
 	next.redesign_character.transaction_receipts.append(receipt)
 	# The foundation owner must admit the explicit defeat namespace; never
 	# disguise defeat XP as an Altar spend or bypass REDESIGN validation.
@@ -914,6 +917,7 @@ static func stage_care(admitted: Dictionary, character_id: String, uid: String,
 	var next := admitted.duplicate(true)
 	next.inventory = RULES.slots(inventory).duplicate(true)
 	var receipt := day_prefix + "%s:%d" % [uid, amount]
+	next.redesign_character.transaction_receipts = RECEIPT_WINDOWS.compact_care(next.redesign_character.transaction_receipts, character_id, host_day)
 	next.redesign_character.transaction_receipts.append(receipt)
 	if not _baseline_errors(next, character_id).is_empty(): return _refuse("invalid_candidate")
 	return {"ok": true, "duplicate": false, "expected_character_revision": character_revision,
