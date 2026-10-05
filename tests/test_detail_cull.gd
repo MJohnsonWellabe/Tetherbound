@@ -118,10 +118,10 @@ func test_instance_aware_sizes_never_fall_below_the_reviewed_bound() -> void:
 func test_spread_is_unknown_for_empty_single_or_unreadable_batches() -> void:
 	var box := AABB(Vector3(-1.0, -1.0, -1.0), Vector3(2.0, 2.0, 2.0))
 	var none: Array[Transform3D] = []
-	assert_eq(float(DETAIL_CULL.measure_instances(none, box, Vector3.ONE).half_diagonal), INF)
-	assert_eq(float(DETAIL_CULL.measure_instances(_at([Vector3(5.0, 0.0, 5.0)]), box, Vector3.ONE).half_diagonal), INF)
+	assert_eq(float(DETAIL_CULL.measure_instances(none, box, Vector3.ONE).base_half_diagonal), INF)
+	assert_eq(float(DETAIL_CULL.measure_instances(_at([Vector3(5.0, 0.0, 5.0)]), box, Vector3.ONE).base_half_diagonal), INF)
 	# Several instances reading one origin: a dummy renderer's empty buffer.
-	assert_eq(float(DETAIL_CULL.measure_instances(_at([Vector3.ZERO, Vector3.ZERO, Vector3.ZERO]), box, Vector3.ONE).half_diagonal), INF)
+	assert_eq(float(DETAIL_CULL.measure_instances(_at([Vector3.ZERO, Vector3.ZERO, Vector3.ZERO]), box, Vector3.ONE).base_half_diagonal), INF)
 
 
 func test_a_small_mesh_is_ranged_and_a_large_one_is_not() -> void:

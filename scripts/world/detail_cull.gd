@@ -107,7 +107,8 @@ static func apply(geometry: GeometryInstance3D, cfg: Dictionary) -> void:
 	var lines := float(cfg.get("reference_lines", 1080.0))
 	var pixels := maxf(0.5, float(cfg.get("pixels", 2.5)))
 	var per_metre := lines / (2.0 * tan(fov * 0.5)) / pixels
-	var reach := maxf(size * per_metre, float(cfg.get("min_range_m", 150.0)))
+	# Same expression and order as the shipped cull, bit for bit.
+	var reach := maxf(size * lines / (2.0 * tan(fov * 0.5)) / pixels, float(cfg.get("min_range_m", 150.0)))
 	if reach >= float(cfg.get("ignore_beyond_m", 9000.0)):
 		return
 	# Godot tests a node's visibility range once, against the centre of the
