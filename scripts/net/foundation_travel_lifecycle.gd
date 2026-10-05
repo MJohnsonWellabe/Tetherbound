@@ -173,15 +173,16 @@ func remote_body(peer: int) -> CharacterBody3D:
 	if found == null or found.get("character_id") != owner.call("_authority_character", peer): return null
 	return found
 
-func host_context(peer: int) -> Dictionary:
+## at_msec: when the request being judged arrived (-1: now). The sample that
+## travels just ahead of a request is judged fresh against that arrival.
+func host_context(peer: int, at_msec: int = -1) -> Dictionary:
 	var owner: Node = session()
 	if owner.call("is_host") != true or peer == owner.call("local_peer_id"): return {}
 	var observation: Dictionary = _observations.get(peer, {})
 	if observation.is_empty(): return {}
 	var sample: Dictionary = observation.sample
-	var timeout: float = float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.refresh_seconds) * 4.0
 	var game: Node = owner.call("_game")
-	if Time.get_ticks_msec() - int(observation.seen_at) > int(timeout * 1000.0) \
+	if not sample_fresh(observation, at_msec) \
 		or sample.character_id != owner.call("_authority_character", peer) \
 		or sample.session_epoch != owner.call("_altar_current_epoch") \
 		or sample.world_instance_id != game.get("world").reward_delivery_namespace: return {}
@@ -228,15 +229,22 @@ func host_context(peer: int) -> Dictionary:
 		"waystones_activated": personal.redesign_character.waystones_activated.duplicate(true),
 		"waystone_positions": positions, "arch_positions": arches}
 
+## A sample counts while it is no older than four refreshes, measured at the
+## judged request's arrival (at_msec), or now when there is none.
+static func sample_fresh(observation: Dictionary, at_msec: int = -1) -> bool:
+	var timeout: float = float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.refresh_seconds) * 4.0
+	var reference: int = at_msec if at_msec >= 0 else Time.get_ticks_msec()
+	var age: int = reference - int(observation.get("seen_at", -1000000000))
+	return age >= 0 and age <= int(timeout * 1000.0)
+
 ## Diagnostic only: the first host_context check that returns empty.
-func host_context_refusal(peer: int) -> String:
+func host_context_refusal(peer: int, at_msec: int = -1) -> String:
 	var owner: Node = session()
 	var observation: Dictionary = _observations.get(peer, {})
 	if observation.is_empty(): return "no_observation"
 	var sample: Dictionary = observation.sample
-	var timeout: float = float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.refresh_seconds) * 4.0
-	var age := Time.get_ticks_msec() - int(observation.seen_at)
-	if age > int(timeout * 1000.0): return "stale_sample_%dms" % age
+	var reference: int = at_msec if at_msec >= 0 else Time.get_ticks_msec()
+	if not sample_fresh(observation, at_msec): return "stale_sample_%dms" % (reference - int(observation.seen_at))
 	if sample.character_id != owner.call("_authority_character", peer) or sample.session_epoch != owner.call("_altar_current_epoch"): return "identity"
 	var actor := remote_body(peer)
 	if actor == null: return "no_remote_body"
@@ -252,10 +260,10 @@ func host_context_refusal(peer: int) -> String:
 ## Diagnostic only: which gate the last host_ending_context refusal hit.
 var ending_refusal := ""
 
-func host_ending_context(peer: int) -> Dictionary:
+func host_ending_context(peer: int, at_msec: int = -1) -> Dictionary:
 	var owner: Node = session()
-	var safety := host_context(peer)
-	ending_refusal = "no_safe_sample:" + host_context_refusal(peer) if safety.is_empty() else "realm_" + str(safety.realm)
+	var safety := host_context(peer, at_msec)
+	ending_refusal = "no_safe_sample:" + host_context_refusal(peer, at_msec) if safety.is_empty() else "realm_" + str(safety.realm)
 	if safety.is_empty() or safety.realm != "meadows": return {}
 	for hazard: String in ["combat", "swimming", "flying", "downed"]:
 		ending_refusal = hazard

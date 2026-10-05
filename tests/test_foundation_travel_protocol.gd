@@ -208,3 +208,17 @@ func test_guest_ending_fields_tolerate_passive_landmark_drift_but_not_another_pa
 	var malformed := drifted.duplicate(true)
 	malformed.party_identity = "short"
 	assert_false(LIFECYCLE.valid_sample(malformed))
+
+
+## F18 #4 (render 37334299323: gate stale_sample_1591ms): a guest's sample
+## travels just ahead of its request, and the host's own save/admission work
+## while handling that request must not age it out. Freshness is judged at
+## the request's arrival; with no request it is judged now, as before.
+func test_sample_freshness_is_judged_at_the_request_arrival() -> void:
+	var LIFECYCLE := preload("res://scripts/net/foundation_travel_lifecycle.gd")
+	var now := Time.get_ticks_msec()
+	var observation := {"sample": {}, "seen_at": now - 1591}
+	assert_false(LIFECYCLE.sample_fresh(observation), "1.6 s old against now: stale")
+	assert_true(LIFECYCLE.sample_fresh(observation, now - 1590), "fresh at the request's arrival a moment after it")
+	assert_false(LIFECYCLE.sample_fresh(observation, now - 1591 + 1100), "a request arriving over a second later still sees it stale")
+	assert_false(LIFECYCLE.sample_fresh({"sample": {}, "seen_at": now}, now - 5), "a sample after the request does not vouch for it")

@@ -356,11 +356,18 @@ func _foundation_send(op: String, key: String, intent: Dictionary, revision: int
 func _rpc_foundation_action(envelope: Dictionary) -> void:
 	if not is_host(): return
 	var peer := multiplayer.get_remote_sender_id()
+	# The guest publishes its lifecycle sample just before this request on the
+	# same reliable channel; judge that sample's freshness at arrival, not
+	# after this handler's own (possibly slow) save and admission work.
+	_foundation_request_arrived_at = Time.get_ticks_msec()
 	var result := _foundation_handle(peer, envelope)
+	_foundation_request_arrived_at = -1
 	if envelope.get("op") == "regional_ack" and result.get("ok") != true and _regional_ack_refusal_new(peer, result):
 		var lifecycle := get_node_or_null(^"FoundationComposition/TravelLifecycle")
 		print("[regional_ack] host answered peer %d %s: %s resolved=%s gate=%s" % [peer, str(envelope.get("intent", {}).get("stage", "")), str(result.get("code", result.get("reason", ""))), str(result.get("resolved")), str(lifecycle.get("ending_refusal")) if lifecycle != null else "-"])
 	if bool(_registry.call("has", peer)): rpc_id(peer, "_rpc_foundation_reply", envelope, result)
+
+var _foundation_request_arrived_at := -1
 
 ## Diagnostic log once per guest and refusal code; re-sends stay quiet.
 var _regional_ack_refusals_logged: Dictionary = {}
@@ -528,7 +535,7 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 		var expected: Dictionary = ending.context(_game()) if peer == local_peer_id() else {}
 		if peer != local_peer_id():
 			var lifecycle := get_node_or_null(^"FoundationComposition/TravelLifecycle")
-			if lifecycle != null: expected = lifecycle.call("host_ending_context", peer)
+			if lifecycle != null: expected = lifecycle.call("host_ending_context", peer, _foundation_request_arrived_at)
 		if config().get("redesign_ending_runtime_enabled") != true \
 			or ending.acknowledgement_intent(expected, str(envelope.intent.get("stage", ""))) != envelope.intent \
 			or (envelope.intent.get("stage") == ending.CREDITS_SEEN_FLAG \
