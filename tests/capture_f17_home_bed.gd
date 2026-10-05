@@ -42,7 +42,7 @@ func _run() -> void:
 	var look := world.get_node("WorldLook")
 	look.call("set_clock_frozen", true)
 	var bed := world.get_node("GrandpaHouse/HomeCreatureBed") as Node3D
-	var stands := {"home_bed": [bed.global_position + Vector3(4.5, 0.0, -4.0), bed.global_position]}
+	var stands := {"home_bed": [bed.global_position + Vector3(2.6, 0.0, -4.6), bed.global_position + Vector3(3.6, 0.0, 2.0)]}
 	for stand: String in stands:
 		var at: Vector3 = stands[stand][0]
 		var aim: Vector3 = stands[stand][1]
