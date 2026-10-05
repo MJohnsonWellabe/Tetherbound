@@ -146,6 +146,53 @@ static func host_grant(session: Node, peer: int, request: Dictionary) -> Diction
 	return gift
 
 
+## Saves made while the portal runtime was off finished Grandpa's first-catch
+## conversation without a Home Key; with portals on they would be stranded
+## outside Meadows. The host journals the same deterministic grant row for any
+## admitted character past that beat who holds no key, no owed escrow and no
+## home_key_given fact. Idempotent: the row id is fixed per character/world and
+## the ordinary delivery path settles it exactly once.
+const PAST_FIRST_CATCH_FLAG := "opening:beat:walk_out"
+
+static func legacy_grant_due(personal: Dictionary, flags: Dictionary, character: String) -> bool:
+	if character.is_empty() or personal.get("character_id") != character: return false
+	if flags.get(PAST_FIRST_CATCH_FLAG) != true or flags.get("home_key_given") == true: return false
+	if HOME_ACTION.key_count(personal) != 0: return false
+	var escrow: Variant = personal.get("portal_escrow", {})
+	if escrow is Dictionary:
+		for row: Variant in (escrow as Dictionary).values():
+			if HOME_ACTION.valid_escrow(row, character): return false
+	return true
+
+
+static func host_legacy_grant(session: Node, peer: int) -> Dictionary:
+	if session == null or session.call("is_host") != true or session.call("portal_runtime_ready") != true: return {}
+	var game: Node = session.call("_game")
+	if game == null or game.get("world") == null: return {}
+	var world: RefCounted = game.get("world")
+	var character: String = session.call("_authority_character", peer)
+	if character.is_empty(): return {}
+	# Cheap gates first; the admitted record re-projects the whole character.
+	var flags: Dictionary = session.call("_foundation_flags", peer)
+	if flags.get(PAST_FIRST_CATCH_FLAG) != true or flags.get("home_key_given") == true: return {}
+	if peer == session.call("local_peer_id") and game.get("inventory").count("home_key") != 0: return {}
+	var personal: Dictionary = session.call("admitted_character_state", peer)
+	if not legacy_grant_due(personal, flags, character): return {}
+	var saver: RefCounted = game.get("save_system")
+	if saver == null or not bool(saver.call("finish_fallback")) or saver.call("fallback_busy") == true:
+		return {"durable": false, "code": "writer_busy"}
+	var request := envelope(character, world.reward_delivery_namespace, str(session.call("_altar_current_epoch")))
+	var bound := _binding(session, peer, request)
+	if bound.is_empty(): return {"durable": false, "code": "not_admitted"}
+	var gift := _journal_prepared(session, peer, bound)
+	if gift.get("durable") == true:
+		var reconcile := request.duplicate(true)
+		reconcile.delivery_id = gift.delivery_id
+		reconcile.origin_namespace = world.reward_delivery_namespace
+		host_reconcile(session, peer, reconcile)
+	return gift
+
+
 static func _journal_prepared(session: Node, peer: int, bound: Dictionary) -> Dictionary:
 	var game: Node = bound.game
 	var saver: RefCounted = game.get("save_system")

@@ -14,6 +14,8 @@ class Saver extends RefCounted:
 	var fail := false
 	var writes := 0
 	var seen_journal := false
+	func finish_fallback() -> bool: return true
+	func fallback_busy() -> bool: return false
 	func save_world_prepared(game: Node, _id: String) -> bool:
 		writes += 1
 		seen_journal = game.get("world").reward_deliveries.size() == 1
@@ -42,14 +44,20 @@ class SessionFixture extends Node:
 	var epoch := "opening-epoch"
 	var character := CHARACTER
 	var admitted_inventory: Array = []
+	var flags: Dictionary = {}
+	var escrow: Dictionary = {}
 	func _init() -> void: admitted_inventory.resize(24)
+	func local_peer_id() -> int: return 1
+	func _foundation_flags(_peer: int) -> Dictionary: return flags.duplicate()
+	func _altar_peer_in_combat(_peer: int) -> bool: return true # Reconcile stops before the owner CAS here.
 	func _game() -> Node: return game
 	func is_host() -> bool: return true
 	func portal_runtime_ready() -> bool: return true
 	func _authority_character(peer: int) -> String: return character if peer == 7 else "other"
 	func _altar_current_epoch() -> String: return epoch
 	func admitted_character_state(peer: int) -> Dictionary:
-		return {"character_id": _authority_character(peer), "inventory": admitted_inventory.duplicate(true)}
+		return {"character_id": _authority_character(peer), "inventory": admitted_inventory.duplicate(true),
+			"portal_escrow": escrow.duplicate(true)}
 
 
 class GameFixture extends Node:
@@ -213,3 +221,36 @@ func test_full_bag_owed_grant_is_not_physical_possession_and_portable_duplicate_
 	assert_true(OPENING.owner_physically_settled(player, original.delivery_id))
 	REWARD.apply(player, other)
 	assert_eq(player.inventory.count("home_key"), 1)
+
+
+func test_legacy_character_past_first_catch_gets_one_deterministic_grant() -> void:
+	_session.flags = {OPENING.PAST_FIRST_CATCH_FLAG: true}
+	var first: Dictionary = OPENING.host_legacy_grant(_session, 7)
+	assert_true(first.get("durable") == true, str(first))
+	assert_eq(first.get("delivery_id"), _row().delivery_id, "same id Grandpa's own grant uses")
+	assert_eq(_game.world.reward_deliveries.size(), 1)
+	assert_true(OPENING.valid_row(_game.world.reward_deliveries[_row().delivery_id], _game.world, CHARACTER))
+	var again: Dictionary = OPENING.host_legacy_grant(_session, 7)
+	assert_true(again.get("duplicate") == true, "a repeat tick journals nothing new")
+	assert_eq(_game.world.reward_deliveries.size(), 1)
+	assert_eq(_game.save_system.writes, 1)
+
+
+func test_legacy_grant_skips_keyed_owed_given_and_unfinished_openings() -> void:
+	_session.flags = {}
+	assert_true(OPENING.host_legacy_grant(_session, 7).is_empty(), "not past Grandpa's first catch")
+	_session.flags = {OPENING.PAST_FIRST_CATCH_FLAG: true, "home_key_given": true}
+	assert_true(OPENING.host_legacy_grant(_session, 7).is_empty(), "already given")
+	_session.flags = {OPENING.PAST_FIRST_CATCH_FLAG: true}
+	_session.admitted_inventory[3] = {"id": "home_key", "n": 1}
+	assert_true(OPENING.host_legacy_grant(_session, 7).is_empty(), "already holds a key")
+	_session.admitted_inventory[3] = null
+	var owed := _row()
+	owed.kind = "reward_delivery"
+	owed.status = "grant_due"
+	_session.escrow = {owed.delivery_id: owed}
+	assert_true(OPENING.legacy_grant_due({"character_id": CHARACTER, "inventory": _session.admitted_inventory,
+		"portal_escrow": {}}, _session.flags, CHARACTER))
+	assert_false(OPENING.legacy_grant_due({"character_id": CHARACTER, "inventory": _session.admitted_inventory,
+		"portal_escrow": _session.escrow}, _session.flags, CHARACTER), "an owed key follows its character")
+	assert_eq(_game.world.reward_deliveries.size(), 0)

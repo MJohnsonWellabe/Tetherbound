@@ -3445,6 +3445,7 @@ func _process(delta: float) -> void:
 	_bind_training_container_guards()
 	if _groom_passive != null: _groom_passive.call("tick", delta)
 	if _owner_passive != null: _owner_passive.call("tick", delta)
+	_tick_legacy_home_keys(delta)
 	# Building the host portal context re-projects and recovers the whole local
 	# character record (~100 ms in Tidewake); cancel_invalid() can only act on a
 	# frozen Home Key channel, so build it only while one is open.
@@ -5882,6 +5883,22 @@ func _request_home_key_delivery(delivery: Dictionary) -> void:
 @rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
 func _rpc_home_key_delivery(request: Dictionary) -> void:
 	if is_host(): OPENING_HOME_KEY.host_reconcile(self, multiplayer.get_remote_sender_id(), request)
+
+
+## Characters saved before the portal runtime finished the opening without a
+## Home Key; the host journals their deterministic grant (opening_home_key.gd
+## host_legacy_grant), which the ordinary delivery path then settles once.
+var _legacy_home_key_left := 0.0
+
+func _tick_legacy_home_keys(delta: float) -> void:
+	_legacy_home_key_left -= delta
+	if _legacy_home_key_left > 0.0 or not is_host() or not portal_runtime_ready() or _game() == null: return
+	_legacy_home_key_left = 2.0
+	var peers: Array = [local_peer_id()]
+	if is_active():
+		for peer: Variant in _registry.call("peer_ids"):
+			if int(peer) != local_peer_id(): peers.append(int(peer))
+	for peer: int in peers: OPENING_HOME_KEY.host_legacy_grant(self, peer)
 
 
 func _home_key_authoritative_owned(peer: int) -> bool:
