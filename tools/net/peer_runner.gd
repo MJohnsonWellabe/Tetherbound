@@ -2329,6 +2329,15 @@ func _step_drop_link(args: Dictionary) -> Dictionary:
 	# to disprove ("the dropped peer is genuinely out of the session, not
 	# merely silent"). Leaving the closed peer attached to be polled is also
 	# what a pulled cable actually looks like from inside the process.
+	#
+	# A DETERMINISTIC clean close (CI-SEGMENTS, 2026-10-05): `close()` alone
+	# could lose the unflushed ENet disconnect, which turned the drop into a
+	# cable pull -- the host then only notices after ENet's peer timeout
+	# (MULTIPLAYER: 135-180 s), far past the 30 s a drop step allows (the
+	# unsegmented f06 mid-ride scenario missed it in 1 of 2 clean runs).
+	# So queue a graceful disconnect to every connected ENet peer and flush
+	# it onto the wire first; `close()` then tears the host down as before.
+	var flushed := _flush_enet_disconnect(peer)
 	peer.close()
 	var sess := _session()
 	var frames := maxi(0, int(args.get("settle_frames", 30)))
@@ -2345,7 +2354,26 @@ func _step_drop_link(args: Dictionary) -> Dictionary:
 		return {"verdict": "FAIL",
 			"detail": "transport closed but this peer's Session still reports active after %d frames"
 				% frames}
-	return {"verdict": "PASS", "detail": "transport closed without a Session.leave()"}
+	return {"verdict": "PASS", "detail": "transport closed without a Session.leave()%s"
+		% ("" if flushed < 0 else " (ENet disconnect flushed to %d peer(s))" % flushed)}
+
+
+## Queue `peer_disconnect` to every connected ENet peer of this process's host
+## (a client: the server) and flush it, so the other side sees a clean close at
+## once. Returns how many were sent, or -1 for a non-ENet peer (unchanged path).
+func _flush_enet_disconnect(peer: MultiplayerPeer) -> int:
+	if not (peer is ENetMultiplayerPeer):
+		return -1
+	var host: ENetConnection = (peer as ENetMultiplayerPeer).host
+	if host == null:
+		return -1
+	var sent := 0
+	for packet_peer: ENetPacketPeer in host.get_peers():
+		if packet_peer.get_state() == ENetPacketPeer.STATE_CONNECTED:
+			packet_peer.peer_disconnect(0)
+			sent += 1
+	host.flush()
+	return sent
 
 
 func _step_expect_peers(args: Dictionary) -> Dictionary:
