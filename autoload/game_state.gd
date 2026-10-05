@@ -2308,6 +2308,10 @@ func load_game(slot: int) -> bool:
 	if not bool(save_system.call("load_slot", self, slot)):
 		return false
 	_world_save_owned = true
+	# A save from before the portal runtime may be past the opening without
+	# its Home Key; the host reconcile checks this loaded character once.
+	if session != null and session.has_method("arm_legacy_home_key_check"):
+		session.call("arm_legacy_home_key_check", int(session.call("local_peer_id")))
 	local.feed.call("clear_events")
 	for node in get_tree().get_nodes_in_group("build_placer"):
 		if node.has_method("restore_from_game"):

@@ -2858,6 +2858,7 @@ func _finish_peer_hello(sender: int) -> void:
 		return
 	_broadcast_registry()
 	peer_joined.emit(sender, character_id)
+	arm_legacy_home_key_check(sender)
 	# The joiner may be arriving into a realm this process is not standing in
 	# (a rejoin carries the character's last realm forward, `peer_registry
 	# .gd::add`). Standing its shell up is this call, not a special case.
@@ -5905,17 +5906,25 @@ func _rpc_home_key_delivery(request: Dictionary) -> void:
 ## Characters saved before the portal runtime finished the opening without a
 ## Home Key; the host journals their deterministic grant (opening_home_key.gd
 ## host_legacy_grant), which the ordinary delivery path then settles once.
+## Armed only when such a character can arrive: a loaded save (local) or an
+## admitted guest. A check stays armed through transient not-ready results
+## for at most LEGACY_HOME_KEY_WINDOW_MS.
 var _legacy_home_key_left := 0.0
+var _legacy_home_key_due: Dictionary = {}
+const LEGACY_HOME_KEY_WINDOW_MS := 60000
+
+func arm_legacy_home_key_check(peer: int) -> void:
+	if is_host() and portal_runtime_ready(): _legacy_home_key_due[peer] = Time.get_ticks_msec()
 
 func _tick_legacy_home_keys(delta: float) -> void:
 	_legacy_home_key_left -= delta
-	if _legacy_home_key_left > 0.0 or not is_host() or not portal_runtime_ready() or _game() == null: return
+	if _legacy_home_key_due.is_empty() or _legacy_home_key_left > 0.0 or not is_host() or not portal_runtime_ready() or _game() == null: return
 	_legacy_home_key_left = 2.0
-	var peers: Array = [local_peer_id()]
-	if is_active():
-		for peer: Variant in _registry.call("peer_ids"):
-			if int(peer) != local_peer_id(): peers.append(int(peer))
-	for peer: int in peers: OPENING_HOME_KEY.host_legacy_grant(self, peer)
+	for peer: Variant in _legacy_home_key_due.keys():
+		var expired: bool = Time.get_ticks_msec() - int(_legacy_home_key_due[peer]) > LEGACY_HOME_KEY_WINDOW_MS
+		if int(peer) != local_peer_id() and not bool(_registry.call("has", int(peer))): expired = true
+		var result: Dictionary = {} if expired else OPENING_HOME_KEY.host_legacy_grant(self, int(peer))
+		if expired or result.is_empty() or result.get("durable") == true: _legacy_home_key_due.erase(peer)
 
 
 func _home_key_authoritative_owned(peer: int) -> bool:

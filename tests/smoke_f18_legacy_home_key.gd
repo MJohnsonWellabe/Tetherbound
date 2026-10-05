@@ -1,10 +1,10 @@
 extends SceneTree
 
 ## F18 review M1: a character saved before the portal runtime finished
-## Grandpa's first catch without a Home Key. Loaded with portals on and
-## standing in Tidewake (not Meadows), the host must journal and deliver
-## exactly one key through the ordinary production path, and nothing more on
-## later ticks or after a save/reload.
+## Grandpa's first catch without a Home Key. Loaded from its save with portals
+## on and standing in Tidewake (not Meadows), the host must journal and
+## deliver exactly one key through the ordinary production path, and nothing
+## more on later ticks. An unloaded in-memory character is never touched.
 const GAME := preload("res://autoload/game_state.gd")
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 const WATER_SCENE := preload("res://scenes/world/water_archipelago.tscn")
@@ -38,6 +38,17 @@ func _run() -> void:
 	_expect(game.get("inventory").count("home_key") == 0, "fixture starts without a Home Key")
 	game.set("current_realm", "water")
 	game.call("bind_realm_map")
+	# An in-memory character (no load, no admission) is never reconciled:
+	# fixtures and fresh games keep their own journal untouched.
+	var quiet_until := Time.get_ticks_msec() + 5000
+	while Time.get_ticks_msec() < quiet_until: await process_frame
+	_expect(game.get("world").reward_deliveries.is_empty(), "no grant is journalled without a load or admission")
+	# The legacy character arrives the way players do: from its own save.
+	_expect(bool(game.call("save_game", 0)), "legacy fixture saves through the production schema")
+	game.call("reset_for_new_game")
+	_expect(bool(game.call("load_game", 0)), "legacy save loads")
+	_expect(game.get("inventory").count("home_key") == 0 and str(game.get("current_realm")) == "water",
+		"loaded legacy character is in Tidewake without a Home Key")
 	var water := WATER_SCENE.instantiate() as Node3D
 	root.add_child(water)
 	current_scene = water

@@ -183,12 +183,13 @@ static func host_legacy_grant(session: Node, peer: int) -> Dictionary:
 	if game == null or game.get("world") == null: return {}
 	var world: RefCounted = game.get("world")
 	var character: String = session.call("_authority_character", peer)
-	if character.is_empty(): return {}
+	if character.is_empty(): return {"durable": false, "code": "not_ready"}
 	# Cheap gates first; the admitted record re-projects the whole character.
 	var flags: Dictionary = session.call("_foundation_flags", peer)
 	if flags.get(PAST_FIRST_CATCH_FLAG) != true or flags.get("home_key_given") == true: return {}
 	if peer == session.call("local_peer_id") and game.get("inventory").count("home_key") != 0: return {}
 	var personal: Dictionary = session.call("admitted_character_state", peer)
+	if personal.is_empty(): return {"durable": false, "code": "not_ready"}
 	if not legacy_grant_due(personal, flags, character): return {}
 	var saver: RefCounted = game.get("save_system")
 	if saver == null or not bool(saver.call("finish_fallback")) or saver.call("fallback_busy") == true:
