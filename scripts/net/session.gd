@@ -355,7 +355,8 @@ func _rpc_foundation_action(envelope: Dictionary) -> void:
 	var peer := multiplayer.get_remote_sender_id()
 	var result := _foundation_handle(peer, envelope)
 	if envelope.get("op") == "regional_ack" and result.get("ok") != true:
-		print("[regional_ack] host answered peer %d %s: %s resolved=%s" % [peer, str(envelope.get("intent", {}).get("stage", "")), str(result.get("code", result.get("reason", ""))), str(result.get("resolved"))])
+		var lifecycle := get_node_or_null(^"FoundationComposition/TravelLifecycle")
+		print("[regional_ack] host answered peer %d %s: %s resolved=%s gate=%s" % [peer, str(envelope.get("intent", {}).get("stage", "")), str(result.get("code", result.get("reason", ""))), str(result.get("resolved")), str(lifecycle.get("ending_refusal")) if lifecycle != null else "-"])
 	if bool(_registry.call("has", peer)): rpc_id(peer, "_rpc_foundation_reply", envelope, result)
 
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)

@@ -228,13 +228,19 @@ func host_context(peer: int) -> Dictionary:
 		"waystones_activated": personal.redesign_character.waystones_activated.duplicate(true),
 		"waystone_positions": positions, "arch_positions": arches}
 
+## Diagnostic only: which gate the last host_ending_context refusal hit.
+var ending_refusal := ""
+
 func host_ending_context(peer: int) -> Dictionary:
 	var owner: Node = session()
 	var safety := host_context(peer)
+	ending_refusal = "no_safe_sample" if safety.is_empty() else "realm_" + str(safety.realm)
 	if safety.is_empty() or safety.realm != "meadows": return {}
 	for hazard: String in ["combat", "swimming", "flying", "downed"]:
+		ending_refusal = hazard
 		if safety.get(hazard) != false: return {}
 	var sample: Dictionary = _observations[peer].sample
+	ending_refusal = "modal dialogue=%s cutscene=%s ending_owner=%s" % [str(safety.dialogue), str(safety.cutscene), str(sample.ending_owner)]
 	if (safety.dialogue or safety.cutscene) and sample.ending_owner != true: return {}
 	var world_node: Node3D = owner.call("_portal_world_node", "meadows")
 	var nearby: bool = false
@@ -243,12 +249,19 @@ func host_ending_context(peer: int) -> Dictionary:
 		var prompt: Node3D = source.get("_grandpa_prompt")
 		if prompt != null and safety.position.distance_to(prompt.global_position) <= float(prompt.get("radius")): nearby = true
 	var world: RefCounted = owner.call("_game").get("world")
+	ending_refusal = "not_at_farm" if not nearby else "world_flag"
 	if not nearby or not world.flags.call("has", preload("res://scripts/story/regional_homecoming.gd").WORLD_FLAG): return {}
 	var personal: Dictionary = owner.get("_character_authority").call("state", sample.character_id)
 	var flags: Dictionary = owner.call("_foundation_flags", peer)
-	return ending_fields(personal, flags, sample)
+	ending_fields_refusal = ""
+	var fields := ending_fields(personal, flags, sample)
+	ending_refusal = "" if not fields.is_empty() else "ending_fields " + ending_fields_refusal
+	return fields
+
+static var ending_fields_refusal := ""
 
 static func ending_fields(personal: Dictionary, flags: Dictionary, sample: Dictionary) -> Dictionary:
+	ending_fields_refusal = "character_or_settled_flag"
 	if personal.get("character_id") != sample.get("character_id") or flags.get("stormwood:legendary_ceremony_settled") != true: return {}
 	var originals: Array[String] = []
 	var answers: Array[String] = []
@@ -256,8 +269,10 @@ static func ending_fields(personal: Dictionary, flags: Dictionary, sample: Dicti
 		if flags[flag] != true: continue
 		if flag.begins_with("stormwood:regional_outcome:"): originals.append(flag)
 		if flag.begins_with("stormwood:legendary_answer:"): answers.append(flag)
+	ending_fields_refusal = "outcome_flags"
 	if originals.size() > 1 or (originals.is_empty() and answers.size() != 1): return {}
 	var outcome: String = answers[0] if originals.is_empty() else originals[0].replace("stormwood:regional_outcome:", "stormwood:legendary_answer:")
+	ending_fields_refusal = "outcome_answer"
 	if not answers.has(outcome) or outcome.get_slice(":", outcome.get_slice_count(":") - 1) not in ["accepted", "refused"]: return {}
 	var home: String = preload("res://scripts/story/regional_homecoming.gd").home_return_receipt(
 		personal.get("redesign_character", {}).get("transaction_receipts", []),
@@ -267,14 +282,17 @@ static func ending_fields(personal: Dictionary, flags: Dictionary, sample: Dicti
 		var prefix: String = "starter_choice:%s:" % sample.character_id
 		if receipt.begins_with(prefix):
 			var uid: String = receipt.trim_prefix(prefix)
+			ending_fields_refusal = "starter_receipt"
 			if uid.is_empty() or uid.contains(":") or (not starter.is_empty() and starter != uid): return {}
 			starter = uid
+	ending_fields_refusal = "home_return=" + str(not home.is_empty()) + " starter=" + str(not starter.is_empty())
 	if home.is_empty() or starter.is_empty(): return {}
 	var temporary: RefCounted = preload("res://autoload/party.gd").new()
 	var mirrors: Dictionary = personal.redesign_character.get("creatures", {})
 	for card: Dictionary in personal.get("party", []):
 		var member: RefCounted = preload("res://scripts/save/water_capture_codec.gd").decode_owned(card, personal.redesign_character) \
 			if mirrors.has(card.uid) else preload("res://scripts/save/water_capture_codec.gd").decode(card)
+		ending_fields_refusal = "party_decode"
 		if member == null or not temporary.call("add", member): return {}
 	var homecoming := preload("res://scripts/story/regional_homecoming.gd")
 	var signature: String = homecoming.party_signature(temporary)
@@ -285,11 +303,14 @@ static func ending_fields(personal: Dictionary, flags: Dictionary, sample: Dicti
 	# same five with the same non-passive history is the same party: verify that
 	# here and keep the guest's own full signature, which its intent carries.
 	if sample.has("party_identity"):
+		ending_fields_refusal = "party_identity"
 		if identity.is_empty() or identity != sample.party_identity: return {}
 		# Guest-attested: only its own presentation fence for this ack, never a
 		# host-verified roster. Identity above is the host's check.
 		signature = sample.party_signature
-	elif signature.is_empty() or signature != sample.get("party_signature"): return {}
+	else:
+		ending_fields_refusal = "party_signature"
+		if signature.is_empty() or signature != sample.get("party_signature"): return {}
 	return {"world_instance_id": sample.world_instance_id, "session_epoch": sample.session_epoch,
 		"character_id": sample.character_id, "outcome_id": outcome, "home_return_receipt": home,
 		"party_revision": sample.party_revision, "party_signature": signature}
