@@ -1,0 +1,39 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_f27_guest_wild_share,test_f27_guest_release_service,test_f27_essence_rules,test_f32_win_shed: 4 of 784 test files
+  ok    test_f27_essence_rules.gd :: test_altar_spend_id_replays_as_duplicate_and_conflicts_cannot_mint
+  ok    test_f27_essence_rules.gd :: test_altar_spend_stops_at_cap_and_refuses_without_payment
+  ok    test_f27_essence_rules.gd :: test_automatic_combat_xp_is_reduced_but_never_zero
+  ok    test_f27_essence_rules.gd :: test_care_trickle_is_capped_per_character_per_host_day
+  ok    test_f27_essence_rules.gd :: test_ceremony_release_action_pays_type_essence_and_removes_one
+  ok    test_f27_essence_rules.gd :: test_ceremony_release_requires_the_ceremony_and_a_full_belt
+  ok    test_f27_essence_rules.gd :: test_defeat_payout_is_typed_level_scaled_and_dual_split
+  ok    test_f27_essence_rules.gd :: test_dual_type_may_pay_with_either_essence_or_candy
+  ok    test_f27_essence_rules.gd :: test_eight_type_essences_and_tether_candy_are_stackable_items
+  ok    test_f27_essence_rules.gd :: test_every_type_crop_harvest_pays_its_configured_essence
+  ok    test_f27_essence_rules.gd :: test_no_creature_expedition_or_automation_source_exists
+  ok    test_f27_essence_rules.gd :: test_passive_care_fields_mirror_the_owner_passive_replay_list
+  ok    test_f27_essence_rules.gd :: test_pending_spend_delivers_once_despite_passive_drift_before_rejoin
+  ok    test_f27_essence_rules.gd :: test_real_conflicts_are_still_refused
+  ok    test_f27_essence_rules.gd :: test_release_pays_the_released_creatures_type_once
+  ok    test_f27_essence_rules.gd :: test_starters_level_through_their_own_type_essence
+  ok    test_f27_essence_rules.gd :: test_wild_defeat_stages_essence_and_reduced_xp_once
+  ok    test_f27_guest_release_service.gd :: test_a_refusal_while_the_owner_guard_is_closed_retries_until_it_opens
+  ok    test_f27_guest_release_service.gd :: test_a_saved_host_row_finishes_paid_and_is_never_also_released_unpaid
+  ok    test_f27_guest_release_service.gd :: test_a_terminal_ceremony_refusal_releases_unpaid
+  ok    test_f27_guest_release_service.gd :: test_an_unchanging_stale_refusal_releases_unpaid_after_the_bound
+  ok    test_f27_guest_wild_share.gd :: test_a_creature_knocked_out_in_the_fight_earns_no_share
+  ok    test_f27_guest_wild_share.gd :: test_a_v1_training_row_follows_an_accepted_v3_action_row
+  ok    test_f27_guest_wild_share.gd :: test_owner_plan_accepts_only_the_owner_holding_the_settled_vitals
+  ok    test_f27_guest_wild_share.gd :: test_retained_share_duty_validates_and_rejects_tampering
+  ok    test_f27_guest_wild_share.gd :: test_settlement_applies_host_saved_hp_and_faint_only
+  ok    test_f27_guest_wild_share.gd :: test_share_action_requires_the_host_frozen_win
+  ok    test_f27_guest_wild_share.gd :: test_share_pays_once_on_the_settled_record_with_battle_credit_and_mood
+  ok    test_f27_guest_wild_share.gd :: test_wild_scope_is_never_a_trainer_round_scope
+  ok    test_f32_win_shed.gd :: test_configured_cloudreach_galecrest_win_sheds_skyplume_once
+  ok    test_f32_win_shed.gd :: test_frozen_shed_is_used_as_is_and_malformed_sheds_are_refused
+  ok    test_f32_win_shed.gd :: test_full_satchel_skips_the_shed_but_pays_victory_xp_and_essence
+  ok    test_f32_win_shed.gd :: test_misses_wrong_realms_and_unlisted_species_shed_nothing
+  ok    test_f32_win_shed.gd :: test_nine_key_legacy_event_validates_without_shed_and_keeps_its_receipt
+
+34 tests, 478 assertions, 0 failed
