@@ -104,14 +104,8 @@ func _run() -> void:
 		"peer 1 joined the shared wild fight (%s)" % str(joined_fight.get("detail", "")))
 	await step(1, "f22_enemy_staggers", {})
 
-	# (a) Tell first, then the committed charge: a read.
-	var read := await _charge_case(true)
-	check(bool(read.host_staggered),
-		"(a) a charge committed after the tell breaks the wild on the host (%s)" % str(read))
-	check(int(read.guest_staggers) == 1,
-		"(a) the guest's manager announces the same break from the host payload (%s)" % str(read))
-	await step(1, "wait", {"frames": COOLDOWN_FRAMES})
-
+	# (b) runs first, on the freshly staged wild: (a)'s break makes the wild
+	# reposition before it can be pinned again.
 	# (b) Charge committed well before the tell: drains, never breaks.
 	var blind := await _charge_case(false)
 	check(bool(blind.landed), "(b) the early-committed charge landed on the host (%s)" % str(blind))
@@ -121,6 +115,15 @@ func _run() -> void:
 		"(b) its blow drained poise normally instead (%s)" % str(blind))
 	check(int(blind.guest_staggers) == 0,
 		"(b) the guest announces no break either: both peers resolve the same verdict (%s)" % str(blind))
+	await step(1, "wait", {"frames": COOLDOWN_FRAMES})
+
+	# (a) Tell first, then the committed charge: a read.
+	var read := await _charge_case(true)
+	check(bool(read.host_staggered),
+		"(a) a charge committed after the tell breaks the wild on the host (%s)" % str(read))
+	check(int(read.guest_staggers) == 1,
+		"(a) the guest's manager announces the same break from the host payload (%s)" % str(read))
+
 	quit(await finish())
 
 
@@ -143,7 +146,10 @@ func _charge_case(tell_first: bool) -> Dictionary:
 	for _swing in QUICK_SWINGS:
 		if landed >= ENERGY_HITS: break
 		# Re-pin (and refill HP) before every swing: the fight must outlive them.
-		var hp_was := float(((await _pin(false)).get("data", {}) as Dictionary).get("hp", -1.0))
+		var live: Dictionary = (await _pin(false)).get("data", {})
+		var hp_was := float(live.get("hp", -1.0))
+		var aim := _vec(live.get("centre", []))
+		if aim != Vector3.INF: centre = aim
 		_action += 1
 		await step(1, "strike", {"target": [centre.x, centre.y, centre.z], "slot": "quick",
 			"action": _action, "settle": 15})
