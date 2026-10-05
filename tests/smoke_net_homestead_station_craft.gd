@@ -59,6 +59,14 @@ func _run() -> void:
 		await _craft_finish()
 		return
 	check(int(placed.effective_tier) == 1, "the host's Kitchen stands at tier 1 with its Spice rack")
+	# F18 travel reset (coordinator): one guest Home Key trip home and its
+	# arrival before the owner-gated craft. Skipped, with its reason, while the
+	# portal runtime is off.
+	var trip := await _craft_data(1, "craft_home_key_trip", {}, 12000)
+	if bool(trip.get("skipped", false)):
+		print("F31#5 craft: guest Home Key trip skipped (portal runtime off in this build)")
+	else:
+		check(str(trip.get("realm", "")) == "meadows", "the guest arrived home before crafting")
 	var host_before := await _craft_data(0, "craft_count", {"ids": COUNTED})
 	var crafted := await _craft_data(1, "craft_at_host_kitchen", {"kitchen_uid": placed.kitchen_uid}, 3000)
 	var host_after := await _craft_data(0, "craft_count", {"ids": COUNTED})
@@ -87,13 +95,22 @@ func _run() -> void:
 				"the guest's harvests flushed as a batch %s" % str(batched.batch))
 			check(int(batched.rows) == 0, "acked and replayed batch rows were pruned from the host world (%d left)" % int(batched.rows))
 	# F31#2 co-op rule: the guest's relic power choice is the host's to save.
-	# Shipping keeps F18's portal runtime off, so the host refuses and nothing
-	# changes, before and after the reconnect. The accepted path joins this
-	# smoke when F18 turns the runtime on.
+	# Read from the shipped portal flag: off, the host refuses with its reason
+	# and nothing changes; on, it is accepted exactly once (a second identical
+	# choice changes nothing more).
 	var power := await _craft_data(1, "relic_power_attempt", {"heart_id": "meadows"})
 	if not power.is_empty():
-		check(not bool(power.runtime_ready) and power.result.get("ok") != true, "with the portal runtime off the host refuses the guest's relic power choice")
-		check(str(power.local_active) == "", "a refused choice leaves the guest without a power")
+		if not bool(power.runtime_ready):
+			check(power.result.get("ok") != true and not str(power.result.get("code", power.result.get("reason", ""))).is_empty(),
+				"portal runtime off: the host refuses the guest's relic power choice with a reason %s" % str(power.result))
+			check(str(power.local_active) == "", "a refused choice leaves the guest without a power")
+		else:
+			check(power.result.get("ok") == true and str(power.local_active) == "meadows",
+				"portal runtime on: the host accepts the guest's relic power choice %s" % str(power.result))
+			var again := await _craft_data(1, "relic_power_attempt", {"heart_id": "meadows"})
+			if not again.is_empty():
+				check(str(again.local_active) == "meadows" and again.result.get("receipt", "") in ["", power.result.get("receipt", "")],
+					"accepted exactly once: the same choice again adds no second change %s" % str(again.result))
 	await _craft_finish()
 
 
