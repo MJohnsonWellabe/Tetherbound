@@ -1,0 +1,78 @@
+{
+  "raw_root": "D:\\tetherbound\\.artifacts\\f26-perf-voice-27ec0b9b\\validation",
+  "archive": {
+    "path": "native-audio-check.zip",
+    "bytes": 8420,
+    "sha256": "df93f7551ae411345c23c25b8e99c823b0f11f4d6729bf210ca458c687b2bc43",
+    "entries": 5
+  },
+  "files": [
+    {
+      "path": "audio/native.log",
+      "bytes": 10279,
+      "sha256": "85082a996b0f76774f6be5c0f505aa16d96ff39c89c71f48b0b8551c463ba694"
+    },
+    {
+      "path": "audio/profile/Godot/app_userdata/Tetherbound/boot_log.txt",
+      "bytes": 2670,
+      "sha256": "3de177d018643ff89a4ed2116efa6c30531f4ffc56b6d45e4dc8ad60a1f7dd79"
+    },
+    {
+      "path": "audio/profile/Godot/app_userdata/Tetherbound/logs/godot.log",
+      "bytes": 10135,
+      "sha256": "07372ac6642f1a1a355b088c22787d8d8567de472aea52673e95f26f518a9fcf"
+    },
+    {
+      "path": "audio/receipt.json",
+      "bytes": 617,
+      "sha256": "78a8e36cd2b9f1965c9d843a9dd50f35e89ebbe0f5fa12ba4574e6d15b3ea19a"
+    },
+    {
+      "path": "receipt.json",
+      "bytes": 1024,
+      "sha256": "65bef7da8a9e608717abe96afb2750e0bda101415daec9e814c28d3acd4c68f1"
+    }
+  ],
+  "excluded_cache_files": [],
+  "original_receipt": {
+    "source_commit": "27ec0b9be80ef718e9f96a7eeafb9a0fa0d6b1f4",
+    "checkout_head": "27ec0b9be80ef718e9f96a7eeafb9a0fa0d6b1f4",
+    "steps": [
+      {
+        "step": "audio",
+        "source_commit": "27ec0b9be80ef718e9f96a7eeafb9a0fa0d6b1f4",
+        "checkout_head": "27ec0b9be80ef718e9f96a7eeafb9a0fa0d6b1f4",
+        "command": [
+          "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64.exe",
+          "--headless",
+          "--path",
+          "D:\\tetherbound\\codex-perf-cpu",
+          "--script",
+          "tests/smoke_audio.gd",
+          "--audio-driver",
+          "Dummy"
+        ],
+        "profile": "D:\\tetherbound\\.artifacts\\f26-perf-voice-27ec0b9b\\validation\\audio\\profile",
+        "exit_code": 0,
+        "stop_reason": null,
+        "elapsed_seconds": 131.75,
+        "started_utc": "2026-10-05T19:55:11.999145+00:00"
+      }
+    ],
+    "all_one_completed": true,
+    "all_exit_zero": true,
+    "scope": "Existing focused correctness checks; no FPS, GPU performance, four-peer or earned-campaign acceptance."
+  },
+  "native_errors": [],
+  "native_warnings": [
+    "WARNING: instance_reset_physics_interpolation() is deprecated.",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light",
+    "WARNING: prop 'Torch_Metal' has glow:\"campfire\" but no `Fire` surface to light"
+  ]
+}
