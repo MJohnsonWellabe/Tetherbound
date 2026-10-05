@@ -120,5 +120,6 @@
       "size": 131,
       "sha256": "4b4444e6a6974fa5ec7cc83d2c4f98c4d1d1480560bdbaedf04df552ffc6ae30"
     }
-  ]
+  ],
+  "excluded": "Isolated profile boot_log.txt, graphics_override.cfg.previous, profile logs, map cache/key and shader caches. Current graphics_override.cfg retained separately; all16 inventoried capture-root/frames originals preserved."
 }
