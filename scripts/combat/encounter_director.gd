@@ -2962,6 +2962,12 @@ func _host_move_start(intent: Dictionary, peer: int) -> Dictionary:
 	var runtime := _shared_host_fight(id)
 	var wild: Node3D = runtime.call("body") as Node3D if runtime != null else _engaged_with
 	if not is_instance_valid(wild): return deny
+	# A tracked trainer/boss actor binds lazily on first publication, which
+	# advances its actor generation. Bind it here, before the start freezes its
+	# binding, so the start and its arrival name the same actor generation;
+	# otherwise every participant's first attack of the fight is refused as
+	# move_start_required. A no-op when tracking is off or already bound.
+	_f22_publication_binding(id, peer, body)
 	# The live deployment and admitted loadout are both checked. No per-press
 	# move name, timing, resource claim or rank is accepted from a guest.
 	var binding := _strike_actor_binding(id, peer, body)
@@ -8203,7 +8209,13 @@ func _resume_trainer_encounter(encounter_id: String) -> bool:
 		var peer_id := int(peer)
 		if peer_id == _local_peer_id() or not live.has(peer_id) or not _realm_rpc_allowed(peer_id):
 			continue
-		_encounter_host.call("join", encounter_id, peer_id, "", "")
+		# The guest's host-admitted character, as _host_engage passes it: a
+		# guest that left at the round boundary is restored from its retained
+		# row (actor vitals, move resources, bound creature) instead of
+		# rejoining as a blank participant whose every round-two move is refused.
+		var guest_character := str(_session.call("_authority_character", peer_id)) \
+			if _session != null and _session.has_method("_authority_character") else ""
+		_encounter_host.call("join", encounter_id, peer_id, "", guest_character)
 	return true
 
 

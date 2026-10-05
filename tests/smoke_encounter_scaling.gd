@@ -672,6 +672,7 @@ func _fell_the_current_creature() -> bool:
 		var theirs: RefCounted = opponent.get("instance") as RefCounted
 		if theirs != null and float(theirs.get("hp")) > ENEMY_HP_CEILING:
 			theirs.set("hp", ENEMY_HP_CEILING)
+		_apply_shortcuts_at_host(mine, theirs)
 		var to := opponent.global_position - ally.global_position
 		to.y = 0.0
 		_rig.set("yaw", atan2(-to.x, -to.z))
@@ -732,6 +733,27 @@ func _live() -> Dictionary:
 		"combat_override": (creature.get("combat_override") as Dictionary).duplicate(true),
 		"body_attack_cooldown": float(cfg.get("attack_cooldown", -1.0)),
 	}
+
+
+## With combat.json actor_vitals on, the host's own records are the authority:
+## a strike is admitted only while the host's actor row for the creature is
+## standing, and the opponent falls by the host's HP, not the local copy. Apply
+## this loop's two disclosed shortcuts (keep the player's creature standing,
+## cap the opponent's HP) to those host records as well.
+func _apply_shortcuts_at_host(mine: RefCounted, theirs: RefCounted) -> void:
+	var host := _host()
+	var id := str(_record().get("encounter_id", ""))
+	if host == null or id.is_empty(): return
+	var rec: Dictionary = (host.get("encounters") as Dictionary).get(id, {})
+	if rec.is_empty(): return
+	if mine != null:
+		var participant: Dictionary = (rec.get("participants", {}) as Dictionary).get(1, {})
+		var actor: Variant = (participant.get("actor_vitals", {}) as Dictionary).get(str(mine.get("uid")))
+		if actor is Dictionary and float(actor.get("max_hp", 0.0)) > 0.0:
+			actor["hp"] = float(actor.max_hp)
+			actor["fainted"] = false
+	if theirs != null and float(host.call("opponent_hp", id)) > ENEMY_HP_CEILING:
+		host.call("set_opponent_hp", id, ENEMY_HP_CEILING, float(theirs.get("max_hp")))
 
 
 func _record() -> Dictionary:
