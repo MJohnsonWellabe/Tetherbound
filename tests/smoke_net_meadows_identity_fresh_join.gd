@@ -195,6 +195,7 @@ func _run() -> void:
 			_check(rows.size() == 1 and str(rows[0]).begins_with(chosen + "@"),
 				"peer %d holds the starter it picked in the real picker, %s (%s)" % [peer, chosen, str(rows)])
 			await _assert_named_starter(peer, "after the opening")
+		await _assert_host_admits_guest_starter(client_peer_id, "after the opening")
 	var first_party: Array = client_identity.get("party", []) as Array
 	_check(int(client_identity.get("party_size", -1)) == 1 and first_party.size() == 1,
 		("the completed opening left the fresh client exactly one starter (%s)" if _opening_together \
@@ -359,6 +360,39 @@ func _complete_fresh_opening(peer: int) -> bool:
 		"peer %d received the opening Basic Orb grant (%s)" % [peer, str(orbs.get("detail", ""))])
 	return str(dismissed.get("verdict", "")) == "PASS" \
 		and str(party.get("verdict", "")) == "PASS" and str(orbs.get("verdict", "")) == "PASS"
+
+
+## F01#6a. The guest's starter is only finished when the host's admitted copy of
+## that character holds the same starter: same party uid, the same
+## `starter_choice:` receipt, the `opening:starter_granted` personal flag, and a
+## record equal to the guest's own as `owner_plan` compares them. Anything less
+## and the guest's next host-staged action meets owner_action_baseline_conflict.
+func _assert_host_admits_guest_starter(client_peer_id: int, when: String, full_record: bool = false) -> void:
+	var guest_value: Variant = await probe(1, "original_starter_ownership", {})
+	var guest: Dictionary = guest_value as Dictionary if guest_value is Dictionary else {}
+	var host_value: Variant = await probe(0, "original_starter_ownership",
+		{"peer_id": client_peer_id, "projection": guest.get("portable_projection", {})})
+	var host: Dictionary = host_value as Dictionary if host_value is Dictionary else {}
+	var guest_receipts: Array = guest.get("own_starter_receipts", []) as Array
+	_check(guest_receipts.size() == 1 and host.get("admitted_starter_receipts", []) == guest_receipts,
+		"the host's admitted copy holds the guest's own starter receipt %s (%s)"
+			% [when, str(host.get("admitted_starter_receipts", []))])
+	_check(host.get("admitted_party_uids", []) == guest.get("party_uids", []) \
+			and (guest.get("party_uids", []) as Array).size() == 1,
+		"the host's admitted party is the guest's starter %s (%s vs %s)"
+			% [when, str(host.get("admitted_party_uids", [])), str(guest.get("party_uids", []))])
+	_check(bool(host.get("admitted_starter_flag", false)) and bool(guest.get("starter_granted", false)),
+		"host and guest both record opening:starter_granted for the guest %s" % when)
+	_check(bool(host.get("admitted_starter_fields_match", false)),
+		"the guest's party and creature record equal the host's admitted copy %s (differing fields: %s)"
+			% [when, str(host.get("admitted_differing_fields", []))])
+	if full_record:
+		_check(bool(host.get("admitted_baseline_matches", false)),
+			"the guest's whole record equals the host's admitted copy %s: no owner_action_baseline_conflict (differing: %s)"
+				% [when, str(host.get("admitted_differing_fields", []))])
+	else:
+		print("opening admitted baseline %s: whole-record match=%s differing=%s" % [when,
+			str(host.get("admitted_baseline_matches", false)), str(host.get("admitted_differing_fields", []))])
 
 
 func _opening(peer: int) -> Dictionary:
@@ -572,6 +606,7 @@ func _rejoin_with_starter(port: int) -> void:
 		want.sort()
 		_check(chars == want, "peer %d's registry after the rejoin holds exactly the host and the returning character (%s)" % [viewer, str(chars)])
 	await _assert_named_starter(1, "after rejoining")
+	await _assert_host_admits_guest_starter(int((await _session(1)).get("peer_id", 0)), "after the rejoin", true)
 	var story := await _story(1, [STARTER_FLAG])
 	_check(_player_flag(story, STARTER_FLAG) == true, "the rejoined guest kept its starter receipt")
 	var orbs: Dictionary = await step(1, "assert", {"check": "inventory_count", "item": "orb_basic",

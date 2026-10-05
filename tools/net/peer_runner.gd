@@ -6132,7 +6132,44 @@ func _original_starter_ownership(args: Dictionary) -> Dictionary:
 	var admitted_uids: Array[String] = []
 	for member: Dictionary in admitted.get("party", []):
 		admitted_uids.append(str(member.get("uid", "")))
+	# F01#6a: the host's admitted copy must hold the guest's starter receipt and
+	# flag, and match the guest's own record exactly as `owner_plan` compares it
+	# (`essence.owner_matches_after`), or the guest's next host-staged action
+	# meets owner_action_baseline_conflict.
+	var admitted_starter_receipts: Array[String] = []
+	for receipt: Variant in admitted.get("redesign_character", {}).get("transaction_receipts", []):
+		if str(receipt).begins_with("starter_choice:"):
+			admitted_starter_receipts.append(str(receipt))
+	var admitted_flag := false
+	var baseline_matches := false
+	var starter_fields_match := false
+	var differing_fields: Array[String] = []
+	if not admitted.is_empty():
+		var admitted_peer := int(args.get("peer_id", session.call("local_peer_id")))
+		admitted_flag = (session.call("_foundation_flags", admitted_peer) as Dictionary).get("opening:starter_granted") == true
+		if args.get("projection") is Dictionary:
+			var essence := preload("res://scripts/creatures/essence.gd")
+			baseline_matches = essence.owner_matches_after(args.projection, admitted)
+			var mine: Dictionary = essence._without_passive(args.projection)
+			var theirs: Dictionary = essence._without_passive(admitted)
+			starter_fields_match = essence._equivalent(mine.get("party"), theirs.get("party")) \
+				and essence._equivalent(mine.get("redesign_character"), theirs.get("redesign_character"))
+			for field: String in mine:
+				if not essence._equivalent(mine.get(field), theirs.get(field)):
+					differing_fields.append(field)
+	var own_starter_receipts: Array[String] = []
+	if local != null:
+		for receipt: Variant in (local.get("redesign_character") as Dictionary).get("transaction_receipts", []):
+			if str(receipt).begins_with("starter_choice:"):
+				own_starter_receipts.append(str(receipt))
 	return {
+		"own_starter_receipts": own_starter_receipts,
+		"portable_projection": preload("res://scripts/net/character_record_rules.gd").portable_projection(local.call("save_data")) if local != null else {},
+		"admitted_starter_receipts": admitted_starter_receipts,
+		"admitted_starter_flag": admitted_flag,
+		"admitted_baseline_matches": baseline_matches,
+		"admitted_starter_fields_match": starter_fields_match,
+		"admitted_differing_fields": differing_fields,
 		"character_id": str(local.get("character_id")) if local != null else "",
 		"party_size": party.call("size") if party != null else -1,
 		"party_uids": uids,
