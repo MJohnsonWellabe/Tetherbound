@@ -29,7 +29,7 @@ TB_NET_RUN_ID=x TB_NET_OUT_DIR=dir godot --headless --path . --script tests/smok
   - `smoke-water-capture-release.txt`: Tidewake claims.
 - **Release**, guest: `net-guest-release.txt` (52 assertions) shows exact payout once and an accepted host row. An unadmitted creature is released unpaid, with a reason.
 - **Rules:** `test_f27_essence_rules.gd` (crops, care cap, no automation) and `test_f32_win_shed.gd`.
-- **Attuned node:** `tests/smoke_f27_essence_node.gd` (not run on this head).
+- **Attuned node:** `smoke-essence-node.txt`, controller gather of `essence_meadows_ground_01` paying 3 Ground Essence and 1 attuned item with an accepted journal and receipt.
 
 ## Commands
 
