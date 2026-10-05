@@ -107,3 +107,82 @@ Galewisp's failures have two parts.
 - **Stormwood Dynamo:** only `outerworks_lieutenant_sera`, `officer_kestrel_outer_works` and `captain_marrow_dynamo_core` (`stormwood_trainers.json`, the finale region).
 
 These bands are covered by F22#4's named fights, not by the ordinary-trainer sweep.
+
+## All chapters at scale 1.0 on the interrupt pilot (555c5857)
+```
+ta_band10 gaps [] rows passing 5/15 {'MASHER': 'stag/fight 5.2 worst-hit 0.23', 'SWITCH_READER': 'stag/fight 3.3 worst-hit 0.20'}
+  band1_lower_meadows            terrapup  M faint0.08 lead0.26 win1.00 | S faint0.00 lead0.32 win1.00 
+  band1_lower_meadows            ripplet   M faint0.00 lead0.32 win1.00 | S faint0.00 lead0.10 win1.00 
+  band1_lower_meadows            galewisp  M faint0.58 lead1.00 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  band2_stone_and_root           terrapup  M faint0.00 lead0.35 win1.00 | S faint0.00 lead0.53 win1.00 
+  band2_stone_and_root           ripplet   M faint0.00 lead0.34 win1.00 | S faint0.00 lead0.12 win1.00 
+  band2_stone_and_root           galewisp  M faint0.83 lead1.00 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  band3_the_river_lock           terrapup  M faint0.00 lead0.25 win1.00 | S faint0.00 lead0.58 win1.00 
+  band3_the_river_lock           ripplet   M faint0.00 lead0.37 win1.00 | S faint0.00 lead0.14 win1.00 
+  band3_the_river_lock           galewisp  M faint0.50 lead0.99 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  band4_upper_meadows_ironwood   terrapup  M faint0.00 lead0.36 win1.00 | S faint0.00 lead0.52 win1.00 
+  band4_upper_meadows_ironwood   ripplet   M faint0.00 lead0.50 win1.00 | S faint0.00 lead0.09 win1.00 
+  band4_upper_meadows_ironwood   galewisp  M faint0.58 lead1.00 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  band5_stronghold_approach      terrapup  M faint0.00 lead0.38 win1.00 | S faint0.00 lead0.40 win1.00 
+  band5_stronghold_approach      ripplet   M faint0.00 lead0.42 win1.00 | S faint0.00 lead0.17 win1.00 
+  band5_stronghold_approach      galewisp  M faint0.50 lead0.92 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+ta_cloudreach10 gaps ['cloudreach/windscar_ravine', 'cloudreach/high_roost_sky_shrine', 'cloudreach/summit_final_stronghold'] rows passing 4/9 {'MASHER': 'stag/fight 12.5 worst-hit 0.09', 'SWITCH_READER': 'stag/fight 8.2 worst-hit 0.07'}
+  cloudreach/gate_lower_cliffs   terrapup  M faint0.00 lead0.44 win1.00 | S faint0.00 lead0.72 win1.00 
+  cloudreach/gate_lower_cliffs   ripplet   M faint1.00 lead1.00 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  cloudreach/gate_lower_cliffs   galewisp  M faint0.67 lead1.00 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  cloudreach/broken_causeways    terrapup  M faint0.00 lead0.29 win1.00 | S faint0.00 lead0.45 win1.00 
+  cloudreach/broken_causeways    ripplet   M faint0.00 lead0.80 win1.00 | S faint0.00 lead0.00 win1.00 
+  cloudreach/broken_causeways    galewisp  M faint0.00 lead0.67 win1.00 | S faint0.00 lead0.00 win1.00 
+  cloudreach/upper_cloudreach    terrapup  M faint0.00 lead0.45 win1.00 | S faint0.00 lead0.53 win1.00 
+  cloudreach/upper_cloudreach    ripplet   M faint1.00 lead1.00 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  cloudreach/upper_cloudreach    galewisp  M faint0.50 lead0.99 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+ta_stormwood10 gaps ['stormwood/dynamo'] rows passing 3/15 {'MASHER': 'stag/fight 13.2 worst-hit 0.08', 'SWITCH_READER': 'stag/fight 8.9 worst-hit 0.06'}
+  stormwood/cinder_verge         terrapup  M faint0.00 lead0.34 win1.00 | S faint0.00 lead0.31 win1.00 
+  stormwood/cinder_verge         ripplet   M faint0.00 lead0.67 win1.00 | S faint0.00 lead0.00 win1.00 
+  stormwood/cinder_verge         galewisp  M faint0.25 lead0.84 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  stormwood/glowmoss_hollows     terrapup  M faint0.00 lead0.42 win1.00 | S faint0.00 lead0.66 win1.00 
+  stormwood/glowmoss_hollows     ripplet   M faint0.00 lead0.64 win1.00 | S faint0.00 lead0.00 win1.00 
+  stormwood/glowmoss_hollows     galewisp  M faint0.08 lead0.81 win1.00 | S faint0.00 lead0.00 win1.00 
+  stormwood/conductor_run        terrapup  M faint0.00 lead0.49 win1.00 | S faint0.00 lead0.63 win1.00 
+  stormwood/conductor_run        ripplet   M faint0.00 lead0.71 win1.00 | S faint0.00 lead0.00 win1.00 
+  stormwood/conductor_run        galewisp  M faint0.08 lead0.82 win1.00 | S faint0.00 lead0.00 win1.00 
+  stormwood/hollow_crown         terrapup  M faint0.00 lead0.36 win1.00 | S faint0.00 lead0.31 win1.00 
+  stormwood/hollow_crown         ripplet   M faint0.08 lead0.77 win1.00 | S faint0.00 lead0.00 win1.00 
+  stormwood/hollow_crown         galewisp  M faint0.33 lead0.86 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  stormwood/deepwood             terrapup  M faint0.00 lead0.48 win1.00 | S faint0.00 lead0.62 win1.00 
+  stormwood/deepwood             ripplet   M faint0.17 lead0.68 win1.00 | S faint0.00 lead0.00 win1.00 
+  stormwood/deepwood             galewisp  M faint0.33 lead0.93 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+```
+
+## Meadows floor trainers 1.0 -> 1.15 (accepted, held; no higher in onboarding)
+```
+rows passing 6/15
+  band1_lower_meadows            terrapup  M faint0.17 lead0.30 win1.00 | S faint0.00 lead0.36 win1.00 
+  band1_lower_meadows            ripplet   M faint0.25 lead0.37 win1.00 | S faint0.00 lead0.11 win1.00 PASS
+  band1_lower_meadows            galewisp  M faint0.75 lead1.00 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  band2_stone_and_root           terrapup  M faint0.00 lead0.40 win1.00 | S faint0.00 lead0.60 win1.00 
+  band2_stone_and_root           ripplet   M faint0.00 lead0.39 win1.00 | S faint0.00 lead0.14 win1.00 
+  band2_stone_and_root           galewisp  M faint0.83 lead1.00 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  band3_the_river_lock           terrapup  M faint0.00 lead0.29 win1.00 | S faint0.00 lead0.62 win1.00 
+  band3_the_river_lock           ripplet   M faint0.00 lead0.42 win1.00 | S faint0.00 lead0.16 win1.00 
+  band3_the_river_lock           galewisp  M faint0.75 lead1.00 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  band4_upper_meadows_ironwood   terrapup  M faint0.00 lead0.41 win1.00 | S faint0.00 lead0.60 win1.00 
+  band4_upper_meadows_ironwood   ripplet   M faint0.00 lead0.57 win1.00 | S faint0.00 lead0.11 win1.00 
+  band4_upper_meadows_ironwood   galewisp  M faint0.92 lead1.00 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+  band5_stronghold_approach      terrapup  M faint0.00 lead0.44 win1.00 | S faint0.00 lead0.46 win1.00 
+  band5_stronghold_approach      ripplet   M faint0.00 lead0.48 win1.00 | S faint0.00 lead0.20 win1.00 
+  band5_stronghold_approach      galewisp  M faint0.50 lead0.99 win1.00 | S faint0.00 lead0.00 win1.00 PASS
+galewisp MASHER switches 0.00 lead 1.00 sec 40 in/s 0.191 maxhit 0.26 interrupts 0.0 esc 0
+galewisp SWITCH_READER switches 2.02 lead 0.00 sec 51 in/s 0.017 maxhit 0.22 interrupts 4.7 esc 325
+ripplet MASHER switches 0.00 lead 0.45 sec 34 in/s 0.164 maxhit 0.27 interrupts 0.0 esc 0
+ripplet SWITCH_READER switches 0.57 lead 0.15 sec 58 in/s 0.038 maxhit 0.18 interrupts 2.9 esc 365
+terrapup MASHER switches 0.00 lead 0.40 sec 36 in/s 0.137 maxhit 0.22 interrupts 0.0 esc 0
+terrapup SWITCH_READER switches 0.53 lead 0.53 sec 77 in/s 0.070 maxhit 0.18 interrupts 3.1 esc 596
+
+```
+Rows passing: 5/15 at 1.0 -> 6/15 at 1.15. §7 reader win 1.00. Worst single hit 0.27. Reader lead cost 0.00–0.62.
+
+## Per-starter balance, owner item (coordinator 2026-10-05)
+F22#1 rows failed by Terrapup and Galewisp are recorded as **per-starter balance, owner item**, not defects. The §7 pilot stays as specified (no earlier-rotation rule).
+- **Terrapup:** reading costs the slowest, widest body more than mashing. In Meadows the reader takes 0.070 hits/s vs the masher's 0.137, but fights 77 s vs 36 s, so its median lead cost is 0.53 vs 0.40. It switches 0.53 times per fight, so the spent-lead rule rarely triggers.
+- **Galewisp:** the fastest starter lets mashing win before the lead falls (Tidewake masher clear time 43 s, lead faint 0.29).

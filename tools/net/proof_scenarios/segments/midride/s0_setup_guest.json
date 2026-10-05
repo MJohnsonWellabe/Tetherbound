@@ -1,0 +1,159 @@
+{
+ "name": "F06: two-peer MID-RIDE rejoin keeps the rider sane, the party whole and Cloudreach's closed counterweight gate shut -- segment 0 (guest setup)",
+ "claim": "The guest's own world and character: fresh Meadows, Cloudreach key AND the upper route open, five owned, a saddle, saved at the Cloudreach arrival. Writes checkpoint midride/setup:guest. Segment of tools/net/proof_scenarios/f06_cloudreach_midride_rejoin.json (CI segments: tests/helpers/ci_segments.gd).",
+ "_comment_segment": {
+  "original": "tools/net/proof_scenarios/f06_cloudreach_midride_rejoin.json",
+  "peer_map": {
+   "0": 1
+  }
+ },
+ "peers": 1,
+ "scene": "title",
+ "budget_s": 1500,
+ "steps": [
+  {
+   "peer": 0,
+   "action": "legacy_physical_crossings_fixture",
+   "args": {
+    "regression": "cloudreach_midride_rejoin"
+   },
+   "label": "disclosed retired realm-key crossing fixture; shipping flag remains off",
+   "_comment": "orig #1"
+  },
+  {
+   "peer": 0,
+   "action": "boot",
+   "args": {
+    "scene": "world"
+   },
+   "label": "each peer boots its own fresh Meadows world",
+   "budget_frames": 20000,
+   "_comment": "orig #2"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "realm_key_cloudreach",
+    "scope": "world"
+   },
+   "label": "setup: both worlds hold the Cloudreach key",
+   "_comment": "orig #3"
+  },
+  {
+   "peer": 0,
+   "action": "story_flag",
+   "args": {
+    "flag": "cloudreach_upper_route_unlocked",
+    "scope": "world"
+   },
+   "label": "setup: ONLY the guest's own world has the upper counterweight route open",
+   "_comment": "orig #4"
+  },
+  {
+   "peer": 0,
+   "action": "party_grant",
+   "args": {
+    "species": "meadowhart",
+    "level": 20
+   },
+   "label": "setup: guest party_grant meadowhart (its ground mount, first = active)",
+   "_comment": "orig #5"
+  },
+  {
+   "peer": 0,
+   "action": "party_grant",
+   "args": {
+    "species": "bramblebun",
+    "level": 20
+   },
+   "label": "setup: guest party_grant bramblebun",
+   "_comment": "orig #6"
+  },
+  {
+   "peer": 0,
+   "action": "party_grant",
+   "args": {
+    "species": "terrapup",
+    "level": 20
+   },
+   "label": "setup: guest party_grant terrapup",
+   "_comment": "orig #7"
+  },
+  {
+   "peer": 0,
+   "action": "party_grant",
+   "args": {
+    "species": "brooktail",
+    "level": 20
+   },
+   "label": "setup: guest party_grant brooktail",
+   "_comment": "orig #8"
+  },
+  {
+   "peer": 0,
+   "action": "party_grant",
+   "args": {
+    "species": "mudsnout",
+    "level": 20
+   },
+   "label": "setup: guest party_grant mudsnout",
+   "_comment": "orig #9"
+  },
+  {
+   "peer": 0,
+   "action": "storage_grant",
+   "args": {
+    "item": "saddle",
+    "n": 1
+   },
+   "label": "setup: a saddle in the guest's satchel (not pre-fitted: mount() fits it)",
+   "_comment": "orig #10"
+  },
+  {
+   "peer": 0,
+   "action": "enter_realm",
+   "args": {
+    "realm": "cloudreach"
+   },
+   "label": "guest enters Cloudreach in its own world",
+   "budget_frames": 20000,
+   "_comment": "orig #12"
+  },
+  {
+   "peer": 0,
+   "action": "assert",
+   "args": {
+    "check": "party_size",
+    "equals": 5
+   },
+   "label": "guest owns five",
+   "_comment": "orig #13"
+  },
+  {
+   "peer": 0,
+   "action": "save_character_here",
+   "label": "guest saves its own world (gate open) + portable character at the Cloudreach arrival",
+   "_comment": "orig #14"
+  },
+  {
+   "peer": 0,
+   "action": "capture_saves",
+   "args": {
+    "label": "checkpoint"
+   },
+   "_comment": "SEGMENT: the production save at the end of this segment"
+  },
+  {
+   "peer": 0,
+   "action": "seg_checkpoint",
+   "args": {
+    "boundary": "midride/setup",
+    "role": "guest",
+    "label": "checkpoint"
+   },
+   "label": "checkpoint midride/setup:guest",
+   "_comment": "SEGMENT: segment end meets the next segment's start contract and reproduces the committed checkpoint"
+  }
+ ]
+}
