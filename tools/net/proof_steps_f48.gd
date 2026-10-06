@@ -1179,6 +1179,38 @@ static func _witness(tree: SceneTree, args: Dictionary) -> Dictionary:
 	_phase(label, "observed", started)
 	if data.is_empty() or data.disk.is_empty():
 		return await _sealed_reply(tree, "f48_witness", args, _result(false, "Actual durable character file unavailable", data))
+	# The explicit producer's initial guest input predates the finite Home Key
+	# runtime. Admission settles that authentic grant before the operation's
+	# bystander baseline; never grant, save, ACK or alter the later equalities.
+	var admission_game: Node = tree.root.get_node_or_null(^"Game")
+	var disk_flags: Array = data.disk.get("flags", {}).get("flags", [])
+	if producer and label == "initial-bootstrap" and admission_game != null \
+			and admission_game.session.call("is_host") == false \
+			and disk_flags.has("opening:beat:walk_out") and not disk_flags.has("home_key_given"):
+		var opening: Script = preload("res://scripts/net/opening_home_key.gd")
+		var gift_id: String = preload("res://scripts/net/reward_delivery.gd").delivery_id(
+			str(data.world_namespace), "home_key:grant:" + str(data.character_id), str(data.character_id))
+		var settled: bool = false
+		# Same 3000-frame default step allowance; coordinator budgets unchanged.
+		for frame: int in 3000:
+			var gift: Variant = admission_game.world.reward_deliveries.get(gift_id)
+			var edge: Dictionary = tree.get_meta("f48_latest_owner_save", {})
+			var row: Dictionary = edge.get("row", {})
+			if gift is Dictionary and gift.get("status") == "accepted" \
+					and opening.valid_row(gift, admission_game.world, str(data.character_id)) \
+					and opening.owner_physically_settled(admission_game.local, gift_id) \
+					and row.get("action") == "home_key_deliver" \
+					and row.get("intent", {}).get("delivery_id") == gift_id:
+				var admitted: Dictionary = _observe(tree)
+				if _snapshot_errors(tree, admitted).is_empty():
+					data = admitted
+					settled = true
+					break
+			await tree.physics_frame
+		if not settled:
+			return await _sealed_reply(tree, "f48_witness", args, _result(false,
+				"Authentic legacy Home Key admission did not reach owner BOOL-save and accepted journal within original step budget", _observe(tree)))
+		_phase(label, "authentic_admission_settled_before_baseline", started)
 	if not label.is_empty() and not _remember(tree, label, data, producer):
 		return await _sealed_reply(tree, "f48_witness", args, _result(false, "Actual full-card witness anchor refused", data))
 	_phase(label, "remembered", started)
