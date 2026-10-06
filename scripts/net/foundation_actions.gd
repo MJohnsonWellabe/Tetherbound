@@ -224,6 +224,10 @@ static func relic_power(current: Dictionary, intent: Dictionary, context: Dictio
 	if context.get("shrine_power") != true or context.get("in_combat") != false: return deny("actual_shrine_pedestal_required")
 	var heart: String = intent.heart_id
 	var character: String = current.character_id
+	# A choice names a configured heart by its runtime id (Tidewake's is
+	# "water"); a biome alias would pass the hung check but load as nothing.
+	if not heart.is_empty() and preload("res://autoload/realm_heart_state.gd").new().heart(heart).is_empty():
+		return deny("unknown_heart")
 	if not heart.is_empty():
 		var biome := preload("res://scripts/data/biome_order.gd").canonical_id(heart)
 		if not current.redesign_character.get("relics_hung", []).has(biome) \

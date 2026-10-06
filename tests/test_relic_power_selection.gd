@@ -82,6 +82,11 @@ func test_the_host_action_saves_one_choice_and_refuses_an_unhung_one() -> void:
 	other.redesign_character.transaction_receipts.append("relic_hang:tidewake:owner_a")
 	assert_true(ACTIONS.relic_power(other, {"heart_id": "water", "edit_id": EDIT.reverse()}, context).get("ok") == true,
 		"a different hung power is still a new choice")
+	assert_eq(ACTIONS.relic_power(other, {"heart_id": "tidewake", "edit_id": EDIT.reverse()}, context).get("code"), "unknown_heart",
+		"a biome alias is not a heart id: it would pass the hung check but reload as no power")
+	assert_eq(ACTIONS.relic_power(other, {"heart_id": "no_such_heart", "edit_id": EDIT.reverse()}, context).get("code"), "unknown_heart")
+	assert_true(PANEL.chosen_already({"ok": false, "code": "reconcile_original_decision"}),
+		"a replayed saved choice is shown as applied, not an error")
 
 
 func test_a_guest_choice_waits_past_the_host_checkpoint_for_its_saved_decision() -> void:

@@ -172,10 +172,11 @@ static func reply_final(result: Dictionary) -> bool:
 	return not result.is_empty() and (result.get("ok") == true or str(result.get("code", "")) not in IN_PROGRESS)
 
 
-## The host saved nothing because this power is already the active one: a
-## no-op for the player, not an error.
+## The host saved nothing new because this power is already the active one
+## (or this exact choice was already saved): a no-op, not an error.
 static func chosen_already(result: Dictionary) -> bool:
-	return str(result.get("code", "")) == "relic_power_unchanged"
+	# A replay of the saved original is the same decision, already applied.
+	return str(result.get("code", "")) in ["relic_power_unchanged", "reconcile_original_decision"]
 
 
 static func _refusal(verdict: Dictionary) -> String:
