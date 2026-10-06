@@ -236,6 +236,32 @@ func test_feast_completion_requires_original_intent_and_all_saved_fences() -> vo
 	assert_false(panel.accept_completion("feast_cook", intent, saved), "delayed completion cannot settle a new cook")
 	panel.free()
 
+func test_feast_buttons_require_the_actual_locked_tier_and_never_reoffer_a_lifted_cap() -> void:
+	var rules := preload("res://scripts/creatures/breakthrough.gd")
+	for tier: int in range(1, 6):
+		var owner := _admitted(_player(tier * 10))
+		var card: Dictionary = owner.party[0]
+		var mirror: Dictionary = owner.redesign_character.creatures[card.uid]
+		var definition: Dictionary = rules.feasts().items["feast_t%d_ground" % tier]
+		var original := owner.duplicate(true)
+		assert_true(PANEL.feast_matches_current_cap(card, mirror, definition), "current canonical tier %d is offered" % tier)
+		var below := card.duplicate(true)
+		below.level -= 1
+		assert_false(PANEL.feast_matches_current_cap(below, mirror, definition), "growth must reach the locked cap")
+		var malformed := mirror.duplicate(true)
+		malformed.cap_level += 10
+		assert_false(PANEL.feast_matches_current_cap(card, malformed, definition), "mirror must agree with cleared-tier history")
+		var lifted := mirror.duplicate(true)
+		lifted.breakthroughs.append(tier)
+		lifted.cap_level = rules.level_cap(lifted.breakthroughs)
+		assert_false(PANEL.feast_matches_current_cap(card, lifted, definition), "unchanged level cannot re-offer the spent tier")
+		var prior := definition.duplicate(true)
+		prior.tier = maxi(1, tier - 1)
+		if tier > 1:
+			assert_false(PANEL.feast_matches_current_cap(card, mirror, prior), "a cleared tier is never offered")
+		assert_eq(owner, original, "presentation cannot change personal state")
+	assert_false(PANEL.feast_matches_current_cap({}, {}, {}), "missing state has no offer")
+
 func test_guest_master_refusal_releases_only_the_matching_attempt() -> void:
 	var panel := PANEL.new()
 	panel.hide()

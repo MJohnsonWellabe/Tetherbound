@@ -89,7 +89,7 @@ func _rebuild() -> void:
 				if not stack is Dictionary: continue
 				var item := str(stack.id)
 				var def: Dictionary = BREAKTHROUGH.feasts().items.get(item, {})
-				if def.get("kind") != "ascension_feast" or int(def.breaks_level) != int(card.level): continue
+				if not feast_matches_current_cap(card, mirror, def): continue
 				var planning := card.duplicate(true)
 				planning.evolution_choices = mirror.get("evolution_choices", {}).duplicate(true)
 				var offer: Dictionary = EVOLUTION.feast_offer(planning, int(def.tier))
@@ -106,6 +106,15 @@ func _rebuild() -> void:
 		if node is Button and not node.disabled:
 			node.grab_focus()
 			break
+
+## Only offer a feast at this individual's current locked tier. Level stays
+## unchanged after feeding, so level alone would re-offer the consumed tier.
+static func feast_matches_current_cap(card: Dictionary, mirror: Dictionary, definition: Dictionary) -> bool:
+	if definition.get("kind") != "ascension_feast": return false
+	var tiers: Array = mirror.get("breakthroughs", [])
+	var cap := BREAKTHROUGH.level_cap(tiers)
+	return cap > 0 and int(mirror.get("cap_level", -1)) == cap and int(card.get("level", -1)) == cap \
+		and int(definition.get("breaks_level", -1)) == cap and not tiers.has(int(definition.get("tier", -1)))
 
 func _button(label: String, action: Callable, disabled: bool = false) -> void:
 	var button := Button.new()
