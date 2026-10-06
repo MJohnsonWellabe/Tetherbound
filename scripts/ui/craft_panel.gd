@@ -211,6 +211,7 @@ func _build_station_controls(outer: VBoxContainer) -> void:
 		"forge":
 			_refining_label=Label.new()
 			_refining_label.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+			_refining_label.add_theme_font_size_override("font_size", UITokens.FONT_READ)
 			controls.add_child(_refining_label)
 			_change_refining_amount(0)
 			_station_button(controls,"Fewer refining units",func() -> void: _change_refining_amount(-1))
@@ -848,13 +849,14 @@ func _build() -> void:
 	zones.add_theme_constant_override("separation", 22)
 	outer.add_child(zones)
 
-	if not is_instance_valid(_station) or _station.get_meta("building_id", "") not in ["den", "farm"]:
+	if not is_instance_valid(_station) or (_station.get_meta("building_id", "") not in ["den", "farm"] and not _known_ids().is_empty()):
 		zones.add_child(_build_list_zone())
 		zones.add_child(_build_center_zone())
 		zones.add_child(_build_right_zone())
 	else:
 		_status = Label.new()
 		_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_status.add_theme_font_size_override("font_size", UITokens.FONT_READ)
 		outer.add_child(_status)
 	if is_instance_valid(_station): _build_station_controls(outer)
 

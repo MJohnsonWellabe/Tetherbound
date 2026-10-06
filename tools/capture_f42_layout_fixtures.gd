@@ -90,6 +90,18 @@ func _run() -> void:
 			quit(1)
 			return
 		await _capture("altar-" + tab.to_lower())
+		if tab == "Gear":
+			for section: String in ["Trainer", "Protection", "Pouch"]:
+				if not await _choose(details, "gear:" + section):
+					quit(1)
+					return
+				await _capture("altar-gear-" + section.to_lower())
+		if tab == "Loadout":
+			for slot: String in ["charged", "utility", "ultimate"]:
+				if not await _choose(details, "slot:" + slot):
+					quit(1)
+					return
+				await _capture("altar-loadout-" + slot)
 		panel.close()
 		panel.queue_free()
 		await process_frame
@@ -134,7 +146,11 @@ func _run() -> void:
 	if not research.open(_research_fixture):
 		quit(1)
 		return
-	research.call("_inspect", "terrapup")
+	for _frame in 2: await process_frame
+	for choice: Button in research.body.find_children("*", "Button", true, false):
+		if choice.get_meta("system_focus_key", "") == "species:terrapup":
+			choice.grab_focus()
+			break
 	await _capture("research-log")
 	research.close()
 	research.queue_free()
@@ -179,6 +195,22 @@ func _capture(name: String) -> void:
 		return
 	_captures.append(path)
 	print("FIXTURE UI CAPTURE: " + path)
+
+func _choose(panel: Node, key: String) -> bool:
+	for choice: Button in panel.find_children("*", "Button", true, false):
+		if choice.get_meta("system_focus_key", "") != key: continue
+		if choice.disabled: return false
+		choice.grab_focus()
+		for _frame in 2: await process_frame
+		var result := await preload("res://tools/net/press_inject.gd").tap(self, _pad_binding, "ui_accept", 1)
+		return result.get("ok") == true
+	push_error("No actual focus target for " + key)
+	return false
+
+func _pad_binding(action: StringName) -> InputEvent:
+	for binding: InputEvent in InputMap.action_get_events(action):
+		if binding is InputEventJoypadButton: return binding
+	return null
 
 func _research_fixture(_biome: String) -> Dictionary:
 	return {"ready": true, "completion_percent": 33, "species": [{"species_id": "terrapup", "name": "Terrapup",
