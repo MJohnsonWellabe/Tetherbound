@@ -1,0 +1,9 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_water_earned_swimmer_segment.gd,test_forward_camp.gd::test_real_recipe_book_splits_travel_tier_from_homestead_only: 2 of 825 test files
+  ok    test_forward_camp.gd :: test_real_recipe_book_splits_travel_tier_from_homestead_only
+  ok    test_water_earned_swimmer_segment.gd :: test_current_saddle_recipe_preserves_paid_cost_and_personal_gates
+  ok    test_water_earned_swimmer_segment.gd :: test_realm_override_keeps_meadows_default_and_real_swimmer_catalogue
+  ok    test_water_earned_swimmer_segment.gd :: test_swim_saddle_camp_panel_preserves_unlock_cost_and_workbench_route
+
+4 tests, 158 assertions, 0 failed

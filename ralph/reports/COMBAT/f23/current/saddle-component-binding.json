@@ -1,0 +1,16 @@
+{
+  "arguments": [
+    "--headless",
+    "--path",
+    "D:/tetherbound/codex-r4",
+    "--log-file",
+    "D:/tetherbound/.artifacts/r4-saddle-733cb52c83/native.log",
+    "--script",
+    "tests/run_tests.gd",
+    "--",
+    "--only=test_water_earned_swimmer_segment.gd,test_forward_camp.gd::test_real_recipe_book_splits_travel_tier_from_homestead_only"
+  ],
+  "source_sha": "733cb52c83aa1e1bfafecd8d21a19bc4cf5630e5",
+  "started_utc": "2026-10-06T14:14:09.2568961Z",
+  "process_scope": "Untimed warm-cache component tests; no import/render/world; fresh process and lease inventory empty"
+}
