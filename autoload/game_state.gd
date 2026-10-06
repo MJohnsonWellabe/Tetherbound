@@ -901,6 +901,12 @@ func autosave_here() -> bool:
 			return false
 		return save_game(autosave_slot())
 	if session != null:
+		# An in-flight owner transaction (e.g. the portal arrival that is
+		# completing this realm entry) writes the character itself; the save
+		# fence would only refuse this transition autosave.
+		if session.has_method("_owner_training_mutation_blocked") \
+			and session.call("_owner_training_mutation_blocked", local) == true:
+			return false
 		session.call("_save_character_here")
 	return false
 
@@ -1075,6 +1081,7 @@ func _exit_tree() -> void:
 ## `SceneTree.change_scene_to` (and so never becomes `current_scene`) all hit
 ## this path, and none of them should ever see an error for it.
 func _process(delta: float) -> void:
+	_tick_orphaned_regional_acks(delta)
 	if session != null and session.has_method("_owner_training_mutation_blocked") 			and session.call("_owner_training_mutation_blocked", local) == true:
 		_travel_pos_valid = false # No delayed travel/bond grant on resume.
 		return # Session/Ledger child recovery still ticks; no care/bed/buff mutation.
@@ -2311,6 +2318,10 @@ func load_game(slot: int) -> bool:
 	if not bool(save_system.call("load_slot", self, slot)):
 		return false
 	_world_save_owned = true
+	# A save from before the portal runtime may be past the opening without
+	# its Home Key; the host reconcile checks this loaded character once.
+	if session != null and session.has_method("arm_legacy_home_key_check"):
+		session.call("arm_legacy_home_key_check", int(session.call("local_peer_id")))
 	local.feed.call("clear_events")
 	for node in get_tree().get_nodes_in_group("build_placer"):
 		if node.has_method("restore_from_game"):
@@ -3293,11 +3304,154 @@ func regional_ending_context() -> Dictionary:
 func commit_regional_ending_ack(intent: Dictionary) -> Dictionary:
 	var ending := preload("res://scripts/story/regional_homecoming.gd")
 	if session == null or ending.acknowledgement_intent(ending.context(self), str(intent.get("stage", ""))) != intent: return {"status": "refused"}
-	var view: Dictionary = session.call("homestead_personal_view")
-	if view.is_empty(): return {"status": "refused"}
+	return _queue_regional_ack(intent)
+
+
+func _queue_regional_ack(intent: Dictionary) -> Dictionary:
 	_regional_ack_intents[intent.transaction_id] = intent.duplicate(true)
-	session.call("_foundation_send", "regional_ack", "regional_ending:" + local.character_id, intent, int(view.registry_revision))
+	if not bool(session.call("is_host")):
+		# A guest's personal view is the host's async reply; its cache may be
+		# empty or predate the arrival that bumped the revision. Send against
+		# the next reply only, and only while the caller is still waiting
+		# (regional_homecoming polls for its ack_timeout_ms).
+		_regional_ack_waiting[intent.transaction_id] = Time.get_ticks_msec()
+		_regional_ack_queued_at[intent.transaction_id] = Time.get_ticks_msec()
+		var drain := Callable(self, "_drain_regional_ack_waiting")
+		if not session.is_connected("homestead_personal_view_completed", drain):
+			session.connect("homestead_personal_view_completed", drain)
+		var replied := Callable(self, "_on_regional_ack_reply")
+		if session.has_signal("homestead_action_completed") and not session.is_connected("homestead_action_completed", replied):
+			session.connect("homestead_action_completed", replied)
+		session.call("homestead_personal_view")
+		return regional_ending_ack_result(intent.transaction_id)
+	if not _send_regional_ack(intent.transaction_id):
+		_regional_ack_intents.erase(intent.transaction_id)
+		return {"status": "refused"}
 	return regional_ending_ack_result(intent.transaction_id)
+
+
+var _regional_ack_waiting: Dictionary = {}
+var _regional_ack_queued_at: Dictionary = {}
+var _regional_ack_sent_at: Dictionary = {}
+const REGIONAL_ACK_RESEND_MS := 1500
+
+## Sends each waiting guest ack on the fresh view reply. The presentation's
+## window (ack_timeout_ms) bounds only how long Grandpa's scene waits; an ack
+## that outlives it is not dropped. It keeps sending while it is still this
+## character's same ending (see _regional_ack_still_owed), so a slow guest's
+## homecoming still settles. The transaction id is per character and stage,
+## and the host answers a repeat with its saved decision: it settles once.
+func _drain_regional_ack_waiting() -> void:
+	var waiting := _regional_ack_waiting.duplicate()
+	_regional_ack_waiting.clear()
+	for transaction_id: String in waiting:
+		if not _regional_ack_still_owed(transaction_id):
+			_forget_regional_ack(transaction_id)
+		elif _regional_ack_sendable(transaction_id):
+			_send_regional_ack(transaction_id)
+
+
+## Same character, world, session, outcome, home return and party as when
+## Grandpa spoke, and that stage not yet saved. Anything else is a new
+## presentation: Grandpa offers the conversation again on the next talk.
+func _regional_ack_still_owed(transaction_id: String) -> bool:
+	var intent: Dictionary = _regional_ack_intents.get(transaction_id, {})
+	if intent.is_empty(): return false
+	var ending := preload("res://scripts/story/regional_homecoming.gd")
+	var journey := _regional_ack_journey()
+	if journey.is_empty() or journey.get(str(intent.get("stage", ""))) == true: return false
+	for field: String in ending.CONTEXT_FIELDS:
+		if journey.get(field) != intent.get(field): return false
+	return true
+
+
+func _regional_ack_journey() -> Dictionary:
+	return preload("res://scripts/story/regional_homecoming.gd").journey_context(self)
+
+
+## The host accepts an ack only at Grandpa and out of danger; wait for that.
+func _regional_ack_sendable(transaction_id: String) -> bool:
+	var intent: Dictionary = _regional_ack_intents.get(transaction_id, {})
+	var ending := preload("res://scripts/story/regional_homecoming.gd")
+	return not intent.is_empty() and ending.acknowledgement_intent(ending.context(self), str(intent.get("stage", ""))) == intent
+
+
+func _forget_regional_ack(transaction_id: String) -> void:
+	_regional_ack_intents.erase(transaction_id)
+	_regional_ack_waiting.erase(transaction_id)
+	_regional_ack_queued_at.erase(transaction_id)
+	_regional_ack_sent_at.erase(transaction_id)
+	_regional_ack_viewed_at.erase(transaction_id)
+
+
+## A guest's send carries the revision from one personal-view reply, and that
+## reply has no request id: a stale one yields a revision-conflict refusal
+## that nothing reports back. While the host has not journalled the row, ask
+## for a fresh view and send again.
+## Past the scene's window an owed ack settles on a slower cadence.
+const REGIONAL_ACK_LATE_RESEND_MS := 5000
+var _regional_ack_viewed_at: Dictionary = {}
+
+func _resend_regional_ack(transaction_id: String) -> void:
+	if session == null or bool(session.call("is_host")) or _regional_ack_waiting.has(transaction_id): return
+	if not _regional_ack_queued_at.has(transaction_id): return
+	var now := Time.get_ticks_msec()
+	var queued := int(_regional_ack_queued_at[transaction_id])
+	var late: bool = now - queued > preload("res://scripts/story/regional_homecoming.gd").ack_timeout_ms(self)
+	if late and not _regional_ack_sendable(transaction_id): return # Away from Grandpa: no requests.
+	# Paced by the last view request as well as the last send: an unsendable
+	# reply sends nothing, and must not let the next request through at once.
+	var last := maxi(int(_regional_ack_sent_at.get(transaction_id, queued)), int(_regional_ack_viewed_at.get(transaction_id, 0)))
+	if now - last < (REGIONAL_ACK_LATE_RESEND_MS if late else REGIONAL_ACK_RESEND_MS): return
+	_regional_ack_viewed_at[transaction_id] = now
+	_regional_ack_waiting[transaction_id] = now
+	session.call("homestead_personal_view")
+
+
+## Drives acks whose presentation already gave up (the scene no longer
+## polls them). The live presentation drives its own, so this never races it.
+var _regional_ack_tick_left := 0.0
+
+func _tick_orphaned_regional_acks(delta: float) -> void:
+	_regional_ack_tick_left -= delta
+	if _regional_ack_intents.is_empty() or _regional_ack_tick_left > 0.0 or session == null or bool(session.call("is_host")): return
+	_regional_ack_tick_left = 0.5
+	var window_ms: int = preload("res://scripts/story/regional_homecoming.gd").ack_timeout_ms(self)
+	var now := Time.get_ticks_msec()
+	for transaction_id: String in _regional_ack_intents.keys():
+		if now - int(_regional_ack_queued_at.get(transaction_id, now)) <= window_ms: continue
+		if not _regional_ack_still_owed(transaction_id):
+			_forget_regional_ack(transaction_id)
+			continue
+		if regional_ending_ack_result(transaction_id).get("status") == "committed":
+			print("[regional_ack] %s settled after its presentation window" % transaction_id)
+			_forget_regional_ack(transaction_id)
+
+
+## A host refusal is otherwise silent on a guest; name it in the log.
+var _regional_ack_logged: Dictionary = {}
+
+func _on_regional_ack_reply(action: String, original: Dictionary, result: Dictionary) -> void:
+	if action != "regional_ack" or result.get("ok") == true: return
+	# Once per stage and code: a persistent refusal re-sends without re-logging.
+	var key := "%s:%s" % [str(original.get("stage", "")), str(result.get("code", result.get("reason", "")))]
+	if _regional_ack_logged.has(key): return
+	_regional_ack_logged[key] = true
+	print("[regional_ack] host %s %s: %s" % ["deferred" if result.get("resolved") == false else "refused", str(original.get("stage", "")), str(result.get("code", result.get("reason", "")))])
+
+
+func _send_regional_ack(transaction_id: String) -> bool:
+	var intent: Dictionary = _regional_ack_intents.get(transaction_id, {})
+	if intent.is_empty() or session == null: return false
+	var cache: Variant = session.get("_foundation_personal_cache") if not bool(session.call("is_host")) else null
+	var view: Dictionary = cache.duplicate(true) if cache is Dictionary else session.call("homestead_personal_view")
+	if view.is_empty() or not view.has("registry_revision"):
+		print("[regional_ack] no personal view to send against")
+		return false
+	var sent: Variant = session.call("_foundation_send", "regional_ack", "regional_ending:" + local.character_id, intent, int(view.registry_revision))
+	if sent is Dictionary and sent.get("ok") != true and sent.get("code") != "awaiting_saved_decision": print("[regional_ack] send refused locally: " + str(sent.get("code", "")))
+	_regional_ack_sent_at[transaction_id] = Time.get_ticks_msec()
+	return true
 
 
 func regional_ending_ack_result(transaction_id: String) -> Dictionary:
@@ -3306,7 +3460,9 @@ func regional_ending_ack_result(transaction_id: String) -> Dictionary:
 	var row: Dictionary = session.call("_owner_training_row")
 	var decision: Dictionary = session.call("_training_decision", session.call("local_peer_id"), row)
 	if row.get("action") != "regional_ack" or row.get("intent") != intent \
-		or decision.get("ok") != true or decision.get("saved") != true: return {"status": "pending"}
+		or decision.get("ok") != true or decision.get("saved") != true:
+		if not (row.get("action") == "regional_ack" and row.get("intent") == intent): _resend_regional_ack(transaction_id)
+		return {"status": "pending"}
 	var result := intent.duplicate(true)
 	result.merge({"status": "committed", "durable": true}, true)
 	return result

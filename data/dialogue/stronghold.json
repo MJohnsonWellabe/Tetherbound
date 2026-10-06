@@ -64,12 +64,12 @@
     },
 
     "stronghold_warden_realm_reward": {
-      "_comment": "Cloudreach Phase 1. Automatic first-victory handoff. The flags are granted by the Warden trainer row before this opens, so closing the panel early cannot lose either entitlement and a full satchel cannot block them.",
+      "_comment": "Automatic first-victory handoff; names Tidewake as the next chapter (RD-10) and the per-participant Tidewake Portal Key (RD-20/RD-21, F19#2). The flags are granted by the Warden trainer row before this opens, so closing the panel early cannot lose either entitlement and a full satchel cannot block them.",
       "speaker": "Warden Aldis",
       "portrait": "res://assets/ui/portraits/warden.png",
       "lines": [
-        "You won. Take the Realm Key. It opens the Storm Road beyond the village.",
-        "Take the Heart of Meadows home to the shrine circle. Its strength will carry you into Cloudreach."
+        "You won. Take the Tidewake Portal Key. Use it at the Tidewake arch in Crossing Hall.",
+        "Take the Heart of Meadows to the Hall Shrine. Its strength will carry you into Tidewake."
       ]
     },
 

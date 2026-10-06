@@ -1,16 +1,17 @@
 extends SceneTree
 
-## Retired-path regression fixture: RD-35 redesign saves are current schema,
-## but this probe deliberately enables the single legacy physical-crossing
-## flag. Production ships this legacy crossing while portals are off
-## (biome_order.legacy_physical_crossings() is true whenever
-## redesign_portal_runtime_enabled is false); this is not portal-loop acceptance.
-##
-## LEGACY PATH: asserts the shipped portal-off behaviour (the old Meadows ->
-## Cloudreach physical crossing). Superseded by RD-10/RD-17 (Meadows now leads
-## to Tidewake through the Crossing Hall portals, F18#2/F19) once F18 turns
-## redesign_portal_runtime_enabled on; retire this test or rewrite it to the redesign rule at that
-## point.
+## LEGACY-TOGGLE REGRESSION (RD-10/RD-17). The shipped config turns
+## session.redesign_portal_runtime_enabled on, so biome_order
+## .legacy_physical_crossings() is false: Meadows leads to Tidewake through the
+## Crossing Hall portals (F18#2/F19) and this Meadows -> Cloudreach span stays
+## only as regional scenery with no realm trigger. The portal runtime's off
+## switch still restores the physical crossings as the emergency fallback, so
+## (a)-(e) and (d) keep that fallback honest under the single debug-only
+## override (BIOME_ORDER.set_test_overrides legacy_physical_crossings=true).
+## Phase (f) clears the override and asserts the shipped rule: the span builds
+## without a trigger, and even the fallback-built trigger refuses -- no
+## enter_realm, no flag write, nobody leaves the Meadows. This is not
+## portal-loop acceptance.
 const BIOME_ORDER := preload("res://scripts/data/biome_order.gd")
 
 ## F05 (ROADMAP §3) / ACCEPTANCE §6.1 F05 and card M4: "the gate opens exactly
@@ -54,6 +55,10 @@ const SLOT := 3
 const STEP := 1.0 / 60.0
 
 class FlatWorld extends Node3D:
+	## Production world contract (every authored world declares it; the
+	## portal-runtime waystone mount reads it from the current scene).
+	var simulation_only := false
+
 	func ground_height_at(_x: float, _z: float) -> float:
 		return 0.0
 
@@ -188,6 +193,45 @@ func _run() -> void:
 		"(e) stepping the loaded crossing past collapse+appear: nothing replayed or rebuilt")
 
 	print("  [t] loaded phase (e) done at %d ms" % (Time.get_ticks_msec() - started_ms))
+	# ---------------------------------------------------------------- (f) ---
+	# SHIPPED RULE (RD-17): no override, portal runtime on -> crossing retired.
+	BIOME_ORDER.clear_test_overrides()
+	_check(not BIOME_ORDER.legacy_physical_crossings(game),
+		"(f) shipped config (portal runtime on, no override) retires the physical crossings")
+	var world_f := _stand_in("GateOnceShipped")
+	var shipped: Node3D = RIFT_CROSSING.new()
+	shipped.name = "RiftCrossing"
+	world_f.add_child(shipped)
+	shipped.call("build", world_f)
+	_check(bool(shipped.call("span_ready")) and _decks(shipped) == 1 and _triggers(shipped) == 0,
+		"(f) shipped: the span stands as scenery with no realm trigger (decks=%d triggers=%d)"
+			% [_decks(shipped), _triggers(shipped)])
+	var retired_walker := CharacterBody3D.new()
+	retired_walker.name = "Player"
+	world_f.add_child(retired_walker)
+	var fallback_trigger := loaded.find_child("RiftCrossingTrigger", false, false) as Area3D
+	var revision_f := int(progression.get("revision"))
+	var realm_f := str(game.get("current_realm"))
+	if fallback_trigger != null:
+		retired_walker.global_position = fallback_trigger.global_position
+		fallback_trigger.body_entered.emit(retired_walker)
+	shipped.call("_on_trigger_entered", retired_walker)
+	for _frame in 30:
+		await process_frame
+	_check(fallback_trigger != null and int(loaded.call("crossings_fired")) == 0
+			and int(shipped.call("crossings_fired")) == 0,
+		"(f) shipped: entering the retired crossing (even its fallback-built trigger) calls no enter_realm (fired %d/%d)"
+			% [int(loaded.call("crossings_fired")), int(shipped.call("crossings_fired"))])
+	_check(realm_f == "meadows" and str(game.get("current_realm")) == "meadows"
+			and (current_scene == null or current_scene.name != "CloudreachCliffs"),
+		"(f) shipped: nobody leaves the Meadows (realm %s)" % str(game.get("current_realm")))
+	_check(int(progression.get("revision")) == revision_f
+			and not bool(progression.call("has", "realm_gate_cloudreach_unlocked")),
+		"(f) shipped: the retired crossing writes nothing (revision %d -> %d)"
+			% [revision_f, int(progression.get("revision"))])
+	world_f.free()
+	_check(BIOME_ORDER.set_test_overrides({"legacy_physical_crossings": true}),
+		"(f) restored the debug-only fallback fixture for (d)")
 	# ---------------------------------------------------------------- (d) ---
 	_check(not bool(progression.call("has", "realm_gate_cloudreach_unlocked")), "(d) setup: realm gate not yet crossed")
 	var trigger := loaded.find_child("RiftCrossingTrigger", false, false) as Area3D

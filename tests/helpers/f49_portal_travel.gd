@@ -26,7 +26,9 @@ func _bind() -> bool:
 	_rig = tree.current_scene.get_node_or_null("CameraRig") as Node3D
 	return (_player != null and _rig != null and INPUT_OWNER.current(tree) == null \
 		and game.party.size() > 0 and game.party.size() <= 5 and game.pending_catch == null) \
-		or _fail("F49 travel requires ordinary world input and one to five actually owned creatures")
+		or _fail("F49 travel requires ordinary world input and one to five actually owned creatures (input owner %s, party %d, pending catch %s, session hold '%s')" % [
+			str(INPUT_OWNER.current(tree)), game.party.size(), str(game.pending_catch != null),
+			str(game.session.call("_owner_snapshot_block_reason", game.local)) if game.get("session") != null and game.session.has_method("_owner_snapshot_block_reason") else "-"])
 
 func _uids() -> Array[String]:
 	var out: Array[String] = []
@@ -74,6 +76,7 @@ func _use_home_key() -> bool:
 				or _fail("F49 actual Home Key return changed the party or lost/duplicated its key")
 		if frame == 120 and menu.call("is_open"):
 			return _fail("F49 missing producer: Satchel Use did not route the earned Home Key to its production owner")
+		if frame % 300 == 299: _print_home_key_wait(frame)
 	return _fail("F49 actual Home Key return never reached the ready home arch")
 
 func enter(arch_id: String, realm: String) -> bool:
@@ -121,11 +124,38 @@ func hang_relic(biome: String) -> bool:
 			return _uids() == before or _fail("F49 relic hanging changed the actual party")
 	return _fail("F49 relic hanging produced no actual portable relics_hung state")
 
+## Diagnostic only: which readiness condition a long Home Key wait is on.
+func _print_home_key_wait(frame: int) -> void:
+	var owner := INPUT_OWNER.current(tree)
+	print("F49 HOME WAIT frame=%d result=%s realm=%s pending_entry='%s' scene_ready=%s owner=%s" % [frame,
+		str(_home_result.get("ok", "none")), str(game.current_realm), str(game.pending_realm_entry),
+		str(tree.current_scene != null and bool(game.call("_realm_scene_ready", tree.current_scene, "meadows"))),
+		str(owner.get_path()) if owner != null else "none"])
+
 func _ready_world(realm: String) -> bool:
 	return tree.current_scene != null and str(game.current_realm) == realm \
 		and str(game.pending_realm_entry).is_empty() \
 		and bool(game.call("_realm_scene_ready", tree.current_scene, realm)) \
 		and INPUT_OWNER.current(tree) == null
+
+## Station craft (F31#2 relic power): the ordinary capsule walk to a Shrine
+## Room pedestal, stopping inside the host's interaction radius without Use.
+func walk_to_pedestal(biome: String) -> bool:
+	if not _bind(): return false
+	var pedestal: Node3D
+	for candidate: Node in tree.get_nodes_in_group("crossing_hall_pedestals"):
+		if candidate.get_meta("biome", "") == biome: pedestal = candidate as Node3D
+	if pedestal == null: return _fail("F49 missing producer: authored Shrine Room has no " + biome + " pedestal")
+	var nav := NAV.new(tree, _player, _rig, _stick)
+	var distance := _player.global_position.distance_to(pedestal.global_position)
+	if not await nav.walk_to(pedestal.global_position, maxi(1200, int(distance * 65.0)), 2.5):
+		_stick(0, 0)
+		return _fail("F49 ordinary capsule walk failed to the " + biome + " pedestal")
+	_stick(0, 0)
+	for frame in 30: await tree.physics_frame # The host samples the replicated body.
+	var radius := float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.interaction_radius_m)
+	distance = _player.global_position.distance_to(pedestal.global_position)
+	return distance <= radius or _fail("F49 walk stopped %.2f m from the %s pedestal (radius %.1f m)" % [distance, biome, radius])
 
 func activate(prompt: Node3D) -> bool:
 	if prompt == null or not _bind(): return _fail("F49 lacks the actual interaction provider")

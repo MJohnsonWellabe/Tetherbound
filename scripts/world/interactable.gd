@@ -41,6 +41,9 @@ const SIGHT_SELF_CLEARANCE := 0.9
 ## eye point is on its axis, so a ray run all the way to the eye ends inside the
 ## player and reports the player as the occluder every single time.
 const SIGHT_TRAINER_CLEARANCE := 0.55
+## At most this many other players' trainers stand between a prompt and the
+## viewer before the ray stops looking past them (a co-op party is four).
+const SIGHT_PASSABLE_BODIES := 4
 
 signal activated()
 
@@ -217,7 +220,25 @@ func _has_line_of_sight(from: Vector3) -> bool:
 				and viewer.global_position.is_equal_approx(from):
 			query.exclude = [viewer.get_rid()]
 	query.collision_mask = 0x7FFFFFFF  # every layer except the camera-only occluders (bit 31, camera_rig.OCCLUSION_ONLY_LAYER): they stop the camera arm and nothing else
-	return space.intersect_ray(query).is_empty()
+	# Co-op: another player's trainer standing at an NPC is not a wall. Their
+	# capsule never hid this prompt from the player behind them (F20: a guest
+	# could not talk to Grandpa while the host stood at him). Walls, floors
+	# and every other body still occlude.
+	return sight_clear(query, space.intersect_ray)
+
+
+## The ray's verdict, looking past other players' trainers (group
+## `remote_trainer`) and nothing else. `cast` is the physics ray query.
+static func sight_clear(query: PhysicsRayQueryParameters3D, cast: Callable) -> bool:
+	var excluded: Array[RID] = query.exclude
+	for attempt in SIGHT_PASSABLE_BODIES:
+		var hit: Dictionary = cast.call(query)
+		if hit.is_empty(): return true
+		var body: Variant = hit.get("collider")
+		if not (body is Node and (body as Node).is_in_group(&"remote_trainer")): return false
+		excluded.append(hit.get("rid"))
+		query.exclude = excluded
+	return false
 
 
 ## The local peer's viewing body. `interaction_arbiter.gd::viewer()` is the

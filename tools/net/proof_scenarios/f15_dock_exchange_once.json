@@ -1,6 +1,6 @@
 {
  "name": "F15: host and guest settle the dock exchange once",
- "claim": "ACCEPTANCE F15 (T3): 'Host and guest settle the dock exchange once' - the ordinary (no-crash) half. Setup stands in for reaching Water with the swim lesson done and the materials gathered only. The guest walks to the Reedhaven departure dock and presses 'Repair departure dock' (the one PAID dock action: 6 reed fiber + 4 driftwood) through the real prompt; the host presses a different action (Deep Watch chart, free). Each must be done once, the payer's cost taken exactly once, and later presses of the finished repair by either player charge nothing.",
+ "claim": "ACCEPTANCE F15 (T3): 'Host and guest settle the dock exchange once' - the ordinary (no-crash) half. Setup stands in for reaching Tidewake through the Crossing Hall portal (RD-17; the disclosed initial portal fixture opens the Tidewake arch, replacing the retired Water key/gate flags) with the swim lesson done and the materials gathered only. The guest walks to the Reedhaven departure dock and presses 'Repair departure dock' (the one PAID dock action: 6 reed fiber + 4 driftwood) through the real prompt; the host presses a different action (Deep Watch chart, free). Each must be done once, the payer's cost taken exactly once, and later presses of the finished repair by either player charge nothing.",
  "peers": 2,
  "scene": "title",
  "budget_s": 1500,
@@ -27,6 +27,30 @@
   },
   {
    "peer": 0,
+   "action": "enter_realm",
+   "args": {
+    "realm": "water",
+    "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+    "portal_regression": "f15_dock",
+    "portal_prepare_only": true
+   },
+   "budget_frames": 3000,
+   "label": "DISCLOSED SETUP: initial Hall arch position and the Tidewake portal open for this world (stands in for the Warden's Tidewake key), no earned credit"
+  },
+  {
+   "peer": 1,
+   "action": "enter_realm",
+   "args": {
+    "realm": "water",
+    "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+    "portal_regression": "f15_dock",
+    "portal_prepare_only": true
+   },
+   "budget_frames": 3000,
+   "label": "DISCLOSED SETUP: initial Hall arch position and the Tidewake portal open for this world (stands in for the Warden's Tidewake key), no earned credit"
+  },
+  {
+   "peer": 0,
    "action": "host"
   },
   {
@@ -39,24 +63,6 @@
    "args": {
     "count": 2
    }
-  },
-  {
-   "peer": 0,
-   "action": "story_flag",
-   "args": {
-    "flag": "realm_gate_water_unlocked",
-    "scope": "world"
-   },
-   "label": "SETUP: the Water route is open (stands in for Stormwood)"
-  },
-  {
-   "peer": 0,
-   "action": "story_flag",
-   "args": {
-    "flag": "realm_key_water",
-    "scope": "world"
-   },
-   "label": "SETUP: the Water key (stands in for Stormwood)"
   },
   {
    "peer": 0,
@@ -96,19 +102,23 @@
    "peer": 0,
    "action": "enter_realm",
    "args": {
-    "realm": "water"
+    "realm": "water",
+    "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+    "portal_regression": "f15_dock"
    },
    "budget_frames": 10000,
-   "label": "host enters Water"
+   "label": "host enters Water through the Crossing Hall Tidewake portal (RD-17)"
   },
   {
    "peer": 1,
    "action": "enter_realm",
    "args": {
-    "realm": "water"
+    "realm": "water",
+    "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+    "portal_regression": "f15_dock"
    },
    "budget_frames": 10000,
-   "label": "guest enters Water"
+   "label": "guest enters Water through the Crossing Hall Tidewake portal (RD-17)"
   },
   {
    "peer": "all",

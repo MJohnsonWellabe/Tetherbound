@@ -334,6 +334,13 @@ func _run() -> void:
 		_fail("ordinary Settings Home Key Replay refusal: " + str(_guards.failures))
 		_report()
 		return
+	# The village leg is proven from the farmyard where gate B's opening leaves
+	# the player; this fresh opening's catch can end below the farm road.
+	receipts.append({"phase": "village_start", "actual_position": str(current_scene.get_node(^"Player").global_position)})
+	if not await _walk(Vector3(24.0, 1.0, -32.0)):
+		_fail("earned village: could not walk from the catch back to the farmyard")
+		_report()
+		return
 	var village_driver := VillageDriver.new()
 	village_driver.guards = _guards
 	var village: Array[String] = await village_driver.run(self, current_scene, game,
@@ -584,7 +591,12 @@ func _craft_at_workbench() -> bool:
 		await process_frame
 		if game.get("inventory").revision != before and panel.get("_station_intent").is_empty(): break
 	if game.get("inventory").revision == before or not panel.get("_station_intent").is_empty():
-		return _fail("actual Workbench Craft did not complete durable paid action")
+		var owner_session: Node = game.get("session")
+		var row: Dictionary = owner_session.call("_owner_training_row")
+		return _fail("actual Workbench Craft did not complete durable paid action (status=%s intent=%s block=%s row=%s/%s)" % [
+			str(panel.get("_status").text), str(panel.get("_station_intent")),
+			str(owner_session.call("_owner_snapshot_block_reason", game.get("local"))),
+			str(row.get("action", "")), str(row.get("status", ""))])
 	if str(panel.get("_status").text) != "Completed. Saved to your character.":
 		return _fail("actual Workbench Craft did not confirm durable owner acceptance")
 	for id: String in expected:
