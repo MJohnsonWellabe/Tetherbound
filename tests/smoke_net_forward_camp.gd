@@ -198,6 +198,7 @@ func _prove_heal(character: String) -> void:
 				and row.get("creature_uid") == uid and row.get("receipt") != before.get("row", {}).get("receipt") \
 				and row.get("receipt", {}).get("encounter_id") == str(target.encounter_id) \
 				and after.get("disk", {}).get("hp") == row.get("hp") and after.get("hp") == row.get("hp") \
+				and after.get("disk_marker", {}).get("receipt") == row.get("receipt") and after.get("disk_marker", {}).get("hp") == row.get("hp") \
 				and after.get("marker", {}).get("receipt") == row.get("receipt") and after.get("marker", {}).get("status") == "settled" \
 				and after.get("saved_bool_seen") == true and after.get("feedback_seen") == true and after.get("awaiting") == false:
 				completed = true

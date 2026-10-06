@@ -180,6 +180,7 @@ func _heal_view(game: Node, character: String, uid: String) -> Dictionary:
 	var hash: String = preload("res://scripts/net/research_passive_preparation.gd").fingerprint(row.get("receipt", {}))
 	var seen: Dictionary = session._owner_passive_service().get("local").get("vitals_seen", {})
 	out.merge({"hp":creature.hp, "max_hp":creature.max_hp, "disk":disk,
+		"disk_marker":saved.get("satchel_escrow", {}).get(row.get("delivery_id", ""), {}).duplicate(true),
 		"marker":game.local.satchel_escrow.get(row.get("delivery_id", ""), {}).duplicate(true),
 		"saved_bool_seen":seen.has("actor_vitals_saved:" + hash + ":" + str(row.get("journal_revision", -1))),
 		"feedback_seen":not receipt.is_empty() and manager.get("_seen_impact_actions").has(receipt),
