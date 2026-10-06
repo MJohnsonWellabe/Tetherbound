@@ -1540,12 +1540,6 @@
             6.0
           ]
         ]
-      },
-      {
-        "_why": "F01#3 (reproof row3 night walk, code-blind judge: 'nothing on screen marks the camp as arrived'). The Practice Meadow camp's own name board, beside where its spur leaves the road: 2.5 m off the road's centreline (OP21-18's standoff), clear of the walk-in, its one arm pointing at the camp's fire (26.8,-26.6) so the plank reads face-on from the road and from the camp. Lit by that fire at night.",
-        "at": [22.5, -22.4],
-        "label": "Practice Meadow Camp",
-        "points": [[22.5, -22.4], [26.8, -26.6]]
       }
     ],
     "village_topology": {

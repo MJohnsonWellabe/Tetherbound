@@ -1,6 +1,8 @@
 # F01 criterion 3 — night village walk
 
-**BLOCKED R3 — acceptance remains OPEN.** No complete error-free night walk or passing code-blind verdict is claimed. This branch is a WIP checkpoint, not a landing candidate.
+**R3 resumed — acceptance remains OPEN.** No complete error-free night walk or passing code-blind verdict is claimed. This branch is a WIP checkpoint, not a landing candidate.
+
+Coordinator answer [6005143821](https://github.com/MJohnsonWellabe/Tetherbound/pull/525#issuecomment-6005143821) removes the bake blocker without authorizing a bake: drop the terrain fingerpost, use the camp's own presentation config, take the previously frame-confirmed rock move, tune the marginal NPC fills and clear Bram's lamp sight line in data. R3 merged accepted main `f267c2b97`, restored `terrain_playground.json` exactly from main, and cherry-picked `9ad7461ac` as `5a030f5f5`. New data tunes the camp fire's existing `glow_scale`, night fills for Mira/Oskar/Nessa/Maren, and Bram's stand spot at the east end of the same bar. Fresh checks, native capture and a fresh blind verdict remain pending; the diagnostics below preserve the earlier failed/interrupted attempts.
 
 Source checkpoint: `89e1a9f75`, branch `tb/codex-r3`, based on `origin/main` at `e2fa5e4e6`. Only F01#3 source commits `d23625120` and `7bbc76535` were cherry-picked as `250f8e2f5` and `89e1a9f75`; `11880d39` was not taken. The rock relocation `9ad7461ac` awaits frame confirmation.
 

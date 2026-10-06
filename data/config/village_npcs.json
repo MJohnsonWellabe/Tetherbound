@@ -14,6 +14,7 @@
   "villagers": [
     {
       "name": "Mira",
+      "night_light": {"energy": 0.55, "range": 2.6, "offset": [0.3, 1.35, 0.9]},
       "prompt_height_m": 1.5,
       "_why_prompt_height": "F01#2 (village walk day r2, render.yml 36365090624): standing at her counter 2.3 m away, the greet prompt's waist-height sight ray hit the counter, so only the shop door's Close Door was offered. village_npcs.gd lifts her prompt point to 1.5 m, above the counter top. TUNABLE.",
       "config_key": "villager_farmer",
@@ -67,6 +68,7 @@
     },
     {
       "name": "Oskar",
+      "night_light": {"energy": 0.85, "range": 2.8, "offset": [0.0, 1.15, 0.9]},
       "hair": {
         "visible": true,
         "color": "#2f2320",
@@ -243,6 +245,7 @@
     },
     {
       "name": "Bram",
+      "_why_f01_3": "Native night walk frame 035: the central hanging lamp completely covered Bram at the middle of the bar. He serves from the east end of the same counter, outside that lamp's sight line; no interior geometry or conversation changes.",
       "hair": {
         "visible": true,
         "color": "#9c8450",
@@ -250,7 +253,7 @@
       },
       "config_key": "villager_keeper",
       "position": [
-        44,
+        45.2,
         -2.39
       ],
       "facing_deg": 0,
@@ -477,6 +480,7 @@
     },
     {
       "name": "Nessa",
+      "night_light": {"energy": 0.65, "range": 2.6, "offset": [0.0, 1.3, 0.9]},
       "config_key": "inn_helper",
       "position": [
         60.0,
@@ -496,7 +500,7 @@
     },
     {
       "name": "Maren",
-      "night_light": true,
+      "night_light": {"energy": 1.05, "range": 2.8, "offset": [0.0, 1.15, 0.9]},
       "config_key": "field_researcher",
       "position": [
         66,
