@@ -17,6 +17,7 @@ var travel: RefCounted
 var receipts: Array[Dictionary] = []
 var _presentation: Node
 var _guards: RefCounted
+var _workbench_stance := Vector3.ZERO
 
 class OpeningDriver extends "res://tests/helpers/fresh_opening_segment.gd":
 	var prepare_guards: Callable
@@ -449,6 +450,7 @@ func _build_workbench() -> bool:
 	if game.get("free_build") == true: return _fail("paid build required")
 	var stance := Vector3(-6.0, current_scene.get_node(^"Player").global_position.y, 22.0)
 	if not await _walk(stance, 0.5): return false
+	_workbench_stance = current_scene.get_node(^"Player").global_position
 	var driver := BuildDriver.new()
 	driver.set("_tree", self)
 	driver.set("_game", game)
@@ -558,6 +560,22 @@ func _craft_at_workbench() -> bool:
 		if node.get_meta("building_id", "") == "workbench": bench = node
 	if bench == null: return _fail("paid homestead Workbench missing")
 	var prompt := bench.find_child("CraftInteractable", true, false) as Node3D
+	# Portals on, the Home Key lands in the Crossing Hall and the locked-arch
+	# guard leaves the player at the Tidewake arch. A straight line from there
+	# meets the Hall's west wall, then Grandpa's house. A player walks out of
+	# the authored entrance, down Main Street to the first Lower Meadows road
+	# point, and back along the leg this run already walked from the Workbench
+	# stance (the reverse of the deep walk's first heading).
+	var halls := get_nodes_in_group(&"crossing_halls")
+	if prompt != null and halls.size() == 1:
+		var hall := halls[0] as Node3D
+		var entrance: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/crossing_hall.json")).entrance
+		var door := Vector3(float(entrance[0]), float(entrance[1]), float(entrance[2]))
+		var road := _trail_camp_headings((current_scene.get_node("Waystones/" + STONE_ID) as Node3D).global_position)
+		if road.is_empty(): return _fail("actual Lower Meadows road headings could not be resolved")
+		var headings: Array[Vector3] = [hall.call("home_arrival"), hall.to_global(door),
+			hall.to_global(door + Vector3(0, 0, -2.4)), road[0], _workbench_stance]
+		if not await _walk(prompt.global_position, 2.5, headings): return false
 	if not await travel.activate(prompt): return _fail("homestead station input: " + str(travel.failures))
 	var panel: Node = prompt.get_parent().get("_panel")
 	if panel == null or panel.call("is_open") != true: return _fail("actual Workbench did not open Craft")

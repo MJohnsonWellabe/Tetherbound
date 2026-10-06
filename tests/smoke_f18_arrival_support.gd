@@ -326,6 +326,31 @@ func _bounded_cases() -> void:
 	await process_frame
 	arrival.free()
 
+func _neighbor_trainer_cases() -> void:
+	# Shard 8 veridian: the guest's trainer proxy stood inside the host's
+	# capsule reach and the host's arrival read as unsupported ground.
+	var arrival := preload("res://scripts/net/foundation_portal_arrival.gd").new()
+	var world := FlatWorld.new()
+	root.add_child(world)
+	world.position.x = 110.0
+	_box(world, Vector3(0, -.05, 0), Vector3(4, .1, 4))
+	var actor := _actor(world, world.global_position + Vector3(0, .1, 0))
+	actor.set_physics_process(true)
+	for frame in 30: await physics_frame
+	actor.set_physics_process(false)
+	_check(actor.is_on_floor() and arrival._supported_capsule(world, actor, world.global_position, .4), "neighbor fixture starts supported")
+	var trainer := _actor(world, actor.global_position + Vector3(.5, 0, 0))
+	trainer.add_to_group(&"remote_trainer")
+	await physics_frame
+	await physics_frame
+	_check(arrival._supported_capsule(world, actor, world.global_position, .4), "a co-op trainer overlapping the capsule is not missing ground")
+	trainer.remove_from_group(&"remote_trainer")
+	_check(not arrival._supported_capsule(world, actor, world.global_position, .4), "any other overlapping body still refuses support")
+	trainer.queue_free()
+	world.queue_free()
+	await process_frame
+	arrival.free()
+
 func _run() -> void:
 	var world := FlatWorld.new()
 	root.add_child(world)
@@ -377,5 +402,6 @@ func _run() -> void:
 	await process_frame
 	await _bounded_cases()
 	await _precision_cases()
+	await _neighbor_trainer_cases()
 	print("F18 SUPPORT: %d checks, %d failures" % [_checks, _failed])
 	quit(0 if _failed == 0 else 1)

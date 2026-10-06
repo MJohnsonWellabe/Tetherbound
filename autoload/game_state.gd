@@ -3462,6 +3462,7 @@ func commit_regional_ending_ack(intent: Dictionary) -> Dictionary:
 
 func _queue_regional_ack(intent: Dictionary) -> Dictionary:
 	_regional_ack_intents[intent.transaction_id] = intent.duplicate(true)
+	_regional_ack_settled.erase(intent.transaction_id) # A new attempt never reads an older settlement.
 	if not bool(session.call("is_host")):
 		# A guest's personal view is the host's async reply; its cache may be
 		# empty or predate the arrival that bumped the revision. Send against
@@ -3530,6 +3531,12 @@ func _regional_ack_sendable(transaction_id: String) -> bool:
 
 
 func _forget_regional_ack(transaction_id: String) -> void:
+	# Forgotten because its own stage is now saved for this same ending: it
+	# succeeded. Keep the intent so a presentation still polling it reads the
+	# committed result, not "refused" (f20_ending: the waiting drain forgot a
+	# saved homecoming before Grandpa's scene polled, and credits never opened).
+	if _regional_ack_saved_for_its_ending(transaction_id):
+		_regional_ack_settled[transaction_id] = _regional_ack_intents[transaction_id].duplicate(true)
 	_regional_ack_intents.erase(transaction_id)
 	_regional_ack_waiting.erase(transaction_id)
 	_regional_ack_queued_at.erase(transaction_id)
@@ -3607,8 +3614,26 @@ func _send_regional_ack(transaction_id: String) -> bool:
 	return true
 
 
+## Acks that settled while still owed: transaction id -> original intent.
+var _regional_ack_settled: Dictionary = {}
+
+## The ack's own stage is saved and the ending it was spoken in still holds.
+func _regional_ack_saved_for_its_ending(transaction_id: String) -> bool:
+	var intent: Dictionary = _regional_ack_intents.get(transaction_id, {})
+	if intent.is_empty(): return false
+	var journey := _regional_ack_journey()
+	if journey.is_empty() or journey.get(str(intent.get("stage", ""))) != true: return false
+	for field: String in preload("res://scripts/story/regional_homecoming.gd").CONTEXT_FIELDS:
+		if journey.get(field) != intent.get(field): return false
+	return true
+
+
 func regional_ending_ack_result(transaction_id: String) -> Dictionary:
 	var intent: Dictionary = _regional_ack_intents.get(transaction_id, {})
+	if intent.is_empty() and _regional_ack_settled.has(transaction_id):
+		var settled: Dictionary = (_regional_ack_settled[transaction_id] as Dictionary).duplicate(true)
+		settled.merge({"status": "committed", "durable": true}, true)
+		return settled
 	if intent.is_empty() or session == null: return {"status": "refused"}
 	var row: Dictionary = session.call("_owner_training_row")
 	var decision: Dictionary = session.call("_training_decision", session.call("local_peer_id"), row)

@@ -282,3 +282,62 @@ func test_an_owed_ack_away_from_grandpa_sends_no_view_requests() -> void:
 	assert_eq(session.view_requests, before + 1, "back at Grandpa: one request per late resend interval")
 	assert_false(game._regional_ack_intents.is_empty(), "still owed")
 	game.free()
+
+
+class RetainedSession extends Node:
+	var retained: Dictionary = {}
+	func retained_training_transaction(actions: Array) -> Dictionary:
+		return retained.duplicate(true) if actions == ["regional_ack"] else {}
+
+
+func test_a_host_journalled_ack_is_waited_out_past_the_window() -> void:
+	# f20_ending (guest, slow frame rate): the round trip took ~25 s, past the
+	# 24 s window, after the host had durably journalled the acknowledgement.
+	# The presentation gave up and credits never opened. The window bounds
+	# reaching the host; once this exact intent is journalled it only settles.
+	var homecoming := preload("res://scripts/story/regional_homecoming.gd")
+	var game := GAME.new()
+	var session := RetainedSession.new()
+	game.session = session
+	var intent := {"kind": "regional_ending_ack", "stage": homecoming.SEEN_FLAG, "transaction_id": "regional_ending:c:homecoming_seen"}
+	assert_false(homecoming.ack_journalled(game, intent), "nothing journalled: the window still applies")
+	session.retained = {"intent": intent.duplicate(true)}
+	assert_true(homecoming.ack_journalled(game, intent), "this exact intent is the host's durable row")
+	var credits := intent.duplicate(true)
+	credits.stage = homecoming.CREDITS_SEEN_FLAG
+	assert_false(homecoming.ack_journalled(game, credits), "another stage's row is not this acknowledgement")
+	assert_false(homecoming.ack_journalled(game, {}), "an empty intent is never journalled")
+	game.session = null
+	assert_false(homecoming.ack_journalled(game, intent), "no session: the window applies")
+	assert_true(homecoming.ack_settle_ceiling_ms() > homecoming.ack_timeout_ms(game),
+		"a journalled ack still has a finite ceiling, past the reach window")
+	session.free()
+	game.free()
+
+
+func test_an_ack_forgotten_because_its_stage_saved_still_reads_committed() -> void:
+	# f20_ending (render f20-diag3-a): the waiting drain forgot a guest's ack
+	# once homecoming_seen was saved, before Grandpa's scene polled it; the
+	# scene read "refused" for a saved acknowledgement and credits never
+	# opened. A forget because its own stage saved keeps the committed result.
+	var game := _journey_game()
+	var intent := _intent()
+	game.journey.homecoming_seen = true
+	game._forget_regional_ack(intent.transaction_id)
+	var result: Dictionary = game.regional_ending_ack_result(intent.transaction_id)
+	assert_eq(result.get("status"), "committed", "a saved ack is not refused")
+	for field: String in intent:
+		assert_eq(result.get(field), intent[field], "the committed result carries its original " + field)
+	game.free()
+	var unsaved := _journey_game()
+	unsaved._forget_regional_ack(intent.transaction_id)
+	assert_eq(unsaved.regional_ending_ack_result(intent.transaction_id).get("status"), "refused",
+		"an ack forgotten unsaved (a new presentation) stays refused")
+	unsaved.free()
+	var moved := _journey_game()
+	moved.journey.homecoming_seen = true
+	moved.journey.session_epoch = "another_epoch"
+	moved._forget_regional_ack(intent.transaction_id)
+	assert_eq(moved.regional_ending_ack_result(intent.transaction_id).get("status"), "refused",
+		"saved under a different ending is not this ack")
+	moved.free()

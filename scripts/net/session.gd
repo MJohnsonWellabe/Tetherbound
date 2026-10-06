@@ -414,13 +414,13 @@ func _rpc_foundation_action(envelope: Dictionary) -> void:
 	if not is_host(): return
 	var peer := multiplayer.get_remote_sender_id()
 	# The guest publishes its lifecycle sample just before this request on the
-	# same reliable channel; judge that sample's freshness at arrival, not
-	# after this handler's own (possibly slow) save and admission work.
-	_foundation_request_arrived_at = Time.get_ticks_msec()
+	# same reliable channel; judge that sample's freshness at its own arrival,
+	# not a slow host frame later or after this handler's save/admission work.
+	var lifecycle := get_node_or_null(^"FoundationComposition/TravelLifecycle")
+	_foundation_request_arrived_at = int(lifecycle.call("take_paired_arrival", peer, Time.get_ticks_msec())) if lifecycle != null and lifecycle.has_method("take_paired_arrival") else Time.get_ticks_msec()
 	var result := _foundation_handle(peer, envelope)
 	_foundation_request_arrived_at = -1
 	if envelope.get("op") == "regional_ack" and result.get("ok") != true and _regional_ack_refusal_new(peer, result):
-		var lifecycle := get_node_or_null(^"FoundationComposition/TravelLifecycle")
 		print("[regional_ack] host answered peer %d %s: %s resolved=%s gate=%s" % [peer, str(envelope.get("intent", {}).get("stage", "")), str(result.get("code", result.get("reason", ""))), str(result.get("resolved")), str(lifecycle.get("ending_refusal")) if lifecycle != null else "-"])
 	if bool(_registry.call("has", peer)): rpc_id(peer, "_rpc_foundation_reply", envelope, result)
 
@@ -1985,6 +1985,11 @@ func _unregister_homestead_station_node(key: String, station: Node3D) -> void:
 	var prior: WeakRef = _homestead_stations.get(key)
 	if prior != null and prior.get_ref() == station: _homestead_stations.erase(key)
 
+## The host's reach is measured from the point the station's own prompt is
+## offered at (interaction_origin), so a prompt the player can use is in range.
+func _station_interaction_origin(station: Node3D) -> Vector3:
+	return station.call("interaction_origin") if station.has_method("interaction_origin") else station.global_position
+
 func _foundation_source(peer: int, key: String, part: String = "workbench") -> Dictionary:
 	if not is_host() or admitted_character_state(peer).is_empty(): return {}
 	var actor_transport := get_node_or_null(^"LedgerRpc")
@@ -2002,7 +2007,7 @@ func _foundation_source(peer: int, key: String, part: String = "workbench") -> D
 	var p: Array = checked.record.position
 	if station.global_position.distance_to(Vector3(p[0], p[1], p[2])) > 0.01 \
 		or absf(wrapf(rad_to_deg(station.global_rotation.y) - checked.record.yaw_deg, -180, 180)) > 0.01 \
-		or actor.position.distance_to(station.global_position) > float(cfg.interaction_radius_m): return {}
+		or actor.position.distance_to(_station_interaction_origin(station)) > float(cfg.interaction_radius_m): return {}
 	var tier := STATION_RULES.effective_tier(cfg, _game().get("world").placed_buildings, checked.record.uid)
 	if tier.get("ok") != true: return {}
 	return {"character_id": _authority_character(peer), "expected_revision": int(_character_authority.call("revision", _authority_character(peer))),
@@ -2036,7 +2041,7 @@ func _foundation_groom_context(peer: int, key: String) -> Dictionary:
 		if safety.get(hazard) != false: return {}
 	var shell := _portal_world_node("meadows")
 	if shell == null or not shell.is_ancestor_of(actor) or not shell.is_ancestor_of(station) \
-		or actor.global_position.distance_to(station.global_position) > float(cfg.den.radius_m): return {}
+		or actor.global_position.distance_to(_station_interaction_origin(station)) > float(cfg.den.radius_m): return {}
 	var world: RefCounted = game.get("world")
 	var uid := str(station.get_meta("building_uid", ""))
 	if not ESSENCE._integer(world.day, 1, 2147483646) or not ESSENCE._opaque_id(world.world_id) \
@@ -6057,12 +6062,12 @@ func home_key_refusal() -> String:
 	if context.is_empty(): return "Your travel state is not ready."
 	return PORTAL_POLICY.refusal(context)
 
-func publish_travel_lifecycle(producer: Node, sample: Dictionary) -> void:
+func publish_travel_lifecycle(producer: Node, sample: Dictionary) -> bool:
 	if is_host() or not is_active() or producer != get_node_or_null(^"FoundationComposition/TravelLifecycle") \
 		or _peer == null or _peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED \
 		or not snapshot_ready() \
-		or not preload("res://scripts/net/foundation_travel_lifecycle.gd").valid_sample(sample): return
-	rpc_id(HOST_PEER_ID, "_rpc_travel_lifecycle", sample)
+		or not preload("res://scripts/net/foundation_travel_lifecycle.gd").valid_sample(sample): return false
+	return rpc_id(HOST_PEER_ID, "_rpc_travel_lifecycle", sample) == OK
 
 @rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
 func _rpc_travel_lifecycle(sample: Dictionary) -> void:

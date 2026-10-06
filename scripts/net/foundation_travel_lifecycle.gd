@@ -6,6 +6,13 @@ extends Node
 var _serial: int = 0
 var _left: float = 0.0
 var _observations: Dictionary = {}
+## Diagnostic only: why the host last dropped each peer's sample.
+var _accept_refusals: Dictionary = {}
+## Host arrival time of each peer's last accepted sample, until a request
+## takes it. A guest publishes the sample its request is judged on just ahead
+## of that request on the same ordered reliable channel; on a slow host the
+## two can still land a frame apart, so the request is judged at its sample.
+var _paired_at: Dictionary = {}
 const SAMPLE_FIELDS := ["character_id", "world_instance_id", "session_epoch", "realm", "damage_revision", "dialogue", "cutscene", "swimming", "flying", "downed", "station_ack_only", "ending_owner", "party_revision", "party_signature", "sequence"]
 const OPTIONAL_SAMPLE_FIELDS := ["equipped_tool", "passive_clock_active", "party_identity"]
 
@@ -43,8 +50,9 @@ func publish_now() -> bool:
 	if sample.is_empty(): return false
 	_serial += 1
 	sample.sequence = _serial
-	owner.call("publish_travel_lifecycle", self, sample)
-	return true
+	# The send itself can refuse (snapshot not ready, link closing): a caller
+	# that pairs this sample with a request must not send the request alone.
+	return owner.call("publish_travel_lifecycle", self, sample) == true
 
 ## A graceful disconnect can be in flight: the ENet link to the host stops
 ## taking packets before the multiplayer status catches up on its next poll,
@@ -153,11 +161,25 @@ func accept(peer: int, sample: Dictionary) -> void:
 		or sample.character_id != owner.call("_authority_character", peer) \
 		or sample.session_epoch != owner.call("_altar_current_epoch") \
 		or sample.world_instance_id != owner.call("_game").get("world").reward_delivery_namespace \
-		or owner.call("admitted_character_state", peer).is_empty(): return
+		or owner.call("admitted_character_state", peer).is_empty():
+		_accept_refusals[peer] = "identity_or_admission"
+		_paired_at.erase(peer)
+		return
 	var prior: Dictionary = _observations.get(peer, {})
 	if not prior.is_empty() and prior.sample.session_epoch == sample.session_epoch \
-		and (sample.sequence <= prior.sample.sequence or sample.damage_revision < prior.sample.damage_revision): return
+		and (sample.sequence <= prior.sample.sequence or sample.damage_revision < prior.sample.damage_revision):
+		_accept_refusals[peer] = "sequence %s<=%s or damage %s<%s" % [str(sample.sequence), str(prior.sample.sequence), str(sample.damage_revision), str(prior.sample.damage_revision)]
+		_paired_at.erase(peer)
+		return
 	_observations[peer] = {"sample": sample.duplicate(true), "seen_at": Time.get_ticks_msec()}
+	_paired_at[peer] = _observations[peer].seen_at
+
+## The time a guest request is judged at: its paired sample's arrival when the
+## last sample received was accepted, else `fallback` (now). One use only.
+func take_paired_arrival(peer: int, fallback: int) -> int:
+	var at := int(_paired_at.get(peer, fallback))
+	_paired_at.erase(peer)
+	return at
 
 ## Cheap read of an already authenticated observation. This does not refresh
 ## admission, inspect geometry, or construct the portal host context. Legacy
@@ -259,7 +281,7 @@ func host_context_refusal(peer: int, at_msec: int = -1) -> String:
 	if observation.is_empty(): return "no_observation"
 	var sample: Dictionary = observation.sample
 	var reference: int = at_msec if at_msec >= 0 else Time.get_ticks_msec()
-	if not sample_fresh(observation, at_msec): return "stale_sample_%dms" % (reference - int(observation.seen_at))
+	if not sample_fresh(observation, at_msec): return "stale_sample_%dms last_refused=%s" % [reference - int(observation.seen_at), str(_accept_refusals.get(peer, "none"))]
 	if sample.character_id != owner.call("_authority_character", peer) or sample.session_epoch != owner.call("_altar_current_epoch"): return "identity"
 	var actor := remote_body(peer)
 	if actor == null: return "no_remote_body"

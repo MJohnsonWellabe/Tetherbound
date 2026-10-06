@@ -125,6 +125,20 @@ static func hung_allows(id: String, relics_hung: Array) -> bool:
 	return relics_hung.has(BIOME_ORDER.canonical_id(id))
 
 
+## Only a hang with its host-written relic_hang receipt is proved, exactly as
+## character_authority admits a portable record; a bare array is a claim.
+static func proved_hung(character: Dictionary, character_id: String) -> Array:
+	var receipts: Variant = character.get("transaction_receipts", [])
+	var hung: Variant = character.get("relics_hung", [])
+	var out: Array = []
+	if not receipts is Array or not hung is Array:
+		return out
+	for biome: Variant in hung:
+		if (receipts as Array).has("relic_hang:%s:%s" % [str(biome), character_id]):
+			out.append(str(biome))
+	return out
+
+
 func activate_hung(id: String, relics_hung: Array) -> bool:
 	if heart(id).is_empty() or not hung_allows(id, relics_hung):
 		return false
@@ -163,11 +177,14 @@ func save_data() -> Dictionary:
 
 ## Unknown, malformed, or no-longer-placed selections load inactive.  A save
 ## must never manufacture a power that its story flags do not support.
-func load_data(data: Dictionary, progression: RefCounted = null) -> void:
+## F31#2 / RD-20: a selection whose relic this character has HUNG
+## (`relics_hung`) stays selected; the world placed flag is the legacy proof.
+func load_data(data: Dictionary, progression: RefCounted = null, relics_hung: Array = []) -> void:
 	var candidate := str(data.get("active_id", ""))
 	if candidate != "" and heart(candidate).is_empty():
 		candidate = ""
-	if candidate != "" and progression != null and not is_placed(candidate, progression):
+	if candidate != "" and progression != null and not is_placed(candidate, progression) \
+			and not hung_allows(candidate, relics_hung):
 		candidate = ""
 	_active_id = candidate
 	revision += 1
