@@ -6,3 +6,4 @@ Live/synchronous overlays matched all mesh channels and ordered 223824 vertices 
 Live fade included intermediate alpha and reached 1.0; loaded-save healing snapped synchronously. Compiler-only stage also exited 0.
 Raw proof: healing/heal-slice-first/{stdout.log,stderr.log,exit.txt,source.txt}; existing interpolation deprecation retained, no SCRIPT/Parse/ERROR/leak output. Private homes/saves remain local.
 Scatter remains unsliced; native healed-land blind comparison, co-op/independent final review and full item 3 acceptance remain OPEN. No READY or shipping visual verdict.
+Native heal-visual-profile-first at 07cfc5f172 was operator-stopped after over 12 minutes/zero PNGs/no freeing event (actual exit -1); per-frame profiler dumps progressed slowly, mechanism unproved. Original logs and operator-stop.txt retained; no scatter cost or visual verdict.

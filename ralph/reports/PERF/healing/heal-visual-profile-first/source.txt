@@ -1,0 +1,4 @@
+source=07cfc5f172a4b21aa0fba3eb45b724ff2bbda5b7
+tool=tools/capture_f05_heal.gd unchanged
+Compatibility/fullscreen1920x1080/fixed-fps12/-d/--profiling
+Existing disclosed flags, party, camera placement and hidden transient HUD; appearance and per-function CPU only, not earned/co-op/device FPS

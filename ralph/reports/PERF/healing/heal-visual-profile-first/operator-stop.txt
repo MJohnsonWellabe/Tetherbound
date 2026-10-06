@@ -1,0 +1,3 @@
+Operator stopped only this owned native run after more than 12 minutes, zero capture frames, and a small number of completed game-frame profiler dumps; no freeing event or healing profile reached.
+Original profiler output continues but synchronous per-frame dump/redirect dominates observed progress; mechanism unproved. No visual/scatter/FPS acceptance. Original stdout/stderr/native/source remain unchanged.
+A separate appearance-only run without -d/--profiling would change the observed logging condition; no source/config/helper/assertion/cache mutation.
