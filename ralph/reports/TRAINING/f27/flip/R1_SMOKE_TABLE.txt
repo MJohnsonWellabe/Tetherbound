@@ -36,8 +36,8 @@ F27 essence_node | ON FIRST PASS exit0/report20checks; +3Groundessence/+1Attuned
 F27 net essence_no_dup | ON OPEN
 
 CI SMOKE names from unchanged .github/workflows/ci.yml; ON verdicts recorded below; all other checks OPEN.
-aggression | ON OPEN
-arena_contain | ON OPEN
+aggression | ON FIRST PASS, exit0; peaceful900frame negative control and aggressive real fight/Run exit; isolated owned-starter fixtures; independent review PASS
+arena_contain | ON FIRST PASS, exit0; two rooms hold/clamp and old-radius controls reproduce leak; Warden22 staging assertions; inherited fixtures/forced trainer cleanup; independent review PASS
 art | ON OPEN
 audio | ON FIRST PASS exit0; realworld footsteps/combatmixer/bandambience; devicehearing nottested; rawreceipts retained
 authored_camps | ON OPEN

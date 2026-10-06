@@ -275,3 +275,11 @@ c1a86837be43a895efe17ee28d795f80b4125445c8e56274c6189f52b055c55d  ci-post-modal-
 9686dc34161f47cbda7f3eb5d514f21b7f48dc78260e736a8247d7dbdf842fa2  ci-post-modal-on/stderr.txt
 734e67b53266a04278e0022f9823eb55bcf0deea8874d67199c07be15c192099  ci-post-modal-on/r1-ci-post-modal-on-20261006T0613Z.txt
 5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  ci-post-modal-on/exit.txt
+a51d8611b44e8b4c81bef36469d244df8f80806132fac2f24af5f0e6228ea901  ci-aggression-on/stdout.txt
+8c65daa011df9cf70b7b21064e1c6f37fd59edc46f567881235efcacbd440719  ci-aggression-on/stderr.txt
+ff2444dbd1bdfce12e31632f1b4f882f103ba1e3c95e92863cc20647010e89c5  ci-aggression-on/r1-ci-aggression-on-20261006T0620Z.txt
+5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  ci-aggression-on/exit.txt
+bff236fc9b4c78e686c68ea7ef51773a39e03c4a9176f5c45f7675d1ad42699f  ci-arena-contain-on/stdout.txt
+9686dc34161f47cbda7f3eb5d514f21b7f48dc78260e736a8247d7dbdf842fa2  ci-arena-contain-on/stderr.txt
+1eeefbc64f4d331b415125080abbf4a7366ea7e77bc53c486e12dfa2e9f8cca0  ci-arena-contain-on/r1-ci-arena-contain-on-20261006T0624Z.txt
+5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  ci-arena-contain-on/exit.txt

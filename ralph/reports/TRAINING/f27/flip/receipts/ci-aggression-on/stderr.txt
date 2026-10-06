@@ -1,0 +1,119 @@
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+   GDScript backtrace (most recent call first):
+       [0] _build_terrain (res://scripts/world/playground_world.gd:1180)
+       [1] _ready (res://scripts/world/playground_world.gd:806)
+       [2] _load_fixture (res://tests/smoke_aggression.gd:115)
+       [3] _run (res://tests/smoke_aggression.gd:98)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
