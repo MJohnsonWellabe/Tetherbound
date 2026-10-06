@@ -13,6 +13,8 @@ class TapManager extends "res://scripts/combat/combat_manager.gd":
 	var face_held := false
 	var face_edge := ""
 	var refusals: Array[String] = []
+	var resolved_strikes := 0
+	func _resolve_player_strike() -> void: resolved_strikes += 1
 	func _ultimate_arm_pressed() -> bool: return arm_edge
 	func _ultimate_arm_held() -> bool: return arm_held
 	func _ultimate_face_held() -> bool: return face_held
@@ -163,3 +165,17 @@ func test_root_status_uses_body_clock_and_never_cancels_protected_tell() -> void
 	body.hold_ultimate_reaction(2.0)
 	assert_true(body.protected_heavy_committed(), "reaction must preserve the committed heavy")
 	body.free()
+
+func test_compensated_frame_cannot_arrive_before_accepted_monotonic_windup() -> void:
+	var manager := TapManager.new()
+	manager.set("_action", MANAGER.Action.WINDUP)
+	manager.set("_action_timer", 0.3)
+	manager.set("_pending_move", {"local_strike_at_ms": Time.get_ticks_msec() + 1000, "recovery": 0.2})
+	manager._tick_action(2.0)
+	assert_eq(manager.resolved_strikes, 0)
+	assert_eq(manager.get("_action"), MANAGER.Action.WINDUP)
+	manager.get("_pending_move").local_strike_at_ms = 0
+	manager._tick_action(2.0)
+	assert_eq(manager.resolved_strikes, 1)
+	assert_eq(manager.get("_action"), MANAGER.Action.RECOVERY)
+	manager.free()
