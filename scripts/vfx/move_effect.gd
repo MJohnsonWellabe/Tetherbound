@@ -322,9 +322,12 @@ func _projectile_position(t: float, index: int) -> Vector3:
 	var spread_size := float(_params.get("spread", 0.0))
 	if count > 1: spread_size = maxf(spread_size, float(_params.size) * float(_row.body.get("volley_separation_scale", 2.8)))
 	var angle := TAU * float(index) / float(count)
-	# volley_vertical_ratio < 1 flattens the volley toward a fan, so a volley
-	# seen from the side does not read as a vertical stack.
-	var position := _from.lerp(_to, t) + (side * cos(angle) + Vector3.UP * sin(angle) * float(_row.body.get("volley_vertical_ratio", 1.0))) * spread_size * sin(t * PI)
+	var lateral := cos(angle)
+	# A circular volley gives two stones the same lateral position. The
+	# stone fan separates every body while retaining the shared endpoint.
+	if count > 1 and str(_row.body.get("volley_layout", "circle")) == "fan":
+		lateral = 2.0 * float(index) / float(count - 1) - 1.0
+	var position := _from.lerp(_to, t) + (side * lateral + Vector3.UP * sin(angle) * float(_row.body.get("volley_vertical_ratio", 1.0))) * spread_size * sin(t * PI)
 	if count > 1:
 		position += direction * (float(index) - float(count - 1) * 0.5) * float(_row.body.get("volley_stagger_m", 0.25)) * sin(t * PI)
 	position.y += float(_params.get("arc", 0.0)) * sin(t * PI)

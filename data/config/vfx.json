@@ -377,6 +377,7 @@
           "grain_strength": 0.5,
           "min_body_size_m": 0.27,
           "volley_vertical_ratio": 0.3,
+          "volley_layout": "fan",
           "shape": "stone",
           "stone_smoothing": 0.62,
           "motion": "projectile",
