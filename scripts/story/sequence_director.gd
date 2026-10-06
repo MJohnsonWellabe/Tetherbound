@@ -1921,6 +1921,19 @@ func _on_dialogue_completed(id: String) -> void:
 		call_deferred("_open_regional_credits", expected_character_id, expected_world, expected_context)
 
 
+## One step of the credits handoff: "open" once nothing owns input, "wait"
+## while this presentation's closing press or its original owner ACK still
+## owns it, "abandon" for any other owner. A guest's Session owns input until
+## the host accepts the acknowledgement; giving up then meant credits never
+## opened for that player.
+func _credits_handoff_step(owner: Node, game: Object) -> String:
+	if owner == null: return "open"
+	if not owns_regional_presentation(owner, game): return "abandon"
+	if owner == _dialogue:
+		return "wait" if _dialogue.call("is_open") != true and Input.is_action_pressed("interact") else "abandon"
+	return "wait"
+
+
 func _open_regional_credits(expected_character_id: String, expected_world: Object,
 		expected_context: Dictionary) -> void:
 	var game := get_node_or_null(^"/root/Game")
@@ -1933,11 +1946,9 @@ func _open_regional_credits(expected_character_id: String, expected_world: Objec
 				or _regional_presentation_context != expected_context \
 				or not REGIONAL_HOMECOMING.context_matches(game, expected_context) \
 				or not REGIONAL_HOMECOMING.credits_pending(game): return
-		var owner := INPUT_OWNER.current(get_tree())
-		if owner == null: break
-		if owner != _dialogue or _dialogue.call("is_open") == true \
-				or not owns_regional_presentation(owner, game) \
-				or not Input.is_action_pressed("interact"): return
+		match _credits_handoff_step(INPUT_OWNER.current(get_tree()), game):
+			"open": break
+			"abandon": return
 		await get_tree().physics_frame
 	if not is_inside_tree(): return
 	if _regional_credits == null or not is_instance_valid(_regional_credits):
