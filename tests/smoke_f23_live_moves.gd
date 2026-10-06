@@ -123,6 +123,8 @@ func _run() -> void:
 		_finish()
 		return
 	_check(is_equal_approx(shown_meter.value, 0.0), "mounted actual CombatHUD starts with an empty Ultimate meter")
+	var prior_ultimate_history: Array = _creature.move_mastery_receipts.get("ultimate_ground_current", []).duplicate()
+	var maximum_mastery := int(MASTERY.config().rank_thresholds[4])
 	var old_world := FileAccess.get_file_as_bytes(_writer.world_store.path_for("resource-slot"))
 	_writer.refuse_world = true
 	var snare := await _tap_move(JOY_BUTTON_B, "utility")
@@ -199,7 +201,15 @@ func _run() -> void:
 				if row is Dictionary and row.get("kind") == "foundation_event" and row.get("duties", []).size() == 1 \
 					and row.duties[0].get("action") == "combat_mastery" and row.duties[0].intent.action_id == ultimate.action_id:
 					ultimate_event = row.duplicate(true)
-			_check(not ultimate_event.is_empty(), "actual Ground Current arrival has its durable original")
+			if _ultimate_prior_uses < maximum_mastery:
+				_check(not ultimate_event.is_empty(), "actual Ground Current arrival has its durable original")
+			else:
+				var original: Dictionary = _host.move_commit(_id, 1, int(ultimate.action))
+				_check(original.get("resolved") == true and original.get("credited") == true
+					and original.get("action_id") == ultimate.action_id and int(original.move.mastery_rank) == 5,
+					"saturated rank-five hit retains its resolved and credited host original")
+				_check(ultimate_event.is_empty() and _host.move_mastery_outcome(_id, 1, int(ultimate.action)).is_empty(),
+					"saturated rank-five hit creates no further mastery award")
 			await create_timer(2.6).timeout
 	else:
 		var before: Dictionary = _host.record(_id).participants[1].move_resources[_creature.uid].duplicate(true)
@@ -215,6 +225,18 @@ func _run() -> void:
 	_host.set_phase(_id, "done")
 	_apply_saved_mastery(snare_event, "snare", 75)
 	if not ultimate_event.is_empty(): _apply_saved_mastery(ultimate_event, "ultimate_ground_current", _ultimate_prior_uses)
+	if _ultimate_prior_uses == maximum_mastery:
+		_check(int(_creature.move_mastery_uses.get("ultimate_ground_current", 0)) == maximum_mastery
+			and _creature.move_mastery_receipts.get("ultimate_ground_current", []) == prior_ultimate_history,
+			"rank-five live mastery retains the exact capped history")
+		var disk: Dictionary = _writer.character_store.read(DATA.CHARACTER)
+		var saved_owned := {}
+		for card: Dictionary in disk.get("party", []):
+			if card.get("uid") == _creature.uid: saved_owned = card
+		_check(saved_owned.get("uid") == _creature.uid
+			and int(saved_owned.get("move_mastery_uses", {}).get("ultimate_ground_current", 0)) == maximum_mastery
+			and saved_owned.get("move_mastery_receipts", {}).get("ultimate_ground_current", []) == prior_ultimate_history,
+			"actual owner disk retains the same rank-five UID and exact capped history")
 	_check(MATH.config().get("actor_vitals", {}).get("runtime_enabled") == false, "proof must not activate actor_vitals")
 	_finish()
 
