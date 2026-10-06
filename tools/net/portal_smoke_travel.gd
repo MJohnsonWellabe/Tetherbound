@@ -141,6 +141,15 @@ func travel(tree: SceneTree, args: Dictionary, started: int, budget: int) -> Dic
 		if approached.get("ok") != true: return approached
 	if Engine.get_physics_frames() - started >= budget:
 		return {"ok": false, "reason": "Original portal action budget exhausted before public request"}
+	# A just-admitted guest's owner record is held (Session owns input, read by
+	# the host as an open dialogue) until the host answers the groom resume
+	# every snapshot apply opens; a player waits for it, so does this request.
+	var session: Node = game.get("session")
+	while session != null and session.has_method("owns_input") and bool(session.call("owns_input")) \
+			and Engine.get_physics_frames() - started < budget:
+		await tree.physics_frame
+		if not is_instance_valid(game) or tree.root.get_node_or_null(^"Game") != game:
+			return {"ok": false, "reason": "Portal source lifetime changed"}
 	# No post-admission position, pose, map or progression writes. This public
 	# request owns real policy/permit, origin BOOL, arrival BOOL and host ACK.
 	game.connect("portal_action_result", _completed)
