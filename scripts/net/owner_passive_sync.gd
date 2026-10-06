@@ -5,7 +5,6 @@ extends RefCounted
 const REPLAY := preload("res://scripts/net/owner_passive_replay.gd")
 const PREP := preload("res://scripts/net/owner_passive_preparation.gd")
 const HASH := preload("res://scripts/net/research_passive_preparation.gd")
-const REWARD := preload("res://scripts/net/reward_delivery.gd")
 const RECORD := preload("res://scripts/net/character_record_rules.gd")
 const E := preload("res://scripts/creatures/essence.gd")
 const EVENT := preload("res://scripts/net/foundation_event.gd")
@@ -18,9 +17,6 @@ const REQUEST_ACTIONS := ["station_craft", "feast_cook", "feast_feed", "relic_ha
 const RETAINED_ACTIONS := ["research_event", "master_win", "boss_relic", "combat_mastery", "combat_round_reward", "wild_defeat_share"]
 const MAX_BUFFER := 120000
 const MAX_BATCH := 64
-## Owner: without new acknowledgements for this long, resend the window.
-const RESEND_STALL_S := 1.5
-const CHECKPOINT_RESEND_S := 1.0
 const MAX_PEERS := 4
 const MAX_SPEED := 40.0
 ## The recorder starts before the existing connection+snapshot handshake.
@@ -84,7 +80,6 @@ func arm_owner(before: Dictionary, discoveries: Dictionary) -> Dictionary:
 	local = {"id": Crypto.new().generate_random_bytes(16).hex_encode(), "character": before.character_id,
 		"base_hash": HASH.fingerprint(before), "sequence": 0, "prefix_hash": cursor.prefix_hash,
 		"inputs": [], "acked": 0, "error": "", "last_settlement": "", "rebase": {}, "admission_pending": true,
-		"hello_pending": true,
 		"discovered": discoveries.duplicate(true)}
 	pending.clear()
 	var game := _game()
@@ -152,23 +147,6 @@ func record_delivery(row: Dictionary) -> bool:
 func recording_active() -> bool:
 	return not local.is_empty() and pending.is_empty() and str(local.error).is_empty()
 
-## A reward delivery waits until the host has first admitted this join's
-## stream (and any readmit settled the payouts its held record already holds,
-## _settle_folded). A rebase never folds payouts, so it does not hold them
-## (re-review M-2); a join whose admission never lands tells the player once.
-const HELLO_WAIT_TELL_MS := 20000
-func delivery_ready() -> bool:
-	if not recording_active(): return false
-	if local.get("hello_pending", false) != true: return true
-	# The clock starts at the first payout held after the snapshot (the dial
-	# and world build are not waiting on admission; review L-1).
-	if not local.has("hello_wait_from_ms"): local.hello_wait_from_ms = Time.get_ticks_msec()
-	if not local.get("hello_wait_told", false) and Time.get_ticks_msec() - int(local.hello_wait_from_ms) > HELLO_WAIT_TELL_MS:
-		local.hello_wait_told = true
-		var game := _game()
-		if game != null and game.has_method("push_world_message"): game.call("push_world_message", "Rewards wait until the host has taken your character in.")
-	return false
-
 func _scope() -> Dictionary:
 	var game := _game()
 	if game == null or game.get("world") == null or game.get("local") == null or owner() == null: return {}
@@ -215,19 +193,16 @@ func admitted(peer: int, summary: Dictionary) -> void:
 	var declared_discoveries: Variant = summary.get("discovered_landmarks", {})
 	var discoveries_match: bool = declared_discoveries is Dictionary \
 		and HASH.fingerprint({"discovered": declared_discoveries}) == HASH.fingerprint({"discovered": discoveries})
-	# Payouts a rejoin folded into the held record that the owner has not yet
-	# confirmed settling: it marks them settled (and saves) on the readmit
-	# before it may process their redelivery, so any such row forces one.
-	var folded: Array = authority.call("unconfirmed_folds", character)
-	if E._equivalent(before, declared) and HASH.fingerprint(before) == declaration.get("baseline_hash") and discoveries_match and folded.is_empty():
+	if E._equivalent(before, declared) and HASH.fingerprint(before) == declaration.get("baseline_hash") and discoveries_match:
 		_add_host(peer, character, str(declaration.id), before, discoveries)
 		return
-	# Rejoin: the declaration differs from the host's held record. Passive
-	# care/travel drift the host never acknowledged readmits those fields only
-	# (owner_passive_replay.gd `_core`); any other difference (an offline
-	# change) makes the owner adopt the whole held record (owner ruling STATE
-	# §0, below). Only a declaration that does not match its own stream
-	# baseline is refused, with a reason the owner receives.
+	# Rejoin: the owner kept ticking care/travel drift the host never
+	# acknowledged, so the declaration differs from the host's recovered
+	# authority. Re-admit against that authority when the difference is ONLY
+	# in the passive fields owner-passive replay itself governs
+	# (owner_passive_replay.gd `_core`); the owner adopts the host's values
+	# (`readmit`). Any other difference is a real conflict: refuse it with a
+	# reason the owner receives, never silently.
 	var core_matches: bool = declared is Dictionary and HASH.fingerprint(declared) == declaration.get("baseline_hash") \
 		and E._equivalent(REPLAY._core(before), REPLAY._core(declared))
 	if not core_matches and not (authority.call("pending_creature_vitals", character) as Dictionary).is_empty():
@@ -238,24 +213,17 @@ func admitted(peer: int, summary: Dictionary) -> void:
 		print("[owner-passive] admission of %s waits for its in-flight vitals ACK" % character.left(18))
 		return
 	deferred.erase(character)
-	if not declared is Dictionary or HASH.fingerprint(declared) != declaration.get("baseline_hash"):
-		var reason := "owner_passive_admission_conflict: declaration does not match its stream baseline"
+	if not core_matches:
+		var reason := "owner_passive_admission_conflict: %s" % ", ".join(_differing_paths("", before, declared, 0, []).slice(0, 8))
 		refused[character] = {"id": str(declaration.id), "reason": reason, "peer": peer}
 		push_warning("[owner-passive] refused rejoined stream for %s: %s" % [character.left(18), reason])
 		_send_refusal(peer, character)
 		return
-	# Owner ruling (STATE §0): the held record wins inside this world. Passive
-	# drift readmits those fields only; any other difference (an offline
-	# change) makes the owner adopt the whole held record (`adopt`).
-	var adopt := not E._equivalent(REPLAY._core(before), REPLAY._core(declared))
 	if not _add_host(peer, character, str(declaration.id), before, discoveries): return
 	hosts[character].readmit = {"op": "readmit", "baseline": before.duplicate(true),
 		"baseline_hash": HASH.fingerprint(before), "discoveries_hash": HASH.fingerprint({"discovered": discoveries}),
-		"discovered": discoveries.duplicate(true), "adopt": adopt, "folded": folded}
-	if adopt:
-		print("[owner-passive] %s adopts the host's held record: %s" % [character.left(18), ", ".join(_differing_paths("", before, declared, 0, []).slice(0, 8))])
-	else:
-		print("[owner-passive] re-admitting %s on the host's recovered authority (passive drift only)" % character.left(18))
+		"discovered": discoveries.duplicate(true)}
+	print("[owner-passive] re-admitting %s on the host's recovered authority (passive drift only)" % character.left(18))
 	_send_owner(peer, hosts[character], hosts[character].readmit)
 
 
@@ -403,8 +371,6 @@ func receive_host(peer: int, packet: Dictionary) -> void:
 		if stream.is_empty(): return
 	if stream.has("readmit") and stream.peer == peer and stream.id == packet.get("stream_id"):
 		if packet.get("op") == "readmitted" and packet.get("baseline_hash") == stream.readmit.baseline_hash:
-			# The owner saved its settlement of the folded rows: they leave the record.
-			owner().get("_character_authority").call("confirm_folds", str(stream.character), stream.readmit.get("folded", []))
 			stream.erase("readmit")
 			_send_owner(peer, stream, {"op": "inputs_ack", "sequence": stream.cursor.sequence})
 		else:
@@ -476,56 +442,28 @@ static func _endpoint_matches(host_body: Vector3, endpoint: Vector3) -> bool:
 func _inputs_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 	if not str(stream.error).is_empty() or not packet.get("inputs") is Array \
 		or packet.inputs.is_empty() or packet.inputs.size() > MAX_BATCH: return
-	# F01#6b: condition ticks of this batch apply to ONE private copy of the
-	# cursor (REPLAY.apply_condition_owned). It becomes the stream's cursor only
-	# after its record is validated (_settle_working): before any other input
-	# and on every exit, so the cursor never holds an unvalidated state.
-	var batch := {"working": {}}
-	var completed := _inputs_host_batch(peer, stream, packet, batch)
-	if not _settle_working(stream, batch) or not completed or not str(stream.error).is_empty(): return
-	_send_owner(peer, stream, {"op": "inputs_ack", "sequence": stream.cursor.sequence})
-	if stream.checkpoint.get("recovery") == true and not stream.checkpoint.has("frozen"):
-		_recovery_freeze(peer, stream)
-	if not stream.checkpoint.is_empty() and stream.checkpoint.has("frozen"):
-		_prepare_host(peer, stream)
-
-
-func _settle_working(stream: Dictionary, batch: Dictionary) -> bool:
-	if (batch.working as Dictionary).is_empty(): return true
-	var working: Dictionary = batch.working
-	batch.working = {}
-	if not REPLAY._record_valid(working.state):
-		stream.error = "owner_passive_invalid_result"
-		return false
-	stream.cursor = working
-	return true
-
-
-func _inputs_host_batch(peer: int, stream: Dictionary, packet: Dictionary, batch: Dictionary) -> bool:
 	var context := _context(peer, stream)
 	for input: Variant in packet.inputs:
-		if input is Dictionary and input.get("op") != "condition" and not _settle_working(stream, batch): return false
 		if not input is Dictionary or not input.get("sequence") is int:
-			stream.error = "owner_passive_invalid_input"; return false
+			stream.error = "owner_passive_invalid_input"; return
 		var sequence: int = input.sequence
 		var digest := HASH.fingerprint(input)
-		var at_sequence: int = int(batch.working.sequence) if not (batch.working as Dictionary).is_empty() else int(stream.cursor.sequence)
-		if sequence <= at_sequence:
+		if sequence <= int(stream.cursor.sequence):
 			if stream.seen.get(sequence) != digest: stream.error = "owner_passive_conflicting_duplicate"
-			if not str(stream.error).is_empty(): return false
+			if not str(stream.error).is_empty(): return
 			continue
 		if stream.seen.size() >= MAX_BUFFER:
-			stream.error = "owner_passive_host_buffer_full"; return false
+			stream.error = "owner_passive_host_buffer_full"; return
 		if input.get("op") == "discovery" and (stream.cursor.travel_valid != true or stream.cursor.realm != context.realm):
 			var at: Variant = input.get("to")
 			if not context.get("initial_position") is Vector3:
 				_note_host(stream, "input %d waits: no host body for this owner in %s" % [sequence, str(context.realm)])
-				return false # Realm body has not arrived; retry this exact prefix.
+				return # Realm body has not arrived; retry this exact prefix.
 			if not REPLAY._position(at) \
 				or context.initial_position.distance_to(Vector3(float(at[0]), float(at[1]), float(at[2]))) > float(context.initial_max_distance):
 				stream.first_input_refusal = {"input": input.duplicate(true), "context": context.duplicate(true),
 					"cursor_sequence": stream.cursor.sequence, "sampled_ms": Time.get_ticks_msec()}
-				stream.error = "owner_passive_initial_pose_unconfirmed"; return false
+				stream.error = "owner_passive_initial_pose_unconfirmed"; return
 		var input_context := context.duplicate()
 		var reset: bool = _reset_matches(peer, stream, input, context)
 		if reset:
@@ -540,46 +478,46 @@ func _inputs_host_batch(peer: int, stream: Dictionary, packet: Dictionary, batch
 				if not context.get("initial_position") is Vector3 or not _endpoint_matches(context.initial_position, to):
 					_note_host(stream, "input %d waits: discontinuity to %s, host body at %s" % [sequence, str(to),
 						str(context.get("initial_position", "none"))])
-					return false
+					return
 				input_context.discontinuity_authorized = true
 		var applied: Dictionary
 		if input.get("op") in ["actor_vitals_applied", "actor_vitals_saved"]:
-			if not owner().has_method("_owner_passive_actor_vitals_context"): return false
+			if not owner().has_method("_owner_passive_actor_vitals_context"): return
 			var proof: Dictionary = owner().call("_owner_passive_actor_vitals_context", peer, input)
 			if proof.is_empty():
 				_note_host(stream, "input %d waits: %s has no host vitals proof yet" % [sequence, str(input.op)])
-				return false # Exact saved op waits the existing authenticated world ACK.
+				return # Exact saved op waits the existing authenticated world ACK.
 			if input.op == "actor_vitals_applied" and proof.get("revision_before") != stream.revision:
-				stream.error = "owner_passive_vitals_revision_conflict"; return false
+				stream.error = "owner_passive_vitals_revision_conflict"; return
 			if input.op == "actor_vitals_saved" and int(proof.row.character_revision) > int(stream.revision):
-				stream.error = "owner_passive_vitals_saved_before_applied"; return false
+				stream.error = "owner_passive_vitals_saved_before_applied"; return
 			applied = REPLAY.apply_vitals(stream.cursor, input, proof)
 		elif input.get("op") == "reward_delivery_applied":
 			var row: Variant = _game().get("world").reward_deliveries.get(input.get("delivery_id"))
 			applied = REPLAY.apply_delivery(stream.cursor, input, row)
 			if applied.get("ok") == true and owner().get("_character_authority").call("apply_owner_reward_delivery",
-				stream.character, stream.cursor.base, applied.cursor.base, str(input.get("delivery_id", ""))) != true:
-				stream.error = "owner_passive_delivery_authority_changed"; return false
+				stream.character, stream.cursor.base, applied.cursor.base) != true:
+				stream.error = "owner_passive_delivery_authority_changed"; return
 			if applied.get("ok") == true and row is Dictionary:
 				# Ruling (b): a batched gather is now credited; its row may be
 				# pruned once the guest's ACK has also landed.
 				var gather_writer: Node = owner().get_node_or_null(^"LedgerRpc")
 				if gather_writer != null: gather_writer.call("mark_gather_replayed", stream.character, row)
-		elif input.get("op") == "condition":
-			if (batch.working as Dictionary).is_empty(): batch.working = stream.cursor.duplicate(true)
-			var reason := REPLAY.apply_condition_owned(batch.working, input, input_context)
-			applied = {"ok": true, "code": "ok"} if reason.is_empty() else {"ok": false, "code": reason}
 		else:
 			applied = REPLAY.apply(stream.cursor, input, input_context)
 		if applied.get("ok") != true:
 			stream.first_input_refusal = {"input": input.duplicate(true), "context": input_context.duplicate(true),
 				"cursor_sequence": stream.cursor.sequence, "sampled_ms": Time.get_ticks_msec()}
-			stream.error = str(applied.get("code", "owner_passive_replay_refused")); return false
-		if input.get("op") != "condition": stream.cursor = applied.cursor
+			stream.error = str(applied.get("code", "owner_passive_replay_refused")); return
+		stream.cursor = applied.cursor
 		if input.get("op") == "actor_vitals_applied": stream.revision = applied.revision
 		stream.seen[sequence] = digest
 		if reset: stream.erase("travel_reset") # Only successful exact replay consumes it.
-	return true
+	_send_owner(peer, stream, {"op": "inputs_ack", "sequence": stream.cursor.sequence})
+	if stream.checkpoint.get("recovery") == true and not stream.checkpoint.has("frozen"):
+		_recovery_freeze(peer, stream)
+	if not stream.checkpoint.is_empty() and stream.checkpoint.has("frozen"):
+		_prepare_host(peer, stream)
 
 func gate(peer: int, action: String, intent: Dictionary, event: Dictionary) -> Dictionary:
 	var session := owner()
@@ -1119,8 +1057,6 @@ func receive_owner(packet: Dictionary) -> void:
 		"inputs_ack":
 			if not packet.get("sequence") is int or packet.sequence < local.acked or packet.sequence > local.sequence: return
 			local.admission_pending = false
-			local.hello_pending = false
-			if packet.sequence > int(local.acked): local.ack_progress_ms = Time.get_ticks_msec()
 			local.acked = packet.sequence
 			while not local.inputs.is_empty() and int(local.inputs[0].sequence) <= int(local.acked): local.inputs.pop_front()
 		"freeze":
@@ -1164,10 +1100,6 @@ func receive_owner(packet: Dictionary) -> void:
 				or prepared.world_id != scope.world_id or prepared.final_sequence != pending.sequence \
 				or prepared.input_prefix_hash != pending.prefix_hash or HASH.fingerprint(prepared.after) != pending.hash: return
 			if pending.has("prepared") and not E._equivalent(pending.prepared, prepared): return
-			# F01#6b: the host answers every resent "frozen" with this same
-			# preparation; a duplicate must not move a saving/saved owner back
-			# to "save" (each such regress was another character save round).
-			if pending.has("prepared") and pending.phase != "frozen": return
 			pending.prepared = prepared.duplicate(true)
 			pending.retained = retained.duplicate(true)
 			pending.phase = "save"
@@ -1209,7 +1141,6 @@ func _retry_owner() -> void:
 	if pending.is_empty() or pending.scope != _scope() or not str(local.error).is_empty(): return
 	_flush()
 	if pending.phase == "frozen":
-		if not _resend_due("frozen"): return
 		_send_host({"op": "frozen", "id": pending.id, "sequence": pending.sequence,
 			"prefix_hash": pending.prefix_hash, "hash": pending.hash})
 	elif pending.phase == "save":
@@ -1227,23 +1158,12 @@ func _retry_owner() -> void:
 		if not PREP.exact(_projection(), pending.prepared.after):
 			local.error = "owner_passive_owner_changed_after_save"; return
 		pending.phase = "saved"
-	if pending.phase == "saved" and _resend_due("saved"):
+	if pending.phase == "saved":
 		_send_host({"op": "saved", "id": pending.id, "hash": pending.prepared.hash, "saved": true})
 
-
-## F01#6b: a checkpoint message goes once when its phase starts, then at most
-## once per CHECKPOINT_RESEND_S while the host has not answered (reliable
-## transport; the resend only covers a host that dropped the stream).
-func _resend_due(phase: String) -> bool:
-	var now := Time.get_ticks_msec()
-	if pending.get("sent_phase") == phase and now - int(pending.get("sent_ms", 0)) < int(CHECKPOINT_RESEND_S * 1000.0): return false
-	pending.sent_phase = phase
-	pending.sent_ms = now
-	return true
-
 ## Owner: the host re-admitted this stream on its recovered authority (see
-## `admitted`). Adopt the host's passive values (or, marked `adopt`, its whole
-## held record) and restart this stream's cursor on that baseline. Inputs
+## `admitted`). Adopt the host's passive values, which are the only fields that
+## may differ, and restart this stream's cursor on that baseline. Inputs
 ## recorded on the old base since joining are dropped with it.
 func _readmit_owner(packet: Dictionary) -> void:
 	var baseline: Variant = packet.get("baseline")
@@ -1256,22 +1176,6 @@ func _readmit_owner(packet: Dictionary) -> void:
 	# carry them; anything else must already match this owner's.
 	var held: Variant = packet.get("discovered")
 	var adopt: bool = held is Dictionary and HASH.fingerprint({"discovered": held}) == packet.get("discoveries_hash")
-	# A durable change (adoption, settled payouts) is saved before "readmitted"
-	# (re-review M-1); a failed save puts the owner back and the host resends.
-	var durable: bool = packet.get("adopt") == true or not (packet.get("folded", []) as Array).is_empty()
-	var undo := _owner_undo_point() if durable and game != null else {}
-	var adopted := false
-	if pending.is_empty() and game != null and packet.get("adopt") == true \
-		and not E._equivalent(REPLAY._core(baseline), REPLAY._core(_projection())):
-		# Owner ruling (STATE §0): this world's held record wins; adopt it whole.
-		adopted = true
-		var outcome := _adopt_held_record(baseline)
-		if outcome != "ok":
-			_note_ignored("held-record adoption deferred: " + outcome)
-			if not local.get("adopt_wait_told", false):
-				local.adopt_wait_told = true
-				game.call("push_world_message", "Joining this world's record of your character… (" + outcome + ")")
-			return
 	if not pending.is_empty() or game == null \
 		or (not adopt and HASH.fingerprint({"discovered": _discoveries()}) != packet.get("discoveries_hash")) \
 		or not E._equivalent(REPLAY._core(baseline), REPLAY._core(_projection())):
@@ -1292,10 +1196,6 @@ func _readmit_owner(packet: Dictionary) -> void:
 		local.error = local.admission_refused
 		push_warning("owner passive readmit did not reproduce the host's baseline")
 		return
-	if (_settle_folded(packet.get("folded", [])) > 0 or adopted) and not _save_owner_now():
-		_owner_undo(undo)
-		_note_ignored("readmit not saved; the host resends it")
-		return
 	var cursor := REPLAY.begin(baseline, _discoveries())
 	if cursor.is_empty(): return
 	local.base_hash = packet.baseline_hash
@@ -1303,7 +1203,6 @@ func _readmit_owner(packet: Dictionary) -> void:
 	local.prefix_hash = cursor.prefix_hash
 	local.inputs = []
 	local.acked = 0
-	local.inflight_through = 0
 	local.vitals_seen = {}
 	local.readmitted_hash = packet.baseline_hash
 	# A cursor restarted on a new base restarts the travel/discovery clocks,
@@ -1312,181 +1211,6 @@ func _readmit_owner(packet: Dictionary) -> void:
 	game.set("_travel_pos_valid", false)
 	game.set("_discovery_elapsed", 0.0)
 	_send_host({"op": "readmitted", "baseline_hash": packet.baseline_hash})
-
-
-## The owner's whole state and creature instances, to put back exactly.
-func _owner_undo_point() -> Dictionary:
-	var party: RefCounted = _game().get("party")
-	var player: RefCounted = _game().get("local")
-	if party == null or player == null or not player.has_method("save_data"): return {}
-	var members := {}
-	for member: RefCounted in party.call("members"): members[str(member.get("uid"))] = member
-	var active: Variant = party.call("at", int(party.get("_active"))) if "_active" in party else null
-	var best: Variant = party.call("at", int(party.get("_best"))) if "_best" in party else null
-	return {"data": player.call("save_data"), "members": members,
-		"active": str((active as RefCounted).get("uid")) if active is RefCounted else "",
-		"best": str((best as RefCounted).get("uid")) if best is RefCounted else ""}
-
-
-func _owner_undo(undo: Dictionary) -> void:
-	if undo.is_empty(): return
-	var party: RefCounted = _game().get("party")
-	var ordered := _load_keeping_instances(_game().get("local"), party, undo.data, undo.members)
-	var uids := ordered.map(func(m: RefCounted) -> String: return str(m.get("uid")))
-	party.set("_active", maxi(0, uids.find(undo.active)))
-	party.set("_best", uids.find(undo.best) if not str(undo.best).is_empty() else -1)
-	party.set("revision", int(party.get("revision")) + 1)
-
-
-func _save_owner_now() -> bool:
-	var saver: RefCounted = _game().get("save_system")
-	if saver == null: return false
-	if saver.has_method("finish_fallback"): saver.call("finish_fallback") # as the freeze path does
-	if saver.call("fallback_busy") == true: return false
-	saving = true
-	var saved: bool = saver.call("save_character_prepared", _game(), str(local.character)) == true
-	saving = false
-	return saved
-
-
-## Owner, on every readmit: the payout rows the host's held record already
-## holds while their world row is pending are marked settled here, before this
-## owner may process their redelivery (delivery waits for admission,
-## session._owner_passive_delivery_ready), so it acknowledges without paying a
-## second time (re-review H1). A row this owner already settled is untouched.
-func _settle_folded(folded: Variant) -> int:
-	if not folded is Array or (folded as Array).is_empty(): return 0
-	var player: RefCounted = _game().get("local")
-	if player == null or not player.get("satchel_escrow") is Dictionary: return 0
-	var escrow: Dictionary = player.get("satchel_escrow")
-	var settled_count := 0
-	for row: Variant in folded:
-		if not row is Dictionary or str(row.get("character_id", "")) != str(player.get("character_id")) \
-			or str(row.get("delivery_id", "")) != REWARD.delivery_id(str(row.get("world_namespace", "")), str(row.get("source", "")), str(row.get("character_id", ""))): continue
-		if escrow.get(row.delivery_id) is Dictionary and str(escrow[row.delivery_id].get("status", "")) == "settled": continue
-		var settled: Dictionary = (row as Dictionary).duplicate(true)
-		settled.kind = "reward_delivery"
-		settled.status = "settled"
-		var flag := str(settled.get("completion_flag", ""))
-		if not flag.is_empty() and player.get("flags") != null: (player.get("flags") as RefCounted).call("set_flag", flag, true)
-		settled.erase("stacks")
-		settled.erase("completion_flag")
-		settled.erase("status_ms")
-		escrow[row.delivery_id] = settled
-		settled_count += 1
-	if settled_count > 0: print("[owner-passive] %d payout(s) this world already holds marked settled" % settled_count)
-	return settled_count
-
-
-## Owner, on a readmit marked `adopt`: replace this character's portable
-## fields with the host's held record (party, satchel, gear, loadouts,
-## receipts, portal/vitals escrow, heart selection). Creatures the record keeps
-## are updated in place, so a deployed body still drives the same instance; a
-## creature the record lacks (an offline catch) leaves the party, its body put
-## away first. (The payouts the record holds are settled by _settle_folded.)
-## All or nothing: a failed attempt restores the owner's state exactly (review
-## M2). Returns "ok", or why it must wait (the host resends the readmit).
-const _RUNTIME_ONLY := ["active_buffs", "combat_override"] # never saved; kept per instance
-
-func _adopt_held_record(baseline: Dictionary) -> String:
-	var game := _game()
-	var player: RefCounted = game.get("local")
-	var party: RefCounted = game.get("party")
-	if player == null or party == null: return "no local character"
-	var inventory: RefCounted = player.get("inventory")
-	if party.call("owner_mutation_blocked") == true \
-		or (inventory.has_method("_owner_mutation_blocked") and inventory.call("_owner_mutation_blocked") == true):
-		return "a saved companion decision is still settling"
-	var kept := {}
-	for card: Variant in baseline.get("party", []):
-		if card is Dictionary: kept[str(card.get("uid", ""))] = true
-	# Bodies of creatures the record lacks are put away only once it applies
-	# (review L4). A freed body is checked before its type (review L3).
-	var away: Array = []
-	for director: Node in _portal_directors(game):
-		var ally: Variant = director.get("_ally")
-		var body: Variant = director.get("_ally_body")
-		if ally is RefCounted and is_instance_valid(body) and not kept.has(str((ally as RefCounted).get("uid"))):
-			if not _can_dismiss(director): return "a companion this world does not know is in a fight"
-			away.append(director)
-	var restore: Dictionary = player.call("save_data")
-	var data: Dictionary = restore.duplicate(true)
-	var energy := {}
-	for card: Dictionary in data.get("party", []): energy[str(card.get("uid", ""))] = card.get("energy", 0.0)
-	var cards: Array = []
-	for card: Dictionary in baseline.party:
-		var copy := card.duplicate(true)
-		if energy.has(str(copy.get("uid", ""))): copy.energy = energy[str(copy.uid)]
-		cards.append(copy)
-	data.party = cards
-	data.redesign_character = (baseline.redesign_character as Dictionary).duplicate(true)
-	data.inventory = (baseline.inventory as Array).duplicate(true)
-	data.equipment = (baseline.equipment as Dictionary).duplicate(true)
-	data.realm_hearts = (baseline.realm_hearts as Dictionary).duplicate(true)
-	# The escrow rows the projection carries come from the held record; every
-	# other row (not portable authority) stays the owner's.
-	var mine: Dictionary = RECORD.portable_projection({"character_id": data.get("character_id"), "satchel_escrow": data.get("satchel_escrow", {})})
-	var escrow := {}
-	for key: Variant in data.get("satchel_escrow", {}):
-		if not (mine.portal_escrow as Dictionary).has(key) and not (mine.vitals_escrow as Dictionary).has(key): escrow[key] = data.satchel_escrow[key]
-	for key: Variant in baseline.get("portal_escrow", {}): escrow[key] = baseline.portal_escrow[key]
-	for key: Variant in baseline.get("vitals_escrow", {}): escrow[key] = baseline.vitals_escrow[key]
-	data.satchel_escrow = escrow
-	var before := {}
-	for member: RefCounted in party.call("members"): before[str(member.get("uid"))] = member
-	var active_uid := str((party.call("at", int(party.get("_active"))) as RefCounted).get("uid")) if party.call("at", int(party.get("_active"))) != null else ""
-	var best_uid := str((party.call("at", int(party.get("_best"))) as RefCounted).get("uid")) if party.call("at", int(party.get("_best"))) != null else ""
-	var ordered := _load_keeping_instances(player, party, data, before)
-	var uids := ordered.map(func(m: RefCounted) -> String: return str(m.get("uid")))
-	party.set("_active", maxi(0, uids.find(active_uid)))
-	party.set("_best", uids.find(best_uid) if not best_uid.is_empty() else -1)
-	party.set("revision", int(party.get("revision")) + 1)
-	var refused := "" if E._equivalent(REPLAY._core(_projection()), REPLAY._core(baseline)) else "the record could not be applied here"
-	for director: Node in away:
-		if refused.is_empty() and director.call("dismiss_active_creature") != true: refused = "a companion this world does not know is in a fight"
-	if not refused.is_empty():
-		var back := _load_keeping_instances(player, party, restore, before)
-		var back_uids := back.map(func(m: RefCounted) -> String: return str(m.get("uid")))
-		party.set("_active", maxi(0, back_uids.find(active_uid)))
-		party.set("_best", back_uids.find(best_uid) if not best_uid.is_empty() else -1)
-		party.set("revision", int(party.get("revision")) + 1)
-		return refused
-	if not local.get("adopt_told", false): # once, even if a failed save retries it (review L-2)
-		local.adopt_told = true
-		game.call("push_world_message", "This world keeps your character as it was here; changes made elsewhere are not used in it.")
-	print("[owner-passive] adopted this world's held record (%d creature(s))" % ordered.size())
-	return "ok"
-
-
-## The director would put its creature away now (the same refusals as
-## dismiss_active_creature), checked before anything changes (review L-2).
-static func _can_dismiss(director: Node) -> bool:
-	var manager: Variant = director.get("_manager")
-	if manager is Object and (manager as Object).has_method("is_fighting") and manager.call("is_fighting") == true: return false
-	return not (director.has_method("trainer_battle_active") and director.call("trainer_battle_active") == true)
-
-
-## The encounter directors that may hold this owner's deployed creature.
-func _portal_directors(game: Node) -> Array:
-	return game.get_tree().get_nodes_in_group(&"foundation_portal_directors") if game.is_inside_tree() else []
-
-
-## load_data, then keep each creature the data also holds as the SAME
-## instance (a deployed body drives it), updated from the freshly loaded one.
-func _load_keeping_instances(player: RefCounted, party: RefCounted, data: Dictionary, before: Dictionary) -> Array:
-	player.call("load_data", data)
-	var ordered: Array = []
-	for fresh: RefCounted in party.call("members"):
-		var existing: RefCounted = before.get(str(fresh.get("uid")))
-		if existing == null:
-			ordered.append(fresh)
-			continue
-		for property: Dictionary in fresh.get_property_list():
-			if int(property.usage) & PROPERTY_USAGE_SCRIPT_VARIABLE and not property.name in _RUNTIME_ONLY:
-				existing.set(property.name, fresh.get(property.name))
-		ordered.append(existing)
-	party.set("_creatures", ordered)
-	return ordered
 
 
 func _flush() -> void:
@@ -1503,19 +1227,7 @@ func _flush() -> void:
 	if local.inputs.is_empty():
 		if pending.is_empty() and local.admission_pending: _send_host({"op": "resume"})
 		return
-	# F01#6b: stop-and-wait. A window goes from the first unacknowledged input
-	# (always contiguous with the host's cursor: the host refuses a gap), then
-	# nothing more until it is acknowledged, or until acknowledgements stall
-	# (the host returns early on a "waits" input and needs that prefix again).
-	# Re-sending the whole window every flush cost the host ~126 ms per packet.
-	var now := Time.get_ticks_msec()
-	if not local.has("ack_progress_ms"): local.ack_progress_ms = now
-	var in_flight: bool = int(local.get("inflight_through", 0)) > int(local.acked)
-	if in_flight and now - int(local.ack_progress_ms) < int(RESEND_STALL_S * 1000.0): return
-	local.ack_progress_ms = now
-	var batch: Array = local.inputs.slice(0, mini(MAX_BATCH, local.inputs.size())).duplicate(true)
-	local.inflight_through = int(batch[-1].sequence)
-	_send_host({"op": "inputs", "inputs": batch})
+	_send_host({"op": "inputs", "inputs": local.inputs.slice(0, mini(MAX_BATCH, local.inputs.size())).duplicate(true)})
 
 ## Diagnostic only, once per character and reason: a host checkpoint that
 ## silently waits leaves the fight's round reward held with no other trace.
@@ -1567,9 +1279,6 @@ func owner_settled(row: Dictionary) -> void:
 	_flush()
 
 func _queue_rebase(declaration: Dictionary, previous: Dictionary, binding: Dictionary) -> void:
-	local.hello_pending = previous.get("hello_pending", false) == true # a rebase is not a join
-	for key: String in ["hello_wait_from_ms", "hello_wait_told", "adopt_told"]:
-		if previous.has(key): local[key] = previous[key]
 	local.rebase = {"op": "rebase", "baseline_hash": declaration.baseline_hash,
 		"old_stream": previous.id, "old_sequence": previous.sequence, "old_prefix_hash": previous.prefix_hash,
 		"old_inputs": previous.inputs.duplicate(true), "discoveries_hash": HASH.fingerprint({"discovered": _discoveries()})}

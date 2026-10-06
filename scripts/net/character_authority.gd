@@ -83,15 +83,9 @@ func _replace_record(character: String, next_revision: int, next_state: Dictiona
 	var carried: bool = _records.get(character, {}).has("personal_flags")
 	var flags := personal_flags(character)
 	var discovered: Variant = _records.get(character, {}).get("discovered_landmarks")
-	var absorbed: Variant = _records.get(character, {}).get("absorbed_deliveries")
-	var unconfirmed: Variant = _records.get(character, {}).get("unconfirmed_folds")
 	_records[character] = {"revision": next_revision, "state": next_state}
 	if carried: _records[character].personal_flags = flags
 	if discovered is Dictionary: _records[character].discovered_landmarks = discovered.duplicate(true)
-	# Which host-journaled payouts this record already holds (rejoin_admission).
-	if absorbed is Dictionary: _records[character].absorbed_deliveries = absorbed.duplicate(true)
-	# Folded payouts the owner has not yet confirmed settling (unconfirmed_folds).
-	if unconfirmed is Dictionary: _records[character].unconfirmed_folds = unconfirmed.duplicate(true)
 
 ## Admission-only companion on the SAME record. A rejoin never refreshes it.
 ## Session validates every ID against the authored realm map catalogue first.
@@ -275,213 +269,14 @@ func _research_reserved(character: String) -> bool:
 
 ## An owner-applied reward payout, replayed exactly by the owner-passive
 ## stream. Only satchel slots move; no revision CAS changes.
-func apply_owner_reward_delivery(character: String, before: Dictionary, after: Dictionary, delivery_id: String = "") -> bool:
+func apply_owner_reward_delivery(character: String, before: Dictionary, after: Dictionary) -> bool:
 	if not _records.has(character) or not ESSENCE._equivalent(_records[character].state, before) \
 		or not after.get("inventory") is Array: return false
-	# Review L3: a payout this record already holds is never credited again.
-	if not delivery_id.is_empty() and _absorbed(character).has(delivery_id): return false
 	var next: Dictionary = _records[character].state.duplicate(true)
 	next.inventory = after.inventory.duplicate(true)
 	if not ESSENCE._equivalent(next, after): return false
 	_records[character].state = next
-	if not delivery_id.is_empty(): _absorbed(character)[delivery_id] = true
 	return true
-
-
-## --- Rejoin admission (coordinator, 2026-10-05; owner ruling STATE §0) ------
-## The host world's held record wins inside it (anti-rollback); the guest's
-## file counts only where the world has no record. A returning owner's held
-## record may still lag host-accepted payouts: the owner applied host-journaled
-## deliveries and left before the host replayed their owner-passive inputs.
-## `rejoin_admission` folds those in from the host's OWN journaled world rows
-## (host-validated, amounts never read from the declaration). Any other
-## difference (an offline change) keeps the held record; the owner adopts it
-## through the owner-passive readmit (owner_passive_sync `adopt`).
-
-## Payout rows an owner applies itself (reward_delivery_applied replay):
-## plain authored grants and gather batches, which carry their stacks.
-static func owner_applied_row(row: Variant, character: String) -> bool:
-	# The Home Key grant is a host inventory CAS (_request_home_key_delivery),
-	# never an owner-applied replay (review M2).
-	return row is Dictionary and row.get("character_id") == character and row.get("delivery_id") is String \
-		and row.get("stacks") is Array and RULES.valid_slots(row.stacks) \
-		and not str(row.delivery_id).contains(":") and not str(row.get("source", "")).begins_with("home_key:grant:")
-
-
-func _absorbed(character: String) -> Dictionary:
-	if not _records[character].has("absorbed_deliveries"): _records[character].absorbed_deliveries = {}
-	return _records[character].absorbed_deliveries
-
-
-## First admission: every payout this world already accepted for the character
-## is in the satchel it declared (accepted only after the owner saved it).
-func seed_absorbed_deliveries(character: String, deliveries: Dictionary) -> void:
-	if not _records.has(character): return
-	var absorbed := {}
-	for id: Variant in deliveries:
-		var row: Variant = deliveries[id]
-		if owner_applied_row(row, character) and row.get("status") == "accepted": absorbed[str(id)] = true
-	_records[character].absorbed_deliveries = absorbed
-
-
-## Review H1: the hello can still refuse after rejoin_admission; the caller
-## restores the exact held record (and its companions) if it does.
-## The record and every per-character map the hello's recover_* steps write.
-const _SNAPSHOT_MAPS := ["_vitals_pending", "_vitals_seen", "_vitals_stages", "_training_pending", "_training_stages"]
-
-func snapshot_record(character: String) -> Dictionary:
-	if not _records.has(character): return {}
-	var maps := {}
-	for name: String in _SNAPSHOT_MAPS:
-		var map: Dictionary = get(name)
-		if map.has(character): maps[name] = map[character].duplicate(true) if map[character] is Dictionary or map[character] is Array else map[character]
-	return {"record": (_records[character] as Dictionary).duplicate(true), "maps": maps}
-
-
-func restore_record(character: String, snapshot: Dictionary) -> void:
-	if snapshot.is_empty(): return
-	_records[character] = (snapshot.record as Dictionary).duplicate(true)
-	for name: String in _SNAPSHOT_MAPS:
-		var map: Dictionary = get(name)
-		if (snapshot.maps as Dictionary).has(name): map[character] = snapshot.maps[name]
-		else: map.erase(character)
-
-
-func rejoin_admission(character: String, declared: Dictionary, deliveries: Dictionary, world_flags: Array = []) -> Dictionary:
-	if not _records.has(character): return {"ok": false, "code": "not_admitted"}
-	var core := preload("res://scripts/net/owner_passive_replay.gd")
-	if ESSENCE._equivalent(core._core(state(character)), core._core(declared)): return {"ok": true, "code": "held"}
-	# (0) A freed legendary this character accepted joins its belt on its own
-	# side (stronghold_climax: no host arbitration), so the held record never
-	# carried it. The world's own receipt proves the acceptance: install that
-	# creature before anything compares (#544 regression, veridian_choices).
-	var vouched := _vouch_accepted_legendaries(character, declared, world_flags)
-	var held: Dictionary = state(character)
-	# (1) Host-proven payouts the held satchel has not absorbed: accepted ones,
-	# and pending ones (host-authored; the owner may have applied one and lost
-	# its ACK to the disconnect). Each row lands whole or not at all (review M1).
-	var absorbed := _absorbed(character)
-	var candidate := held.duplicate(true)
-	var bag := RULES.inventory_from(candidate.get("inventory", []))
-	var applied: Array[String] = []
-	var folded := {}
-	for id: Variant in deliveries:
-		var row: Variant = deliveries[id]
-		if not owner_applied_row(row, character) or not row.get("status") in ["accepted", "pending"] or absorbed.has(str(id)): continue
-		var trial := RULES.inventory_from(RULES.slots(bag))
-		var fits := true
-		for stack: Variant in row.stacks:
-			fits = fits and stack is Dictionary and RULES.give_stack(trial, stack)
-		if not fits: continue
-		bag = trial
-		applied.append(str(id))
-		folded[str(id)] = (row as Dictionary).duplicate(true)
-	candidate.inventory = RULES.slots(bag)
-	# The held record includes every payout this world journaled for it,
-	# whatever else the declaration says, never twice (absorbed). The owner
-	# marks every one of them settled on its readmit (unconfirmed_folds): an
-	# accepted row may still be grant_due in its escrow (a full bag), a pending
-	# one may be unpaid there (re-review H1/H-1).
-	if not applied.is_empty():
-		_records[character].state = candidate
-		for id: String in applied: absorbed[id] = true
-		var unconfirmed: Dictionary = _records[character].get("unconfirmed_folds", {})
-		unconfirmed.merge(folded, true)
-		_records[character].unconfirmed_folds = unconfirmed
-	if ESSENCE._equivalent(core._core(candidate), core._core(declared)):
-		return {"ok": true, "code": "replayed_deliveries" if not applied.is_empty() or vouched.is_empty() else "vouched_legendary",
-			"applied": applied, "vouched": vouched}
-	# (2) Anything else (an offline change): the held record wins.
-	var paths: Array = preload("res://scripts/net/owner_passive_sync.gd")._differing_paths("", core._core(candidate), core._core(declared), 0, []).slice(0, 8)
-	return {"ok": true, "code": "held_wins", "applied": applied, "vouched": vouched, "detail": ", ".join(paths)}
-
-
-## Legendary species a freeing can volunteer, by the world receipt prefix that
-## records its acceptance (world_ledger OWNED_FLAG_PREFIXES).
-static func _legendary_species() -> Dictionary:
-	var data := preload("res://scripts/data/redesign_data.gd")
-	return {
-		"legendary_resolution:accepted:": str((data.json("res://data/config/stronghold_climax.json") as Dictionary).get("legendary", {}).get("species", "veridian")),
-		"cloudreach:legendary_resolution:accepted:": str((data.json("res://data/config/cloudreach_solmane_climax.json") as Dictionary).get("legendary", {}).get("species", "solmane")),
-		"stormwood:legendary_resolution:accepted:": preload("res://scripts/world/stormwood_ending.gd").LEGENDARY_SPECIES,
-	}
-
-
-## Installs, into the held record, each declared creature that is a freed
-## legendary this character's own accepted world receipt proves it took and
-## the held record lacks (one per receipt and species). A full belt's release
-## ceremony let one creature go for it: only as many held creatures as the
-## five-creature belt forces out may leave, with the declared release
-## receipts. Every other creature stays exactly as held (an offline change to
-## it is not vouched). The result must pass the first-join rules. Returns the
-## installed creature uids.
-func _vouch_accepted_legendaries(character: String, declared: Dictionary, world_flags: Array) -> Array:
-	var held: Dictionary = state(character)
-	var held_uids := {}
-	var held_species := {}
-	for card: Dictionary in held.get("party", []):
-		held_uids[str(card.get("uid", ""))] = true
-		held_species[str(card.get("species_id", ""))] = true
-	var proven := {}
-	for prefix: String in _legendary_species():
-		if world_flags.has(prefix + character): proven[_legendary_species()[prefix]] = true
-	var vouched: Array = []
-	var added: Array = []
-	for card: Variant in declared.get("party", []):
-		if not card is Dictionary or held_uids.has(str(card.get("uid", ""))): continue
-		var species := str(card.get("species_id", ""))
-		if proven.has(species) and not held_species.has(species):
-			proven.erase(species)
-			vouched.append(str(card.uid))
-			added.append((card as Dictionary).duplicate(true))
-	if vouched.is_empty(): return []
-	var declared_uids := {}
-	for card: Variant in declared.get("party", []):
-		if card is Dictionary: declared_uids[str(card.get("uid", ""))] = true
-	var overflow := (held.party as Array).size() + added.size() - 5
-	var party: Array = []
-	var released: Array = []
-	for card: Dictionary in held.party:
-		if overflow > 0 and not declared_uids.has(str(card.get("uid", ""))):
-			overflow -= 1
-			released.append(str(card.uid))
-			continue
-		party.append(card.duplicate(true))
-	if overflow > 0: return [] # the belt cannot hold it: not what the ceremony allows
-	party.append_array(added)
-	var candidate := held.duplicate(true)
-	candidate.party = party
-	var creatures: Dictionary = candidate.redesign_character.get("creatures", {})
-	for uid: String in vouched:
-		var entry: Variant = declared.get("redesign_character", {}).get("creatures", {}).get(uid)
-		if entry != null: creatures[uid] = (entry as Dictionary).duplicate(true) if entry is Dictionary else entry
-	for uid: String in released: creatures.erase(uid)
-	candidate.redesign_character.creatures = creatures
-	if not released.is_empty():
-		var receipts: Array = declared.get("redesign_character", {}).get("release_receipts", [])
-		for receipt: Variant in held.redesign_character.get("release_receipts", []):
-			if not receipts.has(receipt): return []
-		candidate.redesign_character.release_receipts = receipts.duplicate(true)
-	if not errors(candidate, character).is_empty():
-		print("[authority] legendary for %s not vouched: %s" % [character.left(18), str(errors(candidate, character))])
-		return []
-	_replace_record(character, revision(character) + 1, candidate)
-	return vouched
-
-
-## Payout rows a rejoin folded into the held record that the owner has not
-## yet confirmed marking settled (its readmit "readmitted", saved). They ride
-## every readmit until then, through record rewrites (recover_durable_*), a
-## deferred adoption and later rejoins in this session, so a redelivery or a
-## grant_due escrow row never pays them a second time.
-func unconfirmed_folds(character: String) -> Array:
-	return (_records.get(character, {}).get("unconfirmed_folds", {}) as Dictionary).values().duplicate(true)
-
-
-func confirm_folds(character: String, rows: Array) -> void:
-	if not _records.has(character) or not _records[character].has("unconfirmed_folds"): return
-	for row: Variant in rows:
-		if row is Dictionary: (_records[character].unconfirmed_folds as Dictionary).erase(str(row.get("delivery_id", "")))
 
 func state(character_id: String) -> Dictionary:
 	return _records[character_id].state.duplicate(true) if _records.has(character_id) else {}
