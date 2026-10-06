@@ -116,6 +116,28 @@ func test_capture_checkpoint_binds_original_offer_without_granting_its_creature(
 	assert_true(f.authority.reserve_owner_passive_checkpoint(DATA.CHARACTER, prepared, capture, f.cursor))
 	assert_true(f.authority.commit_owner_passive_checkpoint(DATA.CHARACTER, prepared.hash))
 	assert_eq(f.authority.state(DATA.CHARACTER).party.size(), f.before.party.size())
+	# The retained offer keeps its raw combat card; the later ownership stage
+	# must use the same portable shape as the real owner install comparison.
+	var context: Dictionary = capture.duties[0].context.duplicate(true)
+	context.merge({"character_id": DATA.CHARACTER, "expected_revision": 0})
+	var original_offer: PackedByteArray = var_to_bytes(context)
+	assert_true(context.creature.has("energy"), "regression starts with the actual raw capture card")
+	var staged := preload("res://scripts/net/foundation_capture_rules.gd").stage(f.authority.state(DATA.CHARACTER),
+		{"offer_id": context.offer_id, "keep": true, "released_uid": ""}, context)
+	assert_true(staged.get("ok") == true, str(staged))
+	if staged.get("ok") != true: return
+	assert_eq(staged.state.party.size(), f.before.party.size() + 1)
+	var newcomer: Dictionary = staged.state.party.back()
+	assert_false(newcomer.has("energy"), "capture ownership uses the existing portable authority shape")
+	assert_eq(var_to_bytes(context), original_offer, "staging never rewrites the retained original offer")
+	var codec := preload("res://scripts/save/water_capture_codec.gd")
+	var decoded: RefCounted = codec.decode_owned(newcomer, staged.state.redesign_character)
+	assert_true(decoded != null, "the staged portable newcomer decodes for the owner")
+	if decoded != null:
+		assert_eq(preload("res://scripts/net/character_record_rules.gd").portable_card(codec.encode(decoded,
+			staged.state.redesign_character)), newcomer, "installed newcomer matches its exact staged portable card")
+	for field: String in context.capture_traits:
+		assert_eq(staged.state.redesign_character.creatures[newcomer.uid][field], context.capture_traits[field])
 	var substituted := capture.duplicate(true)
 	substituted.duties[0].context.creature.nickname = "changed after preparation"
 	assert_false(PREP.valid(prepared, substituted), "full retained creature offer remains immutable")
