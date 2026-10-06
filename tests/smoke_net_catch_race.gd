@@ -67,6 +67,9 @@ extends "res://tests/helpers/net_harness.gd"
 ## with `owned: true`, as the opening owns it; actor_vitals refuses an unowned
 ## fighter). The successful guest catch must raise that peer's count by one.
 ## This does not exercise a full belt or its release ceremony.
+## With F30 enabled, the confirmed guest grant also compares the host's trait
+## packet with the owner's complete character carrier through existing probes.
+## Owner disk/reload is a separate proof; this inspection does not force a save.
 ##
 ## ## Setup is granted explicitly and says so
 ##
@@ -466,12 +469,40 @@ func _run() -> void:
 	want(delivered_cards.size() == 1 and _same_capture_identity(canonical_card, delivered_cards[0] as Dictionary)
 		and int((delivered_cards[0] as Dictionary).get("caught_on_day", 0)) >= 1,
 		"guest received the host-confirmed canonical identity and stats; only caught_on_day is stamped at grant")
+	if preload("res://scripts/creatures/traits.gd").runtime_enabled():
+		await _assert_ordinary_capture_traits(positive_record, guest_after_positive, delivered_cards)
 
 	print("assertions run: %d" % _asserts)
 	quit(await finish())
 
 
 # --- reading peers -----------------------------------------------------------
+
+func _assert_ordinary_capture_traits(host_record: Dictionary, guest: Dictionary, delivered: Array) -> void:
+	var reply: Dictionary = guest.get("finish_reply", {}) as Dictionary
+	var packet: Dictionary = reply.get("capture_traits", {}) as Dictionary
+	want(preload("res://scripts/save/water_capture_codec.gd").valid_capture_traits(packet),
+		"the real host catch finish carries a valid initialized F30 trait packet")
+	var source: Dictionary = packet.get("captured_from", {}) as Dictionary
+	want(source.get("spawn_id") == host_record.get("id") and int(source.get("spawn_generation", 0)) > 0,
+		"the packet retains the actual ordinary encounter identity and a positive body generation")
+	var carrier_reply: Dictionary = await step(1, "foundations_state", {"mode": "inspect"})
+	want(str(carrier_reply.get("verdict", "")) == "PASS",
+		"the guest's existing full character carrier inspection succeeds")
+	var carrier: Dictionary = carrier_reply.get("data", {}) as Dictionary
+	var character: Dictionary = carrier.get("character", {}) as Dictionary
+	var uid := str((reply.get("creature", {}) as Dictionary).get("uid", ""))
+	want(delivered.size() == 1 and not uid.is_empty() and uid == str(host_record.get("opponent_card", {}).get("uid", ""))
+		and uid == str((delivered[0] as Dictionary).get("uid", "")),
+		"the confirmed ordinary capture keeps the same host-published UID on the guest belt")
+	var mirror: Dictionary = character.get("creatures", {}).get(uid, {}) as Dictionary
+	for field: String in ["traits_initialized", "rolled_traits", "taught_traits", "captured_from"]:
+		want(packet.has(field) and mirror.has(field) and mirror[field] == packet[field],
+			"the guest owner carrier copies the original host packet field " + field)
+	print("F30 confirmed ordinary capture: ", JSON.stringify({"uid": uid, "host_packet": packet,
+		"owner_mirror": mirror, "character_id": carrier.get("character_id", ""),
+		"character_disk_sha256": carrier.get("character_disk_sha256", "")}))
+
 
 func _catch_row(peer: int, why: String) -> Dictionary:
 	var row: Variant = await probe(peer, "catch")
