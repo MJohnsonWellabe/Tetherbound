@@ -1213,18 +1213,23 @@ func _advance_participant_wind(row: Dictionary, profile: Dictionary, now_ms: int
 		row["wind_updated_ms"] = now_ms
 		row["wind_ready_at_ms"] = now_ms
 		row["wind_last_action"] = 0
-	row["wind_max"] = maximum
-	row["wind_regen_per_second"] = regen
-	row["wind"] = clampf(float(row.get("wind", maximum)), 0.0, maximum)
+	# The supplied profile starts at this observation, not at the previous
+	# update. Earn elapsed Wind under the stored rate/cap before changing it.
+	var previous_maximum := maxf(1.0, float(row.get("wind_max", maximum)))
+	var previous_regen := maxf(0.0, float(row.get("wind_regen_per_second", regen)))
+	row["wind"] = clampf(float(row.get("wind", previous_maximum)), 0.0, previous_maximum)
 	var updated := int(row.get("wind_updated_ms", now_ms))
 	var ready := int(row.get("wind_ready_at_ms", now_ms))
 	var regen_from := maxi(updated, ready)
-	if now_ms > regen_from and float(row["wind"]) < maximum:
+	if now_ms > regen_from and float(row["wind"]) < previous_maximum:
 		var boosted_ms := maxi(0, mini(now_ms, int(row.get("tether_rally_until_ms", 0))) - regen_from)
 		var bonus := float(TETHER_COMMANDS.config().get("commands", {}).get("rally", {}).get("wind_regen_multiplier", 1.0)) - 1.0
-		row["wind"] = minf(maximum, float(row["wind"])
-			+ regen * (float(now_ms - regen_from) + float(boosted_ms) * bonus) / 1000.0)
+		row["wind"] = minf(previous_maximum, float(row["wind"])
+			+ previous_regen * (float(now_ms - regen_from) + float(boosted_ms) * bonus) / 1000.0)
 	row["wind_updated_ms"] = maxi(updated, now_ms)
+	row["wind_max"] = maximum
+	row["wind_regen_per_second"] = regen
+	row["wind"] = minf(float(row["wind"]), maximum)
 
 
 ## Preserve exactly one action-correlated observation per active participant.
