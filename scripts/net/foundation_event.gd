@@ -72,12 +72,29 @@ static func _duty_valid(duty: Dictionary, row: Dictionary) -> bool:
 		if intent.size() != 2 or not ESSENCE._opaque_id(intent.get("action_id")) \
 			or not ESSENCE._component(intent.get("creature_uid")) or context.get("event_confirmed") != true \
 			or context.get("source_key") != "combat_mastery:" + str(intent.action_id) \
-			or row.source_id != "mastery:" + str(intent.action_id) or not context.get("outcome") is Dictionary \
+			or not context.get("outcome") is Dictionary \
 			or not context.get("binding") is Dictionary or context.binding.get("character_id") != duty.character_id \
 			or context.binding.get("creature_uid") != intent.creature_uid \
 			or not ESSENCE._integer(context.binding.get("deployment_generation"), 1, 2147483647) \
 			or not ESSENCE._opaque_id(context.get("encounter_id")): return false
 		var event: Dictionary = context.outcome
+		if context.has("parent_action_id") or context.has("tag_part"):
+			var parent := tag_mastery_parent(context, intent, duty.character_id)
+			if parent.is_empty() or row.source_id != "mastery:" + parent or row.duties.size() > 2: return false
+			var parts := {}
+			var creatures := {}
+			for sibling: Variant in row.duties:
+				if not sibling is Dictionary or sibling.get("action") != "combat_mastery" \
+					or sibling.get("character_id") != duty.character_id \
+					or not sibling.get("context") is Dictionary or not sibling.get("intent") is Dictionary: return false
+				var other: Dictionary = sibling.context
+				if tag_mastery_parent(other, sibling.intent, duty.character_id) != parent \
+					or other.get("encounter_id") != context.encounter_id \
+					or other.get("outcome", {}).get("target_uid") != event.get("target_uid") \
+					or parts.has(other.tag_part) or creatures.has(sibling.intent.creature_uid): return false
+				parts[other.tag_part] = true
+				creatures[sibling.intent.creature_uid] = true
+		elif row.source_id != "mastery:" + str(intent.action_id): return false
 		if event.get("action_id") != intent.action_id or event.get("attacker_uid") != intent.creature_uid \
 			or not ESSENCE._component(event.get("move_id")): return false
 		if event.has("effect_receipt"):
@@ -126,6 +143,28 @@ static func _duty_valid(duty: Dictionary, row: Dictionary) -> bool:
 		if profile.kind == "master" and (context.participants.size() != 1 or context.get("single_creature_duel") != true or not ESSENCE._opaque_id(context.get("creature_uid"))): return false
 	return true
 
+
+## One command journal may retain two distinct creature-owned quick receipts.
+## This validates their existing child identity; it grants no use or damage.
+static func tag_mastery_parent(context: Dictionary, intent: Dictionary, character: String) -> String:
+	if not ESSENCE._opaque_id(context.get("parent_action_id")) \
+		or context.get("tag_part") not in ["outgoing", "incoming"] \
+		or not context.get("binding") is Dictionary or not context.get("outcome") is Dictionary \
+		or context.outcome.has("effect_receipt") or context.binding.get("character_id") != character \
+		or context.binding.get("creature_uid") != intent.get("creature_uid") \
+		or not ESSENCE._component(intent.get("creature_uid")) \
+		or not ESSENCE._integer(context.binding.get("deployment_generation"), 1, 2147483647): return ""
+	var parent: String = context.parent_action_id
+	var fields := parent.rsplit(":", true, 2)
+	if fields.size() != 3 or fields[0] != "command:%s:%s" % [context.get("encounter_id", ""), character] \
+		or not fields[1].is_valid_int() or not fields[2].is_valid_int() \
+		or not ESSENCE._integer(int(fields[1]), 1, 2147483647) \
+		or not ESSENCE._integer(int(fields[2]), 1, 2147483647) \
+		or str(int(fields[1])) != fields[1] or str(int(fields[2])) != fields[2]: return ""
+	var generation := int(fields[1]) + (1 if context.tag_part == "incoming" else 0)
+	if context.binding.deployment_generation != generation \
+		or intent.get("action_id") != JSON.stringify([parent, context.tag_part, intent.creature_uid, generation]).sha256_text(): return ""
+	return parent
 
 ## Additive event shape on the existing retained mastery carrier. These are
 ## effective host status receipts, with no fabricated hostile damage fields.

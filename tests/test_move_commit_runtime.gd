@@ -135,6 +135,50 @@ func test_idle_wind_ticks_each_uid_and_switched_burst_spends_current_creature() 
 	assert_true(_start(3, 2500, "creature_b").ok)
 	assert_almost_eq(host.move_resource_snapshot(id, 1, "creature_b").wind, 61.6, 0.001,
 		"burst and subsequent attack consume the same UID pool")
+	var commands := preload("res://scripts/combat/tether_commands.gd")
+	var previous: Dictionary = commands.config()
+	commands._config = previous.duplicate(true)
+	commands._config.feature_flags.runtime_enabled = true
+	var manager := preload("res://scripts/combat/combat_manager.gd").new()
+	var species := preload("res://scripts/creatures/creature_species.gd")
+	var first := species.spawn("terrapup")
+	var second := species.spawn("terrapup")
+	first.energy = 23.0
+	second.energy = 35.0
+	manager._party = [first, second]
+	manager._party_wind = [70.0, 60.0]
+	manager._party_wind_quiet = [0.0, 0.0]
+	manager._party_ultimate = {str(first.uid):20.0, str(second.uid):30.0}
+	manager._quick_cooldown = 0.8
+	manager._charged_cooldown = 1.4
+	manager._player_poise = 7.0
+	manager._player_poise_quiet_left = 3.0
+	manager._player_stagger_critical_ready = true
+	manager._activate_party_member(1)
+	assert_eq(manager._party_wind, [70.0, 60.0], "switch never refills Wind")
+	manager._quick_cooldown = 0.2
+	manager._charged_cooldown = 0.6
+	manager._player_poise = 9.0
+	manager._player_poise_quiet_left = 4.0
+	manager._input_guard = 10.0
+	manager._tick_active(0.25)
+	var wind_after_tick: Array = manager._party_wind.duplicate()
+	manager._activate_party_member(0)
+	assert_almost_eq(manager._quick_cooldown, 0.55, 0.0001)
+	assert_almost_eq(manager._charged_cooldown, 1.15, 0.0001)
+	assert_eq(manager._player_poise, 7.0, "return restores the actual UID's poise")
+	assert_almost_eq(manager._player_poise_quiet_left, 2.75, 0.0001)
+	assert_true(manager._player_stagger_critical_ready)
+	assert_eq(manager._party_wind, wind_after_tick)
+	assert_eq(manager._party_ultimate, {str(first.uid):20.0, str(second.uid):30.0})
+	assert_eq(first.energy, 23.0)
+	assert_eq(second.energy, 35.0)
+	manager._activate_party_member(1)
+	assert_almost_eq(manager._quick_cooldown, 0.0, 0.0001)
+	assert_almost_eq(manager._charged_cooldown, 0.35, 0.0001)
+	assert_eq(manager._player_poise, 9.0)
+	manager.free()
+	commands._config = previous
 
 
 func test_f33_charm_gain_frozen_in_the_accepted_action_scales_the_meter_once_and_is_capped() -> void:

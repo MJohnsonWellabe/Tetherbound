@@ -225,7 +225,7 @@ func record_tether_tag_outcome(id: String, peer: int, parent: String,
 		strike["landed"] = float(strike.actual_hp_debit) > 0.0
 		strikes.append(strike)
 		if strike.landed:
-			outcomes.append({"binding":original.binding.duplicate(true) if index == 0 else incoming_binding.duplicate(true),
+			outcomes.append({"part":strike.part, "binding":original.binding.duplicate(true) if index == 0 else incoming_binding.duplicate(true),
 				"context":original.moves[index].get("mastery_context", {}).duplicate(true),
 				"outcome":{"action_id":strike.action_id, "move_id":strike.move_id,
 					"attacker_uid":strike.attacker_uid, "target_uid":original.target_uid,

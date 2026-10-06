@@ -1812,25 +1812,55 @@ func foundation_combat_mastery(director: Node, encounter_id: String, peer: Varia
 	if host == null or not host.has_method("move_mastery_outcome"): return {"ok": false, "durable": false}
 	var original: Dictionary = host.call("move_mastery_outcome", encounter_id, peer, action)
 	if original.is_empty(): return {"ok": true, "durable": true, "no_mastery": true}
-	var event: Dictionary = original.get("outcome", {})
-	var binding: Dictionary = original.get("binding", {})
-	var character := str(binding.get("character_id", ""))
 	var world: RefCounted = _game().get("world")
-	if character.is_empty() or event.get("attacker_uid") != binding.get("creature_uid") \
-		or original.get("encounter_id") != encounter_id or original.get("action") != action \
-		or world == null or _altar_current_epoch().is_empty() \
-		or original.get("context", {}).get("world_namespace") != world.reward_delivery_namespace \
-		or original.get("context", {}).get("session_id") != _altar_current_epoch(): return {"ok": false, "durable": false}
-	var context := {"source_key": "combat_mastery:" + str(event.action_id), "event_confirmed": true,
-		"world_namespace": world.reward_delivery_namespace, "session_id": _altar_current_epoch(),
-		"encounter_id": encounter_id, "participants": [character], "binding": binding.duplicate(true),
-		"outcome": event.duplicate(true)}
-	var duties: Array = [{"character_id": character, "action": "combat_mastery",
-		"intent": {"action_id": str(event.action_id), "creature_uid": str(event.attacker_uid)}, "context": context}]
+	if original.get("encounter_id") != encounter_id or original.get("action") != action \
+		or world == null or _altar_current_epoch().is_empty(): return {"ok": false, "durable": false}
+	var outcomes: Array = [original]
+	var parent := str(original.get("outcome", {}).get("action_id", ""))
+	if action < 0:
+		if not original.get("outcomes") is Array or original.outcomes.is_empty() \
+			or original.outcomes.size() > 2: return {"ok": false, "durable": false}
+		outcomes = original.outcomes
+		parent = str(original.get("action_id", ""))
+	if parent.is_empty(): return {"ok": false, "durable": false}
+	var duties: Array = []
+	var child_ids := {}
+	var creatures := {}
+	var owner := ""
+	for source: Variant in outcomes:
+		if not source is Dictionary or not source.get("outcome") is Dictionary \
+			or not source.get("binding") is Dictionary or not source.get("context") is Dictionary:
+			return {"ok": false, "durable": false}
+		var event: Dictionary = source.outcome
+		var binding: Dictionary = source.binding
+		var character := str(binding.get("character_id", ""))
+		var child := str(event.get("action_id", ""))
+		var creature := str(binding.get("creature_uid", ""))
+		if character.is_empty() or creature.is_empty() or event.get("attacker_uid") != creature \
+			or source.context.get("world_namespace") != world.reward_delivery_namespace \
+			or source.context.get("session_id") != _altar_current_epoch() or child.is_empty() \
+			or child_ids.has(child) or (not owner.is_empty() and owner != character) \
+			or (action < 0 and (creatures.has(creature) or child == parent)):
+			return {"ok": false, "durable": false}
+		owner = character
+		child_ids[child] = true
+		creatures[creature] = true
+		var context := {"source_key": "combat_mastery:" + child, "event_confirmed": true,
+			"world_namespace": world.reward_delivery_namespace, "session_id": _altar_current_epoch(),
+			"encounter_id": encounter_id, "participants": [character], "binding": binding.duplicate(true),
+			"outcome": event.duplicate(true)}
+		if action < 0:
+			context["parent_action_id"] = parent
+			context["tag_part"] = source.get("part")
+			if preload("res://scripts/net/foundation_event.gd").tag_mastery_parent(context,
+				{"action_id":child, "creature_uid":creature}, character) != parent:
+				return {"ok": false, "durable": false}
+		duties.append({"character_id": character, "action": "combat_mastery",
+			"intent": {"action_id": child, "creature_uid": creature}, "context": context})
 	var writer := get_node_or_null(^"LedgerRpc")
-	var result: Dictionary = writer.call("journal_foundation_event", "mastery:" + str(event.action_id), duties) if writer != null else {}
+	var result: Dictionary = writer.call("journal_foundation_event", "mastery:" + parent, duties) if writer != null else {}
 	if result.get("ok") == true and result.get("durable") == true:
-		host.call("acknowledge_move_mastery", encounter_id, peer, action, str(event.action_id))
+		host.call("acknowledge_move_mastery", encounter_id, peer, action, parent)
 	return result
 
 

@@ -135,7 +135,11 @@ static func _combat_mastery(current: Dictionary, intent: Dictionary, context: Di
 		or not context.participants.has(current.character_id):
 		return deny("retained_mastery_required")
 	var event: Dictionary = context.outcome
-	var retained := "foundation_event:" + JSON.stringify([context.world_namespace, context.session_id, "mastery:" + str(intent.action_id)]).sha256_text()
+	var source := str(intent.action_id)
+	if context.has("parent_action_id") or context.has("tag_part"):
+		source = preload("res://scripts/net/foundation_event.gd").tag_mastery_parent(context, intent, current.character_id)
+		if source.is_empty(): return deny("retained_mastery_required")
+	var retained := "foundation_event:" + JSON.stringify([context.world_namespace, context.session_id, "mastery:" + source]).sha256_text()
 	if context.get("retained_event") != retained or context.get("source_key") != "combat_mastery:" + str(intent.action_id) \
 		or event.get("action_id") != intent.action_id or event.get("attacker_uid") != intent.creature_uid:
 		return deny("retained_mastery_required")

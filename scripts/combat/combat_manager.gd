@@ -244,6 +244,7 @@ var _party_ultimate: Dictionary = {}
 var _party_hp_scale: Dictionary = {}
 var _party_utility_cooldown: Dictionary = {}
 var _party_utility_movement: Dictionary = {}
+var _party_action_resources: Dictionary = {}
 var _ultimate_waiting_release := false
 var _ultimate_armed_left := 0.0
 var _ultimate_face_release := false
@@ -746,6 +747,7 @@ func begin(
 	_party_hp_scale.clear()
 	_party_utility_cooldown.clear()
 	_party_utility_movement.clear()
+	_party_action_resources.clear()
 	_tether_command_view.clear()
 	_clear_move_input()
 	_reset_player_poise()
@@ -2498,6 +2500,17 @@ func _tick_active(delta: float) -> void:
 		return
 	_quick_cooldown = maxf(0.0, _quick_cooldown - delta)
 	_charged_cooldown = maxf(0.0, _charged_cooldown - delta)
+	if preload("res://scripts/combat/tether_commands.gd").enabled():
+		var active := active_creature()
+		for uid: String in _party_action_resources:
+			if active != null and uid == str(active.get("uid")): continue
+			var resources: Dictionary = _party_action_resources[uid]
+			resources.quick = maxf(0.0, float(resources.quick) - delta)
+			resources.charged = maxf(0.0, float(resources.charged) - delta)
+			resources.quiet = maxf(0.0, float(resources.quiet) - delta)
+			if resources.quiet <= 0.0:
+				resources.poise = minf(float(resources.maximum), float(resources.poise)
+					+ float(_poise_config().get("regen_per_second", 20.0)) * delta)
 	_input_guard = maxf(0.0, _input_guard - delta)
 	_buffer_left = maxf(0.0, _buffer_left - delta)
 	_switch_lockout = maxf(0.0, _switch_lockout - delta)
@@ -5484,6 +5497,12 @@ func request_switch(index: int) -> bool:
 ## already refused this call unless the fight was between actions.
 func _activate_party_member(index: int) -> void:
 	_move_awaiting_host = false
+	var retain := preload("res://scripts/combat/tether_commands.gd").enabled()
+	var outgoing := active_creature()
+	if retain and outgoing != null:
+		_party_action_resources[str(outgoing.get("uid"))] = {"quick":_quick_cooldown, "charged":_charged_cooldown,
+			"poise":_player_poise, "quiet":_player_poise_quiet_left, "maximum":_player_poise_max(),
+			"critical":_player_stagger_critical_ready}
 	var incoming: RefCounted = _party[index]
 	_active_index = index
 
@@ -5500,6 +5519,13 @@ func _activate_party_member(index: int) -> void:
 	_buffer_left = 0.0
 	_burst_awaiting_host = false
 	_reset_player_poise()
+	if retain and _party_action_resources.has(str(incoming.get("uid"))):
+		var resources: Dictionary = _party_action_resources[str(incoming.get("uid"))]
+		_quick_cooldown = float(resources.quick)
+		_charged_cooldown = float(resources.charged)
+		_player_poise = minf(_player_poise_max(), float(resources.poise))
+		_player_poise_quiet_left = float(resources.quiet)
+		_player_stagger_critical_ready = resources.critical == true
 
 
 ## --- readouts for the HUD -------------------------------------------------
