@@ -1,0 +1,74 @@
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+   GDScript backtrace (most recent call first):
+       [0] _build_terrain (res://scripts/world/playground_world.gd:1180)
+       [1] _ready (res://scripts/world/playground_world.gd:806)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+ERROR: the player already has a creature; adopt_starter is not a swap
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] adopt_starter (res://scripts/combat/encounter_director.gd:1807)
+       [1] _hand_a_late_arrival_a_companion (res://scripts/story/sequence_director.gd:1016)
+       [2] _catch_up_a_behind_character (res://scripts/story/sequence_director.gd:987)
+       [3] _process (res://scripts/story/sequence_director.gd:571)
+WARNING: a late arrival could not be given a 'terrapup'
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _hand_a_late_arrival_a_companion (res://scripts/story/sequence_director.gd:1020)
+       [1] _catch_up_a_behind_character (res://scripts/story/sequence_director.gd:987)
+       [2] _process (res://scripts/story/sequence_director.gd:571)

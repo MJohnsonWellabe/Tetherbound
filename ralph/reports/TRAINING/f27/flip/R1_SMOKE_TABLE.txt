@@ -38,11 +38,11 @@ F27 net essence_no_dup | ON OPEN
 CI SMOKE names from unchanged .github/workflows/ci.yml; ON verdicts recorded below; all other checks OPEN.
 aggression | ON FIRST PASS, exit0; peaceful900frame negative control and aggressive real fight/Run exit; isolated owned-starter fixtures; independent review PASS
 arena_contain | ON FIRST PASS, exit0; two rooms hold/clamp and old-radius controls reproduce leak; Warden22 staging assertions; inherited fixtures/forced trainer cleanup; independent review PASS
-art | ON OPEN
+art | ON FIRST PASS, exit0; species model paths/instantiated body bounds/materials/clip availability/CommonTree_1 LOD mechanical checks; direct asset fixtures; independent review PASS/no visual-quality claim
 audio | ON FIRST PASS exit0; realworld footsteps/combatmixer/bandambience; devicehearing nottested; rawreceipts retained
-authored_camps | ON OPEN
+authored_camps | ON FIRST PASS, exit0; six camp nodes/indices/prompts and arbiter-activated trail-camp overnight creature recovery; staged creature/pose/legacy hunger fixture; independent review PASS
 backpack_player_eats | ON FIRST PASS exit0; physicalSatchel eaterpicker/playerrow/satiety40->58/berries5->4/buff; existingstand-inPlayer/grants
-boss | ON OPEN
+boss | ON FIRST functional PASS, exit0; Warden5creatures/959frames/finale/offer/road/full-party ceremony OPENING; inherited HP/party/relocation fixtures; duplicate-starter ERROR identical to OFF trainer diagnostic; independent functional review PASS
 bramblebun_colourway_binding | ON OPEN
 build_owns_creature_cycle | ON OPEN
 build_two_creature_beds | ON OPEN

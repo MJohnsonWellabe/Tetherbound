@@ -283,3 +283,17 @@ bff236fc9b4c78e686c68ea7ef51773a39e03c4a9176f5c45f7675d1ad42699f  ci-arena-conta
 9686dc34161f47cbda7f3eb5d514f21b7f48dc78260e736a8247d7dbdf842fa2  ci-arena-contain-on/stderr.txt
 1eeefbc64f4d331b415125080abbf4a7366ea7e77bc53c486e12dfa2e9f8cca0  ci-arena-contain-on/r1-ci-arena-contain-on-20261006T0624Z.txt
 5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  ci-arena-contain-on/exit.txt
+ca9ff7d998c32228fb42e3188f63d2c0638f28aa475c084b8913b798f4e4dc6b  ci-art-on/stdout.txt
+9686dc34161f47cbda7f3eb5d514f21b7f48dc78260e736a8247d7dbdf842fa2  ci-art-on/stderr.txt
+5f86d5b94154296fa193577f8cf60643a975fb027012d38f7cdb0adec9fd6e92  ci-art-on/r1-ci-art-on-20261006T0634Z.txt
+5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  ci-art-on/exit.txt
+00c164620057c79afd5f7dc245b309f52b2eb77d40791003e93e5e32052ce612  ci-authored-camps-on/stdout.txt
+9686dc34161f47cbda7f3eb5d514f21b7f48dc78260e736a8247d7dbdf842fa2  ci-authored-camps-on/stderr.txt
+2a1ae3d6e67498bbefd355fd0917c3e8b31f9897685760af1a34e291efb53887  ci-authored-camps-on/r1-ci-authored-camps-on-20261006T0638Z.txt
+5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  ci-authored-camps-on/exit.txt
+8a0da3289ddf7f3e1b80d03378254f6616c04e0eb278ed5f85d0e0bd482c97f3  ci-authored-camps-on/rested-character.json.txt
+b4b94fbe4a90546f56d4bee9a925e7ef1c96fd5fb9dd2d73218872f777d86f72  ci-authored-camps-on/rested-world.json.txt
+51ed7b4e4cd0162efbee1bb7d1fa251a11c0144933141af2ead84771166f50d8  ci-boss-on/stdout.txt
+776d21dfc1b241cd4fdbbf7d39e13e558b1e0d2bcba8fa885b0826cc3475c52b  ci-boss-on/stderr.txt
+12f3c430a15f1daacf6ede55da68fc3090df40eec082c9e28454dba433487608  ci-boss-on/r1-ci-boss-on-20261006T0641Z.txt
+5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  ci-boss-on/exit.txt
