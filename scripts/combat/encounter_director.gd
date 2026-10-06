@@ -3875,6 +3875,10 @@ func _host_fight_disposal_pending(id: String) -> bool:
 
 
 func _ordinary_deployment_pending(peer: int, next_uid: String) -> bool:
+	var alpha := get_parent().get_node_or_null("WaterAlpha") if get_parent() != null else null
+	if alpha != null and alpha != self and alpha.get_script() != null \
+		and alpha.get_script().resource_path == "res://scripts/combat/water_alpha.gd" \
+		and alpha.call("_ordinary_deployment_pending", peer, next_uid) == true: return true
 	if _encounter_host == null: return false
 	for id: String in _encounter_host.get("encounters"):
 		if not ordinary_actor_vitals_pending(id): continue
@@ -3890,6 +3894,10 @@ func _ordinary_deployment_pending(peer: int, next_uid: String) -> bool:
 
 
 func _ordinary_bind_deployed_peer(peer: int) -> void:
+	var alpha := get_parent().get_node_or_null("WaterAlpha") if get_parent() != null else null
+	if alpha != null and alpha != self and alpha.get_script() != null \
+		and alpha.get_script().resource_path == "res://scripts/combat/water_alpha.gd":
+		alpha.call("_ordinary_bind_deployed_peer", peer)
 	if _encounter_host == null: return
 	for id: String in _encounter_host.get("encounters"):
 		if not uses_saved_actor_vitals(id) or ordinary_actor_vitals_pending(id): continue
