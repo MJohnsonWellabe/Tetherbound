@@ -179,6 +179,13 @@ func _on_visibility_changed() -> void:
 		_collision.set_deferred("disabled", not visible)
 
 
+func setup(id: String, is_shiny: bool = false) -> void:
+	# A host-authorized switch keeps this node but starts a new creature sample.
+	# Comparing two owned creatures' HP would invent damage or level feedback.
+	_sampled.clear()
+	super.setup(id, is_shiny)
+
+
 ## Never the local player's own piloted creature: that is always the
 ## `follower_creature.gd` body the encounter director stands up. Read by
 ## `playground_hud.gd` to pick its own creature out of the deployed group
@@ -305,7 +312,12 @@ func _on_local_combat_exited(outcome: String) -> void:
 ## is host truth that has already landed; nothing is decided here and nothing is
 ## rolled here.
 func _publish_presentation() -> void:
-	var after: Dictionary = PRESENTATION.sample(_local_creature_instance())
+	var creature: Variant = _local_creature_instance()
+	var announced := str(get_meta(&"creature_uid", ""))
+	if not announced.is_empty() and (creature == null or str(creature.get("uid")) != announced):
+		_sampled.clear()
+		return
+	var after: Dictionary = PRESENTATION.sample(creature)
 	var before := _sampled
 	_sampled = after
 	for raw: Variant in PRESENTATION.diff(before, after):

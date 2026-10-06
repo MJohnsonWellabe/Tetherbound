@@ -2003,6 +2003,26 @@ func _announce_recall() -> void:
 @rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
 func _rpc_creature_deployed(row: Dictionary) -> void:
 	if not _is_host():
+		# Only the host may recast an existing replicated body. The owner still
+		# applies its command verdict before announcing its own live identity.
+		if multiplayer.get_remote_sender_id() != 1: return
+		var peer := int(row.get("peer_id", 0))
+		var generation := int(row.get("generation", 0))
+		if peer <= 0 or generation <= 0 or str(row.get("creature_uid", "")).is_empty() \
+			or str(row.get("character_id", "")).is_empty() or not SPECIES.has(str(row.get("species_id", ""))): return
+		var previous: Dictionary = _deployed_by.get(peer, {})
+		if generation <= int(previous.get("generation", 0)): return
+		var proxy := _creature_proxies.get(peer) as Node3D
+		if is_instance_valid(proxy) and proxy.get("owner_character_id") != row.character_id: return
+		_deployed_by[peer] = row.duplicate(true)
+		if peer != _local_peer_id():
+			_deployment_identity[peer] = {"character_id": row.character_id,
+				"creature_uid": row.creature_uid, "generation": generation}
+		if is_instance_valid(proxy):
+			proxy.set_meta(&"creature_uid", str(row.creature_uid))
+			proxy.set("deploy_species", str(row.species_id))
+			proxy.set("deploy_shiny", bool(row.get("shiny", false)))
+			proxy.call("setup", str(row.species_id), bool(row.get("shiny", false)))
 		return
 	_host_set_deployed(multiplayer.get_remote_sender_id(), row)
 
@@ -2032,7 +2052,25 @@ func _host_set_deployed(peer_id: int, row: Dictionary) -> void:
 			return
 	var previous: Dictionary = _deployed_by.get(peer_id, {}) as Dictionary
 	_note_deployment_identity(peer_id, character_id, creature_uid)
+	row["peer_id"] = peer_id
+	row["generation"] = int(_deployment_identity[peer_id].generation)
 	_deployed_by[peer_id] = row.duplicate(true)
+	# Switching reuses the canonical physical lifetime, including between
+	# species. Retiring the proxy would invalidate the just-accepted Tag parent.
+	var proxy := _creature_proxies.get(peer_id) as Node3D
+	if not previous.is_empty() and is_instance_valid(proxy) \
+		and previous.get("character_id") == character_id \
+		and (previous.get("creature_uid") != creature_uid or previous.get("species_id") != row.get("species_id") \
+			or bool(previous.get("shiny", false)) != bool(row.get("shiny", false))):
+		proxy.set_meta(&"creature_uid", creature_uid)
+		proxy.set("deploy_species", str(row.get("species_id", "")))
+		proxy.set("deploy_shiny", bool(row.get("shiny", false)))
+		proxy.call("setup", str(row.get("species_id", "")), bool(row.get("shiny", false)))
+		_ordinary_bind_deployed_peer(peer_id)
+		for viewer: int in _session_peer_ids():
+			if viewer != _local_peer_id() and _realm_rpc_allowed(viewer):
+				_send_realm_rpc(viewer, "_rpc_creature_deployed", [row])
+		return
 	# A relic swap changes only the card. Preserve the already-replicated body;
 	# despawning it here would make activating Livewire flash the companion out
 	# of the world even though its species and owner did not change.
@@ -2183,6 +2221,13 @@ func _proxy_spawn_position(peer_id: int) -> Vector3:
 func _spawn_deployed_creature(data: Variant) -> Node:
 	var d: Dictionary = data if data is Dictionary else {}
 	var peer_id := int(d.get("peer_id", 0))
+	# The reliable host recast can precede this spawner callback. Reuse the
+	# existing deployment slot so a late spawn cannot restore the old species.
+	var retained: Dictionary = _deployed_by.get(peer_id, {})
+	if retained.get("character_id") == d.get("character_id") and int(retained.get("generation", 0)) > 0:
+		d = d.duplicate(true)
+		for field: String in ["species_id", "shiny", "creature_uid", "generation"]:
+			if retained.has(field): d[field] = retained[field]
 	var node := CREATURE_SCENE.instantiate()
 	node.set_script(REMOTE_CREATURE_SCRIPT)
 	# One name per owner, a pure function of the peer id, so the same node has
@@ -2195,6 +2240,7 @@ func _spawn_deployed_creature(data: Variant) -> Node:
 	# `_spawn_ally_body()` uses on the local body.
 	node.set("deploy_species", str(d.get("species_id", "")))
 	node.set("deploy_shiny", bool(d.get("shiny", false)))
+	if not str(d.get("creature_uid", "")).is_empty(): node.set_meta(&"creature_uid", str(d.creature_uid))
 	var at: Variant = d.get("at", [])
 	if at is Array and (at as Array).size() == 3:
 		var a: Array = at
@@ -2219,6 +2265,11 @@ func _spawn_deployed_creature(data: Variant) -> Node:
 	var transition := REPLICATION_SCOPE.coordinator(self)
 	if transition != null:
 		transition.call("track_origin_body", origin, node)
+	_creature_proxies[peer_id] = node
+	node.tree_exited.connect(func() -> void:
+		if _creature_proxies.get(peer_id) == node:
+			_creature_proxies.erase(peer_id)
+			if not _is_host(): _deployed_by.erase(peer_id), CONNECT_ONE_SHOT)
 	print("[creatures] built %s for peer %d, authority %d (this peer is %d)"
 		% [node.name, peer_id, node.get_multiplayer_authority(), multiplayer.get_unique_id()])
 	return node
