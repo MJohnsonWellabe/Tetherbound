@@ -16,7 +16,8 @@ extends "res://tests/helpers/net_harness.gd"
 ##   * the guest's bar shows max x the HOST's s, at the stored HP fraction,
 ##     after the guest dropped the Harness from its own record (so only the
 ##     host's s can explain it);
-##   * the guest's stored HP fell by the rolled hit (its own hit_landed) / s;
+##   * the guest's stored HP fell by the rolled hits (its own hit_landed,
+##     summed since the "before" read) / s;
 ##   * the guest's saved party row holds the base maximum, mid-fight and after.
 ## DISCLOSED FIXTURES (peer side: tests/helpers/harness_hp_net_peer.gd): gear
 ## written into the guest's own record before join; the host's swing placed
@@ -110,8 +111,11 @@ func _run() -> void:
 	check(absf(float(after.get("shown_hp", 0.0)) / maxf(0.001, float(after.get("shown_max", 1.0)))
 		- float(after.get("hp", 0.0)) / maxf(0.001, float(after.get("max_hp", 1.0)))) < 0.0001,
 		"the bar shows the stored HP fraction")
-	check(rolled > 0.0 and absf(stored_loss - rolled / host_s) < 0.01,
-		"stored HP fell by the rolled hit / the host's s (%.2f = %.2f / %.4f)" % [stored_loss, rolled, host_s])
+	# Every host-rolled hit since the "before" read counts: the live wild can
+	# land its own strike in this window, and each hit must still divide by s.
+	var rolled_total := float(after.get("incoming_total", -1.0)) - float(before.get("incoming_total", 0.0))
+	check(rolled > 0.0 and absf(stored_loss - rolled_total / host_s) < 0.01,
+		"stored HP fell by the rolled hits / the host's s (%.2f = %.2f / %.4f; last hit %.2f)" % [stored_loss, rolled_total, host_s, rolled])
 	check(absf(float(after.get("saved_max", 0.0)) - float(after.get("max_hp", -1.0))) < 0.0001
 		and float(after.get("saved_max", 0.0)) < float(after.get("shown_max", 0.0)),
 		"mid-fight the guest's saved party row holds the base maximum (%.2f)" % float(after.get("saved_max", 0.0)))

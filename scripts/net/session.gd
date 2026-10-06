@@ -592,6 +592,7 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 		if resources != null: context = resources.call("host_context", peer, envelope.station_key, envelope.intent)
 	elif envelope.op == "groom": context = _foundation_groom_context(peer, envelope.station_key)
 	elif envelope.op == "camp_build": context = _foundation_build_context(peer, envelope.intent)
+	elif envelope.op == "starter_choice": context = _foundation_starter_context(peer)
 	else: context = _foundation_source(peer, envelope.station_key, part)
 	if envelope.op == "wild_capture": context = _foundation_capture_context(peer, envelope.station_key)
 	if envelope.op == "relic_hang": context = _foundation_relic_context(peer, str(envelope.intent.get("biome", "")))
@@ -671,6 +672,7 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 	if _character_authority.call("finish_creature_training", stage, saved) != true: return FOUNDATION_ACTIONS.deny("stage_changed")
 	if not saved: return _foundation_journal_refusal(envelope.op, journal)
 	writer.call("publish_creature_training", peer, character, accepted.receipt)
+	if envelope.op == "starter_choice": _character_authority.call("record_personal_flag", character, STARTER_CHOICE.FLAG, true)
 	return _foundation_decision(peer, world.reward_deliveries.get(journal.delivery_id, {}))
 
 func _foundation_journal_refusal(action: String, journal: Dictionary) -> Dictionary:
@@ -4907,7 +4909,7 @@ func _retain_owner_training_retry(player: RefCounted, world: RefCounted, row: Di
 		"delivery_id": row.delivery_id, "journal_revision": row.journal_revision, "receipt": row.receipt,
 		"saved": _owner_training_retry.get("saved", false), "release_instance": released}
 	if capture_originals is Array: _owner_training_retry.capture_originals = capture_originals
-	if row.get("action") == "wild_capture" and not _owner_training_retry.has("capture_originals"):
+	if row.get("action") in ["wild_capture", "starter_choice"] and not _owner_training_retry.has("capture_originals"):
 		var originals: Array = []
 		for member: RefCounted in player.get("party").call("members"): originals.append(weakref(member))
 		_owner_training_retry.capture_originals = originals
@@ -6187,20 +6189,40 @@ static func _weak_capture_roster_allowed(members: Array, rollback: bool, owner: 
 func _capture_roster_allowed(members: Array, rollback: bool, player: RefCounted) -> bool:
 	var row := _owner_training_row()
 	if not _owner_training_install or rollback != _owner_training_install_rollback or row.get("version") != 3 \
-		or row.get("action") != "wild_capture" or row.get("status") != "pending" or _owner_training_retry.is_empty() \
+		or row.get("action") not in ["wild_capture", "starter_choice"] or row.get("status") != "pending" or _owner_training_retry.is_empty() \
 		or _owner_training_retry.player.get_ref() != player or _owner_training_retry.receipt != row.receipt: return false
+	# F01#6a: an original starter is admitted only onto the empty roster.
+	if row.action == "starter_choice" and not (row.before.party as Array).is_empty(): return false
 	var expected: Array = (row.before if rollback else row.after).party
 	var originals: Array = _owner_training_retry.get("capture_originals", [])
 	if members.size() != expected.size() or members.size() > 5 or originals.size() != row.before.party.size(): return false
 	for index: int in members.size():
 		var member: Variant = members[index]
-		if not member is RefCounted or preload("res://scripts/save/water_capture_codec.gd").encode(member, (row.before if rollback else row.after).redesign_character) != expected[index]: return false
+		if not member is RefCounted: return false
+		# Compare the same portable projection the row was staged from: it
+		# carries no in-fight energy meter (character_record_rules), and passive
+		# care keeps accruing between the host's stage and this install (the
+		# owner apply keeps it: ESSENCE.merge_owner_passive). Identity, stats
+		# and loadout stay exact.
+		var live_card: Dictionary = preload("res://scripts/save/water_capture_codec.gd").encode(member, (row.before if rollback else row.after).redesign_character)
+		var expected_card: Dictionary = expected[index].duplicate(true)
+		live_card.erase("energy")
+		expected_card.erase("energy") # A newcomer's staged card is the raw capture card.
+		if not ESSENCE.owner_matches_after({"party": [live_card]}, {"party": [expected_card]}): return false
 		var old_index := -1
 		for old: int in row.before.party.size():
 			if row.before.party[old].uid == expected[index].uid: old_index = old
 		if old_index >= 0 and originals[old_index].get_ref() != member: return false
-		if old_index < 0 and (rollback or expected[index].uid != row.host_context.creature.uid): return false
+		if old_index < 0 and (rollback or expected[index].uid != _capture_newcomer_uid(row)): return false
 	return true
+
+
+## The one creature a roster install may add: a capture's offered card, or
+## (F01#6a) the original starter the guest asked the host to stage.
+func _capture_newcomer_uid(row: Dictionary) -> String:
+	if row.get("action") == "starter_choice":
+		return str(row.get("intent", {}).get("creature", {}).get("uid", ""))
+	return str(row.get("host_context", {}).get("creature", {}).get("uid", ""))
 
 func _foundation_capture_context(peer: int, key: String) -> Dictionary:
 	if preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true \
@@ -6223,6 +6245,34 @@ func _foundation_capture_context(peer: int, key: String) -> Dictionary:
 			return context
 	return {}
 
+
+## F01#6a. A guest's original starter enters this host's admitted record only
+## through the staged `starter_choice` action (scripts/net/starter_choice_action.gd),
+## never from the guest's own write. The host context comes from the host's own
+## config and registry; `game_state.gd::_original_starter_admitted()` asks.
+const STARTER_CHOICE := preload("res://scripts/net/starter_choice_action.gd")
+
+func _foundation_starter_context(peer: int) -> Dictionary:
+	if not is_host() or peer == local_peer_id() or admitted_character_state(peer).is_empty() or _altar_peer_in_combat(peer): return {}
+	if config().get("redesign_ending_runtime_enabled") != true and not portal_runtime_ready(): return {}
+	var character := _authority_character(peer)
+	if character.is_empty(): return {}
+	var species: Variant = preload("res://scripts/story/opening_beats.gd").config().get("starters", {}).get("species", [])
+	if not species is Array or species.is_empty(): return {}
+	return STARTER_CHOICE.host_context(character, int(_character_authority.call("revision", character)),
+		species, int(PROGRESSION.config().get("level", {}).get("starter_level", 3)))
+
+## Guest only. Re-asked by the opening director until the row reads accepted;
+## the host answers an identical request from its existing row. The revision is
+## the host registry's, read from the personal view this also refreshes.
+func request_original_starter(card: Dictionary) -> Dictionary:
+	if is_host() or not is_active() or card.is_empty(): return FOUNDATION_ACTIONS.deny("authority_missing")
+	var character := _local_character_id()
+	var view := _foundation_personal_cache
+	_foundation_send("personal_view", "homestead_view", {}, -1)
+	if view.get("character_id") != character or not ESSENCE._integer(view.get("registry_revision"), 0, 2147483646):
+		return {"ok": false, "resolved": false, "code": "awaiting_personal_view"}
+	return _foundation_send("starter_choice", STARTER_CHOICE.source_key(character), STARTER_CHOICE.intent(card), int(view.registry_revision))
 
 const OPENING_HOME_KEY := preload("res://scripts/net/opening_home_key.gd")
 
