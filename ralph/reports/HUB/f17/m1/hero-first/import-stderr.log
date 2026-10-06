@@ -1,0 +1,10 @@
+ERROR: Couldn't open MTL file 'res://assets_raw/crossing_hall_shrine_pedestal/textured/model.mtl', it may not exist or not be readable.
+   at: _parse_material_library (editor/import/3d/resource_importer_obj.cpp:44)
+ERROR: Couldn't open MTL file 'res://assets_raw/crossing_hall_creature_nest/a/temp.mtl', it may not exist or not be readable.
+   at: _parse_material_library (editor/import/3d/resource_importer_obj.cpp:44)
+ERROR: Couldn't open MTL file 'res://assets_raw/crossing_hall_shrine_pedestal/a/temp.mtl', it may not exist or not be readable.
+   at: _parse_material_library (editor/import/3d/resource_importer_obj.cpp:44)
+ERROR: Couldn't open MTL file 'res://assets_raw/crossing_hall_portal_arch/a/temp.mtl', it may not exist or not be readable.
+   at: _parse_material_library (editor/import/3d/resource_importer_obj.cpp:44)
+ERROR: Couldn't open MTL file 'res://assets_raw/crossing_hall_portal_arch/textured/model.mtl', it may not exist or not be readable.
+   at: _parse_material_library (editor/import/3d/resource_importer_obj.cpp:44)
