@@ -1327,6 +1327,10 @@ jobs:
             echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
           done
           exit 1
+      # F42. Actual system Controls and physical controller back, no world.
+      - name: Verify f42_system_screen
+        if: ${{ !cancelled() }}
+        run: godot --headless --path . --script tests/smoke_f42_system_screen.gd
       # HIST-013. Mounts combat_hud.tscn only, no fight and no world.
       - name: Verify combat_hud_left_column
         if: ${{ !cancelled() }}
