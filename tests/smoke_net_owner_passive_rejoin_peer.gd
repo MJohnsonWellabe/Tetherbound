@@ -186,8 +186,9 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 				return {"verdict":"FAIL", "detail":"accepted hits did not earn Item meter"}
 			var hud: Node = director.get_parent().get_node_or_null("CombatHUD")
 			var view: Dictionary = manager.new_system_combat_snapshot()
+			var active: RefCounted = manager.active_creature()
 			if hud == null or not is_instance_valid(hud.get("_system_overlay")) \
-				or view.get("active") != true or view.get("creature_uid") != str(director.ally_body().instance.uid) \
+				or active == null or view.get("active") != true or view.get("creature_uid") != str(active.get("uid")) \
 				or float(view.get("ultimate_meter", 0.0)) <= 0.0 \
 				or view.get("commands", {}).get("meter") != manager.tether_command_snapshot().get("meter"):
 				return {"verdict":"FAIL", "detail":"actual mounted HUD lacks the current acknowledged creature/command view: "+str(view)}
