@@ -1,0 +1,10 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=8280 control_port=62467 home=D:\tetherbound\.artifacts\r1-f27-flip\net-f27-guest-wild-on/home-0 log=D:\tetherbound\.artifacts\r1-f27-flip\net-f27-guest-wild-on/peer-0.log
+coordinator: launched peer 1 (client) pid=20644 control_port=62468 home=D:\tetherbound\.artifacts\r1-f27-flip\net-f27-guest-wild-on/home-1 log=D:\tetherbound\.artifacts\r1-f27-flip\net-f27-guest-wild-on/peer-1.log
+coordinator: peer 0 hello: {"enet_port":31161.0,"godot_version":"4.7-stable (official)","main_sha":"ca1be8f68e46","peer":0.0,"pid":8280.0,"role":"host","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-f27-guest-wild-on/home-0/Godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":31162.0,"godot_version":"4.7-stable (official)","main_sha":"ca1be8f68e46","peer":1.0,"pid":20644.0,"role":"client","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-f27-guest-wild-on/home-1/Godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+coordinator: ERROR: peer silent (peer 0, no heartbeat for >150 s)
+FAIL: peer 0 boot: ERROR: peer silent (peer 0, no heartbeat for >150 s)
+FAIL: ERROR: peer silent (peer 0, no heartbeat for >150 s)

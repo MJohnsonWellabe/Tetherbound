@@ -1,0 +1,9 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+peer[0/host]: starting scene=world control_port=63621 enet_port=33521 xdg_data_home=D:\tetherbound\.artifacts\r1-f27-flip\net-tournament-on-retry/home-0 user_data_dir=D:/tetherbound/.artifacts/r1-f27-flip/net-tournament-on-retry/home-0/Godot/app_userdata/Tetherbound
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+   GDScript backtrace (most recent call first):
+       [0] _build_terrain (res://scripts/world/playground_world.gd:1180)
+       [1] _ready (res://scripts/world/playground_world.gd:806)
+[playground] spawned at 0.0, 2.9, 0.0

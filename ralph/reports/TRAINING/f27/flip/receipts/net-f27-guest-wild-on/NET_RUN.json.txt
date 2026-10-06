@@ -1,0 +1,118 @@
+{
+	"budgets": {
+		"desync_frames": 240.0,
+		"heartbeat_frames": 60.0,
+		"hello_budget_s": 180.0,
+		"near_tolerance_motion_m": 4.0,
+		"near_tolerance_rest_m": 1.5,
+		"smoke_step_budget_s_2peer": 300.0,
+		"smoke_step_budget_s_wide": 1500.0,
+		"step_budget_frames": 3000.0
+	},
+	"failures": [
+		"peer 0 boot: ERROR: peer silent (peer 0, no heartbeat for >150 s)"
+	],
+	"fatal": "ERROR: peer silent (peer 0, no heartbeat for >150 s)",
+	"net_conditions": {},
+	"peers": [
+		{
+			"command_timeout_observation": null,
+			"control_port": 62467,
+			"exited": false,
+			"hashes": [
+				648403070,
+				648403070,
+				648403070
+			],
+			"hello": {
+				"enet_port": 31161.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "ca1be8f68e46",
+				"peer": 0.0,
+				"pid": 8280.0,
+				"role": "host",
+				"type": "hello",
+				"user_data_dir": "D:/tetherbound/.artifacts/r1-f27-flip/net-f27-guest-wild-on/home-0/Godot/app_userdata/Tetherbound"
+			},
+			"index": 0,
+			"last_heartbeat": {
+				"context": "locked",
+				"frame": 698.0,
+				"physics_frame": 86.0,
+				"pos": [
+					0.0,
+					40.0,
+					0.0
+				],
+				"session_peers": [],
+				"state_hash": 648403070.0,
+				"t": 98.359,
+				"type": "heartbeat"
+			},
+			"pid": 8280,
+			"role": "host",
+			"unexpected_exit": false
+		},
+		{
+			"command_timeout_observation": null,
+			"control_port": 62468,
+			"exited": false,
+			"hashes": [
+				648403070,
+				648403070,
+				648403070
+			],
+			"hello": {
+				"enet_port": 31162.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "ca1be8f68e46",
+				"peer": 1.0,
+				"pid": 20644.0,
+				"role": "client",
+				"type": "hello",
+				"user_data_dir": "D:/tetherbound/.artifacts/r1-f27-flip/net-f27-guest-wild-on/home-1/Godot/app_userdata/Tetherbound"
+			},
+			"index": 1,
+			"last_heartbeat": {
+				"context": "title",
+				"frame": 32248.0,
+				"physics_frame": 13380.0,
+				"pos": null,
+				"session_peers": [],
+				"state_hash": 648403070.0,
+				"t": 249.785,
+				"type": "heartbeat"
+			},
+			"pid": 20644,
+			"role": "client",
+			"unexpected_exit": false
+		}
+	],
+	"proxies": [],
+	"run_id": "r1-f27-guest-wild-on-20261006T0327Z",
+	"scene": "title",
+	"state_hash_excluded_keys": [
+		"party",
+		"inventory",
+		"hotbar",
+		"satiety",
+		"map",
+		"realm_maps",
+		"alpha_pins",
+		"player_pose",
+		"clock_elapsed_seconds",
+		"current_realm",
+		"pending_realm_entry",
+		"realm_hearts",
+		"version"
+	],
+	"state_hash_hashed_keys": [
+		"flags",
+		"placed_buildings",
+		"farm_plots",
+		"death_satchels",
+		"harvested_vegetation",
+		"felled_vegetation",
+		"day"
+	]
+}

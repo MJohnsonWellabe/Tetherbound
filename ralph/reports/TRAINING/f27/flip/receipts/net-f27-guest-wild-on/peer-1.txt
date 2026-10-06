@@ -1,0 +1,3 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+peer[1/client]: starting scene=title control_port=62468 enet_port=31162 xdg_data_home=D:\tetherbound\.artifacts\r1-f27-flip\net-f27-guest-wild-on/home-1 user_data_dir=D:/tetherbound/.artifacts/r1-f27-flip/net-f27-guest-wild-on/home-1/Godot/app_userdata/Tetherbound

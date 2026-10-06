@@ -14,7 +14,7 @@ client_trainer_rewards | OPEN | OPEN
 cloudreach_riding | OPEN | OPEN
 deploy_two_creatures | OPEN | OPEN (unowned exception)
 f22_forced_break | OPEN | OPEN
-f27_guest_wild_win | OPEN | N/A: manual flag-ON authority proof
+f27_guest_wild_win | FIRST FAIL startup exit2 host boot silent150sec; both titlehellos PASS, no combat. Retry OPEN | N/A: manual flag-ON authority proof
 fly | OPEN | OPEN
 gate_opens_for_both | OPEN | OPEN
 hearts | OPEN | OPEN
@@ -93,3 +93,4 @@ warrens | ON OPEN
 wild_streaming | ON OPEN
 Tournament ON FIRST | FAIL exit1: quarter durable rewards PASS; semi both first strikes PASS, team completion command no verdict at unchanged 95000ms. Diagnosis OPEN. receipts/net-tournament-on-first
 Round identity repair93487a4e58 focused six-file coverage | OFF PASS union100tests/1318assertions/exit0 + ON PASS100/1318/exit0; all stderr empty. Full predecessor suite source374601 retained separately; fixed tournament live proof OPEN.
+Tournament fixed-source ON RETRY | FAIL startup exit2 hello180sec, no combat; receipts/net-tournament-on-retry. Repaired completion acceptance remains OPEN.

@@ -88,3 +88,17 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  unit-round-rel
 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  unit-round-number-on/stderr.txt
 6041511d51a3cc97f3efd6addefc90ddfc07bd0a3daa9ce6f3b43e697894d9b3  unit-round-number-on/stdout.txt
 59c8d8c4daaea5ff23f3bb71568046181f6cd76f361996bbab7135c00537aecd  net-tournament-on-first/host-world-save.json.txt
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  net-tournament-on-retry/coordinator.stderr.txt
+f73aebe5a04255b0591c418bcc5ad803ad06581d3650e11fe041813ba227f252  net-tournament-on-retry/coordinator.stdout.txt
+d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35  net-tournament-on-retry/exit.txt
+7c508b807de5d9b6e67cdbb61f593bdae4810b933fb6a7ed546a8f9dadf9099d  net-tournament-on-retry/NET_RUN.json.txt
+7bd6c5ade8a713aa62c2ab577e0d118d3efed9703fee3abe1f942ceac1ed328e  net-tournament-on-retry/peer-0.txt
+72c95d72d3db3cbafd1b2f539cb0659a9d0f78af53fdb2f344f701baafb58d05  net-tournament-on-retry/peer-1.txt
+75d48099ad9585a3905f2e897bdc85a067c1599d3160f6169334e38bf84bb0c8  net-tournament-on-retry/SUMMARY.md.txt
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  net-f27-guest-wild-on/coordinator.stderr.txt
+6effcdc536e54d7c9cf17295071c1afc17d5e9aa8c8ef4d55a53b6009ce4ce4e  net-f27-guest-wild-on/coordinator.stdout.txt
+d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35  net-f27-guest-wild-on/exit.txt
+181c688dcdfc46f82dce9ea8cdb0a17c34fc4915e25eaa437cdb062c334ac9b9  net-f27-guest-wild-on/NET_RUN.json.txt
+c01a43390e0053df841d53e7fc73b4a6a5abc2822b5cc60e4d5a79dd58fb872a  net-f27-guest-wild-on/peer-0.txt
+f2dbec2638129433af9df0ee3612e8739f9b9b8d8b356284769be522ceb435e6  net-f27-guest-wild-on/peer-1.txt
+351a435e2b6a2656274212d57fdb8d7a2663298106b1a9baf325ff5f9f014b40  net-f27-guest-wild-on/SUMMARY.md.txt
