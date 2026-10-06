@@ -417,7 +417,7 @@ func _rpc_foundation_action(envelope: Dictionary) -> void:
 	# same reliable channel; judge that sample's freshness at its own arrival,
 	# not a slow host frame later or after this handler's save/admission work.
 	var lifecycle := get_node_or_null(^"FoundationComposition/TravelLifecycle")
-	_foundation_request_arrived_at = int(lifecycle.call("take_paired_arrival", peer, Time.get_ticks_msec())) if lifecycle != null else Time.get_ticks_msec()
+	_foundation_request_arrived_at = int(lifecycle.call("take_paired_arrival", peer, Time.get_ticks_msec())) if lifecycle != null and lifecycle.has_method("take_paired_arrival") else Time.get_ticks_msec()
 	var result := _foundation_handle(peer, envelope)
 	_foundation_request_arrived_at = -1
 	if envelope.get("op") == "regional_ack" and result.get("ok") != true and _regional_ack_refusal_new(peer, result):
