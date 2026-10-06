@@ -439,6 +439,53 @@ func test_tag_parent_retains_two_frozen_quicks_and_rejects_stale_or_duplicate_ar
 			assert_ne(pending.outcomes[0].outcome.action_id, pending.outcomes[1].outcome.action_id)
 			assert_eq(pending.outcomes[0].binding, fixture.binding)
 			assert_eq(pending.outcomes[1].binding, incoming_binding)
+			assert_eq(pending.outcomes[0].part, "outgoing")
+			assert_eq(pending.outcomes[1].part, "incoming")
+			for defect: String in ["none", "owner", "parent", "incoming", "generation", "request", "part"]:
+				var manager := MANAGER.new()
+				var director := preload("res://scripts/combat/encounter_director.gd").new()
+				var species := preload("res://scripts/creatures/creature_species.gd")
+				var a := species.spawn("terrapup")
+				var b := species.spawn("terrapup")
+				a.uid = "owned-a"
+				b.uid = "owned-b"
+				var body := preload("res://tests/test_director_projectile_deployment_binding.gd").BodyFixture.new()
+				manager._party = [a, b] as Array[RefCounted]
+				manager._ally_body = body
+				manager._encounter_id = tag_id
+				manager._encounter_link = director
+				manager._tether_command_view = actual_before.duplicate(true)
+				manager._tether_command_view.pending_request = request.duplicate(true)
+				director._deployment_identity[1] = {"character_id":"character-a", "creature_uid":"owned-a", "generation":1}
+				var signals := [0]
+				# Unit transport fixture; the production signal/announcement has
+				# separate existing same-body deployment regression coverage.
+				manager.creature_switched.connect(func(_index: int) -> void:
+					signals[0] += 1
+					director._note_deployment_identity(1, "character-a", str(manager.active_creature().uid)))
+				var result := committed.duplicate(true)
+				match defect:
+					"owner": result.delta.tether_commands.character_id = "foreign-owner"
+					"parent": result.delta.tether_commands.last_receipt.action_id = "foreign-parent"
+					"incoming": result.delta.switched_to_uid = "foreign-creature"
+					"generation": result.command_generation = 2
+					"request": result.command_request.sequence = 2
+					"part": result.delta.effect.strikes[1].part = "outgoing"
+				manager.apply_tether_command_verdict(result)
+				assert_eq(manager.active_creature(), b if defect == "none" else a, defect)
+				assert_eq(signals[0], 1 if defect == "none" else 0)
+				assert_eq(manager._ally_body, body, "same piloted body survives accepted or refused Tag")
+				if defect == "none":
+					assert_eq(manager._switch_lockout, 1.5)
+					assert_false(manager._tether_command_view.has("pending_request"))
+					manager.apply_tether_command_verdict(result)
+					assert_eq(signals[0], 1, "exact duplicate cannot switch or consume twice")
+				else:
+					assert_eq(manager._switch_lockout, 0.0)
+					assert_eq(manager._tether_command_view.pending_request, request)
+				manager.free()
+				director.free()
+				body.free()
 			assert_false(tracked.record_tether_tag_outcome(tag_id, 1, parent, incoming_binding, written, 10600).ok,
 				"duplicate outcome cannot spend or write twice")
 			assert_true(tracked.acknowledge_move_action_publication(tag_id, 1, parent, committed))

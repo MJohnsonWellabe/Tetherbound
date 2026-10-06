@@ -383,6 +383,7 @@ func _tonic_item_original() -> bool:
 			_earned_mastery.receipts[move].append(action)
 			_earned_mastery.uses[move] = int(_earned_mastery.uses.get(move, 0)) + 1
 	check(not seen.is_empty(), "mastery: actual landed quick hits retain unique creature-owned mastery obligations")
+	print("MASTERY actual earned expectation: ", JSON.stringify({"uid":_mastery_uid, "before":before_mastery, "retained":retained, "earned":_earned_mastery}))
 	_ok(await step(1, "op_tonic_clear"), "tonic: existing proximity fixture clears reach while previous actual HP writes settle")
 	var ready := false
 	for poll in 20:
@@ -403,8 +404,10 @@ func _tonic_item_original() -> bool:
 		"tonic: host journal retains the precise original awaiting owner TRUE BOOL")
 	check(_tonic_seconds(guest) == 0.0 and host.get("projected", {}).get(_guest_character, {}).is_empty(),
 		"tonic: owner save refusal installs no owner or authoritative effect")
-	check(int(guest.get("stock", -1)) == 2 and guest.get("saved_result", {}).get("saved") != true,
-		"tonic: failed owner save rolls back the live debit and produces no saved result")
+	check(int(guest.get("stock", -1)) == 1 and int(guest.get("disk_stock", -1)) == 2 \
+		and guest.get("fenced") == true and not (guest.get("disk_receipts", []) as Array).has(str(original.get("receipt", ""))) \
+		and guest.get("saved_result", {}).get("saved") != true,
+		"tonic: failed owner save fences the pending debit, keeps disk unchanged and produces no saved result")
 	_tonic_receipt = str(original.get("receipt", ""))
 	_tonic_uid = str(original.get("uid", ""))
 	_ok(await step(1, "op_tonic_writer", {"block":false}), "tonic: original actual owner writer is restored")

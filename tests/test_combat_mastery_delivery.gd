@@ -138,10 +138,11 @@ func test_retained_hit_rejects_forged_binding_damage_or_epoch_and_preserves_hp()
 	assert_false(ACTIONS.stage(before, 0, "combat_mastery", duty.intent, context, RECORD.errors).ok)
 	# Tag retains one command parent and two ordinary creature-owned uses.
 	# These are codec/owner-plan fixtures; the live host still owns HP writes.
-	var second: Dictionary = before.party[0].duplicate(true)
-	second.uid = "tag-owned-b"
-	before.party.append(second)
-	before.redesign_character = preload("res://scripts/creatures/teaching.gd").character_loadout_mirror(before.party, before.redesign_character)
+	var player: RefCounted = fixture._player()
+	player.party.at(0).uid = before.party[0].uid
+	player.party.add(preload("res://scripts/creatures/creature_species.gd").spawn("terrapup"))
+	before = RECORD.portable_projection(player.save_data())
+	assert_eq(RECORD.errors(before, DATA.CHARACTER), [] as Array[String], "both cards use the canonical owned save projection")
 	var parent := "command:mastery-encounter:%s:1:7" % DATA.CHARACTER
 	var duties: Array = []
 	for index in 2:

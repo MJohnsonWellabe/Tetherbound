@@ -140,6 +140,8 @@ func test_idle_wind_ticks_each_uid_and_switched_burst_spends_current_creature() 
 	commands._config = previous.duplicate(true)
 	commands._config.feature_flags.runtime_enabled = true
 	var manager := preload("res://scripts/combat/combat_manager.gd").new()
+	var throw_aim := preload("res://scripts/combat/throw_aim.gd").new()
+	manager._throw = throw_aim
 	var species := preload("res://scripts/creatures/creature_species.gd")
 	var first := species.spawn("terrapup")
 	var second := species.spawn("terrapup")
@@ -178,6 +180,7 @@ func test_idle_wind_ticks_each_uid_and_switched_burst_spends_current_creature() 
 	assert_almost_eq(manager._charged_cooldown, 0.35, 0.0001)
 	assert_eq(manager._player_poise, 9.0)
 	manager.free()
+	throw_aim.free()
 	commands._config = previous
 
 

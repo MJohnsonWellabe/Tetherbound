@@ -459,7 +459,7 @@ func new_system_combat_snapshot() -> Dictionary:
 
 func submit_tether_command(request: Dictionary) -> bool:
 	if not preload("res://scripts/combat/tether_commands.gd").enabled() or not is_instance_valid(_encounter_link): return false
-	if request.get("command_id") == "item_throw":
+	if request.get("command_id") in ["item_throw", "tag_combo"]:
 		if _tether_command_view.has("pending_request") and _tether_command_view.pending_request != request: return false
 		_tether_command_view["pending_request"] = request.duplicate(true)
 	var verdict: Dictionary = _encounter_link.call("submit_encounter_intent", {"kind": "tether_command", "encounter_id": _encounter_id, "request": request})
@@ -473,7 +473,9 @@ func submit_tether_command(request: Dictionary) -> bool:
 func apply_tether_command_verdict(verdict: Dictionary) -> void:
 	if verdict.get("encounter_id") != _encounter_id: return
 	var deployment: Dictionary = _encounter_link.call("tether_command_deployment") if is_instance_valid(_encounter_link) else {}
-	if verdict.has("command_generation") and int(verdict.command_generation) != int(deployment.get("generation", 0)): return
+	var effect: Dictionary = verdict.get("delta", {}).get("effect", {})
+	var tag := verdict.get("ok") == true and effect.get("kind") == "tag_combo"
+	if not tag and verdict.has("command_generation") and int(verdict.command_generation) != int(deployment.get("generation", 0)): return
 	if verdict.get("pending") == true: return
 	if verdict.get("ok") != true:
 		if _tether_command_view.has("pending_request") and verdict.get("command_request") == _tether_command_view.pending_request:
@@ -482,8 +484,52 @@ func apply_tether_command_verdict(verdict: Dictionary) -> void:
 		return
 	var next: Dictionary = verdict.get("delta", {}).get("tether_commands", {})
 	if next.get("encounter_id") != _encounter_id or next.get("character_id") != deployment.get("character_id"): return
+	if tag:
+		var commands := preload("res://scripts/combat/tether_commands.gd")
+		var request: Dictionary = verdict.get("command_request", {})
+		var receipt: Dictionary = next.get("last_receipt", {})
+		var strikes: Array = effect.get("strikes", [])
+		var creature := active_creature()
+		var incoming := str(verdict.get("delta", {}).get("switched_to_uid", ""))
+		if not commands.enabled() or not commands.valid_intent(request) or request.command_id != "tag_combo" \
+			or _tether_command_view.get("pending_request") != request or creature == null \
+			or int(next.get("revision", -1)) < int(_tether_command_view.get("revision", 0)) \
+			or effect.get("encounter_id") != _encounter_id or effect.get("character_id") != deployment.get("character_id") \
+			or verdict.get("command_generation") != request.generation or receipt.get("command_committed") != true \
+			or receipt.get("command_id") != "tag_combo" or receipt.get("character_id") != deployment.get("character_id") \
+			or receipt.get("encounter_id") != _encounter_id or receipt.get("generation") != request.generation \
+			or receipt.get("sequence") != request.sequence or strikes.size() != 2: return
+		var parent := "command:%s:%s:%d:%d" % [_encounter_id, deployment.character_id, request.generation, request.sequence]
+		var outgoing := str(receipt.get("attacker_uid", ""))
+		if receipt.get("action_id") != parent or incoming.is_empty() or incoming == outgoing: return
+		for index in 2:
+			var strike: Variant = strikes[index]
+			var uid := outgoing if index == 0 else incoming
+			var part := "outgoing" if index == 0 else "incoming"
+			var generation := int(request.generation) + index
+			if not strike is Dictionary or strike.get("parent_action_id") != parent or strike.get("part") != part \
+				or strike.get("attacker_uid") != uid or strike.get("character_id") != deployment.character_id \
+				or strike.get("generation") != generation or strike.get("source_kind") != "creature" \
+				or strike.get("target_uid") != effect.get("target_uid") \
+				or strike.get("target_generation") != effect.get("target_generation") \
+				or strike.get("slot") != "quick" \
+				or strike.get("action_id") != JSON.stringify([parent, part, uid, generation]).sha256_text(): return
+		var index := -1
+		for i in _party.size():
+			if _party[i] != null and str(_party[i].get("uid")) == incoming and _can_take_the_field(_party[i]): index = i
+		if index < 0: return
+		if str(creature.get("uid")) == outgoing and deployment.get("creature_uid") == outgoing \
+			and deployment.get("generation") == request.generation:
+			_clear_move_input()
+			_activate_party_member(index)
+			creature_switched.emit(index)
+		elif str(creature.get("uid")) != incoming or deployment.get("creature_uid") != incoming \
+			or deployment.get("generation") != int(request.generation) + 1: return
+		_switch_lockout = maxf(_switch_lockout, float(commands.config().switch_lockout_s))
+		_tether_command_view.erase("pending_request")
 	if int(next.get("revision", -1)) >= int(_tether_command_view.get("revision", 0)):
 		_tether_command_view.merge(next.duplicate(true), true)
+	if tag: state_changed.emit()
 
 
 ## The owner submitted only this four-field command. A host checkpoint may

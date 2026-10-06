@@ -286,13 +286,14 @@ func _tonic_state(game: Node, session: Node) -> Dictionary:
 				var character := str(record.participants[peer].character_id)
 				readiness[character] = {"admission":session._tether_item_admission_ready(int(peer)),
 					"vitals_pending":director.ordinary_actor_vitals_pending(str(record.get("encounter_id", "")))}
-	var saved: Dictionary = game.save_system.characters().read(str(game.local.character_id)) if _tonic_character_dir.is_empty() \
-		or game.save_system.characters().get("_dir") == _tonic_character_dir else {}
+	var store: RefCounted = game.save_system.characters() if _tonic_character_dir.is_empty() \
+		else preload("res://scripts/save/character_save.gd").new(_tonic_character_dir)
+	var saved: Dictionary = store.read(str(game.local.character_id))
 	return {"owned":owned, "rows":rows, "projected":projected, "readiness":readiness, "stock":game.inventory.count("attack_tonic"),
 		"disk_stock":_counts(saved.get("inventory", [])).get("attack_tonic", 0),
 		"disk_receipts":saved.get("redesign_character", {}).get("transaction_receipts", []),
 		"saved_result":session.get("_tether_item_saved_result").get("result", {}).duplicate(true),
-		"retry":session.get("_owner_training_retry").get("saved", false)}
+		"retry":session.get("_owner_training_retry").get("saved", false), "fenced":session.owns_input()}
 
 
 func _mastery_state(game: Node, session: Node) -> Dictionary:
