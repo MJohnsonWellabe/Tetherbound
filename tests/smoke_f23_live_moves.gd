@@ -20,6 +20,7 @@ const FOLLOWER := preload("res://scripts/creatures/follower_creature.gd")
 const WILD := preload("res://scripts/creatures/wild_creature.gd")
 const DIRECTOR := preload("res://scripts/combat/encounter_director.gd")
 const MANAGER := preload("res://scripts/combat/combat_manager.gd")
+const HUD := preload("res://scenes/combat/combat_hud.tscn")
 const ULTIMATES := preload("res://scripts/vfx/ultimates/ultimate_library.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
 
@@ -60,6 +61,7 @@ var _writer: RefCounted
 var _authority: RefCounted
 var _director: Node
 var _manager: Node
+var _hud: Node
 var _ally: Node3D
 var _wild: Node3D
 var _creature: RefCounted
@@ -108,6 +110,14 @@ func _run() -> void:
 	if not _errors.is_empty():
 		_finish()
 		return
+	await process_frame
+	var shown_meter: ProgressBar = _hud.get("_ultimate_meter")
+	var shown_readout: RichTextLabel = _hud.get("_ultimate_readout")
+	_check(shown_meter != null and shown_readout != null, "mounted actual CombatHUD creates its Ultimate controls")
+	if shown_meter == null or shown_readout == null:
+		_finish()
+		return
+	_check(is_equal_approx(shown_meter.value, 0.0), "mounted actual CombatHUD starts with an empty Ultimate meter")
 	var old_world := FileAccess.get_file_as_bytes(_writer.world_store.path_for("resource-slot"))
 	_writer.refuse_world = true
 	var snare := await _tap_move(JOY_BUTTON_B, "utility")
@@ -146,7 +156,20 @@ func _run() -> void:
 		_check(not quick.is_empty(), "physical quick %d did not land" % hit)
 		if quick.is_empty(): break
 	_check(is_equal_approx(float(_host.move_resource_snapshot(_id, 1, _creature.uid).ultimate_meter), 100.0), "real landed hits fill the host Ultimate meter")
-	_check(is_equal_approx(float(_manager.call("ultimate_fraction")), 1.0), "HUD meter mirrors the host's full meter")
+	_check(is_equal_approx(float(_manager.call("ultimate_fraction")), 1.0), "Manager snapshot mirrors the host's full meter")
+	await process_frame
+	await process_frame
+	_check(shown_meter.is_visible_in_tree() and is_equal_approx(shown_meter.value, 100.0),
+		"mounted actual CombatHUD shows the full landed-hit Ultimate meter")
+	_check(shown_readout.is_visible_in_tree() and shown_readout.get_parsed_text().contains("release → move"),
+		"mounted actual CombatHUD displays the full-meter ready instruction")
+	if not _capture_dir.is_empty():
+		DirAccess.make_dir_recursive_absolute(_capture_dir)
+		await RenderingServer.frame_post_draw
+		var ready_path := _capture_dir.path_join("ultimate-ready.png")
+		var ready_image := root.get_texture().get_image()
+		_check(ready_image != null and ready_image.save_png(ready_path) == OK, "rendered actual full-meter CombatHUD capture " + ready_path)
+		_captures.append(ready_path)
 	var ultimate_event: Dictionary = {}
 	if visual_override:
 		await _wait_ready()
@@ -160,6 +183,9 @@ func _run() -> void:
 			var latest: Dictionary = _impacts.back()
 			_check(float(latest.damage) <= float(_enemy.max_hp) * 0.2 + 0.001, "ultimate respects the named-target HP cap")
 			_check(is_equal_approx(float(_host.move_resource_snapshot(_id, 1, _creature.uid).ultimate_meter), 0.0), "ultimate spends the full per-UID meter once")
+			await process_frame
+			_check(shown_meter.is_visible_in_tree() and is_equal_approx(shown_meter.value, 0.0)
+				and shown_readout.get_parsed_text().contains("0%"), "mounted actual CombatHUD redraws the spent Ultimate meter")
 			_check(_launches.back().move.mastery_rank == 4 and _launches.back().mastery_rank == 4, "launch and frozen move retain admitted mastery rank")
 			_check(_launches.back().get("presentation_mounted") == true, "accepted Ground Current must create its actual ultimate presentation")
 			for row: Variant in _game.world.reward_deliveries.values():
@@ -242,6 +268,7 @@ func _setup() -> void:
 	player.position = Vector3(-4.0, 0, -3.0)
 	_world.add_child(player)
 	_manager = MANAGER.new()
+	_manager.name = "CombatManager"
 	_world.add_child(_manager)
 	_manager.set("_player", player)
 	_manager.set("_wild", _wild)
@@ -254,6 +281,7 @@ func _setup() -> void:
 	# Attach the exact production script after the bare node is ready, avoiding
 	# the unrelated whole-biome population bootstrap. All called methods are real.
 	_director = Node.new()
+	_director.name = "EncounterDirector"
 	_world.add_child(_director)
 	_director.set_script(DIRECTOR)
 	_director.call("_enter_tree") # Existing real source index; script attached after entry.
@@ -279,6 +307,10 @@ func _setup() -> void:
 	_manager.connect("impact_confirmed", func(on_enemy: bool, receipt: Dictionary, _where: Vector3) -> void:
 		if on_enemy: _impacts.append(receipt.duplicate(true)))
 	_capture_stage()
+	_hud = HUD.instantiate()
+	_hud.set("manager_path", NodePath("../CombatManager"))
+	_hud.set("director_path", NodePath("../EncounterDirector"))
+	_world.add_child(_hud)
 
 func _seed_prior_mastery(move_id: String, count: int) -> void:
 	# Disclosed prior-history fixture: use the real staging helper to build a
