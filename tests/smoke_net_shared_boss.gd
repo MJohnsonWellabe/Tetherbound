@@ -1174,6 +1174,7 @@ func _run_chapter_handoff() -> void:
 		await step(peer, "wait", {"frames": 120})
 		check(_hall_says(await _handoff_story(peer), FREED_FLAG) == true,
 			"peer %d received '%s' as a shared world fact" % [peer, FREED_FLAG])
+		await _check_handoff_healing(peer, "live")
 
 	# 3. THE OWNER'S RULE, at runtime: every participant keeps their own.
 	for peer in 2:
@@ -1212,6 +1213,7 @@ func _run_chapter_handoff() -> void:
 			"peer %d completed its production save/reload after the handoff" % peer)
 		check(_hall_says(await _handoff_story(peer), FREED_FLAG) == true,
 			"peer %d retained the freeing after reload" % peer)
+		await _check_handoff_healing(peer, "reload")
 	# NOT a hash here, and this is a stronger check rather than a softer one.
 	#
 	# `world_snapshot`'s `flags` is the world's flags MERGED WITH the local
@@ -1435,6 +1437,37 @@ func _warden_characters(world: Dictionary, accepted_only: bool) -> Array[String]
 			out.append(character)
 	out.sort()
 	return out
+
+
+func _check_handoff_healing(peer: int, when: String) -> void:
+	var raw: Variant = await probe(peer, "veridian_choice")
+	check(raw is Dictionary, "peer %d %s answered existing healing counts probe" % [peer, when])
+	if not raw is Dictionary:
+		return
+	var view: Dictionary = raw
+	check(bool(view.get("healing_found", false)), "peer %d %s has MeadowHealing" % [peer, when])
+	check(int(view.get("healing_remaining_tether_materials", -1)) == 0,
+		"peer %d %s has no surviving live tether materials (count %s)" % [
+			peer, when, str(view.get("healing_remaining_tether_materials", "missing"))])
+	var raw_topples: Variant = view.get("healing_pylons_by_id")
+	check(raw_topples is Dictionary, "peer %d %s supplies pylon counts by id" % [peer, when])
+	if not raw_topples is Dictionary:
+		return
+	var topples: Dictionary = raw_topples
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/meadow_healing.json"))
+	var table: Dictionary = ((parsed as Dictionary).get("pylons", {}) as Dictionary).get("falls", {}) \
+		if parsed is Dictionary else {}
+	check(not table.is_empty(), "healing fall table is present for peer %d %s" % [peer, when])
+	var expected := 0
+	for id: String in table:
+		if table[id] == null:
+			check(not topples.has(id), "peer %d %s keeps authored standing pylon %s" % [peer, when, id])
+			continue
+		expected += 1
+		check(int(topples.get(id, 0)) == 1, "peer %d %s toppled %s exactly once (count %s)" % [
+			peer, when, id, str(topples.get(id, "missing"))])
+	check(topples.size() == expected, "peer %d %s has exactly %d authored topple ids (actual %d)" % [
+		peer, when, expected, topples.size()])
 
 
 func _handoff_story(peer: int) -> Variant:

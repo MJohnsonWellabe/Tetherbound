@@ -1,0 +1,20 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_telegraph_glow.gd::test_unchanged_dry_ring,test_telegraph_glow.gd::test_shared_ground_point,test_companion_presence.gd::test_grouped_camp_scan,test_fight_ring_occluders.gd::test_arena_refresh: 3 of 815 test files
+  FAIL  test_companion_presence.gd :: test_grouped_camp_scan_skips_unrelated_world_and_retains_suffix_and_ui_rules
+          expected 4, got 232  (only indexed sources inspected, not 200 unrelated nodes)
+  FAIL  test_fight_ring_occluders.gd :: test_arena_refresh_updates_changed_cells_without_rebuilding_other_instances
+          expected [false, false], got [true, true]  (hide/restore flush dirty/missing cells in either build mode)
+  FAIL  test_telegraph_glow.gd :: test_shared_ground_point_is_sampled_once_and_cache_expires_each_rebuild
+          expected 1, got 50  (one sample for one distinct ground point)
+          expected 2, got 100  (a changed rebuild never inherits old ground heights)
+  FAIL  test_telegraph_glow.gd :: test_unchanged_dry_ring_skips_vertices_but_pulse_and_move_redraw
+          expected 50, got 100  (unchanged unqueried aim rebuilds nothing)
+
+4 tests, 19 assertions, 4 failed
+
+  test_companion_presence.gd :: test_grouped_camp_scan_skips_unrelated_world_and_retains_suffix_and_ui_rules — expected 4, got 232  (only indexed sources inspected, not 200 unrelated nodes)
+  test_fight_ring_occluders.gd :: test_arena_refresh_updates_changed_cells_without_rebuilding_other_instances — expected [false, false], got [true, true]  (hide/restore flush dirty/missing cells in either build mode)
+  test_telegraph_glow.gd :: test_shared_ground_point_is_sampled_once_and_cache_expires_each_rebuild — expected 1, got 50  (one sample for one distinct ground point)
+  test_telegraph_glow.gd :: test_shared_ground_point_is_sampled_once_and_cache_expires_each_rebuild — expected 2, got 100  (a changed rebuild never inherits old ground heights)
+  test_telegraph_glow.gd :: test_unchanged_dry_ring_skips_vertices_but_pulse_and_move_redraw — expected 50, got 100  (unchanged unqueried aim rebuilds nothing)

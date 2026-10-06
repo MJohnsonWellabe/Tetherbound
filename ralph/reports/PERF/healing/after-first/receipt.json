@@ -1,0 +1,18 @@
+{
+  "command": [
+    "--headless",
+    "--path",
+    "D:/tetherbound/codex-p1",
+    "--script",
+    "tests/smoke_meadow_healing_land_heals.gd"
+  ],
+  "cache_source": "D:\\tetherbound\\codex-p1\\.godot",
+  "cache_basis": "existing local P1 import cache verified and copied at unit-first; no new copy/import",
+  "claim": "fresh quiet candidate freeing-frame measurement; existing 19 mounted, materials, 29-pylon live/save/rebuild assertions intact",
+  "source_head": "7ba419929be0c8a488b7ec5957d6d2ea6315ad74",
+  "supervisor_pid": 11516,
+  "run_id": "p1-healing-after-first",
+  "r2_packaging": "PR525 comment6010403311: R2 CPU packaging/analysis/review finished; source8323965ec6",
+  "native_background": [],
+  "started_utc": "2026-10-06T06:28:57.1106636+00:00"
+}

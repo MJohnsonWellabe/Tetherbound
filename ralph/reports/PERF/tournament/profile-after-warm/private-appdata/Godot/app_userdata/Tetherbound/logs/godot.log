@@ -1,0 +1,42 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=19168 control_port=52250 home=D:\tetherbound\codex-p2\ralph\reports\PERF\tournament\profile-after-warm\native-net/home-0 log=D:\tetherbound\codex-p2\ralph\reports\PERF\tournament\profile-after-warm\native-net/peer-0.log
+coordinator: launched peer 1 (client) pid=9148 control_port=52251 home=D:\tetherbound\codex-p2\ralph\reports\PERF\tournament\profile-after-warm\native-net/home-1 log=D:\tetherbound\codex-p2\ralph\reports\PERF\tournament\profile-after-warm\native-net/peer-1.log
+coordinator: peer 1 hello: {"enet_port":29762.0,"godot_version":"4.7-stable (official)","main_sha":"108eb16ac8fe","peer":1.0,"pid":9148.0,"role":"client","type":"hello","user_data_dir":"D:/tetherbound/codex-p2/ralph/reports/PERF/tournament/profile-after-warm/native-net/home-1/Godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":29761.0,"godot_version":"4.7-stable (official)","main_sha":"108eb16ac8fe","peer":0.0,"pid":19168.0,"role":"host","type":"hello","user_data_dir":"D:/tetherbound/codex-p2/ralph/reports/PERF/tournament/profile-after-warm/native-net/home-0/Godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: tournament host opened a world
+PASS: peer 1 prepared five ordinary creatures and registered three
+PASS: second peer joined the tournament world
+PASS: peer 0 prepared five ordinary creatures and registered three
+PASS: peer 0's production readiness and three selected IDs are visible
+PASS: peer 0 deployed its selected lead
+PASS: peer 1's production readiness and three selected IDs are visible
+PASS: peer 1 deployed its selected lead
+PASS: opened authored tournament round 'tournament_quarter_mira'
+PASS: 'tournament_quarter_mira' minted one shared encounter record
+FAIL: peer 1 joined 'tournament_quarter_mira' rather than opening another fight (the join did not put this peer in a fight)
+PASS: peer 0 reduced 'tournament_quarter_mira' shared opponent HP
+FAIL: peer 1 reduced 'tournament_quarter_mira' shared opponent HP -- attempt 6: host hp 121.314 -> 121.314 at (0.88, 2.15, 5.96); stand_in=this peer has no opponent body to move place=creature stands at (3.50, 0.91, 5.55) strike=FAIL this peer is not in a networked fight; no host receipt for peer 386475135; guest refusal={  }
+PASS: both peers completed 'tournament_quarter_mira' (battle won in 406 frames / 2 swings against 2 of their creatures)
+PASS: peer 0 received 'tournament_quarter_won'
+PASS: peer 0 received 'tournament_quarter_mira' authored reward in full
+PASS: peer 1 received 'tournament_quarter_won'
+FAIL: peer 1 received 'tournament_quarter_mira' authored reward in full
+PASS: 'tournament_quarter_mira' reward proof names both stable participant character IDs (["character-7cd10e80d298e5744c40e401657aa913", "character-a86158c0ba1b2840febe1f5956b8faa8"])
+PASS: 'tournament_quarter_mira' reward journal has one replicated durable world namespace
+PASS: 'tournament_quarter_mira' reward journal is identical on host and guest
+FAIL: 'trainer:tournament_quarter_mira:coins' has accepted durable receipts for both stable participants (["character-7cd10e80d298e5744c40e401657aa913"])
+FAIL: 'trainer:tournament_quarter_mira:item:potion_small' has accepted durable receipts for both stable participants (["character-7cd10e80d298e5744c40e401657aa913"])
+PASS: opened authored tournament round 'tournament_semi_tam'
+PASS: 'tournament_semi_tam' minted one shared encounter record
+PASS: peer 1 joined 'tournament_semi_tam' rather than opening another fight (joined 1:2 beside 'pipwing' at (-1.4, 6.7))
+PASS: peer 0 reduced 'tournament_semi_tam' shared opponent HP
+PASS: peer 1 reduced 'tournament_semi_tam' shared opponent HP
+FAIL: both peers completed 'tournament_semi_tam' (no verdict)
+FAIL: peer 1 joined 'tournament_quarter_mira' rather than opening another fight (the join did not put this peer in a fight)
+FAIL: peer 1 reduced 'tournament_quarter_mira' shared opponent HP -- attempt 6: host hp 121.314 -> 121.314 at (0.88, 2.15, 5.96); stand_in=this peer has no opponent body to move place=creature stands at (3.50, 0.91, 5.55) strike=FAIL this peer is not in a networked fight; no host receipt for peer 386475135; guest refusal={  }
+FAIL: peer 1 received 'tournament_quarter_mira' authored reward in full
+FAIL: 'trainer:tournament_quarter_mira:coins' has accepted durable receipts for both stable participants (["character-7cd10e80d298e5744c40e401657aa913"])
+FAIL: 'trainer:tournament_quarter_mira:item:potion_small' has accepted durable receipts for both stable participants (["character-7cd10e80d298e5744c40e401657aa913"])
+FAIL: both peers completed 'tournament_semi_tam' (no verdict)

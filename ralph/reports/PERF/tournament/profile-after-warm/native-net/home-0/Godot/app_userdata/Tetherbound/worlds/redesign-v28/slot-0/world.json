@@ -1,0 +1,4599 @@
+{
+	"codec_version": 1,
+	"format": "tetherbound-save",
+	"payload": {
+		"clock_elapsed_seconds": {
+			"$tb_float64": "f1eeeeeeee9e7040"
+		},
+		"created_at": "2026-10-06T10:18:34",
+		"day": 1,
+		"death_satchels": [],
+		"display_name": "",
+		"farm_plots": [],
+		"felled_vegetation": {},
+		"flags": {
+			"flags": [
+				"tournament_quarter_won"
+			]
+		},
+		"harvested_vegetation": {
+			"bushes": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+			"rocks": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+			"trees": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+		},
+		"last_played": "2026-10-06T10:21:32",
+		"migrated_from": "",
+		"placed_buildings": [],
+		"realm_environment": {},
+		"redesign_world": {
+			"alpha_cycles": {},
+			"bounty_day": {
+				"$tb_float64": "0000000000000000"
+			},
+			"fifth_arch_stirred": false,
+			"node_cycles": {},
+			"portal_unlocks": [],
+			"rematch_cycles": {},
+			"retained_settlement": {},
+			"shrine_display": {},
+			"station_tiers": {}
+		},
+		"reward_deliveries": {
+			"6484add6b226f5232cf52f54c2c8f95c184097c589c6f4b8fb9dfd856d867676": {
+				"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+				"completion_flag": "",
+				"delivery_id": "6484add6b226f5232cf52f54c2c8f95c184097c589c6f4b8fb9dfd856d867676",
+				"source": "trainer:tournament_quarter_mira:coins",
+				"stacks": [
+					{
+						"id": "coin",
+						"n": 20
+					}
+				],
+				"status": "accepted",
+				"version": 1,
+				"world_id": "slot-0",
+				"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+			},
+			"actor_vitals:0cb65a5c15e85ac97204eeb2d1714c5e361885f1a4e7039aece533b9cbf4f048": {
+				"character_id": "character-a86158c0ba1b2840febe1f5956b8faa8",
+				"character_revision": 3,
+				"creature_uid": "creature-a3f1234a5e3b3108697d78fd092b51f6",
+				"delivery_id": "actor_vitals:0cb65a5c15e85ac97204eeb2d1714c5e361885f1a4e7039aece533b9cbf4f048",
+				"expected_fainted": false,
+				"expected_hp": {
+					"$tb_float64": "9a99999999996240"
+				},
+				"fainted": false,
+				"hp": {
+					"$tb_float64": "92230a4486986040"
+				},
+				"journal_revision": 1,
+				"kind": "actor_vitals",
+				"max_hp": {
+					"$tb_float64": "9a99999999996240"
+				},
+				"receipt": {
+					"body_generation": 1,
+					"creature_uid": "creature-a3f1234a5e3b3108697d78fd092b51f6",
+					"encounter_id": "1:2",
+					"receipt_id": "85a29c91899bb7248794f592080be480:3c8dbfea2992b6d4eea9a1feb402c239a3bb3b706c479538842553eedcae5105",
+					"vitals_revision": 1
+				},
+				"session_id": "d0bae5912d252e80637b5a0255469f1d",
+				"status": "accepted",
+				"version": 1,
+				"world_id": "slot-0",
+				"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+			},
+			"actor_vitals:56a175f09d368e55c132a13af1068172b951e2368329236e2134b829dfbfe15f": {
+				"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+				"character_revision": 78,
+				"creature_uid": "creature-943f393c7e7bb2eba3ccc79fd0384122",
+				"delivery_id": "actor_vitals:56a175f09d368e55c132a13af1068172b951e2368329236e2134b829dfbfe15f",
+				"expected_fainted": false,
+				"expected_hp": {
+					"$tb_float64": "a601571ef8904e40"
+				},
+				"fainted": false,
+				"hp": {
+					"$tb_float64": "c855dab4dd8d4640"
+				},
+				"journal_revision": 6,
+				"kind": "actor_vitals",
+				"max_hp": {
+					"$tb_float64": "9a99999999996240"
+				},
+				"receipt": {
+					"body_generation": 1,
+					"creature_uid": "creature-943f393c7e7bb2eba3ccc79fd0384122",
+					"encounter_id": "1:2",
+					"receipt_id": "85a29c91899bb7248794f592080be480:f7b8876be274fb61913e0a83acf205d625984be366b8f6d47229da158ef217b0",
+					"vitals_revision": 2
+				},
+				"session_id": "d0bae5912d252e80637b5a0255469f1d",
+				"status": "accepted",
+				"version": 1,
+				"world_id": "slot-0",
+				"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+			},
+			"ba77421c0a5a98e7c73dc08e03d38a7ce81c6e743b9aeb5e57b6b3f3182894f3": {
+				"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+				"completion_flag": "",
+				"delivery_id": "ba77421c0a5a98e7c73dc08e03d38a7ce81c6e743b9aeb5e57b6b3f3182894f3",
+				"source": "trainer:tournament_quarter_mira:item:potion_small",
+				"stacks": [
+					{
+						"id": "potion_small",
+						"n": 2
+					}
+				],
+				"status": "accepted",
+				"version": 1,
+				"world_id": "slot-0",
+				"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+			},
+			"creature_training:815f385693831a7b64f59c805b6a31e8c3caefc286cb3ac86dd6a9db0f774d6c": {
+				"action": "combat_round_reward",
+				"action_id": "7c435bd9d6593c3e8ef8980afa620c7ae31f090f49ebe9e759c88f5c33f66ac7",
+				"after": {
+					"character_id": "character-a86158c0ba1b2840febe1f5956b8faa8",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": {
+								"$tb_float64": "6666666666663a40"
+							},
+							"base_attack": {
+								"$tb_float64": "0000000000003640"
+							},
+							"base_defence": {
+								"$tb_float64": "0000000000003440"
+							},
+							"base_hp": {
+								"$tb_float64": "0000000000005e40"
+							},
+							"battles_fought": 2,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": {
+								"$tb_float64": "0000000000003840"
+							},
+							"display_name": "Terrapup",
+							"distance_m_together": {
+								"$tb_float64": "0000000c9c332040"
+							},
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": {
+								"$tb_float64": "0000000000005940"
+							},
+							"hp": {
+								"$tb_float64": "92230a4486986040"
+							},
+							"iv_attack": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_defence": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_hp": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup",
+								"shove"
+							],
+							"landmarks_visited_together": 0,
+							"level": 5,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": {
+								"$tb_float64": "9a99999999996240"
+							},
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "shove",
+							"nickname": "",
+							"nourishment": {
+								"$tb_float64": "ce5efa9cdd775840"
+							},
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": true,
+							"rested_seconds_left": {
+								"$tb_float64": "14397ceef32fa440"
+							},
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": {
+								"$tb_float64": "000000000000f03f"
+							},
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-a3f1234a5e3b3108697d78fd092b51f6",
+							"xp": 120
+						},
+						{
+							"attack": {
+								"$tb_float64": "9999999999993540"
+							},
+							"base_attack": {
+								"$tb_float64": "0000000000003240"
+							},
+							"base_defence": {
+								"$tb_float64": "0000000000003040"
+							},
+							"base_hp": {
+								"$tb_float64": "0000000000c05740"
+							},
+							"battles_fought": 2,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": {
+								"$tb_float64": "3333333333333340"
+							},
+							"display_name": "Bramblebun",
+							"distance_m_together": {
+								"$tb_float64": "0000000c9c332040"
+							},
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": {
+								"$tb_float64": "0000000000005940"
+							},
+							"hp": {
+								"$tb_float64": "3333333333735d40"
+							},
+							"iv_attack": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_defence": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_hp": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"known_moves": [
+								"bramble_whip",
+								"warren_charge",
+								"ultimate_ground_current",
+								"snare"
+							],
+							"landmarks_visited_together": 0,
+							"level": 5,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": {
+								"$tb_float64": "3333333333735d40"
+							},
+							"move_charged": "warren_charge",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "bramble_whip",
+							"move_ultimate": "ultimate_ground_current",
+							"move_utility": "snare",
+							"nickname": "",
+							"nourishment": {
+								"$tb_float64": "ce5efa9cdd775840"
+							},
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": true,
+							"rested_seconds_left": {
+								"$tb_float64": "14397ceef32fa440"
+							},
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "bramblebun",
+							"swim_stamina_fraction": {
+								"$tb_float64": "000000000000f03f"
+							},
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-5af395cbb5837cc39af74f967264b3c3",
+							"xp": 60
+						},
+						{
+							"attack": {
+								"$tb_float64": "9999999999993b40"
+							},
+							"base_attack": {
+								"$tb_float64": "0000000000003740"
+							},
+							"base_defence": {
+								"$tb_float64": "0000000000002e40"
+							},
+							"base_hp": {
+								"$tb_float64": "0000000000405a40"
+							},
+							"battles_fought": 2,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": {
+								"$tb_float64": "0000000000003240"
+							},
+							"display_name": "Trailpup",
+							"distance_m_together": {
+								"$tb_float64": "0000000c9c332040"
+							},
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": {
+								"$tb_float64": "0000000000005940"
+							},
+							"hp": {
+								"$tb_float64": "6666666666466040"
+							},
+							"iv_attack": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_defence": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_hp": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"known_moves": [
+								"pack_bite",
+								"trailblaze_pounce",
+								"ultimate_ground_charger",
+								"dash_strike"
+							],
+							"landmarks_visited_together": 0,
+							"level": 5,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": {
+								"$tb_float64": "6666666666466040"
+							},
+							"move_charged": "trailblaze_pounce",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pack_bite",
+							"move_ultimate": "ultimate_ground_charger",
+							"move_utility": "dash_strike",
+							"nickname": "",
+							"nourishment": {
+								"$tb_float64": "ce5efa9cdd775840"
+							},
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": true,
+							"rested_seconds_left": {
+								"$tb_float64": "14397ceef32fa440"
+							},
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "trailpup",
+							"swim_stamina_fraction": {
+								"$tb_float64": "000000000000f03f"
+							},
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-17643f81ad9d50b6687e61ac617913cf",
+							"xp": 60
+						},
+						{
+							"attack": {
+								"$tb_float64": "6666666666663440"
+							},
+							"base_attack": {
+								"$tb_float64": "0000000000003140"
+							},
+							"base_defence": {
+								"$tb_float64": "0000000000003240"
+							},
+							"base_hp": {
+								"$tb_float64": "0000000000005940"
+							},
+							"battles_fought": 2,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": {
+								"$tb_float64": "9999999999993540"
+							},
+							"display_name": "Mudsnout",
+							"distance_m_together": {
+								"$tb_float64": "0000000c9c332040"
+							},
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": {
+								"$tb_float64": "0000000000005940"
+							},
+							"hp": {
+								"$tb_float64": "0000000000005f40"
+							},
+							"iv_attack": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_defence": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_hp": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"known_moves": [
+								"root_nibble",
+								"rootquake",
+								"ultimate_ground_wall",
+								"slow_field"
+							],
+							"landmarks_visited_together": 0,
+							"level": 5,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": {
+								"$tb_float64": "0000000000005f40"
+							},
+							"move_charged": "rootquake",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "root_nibble",
+							"move_ultimate": "ultimate_ground_wall",
+							"move_utility": "slow_field",
+							"nickname": "",
+							"nourishment": {
+								"$tb_float64": "ce5efa9cdd775840"
+							},
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": true,
+							"rested_seconds_left": {
+								"$tb_float64": "14397ceef32fa440"
+							},
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "mudsnout",
+							"swim_stamina_fraction": {
+								"$tb_float64": "000000000000f03f"
+							},
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-04060685d40409a937c2ae50ff5c41d9",
+							"xp": 60
+						},
+						{
+							"attack": {
+								"$tb_float64": "3333333333333340"
+							},
+							"base_attack": {
+								"$tb_float64": "0000000000003040"
+							},
+							"base_defence": {
+								"$tb_float64": "0000000000003140"
+							},
+							"base_hp": {
+								"$tb_float64": "0000000000c05c40"
+							},
+							"battles_fought": 2,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": {
+								"$tb_float64": "6666666666663440"
+							},
+							"display_name": "Meadowhart",
+							"distance_m_together": {
+								"$tb_float64": "0000000c9c332040"
+							},
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": {
+								"$tb_float64": "0000000000005940"
+							},
+							"hp": {
+								"$tb_float64": "3333333333d36140"
+							},
+							"iv_attack": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_defence": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_hp": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"known_moves": [
+								"hoofbeat",
+								"verdant_burst",
+								"ultimate_ground_diver",
+								"veil"
+							],
+							"landmarks_visited_together": 0,
+							"level": 5,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": {
+								"$tb_float64": "3333333333d36140"
+							},
+							"move_charged": "verdant_burst",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "hoofbeat",
+							"move_ultimate": "ultimate_ground_diver",
+							"move_utility": "veil",
+							"nickname": "",
+							"nourishment": {
+								"$tb_float64": "ce5efa9cdd775840"
+							},
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": true,
+							"rested_seconds_left": {
+								"$tb_float64": "14397ceef32fa440"
+							},
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "meadowhart",
+							"swim_stamina_fraction": {
+								"$tb_float64": "000000000000f03f"
+							},
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-7f665d0abea9a6319c6a6611e8c8f4f2",
+							"xp": 60
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-04060685d40409a937c2ae50ff5c41d9": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"root_nibble",
+									"rootquake",
+									"ultimate_ground_wall",
+									"slow_field"
+								],
+								"loadout": {
+									"charged": "rootquake",
+									"quick": "root_nibble",
+									"ultimate": "ultimate_ground_wall",
+									"utility": "slow_field"
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							},
+							"creature-17643f81ad9d50b6687e61ac617913cf": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pack_bite",
+									"trailblaze_pounce",
+									"ultimate_ground_charger",
+									"dash_strike"
+								],
+								"loadout": {
+									"charged": "trailblaze_pounce",
+									"quick": "pack_bite",
+									"ultimate": "ultimate_ground_charger",
+									"utility": "dash_strike"
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							},
+							"creature-5af395cbb5837cc39af74f967264b3c3": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"bramble_whip",
+									"warren_charge",
+									"ultimate_ground_current",
+									"snare"
+								],
+								"loadout": {
+									"charged": "warren_charge",
+									"quick": "bramble_whip",
+									"ultimate": "ultimate_ground_current",
+									"utility": "snare"
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							},
+							"creature-7f665d0abea9a6319c6a6611e8c8f4f2": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"hoofbeat",
+									"verdant_burst",
+									"ultimate_ground_diver",
+									"veil"
+								],
+								"loadout": {
+									"charged": "verdant_burst",
+									"quick": "hoofbeat",
+									"ultimate": "ultimate_ground_diver",
+									"utility": "veil"
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							},
+							"creature-a3f1234a5e3b3108697d78fd092b51f6": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup",
+									"shove"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": "shove"
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [
+								"8ade6afc78162fb5311a5292b99a5142ad435df4502d97c75de4690ea5198082"
+							],
+							"species": {
+								"bramblebun": {
+									"caught": false,
+									"seen": true,
+									"tasks": {
+										"sight": 1
+									}
+								}
+							},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"research:event_8ade6afc78162fb5311a5292b99a5142ad435df4502d97c75de4690ea5198082:character-a86158c0ba1b2840febe1f5956b8faa8",
+							"defeat:trainer_round_d29a6be2445d970a80a61e9c6fa64da92f78545485945b68ae9abb43f769e531:character-a86158c0ba1b2840febe1f5956b8faa8",
+							"defeat:trainer_round_deb09a2214d0e5b0a1425d120dd048b9127653dcc8d6cf5e3548ab3d15e3abee:character-a86158c0ba1b2840febe1f5956b8faa8"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {
+						"actor_vitals:0cb65a5c15e85ac97204eeb2d1714c5e361885f1a4e7039aece533b9cbf4f048": {
+							"character_id": "character-a86158c0ba1b2840febe1f5956b8faa8",
+							"character_revision": 3,
+							"creature_uid": "creature-a3f1234a5e3b3108697d78fd092b51f6",
+							"delivery_id": "actor_vitals:0cb65a5c15e85ac97204eeb2d1714c5e361885f1a4e7039aece533b9cbf4f048",
+							"expected_fainted": false,
+							"expected_hp": {
+								"$tb_float64": "9a99999999996240"
+							},
+							"fainted": false,
+							"hp": {
+								"$tb_float64": "92230a4486986040"
+							},
+							"journal_revision": 1,
+							"kind": "actor_vitals",
+							"max_hp": {
+								"$tb_float64": "9a99999999996240"
+							},
+							"receipt": {
+								"body_generation": 1,
+								"creature_uid": "creature-a3f1234a5e3b3108697d78fd092b51f6",
+								"encounter_id": "1:2",
+								"receipt_id": "85a29c91899bb7248794f592080be480:3c8dbfea2992b6d4eea9a1feb402c239a3bb3b706c479538842553eedcae5105",
+								"vitals_revision": 1
+							},
+							"session_id": "d0bae5912d252e80637b5a0255469f1d",
+							"status": "settled",
+							"version": 1,
+							"world_id": "slot-0",
+							"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+						}
+					}
+				},
+				"before": {
+					"character_id": "character-a86158c0ba1b2840febe1f5956b8faa8",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": {
+								"$tb_float64": "6666666666663a40"
+							},
+							"base_attack": {
+								"$tb_float64": "0000000000003640"
+							},
+							"base_defence": {
+								"$tb_float64": "0000000000003440"
+							},
+							"base_hp": {
+								"$tb_float64": "0000000000005e40"
+							},
+							"battles_fought": 1,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": {
+								"$tb_float64": "0000000000003840"
+							},
+							"display_name": "Terrapup",
+							"distance_m_together": {
+								"$tb_float64": "0000000c9c332040"
+							},
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": {
+								"$tb_float64": "7a6112916efe5840"
+							},
+							"hp": {
+								"$tb_float64": "92230a4486986040"
+							},
+							"iv_attack": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_defence": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_hp": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup",
+								"shove"
+							],
+							"landmarks_visited_together": 0,
+							"level": 5,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": {
+								"$tb_float64": "9a99999999996240"
+							},
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "shove",
+							"nickname": "",
+							"nourishment": {
+								"$tb_float64": "ce5efa9cdd775840"
+							},
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": true,
+							"rested_seconds_left": {
+								"$tb_float64": "14397ceef32fa440"
+							},
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": {
+								"$tb_float64": "000000000000f03f"
+							},
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-a3f1234a5e3b3108697d78fd092b51f6",
+							"xp": 60
+						},
+						{
+							"attack": {
+								"$tb_float64": "9999999999993540"
+							},
+							"base_attack": {
+								"$tb_float64": "0000000000003240"
+							},
+							"base_defence": {
+								"$tb_float64": "0000000000003040"
+							},
+							"base_hp": {
+								"$tb_float64": "0000000000c05740"
+							},
+							"battles_fought": 1,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": {
+								"$tb_float64": "3333333333333340"
+							},
+							"display_name": "Bramblebun",
+							"distance_m_together": {
+								"$tb_float64": "0000000c9c332040"
+							},
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": {
+								"$tb_float64": "7a6112916efe5840"
+							},
+							"hp": {
+								"$tb_float64": "3333333333735d40"
+							},
+							"iv_attack": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_defence": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_hp": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"known_moves": [
+								"bramble_whip",
+								"warren_charge",
+								"ultimate_ground_current",
+								"snare"
+							],
+							"landmarks_visited_together": 0,
+							"level": 5,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": {
+								"$tb_float64": "3333333333735d40"
+							},
+							"move_charged": "warren_charge",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "bramble_whip",
+							"move_ultimate": "ultimate_ground_current",
+							"move_utility": "snare",
+							"nickname": "",
+							"nourishment": {
+								"$tb_float64": "ce5efa9cdd775840"
+							},
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": true,
+							"rested_seconds_left": {
+								"$tb_float64": "14397ceef32fa440"
+							},
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "bramblebun",
+							"swim_stamina_fraction": {
+								"$tb_float64": "000000000000f03f"
+							},
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-5af395cbb5837cc39af74f967264b3c3",
+							"xp": 30
+						},
+						{
+							"attack": {
+								"$tb_float64": "9999999999993b40"
+							},
+							"base_attack": {
+								"$tb_float64": "0000000000003740"
+							},
+							"base_defence": {
+								"$tb_float64": "0000000000002e40"
+							},
+							"base_hp": {
+								"$tb_float64": "0000000000405a40"
+							},
+							"battles_fought": 1,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": {
+								"$tb_float64": "0000000000003240"
+							},
+							"display_name": "Trailpup",
+							"distance_m_together": {
+								"$tb_float64": "0000000c9c332040"
+							},
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": {
+								"$tb_float64": "7a6112916efe5840"
+							},
+							"hp": {
+								"$tb_float64": "6666666666466040"
+							},
+							"iv_attack": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_defence": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_hp": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"known_moves": [
+								"pack_bite",
+								"trailblaze_pounce",
+								"ultimate_ground_charger",
+								"dash_strike"
+							],
+							"landmarks_visited_together": 0,
+							"level": 5,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": {
+								"$tb_float64": "6666666666466040"
+							},
+							"move_charged": "trailblaze_pounce",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pack_bite",
+							"move_ultimate": "ultimate_ground_charger",
+							"move_utility": "dash_strike",
+							"nickname": "",
+							"nourishment": {
+								"$tb_float64": "ce5efa9cdd775840"
+							},
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": true,
+							"rested_seconds_left": {
+								"$tb_float64": "14397ceef32fa440"
+							},
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "trailpup",
+							"swim_stamina_fraction": {
+								"$tb_float64": "000000000000f03f"
+							},
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-17643f81ad9d50b6687e61ac617913cf",
+							"xp": 30
+						},
+						{
+							"attack": {
+								"$tb_float64": "6666666666663440"
+							},
+							"base_attack": {
+								"$tb_float64": "0000000000003140"
+							},
+							"base_defence": {
+								"$tb_float64": "0000000000003240"
+							},
+							"base_hp": {
+								"$tb_float64": "0000000000005940"
+							},
+							"battles_fought": 1,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": {
+								"$tb_float64": "9999999999993540"
+							},
+							"display_name": "Mudsnout",
+							"distance_m_together": {
+								"$tb_float64": "0000000c9c332040"
+							},
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": {
+								"$tb_float64": "7a6112916efe5840"
+							},
+							"hp": {
+								"$tb_float64": "0000000000005f40"
+							},
+							"iv_attack": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_defence": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_hp": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"known_moves": [
+								"root_nibble",
+								"rootquake",
+								"ultimate_ground_wall",
+								"slow_field"
+							],
+							"landmarks_visited_together": 0,
+							"level": 5,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": {
+								"$tb_float64": "0000000000005f40"
+							},
+							"move_charged": "rootquake",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "root_nibble",
+							"move_ultimate": "ultimate_ground_wall",
+							"move_utility": "slow_field",
+							"nickname": "",
+							"nourishment": {
+								"$tb_float64": "ce5efa9cdd775840"
+							},
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": true,
+							"rested_seconds_left": {
+								"$tb_float64": "14397ceef32fa440"
+							},
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "mudsnout",
+							"swim_stamina_fraction": {
+								"$tb_float64": "000000000000f03f"
+							},
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-04060685d40409a937c2ae50ff5c41d9",
+							"xp": 30
+						},
+						{
+							"attack": {
+								"$tb_float64": "3333333333333340"
+							},
+							"base_attack": {
+								"$tb_float64": "0000000000003040"
+							},
+							"base_defence": {
+								"$tb_float64": "0000000000003140"
+							},
+							"base_hp": {
+								"$tb_float64": "0000000000c05c40"
+							},
+							"battles_fought": 1,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": {
+								"$tb_float64": "6666666666663440"
+							},
+							"display_name": "Meadowhart",
+							"distance_m_together": {
+								"$tb_float64": "0000000c9c332040"
+							},
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": {
+								"$tb_float64": "7a6112916efe5840"
+							},
+							"hp": {
+								"$tb_float64": "3333333333d36140"
+							},
+							"iv_attack": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_defence": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_hp": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"known_moves": [
+								"hoofbeat",
+								"verdant_burst",
+								"ultimate_ground_diver",
+								"veil"
+							],
+							"landmarks_visited_together": 0,
+							"level": 5,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": {
+								"$tb_float64": "3333333333d36140"
+							},
+							"move_charged": "verdant_burst",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "hoofbeat",
+							"move_ultimate": "ultimate_ground_diver",
+							"move_utility": "veil",
+							"nickname": "",
+							"nourishment": {
+								"$tb_float64": "ce5efa9cdd775840"
+							},
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": true,
+							"rested_seconds_left": {
+								"$tb_float64": "14397ceef32fa440"
+							},
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "meadowhart",
+							"swim_stamina_fraction": {
+								"$tb_float64": "000000000000f03f"
+							},
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-7f665d0abea9a6319c6a6611e8c8f4f2",
+							"xp": 30
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-04060685d40409a937c2ae50ff5c41d9": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"root_nibble",
+									"rootquake",
+									"ultimate_ground_wall",
+									"slow_field"
+								],
+								"loadout": {
+									"charged": "rootquake",
+									"quick": "root_nibble",
+									"ultimate": "ultimate_ground_wall",
+									"utility": "slow_field"
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							},
+							"creature-17643f81ad9d50b6687e61ac617913cf": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pack_bite",
+									"trailblaze_pounce",
+									"ultimate_ground_charger",
+									"dash_strike"
+								],
+								"loadout": {
+									"charged": "trailblaze_pounce",
+									"quick": "pack_bite",
+									"ultimate": "ultimate_ground_charger",
+									"utility": "dash_strike"
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							},
+							"creature-5af395cbb5837cc39af74f967264b3c3": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"bramble_whip",
+									"warren_charge",
+									"ultimate_ground_current",
+									"snare"
+								],
+								"loadout": {
+									"charged": "warren_charge",
+									"quick": "bramble_whip",
+									"ultimate": "ultimate_ground_current",
+									"utility": "snare"
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							},
+							"creature-7f665d0abea9a6319c6a6611e8c8f4f2": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"hoofbeat",
+									"verdant_burst",
+									"ultimate_ground_diver",
+									"veil"
+								],
+								"loadout": {
+									"charged": "verdant_burst",
+									"quick": "hoofbeat",
+									"ultimate": "ultimate_ground_diver",
+									"utility": "veil"
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							},
+							"creature-a3f1234a5e3b3108697d78fd092b51f6": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup",
+									"shove"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": "shove"
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [
+								"8ade6afc78162fb5311a5292b99a5142ad435df4502d97c75de4690ea5198082"
+							],
+							"species": {
+								"bramblebun": {
+									"caught": false,
+									"seen": true,
+									"tasks": {
+										"sight": 1
+									}
+								}
+							},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"research:event_8ade6afc78162fb5311a5292b99a5142ad435df4502d97c75de4690ea5198082:character-a86158c0ba1b2840febe1f5956b8faa8",
+							"defeat:trainer_round_d29a6be2445d970a80a61e9c6fa64da92f78545485945b68ae9abb43f769e531:character-a86158c0ba1b2840febe1f5956b8faa8"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {
+						"actor_vitals:0cb65a5c15e85ac97204eeb2d1714c5e361885f1a4e7039aece533b9cbf4f048": {
+							"character_id": "character-a86158c0ba1b2840febe1f5956b8faa8",
+							"character_revision": 3,
+							"creature_uid": "creature-a3f1234a5e3b3108697d78fd092b51f6",
+							"delivery_id": "actor_vitals:0cb65a5c15e85ac97204eeb2d1714c5e361885f1a4e7039aece533b9cbf4f048",
+							"expected_fainted": false,
+							"expected_hp": {
+								"$tb_float64": "9a99999999996240"
+							},
+							"fainted": false,
+							"hp": {
+								"$tb_float64": "92230a4486986040"
+							},
+							"journal_revision": 1,
+							"kind": "actor_vitals",
+							"max_hp": {
+								"$tb_float64": "9a99999999996240"
+							},
+							"receipt": {
+								"body_generation": 1,
+								"creature_uid": "creature-a3f1234a5e3b3108697d78fd092b51f6",
+								"encounter_id": "1:2",
+								"receipt_id": "85a29c91899bb7248794f592080be480:3c8dbfea2992b6d4eea9a1feb402c239a3bb3b706c479538842553eedcae5105",
+								"vitals_revision": 1
+							},
+							"session_id": "d0bae5912d252e80637b5a0255469f1d",
+							"status": "settled",
+							"version": 1,
+							"world_id": "slot-0",
+							"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+						}
+					}
+				},
+				"character_id": "character-a86158c0ba1b2840febe1f5956b8faa8",
+				"character_revision": 7,
+				"delivery_id": "creature_training:815f385693831a7b64f59c805b6a31e8c3caefc286cb3ac86dd6a9db0f774d6c",
+				"host_context": {
+					"binding": {
+						"active_uid": "creature-a3f1234a5e3b3108697d78fd092b51f6",
+						"actor_generation": 3,
+						"character_id": "character-a86158c0ba1b2840febe1f5956b8faa8",
+						"peer_id": 386475135
+					},
+					"character_id": "character-a86158c0ba1b2840febe1f5956b8faa8",
+					"enemy_record": {
+						"creature_type": "water",
+						"fainted": true,
+						"hp": {
+							"$tb_float64": "0000000000000000"
+						},
+						"level": 9,
+						"secondary_type": "",
+						"species_id": "mosshell",
+						"uid": "creature-d425cdfcf93ee8a5c05dc61e20f7b282"
+					},
+					"event_confirmed": true,
+					"expected_revision": 6,
+					"foundation_runtime_authorized": true,
+					"in_combat": false,
+					"in_range": true,
+					"participants": [
+						{
+							"character_id": "character-a86158c0ba1b2840febe1f5956b8faa8",
+							"peer_id": 386475135
+						},
+						{
+							"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+							"peer_id": 1
+						}
+					],
+					"realm": "meadows",
+					"retained_event": "foundation_event:0b359a3601b1930af0c1a26f6f3774bf1598898164430b6af881eaf6e706b10e",
+					"reward_scope": {
+						"encounter_id": "1:2",
+						"realm": "meadows",
+						"session_id": "d1103d263e97b9dab58047638c9d126c",
+						"trainer_id": "tournament_semi_tam",
+						"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+					},
+					"session_id": "d1103d263e97b9dab58047638c9d126c",
+					"settled_vitals": [
+						{
+							"actor_generation": 3,
+							"fainted": false,
+							"hp": {
+								"$tb_float64": "92230a4486986040"
+							},
+							"max_hp": {
+								"$tb_float64": "9a99999999996240"
+							},
+							"uid": "creature-a3f1234a5e3b3108697d78fd092b51f6"
+						},
+						{
+							"actor_generation": 0,
+							"fainted": false,
+							"hp": {
+								"$tb_float64": "3333333333735d40"
+							},
+							"max_hp": {
+								"$tb_float64": "3333333333735d40"
+							},
+							"uid": "creature-5af395cbb5837cc39af74f967264b3c3"
+						},
+						{
+							"actor_generation": 0,
+							"fainted": false,
+							"hp": {
+								"$tb_float64": "6666666666466040"
+							},
+							"max_hp": {
+								"$tb_float64": "6666666666466040"
+							},
+							"uid": "creature-17643f81ad9d50b6687e61ac617913cf"
+						},
+						{
+							"actor_generation": 0,
+							"fainted": false,
+							"hp": {
+								"$tb_float64": "0000000000005f40"
+							},
+							"max_hp": {
+								"$tb_float64": "0000000000005f40"
+							},
+							"uid": "creature-04060685d40409a937c2ae50ff5c41d9"
+						},
+						{
+							"actor_generation": 0,
+							"fainted": false,
+							"hp": {
+								"$tb_float64": "3333333333d36140"
+							},
+							"max_hp": {
+								"$tb_float64": "3333333333d36140"
+							},
+							"uid": "creature-7f665d0abea9a6319c6a6611e8c8f4f2"
+						}
+					],
+					"source_key": "combat_round:ab2233c59e1e6c6eee1dc7bf2e5bf850245e3076c03a4f06c2de302c90a56e73",
+					"validated_host_outcome": "win",
+					"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+				},
+				"intent": {
+					"encounter_id": "1:2",
+					"enemy_uid": "creature-d425cdfcf93ee8a5c05dc61e20f7b282",
+					"phase": "round",
+					"round": 4,
+					"trainer_id": "tournament_semi_tam"
+				},
+				"journal_revision": 3,
+				"kind": "creature_training",
+				"receipt": "defeat:trainer_round_deb09a2214d0e5b0a1425d120dd048b9127653dcc8d6cf5e3548ab3d15e3abee:character-a86158c0ba1b2840febe1f5956b8faa8",
+				"session_id": "d1103d263e97b9dab58047638c9d126c",
+				"source_key": "combat_round:ab2233c59e1e6c6eee1dc7bf2e5bf850245e3076c03a4f06c2de302c90a56e73",
+				"status": "accepted",
+				"version": 3,
+				"world_id": "slot-0",
+				"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+			},
+			"creature_training:e1a8e2971a2b0ec114b97aeabad7e1bf8ddbafec9a78982bc1949031918873ea": {
+				"action": "combat_round_reward",
+				"action_id": "b4daffe0801e00701e0452d0dca8c2ee13a5b99b23463ac7951661839f6b5fc9",
+				"after": {
+					"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "coin",
+							"n": 20
+						},
+						{
+							"id": "potion_small",
+							"n": 2
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": {
+								"$tb_float64": "6666666666663a40"
+							},
+							"base_attack": {
+								"$tb_float64": "0000000000003640"
+							},
+							"base_defence": {
+								"$tb_float64": "0000000000003440"
+							},
+							"base_hp": {
+								"$tb_float64": "0000000000005e40"
+							},
+							"battles_fought": 4,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": {
+								"$tb_float64": "0000000000003840"
+							},
+							"display_name": "Terrapup",
+							"distance_m_together": {
+								"$tb_float64": "0000000000000000"
+							},
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": {
+								"$tb_float64": "0000000000005940"
+							},
+							"hp": {
+								"$tb_float64": "c855dab4dd8d4640"
+							},
+							"iv_attack": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_defence": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_hp": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup",
+								"shove"
+							],
+							"landmarks_visited_together": 0,
+							"level": 5,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": {
+								"$tb_float64": "9a99999999996240"
+							},
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {
+								"pebble_toss": [
+									"b43e9cf292828fd0d206cc2b13bb678c:3:4a94544989fd0c2c8b76c200",
+									"b43e9cf292828fd0d206cc2b13bb678c:4:234d4627e768391870647c37",
+									"b43e9cf292828fd0d206cc2b13bb678c:5:beb93bedaffd1abee2780da3"
+								]
+							},
+							"move_mastery_uses": {
+								"pebble_toss": 3
+							},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "shove",
+							"nickname": "",
+							"nourishment": {
+								"$tb_float64": "3b04d91321bd5840"
+							},
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": true,
+							"rested_seconds_left": {
+								"$tb_float64": "548dbd0404a6a440"
+							},
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": {
+								"$tb_float64": "000000000000f03f"
+							},
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-943f393c7e7bb2eba3ccc79fd0384122",
+							"xp": 224
+						},
+						{
+							"attack": {
+								"$tb_float64": "9999999999993540"
+							},
+							"base_attack": {
+								"$tb_float64": "0000000000003240"
+							},
+							"base_defence": {
+								"$tb_float64": "0000000000003040"
+							},
+							"base_hp": {
+								"$tb_float64": "0000000000c05740"
+							},
+							"battles_fought": 4,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": {
+								"$tb_float64": "3333333333333340"
+							},
+							"display_name": "Bramblebun",
+							"distance_m_together": {
+								"$tb_float64": "0000000000000000"
+							},
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": {
+								"$tb_float64": "0000000000005940"
+							},
+							"hp": {
+								"$tb_float64": "3333333333735d40"
+							},
+							"iv_attack": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_defence": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_hp": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"known_moves": [
+								"bramble_whip",
+								"warren_charge",
+								"ultimate_ground_current",
+								"snare"
+							],
+							"landmarks_visited_together": 0,
+							"level": 5,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": {
+								"$tb_float64": "3333333333735d40"
+							},
+							"move_charged": "warren_charge",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "bramble_whip",
+							"move_ultimate": "ultimate_ground_current",
+							"move_utility": "snare",
+							"nickname": "",
+							"nourishment": {
+								"$tb_float64": "3b04d91321bd5840"
+							},
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": true,
+							"rested_seconds_left": {
+								"$tb_float64": "548dbd0404a6a440"
+							},
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "bramblebun",
+							"swim_stamina_fraction": {
+								"$tb_float64": "000000000000f03f"
+							},
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-90e71f8e2c56c50cd9f83bac86128108",
+							"xp": 111
+						},
+						{
+							"attack": {
+								"$tb_float64": "9999999999993b40"
+							},
+							"base_attack": {
+								"$tb_float64": "0000000000003740"
+							},
+							"base_defence": {
+								"$tb_float64": "0000000000002e40"
+							},
+							"base_hp": {
+								"$tb_float64": "0000000000405a40"
+							},
+							"battles_fought": 4,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": {
+								"$tb_float64": "0000000000003240"
+							},
+							"display_name": "Trailpup",
+							"distance_m_together": {
+								"$tb_float64": "0000000000000000"
+							},
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": {
+								"$tb_float64": "0000000000005940"
+							},
+							"hp": {
+								"$tb_float64": "6666666666466040"
+							},
+							"iv_attack": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_defence": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_hp": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"known_moves": [
+								"pack_bite",
+								"trailblaze_pounce",
+								"ultimate_ground_charger",
+								"dash_strike"
+							],
+							"landmarks_visited_together": 0,
+							"level": 5,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": {
+								"$tb_float64": "6666666666466040"
+							},
+							"move_charged": "trailblaze_pounce",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pack_bite",
+							"move_ultimate": "ultimate_ground_charger",
+							"move_utility": "dash_strike",
+							"nickname": "",
+							"nourishment": {
+								"$tb_float64": "3b04d91321bd5840"
+							},
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": true,
+							"rested_seconds_left": {
+								"$tb_float64": "548dbd0404a6a440"
+							},
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "trailpup",
+							"swim_stamina_fraction": {
+								"$tb_float64": "000000000000f03f"
+							},
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-c7fb33ad0b780d9d77dc08cabe2ed59f",
+							"xp": 111
+						},
+						{
+							"attack": {
+								"$tb_float64": "6666666666663440"
+							},
+							"base_attack": {
+								"$tb_float64": "0000000000003140"
+							},
+							"base_defence": {
+								"$tb_float64": "0000000000003240"
+							},
+							"base_hp": {
+								"$tb_float64": "0000000000005940"
+							},
+							"battles_fought": 4,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": {
+								"$tb_float64": "9999999999993540"
+							},
+							"display_name": "Mudsnout",
+							"distance_m_together": {
+								"$tb_float64": "0000000000000000"
+							},
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": {
+								"$tb_float64": "0000000000005940"
+							},
+							"hp": {
+								"$tb_float64": "0000000000005f40"
+							},
+							"iv_attack": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_defence": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_hp": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"known_moves": [
+								"root_nibble",
+								"rootquake",
+								"ultimate_ground_wall",
+								"slow_field"
+							],
+							"landmarks_visited_together": 0,
+							"level": 5,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": {
+								"$tb_float64": "0000000000005f40"
+							},
+							"move_charged": "rootquake",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "root_nibble",
+							"move_ultimate": "ultimate_ground_wall",
+							"move_utility": "slow_field",
+							"nickname": "",
+							"nourishment": {
+								"$tb_float64": "3b04d91321bd5840"
+							},
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": true,
+							"rested_seconds_left": {
+								"$tb_float64": "548dbd0404a6a440"
+							},
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "mudsnout",
+							"swim_stamina_fraction": {
+								"$tb_float64": "000000000000f03f"
+							},
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-1f93060384b5ee84c72eca4e77c301e6",
+							"xp": 111
+						},
+						{
+							"attack": {
+								"$tb_float64": "3333333333333340"
+							},
+							"base_attack": {
+								"$tb_float64": "0000000000003040"
+							},
+							"base_defence": {
+								"$tb_float64": "0000000000003140"
+							},
+							"base_hp": {
+								"$tb_float64": "0000000000c05c40"
+							},
+							"battles_fought": 4,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": {
+								"$tb_float64": "6666666666663440"
+							},
+							"display_name": "Meadowhart",
+							"distance_m_together": {
+								"$tb_float64": "0000000000000000"
+							},
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": {
+								"$tb_float64": "0000000000005940"
+							},
+							"hp": {
+								"$tb_float64": "3333333333d36140"
+							},
+							"iv_attack": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_defence": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_hp": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"known_moves": [
+								"hoofbeat",
+								"verdant_burst",
+								"ultimate_ground_diver",
+								"veil"
+							],
+							"landmarks_visited_together": 0,
+							"level": 5,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": {
+								"$tb_float64": "3333333333d36140"
+							},
+							"move_charged": "verdant_burst",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "hoofbeat",
+							"move_ultimate": "ultimate_ground_diver",
+							"move_utility": "veil",
+							"nickname": "",
+							"nourishment": {
+								"$tb_float64": "3b04d91321bd5840"
+							},
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": true,
+							"rested_seconds_left": {
+								"$tb_float64": "548dbd0404a6a440"
+							},
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "meadowhart",
+							"swim_stamina_fraction": {
+								"$tb_float64": "000000000000f03f"
+							},
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-655bdf124a391cf87aca7ec426aba1ee",
+							"xp": 111
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-1f93060384b5ee84c72eca4e77c301e6": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"root_nibble",
+									"rootquake",
+									"ultimate_ground_wall",
+									"slow_field"
+								],
+								"loadout": {
+									"charged": "rootquake",
+									"quick": "root_nibble",
+									"ultimate": "ultimate_ground_wall",
+									"utility": "slow_field"
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							},
+							"creature-655bdf124a391cf87aca7ec426aba1ee": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"hoofbeat",
+									"verdant_burst",
+									"ultimate_ground_diver",
+									"veil"
+								],
+								"loadout": {
+									"charged": "verdant_burst",
+									"quick": "hoofbeat",
+									"ultimate": "ultimate_ground_diver",
+									"utility": "veil"
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							},
+							"creature-90e71f8e2c56c50cd9f83bac86128108": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"bramble_whip",
+									"warren_charge",
+									"ultimate_ground_current",
+									"snare"
+								],
+								"loadout": {
+									"charged": "warren_charge",
+									"quick": "bramble_whip",
+									"ultimate": "ultimate_ground_current",
+									"utility": "snare"
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							},
+							"creature-943f393c7e7bb2eba3ccc79fd0384122": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup",
+									"shove"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": "shove"
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {
+									"pebble_toss": {
+										"rank": 1,
+										"uses": 3
+									}
+								},
+								"mastery_receipts": {
+									"pebble_toss": [
+										"b43e9cf292828fd0d206cc2b13bb678c:3:4a94544989fd0c2c8b76c200",
+										"b43e9cf292828fd0d206cc2b13bb678c:4:234d4627e768391870647c37",
+										"b43e9cf292828fd0d206cc2b13bb678c:5:beb93bedaffd1abee2780da3"
+									]
+								},
+								"rolled_traits": [],
+								"taught_traits": {}
+							},
+							"creature-c7fb33ad0b780d9d77dc08cabe2ed59f": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pack_bite",
+									"trailblaze_pounce",
+									"ultimate_ground_charger",
+									"dash_strike"
+								],
+								"loadout": {
+									"charged": "trailblaze_pounce",
+									"quick": "pack_bite",
+									"ultimate": "ultimate_ground_charger",
+									"utility": "dash_strike"
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [
+								"34637b7ac88c148faba684cf8d73df61bc532c9932e7dd3357d8167fee2a7f3b",
+								"9141fb57879840aae831a19a55af26566f1a62d05146e559f6b4d532ffe58035",
+								"62fdd2ff486e33088344dddc635267c9b35d4b7c89db03483af934437506e3f6",
+								"7ef50a8ebd7d5115efff845ceffff2f774617a13e175e81facb81748ba58a08c"
+							],
+							"species": {
+								"bramblebun": {
+									"caught": false,
+									"seen": true,
+									"tasks": {
+										"sight": 1
+									}
+								},
+								"terrapup": {
+									"caught": false,
+									"seen": true,
+									"tasks": {
+										"casts": 3,
+										"sight": 1
+									}
+								}
+							},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"defeat:trainer_round_2629f1562dc6b3207cdd7da1bf088c1a7ad5d7ecebe9373857232b168e1b2237:character-7cd10e80d298e5744c40e401657aa913",
+							"defeat:trainer_round_a1cb412f545f5af79e9fff5dc84cef51f2e07faa8aa493699a260ed6d7bc8942:character-7cd10e80d298e5744c40e401657aa913",
+							"defeat:trainer_round_e65a1a2d740fe599a88eeaa3124f861cb4ee9b6bbae86fe4cffee0885eb04bf3:character-7cd10e80d298e5744c40e401657aa913",
+							"research:event_34637b7ac88c148faba684cf8d73df61bc532c9932e7dd3357d8167fee2a7f3b:character-7cd10e80d298e5744c40e401657aa913",
+							"craft:combat_mastery_bd490f3d551e6399c9e534c090f8de185a30535264a1fc131601c542101bfcab:character-7cd10e80d298e5744c40e401657aa913",
+							"research:event_9141fb57879840aae831a19a55af26566f1a62d05146e559f6b4d532ffe58035:character-7cd10e80d298e5744c40e401657aa913",
+							"craft:combat_mastery_0b37d300b6aee714259c61e6425e9c5c35bb3596aab64e7a869f9fd97e04facf:character-7cd10e80d298e5744c40e401657aa913",
+							"research:event_62fdd2ff486e33088344dddc635267c9b35d4b7c89db03483af934437506e3f6:character-7cd10e80d298e5744c40e401657aa913",
+							"craft:combat_mastery_341bb2ec93266ba1653e7cb218281d607ca8cb6139365c6092856410b457b2b1:character-7cd10e80d298e5744c40e401657aa913",
+							"research:event_7ef50a8ebd7d5115efff845ceffff2f774617a13e175e81facb81748ba58a08c:character-7cd10e80d298e5744c40e401657aa913",
+							"defeat:trainer_round_997457dcca9e7142a6e925b7f5612894cde28f445759dc42c1a92ed13654106b:character-7cd10e80d298e5744c40e401657aa913",
+							"defeat:trainer_round_7bd396bbcfcdc947add0de494f3d47362d15bf030f19ca977d6a09099cbb4d18:character-7cd10e80d298e5744c40e401657aa913"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {
+						"actor_vitals:56a175f09d368e55c132a13af1068172b951e2368329236e2134b829dfbfe15f": {
+							"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+							"character_revision": 78,
+							"creature_uid": "creature-943f393c7e7bb2eba3ccc79fd0384122",
+							"delivery_id": "actor_vitals:56a175f09d368e55c132a13af1068172b951e2368329236e2134b829dfbfe15f",
+							"expected_fainted": false,
+							"expected_hp": {
+								"$tb_float64": "a601571ef8904e40"
+							},
+							"fainted": false,
+							"hp": {
+								"$tb_float64": "c855dab4dd8d4640"
+							},
+							"journal_revision": 6,
+							"kind": "actor_vitals",
+							"max_hp": {
+								"$tb_float64": "9a99999999996240"
+							},
+							"receipt": {
+								"body_generation": 1,
+								"creature_uid": "creature-943f393c7e7bb2eba3ccc79fd0384122",
+								"encounter_id": "1:2",
+								"receipt_id": "85a29c91899bb7248794f592080be480:f7b8876be274fb61913e0a83acf205d625984be366b8f6d47229da158ef217b0",
+								"vitals_revision": 2
+							},
+							"session_id": "d0bae5912d252e80637b5a0255469f1d",
+							"status": "settled",
+							"version": 1,
+							"world_id": "slot-0",
+							"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+						}
+					}
+				},
+				"before": {
+					"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "coin",
+							"n": 20
+						},
+						{
+							"id": "potion_small",
+							"n": 2
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": {
+								"$tb_float64": "6666666666663a40"
+							},
+							"base_attack": {
+								"$tb_float64": "0000000000003640"
+							},
+							"base_defence": {
+								"$tb_float64": "0000000000003440"
+							},
+							"base_hp": {
+								"$tb_float64": "0000000000005e40"
+							},
+							"battles_fought": 3,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": {
+								"$tb_float64": "0000000000003840"
+							},
+							"display_name": "Terrapup",
+							"distance_m_together": {
+								"$tb_float64": "0000000000000000"
+							},
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": {
+								"$tb_float64": "e419423728ff5840"
+							},
+							"hp": {
+								"$tb_float64": "c855dab4dd8d4640"
+							},
+							"iv_attack": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_defence": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_hp": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup",
+								"shove"
+							],
+							"landmarks_visited_together": 0,
+							"level": 5,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": {
+								"$tb_float64": "9a99999999996240"
+							},
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {
+								"pebble_toss": [
+									"b43e9cf292828fd0d206cc2b13bb678c:3:4a94544989fd0c2c8b76c200",
+									"b43e9cf292828fd0d206cc2b13bb678c:4:234d4627e768391870647c37",
+									"b43e9cf292828fd0d206cc2b13bb678c:5:beb93bedaffd1abee2780da3"
+								]
+							},
+							"move_mastery_uses": {
+								"pebble_toss": 3
+							},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "shove",
+							"nickname": "",
+							"nourishment": {
+								"$tb_float64": "3b04d91321bd5840"
+							},
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": true,
+							"rested_seconds_left": {
+								"$tb_float64": "548dbd0404a6a440"
+							},
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": {
+								"$tb_float64": "000000000000f03f"
+							},
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-943f393c7e7bb2eba3ccc79fd0384122",
+							"xp": 164
+						},
+						{
+							"attack": {
+								"$tb_float64": "9999999999993540"
+							},
+							"base_attack": {
+								"$tb_float64": "0000000000003240"
+							},
+							"base_defence": {
+								"$tb_float64": "0000000000003040"
+							},
+							"base_hp": {
+								"$tb_float64": "0000000000c05740"
+							},
+							"battles_fought": 3,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": {
+								"$tb_float64": "3333333333333340"
+							},
+							"display_name": "Bramblebun",
+							"distance_m_together": {
+								"$tb_float64": "0000000000000000"
+							},
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": {
+								"$tb_float64": "e419423728ff5840"
+							},
+							"hp": {
+								"$tb_float64": "3333333333735d40"
+							},
+							"iv_attack": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_defence": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_hp": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"known_moves": [
+								"bramble_whip",
+								"warren_charge",
+								"ultimate_ground_current",
+								"snare"
+							],
+							"landmarks_visited_together": 0,
+							"level": 5,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": {
+								"$tb_float64": "3333333333735d40"
+							},
+							"move_charged": "warren_charge",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "bramble_whip",
+							"move_ultimate": "ultimate_ground_current",
+							"move_utility": "snare",
+							"nickname": "",
+							"nourishment": {
+								"$tb_float64": "3b04d91321bd5840"
+							},
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": true,
+							"rested_seconds_left": {
+								"$tb_float64": "548dbd0404a6a440"
+							},
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "bramblebun",
+							"swim_stamina_fraction": {
+								"$tb_float64": "000000000000f03f"
+							},
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-90e71f8e2c56c50cd9f83bac86128108",
+							"xp": 81
+						},
+						{
+							"attack": {
+								"$tb_float64": "9999999999993b40"
+							},
+							"base_attack": {
+								"$tb_float64": "0000000000003740"
+							},
+							"base_defence": {
+								"$tb_float64": "0000000000002e40"
+							},
+							"base_hp": {
+								"$tb_float64": "0000000000405a40"
+							},
+							"battles_fought": 3,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": {
+								"$tb_float64": "0000000000003240"
+							},
+							"display_name": "Trailpup",
+							"distance_m_together": {
+								"$tb_float64": "0000000000000000"
+							},
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": {
+								"$tb_float64": "e419423728ff5840"
+							},
+							"hp": {
+								"$tb_float64": "6666666666466040"
+							},
+							"iv_attack": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_defence": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_hp": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"known_moves": [
+								"pack_bite",
+								"trailblaze_pounce",
+								"ultimate_ground_charger",
+								"dash_strike"
+							],
+							"landmarks_visited_together": 0,
+							"level": 5,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": {
+								"$tb_float64": "6666666666466040"
+							},
+							"move_charged": "trailblaze_pounce",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pack_bite",
+							"move_ultimate": "ultimate_ground_charger",
+							"move_utility": "dash_strike",
+							"nickname": "",
+							"nourishment": {
+								"$tb_float64": "3b04d91321bd5840"
+							},
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": true,
+							"rested_seconds_left": {
+								"$tb_float64": "548dbd0404a6a440"
+							},
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "trailpup",
+							"swim_stamina_fraction": {
+								"$tb_float64": "000000000000f03f"
+							},
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-c7fb33ad0b780d9d77dc08cabe2ed59f",
+							"xp": 81
+						},
+						{
+							"attack": {
+								"$tb_float64": "6666666666663440"
+							},
+							"base_attack": {
+								"$tb_float64": "0000000000003140"
+							},
+							"base_defence": {
+								"$tb_float64": "0000000000003240"
+							},
+							"base_hp": {
+								"$tb_float64": "0000000000005940"
+							},
+							"battles_fought": 3,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": {
+								"$tb_float64": "9999999999993540"
+							},
+							"display_name": "Mudsnout",
+							"distance_m_together": {
+								"$tb_float64": "0000000000000000"
+							},
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": {
+								"$tb_float64": "e419423728ff5840"
+							},
+							"hp": {
+								"$tb_float64": "0000000000005f40"
+							},
+							"iv_attack": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_defence": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_hp": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"known_moves": [
+								"root_nibble",
+								"rootquake",
+								"ultimate_ground_wall",
+								"slow_field"
+							],
+							"landmarks_visited_together": 0,
+							"level": 5,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": {
+								"$tb_float64": "0000000000005f40"
+							},
+							"move_charged": "rootquake",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "root_nibble",
+							"move_ultimate": "ultimate_ground_wall",
+							"move_utility": "slow_field",
+							"nickname": "",
+							"nourishment": {
+								"$tb_float64": "3b04d91321bd5840"
+							},
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": true,
+							"rested_seconds_left": {
+								"$tb_float64": "548dbd0404a6a440"
+							},
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "mudsnout",
+							"swim_stamina_fraction": {
+								"$tb_float64": "000000000000f03f"
+							},
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-1f93060384b5ee84c72eca4e77c301e6",
+							"xp": 81
+						},
+						{
+							"attack": {
+								"$tb_float64": "3333333333333340"
+							},
+							"base_attack": {
+								"$tb_float64": "0000000000003040"
+							},
+							"base_defence": {
+								"$tb_float64": "0000000000003140"
+							},
+							"base_hp": {
+								"$tb_float64": "0000000000c05c40"
+							},
+							"battles_fought": 3,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": {
+								"$tb_float64": "6666666666663440"
+							},
+							"display_name": "Meadowhart",
+							"distance_m_together": {
+								"$tb_float64": "0000000000000000"
+							},
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": {
+								"$tb_float64": "e419423728ff5840"
+							},
+							"hp": {
+								"$tb_float64": "3333333333d36140"
+							},
+							"iv_attack": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_defence": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_hp": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"known_moves": [
+								"hoofbeat",
+								"verdant_burst",
+								"ultimate_ground_diver",
+								"veil"
+							],
+							"landmarks_visited_together": 0,
+							"level": 5,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": {
+								"$tb_float64": "3333333333d36140"
+							},
+							"move_charged": "verdant_burst",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "hoofbeat",
+							"move_ultimate": "ultimate_ground_diver",
+							"move_utility": "veil",
+							"nickname": "",
+							"nourishment": {
+								"$tb_float64": "3b04d91321bd5840"
+							},
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": true,
+							"rested_seconds_left": {
+								"$tb_float64": "548dbd0404a6a440"
+							},
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "meadowhart",
+							"swim_stamina_fraction": {
+								"$tb_float64": "000000000000f03f"
+							},
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-655bdf124a391cf87aca7ec426aba1ee",
+							"xp": 81
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-1f93060384b5ee84c72eca4e77c301e6": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"root_nibble",
+									"rootquake",
+									"ultimate_ground_wall",
+									"slow_field"
+								],
+								"loadout": {
+									"charged": "rootquake",
+									"quick": "root_nibble",
+									"ultimate": "ultimate_ground_wall",
+									"utility": "slow_field"
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							},
+							"creature-655bdf124a391cf87aca7ec426aba1ee": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"hoofbeat",
+									"verdant_burst",
+									"ultimate_ground_diver",
+									"veil"
+								],
+								"loadout": {
+									"charged": "verdant_burst",
+									"quick": "hoofbeat",
+									"ultimate": "ultimate_ground_diver",
+									"utility": "veil"
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							},
+							"creature-90e71f8e2c56c50cd9f83bac86128108": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"bramble_whip",
+									"warren_charge",
+									"ultimate_ground_current",
+									"snare"
+								],
+								"loadout": {
+									"charged": "warren_charge",
+									"quick": "bramble_whip",
+									"ultimate": "ultimate_ground_current",
+									"utility": "snare"
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							},
+							"creature-943f393c7e7bb2eba3ccc79fd0384122": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup",
+									"shove"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": "shove"
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {
+									"pebble_toss": {
+										"rank": 1,
+										"uses": 3
+									}
+								},
+								"mastery_receipts": {
+									"pebble_toss": [
+										"b43e9cf292828fd0d206cc2b13bb678c:3:4a94544989fd0c2c8b76c200",
+										"b43e9cf292828fd0d206cc2b13bb678c:4:234d4627e768391870647c37",
+										"b43e9cf292828fd0d206cc2b13bb678c:5:beb93bedaffd1abee2780da3"
+									]
+								},
+								"rolled_traits": [],
+								"taught_traits": {}
+							},
+							"creature-c7fb33ad0b780d9d77dc08cabe2ed59f": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pack_bite",
+									"trailblaze_pounce",
+									"ultimate_ground_charger",
+									"dash_strike"
+								],
+								"loadout": {
+									"charged": "trailblaze_pounce",
+									"quick": "pack_bite",
+									"ultimate": "ultimate_ground_charger",
+									"utility": "dash_strike"
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [
+								"34637b7ac88c148faba684cf8d73df61bc532c9932e7dd3357d8167fee2a7f3b",
+								"9141fb57879840aae831a19a55af26566f1a62d05146e559f6b4d532ffe58035",
+								"62fdd2ff486e33088344dddc635267c9b35d4b7c89db03483af934437506e3f6",
+								"7ef50a8ebd7d5115efff845ceffff2f774617a13e175e81facb81748ba58a08c"
+							],
+							"species": {
+								"bramblebun": {
+									"caught": false,
+									"seen": true,
+									"tasks": {
+										"sight": 1
+									}
+								},
+								"terrapup": {
+									"caught": false,
+									"seen": true,
+									"tasks": {
+										"casts": 3,
+										"sight": 1
+									}
+								}
+							},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"defeat:trainer_round_2629f1562dc6b3207cdd7da1bf088c1a7ad5d7ecebe9373857232b168e1b2237:character-7cd10e80d298e5744c40e401657aa913",
+							"defeat:trainer_round_a1cb412f545f5af79e9fff5dc84cef51f2e07faa8aa493699a260ed6d7bc8942:character-7cd10e80d298e5744c40e401657aa913",
+							"defeat:trainer_round_e65a1a2d740fe599a88eeaa3124f861cb4ee9b6bbae86fe4cffee0885eb04bf3:character-7cd10e80d298e5744c40e401657aa913",
+							"research:event_34637b7ac88c148faba684cf8d73df61bc532c9932e7dd3357d8167fee2a7f3b:character-7cd10e80d298e5744c40e401657aa913",
+							"craft:combat_mastery_bd490f3d551e6399c9e534c090f8de185a30535264a1fc131601c542101bfcab:character-7cd10e80d298e5744c40e401657aa913",
+							"research:event_9141fb57879840aae831a19a55af26566f1a62d05146e559f6b4d532ffe58035:character-7cd10e80d298e5744c40e401657aa913",
+							"craft:combat_mastery_0b37d300b6aee714259c61e6425e9c5c35bb3596aab64e7a869f9fd97e04facf:character-7cd10e80d298e5744c40e401657aa913",
+							"research:event_62fdd2ff486e33088344dddc635267c9b35d4b7c89db03483af934437506e3f6:character-7cd10e80d298e5744c40e401657aa913",
+							"craft:combat_mastery_341bb2ec93266ba1653e7cb218281d607ca8cb6139365c6092856410b457b2b1:character-7cd10e80d298e5744c40e401657aa913",
+							"research:event_7ef50a8ebd7d5115efff845ceffff2f774617a13e175e81facb81748ba58a08c:character-7cd10e80d298e5744c40e401657aa913",
+							"defeat:trainer_round_997457dcca9e7142a6e925b7f5612894cde28f445759dc42c1a92ed13654106b:character-7cd10e80d298e5744c40e401657aa913"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {
+						"actor_vitals:56a175f09d368e55c132a13af1068172b951e2368329236e2134b829dfbfe15f": {
+							"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+							"character_revision": 78,
+							"creature_uid": "creature-943f393c7e7bb2eba3ccc79fd0384122",
+							"delivery_id": "actor_vitals:56a175f09d368e55c132a13af1068172b951e2368329236e2134b829dfbfe15f",
+							"expected_fainted": false,
+							"expected_hp": {
+								"$tb_float64": "a601571ef8904e40"
+							},
+							"fainted": false,
+							"hp": {
+								"$tb_float64": "c855dab4dd8d4640"
+							},
+							"journal_revision": 6,
+							"kind": "actor_vitals",
+							"max_hp": {
+								"$tb_float64": "9a99999999996240"
+							},
+							"receipt": {
+								"body_generation": 1,
+								"creature_uid": "creature-943f393c7e7bb2eba3ccc79fd0384122",
+								"encounter_id": "1:2",
+								"receipt_id": "85a29c91899bb7248794f592080be480:f7b8876be274fb61913e0a83acf205d625984be366b8f6d47229da158ef217b0",
+								"vitals_revision": 2
+							},
+							"session_id": "d0bae5912d252e80637b5a0255469f1d",
+							"status": "settled",
+							"version": 1,
+							"world_id": "slot-0",
+							"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+						}
+					}
+				},
+				"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+				"character_revision": 107,
+				"delivery_id": "creature_training:e1a8e2971a2b0ec114b97aeabad7e1bf8ddbafec9a78982bc1949031918873ea",
+				"host_context": {
+					"binding": {
+						"active_uid": "creature-943f393c7e7bb2eba3ccc79fd0384122",
+						"actor_generation": 3,
+						"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+						"peer_id": 1
+					},
+					"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+					"enemy_record": {
+						"creature_type": "water",
+						"fainted": true,
+						"hp": {
+							"$tb_float64": "0000000000000000"
+						},
+						"level": 9,
+						"secondary_type": "",
+						"species_id": "mosshell",
+						"uid": "creature-d425cdfcf93ee8a5c05dc61e20f7b282"
+					},
+					"event_confirmed": true,
+					"expected_revision": 106,
+					"foundation_runtime_authorized": true,
+					"in_combat": false,
+					"in_range": true,
+					"participants": [
+						{
+							"character_id": "character-a86158c0ba1b2840febe1f5956b8faa8",
+							"peer_id": 386475135
+						},
+						{
+							"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+							"peer_id": 1
+						}
+					],
+					"realm": "meadows",
+					"retained_event": "foundation_event:0b359a3601b1930af0c1a26f6f3774bf1598898164430b6af881eaf6e706b10e",
+					"reward_scope": {
+						"encounter_id": "1:2",
+						"realm": "meadows",
+						"session_id": "d1103d263e97b9dab58047638c9d126c",
+						"trainer_id": "tournament_semi_tam",
+						"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+					},
+					"session_id": "d1103d263e97b9dab58047638c9d126c",
+					"settled_vitals": [
+						{
+							"actor_generation": 3,
+							"fainted": false,
+							"hp": {
+								"$tb_float64": "c855dab4dd8d4640"
+							},
+							"max_hp": {
+								"$tb_float64": "9a99999999996240"
+							},
+							"uid": "creature-943f393c7e7bb2eba3ccc79fd0384122"
+						},
+						{
+							"actor_generation": 0,
+							"fainted": false,
+							"hp": {
+								"$tb_float64": "3333333333735d40"
+							},
+							"max_hp": {
+								"$tb_float64": "3333333333735d40"
+							},
+							"uid": "creature-90e71f8e2c56c50cd9f83bac86128108"
+						},
+						{
+							"actor_generation": 0,
+							"fainted": false,
+							"hp": {
+								"$tb_float64": "6666666666466040"
+							},
+							"max_hp": {
+								"$tb_float64": "6666666666466040"
+							},
+							"uid": "creature-c7fb33ad0b780d9d77dc08cabe2ed59f"
+						},
+						{
+							"actor_generation": 0,
+							"fainted": false,
+							"hp": {
+								"$tb_float64": "0000000000005f40"
+							},
+							"max_hp": {
+								"$tb_float64": "0000000000005f40"
+							},
+							"uid": "creature-1f93060384b5ee84c72eca4e77c301e6"
+						},
+						{
+							"actor_generation": 0,
+							"fainted": false,
+							"hp": {
+								"$tb_float64": "3333333333d36140"
+							},
+							"max_hp": {
+								"$tb_float64": "3333333333d36140"
+							},
+							"uid": "creature-655bdf124a391cf87aca7ec426aba1ee"
+						}
+					],
+					"source_key": "combat_round:ab2233c59e1e6c6eee1dc7bf2e5bf850245e3076c03a4f06c2de302c90a56e73",
+					"validated_host_outcome": "win",
+					"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+				},
+				"intent": {
+					"encounter_id": "1:2",
+					"enemy_uid": "creature-d425cdfcf93ee8a5c05dc61e20f7b282",
+					"phase": "round",
+					"round": 4,
+					"trainer_id": "tournament_semi_tam"
+				},
+				"journal_revision": 12,
+				"kind": "creature_training",
+				"receipt": "defeat:trainer_round_7bd396bbcfcdc947add0de494f3d47362d15bf030f19ca977d6a09099cbb4d18:character-7cd10e80d298e5744c40e401657aa913",
+				"session_id": "d1103d263e97b9dab58047638c9d126c",
+				"source_key": "combat_round:ab2233c59e1e6c6eee1dc7bf2e5bf850245e3076c03a4f06c2de302c90a56e73",
+				"status": "accepted",
+				"version": 3,
+				"world_id": "slot-0",
+				"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+			},
+			"foundation_event:0b359a3601b1930af0c1a26f6f3774bf1598898164430b6af881eaf6e706b10e": {
+				"delivery_id": "foundation_event:0b359a3601b1930af0c1a26f6f3774bf1598898164430b6af881eaf6e706b10e",
+				"duties": [
+					{
+						"action": "combat_round_reward",
+						"character_id": "character-a86158c0ba1b2840febe1f5956b8faa8",
+						"context": {
+							"binding": {
+								"active_uid": "creature-a3f1234a5e3b3108697d78fd092b51f6",
+								"actor_generation": 3,
+								"character_id": "character-a86158c0ba1b2840febe1f5956b8faa8",
+								"peer_id": 386475135
+							},
+							"enemy_record": {
+								"creature_type": "water",
+								"fainted": true,
+								"hp": {
+									"$tb_float64": "0000000000000000"
+								},
+								"level": 9,
+								"secondary_type": "",
+								"species_id": "mosshell",
+								"uid": "creature-d425cdfcf93ee8a5c05dc61e20f7b282"
+							},
+							"event_confirmed": true,
+							"participants": [
+								{
+									"character_id": "character-a86158c0ba1b2840febe1f5956b8faa8",
+									"peer_id": 386475135
+								},
+								{
+									"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+									"peer_id": 1
+								}
+							],
+							"realm": "meadows",
+							"reward_scope": {
+								"encounter_id": "1:2",
+								"realm": "meadows",
+								"session_id": "d1103d263e97b9dab58047638c9d126c",
+								"trainer_id": "tournament_semi_tam",
+								"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+							},
+							"session_id": "d1103d263e97b9dab58047638c9d126c",
+							"settled_vitals": [
+								{
+									"actor_generation": 3,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "92230a4486986040"
+									},
+									"max_hp": {
+										"$tb_float64": "9a99999999996240"
+									},
+									"uid": "creature-a3f1234a5e3b3108697d78fd092b51f6"
+								},
+								{
+									"actor_generation": 0,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "3333333333735d40"
+									},
+									"max_hp": {
+										"$tb_float64": "3333333333735d40"
+									},
+									"uid": "creature-5af395cbb5837cc39af74f967264b3c3"
+								},
+								{
+									"actor_generation": 0,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "6666666666466040"
+									},
+									"max_hp": {
+										"$tb_float64": "6666666666466040"
+									},
+									"uid": "creature-17643f81ad9d50b6687e61ac617913cf"
+								},
+								{
+									"actor_generation": 0,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "0000000000005f40"
+									},
+									"max_hp": {
+										"$tb_float64": "0000000000005f40"
+									},
+									"uid": "creature-04060685d40409a937c2ae50ff5c41d9"
+								},
+								{
+									"actor_generation": 0,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "3333333333d36140"
+									},
+									"max_hp": {
+										"$tb_float64": "3333333333d36140"
+									},
+									"uid": "creature-7f665d0abea9a6319c6a6611e8c8f4f2"
+								}
+							],
+							"source_key": "combat_round:ab2233c59e1e6c6eee1dc7bf2e5bf850245e3076c03a4f06c2de302c90a56e73",
+							"validated_host_outcome": "win",
+							"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+						},
+						"intent": {
+							"encounter_id": "1:2",
+							"enemy_uid": "creature-d425cdfcf93ee8a5c05dc61e20f7b282",
+							"phase": "round",
+							"round": 4,
+							"trainer_id": "tournament_semi_tam"
+						}
+					},
+					{
+						"action": "combat_round_reward",
+						"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+						"context": {
+							"binding": {
+								"active_uid": "creature-943f393c7e7bb2eba3ccc79fd0384122",
+								"actor_generation": 3,
+								"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+								"peer_id": 1
+							},
+							"enemy_record": {
+								"creature_type": "water",
+								"fainted": true,
+								"hp": {
+									"$tb_float64": "0000000000000000"
+								},
+								"level": 9,
+								"secondary_type": "",
+								"species_id": "mosshell",
+								"uid": "creature-d425cdfcf93ee8a5c05dc61e20f7b282"
+							},
+							"event_confirmed": true,
+							"participants": [
+								{
+									"character_id": "character-a86158c0ba1b2840febe1f5956b8faa8",
+									"peer_id": 386475135
+								},
+								{
+									"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+									"peer_id": 1
+								}
+							],
+							"realm": "meadows",
+							"reward_scope": {
+								"encounter_id": "1:2",
+								"realm": "meadows",
+								"session_id": "d1103d263e97b9dab58047638c9d126c",
+								"trainer_id": "tournament_semi_tam",
+								"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+							},
+							"session_id": "d1103d263e97b9dab58047638c9d126c",
+							"settled_vitals": [
+								{
+									"actor_generation": 3,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "c855dab4dd8d4640"
+									},
+									"max_hp": {
+										"$tb_float64": "9a99999999996240"
+									},
+									"uid": "creature-943f393c7e7bb2eba3ccc79fd0384122"
+								},
+								{
+									"actor_generation": 0,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "3333333333735d40"
+									},
+									"max_hp": {
+										"$tb_float64": "3333333333735d40"
+									},
+									"uid": "creature-90e71f8e2c56c50cd9f83bac86128108"
+								},
+								{
+									"actor_generation": 0,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "6666666666466040"
+									},
+									"max_hp": {
+										"$tb_float64": "6666666666466040"
+									},
+									"uid": "creature-c7fb33ad0b780d9d77dc08cabe2ed59f"
+								},
+								{
+									"actor_generation": 0,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "0000000000005f40"
+									},
+									"max_hp": {
+										"$tb_float64": "0000000000005f40"
+									},
+									"uid": "creature-1f93060384b5ee84c72eca4e77c301e6"
+								},
+								{
+									"actor_generation": 0,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "3333333333d36140"
+									},
+									"max_hp": {
+										"$tb_float64": "3333333333d36140"
+									},
+									"uid": "creature-655bdf124a391cf87aca7ec426aba1ee"
+								}
+							],
+							"source_key": "combat_round:ab2233c59e1e6c6eee1dc7bf2e5bf850245e3076c03a4f06c2de302c90a56e73",
+							"validated_host_outcome": "win",
+							"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+						},
+						"intent": {
+							"encounter_id": "1:2",
+							"enemy_uid": "creature-d425cdfcf93ee8a5c05dc61e20f7b282",
+							"phase": "round",
+							"round": 4,
+							"trainer_id": "tournament_semi_tam"
+						}
+					}
+				],
+				"kind": "foundation_event",
+				"session_id": "d1103d263e97b9dab58047638c9d126c",
+				"source_id": "combat_round:ab2233c59e1e6c6eee1dc7bf2e5bf850245e3076c03a4f06c2de302c90a56e73",
+				"status": "retained",
+				"version": 1,
+				"world_id": "slot-0",
+				"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+			},
+			"foundation_event:1f13f32c4dcd6056eca838c71aaf11e0c8e71a0da22c8cbd72a0f4b14b4fa125": {
+				"delivery_id": "foundation_event:1f13f32c4dcd6056eca838c71aaf11e0c8e71a0da22c8cbd72a0f4b14b4fa125",
+				"duties": [
+					{
+						"action": "research_event",
+						"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+						"context": {
+							"event_confirmed": true,
+							"event_id": "17031b380da850f569b1a24c52017388000b880a5a0fbb9842dc9825728e2c14",
+							"kind": "cast",
+							"move_id": "pebble_toss",
+							"participants": [
+								"character-7cd10e80d298e5744c40e401657aa913"
+							],
+							"session_id": "d1103d263e97b9dab58047638c9d126c",
+							"source_key": "encounter:1:2",
+							"species_id": "terrapup",
+							"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+						},
+						"intent": {}
+					}
+				],
+				"kind": "foundation_event",
+				"session_id": "d1103d263e97b9dab58047638c9d126c",
+				"source_id": "17031b380da850f569b1a24c52017388000b880a5a0fbb9842dc9825728e2c14",
+				"status": "retained",
+				"version": 1,
+				"world_id": "slot-0",
+				"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+			},
+			"foundation_event:212f793fca0d9af45e8ea2fbc45031d0809c117af132689f66c4feab90eaf08a": {
+				"delivery_id": "foundation_event:212f793fca0d9af45e8ea2fbc45031d0809c117af132689f66c4feab90eaf08a",
+				"duties": [
+					{
+						"action": "research_event",
+						"character_id": "character-a86158c0ba1b2840febe1f5956b8faa8",
+						"context": {
+							"event_confirmed": true,
+							"event_id": "e739832531b2d92da54e6c916b417a4bdc06ad34363bda8fbd55c840bc2f9b37",
+							"kind": "sight",
+							"participants": [
+								"character-a86158c0ba1b2840febe1f5956b8faa8"
+							],
+							"session_id": "d1103d263e97b9dab58047638c9d126c",
+							"source_key": "encounter:1:2",
+							"species_id": "pipwing",
+							"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+						},
+						"intent": {}
+					}
+				],
+				"kind": "foundation_event",
+				"session_id": "d1103d263e97b9dab58047638c9d126c",
+				"source_id": "e739832531b2d92da54e6c916b417a4bdc06ad34363bda8fbd55c840bc2f9b37",
+				"status": "retained",
+				"version": 1,
+				"world_id": "slot-0",
+				"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+			},
+			"foundation_event:235e8364d22d89caa433e840243ea924a1f4c49255702dd16168e6a300185f4d": {
+				"delivery_id": "foundation_event:235e8364d22d89caa433e840243ea924a1f4c49255702dd16168e6a300185f4d",
+				"duties": [
+					{
+						"action": "combat_mastery",
+						"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+						"context": {
+							"binding": {
+								"actor_generation": 1,
+								"body_instance_id": 6330429702049,
+								"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+								"creature_uid": "creature-943f393c7e7bb2eba3ccc79fd0384122",
+								"deployment_generation": 1
+							},
+							"encounter_id": "1:2",
+							"event_confirmed": true,
+							"outcome": {
+								"action_id": "b43e9cf292828fd0d206cc2b13bb678c:15:ae37b4b19b202e41978c58e4",
+								"applied_damage": {
+									"$tb_float64": "0000000000001840"
+								},
+								"attacker_uid": "creature-943f393c7e7bb2eba3ccc79fd0384122",
+								"move_id": "pebble_toss",
+								"target_hp_before": {
+									"$tb_float64": "0000000000001840"
+								},
+								"target_uid": "creature-4b85169ce23b7f4d7d59e49966e984f8"
+							},
+							"participants": [
+								"character-7cd10e80d298e5744c40e401657aa913"
+							],
+							"session_id": "d1103d263e97b9dab58047638c9d126c",
+							"source_key": "combat_mastery:b43e9cf292828fd0d206cc2b13bb678c:15:ae37b4b19b202e41978c58e4",
+							"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+						},
+						"intent": {
+							"action_id": "b43e9cf292828fd0d206cc2b13bb678c:15:ae37b4b19b202e41978c58e4",
+							"creature_uid": "creature-943f393c7e7bb2eba3ccc79fd0384122"
+						}
+					}
+				],
+				"kind": "foundation_event",
+				"session_id": "d1103d263e97b9dab58047638c9d126c",
+				"source_id": "mastery:b43e9cf292828fd0d206cc2b13bb678c:15:ae37b4b19b202e41978c58e4",
+				"status": "retained",
+				"version": 1,
+				"world_id": "slot-0",
+				"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+			},
+			"foundation_event:34d2d4f992b2b5f88a8b21e53178c57f4e7305f76ee85e0ed44a09ceb15284ba": {
+				"delivery_id": "foundation_event:34d2d4f992b2b5f88a8b21e53178c57f4e7305f76ee85e0ed44a09ceb15284ba",
+				"duties": [
+					{
+						"action": "combat_round_reward",
+						"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+						"context": {
+							"binding": {
+								"active_uid": "creature-943f393c7e7bb2eba3ccc79fd0384122",
+								"actor_generation": 1,
+								"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+								"peer_id": 1
+							},
+							"enemy_record": {
+								"creature_type": "ground",
+								"fainted": true,
+								"hp": {
+									"$tb_float64": "0000000000000000"
+								},
+								"level": 7,
+								"secondary_type": "",
+								"species_id": "bramblebun",
+								"uid": "creature-467e0640bd449aa0adefbad528104be9"
+							},
+							"event_confirmed": true,
+							"participants": [
+								{
+									"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+									"peer_id": 1
+								}
+							],
+							"realm": "meadows",
+							"reward_scope": {
+								"encounter_id": "1:1",
+								"realm": "meadows",
+								"session_id": "d1103d263e97b9dab58047638c9d126c",
+								"trainer_id": "tournament_quarter_mira",
+								"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+							},
+							"session_id": "d1103d263e97b9dab58047638c9d126c",
+							"settled_vitals": [
+								{
+									"actor_generation": 1,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "5ca9511e76e65240"
+									},
+									"max_hp": {
+										"$tb_float64": "9a99999999996240"
+									},
+									"uid": "creature-943f393c7e7bb2eba3ccc79fd0384122"
+								},
+								{
+									"actor_generation": 0,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "3333333333735d40"
+									},
+									"max_hp": {
+										"$tb_float64": "3333333333735d40"
+									},
+									"uid": "creature-90e71f8e2c56c50cd9f83bac86128108"
+								},
+								{
+									"actor_generation": 0,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "6666666666466040"
+									},
+									"max_hp": {
+										"$tb_float64": "6666666666466040"
+									},
+									"uid": "creature-c7fb33ad0b780d9d77dc08cabe2ed59f"
+								},
+								{
+									"actor_generation": 0,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "0000000000005f40"
+									},
+									"max_hp": {
+										"$tb_float64": "0000000000005f40"
+									},
+									"uid": "creature-1f93060384b5ee84c72eca4e77c301e6"
+								},
+								{
+									"actor_generation": 0,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "3333333333d36140"
+									},
+									"max_hp": {
+										"$tb_float64": "3333333333d36140"
+									},
+									"uid": "creature-655bdf124a391cf87aca7ec426aba1ee"
+								}
+							],
+							"source_key": "combat_round:fde87064887c5d5f7f8c26d98a6b49d30628c453519689bc39d874c86558c520",
+							"validated_host_outcome": "win",
+							"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+						},
+						"intent": {
+							"encounter_id": "1:1",
+							"enemy_uid": "creature-467e0640bd449aa0adefbad528104be9",
+							"phase": "round",
+							"round": 1,
+							"trainer_id": "tournament_quarter_mira"
+						}
+					}
+				],
+				"kind": "foundation_event",
+				"session_id": "d1103d263e97b9dab58047638c9d126c",
+				"source_id": "combat_round:fde87064887c5d5f7f8c26d98a6b49d30628c453519689bc39d874c86558c520",
+				"status": "retained",
+				"version": 1,
+				"world_id": "slot-0",
+				"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+			},
+			"foundation_event:37f96ef801c085e2920cd970d917372f8f9f34df7a7f763d7fc321d2ad9cfff8": {
+				"delivery_id": "foundation_event:37f96ef801c085e2920cd970d917372f8f9f34df7a7f763d7fc321d2ad9cfff8",
+				"duties": [
+					{
+						"action": "research_event",
+						"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+						"context": {
+							"event_confirmed": true,
+							"event_id": "bcddc781920b799878f22960e1d38c1ea913f0d88c8acc34f9a5f119e070be4d",
+							"kind": "sight",
+							"participants": [
+								"character-7cd10e80d298e5744c40e401657aa913"
+							],
+							"session_id": "d1103d263e97b9dab58047638c9d126c",
+							"source_key": "encounter:1:2",
+							"species_id": "pipwing",
+							"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+						},
+						"intent": {}
+					}
+				],
+				"kind": "foundation_event",
+				"session_id": "d1103d263e97b9dab58047638c9d126c",
+				"source_id": "bcddc781920b799878f22960e1d38c1ea913f0d88c8acc34f9a5f119e070be4d",
+				"status": "retained",
+				"version": 1,
+				"world_id": "slot-0",
+				"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+			},
+			"foundation_event:3cab616cfabffdda542f24eb9a73588521ccf9eeafb887e75e48715609947442": {
+				"delivery_id": "foundation_event:3cab616cfabffdda542f24eb9a73588521ccf9eeafb887e75e48715609947442",
+				"duties": [
+					{
+						"action": "research_event",
+						"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+						"context": {
+							"event_confirmed": true,
+							"event_id": "1a8c6015e1c25462e3142ac27cc3bf506655c71e2e2e0e57bc41593afc3654b0",
+							"kind": "sight",
+							"participants": [
+								"character-7cd10e80d298e5744c40e401657aa913"
+							],
+							"session_id": "d1103d263e97b9dab58047638c9d126c",
+							"source_key": "encounter:1:1",
+							"species_id": "bramblebun",
+							"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+						},
+						"intent": {}
+					}
+				],
+				"kind": "foundation_event",
+				"session_id": "d1103d263e97b9dab58047638c9d126c",
+				"source_id": "1a8c6015e1c25462e3142ac27cc3bf506655c71e2e2e0e57bc41593afc3654b0",
+				"status": "retained",
+				"version": 1,
+				"world_id": "slot-0",
+				"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+			},
+			"foundation_event:494c2a004a82434208aeff72daa7170cfea056444909d7e9722a96ec01b4450a": {
+				"delivery_id": "foundation_event:494c2a004a82434208aeff72daa7170cfea056444909d7e9722a96ec01b4450a",
+				"duties": [
+					{
+						"action": "combat_round_reward",
+						"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+						"context": {
+							"binding": {
+								"active_uid": "creature-943f393c7e7bb2eba3ccc79fd0384122",
+								"actor_generation": 3,
+								"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+								"peer_id": 1
+							},
+							"enemy_record": {
+								"creature_type": "ground",
+								"fainted": true,
+								"hp": {
+									"$tb_float64": "0000000000000000"
+								},
+								"level": 8,
+								"secondary_type": "",
+								"species_id": "mudsnout",
+								"uid": "creature-bb679dc88d08a43640afd7e217f77784"
+							},
+							"event_confirmed": true,
+							"participants": [
+								{
+									"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+									"peer_id": 1
+								}
+							],
+							"realm": "meadows",
+							"reward_scope": {
+								"encounter_id": "1:1",
+								"realm": "meadows",
+								"session_id": "d1103d263e97b9dab58047638c9d126c",
+								"trainer_id": "tournament_quarter_mira",
+								"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+							},
+							"session_id": "d1103d263e97b9dab58047638c9d126c",
+							"settled_vitals": [
+								{
+									"actor_generation": 3,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "5ca9511e76e65240"
+									},
+									"max_hp": {
+										"$tb_float64": "9a99999999996240"
+									},
+									"uid": "creature-943f393c7e7bb2eba3ccc79fd0384122"
+								},
+								{
+									"actor_generation": 0,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "3333333333735d40"
+									},
+									"max_hp": {
+										"$tb_float64": "3333333333735d40"
+									},
+									"uid": "creature-90e71f8e2c56c50cd9f83bac86128108"
+								},
+								{
+									"actor_generation": 0,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "6666666666466040"
+									},
+									"max_hp": {
+										"$tb_float64": "6666666666466040"
+									},
+									"uid": "creature-c7fb33ad0b780d9d77dc08cabe2ed59f"
+								},
+								{
+									"actor_generation": 0,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "0000000000005f40"
+									},
+									"max_hp": {
+										"$tb_float64": "0000000000005f40"
+									},
+									"uid": "creature-1f93060384b5ee84c72eca4e77c301e6"
+								},
+								{
+									"actor_generation": 0,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "3333333333d36140"
+									},
+									"max_hp": {
+										"$tb_float64": "3333333333d36140"
+									},
+									"uid": "creature-655bdf124a391cf87aca7ec426aba1ee"
+								}
+							],
+							"source_key": "combat_round:2346b2933c41fb3f59141cec407d71a7aa1d216997dade5e8cdb0267d56b99fa",
+							"validated_host_outcome": "win",
+							"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+						},
+						"intent": {
+							"encounter_id": "1:1",
+							"enemy_uid": "creature-bb679dc88d08a43640afd7e217f77784",
+							"phase": "round",
+							"round": 2,
+							"trainer_id": "tournament_quarter_mira"
+						}
+					}
+				],
+				"kind": "foundation_event",
+				"session_id": "d1103d263e97b9dab58047638c9d126c",
+				"source_id": "combat_round:2346b2933c41fb3f59141cec407d71a7aa1d216997dade5e8cdb0267d56b99fa",
+				"status": "retained",
+				"version": 1,
+				"world_id": "slot-0",
+				"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+			},
+			"foundation_event:5b1442149303e571c122b8dca0d5f2efb28979596b5f73d4d03025a15c85912c": {
+				"delivery_id": "foundation_event:5b1442149303e571c122b8dca0d5f2efb28979596b5f73d4d03025a15c85912c",
+				"duties": [
+					{
+						"action": "combat_mastery",
+						"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+						"context": {
+							"binding": {
+								"actor_generation": 3,
+								"body_instance_id": 6330429702049,
+								"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+								"creature_uid": "creature-943f393c7e7bb2eba3ccc79fd0384122",
+								"deployment_generation": 1
+							},
+							"encounter_id": "1:2",
+							"event_confirmed": true,
+							"outcome": {
+								"action_id": "b43e9cf292828fd0d206cc2b13bb678c:17:56f361899ec91418631e9797",
+								"applied_damage": {
+									"$tb_float64": "d8a7ebd34657e53f"
+								},
+								"attacker_uid": "creature-943f393c7e7bb2eba3ccc79fd0384122",
+								"move_id": "pebble_toss",
+								"target_hp_before": {
+									"$tb_float64": "d8a7ebd34657e53f"
+								},
+								"target_uid": "creature-d425cdfcf93ee8a5c05dc61e20f7b282"
+							},
+							"participants": [
+								"character-7cd10e80d298e5744c40e401657aa913"
+							],
+							"session_id": "d1103d263e97b9dab58047638c9d126c",
+							"source_key": "combat_mastery:b43e9cf292828fd0d206cc2b13bb678c:17:56f361899ec91418631e9797",
+							"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+						},
+						"intent": {
+							"action_id": "b43e9cf292828fd0d206cc2b13bb678c:17:56f361899ec91418631e9797",
+							"creature_uid": "creature-943f393c7e7bb2eba3ccc79fd0384122"
+						}
+					}
+				],
+				"kind": "foundation_event",
+				"session_id": "d1103d263e97b9dab58047638c9d126c",
+				"source_id": "mastery:b43e9cf292828fd0d206cc2b13bb678c:17:56f361899ec91418631e9797",
+				"status": "retained",
+				"version": 1,
+				"world_id": "slot-0",
+				"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+			},
+			"foundation_event:6ed70d43ae2c1cd88bd00ec4cc6ff7985ce579e137163f9cdd65c6bae7ef650f": {
+				"delivery_id": "foundation_event:6ed70d43ae2c1cd88bd00ec4cc6ff7985ce579e137163f9cdd65c6bae7ef650f",
+				"duties": [
+					{
+						"action": "research_event",
+						"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+						"context": {
+							"event_confirmed": true,
+							"event_id": "5049bef8830850d7dd0f341314d946e1094278891801987c9aee7bb19a050a31",
+							"kind": "cast",
+							"move_id": "pebble_toss",
+							"participants": [
+								"character-7cd10e80d298e5744c40e401657aa913"
+							],
+							"session_id": "d1103d263e97b9dab58047638c9d126c",
+							"source_key": "encounter:1:2",
+							"species_id": "terrapup",
+							"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+						},
+						"intent": {}
+					}
+				],
+				"kind": "foundation_event",
+				"session_id": "d1103d263e97b9dab58047638c9d126c",
+				"source_id": "5049bef8830850d7dd0f341314d946e1094278891801987c9aee7bb19a050a31",
+				"status": "retained",
+				"version": 1,
+				"world_id": "slot-0",
+				"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+			},
+			"foundation_event:96cbb1419f0073609bc2850b979377595597baed9c4bccda5d53009a99277110": {
+				"delivery_id": "foundation_event:96cbb1419f0073609bc2850b979377595597baed9c4bccda5d53009a99277110",
+				"duties": [
+					{
+						"action": "combat_round_reward",
+						"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+						"context": {
+							"binding": {
+								"active_uid": "creature-943f393c7e7bb2eba3ccc79fd0384122",
+								"actor_generation": 1,
+								"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+								"peer_id": 1
+							},
+							"enemy_record": {
+								"creature_type": "air",
+								"fainted": true,
+								"hp": {
+									"$tb_float64": "0000000000000000"
+								},
+								"level": 9,
+								"secondary_type": "",
+								"species_id": "pipwing",
+								"uid": "creature-4b85169ce23b7f4d7d59e49966e984f8"
+							},
+							"event_confirmed": true,
+							"participants": [
+								{
+									"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+									"peer_id": 1
+								},
+								{
+									"character_id": "character-a86158c0ba1b2840febe1f5956b8faa8",
+									"peer_id": 386475135
+								}
+							],
+							"realm": "meadows",
+							"reward_scope": {
+								"encounter_id": "1:2",
+								"realm": "meadows",
+								"session_id": "d1103d263e97b9dab58047638c9d126c",
+								"trainer_id": "tournament_semi_tam",
+								"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+							},
+							"session_id": "d1103d263e97b9dab58047638c9d126c",
+							"settled_vitals": [
+								{
+									"actor_generation": 1,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "c855dab4dd8d4640"
+									},
+									"max_hp": {
+										"$tb_float64": "9a99999999996240"
+									},
+									"uid": "creature-943f393c7e7bb2eba3ccc79fd0384122"
+								},
+								{
+									"actor_generation": 0,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "3333333333735d40"
+									},
+									"max_hp": {
+										"$tb_float64": "3333333333735d40"
+									},
+									"uid": "creature-90e71f8e2c56c50cd9f83bac86128108"
+								},
+								{
+									"actor_generation": 0,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "6666666666466040"
+									},
+									"max_hp": {
+										"$tb_float64": "6666666666466040"
+									},
+									"uid": "creature-c7fb33ad0b780d9d77dc08cabe2ed59f"
+								},
+								{
+									"actor_generation": 0,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "0000000000005f40"
+									},
+									"max_hp": {
+										"$tb_float64": "0000000000005f40"
+									},
+									"uid": "creature-1f93060384b5ee84c72eca4e77c301e6"
+								},
+								{
+									"actor_generation": 0,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "3333333333d36140"
+									},
+									"max_hp": {
+										"$tb_float64": "3333333333d36140"
+									},
+									"uid": "creature-655bdf124a391cf87aca7ec426aba1ee"
+								}
+							],
+							"source_key": "combat_round:32ebae1ea8b0a192a2d1ca6320d6e96ddc56ee4f1fe0617959006bc20f7fcf91",
+							"validated_host_outcome": "win",
+							"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+						},
+						"intent": {
+							"encounter_id": "1:2",
+							"enemy_uid": "creature-4b85169ce23b7f4d7d59e49966e984f8",
+							"phase": "round",
+							"round": 3,
+							"trainer_id": "tournament_semi_tam"
+						}
+					},
+					{
+						"action": "combat_round_reward",
+						"character_id": "character-a86158c0ba1b2840febe1f5956b8faa8",
+						"context": {
+							"binding": {
+								"active_uid": "creature-a3f1234a5e3b3108697d78fd092b51f6",
+								"actor_generation": 1,
+								"character_id": "character-a86158c0ba1b2840febe1f5956b8faa8",
+								"peer_id": 386475135
+							},
+							"enemy_record": {
+								"creature_type": "air",
+								"fainted": true,
+								"hp": {
+									"$tb_float64": "0000000000000000"
+								},
+								"level": 9,
+								"secondary_type": "",
+								"species_id": "pipwing",
+								"uid": "creature-4b85169ce23b7f4d7d59e49966e984f8"
+							},
+							"event_confirmed": true,
+							"participants": [
+								{
+									"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+									"peer_id": 1
+								},
+								{
+									"character_id": "character-a86158c0ba1b2840febe1f5956b8faa8",
+									"peer_id": 386475135
+								}
+							],
+							"realm": "meadows",
+							"reward_scope": {
+								"encounter_id": "1:2",
+								"realm": "meadows",
+								"session_id": "d1103d263e97b9dab58047638c9d126c",
+								"trainer_id": "tournament_semi_tam",
+								"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+							},
+							"session_id": "d1103d263e97b9dab58047638c9d126c",
+							"settled_vitals": [
+								{
+									"actor_generation": 1,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "92230a4486986040"
+									},
+									"max_hp": {
+										"$tb_float64": "9a99999999996240"
+									},
+									"uid": "creature-a3f1234a5e3b3108697d78fd092b51f6"
+								},
+								{
+									"actor_generation": 0,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "3333333333735d40"
+									},
+									"max_hp": {
+										"$tb_float64": "3333333333735d40"
+									},
+									"uid": "creature-5af395cbb5837cc39af74f967264b3c3"
+								},
+								{
+									"actor_generation": 0,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "6666666666466040"
+									},
+									"max_hp": {
+										"$tb_float64": "6666666666466040"
+									},
+									"uid": "creature-17643f81ad9d50b6687e61ac617913cf"
+								},
+								{
+									"actor_generation": 0,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "0000000000005f40"
+									},
+									"max_hp": {
+										"$tb_float64": "0000000000005f40"
+									},
+									"uid": "creature-04060685d40409a937c2ae50ff5c41d9"
+								},
+								{
+									"actor_generation": 0,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "3333333333d36140"
+									},
+									"max_hp": {
+										"$tb_float64": "3333333333d36140"
+									},
+									"uid": "creature-7f665d0abea9a6319c6a6611e8c8f4f2"
+								}
+							],
+							"source_key": "combat_round:32ebae1ea8b0a192a2d1ca6320d6e96ddc56ee4f1fe0617959006bc20f7fcf91",
+							"validated_host_outcome": "win",
+							"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+						},
+						"intent": {
+							"encounter_id": "1:2",
+							"enemy_uid": "creature-4b85169ce23b7f4d7d59e49966e984f8",
+							"phase": "round",
+							"round": 3,
+							"trainer_id": "tournament_semi_tam"
+						}
+					}
+				],
+				"kind": "foundation_event",
+				"session_id": "d1103d263e97b9dab58047638c9d126c",
+				"source_id": "combat_round:32ebae1ea8b0a192a2d1ca6320d6e96ddc56ee4f1fe0617959006bc20f7fcf91",
+				"status": "retained",
+				"version": 1,
+				"world_id": "slot-0",
+				"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+			},
+			"foundation_event:97c9de50544759aeb495dd6104502df7a2263195f51c9bddffbb938c72fac74b": {
+				"delivery_id": "foundation_event:97c9de50544759aeb495dd6104502df7a2263195f51c9bddffbb938c72fac74b",
+				"duties": [
+					{
+						"action": "research_event",
+						"character_id": "character-a86158c0ba1b2840febe1f5956b8faa8",
+						"context": {
+							"event_confirmed": true,
+							"event_id": "516c90b8519d49123304b6813bed63eb93f24dcaaa783c1f77414be700644e3a",
+							"kind": "sight",
+							"participants": [
+								"character-a86158c0ba1b2840febe1f5956b8faa8"
+							],
+							"session_id": "d1103d263e97b9dab58047638c9d126c",
+							"source_key": "encounter:1:1",
+							"species_id": "bramblebun",
+							"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+						},
+						"intent": {}
+					}
+				],
+				"kind": "foundation_event",
+				"session_id": "d1103d263e97b9dab58047638c9d126c",
+				"source_id": "516c90b8519d49123304b6813bed63eb93f24dcaaa783c1f77414be700644e3a",
+				"status": "retained",
+				"version": 1,
+				"world_id": "slot-0",
+				"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+			},
+			"foundation_event:a6cae2e49cec6da44ed9893e4e281275afb49440eab8dbfe6c73fddb0d49cacf": {
+				"delivery_id": "foundation_event:a6cae2e49cec6da44ed9893e4e281275afb49440eab8dbfe6c73fddb0d49cacf",
+				"duties": [
+					{
+						"action": "combat_mastery",
+						"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+						"context": {
+							"binding": {
+								"actor_generation": 1,
+								"body_instance_id": 6330429702049,
+								"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+								"creature_uid": "creature-943f393c7e7bb2eba3ccc79fd0384122",
+								"deployment_generation": 1
+							},
+							"encounter_id": "1:2",
+							"event_confirmed": true,
+							"outcome": {
+								"action_id": "b43e9cf292828fd0d206cc2b13bb678c:10:c88357b327a375ad5e34d4d0",
+								"applied_damage": {
+									"$tb_float64": "a87ecf2da91b2940"
+								},
+								"attacker_uid": "creature-943f393c7e7bb2eba3ccc79fd0384122",
+								"move_id": "pebble_toss",
+								"target_hp_before": {
+									"$tb_float64": "5c8fc2f528dc5c40"
+								},
+								"target_uid": "creature-4b85169ce23b7f4d7d59e49966e984f8"
+							},
+							"participants": [
+								"character-7cd10e80d298e5744c40e401657aa913"
+							],
+							"session_id": "d1103d263e97b9dab58047638c9d126c",
+							"source_key": "combat_mastery:b43e9cf292828fd0d206cc2b13bb678c:10:c88357b327a375ad5e34d4d0",
+							"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+						},
+						"intent": {
+							"action_id": "b43e9cf292828fd0d206cc2b13bb678c:10:c88357b327a375ad5e34d4d0",
+							"creature_uid": "creature-943f393c7e7bb2eba3ccc79fd0384122"
+						}
+					}
+				],
+				"kind": "foundation_event",
+				"session_id": "d1103d263e97b9dab58047638c9d126c",
+				"source_id": "mastery:b43e9cf292828fd0d206cc2b13bb678c:10:c88357b327a375ad5e34d4d0",
+				"status": "retained",
+				"version": 1,
+				"world_id": "slot-0",
+				"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+			},
+			"foundation_event:bee8c4bd995cfdaf845e276b808435095be4e2285cd6dea767cf9840359f7ce5": {
+				"delivery_id": "foundation_event:bee8c4bd995cfdaf845e276b808435095be4e2285cd6dea767cf9840359f7ce5",
+				"duties": [
+					{
+						"action": "research_event",
+						"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+						"context": {
+							"event_confirmed": true,
+							"event_id": "2477927e388bf99a97da9091d336284895edc7100cc9f28e60f4a375e8cb3b76",
+							"kind": "cast",
+							"move_id": "pebble_toss",
+							"participants": [
+								"character-7cd10e80d298e5744c40e401657aa913"
+							],
+							"session_id": "d1103d263e97b9dab58047638c9d126c",
+							"source_key": "encounter:1:1",
+							"species_id": "terrapup",
+							"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+						},
+						"intent": {}
+					}
+				],
+				"kind": "foundation_event",
+				"session_id": "d1103d263e97b9dab58047638c9d126c",
+				"source_id": "2477927e388bf99a97da9091d336284895edc7100cc9f28e60f4a375e8cb3b76",
+				"status": "retained",
+				"version": 1,
+				"world_id": "slot-0",
+				"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+			},
+			"foundation_event:c4519568023ce95d927e9ac165f8108fc8ead9e3dab5792c2b94a23fcc0fdb36": {
+				"delivery_id": "foundation_event:c4519568023ce95d927e9ac165f8108fc8ead9e3dab5792c2b94a23fcc0fdb36",
+				"duties": [
+					{
+						"action": "research_event",
+						"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+						"context": {
+							"event_confirmed": true,
+							"event_id": "bef54f1d46212f86ed391839034c5cbb70aa8a22731a0600e0ab74566ed87f4e",
+							"kind": "cast",
+							"move_id": "pebble_toss",
+							"participants": [
+								"character-7cd10e80d298e5744c40e401657aa913"
+							],
+							"session_id": "d1103d263e97b9dab58047638c9d126c",
+							"source_key": "encounter:1:2",
+							"species_id": "terrapup",
+							"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+						},
+						"intent": {}
+					}
+				],
+				"kind": "foundation_event",
+				"session_id": "d1103d263e97b9dab58047638c9d126c",
+				"source_id": "bef54f1d46212f86ed391839034c5cbb70aa8a22731a0600e0ab74566ed87f4e",
+				"status": "retained",
+				"version": 1,
+				"world_id": "slot-0",
+				"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+			},
+			"foundation_event:db7bca87ee7c5825083f0016034d2154cfaaef143dc9835908bc0fe20c4c9932": {
+				"delivery_id": "foundation_event:db7bca87ee7c5825083f0016034d2154cfaaef143dc9835908bc0fe20c4c9932",
+				"duties": [
+					{
+						"action": "research_event",
+						"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+						"context": {
+							"event_confirmed": true,
+							"event_id": "f2ff1211bb2a701f0952441b2bbf731fee20a001e43f957ca1d21e9a5ee9972e",
+							"kind": "cast",
+							"move_id": "pebble_toss",
+							"participants": [
+								"character-7cd10e80d298e5744c40e401657aa913"
+							],
+							"session_id": "d1103d263e97b9dab58047638c9d126c",
+							"source_key": "encounter:1:1",
+							"species_id": "terrapup",
+							"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+						},
+						"intent": {}
+					}
+				],
+				"kind": "foundation_event",
+				"session_id": "d1103d263e97b9dab58047638c9d126c",
+				"source_id": "f2ff1211bb2a701f0952441b2bbf731fee20a001e43f957ca1d21e9a5ee9972e",
+				"status": "retained",
+				"version": 1,
+				"world_id": "slot-0",
+				"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+			},
+			"foundation_event:e1ae2554c25966e325ec6e32f9a612ad08b4c8e08bc0078a589cec1d2f930192": {
+				"delivery_id": "foundation_event:e1ae2554c25966e325ec6e32f9a612ad08b4c8e08bc0078a589cec1d2f930192",
+				"duties": [
+					{
+						"action": "research_event",
+						"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+						"context": {
+							"event_confirmed": true,
+							"event_id": "5c03e6eb2b0a447ab6c3e008a0e9e6f0808f058044543ea01d267d778d94d48d",
+							"kind": "cast",
+							"move_id": "pebble_toss",
+							"participants": [
+								"character-7cd10e80d298e5744c40e401657aa913"
+							],
+							"session_id": "d1103d263e97b9dab58047638c9d126c",
+							"source_key": "encounter:1:1",
+							"species_id": "terrapup",
+							"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+						},
+						"intent": {}
+					}
+				],
+				"kind": "foundation_event",
+				"session_id": "d1103d263e97b9dab58047638c9d126c",
+				"source_id": "5c03e6eb2b0a447ab6c3e008a0e9e6f0808f058044543ea01d267d778d94d48d",
+				"status": "retained",
+				"version": 1,
+				"world_id": "slot-0",
+				"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+			},
+			"foundation_event:e285513526462f4e6286706c76f39f0e79b28c4bf102267505c9d8d84c2ca1b1": {
+				"delivery_id": "foundation_event:e285513526462f4e6286706c76f39f0e79b28c4bf102267505c9d8d84c2ca1b1",
+				"duties": [
+					{
+						"action": "combat_round_reward",
+						"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+						"context": {
+							"actual_host_trainer_won": true,
+							"binding": {
+								"active_uid": "creature-943f393c7e7bb2eba3ccc79fd0384122",
+								"actor_generation": 4,
+								"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+								"peer_id": 1
+							},
+							"enemy_record": {
+								"creature_type": "ground",
+								"fainted": true,
+								"hp": {
+									"$tb_float64": "0000000000000000"
+								},
+								"level": 8,
+								"secondary_type": "",
+								"species_id": "mudsnout",
+								"uid": "creature-bb679dc88d08a43640afd7e217f77784"
+							},
+							"event_confirmed": true,
+							"participants": [
+								{
+									"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+									"peer_id": 1
+								}
+							],
+							"realm": "meadows",
+							"reward_scope": {
+								"encounter_id": "1:1",
+								"realm": "meadows",
+								"session_id": "d1103d263e97b9dab58047638c9d126c",
+								"trainer_id": "tournament_quarter_mira",
+								"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+							},
+							"session_id": "d1103d263e97b9dab58047638c9d126c",
+							"settled_vitals": [
+								{
+									"actor_generation": 4,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "5ca9511e76e65240"
+									},
+									"max_hp": {
+										"$tb_float64": "9a99999999996240"
+									},
+									"uid": "creature-943f393c7e7bb2eba3ccc79fd0384122"
+								},
+								{
+									"actor_generation": 0,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "3333333333735d40"
+									},
+									"max_hp": {
+										"$tb_float64": "3333333333735d40"
+									},
+									"uid": "creature-90e71f8e2c56c50cd9f83bac86128108"
+								},
+								{
+									"actor_generation": 0,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "6666666666466040"
+									},
+									"max_hp": {
+										"$tb_float64": "6666666666466040"
+									},
+									"uid": "creature-c7fb33ad0b780d9d77dc08cabe2ed59f"
+								},
+								{
+									"actor_generation": 0,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "0000000000005f40"
+									},
+									"max_hp": {
+										"$tb_float64": "0000000000005f40"
+									},
+									"uid": "creature-1f93060384b5ee84c72eca4e77c301e6"
+								},
+								{
+									"actor_generation": 0,
+									"fainted": false,
+									"hp": {
+										"$tb_float64": "3333333333d36140"
+									},
+									"max_hp": {
+										"$tb_float64": "3333333333d36140"
+									},
+									"uid": "creature-655bdf124a391cf87aca7ec426aba1ee"
+								}
+							],
+							"source_key": "combat_round:07811baedbfee9f26d913050234b799f0e6691a18bf890228e7f1475ce55213a",
+							"validated_host_outcome": "win",
+							"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+						},
+						"intent": {
+							"encounter_id": "1:1",
+							"enemy_uid": "creature-bb679dc88d08a43640afd7e217f77784",
+							"phase": "completion",
+							"round": 2,
+							"trainer_id": "tournament_quarter_mira"
+						}
+					}
+				],
+				"kind": "foundation_event",
+				"session_id": "d1103d263e97b9dab58047638c9d126c",
+				"source_id": "combat_round:07811baedbfee9f26d913050234b799f0e6691a18bf890228e7f1475ce55213a",
+				"status": "retained",
+				"version": 1,
+				"world_id": "slot-0",
+				"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+			},
+			"foundation_event:e3100f1e31313f62fa52e85a3b538ec4ccdcafe1951b762a3315d10b51674b5e": {
+				"delivery_id": "foundation_event:e3100f1e31313f62fa52e85a3b538ec4ccdcafe1951b762a3315d10b51674b5e",
+				"duties": [
+					{
+						"action": "research_event",
+						"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+						"context": {
+							"event_confirmed": true,
+							"event_id": "cbc0981baa17dfb93cf0696ac2dcc758637391050a922d60f1d553d0307eb892",
+							"kind": "cast",
+							"move_id": "pebble_toss",
+							"participants": [
+								"character-7cd10e80d298e5744c40e401657aa913"
+							],
+							"session_id": "d1103d263e97b9dab58047638c9d126c",
+							"source_key": "encounter:1:2",
+							"species_id": "terrapup",
+							"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+						},
+						"intent": {}
+					}
+				],
+				"kind": "foundation_event",
+				"session_id": "d1103d263e97b9dab58047638c9d126c",
+				"source_id": "cbc0981baa17dfb93cf0696ac2dcc758637391050a922d60f1d553d0307eb892",
+				"status": "retained",
+				"version": 1,
+				"world_id": "slot-0",
+				"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+			},
+			"foundation_event:e9d3932ae1eb9287d693c1a7bbc4b82597cb93dad43263d8a20a35f2744f2c0c": {
+				"delivery_id": "foundation_event:e9d3932ae1eb9287d693c1a7bbc4b82597cb93dad43263d8a20a35f2744f2c0c",
+				"duties": [
+					{
+						"action": "combat_mastery",
+						"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+						"context": {
+							"binding": {
+								"actor_generation": 3,
+								"body_instance_id": 6330429702049,
+								"character_id": "character-7cd10e80d298e5744c40e401657aa913",
+								"creature_uid": "creature-943f393c7e7bb2eba3ccc79fd0384122",
+								"deployment_generation": 1
+							},
+							"encounter_id": "1:2",
+							"event_confirmed": true,
+							"outcome": {
+								"action_id": "b43e9cf292828fd0d206cc2b13bb678c:16:aab6964b5556e3b2aa2ac190",
+								"applied_damage": {
+									"$tb_float64": "058b822517551540"
+								},
+								"attacker_uid": "creature-943f393c7e7bb2eba3ccc79fd0384122",
+								"move_id": "pebble_toss",
+								"target_hp_before": {
+									"$tb_float64": "0000000000001840"
+								},
+								"target_uid": "creature-d425cdfcf93ee8a5c05dc61e20f7b282"
+							},
+							"participants": [
+								"character-7cd10e80d298e5744c40e401657aa913"
+							],
+							"session_id": "d1103d263e97b9dab58047638c9d126c",
+							"source_key": "combat_mastery:b43e9cf292828fd0d206cc2b13bb678c:16:aab6964b5556e3b2aa2ac190",
+							"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+						},
+						"intent": {
+							"action_id": "b43e9cf292828fd0d206cc2b13bb678c:16:aab6964b5556e3b2aa2ac190",
+							"creature_uid": "creature-943f393c7e7bb2eba3ccc79fd0384122"
+						}
+					}
+				],
+				"kind": "foundation_event",
+				"session_id": "d1103d263e97b9dab58047638c9d126c",
+				"source_id": "mastery:b43e9cf292828fd0d206cc2b13bb678c:16:aab6964b5556e3b2aa2ac190",
+				"status": "retained",
+				"version": 1,
+				"world_id": "slot-0",
+				"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+			},
+			"foundation_event:ea933aa5859f8572b21eb6b9ae6ee31a9cdc586b5eebdf5663869337cb4d9be8": {
+				"delivery_id": "foundation_event:ea933aa5859f8572b21eb6b9ae6ee31a9cdc586b5eebdf5663869337cb4d9be8",
+				"duties": [
+					{
+						"action": "combat_mastery",
+						"character_id": "character-a86158c0ba1b2840febe1f5956b8faa8",
+						"context": {
+							"binding": {
+								"actor_generation": 1,
+								"body_instance_id": 6742813670904,
+								"character_id": "character-a86158c0ba1b2840febe1f5956b8faa8",
+								"creature_uid": "creature-a3f1234a5e3b3108697d78fd092b51f6",
+								"deployment_generation": 1
+							},
+							"encounter_id": "1:2",
+							"event_confirmed": true,
+							"outcome": {
+								"action_id": "b43e9cf292828fd0d206cc2b13bb678c:14:c61718b3f243f66000cbe44e",
+								"applied_damage": {
+									"$tb_float64": "e89608d1e5ff2540"
+								},
+								"attacker_uid": "creature-a3f1234a5e3b3108697d78fd092b51f6",
+								"move_id": "pebble_toss",
+								"target_hp_before": {
+									"$tb_float64": "879f08d0b3b85940"
+								},
+								"target_uid": "creature-4b85169ce23b7f4d7d59e49966e984f8"
+							},
+							"participants": [
+								"character-a86158c0ba1b2840febe1f5956b8faa8"
+							],
+							"session_id": "d1103d263e97b9dab58047638c9d126c",
+							"source_key": "combat_mastery:b43e9cf292828fd0d206cc2b13bb678c:14:c61718b3f243f66000cbe44e",
+							"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+						},
+						"intent": {
+							"action_id": "b43e9cf292828fd0d206cc2b13bb678c:14:c61718b3f243f66000cbe44e",
+							"creature_uid": "creature-a3f1234a5e3b3108697d78fd092b51f6"
+						}
+					}
+				],
+				"kind": "foundation_event",
+				"session_id": "d1103d263e97b9dab58047638c9d126c",
+				"source_id": "mastery:b43e9cf292828fd0d206cc2b13bb678c:14:c61718b3f243f66000cbe44e",
+				"status": "retained",
+				"version": 1,
+				"world_id": "slot-0",
+				"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+			},
+			"foundation_event:ed926789d06f788abfb75cf6f81b8006a45e98cf105751bb58a53d5ae5eec69c": {
+				"delivery_id": "foundation_event:ed926789d06f788abfb75cf6f81b8006a45e98cf105751bb58a53d5ae5eec69c",
+				"duties": [
+					{
+						"action": "research_event",
+						"character_id": "character-a86158c0ba1b2840febe1f5956b8faa8",
+						"context": {
+							"event_confirmed": true,
+							"event_id": "48d7ec099f7d07cb5b30e4af3c0fdd1e1235814c6be8ba12d5b645e21b50ee9e",
+							"kind": "cast",
+							"move_id": "pebble_toss",
+							"participants": [
+								"character-a86158c0ba1b2840febe1f5956b8faa8"
+							],
+							"session_id": "d1103d263e97b9dab58047638c9d126c",
+							"source_key": "encounter:1:2",
+							"species_id": "terrapup",
+							"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+						},
+						"intent": {}
+					}
+				],
+				"kind": "foundation_event",
+				"session_id": "d1103d263e97b9dab58047638c9d126c",
+				"source_id": "48d7ec099f7d07cb5b30e4af3c0fdd1e1235814c6be8ba12d5b645e21b50ee9e",
+				"status": "retained",
+				"version": 1,
+				"world_id": "slot-0",
+				"world_namespace": "dc46d4558361a66316920aa5ee5021a9"
+			}
+		},
+		"reward_delivery_namespace": "dc46d4558361a66316920aa5ee5021a9",
+		"version": 28,
+		"water_capture_claims": {},
+		"world_id": "slot-0",
+		"world_seed": 594440845
+	}
+}
