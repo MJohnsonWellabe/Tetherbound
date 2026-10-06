@@ -1237,9 +1237,10 @@
       "water_revive",
       "water_trail_preserve",
       "water_swift_tonic",
-      "water_stoneguard_brew"
+      "water_stoneguard_brew",
+      "water_swim_saddle"
     ],
-    "_comment_field": "Preserve existing camp orbs, medicines, basic tools/seeds and authored realm travel supplies. Gear, saddles, refining, attachments and essence spending remain homestead-only. No F34 forward-camp kit is authored here."
+    "_comment_field": "Preserve existing camp orbs, medicines, basic tools/seeds and authored realm travel supplies, including the Water Swim Saddle taught by Iona. Gear, other saddles, refining, attachments and essence spending remain homestead-only. No F34 forward-camp kit is authored here."
   },
   "auxiliary_buildables": [
     "greenhouse"
