@@ -2,3 +2,5 @@
 *.gd text eol=lf
 *.json text eol=lf
 *.sh text eol=lf
+# Preserve original native evidence bytes and their recorded hashes.
+ralph/reports/TRAINING/f28/r5/parser-first/** -text
