@@ -1,6 +1,6 @@
 {
-  "status": "CURRENT_AUTHORED_REACHABILITY_AND_REVIEWED_LOCAL_NODE_WITNESSES; BERRIES_AND_CATALYST_PICKUP_BINDINGS_OPEN",
-  "claim": "All recipe ingredients have current authored sources in or before their biome (728 unchanged source checks pass). Existing F32 local native witnesses support all eight attuned types and the other materials via valid same-or-earlier-biome sources. Air raw JSON X decimals differ, but both map to identical production Vector3 coordinate bits; reviewed engine-equivalent local witness reuse, original mismatch retained. Disclosed 6m starts remain explicit. F28#5 is OPEN only for usable-source evidence bindings for berries, heartstone and sunstone; full campaign/repeat supply/farming are outside this criterion.",
+  "status": "CURRENT_AUTHORED_REACHABILITY_AND_REVIEWED_LOCAL_NODE_WITNESSES; BERRIES_AND_SUNSTONE_BINDINGS_OPEN",
+  "claim": "All recipe ingredients have current authored sources in or before their biome (728 unchanged source checks pass). Existing F32 local native witnesses support all eight attuned types and the other materials via valid same-or-earlier-biome sources. Air raw JSON X decimals differ, but both map to identical production Vector3 coordinate bits; reviewed engine-equivalent local witness reuse, original mismatch retained. Disclosed 6m starts remain explicit. Exact-source retained vault production pickup/save/reload supports Heartstone reachability with its guardian-clear and party fixtures disclosed. F28#5 is OPEN only for usable-source evidence bindings for berries and sunstone; full campaign/repeat supply/farming are outside this criterion.",
   "external_source": {
     "owner": "F32",
     "source_commit": "8e7c11ceb5854f063c5241d62618c382803562c9",
@@ -1034,7 +1034,24 @@
               1
             ],
             "amount": 1,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "RETAINED_PRODUCTION_PICKUP_AND_RELOAD; SCOPED_SOURCE_REUSE_PASS"
+          },
+          "native_local_witness": {
+            "receipt_path": "ralph/reports/INTEGRATION/reproof-fixes/F03-3/f03-wr-vault-activity.txt",
+            "receipt_commit": "8e7c11ceb5854f063c5241d62618c382803562c9",
+            "receipt_git_sha256": "73180d52cbe62d2eb59e3312019b753563162ea2d7bc2581f967a3c504080dcc",
+            "source_head": "f5648eb83b9ec44c564c7c72834bfb00df45cdc7",
+            "provenance_path": "ralph/reports/INTEGRATION/reproof-fixes/F03-3/F03-3.md",
+            "native_verdict": "PASS; exit0; 2026-10-04T19:50:45Z; Godot4.7",
+            "actual_controller_route": "authored entrance, mouth, hall, den, vault",
+            "production_pickup_input": true,
+            "item_and_once_flag": true,
+            "production_save_reload": true,
+            "reuse_local_witness": true,
+            "independent_reviewer": "/root/f28_review",
+            "reuse_scope": "F28#5 Heartstone source reachability only; placement/pickup unchanged; Interactable delta only remote-trainer sight, SaveGame delta only refusal diagnostic arity",
+            "fixture": "existing five Lv13 owned species; guardian-clear prerequisite; entrance relocation; other residents frozen; existing COMBAT_PILOT Elder fight",
+            "exclusions": "no current Elder combat, earned campaign/catch, co-op, owner ACK, repeated supply or visual claim"
           }
         },
         {
@@ -1354,7 +1371,24 @@
               1
             ],
             "amount": 1,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "RETAINED_PRODUCTION_PICKUP_AND_RELOAD; SCOPED_SOURCE_REUSE_PASS"
+          },
+          "native_local_witness": {
+            "receipt_path": "ralph/reports/INTEGRATION/reproof-fixes/F03-3/f03-wr-vault-activity.txt",
+            "receipt_commit": "8e7c11ceb5854f063c5241d62618c382803562c9",
+            "receipt_git_sha256": "73180d52cbe62d2eb59e3312019b753563162ea2d7bc2581f967a3c504080dcc",
+            "source_head": "f5648eb83b9ec44c564c7c72834bfb00df45cdc7",
+            "provenance_path": "ralph/reports/INTEGRATION/reproof-fixes/F03-3/F03-3.md",
+            "native_verdict": "PASS; exit0; 2026-10-04T19:50:45Z; Godot4.7",
+            "actual_controller_route": "authored entrance, mouth, hall, den, vault",
+            "production_pickup_input": true,
+            "item_and_once_flag": true,
+            "production_save_reload": true,
+            "reuse_local_witness": true,
+            "independent_reviewer": "/root/f28_review",
+            "reuse_scope": "F28#5 Heartstone source reachability only; placement/pickup unchanged; Interactable delta only remote-trainer sight, SaveGame delta only refusal diagnostic arity",
+            "fixture": "existing five Lv13 owned species; guardian-clear prerequisite; entrance relocation; other residents frozen; existing COMBAT_PILOT Elder fight",
+            "exclusions": "no current Elder combat, earned campaign/catch, co-op, owner ACK, repeated supply or visual claim"
           }
         },
         {
@@ -1674,7 +1708,24 @@
               1
             ],
             "amount": 1,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "RETAINED_PRODUCTION_PICKUP_AND_RELOAD; SCOPED_SOURCE_REUSE_PASS"
+          },
+          "native_local_witness": {
+            "receipt_path": "ralph/reports/INTEGRATION/reproof-fixes/F03-3/f03-wr-vault-activity.txt",
+            "receipt_commit": "8e7c11ceb5854f063c5241d62618c382803562c9",
+            "receipt_git_sha256": "73180d52cbe62d2eb59e3312019b753563162ea2d7bc2581f967a3c504080dcc",
+            "source_head": "f5648eb83b9ec44c564c7c72834bfb00df45cdc7",
+            "provenance_path": "ralph/reports/INTEGRATION/reproof-fixes/F03-3/F03-3.md",
+            "native_verdict": "PASS; exit0; 2026-10-04T19:50:45Z; Godot4.7",
+            "actual_controller_route": "authored entrance, mouth, hall, den, vault",
+            "production_pickup_input": true,
+            "item_and_once_flag": true,
+            "production_save_reload": true,
+            "reuse_local_witness": true,
+            "independent_reviewer": "/root/f28_review",
+            "reuse_scope": "F28#5 Heartstone source reachability only; placement/pickup unchanged; Interactable delta only remote-trainer sight, SaveGame delta only refusal diagnostic arity",
+            "fixture": "existing five Lv13 owned species; guardian-clear prerequisite; entrance relocation; other residents frozen; existing COMBAT_PILOT Elder fight",
+            "exclusions": "no current Elder combat, earned campaign/catch, co-op, owner ACK, repeated supply or visual claim"
           }
         },
         {
@@ -1994,7 +2045,24 @@
               1
             ],
             "amount": 1,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "RETAINED_PRODUCTION_PICKUP_AND_RELOAD; SCOPED_SOURCE_REUSE_PASS"
+          },
+          "native_local_witness": {
+            "receipt_path": "ralph/reports/INTEGRATION/reproof-fixes/F03-3/f03-wr-vault-activity.txt",
+            "receipt_commit": "8e7c11ceb5854f063c5241d62618c382803562c9",
+            "receipt_git_sha256": "73180d52cbe62d2eb59e3312019b753563162ea2d7bc2581f967a3c504080dcc",
+            "source_head": "f5648eb83b9ec44c564c7c72834bfb00df45cdc7",
+            "provenance_path": "ralph/reports/INTEGRATION/reproof-fixes/F03-3/F03-3.md",
+            "native_verdict": "PASS; exit0; 2026-10-04T19:50:45Z; Godot4.7",
+            "actual_controller_route": "authored entrance, mouth, hall, den, vault",
+            "production_pickup_input": true,
+            "item_and_once_flag": true,
+            "production_save_reload": true,
+            "reuse_local_witness": true,
+            "independent_reviewer": "/root/f28_review",
+            "reuse_scope": "F28#5 Heartstone source reachability only; placement/pickup unchanged; Interactable delta only remote-trainer sight, SaveGame delta only refusal diagnostic arity",
+            "fixture": "existing five Lv13 owned species; guardian-clear prerequisite; entrance relocation; other residents frozen; existing COMBAT_PILOT Elder fight",
+            "exclusions": "no current Elder combat, earned campaign/catch, co-op, owner ACK, repeated supply or visual claim"
           }
         },
         {
@@ -2314,7 +2382,24 @@
               1
             ],
             "amount": 1,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "RETAINED_PRODUCTION_PICKUP_AND_RELOAD; SCOPED_SOURCE_REUSE_PASS"
+          },
+          "native_local_witness": {
+            "receipt_path": "ralph/reports/INTEGRATION/reproof-fixes/F03-3/f03-wr-vault-activity.txt",
+            "receipt_commit": "8e7c11ceb5854f063c5241d62618c382803562c9",
+            "receipt_git_sha256": "73180d52cbe62d2eb59e3312019b753563162ea2d7bc2581f967a3c504080dcc",
+            "source_head": "f5648eb83b9ec44c564c7c72834bfb00df45cdc7",
+            "provenance_path": "ralph/reports/INTEGRATION/reproof-fixes/F03-3/F03-3.md",
+            "native_verdict": "PASS; exit0; 2026-10-04T19:50:45Z; Godot4.7",
+            "actual_controller_route": "authored entrance, mouth, hall, den, vault",
+            "production_pickup_input": true,
+            "item_and_once_flag": true,
+            "production_save_reload": true,
+            "reuse_local_witness": true,
+            "independent_reviewer": "/root/f28_review",
+            "reuse_scope": "F28#5 Heartstone source reachability only; placement/pickup unchanged; Interactable delta only remote-trainer sight, SaveGame delta only refusal diagnostic arity",
+            "fixture": "existing five Lv13 owned species; guardian-clear prerequisite; entrance relocation; other residents frozen; existing COMBAT_PILOT Elder fight",
+            "exclusions": "no current Elder combat, earned campaign/catch, co-op, owner ACK, repeated supply or visual claim"
           }
         },
         {
@@ -2634,7 +2719,24 @@
               1
             ],
             "amount": 1,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "RETAINED_PRODUCTION_PICKUP_AND_RELOAD; SCOPED_SOURCE_REUSE_PASS"
+          },
+          "native_local_witness": {
+            "receipt_path": "ralph/reports/INTEGRATION/reproof-fixes/F03-3/f03-wr-vault-activity.txt",
+            "receipt_commit": "8e7c11ceb5854f063c5241d62618c382803562c9",
+            "receipt_git_sha256": "73180d52cbe62d2eb59e3312019b753563162ea2d7bc2581f967a3c504080dcc",
+            "source_head": "f5648eb83b9ec44c564c7c72834bfb00df45cdc7",
+            "provenance_path": "ralph/reports/INTEGRATION/reproof-fixes/F03-3/F03-3.md",
+            "native_verdict": "PASS; exit0; 2026-10-04T19:50:45Z; Godot4.7",
+            "actual_controller_route": "authored entrance, mouth, hall, den, vault",
+            "production_pickup_input": true,
+            "item_and_once_flag": true,
+            "production_save_reload": true,
+            "reuse_local_witness": true,
+            "independent_reviewer": "/root/f28_review",
+            "reuse_scope": "F28#5 Heartstone source reachability only; placement/pickup unchanged; Interactable delta only remote-trainer sight, SaveGame delta only refusal diagnostic arity",
+            "fixture": "existing five Lv13 owned species; guardian-clear prerequisite; entrance relocation; other residents frozen; existing COMBAT_PILOT Elder fight",
+            "exclusions": "no current Elder combat, earned campaign/catch, co-op, owner ACK, repeated supply or visual claim"
           }
         },
         {
@@ -2954,7 +3056,24 @@
               1
             ],
             "amount": 1,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "RETAINED_PRODUCTION_PICKUP_AND_RELOAD; SCOPED_SOURCE_REUSE_PASS"
+          },
+          "native_local_witness": {
+            "receipt_path": "ralph/reports/INTEGRATION/reproof-fixes/F03-3/f03-wr-vault-activity.txt",
+            "receipt_commit": "8e7c11ceb5854f063c5241d62618c382803562c9",
+            "receipt_git_sha256": "73180d52cbe62d2eb59e3312019b753563162ea2d7bc2581f967a3c504080dcc",
+            "source_head": "f5648eb83b9ec44c564c7c72834bfb00df45cdc7",
+            "provenance_path": "ralph/reports/INTEGRATION/reproof-fixes/F03-3/F03-3.md",
+            "native_verdict": "PASS; exit0; 2026-10-04T19:50:45Z; Godot4.7",
+            "actual_controller_route": "authored entrance, mouth, hall, den, vault",
+            "production_pickup_input": true,
+            "item_and_once_flag": true,
+            "production_save_reload": true,
+            "reuse_local_witness": true,
+            "independent_reviewer": "/root/f28_review",
+            "reuse_scope": "F28#5 Heartstone source reachability only; placement/pickup unchanged; Interactable delta only remote-trainer sight, SaveGame delta only refusal diagnostic arity",
+            "fixture": "existing five Lv13 owned species; guardian-clear prerequisite; entrance relocation; other residents frozen; existing COMBAT_PILOT Elder fight",
+            "exclusions": "no current Elder combat, earned campaign/catch, co-op, owner ACK, repeated supply or visual claim"
           }
         },
         {
@@ -3274,7 +3393,24 @@
               1
             ],
             "amount": 1,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "RETAINED_PRODUCTION_PICKUP_AND_RELOAD; SCOPED_SOURCE_REUSE_PASS"
+          },
+          "native_local_witness": {
+            "receipt_path": "ralph/reports/INTEGRATION/reproof-fixes/F03-3/f03-wr-vault-activity.txt",
+            "receipt_commit": "8e7c11ceb5854f063c5241d62618c382803562c9",
+            "receipt_git_sha256": "73180d52cbe62d2eb59e3312019b753563162ea2d7bc2581f967a3c504080dcc",
+            "source_head": "f5648eb83b9ec44c564c7c72834bfb00df45cdc7",
+            "provenance_path": "ralph/reports/INTEGRATION/reproof-fixes/F03-3/F03-3.md",
+            "native_verdict": "PASS; exit0; 2026-10-04T19:50:45Z; Godot4.7",
+            "actual_controller_route": "authored entrance, mouth, hall, den, vault",
+            "production_pickup_input": true,
+            "item_and_once_flag": true,
+            "production_save_reload": true,
+            "reuse_local_witness": true,
+            "independent_reviewer": "/root/f28_review",
+            "reuse_scope": "F28#5 Heartstone source reachability only; placement/pickup unchanged; Interactable delta only remote-trainer sight, SaveGame delta only refusal diagnostic arity",
+            "fixture": "existing five Lv13 owned species; guardian-clear prerequisite; entrance relocation; other residents frozen; existing COMBAT_PILOT Elder fight",
+            "exclusions": "no current Elder combat, earned campaign/catch, co-op, owner ACK, repeated supply or visual claim"
           }
         },
         {
