@@ -1,0 +1,63 @@
+{
+  "hypothesis": "Reader keeps30 Wind for burst; current charged35 plus reserve needs65 of Galewisp80 capacity. Existing global charged-cost25 trial reduces this budget to55 without changing move damage, geometry or pilot. Shared cost affects all starters; preservation requires final all-starter proof.",
+  "scope": "Existing flat-fixture C2 tuning diagnostics only; subset coverage=false; final all-starter Windows/wild/visual acceptance remains required",
+  "dispatches": [
+    {
+      "inputs": {
+        "mode": "headless",
+        "checkout_ref": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+        "label": "r2-f22-gale-outer-control-20261006T0712Z",
+        "script": "tests/smoke_f22_pattern_bands.gd",
+        "args": "--seeds=12 --trainers --band=tidewake/outer_reaches --starters=galewisp --json=res://r2-f22-gale-outer-control-20261006T0712Z.json",
+        "timeout_minutes": "150"
+      },
+      "dispatched_utc": "2026-10-06T07:10:44.1881274Z",
+      "label": "r2-f22-gale-outer-control-20261006T0712Z",
+      "status_code": 204
+    },
+    {
+      "inputs": {
+        "mode": "headless",
+        "checkout_ref": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+        "label": "r2-f22-gale-outer-wind25-20261006T0712Z",
+        "script": "tests/smoke_f22_pattern_bands.gd",
+        "args": "--seeds=12 --trainers --band=tidewake/outer_reaches --starters=galewisp --json=res://r2-f22-gale-outer-wind25-20261006T0712Z.json --config-patch=wind.charged_cost=25",
+        "timeout_minutes": "150"
+      },
+      "dispatched_utc": "2026-10-06T07:10:45.7802882Z",
+      "label": "r2-f22-gale-outer-wind25-20261006T0712Z",
+      "status_code": 204
+    },
+    {
+      "inputs": {
+        "mode": "headless",
+        "checkout_ref": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+        "label": "r2-f22-gale-veilfall-control-20261006T0712Z",
+        "script": "tests/smoke_f22_pattern_bands.gd",
+        "args": "--seeds=12 --trainers --band=tidewake/veilfall --starters=galewisp --json=res://r2-f22-gale-veilfall-control-20261006T0712Z.json",
+        "timeout_minutes": "150"
+      },
+      "dispatched_utc": "2026-10-06T07:10:47.2103518Z",
+      "label": "r2-f22-gale-veilfall-control-20261006T0712Z",
+      "status_code": 204
+    },
+    {
+      "inputs": {
+        "mode": "headless",
+        "checkout_ref": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+        "label": "r2-f22-gale-veilfall-wind25-20261006T0712Z",
+        "script": "tests/smoke_f22_pattern_bands.gd",
+        "args": "--seeds=12 --trainers --band=tidewake/veilfall --starters=galewisp --json=res://r2-f22-gale-veilfall-wind25-20261006T0712Z.json --config-patch=wind.charged_cost=25",
+        "timeout_minutes": "150"
+      },
+      "dispatched_utc": "2026-10-06T07:10:48.6674306Z",
+      "label": "r2-f22-gale-veilfall-wind25-20261006T0712Z",
+      "status_code": 204
+    }
+  ],
+  "source_sha": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+  "platform": "hosted Ubuntu official Godot4.7, default frame pacing; paired controls required",
+  "workflow_ref": "main",
+  "workflow_path": ".github/workflows/render.yml",
+  "workflow_id": 367653314
+}
