@@ -75,6 +75,19 @@ func _harness_dispatch(action: String, args: Dictionary) -> Dictionary:
 			return {"verdict": "PASS" if handled and bool(manager.get("_enemy_strike_connected")) else "FAIL",
 				"detail": "host s %.4f, connected %s" % [host_s, str(manager.get("_enemy_strike_connected"))],
 				"host_s": host_s}
+		"harness_hold_opponent", "harness_release_opponent":
+			# DISCLOSED FIXTURE (host only): the live wild's own swings are not
+			# routed while held, so the scripted strike is the only hit measured.
+			var manager := _combat_manager()
+			var wild: Node = manager.get("_wild") if manager != null else null
+			if wild == null or not wild.has_signal("strike_ready"):
+				return {"verdict": "ERROR", "detail": "the host has no live opponent"}
+			var strike := Callable(manager, "_on_enemy_strike")
+			if action == "harness_hold_opponent" and wild.is_connected("strike_ready", strike):
+				wild.disconnect("strike_ready", strike)
+			elif action == "harness_release_opponent" and not wild.is_connected("strike_ready", strike):
+				wild.connect("strike_ready", strike)
+			return {"verdict": "PASS", "detail": "%s: opponent swings routed %s" % [action, str(wild.is_connected("strike_ready", strike))]}
 		"harness_unwear":
 			var uid := str((members[0] as RefCounted).get("uid"))
 			var row: Dictionary = (local.get("redesign_character") as Dictionary).get("creatures", {}).get(uid, {})

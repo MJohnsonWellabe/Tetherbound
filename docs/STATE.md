@@ -178,6 +178,7 @@ ACCEPTANCE was reconciled with RD-01..RD-37 (PR #527). Eleven legacy-path tests 
 - **Accepted art:** camp set, pickups, South Bridge gate and lost rigs retain ART_DIRECTION §7 dispositions unless gameplay evidence reopens them.
 - **Owner reports.** Fresh owner repros reopen ledger-fixed items; first check the played build.
 - **Forward camps (F34, lane A).** Tidewake now has the BuildPlacer (coordinator-approved hook), so forward camps place there. Sea and shallows refuse. World load is unchanged: 8.6 s with the hook against 8.8–9.5 s without. A co-op guest places a camp only in the host's loaded realm; elsewhere the host refuses with a reason. The second-camp pack-up offer applies when a kit is in hand. Ground within the allowed rise no longer blocks a camp's clearance; every other low collider still does. Evidence: `ralph/reports/HUB/f17/f34/`.
+- **Opening gifts for a co-op guest (F01#6a, lane A).** Grandpa's gifts are held until the Home Key settles, then claimed from the host under the conversation that spoke them; a batch spoken while one is held waits behind it with its own name. UX follow-up (open): a guest's Basic Orbs arrive about 3.7 s after Grandpa hands them over, which is noticeable. Evidence: `ralph/reports/F01-FIXES/f01_6a/`.
 
 ## 5. Dependencies and still-open design questions
 

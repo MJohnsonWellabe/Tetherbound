@@ -3172,8 +3172,16 @@ func use_home_key() -> bool:
 
 ## Appended to Game. Only the mounted opening director may call these local
 ## producer doors. They are not RPCs and do not accept an imported roster.
+##
+## F01#6a: the starter is a CHARACTER fact the HOST decides. Once the host's
+## snapshot has made a guest's character file a valid save candidate, the guest
+## asks the host to stage its starter (`_request_original_starter` below) and
+## never writes its own party; the host commits its own locally. Refusing every
+## non-host outright held each guest's adoption pending forever, which kept the
+## opening modal and Grandpa unreachable
+## (`ralph/reports/INTEGRATION/reproof/f01-current/row6/VERDICT.md on tb/reproof-f01 f5e2b5cb` §1).
 func commit_original_starter(source: Node, instance: RefCounted, nickname: String) -> bool:
-	if session == null or not is_host() or save_system == null or source == null or instance == null: return false
+	if not original_starter_writer_ready() or source == null or instance == null: return false
 	if not bool(session.call("portal_runtime_ready")) and session.call("config").get("redesign_ending_runtime_enabled", false) != true: return false
 	var scene := get_tree().current_scene
 	if scene == null or not scene.is_ancestor_of(source) or source.get_script().resource_path != "res://scripts/story/sequence_director.gd": return false
@@ -3184,7 +3192,11 @@ func commit_original_starter(source: Node, instance: RefCounted, nickname: Strin
 	var prefix := "starter_choice:%s:" % local.character_id
 	var receipt: String = prefix + uid
 	for prior: String in local.redesign_character.transaction_receipts:
-		if prior.begins_with(prefix): return prior == receipt and local.flags.call("has", "opening:starter_granted") == true
+		if prior.begins_with(prefix):
+			return prior == receipt and local.flags.call("has", "opening:starter_granted") == true \
+				and _original_starter_admitted(instance, receipt)
+	if not is_host():
+		return _request_original_starter(instance, nickname)
 	if party.size() != 0 or session.call("_owner_training_mutation_blocked", local) == true: return false
 	if not bool(save_system.call("finish_fallback")) or save_system.call("fallback_busy") == true: return false
 	# Flush callbacks cannot turn this into another character's adoption.
@@ -3207,6 +3219,147 @@ func commit_original_starter(source: Node, instance: RefCounted, nickname: Strin
 		local.flags.call("load_data", before_flags)
 		return false
 	return true
+
+
+## F01#6a. A guest never writes its own original starter. It names its live
+## starter instance -- the one its follower body already pilots -- and asks the
+## host to stage `starter_choice` (scripts/net/starter_choice_action.gd), which
+## validates the card against the host's own admitted record and config. Its
+## party stays empty while the stage is in flight, so its owner-passive inputs
+## stay on the host's roster. The journalled row is installed by
+## character_action_owner.gd, which appends exactly this pending instance, saves,
+## ACKs and re-arms the passive stream; the opening finishes once the row reads
+## accepted. Re-asking is idempotent: every retry re-sends the card the first
+## request carried, so the host's answer is repeatable. The install itself still
+## requires the live instance to equal the staged card (character_action_owner).
+var _original_starter_pending: RefCounted = null
+var _original_starter_pending_card: Dictionary = {}
+
+
+func _request_original_starter(instance: RefCounted, nickname: String) -> bool:
+	if party.size() != 0 or session == null or not session.has_method("request_original_starter"): return false
+	if _original_starter_pending != null and _original_starter_pending != instance: return false
+	if _original_starter_pending == null:
+		instance.set("nickname", nickname)
+		var first: Dictionary = preload("res://scripts/save/water_capture_codec.gd").encode(instance)
+		if first.is_empty(): return false
+		_original_starter_pending = instance
+		_original_starter_pending_card = first
+	session.call("request_original_starter", _original_starter_pending_card.duplicate(true))
+	return false
+
+
+## The installer's only source for the newcomer (character_action_owner.gd).
+func pending_original_starter_instance() -> RefCounted:
+	return _original_starter_pending
+
+
+## The opening gave up on this request (the host refused it): forget the
+## instance so a fresh choice can be made. Refused (false) once the host has
+## journalled a `starter_choice` row for this character: that row is the
+## decision, and the installer needs this exact instance when it arrives.
+func cancel_original_starter_request() -> bool:
+	var row: Variant = world.reward_deliveries.get(preload("res://scripts/creatures/essence.gd").training_delivery_id(world.reward_delivery_namespace, local.character_id))
+	if row is Dictionary and row.get("action") == "starter_choice":
+		return false
+	_original_starter_pending = null
+	_original_starter_pending_card = {}
+	return true
+
+
+## F01#6a. The guest's explicit retry once the opening's bound has passed
+## (opening.json `starters.admission_retry_after_seconds`). Never writes the
+## party and never changes the pending instance itself:
+##   * nothing journalled yet -> re-send the first request ("resent");
+##   * a valid pending row the installer accepts for the live instance -> re-run
+##     this owner's install of it ("reinstall");
+##   * a valid pending row the installer refuses for the live instance but
+##     accepts for the host's own staged card -> hand that card back decoded
+##     ("readopt"); the opening swaps the follower and then confirms it through
+##     `adopt_original_starter_instance`.
+## The acceptance test is the installer's own (`character_action_owner._starter_plan`).
+func retry_original_starter() -> Dictionary:
+	if is_host() or _original_starter_pending == null or session == null: return {"action": "none"}
+	var row := _pending_starter_row()
+	if row.is_empty():
+		if not session.has_method("request_original_starter") or _original_starter_pending_card.is_empty(): return {"action": "none"}
+		session.call("request_original_starter", _original_starter_pending_card.duplicate(true))
+		return {"action": "resent"}
+	var owner := preload("res://scripts/net/character_action_owner.gd")
+	if owner._starter_plan([], row, _original_starter_pending).get("ok") == true:
+		var ledger: Node = session.get_node_or_null(^"LedgerRpc") if session is Node else null
+		if ledger != null and ledger.has_method("_process_creature_training"): ledger.call("_process_creature_training", row)
+		return {"action": "reinstall"}
+	var adopted := _staged_starter_instance(row)
+	if adopted == null: return {"action": "none"}
+	return {"action": "readopt", "instance": adopted}
+
+
+## The opening swapped its follower to `instance` (a "readopt" above): make it
+## the pending instance the installer appends, only if the installer accepts it.
+func adopt_original_starter_instance(instance: RefCounted) -> bool:
+	var row := _pending_starter_row()
+	if is_host() or instance == null or row.is_empty() \
+			or preload("res://scripts/net/character_action_owner.gd")._starter_plan([], row, instance).get("ok") != true: return false
+	_original_starter_pending = instance
+	_original_starter_pending_card = preload("res://scripts/save/water_capture_codec.gd").encode(instance)
+	return true
+
+
+## Polled while the opening's wait is stalled: has the host's row for the
+## pending starter been accepted meanwhile? Sends nothing.
+func original_starter_admitted_now() -> bool:
+	if _original_starter_pending == null: return false
+	var receipt := "starter_choice:%s:%s" % [local.character_id, str(_original_starter_pending.get("uid"))]
+	var instance: RefCounted = _original_starter_pending
+	return _original_starter_admitted(instance, receipt)
+
+
+## The host's staged card for this character's pending starter row, decoded,
+## if the installer would accept it; otherwise null.
+func _staged_starter_instance(row: Dictionary) -> RefCounted:
+	var staged: Variant = row.get("after", {}).get("party", []) if row.get("after") is Dictionary else []
+	if not staged is Array or (staged as Array).size() != 1 or not (staged as Array)[0] is Dictionary: return null
+	var card: Dictionary = (staged as Array)[0]
+	if str(row.receipt) != "starter_choice:%s:%s" % [local.character_id, str(card.get("uid", ""))]: return null
+	# The staged card is the portable one (in-fight energy stripped); the codec
+	# needs the field, and a fresh starter's energy is zero.
+	var full: Dictionary = card.duplicate(true)
+	if not full.has("energy"): full["energy"] = 0.0
+	var adopted: RefCounted = preload("res://scripts/save/water_capture_codec.gd").decode(full)
+	if adopted == null or preload("res://scripts/net/character_action_owner.gd")._starter_plan([], row, adopted).get("ok") != true: return null
+	return adopted
+
+
+## This character's journalled, not yet accepted original-starter row, or {}.
+## Validated exactly as an owner validates a saved row before acting on it.
+func _pending_starter_row() -> Dictionary:
+	var row: Variant = world.reward_deliveries.get(preload("res://scripts/creatures/essence.gd").training_delivery_id(world.reward_delivery_namespace, local.character_id))
+	if not row is Dictionary or row.get("action") != "starter_choice" or row.get("status") != "pending" \
+			or not str(row.get("receipt", "")).begins_with("starter_choice:%s:" % local.character_id): return {}
+	if not preload("res://scripts/net/foundation_delivery.gd").valid(row, preload("res://scripts/net/character_record_rules.gd").errors,
+			local.character_id, world.reward_delivery_namespace, world.world_id): return {}
+	return row
+
+
+func _original_starter_admitted(instance: RefCounted, receipt: String) -> bool:
+	if is_host(): return true
+	var row: Variant = world.reward_deliveries.get(preload("res://scripts/creatures/essence.gd").training_delivery_id(world.reward_delivery_namespace, local.character_id))
+	if row is Dictionary and row.get("action") == "starter_choice" and row.get("receipt") == receipt \
+			and row.get("status") == "accepted":
+		_original_starter_pending = null
+		_original_starter_pending_card = {}
+		return true
+	return false
+
+
+## Whether THIS process may write its own character's starter receipt: the host,
+## or an admitted client whose character file the host's snapshot has made a
+## valid save candidate (`session.gd::client_character_save_ready()`, the same
+## gate a client's own character save uses). A pending joiner may not.
+func original_starter_writer_ready() -> bool:
+	if session == null or save_system == null: return false
+	return is_host() or session.call("client_character_save_ready") == true
 
 
 func original_starter_uid() -> String:

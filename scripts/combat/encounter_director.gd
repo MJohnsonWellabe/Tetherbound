@@ -6332,6 +6332,10 @@ func _begin_admitted_tournament_join() -> bool:
 			or not _tournament_entry_milestones_ready(party) \
 			or not _tournament_join_state_valid(party, selected) \
 			or not _same_tournament_members(selected, _pending_tournament_members):
+		print("[encounter] tournament join '%s' not presentable: fighting=%s milestones=%s state=%s same_members=%s" % [
+			encounter_id, _manager != null and bool(_manager.call("is_fighting")),
+			_tournament_entry_milestones_ready(party), _tournament_join_state_valid(party, selected),
+			_same_tournament_members(selected, _pending_tournament_members)])
 		return false
 	_tournament_members.assign(_pending_tournament_members)
 	_snapshot_tournament_entry_condition()
@@ -6398,6 +6402,7 @@ func _tick_pending_tournament_join() -> void:
 
 func _cancel_pending_tournament_join(reason: String, disengage: bool) -> void:
 	var encounter_id := _pending_tournament_join_id
+	print("[encounter] tournament join '%s' cancelled: %s" % [encounter_id, reason])
 	_pending_tournament_join_id = ""
 	_pending_tournament_join_deadline_ms = 0
 	_pending_tournament_join_announcement = {}
