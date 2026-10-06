@@ -1,0 +1,25 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=6812 control_port=49169 home=D:\tetherbound\.artifacts\r1-f27-flip\net-f22-forced-break-off/home-0 log=D:\tetherbound\.artifacts\r1-f27-flip\net-f22-forced-break-off/peer-0.log
+coordinator: launched peer 1 (client) pid=8804 control_port=49170 home=D:\tetherbound\.artifacts\r1-f27-flip\net-f22-forced-break-off/home-1 log=D:\tetherbound\.artifacts\r1-f27-flip\net-f22-forced-break-off/peer-1.log
+coordinator: peer 1 hello: {"enet_port":33162.0,"godot_version":"4.7-stable (official)","main_sha":"7cfaccc2dd7e","peer":1.0,"pid":8804.0,"role":"client","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-f22-forced-break-off/home-1/Godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":33161.0,"godot_version":"4.7-stable (official)","main_sha":"7cfaccc2dd7e","peer":0.0,"pid":6812.0,"role":"host","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-f22-forced-break-off/home-0/Godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: coordinator tracked 2 peers
+PASS: peer 0 owns a creature before the session ('terrapup' at level 3 joined the party (1 member(s)))
+PASS: peer 1 owns a creature before the session ('terrapup' at level 3 joined the party (1 member(s)))
+PASS: peer 0 hosted (hosting udp/33161 as peer 1)
+PASS: peer 1 joined (joined 127.0.0.1:33161 as peer 307931850 after 49 frames; snapshot applied; 2 peer(s) in registry)
+PASS: peer 0 sees both players
+PASS: peer 1 sees both players
+PASS: peer 0 deployed its creature (deployed AllyCreature)
+PASS: peer 1 deployed its creature (deployed AllyCreature)
+PASS: peer 0 engaged a wild (engaged bramblebun as encounter 1:1 (bound after 0 frame(s)))
+PASS: peer 1 joined the shared wild fight (joined 1:1 beside 'bramblebun' at (-13.4, 65.8))
+PASS: (b) the early-committed charge landed on the host ({ "landed": true, "host_staggered": false, "guest_staggers": 0, "poise_before": 1000000.0, "poise_after": 999954.562664915, "since_ms": 244742, "energy_hits": 6, "start": "sent charged move_start only (action 9007, rapid 0) { \"code\": \"pending\", \"ok\": false, \"pending\": true, \"rapid_action\": 0.0, \"rapid_code\": \"\", \"submitted_action\": 9007.0 }", "strike": "submitted charged strike (local verdict ok=false pending=true code=pending) { \"code\": \"pending\", \"ok\": false, \"pending\": true, \"reason\": \"\", \"submitted_action\": 9007.0 }", "hp": [100000.0, 99954.5626649146] })
+PASS: (b) a charge committed 30+ frames before the tell does not force a break ({ "landed": true, "host_staggered": false, "guest_staggers": 0, "poise_before": 1000000.0, "poise_after": 999954.562664915, "since_ms": 244742, "energy_hits": 6, "start": "sent charged move_start only (action 9007, rapid 0) { \"code\": \"pending\", \"ok\": false, \"pending\": true, \"rapid_action\": 0.0, \"rapid_code\": \"\", \"submitted_action\": 9007.0 }", "strike": "submitted charged strike (local verdict ok=false pending=true code=pending) { \"code\": \"pending\", \"ok\": false, \"pending\": true, \"reason\": \"\", \"submitted_action\": 9007.0 }", "hp": [100000.0, 99954.5626649146] })
+PASS: (b) its blow drained poise normally instead ({ "landed": true, "host_staggered": false, "guest_staggers": 0, "poise_before": 1000000.0, "poise_after": 999954.562664915, "since_ms": 244742, "energy_hits": 6, "start": "sent charged move_start only (action 9007, rapid 0) { \"code\": \"pending\", \"ok\": false, \"pending\": true, \"rapid_action\": 0.0, \"rapid_code\": \"\", \"submitted_action\": 9007.0 }", "strike": "submitted charged strike (local verdict ok=false pending=true code=pending) { \"code\": \"pending\", \"ok\": false, \"pending\": true, \"reason\": \"\", \"submitted_action\": 9007.0 }", "hp": [100000.0, 99954.5626649146] })
+PASS: (b) the guest announces no break either: both peers resolve the same verdict ({ "landed": true, "host_staggered": false, "guest_staggers": 0, "poise_before": 1000000.0, "poise_after": 999954.562664915, "since_ms": 244742, "energy_hits": 6, "start": "sent charged move_start only (action 9007, rapid 0) { \"code\": \"pending\", \"ok\": false, \"pending\": true, \"rapid_action\": 0.0, \"rapid_code\": \"\", \"submitted_action\": 9007.0 }", "strike": "submitted charged strike (local verdict ok=false pending=true code=pending) { \"code\": \"pending\", \"ok\": false, \"pending\": true, \"reason\": \"\", \"submitted_action\": 9007.0 }", "hp": [100000.0, 99954.5626649146] })
+PASS: (a) a charge committed after the tell breaks the wild on the host ({ "landed": true, "host_staggered": true, "guest_staggers": 1, "poise_before": 1000000.0, "poise_after": 1000000.0, "since_ms": 307887, "energy_hits": 6, "hp": [100000.0, 99958.7138152646] })
+PASS: (a) the guest's manager announces the same break from the host payload ({ "landed": true, "host_staggered": true, "guest_staggers": 1, "poise_before": 1000000.0, "poise_after": 1000000.0, "since_ms": 307887, "energy_hits": 6, "hp": [100000.0, 99958.7138152646] })
+ALL CHECKS PASSED

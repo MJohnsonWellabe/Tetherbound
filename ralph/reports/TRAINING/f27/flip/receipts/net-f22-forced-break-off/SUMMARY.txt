@@ -1,0 +1,10 @@
+# Net smoke run r1-f22-forced-break-off-20261006T1006Z
+
+Scene: world
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=6812 exited=true unexpected_exit=false
+- peer 1 (client) pid=8804 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED

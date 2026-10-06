@@ -483,3 +483,11 @@ c3089a137b604a0397c53e4420fab747520fd760d3c9ec58a5d457f53a805b97  net-f22-forced
 7b000a9d8d876eabec79bbcad58efb3fce242215dded19c2375bbb1c778dfd55  net-f22-forced-break-on/NET_RUN.json.txt
 6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b  net-f22-forced-break-on/exit.txt
 e64c0df18a597aaacf06e26a60b410d910544d6d923d5ecb949a666c8e13c989  net-f22-forced-break-on/host-world.json.txt
+5322db1154765b749140bee62aa331b187be480d84a3d2ea0712148d1b68a69f  net-f22-forced-break-off/coordinator.stdout.txt
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  net-f22-forced-break-off/coordinator.stderr.txt
+b1a216c4948d90d1f74848f6891c5785c82b6fe23733d2ecc588ad73d9036133  net-f22-forced-break-off/peer-0.txt
+4090ae1c9ea76442eb98b9c4accfd50cc2be7a360126cac87409d46ce7542e28  net-f22-forced-break-off/peer-1.txt
+7a2b11f64b3640d79edebf17a468eb76fb9b49a5570fced1d672e3d2cd09e7a9  net-f22-forced-break-off/SUMMARY.txt
+830d7489dfbfcbd2bc8cf47a63ca53529247074d3afb4d73d9e3831fd5b6bf4c  net-f22-forced-break-off/NET_RUN.json.txt
+5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  net-f22-forced-break-off/exit.txt
+c6a2c6a7f1145fe3feb68fa4e9c258de325a2ccb63e7b1a01c492a39e9ae53fe  net-f22-forced-break-off/host-world.json.txt
