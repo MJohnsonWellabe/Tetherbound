@@ -415,6 +415,11 @@ func _run() -> void:
 		check(not bool((pre_reward[i] as Dictionary).get("beaten", true)),
 			"peer %d's world does not say the Warden has fallen yet" % i)
 
+	# Finish guest travel/settling before the host opens the boss attack window.
+	var walked: Dictionary = await step(1, "teleport", {"near_trainer": BOSS})
+	check(str(walked.get("verdict", "")) == "PASS",
+		"peer 1 travelled to the boss fight (%s)" % str(walked.get("detail", "")))
+
 	# --- peer 0 takes the challenge -------------------------------------------
 	var began: Dictionary = await step(0, "trainer_battle", {"trainer": BOSS})
 	check(str(began.get("verdict", "")) == "PASS",
@@ -438,11 +443,6 @@ func _run() -> void:
 	# --- peer 1 joins THAT record (§6) ----------------------------------------
 	var where := _vec(record.get("position", []))
 	check(where != Vector3.INF, "the record says where the boss is standing")
-	if where != Vector3.INF:
-		var walked: Dictionary = await step(1, "teleport",
-			{"at": [where.x + 3.0, where.y + 1.0, where.z + 3.0]})
-		check(str(walked.get("verdict", "")) == "PASS",
-			"peer 1 travelled to the boss fight (%s)" % str(walked.get("detail", "")))
 	var joined_fight: Dictionary = await step(1, "join_encounter", {"encounter_id": encounter_id})
 	check(str(joined_fight.get("verdict", "")) == "PASS",
 		"peer 1 joined the boss fight already in progress (%s)" % str(joined_fight.get("detail", "")))

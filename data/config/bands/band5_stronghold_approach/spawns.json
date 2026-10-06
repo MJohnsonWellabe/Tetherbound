@@ -37,6 +37,12 @@
       "alpha": {
         "nickname": "Alpha Galecrest",
         "stand_at_centre": true,
+        "lure_clearings": [
+          {"at": [-31.0, 7292.0], "radius_m": 14.0},
+          {"at": [-9.0, 7300.0], "radius_m": 14.0},
+          {"at": [13.0, 7307.0], "radius_m": 14.0}
+        ],
+        "_why_lure_clearings": "F03#0 current night road views: foreground owls read, but trees fragment the selected Galecrest pack. Three small overlapping openings expose this existing west-shoulder habitat from the road without moving its spawn or reward. AlphaPins applies the existing Vegetation.clear_area path after scatter builds; baked harvest placement identities stay unchanged and the shader grass remains.",
         "aura_light": {"energy": 1.6, "range": 9.0, "colour": "#ffd479", "y": 2.2},
         "nameplate": {"y": 4.4, "font_size": 64, "pixel_size": 0.0009, "fixed_size": true, "colour": "#ffd479", "visible_to_m": 140.0, "no_depth_test": false},
         "_why_nameplate_depth": "VERIFIER full-bar judge (#356 5859347449): from the road the label clipped into the canopy of the woods between the road and the pack (hall_03). Raising it to 9 m did not clear those trees (tried and reverted, #356 5859702428), so alpha_pins.gd gained an opt-in `no_depth_test`. It is OFF here (coordinator ruling #356 5859741412 chose option (c): move the pack to a road sightline and keep the label depth-tested). The pack now stands on that sightline (`_why_f03_0_tight`), so the label stays depth-tested.",

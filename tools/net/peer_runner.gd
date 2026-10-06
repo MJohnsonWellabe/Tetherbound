@@ -2698,6 +2698,12 @@ func _step_teleport(args: Dictionary) -> Dictionary:
 	if player == null:
 		return {"verdict": "ERROR", "detail": "no live player"}
 	var at: Array = args.get("at", []) as Array
+	if not str(args.get("near_trainer", "")).is_empty():
+		var trainer := _trainer_body_named(str(args.near_trainer))
+		if trainer == null:
+			return {"verdict": "ERROR", "detail": "no placed trainer '%s'" % str(args.near_trainer)}
+		var near := trainer.global_position + Vector3(2.0, 0.0, 2.0)
+		at = [near.x, near.y, near.z]
 	if at.size() != 3:
 		return {"verdict": "ERROR", "detail": "teleport needs args.at = [x, y, z]"}
 	# A teleport, not a motion (`remote_creature.teleport_body`): set as a plain
