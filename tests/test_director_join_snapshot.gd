@@ -471,11 +471,18 @@ func _case_native_trainer_hp_fixture_survives_projectile_snapshot(warden_boss: b
 	assert_true(guest_manager.begin(guest_player, guest_foe, guest_ally, [guest_creature] as Array[RefCounted], null, null, true))
 	# Let production mint/bind the record as the real trainer send-out does.
 	# The old handcrafted "trainer" row missed Warden's actual "boss" kind.
+	# F01#6b: an earlier battle this session already sent out two creatures.
+	# The record's round counts this battle's send-outs only; the completion
+	# reward requires its final round to equal the trainer's team size.
+	_native_host.set("_trainer_sent", 3)
+	_native_host.set("_trainer_battle_sent", 1) # this battle's first send-out
 	_native_host._open_encounter_if_networked(foe, true)
 	var arbiter: RefCounted = _native_host.get("_encounter_host")
 	var rec: Dictionary = _native_host.get("_encounter") as Dictionary
 	assert_false(rec.is_empty(), "the production opener created the actual opponent-owned record")
 	if rec.is_empty(): return
+	assert_eq(int(rec.get("opponent", {}).get("round", -1)), 1,
+		"an earlier battle's send-outs do not count toward this battle's round")
 	var encounter_id := str(rec.encounter_id)
 	var kind := str(rec.kind)
 	assert_eq(kind, "boss" if warden_boss else "trainer", "production classifies the Warden from boss_ranks")
@@ -758,6 +765,7 @@ func _case_native_guest_kill_advances_host_trainer_round() -> void:
 	_native_host.set("_trainer_queue", [next_creature] as Array[RefCounted])
 	_native_host.set("_trainer_body", foe)
 	_native_host.set("_trainer_sent", 1)
+	_native_host.set("_trainer_battle_sent", 1)
 	_native_host.set("_engaged_with", foe)
 	_native_host._host_set_deployed(guest_id, {"creature_uid": guest_creature.uid,
 		"species_id": guest_creature.species_id, "shiny": false,

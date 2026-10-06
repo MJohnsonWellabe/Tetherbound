@@ -71,3 +71,32 @@ Example seat (t6b3, semi, host): live opponent (-0.91, 7.76), creature placed at
 Before the fix (t6b1, record position), the host's semifinal blow missed all six attempts: opponent 9.29 m from the origin, 9.0 m reach.
 
 **Still open.** In both runs the quarterfinal completes with rewards for both characters. In the semifinal both blows land, but `win_trainer_battle` reaches the coordinator deadline (5400 frames) with no verdict. This is the known stalled round (pending vitals outliving a round), which waits on Codex R1's pending_vitals round fencing. F01#6b stays open until that lands and the final runs.
+
+## Tournament semifinal stall: root cause and fix (lane A, 2026-10-06)
+
+**Symptom.** With every blow landing (seat fix above), the semifinal is won (encounter `1:2` phase `done`, Tam's mosshell hp 0, the host's creature alive at 112.8 hp), but the host's CombatManager stays RESOLVING with `_waiting_shared_trainer_round` set until `win_trainer_battle` reaches its 5400-frame deadline (t6b3 last sample: `fighting=true`, `manager_state=2`, killing verdict `ok`, `killed=true`).
+
+**Diagnosis** (temporary prints, since removed):
+- The round step resolves.
+- The battle-completion step is refused with `actual_terminal_round_required`, because `COMBAT_ROUND_REWARD.make_duty` returns `{}` (session.gd `foundation_combat_round_resolution`).
+- The cause is `combat_round_reward.gd _completion_valid`, which requires `intent.round == team.size()`.
+- The opponent record's `round` was `_trainer_sent` (encounter_director.gd), which counts send-outs across the whole session. In the first battle (Mira) the rounds are 1–2, so it passes. In the second (Tam), the final round is 4 against a team of 2, so completion is refused forever.
+
+It is not owner_passive (the "prepare waits for inputs" lines are transient and appear in passing rounds too) and not a regression from #547.
+
+**Fix.** `"round": _trainer_battle_sent`: this battle's send-outs, reset at `begin_trainer_battle` and `_finish_trainer_battle`. This is Codex R1's one-liner (93487a4e58), which was reverted from #547 on a CI bisect with one sample each side.
+
+**Test.** `tests/test_director_join_snapshot.gd` `test_native_trainer_hp_fixture_survives_projectile_snapshot` now opens the record after an earlier battle's two send-outs and asserts that the round counts this battle only. It fails on `_trainer_sent` and passes with the fix (6 tests, 38 assertions).
+
+**Runs on the fix** (local, each alone):
+
+| Smoke | Result |
+|---|---|
+| shared_boss `--tournament` (t6b8) | ALL CHECKS PASSED: quarter (Mira), semi (Tam) and final (Oskar) won, with rewards for both characters |
+| boss_rewards_each_participant | ALL CHECKS PASSED |
+| shared_boss (default) | 3 of 4 ALL CHECKS PASSED; run 1 had 9 failures, all in the BOSS friendly-fire leg (the guest's swing at its teammate hit the boss instead of being refused `friendly_target`) |
+| shared_boss (default) without the fix | ALL CHECKS PASSED (1 run) |
+
+The friendly-fire leg resolves targeting from staged positions; the record's round number does not enter `pick_struck`. In default mode the Warden is the session's first trainer battle, so the record is byte-identical before and after this fix on that leg. One failure in four runs is recorded here, not explained away. CI on the batch is the wider check.
+
+**Independent review** (one round): APPROVE-WITH-NITS. No cross-battle key collision: every keyed consumer of `round` also carries `encounter_id`, and the reward scope digest carries `trainer_id` and the epoch. Round is ≥1 on every real path. The guest mirror resets per bind/begin. Nits fixed: the test now models battle 2's first send-out (`_trainer_sent` 3, `_trainer_battle_sent` 1) and asserts round 1; the second fixture also seeds `_trainer_battle_sent`; the comment says "within this battle".
