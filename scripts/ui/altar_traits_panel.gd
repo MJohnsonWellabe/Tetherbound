@@ -22,6 +22,10 @@ var _closing := false
 var _mouse_before := Input.MOUSE_MODE_VISIBLE
 var return_to := Callable()
 var _opened_context: Dictionary = {}
+var _fields: GridContainer
+var _actions: HBoxContainer
+var _seed_detail: Label
+var _release_warning: Label
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -48,39 +52,65 @@ func _ready() -> void:
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	if not candidate: scroll.custom_minimum_size = Vector2(700,640)
 	scroll.follow_focus = true
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_root.add_child(scroll)
 	_body = VBoxContainer.new()
 	_body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_body.add_theme_constant_override("separation",12)
+	_body.add_theme_constant_override("separation",8 if candidate else 12)
 	scroll.add_child(_body)
 	_line("Altar · Traits and Seeds",TOKENS.FONT_TITLE if candidate else 26)
 	_line("Teach your companions. Releasing a caught creature is permanent.",20)
+	_status = _line("",20)
+	if candidate:
+		_fields = GridContainer.new()
+		_fields.columns = 3
+		_fields.add_theme_constant_override("h_separation", 16)
+		_fields.add_theme_constant_override("v_separation", 12)
+		_body.add_child(_fields)
 	_creature = _choice("Companion")
 	_creature.item_selected.connect(func(_index: int) -> void: _refresh())
-	_status = _line("",20)
 	_seed = _choice("Trait Seed")
-	_slot = _choice("Taught slot · old trait is destroyed")
+	_slot = _choice("Replace taught slot")
 	_payment = _choice("Pay with type essence")
+	_distil = _choice("Trait to distil when releasing")
+	if candidate:
+		_seed_detail = _line("", TOKENS.FONT_READ)
+		_seed_detail.hide()
+		_seed.item_selected.connect(func(_index: int) -> void: _describe_seed())
+		_release_warning = _line("", TOKENS.FONT_READ)
+		_release_warning.hide()
+		_actions = HBoxContainer.new()
+		_actions.add_theme_constant_override("separation", 12)
+		_body.add_child(_actions)
 	_teach = _button("Teach chosen seed",_submit_teach)
-	_distil = _choice("One trait to distil when releasing")
-	_release = _button("Release companion and distil chosen trait",_submit_release)
+	_release = _button("Release and distil trait",_submit_release)
 	_button("Back",close)
+	if candidate: _line("A Choose · B Back", TOKENS.FONT_READ)
 	_root.hide()
 
-func _line(text: String, size: int) -> Label:
+func _line(text: String, size: int, parent: Node = null) -> Label:
 	var label := Label.new()
 	label.text = text
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	label.add_theme_font_size_override("font_size",maxi(size,TOKENS.FONT_READ) if SCREEN.config().get("enabled") == true else size)
-	_body.add_child(label)
+	(parent if parent != null else _body).add_child(label)
 	return label
 
 func _choice(title: String) -> OptionButton:
-	_line(title,20)
+	var parent: Node = _body
+	if _fields != null:
+		var field := VBoxContainer.new()
+		field.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		_fields.add_child(field)
+		parent = field
+	_line(title,20,parent)
 	var button := OptionButton.new()
+	if _fields != null:
+		button.fit_to_longest_item = false
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	button.custom_minimum_size.y = 66 if SCREEN.config().get("enabled") == true else 38
-	button.add_theme_font_size_override("font_size",TOKENS.FONT_PROMPT if SCREEN.config().get("enabled") == true else 20)
-	_body.add_child(button)
+	button.add_theme_font_size_override("font_size",TOKENS.FONT_READ if SCREEN.config().get("enabled") == true else 20)
+	parent.add_child(button)
 	return button
 
 func _button(title: String, callback: Callable) -> Button:
@@ -89,7 +119,7 @@ func _button(title: String, callback: Callable) -> Button:
 	button.add_theme_font_size_override("font_size",TOKENS.FONT_PROMPT if SCREEN.config().get("enabled") == true else 20)
 	button.custom_minimum_size.y = 66 if SCREEN.config().get("enabled") == true else 40
 	button.pressed.connect(callback)
-	_body.add_child(button)
+	(_actions if _actions != null else _body).add_child(button)
 	return button
 
 func open(service: Node, station_key: String) -> bool:
@@ -176,7 +206,13 @@ func _selected(button: OptionButton) -> Variant:
 
 func _refresh() -> void:
 	if not _shown: return
-	_release.text = "Release companion and distil chosen trait"
+	_release.text = "Release and distil trait" if _actions != null else "Release companion and distil chosen trait"
+	if _release_warning != null:
+		_release_warning.text = ""
+		_release_warning.hide()
+	if _seed_detail != null:
+		_seed_detail.text = ""
+		_seed_detail.hide()
 	if _release.has_meta("confirmed_uid"): _release.remove_meta("confirmed_uid")
 	_quote = _service.call("quote",_station,str(_selected(_creature)))
 	for button: OptionButton in [_seed,_slot,_payment,_distil]: button.clear()
@@ -189,11 +225,11 @@ func _refresh() -> void:
 	for row: Dictionary in _quote.get("traits",[]): text.append("%s (%s): %s" % [row.display_name,row.rarity,row.description])
 	_status.text = "\n".join(text) if not text.is_empty() else "No active traits"
 	for row: Dictionary in _quote.get("seeds",[]):
-		_seed.add_item("%s · %s · %s" % [row.display_name,row.rarity,row.description])
+		_seed.add_item("%s · %s" % [row.display_name,row.rarity] if _seed_detail != null else "%s · %s · %s" % [row.display_name,row.rarity,row.description])
 		_seed.set_item_metadata(_seed.item_count-1,row.id)
 	for slot: int in _quote.get("unlocked_slots",[]):
 		var old: String = _quote.get("taught_traits",{}).get(str(slot),"")
-		_slot.add_item("Slot %s · %s · %s essence" % [slot,"empty" if old == "" else TRAITS.definition(old).get("display_name",old),slot*int(_quote.essence_cost_per_slot)])
+		_slot.add_item(("%s · %s · %s essence" if _fields != null else "Slot %s · %s · %s essence") % [slot,"empty" if old == "" else TRAITS.definition(old).get("display_name",old),slot*int(_quote.essence_cost_per_slot)])
 		_slot.set_item_metadata(_slot.item_count-1,slot)
 	for item: String in _quote.get("payment_items",[]):
 		_payment.add_item(item.trim_prefix("essence_").capitalize()+" Essence")
@@ -205,6 +241,17 @@ func _refresh() -> void:
 		_distil.set_item_metadata(_distil.item_count-1,row.id)
 	_teach.disabled = _seed.item_count == 0 or _slot.item_count == 0 or _payment.item_count == 0 or _service.call("busy")
 	_release.disabled = _quote.get("release_allowed") != true or _service.call("busy")
+	_describe_seed()
+
+func _describe_seed() -> void:
+	if _seed_detail == null: return
+	_seed_detail.text = ""
+	_seed_detail.hide()
+	for row: Dictionary in _quote.get("seeds", []):
+		if row.id == str(_selected(_seed)):
+			_seed_detail.text = "%s: %s" % [row.display_name, row.description]
+			_seed_detail.show()
+			return
 
 func _intent(action: String, trait_id: String, slot: int, payment: String) -> Dictionary:
 	var random := Crypto.new().generate_random_bytes(16)
@@ -221,7 +268,13 @@ func _submit_release() -> void:
 	# Explicit named second tap confirms a permanent roster removal.
 	if not _release.has_meta("confirmed_uid") or _release.get_meta("confirmed_uid") != _selected(_creature):
 		_release.set_meta("confirmed_uid",_selected(_creature))
-		_release.text = "Release %s? This can't be undone. A confirms; B leaves." % _creature.get_item_text(_creature.selected)
+		var warning := "Release %s? This can't be undone. A confirms; B leaves." % _creature.get_item_text(_creature.selected)
+		if _release_warning != null:
+			_release_warning.text = warning
+			_release_warning.show()
+			_release.text = "Confirm release"
+		else:
+			_release.text = warning
 		return
 	_release.remove_meta("confirmed_uid")
 	_submit(_intent("release",str(_selected(_distil)),-1,""))

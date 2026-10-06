@@ -101,6 +101,51 @@ func test_claim_atomic_capacity_replay_and_existing_journal_owner_plan() -> void
 		assert_true(registry.finish_creature_training(pending, false))
 		assert_eq(registry.state(current.character_id), current)
 
+
+func test_character_file_reload_preserves_unowned_history_paid_reward_and_replay_refusal() -> void:
+	var current := _record()
+	var earned := ACTIONS.stage(current, 0, "research_event", {},
+		_context(current, 0, "sight", "persisted-sight"), RECORD.errors)
+	assert_true(earned.get("ok") == true)
+	if earned.get("ok") != true: return
+	var claim := {"species_id": "bramblebun", "task_id": "sight"}
+	var context := {"character_id": current.character_id, "expected_revision": 1,
+		"in_range": true, "source_key": "research_journal"}
+	var paid := ACTIONS.stage(earned.state, 1, "research_claim", claim, context, RECORD.errors)
+	assert_true(paid.get("ok") == true)
+	if paid.get("ok") != true: return
+	var player := preload("res://autoload/player_state.gd").new()
+	var items := preload("res://autoload/item_db.gd").new()
+	player.configure(items)
+	player.character_id = current.character_id
+	player.redesign_character = paid.state.redesign_character.duplicate(true)
+	player.inventory = RULES.inventory_from(paid.state.inventory)
+	var store := preload("res://scripts/save/character_save.gd").new("user://test_f45_research/")
+	store.delete(player.character_id)
+	assert_true(store.write(player.character_id, player.save_data()), "real atomic character writer succeeds")
+	var restored := preload("res://autoload/player_state.gd").new()
+	restored.configure(items)
+	restored.character_id = player.character_id
+	restored.load_data(store.state(player.character_id))
+	assert_eq(restored.party.size(), 0, "never-owned research needs no creature slot after file reload")
+	assert_eq(restored.redesign_character.research, paid.state.redesign_character.research)
+	assert_eq(restored.redesign_character.research_receipts, paid.state.redesign_character.research_receipts)
+	assert_eq(restored.inventory.count("essence_ground"), 5)
+	var view := LOG.view(restored.redesign_character, restored.character_id, "meadows")
+	var row: Dictionary = {}
+	for species: Dictionary in view.species:
+		if species.species_id == "bramblebun": row = species
+	assert_true(row.get("seen") == true and row.get("caught") == false)
+	assert_eq(row.tasks[0].progress, 1)
+	assert_true(row.tasks[0].paid)
+	context.expected_revision = 2
+	var replay := ACTIONS.stage(restored.save_data(), 2, "research_claim", claim, context, RECORD.errors)
+	assert_false(replay.get("ok") == true, "persisted receipt cannot pay again")
+	assert_eq(restored.inventory.count("essence_ground"), 5)
+	var other := _record("character-f45-b")
+	assert_eq(other.redesign_character.research, LOG.empty_log(), "another character inherits no research")
+	assert_true(store.delete(player.character_id))
+
 func test_cast_signature_catch_history_and_unconfirmed_events_refuse() -> void:
 	var current := _record()
 	var context := _context(current, 0, "cast", "cast-1", "terrapup")
