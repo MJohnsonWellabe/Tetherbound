@@ -4275,6 +4275,19 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 		if frames % stride != 0:
 			continue
 		var mine: Variant = manager.call("active_creature")
+		# A saved faint is not a usable striker. Use the player's LB switch path
+		# and let its normal commitment/save guards decide when it can proceed.
+		# Never revive the actor or manufacture a replacement party member here.
+		if mine != null and bool(mine.get("fainted")):
+			if (manager.call("switchable_indices") as Array).is_empty():
+				return {"verdict": "FAIL", "detail": "active creature fainted; no healthy party member can take the field"}
+			_trainer_fight_progress["phase"] = "switch_fainted_actor"
+			var switched := await _inject("party_cycle", 1)
+			if not bool(switched.get("ok", false)):
+				return {"verdict": "ERROR", "detail": "press 'party_cycle' could not be injected: %s" % str(switched.get("why", ""))}
+			frames += 3
+			_trainer_fight_progress["driver_frames"] = frames
+			continue
 		# Named wiring callers may explicitly decline self-HP aid. Default callers
 		# retain the existing provider requirement and durable save/ACK path.
 		if mine != null and args.get("self_hp_topups", true) != false:
@@ -4359,6 +4372,11 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 			await physics_frame
 			frames += 1
 			_trainer_fight_progress["driver_frames"] = frames
+		# Opponent AI keeps running while the placement settles. A faint during
+		# that beat must reach the switch path, rather than another attack press.
+		mine = manager.call("active_creature")
+		if mine == null or bool(mine.get("fainted")):
+			continue
 		if not bool(manager.call("quick_ready")):
 			_trainer_fight_progress["phase"] = "quick_not_ready"
 			_trainer_fight_progress["quick_not_ready_checks"] += 1
@@ -4502,8 +4520,8 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 					float(last_active.get("hp")) if last_active != null else -1.0,
 					str(last_active.get("fainted")) if last_active != null else "?",
 					str(last_refusal), str(manager.call("encounter_id")), ordinary_diagnostic_suffix]}
-	if drives_guest_master and manager.call("outcome") != "won":
-		return {"verdict": "FAIL", "detail": "Actual guest Master resolved without a production won outcome"}
+	if manager.call("outcome") != "won":
+		return {"verdict": "FAIL", "detail": "Battle resolved without a production won outcome: %s" % str(manager.call("outcome"))}
 	# The payout is committed from `_finish_trainer_battle()` and the deltas
 	# have to cross to the other peer before anybody asks about them.
 	_trainer_fight_progress["phase"] = "settle_payout"
