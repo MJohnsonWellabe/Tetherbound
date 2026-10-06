@@ -1,0 +1,17 @@
+DERIVED GitHub job checkout/command/result excerpts; artifact/native logs remain original.
+2026-10-06T07:09:43.8593083Z   CHECKOUT_REF: 92b9686b2021bfc42ed2b6bef6296666cf753e7a
+2026-10-06T07:09:43.8593858Z   SCRIPT: tests/smoke_net_forward_camp.gd
+2026-10-06T07:09:43.8594526Z   ARGS: 
+2026-10-06T07:09:43.8958071Z   ref: 92b9686b2021bfc42ed2b6bef6296666cf753e7a
+2026-10-06T07:09:44.1309799Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin 92b9686b2021bfc42ed2b6bef6296666cf753e7a
+2026-10-06T07:09:44.9954281Z  * branch            92b9686b2021bfc42ed2b6bef6296666cf753e7a -> FETCH_HEAD
+2026-10-06T07:09:45.0055629Z [command]/usr/bin/git checkout --progress --force 92b9686b2021bfc42ed2b6bef6296666cf753e7a
+2026-10-06T07:10:55.2468965Z Note: switching to '92b9686b2021bfc42ed2b6bef6296666cf753e7a'.
+2026-10-06T07:10:55.2696427Z [command]/usr/bin/git log -1 --format=%H
+2026-10-06T07:10:55.2720554Z 92b9686b2021bfc42ed2b6bef6296666cf753e7a
+2026-10-06T07:10:55.4358749Z   SCRIPT: tests/smoke_net_forward_camp.gd
+2026-10-06T07:10:55.4359298Z   CHECKOUT_REF: 92b9686b2021bfc42ed2b6bef6296666cf753e7a
+2026-10-06T07:11:59.7263406Z [36;1mecho "exit=$rc took=$((SECONDS - t0))s" | tee -a "$RUNNER_TEMP/out/run.log"[0m
+2026-10-06T07:11:59.7313416Z   SCRIPT: tests/smoke_net_forward_camp.gd
+2026-10-06T07:11:59.7313701Z   ARGS: 
+2026-10-06T07:14:46.6310688Z ##[error]Process completed with exit code 1.

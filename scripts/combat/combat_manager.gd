@@ -3589,9 +3589,9 @@ func apply_host_enemy_hit(payload: Dictionary) -> void:
 	var creature := active_creature()
 	if creature == null:
 		return
-	# F27: a guest's hit in a canonical wild fight arrives only after its owner
+	# A hit in a canonical wild fight arrives only after its owner
 	# saved the host's vitals row, carrying that receipt (wild_actor_scope.gd).
-	var canonical: bool = _durable_trainer_reward_owned() or payload.get("actor_vitals_receipt") is Dictionary
+	var canonical: bool = _saved_actor_vitals_owned() or payload.get("actor_vitals_receipt") is Dictionary
 	if canonical and not _saved_actor_vitals_matches(creature, payload): return
 	if canonical and not _admit_host_feedback(_seen_impact_actions, payload.get("impact", {})): return
 	# Host rolls the base strike; this character's one active relic applies
@@ -3636,6 +3636,12 @@ func _durable_trainer_reward_owned() -> bool:
 	return owned is bool and owned
 
 
+func _saved_actor_vitals_owned() -> bool:
+	if _durable_trainer_reward_owned(): return true
+	return is_instance_valid(_encounter_link) and _encounter_link.has_method("uses_saved_actor_vitals") \
+		and _encounter_link.call("uses_saved_actor_vitals", _encounter_id) == true
+
+
 func _saved_actor_vitals_matches(creature: RefCounted, payload: Dictionary) -> bool:
 	if not is_inside_tree() or payload.get("creature_uid") != creature.get("uid") \
 		or not payload.get("actor_vitals_receipt") is Dictionary \
@@ -3646,14 +3652,22 @@ func _saved_actor_vitals_matches(creature: RefCounted, payload: Dictionary) -> b
 	var world: RefCounted = game.get("world") if game != null else null
 	if player == null or world == null: return false
 	var session: Node = game.get("session") as Node
-	if not is_instance_valid(session) or not session.has_method("_altar_current_epoch"): return false
+	if not is_instance_valid(session) or not session.has_method("_altar_current_epoch") \
+		or not session.has_method("_owner_passive_actor_vitals_scope"): return false
 	var character: String = str(player.get("character_id"))
 	var namespace_id: String = str(world.get("reward_delivery_namespace"))
 	var actor_delivery: Script = preload("res://scripts/net/actor_vitals_delivery.gd")
 	var marker: Variant = player.get("satchel_escrow").get(actor_delivery.delivery_id(namespace_id, character, str(payload.creature_uid)))
-	return actor_delivery.valid(marker, character, namespace_id) and marker.get("status") == "settled" \
-		and marker.get("world_id") == world.get("world_id") \
-		and marker.get("session_id") == session.call("_altar_current_epoch") \
+	if not actor_delivery.valid(marker, character, namespace_id) or marker.get("status") != "settled" \
+		or marker.get("world_id") != world.get("world_id"): return false
+	var row: Dictionary = world.get("reward_deliveries").get(marker.delivery_id, {})
+	if row.get("status") != "accepted": return false
+	var accepted_marker: Dictionary = marker.duplicate(true)
+	accepted_marker.status = "accepted"
+	if not actor_delivery.equivalent(accepted_marker, row): return false
+	var bound: Dictionary = session.call("_owner_passive_actor_vitals_scope", row)
+	return not bound.is_empty() and bound.get("session_epoch") == session.call("_altar_current_epoch") \
+		and bound.get("journal_session_id") == marker.session_id \
 		and marker.get("receipt", {}).get("encounter_id") == _encounter_id \
 		and marker.get("receipt") == payload.actor_vitals_receipt and marker.get("creature_uid") == payload.creature_uid \
 		and marker.get("hp") == payload.actor_vitals_hp and marker.get("fainted") == payload.actor_vitals_fainted
@@ -3662,7 +3676,7 @@ func _saved_actor_vitals_matches(creature: RefCounted, payload: Dictionary) -> b
 func apply_host_actor_heal(payload: Dictionary) -> void:
 	var creature: RefCounted = active_creature()
 	if state != State.ACTIVE or creature == null or not is_instance_valid(_ally_body) \
-		or not _durable_trainer_reward_owned() or payload.get("canonical_self_heal") != true \
+		or not _saved_actor_vitals_owned() or payload.get("canonical_self_heal") != true \
 		or not _saved_actor_vitals_matches(creature, payload) or not payload.get("move") is Dictionary: return
 	var action_id: String = str(payload.actor_vitals_receipt.get("receipt_id", ""))
 	if action_id.is_empty() or _seen_impact_actions.has(action_id): return
@@ -5393,7 +5407,7 @@ func cycle_active(direction: int) -> bool:
 ## clamped: an illegal request is refused outright (returns false), never
 ## partially applied.
 func request_switch(index: int) -> bool:
-	if _durable_trainer_reward_owned():
+	if _saved_actor_vitals_owned():
 		if not is_instance_valid(_encounter_link) or not _encounter_link.has_method("ordinary_actor_vitals_pending") \
 			or _encounter_link.call("ordinary_actor_vitals_pending", _encounter_id) == true:
 			_move_refusal("The original health change is still being saved.")

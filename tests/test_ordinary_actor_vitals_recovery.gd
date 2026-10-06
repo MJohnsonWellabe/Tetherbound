@@ -84,6 +84,58 @@ func _fixture() -> Dictionary:
 func _free_fixture(f: Dictionary) -> void:
 	f.body.free()
 
+func test_wild_actor_owner_scope_keeps_journal_and_transport_epochs_distinct() -> void:
+	# Reuse the existing detached source/index fixture. No mounted combat,
+	# guest transport or disk write is claimed by this scope-only check.
+	var f := _fixture()
+	var rec: Dictionary = f.host.call("record", f.id)
+	rec.kind = "wild"
+	rec.opponent.owner_npc = ""
+	rec.erase("ordinary_combat_reward_owner")
+	var scope: Dictionary = preload("res://scripts/net/wild_actor_scope.gd").make("namespace_a", "epoch_a", "meadows", f.id)
+	rec["wild_actor_owner"] = scope
+	var game := SAVE_FIXTURE.FixtureGame.new()
+	game.local = ROUND_FIXTURE.new().call("_player")
+	game.local.set("character_id", "owner_a")
+	game.world = WORLD.new()
+	game.world.world_id = "world_a"
+	game.world.reward_delivery_namespace = "namespace_a"
+	game.world.reward_deliveries[f.row.delivery_id] = f.row
+	var session := EpochSession.new()
+	session.fixture = game
+	session.fixture_epoch = "epoch_a"
+	game.session = session
+	var director := EpochDirector.new()
+	director._session = session
+	director._encounter_host = f.host
+	session.fixture_director = director
+	var proof := {"scope": scope.duplicate(true), "row": f.row.duplicate(true), "journal_epoch": f.row.session_id,
+		"world_id": "world_a", "character_id": "owner_a", "proposal": f.proposal.duplicate(true)}
+	director.set_meta("foundation_ordinary_vitals_commits", {f.row.receipt.receipt_id: proof})
+	var expected := {"character_id": "owner_a", "world_id": "world_a", "world_namespace": "namespace_a",
+		"session_epoch": "epoch_a", "journal_session_id": f.row.session_id}
+	assert_ne(f.row.session_id, "epoch_a")
+	assert_eq(session._owner_passive_actor_vitals_scope(f.row), expected, "same actual wild source binds both independent lifetimes")
+	assert_false(ROUND.scope_valid(scope), "no trainer round capability")
+	for defect: String in ["transport", "journal", "record", "proof", "row"]:
+		match defect:
+			"transport": session.fixture_epoch = "foreign"
+			"journal": proof.journal_epoch = "cd".repeat(16)
+			"record": rec.kind = "trainer"
+			"proof": proof.scope = ROUND.scope("namespace_a", "epoch_a", "meadows", "trainer_arden", f.id)
+			"row": game.world.reward_deliveries[f.row.delivery_id] = {}
+		assert_true(session._owner_passive_actor_vitals_scope(f.row).is_empty(), defect)
+		session.fixture_epoch = "epoch_a"
+		proof.journal_epoch = f.row.session_id
+		rec.kind = "wild"
+		proof.scope = scope.duplicate(true)
+		game.world.reward_deliveries[f.row.delivery_id] = f.row
+	assert_eq(session._owner_passive_actor_vitals_scope(f.row), expected)
+	director.free()
+	session.free()
+	game.free()
+	_free_fixture(f)
+
 func test_accepted_duplicate_repairs_lost_actual_arbiter_ack_without_world_write() -> void:
 	var f: Dictionary = _fixture()
 	assert_true(f.host.call("commit_actor_vitals", f.proposal).get("ok") == true)

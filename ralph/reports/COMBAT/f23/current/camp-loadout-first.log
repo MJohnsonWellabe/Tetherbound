@@ -1,0 +1,46 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=2550 control_port=43995 home=/tmp/net-run-local-7974783/home-0 log=/tmp/net-run-local-7974783/peer-0.log
+coordinator: launched peer 1 (client) pid=2551 control_port=43991 home=/tmp/net-run-local-7974783/home-1 log=/tmp/net-run-local-7974783/peer-1.log
+coordinator: peer 0 hello: {"enet_port":35041.0,"godot_version":"4.7-stable (official)","main_sha":"92b9686b2021","peer":0.0,"pid":2550.0,"role":"host","type":"hello","user_data_dir":"/tmp/net-run-local-7974783/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":35042.0,"godot_version":"4.7-stable (official)","main_sha":"92b9686b2021","peer":1.0,"pid":2551.0,"role":"client","type":"hello","user_data_dir":"/tmp/net-run-local-7974783/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: peer 0 owns a creature
+PASS: peer 0 holds 1 forward-camp kit(s)
+PASS: peer 1 owns a creature
+PASS: peer 1 holds 2 forward-camp kit(s)
+PASS: peer 0 hosts (hosting udp/35041 as peer 1)
+PASS: peer 1 joins (joined 127.0.0.1:35041 as peer 1911906036 after 11 frames; snapshot applied; 2 peer(s) in registry)
+PASS: peer 0 sees both players
+PASS: peer 1 sees both players
+PASS: two distinct characters
+PASS: the host places its camp (placed at (18.0, 0.9, 14.0): 1 record(s), 1 node(s); pending {"character_id":"character-6f0bf589d5531e38ec2c5c4259b58ba0","original":{"action":"place","action_id":"1ca93e877a3df7b91ce57fcee4b2ccbe","position":[18.0,0.899999976158142,14.0],"realm":"meadows","yaw_deg":0.0},"revision":5,"world_namespace":"879b17fc55ceb0e7afeecd1d3dc69c5f"}; answers [{"character_revision":6,"durable":true,"journal_revision":1,"ok":true,"owner_acknowledged":true,"owner_saved":true,"receipt":"craft:character-6f0bf589d5531e38ec2c5c4259b58ba0:camp:1ca93e877a3df7b91ce57fcee4b2ccbe","resolved":true,"saved":true,"settled":true}])
+PASS: the host's kit is spent
+PASS: the guest receives the host's camp record and planted camp (1 record(s), 1 node(s))
+PASS: after joining the guest still holds its kits (2)
+PASS: the guest places its own camp (placed at (52.0, 0.9, 16.0): 2 record(s), 2 node(s); pending {"character_id":"character-e76bc7e741a96cc5c5fc1b78b94596f4","original":{"action":"place","action_id":"e87783125434fa7b104024470ad84867","position":[52.0,0.899999976158142,16.0],"realm":"meadows","yaw_deg":0.0},"revision":0,"world_namespace":"879b17fc55ceb0e7afeecd1d3dc69c5f"}; answers [])
+PASS: the host holds the guest's camp with the guest's character id (2 record(s), 2 node(s))
+PASS: the guest holds both camps
+PASS: the host debited one of the guest's own kits (1 left)
+PASS: the guest's camp request settles (no pending original left)
+PASS: the guest is offered a pack-up and, pressing again, pitches a new camp (placed at (72.0, 0.9, 0.0): 2 record(s), 2 node(s); pending {"character_id":"character-e76bc7e741a96cc5c5fc1b78b94596f4","original":{"action":"place","action_id)
+PASS: the host holds exactly one guest camp, the new one (2 record(s), 2 node(s))
+PASS: the old camp's kit was refunded and one spent on the new camp (one left)
+FAIL: guest equips Quake Ring at its camp (camp loadout panel did not open)
+FAIL: camp equip changes the guest utility and saves its original revision
+FAIL: host admits the guest's saved loadout before reload
+PASS: the host saves and reloads its world (host slot reload preserved party=true selection=true hosted_world=true)
+PASS: after the host reload both camps are in the world (2 record(s), 2 node(s))
+PASS: guest saves and reloads its character (client character reload preserved party=true selection=true hosted_world=true)
+FAIL: guest character reload preserves every loadout field and original receipt
+PASS: the guest leaves (client left cleanly after 0 frames)
+PASS: the guest rejoins (joined 127.0.0.1:35041 as peer 301952814 after 28 frames; snapshot applied; 2 peer(s) in registry)
+PASS: after rejoining the guest receives both camps (2 record(s), 2 node(s))
+FAIL: host re-admits the guest's persisted loadout
+FAIL: guest rejoin preserves the saved loadout and receipt
+FAIL: guest equips Quake Ring at its camp (camp loadout panel did not open)
+FAIL: camp equip changes the guest utility and saves its original revision
+FAIL: host admits the guest's saved loadout before reload
+FAIL: guest character reload preserves every loadout field and original receipt
+FAIL: host re-admits the guest's persisted loadout
+FAIL: guest rejoin preserves the saved loadout and receipt

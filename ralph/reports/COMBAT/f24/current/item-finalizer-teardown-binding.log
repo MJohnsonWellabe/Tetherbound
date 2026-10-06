@@ -1,0 +1,19 @@
+DERIVED GitHub job checkout/command/result excerpts; artifact/native logs remain original.
+2026-10-06T07:14:54.7519393Z   CHECKOUT_REF: 901a13e59ead2a3c6bf0b48106cec85c44856e53
+2026-10-06T07:14:54.7520397Z   SCRIPT: tests/run_tests.gd
+2026-10-06T07:14:54.7522142Z   ARGS: --only=test_f24_host_commands.gd::test_retained_item_ack_preserves_active_body_and_settles_same_v3_decision_once
+2026-10-06T07:14:54.8057813Z   ref: 901a13e59ead2a3c6bf0b48106cec85c44856e53
+2026-10-06T07:14:55.0972988Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin 901a13e59ead2a3c6bf0b48106cec85c44856e53
+2026-10-06T07:14:55.4975572Z  * branch            901a13e59ead2a3c6bf0b48106cec85c44856e53 -> FETCH_HEAD
+2026-10-06T07:14:55.5111127Z [command]/usr/bin/git checkout --progress --force 901a13e59ead2a3c6bf0b48106cec85c44856e53
+2026-10-06T07:16:07.2808748Z Note: switching to '901a13e59ead2a3c6bf0b48106cec85c44856e53'.
+2026-10-06T07:16:07.3228698Z [command]/usr/bin/git log -1 --format=%H
+2026-10-06T07:16:07.3277845Z 901a13e59ead2a3c6bf0b48106cec85c44856e53
+2026-10-06T07:16:07.3578953Z   SCRIPT: tests/run_tests.gd
+2026-10-06T07:16:07.3579457Z   CHECKOUT_REF: 901a13e59ead2a3c6bf0b48106cec85c44856e53
+2026-10-06T07:17:07.8478442Z [36;1mecho "exit=$rc took=$((SECONDS - t0))s" | tee -a "$RUNNER_TEMP/out/run.log"[0m
+2026-10-06T07:17:07.8556575Z   SCRIPT: tests/run_tests.gd
+2026-10-06T07:17:07.8557402Z   ARGS: --only=test_f24_host_commands.gd::test_retained_item_ack_preserves_active_body_and_settles_same_v3_decision_once
+2026-10-06T07:17:17.6837199Z exit=0 took=10s
+2026-10-06T07:17:17.6875942Z 1 tests, 302 assertions, 0 failed
+2026-10-06T07:17:17.6876401Z exit=0 took=10s

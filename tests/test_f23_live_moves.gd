@@ -8,6 +8,57 @@ const WILD := preload("res://scripts/creatures/wild_creature.gd")
 const ULTIMATES := preload("res://scripts/vfx/ultimates/ultimate_library.gd")
 const UTILITY := preload("res://scripts/combat/utility_effects.gd")
 
+func test_current_wild_actor_scope_fences_moves_and_switch_without_round_rewards() -> void:
+	# Detached actual Director/Manager, using the existing saved-resource Game
+	# and Session fixtures. This exercises the guest record consumer only;
+	# mounted host damage/heal and two-peer runtime remain separate proofs.
+	var saved := preload("res://tests/test_foundation_resource_save.gd")
+	var game := saved.FixtureGame.new()
+	game.world = preload("res://autoload/world_state.gd").new()
+	game.world.reward_delivery_namespace = "wild-health-world"
+	var session := saved.FixtureSession.new()
+	session.fixture = game
+	game.session = session
+	var director := preload("res://scripts/combat/encounter_director.gd").new()
+	director.set("_session", session)
+	director.set("_encounter_host", host)
+	var record: Dictionary = host.record(id)
+	record["wild_actor_owner"] = preload("res://scripts/net/wild_actor_scope.gd").make(
+		game.world.reward_delivery_namespace, session._altar_current_epoch(), "meadows", id)
+	record["ordinary_actor_vitals_pending"] = true
+	director.set("_encounter", record)
+	assert_true(director.uses_wild_actor_vitals(id))
+	assert_true(director.uses_saved_actor_vitals(id))
+	assert_false(director.uses_durable_trainer_rewards(id), "wild HP never installs trainer round rewards")
+	assert_true(director.ordinary_actor_vitals_pending(id))
+	for kind: String in ["move_start", "strike_intent", "burst_intent", "tether_command", "disengage"]:
+		var refused: Dictionary = director._host_commit_encounter({"kind": kind, "encounter_id": id}, 1)
+		assert_eq(refused.code, "pending_vitals", kind)
+	var manager := MANAGER.new()
+	manager.set("_encounter_link", director)
+	manager.set("_encounter_id", id)
+	var switch_refusals: Array[String] = []
+	manager.encounter_refused.connect(func(_code: String, reason: String) -> void: switch_refusals.append(reason))
+	assert_true(manager._saved_actor_vitals_owned())
+	assert_false(manager._durable_trainer_reward_owned())
+	assert_false(manager.request_switch(1), "wild hold reaches actual Manager switch guard")
+	assert_eq(switch_refusals, ["The original health change is still being saved."])
+	record.ordinary_actor_vitals_pending = false
+	assert_false(director.ordinary_actor_vitals_pending(id), "exact saved broadcast releases hold")
+	for field: String in ["world_namespace", "session_id", "encounter_id", "realm"]:
+		var original: Dictionary = record.wild_actor_owner.duplicate(true)
+		record.wild_actor_owner[field] = "foreign"
+		assert_false(director.uses_saved_actor_vitals(id), field)
+		assert_false(manager._saved_actor_vitals_owned(), field)
+		record.wild_actor_owner = original
+	assert_false(director.uses_saved_actor_vitals("foreign-encounter"))
+	game.world = null
+	assert_false(director.uses_saved_actor_vitals(id), "teardown cannot retain an authoritative health scope")
+	manager.free()
+	director.free()
+	session.free()
+	game.free()
+
 func test_frozen_heal_keeps_actual_profile_uid_resources_and_self_mastery_receipt() -> void:
 	for uses: int in [0, 25, 75, 150, 300]:
 		var heal_host := HOST.new(1)

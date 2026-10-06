@@ -196,9 +196,15 @@ func _owner_passive_actor_vitals_scope(row: Dictionary) -> Dictionary:
 		or not ESSENCE._equivalent(world.get("reward_deliveries").get(row.delivery_id), row): return {}
 	for director: Node in _foundation_directors_under(_foundation_realm_roots()):
 		if _ordinary_actor_vitals_owned_origin(director, row):
+			var record: Dictionary = director.get("_encounter_host").call("record", str(row.receipt.encounter_id)) \
+				if is_host() and director.get("_encounter_host") != null else director.get("_encounter")
 			var scope: Dictionary = director.get("_ordinary_combat_reward_owners").get(str(row.receipt.encounter_id), {}) \
-				if is_host() else director.get("_encounter").get("ordinary_combat_reward_owner", {})
-			if not COMBAT_ROUND_REWARD.scope_valid(scope) or scope.session_id != _altar_current_epoch() \
+				if is_host() else record.get("ordinary_combat_reward_owner", {})
+			var wild_scope := false
+			if scope.is_empty():
+				scope = record.get("wild_actor_owner", {})
+				wild_scope = WILD_ACTOR_SCOPE.owns(scope, record, str(row.receipt.encounter_id))
+			if not (wild_scope or COMBAT_ROUND_REWARD.scope_valid(scope)) or scope.session_id != _altar_current_epoch() \
 				or scope.encounter_id != row.receipt.encounter_id or scope.world_namespace != row.world_namespace: return {}
 			if is_host():
 				var proof: Dictionary = director.get_meta("foundation_ordinary_vitals_commits", {}).get(row.receipt.receipt_id, {})
