@@ -87,3 +87,64 @@ After two failed fixes the approach changed. Instead of deriving the rows from t
 - `forward_camp`;
 - `rejoin_craft_control`;
 - `gather_departure`.
+
+# The rebuild under the owner ruling "guest wins unless behind" (2026-10-05)
+
+The held-wins design above was reverted in 83cb8cb1. CI (#544) showed it lost guest-side progress the held record never carried; the evidence is in `rejoin_audit.md`. This section covers the rebuild under the owner ruling.
+
+| Round | Commit | Verdict | Findings and fixes |
+|---|---|---|---|
+| 1 | 82c1635b | BLOCK | **H1:** an open host transaction read as "behind" (progress lost, or a lockout). **H2:** owed (grant_due) payouts were absorbed, so their later settle killed the stream (first joins too). Also M1, M2 and L1–L5. Fixed in 40df9738 |
+| 2 | 40df9738 | BLOCK | Parking an admission behind an open host duty never re-decided after a training or Altar ACK, and the re-decide judged a stale hello declaration. After two attempts the approach changed: an open duty at the hello now refuses the stream as main does (nothing lost; the next rejoin decides on a fresh declaration). Fixed in 8ca5ca73 |
+| 3 | 8ca5ca73 | BLOCK | **H1:** a guest adopted after 1024 wild defeats elsewhere lost the accepted training row's receipt to compaction, and recovery refused every hello, a permanent lockout. Fixed in 8b331f75 by tolerating a receipt the record's own full window compacted. **L1:** an unconfirmed fold kept in the hello's list (fixed). **M1** (a missing personal flag counts as behind): sent to the coordinator and owner, because the ruling lists flags. **L2** (a non-fitting accepted row while behind): follow-up |
+| 4 | 8b331f75 | APPROVE-WITH-NITS | **M:** anchor the compaction age on the training row's own receipts, so a stale full-window backup is still refused. **L-a:** windows below 2 are never compacted. Both fixed in 66b2f539 |
+
+## Checks on 66b2f539
+
+**Unit tests:**
+
+| Suite | Tests | Assertions |
+|---|---|---|
+| `test_rejoin_admission` (one test per ruling case) | 15 | 81 |
+| `test_owner_passive_sync` | 36 | 577 |
+| `test_owner_passive_adopt` | 7 | 41 |
+| `test_owner_passive_replay` | 11 | 381 |
+| `test_forward_camp` | 9 | 186 |
+| `test_altar_building_recovery` | 5 | 156 |
+
+**Two-peer smokes:** all report ALL CHECKS PASSED.
+- `owner_passive_rejoin`:
+  - deliver-then-leave and an offline change are adopted;
+  - a rolled-back backup is behind and adopts the held record, with the find back once and never paid twice;
+  - an invalid record is refused.
+- `veridian_choices`, `home_creature_bed`, `rejoin_craft_control`, `gather_departure`, `harness_max_hp`, `forward_camp` and `shared_boss`.
+
+Text evidence: `rejoin-admission/guest-wins-*-2peer.txt`.
+
+## Landing round after #545 (merge, two owner-passive fixes; R1 cherry-picked then reverted)
+
+**What changed:**
+- `origin/main` was merged after #545. The `_readmit_owner` conflict kept F18's note line and this lane's undo; F18's early-readmit hold is intact.
+- R1's tournament round fix (`cherry-pick -x 93487a4e58`) was taken, then reverted in 0f04f223. A CI bisect on #547 traced the trainer-battle reds to it: shared_boss and boss_rewards_each_participant failed with it on 14f240ac and passed without it on 589cc6fb. It returns under F01#6b together with R1's pending_vitals round fencing.
+- **3a7677b5:** an owner-passive input window dropped before the join snapshot is no longer marked in flight. Before this, the first send waited the full 1.5 s stall. Review: APPROVE-WITH-NITS; the comment nit is fixed in fc4986d8.
+- **22dbc94c + 2466ab7f:** a stream's first discovery is now judged against the host's own observed poses over INITIAL_POSE_LAG_S, not only the current one. The ring is bounded, per realm, sampled per physics tick, and cleared on realm change, departure and reset. The 80 m limit is unchanged, and no pose the host didn't observe can count. Review: APPROVE-WITH-NITS; nits 1, 2, 4 and 5 are fixed in 2466ab7f.
+
+**Root cause** (station_craft, `owner_passive_initial_pose_unconfirmed`):
+1. The guest lands at the Home Key point (96.2, 14).
+2. The stream rebases.
+3. The smoke flies the guest 101 m to the kitchen (-4.4, 21.6).
+4. The host judges the new stream's first discovery, recorded at the landing, only after that flight, so it is 101 m from the current body and refused.
+
+This was not caused by this lane: `origin/main` failed the same way in 2 of 4 runs alone on the same box.
+
+**Units on 2466ab7f:** owner_passive_sync, rejoin_admission, adopt, replay and director_join_snapshot: 88 tests, 1218 assertions, 0 failed. The new teleport test fails with the old comparison.
+
+**Two-peer smokes on 2466ab7f, each run alone:**
+
+| Smoke | Runs | Result |
+|---|---|---|
+| `homestead_station_craft` (portals on) | 3 | ALL CHECKS PASSED in all 3 |
+| `owner_passive_rejoin` | 1 | ALL CHECKS PASSED |
+| `veridian_choices` | 1 | ALL CHECKS PASSED |
+
+The same five also passed on 22dbc94c.

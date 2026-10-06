@@ -1,0 +1,25 @@
+PASS: peer 0 production_host: title fresh identity 'GatherHost'/trainer entered 'MeadowsPlayground' and hosted udp/35701 after 1 frames; real mounted world released and admitted host stable30 frames
+PASS: peer 1 production_join: title fresh entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:35701 as peer 949329706 after 76 frames
+PASS: peer 0 craft_place_kitchen: host planted a Kitchen and its Spice rack through the paid journal {"effective_tier":1.0,"kitchen_uid":"b1","rack_uid":"b2"}
+PASS: peer 1 craft_count: counts read {"character_id":"character-5fda1723a65b4dd1211f659e3ec375f9","counts":{"berries":0.0,"fiber":0.0,"potion_small":0.0}}
+PASS: peer 1 hall_leave_guest: production client leave saved its own portable character; production reader confirmed disk payload
+PASS: peer 0 expect_peers: registry reports 1 peer(s) after 0 frames (0.0 s)
+PASS: peer 1 production_join: title returning entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:35701 as peer 1278712969 after 75 frames
+PASS: peer 1 craft_count: counts read {"character_id":"character-5fda1723a65b4dd1211f659e3ec375f9","counts":{"berries":0.0,"fiber":0.0,"potion_small":0.0}}
+PASS: peer 0 craft_authority_count: host authority counts read {"character_id":"character-5fda1723a65b4dd1211f659e3ec375f9","counts":{"berries":0.0,"fiber":0.0,"potion_small":0.0}}
+PASS: the host's authority record matches the rejoined guest { "berries": 0.0, "fiber": 0.0, "potion_small": 0.0 }
+PASS: peer 0 pickup_stand: stood 'ctl_berries' (berries)
+PASS: peer 1 pickup_stand: stood 'ctl_berries' (berries)
+PASS: peer 1 pickup_take: pressed 'ctl_berries'
+PASS: peer 0 pickup_stand: stood 'ctl_fiber' (fiber)
+PASS: peer 1 pickup_stand: stood 'ctl_fiber' (fiber)
+PASS: peer 1 pickup_take: pressed 'ctl_fiber'
+PASS: peer 1 craft_at_host_kitchen: guest crafted at the host's Kitchen and kept the output {"after":{"berries":0.0,"fiber":0.0,"potion_small":1.0},"before":{"berries":4.0,"fiber":1.0,"potion_small":0.0},"reply":{"durable":true,"ok":true,"owner_acknowledged":true,"owner_saved":true,"receipt":"craft:character-5fda1723a65b4dd1211f659e3ec375f9:4a1ef84f485696bc65d8272570b4bb03","resolved":true,"saved":true,"settled":true},"sent":{"code":"awaiting_saved_decision","ok":false,"resolved":false},"view_revision":0.0}
+PASS: the rejoined guest's owner-passive stream is alive: it crafts at the host's Kitchen
+PASS: peer 0 craft_authority_count: host authority counts read {"character_id":"character-5fda1723a65b4dd1211f659e3ec375f9","counts":{"berries":0.0,"fiber":0.0,"potion_small":1.0}}
+PASS: peer 1 craft_count: counts read {"character_id":"character-5fda1723a65b4dd1211f659e3ec375f9","counts":{"berries":0.0,"fiber":0.0,"potion_small":1.0}}
+PASS: host authority still equals the guest after the craft { "berries": 0.0, "fiber": 0.0, "potion_small": 1.0 }
+PASS: control peer logs have no script errors and no owner-passive refusal
+ALL CHECKS PASSED
+ALL CHECKS PASSED
+ALL CHECKS PASSED

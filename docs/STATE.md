@@ -47,14 +47,14 @@ Read first; update in place, under 25KB. No dated status/goal/handoff documents.
   2. The guest's declared record is adopted (first-join rules, at a higher revision) when it is not behind the held record. "Not behind" means every receipt, personal flag and absorbed payout the host recorded is present.
   3. Only a declaration that is behind (a rollback or restored backup) adopts the held record.
   
-  Implementation follows #544 (lane A). The evidence is in `ralph/reports/HUB/f17/rejoin_audit.md`.
+  Implemented on tb/f17 (66b2f539); audit and review: `ralph/reports/HUB/f17/`.
 - **Review gate:** independent code review stays mandatory for co-op, save, economy and world-visibility (culling, streaming) changes. Pure tuning, data and visual changes go straight to their tests or code-blind judge without a separate code review.
 - **Schedule:** rebaseline the delivery plan to the measured pace; scope kept, old baseline shown as a ghost.
 - **Combat controller map (former open decision #10; COMBAT §1, UX §2.2):** confirmed as written. The ultimate and Tether Commands are tap-then-tap sequences, orb aim is on LT, flee is on RT, the LB+face layout is an optional preset, and the commands unlock at the practice catch and the first two-creature fight.
 
 ACCEPTANCE was reconciled with RD-01..RD-37 (PR #527). Eleven legacy-path tests retire when portals turn on.
 
-**Open co-op items:** Stormwood hosted trainers have no durable actor vitals (F27 excludes them); guest catches stay local while alpha_respawns is off (F27); a guest returning after deliveries or offline changes diverges from the host's held record (Lane A).
+**Open co-op items:** Stormwood hosted trainers have no durable actor vitals (F27 excludes them); guest catches stay local while alpha_respawns is off (F27); owner to rule if a missing personal flag is behind (yes now; M1); a payout that can't fit while behind can be lost (L2).
 
 **Owner-blocked:** F26#5 Ally test (parked) and the F47/F49 owner play pass, plus the other `blocked` rows on the board.
 
