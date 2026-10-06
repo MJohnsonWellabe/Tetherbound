@@ -1,0 +1,45 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only f23_loadout_contract,combat_mastery_delivery: 2 of 816 test files
+  ok    test_combat_mastery_delivery.gd :: test_character_snapshot_without_world_id_accepts_a_valid_retained_event
+SCRIPT ERROR: Invalid access to property or key 'state' on a base object of type 'Dictionary'.
+   at: test_effect_mastery_retains_exact_status_receipt_and_recovers_through_existing_delivery (res://tests/test_combat_mastery_delivery.gd:103)
+   GDScript backtrace (most recent call first):
+       [0] test_effect_mastery_retains_exact_status_receipt_and_recovers_through_existing_delivery (res://tests/test_combat_mastery_delivery.gd:103)
+       [1] _init (res://tests/run_tests.gd:120)
+  FAIL  test_combat_mastery_delivery.gd :: test_effect_mastery_retains_exact_status_receipt_and_recovers_through_existing_delivery
+          expected true, got false  ({ "ok": false, "code": "unsettled_training_conflict" })
+          expected 1, got 0
+          expected true, got false
+  ok    test_combat_mastery_delivery.gd :: test_first_noncombat_resource_stage_initializes_same_real_arbiter
+  ok    test_combat_mastery_delivery.gd :: test_passive_care_gained_between_stage_and_apply_is_kept
+  ok    test_combat_mastery_delivery.gd :: test_remote_shell_retains_failed_hit_and_retries_before_release
+  ok    test_combat_mastery_delivery.gd :: test_retained_hit_rejects_forged_binding_damage_or_epoch_and_preserves_hp
+  ok    test_combat_mastery_delivery.gd :: test_world_and_owner_save_refusal_retry_retains_one_landed_use
+  ok    test_f23_loadout_contract.gd :: test_actual_owner_installer_preserves_instances_and_failed_bool_write_retries_without_second_debit_or_ack
+  ok    test_f23_loadout_contract.gd :: test_all_species_have_gated_learnsets_and_two_utility_choices
+  ok    test_f23_loadout_contract.gd :: test_backpack_restarts_original_tm_intent_and_never_reports_unsaved_or_unacknowledged_success
+  ok    test_f23_loadout_contract.gd :: test_each_mastery_rank_freezes_damage_and_effect_tier_without_recrediting
+  FAIL  test_f23_loadout_contract.gd :: test_loadout_station_ownership_and_save_recovery_use_the_existing_original
+          expected true, got false  ({ "ok": false, "code": "unsettled_training_conflict" })
+          expected true, got false
+          expected true, got false  ({ "ok": false, "code": "owner_action_baseline_conflict", "durable": false, "resolved": false })
+          expected true, got false  ({ "ok": false, "code": "unsettled_training_conflict" })
+          expected true, got false
+          expected true, got false  ({ "ok": false, "code": "owner_action_baseline_conflict", "durable": false, "resolved": false })
+  ok    test_f23_loadout_contract.gd :: test_owner_apply_tolerates_passive_care_drift_but_refuses_real_conflicts
+  ok    test_f23_loadout_contract.gd :: test_tm_existing_registry_failed_world_write_rolls_back_then_original_json_row_recovers_and_requires_owner_ack
+  ok    test_f23_loadout_contract.gd :: test_tm_refuses_foreign_target_bad_intent_missing_disc_combat_and_stale_revision_without_mutation
+  ok    test_f23_loadout_contract.gd :: test_tm_stage_consumes_one_disc_teaches_only_chosen_uid_and_preserves_every_equipped_and_mastery_field
+
+16 tests, 777 assertions, 2 failed
+
+  test_combat_mastery_delivery.gd :: test_effect_mastery_retains_exact_status_receipt_and_recovers_through_existing_delivery — expected true, got false  ({ "ok": false, "code": "unsettled_training_conflict" })
+  test_combat_mastery_delivery.gd :: test_effect_mastery_retains_exact_status_receipt_and_recovers_through_existing_delivery — expected 1, got 0
+  test_combat_mastery_delivery.gd :: test_effect_mastery_retains_exact_status_receipt_and_recovers_through_existing_delivery — expected true, got false
+  test_f23_loadout_contract.gd :: test_loadout_station_ownership_and_save_recovery_use_the_existing_original — expected true, got false  ({ "ok": false, "code": "unsettled_training_conflict" })
+  test_f23_loadout_contract.gd :: test_loadout_station_ownership_and_save_recovery_use_the_existing_original — expected true, got false
+  test_f23_loadout_contract.gd :: test_loadout_station_ownership_and_save_recovery_use_the_existing_original — expected true, got false  ({ "ok": false, "code": "owner_action_baseline_conflict", "durable": false, "resolved": false })
+  test_f23_loadout_contract.gd :: test_loadout_station_ownership_and_save_recovery_use_the_existing_original — expected true, got false  ({ "ok": false, "code": "unsettled_training_conflict" })
+  test_f23_loadout_contract.gd :: test_loadout_station_ownership_and_save_recovery_use_the_existing_original — expected true, got false
+  test_f23_loadout_contract.gd :: test_loadout_station_ownership_and_save_recovery_use_the_existing_original — expected true, got false  ({ "ok": false, "code": "owner_action_baseline_conflict", "durable": false, "resolved": false })

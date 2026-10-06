@@ -1,0 +1,76 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only f23_loadout_contract,f23_live_moves,move_commit_runtime,combat_mastery_delivery,move_effects,tm_teach_transaction: 6 of 816 test files
+SCRIPT ERROR: Parse Error: Cannot infer the type of "move" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://tests/test_combat_mastery_delivery.gd:53)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+ERROR: Failed to load script "res://tests/test_combat_mastery_delivery.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+  FAIL  test_combat_mastery_delivery.gd :: could not be parsed or instantiated
+SCRIPT ERROR: Parse Error: Cannot infer the type of "move" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://tests/test_f23_live_moves.gd:233)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://scripts/combat/combat_manager.gd".
+   at: GDScript::reload (res://tests/test_f23_live_moves.gd:11)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+ERROR: Failed to load script "res://tests/test_f23_live_moves.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+  FAIL  test_f23_live_moves.gd :: could not be parsed or instantiated
+  ok    test_f23_loadout_contract.gd :: test_actual_owner_installer_preserves_instances_and_failed_bool_write_retries_without_second_debit_or_ack
+  FAIL  test_f23_loadout_contract.gd :: test_all_species_have_gated_learnsets_and_two_utility_choices
+          expected 57, got 69
+  ok    test_f23_loadout_contract.gd :: test_backpack_restarts_original_tm_intent_and_never_reports_unsaved_or_unacknowledged_success
+  ok    test_f23_loadout_contract.gd :: test_each_mastery_rank_freezes_damage_and_effect_tier_without_recrediting
+SCRIPT ERROR: Invalid access to property or key 'state' on a base object of type 'Dictionary'.
+   at: test_loadout_station_ownership_and_save_recovery_use_the_existing_original (res://tests/test_f23_loadout_contract.gd:82)
+   GDScript backtrace (most recent call first):
+       [0] test_loadout_station_ownership_and_save_recovery_use_the_existing_original (res://tests/test_f23_loadout_contract.gd:82)
+       [1] _init (res://tests/run_tests.gd:120)
+  FAIL  test_f23_loadout_contract.gd :: test_loadout_station_ownership_and_save_recovery_use_the_existing_original
+          expected true, got false
+          expected true, got false
+          expected true, got false
+  ok    test_f23_loadout_contract.gd :: test_owner_apply_tolerates_passive_care_drift_but_refuses_real_conflicts
+  ok    test_f23_loadout_contract.gd :: test_tm_existing_registry_failed_world_write_rolls_back_then_original_json_row_recovers_and_requires_owner_ack
+  ok    test_f23_loadout_contract.gd :: test_tm_refuses_foreign_target_bad_intent_missing_disc_combat_and_stale_revision_without_mutation
+  ok    test_f23_loadout_contract.gd :: test_tm_stage_consumes_one_disc_teaches_only_chosen_uid_and_preserves_every_equipped_and_mastery_field
+  ok    test_move_commit_runtime.gd :: test_admission_refuses_unknown_loadout_without_any_mutation
+  ok    test_move_commit_runtime.gd :: test_charged_refusal_has_no_cost_and_does_not_replace_original
+  ok    test_move_commit_runtime.gd :: test_f33_charm_gain_frozen_in_the_accepted_action_scales_the_meter_once_and_is_capped
+  ok    test_move_commit_runtime.gd :: test_f33_no_charm_keeps_the_ordinary_gain_and_power
+  ok    test_move_commit_runtime.gd :: test_idle_wind_ticks_each_uid_and_switched_burst_spends_current_creature
+  ok    test_move_commit_runtime.gd :: test_meters_require_positive_debit_and_credit_one_actual_action_once
+  ok    test_move_commit_runtime.gd :: test_start_spends_once_and_impact_cannot_run_early_or_repeat
+  ok    test_move_commit_runtime.gd :: test_switch_retains_each_creatures_resources_and_cooldown
+  ok    test_move_commit_runtime.gd :: test_unsaved_mastery_and_resources_survive_peer_replacement_and_close
+  ok    test_move_commit_runtime.gd :: test_wrong_move_or_body_lifetime_cannot_arrive
+  ok    test_move_effects.gd :: test_authored_stages_are_bounded_and_drawable
+  ok    test_move_effects.gd :: test_critical_impact_prunes_trails_before_spending_beyond_encounter_cap
+  ok    test_move_effects.gd :: test_every_move_resolves_and_all_24_bodies_impacts_trails_and_cues_exist
+  ok    test_move_effects.gd :: test_light_cap_is_global_idempotent_and_reclaims_existing_lease
+  ok    test_move_effects.gd :: test_mastery_grows_presentation_without_changing_arrival_schedule
+  ok    test_move_effects.gd :: test_optional_receipt_is_recursively_frozen_and_detached
+  ok    test_move_effects.gd :: test_stages_do_not_change_arrival_or_travel
+  ok    test_move_effects.gd :: test_ultimate_overrides_resolve_to_staged_presentations
+  ok    test_tm_teach_transaction.gd :: test_actual_owner_installer_preserves_instances_and_failed_bool_write_retries_without_second_debit_or_ack
+  ok    test_tm_teach_transaction.gd :: test_backpack_restarts_original_tm_intent_and_never_reports_unsaved_or_unacknowledged_success
+  ok    test_tm_teach_transaction.gd :: test_owner_apply_tolerates_passive_care_drift_but_refuses_real_conflicts
+  ok    test_tm_teach_transaction.gd :: test_tm_existing_registry_failed_world_write_rolls_back_then_original_json_row_recovers_and_requires_owner_ack
+  ok    test_tm_teach_transaction.gd :: test_tm_refuses_foreign_target_bad_intent_missing_disc_combat_and_stale_revision_without_mutation
+  ok    test_tm_teach_transaction.gd :: test_tm_stage_consumes_one_disc_teaches_only_chosen_uid_and_preserves_every_equipped_and_mastery_field
+
+35 tests, 2006 assertions, 4 failed
+
+  res://tests/test_combat_mastery_delivery.gd: parse error, see SCRIPT ERROR above
+  res://tests/test_f23_live_moves.gd: parse error, see SCRIPT ERROR above
+  test_f23_loadout_contract.gd :: test_all_species_have_gated_learnsets_and_two_utility_choices — expected 57, got 69
+  test_f23_loadout_contract.gd :: test_loadout_station_ownership_and_save_recovery_use_the_existing_original — expected true, got false
+  test_f23_loadout_contract.gd :: test_loadout_station_ownership_and_save_recovery_use_the_existing_original — expected true, got false
+  test_f23_loadout_contract.gd :: test_loadout_station_ownership_and_save_recovery_use_the_existing_original — expected true, got false
