@@ -342,17 +342,30 @@ static func _acknowledge(game: Object, id: String, expected: Dictionary, flag: S
 				or Time.get_ticks_msec() >= settle_ceiling \
 				or not game is Node or not game.is_inside_tree() \
 				or not game.has_method("regional_ending_ack_result"):
+			_note_ack_exit(game, expected, "wait ended (deadline passed=%s journalled=%s)" % [str(Time.get_ticks_msec() >= deadline), str(ack_journalled(game, intent))])
 			_notice(game, failure)
 			return false
 		await game.get_tree().process_frame
 		if not is_instance_valid(game) or not context_matches(game, expected):
+			if is_instance_valid(game): _note_ack_exit(game, expected, "context changed while pending")
 			return false
 		raw = game.call("regional_ending_ack_result", intent.transaction_id)
 	if receipt_matches(raw, intent) and context_matches(game, expected) \
 			and context(game).get(flag) == true:
 		return true
+	_note_ack_exit(game, expected, "final check (receipt=%s status=%s flag=%s)" % [str(receipt_matches(raw, intent)), str(raw.get("status") if raw is Dictionary else raw), str(context(game).get(flag))])
 	_notice(game, failure)
 	return false
+
+
+## Diagnostic only: why an acknowledgement presentation ended without its
+## receipt, naming any context field that moved since Grandpa spoke.
+static func _note_ack_exit(game: Object, expected: Dictionary, why: String) -> void:
+	var current := context(game)
+	var moved: Array = []
+	for field: String in CONTEXT_FIELDS + ["starter_uid", "chapter_choices"]:
+		if current.get(field) != expected.get(field): moved.append(field)
+	print("[regional_ack] presentation ended: %s; moved=%s" % [why, str(moved)])
 
 
 ## The host has durably journalled this exact acknowledgement: its row is
