@@ -22,7 +22,7 @@ const DENSIFY_M := 8.0
 const EYE_M := 2.6
 const FOV_DEG := 60.0
 const DISTANCES_M := [220.0, 160.0, 110.0, 70.0]
-## `--distances=480,420` overrides (Juno's patrol camp is ~470 m off any road).
+## `--distances=110,70` covers Juno's patrol beside the current band4 road.
 const CUES := {
 	"bram": Vector2(313.4, 979.2),
 	"doss": Vector2(-23.5, 4160.5),
