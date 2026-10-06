@@ -1,0 +1,35 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only f24_host_commands: 1 of 817 test files
+  ok    test_f24_host_commands.gd :: test_admission_refuses_unknown_loadout_without_any_mutation
+  ok    test_f24_host_commands.gd :: test_charged_refusal_has_no_cost_and_does_not_replace_original
+  ok    test_f24_host_commands.gd :: test_f33_charm_gain_frozen_in_the_accepted_action_scales_the_meter_once_and_is_capped
+  ok    test_f24_host_commands.gd :: test_f33_no_charm_keeps_the_ordinary_gain_and_power
+  ok    test_f24_host_commands.gd :: test_idle_wind_ticks_each_uid_and_switched_burst_spends_current_creature
+SCRIPT ERROR: Invalid access to property or key '3' on a base object of type 'Dictionary'.
+   at: test_meter_uses_original_host_hit_once_and_freezes_admitted_gear (res://tests/test_f24_host_commands.gd:55)
+   GDScript backtrace (most recent call first):
+       [0] test_meter_uses_original_host_hit_once_and_freezes_admitted_gear (res://tests/test_f24_host_commands.gd:55)
+       [1] _init (res://tests/run_tests.gd:120)
+  FAIL  test_f24_host_commands.gd :: test_meter_uses_original_host_hit_once_and_freezes_admitted_gear
+          expected true, got false
+  ok    test_f24_host_commands.gd :: test_meters_require_positive_debit_and_credit_one_actual_action_once
+  ok    test_f24_host_commands.gd :: test_rally_spends_once_affects_only_owner_and_splits_wind_at_expiry
+SCRIPT ERROR: Invalid access to property or key 'tether_snare' on a base object of type 'Dictionary'.
+   at: test_snare_canonical_status_has_one_shared_slow_and_own_catch_grant (res://tests/test_f24_host_commands.gd:99)
+   GDScript backtrace (most recent call first):
+       [0] test_snare_canonical_status_has_one_shared_slow_and_own_catch_grant (res://tests/test_f24_host_commands.gd:99)
+       [1] _init (res://tests/run_tests.gd:120)
+  FAIL  test_f24_host_commands.gd :: test_snare_canonical_status_has_one_shared_slow_and_own_catch_grant
+          expected true, got false  ({ "ok": false, "kind": "tether_command", "peer": 1, "code": "invalid_target", "reason": "No wild creature in reach.", "pending": false, "delta": {  } })
+          expected 40.0, got 100.0
+  ok    test_f24_host_commands.gd :: test_start_spends_once_and_impact_cannot_run_early_or_repeat
+  ok    test_f24_host_commands.gd :: test_switch_retains_each_creatures_resources_and_cooldown
+  ok    test_f24_host_commands.gd :: test_unsaved_mastery_and_resources_survive_peer_replacement_and_close
+  ok    test_f24_host_commands.gd :: test_wrong_move_or_body_lifetime_cannot_arrive
+
+13 tests, 106 assertions, 2 failed
+
+  test_f24_host_commands.gd :: test_meter_uses_original_host_hit_once_and_freezes_admitted_gear — expected true, got false
+  test_f24_host_commands.gd :: test_snare_canonical_status_has_one_shared_slow_and_own_catch_grant — expected true, got false  ({ "ok": false, "kind": "tether_command", "peer": 1, "code": "invalid_target", "reason": "No wild creature in reach.", "pending": false, "delta": {  } })
+  test_f24_host_commands.gd :: test_snare_canonical_status_has_one_shared_slow_and_own_catch_grant — expected 40.0, got 100.0

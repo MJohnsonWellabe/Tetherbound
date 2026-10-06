@@ -1,0 +1,4 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+[encounter] strike_intent refused: stale_move_start (That move cannot arrive from this creature now.)
+F23_LIVE_MOVES {"captures":[],"checks":9,"claim":"focused fixture; no campaign, co-op, device or visual acceptance","errors":["B must start and land admitted Snare"],"impacts":0,"launches":0,"visual_gate_override":false}
