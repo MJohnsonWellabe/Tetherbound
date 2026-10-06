@@ -1,0 +1,66 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.
+     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)
+OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.2 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)
+
+F25 capture small-stones:r1 launch wall=33304ms
+F25 capture small-stones:r1 flight wall=34825ms
+F25 capture small-stones:r1 contact wall=37887ms
+F25 capture small-stones:r1 impact wall=39419ms
+F25 capture small-stones:r1 aftermath wall=41909ms
+F25 capture small-stones:r3 launch wall=46805ms
+F25 capture small-stones:r3 flight wall=47837ms
+F25 capture small-stones:r3 contact wall=50322ms
+F25 capture small-stones:r3 impact wall=51784ms
+F25 capture small-stones:r3 aftermath wall=54214ms
+F25 capture small-stones:r5 launch wall=58960ms
+F25 capture small-stones:r5 flight wall=59976ms
+F25 capture small-stones:r5 contact wall=62459ms
+F25 capture small-stones:r5 impact wall=63961ms
+F25 capture small-stones:r5 aftermath wall=66450ms
+F25 capture large-stone:r1 launch wall=71324ms
+F25 capture large-stone:r1 flight wall=72801ms
+F25 capture large-stone:r1 contact wall=74836ms
+F25 capture large-stone:r1 impact wall=76360ms
+F25 capture large-stone:r1 aftermath wall=78940ms
+F25 capture large-stone:r3 launch wall=84066ms
+F25 capture large-stone:r3 flight wall=85569ms
+F25 capture large-stone:r3 contact wall=87626ms
+F25 capture large-stone:r3 impact wall=89207ms
+F25 capture large-stone:r3 aftermath wall=91777ms
+F25 capture large-stone:r5 launch wall=96829ms
+F25 capture large-stone:r5 flight wall=97880ms
+F25 capture large-stone:r5 contact wall=100522ms
+F25 capture large-stone:r5 impact wall=102199ms
+F25 capture large-stone:r5 aftermath wall=105072ms
+F25 capture burning-orb:r1 launch wall=112694ms
+F25 capture burning-orb:r1 flight wall=114881ms
+F25 capture burning-orb:r1 contact wall=118066ms
+F25 capture burning-orb:r1 impact wall=119580ms
+F25 capture burning-orb:r1 aftermath wall=122038ms
+F25 capture burning-orb:r3 launch wall=127705ms
+F25 capture burning-orb:r3 flight wall=129163ms
+F25 capture burning-orb:r3 contact wall=131114ms
+F25 capture burning-orb:r3 impact wall=132622ms
+F25 capture burning-orb:r3 aftermath wall=135185ms
+F25 capture burning-orb:r5 launch wall=141194ms
+F25 capture burning-orb:r5 flight wall=142185ms
+F25 capture burning-orb:r5 contact wall=144832ms
+F25 capture burning-orb:r5 impact wall=146569ms
+F25 capture burning-orb:r5 aftermath wall=149677ms
+F25 capture descending-bolt:r1 launch wall=157565ms
+F25 capture descending-bolt:r1 flight wall=160686ms
+F25 capture descending-bolt:r1 contact wall=161795ms
+F25 capture descending-bolt:r1 impact wall=163421ms
+F25 capture descending-bolt:r1 aftermath wall=166021ms
+F25 capture descending-bolt:r3 launch wall=171185ms
+F25 capture descending-bolt:r3 flight wall=173832ms
+F25 capture descending-bolt:r3 contact wall=174940ms
+F25 capture descending-bolt:r3 impact wall=176596ms
+F25 capture descending-bolt:r3 aftermath wall=179180ms
+F25 capture descending-bolt:r5 launch wall=184321ms
+F25 capture descending-bolt:r5 flight wall=186963ms
+F25 capture descending-bolt:r5 contact wall=188092ms
+F25 capture descending-bolt:r5 impact wall=189716ms
+F25 capture descending-bolt:r5 aftermath wall=192339ms
+F25 batch=identities cases=12 failures=5 renderer=gl_compatibility out=ralph/reports/VFX/f25/r2/identities-fan-73db1ad63 scope=synthetic_no_combat

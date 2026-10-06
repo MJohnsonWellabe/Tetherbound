@@ -489,10 +489,12 @@ func _build_impact() -> void:
 			_motes.material_override = spark_material
 		_motes.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		_impact.add_child(_motes)
+	var mote_axes: Array = profile.get("mote_axis_scale", [1.0, 1.0, 1.0])
+	var mote_scale := Vector3(float(mote_axes[0]), float(mote_axes[1]), float(mote_axes[2]))
 	for i in count:
 		var start := surface_offset + Vector3(_rng.randf_range(-0.08, 0.08), _rng.randf_range(-0.03, 0.08), _rng.randf_range(-0.08, 0.08)) * scale_factor
 		_mote_positions.append(start)
-		var varied_basis := Basis.from_euler(Vector3(_rng.randf() * TAU, _rng.randf() * TAU, _rng.randf() * TAU)).scaled(Vector3.ONE * _rng.randf_range(0.55, 1.45))
+		var varied_basis := Basis.from_euler(Vector3(_rng.randf() * TAU, _rng.randf() * TAU, _rng.randf() * TAU)).scaled(mote_scale * _rng.randf_range(0.55, 1.45))
 		_mote_bases.append(varied_basis)
 		_motes.multimesh.set_instance_transform(i, Transform3D(varied_basis, start))
 		_motes.multimesh.set_instance_custom_data(i, Color(_rng.randf(), 0, 0, 0))
