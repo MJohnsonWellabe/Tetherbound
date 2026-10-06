@@ -131,7 +131,7 @@ func _choose(id: String) -> void:
 				session.connect("homestead_action_completed", _on_reply)
 			_message.text = "Asking the host…"
 			return
-		if verdict.get("ok") != true:
+		if verdict.get("ok") != true and not chosen_already(verdict):
 			_message.text = _refusal(verdict)
 			return
 	_apply(hearts, id)
@@ -148,7 +148,7 @@ func _on_reply(op: String, intent: Dictionary, result: Dictionary) -> void:
 		session.disconnect("homestead_action_completed", _on_reply)
 	var id := _pending_heart
 	_pending_heart = ""
-	if result.get("ok") == true:
+	if result.get("ok") == true or chosen_already(result):
 		_apply(game.get("realm_hearts"), id)
 	else:
 		_message.text = _refusal(result)
@@ -170,6 +170,12 @@ const IN_PROGRESS := ["awaiting_saved_decision", "owner_passive_checkpoint_pendi
 
 static func reply_final(result: Dictionary) -> bool:
 	return not result.is_empty() and (result.get("ok") == true or str(result.get("code", "")) not in IN_PROGRESS)
+
+
+## The host saved nothing because this power is already the active one: a
+## no-op for the player, not an error.
+static func chosen_already(result: Dictionary) -> bool:
+	return str(result.get("code", "")) == "relic_power_unchanged"
 
 
 static func _refusal(verdict: Dictionary) -> String:

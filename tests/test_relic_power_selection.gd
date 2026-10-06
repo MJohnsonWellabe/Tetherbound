@@ -69,6 +69,19 @@ func test_the_host_action_saves_one_choice_and_refuses_an_unhung_one() -> void:
 		"actual_shrine_pedestal_required", "never mid-fight")
 	assert_eq(ACTIONS.relic_power(chosen.state, {"heart_id": "meadows", "edit_id": EDIT}, context).get("code"),
 		"reconcile_original_decision", "one edit applies once")
+	# render.yml 37400069833: a second choice of the same power (a new edit)
+	# saved a second row and receipt; it changes nothing, so the host refuses.
+	var again := ACTIONS.relic_power(chosen.state, {"heart_id": "meadows", "edit_id": EDIT.reverse()}, context)
+	assert_eq(again.get("code"), "relic_power_unchanged", "the active power chosen again stages nothing")
+	assert_false(again.has("state") or again.has("receipt"), "no record change, no receipt")
+	assert_true(PANEL.chosen_already(again), "the panel shows it as the active power, not an error")
+	assert_eq(ACTIONS.relic_power(current, {"heart_id": "", "edit_id": EDIT}, context).get("code"), "relic_power_unchanged",
+		"clearing an already empty choice is unchanged too")
+	var other: Dictionary = chosen.state.duplicate(true)
+	other.redesign_character.relics_hung.append("tidewake")
+	other.redesign_character.transaction_receipts.append("relic_hang:tidewake:owner_a")
+	assert_true(ACTIONS.relic_power(other, {"heart_id": "water", "edit_id": EDIT.reverse()}, context).get("ok") == true,
+		"a different hung power is still a new choice")
 
 
 func test_a_guest_choice_waits_past_the_host_checkpoint_for_its_saved_decision() -> void:
