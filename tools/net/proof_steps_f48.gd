@@ -1801,13 +1801,17 @@ static func _assert_altar_build(tree: SceneTree, args: Dictionary) -> Dictionary
 			if edge.row.get("status") != "pending" or not _json_equal(pending, accepted) \
 				or _digest(str(edge.path)) != edge.sha256:
 				errors.append("Exact immutable original saved row/edge artifact changed")
-		var host_before := {"inventory": host_edge.files.memory.get("inventory"), "party": host_edge.files.memory.get("party"),
+		var host_party: Variant = host_edge.files.memory.get("party")
+		if host_party is Array: host_party = host_party.map(RECORD_RULES.portable_card)
+		var host_before := {"inventory": host_edge.files.memory.get("inventory"), "party": host_party,
 			"redesign_character": host_edge.files.memory.get("redesign_character")}
 		if not _json_equal(row.get("before"), host_before):
 			errors.append("Full original before carrier differs from actual host writer edge")
 		for scope: String in ["memory", "disk"]:
 			var saved: Dictionary = owner_edge.files[scope]
-			var projection := {"inventory": saved.get("inventory"), "party": saved.get("party"), "redesign_character": saved.get("redesign_character")}
+			var owner_party: Variant = saved.get("party")
+			if owner_party is Array: owner_party = owner_party.map(RECORD_RULES.portable_card)
+			var projection := {"inventory": saved.get("inventory"), "party": owner_party, "redesign_character": saved.get("redesign_character")}
 			if not _json_equal(row.get("after"), projection):
 				errors.append(scope + ": full original after carrier differs at actual owner BOOL-save edge")
 	if not row.get("before") is Dictionary or not row.get("after") is Dictionary \
@@ -1829,7 +1833,9 @@ static func _assert_altar_build(tree: SceneTree, args: Dictionary) -> Dictionary
 		# Disk must still hold the original complete saved row. Live care resumes
 		# later; its full values remain in now and the sealed owner-edge evidence.
 		if scope == "disk":
-			var projection := {"inventory": state.get("inventory"), "party": state.get("party"), "redesign_character": state.get("redesign_character")}
+			var disk_party: Variant = state.get("party")
+			if disk_party is Array: disk_party = disk_party.map(RECORD_RULES.portable_card)
+			var projection := {"inventory": state.get("inventory"), "party": disk_party, "redesign_character": state.get("redesign_character")}
 			if not _json_equal(row.get("after"), projection): errors.append("Latest disk differs from complete authenticated after carrier")
 	if not _json_equal(row.before.get("inventory"), prior.memory.get("inventory")) \
 		or not _json_equal(row.before.get("redesign_character"), prior.memory.get("redesign_character")):
@@ -1846,7 +1852,9 @@ static func _assert_altar_build(tree: SceneTree, args: Dictionary) -> Dictionary
 		var edge_disk: Dictionary = owner_edge.get("files", {}).get("disk", {})
 		for label: String in ["owner_edge_disk", "latest_disk"]:
 			var saved: Dictionary = edge_disk if label == "owner_edge_disk" else now.disk
-			var projection := {"inventory": saved.get("inventory"), "party": saved.get("party"), "redesign_character": saved.get("redesign_character")}
+			var diagnostic_party: Variant = saved.get("party")
+			if diagnostic_party is Array: diagnostic_party = diagnostic_party.map(RECORD_RULES.portable_card)
+			var projection := {"inventory": saved.get("inventory"), "party": diagnostic_party, "redesign_character": saved.get("redesign_character")}
 			differences[label] = _json_difference(row.get("after"), projection)
 		differences["disk_journal"] = _json_difference(row, now.disk_world.get("reward_deliveries", {}).get(id))
 		for building: Variant in now.disk_world.get("placed_buildings", []):
