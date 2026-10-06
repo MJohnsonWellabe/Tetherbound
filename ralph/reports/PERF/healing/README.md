@@ -201,3 +201,28 @@ qualification. The remaining material requires the new native path diagnostic.
 
 C2 is closed as BLOCKED/accepted with an existing-tool gap. Its custom fixture
 and cancelled export/profile queue must not be restored or executed for P1.
+
+The corrected candidate at `649c3449461ed3c2d1521b5076eb188129899f9a`
+completed **exit 1 / FAIL**. It covered the previous 114 omitted materials,
+but the exact remaining identity was on
+`IronwoodGrovePresentation/IronwoodLightningHeart/TrappedLegendaryCore`.
+The unchanged independent whole-world audit still found one lit material
+live, after fresh-world reload and reload+30. The observed **3920 ms** remains
+failed-run evidence, not an accepted AFTER. All 19 mounted assertions ran;
+29 pylon poses, clearance, cables, herd and save/rebuild comparisons passed.
+There were no SCRIPT ERROR, Parse Error, ERROR or leak diagnostics; inherited
+warnings remain. Raw [receipt](after-repair/receipt.json),
+[stdout](after-repair/stdout.log), [stderr](after-repair/stderr.log),
+[exit](after-repair/exit.txt) and [hashes](after-repair/SHA256SUMS.txt) are retained
+unchanged. The owned engine exited and its matching lease released.
+
+The next product correction registers only the authored Ironwood LightningHeart
+subtree when constructed. Its matching core then follows the unchanged material
+classifier in both live healing and the saved-flag rebuild; warm materials keep
+the same predicate. No checker, timing ceiling, gameplay authority or fixture
+changed. Corrected runtime and acceptance remain OPEN.
+Independent read-only review by /root/c3_journal_review: **SOURCE PASS** on
+the one-line Ironwood registration. Grove construction finishes before both
+live and saved-flag healing; descendant material enumeration, identity deduplication,
+world ancestry and warm-color protection are unchanged. This is source readiness,
+not runtime or performance acceptance.

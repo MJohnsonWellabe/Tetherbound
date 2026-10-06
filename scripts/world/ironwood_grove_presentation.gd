@@ -303,6 +303,7 @@ func _build_lightning_heart(world: Node, raw: Dictionary, hero_raw: Dictionary) 
 	var heart := Node3D.new()
 	heart.name = "IronwoodLightningHeart"
 	heart.position = Vector3(hero_at.x, base_y, hero_at.y)
+	heart.add_to_group(&"meadow_healing_light_roots")
 	add_child(heart)
 	var colour := Color(str(raw.get("colour", "#9fe9ff")))
 	var core_size_raw := raw.get("core_size", [8.0, 30.0, 2.4]) as Array
