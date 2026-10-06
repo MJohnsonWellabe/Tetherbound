@@ -1,4 +1,18 @@
 {
+  "burst15_refinement_source_review": {
+    "candidate": "wind.burst_cost=15",
+    "limits": "Assumes full base Wind and no other spending/regeneration; actual reach, energy, punish window and acceptance remain measurement questions. No policy, geometry, damage or authored data change.",
+    "proposal_comment_id": 6012322891,
+    "reviewer": "/root/resolution_review",
+    "verdict": "PASS for unchanged production consumer and recovery-guard arithmetic only; runtime OPEN",
+    "verified": [
+      "Existing wind_cost and consume_wind debit the patched player burst cost",
+      "Existing reader guard uses Wind >= charged_cost + burst_cost",
+      "At base80 two bursts20 leave40 below35+20=55",
+      "At base80 two bursts15 leave50 meeting35+15=50; base100 leaves70",
+      "15 is largest cost satisfying80-2b>=35+b; quick reserve12+15=27"
+    ]
+  },
   "causeways_pair_review": {
     "reviewer": "/root/resolution_review",
     "scope": "Broken Causeways hosted diagnostics only; no full Cloudreach/Windows/global/legal-TM acceptance",
@@ -26,6 +40,18 @@
     ]
   },
   "findings": [],
+  "gale_outer_pair_review": {
+    "reviewer": "/root/resolution_review",
+    "scope": "Outer Reaches hosted diagnostics only; Veilfall/global/allstarter/wild/native proofs OPEN",
+    "verdict": "PASS for receipt integrity/comparison; numerical floors bothFAIL and charged25 rejected as standalonefix",
+    "verified": [
+      "Exact ZIP digests/member lengths+hashes/extracted bytes/summary conservation",
+      "Each36wins/no stalls/12pairedseeds perpolicy/36complete incoming audits; max.1726017063<.5",
+      "Untruncated complete native JSON consoles/no native errors or warnings",
+      "Exact decoded official logs bind source832/official4.7/headlessdefaultpacing/Runexit1",
+      "Control ratio1.6028871040 versus charged25 ratio1.8613601443; reader lead rises slightly"
+    ]
+  },
   "galewisp_extension": {
     "reviewed_receipt_commit": "5996f23bf08b9fd3241336ddb09c5a84631aaee5",
     "runtime_verdict": "OPEN; dispatch/setup/Run-step status is not a completed receipt or criterion acceptance",
@@ -51,7 +77,44 @@
       "Control lead medians numerically match original native row; hosted proof scope remains unchanged"
     ]
   },
+  "next_burst_cost_source_review": {
+    "acceptance": "OPEN; paired12 measurements, allstarter preservation, final Windows/wild/clip proofs required",
+    "actual_product_spend": "Existing cached MATH config\u2192wind_cost\u2192consume_wind changes player burst debit30\u219220; species overrides capacity/regen only",
+    "candidate": "wind.burst_cost=20",
+    "coordination": "Proposed on PR525 before any authored data change; no dispatch during landingCIhold, existing first-matrix live runs retained",
+    "existing_reader_effects": [
+      "quick12+burst reserve42\u219232",
+      "charged35+burst recoverybudget65\u219255",
+      "Two bursts from base80 leave40 instead20; base100 leaves60 instead40, ignoring regeneration/other spending"
+    ],
+    "masher_scope": "MASHER bypasses reader burst path and every reviewed masher run has zero bursts; enemy AI uses enemy config rather than player Wind burst cost. No direct masher action/damage change expected, not measured.",
+    "reviewer": "/root/resolution_review",
+    "status": "UNEXECUTED precursor superseded by reviewed15 proposal; never dispatched or authored",
+    "unchanged": [
+      "damage",
+      "move reach",
+      "body size",
+      "reactions",
+      "control policy",
+      "quick cost12",
+      "charged cost35"
+    ],
+    "verdict": "PASS for source-consumer hypothesis only; no authored patch or runtime trial"
+  },
   "product_sha": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+  "range_pair_review": {
+    "reviewer": "/root/resolution_review",
+    "scope": "Hosted flat diagnostics only; final Windows/allstarter/wild/visual/legal-TM proofs remain OPEN",
+    "verdict": "PASS for exact two lower range receipts/comparisons; numerical floors FAIL",
+    "verified": [
+      "Exact ZIP/member/extracted bytes and summary conservation except events",
+      "Official decoded job logs bind source832, official4.7, existing headless invocation and exit1",
+      "Each36wins/no stalls/12 paired unique seeds per policy/36 complete configured incoming audits; max bounds strictly below .5",
+      "Untruncated complete native JSON consoles without engine errors or warnings",
+      "Gate charge5 to4.5/time110.717 to119.142; Cause charge4 to2.5/time97.808 to125.300",
+      "Gate first checkout failure remains separate and qualified, not runtime evidence"
+    ]
+  },
   "reviewed_receipt_commit": "8e93d090e11e36660fb9240c553d78abdd0b8b9d",
   "reviewer": "/root/resolution_review",
   "reviewer_actions": "Read-only source and metadata; no edit, engine launch, import, test, new script or large-artifact work",
@@ -105,6 +168,20 @@
       "Terrapup equips Stone Rush by default; this counterexample requires no hypothetical TM substitution",
       "Primary-Ground TM teaching grants knowledge without automatically equipping it, and establishes no NPC TM loadout",
       "Ultimate base84 has a named-target-only20% cap, but current presentation enabled=false blocks availability; no current runtime ultimate claim"
+    ]
+  },
+  "upper_power_and_veil_pair_review": {
+    "limits": "Upper range unresolved; no outgoing/legal-TM/Windows/visual/global acceptance.",
+    "reviewer": "/root/resolution_review",
+    "verdict": "PASS for receipt integrity and qualified comparisons; all four numerical floors FAIL",
+    "verified": [
+      "Four exact ZIP digests/all member lengths+hashes/extracted bytes/summary conservation except events",
+      "Untruncated complete matching native F22 JSON consoles/no native errors or warnings",
+      "Exact decoded official logs bind source832, Godot4.7, intended headless arguments and Run exit1",
+      "Each36wins/zero stalls/12paired unique seeds perpolicy/complete configured incoming audits",
+      "Upper incoming bound.1514465717; Veilfall.1505882353; both<.5",
+      "Upper ratio1.249454400 to1.510596378; Veilfall.688195717 to.700962141; all comparisons recomputed",
+      "Identical seed sets and single-key trial separation"
     ]
   },
   "verdict": "PASS for dispatch/source consistency only",

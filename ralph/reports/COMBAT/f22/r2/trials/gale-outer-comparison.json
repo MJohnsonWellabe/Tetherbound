@@ -1,0 +1,72 @@
+{
+  "band": "tidewake/outer_reaches",
+  "changed_key": "wind.charged_cost=25",
+  "disposition": "REJECT wind.charged_cost=25 as a standalone F22 fix: Outer fails, reader lead rises slightly and ratio worsens1.60288710 to1.86136014. Retain live Veilfall diagnostic without cancellation/retry. No authored cost change; next product lever must preserve all bars.",
+  "paired_seed_sets_equal": true,
+  "platform": "Hosted Ubuntu/default pacing; separate from original native baseline",
+  "product_sha": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+  "scope": "Global charged action cost; same in-memory product patch, no pilot changes",
+  "starter": "galewisp",
+  "variants": {
+    "gale-outer-control": {
+      "floor_pass": false,
+      "masher_lead": 0.44451482049487,
+      "policies": {
+        "MASHER": {
+          "burst_uses": 0.0,
+          "charged_uses": 7.5,
+          "exhausted_frames": 1544.0,
+          "quick_uses": 34.5,
+          "seconds": 39.44166666666665
+        },
+        "READER": {
+          "burst_uses": 37.0,
+          "charged_uses": 2.0,
+          "exhausted_frames": 0.0,
+          "quick_uses": 39.0,
+          "seconds": 99.67500000000001
+        },
+        "SWITCH_READER": {
+          "burst_uses": 32.5,
+          "charged_uses": 2.0,
+          "exhausted_frames": 0.0,
+          "quick_uses": 36.5,
+          "seconds": 85.09166666666664
+        }
+      },
+      "ratio": 1.6028871039790016,
+      "run_id": 37428055123,
+      "switch_lead": 0.712507073298768
+    },
+    "gale-outer-wind25": {
+      "floor_pass": false,
+      "masher_lead": 0.385907812662822,
+      "policies": {
+        "MASHER": {
+          "burst_uses": 0.0,
+          "charged_uses": 6.5,
+          "exhausted_frames": 1302.0,
+          "quick_uses": 33.0,
+          "seconds": 35.849999999999994
+        },
+        "READER": {
+          "burst_uses": 33.0,
+          "charged_uses": 2.0,
+          "exhausted_frames": 0.0,
+          "quick_uses": 35.5,
+          "seconds": 87.91666666666666
+        },
+        "SWITCH_READER": {
+          "burst_uses": 26.0,
+          "charged_uses": 2.0,
+          "exhausted_frames": 0.0,
+          "quick_uses": 33.5,
+          "seconds": 76.1333333333333
+        }
+      },
+      "ratio": 1.8613601442984433,
+      "run_id": 37428057808,
+      "switch_lead": 0.718313421863967
+    }
+  }
+}

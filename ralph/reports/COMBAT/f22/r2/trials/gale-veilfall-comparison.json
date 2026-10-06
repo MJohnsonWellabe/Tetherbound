@@ -1,0 +1,72 @@
+{
+  "band": "tidewake/veilfall",
+  "changed_key": "wind.charged_cost=25",
+  "disposition": "No authored change. Power1.5 rejected independently by neutral single-hit ceiling; charged25 rejected as standalone fix by both Tidewake failures. Preserve completed measurements.",
+  "paired_seed_sets_equal": true,
+  "platform": "Hosted Ubuntu/default pacing; separate from original Windows baseline",
+  "product_sha": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+  "scope": "Existing ordinary-trainer flat diagnostic; no global acceptance",
+  "starter": "galewisp",
+  "variants": {
+    "gale-veilfall-control": {
+      "floor_pass": false,
+      "masher_lead": 0.825859402653965,
+      "policies": {
+        "MASHER": {
+          "burst_uses": 0.0,
+          "charged_uses": 12.0,
+          "exhausted_frames": 2613.0,
+          "quick_uses": 55.0,
+          "seconds": 62.466666666666704
+        },
+        "READER": {
+          "burst_uses": 33.5,
+          "charged_uses": 3.5,
+          "exhausted_frames": 0.0,
+          "quick_uses": 47.0,
+          "seconds": 112.34166666666685
+        },
+        "SWITCH_READER": {
+          "burst_uses": 25.5,
+          "charged_uses": 3.5,
+          "exhausted_frames": 0.0,
+          "quick_uses": 47.0,
+          "seconds": 108.67499999999986
+        }
+      },
+      "ratio": 0.6881957168167858,
+      "run_id": 37428060530,
+      "switch_lead": 0.568352903599328
+    },
+    "gale-veilfall-wind25": {
+      "floor_pass": false,
+      "masher_lead": 0.846427025733377,
+      "policies": {
+        "MASHER": {
+          "burst_uses": 0.0,
+          "charged_uses": 11.0,
+          "exhausted_frames": 2143.0,
+          "quick_uses": 51.0,
+          "seconds": 56.19166666666665
+        },
+        "READER": {
+          "burst_uses": 30.0,
+          "charged_uses": 5.0,
+          "exhausted_frames": 0.0,
+          "quick_uses": 46.5,
+          "seconds": 120.22500000000001
+        },
+        "SWITCH_READER": {
+          "burst_uses": 28.5,
+          "charged_uses": 5.0,
+          "exhausted_frames": 0.0,
+          "quick_uses": 47.0,
+          "seconds": 107.4416666666665
+        }
+      },
+      "ratio": 0.7009621408167591,
+      "run_id": 37428063133,
+      "switch_lead": 0.59331330000323
+    }
+  }
+}

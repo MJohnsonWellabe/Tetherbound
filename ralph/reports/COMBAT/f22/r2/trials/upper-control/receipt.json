@@ -1,0 +1,170 @@
+{
+  "all_audits_complete": true,
+  "all_wins": true,
+  "archive_inventory": [
+    {
+      "length": 438,
+      "path": "MANIFEST.txt",
+      "sha256": "454a698871c94a9b747c6e02652d361b539b0504ffdc0ed50b6d1d4220bdd66f"
+    },
+    {
+      "length": 9330445,
+      "path": "tree/r2-f22-upper-control-20261006T0657Z.json",
+      "sha256": "076239b04e24ee3002d58de4b018c1554d33ba287a2a2b48a05e55b47a854d9f"
+    },
+    {
+      "length": 219,
+      "path": "user/godot/app_userdata/Tetherbound/boot_log.txt",
+      "sha256": "7c6519d8c93c8a25b25bb4006e0a922a0749f8c05cd2c355976d9fea686d6ac4"
+    },
+    {
+      "length": 8574949,
+      "path": "run.log",
+      "sha256": "67cddbf0f9dfb3aecb905c3d0866bfac0df3fb3dc91d0fd816b48970b9a7c3b5"
+    },
+    {
+      "length": 8574949,
+      "path": "user/godot/app_userdata/Tetherbound/logs/godot.log",
+      "sha256": "67cddbf0f9dfb3aecb905c3d0866bfac0df3fb3dc91d0fd816b48970b9a7c3b5"
+    },
+    {
+      "length": 4173492,
+      "path": "user/godot/app_userdata/Tetherbound/saves/redesign-v28/slot_0.json",
+      "sha256": "15b6fde1103e9c41f61b26b17d32807aa3e6d1d44e726a20357c1ee1a76a15f9"
+    },
+    {
+      "length": 2774528,
+      "path": "user/godot/app_userdata/Tetherbound/saves/redesign-v28/characters/character-30802ffd51fbc32e162340e3e20258a6/character.json",
+      "sha256": "787dc3416bdb7fdb7673fc24a7b1b08c2e9963c54a08a0e510c521b694dd5848"
+    },
+    {
+      "length": 923,
+      "path": "user/godot/app_userdata/Tetherbound/saves/redesign-v28/worlds/slot-0/world.json",
+      "sha256": "9c17137ef7a883b534a71ee1535b2bab4a65bd907ddcaa2dffbb670fea841ad1"
+    }
+  ],
+  "artifact_id": 11398612983,
+  "artifact_size": 982864,
+  "artifact_zip_sha256": "4a9edada39e6e6d318d08c813b869872049c077e814144a11ca27f18121f302d",
+  "cohort_complete": true,
+  "engine": "Godot Engine v4.7.stable.official.5b4e0cb0f",
+  "engine_exit": 1,
+  "exit_status_binding": {
+    "artifact_has_exit_code_member_or_footer": false,
+    "path": "job-log.txt",
+    "qualification": "Native receipt completed and existing smoke returns1 for subset pass=false; official Run step confirms exit1. Do not infer exit solely from ZIP.",
+    "sha256": "69ec796604654acad47554e8dda0a6e8e32e8fef79099151e4e35dce4f1b1186",
+    "source": "Exact UTF8 encoding of decoded official workflow-job API log; not original compressed API bytes or native console",
+    "utf8_bytes": 464790,
+    "verbatim_run_step_result": "2026-10-06T08:22:16.9750352Z ##[error]Process completed with exit code 1."
+  },
+  "job_id": 112147497976,
+  "limits": [
+    "Flat fixture; world/C3/authority not proved",
+    "Incoming audit covers configured reached profiles, not complete legal-TM/outgoing/world ceiling",
+    "Hosted diagnostic scope only; final Windows/all-starter proof required",
+    "No authored data changes or global acceptance"
+  ],
+  "max_configured_incoming_neutral_entry_bound": 0.151446571670018,
+  "outcome": "Completed hosted diagnostic; numerical floor FAIL; subset coverage/overallpass=false and official exit1 retained. Final Windows/allstarter/wild/visual acceptance OPEN.",
+  "paired_seed_sets": {
+    "MASHER": [
+      2812157982,
+      2812157983,
+      3208829485,
+      3208829486,
+      3208829487,
+      3208829488,
+      3208829489,
+      3208829490,
+      3208829491,
+      3208829492,
+      3208829493,
+      3208829494
+    ],
+    "READER": [
+      2812157982,
+      2812157983,
+      3208829485,
+      3208829486,
+      3208829487,
+      3208829488,
+      3208829489,
+      3208829490,
+      3208829491,
+      3208829492,
+      3208829493,
+      3208829494
+    ],
+    "SWITCH_READER": [
+      2812157982,
+      2812157983,
+      3208829485,
+      3208829486,
+      3208829487,
+      3208829488,
+      3208829489,
+      3208829490,
+      3208829491,
+      3208829492,
+      3208829493,
+      3208829494
+    ]
+  },
+  "platform": "Ubuntu24.04.5 hosted runner, default frame pacing; diagnostic only",
+  "product_binding": "Decoded official job log confirms actual checkout SHA, official Godot4.7 and existing headless invocation",
+  "product_sha": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+  "raw_console_bytes": 8574949,
+  "raw_console_engine_error_lines": [],
+  "raw_console_truncated": false,
+  "row": {
+    "band": "cloudreach/upper_cloudreach",
+    "context": [
+      "lead-faint gap 0.00 < 0.25 (context only)"
+    ],
+    "lead_faint_gap": 0.0,
+    "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.140603341153692,
+      "median_lead_cost": 0.583503865787823,
+      "neutral_entry_audits": 12,
+      "neutral_entry_bound_frac": 0.151446571670018,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+    },
+    "pass": false,
+    "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.178283303975695,
+      "median_lead_cost": 0.739875711499135,
+      "neutral_entry_audits": 12,
+      "neutral_entry_bound_frac": 0.151446571670018,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+    },
+    "reasons": [
+      "reader median lead cost above .55x masher"
+    ],
+    "starter": "terrapup",
+    "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.175677463232048,
+      "median_lead_cost": 0.729061472413,
+      "neutral_entry_audits": 12,
+      "neutral_entry_bound_frac": 0.151446571670018,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+    }
+  },
+  "run_count": 36,
+  "run_id": 37426581942,
+  "seeds_per_policy": 12,
+  "switch_to_masher_lead_ratio": 1.2494543998070196,
+  "workflow_sha": "8e7c11ceb5854f063c5241d62618c382803562c9"
+}

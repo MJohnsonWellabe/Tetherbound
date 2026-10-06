@@ -19,7 +19,39 @@
   "power_disposition": "Both floor rows FAIL; ratio is worse in power trial. Power1.5 also independently violates outgoing neutral single-hit ceiling. Do not author it. No complete Cloudreach/native acceptance claim.",
   "power_run_id": 37426572546,
   "product_sha": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+  "range": {
+    "floor_pass": false,
+    "masher_lead": 0.65904052930469,
+    "policies": {
+      "MASHER": {
+        "burst_uses": 0.0,
+        "charged_uses": 10.0,
+        "exhausted_frames": 2039.5,
+        "quick_uses": 53.0,
+        "seconds": 50.133333333333354
+      },
+      "READER": {
+        "burst_uses": 55.5,
+        "charged_uses": 5.0,
+        "exhausted_frames": 110.0,
+        "quick_uses": 33.5,
+        "seconds": 127.9916666666665
+      },
+      "SWITCH_READER": {
+        "burst_uses": 51.5,
+        "charged_uses": 4.5,
+        "exhausted_frames": 73.0,
+        "quick_uses": 33.5,
+        "seconds": 119.141666666667
+      }
+    },
+    "ratio": 1.1281161293552529,
+    "run_id": 37426570038,
+    "switch_lead": 0.743474251007444
+  },
+  "range_changed_key": "pebble_toss.range=7.5",
+  "range_disposition": "REJECT range7.5 as a standaloneF22fix: this required row stillFAILS and reader absolute lead cost/fight duration increase. Retain upper diagnostic; no authored reach change.",
   "range_run_id": 37426570038,
-  "range_verdict": "OPEN; live run has no receipt yet",
+  "range_verdict": "Completed floor FAIL; exact same policy seedsets as control",
   "starter": "terrapup"
 }

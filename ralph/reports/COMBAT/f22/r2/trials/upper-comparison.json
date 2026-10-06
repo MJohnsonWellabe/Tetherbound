@@ -1,0 +1,72 @@
+{
+  "band": "cloudreach/upper_cloudreach",
+  "changed_key": "stone_rush.power=1.5",
+  "disposition": "No authored change. Power1.5 rejected independently by neutral single-hit ceiling; charged25 rejected as standalone fix by both Tidewake failures. Preserve completed measurements.",
+  "paired_seed_sets_equal": true,
+  "platform": "Hosted Ubuntu/default pacing; separate from original Windows baseline",
+  "product_sha": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+  "scope": "Existing ordinary-trainer flat diagnostic; no global acceptance",
+  "starter": "terrapup",
+  "variants": {
+    "upper-control": {
+      "floor_pass": false,
+      "masher_lead": 0.583503865787823,
+      "policies": {
+        "MASHER": {
+          "burst_uses": 0.0,
+          "charged_uses": 16.0,
+          "exhausted_frames": 3422.0,
+          "quick_uses": 89.0,
+          "seconds": 81.24166666666665
+        },
+        "READER": {
+          "burst_uses": 33.0,
+          "charged_uses": 5.5,
+          "exhausted_frames": 95.0,
+          "quick_uses": 66.5,
+          "seconds": 162.641666666667
+        },
+        "SWITCH_READER": {
+          "burst_uses": 31.5,
+          "charged_uses": 5.0,
+          "exhausted_frames": 95.0,
+          "quick_uses": 67.0,
+          "seconds": 157.9
+        }
+      },
+      "ratio": 1.2494543998070196,
+      "run_id": 37426581942,
+      "switch_lead": 0.729061472413
+    },
+    "upper-power": {
+      "floor_pass": false,
+      "masher_lead": 0.395565446817722,
+      "policies": {
+        "MASHER": {
+          "burst_uses": 0.0,
+          "charged_uses": 13.0,
+          "exhausted_frames": 2654.0,
+          "quick_uses": 71.5,
+          "seconds": 67.24166666666665
+        },
+        "READER": {
+          "burst_uses": 31.0,
+          "charged_uses": 5.0,
+          "exhausted_frames": 76.0,
+          "quick_uses": 59.5,
+          "seconds": 141.5
+        },
+        "SWITCH_READER": {
+          "burst_uses": 31.0,
+          "charged_uses": 5.0,
+          "exhausted_frames": 68.5,
+          "quick_uses": 60.0,
+          "seconds": 138.22500000000002
+        }
+      },
+      "ratio": 1.5105963780112535,
+      "run_id": 37426587048,
+      "switch_lead": 0.597539731229254
+    }
+  }
+}
