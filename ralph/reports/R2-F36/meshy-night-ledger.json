@@ -1,7 +1,50 @@
 {
   "cap_per_night": 30,
-  "timezone": "America/Chicago",
-  "tasks": [],
-  "actual_meshy_submissions": 0,
-  "note": "No Meshy API credential in the F36 session. Imagegen reference drafting is recorded separately and is not a Meshy task. Unit-test mocked task IDs are confined to a temporary fixture and never recorded here. Use f36_meshy_guard.py for every attended generation/refine/retexture/retry; uncertain submissions retain cap slots. F36 is the sole generation owner."
+  "tasks": [
+    {
+      "reservation_id": "2d05a5f4-8bf8-415e-a371-b793e446478b",
+      "night": "2026-10-05",
+      "subject": "crossing_hall_portal_arch",
+      "reference": "assets/environment/crossing_hall/portal_arch/reference/three_quarter.png",
+      "reference_sha256": "72b0fc23e0b5451778eec6e17847e548cf7cd4aa9dff3182479cca34800c5679",
+      "endpoint": "/openapi/v1/multi-image-to-3d",
+      "submitted_utc": "2026-10-06T13:09:35.855168+00:00",
+      "task_id": "01a11155-6ed8-77ff-856a-fab57075e9fd",
+      "status": "submitted_pending_inspection"
+    },
+    {
+      "reservation_id": "aa623eca-cfce-445c-b47a-cf40878690cb",
+      "night": "2026-10-05",
+      "subject": "crossing_hall_shrine_pedestal",
+      "reference": "assets/environment/crossing_hall/shrine_pedestal/reference/three_quarter.png",
+      "reference_sha256": "95e11626ec974204c053f9b6c1a015d67d4833c5673e56589c8709bef150fbc0",
+      "endpoint": "/openapi/v1/multi-image-to-3d",
+      "submitted_utc": "2026-10-06T13:10:50.935859+00:00",
+      "task_id": "01a11156-9401-76dd-82df-8d80958c2e12",
+      "status": "submitted_pending_inspection"
+    },
+    {
+      "reservation_id": "e7c47de6-e427-4cf2-a7e9-29c26ef5d790",
+      "night": "2026-10-05",
+      "subject": "crossing_hall_portal_arch",
+      "reference": "assets/environment/crossing_hall/portal_arch/reference/three_quarter.png",
+      "reference_sha256": "72b0fc23e0b5451778eec6e17847e548cf7cd4aa9dff3182479cca34800c5679",
+      "endpoint": "/openapi/v1/retexture",
+      "submitted_utc": "2026-10-06T13:13:12.035432+00:00",
+      "task_id": "01a11158-bb57-74d1-a36e-0213c622eb21",
+      "status": "submitted_pending_inspection"
+    },
+    {
+      "reservation_id": "55f3e9ae-06a0-4807-a35a-f2470238046f",
+      "night": "2026-10-05",
+      "subject": "crossing_hall_shrine_pedestal",
+      "reference": "assets/environment/crossing_hall/shrine_pedestal/reference/three_quarter.png",
+      "reference_sha256": "95e11626ec974204c053f9b6c1a015d67d4833c5673e56589c8709bef150fbc0",
+      "endpoint": "/openapi/v1/retexture",
+      "submitted_utc": "2026-10-06T13:13:13.240703+00:00",
+      "task_id": "01a11158-bfda-72a3-abf6-7df5e0b762f0",
+      "status": "submitted_pending_inspection"
+    }
+  ],
+  "actual_meshy_submissions": 4
 }
