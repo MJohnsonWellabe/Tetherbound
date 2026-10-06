@@ -26,8 +26,9 @@ func _bind() -> bool:
 	_rig = tree.current_scene.get_node_or_null("CameraRig") as Node3D
 	return (_player != null and _rig != null and INPUT_OWNER.current(tree) == null \
 		and game.party.size() > 0 and game.party.size() <= 5 and game.pending_catch == null) \
-		or _fail("F49 travel requires ordinary world input and one to five actually owned creatures (input owner %s, party %d, pending catch %s)" % [
-			str(INPUT_OWNER.current(tree)), game.party.size(), str(game.pending_catch != null)])
+		or _fail("F49 travel requires ordinary world input and one to five actually owned creatures (input owner %s, party %d, pending catch %s, session hold '%s')" % [
+			str(INPUT_OWNER.current(tree)), game.party.size(), str(game.pending_catch != null),
+			str(game.session.call("_owner_snapshot_block_reason", game.local)) if game.get("session") != null and game.session.has_method("_owner_snapshot_block_reason") else "-"])
 
 func _uids() -> Array[String]:
 	var out: Array[String] = []
