@@ -94,6 +94,27 @@ func _run() -> void:
 	# The same panel must not let a second press mint a second level from one quote.
 	if _failures.is_empty():
 		print("F27_ALTAR_SPEND: PASS controller-path Altar level-up L%d->L%d for %d Water Essence" % [level_before, level_before + 1, cost])
+		# F23: retain this same paid Altar, owned starter and saved progression.
+		# At L2 this Ripplet has no alternative move; prove the actual input/UI
+		# handoff without inventing knowledge or calling a same-move edit a change.
+		await _ui("menu_tab_right")
+		for i in 30: await physics_frame
+		var details: Node = panel.get("_details_panel")
+		if details == null or details.get("_shown") != true or INPUT_OWNER.current(self) != details \
+			or details.get("_uid") != creature.uid or details.get("_tab") != "Loadout" \
+			or details.get("_station_key") != key:
+			_fail("paid Altar input did not hand off the same owned UID and station to Loadout")
+		else:
+			var loadouts: Node = details.get("_loadout_service")
+			var quote: Dictionary = loadouts.call("quote_loadout", key, str(creature.uid)) if loadouts != null else {}
+			if quote.get("ok") != true or quote.get("creature_uid") != creature.uid \
+				or quote.get("loadout_revision") != creature.loadout_revision:
+				_fail("mounted Altar Loadout has no actual current owned loadout quote")
+			await _ui("ui_cancel")
+			for i in 30: await physics_frame
+			if not panel.call("is_open") or INPUT_OWNER.current(self) != panel:
+				_fail("closing Loadout did not return input to the same paid Altar")
+			elif _failures.is_empty(): print("F23_ALTAR_HANDOFF: PASS actual owned UID, paid station, quote and return input")
 	_report()
 
 
