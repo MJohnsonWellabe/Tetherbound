@@ -9,6 +9,52 @@ const MANAGER := preload("res://scripts/combat/combat_manager.gd")
 const DATA := preload("res://tests/test_tm_teach_transaction.gd")
 var _saved_commands: Dictionary
 
+func test_satchel_pouch_recovers_same_original_and_waits_for_saved_ack() -> void:
+	COMMANDS._config.feature_flags.ui_enabled = true
+	var producer := DATA.ProducerDouble.new()
+	producer.action = "tether_pouch"
+	producer.original = {"assignment_id": "saved-pouch-choice", "index": 0, "item_id": "potion_small"}
+	var game := DATA.GameDouble.new()
+	game.session = producer
+	var menu := DATA.MenuDouble.new()
+	menu.game = game
+	var tab := preload("res://scripts/ui/tab_backpack.gd").new()
+	tab.menu = menu
+	tab._poll_pouch_transaction()
+	assert_eq(producer.submissions.size(), 1)
+	assert_eq(producer.submissions[0].intent, producer.original)
+	assert_eq(producer.submissions[0].revision, 7, "saved original revision, not current view's 99")
+	var policy := preload("res://scripts/net/session.gd").new()
+	var refused: Dictionary = policy._foundation_journal_refusal("tether_pouch", {"code": "training_journal_failed"})
+	assert_false(refused.terminal_refusal)
+	producer.homestead_action_completed.emit("tether_pouch", producer.original, refused)
+	assert_eq(tab._pouch_intent, producer.original)
+	producer.homestead_action_completed.emit("tether_pouch", producer.original,
+		{"ok": true, "settled": true, "durable": true, "owner_saved": false, "owner_acknowledged": true})
+	assert_eq(tab._pouch_intent, producer.original)
+	assert_ne(menu.message, "Command pouch saved.")
+	tab._retry_pouch_transaction()
+	assert_eq(producer.submissions[1], producer.submissions[0], "failed save retry cannot choose another slot/item/revision")
+	producer.homestead_action_completed.emit("tether_pouch", producer.original,
+		{"ok": true, "settled": true, "durable": true, "owner_saved": true, "owner_acknowledged": true})
+	assert_true(tab._pouch_intent.is_empty())
+	assert_eq(menu.message, "Command pouch saved.")
+	tab._pouch_view = {"character_id": "old-owner", "registry_revision": 7}
+	tab._pouch_available = true
+	producer.pouch_scope = {}
+	assert_false(tab._bind_pouch_producer())
+	assert_true(tab._pouch_view.is_empty(), "settled presentation cannot survive character/session loss")
+	assert_false(tab._pouch_available)
+	producer.pouch_scope = {"character_id": "new-owner", "world_namespace": "new-world", "session_epoch": "new-session"}
+	assert_true(tab._bind_pouch_producer())
+	assert_eq(tab._pouch_view_scope, producer.pouch_scope)
+	assert_true(tab._pouch_intent.is_empty(), "old pending choice cannot travel into a replacement scope")
+	tab.free()
+	menu.free()
+	game.free()
+	producer.free()
+	policy.free()
+
 func before_each() -> void:
 	super()
 	_saved_commands = COMMANDS.config()

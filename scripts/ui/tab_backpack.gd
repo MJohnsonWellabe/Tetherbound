@@ -43,6 +43,16 @@ var _tm_intent: Dictionary = {}
 var _tm_revision: int = -1
 var _tm_scope: Dictionary = {}
 var _tm_retry_at: int = 0
+const POUCH_ROW := preload("res://scripts/ui/tether_pouch_row.gd")
+var _pouch_row: HBoxContainer = null
+var _pouch_intent: Dictionary = {}
+var _pouch_revision := -1
+var _pouch_scope: Dictionary = {}
+var _pouch_retry_at := 0
+var _pouch_view: Dictionary = {}
+var _pouch_available := false
+var _pouch_view_scope: Dictionary = {}
+var _pouch_producer: Node = null
 ## D47: elixir caps live in data/config/progression.json, read through the
 ## same loader the level curve uses.
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
@@ -353,6 +363,9 @@ func build() -> void:
 	left_column.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	left_column.add_theme_constant_override("separation", 8)
 	left_column.add_child(_build_quick_bar())
+	_pouch_row = POUCH_ROW.new()
+	left_column.add_child(_pouch_row)
+	_pouch_row.assignment_requested.connect(_assign_pouch)
 
 	var divider := HSeparator.new()
 	divider.add_theme_constant_override("separation", 14)
@@ -659,6 +672,19 @@ func _wire_bar_to_grid_focus() -> void:
 			break
 		var above: int = mini(column, _bar_buttons.size() - 1)
 		(_buttons[column] as Control).focus_neighbor_top = (_bar_buttons[above] as Control).get_path()
+	if not is_instance_valid(_pouch_row) or not _pouch_row.visible: return
+	var pouch_buttons: Array[Button] = _pouch_row.focus_buttons()
+	if pouch_buttons.is_empty(): return
+	for index: int in pouch_buttons.size():
+		var button := pouch_buttons[index]
+		button.focus_neighbor_left = pouch_buttons[(index + pouch_buttons.size() - 1) % pouch_buttons.size()].get_path()
+		button.focus_neighbor_right = pouch_buttons[(index + 1) % pouch_buttons.size()].get_path()
+		button.focus_neighbor_top = (_bar_buttons[mini(index, _bar_buttons.size() - 1)] as Control).get_path()
+		button.focus_neighbor_bottom = (_buttons[mini(index, _buttons.size() - 1)] as Control).get_path()
+	for index: int in _bar_buttons.size():
+		(_bar_buttons[index] as Control).focus_neighbor_bottom = pouch_buttons[mini(index, pouch_buttons.size() - 1)].get_path()
+	for column: int in mini(columns, _buttons.size()):
+		(_buttons[column] as Control).focus_neighbor_top = pouch_buttons[mini(column, pouch_buttons.size() - 1)].get_path()
 
 
 ## Center column, spec §7: a big icon of the selected item and its name
@@ -983,6 +1009,7 @@ func notify_shell_opened() -> void:
 
 func poll() -> void:
 	_poll_tm_transaction()
+	_poll_pouch_transaction()
 	var inventory: RefCounted = _inventory()
 	if inventory == null or _summary == null:
 		return
@@ -1011,6 +1038,7 @@ func poll() -> void:
 	_summary.text = "%d of %d slots used" % [used, slots]
 	_refresh_held_banner()
 	_refresh_quick_bar()
+	_refresh_pouch()
 
 	# The preview/detail columns describe whatever is FOCUSED, and that can go
 	# stale mid-poll -- a Split changes the source slot's count while the
@@ -2404,6 +2432,7 @@ func _bind_tm_producer() -> bool:
 		or not producer.has_method("personal_tm_scope") or not producer.has_signal("homestead_action_completed"): return false
 	if is_instance_valid(_tm_producer) and _tm_producer != producer:
 		if _tm_producer.is_connected("homestead_action_completed", _tm_completed): _tm_producer.disconnect("homestead_action_completed", _tm_completed)
+		if _tm_producer.is_connected("homestead_action_completed", _pouch_completed): _tm_producer.disconnect("homestead_action_completed", _pouch_completed)
 		_tm_intent = {}
 		_tm_revision = -1
 		_tm_scope = {}
@@ -2467,6 +2496,106 @@ func _tm_completed(action: String, original: Dictionary, result: Dictionary) -> 
 func _exit_tree() -> void:
 	if is_instance_valid(_tm_producer) and _tm_producer.is_connected("homestead_action_completed", _tm_completed):
 		_tm_producer.disconnect("homestead_action_completed", _tm_completed)
+	if is_instance_valid(_tm_producer) and _tm_producer.is_connected("homestead_action_completed", _pouch_completed):
+		_tm_producer.disconnect("homestead_action_completed", _pouch_completed)
+
+func _bind_pouch_producer() -> bool:
+	if not _bind_tm_producer() or not _tm_producer.has_method("personal_pouch_submit") \
+		or not _tm_producer.has_method("personal_pouch_scope") or not _tm_producer.has_method("personal_pouch_available"):
+		_clear_pouch_context()
+		return false
+	var scope: Dictionary = _tm_producer.call("personal_pouch_scope")
+	if scope.is_empty() or _pouch_producer != _tm_producer or scope != _pouch_view_scope:
+		_clear_pouch_context()
+		_pouch_producer = _tm_producer
+		_pouch_view_scope = scope.duplicate(true)
+	if not _tm_producer.is_connected("homestead_action_completed", _pouch_completed):
+		_tm_producer.connect("homestead_action_completed", _pouch_completed)
+	return not scope.is_empty()
+
+func _clear_pouch_context() -> void:
+	_pouch_intent = {}
+	_pouch_revision = -1
+	_pouch_scope = {}
+	_pouch_view = {}
+	_pouch_available = false
+	_pouch_view_scope = {}
+	_pouch_producer = null
+	_pouch_retry_at = 0
+	if is_instance_valid(_pouch_row): _pouch_row.hide()
+	_wire_bar_to_grid_focus()
+
+func _poll_pouch_transaction() -> void:
+	if not preload("res://scripts/combat/tether_commands.gd").enabled("ui_enabled") \
+		or not _bind_pouch_producer() or Time.get_ticks_msec() < _pouch_retry_at: return
+	_pouch_retry_at = Time.get_ticks_msec() + 1000
+	_pouch_view = _tm_producer.call("homestead_personal_view")
+	_pouch_available = _tm_producer.call("personal_pouch_available") == true
+	if _pouch_intent.is_empty():
+		var retained: Dictionary = _tm_producer.call("retained_training_transaction", ["tether_pouch"])
+		if retained.get("status") != "pending": return
+		_pouch_intent = retained.intent.duplicate(true)
+		_pouch_revision = int(retained.original_revision)
+		_pouch_scope = _tm_producer.call("personal_pouch_scope")
+	_retry_pouch_transaction()
+
+func _assign_pouch(index: int, item_id: String) -> void:
+	if not _bind_pouch_producer(): return
+	if not _pouch_intent.is_empty():
+		say("Waiting for your original pouch assignment to save.")
+		return
+	var view: Dictionary = _tm_producer.call("homestead_personal_view")
+	if not preload("res://scripts/creatures/essence.gd")._integer(view.get("registry_revision"), 0, 2147483646):
+		say("Waiting for your admitted character. Try the same slot again.")
+		return
+	_pouch_intent = {"assignment_id": Crypto.new().generate_random_bytes(16).hex_encode(), "index": index, "item_id": item_id}
+	_pouch_revision = int(view.registry_revision)
+	_pouch_scope = _tm_producer.call("personal_pouch_scope")
+	_retry_pouch_transaction()
+
+func _retry_pouch_transaction() -> void:
+	if _pouch_intent.is_empty() or not is_instance_valid(_tm_producer): return
+	_pouch_retry_at = Time.get_ticks_msec() + 1000
+	var original := _pouch_intent.duplicate(true)
+	var result: Variant = _tm_producer.call("personal_pouch_submit", original, _pouch_revision, _pouch_scope.duplicate(true))
+	if result is Dictionary: _pouch_completed("tether_pouch", original, result)
+
+func _pouch_completed(action: String, original: Dictionary, result: Dictionary) -> void:
+	if action != "tether_pouch" or _pouch_intent.is_empty() or original != _pouch_intent: return
+	if result.get("ok") == true and result.get("settled") == true and result.get("durable") == true \
+		and result.get("owner_saved") == true and result.get("owner_acknowledged") == true:
+		say("Command pouch saved.")
+	elif result.get("ok") == false and result.get("terminal_refusal") == true:
+		say(str(result.get("reason", result.get("code", "Pouch assignment refused."))))
+	else:
+		say("Waiting for your original pouch assignment to save.")
+		return
+	_pouch_intent = {}
+	_pouch_revision = -1
+	_pouch_scope = {}
+	_pouch_retry_at = 0
+
+func _refresh_pouch() -> void:
+	if not is_instance_valid(_pouch_row): return
+	var game := state()
+	var inventory := _inventory()
+	var items: RefCounted = game.get("items") if game != null else null
+	if items == null or inventory == null or _pouch_view.is_empty():
+		_pouch_row.hide()
+		_wire_bar_to_grid_focus()
+		return
+	var equipment := preload("res://scripts/player/player_equipment.gd").new()
+	equipment.configure(items)
+	equipment.load_data(_pouch_view.get("equipment", {}))
+	var counts := {}
+	for item_id: String in items.get("_items"):
+		if preload("res://scripts/combat/tether_commands.gd").support_item(items.call("definition", item_id)):
+			counts[item_id] = inventory.call("count", item_id)
+	var selected: Dictionary = inventory.call("stack_at", _focused)
+	_pouch_row.present(_pouch_view.get("redesign_character", {}).get("tether_pouch", []),
+		equipment.command_pouch_tier(), items.get("_items"), counts,
+		_pouch_available and _pouch_intent.is_empty(), str(selected.get("id", "")))
+	_wire_bar_to_grid_focus()
 
 func _read_targeting_cancel() -> void:
 	if _targeting < 0:

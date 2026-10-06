@@ -51,3 +51,9 @@ func _request_assignment(index: int) -> void:
 	if not _outside_combat or index < 0 or index >= int(COMMANDS.tier_profile(_tier).get("pouch_size", 0)): return
 	if not _selected_item.is_empty() and not COMMANDS.support_item(_items.get(_selected_item)): return
 	assignment_requested.emit(index, _selected_item)
+
+func focus_buttons() -> Array[Button]:
+	var buttons: Array[Button] = []
+	for button: Button in _buttons:
+		if button.visible: buttons.append(button)
+	return buttons

@@ -1,0 +1,7 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_f24_host_commands.gd::test_satchel_pouch,test_tm_teach_transaction.gd::test_backpack: 2 of 817 test files
+  ok    test_f24_host_commands.gd :: test_satchel_pouch_recovers_same_original_and_waits_for_saved_ack
+  ok    test_tm_teach_transaction.gd :: test_backpack_restarts_original_tm_intent_and_never_reports_unsaved_or_unacknowledged_success
+
+2 tests, 25 assertions, 0 failed
