@@ -1552,10 +1552,8 @@ func _flush() -> void:
 	var in_flight: bool = int(local.get("inflight_through", 0)) > int(local.acked)
 	if in_flight and now - int(local.ack_progress_ms) < int(RESEND_STALL_S * 1000.0): return
 	var batch: Array = local.inputs.slice(0, mini(MAX_BATCH, local.inputs.size())).duplicate(true)
-	# A window dropped before the join snapshot is not in flight: the next flush
-	# sends it. Marked in flight anyway, it waited a whole stall, and a first
-	# discovery input reached the host after a Home Key trip had moved the body
-	# (smoke_net_homestead_station_craft: owner_passive_initial_pose_unconfirmed).
+	# A window is in flight only once actually sent (a drop before the join
+	# snapshot would otherwise wait a whole stall).
 	if not _send_host({"op": "inputs", "inputs": batch}): return
 	local.ack_progress_ms = now
 	local.inflight_through = int(batch[-1].sequence)
