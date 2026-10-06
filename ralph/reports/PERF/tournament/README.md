@@ -70,3 +70,24 @@ rows, accounting for Godot's call() double counting; no FPS/device claim.
 No new harness, fixture, pilot, capture tool, measurement script, network code,
 test-budget change, PR or production flag change. Profile acceptance is still OPEN; no
 criterion closure. Failed and incomplete future native logs stay preserved.
+
+## First host profile: FAIL before tournament
+
+Existing --tournament with original six product files and host -d --profiling
+completed exit 2: host did not say hello within the unchanged 180 s deadline.
+Guest hello was recorded; the host's pre-teardown exited=false summary is retained,
+and all actual owned processes exited before source/helper restoration and lease release.
+Native check-only passed. The partial startup dump includes minimap bake self
+95.647941 seconds; nested call() totals are not additive. No target ground-vertex,
+camp-scan or vegetation-refresh self row was reached. This is no tournament profile
+or before performance acceptance. Raw receipt/compiler/output/net/private logs and
+the actual generated production map cache are preserved under profile-before.
+
+The helper's CRLF-only insertion guard first yielded before engine/evidence; its
+LF-preserving correction produced the actual launched profile. The temporary patch
+was restored byte-exact and is retained only as evidence. Candidate host profile
+remains UNRUN. Reuse of the completed shipping minimap cache equally in fresh
+original/candidate private homes has independent SOURCE PASS: unchanged cache
+key/schema/terrain input, real PNG decoding and honest miss fallback. Actual cache
+hit observation must come from native rows, not a receipt assertion. No budget change
+or fresh target timing has been accepted.
