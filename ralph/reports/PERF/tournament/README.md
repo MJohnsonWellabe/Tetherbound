@@ -4,7 +4,11 @@ Coordinator task: #525 comment 6012177191. Baseline: origin/main
 8e7c11ceb5854f063c5241d62618c382803562c9. Source brief: origin/tb/perf,
 ralph/reports/PERF/HANDOFF.md item 6 and Known traps; reference 10cdde31.
 
-## Candidate, acceptance OPEN
+## Current disposition: acceptance OPEN
+
+Independent final review supports bounded boot-refresh and camp-function cost
+reductions. Glow gain is unproved and both tournament profiles fail. No P2 DONE
+or functional/visual/feel acceptance is claimed; coordinator disposition is pending.
 
 - Telegraph glow retains its radius/alpha pulse and fresh dynamic ground/water
   heights. One synchronous rebuild resolves origin and query capabilities once
@@ -24,13 +28,14 @@ ralph/reports/PERF/HANDOFF.md item 6 and Known traps; reference 10cdde31.
   marks additions/removals dirty, creates missing cells, skips clean cells,
   and destroys all buffers only for the full rebuild option.
 
-No before/after profiler self-time rows or visual verdict exist yet. The first
+Warm profiler self-time observations and their limits appear below; no visual
+verdict exists. The first
 independent source review rejected across-draw reuse of dynamic terrain/water;
 the candidate now resamples those queries on every rebuild. Independent
 `c3_journal_review` final SOURCE PASS covers all nine source/test files against
 8e7c11ceb: no stale dynamic-height reuse, camp matching/ancestry preserved,
 native dirty/missing-cell contract supports the refresh. Native buffers,
-real SceneTree group behavior and measured gain remain OPEN.
+real SceneTree group-result equivalence and complete criterion acceptance remain OPEN.
 
 ## Native component evidence, qualified PASS
 
@@ -85,8 +90,8 @@ the actual generated production map cache are preserved under profile-before.
 
 The helper's CRLF-only insertion guard first yielded before engine/evidence; its
 LF-preserving correction produced the actual launched profile. The temporary patch
-was restored byte-exact and is retained only as evidence. Candidate host profile
-remains UNRUN. Reuse of the completed shipping minimap cache equally in fresh
+was restored byte-exact and is retained only as evidence. The cold candidate counterpart was not run. Reuse of the completed shipping
+minimap cache equally in fresh
 original/candidate private homes has independent SOURCE PASS: unchanged cache
 key/schema/terrain input, real PNG decoding and honest miss fallback. Actual cache
 hit observation must come from native rows, not a receipt assertion. No budget change
@@ -129,8 +134,8 @@ Own peers exited, helper bytes match HEAD exactly, candidate tracked sources
 are clean, and only matching owned leases were released. The actual quiet pair
 is serviced; root released R2's P2 CPU reservation in #525 comment 6014265515.
 Per-stage SHA256.json preserves every original raw file (23 before, 24 after).
-Independent review of native costs, shifted work and remaining acceptance is
-pending. No repeated unit, cold baseline or profiler run is requested.
+Independent final review of native costs and remaining acceptance follows below.
+No repeated unit, cold baseline or profiler run is requested.
 ## Independent final scope verdict
 
 c3_journal_review verifies all 47 original manifest entries, retained map bytes,
