@@ -282,11 +282,13 @@ static func stage_spend(admitted: Dictionary, character_id: String, uid: String,
 static func training_projection(record: Dictionary) -> Dictionary:
 	if not record.get("party") is Array or not record.get("inventory") is Array \
 			or not record.get("redesign_character") is Dictionary: return {}
-	# Energy is the in-fight move meter, never owner authority; see
-	# character_record_rules.gd portable_projection.
-	var party: Array = record.get("party", []).duplicate(true)
-	for card: Variant in party:
-		if card is Dictionary: card.erase("energy")
+	# Energy is the in-fight move meter, never owner authority: the one shared
+	# rule is character_record_rules.gd portable_card. Loaded at run time to
+	# keep that file's preload graph free of this one.
+	var record_rules: Script = load("res://scripts/net/character_record_rules.gd")
+	var party: Array = []
+	for card: Variant in record.get("party", []):
+		party.append(record_rules.call("portable_card", card.duplicate(true) if card is Dictionary else card))
 	return {"party": party,
 		"inventory": record.get("inventory", []).duplicate(true),
 		"redesign_character": record.get("redesign_character", {}).duplicate(true)}
@@ -807,6 +809,13 @@ static func merge_owner_passive(after: Dictionary, before: Dictionary, current: 
 					or not (card[field] is int or card[field] is float):
 				# A row that itself decided this field (a camp bed's rest) keeps it.
 				if _equivalent(card[field], was[field]): card[field] = now[field]
+				continue
+			# The row left this field alone: the owner's own value IS the merge.
+			# `card + now - was` with card == was is the same number in exact
+			# arithmetic but not always in floats, and the install compares
+			# exactly (F01#6a: a duplicate install after passive drift failed).
+			if _equivalent(card[field], was[field]):
+				card[field] = now[field]
 				continue
 			var value := maxf(0.0, float(card[field]) + float(now[field]) - float(was[field]))
 			if field == "happiness" and (mood_max is int or mood_max is float): value = minf(value, float(mood_max))

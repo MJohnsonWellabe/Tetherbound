@@ -38,6 +38,8 @@ extends Node
 ## contains one, which is the difference between a renamed beat and a gate that
 ## silently never opens.
 
+const LEDGER_CLAIM := preload("res://scripts/world/ledger_claim.gd")
+const WORLD_LEDGER := preload("res://scripts/net/world_ledger.gd")
 const BEATS := preload("res://scripts/story/opening_beats.gd")
 const RUNNER := preload("res://scripts/story/dialogue_runner.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
@@ -483,11 +485,20 @@ func restore_progression_from_game(_game: Node) -> void:
 	# load, on a joiner's world snapshot, and on every world delta, and must
 	# read the same on the second call as on the first.
 	STORY_LEDGER.listen(self, _on_ledger_delta)
+	# F01#6a. A guest's starter commit waits for the host to stage it, and the
+	# host's journal and accept arrive as world deltas that land HERE while the
+	# beat still reads `choose`. Re-arming the picker and forgetting the choice
+	# then reopened the starter picker over the finished naming, and it stayed
+	# open (a narrative modal: no prompt, no Grandpa) after the adoption landed.
+	# An adoption still bound to this character, world and session epoch is the
+	# same in-flight choice, not a restore; anything else restores as before.
+	var adoption_in_flight := _starter_adoption_in_flight()
 	_restore_opening_beat()
-	_picker_pending = _beat == BEATS.CHOOSE
-	_choice = -1
-	if not _late_arrival_in_flight:
-		_adopting = false
+	_picker_pending = _beat == BEATS.CHOOSE and not adoption_in_flight
+	if not adoption_in_flight:
+		_choice = -1
+		if not _late_arrival_in_flight:
+			_adopting = false
 	# A load can bring in a world that is further along than this character.
 	# Re-arm rather than re-run: `_catch_up_a_behind_character()` decides, on
 	# the next frame, whether there is anything to catch up to.
@@ -506,7 +517,7 @@ func _force_restore_beat(target: String) -> void:
 		target = BEATS.first()
 	var changed := target != _beat
 	_beat = target
-	_picker_pending = _beat == BEATS.CHOOSE
+	_picker_pending = _beat == BEATS.CHOOSE and not _starter_adoption_in_flight()
 	_persist_beat_history(_beat)
 	if changed:
 		beat_changed.emit(_beat)
@@ -622,6 +633,10 @@ func _advance_from_external_progression() -> void:
 ## routing had to be written for it — a villager's conversation arrives in this
 ## queue exactly like the opening's own.
 var _f18_pending_effects: Array[String] = []
+## Batches spoken while one is held, in order, each with its conversation.
+## Uncapped like the merged batch it replaces: it only grows while a held gift
+## waits on an owner record, and every entry is something the player was told.
+var _f18_later_batches: Array[Dictionary] = []
 var _f18_pending_home_key: Dictionary = {}
 var _f18_home_key_retry_at := 0
 ## The first request journals the gift, then the owner-save CAS settles it a
@@ -659,8 +674,18 @@ func _drain_effects() -> void:
 	# over. Prove the whole batch fits before applying any part of it, otherwise
 	# a full satchel can consume the fact and permanently remove the only source
 	# of a required item (Sela's Mill Bridge Gear is the critical case).
+	# F01#6a: each batch keeps the conversation that spoke it, because a held
+	# batch is applied after its box has closed and a guest's gift is claimed
+	# under that conversation (_give_items). A batch spoken while another is
+	# held waits behind it rather than merging into it.
+	var drained: Array[String] = _dialogue.call("drain_effects")
+	if not drained.is_empty():
+		_f18_later_batches.append({"conversation": _speaking_conversation_id(), "effects": drained})
 	var effects: Array[String] = _f18_pending_effects.duplicate()
-	effects.append_array(_dialogue.call("drain_effects"))
+	if effects.is_empty() and not _f18_later_batches.is_empty():
+		var next: Dictionary = _f18_later_batches.pop_front()
+		effects.assign(next.effects)
+		_effects_conversation_id = str(next.conversation)
 	_f18_pending_effects.clear()
 	# Preserve the actual spoken effect and following beats until the world
 	# journal is durable. Closing the panel cannot consume its only source.
@@ -668,6 +693,7 @@ func _drain_effects() -> void:
 	var finite_gift_enabled: bool = opening_game != null and opening_game.get("session") != null and opening_game.get("session").call("portal_runtime_ready") == true
 	if effects.has("home_key:grant") and finite_gift_enabled and _f18_gift_owner_changed(opening_game):
 		push_warning("Grandpa's gift belonged to another character; dropping the held batch")
+		_f18_later_batches.clear()
 		_f18_pending_home_key.clear()
 		_f18_home_key_attempts = 0
 		_f18_home_key_started_at = -1
@@ -1241,10 +1267,57 @@ func _give_items(parts: Array) -> void:
 	if items != null and not bool(items.call("has", item_id)):
 		push_error("dialogue gives '%s', which data/items/items.json does not define" % item_id)
 		return
+	# F01#6a part 2. A guest's gift is the host's to record: claimed as an
+	# authored reward_grant and delivered, so the satchel changes only from the
+	# accepted delivery and the host's admitted copy of this character gains it
+	# too (scripts/net/world_ledger.gd DIALOGUE_GIVE_GATES). Host and solo keep
+	# the direct give below.
+	if _gifts_route_through_host(game):
+		# Named when its batch drained, never at apply time: a batch drained
+		# after its box closed has no name, and borrowing whichever conversation
+		# is open now would spend that conversation's receipt.
+		var conversation := _effects_conversation_id
+		if conversation.is_empty():
+			push_warning("a guest's give:%s:%d has no conversation to claim it under" % [item_id, count])
+			return
+		_submit_gift_claim({"kind": "reward_grant", "realm": str(game.get("current_realm")),
+			"source": WORLD_LEDGER.dialogue_give_source(conversation, item_id),
+			"item": item_id, "count": count})
+		return
 	var inventory: RefCounted = game.get("inventory")
 	var leftover := int(inventory.call("add", item_id, count))
 	if leftover > 0:
 		push_warning("the satchel was full; %d of the %d %s did not fit" % [leftover, count, item_id])
+
+
+## An admitted guest: its own character file is a save candidate and somebody
+## else holds the world. A pending joiner, the host and solo give directly.
+func _gifts_route_through_host(game: Node) -> bool:
+	var session: Variant = game.get("session")
+	return session is Node and (session as Node).has_method("is_multi_peer") and bool((session as Node).call("is_multi_peer")) \
+		and not bool((session as Node).call("is_host")) \
+		and (session as Node).has_method("client_character_save_ready") \
+		and bool((session as Node).call("client_character_save_ready"))
+
+
+## The conversation whose spoken effects are being applied (or are held). A
+## batch held behind Grandpa's Home Key applies after the dialogue box closed,
+## when the runner no longer names it.
+var _effects_conversation_id := ""
+
+
+## Narrow seam: a guest's gift claim (tests record it without a /root/Game).
+func _submit_gift_claim(intent: Dictionary) -> void:
+	LEDGER_CLAIM.submit(self, intent)
+
+
+func _speaking_conversation_id() -> String:
+	if _dialogue == null or not _dialogue.has_method("runner"):
+		return ""
+	var runner: Variant = _dialogue.call("runner")
+	if runner == null or not (runner as RefCounted).has_method("conversation_id"):
+		return ""
+	return str((runner as RefCounted).call("conversation_id"))
 
 
 ## --- what is possible right now -------------------------------------------------
@@ -1994,8 +2067,10 @@ func _adopt(index: int, chosen: String) -> void:
 	var added := bool(game.call("commit_original_starter", self, _encounter.call("ally_instance"), chosen)) if typed_adoption else _give_to_party(_encounter.call("ally_instance"), chosen)
 	if not added:
 		if typed_adoption:
-			_pending_starter_adoption = {"instance": _encounter.call("ally_instance"), "nickname": chosen, "character_id": game.get("local").character_id, "world_instance_id": game.get("world").reward_delivery_namespace, "session_epoch": game.get("session").call("_altar_current_epoch"), "retry_at": Time.get_ticks_msec() + 3000}
+			_pending_starter_adoption = {"instance": _encounter.call("ally_instance"), "nickname": chosen, "character_id": game.get("local").character_id, "world_instance_id": game.get("world").reward_delivery_namespace, "session_epoch": game.get("session").call("_altar_current_epoch"), "retry_at": Time.get_ticks_msec() + 3000,
+				"started_ms": Time.get_ticks_msec(), "notice_at": Time.get_ticks_msec() + _starter_wait_notice_ms()}
 			game.call("push_world_message", "Your chosen companion is waiting for the opening save.")
+			_listen_for_starter_refusal(game.get("session"))
 		else:
 			_adopting = false
 			push_error("the chosen %s is beside the trainer but not in the party" % species)
@@ -2006,19 +2081,180 @@ func _adopt(index: int, chosen: String) -> void:
 var _pending_starter_adoption: Dictionary = {}
 
 func _retry_original_starter_save() -> void:
-	if _pending_starter_adoption.is_empty() or Time.get_ticks_msec() < _pending_starter_adoption.retry_at: return
+	if _pending_starter_adoption.is_empty(): return
+	var bound_game := _effect_game()
+	var guest: bool = bound_game != null and bound_game.has_method("is_host") and not bool(bound_game.call("is_host"))
+	if _pending_starter_adoption.get("stalled") == true:
+		# Stalled stops the re-sends, never the listening: once the host's row
+		# reads accepted, the ordinary commit check (same fences, local receipt
+		# and flag; it sends nothing once the receipt exists) finishes it.
+		if Time.get_ticks_msec() < int(_pending_starter_adoption.get("retry_at", 0)) or bound_game == null \
+				or not bound_game.has_method("original_starter_admitted_now") \
+				or not bool(bound_game.call("original_starter_admitted_now")): return
+		_pending_starter_adoption.retry_at = Time.get_ticks_msec() + 3000
+		if not _starter_adoption_fences_hold(bound_game) \
+				or bound_game.call("commit_original_starter", self, _pending_starter_adoption.instance, _pending_starter_adoption.nickname) != true: return
+		var admitted_name: String = _pending_starter_adoption.nickname
+		_pending_starter_adoption.clear()
+		_finish_original_starter_adoption(admitted_name, true)
+		return
+	# Bounded (guests only; the host commits its own starter locally and keeps
+	# retrying its own save): past `starters.admission_retry_after_seconds`
+	# the automatic re-sends stop and the player gets a clear, explicit retry.
+	if guest and Time.get_ticks_msec() - int(_pending_starter_adoption.get("started_ms", Time.get_ticks_msec())) >= _starter_wait_bound_ms():
+		_pending_starter_adoption.stalled = true
+		if bound_game.has_method("push_world_message"):
+			bound_game.call("push_world_message", "The host has not confirmed your companion yet. Press Interact to ask again.")
+		return
+	if Time.get_ticks_msec() < _pending_starter_adoption.retry_at: return
 	var game := _effect_game()
-	if game == null or game.get("session") == null or _encounter.call("ally_instance") != _pending_starter_adoption.instance: return
-	if game.get("local").character_id != _pending_starter_adoption.character_id or game.get("world").reward_delivery_namespace != _pending_starter_adoption.world_instance_id or game.get("session").call("_altar_current_epoch") != _pending_starter_adoption.session_epoch: return
+	if not _starter_adoption_fences_hold(game): return
 	_pending_starter_adoption.retry_at = Time.get_ticks_msec() + 3000
-	if game.call("commit_original_starter", self, _pending_starter_adoption.instance, _pending_starter_adoption.nickname) != true: return
+	if game.call("commit_original_starter", self, _pending_starter_adoption.instance, _pending_starter_adoption.nickname) != true:
+		# Bounded, never silent: every interval the player is told the host is
+		# still being asked (the request retries itself and is idempotent).
+		if Time.get_ticks_msec() >= int(_pending_starter_adoption.get("notice_at", 0)):
+			_pending_starter_adoption.notice_at = Time.get_ticks_msec() + _starter_wait_notice_ms()
+			game.call("push_world_message", "Still waiting for the host to save your companion. Trying again...")
+		return
 	var chosen: String = _pending_starter_adoption.nickname
 	_pending_starter_adoption.clear()
 	_finish_original_starter_adoption(chosen, true)
 
 
+## F01#6a. How often a guest whose starter the host has not yet recorded is
+## told it is still being asked (opening.json `starters.admission_notice_seconds`).
+func _starter_wait_notice_ms() -> int:
+	return int(1000.0 * maxf(1.0, float(BEATS.config().get("starters", {}).get("admission_notice_seconds", 10.0))))
+
+
+## The pending adoption still belongs to this character, world, session epoch
+## and follower body.
+func _starter_adoption_fences_hold(game: Node) -> bool:
+	if game == null or game.get("session") == null or game.get("local") == null or game.get("world") == null \
+			or _encounter == null or _encounter.call("ally_instance") != _pending_starter_adoption.instance: return false
+	return game.get("local").character_id == _pending_starter_adoption.character_id \
+		and game.get("world").reward_delivery_namespace == _pending_starter_adoption.world_instance_id \
+		and game.get("session").call("_altar_current_epoch") == _pending_starter_adoption.session_epoch
+
+
+## The bound on a guest's wait for the host's row
+## (opening.json `starters.admission_retry_after_seconds`).
+func _starter_wait_bound_ms() -> int:
+	return int(1000.0 * maxf(5.0, float(BEATS.config().get("starters", {}).get("admission_retry_after_seconds", 45.0))))
+
+
+func starter_adoption_stalled() -> bool:
+	return not _pending_starter_adoption.is_empty() and _pending_starter_adoption.get("stalled") == true
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if starter_adoption_stalled() and event.is_action_pressed("interact"):
+		get_viewport().set_input_as_handled()
+		retry_starter_adoption()
+
+
+## The player's explicit retry after the bound: re-arm the bounded wait and ask
+## the game to resend, reinstall or re-adopt the host's staged card
+## (game_state.gd `retry_original_starter`). A re-adopted instance replaces the
+## follower body so the follower stays the object the installer appends.
+func retry_starter_adoption() -> void:
+	if not starter_adoption_stalled():
+		return
+	var now := Time.get_ticks_msec()
+	_pending_starter_adoption.stalled = false
+	_pending_starter_adoption.started_ms = now
+	_pending_starter_adoption.retry_at = now + 3000
+	_pending_starter_adoption.notice_at = now + _starter_wait_notice_ms()
+	var game := _effect_game()
+	if game == null or not game.has_method("retry_original_starter"):
+		return
+	var outcome: Dictionary = game.call("retry_original_starter")
+	if outcome.get("action") == "readopt" and outcome.get("instance") is RefCounted:
+		# Swap the follower to the host's staged card only when the old body
+		# can really be put away (never mid-fight or between trainer rounds),
+		# and confirm it with the game only once the new body exists.
+		if _encounter == null or not _encounter.has_method("dismiss_active_creature") \
+				or not bool(_encounter.call("dismiss_active_creature")):
+			_pending_starter_adoption.stalled = true
+			if game.has_method("push_world_message"):
+				game.call("push_world_message", "Finish the fight, then press Interact to ask the host again.")
+			return
+		if is_inside_tree():
+			await get_tree().process_frame # the dismissed body frees before its replacement takes the name
+		if not bool(await _encounter.call("_spawn_ally_body", outcome.instance)) \
+				or not bool(game.call("adopt_original_starter_instance", outcome.instance)):
+			# The swapped body and the game disagree; staying stalled lets the
+			# next Interact dismiss and re-adopt again from the current row.
+			_pending_starter_adoption.stalled = true
+			return
+		_pending_starter_adoption.instance = outcome.instance
+	if game.has_method("push_world_message"):
+		game.call("push_world_message", "Asking the host again to save your companion...")
+
+
+func _listen_for_starter_refusal(session: Variant) -> void:
+	if session is Object and (session as Object).has_signal("homestead_action_completed") \
+			and not (session as Object).is_connected("homestead_action_completed", _on_starter_action_completed):
+		(session as Object).connect("homestead_action_completed", _on_starter_action_completed)
+
+
+## The host refused to stage this starter outright (a terminal refusal: it
+## journaled nothing, so no row can still arrive for it). Release the choice so
+## the player is never left with an empty party and a follower nobody owns: the
+## follower is dismissed, the instance forgotten and the picker offered again.
+func _on_starter_action_completed(op: String, intent: Dictionary, result: Dictionary) -> void:
+	if op != "starter_choice" or _pending_starter_adoption.is_empty() or result.get("terminal_refusal") != true:
+		return
+	var creature: Variant = intent.get("creature", {})
+	if not creature is Dictionary or str((creature as Dictionary).get("uid", "")) != str(_pending_starter_adoption.instance.get("uid")):
+		return
+	cancel_starter_adoption(str(result.get("code", "refused")))
+
+
+func cancel_starter_adoption(code: String) -> void:
+	var game := _effect_game()
+	# A refusal of a re-ask once the host has already journalled this
+	# character's starter is not a release: keep the follower and wait for
+	# that row to install (game_state.gd `cancel_original_starter_request`).
+	if game != null and game.has_method("cancel_original_starter_request") \
+			and game.call("cancel_original_starter_request") == false:
+		return
+	_pending_starter_adoption.clear()
+	_adopting = false
+	_choice = -1
+	if _encounter != null and _encounter.has_method("dismiss_active_creature"):
+		_encounter.call("dismiss_active_creature")
+	_picker_pending = _beat == BEATS.CHOOSE
+	if game != null and game.has_method("push_world_message"):
+		game.call("push_world_message", "The host could not record that companion (%s). Choose again." % code)
+
+
+## Whether `_pending_starter_adoption` is still the live choice for the
+## character, world and session epoch this process is in now (the same fences
+## `_retry_original_starter_save` retries under).
+func _starter_adoption_in_flight() -> bool:
+	var game := _effect_game()
+	if game == null or game.get("session") == null or game.get("local") == null or game.get("world") == null:
+		return false
+	return adoption_bound_to(_pending_starter_adoption, str(game.get("local").character_id),
+		str(game.get("world").reward_delivery_namespace), str(game.get("session").call("_altar_current_epoch")))
+
+
+static func adoption_bound_to(pending: Dictionary, character_id: String, world_instance_id: String,
+		session_epoch: String) -> bool:
+	return not pending.is_empty() and not character_id.is_empty() \
+		and pending.get("character_id") == character_id \
+		and pending.get("world_instance_id") == world_instance_id \
+		and pending.get("session_epoch") == session_epoch
+
+
 func _finish_original_starter_adoption(chosen: String, typed_adoption: bool) -> void:
 	_adopting = false
+	# Whatever re-armed it, the choice is made: no picker may stand over it.
+	_picker_pending = false
+	if bool(_starter_picker.call("is_open")):
+		_starter_picker.call("close")
 	if not typed_adoption: _persist_opening_fact(STARTER_GRANTED_FLAG)
 	# The first time this game says a word the player wrote.
 	_dialogue.call("set_value", NAME_KEY, chosen)
