@@ -464,6 +464,10 @@ func _case_native_trainer_hp_fixture_survives_projectile_snapshot(warden_boss: b
 	assert_false(trainer_spec.is_empty(), "the boss mode uses the actual Warden trainer data")
 	_native_host.set("_trainer_spec", trainer_spec)
 	_native_host.set("_trainer_body", foe)
+	# A previous trainer already sent two bodies. This battle still starts
+	# at authored round one; lifetime numbering belongs only to body names.
+	_native_host.set("_trainer_sent", 3)
+	_native_host.set("_trainer_battle_sent", 1)
 	_native_host.set("_engaged_with", foe)
 	_native_host._host_set_deployed(1, {"creature_uid": striker.uid,
 		"species_id": striker.species_id, "shiny": false, "card": _native_host._creature_card(striker)})
@@ -480,6 +484,8 @@ func _case_native_trainer_hp_fixture_survives_projectile_snapshot(warden_boss: b
 	var kind := str(rec.kind)
 	assert_eq(kind, "boss" if warden_boss else "trainer", "production classifies the Warden from boss_ranks")
 	assert_eq(str(rec.get("opponent", {}).get("owner_npc", "")), str(trainer_spec.get("id", "")))
+	assert_eq(int(rec.get("opponent", {}).get("round", 0)), 1,
+		"a later trainer starts at its own authored round, preserving final-round reward eligibility")
 	assert_eq(host_manager.encounter_id(), encounter_id, "production opener bound the manager to that record")
 	guest_manager.bind_encounter(_native_guest, encounter_id, kind)
 	var join := _native_guest.submit_encounter_intent({"kind": "engage", "encounter_id": encounter_id,
@@ -758,6 +764,7 @@ func _case_native_guest_kill_advances_host_trainer_round() -> void:
 	_native_host.set("_trainer_queue", [next_creature] as Array[RefCounted])
 	_native_host.set("_trainer_body", foe)
 	_native_host.set("_trainer_sent", 1)
+	_native_host.set("_trainer_battle_sent", 1)
 	_native_host.set("_engaged_with", foe)
 	_native_host._host_set_deployed(guest_id, {"creature_uid": guest_creature.uid,
 		"species_id": guest_creature.species_id, "shiny": false,
