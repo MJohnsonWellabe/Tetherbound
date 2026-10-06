@@ -20,6 +20,7 @@ extends RefCounted
 ## between pure arithmetic and the instance that owns state.
 
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
+const WATER_CATALOGUE := preload("res://scripts/creatures/water_species_catalog.gd")
 const DATA := preload("res://scripts/data/redesign_data.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const INSTANCE := preload("res://scripts/creatures/creature_instance.gd")
@@ -104,16 +105,30 @@ static func feast_offer(creature_card: Dictionary, tier: int) -> Dictionary:
 	if not bool(loaded.get("ok", false)):
 		return _feast_failure("evolution_config_invalid")
 	var branches: Array[Dictionary] = []
+	var authored_source := _authored_source(source)
 	for row: Dictionary in loaded.data:
-		if row.source != source or int(row.breaks_level) != tier * 10 or not bool(row.enabled):
+		if row.source != authored_source or int(row.breaks_level) != tier * 10 or not bool(row.enabled):
 			continue
 		if row.target == "stormursa" and not storm_bear_ready():
 			continue
-		if not SPECIES.has(str(row.target)):
+		var target := str(row.target)
+		if authored_source != source:
+			target = WATER_CATALOGUE.runtime_id(target)
+		if not SPECIES.has(target):
 			return _feast_failure("evolution_target_missing")
-		branches.append(row.duplicate(true))
+		var branch := row.duplicate(true)
+		branch.source = source
+		branch.target = target
+		branches.append(branch)
 	return {"ok": true, "code": "ok", "branches": branches, "choice_required": not branches.is_empty(),
 		"stay_text": "Stay this species permanently for this tier. The level cap still lifts."}
+
+
+## Authored lines use board IDs; caught Water individuals keep their stable
+## runtime IDs and must evolve into the corresponding measured Water form.
+static func _authored_source(species_id: String) -> String:
+	var board_id := WATER_CATALOGUE.board_id(species_id)
+	return species_id if board_id.is_empty() else board_id
 
 
 ## A config flip alone cannot activate a generated or retargeted candidate.
@@ -312,7 +327,7 @@ static func check(
 		var loaded := DATA.load_catalog("evolution_lines", LINES_PATH)
 		if loaded.get("ok") == true:
 			for line: Dictionary in loaded.data:
-				if line.source != species_id or line.enabled != true: continue
+				if line.source != _authored_source(species_id) or line.enabled != true: continue
 				if line.target == "stormursa" and not storm_bear_ready(): continue
 				return {"eligible": false, "target": "", "reason": "Evolution is chosen when feeding the Lv %d Ascension Feast. Cook it at the Kitchen; choosing evolve or stay is permanent for that tier." % int(line.breaks_level)}
 	var req := requirements(species_id, cfg, inventory)

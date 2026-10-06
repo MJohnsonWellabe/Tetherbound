@@ -15,6 +15,8 @@ const EVOLUTION := preload("res://scripts/creatures/evolution.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const CREATURE := preload("res://scripts/creatures/creature_instance.gd")
 const BOND_MILESTONES := preload("res://scripts/creatures/bond_milestones.gd")
+const PARTY := preload("res://autoload/party.gd")
+const SAVE := preload("res://scripts/save/save_game.gd")
 
 const CFG_NO_ITEM := {
 	"evolution": {"mudsnout": {"level": 15, "bond_tier": 3, "item_id": ""}},
@@ -312,3 +314,92 @@ func test_the_shipped_gate_refuses_held_stone_shortcut_and_preserves_the_catalys
 	assert_false(EVOLUTION.evolve(creature, cfg, inventory))
 	assert_eq(inventory.count(item_id), 1, "shortcut refusal must preserve the stone")
 	assert_eq(creature.species_id, "mudsnout")
+
+
+func test_caught_water_mosshell_requires_choice_and_keeps_the_water_form_and_individual() -> void:
+	var creature := SPECIES.spawn("water_mosshell")
+	creature.set("level", 30)
+	creature.set("nickname", "Reed")
+	creature.set("bond", 37)
+	creature.set("iv_hp", 0.21)
+	creature.set("iv_attack", 0.63)
+	creature.set("iv_defence", 0.87)
+	creature.set("boost_hp", 4)
+	creature.set("battles_fought", 17)
+	creature.set("distance_m_together", 2400.0)
+	creature.set("caught_on_day", 9)
+	creature.set("trait_primary", "sturdy")
+	var quick := str(creature.get("move_quick"))
+	creature.set("move_mastery_uses", {quick: 2})
+	creature.set("move_mastery_receipts", {quick: ["water-prior-use-1", "water-prior-use-2"]})
+	var party := PARTY.new()
+	assert_true(party.add(creature))
+	var save := SAVE.new()
+	var card: Dictionary = save._party_to_array(party)[0]
+	card.evolution_choices = {}
+	var before := card.duplicate(true)
+	var offer := EVOLUTION.feast_offer(card, 3)
+	assert_true(bool(offer.get("ok")))
+	assert_true(bool(offer.get("choice_required")), "caught Water IDs must find the authored line")
+	assert_eq(offer.branches.size(), 1)
+	if offer.branches.size() != 1: return
+	assert_eq(offer.branches[0].id, "mosshell_cannonback")
+	assert_eq(offer.branches[0].source, "water_mosshell")
+	assert_eq(offer.branches[0].target, "water_cannonback")
+	assert_eq(offer.branches[0].extra_ingredient, "")
+	assert_eq(EVOLUTION.prepare_feast_choice(card, 3, "", "").code, "evolution_choice_required")
+	var result := EVOLUTION.prepare_feast_choice(card, 3, "evolve", "")
+	assert_true(bool(result.get("ok")))
+	if not bool(result.get("ok")): return
+	assert_eq(card, before, "planning must leave the saved input unchanged")
+	assert_eq(result.creature.species_id, "water_cannonback")
+	assert_eq(result.creature.evolution_choices, {"3": "water_cannonback"})
+	assert_eq(result.choice_record, {"tier": "3", "value": "water_cannonback"})
+	assert_eq(result.debit, {}, "a cooked feast never debits another catalyst")
+	for field: String in before:
+		if not result.species_patch.has(field) and field != "evolution_choices":
+			assert_eq(result.creature[field], before[field], "individual field survives: " + field)
+	assert_almost_eq(float(result.creature.hp) / float(result.creature.max_hp), float(card.hp) / float(card.max_hp), 0.000001)
+	var durable: Dictionary = JSON.parse_string(JSON.stringify(result.creature))
+	assert_eq(durable.species_id, "water_cannonback")
+	assert_eq(durable.evolution_choices, {"3": "water_cannonback"})
+	assert_eq(durable.move_mastery_receipts, card.move_mastery_receipts)
+	assert_eq(EVOLUTION.feast_offer(durable, 3).code, "evolution_choice_permanent")
+	var target := SPECIES.definition(durable.species_id)
+	assert_true(bool(target.swim_mount.compatible))
+	assert_false((target.water_mount_geometry as Dictionary).is_empty())
+	assert_true(SPECIES.is_rideable(durable.species_id))
+	assert_false(SPECIES.definition("cannonback").has("water_mount_geometry"))
+	var guidance := EVOLUTION.check(creature, _shipped_config())
+	assert_false(bool(guidance.eligible))
+	assert_true(str(guidance.reason).contains("Lv 30 Ascension Feast"))
+	assert_true(str(guidance.reason).contains("evolve or stay"))
+
+
+func test_water_mosshell_stay_is_permanent_and_canonical_mosshell_stays_canonical() -> void:
+	var party := PARTY.new()
+	var creature := SPECIES.spawn("water_mosshell")
+	creature.set("level", 30)
+	assert_true(party.add(creature))
+	var card: Dictionary = SAVE.new()._party_to_array(party)[0]
+	card.evolution_choices = {}
+	var before := card.duplicate(true)
+	var stay := EVOLUTION.prepare_feast_choice(card, 3, "stay", "")
+	assert_true(bool(stay.get("ok")))
+	if not bool(stay.get("ok")): return
+	assert_eq(stay.creature.species_id, "water_mosshell")
+	assert_eq(stay.choice_record, {"tier": "3", "value": "stay"})
+	var durable: Dictionary = JSON.parse_string(JSON.stringify(stay.creature))
+	assert_eq(EVOLUTION.prepare_feast_choice(durable, 3, "evolve", "").code, "evolution_choice_permanent")
+	assert_eq(card, before)
+	assert_eq(EVOLUTION.feast_offer(card, 2).code, "evolution_wrong_level")
+	card.species_id = "water_unknown_mosshell"
+	assert_eq(EVOLUTION.feast_offer(card, 3).code, "evolution_species_invalid")
+	card.species_id = "mosshell"
+	var canonical := EVOLUTION.feast_offer(card, 3)
+	assert_true(bool(canonical.get("ok")))
+	assert_eq(canonical.branches.size(), 1)
+	if canonical.branches.size() != 1: return
+	assert_eq(canonical.branches[0].source, "mosshell")
+	assert_eq(canonical.branches[0].target, "cannonback")
+	assert_eq(EVOLUTION.prepare_feast_choice(card, 3, "evolve", "").creature.species_id, "cannonback")
