@@ -371,7 +371,8 @@ func _tonic_item_original() -> bool:
 			ready = true
 			break
 		await step(0, "wait", {"frames":30})
-	if not check(ready, "tonic: host confirms the actual previous owner HP saves are settled before writer refusal"): return false
+	check(ready, "tonic: host confirms the actual previous owner HP saves are settled before writer refusal")
+	if not ready: return false
 	var pending: Dictionary = await step(1, "op_tonic_item")
 	if not _ok(pending, "tonic: production Item request preserves its original while owner save refuses"): return false
 	var guest: Dictionary = (await _state(1)).get("tonic", {})
