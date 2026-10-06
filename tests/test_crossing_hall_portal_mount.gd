@@ -5,6 +5,25 @@ extends "res://tests/test_case.gd"
 const HALL := preload("res://scripts/world/crossing_hall.gd")
 const ACTION := preload("res://scripts/world/portal_arch.gd")
 
+func test_disabled_or_unavailable_hero_art_preserves_the_original_slot_carrier() -> void:
+	var hall: Node3D = HALL.new()
+	var slot := Node3D.new()
+	var original := Node3D.new()
+	original.name = "PortalAction"
+	slot.add_child(original)
+	for kind: String in ["arch", "pedestal"]:
+		var asset := "res://assets/environment/crossing_hall/portal_arch/portal_arch.tscn" if kind == "arch" else "res://assets/environment/crossing_hall/shrine_pedestal/shrine_pedestal.tscn"
+		for enabled: bool in [false, true]:
+			var art := {"enabled": enabled}
+			art[kind + "_model"] = "res://missing_hall_hero_candidate.tscn" if enabled else asset
+			hall.set("_config", {"hero_art": art})
+			assert_false(bool(hall.call("_add_hero_model", slot, kind)), "disabled or unavailable candidates use installed art")
+			assert_eq(slot.get_child_count(), 1, "art lookup cannot mount an input carrier or duplicate a slot")
+			assert_eq(slot.get_node(^"PortalAction"), original)
+			assert_false(slot.has_meta("hero_art_used"), "unaccepted art cannot be recorded as installed")
+	slot.free()
+	hall.free()
+
 class SessionGateDouble extends Node:
 	var enabled := false
 	func portal_runtime_ready() -> bool: return enabled
