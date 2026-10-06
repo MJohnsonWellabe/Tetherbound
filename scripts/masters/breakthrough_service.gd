@@ -10,6 +10,9 @@ var _submit: Callable
 var _view: Callable
 var _panel: Control
 var _producer: Object
+var _duel_preparing := false
+var _duel_preparing_director: WeakRef
+var _duel_preparation_generation := 0
 
 func bind_actions(submit_action: Callable, personal_view: Callable) -> bool:
 	if not submit_action.is_valid() or not personal_view.is_valid(): return false
@@ -48,6 +51,68 @@ func submit(op: String, intent: Dictionary, source: Node) -> Dictionary:
 	# Source node stays local. It is not serialized as proof of reachability.
 	var verdict: Variant = _submit.call(op, intent.duplicate(true), source)
 	return verdict if verdict is Dictionary else {"ok": false, "code": "invalid_producer_verdict"}
+
+## Choosing a challenger uses the same real party/deployment flow as entering
+## a tournament. The host still admits the actual actor and owns the duel.
+func prepare_duel(uid: String, site: Node3D) -> Dictionary:
+	# Summoning owns a live body across its ground/nav awaits. Closing the
+	# chooser cancels submission, but must not let another choice free that
+	# body before the existing summon returns.
+	if _duel_preparing and _duel_preparing_director != null and not is_instance_valid(_duel_preparing_director.get_ref()):
+		_duel_preparing = false
+	if _duel_preparing:
+		return {"ok": false, "code": "deployment_pending", "reason": "Your companion is still taking the field. Try again when it is ready."}
+	_duel_preparing = true
+	_duel_preparation_generation += 1
+	var generation := _duel_preparation_generation
+	var result: Dictionary = await _prepare_duel(uid, site)
+	if generation == _duel_preparation_generation:
+		_duel_preparing = false
+		_duel_preparing_director = null
+	return result
+
+func _prepare_duel(uid: String, site: Node3D) -> Dictionary:
+	var producer: Object = _submit.get_object() if _submit.is_valid() else null
+	if not is_instance_valid(producer) or not is_instance_valid(site) \
+			or not producer.has_method("_game") or not producer.has_method("_foundation_master_director") \
+			or not producer.has_method("personal_tm_scope"):
+		return {"ok": false, "code": "breakthrough_producer_not_mounted"}
+	var scope: Dictionary = producer.call("personal_tm_scope")
+	var game: Node = producer.call("_game")
+	var owner: RefCounted = game.get("local") if is_instance_valid(game) else null
+	var party: RefCounted = owner.get("party") if owner != null else null
+	var director: Node = producer.call("_foundation_master_director", site)
+	if scope.is_empty() or party == null or not is_instance_valid(director):
+		return {"ok": false, "code": "character_context_unavailable"}
+	_duel_preparing_director = weakref(director)
+	if director.call("trainer_battle_active") == true or not str(director.get("_shared_active_id")).is_empty() \
+			or (is_instance_valid(director.get("_manager")) and director.get("_manager").call("is_fighting") == true):
+		return {"ok": false, "code": "combat_active", "reason": "Finish your current fight before challenging a Master."}
+	var members: Array = party.call("members")
+	var chosen: RefCounted
+	var index := -1
+	for i: int in range(members.size()):
+		if str(members[i].get("uid")) != uid: continue
+		if chosen != null: return {"ok": false, "code": "ambiguous_owned_creature"}
+		chosen = members[i]
+		index = i
+	if chosen == null or chosen.get("fainted") == true or chosen.get("resting") == true \
+			or float(chosen.get("hp")) <= 0:
+		return {"ok": false, "code": "conscious_owned_creature_required", "reason": "Choose an awake, conscious companion."}
+	if party.call("set_active", index) != true:
+		return {"ok": false, "code": "character_selection_refused"}
+	if director.call("ally_instance") != chosen:
+		director.call("dismiss_active_creature")
+		if not bool(await director.call("summon_active_creature")):
+			return {"ok": false, "code": "deployment_unavailable", "reason": "Your companion could not take the field. Try again."}
+	if not is_instance_valid(producer) or not _submit.is_valid() or _submit.get_object() != producer or not is_instance_valid(site) \
+			or not is_instance_valid(director) or producer.call("personal_tm_scope") != scope \
+			or not is_instance_valid(game) or producer.call("_game") != game or game.get("local") != owner or owner.get("party") != party \
+			or party.call("active") != chosen or director.call("ally_instance") != chosen:
+		return {"ok": false, "code": "character_context_changed"}
+	if director.call("ally_deployment_ready") != true:
+		return {"ok": false, "code": "deployment_pending", "reason": "Your companion is still taking the field. Try again when it is ready."}
+	return {"ok": true}
 
 func view() -> Dictionary:
 	if not _view.is_valid(): return {}
@@ -118,7 +183,8 @@ func open_feed() -> void:
 ## this path. The selected actual local creature must still be the same UID.
 func accept_duel_offer(intent: Dictionary, result: Dictionary) -> bool:
 	if not is_instance_valid(_panel) or _panel.call("is_open") != true or _panel.get("_mode") != "duel" \
-		or _panel.get("_service") != self or _panel.get("_master") != intent.get("master_id"):
+		or _panel.get("_service") != self or _panel.get("_master") != intent.get("master_id") \
+		or _panel.get("_pending_action") != "master_duel" or _panel.get("_pending_intent") != intent:
 		return false
 	var site := _panel.get("_source") as Node3D
 	var producer: Object = _submit.get_object() if _submit.is_valid() else null

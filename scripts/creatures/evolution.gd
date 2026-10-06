@@ -308,6 +308,13 @@ static func check(
 	milestones_cfg: Dictionary = {}
 ) -> Dictionary:
 	var species_id := str(creature.get("species_id"))
+	if cfg.get("evolution_mode", "legacy") == "breakthrough":
+		var loaded := DATA.load_catalog("evolution_lines", LINES_PATH)
+		if loaded.get("ok") == true:
+			for line: Dictionary in loaded.data:
+				if line.source != species_id or line.enabled != true: continue
+				if line.target == "stormursa" and not storm_bear_ready(): continue
+				return {"eligible": false, "target": "", "reason": "Evolution is chosen when feeding the Lv %d Ascension Feast. Cook it at the Kitchen; choosing evolve or stay is permanent for that tier." % int(line.breaks_level)}
 	var req := requirements(species_id, cfg, inventory)
 	if req.is_empty():
 		return {"eligible": false, "target": "", "reason": "%s does not evolve." % str(creature.call("label"))}

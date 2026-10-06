@@ -1,24 +1,24 @@
 {
-  "status": "REVIEWED_SOURCE_REFERENCES_ONLY; RUNTIME_STOCK_UNPROVEN",
-  "claim": "All recipe inputs have authored sources in or before recipe biome. F32 canonical renewable nodes/crops exclusively provide attuned ingredients; actual mounted stock, terrain, seeds, supply and Kitchen integration remain unproven.",
+  "status": "CURRENT_AUTHORED_REACHABILITY_AND_PRIOR_LOCAL_NODE_WITNESSES; EARNED_CAMPAIGN_AND_CATALYST_PATHS_OPEN",
+  "claim": "All recipe ingredients have current authored sources in or before their biome (728 unchanged source checks pass). All attuned recipes select early Meadows nodes; seven of eight early local controller/disk-save/ACK receipts match coordinates and yields exactly. Air differs only in decimal coordinate representation (-4.800000000000001 vs -4.8), retained as a held reuse rather than an invented pass. Disclosed 6m starts remain explicit. Earned route, repeat supply and catalyst pickup acceptance remain open.",
   "external_source": {
     "owner": "F32",
-    "source_commit": "6c063a2c8c104619730759b27e0332ae8e23a583",
-    "package_head": "dad506a1f9ae5f8ad25d9e6edccc4c83783b99df",
+    "source_commit": "8e7c11ceb5854f063c5241d62618c382803562c9",
+    "package_head": "8e7c11ceb5854f063c5241d62618c382803562c9",
     "pull_request": "https://github.com/MJohnsonWellabe/Tetherbound/pull/515",
     "source_cut": "ralph/reports/HOMESTEAD/f32/whole-source/source-cut.json",
     "files": {
-      "data/config/essence_nodes.json": {
-        "git_content_sha256": "e5a2177f7dce5e5867bc049151f26ff09fd521f0fc34e61e9ef118d3ed04408a",
-        "working_content_sha256": "a3599f0eee6611f2f8777a764cbc1409bd9795fab3dbefec48072a6bca6ae106"
-      },
       "data/config/farm.json": {
-        "git_content_sha256": "3641a46d65d34a36ee8b06d1e4c510566d03fbabfa9419ed7090e64e1c23de78",
-        "working_content_sha256": "7a992b14ac2339fc3349dcaf0c0df0836a4e1c03db0a491305bce5a8bc015814"
+        "git_content_sha256": "7b02a7f4b8ae57781bb736901c6538d5670a32995668ec4f1711e6818ac2c2a7",
+        "working_content_sha256": "7b02a7f4b8ae57781bb736901c6538d5670a32995668ec4f1711e6818ac2c2a7"
+      },
+      "data/config/essence_nodes.json": {
+        "git_content_sha256": "f25c6d4b9bc3d5a87586a97bab4386296a8f1c91d34070d47f785ba31592ae82",
+        "working_content_sha256": "f25c6d4b9bc3d5a87586a97bab4386296a8f1c91d34070d47f785ba31592ae82"
       }
     },
     "runtime_accepted_stock": null,
-    "status": "F32_REVIEWED_FROZEN_SOURCE_ONLY; ALL FLAGS OFF; ACCEPTANCE OPEN",
+    "status": "CURRENT_MAIN_SOURCE_BINDING; PRIOR_NATIVE_CENSUS_REUSE_LIMITED_TO_MATCHING_GEOMETRY_AND_YIELDS",
     "retirement": "F28 finite master_garden nodes removed; old prepare_gather compatibility doorway always refuses. F32 node/farm staging alone owns attuned supply and renewable stock.",
     "typed_node_intent": [
       "site_id",
@@ -48,7 +48,23 @@
       "Save/ACK/rejoin and world namespace boundaries"
     ],
     "removed_assumption": "No longer asserts 25 attuned units per type per character; renewable source arithmetic is not ordinary-play solvency proof.",
-    "check_command": "node ralph/reports/TRAINING/f28/source_risk_check.cjs <reviewed-F32-checkout>; after integration omit the argument"
+    "check_command": "node ralph/reports/TRAINING/f28/source_risk_check.cjs <reviewed-F32-checkout>; after integration omit the argument",
+    "prior_frozen_source": {
+      "files": {
+        "data/config/essence_nodes.json": {
+          "git_content_sha256": "e5a2177f7dce5e5867bc049151f26ff09fd521f0fc34e61e9ef118d3ed04408a",
+          "working_content_sha256": "a3599f0eee6611f2f8777a764cbc1409bd9795fab3dbefec48072a6bca6ae106"
+        },
+        "data/config/farm.json": {
+          "git_content_sha256": "3641a46d65d34a36ee8b06d1e4c510566d03fbabfa9419ed7090e64e1c23de78",
+          "working_content_sha256": "7a992b14ac2339fc3349dcaf0c0df0836a4e1c03db0a491305bce5a8bc015814"
+        }
+      },
+      "status": "F32_REVIEWED_FROZEN_SOURCE_ONLY; ALL FLAGS OFF; ACCEPTANCE OPEN",
+      "source_commit": "6c063a2c8c104619730759b27e0332ae8e23a583",
+      "package_head": "dad506a1f9ae5f8ad25d9e6edccc4c83783b99df"
+    },
+    "current_receipt_limit": "F32 census uses disclosed 6m approach/realm-start fixtures and is not an earned campaign. Reuse proves local mounted reach/accepted yield only where node identity, coordinates and outputs still match. No repeat supply, seed solvency or tier2+ earned feast route is inferred."
   },
   "biome_order": [
     "meadows",
@@ -100,26 +116,27 @@
         {
           "item": "attuned_ground",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.0",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.0",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_ground_01",
-            "position": [
-              22,
-              -28
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_ground",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              22.0,
+              -28.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -133,6 +150,21 @@
             "amount": 2,
             "growth_gate": "native outdoor crop",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_ground_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         }
       ]
@@ -180,26 +212,27 @@
         {
           "item": "attuned_water",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.1",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.1",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_water_01",
-            "position": [
-              32,
-              -44
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_water",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              32.0,
+              -44.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -213,6 +246,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_water_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         }
       ]
@@ -260,26 +308,27 @@
         {
           "item": "attuned_air",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.2",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_SOURCE; PRIOR_POSITION_REPRESENTATION_DIFFERS; REUSE_HELD",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.2",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_air_01",
-            "position": [
-              46.5,
-              -28
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_air",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -4.800000000000001,
+              104.1
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -293,6 +342,21 @@
             "amount": 2,
             "growth_gate": "native outdoor crop",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": false,
+            "site_id": "essence_meadows_air_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": false
           }
         }
       ]
@@ -340,26 +404,27 @@
         {
           "item": "attuned_electric",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.3",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.3",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_electric_01",
-            "position": [
-              -2,
-              8
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_electric",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -162.0,
+              312.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -373,6 +438,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_electric_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         }
       ]
@@ -420,26 +500,27 @@
         {
           "item": "attuned_fire",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.4",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.4",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_fire_01",
-            "position": [
-              28,
-              -34
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_fire",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -320.9,
+              368.5
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -453,6 +534,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_fire_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         }
       ]
@@ -500,26 +596,27 @@
         {
           "item": "attuned_dark",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.5",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.5",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_dark_01",
-            "position": [
-              53,
-              -34.5
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_dark",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -384.6,
+              470.5
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -533,6 +630,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_dark_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         }
       ]
@@ -580,26 +692,27 @@
         {
           "item": "attuned_ice",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.6",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.6",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_ice_01",
-            "position": [
-              -12,
-              6
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_ice",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -229.0,
+              615.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -613,6 +726,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_ice_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         }
       ]
@@ -660,26 +788,27 @@
         {
           "item": "attuned_psychic",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.7",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.7",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_psychic_01",
-            "position": [
-              18,
-              -22
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_psychic",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              16.0,
+              670.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -693,6 +822,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_psychic_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         }
       ]
@@ -723,26 +867,27 @@
         {
           "item": "attuned_ground",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.0",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.0",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_ground_01",
-            "position": [
-              22,
-              -28
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_ground",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              22.0,
+              -28.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -756,6 +901,21 @@
             "amount": 2,
             "growth_gate": "native outdoor crop",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_ground_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         },
         {
@@ -803,26 +963,27 @@
         {
           "item": "attuned_ground",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.0",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.0",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_ground_01",
-            "position": [
-              22,
-              -28
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_ground",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              22.0,
+              -28.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -836,6 +997,21 @@
             "amount": 2,
             "growth_gate": "native outdoor crop",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_ground_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         },
         {
@@ -900,26 +1076,27 @@
         {
           "item": "attuned_ground",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.0",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.0",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_ground_01",
-            "position": [
-              22,
-              -28
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_ground",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              22.0,
+              -28.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -933,6 +1110,21 @@
             "amount": 2,
             "growth_gate": "native outdoor crop",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_ground_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         },
         {
@@ -995,26 +1187,27 @@
         {
           "item": "attuned_water",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.1",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.1",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_water_01",
-            "position": [
-              32,
-              -44
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_water",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              32.0,
+              -44.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -1028,6 +1221,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_water_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         },
         {
@@ -1075,26 +1283,27 @@
         {
           "item": "attuned_water",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.1",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.1",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_water_01",
-            "position": [
-              32,
-              -44
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_water",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              32.0,
+              -44.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -1108,6 +1317,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_water_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         },
         {
@@ -1172,26 +1396,27 @@
         {
           "item": "attuned_water",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.1",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.1",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_water_01",
-            "position": [
-              32,
-              -44
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_water",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              32.0,
+              -44.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -1205,6 +1430,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_water_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         },
         {
@@ -1267,26 +1507,27 @@
         {
           "item": "attuned_air",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.2",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_SOURCE; PRIOR_POSITION_REPRESENTATION_DIFFERS; REUSE_HELD",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.2",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_air_01",
-            "position": [
-              46.5,
-              -28
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_air",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -4.800000000000001,
+              104.1
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -1300,6 +1541,21 @@
             "amount": 2,
             "growth_gate": "native outdoor crop",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": false,
+            "site_id": "essence_meadows_air_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": false
           }
         },
         {
@@ -1347,26 +1603,27 @@
         {
           "item": "attuned_air",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.2",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_SOURCE; PRIOR_POSITION_REPRESENTATION_DIFFERS; REUSE_HELD",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.2",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_air_01",
-            "position": [
-              46.5,
-              -28
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_air",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -4.800000000000001,
+              104.1
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -1380,6 +1637,21 @@
             "amount": 2,
             "growth_gate": "native outdoor crop",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": false,
+            "site_id": "essence_meadows_air_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": false
           }
         },
         {
@@ -1444,26 +1716,27 @@
         {
           "item": "attuned_air",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.2",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_SOURCE; PRIOR_POSITION_REPRESENTATION_DIFFERS; REUSE_HELD",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.2",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_air_01",
-            "position": [
-              46.5,
-              -28
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_air",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -4.800000000000001,
+              104.1
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -1477,6 +1750,21 @@
             "amount": 2,
             "growth_gate": "native outdoor crop",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": false,
+            "site_id": "essence_meadows_air_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": false
           }
         },
         {
@@ -1539,26 +1827,27 @@
         {
           "item": "attuned_electric",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.3",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.3",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_electric_01",
-            "position": [
-              -2,
-              8
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_electric",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -162.0,
+              312.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -1572,6 +1861,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_electric_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         },
         {
@@ -1619,26 +1923,27 @@
         {
           "item": "attuned_electric",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.3",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.3",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_electric_01",
-            "position": [
-              -2,
-              8
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_electric",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -162.0,
+              312.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -1652,6 +1957,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_electric_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         },
         {
@@ -1716,26 +2036,27 @@
         {
           "item": "attuned_electric",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.3",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.3",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_electric_01",
-            "position": [
-              -2,
-              8
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_electric",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -162.0,
+              312.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -1749,6 +2070,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_electric_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         },
         {
@@ -1811,26 +2147,27 @@
         {
           "item": "attuned_fire",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.4",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.4",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_fire_01",
-            "position": [
-              28,
-              -34
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_fire",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -320.9,
+              368.5
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -1844,6 +2181,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_fire_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         },
         {
@@ -1891,26 +2243,27 @@
         {
           "item": "attuned_fire",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.4",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.4",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_fire_01",
-            "position": [
-              28,
-              -34
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_fire",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -320.9,
+              368.5
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -1924,6 +2277,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_fire_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         },
         {
@@ -1988,26 +2356,27 @@
         {
           "item": "attuned_fire",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.4",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.4",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_fire_01",
-            "position": [
-              28,
-              -34
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_fire",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -320.9,
+              368.5
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -2021,6 +2390,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_fire_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         },
         {
@@ -2083,26 +2467,27 @@
         {
           "item": "attuned_dark",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.5",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.5",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_dark_01",
-            "position": [
-              53,
-              -34.5
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_dark",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -384.6,
+              470.5
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -2116,6 +2501,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_dark_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         },
         {
@@ -2163,26 +2563,27 @@
         {
           "item": "attuned_dark",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.5",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.5",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_dark_01",
-            "position": [
-              53,
-              -34.5
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_dark",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -384.6,
+              470.5
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -2196,6 +2597,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_dark_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         },
         {
@@ -2260,26 +2676,27 @@
         {
           "item": "attuned_dark",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.5",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.5",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_dark_01",
-            "position": [
-              53,
-              -34.5
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_dark",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -384.6,
+              470.5
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -2293,6 +2710,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_dark_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         },
         {
@@ -2355,26 +2787,27 @@
         {
           "item": "attuned_ice",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.6",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.6",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_ice_01",
-            "position": [
-              -12,
-              6
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_ice",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -229.0,
+              615.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -2388,6 +2821,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_ice_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         },
         {
@@ -2435,26 +2883,27 @@
         {
           "item": "attuned_ice",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.6",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.6",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_ice_01",
-            "position": [
-              -12,
-              6
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_ice",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -229.0,
+              615.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -2468,6 +2917,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_ice_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         },
         {
@@ -2532,26 +2996,27 @@
         {
           "item": "attuned_ice",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.6",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.6",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_ice_01",
-            "position": [
-              -12,
-              6
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_ice",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -229.0,
+              615.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -2565,6 +3030,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_ice_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         },
         {
@@ -2627,26 +3107,27 @@
         {
           "item": "attuned_psychic",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.7",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.7",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_psychic_01",
-            "position": [
-              18,
-              -22
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_psychic",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              16.0,
+              670.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -2660,6 +3141,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_psychic_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         },
         {
@@ -2707,26 +3203,27 @@
         {
           "item": "attuned_psychic",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.7",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.7",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_psychic_01",
-            "position": [
-              18,
-              -22
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_psychic",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              16.0,
+              670.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -2740,6 +3237,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_psychic_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         },
         {
@@ -2804,26 +3316,27 @@
         {
           "item": "attuned_psychic",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.7",
             "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
+            "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.7",
             "runtime_realm": "meadows",
             "stable_id": "essence_meadows_psychic_01",
-            "position": [
-              18,
-              -22
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
-            "respawn_host_days": 3,
             "seed_drop": {
               "item": "seed_psychic",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              16.0,
+              670.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -2837,6 +3350,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_psychic_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         },
         {
@@ -2918,26 +3446,27 @@
         {
           "item": "attuned_ground",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.24",
-            "biome": "tidewake",
-            "runtime_realm": "water",
-            "stable_id": "essence_water_ground_01",
-            "position": [
-              574,
-              1344
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
+            "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
             "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_ground_01",
             "seed_drop": {
               "item": "seed_ground",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              22.0,
+              -28.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -2951,6 +3480,21 @@
             "amount": 2,
             "growth_gate": "native outdoor crop",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_ground_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         }
       ]
@@ -3000,26 +3544,27 @@
         {
           "item": "attuned_water",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.25",
-            "biome": "tidewake",
-            "runtime_realm": "water",
-            "stable_id": "essence_water_water_01",
-            "position": [
-              814,
-              2900
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
+            "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
             "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.1",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_water_01",
             "seed_drop": {
               "item": "seed_water",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              32.0,
+              -44.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -3033,6 +3578,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_water_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         }
       ]
@@ -3082,26 +3642,27 @@
         {
           "item": "attuned_air",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.26",
-            "biome": "tidewake",
-            "runtime_realm": "water",
-            "stable_id": "essence_water_air_01",
-            "position": [
-              84,
-              2304
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
+            "biome": "meadows",
+            "status": "EARLY_MEADOWS_SOURCE; PRIOR_POSITION_REPRESENTATION_DIFFERS; REUSE_HELD",
             "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.2",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_air_01",
             "seed_drop": {
               "item": "seed_air",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -4.800000000000001,
+              104.1
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -3115,6 +3676,21 @@
             "amount": 2,
             "growth_gate": "native outdoor crop",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": false,
+            "site_id": "essence_meadows_air_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": false
           }
         }
       ]
@@ -3164,26 +3740,27 @@
         {
           "item": "attuned_electric",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.27",
-            "biome": "tidewake",
-            "runtime_realm": "water",
-            "stable_id": "essence_water_electric_01",
-            "position": [
-              24,
-              452
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
+            "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
             "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.3",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_electric_01",
             "seed_drop": {
               "item": "seed_electric",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -162.0,
+              312.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -3197,6 +3774,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_electric_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         }
       ]
@@ -3246,26 +3838,27 @@
         {
           "item": "attuned_fire",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.28",
-            "biome": "tidewake",
-            "runtime_realm": "water",
-            "stable_id": "essence_water_fire_01",
-            "position": [
-              344,
-              3792
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
+            "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
             "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.4",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_fire_01",
             "seed_drop": {
               "item": "seed_fire",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -320.9,
+              368.5
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -3279,6 +3872,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_fire_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         }
       ]
@@ -3328,26 +3936,27 @@
         {
           "item": "attuned_dark",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.29",
-            "biome": "tidewake",
-            "runtime_realm": "water",
-            "stable_id": "essence_water_dark_01",
-            "position": [
-              -90,
-              18
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
+            "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
             "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.5",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_dark_01",
             "seed_drop": {
               "item": "seed_dark",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -384.6,
+              470.5
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -3361,6 +3970,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_dark_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         }
       ]
@@ -3410,26 +4034,27 @@
         {
           "item": "attuned_ice",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.30",
-            "biome": "tidewake",
-            "runtime_realm": "water",
-            "stable_id": "essence_water_ice_01",
-            "position": [
-              482,
-              1216
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
+            "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
             "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.6",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_ice_01",
             "seed_drop": {
               "item": "seed_ice",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -229.0,
+              615.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -3443,6 +4068,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_ice_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         }
       ]
@@ -3492,26 +4132,27 @@
         {
           "item": "attuned_psychic",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.31",
-            "biome": "tidewake",
-            "runtime_realm": "water",
-            "stable_id": "essence_water_psychic_01",
-            "position": [
-              504,
-              828
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
+            "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
             "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.7",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_psychic_01",
             "seed_drop": {
               "item": "seed_psychic",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              16.0,
+              670.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -3525,6 +4166,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_psychic_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         }
       ]
@@ -3574,26 +4230,27 @@
         {
           "item": "attuned_ground",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.8",
-            "biome": "cloudreach",
-            "runtime_realm": "cloudreach",
-            "stable_id": "essence_cloudreach_ground_01",
-            "position": [
-              -394,
-              570
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
+            "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
             "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_ground_01",
             "seed_drop": {
               "item": "seed_ground",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              22.0,
+              -28.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -3607,6 +4264,21 @@
             "amount": 2,
             "growth_gate": "native outdoor crop",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_ground_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         }
       ]
@@ -3656,26 +4328,27 @@
         {
           "item": "attuned_water",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.9",
-            "biome": "cloudreach",
-            "runtime_realm": "cloudreach",
-            "stable_id": "essence_cloudreach_water_01",
-            "position": [
-              1206,
-              3100
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
+            "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
             "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.1",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_water_01",
             "seed_drop": {
               "item": "seed_water",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              32.0,
+              -44.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -3689,6 +4362,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_water_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         }
       ]
@@ -3738,26 +4426,27 @@
         {
           "item": "attuned_air",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.10",
-            "biome": "cloudreach",
-            "runtime_realm": "cloudreach",
-            "stable_id": "essence_cloudreach_air_01",
-            "position": [
-              -262.3,
-              3117.5
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
+            "biome": "meadows",
+            "status": "EARLY_MEADOWS_SOURCE; PRIOR_POSITION_REPRESENTATION_DIFFERS; REUSE_HELD",
             "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.2",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_air_01",
             "seed_drop": {
               "item": "seed_air",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -4.800000000000001,
+              104.1
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -3771,6 +4460,21 @@
             "amount": 2,
             "growth_gate": "native outdoor crop",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": false,
+            "site_id": "essence_meadows_air_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": false
           }
         }
       ]
@@ -3820,26 +4524,27 @@
         {
           "item": "attuned_electric",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.11",
-            "biome": "cloudreach",
-            "runtime_realm": "cloudreach",
-            "stable_id": "essence_cloudreach_electric_01",
-            "position": [
-              -211.2,
-              5327.4
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
+            "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
             "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.3",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_electric_01",
             "seed_drop": {
               "item": "seed_electric",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -162.0,
+              312.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -3853,6 +4558,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_electric_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         }
       ]
@@ -3902,26 +4622,27 @@
         {
           "item": "attuned_fire",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.12",
-            "biome": "cloudreach",
-            "runtime_realm": "cloudreach",
-            "stable_id": "essence_cloudreach_fire_01",
-            "position": [
-              -1083.4,
-              1495.1
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
+            "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
             "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.4",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_fire_01",
             "seed_drop": {
               "item": "seed_fire",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -320.9,
+              368.5
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -3935,6 +4656,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_fire_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         }
       ]
@@ -3984,26 +4720,27 @@
         {
           "item": "attuned_dark",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.13",
-            "biome": "cloudreach",
-            "runtime_realm": "cloudreach",
-            "stable_id": "essence_cloudreach_dark_01",
-            "position": [
-              186,
-              620
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
+            "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
             "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.5",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_dark_01",
             "seed_drop": {
               "item": "seed_dark",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -384.6,
+              470.5
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -4017,6 +4754,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_dark_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         }
       ]
@@ -4066,26 +4818,27 @@
         {
           "item": "attuned_ice",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.14",
-            "biome": "cloudreach",
-            "runtime_realm": "cloudreach",
-            "stable_id": "essence_cloudreach_ice_01",
-            "position": [
-              -342.5,
-              5011
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
+            "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
             "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.6",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_ice_01",
             "seed_drop": {
               "item": "seed_ice",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -229.0,
+              615.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -4099,6 +4852,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_ice_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         }
       ]
@@ -4148,26 +4916,27 @@
         {
           "item": "attuned_psychic",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.15",
-            "biome": "cloudreach",
-            "runtime_realm": "cloudreach",
-            "stable_id": "essence_cloudreach_psychic_01",
-            "position": [
-              -515.5,
-              5301.5
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
+            "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
             "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.7",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_psychic_01",
             "seed_drop": {
               "item": "seed_psychic",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              16.0,
+              670.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -4181,6 +4950,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_psychic_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         }
       ]
@@ -4228,26 +5012,27 @@
         {
           "item": "attuned_ground",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.16",
-            "biome": "stormwood",
-            "runtime_realm": "stormwood",
-            "stable_id": "essence_stormwood_ground_01",
-            "position": [
-              -794,
-              4430
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
+            "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
             "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.0",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_ground_01",
             "seed_drop": {
               "item": "seed_ground",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              22.0,
+              -28.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -4261,6 +5046,21 @@
             "amount": 2,
             "growth_gate": "native outdoor crop",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_ground_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         }
       ]
@@ -4308,26 +5108,27 @@
         {
           "item": "attuned_water",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.17",
-            "biome": "stormwood",
-            "runtime_realm": "stormwood",
-            "stable_id": "essence_stormwood_water_01",
-            "position": [
-              -1144,
-              3160
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
+            "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
             "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.1",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_water_01",
             "seed_drop": {
               "item": "seed_water",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              32.0,
+              -44.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -4341,6 +5142,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_water_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         }
       ]
@@ -4388,26 +5204,27 @@
         {
           "item": "attuned_air",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.18",
-            "biome": "stormwood",
-            "runtime_realm": "stormwood",
-            "stable_id": "essence_stormwood_air_01",
-            "position": [
-              -986,
-              1857
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
+            "biome": "meadows",
+            "status": "EARLY_MEADOWS_SOURCE; PRIOR_POSITION_REPRESENTATION_DIFFERS; REUSE_HELD",
             "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.2",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_air_01",
             "seed_drop": {
               "item": "seed_air",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -4.800000000000001,
+              104.1
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -4421,6 +5238,21 @@
             "amount": 2,
             "growth_gate": "native outdoor crop",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": false,
+            "site_id": "essence_meadows_air_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": false
           }
         }
       ]
@@ -4468,26 +5300,27 @@
         {
           "item": "attuned_electric",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.19",
-            "biome": "stormwood",
-            "runtime_realm": "stormwood",
-            "stable_id": "essence_stormwood_electric_01",
-            "position": [
-              -344,
-              4430
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
+            "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
             "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.3",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_electric_01",
             "seed_drop": {
               "item": "seed_electric",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -162.0,
+              312.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -4501,6 +5334,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_electric_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         }
       ]
@@ -4548,26 +5396,27 @@
         {
           "item": "attuned_fire",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.20",
-            "biome": "stormwood",
-            "runtime_realm": "stormwood",
-            "stable_id": "essence_stormwood_fire_01",
-            "position": [
-              -1144,
-              3030
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
+            "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
             "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.4",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_fire_01",
             "seed_drop": {
               "item": "seed_fire",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -320.9,
+              368.5
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -4581,6 +5430,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_fire_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         }
       ]
@@ -4628,26 +5492,27 @@
         {
           "item": "attuned_dark",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.21",
-            "biome": "stormwood",
-            "runtime_realm": "stormwood",
-            "stable_id": "essence_stormwood_dark_01",
-            "position": [
-              -1324,
-              1750
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
+            "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
             "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.5",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_dark_01",
             "seed_drop": {
               "item": "seed_dark",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -384.6,
+              470.5
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -4661,6 +5526,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_dark_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         }
       ]
@@ -4708,26 +5588,27 @@
         {
           "item": "attuned_ice",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.22",
-            "biome": "stormwood",
-            "runtime_realm": "stormwood",
-            "stable_id": "essence_stormwood_ice_01",
-            "position": [
-              -794,
-              4280
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
+            "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
             "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.6",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_ice_01",
             "seed_drop": {
               "item": "seed_ice",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              -229.0,
+              615.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -4741,6 +5622,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_ice_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         }
       ]
@@ -4788,26 +5684,27 @@
         {
           "item": "attuned_psychic",
           "count": 1,
-          "catalogue": "data/recipes/feasts.json",
+          "catalogue": "data/items/items.json",
           "source": {
-            "file": "data/config/essence_nodes.json",
-            "json_path": "$.nodes.23",
-            "biome": "stormwood",
-            "runtime_realm": "stormwood",
-            "stable_id": "essence_stormwood_psychic_01",
-            "position": [
-              -1144,
-              2900
-            ],
-            "amount": 1,
-            "scope": "world_stock; character_outputs",
+            "biome": "meadows",
+            "status": "EARLY_MEADOWS_AUTHORED_SOURCE; PRIOR_DISCLOSED_LOCAL_APPROACH_AND_ACCEPTED_STOCK_BOUND",
             "respawn_host_days": 3,
+            "file": "data/config/essence_nodes.json",
+            "amount": 1,
+            "region_id": "band1_lower_meadows",
+            "json_path": "$.nodes.7",
+            "runtime_realm": "meadows",
+            "stable_id": "essence_meadows_psychic_01",
             "seed_drop": {
               "item": "seed_psychic",
               "amount": 1,
               "chance": 0.25
             },
-            "status": "F32_REVIEWED_AUTHORED_SOURCE_NO_ACCEPTED_STOCK_OR_PATH_PROOF"
+            "scope": "world_stock; character_outputs",
+            "position": [
+              16.0,
+              670.0
+            ]
           },
           "supplemental_crop": {
             "file": "data/config/farm.json",
@@ -4821,6 +5718,21 @@
             "amount": 2,
             "growth_gate": "actual paid world Greenhouse",
             "status": "NO_ACCEPTED_SEED_PLANT_OR_HARVEST_STOCK_PROOF"
+          },
+          "native_local_witness": {
+            "realm": "meadows",
+            "receipt_path": "ralph/reports/HOMESTEAD/f32/essence-census/meadows-essence-report.json",
+            "controller_approach": true,
+            "owner_saved": true,
+            "accepted_disk_gather": true,
+            "coordinates_match": true,
+            "site_id": "essence_meadows_psychic_01",
+            "earned_campaign": false,
+            "owner_acknowledged": true,
+            "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+            "outputs_match": true,
+            "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
+            "reuse_local_witness": true
           }
         }
       ]

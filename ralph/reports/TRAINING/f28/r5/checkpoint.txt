@@ -6,27 +6,33 @@ Product repairs
 - Good/Great/Rare Candy stage one debit and cap-clamped growth through the existing admitted character/V2 journal. Original intent/revision/character-world-epoch scope persists through retries. No optimistic local debit. Receipt namespace is additive to the existing carrier.
 - Host/guest saved completion signals include character actions. Feast cook retains its original ID until all owner save/ACK fences pass; a second cook then receives a fresh ID. Guest Master admission refusal releases only the exact pending attempt.
 - Personal rest configuration uses the admitted creature cap. Owned live legacy XP/level calls also fence against that cap. Capped XP is discarded; recovery still heals.
-- Shipping progression selects breakthrough evolution. Legacy held-stone shortcuts and readiness copy are disabled in this mode. Catalyst copy names the Lv20 Kitchen feast and explicit choice.
+- Shipping progression selects breakthrough evolution. Legacy held-stone shortcuts and readiness copy are disabled in this mode. Catalyst and Team copy describe the actual Kitchen feast level and permanent evolve/stay choice without implying missed offers can be revisited.
+- Master chooser now deploys the actual chosen companion through existing party selection/recall/summon before submission. One service preparation owns the pending body across cancel/reopen; character/world/epoch and chooser generation fence stale submissions. Guest offers require the exact still-pending intent.
+- Host Tidewake/Cloudreach Masters pass the known-Master exception to the chapter trainer catalogue, retaining common combat and Water diving checks. Stormwood Masters use inherited personal one-creature duels instead of the incompatible chapter trainer hub. Actual summoned-body lifetime/identity is checked around ground waits to prevent stale deployment after recall/swap. Transient exact-body readiness is set only after successful grounding and deployment publication; revival cannot reveal an unfinished spawn and a same-UID choice cannot treat visibility as readiness. Recall clears readiness; failed ground retires only the attempted body.
 
 Tests and review
 New focused test_f28_training_boundaries covers all six caps; atomic proposed debit; cap/combat/faint/ownership/missing-item refusal; JSON admission; same ID on two stable characters; replay; personal rest; all save/ACK UI fences; guest admission refusal; partial candy wording and once-only feed event.
 Existing unit selections directly affected: candy_progression_safety, evolution, evolution_discoverability, progression_feed, breakthrough_saved_move_history, guest_master_admission; rest/Cloudreach and delivery selections still being finalized.
-Engine/unit runs: UNRUN. Fresh checkout has no imported cache. Global lock remains held by other lanes; R2 original baseline is preserved.
-Independent agent source review traced candy through dispatch, passive preparation, re-stage, V2 codec, world validation, owner install, encounter baseline and receipt persistence; no omitted candy gate found. The reported guest-refusal routing gap has since been repaired and receives a new unit. Review update is pending.
+Serialized engine/unit batch on a3e87cb570: PASS 120 tests, 3071 assertions, 0 failed, exit0, empty stderr. Completed matching R4 asset cache was reused in this worktree; private save home. R2 original baseline preserved.
+Existing unchanged F29 feast_choice_proof: PASS 200 checks, exit0, empty stderr. Component only, no ordinary transaction/menu acceptance credit.
+Existing unchanged F28 component_proof: exit1, Godot4.7 parse failure at static class has_method and inferred cookbook/frozen locals. Tool not edited; gap posted at #525 comment6009076120.
+New Master affected batch PASS: 18 tests, 214 assertions, 0 failed, exit0, empty stderr. Owned fail-closed global lock and private save home; released on completion. Covers genuine suspended preparation, hidden and visible-but-unready body refusals, exact cancellation state, delayed guest offers, canonical chapter admission and shipping guidance. Unit is presentation-independent; native layout/controller/body-grounding remains a separate gate.
+Prior Master runs retained: contended INVALID run after PowerShell continued despite failed atomic acquisition (6009189417); serialized parse failure (wrong OS API); serialized null-SceneTree/script/leak failure despite runner zero-failed summary. Existing runner has no SceneTree in _init, so approach changed to the exact product cancellation helper with detached state unit. No invalid/failed run receives credit.
+Independent read-only agent source review PASS for checkpoint candy/save/cap paths and latest Master repairs. It identified catalogue routing, delayed guest offer, overlapping summon, and retired-body defects, all repaired and re-reviewed. No remaining concrete new product defect found. Native host/guest/menu/earned-route gates remain OPEN.
 Known hold: existing smoke_evolution expects the superseded held-stone Team ceremony. It has not been skipped, disabled or changed to run with a fake legacy flag. A current ordinary feast/input/menu witness is required before landing the mode flip.
 
 Existing source checker results (unaltered tools)
-F28 source_risk_check: 728 checks, two frozen-F32 hash failures (essence_nodes/farm). Raw JSON retained. No new ledger/runtime acceptance inferred.
+F28 source_risk_check: initial two frozen-F32 hash failures retained; current-main source contract rebound while preserving prior binding. Unchanged checker now PASS 728 checks. Prior census receipt reuse matches31 of32 nodes exactly; Meadows Air decimal representation differs and reuse stays held. No earned-route/repeat-supply acceptance inferred.
 F29 check_source: stops at historical whole-water-encounter-catalogue equality. Raw stderr and exit1 retained. Current main wild catalogues remain unchanged by R5.
 
 Criteria
 F28#0: source repairs authored; focused/native proof OPEN.
-F28#5: old ledger is authored-source only; current F32 census reuse/reconciliation OPEN.
+F28#5: current authored ingredient reachability ledger reconciled with limited prior native local-node receipts. Earned campaign, catalyst route and repeated five-creature supply OPEN.
 F28#3: existing canonical Kitchen/cook/feed implementation audited; asynchronous repeat-cook repair authored; unit/native proof OPEN.
-F28#1/#2: five existing sites/cast/1v1/chest/loss handlers present; all-route native and code-blind proof BLOCKED on existing witness question at #525.
-F28#4: existing stable-character journal reused; new candy isolation unit authored; native co-op/rejoin proof OPEN.
+F28#1/#2: chooser deployment and host chapter catalogue integration defects repaired; source review PASS. All-route native and code-blind proof BLOCKED on existing witness question at #525.
+F28#4: existing stable-character journal reused; candy isolation/save-fence units PASS. Native co-op/rejoin proof BLOCKED on missing reviewed complete F48 actual-producer profile/bundle path, exact question6009272140. Seed fixtures/schema do not substitute for the required actual-input bundle.
 F29#0/#1/#2: existing detached evolution/stay/preservation component proof will be reused; mode/presentation repair authored; native witness and obsolete-smoke adaptation OPEN.
-F29#4: existing Cannonback/Stormcapra wild rows retained, Tuskroot/Ashtusk/stormursa absent from wild tables in source audit; source tool historic equality failure retained; current proof OPEN.
+F29#4: independent current-source relation PASS: Cannonback six weighted Water tables/84 ordinary linked sites (runtime water_cannonback); Stormcapra three weighted Cloudreach tables/26 linked sites. Tuskroot/Ashtusk/stormursa absent from all audited wild paths. R5 catalogues/species/bear flag unchanged; historical equality failure retained. Earned catch/residency/travel witness OPEN.
 F29#3: excluded; no mesh work or bear flag change.
 
 All acceptance criteria remain OPEN. Coordinator lands; no PR created.

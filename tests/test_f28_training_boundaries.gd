@@ -21,6 +21,90 @@ class MenuOwner extends Node:
 class GameOwner extends Node:
 	var party: RefCounted
 
+class DuelGame extends Node:
+	var local: RefCounted
+
+class DuelDirector extends Node:
+	signal deployment_ready
+	var party: RefCounted
+	var selected: RefCounted
+	var _shared_active_id := ""
+	var _manager: Node
+	var busy := false
+	var summons := 0
+	var on_summon: Callable
+	var hold_summon := false
+	var accepted_offers := 0
+	var body := Node3D.new()
+	var ready_for_duel := true
+	func _init() -> void: add_child(body)
+	func trainer_battle_active() -> bool: return busy
+	func ally_instance() -> RefCounted: return selected
+	func ally_body() -> Node3D: return body
+	func ally_deployment_ready() -> bool: return ready_for_duel and body.visible
+	func dismiss_active_creature() -> bool:
+		selected = null
+		return true
+	func accept_guest_master_offer(_site: Node3D, _intent: Dictionary, _result: Dictionary) -> bool:
+		accepted_offers += 1
+		return true
+	func summon_active_creature() -> bool:
+		summons += 1
+		selected = party.active()
+		if on_summon.is_valid(): on_summon.call()
+		if hold_summon: await deployment_ready
+		return true
+
+class DuelProducer extends Node:
+	var game: Node
+	var director: Node
+	var epoch := "current"
+	var submissions := 0
+	func submit(_op: String, _intent: Dictionary, _source: Node) -> Dictionary:
+		submissions += 1
+		return {}
+	func view() -> Dictionary: return game.local.save_data()
+	func _game() -> Node: return game
+	func _foundation_master_director(_site: Node3D) -> Node: return director
+	func personal_tm_scope() -> Dictionary:
+		return {"character_id": "owner", "world_namespace": "world", "session_epoch": epoch}
+
+class StormwoodDuelDirector extends "res://scripts/combat/stormwood_encounter_director.gd":
+	var allowed := true
+	var sent := 0
+	func can_challenge(_spec: Dictionary) -> bool: return allowed
+	func _send_out_next_creature() -> bool:
+		sent += 1
+		return true
+
+class ChapterHub extends Node:
+	var requested := ""
+	func request_start(id: String) -> void: requested = id
+
+class CloudMasterAdmission extends "res://scripts/combat/cloudreach_encounter_director.gd":
+	func _progression() -> RefCounted: return null
+	func _party() -> RefCounted: return null
+
+class WaterMasterAdmission extends "res://scripts/combat/water_encounter_director.gd":
+	func _progression() -> RefCounted: return null
+	func _party() -> RefCounted: return null
+
+class AdmissionManager extends Node:
+	var fighting := false
+	func is_fighting() -> bool: return fighting
+
+class DivingRider extends Node:
+	var diving := false
+
+class DetachedDuelChooser extends "res://scripts/masters/breakthrough_panel.gd":
+	# This unit exercises chooser state and async cancellation, not layout or
+	# controller focus. The existing runner has no SceneTree in _init. Use the
+	# exact cancellation state method invoked by real open/close, without their
+	# input-owner/tree calls. Native presentation remains a separate gate.
+	func close() -> void:
+		_cancel_duel_preparation()
+		hide()
+
 func _player(level: int) -> RefCounted:
 	var player := preload("res://autoload/player_state.gd").new()
 	player.configure(preload("res://autoload/item_db.gd").new())
@@ -171,12 +255,173 @@ func test_guest_master_refusal_releases_only_the_matching_attempt() -> void:
 	service.free()
 	panel.free()
 
+func test_master_selection_deploys_the_chosen_owned_companion_and_fences_context() -> void:
+	var player := _player(9)
+	var chosen: RefCounted = SPECIES.spawn("ripplet")
+	player.party.add(chosen)
+	var game := DuelGame.new()
+	game.local = player
+	var director := DuelDirector.new()
+	director.party = player.party
+	director.selected = player.party.active()
+	var producer := DuelProducer.new()
+	producer.game = game
+	producer.director = director
+	var service := SERVICE.new()
+	service.set("_submit", producer.submit)
+	var site := Node3D.new()
+	assert_eq((await service.prepare_duel("foreign", site)).get("code"), "conscious_owned_creature_required")
+	chosen.fainted = true
+	assert_eq((await service.prepare_duel(chosen.uid, site)).get("code"), "conscious_owned_creature_required")
+	chosen.fainted = false
+	director.busy = true
+	assert_eq((await service.prepare_duel(chosen.uid, site)).get("code"), "combat_active")
+	assert_eq(director.summons, 0, "foreign/fainted/busy selection never deploys")
+	director.busy = false
+	assert_true((await service.prepare_duel(chosen.uid, site)).get("ok", false))
+	assert_eq(player.party.active(), chosen)
+	assert_eq(director.selected, chosen)
+	assert_eq(director.summons, 1)
+	assert_true((await service.prepare_duel(chosen.uid, site)).get("ok", false))
+	assert_eq(director.summons, 1, "already deployed selection stays on the field")
+	director.body.visible = false
+	assert_eq((await service.prepare_duel(chosen.uid, site)).get("code"), "deployment_pending", "an existing summon has not taken the field until its body is shown")
+	assert_eq(director.summons, 1, "a pending existing body is never recalled and replaced")
+	director.body.visible = true
+	director.ready_for_duel = false
+	assert_eq((await service.prepare_duel(chosen.uid, site)).get("code"), "deployment_pending", "visibility cannot substitute for completed ground placement/publication")
+	assert_eq(director.summons, 1, "visible but unfinished body is never replaced")
+	director.ready_for_duel = true
+	director.selected = null
+	director.on_summon = func() -> void: producer.epoch = "rejoined"
+	assert_eq((await service.prepare_duel(chosen.uid, site)).get("code"), "character_context_changed", "rejoin during deployment cannot submit a challenge")
+	service.free()
+	producer.free()
+	director.free()
+	game.free()
+	site.free()
+
+func test_stormwood_master_uses_the_real_inherited_duel_instead_of_chapter_catalogue() -> void:
+	var world := Node3D.new()
+	var hub := ChapterHub.new()
+	hub.name = "StormwoodEncounterHub"
+	world.add_child(hub)
+	var director := StormwoodDuelDirector.new()
+	world.add_child(director)
+	var master: Dictionary = preload("res://scripts/creatures/breakthrough.gd").master("master_t5")
+	var spec := {"id": master.id, "name": master.name, "master": true,
+		"team": [{"species": master.species_id, "level": master.cap_level, "combat": master.combat.duplicate(true)}]}
+	var trainer := Node3D.new()
+	world.add_child(trainer)
+	assert_true(director.begin_trainer_battle(spec, trainer))
+	assert_eq(director.sent, 1)
+	assert_eq(director.get("_trainer_node"), trainer)
+	assert_eq(director.get("_trainer_queue").size(), 1, "canonical Master builds exactly one opponent")
+	assert_eq(hub.requested, "", "Master is never sent to the incompatible chapter catalogue")
+	director.allowed = false
+	assert_false(director.begin_trainer_battle(spec, trainer), "inherited admission still refuses unavailable challengers")
+	assert_eq(director.sent, 1)
+	director.allowed = true
+	assert_true(director.begin_trainer_battle({"id": "ordinary_chapter_trainer"}, trainer))
+	assert_eq(hub.requested, "ordinary_chapter_trainer", "chapter fights still use their original hub")
+	world.free()
+
+func test_master_deployment_cannot_overlap_after_cancel_and_reopen() -> void:
+	var player := _player(9)
+	var first: RefCounted = player.party.active()
+	var second: RefCounted = SPECIES.spawn("ripplet")
+	player.party.add(second)
+	var game := DuelGame.new()
+	game.local = player
+	var director := DuelDirector.new()
+	director.party = player.party
+	director.hold_summon = true
+	var producer := DuelProducer.new()
+	producer.game = game
+	producer.director = director
+	var service := SERVICE.new()
+	service.set("_submit", producer.submit)
+	service.set("_view", producer.view)
+	var panel := DetachedDuelChooser.new()
+	var message := Label.new()
+	panel.add_child(message)
+	panel.set("_message", message)
+	service.set("_panel", panel)
+	var site := Node3D.new()
+	panel.set("_service", service)
+	panel.set("_source", site)
+	panel.set("_mode", "duel")
+	panel.set("_master", "master_t1")
+	panel.show()
+	panel.call("_duel", first.uid) # Suspends on the real await boundary.
+	assert_eq(director.summons, 1)
+	assert_true(service.get("_duel_preparing"))
+	panel.close()
+	panel.call("_cancel_duel_preparation") # Real open invalidates old preparation too.
+	panel.show()
+	panel.call("_duel", second.uid)
+	assert_eq(director.summons, 1, "second chooser cannot free the pending body")
+	assert_eq(player.party.active(), first, "overlap refuses before changing party selection")
+	assert_true(message.text.contains("still taking the field"))
+	director.hold_summon = false
+	director.deployment_ready.emit()
+	assert_false(service.get("_duel_preparing"))
+	assert_eq(producer.submissions, 0, "cancelled first chooser cannot submit after summon completes")
+	assert_false(service.accept_duel_offer({"master_id": "master_t1", "creature_uid": first.uid}, {}), "delayed offer cannot enter the reopened menu without a pending intent")
+	assert_eq(director.accepted_offers, 0)
+	panel.call("_duel", second.uid)
+	assert_eq(director.summons, 2)
+	assert_eq(director.selected, second)
+	assert_eq(producer.submissions, 1, "reopened chooser can retry after the old summon ends")
+	assert_true(service.accept_duel_offer({"master_id": "master_t1", "creature_uid": second.uid}, {}), "exact current pending offer can enter the duel")
+	assert_eq(director.accepted_offers, 1)
+	service.set("_panel", null)
+	panel.free()
+	service.free()
+	producer.free()
+	director.free()
+	game.free()
+	site.free()
+
+func test_tidewake_and_cloudreach_master_admission_keeps_combat_and_diving_fences() -> void:
+	for director: Node in [CloudMasterAdmission.new(), WaterMasterAdmission.new()]:
+		var world := Node3D.new()
+		world.add_child(director)
+		var manager := AdmissionManager.new()
+		world.add_child(manager)
+		director.set("_manager", manager)
+		director.set("_ally", SPECIES.spawn("terrapup"))
+		var body := Node3D.new()
+		world.add_child(body)
+		director.set("_ally_body", body)
+		var master: Dictionary = preload("res://scripts/creatures/breakthrough.gd").master("master_t3")
+		var spec := {"id": master.id, "name": master.name, "master": true,
+			"team": [{"species": master.species_id, "level": master.cap_level, "combat": master.combat.duplicate(true)}]}
+		assert_true(director.get("trainer_specs").is_empty())
+		assert_true(director.call("can_challenge", spec), "canonical Master is independent of chapter trainer catalogue")
+		var ordinary := spec.duplicate(true)
+		ordinary.erase("master")
+		assert_false(director.call("can_challenge", ordinary), "unknown ordinary trainer still refuses")
+		manager.fighting = true
+		assert_false(director.call("can_challenge", spec), "common in-combat refusal still applies")
+		manager.fighting = false
+		if director is WaterMasterAdmission:
+			var riding := DivingRider.new()
+			riding.name = "RidingController"
+			world.add_child(riding)
+			riding.diving = true
+			assert_false(director.call("can_challenge", spec), "Tidewake submerged refusal still applies")
+		world.free()
+
 func test_shipping_evolution_uses_feast_and_catalyst_text_names_actual_gate() -> void:
 	assert_eq(P.config().get("evolution_mode"), "breakthrough")
 	var creature: RefCounted = SPECIES.spawn("mudsnout")
 	creature.set_level(20, P.config())
 	assert_true(EVOLUTION.requirements("mudsnout", P.config()).is_empty(), "held-stone shortcut is disabled")
 	assert_false(EVOLUTION.check(creature, P.config(), null).get("eligible", false))
+	var guidance: String = EVOLUTION.check(creature, P.config(), null).get("reason", "")
+	assert_true(guidance.contains("Kitchen") and guidance.contains("Lv 20"), guidance)
+	assert_true(guidance.contains("evolve or stay"), "Team action describes the actual permanent feast choice")
 	for item: String in ["heartstone", "sunstone"]:
 		var text := FEED.catalyst_pickup_text(item)
 		assert_true(text.contains("Lv 20") and text.contains("Kitchen") and text.contains("choose"), text)

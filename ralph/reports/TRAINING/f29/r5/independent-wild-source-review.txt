@@ -1,0 +1,10 @@
+Independent read-only review by /root/f28_review: current F29#4 SOURCE RELATION PASS.
+Base 8e7c11ceb5854f063c5241d62618c382803562c9. R5 introduces no wild catalogue, species, evolution-line or bear-flag change.
+
+Cannonback remains in six consumed Water tables: first_shore_land weights5/4, first_shore_shallows3/2, reedhaven_shallows2/1, shellwatch_shallows2/1, tidal_cradle_shallows3/2, salt_crown_shallows2/1 (day/night). Excluding named reservations, linked ordinary positive-count sites total84:25/12/10/9/15/13. Water runtime data maps cannonback to the installed water_cannonback species; actual Water director site_spawn_plans feeds inherited weighted roll_wild then ordinary spawn_wild. Named water_lantern_shell_sentinel also remains catchable Cannonback, trainer_owned false.
+
+Stormcapra remains in Cloudreach high_roost_wild(weight2,19sites,fly_traversal_unlocked), upper_wild(weight3,5sites,cloudreach_upper_route_unlocked), upper_released_wild(weight3,2sites,storm_anchor_upper_east_disabled). Runtime mounts SceneEncounters, resolves authored sites, looks up these catchable tables and draws explicit positive weights before ordinary spawning.
+
+Exact forbidden wild identities tuskroot/ashtusk/stormursa are absent from merged Meadows/all five bands/spawn_tables/Warrens residents, Cloudreach catchable tables+wild/named paths, Water tables/wild/named/scripted paths, Stormwood tables/clusters/named/pockets and alpha_respawns. Trainer/evolution/comment mentions are distinct. Stormwood weighted selectors consume explicit role/named identities, without a dynamic species-pool expansion. staticub_stormursa enabled remains false.
+
+Historical check_source.mjs whole-catalogue equality against b7cb96de89 fails and is preserved. This does not negate current relation invariants. This review performed no engine run and grants no earned catch, residency, travel or full-feature acceptance. Those gates remain OPEN.

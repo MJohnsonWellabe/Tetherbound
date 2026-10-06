@@ -14,6 +14,8 @@ var _craft_id := ""
 var _recipe := ""
 var _pending_action := ""
 var _pending_intent: Dictionary = {}
+var _duel_generation := 0
+var _preparing_duel := false
 
 func _ready() -> void:
 	add_to_group(INPUT.GROUP)
@@ -45,6 +47,7 @@ func is_open() -> bool:
 func open(service: Node, mode: String, source: Node, master_id: String) -> void:
 	if INPUT.current(get_tree()) != null and INPUT.current(get_tree()) != self: return
 	_service = service
+	_cancel_duel_preparation()
 	_source = source
 	_mode = mode
 	_master = master_id
@@ -70,7 +73,7 @@ func _rebuild() -> void:
 		for card: Dictionary in state.get("party", []):
 			var uid := str(card.uid)
 			_button("%s · Lv %d" % [str(card.get("nickname", card.species_id)), int(card.level)],
-				func() -> void: _send("master_duel", {"master_id": _master, "creature_uid": uid}), bool(card.get("fainted", false)))
+				func() -> void: _duel(uid), bool(card.get("fainted", false)) or bool(card.get("resting", false)))
 	elif _mode == "cook":
 		for id: String in BREAKTHROUGH.feasts().get("recipes", {}):
 			var row: Dictionary = BREAKTHROUGH.feasts().recipes[id]
@@ -136,6 +139,23 @@ func _retry_retained_feast(original: Dictionary) -> void:
 func _feed(uid: String, item: String, choice: String) -> void:
 	_send("feast_feed", {"creature_uid": uid, "feast_item": item, "choice": choice})
 
+func _duel(uid: String) -> void:
+	if not visible or _mode != "duel" or _preparing_duel or not _pending_action.is_empty(): return
+	var generation := _duel_generation
+	var service := _service
+	var source := _source
+	var intent := {"master_id": _master, "creature_uid": uid}
+	_preparing_duel = true
+	_message.text = "Calling out your chosen companion…"
+	var result: Dictionary = await service.call("prepare_duel", uid, source)
+	if generation != _duel_generation or not visible or _mode != "duel" \
+			or not is_instance_valid(service) or service != _service or source != _source: return
+	_preparing_duel = false
+	if result.get("ok") != true:
+		_message.text = str(result.get("reason", result.get("code", "Deployment refused.")))
+		return
+	_send("master_duel", intent)
+
 func _send(op: String, intent: Dictionary) -> void:
 	if not _pending_action.is_empty() and (op != _pending_action or intent != _pending_intent):
 		_message.text = "Waiting for your original character transaction to save."
@@ -184,9 +204,14 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		close()
 
-func close() -> void:
+func _cancel_duel_preparation() -> void:
+	_duel_generation += 1
+	_preparing_duel = false
 	if _pending_action == "master_duel":
 		_pending_action = ""
 		_pending_intent = {}
+
+func close() -> void:
+	_cancel_duel_preparation()
 	INPUT.suppress_pause_reopen(get_tree())
 	hide()

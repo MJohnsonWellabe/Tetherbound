@@ -1,0 +1,5 @@
+Existing F32 census receipt reconciliation against baseline 8e7c11ceb:
+32 nodes examined. 31 have exactly matching coordinate numbers, yields, controller approach, accepted disk gather, owner save and ACK. One numeric representation difference is held: essence_meadows_air_01 current X=-4.800000000000001, prior receipt X=-4.8; Z=104.1 is equal. No tolerance was added to the existing checker or smoke.
+F28 ledger now selects each type's early Meadows node for attuned ingredients, avoiding reliance on later chapter/Deepwood-gated stock. Seven of eight early witnesses qualify for exact reuse. All are disclosed local approach fixtures, earned_campaign=false; none establishes a complete campaign, recipe solvency, seed availability or repeated respawn income.
+Unchanged source_risk_check remains unmodified. Its frozen-data input contract is rebound to current-main exact normalized SHA256s, preserving the prior binding in prior_frozen_source. It now passes728 checks. The original two-hash failure is retained.
+Criterion F28#5 remains OPEN for ordinary-route/catalyst proof and the held Air receipt. Product data and proof tools are unchanged.
