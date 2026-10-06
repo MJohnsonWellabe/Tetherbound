@@ -55,11 +55,31 @@ is claimed. Fresh before/after freeing-frame times and the tightened bound
 remain OPEN.
 
 Existing two-peer path: `tests/smoke_net_shared_boss.gd -- --handoff`. It drives
-the production freeing and real save/reload on both peers, but its current
-probes do not expose light/pylon completeness. A bounded request to extend its
-existing read-only probe and assertions is on
+the production freeing and existing in-place save/load on both peers. A bounded
+request to extend its read-only probe with light/pylon completeness assertions
+was posted on
 [PR #525](https://github.com/MJohnsonWellabe/Tetherbound/pull/525#issuecomment-6006429518).
-No network/peer-runner edits have been made pending that answer.
+The coordinator approved that exact extension in
+[comment 6007246010](https://github.com/MJohnsonWellabe/Tetherbound/pull/525#issuecomment-6007246010).
+The existing `veridian_choice` probe in `tools/net/peer_runner.gd` now returns
+only two additional read-only counts: remaining live tether materials from
+the entire current scene (independent of healing groups), and topple counts
+by authored holder/pylon id. It deduplicates material identities and excludes
+queued ancestry. Until healing applies, the remaining-light sentinel is -1.
+The existing `--handoff` smoke asserts zero remaining materials and exactly
+one topple per authored non-null fall-table id, with no unexpected ids, on
+both host and guest live and after their existing save/load steps.
+No new files, modes, gameplay or authority changes; these checks remain
+**UNRUN** and must run alone after R1/R2 heavy jobs clear. Independent review
+of the actual 72-line, two-file extension by `/root/c3_journal_review` returned
+**SOURCE PASS**: fresh whole-scene scanning, queued ancestry, material identity,
+unapplied sentinel and all 29 authored IDs exactly once with no extras checked.
+Pylon counts prove accepted fall starts, not completed landing poses. The host
+loads its saved slot and the guest saves/applies its character in the existing
+scene; these checks prove persistence through that path, not world reconstruction
+or rejoining. The existing solo smoke retains landing-pose checks and an actual
+fresh-world rebuild after save/load. Native parsing, runtime and timings remain
+OPEN; source review does not establish those results.
 
 Independent review of the actual candidate: **SOURCE PASS**, by
 `/root/c3_journal_review`, reviewing the 11-file product/test diff now committed
@@ -86,7 +106,7 @@ parser issue found; native compilation and lifecycle reproduction remain OPEN.
 
 ## Native execution held
 
-At this checkpoint Valheim PID 2496, R1 full unit engine PID 13936 and R2 full
+At this checkpoint Valheim PID 2496, R1 full unit ON engine PID 16844 and R2 full
 baseline engine PID 8624 were already running. No P1 engine, import, export,
 render or heavy CPU measurement was launched. The owner-chat GPU reservation
 remains active until at least 2026-10-06T02:00:00Z and Valheim absence is verified.
