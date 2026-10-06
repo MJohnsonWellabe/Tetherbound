@@ -3309,6 +3309,7 @@ func commit_regional_ending_ack(intent: Dictionary) -> Dictionary:
 
 func _queue_regional_ack(intent: Dictionary) -> Dictionary:
 	_regional_ack_intents[intent.transaction_id] = intent.duplicate(true)
+	_regional_ack_settled.erase(intent.transaction_id) # A new attempt never reads an older settlement.
 	if not bool(session.call("is_host")):
 		# A guest's personal view is the host's async reply; its cache may be
 		# empty or predate the arrival that bumped the revision. Send against

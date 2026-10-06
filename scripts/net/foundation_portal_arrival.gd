@@ -424,7 +424,8 @@ func _capsule_support_failure(world_node: Node3D, actor: CharacterBody3D, target
 ## Every other trainer body (remote proxies and this world's local rig).
 func _other_trainer_rids(world_node: Node3D, actor: CharacterBody3D) -> Array[RID]:
 	var rids: Array[RID] = []
-	var bodies: Array[Node] = actor.get_tree().get_nodes_in_group(&"remote_trainer") if actor.is_inside_tree() else []
+	var bodies: Array[Node] = []
+	if actor.is_inside_tree(): bodies = actor.get_tree().get_nodes_in_group(&"remote_trainer")
 	var local := world_node.get_node_or_null(^"Player")
 	if local != null: bodies.append(local)
 	for body: Node in bodies:
@@ -584,7 +585,7 @@ func _landing_hit(world_node: Node3D, actor: CharacterBody3D, at: Vector3, radiu
 	var terrain := _ground_height(world_node, at)
 	if not is_finite(terrain) or actor == null or not actor.is_inside_tree() or radius <= 0.0: return {}
 	var ray := PhysicsRayQueryParameters3D.create(
-		Vector3(at.x, terrain + radius, at.z), Vector3(at.x, terrain - radius, at.z), actor.collision_mask, [actor.get_rid()])
+		Vector3(at.x, terrain + radius, at.z), Vector3(at.x, terrain - radius, at.z), actor.collision_mask, [actor.get_rid()] + _other_trainer_rids(world_node, actor))
 	var hit := actor.get_world_3d().direct_space_state.intersect_ray(ray)
 	if hit.is_empty() or not hit.get("position") is Vector3 or not hit.get("normal") is Vector3 \
 		or not hit.position.is_finite() or not hit.normal.is_finite() \
