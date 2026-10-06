@@ -50,10 +50,18 @@ void fragment() {
             float center = UV.x - 0.5 + sin(UV.y * 12.0 - clock * 0.85) * 0.06;
             float width = mix(0.12, 0.39, UV.y);
             float feather = (1.0 - smoothstep(width * 0.38, width, abs(center))) * smoothstep(0.0, 0.18, UV.y);
-            float wisp = feather * dissolve;
-            alpha = mix(alpha, clamp(alpha * 0.5 + wisp * 0.55, 0.0, 1.0), clamp(breakup_strength, 0.0, 1.0));
-            vec3 heat = mix(flame_colour.rgb, hot_colour.rgb, smoothstep(0.46, 0.83, curls) * smoothstep(0.12, 0.9, UV.y));
-            ALBEDO = mix(heat, ALBEDO, painted.a * 0.55);
+            // The wake uses one flowing heat field across the continuous
+            // ribbon. Repeating the painted upright flame along that path
+            // gave it a smooth folded-cloth pattern between the curls.
+            float detail = flame_noise(flow * 3.91 - 4.7);
+            float density = smoothstep(0.19, 0.73, curls * 0.78 + detail * 0.22);
+            float wisp = feather * density;
+            alpha = mix(alpha, wisp, clamp(breakup_strength * 2.0, 0.0, 1.0));
+            float radial_heat = 1.0 - smoothstep(0.0, width, abs(center));
+            float heat = smoothstep(0.38, 0.86, curls * 0.58 + radial_heat * 0.42)
+                * smoothstep(0.08, 0.85, UV.y);
+            vec3 burning = mix(flame_colour.rgb * mix(0.68, 1.1, density), hot_colour.rgb, heat);
+            ALBEDO = mix(ALBEDO, burning, clamp(breakup_strength * 2.0, 0.0, 1.0));
         }
     }
     EMISSION = (breakup_strength > 0.0 ? ALBEDO : painted.rgb) * emission_strength;
