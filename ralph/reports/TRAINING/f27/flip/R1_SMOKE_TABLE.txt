@@ -21,7 +21,7 @@ hearts | FIRST PASS50/exit0; independently reviewed qualified functional pair; r
 host_exit_saves | FIRST PASS26/exit0; independent qualified functional pair review PASS; actual worldlateflag-nonzerobuilding/gracefulleave/no exclusive creation claim | FIRST PASS26/exit0; same26checks/original180hello-custom480phase-heartbeat240/all22native-save copies exact; guesttitle-emptyworldstore; no rewardsettlement/diskreload/characterauthority proof
 realm_owner_disconnect_mid_fight | PASS 25 checks/exit0; controlled-drop diagnostic retained | PASS 25 checks/exit0; no error markers
 riding | PASS retry 43 assertions/0 failures/exit0; FIRST startup FAIL retained | PASS 43 assertions/0 failures/exit0
-shared_boss | DEFAULT FIRST qualified PASS197/exit0/raw11; existingfixture scoped sharedauthority/worldflags/inprocessreload | DEFAULT FIRST FAIL4assertions/exit2: missingfriendlyrefusal-cleanwindow after12staging attempts then original300TOTALdeadline; raw10 preserved/independent preservation-diagnosis review complete/cause unresolved; unchangedretryqueued/pairOPEN
+shared_boss | DEFAULT FIRST qualified PASS197/exit0/raw11; existingfixture scoped sharedauthority/worldflags/inprocessreload | DEFAULT FIRST FAIL4assertions/exit2: missingfriendlyrefusal-cleanwindow after12staging attempts then original300TOTALdeadline; raw10 preserved/independent preservation-diagnosis review complete/cause unresolved; unchangedretry FAIL1distinct/exit2 originalTOTALdeadline afterfriendlyPASSattempt11; raw10 retained/independentretry review complete/friendlyPASS-only; pairOPEN
 shared_wild_fight | OPEN | OPEN
 split_realms | OPEN | OPEN
 stormwood_finalized_death | OPEN | OPEN
@@ -30,7 +30,7 @@ stormwood_livewire | OPEN | OPEN
 veridian_choices | OPEN | OPEN
 veridian_relic_key | OPEN | OPEN
 
-shared_boss --tournament | repaired ON final proof retry ACTIVE r1-tournament-on-round-fix-final-20261006T1118Z/original180hello300TOTALphase; priorONquarterPASS-semiFAIL/fixedONstartupFAIL preserved | original OFF FAILexit2 budget retained; repaired OFF queued/OPEN
+shared_boss --tournament | repaired ON final-proof retry FAIL4distinct/exit2: quarter fullrewards-journalPASS; semifinalguestjoin+bothHP-hitFAIL thenoriginal300TOTALbudget; raw10 preserved/causeunderreview/priorfailuresretained | original OFF FAILexit2 budget retained; repaired OFF FIRST FAIL2distinct/exit2: quarterfullrewards-journalPASS/semiguestjoin-hitPASS/hostacceptedgeometrymissFAIL thenoriginal300TOTAL; raw10 preserved/reviewpending; bothgatesOPEN
 F27 wild_defeat_essence | ON FIRST PASS exit0; +1Groundessence/+21reducedXP/exactone receipt+battle; noERROR/SCRIPT/Parse, legacywarningsretained; independent review PASS; inherited starter/relocation setup disclosed, no survival aid
 F27 essence_node | ON FIRST PASS exit0/report20checks; +3Groundessence/+1AttunedGround on owner disk, accepted row+exactreceipt; independent review PASS; raw before/after saves retained; inherited starter/freeplay/6msetup, solo only; warnings retained
 F27 net essence_no_dup | UNSELECTED F27 criterion4; not required for this R1 criteria1/2 or flip inventory

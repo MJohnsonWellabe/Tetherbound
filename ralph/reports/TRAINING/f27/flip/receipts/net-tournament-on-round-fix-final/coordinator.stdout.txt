@@ -1,0 +1,38 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=20660 control_port=54920 home=D:\tetherbound\.artifacts\r1-f27-flip\net-tournament-on-round-fix-final/home-0 log=D:\tetherbound\.artifacts\r1-f27-flip\net-tournament-on-round-fix-final/peer-0.log
+coordinator: launched peer 1 (client) pid=3612 control_port=54921 home=D:\tetherbound\.artifacts\r1-f27-flip\net-tournament-on-round-fix-final/home-1 log=D:\tetherbound\.artifacts\r1-f27-flip\net-tournament-on-round-fix-final/peer-1.log
+coordinator: peer 0 hello: {"enet_port":29781.0,"godot_version":"4.7-stable (official)","main_sha":"b0b104b3b730","peer":0.0,"pid":20660.0,"role":"host","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-tournament-on-round-fix-final/home-0/Godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":29782.0,"godot_version":"4.7-stable (official)","main_sha":"b0b104b3b730","peer":1.0,"pid":3612.0,"role":"client","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-tournament-on-round-fix-final/home-1/Godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: tournament host opened a world
+PASS: peer 1 prepared five ordinary creatures and registered three
+PASS: second peer joined the tournament world
+PASS: peer 0 prepared five ordinary creatures and registered three
+PASS: peer 0's production readiness and three selected IDs are visible
+PASS: peer 0 deployed its selected lead
+PASS: peer 1's production readiness and three selected IDs are visible
+PASS: peer 1 deployed its selected lead
+PASS: opened authored tournament round 'tournament_quarter_mira'
+PASS: 'tournament_quarter_mira' minted one shared encounter record
+PASS: peer 1 joined 'tournament_quarter_mira' rather than opening another fight (joined 1:1 beside 'bramblebun' at (-1.4, 6.7))
+PASS: peer 0 reduced 'tournament_quarter_mira' shared opponent HP
+PASS: peer 1 reduced 'tournament_quarter_mira' shared opponent HP
+PASS: both peers completed 'tournament_quarter_mira' (battle won in 1136 frames / 3 swings against 2 of their creatures)
+PASS: peer 0 received 'tournament_quarter_won'
+PASS: peer 0 received 'tournament_quarter_mira' authored reward in full
+PASS: peer 1 received 'tournament_quarter_won'
+PASS: peer 1 received 'tournament_quarter_mira' authored reward in full
+PASS: 'tournament_quarter_mira' reward proof names both stable participant character IDs (["character-0c359b26ad95939b916fdc333ea4640f", "character-fdad83018ba3aad041f50e015bf9bee8"])
+PASS: 'tournament_quarter_mira' reward journal has one replicated durable world namespace
+PASS: 'tournament_quarter_mira' reward journal is identical on host and guest
+PASS: 'trainer:tournament_quarter_mira:coins' has accepted durable receipts for both stable participants (["character-0c359b26ad95939b916fdc333ea4640f", "character-fdad83018ba3aad041f50e015bf9bee8"])
+PASS: 'trainer:tournament_quarter_mira:item:potion_small' has accepted durable receipts for both stable participants (["character-0c359b26ad95939b916fdc333ea4640f", "character-fdad83018ba3aad041f50e015bf9bee8"])
+PASS: opened authored tournament round 'tournament_semi_tam'
+PASS: 'tournament_semi_tam' minted one shared encounter record
+FAIL: peer 1 joined 'tournament_semi_tam' rather than opening another fight (the join did not put this peer in a fight)
+FAIL: peer 0 reduced 'tournament_semi_tam' shared opponent HP -- attempt 6: host hp 115.440 -> 115.440 at (-4.12, 1.85, 14.03); stand_in=(host) place=creature stands at (-1.20, 0.81, 12.99) strike=PASS submitted quick strike (local verdict ok=true pending=false code=); host receipt: ok=true code= origin=[-1.20051610469818, 2.73255968093872, 12.9931449890137] reach=-1.00 arc=-1.0deg [opponent d=5.87 connects=false, creature d=9.38 connects=false, trainer d=3.92 connects=false]
+FAIL: peer 1 reduced 'tournament_semi_tam' shared opponent HP -- attempt 6: host hp 115.440 -> 115.440 at (-6.35, 1.85, 12.98); stand_in=this peer has no opponent body to move place=creature stands at (-4.59, 0.90, 11.81) strike=FAIL this peer is not in a networked fight; no host receipt for peer 77780391; guest refusal={ "code": "unknown_encounter", "kind": "disengage", "reason": "That fight is over." }
+coordinator: ERROR: smoke budget exceeded
+FAIL: both peers completed 'tournament_semi_tam' (ERROR: smoke budget exceeded)
+FAIL: ERROR: smoke budget exceeded

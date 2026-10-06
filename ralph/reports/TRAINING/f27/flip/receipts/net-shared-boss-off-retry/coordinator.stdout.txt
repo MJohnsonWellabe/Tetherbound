@@ -1,0 +1,214 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=8508 control_port=63941 home=D:\tetherbound\.artifacts\r1-f27-flip\net-shared-boss-off-retry/home-0 log=D:\tetherbound\.artifacts\r1-f27-flip\net-shared-boss-off-retry/peer-0.log
+coordinator: launched peer 1 (client) pid=21472 control_port=63942 home=D:\tetherbound\.artifacts\r1-f27-flip\net-shared-boss-off-retry/home-1 log=D:\tetherbound\.artifacts\r1-f27-flip\net-shared-boss-off-retry/peer-1.log
+coordinator: peer 1 hello: {"enet_port":33922.0,"godot_version":"4.7-stable (official)","main_sha":"49faae8ba272","peer":1.0,"pid":21472.0,"role":"client","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-shared-boss-off-retry/home-1/Godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":33921.0,"godot_version":"4.7-stable (official)","main_sha":"49faae8ba272","peer":0.0,"pid":8508.0,"role":"host","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-shared-boss-off-retry/home-0/Godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: original starter fixture: peer 0 starts standalone with no existing party or body
+PASS: original starter fixture: peer 1 starts standalone with no existing party or body
+PASS: original starter fixture: peer 0 has the production bed_prompt marker
+PASS: original starter fixture: peer 1 has the production bed_prompt marker
+PASS: original starter fixture: peer 0 move_to (arrived within 1.50 m of (-1.4, 12.9))
+PASS: original starter fixture: peer 1 move_to (arrived within 1.50 m of (-1.4, 12.9))
+PASS: original starter fixture: both peers completed move_to
+PASS: original starter fixture: peer 0 press (pressed 'interact' x1)
+PASS: original starter fixture: peer 1 press (pressed 'interact' x1)
+PASS: original starter fixture: both peers completed press
+PASS: original starter fixture: peer 0 has the production stairs_top marker
+PASS: original starter fixture: peer 1 has the production stairs_top marker
+PASS: original starter fixture: peer 0 move_to (arrived within 0.80 m of (1.2, 11.9))
+PASS: original starter fixture: peer 1 move_to (arrived within 0.80 m of (1.2, 11.9))
+PASS: original starter fixture: both peers completed move_to
+PASS: original starter fixture: peer 0 has the production stairs_bottom marker
+PASS: original starter fixture: peer 1 has the production stairs_bottom marker
+PASS: original starter fixture: peer 0 move_to (arrived within 0.80 m of (6.0, 11.9))
+PASS: original starter fixture: peer 1 move_to (arrived within 0.80 m of (6.0, 11.9))
+PASS: original starter fixture: both peers completed move_to
+PASS: original starter fixture: peer 0 has the production grandpa_prompt marker
+PASS: original starter fixture: peer 1 has the production grandpa_prompt marker
+PASS: original starter fixture: peer 0 move_to (arrived within 0.90 m of (-0.4, 15.2))
+PASS: original starter fixture: peer 1 move_to (arrived within 0.90 m of (-0.4, 15.2))
+PASS: original starter fixture: both peers completed move_to
+PASS: original starter fixture: peer 0 opened the real briefing
+PASS: original starter fixture: peer 1 opened the real briefing
+PASS: original starter fixture: both real dialogue panels opened
+PASS: original starter fixture: peer 1 dismiss_dialogue (SETUP: closed the opening dialogue in 6 presses; locomotion now false)
+PASS: original starter fixture: peer 0 dismiss_dialogue (SETUP: closed the opening dialogue in 6 presses; locomotion now false)
+PASS: original starter fixture: both peers completed dismiss_dialogue
+PASS: original starter fixture: both real starter_picker panels opened
+PASS: original starter fixture: peer 1 press (pressed 'menu_confirm' x1)
+PASS: original starter fixture: peer 0 press (pressed 'menu_confirm' x1)
+PASS: original starter fixture: both peers completed press
+PASS: original starter fixture: both real name_prompt panels opened
+PASS: original starter fixture: peer 0 wait (waited 12 physics frames)
+PASS: original starter fixture: peer 1 wait (waited 12 physics frames)
+PASS: original starter fixture: both peers completed wait
+PASS: original starter fixture: guest selected its own first letter
+PASS: original starter fixture: peer 0 wait (waited 12 physics frames)
+PASS: original starter fixture: peer 1 wait (waited 12 physics frames)
+PASS: original starter fixture: both peers completed wait
+PASS: original starter fixture: peer 0 press (pressed 'menu_confirm' x1)
+PASS: original starter fixture: peer 1 press (pressed 'menu_confirm' x1)
+PASS: original starter fixture: both peers completed press
+PASS: original starter fixture: each peer typed its own nonempty companion name
+PASS: original starter fixture: peer 0 moved its real naming cursor
+PASS: original starter fixture: peer 1 moved its real naming cursor
+PASS: original starter fixture: peer 0 wait (waited 12 physics frames)
+PASS: original starter fixture: peer 1 wait (waited 12 physics frames)
+PASS: original starter fixture: both peers completed wait
+PASS: original starter fixture: peer 0 moved its real naming cursor
+PASS: original starter fixture: peer 1 moved its real naming cursor
+PASS: original starter fixture: peer 0 wait (waited 12 physics frames)
+PASS: original starter fixture: peer 1 wait (waited 12 physics frames)
+PASS: original starter fixture: both peers completed wait
+PASS: original starter fixture: peer 0 moved its real naming cursor
+PASS: original starter fixture: peer 1 moved its real naming cursor
+PASS: original starter fixture: peer 0 wait (waited 12 physics frames)
+PASS: original starter fixture: peer 1 wait (waited 12 physics frames)
+PASS: original starter fixture: both peers completed wait
+PASS: original starter fixture: peer 0 moved its real naming cursor
+PASS: original starter fixture: peer 1 moved its real naming cursor
+PASS: original starter fixture: peer 0 wait (waited 12 physics frames)
+PASS: original starter fixture: peer 1 wait (waited 12 physics frames)
+PASS: original starter fixture: both peers completed wait
+PASS: original starter fixture: peer 0 moved its real naming cursor
+PASS: original starter fixture: peer 1 moved its real naming cursor
+PASS: original starter fixture: peer 0 wait (waited 12 physics frames)
+PASS: original starter fixture: peer 1 wait (waited 12 physics frames)
+PASS: original starter fixture: both peers completed wait
+PASS: original starter fixture: peer 0 moved its real naming cursor
+PASS: original starter fixture: peer 1 moved its real naming cursor
+PASS: original starter fixture: peer 0 wait (waited 12 physics frames)
+PASS: original starter fixture: peer 1 wait (waited 12 physics frames)
+PASS: original starter fixture: both peers completed wait
+PASS: original starter fixture: peer 0 moved its real naming cursor
+PASS: original starter fixture: peer 1 moved its real naming cursor
+PASS: original starter fixture: peer 0 wait (waited 12 physics frames)
+PASS: original starter fixture: peer 1 wait (waited 12 physics frames)
+PASS: original starter fixture: both peers completed wait
+PASS: original starter fixture: peer 0 moved its real naming cursor
+PASS: original starter fixture: peer 1 moved its real naming cursor
+PASS: original starter fixture: peer 1 wait (waited 12 physics frames)
+PASS: original starter fixture: peer 0 wait (waited 12 physics frames)
+PASS: original starter fixture: both peers completed wait
+PASS: original starter fixture: peer 0 moved its real naming cursor
+PASS: original starter fixture: peer 1 moved its real naming cursor
+PASS: original starter fixture: peer 0 wait (waited 12 physics frames)
+PASS: original starter fixture: peer 1 wait (waited 12 physics frames)
+PASS: original starter fixture: both peers completed wait
+PASS: original starter fixture: peer 0 moved its real naming cursor
+PASS: original starter fixture: peer 1 moved its real naming cursor
+PASS: original starter fixture: peer 0 wait (waited 12 physics frames)
+PASS: original starter fixture: peer 1 wait (waited 12 physics frames)
+PASS: original starter fixture: both peers completed wait
+PASS: original starter fixture: peer 0 moved its real naming cursor
+PASS: original starter fixture: peer 1 wait (waited 12 physics frames)
+PASS: original starter fixture: peer 0 wait (waited 12 physics frames)
+PASS: original starter fixture: both peers completed wait
+PASS: original starter fixture: both naming cursors reached Done within 20 attempts
+PASS: original starter fixture: peer 0 press (pressed 'menu_confirm' x1)
+PASS: original starter fixture: peer 1 press (pressed 'menu_confirm' x1)
+PASS: original starter fixture: both peers completed press
+PASS: original starter fixture: both production original starters own their exact deployed UID before admission
+PASS: coordinator tracked 2 peers
+PASS: peer 0 input_context is 'world' (got 'world')
+PASS: peer 1 input_context is 'world' (got 'world')
+PASS: a Session exists to host/join (lane 2.A)
+PASS: peer 0 hosted a world (hosting udp/33921 as peer 1)
+PASS: peer 1 joined peer 0's world on port 33921 (joined 127.0.0.1:33921 as peer 974053818 after 49 frames; snapshot applied; 2 peer(s) in registry)
+PASS: peer 0's registry holds both players (registry reports 2 peer(s) after 0 frames (0.0 s))
+PASS: peer 1's registry holds both players (registry reports 2 peer(s) after 0 frames (0.0 s))
+PASS: peer 0 deployed its own creature (a creature was already out)
+PASS: peer 1 deployed its own creature (a creature was already out)
+PASS: original starter fixture: two actual pre-admission ownership rows were retained
+PASS: original starter fixture: peer 0 retained that SAME UID in actual party/body and host-admitted roster
+PASS: original starter fixture: peer 1 retained that SAME UID in actual party/body and host-admitted roster
+PASS: data/config/multiplayer.json configures a scaling row for 2 participants ({ "stat_multiplier": 1.1, "attack_cooldown_multiplier": 0.85 })
+PASS: and that row's stat_multiplier is above 1.0 (1.1000) -- otherwise every comparison below is authored-against-itself and proves nothing
+PASS: the two-player scaling row names only ["stat_multiplier", "attack_cooldown_multiplier"] -- §10 forbids HP x players, so a new key here is a finding whether or not anything reads it yet (stray: [])
+PASS: peer 0 reads 'warden_aldis' as a BOSS -- rank 'warden' is in trainers.json's boss_ranks
+PASS: peer 0 sees his authored team of 5 (got 5)
+PASS: peer 0 sees his defeat flag 'defeated_warden' (got 'defeated_warden')
+PASS: peer 0 sees the climax's own two reward flags ["realm_key_cloudreach", "realm_heart_meadows_earned"] (got ["realm_key_cloudreach", "realm_heart_meadows_earned"])
+PASS: peer 1 reads 'warden_aldis' as a BOSS -- rank 'warden' is in trainers.json's boss_ranks
+PASS: peer 1 sees his authored team of 5 (got 5)
+PASS: peer 1 sees his defeat flag 'defeated_warden' (got 'defeated_warden')
+PASS: peer 1 sees the climax's own two reward flags ["realm_key_cloudreach", "realm_heart_meadows_earned"] (got ["realm_key_cloudreach", "realm_heart_meadows_earned"])
+PASS: peer 0's world does not say the Warden has fallen yet
+PASS: peer 1's world does not say the Warden has fallen yet
+PASS: peer 0 challenged the Warden through begin_trainer_battle() (challenged warden_aldis; bound to encounter '1:1' (4 creatures to come))
+PASS: the host minted an encounter record for the boss fight
+PASS: and it is stamped kind 'boss', not 'trainer' (got 'boss')
+PASS: with an explicit realm (D97), got 'meadows'
+PASS: the running battle is the Warden's (got 'warden_aldis')
+PASS: the record says where the boss is standing
+PASS: peer 1 travelled to the boss fight (trainer stands at (7.86, 7.97, 7658.43))
+PASS: peer 1 joined the boss fight already in progress (joined 1:1 beside 'burrowback' at (4.6, 7654.8))
+PASS: the host's ONE record holds 2 participants (got 2)
+PASS: and it is still the same record the challenge minted ('1:1' -> '1:1')
+PASS: joining did not change the phase (got 'active')
+PASS: peer 1's fight is bound to the SAME record id (got '1:1')
+PASS: peer 1 is in the boss fight but is NOT running a trainer battle of its own
+PASS: and holds no boss battle id of its own (got '')
+PASS: and has no roster of the Warden's to send out (got 0)
+PASS: the join re-derived the record's scaling row to the two-player one (1.1000, configured 1.1000)
+PASS: his opening creature is one of the authored five (species 'burrowback', authored ["brooktail", "burrowback", "galecrest", "meadowhart", "tuskroot"])
+PASS: and the join did NOT add health to the creature already on the field: record hp_max 242.000, authored 242.000 (x 1.1000 would be 266.200)
+PASS: the two of them put his first creature down and he sent out his second (stopped with 3 of their creatures still queued after 287 frames / 3 swings)
+PASS: it is STILL the one record -- a new round swaps the opponent, never the record ('1:1' -> '1:1')
+PASS: and both peers are still participants in it (got 2)
+PASS: the host has the Warden's SECOND creature on the field (species 'galecrest')
+PASS: and 'galecrest' is one of the Warden's authored five (authored: ["brooktail", "burrowback", "galecrest", "meadowhart", "tuskroot"])
+scaling gate: { "director_encounter_id": "1:1", "encounter_host": true, "is_host": true, "is_multi_peer": true }
+live: { "attack": 61.6, "attack_cooldown": 0.765, "body_attack_cooldown": 0.765, "defence": 33.0, "hp": 231.0, "level": 21.0, "max_hp": 231.0, "species_id": "galecrest" }
+authored: { "attack": 56.0, "attack_cooldown": 0.9, "defence": 30.0, "level": 21.0, "max_hp": 231.0 }
+PASS: the authored creature has real hit points (231.000)
+PASS: §10 / D-MP12: at 2 participants the boss's max_hp is its AUTHORED 231.000, not multiplied (live 231.000; a stat_multiplier of 1.1000 folded into hp would give 254.100)
+PASS: and §3's record -- the number both HUDs draw -- carries that same authored hp_max (record 231.000, authored 231.000)
+PASS: §10: at 2 participants his creature's attack is the authored 56.000 x 1.1000 = 61.600 (live 61.600)
+PASS: and its defence is the authored 30.000 x 1.1000 = 33.000 (live 33.000)
+PASS: his second creature authors a real attack_cooldown (0.900) -- without one this comparison is 0.0 against 0.0 and proves nothing (finding F3)
+PASS: and the BODY swings on the authored 0.900 x 0.8500 = 0.765 (live 0.765) -- read off its own combat config, which is the number the swing timer uses
+PASS: the record's own stamped scaling row agrees with the config (stamped 1.1000, configured 1.1000)
+PASS: and so does its cooldown multiplier (stamped 0.8500, configured 0.8500)
+PASS: and it carries no hp knob at all (["attack_cooldown_multiplier", "stat_multiplier"])
+PASS: peer 1's local stand-in was moved onto where the host holds the boss (local stand-in 'LegacyOpponent_1_1' stands at (4.62, 6.19, 7654.83))
+PASS: the record says the boss is standing at 231.0 hp
+[shared-boss geometry] pilot=0 {"can_reach":true,"creature_uid":"creature-fd5a4f5ee5653e000f0ca94332484442","distance_m":3.52982640266418,"encounter_id":"1:1","is_local":true,"origin":[4.55982112884521,8.09699630737305,7651.3017578125],"pair_reach_need_m":5.4356442451477,"peer_id":1.0,"range_m":9.0,"seq":16.0,"target":[4.62095880508423,7.92194271087646,7654.8310546875]}
+[shared-boss strike] pilot=0 {"data":{"code":"","ok":true,"pending":false,"reason":"","submitted_action":3.0},"detail":"submitted quick strike (local verdict ok=true pending=false code=)","frames_used":48.0,"id":"s150","type":"verdict","verdict":"PASS"}
+PASS: peer 0 landed a blow on the SHARED boss: 231.0 -> 223.2 on the host, in 1 swing(s) over 1 placement attempt(s); the host last held its creature 3.53 m from the boss
+PASS: and both peers draw the same boss health bar after it (host 223.185, guest 223.185)
+[shared-boss geometry] pilot=1 {"can_reach":true,"creature_uid":"creature-0ec6cb759389d568cd2b529279cc4849","distance_m":2.28907370567322,"encounter_id":"1:1","is_local":false,"origin":[4.88668012619019,9.47879314422607,7658.1640625],"pair_reach_need_m":5.4356442451477,"peer_id":974053818.0,"range_m":9.0,"seq":19.0,"target":[4.89383602142334,7.92278623580933,7655.875]}
+[shared-boss strike] pilot=1 {"data":{"code":"pending","ok":false,"pending":true,"reason":"","submitted_action":1.0},"detail":"submitted quick strike (local verdict ok=false pending=true code=pending)","frames_used":138.0,"id":"s156","type":"verdict","verdict":"PASS"}
+[shared-boss geometry] pilot=1 {"can_reach":true,"creature_uid":"creature-0ec6cb759389d568cd2b529279cc4849","distance_m":5.05193424224854,"encounter_id":"1:1","is_local":false,"origin":[4.85807657241821,8.09781932830811,7661.73388671875],"pair_reach_need_m":5.4356442451477,"peer_id":974053818.0,"range_m":9.0,"seq":20.0,"target":[1.50397109985352,7.92278623580933,7657.9560546875]}
+[shared-boss strike] pilot=1 {"data":{"code":"pending","ok":false,"pending":true,"reason":"","submitted_action":2.0},"detail":"submitted quick strike (local verdict ok=false pending=true code=pending)","frames_used":213.0,"id":"s161","type":"verdict","verdict":"PASS"}
+PASS: peer 1 landed a blow on the SHARED boss: 223.2 -> 214.5 on the host, in 2 swing(s) over 2 placement attempt(s); the host last held its creature 5.05 m from the boss
+PASS: and both peers draw the same boss health bar after it (host 214.493, guest 214.493)
+[shared-boss friendly] attempt=1 side=(-0.450549, 0.0, 0.892752) stand=(-1.256172, 6.171699, 7663.075) guest=(-0.642533, 6.171664, 7661.735) host=(1.843874, 6.171539, 7659.849) (creature stands at (1.84, 6.17, 7659.85))
+[shared-boss friendly] attempt=2 side=(0.039411, 0.0, 0.999223) stand=(-0.69333, 6.172473, 7663.234) guest=(-0.752446, 6.172473, 7661.735) host=(1.862459, 6.171584, 7659.873) (creature stands at (1.86, 6.17, 7659.87))
+[shared-boss friendly] attempt=3 side=(-0.743657, 0.0, 0.668561) stand=(-1.867932, 6.172473, 7662.738) guest=(-0.752559, 6.171566, 7661.735) host=(2.593404, 6.172072, 7660.715) (creature stands at (2.59, 6.17, 7660.72))
+[shared-boss friendly] attempt=4 side=(-0.404568, 0.0, 0.914508) stand=(-1.359411, 6.171566, 7663.107) guest=(-0.752559, 6.171566, 7661.735) host=(3.076698, 6.172884, 7661.115) (creature stands at (2.50, 6.17, 7660.63))
+[shared-boss friendly] attempt=5 side=(0.165253, 0.0, 0.986251) stand=(-0.541722, 6.172134, 7663.215) guest=(-0.789077, 6.17275, 7661.735) host=(2.482174, 6.171681, 7660.612) (creature stands at (2.21, 6.17, 7660.33))
+[shared-boss friendly] attempt=6 side=(-0.914981, 0.0, 0.403497) stand=(-2.161711, 6.172138, 7662.341) guest=(-0.789586, 6.171462, 7661.736) host=(2.572136, 6.171974, 7660.697) (creature stands at (2.57, 6.17, 7660.70))
+[shared-boss friendly] attempt=7 side=(-0.795112, 0.0, 0.606462) stand=(-1.982255, 6.171462, 7662.646) guest=(-0.789586, 6.171462, 7661.736) host=(2.585394, 6.171973, 7660.708) (creature stands at (2.59, 6.17, 7660.71))
+[shared-boss friendly] attempt=8 side=(0.230629, 0.0, 0.973042) stand=(-0.443169, 6.172396, 7663.195) guest=(-0.789113, 6.172396, 7661.735) host=(2.750446, 6.171387, 7660.856) (creature stands at (2.27, 6.17, 7660.40))
+[shared-boss friendly] attempt=9 side=(-0.923284, 0.0, 0.384119) stand=(-2.175063, 6.171752, 7662.312) guest=(-0.790262, 6.17264, 7661.736) host=(2.572586, 6.172072, 7660.696) (creature stands at (2.57, 6.17, 7660.70))
+[shared-boss friendly] attempt=9 skipped: boss 3.99 m at 35 deg would take the swing
+[shared-boss friendly] attempt=10 side=(-0.607464, 0.0, 0.794347) stand=(-1.701305, 6.172299, 7662.928) guest=(-0.791126, 6.172851, 7661.736) host=(2.604255, 6.171976, 7660.727) (creature stands at (2.60, 6.17, 7660.73))
+[shared-boss friendly] attempt=10 skipped: boss 3.99 m at 36 deg would take the swing
+[shared-boss friendly] attempt=11 side=(-0.12896, 0.0, 0.99165) stand=(-0.983449, 6.172148, 7663.223) guest=(-0.790056, 6.172206, 7661.736) host=(1.884914, 6.171486, 7659.801) (creature stands at (1.88, 6.17, 7659.80))
+PASS: a clean friendly attempt was staged (teammate nearest in the swing arc, boss clear) within 11 attempt(s)
+PASS: the host holds a position for both pilots' creatures (peer 1's (-0.790056, 6.172206, 7661.736) / peer 0's (1.884914, 6.171486, 7659.801))
+PASS: the two pilots' creatures are within one swing of each other after 11 attempt(s) (3.30 m of 4.00 m)
+PASS: peer 0's creature is alive to be swung at (83.2 hp)
+PASS: peer 1's swing at its teammate's creature reached the host (real quick input; action 10 -> 11; last refusal={ "kind": "strike_intent", "code": "friendly_target", "reason": "You can\'t attack your own side." })
+PASS: and the client's own local answer was not a refusal -- the host decides (ok=true pending=false code='')
+PASS: the host refused it with `friendly_target` in the BOSS fight (got code 'friendly_target', reason 'You can't attack your own side.')
+PASS: and the sentence a player can be shown travelled back to the striker
+PASS: and it is measured over a window the boss itself did not act in -- `pick_struck` chose peer 1 0 time(s) before and 0 after, over 11 attempt(s)
+PASS: peer 0's creature took nothing from it (83.229 before, 83.229 after)
+PASS: and the boss took nothing from it either -- a refused strike is refused BEFORE any roll (174.236 before, 174.236 after)
+coordinator: ERROR: smoke budget exceeded
+FAIL: the two of them fought the Warden's whole team of 5 down (ERROR: smoke budget exceeded)
+FAIL: ERROR: smoke budget exceeded
