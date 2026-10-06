@@ -24,6 +24,8 @@ var return_to := Callable()
 var _opened_context: Dictionary = {}
 var _fields: GridContainer
 var _actions: HBoxContainer
+var _seed_detail: Label
+var _release_warning: Label
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -50,6 +52,7 @@ func _ready() -> void:
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	if not candidate: scroll.custom_minimum_size = Vector2(700,640)
 	scroll.follow_focus = true
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_root.add_child(scroll)
 	_body = VBoxContainer.new()
 	_body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -71,6 +74,9 @@ func _ready() -> void:
 	_payment = _choice("Pay with type essence")
 	_distil = _choice("Trait to distil when releasing")
 	if candidate:
+		_seed_detail = _line("", TOKENS.FONT_READ)
+		_seed.item_selected.connect(func(_index: int) -> void: _describe_seed())
+		_release_warning = _line("", TOKENS.FONT_READ)
 		_actions = HBoxContainer.new()
 		_actions.add_theme_constant_override("separation", 12)
 		_body.add_child(_actions)
@@ -97,6 +103,9 @@ func _choice(title: String) -> OptionButton:
 		parent = field
 	_line(title,20,parent)
 	var button := OptionButton.new()
+	if _fields != null:
+		button.fit_to_longest_item = false
+		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	button.custom_minimum_size.y = 66 if SCREEN.config().get("enabled") == true else 38
 	button.add_theme_font_size_override("font_size",TOKENS.FONT_PROMPT if SCREEN.config().get("enabled") == true else 20)
 	parent.add_child(button)
@@ -195,7 +204,9 @@ func _selected(button: OptionButton) -> Variant:
 
 func _refresh() -> void:
 	if not _shown: return
-	_release.text = "Release companion and distil chosen trait"
+	_release.text = "Release and distil trait" if _actions != null else "Release companion and distil chosen trait"
+	if _release_warning != null: _release_warning.text = ""
+	if _seed_detail != null: _seed_detail.text = ""
 	if _release.has_meta("confirmed_uid"): _release.remove_meta("confirmed_uid")
 	_quote = _service.call("quote",_station,str(_selected(_creature)))
 	for button: OptionButton in [_seed,_slot,_payment,_distil]: button.clear()
@@ -208,7 +219,7 @@ func _refresh() -> void:
 	for row: Dictionary in _quote.get("traits",[]): text.append("%s (%s): %s" % [row.display_name,row.rarity,row.description])
 	_status.text = "\n".join(text) if not text.is_empty() else "No active traits"
 	for row: Dictionary in _quote.get("seeds",[]):
-		_seed.add_item("%s · %s · %s" % [row.display_name,row.rarity,row.description])
+		_seed.add_item("%s · %s" % [row.display_name,row.rarity] if _seed_detail != null else "%s · %s · %s" % [row.display_name,row.rarity,row.description])
 		_seed.set_item_metadata(_seed.item_count-1,row.id)
 	for slot: int in _quote.get("unlocked_slots",[]):
 		var old: String = _quote.get("taught_traits",{}).get(str(slot),"")
@@ -224,6 +235,15 @@ func _refresh() -> void:
 		_distil.set_item_metadata(_distil.item_count-1,row.id)
 	_teach.disabled = _seed.item_count == 0 or _slot.item_count == 0 or _payment.item_count == 0 or _service.call("busy")
 	_release.disabled = _quote.get("release_allowed") != true or _service.call("busy")
+	_describe_seed()
+
+func _describe_seed() -> void:
+	if _seed_detail == null: return
+	_seed_detail.text = ""
+	for row: Dictionary in _quote.get("seeds", []):
+		if row.id == str(_selected(_seed)):
+			_seed_detail.text = "%s: %s" % [row.display_name, row.description]
+			return
 
 func _intent(action: String, trait_id: String, slot: int, payment: String) -> Dictionary:
 	var random := Crypto.new().generate_random_bytes(16)
@@ -240,7 +260,12 @@ func _submit_release() -> void:
 	# Explicit named second tap confirms a permanent roster removal.
 	if not _release.has_meta("confirmed_uid") or _release.get_meta("confirmed_uid") != _selected(_creature):
 		_release.set_meta("confirmed_uid",_selected(_creature))
-		_release.text = "Release %s? This can't be undone. A confirms; B leaves." % _creature.get_item_text(_creature.selected)
+		var warning := "Release %s? This can't be undone. A confirms; B leaves." % _creature.get_item_text(_creature.selected)
+		if _release_warning != null:
+			_release_warning.text = warning
+			_release.text = "Confirm release"
+		else:
+			_release.text = warning
 		return
 	_release.remove_meta("confirmed_uid")
 	_submit(_intent("release",str(_selected(_distil)),-1,""))

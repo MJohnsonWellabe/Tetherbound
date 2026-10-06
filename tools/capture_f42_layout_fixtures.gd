@@ -36,8 +36,19 @@ class AltarFixture extends Node:
 class TraitsFixture extends Node:
 	signal action_completed(result: Dictionary)
 	var uid := ""
+	var populated := false
 	func creature_choices() -> Array[Dictionary]: return [{"uid": uid, "name": "Terrapup"}]
 	func quote(_key: String, _uid: String) -> Dictionary:
+		if populated:
+			var traits := preload("res://scripts/creatures/traits.gd")
+			var active: Dictionary = traits.definition("bold").duplicate(true)
+			active["id"] = "bold"
+			var seed: Dictionary = traits.definition("curious").duplicate(true)
+			seed["id"] = "curious"
+			return {"ok": true, "traits": [active], "seeds": [seed], "unlocked_slots": [1, 2, 3],
+				"taught_traits": {"1": "bold"}, "essence_cost_per_slot": 10,
+				"payment_items": ["essence_ground"], "release_allowed": true,
+				"expected_character_revision": 0}
 		return {"ok": true, "traits": [], "seeds": [], "unlocked_slots": [], "taught_traits": {},
 			"essence_cost_per_slot": 5, "payment_items": ["essence_ground"], "release_allowed": false,
 			"expected_character_revision": 0}
@@ -130,6 +141,21 @@ func _run() -> void:
 		return
 	await _capture("altar-traits-release")
 	traits.close()
+	for _frame in 2: await process_frame
+	traits_service.populated = true
+	if not traits.open(traits_service, "layout-altar"):
+		quit(1)
+		return
+	await _capture("altar-traits-populated")
+	var release_button: Button = traits.get("_release")
+	release_button.grab_focus()
+	await preload("res://tools/net/press_inject.gd").tap(self, _pad_binding, "ui_accept", 1)
+	if not release_button.has_meta("confirmed_uid"):
+		push_error("Actual first release tap did not reach confirmation")
+		quit(1)
+		return
+	await _capture("altar-traits-confirm")
+	traits.close()
 	traits.queue_free()
 	await process_frame
 	var station: Dictionary = preload("res://tests/test_craft_station_confirm_lifetime.gd").new().call("_fixture", self, false)
@@ -182,7 +208,7 @@ func _run() -> void:
 		return
 	file.store_string(JSON.stringify({"evidence_kind": "native UI layout fixtures only", "size": [_size.x, _size.y],
 		"captures": _captures, "earned_service_save_coop_device_visual_pass": false,
-		"fixtures": ["new-game Terrapup", "invented Altar quote", "empty trait quote", "invented research tasks",
+		"fixtures": ["new-game Terrapup", "invented Altar quote", "empty and canonical-display populated trait quotes; confirmation only, no submit", "invented research tasks",
 			"invented bounty rows", "existing Forge station-confirm component"],
 		"combat_fixture_captured": _capture_combat,
 		"missing": ["earned services", "code-blind judge", "world/HUD composite"]}, "\t"))
