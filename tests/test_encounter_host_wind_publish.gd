@@ -106,20 +106,23 @@ func test_profile_changes_regenerate_the_previous_interval_before_installing_the
 	host.call("note_opponent_position", encounter_id, Vector3.ZERO, 3300)
 	assert_almost_eq(_published_wind(host, encounter_id, 2), 45.0, 0.001,
 		"idle publications use the installed boost without requiring another action")
+	var emptied: Dictionary = host.call("commit_wind", encounter_id, 2, 3, boosted,
+		MAX, 3300, 0.0, 0.0)
+	assert_almost_eq(float(emptied.wind), 0.0, 0.001)
 	var expired: Dictionary = host.call("preview_wind", encounter_id, 2, baseline, 0.0, 3800)
-	assert_almost_eq(float(expired.wind), 63.0, 0.001,
+	assert_almost_eq(float(expired.wind), 18.0, 0.001,
 		"expiry preserves the final half-second earned under the boost")
 	host.call("note_opponent_position", encounter_id, Vector3.ZERO, 4800)
-	assert_almost_eq(_published_wind(host, encounter_id, 2), 81.0, 0.001)
+	assert_almost_eq(_published_wind(host, encounter_id, 2), 36.0, 0.001)
 	var larger := {"max": 200.0, "regen_per_second": REGEN}
-	var resized: Dictionary = host.call("preview_wind", encounter_id, 2, larger, 0.0, 6800)
+	var resized: Dictionary = host.call("preview_wind", encounter_id, 2, larger, 0.0, 8800)
 	assert_almost_eq(float(resized.wind), MAX, 0.001,
 		"capacity growth cannot regenerate above the old cap before its boundary")
 	assert_almost_eq(float(resized.wind_max), 200.0, 0.001)
-	host.call("note_opponent_position", encounter_id, Vector3.ZERO, 7800)
+	host.call("note_opponent_position", encounter_id, Vector3.ZERO, 9800)
 	assert_almost_eq(_published_wind(host, encounter_id, 2), 118.0, 0.001)
-	var duplicate: Dictionary = host.call("commit_wind", encounter_id, 2, 2, larger,
-		MAX - COST, 7800, RECOVERY, DELAY)
+	var duplicate: Dictionary = host.call("commit_wind", encounter_id, 2, 3, larger,
+		MAX, 9800, RECOVERY, DELAY)
 	assert_true(bool(duplicate.get("wind_duplicate", false)))
 	assert_almost_eq(float(duplicate.wind), 118.0, 0.001,
 		"a profile transition never reopens an accepted action for spending")
