@@ -1,0 +1,681 @@
+{
+	"checks": [
+		{
+			"label": "production Game and selected realm exist",
+			"ok": true
+		},
+		{
+			"label": "canonical production source registry is valid",
+			"ok": true
+		},
+		{
+			"label": "request actual baked realm scene",
+			"ok": true
+		},
+		{
+			"label": "actual realm procedural build completed",
+			"ok": true
+		},
+		{
+			"label": "production player and resource adapter mounted",
+			"ok": true
+		},
+		{
+			"label": "existing physical controller driver resolves production camera and arbiter",
+			"ok": true
+		},
+		{
+			"label": "essence_meadows_ground_01 fixture start resolves actual baked ground",
+			"ok": true
+		},
+		{
+			"label": "essence_meadows_ground_01 actual terrain slope and trainer capsule: { \"ok\": true, \"position\": (24.0, 0.573588, -33.0), \"body_clearance_proven\": true, \"ordinary_player_path_proven\": false }",
+			"ok": true
+		},
+		{
+			"label": "essence_meadows_ground_01 disclosed start is grounded and outside interaction range",
+			"ok": true
+		},
+		{
+			"label": "essence_meadows_ground_01 ordinary source anchor exists",
+			"ok": true
+		},
+		{
+			"label": "essence_meadows_ground_01 authored offset matches canonical anchor",
+			"ok": true
+		},
+		{
+			"label": "essence_meadows_ground_01 production world mount accepts validated candidate",
+			"ok": true
+		},
+		{
+			"label": "essence_meadows_ground_01 actual gather prompt exists",
+			"ok": true
+		},
+		{
+			"label": "essence_meadows_ground_01 actual controller approach moved at least 3m and remained grounded",
+			"ok": true
+		},
+		{
+			"label": "essence_meadows_ground_01 exact candidate prompt wins ordinary interaction",
+			"ok": true
+		},
+		{
+			"label": "essence_meadows_ground_01 pre-gather owner and world fixtures saved to isolated disk",
+			"ok": true
+		},
+		{
+			"label": "before_essence_meadows_ground_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_meadows_ground_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "before_essence_meadows_ground_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_meadows_ground_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_meadows_ground_01 ordinary gather reaches real owner save and ACK",
+			"ok": true
+		},
+		{
+			"label": "after_essence_meadows_ground_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_meadows_ground_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "after_essence_meadows_ground_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_meadows_ground_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_meadows_ground_01 actual disk has exact material gain, accepted journal, receipt and consumed stock",
+			"ok": true
+		},
+		{
+			"label": "essence_meadows_ground_01 actual saved stock survives JSON world reload",
+			"ok": true
+		},
+		{
+			"label": "selected at least one authored candidate",
+			"ok": true
+		},
+		{
+			"label": "production source bytes and proof gates unchanged",
+			"ok": true
+		}
+	],
+	"earned_campaign": false,
+	"fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+	"mode": "essence",
+	"ok": true,
+	"realm": "meadows",
+	"sites": [
+		{
+			"accepted_disk_gather": true,
+			"actor_baseline_before": {
+				"admitted_character_id": "f32-site-owner",
+				"admitted_party_uids": [
+					"creature-14fecf88e10d11d1301188765ca07fe8"
+				],
+				"character_id": "f32-site-owner",
+				"directors": [
+					{
+						"encounter_count": 0,
+						"host_present": true,
+						"host_script": "res://scripts/combat/accepted_action_host.gd",
+						"path": "/root/MeadowsPlayground/EncounterDirector",
+						"script": "res://scripts/combat/encounter_director.gd"
+					}
+				],
+				"local_combat_manager": {
+					"fighting": false,
+					"path": "/root/MeadowsPlayground/CombatManager",
+					"script": "res://scripts/combat/combat_manager.gd"
+				},
+				"local_party_uids": [
+					"creature-14fecf88e10d11d1301188765ca07fe8"
+				],
+				"local_peer_id": 1,
+				"realm": "meadows",
+				"registered_realm": "meadows",
+				"session_active": false
+			},
+			"authored_at": [
+				24.0,
+				-33.0
+			],
+			"controller_approach": true,
+			"fixture_start": "(24.0, 0.683714, -27.0)",
+			"host_context_before": {
+				"actor_realm": "meadows",
+				"character_id": "f32-site-owner",
+				"equipped_tool": "",
+				"expected_revision": 0,
+				"host_day": 1,
+				"in_combat": false,
+				"in_range": true,
+				"modal_open": false,
+				"realm": "meadows",
+				"registered_live_source": true,
+				"resource_runtime_authorized": true,
+				"retained_seed_roll": 0.909695551497862,
+				"source_available": true,
+				"source_definition": {
+					"amount": 3.0,
+					"anchor": {
+						"config": "data/config/bands/band1_lower_meadows/harvest.json",
+						"id": "order:0",
+						"offset_xz_m": [
+							8.0,
+							-5.0
+						]
+					},
+					"at": [
+						24.0,
+						-33.0
+					],
+					"early_master_supply": "Early Meadows candidate; ROOT must prove walkable and enough accepted stock for each typed feast.",
+					"id": "essence_meadows_ground_01",
+					"item": "essence_ground",
+					"label": "Gather Ground Essence",
+					"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+					"model_scale": 0.8,
+					"order": "essence:meadows:ground:01",
+					"outputs": {
+						"attuned_ground": 1.0,
+						"essence_ground": 3.0
+					},
+					"placement": {
+						"main_route_distance_m": 5.139,
+						"off_route": false,
+						"terrain_and_player_path_proven": true
+					},
+					"realm": "meadows",
+					"region_id": "band1_lower_meadows",
+					"respawn_days": 3.0,
+					"seed_drop": {
+						"amount": 1.0,
+						"chance": 0.25,
+						"item": "seed_ground"
+					},
+					"source_config": "res://data/config/essence_nodes.json",
+					"type": "ground"
+				},
+				"source_generation": "1",
+				"source_id": "essence_meadows_ground_01",
+				"source_key": "resource:meadows:essence_meadows_ground_01",
+				"stock": {
+					"generation": 1,
+					"next_ready_day": 1,
+					"revision": 0
+				},
+				"world_id": "f32-site-world",
+				"world_namespace": "daa9069ebb7ca6f94cb995c0e17132da"
+			},
+			"id": "essence_meadows_ground_01",
+			"lifecycle_before": {
+				"character_id": "f32-site-owner",
+				"cutscene": false,
+				"damage_revision": 1,
+				"dialogue": false,
+				"downed": false,
+				"ending_owner": false,
+				"equipped_tool": "",
+				"flying": false,
+				"party_revision": 1,
+				"party_signature": "ed9ca0044d973ca891b236e11ece55ae98ed0664920f6fe7df4df0fbd24edc2e",
+				"passive_clock_active": true,
+				"realm": "meadows",
+				"session_epoch": "b3135ceb7fdcb94e4252ca013697eb59",
+				"station_ack_only": false,
+				"swimming": false,
+				"world_instance_id": "daa9069ebb7ca6f94cb995c0e17132da"
+			},
+			"placement": {
+				"body_clearance_proven": true,
+				"ok": true,
+				"ordinary_player_path_proven": false,
+				"position": "(24.0, 0.573588, -33.0)"
+			},
+			"saved_action": {
+				"action": "resource",
+				"action_id": "0249120e6dc4042ab65ef91ad88907adba848467eb1add81870c6bf76d934764",
+				"after": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 6.41019570827484,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.993143725,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 2,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.9497206499999,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-14fecf88e10d11d1301188765ca07fe8",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-14fecf88e10d11d1301188765ca07fe8": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f32-site-owner:f32:610124a359b9d6818fe53c618c64a61b8f50d834d3e18de63acb351e87149710"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"before": {
+					"character_id": "f32-site-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": 22.0,
+							"base_attack": 22.0,
+							"base_defence": 20.0,
+							"base_hp": 120.0,
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": 20.0,
+							"display_name": "Terrapup",
+							"distance_m_together": 6.41019570827484,
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": 54.993143725,
+							"hp": 120.0,
+							"iv_attack": 0.5,
+							"iv_defence": 0.5,
+							"iv_hp": 0.5,
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 2,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": 120.0,
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": 69.9497206499999,
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": 0.0,
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": 1.0,
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-14fecf88e10d11d1301188765ca07fe8",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": 0.0,
+							"anchor_world": "",
+							"cycle": 0.0,
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-14fecf88e10d11d1301188765ca07fe8": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": 0.0,
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"character_id": "f32-site-owner",
+				"character_revision": 2,
+				"delivery_id": "creature_training:9772d0eb8c9ad6747d423c60002ae1e188e973e2659d256c6b821537017535c3",
+				"host_context": {
+					"actor_realm": "meadows",
+					"character_id": "f32-site-owner",
+					"equipped_tool": "",
+					"expected_revision": 1,
+					"foundation_runtime_authorized": true,
+					"host_day": 1,
+					"in_combat": false,
+					"in_range": true,
+					"modal_open": false,
+					"realm": "meadows",
+					"registered_live_source": true,
+					"resource_runtime_authorized": true,
+					"retained_seed_roll": 0.909695551497862,
+					"source_available": true,
+					"source_definition": {
+						"amount": 3.0,
+						"anchor": {
+							"config": "data/config/bands/band1_lower_meadows/harvest.json",
+							"id": "order:0",
+							"offset_xz_m": [
+								8.0,
+								-5.0
+							]
+						},
+						"at": [
+							24.0,
+							-33.0
+						],
+						"early_master_supply": "Early Meadows candidate; ROOT must prove walkable and enough accepted stock for each typed feast.",
+						"id": "essence_meadows_ground_01",
+						"item": "essence_ground",
+						"label": "Gather Ground Essence",
+						"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+						"model_scale": 0.8,
+						"order": "essence:meadows:ground:01",
+						"outputs": {
+							"attuned_ground": 1.0,
+							"essence_ground": 3.0
+						},
+						"placement": {
+							"main_route_distance_m": 5.139,
+							"off_route": false,
+							"terrain_and_player_path_proven": true
+						},
+						"realm": "meadows",
+						"region_id": "band1_lower_meadows",
+						"respawn_days": 3.0,
+						"seed_drop": {
+							"amount": 1.0,
+							"chance": 0.25,
+							"item": "seed_ground"
+						},
+						"source_config": "res://data/config/essence_nodes.json",
+						"type": "ground"
+					},
+					"source_generation": "1",
+					"source_id": "essence_meadows_ground_01",
+					"source_key": "resource:meadows:essence_meadows_ground_01",
+					"stock": {
+						"generation": 1,
+						"next_ready_day": 1,
+						"revision": 0
+					},
+					"world_id": "f32-site-world",
+					"world_namespace": "daa9069ebb7ca6f94cb995c0e17132da"
+				},
+				"intent": {
+					"operation": "node",
+					"request": {
+						"action_id": "d8a4a902dd294fe9a8a21e670ecefc29",
+						"expected_stock_revision": 0,
+						"site_id": "essence_meadows_ground_01"
+					}
+				},
+				"journal_revision": 1,
+				"kind": "creature_training",
+				"receipt": "craft:f32-site-owner:f32:610124a359b9d6818fe53c618c64a61b8f50d834d3e18de63acb351e87149710",
+				"session_id": "b3135ceb7fdcb94e4252ca013697eb59",
+				"source_key": "resource:meadows:essence_meadows_ground_01",
+				"status": "accepted",
+				"version": 3,
+				"world_id": "f32-site-world",
+				"world_namespace": "daa9069ebb7ca6f94cb995c0e17132da"
+			},
+			"saved_stock": {
+				"generation": 2,
+				"next_ready_day": 4,
+				"revision": 1
+			},
+			"settlement": {
+				"action_id": "d8a4a902dd294fe9a8a21e670ecefc29",
+				"verdict": {
+					"character_revision": 2,
+					"durable": true,
+					"journal_revision": 1,
+					"ok": true,
+					"owner_acknowledged": true,
+					"owner_saved": true,
+					"receipt": "craft:f32-site-owner:f32:610124a359b9d6818fe53c618c64a61b8f50d834d3e18de63acb351e87149710",
+					"resolved": true,
+					"saved": true,
+					"settled": true
+				}
+			},
+			"source_evidence": null,
+			"walk_end": "(24.00203, 0.552318, -31.40884)",
+			"walk_start": "(24.0, 0.683714, -27.0)",
+			"walked_metres": 4.40884065628052
+		}
+	],
+	"source_path": "res://data/config/harvest.json",
+	"source_runtime_enabled": true,
+	"source_sha256": "83d514901ddebe5ac942bfb7897d1e95490f3dc3d65af9ebf4cb7aa2539a980a",
+	"two_peer_rejoin": false,
+	"user_data_dir": "D:/tetherbound/.artifacts/r3-night-proof/round3-home/Godot/app_userdata/Tetherbound"
+}

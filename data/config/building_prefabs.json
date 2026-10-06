@@ -3862,15 +3862,15 @@
         {
           "at": [
             0.0,
-            4.1,
+            4.4,
             0.0
           ],
           "size": [
-            4.4,
-            2.2,
-            6.4
+            4.48,
+            3.08,
+            7.6
           ],
-          "_why": "roof and gables -- bottom (y 3.0) is the room's ceiling, so this blocks nothing a player can stand on"
+          "_why": "F01#3: cover both Roof_Front_Brick4 gables and their projecting eaves. Installed mesh bounds reach local y 2.868 to 5.937 and z +/-3.794, outside the old roof box. Bottom y 2.86 remains above the doorway and walking head height; the exploration camera stops before the roof rather than drawing inside it on departure."
         }
       ],
       "door": {
@@ -6286,6 +6286,11 @@
             10.4
           ],
           "_why": "ceiling and everything above it -- bottom (y 3.12) is the ground-floor room's ceiling, so this blocks nothing the interior walks on; top (y 9.6) clears the roof and chimney. Caps the second storey and roof shell as facade-only, same scope decision grandpa_house.gd's own bespoke loft avoided repeating here."
+        },
+        {
+          "at": [0.0, 2.6, 5.55],
+          "size": [5.64, 0.76, 2.46],
+          "_why": "F01#3: cover Overhang_Roof_Plaster plus InnExteriorIdentity's full-width pitched PorchAwning, fascia and header. Their combined local bounds reach x +/-2.81, y 2.225 to 2.979 and z 4.328 to 6.77. Bottom y 2.22 stays above walking head height; the exploration arm stops before the entire porch roof on departure."
         }
       ],
       "door": {

@@ -1,0 +1,11 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only f32_material_census,f32_essence_census: 2 of 799 test files
+  ok    test_f32_essence_census.gd :: test_every_node_is_a_registered_site_on_the_configured_host_day_timer
+  ok    test_f32_essence_census.gd :: test_nodes_are_mostly_off_the_main_route_in_every_biome
+  ok    test_f32_essence_census.gd :: test_one_or_two_nodes_per_type_per_live_biome
+  ok    test_f32_material_census.gd :: test_every_live_tier_raw_is_gatherable_in_its_biome
+  ok    test_f32_material_census.gd :: test_f32_runtime_is_the_one_renewable_gate
+  ok    test_f32_material_census.gd :: test_meadows_sunleaf_and_tidewake_pearl_candidates_are_live
+
+6 tests, 239 assertions, 0 failed

@@ -1,0 +1,227 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB
+
+GATE A OPENING +0.49s — title interactive
+GATE A OPENING +0.67s — answered the character-choice step
+[session] hosting via enet (cap 4); local peer id 1
+[session] hosting on udp/27015 (cap 4, channels 2); local peer id 1
+[lan] advertising udp/27016 for a session on udp/27015
+[trainers] spawning a body for peer 1 at (0.0, 0.0)
+[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 1)
+[trainers] Trainer_1 stands up: authority 1, this peer is 1 (our own proxy)
+GATE A OPENING +10.13s — confirmed the configured trainer-name prefill
+GATE A OPENING +10.17s — new game world entered
+[playground] spawned at 0.0, 2.9, 0.0
+[scatter bake] load phases (ms): read[256 regions, 387893 placements, 431212 skipped]=3148 reorder[16 layers]=3872
+[vegetation] grass field is on; 431212 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=7269 mark_harvestable=161 group_by_model=634 register_mesh_assets=92 build_batches_total=6238 (of which harvest_points[56283 nodes]=3897, initial_collision_stream[51210 solid]=180) update_mmis=1005
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=RID(24919400251495) region_map=1024 entries
+[playground] scattered 386505 props in 36 batches (56283 harvestable, 0 already chopped, 266/51210 collision resident)
+[water] pond quads 2538, stream points 46, reeds 188, marginals 32, bank flowers 72, rocks 40, driftwood 5, lilypads 54, jetty 18, level -17.0
+[water] stream bank reeds 77, bank scrub 12
+[water] river quads 390, bank reeds 134, bank scrub 57
+[village] placed 29 structures; static batch folded 768 module meshes in 469 ms
+[props] placed 434 props in 54 clusters (6 usable rest points)
+[village_npcs] placed 18 of 20
+[relay_site] placed 3 of 3
+[pond_npc] placed 1 of 1
+[trainers] placed 21 trainer(s)
+[south_bridge_dressing] placed 1 of 1
+[quarry] 2 foundations, 4 pylons, 1 finish treatment standing
+[relay] cleared 152 scattered pieces inside the 27m station radius
+[relay] station at 350, 3760: 4 wall runs, 2 decks, 1 ramps, 10 pylons
+[river] 18 course segments, 18 recovery volumes
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[playground] placed 198 harvest nodes
+[playground] placed 6 farm plots
+[playground] placed 147 band pickups (0 already taken, 34 nudged off scatter, 0 unclear, 0 without ground)
+[warrens] cleared 821 scattered trees/rocks inside the 30m site radius and the chambers
+[warrens] hero clearing: removed 803 more scattered pieces out to 55m (was 30m) so no background tree competes with the mound
+[warrens] bank cap closes the dome over the throat (297 quads)
+[warrens] planted 20 pieces of ground cover around the site
+[warrens] earth bank 65x90m, crest 17.0m above the mouth (9.5x the 1.8m trainer); chamber clearance past the required 1.5m: mouth +4.8m, hall +3.8m, warren +4.1m, den +2.5m, vault +4.1m (worst 2.5m)
+[warrens] 4 flora pieces beside the mouth
+[warrens] 7 claw scrapes beside the mouth
+[warrens] 5 crest trees standing on the bank
+[warrens] scattered 78 rubble pieces across the face foot, spoil fans and threshold
+[warrens] 220 pieces of growth on the bank
+[warrens] 182 pieces of interior rock across 5 chambers
+[warrens] 8 connected excavated terrain masses preserve the original collision route
+[warrens] 12 root masses
+[warrens] 8 fungus clusters, 3 species
+[warrens] 40 litter pieces
+[warrens] 4 haze cards
+[warrens] guardian carries an alert bearing (neck -30, head -12, spine -7 deg)
+[warrens] guardian idle faces the den's entrance passage (yaw -169.0 deg)
+[approach-drain] 690 drained quads over the approach corridor
+[stronghold] approach ramp: 11.3m of rise over 40m (16 degrees)
+[stronghold] 407 structural members across 5 spaces
+[stronghold] hall massing exterior lift: 1.30x height on 17/18 module(s)
+[stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
+[stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 78.7), enclosing LargeTower
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 78.7), enclosing _MeshInstance3D_66628
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 101.7), enclosing _MeshInstance3D_66629
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 101.7), enclosing _MeshInstance3D_66630
+[stronghold] tower pier in legendary_chamber: 5.0 x 5.1 m at local (-43.5, 78.7), enclosing PointyTower
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-20.0, 102.2), enclosing _MeshInstance3D_66631
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-44.0, 102.2), enclosing _MeshInstance3D_66632
+[stronghold] tower pier in legendary_chamber: 3.5 x 3.6 m at local (-19.7, 77.9), enclosing _MeshInstance3D_66633
+[stronghold] 8 tower pier(s) enclosing massing that reached inside a roofed chamber
+[stronghold] 87 interior dressing prop(s) in the roofed rooms
+[trainers] placed 3 trainer(s) for group 'stronghold'
+[stronghold] cleared 90 scattered prop(s) standing inside the five spaces
+[stronghold] 21 exterior omni light(s) at the Hall (budget 22), 11 of them flickering fires
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=6.17, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+[climax] the freed stand is 6.00 m from the machine's axis, inside its 8.05 m plinth on that bearing; moved out to 10.55 m
+[climax] the legendary stands inside the machine: dais 4.06 m up, void 7.67 m tall, body 7.08 m, headroom 0.59 m
+[meadow] the land lies drained: 15161 quads over 8 groups, grass field thinned
+GATE A OPENING +120.76s — wake/Get Up complete
+GATE A OPENING +125.60s — Grandpa briefing and pack complete
+GATE A OPENING +125.65s — starter picker order ["terrapup", "ripplet", "galewisp"]; 0 ui_right press(es) to 'terrapup'
+GATE A OPENING +130.22s — starter selected and named (terrapup, uid creature-7a800f42ab51258c6ec5be8e16d720db)
+GATE A OPENING +131.77s — Grandpa's first-catch supplies received (50 Basic Orbs)
+GATE A OPENING +133.35s — usable house/front doorway exited
+[village-walk] OPENING title interactive
+[village-walk] OPENING answered the character-choice step
+[village-walk] OPENING confirmed the configured trainer-name prefill
+[village-walk] OPENING new game world entered
+[village-walk] OPENING wake/Get Up complete
+[village-walk] OPENING Grandpa briefing and pack complete
+[village-walk] OPENING starter picker order ["terrapup", "ripplet", "galewisp"]; 0 ui_right press(es) to 'terrapup'
+[village-walk] OPENING starter selected and named (terrapup, uid creature-7a800f42ab51258c6ec5be8e16d720db)
+[village-walk] OPENING Grandpa's first-catch supplies received (50 Basic Orbs)
+[village-walk] OPENING usable house/front doorway exited
+[village-walk] OPENING played: starter=terrapup at (7.969, 0.900936, 14.04551)
+[village-walk] OPENING companion put away: true
+[village-walk] START route=visits time=night capture_dir=D:/tetherbound/codex-r3/ralph/reports/F01-FIXES/f01_3/round3 headless=false path_m=2.5 road_arcs=[inf,-inf] events=0
+[village-walk] CAPTURE 001 label="start-after-opening" pos=(8.16,0.90,14.03) heading_deg=360.0 image=visits_night_001_start-after-opening.png
+[village-walk] VISITS Grandpa, Mira, Oskar, Tam, Bram, Nessa, Maren, the old key, Practice Meadow camp, gate RoadGate, gate PondGate, gate TrailGate
+[village-walk] CAPTURE 002 label="end" pos=(1.21,1.02,14.80) heading_deg=253.2 image=visits_night_002_end.png
+[village-walk] CAPTURE 003 label="reached Grandpa" pos=(0.86,1.02,14.91) heading_deg=218.3 image=visits_night_003_reached-grandpa.png
+[village-walk] VISIT Grandpa kind=grandpa dist_m=1.29 prompt="Talk to Grandpa"
+[village-walk] CAPTURE 004 label="travel" pos=(7.69,0.90,14.29) heading_deg=85.5 image=visits_night_004_travel.png
+[village-walk] CAPTURE 005 label="travel" pos=(14.70,0.90,13.77) heading_deg=88.1 image=visits_night_005_travel.png
+[village-walk] CAPTURE 006 label="travel" pos=(21.64,0.90,13.74) heading_deg=90.7 image=visits_night_006_travel.png
+[village-walk] CAPTURE 007 label="travel" pos=(28.59,0.90,13.82) heading_deg=90.7 image=visits_night_007_travel.png
+[village-walk] CAPTURE 008 label="travel" pos=(35.79,0.90,13.91) heading_deg=90.7 image=visits_night_008_travel.png
+[village-walk] CAPTURE 009 label="travel" pos=(40.08,0.90,17.50) heading_deg=187.6 image=visits_night_009_travel.png
+[village-walk] CAPTURE 010 label="travel" pos=(34.15,0.90,19.31) heading_deg=267.7 image=visits_night_010_travel.png
+[village-walk] CAPTURE 011 label="travel" pos=(27.23,0.95,19.36) heading_deg=273.2 image=visits_night_011_travel.png
+[village-walk] CAPTURE 012 label="end" pos=(26.45,0.95,19.31) heading_deg=274.8 image=visits_night_012_end.png
+[village-walk] CAPTURE 013 label="reached Tam" pos=(26.11,0.95,19.22) heading_deg=149.5 image=visits_night_013_reached-tam.png
+[village-walk] VISIT Tam kind=villager dist_m=0.79 prompt="Greet Tam"
+[village-walk] CAPTURE 014 label="travel" pos=(33.10,0.90,19.36) heading_deg=90.9 image=visits_night_014_travel.png
+[village-walk] CAPTURE 015 label="travel" pos=(39.62,0.90,18.40) heading_deg=22.8 image=visits_night_015_travel.png
+[village-walk] CAPTURE 016 label="travel" pos=(36.57,0.90,13.87) heading_deg=276.4 image=visits_night_016_travel.png
+[village-walk] CAPTURE 017 label="travel" pos=(29.37,0.90,13.69) heading_deg=268.8 image=visits_night_017_travel.png
+[village-walk] CAPTURE 018 label="travel" pos=(22.09,0.90,13.84) heading_deg=268.8 image=visits_night_018_travel.png
+[village-walk] CAPTURE 019 label="travel" pos=(19.76,0.90,8.12) heading_deg=358.9 image=visits_night_019_travel.png
+[village-walk] CAPTURE 020 label="travel" pos=(20.81,0.90,1.85) heading_deg=98.1 image=visits_night_020_travel.png
+[village-walk] CAPTURE 021 label="travel" pos=(23.75,0.90,5.64) heading_deg=103.3 image=visits_night_021_travel.png
+[village-walk] CAPTURE 022 label="travel" pos=(25.21,0.90,5.63) heading_deg=29.4 image=visits_night_022_travel.png
+[village-walk] NOTE pressed interact on "Open Door" at (26.1,5.6)
+[village-walk] CAPTURE 023 label="end" pos=(26.21,0.92,2.87) heading_deg=344.0 image=visits_night_023_end.png
+[village-walk] CAPTURE 024 label="reached Mira" pos=(26.10,0.92,2.52) heading_deg=342.3 image=visits_night_024_reached-mira.png
+[village-walk] VISIT Mira kind=villager dist_m=1.92 prompt="Greet Mira"
+[village-walk] CAPTURE 025 label="travel" pos=(25.40,0.92,4.37) heading_deg=155.0 image=visits_night_025_travel.png
+[village-walk] NOTE sidestep 1 at (25.8,4.4) -- bodies near: Spawned/Trainers/Trainer_1
+[village-walk] CAPTURE 026 label="travel" pos=(26.19,0.90,10.49) heading_deg=195.0 image=visits_night_026_travel.png
+[village-walk] CAPTURE 027 label="travel" pos=(21.74,0.90,13.88) heading_deg=275.5 image=visits_night_027_travel.png
+[village-walk] CAPTURE 028 label="travel" pos=(19.74,0.90,7.90) heading_deg=358.7 image=visits_night_028_travel.png
+[village-walk] CAPTURE 029 label="travel" pos=(19.76,0.90,0.96) heading_deg=1.3 image=visits_night_029_travel.png
+[village-walk] CAPTURE 030 label="travel" pos=(19.92,0.90,-5.99) heading_deg=1.3 image=visits_night_030_travel.png
+[village-walk] CAPTURE 031 label="travel" pos=(20.08,0.90,-13.02) heading_deg=1.3 image=visits_night_031_travel.png
+[village-walk] CAPTURE 032 label="travel" pos=(22.40,0.90,-17.90) heading_deg=84.4 image=visits_night_032_travel.png
+[village-walk] CAPTURE 033 label="travel" pos=(29.40,0.61,-17.93) heading_deg=126.0 image=visits_night_033_travel.png
+[village-walk] CAPTURE 034 label="end" pos=(30.03,0.55,-17.44) heading_deg=130.6 image=visits_night_034_end.png
+[village-walk] CAPTURE 035 label="take the old key" pos=(30.59,0.45,-16.96) heading_deg=133.8 image=visits_night_035_take-the-old-key.png
+[village-walk] NOTE key-take: pressed interact on "Take the old key" at 1.07m; satchel has key=true
+[village-walk] CAPTURE 036 label="reached the old key" pos=(30.59,0.45,-16.96) heading_deg=133.8 image=visits_night_036_reached-the-old-key.png
+[village-walk] VISIT the old key kind=key dist_m=1.07 prompt="Take the old key"
+[village-walk] CAPTURE 037 label="travel" pos=(36.22,-1.62,-19.67) heading_deg=80.2 image=visits_night_037_travel.png
+[village-walk] CAPTURE 038 label="end" pos=(38.20,-2.41,-19.94) heading_deg=90.4 image=visits_night_038_end.png
+[village-walk] CAPTURE 039 label="at gate RoadGate, closed" pos=(38.38,-2.41,-19.40) heading_deg=94.6 image=visits_night_039_at-gate-roadgate_-closed.png
+[village-walk] NOTE pressed interact on "Try the gate" at gate RoadGate; road_gate_open=true
+[village-walk] CAPTURE 040 label="reached gate RoadGate" pos=(38.38,-2.41,-19.40) heading_deg=94.6 image=visits_night_040_reached-gate-roadgate.png
+[village-walk] VISIT gate RoadGate kind=gate dist_m=0.56 prompt="Try the gate"
+[village-walk] CAPTURE 041 label="travel" pos=(32.05,-0.07,-19.00) heading_deg=260.9 image=visits_night_041_travel.png
+[village-walk] CAPTURE 042 label="travel" pos=(25.22,0.90,-17.85) heading_deg=265.0 image=visits_night_042_travel.png
+[village-walk] CAPTURE 043 label="travel" pos=(19.99,0.90,-20.26) heading_deg=351.3 image=visits_night_043_travel.png
+[village-walk] CAPTURE 044 label="travel" pos=(22.78,0.84,-25.26) heading_deg=83.2 image=visits_night_044_travel.png
+[village-walk] CAPTURE 045 label="end" pos=(23.09,0.81,-25.48) heading_deg=87.6 image=visits_night_045_end.png
+[village-walk] CAPTURE 046 label="reached Practice Meadow camp" pos=(23.09,0.81,-25.48) heading_deg=164.8 image=visits_night_046_reached-practice-meadow-camp.png
+[village-walk] VISIT Practice Meadow camp kind=camp dist_m=2.82 prompt="-"
+[village-walk] CAPTURE 047 label="travel" pos=(19.86,0.90,-20.65) heading_deg=181.5 image=visits_night_047_travel.png
+[village-walk] CAPTURE 048 label="travel" pos=(19.68,0.90,-13.71) heading_deg=181.5 image=visits_night_048_travel.png
+[village-walk] CAPTURE 049 label="travel" pos=(19.68,0.90,-6.76) heading_deg=179.9 image=visits_night_049_travel.png
+[village-walk] CAPTURE 050 label="travel" pos=(19.70,0.90,0.36) heading_deg=179.9 image=visits_night_050_travel.png
+[village-walk] CAPTURE 051 label="travel" pos=(19.71,0.90,7.39) heading_deg=179.9 image=visits_night_051_travel.png
+[village-walk] CAPTURE 052 label="travel" pos=(21.25,0.90,13.73) heading_deg=108.2 image=visits_night_052_travel.png
+[village-walk] CAPTURE 053 label="travel" pos=(28.16,0.90,14.30) heading_deg=89.4 image=visits_night_053_travel.png
+[village-walk] CAPTURE 054 label="travel" pos=(35.11,0.90,14.23) heading_deg=89.4 image=visits_night_054_travel.png
+[village-walk] CAPTURE 055 label="travel" pos=(42.05,0.90,14.15) heading_deg=89.4 image=visits_night_055_travel.png
+[village-walk] CAPTURE 056 label="travel" pos=(45.01,0.95,10.28) heading_deg=330.8 image=visits_night_056_travel.png
+[village-walk] CAPTURE 057 label="travel" pos=(42.49,0.90,7.63) heading_deg=29.8 image=visits_night_057_travel.png
+[village-walk] NOTE pressed interact on "Open Door" at (43.6,7.6)
+[village-walk] CAPTURE 058 label="travel" pos=(44.68,0.92,3.78) heading_deg=11.9 image=visits_night_058_travel.png
+[village-walk] CAPTURE 059 label="end" pos=(44.78,0.92,-0.13) heading_deg=23.4 image=visits_night_059_end.png
+[village-walk] CAPTURE 060 label="reached Bram" pos=(44.78,0.92,-0.29) heading_deg=353.9 image=visits_night_060_reached-bram.png
+[village-walk] VISIT Bram kind=villager dist_m=2.14 prompt="Greet Bram"
+[village-walk] CAPTURE 061 label="travel" pos=(44.47,0.92,6.55) heading_deg=179.3 image=visits_night_061_travel.png
+[village-walk] CAPTURE 062 label="travel" pos=(46.13,0.90,12.88) heading_deg=151.0 image=visits_night_062_travel.png
+[village-walk] CAPTURE 063 label="travel" pos=(52.67,0.90,14.25) heading_deg=90.4 image=visits_night_063_travel.png
+[village-walk] CAPTURE 064 label="travel" pos=(58.07,0.90,11.73) heading_deg=16.3 image=visits_night_064_travel.png
+[village-walk] CAPTURE 065 label="end" pos=(58.42,0.90,10.85) heading_deg=30.3 image=visits_night_065_end.png
+[village-walk] CAPTURE 066 label="reached Nessa" pos=(58.60,0.90,10.53) heading_deg=55.5 image=visits_night_066_reached-nessa.png
+[village-walk] VISIT Nessa kind=villager dist_m=1.40 prompt="Greet Nessa"
+[village-walk] CAPTURE 067 label="travel" pos=(63.24,0.95,7.60) heading_deg=85.1 image=visits_night_067_travel.png
+[village-walk] CAPTURE 068 label="end" pos=(64.44,0.95,7.50) heading_deg=85.1 image=visits_night_068_end.png
+[village-walk] CAPTURE 069 label="reached Maren" pos=(64.81,0.95,7.47) heading_deg=30.0 image=visits_night_069_reached-maren.png
+[village-walk] VISIT Maren kind=villager dist_m=1.28 prompt="Greet Maren"
+[village-walk] CAPTURE 070 label="travel" pos=(58.23,0.90,8.83) heading_deg=210.0 image=visits_night_070_travel.png
+[village-walk] CAPTURE 071 label="travel" pos=(60.55,0.90,14.01) heading_deg=99.8 image=visits_night_071_travel.png
+[village-walk] CAPTURE 072 label="travel" pos=(64.21,0.90,18.39) heading_deg=176.9 image=visits_night_072_travel.png
+[village-walk] CAPTURE 073 label="end" pos=(62.49,0.95,21.05) heading_deg=251.3 image=visits_night_073_end.png
+[village-walk] CAPTURE 074 label="reached Oskar" pos=(61.98,0.95,21.22) heading_deg=321.1 image=visits_night_074_reached-oskar.png
+[village-walk] VISIT Oskar kind=villager dist_m=1.22 prompt="Greet Oskar"
+[village-walk] CAPTURE 075 label="travel" pos=(64.08,0.90,15.28) heading_deg=341.9 image=visits_night_075_travel.png
+[village-walk] CAPTURE 076 label="travel" pos=(57.63,0.90,13.76) heading_deg=269.1 image=visits_night_076_travel.png
+[village-walk] CAPTURE 077 label="travel" pos=(50.60,0.90,13.88) heading_deg=269.1 image=visits_night_077_travel.png
+[village-walk] CAPTURE 078 label="travel" pos=(43.57,0.90,13.99) heading_deg=269.1 image=visits_night_078_travel.png
+[village-walk] CAPTURE 079 label="travel" pos=(36.29,0.90,14.11) heading_deg=269.1 image=visits_night_079_travel.png
+[village-walk] CAPTURE 080 label="travel" pos=(29.26,0.90,14.22) heading_deg=269.1 image=visits_night_080_travel.png
+[village-walk] CAPTURE 081 label="travel" pos=(22.23,0.90,14.33) heading_deg=269.1 image=visits_night_081_travel.png
+[village-walk] CAPTURE 082 label="travel" pos=(15.30,0.90,14.18) heading_deg=250.4 image=visits_night_082_travel.png
+[village-walk] CAPTURE 083 label="travel" pos=(13.59,0.90,20.56) heading_deg=180.3 image=visits_night_083_travel.png
+[village-walk] CAPTURE 084 label="end" pos=(13.62,0.90,21.92) heading_deg=172.1 image=visits_night_084_end.png
+[village-walk] CAPTURE 085 label="reached gate TrailGate" pos=(13.68,0.90,22.37) heading_deg=64.9 image=visits_night_085_reached-gate-trailgate.png
+[village-walk] VISIT gate TrailGate kind=gate dist_m=0.11 prompt="-"
+[village-walk] CAPTURE 086 label="travel" pos=(14.08,0.90,15.34) heading_deg=21.3 image=visits_night_086_travel.png
+[village-walk] CAPTURE 087 label="travel" pos=(20.00,0.90,12.05) heading_deg=8.3 image=visits_night_087_travel.png
+[village-walk] CAPTURE 088 label="travel" pos=(20.32,0.90,5.12) heading_deg=1.1 image=visits_night_088_travel.png
+[village-walk] CAPTURE 089 label="travel" pos=(20.17,0.90,-1.83) heading_deg=358.2 image=visits_night_089_travel.png
+[village-walk] CAPTURE 090 label="travel" pos=(19.94,0.90,-8.86) heading_deg=358.2 image=visits_night_090_travel.png
+[village-walk] CAPTURE 091 label="travel" pos=(15.38,0.90,-11.77) heading_deg=266.7 image=visits_night_091_travel.png
+[village-walk] CAPTURE 092 label="travel" pos=(8.35,0.90,-11.90) heading_deg=271.5 image=visits_night_092_travel.png
+[village-walk] CAPTURE 093 label="travel" pos=(1.33,0.90,-12.07) heading_deg=271.5 image=visits_night_093_travel.png
+[village-walk] CAPTURE 094 label="travel" pos=(-5.70,0.90,-12.25) heading_deg=271.5 image=visits_night_094_travel.png
+[village-walk] CAPTURE 095 label="travel" pos=(-9.41,0.90,-7.06) heading_deg=196.9 image=visits_night_095_travel.png
+[village-walk] CAPTURE 096 label="travel" pos=(-11.06,0.92,-0.23) heading_deg=192.8 image=visits_night_096_travel.png
+[village-walk] CAPTURE 097 label="travel" pos=(-12.62,0.94,6.62) heading_deg=192.8 image=visits_night_097_travel.png
+[village-walk] CAPTURE 098 label="travel" pos=(-14.24,0.97,13.54) heading_deg=202.4 image=visits_night_098_travel.png
+[village-walk] CAPTURE 099 label="travel" pos=(-18.57,1.52,18.99) heading_deg=224.1 image=visits_night_099_travel.png
+[village-walk] CAPTURE 100 label="end" pos=(-20.51,1.82,20.79) heading_deg=236.4 image=visits_night_100_end.png
+[village-walk] CAPTURE 101 label="reached gate PondGate" pos=(-20.78,1.88,20.98) heading_deg=221.8 image=visits_night_101_reached-gate-pondgate.png
+[village-walk] VISIT gate PondGate kind=gate dist_m=0.22 prompt="-"
+[village-walk] PASS route=visits time=night captures=101 max_off_road_m=0.00 visited=12
