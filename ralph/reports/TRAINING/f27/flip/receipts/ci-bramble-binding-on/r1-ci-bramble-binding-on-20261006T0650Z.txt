@@ -1,0 +1,6 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+BRAMBLEBUN_BINDING variant=ordinary texture_id=-9223371780566021989 path=res://assets/creatures/tetherbound/bramblebun_redesign/models/bramblebun_redesign_extracted_base_color_vivid.png expected_id=-9223372007561755076
+BRAMBLEBUN_BINDING variant=alpha texture_id=-9223371780566021989 path=res://assets/creatures/tetherbound/bramblebun_redesign/models/bramblebun_redesign_extracted_base_color_vivid.png expected_id=-9223372007561755076
+BRAMBLEBUN_BINDING variant=shiny texture_id=-9223372007561755076 path=res://assets/creatures/tetherbound/bramblebun_redesign/models/creature_bramblebun_redesign_lod0_base_color.jpg expected_id=-9223372007561755076
+BRAMBLEBUN_BINDING_RESULT assertions=12 failures=[]

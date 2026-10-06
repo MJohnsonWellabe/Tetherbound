@@ -43,8 +43,8 @@ audio | ON FIRST PASS exit0; realworld footsteps/combatmixer/bandambience; devic
 authored_camps | ON FIRST PASS, exit0; six camp nodes/indices/prompts and arbiter-activated trail-camp overnight creature recovery; staged creature/pose/legacy hunger fixture; independent review PASS
 backpack_player_eats | ON FIRST PASS exit0; physicalSatchel eaterpicker/playerrow/satiety40->58/berries5->4/buff; existingstand-inPlayer/grants
 boss | ON FIRST functional PASS, exit0; Warden5creatures/959frames/finale/offer/road/full-party ceremony OPENING; inherited HP/party/relocation fixtures; duplicate-starter ERROR identical to OFF trainer diagnostic; independent functional review PASS
-bramblebun_colourway_binding | ON OPEN
-build_owns_creature_cycle | ON OPEN
+bramblebun_colourway_binding | ON FIRST PASS, exit0/12assertions/0failures/empty stderr; actual three variant dressing permitted binding/source ownership; direct assets; independent review PASS/no distinct-appearance claim
+build_owns_creature_cycle | ON FIRST PASS, exit0; no-menu LB control/Build Dpad focus+no world cycle/Build LB no cycle; direct party/catalogue setup; independent review PASS
 build_two_creature_beds | ON OPEN
 catch_aim_slowdown | ON OPEN
 catching | ON OPEN

@@ -297,3 +297,11 @@ b4b94fbe4a90546f56d4bee9a925e7ef1c96fd5fb9dd2d73218872f777d86f72  ci-authored-ca
 776d21dfc1b241cd4fdbbf7d39e13e558b1e0d2bcba8fa885b0826cc3475c52b  ci-boss-on/stderr.txt
 12f3c430a15f1daacf6ede55da68fc3090df40eec082c9e28454dba433487608  ci-boss-on/r1-ci-boss-on-20261006T0641Z.txt
 5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  ci-boss-on/exit.txt
+a3bc715dddb4f867cd5f0a7170709a339a061547d203766624a2fbdfe2006ed8  ci-bramble-binding-on/stdout.txt
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ci-bramble-binding-on/stderr.txt
+266b41ef83e7086c2d3457ab0325daaffa5d4f58f6fb94adf903535d5c05be6a  ci-bramble-binding-on/r1-ci-bramble-binding-on-20261006T0650Z.txt
+5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  ci-bramble-binding-on/exit.txt
+80a3094d54a0b2eb97d9dae177301e8d09e3ff00c98aa659b9025fe31dc69ade  ci-build-owns-cycle-on/stdout.txt
+9686dc34161f47cbda7f3eb5d514f21b7f48dc78260e736a8247d7dbdf842fa2  ci-build-owns-cycle-on/stderr.txt
+dcdef2b6656b8a634fe295a921d07a433b117e3361fe6cfb836faffdc0569801  ci-build-owns-cycle-on/r1-ci-build-owns-cycle-on-20261006T0651Z.txt
+5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  ci-build-owns-cycle-on/exit.txt
