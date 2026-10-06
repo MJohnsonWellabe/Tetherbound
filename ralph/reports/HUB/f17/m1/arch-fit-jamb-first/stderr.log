@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "D:\tetherbound\codex-c1\tools\art_pipeline\blender\build_realm_gate.py", line 142, in <module>
+    assert pier_width >= args.min_pier_width, 'Portal piers too narrow'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Portal piers too narrow
+
+Error: script failed, file: 'D:/tetherbound/codex-c1/tools/art_pipeline/blender/build_realm_gate.py', exiting.
