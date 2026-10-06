@@ -4,7 +4,7 @@ name: Auto merge settled work
 # Branch protection waits for traceability and ci-gate on the PR head.
 on:
   pull_request_target:
-    types: [opened, synchronize, reopened, ready_for_review, labeled]
+    types: [opened, synchronize, reopened, ready_for_review, labeled, unlabeled]
 
 permissions:
   contents: read
@@ -32,11 +32,16 @@ jobs:
           set -euo pipefail
           labels=$(gh api "repos/$REPO/issues/$PR_NUMBER/labels" --jq '[.[].name] | join(",")')
           if [[ ",$labels," != *",full-ci,"* ]]; then
-            code=$(gh api --paginate "repos/$REPO/pulls/$PR_NUMBER/files" --jq '.[].filename' \
-              | grep -vE '^(docs/|ralph/)|\.md$' || true)
+            # Fail closed: a gh api error stops this step instead of reading
+            # as "no code changed". Renames count both their old and new path.
+            files=$(gh api --paginate "repos/$REPO/pulls/$PR_NUMBER/files" \
+              --jq '.[] | .filename, (.previous_filename // empty)')
+            code=$(printf '%s\n' "$files" | grep -vE '^(docs/|ralph/)|\.md$' || true)
             if [ -n "$code" ]; then
               echo "Not arming auto-merge: code changed without the full-ci label:"
-              echo "$code" | head -20
+              printf '%s\n' "$code" | head -20 | sed 's/^/  /'
+              # Disarm one armed earlier, while the PR was docs-only.
+              gh pr merge --repo "$REPO" --disable-auto "$PR_NUMBER" || true
               exit 0
             fi
           fi
