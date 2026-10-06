@@ -220,6 +220,12 @@ static func _shape_number(shape: Dictionary, key: String, fallback: float = 0.0)
 func apply_pattern_shape(serial: int, shape: Dictionary) -> void:
 	if serial != last_cue_serial: return
 	var raw: Variant = shape.get("pattern")
+	# A pose carries only the moving parts; this tell's profile arrived on its
+	# reliable cue (same serial), so keep it rather than clearing the marks.
+	if raw is Dictionary and not (raw as Dictionary).has("profile") \
+			and _pattern_geometry.get("profile") is Dictionary:
+		raw = (raw as Dictionary).duplicate()
+		raw["profile"] = _pattern_geometry.profile
 	if not raw is Dictionary or not raw.get("profile") is Dictionary:
 		_clear_pattern_cue()
 		_pattern_geometry.clear()

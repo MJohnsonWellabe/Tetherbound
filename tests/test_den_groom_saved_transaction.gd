@@ -360,6 +360,10 @@ func test_guest_passive_drift_in_transit_is_merged_not_refused() -> void:
 	assert_true(plan.get("ok") == true and plan.get("duplicate") == false, "packet-transit care drift is the owner's, not a conflict " + str(plan))
 	var merged := E.merge_owner_passive(row.after, row.before, arrived)
 	assert_true(E.owner_matches_after(merged, row.after), "the groom's decided result stands")
-	assert_eq(merged.party[0].nourishment, arrived.party[0].nourishment + row.after.party[0].nourishment - row.before.party[0].nourishment,
-		"with the owner's own drift kept")
+	# Exact either way (F01#6a): a field the groom left alone is the owner's
+	# own value bit for bit; a field it decided carries the owner's drift.
+	var expected_nourishment: float = arrived.party[0].nourishment \
+		if E._equivalent(row.after.party[0].nourishment, row.before.party[0].nourishment) \
+		else arrived.party[0].nourishment + row.after.party[0].nourishment - row.before.party[0].nourishment
+	assert_eq(merged.party[0].nourishment, expected_nourishment, "with the owner's own drift kept")
 	assert_eq(player.inventory.count("fiber"), 0)
