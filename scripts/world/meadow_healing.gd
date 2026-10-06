@@ -56,6 +56,12 @@ const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 ## Set on a pylon the moment it is committed to falling, so a second `apply`
 ## (or any second pass) can never rotate an already-fallen pylon again.
 const TOPPLED_META := &"meadow_toppled"
+## Registered by the production builders. Resolve each group at its own
+## healing step: earlier steps can remove nodes, and another realm/world may
+## be alive in the same tree during travel or a proof reload.
+const PYLON_HOLDERS_GROUP := &"meadow_healing_pylon_holders"
+const CABLE_HOLDERS_GROUP := &"meadow_healing_cable_holders"
+const LIGHT_ROOTS_GROUP := &"meadow_healing_light_roots"
 ## F05#7 round 6: the drain and regreen overlays' own shader. Blind round 5
 ## read the works patch as "a hard-edged polygon that becomes a darker olive
 ## polygon -- a texture swap". Two causes, both fixed here rather than in any
@@ -658,18 +664,23 @@ func _kill_the_tether_lights() -> int:
 		dead_texture = load(dead_path)
 	var dead_darken := clampf(float(block.get("dead_darken", 0.25)), 0.0, 1.0)
 	var killed := 0
-	var seen: Array[Material] = []
-	for node: Node in _all_nodes(_world):
-		if not node is GeometryInstance3D:
-			continue
-		var geometry := node as GeometryInstance3D
-		for material: Material in _materials_of(geometry):
-			var standard := material as StandardMaterial3D
-			if standard == null or seen.has(standard):
+	var seen: Dictionary = {}
+	var visited: Dictionary = {}
+	for target_root: Node in _world_group_nodes(LIGHT_ROOTS_GROUP):
+		# These are small authored presentation roots, never the vegetation or
+		# the world. Roots can overlap (e.g. a conduit inside the stronghold).
+		for node: Node in _all_nodes(target_root):
+			if not is_instance_valid(node) or node.is_queued_for_deletion() \
+					or visited.has(node) or not node is GeometryInstance3D:
 				continue
-			seen.append(standard)
-			if _kill_one(standard, lit_path, dead_texture, dead_darken):
-				killed += 1
+			visited[node] = true
+			for material: Material in _materials_of(node as GeometryInstance3D):
+				var standard := material as StandardMaterial3D
+				if standard == null or seen.has(standard):
+					continue
+				seen[standard] = true
+				if _kill_one(standard, lit_path, dead_texture, dead_darken):
+					killed += 1
 	return killed
 
 
@@ -1401,7 +1412,7 @@ func _topple_the_pylons(immediate: bool) -> int:
 	var stagger := float(block.get("stagger_seconds", 0.35))
 	var lead := maxf(float(block.get("creak_seconds", 0.0)), 0.0) + maxf(float(block.get("creak_hold_seconds", 0.0)), 0.0)
 	var toppled := 0
-	for node: Node in _all_nodes(_world):
+	for node: Node in _world_group_nodes(PYLON_HOLDERS_GROUP):
 		var holder := node as Node3D
 		if holder == null or not _name_matches(str(holder.name), patterns):
 			continue
@@ -1421,10 +1432,10 @@ func _topple_the_pylons(immediate: bool) -> int:
 				var spans := _spans_hanging_from(holder, _pylon_index(pylons[i]), claimed)
 				_cables_hidden += spans.size()
 				_tear_after(spans, 0.0 if immediate else delay + lead)
-	for raw: Variant in (block.get("cable_holders", []) as Array):
-		for node: Node in _all_nodes(_world):
-			if str(node.name) == str(raw):
-				_cables_hidden += _hide_named(node, prefixes)
+	var cable_holders: Array = block.get("cable_holders", [])
+	for node: Node in _world_group_nodes(CABLE_HOLDERS_GROUP):
+		if cable_holders.has(str(node.name)):
+			_cables_hidden += _hide_named(node, prefixes)
 	return toppled
 
 
@@ -2315,6 +2326,17 @@ func _find(node_name: String) -> Node:
 		return null
 	var direct := _world.get_node_or_null(NodePath(node_name))
 	return direct if direct != null else _world.find_child(node_name, true, false)
+
+
+func _world_group_nodes(group: StringName) -> Array[Node]:
+	var out: Array[Node] = []
+	if _world == null or not _world.is_inside_tree():
+		return out
+	for node: Node in _world.get_tree().get_nodes_in_group(group):
+		if is_instance_valid(node) and not node.is_queued_for_deletion() \
+				and (node == _world or _world.is_ancestor_of(node)):
+			out.append(node)
+	return out
 
 
 func _all_nodes(root: Node) -> Array[Node]:

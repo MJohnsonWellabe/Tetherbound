@@ -1,0 +1,23 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=11476 control_port=54385 home=D:\tetherbound\codex-p1\ralph\reports\PERF\healing\handoff-second\native-net/home-0 log=D:\tetherbound\codex-p1\ralph\reports\PERF\healing\handoff-second\native-net/peer-0.log
+coordinator: launched peer 1 (client) pid=2384 control_port=54386 home=D:\tetherbound\codex-p1\ralph\reports\PERF\healing\handoff-second\native-net/home-1 log=D:\tetherbound\codex-p1\ralph\reports\PERF\healing\handoff-second\native-net/peer-1.log
+coordinator: peer 0 hello: {"enet_port":32441.0,"godot_version":"4.7-stable (official)","main_sha":"d6b6246278f5","peer":0.0,"pid":11476.0,"role":"host","type":"hello","user_data_dir":"D:/tetherbound/codex-p1/ralph/reports/PERF/healing/handoff-second/native-net/home-0/Godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":32442.0,"godot_version":"4.7-stable (official)","main_sha":"d6b6246278f5","peer":1.0,"pid":2384.0,"role":"client","type":"hello","user_data_dir":"D:/tetherbound/codex-p1/ralph/reports/PERF/healing/handoff-second/native-net/home-1/Godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: handoff host opened a world
+PASS: second peer joined the handoff world
+PASS: peer 0 received a level-18 terrapup
+PASS: peer 0 received a level-18 bramblebun
+PASS: peer 0 received a level-18 trailpup
+PASS: peer 0 received a level-18 mudsnout
+PASS: peer 1 received a level-18 terrapup
+PASS: peer 1 received a level-18 bramblebun
+PASS: peer 1 received a level-18 trailpup
+PASS: peer 1 received a level-18 mudsnout
+PASS: the Hall names its own Warden arena
+PASS: host challenged the Warden (challenged warden_aldis; bound to encounter '1:1' (4 creatures to come))
+PASS: the Warden minted one shared encounter record
+PASS: guest joined the Warden's own fight rather than opening another
+FAIL: both peers felled the Warden (no verdict)
+FAIL: both peers felled the Warden (no verdict)
