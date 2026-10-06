@@ -1,0 +1,38 @@
+{
+	"captures": [
+		"D:/tetherbound/codex-r5/ralph/reports/LOOP/f42/r5/native-after-fixed-1280x720/f42-altar-loadout-1280x720.png",
+		"D:/tetherbound/codex-r5/ralph/reports/LOOP/f42/r5/native-after-fixed-1280x720/f42-altar-loadout-charged-1280x720.png",
+		"D:/tetherbound/codex-r5/ralph/reports/LOOP/f42/r5/native-after-fixed-1280x720/f42-altar-loadout-utility-1280x720.png",
+		"D:/tetherbound/codex-r5/ralph/reports/LOOP/f42/r5/native-after-fixed-1280x720/f42-altar-loadout-ultimate-1280x720.png",
+		"D:/tetherbound/codex-r5/ralph/reports/LOOP/f42/r5/native-after-fixed-1280x720/f42-altar-mastery-1280x720.png",
+		"D:/tetherbound/codex-r5/ralph/reports/LOOP/f42/r5/native-after-fixed-1280x720/f42-altar-gear-1280x720.png",
+		"D:/tetherbound/codex-r5/ralph/reports/LOOP/f42/r5/native-after-fixed-1280x720/f42-altar-gear-trainer-1280x720.png",
+		"D:/tetherbound/codex-r5/ralph/reports/LOOP/f42/r5/native-after-fixed-1280x720/f42-altar-gear-protection-1280x720.png",
+		"D:/tetherbound/codex-r5/ralph/reports/LOOP/f42/r5/native-after-fixed-1280x720/f42-altar-gear-pouch-1280x720.png",
+		"D:/tetherbound/codex-r5/ralph/reports/LOOP/f42/r5/native-after-fixed-1280x720/f42-altar-level-1280x720.png",
+		"D:/tetherbound/codex-r5/ralph/reports/LOOP/f42/r5/native-after-fixed-1280x720/f42-altar-traits-release-1280x720.png",
+		"D:/tetherbound/codex-r5/ralph/reports/LOOP/f42/r5/native-after-fixed-1280x720/f42-station-forge-1280x720.png",
+		"D:/tetherbound/codex-r5/ralph/reports/LOOP/f42/r5/native-after-fixed-1280x720/f42-research-log-1280x720.png",
+		"D:/tetherbound/codex-r5/ralph/reports/LOOP/f42/r5/native-after-fixed-1280x720/f42-bounty-board-1280x720.png"
+	],
+	"combat_fixture_captured": false,
+	"earned_service_save_coop_device_visual_pass": false,
+	"evidence_kind": "native UI layout fixtures only",
+	"fixtures": [
+		"new-game Terrapup",
+		"invented Altar quote",
+		"empty trait quote",
+		"invented research tasks",
+		"invented bounty rows",
+		"existing Forge station-confirm component"
+	],
+	"missing": [
+		"earned services",
+		"code-blind judge",
+		"world/HUD composite"
+	],
+	"size": [
+		1280,
+		720
+	]
+}

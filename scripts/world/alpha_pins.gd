@@ -112,12 +112,43 @@ var _clusters: Array[Dictionary] = []
 func _ready() -> void:
 	_read_config()
 	_clusters = build_clusters()
+	_clear_lure_sightlines()
 	_player = get_node_or_null(player_path) as Node3D
 	# A world with no player (a headless boot, a menu-only scene) has nobody to
 	# measure a distance from. Everything else about this node still works, so
 	# the load-time prune below still runs; only the proximity tick idles.
 	_prune_cleared()
 	set_process(true)
+
+
+## A declared habitat opens its approach once, after the world's scatter build.
+## Reuse the site's existing render/collider/gather removal path; never rebake
+## or renumber harvest placements to make a camera sightline.
+func _clear_lure_sightlines() -> void:
+	var world := get_parent()
+	var vegetation := world.get_node_or_null(^"Vegetation") if world != null else null
+	if vegetation == null or not vegetation.has_method("clear_area"):
+		return
+	for cluster: Dictionary in _clusters:
+		var zones: Variant = cluster.get("lure_clearings", [])
+		if not zones is Array:
+			continue
+		for raw: Variant in zones:
+			if not raw is Dictionary:
+				continue
+			var at: Variant = raw.get("at")
+			var radius: Variant = raw.get("radius_m")
+			if not at is Array or at.size() != 2 or typeof(radius) not in [TYPE_INT, TYPE_FLOAT]:
+				continue
+			if typeof(at[0]) not in [TYPE_INT, TYPE_FLOAT] or typeof(at[1]) not in [TYPE_INT, TYPE_FLOAT]:
+				continue
+			var point := Vector2(float(at[0]), float(at[1]))
+			var radius_m := float(radius)
+			if not point.is_finite() or not is_finite(radius_m) or radius_m <= 0.0 or radius_m > 20.0:
+				continue
+			if point.distance_to(cluster.position) > 100.0:
+				continue
+			vegetation.call("clear_area", Vector3(point.x, 0.0, point.y), radius_m)
 
 
 func _process(delta: float) -> void:
@@ -294,6 +325,7 @@ static func build_clusters() -> Array[Dictionary]:
 			"nickname": str(alpha.get("nickname", "")),
 			"aura_light": alpha.get("aura_light", {}) if alpha.get("aura_light", {}) is Dictionary else {},
 			"nameplate": alpha.get("nameplate", {}) if alpha.get("nameplate", {}) is Dictionary else {},
+			"lure_clearings": alpha.get("lure_clearings", []).duplicate(true) if alpha.get("lure_clearings", []) is Array else [],
 		})
 	return out
 

@@ -185,6 +185,7 @@ func _build_station_controls(outer: VBoxContainer) -> void:
 	_upgrade_label.add_theme_font_size_override("font_size",UITokens.FONT_READ)
 	outer.add_child(_upgrade_label)
 	var scroll := ScrollContainer.new()
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.custom_minimum_size=Vector2(780,210 if _station.get_meta("building_id","") == "forge" else 80)
 	scroll.follow_focus = true
 	if not _gear_cfg.is_empty() and _station.get_meta("building_id","") in ["workbench","altar"]: scroll.custom_minimum_size.y=210
@@ -193,6 +194,7 @@ func _build_station_controls(outer: VBoxContainer) -> void:
 	scroll.custom_minimum_size.y=minf(scroll.custom_minimum_size.y,maxf(120,viewport_height*0.28 if _station.get_meta("building_id","") == "forge" else viewport_height*0.5))
 	outer.add_child(scroll)
 	var controls := VBoxContainer.new()
+	controls.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	controls.custom_minimum_size.x=740
 	scroll.add_child(controls)
 	var id: String = str(_station.get_meta("building_id",""))
@@ -211,6 +213,7 @@ func _build_station_controls(outer: VBoxContainer) -> void:
 		"forge":
 			_refining_label=Label.new()
 			_refining_label.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+			_refining_label.add_theme_font_size_override("font_size", UITokens.FONT_READ)
 			controls.add_child(_refining_label)
 			_change_refining_amount(0)
 			_station_button(controls,"Fewer refining units",func() -> void: _change_refining_amount(-1))
@@ -647,7 +650,7 @@ func _start_refining(recipe: String) -> void:
 
 func _change_refining_amount(delta: int) -> void:
 	_refining_amount=clampi(_refining_amount+delta,1,int(STATION_RULES.config().forge.maximum_manual_units))
-	_refining_label.text="Refine %d units — each completes while you stay beside the Forge" % _refining_amount
+	_refining_label.text="Refine %d %s — stay beside the Forge until each finishes" % [_refining_amount, "unit" if _refining_amount == 1 else "units"]
 var game: Node = null
 
 var _root: Control = null
@@ -848,13 +851,14 @@ func _build() -> void:
 	zones.add_theme_constant_override("separation", 22)
 	outer.add_child(zones)
 
-	if not is_instance_valid(_station) or _station.get_meta("building_id", "") not in ["den", "farm"]:
+	if not is_instance_valid(_station) or (_station.get_meta("building_id", "") not in ["den", "farm"] and not _known_ids().is_empty()):
 		zones.add_child(_build_list_zone())
 		zones.add_child(_build_center_zone())
 		zones.add_child(_build_right_zone())
 	else:
 		_status = Label.new()
 		_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_status.add_theme_font_size_override("font_size", UITokens.FONT_READ)
 		outer.add_child(_status)
 	if is_instance_valid(_station): _build_station_controls(outer)
 
