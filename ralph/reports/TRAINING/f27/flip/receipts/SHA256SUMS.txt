@@ -624,3 +624,13 @@ e3915def59d32f1256f0d5e906c0b5c8df2e83922a20dcf3cf8690c2338125b9  net-tournament
 ddac8c278e322ede416d6eb9b42cec71635a450c90daf17841bd2eff2bfa2f9b  net-tournament-off-round-fix-final/home-0-character.json.txt
 1ac8f39fc9e483d4fe14b4ad7c91554b374dc7e53dc63000ad1a47d90b0911f5  net-tournament-off-round-fix-final/home-0-world.json.txt
 f90182a379b7d596f3a8f1799a262d487be0ae45952ae21cc861316b25be4ec1  net-tournament-off-round-fix-final/home-1-character.json.txt
+9a6ac3297f051a0ba528644b7934ac17ad90ded7b17a868bdb80a7ede1c62605  net-tournament-on-round-fix-final-retry/peer-0.txt
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  net-tournament-on-round-fix-final-retry/coordinator.stderr.txt
+ecab0ab3258acd28426387533fdb0a466b2b85e814be431449cf0423cf5c4170  net-tournament-on-round-fix-final-retry/coordinator.stdout.txt
+d3cac7694144bb80735fcf92edb741948877c53e5b1ea356e300f2bb63af3cca  net-tournament-on-round-fix-final-retry/peer-1.txt
+5cb2bf78d5c0d0021e5a2e535b7c15f73cef5891e55aaf33c87a25f4a25be352  net-tournament-on-round-fix-final-retry/NET_RUN.json.txt
+146776e4e3d7e28948f02d4fc4135dc44792903139dccf3ae8cb400834ab0571  net-tournament-on-round-fix-final-retry/SUMMARY.txt
+6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b  net-tournament-on-round-fix-final-retry/exit.txt
+f9950ad25b869fe6aadc39c9d1bb9ac3cc4a228050264e405284bc258929f617  net-tournament-on-round-fix-final-retry/home-0-character.json.txt
+d992dba0e9cab6187a9df97acdf1a304b7788de9c95fc4ae041163c7f09bff98  net-tournament-on-round-fix-final-retry/home-0-world.json.txt
+cf0dac4e1870622dbbc0357e32daf26c34eb85744c614f93b339eca861fa9ab5  net-tournament-on-round-fix-final-retry/home-1-character.json.txt

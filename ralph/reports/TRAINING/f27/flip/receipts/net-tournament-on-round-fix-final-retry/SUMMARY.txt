@@ -1,0 +1,11 @@
+# Net smoke run r1-tournament-on-round-fix-final-retry-20261006T1148Z
+
+Scene: world
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=11504 exited=false unexpected_exit=false
+- peer 1 (client) pid=17700 exited=true unexpected_exit=false
+
+FAILURES:
+- both peers completed 'tournament_quarter_mira' (no verdict)
