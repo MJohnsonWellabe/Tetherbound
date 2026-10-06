@@ -1467,4 +1467,7 @@ func test_the_reported_owner_hold_names_an_untouched_groom_resume() -> void:
 	groom.untouched = false
 	groom.pending.phase = "install"
 	assert_eq(session.call("_owner_snapshot_block_reason", player), "groom passive pending phase=install")
+	groom.untouched = true
+	assert_ne(str(session.call("_owner_snapshot_block_reason", player, true)).left(20), "groom passive pending",
+		"a save refusal (which ignores an untouched groom) names its own cause")
 	session.free()

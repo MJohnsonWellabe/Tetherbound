@@ -1264,12 +1264,12 @@ func _note_host(stream: Dictionary, reason: String) -> void:
 	_host_notes[character] = reason
 	print("[owner-passive] host %s: %s (t=%dms)" % [character.left(18), reason, Time.get_ticks_msec()])
 
+## Diagnostic: why a host refused an owner's rebase (once per character and reason).
+func _note_rebase_refused(character: String, reason: String) -> void:
+	_note_host({"character": character}, "rebase refused: " + reason)
+
 ## Diagnostic only, once per distinct reason: a packet this owner drops is
 ## otherwise invisible, and the host simply resends it forever.
-## Diagnostic: why a host refused an owner's rebase (logged once per reason).
-func _note_rebase_refused(character: String, reason: String) -> void:
-	_note_ignored("rebase for %s: %s" % [character.left(18), reason])
-
 func _note_ignored(reason: String) -> void:
 	if reason == _reported_ignore:
 		return
