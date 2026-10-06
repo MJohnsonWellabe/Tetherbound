@@ -4212,10 +4212,10 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 		return {"verdict": "ERROR", "detail": "no EncounterDirector/CombatManager"}
 	var guest_master: Dictionary = director.get("_master_duel") if args.get("fixture_guest_master") == true else {}
 	var guest_master_id := str(guest_master.get("encounter_id", ""))
-	var drives_guest_master: bool = guest_master.get("guest") == true and guest_master.get("master_id") == "master_t1" \
+	var drives_guest_master: bool = guest_master.get("guest") == true and not preload("res://scripts/creatures/breakthrough.gd").master(str(guest_master.get("master_id", ""))).is_empty() \
 		and not guest_master_id.is_empty() and guest_master_id == str(manager.call("encounter_id")) and manager.call("is_fighting") == true
 	if args.get("fixture_guest_master") == true and not drives_guest_master:
-		return {"verdict": "FAIL", "detail": "No actual bound guest Master1 manager; fixture cannot select or create a duel"}
+		return {"verdict": "FAIL", "detail": "No actual bound canonical guest Master manager; fixture cannot select or create a duel"}
 	if not bool(director.call("trainer_battle_active")) and not drives_guest_master:
 		return {"verdict": "FAIL", "detail": "no trainer battle is running"}
 	# PHYSICS FRAMES, not loop iterations, and bounded by the budget the

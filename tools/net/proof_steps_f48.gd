@@ -658,13 +658,14 @@ static func _fixture_trainer_fight(tree: SceneTree, args: Dictionary) -> Diction
 	var disclosure: Variant = args.get("fixture_disclosure")
 	var required := {"scope": "named_mechanics_only", "self_hp_topups": true,
 		"ally_placement": true, "enemy_hp_ceiling": 0, "earned_campaign_credit": false}
-	if trainer not in ["master_t1", "warden_aldis"] or not _json_equal(disclosure, required):
+	var master_definition := preload("res://scripts/creatures/breakthrough.gd").master(trainer)
+	if (master_definition.is_empty() and trainer != "warden_aldis") or not _json_equal(disclosure, required):
 		return _result(false, "Exact named mechanics fight disclosure required; opponent HP ceiling is disabled")
 	var director := tree.current_scene.get_node_or_null(^"EncounterDirector") if tree.current_scene != null else null
 	var manager := tree.current_scene.get_node_or_null(^"CombatManager") if tree.current_scene != null else null
 	if director == null or manager == null: return _result(false, "Actual production director/manager missing")
 	var master: Variant = director.get("_master_duel")
-	var guest: bool = trainer == "master_t1" and master is Dictionary and master.get("guest") == true
+	var guest: bool = not master_definition.is_empty() and master is Dictionary and master.get("guest") == true
 	if (not guest and str(director.call("trainer_battle_id")) != trainer) or \
 		(guest and (master.get("master_id") != trainer or master.get("encounter_id") != manager.call("encounter_id"))):
 		return _result(false, "Fixture fight is not bound to the actual already-started named encounter")
@@ -893,7 +894,9 @@ static func _fixture_approach(tree: SceneTree, args: Dictionary) -> Dictionary:
 		return _result(false, "Explicit actual actor/owned-ally position fixture disclosure required")
 	var scene := tree.current_scene
 	var target_name := str(args.get("target", ""))
-	if scene == null or target_name not in ["master_t1", "master_t1_chest", "warden_aldis", "forge", "kitchen", "altar", "home_arch", "tidewake_arch", "meadows_pedestal"]:
+	var master_id := target_name.trim_suffix("_chest")
+	var master_definition := preload("res://scripts/creatures/breakthrough.gd").master(master_id)
+	if scene == null or (master_definition.is_empty() and target_name not in ["warden_aldis", "forge", "kitchen", "altar", "home_arch", "tidewake_arch", "meadows_pedestal"]):
 		return _result(false, "Unknown authored mechanics approach")
 	var world_input_before: Dictionary = {}
 	if target_name == "forge":
@@ -907,8 +910,8 @@ static func _fixture_approach(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var altar_interaction: Node3D
 	var altar_binding := {}
 	for candidate: Node in scene.find_children("*", "Node3D", true, false):
-		if target_name.begins_with("master_t1") and candidate.get_script() == preload("res://scripts/masters/master_site.gd") \
-			and candidate.get("master_id") == "master_t1" and candidate.get("_mounted") == true:
+		if not master_definition.is_empty() and candidate.get_script() == preload("res://scripts/masters/master_site.gd") \
+			and candidate.get("master_id") == master_id and candidate.get("_mounted") == true:
 			if target != null: return _result(false, "Ambiguous actual Master site")
 			target = candidate.get_node_or_null(^"RecipeChest" if target_name.ends_with("_chest") else ^"Master") as Node3D
 		elif target_name == "warden_aldis" and candidate.get_script() == preload("res://scripts/world/stronghold_climax.gd"):
@@ -1302,10 +1305,61 @@ static func _counts(payload: Dictionary) -> Dictionary:
 			out[id] = int(out.get(id, 0)) + int(row.get("n", 0))
 	return out
 
+## Assertions added to the existing producer; never starts/resolves a fight.
+## Capture identities before unbinding; exited retains the actual terminal result.
+static func _check_master_duel(tree: SceneTree, now: Dictionary, wanted: Dictionary, errors: Array[String]) -> void:
+	var game := tree.root.get_node_or_null(^"Game")
+	var director := tree.current_scene.get_node_or_null(^"EncounterDirector") if tree.current_scene != null else null
+	var manager := tree.current_scene.get_node_or_null(^"CombatManager") if tree.current_scene != null else null
+	var id := str(wanted.get("master_id", ""))
+	var uid := str(wanted.get("creature_uid", ""))
+	if game == null or director == null or manager == null or preload("res://scripts/creatures/breakthrough.gd").master(id).is_empty():
+		errors.append("Actual canonical Master composition unavailable")
+		return
+	var key := "f48_master_" + id
+	if wanted.get("outcome") == "active":
+		var record: Dictionary = director.call("encounter_record")
+		var duel: Dictionary = director.get("_master_duel")
+		var peer := int(game.session.call("local_peer_id"))
+		var active: RefCounted = manager.call("active_creature")
+		var participant: Dictionary = record.get("participants", {}).get(peer, {})
+		if manager.call("is_fighting") != true or active == null or record.get("kind") != "trainer" \
+			or record.get("phase") != "active" or record.get("opponent", {}).get("owner_npc") != id \
+			or record.get("participants", {}).size() != 1 or participant.get("character_id") != now.character_id \
+			or participant.get("creature_uid") != uid or active.get("uid") != uid or duel.get("creature_uid") != uid \
+			or duel.get("character_id") != now.character_id or duel.get("master_id") != id \
+			or duel.get("encounter_id") != manager.call("encounter_id") or duel.get("encounter_id") != record.get("encounter_id") \
+			or not UIDS.uids(now.memory.get("party", [])).has(str(active.get("uid"))):
+			errors.append("Master is not an actual 1v1 with this character's selected owned creature")
+			return
+		var previous: Dictionary = tree.get_meta(key, {})
+		if wanted.get("retry") == true and (previous.get("outcome") != "lost" \
+			or previous.get("encounter_id") == duel.encounter_id or previous.get("character_id") != now.character_id \
+			or previous.get("world_namespace") != now.world_namespace or previous.get("session_epoch") != game.session.call("_altar_current_epoch")):
+			errors.append("Retry lacks this character's actual earlier loss and a new encounter identity")
+			return
+		var observed := {"master_id": id, "encounter_id": str(duel.encounter_id), "character_id": str(now.character_id),
+			"world_namespace": str(now.world_namespace), "session_epoch": str(game.session.call("_altar_current_epoch")),
+			"creature_uid": str(active.get("uid")), "outcome": "", "record": record.duplicate(true)}
+		tree.set_meta(key, observed)
+		var observer := func(outcome: String) -> void: observed.outcome = outcome
+		manager.connect("exited", observer, CONNECT_ONE_SHOT)
+		now.master_duel = observed.duplicate(true)
+	elif wanted.get("outcome") == "lost":
+		var observed: Dictionary = tree.get_meta(key, {})
+		if observed.get("outcome") != "lost" or observed.get("creature_uid") != uid or observed.get("character_id") != now.character_id \
+			or observed.get("world_namespace") != now.world_namespace or observed.get("session_epoch") != game.session.call("_altar_current_epoch") \
+			or manager.call("is_fighting") == true or director.call("trainer_battle_active") == true or not (director.get("_master_duel") as Dictionary).is_empty():
+			errors.append("Actual original Master loss has not resolved and released its duel")
+		now.master_duel = observed.duplicate(true)
+	else:
+		errors.append("Master assertion requires active or lost")
+
 static func _assert(tree: SceneTree, args: Dictionary) -> Dictionary:
 	var now := _observe(tree)
 	if now.is_empty() or now.disk.is_empty(): return _result(false, "Actual durable character file unavailable", now)
 	var errors: Array[String] = []
+	if args.has("master_duel"): _check_master_duel(tree, now, args.master_duel, errors)
 	if args.get("portal_enter") == true:
 		var entered := false
 		for result: Dictionary in tree.get_meta("f48_portal_results", []):
@@ -1353,6 +1407,10 @@ static func _assert(tree: SceneTree, args: Dictionary) -> Dictionary:
 			var values: Variant = _path(state, path)
 			for wanted: Variant in args.contains_all[path]:
 				if not values is Array or not values.has(wanted): errors.append(payload + ": missing " + path + "/" + str(wanted))
+		for expected: Dictionary in args.get("receipt_counts", []):
+			var receipt := str(expected.get("receipt", ""))
+			var receipts: Array = state.get("redesign_character", {}).get("transaction_receipts", [])
+			if receipt.is_empty() or receipts.count(receipt) != int(expected.get("count", -1)): errors.append(payload + ": wrong exact receipt count " + receipt)
 		for path: String in args.get("lacks", {}):
 			var values: Variant = _path(state, path)
 			if not values is Array or values.has(args.lacks[path]): errors.append(payload + ": unearned or absent field " + path)
@@ -1431,7 +1489,7 @@ static func _transaction_row(now: Dictionary, transaction: String) -> Dictionary
 static func _check_saved_transaction(tree: SceneTree, now: Dictionary, prior: Dictionary, args: Dictionary, errors: Array[String]) -> void:
 	var transaction := str(args.saved_transaction)
 	var actions := {"craft": "station_craft", "release": "trait_release", "feast": "feast_feed",
-		"relic": "relic_hang", "essence_spend": "altar_spend"}
+		"relic": "relic_hang", "essence_spend": "altar_spend", "master_chest": "master_chest"}
 	var row := _transaction_row(now, transaction)
 	var receipt := str(row.get("receipt", ""))
 	if row.is_empty() or receipt.is_empty() or row.get("character_id") != now.character_id \
@@ -1447,6 +1505,17 @@ static func _check_saved_transaction(tree: SceneTree, now: Dictionary, prior: Di
 		or row.get("after", {}).get("character_id") != now.character_id \
 		or row.get("after", {}).get("redesign_character", {}).get("transaction_receipts", []).count(receipt) != 1:
 		errors.append("Wrong original accepted personal transaction journal")
+	if transaction == "master_chest":
+		var master_id := str(args.get("master_id", ""))
+		var edge: Dictionary = tree.get_meta("f48_latest_owner_save", {})
+		if preload("res://scripts/creatures/breakthrough.gd").master(master_id).is_empty() \
+			or receipt != "master_recipe:%s:%s" % [master_id, str(now.character_id)] \
+			or row.get("intent") != {"master_id": master_id} or edge.get("identity") != row.get("delivery_id") \
+			or edge.get("packet", {}).get("receipt") != receipt or edge.get("row", {}).get("action") != "master_chest":
+			errors.append("Master chest lacks its exact actual owner BOOL-save edge and accepted ACK")
+		# Existing exact full owner/world/transport/file/passive edge validator.
+		# It refuses a pending ACK, another latest row or an unobserved save.
+		errors.append_array(_snapshot_errors(tree, now))
 	for scope: String in ["memory", "disk"]:
 		if now[scope].get("redesign_character", {}).get("transaction_receipts", []).count(receipt) != 1:
 			errors.append(scope + ": original saved transaction receipt missing or duplicated")

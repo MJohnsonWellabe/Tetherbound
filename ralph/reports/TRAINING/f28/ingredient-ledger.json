@@ -5,6 +5,12 @@
     "owner": "F32",
     "source_commit": "8e7c11ceb5854f063c5241d62618c382803562c9",
     "package_head": "8e7c11ceb5854f063c5241d62618c382803562c9",
+    "current_main_source_changes": [
+      {"commit": "045c204fa4ce7237b39a1f8b8bf646bca090aefa", "file": "data/config/essence_nodes.json", "change": "worn or missing held tool no longer locks out gathering"},
+      {"commit": "55cb280747d4916cef81a8ad9219b71a497da774", "file": "data/config/essence_nodes.json", "change": "essence nodes mostly off-route in every biome"},
+      {"commit": "b1522e17b4ae5a7402091c6f365dbe5730637243", "files": ["data/config/essence_nodes.json", "data/config/farm.json"], "change": "activate progression and loops with live pattern and resource consumers"},
+      {"commit": "6cee2372f0d488e25ddb4548c09043901fc32979", "file": "data/config/farm.json", "change": "admit valid item and shed data and preserve native source surfaces"}
+    ],
     "pull_request": "https://github.com/MJohnsonWellabe/Tetherbound/pull/515",
     "source_cut": "ralph/reports/HOMESTEAD/f32/whole-source/source-cut.json",
     "files": {

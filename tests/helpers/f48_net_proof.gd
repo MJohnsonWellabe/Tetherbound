@@ -284,6 +284,52 @@ func _loop(steps: Array, capture_inputs: bool = false) -> void:
 	steps.append(_entry(0, "f48_assert", {"participants": ["$character0", "$character1"]}))
 	steps.append(_entry(1, "f48_assert", {"guest_world_empty": true}))
 
+## Coordinator6009171478: all five Masters and loss -> retry in this EXISTING
+## producer. Routes must contain real travel/recovery/input; none is invented.
+## The existing disclosed approach/top-up arms award no earned-route credit.
+func _masters(steps: Array) -> void:
+	_prerequisites(steps)
+	for tier: int in range(1, 6):
+		var master_id := "master_t%d" % tier
+		var feast_id := "feast_t%d" % tier
+		for peer: int in 2:
+			var prefix := "%s_%d" % [master_id, peer]
+			var selection: Variant = _profile.get("outcomes", {}).get(prefix)
+			if not selection is Dictionary or not selection.has_all(["creature_uid", "retry_uid"]) \
+				or not preload("res://scripts/creatures/creature_instance.gd").valid_uid(str(selection.get("creature_uid", ""))) \
+				or not preload("res://scripts/creatures/creature_instance.gd").valid_uid(str(selection.get("retry_uid", ""))):
+				_profile_errors.append("Independent intended owned choice/retry UID unavailable: " + prefix)
+				return
+			steps.append(_entry("all", "f48_witness", {"remember": prefix + "_before"}))
+			steps.append_array(_route(prefix + "_start", peer))
+			steps.append(_entry(peer, "f48_assert", {"master_duel": {"master_id": master_id, "creature_uid": selection.creature_uid, "outcome": "active"}}))
+			steps.append_array(_route(prefix + "_lose", peer))
+			steps.append(_entry(peer, "f48_assert", {"master_duel": {"master_id": master_id, "creature_uid": selection.creature_uid, "outcome": "lost"},
+				"since": prefix + "_before", "unchanged": ["redesign_character/master_wins", "redesign_character/feast_recipes"]}, "Actual loss grants neither win nor recipe"))
+			steps.append_array(_route(prefix + "_retry", peer))
+			steps.append(_entry(peer, "f48_assert", {"master_duel": {"master_id": master_id, "creature_uid": selection.retry_uid, "outcome": "active", "retry": true}}))
+			steps.append(_entry(peer, "f48_fixture_trainer_fight", {"trainer_id": master_id, "budget_frames": 3000,
+				"fixture_disclosure": {"scope": "named_mechanics_only", "self_hp_topups": true, "ally_placement": true,
+					"enemy_hp_ceiling": 0, "earned_campaign_credit": false}}, "Existing disclosed full-HP opponent fight; real win/save/ACK"))
+			steps.append(_entry(peer, "wait", {"frames": 180}))
+			steps.append_array(_route(prefix + "_chest", peer))
+			steps.append(_entry(peer, "wait", {"frames": 180}))
+			var character := "$character%d" % peer
+			# Existing IPC resolves tokens in values, never Dictionary keys.
+			var receipts := [{"receipt": "master_recipe:%s:%s:win" % [master_id, character], "count": 1},
+				{"receipt": "master_recipe:%s:%s" % [master_id, character], "count": 1}]
+			steps.append(_entry(peer, "f48_assert", {"since": prefix + "_before", "item_delta": {"tether_candy": 2},
+				"contains": {"redesign_character/master_wins": master_id, "redesign_character/feast_recipes": feast_id},
+				"append_count": {"redesign_character/master_wins": 1, "redesign_character/feast_recipes": 1}, "receipt_counts": receipts,
+				"saved_transaction": "master_chest", "master_id": master_id}))
+			steps.append(_entry(1 - peer, "f48_assert", {"since": prefix + "_before", "unchanged": REPLAY_FIELDS}, "Bystander receives no other character's recipe or candy"))
+			steps.append(_entry(peer, "f48_witness", {"remember": prefix + "_claimed"}))
+			steps.append_array(_route(prefix + "_chest", peer))
+			steps.append(_entry(peer, "wait", {"frames": 180}))
+			steps.append(_entry(peer, "f48_assert", {"since": prefix + "_claimed", "unchanged": REPLAY_FIELDS, "receipt_counts": receipts,
+				"saved_transaction": "master_chest", "master_id": master_id, "same_transaction_as": prefix + "_claimed"}, "Reopening the real chest cannot pay twice"))
+	steps.append(_entry(1, "f48_assert", {"guest_world_empty": true}))
+
 func _outcome(transaction: String, since: String, peer: int = 1) -> Dictionary:
 	var fixed := {"since": since}
 	match transaction:
