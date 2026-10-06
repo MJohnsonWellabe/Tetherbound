@@ -28,6 +28,7 @@ signal altar_trait_quote_completed(station_key: String, uid: String)
 var _homestead_stations: Dictionary = {}
 var _foundation_requests: Dictionary = {}
 var _foundation_personal_cache: Dictionary = {}
+var _foundation_personal_cache_scope: Dictionary = {}
 var _foundation_camp_pending: Dictionary = {}
 var _camp_view_requested_ms := -1000000
 var _process_exit_in_flight := false
@@ -407,6 +408,7 @@ func _rpc_foundation_reply(envelope: Dictionary, result: Dictionary) -> void:
 		_foundation_requests.erase(correlation)
 	elif envelope.op == "personal_view":
 		_foundation_personal_cache = result.duplicate(true)
+		_foundation_personal_cache_scope = _foundation_view_scope(envelope)
 		homestead_personal_view_completed.emit()
 	elif envelope.op in FOUNDATION_ACTIONS.ACTIONS:
 		# F34#4: a guest's camp request ends on the host's settled or refused
@@ -714,7 +716,20 @@ func _advance_personal_view_revision(row: Dictionary) -> void:
 
 func homestead_personal_view() -> Dictionary:
 	if is_host(): return _foundation_personal_view(local_peer_id())
+	var scope := _foundation_view_scope(_altar_envelope("personal_view", "homestead_view"))
+	_personal_view_for_scope(scope)
 	_foundation_send("personal_view", "homestead_view", {}, -1)
+	return _personal_view_for_scope(scope)
+
+static func _foundation_view_scope(envelope: Dictionary) -> Dictionary:
+	if envelope.is_empty(): return {}
+	return {"character_id": envelope.get("character_id"), "world_namespace": envelope.get("world_namespace"), "session_epoch": envelope.get("session_epoch")}
+
+func _personal_view_for_scope(scope: Dictionary) -> Dictionary:
+	if scope.is_empty() or scope != _foundation_personal_cache_scope \
+		or _foundation_personal_cache.get("character_id") != scope.get("character_id"):
+		_foundation_personal_cache = {}
+		_foundation_personal_cache_scope = {}
 	return _foundation_personal_cache.duplicate(true)
 
 func foundation_dock_conclusion(source: Node, original: Dictionary) -> Dictionary:
