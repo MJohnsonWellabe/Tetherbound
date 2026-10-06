@@ -4,7 +4,7 @@ Config committed OFF. See R1_PROGRESS.txt for first-attempt receipts.
 
 Fixture assertion coverage:
 OFF | 6185 distinct passing cases across full first attempt plus unchanged ledger rerun; independent evidence review PASS. Full first receipt remains FAIL/exit1 (6184 passed, one sparse-evidence input failure). Exact HEAD inputs restored; target rerun 2/28/0/exit0. Legacy diagnostics and resource leaks prevent clean-runtime claim.
-ON | Full first attempt RUNNING; latest 4328 passed/0 failed at 2026-10-06 01:35 UTC. Final result OPEN.
+ON | Full first attempt PASS assertions: 6185 tests / 4090876 assertions / 0 failed / exit0 at 2026-10-06 02:12 UTC. No SCRIPT ERROR/Parse Error. Legacy fixture diagnostics and exit resource leaks retained; no clean-runtime claim.
 
 Fighting net inventory: handoff item2; OFF inventory: its owned-fighter parity list.
 smoke | ON | OFF

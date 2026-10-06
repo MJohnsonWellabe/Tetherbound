@@ -30,3 +30,6 @@ fc874ec1048033ad9bf1314b6fe670ce2b1db7cced5f00042522adb36bd4d4f7  net-riding-on-
 3b3aa0d4872aad484d580f5bedd217f475fdde88cb39d21cee0158a50e5c6031  full-off-first.stdout.txt
 7e36d4179106303e48b9749f0961e764700d4061da1342cf52534bf0dc7d9604  full-off-first.stderr.txt
 f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04  full-off-first.exit.txt
+223b85fc2c27d11f57bc1657bd3cef38ca412fe0d505a7117cde71ffc0c22b30  full-on-first.stdout.txt
+df37aae5e344d83ff9d89eff96934fa5a241659e29eb963b6df7611ad4bcb1f7  full-on-first.stderr.txt
+5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  full-on-first.exit.txt
