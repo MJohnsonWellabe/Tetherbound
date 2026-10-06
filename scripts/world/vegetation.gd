@@ -1510,10 +1510,11 @@ func _uses_region_render_uploads(slicer: RefCounted) -> bool:
 
 
 ## Terrain3D removes empty cells immediately and marks changed nonempty cells
-## for refresh. update_mmis(false) preserves the other cells and their buffers;
-## Compatibility and network builds retain their existing rebuild behavior.
+## for refresh. update_mmis(false) also builds missing cells after additions,
+## preserving every unchanged cell and buffer in all renderer/network modes.
+## The full rebuild belongs to initial construction, not an arena hide/restore.
 func _refresh_render_instances() -> void:
-	_instancer.call("update_mmis", not _region_render_uploads)
+	_instancer.call("update_mmis", false)
 
 
 func _submit_render_transforms(mesh_id: int, transforms: Array[Transform3D],
