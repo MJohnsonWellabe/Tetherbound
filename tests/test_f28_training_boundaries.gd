@@ -12,6 +12,7 @@ const EVOLUTION := preload("res://scripts/creatures/evolution.gd")
 const FEED := preload("res://scripts/creatures/progression_feed.gd")
 const BACKPACK := preload("res://scripts/ui/tab_backpack.gd")
 const SERVICE := preload("res://scripts/masters/breakthrough_service.gd")
+const MASTER_ACTIONS := preload("res://scripts/masters/breakthrough_actions.gd")
 
 class MenuOwner extends Node:
 	var game: Node
@@ -128,6 +129,55 @@ func _intent(record: Dictionary) -> Dictionary:
 func _context(record: Dictionary) -> Dictionary:
 	return {"character_id": record.character_id, "expected_revision": 7, "owns_character": true,
 		"in_range": true, "in_combat": false, "source_key": "personal_candy_feed"}
+
+func test_each_master_recipe_is_personal_and_replays_never_pay_again() -> void:
+	# Canonical detached planner coverage only; host duel validation and native
+	# owner save/ACK are exercised separately by the existing two-peer smoke.
+	for tier: int in range(1, 6):
+		var master_id := "master_t%d" % tier
+		var first_player := _player(10)
+		var second_player := _player(10)
+		first_player.character_id = "f28-master-first"
+		second_player.character_id = "f28-master-second"
+		var records: Array[Dictionary] = [_admitted(first_player), _admitted(second_player)]
+		for owner: int in 2:
+			var current: Dictionary = records[owner]
+			var before := current.duplicate(true)
+			var bystander: Dictionary = records[1 - owner].duplicate(true)
+			var context := _context(current)
+			context.merge({"master_id": master_id, "validated_host_outcome": "win", "participant_count": 1,
+				"encounter_id": "f28-master-unit-%d-%d" % [tier, owner], "creature_uid": str(current.party[0].uid)})
+			var chest_intent := {"master_id": master_id}
+			var not_won := MASTER_ACTIONS.stage(current, 7, "master_chest", chest_intent, context, Callable(), Callable(), Callable())
+			assert_eq(not_won.get("code"), "win_your_own_duel_first", "another character's win cannot unlock this chest")
+			var win_intent := {"master_id": master_id, "encounter_id": context.encounter_id, "creature_uid": context.creature_uid}
+			var win := MASTER_ACTIONS.stage(current, 7, "master_win", win_intent, context, Callable(), Callable(), Callable())
+			assert_true(win.get("ok") == true)
+			if win.get("ok") != true: return
+			var chest := MASTER_ACTIONS.stage(win.state, 7, "master_chest", chest_intent, context, Callable(), Callable(), Callable())
+			assert_true(chest.get("ok") == true)
+			if chest.get("ok") != true: return
+			assert_eq(current, before, "staging never mutates its admitted input")
+			assert_eq(records[1 - owner], bystander, "the bystander's record is untouched")
+			var claimed: Dictionary = chest.state
+			var personal: Dictionary = claimed.redesign_character
+			assert_eq(personal.master_wins.count(master_id), 1)
+			assert_eq(personal.feast_recipes.count("feast_t%d" % tier), 1)
+			assert_eq(BAG.inventory_from(claimed.inventory).count("tether_candy"), BAG.inventory_from(before.inventory).count("tether_candy") + 2)
+			assert_eq(personal.transaction_receipts.count("master_recipe:%s:%s:win" % [master_id, current.character_id]), 1)
+			assert_eq(personal.transaction_receipts.count("master_recipe:%s:%s" % [master_id, current.character_id]), 1)
+			assert_eq(RECORD.errors(claimed, str(current.character_id)), [], "each claimed record remains canonically admissible")
+			var original := claimed.duplicate(true)
+			for operation: String in ["master_win", "master_chest"]:
+				var intent: Dictionary = win_intent if operation == "master_win" else chest_intent
+				var replay := MASTER_ACTIONS.stage(claimed, 7, operation, intent, context, Callable(), Callable(), Callable())
+				assert_false(replay.get("ok", true), "replay must reconcile the original delivery rather than pay again")
+				assert_true(replay.get("duplicate") == true)
+				assert_eq(replay.get("code"), "reconcile_original_delivery")
+				assert_eq(claimed, original)
+			records[owner] = claimed
+		assert_false(records[0].redesign_character.transaction_receipts == records[1].redesign_character.transaction_receipts,
+			"identical Masters still have distinct stable-character receipts")
 
 func test_candy_clamps_every_admitted_cap_and_stages_one_debit() -> void:
 	for cap: int in [10, 20, 30, 40, 50, 60]:

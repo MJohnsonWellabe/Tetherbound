@@ -260,6 +260,7 @@ func _capture_prepared_start(steps: Array, label: String) -> void:
 
 func _loop(steps: Array, capture_inputs: bool = false) -> void:
 	_prerequisites(steps)
+	steps.append(_entry("all", "f48_watch_owner_saves", {}, "Observe actual owner save edges before loop transactions"))
 	for stage: String in ["hub", "craft", "portal", "master", "feast_cook", "feast", "boss", "relic"]:
 		if stage == "boss":
 			_boss(steps, 2)
@@ -267,6 +268,11 @@ func _loop(steps: Array, capture_inputs: bool = false) -> void:
 			continue
 		steps.append(_entry("all", "f48_witness", {"remember": stage + "_before"}))
 		for peer: int in 2:
+			var master_receipts: Array = []
+			if stage == "master":
+				var character := "$character%d" % peer
+				master_receipts = [{"receipt": "master_recipe:master_t1:%s:win" % character, "count": 1},
+					{"receipt": "master_recipe:master_t1:%s" % character, "count": 1}]
 			if capture_inputs and peer == 1 and stage in ["craft", "feast", "relic"]:
 				_capture_prepared_start(steps, "f48-before-" + stage)
 			if stage == "portal": steps.append(_entry(peer, "f48_watch_portal"))
@@ -275,10 +281,25 @@ func _loop(steps: Array, capture_inputs: bool = false) -> void:
 			if stage in ["craft", "feast_cook", "feast", "relic"]:
 				steps.append(_entry(peer, "f48_assert", _outcome(stage, stage + "_before", peer)))
 			elif stage == "master":
-				steps.append(_entry(peer, "f48_assert", {"contains": {"redesign_character/master_wins": "master_t1", "redesign_character/feast_recipes": "feast_t1"}}))
+				steps.append(_entry(peer, "f48_assert", {"since": "master_before", "item_delta": {"tether_candy": 2},
+					"contains": {"redesign_character/master_wins": "master_t1", "redesign_character/feast_recipes": "feast_t1"},
+					"append_count": {"redesign_character/master_wins": 1, "redesign_character/feast_recipes": 1},
+					"receipt_counts": master_receipts, "saved_transaction": "master_chest", "master_id": "master_t1"}))
 			elif stage == "portal": steps.append(_entry(peer, "f48_assert", {"portal_enter": true}))
 			if stage in ["craft", "master", "feast_cook", "feast", "relic"]:
 				steps.append(_entry(peer, "f48_witness", {"remember": stage + "_done"}))
+				if stage == "master":
+					# Stay at the original chest pose. The retained probe path must
+					# identify MasterT1/RecipeChest in the independent native review;
+					# unchanged state after a wrong-provider/no-op press gives no credit.
+					steps.append(_entry(peer, "assert", {"check": "input_context", "equals": "world"}))
+					steps.append({"peer": peer, "probe": "relay_crossing", "expect_data": {"actionable": true},
+						"label": "Retain actual MasterT1/RecipeChest winning provider path before duplicate physical input"})
+					steps.append(_entry(peer, "press", {"action": "interact"}))
+					steps.append(_entry(peer, "wait", {"frames": 180}))
+					steps.append(_entry(peer, "f48_assert", {"since": "master_done", "unchanged": REPLAY_FIELDS,
+						"receipt_counts": master_receipts, "saved_transaction": "master_chest", "master_id": "master_t1",
+						"same_transaction_as": "master_done"}, "Real chest reopening cannot duplicate either personal receipt, recipe or Candy"))
 				steps.append(_entry(1 - peer, "f48_assert", {"since": stage + ("_before" if peer == 0 else "_done"), "unchanged": REPLAY_FIELDS}, "Bystander keeps their own receipts and inventory"))
 		steps.append(_entry("all", "f48_witness", {"remember": stage + "_after"}))
 	steps.append(_entry(0, "f48_assert", {"participants": ["$character0", "$character1"]}))

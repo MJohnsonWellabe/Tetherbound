@@ -1,0 +1,27 @@
+[
+  {
+    "path": "personal-recipes-unit.stderr.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "path": "personal-recipes-unit.stdout.txt",
+    "sha256": "df93494b26882dd5539947435917fadb14a4d4e1a57fcdf527ff565fc36820c0",
+    "bytes": 342
+  },
+  {
+    "path": "producer-parser.stderr.txt",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "bytes": 0
+  },
+  {
+    "path": "producer-parser.stdout.txt",
+    "sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d",
+    "bytes": 73
+  },
+  {
+    "path": "receipt.json",
+    "sha256": "459fbdbc2778ed4c462d464b9baf1141eb87105a89448138078b70b366127c7e",
+    "bytes": 1852
+  }
+]
