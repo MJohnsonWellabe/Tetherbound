@@ -185,7 +185,7 @@ func _run() -> void:
 		+ "so any defeat flag it ends up holding can only have come from the host")
 
 	# --- and peer 0 fights Bryn's team down ------------------------------------
-	var won: Dictionary = await step(0, "win_trainer_battle", {"self_hp_topups": false}, 6000)
+	var won: Dictionary = await step(0, "win_trainer_battle", {"self_hp_topups": false, "stage_when_ready": true}, 6000)
 	check(str(won.get("verdict", "")) == "PASS",
 		"peer 0 beat Bryn's whole team (%s)" % str(won.get("detail", "")))
 	if str(won.get("verdict", "")) != "PASS":
