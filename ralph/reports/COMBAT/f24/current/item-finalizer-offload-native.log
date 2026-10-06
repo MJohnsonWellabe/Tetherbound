@@ -1,0 +1,101 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_f24_host_commands.gd,test_owner_passive_sync.gd,test_owner_passive_preparation.gd,test_ordinary_actor_vitals_recovery.gd::test_completion_replays_exact_accepted_round_actor_promotion_without_new_body,test_den_groom_saved_transaction.gd: 5 of 817 test files
+  ok    test_den_groom_saved_transaction.gd :: test_disk_failures_original_replay_and_real_saved_ack_never_pay_twice
+  ok    test_den_groom_saved_transaction.gd :: test_first_quote_follows_passive_tick_but_failed_original_never_rebases
+  ok    test_den_groom_saved_transaction.gd :: test_foreign_uid_forged_context_and_care_cap_refuse_without_mutation
+  ok    test_den_groom_saved_transaction.gd :: test_full_bag_refuses_before_consuming_care_or_shed_receipts
+  ok    test_den_groom_saved_transaction.gd :: test_groom_combines_care_shed_and_empty_miss_once_per_owned_uid_day
+  ok    test_den_groom_saved_transaction.gd :: test_groom_journal_rejects_a_different_world_even_with_same_slot_name
+  ok    test_den_groom_saved_transaction.gd :: test_guest_passive_drift_in_transit_is_merged_not_refused
+  ok    test_den_groom_saved_transaction.gd :: test_unsent_source_deletion_keeps_original_until_real_missing_source_refusal
+  ok    test_f24_host_commands.gd :: test_admission_refuses_unknown_loadout_without_any_mutation
+  ok    test_f24_host_commands.gd :: test_charged_refusal_has_no_cost_and_does_not_replace_original
+  ok    test_f24_host_commands.gd :: test_command_input_honors_the_mounted_command_view_before_allocating_sequence
+  ok    test_f24_host_commands.gd :: test_equipped_authored_pouches_bind_each_upgrade_on_the_same_participant
+  ok    test_f24_host_commands.gd :: test_every_joint_damage_event_is_attributed_to_one_of_the_two_owned_creatures
+  ok    test_f24_host_commands.gd :: test_f33_charm_gain_frozen_in_the_accepted_action_scales_the_meter_once_and_is_capped
+  ok    test_f24_host_commands.gd :: test_f33_no_charm_keeps_the_ordinary_gain_and_power
+  ok    test_f24_host_commands.gd :: test_first_item_dispatch_refuses_an_older_uncommitted_actor_original
+  ok    test_f24_host_commands.gd :: test_idle_wind_ticks_each_uid_and_switched_burst_spends_current_creature
+  ok    test_f24_host_commands.gd :: test_item_candidate_debits_one_own_stack_with_actual_heal_food_or_unsaved_tonic
+  ok    test_f24_host_commands.gd :: test_item_owner_checkpoint_matches_only_its_submitted_command_and_current_deployment
+  ok    test_f24_host_commands.gd :: test_meter_uses_original_host_hit_once_and_freezes_admitted_gear
+  ok    test_f24_host_commands.gd :: test_meters_require_positive_debit_and_credit_one_actual_action_once
+  ok    test_f24_host_commands.gd :: test_personal_view_cache_requires_current_character_world_and_epoch
+  ok    test_f24_host_commands.gd :: test_pouch_assignment_uses_original_character_journal_and_owner_save_without_moving_stacks
+  ok    test_f24_host_commands.gd :: test_rally_can_commit_on_current_owned_deployment_before_its_first_move
+  ok    test_f24_host_commands.gd :: test_rally_spends_once_affects_only_owner_and_splits_wind_at_expiry
+  ok    test_f24_host_commands.gd :: test_retained_item_ack_preserves_active_body_and_settles_same_v3_decision_once
+  ok    test_f24_host_commands.gd :: test_satchel_pouch_recovers_same_original_and_waits_for_saved_ack
+  ok    test_f24_host_commands.gd :: test_saved_item_carrier_keeps_one_original_debit_and_owned_effect_with_runtime_off
+  ok    test_f24_host_commands.gd :: test_snare_canonical_status_has_one_shared_slow_and_own_catch_grant
+  ok    test_f24_host_commands.gd :: test_start_spends_once_and_impact_cannot_run_early_or_repeat
+  ok    test_f24_host_commands.gd :: test_switch_retains_each_creatures_resources_and_cooldown
+  ok    test_f24_host_commands.gd :: test_unsaved_mastery_and_resources_survive_peer_replacement_and_close
+  ok    test_f24_host_commands.gd :: test_wrong_move_or_body_lifetime_cannot_arrive
+  ok    test_ordinary_actor_vitals_recovery.gd :: test_completion_replays_exact_accepted_round_actor_promotion_without_new_body
+  ok    test_owner_passive_preparation.gd :: test_a_guest_relic_power_choice_is_a_frozen_owner_request
+  ok    test_owner_passive_preparation.gd :: test_capture_checkpoint_binds_original_offer_without_granting_its_creature
+  ok    test_owner_passive_preparation.gd :: test_exact_cas_retry_after_failed_real_research_stage_and_stale_ack
+  ok    test_owner_passive_preparation.gd :: test_home_key_request_binds_its_own_reconcile_request_and_frozen_host_context
+  ok    test_owner_passive_preparation.gd :: test_owner_requires_full_exact_checkpoint_and_original_source
+  ok    test_owner_passive_preparation.gd :: test_pouch_checkpoint_binds_personal_source_and_exact_saved_original
+  ok    test_owner_passive_preparation.gd :: test_request_cas_preserves_quote_then_original_altar_stage_advances_once_and_retries
+  ok    test_owner_passive_preparation.gd :: test_request_codec_preserves_distinct_authenticated_source_kinds_and_exact_owner_state
+  ok    test_owner_passive_preparation.gd :: test_reservation_requires_local_cursor_and_same_existing_lock
+  ok    test_owner_passive_preparation.gd :: test_same_revision_request_checkpoint_rejects_stale_before_and_other_transaction_locks
+  ok    test_owner_passive_preparation.gd :: test_waystone_touch_request_binds_its_own_envelope_and_frozen_host_context
+[owner-passive] re-admitting resource-owner on the host's recovered authority (passive drift only)
+[owner-passive] ignored readmit for another world_namespace
+  ok    test_owner_passive_sync.gd :: test_a_held_readmit_for_a_world_that_is_not_joined_is_dropped
+  ok    test_owner_passive_sync.gd :: test_a_landmark_revealed_without_an_input_never_changes_the_owner_passive_identity
+[owner-passive] re-admitting resource-owner on the host's recovered authority (passive drift only)
+  ok    test_owner_passive_sync.gd :: test_a_rejoin_readmit_after_the_snapshot_applies_at_once
+[owner-passive] re-admitting resource-owner on the host's recovered authority (passive drift only)
+  ok    test_owner_passive_sync.gd :: test_a_rejoin_readmit_before_the_snapshot_waits_for_the_joined_world_scope
+  ok    test_owner_passive_sync.gd :: test_a_settled_owner_row_advances_the_cached_view_revision
+  ok    test_owner_passive_sync.gd :: test_active_item_checkpoint_saves_current_care_before_same_original_item_stage
+  ok    test_owner_passive_sync.gd :: test_an_unreplayed_reward_delivery_holds_the_home_key_request
+  ok    test_owner_passive_sync.gd :: test_capture_choice_checkpoint_keeps_original_and_only_saved_ack_reenters_handler
+[owner-passive] host resource-owner: rebase refused: discoveries differ (t=11088ms)
+[owner-passive] host resource-owner: rebase refused: old stream/sequence/prefix differs (readmit=false) (t=11088ms)
+[owner-passive] host resource-owner: rebase refused: discoveries differ (t=11088ms)
+  ok    test_owner_passive_sync.gd :: test_cloud_portal_navigation_bind_rebases_only_host_proved_discoveries_before_next_portal
+  ok    test_owner_passive_sync.gd :: test_cloud_reentry_without_a_host_proof_keeps_the_identity_whatever_the_map_reveals
+  ok    test_owner_passive_sync.gd :: test_core_change_before_checkpoint_refuses_without_owner_write
+  ok    test_owner_passive_sync.gd :: test_failed_bool_save_never_acks_or_installs_and_success_is_exact
+  ok    test_owner_passive_sync.gd :: test_gate_binds_a_remote_boss_relic_duty_with_its_world_namespace
+  ok    test_owner_passive_sync.gd :: test_gate_binds_real_retained_duty_and_reuses_original_checkpoint
+  ok    test_owner_passive_sync.gd :: test_host_accepted_travel_reset_is_exact_single_use_and_grants_no_distance
+  ok    test_owner_passive_sync.gd :: test_host_duplicate_input_is_idempotent_and_conflict_does_not_promote
+  ok    test_owner_passive_sync.gd :: test_host_minted_arrival_reset_tolerates_its_body_view_once_and_grants_no_distance
+  ok    test_owner_passive_sync.gd :: test_host_sequence_gap_and_initial_remote_pose_refused
+  ok    test_owner_passive_sync.gd :: test_legacy_typed_accepted_row_rebases_full_record_and_duplicate_keeps_progress
+[owner-passive] host resource-owner: input 2 waits: no host body for this owner in meadows (t=11780ms)
+  ok    test_owner_passive_sync.gd :: test_missing_remote_body_defers_exact_discovery_without_poisoning_stream
+  ok    test_owner_passive_sync.gd :: test_no_progress_exact_reply_releases_fence_into_retryable_rebase
+  ok    test_owner_passive_sync.gd :: test_portal_codec_binds_consumed_permit_without_faking_grounded_departure
+  ok    test_owner_passive_sync.gd :: test_portal_known_origin_save_disconnect_preserves_rejoin_baseline_without_arrival
+  ok    test_owner_passive_sync.gd :: test_portal_lost_origin_ack_rejoin_requires_fresh_bool_and_replays_new_care
+  ok    test_owner_passive_sync.gd :: test_portal_origin_checkpoint_reserves_without_promoting_until_actual_ground
+  ok    test_owner_passive_sync.gd :: test_portal_owner_freeze_blocks_new_inputs_and_pose_save_requires_exact_saved_token
+  ok    test_owner_passive_sync.gd :: test_portal_recovery_refuses_changed_hello_and_old_scope_without_discarding_original
+  ok    test_owner_passive_sync.gd :: test_portal_refusal_owner_fence_releases_only_after_exact_no_effect_rebase
+  ok    test_owner_passive_sync.gd :: test_portal_refusal_preserves_saved_care_and_immutable_journal
+  ok    test_owner_passive_sync.gd :: test_portal_repeated_recovery_bool_ack_loss_keeps_only_exact_latest_candidates
+  ok    test_owner_passive_sync.gd :: test_portal_unsaved_origin_rejoin_cancels_original_only_after_fresh_bool
+  ok    test_owner_passive_sync.gd :: test_pouch_checkpoint_retains_original_through_failed_saved_ack_and_retry
+[owner-passive] ignored inputs_ack for another session_epoch
+  ok    test_owner_passive_sync.gd :: test_recording_reset_and_authenticated_ordered_ack
+  ok    test_owner_passive_sync.gd :: test_rejoin_with_matching_landmarks_still_admits_directly
+[owner-passive] re-admitting resource-owner on the host's recovered authority (passive drift only)
+  ok    test_owner_passive_sync.gd :: test_rejoin_with_unreplayed_landmarks_readmits_on_the_hosts_held_set_and_prefixes_match
+  ok    test_owner_passive_sync.gd :: test_request_host_preserves_original_scope_and_same_revision_on_failed_world_retry
+  ok    test_owner_passive_sync.gd :: test_request_owner_requires_existing_exact_request_and_actual_bool_save
+  ok    test_owner_passive_sync.gd :: test_terminal_request_refusal_rebases_only_the_exact_saved_checkpoint
+  ok    test_owner_passive_sync.gd :: test_the_reported_owner_hold_names_an_untouched_groom_resume
+  ok    test_owner_passive_sync.gd :: test_typed_vitals_records_host_journal_epoch_independently_of_transport_and_guest_writer
+  ok    test_owner_passive_sync.gd :: test_typed_vitals_requires_current_transport_scope_and_exact_original_host_journal
+
+86 tests, 1811 assertions, 0 failed

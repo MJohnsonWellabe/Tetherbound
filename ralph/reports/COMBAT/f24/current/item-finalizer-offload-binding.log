@@ -1,0 +1,21 @@
+Derived checkout/command/result lines from GitHub job 112149992260, run 37427369963.
+Product source 92b9686b2021bfc42ed2b6bef6296666cf753e7a; workflow orchestration main 8e7c11ceb5854f063c5241d62618c382803562c9.
+Artifact 11395344596 render-r4-item-finalizer-92b9686-37427369963.
+Downloaded artifact SHA256 verified d3a7af6d1b8d77d11db18ac2a491303c1bd2f84e4eed6419b458747a8caf4877.
+2026-10-06T07:04:14.9940626Z   CHECKOUT_REF: 92b9686b2021bfc42ed2b6bef6296666cf753e7a
+2026-10-06T07:04:14.9941181Z   SCRIPT: tests/run_tests.gd
+2026-10-06T07:04:14.9942851Z   ARGS: --only=test_f24_host_commands.gd,test_owner_passive_sync.gd,test_owner_passive_preparation.gd,test_ordinary_actor_vitals_recovery.gd::test_completion_replays_exact_accepted_round_actor_promotion_without_new_body,test_den_groom_saved_transaction.gd
+2026-10-06T07:04:15.0260646Z   ref: 92b9686b2021bfc42ed2b6bef6296666cf753e7a
+2026-10-06T07:04:15.2263067Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin 92b9686b2021bfc42ed2b6bef6296666cf753e7a
+2026-10-06T07:04:16.4367838Z  * branch            92b9686b2021bfc42ed2b6bef6296666cf753e7a -> FETCH_HEAD
+2026-10-06T07:04:16.4446195Z [command]/usr/bin/git checkout --progress --force 92b9686b2021bfc42ed2b6bef6296666cf753e7a
+2026-10-06T07:05:24.3642708Z Note: switching to '92b9686b2021bfc42ed2b6bef6296666cf753e7a'.
+2026-10-06T07:05:24.3919722Z 92b9686b2021bfc42ed2b6bef6296666cf753e7a
+2026-10-06T07:05:24.4895180Z   SCRIPT: tests/run_tests.gd
+2026-10-06T07:05:24.4895414Z   CHECKOUT_REF: 92b9686b2021bfc42ed2b6bef6296666cf753e7a
+2026-10-06T07:06:16.0032686Z   SCRIPT: tests/run_tests.gd
+2026-10-06T07:06:16.0033446Z   ARGS: --only=test_f24_host_commands.gd,test_owner_passive_sync.gd,test_owner_passive_preparation.gd,test_ordinary_actor_vitals_recovery.gd::test_completion_replays_exact_accepted_round_actor_promotion_without_new_body,test_den_groom_saved_transaction.gd
+2026-10-06T07:06:30.7864659Z exit=0 took=14s
+2026-10-06T07:06:30.7925180Z 86 tests, 1811 assertions, 0 failed
+2026-10-06T07:06:30.7925391Z exit=0 took=14s
+

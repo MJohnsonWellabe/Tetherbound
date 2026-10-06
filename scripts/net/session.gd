@@ -4823,7 +4823,10 @@ var _tether_item_saved_result: Dictionary = {}
 
 func tether_item_owner_result_saved(result: Dictionary) -> bool:
 	var game := _game()
-	if game == null or _tether_item_saved_result.is_empty(): return false
+	if game == null or not game.get("local") is RefCounted or not game.get("world") is RefCounted:
+		_tether_item_saved_result.clear()
+		return false
+	if _tether_item_saved_result.is_empty(): return false
 	var proof: Dictionary = _tether_item_saved_result
 	if proof.player.get_ref() != game.get("local") or proof.world.get_ref() != game.get("world") \
 		or proof.world_namespace != game.get("world").reward_delivery_namespace \

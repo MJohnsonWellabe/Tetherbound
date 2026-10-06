@@ -472,6 +472,11 @@ func test_retained_item_ack_preserves_active_body_and_settles_same_v3_decision_o
 				assert_true(manager._tether_command_view.has("pending_request"), "older publication cannot clear a newer request")
 				game.world.reward_delivery_namespace = "replacement-world"
 				assert_false(session.tether_item_owner_result_saved(finalized.result), "bounded proof cannot cross world scope")
+				game.world.reward_delivery_namespace = "item-world"
+				game.world.reward_deliveries = {row.delivery_id: row}
+				assert_true(session._settle_owner_training_accepted(player, game.world, row))
+				game.world = null
+				assert_false(session.tether_item_owner_result_saved(finalized.result), "teardown drops a dead weak world before inspecting scope")
 				manager.free()
 				director.free()
 				session.free()
