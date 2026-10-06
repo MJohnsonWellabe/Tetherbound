@@ -14,7 +14,7 @@ client_trainer_rewards | OPEN | OPEN
 cloudreach_riding | OPEN | OPEN
 deploy_two_creatures | OPEN | OPEN (unowned exception)
 f22_forced_break | OPEN | OPEN
-f27_guest_wild_win | FIRST startupFAIL; RETRY exit1/sixmissingrewardFAILs; guarded unchanged RETRY exit1/solelatest-row assertionFAIL, all actual rewards/equality/reconnect/reload PASS. Exact successorcase reproduced; reviewed assertion correction/native parsePASS; corrected live acceptance OPEN | N/A: manual flag-ON authority proof
+f27_guest_wild_win | Corrected ON PASSexit0: canonical successor/one fresh receipt each/sameevent/distinctparticipant/+essence+XP/equality/productionrejoins+reload/no-dup. Hostperiodicdeparture errors+separateMTUwarning retained; independent functional reviewPASS40checks/0fail/exit0. All priorFAIL receipts retained | N/A: manual flag-ON authority proof
 fly | OPEN | OPEN
 gate_opens_for_both | OPEN | OPEN
 hearts | OPEN | OPEN
@@ -62,7 +62,7 @@ gate_a_rest_torch | ON OPEN
 gate_e_finale | ON OPEN
 hud_freed_combat_prompt_lifecycle | ON FIRST PASS exit0/10checks; productionHUD/director freedwinner recovery; existingminimalfixture
 input | ON FIRST PASS exit0; actualactionmovement/animation/jump/staminadebit; devicehardwareuntested
-menu | ON OPEN
+menu | ON FIRST PASSexit0; realworld/nativeUI input/focus/inventory/saveisolatedslot/controlreturn + acceptedTMjournal/receipt/learnedmove; existing grants; independentreviewPASS/raw4+actualsaves4
 menu_open_does_not_offer_to_drop | ON OPEN
 modal_stacking | ON FIRST PASS exit0; realUI menucontrols/refusedoverpicker+dialogue/recoveredafterclose; rawreceipts retained
 night_ecology | ON OPEN
@@ -96,3 +96,5 @@ Round identity repair93487a4e58 focused six-file coverage | OFF PASS union100tes
 Tournament fixed-source ON RETRY | FAIL startup exit2 hello180sec, no combat; receipts/net-tournament-on-retry. Repaired completion acceptance remains OPEN.
 
 Frozen-opponent guard d4f2af | Corrected RED unchanged93487 one exact-opponent failure; final corrected OFF+ON each98tests/1033assertions/0failed/exit0/empty stderr; independent review. Live co-op reward recovery OPEN.
+
+F27 corrected twopeer proof7c44794 | ONPASSexit0; canonical validator+receipt continuity and event binding executed; finalraw10 incl3productionJSONs. Independent functional reviewPASS40checks/0fail/exit0; hostdepartureerrors/MTUwarning retained. CommitflagOFF/manualheader.

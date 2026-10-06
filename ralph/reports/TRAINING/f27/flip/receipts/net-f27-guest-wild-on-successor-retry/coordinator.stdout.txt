@@ -1,0 +1,48 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=20568 control_port=60047 home=D:\tetherbound\.artifacts\r1-f27-flip\net-f27-guest-wild-on-successor-retry/home-0 log=D:\tetherbound\.artifacts\r1-f27-flip\net-f27-guest-wild-on-successor-retry/peer-0.log
+coordinator: launched peer 1 (client) pid=3496 control_port=60048 home=D:\tetherbound\.artifacts\r1-f27-flip\net-f27-guest-wild-on-successor-retry/home-1 log=D:\tetherbound\.artifacts\r1-f27-flip\net-f27-guest-wild-on-successor-retry/peer-1.log
+coordinator: peer 0 hello: {"enet_port":31881.0,"godot_version":"4.7-stable (official)","main_sha":"bed8ba92d13f","peer":0.0,"pid":20568.0,"role":"host","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-f27-guest-wild-on-successor-retry/home-0/Godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":31882.0,"godot_version":"4.7-stable (official)","main_sha":"bed8ba92d13f","peer":1.0,"pid":3496.0,"role":"client","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-f27-guest-wild-on-successor-retry/home-1/Godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: peer 0 boot: booted world (240 settle frames)
+PASS: peer 1 boot: booted world (240 settle frames)
+PASS: peer 0 party_grant: 'terrapup' at level 9 joined the party (1 member(s))
+PASS: peer 1 party_grant: 'terrapup' at level 9 joined the party (1 member(s))
+PASS: peer 0 host: hosting udp/31881 as peer 1
+PASS: peer 1 join: joined 127.0.0.1:31881 as peer 128567836 after 41 frames; snapshot applied; 2 peer(s) in registry
+PASS: peer 0 expect_peers: registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: peer 1 expect_peers: registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: peer 0 deploy_creature: deployed AllyCreature
+PASS: peer 1 deploy_creature: deployed AllyCreature
+PASS: peer 0 engage_wild: engaged bramblebun as encounter 1:1 (bound after 0 frame(s))
+PASS: host minted a shared wild record
+PASS: the guest was told the fight exists and can be joined
+PASS: guest joined the host's wild record (joined 1:1 beside 'bramblebun' at (-13.5, 66.0))
+PASS: the guest's strikes brought the shared opponent down
+PASS: peer 1 leave: client left cleanly after 0 frames
+PASS: peer 0 expect_peers: registry reports 1 peer(s) after 9 frames (0.3 s)
+PASS: peer 1 production_join: title returning entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:31881 as peer 2020648025 after 162 frames
+PASS: the guest holds exactly one new defeat receipt (["defeat:character-9b3dc94b2e58ec33fdf14a609417642f:faef33aa4c96975c1e9e3703e309de9c6c70af9e6dc3e77cc191b99ef222c9bc:eb11e20c7cceaf73fbb86bd500f2a28a5b07ffff3ec22695f1a481198273402c"])
+PASS: exactly one guest defeat receipt is fresh
+PASS: the host accepted the guest's exact wild share, retained by its canonical latest row ({ "action": "combat_mastery", "action_id": "14c14740d210dc060df614edf0ab2fef7c1cd678a914170f82ff2de1c2b7daed", "receipt": "craft:combat_mastery_bf259df23636415502834d702c36c21eba37c9640a3a51eedb0dd157e29661c3:character-9b3dc94b2e58ec33fdf14a609417642f", "status": "accepted" })
+PASS: the guest received its type essence (+1)
+PASS: the guest's creature gained XP from the host share
+PASS: host admitted party equals the guest's: no legacy local award on top ([{ "level": 9.0, "species_id": "terrapup", "uid": "creature-f49714c2fad147858fb004588a8baab0", "xp": 32.0 }] vs [{ "level": 9.0, "species_id": "terrapup", "uid": "creature-f49714c2fad147858fb004588a8baab0", "xp": 32.0 }])
+PASS: host admitted items equals the guest's: no legacy local award on top ({ "essence_air": 0.0, "essence_dark": 0.0, "essence_electric": 0.0, "essence_fire": 0.0, "essence_ground": 1.0, "essence_ice": 0.0, "essence_psychic": 0.0, "essence_water": 0.0, "tether_candy": 0.0 } vs { "essence_air": 0.0, "essence_dark": 0.0, "essence_electric": 0.0, "essence_fire": 0.0, "essence_ground": 1.0, "essence_ice": 0.0, "essence_psychic": 0.0, "essence_water": 0.0, "tether_candy": 0.0 })
+PASS: host admitted defeat_receipts equals the guest's: no legacy local award on top (["defeat:character-9b3dc94b2e58ec33fdf14a609417642f:faef33aa4c96975c1e9e3703e309de9c6c70af9e6dc3e77cc191b99ef222c9bc:eb11e20c7cceaf73fbb86bd500f2a28a5b07ffff3ec22695f1a481198273402c"] vs ["defeat:character-9b3dc94b2e58ec33fdf14a609417642f:faef33aa4c96975c1e9e3703e309de9c6c70af9e6dc3e77cc191b99ef222c9bc:eb11e20c7cceaf73fbb86bd500f2a28a5b07ffff3ec22695f1a481198273402c"])
+PASS: the host participant holds exactly one new defeat receipt (["defeat:character-247c729de19043cb6b0712330f65f6f0:faef33aa4c96975c1e9e3703e309de9c6c70af9e6dc3e77cc191b99ef222c9bc:7e6f6b9f301551ac76e8c439cb3ada36693f15d55233e4286073a285cf38214c"])
+PASS: exactly one host defeat receipt is fresh
+PASS: host and guest receipts bind the same defeat event and their distinct participants
+PASS: the host participant received its type essence (+1)
+PASS: peer 1 leave: client left cleanly after 0 frames
+PASS: peer 0 expect_peers: registry reports 1 peer(s) after 9 frames (0.5 s)
+PASS: peer 1 production_join: title returning entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:31881 as peer 1814986522 after 195 frames
+PASS: after reconnect party unchanged ([{ "level": 9.0, "species_id": "terrapup", "uid": "creature-f49714c2fad147858fb004588a8baab0", "xp": 32.0 }])
+PASS: after reconnect items unchanged ({ "essence_air": 0.0, "essence_dark": 0.0, "essence_electric": 0.0, "essence_fire": 0.0, "essence_ground": 1.0, "essence_ice": 0.0, "essence_psychic": 0.0, "essence_water": 0.0, "tether_candy": 0.0 })
+PASS: after reconnect defeat_receipts unchanged (["defeat:character-9b3dc94b2e58ec33fdf14a609417642f:faef33aa4c96975c1e9e3703e309de9c6c70af9e6dc3e77cc191b99ef222c9bc:eb11e20c7cceaf73fbb86bd500f2a28a5b07ffff3ec22695f1a481198273402c"])
+PASS: peer 1 save_reload_here: client character reload preserved party=true selection=true hosted_world=true
+PASS: after reload party unchanged ([{ "level": 9.0, "species_id": "terrapup", "uid": "creature-f49714c2fad147858fb004588a8baab0", "xp": 32.0 }])
+PASS: after reload items unchanged ({ "essence_air": 0.0, "essence_dark": 0.0, "essence_electric": 0.0, "essence_fire": 0.0, "essence_ground": 1.0, "essence_ice": 0.0, "essence_psychic": 0.0, "essence_water": 0.0, "tether_candy": 0.0 })
+PASS: after reload defeat_receipts unchanged (["defeat:character-9b3dc94b2e58ec33fdf14a609417642f:faef33aa4c96975c1e9e3703e309de9c6c70af9e6dc3e77cc191b99ef222c9bc:eb11e20c7cceaf73fbb86bd500f2a28a5b07ffff3ec22695f1a481198273402c"])
+ALL CHECKS PASSED

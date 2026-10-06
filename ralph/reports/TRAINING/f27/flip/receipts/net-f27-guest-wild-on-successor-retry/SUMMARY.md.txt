@@ -1,0 +1,10 @@
+# Net smoke run r1-f27-guest-wild-successor-on-20261006T0531Z
+
+Scene: title
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=20568 exited=true unexpected_exit=false
+- peer 1 (client) pid=3496 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED
