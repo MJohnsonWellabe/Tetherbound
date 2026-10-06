@@ -200,6 +200,7 @@ func test_new_system_hud_never_exposes_unadmitted_or_foreign_uid_resources() -> 
 	var view: Dictionary = manager.new_system_combat_snapshot()
 	assert_true(view.get("active") == true)
 	assert_eq(view.get("ultimate_meter"), 36.0)
+	assert_false(view.get("ultimate_available", true), "shipping flag-off ultimate is never presented as available")
 	assert_eq(view.get("creature_uid"), first.uid)
 	view.commands.meter = 100.0
 	assert_eq(manager._tether_command_view.meter, 25.0, "returned command view cannot mutate the manager")

@@ -451,6 +451,7 @@ func new_system_combat_snapshot() -> Dictionary:
 	var maximum := float(MATH.config().ultimate.maximum)
 	return {"active":true, "input_context":"combat", "creature_uid":uid,
 		"ultimate_meter":clampf(float(_party_ultimate[uid]), 0.0, maximum), "ultimate_maximum":maximum,
+		"ultimate_available":live_move_supported("ultimate", str(creature.get("move_ultimate"))),
 		"ultimate_armed":ultimate_armed(), "arm_fraction":clampf(_ultimate_armed_left / maxf(0.01,
 			float(MATH.config().ultimate.arm_window_s)), 0.0, 1.0), "commands":commands, "slots":slots}
 
