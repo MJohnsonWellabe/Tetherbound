@@ -282,6 +282,16 @@ func _case_native_realm_rpc_membership_and_admission() -> void:
 	if not _native_build(): return
 	var guest_id := _native_guest_api.get_unique_id()
 	assert_true(guest_id > 1, "use the actual ENet guest identity")
+	# F27: this guest's own wild is local. It cannot ask the host-only
+	# canonical opener for readiness, regardless of the shipped tracking flag.
+	assert_true(_native_guest._is_guest(), "the regression uses a live guest director")
+	var actor_config: Dictionary = NATIVE_COMBAT.MATH.config().get("actor_vitals", {})
+	var original_tracking: Variant = actor_config.get("runtime_enabled")
+	for tracking: bool in [false, true]:
+		actor_config["runtime_enabled"] = tracking
+		assert_eq(_native_guest._canonical_wild_start_state(null), {"enabled": false, "ready": false},
+			"a guest's local wild retains legacy admission with tracking %s" % str(tracking))
+	actor_config["runtime_enabled"] = original_tracking
 	var participants := NativeParticipants.new()
 	participants.ids = [1, guest_id]
 	_native_host.set("_encounter_host", participants)
@@ -350,7 +360,7 @@ func _case_native_realm_rpc_membership_and_admission() -> void:
 	_native_host.free()
 	_native_host = null
 
-const EXPECTED_NATIVE_TRANSPORT_ASSERTIONS := 32
+const EXPECTED_NATIVE_TRANSPORT_ASSERTIONS := 35
 
 func test_native_realm_rpc_reaches_connected_peer_and_refuses_departed_or_unready_receiver() -> void:
 	# The standard runner calls tests during SceneTree._init. As in the existing
