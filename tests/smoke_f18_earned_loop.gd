@@ -571,7 +571,7 @@ func _craft_at_workbench() -> bool:
 		var hall := halls[0] as Node3D
 		var entrance: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/crossing_hall.json")).entrance
 		var door := Vector3(float(entrance[0]), float(entrance[1]), float(entrance[2]))
-		var road := _trail_camp_headings(current_scene.get_node(^"Waystones/" + STONE_ID).global_position)
+		var road := _trail_camp_headings((current_scene.get_node("Waystones/" + STONE_ID) as Node3D).global_position)
 		if road.is_empty(): return _fail("actual Lower Meadows road headings could not be resolved")
 		var headings: Array[Vector3] = [hall.call("home_arrival"), hall.to_global(door),
 			hall.to_global(door + Vector3(0, 0, -2.4)), road[0], _workbench_stance]
