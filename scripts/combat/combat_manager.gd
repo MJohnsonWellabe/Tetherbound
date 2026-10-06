@@ -4572,9 +4572,14 @@ func _nudge_camera_on_landing(charged: bool) -> void:
 ## never before the effect arrives (COMBAT §11, F25#3).
 func _present_local_contact(where: Vector3, charged: bool, tint: Variant, hit_fraction: float,
 		receipt: Dictionary, on_enemy: bool = true) -> void:
+	if state != State.ACTIVE and state != State.RESOLVING: return
 	var struck := _wild if on_enemy else _ally_body
+	var target_instance := _enemy if on_enemy else active_creature()
+	if not is_instance_valid(struck): return
+	if not receipt.is_empty() and (target_instance == null \
+			or str(receipt.get("target_uid", "")) != str(target_instance.get("uid"))): return
 	_flash_host_impact(where, charged, tint, struck, hit_fraction, receipt)
-	if receipt.is_empty() or state != State.ACTIVE: return
+	if receipt.is_empty(): return
 	_play_impact_feel(receipt)
 	if is_instance_valid(struck): _emit_host_impact(on_enemy, receipt, struck)
 
