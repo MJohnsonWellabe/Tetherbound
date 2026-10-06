@@ -161,11 +161,30 @@ func _heal_view(game: Node, character: String, uid: String) -> Dictionary:
 	for delivery: Dictionary in game.world.reward_deliveries.values():
 		if delivery.get("kind") == "actor_vitals" and delivery.get("character_id") == character and delivery.get("creature_uid") == uid:
 			row = delivery.duplicate(true)
-	var out := {"row":row, "originals":[]}
+	var out := {"row":row, "originals":[], "mastery_sources":[], "foundation_rows":[]}
 	var director: Node = _encounter_director()
+	var host: RefCounted = director.get("_encounter_host")
 	for original: Dictionary in director.get("_ordinary_actor_vitals_proposals").values():
 		if original.has("heal_bundle") and original.get("proposal", {}).get("creature_uid") == uid:
 			out.originals.append(original.duplicate(true))
+			if host != null:
+				var action: int = int(original.heal_bundle.intent.action)
+				out.mastery_sources.append({"commit":host.call("move_commit", str(original.encounter_id), int(original.peer_id), action),
+					"outcome":host.call("move_mastery_outcome", str(original.encounter_id), int(original.peer_id), action)})
+	for delivery: Dictionary in game.world.reward_deliveries.values():
+		if delivery.get("kind") != "foundation_event": continue
+		for duty: Dictionary in delivery.get("duties", []):
+			if duty.get("character_id") == character and duty.get("action") == "combat_mastery" and duty.get("intent", {}).get("creature_uid") == uid:
+				out.foundation_rows.append(delivery.duplicate(true))
+	var service: RefCounted = session._owner_passive_service()
+	var stream: Dictionary = service.get("hosts").get(character, {}) if session.is_host() else service.get("local")
+	out["passive"] = {}
+	for field: String in ["error", "first_input_refusal", "revision", "peer", "checkpoint", "frozen", "freeze", "note", "readmit"]:
+		if stream.has(field): out.passive[field] = stream[field]
+	out["passive_report"] = {"error":service.get("_reported_error"), "ignore":service.get("_reported_ignore")}
+	out["pending_mastery"] = host.call("pending_move_mastery") if host != null else []
+	out["epoch"] = session._altar_current_epoch()
+	out["registered_director"] = session._foundation_directors_under(session._foundation_realm_roots()).has(director)
 	if character != str(game.local.character_id): return out
 	var creature: RefCounted = null
 	for member: RefCounted in game.party.members():

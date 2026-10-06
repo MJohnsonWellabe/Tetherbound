@@ -210,8 +210,9 @@ func _prove_heal(character: String) -> void:
 	var exit: Dictionary = await step(1, "press", {"action":"combat_run"})
 	check(exit.get("verdict") == "PASS", "Heal: normal guest disengage settles its earned mastery")
 	var earned := false
+	var final := {}
 	for mastery_poll: int in 40:
-		var final: Dictionary = (await _cstep(1, "camp_heal_view", args)).get("observation", {})
+		final = (await _cstep(1, "camp_heal_view", args)).get("observation", {})
 		var old_uses: int = int(before.get("uses", {}).get("heal_pulse", 0))
 		var old_receipts: Array = before.get("receipts", {}).get("heal_pulse", [])
 		var new_receipts: Array = final.get("disk", {}).get("move_mastery_receipts", {}).get("heal_pulse", [])
@@ -221,6 +222,8 @@ func _prove_heal(character: String) -> void:
 			earned = true
 			break
 		await step(1, "wait", {"frames":15})
+	print("HEAL actual mastery exit observation: ", JSON.stringify({"owner":final,
+		"host":(await _cstep(0, "camp_heal_view", args)).get("observation", {})}))
 	check(earned, "Heal: actual owner disk credits exactly one new equipped Heal use after exit")
 
 
