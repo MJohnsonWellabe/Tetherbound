@@ -15,6 +15,7 @@ class RecordingInstancer extends RefCounted:
 	var added: Array[Transform3D] = []
 	var added_mesh_ids: Array[int] = []
 	var refreshes := 0
+	var rebuilds: Array[bool] = []
 
 	func remove_instances(at: Vector3, _params: Dictionary) -> void:
 		removed.append(at)
@@ -24,8 +25,9 @@ class RecordingInstancer extends RefCounted:
 			added.append(t)
 			added_mesh_ids.append(mesh_id)
 
-	func update_mmis(_rebuild: bool) -> void:
+	func update_mmis(rebuild: bool) -> void:
 		refreshes += 1
+		rebuilds.append(rebuild)
 
 
 func _layer(name: String) -> Dictionary:
@@ -37,6 +39,21 @@ func _veg() -> Array:
 	var instancer := RecordingInstancer.new()
 	veg.set("_instancer", instancer)
 	return [veg, instancer]
+
+
+func test_arena_refresh_updates_changed_cells_without_rebuilding_other_instances() -> void:
+	for region_uploads: bool in [false, true]:
+		var pair := _veg()
+		var veg: Node3D = pair[0]
+		var instancer: RecordingInstancer = pair[1]
+		veg.set("_region_render_uploads", region_uploads)
+		_record(veg, "bushes", Vector3(3.0, 0.0, 0.0), 7)
+		var token: PackedInt32Array = veg.call("hide_fight_occluders", Vector3.ZERO, 11.0)
+		assert_eq(instancer.removed.size(), 1)
+		assert_eq(int(veg.call("restore_fight_occluders", token)), 1)
+		assert_eq(instancer.added.size(), 1)
+		assert_eq(instancer.rebuilds, [false, false], "hide/restore flush dirty/missing cells in either build mode")
+		veg.free()
 
 
 func _record(veg: Node3D, layer_name: String, at: Vector3, mesh_id: int, extra := {}) -> void:

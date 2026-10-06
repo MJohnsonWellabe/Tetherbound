@@ -146,13 +146,16 @@ func _station_pose_valid(game: Node, id: String, realm: String, at: Vector3, yaw
 
 ## Same host geometry probe used by preview and Foundation's paid stage.
 ## Nine footprint samples avoid treating a centre on shore as a dry camp.
-func validate_forward_camp_ground(game: Node, realm: String, at: Vector3, yaw: float) -> Dictionary:
+## `placer_body`: the host validates a guest's camp with that guest's own
+## trainer standing beside it; only that body is no obstacle (F34#4).
+func validate_forward_camp_ground(game: Node, realm: String, at: Vector3, yaw: float, placer_body: Node3D = null) -> Dictionary:
 	var cfg := CAMP_RULES.config()
 	var world := get_parent() as Node3D
 	if cfg.get("runtime_enabled") != true: return CAMP_RULES.deny("camp_disabled")
 	if game != _game() or world == null or not is_inside_tree() or world.get_world_3d() == null \
 			or realm != WORLD_RECORDS.active(game) or not at.is_finite() or not is_finite(yaw): return CAMP_RULES.deny("camp_ground")
 	var size: Array = cfg.size_m
+	var ground := {} # "rid:shape" of the exact shapes that support the camp
 	var base := _ground_height(at)
 	if not is_finite(base) or absf(base-at.y) > float(cfg.ground_tolerance_m): return CAMP_RULES.deny("camp_ground")
 	for x: float in [-float(size[0])*0.5,0.0,float(size[0])*0.5]:
@@ -165,19 +168,48 @@ func validate_forward_camp_ground(game: Node, realm: String, at: Vector3, yaw: f
 			if preload("res://scripts/data/biome_order.gd").canonical_id(realm) == "tidewake" and not world.has_method("water_depth_at"): return CAMP_RULES.deny("camp_ground")
 			# Actual support must exist, independently of analytic terrain height.
 			var ray := PhysicsRayQueryParameters3D.create(sample+Vector3.UP*0.5,sample-Vector3.UP*0.5,1)
-			ray.exclude=_bodies_that_are_not_buildings()
+			ray.exclude=_camp_exclusions(placer_body)
 			var hit := world.get_world_3d().direct_space_state.intersect_ray(ray)
 			if hit.is_empty() or (hit.position as Vector3).distance_to(sample) > float(cfg.ground_tolerance_m): return CAMP_RULES.deny("camp_ground")
-	var shape := BoxShape3D.new()
-	shape.size=Vector3(size[0]+2*float(cfg.clearance_m),size[1],size[2]+2*float(cfg.clearance_m))
-	var query := PhysicsShapeQueryParameters3D.new()
-	query.shape=shape
-	query.transform=Transform3D(Basis(Vector3.UP,deg_to_rad(yaw)),at+Vector3(0,float(size[1])*0.5+0.05,0))
-	query.collision_mask=3
-	query.collide_with_areas=true
-	query.exclude=_bodies_that_are_not_buildings()
-	if not world.get_world_3d().direct_space_state.intersect_shape(query,1).is_empty(): return CAMP_RULES.deny("camp_ground")
+			ground["%s:%d" % [str(hit.rid), int(hit.shape)]] = true
+			ground[str(hit.rid)] = true
+	# Clearance from the higher of the sampled base and the placement. Ground
+	# inside the allowed rise is not an obstruction, so a camp fits rolling
+	# ground (Tidewake's domed islands), not only peaks: below the lift only
+	# the exact shapes the support rays hit are ignored (a batched body's other
+	# rocks and stumps still block), every other low collider still blocks.
+	var floor_y := maxf(base, at.y)
+	var lift := float(cfg.maximum_slope_rise_m)+0.05
+	var footprint := Vector2(size[0]+2*float(cfg.clearance_m),size[2]+2*float(cfg.clearance_m))
+	for band: Array in [[0.05, lift], [lift, lift+float(size[1])]]:
+		var shape := BoxShape3D.new()
+		shape.size=Vector3(footprint.x,float(band[1])-float(band[0]),footprint.y)
+		var query := PhysicsShapeQueryParameters3D.new()
+		query.shape=shape
+		query.transform=Transform3D(Basis(Vector3.UP,deg_to_rad(yaw)),Vector3(at.x,floor_y+(float(band[0])+float(band[1]))*0.5,at.z))
+		query.collision_mask=3
+		query.collide_with_areas=true
+		query.exclude=_camp_exclusions(placer_body)
+		var low: bool = band[0] < lift
+		for hit: Dictionary in world.get_world_3d().direct_space_state.intersect_shape(query,64 if low else 1):
+			if not low or not (ground.has("%s:%d" % [str(hit.rid), int(hit.shape)]) or _terrain_shape_of_support(ground, hit)): return CAMP_RULES.deny("camp_ground")
 	return {"ok":true}
+
+
+## A neighbouring terrain region of the supporting body (heightmap or
+## concave ground) is ground too: a camp across a region seam is not refused
+## (review L-1). Batched props (rocks, stumps) are other shape types.
+static func _terrain_shape_of_support(ground: Dictionary, hit: Dictionary) -> bool:
+	if not ground.has(str(hit.rid)) or not hit.get("collider") is PhysicsBody3D: return false
+	var type := PhysicsServer3D.shape_get_type(PhysicsServer3D.body_get_shape(hit.rid, int(hit.shape)))
+	return type == PhysicsServer3D.SHAPE_HEIGHTMAP or type == PhysicsServer3D.SHAPE_CONCAVE_POLYGON
+
+
+func _camp_exclusions(placer_body: Node3D) -> Array[RID]:
+	var out := _bodies_that_are_not_buildings()
+	if placer_body is CollisionObject3D and is_instance_valid(placer_body):
+		out.append((placer_body as CollisionObject3D).get_rid())
+	return out
 
 
 ## Foundation calls this with the sender's admitted inventory, personal
@@ -451,6 +483,13 @@ var _was_snapped := false
 ## so switching pieces in the Build menu does not carry a rotation the player
 ## chose for a different piece onto the next one.
 var _yaw_deg := 0.0
+## F34 (HOMESTEAD §8): placing a second camp in a biome offers to pack up the
+## first. `_camp_repack` holds the armed offer (first press); `_camp_after_pack`
+## holds the new camp's intent while the old one's pack transaction settles.
+var _camp_repack := {}
+var _camp_after_pack := {}
+const CAMP_REPACK_WINDOW_MS := 6000
+const CAMP_REPACK_TIMEOUT_MS := 15000
 ## OP21-07: true once the player has pressed any rotate action for the
 ## currently-armed piece. Gates whether `_show_ghost` lets a structural
 ## anchor's suggested `yaw_deg` overwrite `_yaw_deg` — see that call site.
@@ -583,6 +622,7 @@ func _physics_process(_delta: float) -> void:
 	# Capability can arrive after scene restoration. Retry mounting the same
 	# committed nodes; the frozen Training attach() is idempotent.
 	_mount_current_altars(game)
+	_advance_camp_repack(game)
 	var armed := str(game.get("pending_build"))
 	# Arming — including swapping straight from one piece to another without
 	# disarming in between — bars the place action until it is released. See
@@ -1428,6 +1468,11 @@ func _place(game: Node, armed: String) -> void:
 		var at: Vector3 = preview.position
 		var intent := {"action":"place","action_id":Crypto.new().generate_random_bytes(16).hex_encode(),
 			"realm":WORLD_RECORDS.active(game),"position":[at.x,at.y,at.z],"yaw_deg":_yaw_deg}
+		_connect_camp_answers(producer)
+		var existing := own_camp_uid(game, WORLD_RECORDS.active(game))
+		if not existing.is_empty():
+			_offer_camp_repack(game, producer, existing, intent)
+			return
 		# Producer retains original ID and admission revision through lost ACK.
 		producer.call("forward_camp_submit_build",intent,self)
 		return
@@ -1613,6 +1658,17 @@ func _plant_from_delta(game: Node, op: Dictionary, index: int) -> void:
 func _uproot_from_delta(game: Node, op: Dictionary) -> void:
 	var index := int(op.get("index", -1))
 	if index < 0:
+		# F34: a packed forward camp is a tombstone (record kept, `removed`),
+		# addressed by uid; its node goes and nothing renumbers.
+		if not str(op.get("uid", "")).is_empty():
+			for node in get_tree().get_nodes_in_group(PLACED_GROUP):
+				if get_parent().is_ancestor_of(node) and str(node.get_meta(BUILDING_UID_META, "")) == str(op.uid) \
+						and str(node.get_meta(BUILDING_ID_META, "")) == CAMP_RULES.ID:
+					if node == _dismantle_target: _clear_dismantle_target()
+					# Out of the tree now, so its collider cannot refuse a new camp
+					# validated before the frame ends.
+					node.get_parent().remove_child(node)
+					node.queue_free()
 		return
 	var realm := str(op.get("realm", "meadows"))
 	var target: Node3D = null
@@ -1794,6 +1850,77 @@ func _building_uid_at(index: int) -> String:
 		return ""
 	var record: Variant = (buildings as Array)[index]
 	return str((record as Dictionary).get("uid", "")) if record is Dictionary else ""
+
+
+## F34: this character's standing camp in `realm`'s biome, or "".
+func own_camp_uid(game: Node, realm: String) -> String:
+	var local: Variant = game.get("local") if game != null else null
+	if local == null: return ""
+	var character := str(local.get("character_id"))
+	var biome := preload("res://scripts/data/biome_order.gd").canonical_id(realm)
+	for row: Variant in game.get("placed_buildings") as Array:
+		if row is Dictionary and row.get("id") == CAMP_RULES.ID and row.get("removed") != true \
+				and str(row.get("character_id", "")) == character \
+				and preload("res://scripts/data/biome_order.gd").canonical_id(str(row.get("realm", ""))) == biome:
+			return str(row.get("uid", ""))
+	return ""
+
+
+## First press: say what a second press does. Second press inside the window:
+## pack the old camp up (its kit refunded by the host), then place this one.
+## The host's answer to this player's camp requests (a guest's arrives later
+## than the press): a refusal is said in words, and the repack follows its pack.
+func _connect_camp_answers(producer: Node) -> void:
+	if producer != null and producer.has_signal("homestead_action_completed") \
+			and not producer.is_connected("homestead_action_completed", _on_camp_answer):
+		producer.connect("homestead_action_completed", _on_camp_answer)
+
+
+func _on_camp_answer(op: String, intent: Dictionary, result: Dictionary) -> void:
+	if op != "camp_build" or result.get("ok") == true or result.get("terminal_refusal") != true: return
+	var game := _game()
+	if not _camp_after_pack.is_empty() and intent.get("action_id") == _camp_after_pack.get("pack_id"):
+		_camp_after_pack = {}
+	if game != null:
+		game.call("push_world_message", CAMP_RULES.deny(str(result.get("code", ""))).reason)
+
+
+func _offer_camp_repack(game: Node, producer: Node, existing: String, intent: Dictionary) -> void:
+	var now := Time.get_ticks_msec()
+	if _camp_repack.get("uid") != existing or now > int(_camp_repack.get("until_ms", 0)):
+		_camp_repack = {"uid": existing, "until_ms": now + CAMP_REPACK_WINDOW_MS}
+		game.call("push_world_message", "You already have a camp in %s. Press Place again to pack it up (kit refunded) and pitch here." \
+			% preload("res://scripts/data/biome_order.gd").display_name(str(intent.realm)))
+		return
+	_camp_repack = {}
+	var pack := {"action":"pack","action_id":Crypto.new().generate_random_bytes(16).hex_encode(),"uid":existing}
+	_connect_camp_answers(producer)
+	var result: Variant = producer.call("forward_camp_submit_build", pack, self)
+	# Sent (settled here, or awaiting the host's saved decision) or not at all.
+	var sent: bool = result is Dictionary and (result.get("ok") == true \
+		or result.get("code") == "awaiting_saved_decision" or result.get("settled") == true)
+	if not sent:
+		game.call("push_world_message", CAMP_RULES.deny(str((result as Dictionary).get("code", "camp_unavailable")) if result is Dictionary else "camp_unavailable").reason)
+		return
+	_camp_after_pack = {"old_uid": existing, "intent": intent, "pack_id": pack.action_id, "until_ms": now + CAMP_REPACK_TIMEOUT_MS}
+
+
+## Once the old camp's record is gone, the new one goes to the host as an
+## ordinary placement; a pack that never lands is reported and dropped.
+func _advance_camp_repack(game: Node) -> void:
+	if _camp_after_pack.is_empty(): return
+	var producer: Node = game.get("session") as Node
+	if Time.get_ticks_msec() > int(_camp_after_pack.until_ms):
+		var packed: bool = own_camp_uid(game, str(_camp_after_pack.intent.realm)) != str(_camp_after_pack.old_uid)
+		_camp_after_pack = {}
+		game.call("push_world_message", "The old camp was packed up (kit refunded); press Place to pitch the new one." if packed \
+			else "The old camp could not be packed up; nothing was placed.")
+		return
+	if own_camp_uid(game, str(_camp_after_pack.intent.realm)) == _camp_after_pack.old_uid: return
+	if producer == null or producer.call("forward_camp_placement_available") != true: return
+	var intent: Dictionary = _camp_after_pack.intent
+	_camp_after_pack = {}
+	producer.call("forward_camp_submit_build", intent, self)
 
 
 ## Controller-first removal transaction. The caller supplies an explicitly

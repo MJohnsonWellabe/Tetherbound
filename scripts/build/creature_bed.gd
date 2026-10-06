@@ -1,5 +1,9 @@
 extends Node3D
 
+
+func _init() -> void:
+	add_to_group(&"companion_camp_sources")
+
 ## Gate A physical-rest implementation. The authoritative recovery state lives
 ## on the CreatureInstance/Game; this placed node owns only which bed index it is,
 ## assignment UI, and the visible sleeping body.

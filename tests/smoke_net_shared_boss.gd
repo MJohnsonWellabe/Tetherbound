@@ -182,6 +182,15 @@ const ALLOWED_SCALING_KEYS: Array[String] = ["stat_multiplier", "attack_cooldown
 const SWINGS := 14
 const PLACE_SETTLE := 20
 const STRIKE_SETTLE := 30
+## F01#6b: the tournament leg seats the striker this far beyond the two
+## bodies' touching distance (opponent radius + striker radius). Seated closer,
+## physics pushes the striker 2.8-4 m out of the opponent while a guest's swing
+## is still crossing the network, and the swing lands on nothing. The host
+## floors every move's reach at the pair's longest separation + 0.5 m
+## (`contact_spacing.pair_reach_need`), so this seat is inside every reach.
+const SEAT_MARGIN := 0.35
+## The old fixed seat, used only when a probe reports no radii.
+const SEAT_FALLBACK := 1.4
 ## Metres along Z each creature stands off the boss, on opposite sides, so
 ## neither is ever in the other's arc during the shared-damage half.
 const NEAR_Z := 1.6
@@ -1174,6 +1183,7 @@ func _run_chapter_handoff() -> void:
 		await step(peer, "wait", {"frames": 120})
 		check(_hall_says(await _handoff_story(peer), FREED_FLAG) == true,
 			"peer %d received '%s' as a shared world fact" % [peer, FREED_FLAG])
+		await _check_handoff_healing(peer, "live")
 
 	# 3. THE OWNER'S RULE, at runtime: every participant keeps their own.
 	for peer in 2:
@@ -1212,6 +1222,7 @@ func _run_chapter_handoff() -> void:
 			"peer %d completed its production save/reload after the handoff" % peer)
 		check(_hall_says(await _handoff_story(peer), FREED_FLAG) == true,
 			"peer %d retained the freeing after reload" % peer)
+		await _check_handoff_healing(peer, "reload")
 	# NOT a hash here, and this is a stronger check rather than a softer one.
 	#
 	# `world_snapshot`'s `flags` is the world's flags MERGED WITH the local
@@ -1435,6 +1446,37 @@ func _warden_characters(world: Dictionary, accepted_only: bool) -> Array[String]
 			out.append(character)
 	out.sort()
 	return out
+
+
+func _check_handoff_healing(peer: int, when: String) -> void:
+	var raw: Variant = await probe(peer, "veridian_choice")
+	check(raw is Dictionary, "peer %d %s answered existing healing counts probe" % [peer, when])
+	if not raw is Dictionary:
+		return
+	var view: Dictionary = raw
+	check(bool(view.get("healing_found", false)), "peer %d %s has MeadowHealing" % [peer, when])
+	check(int(view.get("healing_remaining_tether_materials", -1)) == 0,
+		"peer %d %s has no surviving live tether materials (count %s)" % [
+			peer, when, str(view.get("healing_remaining_tether_materials", "missing"))])
+	var raw_topples: Variant = view.get("healing_pylons_by_id")
+	check(raw_topples is Dictionary, "peer %d %s supplies pylon counts by id" % [peer, when])
+	if not raw_topples is Dictionary:
+		return
+	var topples: Dictionary = raw_topples
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/meadow_healing.json"))
+	var table: Dictionary = ((parsed as Dictionary).get("pylons", {}) as Dictionary).get("falls", {}) \
+		if parsed is Dictionary else {}
+	check(not table.is_empty(), "healing fall table is present for peer %d %s" % [peer, when])
+	var expected := 0
+	for id: String in table:
+		if table[id] == null:
+			check(not topples.has(id), "peer %d %s keeps authored standing pylon %s" % [peer, when, id])
+			continue
+		expected += 1
+		check(int(topples.get(id, 0)) == 1, "peer %d %s toppled %s exactly once (count %s)" % [
+			peer, when, id, str(topples.get(id, "missing"))])
+	check(topples.size() == expected, "peer %d %s has exactly %d authored topple ids (actual %d)" % [
+		peer, when, expected, topples.size()])
 
 
 func _handoff_story(peer: int) -> Variant:
@@ -1741,12 +1783,29 @@ func _tournament_hit(peer: int) -> bool:
 		var hp := float((before as Dictionary).get("opponent_hp", -1.0))
 		if pos.size() != 3 or hp <= 0.0:
 			return false
+		# The record's opponent_pos lags a trainer creature that keeps moving;
+		# the host resolves the swing against its live body, so seat on that.
+		var record_pos := pos
+		var live: Array = (before as Dictionary).get("presentation_centre", []) as Array
+		if live.size() == 3:
+			pos = live
 		var seated: Dictionary = {}
 		if peer != 0:
 			seated = await step(peer, "place_stand_in", {"at": pos, "settle": PLACE_SETTLE})
-		var stand := [float(pos[0]) + 1.4, float(pos[1]), float(pos[2])]
+		# Seat at floor height just outside the opponent's body, facing it.
+		var feet: Array = (before as Dictionary).get("presentation_pos", []) as Array
+		var floor_y := float(feet[1]) if feet.size() == 3 else float(pos[1])
+		var seat_probe = await probe(peer, "encounter")
+		var opp_r := float((before as Dictionary).get("presentation_radius", 0.0))
+		var ally_r := float((seat_probe as Dictionary).get("ally_radius", 0.0)) if seat_probe is Dictionary else 0.0
+		var sep := opp_r + ally_r + SEAT_MARGIN if opp_r > 0.0 and ally_r > 0.0 else SEAT_FALLBACK
+		var stand := [float(pos[0]) + sep, floor_y, float(pos[2])]
+		var face := [float(pos[0]), floor_y, float(pos[2])]
 		var placed: Dictionary = await step(peer, "place_creature",
-			{"at": stand, "exact": true, "face": pos, "settle": PLACE_SETTLE})
+			{"at": stand, "exact": true, "face": face, "settle": PLACE_SETTLE})
+		print("[tournament seat] peer %d attempt %d: opponent r=%.2f, striker r=%.2f, seat %.2f m at floor y=%.2f (centre y=%.2f); live (%.2f, %.2f) record (%.2f, %.2f); %s"
+			% [peer, _try + 1, opp_r, ally_r, sep, floor_y, float(pos[1]), float(pos[0]), float(pos[2]),
+				float(record_pos[0]), float(record_pos[2]), str(placed.get("detail", ""))])
 		var struck: Dictionary = await step(peer, "strike",
 			{"target": pos, "slot": "quick", "settle": STRIKE_SETTLE})
 		var after = await probe(0, "encounter")
@@ -1798,10 +1857,12 @@ func _host_receipt_reason(state: Variant, peer: int) -> String:
 				var candidate: Dictionary = entry
 				rows.append("%s d=%.2f connects=%s" % [str(candidate.get("role", "?")),
 					float(candidate.get("distance", -1.0)), str(candidate.get("connects", false))])
-		return "host receipt: ok=%s code=%s origin=%s reach=%.2f arc=%.1fdeg [%s]" \
+		# The keys `combat_math.move_connects` reads; -1 means the host's
+		# move carried none and `move_connects` used its default.
+		return "host receipt: ok=%s code=%s origin=%s range=%.2f cone=%.1fdeg [%s]" \
 			% [str(receipt.get("ok", false)), str(receipt.get("code", "")),
-				str(receipt.get("host_origin", [])), float(move.get("reach", -1.0)),
-				float(move.get("angle_degrees", move.get("angle", -1.0))), ", ".join(rows)]
+				str(receipt.get("host_origin", [])), float(move.get("range", -1.0)),
+				float(move.get("cone_degrees", -1.0)), ", ".join(rows)]
 	return "no host receipt for peer %d" % peer_id
 
 

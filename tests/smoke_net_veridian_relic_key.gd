@@ -2,25 +2,32 @@ extends "res://tests/helpers/net_harness.gd"
 
 # peers: 2
 
-## LEGACY PATH: asserts the shipped portal-off behaviour (world-scoped
-## `realm_key_cloudreach` and a world-scoped earned Heart from the Warden).
-## Superseded by RD-10/RD-20/RD-21 (the Warden now grants each participant their
-## own Tidewake key item and relic, F19#2) once F18 turns
-## redesign_portal_runtime_enabled on; retire this test or rewrite it to the redesign rule at that
-## point.
+## REDESIGN (RD-10/RD-20/RD-21): the Warden's portal key and relic are PER
+## PARTICIPANT. Every fight participant receives their own
+## `tidewake_portal_key` ITEM and the Meadows relic in their own
+## `redesign_character.relics_held` (chapter_rewards.json boss_handoffs,
+## encounter_rewards.gd::chapter_hand_off, foundation_actions boss_relic). The
+## retired world-scoped `realm_key_cloudreach` is no longer asserted. The
+## world-scoped earned Heart and its personal one-active power remain the
+## shipped relic-power rule (RD-20 "the existing one-active rule"; moving the
+## selection into the Shrine Room is F31#2, not built), so the shrine/power
+## assertions below are unchanged. Hanging the relic in the Shrine Room is not
+## covered here.
 ##
 ## F05 (ACCEPTANCE §6.1; card M4 "relic/key are durable"), two real peers.
 ##
 ##   GODOT_BIN=$HOME/godot-bin/godot tools/net/run_net_smoke.sh veridian_relic_key
 ##
-## The Warden's payout is the only source of the Meadows' two chapter rewards:
-## `realm_key_cloudreach` (the Cloudreach gate's key) and
-## `realm_heart_meadows_earned` (the Heart of the Meadows relic). Both are WORLD
-## facts, committed once by the host's encounter rewards
-## (scripts/net/encounter_rewards.gd). This smoke plays the real shared Warden
+## The Warden's payout is the only source of each participant's Tidewake
+## portal key item and Meadows relic (personal, one each) and of the world's
+## `realm_heart_meadows_earned` (the Heart of the Meadows, a WORLD fact
+## committed once by the host's encounter rewards,
+## scripts/net/encounter_rewards.gd). This smoke plays the real shared Warden
 ## fight -- no flag is set by hand -- then:
 ##
-##   * both peers' WORLD stores hold the key and the earned Heart;
+##   * each peer's OWN satchel holds exactly one Tidewake portal key and its
+##     OWN character holds the Meadows relic; both WORLD stores hold the
+##     earned Heart;
 ##   * the GUEST sets the Heart into a real shrine (`submit_place()`, the call
 ##     the interact prompt makes, which a client submits through the ledger), and
 ##     both worlds hold it placed;
@@ -28,7 +35,8 @@ extends "res://tests/helpers/net_harness.gd"
 ##     power is personal, the relic is the world's;
 ##   * a production save/reload on the host, and the guest leaves and rejoins by
 ##     its character id (the returning route);
-##   * afterwards, on both peers: key, earned and placed are still the world's;
+##   * afterwards, on both peers: one key and one held relic each, and the
+##     Heart earned and placed are still the world's;
 ##     the host's power is still active and the guest's still is not.
 ##
 ## Disclosed staging: parties are granted with `party_grant`, both peers are
@@ -43,7 +51,8 @@ const WARDEN_TRAINER := "warden_aldis"
 const BATTLE_FRAMES := 5400
 const ENEMY_HP_CEILING := 6.0
 const GUEST_NAME := "Relic Guest"
-const KEY_FLAG := "realm_key_cloudreach"
+const KEY_ITEM := "tidewake_portal_key"
+const RELIC := "meadows"
 const POLLS := 60
 
 var _port := 0
@@ -99,9 +108,11 @@ func _run() -> void:
 	# Before the fight: neither reward exists anywhere.
 	for peer in 2:
 		var heart0: Dictionary = await _heart(peer)
-		var key0: Variant = _says(await _story(peer), KEY_FLAG)
-		check(not bool(heart0.get("earned_in_world", true)) and key0 != true,
-			"peer %d: no key and no earned Heart before the Warden (%s, key %s)" % [peer, str(heart0), str(key0)])
+		var keys0 := await _keys(peer)
+		var relics0 := await _relics_held(peer)
+		check(not bool(heart0.get("earned_in_world", true)) and keys0 == 0 and not relics0.has(RELIC),
+			"peer %d: no portal key, no Meadows relic and no earned Heart before the Warden (%s, keys %d, relics %s)"
+				% [peer, str(heart0), keys0, str(relics0)])
 
 	# 3. The Warden, shared.
 	for peer in 2:
@@ -137,20 +148,23 @@ func _run() -> void:
 		await step(peer, "wait", {"frames": 120})
 		await step(peer, "dismiss_dialogue", {"presses": 40, "settle": 30})
 
-	# 4. The payout: the key and the earned Heart are the WORLD's, on both.
+	# 4. The payout (RD-21): each participant's OWN key item and relic; the
+	# earned Heart is the world's.
 	for peer in 2:
 		var ok := false
 		var heart: Dictionary = {}
-		var key: Variant = null
+		var keys := -1
+		var relics: Array = []
 		for _poll in POLLS:
 			heart = await _heart(peer)
-			key = _says(await _story(peer), KEY_FLAG)
-			if bool(heart.get("earned_in_world", false)) and key == true:
+			keys = await _keys(peer)
+			relics = await _relics_held(peer)
+			if bool(heart.get("earned_in_world", false)) and keys == 1 and relics.count(RELIC) == 1:
 				ok = true
 				break
 			await step(peer, "wait", {"frames": 10})
-		check(ok, "peer %d's WORLD holds the Cloudreach key and the earned Heart after the Warden (%s, key %s)"
-			% [peer, str(heart), str(key)])
+		check(ok, "peer %d holds its own Tidewake portal key (x%d) and Meadows relic (%s), and its WORLD the earned Heart (%s)"
+			% [peer, keys, str(relics), str(heart)])
 
 	# 5. The GUEST places the Heart (a client press, through the ledger).
 	var bound_all := true
@@ -212,8 +226,10 @@ func _run() -> void:
 func _assert_durable(when: String) -> void:
 	for peer in 2:
 		var heart: Dictionary = await _heart(peer)
-		var key: Variant = _says(await _story(peer), KEY_FLAG)
-		check(key == true, "%s: peer %d's WORLD holds the Cloudreach key" % [when, peer])
+		var keys := await _keys(peer)
+		var relics := await _relics_held(peer)
+		check(keys == 1, "%s: peer %d's own satchel holds exactly one Tidewake portal key (%d)" % [when, peer, keys])
+		check(relics.count(RELIC) == 1, "%s: peer %d's own character holds the Meadows relic once (%s)" % [when, peer, str(relics)])
 		check(bool(heart.get("earned_in_world", false)) and bool(heart.get("placed_in_world", false)),
 			"%s: peer %d's WORLD holds the Heart earned and placed (%s)" % [when, peer, str(heart)])
 		var want_active := "meadows" if peer == 0 else ""
@@ -227,14 +243,16 @@ func _heart(peer: int) -> Dictionary:
 	return raw as Dictionary if raw is Dictionary else {}
 
 
-func _story(peer: int) -> Variant:
-	return await probe(peer, "story", {"world_flags": [KEY_FLAG], "player_flags": []})
+## This peer's own satchel count of the Tidewake portal key, -1 if unreadable.
+func _keys(peer: int) -> int:
+	var verdict: Dictionary = await step(peer, "assert", {"check": "inventory_count", "item": KEY_ITEM, "min": 0})
+	var detail := str(verdict.get("detail", ""))
+	var prefix := "%s count " % KEY_ITEM
+	return int(detail.trim_prefix(prefix)) if detail.begins_with(prefix) else -1
 
 
-func _says(story: Variant, flag: String) -> Variant:
-	if story is not Dictionary:
-		return null
-	var world: Variant = (story as Dictionary).get("world", {})
-	if world is not Dictionary or not (world as Dictionary).has(flag):
-		return null
-	return bool((world as Dictionary)[flag])
+## This peer's own character's held relics (redesign_character.relics_held).
+func _relics_held(peer: int) -> Array:
+	var verdict: Dictionary = await step(peer, "foundations_state", {"mode": "inspect"})
+	var character: Variant = (verdict.get("data", {}) as Dictionary).get("character", {})
+	return (character as Dictionary).get("relics_held", []) as Array if character is Dictionary else []

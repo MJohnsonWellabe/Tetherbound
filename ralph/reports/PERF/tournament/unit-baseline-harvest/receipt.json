@@ -1,0 +1,52 @@
+{
+  "run_id": "p2-tournament-baseline-harvest",
+  "stage": "unit-baseline-harvest",
+  "source_head": "fd3e095bc32bef2202a33b79ed89c07cd8d3405d",
+  "product_basis": "8e7c11ceb5854f063c5241d62618c382803562c9",
+  "temporary_baseline_paths": [
+    "scripts/build/creature_bed.gd",
+    "scripts/build/player_bed.gd",
+    "scripts/combat/telegraph_glow.gd",
+    "scripts/creatures/companion_presence.gd",
+    "scripts/world/campfire_glow.gd",
+    "scripts/world/vegetation.gd"
+  ],
+  "started_utc": "2026-10-06T09:39:04.7869913Z",
+  "command": [
+    "--headless",
+    "--path",
+    "D:/tetherbound/codex-p2",
+    "--script",
+    "tests/run_tests.gd",
+    "--",
+    "--only=test_fight_ring_occluders.gd::test_a_deadwood_node,test_fight_ring_occluders.gd::test_overlapping_rings_keep_the_model"
+  ],
+  "claim": "two existing methods on baseline product; correctness/diagnostic attribution only, no timing claim",
+  "background": [
+    {
+      "ProcessId": 4808,
+      "ParentProcessId": 19204,
+      "Name": "Godot_v4.7-stable_win64_console.exe",
+      "CommandLine": "\"D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64_console.exe\" --headless --path D:/tetherbound/codex-r1 --script tests/smoke_net_cloudreach_riding.gd"
+    },
+    {
+      "ProcessId": 15380,
+      "ParentProcessId": 4808,
+      "Name": "Godot_v4.7-stable_win64.exe",
+      "CommandLine": "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe --headless --path D:/tetherbound/codex-r1 --script tests/smoke_net_cloudreach_riding.gd"
+    },
+    {
+      "ProcessId": 14112,
+      "ParentProcessId": 15380,
+      "Name": "Godot_v4.7-stable_win64.exe",
+      "CommandLine": "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe --headless --path D:/tetherbound/codex-r1/ --log-file D:\\tetherbound\\.artifacts\\r1-f27-flip\\net-cloudreach-riding-on/peer-0.log --script res://tools/net/peer_runner.gd -- \"--role=host\" \"--peer=0\" \"--control-port=56389\" \"--enet-port=28781\" \"--scene=world\" \"TB_NET_RUN_ID=r1-cloudreach-riding-on-20261006T0936Z\""
+    },
+    {
+      "ProcessId": 6120,
+      "ParentProcessId": 15380,
+      "Name": "Godot_v4.7-stable_win64.exe",
+      "CommandLine": "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe --headless --path D:/tetherbound/codex-r1/ --log-file D:\\tetherbound\\.artifacts\\r1-f27-flip\\net-cloudreach-riding-on/peer-1.log --script res://tools/net/peer_runner.gd -- \"--role=client\" \"--peer=1\" \"--control-port=56390\" \"--enet-port=28782\" \"--scene=world\" \"TB_NET_RUN_ID=r1-cloudreach-riding-on-20261006T0936Z\""
+    }
+  ],
+  "cache_basis": "independent P1 copied cache, no import; unchanged actual assets/addon/project inputs; only new shader UID/provenance CSV import metadata differ"
+}

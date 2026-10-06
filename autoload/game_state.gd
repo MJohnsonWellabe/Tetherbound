@@ -901,6 +901,12 @@ func autosave_here() -> bool:
 			return false
 		return save_game(autosave_slot())
 	if session != null:
+		# An in-flight owner transaction (e.g. the portal arrival that is
+		# completing this realm entry) writes the character itself; the save
+		# fence would only refuse this transition autosave.
+		if session.has_method("_owner_training_mutation_blocked") \
+			and session.call("_owner_training_mutation_blocked", local) == true:
+			return false
 		session.call("_save_character_here")
 	return false
 
@@ -1075,6 +1081,7 @@ func _exit_tree() -> void:
 ## `SceneTree.change_scene_to` (and so never becomes `current_scene`) all hit
 ## this path, and none of them should ever see an error for it.
 func _process(delta: float) -> void:
+	_tick_orphaned_regional_acks(delta)
 	if session != null and session.has_method("_owner_training_mutation_blocked") 			and session.call("_owner_training_mutation_blocked", local) == true:
 		_travel_pos_valid = false # No delayed travel/bond grant on resume.
 		return # Session/Ledger child recovery still ticks; no care/bed/buff mutation.
@@ -1176,6 +1183,15 @@ func _process(delta: float) -> void:
 	map.mark_visited(here)
 	map.update_region(here)
 	var landmarks_gained := int(map.discovered_landmark_count()) - landmarks_before
+	if record_passive and not canonical_passive and landmarks_gained > 0:
+		# Owner-passive: a landmark the host already holds (its replay identity)
+		# is not replayed again, so it earns no visit credit here either.
+		var identity: Variant = session.call("owner_passive_discoveries") if session.has_method("owner_passive_discoveries") else null
+		if identity is Dictionary:
+			var known: Array = (identity as Dictionary).get(current_realm, [])
+			landmarks_gained = 0
+			for id: String in (map.get("_discovered") as Dictionary):
+				if not discovered_before.has(id) and not known.has(id): landmarks_gained += 1
 	if not canonical_passive and landmarks_gained > 0 and party != null:
 		for member: Variant in (party.call("members") as Array):
 			BOND_MILESTONES.credit_landmark_visit(member as RefCounted)
@@ -2302,6 +2318,10 @@ func load_game(slot: int) -> bool:
 	if not bool(save_system.call("load_slot", self, slot)):
 		return false
 	_world_save_owned = true
+	# A save from before the portal runtime may be past the opening without
+	# its Home Key; the host reconcile checks this loaded character once.
+	if session != null and session.has_method("arm_legacy_home_key_check"):
+		session.call("arm_legacy_home_key_check", int(session.call("local_peer_id")))
 	local.feed.call("clear_events")
 	for node in get_tree().get_nodes_in_group("build_placer"):
 		if node.has_method("restore_from_game"):
@@ -3152,8 +3172,16 @@ func use_home_key() -> bool:
 
 ## Appended to Game. Only the mounted opening director may call these local
 ## producer doors. They are not RPCs and do not accept an imported roster.
+##
+## F01#6a: the starter is a CHARACTER fact the HOST decides. Once the host's
+## snapshot has made a guest's character file a valid save candidate, the guest
+## asks the host to stage its starter (`_request_original_starter` below) and
+## never writes its own party; the host commits its own locally. Refusing every
+## non-host outright held each guest's adoption pending forever, which kept the
+## opening modal and Grandpa unreachable
+## (`ralph/reports/INTEGRATION/reproof/f01-current/row6/VERDICT.md on tb/reproof-f01 f5e2b5cb` §1).
 func commit_original_starter(source: Node, instance: RefCounted, nickname: String) -> bool:
-	if session == null or not is_host() or save_system == null or source == null or instance == null: return false
+	if not original_starter_writer_ready() or source == null or instance == null: return false
 	if not bool(session.call("portal_runtime_ready")) and session.call("config").get("redesign_ending_runtime_enabled", false) != true: return false
 	var scene := get_tree().current_scene
 	if scene == null or not scene.is_ancestor_of(source) or source.get_script().resource_path != "res://scripts/story/sequence_director.gd": return false
@@ -3164,7 +3192,11 @@ func commit_original_starter(source: Node, instance: RefCounted, nickname: Strin
 	var prefix := "starter_choice:%s:" % local.character_id
 	var receipt: String = prefix + uid
 	for prior: String in local.redesign_character.transaction_receipts:
-		if prior.begins_with(prefix): return prior == receipt and local.flags.call("has", "opening:starter_granted") == true
+		if prior.begins_with(prefix):
+			return prior == receipt and local.flags.call("has", "opening:starter_granted") == true \
+				and _original_starter_admitted(instance, receipt)
+	if not is_host():
+		return _request_original_starter(instance, nickname)
 	if party.size() != 0 or session.call("_owner_training_mutation_blocked", local) == true: return false
 	if not bool(save_system.call("finish_fallback")) or save_system.call("fallback_busy") == true: return false
 	# Flush callbacks cannot turn this into another character's adoption.
@@ -3187,6 +3219,147 @@ func commit_original_starter(source: Node, instance: RefCounted, nickname: Strin
 		local.flags.call("load_data", before_flags)
 		return false
 	return true
+
+
+## F01#6a. A guest never writes its own original starter. It names its live
+## starter instance -- the one its follower body already pilots -- and asks the
+## host to stage `starter_choice` (scripts/net/starter_choice_action.gd), which
+## validates the card against the host's own admitted record and config. Its
+## party stays empty while the stage is in flight, so its owner-passive inputs
+## stay on the host's roster. The journalled row is installed by
+## character_action_owner.gd, which appends exactly this pending instance, saves,
+## ACKs and re-arms the passive stream; the opening finishes once the row reads
+## accepted. Re-asking is idempotent: every retry re-sends the card the first
+## request carried, so the host's answer is repeatable. The install itself still
+## requires the live instance to equal the staged card (character_action_owner).
+var _original_starter_pending: RefCounted = null
+var _original_starter_pending_card: Dictionary = {}
+
+
+func _request_original_starter(instance: RefCounted, nickname: String) -> bool:
+	if party.size() != 0 or session == null or not session.has_method("request_original_starter"): return false
+	if _original_starter_pending != null and _original_starter_pending != instance: return false
+	if _original_starter_pending == null:
+		instance.set("nickname", nickname)
+		var first: Dictionary = preload("res://scripts/save/water_capture_codec.gd").encode(instance)
+		if first.is_empty(): return false
+		_original_starter_pending = instance
+		_original_starter_pending_card = first
+	session.call("request_original_starter", _original_starter_pending_card.duplicate(true))
+	return false
+
+
+## The installer's only source for the newcomer (character_action_owner.gd).
+func pending_original_starter_instance() -> RefCounted:
+	return _original_starter_pending
+
+
+## The opening gave up on this request (the host refused it): forget the
+## instance so a fresh choice can be made. Refused (false) once the host has
+## journalled a `starter_choice` row for this character: that row is the
+## decision, and the installer needs this exact instance when it arrives.
+func cancel_original_starter_request() -> bool:
+	var row: Variant = world.reward_deliveries.get(preload("res://scripts/creatures/essence.gd").training_delivery_id(world.reward_delivery_namespace, local.character_id))
+	if row is Dictionary and row.get("action") == "starter_choice":
+		return false
+	_original_starter_pending = null
+	_original_starter_pending_card = {}
+	return true
+
+
+## F01#6a. The guest's explicit retry once the opening's bound has passed
+## (opening.json `starters.admission_retry_after_seconds`). Never writes the
+## party and never changes the pending instance itself:
+##   * nothing journalled yet -> re-send the first request ("resent");
+##   * a valid pending row the installer accepts for the live instance -> re-run
+##     this owner's install of it ("reinstall");
+##   * a valid pending row the installer refuses for the live instance but
+##     accepts for the host's own staged card -> hand that card back decoded
+##     ("readopt"); the opening swaps the follower and then confirms it through
+##     `adopt_original_starter_instance`.
+## The acceptance test is the installer's own (`character_action_owner._starter_plan`).
+func retry_original_starter() -> Dictionary:
+	if is_host() or _original_starter_pending == null or session == null: return {"action": "none"}
+	var row := _pending_starter_row()
+	if row.is_empty():
+		if not session.has_method("request_original_starter") or _original_starter_pending_card.is_empty(): return {"action": "none"}
+		session.call("request_original_starter", _original_starter_pending_card.duplicate(true))
+		return {"action": "resent"}
+	var owner := preload("res://scripts/net/character_action_owner.gd")
+	if owner._starter_plan([], row, _original_starter_pending).get("ok") == true:
+		var ledger: Node = session.get_node_or_null(^"LedgerRpc") if session is Node else null
+		if ledger != null and ledger.has_method("_process_creature_training"): ledger.call("_process_creature_training", row)
+		return {"action": "reinstall"}
+	var adopted := _staged_starter_instance(row)
+	if adopted == null: return {"action": "none"}
+	return {"action": "readopt", "instance": adopted}
+
+
+## The opening swapped its follower to `instance` (a "readopt" above): make it
+## the pending instance the installer appends, only if the installer accepts it.
+func adopt_original_starter_instance(instance: RefCounted) -> bool:
+	var row := _pending_starter_row()
+	if is_host() or instance == null or row.is_empty() \
+			or preload("res://scripts/net/character_action_owner.gd")._starter_plan([], row, instance).get("ok") != true: return false
+	_original_starter_pending = instance
+	_original_starter_pending_card = preload("res://scripts/save/water_capture_codec.gd").encode(instance)
+	return true
+
+
+## Polled while the opening's wait is stalled: has the host's row for the
+## pending starter been accepted meanwhile? Sends nothing.
+func original_starter_admitted_now() -> bool:
+	if _original_starter_pending == null: return false
+	var receipt := "starter_choice:%s:%s" % [local.character_id, str(_original_starter_pending.get("uid"))]
+	var instance: RefCounted = _original_starter_pending
+	return _original_starter_admitted(instance, receipt)
+
+
+## The host's staged card for this character's pending starter row, decoded,
+## if the installer would accept it; otherwise null.
+func _staged_starter_instance(row: Dictionary) -> RefCounted:
+	var staged: Variant = row.get("after", {}).get("party", []) if row.get("after") is Dictionary else []
+	if not staged is Array or (staged as Array).size() != 1 or not (staged as Array)[0] is Dictionary: return null
+	var card: Dictionary = (staged as Array)[0]
+	if str(row.receipt) != "starter_choice:%s:%s" % [local.character_id, str(card.get("uid", ""))]: return null
+	# The staged card is the portable one (in-fight energy stripped); the codec
+	# needs the field, and a fresh starter's energy is zero.
+	var full: Dictionary = card.duplicate(true)
+	if not full.has("energy"): full["energy"] = 0.0
+	var adopted: RefCounted = preload("res://scripts/save/water_capture_codec.gd").decode(full)
+	if adopted == null or preload("res://scripts/net/character_action_owner.gd")._starter_plan([], row, adopted).get("ok") != true: return null
+	return adopted
+
+
+## This character's journalled, not yet accepted original-starter row, or {}.
+## Validated exactly as an owner validates a saved row before acting on it.
+func _pending_starter_row() -> Dictionary:
+	var row: Variant = world.reward_deliveries.get(preload("res://scripts/creatures/essence.gd").training_delivery_id(world.reward_delivery_namespace, local.character_id))
+	if not row is Dictionary or row.get("action") != "starter_choice" or row.get("status") != "pending" \
+			or not str(row.get("receipt", "")).begins_with("starter_choice:%s:" % local.character_id): return {}
+	if not preload("res://scripts/net/foundation_delivery.gd").valid(row, preload("res://scripts/net/character_record_rules.gd").errors,
+			local.character_id, world.reward_delivery_namespace, world.world_id): return {}
+	return row
+
+
+func _original_starter_admitted(instance: RefCounted, receipt: String) -> bool:
+	if is_host(): return true
+	var row: Variant = world.reward_deliveries.get(preload("res://scripts/creatures/essence.gd").training_delivery_id(world.reward_delivery_namespace, local.character_id))
+	if row is Dictionary and row.get("action") == "starter_choice" and row.get("receipt") == receipt \
+			and row.get("status") == "accepted":
+		_original_starter_pending = null
+		_original_starter_pending_card = {}
+		return true
+	return false
+
+
+## Whether THIS process may write its own character's starter receipt: the host,
+## or an admitted client whose character file the host's snapshot has made a
+## valid save candidate (`session.gd::client_character_save_ready()`, the same
+## gate a client's own character save uses). A pending joiner may not.
+func original_starter_writer_ready() -> bool:
+	if session == null or save_system == null: return false
+	return is_host() or session.call("client_character_save_ready") == true
 
 
 func original_starter_uid() -> String:
@@ -3284,20 +3457,190 @@ func regional_ending_context() -> Dictionary:
 func commit_regional_ending_ack(intent: Dictionary) -> Dictionary:
 	var ending := preload("res://scripts/story/regional_homecoming.gd")
 	if session == null or ending.acknowledgement_intent(ending.context(self), str(intent.get("stage", ""))) != intent: return {"status": "refused"}
-	var view: Dictionary = session.call("homestead_personal_view")
-	if view.is_empty(): return {"status": "refused"}
+	return _queue_regional_ack(intent)
+
+
+func _queue_regional_ack(intent: Dictionary) -> Dictionary:
 	_regional_ack_intents[intent.transaction_id] = intent.duplicate(true)
-	session.call("_foundation_send", "regional_ack", "regional_ending:" + local.character_id, intent, int(view.registry_revision))
+	_regional_ack_settled.erase(intent.transaction_id) # A new attempt never reads an older settlement.
+	if not bool(session.call("is_host")):
+		# A guest's personal view is the host's async reply; its cache may be
+		# empty or predate the arrival that bumped the revision. Send against
+		# the next reply only, and only while the caller is still waiting
+		# (regional_homecoming polls for its ack_timeout_ms).
+		_regional_ack_waiting[intent.transaction_id] = Time.get_ticks_msec()
+		_regional_ack_queued_at[intent.transaction_id] = Time.get_ticks_msec()
+		var drain := Callable(self, "_drain_regional_ack_waiting")
+		if not session.is_connected("homestead_personal_view_completed", drain):
+			session.connect("homestead_personal_view_completed", drain)
+		var replied := Callable(self, "_on_regional_ack_reply")
+		if session.has_signal("homestead_action_completed") and not session.is_connected("homestead_action_completed", replied):
+			session.connect("homestead_action_completed", replied)
+		session.call("homestead_personal_view")
+		return regional_ending_ack_result(intent.transaction_id)
+	if not _send_regional_ack(intent.transaction_id):
+		_regional_ack_intents.erase(intent.transaction_id)
+		return {"status": "refused"}
 	return regional_ending_ack_result(intent.transaction_id)
+
+
+var _regional_ack_waiting: Dictionary = {}
+var _regional_ack_queued_at: Dictionary = {}
+var _regional_ack_sent_at: Dictionary = {}
+const REGIONAL_ACK_RESEND_MS := 1500
+
+## Sends each waiting guest ack on the fresh view reply. The presentation's
+## window (ack_timeout_ms) bounds only how long Grandpa's scene waits; an ack
+## that outlives it is not dropped. It keeps sending while it is still this
+## character's same ending (see _regional_ack_still_owed), so a slow guest's
+## homecoming still settles. The transaction id is per character and stage,
+## and the host answers a repeat with its saved decision: it settles once.
+func _drain_regional_ack_waiting() -> void:
+	var waiting := _regional_ack_waiting.duplicate()
+	_regional_ack_waiting.clear()
+	for transaction_id: String in waiting:
+		if not _regional_ack_still_owed(transaction_id):
+			_forget_regional_ack(transaction_id)
+		elif _regional_ack_sendable(transaction_id):
+			_send_regional_ack(transaction_id)
+
+
+## Same character, world, session, outcome, home return and party as when
+## Grandpa spoke, and that stage not yet saved. Anything else is a new
+## presentation: Grandpa offers the conversation again on the next talk.
+func _regional_ack_still_owed(transaction_id: String) -> bool:
+	var intent: Dictionary = _regional_ack_intents.get(transaction_id, {})
+	if intent.is_empty(): return false
+	var ending := preload("res://scripts/story/regional_homecoming.gd")
+	var journey := _regional_ack_journey()
+	if journey.is_empty() or journey.get(str(intent.get("stage", ""))) == true: return false
+	for field: String in ending.CONTEXT_FIELDS:
+		if journey.get(field) != intent.get(field): return false
+	return true
+
+
+func _regional_ack_journey() -> Dictionary:
+	return preload("res://scripts/story/regional_homecoming.gd").journey_context(self)
+
+
+## The host accepts an ack only at Grandpa and out of danger; wait for that.
+func _regional_ack_sendable(transaction_id: String) -> bool:
+	var intent: Dictionary = _regional_ack_intents.get(transaction_id, {})
+	var ending := preload("res://scripts/story/regional_homecoming.gd")
+	return not intent.is_empty() and ending.acknowledgement_intent(ending.context(self), str(intent.get("stage", ""))) == intent
+
+
+func _forget_regional_ack(transaction_id: String) -> void:
+	# Forgotten because its own stage is now saved for this same ending: it
+	# succeeded. Keep the intent so a presentation still polling it reads the
+	# committed result, not "refused" (f20_ending: the waiting drain forgot a
+	# saved homecoming before Grandpa's scene polled, and credits never opened).
+	if _regional_ack_saved_for_its_ending(transaction_id):
+		_regional_ack_settled[transaction_id] = _regional_ack_intents[transaction_id].duplicate(true)
+	_regional_ack_intents.erase(transaction_id)
+	_regional_ack_waiting.erase(transaction_id)
+	_regional_ack_queued_at.erase(transaction_id)
+	_regional_ack_sent_at.erase(transaction_id)
+	_regional_ack_viewed_at.erase(transaction_id)
+
+
+## A guest's send carries the revision from one personal-view reply, and that
+## reply has no request id: a stale one yields a revision-conflict refusal
+## that nothing reports back. While the host has not journalled the row, ask
+## for a fresh view and send again.
+## Past the scene's window an owed ack settles on a slower cadence.
+const REGIONAL_ACK_LATE_RESEND_MS := 5000
+var _regional_ack_viewed_at: Dictionary = {}
+
+func _resend_regional_ack(transaction_id: String) -> void:
+	if session == null or bool(session.call("is_host")) or _regional_ack_waiting.has(transaction_id): return
+	if not _regional_ack_queued_at.has(transaction_id): return
+	var now := Time.get_ticks_msec()
+	var queued := int(_regional_ack_queued_at[transaction_id])
+	var late: bool = now - queued > preload("res://scripts/story/regional_homecoming.gd").ack_timeout_ms(self)
+	if late and not _regional_ack_sendable(transaction_id): return # Away from Grandpa: no requests.
+	# Paced by the last view request as well as the last send: an unsendable
+	# reply sends nothing, and must not let the next request through at once.
+	var last := maxi(int(_regional_ack_sent_at.get(transaction_id, queued)), int(_regional_ack_viewed_at.get(transaction_id, 0)))
+	if now - last < (REGIONAL_ACK_LATE_RESEND_MS if late else REGIONAL_ACK_RESEND_MS): return
+	_regional_ack_viewed_at[transaction_id] = now
+	_regional_ack_waiting[transaction_id] = now
+	session.call("homestead_personal_view")
+
+
+## Drives acks whose presentation already gave up (the scene no longer
+## polls them). The live presentation drives its own, so this never races it.
+var _regional_ack_tick_left := 0.0
+
+func _tick_orphaned_regional_acks(delta: float) -> void:
+	_regional_ack_tick_left -= delta
+	if _regional_ack_intents.is_empty() or _regional_ack_tick_left > 0.0 or session == null or bool(session.call("is_host")): return
+	_regional_ack_tick_left = 0.5
+	var window_ms: int = preload("res://scripts/story/regional_homecoming.gd").ack_timeout_ms(self)
+	var now := Time.get_ticks_msec()
+	for transaction_id: String in _regional_ack_intents.keys():
+		if now - int(_regional_ack_queued_at.get(transaction_id, now)) <= window_ms: continue
+		if not _regional_ack_still_owed(transaction_id):
+			_forget_regional_ack(transaction_id)
+			continue
+		if regional_ending_ack_result(transaction_id).get("status") == "committed":
+			print("[regional_ack] %s settled after its presentation window" % transaction_id)
+			_forget_regional_ack(transaction_id)
+
+
+## A host refusal is otherwise silent on a guest; name it in the log.
+var _regional_ack_logged: Dictionary = {}
+
+func _on_regional_ack_reply(action: String, original: Dictionary, result: Dictionary) -> void:
+	if action != "regional_ack" or result.get("ok") == true: return
+	# Once per stage and code: a persistent refusal re-sends without re-logging.
+	var key := "%s:%s" % [str(original.get("stage", "")), str(result.get("code", result.get("reason", "")))]
+	if _regional_ack_logged.has(key): return
+	_regional_ack_logged[key] = true
+	print("[regional_ack] host %s %s: %s" % ["deferred" if result.get("resolved") == false else "refused", str(original.get("stage", "")), str(result.get("code", result.get("reason", "")))])
+
+
+func _send_regional_ack(transaction_id: String) -> bool:
+	var intent: Dictionary = _regional_ack_intents.get(transaction_id, {})
+	if intent.is_empty() or session == null: return false
+	var cache: Variant = session.get("_foundation_personal_cache") if not bool(session.call("is_host")) else null
+	var view: Dictionary = cache.duplicate(true) if cache is Dictionary else session.call("homestead_personal_view")
+	if view.is_empty() or not view.has("registry_revision"):
+		print("[regional_ack] no personal view to send against")
+		return false
+	var sent: Variant = session.call("_foundation_send", "regional_ack", "regional_ending:" + local.character_id, intent, int(view.registry_revision))
+	if sent is Dictionary and sent.get("ok") != true and sent.get("code") != "awaiting_saved_decision": print("[regional_ack] send refused locally: " + str(sent.get("code", "")))
+	_regional_ack_sent_at[transaction_id] = Time.get_ticks_msec()
+	return true
+
+
+## Acks that settled while still owed: transaction id -> original intent.
+var _regional_ack_settled: Dictionary = {}
+
+## The ack's own stage is saved and the ending it was spoken in still holds.
+func _regional_ack_saved_for_its_ending(transaction_id: String) -> bool:
+	var intent: Dictionary = _regional_ack_intents.get(transaction_id, {})
+	if intent.is_empty(): return false
+	var journey := _regional_ack_journey()
+	if journey.is_empty() or journey.get(str(intent.get("stage", ""))) != true: return false
+	for field: String in preload("res://scripts/story/regional_homecoming.gd").CONTEXT_FIELDS:
+		if journey.get(field) != intent.get(field): return false
+	return true
 
 
 func regional_ending_ack_result(transaction_id: String) -> Dictionary:
 	var intent: Dictionary = _regional_ack_intents.get(transaction_id, {})
+	if intent.is_empty() and _regional_ack_settled.has(transaction_id):
+		var settled: Dictionary = (_regional_ack_settled[transaction_id] as Dictionary).duplicate(true)
+		settled.merge({"status": "committed", "durable": true}, true)
+		return settled
 	if intent.is_empty() or session == null: return {"status": "refused"}
 	var row: Dictionary = session.call("_owner_training_row")
 	var decision: Dictionary = session.call("_training_decision", session.call("local_peer_id"), row)
 	if row.get("action") != "regional_ack" or row.get("intent") != intent \
-		or decision.get("ok") != true or decision.get("saved") != true: return {"status": "pending"}
+		or decision.get("ok") != true or decision.get("saved") != true:
+		if not (row.get("action") == "regional_ack" and row.get("intent") == intent): _resend_regional_ack(transaction_id)
+		return {"status": "pending"}
 	var result := intent.duplicate(true)
 	result.merge({"status": "committed", "durable": true}, true)
 	return result

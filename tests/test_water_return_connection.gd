@@ -1,8 +1,10 @@
 extends "res://tests/test_case.gd"
 
-## Parts of this file assert the LEGACY PATH (the physical Water -> Stormwood
-## return gate while portals are off); see the LEGACY PATH note in
-## test_durable_world_unlock_routes_to_existing_stormwood_destination_without_key_write.
+## RD-17: the Crossing Hall portals are the only realm path, so the shipped
+## config retires this physical Water -> Stormwood return gate
+## (test_shipped_config_retires_the_water_return_gate). The other gate cases are
+## regressions of the retired crossing, exercised only through the explicit
+## `legacy_physical_crossings` test toggle with the portal runtime ON.
 
 const WATER_WORLD := preload("res://scripts/world/water_world.gd")
 const REALM_GATE := preload("res://scripts/world/realm_gate.gd")
@@ -14,8 +16,9 @@ const BIOME_ORDER := preload("res://scripts/data/biome_order.gd")
 
 
 func before_each() -> void:
-	# Historical fixtures use the inactive replacement runtime. The strict-ON
-	# negative control below explicitly activates its isolated Session.
+	# Retired-crossing regressions opt in through the legacy toggle; the
+	# fixture Session has portals ON (as shipped), so only the toggle keeps the
+	# physical gate alive. The retirement cases clear it.
 	assert_true(BIOME_ORDER.set_test_overrides({"legacy_physical_crossings": true}))
 
 
@@ -28,9 +31,20 @@ class WorldFixture extends RefCounted:
 
 
 class PortalSession extends RefCounted:
-	var enabled := false
+	var enabled := true
 	func portal_runtime_ready() -> bool:
 		return enabled
+
+
+## A Game with no Session of its own, so `biome_order.portal_runtime_ready()`
+## reads the shipped `data/config/multiplayer.json` session config.
+class ShippedGameFixture extends Node:
+	var world: RefCounted
+	var progression: RefCounted = PROGRESSION.new()
+	var enter_calls := 0
+
+	func enter_realm(_realm: String, _entry_id: String = "") -> void:
+		enter_calls += 1
 
 
 class GameFixture extends Node:
@@ -204,19 +218,16 @@ func test_return_refuses_personal_unlock_and_water_key_shortcuts_without_mutatio
 
 
 func test_durable_world_unlock_routes_to_existing_stormwood_destination_without_key_write() -> void:
-	# LEGACY PATH: asserts the shipped portal-off behaviour (the old physical Water
-	# -> Stormwood return gate behind a world-scoped unlock). Superseded by
-	# RD-10/RD-17/RD-22 (biomes connect only through the Crossing Hall portals and
-	# the Home Key, F18#2) once F18 turns redesign_portal_runtime_enabled on;
-	# retire this test or rewrite it to the redesign rule at that point.
-	BIOME_ORDER.clear_test_overrides()
+	# Retired-crossing regression (RD-17 retires this gate in shipping; see
+	# test_shipped_config_retires_the_water_return_gate). Only the explicit
+	# legacy toggle, set in before_each, keeps it routing while portals are on.
 	var mounted := _mounted_gate()
 	var water: Node3D = mounted.world
 	var gate: Node3D = mounted.gate
 	var game := GameFixture.new()
-	assert_false(BIOME_ORDER.portal_runtime_ready(game))
+	assert_true(BIOME_ORDER.portal_runtime_ready(game))
 	assert_true(BIOME_ORDER.legacy_physical_crossings(game),
-		"inactive portals retain the real legacy return even when the authored retirement flag is false")
+		"the explicit legacy toggle is what keeps the physical return alive")
 	game.world = WorldFixture.new()
 	game.world.flags.set_flag("realm_gate_water_unlocked")
 	var before: Dictionary = game.world.flags.save_data()
@@ -228,6 +239,51 @@ func test_durable_world_unlock_routes_to_existing_stormwood_destination_without_
 	assert_eq(game.world.flags.save_data(), before,
 		"return travel must not consume, restore, or mint any key/flag")
 	assert_false(game.world.flags.has("realm_key_water"))
+	water.free()
+	game.free()
+
+
+func test_inactive_portal_runtime_keeps_the_physical_return_as_a_fail_safe() -> void:
+	# Retirement is effective only when its replacement is active: a Session
+	# whose portal runtime is off still routes through the physical gate even
+	# though biome_order.json authors legacy_physical_crossings=false.
+	BIOME_ORDER.clear_test_overrides()
+	var game := GameFixture.new()
+	game.session.set("enabled", false)
+	assert_false(BIOME_ORDER.portal_runtime_ready(game))
+	assert_true(BIOME_ORDER.legacy_physical_crossings(game),
+		"inactive portals retain the real legacy return even when the authored retirement flag is false")
+	game.free()
+
+
+func test_shipped_config_retires_the_water_return_gate() -> void:
+	# RD-17: the physical crossings are retired; the Crossing Hall portals are
+	# the only realm path. Proven against the shipped configs, not a fixture flag.
+	BIOME_ORDER.clear_test_overrides()
+	var session: Dictionary = (JSON.parse_string(FileAccess.get_file_as_string(
+		"res://data/config/multiplayer.json")) as Dictionary).session
+	assert_eq(session.get("redesign_portal_runtime_enabled"), true,
+		"the shipped session turns the Crossing Hall portal runtime on")
+	assert_eq(BIOME_ORDER.config().get("legacy_physical_crossings"), false,
+		"the shipped biome order authors the physical crossings as retired")
+	var mounted := _mounted_gate()
+	var water: Node3D = mounted.world
+	var gate: Node3D = mounted.gate
+	var game := ShippedGameFixture.new()
+	assert_true(BIOME_ORDER.portal_runtime_ready(game))
+	assert_false(BIOME_ORDER.legacy_physical_crossings(game))
+	game.world = WorldFixture.new()
+	game.world.flags.set_flag("realm_gate_water_unlocked")
+	game.world.flags.set_flag("realm_key_water")
+	var before: Dictionary = game.world.flags.save_data().duplicate(true)
+	var personal_before: Dictionary = game.progression.save_data().duplicate(true)
+	assert_true(gate != null)
+	if gate != null:
+		assert_false(gate.call("try_unlock", game), "a held Water key opens nothing")
+		assert_false(gate.call("try_enter", game), "an old durable unlock moves nobody")
+	assert_eq(game.enter_calls, 0)
+	assert_eq(game.world.flags.save_data(), before)
+	assert_eq(game.progression.save_data(), personal_before)
 	water.free()
 	game.free()
 

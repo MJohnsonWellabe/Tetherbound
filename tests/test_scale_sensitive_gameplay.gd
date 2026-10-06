@@ -74,13 +74,45 @@ func _case_combat_reach_uses_the_live_pair_of_gameplay_bodies() -> void:
 	fixture.free()
 
 
+## Main CI 37346752715 (gate A): a real player's quick strike lands at the
+## opponent's floored stand-off. The strike the resolver checks is built the way
+## `_start_action` builds it, and its reach is the same value
+## `combat_move_reach` gives combat drivers, so the opening pilot's tap gate
+## matches what a player gets.
+func _case_quick_strike_connects_at_the_floored_standoff() -> void:
+	var fixture := Node3D.new()
+	(Engine.get_main_loop() as SceneTree).root.add_child(fixture)
+	var manager := RoomManager.new()
+	var player := Fighter.new()
+	var wild := Fighter.new()
+	var ally := Fighter.new()
+	for node in [player, wild, ally, manager]:
+		fixture.add_child(node)
+	ally.radius = float(SPECIES.placeholder("terrapup").get("radius", 0.5))
+	wild.radius = float(SPECIES.placeholder("bramblebun").get("radius", 0.5))
+	manager.seed(player, wild, ally)
+	var creature: RefCounted = SPECIES.spawn("terrapup")
+	manager.seed_party(creature)
+	var strike: Dictionary = manager.call("_with_reach_for_the_bodies",
+		manager.call("_move_profile", "player_quick", str(creature.get("move_quick"))))
+	assert_almost_eq(float(strike.range), float(manager.call("combat_move_reach", "quick")), 0.001,
+		"the resolver's quick reach is the value combat drivers are given")
+	var cfg: Dictionary = preload("res://scripts/combat/combat_math.gd").config().get("enemy", {})
+	var standoff := float(preload("res://scripts/creatures/wild_creature.gd").spaced_config_for(
+		cfg, wild.radius, ally.radius).preferred_range)
+	assert_true(preload("res://scripts/combat/combat_math.gd").move_connects(strike, Vector3.ZERO,
+		Vector3.FORWARD, Vector3.FORWARD * standoff),
+		"a quick strike lands at the floored stand-off (%.2f m, reach %.2f m)" % [standoff, float(strike.range)])
+	fixture.free()
+
+
 func test_initialized_combat_geometry_contracts() -> void:
 	var path := "user://scale-sensitive-gameplay-child.gd"
 	var file := FileAccess.open(path, FileAccess.WRITE)
 	assert_true(file != null)
 	if file == null:
 		return
-	file.store_string('extends SceneTree\nfunc _initialize():\n\tcall_deferred("run")\nfunc run():\n\tvar test = load("res://tests/test_scale_sensitive_gameplay.gd").new()\n\ttest._case_built_room_staging_uses_the_direction_that_preserves_separation()\n\ttest._case_combat_reach_uses_the_live_pair_of_gameplay_bodies()\n\tprint("SCALE_GAMEPLAY_RESULT=" + JSON.stringify({"assertions":test.assertion_count,"failures":test.failures}))\n\tquit(0 if test.failures.is_empty() and test.assertion_count == 6 else 1)\n')
+	file.store_string('extends SceneTree\nfunc _initialize():\n\tcall_deferred("run")\nfunc run():\n\tvar test = load("res://tests/test_scale_sensitive_gameplay.gd").new()\n\ttest._case_built_room_staging_uses_the_direction_that_preserves_separation()\n\ttest._case_combat_reach_uses_the_live_pair_of_gameplay_bodies()\n\ttest._case_quick_strike_connects_at_the_floored_standoff()\n\tprint("SCALE_GAMEPLAY_RESULT=" + JSON.stringify({"assertions":test.assertion_count,"failures":test.failures}))\n\tquit(0 if test.failures.is_empty() and test.assertion_count == 8 else 1)\n')
 	file.close()
 	var output: Array = []
 	var absolute := ProjectSettings.globalize_path(path)
@@ -95,7 +127,7 @@ func test_initialized_combat_geometry_contracts() -> void:
 	for line: String in combined.split("\n"):
 		if line.begins_with("SCALE_GAMEPLAY_RESULT="):
 			result = JSON.parse_string(line.trim_prefix("SCALE_GAMEPLAY_RESULT="))
-	assert_eq(int(result.get("assertions", 0)), 6, combined)
+	assert_eq(int(result.get("assertions", 0)), 8, combined)
 	assert_eq(result.get("failures", ["missing result"]), [])
 
 

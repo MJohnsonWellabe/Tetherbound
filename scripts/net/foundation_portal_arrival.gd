@@ -114,15 +114,20 @@ func _travel_owner(session: Node, peer: int, envelope: Dictionary, permit: Dicti
 		_refuse("The arrival collision is not ready."); return
 	var radius := (collision.shape as CapsuleShape3D).radius
 	var body := actor as CharacterBody3D
-	var height := _landing_height(world_node, body, target, radius)
-	if not is_finite(height): _refuse("The arrival anchor has no supported ground."); return
-	var tolerance := tan(body.floor_max_angle) * radius
-	for offset: Vector2 in [Vector2(-radius, 0), Vector2(radius, 0), Vector2(0, -radius), Vector2(0, radius)]:
-		var support := _landing_height(world_node, body, target + Vector3(offset.x, 0, offset.y), radius)
-		if not is_finite(support) or absf(support - height) > tolerance: _refuse("The arrival anchor is not supported."); return
-	var landing := _capsule_landing(world_node, body, target, radius)
+	# Co-op: another trainer may already stand on the anchor (two Home Keys in
+	# a row). Take the first supported, unobstructed slot from the fixed,
+	# host-authored list around it; the host accepts contact only at a slot.
+	var landing := Vector3(INF, INF, INF)
+	var reason := "The arrival anchor is obstructed."
+	for slot: Vector3 in arrival_slots(target):
+		var checked := _slot_landing(world_node, body, slot, radius)
+		if checked.get("landing") is Vector3:
+			landing = checked.landing
+			target = slot
+			break
+		if slot == target: reason = str(checked.reason)
 	if not landing.is_finite():
-		_refuse("The arrival anchor is obstructed."); return
+		_refuse(reason); return
 	if not body.is_physics_processing() or body.get("_foundation_ground_contact_generation") == null:
 		_refuse("The ordinary arrival controller is not processing."); return
 	_pending.actor = weakref(body)
@@ -140,7 +145,9 @@ func _travel_owner(session: Node, peer: int, envelope: Dictionary, permit: Dicti
 	await get_tree().physics_frame
 	while _same_owner() and not _grounded_actor(body) and Time.get_ticks_msec() < deadline:
 		await get_tree().physics_frame
-	if not _same_owner() or not _grounded_actor(body): _refuse("The arrival has not reached supported ground."); return
+	if not _same_owner() or not _grounded_actor(body):
+		print("[portal-arrival] not grounded at the deadline: " + _grounded_failure(body))
+		_refuse("The arrival has not reached supported ground."); return
 	_pending.seated = true
 	_pending.save_deadline_msec = Time.get_ticks_msec() + int(float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").home_key.response_timeout_seconds) * 1000.0)
 	_save_arrival()
@@ -162,6 +169,23 @@ func _grounded_actor(actor: CharacterBody3D) -> bool:
 		and _pending.has("anchor") and actor.global_position.distance_to(_pending.anchor) <= float(_pending.radius) \
 		and _pending.has("world_node") and is_instance_valid(_pending.world_node.get_ref()) \
 		and _supported_capsule(_pending.world_node.get_ref(), actor, _pending.anchor, float(_pending.radius))
+
+## Diagnostic only: the first _grounded_actor condition that fails.
+func _grounded_failure(actor: CharacterBody3D) -> String:
+	if not is_instance_valid(actor): return "no_actor"
+	if not actor.is_on_floor(): return "not_on_floor pos=%s" % str(actor.global_position)
+	if not actor.is_physics_processing(): return "not_processing"
+	if int(actor.get("_foundation_ground_contact_generation")) <= int(_pending.get("contact_generation", -1)): return "no_new_contact"
+	var contact: Variant = actor.get("_foundation_ground_contact_position")
+	if not contact is Vector3: return "no_contact_position"
+	if actor.global_position.distance_to(contact) > actor.safe_margin: return "contact_%.3fm_from_body" % actor.global_position.distance_to(contact)
+	if actor.get_floor_normal().angle_to(Vector3.UP) > actor.floor_max_angle: return "floor_too_steep"
+	if not _pending.has("anchor") or actor.global_position.distance_to(_pending.anchor) > float(_pending.get("radius", 0.0)):
+		return "slid_%.2fm_from_anchor" % (actor.global_position.distance_to(_pending.anchor) if _pending.has("anchor") else -1.0)
+	if not _pending.has("world_node") or not is_instance_valid(_pending.world_node.get_ref()): return "no_world_node"
+	var support := _capsule_support_failure(_pending.world_node.get_ref(), actor, _pending.anchor, float(_pending.radius))
+	if not support.is_empty(): return "capsule_unsupported:" + support
+	return "collision_or_scale_changed"
 
 func arrival_binding(envelope: Dictionary, permit: Dictionary) -> bool:
 	var peer: int = int(permit.get("peer_id", 0))
@@ -203,11 +227,29 @@ func _process(delta: float) -> void:
 			continue
 		if not _remote_binding(peer, original): continue
 		var journal: Dictionary = session.call("foundation_grounded_arrival", self, original.envelope, original.permit)
-		if journal.get("durable") == true: original.journal_started = true
+		if journal.get("durable") == true:
+			original.journal_started = true
+			# The guest is released once the arrival is durable; mint the reset
+			# proof in this same frame, before any of its next inputs can arrive,
+			# not after the (possibly retried) world save.
+			if original.get("reset_minted") != true:
+				original.reset_minted = true
+				_confirm_travel_reset(session, peer, str(original.permit.realm))
 		if journal.get("ok") != true or journal.get("saved") != true: continue
 		_remote.erase(peer)
 		session.call("_portal_reply", peer, original.envelope, {"ok": true, "saved": true, "durable": true,
 			"arrival_applied": true, "arrived": true, "permit_id": original.permit.request_id, "reason": ""})
+
+## The guest's Game drops its travel baseline while the arrival holds its
+## owner record. This host-accepted placement is the proof that explains that
+## one reset to the guest's owner-passive replay (as a fly landing does);
+## without it the guest's next discovery is a travel_baseline_mismatch and
+## every later owner-gated guest action is refused.
+static func _confirm_travel_reset(session: Node, peer: int, realm: String) -> void:
+	var lifecycle: Node = session.get_node_or_null(^"FoundationComposition/TravelLifecycle")
+	var actor: Node3D = lifecycle.call("remote_body", peer) as Node3D if lifecycle != null else null
+	if actor == null or not actor.global_position.is_finite() or not session.has_method("owner_passive_travel_reset_confirmed"): return
+	session.call("owner_passive_travel_reset_confirmed", peer, realm, actor.global_position, true)
 
 func _same_owner() -> bool:
 	if _pending.is_empty(): return false
@@ -306,17 +348,22 @@ func _remote_binding(peer: int, original: Dictionary) -> bool:
 		or contact.get("body_instance_id") != actor.get_instance_id() or not contact.get("position") is Vector3: return false
 	var world_node: Node3D = session.call("_portal_world_node", str(permit.realm))
 	if world_node == null or not world_node.is_ancestor_of(actor): return false
-	var target := _arrival_target(world_node, permit)
-	if not target.is_finite() or not world_node.has_method("ground_height_at"): return false
+	var anchor := _arrival_target(world_node, permit)
+	if not anchor.is_finite() or not world_node.has_method("ground_height_at"): return false
 	var radius: float = float(contact.get("capsule_radius", 0.0))
 	if radius <= 0.0: return false
+	for target: Vector3 in arrival_slots(anchor):
+		if _remote_slot_contact(world_node, actor, target, radius, contact.position): return true
+	return false
+
+func _remote_slot_contact(world_node: Node3D, actor: CharacterBody3D, target: Vector3, radius: float, at: Vector3) -> bool:
 	var height: float = _landing_height(world_node, actor, target, radius)
 	if not is_finite(height): return false
 	for offset: Vector2 in [Vector2(-radius, 0), Vector2(radius, 0), Vector2(0, -radius), Vector2(0, radius)]:
 		var support: float = _landing_height(world_node, actor, target + Vector3(offset.x, 0, offset.y), radius)
 		if not is_finite(support) or absf(support - height) > tan(actor.floor_max_angle) * radius: return false
 	var landing := Vector3(target.x, height + actor.safe_margin, target.z)
-	return contact.position.distance_to(landing) <= radius and _supported_capsule(world_node, actor, target, radius)
+	return at.distance_to(landing) <= radius and _supported_capsule(world_node, actor, target, radius)
 
 func _original_arrival_row(world: RefCounted, original: Dictionary) -> bool:
 	var id: String = preload("res://scripts/creatures/essence.gd").training_delivery_id(original.envelope.world_instance_id, original.envelope.character_id)
@@ -328,48 +375,67 @@ func _original_arrival_row(world: RefCounted, original: Dictionary) -> bool:
 		"permit_id": original.permit.request_id, "realm": original.permit.realm, "entry_id": original.permit.entry_id}
 
 func _supported_capsule(world_node: Node3D, actor: CharacterBody3D, target: Vector3, radius: float) -> bool:
+	return _capsule_support_failure(world_node, actor, target, radius).is_empty()
+
+## "" when the live capsule is supported; otherwise which check failed.
+func _capsule_support_failure(world_node: Node3D, actor: CharacterBody3D, target: Vector3, radius: float) -> String:
 	# Terrain/scatter may finish streaming or change after the initial pose.
 	# Recheck actual support and the complete live capsule before either owner
 	# or host can turn a controller contact into a durable arrival.
-	if world_node == null or actor == null or not world_node.is_ancestor_of(actor): return false
+	if world_node == null or actor == null or not world_node.is_ancestor_of(actor): return "actor_outside_world"
 	var surfaces: Array[Dictionary] = []
 	var center := _landing_hit(world_node, actor, target, radius)
-	if center.is_empty(): return false
+	if center.is_empty(): return "no_ground_at_anchor"
 	var height: float = center.position.y
 	surfaces.append(center)
 	for offset: Vector2 in [Vector2(-radius, 0), Vector2(radius, 0), Vector2(0, -radius), Vector2(0, radius)]:
 		var surface := _landing_hit(world_node, actor, target + Vector3(offset.x, 0, offset.y), radius)
-		if surface.is_empty() or absf(float(surface.position.y) - height) > tan(actor.floor_max_angle) * radius: return false
+		if surface.is_empty() or absf(float(surface.position.y) - height) > tan(actor.floor_max_angle) * radius: return "uneven_support"
 		surfaces.append(surface)
 	var collision := actor.get_node_or_null(^"Collision") as CollisionShape3D
-	if collision == null or collision.disabled or not collision.shape is CapsuleShape3D: return false
+	if collision == null or collision.disabled or not collision.shape is CapsuleShape3D: return "no_capsule"
 	var query := PhysicsShapeQueryParameters3D.new()
 	query.shape = collision.shape
 	query.transform = collision.global_transform
 	query.collision_mask = actor.collision_mask
-	query.exclude = [actor.get_rid()]
+	# Support is world geometry. A co-op trainer standing in the capsule's
+	# reach is not missing ground; slot choice already avoids standing ones.
+	var trainers := _other_trainer_rids(world_node, actor)
+	query.exclude = [actor.get_rid()] + trainers
 	var space := actor.get_world_3d().direct_space_state
 	var overlaps: Array[Dictionary] = space.intersect_shape(query, 32)
-	if overlaps.is_empty(): return true
+	if overlaps.is_empty(): return ""
 	if overlaps.size() == 32 or not actor.is_on_floor() or not is_finite(actor.safe_margin) \
-		or actor.safe_margin <= 0.0 or actor.safe_margin > radius: return false
+		or actor.safe_margin <= 0.0 or actor.safe_margin > radius: return "overlap_%d_without_floor" % overlaps.size()
 	# A settled controller can retain tiny walkable floor contact. Never waive
 	# a whole floor RID: every overlapping shape must have an actual bounded
 	# walkable recovery contact, and the complete vertically lifted capsule
 	# must clear all bodies, including another shape on the same Hall body.
-	var contacts := _walkable_contacts(actor, actor.global_transform, actor.safe_margin)
-	if not _contacts_on_support(world_node, contacts, surfaces, actor.safe_margin): return false
+	var contacts := _walkable_contacts(actor, actor.global_transform, actor.safe_margin, trainers)
+	if not _contacts_on_support(world_node, contacts, surfaces, actor.safe_margin): return "contacts_off_support"
 	for overlap: Dictionary in overlaps:
 		var matched := false
 		for contact: Dictionary in contacts:
 			if overlap.get("rid") == contact.rid and overlap.get("shape") == contact.shape: matched = true
-		if not matched: return false
+		if not matched: return "overlap_not_floor:" + str(instance_from_id(overlap.get("collider_id", 0)).get_path() if is_instance_id_valid(overlap.get("collider_id", 0)) and instance_from_id(overlap.get("collider_id", 0)) is Node else "?")
 	query.transform.origin.y += actor.safe_margin
-	return space.intersect_shape(query, 1).is_empty()
+	return "" if space.intersect_shape(query, 1).is_empty() else "lifted_capsule_blocked"
 
-func _walkable_contacts(actor: CharacterBody3D, from: Transform3D, depth_limit: float = -1.0) -> Array[Dictionary]:
+## Every other trainer body (remote proxies and this world's local rig).
+func _other_trainer_rids(world_node: Node3D, actor: CharacterBody3D) -> Array[RID]:
+	var rids: Array[RID] = []
+	var bodies: Array[Node] = []
+	if actor.is_inside_tree(): bodies = actor.get_tree().get_nodes_in_group(&"remote_trainer")
+	var local := world_node.get_node_or_null(^"Player")
+	if local != null: bodies.append(local)
+	for body: Node in bodies:
+		if body is CharacterBody3D and body != actor and world_node.is_ancestor_of(body): rids.append((body as CharacterBody3D).get_rid())
+	return rids
+
+func _walkable_contacts(actor: CharacterBody3D, from: Transform3D, depth_limit: float = -1.0, excluded: Array[RID] = []) -> Array[Dictionary]:
 	var motion := PhysicsTestMotionParameters3D.new()
 	motion.from = from
+	motion.exclude_bodies = excluded
 	motion.motion = Vector3.ZERO
 	motion.margin = actor.safe_margin
 	motion.recovery_as_collision = true
@@ -408,6 +474,31 @@ func _contacts_on_support(world_node: Node3D, contacts: Array[Dictionary], surfa
 				and absf(surface.normal.dot(contact.point - surface.position)) <= margin: matched = true
 		if not matched: return false
 	return true
+
+## The anchor first, then the configured ring (portals.json arch.arrival_slots_m).
+## Offsets are authored data; no client coordinate ever enters this list.
+static func arrival_slots(anchor: Vector3) -> Array[Vector3]:
+	var slots: Array[Vector3] = [anchor]
+	var config: Variant = preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json")
+	var offsets: Variant = config.get("arch", {}).get("arrival_slots_m", []) if config is Dictionary else []
+	if not offsets is Array: return slots
+	for offset: Variant in offsets:
+		if offset is Array and offset.size() == 2 and (offset[0] is float or offset[0] is int) \
+			and (offset[1] is float or offset[1] is int) and is_finite(float(offset[0])) and is_finite(float(offset[1])) \
+			and Vector2(float(offset[0]), float(offset[1])) != Vector2.ZERO:
+			slots.append(anchor + Vector3(float(offset[0]), 0.0, float(offset[1])))
+	return slots
+
+func _slot_landing(world_node: Node3D, body: CharacterBody3D, target: Vector3, radius: float) -> Dictionary:
+	var height := _landing_height(world_node, body, target, radius)
+	if not is_finite(height): return {"reason": "The arrival anchor has no supported ground."}
+	var tolerance := tan(body.floor_max_angle) * radius
+	for offset: Vector2 in [Vector2(-radius, 0), Vector2(radius, 0), Vector2(0, -radius), Vector2(0, radius)]:
+		var support := _landing_height(world_node, body, target + Vector3(offset.x, 0, offset.y), radius)
+		if not is_finite(support) or absf(support - height) > tolerance: return {"reason": "The arrival anchor is not supported."}
+	var landing := _capsule_landing(world_node, body, target, radius)
+	if not landing.is_finite(): return {"reason": "The arrival anchor is obstructed."}
+	return {"landing": landing}
 
 func _capsule_landing(world_node: Node3D, actor: CharacterBody3D, target: Vector3, radius: float) -> Vector3:
 	var refused := Vector3(INF, INF, INF)
@@ -494,7 +585,7 @@ func _landing_hit(world_node: Node3D, actor: CharacterBody3D, at: Vector3, radiu
 	var terrain := _ground_height(world_node, at)
 	if not is_finite(terrain) or actor == null or not actor.is_inside_tree() or radius <= 0.0: return {}
 	var ray := PhysicsRayQueryParameters3D.create(
-		Vector3(at.x, terrain + radius, at.z), Vector3(at.x, terrain - radius, at.z), actor.collision_mask, [actor.get_rid()])
+		Vector3(at.x, terrain + radius, at.z), Vector3(at.x, terrain - radius, at.z), actor.collision_mask, [actor.get_rid()] + _other_trainer_rids(world_node, actor))
 	var hit := actor.get_world_3d().direct_space_state.intersect_ray(ray)
 	if hit.is_empty() or not hit.get("position") is Vector3 or not hit.get("normal") is Vector3 \
 		or not hit.position.is_finite() or not hit.normal.is_finite() \

@@ -287,3 +287,42 @@ func test_confirmed_reset_keeps_landmark_range_and_one_visit_per_poll() -> void:
 	for id: String in ["manual", "far", "high"]:
 		packet.new_landmarks = [id]
 		_denied(cursor, packet, "invalid_landmark" if id == "manual" else "landmark_out_of_range", context)
+
+func test_in_place_condition_batch_equals_the_copying_replay_and_refusal_leaves_it_untouched() -> void:
+	# F01#6b: one working copy per batch must give byte-identical cursors.
+	var before: Dictionary = FIXTURE.new()._before()
+	before.party[0].nourishment = 30.003
+	before.party[0].rested = true
+	before.party[0].rested_seconds_left = 0.15
+	var copied := REPLAY.begin(before, {})
+	var working := copied.duplicate(true)
+	for delta: float in [0.1, 0.1, 0.016666666666666666, 0.03333333333333333, 0.0, 0.2]:
+		var packet := _condition(copied, delta)
+		copied = _advance(copied, packet)
+		assert_eq(REPLAY.apply_condition_owned(working, packet, _context()), "")
+		assert_eq(var_to_bytes(working), var_to_bytes(copied), "in place == copying replay (state, clocks, sequence, prefix)")
+	var snapshot := var_to_bytes(working)
+	var bad := _condition(working, 0.1)
+	bad.uids = (bad.uids as Array).duplicate()
+	bad.uids[0] = "creature-someone-else"
+	assert_eq(REPLAY.apply_condition_owned(working, bad, _context()), "roster_mismatch")
+	var skipped := _condition(working, 0.1)
+	skipped.sequence = int(working.sequence) + 2
+	assert_eq(REPLAY.apply_condition_owned(working, skipped, _context()), "sequence_mismatch")
+	assert_eq(var_to_bytes(working), snapshot, "a refused tick leaves the working copy untouched")
+	assert_eq(REPLAY.apply_condition_owned(working, _discovery(working, [1, 0, 0]), _context()), "invalid_packet",
+		"only condition ticks take the in-place path")
+
+
+## PERF (2026-10-05): `_record_valid` remembers verdicts by exact content. A
+## record that turns invalid in place, or differs only by an int/float type,
+## must never reuse an earlier verdict.
+func test_record_verdicts_are_never_reused_for_a_changed_record() -> void:
+	var record: Dictionary = FIXTURE.new()._before()
+	assert_true(REPLAY._record_valid(record), "fixture record is valid")
+	assert_true(REPLAY._record_valid(record.duplicate(true)), "an identical copy shares the verdict")
+	record.party[0].nourishment = -1.0
+	assert_false(REPLAY._record_valid(record), "the same Dictionary, now invalid, is re-judged")
+	record.party[0].nourishment = 30.0
+	record.party[0].landmarks_visited_together = 1.5
+	assert_false(REPLAY._record_valid(record), "a non-integral count is refused, not served from memory")

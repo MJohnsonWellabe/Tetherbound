@@ -8529,6 +8529,8 @@ func _build_fungus() -> void:
 		brackets = _fungus_species_from_models(cfg.get("bracket_models", []), glow, emission)
 	var holder := Node3D.new()
 	holder.name = "Fungus"
+	# The existing healing hue rule includes the cave's cool fungus glow.
+	holder.add_to_group(&"meadow_healing_light_roots")
 	add_child(holder)
 	var rng := RandomNumberGenerator.new()
 	rng.seed = int(cfg.get("seed", 905))

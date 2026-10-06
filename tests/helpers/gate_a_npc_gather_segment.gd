@@ -532,13 +532,17 @@ func _gather_authored_node(item_id: String, tool_id: String, hotbar_action: Stri
 	# Follow the existing Pond road to its nearest authored node, then leave it
 	# for the resource. Nearest live nodes vary with the real NPC arrival pose.
 	# A stone heading that crosses the concave fence uses the existing meadow
-	# road; an interior heading stays direct. This hint admits no native contact.
+	# road; an interior heading stays direct. A heading through an authored prop
+	# cluster's placed collider (the practice-meadow trainer_camp's fire ring and
+	# bedroll sit on the eastern-wood -> Stoneyard line) uses the same road, as
+	# the wood leg does around Grandpa's furnished yard. This hint admits no
+	# native contact; it reads placed collider boxes only as layout metadata.
 	# Every leg shares the same 1800-frame walk and unchanged live floor checks.
 	var road := "The Pond" if item_id == "wood" else ""
 	if item_id == "stone":
 		var outline := VILLAGE_BOUNDARY.outline(VILLAGE_BOUNDARY.load_config())
 		var hint := stone_road_hint(Vector2(_player.global_position.x, _player.global_position.z),
-			Vector2(node.global_position.x, node.global_position.z), outline, 1.55)
+			Vector2(node.global_position.x, node.global_position.z), outline, 1.55, _authored_prop_footprints())
 		if hint == StoneRoadHint.INVALID:
 			_fail("actual stone approach is outside the bounded village fence hint")
 			return false
@@ -685,18 +689,25 @@ func _wait_for_tool_idle() -> bool:
 
 
 enum StoneRoadHint { INVALID, DIRECT, MEADOW }
+const MAX_PROP_FOOTPRINTS := 4096
+const MAX_PROP_RADIUS := 32.0
 
 
 ## Bounded layout guidance only. Inside endpoints can still cross a concave
 ## fence twice, leaving via an open gate and returning through a solid panel.
 ## Native production movement, floor, skin and raw contact checks still decide
 ## whether the unchanged actual target is physically reached.
-static func stone_road_hint(from: Vector2, goal: Vector2, outline: PackedVector2Array, clearance: float) -> int:
+static func stone_road_hint(from: Vector2, goal: Vector2, outline: PackedVector2Array, clearance: float,
+		footprints: PackedVector3Array = PackedVector3Array()) -> int:
 	if not from.is_finite() or not goal.is_finite() or outline.size() < 3 or outline.size() > 64 \
-			or from.distance_to(goal) > 180.0 or not is_finite(clearance) or clearance <= 0.0 or clearance > 1.65:
+			or from.distance_to(goal) > 180.0 or not is_finite(clearance) or clearance <= 0.0 or clearance > 1.65 \
+			or footprints.size() > MAX_PROP_FOOTPRINTS:
 		return StoneRoadHint.INVALID
 	for index in outline.size():
 		if not outline[index].is_finite() or outline[index] == outline[(index + 1) % outline.size()]:
+			return StoneRoadHint.INVALID
+	for footprint: Vector3 in footprints:
+		if not footprint.is_finite() or footprint.z <= 0.0 or footprint.z > MAX_PROP_RADIUS:
 			return StoneRoadHint.INVALID
 	if not Geometry2D.is_point_in_polygon(from, outline) or not Geometry2D.is_point_in_polygon(goal, outline):
 		return StoneRoadHint.INVALID
@@ -711,7 +722,42 @@ static func stone_road_hint(from: Vector2, goal: Vector2, outline: PackedVector2
 		gap = minf(gap, b.distance_to(Geometry2D.get_closest_point_to_segment(b, from, goal)))
 		if gap <= clearance:
 			return StoneRoadHint.MEADOW
+	# A placed prop collider (x, z, footprint radius) the direct heading crosses.
+	# One beside either endpoint is part of that stop, which no road choice avoids.
+	for footprint: Vector3 in footprints:
+		var centre := Vector2(footprint.x, footprint.y)
+		var reach := footprint.z + clearance
+		if from.distance_to(centre) <= reach or goal.distance_to(centre) <= reach:
+			continue
+		if centre.distance_to(Geometry2D.get_closest_point_to_segment(centre, from, goal)) <= reach:
+			return StoneRoadHint.MEADOW
 	return StoneRoadHint.DIRECT
+
+
+## Placed authored prop colliders (props.gd: one centred box per prop, under its
+## cluster in Props) as (x, z, horizontal half-diagonal). Walkable terrace
+## segments are ground, not furnishing, and are left out. Metadata only.
+func _authored_prop_footprints() -> PackedVector3Array:
+	var footprints := PackedVector3Array()
+	var props := _world.get_node_or_null(^"Props")
+	if props == null:
+		return footprints
+	for cluster: Node in props.get_children():
+		for child: Node in cluster.get_children():
+			if not child is StaticBody3D or not str(child.name).ends_with("_Collision"):
+				continue
+			if cluster.get_node_or_null(NodePath(str(child.name).trim_suffix("_Collision"))) is MeshInstance3D:
+				continue # A walkable segment's visible surface, not a prop root.
+			for shape_node: Node in child.get_children():
+				var shape := shape_node as CollisionShape3D
+				if shape == null or not shape.shape is BoxShape3D:
+					continue
+				var size := (shape.shape as BoxShape3D).size * shape.global_basis.get_scale()
+				var at := shape.global_position
+				footprints.append(Vector3(at.x, at.z, 0.5 * Vector2(size.x, size.z).length()))
+				if footprints.size() >= MAX_PROP_FOOTPRINTS:
+					return footprints
+	return footprints
 
 
 func _nearest_authored_node(item_id: String) -> Node3D:

@@ -21,9 +21,79 @@ extends "res://tests/test_case.gd"
 const TELEGRAPH_GLOW := preload("res://scripts/combat/telegraph_glow.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
 class SlopedBody extends Node3D:
+	var ground_calls := 0
+	var ground_offset := 0.0
 	func body_radius() -> float: return 2.0
-	func _ground_height(x: float, _z: float) -> float: return x * 0.5
+	func _ground_height(x: float, _z: float) -> float:
+		ground_calls += 1
+		return x * 0.5 + ground_offset
 	func active() -> bool: return true
+
+
+class CountingGlow extends TELEGRAPH_GLOW:
+	var vertices_sampled := 0
+	func _ground_vertex(offset: Vector3) -> Vector3:
+		vertices_sampled += 1
+		return super._ground_vertex(offset)
+
+
+func test_unchanged_dry_ring_skips_vertices_but_pulse_and_move_redraw() -> void:
+	var glow := CountingGlow.new()
+	glow.call("_ready")
+	glow.call("_draw_ring", 3.0, 0.7)
+	var count := glow.vertices_sampled
+	glow.call("_draw_ring", 3.0, 0.7)
+	assert_eq(glow.vertices_sampled, count, "unchanged unqueried aim rebuilds nothing")
+	glow.call("_draw_ring", 3.2, 0.6)
+	assert_true(glow.vertices_sampled > count, "radius/alpha pulse is retained")
+	count = glow.vertices_sampled
+	glow.position += Vector3.RIGHT
+	glow.call("_draw_ring", 3.2, 0.6)
+	assert_true(glow.vertices_sampled > count, "moved aim redraws")
+	glow.free()
+
+
+func test_ground_ring_keeps_resampling_changed_heights_on_same_body() -> void:
+	var parent := Node3D.new()
+	var body := SlopedBody.new()
+	parent.add_child(body)
+	var glow := TELEGRAPH_GLOW.begin(parent, Vector3.ZERO, Color.CYAN, 1.1, 0.6)
+	glow.call("_ready")
+	glow.call("follow_state", body, body.active)
+	glow.call("_draw_ring", 3.0, 0.7)
+	var mesh: ImmediateMesh = glow.get("_ring_mesh")
+	var before: PackedVector3Array = mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+	var calls := body.ground_calls
+	body.ground_offset = 1.0
+	glow.call("_draw_ring", 3.0, 0.7)
+	assert_true(body.ground_calls > calls, "same source may report changed ground")
+	assert_true(mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX] != before)
+	body.ground_offset = 0.0
+	glow.call("_draw_ring", 3.2, 0.6)
+	assert_true(body.ground_calls > calls, "the pulse resamples its changed ground points")
+	assert_true(mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX] != before)
+	calls = body.ground_calls
+	glow.position += Vector3(2.0, 0.0, 1.0)
+	glow.call("_draw_ring", 3.2, 0.6)
+	assert_true(body.ground_calls > calls, "moving the same-sized ring resamples")
+	for point: Vector3 in mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]:
+		assert_almost_eq((glow.position + point).y, (glow.position.x + point.x) * 0.5 + 0.08, 0.001)
+	parent.free()
+
+
+func test_shared_ground_point_is_sampled_once_and_cache_expires_each_rebuild() -> void:
+	var parent := Node3D.new()
+	var body := SlopedBody.new()
+	parent.add_child(body)
+	var glow := TELEGRAPH_GLOW.begin(parent, Vector3.ZERO, Color.CYAN, 1.1, 0.6)
+	glow.call("_ready")
+	glow.call("follow_state", body, body.active)
+	# A collapsed ring repeats the same point in all strip vertices.
+	glow.call("_draw_ring", 0.0, 0.7)
+	assert_eq(body.ground_calls, 1, "one sample for one distinct ground point")
+	glow.call("_draw_ring", 0.0, 0.6)
+	assert_eq(body.ground_calls, 2, "a changed rebuild never inherits old ground heights")
+	parent.free()
 
 
 func test_state_ring_clears_body_footprint_and_follows_sloped_ground() -> void:

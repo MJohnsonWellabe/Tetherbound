@@ -18,6 +18,7 @@ const NATIVE_CASES := [
 	"wild_body_reports_its_shape_and_announces_a_route_cue",
 	"a_new_tell_redraws_rather_than_reusing_an_earlier_tells_marks",
 	"captured_wild_opponent_survives_terminal_presentation_refresh",
+	"pose_fits_one_packet_and_the_guest_keeps_the_cues_pattern_profile",
 ]
 
 class WildShell extends "res://scripts/creatures/wild_creature.gd":
@@ -356,6 +357,36 @@ func _case_captured_wild_opponent_survives_terminal_presentation_refresh() -> vo
 	_free_director(director)
 
 
+func _case_pose_fits_one_packet_and_the_guest_keeps_the_cues_pattern_profile() -> void:
+	# The 10 Hz pose is unreliable: over the 1392-byte ENet MTU it fragments,
+	# and one lost fragment drops the pose (host log: 6992 bytes, CI #546).
+	var profile: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/combat.json"))
+	profile["telegraph_shape"] = "lane"
+	var shape := LANE_SHAPE.duplicate()
+	shape["pattern"] = {"profile": profile, "origin": [0.0, 0.0, 0.0], "heading": [0.0, 0.0, 1.0], "marker": [0.0, 0.0, 4.0]}
+	var director := _director(shape)
+	var cue := director._shared_cue_payload("enc_1", "telegraph", 0.9)
+	assert_eq(cue.shape.pattern.profile, profile, "the reliable cue carries the whole pattern profile")
+	assert_true(var_to_bytes(cue).size() > 1392, "the fixture profile really exceeds one packet")
+	var pose := director._shared_presentation_payload("enc_1")
+	assert_false((pose.shape.pattern as Dictionary).has("profile"), "the unreliable pose carries no profile")
+	assert_eq(pose.shape.pattern.marker, [0.0, 0.0, 4.0], "the pose keeps the moving marker")
+	assert_true(var_to_bytes(pose).size() < 1200, "the pose fits one packet: %d bytes" % var_to_bytes(pose).size())
+	var proxy := _tree_proxy()
+	proxy.last_cue_serial = 4
+	proxy.apply_pattern_shape(4, cue.shape)
+	var moved: Dictionary = pose.shape.duplicate(true)
+	moved.pattern.marker = [1.0, 0.0, 5.0]
+	proxy.apply_pattern_shape(4, moved)
+	assert_eq(proxy._pattern_geometry.get("profile"), profile, "a pose keeps this tell's cue profile")
+	assert_eq(proxy._pattern_geometry.get("marker"), Vector3(1.0, 0.0, 5.0), "and moves its marker")
+	proxy._pattern_geometry.clear()
+	proxy.apply_pattern_shape(4, moved)
+	assert_true(proxy._pattern_geometry.is_empty(), "a pose alone never invents a profile")
+	proxy.free()
+	_free_director(director)
+
+
 func run_initialized_cases(tree: SceneTree) -> Dictionary:
 	var completed: Array[String] = []
 	for name: String in NATIVE_CASES:
@@ -386,7 +417,7 @@ func run():
 	var result = test.run_initialized_cases(self)
 	await process_frame
 	print("SHARED_CUE_SHAPE_RESULT=" + JSON.stringify(result))
-	quit(0 if result.failures.is_empty() and result.cases.size() == 9 and result.assertions == 77 else 1)
+	quit(0 if result.failures.is_empty() and result.cases.size() == 10 and result.assertions == 85 else 1)
 ''')
 	runner.close()
 	var output: Array = []
@@ -404,8 +435,8 @@ func run():
 			var parsed: Variant = JSON.parse_string(line.trim_prefix("SHARED_CUE_SHAPE_RESULT="))
 			if parsed is Dictionary: result = parsed
 	assert_eq(result_count, 1, combined)
-	assert_eq(result.get("cases", []), NATIVE_CASES, "all original cue cases and the victory regression must run")
-	assert_eq(result.get("assertions", 0), 77, "preserve all 66 original assertions plus the 11 victory checks")
+	assert_eq(result.get("cases", []), NATIVE_CASES, "all original cue cases and both regressions must run")
+	assert_eq(result.get("assertions", 0), 85, "preserve all 66 original assertions plus 11 victory and 8 packet checks")
 	assert_eq(result.get("failures", ["missing result"]), [], combined)
 	assert_false(combined.contains("ERROR:") or combined.contains("SCRIPT ERROR"), combined)
 	assert_false(combined.contains("ObjectDB instances leaked") or combined.contains("resources still in use") \

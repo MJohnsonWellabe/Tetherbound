@@ -100,6 +100,15 @@ static func modifiers(gear: Variant, cfg: Dictionary) -> Dictionary:
 				result[field] = 1.0 + clampf(float(bonus), 0.0, 1.0) * upgrade_scale
 	return result
 
+## Harness maximum HP, fight-scoped (coordinator ruling 2026-10-05). Portable
+## and durable HP stay in base units; in a fight the creature shows hp x s over
+## max x s and loses rolled damage / s, which is exactly the HP fraction a
+## raised maximum gives, and the fraction it leaves the fight with is its base
+## fraction. The host reads s from the admitted record; 1.0 when off or bare.
+static func hp_scale(record: Dictionary, uid: String, cfg: Dictionary) -> float:
+	if not _runtime_enabled(cfg): return 1.0
+	return maxf(1.0, float(modifiers(gear_for(record, uid), cfg).max_hp))
+
 ## Base must be freshly prepared from species/level/individuality/bond/traits,
 ## never a previously geared profile. Preserve HP fraction during gear changes;
 ## equipping/unequipping cannot heal, revive or compound maximum HP.

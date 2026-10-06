@@ -227,3 +227,39 @@ func test_excluded_encounter_keeps_the_untracked_strike_path() -> void:
 	assert_true(host.authorize_move_start({"encounter_id": hosted, "action": 4, "slot": "quick"},
 		1, _owned(), loose, _move(), WIND, 5000).ok)
 	assert_true(strike.call(4, 5300).ok, "the excluded hosted record accepts the untracked strike")
+
+
+func test_f33_charm_gain_frozen_in_the_accepted_action_scales_the_meter_once_and_is_capped() -> void:
+	# F33: the host freezes the owner's Charm into the accepted move
+	# (encounter_director `_host_move_start` -> creature_gear.freeze_move_profile);
+	# the landed credit multiplies the ordinary gain by it, bounded by the
+	# gear.json cap. Nothing else changes.
+	var gear := preload("res://scripts/creatures/creature_gear.gd")
+	var cap := float(gear.config().limits.ultimate_gain_multiplier_cap)
+	var charmed := gear.freeze_move_profile(_move("quick"), {"harness": "", "charm": "skyglass_charm_plus_3"}, gear.config())
+	assert_true(float(charmed.gear_ultimate_gain_multiplier) > 1.0, "a Charm raises ultimate gain")
+	assert_true(float(charmed.power_multiplier) > 1.0, "and move power, in the same frozen action")
+	assert_true(host.authorize_move_start({"encounter_id": id, "action": 1, "slot": "quick"},
+		1, _owned(), _binding(), charmed, WIND, 1000).ok)
+	assert_true(_arrive(1).ok)
+	var credited: Dictionary = host.credit_move_hit(id, 1, 1, 10.0)
+	assert_almost_eq(float(credited.ultimate_meter), 6.0 * minf(float(charmed.gear_ultimate_gain_multiplier), cap), 0.0001)
+	assert_true(host.credit_move_hit(id, 1, 1, 10.0).is_empty(), "still credited once")
+	var forged := _move("quick")
+	forged["gear_ultimate_gain_multiplier"] = 50.0
+	assert_true(host.authorize_move_start({"encounter_id": id, "action": 2, "slot": "quick"},
+		1, _owned(), _binding(), forged, WIND, 2000).ok)
+	assert_true(_arrive(2, 2300).ok)
+	var before := float(host.move_resource_snapshot(id, 1, "creature_a").ultimate_meter)
+	var capped: Dictionary = host.credit_move_hit(id, 1, 2, 10.0)
+	assert_almost_eq(float(capped.ultimate_meter) - before, 6.0 * cap, 0.0001, "never above the gear.json cap")
+
+
+func test_f33_no_charm_keeps_the_ordinary_gain_and_power() -> void:
+	var gear := preload("res://scripts/creatures/creature_gear.gd")
+	var plain := gear.freeze_move_profile(_move("quick"), gear.empty_slots(), gear.config())
+	assert_eq(float(plain.power_multiplier), 1.0)
+	assert_eq(float(plain.gear_ultimate_gain_multiplier), 1.0)
+	assert_true(_start(1).ok)
+	assert_true(_arrive(1).ok)
+	assert_eq(host.credit_move_hit(id, 1, 1, 10.0).ultimate_meter, 6.0)

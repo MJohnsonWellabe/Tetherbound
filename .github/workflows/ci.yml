@@ -1748,6 +1748,11 @@ jobs:
       - name: Verify Stormwood constructed arch journey
         if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_arches.gd
+      # PERF / co-op heartbeat: a host's Stormwood shell boot keeps every
+      # main-thread gap under 2 s while all 808 wilds spawn with stable names.
+      - name: Verify Stormwood shell spawn slicing
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
+        run: timeout 300s godot --headless --path . --script tests/smoke_stormwood_spawn_slicing.gd
       - name: Verify solo Stormwood hosted rewards
         if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: |
@@ -2817,10 +2822,11 @@ jobs:
 
   verify-multiplayer-shard:
     runs-on: ubuntu-latest
-    # Eighteen shards: seventeen longest-processing-time first on MEASURED
+    # Twenty-one shards: nineteen longest-processing-time first on MEASURED
     # durations (tools/ci/net_shards.py: the slowest of three green full runs
     # per smoke), so the longest shard's job stays under ~13 minutes, then
-    # split_realms alone (a hang cannot take other smokes down with it). The
+    # f20_ending and split_realms each alone (a hang cannot take other smokes
+    # down with it). The
     # original 30-minute job limit stays. Each shard discovers the smokes
     # itself, so this matrix needs only `changes` and queues in the FIRST
     # wave rather than behind discover-net-smokes (it used to wait ~6 min for
@@ -2829,7 +2835,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
     timeout-minutes: 30
     needs: changes
     if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-multiplayer-shard|'))
@@ -3143,6 +3149,33 @@ jobs:
       - name: Verify Cloudreach persistence tail
         run: timeout 600s godot --headless --path . --script tests/smoke_cloudreach_persistence_tail.gd
 
+  verify-f18-earned-loop:
+    # F18#5 (ACCEPTANCE 6.2): the ordinary-input loop with portals on. Fresh
+    # opening and earned tools, a paid homestead Workbench, a deep Trail Camp
+    # waystone touch, Satchel Home Key to the Crossing Hall, out of its door
+    # to Craft at the Workbench, Save/Load UI, then the home arch back to the
+    # same stone. Measured 15.4 min locally (headless).
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    # A ~15-min job: queued first, on `changes` only (QUEUE ORDER above).
+    needs: changes
+    if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-f18-earned-loop|'))
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ralph/
+            !/docs/
+            !/shots/
+            !/assets_raw/
+            !/archive/
+      - uses: ./.github/actions/setup-godot
+      - name: Verify F18 earned Home Key loop
+        run: timeout 1800s godot --headless --path . --script tests/smoke_f18_earned_loop.gd
+
   verify-cloudreach-midride-rejoin:
     # F06#6 (ACCEPTANCE 6.1, counted met in batch 22): two real peers; the
     # guest drops its link while riding (including a ride into the host's
@@ -3341,6 +3374,7 @@ jobs:
       - verify-segment-handoffs
       - verify-unbroken-chains
       - verify-cloudreach-persistence
+      - verify-f18-earned-loop
       - verify-bake-freshness
       - verify-unit-tests
       - verify-veg-corridor

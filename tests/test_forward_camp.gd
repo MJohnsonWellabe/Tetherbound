@@ -122,3 +122,40 @@ func test_atomic_kit_place_pack_replay_and_stale_revision() -> void:
 	context.character_id="guest"
 	context.all_parties_awake=true
 	assert_eq(ACTIONS._stage_build(cfg,guest,0,stage.placed_buildings,2,pack,context).code,"camp_owner")
+	# F34#4 review: a request without a kit, or naming a realm other than the
+	# host's validated one, plants nothing.
+	var broke: Dictionary = before.duplicate(true)
+	broke.inventory=[]
+	context.character_id="owner"
+	assert_eq(ACTIONS._stage_build(cfg,broke,0,[],1,place,context).code,"camp_kit_missing")
+	var elsewhere := place.duplicate(true)
+	elsewhere.realm="stormwood"
+	assert_eq(ACTIONS._stage_build(cfg,before,0,[],1,elsewhere,context).code,"camp_ground")
+
+func test_real_recipe_book_splits_travel_tier_from_homestead_only() -> void:
+	# F34#1 over the shipped recipe book (ItemDB): the field allowlist crafts at
+	# the camp part its route names; every feast, Forge ingot, tool reinforcement
+	# or bracing, and tier-gear recipe is refused naming the homestead station.
+	var db: RefCounted = preload("res://autoload/item_db.gd").new()
+	var allowed: Array = RULES.STATIONS.config().recipe_routes.field_allowed
+	var crafted := 0
+	var refused := 0
+	for id: Variant in db.call("recipe_ids"):
+		var canonical: Dictionary = db.call("recipe", str(id))
+		var route := RULES.recipe(str(id), canonical)
+		var home_only: bool = canonical.has("feast_id") or str(id).begins_with("feast_") \
+			or str(id).ends_with("_ingot") or str(id) == "stormglass_plate" or canonical.has("reinforce") \
+			or canonical.has("personal_gear_tier") or canonical.has("gear_id") or str(id).contains("bracing") \
+			or str(id).ends_with("_harness") or str(id).contains("_harness_plus") or str(id).contains("_charm")
+		if allowed.has(id) and not home_only:
+			assert_true(route.get("ok") == true, "%s crafts at a forward camp" % str(id))
+			if route.get("ok") == true:
+				assert_true(route.part in ["cookpot", "workbench"], "%s names a camp part" % str(id))
+				crafted += 1
+		elif home_only:
+			assert_false(route.get("ok") == true, "%s is homestead-only" % str(id))
+			assert_true(str(route.get("reason", "")).begins_with("Needs the homestead — use the "),
+				"%s says why: %s" % [str(id), str(route.get("reason", ""))])
+			refused += 1
+	assert_true(crafted >= 20, "travel-tier recipes craft at camp (%d)" % crafted)
+	assert_true(refused >= 30, "ingots, reinforcement, bracing and gear are refused (%d)" % refused)

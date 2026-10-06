@@ -14,6 +14,8 @@ class Saver extends RefCounted:
 	var fail := false
 	var writes := 0
 	var seen_journal := false
+	func finish_fallback() -> bool: return true
+	func fallback_busy() -> bool: return false
 	func save_world_prepared(game: Node, _id: String) -> bool:
 		writes += 1
 		seen_journal = game.get("world").reward_deliveries.size() == 1
@@ -42,14 +44,20 @@ class SessionFixture extends Node:
 	var epoch := "opening-epoch"
 	var character := CHARACTER
 	var admitted_inventory: Array = []
+	var flags: Dictionary = {}
+	var escrow: Dictionary = {}
 	func _init() -> void: admitted_inventory.resize(24)
+	func local_peer_id() -> int: return 1
+	func _foundation_flags(_peer: int) -> Dictionary: return flags.duplicate()
+	func _altar_peer_in_combat(_peer: int) -> bool: return true # Reconcile stops before the owner CAS here.
 	func _game() -> Node: return game
 	func is_host() -> bool: return true
 	func portal_runtime_ready() -> bool: return true
 	func _authority_character(peer: int) -> String: return character if peer == 7 else "other"
 	func _altar_current_epoch() -> String: return epoch
 	func admitted_character_state(peer: int) -> Dictionary:
-		return {"character_id": _authority_character(peer), "inventory": admitted_inventory.duplicate(true)}
+		return {"character_id": _authority_character(peer), "inventory": admitted_inventory.duplicate(true),
+			"portal_escrow": escrow.duplicate(true)}
 
 
 class GameFixture extends Node:
@@ -213,3 +221,209 @@ func test_full_bag_owed_grant_is_not_physical_possession_and_portable_duplicate_
 	assert_true(OPENING.owner_physically_settled(player, original.delivery_id))
 	REWARD.apply(player, other)
 	assert_eq(player.inventory.count("home_key"), 1)
+
+
+func test_legacy_character_past_first_catch_gets_one_deterministic_grant() -> void:
+	_session.flags = {OPENING.PAST_FIRST_CATCH_FLAG: true}
+	var first: Dictionary = OPENING.host_legacy_grant(_session, 7)
+	assert_true(first.get("durable") == true, str(first))
+	assert_eq(first.get("delivery_id"), _row().delivery_id, "same id Grandpa's own grant uses")
+	assert_eq(_game.world.reward_deliveries.size(), 1)
+	assert_true(OPENING.valid_row(_game.world.reward_deliveries[_row().delivery_id], _game.world, CHARACTER))
+	var again: Dictionary = OPENING.host_legacy_grant(_session, 7)
+	assert_true(again.get("duplicate") == true, "a repeat tick journals nothing new")
+	assert_eq(_game.world.reward_deliveries.size(), 1)
+	assert_eq(_game.save_system.writes, 1)
+
+
+func test_legacy_grant_skips_keyed_owed_given_and_unfinished_openings() -> void:
+	_session.flags = {}
+	var early: Dictionary = OPENING.host_legacy_grant(_session, 7)
+	assert_eq(early.get("code"), "not_past_first_catch", "not past Grandpa's first catch: no grant, the arm waits")
+	assert_true(early.get("durable") == false)
+	assert_eq(_game.world.reward_deliveries.size(), 0)
+	_session.flags = {OPENING.PAST_FIRST_CATCH_FLAG: true, "home_key_given": true}
+	assert_true(OPENING.host_legacy_grant(_session, 7).is_empty(), "already given")
+	_session.flags = {OPENING.PAST_FIRST_CATCH_FLAG: true}
+	_session.admitted_inventory[3] = {"id": "home_key", "n": 1}
+	assert_true(OPENING.host_legacy_grant(_session, 7).is_empty(), "already holds a key")
+	_session.admitted_inventory[3] = null
+	var owed := _row()
+	owed.kind = "reward_delivery"
+	owed.status = "grant_due"
+	_session.escrow = {owed.delivery_id: owed}
+	assert_true(OPENING.legacy_grant_due({"character_id": CHARACTER, "inventory": _session.admitted_inventory,
+		"portal_escrow": {}}, _session.flags, CHARACTER))
+	assert_false(OPENING.legacy_grant_due({"character_id": CHARACTER, "inventory": _session.admitted_inventory,
+		"portal_escrow": _session.escrow}, _session.flags, CHARACTER), "an owed key follows its character")
+	assert_eq(_game.world.reward_deliveries.size(), 0)
+
+
+class GiftSeenSession extends SessionFixture:
+	var gift_seen := true
+	func opening_gift_requested(_peer: int) -> bool: return gift_seen
+
+## Review finding 1: a guest's opening beats stay on the guest, so the host
+## never sees its walk_out mid-session. A verified gift request that reached
+## this host is the host's own evidence; the reconcile grants on it.
+func test_a_gift_request_seen_by_the_host_is_past_first_catch_evidence() -> void:
+	_game.remove_child(_session)
+	var seen := GiftSeenSession.new()
+	seen.game = _game
+	seen.flags = {}
+	_game.add_child(seen)
+	_transport.reparent(seen)
+	var granted: Dictionary = OPENING.host_legacy_grant(seen, 7)
+	assert_true(granted.get("durable") == true, "no walk_out on the host, gift seen: " + str(granted))
+	assert_eq(_game.world.reward_deliveries.size(), 1)
+	seen.gift_seen = false
+	seen.flags = {"home_key_given": true}
+	assert_true(OPENING.host_legacy_grant(seen, 7).is_empty(), "a given key is final")
+	_transport.reparent(_session)
+	_game.add_child(_session)
+	seen.queue_free()
+
+
+class NoteSession extends SessionFixture:
+	var noted: Array = []
+	func note_opening_gift_requested(peer: int) -> void: noted.append(peer)
+	func _portal_world_node(_realm: String) -> Node3D: return null # No authored Grandpa here.
+
+## Review nit 2: a rejected gift request records no evidence. Only a request
+## that passes binding, Grandpa geometry and the starter check is noted.
+func test_a_rejected_gift_request_records_no_evidence() -> void:
+	var probe := NoteSession.new()
+	probe.game = _game
+	var request := OPENING.envelope(CHARACTER, NAMESPACE, probe.epoch)
+	var away: Dictionary = OPENING.host_grant(probe, 7, request)
+	assert_eq(away.get("code"), "opening_context_changed", "away from Grandpa")
+	assert_eq(probe.noted, [], "no evidence without Grandpa's geometry")
+	var stranger: Dictionary = OPENING.host_grant(probe, 9, request)
+	assert_eq(stranger.get("code"), "not_admitted")
+	assert_eq(probe.noted, [], "no evidence for an unadmitted or foreign request")
+	assert_eq(_game.world.reward_deliveries.size(), 0)
+	probe.free()
+
+
+func test_reconcile_waits_while_another_owner_delivery_is_unsettled() -> void:
+	# render.yml 37378022226: a returning guest past the opening gathered
+	# berries while its legacy Home Key row was staged against an admitted
+	# record without them; the owner apply conflicted and held every write.
+	_session.flags = {OPENING.PAST_FIRST_CATCH_FLAG: true}
+	assert_true(OPENING.host_legacy_grant(_session, 7).get("durable") == true)
+	var request := _settlement()
+	request.origin_namespace = NAMESPACE
+	var find := REWARD.make_record(_game.world.world_id, NAMESPACE, "gather_batch:1", CHARACTER, "berries", 2)
+	_game.world.reward_deliveries[find.delivery_id] = find
+	assert_eq(OPENING.host_reconcile(_session, 7, request).get("code"), "owner_delivery_pending",
+		"a find the owner may already hold blocks the full-record Home Key row")
+	var other := REWARD.make_record(_game.world.world_id, NAMESPACE, "gather_batch:1", "someone-else", "berries", 2)
+	_game.world.reward_deliveries.erase(find.delivery_id)
+	_game.world.reward_deliveries[other.delivery_id] = other
+	assert_eq(OPENING.host_reconcile(_session, 7, request).get("code"), "actor_in_combat",
+		"another character's delivery and the gift's own pending row do not block (the fixture then stops at combat)")
+	find.status = "accepted"
+	_game.world.reward_deliveries[find.delivery_id] = find
+	assert_eq(OPENING.host_reconcile(_session, 7, request).get("code"), "actor_in_combat", "an accepted find no longer blocks")
+
+
+class GateRecorder extends RefCounted:
+	var calls: Array = []
+	func action_gate(peer: int, source_kind: String, request: Dictionary, context: Dictionary) -> Dictionary:
+		calls.append({"peer": peer, "source_kind": source_kind, "request": request.duplicate(true), "context": context.duplicate(true)})
+		return {"ok": false, "code": "owner_passive_checkpoint_pending"}
+
+
+class RevisionAuthority extends Authority:
+	func revision(_character: String) -> int: return 4
+
+
+class GatedSession extends SessionFixture:
+	var gate := GateRecorder.new()
+	func _altar_peer_in_combat(_peer: int) -> bool: return false
+	func _owner_passive_service() -> RefCounted: return gate
+
+
+func test_a_guest_reconcile_freezes_its_owner_passive_stream_before_staging() -> void:
+	# render.yml 37383201956: the guest's home_key_owe row staged straight onto
+	# the admitted record while its owner-passive stream kept replaying care
+	# and finds; the stream's base went stale and the next find's replay
+	# stopped it (owner_passive_delivery_authority_changed). The reconcile now
+	# asks the owner-passive gate first, as waystone touches do.
+	var gated := GatedSession.new()
+	gated.game = _game
+	gated._character_authority = RevisionAuthority.new()
+	gated.flags = {OPENING.PAST_FIRST_CATCH_FLAG: true}
+	_session.remove_child(_transport)
+	gated.add_child(_transport)
+	_game.add_child(gated)
+	assert_true(OPENING.host_legacy_grant(gated, 7).get("durable") == true)
+	var request := _settlement()
+	request.origin_namespace = NAMESPACE
+	var result: Dictionary = OPENING.host_reconcile(gated, 7, request)
+	assert_eq(result.get("code"), "owner_passive_checkpoint_pending", "nothing stages until the owner is frozen")
+	assert_eq(gated.gate.calls.size(), 1)
+	var call: Dictionary = gated.gate.calls[0]
+	assert_eq(call.source_kind, "home_key")
+	assert_true(_same(call.request, preload("res://scripts/net/owner_passive_preparation.gd").home_key_request(request)),
+		"the gate binds the owner's exact request")
+	assert_eq(call.context.expected_revision, 4)
+	assert_eq(call.context.home_key_record.status, "grant_due", "a first debt is the host's own saved grant")
+	assert_eq(call.context.source_key, "opening_home_key:" + request.delivery_id)
+	assert_false(_game.world.reward_deliveries.keys().any(func(id: String) -> bool: return id.begins_with("creature_training")),
+		"no full-record row was staged")
+
+
+func _same(a: Variant, b: Variant) -> bool:
+	return preload("res://scripts/creatures/essence.gd")._equivalent(a, b)
+
+
+class StageAuthority extends Authority:
+	var staged: Array = []
+	var verdict := {"ok": false, "code": "transaction_busy"}
+	func revision(_character: String) -> int: return 4
+	func stage_character_action(character: String, revision: int, action: String, intent: Dictionary, context: Dictionary) -> Dictionary:
+		staged.append({"character": character, "revision": revision, "action": action, "intent": intent.duplicate(true), "context": context.duplicate(true)})
+		return verdict.duplicate(true)
+
+
+func _frozen_context(request: Dictionary) -> Dictionary:
+	var source := preload("res://scripts/net/home_key_action.gd").due(_game.world.reward_deliveries[request.delivery_id], CHARACTER)
+	return {"character_id": CHARACTER, "expected_revision": 4, "in_range": true, "in_combat": false,
+		"foundation_runtime_authorized": true, "home_key_authorized": true, "home_key_record": source,
+		"source_key": "opening_home_key:" + request.delivery_id}
+
+
+func test_the_checkpointed_commit_stages_the_frozen_source_and_classifies_refusals() -> void:
+	var authority := StageAuthority.new()
+	_session._character_authority = authority
+	_session.flags = {OPENING.PAST_FIRST_CATCH_FLAG: true}
+	assert_true(OPENING.host_legacy_grant(_session, 7).get("durable") == true)
+	var request := _settlement()
+	request.origin_namespace = NAMESPACE
+	var context := _frozen_context(request)
+	var busy: Dictionary = OPENING.commit_reconcile(_session, 7, request, context)
+	assert_eq(authority.staged.size(), 1)
+	assert_eq(authority.staged[0].action, "home_key_owe", "no admitted escrow yet: a first debt")
+	assert_eq(authority.staged[0].revision, 4, "the frozen quoted revision")
+	assert_true(_same(authority.staged[0].context, context), "exactly the checkpointed context stages")
+	assert_eq(authority.staged[0].intent, {"delivery_id": request.delivery_id, "origin_namespace": NAMESPACE})
+	assert_eq(busy.get("code"), "transaction_busy")
+	assert_true(busy.get("terminal_refusal") != true, "a transient refusal keeps the checkpoint for its retry")
+	authority.verdict = {"ok": false, "code": "finite_home_key_source_required"}
+	var refused: Dictionary = OPENING.commit_reconcile(_session, 7, request, context)
+	assert_true(refused.get("terminal_refusal") == true and refused.get("resolved") == true and refused.get("durable") == false,
+		"a semantic refusal is terminal: the owner rebases and its next request retries")
+	var changed := context.duplicate(true)
+	changed.home_key_record.status = "settled"
+	var stale: Dictionary = OPENING.commit_reconcile(_session, 7, request, changed)
+	assert_eq(stale.get("code"), "home_key_source_changed")
+	assert_true(stale.get("terminal_refusal") == true)
+	authority.locked = true
+	var locked: Dictionary = OPENING.commit_reconcile(_session, 7, request, context)
+	assert_eq(locked.get("code"), "owner_action_pending")
+	assert_true(locked.get("resolved") != true, "a busy record is retried, never terminal")
+	assert_eq(authority.staged.size(), 2, "a changed source or a locked record stages nothing")
+	var stranger: Dictionary = OPENING.commit_reconcile(_session, 9, request, context)
+	assert_eq(stranger.get("code"), "not_admitted")
+	assert_eq(authority.staged.size(), 2)

@@ -169,6 +169,8 @@
     "idle_interval_seconds": [9.0, 22.0],
     "idle_max_distance_metres": 30.0,
     "alert_cooldown_seconds": 2.5,
+    "_comment_connect_poll": "Seconds between scans that connect newly spawned creatures' alert signals. The scan walks every wild body in the realm, so it is polled rather than run every frame (PERF, 2026-10-05).",
+    "connect_poll_seconds": 0.5,
     "pitch_jitter": 0.05,
     "_comment_species": "Pitch is the main differentiator within an archetype and is keyed off size: bigger creature, lower voice. Where a species is not listed the default applies, which is audible but generic -- that is a gap to fill, not a design.",
     "species": {

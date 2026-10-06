@@ -27,6 +27,30 @@
   },
   {
    "peer": 0,
+   "action": "enter_realm",
+   "args": {
+    "realm": "water",
+    "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+    "portal_regression": "f15_dock",
+    "portal_prepare_only": true
+   },
+   "budget_frames": 3000,
+   "label": "DISCLOSED SETUP: initial Hall arch position and the Tidewake portal open for this world (stands in for the Warden's Tidewake key), no earned credit"
+  },
+  {
+   "peer": 1,
+   "action": "enter_realm",
+   "args": {
+    "realm": "water",
+    "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+    "portal_regression": "f15_dock",
+    "portal_prepare_only": true
+   },
+   "budget_frames": 3000,
+   "label": "DISCLOSED SETUP: initial Hall arch position and the Tidewake portal open for this world (stands in for the Warden's Tidewake key), no earned credit"
+  },
+  {
+   "peer": 0,
    "action": "host"
   },
   {
@@ -39,24 +63,6 @@
    "args": {
     "count": 2
    }
-  },
-  {
-   "peer": 0,
-   "action": "story_flag",
-   "args": {
-    "flag": "realm_gate_water_unlocked",
-    "scope": "world"
-   },
-   "label": "SETUP: the Water route is open (stands in for Stormwood)"
-  },
-  {
-   "peer": 0,
-   "action": "story_flag",
-   "args": {
-    "flag": "realm_key_water",
-    "scope": "world"
-   },
-   "label": "SETUP: the Water key (stands in for Stormwood)"
   },
   {
    "peer": 0,
@@ -79,19 +85,23 @@
    "peer": 0,
    "action": "enter_realm",
    "args": {
-    "realm": "water"
+    "realm": "water",
+    "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+    "portal_regression": "f15_dock"
    },
    "budget_frames": 10000,
-   "label": "host enters Water"
+   "label": "host enters Water through the Crossing Hall Tidewake portal (RD-17)"
   },
   {
    "peer": 1,
    "action": "enter_realm",
    "args": {
-    "realm": "water"
+    "realm": "water",
+    "actual_portal_fixture": "initial_hall_position_and_open_route_no_earned_credit",
+    "portal_regression": "f15_dock"
    },
    "budget_frames": 10000,
-   "label": "guest enters Water"
+   "label": "guest enters Water through the Crossing Hall Tidewake portal (RD-17)"
   },
   {
    "peer": "all",

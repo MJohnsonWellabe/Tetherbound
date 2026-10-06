@@ -162,3 +162,31 @@ func test_new_capture_loadout_is_complete_and_semantically_valid_or_refused() ->
 		var malformed := valid.duplicate(true)
 		malformed[pair[0]] = pair[1]
 		assert_true(CODEC.decode(malformed) == null, "Refuse malformed new document: " + str(pair[0]))
+
+
+## Portable owner records (character_record_rules.portable_projection, since
+## 187a3f24) leave out each card's in-fight energy meter. A host decoding
+## such a card got null from both entry points, so the F20 guest homecoming
+## and every other host-side read of a portable party failed silently.
+func test_portable_projection_cards_decode_and_decode_owned_without_energy() -> void:
+	var game := preload("res://autoload/game_state.gd").new()
+	game.reset_for_new_game()
+	game.local.character_id = "character-portable"
+	assert_true(game.party.call("add", game.local.call("make_creature", "terrapup", "Pip")))
+	var personal: Dictionary = preload("res://scripts/net/character_record_rules.gd").portable_projection(game.local.save_data())
+	var card: Dictionary = personal.party[0]
+	assert_false(card.has("energy"), "the portable card has no energy")
+	var owned: RefCounted = CODEC.decode_owned(card, personal.redesign_character)
+	assert_true(owned != null, "decode_owned reads the portable card")
+	assert_eq(owned.get("uid"), card.uid)
+	assert_eq(float(owned.get("energy")), 0.0, "the transient meter starts empty")
+	var wild: Dictionary = CODEC.encode(populated())
+	wild.erase("energy")
+	var decoded: RefCounted = CODEC.decode(wild)
+	assert_true(decoded != null, "decode reads a card without its energy")
+	assert_false(wild.has("energy"), "the caller's wild card is not mutated")
+	assert_false(card.has("energy"), "the caller's card is not mutated")
+	var broken: Dictionary = card.duplicate(true)
+	broken.erase("level")
+	assert_true(CODEC.decode_owned(broken, personal.redesign_character) == null, "any other missing field still refuses")
+	game.free()

@@ -1,17 +1,19 @@
 extends SceneTree
 
-## Retired-path regression fixture: RD-35 redesign saves are current schema,
-## but this probe deliberately enables the single legacy physical-crossing
-## flag. Production ships this legacy crossing while portals are off
-## (biome_order.legacy_physical_crossings() is true whenever
-## redesign_portal_runtime_enabled is false); this is not portal-loop acceptance.
-##
-## LEGACY PATH: asserts the shipped portal-off behaviour (the old Stormwood ->
-## Water physical gate and its world-scoped Water key). Superseded by
-## RD-10/RD-17/RD-22 (Stormwood is now the last chapter: its finale grants a
-## fifth portal key and the Home Key homecoming follows, F19#2/F20) once F18
-## turns redesign_portal_runtime_enabled on; retire this test or rewrite it to the redesign rule at that
-## point.
+## LEGACY-TOGGLE REGRESSION (RD-10/RD-17/RD-22). The shipped config turns
+## session.redesign_portal_runtime_enabled on, so biome_order
+## .legacy_physical_crossings() is false and this Stormwood -> Water physical
+## gate is retired: Stormwood is the last chapter, its finale hands each
+## participant a fifth portal key and the Home Key homecoming follows (F19#2,
+## F20). The portal runtime's off switch still restores the old physical
+## crossings as the emergency fallback, so this smoke keeps the fallback path
+## honest under the single debug-only override
+## (BIOME_ORDER.set_test_overrides legacy_physical_crossings=true). It is not
+## portal-loop acceptance. With that override CLEARED mid-run (the key in hand,
+## the gate prompt the arbiter's winner) it also asserts the shipped rule: the
+## retired gate reads the authored retired line, an ordinary press, a forced
+## activation and a direct host commit all refuse, no ledger operation or
+## world flag changes and nobody leaves Stormwood.
 const BIOME_ORDER := preload("res://scripts/data/biome_order.gd")
 
 ## Production Stormwood -> Water seam proof.
@@ -188,6 +190,56 @@ func _run() -> void:
 	transport.delta_applied.connect(func(delta: Dictionary) -> void:
 		published.append(delta.duplicate(true)))
 	var sequence_before := int(transport.get("ledger").get("seq"))
+
+	# SHIPPED RULE (RD-17): clear the debug override at the strongest point --
+	# Water key in the world, gate prompt winning the arbiter -- and prove the
+	# shipped config retires this crossing instead of opening or travelling.
+	BIOME_ORDER.clear_test_overrides()
+	_expect(not BIOME_ORDER.legacy_physical_crossings(game),
+		"shipped config (portal runtime on, no override) still enables the physical crossings")
+	gate.call("refresh_from_game")
+	await _frames(3)
+	_expect(not bool(gate_prompt.get("actionable")),
+		"shipped config left the retired Waterward gate prompt actionable")
+	var retired_reason := str((JSON.parse_string(FileAccess.get_file_as_string(
+		"res://data/config/portals.json")) as Dictionary).get("retired_crossing_reason", ""))
+	_expect(not retired_reason.is_empty() and str(gate_prompt.get("label")) == retired_reason,
+		"shipped config: the retired Waterward gate does not read the authored retired-crossing line (%s)"
+			% str(gate_prompt.get("label")))
+	# The ordinary press the player would make (the arbiter may still show the
+	# retired line as its non-actionable winner), then a forced activation of
+	# the prompt's own handler: both must refuse.
+	await _press_interact()
+	await _frames(3)
+	gate_prompt.emit_signal("activated")
+	var retired_commit: Dictionary = gate.get_script().call("host_commit", game, transport.get("ledger"))
+	_expect(str(retired_commit.get("code", "")) == "legacy_physical_crossings_disabled",
+		"shipped config: the Waterward host commit did not refuse as retired (%s)" % str(retired_commit))
+	_expect(not bool(gate.call("try_unlock", game)) and not bool(gate.call("try_enter", game)),
+		"shipped config: the retired Waterward gate still unlocks or enters")
+	await _frames(120)
+	_expect(current_scene == stormwood and str(game.get("current_realm")) == "stormwood"
+			and str(game.get("pending_realm_entry")) == "",
+		"shipped config: the retired Waterward gate moved the player out of Stormwood")
+	_expect(bool(game.call("world_flags").call("has", "realm_key_water"))
+			and not bool(game.call("world_flags").call("has", "realm_gate_water_unlocked")),
+		"shipped config: the retired Waterward gate consumed the key or opened the gate")
+	_expect(int(transport.get("ledger").get("seq")) == sequence_before and published.is_empty(),
+		"shipped config: the retired Waterward gate committed or published a ledger operation")
+	# Restore the fallback fixture for the legacy path below. The retired branch
+	# of RealmGate._refresh switched the gate's revision watcher off; switch it
+	# back exactly as _ready() leaves it in a legacy-crossing world.
+	_expect(BIOME_ORDER.set_test_overrides({"legacy_physical_crossings": true}),
+		"could not restore the debug-only legacy crossing fixture")
+	gate.set_process(true)
+	gate.call("refresh_from_game")
+	_expect(str(gate.call("current_state")) == REALM_GATE.STATE_UNLOCKABLE,
+		"legacy fixture restore did not return the gate to unlockable")
+	_expect(await _wait_for_provider(arbiter, gate_prompt),
+		"Waterward RealmGate prompt did not win the arbiter again after the fixture restore")
+	if not _failures.is_empty():
+		_finish()
+		return
 	await _press_interact()
 	await _frames(3)
 

@@ -176,6 +176,18 @@ static func party_signature(party: Object) -> String:
 	return JSON.stringify(rows).sha256_text()
 
 
+## party_signature without passive care (landmarks walked together), which a
+## host copy of a guest's party receives only at owner-passive gates.
+static func party_identity_signature(party: Object) -> String:
+	if not valid_party(party):
+		return ""
+	var rows: Array = []
+	for member: Object in _members(party):
+		rows.append([member.get("uid"), _name(member), member.get("battles_fought"),
+			member.get("rest_nights_together"), member.get("feeds_together")])
+	return JSON.stringify(rows).sha256_text()
+
+
 static func eligible(game: Object) -> bool:
 	return not context(game).is_empty()
 
@@ -322,23 +334,51 @@ static func _acknowledge(game: Object, id: String, expected: Dictionary, flag: S
 		return false
 	var intent := acknowledgement_intent(expected, flag)
 	var raw: Variant = game.call("commit_regional_ending_ack", intent.duplicate(true))
-	var settings := _settings()
-	var deadline := Time.get_ticks_msec() + int(float(settings.get("ack_timeout_seconds", 8.0)) * 1000.0)
+	var deadline := Time.get_ticks_msec() + ack_timeout_ms(game)
+	var settle_ceiling := deadline + ack_settle_ceiling_ms()
 	while raw is Dictionary and raw.get("status") == "pending":
-		if not context_matches(game, expected) or Time.get_ticks_msec() >= deadline \
+		if not context_matches(game, expected) \
+				or (Time.get_ticks_msec() >= deadline and not ack_journalled(game, intent)) \
+				or Time.get_ticks_msec() >= settle_ceiling \
 				or not game is Node or not game.is_inside_tree() \
 				or not game.has_method("regional_ending_ack_result"):
+			_note_ack_exit(game, expected, "wait ended (deadline passed=%s journalled=%s)" % [str(Time.get_ticks_msec() >= deadline), str(ack_journalled(game, intent))])
 			_notice(game, failure)
 			return false
 		await game.get_tree().process_frame
 		if not is_instance_valid(game) or not context_matches(game, expected):
+			if is_instance_valid(game): _note_ack_exit(game, expected, "context changed while pending")
 			return false
 		raw = game.call("regional_ending_ack_result", intent.transaction_id)
 	if receipt_matches(raw, intent) and context_matches(game, expected) \
 			and context(game).get(flag) == true:
 		return true
+	_note_ack_exit(game, expected, "final check (receipt=%s status=%s flag=%s)" % [str(receipt_matches(raw, intent)), str(raw.get("status") if raw is Dictionary else raw), str(context(game).get(flag))])
 	_notice(game, failure)
 	return false
+
+
+## Diagnostic only: why an acknowledgement presentation ended without its
+## receipt, naming any context field that moved since Grandpa spoke.
+static func _note_ack_exit(game: Object, expected: Dictionary, why: String) -> void:
+	var current := context(game)
+	var moved: Array = []
+	for field: String in CONTEXT_FIELDS + ["starter_uid", "chapter_choices"]:
+		if current.get(field) != expected.get(field): moved.append(field)
+	print("[regional_ack] presentation ended: %s; moved=%s" % [why, str(moved)])
+
+
+## The host has durably journalled this exact acknowledgement: its row is
+## this character's retained regional_ack transaction. From then on it can
+## only settle (the owner applies, saves and ACKs); the presentation's window
+## bounds reaching the host, never that settlement. A slow guest round trip
+## (f20_ending, ~25 s at a low frame rate) otherwise gave up after the save
+## was safe, and credits never opened.
+static func ack_journalled(game: Object, intent: Dictionary) -> bool:
+	var owner_session: Variant = game.get("session") if game != null else null
+	if intent.is_empty() or not owner_session is Node or not owner_session.has_method("retained_training_transaction"):
+		return false
+	return owner_session.call("retained_training_transaction", ["regional_ack"]).get("intent") == intent
 
 
 static func receipt_matches(raw: Variant, intent: Dictionary) -> bool:
@@ -394,6 +434,25 @@ static func _name(member: Object) -> String:
 
 static func _prose() -> Dictionary:
 	return _settings().get("homecoming", {})
+
+
+## How long an acknowledgement may stay pending. A guest's is a host round
+## trip, so it gets its own (longer) window; the host's commits in-frame.
+static func ack_timeout_ms(game: Object) -> int:
+	var settings := _settings()
+	var session: Variant = game.get("session") if game != null else null
+	var guest: bool = session is Node and session.has_method("is_host") and session.call("is_host") != true
+	var seconds: Variant = settings.get("guest_ack_timeout_seconds" if guest else "ack_timeout_seconds", 8.0)
+	if not (seconds is float or seconds is int): seconds = 8.0
+	return int(float(seconds) * 1000.0)
+
+
+## A journalled acknowledgement that never settles while connected still
+## ends with the failure notice (never a silent, endless "saving").
+static func ack_settle_ceiling_ms() -> int:
+	var seconds: Variant = _settings().get("guest_ack_settle_ceiling_seconds", 120.0)
+	if not (seconds is float or seconds is int) or float(seconds) <= 0.0: seconds = 120.0
+	return int(float(seconds) * 1000.0)
 
 
 static func _settings() -> Dictionary:

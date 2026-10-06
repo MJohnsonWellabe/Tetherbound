@@ -10,7 +10,19 @@ extends "res://tests/smoke_net_crossing_hall_agreement.gd"
 ## through Session.homestead_submit_action;
 ## the potion is the guest's, the host's stock is untouched, and the guest's
 ## craft survives a production leave and returning-character rejoin.
-## Disclosed fixtures: tests/helpers/hall_agreement_net_peer.gd (F31#5 block).
+## Disclosed fixtures: tests/helpers/hall_agreement_net_peer.gd (F31#5 block);
+## the guest is a returning saved character that already owns its starter
+## (one Terrapup, peer_runner party_grant, saved with save_character_here
+## before its first admission, as the F27 net smokes seed theirs), so it
+## joins like a real player after the opening: a Home Key holder always
+## owns a creature. The same saved character has played the opening: every
+## opening:beat:<beat> flag through free_play and every onboarding
+## opening:lesson:<id> seen flag are set before its save (seed_opening_complete).
+## For the F31#2 relic power case it has also hung the Meadows relic
+## (relics_hung plus the host's relic_hang receipt, seeded before its save:
+## seed_relic_hung), and with portals on it takes a Home Key trip home and
+## walks the ordinary capsule path to the Meadows Shrine Room pedestal before
+## choosing (relic_pedestal_stand).
 const COUNTED := ["potion_small", "berries", "fiber"]
 
 
@@ -19,14 +31,25 @@ func _run() -> void:
 	require_peer_logs_without(["SCRIPT ERROR", "Parse Error", "Invalid call"], "station craft peer logs have no script errors")
 	world_build_allowance_floor_s["production_host"] = 150.0
 	world_build_allowance_floor_s["production_join"] = 150.0
-	if not await launch(2, "title"):
+	# The guest launches straight into the world (as the F27 net smokes do)
+	# so it can seed its saved character before it first joins (header).
+	if not await launch(2, "title", [], {1: ["--scene=world"]}):
 		quit(await finish())
 		return
 	_step_phase_deadline_ms = Time.get_ticks_msec() + 600000.0
 	var port := int((_peers[0] as Dictionary).get("hello", {}).get("enet_port", 0))
 	if not await _craft_step(0, "production_host", {"port": port, "appearance_id": "trainer", "display_name": "CraftHost"}, 9000): return
+	# Disclosed fixture (see header): the guest's saved character owns its
+	# starter before the host first admits it.
+	if not await _craft_step(1, "party_grant", {"species": "terrapup"}): return
+	if not await _craft_step(1, "seed_opening_complete", {}): return
+	if not await _craft_step(1, "seed_relic_hung", {"biome": "meadows"}): return
+	var seeded := await _craft_data(1, "save_character_here", {})
+	if seeded.is_empty():
+		await _craft_finish()
+		return
 	if not await _craft_step(1, "production_join", {"host": "127.0.0.1", "port": port,
-		"returning_route": false, "character": {"appearance_id": "lyra", "display_name": "CraftGuest"}}, 9000): return
+		"returning_route": true, "character": {"character_id": str(seeded.character_id)}}, 9000): return
 	# The guest's own ingredients, gathered the ordinary co-op way through the
 	# host's ledger (disclosed setup: the smoke stands the nodes and finds on
 	# both peers). Harvests pay through one batched delivery, the fiber find
@@ -98,6 +121,7 @@ func _run() -> void:
 	# Read from the shipped portal flag: off, the host refuses with its reason
 	# and nothing changes; on, it is accepted exactly once (a second identical
 	# choice changes nothing more).
+	if not await _craft_step(1, "relic_pedestal_stand", {"biome": "meadows"}, 9000): return
 	var power := await _craft_data(1, "relic_power_attempt", {"heart_id": "meadows"})
 	if not power.is_empty():
 		if not bool(power.runtime_ready):

@@ -603,6 +603,8 @@ func _relic_view_refreshed(session: Node) -> bool:
 func _relic_reply(op: String, intent: Dictionary, result: Dictionary) -> void:
 	if op != "relic_hang" or str(intent.get("biome", "")) != _relic_pending:
 		return
+	if not preload("res://scripts/ui/relic_power_panel.gd").reply_final(result):
+		return # A guest's first reply is the host's checkpoint; the saved decision follows.
 	_relic_pending = ""
 	var game := _relic_game if is_instance_valid(_relic_game) else get_node_or_null(^"/root/Game")
 	var session: Node = game.get("session") if game != null else null

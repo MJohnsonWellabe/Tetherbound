@@ -1,0 +1,31 @@
+ALL CHECKS PASSED
+PASS: after the fight the guest's bar is the stored maximum again
+PASS: and the saved row holds it
+PASS: before the host's hit the guest's own (bare) record shows no raise
+PASS: mid-fight the guest's saved party row holds the base maximum (134.40)
+PASS: out of a fight the guest's bar is the stored maximum (hp 134.40/134.40 shown 134.40/134.40 saved max 134.40)
+PASS: peer 0 deployed its creature (deployed AllyCreature)
+PASS: peer 0 hosts (hosting udp/31121 as peer 1)
+PASS: peer 0 owns a creature ('terrapup' at level 3 joined the party (1 member(s)))
+PASS: peer 0 sees both players
+PASS: peer 1 deployed its creature (deployed AllyCreature)
+PASS: peer 1 joins (joined 127.0.0.1:31121 as peer 898022903 after 24 frames; snapshot applied; 2 peer(s) in registry)
+PASS: peer 1 owns a creature ('terrapup' at level 3 joined the party (1 member(s)))
+PASS: peer 1 sees both players
+PASS: stored HP fell by the rolled hit / the host's s (5.87 = 7.42 / 1.2640)
+PASS: the bar shows the stored HP fraction
+PASS: the fight's position is announced
+PASS: the guest has a real peer id (898022903)
+PASS: the guest is in the fight
+PASS: the guest joins the fight (joined 1:1 beside 'bramblebun' at (-13.2, 65.4))
+PASS: the guest left the fight (try_flee true ())
+PASS: the guest wears the Harness before joining (creature-93e2ae727274a73f6bc67f7b4040a067 wears tidesteel_harness_plus_1)
+PASS: the guest's bar shows max x the host's s (169.88 = 134.40 x 1.2640)
+PASS: the guest's local record no longer carries the Harness
+PASS: the hit reached the guest's creature (stored -5.87)
+PASS: the host engages a wild (engaged bramblebun as encounter 1:1 (bound after 0 frame(s)))
+PASS: the host's opponent strikes the guest's creature (host s 1.2640, connected true)
+PASS: the host's s comes from the admitted record (1.2640 vs authored 1.2640)
+PASS: tidesteel_harness_plus_1 raises maximum HP (authored s 1.264)
+after leaving: hp 128.53/134.40 shown 128.53/134.40 saved max 134.40 (leave try_flee true ())
+harness hit: before hp 134.40/134.40 shown 134.40/134.40 saved max 134.40 | after hp 128.53/134.40 shown 162.46/169.88 saved max 134.40

@@ -164,6 +164,27 @@ func test_actual_stone_heading_accounts_for_the_concave_fence() -> void:
 			"nearby eastern wood does not force every stone errand through the meadow")
 
 
+func test_stone_heading_through_a_placed_prop_collider_uses_the_meadow_road() -> void:
+	var boundary := preload("res://scripts/world/village_boundary.gd")
+	var outline := boundary.outline(boundary.load_config())
+	var east_wood := Vector2(34.5, -15.8)
+	var stone := Vector2(22.0, -34.0)
+	# trainer_camp's campfire_stone_ring sits on this line (band1 props.json [26.8,-26.6]).
+	var ring := PackedVector3Array([Vector3(26.8, -26.6, 1.1)])
+	assert_eq(SEGMENT.stone_road_hint(east_wood, stone, outline, 1.55, ring), SEGMENT.StoneRoadHint.MEADOW,
+		"a direct stone heading through a placed camp collider prefers the authored road")
+	var aside := PackedVector3Array([Vector3(40.0, -30.0, 1.1)])
+	assert_eq(SEGMENT.stone_road_hint(east_wood, stone, outline, 1.55, aside), SEGMENT.StoneRoadHint.DIRECT,
+		"a collider well off the heading leaves it direct")
+	var at_goal := PackedVector3Array([Vector3(22.5, -33.5, 0.5)])
+	assert_eq(SEGMENT.stone_road_hint(east_wood, stone, outline, 1.55, at_goal), SEGMENT.StoneRoadHint.DIRECT,
+		"a collider beside the node belongs to that stop; no road choice avoids it")
+	assert_eq(SEGMENT.stone_road_hint(east_wood, stone, outline, 1.55, PackedVector3Array([Vector3(26.8, -26.6, INF)])),
+		SEGMENT.StoneRoadHint.INVALID)
+	assert_eq(SEGMENT.stone_road_hint(east_wood, stone, outline, 1.55, PackedVector3Array([Vector3(26.8, -26.6, 0.0)])),
+		SEGMENT.StoneRoadHint.INVALID)
+
+
 func test_stone_fence_hint_keeps_clearance_and_refuses_invalid_scope() -> void:
 	var square := PackedVector2Array([Vector2.ZERO, Vector2(10.0, 0.0), Vector2(10.0, 10.0), Vector2(0.0, 10.0)])
 	assert_eq(SEGMENT.stone_road_hint(Vector2(1.0, 2.0), Vector2(1.0, 8.0), square, 1.55), SEGMENT.StoneRoadHint.MEADOW,
