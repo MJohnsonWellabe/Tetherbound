@@ -257,3 +257,44 @@ assertions. The 4500 ms ceiling is source-approved; its observed 3905 ms input
 passes the stricter predicate, without claiming a new run of that constant.
 This is one headless observation, not repeatability, FPS or visual/onboarding
 timing equivalence. Native check-only and two-peer acceptance remain pending.
+
+The remaining existing two-peer chapter handoff at
+`d6b6246278f5e94660cca2ff68a55973556cd230` completed **FAIL / exit 1 before
+healing**. Both peers opened/joined the actual world, received the disclosed
+level-18 teams, and joined the Warden's shared encounter. Its first opponent
+fainted with an accepted killing verdict, but the manager stayed RESOLVING/won,
+with four opponents still queued, until the original command deadline returned
+`no verdict`. The retained final sample records enemy HP 0, encounter phase
+`done`, manager state 2, resolve timer about -63 s and an active trainer fight.
+The raw `move_start_required` refusal is preserved; it is not established as
+the cause, since a later real-input kill was accepted. No deadline, fixture,
+authority, budget or assertion was changed, and no confirming rerun was made.
+The required host/guest material and pylon checks were **never reached**; they
+remain OPEN. No two-peer healing acceptance is claimed.
+
+Existing native `--check-only` healing and handoff checks immediately before the
+run both passed exit 0 with empty stderr and banner-only stdout. Their raw
+[compiler receipt](handoff-second/compiler/receipt.json) and logs are retained.
+The [native run](handoff-second/native-net/NET_RUN.json),
+[summary](handoff-second/native-net/SUMMARY.md), both peer logs, root
+[receipt](handoff-second/receipt.json), stdout/stderr/exit and original private
+boot/engine logs are retained byte-for-byte with a hash manifest. Original host
+character and world saves are also retained. Map image caches stay local;
+no original file was removed or overwritten. SUMMARY's host `exited=false`
+is a pre-teardown observation; a subsequent process census verified all owned
+coordinator/host/client engines exited and the matching global lease released.
+R2's CPU hold was explicitly released in PR #525 comment 6011332839.
+
+An earlier prelaunch guard acquired then released its matching lease when a
+CPU-heavy process appeared; no compiler or engine ran. Its original directory
+and [guard note](handoff-first/guard.txt) are retained without native PASS credit.
+Independent read-only /root/c3_journal_review: **handoff FAIL, co-op OPEN**.
+The fresh heartbeat rules out a silent/crashed peer. Four retained samples show
+the same first-opponent RESOLVING state. Actual host saves retain settled vitals
+and foundation events, but no round-reward delivery row; an absent row does not
+prove a failed ACK. The existing detailed round diagnostic only runs after the
+driver's 5160-frame loop, while the unchanged coordinator deadline ended it at
+3967 frames. Captured data cannot distinguish shared-round waiting from durable
+round release; both production paths are unchanged by P1. No failure-cause,
+P1-regression, budget workaround or two-peer success is established. The next
+step needs the owning shared-round lane's reviewed dependency, not new equipment.
