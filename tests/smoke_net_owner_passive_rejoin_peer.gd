@@ -191,6 +191,11 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 				or float(view.get("ultimate_meter", 0.0)) <= 0.0 \
 				or view.get("commands", {}).get("meter") != manager.tether_command_snapshot().get("meter"):
 				return {"verdict":"FAIL", "detail":"actual mounted HUD lacks the current acknowledged creature/command view: "+str(view)}
+			var overlay: Control = hud.get("_system_overlay")
+			var ring: Control = overlay.get("_ring")
+			var expected_fraction := clampf(float(view.ultimate_meter) / float(view.ultimate_maximum), 0.0, 1.0)
+			if not overlay.visible or ring == null or not is_equal_approx(float(ring.get("fraction")), expected_fraction):
+				return {"verdict":"FAIL", "detail":"actual HUD did not display its acknowledged current-UID ultimate meter"}
 		"op_tonic_clear":
 			# Existing proximity fixture: stop exposing this owned actor to a
 			# new enemy hit while the original Item's writer refusal is tested.
