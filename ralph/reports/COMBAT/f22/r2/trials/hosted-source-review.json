@@ -26,7 +26,8 @@
     "product_pin": "8323965ec6a73a20adaca867c56b4478660b8cb2",
     "proposal_comment_id": 6012860836,
     "runtime_grounding": "Native15 incoming-hit snapshot medianWind5.8 and113/162 below15 vsnativecontrol18.9 and75/181; not continuous or causal proof. Charged uses fell5 to3, showing cost-only change insufficient.",
-    "status": "UNEXECUTED; no authored data. Independent source-consumer PASS only. Local follow-up respects P2quiet reservation; hosted respects landingCI hold.",
+    "status": "DISPATCHED as hosted37457844923 under revised FOUR-render cap6014059487; queued at last observation, runtime unknown. No authored data. P2 reservation released6014265515; R1/P3 local ordering preserved.",
+    "stop_rule": "Coordinator6014059487: if actual ratio is not below0.8, stop this resource lever and post measuredtable + two strongest remaining productlevers with one question; full floor\u22640.55 remains required.",
     "unchanged": [
       "damage powers",
       "variance",
@@ -116,6 +117,19 @@
       "Control lead medians numerically match original native row; hosted proof scope remains unchanged"
     ]
   },
+  "landed_main_merge_review": {
+    "merge_commit": "926e6a7d6cb2edfe6eff8e0941bd6fe2a07c604f",
+    "qualification": "Upstream integration is not identical832 product; queuedtrial remains immutable832 and no finalmerged-source runtime credit. Full upstreamdiff includes inherited whitespace findings in docs/STATE.md and HUB reports/EOFs; resolvedsmoke scoped diff-check clean.",
+    "reviewer": "/root/resolution_review",
+    "upstream": "603028087646d68e67fdcfbff2f976340934de6e",
+    "verdict": "PASS for focused source merge only; native verification UNRUN",
+    "verified": [
+      "Only manual conflict combined R2selectors/config/movepatch fields with landedGEAR.from_args.",
+      "Smoke equals firstparent1c2a9ae37a after removing five upstreamgear additions; bareGEAR returns before mutation.",
+      "R2audit/strictlead.55/entrybound<.5 and unchanged pilots preserved.",
+      "AcceptedSkyRend10 revert and finishedTweenrepair preserved; no authored tuning/newR2fixture/tool/test weakening."
+    ]
+  },
   "next_burst_cost_source_review": {
     "acceptance": "OPEN; paired12 measurements, allstarter preservation, final Windows/wild/clip proofs required",
     "actual_product_spend": "Existing cached MATH config\u2192wind_cost\u2192consume_wind changes player burst debit30\u219220; species overrides capacity/regen only",
@@ -153,6 +167,20 @@
       "Gate charge5 to4.5/time110.717 to119.142; Cause charge4 to2.5/time97.808 to125.300",
       "Gate first checkout failure remains separate and qualified, not runtime evidence"
     ]
+  },
+  "remaining_nonresource_hypotheses": {
+    "burst_displacement": {
+      "risk": "Commitment/arena positioning/allstarters; request counters do not prove accepted displacement or failed exits. No body/geometry shrink/power/HP change.",
+      "source": "Productiondistance3/duration.2; unchangedreader evaluates displayed body-aware exits up to6m. Greater displacement could clear more per acceptedburst."
+    },
+    "rejected_inference": "Failed quickrange7.5 and zero medianreadermisses do not support cone tuning; individual misses exist.",
+    "reviewer": "/root/resolution_review",
+    "stone_rush_effective_reach": {
+      "correction": "Lunge7.5 is impulse strength, not guaranteed7.5mtravel; starts after commitment.",
+      "risk": "Body floors may dominate particularpairs; MASHER benefits too; melee/physical presentation must remain coherent. No inferred numericalgain or acceptance.",
+      "source": "Chargedeligibility uses body-floored range excludinglunge; StoneRushrange3.2 vsPebblequick9 can restrict existingpunish opportunities."
+    },
+    "verdict": "SOURCE-grounded hypotheses only; no chosen/authored numbers or runtimefix"
   },
   "reviewed_receipt_commit": "8e93d090e11e36660fb9240c553d78abdd0b8b9d",
   "reviewer": "/root/resolution_review",
