@@ -1,0 +1,139 @@
+{
+	"budgets": {
+		"desync_frames": 240.0,
+		"heartbeat_frames": 60.0,
+		"hello_budget_s": 180.0,
+		"near_tolerance_motion_m": 4.0,
+		"near_tolerance_rest_m": 1.5,
+		"smoke_step_budget_s_2peer": 300.0,
+		"smoke_step_budget_s_wide": 1500.0,
+		"step_budget_frames": 3000.0
+	},
+	"failures": [
+		"the confirmed guest capture actually entered its owned party",
+		"the guest's typed capture ceremony settled and cleared its pending creature",
+		"the guest owner carrier copies the original host packet field traits_initialized",
+		"the guest owner carrier copies the original host packet field rolled_traits",
+		"the guest owner carrier copies the original host packet field taught_traits",
+		"the guest owner carrier copies the original host packet field captured_from"
+	],
+	"fatal": "",
+	"net_conditions": {},
+	"peers": [
+		{
+			"command_timeout_observation": null,
+			"control_port": 36773,
+			"exited": true,
+			"hashes": [
+				949396019,
+				949396019,
+				949396019
+			],
+			"hello": {
+				"enet_port": 34661.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "881c6916273e",
+				"peer": 0.0,
+				"pid": 2487.0,
+				"role": "host",
+				"type": "hello",
+				"user_data_dir": "/tmp/net-run-local-6616304/home-0/godot/app_userdata/Tetherbound"
+			},
+			"index": 0,
+			"last_heartbeat": {
+				"context": "world",
+				"frame": 1099.0,
+				"physics_frame": 3960.0,
+				"pos": [
+					-4.63784551620483,
+					-0.627502024173737,
+					64.3155136108398
+				],
+				"session_peers": [
+					1.0,
+					256599127.0
+				],
+				"state_hash": 949396019.0,
+				"t": 162.995,
+				"type": "heartbeat"
+			},
+			"pid": 2487,
+			"role": "host",
+			"unexpected_exit": false
+		},
+		{
+			"command_timeout_observation": null,
+			"control_port": 43009,
+			"exited": true,
+			"hashes": [
+				949396019,
+				949396019,
+				949396019
+			],
+			"hello": {
+				"enet_port": 34662.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "881c6916273e",
+				"peer": 1.0,
+				"pid": 2488.0,
+				"role": "client",
+				"type": "hello",
+				"user_data_dir": "/tmp/net-run-local-6616304/home-1/godot/app_userdata/Tetherbound"
+			},
+			"index": 1,
+			"last_heartbeat": {
+				"context": "panel:Session",
+				"frame": 1206.0,
+				"panel_observation": {
+					"focus_path": "",
+					"owner_path": "/root/Game/Session",
+					"owner_script": "res://scripts/net/session.gd",
+					"tree_paused": false
+				},
+				"physics_frame": 4080.0,
+				"pos": [
+					-8.14633941650391,
+					-0.828537821769714,
+					63.9085273742676
+				],
+				"session_peers": [
+					1.0,
+					256599127.0
+				],
+				"state_hash": 949396019.0,
+				"t": 162.213,
+				"type": "heartbeat"
+			},
+			"pid": 2488,
+			"role": "client",
+			"unexpected_exit": false
+		}
+	],
+	"proxies": [],
+	"run_id": "local-6616304",
+	"scene": "world",
+	"state_hash_excluded_keys": [
+		"party",
+		"inventory",
+		"hotbar",
+		"satiety",
+		"map",
+		"realm_maps",
+		"alpha_pins",
+		"player_pose",
+		"clock_elapsed_seconds",
+		"current_realm",
+		"pending_realm_entry",
+		"realm_hearts",
+		"version"
+	],
+	"state_hash_hashed_keys": [
+		"flags",
+		"placed_buildings",
+		"farm_plots",
+		"death_satchels",
+		"harvested_vegetation",
+		"felled_vegetation",
+		"day"
+	]
+}
