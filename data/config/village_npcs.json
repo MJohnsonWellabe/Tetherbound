@@ -484,10 +484,10 @@
       "config_key": "inn_helper",
       "position": [
         60.0,
-        10.6
+        10.2
       ],
       "facing_deg": 125,
-      "_why_f01_3": "F01#3 (reproof row3 night walk, code-blind judge): at (62,7) she stood in the research house doorway, 0.9 m from research_house_walk, so a player walking up stopped 0.8 m from her and the trainer hid her at prompt distance. Moved into the open yard, 2 m clear of both walk segments, facing the walk she is approached from.",
+      "_why_f01_3": "F01#3: at (62,7) the research-house doorway approach hid Nessa behind the trainer at prompt distance. The open-yard position (60,10.2) stays 3.77 m from the research-house public approach (62,7), inside its tested 4 m radius, while clearing both research_house_walk segments by at least 2 m and facing the walk.",
       "greeting": "village_nessa_overlook",
       "greeting_when": [
         {
