@@ -529,3 +529,11 @@ ba7884cf1497730e346b710b71d4917de2b0ae3e457cf9b01a5b5467c880ef0f  net-gate-opens
 1507e78bda2a0a54bdaed2a7ada509c4c3db2ea7bc32cfc56187e8c9dfb3d147  net-gate-opens-for-both-off/SUMMARY.txt
 e1d4157c4ed628f063c58c45cda3f6432f2bb04f7c9045343112677dfdb7c13b  net-gate-opens-for-both-off/NET_RUN.json.txt
 5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  net-gate-opens-for-both-off/exit.txt
+054f700190750b9258e65507f799bc108945227e1a8f2007ca0b9e0dbca1793b  net-fly-off-retry/coordinator.stdout.txt
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  net-fly-off-retry/coordinator.stderr.txt
+165020b917d5c4cc6434f052af3f42bad61e9e911363ba78bbb2045e24a68e35  net-fly-off-retry/peer-0.txt
+b430ae39f163367c38e0b5eac6ce533cad8d9a2d348766628a3fe95e6361943b  net-fly-off-retry/peer-1.txt
+aa5bd34659277ff1b410b0c4fda9cd74d52872f2a43c6b7f825953adf85c3bf9  net-fly-off-retry/SUMMARY.txt
+17e8cf60b1a1a36f3f0d06b7ea8d8aadd1e8971a17eff6bbfe5c972bd89d9deb  net-fly-off-retry/NET_RUN.json.txt
+5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  net-fly-off-retry/exit.txt
+6c7658b1b97c840156bc14e81096cb39c0f243b55efaebb21bd52c32decfff41  net-fly-off-retry/host-world.json.txt
