@@ -102,3 +102,7 @@ d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35  net-f27-guest-
 c01a43390e0053df841d53e7fc73b4a6a5abc2822b5cc60e4d5a79dd58fb872a  net-f27-guest-wild-on/peer-0.txt
 f2dbec2638129433af9df0ee3612e8739f9b9b8d8b356284769be522ceb435e6  net-f27-guest-wild-on/peer-1.txt
 351a435e2b6a2656274212d57fdb8d7a2663298106b1a9baf325ff5f9f014b40  net-f27-guest-wild-on/SUMMARY.md.txt
+5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  solo-f27-wild-defeat-on/exit.txt
+e9ec3f9d8a4a3c733cfff476993cf3a4c9a45a756c212381dd40dfe95b00bd90  solo-f27-wild-defeat-on/r1-f27-solo-wild-on-20261006T0339Z.txt
+9686dc34161f47cbda7f3eb5d514f21b7f48dc78260e736a8247d7dbdf842fa2  solo-f27-wild-defeat-on/stderr.txt
+4bcb3f842385cb64a01ed4b55a9e3a7843133f0c8a8d03db1cffd21a737cbfc1  solo-f27-wild-defeat-on/stdout.txt
