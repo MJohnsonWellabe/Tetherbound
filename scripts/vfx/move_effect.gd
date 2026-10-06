@@ -584,6 +584,8 @@ func _update_puffs(u: float) -> void:
 	var profile: Dictionary = _row.impact
 	if bool(profile.get("thermal_aftermath", false)) and str(profile.get("puff_shape", "")) == "fire_explosion" and _puffs.material_override is ShaderMaterial:
 		(_puffs.material_override as ShaderMaterial).set_shader_parameter("impact_age", u)
+		(_puffs.material_override as ShaderMaterial).set_shader_parameter("ground_height", _ground_height())
+		(_puffs.material_override as ShaderMaterial).set_shader_parameter("ground_softening_m", float(profile.get("ground_softening_m", 0.0)))
 	var growth_u := pow(u, clampf(float(profile.get("growth_power", 1.0)), 0.2, 3.0))
 	var extent := _puff_extent * lerpf(float(profile.get("puff_start_radius_scale", 0.65)), float(profile.get("puff_end_radius_scale", 1.4)), growth_u)
 	var reveal := pow(u, maxf(0.0, float(profile.puff_reveal_power))) if profile.has("puff_reveal_power") else 1.0
@@ -608,6 +610,8 @@ func _update_impact(u: float, delta: float) -> void:
 			_set_opacity(child.material_override, alpha)
 			if bool(child.get_meta("thermal_aftermath", false)) and child.material_override is ShaderMaterial:
 				(child.material_override as ShaderMaterial).set_shader_parameter("impact_age", u)
+				(child.material_override as ShaderMaterial).set_shader_parameter("ground_height", _ground_height())
+				(child.material_override as ShaderMaterial).set_shader_parameter("ground_softening_m", float(profile.get("ground_softening_m", 0.0)))
 	var growth_u := pow(u, clampf(float(profile.get("growth_power", 1.0)), 0.2, 3.0))
 	var growth := lerpf(float(profile.get("initial_grow", 0.35)), float(profile.get("grow", 2.0)), growth_u)
 	for child: Node in _impact.get_children():

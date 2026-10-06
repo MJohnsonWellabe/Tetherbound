@@ -817,6 +817,7 @@
             }
           },
           "shape": "fire_explosion",
+          "ground_softening_m": 0.3,
           "thermal_aftermath": true,
           "afterburn_strength": 1.0,
           "afterburn_start": 0.3,

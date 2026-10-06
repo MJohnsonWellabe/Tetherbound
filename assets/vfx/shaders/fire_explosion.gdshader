@@ -22,7 +22,10 @@ uniform float afterburn_end = 0.32;
 uniform vec4 afterburn_colour : source_color = vec4(0.34, 0.30, 0.25, 1.0);
 uniform float emission_fade_power = 2.2;
 uniform float afterburn_porosity = 0.55;
+uniform float ground_height = 0.0;
+uniform float ground_softening_m = 0.0;
 varying float phase_seed;
+varying float world_y;
 
 float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 float noise(vec2 p) {
@@ -39,6 +42,7 @@ void vertex() {
     vec3 scale = vec3(length(MODEL_MATRIX[0].xyz), length(MODEL_MATRIX[1].xyz), length(MODEL_MATRIX[2].xyz));
     MODELVIEW_MATRIX = VIEW_MATRIX * mat4(INV_VIEW_MATRIX[0] * scale.x,
         INV_VIEW_MATRIX[1] * scale.y, INV_VIEW_MATRIX[2] * scale.z, MODEL_MATRIX[3]);
+    world_y = (INV_VIEW_MATRIX * MODELVIEW_MATRIX * vec4(VERTEX, 1.0)).y;
 }
 void fragment() {
     vec2 p = vec2(UV.x * 2.0 - 1.0, 1.0 - UV.y * 2.0);
@@ -80,4 +84,10 @@ void fragment() {
              * pow(max(0.0, 1.0 - cooling), max(0.1, emission_fade_power));
     ALPHA = mask * opacity * mix(1.0, density, clamp(porosity, 0.0, 1.0))
           * mix(1.0, density, cooling * clamp(afterburn_porosity, 0.0, 1.0));
+    if (ground_softening_m > 0.0) {
+        // Fade the actual billboard's floor intersection before depth clipping
+        // cuts it into a hard horizontal band. Existing fire pores vary the edge.
+        float floor_distance = world_y - ground_height + (n - 0.5) * ground_softening_m * 0.35;
+        ALPHA *= smoothstep(0.0, ground_softening_m, floor_distance);
+    }
 }
