@@ -969,7 +969,8 @@ func load_slot(game: Object, slot: int) -> bool:
 		(realm_hearts_obj as RefCounted).call(
 			"load_data",
 			hearts_data if typeof(hearts_data) == TYPE_DICTIONARY else {},
-			progression_obj as RefCounted if progression_obj != null else null)
+			progression_obj as RefCounted if progression_obj != null else null,
+			_proved_relics_hung(personal))
 	var loaded_pose := _sanitise_player_pose(data.get("player_pose", {}))
 	var traversal: Dictionary = loaded_pose.get("traversal", {})
 	if not traversal.is_empty():
@@ -1175,6 +1176,15 @@ func _seat_portable_character_for_slot(data: Dictionary, flat: Dictionary) -> Di
 
 func _safe_split_id(id: String) -> bool:
 	return CHARACTER_IDENTITY.is_valid(id)
+
+
+## A hung relic's chosen power survives title Load as it does PlayerState
+## reload: the redesign hang sets no world placed flag.
+func _proved_relics_hung(personal: Variant) -> Array:
+	if not personal is Object or not personal.get("redesign_character") is Dictionary:
+		return []
+	return preload("res://autoload/realm_heart_state.gd").proved_hung(
+		personal.get("redesign_character"), str(personal.get("character_id")))
 
 
 func _set_resolved_split_ids(game: Object, world_id: String, character_id: String) -> void:
