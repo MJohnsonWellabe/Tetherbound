@@ -357,6 +357,11 @@ func _flags_hold(flags: Array) -> bool:
 
 
 func can_challenge(spec: Dictionary) -> bool:
+	# Foundation's mounted Master doorway constructs these canonical duel
+	# specs. They are not chapter trainers, so keep the common combat gates
+	# without requiring a chapter trainer catalogue entry.
+	if spec.get("master") == true and not preload("res://scripts/creatures/breakthrough.gd").master(str(spec.get("id", ""))).is_empty():
+		return super.can_challenge(spec)
 	return trainer_specs.has(str(spec.get("id", ""))) \
 		and _flags_hold(spec.get("requires_flags", [])) and super.can_challenge(spec)
 

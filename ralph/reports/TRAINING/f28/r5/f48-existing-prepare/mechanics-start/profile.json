@@ -1,0 +1,275 @@
+{
+  "provenance": "DISCLOSED initial mechanics fixture: actual retained v28 characters/owned cards; added initial material stock, paid station records and starting pose. No earned campaign claim. Native producer, routes and terrain validation OPEN. See fixture-manifest.json. Original native shared_boss saves retained by the prior integration session. These are disclosed mechanics starter-level-9 sources, not earned redesigned campaign checkpoints. No new character, UID, level, receipt or outcome is synthesized. The existing fixture producer separately discloses initial stock, physical setup and legacy pre-boss flags. Explicit pre-boss legacy mechanics gates removed only in detached initial fixture; original rewards and all personal data retained. INITIAL Kitchen Spice rack attachment is a disclosed mechanics station fixture, not an earned upgrade/payment/transaction; real Master recipe, cooking and feed still required. One initial Basic Orb per actual character is disclosed stock for the real catch producer, never a caught companion or provenance grant.",
+  "saves": [
+    "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\mechanics-start\\peer-0",
+    "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\mechanics-start\\peer-1"
+  ],
+  "routes": {
+    "bootstrap_altar": [
+      {
+        "action": "press",
+        "args": {
+          "action": "build_open"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 30
+        }
+      },
+      {
+        "action": "f48_button",
+        "args": {
+          "text": "  Crafting"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 15
+        }
+      },
+      {
+        "action": "f48_build_cell",
+        "args": {
+          "id": "altar"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 30
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "build_place"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 180
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "build_cancel"
+        }
+      }
+    ],
+    "craft_prepare": [
+      {
+        "action": "move_to",
+        "args": {
+          "x": -16.0,
+          "z": 11.850000000000001,
+          "close_enough": 0.25,
+          "budget_frames": 2400
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "interact"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      }
+    ],
+    "craft_reopen": [
+      {
+        "action": "move_to",
+        "args": {
+          "x": -16.0,
+          "z": 11.850000000000001,
+          "close_enough": 0.25,
+          "budget_frames": 2400
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "interact"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      }
+    ],
+    "craft_commit": [
+      {
+        "action": "f48_button",
+        "args": {
+          "text": "Refine Rootiron Ingot"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 150
+        }
+      }
+    ],
+    "essence_spend_prepare": [
+      {
+        "action": "move_to",
+        "args": {
+          "x": -10.0,
+          "z": 9.305000000000001,
+          "close_enough": 0.25,
+          "budget_frames": 2400
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "interact"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      }
+    ],
+    "essence_spend_reopen": [
+      {
+        "action": "move_to",
+        "args": {
+          "x": -10.0,
+          "z": 9.305000000000001,
+          "close_enough": 0.25,
+          "budget_frames": 2400
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "interact"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      }
+    ],
+    "essence_spend_commit": [
+      {
+        "action": "f48_button",
+        "args": {
+          "text": "Ground Essence · Cost 20 · Have 100"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 120
+        }
+      }
+    ]
+  },
+  "outcomes": {
+    "essence_spend_0": {
+      "item_delta": {
+        "essence_ground": -20
+      },
+      "creature": {
+        "uid": "creature-90d325f68da4033a00d47730057cf38c",
+        "level": 10,
+        "breakthroughs": []
+      },
+      "equals": {
+        "redesign_character/creatures/creature-90d325f68da4033a00d47730057cf38c/cap_level": 10
+      }
+    },
+    "essence_spend_1": {
+      "item_delta": {
+        "essence_ground": -20
+      },
+      "creature": {
+        "uid": "creature-39db0f1e8b5584e6949b906a7b09ec76",
+        "level": 10,
+        "breakthroughs": []
+      },
+      "equals": {
+        "redesign_character/creatures/creature-39db0f1e8b5584e6949b906a7b09ec76/cap_level": 10
+      }
+    }
+  },
+  "test_configuration": [
+    {
+      "file": "res://data/config/stations.json",
+      "source_sha256": "8fd375347b19d86dd9db826d2f163d60c08430a719f1d098708280d3b2fac262",
+      "sha256": "8fd375347b19d86dd9db826d2f163d60c08430a719f1d098708280d3b2fac262",
+      "overlay_file": "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\mechanics-start\\test-configuration\\data\\config\\stations.json",
+      "enabled_fields": [
+        "runtime_enabled",
+        "craft_runtime_enabled",
+        "forge.runtime_enabled"
+      ]
+    },
+    {
+      "file": "res://data/config/essence.json",
+      "source_sha256": "024fd4614037d9b11c03a69908f05c454e15e503933e91acece1aadf38153c13",
+      "sha256": "024fd4614037d9b11c03a69908f05c454e15e503933e91acece1aadf38153c13",
+      "overlay_file": "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\mechanics-start\\test-configuration\\data\\config\\essence.json",
+      "enabled_fields": [
+        "altar_runtime_enabled",
+        "altar_building_runtime_enabled",
+        "altar_remote_spend_enabled"
+      ]
+    },
+    {
+      "file": "res://data/config/traits.json",
+      "source_sha256": "14e339286cb1e267b84e2c05407db92f8c86418cad4f16ef8e2500c4fee238b8",
+      "sha256": "14e339286cb1e267b84e2c05407db92f8c86418cad4f16ef8e2500c4fee238b8",
+      "overlay_file": "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\mechanics-start\\test-configuration\\data\\config\\traits.json",
+      "enabled_fields": [
+        "runtime_enabled"
+      ]
+    },
+    {
+      "file": "res://data/config/multiplayer.json",
+      "source_sha256": "c684e4c4a9d560b48fef910179942845337a5517118e927e01c9c345a1081961",
+      "sha256": "1917076c359fd4764904ca120a51c104b73b2c29b2971352a9b295174466384e",
+      "overlay_file": "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\mechanics-start\\test-configuration\\data\\config\\multiplayer.json",
+      "enabled_fields": [
+        "session.redesign_portal_runtime_enabled",
+        "session.redesign_boss_handoff_runtime_enabled"
+      ]
+    },
+    {
+      "file": "res://data/config/hud.json",
+      "source_sha256": "25414f95182ec6f3a9181217bd5a29304ba14c113e7f8387560e634339e5552f",
+      "sha256": "25414f95182ec6f3a9181217bd5a29304ba14c113e7f8387560e634339e5552f",
+      "overlay_file": "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\mechanics-start\\test-configuration\\data\\config\\hud.json",
+      "enabled_fields": [
+        "new_system_screens.enabled"
+      ]
+    },
+    {
+      "file": "res://data/config/alpha_respawns.json",
+      "source_sha256": "b5a92b9a73ba66bb39aed476354b012e9e0ac80beb1e9cad82df6213ba5e2b59",
+      "sha256": "b02e05dab1f45442b97d32d114762b90b22d0432f3217693375fed6eed55972e",
+      "overlay_file": "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\mechanics-start\\test-configuration\\data\\config\\alpha_respawns.json",
+      "enabled_fields": [
+        "runtime_enabled"
+      ]
+    }
+  ],
+  "configuration_scope": "full"
+}

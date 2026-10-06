@@ -1,0 +1,26 @@
+{
+  "workflow": "docs/WORKFLOW.md read carve-out",
+  "started_utc": "2026-10-06T06:35:57.7516001+00:00",
+  "claim": "parser only; no world/import/render/native acceptance",
+  "foreign_native": [
+    {
+      "ProcessId": 14516,
+      "ParentProcessId": 17728,
+      "Name": "Godot_v4.7-stable_win64_console.exe",
+      "CommandLine": "\"D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64_console.exe\" --headless --path D:/tetherbound/codex-r1 --log-file D:\\tetherbound\\.artifacts\\r1-f27-flip\\ci-art-on\\r1-ci-art-on-20261006T0634Z.log --script tests/smoke_art.gd"
+    },
+    {
+      "ProcessId": 8656,
+      "ParentProcessId": 14516,
+      "Name": "Godot_v4.7-stable_win64.exe",
+      "CommandLine": "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe --headless --path D:/tetherbound/codex-r1 --log-file D:\\tetherbound\\.artifacts\\r1-f27-flip\\ci-art-on\\r1-ci-art-on-20261006T0634Z.log --script tests/smoke_art.gd"
+    }
+  ],
+  "scripts": [
+    "tests/smoke_playground.gd",
+    "tests/smoke_water_scene_encounters.gd",
+    "tests/smoke_cloudreach_f07_windscar_cadence.gd"
+  ],
+  "source_head": "e6f2d83d61685c4e1a07cbc984c2e58b1e831c98",
+  "cache": "existing already-imported R5 cache"
+}

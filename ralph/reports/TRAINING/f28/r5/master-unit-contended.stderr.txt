@@ -1,0 +1,32 @@
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] open (res://scripts/masters/breakthrough_panel.gd:48)
+       [1] test_master_deployment_cannot_overlap_after_cancel_and_reopen (res://tests/test_f28_training_boundaries.gd:327)
+       [2] _init (res://tests/run_tests.gd:120)
+ERROR: Condition "!is_inside_tree()" is true.
+   at: grab_focus (scene/gui/control.cpp:2996)
+   GDScript backtrace (most recent call first):
+       [0] _rebuild (res://scripts/masters/breakthrough_panel.gd:108)
+       [1] open (res://scripts/masters/breakthrough_panel.gd:56)
+       [2] test_master_deployment_cannot_overlap_after_cancel_and_reopen (res://tests/test_f28_training_boundaries.gd:327)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] close (res://scripts/masters/breakthrough_panel.gd:214)
+       [1] test_master_deployment_cannot_overlap_after_cancel_and_reopen (res://tests/test_f28_training_boundaries.gd:331)
+       [2] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] open (res://scripts/masters/breakthrough_panel.gd:48)
+       [1] test_master_deployment_cannot_overlap_after_cancel_and_reopen (res://tests/test_f28_training_boundaries.gd:332)
+       [2] _init (res://tests/run_tests.gd:120)
+ERROR: Condition "!is_inside_tree()" is true.
+   at: grab_focus (scene/gui/control.cpp:2996)
+   GDScript backtrace (most recent call first):
+       [0] _rebuild (res://scripts/masters/breakthrough_panel.gd:108)
+       [1] open (res://scripts/masters/breakthrough_panel.gd:56)
+       [2] test_master_deployment_cannot_overlap_after_cancel_and_reopen (res://tests/test_f28_training_boundaries.gd:332)
+       [3] _init (res://tests/run_tests.gd:120)

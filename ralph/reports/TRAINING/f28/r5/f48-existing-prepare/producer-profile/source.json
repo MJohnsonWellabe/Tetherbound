@@ -1,0 +1,8 @@
+{
+  "source": "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\mechanics-start\\profile.json",
+  "source_sha256": "5d776772e2962dafdd86d112364dea77263c9009be0a16feb1ad136cd186e6c9",
+  "profile_sha256": "23a365679f106f99e67f621cd22f17c09c8a59bf7c46ae57f23322ba7f1ad5b9",
+  "acceptance_credit": false,
+  "ready_ci_bundle": false,
+  "release_uid": "Requires actual producer result; never invented"
+}

@@ -324,15 +324,20 @@ func _settle_interaction(id: String, spec: Dictionary) -> void:
 ## `creature_bed_rest_bonus` group, before the sleep autosave, on each peer
 ## for its own party.
 func on_creature_bed_rest_completed(creature: RefCounted, bed_index: int) -> void:
-	sheltered_rest_xp(creature, bed_index, _flags, config.get("sheltered_rest", {}))
+	var owner: RefCounted = _game.get("local") if _game != null else null
+	if owner == null: return
+	sheltered_rest_xp(creature, bed_index, _flags, config.get("sheltered_rest", {}), owner.get("redesign_character"))
 
 
-static func sheltered_rest_xp(creature: RefCounted, bed_index: int, flags: RefCounted, cfg: Dictionary) -> int:
+static func sheltered_rest_xp(creature: RefCounted, bed_index: int, flags: RefCounted, cfg: Dictionary, personal: Variant = null) -> int:
 	if creature == null or flags == null or cfg.is_empty() or bed_index != int(cfg.get("bed_index", 0)):
 		return 0
 	if not bool(flags.call("has", str(cfg.get("requires_flag", "")))):
 		return 0
 	var progression_cfg := PROGRESSION_CONFIG.config()
+	if personal is Dictionary:
+		progression_cfg = preload("res://scripts/creatures/home_recovery.gd").training_config(creature, progression_cfg, personal)
+		if progression_cfg.is_empty(): return 0
 	var bonus := int(round(float(PROGRESSION_CONFIG.rest_xp(progression_cfg)) * float(cfg.get("rest_xp_multiplier", 1.0))))
 	if bonus > 0:
 		creature.call("gain_xp", bonus, progression_cfg)

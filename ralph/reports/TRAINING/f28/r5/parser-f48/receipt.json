@@ -1,0 +1,54 @@
+{
+  "mode": "existing-cache --headless --check-only; no world/import/render/peer or acceptance credit",
+  "checks": [
+    {
+      "script": "tools/net/f48_prepare.gd",
+      "stderr_bytes": 0,
+      "exit_code": 0,
+      "stdout_bytes": 73,
+      "argv": [
+        "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:/tetherbound/codex-r5",
+        "--check-only",
+        "--script",
+        "tools/net/f48_prepare.gd"
+      ]
+    },
+    {
+      "script": "tools/net/peer_runner.gd",
+      "stderr_bytes": 0,
+      "exit_code": 0,
+      "stdout_bytes": 73,
+      "argv": [
+        "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:/tetherbound/codex-r5",
+        "--check-only",
+        "--script",
+        "tools/net/peer_runner.gd"
+      ]
+    }
+  ],
+  "foreign_native_pids": [
+    2148,
+    15384
+  ],
+  "engine": "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64_console.exe",
+  "source_head": "9c0d2d07b908d13891fa2496e3fffc3752d82baa",
+  "source_sha256": {
+    "tools/net/peer_runner.gd": "e5e75b2fca32e4ac38f4ac6d5e95d9843a738c68cac01ff1cb116f10598d36c0",
+    "tools/net/proof_steps_f48.gd": "dc77f30f13caf8b4c320687581f608dcc05e21be012b82fe721b43ab4371b2a7",
+    "tools/net/f48_prepare.gd": "5802407d133f39d4a3e0c770e264d8fd0d799117ad688196fb99d7832cf93a39",
+    "tests/helpers/f48_net_proof.gd": "b7d7594da3ecf505370b9c791723147ffd6bc9a302b04c8366bc7ec57c62daef"
+  },
+  "independent_review": {
+    "verdict": "Scoped parser/static dependency resolution PASS",
+    "excludes": "profile _build, controller/runtime dispatch, native save/ACK and criterion acceptance",
+    "inherited_helper": "f48_prepare extends f48_net_proof extends smoke_net_proof_two_peer",
+    "peer_dependency": "peer_runner statically preloads proof_steps_f48",
+    "reviewer": "/root/f28_review"
+  }
+}

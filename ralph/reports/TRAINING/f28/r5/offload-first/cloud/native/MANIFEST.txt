@@ -1,0 +1,9 @@
+MANIFEST.txt
+exit_code
+run.log
+user/godot/app_userdata/Tetherbound/boot_log.txt
+user/godot/app_userdata/Tetherbound/cloudreach_f07_windscar_cadence/events.json
+user/godot/app_userdata/Tetherbound/logs/godot.log
+user/godot/app_userdata/Tetherbound/saves/redesign-v28/characters/character-c2faea98bafc61e80c734f3bdfdec85d/character.json
+user/godot/app_userdata/Tetherbound/saves/redesign-v28/slot_0.json
+user/godot/app_userdata/Tetherbound/saves/redesign-v28/worlds/slot-0/world.json

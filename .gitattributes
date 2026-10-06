@@ -23,3 +23,11 @@ ralph/reports/COMBAT/f23/current/main-555-conflict-binding.json -text
 ralph/reports/COMBAT/f23/current/alpha-saddle-*.log -text
 ralph/reports/COMBAT/f23/current/alpha-saddle-binding.json -text
 ralph/reports/COMBAT/f23/current/alpha-saddle-dispatch.json -text
+# Preserve original native evidence bytes and their recorded hashes.
+ralph/reports/TRAINING/f28/r5/parser-first/** -text
+ralph/reports/TRAINING/f28/r5/offload-first/** -text
+ralph/reports/TRAINING/f28/r5/f48-existing-prepare/** -text
+
+ralph/reports/TRAINING/f28/r5/parser-f48/** -text
+
+ralph/reports/TRAINING/f28/r5/master-assertions-first/** -text

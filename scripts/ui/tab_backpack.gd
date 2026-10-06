@@ -53,6 +53,13 @@ var _pouch_view: Dictionary = {}
 var _pouch_available := false
 var _pouch_view_scope: Dictionary = {}
 var _pouch_producer: Node = null
+var _candy_producer: Node = null
+var _candy_intent: Dictionary = {}
+var _candy_revision: int = -1
+var _candy_scope: Dictionary = {}
+var _candy_retry_at: int = 0
+var _candy_before: Dictionary = {}
+var _candy_cap: int = -1
 ## D47: elixir caps live in data/config/progression.json, read through the
 ## same loader the level curve uses.
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
@@ -1010,6 +1017,7 @@ func notify_shell_opened() -> void:
 func poll() -> void:
 	_poll_tm_transaction()
 	_poll_pouch_transaction()
+	_poll_candy_transaction()
 	var inventory: RefCounted = _inventory()
 	if inventory == null or _summary == null:
 		return
@@ -2024,6 +2032,9 @@ func _level_headroom(creature: RefCounted) -> int:
 	if creature == null or _targeting_level_up.is_empty():
 		return 0
 	var cap := int(PROGRESSION.config().get("level", {}).get("cap", 50))
+	var game := state()
+	if game != null:
+		cap = preload("res://scripts/creatures/essence.gd").creature_cap(game.get("local").redesign_character, str(creature.get("uid")))
 	return maxi(0, cap - int(creature.get("level")))
 
 
@@ -2066,7 +2077,13 @@ func _ineligible_reason(creature: RefCounted, heal: float, revive: float, tm: St
 	if not _targeting_level_up.is_empty():
 		if bool(creature.get("fainted")):
 			return "fainted"
-		return "" if _level_headroom(creature) > 0 else "already at the level cap"
+		if _level_headroom(creature) > 0: return ""
+		var game := state()
+		if game != null:
+			var cap := preload("res://scripts/creatures/essence.gd").creature_cap(game.get("local").redesign_character, str(creature.get("uid")))
+			if cap < 0: return "progression reconciliation required"
+			return "breakthrough needed" if cap < 60 else "ceiling reached"
+		return "already at the level cap"
 	if not _targeting_food.is_empty():
 		if bool(creature.get("fainted")):
 			return "fainted"
@@ -2324,26 +2341,7 @@ func _on_target_row(index: int) -> void:
 		return
 
 	if not _targeting_level_up.is_empty():
-		var levels := int((db.call("definition", id) as Dictionary).get("level_up", 0))
-		var before := int(creature.get("level"))
-		# PROGRESSION-VISIBLE (addendum §B): through `gain_levels()`, not
-		# `set_level()`, so the candy speaks the same `level_up` event the
-		# combat award does -- the party strip, the HUD banner and the sound
-		# cue all fire for a candy exactly as for a fight -- and so the hp
-		# fraction and banked xp survive the jump the way a real level-up
-		# keeps them (`set_level` is the spawn path: it refills hp and zeroes
-		# xp, neither of which a consumable should do).
-		var gained := int(creature.call("gain_levels", levels, PROGRESSION.config()))
-		if gained <= 0:
-			# `_eligible()` said yes a line ago; the same defensive dead-end
-			# guard every branch here keeps -- never spend a permanent item
-			# on nothing.
-			say("%s is already at the level cap." % str(creature.call("label")))
-			_end_targeting()
-			return
-		inventory.call("remove", id, 1)
-		say(candy_result_line(str(creature.call("label")), before, before + gained, levels,
-			int(PROGRESSION.config().get("level", {}).get("cap", 50))))
+		_begin_candy_transaction(str(creature.get("uid")), id)
 		_end_targeting()
 		return
 
@@ -2424,6 +2422,93 @@ func _on_target_row(index: int) -> void:
 	_end_targeting()
 
 
+func _bind_candy_producer() -> bool:
+	var game := state()
+	var producer: Variant = game.get("session") if game != null else null
+	if not producer is Node or not producer.has_method("personal_candy_submit") \
+		or not producer.has_method("retained_training_transaction") or not producer.has_method("homestead_personal_view") \
+		or not producer.has_method("personal_tm_scope") or not producer.has_signal("homestead_action_completed"): return false
+	if is_instance_valid(_candy_producer) and _candy_producer != producer:
+		if _candy_producer.is_connected("homestead_action_completed", _candy_completed):
+			_candy_producer.disconnect("homestead_action_completed", _candy_completed)
+		_candy_intent = {}
+		_candy_revision = -1
+		_candy_scope = {}
+		_candy_before = {}
+		_candy_cap = -1
+	_candy_producer = producer
+	if not producer.is_connected("homestead_action_completed", _candy_completed):
+		producer.connect("homestead_action_completed", _candy_completed)
+	return true
+
+func _poll_candy_transaction() -> void:
+	if not _bind_candy_producer() or Time.get_ticks_msec() < _candy_retry_at: return
+	if _candy_intent.is_empty():
+		_candy_retry_at = Time.get_ticks_msec() + 1000
+		var retained: Dictionary = _candy_producer.call("retained_training_transaction", ["candy_feed"])
+		if retained.get("status") != "pending": return
+		_candy_intent = retained.intent.duplicate(true)
+		_candy_revision = int(retained.original_revision)
+		_candy_scope = _candy_producer.call("personal_tm_scope")
+	_retry_candy_transaction()
+
+func _begin_candy_transaction(uid: String, item: String) -> void:
+	if not _bind_candy_producer():
+		say("Candy feeding is unavailable until your character is admitted.")
+		return
+	_poll_candy_transaction()
+	if not _candy_intent.is_empty():
+		say("Waiting for your original candy feeding decision.")
+		return
+	var view: Dictionary = _candy_producer.call("homestead_personal_view")
+	var revision: Variant = view.get("registry_revision")
+	if not preload("res://scripts/creatures/essence.gd")._integer(revision, 0, 2147483646):
+		say("Waiting for your admitted character. Try the same candy again.")
+		return
+	_candy_intent = {"creature_uid": uid, "candy_item": item, "action_id": Crypto.new().generate_random_bytes(16).hex_encode()}
+	for card: Dictionary in view.get("party", []):
+		if card.get("uid") == uid: _candy_before = card.duplicate(true)
+	_candy_cap = preload("res://scripts/creatures/essence.gd").creature_cap(view.get("redesign_character", {}), uid)
+	_candy_revision = int(revision)
+	_candy_scope = _candy_producer.call("personal_tm_scope")
+	_retry_candy_transaction()
+
+func _retry_candy_transaction() -> void:
+	if _candy_intent.is_empty() or not is_instance_valid(_candy_producer): return
+	_candy_retry_at = Time.get_ticks_msec() + 1000
+	var original := _candy_intent.duplicate(true)
+	var result: Variant = _candy_producer.call("personal_candy_submit", original, _candy_revision, _candy_scope.duplicate(true))
+	if result is Dictionary: _candy_completed("candy_feed", original, result)
+
+func _candy_completed(action: String, original: Dictionary, result: Dictionary) -> void:
+	if action != "candy_feed" or _candy_intent.is_empty() or original != _candy_intent: return
+	if result.get("ok") == true and result.get("settled") == true and result.get("durable") == true \
+		and result.get("owner_saved") == true and result.get("owner_acknowledged") == true:
+		var announced := false
+		var party := _party()
+		if party != null and not _candy_before.is_empty():
+			for creature: RefCounted in party.call("members"):
+				if creature.get("uid") != _candy_intent.creature_uid: continue
+				var before := int(_candy_before.level)
+				var after := int(creature.get("level"))
+				if after > before:
+					creature.call("_announce_level_up", before, _candy_before, PROGRESSION.config(), "candy")
+					var requested := int(preload("res://autoload/item_db.gd").new().definition(_candy_intent.candy_item).get("level_up", 0))
+					say(candy_result_line(str(creature.call("label")), before, after, requested, _candy_cap))
+					announced = true
+				break
+		if not announced: say("Candy fed. Growth saved to your character.")
+	elif result.get("ok") == false and result.get("terminal_refusal") == true:
+		say(str(result.get("reason", result.get("code", "Candy feeding refused."))))
+	else:
+		say("Waiting for your original candy feeding decision to save.")
+		return
+	_candy_intent = {}
+	_candy_revision = -1
+	_candy_scope = {}
+	_candy_before = {}
+	_candy_cap = -1
+
 func _bind_tm_producer() -> bool:
 	var game := state()
 	var producer: Variant = game.get("session") if game != null else null
@@ -2494,6 +2579,8 @@ func _tm_completed(action: String, original: Dictionary, result: Dictionary) -> 
 		say("Waiting for your original TM teaching decision to save.")
 
 func _exit_tree() -> void:
+	if is_instance_valid(_candy_producer) and _candy_producer.is_connected("homestead_action_completed", _candy_completed):
+		_candy_producer.disconnect("homestead_action_completed", _candy_completed)
 	if is_instance_valid(_tm_producer) and _tm_producer.is_connected("homestead_action_completed", _tm_completed):
 		_tm_producer.disconnect("homestead_action_completed", _tm_completed)
 	if is_instance_valid(_tm_producer) and _tm_producer.is_connected("homestead_action_completed", _pouch_completed):

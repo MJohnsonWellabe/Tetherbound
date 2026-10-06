@@ -113,7 +113,7 @@ static func _action_request_valid(raw: Dictionary) -> bool:
 			and request.intent.item_id is String
 	match raw.source_kind:
 		"foundation_request":
-			return request.op in ["station_craft", "feast_cook", "feast_feed", "relic_hang", "relic_power", "master_chest", "essence_release"] \
+			return request.op in ["station_craft", "feast_cook", "feast_feed", "candy_feed", "relic_hang", "relic_power", "master_chest", "essence_release"] \
 				and E._integer(request.revision, 0, 2147483645) and request.revision == raw.revision
 		"altar_spend":
 			return request.op == "altar_spend" \

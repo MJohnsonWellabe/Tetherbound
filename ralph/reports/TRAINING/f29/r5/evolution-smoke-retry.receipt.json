@@ -1,0 +1,36 @@
+{
+  "script_sha256": "B5D0090C7C9EBE0EF14A728703CAEBE367687B7D73DB5BF68500928A6A1DBE3A",
+  "since_utc": "2026-10-06T05:49:43.4324677Z",
+  "private_localappdata": "D:/tetherbound/.artifacts/r5-rd-f29-evolution-retry/localappdata",
+  "claim": "same existing disclosed mechanics setup; untimed solo correctness only, no earned Kitchen/catch/travel/co-op/visual claim",
+  "private_appdata": "D:/tetherbound/.artifacts/r5-rd-f29-evolution-retry/appdata",
+  "held_by": "tb/codex-r5",
+  "approved_by": "PR5256009171478; solo scheduling6009050449; R4 terminal stage and R5 announced next slot",
+  "source_head": "4d867ed2306f269d3e21b98d7b6fc0cf96b89709",
+  "run_id": "r5-rd-f29-evolution-retry-20261006T054943Z",
+  "background": [
+    {
+      "ProcessId": 15796,
+      "ParentProcessId": 7800,
+      "Name": "Godot_v4.7-stable_win64_console.exe",
+      "CommandLine": "\"D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64_console.exe\" --headless --path D:\\tetherbound\\codex-r2 --fixed-fps 60 --script tests/smoke_f22_pattern_bands.gd -- --seeds=12 --trainers --json=D:/tetherbound/codex-r2/ralph/reports/COMBAT/f22/r2/baseline/full.json"
+    },
+    {
+      "ProcessId": 8624,
+      "ParentProcessId": 15796,
+      "Name": "Godot_v4.7-stable_win64.exe",
+      "CommandLine": "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe --headless --path D:\\tetherbound\\codex-r2 --fixed-fps 60 --script tests/smoke_f22_pattern_bands.gd -- --seeds=12 --trainers --json=D:/tetherbound/codex-r2/ralph/reports/COMBAT/f22/r2/baseline/full.json"
+    }
+  ],
+  "pid": 19716,
+  "command": [
+    "--headless",
+    "--path",
+    "D:/tetherbound/codex-r5",
+    "--script",
+    "tests/smoke_evolution.gd",
+    "--log-file",
+    "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f29\\r5\\evolution-smoke-retry.godot.log"
+  ],
+  "action": "unchanged existing RD F29 evolution retry, untimed solo"
+}

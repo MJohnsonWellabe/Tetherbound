@@ -1,0 +1,7 @@
+MANIFEST.txt
+exit_code
+run.log
+user/godot/app_userdata/Tetherbound/boot_log.txt
+user/godot/app_userdata/Tetherbound/cache/map_meadows.png
+user/godot/app_userdata/Tetherbound/cache/map_meadows.png.key
+user/godot/app_userdata/Tetherbound/logs/godot.log
