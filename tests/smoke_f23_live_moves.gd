@@ -70,6 +70,7 @@ var _host: RefCounted
 var _id := ""
 var _directory := ""
 var _capture_dir := ""
+var _ultimate_prior_uses := 150
 var _launches: Array[Dictionary] = []
 var _impacts: Array[Dictionary] = []
 var _captures: Array[String] = []
@@ -94,6 +95,10 @@ func _body(script: Script, species: String, at: Vector3) -> Node3D:
 func _run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--capture-dir="): _capture_dir = arg.trim_prefix("--capture-dir=")
+		if arg.begins_with("--ultimate-prior-uses="):
+			var prior := arg.trim_prefix("--ultimate-prior-uses=")
+			_check(prior.is_valid_int() and [0, 25, 75, 150, 300].has(int(prior)), "prior mastery fixture selects a canonical rank threshold")
+			if prior.is_valid_int(): _ultimate_prior_uses = int(prior)
 	_saved_visual_config = ULTIMATES.config()
 	var visual_override := OS.get_cmdline_user_args().has("--enable-ultimate-visual")
 	if visual_override:
@@ -186,7 +191,9 @@ func _run() -> void:
 			await process_frame
 			_check(shown_meter.is_visible_in_tree() and is_equal_approx(shown_meter.value, 0.0)
 				and shown_readout.get_parsed_text().contains("0%"), "mounted actual CombatHUD redraws the spent Ultimate meter")
-			_check(_launches.back().move.mastery_rank == 4 and _launches.back().mastery_rank == 4, "launch and frozen move retain admitted mastery rank")
+			var admitted_rank := MASTERY.rank_from_uses(_ultimate_prior_uses)
+			_check(_launches.back().move.mastery_rank == admitted_rank and _launches.back().mastery_rank == admitted_rank,
+				"launch and frozen move retain admitted mastery rank")
 			_check(_launches.back().get("presentation_mounted") == true, "accepted Ground Current must create its actual ultimate presentation")
 			for row: Variant in _game.world.reward_deliveries.values():
 				if row is Dictionary and row.get("kind") == "foundation_event" and row.get("duties", []).size() == 1 \
@@ -207,7 +214,7 @@ func _run() -> void:
 	_manager.set_physics_process(false)
 	_host.set_phase(_id, "done")
 	_apply_saved_mastery(snare_event, "snare", 75)
-	if not ultimate_event.is_empty(): _apply_saved_mastery(ultimate_event, "ultimate_ground_current", 150)
+	if not ultimate_event.is_empty(): _apply_saved_mastery(ultimate_event, "ultimate_ground_current", _ultimate_prior_uses)
 	_check(MATH.config().get("actor_vitals", {}).get("runtime_enabled") == false, "proof must not activate actor_vitals")
 	_finish()
 
@@ -225,7 +232,7 @@ func _setup() -> void:
 	_creature = SPECIES.spawn("bramblebun")
 	_creature.set_level(5, PROGRESSION.config())
 	_seed_prior_mastery("snare", 75)
-	_seed_prior_mastery("ultimate_ground_current", 150)
+	_seed_prior_mastery("ultimate_ground_current", _ultimate_prior_uses)
 	_game.local.party.add(_creature)
 	_game.world = fixture._world()
 	root.add_child(_game)
