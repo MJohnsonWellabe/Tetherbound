@@ -4072,6 +4072,10 @@ func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0,
 	# Self buffs stay in the existing encounter. Each owner receives only
 	# the remaining modifier for their own UIDs, on the usual resource carrier.
 	rec = rec.duplicate(true)
+	var snare_opponent: Dictionary = rec.get("opponent", {})
+	snare_opponent["tether_snare_view"] = preload("res://scripts/combat/tether_commands.gd").snare_presentation(
+		snare_opponent.get("tether_snare", {}), str(snare_opponent.get("card", {}).get("uid", "")),
+		int(snare_opponent.get("body_generation", 0)), Time.get_ticks_msec()) if rec.get("phase") in ["active", "catching"] else {}
 	for retained: Dictionary in rec.get("retained_actor_participants", {}).values():
 		if retained.get("tether_commands") is Dictionary: retained.tether_commands.erase("item_pending")
 	for peer: int in rec.get("participants", {}):
@@ -4243,6 +4247,9 @@ static func _pose_shape(shape: Dictionary) -> Dictionary:
 func _refresh_shared_record_presentation(rec: Dictionary) -> void:
 	var encounter_id := str(rec.get("encounter_id", ""))
 	var runtime := _shared_host_fight(encounter_id)
+	var snare_body: Node3D = runtime.call("body") as Node3D if runtime != null else null
+	if snare_body == null and _local_bound_encounter_id() == encounter_id: snare_body = _engaged_with
+	_present_tether_snare(rec, snare_body)
 	if (str(rec.get("kind", "")) != "wild" and not _guest_master_duels.has(encounter_id) and _remote_rematch(encounter_id) == null) or runtime == null:
 		return
 	var opponent: Dictionary = rec.get("opponent", {}) as Dictionary
@@ -4745,6 +4752,7 @@ func _dispose_shared_host_fight(encounter_id: String, restore_ambient: bool) -> 
 	var wild: Node3D = runtime.call("body") as Node3D
 	var terminal := str(runtime.get("terminal_outcome"))
 	if is_instance_valid(wild):
+		_clear_tether_snare_presentation(wild)
 		wild.remove_meta(&"tether_snare")
 		wild.remove_meta(&"tether_body_generation")
 	if wild != null and is_instance_valid(wild) and wild.has_signal("route_cue_started"):
@@ -6494,6 +6502,7 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 func _start_shared_host_runtime(encounter_id: String, wild: Node3D, generation: int) -> void:
 	# The actual lifecycle owns this generation. A returned ambient body never
 	# imports the previous encounter's short-lived target status.
+	_clear_tether_snare_presentation(wild)
 	wild.remove_meta(&"tether_snare")
 	wild.set_meta(&"tether_body_generation", generation)
 	var runtime := SHARED_WILD_HOST_FIGHT.new()
@@ -6905,6 +6914,7 @@ func _begin_shared_guest_from_record(rec: Dictionary) -> bool:
 func _apply_shared_record_presentation(rec: Dictionary) -> void:
 	if _shared_opponent_proxy == null or not is_instance_valid(_shared_opponent_proxy):
 		return
+	_present_tether_snare(rec, _shared_opponent_proxy)
 	var opponent: Dictionary = rec.get("opponent", {}) as Dictionary
 	var payload := {
 		"encounter_id": str(rec.get("encounter_id", "")),
@@ -6921,6 +6931,42 @@ func _apply_shared_record_presentation(rec: Dictionary) -> void:
 		cue_payload.merge(cue as Dictionary, true)
 		_apply_shared_cue(cue_payload)
 
+
+## The same accepted opponent record drives host and guest meshes. Only the
+## host prepares remaining seconds; no guest reads the host's status clock.
+func _present_tether_snare(rec: Dictionary, body: Node3D) -> void:
+	if not is_instance_valid(body): return
+	var commands := preload("res://scripts/combat/tether_commands.gd")
+	var opponent: Dictionary = rec.get("opponent", {})
+	var target_uid := str(opponent.get("card", {}).get("uid", ""))
+	var card: RefCounted = body.get("instance") as RefCounted
+	if not commands.enabled() or not commands.enabled("ui_enabled") or card == null \
+		or target_uid.is_empty() or str(card.get("uid")) != target_uid:
+		_clear_tether_snare_presentation(body)
+		return
+	var view: Dictionary = opponent.get("tether_snare_view", {}) if rec.get("phase") in ["active", "catching"] else {}
+	var visual: Node3D = body.get_node_or_null("TetherSnareVisual") as Node3D
+	if visual == null:
+		if view.is_empty(): return
+		visual = preload("res://scripts/combat/tether_snare_visual.gd").new()
+		visual.name = "TetherSnareVisual"
+		body.add_child(visual)
+	var trainer: Node3D
+	for peer: int in rec.get("participants", {}):
+		if rec.participants[peer].get("character_id") != view.get("character_id"): continue
+		if peer == _local_peer_id(): trainer = _player
+		elif is_inside_tree():
+			for proxy: Node in get_tree().get_nodes_in_group("remote_trainer"):
+				if proxy is Node3D and proxy.get_multiplayer_authority() == peer:
+					trainer = proxy as Node3D
+					break
+		break
+	visual.call("apply_view", view, int(rec.get("seq", 0)), target_uid,
+		int(opponent.get("body_generation", 0)), trainer, _body_radius(body))
+
+func _clear_tether_snare_presentation(body: Node3D) -> void:
+	var visual := body.get_node_or_null("TetherSnareVisual") if is_instance_valid(body) else null
+	if visual != null: visual.call("clear_presentation")
 
 func shared_opponent_presentation() -> Dictionary:
 	var out := {

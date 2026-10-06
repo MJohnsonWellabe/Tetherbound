@@ -459,6 +459,20 @@ static func snare_status(effect: Dictionary, previous: Dictionary, now_ms: int,
 	next["catch_grants"] = grants
 	return next
 
+## Only the host translates its status clock for the existing record carrier.
+## Guests render remaining time; they never compare a foreign host timestamp
+## with their own process clock or import catch grants into presentation.
+static func snare_presentation(status: Dictionary, target_uid: String, target_generation: int,
+		now_ms: int) -> Dictionary:
+	if not EFFECTS._identity(target_uid) or target_generation < 1 \
+		or status.get("kind") != "snare" or status.get("target_uid") != target_uid \
+		or status.get("target_generation") != target_generation or now_ms < 0 \
+		or not EFFECTS._identity(status.get("character_id")) \
+		or not _integer(status.get("until_ms"), now_ms + 1, 9223372036854775807): return {}
+	return {"target_uid": target_uid, "target_generation": target_generation,
+		"character_id": status.character_id, "remaining_s": minf(float(config().commands.snare.duration_s),
+			float(int(status.until_ms) - now_ms) / 1000.0)}
+
 static func snare_modifiers(status: Dictionary, target_uid: String, target_generation: int,
 		character_id: String, now_ms: int) -> Dictionary:
 	var neutral := {"movement": 1.0, "catch_bonus": 0.0}

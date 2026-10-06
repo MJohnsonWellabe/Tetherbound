@@ -169,6 +169,67 @@ func test_snare_canonical_status_has_one_shared_slow_and_own_catch_grant() -> vo
 	assert_false(host.commit_tether_command(COMMANDS.intent(id, 1, 2, "tag_combo"), 1, _command_view(), 2500).ok)
 	assert_false(host.commit_tether_command(COMMANDS.intent(id, 1, 2, "item_throw"), 1, _command_view(), 2500).ok)
 
+func test_snare_presentation_uses_current_record_body_and_remaining_host_duration() -> void:
+	COMMANDS._config.feature_flags.ui_enabled = true
+	var player: RefCounted = DATA.new()._player()
+	var creature: RefCounted = player.get("party").call("at", 0)
+	var uid := str(creature.get("uid"))
+	var status := {"kind": "snare", "target_uid": uid, "target_generation": 3,
+		"character_id": "owner_a", "until_ms": 5000, "catch_grants": {"owner_a": {"until_ms": 5000, "bonus": 0.1}}}
+	var before := status.duplicate(true)
+	var view := COMMANDS.snare_presentation(status, uid, 3, 3500)
+	assert_eq(view.remaining_s, 1.5)
+	assert_false(view.has("until_ms"), "a guest has its own clock")
+	assert_false(view.has("catch_grants"), "presentation carries no catch authority")
+	assert_true(COMMANDS.snare_presentation(status, uid, 4, 3500).is_empty())
+	assert_true(COMMANDS.snare_presentation(status, "another-creature", 3, 3500).is_empty())
+	assert_true(COMMANDS.snare_presentation(status, uid, 3, 5000).is_empty())
+	assert_eq(status, before)
+	var body := preload("res://scripts/creatures/wild_creature.gd").new()
+	body.instance = creature
+	var director := preload("res://tests/test_client_trainer_victory.gd").DirectorFixture.new()
+	var record := {"encounter_id": "snare-view", "phase": "active", "seq": 7,
+		"participants": {1: {"character_id": "owner_a"}},
+		"opponent": {"card": {"uid": uid}, "body_generation": 3, "tether_snare_view": view}}
+	var hp_before := float(creature.get("hp"))
+	director._present_tether_snare(record, body)
+	var visual: Node3D = body.get_node_or_null("TetherSnareVisual") as Node3D
+	assert_true(visual != null)
+	if visual == null:
+		body.free()
+		director.free()
+		return
+	assert_true(visual.visible)
+	assert_eq(visual.get_child_count(), 2, "one loop and one line, no collision or particle body")
+	visual.call("_process", 0.5)
+	assert_eq(visual.get("_remaining_s"), 1.0)
+	director._present_tether_snare(record, body)
+	assert_eq(visual.get("_remaining_s"), 1.0, "duplicate record cannot restart the local duration")
+	visual.call("_process", 1.0)
+	assert_false(visual.visible)
+	record.seq = 8
+	record.opponent.tether_snare_view.remaining_s = 2.0
+	director._present_tether_snare(record, body)
+	assert_true(visual.visible, "new host refresh reuses the same two meshes")
+	assert_eq(visual.get_child_count(), 2)
+	record.seq = 7
+	record.opponent.tether_snare_view.remaining_s = 3.0
+	director._present_tether_snare(record, body)
+	assert_eq(visual.get("_remaining_s"), 2.0, "older record cannot refresh the effect")
+	record.seq = 9
+	record.phase = "done"
+	director._present_tether_snare(record, body)
+	assert_false(visual.visible)
+	record.phase = "active"
+	record.seq = 10
+	record.opponent.card.uid = "another-creature"
+	director._present_tether_snare(record, body)
+	assert_false(visual.visible, "foreign target cannot bind to this body")
+	assert_eq(float(creature.get("hp")), hp_before)
+	assert_false(body.has_meta(&"tether_snare"), "visual consumer never installs canonical status")
+	body.free()
+	director.free()
+
 func test_equipped_authored_pouches_bind_each_upgrade_on_the_same_participant() -> void:
 	var ids := ["", "rootiron_command_pouch", "tidesteel_command_pouch", "skyglass_command_pouch", "stormglass_command_pouch"]
 	for tier: int in 5:

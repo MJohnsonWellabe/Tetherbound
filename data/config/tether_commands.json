@@ -19,6 +19,7 @@
     "4": {"meter_rate": 1.45, "pouch_size": 3, "movement_multiplier": 0.45, "catch_bonus": 0.16}
   },
   "snare_bounds": {"minimum_movement_multiplier": 0.45, "maximum_catch_bonus": 0.16},
+  "snare_visual": {"colour": "#e8cf87", "line_radius_m": 0.035, "loop_width_m": 0.06, "trainer_anchor_height_m": 1.2, "target_height_fraction": 0.4, "loop_segments": 32},
   "item_bounds": {"maximum_heal": 1000000, "maximum_nourishment": 100, "maximum_happiness": 100, "minimum_buff_scale": 0.001, "maximum_buff_scale": 2.0, "maximum_buff_seconds": 3600, "buff_stats": ["attack", "defence", "speed", "wind_regen"]},
   "ui": {"width": 580, "font_size": 22, "bar_height": 18, "refusal_seconds": 2.5},
   "refusals": {
