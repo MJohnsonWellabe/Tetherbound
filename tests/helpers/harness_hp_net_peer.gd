@@ -78,16 +78,27 @@ func _harness_dispatch(action: String, args: Dictionary) -> Dictionary:
 		"harness_hold_opponent", "harness_release_opponent":
 			# DISCLOSED FIXTURE (host only): the live wild's own swings are not
 			# routed while held, so the scripted strike is the only hit measured.
+			# A shared fight's enemy AI runs in the director's host runtime (a
+			# CombatManager of its own), so every runtime with a live wild is held.
+			var runtimes: Array = []
 			var manager := _combat_manager()
-			var wild: Node = manager.get("_wild") if manager != null else null
-			if wild == null or not wild.has_signal("strike_ready"):
+			if manager != null: runtimes.append(manager)
+			var director := _encounter_director()
+			if director != null:
+				runtimes.append_array((director.get("_shared_host_fights") as Dictionary).values())
+			var routed: Array = []
+			for runtime: Node in runtimes:
+				var wild: Node = runtime.get("_wild") if is_instance_valid(runtime) else null
+				if wild == null or not is_instance_valid(wild) or not wild.has_signal("strike_ready"): continue
+				var strike := Callable(runtime, "_on_enemy_strike")
+				if action == "harness_hold_opponent" and wild.is_connected("strike_ready", strike):
+					wild.disconnect("strike_ready", strike)
+				elif action == "harness_release_opponent" and not wild.is_connected("strike_ready", strike):
+					wild.connect("strike_ready", strike)
+				routed.append("%s=%s" % [runtime.name, str(wild.is_connected("strike_ready", strike))])
+			if routed.is_empty():
 				return {"verdict": "ERROR", "detail": "the host has no live opponent"}
-			var strike := Callable(manager, "_on_enemy_strike")
-			if action == "harness_hold_opponent" and wild.is_connected("strike_ready", strike):
-				wild.disconnect("strike_ready", strike)
-			elif action == "harness_release_opponent" and not wild.is_connected("strike_ready", strike):
-				wild.connect("strike_ready", strike)
-			return {"verdict": "PASS", "detail": "%s: opponent swings routed %s" % [action, str(wild.is_connected("strike_ready", strike))]}
+			return {"verdict": "PASS", "detail": "%s: opponent swings routed %s" % [action, ", ".join(routed)]}
 		"harness_unwear":
 			var uid := str((members[0] as RefCounted).get("uid"))
 			var row: Dictionary = (local.get("redesign_character") as Dictionary).get("creatures", {}).get(uid, {})
