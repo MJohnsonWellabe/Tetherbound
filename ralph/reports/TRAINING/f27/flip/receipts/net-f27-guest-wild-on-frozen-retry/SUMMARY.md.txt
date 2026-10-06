@@ -1,0 +1,11 @@
+# Net smoke run r1-f27-guest-wild-frozen-on-20261006T0510Z
+
+Scene: title
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=5736 exited=true unexpected_exit=false
+- peer 1 (client) pid=15052 exited=true unexpected_exit=false
+
+FAILURES:
+- the host's row for the guest is its accepted wild_defeat share ({ "action": "combat_mastery", "action_id": "b1c1ff91edf9ffb114ce0ec65b629a689a8e05f39662d531610f12516cb07bc1", "receipt": "craft:combat_mastery_89783501c426e9ee2d92bab261c7bf1e504c1c8276485b714fdf5925e223fc74:character-d9fe3adc694f3c238eb6262af2d7f112", "status": "accepted" })

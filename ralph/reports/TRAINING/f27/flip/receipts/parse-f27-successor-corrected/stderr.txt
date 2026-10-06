@@ -1,0 +1,4 @@
+SCRIPT ERROR: Parse Error: Cannot infer the type of "valid_row" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://tests/smoke_net_f27_guest_wild_win.gd:131)
+ERROR: Failed to load script "res://tests/smoke_net_f27_guest_wild_win.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)

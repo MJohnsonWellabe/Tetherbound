@@ -1,0 +1,4 @@
+SCRIPT ERROR: Parse Error: Expected variable name after "var".
+   at: GDScript::reload (res://tests/smoke_net_f27_guest_wild_win.gd:127)
+ERROR: Failed to load script "res://tests/smoke_net_f27_guest_wild_win.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)

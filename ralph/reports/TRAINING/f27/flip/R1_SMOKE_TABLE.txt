@@ -1,5 +1,5 @@
 R1 existing smoke coverage (OPEN; no flip acceptance claim)
-Product head: d4f2af753795087b9d852afffe961016cb5c1a1c (predecessor full suite plus reviewed round/guard affected revalidation)
+Product head: d4f2af753795087b9d852afffe961016cb5c1a1c; smoke assertion head7c44794f6d17f3a54446c5548140358756b20ce2 (predecessor full suite plus reviewed round/guard affected revalidation)
 Config committed OFF. See R1_PROGRESS.txt for first-attempt receipts.
 
 Fixture assertion coverage (reviewed reuse: predecessor full evidence + repaired-source 100 affected cases; 6085 unchanged cases carried forward under RD36):
@@ -14,7 +14,7 @@ client_trainer_rewards | OPEN | OPEN
 cloudreach_riding | OPEN | OPEN
 deploy_two_creatures | OPEN | OPEN (unowned exception)
 f22_forced_break | OPEN | OPEN
-f27_guest_wild_win | RETRY FAIL actualsettlement exit1/6rewardfailures: guestkill+productionrejoin PASS, no XP/essence/receipt for eitherpeer, wild_training_unavailable. Director frozen-opponent guard d4f2af reviewed/final OFF+ON98/1033PASS; live recovery OPEN; FIRST startupFAIL retained | N/A: manual flag-ON authority proof
+f27_guest_wild_win | FIRST startupFAIL; RETRY exit1/sixmissingrewardFAILs; guarded unchanged RETRY exit1/solelatest-row assertionFAIL, all actual rewards/equality/reconnect/reload PASS. Exact successorcase reproduced; reviewed assertion correction/native parsePASS; corrected live acceptance OPEN | N/A: manual flag-ON authority proof
 fly | OPEN | OPEN
 gate_opens_for_both | OPEN | OPEN
 hearts | OPEN | OPEN
