@@ -295,6 +295,7 @@ func admitted(peer: int, summary: Dictionary) -> void:
 ## stream stays for `_recovery_admitted`; anything else would shadow the
 ## owner's next stream forever (re-proof: rejoin left admission pending).
 func peer_departed(peer: int) -> void:
+	_pose_ring.erase(peer)
 	for character: String in deferred.keys():
 		if int(deferred[character].get("peer", 0)) == peer: deferred.erase(character)
 	for character: String in hosts.keys():
@@ -457,10 +458,7 @@ func receive_host(peer: int, packet: Dictionary) -> void:
 
 func _context(peer: int, stream: Dictionary) -> Dictionary:
 	var session := owner()
-	var registry: RefCounted = session.call("registry")
-	var realm := ""
-	for row: Dictionary in registry.call("rows"):
-		if row.get("peer_id") == peer: realm = str(row.get("realm", ""))
+	var realm := _peer_realm(peer)
 	var map: RefCounted = _game().get("local").call("map_for", realm)
 	var definitions := GROOM.landmark_definitions(map, realm, session.call("_foundation_flags", peer),
 		_game().get("world").flags.call("all_set"))
@@ -489,7 +487,7 @@ func _peer_realm(peer: int) -> String:
 ## Host, every physics tick: record each streaming owner's body.
 func _sample_poses() -> void:
 	var session := owner()
-	if session == null or session.call("is_host") != true:
+	if session == null or not session.is_inside_tree() or session.call("is_host") != true:
 		_pose_ring.clear()
 		return
 	var now := Time.get_ticks_msec()
@@ -1749,6 +1747,7 @@ func _rebase_host(peer: int, packet: Dictionary) -> void:
 		_send_owner(peer, hosts[character], {"op": "rebase_ack"})
 
 func reset() -> void:
+	_pose_ring.clear()
 	if owner() != null:
 		var authority: RefCounted = owner().get("_character_authority")
 		if authority != null:

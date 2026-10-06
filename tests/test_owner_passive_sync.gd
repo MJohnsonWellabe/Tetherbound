@@ -407,12 +407,17 @@ func test_a_pose_observed_in_another_realm_does_not_count_and_a_realm_change_cle
 	assert_eq((service._pose_ring[2].samples as Array).size(), 1, "the realm change started a fresh ring")
 	assert_eq(service._pose_ring[2].realm, "meadows")
 
-func test_the_pose_ring_keeps_only_the_lag_window() -> void:
+func test_the_pose_ring_keeps_only_the_lag_window_and_its_cap() -> void:
 	var now := Time.get_ticks_msec()
 	for i in 300: service._record_pose(2, "meadows", Vector3(i, 0, 0), now - 3000 + i * 10)
 	var samples: Array = service._pose_ring[2].samples
-	assert_true(samples.size() <= service.MAX_POSE_SAMPLES, "bounded")
 	assert_true(int(samples[0][0]) >= now - 10 - int(service.INITIAL_POSE_LAG_S * 1000.0), "nothing older than the window")
+	for i in 300: service._record_pose(3, "meadows", Vector3(i, 0, 0), now - 300 + i) # all inside the window
+	assert_eq((service._pose_ring[3].samples as Array).size(), service.MAX_POSE_SAMPLES, "and never more than the cap")
+	service.peer_departed(3)
+	assert_false(service._pose_ring.has(3), "a departing peer's ring goes at once")
+	service.reset()
+	assert_true(service._pose_ring.is_empty(), "reset clears every ring")
 
 func test_failed_bool_save_never_acks_or_installs_and_success_is_exact() -> void:
 	var prepared := _prepared_owner()
