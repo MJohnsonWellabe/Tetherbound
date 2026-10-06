@@ -5,6 +5,41 @@ extends "res://tests/test_case.gd"
 const HALL := preload("res://scripts/world/crossing_hall.gd")
 const ACTION := preload("res://scripts/world/portal_arch.gd")
 
+func test_hero_plaque_preserves_visible_named_signs_and_a_separate_static_emblem() -> void:
+	var hall: Node3D = HALL.new()
+	var slot := Node3D.new()
+	hall.add_child(slot)
+	var board := Label3D.new()
+	board.name = "BiomeSign"
+	board.text = "Tidewake"
+	slot.add_child(board)
+	var state := Label3D.new()
+	state.name = "StateSign"
+	state.text = "Locked"
+	slot.add_child(state)
+	var membrane := MeshInstance3D.new()
+	membrane.name = "PortalSurface"
+	membrane.material_override = StandardMaterial3D.new()
+	slot.add_child(membrane)
+	hall.call("_place_hero_arch_signs", slot, board, state, "tidewake")
+	hall.get("_arches")["tidewake"] = slot
+	assert_eq(slot.get_node(^"BiomeSign"), board)
+	assert_eq(slot.get_node(^"StateSign"), state)
+	assert_eq(board.text, "Tidewake")
+	assert_true(board.visible)
+	assert_true(state.visible)
+	assert_false(board.no_depth_test)
+	assert_false(board.double_sided)
+	assert_eq(board.billboard, BaseMaterial3D.BILLBOARD_DISABLED)
+	assert_true(board.position.y > 3.6, "candidate lettering does not occupy the passage")
+	var emblem := slot.get_node(^"BiomeKeystone/BiomeEmblem") as Node3D
+	assert_true(emblem.visible)
+	hall.call("apply_display", {"portal_unlocks": ["tidewake"]})
+	assert_eq(state.text, "Open", "the existing public display still owns the visible state text")
+	assert_true(emblem.visible, "static identification is independent of earned shrine display")
+	assert_eq(slot.get_child_count(), 4, "no extra plaque, action or collider is invented")
+	hall.free()
+
 func test_hero_cradles_follow_only_the_latest_shared_shrine_display() -> void:
 	var hall: Node3D = HALL.new()
 	for biome: String in ["meadows", "tidewake", "cloudreach", "stormwood"]:

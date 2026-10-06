@@ -198,6 +198,7 @@
     "arch_model": "res://assets/environment/crossing_hall/portal_arch/portal_arch.tscn",
     "pedestal_model": "res://assets/environment/crossing_hall/shrine_pedestal/shrine_pedestal.tscn",
     "pedestal_collider": {"size": [0.8, 1.1, 0.8], "at": [0, 0.55, 0]},
+    "name_plaque": {"name_at": [0, 4.17, 0.37], "state_at": [0, 4.01, 0.37], "name_pixel_size": 0.0022, "state_pixel_size": 0.0016, "colour": "#524736", "emblem_at": [0, 4.55, 0.37], "emblem_scale": 0.65, "_scope": "Candidate lettering/insert placement only; verify against the fitted native frame and blind readability before enabling."},
     "relic_display": {"at": [0, 1.28, 0], "scale": 1.0, "colours": {"tidewake": "#cbb375", "cloudreach": "#d1ddd7", "stormwood": "#d6b454"}, "_scope": "Presentation from host shrine_display only; no local inventory or progress decision."},
     "portal_surface": {"size": [2.4, 3.6], "at": [0, 1.8, -0.08]},
     "stone_infill": {"size": [2.4, 3.6, 0.16], "at": [0, 1.8, -0.08], "colour": "#776f60"},

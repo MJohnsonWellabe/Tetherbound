@@ -99,6 +99,8 @@ func _build_arch(entry: Dictionary) -> void:
 	board.name = "BiomeSign"
 	var state := _label(slot, "Home arch" if entry.kind == "home" else "Sealed" if entry.kind == "sealed" else "Locked", Vector3(0, 2.95, .12))
 	state.name = "StateSign"
+	if hero:
+		_place_hero_arch_signs(slot, board, state, str(entry.biome))
 	var arrival := Marker3D.new()
 	arrival.name = "Approach"
 	arrival.position = Vector3(0, .05, 2.8)
@@ -195,6 +197,37 @@ func _add_hero_model(parent: Node3D, kind: String) -> bool:
 	parent.add_child(model)
 	parent.set_meta("hero_art_used", true)
 	return true
+
+
+func _place_hero_arch_signs(slot: Node3D, board: Label3D, state: Label3D, biome: String) -> void:
+	# The generated frame already carries one stone plaque. Preserve the actual
+	# named, visible signs consumed by the Hall path, but seat their lettering
+	# together on that plaque rather than across the passage.
+	var art: Dictionary = _config.get("hero_art", {})
+	var settings: Dictionary = art.get("name_plaque", {})
+	board.position = _position(settings.get("name_at", [0, 4.17, .37]))
+	state.position = _position(settings.get("state_at", [0, 4.01, .37]))
+	board.pixel_size = float(settings.get("name_pixel_size", .0022))
+	state.pixel_size = float(settings.get("state_pixel_size", .0016))
+	for sign_node: Label3D in [board, state]:
+		sign_node.modulate = Color(str(settings.get("colour", "#524736")))
+		sign_node.outline_size = 0
+		sign_node.billboard = BaseMaterial3D.BILLBOARD_DISABLED
+		sign_node.no_depth_test = false
+		sign_node.double_sided = false
+	# Existing live relic silhouettes also identify the carved keystone insert.
+	# This emblem is static signage, separate from an earned pedestal display.
+	if biome not in ["meadows", "tidewake", "cloudreach", "stormwood"]:
+		return
+	var insert := Node3D.new()
+	insert.name = "BiomeKeystone"
+	slot.add_child(insert)
+	_add_hero_relic(insert, biome)
+	var emblem := insert.get_node(^"DisplayedRelic") as Node3D
+	emblem.name = "BiomeEmblem"
+	emblem.position = _position(settings.get("emblem_at", [0, 4.55, .37]))
+	emblem.scale = Vector3.ONE * float(settings.get("emblem_scale", .65))
+	emblem.visible = true
 
 
 func _add_hero_stone_infill(slot: Node3D) -> void:
