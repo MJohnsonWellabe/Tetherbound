@@ -1,0 +1,7 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+paid controller build: 2x2 floor + shared door/walls + four wall-top roofs
+controller dismantle: exact middle piece removed; neighbours survive; full refund
+controller dismantle: creature bed removed and fully refunded
+build Cancel: ghost cleared and unpaused world control returned
+GATE A BUILD HOUSE SMOKE: PASS

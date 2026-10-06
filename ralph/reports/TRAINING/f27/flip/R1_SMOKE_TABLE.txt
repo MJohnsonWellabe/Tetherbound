@@ -55,11 +55,11 @@ dialogue_clears_the_world_hud | ON FIRST PASS exit0; actualHUD/dialogue1920x1080
 encounter_scaling | ON FIRST PASS, exit0/70assertions/0failures; live creature join/leave/no-compound/maxHP/three-roster scaling without battle completion; SessionDouble/direct meadow trainer-start/null body/HP fixture; independent review PASS
 f27_altar_spend | ON FIRST PASS exit0; controller paid6Water/RippletL3->4/one receipt+accepted saved row; independent source+disk review PASS; inherited grants/placement/relocation disclosed, single payment only; warnings retained
 f31_station_paid_path | ON FIRST PASS, exit0; paid station/attachment/ACK/debit/refund/craft/serialized world-binding/forged placement refusal; grants/ghost-pose/direct handler fixtures; actual saves2; Altar v1 exception; independent review PASS
-free_build | ON FIRST ACTIVE; original pad toggle/UI/empty-satchel build/snap-refusal/ownership checks
-gate_a_build_house | ON OPEN
-gate_a_opening_segment | ON OPEN
-gate_a_rest_torch | ON OPEN
-gate_e_finale | ON OPEN
+free_build | ON FIRST functional PASS, exit0; toggle/UI/empty-satchel selection-arming/rotation/snap/refusal/ownership recovery; funded placements; dummy material-null ERROR retained; earlier rest saves only; independent functional review PASS
+gate_a_build_house | ON FIRST PASS, exit0; focused FlatWorld/paid grants/joypad placements; direct-spawn paid dismantle targets/direct physics call/refund/Cancel cleared+unpaused; five dummy material errors/no SCRIPT/Parse; independent qualified review PASS
+gate_a_opening_segment | ON FIRST PASS, exit0; title-through-catch/party COUNT2+locomotion enabled; acceptance:false road/prefill/orb drain/HP hold fixtures; earlier save only starter/no durable catch or subsequent-walk claim; optional core unexecuted; independent review PASS
+gate_a_rest_torch | ON FIRST PASS, exit0; creature recovery/six torch cycles/overnight heal/shelter refusal-recovery/loft walk+sleep; free-build/party/pose/injury/direct orphan-tent fixtures; no reload/rendered-light proof; independent qualified review PASS
+gate_e_finale | ON FIRST ACTIVE; original finale wiring/gauntlet/rest/Warden/ceremony/acknowledgment fixtures
 hud_freed_combat_prompt_lifecycle | ON FIRST PASS exit0/10checks; productionHUD/director freedwinner recovery; existingminimalfixture
 input | ON FIRST PASS exit0; actualactionmovement/animation/jump/staminadebit; devicehardwareuntested
 menu | ON FIRST PASSexit0; realworld/nativeUI input/focus/inventory/saveisolatedslot/controlreturn + acceptedTMjournal/receipt/learnedmove; existing grants; independentreviewPASS/raw4+actualsaves4
