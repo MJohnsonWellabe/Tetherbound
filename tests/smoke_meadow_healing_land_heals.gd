@@ -63,6 +63,7 @@ func _run() -> void:
 		print("FALLS_REASONS:" + JSON.stringify(healing.call("bake_reasons")))
 		quit(0)
 		return
+	_check_grouped_targets()
 	var spokes_before := _spoke_pylon_transforms(world)
 	_check_table_covers_the_world(world)
 
@@ -226,6 +227,20 @@ func _run() -> void:
 	_check_end_state(fresh, reloaded, "reload+30")
 	print("pylons toppled: %d" % live_count)
 	_finish()
+
+
+func _check_grouped_targets() -> void:
+	var checks: RefCounted = preload("res://tests/test_meadow_healing_land_heals.gd").new()
+	for method: String in [
+		"check_healing_groups_are_scoped_to_the_live_world_and_refreshed_per_step",
+		"check_grouped_topple_preserves_exactly_once_and_severed_spoke_exclusion",
+		"check_grouped_lights_deduplicate_materials_and_preserve_warm_and_other_worlds"]:
+		checks.set("failures", [] as Array[String])
+		if checks.call(method) != true:
+			_fail("(groups) %s did not complete" % method)
+		for failure: String in (checks.get("failures") as Array):
+			_fail("(groups) %s: %s" % [method, failure])
+	print("(groups) mounted checks executed %d assertions" % int(checks.get("assertion_count")))
 
 
 func _check_end_state(world: Node, healing: Node, tag: String) -> void:

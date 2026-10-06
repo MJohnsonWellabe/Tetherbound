@@ -33,10 +33,14 @@ material completeness still requires the smoke audit below.
 
 ## Existing proof changes and required results
 
-`tests/test_meadow_healing_land_heals.gd` gains focused checks for current-world
-group scope, queued/new targets between steps, exactly-once grouped toppling,
-severed-spoke exclusion, shared/overlapping light roots, warm-light preservation,
-foreign-world isolation and repeated light kill. **UNRUN.**
+The existing unit file contains checks for current-world group scope, queued/new
+targets between steps, exactly-once grouped toppling, severed-spoke exclusion,
+shared/overlapping light roots, warm-light preservation, foreign-world isolation
+and repeated light kill. These three mounted checks now run from the existing
+production healing smoke after world boot, outside the timed freeing frame.
+Every original assertion is retained; boolean completion and forwarded failures
+make a runtime abort fail the smoke. They remain **UNRUN in that initialized path**.
+The 30 pure unit methods remain under the existing focused unit runner.
 
 `tests/smoke_meadow_healing_land_heals.gd` now audits every affected material
 through the whole production world before healing, outside the timed frame,
@@ -89,7 +93,9 @@ coverage, per-run child order/stagger, authored pose/idempotence, cable timing,
 unchanged durable flags, focused tests and solo smoke assertions. No actionable
 source finding; imported/later-spawn material completeness and runtime/perf
 remain OPEN. A source review does not certify the smoke or compiler.
-No compiler or native PASS is claimed. `git diff --check` passed on this stage.
+No complete compiler or native acceptance PASS is claimed. `git diff --check`
+passed on this stage. The first native unit result below supersedes source review
+as evidence about the original mounted-test placement.
 
 Follow-up source inspection found a proof accounting trap: the climax can queue
 its cage before MeadowHealing's light step. The smoke now accounts by material
@@ -104,14 +110,39 @@ The same independent reviewer re-read the actual follow-up diff and returned
 materials, exact expected count and preserved audits checked. No source-level
 parser issue found; native compilation and lifecycle reproduction remain OPEN.
 
-## Native execution held
+## First native stage: INVALID result, preserved
 
-At this checkpoint Valheim PID 2496, R1 full unit ON engine PID 16844 and R2 full
-baseline engine PID 8624 were already running. No P1 engine, import, export,
-render or heavy CPU measurement was launched. The owner-chat GPU reservation
-remains active until at least 2026-10-06T02:00:00Z and Valheim absence is verified.
-P1 CPU-only proof is authorized, but must wait for other heavy jobs to clear;
-source work, independent review and evidence pushes continue meanwhile.
+At 2026-10-06T04:57:25Z P1 acquired the global lock and ran the existing focused
+unit command at source `5c81904d9fb07a78c4c7eb308cf15117879d88d8`, with private
+APPDATA. Coordinator comment 6009171478 permitted these untimed units alongside
+the original R2 baseline pair 15796/8624; no other engine was active at launch.
+Valheim and both owner reservation files were absent. The local import cache
+was copied under the lock from R1 after checking identical tracked import inputs
+and all cached class paths; no import or shared writable cache was used.
+
+Raw [receipt](unit-first/receipt.json), [stdout](unit-first/stdout.log),
+[stderr](unit-first/stderr.log) and [exit](unit-first/exit.txt) are preserved
+byte-for-byte, with hashes in [SHA256SUMS.txt](unit-first/SHA256SUMS.txt).
+Exit 0 and the reported **33 tests / 587 assertions / 0 failed are INVALID as a
+pass**: the three new mounted-group methods aborted before their assertions.
+`Engine.get_main_loop()` is null during the existing runner's synchronous `_init`.
+The native log contains three SCRIPT ERRORs and five leaked ObjectDB instances.
+The other 30 pure methods executed 587 assertions, with inherited authored-null
+and unbaked-pylon warnings. This establishes no grouped behavior or performance
+acceptance. The owned lock was released after the engine exited.
+
+The correction invokes all three checks from the already initialized production
+smoke, retaining their bodies and assertions. No generic runner, new fixture,
+new test file, new mode or product behavior was introduced to work around the runner.
+Independent read-only review by `/root/c3_journal_review`: **SOURCE PASS** on
+the actual two-file fix, with all 19 mounted assertions retained (5 scope/refresh,
+7 topple/idempotence, 7 light/material). Fixture worlds are isolated from the
+production world; calls run after initialization, outside the measured frame,
+and incomplete calls or assertion failures persist into the smoke's nonzero exit.
+This verdict does not establish native parsing or runtime success.
+The corrected focused unit selection and mounted smoke remain pending. Fresh
+before/after freeing-frame measurement and the two-peer handoff still require
+an uncontended window after R2 finishes. P1 remains OPEN.
 
 C2 is closed as BLOCKED/accepted with an existing-tool gap. Its custom fixture
 and cancelled export/profile queue must not be restored or executed for P1.

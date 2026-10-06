@@ -1,0 +1,38 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only meadow_healing_land_heals: 1 of 804 test files
+  ok    test_meadow_healing_land_heals.gd :: test_a_fallen_pylon_is_never_toppled_twice_and_lay_down_keeps_its_collider_down
+  ok    test_meadow_healing_land_heals.gd :: test_an_authored_null_stays_standing_and_a_baked_azimuth_is_obeyed
+  ok    test_meadow_healing_land_heals.gd :: test_an_unbaked_pylon_with_no_clear_direction_stays_standing_and_is_counted
+  ok    test_meadow_healing_land_heals.gd :: test_by_default_a_fallen_pylon_leaves_no_collider
+  ok    test_meadow_healing_land_heals.gd :: test_edge_jitter_is_deterministic_and_bounded
+  ok    test_meadow_healing_land_heals.gd :: test_fall_angle_follows_the_ground
+  ok    test_meadow_healing_land_heals.gd :: test_fall_direction_is_deterministic_and_unit
+  ok    test_meadow_healing_land_heals.gd :: test_footprint_covers_the_full_fallen_body_to_the_tip
+  ok    test_meadow_healing_land_heals.gd :: test_grouped_lights_deduplicate_materials_and_preserve_warm_and_other_worlds
+  ok    test_meadow_healing_land_heals.gd :: test_grouped_topple_preserves_exactly_once_and_severed_spoke_exclusion
+  ok    test_meadow_healing_land_heals.gd :: test_healing_groups_are_scoped_to_the_live_world_and_refreshed_per_step
+  ok    test_meadow_healing_land_heals.gd :: test_herd_placement_is_deterministic_spaced_and_clear_of_the_veridian
+  ok    test_meadow_healing_land_heals.gd :: test_herd_placement_skips_malformed_entries
+  ok    test_meadow_healing_land_heals.gd :: test_herd_scale_is_up_only
+  ok    test_meadow_healing_land_heals.gd :: test_inline_disc_reads_like_a_station_and_rejects_malformed
+  ok    test_meadow_healing_land_heals.gd :: test_neighbours_in_a_run_never_fall_alike
+  ok    test_meadow_healing_land_heals.gd :: test_overlapping_discs_share_one_world_aligned_grid
+  ok    test_meadow_healing_land_heals.gd :: test_polyline_distance
+  ok    test_meadow_healing_land_heals.gd :: test_regreen_alpha_takes_the_worst_station_and_spares_roads
+  ok    test_meadow_healing_land_heals.gd :: test_regreen_config_names_real_baked_stations_and_installed_textures
+  ok    test_meadow_healing_land_heals.gd :: test_resting_half_depth_is_half_the_lying_thickness
+  ok    test_meadow_healing_land_heals.gd :: test_station_falloff_is_full_in_the_core_and_zero_at_the_rim
+  ok    test_meadow_healing_land_heals.gd :: test_station_falloff_matches_the_heightfield_drain_factor
+  ok    test_meadow_healing_land_heals.gd :: test_the_baked_table_covers_every_pylon_run_with_real_azimuths
+  ok    test_meadow_healing_land_heals.gd :: test_the_healed_field_greens_at_full_density
+  ok    test_meadow_healing_land_heals.gd :: test_the_healed_ground_blooms_deterministically_inside_the_stations
+  ok    test_meadow_healing_land_heals.gd :: test_the_herd_grazes_in_clusters_not_a_ring
+  ok    test_meadow_healing_land_heals.gd :: test_the_herd_groups_around_the_stag
+  ok    test_meadow_healing_land_heals.gd :: test_the_herd_scatter_is_a_pure_function_of_its_seed
+  ok    test_meadow_healing_land_heals.gd :: test_the_overlays_feather_their_edge_and_bias_over_the_slope
+  ok    test_meadow_healing_land_heals.gd :: test_the_severed_spokes_stay_standing
+  ok    test_meadow_healing_land_heals.gd :: test_topple_keeps_scale_and_zero_angle_is_identity
+  ok    test_meadow_healing_land_heals.gd :: test_topple_tips_up_toward_the_fall_direction_about_the_pivot
+
+33 tests, 587 assertions, 0 failed

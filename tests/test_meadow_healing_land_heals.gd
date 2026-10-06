@@ -21,8 +21,14 @@ func _config() -> Dictionary:
 	return _json(CONFIG_PATH)
 
 
-func test_healing_groups_are_scoped_to_the_live_world_and_refreshed_per_step() -> void:
+# Mounted checks are invoked by the existing production healing smoke after
+# its first await. The synchronous unit runner executes before SceneTree init.
+# Return completion explicitly so a runtime abort cannot look like a pass.
+func check_healing_groups_are_scoped_to_the_live_world_and_refreshed_per_step() -> bool:
 	var tree := Engine.get_main_loop() as SceneTree
+	if tree == null:
+		assert_true(false, "mounted group checks require an initialized SceneTree")
+		return false
 	var world := Node3D.new()
 	var foreign_world := Node3D.new()
 	tree.root.add_child(world)
@@ -49,10 +55,14 @@ func test_healing_groups_are_scoped_to_the_live_world_and_refreshed_per_step() -
 	world.free()
 	foreign_world.free()
 	healing.free()
+	return true
 
 
-func test_grouped_topple_preserves_exactly_once_and_severed_spoke_exclusion() -> void:
+func check_grouped_topple_preserves_exactly_once_and_severed_spoke_exclusion() -> bool:
 	var tree := Engine.get_main_loop() as SceneTree
+	if tree == null:
+		assert_true(false, "mounted group checks require an initialized SceneTree")
+		return false
 	var world := Node3D.new()
 	tree.root.add_child(world)
 	var healing: Node3D = HEALING.new()
@@ -78,10 +88,14 @@ func test_grouped_topple_preserves_exactly_once_and_severed_spoke_exclusion() ->
 	assert_false((severed[1] as Node).has_meta(HEALING.TOPPLED_META))
 	world.free()
 	healing.free()
+	return true
 
 
-func test_grouped_lights_deduplicate_materials_and_preserve_warm_and_other_worlds() -> void:
+func check_grouped_lights_deduplicate_materials_and_preserve_warm_and_other_worlds() -> bool:
 	var tree := Engine.get_main_loop() as SceneTree
+	if tree == null:
+		assert_true(false, "mounted group checks require an initialized SceneTree")
+		return false
 	var world := Node3D.new()
 	var foreign_world := Node3D.new()
 	tree.root.add_child(world)
@@ -127,6 +141,7 @@ func test_grouped_lights_deduplicate_materials_and_preserve_warm_and_other_world
 	world.free()
 	foreign_world.free()
 	healing.free()
+	return true
 
 
 # --- (A) regreen ---------------------------------------------------------------
