@@ -1,0 +1,9 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only f24_host_commands::test_every_joint_damage_event_is_attributed_to_one_of_the_two_owned_creatures: 1 of 817 test files
+  FAIL  test_f24_host_commands.gd :: test_every_joint_damage_event_is_attributed_to_one_of_the_two_owned_creatures
+          expected anything but 1.0  (exercise an actual non-neutral type pairing)
+
+1 tests, 28 assertions, 1 failed
+
+  test_f24_host_commands.gd :: test_every_joint_damage_event_is_attributed_to_one_of_the_two_owned_creatures — expected anything but 1.0  (exercise an actual non-neutral type pairing)

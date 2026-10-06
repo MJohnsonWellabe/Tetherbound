@@ -246,6 +246,7 @@ static func stage_joint_attack(effect: Dictionary, frozen_moves: Array,
 		host: Dictionary, combat_config: Dictionary) -> Dictionary:
 	var math := preload("res://scripts/combat/combat_math.gd")
 	var chart := preload("res://scripts/combat/type_chart.gd")
+	var moves := preload("res://scripts/creatures/move_db.gd").load_default()
 	if effect.get("kind") != "tag_combo" or not effect.get("strikes") is Array \
 		or effect.strikes.size() != 2 or frozen_moves.size() != 2 \
 		or not host.get("actors") is Array or host.actors.size() != 2 \
@@ -257,8 +258,7 @@ static func stage_joint_attack(effect: Dictionary, frozen_moves: Array,
 		or not EFFECTS._point(target.get("position")) \
 		or not _number(target.get("defence"), 1, INF): return refuse("invalid_target")
 	var bonus_cap: Variant = combat_config.get("damage", {}).get("max_bonus_product")
-	var base: Variant = combat_config.get("player_quick", {}).get("power")
-	if not _number(bonus_cap, 1, 2) or not _number(base, 0.001, INF): return refuse("invalid_request")
+	if not _number(bonus_cap, 1, 2): return refuse("invalid_request")
 	var hp := float(target.hp)
 	var strikes: Array = []
 	for index: int in 2:
@@ -294,14 +294,18 @@ static func stage_joint_attack(effect: Dictionary, frozen_moves: Array,
 			if actor.get(key) != move.actor_binding.get(key): return refuse("stale_actor")
 		if index == 1 and actor.creature_uid == host.actors[0].creature_uid: return refuse("no_partner")
 		var connected := math.move_connects(move, actor.position, actor.facing, target.position)
-		var type_scale := chart.multiplier_dual(str(move.get("type", "")),
+		if moves.move(str(move.move_id)).get("slot") != "quick": return refuse("stale_actor")
+		var type_scale := chart.multiplier_dual(moves.type_of(str(move.move_id)),
 			str(target.get("type", "")), str(target.get("secondary_type", "")))
-		var damage := math.rolled_damage(float(base) * float(move.power_multiplier) * power,
+		# Host profiles already include mastery, breakthroughs and gear in power.
+		# Match host_roll_damage's authored named multiplier and type lookup; the
+		# Tag fraction scales the resulting ordinary quick hit exactly once.
+		var damage := math.rolled_damage(float(move.power),
 			float(actor.attack), float(target.defence), float(host.rolls[index]),
-			float(move.power), type_scale) * float(actor.bonus_product) if connected else 0.0
+			moves.power(str(move.move_id)), type_scale) * power * float(actor.bonus_product) if connected else 0.0
 		damage = clampf(damage, 0.0, hp)
 		var receipt: Dictionary = strike.duplicate(true)
-		receipt["action_id"] = strike.parent_action_id
+		receipt["action_id"] = JSON.stringify([strike.parent_action_id, part, actor.creature_uid, actor.generation]).sha256_text()
 		receipt["move_id"] = move.move_id
 		receipt["landed"] = damage > 0.0
 		receipt["actual_hp_debit"] = damage
@@ -348,6 +352,68 @@ static func first_pouch_item(pouch: Array, items: Dictionary, counts: Dictionary
 		var item: String = pouch[index]
 		if not item.is_empty() and _integer(counts.get(item), 1, 2147483647): return item
 	return ""
+
+## Prepare the owned inventory + creature candidate for the existing saved
+## character transaction. The adapter must first settle its canonical live
+## baseline and retain this exact original until owner ACK; this helper never
+## replaces a live actor, spends meter, publishes a buff or writes a file.
+static func stage_item_use(current: Dictionary, effect: Dictionary, host: Dictionary) -> Dictionary:
+	if not enabled(): return refuse("disabled")
+	if not host.get("actor") is Dictionary: return refuse("stale_actor")
+	var record: GDScript = load("res://scripts/net/character_record_rules.gd")
+	var actor: Dictionary = host.get("actor", {})
+	if not record.errors(current, str(current.get("character_id", ""))).is_empty() \
+		or effect.size() != 7 or effect.get("kind") != "item_throw" or effect.get("count") != 1 \
+		or effect.get("character_id") != current.get("character_id") \
+		or not EFFECTS._identity(effect.get("action_id")) or not EFFECTS._identity(effect.get("item_id")) \
+		or host.get("owner_admitted") != true or host.get("encounter_active") != true \
+		or not _integer(actor.get("generation"), 1, 2147483647): return refuse("stale_actor")
+	for key: String in ["character_id", "creature_uid", "generation"]:
+		if effect.get(key) != actor.get(key): return refuse("stale_actor")
+	var selected := -1
+	for index: int in current.party.size():
+		if current.party[index].uid == effect.creature_uid:
+			if selected != -1: return refuse("stale_actor")
+			selected = index
+	if selected == -1: return refuse("stale_actor")
+	var owned: Dictionary = current.party[selected]
+	if owned.fainted or float(owned.hp) <= 0.0 or actor.get("hp") != owned.hp \
+		or actor.get("max_hp") != owned.max_hp: return refuse("transaction_unavailable")
+	var rules := preload("res://scripts/world/death_satchel_rules.gd")
+	var items: RefCounted = rules.db()
+	var equipment := preload("res://scripts/player/player_equipment.gd").new()
+	equipment.configure(items)
+	equipment.load_data(current.equipment)
+	var inventory: RefCounted = rules.inventory_from(current.inventory)
+	var counts := {}
+	for stack: Variant in current.inventory:
+		if stack is Dictionary: counts[stack.id] = inventory.call("count", str(stack.id))
+	var pouch: Array = current.redesign_character.get("tether_pouch", [])
+	if first_pouch_item(pouch, items.get("_items"), counts, equipment.command_pouch_tier()) != effect.item_id:
+		return refuse("pouch_empty")
+	var codec: GDScript = load("res://scripts/save/water_capture_codec.gd")
+	var creature: RefCounted = codec.decode_owned(owned, current.redesign_character)
+	if creature == null: return refuse("stale_actor")
+	var definition: Dictionary = items.call("definition", str(effect.item_id))
+	var buff := {}
+	if definition.has("creature_food"):
+		var condition := preload("res://scripts/creatures/creature_condition.gd")
+		if condition.feed(creature, condition.config(), definition.creature_food).get("accepted") != true:
+			return refuse("transaction_unavailable")
+	elif definition.has("creature_buff"):
+		buff = definition.creature_buff.duplicate(true)
+		if creature.call("apply_buff", str(buff.id), str(buff.stat), float(buff.scale), float(buff.duration_s)) != true:
+			return refuse("transaction_unavailable")
+	elif float(creature.call("heal", float(definition.get("heal", 0.0)))) <= 0.0:
+		return refuse("transaction_unavailable")
+	if inventory.call("remove", str(effect.item_id), 1) != true: return refuse("pouch_empty")
+	var next := current.duplicate(true)
+	next.inventory = rules.slots(inventory)
+	for key: String in ["hp", "nourishment", "happiness"]:
+		next.party[selected][key] = creature.get(key)
+	if not record.errors(next, str(current.character_id)).is_empty(): return refuse("transaction_unavailable")
+	return {"ok": true, "before": current.duplicate(true), "state": next,
+		"effect": effect.duplicate(true), "buff": buff, "requires_owner_debit_ack": true}
 
 static func stage_pouch_assignment(current: Array, index: int, item_id: String,
 		tier: int, items: Dictionary, outside_combat: bool) -> Dictionary:

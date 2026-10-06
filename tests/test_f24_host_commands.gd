@@ -134,7 +134,7 @@ func test_rally_can_commit_on_current_owned_deployment_before_its_first_move() -
 
 func test_every_joint_damage_event_is_attributed_to_one_of_the_two_owned_creatures() -> void:
 	var target := {"uid": "opponent", "generation": 1, "hp": 200.0, "hostile": true,
-		"position": Vector3(2, 0, 0), "defence": 10.0, "type": "Ground", "secondary_type": ""}
+		"position": Vector3(2, 0, 0), "defence": 10.0, "type": "Water", "secondary_type": ""}
 	var actors: Array = []
 	var moves: Array = []
 	for index: int in 2:
@@ -143,7 +143,9 @@ func test_every_joint_damage_event_is_attributed_to_one_of_the_two_owned_creatur
 			"generation": index + 1, "action": index + 1, "hp": 100.0, "attack": 20.0, "position": Vector3.ZERO,
 			"facing": Vector3.RIGHT, "bonus_product": 1.0}
 		actors.append(actor)
-		var frozen := MASTERY.freeze_action(MASTERY.owned_record(_owned(uid)), "quick", actor, [], MOVES.load_default())
+		var owned := _owned(uid)
+		owned["move_mastery_uses"] = {"pebble_toss": 300}
+		var frozen := MASTERY.freeze_action(MASTERY.owned_record(owned), "quick", actor, [], MOVES.load_default())
 		assert_true(frozen.ok, str(frozen))
 		if not frozen.ok: return
 		moves.append(MANAGER.host_move_profile(MOVES.load_default(), "player_quick", "pebble_toss", 0.5, 0.5, 1.0, 0.0, frozen.move))
@@ -156,12 +158,31 @@ func test_every_joint_damage_event_is_attributed_to_one_of_the_two_owned_creatur
 	assert_true(plan.ok, str(plan))
 	if not plan.ok: return
 	assert_eq(plan.strikes.size(), 2)
-	for strike: Dictionary in plan.strikes:
+	assert_ne(plan.strikes[0].action_id, plan.strikes[1].action_id, "each owned contribution has its own original")
+	var math := preload("res://scripts/combat/combat_math.gd")
+	var chart := preload("res://scripts/combat/type_chart.gd")
+	var type_scale := chart.multiplier_dual(MOVES.load_default().type_of("pebble_toss"), "Water", "")
+	assert_ne(type_scale, 1.0, "exercise an actual non-neutral type pairing")
+	for index: int in 2:
+		var strike: Dictionary = plan.strikes[index]
 		assert_true(float(strike.actual_hp_debit) > 0.0)
 		assert_eq(strike.source_kind, "creature")
 		assert_true(["creature_a", "creature_b"].has(strike.attacker_uid))
 		assert_eq(strike.character_id, "owner_a")
 		assert_eq(strike.parent_action_id, "joint-original")
+		assert_ne(strike.action_id, "joint-original")
+		var ordinary := math.rolled_damage(float(moves[index].power), 20.0, 10.0, 0.5,
+			MOVES.load_default().power("pebble_toss"), type_scale)
+		assert_eq(strike.actual_hp_debit, ordinary * (0.5 if index == 0 else 1.5), "rank-five profile and actual type scale exactly like one ordinary quick")
+	assert_eq(COMMANDS.stage_joint_attack(effect, moves, view, math.config()).strikes, plan.strikes, "retry retains exact child identities")
+	view.target.hp = 1.0
+	var finishing: Dictionary = COMMANDS.stage_joint_attack(effect, moves, view, math.config())
+	assert_true(finishing.ok)
+	if finishing.ok:
+		assert_eq(finishing.hp_after, 0.0)
+		assert_eq(finishing.strikes[0].actual_hp_debit, 1.0)
+		assert_eq(finishing.strikes[1].actual_hp_debit, 0.0, "incoming cannot credit already-debited HP")
+		assert_false(finishing.strikes[1].landed)
 	var forged := effect.duplicate(true)
 	forged.strikes[0].source_kind = "trainer"
 	assert_false(COMMANDS.stage_joint_attack(forged, moves, view, preload("res://scripts/combat/combat_math.gd").config()).ok)
@@ -234,3 +255,73 @@ func test_pouch_assignment_uses_original_character_journal_and_owner_save_withou
 	var forged_saved := before.duplicate(true)
 	forged_saved.redesign_character.tether_pouch = ["orb_basic"]
 	assert_false(record.errors(forged_saved, "owner_a").is_empty())
+
+
+func test_item_candidate_debits_one_own_stack_with_actual_heal_food_or_unsaved_tonic() -> void:
+	var rules := preload("res://scripts/world/death_satchel_rules.gd")
+	var record := preload("res://scripts/net/character_record_rules.gd")
+	for item: String in ["potion_small", "berries", "attack_tonic"]:
+		var player: RefCounted = DATA.new()._player()
+		player.set("character_id", "owner_a")
+		var inventory: RefCounted = player.get("inventory")
+		inventory.call("add", item, 2)
+		var party: RefCounted = player.get("party")
+		var creature: RefCounted = party.call("at", 0)
+		creature.set("hp", float(creature.get("max_hp")) - 10.0)
+		creature.set("nourishment", 10.0)
+		creature.set("happiness", 20.0)
+		var saved: Dictionary = player.call("save_data")
+		saved.redesign_character = preload("res://scripts/creatures/teaching.gd").character_loadout_mirror(saved.party, saved.redesign_character)
+		var before := record.portable_projection(saved)
+		before.redesign_character["tether_pouch"] = [item]
+		var original := before.duplicate(true)
+		var effect := {"kind": "item_throw", "character_id": "owner_a", "creature_uid": before.party[0].uid,
+			"generation": 1, "item_id": item, "count": 1, "action_id": "item-original-" + item}
+		var view := {"owner_admitted": true, "encounter_active": true,
+			"actor": {"character_id": "owner_a", "creature_uid": before.party[0].uid, "generation": 1,
+				"hp": before.party[0].hp, "max_hp": before.party[0].max_hp}}
+		var plan := COMMANDS.stage_item_use(before, effect, view)
+		assert_true(plan.ok, str(plan))
+		if not plan.ok: continue
+		assert_eq(before, original, "candidate does not mutate inventory or owned creature")
+		assert_true(plan.requires_owner_debit_ack)
+		assert_eq(plan.effect, effect, "retain the original command identity")
+		assert_eq(plan.state.party[1], before.party[1], "other owned creature unchanged")
+		assert_eq(plan.state.redesign_character, before.redesign_character)
+		assert_eq(rules.inventory_from(plan.state.inventory).count(item), 1)
+		assert_eq(rules.inventory_from(plan.state.inventory).count("tm_burrow_strike"), 1)
+		assert_eq(COMMANDS.stage_item_use(before, effect, view), plan, "retry stages the same candidate")
+		match item:
+			"potion_small":
+				assert_eq(plan.state.party[0].hp, before.party[0].max_hp, "ordinary heal caps at actual maximum")
+				assert_eq(plan.state.party[0].nourishment, 10.0)
+				assert_true(plan.buff.is_empty())
+			"berries":
+				assert_eq(plan.state.party[0].hp, before.party[0].hp)
+				assert_eq(plan.state.party[0].nourishment, 45.0)
+				assert_eq(plan.state.party[0].happiness, 28.0)
+			"attack_tonic":
+				assert_eq(plan.state.party, before.party, "temporary tonic never becomes a saved party field")
+				assert_eq(plan.buff, rules.db().definition(item).creature_buff)
+		for defect: String in ["foreign_owner", "foreign_uid", "generation", "stale_hp", "empty", "fainted", "extra"]:
+			var current := before.duplicate(true)
+			var forged := effect.duplicate(true)
+			var changed := view.duplicate(true)
+			match defect:
+				"foreign_owner": forged.character_id = "owner_b"
+				"foreign_uid": forged.creature_uid = current.party[1].uid
+				"generation": forged.generation = 2
+				"stale_hp": changed.actor.hp = float(current.party[0].hp) - 1.0
+				"empty": current.inventory = rules.slots(rules.inventory_from([]))
+				"fainted":
+					current.party[0].hp = 0.0
+					current.party[0].fainted = true
+					changed.actor.hp = 0.0
+				"extra": forged.heal = 9999
+			var frozen := current.duplicate(true)
+			assert_false(COMMANDS.stage_item_use(current, forged, changed).ok, item + ":" + defect)
+			assert_eq(current, frozen)
+		if item == "potion_small":
+			before.party[0].hp = before.party[0].max_hp
+			view.actor.hp = before.party[0].hp
+			assert_false(COMMANDS.stage_item_use(before, effect, view).ok, "full creature consumes no potion")
