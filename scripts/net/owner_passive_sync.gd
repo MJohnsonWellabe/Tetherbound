@@ -1605,21 +1605,8 @@ func _flush() -> void:
 	if local.inputs.is_empty():
 		if pending.is_empty() and local.admission_pending: _send_host({"op": "resume"})
 		return
-	# F01#6b: stop-and-wait. A window goes from the first unacknowledged input
-	# (always contiguous with the host's cursor: the host refuses a gap), then
-	# nothing more until it is acknowledged, or until acknowledgements stall
-	# (the host returns early on a "waits" input and needs that prefix again).
-	# Re-sending the whole window every flush cost the host ~126 ms per packet.
-	var now := Time.get_ticks_msec()
-	if not local.has("ack_progress_ms"): local.ack_progress_ms = now
-	var in_flight: bool = int(local.get("inflight_through", 0)) > int(local.acked)
-	if in_flight and now - int(local.ack_progress_ms) < int(RESEND_STALL_S * 1000.0): return
-	var batch: Array = local.inputs.slice(0, mini(MAX_BATCH, local.inputs.size())).duplicate(true)
-	# A window is in flight only once actually sent (a drop before the join
-	# snapshot would otherwise wait a whole stall).
-	if not _send_host({"op": "inputs", "inputs": batch}): return
-	local.ack_progress_ms = now
-	local.inflight_through = int(batch[-1].sequence)
+	# BISECT (diagnostic, #547 CI): main's every-flush resend, no stop-and-wait.
+	_send_host({"op": "inputs", "inputs": local.inputs.slice(0, mini(MAX_BATCH, local.inputs.size())).duplicate(true)})
 
 ## Diagnostic only, once per character and reason: a host checkpoint that
 ## silently waits leaves the fight's round reward held with no other trace.
@@ -1645,8 +1632,7 @@ func _note_ignored(reason: String) -> void:
 	print("[owner-passive] ignored " + reason)
 
 func tick(delta: float) -> void:
-	if owner() != null and owner().is_inside_tree() and not owner().get_tree().physics_frame.is_connected(_sample_poses):
-		owner().get_tree().physics_frame.connect(_sample_poses)
+	# BISECT (diagnostic, #547 CI): pose ring sampling off.
 	_left -= delta
 	if _left > 0.0: return
 	_left = 0.25
