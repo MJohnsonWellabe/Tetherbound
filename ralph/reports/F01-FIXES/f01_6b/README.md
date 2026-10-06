@@ -43,3 +43,31 @@ Both reproof symptoms reproduce, and they vary from run to run.
 - F27 `actor_vitals`: pending vitals that outlive a round.
 
 The `combat_round_reward` owner action follows once Lane A has settled the checkpoint path.
+
+## Tournament seat fix (lane A, 2026-10-06, after #547)
+
+**Problem.** In `smoke_net_shared_boss --tournament`, a striker's blow landed on nothing. The leg seated the striker a fixed 1.4 m from the encounter record's `opponent_pos`. That is inside a 0.57–0.67 m opponent plus a 1.46 m striker, so physics pushed the striker out. Also, the record's position lags a trainer creature that keeps moving. One host receipt measured the opponent 9.29 m from the host's resolved origin against a 9.0 m reach.
+
+**Fix (smoke and probe only, no product change).**
+- The `encounter` probe (`tools/net/peer_runner.gd`) now reports `presentation_radius` (the opponent body) and `ally_radius` (this peer's creature).
+- The leg seats on the host's live opponent body (`presentation_centre`), at opponent radius + striker radius + 0.35 m (`SEAT_MARGIN`), at floor height, facing it. With no radii it falls back to the old 1.4 m.
+- The host-receipt line now prints the keys `combat_math.move_connects` reads (`range`, `cone_degrees`). Before, it printed `reach=-1`, which was a display key mismatch, not a missing reach.
+
+**Measured** (local, each run alone; `[tournament seat]` lines in the run output):
+
+| Run | Round | Peer | Opponent r | Striker r | Seat | Attempts to land |
+|---|---|---|---|---|---|---|
+| t6b2 | quarter (Mira) | host | 0.67 | 1.46 | 2.48 m | 3 |
+| t6b2 | quarter (Mira) | guest | 0.67 | 1.46 | 2.48 m | 1 |
+| t6b2 | semi (Tam) | host | 0.57 | 1.46 | 2.38 m | 2 |
+| t6b2 | semi (Tam) | guest | 0.57 | 1.46 | 2.38 m | 1 |
+| t6b3 | quarter (Mira) | host | 0.67 | 1.46 | 2.48 m | 1 |
+| t6b3 | quarter (Mira) | guest | 0.67 | 1.46 | 2.48 m | 2 |
+| t6b3 | semi (Tam) | host | 0.57 | 1.46 | 2.38 m | 1 |
+| t6b3 | semi (Tam) | guest | 0.57 | 1.46 | 2.38 m | 2 |
+
+Example seat (t6b3, semi, host): live opponent (-0.91, 7.76), creature placed at (2.80, 0.90, 7.76). The opponent moves 1–5 m between attempts (live against record, for example (-1.12, 3.77) against (-2.81, 2.40)), which is why the leg reads the live body.
+
+Before the fix (t6b1, record position), the host's semifinal blow missed all six attempts: opponent 9.29 m from the origin, 9.0 m reach.
+
+**Still open.** In both runs the quarterfinal completes with rewards for both characters. In the semifinal both blows land, but `win_trainer_battle` reaches the coordinator deadline (5400 frames) with no verdict. This is the known stalled round (pending vitals outliving a round), which waits on Codex R1's pending_vitals round fencing. F01#6b stays open until that lands and the final runs.

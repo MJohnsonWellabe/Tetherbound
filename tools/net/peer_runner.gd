@@ -7035,6 +7035,8 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				# two coordinator polls.
 				"refusals": _encounter_refusal_history(emanager),
 				"joinable": joinable,
+				"ally_radius": float((mine_body as Node).call("body_radius")) if is_instance_valid(mine_body) and mine_body is Node \
+					and (mine_body as Node).has_method("body_radius") else 0.0,
 			}
 			# Shared wild fights must expose the actual opponent presentation body,
 			# separately from the authoritative encounter record. This lets the
@@ -7053,6 +7055,9 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				out["presentation_pos"] = [enemy_node.global_position.x, enemy_node.global_position.y, enemy_node.global_position.z]
 				out["presentation_centre"] = [enemy_centre.x, enemy_centre.y, enemy_centre.z]
 				out["presentation_engaged"] = bool(enemy_node.get("engaged"))
+				# F01#6b: body radii, so a smoke can seat a striker just outside
+				# the opponent instead of inside it.
+				out["presentation_radius"] = float(enemy_node.call("body_radius")) if enemy_node.has_method("body_radius") else 0.0
 				if enemy_script != null \
 						and str(enemy_script.resource_path) == "res://scripts/creatures/shared_opponent_proxy.gd":
 					out["presentation_body_generation"] = int(enemy_node.get("body_generation"))
