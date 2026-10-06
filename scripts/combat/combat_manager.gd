@@ -474,7 +474,7 @@ func apply_tether_command_verdict(verdict: Dictionary) -> void:
 	if verdict.get("encounter_id") != _encounter_id: return
 	var deployment: Dictionary = _encounter_link.call("tether_command_deployment") if is_instance_valid(_encounter_link) else {}
 	var effect: Dictionary = verdict.get("delta", {}).get("effect", {})
-	var tag := verdict.get("ok") == true and effect.get("kind") == "tag_combo"
+	var tag: bool = verdict.get("ok") == true and effect.get("kind") == "tag_combo"
 	if not tag and verdict.has("command_generation") and int(verdict.command_generation) != int(deployment.get("generation", 0)): return
 	if verdict.get("pending") == true: return
 	if verdict.get("ok") != true:
