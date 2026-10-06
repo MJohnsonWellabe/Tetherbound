@@ -1,0 +1,16 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_f30_traits.gd::test_ordinary_host_publication_retains_packet_and_catch_copies_it,test_water_capture_codec.gd: 2 of 824 test files
+  FAIL  test_f30_traits.gd :: test_ordinary_host_publication_retains_packet_and_catch_copies_it
+          expected { "traits_initialized": true, "rolled_traits": [], "taught_traits": {  }, "captured_from": { "kind": "wild", "world_namespace": "traits-world", "spawn_id": "1:1", "spawn_generation": 7 } }, got { "captured_from": { "kind": "wild", "spawn_generation": 7.0, "spawn_id": "1:1", "world_namespace": "traits-world" }, "rolled_traits": [], "taught_traits": {  }, "traits_initialized": true }
+  ok    test_water_capture_codec.gd :: test_actual_alpha_trait_packet_decodes_with_modern_loadout_without_mutating_source
+  ok    test_water_capture_codec.gd :: test_aquaryn_json_round_trip_matches_every_canonical_saved_field
+  ok    test_water_capture_codec.gd :: test_complete_legacy_capture_shape_remains_valid_without_loadout_adoption
+  ok    test_water_capture_codec.gd :: test_malformed_records_refuse_without_repair_or_species_invention
+  ok    test_water_capture_codec.gd :: test_new_capture_loadout_is_complete_and_semantically_valid_or_refused
+  ok    test_water_capture_codec.gd :: test_portable_projection_cards_decode_and_decode_owned_without_energy
+  ok    test_water_capture_codec.gd :: test_repeat_decode_does_not_add_to_any_gameplay_party
+
+8 tests, 210 assertions, 1 failed
+
+  test_f30_traits.gd :: test_ordinary_host_publication_retains_packet_and_catch_copies_it — expected { "traits_initialized": true, "rolled_traits": [], "taught_traits": {  }, "captured_from": { "kind": "wild", "world_namespace": "traits-world", "spawn_id": "1:1", "spawn_generation": 7 } }, got { "captured_from": { "kind": "wild", "spawn_generation": 7.0, "spawn_id": "1:1", "world_namespace": "traits-world" }, "rolled_traits": [], "taught_traits": {  }, "traits_initialized": true }

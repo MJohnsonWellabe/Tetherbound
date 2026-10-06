@@ -1,0 +1,9 @@
+SCRIPT ERROR: Invalid access to property or key 'rolled_traits' on a base object of type 'Dictionary'.
+   at: test_ordinary_host_publication_retains_packet_and_catch_copies_it (res://tests/test_f30_traits.gd:65)
+   GDScript backtrace (most recent call first):
+       [0] test_ordinary_host_publication_retains_packet_and_catch_copies_it (res://tests/test_f30_traits.gd:65)
+       [1] _init (res://tests/run_tests.gd:120)
+WARNING: 20 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2535)
+ERROR: 3 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

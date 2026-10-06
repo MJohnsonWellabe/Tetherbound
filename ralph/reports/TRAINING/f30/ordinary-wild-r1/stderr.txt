@@ -1,0 +1,9 @@
+SCRIPT ERROR: Invalid access to property or key 'root' on a base object of type 'null instance'.
+   at: test_ordinary_host_publication_retains_packet_and_catch_copies_it (res://tests/test_f30_traits.gd:43)
+   GDScript backtrace (most recent call first):
+       [0] test_ordinary_host_publication_retains_packet_and_catch_copies_it (res://tests/test_f30_traits.gd:43)
+       [1] _init (res://tests/run_tests.gd:120)
+WARNING: 13 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2535)
+ERROR: 2 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
