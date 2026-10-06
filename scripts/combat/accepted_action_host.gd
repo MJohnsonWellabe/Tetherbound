@@ -108,6 +108,89 @@ func authorize_move_start(intent: Dictionary, peer: int, owned: Dictionary,
 	return super.authorize_move_start(intent, peer, owned, binding, move, wind_profile, now_ms)
 
 
+## The director supplies the admitted owner's next healthy creature and both
+## host-frozen quick profiles. A request carries only the existing command ID.
+## Retain its parent here before presentation; spend and body mutation belong
+## to the synchronous arrival commit, never to preparation or a guest packet.
+func prepare_tether_tag_command(request: Dictionary, peer: int, binding: Dictionary,
+		view: Dictionary, frozen_moves: Array, now_ms: int) -> Dictionary:
+	var commands := preload("res://scripts/combat/tether_commands.gd")
+	if not commands.enabled() or not commands.valid_intent(request) or request.command_id != "tag_combo":
+		return {"ok":false, "code":"invalid_request"}
+	var id: String = request.encounter_id
+	var participant: Dictionary = encounters.get(id, {}).get("participants", {}).get(peer, {})
+	if not _tracking_enabled_for(id) or encounters.get(id, {}).get("phase") != "active" \
+		or not _binding_current(id, peer, binding) or binding.get("deployment_generation") != request.generation \
+		or participant.get("character_id") != view.get("actor", {}).get("character_id") \
+		or binding.get("creature_uid") != view.get("actor", {}).get("creature_uid") \
+		or view.get("actor", {}).get("generation") != request.generation \
+		or not participant.get("tether_commands") is Dictionary or frozen_moves.size() != 2 \
+		or not pending_tether_items(id).is_empty() or move_action_publication_pending(id):
+		return {"ok":false, "code":"stale_actor"}
+	var parent := "command:%s:%s:%d:%d" % [id, participant.character_id, int(request.generation), int(request.sequence)]
+	var actions := _actions(id, peer)
+	var existing: Dictionary = actions.get(parent, {})
+	if not existing.is_empty():
+		return {"ok":true, "duplicate":true, "original":existing.admission.duplicate(true)} \
+			if existing.get("phase") == "admitted" and existing.admission.get("request") == request \
+			and existing.admission.get("binding") == binding else {"ok":false, "code":"replayed"}
+	for retained: Dictionary in actions.values():
+		if retained.get("admission", {}).get("kind") == "tag_combo" and retained.get("phase") == "admitted":
+			return {"ok":false, "code":"pending_action"}
+	var limit := int(MATH.config().get("utility_limits", {}).get("receipt_limit_per_encounter", 0))
+	if limit < 1 or actions.size() >= limit: return {"ok":false, "code":"receipt_budget"}
+	var host := view.duplicate(true)
+	host.merge({"peer_id":peer, "owner_admitted":true, "encounter_active":true, "unlocked_commands":["tag_combo"],
+		"accepted_receipt":{"action_id":parent, "character_id":participant.character_id, "encounter_id":id,
+			"attacker_uid":binding.creature_uid, "generation":request.generation, "sequence":request.sequence,
+			"command_id":"tag_combo", "command_committed":false}}, true)
+	var plan: Dictionary = commands.stage_command(participant.tether_commands, request, host, now_ms)
+	if plan.get("ok") != true: return plan
+	# Validate both frozen profiles/attributions now, without accepting their
+	# predicted damage as a live debit or changing either creature's resources.
+	var joint: Dictionary = commands.stage_joint_attack(plan.effect, frozen_moves, host, MATH.config())
+	if joint.get("ok") != true: return joint
+	var admission := {"kind":"tag_combo", "encounter_id":id, "peer_id":peer,
+		"action":-int(request.sequence), "action_id":parent, "request":request, "binding":binding,
+		"target_uid":plan.effect.target_uid, "target_generation":plan.effect.target_generation,
+		"incoming":host.incoming, "moves":frozen_moves, "plan":plan,
+		"command_before":participant.tether_commands, "accepted_at_ms":now_ms}
+	if not _strike_state_for(id).has(peer): _strike_authority[id][peer] = {}
+	_strike_authority[id][peer]["accepted_actions"] = actions
+	actions[parent] = {"phase":"admitted", "admission":_original(admission)}
+	return {"ok":true, "duplicate":false, "original":admission.duplicate(true)}
+
+
+## One parent enters resolution once. Recompute arrival geometry from the
+## host's current bodies; keep both accepted move profiles and child IDs.
+func begin_tether_tag_resolution(id: String, peer: int, parent: String,
+		binding: Dictionary, view: Dictionary) -> Dictionary:
+	var entry: Dictionary = _actions(id, peer).get(parent, {})
+	if entry.get("phase") != "admitted" or entry.get("admission", {}).get("kind") != "tag_combo" \
+		or move_action_publication_pending(id): return {"ok":false, "code":"not_arrivable"}
+	var original: Dictionary = entry.admission
+	var rec: Dictionary = encounters.get(id, {})
+	var participant: Dictionary = rec.get("participants", {}).get(peer, {})
+	var target: Dictionary = view.get("target", {})
+	if rec.get("phase") != "active" or binding != original.binding or not _binding_current(id, peer, binding) \
+		or participant.get("tether_commands") != original.command_before \
+		or view.get("incoming_is_next_owned") != true or view.get("incoming") != original.incoming \
+		or target.get("uid") != original.target_uid or target.get("generation") != original.target_generation \
+		or target.get("uid") != rec.get("opponent", {}).get("card", {}).get("uid") \
+		or target.get("generation") != rec.get("opponent", {}).get("body_generation") \
+		or target.get("hp") != rec.get("opponent", {}).get("hp"):
+		entry["phase"] = "cancelled"
+		return {"ok":false, "code":"stale_arrival"}
+	var joint: Dictionary = preload("res://scripts/combat/tether_commands.gd").stage_joint_attack(
+		original.plan.effect, original.moves, view, MATH.config())
+	if joint.get("ok") != true:
+		entry["phase"] = "cancelled"
+		return joint
+	entry["arrival"] = _original(joint)
+	entry["phase"] = "resolving"
+	return {"ok":true, "action_id":parent, "original":original.duplicate(true), "joint":joint}
+
+
 ## Called immediately before the existing host damage writer, from actual
 ## arrival state. A duplicate callback cannot invoke that writer twice.
 func begin_move_action_resolution(id: String, peer: int, action: int,

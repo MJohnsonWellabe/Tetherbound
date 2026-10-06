@@ -332,6 +332,70 @@ func test_every_joint_damage_event_is_attributed_to_one_of_the_two_owned_creatur
 	assert_false(COMMANDS.stage_joint_attack(effect, moves, view, preload("res://scripts/combat/combat_math.gd").config()).ok)
 
 
+func test_tag_parent_retains_two_frozen_quicks_and_rejects_stale_or_duplicate_arrival() -> void:
+	# Reuse the existing tracked-host fixture. Meter/combo/positions are explicit
+	# unit setup; this does not claim a mounted switch, transport or native hit.
+	for defect: String in ["none", "partner", "target", "body", "revision"]:
+		var fixture: Dictionary = preload("res://tests/test_f22_action_publication.gd").new()._fixture()
+		var tracked: RefCounted = fixture.host
+		var tag_id := str(fixture.id)
+		var participant: Dictionary = tracked.encounters[tag_id].participants[1]
+		participant["tether_commands"] = COMMANDS.admission("character-a", tag_id, 0)
+		participant.tether_commands.meter = 40.0
+		participant.tether_commands.combo = {"source_uid":"owned-a", "source_generation":1,
+			"target_uid":"wild-a", "target_generation":1, "action_id":"prior-landed-hit", "until_ms":11000}
+		var actors: Array = []
+		var frozen_moves: Array = []
+		for index: int in 2:
+			var uid := "owned-a" if index == 0 else "owned-b"
+			var actor := {"character_id":"character-a", "encounter_id":tag_id, "creature_uid":uid,
+				"generation":index + 1, "action":index + 1, "hp":100.0, "attack":20.0,
+				"position":Vector3.ZERO, "facing":Vector3.RIGHT, "bonus_product":1.0}
+			actors.append(actor)
+			var frozen := MASTERY.freeze_action(MASTERY.owned_record(_owned(uid)), "quick", actor, [], MOVES.load_default())
+			assert_true(frozen.ok, str(frozen))
+			if not frozen.ok: return
+			frozen_moves.append(MANAGER.host_move_profile(MOVES.load_default(), "player_quick", "pebble_toss", 0.5, 0.5, 1.0, 0.0, frozen.move))
+		var view := {"actor":actors[0], "incoming":actors[1], "actors":actors, "rolls":[0.5,0.5],
+			"target":{"uid":"wild-a", "generation":1, "hp":30.0, "hostile":true,
+				"position":Vector3(2,0,0), "defence":10.0, "type":"Water", "secondary_type":""},
+			"switch_allowed":true, "incoming_is_next_owned":true, "combo_geometry_connected":true}
+		var request := COMMANDS.intent(tag_id, 1, 1, "tag_combo")
+		var before: Dictionary = participant.tether_commands.duplicate(true)
+		var prepared: Dictionary = tracked.prepare_tether_tag_command(request, 1, fixture.binding, view, frozen_moves, 10001)
+		assert_true(prepared.ok, str(prepared))
+		if not prepared.ok: return
+		var parent := str(prepared.original.action_id)
+		assert_eq(participant.tether_commands, before, "preparation never spends meter or switches")
+		assert_eq(float(tracked.record(tag_id).opponent.hp), 30.0, "no HP before arrival")
+		assert_eq(participant.creature_uid, "owned-a")
+		var repeated: Dictionary = tracked.prepare_tether_tag_command(request, 1, fixture.binding, view, frozen_moves, 10002)
+		assert_true(repeated.ok and repeated.duplicate)
+		assert_eq(repeated.original, prepared.original, "same exact parent and two accepted profiles")
+		assert_false(tracked.prepare_tether_tag_command(COMMANDS.intent(tag_id, 1, 2, "tag_combo"),
+			1, fixture.binding, view, frozen_moves, 10003).ok, "another request cannot substitute the retained parent")
+		prepared.original.moves[0].power = 99999.0
+		assert_ne(tracked.move_action_original(tag_id, 1, parent).admission.moves[0].power, 99999.0,
+			"the caller cannot mutate the retained original")
+		match defect:
+			"partner": view.incoming.creature_uid = "foreign-creature"
+			"target": view.target.generation = 2
+			"body": assert_true(tracked.bind_actor_body(tag_id, 1, "character-a", fixture.owned, 202).ok)
+			"revision": participant.tether_commands.revision += 1
+		var actual_before: Dictionary = participant.tether_commands.duplicate(true)
+		var arrival: Dictionary = tracked.begin_tether_tag_resolution(tag_id, 1, parent, fixture.binding, view)
+		assert_eq(arrival.get("ok"), defect == "none", defect + ":" + str(arrival))
+		if defect == "none":
+			assert_eq(arrival.joint.strikes.size(), 2)
+			assert_eq(arrival.joint.strikes[0].attacker_uid, "owned-a")
+			assert_eq(arrival.joint.strikes[1].attacker_uid, "owned-b")
+			assert_true(tracked.move_action_publication_pending(tag_id))
+		assert_false(tracked.begin_tether_tag_resolution(tag_id, 1, parent, fixture.binding, view).ok,
+			"duplicate or cancelled arrival never enters the writer")
+		assert_eq(float(tracked.record(tag_id).opponent.hp), 30.0)
+		assert_eq(participant.tether_commands, actual_before, "arrival validation itself never spends")
+
+
 func test_pouch_assignment_uses_original_character_journal_and_owner_save_without_moving_stacks() -> void:
 	var actions := preload("res://scripts/net/foundation_actions.gd")
 	var record := preload("res://scripts/net/character_record_rules.gd")
