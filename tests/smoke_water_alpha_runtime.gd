@@ -71,7 +71,7 @@ func _run() -> void:
 	# Drive normal quick-attack input and face the live target. No damage/HP
 	# injection: the manager windup, host geometry and damage roll must execute.
 	var deadline_fight := Time.get_ticks_msec() + 90000
-	var tick := 0
+	var quick_pressed := false
 	while manager.is_fighting() and Time.get_ticks_msec() < deadline_fight:
 		var deployed: Node3D = director.get("_ally_body")
 		var in_reach := false
@@ -94,11 +94,15 @@ func _run() -> void:
 				"move_back":stick.z, "move_forward":-stick.z}[axis])
 			if strength > 0.001: Input.action_press(axis, strength)
 			else: Input.action_release(axis)
-		if tick % 24 == 0 and in_reach:
-			Input.action_press("combat_quick")
-		elif tick % 24 == 2:
+		# Use the same readiness readout as the HUD: fixed frame cadence can
+		# land its next edge during recovery and then leave a ready creature
+		# idle. Keep every attack a one-frame tap through ordinary input.
+		if quick_pressed:
 			Input.action_release("combat_quick")
-		tick += 1
+			quick_pressed = false
+		elif in_reach and manager.quick_ready():
+			Input.action_press("combat_quick")
+			quick_pressed = true
 		await physics_frame
 	Input.action_release("combat_quick")
 	for axis: String in ["move_right", "move_left", "move_back", "move_forward"]:
