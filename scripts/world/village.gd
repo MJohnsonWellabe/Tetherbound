@@ -20,6 +20,7 @@ const INN_EXTERIOR_IDENTITY := preload("res://scripts/world/inn_exterior_identit
 const MILL_POND_IDENTITY := preload("res://scripts/world/mill_pond_identity.gd")
 const VILLAGE_WELL_PRESENTATION := preload("res://scripts/world/village_well_presentation.gd")
 const CROSSING_HALL := preload("res://scripts/world/crossing_hall.gd")
+const DOOR_LANTERN := preload("res://scripts/world/door_lantern.gd")
 const CATALOG_PRESENTATION := preload("res://scripts/world/meadows_catalog_presentation.gd")
 ## Read for its group and meta names only -- see `_declare_ground`.
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
@@ -31,6 +32,8 @@ const PERF_CONFIG := preload("res://scripts/world/performance_config.gd")
 ## same measurement -- see `_ground_clear_radius`.
 const CLEAR_MARGIN := 0.7
 const CONFIG_PATH := "res://data/config/village.json"
+## The parsed village.json, for per-prefab presentation settings.
+var _config: Dictionary = {}
 @export var config_path := CONFIG_PATH
 
 var _prefabs: RefCounted = null
@@ -57,6 +60,7 @@ func build(slicer: RefCounted = null) -> void:
 		push_error("village.json is not valid JSON")
 		return
 
+	_config = parsed as Dictionary
 	_prefabs = PREFABS.new()
 	if not _prefabs.call("load_recipes"):
 		return
@@ -264,6 +268,16 @@ func _exterior_identity(building: Node3D, prefab_name: String) -> void:
 		identity = MILL_POND_IDENTITY.new()
 	elif prefab_name == "well":
 		identity = VILLAGE_WELL_PRESENTATION.new()
+	elif prefab_name == "doorstep":
+		# F17#6 r5: a night lantern at each road-house threshold.
+		var lantern_cfg: Variant = _config.get("door_lanterns", {})
+		if not lantern_cfg is Dictionary or not bool((lantern_cfg as Dictionary).get("enabled", false)):
+			return
+		identity = DOOR_LANTERN.new()
+		identity.name = "DoorLantern"
+		building.add_child(identity)
+		identity.call("build", lantern_cfg)
+		return
 	elif prefab_name == "crossing_hall_shell":
 		identity = CROSSING_HALL.new()
 		building.add_child(identity)

@@ -192,6 +192,12 @@
     "flame_radius_m": 0.08,
     "flame_energy": 2.4
   },
+  "labels": {
+    "_why": "F17#6 r5 judge: pedestal names cut into their 1.44 m stands and every arch label in the nave showed at once, overlapping each other and the HUD. Pedestal names float above the stand; signs fade beyond these distances (metres; 0 = always). TUNABLE.",
+    "pedestal_height_m": 1.72,
+    "pedestal_visible_m": 8.0,
+    "arch_visible_m": 14.0
+  },
   "refresh_seconds": 0.2,
   "pedestal_collider": {
     "_provenance": "Installed BookStand.gltf POSITION accessor bounds: X[-0.25348,0.25363],Y[-0.00250,1.44429],Z[-0.25552,0.25567]; native metres, no model scale change.",

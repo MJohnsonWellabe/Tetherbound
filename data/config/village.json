@@ -316,6 +316,16 @@
     ],
     "lantern": {"at": [-1.9, -1.95], "yaw_deg": 0.0, "post_height_m": 1.1, "energy": 1.3, "range_m": 4.5}
   },
+  "door_lanterns": {
+    "_why": "F17#6 r5 code-blind judge: at night the main street had no lit lanterns leading to the Crossing Hall. Each road-house doorstep carries one installed Lantern_Wall on a short post at its road-side corner (doorstep-local x/z; +z faces the road). Light and flame burn only while WorldLook is dark (scripts/world/door_lantern.gd). No shadows. Visual only. TUNABLE.",
+    "enabled": true,
+    "at": [2.3, 0.8],
+    "post_height_m": 1.6,
+    "energy": 3.2,
+    "range_m": 7.0,
+    "flame_radius_m": 0.1,
+    "colour": "#ffc778"
+  },
   "road_plan": {
     "home_centre": [
       2,
