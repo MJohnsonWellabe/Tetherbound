@@ -247,6 +247,21 @@ func admitted(peer: int, summary: Dictionary) -> void:
 		return
 	var adopt := not E._equivalent(REPLAY._core(before), REPLAY._core(declared))
 	var rejoin_code := str((session.get("last_rejoin_admission") as Dictionary).get(character, "")) if "last_rejoin_admission" in session else ""
+	if adopt and rejoin_code == "host_duties_unsettled" and session.has_method("rejoin_admission_for"):
+		# The hello kept the held record while a host transaction for this
+		# character was open. Park until it settles, then decide again (review M1).
+		if not _duties_settled(character):
+			deferred[character] = {"peer": peer, "summary": summary.duplicate(true)}
+			print("[owner-passive] admission of %s waits for its open host transaction" % character.left(18))
+			return
+		var again: Dictionary = session.call("rejoin_admission_for", character, declared, summary)
+		print("[owner-passive] rejoin of %s decided again after its host transaction settled: %s" % [character.left(18), str(again.get("code", ""))])
+		if again.get("code") == "readmitted_portable":
+			authority.call("seed_personal_flags", character, summary.get("personal_flags", {"flags": []}))
+		session.call("credit_rejoin_gathers", character, again.get("applied", []))
+		if again.get("code") != "host_duties_unsettled":
+			admitted(peer, summary)
+			return
 	if adopt and rejoin_code != "held_wins":
 		# Never adopt over a declaration that was not found behind (e.g. an open
 		# host transaction kept the held record): refuse, as before the ruling.
@@ -281,6 +296,14 @@ func peer_departed(peer: int) -> void:
 
 
 ## Host: re-run a rejoin admission parked behind in-flight vitals.
+## No open host transaction and no unsettled typed row for this character.
+func _duties_settled(character: String) -> bool:
+	var authority: RefCounted = owner().get("_character_authority")
+	return authority.call("owes_unsettled", character) != true \
+		and authority.call("host_rows_unsettled", character, _game().get("world").reward_deliveries) != true \
+		and (authority.call("pending_creature_vitals", character) as Dictionary).is_empty()
+
+
 func retry_deferred(character: String) -> void:
 	var parked: Dictionary = deferred.get(character, {})
 	if parked.is_empty(): return
@@ -400,9 +423,7 @@ func receive_host(peer: int, packet: Dictionary) -> void:
 		if refused.get(character, {}).get("id") == packet.get("stream_id"): _send_refusal(peer, character)
 		# A parked rejoin admission re-checks on the owner's own traffic once its
 		# in-flight vitals are settled (backstop for a lost ACK-side retry).
-		if deferred.get(character, {}).get("peer") == peer:
-			var authority: RefCounted = owner().get("_character_authority")
-			if (authority.call("pending_creature_vitals", character) as Dictionary).is_empty(): retry_deferred(character)
+		if deferred.get(character, {}).get("peer") == peer and _duties_settled(character): retry_deferred(character)
 		return
 	var stream: Dictionary = hosts[character]
 	if stream.get("departed") == true:
@@ -1287,7 +1308,10 @@ func _readmit_owner(packet: Dictionary) -> void:
 	var members: Dictionary = {}
 	for member: RefCounted in game.get("party").call("members"): members[str(member.get("uid"))] = member
 	for card: Dictionary in baseline.party:
-		if members.get(str(card.get("uid", ""))) == null: return
+		if members.get(str(card.get("uid", ""))) == null:
+			_owner_undo(undo)
+			_note_ignored("readmit naming a creature this owner does not hold")
+			return
 	if adopt:
 		local.discovered = (held as Dictionary).duplicate(true) # The host's held set wins; maps untouched.
 	for card: Dictionary in baseline.party:
@@ -1295,6 +1319,7 @@ func _readmit_owner(packet: Dictionary) -> void:
 		for field: String in REPLAY.PASSIVE_FIELDS:
 			if card.has(field) and field in member: member.set(field, card[field])
 	if not E._equivalent(_projection(), baseline):
+		_owner_undo(undo) # never left adopted, unsaved and unsettled (review L4)
 		local.admission_refused = "owner_passive_readmit_mismatch"
 		local.error = local.admission_refused
 		push_warning("owner passive readmit did not reproduce the host's baseline")

@@ -313,12 +313,16 @@ func _absorbed(character: String) -> Dictionary:
 
 ## First admission: every payout this world already accepted for the character
 ## is in the satchel it declared (accepted only after the owner saved it).
-func seed_absorbed_deliveries(character: String, deliveries: Dictionary) -> void:
+func seed_absorbed_deliveries(character: String, deliveries: Dictionary, declared_owed: Array = []) -> void:
 	if not _records.has(character): return
+	var owed := {}
+	for id: Variant in declared_owed: owed[str(id)] = true
 	var absorbed := {}
 	for id: Variant in deliveries:
 		var row: Variant = deliveries[id]
-		if owner_applied_row(row, character) and row.get("status") == "accepted": absorbed[str(id)] = true
+		# One the owner still owes itself (a full bag, grant_due) settles and
+		# replays later: not in the satchel it declared (review H2).
+		if owner_applied_row(row, character) and row.get("status") == "accepted" and not owed.has(str(id)): absorbed[str(id)] = true
 	_records[character].absorbed_deliveries = absorbed
 
 
@@ -346,17 +350,20 @@ func restore_record(character: String, snapshot: Dictionary) -> void:
 
 
 func rejoin_admission(character: String, declared: Dictionary, deliveries: Dictionary, declared_flags: Array = [],
-		declared_settled: Array = []) -> Dictionary:
+		declared_settled: Array = [], declared_owed: Array = []) -> Dictionary:
 	if not _records.has(character): return {"ok": false, "code": "not_admitted"}
 	var core := preload("res://scripts/net/owner_passive_replay.gd")
 	if ESSENCE._equivalent(core._core(state(character)), core._core(declared)): return {"ok": true, "code": "held"}
-	var behind := declaration_behind(character, declared, declared_flags, declared_settled, deliveries)
+	# An open host transaction for this character (a training, vitals, portal
+	# or Altar row the owner has not yet ACKed) means the declaration may only
+	# be mid-transaction, never behind: nothing is adopted or folded either way
+	# until it settles (review H1). The stream is refused as before the ruling.
+	if owes_unsettled(character) or host_rows_unsettled(character, deliveries): return {"ok": false, "code": "host_duties_unsettled"}
+	var behind := declaration_behind(character, declared, declared_flags, declared_settled, deliveries, declared_owed)
 	if behind.is_empty():
 		# Owner ruling 2026-10-05, "guest wins unless behind": the declaration
 		# holds everything this world recorded for it, so it is the newer truth
 		# (guest-side grants the held record never carried: rejoin_audit.md).
-		# Never swapped under an open host transaction for this character.
-		if owes_unsettled(character): return {"ok": false, "code": "host_duties_unsettled"}
 		_replace_record(character, revision(character) + 1, declared.duplicate(true))
 		_records[character].state["vitals_escrow"] = declared.get("vitals_escrow", {}).duplicate(true)
 		# The admission flags travel with that record: the session's next
@@ -365,11 +372,15 @@ func rejoin_admission(character: String, declared: Dictionary, deliveries: Dicti
 		_records[character].erase("unconfirmed_folds")
 		# Every payout the owner settled is in this record now; newly absorbed
 		# gather batches are credited by the session (mark_gather_replayed).
-		var before_absorbed := _absorbed(character).duplicate()
-		var absorbed := before_absorbed.duplicate()
+		# Only SETTLED payouts are in the satchel; one owed to a full bag
+		# (grant_due) is settled and replayed later, so it is not absorbed now
+		# (review H2).
+		var settled_set := {}
+		for id: Variant in declared_settled: settled_set[str(id)] = true
+		var absorbed := _absorbed(character).duplicate()
 		var newly: Array[String] = []
 		for id: Variant in deliveries:
-			if owner_applied_row(deliveries[id], character) and declared_settled.has(str(id)) and not absorbed.has(str(id)):
+			if owner_applied_row(deliveries[id], character) and settled_set.has(str(id)) and not absorbed.has(str(id)):
 				absorbed[str(id)] = true
 				newly.append(str(id))
 		_records[character].absorbed_deliveries = absorbed
@@ -405,6 +416,15 @@ func rejoin_admission(character: String, declared: Dictionary, deliveries: Dicti
 	return {"ok": true, "code": "held_wins", "applied": applied, "detail": behind}
 
 
+## A typed host row for this character still waiting on the owner's ACK.
+static func host_rows_unsettled(character: String, deliveries: Dictionary) -> bool:
+	for id: Variant in deliveries:
+		var row: Variant = deliveries[id]
+		if row is Dictionary and row.get("character_id") == character and row.get("status") == "pending" \
+			and str(row.get("kind", "")) in ["creature_training", "altar_building", "actor_vitals", "portal_unlock"]: return true
+	return false
+
+
 ## True while a host-side transaction for this character is still open.
 func owes_unsettled(character: String) -> bool:
 	return _portal_stages.has(character) or _loadout_pending.has(character) or _vitals_pending.has(character) \
@@ -419,11 +439,20 @@ func owes_unsettled(character: String) -> bool:
 ## Windowed transaction receipts count as present when the declaration's
 ## window shows it compacted them (receipt_windows: oldest first). Returns
 ## what is missing, or "".
-func declaration_behind(character: String, declared: Dictionary, declared_flags: Array, declared_settled: Array, deliveries: Dictionary) -> String:
+func declaration_behind(character: String, declared: Dictionary, declared_flags: Array, declared_settled: Array, deliveries: Dictionary,
+		declared_owed: Array = []) -> String:
+	var flags_present := {}
+	for flag: Variant in declared_flags: flags_present[str(flag)] = true
 	for flag: Variant in personal_flags(character):
-		if personal_flags(character)[flag] == true and not declared_flags.has(flag): return "personal_flag " + str(flag)
+		if personal_flags(character)[flag] == true and not flags_present.has(str(flag)): return "personal_flag " + str(flag)
+	# A payout is present if the owner holds it settled or owed (grant_due).
 	var settled := {}
 	for id: Variant in declared_settled: settled[str(id)] = true
+	for id: Variant in declared_owed: settled[str(id)] = true
+	# A folded row the owner has not confirmed settling stays required even
+	# once its world row is pruned (review M2).
+	for id: Variant in _records[character].get("unconfirmed_folds", {}):
+		if not settled.has(str(id)): return "payout " + str(id).left(24)
 	# Only rows the world still holds: a pruned row's escrow is pruned on the
 	# owner too (gather_batches guest_prunable), so its id is gone from both.
 	for id: Variant in _absorbed(character):
@@ -458,7 +487,7 @@ func declaration_behind(character: String, declared: Dictionary, declared_flags:
 		var window := 0
 		if receipt.begins_with(f32_prefix):
 			same_kind = func(r: Variant) -> bool: return str(r).begins_with(f32_prefix)
-			window = f32_window - 1 if f32_window >= 2 else 0
+			window = f32_window # compact_f32_receipts keeps window-1, then appends one (review L3)
 		else:
 			for kind: String in kinds:
 				if windows.window(kind) > 0 and windows.is_kind(receipt, kind, character):

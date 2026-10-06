@@ -249,3 +249,70 @@ func test_home_key_rows_are_never_credited_by_a_fold() -> void:
 	authority.call("restore_record", character, snapshot)
 	assert_false((authority.get("_vitals_pending") as Dictionary).has(character), "a refused hello restores the maps")
 	assert_eq(int(authority.call("revision", character)), 0, "and the exact held record")
+
+
+func test_an_open_host_row_is_never_read_as_behind() -> void:
+	# Review H1: a wild win's training row staged the receipt into the held
+	# record; the owner left before its ACK. Its declaration lacks the receipt
+	# only because it is mid-transaction: nothing is adopted or folded.
+	var record := _record()
+	var deliveries := {}
+	var authority := _authority(record, deliveries)
+	var character: String = record.character_id
+	var held: Dictionary = authority.call("state", character)
+	held.redesign_character.transaction_receipts.append("defeat:%s:%s" % [character, "0123456789abcdef0123456789abcdef"])
+	authority.call("_replace_record", character, 1, held)
+	deliveries["creature_training:x"] = {"kind": "creature_training", "character_id": character, "status": "pending", "delivery_id": "creature_training:x"}
+	var gather := _row("gather:open", "berries", 2, "pending")
+	deliveries[gather.delivery_id] = gather
+	var result: Dictionary = authority.call("rejoin_admission", character, _caught(record, "a3b2c3d4e5f60718293a4b5c6d7e8f90"), deliveries, [], [])
+	assert_eq(result.get("code"), "host_duties_unsettled", "%s" % str(result))
+	assert_eq((authority.call("state", character) as Dictionary).inventory, held.inventory, "nothing folded")
+	assert_true((authority.call("unconfirmed_folds", character) as Array).is_empty())
+	authority.get("_training_pending")[character] = {"uid": "x"}
+	deliveries.erase("creature_training:x")
+	assert_eq((authority.call("rejoin_admission", character, _caught(record, "a3b2c3d4e5f60718293a4b5c6d7e8f90"), deliveries, [], []) as Dictionary).get("code"),
+		"host_duties_unsettled", "the authority's own open training lock too")
+
+
+func test_an_owed_payout_counts_as_held_but_is_never_absorbed() -> void:
+	# Review H2: a full bag ACKs a payout as grant_due; it settles and replays
+	# later, so it must not be absorbed (its replay would be refused).
+	var record := _record()
+	var deliveries := {}
+	var owed_row := _row("pickup:owed", "berries", 2, "accepted")
+	deliveries[owed_row.delivery_id] = owed_row
+	var authority: RefCounted = AUTHORITY.new()
+	authority.call("bind_world", NS)
+	authority.call("seed_admitted_character", record, record.character_id)
+	authority.call("seed_absorbed_deliveries", record.character_id, deliveries, [owed_row.delivery_id])
+	var character: String = record.character_id
+	assert_false((authority.call("_absorbed", character) as Dictionary).has(owed_row.delivery_id), "first join: an owed payout is not absorbed")
+	var declared := _caught(record, "a4b2c3d4e5f60718293a4b5c6d7e8f90")
+	var result: Dictionary = authority.call("rejoin_admission", character, declared, deliveries, [], [], [owed_row.delivery_id])
+	assert_eq(result.get("code"), "readmitted_portable", "owed counts as present, not behind: %s" % str(result))
+	assert_eq(result.get("applied"), [], "and is not absorbed on adoption either")
+	var after := _with(authority.call("state", character), "berries", 2)
+	assert_true(authority.call("apply_owner_reward_delivery", character, authority.call("state", character), after, owed_row.delivery_id),
+		"its later settle replays normally")
+
+
+func test_an_unconfirmed_fold_stays_required_after_its_row_is_pruned() -> void:
+	# Review M2: a behind rejoin folded gather row G (marked replayed, then
+	# pruned); the owner left before confirming. The same backup must still be
+	# behind, never adopted without G.
+	var record := _record()
+	var deliveries := {}
+	var authority := _authority(record, deliveries)
+	var character: String = record.character_id
+	authority.call("record_personal_flag", character, "home_key_given", true)
+	var g := _row("gather:g", "berries", 2, "accepted")
+	deliveries[g.delivery_id] = g
+	var backup := _caught(record, "a5b2c3d4e5f60718293a4b5c6d7e8f90")
+	assert_eq((authority.call("rejoin_admission", character, backup, deliveries, [], []) as Dictionary).get("code"), "held_wins")
+	deliveries.erase(g.delivery_id) # pruned
+	var result: Dictionary = authority.call("rejoin_admission", character, backup, deliveries, ["home_key_given"], [])
+	assert_eq(result.get("code"), "held_wins", "still behind on the unconfirmed fold: %s" % str(result))
+	assert_true(str(result.get("detail", "")).begins_with("payout"))
+	assert_eq((authority.call("rejoin_admission", character, backup, deliveries, ["home_key_given"], [g.delivery_id]) as Dictionary).get("code"),
+		"readmitted_portable", "once the owner holds it settled it is not behind")
