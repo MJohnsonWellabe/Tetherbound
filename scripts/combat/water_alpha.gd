@@ -439,7 +439,10 @@ func receive_authority(kind: String, payload: Dictionary) -> void:
 			var result: Dictionary = payload.get("resolution", {})
 			if not result.is_empty() and _presented_resolution.is_empty():
 				_presented_resolution = result.duplicate(true)
-				_present_resolution.call_deferred()
+				# A reliable snapshot can arrive a frame before the rich verdict.
+				# Only that verdict resolves its author, after the killing impact.
+				if not (result.get("outcome") == "defeated" and int(payload.get("terminal_author", 0)) == _local_peer_id()):
+					_present_resolution.call_deferred()
 
 func _present_resolution() -> void:
 	if not _local_fight or not is_instance_valid(_manager):
