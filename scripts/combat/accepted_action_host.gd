@@ -191,6 +191,98 @@ func begin_tether_tag_resolution(id: String, peer: int, parent: String,
 	return {"ok":true, "action_id":parent, "original":original.duplicate(true), "joint":joint}
 
 
+## Observe the ordinary writer's two results after the real incoming actor
+## has been bound. Claimed damage never substitutes for chained actual HP.
+func record_tether_tag_outcome(id: String, peer: int, parent: String,
+		incoming_binding: Dictionary, written: Array, now_ms: int) -> Dictionary:
+	var entry: Dictionary = _actions(id, peer).get(parent, {})
+	if entry.get("phase") != "resolving" or entry.get("admission", {}).get("kind") != "tag_combo" \
+		or written.size() != 2 or now_ms < 0: return {"ok":false, "code":"not_resolving"}
+	var original: Dictionary = entry.admission
+	var participant: Dictionary = encounters.get(id, {}).get("participants", {}).get(peer, {})
+	var opponent: Dictionary = encounters.get(id, {}).get("opponent", {})
+	if incoming_binding.get("character_id") != original.binding.character_id \
+		or incoming_binding.get("creature_uid") != original.incoming.creature_uid \
+		or incoming_binding.get("deployment_generation") != original.incoming.generation \
+		or not _binding_current(id, peer, incoming_binding) \
+		or participant.get("tether_commands") != original.command_before \
+		or opponent.get("card", {}).get("uid") != original.target_uid \
+		or opponent.get("body_generation") != original.target_generation: return {"ok":false, "code":"stale_outcome"}
+	var before := float(entry.arrival.hp_before)
+	var maximum := float(opponent.get("hp_max", NAN))
+	var hp := before
+	var outcomes: Array = []
+	var strikes: Array = []
+	for index: int in 2:
+		var rolled: Variant = written[index]
+		if not rolled is Dictionary or not (rolled.get("hp") is int or rolled.get("hp") is float) \
+			or not is_finite(float(rolled.hp)) or float(rolled.hp) < 0.0 or float(rolled.hp) > hp \
+			or rolled.get("hp_max") != maximum: return {"ok":false, "code":"invalid_debit"}
+		var strike: Dictionary = entry.arrival.strikes[index].duplicate(true)
+		strike["target_hp_before"] = hp
+		strike["actual_hp_debit"] = hp - float(rolled.hp)
+		strike["target_hp_after"] = float(rolled.hp)
+		strike["landed"] = float(strike.actual_hp_debit) > 0.0
+		strikes.append(strike)
+		if strike.landed:
+			outcomes.append({"binding":original.binding.duplicate(true) if index == 0 else incoming_binding.duplicate(true),
+				"context":original.moves[index].get("mastery_context", {}).duplicate(true),
+				"outcome":{"action_id":strike.action_id, "move_id":strike.move_id,
+					"attacker_uid":strike.attacker_uid, "target_uid":original.target_uid,
+					"target_hp_before":hp, "applied_damage":strike.actual_hp_debit}})
+		hp = float(rolled.hp)
+	if not is_finite(maximum) or maximum <= 0.0 or opponent.get("hp") != hp:
+		return {"ok":false, "code":"uncommitted_debit"}
+	var state: Dictionary = original.plan.state.duplicate(true)
+	state["switch_until_ms"] = now_ms + int(float(TETHER_COMMANDS.config().switch_lockout_s) * 1000)
+	state["last_receipt"] = original.plan.receipt.duplicate(true)
+	var effect: Dictionary = original.plan.effect.duplicate(true)
+	effect["strikes"] = strikes
+	var verdict := {"ok":true, "kind":"tether_command", "peer":peer, "code":"accepted", "pending":false,
+		"reason":"", "encounter_id":id, "command_generation":original.request.generation,
+		"command_request":original.request.duplicate(true),
+		"delta":{"tether_commands":state.duplicate(true), "effect":effect,
+			"switched_to_uid":original.incoming.creature_uid, "switch_lockout_s":TETHER_COMMANDS.config().switch_lockout_s}}
+	participant["tether_commands"] = state
+	entry["outcome"] = _original({"action_id":parent, "actual_hp_debit":before - hp,
+		"target_hp_before":before, "target_hp_after":hp, "rolled":written[1], "verdict":verdict,
+		"joint_mastery":outcomes})
+	entry["mastery_pending"] = not outcomes.is_empty()
+	entry["phase"] = "body_publication_pending"
+	seq += 1
+	encounters[id]["seq"] = seq
+	return verdict
+
+
+func move_mastery_outcome(id: String, peer: Variant, action: int) -> Dictionary:
+	if action >= 0: return super.move_mastery_outcome(id, peer, action)
+	for entry: Dictionary in (_strike_authority.get(id, {}) as Dictionary).get(peer, {}).get("accepted_actions", {}).values():
+		if entry.get("mastery_pending") == true and entry.get("admission", {}).get("kind") == "tag_combo" \
+			and entry.admission.action == action:
+			return {"encounter_id":id, "peer":peer, "action":action, "action_id":entry.admission.action_id,
+				"outcomes":entry.outcome.joint_mastery.duplicate(true)}
+	return {}
+
+
+func acknowledge_move_mastery(id: String, peer: Variant, action: int, action_id: String) -> bool:
+	if action >= 0: return super.acknowledge_move_mastery(id, peer, action, action_id)
+	var entry: Dictionary = (_strike_authority.get(id, {}) as Dictionary).get(peer, {}).get("accepted_actions", {}).get(action_id, {})
+	if entry.get("mastery_pending") != true or entry.get("admission", {}).get("kind") != "tag_combo" \
+		or entry.admission.action != action: return false
+	entry["mastery_pending"] = false
+	return true
+
+
+func pending_move_mastery() -> Array[Dictionary]:
+	var pending: Array[Dictionary] = super.pending_move_mastery()
+	for id: String in _strike_authority:
+		for peer: Variant in _strike_authority[id]:
+			for entry: Dictionary in _strike_authority[id][peer].get("accepted_actions", {}).values():
+				if entry.get("mastery_pending") == true and entry.get("admission", {}).get("kind") == "tag_combo":
+					pending.append({"encounter_id":id, "peer":peer, "action":int(entry.admission.action)})
+	return pending
+
+
 ## Called immediately before the existing host damage writer, from actual
 ## arrival state. A duplicate callback cannot invoke that writer twice.
 func begin_move_action_resolution(id: String, peer: int, action: int,
@@ -312,6 +404,8 @@ func close(id: String) -> void:
 
 func forget(id: String) -> void:
 	if move_action_publication_pending(id): return
+	for pending: Dictionary in pending_move_mastery():
+		if pending.encounter_id == id: return
 	for state: Dictionary in (_strike_authority.get(id, {}) as Dictionary).values():
 		for started: Dictionary in state.get("move_starts", {}).values():
 			if started.get("mastery_pending") == true: return
@@ -489,10 +583,21 @@ func commit_original_fixture_actor_topup(proposal: Dictionary, original: Diction
 
 
 func bind_actor_body(id: String, peer: int, character: String, owned: Dictionary, body_id: int) -> Dictionary:
-	if move_action_publication_pending(id): return {"ok": false, "code": "pending_action"}
+	if move_action_publication_pending(id) and not _tag_incoming_binding_allowed(id, peer, character, str(owned.get("uid", ""))):
+		return {"ok": false, "code": "pending_action"}
 	return super.bind_actor_body(id, peer, character, owned, body_id)
 
 
 func bind_actor_vitals(id: String, peer: int, character: String, owned: Dictionary, generation: int) -> Dictionary:
-	if move_action_publication_pending(id): return {"ok": false, "code": "pending_action"}
+	if move_action_publication_pending(id) and not _tag_incoming_binding_allowed(id, peer, character, str(owned.get("uid", ""))):
+		return {"ok": false, "code": "pending_action"}
 	return super.bind_actor_vitals(id, peer, character, owned, generation)
+
+
+## Only the same parent's accepted incoming actor may replace its outgoing
+## body during the synchronous Tag arrival. Unrelated publication stays held.
+func _tag_incoming_binding_allowed(id: String, peer: int, character: String, uid: String) -> bool:
+	for entry: Dictionary in _actions(id, peer).values():
+		if entry.get("phase") != "resolving" or entry.get("admission", {}).get("kind") != "tag_combo": continue
+		return entry.admission.binding.character_id == character and entry.admission.incoming.creature_uid == uid
+	return false

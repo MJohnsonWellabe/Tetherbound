@@ -394,6 +394,50 @@ func test_tag_parent_retains_two_frozen_quicks_and_rejects_stale_or_duplicate_ar
 			"duplicate or cancelled arrival never enters the writer")
 		assert_eq(float(tracked.record(tag_id).opponent.hp), 30.0)
 		assert_eq(participant.tether_commands, actual_before, "arrival validation itself never spends")
+		if defect == "none":
+			assert_false(tracked.bind_actor_body(tag_id, 1, "character-a", fixture.owned, 303).ok,
+				"the resolution fence permits only this parent's incoming creature")
+			var incoming := {"uid":"owned-b", "hp":100.0, "max_hp":100.0, "fainted":false}
+			var bound: Dictionary = tracked.bind_actor_body(tag_id, 1, "character-a", incoming, 202)
+			assert_true(bound.ok, str(bound))
+			if not bound.ok: return
+			var incoming_binding := {"character_id":"character-a", "creature_uid":"owned-b",
+				"deployment_generation":2, "actor_generation":bound.vitals.body_generation, "body_instance_id":202}
+			var written := [{"hp":25.0, "hp_max":30.0, "damage":999.0, "killed":false},
+				{"hp":16.0, "hp_max":30.0, "damage":999.0, "killed":false}]
+			tracked.set_opponent_hp(tag_id, 16.0, 30.0, written[1])
+			var bad := written.duplicate(true)
+			bad[1].hp = 26.0
+			assert_false(tracked.record_tether_tag_outcome(tag_id, 1, parent, incoming_binding, bad, 10500).ok)
+			assert_eq(participant.tether_commands, actual_before, "invalid debit cannot spend")
+			var committed: Dictionary = tracked.record_tether_tag_outcome(tag_id, 1, parent, incoming_binding, written, 10500)
+			assert_true(committed.ok, str(committed))
+			if not committed.ok: return
+			assert_eq(participant.tether_commands.meter, 0.0, "one 40-meter parent cost")
+			assert_eq(participant.tether_commands.switch_until_ms, 12000, "actual arrival starts the full 1.5-second lockout")
+			assert_eq(committed.delta.effect.strikes[0].actual_hp_debit, 5.0)
+			assert_eq(committed.delta.effect.strikes[1].actual_hp_debit, 9.0)
+			var pending: Dictionary = tracked.move_mastery_outcome(tag_id, 1, -1)
+			assert_eq(pending.action_id, parent)
+			assert_eq(pending.outcomes.size(), 2)
+			assert_eq(pending.outcomes[0].outcome.attacker_uid, "owned-a")
+			assert_eq(pending.outcomes[1].outcome.attacker_uid, "owned-b")
+			assert_ne(pending.outcomes[0].outcome.action_id, pending.outcomes[1].outcome.action_id)
+			assert_eq(pending.outcomes[0].binding, fixture.binding)
+			assert_eq(pending.outcomes[1].binding, incoming_binding)
+			assert_false(tracked.record_tether_tag_outcome(tag_id, 1, parent, incoming_binding, written, 10600).ok,
+				"duplicate outcome cannot spend or write twice")
+			assert_true(tracked.acknowledge_move_action_publication(tag_id, 1, parent, committed))
+			assert_true(tracked.leave(tag_id, 1).ok)
+			pending.peer = "character-a"
+			assert_eq(tracked.move_mastery_outcome(tag_id, "character-a", -1), pending,
+				"failed journal keeps both child originals under the stable departed owner")
+			tracked.forget(tag_id)
+			assert_false(tracked.record(tag_id).is_empty(), "pending mastery prevents losing the parent")
+			assert_false(tracked.acknowledge_move_mastery(tag_id, "character-a", -1, pending.outcomes[0].outcome.action_id))
+			assert_true(tracked.acknowledge_move_mastery(tag_id, "character-a", -1, parent))
+			assert_true(tracked.pending_move_mastery().is_empty())
+			assert_eq(float(tracked.record(tag_id).opponent.hp), 16.0, "journal acknowledgement never restores HP")
 
 
 func test_pouch_assignment_uses_original_character_journal_and_owner_save_without_moving_stacks() -> void:
