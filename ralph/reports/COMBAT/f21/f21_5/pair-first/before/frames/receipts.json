@@ -1,0 +1,47 @@
+{
+	"baseline": false,
+	"complete": false,
+	"failures": [
+		"could not enter combat",
+		"Native parent timing must retain all 300 drawn fight frames",
+		"Native hit sequence role is missing: quick",
+		"Native hit sequence role is missing: charged",
+		"Native hit sequence role is missing: crit",
+		"Native hit sequence role is missing: incoming"
+	],
+	"frame_time_summary": {},
+	"frame_times_ms": [],
+	"global_rng_seed": 210617239,
+	"graphics_capture": {
+		"adapter": "NVIDIA GeForce GTX 1060 3GB",
+		"graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+		"preset": "Medium",
+		"renderer": "forward_plus",
+		"resolution": [
+			1920,
+			1080
+		],
+		"source_commit": "0e12ce5c41a868c17a59c28a15d8b1bc8bc6c18d"
+	},
+	"graphics_values": {
+		"cloudreach_rock_candidate": false,
+		"draw_distance": "Normal",
+		"glow": true,
+		"renderer": "forward_plus",
+		"shadow_quality": "Medium",
+		"ssao": true,
+		"ssil": false,
+		"volumetric_fog": true,
+		"volumetric_fog_density": 0.0005,
+		"volumetric_fog_length": 96.0,
+		"volumetric_fog_sky_affect": 0.0
+	},
+	"pairing_scope": "Only the global RNG is seeded. Production nodes also randomize private generators; matched contact outcomes and damage are unproved and require cross-run review. Capture completeness does not certify a matched A/B pair.",
+	"renderer": "forward_plus",
+	"scope": "Existing parent fixture, same global RNG seed/preset/source for comparison inputs; its baseline disables the impact layer in memory. Sequence offsets are 0,2,4,6,10,16,24 after confirmed contact; no pre-contact frame. No actor rescale, accelerated or hidden rendering, earned campaign or Ally acceptance. Independent pairing/image/full-feature review remains required.",
+	"sequence_files": [],
+	"shots": [],
+	"source_commit": "0e12ce5c41a868c17a59c28a15d8b1bc8bc6c18d",
+	"timing_scope": "Parent's 300 continuously drawn process-frame intervals in the entered live fight before the scripted contact sequences. PNG I/O is outside this interval; not GPU-only timing or hit-sequence frame-time proof.",
+	"video_adapter": "NVIDIA GeForce GTX 1060 3GB"
+}
