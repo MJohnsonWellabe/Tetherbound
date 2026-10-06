@@ -1,0 +1,34 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=14716 control_port=53152 home=D:\tetherbound\.artifacts\r1-f27-flip\net-disconnect-on/home-0 log=D:\tetherbound\.artifacts\r1-f27-flip\net-disconnect-on/peer-0.log
+coordinator: launched peer 1 (client) pid=16140 control_port=53153 home=D:\tetherbound\.artifacts\r1-f27-flip\net-disconnect-on/home-1 log=D:\tetherbound\.artifacts\r1-f27-flip\net-disconnect-on/peer-1.log
+coordinator: peer 0 hello: {"enet_port":34421.0,"godot_version":"4.7-stable (official)","main_sha":"8f4641c5ff16","peer":0.0,"pid":14716.0,"role":"host","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-disconnect-on/home-0/Godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":34422.0,"godot_version":"4.7-stable (official)","main_sha":"8f4641c5ff16","peer":1.0,"pid":16140.0,"role":"client","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-disconnect-on/home-1/Godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: disclosed retired crossing fixture enabled
+PASS: disclosed retired crossing fixture enabled
+PASS: coordinator tracked 2 peers
+PASS: a Session exists to host/join (lane 2.A); without it there are no remote bodies to see
+PASS: peer 0 hosted a world (hosting udp/34421 as peer 1)
+PASS: peer 1 joined peer 0's world on port 34421 (joined 127.0.0.1:34421 as peer 1302430951 after 49 frames; snapshot applied; 2 peer(s) in registry)
+PASS: peer 0's registry holds both players (registry reports 2 peer(s) after 0 frames (0.0 s))
+PASS: peer 1's registry holds both players (registry reports 2 peer(s) after 0 frames (0.0 s))
+PASS: the Cloudreach route is open before the host tries to walk it (realm_key_cloudreach: ok=true pending=false code='' reason='')
+PASS: the client committed a Meadows world record before anybody moved (chest record at index 0)
+PASS: the host holds at least one Meadows world record to lose (holds 1)
+PASS: the host crossed into Cloudreach, leaving the client alone in the Meadows (crossed 'meadows' -> 'cloudreach' after 870 observed physics frames / 97053 ms (budget 6000 physics frames); current scene is /root/CloudreachCliffs)
+PASS: the host runs a headless MEADOWS shell for the peer it left behind (holds ["meadows"])
+6A-SHELL-COST peer=0 realm=meadows attach_ms=194 build_ms=-1 ready=false static_delta_kb=10075 process_static_kb=1429991 vm_hwm_kb=-1 bodies=1
+PASS: the client's trainer body stands inside the host's Meadows shell (found 1)
+PASS: the host's Meadows shell finished building before anything asks it to simulate
+PASS: the client put a creature out in the Meadows (deployed AllyCreature)
+PASS: the client is mid-fight in the unhosted realm (engaged bramblebun; the fight is live and UNBOUND after 600 frames, which is what a client's wild fight is (4.C H1: wilds are not replicated, so the host mints no record))
+PASS: the client's transport went away without a Session.leave() (transport closed without a Session.leave() (ENet disconnect sent to 1 peer(s), acknowledged by 1 after 9 frames))
+PASS: the host folded the now-empty Meadows shell down (still holds [])
+PASS: the host is alone in the session again (registry reports 1 peer(s) after 0 frames (0.0 s))
+PASS: the host answered a world_records probe after the drop
+PASS: the host still holds every Meadows world record (1 before, 1 after)
+PASS: the host's autosave file exists to be read back (keys: ["_file", "meadows"])
+PASS: the folded-down realm's world state reached the autosave file: 1 Meadows record(s) on disk, 1 were live before the drop (user://saves/redesign-v28/slot_0.json)
+PASS: the dropped peer is genuinely out of the session, not merely silent
+ALL CHECKS PASSED

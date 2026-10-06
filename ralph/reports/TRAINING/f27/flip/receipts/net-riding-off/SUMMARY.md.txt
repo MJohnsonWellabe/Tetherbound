@@ -1,0 +1,10 @@
+# Net smoke run r1-riding-off-20261006T0238Z
+
+Scene: world
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=6888 exited=true unexpected_exit=false
+- peer 1 (client) pid=13120 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED

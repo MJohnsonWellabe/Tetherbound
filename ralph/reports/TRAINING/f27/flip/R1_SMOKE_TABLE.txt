@@ -19,8 +19,8 @@ fly | OPEN | OPEN
 gate_opens_for_both | OPEN | OPEN
 hearts | OPEN | OPEN
 host_exit_saves | OPEN | OPEN
-realm_owner_disconnect_mid_fight | OPEN | OPEN
-riding | PASS retry 43 assertions/0 failures/exit0; FIRST startup FAIL retained | OPEN
+realm_owner_disconnect_mid_fight | PASS 25 checks/exit0; controlled-drop diagnostic retained | PASS 25 checks/exit0; no error markers
+riding | PASS retry 43 assertions/0 failures/exit0; FIRST startup FAIL retained | PASS 43 assertions/0 failures/exit0
 shared_boss | OPEN | OPEN
 shared_wild_fight | OPEN | OPEN
 split_realms | OPEN | OPEN
