@@ -245,7 +245,7 @@
     },
     {
       "name": "Bram",
-      "_why_f01_3": "Native night walk frame 035: the central hanging lamp completely covered Bram at the middle of the bar. He serves from the east end of the same counter, outside that lamp's sight line; no interior geometry or conversation changes.",
+      "_why_f01_3": "Native night walk: the central hanging lamp covered Bram at the middle of the bar. The east-end candidate cleared his face but put the player behind the lodging privacy screen. He serves from the west end of the same counter, keeping the approach in the public aisle and away from that screen. No interior geometry or conversation changes; fresh walk and blind verdict required.",
       "hair": {
         "visible": true,
         "color": "#9c8450",
@@ -253,7 +253,7 @@
       },
       "config_key": "villager_keeper",
       "position": [
-        45.2,
+        43.0,
         -2.39
       ],
       "facing_deg": 0,
