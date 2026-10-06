@@ -39,7 +39,7 @@
       "range": 9.0,
       "cone_degrees": 26.0,
       "windup": 0.22,
-      "recovery": 0.4,
+      "recovery": 0.24,
       "lunge": 0.0,
       "vfx": {
         "count": 3,
