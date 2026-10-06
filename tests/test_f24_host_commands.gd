@@ -423,6 +423,31 @@ func test_retained_item_ack_preserves_active_body_and_settles_same_v3_decision_o
 				authority.bind_tether_tonic_stream("owner_a", "stream-b", "transport-epoch")
 				authority.tick_tether_tonics("owner_a", 10.0, [uid], "stream-a", "transport-epoch", 99)
 				assert_eq(authority.tether_tonic_projection("owner_a")[uid].effects[0].remaining_s, 81.0, "old buffered stream cannot age the rebased original")
+				# Actual Game signal and Session callback; no new fixture or clock.
+				var clock_game := preload("res://autoload/game_state.gd").new()
+				clock_game.local = player
+				clock_game.world = preload("res://tests/test_foundation_resources.gd").new()._world()
+				clock_game.world.reward_delivery_namespace = "item-world"
+				var clock_session := preload("res://scripts/net/session.gd").new()
+				clock_game.add_child(clock_session)
+				clock_game.session = clock_session
+				clock_session._character_authority = authority
+				clock_session._altar_epoch = "transport-epoch"
+				clock_session._mode = "host"
+				clock_session._tether_tonic_observer_scope = clock_session._tether_tonic_current_scope()
+				authority.bind_tether_tonic_stream("owner_a", "local", "transport-epoch", 10)
+				clock_session._sync_tether_tonic_scope()
+				assert_true(clock_game.is_connected("party_passive_tick", clock_session._tether_tonic_party_tick))
+				clock_session._teardown()
+				assert_true(clock_game.is_connected("party_passive_tick", clock_session._tether_tonic_party_tick), "same-context host-to-offline teardown preserves the local clock")
+				clock_game.party_passive_tick.emit({"character_id": "owner_a", "world_namespace": "item-world",
+					"session_epoch": "transport-epoch", "uid": uid, "sequence": 11, "delta": 9.0})
+				assert_eq(authority.tether_tonic_projection("owner_a")[uid].effects[0].remaining_s, 72.0, "actual signal still ages the authoritative companion after closing transport")
+				clock_game.world.reward_delivery_namespace = "replacement-world"
+				clock_session._sync_tether_tonic_scope()
+				assert_false(clock_game.is_connected("party_passive_tick", clock_session._tether_tonic_party_tick), "changed world disconnects the old authority clock")
+				clock_game.free()
+				authority.bind_tether_tonic_stream("owner_a", "stream-b", "transport-epoch")
 				for tick: int in range(1, 10): authority.tick_tether_tonics("owner_a", 10.0, [uid], "stream-b", "transport-epoch", tick)
 				assert_true(authority.tether_tonic_projection("owner_a")[uid].effects.is_empty())
 				assert_true(authority.install_saved_tether_tonic("owner_a", row, original, "stream-b", "transport-epoch", 9))
@@ -1028,6 +1053,36 @@ func test_tonic_wind_boundaries_update_active_and_retained_character_uid_without
 	assert_eq(pool.wind_last_action, 1)
 	assert_eq(pool.energy, 0.0)
 	assert_eq(pool.ultimate_meter, 0.0)
+
+func test_tonic_scope_cleanup_preserves_current_context_and_unmanaged_same_instance_buffs() -> void:
+	var fixture := preload("res://tests/test_foundation_resource_save.gd")
+	var game := fixture.FixtureGame.new()
+	game.local = DATA.new()._player()
+	game.world = preload("res://tests/test_foundation_resources.gd").new()._world()
+	var session := fixture.FixtureSession.new()
+	session.fixture = game
+	game.session = session
+	var member: RefCounted = game.local.party.at(0)
+	var buff: Dictionary = preload("res://scripts/world/death_satchel_rules.gd").db().definition("attack_tonic").creature_buff
+	assert_true(member.call("apply_buff", "native-speed", "speed", 1.1, 90.0))
+	var effect := {"id": buff.id, "stat": buff.stat, "scale": buff.scale, "remaining_s": 90.0, "receipt": "same-receipt"}
+	assert_true(session._apply_host_tether_tonics({str(member.uid): {"version": 1, "effects": [effect]}}))
+	var original: Array = member.get("active_buffs").duplicate(true)
+	session._sync_tether_tonic_scope()
+	assert_eq(member.get("active_buffs"), original, "transport retirement does not expire a matching context")
+	game.world.reward_delivery_namespace = "replacement-world"
+	session._sync_tether_tonic_scope()
+	assert_eq(member.get("active_buffs").size(), 1)
+	assert_eq(member.get("active_buffs")[0].id, "native-speed", "changed-world cleanup removes only receipt-managed IDs")
+	assert_true(is_same(game.local.party.at(0), member), "cleanup retains the actual owned instance")
+	assert_true(session._apply_host_tether_tonics({str(member.uid): {"version": 1, "effects": [effect]}}))
+	var seen: Dictionary = member.get_meta("tether_tonic_projection")
+	seen.context[2] = "departed-epoch"
+	session._sync_tether_tonic_scope()
+	assert_eq(member.get("active_buffs").size(), 1, "changed-epoch cleanup works without a later projection packet")
+	assert_eq(member.get("active_buffs")[0].id, "native-speed")
+	session.free()
+	game.free()
 
 func test_item_candidate_debits_one_own_stack_with_actual_heal_food_or_unsaved_tonic() -> void:
 	var rules := preload("res://scripts/world/death_satchel_rules.gd")

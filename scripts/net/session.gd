@@ -2476,6 +2476,7 @@ const HOST_PEER_ID := PEER_REGISTRY.HOST_PEER_ID
 
 var _altar_epoch := Crypto.new().generate_random_bytes(16).hex_encode()
 var _altar_host_epoch := ""
+var _tether_tonic_observer_scope: Array = []
 var _altar_host_namespace := ""
 var _altar_stations: Dictionary = {} # Weak mounted nodes, never placement truth.
 var _altar_quote_request: Dictionary = {}
@@ -3510,6 +3511,7 @@ func _finalize_snapshot_receive() -> bool:
 		_fail_snapshot_receive("Queued world changes could not be applied after the snapshot.", true)
 		return false
 	game.call("apply_world_snapshot", data)
+	_sync_tether_tonic_scope()
 	if not _latest_bootstrap_registry.is_empty():
 		_apply_registry(_latest_bootstrap_registry)
 	for delta: Dictionary in _bootstrap_deltas:
@@ -4225,6 +4227,7 @@ func _teardown(linger_transport: bool = false) -> void:
 			_peer.close()
 	_peer = null
 	_mode = ""
+	_sync_tether_tonic_scope()
 	_transport_kind = ""
 	_preparing_client = false
 	_capacity = 0
@@ -4588,6 +4591,7 @@ func _bind_character_authority() -> bool:
 		_world_snapshot()
 		raw = game.get("world").get("reward_delivery_namespace")
 	if not raw is String or not bool(_character_authority.call("bind_world", raw)): return false
+	_sync_tether_tonic_scope()
 	_character_authority.call("bind_portal_pending_reader", _pending_portal_for)
 	return true
 
@@ -4648,6 +4652,7 @@ func _rpc_altar_epoch(epoch: String, world_namespace: String, character: String)
 	if is_host() or not _altar_hex_id(epoch) or character != _local_character_id() or world_namespace.is_empty(): return
 	_altar_host_epoch = epoch
 	_altar_host_namespace = world_namespace
+	_sync_tether_tonic_scope()
 
 
 static func _altar_hex_id(raw: Variant) -> bool:
@@ -4956,8 +4961,6 @@ func _install_host_tether_tonic(peer: int, row: Dictionary) -> bool:
 	if peer != local_peer_id() and (stream.is_empty() or stream.get("peer") != peer \
 		or stream.get("epoch") != _altar_current_epoch() or stream.get("departed") == true): return false
 	var stream_id := "local" if peer == local_peer_id() else str(stream.id)
-	if peer == local_peer_id() and not _game().is_connected("party_passive_tick", _tether_tonic_party_tick):
-		_game().connect("party_passive_tick", _tether_tonic_party_tick)
 	var sequence := int(_game().get("_passive_observation_sequence")) if peer == local_peer_id() else int(stream.cursor.sequence)
 	for director: Node in _foundation_directors_under(_foundation_realm_roots()):
 		if not _ordinary_combat_director_live(director): continue
@@ -4972,6 +4975,9 @@ func _install_host_tether_tonic(peer: int, row: Dictionary) -> bool:
 			director.call("capture_tether_tonic_card", peer, str(row.intent.effect.creature_uid))
 			if _character_authority.call("install_saved_tether_tonic", character, row, original,
 				stream_id, _altar_current_epoch(), sequence) != true: return false
+			if peer == local_peer_id():
+				_tether_tonic_observer_scope = _tether_tonic_current_scope()
+				_sync_tether_tonic_scope()
 			if changes_wind:
 				_settle_tether_tonic_wind(character, uid, now_ms, _tether_tonic_wind_profile(character, uid))
 			original["tonic_receipt"] = row.receipt
@@ -5054,8 +5060,37 @@ func _tick_host_tether_tonics(character: String, delta: float, uids: Array, stre
 		if after.get(uid, {}).get("version") != before.get(uid, {}).get("version"):
 			_settle_tether_tonic_wind(character, uid, now_ms, _tether_tonic_wind_profile(character, uid))
 
+func _tether_tonic_current_scope() -> Array:
+	var game := _game()
+	if game == null or game.get("local") == null or game.get("world") == null: return []
+	return [_local_character_id(), game.get("world").reward_delivery_namespace, _altar_current_epoch()]
+
+func _sync_tether_tonic_scope() -> void:
+	var game := _game()
+	var scope := _tether_tonic_current_scope()
+	if game == null: return
+	# Empty projection only retires managed buffs from a different context.
+	_apply_host_tether_tonics({})
+	if _tether_tonic_observer_scope != scope: _tether_tonic_observer_scope.clear()
+	if not game.has_signal("party_passive_tick"): return
+	var live := not scope.is_empty() and is_host() and _character_authority != null \
+		and _tether_tonic_observer_scope == scope and _character_authority.get("_world_instance") == scope[1]
+	if live:
+		live = false
+		for held: Dictionary in _character_authority.call("tether_tonic_projection", _local_character_id()).values():
+			if not held.get("effects", []).is_empty(): live = true
+	var connected := game.is_connected("party_passive_tick", _tether_tonic_party_tick)
+	if live and not connected: game.connect("party_passive_tick", _tether_tonic_party_tick)
+	elif not live and connected: game.disconnect("party_passive_tick", _tether_tonic_party_tick)
+
 func _tether_tonic_party_tick(observation: Dictionary) -> void:
 	var game := _game()
+	if game == null: return
+	if game.get("world") == null or not is_host() or _character_authority == null \
+		or _tether_tonic_observer_scope != _tether_tonic_current_scope() \
+		or _character_authority.get("_world_instance") != game.get("world").reward_delivery_namespace:
+		_sync_tether_tonic_scope()
+		return
 	if game == null or observation.get("character_id") != _local_character_id() \
 		or observation.get("world_namespace") != game.get("world").reward_delivery_namespace \
 		or observation.get("session_epoch") != _altar_current_epoch(): return
@@ -5065,14 +5100,14 @@ func _tether_tonic_party_tick(observation: Dictionary) -> void:
 		var live := false
 		for held: Dictionary in _character_authority.call("tether_tonic_projection", _local_character_id()).values():
 			if not held.get("effects", []).is_empty(): live = true
-		if not live: game.disconnect("party_passive_tick", _tether_tonic_party_tick)
+		if not live: _sync_tether_tonic_scope()
 
 ## These projections arrive only on the existing authenticated passive carrier
 ## after its character/world/epoch/current-stream checks. No portable buff import.
 func _apply_host_tether_tonics(projected: Dictionary) -> bool:
 	var game := _game()
 	if game == null or game.get("local") == null: return false
-	var context := [_local_character_id(), game.get("world").reward_delivery_namespace, _altar_current_epoch()]
+	var context := _tether_tonic_current_scope()
 	for member: RefCounted in game.get("local").party.call("members"):
 		var uid := str(member.get("uid"))
 		var seen: Dictionary = member.get_meta("tether_tonic_projection", {})
@@ -5083,7 +5118,7 @@ func _apply_host_tether_tonics(projected: Dictionary) -> bool:
 			seen = {}
 			member.set_meta("tether_tonic_projection", {"context": context, "version": -1, "receipts": {}})
 		var row: Dictionary = projected.get(uid, {})
-		if row.is_empty(): continue
+		if row.is_empty() or context.is_empty(): continue
 		if seen.get("context") == context and int(seen.get("version", -1)) >= int(row.get("version", -1)): continue
 		var previous: Dictionary = seen.get("receipts", {}) if seen.get("context") == context else {}
 		var buffs: Array = member.get("active_buffs")
