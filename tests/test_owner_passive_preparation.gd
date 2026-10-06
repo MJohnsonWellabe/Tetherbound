@@ -249,6 +249,34 @@ func test_same_revision_request_checkpoint_rejects_stale_before_and_other_transa
 		separate.authority.set(lock, {DATA.CHARACTER: {"fixture": true}})
 		assert_false(separate.authority.reserve_owner_passive_checkpoint(DATA.CHARACTER, separate.prepared, {}, separate.cursor), lock)
 
+func test_pouch_checkpoint_binds_personal_source_and_exact_saved_original() -> void:
+	var f := _action_fixture()
+	var request := {"op": "tether_pouch", "session_epoch": "current-epoch", "world_namespace": "resource-namespace",
+		"character_id": DATA.CHARACTER, "station_key": "personal_pouch:" + DATA.CHARACTER, "revision": 0,
+		"intent": {"assignment_id": "original-pouch-choice", "index": 0, "item_id": "potion_small"}}
+	var context := {"character_id": DATA.CHARACTER, "expected_revision": 0, "source_key": request.station_key,
+		"station_kind": "personal_pouch", "owns_character": true, "in_range": true, "in_combat": false, "foundation_runtime_authorized": true}
+	var prepared := PREP.make_action(request, context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN)
+	assert_false(prepared.is_empty())
+	assert_true(PREP.valid_action_host(prepared, f.cursor))
+	assert_true(PREP.owner_plan(f.cursor.state, prepared, {}, {}).ok)
+	assert_false(PREP.owner_plan(f.before, prepared, {}, {}).ok, "owner must first save its exact replayed baseline")
+	assert_eq(prepared.request, request)
+	for mutate: Callable in [
+		func(r: Dictionary, c: Dictionary) -> void: r.station_key = "personal_pouch:another-owner"; c.source_key = r.station_key,
+		func(r: Dictionary, c: Dictionary) -> void: c.owns_character = false,
+		func(r: Dictionary, c: Dictionary) -> void: c.station_kind = "camp",
+		func(r: Dictionary, c: Dictionary) -> void: c.in_combat = true,
+		func(r: Dictionary, c: Dictionary) -> void: r.intent.index = 3,
+		func(r: Dictionary, c: Dictionary) -> void: r.intent.assignment_id = "",
+		func(r: Dictionary, c: Dictionary) -> void: r.intent["count"] = 1,
+		func(r: Dictionary, c: Dictionary) -> void: r.revision = 1,
+	]:
+		var changed_request: Dictionary = request.duplicate(true)
+		var changed_context: Dictionary = context.duplicate(true)
+		mutate.call(changed_request, changed_context)
+		assert_true(PREP.make_action(changed_request, changed_context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN).is_empty())
+
 func _waystone_parts(f: Dictionary) -> Dictionary:
 	var envelope := {"request_id": "current-epoch:7", "session_epoch": "current-epoch",
 		"world_instance_id": "resource-namespace", "character_id": DATA.CHARACTER,

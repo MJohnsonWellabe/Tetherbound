@@ -1,0 +1,9 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_owner_passive_preparation.gd::test_pouch_checkpoint_binds_personal_source_and_exact_saved_original,test_owner_passive_sync.gd::test_pouch_checkpoint_retains_original_through_failed_saved_ack_and_retry,test_owner_passive_sync.gd::test_request_host_preserves_original_scope_and_same_revision_on_failed_world_retry,test_f24_host_commands.gd::test_satchel_pouch_recovers_same_original_and_waits_for_saved_ack: 3 of 817 test files
+  ok    test_f24_host_commands.gd :: test_satchel_pouch_recovers_same_original_and_waits_for_saved_ack
+  ok    test_owner_passive_preparation.gd :: test_pouch_checkpoint_binds_personal_source_and_exact_saved_original
+  ok    test_owner_passive_sync.gd :: test_pouch_checkpoint_retains_original_through_failed_saved_ack_and_retry
+  ok    test_owner_passive_sync.gd :: test_request_host_preserves_original_scope_and_same_revision_on_failed_world_retry
+
+4 tests, 79 assertions, 0 failed

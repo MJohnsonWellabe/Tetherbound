@@ -541,13 +541,50 @@ func test_capture_choice_checkpoint_keeps_original_and_only_saved_ack_reenters_h
 	assert_true(PREP.exact(stream.checkpoint.binding.envelope, envelope), "host-derived CAS revision never rewrites original request")
 	assert_eq(session._character_authority.state(before.character_id).party.size(), before.party.size(), "failed capture writer grants no creature")
 
-func _request_fixture() -> Dictionary:
+func _request_fixture(action: String = "station_craft") -> Dictionary:
 	var request := {"op": "station_craft", "session_epoch": "current-epoch", "world_namespace": event.world_namespace,
 		"character_id": before.character_id, "station_key": "workbench:meadows:fixture", "revision": 0,
 		"intent": {"recipe_id": "fixture-recipe", "craft_id": "f".repeat(32)}}
 	var context := {"character_id": before.character_id, "expected_revision": 0, "source_key": request.station_key,
 		"in_range": true, "in_combat": false, "foundation_runtime_authorized": true}
+	if action == "tether_pouch":
+		request.op = action
+		request.station_key = "personal_pouch:" + str(before.character_id)
+		request.intent = {"assignment_id": "original-pouch-choice", "index": 0, "item_id": "potion_small"}
+		context.source_key = request.station_key
+		context["station_kind"] = "personal_pouch"
+		context["owns_character"] = true
 	return {"request": request, "context": context}
+
+func test_pouch_checkpoint_retains_original_through_failed_saved_ack_and_retry() -> void:
+	var f := _request_fixture("tether_pouch")
+	service.record_input(_input())
+	var stream := _host_stream()
+	service.receive_host(2, _envelope({"op": "inputs", "inputs": service.local.inputs.duplicate(true)}))
+	assert_eq(service.action_gate(2, "foundation_request", f.request, f.context).code, "owner_passive_checkpoint_pending")
+	var original: PackedByteArray = var_to_bytes(stream.checkpoint)
+	var replacement: Dictionary = f.request.duplicate(true)
+	replacement.intent.item_id = "berries"
+	assert_eq(service.action_gate(2, "foundation_request", replacement, f.context).code, "owner_passive_original_pending")
+	assert_eq(var_to_bytes(stream.checkpoint), original)
+	service.receive_host(2, _envelope({"op": "frozen", "id": stream.checkpoint.id, "sequence": stream.cursor.sequence,
+		"prefix_hash": stream.cursor.prefix_hash, "hash": PREP.fingerprint(stream.cursor.state)}))
+	assert_true(stream.checkpoint.has("prepared"))
+	if not stream.checkpoint.has("prepared"): return
+	session.capture_service = service
+	var saved := _envelope({"op": "saved", "id": stream.checkpoint.id, "hash": stream.checkpoint.prepared.hash, "saved": false})
+	service.receive_host(2, saved)
+	assert_true(session.action_calls.is_empty(), "false owner save cannot dispatch the binding")
+	assert_true(PREP.exact(session._character_authority.state(before.character_id), before))
+	saved.saved = true
+	for attempt: int in 2:
+		service.receive_host(2, saved)
+		assert_eq(session.action_calls.size(), attempt + 1)
+		assert_true(session.action_calls[-1].gate.ok)
+		assert_eq(session.action_calls[-1].revision, 0)
+		assert_eq(session.action_calls[-1].request, f.request)
+		assert_true(PREP.exact(session.action_calls[-1].state, stream.cursor.state))
+	assert_eq(stream.checkpoint.request, f.request)
 
 func test_request_owner_requires_existing_exact_request_and_actual_bool_save() -> void:
 	var f := _request_fixture()

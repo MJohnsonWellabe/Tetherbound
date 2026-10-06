@@ -96,6 +96,13 @@ static func _action_request_valid(raw: Dictionary) -> bool:
 			or raw.host_context.get("master_id") != request.intent.master_id: return false
 		expected_source = "master_chest:" + str(request.intent.master_id)
 	if raw.host_context.get("source_key") != expected_source: return false
+	if raw.source_kind == "foundation_request" and request.op == "tether_pouch":
+		return request.station_key == "personal_pouch:" + str(raw.character_id) \
+			and raw.host_context.get("station_kind") == "personal_pouch" and raw.host_context.get("owns_character") == true \
+			and E._integer(request.revision, 0, 2147483645) and request.revision == raw.revision \
+			and _fields(request.intent, ["assignment_id", "index", "item_id"]) \
+			and E._component(request.intent.assignment_id) and E._integer(request.intent.index, 0, 2) \
+			and request.intent.item_id is String
 	match raw.source_kind:
 		"foundation_request":
 			return request.op in ["station_craft", "feast_cook", "feast_feed", "relic_hang", "relic_power", "master_chest", "essence_release"] \
