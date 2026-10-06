@@ -231,6 +231,18 @@ func test_snare_presentation_uses_current_record_body_and_remaining_host_duratio
 	record.opponent.card.uid = "another-creature"
 	director._present_tether_snare(record, body)
 	assert_false(visual.visible, "foreign target cannot bind to this body")
+	var proxy := preload("res://scripts/creatures/shared_opponent_proxy.gd").new()
+	proxy.instance = creature
+	proxy.body_generation = 3
+	proxy.set_meta(&"tether_body_generation", 99)
+	record.opponent.card.uid = uid
+	director._present_tether_snare(record, proxy)
+	var proxy_visual: Node3D = proxy.get_node_or_null("TetherSnareVisual") as Node3D
+	assert_true(proxy_visual != null, "guest lifetime comes from the actual proxy generation")
+	proxy.body_generation = 4
+	director._present_tether_snare(record, proxy)
+	if proxy_visual != null: assert_false(proxy_visual.visible, "guest replacement refuses older lifetime even with the same owned UID")
+	proxy.free()
 	assert_eq(float(creature.get("hp")), hp_before)
 	assert_false(body.has_meta(&"tether_snare"), "visual consumer never installs canonical status")
 	body.free()
