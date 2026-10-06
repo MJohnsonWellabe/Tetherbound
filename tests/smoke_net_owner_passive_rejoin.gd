@@ -171,8 +171,13 @@ func _run() -> void:
 		"tonic: new admitted stream reconciles remaining duration without refreshing the saved Item")
 	check(int(rejoin_tonic.get("stock", -1)) == 1, "tonic: rejoin never debits the Item a second time")
 	check((rejoin_tonic.get("disk_receipts", []) as Array).has(_tonic_receipt), "tonic: owner disk retains the exact saved Item receipt")
-	var rejoin_mastery: Dictionary = (await _state(1)).get("mastery", {})
-	var held_mastery: Dictionary = (await _state(0)).get("mastery", {}).get("held", {}).get(_guest_character, {}).get(_mastery_uid, {})
+	var rejoin_mastery := {}
+	var held_mastery := {}
+	for poll in 30:
+		rejoin_mastery = (await _state(1)).get("mastery", {})
+		held_mastery = (await _state(0)).get("mastery", {}).get("held", {}).get(_guest_character, {}).get(_mastery_uid, {})
+		if rejoin_mastery.get("disk", {}).get(_mastery_uid, {}) == _earned_mastery and held_mastery == _earned_mastery: break
+		await step(0, "wait", {"frames":30})
 	check(rejoin_mastery.get("live", {}).get(_mastery_uid, {}).get("uses") == _earned_mastery.get("uses") \
 		and rejoin_mastery.get("live", {}).get(_mastery_uid, {}).get("receipts") == _earned_mastery.get("receipts"),
 		"mastery: plain rejoin preserves actual landed uses and never credits an admission replay")
@@ -341,30 +346,38 @@ func _tonic_item_original() -> bool:
 	if not _ok(await step(1, "join_encounter", {"encounter_id":id}), "tonic: guest joins the host's exact record"): return false
 	var before_mastery: Dictionary = (await _state(1)).get("mastery", {}).get("live", {})
 	if not _ok(await step(1, "op_tonic_hits"), "tonic: normal accepted quick hits earn Item meter"): return false
-	var earned := false
+	var retained: Array = (await _state(0)).get("mastery", {}).get("retained", {}).get(_guest_character, [])
+	var seen := {}
+	for event: Dictionary in retained:
+		var uid := str(event.get("attacker_uid", ""))
+		var move := str(event.get("move_id", ""))
+		var action := str(event.get("action_id", ""))
+		if not before_mastery.has(uid) or seen.has(action) or float(event.get("applied_damage", 0.0)) <= 0.0: continue
+		if _mastery_uid.is_empty():
+			_mastery_uid = uid
+			_earned_mastery = {"uses":before_mastery[uid].uses.duplicate(true), "receipts":before_mastery[uid].receipts.duplicate(true)}
+		if uid != _mastery_uid: continue
+		seen[action] = true
+		if not _earned_mastery.receipts.has(move): _earned_mastery.receipts[move] = []
+		if not _earned_mastery.receipts[move].has(action):
+			_earned_mastery.receipts[move].append(action)
+			_earned_mastery.uses[move] = int(_earned_mastery.uses.get(move, 0)) + 1
+	check(not seen.is_empty(), "mastery: actual landed quick hits retain unique creature-owned mastery obligations")
+	_ok(await step(1, "op_tonic_clear"), "tonic: existing proximity fixture clears reach while previous actual HP writes settle")
+	var ready := false
 	for poll in 20:
-		var mastery: Dictionary = (await _state(1)).get("mastery", {})
-		for uid: String in mastery.get("live", {}):
-			var card: Dictionary = mastery.live[uid]
-			var move := str(card.get("move", ""))
-			var uses := int(card.get("uses", {}).get(move, 0))
-			var receipts: Array = card.get("receipts", {}).get(move, [])
-			var unique := {}
-			for receipt: String in receipts: unique[receipt] = true
-			if uses > int(before_mastery.get(uid, {}).get("uses", {}).get(move, 0)) \
-				and receipts.size() == uses and unique.size() == uses:
-				_mastery_uid = uid
-				_earned_mastery = {"uses":card.uses.duplicate(true), "receipts":card.receipts.duplicate(true)}
-				earned = mastery.get("disk", {}).get(uid, {}) == _earned_mastery
-		if earned: break
+		var current: Dictionary = (await _state(0)).get("tonic", {}).get("readiness", {}).get(_guest_character, {})
+		if current.get("admission") == true and current.get("vitals_pending") == false:
+			ready = true
+			break
 		await step(0, "wait", {"frames":30})
-	check(earned, "mastery: actual accepted quick hits credit unique creature-owned uses and save them to owner disk")
-	_ok(await step(1, "op_tonic_writer", {"block":true}), "tonic: actual owner character writer will return false")
+	if not check(ready, "tonic: host confirms the actual previous owner HP saves are settled before writer refusal"): return false
 	var pending: Dictionary = await step(1, "op_tonic_item")
 	if not _ok(pending, "tonic: production Item request preserves its original while owner save refuses"): return false
 	var guest: Dictionary = (await _state(1)).get("tonic", {})
 	var host: Dictionary = (await _state(0)).get("tonic", {})
 	var original: Dictionary = host.get("rows", {}).get(_guest_character, {})
+	print("TONIC original actual owner/host: ", JSON.stringify({"owner":guest, "host":host}))
 	check(original.get("status") == "pending" and not str(original.get("receipt", "")).is_empty(),
 		"tonic: host journal retains the precise original awaiting owner TRUE BOOL")
 	check(_tonic_seconds(guest) == 0.0 and host.get("projected", {}).get(_guest_character, {}).is_empty(),

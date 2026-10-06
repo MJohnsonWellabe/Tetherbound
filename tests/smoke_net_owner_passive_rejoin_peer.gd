@@ -184,6 +184,15 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 				if strike.get("verdict") != "PASS": return strike
 			if float(manager.tether_command_snapshot().get("meter", 0.0)) < 25.0:
 				return {"verdict":"FAIL", "detail":"accepted hits did not earn Item meter"}
+		"op_tonic_clear":
+			# Existing proximity fixture: stop exposing this owned actor to a
+			# new enemy hit while the original Item's writer refusal is tested.
+			var director: Node = _encounter_director()
+			var target: Node3D = director.get("_shared_opponent_proxy")
+			var body: Node3D = director.ally_body()
+			if target == null or body == null: return {"verdict":"FAIL", "detail":"actual combat body missing"}
+			body.global_position = target.global_position + Vector3(0, 0, 18.0)
+			for frame in 60: await physics_frame
 		"op_tonic_writer":
 			var store: RefCounted = game.save_system.characters()
 			if args.get("block") == true:
@@ -201,10 +210,14 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 			var input: Node = null
 			for child: Node in manager.get_children():
 				if child.get_script() == preload("res://scripts/ui/tether_command_input.gd"): input = child
+			# Arm and submit without a physics frame between them. Earlier HP
+			# writes must have settled before this step is sent by the parent.
+			await _tonic_step("op_tonic_writer", {"block":true})
 			if input == null or not input.request("item_throw"):
 				return {"verdict":"FAIL", "detail":"production TetherCommandInput refused Item request"}
 			_tonic_request = manager.get("_tether_command_view").get("pending_request", {}).duplicate(true)
 			for frame in 180: await physics_frame
+			print("TONIC actual Item view: ", JSON.stringify(manager.get("_tether_command_view")))
 		"op_tonic_retry":
 			var manager: Node = _combat_manager()
 			if _tonic_request.is_empty() or not manager.submit_tether_command(_tonic_request):
@@ -226,13 +239,22 @@ func _tonic_state(game: Node, session: Node) -> Dictionary:
 			rows[str(row.character_id)] = {"receipt":row.receipt, "status":row.status,
 				"request":row.intent.request.duplicate(true), "uid":row.intent.effect.creature_uid}
 	var projected := {}
+	var readiness := {}
 	if session.is_host():
 		var authority: RefCounted = session.get("_character_authority")
 		for character: String in authority.get("_records"):
 			projected[character] = authority.tether_tonic_projection(character)
+		var director: Node = _encounter_director()
+		var manager: Node = _combat_manager()
+		if director != null and manager != null:
+			var record: Dictionary = director.encounter_record()
+			for peer: Variant in record.get("participants", {}):
+				var character := str(record.participants[peer].character_id)
+				readiness[character] = {"admission":session._tether_item_admission_ready(int(peer)),
+					"vitals_pending":director.ordinary_actor_vitals_pending(str(record.get("encounter_id", "")))}
 	var saved: Dictionary = game.save_system.characters().read(str(game.local.character_id)) if _tonic_character_dir.is_empty() \
 		or game.save_system.characters().get("_dir") == _tonic_character_dir else {}
-	return {"owned":owned, "rows":rows, "projected":projected, "stock":game.inventory.count("attack_tonic"),
+	return {"owned":owned, "rows":rows, "projected":projected, "readiness":readiness, "stock":game.inventory.count("attack_tonic"),
 		"disk_stock":_counts(saved.get("inventory", [])).get("attack_tonic", 0),
 		"disk_receipts":saved.get("redesign_character", {}).get("transaction_receipts", []),
 		"saved_result":session.get("_tether_item_saved_result").get("result", {}).duplicate(true),
@@ -250,13 +272,21 @@ func _mastery_state(game: Node, session: Node) -> Dictionary:
 	for card: Dictionary in saved.get("party", []):
 		disk[str(card.uid)] = {"uses":card.get("move_mastery_uses", {}), "receipts":card.get("move_mastery_receipts", {})}
 	var held := {}
+	var retained := {}
+	for row: Dictionary in game.world.reward_deliveries.values():
+		if row.get("kind") != "foundation_event": continue
+		for duty: Dictionary in row.get("duties", []):
+			if duty.get("action") != "combat_mastery": continue
+			var character := str(duty.character_id)
+			if not retained.has(character): retained[character] = []
+			retained[character].append(duty.context.outcome.duplicate(true))
 	if session.is_host():
 		var authority: RefCounted = session.get("_character_authority")
 		for character: String in authority.get("_records"):
 			held[character] = {}
 			for card: Dictionary in authority.state(character).get("party", []):
 				held[character][str(card.uid)] = {"uses":card.get("move_mastery_uses", {}), "receipts":card.get("move_mastery_receipts", {})}
-	return {"live":live, "disk":disk, "held":held}
+	return {"live":live, "disk":disk, "held":held, "retained":retained}
 
 
 static func _counts(slots: Variant) -> Dictionary:
