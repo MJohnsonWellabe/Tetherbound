@@ -238,14 +238,19 @@ func record_tether_tag_outcome(id: String, peer: int, parent: String,
 	state["last_receipt"] = original.plan.receipt.duplicate(true)
 	var effect: Dictionary = original.plan.effect.duplicate(true)
 	effect["strikes"] = strikes
+	var family_roll: Dictionary = written[1].duplicate(true)
+	family_roll["killed"] = hp == 0.0
+	family_roll["damage"] = before - hp
 	var verdict := {"ok":true, "kind":"tether_command", "peer":peer, "code":"accepted", "pending":false,
 		"reason":"", "encounter_id":id, "command_generation":original.request.generation,
 		"command_request":original.request.duplicate(true),
 		"delta":{"tether_commands":state.duplicate(true), "effect":effect,
-			"switched_to_uid":original.incoming.creature_uid, "switch_lockout_s":TETHER_COMMANDS.config().switch_lockout_s}}
+			"switched_to_uid":original.incoming.creature_uid, "switch_lockout_s":TETHER_COMMANDS.config().switch_lockout_s,
+			"action_id":parent, "creature_uid":original.incoming.creature_uid, "hp":hp, "hp_max":maximum,
+			"damage":before - hp, "killed":family_roll.killed, "impact":family_roll.get("impact", {}).duplicate(true)}}
 	participant["tether_commands"] = state
 	entry["outcome"] = _original({"action_id":parent, "actual_hp_debit":before - hp,
-		"target_hp_before":before, "target_hp_after":hp, "rolled":written[1], "verdict":verdict,
+		"target_hp_before":before, "target_hp_after":hp, "rolled":family_roll, "verdict":verdict,
 		"joint_mastery":outcomes})
 	entry["mastery_pending"] = not outcomes.is_empty()
 	entry["phase"] = "body_publication_pending"

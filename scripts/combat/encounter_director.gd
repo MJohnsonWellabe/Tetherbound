@@ -3525,6 +3525,12 @@ func _host_tether_command(intent: Dictionary, peer: int) -> Dictionary:
 		denied.code = "item_save_pending"
 		denied.pending = true
 		return denied
+	if request.command_id == "tag_combo":
+		var tag := _host_tether_tag(request, peer, admitted, body, wild, runtime)
+		if tag.get("ok") != true:
+			denied.code = tag.get("code", "tag_unavailable")
+			return denied
+		return tag
 	var profile := COMBAT_MANAGER.host_move_profile(preload("res://scripts/creatures/move_db.gd").load_default(), "player_utility", "snare",
 		_body_radius(body), _body_radius(wild), 1.0, CONTACT_SPACING.pair_reach_need(body, wild))
 	var view := {"actor": {"character_id": binding.character_id, "creature_uid": binding.creature_uid,
@@ -3541,6 +3547,141 @@ func _host_tether_command(intent: Dictionary, peer: int) -> Dictionary:
 		if verdict.delta.effect.kind == "snare":
 			wild.set_meta(&"tether_snare", verdict.delta.effect.status.duplicate(true))
 		_host_after_encounter_change(id, peer)
+	return verdict
+
+
+## A Tag is one accepted command family. Both actual creature damage writes
+## complete synchronously before any terminal record or owner verdict leaves.
+func _host_tether_tag(request: Dictionary, peer: int, admitted: Dictionary,
+		body: Node3D, wild: Node3D, runtime: Node) -> Dictionary:
+	var id: String = request.encounter_id
+	var refuse := {"ok": false, "code": "tag_unavailable"}
+	var engine: Node = runtime if runtime != null else _manager
+	if not is_instance_valid(engine) or not engine.has_method("host_roll_damage") \
+		or not uses_saved_actor_vitals(id) or ordinary_actor_vitals_pending(id) \
+		or not _guest_master_identity_valid(id, peer): return refuse
+	# Master duels bind one chosen trainee. A different incoming UID cannot
+	# satisfy that existing identity contract, even with a legal command meter.
+	var rematch := _remote_rematch(id)
+	if _guest_master_duels.has(id) or (rematch != null and not str(rematch.get("_master_uid")).is_empty()): return refuse
+	var binding := _f22_publication_binding(id, peer, body)
+	if binding.is_empty() or int(binding.deployment_generation) != int(request.generation): return refuse
+	var now_ms := Time.get_ticks_msec()
+	var authority: Dictionary = _encounter_host.call("strike_authority_state", id, peer)
+	if now_ms < int(authority.get("deadline_ms", 0)): return {"ok": false, "code": "switch_locked"}
+	var party: Array = admitted.get("party", [])
+	var outgoing_index := -1
+	for index in party.size():
+		if party[index].get("uid") == binding.creature_uid: outgoing_index = index
+	if outgoing_index < 0 or party.size() < 2 or party.size() > 5: return refuse
+	var incoming: Dictionary = {}
+	for offset in range(1, party.size()):
+		var candidate: Dictionary = party[(outgoing_index + offset) % party.size()]
+		if float(candidate.get("hp", 0.0)) > 0.0 and candidate.get("fainted") == false \
+			and not bool(candidate.get("resting", false)):
+			incoming = candidate
+			break
+	if incoming.is_empty(): return {"ok": false, "code": "no_partner"}
+	var local_index := -1
+	if peer == _local_peer_id():
+		if _manager == null or _manager.call("can_switch") != true: return {"ok": false, "code": "switch_locked"}
+		local_index = int(_manager.call("_next_switchable_index", 1))
+		var local_party: Array = _manager.get("_party")
+		if local_index < 0 or str(local_party[local_index].get("uid")) != incoming.uid: return refuse
+	var target: RefCounted = wild.get("instance")
+	var record: Dictionary = _encounter_host.call("record", id)
+	if target == null or record.get("phase") != "active" or float(target.hp) <= 0.0: return refuse
+	var generation := int(record.get("opponent", {}).get("body_generation", 0))
+	if generation < 1: return refuse
+	var moves := preload("res://scripts/creatures/move_db.gd").load_default()
+	var mastery := preload("res://scripts/creatures/move_mastery.gd")
+	var gear := preload("res://scripts/creatures/creature_gear.gd")
+	var actors: Array = []
+	var cards: Array = []
+	var profiles: Array = []
+	var owned_rows: Array = [party[outgoing_index], incoming]
+	var position: Vector3 = body.call("centre")
+	var facing: Vector3 = body.call("facing")
+	var game: Node = _session.call("_game")
+	if game == null: return refuse
+	for index in 2:
+		var owned: Dictionary = owned_rows[index]
+		var creature := WATER_CAPTURE_CODEC.decode_owned(owned, admitted.redesign_character)
+		if creature == null: return refuse
+		var card: Dictionary = _creature_card_for(peer) if index == 0 else _creature_card(creature)
+		var actor := {"character_id": binding.character_id, "creature_uid": str(owned.uid), "encounter_id": id,
+			"generation": int(request.generation) + index, "action": int(request.sequence), "hp": float(card.hp),
+			"attack": float(card.attack), "position": position, "facing": facing, "bonus_product": 1.0}
+		var tiers: Array = admitted.redesign_character.get("creatures", {}).get(owned.uid, {}).get("breakthroughs", [])
+		var frozen: Dictionary = mastery.freeze_action(mastery.owned_record(owned), "quick", actor, tiers, moves)
+		if frozen.get("ok") != true: return refuse
+		frozen.move = gear.freeze_move_profile(frozen.move, gear.gear_for(admitted, str(owned.uid)), gear.config())
+		var radius := _body_radius(body) if index == 0 else float(SPECIES.placeholder(str(owned.species_id)).get("radius", 0.4)) \
+			* maxf(float(body.get("body_scale")), 0.01)
+		var profile := COMBAT_MANAGER.host_move_profile(moves, "player_quick", str(owned.move_quick), radius,
+			_body_radius(wild), host_card_cooldown_multiplier(card), 0.0, frozen.move)
+		profile["mastery_context"] = {"world_namespace": game.get("world").get("reward_delivery_namespace"),
+			"session_id": _session.call("_altar_current_epoch")}
+		actors.append(actor)
+		cards.append(card)
+		profiles.append(profile)
+	var connected := MATH.move_connects(profiles[0], position, facing, wild.call("centre")) \
+		and MATH.move_connects(profiles[1], position, facing, wild.call("centre"))
+	var view := {"actor": actors[0], "incoming": actors[1], "actors": actors, "rolls": [0.5, 0.5],
+		"target": {"uid": str(target.uid), "generation": generation, "hp": float(target.hp), "hostile": true,
+			"position": wild.call("centre"), "defence": float(target.call("effective_defence", PROGRESSION.config())),
+			"type": str(target.get("creature_type")), "secondary_type": str(target.get("secondary_type"))},
+		"switch_allowed": true, "incoming_is_next_owned": true, "combo_geometry_connected": connected}
+	var prepared: Dictionary = _encounter_host.call("prepare_tether_tag_command", request, peer, binding, view, profiles, now_ms)
+	if prepared.get("ok") != true: return prepared
+	var parent := str(prepared.original.action_id)
+	var arrival: Dictionary = _encounter_host.call("begin_tether_tag_resolution", id, peer, parent, binding, view)
+	if arrival.get("ok") != true: return arrival
+	var original: Dictionary = arrival.original
+	var written: Array = []
+	var enemy_profile: Dictionary = wild.call("combat_config")
+	var armor := COMBAT_AI.armored_front_scale(enemy_profile, wild.call("centre"), wild.call("facing"), position)
+	# No await, RPC, lifecycle publication or body replacement between writes.
+	# The ordinary writer keeps its own RNG, minimum floor, poise and HP cap.
+	for index in 2:
+		var move: Dictionary = original.moves[index]
+		var child: Dictionary = arrival.joint.strikes[index]
+		var bonus := float(_encounter_host.call("self_utility_power", id, str(cards[index].creature_uid), now_ms)) \
+			* float((_encounter_host.call("tether_rally", id, peer, now_ms) as Dictionary).damage)
+		var rolled: Dictionary = engine.call("host_roll_damage", cards[index], str(move.move_id),
+			float(move.power) * float(child.power_multiplier) * armor, false,
+			{"action_id": str(child.action_id), "striker_body": body, "move": move,
+				"source_utility_power": bonus, "travel_seconds": 0.0, "body_generation": generation,
+				"direction": (wild.call("centre") as Vector3) - position})
+		if rolled.is_empty(): return refuse
+		written.append(rolled)
+	_encounter_host.call("set_opponent_hp", id, float(written[1].hp), float(written[1].hp_max), written[1])
+	if peer == _local_peer_id():
+		_manager.call("_clear_move_input")
+		_manager.call("_activate_party_member", local_index)
+		_manager.emit_signal("creature_switched", local_index)
+	else:
+		_host_set_deployed(peer, {"creature_uid": str(incoming.uid), "species_id": str(incoming.species_id),
+			"shiny": bool(incoming.get("shiny", false)), "card": cards[1]})
+	var incoming_binding := _ordinary_actor_binding(id, peer, body)
+	var verdict: Dictionary = _encounter_host.call("record_tether_tag_outcome", id, peer, parent, incoming_binding, written, Time.get_ticks_msec())
+	if verdict.get("ok") != true: return verdict
+	if _session != null: _session.call("foundation_combat_mastery", self, id, peer, -int(request.sequence))
+	var launch := HIT_FEEDBACK.launch(parent, id, str(binding.creature_uid), str(target.uid), str(profiles[0].move_id),
+		"quick", position, wild.call("centre"), 0.0, generation, wild.global_position, _host_visual_bounds(wild)).duplicate(true)
+	launch["attacker_binding"] = binding
+	launch["move"] = profiles[0]
+	launch["source_ground"] = body.global_position
+	if verdict.delta.killed == true:
+		if rematch != null:
+			if rematch.call("capture_kill", peer, parent, launch, verdict) != true: return refuse
+		else: _capture_wild_victory_source(id, verdict)
+		if not _encounter_host.call("publish_move_action_terminal", id, peer, parent, "done"): return refuse
+		_capture_ordinary_combat_round(id, target)
+	_host_publish_peer_impact(id, peer, verdict.delta.impact)
+	_host_after_encounter_change(id, peer, 0, verdict.delta.impact)
+	if not _encounter_host.call("acknowledge_move_action_publication", id, peer, parent, verdict): return refuse
+	if verdict.delta.killed == true: _finalize_shared_host_fight(id, "won")
 	return verdict
 
 
