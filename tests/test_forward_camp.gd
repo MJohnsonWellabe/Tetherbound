@@ -70,6 +70,30 @@ func test_source_context_is_realm_and_reach_bound() -> void:
 	assert_true(RULES.source_context(cfg,[_row()],"b1",Vector3.ZERO,"tidewake","guest",0,false,"bed").is_empty())
 	assert_false(RULES.source_context(cfg,[_row()],"b1",Vector3(50,0,0),"meadows","guest",0,false,"bed").in_range)
 
+func test_guest_camp_presentation_requires_the_current_record_pose_and_reach() -> void:
+	var session := preload("res://scripts/net/session.gd")
+	var row := _row()
+	var cfg := RULES.config()
+	var offset: Array = cfg.workbench_offset
+	var near := Vector3(offset[0], offset[1] + 0.6, offset[2])
+	var pose := Transform3D.IDENTITY
+	assert_true(session._forward_camp_record_in_range([row], "b1", pose, near, "meadows", "guest", 7))
+	assert_false(session._forward_camp_record_in_range([row], "b1", pose, Vector3(50,0,0), "meadows", "guest", 7))
+	assert_false(session._forward_camp_record_in_range([row], "b1", pose, near, "tidewake", "guest", 7))
+	assert_false(session._forward_camp_record_in_range([row], "b1", pose, near, "meadows", "", 7))
+	assert_false(session._forward_camp_record_in_range([row], "b1", pose, near, "meadows", "guest", -1))
+	assert_false(session._forward_camp_record_in_range([], "b1", pose, near, "meadows", "guest", 7))
+	assert_false(session._forward_camp_record_in_range([row,row], "b1", pose, near, "meadows", "guest", 7))
+	for field: String in ["removed", "paid", "realm"]:
+		var changed := row.duplicate(true)
+		changed[field] = true if field == "removed" else (false if field == "paid" else "tidewake")
+		assert_false(session._forward_camp_record_in_range([changed], "b1", pose, near, "meadows", "guest", 7), field)
+	for changed_pose: Transform3D in [Transform3D(Basis.IDENTITY, Vector3(1,0,0)),
+		Transform3D(Basis(Vector3.UP, 0.1), Vector3.ZERO),
+		Transform3D(Basis.IDENTITY.scaled(Vector3(2,2,2)), Vector3.ZERO)]:
+		assert_false(session._forward_camp_record_in_range([row], "b1", changed_pose, near, "meadows", "guest", 7))
+	assert_false(session._forward_camp_record_in_range([row], "b2", pose, near, "meadows", "guest", 7))
+
 func test_commit_reconciles_original_before_removed_source_and_never_publishes_failed_save() -> void:
 	var calls := {"stage":0,"publish":0}
 	var replay := HOST.commit({},func(_i: Dictionary) -> Dictionary: return {"ok":true,"found":true,"durable":true},
@@ -159,3 +183,21 @@ func test_real_recipe_book_splits_travel_tier_from_homestead_only() -> void:
 			refused += 1
 	assert_true(crafted >= 20, "travel-tier recipes craft at camp (%d)" % crafted)
 	assert_true(refused >= 30, "ingots, reinforcement, bracing and gear are refused (%d)" % refused)
+
+func test_personal_view_cache_requires_current_character_world_and_epoch() -> void:
+	var session := preload("res://scripts/net/session.gd").new()
+	var scope := {"character_id": "owner_a", "world_namespace": "world-a", "session_epoch": "epoch-a"}
+	var view := {"character_id": "owner_a", "registry_revision": 7, "redesign_character": {"tether_pouch": ["potion_small"]}}
+	for key: String in ["character_id", "world_namespace", "session_epoch", "missing"]:
+		session._foundation_personal_cache = view.duplicate(true)
+		session._foundation_personal_cache_scope = scope.duplicate(true)
+		assert_eq(session._personal_view_for_scope(scope), view)
+		var changed := scope.duplicate(true)
+		if key == "missing": changed = {}
+		else: changed[key] = "replacement"
+		assert_true(session._personal_view_for_scope(changed).is_empty(), key)
+		assert_true(session._foundation_personal_cache.is_empty())
+		assert_true(session._foundation_personal_cache_scope.is_empty())
+		assert_true(session._personal_view_for_scope(scope).is_empty(), "must await current reply; changing back cannot revive cleared cache")
+	session.free()
+

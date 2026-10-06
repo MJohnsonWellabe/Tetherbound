@@ -1,0 +1,112 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB
+
+[session] hosting via enet (cap 4); local peer id 1
+[session] hosting on udp/27015 (cap 4, channels 2); local peer id 1
+[trainers] spawning a body for peer 1 at (0.0, 0.0)
+[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 1)
+[trainers] Trainer_1 stands up: authority 1, this peer is 1 (our own proxy)
+[playground] spawned at 8.3, 2.9, -12.2
+[scatter bake] load phases (ms): read[256 regions, 387893 placements, 431212 skipped]=3074 reorder[16 layers]=3598
+[vegetation] grass field is on; 431212 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=6969 mark_harvestable=163 group_by_model=593 register_mesh_assets=94 build_batches_total=6117 (of which harvest_points[56283 nodes]=3808, initial_collision_stream[51210 solid]=172) update_mmis=989
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=RID(17038135263345) region_map=1024 entries
+[playground] scattered 386505 props in 36 batches (56283 harvestable, 0 already chopped, 256/51210 collision resident)
+[water] pond quads 2538, stream points 46, reeds 188, marginals 32, bank flowers 72, rocks 40, driftwood 5, lilypads 54, jetty 18, level -17.0
+[water] stream bank reeds 77, bank scrub 12
+[water] river quads 390, bank reeds 134, bank scrub 57
+[village] placed 29 structures; static batch folded 768 module meshes in 455 ms
+[props] placed 434 props in 54 clusters (6 usable rest points)
+[village_npcs] placed 18 of 20
+[relay_site] placed 3 of 3
+[pond_npc] placed 1 of 1
+[trainers] placed 21 trainer(s)
+[south_bridge_dressing] placed 1 of 1
+[quarry] 2 foundations, 4 pylons, 1 finish treatment standing
+[relay] cleared 152 scattered pieces inside the 27m station radius
+[relay] station at 350, 3760: 4 wall runs, 2 decks, 1 ramps, 10 pylons
+[river] 18 course segments, 18 recovery volumes
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[playground] placed 198 harvest nodes
+[playground] placed 6 farm plots
+[playground] placed 147 band pickups (0 already taken, 34 nudged off scatter, 0 unclear, 0 without ground)
+[warrens] cleared 821 scattered trees/rocks inside the 30m site radius and the chambers
+[warrens] hero clearing: removed 803 more scattered pieces out to 55m (was 30m) so no background tree competes with the mound
+[warrens] bank cap closes the dome over the throat (297 quads)
+[warrens] planted 20 pieces of ground cover around the site
+[warrens] earth bank 65x90m, crest 17.0m above the mouth (9.5x the 1.8m trainer); chamber clearance past the required 1.5m: mouth +4.8m, hall +3.8m, warren +4.1m, den +2.5m, vault +4.1m (worst 2.5m)
+[warrens] 4 flora pieces beside the mouth
+[warrens] 7 claw scrapes beside the mouth
+[warrens] 5 crest trees standing on the bank
+[warrens] scattered 78 rubble pieces across the face foot, spoil fans and threshold
+[warrens] 220 pieces of growth on the bank
+[warrens] 182 pieces of interior rock across 5 chambers
+[warrens] 8 connected excavated terrain masses preserve the original collision route
+[warrens] 12 root masses
+[warrens] 8 fungus clusters, 3 species
+[warrens] 40 litter pieces
+[warrens] 4 haze cards
+[warrens] guardian carries an alert bearing (neck -30, head -12, spine -7 deg)
+[warrens] guardian idle faces the den's entrance passage (yaw -169.0 deg)
+[approach-drain] 690 drained quads over the approach corridor
+[stronghold] approach ramp: 11.3m of rise over 40m (16 degrees)
+[stronghold] 407 structural members across 5 spaces
+[stronghold] hall massing exterior lift: 1.30x height on 17/18 module(s)
+[stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
+[stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 78.7), enclosing LargeTower
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 78.7), enclosing _MeshInstance3D_66457
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 101.7), enclosing _MeshInstance3D_66458
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 101.7), enclosing _MeshInstance3D_66459
+[stronghold] tower pier in legendary_chamber: 5.0 x 5.1 m at local (-43.5, 78.7), enclosing PointyTower
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-20.0, 102.2), enclosing _MeshInstance3D_66460
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-44.0, 102.2), enclosing _MeshInstance3D_66461
+[stronghold] tower pier in legendary_chamber: 3.5 x 3.6 m at local (-19.7, 77.9), enclosing _MeshInstance3D_66462
+[stronghold] 8 tower pier(s) enclosing massing that reached inside a roofed chamber
+[stronghold] 87 interior dressing prop(s) in the roofed rooms
+[trainers] placed 3 trainer(s) for group 'stronghold'
+[stronghold] cleared 90 scattered prop(s) standing inside the five spaces
+[stronghold] 21 exterior omni light(s) at the Hall (budget 22), 11 of them flickering fires
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=6.17, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+[climax] the freed stand is 6.00 m from the machine's axis, inside its 8.05 m plinth on that bearing; moved out to 10.55 m
+[climax] the legendary stands inside the machine: dais 4.06 m up, void 7.67 m tall, body 7.08 m, headroom 0.59 m
+[meadow] the land lies drained: 15161 quads over 8 groups, grass field thinned
+[lure-walk] START activity=bram save=slot_0.json pos=[8.27, 0.9, -12.24] lure=[300.0, 983.0] route_m=1115.5 hour=23.20
+[lure-walk] CAPTURE bram_01_start.png t=0.0s walked=0.0m pos=(8.3,-12.2) lure_m=1037.1
+[lure-walk] PROGRESS t=10.0s walked=78.8m pos=(10.1,65.9) cursor=8/125
+[lure-walk] PROGRESS t=20.0s walked=141.0m pos=(13.7,127.6) cursor=16/125
+[lure-walk] PROGRESS t=30.0s walked=200.9m pos=(22.3,185.8) cursor=23/125
+[lure-walk] PROGRESS t=40.0s walked=261.5m pos=(31.6,245.8) cursor=31/125
+[lure-walk] PROGRESS t=50.0s walked=323.5m pos=(40.8,307.1) cursor=38/125
+[lure-walk] PROGRESS t=60.0s walked=385.8m pos=(50.1,368.7) cursor=46/125
+[lure-walk] PROGRESS t=70.0s walked=448.0m pos=(59.4,430.1) cursor=54/125
+[lure-walk] PROGRESS t=80.0s walked=510.0m pos=(68.7,491.4) cursor=62/125
+[lure-walk] PROGRESS t=90.0s walked=571.9m pos=(78.5,552.5) cursor=70/125
+[lure-walk] PROGRESS t=100.0s walked=634.2m pos=(88.5,614.1) cursor=77/125
+[lure-walk] PROGRESS t=110.0s walked=696.2m pos=(98.4,675.3) cursor=85/125
+[lure-walk] PROGRESS t=120.0s walked=758.5m pos=(108.4,736.7) cursor=93/125
+[lure-walk] PROGRESS t=130.0s walked=820.6m pos=(118.3,798.1) cursor=101/125
+[lure-walk] PROGRESS t=140.0s walked=882.3m pos=(128.2,859.0) cursor=108/125
+[lure-walk] PROGRESS t=150.0s walked=944.0m pos=(141.4,919.2) cursor=116/125
+[lure-walk] CAPTURE bram_02_road-glance-before-exit.png t=155.8s walked=977.8m pos=(149.0,952.2) lure_m=154.1
+[lure-walk] CAPTURE bram_03_left-road-lure-not-yet-on-screen.png t=158.3s walked=992.6m pos=(152.5,966.6) lure_m=148.4
+[lure-walk] CAPTURE bram_04_road-exit-glance-toward-lure.png t=160.5s walked=993.5m pos=(152.8,967.4) lure_m=148.0
+[lure-walk] PROGRESS t=162.8s walked=1010.5m pos=(169.7,969.2) cursor=123/125
+[lure-walk] CAPTURE bram_05_lure-first-seen.png t=170.0s walked=1021.6m pos=(178.8,968.0) lure_m=122.1
+[lure-walk] PROGRESS t=178.1s walked=1027.9m pos=(184.5,970.4) cursor=124/125
+[lure-walk] CAPTURE bram_06_lure-first-readable.png t=187.1s walked=1091.6m pos=(247.8,977.3) lure_m=52.5
+[lure-walk] PROGRESS t=189.8s walked=1110.3m pos=(266.4,979.3) cursor=124/125
+[lure-walk] CAPTURE bram_07_approach-30m.png t=192.8s walked=1114.5m pos=(270.6,979.8) lure_m=29.6
+[lure-walk] CAPTURE bram_08_prompt-offered.png t=199.3s walked=1141.1m pos=(297.0,982.6) lure_m=3.0
+[lure-walk] RECEIPT {"activity":"bram","budget_s":360.0,"clock_hour":23.2048117733333,"companion_out_at_start":true,"entered_road_at":[13.8,14.0],"fights":[],"final_position":[297.0,982.6],"flags_set_by_game_during_walk":[],"frames":[{"file":"bram_01_start.png","label":"start","lure_m":1037.1,"pos":[8.3,-12.2],"t_s":0.0,"walked_m":0.0},{"file":"bram_02_road-glance-before-exit.png","label":"road-glance-before-exit","lure_m":154.1,"pos":[149.0,952.2],"t_s":155.8,"walked_m":977.8},{"file":"bram_03_left-road-lure-not-yet-on-screen.png","label":"left-road-lure-not-yet-on-screen","lure_m":148.4,"pos":[152.5,966.6],"t_s":158.3,"walked_m":992.6},{"file":"bram_04_road-exit-glance-toward-lure.png","label":"road-exit-glance-toward-lure","lure_m":148.0,"pos":[152.8,967.4],"t_s":160.5,"walked_m":993.5},{"file":"bram_05_lure-first-seen.png","label":"lure-first-seen","lure_m":122.1,"pos":[178.8,968.0],"t_s":170.0,"walked_m":1021.6},{"file":"bram_06_lure-first-readable.png","label":"lure-first-readable","lure_m":52.5,"pos":[247.8,977.3],"t_s":187.1,"walked_m":1091.6},{"file":"bram_07_approach-30m.png","label":"approach-30m","lure_m":29.6,"pos":[270.6,979.8],"t_s":192.8,"walked_m":1114.5},{"file":"bram_08_prompt-offered.png","label":"prompt-offered","lure_m":3.0,"pos":[297.0,982.6],"t_s":199.3,"walked_m":1141.1}],"game_seconds":199.3,"left_road_at":[152.9,969.4],"load_vs_saved_xz_m":0.0,"lure_first_readable":{"after_deliberate_look":true,"camera_to_lure_m":58.7,"height_px":24,"t_s":185.4,"walked_m":1090.7,"while_on_road":false},"lure_first_seen":{"after_deliberate_look":true,"camera_to_lure_m":127.3,"screen_px":[958,338],"t_s":168.3,"walked_m":1020.7,"while_on_road":false},"lure_node":"/root/MeadowsPlayground/Trainers/Old Bram","lure_position":[300.0,983.0],"notes":["pressed creature_recall (attempt 1); companion out afterwards: true","t=170.0s no progress at (178.7,968.9); unstick attempt 1 (jump + strafe)","t=175.9s no progress at (180.0,964.8); unstick attempt 2 (jump + strafe)","approach-30m frame; pressed creature_recall (attempt 1); companion out afterwards: true"],"off_road_leg_m":147.7,"position_after_load":[8.27,0.9,-12.24],"prompt":{"t_s":197.1,"walked_m":1140.3,"winner":"{ \"label\": \"Challenge Old Bram\", \"distance\": 4.0502758026123, \"priority\": 0, \"actionable\": true }"},"road_exit_glance":{"camera_to_lure_m":148.5,"t_s":158.3},"road_glance_before_exit":{"camera_to_lure_m":154.5,"t_s":155.3},"route_m":1115.5,"route_road_points":123,"save":"D:/tetherbound/.artifacts/r3-night-proof/round7-home/Godot/app_userdata/Tetherbound/saves/redesign-v28/slot_0.json","save_dir":"D:/tetherbound/.artifacts/r3-night-proof/round7-home/Godot/app_userdata/Tetherbound/saves/redesign-v28","save_sha256":"fb891a8bd3a8ceac081aaaa53dd569355405df57ffa9010e1d307cdc8d6ce896","save_version":28,"saved_position":[8.26587200164795,0.900766730308533,-12.2372465133667],"scene":"res://scenes/world/meadows_playground.tscn","script_state_writes":"none","start_distance_to_lure_m":1037.1,"verdict":"PASS","walked_m":1141.1,"why":"lure seen and the activity's prompt was offered"}
+[lure-walk] PASS activity=bram: lure seen and the activity's prompt was offered
