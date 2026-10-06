@@ -4271,6 +4271,10 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 	## assert scaling at two participants the smoke has to reach a creature that
 	## came out AFTER the join, which is the boss's second.
 	var stop_at := int(args.get("stop_when_creatures_left", -1))
+	# Saved actor HP is authoritative on the canonical path. Keep the legacy
+	# OFF pilot's existing input behavior; its local faint is not that receipt.
+	var canonical_vitals: bool = NET_COMBAT_MATH.config().get("actor_vitals", {}).get("runtime_enabled") == true \
+		or director.call("uses_durable_trainer_rewards", str(manager.call("encounter_id"))) == true
 	_trainer_fight_director = director
 	_trainer_fight_manager = manager
 	_trainer_fight_observed_encounter_id = str(manager.call("encounter_id"))
@@ -4321,7 +4325,7 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 		# A saved faint is not a usable striker. Use the player's LB switch path
 		# and let its normal commitment/save guards decide when it can proceed.
 		# Never revive the actor or manufacture a replacement party member here.
-		if mine != null and bool(mine.get("fainted")):
+		if canonical_vitals and mine != null and bool(mine.get("fainted")):
 			# No healthy member left: in a shared fight the partner can still
 			# finish the round, so wait. A loss ends the battle, and the outcome
 			# check after this loop reports it.
@@ -4422,7 +4426,7 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 		# Opponent AI keeps running while the placement settles. A faint during
 		# that beat must reach the switch path, rather than another attack press.
 		mine = manager.call("active_creature")
-		if mine == null or bool(mine.get("fainted")):
+		if mine == null or (canonical_vitals and bool(mine.get("fainted"))):
 			continue
 		if not bool(manager.call("quick_ready")):
 			_trainer_fight_progress["phase"] = "quick_not_ready"
