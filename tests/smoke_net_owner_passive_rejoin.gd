@@ -385,7 +385,8 @@ func _tonic_item_original() -> bool:
 		if not _earned_mastery.receipts.has(move): _earned_mastery.receipts[move] = []
 		if not _earned_mastery.receipts[move].has(action):
 			_earned_mastery.receipts[move].append(action)
-			_earned_mastery.uses[move] = int(_earned_mastery.uses.get(move, 0)) + 1
+			# Probe/save JSON counts are floats; Dictionary equality keeps types.
+			_earned_mastery.uses[move] = float(_earned_mastery.uses.get(move, 0.0)) + 1.0
 	check(not seen.is_empty(), "mastery: actual landed quick hits retain unique creature-owned mastery obligations")
 	print("MASTERY actual earned expectation: ", JSON.stringify({"uid":_mastery_uid, "before":before_mastery, "retained":retained, "earned":_earned_mastery}))
 	_ok(await step(1, "op_tonic_clear"), "tonic: existing proximity fixture clears reach while previous actual HP writes settle")
