@@ -63,7 +63,14 @@ func _process(_delta: float) -> void:
 		for candidate: Dictionary in RULES.config().get("lessons", []):
 			if candidate.id == _replay: row = candidate.duplicate(true)
 	else:
-		row = RULES.due(player)
+		# A missed Grandpa lesson must not silence Tam when his own system
+		# unlocks. Preserve authored order among teachers actually present.
+		for due_candidate: Dictionary in RULES.config().get("lessons", []):
+			var id := str(due_candidate.id)
+			if player.get("flags").call("has", RULES.PREFIX + id) == true: continue
+			if RULES.available(id, player) and _teacher_near(due_candidate):
+				row = due_candidate.duplicate(true)
+				break
 	if row.is_empty() or not _teacher_near(row): return
 	# Content lives with its installed speaker's dialogue, with no reward effects.
 	var dialogue: Variant = preload("res://scripts/data/redesign_data.gd").json(str(row.dialogue_path))
