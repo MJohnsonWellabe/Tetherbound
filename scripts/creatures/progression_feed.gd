@@ -297,6 +297,14 @@ static func catalyst_pickup_text(item_id: String, cfg: Dictionary = {}) -> Strin
 	if item_id == "":
 		return ""
 	var progression_cfg := cfg if not cfg.is_empty() else PROGRESSION.config()
+	if progression_cfg.get("evolution_mode") == "breakthrough":
+		var catalog := preload("res://scripts/data/redesign_data.gd").load_catalog("evolution_lines", EVOLUTION.LINES_PATH)
+		if catalog.get("ok") != true: return ""
+		for row: Dictionary in catalog.data:
+			if row.get("enabled") != true or row.get("extra_ingredient") != item_id: continue
+			return "%s: cook a Lv %d Ascension Feast at a Kitchen for %s, then choose to evolve into %s or stay." % [
+				item_id.capitalize(), int(row.breaks_level), str(row.source).capitalize(), str(row.target).capitalize()]
+		return ""
 	var evolution: Dictionary = progression_cfg.get("evolution", {})
 	var template := str(config().get("catalyst_pickup_template", "%s: held against a creature that has grown enough (Lv %d, bond tier %d), it finishes what it was becoming. %s is one."))
 	for species_id: String in evolution.keys():

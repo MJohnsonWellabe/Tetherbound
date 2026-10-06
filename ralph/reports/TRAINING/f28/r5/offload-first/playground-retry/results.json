@@ -1,0 +1,78 @@
+{
+  "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+  "run_id": 37427871290,
+  "job_id": 112151566045,
+  "artifact": {
+    "id": 11395996013,
+    "name": "render-r5-f28-semantic-20261006-070814-37427871290",
+    "size_in_bytes": 10029,
+    "url": "https://api.github.com/repos/MJohnsonWellabe/Tetherbound/actions/artifacts/11395996013",
+    "archive_download_url": "https://api.github.com/repos/MJohnsonWellabe/Tetherbound/actions/artifacts/11395996013/zip",
+    "expired": false,
+    "created_at": "2026-10-06T07:13:07Z",
+    "expires_at": "2026-10-13T07:13:06Z",
+    "updated_at": "2026-10-06T07:13:07Z",
+    "digest": "sha256:709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+    "workflow_run": {
+      "id": 37427871290,
+      "repository_id": 1319534705,
+      "head_repository_id": 1319534705,
+      "head_branch": "main",
+      "head_sha": "8e7c11ceb5854f063c5241d62618c382803562c9"
+    }
+  },
+  "workflow_main": "8e7c11ceb5854f063c5241d62618c382803562c9",
+  "engine": "4.7.stable.official.5b4e0cb0f",
+  "native_exit": 0,
+  "original_smoke": "OK",
+  "setup": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+  "diagnostics": {
+    "warning": "8 ObjectDB instances leaked at exit",
+    "error": "4 resources still in use at exit",
+    "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+  },
+  "native_witnesses": [
+    {
+      "item": "berries",
+      "source_at": [
+        -6,
+        0.891517,
+        -24.5
+      ],
+      "player_at": [
+        -4.511112,
+        0.889983,
+        -24.68224
+      ],
+      "on_floor": true,
+      "exact_winning_provider": true,
+      "label": "Pick berries",
+      "stock_before": 0,
+      "stock_after": 3,
+      "once_flag": "harvest_node:order:10.0",
+      "spent_prompt": true
+    },
+    {
+      "item": "sunstone",
+      "source_at": [
+        121,
+        4.738902,
+        7336
+      ],
+      "player_at": [
+        120.9744,
+        4.781143,
+        7334.5
+      ],
+      "on_floor": true,
+      "exact_winning_provider": true,
+      "label": "Take the sunstone",
+      "stock_before": 0,
+      "stock_after": 1,
+      "once_flag": "pickup:sunstone",
+      "spent_prompt": true
+    }
+  ],
+  "raw_log_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+  "verdict": "/root/f28_review final native+ledger scoped F28#5 evidence MET: exactly32 Berry/8 Sunstone bindings; all prior ledger metadata equivalent after removing only additions; coordinator landing/count pending"
+}

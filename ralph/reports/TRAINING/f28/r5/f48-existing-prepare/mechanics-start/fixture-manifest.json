@@ -1,0 +1,344 @@
+{
+  "status": "OPEN_UNVALIDATED_MECHANICS_FIXTURE",
+  "acceptance_credit": false,
+  "earned_checkpoint": false,
+  "original_input_origin": "Original native shared_boss saves retained by the prior integration session. These are disclosed mechanics starter-level-9 sources, not earned redesigned campaign checkpoints. No new character, UID, level, receipt or outcome is synthesized. The existing fixture producer separately discloses initial stock, physical setup and legacy pre-boss flags.",
+  "layout": {
+    "path": "D:\\tetherbound\\codex-r5\\tests\\fixtures\\f48-producer-seeds\\layout.json",
+    "sha256": "98499e2c47f5b82f73bb70e9f8d0ceb1a8bad30e4badfc1f845150d873d74fe2"
+  },
+  "source_files": {
+    "data/config/stations.json": "8fd375347b19d86dd9db826d2f163d60c08430a719f1d098708280d3b2fac262",
+    "data/config/essence.json": "024fd4614037d9b11c03a69908f05c454e15e503933e91acece1aadf38153c13",
+    "data/config/traits.json": "14e339286cb1e267b84e2c05407db92f8c86418cad4f16ef8e2500c4fee238b8",
+    "data/config/multiplayer.json": "c684e4c4a9d560b48fef910179942845337a5517118e927e01c9c345a1081961",
+    "data/config/hud.json": "25414f95182ec6f3a9181217bd5a29304ba14c113e7f8387560e634339e5552f",
+    "data/config/alpha_respawns.json": "b5a92b9a73ba66bb39aed476354b012e9e0ac80beb1e9cad82df6213ba5e2b59",
+    "data/config/progression.json": "1d2a3bbb7c5fbadd365ef2e32282d90749c2ad6195d2ac5f5360be850e75199b",
+    "data/recipes/recipes_forge.json": "31b004ed464502b56a9d1788b78b5d9882e245da62617f91f8f65fc4e0c2e378",
+    "data/items/items.json": "bcf67b7bdf175885eb2891c5facf43f8bcbd110fec75f7a2cfa534b0d5354fc0",
+    "scripts/net/session.gd": "0742f2c85b796f913ace7c36d18be9d1970a8388607451bed9ec63cdc1a54555",
+    "scripts/ui/craft_panel.gd": "a05ef4ace71e3dda32b6dee8bdc92862f4ef68d61c1c180afe01f1ef7e707e95",
+    "scripts/build/station_piece.gd": "7f10d284b484fff6ca2a33173eee2426fd6b245914901465bf65938deabdfd0d",
+    "autoload/world_state.gd": "4c0678ab14c347bcc85ca229903ac6c5648ae20127bdc8346fdaa195b1740082"
+  },
+  "inputs": [
+    {
+      "peer": 0,
+      "character_id": "character-626300bee616b52bfa1d40ab32fb776a",
+      "owned_uids": [
+        "creature-90d325f68da4033a00d47730057cf38c"
+      ],
+      "documents": [
+        {
+          "path": "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\originals\\peer-0\\characters\\redesign-v28\\character-626300bee616b52bfa1d40ab32fb776a\\character.json",
+          "sha256": "06fea685d133a680a4d7dcc887fbd6179b7675f36b2c87a54753c7b7c81d2063",
+          "fixture_path": "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\mechanics-start\\peer-0\\characters\\redesign-v28\\character-626300bee616b52bfa1d40ab32fb776a\\character.json",
+          "fixture_sha256": "48289d457580a72f0a791d4d2e8c4451f4e19d9b3a42c935dc661a01c15b36e5"
+        },
+        {
+          "path": "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\originals\\peer-0\\worlds\\redesign-v28\\slot-0\\world.json",
+          "sha256": "4e5b04e982f85a10d38c07865306bb0f1e13fa08b0e1624e501873c3ac2f35bc",
+          "fixture_path": "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\mechanics-start\\peer-0\\worlds\\redesign-v28\\slot-0\\world.json",
+          "fixture_sha256": "71b59819d2a8bcae12d555d05d819ea0755e49909138e7447e7574f1a6c95324"
+        },
+        {
+          "path": "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\originals\\peer-0\\saves\\redesign-v28\\slot_0.json",
+          "sha256": "b187d4f8abeffd9bbe6e6d4daedf28a472368ce1d849bf0f69d27d2f9562fe2b",
+          "fixture_path": "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\mechanics-start\\peer-0\\saves\\redesign-v28\\slot_0.json",
+          "fixture_sha256": "c207428705adb761c2ecef8935184ebecd538db12e61a7015ff244ef2f7d57cb"
+        }
+      ]
+    },
+    {
+      "peer": 1,
+      "character_id": "character-a79c7bee9128c2ef03d266ce0352c666",
+      "owned_uids": [
+        "creature-39db0f1e8b5584e6949b906a7b09ec76"
+      ],
+      "documents": [
+        {
+          "path": "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\originals\\peer-1\\characters\\redesign-v28\\character-a79c7bee9128c2ef03d266ce0352c666\\character.json",
+          "sha256": "8d2deab960882f4f25172de6147a965fe3fb2b9366ebea9b40402a55e4b37172",
+          "fixture_path": "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\mechanics-start\\peer-1\\characters\\redesign-v28\\character-a79c7bee9128c2ef03d266ce0352c666\\character.json",
+          "fixture_sha256": "b7eb1ad4489e484792d9fc0a91bd7d54a684f563ec9f8c28ea5f4aafdc73ebf3"
+        }
+      ]
+    }
+  ],
+  "mutations": [
+    {
+      "peer": 0,
+      "initial_stock_added": {
+        "stone": 10,
+        "rootstone": 8,
+        "ironwood": 4,
+        "berries": 8,
+        "attuned_ground": 2,
+        "essence_ground": 100,
+        "orb_basic": 1
+      },
+      "initial_pose": {
+        "camera_pitch": -0.226892807154215,
+        "camera_yaw": -0.785157014069263,
+        "model_yaw": 2.82077932357788,
+        "position": [
+          -16,
+          3.1099109649658203,
+          14
+        ],
+        "realm": "meadows",
+        "traversal": {
+          "active_index": 0,
+          "mode": "grounded",
+          "realm": "meadows",
+          "safe_anchor": [
+            -16,
+            3.1099109649658203,
+            14
+          ],
+          "stamina_fraction": 1.0,
+          "velocity": [
+            0,
+            0,
+            0
+          ],
+          "version": 1
+        }
+      },
+      "initial_paid_stations": [
+        {
+          "uid": "b1",
+          "id": "forge",
+          "paid": true,
+          "removed": false,
+          "realm": "meadows",
+          "position": [
+            -16.0,
+            1.14382481575012,
+            10.0
+          ],
+          "yaw_deg": 0
+        },
+        {
+          "uid": "b2",
+          "id": "kitchen",
+          "paid": true,
+          "removed": false,
+          "realm": "meadows",
+          "position": [
+            -16.0,
+            0.947120308876038,
+            25.0
+          ],
+          "yaw_deg": 0
+        },
+        {
+          "uid": "b3",
+          "id": "kitchen_meadows",
+          "paid": true,
+          "removed": false,
+          "realm": "meadows",
+          "position": [
+            -19.0,
+            0.947120308876038,
+            25.0
+          ],
+          "yaw_deg": 0,
+          "parent_uid": "b2",
+          "slot": 1
+        }
+      ]
+    },
+    {
+      "peer": 1,
+      "initial_stock_added": {
+        "stone": 10,
+        "rootstone": 8,
+        "ironwood": 4,
+        "berries": 8,
+        "attuned_ground": 2,
+        "essence_ground": 100,
+        "orb_basic": 1
+      },
+      "initial_pose": {
+        "camera_pitch": -0.244346095279206,
+        "camera_yaw": 1.31278502909642,
+        "model_yaw": -1.22918593883514,
+        "position": [
+          -16,
+          3.1099109649658203,
+          14
+        ],
+        "realm": "meadows",
+        "traversal": {
+          "active_index": 0,
+          "mode": "grounded",
+          "realm": "meadows",
+          "safe_anchor": [
+            -16,
+            3.1099109649658203,
+            14
+          ],
+          "stamina_fraction": 1.0,
+          "velocity": [
+            0,
+            0,
+            0
+          ],
+          "version": 1
+        }
+      },
+      "initial_paid_stations": []
+    }
+  ],
+  "gaps": [
+    "peer0: no authentic caught wild companion for release; none fabricated",
+    "peer1: no authentic caught wild companion for release; none fabricated",
+    "Actual ordinary release_prepare route unavailable; existing smoke fails",
+    "Actual ordinary release_commit route unavailable; existing smoke fails",
+    "Actual ordinary release_reopen route unavailable; existing smoke fails",
+    "Actual ordinary feast_prepare route unavailable; existing smoke fails",
+    "Actual ordinary feast_commit route unavailable; existing smoke fails",
+    "Actual ordinary feast_reopen route unavailable; existing smoke fails",
+    "Actual ordinary key_prepare route unavailable; existing smoke fails",
+    "Actual ordinary key_commit route unavailable; existing smoke fails",
+    "Actual ordinary key_reopen route unavailable; existing smoke fails",
+    "Actual ordinary relic_prepare route unavailable; existing smoke fails",
+    "Actual ordinary relic_commit route unavailable; existing smoke fails",
+    "Actual ordinary relic_reopen route unavailable; existing smoke fails",
+    "Independent exact release_1 oracle unavailable; existing smoke fails",
+    "Independent exact feast_1 oracle unavailable; existing smoke fails",
+    "Actual native terrain/interaction/transaction/BOOL-save/ACK/cut proof remains OPEN",
+    "Altar station deliberately absent: actual ordinary paid build and authentic altar_building journal required; no fixture receipt",
+    "Master win/recipe, boss key/relic and ordinary reopen routes are not fabricated; INITIAL Kitchen tier1 is separately disclosed, not earned"
+  ],
+  "preboss_legacy_mechanics": {
+    "scope": "DISCLOSED initial pre-boss mechanics setup, not earned progression",
+    "removed_legacy_world_flags": [
+      "defeated_warden",
+      "realm_key_cloudreach",
+      "realm_heart_meadows_earned"
+    ],
+    "original_world_flags": [
+      "defeated_warden",
+      "realm_key_cloudreach",
+      "realm_heart_meadows_earned",
+      "reward:trainer:warden_aldis:xp:1",
+      "reward:trainer:warden_aldis:xp:887192150"
+    ],
+    "initial_world_flags": [
+      "reward:trainer:warden_aldis:xp:1",
+      "reward:trainer:warden_aldis:xp:887192150"
+    ],
+    "retained_journal_sha256": "1535ca7534f083f99d0bc8ec407bb93d4c0b167863b6793b04f8f227b89d15eb",
+    "preserved": "Every original journal row, namespace, XP flag, character and owner receipt; no typed prior win"
+  },
+  "initial_kitchen_meadows_attachment_fixture": {
+    "scope": "DISCLOSED initial station attachment fixture; no earned payment or build transaction",
+    "record": {
+      "uid": "b3",
+      "id": "kitchen_meadows",
+      "paid": true,
+      "removed": false,
+      "realm": "meadows",
+      "position": [
+        -19.0,
+        0.947120308876038,
+        25.0
+      ],
+      "yaw_deg": 0,
+      "parent_uid": "b2",
+      "slot": 1
+    },
+    "authored_cost_not_claimed_paid": [
+      {
+        "id": "rootstone",
+        "n": 8,
+        "name": "Rootstone",
+        "source_hint": "Gather in Meadows"
+      },
+      {
+        "id": "ironwood",
+        "n": 8,
+        "name": "Ironwood",
+        "source_hint": "Gather in Meadows"
+      },
+      {
+        "id": "rootiron_ingot",
+        "n": 2,
+        "name": "Rootiron Ingot",
+        "source_hint": "Refine at the Forge"
+      }
+    ],
+    "source_socket": "Actual StationRules.socket tier1 at yaw0: parentX−halfWidth−attachmentSpacing",
+    "personal_recipes_changed": false,
+    "receipt_or_journal_created": false
+  },
+  "test_configuration": {
+    "status": "DISCLOSED mechanics full overlay only; production defaults unchanged; native execution OPEN",
+    "files": [
+      {
+        "file": "res://data/config/stations.json",
+        "source_sha256": "8fd375347b19d86dd9db826d2f163d60c08430a719f1d098708280d3b2fac262",
+        "sha256": "8fd375347b19d86dd9db826d2f163d60c08430a719f1d098708280d3b2fac262",
+        "overlay_file": "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\mechanics-start\\test-configuration\\data\\config\\stations.json",
+        "enabled_fields": [
+          "runtime_enabled",
+          "craft_runtime_enabled",
+          "forge.runtime_enabled"
+        ]
+      },
+      {
+        "file": "res://data/config/essence.json",
+        "source_sha256": "024fd4614037d9b11c03a69908f05c454e15e503933e91acece1aadf38153c13",
+        "sha256": "024fd4614037d9b11c03a69908f05c454e15e503933e91acece1aadf38153c13",
+        "overlay_file": "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\mechanics-start\\test-configuration\\data\\config\\essence.json",
+        "enabled_fields": [
+          "altar_runtime_enabled",
+          "altar_building_runtime_enabled",
+          "altar_remote_spend_enabled"
+        ]
+      },
+      {
+        "file": "res://data/config/traits.json",
+        "source_sha256": "14e339286cb1e267b84e2c05407db92f8c86418cad4f16ef8e2500c4fee238b8",
+        "sha256": "14e339286cb1e267b84e2c05407db92f8c86418cad4f16ef8e2500c4fee238b8",
+        "overlay_file": "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\mechanics-start\\test-configuration\\data\\config\\traits.json",
+        "enabled_fields": [
+          "runtime_enabled"
+        ]
+      },
+      {
+        "file": "res://data/config/multiplayer.json",
+        "source_sha256": "c684e4c4a9d560b48fef910179942845337a5517118e927e01c9c345a1081961",
+        "sha256": "1917076c359fd4764904ca120a51c104b73b2c29b2971352a9b295174466384e",
+        "overlay_file": "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\mechanics-start\\test-configuration\\data\\config\\multiplayer.json",
+        "enabled_fields": [
+          "session.redesign_portal_runtime_enabled",
+          "session.redesign_boss_handoff_runtime_enabled"
+        ]
+      },
+      {
+        "file": "res://data/config/hud.json",
+        "source_sha256": "25414f95182ec6f3a9181217bd5a29304ba14c113e7f8387560e634339e5552f",
+        "sha256": "25414f95182ec6f3a9181217bd5a29304ba14c113e7f8387560e634339e5552f",
+        "overlay_file": "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\mechanics-start\\test-configuration\\data\\config\\hud.json",
+        "enabled_fields": [
+          "new_system_screens.enabled"
+        ]
+      },
+      {
+        "file": "res://data/config/alpha_respawns.json",
+        "source_sha256": "b5a92b9a73ba66bb39aed476354b012e9e0ac80beb1e9cad82df6213ba5e2b59",
+        "sha256": "b02e05dab1f45442b97d32d114762b90b22d0432f3217693375fed6eed55972e",
+        "overlay_file": "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\mechanics-start\\test-configuration\\data\\config\\alpha_respawns.json",
+        "enabled_fields": [
+          "runtime_enabled"
+        ]
+      }
+    ],
+    "apply": "ROOT copies the exact overlay bytes to its isolated serialized native candidate, runs tools/net/f48_bootstrap.gd, then restores original configuration. No source flag or CI prerequisite waiver."
+  },
+  "profile_sha256": "5d776772e2962dafdd86d112364dea77263c9009be0a16feb1ad136cd186e6c9"
+}
