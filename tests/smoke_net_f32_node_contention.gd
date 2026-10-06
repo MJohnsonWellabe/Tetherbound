@@ -61,15 +61,36 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		(session.get("_config") as Dictionary)["redesign_portal_runtime_enabled"] = true
 		return {"verdict": "PASS", "detail": "DIAGNOSTIC: host in-memory redesign_portal_runtime_enabled=true (portal_runtime_ready=%s)" % str(session.call("portal_runtime_ready"))}
 	if action == "f32_portal_refused":
-		# Accepting guest travel samples must not open portals: with the shipped
-		# flag off, the Home Key and every portal action still refuse.
+		# Accepting guest travel samples must not open portals by itself. With
+		# the portal runtime off, the Home Key and every portal action refuse.
+		# With it on (F18, shipped), a bare Home Key finish that no host raise
+		# issued still refuses: a sample alone never moves anyone.
 		var session: Node = root.get_node(^"Game").get("session")
 		var ready: bool = session.call("portal_runtime_ready") == true
+		var shipped: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/multiplayer.json"))
+		var shipped_on: bool = shipped is Dictionary and shipped.get("session", {}).get("redesign_portal_runtime_enabled") == true
 		var key := str(session.call("home_key_refusal"))
-		var action_reply: Dictionary = session.call("request_portal_action", {"kind": "home_key_finish"})
-		var ok: bool = not ready and key == "The Home Key is not ready yet." and action_reply.get("ok") != true
+		var game: Node = root.get_node(^"Game")
+		# A well-formed finish for a use_id no host raise ever issued, so the
+		# refusal is the host's verdict, not local payload validation.
+		var use_id := "travel:%s:%s:999999" % [str(game.get("world").reward_delivery_namespace), str(game.get("local").character_id)]
+		var replies: Array = []
+		var observe := func(reply: Dictionary) -> void: replies.append(reply)
+		game.connect("portal_action_result", observe)
+		var action_reply: Dictionary = session.call("request_portal_action", {"kind": "home_key_finish", "use_id": use_id})
+		var host_reply: Dictionary = {}
+		if ready and action_reply.get("ok") == true:
+			for _frame in 600:
+				await process_frame
+				for reply: Dictionary in replies:
+					if reply.get("request_id") == action_reply.get("request_id"): host_reply = reply
+				if not host_reply.is_empty(): break
+		game.disconnect("portal_action_result", observe)
+		var ok: bool = ready == shipped_on \
+			and (host_reply.get("ok") == false and not str(host_reply.get("reason", "")).is_empty() if ready \
+				else action_reply.get("ok") != true and key == "The Home Key is not ready yet.")
 		return {"verdict": "PASS" if ok else "FAIL",
-			"detail": "portal_runtime_ready=%s home_key='%s' portal_action=%s" % [str(ready), key, str(action_reply)]}
+			"detail": "portal_runtime_ready=%s home_key='%s' portal_action=%s host_reply=%s" % [str(ready), key, str(action_reply), str(host_reply)]}
 	if action == "f32_press":
 		var at := float(args.get("at_unix_ms", 0.0))
 		if at > 0.0:

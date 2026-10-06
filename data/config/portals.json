@@ -34,7 +34,13 @@
       "downed": "You can't use it while down."
     }
   },
-  "arch": {"interaction_radius_m": 3.2, "refresh_seconds": 0.25, "response_timeout_seconds": 12.0},
+  "home_arch": {
+    "returns_to_last_meadows_waystone": true,
+    "_comment": "STATE owner decision #11 (settled 2026-10-05, STATE \u00a70): the home arch returns you to your last activated Meadows waystone, exactly as the live biome arches do; with none touched it lands at the Meadows entry."
+  },
+  "arch": {"interaction_radius_m": 3.2, "refresh_seconds": 0.25, "response_timeout_seconds": 12.0,
+    "arrival_slots_m": [[1.5, 0.0], [-1.5, 0.0], [0.0, 1.5], [0.0, -1.5], [1.5, 1.5], [-1.5, 1.5], [1.5, -1.5], [-1.5, -1.5]],
+    "_comment_arrival_slots_m": "Co-op arrival: up to four trainers can arrive at one anchor (Home Key, portal, waystone). The anchor is tried first, then these fixed XZ offsets; each slot must pass the same supported, unobstructed capsule checks, and the host accepts arrival contact only at one of them."},
   "fifth_stir": {
     "line": "It stirred, but it is not ready yet.",
     "glow_seconds": 2.5, "glow_color": "a89ec7", "glow_height_m": 1.3,

@@ -2822,10 +2822,11 @@ jobs:
 
   verify-multiplayer-shard:
     runs-on: ubuntu-latest
-    # Eighteen shards: seventeen longest-processing-time first on MEASURED
+    # Twenty-one shards: nineteen longest-processing-time first on MEASURED
     # durations (tools/ci/net_shards.py: the slowest of three green full runs
     # per smoke), so the longest shard's job stays under ~13 minutes, then
-    # split_realms alone (a hang cannot take other smokes down with it). The
+    # f20_ending and split_realms each alone (a hang cannot take other smokes
+    # down with it). The
     # original 30-minute job limit stays. Each shard discovers the smokes
     # itself, so this matrix needs only `changes` and queues in the FIRST
     # wave rather than behind discover-net-smokes (it used to wait ~6 min for
@@ -2834,7 +2835,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
     timeout-minutes: 30
     needs: changes
     if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-multiplayer-shard|'))

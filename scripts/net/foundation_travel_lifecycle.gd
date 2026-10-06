@@ -7,7 +7,7 @@ var _serial: int = 0
 var _left: float = 0.0
 var _observations: Dictionary = {}
 const SAMPLE_FIELDS := ["character_id", "world_instance_id", "session_epoch", "realm", "damage_revision", "dialogue", "cutscene", "swimming", "flying", "downed", "station_ack_only", "ending_owner", "party_revision", "party_signature", "sequence"]
-const OPTIONAL_SAMPLE_FIELDS := ["equipped_tool", "passive_clock_active"]
+const OPTIONAL_SAMPLE_FIELDS := ["equipped_tool", "passive_clock_active", "party_identity"]
 
 func _ready() -> void:
 	session().connect("peer_left", func(peer: int) -> void: _observations.erase(peer))
@@ -38,12 +38,23 @@ func _process(delta: float) -> void:
 func publish_now() -> bool:
 	var owner: Node = session()
 	if owner.call("is_host") == true or owner.call("is_active") != true: return false
+	if not host_link_open(owner.multiplayer.multiplayer_peer): return false
 	var sample := local_sample()
 	if sample.is_empty(): return false
 	_serial += 1
 	sample.sequence = _serial
 	owner.call("publish_travel_lifecycle", self, sample)
 	return true
+
+## A graceful disconnect can be in flight: the ENet link to the host stops
+## taking packets before the multiplayer status catches up on its next poll,
+## and a send then fails in the engine. Other transports defer to the
+## session's own connection checks.
+static func host_link_open(transport: MultiplayerPeer) -> bool:
+	if not transport is ENetMultiplayerPeer: return true
+	if transport.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED: return false
+	var link: ENetPacketPeer = (transport as ENetMultiplayerPeer).get_peer(1)
+	return link != null and link.get_state() == ENetPacketPeer.STATE_CONNECTED
 
 func local_sample() -> Dictionary:
 	var owner: Node = session()
@@ -96,7 +107,8 @@ func local_sample() -> Dictionary:
 		"equipped_tool": str(game.get("equipped_tool")),
 		"passive_clock_active": local_passive_clock_active(game, owner),
 		"ending_owner": ending_owner, "party_revision": int(party.get("revision")),
-		"party_signature": preload("res://scripts/story/regional_homecoming.gd").party_signature(party)}
+		"party_signature": preload("res://scripts/story/regional_homecoming.gd").party_signature(party),
+		"party_identity": preload("res://scripts/story/regional_homecoming.gd").party_identity_signature(party)}
 
 ## D102 multiplayer modals do not pause Game. Use actual processing and the
 ## existing transaction fence, never dialogue/cutscene/input ownership flags.
@@ -123,6 +135,8 @@ static func valid_sample(sample: Dictionary) -> bool:
 		if field not in SAMPLE_FIELDS and field not in OPTIONAL_SAMPLE_FIELDS: return false
 	if sample.has("equipped_tool") and (not sample.equipped_tool is String or sample.equipped_tool.length() > 96): return false
 	if sample.has("passive_clock_active") and not sample.passive_clock_active is bool: return false
+	if sample.has("party_identity") and (not sample.party_identity is String or sample.party_identity.length() != 64 \
+		or not sample.party_identity.is_valid_hex_number(false)): return false
 	for field: String in ["character_id", "world_instance_id", "session_epoch", "realm"]:
 		if not sample.get(field) is String or sample[field].is_empty() or sample[field].length() > 192: return false
 	for field: String in ["dialogue", "cutscene", "swimming", "flying", "downed", "ending_owner", "station_ack_only"]:
@@ -174,15 +188,16 @@ func remote_body(peer: int) -> CharacterBody3D:
 	if found == null or found.get("character_id") != owner.call("_authority_character", peer): return null
 	return found
 
-func host_context(peer: int) -> Dictionary:
+## at_msec: when the request being judged arrived (-1: now). The sample that
+## travels just ahead of a request is judged fresh against that arrival.
+func host_context(peer: int, at_msec: int = -1) -> Dictionary:
 	var owner: Node = session()
 	if owner.call("is_host") != true or peer == owner.call("local_peer_id"): return {}
 	var observation: Dictionary = _observations.get(peer, {})
 	if observation.is_empty(): return {}
 	var sample: Dictionary = observation.sample
-	var timeout: float = float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.refresh_seconds) * 4.0
 	var game: Node = owner.call("_game")
-	if Time.get_ticks_msec() - int(observation.seen_at) > int(timeout * 1000.0) \
+	if not sample_fresh(observation, at_msec) \
 		or sample.character_id != owner.call("_authority_character", peer) \
 		or sample.session_epoch != owner.call("_altar_current_epoch") \
 		or sample.world_instance_id != game.get("world").reward_delivery_namespace: return {}
@@ -229,13 +244,47 @@ func host_context(peer: int) -> Dictionary:
 		"waystones_activated": personal.redesign_character.waystones_activated.duplicate(true),
 		"waystone_positions": positions, "arch_positions": arches}
 
-func host_ending_context(peer: int) -> Dictionary:
+## A sample counts while it is no older than four refreshes, measured at the
+## judged request's arrival (at_msec), or now when there is none.
+static func sample_fresh(observation: Dictionary, at_msec: int = -1) -> bool:
+	var timeout: float = float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.refresh_seconds) * 4.0
+	var reference: int = at_msec if at_msec >= 0 else Time.get_ticks_msec()
+	var age: int = reference - int(observation.get("seen_at", -1000000000))
+	return age >= 0 and age <= int(timeout * 1000.0)
+
+## Diagnostic only: the first host_context check that returns empty.
+func host_context_refusal(peer: int, at_msec: int = -1) -> String:
 	var owner: Node = session()
-	var safety := host_context(peer)
+	var observation: Dictionary = _observations.get(peer, {})
+	if observation.is_empty(): return "no_observation"
+	var sample: Dictionary = observation.sample
+	var reference: int = at_msec if at_msec >= 0 else Time.get_ticks_msec()
+	if not sample_fresh(observation, at_msec): return "stale_sample_%dms" % (reference - int(observation.seen_at))
+	if sample.character_id != owner.call("_authority_character", peer) or sample.session_epoch != owner.call("_altar_current_epoch"): return "identity"
+	var actor := remote_body(peer)
+	if actor == null: return "no_remote_body"
+	var world_node: Node3D = owner.call("_portal_world_node", str(sample.realm))
+	if world_node == null: return "no_world_node_" + str(sample.realm)
+	if not world_node.is_ancestor_of(actor): return "body_outside_world"
+	if actor.get("net_realm") != sample.realm: return "body_realm_%s_sample_%s" % [str(actor.get("net_realm")), str(sample.realm)]
+	if not actor.is_physics_processing(): return "body_not_processing"
+	if actor.get("aquatic") == null: return "no_aquatic"
+	if owner.get("_character_authority").call("state", sample.character_id).is_empty(): return "no_personal_state"
+	return "duplicate_hall_or_stone"
+
+## Diagnostic only: which gate the last host_ending_context refusal hit.
+var ending_refusal := ""
+
+func host_ending_context(peer: int, at_msec: int = -1) -> Dictionary:
+	var owner: Node = session()
+	var safety := host_context(peer, at_msec)
+	ending_refusal = "no_safe_sample:" + host_context_refusal(peer, at_msec) if safety.is_empty() else "realm_" + str(safety.realm)
 	if safety.is_empty() or safety.realm != "meadows": return {}
 	for hazard: String in ["combat", "swimming", "flying", "downed"]:
+		ending_refusal = hazard
 		if safety.get(hazard) != false: return {}
 	var sample: Dictionary = _observations[peer].sample
+	ending_refusal = "modal dialogue=%s cutscene=%s ending_owner=%s" % [str(safety.dialogue), str(safety.cutscene), str(sample.ending_owner)]
 	if (safety.dialogue or safety.cutscene) and sample.ending_owner != true: return {}
 	var world_node: Node3D = owner.call("_portal_world_node", "meadows")
 	var nearby: bool = false
@@ -246,12 +295,19 @@ func host_ending_context(peer: int) -> Dictionary:
 		var prompt: Node3D = source.get("_grandpa_prompt")
 		if prompt != null and safety.position.distance_to(prompt.global_position) <= float(prompt.get("radius")): nearby = true
 	var world: RefCounted = owner.call("_game").get("world")
+	ending_refusal = "not_at_farm" if not nearby else "world_flag"
 	if not nearby or not world.flags.call("has", preload("res://scripts/story/regional_homecoming.gd").WORLD_FLAG): return {}
 	var personal: Dictionary = owner.get("_character_authority").call("state", sample.character_id)
 	var flags: Dictionary = owner.call("_foundation_flags", peer)
-	return ending_fields(personal, flags, sample)
+	ending_fields_refusal = ""
+	var fields := ending_fields(personal, flags, sample)
+	ending_refusal = "" if not fields.is_empty() else "ending_fields " + ending_fields_refusal
+	return fields
+
+static var ending_fields_refusal := ""
 
 static func ending_fields(personal: Dictionary, flags: Dictionary, sample: Dictionary) -> Dictionary:
+	ending_fields_refusal = "character_or_settled_flag"
 	if personal.get("character_id") != sample.get("character_id") or flags.get("stormwood:legendary_ceremony_settled") != true: return {}
 	var originals: Array[String] = []
 	var answers: Array[String] = []
@@ -259,8 +315,10 @@ static func ending_fields(personal: Dictionary, flags: Dictionary, sample: Dicti
 		if flags[flag] != true: continue
 		if flag.begins_with("stormwood:regional_outcome:"): originals.append(flag)
 		if flag.begins_with("stormwood:legendary_answer:"): answers.append(flag)
+	ending_fields_refusal = "outcome_flags"
 	if originals.size() > 1 or (originals.is_empty() and answers.size() != 1): return {}
 	var outcome: String = answers[0] if originals.is_empty() else originals[0].replace("stormwood:regional_outcome:", "stormwood:legendary_answer:")
+	ending_fields_refusal = "outcome_answer"
 	if not answers.has(outcome) or outcome.get_slice(":", outcome.get_slice_count(":") - 1) not in ["accepted", "refused"]: return {}
 	var home: String = preload("res://scripts/story/regional_homecoming.gd").home_return_receipt(
 		personal.get("redesign_character", {}).get("transaction_receipts", []),
@@ -270,18 +328,35 @@ static func ending_fields(personal: Dictionary, flags: Dictionary, sample: Dicti
 		var prefix: String = "starter_choice:%s:" % sample.character_id
 		if receipt.begins_with(prefix):
 			var uid: String = receipt.trim_prefix(prefix)
+			ending_fields_refusal = "starter_receipt"
 			if uid.is_empty() or uid.contains(":") or (not starter.is_empty() and starter != uid): return {}
 			starter = uid
+	ending_fields_refusal = "home_return=" + str(not home.is_empty()) + " starter=" + str(not starter.is_empty())
 	if home.is_empty() or starter.is_empty(): return {}
 	var temporary: RefCounted = preload("res://autoload/party.gd").new()
 	var mirrors: Dictionary = personal.redesign_character.get("creatures", {})
 	for card: Dictionary in personal.get("party", []):
 		var member: RefCounted = preload("res://scripts/save/water_capture_codec.gd").decode_owned(card, personal.redesign_character) \
 			if mirrors.has(card.uid) else preload("res://scripts/save/water_capture_codec.gd").decode(card)
+		ending_fields_refusal = "party_decode"
 		if member == null or not temporary.call("add", member): return {}
-	var signature: String = preload("res://scripts/story/regional_homecoming.gd").party_signature(temporary)
+	var homecoming := preload("res://scripts/story/regional_homecoming.gd")
+	var signature: String = homecoming.party_signature(temporary)
+	var identity: String = homecoming.party_identity_signature(temporary)
 	while temporary.call("size") > 0: temporary.call("remove_at", 0)
-	if signature.is_empty() or signature != sample.get("party_signature"): return {}
+	# The guest's live party keeps accruing passive care (landmarks walked
+	# together) that this host copy only receives at owner-passive gates. The
+	# same five with the same non-passive history is the same party: verify that
+	# here and keep the guest's own full signature, which its intent carries.
+	if sample.has("party_identity"):
+		ending_fields_refusal = "party_identity"
+		if identity.is_empty() or identity != sample.party_identity: return {}
+		# Guest-attested: only its own presentation fence for this ack, never a
+		# host-verified roster. Identity above is the host's check.
+		signature = sample.party_signature
+	else:
+		ending_fields_refusal = "party_signature"
+		if signature.is_empty() or signature != sample.get("party_signature"): return {}
 	return {"world_instance_id": sample.world_instance_id, "session_epoch": sample.session_epoch,
 		"character_id": sample.character_id, "outcome_id": outcome, "home_return_receipt": home,
 		"party_revision": sample.party_revision, "party_signature": signature}

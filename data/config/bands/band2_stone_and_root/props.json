@@ -500,6 +500,7 @@
         {
           "name": "WarrensVaultSignalPost",
           "model": "Torch_Metal",
+          "glow_light_only": true,
           "at": [-351.0, 2611.8],
           "yaw_deg": 45.0,
           "scale": 1.6,

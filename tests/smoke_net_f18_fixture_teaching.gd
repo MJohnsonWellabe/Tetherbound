@@ -1,7 +1,6 @@
 extends "res://tests/smoke_net_f18_travel.gd"
 
 # peers: 2
-# requires-flag: multiplayer.json session.redesign_portal_runtime_enabled
 ## Focused pre-admission fixture proof only. No travel/co-op/earned F18 credit.
 ## Reuse the actual F18 peer process, sequential world boot and save inspection.
 func _run() -> void:

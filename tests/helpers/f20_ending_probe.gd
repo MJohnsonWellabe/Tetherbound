@@ -254,7 +254,9 @@ func open_credits(tree: SceneTree, game: Node) -> bool:
 		for field: String in ["starter_status", "bond_memory", "chapter_choices"]:
 			if not check(not str(prose.get(field, "")).is_empty() and _heard.contains(str(prose[field])), "Grandpa rendered truthful " + field): return false
 	var credits: Node
-	for frame in 600:
+	# Wall-clock bound: a slow runner can take over a second per frame.
+	var credits_deadline := Time.get_ticks_msec() + 30000
+	while Time.get_ticks_msec() < credits_deadline:
 		await tree.process_frame
 		var owner := INPUT_OWNER.current(tree)
 		if owner != null and owner.get_script() == load("res://scripts/ui/regional_credits.gd"):
@@ -340,7 +342,8 @@ func fifth(tree: SceneTree, game: Node, travel: RefCounted = null) -> bool:
 		tree.process_frame.disconnect(observer)
 		game.disconnect("portal_action_result", result_observer)
 		failures.append_array(travel.failures); return false
-	for frame in 600:
+	var stir_deadline := Time.get_ticks_msec() + 30000 # wall-clock: slow runners exceed 1 s/frame
+	while Time.get_ticks_msec() < stir_deadline:
 		await tree.process_frame
 		if game.call("portal_view", "biome5").get("character_stirred") == true: break
 	for frame in 8: await tree.process_frame

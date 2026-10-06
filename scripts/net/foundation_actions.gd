@@ -233,6 +233,8 @@ static func relic_power(current: Dictionary, intent: Dictionary, context: Dictio
 	next.realm_hearts = {"active_id": heart}
 	var receipt := "craft:%s:relic_power_%s" % [character, intent.edit_id]
 	if next.redesign_character.transaction_receipts.has(receipt): return deny("reconcile_original_decision")
+	# Choosing the power already active changes nothing: no row, no receipt.
+	if str((current.get("realm_hearts", {}) as Dictionary).get("active_id", "")) == heart: return deny("relic_power_unchanged")
 	next.redesign_character.transaction_receipts.append(receipt)
 	return {"ok": true, "state": next, "receipt": receipt}
 

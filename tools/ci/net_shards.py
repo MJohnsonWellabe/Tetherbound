@@ -24,7 +24,7 @@ import sys
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 # Must equal the `shard:` matrix in ci.yml (tests/test_ci_net_shards.py).
-SHARD_COUNT = 21
+SHARD_COUNT = 23
 # Smoke time per shard: a 13-minute job less ~140 s of checkout, Godot setup
 # and upload (measured: 81-133 s before the first smoke, ~10 s after).
 SHARD_SMOKE_BUDGET_SECONDS = 640
@@ -41,6 +41,13 @@ MEASURED_SECONDS = {
     "f27_guest_wild_win": 330,
     "gather_departure": 330,
     "homestead_station_craft": 330,
+    # F18 (portal runtime on) adds these to the gate. Measured in full run
+    # 37320223520 @ea685537 (2026-10-05). f20_ending failed partway there,
+    # so its 595 s is only a lower bound; it runs alone (ISOLATED) until a
+    # green run measures it.
+    "f18_fixture_teaching": 232,
+    "f20_home_diagnostic": 143,
+    "f20_ending": 595,
     # Provisional (lane A, tb/f17): F33/F34 net smokes at ~1.4x their local wall
     # time (forward_camp 184 s, harness_max_hp 170 s; charged ground crosses two
     # realms) until three green full runs give real durations.
@@ -108,9 +115,11 @@ MEASURED_SECONDS = {
 # smokes down with it at the 30-minute job limit: split_realms once ran 24+
 # minutes and was cancelled with the smokes queued behind it
 # (ralph/reports/FOUR-BIOME-BUILD/ci-shard-balance/REPORT.md).
-ISOLATED = ("split_realms",)
+ISOLATED = ("split_realms", "f20_ending")
 # An unmeasured smoke is planned as the slowest measured one until measured.
-UNMEASURED_SECONDS = max(MEASURED_SECONDS.values())
+# Isolated smokes run alone, so their (possibly lower-bound) times are not a
+# guide for an ordinary smoke.
+UNMEASURED_SECONDS = max(v for k, v in MEASURED_SECONDS.items() if k not in ISOLATED)
 
 # The floor is the TRUE count of files declaring the header, regenerated from
 # the files on disk at every landing, never incremented from a lane's guess:

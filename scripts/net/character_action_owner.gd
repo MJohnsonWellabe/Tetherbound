@@ -60,6 +60,9 @@ static func apply_owner(game: Node, row: Dictionary) -> Dictionary:
 			return _rollback(game, player, world, session, row, snapshot, roster, plan, "owner_capture_roster_refused")
 		if not ESSENCE._equivalent(current.equipment, row.after.equipment):
 			player.get("equipment").call("load_data", row.after.equipment)
+		# F31#2: a relic power choice changes only the active heart.
+		if not ESSENCE._equivalent(current.realm_hearts, row.after.realm_hearts) and player.get("hearts") != null:
+			player.get("hearts").call("load_data", row.after.realm_hearts)
 	if not preload("res://scripts/net/home_key_action.gd").install_owner(player, row):
 		return _rollback(game, player, world, session, row, snapshot, roster, plan, "owner_home_key_install_refused")
 	var installed: Dictionary = player.call("save_data")
@@ -158,6 +161,8 @@ static func _rollback(game: Node, player: RefCounted, world: RefCounted, session
 		player.flags.call("load_data", snapshot.flags)
 	if not ESSENCE._equivalent(snapshot.equipment, row.after.equipment):
 		player.get("equipment").call("load_data", snapshot.equipment)
+	if not ESSENCE._equivalent(snapshot.realm_hearts, row.after.realm_hearts) and player.get("hearts") != null:
+		player.get("hearts").call("load_data", snapshot.realm_hearts)
 	if (plan.release_index >= 0 or row.action == "wild_capture") and party_restore(player, roster) != true: return _end_refused(session, "owner_roster_rollback_failed")
 	var expected: Dictionary = row.before
 	if row.action == "combat_round_reward":

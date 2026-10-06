@@ -31,6 +31,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 	var before := _physics_count
 	var args: Dictionary = msg.get("args", {})
 	var result: Dictionary
+	_f18_tracing = action
+	_f18_trace_loop(action)
 	match action:
 		"f18_boot_world":
 			if _f18_started or _f18_fixture_done or _session().call("is_active") == true:
@@ -51,6 +53,15 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"f18_traversal_refusal": result = await _f18_traversal_refusal(game, str(args.get("kind", "")))
 		"f18_stage": result = await _f18_stage(game, args)
 		"f18_inspect": result = _f18_verdict(true, "read-only production/disk witness", _f18_state(game, args))
+		"f18_settled":
+			# Read-only wait: the last owner transaction finishes its ordinary
+			# settlement (owner-passive fence and training row released).
+			var deadline := Time.get_ticks_msec() + 20000
+			while _session().call("_owner_training_mutation_blocked", game.get("local")) == true and Time.get_ticks_msec() < deadline:
+				await physics_frame
+			var blocked: bool = _session().call("_owner_training_mutation_blocked", game.get("local")) == true
+			result = _f18_verdict(not blocked, "owner transactions settled before the session ends",
+				{"reason": str(_session().call("_owner_snapshot_block_reason", game.get("local"))) if blocked else ""})
 		"f18_touch":
 			_f18_started = true
 			result = await _f18_touch(game, args)
@@ -61,14 +72,41 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			_f18_started = true
 			result = await _f18_arch(game, args)
 		_: result = _f18_verdict(false, "unknown F18 action " + action)
+	_f18_tracing = ""
 	result.frames_used = _physics_count - before
 	if is_instance_valid(_f18_presentation): _f18_presentation.call("_flush")
 	return result
 
 func _f18_verdict(ok: bool, detail: String, data: Dictionary = {}) -> Dictionary:
+	if not ok: detail += " [" + _f18_owner_diagnosis() + "]"
 	return {"verdict": "PASS" if ok else "FAIL", "detail": detail, "data": data}
 
+## Diagnostic only: a step that never returns a verdict still leaves a trail.
+var _f18_tracing := ""
+
+func _f18_trace_loop(action: String) -> void:
+	var next := Time.get_ticks_msec() + 4000
+	while _f18_tracing == action:
+		await physics_frame
+		if Time.get_ticks_msec() < next: continue
+		next += 4000
+		var requests: Variant = _session().get("_portal_requests") if _session() != null else null
+		print("F18_OWNER_TRACE step=%s t=%d %s portal_requests=%d" % [action, Time.get_ticks_msec(),
+			_f18_owner_diagnosis(), (requests as Dictionary).size() if requests is Dictionary else -1])
+
+## Diagnostic only: why the local owner record may still be held.
+func _f18_owner_diagnosis() -> String:
+	var session: Node = _session()
+	var game := root.get_node_or_null(^"Game")
+	if session == null or game == null or game.get("local") == null: return "no session/local"
+	var row: Dictionary = session.call("_owner_training_row")
+	var passive: Variant = session.get("_owner_passive")
+	var phase: Variant = passive.get("pending").get("phase") if passive != null and passive.get("pending") is Dictionary else ""
+	return "block=%s row=%s/%s passive_phase=%s" % [str(session.call("_owner_snapshot_block_reason", game.get("local"))),
+		str(row.get("action", "")), str(row.get("status", "")), str(phase)]
+
 func _f18_note(result: Dictionary) -> void:
+	if result.get("ok") != true: print("F18 REFUSED kind=%s reason=%s code=%s" % [str(result.get("kind", "")), str(result.get("reason", "")), str(result.get("code", ""))])
 	_f18_results.append(result.duplicate(true))
 
 func _f18_fixture(game: Node, args: Dictionary) -> Dictionary:
@@ -382,11 +420,19 @@ func _f18_home_key(game: Node) -> Dictionary:
 	var ok: bool = reply.get("ok") == true and reply.get("durable") == true and reply.get("saved") == true \
 		and reply.get("character_id") == after.character_id and after.realm == "meadows" \
 		and after.home_key_count == 1 and before.home_key_count == 1 and target.is_finite() \
-		and _f18_vector(after.position).distance_to(target) < 1.0 \
+		and _f18_at_arrival_slot(_f18_vector(after.position), target) \
 		and _f18_disk_pose_at(after, "meadows", _f18_vector(after.position))
 	after.observed_reply = reply
 	after.before_position = before.position
 	return _f18_verdict(ok, "production Satchel Use requires saved authoritative HomeKey return at actual Hall", after)
+
+## The anchor itself, or (co-op, occupied anchor) one of its authored slots.
+## Same 1 m arrival tolerance as before; a slot is never an arbitrary point.
+func _f18_at_arrival_slot(at: Vector3, anchor: Vector3) -> bool:
+	if not at.is_finite() or not anchor.is_finite(): return false
+	for slot: Vector3 in preload("res://scripts/net/foundation_portal_arrival.gd").arrival_slots(anchor):
+		if at.distance_to(slot) < 1.0: return true
+	return false
 
 func _f18_arch(game: Node, args: Dictionary) -> Dictionary:
 	var id := str(args.get("arch", ""))
@@ -427,6 +473,13 @@ func _f18_arch(game: Node, args: Dictionary) -> Dictionary:
 				var stone := _f18_find_stone(str(args.stone))
 				var target := F18_STONE.resolve_position(current_scene, stone.get("_row"), true) if stone != null else Vector3(INF, INF, INF)
 				ok = ok and target.is_finite() and _f18_vector(state.position).distance_to(target) < 1.0
+			if args.get("hall") == true:
+				# Home-only home arch (STATE decision #11): the Hall's own home
+				# arrival, at the anchor or one of its authored co-op slots.
+				var at_hall := false
+				for hall: Node in get_nodes_in_group("crossing_halls"):
+					if _f18_at_arrival_slot(_f18_vector(state.position), hall.call("home_arrival")): at_hall = true
+				ok = ok and at_hall
 		state.observed_reply = reply
 		return _f18_verdict(ok, "actual prompt " + mode + " requires bound durable reply and exact portable outcome", state)
 	return _f18_verdict(false, "actual arch produced no authoritative outcome within bounded deadline", _f18_state(game, {}))

@@ -91,10 +91,12 @@ func owner_passive_recording_active() -> bool:
 func record_owner_passive_input(packet: Dictionary) -> void:
 	if _owner_passive != null: _owner_passive.call("record_input", packet)
 
-## Only the existing host landing arbiter's accepted placement calls this.
-func owner_passive_travel_reset_confirmed(peer: int, realm: String, anchor: Vector3) -> void:
+## Host-only callers: the landing arbiter's accepted fly placement (exact
+## guest-claimed pose) and an accepted grounded portal/Home Key arrival
+## (foundation_portal_arrival, arrival_endpoint).
+func owner_passive_travel_reset_confirmed(peer: int, realm: String, anchor: Vector3, arrival_endpoint: bool = false) -> void:
 	if is_host() and _owner_passive != null:
-		_owner_passive.call("travel_reset_confirmed", peer, realm, anchor)
+		_owner_passive.call("travel_reset_confirmed", peer, realm, anchor, arrival_endpoint)
 
 func owner_passive_research_gate(peer: int, action: String, intent: Dictionary, event: Dictionary) -> Dictionary:
 	return _owner_passive_service().call("gate", peer, action, intent, event)
@@ -105,6 +107,13 @@ func _owner_passive_request_matches(source_kind: String, request: Dictionary) ->
 		return arrival != null and request.get("envelope") is Dictionary \
 			and preload("res://scripts/net/owner_passive_preparation.gd").exact(_portal_requests.get(request.envelope.get("request_id")), request.envelope) \
 			and arrival.call("owner_request_matches", request) == true
+	if source_kind == "waystone_touch":
+		return request.get("envelope") is Dictionary \
+			and preload("res://scripts/net/owner_passive_preparation.gd").exact(_portal_requests.get(request.envelope.get("request_id")), request.envelope) \
+			and request.envelope.get("payload") is Dictionary and request.envelope.payload.get("kind") == "waystone_touch"
+	if source_kind == "home_key":
+		return request.get("envelope") is Dictionary \
+			and preload("res://scripts/net/owner_passive_preparation.gd").exact(_home_key_requests_sent.get(request.envelope.get("delivery_id")), request.envelope)
 	if source_kind == "altar_spend":
 		return preload("res://scripts/net/owner_passive_preparation.gd").exact(_owner_passive_altar_original, request)
 	if source_kind == "altar_traits": return _altar_traits_service().call("owner_request_matches", request) == true
@@ -121,6 +130,8 @@ func _owner_passive_commit_request(peer: int, source_kind: String, request: Dict
 				result.terminal_refusal = true
 			return result
 		"foundation_request": return _foundation_handle(peer, request)
+		"waystone_touch": return _waystone_commit_prepared(peer, request.envelope, context)
+		"home_key": return OPENING_HOME_KEY.commit_reconcile(self, peer, request.envelope, context)
 		"altar_spend": return _handle_altar_spend(peer, request)
 		"altar_traits": return _altar_traits_service().call("commit_prepared", peer, request)
 		"manual_refine":
@@ -131,11 +142,12 @@ func _owner_passive_commit_request(peer: int, source_kind: String, request: Dict
 func _owner_passive_request_terminal(source_kind: String, request: Dictionary, result: Dictionary) -> void:
 	if is_host() or result.get("terminal_refusal") != true or result.get("resolved") != true \
 		or result.get("durable") == true or not _owner_passive_request_matches(source_kind, request): return
-	if source_kind == "portal_arrival":
+	if source_kind in ["portal_arrival", "waystone_touch"]:
 		var reply := result.duplicate(true)
 		var envelope: Dictionary = request.envelope
 		for field: String in ["request_id", "character_id", "world_instance_id", "session_epoch"]: reply[field] = envelope[field]
 		reply.kind = envelope.payload.kind
+		if envelope.payload.kind == "waystone_touch": reply.waystone_id = envelope.payload.waystone_id
 		_receive_portal_reply(reply)
 	elif source_kind == "altar_traits":
 		var reply := result.duplicate(true)
@@ -361,7 +373,9 @@ func _rpc_altar_traits_reply(envelope: Dictionary, result: Dictionary) -> void:
 		_altar_traits_service().call("receive_result", envelope, result)
 
 func _owner_passive_send_host(packet: Dictionary) -> void:
-	if not is_host() and is_active(): rpc_id(HOST_PEER_ID, "_rpc_owner_passive_input", packet)
+	# The flush re-sends its unacknowledged inputs; skip a disconnecting link.
+	if not is_host() and is_active() and preload("res://scripts/net/foundation_travel_lifecycle.gd").host_link_open(multiplayer.multiplayer_peer):
+		rpc_id(HOST_PEER_ID, "_rpc_owner_passive_input", packet)
 
 func _owner_passive_send_peer(peer: int, packet: Dictionary) -> void:
 	if is_host() and _registry.call("has", peer) == true: rpc_id(peer, "_rpc_owner_passive_reply", packet)
@@ -399,8 +413,26 @@ func _foundation_send(op: String, key: String, intent: Dictionary, revision: int
 func _rpc_foundation_action(envelope: Dictionary) -> void:
 	if not is_host(): return
 	var peer := multiplayer.get_remote_sender_id()
+	# The guest publishes its lifecycle sample just before this request on the
+	# same reliable channel; judge that sample's freshness at arrival, not
+	# after this handler's own (possibly slow) save and admission work.
+	_foundation_request_arrived_at = Time.get_ticks_msec()
 	var result := _foundation_handle(peer, envelope)
+	_foundation_request_arrived_at = -1
+	if envelope.get("op") == "regional_ack" and result.get("ok") != true and _regional_ack_refusal_new(peer, result):
+		var lifecycle := get_node_or_null(^"FoundationComposition/TravelLifecycle")
+		print("[regional_ack] host answered peer %d %s: %s resolved=%s gate=%s" % [peer, str(envelope.get("intent", {}).get("stage", "")), str(result.get("code", result.get("reason", ""))), str(result.get("resolved")), str(lifecycle.get("ending_refusal")) if lifecycle != null else "-"])
 	if bool(_registry.call("has", peer)): rpc_id(peer, "_rpc_foundation_reply", envelope, result)
+
+var _foundation_request_arrived_at := -1
+
+## Diagnostic log once per guest and refusal code; re-sends stay quiet.
+var _regional_ack_refusals_logged: Dictionary = {}
+func _regional_ack_refusal_new(peer: int, result: Dictionary) -> bool:
+	var key := "%d:%s" % [peer, str(result.get("code", result.get("reason", "")))]
+	if _regional_ack_refusals_logged.has(key): return false
+	_regional_ack_refusals_logged[key] = true
+	return true
 
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
 func _rpc_foundation_reply(envelope: Dictionary, result: Dictionary) -> void:
@@ -411,7 +443,9 @@ func _rpc_foundation_reply(envelope: Dictionary, result: Dictionary) -> void:
 	if not ESSENCE._equivalent(_foundation_requests.get(correlation), envelope): return
 	if result.get("ok") == true and result.get("resolved") == true:
 		var row := _owner_training_row()
-		if row.get("receipt") != result.get("receipt") or _training_decision(local_peer_id(), row).get("ok") != true: return
+		if row.get("receipt") != result.get("receipt") or _training_decision(local_peer_id(), row).get("ok") != true:
+			if envelope.op == "regional_ack": print("[regional_ack] committed reply ahead of the local row: local=%s/%s" % [str(row.get("action", "")), str(row.get("status", ""))])
+			return
 	if envelope.op in ["groom_prepare", "groom_commit", "groom_resume", "groom_cancel"]:
 		_groom_service().call("receive", envelope, result)
 		_foundation_requests.erase(correlation)
@@ -567,7 +601,7 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 		var expected: Dictionary = ending.context(_game()) if peer == local_peer_id() else {}
 		if peer != local_peer_id():
 			var lifecycle := get_node_or_null(^"FoundationComposition/TravelLifecycle")
-			if lifecycle != null: expected = lifecycle.call("host_ending_context", peer)
+			if lifecycle != null: expected = lifecycle.call("host_ending_context", peer, _foundation_request_arrived_at)
 		if config().get("redesign_ending_runtime_enabled") != true \
 			or ending.acknowledgement_intent(expected, str(envelope.intent.get("stage", ""))) != envelope.intent \
 			or (envelope.intent.get("stage") == ending.CREDITS_SEEN_FLAG \
@@ -675,6 +709,10 @@ func foundation_record_personal_flags(delta: Dictionary) -> void:
 		for peer: int in op.get("peers", []):
 			var character := _authority_character(peer)
 			if not character.is_empty(): _character_authority.call("record_personal_flag", character, str(op.get("id", "")), op.get("value", true) == true)
+			# A host-authored walk_out flag op arms the reconcile too. Opening
+			# beats are otherwise guest-local; a guest's verified gift request
+			# (note_opening_gift_requested) is the host's usual evidence.
+			if str(op.get("id", "")) == OPENING_HOME_KEY.PAST_FIRST_CATCH_FLAG and op.get("value", true) == true: arm_legacy_home_key_check(peer)
 
 ## The actual host ending calls this only after its original claim saves.
 ## Guests cannot replace a flag dictionary or choose another claim/character.
@@ -706,6 +744,16 @@ func _foundation_personal_view(peer: int) -> Dictionary:
 	var full: Dictionary = _character_authority.call("state", character)
 	full.registry_revision = int(_character_authority.call("revision", character))
 	return full
+
+## A settled owner row is this character's record at its new host revision.
+## The cached view must not quote an older one: the next request (a relic
+## power chosen right after a Home Key trip home) would be refused as stale.
+func _advance_personal_view_revision(row: Dictionary) -> void:
+	var revision: Variant = row.get("character_revision")
+	if is_host() or (not revision is int and not revision is float) \
+		or _foundation_personal_cache.get("character_id") != row.get("character_id"): return
+	if int(_foundation_personal_cache.get("registry_revision", -1)) < int(revision):
+		_foundation_personal_cache.registry_revision = int(revision)
 
 func homestead_personal_view() -> Dictionary:
 	if is_host(): return _foundation_personal_view(local_peer_id())
@@ -769,6 +817,10 @@ func foundation_grounded_arrival(producer: Node, envelope: Dictionary, permit: D
 		if binding.get("source_kind") != "portal_arrival" or binding.get("character") != character \
 			or not preload("res://scripts/net/owner_passive_preparation.gd").exact(binding.get("envelope"), request):
 			return passive.call("portal_grounded", peer, request)
+	# The host's own record drifts (care, bond walking) through the raise, fade
+	# and load. Refresh it from the live save right before staging, as every
+	# other host-local request does, so the owner apply baseline matches.
+	elif admitted_character_state(peer).is_empty(): return FOUNDATION_ACTIONS.deny("character_unavailable")
 	var context := {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
 		"in_range": true, "in_combat": false, "foundation_runtime_authorized": true, "grounded_arrival": true,
 		"source_key": "arrival:" + intent.permit_id, "permit_id": intent.permit_id, "realm": intent.realm, "entry_id": intent.entry_id,
@@ -3031,6 +3083,7 @@ func _finish_peer_hello(sender: int) -> void:
 		return
 	_broadcast_registry()
 	peer_joined.emit(sender, character_id)
+	arm_legacy_home_key_check(sender)
 	# The joiner may be arriving into a realm this process is not standing in
 	# (a rejoin carries the character's last realm forward, `peer_registry
 	# .gd::add`). Standing its shell up is this call, not a special case.
@@ -3622,6 +3675,7 @@ func _process(delta: float) -> void:
 	_bind_training_container_guards()
 	if _groom_passive != null: _groom_passive.call("tick", delta)
 	if _owner_passive != null: _owner_passive.call("tick", delta)
+	_tick_legacy_home_keys(delta)
 	# Building the host portal context re-projects and recovers the whole local
 	# character record (~100 ms in Tidewake); cancel_invalid() can only act on a
 	# frozen Home Key channel, so build it only while one is open.
@@ -3927,6 +3981,12 @@ func _teardown(linger_transport: bool = false) -> void:
 		if travel_service != null: travel_service.call("reset")
 	_portal_policy.call("bind_world", "")
 	_portal_requests.clear()
+	_portal_request_at.clear()
+	# Peer ids are reused and the next session may serve another world; a
+	# rejoin re-seeds the guest's persisted beats and re-arms at admission.
+	_opening_gift_requested.clear()
+	_legacy_home_key_due.clear()
+	_regional_ack_refusals_logged.clear()
 	_portal_waiters.clear()
 	var had_transport := _peer != null
 	if realm_transition != null:
@@ -4754,9 +4814,14 @@ func _owner_training_mutation_blocked(player: RefCounted, ignore_untouched_groom
 
 
 ## Diagnostic only: which of `_owner_training_mutation_blocked`'s holds is set.
-func _owner_snapshot_block_reason(player: RefCounted) -> String:
+func _owner_snapshot_block_reason(player: RefCounted, ignore_untouched_groom: bool = false) -> String:
+	# Mirrors _owner_training_mutation_blocked: an untouched groom (e.g. the
+	# resume opened on every snapshot apply) still holds owner mutations; a
+	# save's refusal (which ignores an untouched groom) passes true.
 	if _groom_passive != null and _groom_passive.call("blocked", player) == true \
-		and _groom_passive.call("local_untouched", player) != true: return "groom passive pending"
+		and not (ignore_untouched_groom and _groom_passive.call("local_untouched", player) == true):
+		return "groom passive pending phase=%s%s" % [str((_groom_passive.get("pending") as Dictionary).get("phase", "")),
+			" (untouched)" if _groom_passive.call("local_untouched", player) == true else ""]
 	if _owner_passive != null and _owner_passive.call("blocked", player) == true:
 		return "owner passive pending phase=%s" % str(_owner_passive.get("pending").get("phase"))
 	if _pending_portal_for(str(player.get("character_id"))): return "portal pending"
@@ -4906,6 +4971,7 @@ func _settle_owner_training_accepted(player: RefCounted, world: RefCounted, row:
 			or not ESSENCE.owner_matches_after(preload("res://scripts/net/character_record_rules.gd").training_projection(player.call("save_data"), row, ESSENCE.training_projection), row.after): return false
 		_owner_training_retry = {}
 	if _owner_passive != null: _owner_passive.call("owner_settled", row)
+	_advance_personal_view_revision(row)
 	if _owner_passive_altar_original.get("intent", {}).get("spend_id") == row.action_id:
 		_owner_passive_altar_original.clear()
 	if not _altar_spend_request.is_empty() and _altar_spend_request.get("intent", {}).get("spend_id") == row.action_id:
@@ -5523,6 +5589,20 @@ const PORTAL_RECEIPT := preload("res://scripts/net/portal_delivery.gd")
 var _portal_policy: RefCounted = PORTAL_POLICY.new()
 var _portal_request_serial := 0
 var _portal_requests: Dictionary = {}
+## Touch retries are fire-and-forget: one the host never answers (e.g. its
+## owner-passive gate retained it and a later retry won) would otherwise stay
+## here for the session. Travel requests keep their own lifecycle.
+var _portal_request_at: Dictionary = {}
+const PORTAL_TOUCH_REQUEST_TTL_MS := 120000
+
+func _prune_portal_touch_requests() -> void:
+	var now := Time.get_ticks_msec()
+	for id: Variant in _portal_request_at.keys():
+		var frozen: Dictionary = _portal_requests.get(id, {})
+		if frozen.is_empty(): _portal_request_at.erase(id)
+		elif frozen.get("payload", {}).get("kind") == "waystone_touch" and now - int(_portal_request_at[id]) > PORTAL_TOUCH_REQUEST_TTL_MS:
+			_portal_requests.erase(id)
+			_portal_request_at.erase(id)
 var _portal_waiters: Dictionary = {}
 
 
@@ -5562,7 +5642,9 @@ func request_portal_action(payload: Dictionary) -> Dictionary:
 	var id := "%s:%d" % [generation, _portal_request_serial]
 	var frozen := {"request_id": id, "world_instance_id": world.reward_delivery_namespace,
 		"session_epoch": generation, "character_id": character, "payload": payload.duplicate(true)}
+	_prune_portal_touch_requests()
 	_portal_requests[id] = frozen.duplicate(true)
+	_portal_request_at[id] = Time.get_ticks_msec()
 	if is_host(): _host_portal_action.call_deferred(local_peer_id(), frozen)
 	else: _send_portal_action.call_deferred(frozen)
 	return {"ok": true, "request_id": id}
@@ -5727,6 +5809,10 @@ func _commit_portal_unlock(peer: int, envelope: Dictionary, result: Dictionary) 
 
 
 func _portal_delivery_accepted(peer: int, row: Dictionary) -> void:
+	var game_now := _game()
+	if peer != local_peer_id() and row.get("status") == "accepted" and game_now != null \
+		and PORTAL_RECEIPT.equivalent(game_now.get("world").reward_deliveries.get(row.get("receipt")), row):
+		_character_authority.call("promote_settled_portal_marker", _authority_character(peer), row)
 	var waiter: Dictionary = _portal_waiters.get(row.get("receipt"), {})
 	if waiter.is_empty() or waiter.peer != peer or not _portal_envelope_valid(peer, waiter.envelope): return
 	var game := _game()
@@ -5739,6 +5825,11 @@ func _portal_delivery_accepted(peer: int, row: Dictionary) -> void:
 
 func _commit_waystone_touch(peer: int, envelope: Dictionary, result: Dictionary) -> void:
 	if not _portal_envelope_valid(peer, envelope): return
+	# Host-local: refresh the authority record from the live save first, so the
+	# staged baseline (and its revision) include this frame's care drift.
+	if peer == local_peer_id() and admitted_character_state(peer).is_empty():
+		_portal_reply(peer, envelope, {"ok": false, "reason": "Your waystone could not save. Touch it again."})
+		return
 	var character: String = envelope.character_id
 	var current: Dictionary = _character_authority.call("state", character)
 	var writer := get_node_or_null(^"LedgerRpc")
@@ -5760,19 +5851,56 @@ func _commit_waystone_touch(peer: int, envelope: Dictionary, result: Dictionary)
 		_portal_reply(peer, envelope, {"ok": true, "durable": true, "waystone_id": stone.id, "first_activation": false})
 		return
 	var touch_id: String = Crypto.new().generate_random_bytes(16).hex_encode()
-	var intent := {"waystone_id": stone.id, "touch_id": touch_id}
 	var context := {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
 		"in_range": true, "in_combat": false, "foundation_runtime_authorized": true,
 		"validated_touch": true, "source_key": "waystone:" + str(stone.id), "touch_id": touch_id,
 		"realm": str(stone.realm_id), "world_namespace": world.reward_delivery_namespace}
-	var receipt := "craft:waystone_%s:%s" % [touch_id.sha256_text(), character]
+	# A guest's portable record keeps drifting (care, bond walking) between host
+	# samples. Freeze and replay its exact owner inputs first, as every other
+	# owner request does, so the staged before equals the owner's own baseline.
+	# The touch itself commits from _owner_passive_commit_request; a retry with
+	# a new envelope while that original is pending gets no second mutation.
+	# Stage first, as foundation requests do: a semantic refusal (e.g. the
+	# receipt limit) replies now instead of freezing the owner in a checkpoint.
+	var preview: Dictionary = preload("res://scripts/net/waystone_action.gd").stage(current,
+		{"waystone_id": stone.id, "touch_id": touch_id}, context)
+	if preview.get("ok") != true:
+		_portal_reply(peer, envelope, {"ok": false, "reason": "Your waystone could not save. Touch it again.",
+			"waystone_id": stone.id, "code": str(preview.get("code", ""))})
+		return
+	if peer != local_peer_id():
+		var request := preload("res://scripts/net/owner_passive_preparation.gd").waystone_request(envelope)
+		var ready: Dictionary = _owner_passive_service().call("action_gate", peer, "waystone_touch", request, context)
+		if ready.get("ok") != true:
+			if ready.get("code") not in ["owner_passive_checkpoint_pending", "owner_passive_original_pending"]:
+				_portal_reply(peer, envelope, {"ok": false, "reason": "Your waystone could not save. Touch it again.",
+					"code": "gate:" + str(ready.get("code", ""))})
+			return
+	var committed := _waystone_commit_prepared(peer, envelope, context)
+	if committed.get("durable") != true:
+		_portal_reply(peer, envelope, {"ok": false, "reason": "Your waystone could not save. Touch it again.",
+			"code": "commit:" + str(committed.get("code", committed.get("reason", "")))})
+
+
+## Stages the frozen touch with exactly the context that was (for a guest)
+## checkpointed. The waiter replies to the original envelope once the owner
+## save is acknowledged (_waystone_delivery_accepted).
+func _waystone_commit_prepared(peer: int, envelope: Dictionary, context: Dictionary) -> Dictionary:
+	if not _portal_envelope_valid(peer, envelope): return FOUNDATION_ACTIONS.deny("waystone_envelope_changed")
+	var character: String = envelope.character_id
+	var current: Dictionary = _character_authority.call("state", character)
+	var writer := get_node_or_null(^"LedgerRpc")
+	var stones: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/waystones.json"))
+	if current.is_empty() or writer == null or not stones is Dictionary: return FOUNDATION_ACTIONS.deny("waystone_unavailable")
+	var stone: Dictionary = PORTAL_POLICY._find_stone(stones, str(envelope.payload.waystone_id))
+	if stone.is_empty(): return FOUNDATION_ACTIONS.deny("waystone_unavailable")
+	var receipt := "craft:waystone_%s:%s" % [str(context.touch_id).sha256_text(), character]
 	_portal_waiters[receipt] = {"peer": peer, "envelope": envelope.duplicate(true),
 		"first_activation": not current.redesign_character.waystones_activated.get(stone.biome, []).has(stone.id)}
 	var committed := FOUNDATION_ACTIONS.commit(_character_authority, writer, peer, character,
-		context.expected_revision, "waystone_touch", intent, context)
-	if committed.get("durable") != true:
-		_portal_waiters.erase(receipt)
-		_portal_reply(peer, envelope, {"ok": false, "reason": "Your waystone could not save. Touch it again."})
+		int(context.expected_revision), "waystone_touch", {"waystone_id": stone.id, "touch_id": context.touch_id}, context)
+	if committed.get("durable") != true: _portal_waiters.erase(receipt)
+	return preload("res://scripts/net/waystone_action.gd").commit_outcome(committed)
 
 func _waystone_delivery_accepted(peer: int, row: Dictionary) -> void:
 	var waiter: Dictionary = _portal_waiters.get(row.get("receipt"), {})
@@ -5788,6 +5916,8 @@ func _waystone_delivery_accepted(peer: int, row: Dictionary) -> void:
 
 func _portal_reply(peer: int, envelope: Dictionary, result: Dictionary) -> void:
 	if not _portal_envelope_valid(peer, envelope): return
+	if result.get("ok") != true and envelope.payload.get("kind") == "waystone_touch":
+		print("[waystone] host refused peer %d %s: %s" % [peer, str(envelope.payload.get("waystone_id", "")), str(result.get("code", result.get("reason", "")))])
 	var reply := result.duplicate(true)
 	if reply.get("prepared") is Dictionary:
 		for key: Variant in reply.prepared:
@@ -6120,10 +6250,16 @@ func _rpc_opening_home_key(request: Dictionary) -> void:
 
 
 var _home_key_delivery_retry_at: Dictionary = {}
+## This owner's latest Home Key reconcile request per gift: the host's
+## owner-passive freeze must name exactly the request this owner sent.
+var _home_key_requests_sent: Dictionary = {}
 
 func _request_home_key_delivery(delivery: Dictionary) -> void:
 	var game := _game()
 	if not portal_runtime_ready() or game == null or game.get("local") == null or game.get("world") == null: return
+	# The host stages a full-record Home Key row: wait until every find this
+	# owner applied has been replayed into the host's admitted record.
+	if not is_host() and _owner_passive != null and _owner_passive.call("reward_replay_pending") == true: return
 	var character: String = game.get("local").character_id
 	var id: String = str(delivery.get("delivery_id", ""))
 	var origin: String = str(delivery.get("world_namespace", ""))
@@ -6137,12 +6273,51 @@ func _request_home_key_delivery(delivery: Dictionary) -> void:
 	request.delivery_id = id
 	request.origin_namespace = origin
 	if is_host(): OPENING_HOME_KEY.host_reconcile(self, local_peer_id(), request)
-	elif is_active() and handshake_snapshot_applied(): rpc_id(HOST_PEER_ID, "_rpc_home_key_delivery", request)
+	elif is_active() and handshake_snapshot_applied():
+		_home_key_requests_sent[id] = request.duplicate(true)
+		rpc_id(HOST_PEER_ID, "_rpc_home_key_delivery", request)
 
 
 @rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
 func _rpc_home_key_delivery(request: Dictionary) -> void:
 	if is_host(): OPENING_HOME_KEY.host_reconcile(self, multiplayer.get_remote_sender_id(), request)
+
+
+## Characters saved before the portal runtime finished the opening without a
+## Home Key; the host journals their deterministic grant (opening_home_key.gd
+## host_legacy_grant), which the ordinary delivery path then settles once.
+## Armed only when such a character can arrive: a loaded save (local) or an
+## admitted guest. A check stays armed through transient not-ready results
+## for at most LEGACY_HOME_KEY_WINDOW_MS.
+var _legacy_home_key_left := 0.0
+var _legacy_home_key_due: Dictionary = {}
+const LEGACY_HOME_KEY_WINDOW_MS := 60000
+
+func arm_legacy_home_key_check(peer: int) -> void:
+	if is_host() and portal_runtime_ready(): _legacy_home_key_due[peer] = Time.get_ticks_msec()
+
+## Characters whose verified opening-gift request reached this host this
+## session (host memory only; a rejoin re-seeds the guest's persisted beats).
+var _opening_gift_requested: Dictionary = {}
+
+func note_opening_gift_requested(peer: int) -> void:
+	var character := _authority_character(peer)
+	if not is_host() or character.is_empty(): return
+	_opening_gift_requested[character] = true
+	arm_legacy_home_key_check(peer)
+
+func opening_gift_requested(peer: int) -> bool:
+	return _opening_gift_requested.get(_authority_character(peer)) == true
+
+func _tick_legacy_home_keys(delta: float) -> void:
+	_legacy_home_key_left -= delta
+	if _legacy_home_key_due.is_empty() or _legacy_home_key_left > 0.0 or not is_host() or not portal_runtime_ready() or _game() == null: return
+	_legacy_home_key_left = 2.0
+	for peer: Variant in _legacy_home_key_due.keys():
+		var expired: bool = Time.get_ticks_msec() - int(_legacy_home_key_due[peer]) > LEGACY_HOME_KEY_WINDOW_MS
+		if int(peer) != local_peer_id() and not bool(_registry.call("has", int(peer))): expired = true
+		var result: Dictionary = {} if expired else OPENING_HOME_KEY.host_legacy_grant(self, int(peer))
+		if expired or result.is_empty() or result.get("durable") == true: _legacy_home_key_due.erase(peer)
 
 
 func _home_key_authoritative_owned(peer: int) -> bool:

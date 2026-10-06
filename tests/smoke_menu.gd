@@ -1257,6 +1257,13 @@ func _check_save_tab_controller_actions() -> void:
 		return
 
 	_cleanup_controller_save_dir()
+	# With portals on, every character past Grandpa's first catch holds its
+	# Home Key; without it, loading this slot correctly delivers the key and
+	# its lesson card (F18 legacy reconcile), which is not what this tab tests.
+	if _game.get("inventory").count("home_key") == 0:
+		_game.get("inventory").add("home_key", 1)
+		_game.get("local").flags.call("set_flag", "home_key_given")
+		_game.get("local").flags.call("set_flag", "opening:lesson:home_key")
 	var original: RefCounted = _game.get("save_system")
 	var isolated: RefCounted = SAVE_GAME.new(CONTROLLER_SAVE_DIR)
 	_game.set("save_system", isolated)

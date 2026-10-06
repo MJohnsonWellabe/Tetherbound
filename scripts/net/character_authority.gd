@@ -1325,6 +1325,37 @@ func character_fifth_stirred(character_id: String) -> bool:
 	return false
 
 
+## The owner settles an accepted key spend by keeping the journal row as a
+## settled portal escrow in its own record (portal_delivery.settle_owner).
+## Mirror that exact row on the admitted record, or every later full-record
+## owner action from this character conflicts on its baseline until a rejoin.
+## Only the host's own accepted journal row, after its debit, at the same
+## revision (receipt metadata, like the vitals marker). Busy: retried by the
+## portal reconcile poll.
+var _portal_marker_conflicts_logged: Dictionary = {}
+
+func promote_settled_portal_marker(character: String, row: Dictionary) -> bool:
+	const DELIVERY = preload("res://scripts/net/portal_delivery.gd")
+	if not DELIVERY.valid(row, character, _world_instance) or row.status != "accepted": return false
+	var candidate := state(character)
+	if candidate.is_empty() or not candidate.redesign_character.transaction_receipts.has(row.receipt): return false
+	var marker := row.duplicate(true)
+	marker.status = "settled"
+	var previous: Variant = candidate.portal_escrow.get(row.receipt)
+	if previous != null:
+		if equivalent(previous, marker): return true
+		if not _portal_marker_conflicts_logged.has(row.receipt):
+			_portal_marker_conflicts_logged[row.receipt] = true
+			push_warning("portal marker conflicts with the admitted record's row " + str(row.receipt))
+		return false
+	if _portal_mutation_pending(character) or _training_locked(character) or _portal_stages.has(character) \
+		or _loadout_pending.has(character) or _vitals_pending.has(character) or _vitals_stages.has(character): return false
+	candidate.portal_escrow[row.receipt] = marker
+	if not errors(candidate, character).is_empty(): return false
+	_replace_record(character, revision(character), candidate)
+	return true
+
+
 ## Reconstruct the hidden debit from the already saved world journal before
 ## an admitted rejoin can use another key. Never accept a client replacement.
 func recover_durable_portals(character_id: String, deliveries: Dictionary) -> Dictionary:

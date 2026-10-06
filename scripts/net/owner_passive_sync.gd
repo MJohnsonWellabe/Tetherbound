@@ -13,8 +13,8 @@ const GROOM := preload("res://scripts/net/groom_passive_sync.gd")
 const RESEARCH := preload("res://scripts/creatures/research_actions.gd")
 const CLOUD_MAP := preload("res://scripts/world/cloudreach_map_state.gd")
 const DATA := preload("res://scripts/data/redesign_data.gd")
-const REQUEST_KINDS := ["foundation_request", "altar_spend", "manual_refine", "altar_traits", "portal_arrival"]
-const REQUEST_ACTIONS := ["station_craft", "feast_cook", "feast_feed", "relic_hang", "master_chest", "essence_release"]
+const REQUEST_KINDS := ["foundation_request", "altar_spend", "manual_refine", "altar_traits", "portal_arrival", "waystone_touch", "home_key"]
+const REQUEST_ACTIONS := ["station_craft", "feast_cook", "feast_feed", "relic_hang", "relic_power", "master_chest", "essence_release"]
 const RETAINED_ACTIONS := ["research_event", "master_win", "boss_relic", "combat_mastery", "combat_round_reward", "wild_defeat_share"]
 const MAX_BUFFER := 120000
 const MAX_BATCH := 64
@@ -49,6 +49,10 @@ var saving := false
 var _left := 0.0
 var _reported_error := ""
 var _reported_ignore := ""
+## F18 rejoin: a host readmit that reached this owner before its handshake
+## snapshot set the joined world's scope. One, replayed by tick() once the
+## snapshot lands (dropped then if the scope still differs); cleared by reset().
+var held_readmit: Dictionary = {}
 
 class NavigationFlags extends RefCounted:
 	var flags: Dictionary = {}
@@ -148,6 +152,13 @@ func record_delivery(row: Dictionary) -> bool:
 	record_input({"op": "reward_delivery_applied", "delivery_id": str(row.get("delivery_id", "")),
 		"stacks_hash": HASH.fingerprint({"stacks": row.get("stacks")})})
 	return true
+
+## An applied reward delivery this owner has not yet replayed to the host:
+## the host's admitted record does not hold it yet (owner side only).
+func reward_replay_pending() -> bool:
+	for input: Variant in local.get("inputs", []):
+		if input is Dictionary and input.get("op") == "reward_delivery_applied": return true
+	return false
 
 func recording_active() -> bool:
 	return not local.is_empty() and pending.is_empty() and str(local.error).is_empty()
@@ -455,7 +466,11 @@ func _context(peer: int, stream: Dictionary) -> Dictionary:
 
 ## A host-accepted physical placement explains one same-stream false travel
 ## baseline. Peer inputs cannot create this capability or choose its anchor.
-func travel_reset_confirmed(peer: int, realm: String, anchor: Vector3) -> void:
+## A fly landing names the guest's own claimed pose, matched exactly. An
+## accepted portal/Home Key arrival (arrival_endpoint) names the host's view
+## of the guest's body; the guest's own endpoint is bound only by the live
+## host body (as every reset is), not by that stale replica.
+func travel_reset_confirmed(peer: int, realm: String, anchor: Vector3, arrival_endpoint: bool = false) -> void:
 	if owner() == null or owner().call("is_host") != true or not anchor.is_finite(): return
 	var character: String = owner().call("_authority_character", peer)
 	var stream: Dictionary = hosts.get(character, {})
@@ -466,7 +481,7 @@ func travel_reset_confirmed(peer: int, realm: String, anchor: Vector3) -> void:
 	var context := _context(peer, stream)
 	if context.realm != realm or not context.get("initial_position") is Vector3: return
 	stream.travel_reset = {"peer": peer, "stream_id": stream.id, "epoch": stream.epoch, "realm": realm,
-		"anchor": [anchor.x, anchor.y, anchor.z], "sequence": stream.cursor.sequence}
+		"anchor": [anchor.x, anchor.y, anchor.z], "sequence": stream.cursor.sequence, "arrival": arrival_endpoint}
 
 func _reset_matches(peer: int, stream: Dictionary, input: Dictionary, context: Dictionary) -> bool:
 	var proof: Dictionary = stream.get("travel_reset", {})
@@ -474,9 +489,13 @@ func _reset_matches(peer: int, stream: Dictionary, input: Dictionary, context: D
 		or stream.cursor.travel_valid != true or proof.peer != peer or proof.stream_id != stream.id \
 		or proof.epoch != stream.epoch or proof.realm != context.realm or input.get("realm") != proof.realm \
 		or int(input.sequence) <= int(proof.sequence) or not E._equivalent(input.get("from"), stream.cursor.position) \
-		or not E._equivalent(input.get("to"), proof.anchor) or not REPLAY._position(input.get("to")) \
+		or not REPLAY._position(input.get("to")) or not REPLAY._position(proof.anchor) \
 		or not context.get("initial_position") is Vector3: return false
 	var at := Vector3(float(input.to[0]), float(input.to[1]), float(input.to[2]))
+	# An arrival proof's anchor is the host's replica at mint time; the guest
+	# reports where it stands at its next poll. The live-body check below is
+	# the bound for it. A fly proof names the guest's own claim: exact.
+	if proof.get("arrival") != true and not E._equivalent(input.get("to"), proof.anchor): return false
 	# Reuse the existing live-body discontinuity endpoint tolerance.
 	return _endpoint_matches(context.initial_position, at)
 
@@ -1044,6 +1063,9 @@ func receive_owner(packet: Dictionary) -> void:
 	var scope := _scope()
 	for field: String in scope:
 		if packet.get(field) != scope[field]:
+			if packet.get("op") == "readmit" and owner().call("handshake_snapshot_applied") != true:
+				held_readmit = packet.duplicate(true) # This world's scope is not set yet.
+				return
 			_note_ignored("%s for another %s" % [str(packet.get("op", "")), field])
 			return
 	if packet.get("stream_id") != local.id and packet.get("op") != "inputs_ack":
@@ -1293,7 +1315,7 @@ func _readmit_owner(packet: Dictionary) -> void:
 	for card: Dictionary in baseline.party:
 		if members.get(str(card.get("uid", ""))) == null:
 			_owner_undo(undo)
-			_note_ignored("readmit naming a creature this owner does not hold")
+			_note_ignored("readmit naming creature %s this owner does not hold" % str(card.get("uid", "")))
 			return
 	if adopt:
 		local.discovered = (held as Dictionary).duplicate(true) # The host's held set wins; maps untouched.
@@ -1543,6 +1565,10 @@ func _note_host(stream: Dictionary, reason: String) -> void:
 	_host_notes[character] = reason
 	print("[owner-passive] host %s: %s (t=%dms)" % [character.left(18), reason, Time.get_ticks_msec()])
 
+## Diagnostic: why a host refused an owner's rebase (once per character and reason).
+func _note_rebase_refused(character: String, reason: String) -> void:
+	_note_host({"character": character}, "rebase refused: " + reason)
+
 ## Diagnostic only, once per distinct reason: a packet this owner drops is
 ## otherwise invisible, and the host simply resends it forever.
 func _note_ignored(reason: String) -> void:
@@ -1556,6 +1582,10 @@ func tick(delta: float) -> void:
 	if _left > 0.0: return
 	_left = 0.25
 	if owner() == null or owner().call("is_host") == true: return
+	if not held_readmit.is_empty() and owner().call("handshake_snapshot_applied") == true:
+		var readmit := held_readmit
+		held_readmit = {}
+		receive_owner(readmit)
 	if not local.is_empty() and str(local.get("error", "")) != _reported_error:
 		_reported_error = str(local.get("error", ""))
 		if not _reported_error.is_empty():
@@ -1605,7 +1635,9 @@ func _rebase_host(peer: int, packet: Dictionary) -> void:
 	if hosts.has(character):
 		var previous: Dictionary = hosts[character]
 		if previous.id != packet.get("old_stream") or previous.cursor.sequence != packet.get("old_sequence") \
-			or previous.cursor.prefix_hash != packet.get("old_prefix_hash"): return
+			or previous.cursor.prefix_hash != packet.get("old_prefix_hash"):
+			_note_rebase_refused(character, "old stream/sequence/prefix differs (readmit=%s)" % str(previous.has("readmit")))
+			return
 		discoveries = previous.cursor.discovered.duplicate(true)
 		var checkpoint: Dictionary = previous.checkpoint
 		if not packet.has("checkpoint_id") and row is Dictionary and checkpoint.get("source_kind") == "portal_arrival" \
@@ -1616,7 +1648,9 @@ func _rebase_host(peer: int, packet: Dictionary) -> void:
 				"permit_id": checkpoint.request.permit.request_id, "realm": checkpoint.request.permit.realm,
 				"entry_id": checkpoint.request.permit.entry_id}):
 			discoveries = checkpoint.arrival_discoveries.duplicate(true)
-	if HASH.fingerprint({"discovered": discoveries}) != packet.get("discoveries_hash"): return
+	if HASH.fingerprint({"discovered": discoveries}) != packet.get("discoveries_hash"):
+		_note_rebase_refused(character, "discoveries differ")
+		return
 	if packet.has("checkpoint_id"):
 		if not hosts.has(character): return
 		var old: Dictionary = hosts[character]
@@ -1632,7 +1666,10 @@ func _rebase_host(peer: int, packet: Dictionary) -> void:
 	if not row is Dictionary or row.get("status") != "accepted" or row.get("receipt") != packet.get("receipt") \
 		or row.get("character_id") != character or not row.get("after") is Dictionary \
 		or not PREP.exact(RECORD.training_projection(before, row, E.training_projection), row.after) \
-		or HASH.fingerprint(before) != packet.get("baseline_hash"): return
+		or HASH.fingerprint(before) != packet.get("baseline_hash"):
+		_note_rebase_refused(character, "settled row/baseline differs (row=%s, baseline_match=%s)" % [
+			str(row.get("status", "none") if row is Dictionary else "none"), str(HASH.fingerprint(before) == packet.get("baseline_hash"))])
+		return
 	if hosts.has(character):
 		var checkpoint: Dictionary = hosts[character].checkpoint
 		if checkpoint.has("prepared") and not checkpoint.has("result"): return
@@ -1648,6 +1685,7 @@ func reset() -> void:
 				if stream.checkpoint.has("prepared"):
 					authority.call("cancel_owner_passive_checkpoint", stream.character, stream.checkpoint.prepared.hash)
 	local.clear()
+	held_readmit.clear()
 	hosts.clear()
 	refused.clear()
 	pending.clear()

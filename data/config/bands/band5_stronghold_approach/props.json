@@ -380,6 +380,7 @@
         {
           "name": "HallwardTorchWest",
           "model": "Torch_Metal",
+          "glow_light_only": true,
           "at": [6.0, 7503.0],
           "yaw_deg": -14.0,
           "sink_m": 0.04,
@@ -390,6 +391,7 @@
         {
           "name": "HallwardTorchEast",
           "model": "Torch_Metal",
+          "glow_light_only": true,
           "at": [22.0, 7505.0],
           "yaw_deg": 166.0,
           "sink_m": 0.04,
@@ -444,6 +446,7 @@
         {
           "name": "HallGateBeaconWest",
           "model": "Torch_Metal",
+          "glow_light_only": true,
           "at": [-5.0, 7539.5],
           "yaw_deg": -14.0,
           "sink_m": 0.04,
@@ -455,6 +458,7 @@
         {
           "name": "HallGateBeaconEast",
           "model": "Torch_Metal",
+          "glow_light_only": true,
           "at": [20.5, 7541.0],
           "yaw_deg": 166.0,
           "sink_m": 0.04,

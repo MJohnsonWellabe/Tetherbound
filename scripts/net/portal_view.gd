@@ -12,7 +12,10 @@ static func build(player: RefCounted, world: RefCounted, arch: Dictionary) -> Di
 			and row.biome == "biome5" and row.status == "settled": stirred = true
 	var label := "biome entry"
 	var last: String = str(player.redesign_character.last_waystones.get(biome, ""))
-	if player.redesign_character.waystones_activated.get(biome, []).has(last):
+	if biome == "meadows" and not preload("res://scripts/net/portal_action_policy.gd").meadows_waystone_return(
+			preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json")):
+		last = ""
+	if not last.is_empty() and player.redesign_character.waystones_activated.get(biome, []).has(last):
 		var stone: Dictionary = preload("res://scripts/net/portal_action_policy.gd")._find_stone(
 			preload("res://scripts/world/waystone.gd").load_config(), last)
 		if stone.get("biome") == biome: label = str(stone.display_name)
