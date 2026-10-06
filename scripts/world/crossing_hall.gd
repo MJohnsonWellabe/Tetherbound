@@ -135,6 +135,8 @@ func _build_pedestal(entry: Dictionary) -> void:
 	var hero := _add_hero_model(slot, "pedestal")
 	if not hero:
 		_add_model(slot, STAND_MODEL)
+	else:
+		_add_hero_relic(slot, str(entry.biome))
 	# Measured installed BookStand bounds, authored in config so physics and
 	# presentation share one native-scale footprint rather than a solid room.
 	var collider: Dictionary = _config.get("pedestal_collider", {})
@@ -226,6 +228,64 @@ func _set_hero_arch_state(slot: Node3D, state: String) -> void:
 	material.emission_enabled = state == "stirred"
 	material.emission = (membrane.material_override as StandardMaterial3D).albedo_color
 	material.emission_energy_multiplier = .1
+
+
+func _add_hero_relic(slot: Node3D, biome: String) -> void:
+	# An empty cradle stays empty until the host's existing shrine display says
+	# otherwise. These small relics carry no prompt, collider or local state.
+	if biome not in ["meadows", "tidewake", "cloudreach", "stormwood"]:
+		return
+	var settings: Dictionary = (_config.get("hero_art", {}) as Dictionary).get("relic_display", {})
+	var relic := Node3D.new()
+	relic.name = "DisplayedRelic"
+	relic.position = _position(settings.get("at", [0, 1.28, 0]))
+	relic.scale = Vector3.ONE * float(settings.get("scale", 1.0))
+	relic.visible = false
+	slot.add_child(relic)
+	if biome == "meadows":
+		# The installed aftermath's recognizable heart, including its own finish.
+		preload("res://scripts/world/trainer_aftermath.gd")._build_heart(relic, Vector3.ZERO, 1.2)
+		return
+	var material := StandardMaterial3D.new()
+	var colours: Dictionary = settings.get("colours", {})
+	material.albedo_color = Color(str(colours.get(biome, "#cbb375" if biome == "tidewake" else "#d1ddd7" if biome == "cloudreach" else "#d6b454")))
+	material.metallic = .2
+	material.roughness = .8
+	if biome == "tidewake":
+		var ring := TorusMesh.new()
+		ring.inner_radius = .12
+		ring.outer_radius = .16
+		var compass := _relic_piece(relic, ring, material)
+		compass.rotation.x = PI * .5
+		var needle := PrismMesh.new()
+		needle.size = Vector3(.08, .25, .035)
+		_relic_piece(relic, needle, material).rotation.z = -.35
+	elif biome == "cloudreach":
+		# The same paired three-feather silhouette as the existing realm shrine.
+		for side: float in [-1.0, 1.0]:
+			for index: int in 3:
+				var feather := CapsuleMesh.new()
+				feather.radius = .025
+				feather.height = .25 - float(index) * .035
+				var piece := _relic_piece(relic, feather, material)
+				piece.position = Vector3(side * (.07 + index * .06), .07 - index * .035, 0)
+				piece.rotation.z = side * .65
+	else:
+		# Stormwood's established three-stroke spark silhouette.
+		for index: int in 3:
+			var stroke := BoxMesh.new()
+			stroke.size = Vector3(.06, .21, .05) if index != 1 else Vector3(.17, .055, .05)
+			var piece := _relic_piece(relic, stroke, material)
+			piece.position = Vector3(-.035, .1, 0) if index == 0 else Vector3(.035, -.1, 0) if index == 2 else Vector3.ZERO
+			piece.rotation.z = -.4 if index != 1 else 0.0
+
+
+func _relic_piece(parent: Node3D, mesh: Mesh, material: Material) -> MeshInstance3D:
+	var piece := MeshInstance3D.new()
+	piece.mesh = mesh
+	piece.material_override = material
+	parent.add_child(piece)
+	return piece
 
 
 func _label(parent: Node3D, text: String, at: Vector3) -> Label3D:
@@ -500,6 +560,9 @@ func apply_display(display: Dictionary) -> void:
 	for id: String in _pedestals:
 		var pedestal: Node3D = _pedestals[id]
 		pedestal.set_meta("relic_displayed", bool(shrine.get(id, false)))
+		var relic := pedestal.get_node_or_null(^"DisplayedRelic") as Node3D
+		if relic != null:
+			relic.visible = bool(shrine.get(id, false))
 
 
 func home_arrival() -> Vector3:

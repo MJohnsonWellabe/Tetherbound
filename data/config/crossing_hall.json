@@ -198,6 +198,7 @@
     "arch_model": "res://assets/environment/crossing_hall/portal_arch/portal_arch.tscn",
     "pedestal_model": "res://assets/environment/crossing_hall/shrine_pedestal/shrine_pedestal.tscn",
     "pedestal_collider": {"size": [0.8, 1.1, 0.8], "at": [0, 0.55, 0]},
+    "relic_display": {"at": [0, 1.28, 0], "scale": 1.0, "colours": {"tidewake": "#cbb375", "cloudreach": "#d1ddd7", "stormwood": "#d6b454"}, "_scope": "Presentation from host shrine_display only; no local inventory or progress decision."},
     "portal_surface": {"size": [2.4, 3.6], "at": [0, 1.8, -0.08]},
     "stone_infill": {"size": [2.4, 3.6, 0.16], "at": [0, 1.8, -0.08], "colour": "#776f60"},
     "_aperture_validation": "Brief target only: verify native mesh aperture and surface/infill fit before enabling. These surfaces add no collision or progression authority."

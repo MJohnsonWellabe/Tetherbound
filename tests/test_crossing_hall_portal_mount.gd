@@ -5,6 +5,35 @@ extends "res://tests/test_case.gd"
 const HALL := preload("res://scripts/world/crossing_hall.gd")
 const ACTION := preload("res://scripts/world/portal_arch.gd")
 
+func test_hero_cradles_follow_only_the_latest_shared_shrine_display() -> void:
+	var hall: Node3D = HALL.new()
+	for biome: String in ["meadows", "tidewake", "cloudreach", "stormwood"]:
+		var slot := Node3D.new()
+		hall.add_child(slot)
+		hall.get("_pedestals")[biome] = slot
+		hall.call("_add_hero_relic", slot, biome)
+		var relic := slot.get_node(^"DisplayedRelic") as Node3D
+		assert_false(relic.visible, "an empty cradle does not invent an earned relic")
+		assert_true(relic.get_child_count() > 0, "each live biome has a physical relic, not metadata alone")
+		hall.call("apply_display", {"shrine_display": {biome: true}})
+		assert_true(relic.visible)
+		assert_true(bool(slot.get_meta("relic_displayed")))
+		hall.call("apply_display", {"shrine_display": {biome: false}})
+		assert_false(relic.visible, "a fresh world display replaces the prior display")
+		hall.call("apply_display", {})
+		assert_false(relic.visible, "missing shared display is empty, not a cached personal hang")
+	var reserved := Node3D.new()
+	hall.add_child(reserved)
+	hall.call("_add_hero_relic", reserved, "biome5")
+	assert_eq(reserved.get_child_count(), 0, "sealed future biomes do not acquire a fabricated relic")
+	var stock := Node3D.new()
+	hall.add_child(stock)
+	hall.get("_pedestals")["stock"] = stock
+	hall.call("apply_display", {"shrine_display": {"stock": true}})
+	assert_true(bool(stock.get_meta("relic_displayed")))
+	assert_eq(stock.get_child_count(), 0, "fallback presentation remains unchanged")
+	hall.free()
+
 func test_hero_arch_membrane_and_stone_follow_the_existing_display_state() -> void:
 	var hall: Node3D = HALL.new()
 	var slot := Node3D.new()
