@@ -121,6 +121,11 @@ func _run() -> void:
 		"camp equip changes the guest utility and saves its original revision")
 	var view_args := {"character_id": guest_id, "uid": str(expected.get("uid", ""))}
 	check(await _await_loadout(0, view_args, expected), "host admits the guest's saved loadout before reload")
+	# Earn on the first admitted stream, then retain that exact disk credit
+	# through the original reload/rejoin tail. A new post-rejoin checkpoint is
+	# separately blocked by the observed R1 travel_baseline_mismatch defect.
+	var heal_earned := {}
+	if heal_mode: heal_earned = await _prove_heal(guest_id)
 
 	# --- host save and reload -------------------------------------------------
 	var reload: Dictionary = await step(0, "save_reload_here", {}, STEP_BUDGET)
@@ -144,11 +149,17 @@ func _run() -> void:
 		"after rejoining the guest receives both camps (%s)" % str(guest_view.get("detail", "")))
 	check(await _await_loadout(0, view_args, expected), "host re-admits the guest's persisted loadout")
 	check(await _await_loadout(1, view_args, expected), "guest rejoin preserves the saved loadout and receipt")
-	if heal_mode: await _prove_heal(guest_id)
+	if heal_mode:
+		var restored: Dictionary = (await _cstep(1, "camp_heal_view", {"character_id":guest_id,
+			"uid":str(heal_earned.get("uid", ""))})).get("observation", {}).get("disk", {})
+		check(not heal_earned.is_empty() and restored.get("uid") == heal_earned.get("uid")
+			and restored.get("move_mastery_uses") == heal_earned.get("uses")
+			and restored.get("move_mastery_receipts") == heal_earned.get("receipts"),
+			"Heal: actual owner reload and rejoin retain the exact earned UID, uses and ordered receipts")
 	quit(await finish())
 
 
-func _prove_heal(character: String) -> void:
+func _prove_heal(character: String) -> Dictionary:
 	var edit := await _cstep(1, "camp_loadout_edit", {"species":"meadowhart", "move_id":"heal_pulse"}, STEP_BUDGET)
 	check(edit.get("verdict") == "PASS", "Heal: actual camp panel saves the legal owned utility (%s)" % str(edit.get("detail", "")))
 	var expected: Dictionary = edit.get("card", {})
@@ -156,20 +167,20 @@ func _prove_heal(character: String) -> void:
 	var args := {"character_id":character, "uid":uid}
 	check(not uid.is_empty() and expected.get("move_utility") == "heal_pulse" and not expected.get("loadout_last_edit", {}).is_empty(),
 		"Heal: equipped utility has its exact saved loadout receipt")
-	if uid.is_empty() or edit.get("verdict") != "PASS": return
+	if uid.is_empty() or edit.get("verdict") != "PASS": return {}
 	check(await _await_loadout(0, args, expected), "Heal: host admits the actual equipped owner loadout")
 	var deployed := await _cstep(1, "camp_heal_deploy")
 	check(deployed.get("verdict") == "PASS", "Heal: normal LB selects and deploys the owned healer")
-	if deployed.get("verdict") != "PASS": return
+	if deployed.get("verdict") != "PASS": return {}
 	var host_deployed: Dictionary = await step(0, "deploy_creature")
 	check(host_deployed.get("verdict") == "PASS", "Heal: host deploys its actual owned creature")
 	var target := await _cstep(0, "camp_heal_target")
 	check(target.get("verdict") == "PASS" and not str(target.get("encounter_id", "")).is_empty(), "Heal: normal interact opens an actual canonical wild")
-	if target.get("verdict") != "PASS" or str(target.get("encounter_id", "")).is_empty(): return
+	if target.get("verdict") != "PASS" or str(target.get("encounter_id", "")).is_empty(): return {}
 	await step(1, "teleport", {"at":target.get("position", [])})
 	var joined: Dictionary = await step(1, "join_encounter", {"encounter_id":str(target.encounter_id)})
 	check(joined.get("verdict") == "PASS", "Heal: guest joins the host's exact wild record")
-	if joined.get("verdict") != "PASS": return
+	if joined.get("verdict") != "PASS": return {}
 	var left: Dictionary = await step(0, "press", {"action":"combat_run"})
 	check(left.get("verdict") == "PASS", "Heal: host normally disengages while the guest remains")
 	var wounded := await _cstep(1, "camp_heal_wounded", args, STEP_BUDGET)
@@ -177,7 +188,9 @@ func _prove_heal(character: String) -> void:
 	print("HEAL actual wounded observation: ", JSON.stringify(before))
 	check(wounded.get("verdict") == "PASS" and before.get("active_uid") == uid and before.get("saved_bool_seen") == true,
 		"Heal: real enemy damage reaches the current owned body and the actual owner save BOOL")
-	if wounded.get("verdict") != "PASS": return
+	if wounded.get("verdict") != "PASS": return {}
+	var stream_before: Dictionary = (await _cstep(0, "camp_heal_view", args)).get("observation", {})
+	check(stream_before.get("passive", {}).get("error") == "", "Heal: actual host owner stream has no baseline refusal before the utility")
 	var pressed: Dictionary = await step(1, "press", {"action":"combat_utility"})
 	check(pressed.get("verdict") == "PASS", "Heal: physical B utility tap reaches the mounted combat input")
 	var after := {}
@@ -225,6 +238,8 @@ func _prove_heal(character: String) -> void:
 	print("HEAL actual mastery exit observation: ", JSON.stringify({"owner":final,
 		"host":(await _cstep(0, "camp_heal_view", args)).get("observation", {})}))
 	check(earned, "Heal: actual owner disk credits exactly one new equipped Heal use after exit")
+	return {"uid":uid, "uses":final.disk.move_mastery_uses.duplicate(true),
+		"receipts":final.disk.move_mastery_receipts.duplicate(true)} if earned else {}
 
 
 func _await_loadout(peer: int, args: Dictionary, expected: Dictionary) -> bool:
