@@ -245,7 +245,7 @@
     },
     {
       "name": "Bram",
-      "_why_f01_3": "Native night walk: the central hanging lamp covered Bram at the middle of the bar. The east-end candidate cleared his face but put the player behind the lodging privacy screen. He serves from the west end of the same counter, keeping the approach in the public aisle and away from that screen. No interior geometry or conversation changes; fresh walk and blind verdict required.",
+      "_why_f01_3": "Native night walk: counter placements put the camera behind the lodging screen or sent the departing player toward the west wall. Bram welcomes guests in the inn's public entrance aisle, clear of the tables, barrels and door posts. The doorway approach and nearest road departure share the same open aisle. No interior geometry or conversation changes; fresh walk and blind verdict required.",
       "hair": {
         "visible": true,
         "color": "#9c8450",
@@ -253,8 +253,8 @@
       },
       "config_key": "villager_keeper",
       "position": [
-        43.0,
-        -2.39
+        43.65,
+        4.35
       ],
       "facing_deg": 0,
       "greeting": "village_bram",
