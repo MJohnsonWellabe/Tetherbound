@@ -7,6 +7,7 @@ const CATALOG := preload("res://scripts/creatures/water_species_catalog.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
 var checks := 0
 var failures := 0
+var _owner_reload_complete := false
 
 func _init() -> void:
 	_run.call_deferred()
@@ -109,6 +110,7 @@ func _run() -> void:
 	print("Alpha runtime evidence: phase=", alpha.authority.phase().id, " ally_hp=", ally.hp, " enemy_hp=", alpha.body.instance.hp)
 	if game.local.flags.has("water_swim_stone_earned"):
 		await _complete_saddle_chain(game, world, director, player, ally)
+		check(_owner_reload_complete, "Earned owner save and reload chain completes without an aborted tail")
 	_finish()
 
 func _complete_saddle_chain(game: Node, world: Node3D, director: Node, player: Node3D, ally: RefCounted) -> void:
@@ -196,8 +198,9 @@ func _complete_saddle_chain(game: Node, world: Node3D, director: Node, player: N
 	check(flags.has("water_swim_stone_earned") and flags.has("water_swim_saddle_recipe_learned"),
 		"Actual owner disk preserves the earned Stone and completed Iona lesson")
 	var saddles := 0
-	for slot: Dictionary in payload.get("inventory", []):
-		if slot.get("id") == "swim_saddle": saddles += int(slot.get("n", 0))
+	for slot: Variant in payload.get("inventory", []):
+		if slot is Dictionary and slot.get("id") == "swim_saddle":
+			saddles += int(slot.get("n", 0))
 	check(saddles == 1 and payload.get("party", []).size() == 1 \
 		and str(payload.party[0].get("uid", "")) == str(ally.uid),
 		"Actual owner disk holds exactly one crafted saddle and the same owned companion UID")
@@ -212,6 +215,7 @@ func _complete_saddle_chain(game: Node, world: Node3D, director: Node, player: N
 	check(game.world.get_instance_id() == world_instance and str(game.world.world_id) == world_id \
 		and game.world.flags.has("water_aquaryn_resolved"),
 		"Owner reload preserves the actual resolved host World")
+	_owner_reload_complete = failures == 0
 
 func _frames(count: int) -> void:
 	for frame in count:
