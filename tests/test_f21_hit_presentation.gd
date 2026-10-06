@@ -14,6 +14,7 @@ const FEEDBACK := preload("res://scripts/combat/hit_feedback.gd")
 const MOTION := preload("res://scripts/ui/motion_prefs.gd")
 const KEY_BINDINGS := preload("res://scripts/ui/key_bindings.gd")
 const COMBAT_HUD_SCENE := preload("res://scenes/combat/combat_hud.tscn")
+const LIBRARY := preload("res://scripts/vfx/move_effect_library.gd")
 const TEST_PATH := "user://__test_f21_hit_presentation.json"
 
 
@@ -29,6 +30,7 @@ class CombatBody extends Node3D:
 	func play_attack() -> void: pass
 	func play_hit() -> void: pass
 	func play_faint() -> void: pass
+	func set_engaged(_engaged: bool) -> void: pass
 
 
 func after_each() -> void:
@@ -44,11 +46,12 @@ func _creature(type_id: String) -> RefCounted:
 		"base_attack": 20.0, "base_defence": 20.0})
 	creature.move_quick = "gale_peck"
 	creature.move_charged = "earth_fist"
+	creature.known_moves = ["gale_peck", "earth_fist"] as Array[String]
 	creature.hp = 1000.0
 	return creature
 
 
-func _fight() -> Dictionary:
+func _fight(mounted: bool = false) -> Dictionary:
 	var manager := COMBAT.new()
 	var enemy := _creature("ground")
 	var ally := _creature("water")
@@ -59,6 +62,18 @@ func _fight() -> Dictionary:
 	ally_body.instance = ally
 	ally_body.position = Vector3(0.0, 0.0, 2.0)
 	var arena := Node3D.new()
+	var owned_game: Node = null
+	if mounted:
+		var root: Window = (Engine.get_main_loop() as SceneTree).root
+		if root.get_node_or_null(^"Game") == null:
+			owned_game = preload("res://autoload/game_state.gd").new()
+			owned_game.name = "Game"
+			root.add_child(owned_game)
+		root.add_child(arena)
+		arena.add_child(manager)
+		arena.add_child(wild)
+		arena.add_child(ally_body)
+		manager.set_physics_process(false)
 	manager.set("_moves", MOVE_DB.new())
 	manager.set("_enemy", enemy)
 	manager.set("_wild", wild)
@@ -72,14 +87,19 @@ func _fight() -> Dictionary:
 	rng.seed = 5
 	manager.set("_rng", rng)
 	var impacts: Array = []
+	var launches: Array = []
+	manager.attack_launched.connect(func(_on_enemy: bool, launch: Dictionary, shot: Node3D) -> void:
+		launches.append({"launch": launch, "shot": shot}))
 	manager.impact_confirmed.connect(func(on_enemy: bool, receipt: Dictionary, where: Vector3) -> void:
 		impacts.append({"on_enemy": on_enemy, "receipt": receipt, "where": where}))
-	return {"manager": manager, "wild": wild, "ally_body": ally_body, "arena": arena, "impacts": impacts}
+	return {"manager": manager, "wild": wild, "ally_body": ally_body, "arena": arena,
+		"impacts": impacts, "launches": launches, "owned_game": owned_game}
 
 
 func _free(fight: Dictionary) -> void:
 	for key: String in ["manager", "wild", "ally_body", "arena"]:
 		(fight[key] as Node).free()
+	if is_instance_valid(fight.owned_game): (fight.owned_game as Node).free()
 
 
 func _expected_impulse(weight: String) -> float:
@@ -109,13 +129,47 @@ func test_solo_hit_on_the_player_freezes_a_weighted_receipt_and_reaches_the_hud(
 
 
 func test_solo_player_strike_uses_slot_weight_for_knockback_and_hitstop() -> void:
+	if not Engine.get_main_loop() is SceneTree:
+		var output: Array = []
+		var code := OS.execute(OS.get_executable_path(), ["--headless", "--path",
+			ProjectSettings.globalize_path("res://"), "--script", "res://tests/run_tests.gd", "--",
+			"--only=test_f21_hit_presentation.gd::test_solo_player_strike_uses_slot_weight_for_knockback_and_hitstop",
+			"--initialized-tree"], output, true)
+		var combined := "\n".join(output)
+		var completed: Dictionary = {}
+		for line: String in combined.split("\n"):
+			if line.begins_with("F25_SOLO_ARRIVAL_COMPLETE="):
+				var parsed: Variant = JSON.parse_string(line.trim_prefix("F25_SOLO_ARRIVAL_COMPLETE="))
+				if parsed is Dictionary: completed = parsed
+		assert_eq(code, 0, combined)
+		assert_false(combined.contains("ERROR:") or combined.contains("ObjectDB instances") or combined.contains("resources still in use"), combined)
+		assert_true(completed.get("completed") == true, combined)
+		assert_true(int(completed.get("assertions", 0)) >= 200, combined)
+		assert_eq(completed.get("failures", ["missing receipt"]), [], combined)
+		print("F25_SOLO_ARRIVAL_NATIVE=" + JSON.stringify(completed))
+		return
+	var library_was := bool(LIBRARY.config().get("enabled", false))
+	LIBRARY.config()["enabled"] = true
 	for slot: String in ["quick", "charged"]:
-		var fight := _fight()
+		var fight := _fight(true)
 		var manager: Node = fight.manager
 		manager.set("_pending_move", {"is_quick": slot == "quick", "slot": slot, "power": 9.0, "vfx": {}})
 		var flash_was := bool(MATH.config().get("impact", {}).get("enabled", true))
 		MATH.config().get("impact", {})["enabled"] = false
+		var enemy: RefCounted = manager.get("_enemy")
+		var before := float(enemy.hp)
 		manager.call("_perform_player_strike", true)
+		assert_eq(float(enemy.hp), before, "HP cannot change at projectile birth")
+		assert_eq((fight.impacts as Array).size(), 0, "no number before contact")
+		assert_eq((fight.launches as Array).size(), 1, "the actual library accepted the F23 frozen move")
+		if (fight.launches as Array).size() == 1:
+			var shot: Node3D = fight.launches[0].shot
+			assert_true(shot.has_method("actor_binding"), "this is an actual library effect")
+			shot.call("_finish_presentation")
+			assert_true(float(enemy.hp) < before, "actual arrival applies damage")
+			var after := float(enemy.hp)
+			shot.emit_signal("arrived")
+			assert_eq(float(enemy.hp), after, "duplicate arrival cannot debit HP twice")
 		MATH.config().get("impact", {})["enabled"] = flash_was
 		var impacts: Array = fight.impacts
 		var weight := str(FEEDBACK.config().get("slot_weights", {}).get(slot, "light"))
@@ -144,7 +198,62 @@ func test_solo_player_strike_uses_slot_weight_for_knockback_and_hitstop() -> voi
 			assert_eq(impacts.size(), 0, "contact cannot be redirected onto a replacement target")
 			MATH.config().get("impact", {})["enabled"] = flash_was
 		_free(fight)
+	for move_id: String in ["pebble_toss", "rock_throw", "fireball", "thunder_break"]:
+		for condition: String in ["arrival", "cancel", "target_uid", "target_body", "source_uid", "source_body", "inactive", "ko"]:
+			var fight := _fight(true)
+			var manager: Node = fight.manager
+			var creature: RefCounted = manager.call("active_creature")
+			var enemy: RefCounted = manager.get("_enemy")
+			var slot := str(MOVE_DB.new().slot(move_id))
+			creature.set("move_" + slot, move_id)
+			(creature.get("known_moves") as Array[String]).append(move_id)
+			manager.set("_pending_move", {"is_quick": slot == "quick", "slot": slot, "power": 9.0,
+				"vfx": MOVE_DB.new().move(move_id).vfx})
+			if condition == "ko": enemy.hp = 0.01
+			var before := float(enemy.hp)
+			var energy_before := float(creature.energy)
+			var flash_was := bool(MATH.config().get("impact", {}).get("enabled", true))
+			MATH.config().get("impact", {})["enabled"] = false
+			manager.call("_perform_player_strike", true)
+			assert_eq(float(enemy.hp), before, move_id + ": no HP at birth")
+			assert_eq(float(creature.energy), energy_before, "no connecting energy before arrival")
+			assert_eq((fight.launches as Array).size(), 1, "four ordinary identities use actual F23 library births")
+			var replacement: CombatBody = null
+			if (fight.launches as Array).size() == 1:
+				var shot: Node3D = fight.launches[0].shot
+				if condition == "cancel": shot.call("cancel_presentation")
+				elif condition == "target_uid": enemy.uid = "replaced-target"
+				elif condition == "source_uid": creature.uid = "replaced-source"
+				elif condition == "inactive": manager.set("state", COMBAT.State.INACTIVE)
+				elif condition in ["target_body", "source_body"]:
+					replacement = CombatBody.new()
+					replacement.instance = enemy if condition == "target_body" else creature
+					(fight.arena as Node3D).add_child(replacement)
+					manager.set("_wild" if condition == "target_body" else "_ally_body", replacement)
+				shot.call("_finish_presentation")
+				if condition in ["arrival", "ko"]:
+					assert_true(float(enemy.hp) < before, move_id + ": arrival debits original HP")
+					assert_eq((fight.impacts as Array).size(), 1, "one actual contact, one number")
+					var after := float(enemy.hp)
+					shot.emit_signal("arrived")
+					assert_eq(float(enemy.hp), after, "duplicate arrived cannot repeat damage")
+					assert_eq((fight.impacts as Array).size(), 1, "duplicate arrived cannot repeat number")
+					if condition == "ko":
+						assert_eq(int(manager.get("state")), COMBAT.State.RESOLVING)
+						assert_true(bool(manager.get("_victory_awarded")), "final arrival awards victory")
+				else:
+					assert_eq(float(enemy.hp), before, condition + ": no stale/cancelled damage")
+					assert_eq(float(creature.energy), energy_before, "no stale/cancelled energy credit")
+					assert_eq((fight.impacts as Array).size(), 0, "no stale/cancelled number")
+			MATH.config().get("impact", {})["enabled"] = flash_was
+			if replacement != null: replacement.free()
+			manager.set("_wild", fight.wild)
+			manager.set("_ally_body", fight.ally_body)
+			_free(fight)
+	LIBRARY.config()["enabled"] = library_was
 	assert_true(_expected_impulse("heavy") > _expected_impulse("light"), "a heavy hit throws further")
+	print("F25_SOLO_ARRIVAL_COMPLETE=" + JSON.stringify({"completed": true,
+		"assertions": assertion_count, "failures": failures}))
 
 
 func test_crit_sharp_rumble_and_class_shake_follow_their_settings() -> void:

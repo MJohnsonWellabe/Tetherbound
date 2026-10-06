@@ -2873,7 +2873,7 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 		killed_override: bool = false, crit_override: bool = false,
 		stagger_triggered_override: bool = false, impact: Dictionary = {}) -> void:
 	var creature := active_creature()
-	if creature == null or _enemy == null or _ally_body == null or _wild == null:
+	if creature == null or _enemy == null or not is_instance_valid(_ally_body) or not is_instance_valid(_wild):
 		return
 	var origin: Vector3 = _ally_body.call("centre")
 	var facing: Vector3 = _ally_body.call("facing")
@@ -2882,6 +2882,92 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 	if not connected:
 		attack_missed.emit(true)
 		state_changed.emit()
+		return
+
+	# The unlinked solo path owns this already-connected strike. Freeze its
+	# presentation once, then commit only at that presentation's contact.
+	# Host verdicts below retain their separate host-owned HP decision.
+	var solo_slot := str(_pending_move.get("slot", "quick" if bool(_pending_move.get("is_quick", false)) else "charged"))
+	if damage_override < 0.0 and impact.is_empty() and _encounter_link == null \
+			and not str(creature.get("move_" + solo_slot)).is_empty():
+		if state != State.ACTIVE or not is_instance_valid(_arena) or not _arena.is_inside_tree(): return
+		var game := get_node_or_null(^"/root/Game")
+		var local: Variant = game.get("local") if game != null else null
+		if local == null or str(local.get("character_id")).is_empty(): return
+		var source_body := _ally_body
+		var target_body := _wild
+		var enemy := _enemy
+		var arena := _arena
+		var source_uid := str(creature.get("uid"))
+		var target_uid := str(enemy.get("uid"))
+		if source_body.get("instance") != creature or target_body.get("instance") != enemy: return
+		# An arena is the actual local encounter lifetime. Instance IDs remain
+		# strings here; they cannot fit the presentation generation's int range.
+		if _encounter_id.is_empty(): _encounter_id = "solo:%s" % arena.get_instance_id()
+		var encounter_id := _encounter_id
+		var character_id := str(local.get("character_id"))
+		var lifetime: Dictionary = source_body.get_meta(&"solo_move_lifetime", {})
+		if lifetime.get("encounter_id") != encounter_id or lifetime.get("creature_uid") != source_uid \
+				or lifetime.get("character_id") != character_id:
+			if _impact_serial >= 2147483646: return
+			_impact_serial += 1
+			lifetime = {"encounter_id": encounter_id, "creature_uid": source_uid,
+				"character_id": character_id, "generation": _impact_serial}
+			source_body.set_meta(&"solo_move_lifetime", lifetime)
+		if _impact_serial >= 2147483646: return
+		_impact_serial += 1
+		var actor := lifetime.duplicate(true)
+		actor["action"] = _impact_serial
+		var slot := solo_slot
+		var owned: Dictionary = (local.get("redesign_character") as Dictionary).get("creatures", {}).get(source_uid, {})
+		var frozen_result := MOVE_MASTERY.freeze_action(creature, slot, actor, owned.get("breakthroughs", []), _moves)
+		if frozen_result.get("ok") != true: return
+		var frozen: Dictionary = frozen_result.move
+		var move_id := str(frozen.move_id)
+		var muzzle := origin + facing * float(source_body.call("body_radius")) if source_body.has_method("body_radius") else origin
+		var context := {"current_actor": actor, "source_ground": source_body.global_position,
+			"target_ground": target_body.global_position,
+			"travel_seconds": PROJECTILE.travel_seconds(muzzle, target, frozen)}
+		var cfg := PROGRESSION.config()
+		var type_mult := TYPE_CHART.multiplier_dual(_moves.type_of(move_id), str(enemy.creature_type), str(enemy.get("secondary_type")))
+		var rolled := MATH.rolled_damage(float(_pending_move.get("power", 9.0)) * _gear_power_scale(creature),
+			creature.effective_attack(cfg), enemy.effective_defence(cfg), _rng.randf(), _moves.power(move_id), type_mult)
+		var windup := float(_pending_move.get("windup", 0.55))
+		# Keep the established numbered feedback receipt separate from F23's
+		# opaque frozen-action identity; neither parser is weakened to admit it.
+		var receipt := _new_impact(move_id, slot, rolled, type_mult, false, facing, target_body)
+		if receipt.is_empty(): return
+		var commit := func() -> void:
+			if not is_instance_valid(game) or game.get("local") != local: return
+			if state != State.ACTIVE or _encounter_id != encounter_id or _arena != arena \
+					or not is_instance_valid(arena) or arena.is_queued_for_deletion(): return
+			if not is_instance_valid(source_body) or not is_instance_valid(target_body) \
+					or source_body.is_queued_for_deletion() or target_body.is_queued_for_deletion(): return
+			if _ally_body != source_body or _wild != target_body or active_creature() != creature or _enemy != enemy \
+					or str(creature.get("uid")) != source_uid or str(enemy.get("uid")) != target_uid \
+					or source_body.get("instance") != creature or target_body.get("instance") != enemy \
+					or source_body.get_meta(&"solo_move_lifetime", {}) != lifetime \
+					or str(local.get("character_id")) != character_id or creature.fainted or enemy.fainted: return
+			if not _admit_host_feedback(_seen_impact_actions, receipt, false): return
+			var critical := bool(target_body.call("consume_stagger_critical")) if target_body.has_method("consume_stagger_critical") else false
+			var damage := rolled * _poise_crit_scale() if critical else rolled
+			var killed: bool = enemy.take_damage(damage)
+			var staggered := false
+			if not killed and target_body.has_method("apply_poise_damage"):
+				var interrupt := slot != "quick" and enemy_is_winding_up() \
+					and bool(_poise_config().get("interrupt_on_charged_into_telegraph", true)) and charge_read_the_tell(windup)
+				staggered = bool(target_body.call("apply_poise_damage", damage, interrupt))
+			var landed := _new_impact(move_id, slot, damage, type_mult, critical, facing, target_body, str(receipt.action_id)).duplicate()
+			landed["presentation_launched"] = true
+			target_body.call("add_impulse", landed.direction, float(_shared_hit_feedback().call("impulse_for", landed)))
+			_perform_player_strike(true, damage, killed, critical, staggered, landed)
+		var shot := PROJECTILE.launch(arena, muzzle, target, frozen, context)
+		if shot != null:
+			shot.connect("arrived", commit, CONNECT_ONE_SHOT)
+			attack_launched.emit(true, {"action_id": frozen.action_id, "move": frozen,
+				"encounter_id": encounter_id, "target_uid": target_uid}, shot)
+		elif not bool(PROJECTILE.LIBRARY.config().get("enabled", false)) and str(frozen.vfx.get("kind", "melee")) == "melee":
+			commit.call() # The established flag-off melee path has no travelling node.
 		return
 
 	var is_quick: bool = str(impact.get("slot", "")) == "quick" if impact.has("slot") else bool(_pending_move.get("is_quick", false))
