@@ -1,6 +1,6 @@
 {
-  "status": "CURRENT_AUTHORED_REACHABILITY_AND_PRIOR_LOCAL_NODE_WITNESSES; EARNED_CAMPAIGN_AND_CATALYST_PATHS_OPEN",
-  "claim": "All recipe ingredients have current authored sources in or before their biome (728 unchanged source checks pass). All attuned recipes select early Meadows nodes; seven of eight early local controller/disk-save/ACK receipts match coordinates and yields exactly. Air differs only in decimal coordinate representation (-4.800000000000001 vs -4.8), retained as a held reuse rather than an invented pass. Disclosed 6m starts remain explicit. Earned route, repeat supply and catalyst pickup acceptance remain open.",
+  "status": "CURRENT_AUTHORED_REACHABILITY_AND_REVIEWED_LOCAL_NODE_WITNESSES; BERRIES_AND_CATALYST_PICKUP_BINDINGS_OPEN",
+  "claim": "All recipe ingredients have current authored sources in or before their biome (728 unchanged source checks pass). Existing F32 local native witnesses support all eight attuned types and the other materials via valid same-or-earlier-biome sources. Air raw JSON X decimals differ, but both map to identical production Vector3 coordinate bits; reviewed engine-equivalent local witness reuse, original mismatch retained. Disclosed 6m starts remain explicit. F28#5 is OPEN only for usable-source evidence bindings for berries, heartstone and sunstone; full campaign/repeat supply/farming are outside this criterion.",
   "external_source": {
     "owner": "F32",
     "source_commit": "8e7c11ceb5854f063c5241d62618c382803562c9",
@@ -317,7 +317,7 @@
           "catalogue": "data/items/items.json",
           "source": {
             "biome": "meadows",
-            "status": "EARLY_MEADOWS_SOURCE; PRIOR_POSITION_REPRESENTATION_DIFFERS; REUSE_HELD",
+            "status": "EARLY_MEADOWS_SOURCE; RAW_JSON_REPRESENTATION_DIFFERS; REVIEWED_ENGINE_EQUIVALENT_LOCAL_REUSE",
             "respawn_host_days": 3,
             "file": "data/config/essence_nodes.json",
             "amount": 1,
@@ -362,7 +362,7 @@
             "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
             "outputs_match": true,
             "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
-            "reuse_local_witness": false
+            "reuse_local_witness": true, "engine_coordinates_match": true, "engine_x_binary32_bits": -1063675494, "reuse_basis": "independent production Vector3 terrain/placement query audit; original raw JSON mismatch retained"
           }
         }
       ]
@@ -1516,7 +1516,7 @@
           "catalogue": "data/items/items.json",
           "source": {
             "biome": "meadows",
-            "status": "EARLY_MEADOWS_SOURCE; PRIOR_POSITION_REPRESENTATION_DIFFERS; REUSE_HELD",
+            "status": "EARLY_MEADOWS_SOURCE; RAW_JSON_REPRESENTATION_DIFFERS; REVIEWED_ENGINE_EQUIVALENT_LOCAL_REUSE",
             "respawn_host_days": 3,
             "file": "data/config/essence_nodes.json",
             "amount": 1,
@@ -1561,7 +1561,7 @@
             "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
             "outputs_match": true,
             "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
-            "reuse_local_witness": false
+            "reuse_local_witness": true, "engine_coordinates_match": true, "engine_x_binary32_bits": -1063675494, "reuse_basis": "independent production Vector3 terrain/placement query audit; original raw JSON mismatch retained"
           }
         },
         {
@@ -1612,7 +1612,7 @@
           "catalogue": "data/items/items.json",
           "source": {
             "biome": "meadows",
-            "status": "EARLY_MEADOWS_SOURCE; PRIOR_POSITION_REPRESENTATION_DIFFERS; REUSE_HELD",
+            "status": "EARLY_MEADOWS_SOURCE; RAW_JSON_REPRESENTATION_DIFFERS; REVIEWED_ENGINE_EQUIVALENT_LOCAL_REUSE",
             "respawn_host_days": 3,
             "file": "data/config/essence_nodes.json",
             "amount": 1,
@@ -1657,7 +1657,7 @@
             "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
             "outputs_match": true,
             "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
-            "reuse_local_witness": false
+            "reuse_local_witness": true, "engine_coordinates_match": true, "engine_x_binary32_bits": -1063675494, "reuse_basis": "independent production Vector3 terrain/placement query audit; original raw JSON mismatch retained"
           }
         },
         {
@@ -1725,7 +1725,7 @@
           "catalogue": "data/items/items.json",
           "source": {
             "biome": "meadows",
-            "status": "EARLY_MEADOWS_SOURCE; PRIOR_POSITION_REPRESENTATION_DIFFERS; REUSE_HELD",
+            "status": "EARLY_MEADOWS_SOURCE; RAW_JSON_REPRESENTATION_DIFFERS; REVIEWED_ENGINE_EQUIVALENT_LOCAL_REUSE",
             "respawn_host_days": 3,
             "file": "data/config/essence_nodes.json",
             "amount": 1,
@@ -1770,7 +1770,7 @@
             "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
             "outputs_match": true,
             "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
-            "reuse_local_witness": false
+            "reuse_local_witness": true, "engine_coordinates_match": true, "engine_x_binary32_bits": -1063675494, "reuse_basis": "independent production Vector3 terrain/placement query audit; original raw JSON mismatch retained"
           }
         },
         {
@@ -3651,7 +3651,7 @@
           "catalogue": "data/items/items.json",
           "source": {
             "biome": "meadows",
-            "status": "EARLY_MEADOWS_SOURCE; PRIOR_POSITION_REPRESENTATION_DIFFERS; REUSE_HELD",
+            "status": "EARLY_MEADOWS_SOURCE; RAW_JSON_REPRESENTATION_DIFFERS; REVIEWED_ENGINE_EQUIVALENT_LOCAL_REUSE",
             "respawn_host_days": 3,
             "file": "data/config/essence_nodes.json",
             "amount": 1,
@@ -3696,7 +3696,7 @@
             "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
             "outputs_match": true,
             "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
-            "reuse_local_witness": false
+            "reuse_local_witness": true, "engine_coordinates_match": true, "engine_x_binary32_bits": -1063675494, "reuse_basis": "independent production Vector3 terrain/placement query audit; original raw JSON mismatch retained"
           }
         }
       ]
@@ -4435,7 +4435,7 @@
           "catalogue": "data/items/items.json",
           "source": {
             "biome": "meadows",
-            "status": "EARLY_MEADOWS_SOURCE; PRIOR_POSITION_REPRESENTATION_DIFFERS; REUSE_HELD",
+            "status": "EARLY_MEADOWS_SOURCE; RAW_JSON_REPRESENTATION_DIFFERS; REVIEWED_ENGINE_EQUIVALENT_LOCAL_REUSE",
             "respawn_host_days": 3,
             "file": "data/config/essence_nodes.json",
             "amount": 1,
@@ -4480,7 +4480,7 @@
             "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
             "outputs_match": true,
             "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
-            "reuse_local_witness": false
+            "reuse_local_witness": true, "engine_coordinates_match": true, "engine_x_binary32_bits": -1063675494, "reuse_basis": "independent production Vector3 terrain/placement query audit; original raw JSON mismatch retained"
           }
         }
       ]
@@ -5213,7 +5213,7 @@
           "catalogue": "data/items/items.json",
           "source": {
             "biome": "meadows",
-            "status": "EARLY_MEADOWS_SOURCE; PRIOR_POSITION_REPRESENTATION_DIFFERS; REUSE_HELD",
+            "status": "EARLY_MEADOWS_SOURCE; RAW_JSON_REPRESENTATION_DIFFERS; REVIEWED_ENGINE_EQUIVALENT_LOCAL_REUSE",
             "respawn_host_days": 3,
             "file": "data/config/essence_nodes.json",
             "amount": 1,
@@ -5258,7 +5258,7 @@
             "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
             "outputs_match": true,
             "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
-            "reuse_local_witness": false
+            "reuse_local_witness": true, "engine_coordinates_match": true, "engine_x_binary32_bits": -1063675494, "reuse_basis": "independent production Vector3 terrain/placement query audit; original raw JSON mismatch retained"
           }
         }
       ]

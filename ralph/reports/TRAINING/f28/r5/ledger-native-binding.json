@@ -45,7 +45,7 @@
       "fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
       "outputs_match": true,
       "receipt_sha256": "f89cc5d82ba442e15fba8a4b13bcf8a3c9cd323d86c68abd10ec9cdd02709f0f",
-      "reuse_local_witness": false
+      "reuse_local_witness": true, "engine_coordinates_match": true, "engine_x_binary32_bits": -1063675494, "reuse_basis": "independent production Vector3 terrain/placement query audit; original raw JSON mismatch retained"
     },
     {
       "realm": "meadows",
