@@ -27,6 +27,8 @@ extends "res://tools/net/proof_peer_runner.gd"
 var _corrupt_hp := -1.0
 var _tonic_character_dir := ""
 var _tonic_request: Dictionary = {}
+var _tonic_blocker: Callable
+var _tonic_refusal_armed := false
 
 
 func _execute_step(msg: Dictionary) -> Dictionary:
@@ -218,19 +220,38 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 				store.set("_dir", blocker + "/")
 			else:
 				store.set("_dir", _tonic_character_dir)
+				var ledger: Node = session.get_node("LedgerRpc")
+				if _tonic_blocker.is_valid() and ledger.delta_applied.is_connected(_tonic_blocker):
+					ledger.delta_applied.disconnect(_tonic_blocker)
+				_tonic_blocker = Callable()
 		"op_tonic_item":
 			var manager: Node = _combat_manager()
 			var input: Node = null
 			for child: Node in manager.get_children():
 				if child.get_script() == preload("res://scripts/ui/tether_command_input.gd"): input = child
-			# Arm and submit without a physics frame between them. Earlier HP
-			# writes must have settled before this step is sent by the parent.
-			await _tonic_step("op_tonic_writer", {"block":true})
+			# Let the real owner-passive checkpoint save first. The existing
+			# ledger signal observes the exact Item publication synchronously,
+			# before its deferred owner apply can reach CharacterSave.write.
+			var ledger: Node = session.get_node("LedgerRpc")
+			_tonic_refusal_armed = false
+			_tonic_blocker = func(delta: Dictionary) -> void:
+				if _tonic_refusal_armed: return
+				for op: Variant in delta.get("ops", []):
+					if not op is Dictionary or op.get("op") != "creature_training_settle": continue
+					var row: Dictionary = op.get("delivery", {})
+					if row.get("action") != "tether_item" or row.get("status") != "pending" \
+						or row.get("character_id") != game.local.character_id \
+						or row.get("intent", {}).get("request") != _tonic_request: continue
+					var blocked: Dictionary = await _tonic_step("op_tonic_writer", {"block":true})
+					_tonic_refusal_armed = blocked.get("verdict") == "PASS"
+			ledger.delta_applied.connect(_tonic_blocker)
 			if input == null or not input.request("item_throw"):
 				return {"verdict":"FAIL", "detail":"production TetherCommandInput refused Item request"}
 			_tonic_request = manager.get("_tether_command_view").get("pending_request", {}).duplicate(true)
 			for frame in 180: await physics_frame
 			print("TONIC actual Item view: ", JSON.stringify(manager.get("_tether_command_view")))
+			if not _tonic_refusal_armed:
+				return {"verdict":"FAIL", "detail":"exact pending Item never reached the actual owner writer refusal"}
 		"op_tonic_retry":
 			var manager: Node = _combat_manager()
 			if _tonic_request.is_empty() or not manager.submit_tether_command(_tonic_request):

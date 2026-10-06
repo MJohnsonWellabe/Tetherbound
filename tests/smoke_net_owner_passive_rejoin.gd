@@ -156,6 +156,21 @@ func _run() -> void:
 	if not await _tonic_item_original():
 		quit(await finish())
 		return
+	# Mastery settles after a normal wild exit, before testing plain rejoin.
+	# The actual Item remains timed; neither exit fabricates a win or reward.
+	for i in [1, 0]:
+		if not _ok(await step(i, "press", {"action":"combat_run"}), "mastery: normal disengage input exits peer %d's wild fight" % i):
+			quit(await finish())
+			return
+	var mastery_settled := false
+	for poll in 30:
+		var owner: Dictionary = (await _state(1)).get("mastery", {})
+		var held: Dictionary = (await _state(0)).get("mastery", {}).get("held", {}).get(_guest_character, {}).get(_mastery_uid, {})
+		if owner.get("disk", {}).get(_mastery_uid, {}) == _earned_mastery and held == _earned_mastery:
+			mastery_settled = true
+			break
+		await step(0, "wait", {"frames":30})
+	check(mastery_settled, "mastery: normal exit settles exactly the actual earned uses on owner disk and host")
 
 	# 2. Plain leave + rejoin.
 	if not await _rejoin("rejoin"):
@@ -185,6 +200,11 @@ func _run() -> void:
 		"mastery: real owner disk and rejoined host hold exactly the earned per-UID mastery")
 
 	# 3. Passive inputs after the rejoin are acknowledged under the new id.
+	# Saved mastery legitimately rebases the owner stream. Sample its current
+	# admitted identity after settlement before testing additional inputs.
+	var walking_stream := await _await_admitted("before-walk")
+	check(_admitted(walking_stream), "rejoin: the current post-settlement walking stream is admitted")
+	rejoined_id = str(walking_stream.guest.get("local", {}).get("id", ""))
 	var before_walk: Dictionary = ((await _state(1)).get("local", {}) as Dictionary)
 	await step(1, "stick", {"x": 0.0, "y": -1.0, "frames": 180})
 	await step(1, "stick", {"x": 1.0, "y": 0.0, "frames": 120})
