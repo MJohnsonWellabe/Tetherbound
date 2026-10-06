@@ -89,3 +89,36 @@ func test_garbage_is_refused_without_a_trace() -> void:
 func test_ticking_with_no_buffs_is_a_no_op() -> void:
 	creature.tick_buffs(5.0)
 	assert_eq((creature.get("active_buffs") as Array).size(), 0)
+
+
+func test_authored_mushrooms_boost_the_drinker_refresh_expire_and_remain_unsaved() -> void:
+	var items := preload("res://autoload/item_db.gd").new()
+	var commands := preload("res://scripts/combat/tether_commands.gd")
+	var party := preload("res://autoload/party.gd").new()
+	assert_true(party.add(creature))
+	var saver := preload("res://scripts/save/save_game.gd").new()
+	var before: Array = saver._party_to_array(party)
+	var cfg := PROGRESSION.config()
+	var attack_before: float = creature.effective_attack(cfg)
+	var defence_before: float = creature.effective_defence(cfg)
+	for item: String in ["speed_mushroom", "wild_mushroom"]:
+		var definition: Dictionary = items.definition(item)
+		assert_true(commands.support_item(definition), "the real authored consumable is supported in the command pouch")
+		var buff: Dictionary = definition.creature_buff
+		assert_true(creature.apply_buff(str(buff.id), str(buff.stat), float(buff.scale), float(buff.duration_s)))
+		assert_true(float(creature.buff_scale(str(buff.stat))) > 1.0, item + " promises faster or stronger, so must increase the stat")
+		if buff.stat == "attack":
+			assert_true(float(creature.effective_attack(cfg)) > attack_before, "the real attack consumer must become stronger")
+			assert_almost_eq(float(creature.effective_attack(cfg)), attack_before * float(buff.scale), 0.001)
+		assert_almost_eq(float(creature.effective_defence(cfg)), defence_before, 0.001)
+		creature.tick_buffs(float(buff.duration_s) / 2.0)
+		assert_true(creature.apply_buff(str(buff.id), str(buff.stat), float(buff.scale), float(buff.duration_s)))
+		assert_eq(creature.active_buffs.size(), 1, "re-drinking refreshes the same effect")
+		assert_almost_eq(float(creature.buff_scale(str(buff.stat))), float(buff.scale), 0.0001, "refresh cannot stack the multiplier")
+		assert_eq(saver._party_to_array(party), before, "temporary stats never change the complete saved creature row")
+		creature.tick_buffs(float(buff.duration_s) - 0.1)
+		assert_almost_eq(float(creature.buff_scale(str(buff.stat))), float(buff.scale), 0.0001)
+		creature.tick_buffs(0.2)
+		assert_true(creature.active_buffs.is_empty())
+		assert_almost_eq(float(creature.buff_scale(str(buff.stat))), 1.0, 0.0001)
+		assert_almost_eq(float(creature.effective_attack(cfg)), attack_before, 0.001)
