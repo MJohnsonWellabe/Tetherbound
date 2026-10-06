@@ -5,6 +5,33 @@ extends "res://tests/test_case.gd"
 const HALL := preload("res://scripts/world/crossing_hall.gd")
 const ACTION := preload("res://scripts/world/portal_arch.gd")
 
+func test_hero_arch_membrane_and_stone_follow_the_existing_display_state() -> void:
+	var hall: Node3D = HALL.new()
+	var slot := Node3D.new()
+	var action := Node3D.new()
+	action.name = "PortalAction"
+	slot.add_child(action)
+	var membrane := MeshInstance3D.new()
+	membrane.name = "PortalSurface"
+	membrane.mesh = QuadMesh.new()
+	membrane.material_override = StandardMaterial3D.new()
+	slot.add_child(membrane)
+	hall.call("_add_hero_stone_infill", slot)
+	var stone := slot.get_node(^"PortalStoneInfill") as MeshInstance3D
+	hall.call("_set_hero_arch_state", slot, "sealed")
+	assert_true(membrane.visible, "installed fallback does not adopt candidate state geometry")
+	assert_false(stone.visible)
+	slot.set_meta("hero_art_used", true)
+	for state: String in ["open", "locked", "sealed", "stirred"]:
+		hall.call("_set_hero_arch_state", slot, state)
+		assert_eq(membrane.visible, state in ["open", "locked"], "live states retain the actual membrane")
+		assert_eq(stone.visible, state in ["sealed", "stirred"], "reserved states retain a physical-looking stone infill")
+		assert_eq((stone.material_override as StandardMaterial3D).emission_enabled, state == "stirred", "sealed stone is unlit; the existing stirred state is preserved")
+	assert_eq(slot.get_node(^"PortalAction"), action, "presentation cannot replace the canonical input carrier")
+	assert_eq(slot.get_child_count(), 3, "state changes cannot duplicate surfaces or input")
+	slot.free()
+	hall.free()
+
 func test_disabled_or_unavailable_hero_art_preserves_the_original_slot_carrier() -> void:
 	var hall: Node3D = HALL.new()
 	var slot := Node3D.new()

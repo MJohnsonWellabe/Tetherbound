@@ -197,7 +197,10 @@
     "_scope": "Local candidate presentation only, not saved or authoritative. Keep OFF until native dimensions/aperture, visual matrix and independent judgment pass. Missing candidates use installed art.",
     "arch_model": "res://assets/environment/crossing_hall/portal_arch/portal_arch.tscn",
     "pedestal_model": "res://assets/environment/crossing_hall/shrine_pedestal/shrine_pedestal.tscn",
-    "pedestal_collider": {"size": [0.8, 1.1, 0.8], "at": [0, 0.55, 0]}
+    "pedestal_collider": {"size": [0.8, 1.1, 0.8], "at": [0, 0.55, 0]},
+    "portal_surface": {"size": [2.4, 3.6], "at": [0, 1.8, -0.08]},
+    "stone_infill": {"size": [2.4, 3.6, 0.16], "at": [0, 1.8, -0.08], "colour": "#776f60"},
+    "_aperture_validation": "Brief target only: verify native mesh aperture and surface/infill fit before enabling. These surfaces add no collision or progression authority."
   },
   "pedestal_collider": {
     "_provenance": "Installed BookStand.gltf POSITION accessor bounds: X[-0.25348,0.25363],Y[-0.00250,1.44429],Z[-0.25552,0.25567]; native metres, no model scale change.",

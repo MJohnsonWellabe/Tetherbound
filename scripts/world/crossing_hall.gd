@@ -109,11 +109,18 @@ func _build_arch(entry: Dictionary) -> void:
 	mesh.size = Vector2(1.45, 2.4)
 	membrane.mesh = mesh
 	membrane.position = Vector3(0, 1.28, -.08)
+	if hero:
+		var surface: Dictionary = (_config.get("hero_art", {}) as Dictionary).get("portal_surface", {})
+		var aperture: Array = surface.get("size", [2.4, 3.6])
+		mesh.size = Vector2(float(aperture[0]), float(aperture[1]))
+		membrane.position = _position(surface.get("at", [0, 1.8, -.08]))
 	var material := StandardMaterial3D.new()
 	material.cull_mode = BaseMaterial3D.CULL_DISABLED
 	material.roughness = .75
 	membrane.material_override = material
 	slot.add_child(membrane)
+	if hero:
+		_add_hero_stone_infill(slot)
 	_arches[str(entry.id)] = slot
 
 
@@ -186,6 +193,39 @@ func _add_hero_model(parent: Node3D, kind: String) -> bool:
 	parent.add_child(model)
 	parent.set_meta("hero_art_used", true)
 	return true
+
+
+func _add_hero_stone_infill(slot: Node3D) -> void:
+	var settings: Dictionary = (_config.get("hero_art", {}) as Dictionary).get("stone_infill", {})
+	var infill := MeshInstance3D.new()
+	infill.name = "PortalStoneInfill"
+	var stone := BoxMesh.new()
+	stone.size = _position(settings.get("size", [2.4, 3.6, .16]))
+	infill.mesh = stone
+	infill.position = _position(settings.get("at", [0, 1.8, -.08]))
+	var material := StandardMaterial3D.new()
+	material.albedo_color = Color(str(settings.get("colour", "#776f60")))
+	material.roughness = .95
+	infill.material_override = material
+	infill.visible = false
+	slot.add_child(infill)
+
+
+func _set_hero_arch_state(slot: Node3D, state: String) -> void:
+	if not bool(slot.get_meta("hero_art_used", false)):
+		return
+	var infill := slot.get_node_or_null(^"PortalStoneInfill") as MeshInstance3D
+	var membrane := slot.get_node_or_null(^"PortalSurface") as MeshInstance3D
+	if infill == null or membrane == null:
+		return
+	# The existing display decision drives geometry as well as its material.
+	# A stirred reserved arch remains closed; only its stone starts to glow.
+	infill.visible = state in ["sealed", "stirred"]
+	membrane.visible = not infill.visible
+	var material := infill.material_override as StandardMaterial3D
+	material.emission_enabled = state == "stirred"
+	material.emission = (membrane.material_override as StandardMaterial3D).albedo_color
+	material.emission_energy_multiplier = .1
 
 
 func _label(parent: Node3D, text: String, at: Vector3) -> Label3D:
@@ -455,6 +495,7 @@ func apply_display(display: Dictionary) -> void:
 		material.emission = material.albedo_color
 		material.emission_energy_multiplier = OPEN_MEMBRANE_EMISSION if state == "open" else .1
 		(arch.get_node("StateSign") as Label3D).text = "Home arch" if id == "home" else state.capitalize()
+		_set_hero_arch_state(arch, state)
 	_refresh_home_membrane()
 	for id: String in _pedestals:
 		var pedestal: Node3D = _pedestals[id]
