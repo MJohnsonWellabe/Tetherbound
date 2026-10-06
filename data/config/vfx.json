@@ -374,6 +374,7 @@
           }
         },
         "body": {
+          "installed_rock": true,
           "grain_strength": 0.22,
           "min_body_size_m": 0.27,
           "volley_vertical_ratio": 0.3,

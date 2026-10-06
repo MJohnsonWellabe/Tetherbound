@@ -5,6 +5,8 @@ const FIRE_CORE_SHADER := preload("res://assets/vfx/shaders/fire_core.gdshader")
 const ION_SHADER := preload("res://assets/vfx/shaders/ion_filament.gdshader")
 const STONE_SHADER := preload("res://assets/vfx/shaders/stone_body.gdshader")
 const STONE_TEXTURE := preload("res://assets/environment/terrain/stylised/rock_scree_Color.png")
+const INSTALLED_STONE := preload("res://assets/environment/stylized_nature/Rock_Medium_1.gltf")
+static var _installed_stone_mesh: Mesh
 const FLUID := preload("res://scripts/vfx/fluid_effect_geometry.gd")
 const FLOW_SHADER := preload("res://assets/vfx/shaders/flowing_water.gdshader")
 const ICE_SHADER := preload("res://assets/vfx/shaders/ice_crystal.gdshader")
@@ -92,6 +94,12 @@ static func shape(kind: String, size: float, profile: Dictionary = {}) -> Mesh:
 	return null
 
 static func authored_material(kind: String, profile: Dictionary, colour: Color) -> Material:
+	if kind == "stone" and bool(profile.get("installed_rock", false)):
+		var source := _installed_stone_source()
+		if source != null and source.surface_get_material(0) != null:
+			# Keep the installed painted atlas/UVs instead of projecting scree
+			# over the authored rock. Each body retains its own material instance.
+			return source.surface_get_material(0).duplicate() as Material
 	var out := ShaderMaterial.new()
 	if kind == "bubble":
 		out.shader = BUBBLE_SHADER
@@ -299,7 +307,24 @@ static func spark(size: float, profile: Dictionary = {}) -> ImmediateMesh:
 	return mesh
 
 ## Irregular geological chunks with face normals, not smoothly shaded balls.
-static func stone(size: float, profile: Dictionary) -> ImmediateMesh:
+static func stone(size: float, profile: Dictionary) -> Mesh:
+	if bool(profile.get("installed_rock", false)):
+		var source := _installed_stone_source()
+		if source != null:
+			var fitted := ArrayMesh.new()
+			var bounds := source.get_aabb()
+			var centre := bounds.get_center()
+			# The existing irregular stone reaches 1.2 times its declared
+			# radius. Fit the installed silhouette into that same diameter.
+			var factor := size * 2.4 / maxf(0.001, maxf(bounds.size.x, maxf(bounds.size.y, bounds.size.z)))
+			for surface in source.get_surface_count():
+				var arrays: Array = source.surface_get_arrays(surface)
+				var vertices: PackedVector3Array = arrays[Mesh.ARRAY_VERTEX]
+				for i in vertices.size(): vertices[i] = (vertices[i] - centre) * factor
+				arrays[Mesh.ARRAY_VERTEX] = vertices
+				fitted.add_surface_from_arrays(source.surface_get_primitive_type(surface), arrays)
+				fitted.surface_set_material(surface, source.surface_get_material(surface))
+			return fitted
 	var mesh := ImmediateMesh.new()
 	var segments := int(profile.get("segments", 12))
 	var rings := int(profile.get("rings", 7))
@@ -322,6 +347,17 @@ static func stone(size: float, profile: Dictionary) -> ImmediateMesh:
 				_triangle(mesh, a, c, d)
 	mesh.surface_end()
 	return mesh
+
+static func _installed_stone_source() -> Mesh:
+	if _installed_stone_mesh != null: return _installed_stone_mesh
+	var scene := INSTALLED_STONE.instantiate()
+	var visual := scene as MeshInstance3D
+	if visual == null:
+		var parts := scene.find_children("*", "MeshInstance3D", true, false)
+		if not parts.is_empty(): visual = parts[0] as MeshInstance3D
+	if visual != null: _installed_stone_mesh = visual.mesh
+	scene.free()
+	return _installed_stone_mesh
 
 static func _stone_triangle(mesh: ImmediateMesh, a: Vector3, b: Vector3, c: Vector3, smoothing: float) -> void:
 	var face := (b - a).cross(c - a)
