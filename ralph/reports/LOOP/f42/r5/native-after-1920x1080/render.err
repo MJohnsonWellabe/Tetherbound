@@ -1,0 +1,6 @@
+SCRIPT ERROR: Parse Error: Identifier "details" not declared in the current scope.
+   at: GDScript::reload (res://tools/capture_f42_layout_fixtures.gd:95)
+SCRIPT ERROR: Parse Error: Identifier "details" not declared in the current scope.
+   at: GDScript::reload (res://tools/capture_f42_layout_fixtures.gd:101)
+ERROR: Failed to load script "res://tools/capture_f42_layout_fixtures.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
