@@ -33,7 +33,7 @@ veridian_relic_key | OPEN | OPEN
 shared_boss --tournament | ON FIRST FAIL exit1: semifinal completion round4 rejected for authored two-member team; allowed director correction independently reviewed, retry OPEN. OFF original-source FAIL exit2 overall smoke budget at semifinal; fixed-source ON/OFF retry OPEN.
 F27 wild_defeat_essence | ON FIRST PASS exit0; +1Groundessence/+21reducedXP/exactone receipt+battle; noERROR/SCRIPT/Parse, legacywarningsretained; independent review PASS; inherited starter/relocation setup disclosed, no survival aid
 F27 essence_node | ON FIRST PASS exit0/report20checks; +3Groundessence/+1AttunedGround on owner disk, accepted row+exactreceipt; independent review PASS; raw before/after saves retained; inherited starter/freeplay/6msetup, solo only; warnings retained
-F27 net essence_no_dup | ON OPEN
+F27 net essence_no_dup | UNSELECTED F27 criterion4; not required for this R1 criteria1/2 or flip inventory
 
 CI SMOKE names from unchanged .github/workflows/ci.yml; ON verdicts recorded below; all other checks OPEN.
 aggression | ON FIRST PASS, exit0; peaceful900frame negative control and aggressive real fight/Run exit; isolated owned-starter fixtures; independent review PASS
@@ -88,7 +88,7 @@ trainer_battle_camera | ON FIRST PASS exit0; realMira deployedcamera/GUI focus/c
 trainer_no_usable_ally | ON FIRST PASS exit0; faintedally honestrefusal/nofalsevictory/directheal restoreschallenge; rawreceipts retained, inheritedfault+heal fixture
 traversal | ON FIRST PASS, exit0; mainlegs108m/perimeter/kill/crossinggates/rockalign/doors; nineperimeter/doorcollider-query/heightrecovery/analyticnormals/stagedposes-flags/recoveryinterruptions+routeoffsetnotes/no600mcontinuous-earned-hw-coop proof; independent qualified review PASS
 unstick | ON FIRST PASS, exit0/empty stderr; bareplayer sealed-pocket escape9.65m/wallnorecovery/originalfixtures; minimum1recovery/no Meadows-combat-earned-hw-coop proof; independent qualified review PASS
-veridian_offer_choice | ON SPACE FIRST PASS exit0/qualified independent review PASS; CAPACITY ACTIVE/RECOVERY OPEN; originalCI groups sequential/privatehomes/2700sec native deadline; allgroupsneeded
+veridian_offer_choice | ON SPACE FIRST PASS exit0/qualified independent review PASS; CAPACITY FIRST PASS exit0/qualified independent review PASS; RECOVERY ACTIVE; originalCI groups sequential/privatehomes/2700sec native deadline; allgroupsneeded
 warrens | ON OPEN
 wild_streaming | ON FIRST PASS exit0/empty stderr; bare live-tree/production Director/direct streaming fixtures/metadata-marker+position roundtrip only/no Meadows density-render-perf-combat-reload proof; qualified independent review PASS
 Tournament ON FIRST | FAIL exit1: quarter durable rewards PASS; semi both first strikes PASS, team completion command no verdict at unchanged 95000ms. Diagnosis OPEN. receipts/net-tournament-on-first

@@ -419,3 +419,9 @@ b55581bc048b3fbeb2fbc0d529a9d62bea095011f87da32a362d1957e9f7b40d  ci-veridian-sp
 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ci-wild-streaming-on/stderr.txt
 5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  ci-wild-streaming-on/exit.txt
 efcc8e4d5e9715eda65075a0718bef7d5fb4e80a271d1876cb40a0be42c6e60c  ci-wild-streaming-on/r1-ci-wild-streaming-on-20261006T0901Z.txt
+e339850426401695a27cda57d7efb9c997de7daa1d13bcae3428790a556694c7  ci-veridian-capacity-on/stdout.txt
+b55581bc048b3fbeb2fbc0d529a9d62bea095011f87da32a362d1957e9f7b40d  ci-veridian-capacity-on/stderr.txt
+5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  ci-veridian-capacity-on/exit.txt
+88d8fe2f609b1c43bc501056676664f9d3f99acd7b0217fde9f39d2f9212acb9  ci-veridian-capacity-on/r1-ci-veridian-capacity-on-20261006T0854Z.txt
+b27297ae20c9d8a68c02ee60af76acf074c77a9df519ebb45148efa6083168e8  ci-veridian-capacity-on/character.json.txt
+f237b651c3a8c2925aca1e8d71efae9e9f0a32e3fd439d0c9a5a73a49bab3369  ci-veridian-capacity-on/world.json.txt
