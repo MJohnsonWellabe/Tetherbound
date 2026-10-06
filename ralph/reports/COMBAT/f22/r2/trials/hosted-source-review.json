@@ -17,5 +17,17 @@
     "No fixed-FPS input exists; paired hosted controls separate Linux/default-pacing diagnostics from the original Windows fixed-fps60 baseline"
   ],
   "runtime_verdict": "OPEN; dispatch/setup is not a completed cohort, clean runtime, native proof or global acceptance",
-  "reviewer_actions": "Read-only source and metadata; no edit, engine launch, import, test, new script or large-artifact work"
+  "reviewer_actions": "Read-only source and metadata; no edit, engine launch, import, test, new script or large-artifact work",
+  "galewisp_extension": {
+    "reviewed_receipt_commit": "5996f23bf08b9fd3241336ddb09c5a84631aaee5",
+    "verdict": "PASS for source/metadata consistency only; no grounded findings",
+    "verified": [
+      "Four unique Galewisp12 control/wind25 dispatches bind immutable product8323965ec6 and the two failed Tidewake bands",
+      "Existing smoke patches cached MATH.config before fights; manager._wind_config reads it, wind_cost selects charged_cost and consume_wind debits the actual35-to25 cost",
+      "Species Wind config affects capacity/regen, not action costs; Galewisp base80/24 remains subject to ordinary condition/bond modifiers",
+      "Each pair differs only by wind.charged_cost=25; seed hashes exclude patches and preserve pairing",
+      "The cost is global, including retained companions and all starters; preservation requires final all-starter Windows proof"
+    ],
+    "runtime_verdict": "OPEN; dispatch/setup/Run-step status is not a completed receipt or criterion acceptance"
+  }
 }
