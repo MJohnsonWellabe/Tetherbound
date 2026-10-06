@@ -83,9 +83,15 @@ func _replace_record(character: String, next_revision: int, next_state: Dictiona
 	var carried: bool = _records.get(character, {}).has("personal_flags")
 	var flags := personal_flags(character)
 	var discovered: Variant = _records.get(character, {}).get("discovered_landmarks")
+	var absorbed: Variant = _records.get(character, {}).get("absorbed_deliveries")
+	var unconfirmed: Variant = _records.get(character, {}).get("unconfirmed_folds")
 	_records[character] = {"revision": next_revision, "state": next_state}
 	if carried: _records[character].personal_flags = flags
 	if discovered is Dictionary: _records[character].discovered_landmarks = discovered.duplicate(true)
+	# Which host-journaled payouts this record already holds (rejoin_admission).
+	if absorbed is Dictionary: _records[character].absorbed_deliveries = absorbed.duplicate(true)
+	# Folded payouts the owner has not yet confirmed settling (unconfirmed_folds).
+	if unconfirmed is Dictionary: _records[character].unconfirmed_folds = unconfirmed.duplicate(true)
 
 ## Admission-only companion on the SAME record. A rejoin never refreshes it.
 ## Session validates every ID against the authored realm map catalogue first.
@@ -269,14 +275,276 @@ func _research_reserved(character: String) -> bool:
 
 ## An owner-applied reward payout, replayed exactly by the owner-passive
 ## stream. Only satchel slots move; no revision CAS changes.
-func apply_owner_reward_delivery(character: String, before: Dictionary, after: Dictionary) -> bool:
+func apply_owner_reward_delivery(character: String, before: Dictionary, after: Dictionary, delivery_id: String = "") -> bool:
 	if not _records.has(character) or not ESSENCE._equivalent(_records[character].state, before) \
 		or not after.get("inventory") is Array: return false
+	# Review L3: a payout this record already holds is never credited again.
+	if not delivery_id.is_empty() and _absorbed(character).has(delivery_id): return false
 	var next: Dictionary = _records[character].state.duplicate(true)
 	next.inventory = after.inventory.duplicate(true)
 	if not ESSENCE._equivalent(next, after): return false
 	_records[character].state = next
+	if not delivery_id.is_empty(): _absorbed(character)[delivery_id] = true
 	return true
+
+
+## --- Rejoin admission (owner ruling 2026-10-05: guest wins unless behind) ---
+## A returning owner whose record differs from the held one: its declaration
+## is adopted (first-join rules already passed, at a higher revision) unless it
+## is behind -- missing a receipt, personal flag or payout this world recorded
+## (a rollback or restored backup). Only a declaration that is behind adopts
+## the held record, which first folds this world's own journaled payouts
+## (host-validated, never twice). Evidence: ralph/reports/HUB/f17/rejoin_audit.md.
+
+## Payout rows an owner applies itself (reward_delivery_applied replay):
+## plain authored grants and gather batches, which carry their stacks.
+static func owner_applied_row(row: Variant, character: String) -> bool:
+	# The Home Key grant is a host inventory CAS (_request_home_key_delivery),
+	# never an owner-applied replay (review M2).
+	return row is Dictionary and row.get("character_id") == character and row.get("delivery_id") is String \
+		and row.get("stacks") is Array and RULES.valid_slots(row.stacks) \
+		and not str(row.delivery_id).contains(":") and not str(row.get("source", "")).begins_with("home_key:grant:")
+
+
+func _absorbed(character: String) -> Dictionary:
+	if not _records[character].has("absorbed_deliveries"): _records[character].absorbed_deliveries = {}
+	return _records[character].absorbed_deliveries
+
+
+## First admission: every payout this world already accepted for the character
+## is in the satchel it declared (accepted only after the owner saved it).
+func seed_absorbed_deliveries(character: String, deliveries: Dictionary, declared_owed: Array = []) -> void:
+	if not _records.has(character): return
+	var owed := {}
+	for id: Variant in declared_owed: owed[str(id)] = true
+	var absorbed := {}
+	for id: Variant in deliveries:
+		var row: Variant = deliveries[id]
+		# One the owner still owes itself (a full bag, grant_due) settles and
+		# replays later: not in the satchel it declared (review H2).
+		if owner_applied_row(row, character) and row.get("status") == "accepted" and not owed.has(str(id)): absorbed[str(id)] = true
+	_records[character].absorbed_deliveries = absorbed
+
+
+## Review H1: the hello can still refuse after rejoin_admission; the caller
+## restores the exact held record (and its companions) if it does.
+## The record and every per-character map the hello's recover_* steps write.
+const _SNAPSHOT_MAPS := ["_vitals_pending", "_vitals_seen", "_vitals_stages", "_training_pending", "_training_stages"]
+
+func snapshot_record(character: String) -> Dictionary:
+	if not _records.has(character): return {}
+	var maps := {}
+	for name: String in _SNAPSHOT_MAPS:
+		var map: Dictionary = get(name)
+		if map.has(character): maps[name] = map[character].duplicate(true) if map[character] is Dictionary or map[character] is Array else map[character]
+	return {"record": (_records[character] as Dictionary).duplicate(true), "maps": maps}
+
+
+func restore_record(character: String, snapshot: Dictionary) -> void:
+	if snapshot.is_empty(): return
+	_records[character] = (snapshot.record as Dictionary).duplicate(true)
+	for name: String in _SNAPSHOT_MAPS:
+		var map: Dictionary = get(name)
+		if (snapshot.maps as Dictionary).has(name): map[character] = snapshot.maps[name]
+		else: map.erase(character)
+
+
+func rejoin_admission(character: String, declared: Dictionary, deliveries: Dictionary, declared_flags: Array = [],
+		declared_settled: Array = [], declared_owed: Array = []) -> Dictionary:
+	if not _records.has(character): return {"ok": false, "code": "not_admitted"}
+	var core := preload("res://scripts/net/owner_passive_replay.gd")
+	if ESSENCE._equivalent(core._core(state(character)), core._core(declared)): return {"ok": true, "code": "held"}
+	# An open host transaction for this character (a training, vitals, portal
+	# or Altar row the owner has not yet ACKed) means the declaration may only
+	# be mid-transaction, never behind: nothing is adopted or folded either way
+	# until it settles (review H1). The stream is refused as before the ruling.
+	if owes_unsettled(character) or host_rows_unsettled(character, deliveries): return {"ok": false, "code": "host_duties_unsettled"}
+	var behind := declaration_behind(character, declared, declared_flags, declared_settled, deliveries, declared_owed)
+	if behind.is_empty():
+		# Owner ruling 2026-10-05, "guest wins unless behind": the declaration
+		# holds everything this world recorded for it, so it is the newer truth
+		# (guest-side grants the held record never carried: rejoin_audit.md).
+		_replace_record(character, revision(character) + 1, declared.duplicate(true))
+		_records[character].state["vitals_escrow"] = declared.get("vitals_escrow", {}).duplicate(true)
+		# The admission flags travel with that record: the session's next
+		# seed_personal_flags seeds them from this same validated summary.
+		_records[character].erase("personal_flags")
+		_records[character].erase("unconfirmed_folds")
+		# Every payout the owner settled is in this record now; newly absorbed
+		# gather batches are credited by the session (mark_gather_replayed).
+		# Only SETTLED payouts are in the satchel; one owed to a full bag
+		# (grant_due) is settled and replayed later, so it is not absorbed now
+		# (review H2).
+		var settled_set := {}
+		for id: Variant in declared_settled: settled_set[str(id)] = true
+		var absorbed := _absorbed(character).duplicate()
+		var newly: Array[String] = []
+		for id: Variant in deliveries:
+			if owner_applied_row(deliveries[id], character) and settled_set.has(str(id)) and not absorbed.has(str(id)):
+				absorbed[str(id)] = true
+				newly.append(str(id))
+		_records[character].absorbed_deliveries = absorbed
+		return {"ok": true, "code": "readmitted_portable", "applied": newly}
+	# Behind (a rollback or restored backup): the held record wins. It first
+	# includes every payout this world journaled for it (never twice,
+	# absorbed); each row lands whole or not at all. The owner marks the folded
+	# rows settled when it adopts the record (unconfirmed_folds).
+	var absorbed := _absorbed(character)
+	var held: Dictionary = state(character)
+	var candidate := held.duplicate(true)
+	var bag := RULES.inventory_from(candidate.get("inventory", []))
+	var applied: Array[String] = []
+	var folded := {}
+	for id: Variant in deliveries:
+		var row: Variant = deliveries[id]
+		if not owner_applied_row(row, character) or not row.get("status") in ["accepted", "pending"] or absorbed.has(str(id)): continue
+		var trial := RULES.inventory_from(RULES.slots(bag))
+		var fits := true
+		for stack: Variant in row.stacks:
+			fits = fits and stack is Dictionary and RULES.give_stack(trial, stack)
+		if not fits: continue
+		bag = trial
+		applied.append(str(id))
+		folded[str(id)] = (row as Dictionary).duplicate(true)
+	candidate.inventory = RULES.slots(bag)
+	if not applied.is_empty():
+		_records[character].state = candidate
+		for id: String in applied: absorbed[id] = true
+		var unconfirmed: Dictionary = _records[character].get("unconfirmed_folds", {})
+		unconfirmed.merge(folded, true)
+		_records[character].unconfirmed_folds = unconfirmed
+	return {"ok": true, "code": "held_wins", "applied": applied, "detail": behind}
+
+
+## A typed host row for this character still waiting on the owner's ACK.
+static func host_rows_unsettled(character: String, deliveries: Dictionary) -> bool:
+	for id: Variant in deliveries:
+		var row: Variant = deliveries[id]
+		if row is Dictionary and row.get("character_id") == character and row.get("status") == "pending" \
+			and str(row.get("kind", "")) in ["creature_training", "altar_building", "actor_vitals", "portal_unlock"]: return true
+	return false
+
+
+## A windowed transaction receipt absent from `receipts` because their own
+## window of that kind is full (receipt_windows keeps only the newest N), and
+## -- when `older` (the receipts a journal row recorded alongside it) is given
+## -- no receipt of that kind which was there with it survives: a record newer
+## than the row dropped them all; a stale backup still shares some (review M).
+static func receipt_compacted(character: String, receipt: String, receipts: Array, older: Array = []) -> bool:
+	var windows := preload("res://scripts/creatures/receipt_windows.gd")
+	var f32_prefix := "craft:%s:f32:" % character
+	var same := Callable()
+	var window := 0
+	if receipt.begins_with(f32_prefix):
+		same = func(r: Variant) -> bool: return str(r).begins_with(f32_prefix)
+		window = int(preload("res://scripts/data/redesign_data.gd").json("res://data/config/f32_runtime.json").get("f32_receipt_window", 0))
+	else:
+		for kind: String in ["essence_spend", "wild_defeat", "shed_win", "combat_mastery", "trainer_round", "groom", "station_craft", "bounty_decision"]:
+			if windows.window(kind) > 0 and windows.is_kind(receipt, kind, character):
+				same = func(r: Variant) -> bool: return windows.is_kind(str(r), kind, character)
+				window = windows.window(kind)
+				break
+	# compact and compact_f32_receipts skip any window below 2 (review L-a).
+	if window < 2 or receipts.filter(same).size() < window: return false
+	var present := {}
+	for r: Variant in receipts: present[str(r)] = true
+	for r: Variant in older:
+		if str(r) != receipt and same.call(r) and present.has(str(r)): return false
+	return true
+
+
+## True while a host-side transaction for this character is still open.
+func owes_unsettled(character: String) -> bool:
+	return _portal_stages.has(character) or _loadout_pending.has(character) or _vitals_pending.has(character) \
+		or _vitals_stages.has(character) or _training_locked(character) or _research_preparations.has(character) \
+		or _portal_mutation_pending(character)
+
+
+## "Behind" (owner ruling 2026-10-05): the declaration lacks something this
+## world recorded for the character -- a receipt, a personal flag, or a payout
+## it absorbed or whose ACK it accepted (the owner saves before it ACKs). A
+## restored backup would re-earn it; it adopts the held record instead.
+## Windowed transaction receipts count as present when the declaration's
+## window shows it compacted them (receipt_windows: oldest first). Returns
+## what is missing, or "".
+func declaration_behind(character: String, declared: Dictionary, declared_flags: Array, declared_settled: Array, deliveries: Dictionary,
+		declared_owed: Array = []) -> String:
+	var flags_present := {}
+	for flag: Variant in declared_flags: flags_present[str(flag)] = true
+	for flag: Variant in personal_flags(character):
+		if personal_flags(character)[flag] == true and not flags_present.has(str(flag)): return "personal_flag " + str(flag)
+	# A payout is present if the owner holds it settled or owed (grant_due).
+	var settled := {}
+	for id: Variant in declared_settled: settled[str(id)] = true
+	for id: Variant in declared_owed: settled[str(id)] = true
+	# A folded row the owner has not confirmed settling stays required even
+	# once its world row is pruned (review M2).
+	for id: Variant in _records[character].get("unconfirmed_folds", {}):
+		if not settled.has(str(id)): return "payout " + str(id).left(24)
+	# Only rows the world still holds: a pruned row's escrow is pruned on the
+	# owner too (gather_batches guest_prunable), so its id is gone from both.
+	for id: Variant in _absorbed(character):
+		if deliveries.has(id) and not settled.has(str(id)): return "payout " + str(id).left(24)
+	for id: Variant in deliveries:
+		var row: Variant = deliveries[id]
+		if owner_applied_row(row, character) and row.get("status") == "accepted" and not settled.has(str(id)): return "payout " + str(id).left(24)
+	var held_rc: Dictionary = state(character).get("redesign_character", {})
+	var mine_rc: Dictionary = declared.get("redesign_character", {})
+	for list: String in ["release_receipts", "research_receipts", "bounty_receipts"]:
+		var held_list: Variant = held_rc.get(list, [])
+		var mine_list: Variant = mine_rc.get(list, [])
+		if held_list is Array and mine_list is Array:
+			for receipt: Variant in held_list:
+				if not (mine_list as Array).has(receipt): return "%s %s" % [list, str(receipt).left(40)]
+	var held_receipts: Array = held_rc.get("transaction_receipts", [])
+	var mine: Array = mine_rc.get("transaction_receipts", [])
+	var present := {}
+	for receipt: Variant in mine: present[str(receipt)] = true
+	var windows := preload("res://scripts/creatures/receipt_windows.gd")
+	var f32_window := int(preload("res://scripts/data/redesign_data.gd").json("res://data/config/f32_runtime.json").get("f32_receipt_window", 0))
+	# Windows drop their OLDEST receipts first (receipt_windows.compact,
+	# compact_f32_receipts): a missing held receipt was compacted only if the
+	# declaration's window is full AND no older held receipt of that kind
+	# survives in it (a backup with a full window is otherwise behind).
+	var kinds := ["essence_spend", "wild_defeat", "shed_win", "combat_mastery", "trainer_round", "groom", "station_craft", "bounty_decision"]
+	var f32_prefix := "craft:%s:f32:" % character
+	for index: int in held_receipts.size():
+		var receipt := str(held_receipts[index])
+		if present.has(receipt): continue
+		var same_kind := Callable()
+		var window := 0
+		if receipt.begins_with(f32_prefix):
+			same_kind = func(r: Variant) -> bool: return str(r).begins_with(f32_prefix)
+			window = f32_window # compact_f32_receipts keeps window-1, then appends one (review L3)
+		else:
+			for kind: String in kinds:
+				if windows.window(kind) > 0 and windows.is_kind(receipt, kind, character):
+					same_kind = func(r: Variant) -> bool: return windows.is_kind(str(r), kind, character)
+					window = windows.window(kind)
+					break
+		var compacted: bool = window > 0 and mine.filter(same_kind).size() >= window
+		if compacted:
+			for older: int in index:
+				if same_kind.call(held_receipts[older]) and present.has(str(held_receipts[older])):
+					compacted = false
+					break
+		if not compacted: return "receipt " + receipt.left(48)
+	return ""
+
+
+## Payout rows a rejoin folded into the held record that the owner has not
+## yet confirmed marking settled (its readmit "readmitted", saved). They ride
+## every readmit until then, through record rewrites (recover_durable_*), a
+## deferred adoption and later rejoins in this session, so a redelivery or a
+## grant_due escrow row never pays them a second time.
+func unconfirmed_folds(character: String) -> Array:
+	return (_records.get(character, {}).get("unconfirmed_folds", {}) as Dictionary).values().duplicate(true)
+
+
+func confirm_folds(character: String, rows: Array) -> void:
+	if not _records.has(character) or not _records[character].has("unconfirmed_folds"): return
+	for row: Variant in rows:
+		if row is Dictionary: (_records[character].unconfirmed_folds as Dictionary).erase(str(row.get("delivery_id", "")))
 
 func state(character_id: String) -> Dictionary:
 	return _records[character_id].state.duplicate(true) if _records.has(character_id) else {}
@@ -975,7 +1243,12 @@ func recover_durable_training(character: String, deliveries: Dictionary) -> Dict
 	var current := state(character)
 	if row.status == "accepted":
 		# Old accepted history must never replace a later earned portable state.
-		if not current.redesign_character.transaction_receipts.has(row.receipt):
+		# A windowed receipt the record's own full window compacted (a guest
+		# adopted on rejoin after 1024 wild defeats elsewhere) is the same later
+		# earned state, not a missing one (review of 8ca5ca73, H1).
+		if not current.redesign_character.transaction_receipts.has(row.receipt) \
+				and not receipt_compacted(character, str(row.receipt), current.redesign_character.transaction_receipts,
+					row.get("after", {}).get("redesign_character", {}).get("transaction_receipts", [])):
 			return {"ok": false, "code": "accepted_training_marker_missing"}
 		if _research_reserved(character) and int(row.character_revision) > revision(character):
 			return {"ok": false, "code": "transaction_busy"}

@@ -16,10 +16,22 @@ extends "res://tests/helpers/net_harness.gd"
 ##    the host must drop the departed one and admit the new one, acking it.
 ## 3. The rejoined guest walks: its recorded inputs are acknowledged by the
 ##    host under the new stream id (the passive path the gates rely on).
-## 4. NEGATIVE CONTROL / real conflict: the guest leaves, its live character
-##    diverges from what the host admitted (fixture: one owned creature +1
-##    level on the guest only), and it rejoins. The host must refuse the stream
-##    LOUDLY (a reason reaches the guest), never leave it silently pending.
+## 3b. Deliver-then-leave (coordinator 2026-10-05, F01 op10/op11): the guest
+##    takes a world find (a host-journaled payout it applies and saves) while
+##    its owner-passive send is held (fixture: "left before its inputs reached
+##    the host"), leaves, and rejoins. It holds every payout this world
+##    recorded, so its record is adopted (owner ruling 2026-10-05, "guest wins
+##    unless behind"); the host's record has the find, absorbed once.
+## 4. Offline change (F18 render 37365638014): the guest leaves, its creature
+##    gains a level offline (fixture), and it rejoins. Not behind: the host
+##    adopts the guest's record (its levels), no refusal, and a later find pays
+##    on both sides.
+## 4b. Behind (a restored backup): the guest leaves and forgets that later
+##    find (fixture `op_rollback`), and rejoins. Its record lacks a payout this
+##    world absorbed, so the held record wins and the guest adopts it: the find
+##    is back, its payout row settled, not paid again.
+## 5. NEGATIVE CONTROL: an invalid portable record (fixture: hp above max) is
+##    refused at the rejoin hello with a reason, never adopted.
 
 const PEER_SCRIPT := "res://tests/smoke_net_owner_passive_rejoin_peer.gd"
 const BUILD_BUDGET := 20000
@@ -163,16 +175,105 @@ func _run() -> void:
 	check(acked_ok, "rejoin: the walking guest's passive inputs are acknowledged by the host (%s -> %s)"
 		% [JSON.stringify(before_walk), JSON.stringify(walked)])
 
-	# 4. A real conflict is refused loudly.
-	if not _ok(await step(1, "leave"), "conflict: guest leaves"):
+	# 3b. Deliver-then-leave.
+	var base_items: Dictionary = (await _state(1)).get("items", {})
+	_ok(await step(1, "op_hold", {"hold": true}), "deliver-then-leave: FIXTURE the guest's owner-passive send is held")
+	# Both peers stand the find, as both run the same world scene: the host's
+	# own world says what it holds, so the guest's claim is a journaled payout.
+	for i in 2:
+		_ok(await step(i, "pickup_stand", {"id": "op_rejoin_find_a", "item": "berries", "realm": "meadows", "count": 3}),
+			"deliver-then-leave: peer %d stands the find" % i)
+	_ok(await step(1, "pickup_take"), "deliver-then-leave: the guest takes it")
+	var paid := false
+	for _i in 30:
+		await step(0, "wait", {"frames": 30})
+		if int(((await _state(1)).get("items", {}) as Dictionary).get("berries", 0)) >= int(base_items.get("berries", 0)) + 3:
+			paid = true
+			break
+	check(paid, "deliver-then-leave: the guest's satchel holds the find (host-journaled payout applied and saved)")
+	for _i in 10: await step(0, "wait", {"frames": 30}) # The host accepts the guest's ACK.
+	if not await _rejoin("deliver-then-leave"):
 		quit(await finish())
 		return
-	_ok(await step(0, "expect_peers", {"count": 1}), "conflict: host sees the guest gone")
-	_ok(await step(1, "op_diverge"), "conflict: FIXTURE the guest's live character diverges from the host's admitted one")
-	_ok(await step(1, "join", {"host": "127.0.0.1", "port": _port}), "conflict: guest rejoins")
-	var conflict := await _await_admitted("conflict")
-	var mine: Dictionary = (conflict.guest as Dictionary).get("local", {})
-	check(not _admitted(conflict), "conflict: the diverged stream is NOT admitted")
-	check(not str(mine.get("admission_refused", "")).is_empty() or not str(mine.get("error", "")).is_empty(),
-		"conflict: the refusal reaches the guest with a reason, not silence (%s)" % JSON.stringify(mine))
+	_ok(await step(1, "op_hold", {"hold": false}), "deliver-then-leave: the new stream sends normally")
+	var delivered := await _await_admitted("deliver-then-leave")
+	check(_admitted(delivered), "deliver-then-leave: the rejoined stream is admitted, not refused")
+	var code := str(((await _state(0)).get("rejoin_codes", {}) as Dictionary).get(_guest_character, ""))
+	check(code == "readmitted_portable", "deliver-then-leave: holding every payout, the guest's record is adopted (%s)" % code)
+	var held: Dictionary = (((await _state(0)).get("authority", {}) as Dictionary).get(_guest_character, {}) as Dictionary)
+	check(int((held.get("items", {}) as Dictionary).get("berries", 0)) == int(((await _state(1)).get("items", {}) as Dictionary).get("berries", -1)),
+		"deliver-then-leave: the host's held record has the find, from its own row (%s)" % JSON.stringify(held))
+
+	# 4. Offline change.
+	if not _ok(await step(1, "leave"), "offline change: guest leaves"):
+		quit(await finish())
+		return
+	_ok(await step(0, "expect_peers", {"count": 1}), "offline change: host sees the guest gone")
+	var held_levels: Array = (await _state(1)).get("levels", [])
+	_ok(await step(1, "op_diverge"), "offline change: FIXTURE the guest's creature gains a level offline")
+	var levels: Array = (await _state(1)).get("levels", [])
+	check(levels != held_levels, "offline change: the guest's file now differs (levels %s -> %s)" % [str(held_levels), str(levels)])
+	_ok(await step(1, "join", {"host": "127.0.0.1", "port": _port}), "offline change: guest rejoins")
+	for i in 2: _ok(await step(i, "expect_peers", {"count": 2}), "offline change: peer %d sees both" % i)
+	var changed := await _await_admitted("offline-change")
+	check(_admitted(changed), "offline change: the rejoined stream is admitted")
+	var changed_code := str(((await _state(0)).get("rejoin_codes", {}) as Dictionary).get(_guest_character, ""))
+	check(changed_code == "readmitted_portable", "offline change: not behind, the guest's record is adopted (%s)" % changed_code)
+	held = (((await _state(0)).get("authority", {}) as Dictionary).get(_guest_character, {}) as Dictionary)
+	check(held.get("levels") == levels, "offline change: the host's record now has the guest's levels (guest %s, host %s)" % [str(levels), JSON.stringify(held)])
+	var kept: Dictionary = await _state(1)
+	check(kept.get("levels") == levels and str((kept.get("local", {}) as Dictionary).get("admission_refused", "")).is_empty(),
+		"offline change: the guest keeps its levels, not refused (guest levels %s, refused '%s')" % [
+		str(kept.get("levels")), str((kept.get("local", {}) as Dictionary).get("admission_refused", ""))])
+	var before_find: Dictionary = (await _state(1)).get("items", {})
+	for i in 2:
+		_ok(await step(i, "pickup_stand", {"id": "op_rejoin_find_b", "item": "berries", "realm": "meadows", "count": 2}),
+			"offline change: peer %d stands another find" % i)
+	_ok(await step(1, "pickup_take"), "offline change: the guest takes it")
+	var pays := false
+	for _i in 30:
+		await step(0, "wait", {"frames": 30})
+		var mine_now: Dictionary = (await _state(1)).get("items", {})
+		var host_now: Dictionary = ((((await _state(0)).get("authority", {}) as Dictionary).get(_guest_character, {}) as Dictionary).get("items", {}))
+		if int(mine_now.get("berries", 0)) == int(before_find.get("berries", 0)) + 2 and int(host_now.get("berries", 0)) == int(mine_now.get("berries", 0)):
+			pays = true
+			break
+	check(pays, "offline change: a later find pays the guest and reaches the host's record (satchel not blocked): guest %s host %s" % [
+		JSON.stringify((await _state(1)).get("items", {})),
+		JSON.stringify((((await _state(0)).get("authority", {}) as Dictionary).get(_guest_character, {}) as Dictionary))])
+
+	# 4b. Behind: a restored backup made before that find.
+	var full: Dictionary = (await _state(1)).get("items", {})
+	if not _ok(await step(1, "leave"), "behind: guest leaves"):
+		quit(await finish())
+		return
+	_ok(await step(0, "expect_peers", {"count": 1}), "behind: host sees the guest gone")
+	_ok(await step(1, "op_rollback", {"find": "op_rejoin_find_b", "item": "berries", "count": 2}),
+		"behind: FIXTURE the guest's file forgets the later find (a backup)")
+	_ok(await step(1, "join", {"host": "127.0.0.1", "port": _port}), "behind: guest rejoins")
+	for i in 2: _ok(await step(i, "expect_peers", {"count": 2}), "behind: peer %d sees both" % i)
+	var behind_code := str(((await _state(0)).get("rejoin_codes", {}) as Dictionary).get(_guest_character, ""))
+	check(behind_code == "held_wins", "behind: the host's held record wins (%s)" % behind_code)
+	var restored: Dictionary = {}
+	for _i in 30:
+		restored = await _state(1)
+		if int((restored.get("items", {}) as Dictionary).get("berries", 0)) == int(full.get("berries", -1)): break
+		await step(0, "wait", {"frames": 30})
+	check(int((restored.get("items", {}) as Dictionary).get("berries", 0)) == int(full.get("berries", -1))
+		and str((restored.get("local", {}) as Dictionary).get("admission_refused", "")).is_empty(),
+		"behind: the guest adopted the held record, the find is back once (%s vs %s)" % [JSON.stringify(restored.get("items", {})), JSON.stringify(full)])
+	var behind_admitted := await _await_admitted("behind")
+	check(_admitted(behind_admitted), "behind: the stream is admitted after the adoption")
+	for _i in 10: await step(0, "wait", {"frames": 30})
+	check(int(((await _state(1)).get("items", {}) as Dictionary).get("berries", 0)) == int(full.get("berries", -1)), "behind: the find is never paid a second time")
+
+	# 5. Negative control: an invalid record is refused, never adopted.
+	if not _ok(await step(1, "leave"), "invalid: guest leaves"):
+		quit(await finish())
+		return
+	_ok(await step(0, "expect_peers", {"count": 1}), "invalid: host sees the guest gone")
+	_ok(await step(1, "op_corrupt"), "invalid: FIXTURE the guest's record is invalid (hp above max)")
+	var refused: Dictionary = await step(1, "join", {"host": "127.0.0.1", "port": _port})
+	check(str(refused.get("verdict", "")) != "PASS" and str(refused.get("detail", "")).contains("could not be admitted"),
+		"invalid: the rejoin is refused with a reason (%s)" % str(refused.get("detail", "")))
 	quit(await finish())
