@@ -34,7 +34,7 @@ const SETTLE := 8
 
 
 func _init() -> void:
-	_run()
+	call_deferred("_run")
 
 
 func _run() -> void:
