@@ -398,7 +398,10 @@ func _capsule_support_failure(world_node: Node3D, actor: CharacterBody3D, target
 	query.shape = collision.shape
 	query.transform = collision.global_transform
 	query.collision_mask = actor.collision_mask
-	query.exclude = [actor.get_rid()]
+	# Support is world geometry. A co-op trainer standing in the capsule's
+	# reach is not missing ground; slot choice already avoids standing ones.
+	var trainers := _other_trainer_rids(world_node, actor)
+	query.exclude = [actor.get_rid()] + trainers
 	var space := actor.get_world_3d().direct_space_state
 	var overlaps: Array[Dictionary] = space.intersect_shape(query, 32)
 	if overlaps.is_empty(): return ""
@@ -408,7 +411,7 @@ func _capsule_support_failure(world_node: Node3D, actor: CharacterBody3D, target
 	# a whole floor RID: every overlapping shape must have an actual bounded
 	# walkable recovery contact, and the complete vertically lifted capsule
 	# must clear all bodies, including another shape on the same Hall body.
-	var contacts := _walkable_contacts(actor, actor.global_transform, actor.safe_margin)
+	var contacts := _walkable_contacts(actor, actor.global_transform, actor.safe_margin, trainers)
 	if not _contacts_on_support(world_node, contacts, surfaces, actor.safe_margin): return "contacts_off_support"
 	for overlap: Dictionary in overlaps:
 		var matched := false
@@ -418,9 +421,20 @@ func _capsule_support_failure(world_node: Node3D, actor: CharacterBody3D, target
 	query.transform.origin.y += actor.safe_margin
 	return "" if space.intersect_shape(query, 1).is_empty() else "lifted_capsule_blocked"
 
-func _walkable_contacts(actor: CharacterBody3D, from: Transform3D, depth_limit: float = -1.0) -> Array[Dictionary]:
+## Every other trainer body (remote proxies and this world's local rig).
+func _other_trainer_rids(world_node: Node3D, actor: CharacterBody3D) -> Array[RID]:
+	var rids: Array[RID] = []
+	var bodies: Array[Node] = actor.get_tree().get_nodes_in_group(&"remote_trainer") if actor.is_inside_tree() else []
+	var local := world_node.get_node_or_null(^"Player")
+	if local != null: bodies.append(local)
+	for body: Node in bodies:
+		if body is CharacterBody3D and body != actor and world_node.is_ancestor_of(body): rids.append((body as CharacterBody3D).get_rid())
+	return rids
+
+func _walkable_contacts(actor: CharacterBody3D, from: Transform3D, depth_limit: float = -1.0, excluded: Array[RID] = []) -> Array[Dictionary]:
 	var motion := PhysicsTestMotionParameters3D.new()
 	motion.from = from
+	motion.exclude_bodies = excluded
 	motion.motion = Vector3.ZERO
 	motion.margin = actor.safe_margin
 	motion.recovery_as_collision = true

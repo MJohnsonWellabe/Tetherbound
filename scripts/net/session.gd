@@ -414,13 +414,13 @@ func _rpc_foundation_action(envelope: Dictionary) -> void:
 	if not is_host(): return
 	var peer := multiplayer.get_remote_sender_id()
 	# The guest publishes its lifecycle sample just before this request on the
-	# same reliable channel; judge that sample's freshness at arrival, not
-	# after this handler's own (possibly slow) save and admission work.
-	_foundation_request_arrived_at = Time.get_ticks_msec()
+	# same reliable channel; judge that sample's freshness at its own arrival,
+	# not a slow host frame later or after this handler's save/admission work.
+	var lifecycle := get_node_or_null(^"FoundationComposition/TravelLifecycle")
+	_foundation_request_arrived_at = int(lifecycle.call("take_paired_arrival", peer, Time.get_ticks_msec())) if lifecycle != null else Time.get_ticks_msec()
 	var result := _foundation_handle(peer, envelope)
 	_foundation_request_arrived_at = -1
 	if envelope.get("op") == "regional_ack" and result.get("ok") != true and _regional_ack_refusal_new(peer, result):
-		var lifecycle := get_node_or_null(^"FoundationComposition/TravelLifecycle")
 		print("[regional_ack] host answered peer %d %s: %s resolved=%s gate=%s" % [peer, str(envelope.get("intent", {}).get("stage", "")), str(result.get("code", result.get("reason", ""))), str(result.get("resolved")), str(lifecycle.get("ending_refusal")) if lifecycle != null else "-"])
 	if bool(_registry.call("has", peer)): rpc_id(peer, "_rpc_foundation_reply", envelope, result)
 
