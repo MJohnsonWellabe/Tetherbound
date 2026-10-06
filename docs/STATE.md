@@ -41,7 +41,12 @@ Read first; update in place, under 25KB. No dated status/goal/handoff documents.
 - **Per-starter balance (F22#1):** every starter is balanced; Terrapup gets no tank exception (owner). F22#1 is measured by the COMBAT §7 floor-trainer form: reader lead cost ≤55% of the masher's, reader win ≥0.9 (coordinator). The sky_rend trial is dropped.
 - **Forced break (COMBAT §4):** only a charge started after its tell can be broken, with a 0.1 s grace window.
 - **Home arch (F18, former open decision #11):** the Crossing Hall home arch returns to the last Meadows waystone the player touched.
-- **Co-op rejoin authority:** the host world's held record wins inside it (anti-rollback); the guest file counts only where the world has no record.
+- **Co-op rejoin authority (owner ruling 2026-10-05, supersedes "held record wins"): guest wins unless behind.** On a rejoin whose record differs:
+  1. The host first folds its own journaled payouts.
+  2. The guest's declared record is adopted (first-join rules, at a higher revision) when it is not behind the held record. "Not behind" means every receipt, personal flag and absorbed payout the host recorded is present.
+  3. Only a declaration that is behind (a rollback or restored backup) adopts the held record.
+  
+  Implementation follows #544 (lane A). The evidence is in `ralph/reports/HUB/f17/rejoin_audit.md`.
 - **Review gate:** independent code review stays mandatory for co-op, save, economy and world-visibility (culling, streaming) changes. Pure tuning, data and visual changes go straight to their tests or code-blind judge without a separate code review.
 - **Schedule:** rebaseline the delivery plan to the measured pace; scope kept, old baseline shown as a ghost.
 - **Combat controller map (former open decision #10; COMBAT §1, UX §2.2):** confirmed as written. The ultimate and Tether Commands are tap-then-tap sequences, orb aim is on LT, flee is on RT, the LB+face layout is an optional preset, and the commands unlock at the practice catch and the first two-creature fight.
