@@ -299,10 +299,10 @@ static func stage_joint_attack(effect: Dictionary, frozen_moves: Array,
 			str(target.get("type", "")), str(target.get("secondary_type", "")))
 		# Host profiles already include mastery, breakthroughs and gear in power.
 		# Match host_roll_damage's authored named multiplier and type lookup; the
-		# Tag fraction scales the resulting ordinary quick hit exactly once.
-		var damage := math.rolled_damage(float(move.power),
+		# Tag scales quick power before the ordinary minimum-damage floor.
+		var damage := math.rolled_damage(float(move.power) * power,
 			float(actor.attack), float(target.defence), float(host.rolls[index]),
-			moves.power(str(move.move_id)), type_scale) * power * float(actor.bonus_product) if connected else 0.0
+			moves.power(str(move.move_id)), type_scale) * float(actor.bonus_product) if connected else 0.0
 		damage = clampf(damage, 0.0, hp)
 		var receipt: Dictionary = strike.duplicate(true)
 		receipt["action_id"] = JSON.stringify([strike.parent_action_id, part, actor.creature_uid, actor.generation]).sha256_text()

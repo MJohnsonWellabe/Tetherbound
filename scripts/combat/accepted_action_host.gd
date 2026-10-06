@@ -583,14 +583,24 @@ func commit_original_fixture_actor_topup(proposal: Dictionary, original: Diction
 
 
 func bind_actor_body(id: String, peer: int, character: String, owned: Dictionary, body_id: int) -> Dictionary:
-	if move_action_publication_pending(id) and not _tag_incoming_binding_allowed(id, peer, character, str(owned.get("uid", ""))):
-		return {"ok": false, "code": "pending_action"}
+	if move_action_publication_pending(id):
+		var uid := str(owned.get("uid", ""))
+		var participant: Dictionary = _actor_participant(id, peer, character)
+		var current: Dictionary = participant.get("actor_vitals", {}).get(uid, {})
+		if not _tag_incoming_binding_allowed(id, peer, character, uid) \
+			or (participant.get("actor_bound_uid") == uid and current.get("body_instance_id") != body_id):
+			return {"ok": false, "code": "pending_action"}
 	return super.bind_actor_body(id, peer, character, owned, body_id)
 
 
 func bind_actor_vitals(id: String, peer: int, character: String, owned: Dictionary, generation: int) -> Dictionary:
-	if move_action_publication_pending(id) and not _tag_incoming_binding_allowed(id, peer, character, str(owned.get("uid", ""))):
-		return {"ok": false, "code": "pending_action"}
+	if move_action_publication_pending(id):
+		var uid := str(owned.get("uid", ""))
+		var participant: Dictionary = _actor_participant(id, peer, character)
+		var current: Dictionary = participant.get("actor_vitals", {}).get(uid, {})
+		if not _tag_incoming_binding_allowed(id, peer, character, uid) \
+			or (participant.get("actor_bound_uid") == uid and current.get("body_generation") != generation):
+			return {"ok": false, "code": "pending_action"}
 	return super.bind_actor_vitals(id, peer, character, owned, generation)
 
 

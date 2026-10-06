@@ -313,10 +313,18 @@ func test_every_joint_damage_event_is_attributed_to_one_of_the_two_owned_creatur
 		assert_eq(strike.character_id, "owner_a")
 		assert_eq(strike.parent_action_id, "joint-original")
 		assert_ne(strike.action_id, "joint-original")
-		var ordinary := math.rolled_damage(float(moves[index].power), 20.0, 10.0, 0.5,
+		var ordinary := math.rolled_damage(float(moves[index].power) * (0.5 if index == 0 else 1.5), 20.0, 10.0, 0.5,
 			MOVES.load_default().power("pebble_toss"), type_scale)
-		assert_eq(strike.actual_hp_debit, ordinary * (0.5 if index == 0 else 1.5), "rank-five profile and actual type scale exactly like one ordinary quick")
+		assert_eq(strike.actual_hp_debit, ordinary, "rank-five profile and actual type scale exactly like one ordinary scaled-power quick")
 	assert_eq(COMMANDS.stage_joint_attack(effect, moves, view, math.config()).strikes, plan.strikes, "retry retains exact child identities")
+	var low_power := view.duplicate(true)
+	low_power.target.defence = 1000000000.0
+	for actor: Dictionary in low_power.actors: actor.attack = 1.0
+	var floor_plan: Dictionary = COMMANDS.stage_joint_attack(effect, moves, low_power, math.config())
+	assert_true(floor_plan.ok, str(floor_plan))
+	if floor_plan.ok:
+		assert_eq(floor_plan.strikes[0].actual_hp_debit, 1.0, "half power keeps the ordinary minimum damage")
+		assert_eq(floor_plan.strikes[1].actual_hp_debit, 1.0, "one-and-a-half power does not amplify the minimum floor")
 	view.target.hp = 1.0
 	var finishing: Dictionary = COMMANDS.stage_joint_attack(effect, moves, view, math.config())
 	assert_true(finishing.ok)
@@ -401,6 +409,12 @@ func test_tag_parent_retains_two_frozen_quicks_and_rejects_stale_or_duplicate_ar
 			var bound: Dictionary = tracked.bind_actor_body(tag_id, 1, "character-a", incoming, 202)
 			assert_true(bound.ok, str(bound))
 			if not bound.ok: return
+			assert_true(tracked.bind_actor_body(tag_id, 1, "character-a", incoming, 202).ok,
+				"unchanged canonical incoming binding remains observable")
+			assert_false(tracked.bind_actor_body(tag_id, 1, "character-a", incoming, 303).ok,
+				"same parent cannot replace its incoming body a second time")
+			assert_false(tracked.bind_actor_vitals(tag_id, 1, "character-a", incoming, int(bound.vitals.body_generation) + 1).ok,
+				"same parent cannot replace its incoming generation")
 			var incoming_binding := {"character_id":"character-a", "creature_uid":"owned-b",
 				"deployment_generation":2, "actor_generation":bound.vitals.body_generation, "body_instance_id":202}
 			var written := [{"hp":25.0, "hp_max":30.0, "damage":999.0, "killed":false},
