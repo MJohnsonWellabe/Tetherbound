@@ -25,6 +25,7 @@ const TERRAIN_BAKE_TOLERANCE := 0.35
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const HARVEST_POINT_SCRIPT := preload("res://scripts/world/vegetation_harvest_point.gd")
 const HARVEST_NODE_SCRIPT := preload("res://scripts/world/harvest_node.gd")
+const KEY_PICKUP_SCRIPT := preload("res://scripts/world/key_pickup.gd")
 const FELLED_RESOURCE_SCRIPT := preload("res://scripts/world/felled_resource.gd")
 
 
@@ -731,6 +732,79 @@ func _a_full_satchel_gather_still_says_so(world: Node) -> Array[String]:
 	else:
 		print("full-satchel feedback: %s" % message.text)
 	_restore_satchel(inventory, saved_slots)
+	# F28#5: accepted claims at the same shipped Berry source and Sunstone.
+	# Reuse this smoke's local production-ground pose; no earned journey claim.
+	if not is_instance_valid(berry_node):
+		found.append("the Berry refusal check unexpectedly consumed its authored source")
+		return found
+	var player := player_body as CharacterBody3D
+	var model := player.get_node_or_null(^"Model") as Node3D if player != null else null
+	var arbiter := world.get_node_or_null(^"InteractionArbiter")
+	var rig := world.get_node_or_null(^"CameraRig") as Node3D
+	if player == null or model == null or arbiter == null or rig == null:
+		found.append("local ingredient claim is missing Player/Model/arbiter/camera wiring")
+		return found
+	var saved_player := player.global_transform
+	var saved_velocity := player.velocity
+	var saved_model := model.transform
+	var saved_camera := rig.global_transform
+	var saved_tool := str(game.get("equipped_tool"))
+	game.set("equipped_tool", "")
+	var sunstone := world.get_node_or_null(^"Sunstone") as Node3D
+	for source: Dictionary in [
+		{"node": berry_node, "item": "berries", "amount": int(berry_node.call("resource_amount")),
+			"flag": HARVEST_NODE_SCRIPT.flag_id(str(berry_node.get("_node_id"))), "label": "Pick berries"},
+		{"node": sunstone, "item": "sunstone", "amount": 1,
+			"flag": KEY_PICKUP_SCRIPT.flag_id("sunstone"), "label": "Take the sunstone"},
+	]:
+		var pickup := source.node as Node3D
+		if not is_instance_valid(pickup) or bool(game.progression.has(source.flag)):
+			found.append("authored %s source is absent or already claimed" % source.item)
+			continue
+		var prompt := pickup.get_node_or_null(^"Interactable") as Node3D
+		if prompt == null:
+			found.append("authored %s source has no production Interactable" % source.item)
+			continue
+		var pickup_at := pickup.global_position
+		_face_and_stand_near(player, model, pickup_at, world)
+		for i in 60:
+			await physics_frame
+		arbiter.call("_recompute")
+		if not player.is_on_floor() or arbiter.call("winning_provider") != prompt \
+				or str(arbiter.call("prompt")) != source.label:
+			found.append("authored %s local floor/winning prompt failed at %s (floor=%s prompt=%s)" % [
+				source.item, player.global_position, player.is_on_floor(), arbiter.call("prompt")])
+			continue
+		var stock_before := int(inventory.call("count", source.item))
+		var press := InputEventAction.new()
+		press.action = &"interact"
+		press.pressed = true
+		Input.parse_input_event(press)
+		await process_frame
+		await process_frame
+		var release := InputEventAction.new()
+		release.action = &"interact"
+		release.pressed = false
+		Input.parse_input_event(release)
+		for i in 120:
+			await physics_frame
+			if bool(game.progression.has(source.flag)):
+				break
+		var stock_after := int(inventory.call("count", source.item))
+		var spent := not is_instance_valid(prompt) or (prompt.call("interaction_offer", player.global_position) as Dictionary).is_empty()
+		if stock_after != stock_before + int(source.amount) or not bool(game.progression.has(source.flag)) or not spent:
+			found.append("authored %s input claim failed: stock %d->%d expected +%d flag=%s spent=%s" % [
+				source.item, stock_before, stock_after, source.amount, game.progression.has(source.flag), spent])
+		else:
+			print("F28 ingredient witness ", JSON.stringify({"item": source.item, "source_at": str(pickup_at),
+				"player_at": str(player.global_position), "on_floor": player.is_on_floor(), "label": source.label,
+				"stock_before": stock_before, "stock_after": stock_after, "once_flag": source.flag,
+				"spent_prompt": spent, "setup": "existing local ground pose; real interact input"}))
+	player.global_transform = saved_player
+	player.velocity = saved_velocity
+	model.transform = saved_model
+	rig.global_transform = saved_camera
+	game.set("equipped_tool", saved_tool)
 	return found
 
 
