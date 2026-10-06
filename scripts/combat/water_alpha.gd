@@ -152,6 +152,13 @@ func _strike_actor_binding(id: String, peer: int, deployed: Node3D) -> Dictionar
 	binding.make_read_only()
 	return binding
 
+func presentation_move_actor(launch: Dictionary, deployed: Node3D) -> Dictionary:
+	if not is_instance_valid(primary) or primary == self: return {}
+	return primary.call("presentation_move_actor", launch, deployed)
+
+func tether_command_deployment() -> Dictionary:
+	return primary.call("tether_command_deployment") if is_instance_valid(primary) and primary != self else {}
+
 
 func _bind_alpha_actions(rec: Dictionary, peer: int) -> bool:
 	var id: String = str(rec.get("encounter_id", ""))
@@ -322,6 +329,9 @@ func _publish_snapshot() -> void:
 	_settle_resolution()
 	_pose_sequence += 1
 	var rec: Dictionary = authority.record().duplicate(true)
+	for members: Dictionary in [rec.get("participants", {}), rec.get("retained_actor_participants", {})]:
+		for member: Dictionary in members.values():
+			member.get("tether_commands", {}).erase("item_pending")
 	if uses_saved_actor_vitals(authority.encounter_id):
 		rec["ordinary_actor_vitals_pending"] = ordinary_actor_vitals_pending(authority.encounter_id)
 	var snapshot := {"sequence": _pose_sequence, "record": rec, "terminal_author": _terminal_author_peer,
