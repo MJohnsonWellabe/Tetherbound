@@ -3608,7 +3608,19 @@ func _host_tether_tag(request: Dictionary, peer: int, admitted: Dictionary,
 		var owned: Dictionary = owned_rows[index]
 		var creature := WATER_CAPTURE_CODEC.decode_owned(owned, admitted.redesign_character)
 		if creature == null: return refuse
+		if index == 1:
+			if peer == _local_peer_id():
+				creature = (_manager.get("_party") as Array)[local_index]
+			elif _session.has_method("admitted_tether_tonics") and _session.has_method("tether_tonic_passive_card"):
+				var passive: Dictionary = _session.call("tether_tonic_passive_card", peer, str(owned.uid), owned)
+				creature = WATER_CAPTURE_CODEC.decode_owned(passive, admitted.redesign_character)
+				if creature == null: return refuse
+				var tonics: Dictionary = _session.call("admitted_tether_tonics", peer).get(str(owned.uid), {})
+				for effect: Dictionary in tonics.get("effects", []):
+					creature.call("apply_buff", str(effect.id), str(effect.stat), float(effect.scale), float(effect.remaining_s))
 		var card: Dictionary = _creature_card_for(peer) if index == 0 else _creature_card(creature)
+		if index == 1 and peer != _local_peer_id():
+			card["active_relic_id"] = str(admitted.get("realm_hearts", {}).get("active_id", ""))
 		var actor := {"character_id": binding.character_id, "creature_uid": str(owned.uid), "encounter_id": id,
 			"generation": int(request.generation) + index, "action": int(request.sequence), "hp": float(card.hp),
 			"attack": float(card.attack), "position": position, "facing": facing, "bonus_product": 1.0}
