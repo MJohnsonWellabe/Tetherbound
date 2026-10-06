@@ -29,6 +29,50 @@ var _homestead_stations: Dictionary = {}
 var _foundation_requests: Dictionary = {}
 var _foundation_personal_cache: Dictionary = {}
 var _foundation_camp_pending: Dictionary = {}
+## Host: the last rejoin_admission outcome per character (diagnostic/proof).
+var last_rejoin_admission: Dictionary = {}
+## Bound on a hello's settled/owed delivery ids. A malformed or oversized list
+## keeps the held record and refuses the stream (never read as behind, which
+## would cost the owner its progress; review L1).
+const MAX_SETTLED_DELIVERIES := 16384
+
+
+## The hello's settled and owed payout ids, filtered to this world's rows --
+## and to folds this character has not yet confirmed, whose rows may already
+## be pruned (review L1: a lost "readmitted" must not read as behind).
+func rejoin_payout_lists(summary: Dictionary) -> Dictionary:
+	var out := {"valid": true, "settled": [], "owed": []}
+	var rows: Dictionary = (_game().get("world").reward_deliveries as Dictionary).duplicate() if _game() != null else {}
+	if _character_authority != null:
+		for fold: Variant in _character_authority.call("unconfirmed_folds", str(summary.get("character_id", ""))):
+			if fold is Dictionary: rows[str(fold.get("delivery_id", ""))] = true
+	for key: String in ["settled", "owed"]:
+		var raw: Variant = summary.get(key + "_deliveries", [])
+		if not raw is Array or (raw as Array).size() > MAX_SETTLED_DELIVERIES \
+			or (raw as Array).any(func(id: Variant) -> bool: return not id is String or (id as String).length() > 160):
+			out.valid = false
+			continue
+		out[key] = (raw as Array).filter(func(id: String) -> bool: return rows.has(id))
+	return out
+
+
+## The hello's rejoin decision; records its code for owner-passive admission.
+func rejoin_admission_for(character_id: String, portable: Dictionary, summary: Dictionary, lists: Dictionary) -> Dictionary:
+	var rejoin: Dictionary = {"ok": false, "code": "payout_list_invalid"}
+	if lists.get("valid") == true:
+		rejoin = _character_authority.call("rejoin_admission", character_id, portable, _game().get("world").reward_deliveries,
+			(summary.get("personal_flags", {"flags": []}) as Dictionary).get("flags", []), lists.settled, lists.owed)
+	last_rejoin_admission[character_id] = str(rejoin.get("code", ""))
+	return rejoin
+
+
+## A gather batch now in the character's record is credited, as its live
+## replay would mark it, so its row can be pruned once ACKed.
+func credit_rejoin_gathers(character_id: String, ids: Array) -> void:
+	var gather_writer: Node = get_node_or_null(^"LedgerRpc")
+	for delivery_id: Variant in ids:
+		var row: Variant = _game().get("world").reward_deliveries.get(delivery_id)
+		if gather_writer != null and row is Dictionary: gather_writer.call("mark_gather_replayed", character_id, row)
 var _camp_view_requested_ms := -1000000
 var _process_exit_in_flight := false
 var _process_exit_refusal := ""
@@ -198,7 +242,7 @@ func owner_passive_discoveries() -> Variant:
 
 func _owner_passive_delivery_ready() -> bool:
 	if is_host() or _owner_passive == null or (_owner_passive.get("local") as Dictionary).is_empty(): return true
-	return _owner_passive.call("recording_active") == true
+	return _owner_passive.call("delivery_ready") == true
 
 func _owner_passive_delivery_record(row: Dictionary) -> void:
 	if is_host() or _owner_passive == null or (_owner_passive.get("local") as Dictionary).is_empty(): return
@@ -2566,6 +2610,18 @@ func join_with_peer(peer: MultiplayerPeer, character_summary: Dictionary = {},
 		summary["portable_authority"] = CHARACTER_AUTHORITY.portable_projection(admission_game.get("local").save_data())
 		summary["personal_flags"] = admission_game.get("local").flags.call("save_data").duplicate(true)
 		summary["discovered_landmarks"] = _groom_service().call("admission_landmarks")
+		# The payouts this character holds settled, and those it is owed by a
+		# full bag (grant_due): a rejoin is "behind" if one this world recorded
+		# is in neither; only settled ones are in its satchel.
+		var settled: Array[String] = []
+		var owed: Array[String] = []
+		for key: Variant in admission_game.get("local").satchel_escrow:
+			var row: Variant = admission_game.get("local").satchel_escrow[key]
+			if row is Dictionary and row.get("kind") == "reward_delivery":
+				if row.get("status") == "settled": settled.append(str(key))
+				elif row.get("status") == "grant_due": owed.append(str(key))
+		summary["settled_deliveries"] = settled
+		summary["owed_deliveries"] = owed
 		summary["owner_passive_stream"] = _owner_passive_service().call("arm_owner", summary.portable_authority, summary.discovered_landmarks)
 	# Always this process's own fingerprint: a caller cannot claim another build.
 	summary["build"] = BUILD_FINGERPRINT.current()
@@ -2952,7 +3008,21 @@ func _rpc_hello(summary: Dictionary) -> void:
 		_reject_hello(sender, "character_in_use",
 			"That character is already connected to this world.")
 		return
+	var held_snapshot: Dictionary = _character_authority.call("snapshot_record", character_id)
+	var rejoin_applied: Array = []
 	var seeded: Dictionary = _character_authority.call("seed_admitted_character", portable, character_id)
+	var payout_lists := rejoin_payout_lists(summary)
+	if seeded.get("ok") == true and seeded.get("already_seeded") != true:
+		_character_authority.call("seed_absorbed_deliveries", character_id, _game().get("world").reward_deliveries, payout_lists.get("owed", []))
+	elif seeded.get("ok") == true:
+		# A returning owner (owner ruling 2026-10-05): its declaration is
+		# adopted unless it is behind this world's record, which then wins and
+		# the owner adopts it through the owner-passive readmit
+		# (character_authority.rejoin_admission).
+		var rejoin := rejoin_admission_for(character_id, portable, summary, payout_lists)
+		rejoin_applied = rejoin.get("applied", [])
+		if rejoin.get("code") != "held":
+			print("[session] rejoin of %s: %s %s" % [character_id.left(18), str(rejoin.get("code", "")), str(rejoin.get("detail", ""))])
 	if seeded.get("ok") == true and _character_authority.call("seed_personal_flags", character_id, summary.get("personal_flags", {"flags": []})) != true: seeded = {"ok": false}
 	if seeded.get("ok") == true and _character_authority.call("seed_discovered_landmarks", character_id, summary.get("discovered_landmarks", {})) != true: seeded = {"ok": false}
 	if bool(seeded.get("ok", false)):
@@ -2960,9 +3030,13 @@ func _rpc_hello(summary: Dictionary) -> void:
 	if bool(seeded.get("ok", false)):
 		seeded = _character_authority.call("recover_durable_training", character_id, _game().get("world").reward_deliveries)
 	if not bool(seeded.get("ok", false)):
+		# A refused hello leaves this world's record exactly as it was (review H1).
+		if not held_snapshot.is_empty(): _character_authority.call("restore_record", character_id, held_snapshot)
+		last_rejoin_admission.erase(character_id) # never a stale code for a later stream (review L5)
 		_registry.call("remove", sender)
 		_reject_hello(sender, "invalid_character", "That portable character could not be admitted. Your files remain unchanged.")
 		return
+	credit_rejoin_gathers(character_id, rejoin_applied)
 	_groom_service().call("admitted", character_id, _character_authority.call("discovered_landmarks", character_id))
 	_owner_passive_service().call("admitted", sender, summary)
 	if realm_transition != null and bool(realm_transition.call("prepare_joined_sender", sender)):
