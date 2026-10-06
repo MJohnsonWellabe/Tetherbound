@@ -313,3 +313,31 @@ func test_a_host_journalled_ack_is_waited_out_past_the_window() -> void:
 		"a journalled ack still has a finite ceiling, past the reach window")
 	session.free()
 	game.free()
+
+
+func test_an_ack_forgotten_because_its_stage_saved_still_reads_committed() -> void:
+	# f20_ending (render f20-diag3-a): the waiting drain forgot a guest's ack
+	# once homecoming_seen was saved, before Grandpa's scene polled it; the
+	# scene read "refused" for a saved acknowledgement and credits never
+	# opened. A forget because its own stage saved keeps the committed result.
+	var game := _journey_game()
+	var intent := _intent()
+	game.journey.homecoming_seen = true
+	game._forget_regional_ack(intent.transaction_id)
+	var result: Dictionary = game.regional_ending_ack_result(intent.transaction_id)
+	assert_eq(result.get("status"), "committed", "a saved ack is not refused")
+	for field: String in intent:
+		assert_eq(result.get(field), intent[field], "the committed result carries its original " + field)
+	game.free()
+	var unsaved := _journey_game()
+	unsaved._forget_regional_ack(intent.transaction_id)
+	assert_eq(unsaved.regional_ending_ack_result(intent.transaction_id).get("status"), "refused",
+		"an ack forgotten unsaved (a new presentation) stays refused")
+	unsaved.free()
+	var moved := _journey_game()
+	moved.journey.homecoming_seen = true
+	moved.journey.session_epoch = "another_epoch"
+	moved._forget_regional_ack(intent.transaction_id)
+	assert_eq(moved.regional_ending_ack_result(intent.transaction_id).get("status"), "refused",
+		"saved under a different ending is not this ack")
+	moved.free()
