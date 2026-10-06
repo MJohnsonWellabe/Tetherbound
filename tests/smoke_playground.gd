@@ -771,7 +771,7 @@ func _a_full_satchel_gather_still_says_so(world: Node) -> Array[String]:
 			await physics_frame
 		arbiter.call("_recompute")
 		if not player.is_on_floor() or arbiter.call("winning_provider") != prompt \
-				or str(arbiter.call("prompt")) != source.label:
+				or str((arbiter.call("winner") as Dictionary).get("label", "")) != source.label:
 			found.append("authored %s local floor/winning prompt failed at %s (floor=%s prompt=%s)" % [
 				source.item, player.global_position, player.is_on_floor(), arbiter.call("prompt")])
 			continue

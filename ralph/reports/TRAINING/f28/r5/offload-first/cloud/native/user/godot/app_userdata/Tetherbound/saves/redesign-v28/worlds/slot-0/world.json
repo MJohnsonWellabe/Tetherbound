@@ -1,0 +1,56 @@
+{
+	"codec_version": 1,
+	"format": "tetherbound-save",
+	"payload": {
+		"clock_elapsed_seconds": {
+			"$tb_float64": "8d6d6772c4ba7740"
+		},
+		"created_at": "2026-10-06T07:00:25",
+		"day": 1,
+		"death_satchels": [],
+		"display_name": "",
+		"farm_plots": [],
+		"felled_vegetation": {},
+		"flags": {
+			"flags": [
+				"cloudreach_chapter_started",
+				"cloudreach_crisis_learned",
+				"storm_anchor_lower_west_mapped",
+				"cloudreach_lower_anchors_investigated",
+				"tether_lieutenant_senn_defeated",
+				"causeway_survivors_reconnected",
+				"windscar_aerie_prepared",
+				"keeper_maela_trial_defeated",
+				"cloudreach_act_i_complete",
+				"fly_traversal_unlocked",
+				"sky_shrine_reached",
+				"storm_anchor_engine_truth_learned",
+				"cloudreach_upper_route_unlocked",
+				"fly_tutorial_completed"
+			]
+		},
+		"harvested_vegetation": {},
+		"last_played": "2026-10-06T07:00:25",
+		"migrated_from": "",
+		"placed_buildings": [],
+		"realm_environment": {},
+		"redesign_world": {
+			"alpha_cycles": {},
+			"bounty_day": {
+				"$tb_float64": "0000000000000000"
+			},
+			"fifth_arch_stirred": false,
+			"node_cycles": {},
+			"portal_unlocks": [],
+			"rematch_cycles": {},
+			"shrine_display": {},
+			"station_tiers": {}
+		},
+		"reward_deliveries": {},
+		"reward_delivery_namespace": "9ebea73180887b3002a60de799524672",
+		"version": 28,
+		"water_capture_claims": {},
+		"world_id": "slot-0",
+		"world_seed": 583337486
+	}
+}
