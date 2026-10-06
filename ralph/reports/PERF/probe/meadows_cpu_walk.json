@@ -1,0 +1,135 @@
+{
+	"animation_census": {
+		"active": 1224,
+		"in_character_body": 1164,
+		"in_dormant_character_body": 1158,
+		"mixers": 1224,
+		"playing": 64
+	},
+	"biome": "meadows",
+	"disclosure": "Headless Dummy renderer: CPU main-thread process and physics-step cost only.",
+	"display_server": "headless",
+	"frames_per_row": 240,
+	"processor_count": 4,
+	"rows": [],
+	"schema": "perf_cpu_probe/1",
+	"stand": [
+		9.5,
+		0.899999976158142,
+		14.0
+	],
+	"walk": [
+		{
+			"frames": 1170,
+			"label": "walk_baseline",
+			"max_ms": 198.468,
+			"mean_ms": 23.7319196581197,
+			"p99_ms": 105.361
+		},
+		{
+			"frames": 1170,
+			"label": "walk_without_GrassField",
+			"max_ms": 167.412,
+			"mean_ms": 24.9597641025641,
+			"p99_ms": 116.591
+		},
+		{
+			"frames": 1170,
+			"label": "walk_without_Vegetation",
+			"max_ms": 170.936,
+			"mean_ms": 24.8073914529915,
+			"p99_ms": 118.691
+		},
+		{
+			"frames": 1170,
+			"label": "walk_without_Terrain",
+			"max_ms": 176.088,
+			"mean_ms": 22.5853709401709,
+			"p99_ms": 105.728
+		},
+		{
+			"frames": 1170,
+			"label": "walk_without_EncounterDirector",
+			"max_ms": 156.776,
+			"mean_ms": 20.7228273504274,
+			"p99_ms": 116.938
+		},
+		{
+			"frames": 1170,
+			"label": "walk_without_Water",
+			"max_ms": 160.764,
+			"mean_ms": 24.362952991453,
+			"p99_ms": 114.637
+		},
+		{
+			"frames": 1170,
+			"label": "walk_without_River",
+			"max_ms": 234.083,
+			"mean_ms": 28.7985897435898,
+			"p99_ms": 128.666
+		},
+		{
+			"frames": 1170,
+			"label": "walk_without_PlaygroundHUD",
+			"max_ms": 190.899,
+			"mean_ms": 27.4687504273504,
+			"p99_ms": 149.692
+		},
+		{
+			"frames": 1170,
+			"label": "walk_without_InteractionArbiter",
+			"max_ms": 175.211,
+			"mean_ms": 29.4702726495726,
+			"p99_ms": 138.395
+		},
+		{
+			"frames": 1170,
+			"label": "walk_without_WorldAudio",
+			"max_ms": 187.55,
+			"mean_ms": 28.1035743589744,
+			"p99_ms": 135.779
+		},
+		{
+			"frames": 1170,
+			"label": "walk_without_WorldLook",
+			"max_ms": 172.619,
+			"mean_ms": 29.0251282051282,
+			"p99_ms": 129.683
+		},
+		{
+			"frames": 1170,
+			"label": "walk_without_Village",
+			"max_ms": 199.712,
+			"mean_ms": 27.0359136752137,
+			"p99_ms": 144.747
+		},
+		{
+			"frames": 1170,
+			"label": "walk_without_VillageNPCs",
+			"max_ms": 195.939,
+			"mean_ms": 27.3932606837607,
+			"p99_ms": 133.641
+		},
+		{
+			"frames": 1170,
+			"label": "walk_without_CameraRig",
+			"max_ms": 177.473,
+			"mean_ms": 27.0768478632479,
+			"p99_ms": 122.069
+		},
+		{
+			"frames": 1170,
+			"label": "walk_without_/root/Game",
+			"max_ms": 218.604,
+			"mean_ms": 28.482541025641,
+			"p99_ms": 143.947
+		},
+		{
+			"frames": 1170,
+			"label": "walk_baseline_again",
+			"max_ms": 180.914,
+			"mean_ms": 27.5084418803419,
+			"p99_ms": 126.646
+		}
+	]
+}

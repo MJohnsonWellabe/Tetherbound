@@ -6,6 +6,8 @@ const RULES := preload("res://scripts/world/stormwood_surge_rules.gd")
 const SHELTER := preload("res://scripts/world/stormwood_shelter.gd")
 const COMBAT_MATH := preload("res://scripts/combat/combat_math.gd")
 const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
+const CHARGED_GROUND := preload("res://scripts/world/stormwood_charged_ground.gd")
+const EQUIPMENT := preload("res://scripts/player/player_equipment.gd")
 var rules := RULES.new()
 var world: Node3D
 var surge: Node
@@ -17,6 +19,9 @@ var _visuals: Dictionary = {}
 var _warning_centres: Dictionary = {}
 var _received_impacts: Array[int] = []
 var _rng := RandomNumberGenerator.new()
+var _charged_clock := 0.0
+var _charged_serial := 0
+var _received_charged: Array[int] = []
 
 var _road_zones_clear := true
 var _road_afterglow: Dictionary = {}
@@ -40,6 +45,7 @@ func _process(delta: float) -> void:
 	_sync_road_warnings()
 	if not session.is_host():
 		return
+	_tick_charged_ground(delta)
 	for i in range(_pending.size() - 1, -1, -1):
 		_pending[i].remaining = float(_pending[i].remaining) - delta
 		if float(_pending[i].remaining) <= 0:
@@ -170,8 +176,58 @@ func _resolve(event: Dictionary) -> void:
 			hits[peer] = rules.strike_effect(str(surge.region_at(at)), 100.0, 0)
 	session.publish_stormwood_strike({"id": event.id, "kind": "impact", "at": at, "hits": hits})
 
+## Host: once per charged_ground tick, which trainers stand on the glass
+## sink's charged ground (stormwood_charged_ground.gd, owner RD-14).
+func _tick_charged_ground(delta: float) -> void:
+	var cfg: Dictionary = rules.config.get("charged_ground", {})
+	if not session.is_host() or cfg.is_empty() or not EQUIPMENT.hazards_live():
+		return
+	_charged_clock += delta
+	if _charged_clock < float(cfg.get("tick_seconds", 1.0)):
+		return
+	_charged_clock = 0.0
+	var rows := {}
+	var actors := _actors()
+	for peer: int in actors:
+		var body: Node3D = actors[peer]
+		rows[peer] = {"position": body.global_position, "ground_y": float(world.ground_height_near(body.global_position)),
+			"in_fight": _trainer_in_fight(peer)}
+	var hits := CHARGED_GROUND.host_hits(rules, rows, cfg)
+	if hits.is_empty():
+		return
+	_charged_serial += 1
+	session.publish_stormwood_strike({"id": _charged_serial, "kind": "charged_ground", "hits": hits})
+
+
+## Receiver: this trainer's own gear and the never-lethal floor.
+func _receive_charged_ground(event: Dictionary) -> void:
+	var id := int(event.get("id", -1))
+	if _received_charged.has(id):
+		return
+	_received_charged.append(id)
+	if _received_charged.size() > 256:
+		_received_charged.pop_front()
+	var hit: Variant = event.get("hits", {}).get(session.local_peer_id())
+	if not hit is Dictionary:
+		return
+	var player := world.get_node_or_null("Player") as CharacterBody3D
+	var vitals: RefCounted = player.get("vitals") if player != null else null
+	if vitals == null or vitals.is_dead():
+		return
+	var reduction := 0.0
+	var game := get_node_or_null("/root/Game")
+	var equipment: Variant = game.get("player_equipment") if game != null else null
+	if equipment != null and EQUIPMENT.hazards_live():
+		reduction = float(equipment.call("hazard_reduction", "terrain"))
+	vitals.health = CHARGED_GROUND.health_after(float(vitals.health), float(vitals.max_health),
+		float(hit.get("damage", 0.0)), reduction, rules.config.get("charged_ground", {}))
+
+
 func _receive(event: Dictionary) -> void:
 	if bool(world.get("simulation_only")):
+		return
+	if str(event.get("kind", "")) == "charged_ground":
+		_receive_charged_ground(event)
 		return
 	var id := int(event.get("id", -1))
 	if str(event.get("kind", "")) == "warning":

@@ -3,7 +3,7 @@
   "feature_flags": {
     "runtime_enabled": true,
     "network_enabled": true,
-    "visual_enabled": false
+    "visual_enabled": true, "hazards_enabled": true
   },
   "scope": "character",
   "canonical_path": "redesign_character.creatures[uid].gear",
@@ -40,9 +40,9 @@
       "ingot": "tidesteel_ingot",
       "shed": "reed_fiber",
       "color": [
-        0.22,
-        0.76,
-        0.74,
+        0.1,
+        0.7,
+        0.48,
         1
       ],
       "bonuses": {
@@ -61,9 +61,9 @@
       "ingot": "skyglass_ingot",
       "shed": "skyplume",
       "color": [
-        0.48,
-        0.7,
-        0.98,
+        0.42,
+        0.6,
+        1.0,
         1
       ],
       "bonuses": {
@@ -1376,11 +1376,12 @@
   },
   "accent": {
     "refresh_ms": 100,
-    "band_center": 0.56,
-    "band_width": 0.12,
-    "charm_band_center": 0.78,
-    "charm_band_width": 0.045,
-    "emission_energy": 0.7,
+    "band_center": 0.33,
+    "band_width": 0.045,
+    "charm_band_center": 0.5,
+    "charm_band_width": 0.028,
+    "emission_energy": 1.1,
+    "tier_emission_step": 0.45,
     "upgrade_emission_step": 0.1
   },
   "boss_proof": {

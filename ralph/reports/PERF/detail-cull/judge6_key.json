@@ -1,0 +1,26 @@
+{
+ "stormwood__route_00__day": {
+  "X": "before",
+  "Y": "after"
+ },
+ "stormwood__route_00__night": {
+  "X": "after",
+  "Y": "before"
+ },
+ "stormwood__route_01__day": {
+  "X": "after",
+  "Y": "before"
+ },
+ "stormwood__route_01__night": {
+  "X": "before",
+  "Y": "after"
+ },
+ "stormwood__route_02__day": {
+  "X": "before",
+  "Y": "after"
+ },
+ "stormwood__route_02__night": {
+  "X": "after",
+  "Y": "before"
+ }
+}

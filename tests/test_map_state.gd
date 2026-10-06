@@ -496,3 +496,25 @@ func test_dirty_rect_accumulates_across_ticks_until_consumed() -> void:
 	var far: Vector2i = map.world_to_cell(Vector3(0.0, 0.0, 80.0))
 	assert_true(r.has_point(near) and r.has_point(far),
 		"the accumulated rect %s must cover every cell revealed since the last consume" % r)
+
+
+## PERF (2026-10-05): `save_data()` reuses its encoded fog while the grid is
+## unchanged. A newly visited cell, or a load of a different grid with the
+## same number of visited cells, must never be served the old encoding.
+func test_saved_fog_is_never_stale() -> void:
+	map.mark_visited(Vector3(0.0, 0.0, 0.0))
+	var first: Dictionary = map.save_data()
+	assert_eq(str(map.save_data().visited_b64), str(first.visited_b64), "unchanged grid, same encoding")
+	map.mark_visited(Vector3(150.0, 0.0, 150.0))
+	var second: Dictionary = map.save_data()
+	assert_true(str(second.visited_b64) != str(first.visited_b64), "a new visit re-encodes")
+	var other: Variant = MAP_STATE.new()
+	other.configure(_config())
+	other.mark_visited(Vector3(-150.0, 0.0, -150.0))
+	other.mark_visited(Vector3(0.0, 0.0, 0.0))
+	var swapped: Dictionary = other.save_data()
+	assert_eq(int(other.get("_visited_count")), int(map.get("_visited_count")), "same count, different cells")
+	assert_true(str(swapped.visited_b64) != str(second.visited_b64))
+	map.load_data(swapped)
+	assert_eq(str(map.save_data().visited_b64), str(swapped.visited_b64),
+		"a loaded grid is encoded as loaded, whatever its visited count")

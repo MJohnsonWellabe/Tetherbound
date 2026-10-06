@@ -439,37 +439,3 @@ func test_native_delayed_preparation_and_bool_retry_enter_existing_groom_journal
 	assert_false(combined.contains("ERROR:") or combined.contains("ObjectDB instances leaked") or combined.contains("resources still in use"), combined)
 	assert_eq(code, 0, combined)
 
-
-func test_rejoin_readmit_adopts_the_hosts_landmarks_on_real_maps_and_keeps_fog() -> void:
-	# Review G1 finding 4: the real adopt over the real four realm maps. The
-	# adopted set must hash back exactly to what the host sent (so the readmit
-	# completes), and nothing but the discovered landmarks may change.
-	var game := _game(OS.get_user_data_dir().path_join("g1-adopt"))
-	var sync := SYNC.new(game.session)
-	var player: RefCounted = game.local
-	var meadows: RefCounted = player.call("map_for", "meadows")
-	var ids: Array = (meadows.get("_landmark_defs") as Dictionary).keys()
-	assert_true(ids.size() >= 2, "the real Meadows map defines landmarks")
-	if ids.size() < 2:
-		game.session.free()
-		game.free()
-		return
-	meadows.call("discover_landmark", str(ids[0]))
-	meadows.call("discover_landmark", str(ids[1]))
-	meadows.call("mark_visited", Vector3.ZERO)
-	var before_fog: Dictionary = meadows.call("save_data")
-	var held := sync.admission_landmarks()
-	held.meadows = [str(ids[1])] # The host never replayed ids[0].
-	var hash := preload("res://scripts/net/research_passive_preparation.gd")
-	assert_true(sync.adopt_landmarks(held))
-	assert_eq(hash.fingerprint({"discovered": sync.admission_landmarks()}), hash.fingerprint({"discovered": held}),
-		"the adopted maps hash back to the host's held set")
-	var after_fog: Dictionary = meadows.call("save_data")
-	for key: String in before_fog:
-		if key != "landmarks":
-			assert_eq(JSON.stringify(after_fog.get(key)), JSON.stringify(before_fog.get(key)), "%s is untouched" % key)
-	assert_false(bool(meadows.call("is_landmark_discovered", str(ids[0]))), "the unreplayed landmark can be discovered again")
-	held.meadows = ["not-a-real-landmark"]
-	assert_false(sync.adopt_landmarks(held), "an unknown landmark is refused")
-	game.session.free()
-	game.free()

@@ -1,0 +1,1663 @@
+{
+	"adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+	"biome": "meadows",
+	"boot_ms": 128997,
+	"camera": {
+		"far": 2000.0,
+		"far_override": -1.0,
+		"fov": 70.0,
+		"near": 0.0500000007450581
+	},
+	"captured_utc": "2026-10-05T03:07:52",
+	"census": {
+		"by_class": [
+			[
+				"Node3D",
+				122570
+			],
+			[
+				"MultiMeshInstance3D",
+				32901
+			],
+			[
+				"MeshInstance3D",
+				15249
+			],
+			[
+				"CollisionShape3D",
+				4320
+			],
+			[
+				"StaticBody3D",
+				2753
+			],
+			[
+				"AnimationPlayer",
+				1218
+			],
+			[
+				"Skeleton3D",
+				1218
+			],
+			[
+				"CharacterBody3D",
+				1164
+			],
+			[
+				"OmniLight3D",
+				216
+			],
+			[
+				"Label",
+				190
+			],
+			[
+				"Label3D",
+				135
+			],
+			[
+				"PanelContainer",
+				121
+			],
+			[
+				"GPUParticles3D",
+				73
+			],
+			[
+				"HBoxContainer",
+				55
+			],
+			[
+				"BoneAttachment3D",
+				40
+			],
+			[
+				"ProgressBar",
+				31
+			],
+			[
+				"Area3D",
+				29
+			],
+			[
+				"Panel",
+				27
+			],
+			[
+				"VBoxContainer",
+				27
+			],
+			[
+				"Control",
+				26
+			],
+			[
+				"ColorRect",
+				24
+			],
+			[
+				"RichTextLabel",
+				23
+			],
+			[
+				"Node",
+				17
+			],
+			[
+				"Marker3D",
+				16
+			],
+			[
+				"TextureRect",
+				15
+			],
+			[
+				"MarginContainer",
+				14
+			],
+			[
+				"SpotLight3D",
+				13
+			],
+			[
+				"AudioStreamPlayer",
+				9
+			],
+			[
+				"CanvasLayer",
+				6
+			],
+			[
+				"MultiplayerSpawner",
+				3
+			]
+		],
+		"by_subtree": [
+			[
+				"Vegetation",
+				112717
+			],
+			[
+				"Terrain",
+				32686
+			],
+			[
+				"Stronghold",
+				4250
+			],
+			[
+				"Village",
+				4003
+			],
+			[
+				"Props",
+				2906
+			],
+			[
+				"BurrowWarrens",
+				1808
+			],
+			[
+				"VillageBoundary",
+				1687
+			],
+			[
+				"WorldPerimeter",
+				1145
+			],
+			[
+				"SeveredSpokes",
+				815
+			],
+			[
+				"MillCrossing",
+				722
+			],
+			[
+				"SouthBridge",
+				465
+			],
+			[
+				"TetherRelay",
+				406
+			],
+			[
+				"StonewaterReach",
+				282
+			],
+			[
+				"GrandpaHouse",
+				273
+			],
+			[
+				"OldQuarry",
+				272
+			],
+			[
+				"Trainers",
+				256
+			],
+			[
+				"IronwoodGrovePresentation",
+				227
+			],
+			[
+				"PlaygroundHUD",
+				213
+			],
+			[
+				"CombatHUD",
+				177
+			],
+			[
+				"VillageNPCs",
+				174
+			],
+			[
+				"GrassField",
+				167
+			],
+			[
+				"NamePrompt",
+				153
+			],
+			[
+				"SigilGate",
+				131
+			],
+			[
+				"ApproachConduits",
+				130
+			],
+			[
+				"Water",
+				103
+			],
+			[
+				"Tournament",
+				95
+			],
+			[
+				"RuinedWatchtower",
+				89
+			],
+			[
+				"RidgelineWatch",
+				82
+			],
+			[
+				"MeadowsRealmHeartShrine",
+				71
+			],
+			[
+				"BerryFarm",
+				43
+			],
+			[
+				"Signpost",
+				41
+			],
+			[
+				"StrongholdTrainers",
+				39
+			],
+			[
+				"River",
+				38
+			],
+			[
+				"RiverNestClear",
+				32
+			],
+			[
+				"RelayNPCs",
+				32
+			],
+			[
+				"StrongholdClimax",
+				27
+			],
+			[
+				"HighfieldPastureIdentity",
+				26
+			],
+			[
+				"WardenTrainer",
+				24
+			],
+			[
+				"TrailheadSignpost_11",
+				21
+			],
+			[
+				"TrailheadSignpost_12",
+				21
+			]
+		],
+		"class_owners": {
+			"AnimationPlayer": [
+				[
+					"VillageNPCs/villager_female_lod0",
+					4
+				],
+				[
+					"StrongholdTrainers/grunt_lod0",
+					3
+				],
+				[
+					"Trainers/grunt_b_lod0",
+					3
+				],
+				[
+					"Trainers/grunt_a_lod0",
+					3
+				],
+				[
+					"VillageNPCs/villager_male_lod0",
+					3
+				],
+				[
+					"Trainers/wandering_trainer_lod0",
+					2
+				],
+				[
+					"Trainers/grunt_c_lod0",
+					2
+				],
+				[
+					"Stronghold/grunt_lod0",
+					2
+				],
+				[
+					"BurrowWarrens/creature_burrowback_lod0",
+					2
+				],
+				[
+					"BurrowWarrens/creature_mudsnout_lod0",
+					2
+				],
+				[
+					"Trainers/captain_a_lod0",
+					2
+				],
+				[
+					"Trainers/grunt_lod0",
+					2
+				]
+			],
+			"CharacterBody3D": [
+				[
+					"BurrowWarrens/BurrowWarrens",
+					5
+				],
+				[
+					"Wild_trailpup_2043_2",
+					1
+				],
+				[
+					"Wild_trailpup_2043_3",
+					1
+				],
+				[
+					"Wild_trailpup_2043_4",
+					1
+				],
+				[
+					"Wild_duskhush_2044_1",
+					1
+				],
+				[
+					"Wild_duskhush_2044_2",
+					1
+				],
+				[
+					"Wild_duskhush_2044_3",
+					1
+				],
+				[
+					"Wild_burrowback_2045_1",
+					1
+				],
+				[
+					"Wild_burrowback_2045_2",
+					1
+				],
+				[
+					"Wild_burrowback_2045_3",
+					1
+				],
+				[
+					"Wild_burrowback_2045_4",
+					1
+				],
+				[
+					"Wild_pipwing_2046_1",
+					1
+				]
+			],
+			"CollisionShape3D": [
+				[
+					"Vegetation/CameraCanopy",
+					177
+				],
+				[
+					"Village/Collision",
+					105
+				],
+				[
+					"Vegetation/CommonTree_2_Collision",
+					60
+				],
+				[
+					"Vegetation/CommonTree_3_Collision",
+					53
+				],
+				[
+					"Vegetation/CommonTree_1_Collision",
+					48
+				],
+				[
+					"Stronghold/CameraOccluder",
+					28
+				],
+				[
+					"Props/Crate_Wooden_Collision",
+					25
+				],
+				[
+					"Trainers/Body",
+					21
+				],
+				[
+					"Props/Bag_Collision",
+					20
+				],
+				[
+					"Props/Barrel_Collision",
+					20
+				],
+				[
+					"VillageNPCs/Body",
+					18
+				],
+				[
+					"Vegetation/Rock_Medium_1_Collision",
+					17
+				]
+			],
+			"GPUParticles3D": [
+				[
+					"Stronghold/TorchProp",
+					42
+				],
+				[
+					"Props/CampfireGlow",
+					26
+				],
+				[
+					"BurrowWarrens/CampfireGlow",
+					2
+				],
+				[
+					"MillCrossing/OldMillHeadrace",
+					2
+				],
+				[
+					"WorldWeather/WorldWeather",
+					1
+				]
+			],
+			"Node3D": [
+				[
+					"Vegetation/Vegetation",
+					56041
+				],
+				[
+					"Village/crossing_hall_shell_12",
+					318
+				],
+				[
+					"Village/crossing_hall_shell",
+					317
+				],
+				[
+					"VillageBoundary/Course1",
+					267
+				],
+				[
+					"VillageBoundary/Course0",
+					267
+				],
+				[
+					"BurrowWarrens/MoundGrowth",
+					220
+				],
+				[
+					"BurrowWarrens/InteriorRock",
+					182
+				],
+				[
+					"VillageBoundary/VillageBoundary",
+					93
+				],
+				[
+					"Stronghold/HallDressing",
+					87
+				],
+				[
+					"Village/inn_5",
+					83
+				],
+				[
+					"Stronghold/Stronghold",
+					82
+				],
+				[
+					"MillCrossing/Mill",
+					81
+				]
+			],
+			"OmniLight3D": [
+				[
+					"Props/CampfireGlow",
+					26
+				],
+				[
+					"Stronghold/Stronghold",
+					15
+				],
+				[
+					"BurrowWarrens/BurrowWarrens",
+					15
+				],
+				[
+					"Village/Interior",
+					12
+				],
+				[
+					"TetherRelay/SceneLights",
+					10
+				],
+				[
+					"BurrowWarrens/Fungus",
+					8
+				],
+				[
+					"Village/@Node3D@59484",
+					8
+				],
+				[
+					"Props/CampCreatureBed",
+					6
+				],
+				[
+					"BurrowWarrens/RootstonePassageTrail",
+					4
+				],
+				[
+					"BurrowWarrens/BankMouth",
+					4
+				],
+				[
+					"VillageBoundary/VillageGateLanternR",
+					3
+				],
+				[
+					"BurrowWarrens/VaultDoor",
+					3
+				]
+			]
+		},
+		"lights": {
+			"directional": 1,
+			"omni": 216,
+			"shadowed": 23,
+			"shadowed_omni_spot": 22,
+			"spot": 13
+		},
+		"mesh_instances_by_subtree": [
+			[
+				"Village",
+				1975
+			],
+			[
+				"Stronghold",
+				1726
+			],
+			[
+				"Props",
+				1437
+			],
+			[
+				"BurrowWarrens",
+				833
+			],
+			[
+				"VillageBoundary",
+				606
+			],
+			[
+				"MillCrossing",
+				593
+			],
+			[
+				"SeveredSpokes",
+				466
+			],
+			[
+				"SouthBridge",
+				402
+			],
+			[
+				"TetherRelay",
+				221
+			],
+			[
+				"OldQuarry",
+				189
+			],
+			[
+				"IronwoodGrovePresentation",
+				166
+			],
+			[
+				"StonewaterReach",
+				136
+			],
+			[
+				"GrandpaHouse",
+				116
+			],
+			[
+				"ApproachConduits",
+				99
+			],
+			[
+				"Tournament",
+				60
+			],
+			[
+				"RidgelineWatch",
+				60
+			],
+			[
+				"RuinedWatchtower",
+				54
+			],
+			[
+				"SigilGate",
+				51
+			],
+			[
+				"Trainers",
+				49
+			],
+			[
+				"MeadowsRealmHeartShrine",
+				43
+			],
+			[
+				"BerryFarm",
+				30
+			],
+			[
+				"VillageNPCs",
+				29
+			],
+			[
+				"Signpost",
+				21
+			],
+			[
+				"Water",
+				21
+			],
+			[
+				"HighfieldPastureIdentity",
+				19
+			]
+		],
+		"meshes": {
+			"count": 15249,
+			"shadow_casting": 13464,
+			"shadow_casting_no_range": 8222,
+			"surfaces": 15047,
+			"visible": 10989,
+			"with_visibility_range": 5702
+		},
+		"multimesh": {
+			"by_owner": {
+				"GrassField": {
+					"count": 166,
+					"instances": 94280
+				},
+				"PickupGlowField": {
+					"count": 2,
+					"instances": 422
+				},
+				"SeveredSpokes": {
+					"count": 6,
+					"instances": 138
+				},
+				"Stronghold": {
+					"count": 33,
+					"instances": 672
+				},
+				"Terrain": {
+					"count": 32616,
+					"instances": 383210
+				},
+				"Water": {
+					"count": 53,
+					"instances": 630
+				},
+				"WorldPerimeter": {
+					"count": 25,
+					"instances": 17765
+				}
+			},
+			"count": 32901,
+			"instances": 497117,
+			"shadow_casting": 25403,
+			"visible_instances": 497117,
+			"with_visibility_range": 32622
+		},
+		"particles": {
+			"cpu": 0,
+			"gpu": 73
+		},
+		"physics": {
+			"animatable_bodies": 0,
+			"areas": 29,
+			"character_bodies": 1164,
+			"collision_polygons": 0,
+			"collision_shapes": 4320,
+			"rigid_bodies": 0,
+			"static_bodies": 2753
+		},
+		"processing": {
+			"animation_players": 1218,
+			"animation_trees": 0,
+			"physics_process": 39,
+			"process": 366,
+			"skeletons": 1218
+		},
+		"total_nodes": 182516
+	},
+	"clock": {
+		"elapsed_seconds": 200.269597666667,
+		"hour": 8.01078390666667,
+		"requested": "day",
+		"time_of_day": "day"
+	},
+	"disclosure": "Structural counters only. Software-rasterised frame time is never device performance; process/physics ms are CPU costs on this container's CPU.",
+	"display_server": "X11",
+	"failures": [],
+	"label": "batch-lod",
+	"rendering_method": "gl_compatibility",
+	"resolution": [
+		320,
+		180
+	],
+	"scene": "res://scenes/world/meadows_playground.tscn",
+	"schema": "perf_probe/1",
+	"source_commit": "c641da4088b7449cf52b64475f0391586c02d6f5",
+	"stands": [
+		{
+			"avg": {
+				"draw_calls": 5396.0,
+				"navigation_ms": 0.00000425,
+				"node_count": 183988.0,
+				"objects": 4791.0,
+				"orphan_nodes": 0.0,
+				"physics_active_objects": 6.0,
+				"physics_collision_pairs": 513.25,
+				"physics_islands": 6.0,
+				"physics_step_ms": 0.009056375,
+				"primitives": 6749810.0,
+				"process_ms": 4.4992895,
+				"video_mem_mb": 1517.97789669037
+			},
+			"camera_far": 2000.0,
+			"camera_position": [
+				8.5860424041748,
+				2.84521055221558,
+				14.0
+			],
+			"frustum": {
+				"bands": {
+					"0-100": {
+						"meshes": 771,
+						"mm_instances": 45231,
+						"multimesh": 127,
+						"ranged": 735,
+						"shadow_casting": 787
+					},
+					"100-320": {
+						"meshes": 162,
+						"mm_instances": 323,
+						"multimesh": 29,
+						"ranged": 191,
+						"shadow_casting": 173
+					},
+					"1000-3000": {
+						"meshes": 0,
+						"mm_instances": 0,
+						"multimesh": 0,
+						"ranged": 0,
+						"shadow_casting": 0
+					},
+					"3000+": {
+						"meshes": 2,
+						"mm_instances": 5084,
+						"multimesh": 7,
+						"ranged": 0,
+						"shadow_casting": 7
+					},
+					"320-1000": {
+						"meshes": 2,
+						"mm_instances": 2826,
+						"multimesh": 5,
+						"ranged": 0,
+						"shadow_casting": 7
+					}
+				},
+				"beyond_320m_by_subtree": [
+					[
+						"WorldPerimeter",
+						14
+					],
+					[
+						"PickupGlowField",
+						2
+					]
+				],
+				"lights": {
+					"omni_spot_in_view": 39,
+					"shadowed": [
+						"Village/cottage_a_10/Interior/RoomLight r=6 d=72",
+						"Village/cottage_b_9/Interior/RoomLight r=6 d=72",
+						"Village/cottage_b_8/Interior/RoomLight r=6 d=55",
+						"Village/cottage_a_7/Interior/RoomLight r=6 d=55",
+						"Village/cottage_b_6/Interior/RoomLight r=6 d=37",
+						"Village/inn_5/Interior/RoomLight r=8 d=37",
+						"Village/inn_5/Interior/BarLight r=5 d=38",
+						"Village/workshop_4/Interior/WorkshopLight r=6 d=22",
+						"Village/cottage_a_3/Interior/ShopLight r=7 d=21",
+						"GrandpaHouse/@OmniLight3D@58643 r=9 d=10",
+						"GrandpaHouse/@OmniLight3D@58642 r=9 d=7"
+					],
+					"shadowed_in_view": 11
+				}
+			},
+			"heading_xz": [
+				1.0,
+				0.0
+			],
+			"peak": {
+				"draw_calls": 5396.0,
+				"navigation_ms": 0.000007,
+				"node_count": 183988.0,
+				"objects": 4791.0,
+				"orphan_nodes": 0.0,
+				"physics_active_objects": 6.0,
+				"physics_collision_pairs": 515.0,
+				"physics_islands": 6.0,
+				"physics_step_ms": 0.015318,
+				"primitives": 6749810.0,
+				"process_ms": 5.024512,
+				"video_mem_mb": 1517.97963619232
+			},
+			"physics_steps_per_frame": 8.0,
+			"player": [
+				9.5,
+				0.899999976158142,
+				14.0
+			],
+			"stand": "stand_0"
+		},
+		{
+			"avg": {
+				"draw_calls": 2525.0,
+				"navigation_ms": 0.0000045,
+				"node_count": 183684.0,
+				"objects": 2591.0,
+				"orphan_nodes": 0.0,
+				"physics_active_objects": 6.0,
+				"physics_collision_pairs": 511.0,
+				"physics_islands": 6.0,
+				"physics_step_ms": 0.01134425,
+				"primitives": 6088184.0,
+				"process_ms": 3.521906875,
+				"video_mem_mb": 1517.98005580902
+			},
+			"camera_far": 2000.0,
+			"camera_position": [
+				42.913631439209,
+				3.73208379745483,
+				14.0
+			],
+			"frustum": {
+				"bands": {
+					"0-100": {
+						"meshes": 421,
+						"mm_instances": 44906,
+						"multimesh": 126,
+						"ranged": 411,
+						"shadow_casting": 448
+					},
+					"100-320": {
+						"meshes": 0,
+						"mm_instances": 579,
+						"multimesh": 35,
+						"ranged": 35,
+						"shadow_casting": 26
+					},
+					"1000-3000": {
+						"meshes": 0,
+						"mm_instances": 0,
+						"multimesh": 0,
+						"ranged": 0,
+						"shadow_casting": 0
+					},
+					"3000+": {
+						"meshes": 2,
+						"mm_instances": 5084,
+						"multimesh": 7,
+						"ranged": 0,
+						"shadow_casting": 7
+					},
+					"320-1000": {
+						"meshes": 2,
+						"mm_instances": 2826,
+						"multimesh": 5,
+						"ranged": 0,
+						"shadow_casting": 7
+					}
+				},
+				"beyond_320m_by_subtree": [
+					[
+						"WorldPerimeter",
+						14
+					],
+					[
+						"PickupGlowField",
+						2
+					]
+				],
+				"lights": {
+					"omni_spot_in_view": 25,
+					"shadowed": [
+						"Village/cottage_a_10/Interior/RoomLight r=6 d=39",
+						"Village/cottage_b_9/Interior/RoomLight r=6 d=39",
+						"Village/cottage_b_8/Interior/RoomLight r=6 d=23",
+						"Village/cottage_a_7/Interior/RoomLight r=6 d=23",
+						"Village/cottage_b_6/Interior/RoomLight r=6 d=12",
+						"Village/inn_5/Interior/RoomLight r=8 d=11"
+					],
+					"shadowed_in_view": 6
+				}
+			},
+			"heading_xz": [
+				1.0,
+				0.0
+			],
+			"peak": {
+				"draw_calls": 2525.0,
+				"navigation_ms": 0.000005,
+				"node_count": 183684.0,
+				"objects": 2591.0,
+				"orphan_nodes": 0.0,
+				"physics_active_objects": 6.0,
+				"physics_collision_pairs": 511.0,
+				"physics_islands": 6.0,
+				"physics_step_ms": 0.018242,
+				"primitives": 6088184.0,
+				"process_ms": 4.015559,
+				"video_mem_mb": 1517.98216152191
+			},
+			"physics_steps_per_frame": 8.0,
+			"player": [
+				48.0,
+				0.899999976158142,
+				14.0
+			],
+			"stand": "stand_1"
+		},
+		{
+			"avg": {
+				"draw_calls": 963.0,
+				"navigation_ms": 0.000004875,
+				"node_count": 183680.0,
+				"objects": 1262.0,
+				"orphan_nodes": 0.0,
+				"physics_active_objects": 6.0,
+				"physics_collision_pairs": 498.125,
+				"physics_islands": 6.0,
+				"physics_step_ms": 0.00867125,
+				"primitives": 5280011.0,
+				"process_ms": 2.301915,
+				"video_mem_mb": 1517.97886562347
+			},
+			"camera_far": 2000.0,
+			"camera_position": [
+				85.9136428833008,
+				3.73208141326904,
+				14.0
+			],
+			"frustum": {
+				"bands": {
+					"0-100": {
+						"meshes": 168,
+						"mm_instances": 44219,
+						"multimesh": 109,
+						"ranged": 203,
+						"shadow_casting": 188
+					},
+					"100-320": {
+						"meshes": 0,
+						"mm_instances": 707,
+						"multimesh": 33,
+						"ranged": 33,
+						"shadow_casting": 20
+					},
+					"1000-3000": {
+						"meshes": 0,
+						"mm_instances": 0,
+						"multimesh": 0,
+						"ranged": 0,
+						"shadow_casting": 0
+					},
+					"3000+": {
+						"meshes": 2,
+						"mm_instances": 5084,
+						"multimesh": 7,
+						"ranged": 0,
+						"shadow_casting": 7
+					},
+					"320-1000": {
+						"meshes": 2,
+						"mm_instances": 2826,
+						"multimesh": 5,
+						"ranged": 0,
+						"shadow_casting": 7
+					}
+				},
+				"beyond_320m_by_subtree": [
+					[
+						"WorldPerimeter",
+						14
+					],
+					[
+						"PickupGlowField",
+						2
+					]
+				],
+				"lights": {
+					"omni_spot_in_view": 12,
+					"shadowed": [],
+					"shadowed_in_view": 0
+				}
+			},
+			"heading_xz": [
+				1.0,
+				0.0
+			],
+			"peak": {
+				"draw_calls": 963.0,
+				"navigation_ms": 0.000011,
+				"node_count": 183680.0,
+				"objects": 1262.0,
+				"orphan_nodes": 0.0,
+				"physics_active_objects": 6.0,
+				"physics_collision_pairs": 499.0,
+				"physics_islands": 6.0,
+				"physics_step_ms": 0.012483,
+				"primitives": 5280011.0,
+				"process_ms": 2.874448,
+				"video_mem_mb": 1517.98069667816
+			},
+			"physics_steps_per_frame": 8.0,
+			"player": [
+				91.0,
+				0.899999976158142,
+				14.0
+			],
+			"stand": "stand_2"
+		},
+		{
+			"avg": {
+				"draw_calls": 8971.5,
+				"navigation_ms": 0.00000825,
+				"node_count": 183689.0,
+				"objects": 7684.5,
+				"orphan_nodes": 0.0,
+				"physics_active_objects": 6.0,
+				"physics_collision_pairs": 499.0,
+				"physics_islands": 6.0,
+				"physics_step_ms": 0.00906,
+				"primitives": 8070147.0,
+				"process_ms": 3.519161,
+				"video_mem_mb": 1517.97822475433
+			},
+			"camera_far": 2000.0,
+			"camera_position": [
+				112.086372375488,
+				3.74208641052246,
+				14.0
+			],
+			"frustum": {
+				"bands": {
+					"0-100": {
+						"meshes": 736,
+						"mm_instances": 45095,
+						"multimesh": 131,
+						"ranged": 729,
+						"shadow_casting": 756
+					},
+					"100-320": {
+						"meshes": 620,
+						"mm_instances": 646,
+						"multimesh": 63,
+						"ranged": 398,
+						"shadow_casting": 588
+					},
+					"1000-3000": {
+						"meshes": 0,
+						"mm_instances": 175,
+						"multimesh": 2,
+						"ranged": 0,
+						"shadow_casting": 2
+					},
+					"3000+": {
+						"meshes": 2,
+						"mm_instances": 6684,
+						"multimesh": 7,
+						"ranged": 0,
+						"shadow_casting": 7
+					},
+					"320-1000": {
+						"meshes": 236,
+						"mm_instances": 3176,
+						"multimesh": 20,
+						"ranged": 66,
+						"shadow_casting": 213
+					}
+				},
+				"beyond_320m_by_subtree": [
+					[
+						"Village",
+						66
+					],
+					[
+						"Water",
+						34
+					],
+					[
+						"WorldPerimeter",
+						16
+					],
+					[
+						"BandPickup_b1_candy_pond_alpha",
+						13
+					],
+					[
+						"TrailheadSignpost_2",
+						13
+					],
+					[
+						"TrailheadSignpost_13",
+						13
+					],
+					[
+						"BandPickup_b1_candy_pond_hollow",
+						6
+					],
+					[
+						"BandPickup_b1_candy_rise_top",
+						6
+					],
+					[
+						"Alpha_mosshell",
+						3
+					],
+					[
+						"PondNPCs",
+						3
+					],
+					[
+						"Trainers",
+						3
+					],
+					[
+						"BandPickup_b1_candy_rise_base",
+						3
+					],
+					[
+						"RenewableResources",
+						3
+					],
+					[
+						"BandPickup_b1_candy_rise_shoulder",
+						3
+					],
+					[
+						"BandPickup_b1_candy_pond_turn",
+						3
+					],
+					[
+						"Wild_bramblebun_1018_1",
+						2
+					],
+					[
+						"Wild_pipwing_1016_4",
+						2
+					],
+					[
+						"Wild_pipwing_1016_3",
+						2
+					],
+					[
+						"Wild_pipwing_1016_2",
+						2
+					],
+					[
+						"Wild_pipwing_1016_1",
+						2
+					]
+				],
+				"lights": {
+					"omni_spot_in_view": 42,
+					"shadowed": [
+						"Village/cottage_a_10/Interior/RoomLight r=6 d=34",
+						"Village/cottage_b_9/Interior/RoomLight r=6 d=34",
+						"Village/cottage_b_8/Interior/RoomLight r=6 d=52",
+						"Village/cottage_a_7/Interior/RoomLight r=6 d=52",
+						"Village/cottage_b_6/Interior/RoomLight r=6 d=69",
+						"Village/inn_5/Interior/RoomLight r=8 d=69",
+						"Village/inn_5/Interior/BarLight r=5 d=70",
+						"Village/workshop_4/Interior/WorkshopLight r=6 d=87",
+						"Village/cottage_a_3/Interior/ShopLight r=7 d=87",
+						"Village/ranger_station_2/Interior/RoomLight r=6 d=676",
+						"GrandpaHouse/@OmniLight3D@58644 r=4 d=110",
+						"GrandpaHouse/@OmniLight3D@58643 r=9 d=113",
+						"GrandpaHouse/@OmniLight3D@58642 r=9 d=110"
+					],
+					"shadowed_in_view": 13
+				}
+			},
+			"heading_xz": [
+				-1.0,
+				0.0
+			],
+			"peak": {
+				"draw_calls": 8973.0,
+				"navigation_ms": 0.000035,
+				"node_count": 183689.0,
+				"objects": 7686.0,
+				"orphan_nodes": 0.0,
+				"physics_active_objects": 6.0,
+				"physics_collision_pairs": 499.0,
+				"physics_islands": 6.0,
+				"physics_step_ms": 0.018489,
+				"primitives": 8074873.0,
+				"process_ms": 3.695036,
+				"video_mem_mb": 1517.98069667816
+			},
+			"physics_steps_per_frame": 8.0,
+			"player": [
+				107.0,
+				0.899999976158142,
+				14.0
+			],
+			"stand": "stand_3"
+		}
+	],
+	"terrain": {
+		"cast_shadows": 1,
+		"class": "Terrain3D",
+		"collision_mode": 1,
+		"collision_radius": 256,
+		"collision_shape_size": 64,
+		"instancer_assets": [
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 0,
+				"instance_count": 0,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "New Mesh"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 1,
+				"instance_count": 8094,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "Bush_Common"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 2,
+				"instance_count": 8078,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "Bush_Common_Flowers"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 3,
+				"instance_count": 8118,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "Plant_7"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 4,
+				"instance_count": 8148,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "Plant_7_Big"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 5,
+				"instance_count": 8150,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "Fern_1"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 6,
+				"instance_count": 52,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "Plant_1"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 7,
+				"instance_count": 35,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "Mushroom_Common"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 8,
+				"instance_count": 28,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "DeadTree_1"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 9,
+				"instance_count": 16,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "DeadTree_2"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 10,
+				"instance_count": 31,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "Mushroom_Laetiporus"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 11,
+				"instance_count": 17,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "DeadTree_3"
+			},
+			{
+				"cast_shadows": 0,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 12,
+				"instance_count": 42543,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "Grass_Wispy_Tall"
+			},
+			{
+				"cast_shadows": 0,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 13,
+				"instance_count": 42534,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "Grass_Wispy_Short"
+			},
+			{
+				"cast_shadows": 0,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 14,
+				"instance_count": 42636,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "Grass_Wheat"
+			},
+			{
+				"cast_shadows": 0,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 15,
+				"instance_count": 10,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "Grass_Wide_Tall"
+			},
+			{
+				"cast_shadows": 0,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 16,
+				"instance_count": 51337,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "Clover_1"
+			},
+			{
+				"cast_shadows": 0,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 17,
+				"instance_count": 51639,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "Clover_2"
+			},
+			{
+				"cast_shadows": 0,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 18,
+				"instance_count": 51409,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "Plant_1_Big"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 19,
+				"instance_count": 116,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "CherryBlossom_3"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 20,
+				"instance_count": 102,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "TwistedTree_4"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 21,
+				"instance_count": 109,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "TwistedTree_2"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 22,
+				"instance_count": 2290,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "RockPath_Round_Small_2"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 23,
+				"instance_count": 2285,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "RockPath_Round_Small_1"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 24,
+				"instance_count": 2399,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "RockPath_Round_Wide"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 25,
+				"instance_count": 2372,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "RockPath_Round_Thin"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 26,
+				"instance_count": 1039,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "Pebble_Round_2"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 27,
+				"instance_count": 1041,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "Pebble_Round_1"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 28,
+				"instance_count": 1087,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "Pebble_Round_3"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 29,
+				"instance_count": 1043,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "Rock_Medium_3"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 30,
+				"instance_count": 1072,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "Rock_Medium_2"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 31,
+				"instance_count": 1070,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "Rock_Medium_1"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 32,
+				"instance_count": 1377,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "CommonTree_5"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 33,
+				"instance_count": 1380,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "CommonTree_4"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 34,
+				"instance_count": 13945,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "CommonTree_2"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 35,
+				"instance_count": 13834,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "CommonTree_1"
+			},
+			{
+				"cast_shadows": 1,
+				"enabled": true,
+				"fade_margin": 0.0,
+				"id": 36,
+				"instance_count": 13774,
+				"last_lod": 0,
+				"lod0_range": 128.0,
+				"name": "CommonTree_3"
+			}
+		],
+		"instancer_mesh_assets": 37,
+		"mesh_lods": 7,
+		"mesh_size": 48,
+		"present": true,
+		"region_count": 64,
+		"region_size": 256,
+		"render_layers": 2147483649,
+		"vertex_spacing": 2.0
+	}
+}

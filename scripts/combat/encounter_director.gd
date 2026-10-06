@@ -1,5 +1,8 @@
 extends Node
 
+const PERF_SPAWN_CONFIG := preload("res://scripts/world/performance_config.gd")
+## Set while the sliced main population build runs (see _spawn_authored_creatures).
+const POPULATION_SPAWNING_META := &"wild_population_spawning"
 ## SceneTree maintains this live index on enter/exit. Portal views need only
 ## actual directors, rather than every terrain/harvest node in the world.
 const PORTAL_DIRECTOR_GROUP := &"foundation_portal_directors"
@@ -997,6 +1000,10 @@ func foundation_publish_alpha(site_id: String, packet: Dictionary) -> void:
 		if is_instance_valid(wild) and wild.get_meta("foundation_alpha_site", "") == site_id \
 			and wild.get_meta("foundation_alpha_generation", 0) == packet.captured_from.spawn_generation: return
 	if has_meta("foundation_alpha_spawning_" + site_id): return
+	# The sliced population build reaches this site's entry later and spawns
+	# its retained generation itself; publishing now would make a second body.
+	# The publisher retries every second, so it resumes once the build is done.
+	if has_meta(POPULATION_SPAWNING_META): return
 	var entry: Dictionary = {}
 	for raw: Dictionary in spawns_config().get("spawns", []):
 		if (site.has("source_order") and raw.get("order") == site.source_order) or raw.get("stormwood_named_id") == site_id:
@@ -1019,6 +1026,22 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 	# Empty at the authored world seed, which is what makes seed 0 reproduce
 	# today's world exactly rather than approximately.
 	var plan := _spawn_plan(entries)
+
+	# PERF / co-op heartbeat (2026-10-05): the table spawned in one frame --
+	# Stormwood's 808 wilds held the main thread long enough for a crossing
+	# peer to go heartbeat-silent. Spawn order, the per-cluster rng and every
+	# name are unchanged; only the work is spread across frames.
+	# Sliced only where a peer's heartbeat is at stake: a host's realm shell, or
+	# any world inside a live multi-peer session. A solo boot spawns in one
+	# frame behind its loading transition, as it always has.
+	var slice_budget_usec := int(float(PERF_SPAWN_CONFIG.config().get("wild_spawn_slice_ms", 12.0)) * 1000.0) \
+		if _spawn_slicing_wanted() else 0
+	var slice_started := Time.get_ticks_usec()
+	var slice_world := get_parent()
+	var slice_tree := get_tree()
+	var slice_generation := _population_generation
+	var population_build := repeat_packet.is_empty()
+	if population_build: set_meta(POPULATION_SPAWNING_META, true)
 
 	for index in entries.size():
 		var spawn: Dictionary = entries[index] as Dictionary
@@ -1099,6 +1122,16 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 		if not spawn_packet.is_empty(): set_meta("foundation_alpha_spawning_" + alpha_site, true)
 
 		for n in count:
+			if slice_budget_usec > 0 and Time.get_ticks_usec() - slice_started > slice_budget_usec:
+				await slice_tree.process_frame
+				# The same lifetime check as every population frame wait: a
+				# detached, re-added or rolled-back director stops here rather
+				# than spawning into its next lifetime.
+				if not _population_lifetime_matches(slice_world, slice_tree, slice_generation):
+					if not spawn_packet.is_empty(): remove_meta("foundation_alpha_spawning_" + alpha_site)
+					if population_build: remove_meta(POPULATION_SPAWNING_META)
+					return
+				slice_started = Time.get_ticks_usec()
 			# The named individual is always the cluster's first member
 			# (`_make_alpha()`/`_apply_elder()` below). Once it is beaten,
 			# caught or freed, this spot simply spawns one fewer body -- the
@@ -1343,6 +1376,7 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 
 		if not spawn_packet.is_empty(): remove_meta("foundation_alpha_spawning_" + alpha_site)
 		_clusters.append(cluster)
+	if population_build: remove_meta(POPULATION_SPAWNING_META)
 
 	# Set every cluster's real activation state against the player's actual
 	# starting position, rather than leaving the whole freshly spawned meadow
@@ -1352,6 +1386,14 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 		# Preserve the ordinary startup guard and its supported placement.
 		# Publishing a repeat generation never adopts another starter.
 		await adopt_starter(default_starter)
+
+func _spawn_slicing_wanted() -> bool:
+	var world := get_parent()
+	if world != null and world.get("simulation_only") == true:
+		return true
+	var game := get_node_or_null(^"/root/Game")
+	return game != null and game.has_method("is_multi_peer") and bool(game.call("is_multi_peer"))
+
 
 func foundation_alpha_cycle(site_id: String) -> Dictionary:
 	if not is_inside_tree(): return {}
@@ -2980,6 +3022,10 @@ func _host_move_start(intent: Dictionary, peer: int) -> Dictionary:
 	var frozen := preload("res://scripts/creatures/move_mastery.gd").freeze_action(
 		preload("res://scripts/creatures/move_mastery.gd").owned_record(owned), slot, actor, tiers, moves)
 	if frozen.get("ok") != true: return deny
+	# F33: the owner's equipped Charm enters this accepted action exactly once,
+	# here on the host, from the admitted record (never an intent or a card).
+	var gear := preload("res://scripts/creatures/creature_gear.gd")
+	frozen.move = gear.freeze_move_profile(frozen.move, gear.gear_for(admitted, str(binding.creature_uid)), gear.config())
 	var move := COMBAT_MANAGER.host_move_profile(moves, "player_" + slot, move_id,
 		_body_radius(body), _body_radius(wild), host_card_cooldown_multiplier(card), CONTACT_SPACING.pair_reach_need(body, wild), frozen.move)
 	move["mastery_context"] = {"world_namespace": _session.call("_game").get("world").reward_delivery_namespace,
@@ -3547,7 +3593,45 @@ func host_pick_struck_participant(encounter_id: String, cfg: Dictionary,
 	var body: Node3D = deployed_body_for(struck)
 	if uses_durable_trainer_rewards(encounter_id) \
 		and _ordinary_actor_binding(encounter_id, struck, body).is_empty(): return {}
-	return {"peer_id": struck, "card": _creature_card_for(struck), "body": body}
+	return {"peer_id": struck, "card": _geared_card(struck, _creature_card_for(struck)), "body": body}
+
+
+## F33: the struck creature's equipped Harness raises the defence the host
+## rolls this hit against, once, from the host's own record of its owner (the
+## admitted record for a guest; the host's own for itself), never the card.
+func _geared_card(peer_id: int, card: Dictionary) -> Dictionary:
+	var gear := preload("res://scripts/creatures/creature_gear.gd")
+	var cfg: Dictionary = gear.config()
+	if card.has("hp_scale"):
+		# s is the host's alone: a value on the announced card is discarded.
+		card = card.duplicate(true)
+		card.erase("hp_scale")
+	if card.is_empty() or not gear._runtime_enabled(cfg): return card
+	var record: Dictionary = {}
+	if peer_id == _local_peer_id():
+		var game := get_node_or_null(^"/root/Game")
+		var local: Variant = game.get("local") if game != null else null
+		if local != null: record = {"redesign_character": local.get("redesign_character")}
+	elif _session != null and _session.has_method("admitted_character_state"):
+		record = _session.call("admitted_character_state", peer_id)
+	var mods: Dictionary = gear.modifiers(gear.gear_for(record, str(card.get("creature_uid", ""))), cfg)
+	var geared := card.duplicate(true)
+	geared["defence"] = float(card.get("defence", 1.0)) * float(mods.defence)
+	# Harness max HP (creature_gear.hp_scale): the host's s rides on the hit.
+	geared["hp_scale"] = maxf(1.0, float(mods.max_hp))
+	return geared
+
+
+## Harness max HP for the participant's deployed creature, from the admitted
+## record (the host's own record for itself). Durable vitals lose damage / s.
+func _host_hp_scale(peer_id: int) -> float:
+	return clampf(float(_geared_card(peer_id, _creature_card_for(peer_id)).get("hp_scale", 1.0)),
+		1.0, preload("res://scripts/combat/combat_manager.gd")._max_hp_scale())
+
+
+## The stored HP a durable host hit stages: rolled damage / the admitted s.
+func _ordinary_hit_amount(peer_id: int, resolved: Dictionary) -> float:
+	return float(resolved.get("damage", 0.0)) / _host_hp_scale(peer_id)
 
 
 func _f22_enemy_connects(encounter_id: String, profile: Dictionary, origin: Vector3,
@@ -3657,7 +3741,7 @@ func _stage_ordinary_enemy_hit(id: String, peer: int, payload: Dictionary) -> vo
 	if resolved.is_empty(): return
 	var proposal: Dictionary = _encounter_host.call("stage_actor_vitals", id, peer,
 		str(binding.creature_uid), int(binding.actor_generation), int(actor.revision),
-		action_id, "damage", float(resolved.damage), limit)
+		action_id, "damage", _ordinary_hit_amount(peer, resolved), limit)
 	if proposal.get("ok") != true: return
 	var retained: Dictionary = {"encounter_id": id, "peer_id": peer,
 		"proposal": preload("res://scripts/combat/accepted_action_host.gd")._original(proposal),
@@ -5511,7 +5595,19 @@ func _sync_spawn_gates() -> void:
 		if wild == _engaged_with or not _shared_host_id_for_body(wild).is_empty() \
 				or _faint_timers.has(wild) or _respawn_timers.has(wild):
 			continue
-		wild.visible = _gate_active(_wild_gates[wild])
+		var open := _gate_active(_wild_gates[wild])
+		if wild.visible == open:
+			continue
+		wild.visible = open
+		# Showing a body turns its physics back on (creature_body ties process
+		# to visibility). A night-gated creature in a cluster nobody is near
+		# must stay asleep like its neighbours, exactly as the respawn path
+		# above does; otherwise every night creature on the map ticks all night
+		# (PERF, 2026-10-05: Meadows CPU frame 34 -> 66 ms from 22:00 to 03:00).
+		if open:
+			var cluster: Dictionary = _wild_cluster.get(wild, {})
+			if not cluster.is_empty() and not bool(cluster.get("active", true)):
+				wild.set_physics_process(false)
 
 
 ## Distance beyond a cluster's own scatter radius at which its members start
@@ -5699,23 +5795,75 @@ func _reground_if_fallen(wild: Node3D) -> void:
 	wild.call("place_on_ground", Vector3(at.x, 0.0, at.z))
 
 
-## The nearest wild creature the player could choose to fight right now.
+## The wild creature the player could choose to fight right now: the nearest in
+## range, or during the opening's practice beats the nearest practice creature
+## in range (`choose_engage_target()`, F01#4).
 func _engageable() -> Node3D:
 	if _ally == null or _manager == null or _ally.fainted:
 		return null
 	if bool(_manager.call("is_fighting")) or trainer_battle_active():
 		return null
 
-	var best: Node3D = null
-	var best_distance := _engage_range
+	var candidates: Array = []
 	for wild in _wild_creatures:
 		if not is_instance_valid(wild) or not wild.visible or not bool(wild.call("is_alive")):
 			continue
-		var distance := _player.global_position.distance_to(wild.global_position)
+		candidates.append({
+			"body": wild,
+			"distance": _player.global_position.distance_to(wild.global_position),
+			"species": str(wild.get("species_id")),
+		})
+	return choose_engage_target(candidates, _engage_range, _practice_engage_species)
+
+
+## F01#4. The opening's practice fight belongs to its practice creature.
+##
+## Without this the engage offer is simply the nearest live wild in range, and
+## an ambient Mudsnout (band1 spawns.json's cluster beside the clearing) standing nearer the Practice Meadow road
+## end than the practice Bramblebun took the tutorial fight from it
+## (`ralph/reports/INTEGRATION/reproof/f01-current/row4-5/VERDICT.md`, terrapup
+## run 1: "Engage Mudsnout" at 2.56 m). `sequence_director.gd` names the
+## species while the opening's own beats want that fight
+## (`opening.json` `encounter.practice_engage_priority_beats`) and clears it
+## afterwards, so nothing here outlives the tutorial. Empty means no priority.
+var _practice_engage_species := ""
+
+
+func set_practice_engage_priority(species_id: String) -> void:
+	_practice_engage_species = species_id
+
+
+func practice_engage_priority() -> String:
+	return _practice_engage_species
+
+
+## Which candidate the engage offer names. Pure so the rule is testable without
+## a scene: each candidate is `{body, distance, species}`, already filtered to
+## live, visible bodies. The nearest one within `engage_range` wins, except that
+## while `priority_species` is set any in-range body of that species wins over
+## a nearer body of another species. A priority creature that is out of range,
+## fainted or caught does not block the ordinary nearest choice, so the player
+## is never left with nothing to engage.
+static func choose_engage_target(candidates: Array, engage_range: float,
+		priority_species: String) -> Node3D:
+	var best: Node3D = null
+	var best_distance := engage_range
+	var preferred: Node3D = null
+	var preferred_distance := engage_range
+	for raw: Variant in candidates:
+		var candidate: Dictionary = raw
+		var distance := float(candidate.get("distance", INF))
+		var body: Node3D = candidate.get("body") as Node3D
+		if body == null or distance > engage_range:
+			continue
 		if distance <= best_distance:
-			best = wild
+			best = body
 			best_distance = distance
-	return best
+		if priority_species != "" and str(candidate.get("species", "")) == priority_species \
+				and distance <= preferred_distance:
+			preferred = body
+			preferred_distance = distance
+	return preferred if preferred != null else best
 
 
 func _update_prompt() -> void:
@@ -8644,6 +8792,7 @@ func host_resolve_enemy_hit(encounter_id: String, peer_id: int, payload: Diction
 	resolved["critical"] = bool(defence.critical)
 	resolved["defence"] = defence
 	resolved["host_resolved_defence"] = true
+	resolved["hp_scale"] = _host_hp_scale(peer_id)
 	resolved["impact"] = HIT_FEEDBACK.with_defence(impact, defence)
 	return resolved
 

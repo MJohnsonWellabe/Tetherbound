@@ -1,0 +1,183 @@
+{
+ "acceptance": false,
+ "coverage": true,
+ "data_gaps": [
+  "band1_lower_meadows",
+  "band2_stone_and_root",
+  "band3_the_river_lock",
+  "band4_upper_meadows_ironwood",
+  "band5_stronghold_approach",
+  "tidewake/first_shores",
+  "tidewake/marsh_channels",
+  "tidewake/tidal_cradle",
+  "tidewake/outer_reaches",
+  "tidewake/tether_current",
+  "tidewake/veilfall",
+  "cloudreach/gate_lower_cliffs",
+  "cloudreach/broken_causeways",
+  "cloudreach/windscar_ravine",
+  "cloudreach/high_roost_sky_shrine",
+  "cloudreach/upper_cloudreach",
+  "stormwood/cinder_verge",
+  "stormwood/glowmoss_hollows",
+  "stormwood/conductor_run",
+  "stormwood/hollow_crown",
+  "stormwood/deepwood",
+  "stormwood/dynamo"
+ ],
+ "errors": [],
+ "gear": "tidesteel",
+ "kind": "actual flat-fixture C2; world/C3/authority proofs separate",
+ "mode": "trainers",
+ "pass": false,
+ "policy_scope": "quick/charged/spatial diagnostic; full F23/F24 policy and actual admission fixture required",
+ "rows": [
+  {
+   "band": "cloudreach/summit_final_stronghold",
+   "masher": {
+    "errors": 0,
+    "lead_faint_rate": 0.0,
+    "median_cost": 0.0723086367102898,
+    "median_lead_cost": 0.300080842347702,
+    "runs": 12,
+    "tags": 0,
+    "win_rate": 1.0,
+    "median_seconds": 70.00833333333335,
+    "max_hit_frac": 0.0419156700681963
+   },
+   "pass": false,
+   "reader": {
+    "errors": 0,
+    "lead_faint_rate": 0.0,
+    "median_cost": 0.0981642350597117,
+    "median_lead_cost": 0.407381575497803,
+    "runs": 12,
+    "tags": 0,
+    "win_rate": 1.0,
+    "median_seconds": 164.525,
+    "max_hit_frac": 0.041551592730514
+   },
+   "reasons": [
+    "top: masher kept its lead in some run",
+    "top: reader party cost above .55x masher"
+   ],
+   "starter": "terrapup",
+   "switch_reader": {
+    "errors": 0,
+    "lead_faint_rate": 0.0,
+    "median_cost": 0.0981642350597117,
+    "median_lead_cost": 0.407381575497803,
+    "runs": 12,
+    "tags": 0,
+    "win_rate": 1.0,
+    "median_seconds": 164.525,
+    "max_hit_frac": 0.041551592730514
+   }
+  },
+  {
+   "band": "cloudreach/summit_final_stronghold",
+   "masher": {
+    "errors": 0,
+    "lead_faint_rate": 1.0,
+    "median_cost": 0.235651627888939,
+    "median_lead_cost": 1.0,
+    "runs": 12,
+    "tags": 0,
+    "win_rate": 1.0,
+    "median_seconds": 100.2416666666665,
+    "max_hit_frac": 0.0749557217535938
+   },
+   "pass": true,
+   "reader": {
+    "errors": 0,
+    "lead_faint_rate": 0.166666666666667,
+    "median_cost": 0.169360729762933,
+    "median_lead_cost": 0.751345782948283,
+    "runs": 12,
+    "tags": 0,
+    "win_rate": 1.0,
+    "median_seconds": 258.95,
+    "max_hit_frac": 0.0746120910951562
+   },
+   "reasons": [],
+   "starter": "ripplet",
+   "switch_reader": {
+    "errors": 0,
+    "lead_faint_rate": 0.0,
+    "median_cost": 0.0553953973641835,
+    "median_lead_cost": 0.0,
+    "runs": 12,
+    "tags": 0,
+    "win_rate": 1.0,
+    "median_seconds": 120.0916666666665,
+    "max_hit_frac": 0.0573572736108254
+   }
+  },
+  {
+   "band": "cloudreach/summit_final_stronghold",
+   "masher": {
+    "errors": 0,
+    "lead_faint_rate": 0.0,
+    "median_cost": 0.128030755530837,
+    "median_lead_cost": 0.588941475441852,
+    "runs": 12,
+    "tags": 0,
+    "win_rate": 1.0,
+    "median_seconds": 88.3333333333333,
+    "max_hit_frac": 0.064336151595232
+   },
+   "pass": false,
+   "reader": {
+    "errors": 0,
+    "lead_faint_rate": 0.0,
+    "median_cost": 0.111717509958374,
+    "median_lead_cost": 0.513900545808519,
+    "runs": 12,
+    "tags": 0,
+    "win_rate": 1.0,
+    "median_seconds": 215.3416666666665,
+    "max_hit_frac": 0.0643518621078072
+   },
+   "reasons": [
+    "top: masher kept its lead in some run"
+   ],
+   "starter": "galewisp",
+   "switch_reader": {
+    "errors": 0,
+    "lead_faint_rate": 0.0,
+    "median_cost": 0.0481832639924668,
+    "median_lead_cost": 0.0,
+    "runs": 12,
+    "tags": 0,
+    "win_rate": 1.0,
+    "median_seconds": 124.3333333333335,
+    "max_hit_frac": 0.0583458501986372
+   }
+  }
+ ],
+ "seeds_per_band": 12,
+ "switch_value": {
+  "fixed": {
+   "errors": 0,
+   "lead_faint_rate": 0.0555555555555556,
+   "median_cost": 0.11694501841601,
+   "median_lead_cost": 0.513900545808519,
+   "runs": 36,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "pass": true,
+  "status": "partial_no_f24: type matchup and per-identity HP only; F24 tag combo off, F22#2 not fully measured",
+  "switched": {
+   "errors": 0,
+   "lead_faint_rate": 0.0,
+   "median_cost": 0.0676166008227704,
+   "median_lead_cost": 0.0,
+   "runs": 36,
+   "tags": 0,
+   "win_rate": 1.0
+  },
+  "tag_combo_live": false
+ },
+ "note": "Compact receipt: per-run rows (108 runs, 32 MB) omitted; re-run with the command in boss-sims.md."
+}

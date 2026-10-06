@@ -21,6 +21,7 @@ extends Node3D
 ## group (`autoload/game_state.gd::load_game()`), so a save never brings a
 ## gathered node back.
 
+const PERF_CONFIG := preload("res://scripts/world/performance_config.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const PICKUP_GLOW := preload("res://scripts/world/pickup_glow.gd")
 const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
@@ -717,10 +718,30 @@ func _ready() -> void:
 		_refresh_renewable_presentation()
 
 
-func _process(_delta: float) -> void:
-	if not _renewable_site_id.is_empty():
-		_read_renewable_stock(get_node_or_null(^"/root/Game"))
-		_refresh_renewable_presentation()
+## Seconds until the next idle stock poll, and the day it last read. A
+## gather commits through the ledger delta listener immediately, a day change
+## re-reads at once, and a gather re-reads fresh before it submits, so the
+## throttle only ever delays idle presentation of a host snapshot (PERF,
+## 2026-10-05: every renewable node polling its source service each frame
+## cost Tidewake ~26 ms).
+var _stock_poll_left := -1.0
+var _stock_read_day := -1
+
+
+func _process(delta: float) -> void:
+	if _renewable_site_id.is_empty():
+		return
+	var game := get_node_or_null(^"/root/Game")
+	var day := int(game.get("day")) if game != null else -1
+	_stock_poll_left -= delta
+	if _stock_poll_left > 0.0 and day == _stock_read_day:
+		return
+	var interval := float(PERF_CONFIG.config().get("renewable_stock_poll_s", 1.0))
+	# Spread first polls so a realm's nodes never all land on one frame.
+	_stock_poll_left = interval if _stock_poll_left > -1.0 else randf() * interval
+	_stock_read_day = day
+	_read_renewable_stock(game)
+	_refresh_renewable_presentation()
 
 
 func _read_renewable_stock(game: Node) -> void:
@@ -790,6 +811,9 @@ func _on_renewable_refused(kind: String, _code: String, _reason: String, detail:
 ## crosses the request boundary. No fallback into generic legacy harvest.
 func _gather_registered_source() -> void:
 	var game := get_node_or_null(^"/root/Game")
+	# Never submit against a throttled read: refresh the stock (and with it the
+	# expected revision) right before the claim.
+	_read_renewable_stock(game)
 	if _source_service == null or not is_instance_valid(_source_service) or not _renewable_ready(game):
 		if game != null: game.call("push_world_message", "This resource is not ready.")
 		return

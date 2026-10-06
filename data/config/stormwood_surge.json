@@ -111,5 +111,6 @@
     {"id":"still_grove","at":[-160,2700],"radius":70},
     {"id":"lantern_hollow","at":[-450,3960],"radius":48},
     {"id":"ember_bivouac","at":[-120,5270],"radius":35}
-  ]
+  ],
+  "charged_ground": {"_comment": "Owner RD-14 (STATE item 13): the glass sink's charged ground deals light contact damage to the trainer only, never lethal on the ordinary route (health floor). Host decides per tick; receivers apply worn gear (terrain_damage_reduction: Rootiron, Stormglass).", "tick_seconds": 1.0, "damage_per_tick": 2.0, "health_floor_fraction": 0.3, "contact_height_m": 1.5}
 }

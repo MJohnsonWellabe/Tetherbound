@@ -15,8 +15,20 @@ func _init(tms_path: String = TMS_PATH) -> void:
 	_tms = _read(tms_path).get("tms", {})
 
 
+## One parsed table per process, re-read only when the file changes (see
+## move_db.gd::load_default). Read-only for callers: accessors hand out copies.
+static var _shared: RefCounted = null
+static var _shared_stamp := ""
+
+
 static func load_default() -> RefCounted:
-	return (load("res://scripts/creatures/tm_db.gd") as GDScript).new()
+	# Modified time and size: a test writing a temporary table within the same
+	# second still reloads.
+	var stamp := "%d:%d" % [FileAccess.get_modified_time(TMS_PATH), FileAccess.get_size(TMS_PATH)]
+	if _shared == null or stamp != _shared_stamp:
+		_shared = (load("res://scripts/creatures/tm_db.gd") as GDScript).new()
+		_shared_stamp = stamp
+	return _shared
 
 
 func _read(path: String) -> Dictionary:
@@ -39,27 +51,36 @@ func tm_ids() -> Array:
 	return _tms.keys()
 
 
+## A copy: the table behind `load_default()` is shared by every caller.
 func tm(id: String) -> Dictionary:
+	return _tm(id).duplicate(true)
+
+
+func _tm(id: String) -> Dictionary:
 	var value: Variant = _tms.get(id, {})
 	return value as Dictionary if typeof(value) == TYPE_DICTIONARY else {}
 
 
 func display_name(id: String) -> String:
-	return str(tm(id).get("display_name", id))
+	return str(_tm(id).get("display_name", id))
 
 
 func move_id(id: String) -> String:
-	return str(tm(id).get("move_id", ""))
+	return str(_tm(id).get("move_id", ""))
 
 
 func compatible_types(id: String) -> Array:
-	var value: Variant = tm(id).get("compatible_types", [])
+	return _compatible_types(id).duplicate()
+
+
+func _compatible_types(id: String) -> Array:
+	var value: Variant = _tm(id).get("compatible_types", [])
 	return value as Array if typeof(value) == TYPE_ARRAY else []
 
 
 func is_compatible(id: String, creature_type: String) -> bool:
-	return compatible_types(id).has(creature_type)
+	return _compatible_types(id).has(creature_type)
 
 
 func colour(id: String) -> Color:
-	return Color(str(tm(id).get("colour", "#888888")))
+	return Color(str(_tm(id).get("colour", "#888888")))

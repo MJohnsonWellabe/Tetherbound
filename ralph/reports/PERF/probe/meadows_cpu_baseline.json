@@ -1,0 +1,56 @@
+{
+	"animation_census": {
+		"active": 1224,
+		"in_character_body": 1164,
+		"in_dormant_character_body": 1158,
+		"mixers": 1224,
+		"playing": 64
+	},
+	"biome": "meadows",
+	"disclosure": "Headless Dummy renderer: CPU main-thread process and physics-step cost only.",
+	"display_server": "headless",
+	"frames_per_row": 200,
+	"processor_count": 4,
+	"rows": [
+		{
+			"label": "baseline",
+			"physics_step_ms_avg": 6.76168,
+			"physics_steps_per_frame": 4.275,
+			"process_ms_avg": 110.794205,
+			"process_ms_peak": 181.918,
+			"wall_ms_per_frame": 71.555285
+		},
+		{
+			"label": "dormant_creature_animation_paused",
+			"physics_step_ms_avg": 7.13989499999998,
+			"physics_steps_per_frame": 4.045,
+			"players_paused": 1158,
+			"process_ms_avg": 114.974925,
+			"process_ms_peak": 155.676,
+			"wall_ms_per_frame": 67.52869
+		},
+		{
+			"label": "all_animation_paused",
+			"physics_step_ms_avg": 6.97563500000001,
+			"physics_steps_per_frame": 4.285,
+			"players_paused": 1224,
+			"process_ms_avg": 111.289185,
+			"process_ms_peak": 187.308,
+			"wall_ms_per_frame": 71.66729
+		},
+		{
+			"label": "baseline_again",
+			"physics_step_ms_avg": 7.454315,
+			"physics_steps_per_frame": 3.98,
+			"process_ms_avg": 106.142695,
+			"process_ms_peak": 115.884,
+			"wall_ms_per_frame": 66.36809
+		}
+	],
+	"schema": "perf_cpu_probe/1",
+	"stand": [
+		9.5,
+		0.899999976158142,
+		14.0
+	]
+}

@@ -38,8 +38,9 @@ func open(game: Node, uid: String, tab: String = "Loadout", loadout_only: bool =
 	_game = game
 	_uid = uid
 	_choose_owned = loadout_only
-	_tabs = ["Loadout"] if loadout_only else ["Loadout", "Mastery", "Gear"]
-	if not loadout_only and level_route.is_valid() and traits_route.is_valid(): _tabs = ["Level", "Loadout", "Traits", "Mastery", "Gear"]
+	# assign(): a ternary of literals is an untyped Array, refused by Array[String].
+	_tabs.assign(["Loadout"] if loadout_only else ["Loadout", "Mastery", "Gear"])
+	if not loadout_only and level_route.is_valid() and traits_route.is_valid(): _tabs.assign(["Level", "Loadout", "Traits", "Mastery", "Gear"])
 	_tab = tab if _tabs.has(tab) else "Loadout"
 	if _owned() == null or not begin("Companion", "A Choose · LB/RB Details · B Back"): return false
 	_moves = MOVES.load_default()

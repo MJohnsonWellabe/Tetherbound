@@ -34,6 +34,7 @@ class FakePlayer extends CharacterBody3D:
 
 class FakeWorld extends Node3D:
 	var simulation_only := false
+	func ground_height_near(at: Vector3) -> float: return at.y # Fixture: every actor stands on its ground.
 
 class FixtureLightning extends LIGHTNING:
 	var fixture_actors := {}
@@ -336,3 +337,62 @@ func test_process_negative_control_flag_off_hits_the_fighting_trainer() -> void:
 	var impact := _impact(fixture)
 	assert_true((impact.get("hits", {}) as Dictionary).has(1), "flag off: the fighting trainer is hit")
 	_wiring_free(fixture)
+
+
+const CHARGED_SINK := Vector3(1100.0, -20.0, 2700.0) # In the authored glass sink.
+const CHARGED_PIECES := {"helmet": "travel_hood", "upper_body": "travel_coat", "lower_body": "travel_trousers", "boots": "travel_boots"}
+
+func _charged_wear(tier: String) -> void:
+	for slot: String in CHARGED_PIECES:
+		equipment.call("unequip", slot)
+		if not tier.is_empty():
+			equipment.call("equip", "%s_%s" % [tier, CHARGED_PIECES[slot]])
+
+## Owner RD-14: the host's tick publishes a base hit for each grounded trainer
+## on charged ground; the receiver applies its OWN worn gear (Rootiron and
+## Stormglass reduce it), on the production _tick_charged_ground/_receive.
+func test_charged_ground_host_tick_hits_and_each_receiver_applies_its_own_gear() -> void:
+	lightning.world = receive_world
+	player.global_position = CHARGED_SINK
+	remote.global_position = Vector3(700.0, 80.0, 2700.0) # The island: not charged.
+	var cfg: Dictionary = lightning.rules.config.charged_ground
+	var losses := {}
+	for tier: String in ["", "rootiron", "stormglass"]:
+		_charged_wear(tier)
+		player.vitals.health = 100.0
+		session.published.clear()
+		lightning._tick_charged_ground(float(cfg.tick_seconds))
+		assert_eq(session.published.size(), 1, "the host publishes one charged-ground tick")
+		if session.published.is_empty(): return
+		var event: Dictionary = session.published[0]
+		assert_eq(event.hits.keys(), [1], "only the trainer standing on charged ground is hit")
+		lightning._receive(event)
+		losses[tier if not tier.is_empty() else "bare"] = 100.0 - float(player.vitals.health)
+	assert_eq(float(losses.bare), float(cfg.damage_per_tick), "bare: the light base hit")
+	assert_true(float(losses.rootiron) < float(losses.bare), "Rootiron reduces it (%.2f)" % losses.rootiron)
+	assert_true(float(losses.stormglass) < float(losses.rootiron), "Stormglass reduces it more (%.2f)" % losses.stormglass)
+	_charged_wear("")
+
+## Personal and never lethal: a hit addressed to another peer never touches
+## this trainer, a replayed tick is ignored, and standing in it stops at the floor.
+func test_charged_ground_is_personal_idempotent_and_never_lethal() -> void:
+	lightning.world = receive_world
+	lightning._receive({"id": 9001, "kind": "charged_ground", "hits": {2: {"damage": 50.0}}})
+	assert_eq(player.vitals.health, 100.0, "a hit for another trainer does not touch this one")
+	lightning._receive({"id": 9002, "kind": "charged_ground", "hits": {1: {"damage": 2.0}}})
+	lightning._receive({"id": 9002, "kind": "charged_ground", "hits": {1: {"damage": 2.0}}})
+	assert_eq(player.vitals.health, 98.0, "a replayed tick is ignored")
+	for i in 400:
+		lightning._receive({"id": 10000 + i, "kind": "charged_ground", "hits": {1: {"damage": 2.0}}})
+	var floor_hp := 100.0 * float(lightning.rules.config.charged_ground.health_floor_fraction)
+	assert_eq(player.vitals.health, floor_hp, "never lethal: it stops at the floor")
+	assert_false(player.vitals.is_dead())
+
+## Host-authoritative: a client never decides a charged-ground tick.
+func test_charged_ground_tick_is_host_only() -> void:
+	lightning.world = receive_world
+	player.global_position = CHARGED_SINK
+	session.host = false
+	var clock_before: float = lightning._charged_clock
+	lightning._tick_charged_ground(5.0)
+	assert_eq(lightning._charged_clock, clock_before, "a client never even advances the charged-ground clock")
