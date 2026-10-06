@@ -125,3 +125,15 @@ c40f5e9b11ba0a5c7d225036027b22f4d2ec060ac91d7691c41005aa97cb07ef  ci-f27-altar-s
 78d719b5db28527808a72702a7ee3375cea2022eeb1dc8d1cde18870c808d313  ci-combat-on/r1-ci-combat-on-20261006T0405Z.txt
 9686dc34161f47cbda7f3eb5d514f21b7f48dc78260e736a8247d7dbdf842fa2  ci-combat-on/stderr.txt
 1cd2606b420c8d6340d628a6f8ddfa2d657a3776b68ebdb8130251d4704eda21  ci-combat-on/stdout.txt
+5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  ci-trainer-battle-on/exit.txt
+2ebce028a50ffde6161a77c87a6ba33292c1129fd92850b1fadcb72ce0556218  ci-trainer-battle-on/r1-ci-trainer-battle-on-20261006T0415Z.txt
+776d21dfc1b241cd4fdbbf7d39e13e558b1e0d2bcba8fa885b0826cc3475c52b  ci-trainer-battle-on/stderr.txt
+9e04f3b88ddc40d6cc8a782614dd263f480feab2be763e5160bc464b918dbe92  ci-trainer-battle-on/stdout.txt
+5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  ci-trainer-battle-off/exit.txt
+91a20025e80cd8195f2e06682a37e5486d0f1254de5052db5b93b771b3810773  ci-trainer-battle-off/r1-ci-trainer-battle-off-20261006T0420Z.txt
+776d21dfc1b241cd4fdbbf7d39e13e558b1e0d2bcba8fa885b0826cc3475c52b  ci-trainer-battle-off/stderr.txt
+b48bfc7f5ea64f0c7c92eb438f310ae93756612cc4a43f6afb805488657685d1  ci-trainer-battle-off/stdout.txt
+5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  ci-trainer-camera-on/exit.txt
+081dc2e3d251bf6765edafbd404a882e1ec52a9bd31b8216bb52f5764575dffe  ci-trainer-camera-on/r1-ci-trainer-camera-on-20261006T0420Z.txt
+9686dc34161f47cbda7f3eb5d514f21b7f48dc78260e736a8247d7dbdf842fa2  ci-trainer-camera-on/stderr.txt
+43e24e1a498bfb8081bf99b1f9671b452d2081a31401517345424969dd13c4bf  ci-trainer-camera-on/stdout.txt

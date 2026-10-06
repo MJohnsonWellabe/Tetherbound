@@ -83,8 +83,8 @@ stormwood_deepwood_circuit_wiring | ON OPEN
 stronghold | ON OPEN
 title_load_game | ON OPEN
 title_new_game | ON OPEN
-trainer_battle | ON OPEN
-trainer_battle_camera | ON OPEN
+trainer_battle | ON FIRST PASS exit0; 2of2opponents/exact20coin+1potion/XPgain/no-rechallenge-payout; independent functional review PASS; duplicate-starterERROR retained/OFFcomparison PASS exactstderrparity reviewed; legacy local fixture/no durable proof
+trainer_battle_camera | ON FIRST PASS exit0; realMira deployedcamera/GUI focus/controllerorbit entry+exit; rawreceipt retained
 trainer_no_usable_ally | ON OPEN
 traversal | ON OPEN
 unstick | ON OPEN
