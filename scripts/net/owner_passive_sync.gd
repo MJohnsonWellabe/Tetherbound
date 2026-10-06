@@ -45,6 +45,10 @@ var saving := false
 var _left := 0.0
 var _reported_error := ""
 var _reported_ignore := ""
+## F18 rejoin: a host readmit that reached this owner before its handshake
+## snapshot set the joined world's scope. One, replayed by tick() once the
+## snapshot lands (dropped then if the scope still differs); cleared by reset().
+var held_readmit: Dictionary = {}
 
 class NavigationFlags extends RefCounted:
 	var flags: Dictionary = {}
@@ -962,6 +966,9 @@ func receive_owner(packet: Dictionary) -> void:
 	var scope := _scope()
 	for field: String in scope:
 		if packet.get(field) != scope[field]:
+			if packet.get("op") == "readmit" and owner().call("handshake_snapshot_applied") != true:
+				held_readmit = packet.duplicate(true) # This world's scope is not set yet.
+				return
 			_note_ignored("%s for another %s" % [str(packet.get("op", "")), field])
 			return
 	if packet.get("stream_id") != local.id and packet.get("op") != "inputs_ack":
@@ -1244,6 +1251,10 @@ func tick(delta: float) -> void:
 	if _left > 0.0: return
 	_left = 0.25
 	if owner() == null or owner().call("is_host") == true: return
+	if not held_readmit.is_empty() and owner().call("handshake_snapshot_applied") == true:
+		var readmit := held_readmit
+		held_readmit = {}
+		receive_owner(readmit)
 	if not local.is_empty() and str(local.get("error", "")) != _reported_error:
 		_reported_error = str(local.get("error", ""))
 		if not _reported_error.is_empty():
@@ -1327,6 +1338,7 @@ func reset() -> void:
 				if stream.checkpoint.has("prepared"):
 					authority.call("cancel_owner_passive_checkpoint", stream.character, stream.checkpoint.prepared.hash)
 	local.clear()
+	held_readmit.clear()
 	hosts.clear()
 	refused.clear()
 	pending.clear()

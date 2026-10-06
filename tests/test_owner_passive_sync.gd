@@ -85,6 +85,8 @@ class Session extends Node:
 	func is_host() -> bool: return host
 	func local_peer_id() -> int: return 1 if host else 2
 	func snapshot_ready() -> bool: return true
+	var snapshot_applied := true
+	func handshake_snapshot_applied() -> bool: return snapshot_applied
 	func _authority_character(peer: int) -> String: return game.local.character_id if peer == owner_peer else "host"
 	func _owner_passive_send_host(packet: Dictionary) -> void: messages.append(packet.duplicate(true))
 	func _owner_passive_send_peer(_peer: int, packet: Dictionary) -> void: messages.append(packet.duplicate(true))
@@ -1321,3 +1323,77 @@ func test_a_settled_owner_row_advances_the_cached_view_revision() -> void:
 	session.call("_advance_personal_view_revision", {"character_id": "guest-a", "character_revision": 8})
 	assert_eq(session.get("_foundation_personal_cache").registry_revision, 5, "the host reads its own authority, not a cache")
 	session.free()
+
+
+## The host side of a landmark-mismatch rejoin readmit (the G1 exchange).
+func _rejoin_readmit() -> Dictionary:
+	var owner_seen := {"meadows": ["g1-landmark-the-host-never-replayed"]}
+	var hash := preload("res://scripts/net/research_passive_preparation.gd")
+	session.host = true
+	service.hosts.clear()
+	session.messages.clear()
+	service.admitted(2, {"portable_authority": before.duplicate(true), "discovered_landmarks": owner_seen,
+		"owner_passive_stream": {"id": "0123456789abcdef0123456789abcdef", "baseline_hash": hash.fingerprint(before)}})
+	var readmits := session.messages.filter(func(m: Dictionary) -> bool: return m.get("op") == "readmit")
+	session.host = false
+	session.messages.clear()
+	session.maps.value = owner_seen.duplicate(true)
+	for card: Dictionary in before.party:
+		var member := PartyMember.new()
+		member.uid = str(card.uid)
+		game.party.list.append(member)
+	service.arm_owner(before, owner_seen)
+	var readmit: Dictionary = readmits[0] if readmits.size() == 1 else {}
+	readmit.stream_id = service.local.id
+	return readmit
+
+func _readmitted() -> bool:
+	return session.messages.any(func(m: Dictionary) -> bool: return m.get("op") == "readmitted")
+
+func test_a_rejoin_readmit_before_the_snapshot_waits_for_the_joined_world_scope() -> void:
+	# F18 (render.yml 37391150870): on a returning guest's rejoin the host's
+	# readmit arrived before the handshake snapshot set the joined world's
+	# scope; the owner dropped it as "another world_namespace", never adopted
+	# the host's baseline, and every later owner request stalled at its
+	# checkpoint. It is held until the snapshot lands, then judged as usual.
+	var readmit := _rejoin_readmit()
+	assert_false(readmit.is_empty(), "the fixture's host readmits")
+	if readmit.is_empty(): return
+	var joined: String = game.world.reward_delivery_namespace
+	game.world.reward_delivery_namespace = "pre-join-own-world"
+	session.snapshot_applied = false
+	service.receive_owner(readmit)
+	assert_false(_readmitted(), "before the snapshot the readmit is not applied")
+	game.world.reward_delivery_namespace = joined
+	session.snapshot_applied = true
+	service.tick(1.0)
+	assert_true(_readmitted(), "the snapshot set the joined scope: the held readmit applies")
+	assert_true(service.held_readmit.is_empty(), "and is no longer held")
+
+func test_a_rejoin_readmit_after_the_snapshot_applies_at_once() -> void:
+	var readmit := _rejoin_readmit()
+	assert_false(readmit.is_empty(), "the fixture's host readmits")
+	if readmit.is_empty(): return
+	service.receive_owner(readmit)
+	assert_true(_readmitted(), "scope already set: applied directly")
+	assert_true(service.held_readmit.is_empty(), "nothing is held")
+
+func test_a_held_readmit_for_a_world_that_is_not_joined_is_dropped() -> void:
+	var readmit := _rejoin_readmit()
+	assert_false(readmit.is_empty(), "the fixture's host readmits")
+	if readmit.is_empty(): return
+	game.world.reward_delivery_namespace = "pre-join-own-world"
+	session.snapshot_applied = false
+	service.receive_owner(readmit)
+	service.receive_owner(readmit)
+	assert_false(service.held_readmit.is_empty(), "one readmit is held, not a queue")
+	game.world.reward_delivery_namespace = "a-different-joined-world"
+	session.snapshot_applied = true
+	service.tick(1.0)
+	assert_false(_readmitted(), "the snapshot set another world's scope: dropped")
+	assert_true(service.held_readmit.is_empty(), "and not held again")
+	session.snapshot_applied = false
+	service.receive_owner(readmit)
+	service.reset()
+	assert_true(service.held_readmit.is_empty(), "a disconnect clears a held readmit")
+
