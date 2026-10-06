@@ -20,6 +20,7 @@ const FOLLOWER := preload("res://scripts/creatures/follower_creature.gd")
 const WILD := preload("res://scripts/creatures/wild_creature.gd")
 const DIRECTOR := preload("res://scripts/combat/encounter_director.gd")
 const MANAGER := preload("res://scripts/combat/combat_manager.gd")
+const HUD := preload("res://scenes/combat/combat_hud.tscn")
 const ULTIMATES := preload("res://scripts/vfx/ultimates/ultimate_library.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
 
@@ -31,6 +32,7 @@ class FixtureGame extends SAVE.FixtureGame:
 	var current_realm := "meadows"
 	var messages: Array[String] = []
 	func push_world_message(message: String) -> void: messages.append(message)
+	func is_multi_peer() -> bool: return session != null and bool(session.call("is_multi_peer"))
 
 class FixtureSession extends SAVE.FixtureSession:
 	func _ready() -> void: pass # Canonical admission below replaces only transport bootstrap.
@@ -59,6 +61,7 @@ var _writer: RefCounted
 var _authority: RefCounted
 var _director: Node
 var _manager: Node
+var _hud: Node
 var _ally: Node3D
 var _wild: Node3D
 var _creature: RefCounted
@@ -107,6 +110,14 @@ func _run() -> void:
 	if not _errors.is_empty():
 		_finish()
 		return
+	await process_frame
+	var shown_meter: ProgressBar = _hud.get("_ultimate_meter")
+	var shown_readout: RichTextLabel = _hud.get("_ultimate_readout")
+	_check(shown_meter != null and shown_readout != null, "mounted actual CombatHUD creates its Ultimate controls")
+	if shown_meter == null or shown_readout == null:
+		_finish()
+		return
+	_check(is_equal_approx(shown_meter.value, 0.0), "mounted actual CombatHUD starts with an empty Ultimate meter")
 	var old_world := FileAccess.get_file_as_bytes(_writer.world_store.path_for("resource-slot"))
 	_writer.refuse_world = true
 	var snare := await _tap_move(JOY_BUTTON_B, "utility")
@@ -121,11 +132,18 @@ func _run() -> void:
 	_check(float(_wild.call("utility_movement_multiplier")) == 0.0, "landed Snare installs the actual movement root")
 	_check(bool(_wild.call("protected_heavy_committed")), "Snare preserves the committed protected tell")
 	_check(float(_host.move_resource_snapshot(_id, 1, _creature.uid).energy) == 0.0, "Snare never grants charged Energy")
-	var energy_before: Dictionary = _host.move_resource_snapshot(_id, 1, _creature.uid)
+	# The owner HUD snapshot contains a remaining cooldown computed from the
+	# current clock. Compare the full canonical resource row/deadlines instead
+	# so elapsed milliseconds cannot masquerade as a duplicate resource write.
+	var energy_before: Dictionary = _host.record(_id).participants[1].move_resources[_creature.uid].duplicate(true)
+	var original_before: Dictionary = _host.move_commit(_id, 1, int(snare.action)).duplicate(true)
+	var hp_before := float(_enemy.hp)
 	var duplicate: Dictionary = _director.call("_host_strike", {"encounter_id": _id,
 		"action": snare.action, "slot": "utility", "move_id": "snare", "facing": Vector3.RIGHT}, 1)
 	_check(duplicate.get("ok") == false, "same accepted strike cannot land twice")
-	_check(_host.move_resource_snapshot(_id, 1, _creature.uid) == energy_before, "replayed arrival cannot credit resources")
+	_check(_host.record(_id).participants[1].move_resources[_creature.uid] == energy_before, "replayed arrival cannot credit resources")
+	_check(_host.move_commit(_id, 1, int(snare.action)) == original_before, "replayed arrival cannot change its original commit")
+	_check(float(_enemy.hp) == hp_before, "replayed arrival cannot debit target HP")
 	_writer.refuse_world = false
 	var retained: Dictionary = _session.foundation_combat_mastery(_director, _id, 1, int(snare.action))
 	_check(retained.get("durable") == true and _host.pending_move_mastery().is_empty(), "same original retries into a durable world row")
@@ -138,7 +156,20 @@ func _run() -> void:
 		_check(not quick.is_empty(), "physical quick %d did not land" % hit)
 		if quick.is_empty(): break
 	_check(is_equal_approx(float(_host.move_resource_snapshot(_id, 1, _creature.uid).ultimate_meter), 100.0), "real landed hits fill the host Ultimate meter")
-	_check(is_equal_approx(float(_manager.call("ultimate_fraction")), 1.0), "HUD meter mirrors the host's full meter")
+	_check(is_equal_approx(float(_manager.call("ultimate_fraction")), 1.0), "Manager snapshot mirrors the host's full meter")
+	await process_frame
+	await process_frame
+	_check(shown_meter.is_visible_in_tree() and is_equal_approx(shown_meter.value, 100.0),
+		"mounted actual CombatHUD shows the full landed-hit Ultimate meter")
+	_check(shown_readout.is_visible_in_tree() and shown_readout.get_parsed_text().contains("release → move"),
+		"mounted actual CombatHUD displays the full-meter ready instruction")
+	if not _capture_dir.is_empty():
+		DirAccess.make_dir_recursive_absolute(_capture_dir)
+		await RenderingServer.frame_post_draw
+		var ready_path := _capture_dir.path_join("ultimate-ready.png")
+		var ready_image := root.get_texture().get_image()
+		_check(ready_image != null and ready_image.save_png(ready_path) == OK, "rendered actual full-meter CombatHUD capture " + ready_path)
+		_captures.append(ready_path)
 	var ultimate_event: Dictionary = {}
 	if visual_override:
 		await _wait_ready()
@@ -152,6 +183,9 @@ func _run() -> void:
 			var latest: Dictionary = _impacts.back()
 			_check(float(latest.damage) <= float(_enemy.max_hp) * 0.2 + 0.001, "ultimate respects the named-target HP cap")
 			_check(is_equal_approx(float(_host.move_resource_snapshot(_id, 1, _creature.uid).ultimate_meter), 0.0), "ultimate spends the full per-UID meter once")
+			await process_frame
+			_check(shown_meter.is_visible_in_tree() and is_equal_approx(shown_meter.value, 0.0)
+				and shown_readout.get_parsed_text().contains("0%"), "mounted actual CombatHUD redraws the spent Ultimate meter")
 			_check(_launches.back().move.mastery_rank == 4 and _launches.back().mastery_rank == 4, "launch and frozen move retain admitted mastery rank")
 			_check(_launches.back().get("presentation_mounted") == true, "accepted Ground Current must create its actual ultimate presentation")
 			for row: Variant in _game.world.reward_deliveries.values():
@@ -161,10 +195,12 @@ func _run() -> void:
 			_check(not ultimate_event.is_empty(), "actual Ground Current arrival has its durable original")
 			await create_timer(2.6).timeout
 	else:
-		var before: Dictionary = _host.move_resource_snapshot(_id, 1, _creature.uid)
+		var before: Dictionary = _host.record(_id).participants[1].move_resources[_creature.uid].duplicate(true)
+		var prior_commit: Dictionary = _host.move_commit(_id, 1, 99).duplicate(true)
 		var refusal: Dictionary = _director.call("_host_move_start", {"encounter_id": _id, "slot": "ultimate", "action": 99}, 1)
 		_check(refusal.get("code") == "move_not_mounted", "production visual gate refuses the ultimate at host ingress")
-		_check(_host.move_resource_snapshot(_id, 1, _creature.uid) == before, "gated ultimate does not spend a full meter")
+		_check(_host.record(_id).participants[1].move_resources[_creature.uid] == before, "gated ultimate leaves the entire canonical resource row unchanged")
+		_check(_host.move_commit(_id, 1, 99) == prior_commit, "gated ultimate creates no original action commit")
 	# End the disclosed fixture fight before the existing full-character carrier
 	# is allowed to apply. This is not an authored victory/reward claim.
 	_manager.set("state", MANAGER.State.INACTIVE)
@@ -232,6 +268,7 @@ func _setup() -> void:
 	player.position = Vector3(-4.0, 0, -3.0)
 	_world.add_child(player)
 	_manager = MANAGER.new()
+	_manager.name = "CombatManager"
 	_world.add_child(_manager)
 	_manager.set("_player", player)
 	_manager.set("_wild", _wild)
@@ -244,8 +281,10 @@ func _setup() -> void:
 	# Attach the exact production script after the bare node is ready, avoiding
 	# the unrelated whole-biome population bootstrap. All called methods are real.
 	_director = Node.new()
+	_director.name = "EncounterDirector"
 	_world.add_child(_director)
 	_director.set_script(DIRECTOR)
+	_director.call("_enter_tree") # Existing real source index; script attached after entry.
 	_director.set_process(false)
 	_director.set_physics_process(false)
 	_director.set("_session", _session)
@@ -268,6 +307,10 @@ func _setup() -> void:
 	_manager.connect("impact_confirmed", func(on_enemy: bool, receipt: Dictionary, _where: Vector3) -> void:
 		if on_enemy: _impacts.append(receipt.duplicate(true)))
 	_capture_stage()
+	_hud = HUD.instantiate()
+	_hud.set("manager_path", NodePath("../CombatManager"))
+	_hud.set("director_path", NodePath("../EncounterDirector"))
+	_world.add_child(_hud)
 
 func _seed_prior_mastery(move_id: String, count: int) -> void:
 	# Disclosed prior-history fixture: use the real staging helper to build a
@@ -387,7 +430,7 @@ func _apply_saved_mastery(event: Dictionary, move_id: String, initial: int) -> v
 	_check(token.get("ok") == true, "durable original stages " + move_id + ": " + str(token))
 	if token.get("ok") != true: return
 	var journal: Dictionary = _rpc.journal_creature_training_prepared(1, DATA.CHARACTER, _authority.staged_creature_training(token))
-	_check(journal.get("durable") == true, "personal journal saved for " + move_id)
+	_check(journal.get("durable") == true, "personal journal saved for " + move_id + ": " + str(journal))
 	_authority.finish_creature_training(token, journal.get("durable") == true)
 	if journal.get("durable") != true: return
 	var row: Dictionary = _game.world.reward_deliveries[journal.delivery_id]
