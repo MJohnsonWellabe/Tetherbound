@@ -1,0 +1,16 @@
+{
+  "species": "crossing_hall_portal_arch",
+  "tier": "preview",
+  "prompt": "One freestanding warm pale-sandstone civic portal arch, stylized Quaternius-like uneven stone blocks, narrow piers and stable feet, wide empty clear aperture at least 2.4m wide and 3.6m tall within 3.2m overall width, single blank name plaque and empty recessed keystone emblem slot. Open aperture, no membrane or stone infill, no text, no red accents. Native metre scale corrected after generation. stylized PBR game environment prop, hand-painted fantasy style, clean readable forms, large clear colour regions, restrained surface detail, single object, upright, full structure visible",
+  "negative_prompt": "photorealistic, gothic ornament, red accents, oxblood, text, glyphs, watermark, multiple objects, human, creature, floor plane, backdrop, blocked aperture, portal membrane, stone infill, floating parts, noisy surface detail, wet plastic shading",
+  "views": {
+    "source": "assets\\environment\\crossing_hall\\portal_arch\\reference\\three_quarter.png"
+  },
+  "polycount": 6000,
+  "tasks": [
+    {
+      "candidate": "a",
+      "task_id": "01a11155-6ed8-77ff-856a-fab57075e9fd"
+    }
+  ]
+}

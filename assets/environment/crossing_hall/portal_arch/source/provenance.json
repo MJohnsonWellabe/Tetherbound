@@ -1,0 +1,17 @@
+{
+  "subject": "crossing_hall_portal_arch",
+  "authorization": "M1 F17#6, #5256016508725",
+  "reference": "../reference/three_quarter.png",
+  "reference_service": "OpenAI imagegen",
+  "reference_prompt": "../reference/imagegen-prompt.txt",
+  "reference_inspected": "2026-10-06; complete warm stone frame, empty aperture, blank plaque and keystone recess",
+  "service": "Meshy; existing project license, no purchased credits",
+  "preview_task_id": "01a11155-6ed8-77ff-856a-fab57075e9fd",
+  "preview_settings": "one candidate, triangle topology, 6000 target triangles; exact prompt in preview-submission.json",
+  "preview_inspected": "Service thumbnail preserves one open stone arch and complete feet; dimensional and topology validation remain open",
+  "texture_task_id": "01a11158-bb57-74d1-a36e-0213c622eb21",
+  "texture_settings": "existing cmd_texture, exact reference as image_style_url, 2k, PBR enabled, regenerated UV, preview prompt",
+  "preparation": "existing meshy.py commands via direct Python calls; existing f36_meshy_guard.submit_guarded reserves every task",
+  "runtime_enabled": false,
+  "acceptance": "OPEN: textured candidate inspection, native scale/clearance, integration, Medium/High Hall captures and blind judgment"
+}

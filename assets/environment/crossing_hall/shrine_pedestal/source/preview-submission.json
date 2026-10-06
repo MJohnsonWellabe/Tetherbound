@@ -1,0 +1,16 @@
+{
+  "species": "crossing_hall_shrine_pedestal",
+  "tier": "preview",
+  "prompt": "One small warm pale-sandstone shrine pedestal, stylized Quaternius-like carved stone, compact square stepped stable base about 0.8m wide and total height 1.1m. Single blank front carved name panel and shallow empty relic cradle on top. Match warm civic portal stone. No relic, no text, no red accents, native metre dimensions corrected after generation. stylized PBR game environment prop, hand-painted fantasy style, clean readable forms, large clear colour regions, restrained surface detail, single object, upright, full structure visible",
+  "negative_prompt": "photorealistic, gothic ornament, red accents, oxblood, text, glyphs, watermark, multiple objects, human, creature, floor plane, backdrop, relic, noisy surface detail, wet plastic shading, floating parts",
+  "views": {
+    "source": "assets\\environment\\crossing_hall\\shrine_pedestal\\reference\\three_quarter.png"
+  },
+  "polycount": 4000,
+  "tasks": [
+    {
+      "candidate": "a",
+      "task_id": "01a11156-9401-76dd-82df-8d80958c2e12"
+    }
+  ]
+}

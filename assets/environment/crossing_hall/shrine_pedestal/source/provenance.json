@@ -1,0 +1,17 @@
+{
+  "subject": "crossing_hall_shrine_pedestal",
+  "authorization": "M1 F17#6, #5256016508725",
+  "reference": "../reference/three_quarter.png",
+  "reference_service": "OpenAI imagegen",
+  "reference_prompt": "../reference/imagegen-prompt.txt",
+  "reference_inspected": "2026-10-06; complete warm stone plinth, stable square base, blank front panel and empty cradle",
+  "service": "Meshy; existing project license, no purchased credits",
+  "preview_task_id": "01a11156-9401-76dd-82df-8d80958c2e12",
+  "preview_settings": "one candidate, triangle topology, 4000 target triangles; exact prompt in preview-submission.json",
+  "preview_inspected": "Service thumbnail preserves blank front panel and empty cradle; thumbnail crops the base, native whole-mesh validation remains open",
+  "texture_task_id": "01a11158-bfda-72a3-abf6-7df5e0b762f0",
+  "texture_settings": "existing cmd_texture, exact reference as image_style_url, 2k, PBR enabled, regenerated UV, preview prompt",
+  "preparation": "existing meshy.py commands via direct Python calls; existing f36_meshy_guard.submit_guarded reserves every task",
+  "runtime_enabled": false,
+  "acceptance": "OPEN: textured candidate inspection, native dimensions, integration, Medium/High Hall captures and blind judgment"
+}
