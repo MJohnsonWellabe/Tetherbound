@@ -69,7 +69,7 @@ static func valid_capture_traits(raw: Variant) -> bool:
 	var source: Variant = raw.get("captured_from")
 	return source is Dictionary and source.size() == 4 and source.get("kind") == "wild" \
 		and preload("res://scripts/creatures/traits.gd").component(source.get("world_namespace")) \
-		and preload("res://scripts/creatures/traits.gd").component(source.get("spawn_id")) \
+		and preload("res://scripts/creatures/trait_spawn_hooks.gd").valid_spawn_id(source.get("spawn_id")) \
 		and preload("res://scripts/creatures/traits.gd").integer(source.get("spawn_generation"), 1, 2147483647)
 
 

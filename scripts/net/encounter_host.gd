@@ -1333,7 +1333,7 @@ static func _opponent_row(opponent: Dictionary) -> Dictionary:
 	# Shared-wild presentation, and a trainer round's mirror identity (F14#1),
 	# are read-only client data. Preserve only their explicit schema; authority
 	# still reads the established fields above.
-	for key: String in ["card", "foot_position", "facing", "body_generation",
+	for key: String in ["card", "capture_traits", "foot_position", "facing", "body_generation",
 			"presentation_seq", "cue_serial", "telegraph_count", "strike_count", "cue",
 			"body_scale", "alpha", "round", "round_continues"]:
 		if opponent.has(key):

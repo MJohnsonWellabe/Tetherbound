@@ -912,6 +912,26 @@ func foundation_research_source(director: Node, encounter_id: String, peer: int,
 	if duties.is_empty(): return {"ok": true, "durable": true, "disabled": true}
 	return get_node(^"LedgerRpc").call("journal_foundation_event", source_id, duties)
 
+func foundation_wild_capture_source(director: Node, encounter_id: String, capture: Dictionary) -> Dictionary:
+	if not is_host() or not is_instance_valid(director) or director.get("_session") != self \
+		or director.get_script() == null or not FOUNDATION_DIRECTORS.has(director.get_script().resource_path) \
+		or not preload("res://scripts/creatures/traits.gd").runtime_enabled(): return {"ok": false, "durable": false}
+	var runtime: Node = director.call("_shared_host_fight", encounter_id)
+	var record: Dictionary = director.get("_encounter_host").call("record", encounter_id)
+	if runtime == null or record.get("kind") != "wild" or record.get("phase") != "catching" \
+		or runtime.get_meta("catch_decision", {}).get("caught") != true: return {"ok": false, "durable": false}
+	var peer := int(runtime.get("catch_claimant"))
+	var body: Node3D = runtime.call("body")
+	if body == null or not record.get("participants", {}).has(peer) \
+		or not preload("res://scripts/net/foundation_capture_rules.gd").offer_valid(capture) \
+		or capture.creature != preload("res://scripts/save/water_capture_codec.gd").encode(body.get("instance")) \
+		or capture.capture_traits != director.call("foundation_wild_capture_traits", body) \
+		or capture.participants != [_authority_character(peer)] or capture.realm != record.get("realm") \
+		or capture.world_namespace != _game().world.reward_delivery_namespace \
+		or capture.session_id != _altar_current_epoch(): return {"ok": false, "durable": false}
+	return get_node(^"LedgerRpc").call("journal_foundation_event", capture.source_key,
+		[{"character_id": capture.participants[0], "action": "capture_offer", "intent": {}, "context": capture}])
+
 func foundation_alpha_resolution(director: Node, encounter_id: String, outcome: String, capture: Dictionary = {}) -> Dictionary:
 	var producer := get_node_or_null(^"FoundationComposition/Alphas")
 	return producer.call("resolution", director, encounter_id, outcome, capture) if producer != null else {"ok": false, "durable": false}
@@ -6230,7 +6250,8 @@ func _capture_newcomer_uid(row: Dictionary) -> String:
 	return str(row.get("host_context", {}).get("creature", {}).get("uid", ""))
 
 func _foundation_capture_context(peer: int, key: String) -> Dictionary:
-	if preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true \
+	if (preload("res://scripts/repeatables/alpha_respawns.gd").config().get("runtime_enabled") != true \
+		and not preload("res://scripts/creatures/traits.gd").runtime_enabled()) \
 		or not is_host() or admitted_character_state(peer).is_empty() or _altar_peer_in_combat(peer): return {}
 	var world: RefCounted = _game().world
 	var character := _authority_character(peer)

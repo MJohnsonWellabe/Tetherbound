@@ -8,6 +8,101 @@ const COMBAT := preload("res://scripts/combat/trait_effects.gd")
 const TRAVERSAL := preload("res://scripts/world/trait_traversal.gd")
 const SPAWN := preload("res://scripts/creatures/trait_spawn_hooks.gd")
 
+class WildTraitWorld extends RefCounted:
+	var reward_delivery_namespace := "traits-world"
+
+class WildTraitGame extends Node:
+	var world := WildTraitWorld.new()
+
+class WildTraitSession extends Node:
+	var host := true
+	var epoch := "traits-session"
+	var game := WildTraitGame.new()
+	func is_active() -> bool: return true
+	func is_host() -> bool: return host
+	func _game() -> Node: return game
+	func _altar_current_epoch() -> String: return epoch
+
+class WildTraitDirector extends "res://scripts/combat/encounter_director.gd":
+	var environment := {"night": false, "weather": false}
+	func _is_host() -> bool: return _session.call("is_active") == true and _session.call("is_host") == true
+	func _encounter_realm() -> String: return "meadows"
+	func _ordinary_trait_environment() -> Dictionary: return environment.duplicate()
+
+class WildTraitBody extends Node3D:
+	var instance: RefCounted
+	var alpha := false
+
+func test_ordinary_host_publication_retains_packet_and_catch_copies_it() -> void:
+	# Scoped Session/clock/body doubles; real director registration, host record,
+	# instance, roll, capture codec and copy hooks. No live transport/save claim.
+	var session := WildTraitSession.new()
+	var director := WildTraitDirector.new()
+	director._session = session
+	director._encounter_host = preload("res://scripts/net/encounter_host.gd").new(1)
+	var body := WildTraitBody.new()
+	body.instance = preload("res://scripts/creatures/creature_species.gd").spawn("bramblebun")
+	var instance := body.instance
+	instance.hp *= 0.5
+	var fraction := float(instance.call("hp_fraction"))
+	var record: Dictionary = director._encounter_host.open(1, "meadows", "wild", {
+		"species_id": "bramblebun", "body_generation": 7}, "ally-uid", "owner-a")
+	session.host = false
+	assert_false(director.foundation_register_wild_traits(body, record), "client rolled a host packet")
+	assert_false(body.has_meta("foundation_wild_traits"))
+	session.host = true
+	assert_true(director.foundation_register_wild_traits(body, record))
+	var packet := director.foundation_wild_capture_traits(body)
+	assert_false(packet.is_empty())
+	if packet.is_empty():
+		body.free(); director.free(); session.game.free(); session.free()
+		return
+	assert_eq(packet.captured_from, {"kind": "wild", "world_namespace": "traits-world",
+		"spawn_id": record.encounter_id, "spawn_generation": 7})
+	assert_eq(packet, SPAWN.prepare_host_spawn({"world_namespace": "traits-world",
+		"spawn_id": record.encounter_id, "spawn_generation": 7, "alpha": false, "night": false, "weather": false}))
+	assert_almost_eq(float(instance.call("hp_fraction")), fraction)
+	assert_eq(record.opponent.capture_traits, packet)
+	assert_true(director._encounter_host.set_opponent(record.encounter_id, record.opponent.duplicate(true)))
+	assert_eq(director._encounter_host.record(record.encounter_id).opponent.capture_traits, packet, "host row lost the guest packet")
+	var projected: RefCounted = preload("res://scripts/save/water_capture_codec.gd").decode(record.opponent.card, record.opponent.capture_traits)
+	assert_true(projected != null, "guest could not decode the published packet")
+	if projected != null: assert_eq(projected.get("rolled_traits"), packet.rolled_traits)
+	assert_false(body.has_meta("foundation_alpha_packet"), "ordinary publication touched alpha lifecycle")
+	director.environment = {"night": true, "weather": true}
+	var reengaged: Dictionary = director._encounter_host.open(1, "meadows", "wild", {
+		"species_id": "bramblebun", "body_generation": 8}, "ally-uid", "owner-a")
+	assert_true(director.foundation_register_wild_traits(body, reengaged))
+	assert_eq(director.foundation_wild_capture_traits(body), packet, "re-engagement rerolled the same instance")
+	var codec := preload("res://scripts/save/water_capture_codec.gd")
+	var card: Dictionary = codec.encode(instance)
+	var identity: Dictionary = packet.captured_from.duplicate(true)
+	identity.erase("kind")
+	var caught := SPAWN.prepare_catch(identity, packet, card)
+	for field: String in packet: assert_eq(caught[field], packet[field], "catch changed original " + field)
+	var decoded: RefCounted = codec.decode(JSON.parse_string(JSON.stringify(card)), JSON.parse_string(JSON.stringify(packet)))
+	assert_true(decoded != null, "ordinary peer:record provenance did not survive the canonical codec")
+	if decoded != null: assert_eq(decoded.get_meta("foundation_capture_traits"), JSON.parse_string(JSON.stringify(packet)), "saved packet fields changed")
+	identity.spawn_generation = 8
+	assert_true(SPAWN.prepare_catch(identity, packet, card).is_empty(), "replacement generation accepted old catch")
+	session.epoch = "other-session"
+	assert_true(director.foundation_wild_capture_traits(body).is_empty())
+	assert_false(director.foundation_register_wild_traits(body, reengaged), "stale epoch silently rerolled original body")
+	session.epoch = "traits-session"
+	body.instance = preload("res://scripts/creatures/creature_species.gd").spawn("bramblebun")
+	assert_true(director.foundation_register_wild_traits(body, reengaged))
+	assert_eq(director.foundation_wild_capture_traits(body).captured_from.spawn_id, reengaged.encounter_id)
+	assert_eq(director.foundation_wild_capture_traits(body).captured_from.spawn_generation, 8)
+	var fresh_packet := director.foundation_wild_capture_traits(body)
+	assert_eq(fresh_packet, SPAWN.prepare_host_spawn({"world_namespace": "traits-world",
+		"spawn_id": reengaged.encounter_id, "spawn_generation": 8, "alpha": false, "night": true, "weather": true}))
+	var fresh_decoded: RefCounted = codec.decode(codec.encode(body.instance), fresh_packet)
+	assert_true(fresh_decoded != null)
+	if fresh_decoded != null: assert_eq(fresh_decoded.get("rolled_traits"), fresh_packet.rolled_traits)
+	for invalid: Variant in ["0:1", "1:0", "01:2", "1:+2", "1:2:3", "a:b", "1:2147483648"]:
+		assert_false(SPAWN.valid_spawn_id(invalid), "malformed host record accepted")
+	body.free(); director.free(); session.game.free(); session.free()
+
 func _one(id: String) -> Dictionary:
 	return {"traits_initialized":true,"rolled_traits":[id],"taught_traits":{},"trait_secondary":""}
 

@@ -1395,6 +1395,67 @@ func _spawn_slicing_wanted() -> bool:
 	return game != null and game.has_method("is_multi_peer") and bool(game.call("is_multi_peer"))
 
 
+## F30: freeze the host roll at the first canonical publication of this body.
+## Re-engaging keeps the original encounter identity; a replacement instance
+## gets its own actual record and generation. No alpha cycle is created here.
+func _ordinary_trait_environment() -> Dictionary:
+	var realm: Node = _session.call("_portal_world_node", _encounter_realm())
+	if realm == null or not realm.is_ancestor_of(self): return {}
+	var look: Node = null
+	for candidate: Node in get_tree().get_nodes_in_group(&"day_cycle"):
+		if not realm.is_ancestor_of(candidate) or candidate.get_script() == null \
+			or candidate.get_script().resource_path != "res://scripts/world/world_look.gd": continue
+		if look != null: return {}
+		look = candidate
+	if look == null or not look.get("_weather") is Dictionary: return {}
+	return {"night": bool(look.call("is_dark")),
+		"weather": preload("res://scripts/net/foundation_alphas.gd").unusual_weather(look.get("_weather"))}
+
+func foundation_wild_capture_traits(wild: Node3D) -> Dictionary:
+	if not _is_host() or wild == null or not is_instance_valid(wild): return {}
+	var retained: Dictionary = wild.get_meta("foundation_wild_traits", {})
+	if retained.is_empty(): return {}
+	var game: Node = _session.call("_game")
+	if retained.world.get_ref() != game.world or retained.instance.get_ref() != wild.get("instance") \
+		or retained.epoch != _session.call("_altar_current_epoch") \
+		or retained.packet.captured_from.world_namespace != game.world.reward_delivery_namespace \
+		or not WATER_CAPTURE_CODEC.valid_capture_traits(retained.packet): return {}
+	var instance: RefCounted = wild.get("instance")
+	for field: String in ["traits_initialized", "rolled_traits", "taught_traits"]:
+		if instance.get(field) != retained.packet[field]: return {}
+	return retained.packet.duplicate(true)
+
+func foundation_register_wild_traits(wild: Node3D, record: Dictionary) -> bool:
+	if not _is_host() or wild == null or not is_instance_valid(wild): return false
+	if not preload("res://scripts/creatures/traits.gd").runtime_enabled() \
+		or wild.has_meta("foundation_alpha_packet"): return true
+	var instance: RefCounted = wild.get("instance")
+	if instance == null or record.get("kind") != "wild" \
+		or record != _encounter_host.call("record", str(record.get("encounter_id", ""))) \
+		or record.get("realm") != _encounter_realm(): return false
+	var packet := foundation_wild_capture_traits(wild)
+	if packet.is_empty():
+		var old: Dictionary = wild.get_meta("foundation_wild_traits", {})
+		if not old.is_empty() and old.instance.get_ref() == instance: return false
+		var environment := _ordinary_trait_environment()
+		if environment.is_empty(): return false
+		var game: Node = _session.call("_game")
+		packet = preload("res://scripts/creatures/trait_spawn_hooks.gd").prepare_host_spawn({
+			"world_namespace": game.world.reward_delivery_namespace, "spawn_id": record.encounter_id,
+			"spawn_generation": record.opponent.get("body_generation", 0),
+			"alpha": bool(wild.get("alpha")), "night": environment.night, "weather": environment.weather})
+		if not WATER_CAPTURE_CODEC.valid_capture_traits(packet): return false
+		for field: String in ["traits_initialized", "rolled_traits", "taught_traits"]:
+			instance.set(field, packet[field].duplicate(true) if packet[field] is Array or packet[field] is Dictionary else packet[field])
+		instance.call("_apply_level_stats", PROGRESSION.config())
+		wild.set_meta("foundation_wild_traits", {"world": weakref(game.world), "instance": weakref(instance),
+			"epoch": _session.call("_altar_current_epoch"), "packet": packet.duplicate(true)})
+	record.opponent.card = WATER_CAPTURE_CODEC.encode(instance)
+	record.opponent.capture_traits = packet.duplicate(true)
+	record.opponent.hp = instance.get("hp")
+	record.opponent.hp_max = instance.get("max_hp")
+	return not record.opponent.card.is_empty()
+
 func foundation_alpha_cycle(site_id: String) -> Dictionary:
 	if not is_inside_tree(): return {}
 	var rules := preload("res://scripts/repeatables/alpha_respawns.gd")
@@ -3468,6 +3529,10 @@ func _host_catch_finished(intent: Dictionary, peer_id: int) -> Dictionary:
 				return {"ok": false, "pending": true, "code": "capture_traits_unavailable", "encounter_id": encounter_id, "claim_id": claim_id}
 			for field: String in ["traits_initialized", "rolled_traits", "taught_traits", "captured_from"]:
 				capture_traits[field] = prepared[field]
+		elif alpha_body.has_meta("foundation_wild_traits"):
+			capture_traits = foundation_wild_capture_traits(alpha_body)
+			if capture_traits.is_empty():
+				return {"ok": false, "pending": true, "code": "capture_traits_unavailable", "encounter_id": encounter_id, "claim_id": claim_id}
 		var capture_offer: Dictionary = {}
 		if not capture_traits.is_empty():
 			var game := get_node("/root/Game")
@@ -3476,6 +3541,10 @@ func _host_catch_finished(intent: Dictionary, peer_id: int) -> Dictionary:
 				"world_namespace": game.world.reward_delivery_namespace, "session_id": _session.call("_altar_current_epoch"),
 				"participants": [_session.call("_authority_character", peer_id)], "realm": _encounter_realm(),
 				"creature": creature_card.duplicate(true), "capture_traits": capture_traits.duplicate(true)}
+		if alpha_body.has_meta("foundation_wild_traits"):
+			var retained_offer: Dictionary = _session.call("foundation_wild_capture_source", self, encounter_id, capture_offer)
+			if retained_offer.get("durable") != true:
+				return {"ok": false, "pending": true, "code": "capture_offer_write_pending", "encounter_id": encounter_id, "claim_id": claim_id}
 		var alpha_resolution: Dictionary = _session.call("foundation_alpha_resolution", self, encounter_id, "catch", capture_offer)
 		if alpha_resolution.get("durable") != true:
 			return {"ok": false, "pending": true, "code": "alpha_resolution_write_pending", "encounter_id": encounter_id, "claim_id": claim_id,
@@ -6129,6 +6198,11 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 		opponent,
 		str(_ally.get("uid")) if _ally != null else "", character_id)
 	_encounter = rec
+	if not opponent_owned and not foundation_register_wild_traits(wild, rec):
+		_encounter_host.call("forget", str(rec["encounter_id"]))
+		_encounter = {}
+		_manager.call("_begin_resolve", "fled")
+		return
 	if opponent_owned and not _install_ordinary_combat_reward_owner(str(rec["encounter_id"])):
 		_manager.call("_begin_resolve", "fled")
 		return
@@ -6524,7 +6598,7 @@ func _begin_shared_guest_from_record(rec: Dictionary) -> bool:
 			or not _shared_record_is_current_realm(rec):
 		return false
 	var opponent: Dictionary = rec.get("opponent", {}) as Dictionary
-	var card := WATER_CAPTURE_CODEC.decode(opponent.get("card", {})) as RefCounted
+	var card := WATER_CAPTURE_CODEC.decode(opponent.get("card", {}), opponent.get("capture_traits", {})) as RefCounted
 	var feet: Variant = _wire_vec3(opponent.get("foot_position", []))
 	var facing: Variant = _wire_vec3(opponent.get("facing", []))
 	var generation := int(opponent.get("body_generation", 0))

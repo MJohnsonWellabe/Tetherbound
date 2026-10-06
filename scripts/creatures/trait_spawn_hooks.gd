@@ -2,6 +2,18 @@ extends RefCounted
 
 const TRAITS := preload("res://scripts/creatures/traits.gd")
 
+## Ordinary encounter IDs are the host's existing peer:record counter.
+## Preserve authored site IDs without accepting arbitrary colon payloads.
+static func valid_spawn_id(value: Variant) -> bool:
+	if TRAITS.component(value): return true
+	if not value is String: return false
+	var parts: PackedStringArray = value.split(":")
+	if parts.size() != 2: return false
+	for part: String in parts:
+		if not part.is_valid_int() or str(part.to_int()) != part \
+			or part.to_int() < 1 or part.to_int() > 2147483647: return false
+	return true
+
 ## Called ONLY by host spawn registration before announcement. The caller
 ## supplies its actual registered namespace/id/generation, not client flags.
 static func prepare_host_spawn(host_identity: Dictionary, cfg: Dictionary = {}) -> Dictionary:
