@@ -88,7 +88,7 @@ trainer_battle_camera | ON FIRST PASS exit0; realMira deployedcamera/GUI focus/c
 trainer_no_usable_ally | ON FIRST PASS exit0; faintedally honestrefusal/nofalsevictory/directheal restoreschallenge; rawreceipts retained, inheritedfault+heal fixture
 traversal | ON FIRST PASS, exit0; mainlegs108m/perimeter/kill/crossinggates/rockalign/doors; nineperimeter/doorcollider-query/heightrecovery/analyticnormals/stagedposes-flags/recoveryinterruptions+routeoffsetnotes/no600mcontinuous-earned-hw-coop proof; independent qualified review PASS
 unstick | ON FIRST PASS, exit0/empty stderr; bareplayer sealed-pocket escape9.65m/wallnorecovery/originalfixtures; minimum1recovery/no Meadows-combat-earned-hw-coop proof; independent qualified review PASS
-veridian_offer_choice | ON FIRST space group ACTIVE; originalCIspace-capacity-recovery groups sequential/privatehomes/2700sec native deadline; allgroupsneeded
+veridian_offer_choice | ON SPACE FIRST PASS exit0/qualified independent review PASS; CAPACITY ACTIVE/RECOVERY OPEN; originalCI groups sequential/privatehomes/2700sec native deadline; allgroupsneeded
 warrens | ON OPEN
 wild_streaming | ON OPEN
 Tournament ON FIRST | FAIL exit1: quarter durable rewards PASS; semi both first strikes PASS, team completion command no verdict at unchanged 95000ms. Diagnosis OPEN. receipts/net-tournament-on-first

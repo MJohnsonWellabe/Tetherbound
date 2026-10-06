@@ -409,3 +409,9 @@ d3a39bbd999c5425ecfa48e09bba7e52f14464306ef5b352f019527931025644  ci-traversal-o
 b0a31ec0ffd92729af7b799d7fd8ced75a141e7dc4c8c79e48aae9a04091b37e  ci-unstick-on/r1-ci-unstick-on-20261006T0838Z.txt
 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ci-unstick-on/stderr.txt
 f264536ba6060cc98c120fa5f9d5726a7faa39ce2dd0f8d9fce0eaf30e9f73c0  ci-unstick-on/stdout.txt
+b1dda5535903a15d82eea0e345086e967eb6fed61199fb6069dfbd2e727a3f1d  ci-veridian-space-on/character.json.txt
+5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  ci-veridian-space-on/exit.txt
+b1f577a9b2217a210fa4bdadbc95e4c59f62eebd539d0ce7ff3e068be60759ac  ci-veridian-space-on/r1-ci-veridian-space-on-20261006T0840Z.txt
+b55581bc048b3fbeb2fbc0d529a9d62bea095011f87da32a362d1957e9f7b40d  ci-veridian-space-on/stderr.txt
+1cfe2a3838b2e596e24e62d831321bf3961609cf01107f64f45fa8a10c706836  ci-veridian-space-on/stdout.txt
+5cbd21f6262becf5eba37c8e6548159d01a4c5fdc6f17a84e879264a47e0241d  ci-veridian-space-on/world.json.txt
