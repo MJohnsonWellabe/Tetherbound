@@ -169,10 +169,12 @@ func _run() -> void:
 			_check(not ultimate_event.is_empty(), "actual Ground Current arrival has its durable original")
 			await create_timer(2.6).timeout
 	else:
-		var before: Dictionary = _host.move_resource_snapshot(_id, 1, _creature.uid)
+		var before: Dictionary = _host.record(_id).participants[1].move_resources[_creature.uid].duplicate(true)
+		var prior_commit: Dictionary = _host.move_commit(_id, 1, 99).duplicate(true)
 		var refusal: Dictionary = _director.call("_host_move_start", {"encounter_id": _id, "slot": "ultimate", "action": 99}, 1)
 		_check(refusal.get("code") == "move_not_mounted", "production visual gate refuses the ultimate at host ingress")
-		_check(_host.move_resource_snapshot(_id, 1, _creature.uid) == before, "gated ultimate does not spend a full meter")
+		_check(_host.record(_id).participants[1].move_resources[_creature.uid] == before, "gated ultimate leaves the entire canonical resource row unchanged")
+		_check(_host.move_commit(_id, 1, 99) == prior_commit, "gated ultimate creates no original action commit")
 	# End the disclosed fixture fight before the existing full-character carrier
 	# is allowed to apply. This is not an authored victory/reward claim.
 	_manager.set("state", MANAGER.State.INACTIVE)
