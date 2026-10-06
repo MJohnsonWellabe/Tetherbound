@@ -192,6 +192,13 @@
     "flame_energy": 2.4
   },
   "refresh_seconds": 0.2,
+  "hero_art": {
+    "enabled": false,
+    "_scope": "Local candidate presentation only, not saved or authoritative. Keep OFF until native dimensions/aperture, visual matrix and independent judgment pass. Missing candidates use installed art.",
+    "arch_model": "res://assets/environment/crossing_hall/portal_arch/portal_arch.tscn",
+    "pedestal_model": "res://assets/environment/crossing_hall/shrine_pedestal/shrine_pedestal.tscn",
+    "pedestal_collider": {"size": [0.8, 1.1, 0.8], "at": [0, 0.55, 0]}
+  },
   "pedestal_collider": {
     "_provenance": "Installed BookStand.gltf POSITION accessor bounds: X[-0.25348,0.25363],Y[-0.00250,1.44429],Z[-0.25552,0.25567]; native metres, no model scale change.",
     "size": [

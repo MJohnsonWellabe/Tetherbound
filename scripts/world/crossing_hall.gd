@@ -92,7 +92,9 @@ func _build_arch(entry: Dictionary) -> void:
 	slot.set_meta("biome", str(entry.biome))
 	slot.add_to_group("crossing_hall_arches")
 	add_child(slot)
-	_add_model(slot, ARCH_MODEL)
+	var hero := _add_hero_model(slot, "arch")
+	if not hero:
+		_add_model(slot, ARCH_MODEL)
 	var board := _label(slot, ORDER.display_name(str(entry.biome)), Vector3(0, 3.55, 0))
 	board.name = "BiomeSign"
 	var state := _label(slot, "Home arch" if entry.kind == "home" else "Sealed" if entry.kind == "sealed" else "Locked", Vector3(0, 2.95, .12))
@@ -123,10 +125,14 @@ func _build_pedestal(entry: Dictionary) -> void:
 	slot.set_meta("biome", str(entry.biome))
 	slot.add_to_group("crossing_hall_pedestals")
 	add_child(slot)
-	_add_model(slot, STAND_MODEL)
+	var hero := _add_hero_model(slot, "pedestal")
+	if not hero:
+		_add_model(slot, STAND_MODEL)
 	# Measured installed BookStand bounds, authored in config so physics and
 	# presentation share one native-scale footprint rather than a solid room.
 	var collider: Dictionary = _config.get("pedestal_collider", {})
+	if hero:
+		collider = (_config.get("hero_art", {}) as Dictionary).get("pedestal_collider", collider)
 	var body := StaticBody3D.new()
 	body.name = "PedestalBody"
 	var shape := CollisionShape3D.new()
@@ -159,6 +165,27 @@ func _add_model(parent: Node3D, path: String) -> void:
 		push_error("Crossing Hall installed model missing: " + path)
 		return
 	parent.add_child(packed.instantiate())
+
+
+func _add_hero_model(parent: Node3D, kind: String) -> bool:
+	# Local art configuration only: no world/character state, save field or
+	# interaction change. Disabled candidates are never loaded into the world.
+	var art: Dictionary = _config.get("hero_art", {})
+	if not bool(art.get("enabled", false)):
+		return false
+	var path := str(art.get(kind + "_model", ""))
+	if path.is_empty() or not ResourceLoader.exists(path, "PackedScene"):
+		return false
+	var packed := load(path) as PackedScene
+	if packed == null:
+		return false
+	var model := packed.instantiate()
+	if not model is Node3D:
+		model.free()
+		return false
+	parent.add_child(model)
+	parent.set_meta("hero_art_used", true)
+	return true
 
 
 func _label(parent: Node3D, text: String, at: Vector3) -> Label3D:
