@@ -1,10 +1,10 @@
-Verdict: OPEN; live regreen component/runtime proof PASS, full PERF item 3 pending.
-Product: d5d692934fbca93dde191f7d8974a3148d486498; smoke producer eead1daf9cf946c87f0c044b835b4fe9f0008f0f.
-Existing smoke_meadow_healing_land_heals.gd: exit 0; all original live/fade/pylon/herd/save/reload assertions retained; 19 mounted group assertions passed.
-Longest observed freeing frame: 1663 ms, below unchanged 4500 ms ceiling; this is one quiet headless run, not a matched before/after or device FPS claim.
-Live/synchronous overlays matched all mesh channels and ordered 223824 vertices (37304 quads); 1388 plants restored, 29 pylon poses retained across real save/reload.
-Live fade included intermediate alpha and reached 1.0; loaded-save healing snapped synchronously. Compiler-only stage also exited 0.
-Raw proof: healing/heal-slice-first/{stdout.log,stderr.log,exit.txt,source.txt}; existing interpolation deprecation retained, no SCRIPT/Parse/ERROR/leak output. Private homes/saves remain local.
-Scatter remains unsliced; native healed-land blind comparison, co-op/independent final review and full item 3 acceptance remain OPEN. No READY or shipping visual verdict.
-Two profiled stages (heal-visual-profile-first/07cfc and heal-visual-native-log-first/7fa) were operator-stopped incomplete, exit -1 after >12/>10 minutes, zero PNGs/no freeing report; originals retained, mechanism unproved. Existing low-output callee proof QUESTION #5256022153085; no cost verdict.
-Matched native groups heal-visual-unprofiled-first/62fbbf and heal-visual-synchronous-baseline-first/6116c8 (only pre-slice meadow_healing080d7 test-local): each exit0/33 original1920x1080 GTX1060/OpenGL frames,1388plants/37304quads/29pylons/7herd; light counts137/138 differ. Original warnings/Works fall retained; first source.txt CPU wording inapplicable. Blind BLOCK: current t01-t08 light/cable/fall delay, final land broadly matches; baseline/blind-verdict.txt. Measured cue-order correction/new proof pending; no CPU/FPS/co-op/READY.
+Verdict: READY for PERF item 3's declared frame/equality/native visual bar under #5256022595813; scatter remains unsliced and is not an extra gate.
+Product: d5d692934fbca93dde191f7d8974a3148d486498 + cue-order fix fe861cd7e190b129af04544628f7476be684aaf0; corrected smoke/capture producer17436eb251b3b41ade32246e61e77cbf230a0a04.
+Existing healing smoke exit0: longest freeing frame1854ms < unchanged4500ms; first preparation yield0 original tether materials lit/29 pylon falls started; intermediate alpha reached1.0.
+All223824 ordered vertices/all mesh channels matched synchronous construction on the same real terrain;37304quads/1388plants/29pylons, real save/reload/herd/material/cable and19 mounted-group assertions passed; original bars/checks retained.
+Matched existing unprofiled F05 captures: corrected33 + synchronous baseline33 original1920x1080 GTX1060/OpenGL/fixed12 frames, four land vantages and25 cue frames; both exit0 and138lights/29pylons/7herd.
+Fresh code-blind judge EQUIVALENT after inspecting66 originals: shutdown/fall/dust samples and final land match; dust shapes/ordinary animal poses vary. Verdict visual-verdict.txt; mapping revealed only after verdict (C baseline,D corrected).
+ONE final independent source/test review APPROVE at17436eb251: readiness/idempotence/mesh order, immediate saved-load, station consumption and existing peer wait preserved; authority/network unchanged. Verdict independent-review.txt.
+Raw proof: healing/heal-cue-order-smoke-first/{stdout,stderr,native}.log/source.txt/exit.txt and healing/heal-cue-order-visual-first/{stdout,stderr,native}.log/source.txt/exit.txt/frames/*.png; homes remain local.
+Inherited interpolation warning and F05 Works-vantage fall retained; no SCRIPT/Parse/ERROR/leak. Headless1854ms is one frame-bar run; staged flags/party/HUD/fixed12 visuals do not claim Medium/High, FPS, earned/live co-op or exact population.
+Original1663ms proof, first native blind BLOCK and both incomplete profilers remain preserved; measured cue-order defect corrected. Profilers stopped per6022595813; no callee CPU or matched performance ratio claimed.
