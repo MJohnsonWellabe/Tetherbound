@@ -17,6 +17,7 @@ const NATIVE_CASES := [
 	"unset_or_malformed_shape_keys_draw_nothing_and_clear_stale_marks",
 	"wild_body_reports_its_shape_and_announces_a_route_cue",
 	"a_new_tell_redraws_rather_than_reusing_an_earlier_tells_marks",
+	"captured_wild_opponent_survives_terminal_presentation_refresh",
 ]
 
 class WildShell extends "res://scripts/creatures/wild_creature.gd":
@@ -314,6 +315,47 @@ func _case_a_new_tell_redraws_rather_than_reusing_an_earlier_tells_marks() -> vo
 	proxy.free()
 
 
+func _case_captured_wild_opponent_survives_terminal_presentation_refresh() -> void:
+	var director := _director(LANE_SHAPE)
+	var runtime: FakeRuntime = director.runtime
+	runtime.cue_serial = 2
+	runtime.telegraph_count = 1
+	runtime.telegraph_until_ms = Time.get_ticks_msec() + 5000
+	var rec := {"encounter_id": "enc_1", "kind": "wild", "phase": "active",
+		"opponent": {"species_id": "bramblebun", "hp": 10.0}}
+	director._refresh_shared_record_presentation(rec)
+	assert_eq(rec.opponent.presentation_seq, 1, "uncaptured presentation still refreshes")
+	assert_eq(rec.opponent.cue.kind, "telegraph")
+	assert_true(float(rec.opponent.cue.remaining_s) > 0.0)
+	runtime.presentation_seq = 2
+	runtime.wild.global_position = Vector3(1.0, 2.0, 3.0)
+	director._refresh_shared_record_presentation(rec)
+	assert_eq(rec.opponent.presentation_seq, 2)
+	assert_eq(rec.opponent.foot_position, [1.0, 2.0, 3.0])
+	# Reuse the existing cue fixture: production capture validates the source;
+	# this case exercises its immutable opponent through the real refresh hook.
+	rec.opponent.hp = 0.0
+	var frozen := {"record": rec.duplicate(true)}
+	runtime.set_meta(&"wild_victory_source", frozen.duplicate(true))
+	rec.phase = "done"
+	runtime.presentation_seq = 3
+	runtime.cue_serial = 7
+	runtime.telegraph_until_ms = 0
+	runtime.wild.global_position = Vector3(8.0, 9.0, 10.0)
+	for _refresh in 4:
+		director._refresh_shared_record_presentation(rec)
+	assert_eq(rec.opponent, frozen.record.opponent,
+		"terminal publication and teardown cannot invalidate the original victory opponent")
+	assert_eq(runtime.get_meta(&"wild_victory_source"), frozen,
+		"presentation cannot reconstruct or overwrite the retained source")
+	assert_eq(rec.phase, "done")
+	assert_almost_eq(float(rec.opponent.hp), 0.0)
+	var payload := director._shared_presentation_payload("enc_1")
+	assert_eq(payload.presentation_seq, 3, "render payloads still read the live presentation clock")
+	assert_eq(payload.foot_position, [8.0, 9.0, 10.0])
+	_free_director(director)
+
+
 func run_initialized_cases(tree: SceneTree) -> Dictionary:
 	var completed: Array[String] = []
 	for name: String in NATIVE_CASES:
@@ -344,7 +386,7 @@ func run():
 	var result = test.run_initialized_cases(self)
 	await process_frame
 	print("SHARED_CUE_SHAPE_RESULT=" + JSON.stringify(result))
-	quit(0 if result.failures.is_empty() and result.cases.size() == 8 and result.assertions == 66 else 1)
+	quit(0 if result.failures.is_empty() and result.cases.size() == 9 and result.assertions == 77 else 1)
 ''')
 	runner.close()
 	var output: Array = []
@@ -362,8 +404,8 @@ func run():
 			var parsed: Variant = JSON.parse_string(line.trim_prefix("SHARED_CUE_SHAPE_RESULT="))
 			if parsed is Dictionary: result = parsed
 	assert_eq(result_count, 1, combined)
-	assert_eq(result.get("cases", []), NATIVE_CASES, "all eight original cases must run")
-	assert_eq(result.get("assertions", 0), 66, "preserve every original cue assertion")
+	assert_eq(result.get("cases", []), NATIVE_CASES, "all original cue cases and the victory regression must run")
+	assert_eq(result.get("assertions", 0), 77, "preserve all 66 original assertions plus the 11 victory checks")
 	assert_eq(result.get("failures", ["missing result"]), [], combined)
 	assert_false(combined.contains("ERROR:") or combined.contains("SCRIPT ERROR"), combined)
 	assert_false(combined.contains("ObjectDB instances leaked") or combined.contains("resources still in use") \

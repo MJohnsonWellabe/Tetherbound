@@ -3907,6 +3907,11 @@ func _refresh_shared_record_presentation(rec: Dictionary) -> void:
 	var runtime := _shared_host_fight(encounter_id)
 	if (str(rec.get("kind", "")) != "wild" and not _guest_master_duels.has(encounter_id) and _remote_rematch(encounter_id) == null) or runtime == null:
 		return
+	# The killing capture retains this exact opponent for reward validation.
+	# Terminal publication/teardown may still render, but cannot rewrite its
+	# pose or expiring cue while the original owner-save/ACK is outstanding.
+	if runtime.has_meta(&"wild_victory_source"):
+		return
 	var opponent: Dictionary = rec.get("opponent", {}) as Dictionary
 	var payload := _shared_presentation_payload(encounter_id)
 	for key: String in ["body_generation", "presentation_seq", "foot_position", "facing"]:
