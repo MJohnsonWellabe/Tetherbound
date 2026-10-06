@@ -183,7 +183,8 @@ func _grounded_failure(actor: CharacterBody3D) -> String:
 	if not _pending.has("anchor") or actor.global_position.distance_to(_pending.anchor) > float(_pending.get("radius", 0.0)):
 		return "slid_%.2fm_from_anchor" % (actor.global_position.distance_to(_pending.anchor) if _pending.has("anchor") else -1.0)
 	if not _pending.has("world_node") or not is_instance_valid(_pending.world_node.get_ref()): return "no_world_node"
-	if not _supported_capsule(_pending.world_node.get_ref(), actor, _pending.anchor, float(_pending.radius)): return "capsule_unsupported"
+	var support := _capsule_support_failure(_pending.world_node.get_ref(), actor, _pending.anchor, float(_pending.radius))
+	if not support.is_empty(): return "capsule_unsupported:" + support
 	return "collision_or_scale_changed"
 
 func arrival_binding(envelope: Dictionary, permit: Dictionary) -> bool:
@@ -374,21 +375,25 @@ func _original_arrival_row(world: RefCounted, original: Dictionary) -> bool:
 		"permit_id": original.permit.request_id, "realm": original.permit.realm, "entry_id": original.permit.entry_id}
 
 func _supported_capsule(world_node: Node3D, actor: CharacterBody3D, target: Vector3, radius: float) -> bool:
+	return _capsule_support_failure(world_node, actor, target, radius).is_empty()
+
+## "" when the live capsule is supported; otherwise which check failed.
+func _capsule_support_failure(world_node: Node3D, actor: CharacterBody3D, target: Vector3, radius: float) -> String:
 	# Terrain/scatter may finish streaming or change after the initial pose.
 	# Recheck actual support and the complete live capsule before either owner
 	# or host can turn a controller contact into a durable arrival.
-	if world_node == null or actor == null or not world_node.is_ancestor_of(actor): return false
+	if world_node == null or actor == null or not world_node.is_ancestor_of(actor): return "actor_outside_world"
 	var surfaces: Array[Dictionary] = []
 	var center := _landing_hit(world_node, actor, target, radius)
-	if center.is_empty(): return false
+	if center.is_empty(): return "no_ground_at_anchor"
 	var height: float = center.position.y
 	surfaces.append(center)
 	for offset: Vector2 in [Vector2(-radius, 0), Vector2(radius, 0), Vector2(0, -radius), Vector2(0, radius)]:
 		var surface := _landing_hit(world_node, actor, target + Vector3(offset.x, 0, offset.y), radius)
-		if surface.is_empty() or absf(float(surface.position.y) - height) > tan(actor.floor_max_angle) * radius: return false
+		if surface.is_empty() or absf(float(surface.position.y) - height) > tan(actor.floor_max_angle) * radius: return "uneven_support"
 		surfaces.append(surface)
 	var collision := actor.get_node_or_null(^"Collision") as CollisionShape3D
-	if collision == null or collision.disabled or not collision.shape is CapsuleShape3D: return false
+	if collision == null or collision.disabled or not collision.shape is CapsuleShape3D: return "no_capsule"
 	var query := PhysicsShapeQueryParameters3D.new()
 	query.shape = collision.shape
 	query.transform = collision.global_transform
@@ -396,22 +401,22 @@ func _supported_capsule(world_node: Node3D, actor: CharacterBody3D, target: Vect
 	query.exclude = [actor.get_rid()]
 	var space := actor.get_world_3d().direct_space_state
 	var overlaps: Array[Dictionary] = space.intersect_shape(query, 32)
-	if overlaps.is_empty(): return true
+	if overlaps.is_empty(): return ""
 	if overlaps.size() == 32 or not actor.is_on_floor() or not is_finite(actor.safe_margin) \
-		or actor.safe_margin <= 0.0 or actor.safe_margin > radius: return false
+		or actor.safe_margin <= 0.0 or actor.safe_margin > radius: return "overlap_%d_without_floor" % overlaps.size()
 	# A settled controller can retain tiny walkable floor contact. Never waive
 	# a whole floor RID: every overlapping shape must have an actual bounded
 	# walkable recovery contact, and the complete vertically lifted capsule
 	# must clear all bodies, including another shape on the same Hall body.
 	var contacts := _walkable_contacts(actor, actor.global_transform, actor.safe_margin)
-	if not _contacts_on_support(world_node, contacts, surfaces, actor.safe_margin): return false
+	if not _contacts_on_support(world_node, contacts, surfaces, actor.safe_margin): return "contacts_off_support"
 	for overlap: Dictionary in overlaps:
 		var matched := false
 		for contact: Dictionary in contacts:
 			if overlap.get("rid") == contact.rid and overlap.get("shape") == contact.shape: matched = true
-		if not matched: return false
+		if not matched: return "overlap_not_floor:" + str(instance_from_id(overlap.get("collider_id", 0)).get_path() if is_instance_id_valid(overlap.get("collider_id", 0)) and instance_from_id(overlap.get("collider_id", 0)) is Node else "?")
 	query.transform.origin.y += actor.safe_margin
-	return space.intersect_shape(query, 1).is_empty()
+	return "" if space.intersect_shape(query, 1).is_empty() else "lifted_capsule_blocked"
 
 func _walkable_contacts(actor: CharacterBody3D, from: Transform3D, depth_limit: float = -1.0) -> Array[Dictionary]:
 	var motion := PhysicsTestMotionParameters3D.new()

@@ -1919,6 +1919,8 @@ func _on_dialogue_completed(id: String) -> void:
 			and REGIONAL_HOMECOMING.credits_pending(game)
 	if should_open:
 		call_deferred("_open_regional_credits", expected_character_id, expected_world, expected_context)
+	elif initial:
+		print("[regional_ack] credits not requested: the acknowledgement did not complete (credits_pending=%s)" % str(REGIONAL_HOMECOMING.credits_pending(game)))
 
 
 ## One step of the credits handoff: "open" once nothing owns input, "wait"
@@ -1945,10 +1947,15 @@ func _open_regional_credits(expected_character_id: String, expected_world: Objec
 				or REGIONAL_HOMECOMING.character_id(game) != expected_character_id \
 				or _regional_presentation_context != expected_context \
 				or not REGIONAL_HOMECOMING.context_matches(game, expected_context) \
-				or not REGIONAL_HOMECOMING.credits_pending(game): return
-		match _credits_handoff_step(INPUT_OWNER.current(get_tree()), game):
+				or not REGIONAL_HOMECOMING.credits_pending(game):
+			print("[regional_ack] credits handoff ended: presentation context changed or credits no longer pending")
+			return
+		var owner := INPUT_OWNER.current(get_tree())
+		match _credits_handoff_step(owner, game):
 			"open": break
-			"abandon": return
+			"abandon":
+				print("[regional_ack] credits handoff abandoned: input owner %s" % (str(owner.get_path()) if owner != null else "none"))
+				return
 		await get_tree().physics_frame
 	if not is_inside_tree(): return
 	if _regional_credits == null or not is_instance_valid(_regional_credits):
