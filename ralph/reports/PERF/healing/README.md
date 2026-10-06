@@ -226,3 +226,34 @@ the one-line Ironwood registration. Grove construction finishes before both
 live and saved-flag healing; descendant material enumeration, identity deduplication,
 world ancestry and warm-color protection are unchanged. This is source readiness,
 not runtime or performance acceptance.
+
+The corrected quiet existing solo smoke at
+`8f87088f03a18f67bf99ec37ad828cddde1881e3` completed **PASS / exit 0**.
+The freeing frame was **3905 ms**, against the unchanged fresh baseline's
+**6085 ms** (2180 ms less in this single quiet before/after pair; no FPS claim).
+All 143 before-state affected material identities were indexed and changed live;
+no affected materials remained lit live, after the fresh-world slot-4 reload or
+reload+30. All 19 mounted assertions ran. All 29 authored pylon IDs toppled once,
+with final poses, road/static clearance, 168 cable pieces, seven herd members and
+per-pylon save/rebuild comparisons passing. Both native streams have zero SCRIPT
+ERROR, Parse Error, ERROR, FAIL or leak diagnostics; inherited warnings remain.
+The rebuilt scene reported 142 kills because its authored surviving materials
+have a different inventory; the independent whole-world end-state audit is zero.
+Raw [receipt](after-heart/receipt.json), [stdout](after-heart/stdout.log),
+[stderr](after-heart/stderr.log), [exit](after-heart/exit.txt) and
+[hashes](after-heart/SHA256SUMS.txt) are preserved unchanged. The owned engine
+exited and matching lease released. This establishes the corrected solo behavior
+and quiet AFTER; no failed-run timing is substituted.
+
+The existing frame ceiling is tightened from 9000 to **4500 ms**, giving the
+observed 3905 ms a 595 ms (about 15%) margin. The measurement and all other smoke
+assertions are unchanged. The preserved actual frame also satisfies this tighter
+bound; its run used the prior 9000 ms constant. Native compiler verification and
+the existing two-peer handoff remain OPEN. Pure units and baseline are not rerun.
+Independent read-only /root/c3_journal_review: **SOURCE PASS + scoped solo
+runtime PASS**. Reviewed complete baseline-to-product diff and both raw receipts,
+all eight before/after raw hashes, 19 mounted checks and material/pylon/save
+assertions. The 4500 ms ceiling is source-approved; its observed 3905 ms input
+passes the stricter predicate, without claiming a new run of that constant.
+This is one headless observation, not repeatability, FPS or visual/onboarding
+timing equivalence. Native check-only and two-peer acceptance remain pending.

@@ -18,7 +18,7 @@ extends SceneTree
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 ## The single frame the freeing lands in (see the live phase below).
-const MAX_HEAL_FRAME_MS := 9000
+const MAX_HEAL_FRAME_MS := 4500
 const SETTLE_FRAMES := 240
 const SLOT := 4
 const FLAG := "legendary_freed"
