@@ -38,3 +38,4 @@ F29#4: independent current-source relation PASS: Cannonback six weighted Water t
 F29#3: excluded; no mesh work or bear flag change.
 
 F28#0 scoped proof DONE; formal count pending coordinator merge. Remaining criterion evidence OPEN and combined branch landing HOLD. Coordinator lands; no PR created.
+Current serialized queue: R1 successor ON retry owns global lease runr1-f27-guest-wild-successor-on-20261006T0531Z supervisor1852/console13884/coordinator13900/peers20568+3496, verified live. Original R2 continues. R5 spent-tier predicate native PASS1/35 preserved atdb38a02658; unchanged evolution retry remains after R4 repaired solo. No R5 world/import launched against foreign lease.
