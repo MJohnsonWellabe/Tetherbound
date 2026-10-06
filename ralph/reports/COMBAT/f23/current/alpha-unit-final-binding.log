@@ -1,0 +1,9 @@
+Source: 000fa9091a87b00e8982d8ab770276ef452ab3fb (terminal job checkout verified; source SHA is not embedded in unit run.log).
+Existing script: tests/run_tests.gd -- --only=test_water_alpha_state.gd.
+Run37462020219/job112263676639 terminalSUCCESS. Artifact11412289223 render-r4-alpha-unit-000fa909-37462020219.
+ZIP1938bytes SHA256 f2c1d319474f1e8226c2c513d0623f15b1f00e41042ca102202c540c85910b6a matchesAPI.
+11tests104assertions0failedexit0; all11 named methods executed; full run and native logs contain no ERROR/SCRIPT/Parse/WARNING.
+Independent /root/f23_audit SOURCE and bounded EVIDENCE PASS.
+Proves actual encoded opponent-card identity, accepted terminal Alpha resolution, same-body damage adapter, monotonic move_start/arrival transport envelope and existing catch/phase authority regressions.
+Does not prove actual mounted Alpha/controller/co-op/all-slots/mastery/Heal consumers; existing real-scene smoke37462532284 is pending.
+Prior invalid cuts are retained under alpha-unit-invalid-* and receive no passing credit.

@@ -1,0 +1,16 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_water_alpha_state.gd: 1 of 819 test files
+  ok    test_water_alpha_state.gd :: test_abandoned_fight_cannot_replace_the_original_wounded_opponent
+  ok    test_water_alpha_state.gd :: test_accepted_terminal_preserves_alpha_resolution_and_real_opponent_identity
+  ok    test_water_alpha_state.gd :: test_breakout_restores_active_fight_without_unlocking
+  ok    test_water_alpha_state.gd :: test_catch_uses_stored_claimant_decision_rejects_outsider_and_replay
+  ok    test_water_alpha_state.gd :: test_expired_catch_cannot_resolve_or_cancel_a_new_claim
+  ok    test_water_alpha_state.gd :: test_only_live_enemy_zero_hp_resolves_defeat_once
+  ok    test_water_alpha_state.gd :: test_persistent_damage_adapter_binds_same_body_without_an_ai_or_arena
+  ok    test_water_alpha_state.gd :: test_phase_thresholds_are_monotonic_and_do_not_reset_on_healing
+  ok    test_water_alpha_state.gd :: test_repeated_peer_cannot_add_a_different_character_entitlement
+  ok    test_water_alpha_state.gd :: test_runtime_transport_stamps_monotonic_strike_actions
+  ok    test_water_alpha_state.gd :: test_two_participants_join_the_same_wounded_enemy_without_reset
+
+11 tests, 104 assertions, 0 failed
