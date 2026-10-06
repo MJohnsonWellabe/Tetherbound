@@ -8,7 +8,9 @@
   "service": "Meshy; existing project license, no purchased credits",
   "preview_task_id": "01a11180-067f-7131-a97b-47cc2efed24f",
   "preview_settings": "one preview candidate, triangle topology, 8000 target triangles; exact prompt/settings in preview-submission.json",
-  "preview_status": "submitted; service mesh and native inspection pending",
+  "preview_status": "SUCCEEDED; fetched once into assets_raw/crossing_hall_creature_nest/a",
+  "candidate": "preview-candidate.glb; original untextured successful preview, no runtime binding",
+  "preview_inspected": "Service thumbnail shows one wide round woven rim and complete base rather than a square pad. Its low camera does not establish centre concavity, rear/top quality, scale or topology; native inspection remains OPEN.",
   "actual_preview_credits": 20,
   "runtime_enabled": false,
   "acceptance": "OPEN: actual mesh inspection, native scale/creature clearance, unchanged bed footprint/prompt integration and blind camp/home views"
