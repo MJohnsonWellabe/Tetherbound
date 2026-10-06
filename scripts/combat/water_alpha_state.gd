@@ -4,6 +4,7 @@ extends RefCounted
 ## Only the realm authority calls this with host-observed participant identities
 ## and its live enemy instance. Transport intents never contain HP or eligibility.
 const HOST := preload("res://scripts/combat/accepted_action_host.gd")
+const CAPTURE_CODEC := preload("res://scripts/save/water_capture_codec.gd")
 var host := HOST.new()
 var config: Dictionary
 var enemy: RefCounted
@@ -33,7 +34,7 @@ func engage(peer_id: int, character_id: String, creature_uid: String, opponent: 
 		var opened := host.open(peer_id, "water", "wild", {
 			"species_id": enemy.species_id, "level": enemy.level,
 			"hp": enemy.hp, "hp_max": enemy.max_hp, "owner_npc": "",
-			"creature_uid": enemy.uid, "body_generation": 1}, creature_uid, character_id)
+			"card": CAPTURE_CODEC.encode(enemy), "body_generation": 1}, creature_uid, character_id)
 		encounter_id = str(opened.encounter_id)
 	else:
 		if enemy != opponent:

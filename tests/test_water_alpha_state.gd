@@ -59,7 +59,7 @@ func test_runtime_transport_stamps_monotonic_strike_actions() -> void:
 func test_accepted_terminal_preserves_alpha_resolution_and_real_opponent_identity() -> void:
 	var state := _opened()
 	assert_eq(state.host.get_script(), preload("res://scripts/combat/accepted_action_host.gd"))
-	assert_eq(state.record().opponent.creature_uid, state.enemy.uid)
+	assert_eq(state.record().get("opponent", {}).get("card", {}).get("uid", ""), state.enemy.uid)
 	assert_eq(state.record().opponent.body_generation, 1)
 	state.enemy.take_damage(state.enemy.max_hp)
 	state.host.set_phase(state.encounter_id, "done")
