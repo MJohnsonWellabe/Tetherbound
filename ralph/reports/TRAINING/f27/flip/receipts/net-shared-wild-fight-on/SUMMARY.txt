@@ -1,0 +1,10 @@
+# Net smoke run r1-shared-wild-fight-on-20261006T1203Z
+
+Scene: world
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=5008 exited=false unexpected_exit=false
+- peer 1 (client) pid=18384 exited=false unexpected_exit=false
+
+FATAL: ERROR: not every peer said hello within 180 s

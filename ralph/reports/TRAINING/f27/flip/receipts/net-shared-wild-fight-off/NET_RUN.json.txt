@@ -1,0 +1,132 @@
+{
+	"budgets": {
+		"desync_frames": 240.0,
+		"heartbeat_frames": 60.0,
+		"hello_budget_s": 180.0,
+		"near_tolerance_motion_m": 4.0,
+		"near_tolerance_rest_m": 1.5,
+		"smoke_step_budget_s_2peer": 300.0,
+		"smoke_step_budget_s_wide": 1500.0,
+		"step_budget_frames": 3000.0
+	},
+	"failures": [],
+	"fatal": "",
+	"net_conditions": {},
+	"peers": [
+		{
+			"command_timeout_observation": null,
+			"control_port": 54402,
+			"exited": true,
+			"hashes": [
+				949396019,
+				949396019,
+				949396019
+			],
+			"hello": {
+				"enet_port": 29561.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "5a690bb08b14",
+				"peer": 0.0,
+				"pid": 20212.0,
+				"role": "host",
+				"type": "hello",
+				"user_data_dir": "D:/tetherbound/.artifacts/r1-f27-flip/net-shared-wild-fight-off/home-0/Godot/app_userdata/Tetherbound"
+			},
+			"index": 0,
+			"last_heartbeat": {
+				"context": "world",
+				"frame": 253.0,
+				"physics_frame": 1680.0,
+				"pos": [
+					-3.75813031196594,
+					-1.35580265522003,
+					71.62109375
+				],
+				"session_peers": [
+					1.0,
+					1936351238.0
+				],
+				"state_hash": 949396019.0,
+				"t": 278.149,
+				"type": "heartbeat"
+			},
+			"pid": 20212,
+			"role": "host",
+			"unexpected_exit": false
+		},
+		{
+			"command_timeout_observation": null,
+			"control_port": 54403,
+			"exited": true,
+			"hashes": [
+				949396019,
+				949396019,
+				949396019
+			],
+			"hello": {
+				"enet_port": 29562.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "5a690bb08b14",
+				"peer": 1.0,
+				"pid": 9796.0,
+				"role": "client",
+				"type": "hello",
+				"user_data_dir": "D:/tetherbound/.artifacts/r1-f27-flip/net-shared-wild-fight-off/home-1/Godot/app_userdata/Tetherbound"
+			},
+			"index": 1,
+			"last_heartbeat": {
+				"context": "panel:Session",
+				"frame": 452.0,
+				"panel_observation": {
+					"focus_path": "",
+					"owner_path": "/root/Game/Session",
+					"owner_script": "res://scripts/net/session.gd",
+					"tree_paused": false
+				},
+				"physics_frame": 3271.0,
+				"pos": [
+					-14.5705976486206,
+					-1.02548539638519,
+					63.8941955566406
+				],
+				"session_peers": [
+					1.0,
+					1936351238.0
+				],
+				"state_hash": 949396019.0,
+				"t": 277.27,
+				"type": "heartbeat"
+			},
+			"pid": 9796,
+			"role": "client",
+			"unexpected_exit": false
+		}
+	],
+	"proxies": [],
+	"run_id": "r1-shared-wild-fight-off-20261006T1209Z",
+	"scene": "world",
+	"state_hash_excluded_keys": [
+		"party",
+		"inventory",
+		"hotbar",
+		"satiety",
+		"map",
+		"realm_maps",
+		"alpha_pins",
+		"player_pose",
+		"clock_elapsed_seconds",
+		"current_realm",
+		"pending_realm_entry",
+		"realm_hearts",
+		"version"
+	],
+	"state_hash_hashed_keys": [
+		"flags",
+		"placed_buildings",
+		"farm_plots",
+		"death_satchels",
+		"harvested_vegetation",
+		"felled_vegetation",
+		"day"
+	]
+}

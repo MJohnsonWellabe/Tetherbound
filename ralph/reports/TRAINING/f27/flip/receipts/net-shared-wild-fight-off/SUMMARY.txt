@@ -1,0 +1,10 @@
+# Net smoke run r1-shared-wild-fight-off-20261006T1209Z
+
+Scene: world
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=20212 exited=true unexpected_exit=false
+- peer 1 (client) pid=9796 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED

@@ -1,0 +1,131 @@
+{
+	"budgets": {
+		"desync_frames": 240.0,
+		"heartbeat_frames": 60.0,
+		"hello_budget_s": 180.0,
+		"near_tolerance_motion_m": 4.0,
+		"near_tolerance_rest_m": 1.5,
+		"smoke_step_budget_s_2peer": 300.0,
+		"smoke_step_budget_s_wide": 1500.0,
+		"step_budget_frames": 3000.0
+	},
+	"failures": [
+		"peer 0 hosted a world (ERROR: peer silent (peer 0, no heartbeat for >15 s))",
+		"peer 1 joined peer 0's world on port 0 (ERROR: peer silent (peer 0, no heartbeat for >15 s))",
+		"the joiner has a real ENet peer id for host action authority",
+		"peer 0's registry holds both players (ERROR: peer silent (peer 0, no heartbeat for >15 s))",
+		"peer 1's registry holds both players (ERROR: peer silent (peer 0, no heartbeat for >15 s))",
+		"peer 0 deployed its own creature (ERROR: peer silent (peer 0, no heartbeat for >15 s))",
+		"peer 1 deployed its own creature (ERROR: peer silent (peer 0, no heartbeat for >15 s))",
+		"peer 0 engaged a wild creature (ERROR: peer silent (peer 0, no heartbeat for >15 s))"
+	],
+	"fatal": "ERROR: peer silent (peer 0, no heartbeat for >15 s)",
+	"net_conditions": {},
+	"peers": [
+		{
+			"command_timeout_observation": null,
+			"control_port": 63882,
+			"exited": false,
+			"hashes": [
+				949396019,
+				949396019,
+				949396019
+			],
+			"hello": {
+				"enet_port": 34401.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "5a690bb08b14",
+				"peer": 0.0,
+				"pid": 15248.0,
+				"role": "host",
+				"type": "hello",
+				"user_data_dir": "D:/tetherbound/.artifacts/r1-f27-flip/net-shared-wild-fight-on-retry/home-0/Godot/app_userdata/Tetherbound"
+			},
+			"index": 0,
+			"last_heartbeat": {
+				"context": "world",
+				"frame": 69.0,
+				"physics_frame": 240.0,
+				"pos": [
+					-1.40000009536743,
+					4.65094184875488,
+					14.2999992370605
+				],
+				"session_peers": [
+					1.0
+				],
+				"state_hash": 949396019.0,
+				"t": 194.704,
+				"type": "heartbeat"
+			},
+			"pid": 15248,
+			"role": "host",
+			"unexpected_exit": false
+		},
+		{
+			"command_timeout_observation": null,
+			"control_port": 63883,
+			"exited": false,
+			"hashes": [
+				949396019,
+				949396019,
+				949396019
+			],
+			"hello": {
+				"enet_port": 34402.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "5a690bb08b14",
+				"peer": 1.0,
+				"pid": 21024.0,
+				"role": "client",
+				"type": "hello",
+				"user_data_dir": "D:/tetherbound/.artifacts/r1-f27-flip/net-shared-wild-fight-on-retry/home-1/Godot/app_userdata/Tetherbound"
+			},
+			"index": 1,
+			"last_heartbeat": {
+				"context": "world",
+				"frame": 210.0,
+				"physics_frame": 1368.0,
+				"pos": [
+					-1.40000009536743,
+					4.65094184875488,
+					14.2999992370605
+				],
+				"session_peers": [],
+				"state_hash": 949396019.0,
+				"t": 194.864,
+				"type": "heartbeat"
+			},
+			"pid": 21024,
+			"role": "client",
+			"unexpected_exit": false
+		}
+	],
+	"proxies": [],
+	"run_id": "r1-shared-wild-fight-on-retry-20261006T1215Z",
+	"scene": "world",
+	"state_hash_excluded_keys": [
+		"party",
+		"inventory",
+		"hotbar",
+		"satiety",
+		"map",
+		"realm_maps",
+		"alpha_pins",
+		"player_pose",
+		"clock_elapsed_seconds",
+		"current_realm",
+		"pending_realm_entry",
+		"realm_hearts",
+		"version"
+	],
+	"state_hash_hashed_keys": [
+		"flags",
+		"placed_buildings",
+		"farm_plots",
+		"death_satchels",
+		"harvested_vegetation",
+		"felled_vegetation",
+		"day"
+	]
+}

@@ -1,0 +1,5 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=5008 control_port=54243 home=D:\tetherbound\.artifacts\r1-f27-flip\net-shared-wild-fight-on/home-0 log=D:\tetherbound\.artifacts\r1-f27-flip\net-shared-wild-fight-on/peer-0.log
+coordinator: launched peer 1 (client) pid=18384 control_port=54244 home=D:\tetherbound\.artifacts\r1-f27-flip\net-shared-wild-fight-on/home-1 log=D:\tetherbound\.artifacts\r1-f27-flip\net-shared-wild-fight-on/peer-1.log
+FAIL: ERROR: not every peer said hello within 180 s
