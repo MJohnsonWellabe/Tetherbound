@@ -3149,6 +3149,33 @@ jobs:
       - name: Verify Cloudreach persistence tail
         run: timeout 600s godot --headless --path . --script tests/smoke_cloudreach_persistence_tail.gd
 
+  verify-f18-earned-loop:
+    # F18#5 (ACCEPTANCE 6.2): the ordinary-input loop with portals on. Fresh
+    # opening and earned tools, a paid homestead Workbench, a deep Trail Camp
+    # waystone touch, Satchel Home Key to the Crossing Hall, out of its door
+    # to Craft at the Workbench, Save/Load UI, then the home arch back to the
+    # same stone. Measured 15.4 min locally (headless).
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    # A ~15-min job: queued first, on `changes` only (QUEUE ORDER above).
+    needs: changes
+    if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-f18-earned-loop|'))
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /*
+            !/ralph/
+            !/docs/
+            !/shots/
+            !/assets_raw/
+            !/archive/
+      - uses: ./.github/actions/setup-godot
+      - name: Verify F18 earned Home Key loop
+        run: timeout 1800s godot --headless --path . --script tests/smoke_f18_earned_loop.gd
+
   verify-cloudreach-midride-rejoin:
     # F06#6 (ACCEPTANCE 6.1, counted met in batch 22): two real peers; the
     # guest drops its link while riding (including a ride into the host's
@@ -3347,6 +3374,7 @@ jobs:
       - verify-segment-handoffs
       - verify-unbroken-chains
       - verify-cloudreach-persistence
+      - verify-f18-earned-loop
       - verify-bake-freshness
       - verify-unit-tests
       - verify-veg-corridor
