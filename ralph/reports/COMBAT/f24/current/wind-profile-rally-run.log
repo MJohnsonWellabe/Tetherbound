@@ -1,0 +1,6 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_f24_host_commands.gd::test_rally_spends_once_affects_only_owner_and_splits_wind_at_expiry: 1 of 817 test files
+  ok    test_f24_host_commands.gd :: test_rally_spends_once_affects_only_owner_and_splits_wind_at_expiry
+
+1 tests, 11 assertions, 0 failed

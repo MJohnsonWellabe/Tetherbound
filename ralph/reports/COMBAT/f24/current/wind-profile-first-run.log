@@ -1,0 +1,17 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_encounter_host_wind_publish.gd::test_profile_changes_regenerate_the_previous_interval_before_installing_the_new_profile: 1 of 817 test files
+  FAIL  test_encounter_host_wind_publish.gd :: test_profile_changes_regenerate_the_previous_interval_before_installing_the_new_profile
+          expected 9.000000 +/- 0.001000, got 18.000000  (the new rate must not boost the half-second before it was applied)
+          expected 45.000000 +/- 0.001000, got 54.000000  (idle publications use the installed boost without requiring another action)
+          expected 100.000000 +/- 0.001000, got 117.000000  (capacity growth cannot regenerate above the old cap before its boundary)
+          expected 118.000000 +/- 0.001000, got 135.000000
+          expected 118.000000 +/- 0.001000, got 135.000000  (a profile transition never reopens an accepted action for spending)
+
+1 tests, 9 assertions, 1 failed
+
+  test_encounter_host_wind_publish.gd :: test_profile_changes_regenerate_the_previous_interval_before_installing_the_new_profile — expected 9.000000 +/- 0.001000, got 18.000000  (the new rate must not boost the half-second before it was applied)
+  test_encounter_host_wind_publish.gd :: test_profile_changes_regenerate_the_previous_interval_before_installing_the_new_profile — expected 45.000000 +/- 0.001000, got 54.000000  (idle publications use the installed boost without requiring another action)
+  test_encounter_host_wind_publish.gd :: test_profile_changes_regenerate_the_previous_interval_before_installing_the_new_profile — expected 100.000000 +/- 0.001000, got 117.000000  (capacity growth cannot regenerate above the old cap before its boundary)
+  test_encounter_host_wind_publish.gd :: test_profile_changes_regenerate_the_previous_interval_before_installing_the_new_profile — expected 118.000000 +/- 0.001000, got 135.000000
+  test_encounter_host_wind_publish.gd :: test_profile_changes_regenerate_the_previous_interval_before_installing_the_new_profile — expected 118.000000 +/- 0.001000, got 135.000000  (a profile transition never reopens an accepted action for spending)

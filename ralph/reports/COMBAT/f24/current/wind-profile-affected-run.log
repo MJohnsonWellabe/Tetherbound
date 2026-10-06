@@ -1,0 +1,26 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_encounter_host_wind_publish.gd,test_combat_wind.gd,test_f24_host_commands.gd::test_rally,test_f23_live_moves.gd::test_frozen_heal_keeps_actual_profile_uid_resources_and_self_mastery_receipt,test_f23_live_moves.gd::test_self_buff_commits_without_hostile_geometry_and_keeps_original_mastery_and_own_uid: 4 of 817 test files
+  ok    test_combat_wind.gd :: test_authoritative_absolute_wind_is_safe_to_apply_twice
+  ok    test_combat_wind.gd :: test_costs_spend_once_and_exhausted_attacks_still_start_slow_and_weak
+  ok    test_combat_wind.gd :: test_host_owns_wind_spend_quiet_timing_and_exhaustion
+  ok    test_combat_wind.gd :: test_host_wind_commit_is_action_idempotent
+  ok    test_combat_wind.gd :: test_regen_waits_for_delay_and_pauses_during_commitment
+  ok    test_combat_wind.gd :: test_satiety_fed_and_bond_change_capacity_and_regen
+  ok    test_combat_wind.gd :: test_species_profiles_are_safe_and_inverse
+  ok    test_combat_wind.gd :: test_stamina_shroom_truthfully_accelerates_wind_regen
+  ok    test_combat_wind.gd :: test_wind_tuning_has_every_ordered_cost_and_penalty
+  ok    test_encounter_host_wind_publish.gd :: test_duplicate_action_still_cannot_double_drain_after_ticks
+  ok    test_encounter_host_wind_publish.gd :: test_participant_who_never_spent_has_no_fabricated_pool
+  ok    test_encounter_host_wind_publish.gd :: test_profile_changes_regenerate_the_previous_interval_before_installing_the_new_profile
+  ok    test_encounter_host_wind_publish.gd :: test_published_record_carries_regenerated_wind_while_waiting
+  ok    test_encounter_host_wind_publish.gd :: test_tick_regeneration_does_not_double_count_with_a_later_commit
+  ok    test_f23_live_moves.gd :: test_frozen_heal_keeps_actual_profile_uid_resources_and_self_mastery_receipt
+  ok    test_f23_live_moves.gd :: test_self_buff_commits_without_hostile_geometry_and_keeps_original_mastery_and_own_uid
+  ok    test_f24_host_commands.gd :: test_rally_can_commit_on_current_owned_deployment_before_its_first_move
+  FAIL  test_f24_host_commands.gd :: test_rally_spends_once_affects_only_owner_and_splits_wind_at_expiry
+          expected 22.5, got 40.5
+
+18 tests, 233 assertions, 1 failed
+
+  test_f24_host_commands.gd :: test_rally_spends_once_affects_only_owner_and_splits_wind_at_expiry — expected 22.5, got 40.5
