@@ -1445,3 +1445,26 @@ func test_cloud_reentry_without_a_host_proof_keeps_the_identity_whatever_the_map
 	if not rebases.is_empty():
 		assert_eq(rebases[-1].discoveries_hash, PREP.fingerprint({"discovered": identity}),
 			"seeded from the replayed identity, exactly what the host's unproven rebase uses")
+
+
+class GroomHold extends RefCounted:
+	var pending := {"phase": "resume"}
+	var untouched := true
+	func blocked(_player: RefCounted) -> bool: return not pending.is_empty()
+	func local_untouched(_player: RefCounted) -> bool: return untouched
+
+
+func test_the_reported_owner_hold_names_an_untouched_groom_resume() -> void:
+	# render.yml 37398672559: a rejoined guest was held by its groom resume
+	# (opened on every snapshot apply; untouched), but the reason function
+	# skipped untouched grooms and reported a training-row mismatch instead.
+	var session: Node = load("res://scripts/net/session.gd").new()
+	var player := RefCounted.new()
+	var groom := GroomHold.new()
+	session.set("_groom_passive", groom)
+	assert_eq(session.call("_owner_snapshot_block_reason", player), "groom passive pending phase=resume (untouched)",
+		"the hold that blocks owner mutations is the one reported")
+	groom.untouched = false
+	groom.pending.phase = "install"
+	assert_eq(session.call("_owner_snapshot_block_reason", player), "groom passive pending phase=install")
+	session.free()

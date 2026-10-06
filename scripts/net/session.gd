@@ -4741,8 +4741,11 @@ func _owner_training_mutation_blocked(player: RefCounted, ignore_untouched_groom
 
 ## Diagnostic only: which of `_owner_training_mutation_blocked`'s holds is set.
 func _owner_snapshot_block_reason(player: RefCounted) -> String:
-	if _groom_passive != null and _groom_passive.call("blocked", player) == true \
-		and _groom_passive.call("local_untouched", player) != true: return "groom passive pending"
+	# Mirrors _owner_training_mutation_blocked: an untouched groom (e.g. the
+	# resume opened on every snapshot apply) still holds owner mutations.
+	if _groom_passive != null and _groom_passive.call("blocked", player) == true:
+		return "groom passive pending phase=%s%s" % [str((_groom_passive.get("pending") as Dictionary).get("phase", "")),
+			" (untouched)" if _groom_passive.call("local_untouched", player) == true else ""]
 	if _owner_passive != null and _owner_passive.call("blocked", player) == true:
 		return "owner passive pending phase=%s" % str(_owner_passive.get("pending").get("phase"))
 	if _pending_portal_for(str(player.get("character_id"))): return "portal pending"

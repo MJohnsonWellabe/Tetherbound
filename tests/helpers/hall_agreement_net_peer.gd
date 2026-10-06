@@ -732,6 +732,15 @@ func _relic_pedestal_stand(biome: String) -> Dictionary:
 	var game := root.get_node("Game")
 	if not bool(_session().call("portal_runtime_ready")):
 		return {"verdict": "PASS", "detail": "portal runtime off: no pedestal walk", "data": {"skipped": true}}
+	# A rejoined guest's input is held until the host answers its groom resume
+	# (opened on every snapshot apply); a player waits for it, so does this.
+	var session := _session()
+	var deadline := Time.get_ticks_msec() + 20000
+	while bool(session.call("owns_input")) and Time.get_ticks_msec() < deadline:
+		await physics_frame
+	if bool(session.call("owns_input")):
+		return {"verdict": "FAIL", "detail": "input still held 20 s after the rejoin: %s" % str(
+			session.call("_owner_snapshot_block_reason", game.get("local"))), "data": {"skipped": false}}
 	var travel := preload("res://tests/helpers/f49_portal_travel.gd").new(self, game)
 	var ok: bool = await travel.home_key() and await travel.walk_to_pedestal(biome)
 	return {"verdict": "PASS" if ok else "FAIL", "detail": "guest stands at the %s pedestal" % biome if ok else str(travel.failures),
