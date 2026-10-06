@@ -1,0 +1,3 @@
+source=b415f044e41cda1ea545e613a7e286c89797d0f5
+Existing tests/run_tests.gd only test_crossing_hall_portal_mount.gd::test_static_batching_keeps_live_portal_and_relic_display_nodes
+WORKFLOW4 untimed warm standalone component; permitted alongside exact R1 shared_boss ON main558 children23052/22096/3008/14096, foreign global lease unchanged; no world/GPU/FPS/visual acceptance
