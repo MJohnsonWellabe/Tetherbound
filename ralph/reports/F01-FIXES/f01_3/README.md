@@ -1,8 +1,19 @@
 # F01 criterion 3 — night village walk
 
-**R3 resumed — acceptance remains OPEN.** No complete error-free night walk or passing code-blind verdict is claimed. This branch is a WIP checkpoint, not a landing candidate.
+**R3 resumed — acceptance remains OPEN.** Round 3 completed an error-free 12-target native controller walk, but its fresh code-blind review failed inn readability. Round 4 improved the inn view but failed departure traversal. Round 5 tests the public entrance-aisle placement. This branch is a WIP checkpoint, not a landing candidate.
 
-Coordinator answer [6005143821](https://github.com/MJohnsonWellabe/Tetherbound/pull/525#issuecomment-6005143821) removes the bake blocker without authorizing a bake: drop the terrain fingerpost, use the camp's own presentation config, take the previously frame-confirmed rock move, tune the marginal NPC fills and clear Bram's lamp sight line in data. R3 merged accepted main `f267c2b97`, restored `terrain_playground.json` exactly from main, and cherry-picked `9ad7461ac` as `5a030f5f5`. New data tunes the camp fire's existing `glow_scale`, night fills for Mira/Oskar/Nessa/Maren, and Bram's stand spot at the east end of the same bar. Fresh checks, native capture and a fresh blind verdict remain pending; the diagnostics below preserve the earlier failed/interrupted attempts.
+Coordinator answer [6005143821](https://github.com/MJohnsonWellabe/Tetherbound/pull/525#issuecomment-6005143821) removes the bake blocker without authorizing a bake: drop the terrain fingerpost, use the camp's own presentation config, take the previously frame-confirmed rock move, tune the marginal NPC fills and clear Bram's lamp sight line in data. R3 merged accepted main `f267c2b97`, restored `terrain_playground.json` exactly from that baseline, and cherry-picked `9ad7461ac` as `5a030f5f5`. Data tunes the camp fire's existing `glow_scale`, night fills for Mira/Oskar/Nessa/Maren, and Bram's stand spot. Candidate `4f4c200673` places Bram in the public entrance aisle, clear of the tables, barrels and door posts; no interior geometry changed.
+
+## Current proof and retained failures
+
+- Round 3 source `354c64ac69`: unchanged scoped checks **34 tests, 2,689 assertions, 0 failed**, exit 0; unchanged native essence-site smoke **29 checks, 0 failed**, exit 0; import exit 0. Full receipts are in `round3/`.
+- Round 3 native walk: **PASS, 101 captures, 12 visited, max_off_road_m=0.00**, exit 0. All seven NPCs won their own prompts, the key was taken, RoadGate opened, and the camp/all three gates were reached. Native GTX 1060 / Compatibility at 1920x1080; saved PNGs are the unchanged tool's 1280x720 output. No engine/script errors. This is traversal proof, not acceptance: the fresh blind verdict in `round3/VERDICT.md` failed Bram's approach/arrival occlusion.
+- Round 4 source `b11dce01e`: Bram's west-counter arrival was visually clear in the root inspection, but the walk **FAILED**, exit 1, after 42 captures. Departure selected a western nearest-road point and pushed against the inn's west wall while heading to the old key. Complete raw logs/exit are retained in `round4/`; no fresh judge was run on this incomplete walk.
+- Round 5 source `4f4c200673`: unchanged capture queued under the sole global lock. A complete walk and fresh code-blind verdict are required before claiming closure. The round 3 checks are reused for unchanged relevant source under RD-36; this candidate changes only Bram's data placement.
+
+Only six game files differ from the accepted baseline: `village_npcs.json`, band-1 `props.json` and `harvest.json`, `essence_nodes.json`, `village_npcs.gd`, and the existing scoped `villager_night_light.gd` hook. No tests, tools, fixtures, capture logic or bake guards changed. `11880d39` was not taken. Raw receipts and verdicts are committed; PNGs and isolated user profiles remain local.
+
+## Historical diagnostics before the coordinator answer
 
 Source checkpoint: `89e1a9f75`, branch `tb/codex-r3`, based on `origin/main` at `e2fa5e4e6`. Only F01#3 source commits `d23625120` and `7bbc76535` were cherry-picked as `250f8e2f5` and `89e1a9f75`; `11880d39` was not taken. The rock relocation `9ad7461ac` awaits frame confirmation.
 
@@ -62,4 +73,4 @@ Refused source outside approved village snapshot: data/config/terrain_playground
 
 Its output is `bake-scope-refusal.txt`. The existing identity-preserving regional writer requires `terrain_bake.gd`'s hardcoded F17 snapshot, approved source `8ee152a47ee90f430a3e8aafb13d2b0d9c9ad1ea`, and exact input hashes. The new camp sign is outside that snapshot. The existing full scatter writer explicitly refuses replacing a stable-harvest-ID generation (`stable_ids_require_identity_preserving_writer`). Editing guards, faking receipts, manually restamping manifests, or building a replacement tool would violate this task's constraints; none was done.
 
-**One exact question:** Which existing approved bake command or commit should R3 use to refresh the F01#3 camp-sign fingerprint while preserving harvest IDs and the data/config-only scope?
+The historical bake question was resolved by coordinator comment 6005143821: remove the terrain fingerpost and retain the approved shipped bake. No bake was refreshed.
