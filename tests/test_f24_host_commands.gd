@@ -134,10 +134,10 @@ func test_rally_spends_once_affects_only_owner_and_splits_wind_at_expiry() -> vo
 	assert_eq(host.tether_rally(id, 2, 7999).damage, 1.0)
 	assert_eq(host.tether_rally(id, 1, 8000).damage, 1.0)
 	var pool: Dictionary = host.encounters[id].participants[1].move_resources.creature_a
-	pool.wind = 0.0
-	pool.wind_updated_ms = 7000
-	pool.wind_ready_at_ms = 7000
 	var profile := {"creature_uid": "creature_a", "max": 100.0, "regen_per_second": 10.0}
+	host.preview_wind(id, 1, profile, 0.0, 7000)
+	pool.wind = 0.0
+	pool.wind_ready_at_ms = 7000
 	assert_eq(host.preview_wind(id, 1, profile, 0.0, 9000).wind, 22.5)
 	var forged := _command_view()
 	forged.actor.character_id = "owner_b"
