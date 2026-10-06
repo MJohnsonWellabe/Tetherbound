@@ -1,0 +1,41 @@
+{
+	"captures": [
+		"res://shots/f42-footer-720/f42-altar-loadout-1280x720.png",
+		"res://shots/f42-footer-720/f42-altar-loadout-charged-1280x720.png",
+		"res://shots/f42-footer-720/f42-altar-loadout-utility-1280x720.png",
+		"res://shots/f42-footer-720/f42-altar-loadout-ultimate-1280x720.png",
+		"res://shots/f42-footer-720/f42-altar-mastery-1280x720.png",
+		"res://shots/f42-footer-720/f42-altar-gear-1280x720.png",
+		"res://shots/f42-footer-720/f42-altar-gear-trainer-1280x720.png",
+		"res://shots/f42-footer-720/f42-altar-gear-protection-1280x720.png",
+		"res://shots/f42-footer-720/f42-altar-gear-pouch-1280x720.png",
+		"res://shots/f42-footer-720/f42-altar-level-1280x720.png",
+		"res://shots/f42-footer-720/f42-altar-traits-release-1280x720.png",
+		"res://shots/f42-footer-720/f42-altar-traits-populated-1280x720.png",
+		"res://shots/f42-footer-720/f42-altar-traits-confirm-1280x720.png",
+		"res://shots/f42-footer-720/f42-station-forge-1280x720.png",
+		"res://shots/f42-footer-720/f42-station-forge-refine-1280x720.png",
+		"res://shots/f42-footer-720/f42-research-log-1280x720.png",
+		"res://shots/f42-footer-720/f42-bounty-board-1280x720.png"
+	],
+	"combat_fixture_captured": false,
+	"earned_service_save_coop_device_visual_pass": false,
+	"evidence_kind": "native UI layout fixtures only",
+	"fixtures": [
+		"new-game Terrapup",
+		"invented Altar quote",
+		"empty and canonical-display populated trait quotes; confirmation only, no submit",
+		"invented research tasks",
+		"invented bounty rows",
+		"existing Forge station-confirm component"
+	],
+	"missing": [
+		"earned services",
+		"code-blind judge",
+		"world/HUD composite"
+	],
+	"size": [
+		1280,
+		720
+	]
+}
