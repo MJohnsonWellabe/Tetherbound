@@ -63,26 +63,26 @@ gate_e_finale | ON OPEN
 hud_freed_combat_prompt_lifecycle | ON FIRST PASS exit0/10checks; productionHUD/director freedwinner recovery; existingminimalfixture
 input | ON FIRST PASS exit0; actualactionmovement/animation/jump/staminadebit; devicehardwareuntested
 menu | ON FIRST PASSexit0; realworld/nativeUI input/focus/inventory/saveisolatedslot/controlreturn + acceptedTMjournal/receipt/learnedmove; existing grants; independentreviewPASS/raw4+actualsaves4
-menu_open_does_not_offer_to_drop | ON OPEN
+menu_open_does_not_offer_to_drop | ON FIRST PASS, exit0; two native joypad Menu/B cycles with stocked-satchel fixture (three stacks of5); original limits; independent review PASS
 modal_stacking | ON FIRST PASS exit0; realUI menucontrols/refusedoverpicker+dialogue/recoveredafterclose; rawreceipts retained
 night_ecology | ON OPEN
 objective_hint_card | ON FIRST PASS exit0;28hints/titles fit1920x1080/deadline+Game.signal; existingHUDfixture
 opening | ON OPEN
 party_count_after_catches | ON OPEN
 playground | ON OPEN
-post_modal_control | ON OPEN
+post_modal_control | ON FIRST PASS, exit0; three mixed joypad UI/rest/build/pause cycles with actual movement recovery; inherited fixtures; independent review PASS
 relay | ON OPEN
 relay_station | ON OPEN
 release | ON OPEN
 riding | ON OPEN
 satchel_owns_hotbar | ON FIRST PASS exit0; physicalinput ownership/control+heldstackvariants; existingminimalfixture
-settings | ON OPEN
+settings | ON FIRST PASS, exit0; native input/rebinding/file/reset/panic/debug teleport; private controls file; original limits; independent review PASS
 starter_picker | ON FIRST PASS exit0; sameframechoice+physicalDpad navigation; isolatedpickerfixture
 station_panels_hide_world_hud | ON FIRST PASS exit0; fiveactualUIpanels hide+restore bothHUDlayers; existingstand-infixture
 stormwood_deepwood_circuit_wiring | ON OPEN
 stronghold | ON OPEN
-title_load_game | ON OPEN
-title_new_game | ON OPEN
+title_load_game | ON FIRST PASS, exit0; real isolated save/title pad Load/Meadows/locomotion enabled/focus released/pose/day/party COUNT/inventory restoration; staged save fixture; raw4 plus actual saves2; independent review PASS
+title_new_game | ON FIRST PASS, exit0; native title pad activation/reset/Meadows entry; dirty-state fixture and prefilled name confirmation; independent review PASS
 trainer_battle | ON FIRST PASS exit0; 2of2opponents/exact20coin+1potion/XPgain/no-rechallenge-payout; independent functional review PASS; duplicate-starterERROR retained/OFFcomparison PASS exactstderrparity reviewed; legacy local fixture/no durable proof
 trainer_battle_camera | ON FIRST PASS exit0; realMira deployedcamera/GUI focus/controllerorbit entry+exit; rawreceipt retained
 trainer_no_usable_ally | ON FIRST PASS exit0; faintedally honestrefusal/nofalsevictory/directheal restoreschallenge; rawreceipts retained, inheritedfault+heal fixture
@@ -95,6 +95,6 @@ Tournament ON FIRST | FAIL exit1: quarter durable rewards PASS; semi both first 
 Round identity repair93487a4e58 focused six-file coverage | OFF PASS union100tests/1318assertions/exit0 + ON PASS100/1318/exit0; all stderr empty. Full predecessor suite source374601 retained separately; fixed tournament live proof OPEN.
 Tournament fixed-source ON RETRY | FAIL startup exit2 hello180sec, no combat; receipts/net-tournament-on-retry. Repaired completion acceptance remains OPEN.
 
-Frozen-opponent guard d4f2af | Corrected RED unchanged93487 one exact-opponent failure; final corrected OFF+ON each98tests/1033assertions/0failed/exit0/empty stderr; independent review. Live co-op reward recovery OPEN.
+Frozen-opponent guard d4f2af | Corrected RED unchanged93487 one exact-opponent failure; final corrected OFF+ON each98tests/1033assertions/0failed/exit0/empty stderr; independent review. Live co-op reward recovery PASS in corrected F27 proof below.
 
 F27 corrected twopeer proof7c44794 | ONPASSexit0; canonical validator+receipt continuity and event binding executed; finalraw10 incl3productionJSONs. Independent functional reviewPASS40checks/0fail/exit0; hostdepartureerrors/MTUwarning retained. CommitflagOFF/manualheader.
