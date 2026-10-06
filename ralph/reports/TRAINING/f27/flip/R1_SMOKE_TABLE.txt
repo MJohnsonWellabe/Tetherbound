@@ -47,15 +47,15 @@ bramblebun_colourway_binding | ON FIRST PASS, exit0/12assertions/0failures/empty
 build_owns_creature_cycle | ON FIRST PASS, exit0; no-menu LB control/Build Dpad focus+no world cycle/Build LB no cycle; direct party/catalogue setup; independent review PASS
 build_two_creature_beds | ON FIRST PASS, exit0; ten two-bed placement/delta runs/default2s soak/finish_fallback accepted; no save completion observed; free-build fixture; independent review PASS/no post-warmup or180s fallback proof
 catch_aim_slowdown | ON FIRST PASS, exit0; accumulated path length baseline1.22m/aimed0.49m/ratio0.40 over equal60frame windows; CLOSE/placement/owned-starter fixture; independent review PASS
-catching | ON OPEN
-cloudreach_arrival_walk | ON OPEN
+catching | ON FIRST PASS, exit0; aim/control/miss orb-decrease/weak-target catch+party/authored respawn/faint refusal; grants/HP/pose fixtures; independent review PASS
+cloudreach_arrival_walk | ON FIRST PASS, exit0; continuous controller route/five waypoints/Aila prompt+single body/chapter flag; original8x matching-frequency/key fixture; omitted sites/fallback warnings retained; independent review PASS/route only
 combat | ON FIRST PASS exit0; real wild controller/movement/arena/hit+miss/typechart/win/no-autoheal/control-return; independent review PASS; inherited staging/crit-scale fixture disclosed; warnings retained
 combat_hud_left_column | ON FIRST PASS exit0; actualHUD5memberroster/plategeometry at1920x1080; existingHUDfixture
 dialogue_clears_the_world_hud | ON FIRST PASS exit0; actualHUD/dialogue1920x1080/nooverlap/dockrestores; existingstand-inworld fixture
-encounter_scaling | ON OPEN
+encounter_scaling | ON FIRST PASS, exit0/70assertions/0failures; live creature join/leave/no-compound/maxHP/three-roster scaling without battle completion; SessionDouble/direct meadow trainer-start/null body/HP fixture; independent review PASS
 f27_altar_spend | ON FIRST PASS exit0; controller paid6Water/RippletL3->4/one receipt+accepted saved row; independent source+disk review PASS; inherited grants/placement/relocation disclosed, single payment only; warnings retained
-f31_station_paid_path | ON OPEN
-free_build | ON OPEN
+f31_station_paid_path | ON FIRST PASS, exit0; paid station/attachment/ACK/debit/refund/craft/serialized world-binding/forged placement refusal; grants/ghost-pose/direct handler fixtures; actual saves2; Altar v1 exception; independent review PASS
+free_build | ON FIRST ACTIVE; original pad toggle/UI/empty-satchel build/snap-refusal/ownership checks
 gate_a_build_house | ON OPEN
 gate_a_opening_segment | ON OPEN
 gate_a_rest_torch | ON OPEN
@@ -79,7 +79,7 @@ satchel_owns_hotbar | ON FIRST PASS exit0; physicalinput ownership/control+helds
 settings | ON FIRST PASS, exit0; native input/rebinding/file/reset/panic/debug teleport; private controls file; original limits; independent review PASS
 starter_picker | ON FIRST PASS exit0; sameframechoice+physicalDpad navigation; isolatedpickerfixture
 station_panels_hide_world_hud | ON FIRST PASS exit0; fiveactualUIpanels hide+restore bothHUDlayers; existingstand-infixture
-stormwood_deepwood_circuit_wiring | ON OPEN
+stormwood_deepwood_circuit_wiring | ON FIRST PASS, exit0/empty stderr; isolated production chapter/ledger wiring with stubbed outcomes/projections; no actual combat/co-op/disk reload; independent review PASS
 stronghold | ON OPEN
 title_load_game | ON FIRST PASS, exit0; real isolated save/title pad Load/Meadows/locomotion enabled/focus released/pose/day/party COUNT/inventory restoration; staged save fixture; raw4 plus actual saves2; independent review PASS
 title_new_game | ON FIRST PASS, exit0; native title pad activation/reset/Meadows entry; dirty-state fixture and prefilled name confirmation; independent review PASS

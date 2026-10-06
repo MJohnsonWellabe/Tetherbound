@@ -1,0 +1,12 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+[village_npcs] placed 11 of 11
+[climax] no 'CloudreachNoStronghold' node; standing the climax on its own fallback coordinates
+ARRIVAL WALK reached (-79.84781, 130.0309, 39.42924)
+ARRIVAL WALK reached (-299.536, 145.0309, 199.6618)
+ARRIVAL WALK reached (-280.041, 180.0309, 489.3944)
+[village_npcs] placed 1 of 1
+[village_npcs] placed 1 of 1
+ARRIVAL WALK reached (-280.0014, 180.0309, 507.3911)
+ARRIVAL WALK reached (-275.2795, 180.0309, 517.2236)
+CLOUDREACH ARRIVAL WALK OK player=(-275.1539, 180.0309, 517.4825)

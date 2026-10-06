@@ -1,0 +1,2745 @@
+{
+	"codec_version": 1,
+	"format": "tetherbound-save",
+	"payload": {
+		"clock_elapsed_seconds": {
+			"$tb_float64": "000000000000f0bf"
+		},
+		"created_at": "2026-10-06T07:30:33",
+		"day": 1,
+		"death_satchels": [],
+		"display_name": "",
+		"farm_plots": [],
+		"felled_vegetation": {},
+		"flags": {
+			"flags": []
+		},
+		"harvested_vegetation": {},
+		"last_played": "2026-10-06T07:31:02",
+		"migrated_from": "",
+		"placed_buildings": [
+			{
+				"id": "kitchen",
+				"paid": true,
+				"parent_uid": "",
+				"position": [
+					{
+						"$tb_float64": "00000000000018c0"
+					},
+					{
+						"$tb_float64": "000000c0ccccec3f"
+					},
+					{
+						"$tb_float64": "0000000000003440"
+					}
+				],
+				"realm": "meadows",
+				"slot": 0,
+				"uid": "b3",
+				"yaw_deg": {
+					"$tb_float64": "0000000000000000"
+				}
+			},
+			{
+				"id": "kitchen_meadows",
+				"paid": true,
+				"parent_uid": "b3",
+				"position": [
+					{
+						"$tb_float64": "00000000000022c0"
+					},
+					{
+						"$tb_float64": "000000c0ccccec3f"
+					},
+					{
+						"$tb_float64": "0000000000003440"
+					}
+				],
+				"realm": "meadows",
+				"slot": 1,
+				"uid": "b4",
+				"yaw_deg": {
+					"$tb_float64": "0000000000000000"
+				}
+			},
+			{
+				"id": "workbench",
+				"paid": true,
+				"parent_uid": "",
+				"position": [
+					{
+						"$tb_float64": "0000000000002440"
+					},
+					{
+						"$tb_float64": "000000c0ccccec3f"
+					},
+					{
+						"$tb_float64": "0000000000003440"
+					}
+				],
+				"realm": "meadows",
+				"slot": 0,
+				"uid": "b5",
+				"yaw_deg": {
+					"$tb_float64": "0000000000000000"
+				}
+			},
+			{
+				"id": "altar",
+				"paid": true,
+				"position": [
+					{
+						"$tb_float64": "0000000000002cc0"
+					},
+					{
+						"$tb_float64": "000000606ebbee3f"
+					},
+					{
+						"$tb_float64": "0000000000003440"
+					}
+				],
+				"realm": "meadows",
+				"uid": "b6",
+				"yaw_deg": {
+					"$tb_float64": "0000000000000000"
+				}
+			},
+			{
+				"id": "den",
+				"paid": true,
+				"parent_uid": "",
+				"position": [
+					{
+						"$tb_float64": "00000000000018c0"
+					},
+					{
+						"$tb_float64": "000000c0ccccec3f"
+					},
+					{
+						"$tb_float64": "0000000000003040"
+					}
+				],
+				"realm": "meadows",
+				"slot": 0,
+				"uid": "b7",
+				"yaw_deg": {
+					"$tb_float64": "0000000000000000"
+				}
+			},
+			{
+				"id": "farm",
+				"paid": true,
+				"parent_uid": "",
+				"position": [
+					{
+						"$tb_float64": "0000000000002c40"
+					},
+					{
+						"$tb_float64": "000000c0ccccec3f"
+					},
+					{
+						"$tb_float64": "0000000000003240"
+					}
+				],
+				"realm": "meadows",
+				"slot": 0,
+				"uid": "b8",
+				"yaw_deg": {
+					"$tb_float64": "0000000000000000"
+				}
+			}
+		],
+		"realm_environment": {},
+		"redesign_world": {
+			"alpha_cycles": {},
+			"bounty_day": {
+				"$tb_float64": "0000000000000000"
+			},
+			"fifth_arch_stirred": false,
+			"node_cycles": {},
+			"portal_unlocks": [],
+			"rematch_cycles": {},
+			"shrine_display": {},
+			"station_tiers": {}
+		},
+		"reward_deliveries": {
+			"altar_building:0a95a4b0221dd899a17b01b3def76b3a62070963aa1999d74705b8eb66ca201c": {
+				"action": "dismantle",
+				"action_id": "244cb159c284a6a28c0cc9697808bc6d",
+				"after": {
+					"inventory": [
+						{
+							"id": "rootstone",
+							"n": 14
+						},
+						{
+							"id": "ironwood",
+							"n": 8
+						},
+						{
+							"id": "rootiron_ingot",
+							"n": 2
+						},
+						{
+							"id": "stone",
+							"n": 12
+						},
+						{
+							"id": "wood",
+							"n": 4
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [],
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:b4a048d87b85a9119adc13b4d9a8e63e:place_building:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:5e6f0686d23849d87bdeb20d8285d900:place_building:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:2787321bbf04d4fc72459a5871689f67:dismantle:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:244cb159c284a6a28c0cc9697808bc6d:dismantle:b1"
+						],
+						"waystones_activated": {}
+					}
+				},
+				"before": {
+					"inventory": [
+						{
+							"id": "rootstone",
+							"n": 8
+						},
+						{
+							"id": "ironwood",
+							"n": 8
+						},
+						{
+							"id": "rootiron_ingot",
+							"n": 2
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [],
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:b4a048d87b85a9119adc13b4d9a8e63e:place_building:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:5e6f0686d23849d87bdeb20d8285d900:place_building:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:2787321bbf04d4fc72459a5871689f67:dismantle:b2"
+						],
+						"waystones_activated": {}
+					}
+				},
+				"character_id": "character-4f751ebebc68b301ab401aa7e0dd05ed",
+				"character_revision": 5,
+				"delivery_id": "altar_building:0a95a4b0221dd899a17b01b3def76b3a62070963aa1999d74705b8eb66ca201c",
+				"intent": {
+					"cost": [
+						{
+							"id": "stone",
+							"n": 12
+						},
+						{
+							"id": "rootstone",
+							"n": 6
+						},
+						{
+							"id": "wood",
+							"n": 4
+						}
+					],
+					"record": {
+						"id": "forge",
+						"paid": true,
+						"parent_uid": "",
+						"position": [
+							{
+								"$tb_float64": "00000000000018c0"
+							},
+							{
+								"$tb_float64": "000000c0ccccec3f"
+							},
+							{
+								"$tb_float64": "0000000000003440"
+							}
+						],
+						"realm": "meadows",
+						"slot": 0,
+						"uid": "b1",
+						"yaw_deg": {
+							"$tb_float64": "0000000000000000"
+						}
+					},
+					"request": {
+						"kind": "dismantle",
+						"realm": "meadows",
+						"txn_id": "244cb159c284a6a28c0cc9697808bc6d",
+						"uid": "b1"
+					}
+				},
+				"journal_revision": 1,
+				"kind": "altar_building",
+				"receipt": "craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:244cb159c284a6a28c0cc9697808bc6d:dismantle:b1",
+				"session_id": "0bc8541b22daa20902af7bda38b4615d",
+				"status": "accepted",
+				"version": 2,
+				"world_id": "slot-0",
+				"world_namespace": "575979de479ce04b6192e09a2df76bdc"
+			},
+			"altar_building:0d9f6477e4fd0df958f8b7ba5f36f3813f29642f70485ddbcbbf448abab82316": {
+				"action": "dismantle",
+				"action_id": "2787321bbf04d4fc72459a5871689f67",
+				"after": {
+					"inventory": [
+						{
+							"id": "rootstone",
+							"n": 8
+						},
+						{
+							"id": "ironwood",
+							"n": 8
+						},
+						{
+							"id": "rootiron_ingot",
+							"n": 2
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [],
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:b4a048d87b85a9119adc13b4d9a8e63e:place_building:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:5e6f0686d23849d87bdeb20d8285d900:place_building:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:2787321bbf04d4fc72459a5871689f67:dismantle:b2"
+						],
+						"waystones_activated": {}
+					}
+				},
+				"before": {
+					"inventory": [
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [],
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:b4a048d87b85a9119adc13b4d9a8e63e:place_building:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:5e6f0686d23849d87bdeb20d8285d900:place_building:b2"
+						],
+						"waystones_activated": {}
+					}
+				},
+				"character_id": "character-4f751ebebc68b301ab401aa7e0dd05ed",
+				"character_revision": 4,
+				"delivery_id": "altar_building:0d9f6477e4fd0df958f8b7ba5f36f3813f29642f70485ddbcbbf448abab82316",
+				"intent": {
+					"cost": [
+						{
+							"id": "rootstone",
+							"n": 8
+						},
+						{
+							"id": "ironwood",
+							"n": 8
+						},
+						{
+							"id": "rootiron_ingot",
+							"n": 2
+						}
+					],
+					"record": {
+						"id": "forge_meadows",
+						"paid": true,
+						"parent_uid": "b1",
+						"position": [
+							{
+								"$tb_float64": "000000a0999921c0"
+							},
+							{
+								"$tb_float64": "000000c0ccccec3f"
+							},
+							{
+								"$tb_float64": "0000000000003440"
+							}
+						],
+						"realm": "meadows",
+						"slot": 1,
+						"uid": "b2",
+						"yaw_deg": {
+							"$tb_float64": "0000000000000000"
+						}
+					},
+					"request": {
+						"kind": "dismantle",
+						"realm": "meadows",
+						"txn_id": "2787321bbf04d4fc72459a5871689f67",
+						"uid": "b2"
+					}
+				},
+				"journal_revision": 1,
+				"kind": "altar_building",
+				"receipt": "craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:2787321bbf04d4fc72459a5871689f67:dismantle:b2",
+				"session_id": "0bc8541b22daa20902af7bda38b4615d",
+				"status": "accepted",
+				"version": 2,
+				"world_id": "slot-0",
+				"world_namespace": "575979de479ce04b6192e09a2df76bdc"
+			},
+			"altar_building:14d5cf2bf86f040b5829eb4ded8030681005dc5c3d3187efdb4fbef90eccfa14": {
+				"action": "place_building",
+				"action_id": "26dd6baddce3b9080ba3d03fb39fb404",
+				"after": {
+					"inventory": [
+						{
+							"id": "rootstone",
+							"n": 14
+						},
+						{
+							"id": "ironwood",
+							"n": 8
+						},
+						{
+							"id": "rootiron_ingot",
+							"n": 2
+						},
+						{
+							"id": "stone",
+							"n": 12
+						},
+						{
+							"id": "wood",
+							"n": 4
+						},
+						{
+							"id": "potion_small",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [],
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:b4a048d87b85a9119adc13b4d9a8e63e:place_building:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:5e6f0686d23849d87bdeb20d8285d900:place_building:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:2787321bbf04d4fc72459a5871689f67:dismantle:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:244cb159c284a6a28c0cc9697808bc6d:dismantle:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:51483bb671f2d3af49a13e9238430cc7:place_building:b3",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:7a0643f8882e29bf63643223e7ea2a2a:place_building:b4",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:2f2aecb2ee8374067b0851811c957d9a",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:26dd6baddce3b9080ba3d03fb39fb404:place_building:b5"
+						],
+						"waystones_activated": {}
+					}
+				},
+				"before": {
+					"inventory": [
+						{
+							"id": "rootstone",
+							"n": 14
+						},
+						{
+							"id": "ironwood",
+							"n": 8
+						},
+						{
+							"id": "rootiron_ingot",
+							"n": 2
+						},
+						{
+							"id": "stone",
+							"n": 16
+						},
+						{
+							"id": "wood",
+							"n": 14
+						},
+						{
+							"id": "potion_small",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [],
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:b4a048d87b85a9119adc13b4d9a8e63e:place_building:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:5e6f0686d23849d87bdeb20d8285d900:place_building:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:2787321bbf04d4fc72459a5871689f67:dismantle:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:244cb159c284a6a28c0cc9697808bc6d:dismantle:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:51483bb671f2d3af49a13e9238430cc7:place_building:b3",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:7a0643f8882e29bf63643223e7ea2a2a:place_building:b4",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:2f2aecb2ee8374067b0851811c957d9a"
+						],
+						"waystones_activated": {}
+					}
+				},
+				"character_id": "character-4f751ebebc68b301ab401aa7e0dd05ed",
+				"character_revision": 13,
+				"delivery_id": "altar_building:14d5cf2bf86f040b5829eb4ded8030681005dc5c3d3187efdb4fbef90eccfa14",
+				"intent": {
+					"cost": [
+						{
+							"id": "wood",
+							"n": 10
+						},
+						{
+							"id": "stone",
+							"n": 4
+						}
+					],
+					"record": {
+						"id": "workbench",
+						"paid": true,
+						"parent_uid": "",
+						"position": [
+							{
+								"$tb_float64": "0000000000002440"
+							},
+							{
+								"$tb_float64": "000000c0ccccec3f"
+							},
+							{
+								"$tb_float64": "0000000000003440"
+							}
+						],
+						"realm": "meadows",
+						"slot": 0,
+						"uid": "b5",
+						"yaw_deg": {
+							"$tb_float64": "0000000000000000"
+						}
+					},
+					"request": {
+						"id": "workbench",
+						"kind": "place_building",
+						"paid": true,
+						"parent_uid": "",
+						"position": [
+							{
+								"$tb_float64": "0000000000002440"
+							},
+							{
+								"$tb_float64": "000000c0ccccec3f"
+							},
+							{
+								"$tb_float64": "0000000000003440"
+							}
+						],
+						"realm": "meadows",
+						"txn_id": "26dd6baddce3b9080ba3d03fb39fb404",
+						"yaw_deg": {
+							"$tb_float64": "0000000000000000"
+						}
+					}
+				},
+				"journal_revision": 1,
+				"kind": "altar_building",
+				"receipt": "craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:26dd6baddce3b9080ba3d03fb39fb404:place_building:b5",
+				"session_id": "0bc8541b22daa20902af7bda38b4615d",
+				"status": "accepted",
+				"version": 2,
+				"world_id": "slot-0",
+				"world_namespace": "575979de479ce04b6192e09a2df76bdc"
+			},
+			"altar_building:17f62bcb1493b791232db7e5b3e6d9a48622f1e9d58894e3a3096eb93feae08c": {
+				"action": "place_building",
+				"action_id": "5e6f0686d23849d87bdeb20d8285d900",
+				"after": {
+					"inventory": [
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [],
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:b4a048d87b85a9119adc13b4d9a8e63e:place_building:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:5e6f0686d23849d87bdeb20d8285d900:place_building:b2"
+						],
+						"waystones_activated": {}
+					}
+				},
+				"before": {
+					"inventory": [
+						{
+							"id": "rootstone",
+							"n": 8
+						},
+						{
+							"id": "ironwood",
+							"n": 8
+						},
+						{
+							"id": "rootiron_ingot",
+							"n": 2
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [],
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:b4a048d87b85a9119adc13b4d9a8e63e:place_building:b1"
+						],
+						"waystones_activated": {}
+					}
+				},
+				"character_id": "character-4f751ebebc68b301ab401aa7e0dd05ed",
+				"character_revision": 3,
+				"delivery_id": "altar_building:17f62bcb1493b791232db7e5b3e6d9a48622f1e9d58894e3a3096eb93feae08c",
+				"intent": {
+					"cost": [
+						{
+							"id": "rootstone",
+							"n": 8
+						},
+						{
+							"id": "ironwood",
+							"n": 8
+						},
+						{
+							"id": "rootiron_ingot",
+							"n": 2
+						}
+					],
+					"record": {
+						"id": "forge_meadows",
+						"paid": true,
+						"parent_uid": "b1",
+						"position": [
+							{
+								"$tb_float64": "000000a0999921c0"
+							},
+							{
+								"$tb_float64": "000000c0ccccec3f"
+							},
+							{
+								"$tb_float64": "0000000000003440"
+							}
+						],
+						"realm": "meadows",
+						"slot": 1,
+						"uid": "b2",
+						"yaw_deg": {
+							"$tb_float64": "0000000000000000"
+						}
+					},
+					"request": {
+						"id": "forge_meadows",
+						"kind": "place_building",
+						"paid": true,
+						"parent_uid": "b1",
+						"position": [
+							{
+								"$tb_float64": "000000a0999921c0"
+							},
+							{
+								"$tb_float64": "000000c0ccccec3f"
+							},
+							{
+								"$tb_float64": "0000000000003440"
+							}
+						],
+						"realm": "meadows",
+						"txn_id": "5e6f0686d23849d87bdeb20d8285d900",
+						"yaw_deg": {
+							"$tb_float64": "0000000000000000"
+						}
+					}
+				},
+				"journal_revision": 1,
+				"kind": "altar_building",
+				"receipt": "craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:5e6f0686d23849d87bdeb20d8285d900:place_building:b2",
+				"session_id": "0bc8541b22daa20902af7bda38b4615d",
+				"status": "accepted",
+				"version": 2,
+				"world_id": "slot-0",
+				"world_namespace": "575979de479ce04b6192e09a2df76bdc"
+			},
+			"altar_building:48276c081389bf402b6eca75c8dfd6abb8fd2ac798182feaf42d34574da5bdaf": {
+				"action": "place_building",
+				"action_id": "b4a048d87b85a9119adc13b4d9a8e63e",
+				"after": {
+					"inventory": [
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [],
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:b4a048d87b85a9119adc13b4d9a8e63e:place_building:b1"
+						],
+						"waystones_activated": {}
+					}
+				},
+				"before": {
+					"inventory": [
+						{
+							"id": "stone",
+							"n": 12
+						},
+						{
+							"id": "rootstone",
+							"n": 6
+						},
+						{
+							"id": "wood",
+							"n": 4
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [],
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [],
+						"waystones_activated": {}
+					}
+				},
+				"character_id": "character-4f751ebebc68b301ab401aa7e0dd05ed",
+				"character_revision": 1,
+				"delivery_id": "altar_building:48276c081389bf402b6eca75c8dfd6abb8fd2ac798182feaf42d34574da5bdaf",
+				"intent": {
+					"cost": [
+						{
+							"id": "stone",
+							"n": 12
+						},
+						{
+							"id": "rootstone",
+							"n": 6
+						},
+						{
+							"id": "wood",
+							"n": 4
+						}
+					],
+					"record": {
+						"id": "forge",
+						"paid": true,
+						"parent_uid": "",
+						"position": [
+							{
+								"$tb_float64": "00000000000018c0"
+							},
+							{
+								"$tb_float64": "000000c0ccccec3f"
+							},
+							{
+								"$tb_float64": "0000000000003440"
+							}
+						],
+						"realm": "meadows",
+						"slot": 0,
+						"uid": "b1",
+						"yaw_deg": {
+							"$tb_float64": "0000000000000000"
+						}
+					},
+					"request": {
+						"id": "forge",
+						"kind": "place_building",
+						"paid": true,
+						"parent_uid": "",
+						"position": [
+							{
+								"$tb_float64": "00000000000018c0"
+							},
+							{
+								"$tb_float64": "000000c0ccccec3f"
+							},
+							{
+								"$tb_float64": "0000000000003440"
+							}
+						],
+						"realm": "meadows",
+						"txn_id": "b4a048d87b85a9119adc13b4d9a8e63e",
+						"yaw_deg": {
+							"$tb_float64": "0000000000000000"
+						}
+					}
+				},
+				"journal_revision": 1,
+				"kind": "altar_building",
+				"receipt": "craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:b4a048d87b85a9119adc13b4d9a8e63e:place_building:b1",
+				"session_id": "0bc8541b22daa20902af7bda38b4615d",
+				"status": "accepted",
+				"version": 2,
+				"world_id": "slot-0",
+				"world_namespace": "575979de479ce04b6192e09a2df76bdc"
+			},
+			"altar_building:67d93d7f9f2ac17a79fca33a54187cc37353913ba13812ea57ad2b6fd3e2d5c8": {
+				"action": "place_building",
+				"action_id": "c478516c053425e693927026e264d06e",
+				"after": {
+					"inventory": [
+						{
+							"id": "rootstone",
+							"n": 10
+						},
+						{
+							"id": "ironwood",
+							"n": 6
+						},
+						{
+							"id": "rootiron_ingot",
+							"n": 2
+						},
+						{
+							"id": "stone",
+							"n": 2
+						},
+						{
+							"id": "wood",
+							"n": 4
+						},
+						{
+							"id": "potion_small",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [],
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:b4a048d87b85a9119adc13b4d9a8e63e:place_building:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:5e6f0686d23849d87bdeb20d8285d900:place_building:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:2787321bbf04d4fc72459a5871689f67:dismantle:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:244cb159c284a6a28c0cc9697808bc6d:dismantle:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:51483bb671f2d3af49a13e9238430cc7:place_building:b3",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:7a0643f8882e29bf63643223e7ea2a2a:place_building:b4",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:2f2aecb2ee8374067b0851811c957d9a",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:26dd6baddce3b9080ba3d03fb39fb404:place_building:b5",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:altar_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:c478516c053425e693927026e264d06e:place_building:b6"
+						],
+						"waystones_activated": {}
+					}
+				},
+				"before": {
+					"inventory": [
+						{
+							"id": "rootstone",
+							"n": 14
+						},
+						{
+							"id": "ironwood",
+							"n": 8
+						},
+						{
+							"id": "rootiron_ingot",
+							"n": 2
+						},
+						{
+							"id": "stone",
+							"n": 12
+						},
+						{
+							"id": "wood",
+							"n": 4
+						},
+						{
+							"id": "potion_small",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [],
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:b4a048d87b85a9119adc13b4d9a8e63e:place_building:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:5e6f0686d23849d87bdeb20d8285d900:place_building:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:2787321bbf04d4fc72459a5871689f67:dismantle:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:244cb159c284a6a28c0cc9697808bc6d:dismantle:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:51483bb671f2d3af49a13e9238430cc7:place_building:b3",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:7a0643f8882e29bf63643223e7ea2a2a:place_building:b4",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:2f2aecb2ee8374067b0851811c957d9a",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:26dd6baddce3b9080ba3d03fb39fb404:place_building:b5"
+						],
+						"waystones_activated": {}
+					}
+				},
+				"character_id": "character-4f751ebebc68b301ab401aa7e0dd05ed",
+				"character_revision": 14,
+				"delivery_id": "altar_building:67d93d7f9f2ac17a79fca33a54187cc37353913ba13812ea57ad2b6fd3e2d5c8",
+				"intent": {
+					"cost": [
+						{
+							"id": "stone",
+							"n": 10
+						},
+						{
+							"id": "rootstone",
+							"n": 4
+						},
+						{
+							"id": "ironwood",
+							"n": 2
+						}
+					],
+					"record": {
+						"id": "altar",
+						"paid": true,
+						"position": [
+							{
+								"$tb_float64": "0000000000002cc0"
+							},
+							{
+								"$tb_float64": "000000606ebbee3f"
+							},
+							{
+								"$tb_float64": "0000000000003440"
+							}
+						],
+						"realm": "meadows",
+						"uid": "b6",
+						"yaw_deg": {
+							"$tb_float64": "0000000000000000"
+						}
+					},
+					"request": {
+						"id": "altar",
+						"kind": "place_building",
+						"paid": true,
+						"position": [
+							{
+								"$tb_float64": "0000000000002cc0"
+							},
+							{
+								"$tb_float64": "000000606ebbee3f"
+							},
+							{
+								"$tb_float64": "0000000000003440"
+							}
+						],
+						"realm": "meadows",
+						"txn_id": "c478516c053425e693927026e264d06e",
+						"yaw_deg": {
+							"$tb_float64": "0000000000000000"
+						}
+					}
+				},
+				"journal_revision": 1,
+				"kind": "altar_building",
+				"receipt": "craft:character-4f751ebebc68b301ab401aa7e0dd05ed:altar_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:c478516c053425e693927026e264d06e:place_building:b6",
+				"session_id": "0bc8541b22daa20902af7bda38b4615d",
+				"status": "accepted",
+				"version": 1,
+				"world_id": "slot-0",
+				"world_namespace": "575979de479ce04b6192e09a2df76bdc"
+			},
+			"altar_building:a000675ab0196a63df701cc3a1560e2555580af4b30aa72b8cf3c59814eaa1a9": {
+				"action": "place_building",
+				"action_id": "7a0643f8882e29bf63643223e7ea2a2a",
+				"after": {
+					"inventory": [
+						{
+							"id": "rootstone",
+							"n": 14
+						},
+						{
+							"id": "ironwood",
+							"n": 8
+						},
+						{
+							"id": "rootiron_ingot",
+							"n": 2
+						},
+						{
+							"id": "stone",
+							"n": 12
+						},
+						{
+							"id": "wood",
+							"n": 4
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [],
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:b4a048d87b85a9119adc13b4d9a8e63e:place_building:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:5e6f0686d23849d87bdeb20d8285d900:place_building:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:2787321bbf04d4fc72459a5871689f67:dismantle:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:244cb159c284a6a28c0cc9697808bc6d:dismantle:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:51483bb671f2d3af49a13e9238430cc7:place_building:b3",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:7a0643f8882e29bf63643223e7ea2a2a:place_building:b4"
+						],
+						"waystones_activated": {}
+					}
+				},
+				"before": {
+					"inventory": [
+						{
+							"id": "rootstone",
+							"n": 22
+						},
+						{
+							"id": "ironwood",
+							"n": 16
+						},
+						{
+							"id": "rootiron_ingot",
+							"n": 4
+						},
+						{
+							"id": "stone",
+							"n": 12
+						},
+						{
+							"id": "wood",
+							"n": 4
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [],
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:b4a048d87b85a9119adc13b4d9a8e63e:place_building:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:5e6f0686d23849d87bdeb20d8285d900:place_building:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:2787321bbf04d4fc72459a5871689f67:dismantle:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:244cb159c284a6a28c0cc9697808bc6d:dismantle:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:51483bb671f2d3af49a13e9238430cc7:place_building:b3"
+						],
+						"waystones_activated": {}
+					}
+				},
+				"character_id": "character-4f751ebebc68b301ab401aa7e0dd05ed",
+				"character_revision": 9,
+				"delivery_id": "altar_building:a000675ab0196a63df701cc3a1560e2555580af4b30aa72b8cf3c59814eaa1a9",
+				"intent": {
+					"cost": [
+						{
+							"id": "rootstone",
+							"n": 8
+						},
+						{
+							"id": "ironwood",
+							"n": 8
+						},
+						{
+							"id": "rootiron_ingot",
+							"n": 2
+						}
+					],
+					"record": {
+						"id": "kitchen_meadows",
+						"paid": true,
+						"parent_uid": "b3",
+						"position": [
+							{
+								"$tb_float64": "00000000000022c0"
+							},
+							{
+								"$tb_float64": "000000c0ccccec3f"
+							},
+							{
+								"$tb_float64": "0000000000003440"
+							}
+						],
+						"realm": "meadows",
+						"slot": 1,
+						"uid": "b4",
+						"yaw_deg": {
+							"$tb_float64": "0000000000000000"
+						}
+					},
+					"request": {
+						"id": "kitchen_meadows",
+						"kind": "place_building",
+						"paid": true,
+						"parent_uid": "b3",
+						"position": [
+							{
+								"$tb_float64": "00000000000022c0"
+							},
+							{
+								"$tb_float64": "000000c0ccccec3f"
+							},
+							{
+								"$tb_float64": "0000000000003440"
+							}
+						],
+						"realm": "meadows",
+						"txn_id": "7a0643f8882e29bf63643223e7ea2a2a",
+						"yaw_deg": {
+							"$tb_float64": "0000000000000000"
+						}
+					}
+				},
+				"journal_revision": 1,
+				"kind": "altar_building",
+				"receipt": "craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:7a0643f8882e29bf63643223e7ea2a2a:place_building:b4",
+				"session_id": "0bc8541b22daa20902af7bda38b4615d",
+				"status": "accepted",
+				"version": 2,
+				"world_id": "slot-0",
+				"world_namespace": "575979de479ce04b6192e09a2df76bdc"
+			},
+			"altar_building:a4648aad30caba3a4487729d25713895d900e75415c501b97c36cd08eff632d7": {
+				"action": "place_building",
+				"action_id": "c299b3c8a1f62be5ba43ef91c3481c66",
+				"after": {
+					"inventory": [
+						{
+							"id": "rootstone",
+							"n": 10
+						},
+						{
+							"id": "ironwood",
+							"n": 6
+						},
+						{
+							"id": "rootiron_ingot",
+							"n": 2
+						},
+						{
+							"id": "stone",
+							"n": 2
+						},
+						{
+							"id": "wood",
+							"n": 4
+						},
+						{
+							"id": "potion_small",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [],
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:b4a048d87b85a9119adc13b4d9a8e63e:place_building:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:5e6f0686d23849d87bdeb20d8285d900:place_building:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:2787321bbf04d4fc72459a5871689f67:dismantle:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:244cb159c284a6a28c0cc9697808bc6d:dismantle:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:51483bb671f2d3af49a13e9238430cc7:place_building:b3",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:7a0643f8882e29bf63643223e7ea2a2a:place_building:b4",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:2f2aecb2ee8374067b0851811c957d9a",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:26dd6baddce3b9080ba3d03fb39fb404:place_building:b5",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:altar_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:c478516c053425e693927026e264d06e:place_building:b6",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:c299b3c8a1f62be5ba43ef91c3481c66:place_building:b7"
+						],
+						"waystones_activated": {}
+					}
+				},
+				"before": {
+					"inventory": [
+						{
+							"id": "rootstone",
+							"n": 10
+						},
+						{
+							"id": "ironwood",
+							"n": 6
+						},
+						{
+							"id": "rootiron_ingot",
+							"n": 2
+						},
+						{
+							"id": "stone",
+							"n": 2
+						},
+						{
+							"id": "wood",
+							"n": 16
+						},
+						{
+							"id": "potion_small",
+							"n": 1
+						},
+						{
+							"id": "fiber",
+							"n": 10
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [],
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:b4a048d87b85a9119adc13b4d9a8e63e:place_building:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:5e6f0686d23849d87bdeb20d8285d900:place_building:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:2787321bbf04d4fc72459a5871689f67:dismantle:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:244cb159c284a6a28c0cc9697808bc6d:dismantle:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:51483bb671f2d3af49a13e9238430cc7:place_building:b3",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:7a0643f8882e29bf63643223e7ea2a2a:place_building:b4",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:2f2aecb2ee8374067b0851811c957d9a",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:26dd6baddce3b9080ba3d03fb39fb404:place_building:b5",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:altar_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:c478516c053425e693927026e264d06e:place_building:b6"
+						],
+						"waystones_activated": {}
+					}
+				},
+				"character_id": "character-4f751ebebc68b301ab401aa7e0dd05ed",
+				"character_revision": 16,
+				"delivery_id": "altar_building:a4648aad30caba3a4487729d25713895d900e75415c501b97c36cd08eff632d7",
+				"intent": {
+					"cost": [
+						{
+							"id": "wood",
+							"n": 12
+						},
+						{
+							"id": "fiber",
+							"n": 10
+						}
+					],
+					"record": {
+						"id": "den",
+						"paid": true,
+						"parent_uid": "",
+						"position": [
+							{
+								"$tb_float64": "00000000000018c0"
+							},
+							{
+								"$tb_float64": "000000c0ccccec3f"
+							},
+							{
+								"$tb_float64": "0000000000003040"
+							}
+						],
+						"realm": "meadows",
+						"slot": 0,
+						"uid": "b7",
+						"yaw_deg": {
+							"$tb_float64": "0000000000000000"
+						}
+					},
+					"request": {
+						"id": "den",
+						"kind": "place_building",
+						"paid": true,
+						"parent_uid": "",
+						"position": [
+							{
+								"$tb_float64": "00000000000018c0"
+							},
+							{
+								"$tb_float64": "000000c0ccccec3f"
+							},
+							{
+								"$tb_float64": "0000000000003040"
+							}
+						],
+						"realm": "meadows",
+						"txn_id": "c299b3c8a1f62be5ba43ef91c3481c66",
+						"yaw_deg": {
+							"$tb_float64": "0000000000000000"
+						}
+					}
+				},
+				"journal_revision": 1,
+				"kind": "altar_building",
+				"receipt": "craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:c299b3c8a1f62be5ba43ef91c3481c66:place_building:b7",
+				"session_id": "0bc8541b22daa20902af7bda38b4615d",
+				"status": "accepted",
+				"version": 2,
+				"world_id": "slot-0",
+				"world_namespace": "575979de479ce04b6192e09a2df76bdc"
+			},
+			"altar_building:c9dc91e2a75e5a9820499b66d9595814a6f459f7a880e0adca9527324699adf5": {
+				"action": "place_building",
+				"action_id": "0d6d0f6276dc4ec806470b654572af23",
+				"after": {
+					"inventory": [
+						{
+							"id": "rootstone",
+							"n": 10
+						},
+						{
+							"id": "ironwood",
+							"n": 6
+						},
+						{
+							"id": "rootiron_ingot",
+							"n": 2
+						},
+						{
+							"id": "stone",
+							"n": 2
+						},
+						{
+							"id": "wood",
+							"n": 4
+						},
+						{
+							"id": "potion_small",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [],
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:b4a048d87b85a9119adc13b4d9a8e63e:place_building:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:5e6f0686d23849d87bdeb20d8285d900:place_building:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:2787321bbf04d4fc72459a5871689f67:dismantle:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:244cb159c284a6a28c0cc9697808bc6d:dismantle:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:51483bb671f2d3af49a13e9238430cc7:place_building:b3",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:7a0643f8882e29bf63643223e7ea2a2a:place_building:b4",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:2f2aecb2ee8374067b0851811c957d9a",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:26dd6baddce3b9080ba3d03fb39fb404:place_building:b5",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:altar_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:c478516c053425e693927026e264d06e:place_building:b6",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:c299b3c8a1f62be5ba43ef91c3481c66:place_building:b7",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:0d6d0f6276dc4ec806470b654572af23:place_building:b8"
+						],
+						"waystones_activated": {}
+					}
+				},
+				"before": {
+					"inventory": [
+						{
+							"id": "rootstone",
+							"n": 10
+						},
+						{
+							"id": "ironwood",
+							"n": 6
+						},
+						{
+							"id": "rootiron_ingot",
+							"n": 2
+						},
+						{
+							"id": "stone",
+							"n": 2
+						},
+						{
+							"id": "wood",
+							"n": 6
+						},
+						{
+							"id": "potion_small",
+							"n": 1
+						},
+						{
+							"id": "fiber",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [],
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:b4a048d87b85a9119adc13b4d9a8e63e:place_building:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:5e6f0686d23849d87bdeb20d8285d900:place_building:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:2787321bbf04d4fc72459a5871689f67:dismantle:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:244cb159c284a6a28c0cc9697808bc6d:dismantle:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:51483bb671f2d3af49a13e9238430cc7:place_building:b3",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:7a0643f8882e29bf63643223e7ea2a2a:place_building:b4",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:2f2aecb2ee8374067b0851811c957d9a",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:26dd6baddce3b9080ba3d03fb39fb404:place_building:b5",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:altar_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:c478516c053425e693927026e264d06e:place_building:b6",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:c299b3c8a1f62be5ba43ef91c3481c66:place_building:b7"
+						],
+						"waystones_activated": {}
+					}
+				},
+				"character_id": "character-4f751ebebc68b301ab401aa7e0dd05ed",
+				"character_revision": 18,
+				"delivery_id": "altar_building:c9dc91e2a75e5a9820499b66d9595814a6f459f7a880e0adca9527324699adf5",
+				"intent": {
+					"cost": [
+						{
+							"id": "wood",
+							"n": 2
+						},
+						{
+							"id": "fiber",
+							"n": 1
+						}
+					],
+					"record": {
+						"id": "farm",
+						"paid": true,
+						"parent_uid": "",
+						"position": [
+							{
+								"$tb_float64": "0000000000002c40"
+							},
+							{
+								"$tb_float64": "000000c0ccccec3f"
+							},
+							{
+								"$tb_float64": "0000000000003240"
+							}
+						],
+						"realm": "meadows",
+						"slot": 0,
+						"uid": "b8",
+						"yaw_deg": {
+							"$tb_float64": "0000000000000000"
+						}
+					},
+					"request": {
+						"id": "farm",
+						"kind": "place_building",
+						"paid": true,
+						"parent_uid": "",
+						"position": [
+							{
+								"$tb_float64": "0000000000002c40"
+							},
+							{
+								"$tb_float64": "000000c0ccccec3f"
+							},
+							{
+								"$tb_float64": "0000000000003240"
+							}
+						],
+						"realm": "meadows",
+						"txn_id": "0d6d0f6276dc4ec806470b654572af23",
+						"yaw_deg": {
+							"$tb_float64": "0000000000000000"
+						}
+					}
+				},
+				"journal_revision": 1,
+				"kind": "altar_building",
+				"receipt": "craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:0d6d0f6276dc4ec806470b654572af23:place_building:b8",
+				"session_id": "0bc8541b22daa20902af7bda38b4615d",
+				"status": "accepted",
+				"version": 2,
+				"world_id": "slot-0",
+				"world_namespace": "575979de479ce04b6192e09a2df76bdc"
+			},
+			"altar_building:cfd94bc59f638e7675968ec93a0b45ace0a9f7ce6b255f02b82c515d2cefb088": {
+				"action": "place_building",
+				"action_id": "51483bb671f2d3af49a13e9238430cc7",
+				"after": {
+					"inventory": [
+						{
+							"id": "rootstone",
+							"n": 14
+						},
+						{
+							"id": "ironwood",
+							"n": 8
+						},
+						{
+							"id": "rootiron_ingot",
+							"n": 2
+						},
+						{
+							"id": "stone",
+							"n": 12
+						},
+						{
+							"id": "wood",
+							"n": 4
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [],
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:b4a048d87b85a9119adc13b4d9a8e63e:place_building:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:5e6f0686d23849d87bdeb20d8285d900:place_building:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:2787321bbf04d4fc72459a5871689f67:dismantle:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:244cb159c284a6a28c0cc9697808bc6d:dismantle:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:51483bb671f2d3af49a13e9238430cc7:place_building:b3"
+						],
+						"waystones_activated": {}
+					}
+				},
+				"before": {
+					"inventory": [
+						{
+							"id": "rootstone",
+							"n": 14
+						},
+						{
+							"id": "ironwood",
+							"n": 8
+						},
+						{
+							"id": "rootiron_ingot",
+							"n": 2
+						},
+						{
+							"id": "stone",
+							"n": 20
+						},
+						{
+							"id": "wood",
+							"n": 12
+						},
+						{
+							"id": "fiber",
+							"n": 2
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [],
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:b4a048d87b85a9119adc13b4d9a8e63e:place_building:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:5e6f0686d23849d87bdeb20d8285d900:place_building:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:2787321bbf04d4fc72459a5871689f67:dismantle:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:244cb159c284a6a28c0cc9697808bc6d:dismantle:b1"
+						],
+						"waystones_activated": {}
+					}
+				},
+				"character_id": "character-4f751ebebc68b301ab401aa7e0dd05ed",
+				"character_revision": 7,
+				"delivery_id": "altar_building:cfd94bc59f638e7675968ec93a0b45ace0a9f7ce6b255f02b82c515d2cefb088",
+				"intent": {
+					"cost": [
+						{
+							"id": "wood",
+							"n": 8
+						},
+						{
+							"id": "stone",
+							"n": 8
+						},
+						{
+							"id": "fiber",
+							"n": 2
+						}
+					],
+					"record": {
+						"id": "kitchen",
+						"paid": true,
+						"parent_uid": "",
+						"position": [
+							{
+								"$tb_float64": "00000000000018c0"
+							},
+							{
+								"$tb_float64": "000000c0ccccec3f"
+							},
+							{
+								"$tb_float64": "0000000000003440"
+							}
+						],
+						"realm": "meadows",
+						"slot": 0,
+						"uid": "b3",
+						"yaw_deg": {
+							"$tb_float64": "0000000000000000"
+						}
+					},
+					"request": {
+						"id": "kitchen",
+						"kind": "place_building",
+						"paid": true,
+						"parent_uid": "",
+						"position": [
+							{
+								"$tb_float64": "00000000000018c0"
+							},
+							{
+								"$tb_float64": "000000c0ccccec3f"
+							},
+							{
+								"$tb_float64": "0000000000003440"
+							}
+						],
+						"realm": "meadows",
+						"txn_id": "51483bb671f2d3af49a13e9238430cc7",
+						"yaw_deg": {
+							"$tb_float64": "0000000000000000"
+						}
+					}
+				},
+				"journal_revision": 1,
+				"kind": "altar_building",
+				"receipt": "craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:51483bb671f2d3af49a13e9238430cc7:place_building:b3",
+				"session_id": "0bc8541b22daa20902af7bda38b4615d",
+				"status": "accepted",
+				"version": 2,
+				"world_id": "slot-0",
+				"world_namespace": "575979de479ce04b6192e09a2df76bdc"
+			},
+			"creature_training:5190cdade36fa8c5a28e8097b97cdf0b8e0117918e8f200b19548d23fdc81734": {
+				"action": "station_craft",
+				"action_id": "7dbe553f25fb10c803af799622ebb518612472049bc1e3242e9c8ea6965b65a2",
+				"after": {
+					"character_id": "character-4f751ebebc68b301ab401aa7e0dd05ed",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "rootstone",
+							"n": 14
+						},
+						{
+							"id": "ironwood",
+							"n": 8
+						},
+						{
+							"id": "rootiron_ingot",
+							"n": 2
+						},
+						{
+							"id": "stone",
+							"n": 12
+						},
+						{
+							"id": "wood",
+							"n": 4
+						},
+						{
+							"id": "potion_small",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:b4a048d87b85a9119adc13b4d9a8e63e:place_building:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:5e6f0686d23849d87bdeb20d8285d900:place_building:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:2787321bbf04d4fc72459a5871689f67:dismantle:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:244cb159c284a6a28c0cc9697808bc6d:dismantle:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:51483bb671f2d3af49a13e9238430cc7:place_building:b3",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:7a0643f8882e29bf63643223e7ea2a2a:place_building:b4",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:2f2aecb2ee8374067b0851811c957d9a"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"before": {
+					"character_id": "character-4f751ebebc68b301ab401aa7e0dd05ed",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "rootstone",
+							"n": 14
+						},
+						{
+							"id": "ironwood",
+							"n": 8
+						},
+						{
+							"id": "rootiron_ingot",
+							"n": 2
+						},
+						{
+							"id": "stone",
+							"n": 12
+						},
+						{
+							"id": "wood",
+							"n": 4
+						},
+						{
+							"id": "berries",
+							"n": 4
+						},
+						{
+							"id": "fiber",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:b4a048d87b85a9119adc13b4d9a8e63e:place_building:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:5e6f0686d23849d87bdeb20d8285d900:place_building:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:2787321bbf04d4fc72459a5871689f67:dismantle:b2",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:244cb159c284a6a28c0cc9697808bc6d:dismantle:b1",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:51483bb671f2d3af49a13e9238430cc7:place_building:b3",
+							"craft:character-4f751ebebc68b301ab401aa7e0dd05ed:homestead_build:5a49e6a92d502d73e0f33a891d876f98c75c01e0322376118d21b08993d2d0d8:7a0643f8882e29bf63643223e7ea2a2a:place_building:b4"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"character_id": "character-4f751ebebc68b301ab401aa7e0dd05ed",
+				"character_revision": 11,
+				"delivery_id": "creature_training:5190cdade36fa8c5a28e8097b97cdf0b8e0117918e8f200b19548d23fdc81734",
+				"host_context": {
+					"character_id": "character-4f751ebebc68b301ab401aa7e0dd05ed",
+					"den_index": 0,
+					"effective_tier": 1,
+					"expected_revision": 10,
+					"foundation_runtime_authorized": true,
+					"homestead": true,
+					"in_combat": false,
+					"in_range": true,
+					"recipe_known": true,
+					"source_key": "kitchen:meadows:b3",
+					"station_id": "kitchen",
+					"station_kind": "kitchen"
+				},
+				"intent": {
+					"craft_id": "2f2aecb2ee8374067b0851811c957d9a",
+					"recipe_id": "potion_small"
+				},
+				"journal_revision": 1,
+				"kind": "creature_training",
+				"receipt": "craft:character-4f751ebebc68b301ab401aa7e0dd05ed:2f2aecb2ee8374067b0851811c957d9a",
+				"session_id": "6ab1d73af9e50ee873049ba0ff3ff294",
+				"source_key": "kitchen:meadows:b3",
+				"status": "accepted",
+				"version": 3,
+				"world_id": "slot-0",
+				"world_namespace": "575979de479ce04b6192e09a2df76bdc"
+			}
+		},
+		"reward_delivery_namespace": "575979de479ce04b6192e09a2df76bdc",
+		"version": 28,
+		"water_capture_claims": {},
+		"world_id": "slot-0",
+		"world_seed": 916262919
+	}
+}
