@@ -417,6 +417,7 @@
           "flow_speed": 2.4
         },
         "impact": {
+          "installed_rock": true,
           "mote_max_growth": 3.0,
           "mote_reference_scale": 0.5,
           "stages": {

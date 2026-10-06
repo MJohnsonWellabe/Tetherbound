@@ -468,9 +468,10 @@ func _build_impact() -> void:
 		if profile.has("mote_reference_scale"):
 			mote_size *= clampf(scale_factor / maxf(0.01, float(profile.mote_reference_scale)), 1.0, float(profile.get("mote_max_growth", 4.0)))
 		var mote_kind := str(profile.get("mote_shape", "orb"))
-		# Only sparks read shape keys from the impact profile; other mote shapes
-		# keep their size-only meshes (the profile carries body segment counts).
-		multimesh.mesh = GEOMETRY.shape(mote_kind, mote_size, profile if mote_kind == "spark" else {})
+		# Installed stone fragments retain the body's painted mesh and UVs.
+		# Other mote shapes keep their existing size-only geometry.
+		var mote_geometry := profile if mote_kind == "spark" or (mote_kind == "stone" and bool(profile.get("installed_rock", false))) else {}
+		multimesh.mesh = GEOMETRY.shape(mote_kind, mote_size, mote_geometry)
 		multimesh.instance_count = count
 		_motes = MultiMeshInstance3D.new()
 		# Moved every frame: detail_cull.gd must not range it by its spawn spread.
