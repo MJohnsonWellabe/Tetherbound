@@ -187,6 +187,7 @@ func test_snare_presentation_uses_current_record_body_and_remaining_host_duratio
 	assert_eq(status, before)
 	var body := preload("res://scripts/creatures/wild_creature.gd").new()
 	body.instance = creature
+	body.set_meta(&"tether_body_generation", 3)
 	var director := preload("res://tests/test_client_trainer_victory.gd").DirectorFixture.new()
 	var record := {"encounter_id": "snare-view", "phase": "active", "seq": 7,
 		"participants": {1: {"character_id": "owner_a"}},
@@ -216,6 +217,11 @@ func test_snare_presentation_uses_current_record_body_and_remaining_host_duratio
 	record.opponent.tether_snare_view.remaining_s = 3.0
 	director._present_tether_snare(record, body)
 	assert_eq(visual.get("_remaining_s"), 2.0, "older record cannot refresh the effect")
+	body.set_meta(&"tether_body_generation", 4)
+	record.seq = 9
+	director._present_tether_snare(record, body)
+	assert_false(visual.visible, "an older record cannot snare the same UID's new physical lifetime")
+	body.set_meta(&"tether_body_generation", 3)
 	record.seq = 9
 	record.phase = "done"
 	director._present_tether_snare(record, body)

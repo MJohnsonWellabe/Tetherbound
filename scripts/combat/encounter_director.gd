@@ -6939,9 +6939,14 @@ func _present_tether_snare(rec: Dictionary, body: Node3D) -> void:
 	var commands := preload("res://scripts/combat/tether_commands.gd")
 	var opponent: Dictionary = rec.get("opponent", {})
 	var target_uid := str(opponent.get("card", {}).get("uid", ""))
+	var generation := int(opponent.get("body_generation", 0))
+	var actual_generation := int(body.get_meta(&"tether_body_generation", 0))
+	var proxy_generation: Variant = body.get("body_generation")
+	if proxy_generation is int: actual_generation = proxy_generation
 	var card: RefCounted = body.get("instance") as RefCounted
 	if not commands.enabled() or not commands.enabled("ui_enabled") or card == null \
-		or target_uid.is_empty() or str(card.get("uid")) != target_uid:
+		or target_uid.is_empty() or str(card.get("uid")) != target_uid \
+		or generation < 1 or actual_generation != generation:
 		_clear_tether_snare_presentation(body)
 		return
 	var view: Dictionary = opponent.get("tether_snare_view", {}) if rec.get("phase") in ["active", "catching"] else {}
@@ -6962,7 +6967,7 @@ func _present_tether_snare(rec: Dictionary, body: Node3D) -> void:
 					break
 		break
 	visual.call("apply_view", view, int(rec.get("seq", 0)), target_uid,
-		int(opponent.get("body_generation", 0)), trainer, _body_radius(body))
+		generation, trainer, _body_radius(body))
 
 func _clear_tether_snare_presentation(body: Node3D) -> void:
 	var visual := body.get_node_or_null("TetherSnareVisual") if is_instance_valid(body) else null
