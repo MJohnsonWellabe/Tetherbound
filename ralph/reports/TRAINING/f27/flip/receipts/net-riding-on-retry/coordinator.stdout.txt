@@ -1,0 +1,52 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=3496 control_port=53623 home=D:\tetherbound\.artifacts\r1-f27-flip\net-riding-on-retry/home-0 log=D:\tetherbound\.artifacts\r1-f27-flip\net-riding-on-retry/peer-0.log
+coordinator: launched peer 1 (client) pid=18628 control_port=53624 home=D:\tetherbound\.artifacts\r1-f27-flip\net-riding-on-retry/home-1 log=D:\tetherbound\.artifacts\r1-f27-flip\net-riding-on-retry/peer-1.log
+coordinator: peer 1 hello: {"enet_port":27802.0,"godot_version":"4.7-stable (official)","main_sha":"9dc97814af92","peer":1.0,"pid":18628.0,"role":"client","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-riding-on-retry/home-1/Godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":27801.0,"godot_version":"4.7-stable (official)","main_sha":"9dc97814af92","peer":0.0,"pid":3496.0,"role":"host","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-riding-on-retry/home-0/Godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: coordinator tracked 2 peers
+PASS: a Session exists to host/join (lane 2.A); without it there are no trainer bodies to ride on
+PASS: peer 0 hosted a world (hosting udp/27801 as peer 1)
+PASS: peer 1 joined peer 0's world on port 27801 (joined 127.0.0.1:27801 as peer 1507414939 after 33 frames; snapshot applied; 2 peer(s) in registry)
+PASS: peer 0's registry holds both players (registry reports 2 peer(s) after 0 frames (0.0 s))
+PASS: peer 1's registry holds both players (registry reports 2 peer(s) after 0 frames (0.0 s))
+PASS: peer 0 is the listen server (id 1)
+PASS: peer 1 has its own distinct peer id (1507414939)
+PASS: SETUP: peer 0 is holding the world rather than a dialogue box (SETUP: no dialogue box was open; locomotion now true)
+PASS: SETUP: peer 1 is holding the world rather than a dialogue box (SETUP: no dialogue box was open; locomotion now true)
+PASS: SETUP: peer 1 has its own creature out (deployed AllyCreature)
+PASS: SETUP: peer 0 has a meadowhart out and a saddle in the satchel (SETUP: meadowhart standing as AllyCreature, saddle in the satchel)
+PASS: peer 0 pressed the mount and got on (riding AllyCreature)
+PASS: peer 0 reports itself mounted
+PASS: peer 0 is on a meadowhart (got 'meadowhart')
+PASS: mounting fitted the saddle on peer 0's own animal (OP-0904-3)
+PASS: peer 1 holds a trainer body for peer 1 at all
+PASS: peer 1 draws peer 1 as RIDING, not merely as carried
+PASS: peer 1 actually draws peer 1's rider
+PASS: peer 1 knows which animal peer 1 is on: a meadowhart (got 'meadowhart')
+PASS: the seated pose reached the skeleton on peer 1's copy -- a rider drawn standing on a creature's back is OP-0904-3 reopened across the wire
+PASS: the saddle peer 0 built is worn by the animal on peer 1's screen (published true, worn true)
+PASS: peer 1 draws the rider IN the saddle: 0.00 m from the seat offset (tolerance 0.35)
+PASS: peer 1's position is readable before the ride
+PASS: SETUP: peer 1's own screen is its own before it is asked to play (SETUP: no dialogue box was open; locomotion now true)
+PASS: peer 1 placed a building WHILE peer 0 rode: peer 1 PASS (pressed Place for 'floor' (ghost_ok=true); records 0 -> 0); peer 0 PASS (left stick (0.00, -1.00) for 150 frames)
+PASS: peer 1 dropped a stack WHILE peer 0 rode: peer 1 PASS (drop 2 wood (txn drop:1507414939:197044926:513064534): ok=false pending=true); peer 0 PASS (left stick (1.00, -1.00) for 150 frames)
+PASS: peer 1 picked it back up WHILE peer 0 rode: peer 1 PASS (picked up wood: ok=false pending=true); peer 0 PASS (left stick (-1.00, -1.00) for 150 frames)
+PASS: both peers drove their own stick in the same frames: peer 1 PASS (left stick (0.00, -1.00) for 150 frames); peer 0 PASS (left stick (0.00, -1.00) for 150 frames)
+PASS: peer 1 started a fight WHILE peer 0 rode: peer 0 PASS (left stick (0.00, -1.00) for 150 frames); peer 1 PASS (engaged mudsnout; the fight is live and UNBOUND after 600 frames, which is what a client's wild fight is (4.C H1: wilds are not replicated, so the host mints no record))
+PASS: peer 1 is IN its fight, not merely reported as having started one
+PASS: peer 1's building actually landed in the world during the ride (0 -> 1)
+PASS: peer 1's trainer is not frozen where it stood: it is 53.63 m away, on floor=true
+PASS: peer 1 is still playing its own game after five rounds beside a ride (context 'combat')
+PASS: peer 0 is STILL on the mount after everything peer 1 did
+PASS: peer 1 still draws peer 1 as riding at the end
+PASS: the rider is still IN the saddle after the animal has been driven around: 0.00 m
+PASS: the animal is still wearing its saddle on peer 1's screen
+PASS: peer 0 got off in one piece (dismounted; trainer visible=true on_floor=false)
+PASS: peer 1 stopped drawing peer 1 as a rider once they got off
+PASS: the seated pose was taken off peer 1's copy of the trainer too
+PASS: the saddle STAYS on the animal after dismount (OP-0904-3: it is the visible proof of the craft, not a ride-only prop)
+PASS: peer 1 is still playing after peer 0's ride ended (context 'combat')
+smoke_net_riding: 43 assertions, 0 failures
+ALL CHECKS PASSED

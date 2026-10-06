@@ -33,3 +33,10 @@ f1b2f662800122bed0ff255693df89c4487fbdcf453d3524a42d4ec20c3d9c04  full-off-first
 223b85fc2c27d11f57bc1657bd3cef38ca412fe0d505a7117cde71ffc0c22b30  full-on-first.stdout.txt
 df37aae5e344d83ff9d89eff96934fa5a241659e29eb963b6df7611ad4bcb1f7  full-on-first.stderr.txt
 5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  full-on-first.exit.txt
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  net-riding-on-retry/coordinator.stderr.txt
+515aef1320e4df739683657a33d9a1ce69209d2c248c3b8f4612cb74ee1cc178  net-riding-on-retry/coordinator.stdout.txt
+5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  net-riding-on-retry/exit.txt
+b7a7e7743ef3d1a423f4a186a12f580d47b40c364ea2e48ab232da2b0adc6ebb  net-riding-on-retry/NET_RUN.json.txt
+de80c914773e7aef8fc4be84c201356b62ce13372469c6d342723cc0361c199d  net-riding-on-retry/peer-0.txt
+4c75db2f8f364380b893bdf40ad5ef89cecf25e495e521a39c280b6e4d3010f6  net-riding-on-retry/peer-1.txt
+09c8cd7cc4dd39f640977a0ad4ea78b566625aff1c70201c20b6d712d54b89df  net-riding-on-retry/SUMMARY.md.txt
