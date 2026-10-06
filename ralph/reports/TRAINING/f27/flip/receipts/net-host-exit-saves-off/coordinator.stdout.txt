@@ -1,0 +1,34 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=3992 control_port=59493 home=D:\tetherbound\.artifacts\r1-f27-flip\net-host-exit-saves-off/home-0 log=D:\tetherbound\.artifacts\r1-f27-flip\net-host-exit-saves-off/peer-0.log
+coordinator: launched peer 1 (client) pid=19452 control_port=59494 home=D:\tetherbound\.artifacts\r1-f27-flip\net-host-exit-saves-off/home-1 log=D:\tetherbound\.artifacts\r1-f27-flip\net-host-exit-saves-off/peer-1.log
+coordinator: peer 1 hello: {"enet_port":31882.0,"godot_version":"4.7-stable (official)","main_sha":"9f03667d463c","peer":1.0,"pid":19452.0,"role":"client","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-host-exit-saves-off/home-1/Godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":31881.0,"godot_version":"4.7-stable (official)","main_sha":"9f03667d463c","peer":0.0,"pid":3992.0,"role":"host","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-host-exit-saves-off/home-0/Godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: coordinator tracked 2 peers
+PASS: host reported its ENet port in hello (31881)
+PASS: peer 0 hosted a listen server (hosting udp/31881 as peer 1)
+PASS: peer 1 joined (joined 127.0.0.1:31881 as peer 349481244 after 33 frames; snapshot applied; 2 peer(s) in registry)
+PASS: the host had written no world autosave before the exit (false)
+PASS: the client had written no world autosave before the exit (false)
+PASS: SETUP: peer 0 has a creature out to fight with (deployed AllyCreature)
+PASS: SETUP: peer 1 has a creature out to fight with (deployed AllyCreature)
+PASS: the host is mid-fight when it exits (engaged bramblebun as encounter 1:1 (bound after 0 frame(s)))
+PASS: the host minted an encounter record for that fight ('1:1')
+PASS: the client travelled to the fight (trainer stands at (-14.19, -1.00, 63.80))
+PASS: the client joined the fight in progress, so BOTH ends are busy (joined 1:1 beside 'bramblebun' at (-12.8, 63.0))
+PASS: the host placed a building mid-session (pressed Place for 'floor' (ghost_ok=true); records 0 -> 1)
+PASS: the host holds that building record live ([{ "id": "floor", "position": [-4.0, -0.73, 68.0], "realm": "meadows" }])
+PASS: the host committed a world flag mid-session (smoke_host_exit_last_thing: ok=true pending=false code='' reason='')
+PASS: that flag is live on the host immediately before the exit (flag smoke_host_exit_last_thing (world) set after 0 frames)
+PASS: the host exited its session under load (host left cleanly after 41 frames)
+PASS: the host wrote its world autosave on exit (true)
+PASS: the host's autosave file re-read off disk (33 keys)
+PASS: the saved world carries the building placed after the fight began ([{ "id": "floor", "paid": false, "position": [-4.0, -0.73374098539352, 68.0], "realm": "meadows", "uid": "b1", "yaw_deg": 0.0 }])
+PASS: the saved world carries the flag committed immediately before the exit (flags: 4, has 'smoke_host_exit_last_thing': true)
+PASS: the client was returned to the title screen (input_context=title after 0 frames)
+PASS: the client's session is no longer active ({ "active": false, "available": true, "enet_port": 31882.0, "handshake_failed": false, "handshake_failure_reason": "", "handshake_rejected_by_host": false, "handshake_snapshot_applied": true, "is_host": true, "mode": "", "peer_count": 1.0, "peer_id": 1.0, "registry_fingerprint": 5863005.0, "rows": [{ "appearance_id": "trainer", "character_id": "host-exit-joiner", "display_name": "Trainer", "downed": false, "peer_id": 1.0, "realm": "meadows", "sleeping": false }], "snapshot_ready": true })
+PASS: the client wrote NO world file, mid-fight or not (false)
+PASS: the client's user://worlds/ is empty ([])
+PASS: the host's session is closed ({ "active": false, "available": true, "enet_port": 31881.0, "handshake_failed": false, "handshake_failure_reason": "", "handshake_rejected_by_host": false, "handshake_snapshot_applied": false, "is_host": true, "mode": "", "peer_count": 1.0, "peer_id": 1.0, "registry_fingerprint": 5863005.0, "rows": [{ "appearance_id": "trainer", "character_id": "character-dfbd39d611af8946b9ee535f1357a02d", "display_name": "Trainer", "downed": false, "peer_id": 1.0, "realm": "meadows", "sleeping": false }], "snapshot_ready": true })
+ALL CHECKS PASSED

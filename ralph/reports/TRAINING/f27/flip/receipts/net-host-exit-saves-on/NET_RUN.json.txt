@@ -1,0 +1,116 @@
+{
+	"budgets": {
+		"desync_frames": 240.0,
+		"heartbeat_frames": 60.0,
+		"hello_budget_s": 180.0,
+		"near_tolerance_motion_m": 4.0,
+		"near_tolerance_rest_m": 1.5,
+		"smoke_step_budget_s_2peer": 300.0,
+		"smoke_step_budget_s_wide": 1500.0,
+		"step_budget_frames": 3000.0
+	},
+	"failures": [],
+	"fatal": "",
+	"net_conditions": {},
+	"peers": [
+		{
+			"command_timeout_observation": null,
+			"control_port": 55315,
+			"exited": true,
+			"hashes": [
+				183502904,
+				183502904,
+				183502904
+			],
+			"hello": {
+				"enet_port": 29601.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "9f03667d463c",
+				"peer": 0.0,
+				"pid": 9308.0,
+				"role": "host",
+				"type": "hello",
+				"user_data_dir": "D:/tetherbound/.artifacts/r1-f27-flip/net-host-exit-saves-on/home-0/Godot/app_userdata/Tetherbound"
+			},
+			"index": 0,
+			"last_heartbeat": {
+				"context": "combat",
+				"frame": 137.0,
+				"physics_frame": 751.0,
+				"pos": [
+					-4.63784551620483,
+					-0.627502024173737,
+					64.3155136108398
+				],
+				"session_peers": [],
+				"state_hash": 183502904.0,
+				"t": 196.06,
+				"type": "heartbeat"
+			},
+			"pid": 9308,
+			"role": "host",
+			"unexpected_exit": false
+		},
+		{
+			"command_timeout_observation": null,
+			"control_port": 55316,
+			"exited": true,
+			"hashes": [
+				183502904,
+				183502904,
+				183502904
+			],
+			"hello": {
+				"enet_port": 29602.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "9f03667d463c",
+				"peer": 1.0,
+				"pid": 12004.0,
+				"role": "client",
+				"type": "hello",
+				"user_data_dir": "D:/tetherbound/.artifacts/r1-f27-flip/net-host-exit-saves-on/home-1/Godot/app_userdata/Tetherbound"
+			},
+			"index": 1,
+			"last_heartbeat": {
+				"context": "title",
+				"frame": 179.0,
+				"physics_frame": 1102.0,
+				"pos": null,
+				"session_peers": [],
+				"state_hash": 183502904.0,
+				"t": 195.708,
+				"type": "heartbeat"
+			},
+			"pid": 12004,
+			"role": "client",
+			"unexpected_exit": false
+		}
+	],
+	"proxies": [],
+	"run_id": "r1-host-exit-saves-on-20261006T1055Z",
+	"scene": "world",
+	"state_hash_excluded_keys": [
+		"party",
+		"inventory",
+		"hotbar",
+		"satiety",
+		"map",
+		"realm_maps",
+		"alpha_pins",
+		"player_pose",
+		"clock_elapsed_seconds",
+		"current_realm",
+		"pending_realm_entry",
+		"realm_hearts",
+		"version"
+	],
+	"state_hash_hashed_keys": [
+		"flags",
+		"placed_buildings",
+		"farm_plots",
+		"death_satchels",
+		"harvested_vegetation",
+		"felled_vegetation",
+		"day"
+	]
+}

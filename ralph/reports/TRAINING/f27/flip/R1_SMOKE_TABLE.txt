@@ -18,10 +18,10 @@ f27_guest_wild_win | Corrected ON PASSexit0: canonical successor/one fresh recei
 fly | ON FIRST PASS46assertions/0fail/exit0; qualified independent review PASS/no flightanchor reload proof | OFF unchanged RETRY PASS46assertions/0fail/exit0; FIRST FAILaltitude41.09m retained/cause unresolved; qualified independent functional ON/OFF pair review PASS
 gate_opens_for_both | ON FIRST PASS20checks/0fail/exit0; defaultledger-flag/is_open/hash scope; qualified independent review PASS | OFF FIRST PASS20checks/0fail/exit0; qualified independent functional ON/OFF pair review PASS/nodiskproof
 hearts | FIRST PASS50/exit0; independently reviewed qualified functional pair; raw7/no saves/0ERROR-SCRIPT-Parse/stderrEMPTY | FIRST PASS50/exit0; same50orderedchecks/source-fixtures180hello300TOTAL3000steps; sharedplacement/personal-selection/mechanical remote presentation only; stamina inequality first selection direction ONLY; no earnedfight/durablevitals/render/reload-reconnect
-host_exit_saves | FIRST ACTIVE r1-host-exit-saves-on-20261006T1055Z; original180hello/custom480TOTALposthello | OPEN queued
+host_exit_saves | FIRST PASS26/exit0; independent qualified functional pair review PASS; actual worldlateflag-nonzerobuilding/gracefulleave/no exclusive creation claim | FIRST PASS26/exit0; same26checks/original180hello-custom480phase-heartbeat240/all22native-save copies exact; guesttitle-emptyworldstore; no rewardsettlement/diskreload/characterauthority proof
 realm_owner_disconnect_mid_fight | PASS 25 checks/exit0; controlled-drop diagnostic retained | PASS 25 checks/exit0; no error markers
 riding | PASS retry 43 assertions/0 failures/exit0; FIRST startup FAIL retained | PASS 43 assertions/0 failures/exit0
-shared_boss | OPEN | OPEN
+shared_boss | DEFAULT FIRST ACTIVE r1-shared-boss-on-20261006T1103Z; originalstarter/scaling-friendly-sharedHP/HPceiling6/no selftopups/worldflags-inprocessreload qualifiers | OPEN queued
 shared_wild_fight | OPEN | OPEN
 split_realms | OPEN | OPEN
 stormwood_finalized_death | OPEN | OPEN
@@ -101,5 +101,5 @@ F27 corrected twopeer proof7c44794 | ONPASSexit0; canonical validator+receipt co
 
 2026-10-06 04:26 Chicago checkpoint: ALL55/55 explicitly required existing CI ON checks independently reviewed qualified PASS. Scoped ON/OFF networks and tournament remain OPEN; committed flag OFF/no flip or DONE claim.
 
-Hearts OFF FIRST: PASS50/exit0; raw7 exact/no saves/0ERROR-SCRIPT-Parse/stderrEMPTY; ON FIRST PASS50; independent pair review pending. Synthetic shrines/direct earned-ledger-place and personal activation/direct mechanical presentation samplers only; original native source-budget-fixtures unchanged; no durable-reward, earned-route, actual fight/catch, rendered-quality, reload/reconnect claims.
-host_exit_saves ON FIRST ACTIVE 20261006T1055Z; original180hello/custom480TOTALposthello; OFF queued; review-qualified setup/graceful-leave/world-save scope only.
+Hearts ON/OFF qualified functional pair PASS50/exit0 each; independent review complete/all14nativecopies exact/no saves; direct mechanical presentation and shared placement/personal selection; stamina inequality first direction only.
+host_exit_saves ON/OFF FIRST qualified functional pair PASS26/exit0 each; independent review complete/all22copies exact; original180hello/custom480TOTALphase/heartbeat240.
