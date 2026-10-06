@@ -5986,12 +5986,12 @@ func home_key_refusal() -> String:
 	if context.is_empty(): return "Your travel state is not ready."
 	return PORTAL_POLICY.refusal(context)
 
-func publish_travel_lifecycle(producer: Node, sample: Dictionary) -> void:
+func publish_travel_lifecycle(producer: Node, sample: Dictionary) -> bool:
 	if is_host() or not is_active() or producer != get_node_or_null(^"FoundationComposition/TravelLifecycle") \
 		or _peer == null or _peer.get_connection_status() != MultiplayerPeer.CONNECTION_CONNECTED \
 		or not snapshot_ready() \
-		or not preload("res://scripts/net/foundation_travel_lifecycle.gd").valid_sample(sample): return
-	rpc_id(HOST_PEER_ID, "_rpc_travel_lifecycle", sample)
+		or not preload("res://scripts/net/foundation_travel_lifecycle.gd").valid_sample(sample): return false
+	return rpc_id(HOST_PEER_ID, "_rpc_travel_lifecycle", sample) == OK
 
 @rpc("any_peer", "call_remote", "reliable", CHANNEL_LEDGER)
 func _rpc_travel_lifecycle(sample: Dictionary) -> void:

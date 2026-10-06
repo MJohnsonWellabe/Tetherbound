@@ -145,7 +145,9 @@ func _travel_owner(session: Node, peer: int, envelope: Dictionary, permit: Dicti
 	await get_tree().physics_frame
 	while _same_owner() and not _grounded_actor(body) and Time.get_ticks_msec() < deadline:
 		await get_tree().physics_frame
-	if not _same_owner() or not _grounded_actor(body): _refuse("The arrival has not reached supported ground."); return
+	if not _same_owner() or not _grounded_actor(body):
+		print("[portal-arrival] not grounded at the deadline: " + _grounded_failure(body))
+		_refuse("The arrival has not reached supported ground."); return
 	_pending.seated = true
 	_pending.save_deadline_msec = Time.get_ticks_msec() + int(float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").home_key.response_timeout_seconds) * 1000.0)
 	_save_arrival()
@@ -167,6 +169,22 @@ func _grounded_actor(actor: CharacterBody3D) -> bool:
 		and _pending.has("anchor") and actor.global_position.distance_to(_pending.anchor) <= float(_pending.radius) \
 		and _pending.has("world_node") and is_instance_valid(_pending.world_node.get_ref()) \
 		and _supported_capsule(_pending.world_node.get_ref(), actor, _pending.anchor, float(_pending.radius))
+
+## Diagnostic only: the first _grounded_actor condition that fails.
+func _grounded_failure(actor: CharacterBody3D) -> String:
+	if not is_instance_valid(actor): return "no_actor"
+	if not actor.is_on_floor(): return "not_on_floor pos=%s" % str(actor.global_position)
+	if not actor.is_physics_processing(): return "not_processing"
+	if int(actor.get("_foundation_ground_contact_generation")) <= int(_pending.get("contact_generation", -1)): return "no_new_contact"
+	var contact: Variant = actor.get("_foundation_ground_contact_position")
+	if not contact is Vector3: return "no_contact_position"
+	if actor.global_position.distance_to(contact) > actor.safe_margin: return "contact_%.3fm_from_body" % actor.global_position.distance_to(contact)
+	if actor.get_floor_normal().angle_to(Vector3.UP) > actor.floor_max_angle: return "floor_too_steep"
+	if not _pending.has("anchor") or actor.global_position.distance_to(_pending.anchor) > float(_pending.get("radius", 0.0)):
+		return "slid_%.2fm_from_anchor" % (actor.global_position.distance_to(_pending.anchor) if _pending.has("anchor") else -1.0)
+	if not _pending.has("world_node") or not is_instance_valid(_pending.world_node.get_ref()): return "no_world_node"
+	if not _supported_capsule(_pending.world_node.get_ref(), actor, _pending.anchor, float(_pending.radius)): return "capsule_unsupported"
+	return "collision_or_scale_changed"
 
 func arrival_binding(envelope: Dictionary, permit: Dictionary) -> bool:
 	var peer: int = int(permit.get("peer_id", 0))
