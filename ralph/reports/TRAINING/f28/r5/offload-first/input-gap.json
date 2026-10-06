@@ -1,0 +1,121 @@
+{
+  "source_commit": "35525a53fa0561a0d9ecab8d18115eccf565cbae",
+  "authority": "Coordinator6009787763: use existing f48_prepare only if it produces pinned bundle without changes; otherwise record gap and move on. No other means.",
+  "result": "Both profiles have4 current config mismatches, only T1 win routes, no40 actual Master loss/retry/UID route bundle. Existing f48_prepare consumes these requirements; cannot produce missing routes/current configuration without forbidden input/overlay changes. Kitchen cook routes exist but are in incompatible pinned full-loop packs. No native known-fail launch or input rewrite.",
+  "profiles": [
+    {
+      "path": "D:/tetherbound/foundations-batch-check/.tmp/main-green-f48-dry-run/producer-profile/profile.json",
+      "sha256": "f7f1885dcaa2a8fd77ce8496762337404523597338961e8c5acbc84a6ba4399a",
+      "configuration_scope": "full",
+      "pins": [
+        {
+          "file": "data/config/stations.json",
+          "expected": "bb29276bf7d502dbc90fc96e10f3f506af04d37f776732b8072ef20df8bcb0f9",
+          "current": "8fd375347b19d86dd9db826d2f163d60c08430a719f1d098708280d3b2fac262",
+          "matches": false
+        },
+        {
+          "file": "data/config/essence.json",
+          "expected": "0b03b15b433f2297767b18a10f49126902d80d9bbc4e6560133e97526ca8d80e",
+          "current": "024fd4614037d9b11c03a69908f05c454e15e503933e91acece1aadf38153c13",
+          "matches": false
+        },
+        {
+          "file": "data/config/traits.json",
+          "expected": "14e339286cb1e267b84e2c05407db92f8c86418cad4f16ef8e2500c4fee238b8",
+          "current": "14e339286cb1e267b84e2c05407db92f8c86418cad4f16ef8e2500c4fee238b8",
+          "matches": true
+        },
+        {
+          "file": "data/config/multiplayer.json",
+          "expected": "ca39e27adee3d8b18cd3c19c4a6fd045b66ee0f92b1892467f70a0c9013acf79",
+          "current": "c684e4c4a9d560b48fef910179942845337a5517118e927e01c9c345a1081961",
+          "matches": false
+        },
+        {
+          "file": "data/config/hud.json",
+          "expected": "25414f95182ec6f3a9181217bd5a29304ba14c113e7f8387560e634339e5552f",
+          "current": "25414f95182ec6f3a9181217bd5a29304ba14c113e7f8387560e634339e5552f",
+          "matches": true
+        },
+        {
+          "file": "data/config/alpha_respawns.json",
+          "expected": "f4b4627146ee64647aa782da61d611f75e8508d5e2e96585cd227f9a1d2e1851",
+          "current": "b5a92b9a73ba66bb39aed476354b012e9e0ac80beb1e9cad82df6213ba5e2b59",
+          "matches": false
+        }
+      ],
+      "master_routes": [
+        "master_0",
+        "master_1"
+      ],
+      "kitchen_routes": [
+        "feast_cook_0",
+        "feast_0",
+        "feast_cook_1",
+        "feast_1",
+        "feast_prepare",
+        "feast_reopen",
+        "feast_commit"
+      ],
+      "missing_required_master_routes": 40
+    },
+    {
+      "path": "D:/tetherbound/foundations-batch-check/.tmp/f48-codec-loop-prepared/producer-profile/profile.json",
+      "sha256": "2f98f34bca41aaeac3521e73eac002b23941772df3ce3edefcf68ce6a27d346d",
+      "configuration_scope": "full",
+      "pins": [
+        {
+          "file": "data/config/stations.json",
+          "expected": "bb29276bf7d502dbc90fc96e10f3f506af04d37f776732b8072ef20df8bcb0f9",
+          "current": "8fd375347b19d86dd9db826d2f163d60c08430a719f1d098708280d3b2fac262",
+          "matches": false
+        },
+        {
+          "file": "data/config/essence.json",
+          "expected": "0b03b15b433f2297767b18a10f49126902d80d9bbc4e6560133e97526ca8d80e",
+          "current": "024fd4614037d9b11c03a69908f05c454e15e503933e91acece1aadf38153c13",
+          "matches": false
+        },
+        {
+          "file": "data/config/traits.json",
+          "expected": "14e339286cb1e267b84e2c05407db92f8c86418cad4f16ef8e2500c4fee238b8",
+          "current": "14e339286cb1e267b84e2c05407db92f8c86418cad4f16ef8e2500c4fee238b8",
+          "matches": true
+        },
+        {
+          "file": "data/config/multiplayer.json",
+          "expected": "ca39e27adee3d8b18cd3c19c4a6fd045b66ee0f92b1892467f70a0c9013acf79",
+          "current": "c684e4c4a9d560b48fef910179942845337a5517118e927e01c9c345a1081961",
+          "matches": false
+        },
+        {
+          "file": "data/config/hud.json",
+          "expected": "25414f95182ec6f3a9181217bd5a29304ba14c113e7f8387560e634339e5552f",
+          "current": "25414f95182ec6f3a9181217bd5a29304ba14c113e7f8387560e634339e5552f",
+          "matches": true
+        },
+        {
+          "file": "data/config/alpha_respawns.json",
+          "expected": "f4b4627146ee64647aa782da61d611f75e8508d5e2e96585cd227f9a1d2e1851",
+          "current": "b5a92b9a73ba66bb39aed476354b012e9e0ac80beb1e9cad82df6213ba5e2b59",
+          "matches": false
+        }
+      ],
+      "master_routes": [
+        "master_0",
+        "master_1"
+      ],
+      "kitchen_routes": [
+        "feast_cook_0",
+        "feast_0",
+        "feast_cook_1",
+        "feast_1",
+        "feast_prepare",
+        "feast_reopen",
+        "feast_commit"
+      ],
+      "missing_required_master_routes": 40
+    }
+  ]
+}

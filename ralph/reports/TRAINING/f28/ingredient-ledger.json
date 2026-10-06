@@ -1,6 +1,6 @@
 {
-  "status": "CURRENT_AUTHORED_REACHABILITY_AND_REVIEWED_LOCAL_NODE_WITNESSES; BERRIES_AND_SUNSTONE_BINDINGS_OPEN",
-  "claim": "All recipe ingredients have current authored sources in or before their biome (728 unchanged source checks pass). Existing F32 local native witnesses support all eight attuned types and the other materials via valid same-or-earlier-biome sources. Air raw JSON X decimals differ, but both map to identical production Vector3 coordinate bits; reviewed engine-equivalent local witness reuse, original mismatch retained. Disclosed 6m starts remain explicit. Exact-source retained vault production pickup/save/reload supports Heartstone reachability with its guardian-clear and party fixtures disclosed. F28#5 is OPEN only for usable-source evidence bindings for berries and sunstone; full campaign/repeat supply/farming are outside this criterion.",
+  "status": "CURRENT_AUTHORED_REACHABILITY_AND_REVIEWED_LOCAL_NODE_WITNESSES; SCOPED_F28_5_EVIDENCE_MET",
+  "claim": "All recipe ingredients have current authored sources in or before their biome (728 unchanged source checks pass). Existing F32 local native witnesses support all eight attuned types and other materials; reviewed engine-equivalent Air coordinates and original mismatch retained. Exact-source retained vault pickup/save/reload supports Heartstone with guardian-clear and party setup disclosed. Current checkout618c871 real-input Berry and Sunstone claims bind32+8 ingredient entries: floor/exact winner, accepted stock, once flags and spent prompts. Independent scoped F28#5 evidence MET; coordinator landing/count pending. Local poses, single-witness reuse and shutdown resource diagnostics are disclosed. No earned campaign/repeated supply/farming/saveACK/co-op claim.",
   "external_source": {
     "owner": "F32",
     "source_commit": "8e7c11ceb5854f063c5241d62618c382803562c9",
@@ -99,7 +99,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         },
         {
@@ -195,7 +237,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         },
         {
@@ -291,7 +375,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         },
         {
@@ -387,7 +513,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         },
         {
@@ -483,7 +651,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         },
         {
@@ -579,7 +789,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         },
         {
@@ -675,7 +927,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         },
         {
@@ -771,7 +1065,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         },
         {
@@ -938,7 +1274,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         }
       ]
@@ -1068,7 +1446,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         }
       ]
@@ -1162,7 +1582,49 @@
               7336
             ],
             "biome": "meadows",
-            "status": "existing_optional_stone_pickup_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "sunstone",
+              "source_at": [
+                121,
+                4.738902,
+                7336
+              ],
+              "player_at": [
+                120.9744,
+                4.781143,
+                7334.5
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Take the sunstone",
+              "stock_before": 0,
+              "stock_after": 1,
+              "once_flag": "pickup:sunstone",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         },
         {
@@ -1179,7 +1641,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         }
       ]
@@ -1275,7 +1779,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         }
       ]
@@ -1405,7 +1951,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         }
       ]
@@ -1499,7 +2087,49 @@
               7336
             ],
             "biome": "meadows",
-            "status": "existing_optional_stone_pickup_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "sunstone",
+              "source_at": [
+                121,
+                4.738902,
+                7336
+              ],
+              "player_at": [
+                120.9744,
+                4.781143,
+                7334.5
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Take the sunstone",
+              "stock_before": 0,
+              "stock_after": 1,
+              "once_flag": "pickup:sunstone",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         },
         {
@@ -1516,7 +2146,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         }
       ]
@@ -1612,7 +2284,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         }
       ]
@@ -1742,7 +2456,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         }
       ]
@@ -1836,7 +2592,49 @@
               7336
             ],
             "biome": "meadows",
-            "status": "existing_optional_stone_pickup_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "sunstone",
+              "source_at": [
+                121,
+                4.738902,
+                7336
+              ],
+              "player_at": [
+                120.9744,
+                4.781143,
+                7334.5
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Take the sunstone",
+              "stock_before": 0,
+              "stock_after": 1,
+              "once_flag": "pickup:sunstone",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         },
         {
@@ -1853,7 +2651,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         }
       ]
@@ -1949,7 +2789,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         }
       ]
@@ -2079,7 +2961,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         }
       ]
@@ -2173,7 +3097,49 @@
               7336
             ],
             "biome": "meadows",
-            "status": "existing_optional_stone_pickup_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "sunstone",
+              "source_at": [
+                121,
+                4.738902,
+                7336
+              ],
+              "player_at": [
+                120.9744,
+                4.781143,
+                7334.5
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Take the sunstone",
+              "stock_before": 0,
+              "stock_after": 1,
+              "once_flag": "pickup:sunstone",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         },
         {
@@ -2190,7 +3156,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         }
       ]
@@ -2286,7 +3294,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         }
       ]
@@ -2416,7 +3466,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         }
       ]
@@ -2510,7 +3602,49 @@
               7336
             ],
             "biome": "meadows",
-            "status": "existing_optional_stone_pickup_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "sunstone",
+              "source_at": [
+                121,
+                4.738902,
+                7336
+              ],
+              "player_at": [
+                120.9744,
+                4.781143,
+                7334.5
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Take the sunstone",
+              "stock_before": 0,
+              "stock_after": 1,
+              "once_flag": "pickup:sunstone",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         },
         {
@@ -2527,7 +3661,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         }
       ]
@@ -2623,7 +3799,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         }
       ]
@@ -2753,7 +3971,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         }
       ]
@@ -2847,7 +4107,49 @@
               7336
             ],
             "biome": "meadows",
-            "status": "existing_optional_stone_pickup_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "sunstone",
+              "source_at": [
+                121,
+                4.738902,
+                7336
+              ],
+              "player_at": [
+                120.9744,
+                4.781143,
+                7334.5
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Take the sunstone",
+              "stock_before": 0,
+              "stock_after": 1,
+              "once_flag": "pickup:sunstone",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         },
         {
@@ -2864,7 +4166,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         }
       ]
@@ -2960,7 +4304,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         }
       ]
@@ -3090,7 +4476,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         }
       ]
@@ -3184,7 +4612,49 @@
               7336
             ],
             "biome": "meadows",
-            "status": "existing_optional_stone_pickup_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "sunstone",
+              "source_at": [
+                121,
+                4.738902,
+                7336
+              ],
+              "player_at": [
+                120.9744,
+                4.781143,
+                7334.5
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Take the sunstone",
+              "stock_before": 0,
+              "stock_after": 1,
+              "once_flag": "pickup:sunstone",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         },
         {
@@ -3201,7 +4671,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         }
       ]
@@ -3297,7 +4809,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         }
       ]
@@ -3427,7 +4981,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         }
       ]
@@ -3521,7 +5117,49 @@
               7336
             ],
             "biome": "meadows",
-            "status": "existing_optional_stone_pickup_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "sunstone",
+              "source_at": [
+                121,
+                4.738902,
+                7336
+              ],
+              "player_at": [
+                120.9744,
+                4.781143,
+                7334.5
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Take the sunstone",
+              "stock_before": 0,
+              "stock_after": 1,
+              "once_flag": "pickup:sunstone",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         },
         {
@@ -3538,7 +5176,49 @@
               -24.5
             ],
             "amount": 3,
-            "status": "existing_authored_source_no_runtime_reproof"
+            "status": "CURRENT_LOCAL_PRODUCTION_INPUT_STOCK_ONCE_SPENT_WITNESS_BOUND"
+          },
+          "native_local_witness": {
+            "source_commit": "618c8714210013e9d54b5a262611f84234b79671",
+            "run_id": 37427871290,
+            "job_id": 112151566045,
+            "receipt_path": "ralph/reports/TRAINING/f28/r5/offload-first/playground-retry/native/run.log",
+            "receipt_sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221",
+            "artifact_sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899",
+            "native_observation": {
+              "item": "berries",
+              "source_at": [
+                -6,
+                0.891517,
+                -24.5
+              ],
+              "player_at": [
+                -4.511112,
+                0.889983,
+                -24.68224
+              ],
+              "on_floor": true,
+              "exact_winning_provider": true,
+              "label": "Pick berries",
+              "stock_before": 0,
+              "stock_after": 3,
+              "once_flag": "harvest_node:order:10.0",
+              "spent_prompt": true
+            },
+            "real_interact_input": true,
+            "reuse_local_witness": true,
+            "fixture": "Existing authored world and smoke; same original full-satchel refusal/setup. Local production-ground poses, bare-hand real interact input, no earned controller walk/campaign, no additional save/ACK/co-op/repeat supply credit.",
+            "shutdown_diagnostics": {
+              "warning": "8 ObjectDB instances leaked at exit",
+              "error": "4 resources still in use at exit",
+              "status": "Independent scoped accepted-source PASS; original shutdown defects retained for owning-smoke teardown handoff"
+            },
+            "earned_campaign": false,
+            "controller_walk": false,
+            "owner_saved": false,
+            "owner_acknowledged": false,
+            "co_op": false,
+            "repeated_supply": false
           }
         }
       ]
