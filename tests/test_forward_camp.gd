@@ -70,6 +70,30 @@ func test_source_context_is_realm_and_reach_bound() -> void:
 	assert_true(RULES.source_context(cfg,[_row()],"b1",Vector3.ZERO,"tidewake","guest",0,false,"bed").is_empty())
 	assert_false(RULES.source_context(cfg,[_row()],"b1",Vector3(50,0,0),"meadows","guest",0,false,"bed").in_range)
 
+func test_guest_camp_presentation_requires_the_current_record_pose_and_reach() -> void:
+	var session := preload("res://scripts/net/session.gd")
+	var row := _row()
+	var cfg := RULES.config()
+	var offset: Array = cfg.workbench_offset
+	var near := Vector3(offset[0], offset[1] + 0.6, offset[2])
+	var pose := Transform3D.IDENTITY
+	assert_true(session._forward_camp_record_in_range([row], "b1", pose, near, "meadows", "guest", 7))
+	assert_false(session._forward_camp_record_in_range([row], "b1", pose, Vector3(50,0,0), "meadows", "guest", 7))
+	assert_false(session._forward_camp_record_in_range([row], "b1", pose, near, "tidewake", "guest", 7))
+	assert_false(session._forward_camp_record_in_range([row], "b1", pose, near, "meadows", "", 7))
+	assert_false(session._forward_camp_record_in_range([row], "b1", pose, near, "meadows", "guest", -1))
+	assert_false(session._forward_camp_record_in_range([], "b1", pose, near, "meadows", "guest", 7))
+	assert_false(session._forward_camp_record_in_range([row,row], "b1", pose, near, "meadows", "guest", 7))
+	for field: String in ["removed", "paid", "realm"]:
+		var changed := row.duplicate(true)
+		changed[field] = true if field == "removed" else (false if field == "paid" else "tidewake")
+		assert_false(session._forward_camp_record_in_range([changed], "b1", pose, near, "meadows", "guest", 7), field)
+	for changed_pose: Transform3D in [Transform3D(Basis.IDENTITY, Vector3(1,0,0)),
+		Transform3D(Basis(Vector3.UP, 0.1), Vector3.ZERO),
+		Transform3D(Basis.IDENTITY.scaled(Vector3(2,2,2)), Vector3.ZERO)]:
+		assert_false(session._forward_camp_record_in_range([row], "b1", changed_pose, near, "meadows", "guest", 7))
+	assert_false(session._forward_camp_record_in_range([row], "b2", pose, near, "meadows", "guest", 7))
+
 func test_commit_reconciles_original_before_removed_source_and_never_publishes_failed_save() -> void:
 	var calls := {"stage":0,"publish":0}
 	var replay := HOST.commit({},func(_i: Dictionary) -> Dictionary: return {"ok":true,"found":true,"durable":true},

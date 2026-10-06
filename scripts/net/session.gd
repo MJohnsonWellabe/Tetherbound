@@ -2247,8 +2247,51 @@ func _foundation_camp_context(peer: int, key: String, actor: Dictionary, part: S
 
 func forward_camp_available(camp: Node3D) -> bool:
 	if not is_instance_valid(camp): return false
+	if not is_host():
+		var game := _game()
+		if game == null or game.get("world") == null or game.get("local") == null \
+			or not snapshot_ready() or _owner_training_mutation_blocked(game.get("local")) \
+			or _altar_peer_in_combat(local_peer_id()): return false
+		var scope := _foundation_view_scope(_altar_envelope("personal_view", "homestead_view"))
+		var view := _personal_view_for_scope(scope)
+		if scope.is_empty() or int(view.get("registry_revision", -1)) < 0:
+			_camp_revision_known()
+			return false
+		var actor := game.call("find_player") as Node3D
+		if not is_instance_valid(actor) or not actor.is_inside_tree(): return false
+		return _forward_camp_guest_in_range(camp, game.get("world").placed_buildings,
+			actor.global_position, _local_realm(), _local_character_id(), int(view.registry_revision))
 	for part: String in ["bed", "workbench", "cookpot"]:
 		if _foundation_source(local_peer_id(), camp.call("source_key"), part).get("in_range") == true: return true
+	return false
+
+## A guest may present the current camp; every action still quotes/commits on
+## the host. No cached character state authorizes a debit or loadout change.
+static func _forward_camp_guest_in_range(camp: Node3D, records: Array, actor_at: Vector3,
+		realm: String, character: String, revision: int) -> bool:
+	const CAMP = preload("res://scripts/build/forward_camp_rules.gd")
+	if not is_instance_valid(camp) or not camp.is_inside_tree() or not camp.is_in_group("placed_building") \
+		or camp.get_script() != preload("res://scripts/build/forward_camp.gd") or camp.scale != Vector3.ONE: return false
+	var uid := str(camp.get_meta("building_uid", ""))
+	var source := CAMP.record(records, uid)
+	if source.get("ok") != true or camp.call("source_key") != source.key \
+		or str(camp.get_meta("realm", "")) != realm: return false
+	for node: Node in camp.get_tree().get_nodes_in_group("placed_building"):
+		if node != camp and node.get_script() == preload("res://scripts/build/forward_camp.gd") \
+			and node.call("source_key") == source.key: return false
+	return _forward_camp_record_in_range(records, uid, camp.global_transform, actor_at, realm, character, revision)
+
+static func _forward_camp_record_in_range(records: Array, uid: String, pose: Transform3D,
+		actor_at: Vector3, realm: String, character: String, revision: int) -> bool:
+	const CAMP = preload("res://scripts/build/forward_camp_rules.gd")
+	var source := CAMP.record(records, uid)
+	if source.get("ok") != true: return false
+	var p: Array = source.record.position
+	if not pose.is_finite() or pose.origin.distance_to(Vector3(p[0], p[1], p[2])) > 0.01 \
+		or not pose.basis.is_equal_approx(Basis(Vector3.UP, deg_to_rad(source.record.yaw_deg))): return false
+	for part: String in ["bed", "workbench", "cookpot"]:
+		if CAMP.source_context(CAMP.config(), records, uid, actor_at, realm, character,
+			revision, false, part).get("in_range") == true: return true
 	return false
 
 func forward_camp_prepare_rest(camp: Node3D, original: Dictionary) -> Dictionary:
