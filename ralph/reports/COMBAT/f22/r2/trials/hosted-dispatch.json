@@ -1,0 +1,128 @@
+{
+  "workflow_id": 367653314,
+  "dispatches": [
+    {
+      "label": "r2-f22-gate-control-20261006T0657Z",
+      "status_code": 204,
+      "inputs": {
+        "timeout_minutes": "150",
+        "script": "tests/smoke_f22_pattern_bands.gd",
+        "checkout_ref": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+        "args": "--seeds=12 --trainers --band=cloudreach/gate_lower_cliffs --starters=terrapup --json=res://r2-f22-gate-control-20261006T0657Z.json",
+        "mode": "headless",
+        "label": "r2-f22-gate-control-20261006T0657Z"
+      },
+      "dispatched_utc": "2026-10-06T06:55:54.9202400Z"
+    },
+    {
+      "label": "r2-f22-gate-range-20261006T0657Z",
+      "status_code": 204,
+      "inputs": {
+        "timeout_minutes": "150",
+        "script": "tests/smoke_f22_pattern_bands.gd",
+        "checkout_ref": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+        "args": "--seeds=12 --trainers --band=cloudreach/gate_lower_cliffs --starters=terrapup --json=res://r2-f22-gate-range-20261006T0657Z.json --move-patch=pebble_toss.range=7.5",
+        "mode": "headless",
+        "label": "r2-f22-gate-range-20261006T0657Z"
+      },
+      "dispatched_utc": "2026-10-06T06:55:56.4348972Z"
+    },
+    {
+      "label": "r2-f22-gate-power-20261006T0657Z",
+      "status_code": 204,
+      "inputs": {
+        "timeout_minutes": "150",
+        "script": "tests/smoke_f22_pattern_bands.gd",
+        "checkout_ref": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+        "args": "--seeds=12 --trainers --band=cloudreach/gate_lower_cliffs --starters=terrapup --json=res://r2-f22-gate-power-20261006T0657Z.json --move-patch=stone_rush.power=1.5",
+        "mode": "headless",
+        "label": "r2-f22-gate-power-20261006T0657Z"
+      },
+      "dispatched_utc": "2026-10-06T06:55:57.9748424Z"
+    },
+    {
+      "label": "r2-f22-causeways-control-20261006T0657Z",
+      "status_code": 204,
+      "inputs": {
+        "timeout_minutes": "150",
+        "script": "tests/smoke_f22_pattern_bands.gd",
+        "checkout_ref": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+        "args": "--seeds=12 --trainers --band=cloudreach/broken_causeways --starters=terrapup --json=res://r2-f22-causeways-control-20261006T0657Z.json",
+        "mode": "headless",
+        "label": "r2-f22-causeways-control-20261006T0657Z"
+      },
+      "dispatched_utc": "2026-10-06T06:55:59.4138078Z"
+    },
+    {
+      "label": "r2-f22-causeways-range-20261006T0657Z",
+      "status_code": 204,
+      "inputs": {
+        "timeout_minutes": "150",
+        "script": "tests/smoke_f22_pattern_bands.gd",
+        "checkout_ref": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+        "args": "--seeds=12 --trainers --band=cloudreach/broken_causeways --starters=terrapup --json=res://r2-f22-causeways-range-20261006T0657Z.json --move-patch=pebble_toss.range=7.5",
+        "mode": "headless",
+        "label": "r2-f22-causeways-range-20261006T0657Z"
+      },
+      "dispatched_utc": "2026-10-06T06:56:00.8687323Z"
+    },
+    {
+      "label": "r2-f22-causeways-power-20261006T0657Z",
+      "status_code": 204,
+      "inputs": {
+        "timeout_minutes": "150",
+        "script": "tests/smoke_f22_pattern_bands.gd",
+        "checkout_ref": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+        "args": "--seeds=12 --trainers --band=cloudreach/broken_causeways --starters=terrapup --json=res://r2-f22-causeways-power-20261006T0657Z.json --move-patch=stone_rush.power=1.5",
+        "mode": "headless",
+        "label": "r2-f22-causeways-power-20261006T0657Z"
+      },
+      "dispatched_utc": "2026-10-06T06:56:02.3153339Z"
+    },
+    {
+      "label": "r2-f22-upper-control-20261006T0657Z",
+      "status_code": 204,
+      "inputs": {
+        "timeout_minutes": "150",
+        "script": "tests/smoke_f22_pattern_bands.gd",
+        "checkout_ref": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+        "args": "--seeds=12 --trainers --band=cloudreach/upper_cloudreach --starters=terrapup --json=res://r2-f22-upper-control-20261006T0657Z.json",
+        "mode": "headless",
+        "label": "r2-f22-upper-control-20261006T0657Z"
+      },
+      "dispatched_utc": "2026-10-06T06:56:03.7344724Z"
+    },
+    {
+      "label": "r2-f22-upper-range-20261006T0657Z",
+      "status_code": 204,
+      "inputs": {
+        "timeout_minutes": "150",
+        "script": "tests/smoke_f22_pattern_bands.gd",
+        "checkout_ref": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+        "args": "--seeds=12 --trainers --band=cloudreach/upper_cloudreach --starters=terrapup --json=res://r2-f22-upper-range-20261006T0657Z.json --move-patch=pebble_toss.range=7.5",
+        "mode": "headless",
+        "label": "r2-f22-upper-range-20261006T0657Z"
+      },
+      "dispatched_utc": "2026-10-06T06:56:05.1731429Z"
+    },
+    {
+      "label": "r2-f22-upper-power-20261006T0657Z",
+      "status_code": 204,
+      "inputs": {
+        "timeout_minutes": "150",
+        "script": "tests/smoke_f22_pattern_bands.gd",
+        "checkout_ref": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+        "args": "--seeds=12 --trainers --band=cloudreach/upper_cloudreach --starters=terrapup --json=res://r2-f22-upper-power-20261006T0657Z.json --move-patch=stone_rush.power=1.5",
+        "mode": "headless",
+        "label": "r2-f22-upper-power-20261006T0657Z"
+      },
+      "dispatched_utc": "2026-10-06T06:56:06.5906838Z"
+    }
+  ],
+  "platform": "hosted Ubuntu official Godot 4.7, default frame pacing; paired controls required",
+  "workflow_ref": "main",
+  "workflow_path": ".github/workflows/render.yml",
+  "native_baseline": "785057d4a3b48faa7445b4cc1c5d35e649466416",
+  "scope": "Existing flat-fixture C2 tuning diagnostics only; subset coverage false; final Windows trainer/wild/visual proofs remain required",
+  "source_sha": "8323965ec6a73a20adaca867c56b4478660b8cb2"
+}
