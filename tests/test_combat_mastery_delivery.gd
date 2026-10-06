@@ -139,7 +139,6 @@ func test_retained_hit_rejects_forged_binding_damage_or_epoch_and_preserves_hp()
 	# Tag retains one command parent and two ordinary creature-owned uses.
 	# These are codec/owner-plan fixtures; the live host still owns HP writes.
 	var player: RefCounted = fixture._player()
-	player.party.at(0).uid = before.party[0].uid
 	player.party.add(preload("res://scripts/creatures/creature_species.gd").spawn("terrapup"))
 	before = RECORD.portable_projection(player.save_data())
 	assert_eq(RECORD.errors(before, DATA.CHARACTER), [] as Array[String], "both cards use the canonical owned save projection")
