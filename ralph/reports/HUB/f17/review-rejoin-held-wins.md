@@ -121,11 +121,11 @@ The held-wins design above was reverted in 83cb8cb1. CI (#544) showed it lost gu
 
 Text evidence: `rejoin-admission/guest-wins-*-2peer.txt`.
 
-## Landing round after #545 (merge, R1, two owner-passive fixes)
+## Landing round after #545 (merge, two owner-passive fixes; R1 cherry-picked then reverted)
 
 **What changed:**
 - `origin/main` was merged after #545. The `_readmit_owner` conflict kept F18's note line and this lane's undo; F18's early-readmit hold is intact.
-- R1's tournament round fix: `cherry-pick -x 93487a4e58`.
+- R1's tournament round fix (`cherry-pick -x 93487a4e58`) was taken, then reverted in 0f04f223. A CI bisect on #547 traced the trainer-battle reds to it: shared_boss and boss_rewards_each_participant failed with it on 14f240ac and passed without it on 589cc6fb. It returns under F01#6b together with R1's pending_vitals round fencing.
 - **3a7677b5:** an owner-passive input window dropped before the join snapshot is no longer marked in flight. Before this, the first send waited the full 1.5 s stall. Review: APPROVE-WITH-NITS; the comment nit is fixed in fc4986d8.
 - **22dbc94c + 2466ab7f:** a stream's first discovery is now judged against the host's own observed poses over INITIAL_POSE_LAG_S, not only the current one. The ring is bounded, per realm, sampled per physics tick, and cleared on realm change, departure and reset. The 80 m limit is unchanged, and no pose the host didn't observe can count. Review: APPROVE-WITH-NITS; nits 1, 2, 4 and 5 are fixed in 2466ab7f.
 
