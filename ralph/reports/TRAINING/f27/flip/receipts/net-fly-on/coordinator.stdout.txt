@@ -1,0 +1,56 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=21280 control_port=53206 home=D:\tetherbound\.artifacts\r1-f27-flip\net-fly-on/home-0 log=D:\tetherbound\.artifacts\r1-f27-flip\net-fly-on/peer-0.log
+coordinator: launched peer 1 (client) pid=2972 control_port=53207 home=D:\tetherbound\.artifacts\r1-f27-flip\net-fly-on/home-1 log=D:\tetherbound\.artifacts\r1-f27-flip\net-fly-on/peer-1.log
+coordinator: peer 1 hello: {"enet_port":32302.0,"godot_version":"4.7-stable (official)","main_sha":"cdc67eb14aaf","peer":1.0,"pid":2972.0,"role":"client","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-fly-on/home-1/Godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":32301.0,"godot_version":"4.7-stable (official)","main_sha":"cdc67eb14aaf","peer":0.0,"pid":21280.0,"role":"host","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-fly-on/home-0/Godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: coordinator tracked 2 peers
+PASS: a Session exists to host/join (lane 2.A); without it there is no host to decide a landing
+PASS: peer 0 hosted a world (hosting udp/32301 as peer 1)
+PASS: peer 1 joined peer 0's world on port 32301 (joined 127.0.0.1:32301 as peer 317247626 after 41 frames; snapshot applied; 2 peer(s) in registry)
+PASS: peer 0's registry holds both players (registry reports 2 peer(s) after 0 frames (0.0 s))
+PASS: peer 1's registry holds both players (registry reports 2 peer(s) after 0 frames (0.0 s))
+PASS: peer 0 is the listen server (id 1)
+PASS: peer 1 has its own distinct peer id (317247626), and is therefore NOT the authority on where it lands
+PASS: SETUP: peer 0 is holding the world rather than a dialogue box (SETUP: no dialogue box was open; locomotion now true)
+PASS: SETUP: peer 1 is holding the world rather than a dialogue box (SETUP: no dialogue box was open; locomotion now true)
+PASS: SETUP: peer 1 has the Fly unlock and a galecrest carrier (SETUP: fly_traversal_unlocked set, galecrest active, anchor=(8.6, 0.98, -3.020508), screen: no dialogue box was open, launch site: cleared at (8.6, -3.0) after 20 m (locomotion=true carried=false on_floor=true))
+PASS: peer 1 knows its anchor is the HOST's to give (it is a client, not the listen server)
+PASS: the host granted peer 1 a real landing anchor as it walked (accepts=7, proposals=10)
+PASS: peer 1 is holding a committed anchor to be pulled back to ([8.60000038146973, 0.98000007867813, -3.0205078125])
+PASS: peer 1's position is readable
+PASS: peer 1 was able to SEND a landing claim at all (claimed (508.6, 0.9, 497.0); refusals 3 -> 4, accepts 7 -> 7, code 'too_far')
+PASS: the host REFUSED a landing 500 m from where it has peer 1 standing (refusals 3 -> 4, code 'too_far')
+PASS: the refusal carries a reason code, not silence (got 'too_far')
+PASS: the forged claim was not also counted as an accept (7 -> 7)
+PASS: peer 1's committed anchor is UNCHANGED by the forgery -- a refused claim must not become a teleport destination (was [8.60000038146973, 0.98000007867813, -3.0205078125], now [8.60000038146973, 0.98000007867813, -3.0205078125])
+PASS: SETUP: peer 0 has its own creature out to fight beside (deployed AllyCreature)
+smoke_net_fly: peer 1 before launch: blockers='' locomotion=true carried=false on_floor=true lockout={"adopting":false,"beat":"house","dialogue":false,"downed":false,"fading":false,"fighting":false,"name_prompt":false,"pending_build":"","picker":false,"trainer_battle":false}
+PASS: peer 1's second airborne Jump deployed Fly (flying (glide) at y=45.12 on attempt 0)
+PASS: peer 1 reports itself flying
+PASS: peer 1 is hanging off a galecrest (got 'galecrest')
+PASS: peer 1 has the carrier's art over its own head
+PASS: peer 0 holds a trainer body for peer 317247626 at all
+PASS: peer 0 draws peer 317247626 as FLYING, not as a trainer who stepped off a ledge
+PASS: peer 0 actually draws the flier
+PASS: peer 0 knows which carrier peer 317247626 is under (got 'galecrest')
+PASS: peer 0 built the carrier's art over the remote flier's head -- the friend has a bird, not an empty sky
+PASS: the hanging pose reached the remote flier's skeleton
+PASS: peer 0 knows the flight's own state word (got 'glide')
+PASS: peer 0 draws the flier at the altitude their owner is actually at: 0.06 m apart (tolerance 6.0)
+PASS: peer 0 placed a building WHILE peer 1 was airborne: peer 0 PASS (pressed Place for 'floor' (ghost_ok=true); records 0 -> 1); peer 1 PASS (waited 120 physics frames)
+PASS: peer 0 dropped a stack WHILE peer 1 was airborne: peer 0 PASS (drop 2 wood (txn drop:1:179102765:1149070458): ok=true pending=false); peer 1 PASS (waited 120 physics frames)
+PASS: peer 0 picked it back up WHILE peer 1 was airborne: peer 0 PASS (picked up wood: ok=true pending=false); peer 1 PASS (waited 120 physics frames)
+PASS: peer 0 started its own fight WHILE peer 1 was airborne: peer 0 PASS (engaged bramblebun as encounter 1:1 (bound after 0 frame(s))); peer 1 PASS (waited 120 physics frames)
+PASS: peer 0's building actually landed in the world during the flight (0 -> 1)
+PASS: peer 0 is still playing its own game beside a flight (context 'combat')
+PASS: peer 1 came down (landed at (8.60, 0.90, -3.02); anchor report {"accepts":8,"anchor":[8.60000038146973,0.979999840259552,-3.0205078125],"host_granted":true,"host_validated":true,"last_code":"ok","last_denial":"","pending":false,"proposals":11,"realm":"meadows","refusals":4})
+PASS: the host granted peer 1's real landing (accepts 7 -> 8)
+PASS: peer 1 is not left waiting on an answer that never came
+PASS: peer 0 stopped drawing peer 317247626 as flying once they landed
+PASS: the carrier art was taken off the remote body -- a bird left behind is a bird that follows a landed trainer around
+PASS: the hanging pose came off too, so the remote trainer walks again
+PASS: peer 0 is still playing after the flight ended (context 'combat')
+smoke_net_fly: 46 assertions, 0 failures
+ALL CHECKS PASSED
