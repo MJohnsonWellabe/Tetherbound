@@ -14,7 +14,9 @@ extends "res://tools/net/peer_runner.gd"
 ##   * `harness_unwear`: removes that Harness from this peer's own record
 ##     again (after join), so only the host's s can explain the raised bar.
 ##   * `harness_read` also reports the last rolled incoming hit this peer's
-##     CombatManager announced (its production `hit_landed(false, amount)`).
+##     CombatManager announced (its production `hit_landed(false, amount)`),
+##     and the running total of every such hit since it started listening (the
+##     live wild may land its own strike inside the measured window).
 ##   * `harness_flee`: the production combat_manager.try_flee (what the flee
 ##     button calls), so the fight ends by the ordinary exit.
 ##   * `harness_read`: this peer's active creature as stored, as displayed by
@@ -23,11 +25,14 @@ extends "res://tools/net/peer_runner.gd"
 const SAVE := preload("res://scripts/save/save_game.gd")
 
 var _last_incoming := -1.0
+var _incoming_total := 0.0
 var _incoming_listening := false
 
 
 func _on_hit_landed(on_enemy: bool, amount: float) -> void:
-	if not on_enemy: _last_incoming = amount
+	if not on_enemy:
+		_last_incoming = amount
+		_incoming_total += amount
 
 
 func _execute_step(msg: Dictionary) -> Dictionary:
@@ -97,5 +102,6 @@ func _harness_dispatch(action: String, args: Dictionary) -> Dictionary:
 				float(creature.get("hp")), float(creature.get("max_hp")), shown.x, shown.y, float(row.max_hp)],
 				"hp": float(creature.get("hp")), "max_hp": float(creature.get("max_hp")),
 				"shown_hp": shown.x, "shown_max": shown.y, "saved_max": float(row.max_hp),
-				"fighting": manager != null and bool(manager.call("is_fighting")), "last_incoming": _last_incoming}
+				"fighting": manager != null and bool(manager.call("is_fighting")), "last_incoming": _last_incoming,
+				"incoming_total": _incoming_total}
 	return {"verdict": "ERROR", "detail": "unknown action " + action}

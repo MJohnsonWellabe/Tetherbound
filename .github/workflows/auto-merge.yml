@@ -4,7 +4,7 @@ name: Auto merge settled work
 # Branch protection waits for traceability and ci-gate on the PR head.
 on:
   pull_request_target:
-    types: [opened, synchronize, reopened, ready_for_review]
+    types: [opened, synchronize, reopened, ready_for_review, labeled]
 
 permissions:
   contents: read
@@ -24,7 +24,23 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           REPO: ${{ github.repository }}
-        run: gh pr merge --repo "$REPO" --auto --merge "$PR_NUMBER"
+        # ci.yml skips every engine job on a PR without `full-ci`, and ci-gate
+        # then passes. #548 (2026-10-06) merged untested that way when its
+        # label landed after `opened`. Arm only when the engine jobs will run,
+        # or when nothing outside docs/evidence changed.
+        run: |
+          set -euo pipefail
+          labels=$(gh api "repos/$REPO/issues/$PR_NUMBER/labels" --jq '[.[].name] | join(",")')
+          if [[ ",$labels," != *",full-ci,"* ]]; then
+            code=$(gh api --paginate "repos/$REPO/pulls/$PR_NUMBER/files" --jq '.[].filename' \
+              | grep -vE '^(docs/|ralph/)|\.md$' || true)
+            if [ -n "$code" ]; then
+              echo "Not arming auto-merge: code changed without the full-ci label:"
+              echo "$code" | head -20
+              exit 0
+            fi
+          fi
+          gh pr merge --repo "$REPO" --auto --merge "$PR_NUMBER"
 
   # A merge that this workflow's GITHUB_TOKEN auto-merge performs starts no
   # push run on main (batch 67, 3dbec66b, reached main with no CI). GitHub's
