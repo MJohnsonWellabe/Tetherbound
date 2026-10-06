@@ -143,9 +143,9 @@ Local 4 vCPU, headless, Godot 4.7-stable.
 **Smoke fixtures (coordinator-approved, no assertion weakened).**
 - Opening-together: the orb assert re-polls up to 20 × 60 frames for the late gift. Standing by Grandpa with the key held opens the `lesson_home_key` card, which owns input; each viewer reads it through with the production `ui_accept` (at most 8 pages) before the full-map step.
 - Join/reload layout check: road layout agreement is now asserted after the fresh join and after each peer's save and reload, as well as after the rejoin and the cold reconnect.
-- `smoke_net_harness_max_hp` (the shard-17 race on #547: the host's live wild struck the guest before the "before" read): a disclosed host-side hold of the wild's own swings, on the CombatManager and the director's shared host fight runtime, from just before the guest joins until the scripted hit has been read; plus a named check that no unscripted hit landed first.
+- `smoke_net_harness_max_hp` (the shard-17 race on #547) is not part of this change: the coordinator fixes it on tb/net-fixes (`incoming_total`). A disclosed AI hold was tried here and removed.
 
-**Independent review.** APPROVE-WITH-NITS (static; the reviewer's worktree hit a full disk). Fixed: the conversation fallback (finding 1), the played-shape test (5), the release check (6), a queue comment (2). Recorded, not changed: a guest's satchel room is preflighted per batch against gifts the host has not delivered yet (3); a mid-session load drops queued batches with the held one, as before (4).
+**Independent review.** APPROVE-WITH-NITS (static; the reviewer's worktree hit a full disk). Fixed: the conversation fallback (finding 1), the played-shape test (5), a queue comment (2). Finding 6 (the hold's release check) fell away with the hold. Recorded, not changed: a guest's satchel room is preflighted per batch against gifts the host has not delivered yet (3); a mid-session load drops queued batches with the held one, as before (4).
 
 **Proof on 5fd6937c** (local, 4 vCPU, headless, Godot 4.7-stable, each run alone):
 
@@ -153,6 +153,4 @@ Local 4 vCPU, headless, Godot 4.7-stable.
 |---|---|
 | opening-together 1/3, 2/3, 3/3 | ALL CHECKS PASSED, 158 assertions each; road layout `00cf42f4bb81` (47 bands / 289 points) equal on both peers after the join, the reloads and the rejoin |
 | meadows_identity_fresh_join (default mode) | ALL CHECKS PASSED |
-| harness_max_hp ×2 on 262c098a (the shared-runtime hold; the opening rows are unaffected by it) | ALL CHECKS PASSED; guest at 134.40/134.40 immediately before the scripted hit |
 
-The first harness run on 5fd6937c, with the hold on the CombatManager only, failed the new named check (an unscripted hit landed: 126.08/134.40). That showed the shared fight runs its own enemy AI; the hold now covers it.

@@ -20,10 +20,7 @@ extends "res://tests/helpers/net_harness.gd"
 ##   * the guest's saved party row holds the base maximum, mid-fight and after.
 ## DISCLOSED FIXTURES (peer side: tests/helpers/harness_hp_net_peer.gd): gear
 ## written into the guest's own record before join; the host's swing placed
-## 1.5 m from the guest's creature with a narrow cone so it picks the guest;
-## and, from just before the guest joins until the scripted hit has been read,
-## the host does not route its live wild's own swings (harness_hold_opponent),
-## so the scripted strike is the only hit the guest takes in that window.
+## 1.5 m from the guest's creature with a narrow cone so it picks the guest.
 
 const PEER_SCRIPT := "res://tests/helpers/harness_hp_net_peer.gd"
 const ITEM := "tidesteel_harness_plus_1"
@@ -85,8 +82,6 @@ func _run() -> void:
 	if here == Vector3.INF:
 		quit(await finish())
 		return
-	var held: Dictionary = await _hstep(0, "harness_hold_opponent")
-	check(held.get("verdict") == "PASS", "the host holds its wild's own swings for the measured window (%s)" % str(held.get("detail", "")))
 	await step(1, "teleport", {"at": [here.x - 2.5, here.y + 1.0, here.z]})
 	var joined_fight: Dictionary = await step(1, "join_encounter", {"encounter_id": encounter_id})
 	check(joined_fight.get("verdict") == "PASS", "the guest joins the fight (%s)" % str(joined_fight.get("detail", "")))
@@ -95,8 +90,6 @@ func _run() -> void:
 
 	var before: Dictionary = await _hstep(1, "harness_read")
 	check(bool(before.get("fighting", false)), "the guest is in the fight")
-	check(float(before.get("last_incoming", -1.0)) < 0.0,
-		"no unscripted hit landed on the guest before the host's hit (%s)" % str(before.get("detail", "")))
 	check(absf(float(before.get("shown_max", 0.0)) - float(before.get("max_hp", -1.0))) < 0.01,
 		"before the host's hit the guest's own (bare) record shows no raise")
 	var hit: Dictionary = await _hstep(0, "harness_host_hit", {"peer_id": guest_peer})
@@ -122,8 +115,6 @@ func _run() -> void:
 	check(absf(float(after.get("saved_max", 0.0)) - float(after.get("max_hp", -1.0))) < 0.0001
 		and float(after.get("saved_max", 0.0)) < float(after.get("shown_max", 0.0)),
 		"mid-fight the guest's saved party row holds the base maximum (%.2f)" % float(after.get("saved_max", 0.0)))
-	var released: Dictionary = await _hstep(0, "harness_release_opponent")
-	check(released.get("verdict") == "PASS", "the host routes its wild's swings again (%s)" % str(released.get("detail", "")))
 	var left: Dictionary = await _hstep(1, "harness_flee")
 	var out: Dictionary = {}
 	for _poll in 40:
