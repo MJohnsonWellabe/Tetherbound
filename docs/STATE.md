@@ -4,9 +4,9 @@ Read first; update in place, under 25KB. No dated status/goal/handoff documents.
 
 ## 0. Current integration (coordinator: Claude)
 
-**Main:** PRs #532–#536 landed 2026-10-04/05 (F22 trainers and staging, F17 bed/relic/Hall, F27 essence and leveling, F30#1, CI segmentation with affected-only selection and caches). #537 (F22 a8125751, rematch stutter fix) is in full CI. PRs need the `full-ci` label: a PR without it skips every engine job and auto-merges on a docs-only green.
+**Main:** PRs #532–#544 landed 2026-10-04/05 (F22 trainers and staging, F17 bed/relic/Hall, F27 essence and leveling, F30#1, F31, F33, F34, perf host stalls, CI segmentation). PRs need the `full-ci` label: a PR without it skips every engine job and auto-merges on a docs-only green.
 
-**Critical path:** F18 portal runtime is OFF (`multiplayer.json session.redesign_portal_runtime_enabled=false`) until the F18 flip lands; travel uses the legacy order and the F20 credits aren't reachable in normal play. Dependent smokes carry `# requires-flag:`.
+**F18 portal runtime is ON** (`multiplayer.json session.redesign_portal_runtime_enabled=true`): station-craft co-op green (render 37401490374); post-rejoin relic/Home Key owner stalls fixed. Follow-up: hung-relic reload loss (F18 lane, next PR).
 
 **Criterion audit (2026-10-04, against the consolidated code):** prior evidence counts only where its code is unchanged. 271 live criteria; 10 superseded rows dropped with citations. Tables: `ralph/reports/INTEGRATION/criterion-audit/`. Board (hourly): `ralph/reports/COORDINATOR/dashboard/`.
 
