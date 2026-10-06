@@ -5075,7 +5075,7 @@ func _sync_tether_tonic_scope() -> void:
 	_apply_host_tether_tonics({})
 	if _tether_tonic_observer_scope != scope: _tether_tonic_observer_scope.clear()
 	if not game.has_signal("party_passive_tick"): return
-	var live := not scope.is_empty() and is_host() and _character_authority != null \
+	var live: bool = not scope.is_empty() and is_host() and _character_authority != null \
 		and _tether_tonic_observer_scope == scope and _character_authority.get("_world_instance") == scope[1]
 	if live:
 		live = false
