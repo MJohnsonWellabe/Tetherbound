@@ -1,0 +1,7670 @@
+{
+	"acceptance_verdict": "not assessed; pixels require visual review, audio requires listening",
+	"audio_driver": "Dummy",
+	"capture_source": "actual root viewport texture after frame_post_draw",
+	"display_server": "headless",
+	"episodes": [
+		{
+			"before_transition_candidate": true,
+			"captures": [
+				{
+					"label": "raise_0.0s",
+					"near_target": true,
+					"observation": {
+						"actual_elapsed_seconds": 0.22,
+						"actual_progress": 0.11,
+						"audio": {
+							"bus": "SFX",
+							"bus_muted": false,
+							"bus_volume_db": -4.0,
+							"listened": false,
+							"playback_seconds": 0.284444451332092,
+							"playing": true,
+							"present": true,
+							"stream_class": "AudioStreamWAV",
+							"stream_path": "",
+							"stream_seconds": 2.0,
+							"volume_db": -12.0,
+							"waveform": {
+								"audio_node": {
+									"class": "AudioStreamPlayer",
+									"instance_id": 91533353405845,
+									"path": "/root/Game/HomeKey/@AudioStreamPlayer@84550",
+									"present": true,
+									"script": ""
+								},
+								"bus": "SFX",
+								"device_playback_proven": false,
+								"format": 1,
+								"listened": false,
+								"mix_rate": 22050,
+								"observed_monotonic_msec": 726203,
+								"observed_physics_frame": 37627,
+								"observed_process_frame": 10872,
+								"playback_seconds": 0.284444451332092,
+								"playing_at_observation": true,
+								"scope": "Exact source stream contents; excludes player/bus gain and spatial/mixed device output",
+								"source_bytes": 88200,
+								"source_path": "",
+								"status": "exported_runtime_waveform",
+								"stereo": false,
+								"stream_instance": -9223280503518147180,
+								"stream_seconds": 2.0,
+								"volume_db": -12.0,
+								"wav": "home_key_stream_-9223280503518147180.wav",
+								"write_error": 0
+							}
+						},
+						"bone_pose_rotations": {
+							"RightArm": [
+								0.239348396658897,
+								-0.388578653335571,
+								-0.394667565822601,
+								0.797468900680542
+							],
+							"RightForeArm": [
+								-0.627205908298492,
+								0.0236348360776901,
+								-0.109760582447052,
+								0.770718336105347
+							],
+							"RightHand": [
+								-0.0655787736177444,
+								-0.0327265523374081,
+								-0.039840929210186,
+								0.996514499187469
+							]
+						},
+						"current_player": {
+							"class": "CharacterBody3D",
+							"instance_id": 467681676022,
+							"path": "/root/MeadowsPlayground/Player",
+							"position": [
+								343.788726806641,
+								1.86833095550537,
+								931.489990234375
+							],
+							"present": true,
+							"script": "res://scripts/player/player_controller.gd",
+							"visible_in_tree": true
+						},
+						"current_scene": {
+							"class": "Node3D",
+							"instance_id": 467581012355,
+							"path": "/root/MeadowsPlayground",
+							"position": [
+								0.0,
+								0.0,
+								0.0
+							],
+							"present": true,
+							"script": "res://scripts/world/playground_world.gd",
+							"visible_in_tree": true
+						},
+						"draw_index": 0,
+						"engine_process_frame": 10872,
+						"glow": {
+							"class": "OmniLight3D",
+							"instance_id": 91533319851411,
+							"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/RaisedHomeKey/@OmniLight3D@84549",
+							"position": [
+								344.239807128906,
+								2.98431348800659,
+								931.379638671875
+							],
+							"present": true,
+							"script": "",
+							"visible_in_tree": true
+						},
+						"glow_energy": 0.153999999165535,
+						"input_owner": {
+							"class": "Node",
+							"instance_id": 277058947263,
+							"path": "/root/Game/HomeKey",
+							"present": true,
+							"script": "res://scripts/world/home_key.gd"
+						},
+						"key_prop": {
+							"class": "BoneAttachment3D",
+							"instance_id": 91533185633678,
+							"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/RaisedHomeKey",
+							"position": [
+								344.239807128906,
+								2.98431348800659,
+								931.379638671875
+							],
+							"present": true,
+							"script": "",
+							"visible_in_tree": true
+						},
+						"key_prop_bone": "RightHand",
+						"monotonic_msec": 726200,
+						"native_draw": false,
+						"pending_realm_entry": "",
+						"phase": "raising",
+						"process_seconds": 0.959,
+						"raise_actor": {
+							"class": "CharacterBody3D",
+							"instance_id": 467681676022,
+							"path": "/root/MeadowsPlayground/Player",
+							"position": [
+								343.788726806641,
+								1.86833095550537,
+								931.489990234375
+							],
+							"present": true,
+							"script": "res://scripts/player/player_controller.gd",
+							"visible_in_tree": true
+						},
+						"raise_clock_elapsed_seconds": 0.244,
+						"realm": "meadows",
+						"remote_raises": [],
+						"rig": {
+							"class": "Skeleton3D",
+							"instance_id": 474140903631,
+							"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D",
+							"position": [
+								343.788726806641,
+								1.86833226680756,
+								931.489990234375
+							],
+							"present": true,
+							"script": "",
+							"visible_in_tree": true
+						},
+						"transition": {
+							"active": false,
+							"fading": false,
+							"home_key_fade": {
+								"present": false
+							},
+							"home_key_fade_alpha": null,
+							"home_key_is_fading": false,
+							"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+							"loading_overlay": {
+								"present": false
+							},
+							"overlay_alpha": null,
+							"overlay_visible": false,
+							"reported_fading_sources": []
+						}
+					},
+					"png": "",
+					"raise_visual_present": true,
+					"status": "unavailable_headless",
+					"target_error_seconds": 0.244,
+					"target_seconds": 0.0
+				},
+				{
+					"label": "raise_0.5s",
+					"near_target": true,
+					"observation": {
+						"actual_elapsed_seconds": 0.48,
+						"actual_progress": 0.24,
+						"audio": {
+							"bus": "SFX",
+							"bus_muted": false,
+							"bus_volume_db": -4.0,
+							"listened": false,
+							"playback_seconds": 0.470204085111618,
+							"playing": true,
+							"present": true,
+							"stream_class": "AudioStreamWAV",
+							"stream_path": "",
+							"stream_seconds": 2.0,
+							"volume_db": -12.0,
+							"waveform": {
+								"audio_node": {
+									"class": "AudioStreamPlayer",
+									"instance_id": 91533353405845,
+									"path": "/root/Game/HomeKey/@AudioStreamPlayer@84550",
+									"present": true,
+									"script": ""
+								},
+								"bus": "SFX",
+								"device_playback_proven": false,
+								"format": 1,
+								"listened": false,
+								"mix_rate": 22050,
+								"observed_monotonic_msec": 726203,
+								"observed_physics_frame": 37627,
+								"observed_process_frame": 10872,
+								"playback_seconds": 0.284444451332092,
+								"playing_at_observation": true,
+								"scope": "Exact source stream contents; excludes player/bus gain and spatial/mixed device output",
+								"source_bytes": 88200,
+								"source_path": "",
+								"status": "exported_runtime_waveform",
+								"stereo": false,
+								"stream_instance": -9223280503518147180,
+								"stream_seconds": 2.0,
+								"volume_db": -12.0,
+								"wav": "home_key_stream_-9223280503518147180.wav",
+								"write_error": 0
+							}
+						},
+						"bone_pose_rotations": {
+							"RightArm": [
+								0.0538615733385086,
+								-0.289860755205154,
+								-0.471949756145477,
+								0.830869019031525
+							],
+							"RightForeArm": [
+								-0.669882714748383,
+								0.029818182811141,
+								-0.108244471251965,
+								0.733928620815277
+							],
+							"RightHand": [
+								-0.0655787736177444,
+								-0.0327265523374081,
+								-0.039840929210186,
+								0.996514499187469
+							]
+						},
+						"current_player": {
+							"class": "CharacterBody3D",
+							"instance_id": 467681676022,
+							"path": "/root/MeadowsPlayground/Player",
+							"position": [
+								343.788726806641,
+								1.86833095550537,
+								931.489990234375
+							],
+							"present": true,
+							"script": "res://scripts/player/player_controller.gd",
+							"visible_in_tree": true
+						},
+						"current_scene": {
+							"class": "Node3D",
+							"instance_id": 467581012355,
+							"path": "/root/MeadowsPlayground",
+							"position": [
+								0.0,
+								0.0,
+								0.0
+							],
+							"present": true,
+							"script": "res://scripts/world/playground_world.gd",
+							"visible_in_tree": true
+						},
+						"draw_index": 0,
+						"engine_process_frame": 10873,
+						"glow": {
+							"class": "OmniLight3D",
+							"instance_id": 91533319851411,
+							"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/RaisedHomeKey/@OmniLight3D@84549",
+							"position": [
+								344.250274658203,
+								3.03225421905518,
+								931.348937988281
+							],
+							"present": true,
+							"script": "",
+							"visible_in_tree": true
+						},
+						"glow_energy": 0.335999995470047,
+						"input_owner": {
+							"class": "Node",
+							"instance_id": 277058947263,
+							"path": "/root/Game/HomeKey",
+							"present": true,
+							"script": "res://scripts/world/home_key.gd"
+						},
+						"key_prop": {
+							"class": "BoneAttachment3D",
+							"instance_id": 91533185633678,
+							"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/RaisedHomeKey",
+							"position": [
+								344.250274658203,
+								3.03225421905518,
+								931.348937988281
+							],
+							"present": true,
+							"script": "",
+							"visible_in_tree": true
+						},
+						"key_prop_bone": "RightHand",
+						"monotonic_msec": 726464,
+						"native_draw": false,
+						"pending_realm_entry": "",
+						"phase": "raising",
+						"process_seconds": 1.223,
+						"raise_actor": {
+							"class": "CharacterBody3D",
+							"instance_id": 467681676022,
+							"path": "/root/MeadowsPlayground/Player",
+							"position": [
+								343.788726806641,
+								1.86833095550537,
+								931.489990234375
+							],
+							"present": true,
+							"script": "res://scripts/player/player_controller.gd",
+							"visible_in_tree": true
+						},
+						"raise_clock_elapsed_seconds": 0.508,
+						"realm": "meadows",
+						"remote_raises": [],
+						"rig": {
+							"class": "Skeleton3D",
+							"instance_id": 474140903631,
+							"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D",
+							"position": [
+								343.788726806641,
+								1.86833226680756,
+								931.489990234375
+							],
+							"present": true,
+							"script": "",
+							"visible_in_tree": true
+						},
+						"transition": {
+							"active": false,
+							"fading": false,
+							"home_key_fade": {
+								"present": false
+							},
+							"home_key_fade_alpha": null,
+							"home_key_is_fading": false,
+							"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+							"loading_overlay": {
+								"present": false
+							},
+							"overlay_alpha": null,
+							"overlay_visible": false,
+							"reported_fading_sources": []
+						}
+					},
+					"png": "",
+					"raise_visual_present": true,
+					"status": "unavailable_headless",
+					"target_error_seconds": 0.00800000000000001,
+					"target_seconds": 0.5
+				},
+				{
+					"label": "raise_1.5s",
+					"near_target": true,
+					"observation": {
+						"actual_elapsed_seconds": 1.562,
+						"actual_progress": 0.781,
+						"audio": {
+							"bus": "SFX",
+							"bus_muted": false,
+							"bus_volume_db": -4.0,
+							"listened": false,
+							"playback_seconds": 1.58476185798645,
+							"playing": true,
+							"present": true,
+							"stream_class": "AudioStreamWAV",
+							"stream_path": "",
+							"stream_seconds": 2.0,
+							"volume_db": -12.0,
+							"waveform": {
+								"audio_node": {
+									"class": "AudioStreamPlayer",
+									"instance_id": 91533353405845,
+									"path": "/root/Game/HomeKey/@AudioStreamPlayer@84550",
+									"present": true,
+									"script": ""
+								},
+								"bus": "SFX",
+								"device_playback_proven": false,
+								"format": 1,
+								"listened": false,
+								"mix_rate": 22050,
+								"observed_monotonic_msec": 726203,
+								"observed_physics_frame": 37627,
+								"observed_process_frame": 10872,
+								"playback_seconds": 0.284444451332092,
+								"playing_at_observation": true,
+								"scope": "Exact source stream contents; excludes player/bus gain and spatial/mixed device output",
+								"source_bytes": 88200,
+								"source_path": "",
+								"status": "exported_runtime_waveform",
+								"stereo": false,
+								"stream_instance": -9223280503518147180,
+								"stream_seconds": 2.0,
+								"volume_db": -12.0,
+								"wav": "home_key_stream_-9223280503518147180.wav",
+								"write_error": 0
+							}
+						},
+						"bone_pose_rotations": {
+							"RightArm": [
+								-0.477866053581238,
+								0.0691945999860764,
+								-0.549516081809998,
+								0.681827187538147
+							],
+							"RightForeArm": [
+								-0.783789396286011,
+								0.0476007163524628,
+								-0.101686589419842,
+								0.610793054103851
+							],
+							"RightHand": [
+								-0.0655787736177444,
+								-0.0327265523374081,
+								-0.039840929210186,
+								0.996514499187469
+							]
+						},
+						"current_player": {
+							"class": "CharacterBody3D",
+							"instance_id": 467681676022,
+							"path": "/root/MeadowsPlayground/Player",
+							"position": [
+								343.788726806641,
+								1.86833095550537,
+								931.489990234375
+							],
+							"present": true,
+							"script": "res://scripts/player/player_controller.gd",
+							"visible_in_tree": true
+						},
+						"current_scene": {
+							"class": "Node3D",
+							"instance_id": 467581012355,
+							"path": "/root/MeadowsPlayground",
+							"position": [
+								0.0,
+								0.0,
+								0.0
+							],
+							"present": true,
+							"script": "res://scripts/world/playground_world.gd",
+							"visible_in_tree": true
+						},
+						"draw_index": 0,
+						"engine_process_frame": 10877,
+						"glow": {
+							"class": "OmniLight3D",
+							"instance_id": 91533319851411,
+							"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/RaisedHomeKey/@OmniLight3D@84549",
+							"position": [
+								343.865234375,
+								3.42892694473267,
+								931.364685058594
+							],
+							"present": true,
+							"script": "",
+							"visible_in_tree": true
+						},
+						"glow_energy": 1.09340000152588,
+						"input_owner": {
+							"class": "Node",
+							"instance_id": 277058947263,
+							"path": "/root/Game/HomeKey",
+							"present": true,
+							"script": "res://scripts/world/home_key.gd"
+						},
+						"key_prop": {
+							"class": "BoneAttachment3D",
+							"instance_id": 91533185633678,
+							"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/RaisedHomeKey",
+							"position": [
+								343.865234375,
+								3.42892694473267,
+								931.364685058594
+							],
+							"present": true,
+							"script": "",
+							"visible_in_tree": true
+						},
+						"key_prop_bone": "RightHand",
+						"monotonic_msec": 727547,
+						"native_draw": false,
+						"pending_realm_entry": "",
+						"phase": "raising",
+						"process_seconds": 2.306,
+						"raise_actor": {
+							"class": "CharacterBody3D",
+							"instance_id": 467681676022,
+							"path": "/root/MeadowsPlayground/Player",
+							"position": [
+								343.788726806641,
+								1.86833095550537,
+								931.489990234375
+							],
+							"present": true,
+							"script": "res://scripts/player/player_controller.gd",
+							"visible_in_tree": true
+						},
+						"raise_clock_elapsed_seconds": 1.591,
+						"realm": "meadows",
+						"remote_raises": [],
+						"rig": {
+							"class": "Skeleton3D",
+							"instance_id": 474140903631,
+							"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D",
+							"position": [
+								343.788726806641,
+								1.86833238601685,
+								931.489990234375
+							],
+							"present": true,
+							"script": "",
+							"visible_in_tree": true
+						},
+						"transition": {
+							"active": false,
+							"fading": false,
+							"home_key_fade": {
+								"present": false
+							},
+							"home_key_fade_alpha": null,
+							"home_key_is_fading": false,
+							"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+							"loading_overlay": {
+								"present": false
+							},
+							"overlay_alpha": null,
+							"overlay_visible": false,
+							"reported_fading_sources": []
+						}
+					},
+					"png": "",
+					"raise_visual_present": true,
+					"status": "unavailable_headless",
+					"target_error_seconds": 0.091,
+					"target_seconds": 1.5
+				},
+				{
+					"label": "before_transition_candidate",
+					"observation": {
+						"actual_elapsed_seconds": 1.562,
+						"actual_progress": 0.781,
+						"audio": {
+							"bus": "SFX",
+							"bus_muted": false,
+							"bus_volume_db": -4.0,
+							"listened": false,
+							"playback_seconds": 1.58476185798645,
+							"playing": true,
+							"present": true,
+							"stream_class": "AudioStreamWAV",
+							"stream_path": "",
+							"stream_seconds": 2.0,
+							"volume_db": -12.0,
+							"waveform": {
+								"audio_node": {
+									"class": "AudioStreamPlayer",
+									"instance_id": 91533353405845,
+									"path": "/root/Game/HomeKey/@AudioStreamPlayer@84550",
+									"present": true,
+									"script": ""
+								},
+								"bus": "SFX",
+								"device_playback_proven": false,
+								"format": 1,
+								"listened": false,
+								"mix_rate": 22050,
+								"observed_monotonic_msec": 726203,
+								"observed_physics_frame": 37627,
+								"observed_process_frame": 10872,
+								"playback_seconds": 0.284444451332092,
+								"playing_at_observation": true,
+								"scope": "Exact source stream contents; excludes player/bus gain and spatial/mixed device output",
+								"source_bytes": 88200,
+								"source_path": "",
+								"status": "exported_runtime_waveform",
+								"stereo": false,
+								"stream_instance": -9223280503518147180,
+								"stream_seconds": 2.0,
+								"volume_db": -12.0,
+								"wav": "home_key_stream_-9223280503518147180.wav",
+								"write_error": 0
+							}
+						},
+						"bone_pose_rotations": {
+							"RightArm": [
+								-0.477866053581238,
+								0.0691945999860764,
+								-0.549516081809998,
+								0.681827187538147
+							],
+							"RightForeArm": [
+								-0.783789396286011,
+								0.0476007163524628,
+								-0.101686589419842,
+								0.610793054103851
+							],
+							"RightHand": [
+								-0.0655787736177444,
+								-0.0327265523374081,
+								-0.039840929210186,
+								0.996514499187469
+							]
+						},
+						"current_player": {
+							"class": "CharacterBody3D",
+							"instance_id": 467681676022,
+							"path": "/root/MeadowsPlayground/Player",
+							"position": [
+								343.788726806641,
+								1.86833095550537,
+								931.489990234375
+							],
+							"present": true,
+							"script": "res://scripts/player/player_controller.gd",
+							"visible_in_tree": true
+						},
+						"current_scene": {
+							"class": "Node3D",
+							"instance_id": 467581012355,
+							"path": "/root/MeadowsPlayground",
+							"position": [
+								0.0,
+								0.0,
+								0.0
+							],
+							"present": true,
+							"script": "res://scripts/world/playground_world.gd",
+							"visible_in_tree": true
+						},
+						"draw_index": 0,
+						"engine_process_frame": 10877,
+						"glow": {
+							"class": "OmniLight3D",
+							"instance_id": 91533319851411,
+							"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/RaisedHomeKey/@OmniLight3D@84549",
+							"position": [
+								343.865234375,
+								3.42892694473267,
+								931.364685058594
+							],
+							"present": true,
+							"script": "",
+							"visible_in_tree": true
+						},
+						"glow_energy": 1.09340000152588,
+						"input_owner": {
+							"class": "Node",
+							"instance_id": 277058947263,
+							"path": "/root/Game/HomeKey",
+							"present": true,
+							"script": "res://scripts/world/home_key.gd"
+						},
+						"key_prop": {
+							"class": "BoneAttachment3D",
+							"instance_id": 91533185633678,
+							"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/RaisedHomeKey",
+							"position": [
+								343.865234375,
+								3.42892694473267,
+								931.364685058594
+							],
+							"present": true,
+							"script": "",
+							"visible_in_tree": true
+						},
+						"key_prop_bone": "RightHand",
+						"monotonic_msec": 727547,
+						"native_draw": false,
+						"pending_realm_entry": "",
+						"phase": "raising",
+						"process_seconds": 2.306,
+						"raise_actor": {
+							"class": "CharacterBody3D",
+							"instance_id": 467681676022,
+							"path": "/root/MeadowsPlayground/Player",
+							"position": [
+								343.788726806641,
+								1.86833095550537,
+								931.489990234375
+							],
+							"present": true,
+							"script": "res://scripts/player/player_controller.gd",
+							"visible_in_tree": true
+						},
+						"raise_clock_elapsed_seconds": 1.591,
+						"realm": "meadows",
+						"remote_raises": [],
+						"rig": {
+							"class": "Skeleton3D",
+							"instance_id": 474140903631,
+							"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D",
+							"position": [
+								343.788726806641,
+								1.86833238601685,
+								931.489990234375
+							],
+							"present": true,
+							"script": "",
+							"visible_in_tree": true
+						},
+						"transition": {
+							"active": false,
+							"fading": false,
+							"home_key_fade": {
+								"present": false
+							},
+							"home_key_fade_alpha": null,
+							"home_key_is_fading": false,
+							"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+							"loading_overlay": {
+								"present": false
+							},
+							"overlay_alpha": null,
+							"overlay_visible": false,
+							"reported_fading_sources": []
+						}
+					},
+					"png": "",
+					"status": "unavailable_headless"
+				},
+				{
+					"label": "raise_2.0s",
+					"near_target": true,
+					"observation": {
+						"actual_elapsed_seconds": 2.112,
+						"actual_progress": 1.0,
+						"audio": {
+							"bus": "SFX",
+							"bus_muted": false,
+							"bus_volume_db": -4.0,
+							"listened": false,
+							"playback_seconds": 0.0,
+							"playing": false,
+							"present": true,
+							"stream_class": "AudioStreamWAV",
+							"stream_path": "",
+							"stream_seconds": 2.0,
+							"volume_db": -12.0,
+							"waveform": {
+								"device_playback_proven": false,
+								"status": "unavailable_not_playing_wav"
+							}
+						},
+						"bone_pose_rotations": {
+							"RightArm": [
+								-0.477866053581238,
+								0.0691945999860764,
+								-0.549516081809998,
+								0.681827187538147
+							],
+							"RightForeArm": [
+								-0.783789396286011,
+								0.0476007163524628,
+								-0.101686589419842,
+								0.610793054103851
+							],
+							"RightHand": [
+								-0.0655787736177444,
+								-0.0327265523374081,
+								-0.039840929210186,
+								0.996514499187469
+							]
+						},
+						"current_player": {
+							"class": "CharacterBody3D",
+							"instance_id": 467681676022,
+							"path": "/root/MeadowsPlayground/Player",
+							"position": [
+								343.788726806641,
+								1.86833095550537,
+								931.489990234375
+							],
+							"present": true,
+							"script": "res://scripts/player/player_controller.gd",
+							"visible_in_tree": true
+						},
+						"current_scene": {
+							"class": "Node3D",
+							"instance_id": 467581012355,
+							"path": "/root/MeadowsPlayground",
+							"position": [
+								0.0,
+								0.0,
+								0.0
+							],
+							"present": true,
+							"script": "res://scripts/world/playground_world.gd",
+							"visible_in_tree": true
+						},
+						"draw_index": 0,
+						"engine_process_frame": 10879,
+						"glow": {
+							"class": "OmniLight3D",
+							"instance_id": 91533319851411,
+							"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/RaisedHomeKey/@OmniLight3D@84549",
+							"position": [
+								343.863311767578,
+								3.42868137359619,
+								931.366333007812
+							],
+							"present": true,
+							"script": "",
+							"visible_in_tree": true
+						},
+						"glow_energy": 1.39999997615814,
+						"input_owner": {
+							"class": "Node",
+							"instance_id": 277058947263,
+							"path": "/root/Game/HomeKey",
+							"present": true,
+							"script": "res://scripts/world/home_key.gd"
+						},
+						"key_prop": {
+							"class": "BoneAttachment3D",
+							"instance_id": 91533185633678,
+							"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/RaisedHomeKey",
+							"position": [
+								343.863311767578,
+								3.42868137359619,
+								931.366333007812
+							],
+							"present": true,
+							"script": "",
+							"visible_in_tree": true
+						},
+						"key_prop_bone": "RightHand",
+						"monotonic_msec": 728099,
+						"native_draw": false,
+						"pending_realm_entry": "",
+						"phase": "finishing",
+						"process_seconds": 2.858,
+						"raise_actor": {
+							"class": "CharacterBody3D",
+							"instance_id": 467681676022,
+							"path": "/root/MeadowsPlayground/Player",
+							"position": [
+								343.788726806641,
+								1.86833095550537,
+								931.489990234375
+							],
+							"present": true,
+							"script": "res://scripts/player/player_controller.gd",
+							"visible_in_tree": true
+						},
+						"raise_clock_elapsed_seconds": 2.143,
+						"realm": "meadows",
+						"remote_raises": [],
+						"rig": {
+							"class": "Skeleton3D",
+							"instance_id": 474140903631,
+							"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D",
+							"position": [
+								343.788726806641,
+								1.86833238601685,
+								931.489990234375
+							],
+							"present": true,
+							"script": "",
+							"visible_in_tree": true
+						},
+						"transition": {
+							"active": false,
+							"fading": false,
+							"home_key_fade": {
+								"present": false
+							},
+							"home_key_fade_alpha": null,
+							"home_key_is_fading": false,
+							"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+							"loading_overlay": {
+								"present": false
+							},
+							"overlay_alpha": null,
+							"overlay_visible": false,
+							"reported_fading_sources": []
+						}
+					},
+					"png": "",
+					"raise_visual_present": true,
+					"status": "unavailable_headless",
+					"target_error_seconds": 0.143,
+					"target_seconds": 2.0
+				},
+				{
+					"label": "finishing",
+					"observation": {
+						"actual_elapsed_seconds": 2.112,
+						"actual_progress": 1.0,
+						"audio": {
+							"bus": "SFX",
+							"bus_muted": false,
+							"bus_volume_db": -4.0,
+							"listened": false,
+							"playback_seconds": 0.0,
+							"playing": false,
+							"present": true,
+							"stream_class": "AudioStreamWAV",
+							"stream_path": "",
+							"stream_seconds": 2.0,
+							"volume_db": -12.0,
+							"waveform": {
+								"device_playback_proven": false,
+								"status": "unavailable_not_playing_wav"
+							}
+						},
+						"bone_pose_rotations": {
+							"RightArm": [
+								-0.477866053581238,
+								0.0691945999860764,
+								-0.549516081809998,
+								0.681827187538147
+							],
+							"RightForeArm": [
+								-0.783789396286011,
+								0.0476007163524628,
+								-0.101686589419842,
+								0.610793054103851
+							],
+							"RightHand": [
+								-0.0655787736177444,
+								-0.0327265523374081,
+								-0.039840929210186,
+								0.996514499187469
+							]
+						},
+						"current_player": {
+							"class": "CharacterBody3D",
+							"instance_id": 467681676022,
+							"path": "/root/MeadowsPlayground/Player",
+							"position": [
+								343.788726806641,
+								1.86833095550537,
+								931.489990234375
+							],
+							"present": true,
+							"script": "res://scripts/player/player_controller.gd",
+							"visible_in_tree": true
+						},
+						"current_scene": {
+							"class": "Node3D",
+							"instance_id": 467581012355,
+							"path": "/root/MeadowsPlayground",
+							"position": [
+								0.0,
+								0.0,
+								0.0
+							],
+							"present": true,
+							"script": "res://scripts/world/playground_world.gd",
+							"visible_in_tree": true
+						},
+						"draw_index": 0,
+						"engine_process_frame": 10879,
+						"glow": {
+							"class": "OmniLight3D",
+							"instance_id": 91533319851411,
+							"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/RaisedHomeKey/@OmniLight3D@84549",
+							"position": [
+								343.863311767578,
+								3.42868137359619,
+								931.366333007812
+							],
+							"present": true,
+							"script": "",
+							"visible_in_tree": true
+						},
+						"glow_energy": 1.39999997615814,
+						"input_owner": {
+							"class": "Node",
+							"instance_id": 277058947263,
+							"path": "/root/Game/HomeKey",
+							"present": true,
+							"script": "res://scripts/world/home_key.gd"
+						},
+						"key_prop": {
+							"class": "BoneAttachment3D",
+							"instance_id": 91533185633678,
+							"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/RaisedHomeKey",
+							"position": [
+								343.863311767578,
+								3.42868137359619,
+								931.366333007812
+							],
+							"present": true,
+							"script": "",
+							"visible_in_tree": true
+						},
+						"key_prop_bone": "RightHand",
+						"monotonic_msec": 728099,
+						"native_draw": false,
+						"pending_realm_entry": "",
+						"phase": "finishing",
+						"process_seconds": 2.858,
+						"raise_actor": {
+							"class": "CharacterBody3D",
+							"instance_id": 467681676022,
+							"path": "/root/MeadowsPlayground/Player",
+							"position": [
+								343.788726806641,
+								1.86833095550537,
+								931.489990234375
+							],
+							"present": true,
+							"script": "res://scripts/player/player_controller.gd",
+							"visible_in_tree": true
+						},
+						"raise_clock_elapsed_seconds": 2.143,
+						"realm": "meadows",
+						"remote_raises": [],
+						"rig": {
+							"class": "Skeleton3D",
+							"instance_id": 474140903631,
+							"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D",
+							"position": [
+								343.788726806641,
+								1.86833238601685,
+								931.489990234375
+							],
+							"present": true,
+							"script": "",
+							"visible_in_tree": true
+						},
+						"transition": {
+							"active": false,
+							"fading": false,
+							"home_key_fade": {
+								"present": false
+							},
+							"home_key_fade_alpha": null,
+							"home_key_is_fading": false,
+							"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+							"loading_overlay": {
+								"present": false
+							},
+							"overlay_alpha": null,
+							"overlay_visible": false,
+							"reported_fading_sources": []
+						}
+					},
+					"png": "",
+					"status": "unavailable_headless"
+				},
+				{
+					"label": "observed_transition_visible",
+					"observation": {
+						"actual_elapsed_seconds": 2.112,
+						"actual_progress": 1.0,
+						"audio": {
+							"listened": false,
+							"present": false
+						},
+						"bone_pose_rotations": {},
+						"current_player": {
+							"class": "CharacterBody3D",
+							"instance_id": 467681676022,
+							"path": "/root/MeadowsPlayground/Player",
+							"position": [
+								343.788726806641,
+								1.86833095550537,
+								931.489990234375
+							],
+							"present": true,
+							"script": "res://scripts/player/player_controller.gd",
+							"visible_in_tree": true
+						},
+						"current_scene": {
+							"class": "Node3D",
+							"instance_id": 467581012355,
+							"path": "/root/MeadowsPlayground",
+							"position": [
+								0.0,
+								0.0,
+								0.0
+							],
+							"present": true,
+							"script": "res://scripts/world/playground_world.gd",
+							"visible_in_tree": true
+						},
+						"draw_index": 0,
+						"engine_process_frame": 10880,
+						"glow": {
+							"present": false
+						},
+						"glow_energy": null,
+						"input_owner": {
+							"class": "Node",
+							"instance_id": 277058947263,
+							"path": "/root/Game/HomeKey",
+							"present": true,
+							"script": "res://scripts/world/home_key.gd"
+						},
+						"key_prop": {
+							"present": false
+						},
+						"key_prop_bone": "",
+						"monotonic_msec": 728296,
+						"native_draw": false,
+						"pending_realm_entry": "",
+						"phase": "travelling",
+						"process_seconds": 3.055,
+						"raise_actor": {
+							"present": false
+						},
+						"raise_clock_elapsed_seconds": 2.34,
+						"realm": "meadows",
+						"remote_raises": [],
+						"rig": {
+							"present": false
+						},
+						"transition": {
+							"active": true,
+							"fading": true,
+							"home_key_fade": {
+								"class": "ColorRect",
+								"instance_id": 91852338613626,
+								"path": "/root/Game/HomeKey/HomeKeyFade/Black",
+								"present": true,
+								"script": ""
+							},
+							"home_key_fade_alpha": 0.349999994039536,
+							"home_key_is_fading": true,
+							"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+							"loading_overlay": {
+								"present": false
+							},
+							"overlay_alpha": null,
+							"overlay_visible": false,
+							"reported_fading_sources": []
+						}
+					},
+					"png": "",
+					"status": "unavailable_headless"
+				},
+				{
+					"label": "travelling",
+					"observation": {
+						"actual_elapsed_seconds": 2.112,
+						"actual_progress": 1.0,
+						"audio": {
+							"listened": false,
+							"present": false
+						},
+						"bone_pose_rotations": {},
+						"current_player": {
+							"class": "CharacterBody3D",
+							"instance_id": 467681676022,
+							"path": "/root/MeadowsPlayground/Player",
+							"position": [
+								343.788726806641,
+								1.86833095550537,
+								931.489990234375
+							],
+							"present": true,
+							"script": "res://scripts/player/player_controller.gd",
+							"visible_in_tree": true
+						},
+						"current_scene": {
+							"class": "Node3D",
+							"instance_id": 467581012355,
+							"path": "/root/MeadowsPlayground",
+							"position": [
+								0.0,
+								0.0,
+								0.0
+							],
+							"present": true,
+							"script": "res://scripts/world/playground_world.gd",
+							"visible_in_tree": true
+						},
+						"draw_index": 0,
+						"engine_process_frame": 10880,
+						"glow": {
+							"present": false
+						},
+						"glow_energy": null,
+						"input_owner": {
+							"class": "Node",
+							"instance_id": 277058947263,
+							"path": "/root/Game/HomeKey",
+							"present": true,
+							"script": "res://scripts/world/home_key.gd"
+						},
+						"key_prop": {
+							"present": false
+						},
+						"key_prop_bone": "",
+						"monotonic_msec": 728296,
+						"native_draw": false,
+						"pending_realm_entry": "",
+						"phase": "travelling",
+						"process_seconds": 3.055,
+						"raise_actor": {
+							"present": false
+						},
+						"raise_clock_elapsed_seconds": 2.34,
+						"realm": "meadows",
+						"remote_raises": [],
+						"rig": {
+							"present": false
+						},
+						"transition": {
+							"active": true,
+							"fading": true,
+							"home_key_fade": {
+								"class": "ColorRect",
+								"instance_id": 91852338613626,
+								"path": "/root/Game/HomeKey/HomeKeyFade/Black",
+								"present": true,
+								"script": ""
+							},
+							"home_key_fade_alpha": 0.349999994039536,
+							"home_key_is_fading": true,
+							"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+							"loading_overlay": {
+								"present": false
+							},
+							"overlay_alpha": null,
+							"overlay_visible": false,
+							"reported_fading_sources": []
+						}
+					},
+					"png": "",
+					"status": "unavailable_headless"
+				},
+				{
+					"label": "observed_home_key_black",
+					"observation": {
+						"actual_elapsed_seconds": 2.112,
+						"actual_progress": 1.0,
+						"audio": {
+							"listened": false,
+							"present": false
+						},
+						"bone_pose_rotations": {},
+						"current_player": {
+							"class": "CharacterBody3D",
+							"instance_id": 467681676022,
+							"path": "/root/MeadowsPlayground/Player",
+							"position": [
+								343.788726806641,
+								1.86833095550537,
+								931.489990234375
+							],
+							"present": true,
+							"script": "res://scripts/player/player_controller.gd",
+							"visible_in_tree": true
+						},
+						"current_scene": {
+							"class": "Node3D",
+							"instance_id": 467581012355,
+							"path": "/root/MeadowsPlayground",
+							"position": [
+								0.0,
+								0.0,
+								0.0
+							],
+							"present": true,
+							"script": "res://scripts/world/playground_world.gd",
+							"visible_in_tree": true
+						},
+						"draw_index": 0,
+						"engine_process_frame": 10882,
+						"glow": {
+							"present": false
+						},
+						"glow_energy": null,
+						"input_owner": {
+							"class": "Node",
+							"instance_id": 277058947263,
+							"path": "/root/Game/HomeKey",
+							"present": true,
+							"script": "res://scripts/world/home_key.gd"
+						},
+						"key_prop": {
+							"present": false
+						},
+						"key_prop_bone": "",
+						"monotonic_msec": 728535,
+						"native_draw": false,
+						"pending_realm_entry": "",
+						"phase": "travelling",
+						"process_seconds": 3.294,
+						"raise_actor": {
+							"present": false
+						},
+						"raise_clock_elapsed_seconds": 2.579,
+						"realm": "meadows",
+						"remote_raises": [],
+						"rig": {
+							"present": false
+						},
+						"transition": {
+							"active": true,
+							"fading": true,
+							"home_key_fade": {
+								"class": "ColorRect",
+								"instance_id": 91852338613626,
+								"path": "/root/Game/HomeKey/HomeKeyFade/Black",
+								"present": true,
+								"script": ""
+							},
+							"home_key_fade_alpha": 1.0,
+							"home_key_is_fading": true,
+							"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+							"loading_overlay": {
+								"present": false
+							},
+							"overlay_alpha": null,
+							"overlay_visible": false,
+							"reported_fading_sources": []
+						}
+					},
+					"png": "",
+					"status": "unavailable_headless"
+				},
+				{
+					"label": "after_observed_transition",
+					"observation": {
+						"actual_elapsed_seconds": 2.112,
+						"actual_progress": 1.0,
+						"audio": {
+							"listened": false,
+							"present": false
+						},
+						"bone_pose_rotations": {},
+						"current_player": {
+							"class": "CharacterBody3D",
+							"instance_id": 467681676022,
+							"path": "/root/MeadowsPlayground/Player",
+							"position": [
+								96.1999969482422,
+								0.910941302776337,
+								14.0
+							],
+							"present": true,
+							"script": "res://scripts/player/player_controller.gd",
+							"visible_in_tree": true
+						},
+						"current_scene": {
+							"class": "Node3D",
+							"instance_id": 467581012355,
+							"path": "/root/MeadowsPlayground",
+							"position": [
+								0.0,
+								0.0,
+								0.0
+							],
+							"present": true,
+							"script": "res://scripts/world/playground_world.gd",
+							"visible_in_tree": true
+						},
+						"draw_index": 0,
+						"engine_process_frame": 10889,
+						"glow": {
+							"present": false
+						},
+						"glow_energy": null,
+						"input_owner": {
+							"present": false
+						},
+						"key_prop": {
+							"present": false
+						},
+						"key_prop_bone": "",
+						"monotonic_msec": 729714,
+						"native_draw": false,
+						"pending_realm_entry": "",
+						"phase": "idle",
+						"process_seconds": 4.473,
+						"raise_actor": {
+							"present": false
+						},
+						"raise_clock_elapsed_seconds": 3.758,
+						"realm": "meadows",
+						"remote_raises": [],
+						"rig": {
+							"present": false
+						},
+						"transition": {
+							"active": false,
+							"fading": false,
+							"home_key_fade": {
+								"class": "ColorRect",
+								"instance_id": 91852338613626,
+								"path": "/root/Game/HomeKey/HomeKeyFade/Black",
+								"present": true,
+								"script": ""
+							},
+							"home_key_fade_alpha": 0.0,
+							"home_key_is_fading": false,
+							"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+							"loading_overlay": {
+								"present": false
+							},
+							"overlay_alpha": null,
+							"overlay_visible": false,
+							"reported_fading_sources": []
+						}
+					},
+					"png": "",
+					"status": "unavailable_headless"
+				},
+				{
+					"label": "idle_after_raise",
+					"observation": {
+						"actual_elapsed_seconds": 2.112,
+						"actual_progress": 1.0,
+						"audio": {
+							"listened": false,
+							"present": false
+						},
+						"bone_pose_rotations": {},
+						"current_player": {
+							"class": "CharacterBody3D",
+							"instance_id": 467681676022,
+							"path": "/root/MeadowsPlayground/Player",
+							"position": [
+								96.1999969482422,
+								0.910941302776337,
+								14.0
+							],
+							"present": true,
+							"script": "res://scripts/player/player_controller.gd",
+							"visible_in_tree": true
+						},
+						"current_scene": {
+							"class": "Node3D",
+							"instance_id": 467581012355,
+							"path": "/root/MeadowsPlayground",
+							"position": [
+								0.0,
+								0.0,
+								0.0
+							],
+							"present": true,
+							"script": "res://scripts/world/playground_world.gd",
+							"visible_in_tree": true
+						},
+						"draw_index": 0,
+						"engine_process_frame": 10889,
+						"glow": {
+							"present": false
+						},
+						"glow_energy": null,
+						"input_owner": {
+							"present": false
+						},
+						"key_prop": {
+							"present": false
+						},
+						"key_prop_bone": "",
+						"monotonic_msec": 729714,
+						"native_draw": false,
+						"pending_realm_entry": "",
+						"phase": "idle",
+						"process_seconds": 4.473,
+						"raise_actor": {
+							"present": false
+						},
+						"raise_clock_elapsed_seconds": 3.758,
+						"realm": "meadows",
+						"remote_raises": [],
+						"rig": {
+							"present": false
+						},
+						"transition": {
+							"active": false,
+							"fading": false,
+							"home_key_fade": {
+								"class": "ColorRect",
+								"instance_id": 91852338613626,
+								"path": "/root/Game/HomeKey/HomeKeyFade/Black",
+								"present": true,
+								"script": ""
+							},
+							"home_key_fade_alpha": 0.0,
+							"home_key_is_fading": false,
+							"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+							"loading_overlay": {
+								"present": false
+							},
+							"overlay_alpha": null,
+							"overlay_visible": false,
+							"reported_fading_sources": []
+						}
+					},
+					"png": "",
+					"status": "unavailable_headless"
+				}
+			],
+			"home_key_black_observed": true,
+			"idle_after_raise_observed": true,
+			"index": 1,
+			"phase_events": [
+				{
+					"monotonic_msec": 726200,
+					"phase": "raising"
+				},
+				{
+					"monotonic_msec": 728099,
+					"phase": "finishing"
+				},
+				{
+					"monotonic_msec": 728296,
+					"phase": "travelling"
+				},
+				{
+					"monotonic_msec": 729537,
+					"phase": "idle"
+				}
+			],
+			"previous_transition_active": false,
+			"production_fade_observed": true,
+			"raise_started_msec": 725956,
+			"targets_seen": [
+				0.0,
+				0.5,
+				1.5,
+				2.0
+			],
+			"transition_observed": true,
+			"use_id": "travel:13e45d661857f71c4a63945f3433427f:character-e5da75759ba56cadea595358baa0f521:3"
+		}
+	],
+	"errors": [],
+	"finished_monotonic_msec": 788953,
+	"headless_reason": "Headless has no native presentation framebuffer.",
+	"native_draws_observed": 0,
+	"native_framebuffer_available": false,
+	"pid": 2728,
+	"samples": [
+		{
+			"actual_elapsed_seconds": 0.0,
+			"actual_progress": 0.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					343.728912353516,
+					1.87241744995117,
+					931.489624023438
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 10863,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 725393,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 0.152,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": null,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 0.0,
+			"actual_progress": 0.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					343.788726806641,
+					1.86833095550537,
+					931.489990234375
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 10871,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"class": "Node",
+				"instance_id": 277058947263,
+				"path": "/root/Game/HomeKey",
+				"present": true,
+				"script": "res://scripts/world/home_key.gd"
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 725832,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "confirming",
+			"process_seconds": 0.591,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": null,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 0.22,
+			"actual_progress": 0.11,
+			"audio": {
+				"bus": "SFX",
+				"bus_muted": false,
+				"bus_volume_db": -4.0,
+				"listened": false,
+				"playback_seconds": 0.284444451332092,
+				"playing": true,
+				"present": true,
+				"stream_class": "AudioStreamWAV",
+				"stream_path": "",
+				"stream_seconds": 2.0,
+				"volume_db": -12.0,
+				"waveform": {
+					"audio_node": {
+						"class": "AudioStreamPlayer",
+						"instance_id": 91533353405845,
+						"path": "/root/Game/HomeKey/@AudioStreamPlayer@84550",
+						"present": true,
+						"script": ""
+					},
+					"bus": "SFX",
+					"device_playback_proven": false,
+					"format": 1,
+					"listened": false,
+					"mix_rate": 22050,
+					"observed_monotonic_msec": 726203,
+					"observed_physics_frame": 37627,
+					"observed_process_frame": 10872,
+					"playback_seconds": 0.284444451332092,
+					"playing_at_observation": true,
+					"scope": "Exact source stream contents; excludes player/bus gain and spatial/mixed device output",
+					"source_bytes": 88200,
+					"source_path": "",
+					"status": "exported_runtime_waveform",
+					"stereo": false,
+					"stream_instance": -9223280503518147180,
+					"stream_seconds": 2.0,
+					"volume_db": -12.0,
+					"wav": "home_key_stream_-9223280503518147180.wav",
+					"write_error": 0
+				}
+			},
+			"bone_pose_rotations": {
+				"RightArm": [
+					0.239348396658897,
+					-0.388578653335571,
+					-0.394667565822601,
+					0.797468900680542
+				],
+				"RightForeArm": [
+					-0.627205908298492,
+					0.0236348360776901,
+					-0.109760582447052,
+					0.770718336105347
+				],
+				"RightHand": [
+					-0.0655787736177444,
+					-0.0327265523374081,
+					-0.039840929210186,
+					0.996514499187469
+				]
+			},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					343.788726806641,
+					1.86833095550537,
+					931.489990234375
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 10872,
+			"glow": {
+				"class": "OmniLight3D",
+				"instance_id": 91533319851411,
+				"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/RaisedHomeKey/@OmniLight3D@84549",
+				"position": [
+					344.239807128906,
+					2.98431348800659,
+					931.379638671875
+				],
+				"present": true,
+				"script": "",
+				"visible_in_tree": true
+			},
+			"glow_energy": 0.153999999165535,
+			"input_owner": {
+				"class": "Node",
+				"instance_id": 277058947263,
+				"path": "/root/Game/HomeKey",
+				"present": true,
+				"script": "res://scripts/world/home_key.gd"
+			},
+			"key_prop": {
+				"class": "BoneAttachment3D",
+				"instance_id": 91533185633678,
+				"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/RaisedHomeKey",
+				"position": [
+					344.239807128906,
+					2.98431348800659,
+					931.379638671875
+				],
+				"present": true,
+				"script": "",
+				"visible_in_tree": true
+			},
+			"key_prop_bone": "RightHand",
+			"monotonic_msec": 726200,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "raising",
+			"process_seconds": 0.959,
+			"raise_actor": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					343.788726806641,
+					1.86833095550537,
+					931.489990234375
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"raise_clock_elapsed_seconds": 0.244,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"class": "Skeleton3D",
+				"instance_id": 474140903631,
+				"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D",
+				"position": [
+					343.788726806641,
+					1.86833226680756,
+					931.489990234375
+				],
+				"present": true,
+				"script": "",
+				"visible_in_tree": true
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 0.48,
+			"actual_progress": 0.24,
+			"audio": {
+				"bus": "SFX",
+				"bus_muted": false,
+				"bus_volume_db": -4.0,
+				"listened": false,
+				"playback_seconds": 0.470204085111618,
+				"playing": true,
+				"present": true,
+				"stream_class": "AudioStreamWAV",
+				"stream_path": "",
+				"stream_seconds": 2.0,
+				"volume_db": -12.0,
+				"waveform": {
+					"audio_node": {
+						"class": "AudioStreamPlayer",
+						"instance_id": 91533353405845,
+						"path": "/root/Game/HomeKey/@AudioStreamPlayer@84550",
+						"present": true,
+						"script": ""
+					},
+					"bus": "SFX",
+					"device_playback_proven": false,
+					"format": 1,
+					"listened": false,
+					"mix_rate": 22050,
+					"observed_monotonic_msec": 726203,
+					"observed_physics_frame": 37627,
+					"observed_process_frame": 10872,
+					"playback_seconds": 0.284444451332092,
+					"playing_at_observation": true,
+					"scope": "Exact source stream contents; excludes player/bus gain and spatial/mixed device output",
+					"source_bytes": 88200,
+					"source_path": "",
+					"status": "exported_runtime_waveform",
+					"stereo": false,
+					"stream_instance": -9223280503518147180,
+					"stream_seconds": 2.0,
+					"volume_db": -12.0,
+					"wav": "home_key_stream_-9223280503518147180.wav",
+					"write_error": 0
+				}
+			},
+			"bone_pose_rotations": {
+				"RightArm": [
+					0.0538615733385086,
+					-0.289860755205154,
+					-0.471949756145477,
+					0.830869019031525
+				],
+				"RightForeArm": [
+					-0.669882714748383,
+					0.029818182811141,
+					-0.108244471251965,
+					0.733928620815277
+				],
+				"RightHand": [
+					-0.0655787736177444,
+					-0.0327265523374081,
+					-0.039840929210186,
+					0.996514499187469
+				]
+			},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					343.788726806641,
+					1.86833095550537,
+					931.489990234375
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 10873,
+			"glow": {
+				"class": "OmniLight3D",
+				"instance_id": 91533319851411,
+				"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/RaisedHomeKey/@OmniLight3D@84549",
+				"position": [
+					344.250274658203,
+					3.03225421905518,
+					931.348937988281
+				],
+				"present": true,
+				"script": "",
+				"visible_in_tree": true
+			},
+			"glow_energy": 0.335999995470047,
+			"input_owner": {
+				"class": "Node",
+				"instance_id": 277058947263,
+				"path": "/root/Game/HomeKey",
+				"present": true,
+				"script": "res://scripts/world/home_key.gd"
+			},
+			"key_prop": {
+				"class": "BoneAttachment3D",
+				"instance_id": 91533185633678,
+				"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/RaisedHomeKey",
+				"position": [
+					344.250274658203,
+					3.03225421905518,
+					931.348937988281
+				],
+				"present": true,
+				"script": "",
+				"visible_in_tree": true
+			},
+			"key_prop_bone": "RightHand",
+			"monotonic_msec": 726464,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "raising",
+			"process_seconds": 1.223,
+			"raise_actor": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					343.788726806641,
+					1.86833095550537,
+					931.489990234375
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"raise_clock_elapsed_seconds": 0.508,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"class": "Skeleton3D",
+				"instance_id": 474140903631,
+				"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D",
+				"position": [
+					343.788726806641,
+					1.86833226680756,
+					931.489990234375
+				],
+				"present": true,
+				"script": "",
+				"visible_in_tree": true
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 0.75,
+			"actual_progress": 0.375,
+			"audio": {
+				"bus": "SFX",
+				"bus_muted": false,
+				"bus_volume_db": -4.0,
+				"listened": false,
+				"playback_seconds": 0.748843550682068,
+				"playing": true,
+				"present": true,
+				"stream_class": "AudioStreamWAV",
+				"stream_path": "",
+				"stream_seconds": 2.0,
+				"volume_db": -12.0,
+				"waveform": {
+					"audio_node": {
+						"class": "AudioStreamPlayer",
+						"instance_id": 91533353405845,
+						"path": "/root/Game/HomeKey/@AudioStreamPlayer@84550",
+						"present": true,
+						"script": ""
+					},
+					"bus": "SFX",
+					"device_playback_proven": false,
+					"format": 1,
+					"listened": false,
+					"mix_rate": 22050,
+					"observed_monotonic_msec": 726203,
+					"observed_physics_frame": 37627,
+					"observed_process_frame": 10872,
+					"playback_seconds": 0.284444451332092,
+					"playing_at_observation": true,
+					"scope": "Exact source stream contents; excludes player/bus gain and spatial/mixed device output",
+					"source_bytes": 88200,
+					"source_path": "",
+					"status": "exported_runtime_waveform",
+					"stereo": false,
+					"stream_instance": -9223280503518147180,
+					"stream_seconds": 2.0,
+					"volume_db": -12.0,
+					"wav": "home_key_stream_-9223280503518147180.wav",
+					"write_error": 0
+				}
+			},
+			"bone_pose_rotations": {
+				"RightArm": [
+					-0.193460583686829,
+					-0.137855961918831,
+					-0.536424815654755,
+					0.809825539588928
+				],
+				"RightForeArm": [
+					-0.722861647605896,
+					0.0378247834742069,
+					-0.105713181197643,
+					0.681810140609741
+				],
+				"RightHand": [
+					-0.0655787736177444,
+					-0.0327265523374081,
+					-0.039840929210186,
+					0.996514499187469
+				]
+			},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					343.788726806641,
+					1.86833095550537,
+					931.489990234375
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 10874,
+			"glow": {
+				"class": "OmniLight3D",
+				"instance_id": 91533319851411,
+				"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/RaisedHomeKey/@OmniLight3D@84549",
+				"position": [
+					344.2177734375,
+					3.18910884857178,
+					931.271484375
+				],
+				"present": true,
+				"script": "",
+				"visible_in_tree": true
+			},
+			"glow_energy": 0.524999976158142,
+			"input_owner": {
+				"class": "Node",
+				"instance_id": 277058947263,
+				"path": "/root/Game/HomeKey",
+				"present": true,
+				"script": "res://scripts/world/home_key.gd"
+			},
+			"key_prop": {
+				"class": "BoneAttachment3D",
+				"instance_id": 91533185633678,
+				"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/RaisedHomeKey",
+				"position": [
+					344.2177734375,
+					3.18910884857178,
+					931.271484375
+				],
+				"present": true,
+				"script": "",
+				"visible_in_tree": true
+			},
+			"key_prop_bone": "RightHand",
+			"monotonic_msec": 726729,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "raising",
+			"process_seconds": 1.488,
+			"raise_actor": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					343.788726806641,
+					1.86833095550537,
+					931.489990234375
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"raise_clock_elapsed_seconds": 0.773,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"class": "Skeleton3D",
+				"instance_id": 474140903631,
+				"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D",
+				"position": [
+					343.788726806641,
+					1.86833226680756,
+					931.489990234375
+				],
+				"present": true,
+				"script": "",
+				"visible_in_tree": true
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 0.997,
+			"actual_progress": 0.4985,
+			"audio": {
+				"bus": "SFX",
+				"bus_muted": false,
+				"bus_volume_db": -4.0,
+				"listened": false,
+				"playback_seconds": 1.0274829864502,
+				"playing": true,
+				"present": true,
+				"stream_class": "AudioStreamWAV",
+				"stream_path": "",
+				"stream_seconds": 2.0,
+				"volume_db": -12.0,
+				"waveform": {
+					"audio_node": {
+						"class": "AudioStreamPlayer",
+						"instance_id": 91533353405845,
+						"path": "/root/Game/HomeKey/@AudioStreamPlayer@84550",
+						"present": true,
+						"script": ""
+					},
+					"bus": "SFX",
+					"device_playback_proven": false,
+					"format": 1,
+					"listened": false,
+					"mix_rate": 22050,
+					"observed_monotonic_msec": 726203,
+					"observed_physics_frame": 37627,
+					"observed_process_frame": 10872,
+					"playback_seconds": 0.284444451332092,
+					"playing_at_observation": true,
+					"scope": "Exact source stream contents; excludes player/bus gain and spatial/mixed device output",
+					"source_bytes": 88200,
+					"source_path": "",
+					"status": "exported_runtime_waveform",
+					"stereo": false,
+					"stream_instance": -9223280503518147180,
+					"stream_seconds": 2.0,
+					"volume_db": -12.0,
+					"wav": "home_key_stream_-9223280503518147180.wav",
+					"write_error": 0
+				}
+			},
+			"bone_pose_rotations": {
+				"RightArm": [
+					-0.382092773914337,
+					-0.00513848662376404,
+					-0.553831577301025,
+					0.739763081073761
+				],
+				"RightForeArm": [
+					-0.762806296348572,
+					0.0441542714834213,
+					-0.10322979837656,
+					0.636804938316345
+				],
+				"RightHand": [
+					-0.0655787736177444,
+					-0.0327265523374081,
+					-0.039840929210186,
+					0.996514499187469
+				]
+			},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					343.788726806641,
+					1.86833095550537,
+					931.489990234375
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 10875,
+			"glow": {
+				"class": "OmniLight3D",
+				"instance_id": 91533319851411,
+				"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/RaisedHomeKey/@OmniLight3D@84549",
+				"position": [
+					344.079071044922,
+					3.35995101928711,
+					931.256713867188
+				],
+				"present": true,
+				"script": "",
+				"visible_in_tree": true
+			},
+			"glow_energy": 0.697899997234344,
+			"input_owner": {
+				"class": "Node",
+				"instance_id": 277058947263,
+				"path": "/root/Game/HomeKey",
+				"present": true,
+				"script": "res://scripts/world/home_key.gd"
+			},
+			"key_prop": {
+				"class": "BoneAttachment3D",
+				"instance_id": 91533185633678,
+				"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/RaisedHomeKey",
+				"position": [
+					344.079071044922,
+					3.35995101928711,
+					931.256713867188
+				],
+				"present": true,
+				"script": "",
+				"visible_in_tree": true
+			},
+			"key_prop_bone": "RightHand",
+			"monotonic_msec": 726989,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "raising",
+			"process_seconds": 1.748,
+			"raise_actor": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					343.788726806641,
+					1.86833095550537,
+					931.489990234375
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"raise_clock_elapsed_seconds": 1.033,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"class": "Skeleton3D",
+				"instance_id": 474140903631,
+				"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D",
+				"position": [
+					343.788726806641,
+					1.86833238601685,
+					931.489990234375
+				],
+				"present": true,
+				"script": "",
+				"visible_in_tree": true
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 1.252,
+			"actual_progress": 0.626,
+			"audio": {
+				"bus": "SFX",
+				"bus_muted": false,
+				"bus_volume_db": -4.0,
+				"listened": false,
+				"playback_seconds": 1.30612242221832,
+				"playing": true,
+				"present": true,
+				"stream_class": "AudioStreamWAV",
+				"stream_path": "",
+				"stream_seconds": 2.0,
+				"volume_db": -12.0,
+				"waveform": {
+					"audio_node": {
+						"class": "AudioStreamPlayer",
+						"instance_id": 91533353405845,
+						"path": "/root/Game/HomeKey/@AudioStreamPlayer@84550",
+						"present": true,
+						"script": ""
+					},
+					"bus": "SFX",
+					"device_playback_proven": false,
+					"format": 1,
+					"listened": false,
+					"mix_rate": 22050,
+					"observed_monotonic_msec": 726203,
+					"observed_physics_frame": 37627,
+					"observed_process_frame": 10872,
+					"playback_seconds": 0.284444451332092,
+					"playing_at_observation": true,
+					"scope": "Exact source stream contents; excludes player/bus gain and spatial/mixed device output",
+					"source_bytes": 88200,
+					"source_path": "",
+					"status": "exported_runtime_waveform",
+					"stereo": false,
+					"stream_instance": -9223280503518147180,
+					"stream_seconds": 2.0,
+					"volume_db": -12.0,
+					"wav": "home_key_stream_-9223280503518147180.wav",
+					"write_error": 0
+				}
+			},
+			"bone_pose_rotations": {
+				"RightArm": [
+					-0.475203961133957,
+					0.0670515149831772,
+					-0.549781680107117,
+					0.683685183525085
+				],
+				"RightForeArm": [
+					-0.783193707466125,
+					0.0475015789270401,
+					-0.101732939481735,
+					0.611556768417358
+				],
+				"RightHand": [
+					-0.0655787736177444,
+					-0.0327265523374081,
+					-0.039840929210186,
+					0.996514499187469
+				]
+			},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					343.788726806641,
+					1.86833095550537,
+					931.489990234375
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 10876,
+			"glow": {
+				"class": "OmniLight3D",
+				"instance_id": 91533319851411,
+				"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/RaisedHomeKey/@OmniLight3D@84549",
+				"position": [
+					343.936126708984,
+					3.4258029460907,
+					931.315063476562
+				],
+				"present": true,
+				"script": "",
+				"visible_in_tree": true
+			},
+			"glow_energy": 0.876399993896484,
+			"input_owner": {
+				"class": "Node",
+				"instance_id": 277058947263,
+				"path": "/root/Game/HomeKey",
+				"present": true,
+				"script": "res://scripts/world/home_key.gd"
+			},
+			"key_prop": {
+				"class": "BoneAttachment3D",
+				"instance_id": 91533185633678,
+				"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/RaisedHomeKey",
+				"position": [
+					343.936126708984,
+					3.4258029460907,
+					931.315063476562
+				],
+				"present": true,
+				"script": "",
+				"visible_in_tree": true
+			},
+			"key_prop_bone": "RightHand",
+			"monotonic_msec": 727232,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "raising",
+			"process_seconds": 1.991,
+			"raise_actor": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					343.788726806641,
+					1.86833095550537,
+					931.489990234375
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"raise_clock_elapsed_seconds": 1.276,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"class": "Skeleton3D",
+				"instance_id": 474140903631,
+				"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D",
+				"position": [
+					343.788726806641,
+					1.86833238601685,
+					931.489990234375
+				],
+				"present": true,
+				"script": "",
+				"visible_in_tree": true
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 1.562,
+			"actual_progress": 0.781,
+			"audio": {
+				"bus": "SFX",
+				"bus_muted": false,
+				"bus_volume_db": -4.0,
+				"listened": false,
+				"playback_seconds": 1.58476185798645,
+				"playing": true,
+				"present": true,
+				"stream_class": "AudioStreamWAV",
+				"stream_path": "",
+				"stream_seconds": 2.0,
+				"volume_db": -12.0,
+				"waveform": {
+					"audio_node": {
+						"class": "AudioStreamPlayer",
+						"instance_id": 91533353405845,
+						"path": "/root/Game/HomeKey/@AudioStreamPlayer@84550",
+						"present": true,
+						"script": ""
+					},
+					"bus": "SFX",
+					"device_playback_proven": false,
+					"format": 1,
+					"listened": false,
+					"mix_rate": 22050,
+					"observed_monotonic_msec": 726203,
+					"observed_physics_frame": 37627,
+					"observed_process_frame": 10872,
+					"playback_seconds": 0.284444451332092,
+					"playing_at_observation": true,
+					"scope": "Exact source stream contents; excludes player/bus gain and spatial/mixed device output",
+					"source_bytes": 88200,
+					"source_path": "",
+					"status": "exported_runtime_waveform",
+					"stereo": false,
+					"stream_instance": -9223280503518147180,
+					"stream_seconds": 2.0,
+					"volume_db": -12.0,
+					"wav": "home_key_stream_-9223280503518147180.wav",
+					"write_error": 0
+				}
+			},
+			"bone_pose_rotations": {
+				"RightArm": [
+					-0.477866053581238,
+					0.0691945999860764,
+					-0.549516081809998,
+					0.681827187538147
+				],
+				"RightForeArm": [
+					-0.783789396286011,
+					0.0476007163524628,
+					-0.101686589419842,
+					0.610793054103851
+				],
+				"RightHand": [
+					-0.0655787736177444,
+					-0.0327265523374081,
+					-0.039840929210186,
+					0.996514499187469
+				]
+			},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					343.788726806641,
+					1.86833095550537,
+					931.489990234375
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 10877,
+			"glow": {
+				"class": "OmniLight3D",
+				"instance_id": 91533319851411,
+				"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/RaisedHomeKey/@OmniLight3D@84549",
+				"position": [
+					343.865234375,
+					3.42892694473267,
+					931.364685058594
+				],
+				"present": true,
+				"script": "",
+				"visible_in_tree": true
+			},
+			"glow_energy": 1.09340000152588,
+			"input_owner": {
+				"class": "Node",
+				"instance_id": 277058947263,
+				"path": "/root/Game/HomeKey",
+				"present": true,
+				"script": "res://scripts/world/home_key.gd"
+			},
+			"key_prop": {
+				"class": "BoneAttachment3D",
+				"instance_id": 91533185633678,
+				"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/RaisedHomeKey",
+				"position": [
+					343.865234375,
+					3.42892694473267,
+					931.364685058594
+				],
+				"present": true,
+				"script": "",
+				"visible_in_tree": true
+			},
+			"key_prop_bone": "RightHand",
+			"monotonic_msec": 727547,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "raising",
+			"process_seconds": 2.306,
+			"raise_actor": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					343.788726806641,
+					1.86833095550537,
+					931.489990234375
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"raise_clock_elapsed_seconds": 1.591,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"class": "Skeleton3D",
+				"instance_id": 474140903631,
+				"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D",
+				"position": [
+					343.788726806641,
+					1.86833238601685,
+					931.489990234375
+				],
+				"present": true,
+				"script": "",
+				"visible_in_tree": true
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 1.83,
+			"actual_progress": 0.915,
+			"audio": {
+				"bus": "SFX",
+				"bus_muted": false,
+				"bus_volume_db": -4.0,
+				"listened": false,
+				"playback_seconds": 1.86340141296387,
+				"playing": true,
+				"present": true,
+				"stream_class": "AudioStreamWAV",
+				"stream_path": "",
+				"stream_seconds": 2.0,
+				"volume_db": -12.0,
+				"waveform": {
+					"audio_node": {
+						"class": "AudioStreamPlayer",
+						"instance_id": 91533353405845,
+						"path": "/root/Game/HomeKey/@AudioStreamPlayer@84550",
+						"present": true,
+						"script": ""
+					},
+					"bus": "SFX",
+					"device_playback_proven": false,
+					"format": 1,
+					"listened": false,
+					"mix_rate": 22050,
+					"observed_monotonic_msec": 726203,
+					"observed_physics_frame": 37627,
+					"observed_process_frame": 10872,
+					"playback_seconds": 0.284444451332092,
+					"playing_at_observation": true,
+					"scope": "Exact source stream contents; excludes player/bus gain and spatial/mixed device output",
+					"source_bytes": 88200,
+					"source_path": "",
+					"status": "exported_runtime_waveform",
+					"stereo": false,
+					"stream_instance": -9223280503518147180,
+					"stream_seconds": 2.0,
+					"volume_db": -12.0,
+					"wav": "home_key_stream_-9223280503518147180.wav",
+					"write_error": 0
+				}
+			},
+			"bone_pose_rotations": {
+				"RightArm": [
+					-0.477866053581238,
+					0.0691945999860764,
+					-0.549516081809998,
+					0.681827187538147
+				],
+				"RightForeArm": [
+					-0.783789396286011,
+					0.0476007163524628,
+					-0.101686589419842,
+					0.610793054103851
+				],
+				"RightHand": [
+					-0.0655787736177444,
+					-0.0327265523374081,
+					-0.039840929210186,
+					0.996514499187469
+				]
+			},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					343.788726806641,
+					1.86833095550537,
+					931.489990234375
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 10878,
+			"glow": {
+				"class": "OmniLight3D",
+				"instance_id": 91533319851411,
+				"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/RaisedHomeKey/@OmniLight3D@84549",
+				"position": [
+					343.863311767578,
+					3.42868137359619,
+					931.366333007812
+				],
+				"present": true,
+				"script": "",
+				"visible_in_tree": true
+			},
+			"glow_energy": 1.28100001811981,
+			"input_owner": {
+				"class": "Node",
+				"instance_id": 277058947263,
+				"path": "/root/Game/HomeKey",
+				"present": true,
+				"script": "res://scripts/world/home_key.gd"
+			},
+			"key_prop": {
+				"class": "BoneAttachment3D",
+				"instance_id": 91533185633678,
+				"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/RaisedHomeKey",
+				"position": [
+					343.863311767578,
+					3.42868137359619,
+					931.366333007812
+				],
+				"present": true,
+				"script": "",
+				"visible_in_tree": true
+			},
+			"key_prop_bone": "RightHand",
+			"monotonic_msec": 727812,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "raising",
+			"process_seconds": 2.571,
+			"raise_actor": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					343.788726806641,
+					1.86833095550537,
+					931.489990234375
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"raise_clock_elapsed_seconds": 1.856,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"class": "Skeleton3D",
+				"instance_id": 474140903631,
+				"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D",
+				"position": [
+					343.788726806641,
+					1.86833238601685,
+					931.489990234375
+				],
+				"present": true,
+				"script": "",
+				"visible_in_tree": true
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"bus": "SFX",
+				"bus_muted": false,
+				"bus_volume_db": -4.0,
+				"listened": false,
+				"playback_seconds": 0.0,
+				"playing": false,
+				"present": true,
+				"stream_class": "AudioStreamWAV",
+				"stream_path": "",
+				"stream_seconds": 2.0,
+				"volume_db": -12.0,
+				"waveform": {
+					"device_playback_proven": false,
+					"status": "unavailable_not_playing_wav"
+				}
+			},
+			"bone_pose_rotations": {
+				"RightArm": [
+					-0.477866053581238,
+					0.0691945999860764,
+					-0.549516081809998,
+					0.681827187538147
+				],
+				"RightForeArm": [
+					-0.783789396286011,
+					0.0476007163524628,
+					-0.101686589419842,
+					0.610793054103851
+				],
+				"RightHand": [
+					-0.0655787736177444,
+					-0.0327265523374081,
+					-0.039840929210186,
+					0.996514499187469
+				]
+			},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					343.788726806641,
+					1.86833095550537,
+					931.489990234375
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 10879,
+			"glow": {
+				"class": "OmniLight3D",
+				"instance_id": 91533319851411,
+				"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/RaisedHomeKey/@OmniLight3D@84549",
+				"position": [
+					343.863311767578,
+					3.42868137359619,
+					931.366333007812
+				],
+				"present": true,
+				"script": "",
+				"visible_in_tree": true
+			},
+			"glow_energy": 1.39999997615814,
+			"input_owner": {
+				"class": "Node",
+				"instance_id": 277058947263,
+				"path": "/root/Game/HomeKey",
+				"present": true,
+				"script": "res://scripts/world/home_key.gd"
+			},
+			"key_prop": {
+				"class": "BoneAttachment3D",
+				"instance_id": 91533185633678,
+				"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D/RaisedHomeKey",
+				"position": [
+					343.863311767578,
+					3.42868137359619,
+					931.366333007812
+				],
+				"present": true,
+				"script": "",
+				"visible_in_tree": true
+			},
+			"key_prop_bone": "RightHand",
+			"monotonic_msec": 728099,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "finishing",
+			"process_seconds": 2.858,
+			"raise_actor": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					343.788726806641,
+					1.86833095550537,
+					931.489990234375
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"raise_clock_elapsed_seconds": 2.143,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"class": "Skeleton3D",
+				"instance_id": 474140903631,
+				"path": "/root/MeadowsPlayground/Player/Model/trainer_lod0/Armature/Skeleton3D",
+				"position": [
+					343.788726806641,
+					1.86833238601685,
+					931.489990234375
+				],
+				"present": true,
+				"script": "",
+				"visible_in_tree": true
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					343.788726806641,
+					1.86833095550537,
+					931.489990234375
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 10880,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"class": "Node",
+				"instance_id": 277058947263,
+				"path": "/root/Game/HomeKey",
+				"present": true,
+				"script": "res://scripts/world/home_key.gd"
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 728296,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "travelling",
+			"process_seconds": 3.055,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 2.34,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": true,
+				"fading": true,
+				"home_key_fade": {
+					"class": "ColorRect",
+					"instance_id": 91852338613626,
+					"path": "/root/Game/HomeKey/HomeKeyFade/Black",
+					"present": true,
+					"script": ""
+				},
+				"home_key_fade_alpha": 0.349999994039536,
+				"home_key_is_fading": true,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					96.1999969482422,
+					0.910941302776337,
+					14.0
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 10885,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"class": "Node",
+				"instance_id": 277058947263,
+				"path": "/root/Game/HomeKey",
+				"present": true,
+				"script": "res://scripts/world/home_key.gd"
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 729332,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "travelling",
+			"process_seconds": 4.091,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 3.376,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": true,
+				"fading": true,
+				"home_key_fade": {
+					"class": "ColorRect",
+					"instance_id": 91852338613626,
+					"path": "/root/Game/HomeKey/HomeKeyFade/Black",
+					"present": true,
+					"script": ""
+				},
+				"home_key_fade_alpha": 1.0,
+				"home_key_is_fading": true,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					96.1999969482422,
+					0.910941302776337,
+					14.0
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 10887,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"class": "Node",
+				"instance_id": 277058947263,
+				"path": "/root/Game/HomeKey",
+				"present": true,
+				"script": "res://scripts/world/home_key.gd"
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 729537,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 4.296,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 3.581,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": true,
+				"fading": true,
+				"home_key_fade": {
+					"class": "ColorRect",
+					"instance_id": 91852338613626,
+					"path": "/root/Game/HomeKey/HomeKeyFade/Black",
+					"present": true,
+					"script": ""
+				},
+				"home_key_fade_alpha": 0.714999973773956,
+				"home_key_is_fading": true,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					97.1950759887695,
+					0.910842657089233,
+					17.2615776062012
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 10896,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 730587,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 5.346,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 4.631,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					97.4735717773438,
+					0.910941660404205,
+					18.1744804382324
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 10904,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 731617,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 6.376,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 5.661,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					96.7703170776367,
+					0.910842657089233,
+					15.8693752288818
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 10912,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 732657,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 7.416,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 6.701,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					92.7714233398438,
+					0.910829782485962,
+					13.9445123672485
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 10921,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 733788,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 8.547,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 7.832,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					87.607551574707,
+					0.900936126708984,
+					13.9999752044678
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 10929,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 734819,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 9.578,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 8.863,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					82.4407577514648,
+					0.900936126708984,
+					13.9999656677246
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 10937,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 735829,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 10.588,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 9.873,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					77.1906509399414,
+					0.900936126708984,
+					13.9999532699585
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 10946,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 736888,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 11.647,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 10.932,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					71.9405364990234,
+					0.900941491127014,
+					13.9999399185181
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 10955,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 737923,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 12.682,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 11.967,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					66.9404220581055,
+					0.900936126708984,
+					13.9999332427979
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 10964,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 738932,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 13.691,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 12.976,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					61.8570747375488,
+					0.900936126708984,
+					13.9999217987061
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 10973,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 739958,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 14.717,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 14.002,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					56.4405212402344,
+					0.900936126708984,
+					13.9999141693115
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 10982,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 741042,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 15.801,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 15.086,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					51.4406433105469,
+					0.900936126708984,
+					13.9999027252197
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 10990,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 742061,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 16.82,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 16.105,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					47.8573913574219,
+					0.900936126708984,
+					13.9998950958252
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 10996,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 743071,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 17.83,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 17.115,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					42.3574981689453,
+					0.900936126708984,
+					13.9998874664307
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11006,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 744212,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 18.971,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 18.256,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					36.9409561157227,
+					0.900936126708984,
+					13.9998760223389
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11015,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 745308,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 20.067,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 19.352,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					31.607738494873,
+					0.900936126708984,
+					13.9998950958252
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11024,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 746428,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 21.187,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 20.472,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					26.4410552978516,
+					0.900936126708984,
+					13.9999237060547
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11032,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 747467,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 22.226,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 21.511,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					20.7743797302246,
+					0.900936126708984,
+					13.9999618530273
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11041,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 748579,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 23.338,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 22.623,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					15.4410457611084,
+					0.900936126708984,
+					13.9999904632568
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11050,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 749644,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 24.403,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 23.688,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					10.6776361465454,
+					0.900842487812042,
+					15.2984485626221
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11058,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 750678,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 25.437,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 24.722,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					7.55419874191284,
+					0.900781750679016,
+					16.4769802093506
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11067,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 751809,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 26.568,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 25.853,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					8.02483463287354,
+					0.900842666625977,
+					19.7667255401611
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11075,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 752822,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 27.581,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 26.866,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					4.35389137268066,
+					0.900841593742371,
+					20.1079216003418
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11081,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 753898,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 28.657,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 27.942,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					-1.09091734886169,
+					0.900842666625977,
+					20.8851375579834
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11090,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 755006,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 29.765,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 29.05,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					-6.04073715209961,
+					0.900842666625977,
+					21.5916690826416
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11098,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 756014,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 30.773,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 30.058,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					-6.32562780380249,
+					0.900941669940948,
+					21.6323299407959
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11102,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"class": "CanvasLayer",
+				"instance_id": 93316821796111,
+				"path": "/root/@CanvasLayer@85097",
+				"present": true,
+				"script": "res://scripts/ui/craft_panel.gd"
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 757082,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 31.841,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 31.126,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					-6.32562780380249,
+					0.900941669940948,
+					21.6323299407959
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11111,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"class": "CanvasLayer",
+				"instance_id": 93316821796111,
+				"path": "/root/@CanvasLayer@85097",
+				"present": true,
+				"script": "res://scripts/ui/craft_panel.gd"
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 758830,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 33.589,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 32.874,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					-6.32562780380249,
+					0.900941669940948,
+					21.6323299407959
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11116,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"class": "CanvasLayer",
+				"instance_id": 93316821796111,
+				"path": "/root/@CanvasLayer@85097",
+				"present": true,
+				"script": "res://scripts/ui/craft_panel.gd"
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 759874,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 34.633,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 33.918,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					-6.32562780380249,
+					0.900941669940948,
+					21.6323299407959
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11124,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"class": "CanvasLayer",
+				"instance_id": 253721839516,
+				"path": "/root/Game/GameMenu",
+				"present": true,
+				"script": "res://scripts/ui/game_menu.gd"
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 760898,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 35.657,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 34.942,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					-6.32562780380249,
+					0.900941669940948,
+					21.6323299407959
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11148,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"class": "CanvasLayer",
+				"instance_id": 253721839516,
+				"path": "/root/Game/GameMenu",
+				"present": true,
+				"script": "res://scripts/ui/game_menu.gd"
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 761973,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 36.732,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 36.017,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					-6.32562780380249,
+					0.900941669940948,
+					21.6323299407959
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11184,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"class": "CanvasLayer",
+				"instance_id": 253721839516,
+				"path": "/root/Game/GameMenu",
+				"present": true,
+				"script": "res://scripts/ui/game_menu.gd"
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 763192,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 37.951,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 37.236,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					-6.32562780380249,
+					0.900941669940948,
+					21.6323299407959
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11200,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"class": "CanvasLayer",
+				"instance_id": 253721839516,
+				"path": "/root/Game/GameMenu",
+				"present": true,
+				"script": "res://scripts/ui/game_menu.gd"
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 764372,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 39.131,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 38.416,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					-6.32562780380249,
+					0.900941669940948,
+					21.6323299407959
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11210,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 765378,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 40.137,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 39.422,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					-6.32562780380249,
+					0.900941669940948,
+					21.6323299407959
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11218,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 766451,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 41.21,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 40.495,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					-1.92829167842865,
+					0.900889933109283,
+					21.298454284668
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11226,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 767583,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 42.342,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 41.627,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					3.63901877403259,
+					0.900842666625977,
+					20.8757419586182
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11235,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 768689,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 43.448,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 42.733,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					8.62601089477539,
+					0.900854408740997,
+					20.5627861022949
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11243,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 769720,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 44.479,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 43.764,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					13.8606224060059,
+					0.900842666625977,
+					20.161319732666
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11251,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 770758,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 45.517,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 44.802,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					19.2614402770996,
+					0.900829792022705,
+					19.7470798492432
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11260,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 771861,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 46.62,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 45.905,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					24.3972911834717,
+					0.950753092765808,
+					19.3531551361084
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11268,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 772901,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 47.66,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 46.945,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					29.631031036377,
+					0.900830090045929,
+					18.9517974853516
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11276,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 773945,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 48.704,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 47.989,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					34.7826347351074,
+					0.900842666625977,
+					18.5567245483398
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11284,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 774982,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 49.741,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 49.026,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					40.0173759460449,
+					0.900842666625977,
+					18.1552658081055
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11292,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 776075,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 50.834,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 50.119,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					43.3410949707031,
+					0.900842487812042,
+					17.900354385376
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11297,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 777107,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 51.866,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 51.151,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					48.6589584350586,
+					0.900830030441284,
+					17.4925498962402
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11305,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 778271,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 53.03,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 52.315,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					53.8937187194824,
+					0.900842666625977,
+					17.0911140441895
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11313,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 779344,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 54.103,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 53.388,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					59.0453796386719,
+					0.900828957557678,
+					16.6960258483887
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11321,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 780363,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 55.122,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 54.407,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					63.9477767944336,
+					0.900841355323792,
+					16.3200588226318
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11329,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 781365,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 56.124,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 55.409,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					69.265625,
+					0.900829792022705,
+					15.9122018814087
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11337,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 782466,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 57.225,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 56.51,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					74.5835113525391,
+					0.900842666625977,
+					15.5043830871582
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11345,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 783577,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 58.336,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 57.621,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					79.9013824462891,
+					0.900830090045929,
+					15.0965595245361
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11353,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 784721,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 59.48,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 58.765,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					84.8868789672852,
+					0.900843501091003,
+					14.7142238616943
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11361,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 785739,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 60.498,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 59.783,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					90.2878341674805,
+					0.900842487812042,
+					14.3000259399414
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11370,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 786841,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 61.6,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 60.885,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		},
+		{
+			"actual_elapsed_seconds": 2.112,
+			"actual_progress": 1.0,
+			"audio": {
+				"listened": false,
+				"present": false
+			},
+			"bone_pose_rotations": {},
+			"current_player": {
+				"class": "CharacterBody3D",
+				"instance_id": 467681676022,
+				"path": "/root/MeadowsPlayground/Player",
+				"position": [
+					344.299987792969,
+					2.45772242546082,
+					926.599975585938
+				],
+				"present": true,
+				"script": "res://scripts/player/player_controller.gd",
+				"visible_in_tree": true
+			},
+			"current_scene": {
+				"class": "Node3D",
+				"instance_id": 467581012355,
+				"path": "/root/MeadowsPlayground",
+				"position": [
+					0.0,
+					0.0,
+					0.0
+				],
+				"present": true,
+				"script": "res://scripts/world/playground_world.gd",
+				"visible_in_tree": true
+			},
+			"draw_index": 0,
+			"engine_process_frame": 11375,
+			"glow": {
+				"present": false
+			},
+			"glow_energy": null,
+			"input_owner": {
+				"present": false
+			},
+			"key_prop": {
+				"present": false
+			},
+			"key_prop_bone": "",
+			"monotonic_msec": 788043,
+			"native_draw": false,
+			"pending_realm_entry": "",
+			"phase": "idle",
+			"process_seconds": 62.802,
+			"raise_actor": {
+				"present": false
+			},
+			"raise_clock_elapsed_seconds": 62.087,
+			"realm": "meadows",
+			"remote_raises": [],
+			"rig": {
+				"present": false
+			},
+			"transition": {
+				"active": false,
+				"fading": false,
+				"home_key_fade": {
+					"present": false
+				},
+				"home_key_fade_alpha": null,
+				"home_key_is_fading": false,
+				"interpretation": "overlay visibility/production is_fading observation; smooth fade has not been judged",
+				"loading_overlay": {
+					"present": false
+				},
+				"overlay_alpha": null,
+				"overlay_visible": false,
+				"reported_fading_sources": []
+			}
+		}
+	],
+	"schema_version": 1,
+	"started_monotonic_msec": 725241,
+	"stop_reason": "smoke completed",
+	"waveform_scope": "Actual observed Home Key stream contents only; no device playback or mixed-bus recording",
+	"waveforms": [
+		{
+			"audio_node": {
+				"class": "AudioStreamPlayer",
+				"instance_id": 91533353405845,
+				"path": "/root/Game/HomeKey/@AudioStreamPlayer@84550",
+				"present": true,
+				"script": ""
+			},
+			"bus": "SFX",
+			"device_playback_proven": false,
+			"format": 1,
+			"listened": false,
+			"mix_rate": 22050,
+			"observed_monotonic_msec": 726203,
+			"observed_physics_frame": 37627,
+			"observed_process_frame": 10872,
+			"playback_seconds": 0.284444451332092,
+			"playing_at_observation": true,
+			"scope": "Exact source stream contents; excludes player/bus gain and spatial/mixed device output",
+			"source_bytes": 88200,
+			"source_path": "",
+			"status": "exported_runtime_waveform",
+			"stereo": false,
+			"stream_instance": -9223280503518147180,
+			"stream_seconds": 2.0,
+			"volume_db": -12.0,
+			"wav": "home_key_stream_-9223280503518147180.wav",
+			"write_error": 0
+		}
+	]
+}

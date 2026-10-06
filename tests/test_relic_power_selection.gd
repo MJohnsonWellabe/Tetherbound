@@ -82,6 +82,15 @@ func test_the_host_action_saves_one_choice_and_refuses_an_unhung_one() -> void:
 	other.redesign_character.transaction_receipts.append("relic_hang:tidewake:owner_a")
 	assert_true(ACTIONS.relic_power(other, {"heart_id": "water", "edit_id": EDIT.reverse()}, context).get("ok") == true,
 		"a different hung power is still a new choice")
+	assert_eq(ACTIONS.relic_power(other, {"heart_id": "tidewake", "edit_id": EDIT.reverse()}, context).get("code"), "unknown_heart",
+		"a biome alias is not a heart id: it would pass the hung check but reload as no power")
+	assert_eq(ACTIONS.relic_power(other, {"heart_id": "no_such_heart", "edit_id": EDIT.reverse()}, context).get("code"), "unknown_heart")
+	var unhung_replay: Dictionary = chosen.state.duplicate(true)
+	unhung_replay.redesign_character.relics_hung = []
+	assert_eq(ACTIONS.relic_power(unhung_replay, {"heart_id": "tidewake", "edit_id": EDIT}, context).get("code"),
+		"reconcile_original_decision", "a committed edit replays as itself before the heart and hang rules")
+	assert_true(PANEL.chosen_already({"ok": false, "code": "reconcile_original_decision"}),
+		"a replayed saved choice is shown as applied, not an error")
 
 
 func test_a_guest_choice_waits_past_the_host_checkpoint_for_its_saved_decision() -> void:
@@ -146,3 +155,73 @@ func test_the_owner_installs_a_saved_relic_power_choice() -> void:
 	session.free()
 	game.free()
 	preload("res://tests/helpers/split_save_fixture.gd").wipe(directory)
+
+
+class NoPlacedFlags extends RefCounted:
+	func has(_id: String) -> bool: return false
+
+
+func test_a_hung_relic_choice_survives_a_save_and_reload() -> void:
+	# Review of cc114109: the redesign hangs relics per character
+	# (relics_hung + receipt) and never sets the world placed flag, but the
+	# reload validated the active power only against that flag, so a saved
+	# choice came back empty while the host's record kept it.
+	var player := PLAYER.new()
+	player.configure(ITEMS.new())
+	player.character_id = "owner_a"
+	player.party.add(INSTANCE.from_species("terrapup", SPECIES.table().terrapup))
+	player.flag_reader = NoPlacedFlags.new()
+	player.redesign_character.relics_hung = ["meadows"]
+	player.redesign_character.transaction_receipts = ["relic_hang:meadows:owner_a"]
+	assert_true(player.hearts.activate_hung("meadows", ["meadows"]))
+	var saved: Dictionary = player.save_data()
+	var reloaded := PLAYER.new()
+	reloaded.configure(ITEMS.new())
+	reloaded.flag_reader = NoPlacedFlags.new()
+	reloaded.load_data(saved)
+	assert_eq(reloaded.hearts.active_id(), "meadows", "a hung (not world-placed) relic's power is still active after reload")
+	saved.redesign_character.relics_hung = []
+	var unhung := PLAYER.new()
+	unhung.configure(ITEMS.new())
+	unhung.flag_reader = NoPlacedFlags.new()
+	unhung.load_data(saved)
+	assert_eq(unhung.hearts.active_id(), "", "an unhung, unplaced selection still loads inactive")
+	saved.redesign_character.relics_hung = ["meadows"]
+	saved.redesign_character.transaction_receipts = []
+	var claimed := PLAYER.new()
+	claimed.configure(ITEMS.new())
+	claimed.flag_reader = NoPlacedFlags.new()
+	claimed.load_data(saved)
+	assert_eq(claimed.hearts.active_id(), "", "a hang without its relic_hang receipt is a claim, not a proof")
+
+
+func test_a_hung_relic_choice_survives_title_load() -> void:
+	# Review of 4a667c59: title Load (SaveGame.load_slot) restores the hearts
+	# itself, with the world progression, and dropped the hung choice.
+	const DIR := "user://test_relic_power_title_load/"
+	var fixture := preload("res://tests/helpers/split_save_fixture.gd")
+	fixture.wipe(DIR)
+	var save: RefCounted = preload("res://scripts/save/save_game.gd").new(DIR)
+	var written: Node = preload("res://autoload/game_state.gd").new()
+	written.reset_for_new_game()
+	assert_true(save.save(written, 0))
+	var owner := str(written.local.character_id)
+	assert_false(owner.is_empty(), "the first save resolves the character id")
+	written.local.redesign_character.relics_hung = ["meadows"]
+	written.local.redesign_character.transaction_receipts = ["relic_hang:meadows:" + owner]
+	assert_true(written.realm_hearts.activate_hung("meadows", ["meadows"]))
+	assert_true(save.save(written, 0))
+	var restored: Node = preload("res://autoload/game_state.gd").new()
+	restored.reset_for_new_game()
+	assert_true(save.load_slot(restored, 0))
+	assert_eq(str(restored.local.character_id), owner)
+	assert_eq(restored.realm_hearts.active_id(), "meadows", "a hung relic's power survives title Load")
+	written.local.redesign_character.transaction_receipts = []
+	assert_true(save.save(written, 0))
+	var claimed: Node = preload("res://autoload/game_state.gd").new()
+	claimed.reset_for_new_game()
+	assert_true(save.load_slot(claimed, 0))
+	assert_eq(claimed.realm_hearts.active_id(), "", "a hang without its receipt does not restore the power")
+	for game: Node in [written, restored, claimed]:
+		game.free()
+	fixture.wipe(DIR)
