@@ -1,0 +1,70 @@
+{
+  "model": "D:\\tetherbound\\codex-c1\\assets\\environment\\crossing_hall\\creature_nest\\source\\preview-candidate.glb",
+  "bounds": {
+    "min": [
+      -0.9478,
+      -0.9438,
+      -0.2139
+    ],
+    "max": [
+      0.9254,
+      0.9507,
+      0.2205
+    ],
+    "size": [
+      1.8731,
+      1.8946,
+      0.4344
+    ],
+    "height_m": 0.4344,
+    "longest_axis_m": 1.8946,
+    "sits_on_origin": false,
+    "centred_on_origin": true
+  },
+  "meshes": [
+    {
+      "name": "output_unwrapped",
+      "vertices": 15366,
+      "edges": 19006,
+      "faces": 7564,
+      "triangles": 7564,
+      "tris": 7564,
+      "quads": 0,
+      "ngons": 0,
+      "quad_fraction": 0.0,
+      "non_manifold_edges": 15320,
+      "boundary_edges": 15320,
+      "loose_vertices": 0,
+      "duplicate_vertices": 11911,
+      "components": 3924,
+      "debris_components": 3924,
+      "flipped_normals": 1951,
+      "uv_layers": 1,
+      "stretched_uv_faces": 564,
+      "materials": [],
+      "shape_keys": 0,
+      "vertex_groups": 0
+    }
+  ],
+  "materials": [],
+  "armatures": [],
+  "animations": [],
+  "totals": {
+    "meshes": 1,
+    "triangles": 7564,
+    "vertices": 15366,
+    "materials": 0,
+    "animations": 0
+  },
+  "problems": [
+    "no material carries a texture \u2014 this is the exact defect two blind reviews named on the existing roster (archive/reports/docs-reviews-full/MA-01, MA-02)",
+    "output_unwrapped: 15320 non-manifold edges",
+    "output_unwrapped: 11911 duplicate vertices \u2014 will split under deformation",
+    "output_unwrapped: 3924 microscopic disconnected components",
+    "output_unwrapped: ~1951 inward-facing faces",
+    "output_unwrapped: 564 faces with texel density 4.0x off the median",
+    "output_unwrapped: 0% quads \u2014 generator triangle soup, poor for deformation",
+    "does not stand on the origin (lowest point z=-0.2139)",
+    "no armature and no clips \u2014 nothing here can move"
+  ]
+}

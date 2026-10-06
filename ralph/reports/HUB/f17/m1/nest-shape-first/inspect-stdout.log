@@ -1,0 +1,21 @@
+09:34:58 | INFO: Data are loaded, start creating Blender stuff
+09:34:59 | INFO: Blender create Mesh node output_unwrapped
+09:34:59 | INFO: glTF import finished in 0.13s
+wrote D:\tetherbound\codex-c1\ralph\reports\HUB\f17\m1\nest-shape-first\creature_nest.json
+
+preview-candidate.glb
+  7,564 tris, 1 mesh(es), 0 material(s), 0 clip(s)
+  0.4344m tall
+  9 problem(s):
+    - no material carries a texture — this is the exact defect two blind reviews named on the existing roster (archive/reports/docs-reviews-full/MA-01, MA-02)
+    - output_unwrapped: 15320 non-manifold edges
+    - output_unwrapped: 11911 duplicate vertices — will split under deformation
+    - output_unwrapped: 3924 microscopic disconnected components
+    - output_unwrapped: ~1951 inward-facing faces
+    - output_unwrapped: 564 faces with texel density 4.0x off the median
+    - output_unwrapped: 0% quads — generator triangle soup, poor for deformation
+    - does not stand on the origin (lowest point z=-0.2139)
+    - no armature and no clips — nothing here can move
+Blender 4.2.9 LTS (hash a10f621e649a built 2025-04-15 03:32:43)
+
+Blender quit

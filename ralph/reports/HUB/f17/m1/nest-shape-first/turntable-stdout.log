@@ -1,0 +1,33 @@
+09:35:00 | INFO: Data are loaded, start creating Blender stuff
+09:35:00 | INFO: Blender create Mesh node output_unwrapped
+09:35:00 | INFO: glTF import finished in 0.05s
+Blender 4.2.9 LTS (hash a10f621e649a built 2025-04-15 03:32:43)
+Fra:1 Mem:59.05M (Peak 59.37M) | Time:00:30.70 | Rendering 1 / 32 samples
+Fra:1 Mem:59.05M (Peak 59.37M) | Time:00:31.41 | Rendering 25 / 32 samples
+Fra:1 Mem:59.05M (Peak 59.37M) | Time:00:31.51 | Rendering 32 / 32 samples
+Saved: 'D:\tetherbound\codex-c1\ralph\reports\HUB\f17\m1\nest-shape-first\views\front.png'
+Time: 00:31.79 (Saving: 00:00.20)
+
+Fra:1 Mem:59.05M (Peak 59.09M) | Time:00:00.08 | Rendering 1 / 32 samples
+Fra:1 Mem:59.05M (Peak 59.09M) | Time:00:00.34 | Rendering 25 / 32 samples
+Fra:1 Mem:59.05M (Peak 59.09M) | Time:00:00.41 | Rendering 32 / 32 samples
+Saved: 'D:\tetherbound\codex-c1\ralph\reports\HUB\f17\m1\nest-shape-first\views\side.png'
+Time: 00:00.53 (Saving: 00:00.08)
+
+Fra:1 Mem:59.05M (Peak 59.05M) | Time:00:00.04 | Rendering 1 / 32 samples
+Fra:1 Mem:59.05M (Peak 59.05M) | Time:00:00.27 | Rendering 25 / 32 samples
+Fra:1 Mem:59.05M (Peak 59.05M) | Time:00:00.33 | Rendering 32 / 32 samples
+Saved: 'D:\tetherbound\codex-c1\ralph\reports\HUB\f17\m1\nest-shape-first\views\back.png'
+Time: 00:00.45 (Saving: 00:00.09)
+
+Fra:1 Mem:59.05M (Peak 59.05M) | Time:00:00.04 | Rendering 1 / 32 samples
+Fra:1 Mem:59.05M (Peak 59.05M) | Time:00:00.27 | Rendering 25 / 32 samples
+Fra:1 Mem:59.05M (Peak 59.05M) | Time:00:00.33 | Rendering 32 / 32 samples
+Saved: 'D:\tetherbound\codex-c1\ralph\reports\HUB\f17\m1\nest-shape-first\views\three_quarter.png'
+Time: 00:00.45 (Saving: 00:00.08)
+
+
+preview-candidate.glb: 4 views -> D:\tetherbound\codex-c1\ralph\reports\HUB\f17\m1\nest-shape-first\views
+  normalised to 1.895 units on its longest axis, standing on z=0
+
+Blender quit
