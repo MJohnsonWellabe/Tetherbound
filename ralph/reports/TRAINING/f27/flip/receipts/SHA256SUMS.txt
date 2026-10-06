@@ -415,3 +415,7 @@ b1f577a9b2217a210fa4bdadbc95e4c59f62eebd539d0ce7ff3e068be60759ac  ci-veridian-sp
 b55581bc048b3fbeb2fbc0d529a9d62bea095011f87da32a362d1957e9f7b40d  ci-veridian-space-on/stderr.txt
 1cfe2a3838b2e596e24e62d831321bf3961609cf01107f64f45fa8a10c706836  ci-veridian-space-on/stdout.txt
 5cbd21f6262becf5eba37c8e6548159d01a4c5fdc6f17a84e879264a47e0241d  ci-veridian-space-on/world.json.txt
+23cb21861a0c8e4e39dee4bfa334e2f0902d90bf73131715eba08674372c7c2a  ci-wild-streaming-on/stdout.txt
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ci-wild-streaming-on/stderr.txt
+5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  ci-wild-streaming-on/exit.txt
+efcc8e4d5e9715eda65075a0718bef7d5fb4e80a271d1876cb40a0be42c6e60c  ci-wild-streaming-on/r1-ci-wild-streaming-on-20261006T0901Z.txt

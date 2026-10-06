@@ -1,0 +1,4 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+
+wild streaming: OK — distant clusters sleep, near ones tick and recover delayed falls, engaged/fainting/respawning are never touched, and a round trip changes nothing about a creature's identity.
