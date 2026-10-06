@@ -722,18 +722,32 @@ func _stat_snapshot() -> Dictionary:
 ## creature stands against its evolution gate. `trait_unlocked` reads the
 ## real gate (`revealed_trait_secondary`), so it is only ever true when
 ## there is a second trait to show. Evolution is read off progression.json's
-## own `evolution` block: `evolution_level_reached` when this jump crossed
-## the level requirement, `evolution_ready` when level AND bond are both met
+## own `evolution` block for legacy play, or enabled feast offers for the
+## breakthrough mode: `evolution_level_reached` when this jump crossed
+## the level requirement. Only legacy play reports `evolution_ready` from
+## level AND bond; breakthrough eligibility belongs to the feast transaction
 ## (the heartstone is inventory state, not the creature's, and is left to
 ## the Team screen's own evolve check).
 func _announce_level_up(old_level: int, before: Dictionary, cfg: Dictionary, source: String) -> void:
 	var req: Dictionary = cfg.get("evolution", {}).get(species_id, {})
-	if cfg.get("evolution_mode") == "breakthrough": req = {}
 	var level_needed := int(req.get("level", 0))
 	var level_reached := level_needed > 0 and old_level < level_needed and level >= level_needed
 	var nodes := bond_nodes(cfg)
 	var ready := level_needed > 0 and level >= level_needed \
 			and nodes >= int(req.get("bond_tier", 0))
+	if cfg.get("evolution_mode") == "breakthrough":
+		ready = false
+		level_reached = false
+		# Use the host's canonical offers, including runtime species aliases and
+		# disabled art gates. A threshold notice grants neither a cap nor a choice.
+		var evolution: GDScript = load("res://scripts/creatures/evolution.gd")
+		for tier: int in range(1, 6):
+			var gate := tier * 10
+			if old_level >= gate or level < gate: continue
+			var offer: Dictionary = evolution.call("feast_offer", {"uid": uid,
+				"species_id": species_id, "level": gate}, tier)
+			if offer.get("ok") == true and not offer.get("branches", []).is_empty():
+				level_reached = true
 	FEED.push("level_up", self, {
 		"old_level": old_level,
 		"new_level": level,

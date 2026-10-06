@@ -3197,6 +3197,9 @@ func commit_original_starter(source: Node, instance: RefCounted, nickname: Strin
 	if not party.add(instance):
 		instance.set("nickname", before_nickname)
 		return false
+	# Retain the same canonical training mirror the owner save writes. A fresh
+	# starter must have its cap in memory before the first rest or XP award.
+	local.redesign_character = local.save_data().redesign_character
 	local.redesign_character.transaction_receipts.append(receipt)
 	local.flags.call("set_flag", "opening:starter_granted", true)
 	if not bool(save_system.call("save_character_prepared", self, local.character_id)):

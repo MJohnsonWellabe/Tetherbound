@@ -244,6 +244,24 @@ func test_two_stable_characters_share_no_candy_receipt_or_inventory() -> void:
 	var foreign := _intent(first)
 	assert_eq(CANDY.stage(second, 7, foreign, _context(second)).get("code"), "not_owned")
 
+func test_fresh_starter_saved_mirror_allows_rest_xp_without_inventing_missing_history() -> void:
+	var player := _player(3)
+	player.redesign_character = preload("res://scripts/data/redesign_state.gd").defaults("character")
+	var creature: RefCounted = player.party.members()[0]
+	var cfg := P.config()
+	REST.rest(creature, cfg, player.redesign_character)
+	assert_eq(creature.xp, 0, "unresolved live state remains fail-closed")
+	# The original-starter producer retains this real owner-save projection.
+	player.redesign_character = player.save_data().redesign_character
+	assert_eq(creature.call("_admitted_level_cap", cfg, player.redesign_character), 10)
+	REST.rest(creature, cfg, player.redesign_character)
+	assert_eq(creature.xp, P.rest_xp(cfg), "an admitted fresh starter earns the real rest bonus")
+	creature.set_level(11, cfg)
+	REST.rest(creature, cfg, player.redesign_character)
+	assert_eq(creature.level, 11)
+	assert_eq(creature.xp, 0, "an above-cap fixture is healed without inventing breakthrough history")
+
+
 func test_personal_rest_heals_but_cannot_bank_xp_or_cross_locked_cap() -> void:
 	var player := _player(9)
 	var admitted := _admitted(player)
