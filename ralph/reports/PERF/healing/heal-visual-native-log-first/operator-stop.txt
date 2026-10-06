@@ -1,0 +1,4 @@
+Operator stop of exact owned native9676/console23556/lease14128/perf3-heal-visual-native-log-first.
+More than ten minutes elapsed; original output shows four completed profiler-frame headers, zero PNGs, no freeing event or heal report. CPU rose only slightly during several minutes of function-table output.
+Native raw-file redirect did not yield usable healing or appearance evidence. Exact logging/profiler mechanism remains unproved; no game regression or healing cost verdict. Original stdout/stderr/native/source are unchanged.
+Change approach after two incomplete profiled capture attempts: use existing unprofiled capture for appearance only; request an accepted existing low-output scatter profiler. No unchanged profile retry.

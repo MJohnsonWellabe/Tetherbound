@@ -1,0 +1,1821 @@
+WARNING: "await" keyword is unnecessary because the expression isn't a coroutine nor a signal.
+   at: GDScript::reload (res://tools/capture_f05_heal.gd:153)
+WARNING: "await" keyword is unnecessary because the expression isn't a coroutine nor a signal.
+   at: GDScript::reload (res://tools/capture_f05_heal.gd:247)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/steam_lobby.gd:254)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/steam_lobby.gd:428)
+WARNING: The local function parameter "runtime_id" is shadowing an already-declared function at line 45 in the current class.
+   at: GDScript::reload (res://scripts/data/biome_order.gd:38)
+WARNING: Values of the ternary operator are not mutually compatible.
+   at: GDScript::reload (res://autoload/inventory.gd:316)
+WARNING: The variable "row" is declared below in the parent block.
+   at: GDScript::reload (res://scripts/build/home_plot_rules.gd:117)
+WARNING: The local "for" iterator variable "station" is shadowing an already-declared function at line 74 in the current class.
+   at: GDScript::reload (res://scripts/build/station_rules.gd:37)
+WARNING: Values of the ternary operator are not mutually compatible.
+   at: GDScript::reload (res://scripts/world/death_satchel_rules.gd:15)
+WARNING: Values of the ternary operator are not mutually compatible.
+   at: GDScript::reload (res://scripts/world/death_satchel_rules.gd:87)
+WARNING: The local function parameter "members" is shadowing an already-declared function at line 55 in the current class.
+   at: GDScript::reload (res://autoload/party.gd:349)
+WARNING: The local function parameter "board_id" is shadowing an already-declared function at line 18 in the current class.
+   at: GDScript::reload (res://scripts/creatures/water_species_catalog.gd:14)
+WARNING: The variable "stack" is declared below in the parent block.
+   at: GDScript::reload (res://scripts/creatures/teaching.gd:115)
+WARNING: Values of the ternary operator are not mutually compatible.
+   at: GDScript::reload (res://scripts/creatures/bond_milestones.gd:234)
+WARNING: The variable "seed" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/creatures/traits.gd:250)
+WARNING: Values of the ternary operator are not mutually compatible.
+   at: GDScript::reload (res://scripts/creatures/essence.gd:822)
+WARNING: The variable "out" is declared below in the parent block.
+   at: GDScript::reload (res://scripts/save/save_document.gd:109)
+WARNING: The parameter "plot" is never used in the function "tilled()". If this is intended, prefix it with an underscore: "_plot".
+   at: GDScript::reload (res://scripts/world/farm_logic.gd:161)
+WARNING: The parameter "plot" is never used in the function "sown()". If this is intended, prefix it with an underscore: "_plot".
+   at: GDScript::reload (res://scripts/world/farm_logic.gd:168)
+WARNING: The parameter "plot" is never used in the function "harvested()". If this is intended, prefix it with an underscore: "_plot".
+   at: GDScript::reload (res://scripts/world/farm_logic.gd:178)
+WARNING: The variable "row" is declared below in the parent block.
+   at: GDScript::reload (res://scripts/net/reward_delivery.gd:62)
+WARNING: The variable "seed" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/world/essence_node_catalog.gd:70)
+WARNING: Values of the ternary operator are not mutually compatible.
+   at: GDScript::reload (res://scripts/player/player_equipment.gd:120)
+WARNING: Values of the ternary operator are not mutually compatible.
+   at: GDScript::reload (res://scripts/creatures/creature_gear.gd:503)
+WARNING: The local function parameter "path" is shadowing an already-declared function at line 360 in the current class.
+   at: GDScript::reload (res://scripts/ui/key_bindings.gd:87)
+WARNING: Integer used when an enum value is expected. If this is intended, cast the integer to the enum type using the "as" keyword.
+   at: GDScript::reload (res://scripts/ui/key_bindings.gd:315)
+WARNING: Integer used when an enum value is expected. If this is intended, cast the integer to the enum type using the "as" keyword.
+   at: GDScript::reload (res://scripts/ui/key_bindings.gd:319)
+WARNING: Integer used when an enum value is expected. If this is intended, cast the integer to the enum type using the "as" keyword.
+   at: GDScript::reload (res://scripts/ui/key_bindings.gd:323)
+WARNING: Integer used when an enum value is expected. If this is intended, cast the integer to the enum type using the "as" keyword.
+   at: GDScript::reload (res://scripts/ui/key_bindings.gd:329)
+WARNING: The local variable "offer" is shadowing an already-declared function at line 90 in the current class.
+   at: GDScript::reload (res://scripts/world/prompt_arbiter.gd:60)
+WARNING: The local function parameter "offer" is shadowing an already-declared function at line 90 in the current class.
+   at: GDScript::reload (res://scripts/world/prompt_arbiter.gd:74)
+WARNING: The local function parameter "offer" is shadowing an already-declared function at line 90 in the current class.
+   at: GDScript::reload (res://scripts/world/prompt_arbiter.gd:84)
+WARNING: The class variable "_providers" is declared but never used in the class.
+   at: GDScript::reload (res://scripts/world/interaction_arbiter.gd:81)
+WARNING: The local function parameter "enabled" is shadowing an already-declared function at line 287 in the current class.
+   at: GDScript::reload (res://scripts/world/interaction_arbiter.gd:279)
+WARNING: The class variable "_world" is declared but never used in the class.
+   at: GDScript::reload (res://scripts/world/waystone.gd:17)
+WARNING: The class variable "_row" is declared but never used in the class.
+   at: GDScript::reload (res://scripts/world/waystone.gd:19)
+WARNING: The variable "seed" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/world/harvest_logic.gd:141)
+WARNING: Values of the ternary operator are not mutually compatible.
+   at: GDScript::reload (res://scripts/world/f32_source_actions.gd:80)
+WARNING: The variable "seed" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/world/f32_source_actions.gd:135)
+WARNING: The local function parameter "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/characters/character_model.gd:88)
+WARNING: The local function parameter "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/characters/character_model.gd:108)
+WARNING: The local variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/characters/character_model.gd:476)
+WARNING: The local function parameter "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/characters/character_model.gd:522)
+WARNING: The local variable "visible" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/characters/character_model.gd:811)
+WARNING: The local variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/characters/character_model.gd:969)
+WARNING: The local variable "skeleton" is shadowing an already-declared function at line 1131 in the current class.
+   at: GDScript::reload (res://scripts/characters/character_model.gd:1083)
+WARNING: The local function parameter "config" is shadowing an already-declared function at line 153 in the base class "res://scripts/characters/character_model.gd".
+   at: GDScript::reload (res://scripts/npc/npc_body.gd:51)
+WARNING: The local variable "recipe" is shadowing an already-declared function at line 173 in the current class.
+   at: GDScript::reload (res://scripts/world/building_prefabs.gd:184)
+WARNING: The local variable "recipe" is shadowing an already-declared function at line 173 in the current class.
+   at: GDScript::reload (res://scripts/world/building_prefabs.gd:192)
+WARNING: The local variable "recipe" is shadowing an already-declared function at line 173 in the current class.
+   at: GDScript::reload (res://scripts/world/building_prefabs.gd:206)
+WARNING: The local variable "recipe" is shadowing an already-declared function at line 173 in the current class.
+   at: GDScript::reload (res://scripts/world/building_prefabs.gd:221)
+WARNING: The local variable "recipe" is shadowing an already-declared function at line 173 in the current class.
+   at: GDScript::reload (res://scripts/world/building_prefabs.gd:246)
+WARNING: The local variable "row" is shadowing an already-declared function at line 177 in the current class.
+   at: GDScript::reload (res://scripts/net/peer_registry.gd:147)
+WARNING: The variable "log" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/creatures/research_log.gd:64)
+WARNING: The function parameter "log" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/creatures/research_log.gd:106)
+WARNING: The variable "log" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/creatures/research_log.gd:125)
+WARNING: The variable "log" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/creatures/research_log.gd:155)
+WARNING: The local variable "stage" is shadowing an already-declared function at line 19 in the current class.
+   at: GDScript::reload (res://scripts/net/character_action_rules.gd:118)
+WARNING: The local variable "reset" is shadowing an already-declared function at line 1749 in the current class.
+   at: GDScript::reload (res://scripts/net/owner_passive_sync.gd:625)
+WARNING: The local variable "refused" is shadowing an already-declared variable at line 51 in the current class.
+   at: GDScript::reload (res://scripts/net/owner_passive_sync.gd:1546)
+WARNING: Integer division. Decimal part will be discarded.
+   at: GDScript::reload (res://scripts/net/realm_shells.gd:206)
+WARNING: Integer division. Decimal part will be discarded.
+   at: GDScript::reload (res://scripts/net/realm_shells.gd:301)
+WARNING: The local function parameter "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/realm_replication_scope.gd:35)
+WARNING: The local function parameter "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/realm_replication_scope.gd:54)
+WARNING: The parameter "from" is never used in the function "owns_announcement()". If this is intended, prefix it with an underscore: "_from".
+   at: GDScript::reload (res://scripts/net/realm_transition.gd:282)
+WARNING: The local function parameter "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/realm_transition.gd:578)
+WARNING: The local function parameter "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/realm_transition.gd:596)
+WARNING: The local function parameter "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/realm_transition.gd:643)
+WARNING: The local variable "session" is shadowing an already-declared function at line 41 in the current class.
+   at: GDScript::reload (res://scripts/net/realm_transition.gd:1002)
+WARNING: The local function parameter "snapshot" is shadowing an already-declared function at line 140 in the current class.
+   at: GDScript::reload (res://scripts/net/snapshot_transfer.gd:34)
+WARNING: The local function parameter "transfer_id" is shadowing an already-declared function at line 152 in the current class.
+   at: GDScript::reload (res://scripts/net/snapshot_transfer.gd:34)
+WARNING: The local function parameter "transfer_id" is shadowing an already-declared function at line 152 in the current class.
+   at: GDScript::reload (res://scripts/net/snapshot_transfer.gd:106)
+WARNING: The function parameter "hash" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/net/character_authority.gd:118)
+WARNING: The function parameter "hash" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/net/character_authority.gd:232)
+WARNING: The variable "absorbed" is declared below in the parent block.
+   at: GDScript::reload (res://scripts/net/character_authority.gd:380)
+WARNING: The variable "found" is used before being assigned a value.
+   at: GDScript::reload (res://scripts/net/opening_home_key.gd:99)
+WARNING: The local variable "reach_extra" is declared but never used in the block. If this is intended, prefix it with an underscore: "_reach_extra".
+   at: GDScript::reload (res://scripts/world/water_heightfield.gd:151)
+WARNING: The variable "uid" is declared below in the parent block.
+   at: GDScript::reload (res://scripts/net/world_ledger.gd:372)
+WARNING: The variable "raw" is declared below in the parent block.
+   at: GDScript::reload (res://scripts/net/world_ledger.gd:377)
+WARNING: The local variable "config" is shadowing an already-declared function at line 47 in the current class.
+   at: GDScript::reload (res://scripts/world/scatter_rules.gd:1008)
+WARNING: The class variable "_respawn_left" is declared but never used in the class.
+   at: GDScript::reload (res://scripts/world/harvest_node.gd:68)
+WARNING: The variable "game" is declared below in the parent block.
+   at: GDScript::reload (res://scripts/world/harvest_node.gd:153)
+WARNING: The local variable "ready" is shadowing an already-declared signal in the base class "Node".
+   at: GDScript::reload (res://scripts/world/harvest_node.gd:779)
+WARNING: The local variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/world/tournament.gd:467)
+WARNING: Integer division. Decimal part will be discarded.
+   at: GDScript::reload (res://scripts/world/tournament.gd:489)
+WARNING: The "for" iterator variable "round" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/world/tournament.gd:710)
+WARNING: Integer division. Decimal part will be discarded.
+   at: GDScript::reload (res://scripts/world/tournament.gd:773)
+WARNING: The local function parameter "round_spec" is shadowing an already-declared function at line 924 in the current class.
+   at: GDScript::reload (res://scripts/world/tournament.gd:855)
+WARNING: The local variable "selected" is shadowing an already-declared function at line 45 in the current class.
+   at: GDScript::reload (res://scripts/ui/graphics_prefs.gd:34)
+WARNING: The class variable "_world_hud" is declared but never used in the class.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:135)
+WARNING: Integer used when an enum value is expected. If this is intended, cast the integer to the enum type using the "as" keyword.
+   at: GDScript::reload (res://scripts/ui/game_menu.gd:442)
+WARNING: The constant "UITokens" has the same name as a global class defined in "ui_tokens.gd".
+   at: GDScript::reload (res://scripts/ui/shop_panel.gd:24)
+WARNING: The constant "UITokens" has the same name as a global class defined in "ui_tokens.gd".
+   at: GDScript::reload (res://scripts/ui/swap_panel.gd:27)
+WARNING: The local variable "definition" is shadowing an already-declared function at line 44 in the current class.
+   at: GDScript::reload (res://scripts/world/dialogue_map_reveal.gd:15)
+WARNING: The local function parameter "beat" is shadowing an already-declared function at line 412 in the current class.
+   at: GDScript::reload (res://scripts/story/sequence_director.gd:541)
+WARNING: Values of the ternary operator are not mutually compatible.
+   at: GDScript::reload (res://scripts/story/sequence_director.gd:818)
+WARNING: The local function parameter "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/story/sequence_director.gd:2004)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/story/sequence_director.gd:2026)
+WARNING: The local function parameter "beat" is shadowing an already-declared function at line 412 in the current class.
+   at: GDScript::reload (res://scripts/story/sequence_director.gd:2461)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_travel_lifecycle.gd:34)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_travel_lifecycle.gd:46)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_travel_lifecycle.gd:68)
+WARNING: The local function parameter "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_travel_lifecycle.gd:123)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_travel_lifecycle.gd:159)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_travel_lifecycle.gd:188)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_travel_lifecycle.gd:204)
+WARNING: The variable "found" is used before being assigned a value.
+   at: GDScript::reload (res://scripts/net/foundation_travel_lifecycle.gd:208)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_travel_lifecycle.gd:216)
+WARNING: The local variable "key_count" is declared but never used in the block. If this is intended, prefix it with an underscore: "_key_count".
+   at: GDScript::reload (res://scripts/net/foundation_travel_lifecycle.gd:236)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_travel_lifecycle.gd:279)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_travel_lifecycle.gd:301)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/creatures/alpha_aura.gd:106)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/creatures/vfx/aspect_vfx.gd:204)
+WARNING: The local function parameter "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/creatures/creature_body.gd:1031)
+WARNING: The local function parameter "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/creatures/creature_body.gd:1170)
+WARNING: The local variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/creatures/creature_body.gd:1529)
+WARNING: The local function parameter "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/creatures/creature_body.gd:1577)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/creatures/creature_body.gd:1684)
+WARNING: The local function parameter "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/creatures/creature_body.gd:1936)
+WARNING: Integer division. Decimal part will be discarded.
+   at: GDScript::reload (res://scripts/creatures/creature_body.gd:2398)
+WARNING: The local variable "position" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/stormwood_ending.gd:850)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/world/stormwood_ending.gd:917)
+WARNING: The function parameter "seed" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/vfx/ultimates/ultimate_choreography.gd:179)
+WARNING: The function parameter "seed" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/vfx/ultimates/ultimate_choreography.gd:317)
+WARNING: The local variable "position" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/vfx/ultimates/ultimate_effect.gd:209)
+WARNING: The local variable "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/vfx/ultimates/ultimate_effect.gd:211)
+WARNING: The local variable "position" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/vfx/move_effect.gd:327)
+WARNING: The local variable "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/vfx/move_effect.gd:432)
+WARNING: The local variable "position" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/vfx/move_effect.gd:514)
+WARNING: The local variable "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/vfx/move_effect.gd:588)
+WARNING: The local variable "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/vfx/move_effect.gd:666)
+WARNING: The local function parameter "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/vfx/move_effect.gd:703)
+WARNING: The local function parameter "position" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/vfx/move_effect.gd:724)
+WARNING: The local function parameter "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/vfx/move_effect.gd:724)
+WARNING: The local function parameter "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/vfx/move_effect.gd:749)
+WARNING: The local function parameter "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/vfx/move_effect.gd:802)
+WARNING: The local variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/vfx/move_effect.gd:818)
+WARNING: The local variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/vfx/move_effect.gd:828)
+WARNING: The local function parameter "participant_count" is shadowing an already-declared function at line 1154 in the current class.
+   at: GDScript::reload (res://scripts/net/encounter_host.gd:122)
+WARNING: The local function parameter "kind" is shadowing an already-declared function at line 1259 in the current class.
+   at: GDScript::reload (res://scripts/net/encounter_host.gd:201)
+WARNING: The local variable "record" is shadowing an already-declared function at line 300 in the current class.
+   at: GDScript::reload (res://scripts/net/encounter_host.gd:206)
+WARNING: The local variable "record" is shadowing an already-declared function at line 300 in the current class.
+   at: GDScript::reload (res://scripts/net/encounter_host.gd:237)
+WARNING: The local variable "record" is shadowing an already-declared function at line 300 in the current class.
+   at: GDScript::reload (res://scripts/net/encounter_host.gd:270)
+WARNING: The local variable "phase" is shadowing an already-declared function at line 1252 in the current class.
+   at: GDScript::reload (res://scripts/net/encounter_host.gd:466)
+WARNING: The local function parameter "phase" is shadowing an already-declared function at line 1252 in the current class.
+   at: GDScript::reload (res://scripts/net/encounter_host.gd:1239)
+WARNING: The local function parameter "kind" is shadowing an already-declared function at line 1259 in the current class.
+   at: GDScript::reload (res://scripts/net/encounter_host.gd:1435)
+WARNING: The local variable "record" is shadowing an already-declared function at line 300 in the current class.
+   at: GDScript::reload (res://scripts/net/encounter_host.gd:1731)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/masters/attuned_herb.gd:14)
+WARNING: The local variable "visible" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/masters/master_site.gd:86)
+WARNING: The variable "sign" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/masters/master_site.gd:107)
+WARNING: The constant "UITokens" has the same name as a global class defined in "ui_tokens.gd".
+   at: GDScript::reload (res://scripts/ui/craft_panel.gd:28)
+WARNING: The local variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/ui/craft_panel.gd:221)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/ui/craft_panel.gd:547)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/ui/craft_panel.gd:559)
+WARNING: The local variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/ui/craft_panel.gd:988)
+WARNING: The local variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/ui/craft_panel.gd:1172)
+WARNING: The local variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/ui/craft_panel.gd:1252)
+WARNING: The local variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/ui/craft_panel.gd:1272)
+WARNING: Values of the ternary operator are not mutually compatible.
+   at: GDScript::reload (res://scripts/world/storage_state.gd:128)
+WARNING: Values of the ternary operator are not mutually compatible.
+   at: GDScript::reload (res://scripts/world/storage_state.gd:138)
+WARNING: The constant "UITokens" has the same name as a global class defined in "ui_tokens.gd".
+   at: GDScript::reload (res://scripts/ui/storage_panel.gd:31)
+WARNING: The constant "UITokens" has the same name as a global class defined in "ui_tokens.gd".
+   at: GDScript::reload (res://scripts/ui/creature_bed_panel.gd:21)
+WARNING: Integer division. Decimal part will be discarded.
+   at: GDScript::reload (res://scripts/ui/creature_bed_panel.gd:311)
+WARNING: The variable "wrap" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/build/creature_bed.gd:335)
+WARNING: The local variable "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/build/stormwood_arch_piece.gd:84)
+WARNING: The local function parameter "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/build/stormwood_arch_piece.gd:112)
+WARNING: The variable "floor" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/build/build_snap_contract.gd:205)
+WARNING: The parameter "game" is never used in the function "_station_pose_valid()". If this is intended, prefix it with an underscore: "_game".
+   at: GDScript::reload (res://scripts/build/build_placer.gd:123)
+WARNING: The variable "intent" is declared below in the parent block.
+   at: GDScript::reload (res://scripts/build/build_placer.gd:1469)
+WARNING: The signal "altar_trait_completed" is declared but never explicitly used in the class.
+   at: GDScript::reload (res://scripts/net/session.gd:27)
+WARNING: The signal "altar_trait_quote_completed" is declared but never explicitly used in the class.
+   at: GDScript::reload (res://scripts/net/session.gd:28)
+WARNING: The variable "context" is declared below in the parent block.
+   at: GDScript::reload (res://scripts/net/session.gd:505)
+WARNING: The variable "world" is declared below in the parent block.
+   at: GDScript::reload (res://scripts/net/session.gd:533)
+WARNING: The variable "character" is declared below in the parent block.
+   at: GDScript::reload (res://scripts/net/session.gd:534)
+WARNING: The variable "row" is declared below in the parent block.
+   at: GDScript::reload (res://scripts/net/session.gd:535)
+WARNING: The variable "world" is declared below in the parent block.
+   at: GDScript::reload (res://scripts/net/session.gd:547)
+WARNING: The variable "character" is declared below in the parent block.
+   at: GDScript::reload (res://scripts/net/session.gd:548)
+WARNING: The variable "saver" is declared below in the parent block.
+   at: GDScript::reload (res://scripts/net/session.gd:553)
+WARNING: The variable "row" is declared below in the parent block.
+   at: GDScript::reload (res://scripts/net/session.gd:559)
+WARNING: The local variable "ready" is shadowing an already-declared signal in the base class "Node".
+   at: GDScript::reload (res://scripts/net/session.gd:661)
+WARNING: The local variable "ready" is shadowing an already-declared signal in the base class "Node".
+   at: GDScript::reload (res://scripts/net/session.gd:668)
+WARNING: The variable "found" is used before being assigned a value.
+   at: GDScript::reload (res://scripts/net/session.gd:875)
+WARNING: The local variable "host" is declared but never used in the block. If this is intended, prefix it with an underscore: "_host".
+   at: GDScript::reload (res://scripts/net/session.gd:887)
+WARNING: The local variable "host" is shadowing an already-declared function at line 2474 in the current class.
+   at: GDScript::reload (res://scripts/net/session.gd:887)
+WARNING: The local variable "ready" is shadowing an already-declared signal in the base class "Node".
+   at: GDScript::reload (res://scripts/net/session.gd:1108)
+WARNING: The local variable "host" is shadowing an already-declared function at line 2474 in the current class.
+   at: GDScript::reload (res://scripts/net/session.gd:1198)
+WARNING: The local variable "host" is shadowing an already-declared function at line 2474 in the current class.
+   at: GDScript::reload (res://scripts/net/session.gd:1302)
+WARNING: The local variable "leave" is shadowing an already-declared function at line 2724 in the current class.
+   at: GDScript::reload (res://scripts/net/session.gd:1481)
+WARNING: The local variable "host" is shadowing an already-declared function at line 2474 in the current class.
+   at: GDScript::reload (res://scripts/net/session.gd:1543)
+WARNING: The local variable "ready" is shadowing an already-declared signal in the base class "Node".
+   at: GDScript::reload (res://scripts/net/session.gd:1635)
+WARNING: The local variable "host" is shadowing an already-declared function at line 2474 in the current class.
+   at: GDScript::reload (res://scripts/net/session.gd:1669)
+WARNING: The local variable "host" is shadowing an already-declared function at line 2474 in the current class.
+   at: GDScript::reload (res://scripts/net/session.gd:1749)
+WARNING: The local variable "host" is shadowing an already-declared function at line 2474 in the current class.
+   at: GDScript::reload (res://scripts/net/session.gd:1767)
+WARNING: The variable "found" is used before being assigned a value.
+   at: GDScript::reload (res://scripts/net/session.gd:1878)
+WARNING: The variable "camp" is used before being assigned a value.
+   at: GDScript::reload (res://scripts/net/session.gd:2079)
+WARNING: The local variable "peers" is shadowing an already-declared function at line 2913 in the current class.
+   at: GDScript::reload (res://scripts/net/session.gd:2153)
+WARNING: The local function parameter "peers" is shadowing an already-declared function at line 2913 in the current class.
+   at: GDScript::reload (res://scripts/net/session.gd:2474)
+WARNING: The local function parameter "transport_kind" is shadowing an already-declared function at line 2658 in the current class.
+   at: GDScript::reload (res://scripts/net/session.gd:2500)
+WARNING: The local function parameter "transport_kind" is shadowing an already-declared function at line 2658 in the current class.
+   at: GDScript::reload (res://scripts/net/session.gd:2571)
+WARNING: The parameter "from_realm" is never used in the function "_rpc_realm_changed()". If this is intended, prefix it with an underscore: "_from_realm".
+   at: GDScript::reload (res://scripts/net/session.gd:2857)
+WARNING: Integer division. Decimal part will be discarded.
+   at: GDScript::reload (res://scripts/net/session.gd:3621)
+WARNING: The local variable "config" is shadowing an already-declared function at line 2450 in the current class.
+   at: GDScript::reload (res://scripts/net/session.gd:4182)
+WARNING: The local variable "host" is shadowing an already-declared function at line 2474 in the current class.
+   at: GDScript::reload (res://scripts/net/session.gd:4313)
+WARNING: The local variable "ready" is shadowing an already-declared signal in the base class "Node".
+   at: GDScript::reload (res://scripts/net/session.gd:4670)
+WARNING: The local function parameter "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/session.gd:4863)
+WARNING: The local function parameter "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/session.gd:4871)
+WARNING: The local function parameter "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/session.gd:4876)
+WARNING: The local function parameter "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/session.gd:4881)
+WARNING: The local function parameter "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/session.gd:4886)
+WARNING: The local variable "host" is shadowing an already-declared function at line 2474 in the current class.
+   at: GDScript::reload (res://scripts/net/session.gd:5015)
+WARNING: The local variable "host" is shadowing an already-declared function at line 2474 in the current class.
+   at: GDScript::reload (res://scripts/net/session.gd:5063)
+WARNING: The variable "transport" is declared below in the parent block.
+   at: GDScript::reload (res://scripts/net/session.gd:5117)
+WARNING: The variable "placer" is used before being assigned a value.
+   at: GDScript::reload (res://scripts/net/session.gd:5140)
+WARNING: The variable "placer" is used before being assigned a value.
+   at: GDScript::reload (res://scripts/net/session.gd:5271)
+WARNING: The variable "building" is used before being assigned a value.
+   at: GDScript::reload (res://scripts/net/session.gd:5314)
+WARNING: The local variable "host" is shadowing an already-declared function at line 2474 in the current class.
+   at: GDScript::reload (res://scripts/net/session.gd:5442)
+WARNING: The local variable "peers" is shadowing an already-declared function at line 2913 in the current class.
+   at: GDScript::reload (res://scripts/net/session.gd:5561)
+WARNING: The local variable "ready" is shadowing an already-declared signal in the base class "Node".
+   at: GDScript::reload (res://scripts/net/session.gd:5888)
+WARNING: The local function parameter "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/session.gd:5976)
+WARNING: The local function parameter "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/session.gd:6199)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/props.gd:418)
+WARNING: The parameter "id" is never used in the function "begin_fall()". If this is intended, prefix it with an underscore: "_id".
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:78)
+WARNING: The local variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:749)
+WARNING: The local function parameter "trainer_key" is shadowing an already-declared function at line 186 in the current class.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:71)
+WARNING: The local function parameter "revision" is shadowing an already-declared variable at line 88 in the current class.
+   at: GDScript::reload (res://autoload/world_state.gd:913)
+WARNING: The local function parameter "revision" is shadowing an already-declared variable at line 88 in the current class.
+   at: GDScript::reload (res://autoload/world_state.gd:953)
+WARNING: The local function parameter "world_id" is shadowing an already-declared variable at line 43 in the current class.
+   at: GDScript::reload (res://autoload/world_state.gd:960)
+WARNING: The local function parameter "world_id" is shadowing an already-declared variable at line 43 in the current class.
+   at: GDScript::reload (res://autoload/world_state.gd:1001)
+WARNING: The local function parameter "world_id" is shadowing an already-declared variable at line 43 in the current class.
+   at: GDScript::reload (res://autoload/world_state.gd:1016)
+WARNING: The local function parameter "world_id" is shadowing an already-declared variable at line 43 in the current class.
+   at: GDScript::reload (res://autoload/world_state.gd:1094)
+WARNING: The local function parameter "world_id" is shadowing an already-declared variable at line 43 in the current class.
+   at: GDScript::reload (res://autoload/world_state.gd:1098)
+WARNING: Values of the ternary operator are not mutually compatible.
+   at: GDScript::reload (res://scripts/save/save_game.gd:2259)
+WARNING: The parameter "chapter" is never used in the function "configure_realm()". If this is intended, prefix it with an underscore: "_chapter".
+   at: GDScript::reload (res://scripts/world/realm_map_state.gd:19)
+WARNING: The local variable "landmarks" is shadowing an already-declared function at line 496 in the base class "res://autoload/map_state.gd".
+   at: GDScript::reload (res://scripts/world/realm_map_state.gd:33)
+WARNING: The local function parameter "host_local_character" is shadowing an already-declared function at line 244 in the current class.
+   at: GDScript::reload (res://scripts/world/water_guardian_reward.gd:233)
+WARNING: Values of the ternary operator are not mutually compatible.
+   at: GDScript::reload (res://scripts/net/character_action_owner.gd:214)
+WARNING: Values of the ternary operator are not mutually compatible.
+   at: GDScript::reload (res://scripts/net/character_action_owner.gd:215)
+WARNING: The variable "request" is declared below in the parent block.
+   at: GDScript::reload (res://scripts/net/ledger_rpc.gd:1522)
+WARNING: Integer used when an enum value is expected. If this is intended, cast the integer to the enum type using the "as" keyword.
+   at: GDScript::reload (res://scripts/ui/altar_panel.gd:120)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/masters/breakthrough_service.gd:82)
+WARNING: The variable "chosen" is used before being assigned a value.
+   at: GDScript::reload (res://scripts/masters/breakthrough_service.gd:96)
+WARNING: The variable "found" is used before being assigned a value.
+   at: GDScript::reload (res://scripts/masters/breakthrough_service.gd:162)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_portal_arrival.gd:212)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/world/home_key.gd:215)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/world/home_key.gd:276)
+WARNING: The local function parameter "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/world/home_key.gd:538)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/home_key_channels.gd:29)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/home_key_channels.gd:59)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/home_key_channels.gd:76)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_forge.gd:39)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_forge.gd:49)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_forge.gd:56)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_forge.gd:61)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_forge.gd:95)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_forge.gd:114)
+WARNING: The local variable "ready" is shadowing an already-declared signal in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_forge.gd:152)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_forge.gd:178)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_forge.gd:205)
+WARNING: The variable "seed" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/combat/stormwood_encounter_catalogue.gd:58)
+WARNING: The function parameter "seed" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/combat/stormwood_encounter_catalogue.gd:264)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_alphas.gd:22)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_alphas.gd:59)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_alphas.gd:139)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_alphas.gd:168)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_alphas.gd:197)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_alphas.gd:214)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_alphas.gd:234)
+WARNING: The variable "seed" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/world/essence_node_mount.gd:85)
+WARNING: The variable "seed" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/world/type_crop_plot.gd:491)
+WARNING: The variable "first" is used before being assigned a value.
+   at: GDScript::reload (res://scripts/world/type_crop_plot.gd:578)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_resources.gd:43)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_resources.gd:54)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_resources.gd:113)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_resources.gd:147)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/net/foundation_composition.gd:100)
+WARNING: The local function parameter "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://autoload/game_state.gd:1514)
+WARNING: The local variable "ready" is shadowing an already-declared signal in the base class "Node".
+   at: GDScript::reload (res://autoload/game_state.gd:1842)
+WARNING: The local variable "ready" is shadowing an already-declared signal in the base class "Node".
+   at: GDScript::reload (res://autoload/game_state.gd:1906)
+WARNING: The variable "sign" has the same name as a built-in function.
+   at: GDScript::reload (res://autoload/game_state.gd:2922)
+WARNING: The local variable "world" is shadowing an already-declared variable at line 94 in the current class.
+   at: GDScript::reload (res://autoload/game_state.gd:2955)
+WARNING: The local function parameter "world" is shadowing an already-declared variable at line 94 in the current class.
+   at: GDScript::reload (res://autoload/game_state.gd:2975)
+WARNING: The local variable "world" is shadowing an already-declared variable at line 94 in the current class.
+   at: GDScript::reload (res://autoload/game_state.gd:3024)
+WARNING: The local variable "world" is shadowing an already-declared variable at line 94 in the current class.
+   at: GDScript::reload (res://autoload/game_state.gd:3072)
+WARNING: The local variable "world" is shadowing an already-declared variable at line 94 in the current class.
+   at: GDScript::reload (res://autoload/game_state.gd:3085)
+WARNING: The signal "portal_action_result" is declared but never explicitly used in the class.
+   at: GDScript::reload (res://autoload/game_state.gd:3149)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://autoload/game_state.gd:3291)
+WARNING: The local variable "ledger" is shadowing an already-declared variable at line 112 in the current class.
+   at: GDScript::reload (res://autoload/game_state.gd:3293)
+WARNING: The parameter "instance" is never used in the function "_original_starter_admitted()". If this is intended, prefix it with an underscore: "_instance".
+   at: GDScript::reload (res://autoload/game_state.gd:3348)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://autoload/game_state.gd:3442)
+WARNING: The local variable "ledger" is shadowing an already-declared variable at line 112 in the current class.
+   at: GDScript::reload (res://autoload/game_state.gd:3668)
+WARNING: The local function parameter "txn_id" is shadowing an already-declared function at line 101 in the current class.
+   at: GDScript::reload (res://scripts/world/dropped_item.gd:70)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local function parameter "txn_id" is shadowing an already-declared function at line 101 in the current class.
+   at: GDScript::reload (res://scripts/world/dropped_item.gd:76)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local function parameter "item_id" is shadowing an already-declared function at line 105 in the current class.
+   at: GDScript::reload (res://scripts/world/dropped_item.gd:76)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local function parameter "count" is shadowing an already-declared function at line 109 in the current class.
+   at: GDScript::reload (res://scripts/world/dropped_item.gd:76)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local function parameter "realm" is shadowing an already-declared function at line 113 in the current class.
+   at: GDScript::reload (res://scripts/world/dropped_item.gd:76)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The constant "UITokens" has the same name as a global class defined in "ui_tokens.gd".
+   at: GDScript::reload (res://scripts/ui/trade_offer_panel.gd:26)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: Integer division. Decimal part will be discarded.
+   at: GDScript::reload (res://scripts/ui/tab_backpack.gd:500)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local function parameter "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/ui/tab_backpack.gd:1380)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: Integer division. Decimal part will be discarded.
+   at: GDScript::reload (res://scripts/ui/tab_backpack.gd:1939)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local variable "revision" is shadowing an already-declared function at line 975 in the current class.
+   at: GDScript::reload (res://scripts/ui/tab_backpack.gd:2436)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local variable "revision" is shadowing an already-declared function at line 975 in the current class.
+   at: GDScript::reload (res://scripts/ui/tab_backpack.gd:2520)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/ui/tab_backpack.gd:2634)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The class variable "_drag_device" is declared but never used in the class.
+   at: GDScript::reload (res://scripts/ui/creature_viewport.gd:159)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local variable "size" is shadowing an already-declared property in the base class "Control".
+   at: GDScript::reload (res://scripts/ui/creature_viewport.gd:382)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local variable "material" is shadowing an already-declared property in the base class "CanvasItem".
+   at: GDScript::reload (res://scripts/ui/creature_viewport.gd:463)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: Integer used when an enum value is expected. If this is intended, cast the integer to the enum type using the "as" keyword.
+   at: GDScript::reload (res://scripts/ui/creature_viewport.gd:927)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local variable "party" is shadowing an already-declared function at line 174 in the current class.
+   at: GDScript::reload (res://scripts/story/party_seam.gd:106)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local variable "party" is shadowing an already-declared function at line 174 in the current class.
+   at: GDScript::reload (res://scripts/story/party_seam.gd:140)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The variable "wrap" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/ui/tab_creatures.gd:534)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local variable "size" is shadowing an already-declared property in the base class "Control".
+   at: GDScript::reload (res://scripts/ui/tab_creatures.gd:1149)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The parameter "cfg" is never used in the function "_poll_row()". If this is intended, prefix it with an underscore: "_cfg".
+   at: GDScript::reload (res://scripts/ui/tab_creatures.gd:1191)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local function parameter "size" is shadowing an already-declared property in the base class "Control".
+   at: GDScript::reload (res://scripts/ui/tab_creatures.gd:1191)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: Integer division. Decimal part will be discarded.
+   at: GDScript::reload (res://scripts/ui/tab_creatures.gd:1317)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local function parameter "size" is shadowing an already-declared property in the base class "Control".
+   at: GDScript::reload (res://scripts/ui/tab_creatures.gd:2455)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The variable "wrap" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/ui/tab_creatures.gd:2459)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local "for" iterator variable "state" is shadowing an already-declared function at line 72 in the base class "res://scripts/ui/menu_tab.gd".
+   at: GDScript::reload (res://scripts/ui/tab_creatures.gd:2473)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local variable "rotation" is shadowing an already-declared property in the base class "Control".
+   at: GDScript::reload (res://scripts/ui/minimap.gd:262)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local function parameter "rotation" is shadowing an already-declared property in the base class "Control".
+   at: GDScript::reload (res://scripts/ui/minimap.gd:309)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local variable "size" is shadowing an already-declared property in the base class "Control".
+   at: GDScript::reload (res://scripts/ui/minimap.gd:769)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local variable "scale" is shadowing an already-declared property in the base class "Control".
+   at: GDScript::reload (res://scripts/ui/tab_map.gd:687)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local function parameter "alignment" is shadowing an already-declared property in the base class "BoxContainer".
+   at: GDScript::reload (res://scripts/ui/tab_map.gd:977)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local function parameter "alignment" is shadowing an already-declared property in the base class "BoxContainer".
+   at: GDScript::reload (res://scripts/ui/tab_map.gd:982)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local variable "visible" is shadowing an already-declared property in the base class "CanvasItem".
+   at: GDScript::reload (res://scripts/ui/tab_map.gd:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local variable "size" is shadowing an already-declared property in the base class "Control".
+   at: GDScript::reload (res://scripts/ui/tab_map.gd:1080)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local variable "position" is shadowing an already-declared property in the base class "Control".
+   at: GDScript::reload (res://scripts/ui/tab_map.gd:1309)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local variable "scale" is shadowing an already-declared property in the base class "Control".
+   at: GDScript::reload (res://scripts/ui/tab_map.gd:1393)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local variable "size" is shadowing an already-declared property in the base class "Control".
+   at: GDScript::reload (res://scripts/ui/tab_map.gd:1394)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local variable "revision" is shadowing an already-declared function at line 335 in the current class.
+   at: GDScript::reload (res://scripts/ui/tab_map.gd:1476)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local variable "ready" is shadowing an already-declared signal in the base class "Node".
+   at: GDScript::reload (res://scripts/ui/tab_map.gd:1650)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local variable "size" is shadowing an already-declared property in the base class "Control".
+   at: GDScript::reload (res://scripts/ui/tab_map.gd:1851)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local variable "revision" is shadowing an already-declared function at line 58 in the base class "res://scripts/ui/menu_tab.gd".
+   at: GDScript::reload (res://scripts/ui/tab_quest_log.gd:200)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: Integer used when an enum value is expected. If this is intended, cast the integer to the enum type using the "as" keyword.
+   at: GDScript::reload (res://scripts/ui/build_menu.gd:242)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/ui/build_menu.gd:722)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local variable "controls" is shadowing an already-declared function at line 81 in the current class.
+   at: GDScript::reload (res://scripts/ui/graphics_settings.gd:77)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local variable "controls" is shadowing an already-declared function at line 81 in the current class.
+   at: GDScript::reload (res://scripts/ui/graphics_settings.gd:131)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local variable "controls" is shadowing an already-declared function at line 81 in the current class.
+   at: GDScript::reload (res://scripts/ui/graphics_settings.gd:139)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local variable "position" is shadowing an already-declared property in the base class "Control".
+   at: GDScript::reload (res://scripts/ui/tab_settings.gd:471)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local variable "position" is shadowing an already-declared property in the base class "Control".
+   at: GDScript::reload (res://scripts/ui/tab_settings.gd:504)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/ui/tab_settings.gd:744)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/ui/tab_settings.gd:1201)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local variable "size" is shadowing an already-declared property in the base class "Control".
+   at: GDScript::reload (res://scripts/ui/tab_settings.gd:1598)
+   GDScript backtrace (most recent call first):
+       [0] _build_tabs (res://scripts/ui/game_menu.gd:255)
+       [1] _ready (res://scripts/ui/game_menu.gd:164)
+       [2] _mount_menu (res://autoload/game_state.gd:973)
+       [3] _ready (res://autoload/game_state.gd:772)
+WARNING: The local function parameter "health_fraction" is shadowing an already-declared function at line 233 in the current class.
+   at: GDScript::reload (res://scripts/player/player_vitals.gd:145)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "stamina_fraction" is shadowing an already-declared function at line 229 in the current class.
+   at: GDScript::reload (res://scripts/player/player_vitals.gd:145)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/player/player_controller.gd:348)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/player/player_controller.gd:771)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "config" is shadowing an already-declared function at line 6 in the current class.
+   at: GDScript::reload (res://scripts/combat/fight_camera.gd:15)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "config" is shadowing an already-declared function at line 6 in the current class.
+   at: GDScript::reload (res://scripts/combat/fight_camera.gd:21)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "config" is shadowing an already-declared function at line 6 in the current class.
+   at: GDScript::reload (res://scripts/combat/fight_camera.gd:28)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "config" is shadowing an already-declared function at line 6 in the current class.
+   at: GDScript::reload (res://scripts/combat/fight_camera.gd:113)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/player/camera_rig.gd:708)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "show" is shadowing an already-declared method in the base class "CanvasLayer".
+   at: GDScript::reload (res://scripts/ui/playground_hud.gd:1567)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "show" is shadowing an already-declared method in the base class "CanvasLayer".
+   at: GDScript::reload (res://scripts/ui/playground_hud.gd:2475)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "scale" is shadowing an already-declared property in the base class "CanvasLayer".
+   at: GDScript::reload (res://scripts/ui/playground_hud.gd:3897)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: Values of the ternary operator are not mutually compatible.
+   at: GDScript::reload (res://scripts/ui/playground_hud.gd:3898)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The variable "hash" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/world/terrain_bake.gd:45)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local "for" iterator variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/world/grass_field.gd:169)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/grass_field.gd:284)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: Integer division. Decimal part will be discarded.
+   at: GDScript::reload (res://scripts/world/grass_field.gd:1056)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The variable "seed" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/world/grass_field.gd:1270)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: Values of the ternary operator are not mutually compatible.
+   at: GDScript::reload (res://scripts/world/grass_field.gd:1807)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: Integer division. Decimal part will be discarded.
+   at: GDScript::reload (res://scripts/world/vegetation.gd:749)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: Integer division. Decimal part will be discarded.
+   at: GDScript::reload (res://scripts/world/vegetation.gd:760)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: Integer division. Decimal part will be discarded.
+   at: GDScript::reload (res://scripts/world/vegetation.gd:767)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The parameter "by_layer" is never used in the function "_warn_about_shared_models()". If this is intended, prefix it with an underscore: "_by_layer".
+   at: GDScript::reload (res://scripts/world/vegetation.gd:779)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/world/vegetation.gd:913)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/world/vegetation.gd:1066)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "position" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/vegetation.gd:1322)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/vegetation.gd:1467)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local "for" iterator variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/world/vegetation.gd:1908)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/vegetation.gd:1939)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local "for" iterator variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/world/vegetation.gd:2064)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local "for" iterator variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/world/vegetation.gd:2082)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "position" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/vegetation.gd:2193)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "position" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/vegetation.gd:2325)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/vegetation.gd:2843)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "water_level" is shadowing an already-declared function at line 191 in the current class.
+   at: GDScript::reload (res://scripts/world/water.gd:210)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/water.gd:1440)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/water.gd:1606)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The variable "sign" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/world/inn_exterior_identity.gd:75)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The constant "UITokens" has the same name as a global class defined in "ui_tokens.gd".
+   at: GDScript::reload (res://scripts/ui/relic_power_panel.gd:12)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The parameter "game" is never used in the function "_clear_target()". If this is intended, prefix it with an underscore: "_game".
+   at: GDScript::reload (res://scripts/world/objective_beacon.gd:147)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/world/portal_arch.gd:98)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The variable "sign" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/world/portal_arch.gd:100)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/world/crossing_hall.gd:449)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "arch" is shadowing an already-declared function at line 618 in the current class.
+   at: GDScript::reload (res://scripts/world/crossing_hall.gd:539)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/crossing_hall.gd:549)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "arch" is shadowing an already-declared function at line 618 in the current class.
+   at: GDScript::reload (res://scripts/world/crossing_hall.gd:593)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The variable "sign" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/world/crossing_hall.gd:655)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The parameter "game" is never used in the function "open_relic_power()". If this is intended, prefix it with an underscore: "_game".
+   at: GDScript::reload (res://scripts/world/crossing_hall.gd:805)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: Integer division. Decimal part will be discarded.
+   at: GDScript::reload (res://scripts/world/village.gd:80)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "position" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/lost_companion_reunion.gd:499)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "marker" is shadowing an already-declared function at line 147 in the current class.
+   at: GDScript::reload (res://scripts/world/grandpa_house.gd:330)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "half_d" is declared but never used in the block. If this is intended, prefix it with an underscore: "_half_d".
+   at: GDScript::reload (res://scripts/world/grandpa_house.gd:446)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The class variable "_poll_left" is declared but never used in the class.
+   at: GDScript::reload (res://scripts/world/burrow_warrens.gd:252)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The parameter "width" is never used in the function "_build_vault_door_seam()". If this is intended, prefix it with an underscore: "_width".
+   at: GDScript::reload (res://scripts/world/burrow_warrens.gd:1468)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The variable "sign" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/world/burrow_warrens.gd:1743)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The parameter "base_material" is never used in the function "_build_rootstone_wayfinders()". If this is intended, prefix it with an underscore: "_base_material".
+   at: GDScript::reload (res://scripts/world/burrow_warrens.gd:1853)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "marker" is shadowing an already-declared function at line 8246 in the current class.
+   at: GDScript::reload (res://scripts/world/burrow_warrens.gd:3725)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The variable "seed" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/world/burrow_warrens.gd:3823)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The variable "seed" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/world/burrow_warrens.gd:4688)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: Integer division. Decimal part will be discarded.
+   at: GDScript::reload (res://scripts/world/burrow_warrens.gd:4701)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The parameter "brow_rx_extra" is never used in the function "_build_brow_turf()". If this is intended, prefix it with an underscore: "_brow_rx_extra".
+   at: GDScript::reload (res://scripts/world/burrow_warrens.gd:4819)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/burrow_warrens.gd:4916)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/burrow_warrens.gd:4932)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "marker" is shadowing an already-declared function at line 8246 in the current class.
+   at: GDScript::reload (res://scripts/world/burrow_warrens.gd:5043)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/burrow_warrens.gd:5178)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/burrow_warrens.gd:5202)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/burrow_warrens.gd:5340)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The function parameter "seed" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/world/burrow_warrens.gd:6141)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The variable "seed" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/world/burrow_warrens.gd:6255)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The variable "crown_y" is declared below in the parent block.
+   at: GDScript::reload (res://scripts/world/burrow_warrens.gd:6320)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "guardian" is shadowing an already-declared function at line 8254 in the current class.
+   at: GDScript::reload (res://scripts/world/burrow_warrens.gd:7612)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/burrow_warrens.gd:7865)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The parameter "delta" is never used in the function "_process()". If this is intended, prefix it with an underscore: "_delta".
+   at: GDScript::reload (res://scripts/world/burrow_warrens.gd:8052)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/burrow_warrens.gd:8457)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/burrow_warrens.gd:8468)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "rotation" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/stonewater_reach.gd:688)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: Integer division. Decimal part will be discarded.
+   at: GDScript::reload (res://scripts/world/ironwood_grove_presentation.gd:612)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: Integer division. Decimal part will be discarded.
+   at: GDScript::reload (res://scripts/world/ironwood_grove_presentation.gd:665)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "rotation" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/ironwood_grove_presentation.gd:770)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/severed_spokes.gd:243)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/severed_spokes.gd:321)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/severed_spokes.gd:342)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/severed_spokes.gd:638)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/severed_spokes.gd:705)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/severed_spokes.gd:867)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: Values of the ternary operator are not mutually compatible.
+   at: GDScript::reload (res://scripts/world/river_nest_clear.gd:173)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: Values of the ternary operator are not mutually compatible.
+   at: GDScript::reload (res://scripts/world/meadowhart_herd_visit.gd:276)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/world_perimeter.gd:931)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/world_perimeter.gd:977)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/world_perimeter.gd:1002)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/world_perimeter.gd:1004)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/world_perimeter.gd:1034)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/world_perimeter.gd:1037)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/world_perimeter.gd:1070)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/world_perimeter.gd:1110)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/world_perimeter.gd:1142)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/world_perimeter.gd:1147)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/world_perimeter.gd:1148)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/world_perimeter.gd:1180)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The variable "wrap" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/world/gated_crossing.gd:625)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The variable "floor" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/world/old_quarry.gd:179)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The variable "floor" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/world/old_quarry.gd:239)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/tether_relay.gd:215)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/tether_relay.gd:712)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The parameter "centre" is never used in the function "_build_gate_heraldry()". If this is intended, prefix it with an underscore: "_centre".
+   at: GDScript::reload (res://scripts/world/tether_relay.gd:746)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/tether_relay.gd:989)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/tether_relay.gd:1245)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "position" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/tether_relay.gd:1758)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "healing" is shadowing an already-declared function at line 2817 in the current class.
+   at: GDScript::reload (res://scripts/world/tether_relay.gd:1877)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "position" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/tether_relay.gd:2661)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: Integer division. Decimal part will be discarded.
+   at: GDScript::reload (res://scripts/world/alpha_pins.gd:221)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The variable "sign" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/world/mill_crossing.gd:187)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/rift_collapse.gd:166)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/rift_collapse.gd:419)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "report" is shadowing an already-declared function at line 629 in the current class.
+   at: GDScript::reload (res://scripts/world/meadow_healing.gd:407)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "position" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/meadow_healing.gd:620)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/meadow_healing.gd:972)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/meadow_healing.gd:1983)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/meadow_healing.gd:2109)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "transform" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/meadow_healing.gd:2188)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/meadow_healing.gd:2327)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/stronghold.gd:1911)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/stronghold.gd:1983)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The parameter "jamb_w" is never used in the function "_build_gate_arch_and_portcullis()". If this is intended, prefix it with an underscore: "_jamb_w".
+   at: GDScript::reload (res://scripts/world/stronghold.gd:2233)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: Integer division. Decimal part will be discarded.
+   at: GDScript::reload (res://scripts/world/stronghold.gd:2252)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The variable "seed" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/world/stronghold.gd:2677)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "position" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/stronghold.gd:4682)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/stronghold.gd:5565)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The parameter "solo_character" is never used in the function "all_refused()". If this is intended, prefix it with an underscore: "_solo_character".
+   at: GDScript::reload (res://scripts/world/stronghold_climax.gd:1638)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/world/death_satchel.gd:94)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/world/death_satchel.gd:107)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "position" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/world/player_death.gd:278)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/combat/impact_flash.gd:199)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/combat/impact_flash.gd:223)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/combat/orb.gd:234)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: Values of the ternary operator are not mutually compatible.
+   at: GDScript::reload (res://scripts/combat/orb.gd:697)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "colour" is shadowing an already-declared function at line 80 in the current class.
+   at: GDScript::reload (res://scripts/vfx/vfx_burst.gd:53)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "scale" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/vfx/vfx_burst.gd:53)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The function parameter "seed" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/vfx/vfx_burst.gd:53)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/vfx/vfx_burst.gd:197)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "position" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/vfx/vfx_burst.gd:242)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "colour" is shadowing an already-declared function at line 80 in the current class.
+   at: GDScript::reload (res://scripts/vfx/vfx_burst.gd:247)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "colour" is shadowing an already-declared function at line 80 in the current class.
+   at: GDScript::reload (res://scripts/vfx/vfx_burst.gd:271)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "colour" is shadowing an already-declared function at line 80 in the current class.
+   at: GDScript::reload (res://scripts/vfx/vfx_burst.gd:296)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "tr" is shadowing an already-declared method in the base class "Object".
+   at: GDScript::reload (res://scripts/vfx/vfx_burst.gd:309)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/vfx/level_up_flourish.gd:143)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "basis" is shadowing an already-declared property in the base class "Node3D".
+   at: GDScript::reload (res://scripts/combat/target_marker.gd:88)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The signal "arrived" is declared but never explicitly used in the class.
+   at: GDScript::reload (res://scripts/combat/move_projectile.gd:9)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/combat/enemy_pattern_cast.gd:20)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "encounter_id" is shadowing an already-declared function at line 452 in the current class.
+   at: GDScript::reload (res://scripts/combat/combat_manager.gd:412)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/combat/combat_manager.gd:423)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: Values of the ternary operator are not mutually compatible.
+   at: GDScript::reload (res://scripts/combat/combat_manager.gd:1592)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: Values of the ternary operator are not mutually compatible.
+   at: GDScript::reload (res://scripts/combat/combat_manager.gd:2946)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "outcome" is shadowing an already-declared function at line 5416 in the current class.
+   at: GDScript::reload (res://scripts/combat/combat_manager.gd:5073)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: Values of the ternary operator are not mutually compatible.
+   at: GDScript::reload (res://scripts/combat/combat_manager.gd:5134)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The parameter "delta" is never used in the function "_tick_aggression()". If this is intended, prefix it with an underscore: "_delta".
+   at: GDScript::reload (res://scripts/creatures/wild_creature.gd:350)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "intent" is shadowing an already-declared function at line 1601 in the current class.
+   at: GDScript::reload (res://scripts/creatures/wild_creature.gd:1008)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "_opponent" is shadowing an already-declared variable at line 84 in the base class "res://scripts/creatures/wild_creature.gd".
+   at: GDScript::reload (res://scripts/creatures/shared_opponent_proxy.gd:52)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "encounter_id" is shadowing an already-declared function at line 452 in the base class "res://scripts/combat/combat_manager.gd".
+   at: GDScript::reload (res://scripts/combat/stormwood_authoritative_fight.gd:12)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "body" is shadowing an already-declared function at line 46 in the current class.
+   at: GDScript::reload (res://scripts/combat/shared_wild_host_fight.gd:22)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "encounter_id" is shadowing an already-declared function at line 452 in the base class "res://scripts/combat/combat_manager.gd".
+   at: GDScript::reload (res://scripts/combat/shared_wild_host_fight.gd:23)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "encounter_id" is shadowing an already-declared function at line 452 in the base class "res://scripts/combat/combat_manager.gd".
+   at: GDScript::reload (res://scripts/combat/shared_wild_host_fight.gd:37)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "encounter_id" is shadowing an already-declared function at line 452 in the base class "res://scripts/combat/combat_manager.gd".
+   at: GDScript::reload (res://scripts/combat/shared_wild_host_fight.gd:42)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "outcome" is shadowing an already-declared function at line 5416 in the base class "res://scripts/combat/combat_manager.gd".
+   at: GDScript::reload (res://scripts/combat/shared_wild_host_fight.gd:75)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/creatures/companion_presence.gd:285)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local "for" iterator variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/creatures/companion_presence.gd:297)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local "for" iterator variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/creatures/companion_presence.gd:299)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/creatures/companion_presence.gd:536)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/creatures/companion_presence.gd:603)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: Integer division. Decimal part will be discarded.
+   at: GDScript::reload (res://scripts/creatures/companion_presence.gd:618)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/creatures/companion_presence.gd:701)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: Integer used when an enum value is expected. If this is intended, cast the integer to the enum type using the "as" keyword.
+   at: GDScript::reload (res://scripts/creatures/companion_presence.gd:1148)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: Integer used when an enum value is expected. If this is intended, cast the integer to the enum type using the "as" keyword.
+   at: GDScript::reload (res://scripts/creatures/companion_presence.gd:1149)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: Integer division. Decimal part will be discarded.
+   at: GDScript::reload (res://scripts/creatures/companion_presence.gd:1196)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/creatures/companion_presence.gd:1270)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/creatures/companion_presence.gd:1278)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "_body" is shadowing an already-declared variable at line 348 in the base class "res://scripts/creatures/creature_body.gd".
+   at: GDScript::reload (res://scripts/creatures/follower_creature.gd:404)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "receipt" is shadowing an already-declared function at line 19 in the current class.
+   at: GDScript::reload (res://scripts/combat/hit_feedback.gd:72)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "receipt" is shadowing an already-declared function at line 19 in the current class.
+   at: GDScript::reload (res://scripts/combat/hit_feedback.gd:78)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "receipt" is shadowing an already-declared function at line 19 in the current class.
+   at: GDScript::reload (res://scripts/combat/hit_feedback.gd:105)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "receipt" is shadowing an already-declared function at line 19 in the current class.
+   at: GDScript::reload (res://scripts/combat/hit_feedback.gd:117)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "receipt" is shadowing an already-declared function at line 19 in the current class.
+   at: GDScript::reload (res://scripts/combat/hit_feedback.gd:134)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "receipt" is shadowing an already-declared function at line 19 in the current class.
+   at: GDScript::reload (res://scripts/combat/hit_feedback.gd:140)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "launch" is shadowing an already-declared function at line 45 in the current class.
+   at: GDScript::reload (res://scripts/combat/hit_feedback.gd:140)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "source" is shadowing an already-declared function at line 128 in the current class.
+   at: GDScript::reload (res://scripts/combat/remote_rematch_runtime.gd:59)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The variable "encounter_id" is declared below in the parent block.
+   at: GDScript::reload (res://scripts/combat/encounter_director.gd:2574)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The variable "body" is declared below in the parent block.
+   at: GDScript::reload (res://scripts/combat/encounter_director.gd:3598)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "owner" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/combat/encounter_director.gd:4229)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The class variable "_ally_status" is declared but never used in the class.
+   at: GDScript::reload (res://scripts/ui/combat_hud.gd:253)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "ready" is shadowing an already-declared signal in the base class "Node".
+   at: GDScript::reload (res://scripts/ui/combat_hud.gd:1095)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "ready" is shadowing an already-declared signal in the base class "Node".
+   at: GDScript::reload (res://scripts/ui/combat_hud.gd:1104)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The parameter "orbs" is never used in the function "_draw_throw_cell()". If this is intended, prefix it with an underscore: "_orbs".
+   at: GDScript::reload (res://scripts/ui/combat_hud.gd:1122)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "ready" is shadowing an already-declared signal in the base class "Node".
+   at: GDScript::reload (res://scripts/ui/combat_hud.gd:1122)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "ready" is shadowing an already-declared signal in the base class "Node".
+   at: GDScript::reload (res://scripts/ui/combat_hud.gd:1130)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "ready" is shadowing an already-declared signal in the base class "Node".
+   at: GDScript::reload (res://scripts/ui/combat_hud.gd:1140)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "hour" is shadowing an already-declared function at line 614 in the current class.
+   at: GDScript::reload (res://scripts/world/world_look.gd:250)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "hour" is shadowing an already-declared function at line 614 in the current class.
+   at: GDScript::reload (res://scripts/world/world_look.gd:312)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "hour" is shadowing an already-declared function at line 614 in the current class.
+   at: GDScript::reload (res://scripts/world/world_look.gd:338)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "hour" is shadowing an already-declared function at line 614 in the current class.
+   at: GDScript::reload (res://scripts/world/world_look.gd:399)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "hour" is shadowing an already-declared function at line 614 in the current class.
+   at: GDScript::reload (res://scripts/world/world_look.gd:459)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/world/world_look.gd:493)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/world/world_look.gd:521)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/world/world_look.gd:664)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "hour" is shadowing an already-declared function at line 614 in the current class.
+   at: GDScript::reload (res://scripts/world/world_look.gd:710)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "hour" is shadowing an already-declared function at line 614 in the current class.
+   at: GDScript::reload (res://scripts/world/world_look.gd:758)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "hour" is shadowing an already-declared function at line 614 in the current class.
+   at: GDScript::reload (res://scripts/world/world_look.gd:781)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local function parameter "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/world/world_weather.gd:102)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local "for" iterator variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/audio/world_audio.gd:137)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/audio/world_audio.gd:269)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local "for" iterator variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/audio/world_audio.gd:293)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local "for" iterator variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/audio/world_audio.gd:321)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local "for" iterator variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/audio/world_audio.gd:352)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local variable "set_name" is shadowing an already-declared method in the base class "Node".
+   at: GDScript::reload (res://scripts/audio/world_audio.gd:429)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The local "for" iterator variable "name" is shadowing an already-declared property in the base class "Node".
+   at: GDScript::reload (res://scripts/audio/world_audio.gd:501)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The parameter "peer_id" is never used in the function "_on_peer_joined()". If this is intended, prefix it with an underscore: "_peer_id".
+   at: GDScript::reload (res://scripts/net/trainer_spawn.gd:371)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The function parameter "seed" has the same name as a built-in function.
+   at: GDScript::reload (res://scripts/world/horizon_ranges.gd:70)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The parameter "segments" is never used in the function "_colours()". If this is intended, prefix it with an underscore: "_segments".
+   at: GDScript::reload (res://scripts/world/horizon_ranges.gd:133)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: The parameter "rows" is never used in the function "_colours()". If this is intended, prefix it with an underscore: "_rows".
+   at: GDScript::reload (res://scripts/world/horizon_ranges.gd:133)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tools/capture_f05_heal.gd:111)
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+   GDScript backtrace (most recent call first):
+       [0] _build_terrain (res://scripts/world/playground_world.gd:1173)
+       [1] _ready (res://scripts/world/playground_world.gd:806)
+       [2] _run (res://tools/capture_f05_heal.gd:112)
+WARNING: The variable "key_file" is declared below in the parent block.
+   at: GDScript::reload (res://scripts/world/map_baker.gd:258)
+   GDScript backtrace (most recent call first):
+       [0] _ensure_minimap_baked (res://scripts/ui/playground_hud.gd:2848)
+       [1] _run_frame (res://scripts/ui/playground_hud.gd:3860)
+       [2] _process (res://scripts/ui/playground_hud.gd:3748)
