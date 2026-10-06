@@ -20,13 +20,18 @@ ralph/reports/PERF/HANDOFF.md item 6 and Known traps; reference 10cdde31.
 - Vegetation refresh uses Terrain3D's modified/missing-cell update instead of
   destroying and rebuilding all cells. Initial construction remains unchanged;
   transforms, colors, hide/restore tokens and durable harvesting are unchanged.
-  Installed addon version is 1.0.2. Its [official API contract](https://terrain3d.readthedocs.io/en/stable/api/class_terrain3dinstancer.html)
-  distinguishes modified/missing-cell refresh from a full destructive rebuild.
+  Installed addon version is 1.0.2. The [exact upstream native source](https://raw.githubusercontent.com/TokisanGames/Terrain3D/v1.0.2-stable/src/terrain_3d_instancer.cpp)
+  marks additions/removals dirty, creates missing cells, skips clean cells,
+  and destroys all buffers only for the full rebuild option.
 
 All native checks and old-code regression demonstrations remain **UNRUN**.
 No before/after profiler self-time rows or visual verdict exist yet. The first
 independent source review rejected across-draw reuse of dynamic terrain/water;
-the candidate now resamples those queries on every rebuild. Final review pending.
+the candidate now resamples those queries on every rebuild. Independent
+`c3_journal_review` final SOURCE PASS covers all nine source/test files against
+8e7c11ceb: no stale dynamic-height reuse, camp matching/ancestry preserved,
+native dirty/missing-cell contract supports the refresh. Native buffers,
+real SceneTree group behavior, compilation and measured gain remain OPEN.
 
 Required existing checks: telegraph_glow, companion_presence and
 fight_ring_occluders focused tests; demonstrate the new performance regressions
