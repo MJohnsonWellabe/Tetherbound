@@ -1,0 +1,14 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_move_effects.gd: 1 of 824 test files
+  ok    test_move_effects.gd :: test_authored_stages_are_bounded_and_drawable
+  ok    test_move_effects.gd :: test_critical_impact_prunes_trails_before_spending_beyond_encounter_cap
+  ok    test_move_effects.gd :: test_every_move_resolves_and_all_24_bodies_impacts_trails_and_cues_exist
+  ok    test_move_effects.gd :: test_light_cap_is_global_idempotent_and_reclaims_existing_lease
+  ok    test_move_effects.gd :: test_mastery_grows_presentation_without_changing_arrival_schedule
+  ok    test_move_effects.gd :: test_optional_receipt_is_recursively_frozen_and_detached
+  ok    test_move_effects.gd :: test_stages_do_not_change_arrival_or_travel
+  ok    test_move_effects.gd :: test_ultimate_overrides_resolve_to_staged_presentations
+
+8 tests, 1217 assertions, 0 failed
+R2_NATIVE_EXIT=0
