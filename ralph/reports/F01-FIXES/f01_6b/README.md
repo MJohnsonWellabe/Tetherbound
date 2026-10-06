@@ -94,7 +94,9 @@ It is not owner_passive (the "prepare waits for inputs" lines are transient and 
 |---|---|
 | shared_boss `--tournament` (t6b8) | ALL CHECKS PASSED: quarter (Mira), semi (Tam) and final (Oskar) won, with rewards for both characters |
 | boss_rewards_each_participant | ALL CHECKS PASSED |
-| shared_boss (default) | run 1: 9 failures, all in the BOSS friendly-fire leg (the guest's swing at its teammate hit the boss instead of being refused `friendly_target`); run 2: ALL CHECKS PASSED |
+| shared_boss (default) | 3 of 4 ALL CHECKS PASSED; run 1 had 9 failures, all in the BOSS friendly-fire leg (the guest's swing at its teammate hit the boss instead of being refused `friendly_target`) |
 | shared_boss (default) without the fix | ALL CHECKS PASSED (1 run) |
 
-The friendly-fire leg resolves targeting from staged positions; the record's round number does not enter `pick_struck`. One failure in two runs is recorded here, not explained away. CI on the batch is the wider check.
+The friendly-fire leg resolves targeting from staged positions; the record's round number does not enter `pick_struck`. In default mode the Warden is the session's first trainer battle, so the record is byte-identical before and after this fix on that leg. One failure in four runs is recorded here, not explained away. CI on the batch is the wider check.
+
+**Independent review** (one round): APPROVE-WITH-NITS. No cross-battle key collision: every keyed consumer of `round` also carries `encounter_id`, and the reward scope digest carries `trainer_id` and the epoch. Round is ≥1 on every real path. The guest mirror resets per bind/begin. Nits fixed: the test now models battle 2's first send-out (`_trainer_sent` 3, `_trainer_battle_sent` 1) and asserts round 1; the second fixture also seeds `_trainer_battle_sent`; the comment says "within this battle".
