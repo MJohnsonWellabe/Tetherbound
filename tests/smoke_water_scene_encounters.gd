@@ -65,8 +65,19 @@ func run() -> void:
 	for _frame in 30:
 		await process_frame
 	check(not director._wild_creatures.is_empty(), "Actual production wild bodies spawn")
+	var cannonbacks := 0
 	for wild: Node3D in director._wild_creatures:
 		check(wild.instance != null and str(wild.instance.species_id).begins_with("water_"), "Wild body carries Water instance")
+		if wild.instance != null and str(wild.instance.species_id) == "water_cannonback":
+			var authored: Dictionary = director.find_id(director.encounter_config.wild_sites,
+				str(wild.get_meta("water_site_id", "")))
+			check(not wild.trainer_owned and not authored.is_empty(), "Cannonback is an actual nontrainer body at an authored Water site")
+			if not wild.trainer_owned and not authored.is_empty():
+				cannonbacks += 1
+				print("F29 wild witness ", JSON.stringify({"species": wild.instance.species_id,
+					"body": str(wild.get_path()), "site": authored.id, "table": authored.table_id,
+					"position": str(wild.global_position), "trainer_owned": wild.trainer_owned}))
+	check(cannonbacks > 0, "Natural first-shore production population includes Cannonback")
 	# Remote proxy fixture exercises the live director's same cross-island input.
 	var remote := PeerFixture.new()
 	world.add_child(remote)

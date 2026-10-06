@@ -1,21 +1,27 @@
 {
   "owner": "F32",
-  "source_commit": "6c063a2c8c104619730759b27e0332ae8e23a583",
-  "package_head": "dad506a1f9ae5f8ad25d9e6edccc4c83783b99df",
+  "source_commit": "8e7c11ceb5854f063c5241d62618c382803562c9",
+  "package_head": "8e7c11ceb5854f063c5241d62618c382803562c9",
+  "current_main_source_changes": [
+    {"commit": "045c204fa4ce7237b39a1f8b8bf646bca090aefa", "file": "data/config/essence_nodes.json", "change": "worn or missing held tool no longer locks out gathering"},
+    {"commit": "55cb280747d4916cef81a8ad9219b71a497da774", "file": "data/config/essence_nodes.json", "change": "essence nodes mostly off-route in every biome"},
+    {"commit": "b1522e17b4ae5a7402091c6f365dbe5730637243", "files": ["data/config/essence_nodes.json", "data/config/farm.json"], "change": "activate progression and loops with live pattern and resource consumers"},
+    {"commit": "6cee2372f0d488e25ddb4548c09043901fc32979", "file": "data/config/farm.json", "change": "admit valid item and shed data and preserve native source surfaces"}
+  ],
   "pull_request": "https://github.com/MJohnsonWellabe/Tetherbound/pull/515",
   "source_cut": "ralph/reports/HOMESTEAD/f32/whole-source/source-cut.json",
   "files": {
-    "data/config/essence_nodes.json": {
-      "git_content_sha256": "e5a2177f7dce5e5867bc049151f26ff09fd521f0fc34e61e9ef118d3ed04408a",
-      "working_content_sha256": "a3599f0eee6611f2f8777a764cbc1409bd9795fab3dbefec48072a6bca6ae106"
-    },
     "data/config/farm.json": {
-      "git_content_sha256": "3641a46d65d34a36ee8b06d1e4c510566d03fbabfa9419ed7090e64e1c23de78",
-      "working_content_sha256": "7a992b14ac2339fc3349dcaf0c0df0836a4e1c03db0a491305bce5a8bc015814"
+      "git_content_sha256": "7b02a7f4b8ae57781bb736901c6538d5670a32995668ec4f1711e6818ac2c2a7",
+      "working_content_sha256": "7b02a7f4b8ae57781bb736901c6538d5670a32995668ec4f1711e6818ac2c2a7"
+    },
+    "data/config/essence_nodes.json": {
+      "git_content_sha256": "f25c6d4b9bc3d5a87586a97bab4386296a8f1c91d34070d47f785ba31592ae82",
+      "working_content_sha256": "f25c6d4b9bc3d5a87586a97bab4386296a8f1c91d34070d47f785ba31592ae82"
     }
   },
   "runtime_accepted_stock": null,
-  "status": "F32_REVIEWED_FROZEN_SOURCE_ONLY; ALL FLAGS OFF; ACCEPTANCE OPEN",
+  "status": "CURRENT_MAIN_SOURCE_BINDING; PRIOR_NATIVE_CENSUS_REUSE_LIMITED_TO_MATCHING_GEOMETRY_AND_YIELDS",
   "retirement": "F28 finite master_garden nodes removed; old prepare_gather compatibility doorway always refuses. F32 node/farm staging alone owns attuned supply and renewable stock.",
   "typed_node_intent": [
     "site_id",
@@ -45,5 +51,21 @@
     "Save/ACK/rejoin and world namespace boundaries"
   ],
   "removed_assumption": "No longer asserts 25 attuned units per type per character; renewable source arithmetic is not ordinary-play solvency proof.",
-  "check_command": "node ralph/reports/TRAINING/f28/source_risk_check.cjs <reviewed-F32-checkout>; after integration omit the argument"
+  "check_command": "node ralph/reports/TRAINING/f28/source_risk_check.cjs <reviewed-F32-checkout>; after integration omit the argument",
+  "prior_frozen_source": {
+    "files": {
+      "data/config/essence_nodes.json": {
+        "git_content_sha256": "e5a2177f7dce5e5867bc049151f26ff09fd521f0fc34e61e9ef118d3ed04408a",
+        "working_content_sha256": "a3599f0eee6611f2f8777a764cbc1409bd9795fab3dbefec48072a6bca6ae106"
+      },
+      "data/config/farm.json": {
+        "git_content_sha256": "3641a46d65d34a36ee8b06d1e4c510566d03fbabfa9419ed7090e64e1c23de78",
+        "working_content_sha256": "7a992b14ac2339fc3349dcaf0c0df0836a4e1c03db0a491305bce5a8bc015814"
+      }
+    },
+    "status": "F32_REVIEWED_FROZEN_SOURCE_ONLY; ALL FLAGS OFF; ACCEPTANCE OPEN",
+    "source_commit": "6c063a2c8c104619730759b27e0332ae8e23a583",
+    "package_head": "dad506a1f9ae5f8ad25d9e6edccc4c83783b99df"
+  },
+  "current_receipt_limit": "F32 census uses disclosed 6m approach/realm-start fixtures and is not an earned campaign. Reuse proves local mounted reach/accepted yield only where node identity, coordinates and outputs still match. No repeat supply, seed solvency or tier2+ earned feast route is inferred."
 }

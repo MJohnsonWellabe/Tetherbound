@@ -1,0 +1,8 @@
+SCRIPT ERROR: Parse Error: Cannot call non-static function "has_method()" on the class "res://scripts/creatures/evolution.gd" directly. Make an instance instead.
+   at: GDScript::reload (res://ralph/reports/TRAINING/f28/component_proof.gd:15)
+SCRIPT ERROR: Parse Error: Cannot infer the type of "cookbook" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://ralph/reports/TRAINING/f28/component_proof.gd:33)
+SCRIPT ERROR: Parse Error: Cannot infer the type of "frozen" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://ralph/reports/TRAINING/f28/component_proof.gd:38)
+ERROR: Failed to load script "res://ralph/reports/TRAINING/f28/component_proof.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)

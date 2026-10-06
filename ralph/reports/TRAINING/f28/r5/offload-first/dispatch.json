@@ -1,0 +1,57 @@
+{
+  "claim": "Dispatch receipts only; official4.7 Linux isolated headless correctness, no results or acceptance yet",
+  "dispatches": [
+    {
+      "inputs": {
+        "timeout_minutes": "30",
+        "label": "r5-f28-local-20261006-065258",
+        "args": "",
+        "checkout_ref": "3ecf62faf47bf91630017a1cc4fe215898812f9d",
+        "script": "tests/smoke_playground.gd",
+        "mode": "headless"
+      },
+      "label": "r5-f28-local-20261006-065258",
+      "status_code": 204,
+      "checkout_ref": "3ecf62faf47bf91630017a1cc4fe215898812f9d",
+      "script": "tests/smoke_playground.gd",
+      "workflow_ref": "main",
+      "requested_utc": "2026-10-06T06:53:01.0616932+00:00"
+    },
+    {
+      "inputs": {
+        "timeout_minutes": "30",
+        "label": "r5-f29-water-20261006-065258",
+        "args": "",
+        "checkout_ref": "3ecf62faf47bf91630017a1cc4fe215898812f9d",
+        "script": "tests/smoke_water_scene_encounters.gd",
+        "mode": "headless"
+      },
+      "label": "r5-f29-water-20261006-065258",
+      "status_code": 204,
+      "checkout_ref": "3ecf62faf47bf91630017a1cc4fe215898812f9d",
+      "script": "tests/smoke_water_scene_encounters.gd",
+      "workflow_ref": "main",
+      "requested_utc": "2026-10-06T06:53:02.2849972+00:00"
+    },
+    {
+      "inputs": {
+        "timeout_minutes": "30",
+        "label": "r5-f29-cloud-20261006-065258",
+        "args": "",
+        "checkout_ref": "3ecf62faf47bf91630017a1cc4fe215898812f9d",
+        "script": "tests/smoke_cloudreach_f07_windscar_cadence.gd",
+        "mode": "headless"
+      },
+      "label": "r5-f29-cloud-20261006-065258",
+      "status_code": 204,
+      "checkout_ref": "3ecf62faf47bf91630017a1cc4fe215898812f9d",
+      "script": "tests/smoke_cloudreach_f07_windscar_cadence.gd",
+      "workflow_ref": "main",
+      "requested_utc": "2026-10-06T06:53:03.6117723+00:00"
+    }
+  ],
+  "workflow_content_blob": "42b562e90b6d59a09ef06850c926b181aea627c6",
+  "authority": "Existing WORKFLOW§8 offload, exact reviewed smokes; PR525 comment6011021522",
+  "workflow": ".github/workflows/render.yml",
+  "source_head": "3ecf62faf47bf91630017a1cc4fe215898812f9d"
+}

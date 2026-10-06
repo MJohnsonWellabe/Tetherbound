@@ -1,0 +1,13 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only f28_training_boundaries,guest_master_admission: 2 of 816 test files
+  FAIL  test_f28_training_boundaries.gd :: could not be parsed or instantiated
+  ok    test_guest_master_admission.gd :: test_actual_remote_body_uses_admitted_deployment_identity_without_an_owned_instance
+  ok    test_guest_master_admission.gd :: test_failed_guest_presentation_keeps_no_duel_or_party_lock
+  ok    test_guest_master_admission.gd :: test_guest_offer_refuses_foreign_character_uid_extra_participants_and_wrong_encounter
+  ok    test_guest_master_admission.gd :: test_retained_master_site_is_unique_owned_and_survives_other_world_lookup
+  ok    test_guest_master_admission.gd :: test_world_write_refusal_retains_original_guest_win_and_epoch_fences_retry
+
+6 tests, 43 assertions, 1 failed
+
+  res://tests/test_f28_training_boundaries.gd: parse error, see SCRIPT ERROR above

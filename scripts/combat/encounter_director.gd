@@ -184,6 +184,9 @@ var _camera_rig: Node = null
 var _wild_creatures: Array[Node3D] = []
 var _engaged_with: Node3D = null
 var _ally_body: Node3D = null
+# Transient director-instance readiness; never serialized. Only the exact
+# grounded/published follower may be admitted while an async summon exists.
+var _ally_ready_body: Node3D = null
 var _ally: RefCounted = null
 
 ## --- Stage B lane 4.B: one deployed creature PER OWNER -----------------------
@@ -1875,6 +1878,7 @@ func adopt_starter(species_id: String, nickname: String = "") -> bool:
 ## around them.
 func _spawn_ally_body(creature: RefCounted) -> bool:
 	_ally = creature
+	_ally_ready_body = null
 
 	# Instanced hidden and only shown once it is standing on the ground. An
 	# invisible body is switched off entirely (creature_body._on_visibility_changed),
@@ -1905,15 +1909,28 @@ func _spawn_ally_body(creature: RefCounted) -> bool:
 	# process, so the leader is right by construction on every side.
 	_ally_body.set("leader", _player)
 	_ally_body.set("owner_peer_id", _local_peer_id())
+	var summoned := _ally_body
 
 	# Behind the trainer's right shoulder, which is where it will settle anyway.
 	var spot := _player.global_position - _player.global_basis.z * 2.4 + _player.global_basis.x * 1.2
-	if not await _stand_on_ground(_ally_body, spot):
+	var grounded: bool = await _stand_on_ground(summoned, spot)
+	# A party swap, recall or biome exit can retire this body while ground
+	# streams. Never operate on its replacement or announce the old creature.
+	if not is_instance_valid(summoned) or summoned.is_queued_for_deletion() \
+			or not is_inside_tree() or not is_instance_valid(_player) \
+			or _ally_body != summoned or _ally != creature:
+		return false
+	if not grounded:
 		push_error("no ground beside the trainer to put their creature on")
+		summoned.queue_free()
+		_ally_body = null
+		_ally = null
+		return false
 	_ally_body.visible = true
 	_ally_body.call("face_towards", _player.global_position)
 	_ally_body.call("set_following", true)
 	_announce_deployment(creature)
+	_ally_ready_body = summoned
 	return true
 
 
@@ -5033,6 +5050,8 @@ func _pick_clear_spot(centre: Vector3, radius: float, rng: RandomNumberGenerator
 
 func _stand_on_ground(body: Node3D, spot: Vector3) -> bool:
 	for i in GROUND_WAIT_FRAMES:
+		if not is_instance_valid(body) or body.is_queued_for_deletion() or not is_inside_tree():
+			return false
 		if bool(body.call("place_on_ground", spot)):
 			return true
 		await get_tree().physics_frame
@@ -5113,6 +5132,10 @@ func _wild_of_species(id: String) -> Node3D:
 
 func ally_body() -> Node3D:
 	return _ally_body
+
+func ally_deployment_ready() -> bool:
+	return _ally != null and is_instance_valid(_ally_body) and not _ally_body.is_queued_for_deletion() \
+		and _ally_body == _ally_ready_body and _ally_body.visible
 
 
 func _player_is_flying() -> bool:
@@ -5197,6 +5220,7 @@ func dismiss_active_creature() -> bool:
 		return false
 	_ally_body.queue_free()
 	_ally_body = null
+	_ally_ready_body = null
 	_ally = null
 	_announce_recall()
 	return true
@@ -5502,6 +5526,7 @@ func _process(delta: float) -> void:
 func _show_a_revived_follower() -> void:
 	if _ally == null or _ally_body == null or not is_instance_valid(_ally_body):
 		return
+	if _ally_body != _ally_ready_body: return # Ground placement still owns visibility.
 	if _ally_body.visible:
 		return
 	# The three states that own the body's visibility themselves, in the order

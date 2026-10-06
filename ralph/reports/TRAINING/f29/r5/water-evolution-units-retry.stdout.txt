@@ -1,0 +1,38 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_evolution.gd,test_evolution_discoverability.gd: 2 of 816 test files
+  ok    test_evolution.gd :: test_a_species_with_no_evolution_link_reports_ineligible
+  ok    test_evolution.gd :: test_caught_water_mosshell_requires_choice_and_keeps_the_water_form_and_individual
+  ok    test_evolution.gd :: test_eligible_once_level_and_bond_are_both_met_with_no_item_required
+  ok    test_evolution.gd :: test_evolve_changes_species_and_stats_but_preserves_what_the_player_earned
+  ok    test_evolution.gd :: test_evolve_refuses_and_changes_nothing_when_not_eligible
+  ok    test_evolution.gd :: test_holding_both_stones_refuses_as_ambiguous_and_spends_nothing
+  ok    test_evolution.gd :: test_holding_neither_stone_still_reports_tuskroot_as_the_default_target
+  ok    test_evolution.gd :: test_item_gate_passes_and_consumes_exactly_one_with_the_item_in_hand
+  ok    test_evolution.gd :: test_item_gate_refuses_without_the_item_and_spends_nothing
+  ok    test_evolution.gd :: test_not_eligible_below_the_bond_requirement
+  ok    test_evolution.gd :: test_not_eligible_below_the_level_requirement
+  ok    test_evolution.gd :: test_refusal_with_no_catalyst_names_both_stones
+  ok    test_evolution.gd :: test_requirements_names_the_real_species_json_target
+  ok    test_evolution.gd :: test_sunstone_branch_evolves_into_ashtusk_and_consumes_only_the_sunstone
+  ok    test_evolution.gd :: test_the_shipped_evolution_catalyst_is_a_real_item
+  ok    test_evolution.gd :: test_the_shipped_gate_refuses_held_stone_shortcut_and_preserves_the_catalyst
+  ok    test_evolution.gd :: test_water_feast_preserves_ancestor_moves_through_real_character_admission_and_reload
+  ok    test_evolution.gd :: test_water_mosshell_stay_is_permanent_and_canonical_mosshell_stays_canonical
+  ok    test_evolution_discoverability.gd :: test_a_species_with_no_evolution_link_is_never_announced
+  ok    test_evolution_discoverability.gd :: test_announce_catalyst_pickup_is_silent_for_an_ordinary_item
+  ok    test_evolution_discoverability.gd :: test_announce_catalyst_pickup_pushes_one_catalyst_found_event_for_a_real_catalyst
+  ok    test_evolution_discoverability.gd :: test_catalyst_pickup_text_is_empty_for_an_ordinary_item
+  ok    test_evolution_discoverability.gd :: test_catalyst_pickup_text_names_the_real_gate_for_both_shipped_stones
+  ok    test_evolution_discoverability.gd :: test_evolution_eligible_and_catalyst_found_are_moments_with_the_actual_verb
+  ok    test_evolution_discoverability.gd :: test_evolution_eligible_does_not_fire_below_the_level_or_bond_gate
+  ok    test_evolution_discoverability.gd :: test_evolution_eligible_does_not_fire_while_the_catalyst_is_missing
+  ok    test_evolution_discoverability.gd :: test_evolution_eligible_fires_once_for_a_creature_that_crosses_every_gate
+  ok    test_evolution_discoverability.gd :: test_missing_text_is_empty_for_a_species_that_does_not_evolve
+  ok    test_evolution_discoverability.gd :: test_missing_text_is_empty_once_every_requirement_including_the_item_is_met
+  ok    test_evolution_discoverability.gd :: test_missing_text_names_all_three_unmet_requirements_with_current_values
+  ok    test_evolution_discoverability.gd :: test_missing_text_names_only_what_is_actually_unmet
+  ok    test_evolution_discoverability.gd :: test_xp_next_line_names_missing_requirements_when_not_yet_eligible
+  ok    test_evolution_discoverability.gd :: test_xp_next_line_reports_ready_to_evolve_once_every_gate_is_met
+
+33 tests, 235 assertions, 0 failed
