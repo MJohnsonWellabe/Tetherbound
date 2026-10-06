@@ -1,0 +1,873 @@
+{
+	"codec_version": 1,
+	"format": "tetherbound-save",
+	"payload": {
+		"clock_elapsed_seconds": {
+			"$tb_float64": "000000000000f0bf"
+		},
+		"created_at": "2026-10-06T04:05:17",
+		"day": 1,
+		"death_satchels": [],
+		"display_name": "",
+		"farm_plots": [],
+		"felled_vegetation": {},
+		"flags": {
+			"flags": []
+		},
+		"harvested_vegetation": {},
+		"last_played": "2026-10-06T04:05:25",
+		"migrated_from": "",
+		"placed_buildings": [
+			{
+				"id": "altar",
+				"paid": true,
+				"position": [
+					{
+						"$tb_float64": "00000000000030c0"
+					},
+					{
+						"$tb_float64": "000000401b4df23f"
+					},
+					{
+						"$tb_float64": "0000000000002440"
+					}
+				],
+				"realm": "meadows",
+				"uid": "b1",
+				"yaw_deg": {
+					"$tb_float64": "0000000000000000"
+				}
+			}
+		],
+		"realm_environment": {},
+		"redesign_world": {
+			"alpha_cycles": {},
+			"bounty_day": {
+				"$tb_float64": "0000000000000000"
+			},
+			"fifth_arch_stirred": false,
+			"node_cycles": {},
+			"portal_unlocks": [],
+			"rematch_cycles": {},
+			"shrine_display": {},
+			"station_tiers": {}
+		},
+		"reward_deliveries": {
+			"altar_building:f20e19f25720633015627d4490f7ab4c39e48dc1c86c8562b1755ba1b53a19b4": {
+				"action": "place_building",
+				"action_id": "8c938b8113f303cb079355c2a5dca619",
+				"after": {
+					"inventory": [
+						null,
+						null,
+						null,
+						{
+							"id": "essence_water",
+							"n": 120
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": {
+								"$tb_float64": "cdcccccccc4c3940"
+							},
+							"base_attack": {
+								"$tb_float64": "0000000000003740"
+							},
+							"base_defence": {
+								"$tb_float64": "0000000000003240"
+							},
+							"base_hp": {
+								"$tb_float64": "0000000000805b40"
+							},
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "water",
+							"defence": {
+								"$tb_float64": "cdcccccccccc3340"
+							},
+							"display_name": "Ripplet",
+							"distance_m_together": {
+								"$tb_float64": "000000201ed62940"
+							},
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": {
+								"$tb_float64": "43d2948ab37f4b40"
+							},
+							"hp": {
+								"$tb_float64": "cecccccccccc5e40"
+							},
+							"iv_attack": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_defence": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_hp": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"known_moves": [
+								"ripple_jab",
+								"undertow",
+								"ultimate_ripplet"
+							],
+							"landmarks_visited_together": 1,
+							"level": 3,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": {
+								"$tb_float64": "cecccccccccc5e40"
+							},
+							"move_charged": "undertow",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "ripple_jab",
+							"move_ultimate": "ultimate_ripplet",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": {
+								"$tb_float64": "4a58cca6e77e5140"
+							},
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": {
+								"$tb_float64": "0000000000000000"
+							},
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "ripplet",
+							"swim_stamina_fraction": {
+								"$tb_float64": "000000000000f03f"
+							},
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-f9e0a97451080092dace74a67dc5b4a9",
+							"xp": 0
+						}
+					],
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-f9e0a97451080092dace74a67dc5b4a9": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"ripple_jab",
+									"undertow",
+									"ultimate_ripplet"
+								],
+								"loadout": {
+									"charged": "undertow",
+									"quick": "ripple_jab",
+									"ultimate": "ultimate_ripplet",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:character-40de6a9cb316a2fb4692ead878e4a6ee:altar_build:07409c11a734e4dbe77b8c7efdd83ce93555ae0ff26dcfc345d49b3ae1087120:8c938b8113f303cb079355c2a5dca619:place_building:b1"
+						],
+						"waystones_activated": {}
+					}
+				},
+				"before": {
+					"inventory": [
+						{
+							"id": "stone",
+							"n": 10
+						},
+						{
+							"id": "rootstone",
+							"n": 4
+						},
+						{
+							"id": "ironwood",
+							"n": 2
+						},
+						{
+							"id": "essence_water",
+							"n": 120
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": {
+								"$tb_float64": "cdcccccccc4c3940"
+							},
+							"base_attack": {
+								"$tb_float64": "0000000000003740"
+							},
+							"base_defence": {
+								"$tb_float64": "0000000000003240"
+							},
+							"base_hp": {
+								"$tb_float64": "0000000000805b40"
+							},
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "water",
+							"defence": {
+								"$tb_float64": "cdcccccccccc3340"
+							},
+							"display_name": "Ripplet",
+							"distance_m_together": {
+								"$tb_float64": "000000201ed62940"
+							},
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": {
+								"$tb_float64": "43d2948ab37f4b40"
+							},
+							"hp": {
+								"$tb_float64": "cecccccccccc5e40"
+							},
+							"iv_attack": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_defence": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_hp": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"known_moves": [
+								"ripple_jab",
+								"undertow",
+								"ultimate_ripplet"
+							],
+							"landmarks_visited_together": 1,
+							"level": 3,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": {
+								"$tb_float64": "cecccccccccc5e40"
+							},
+							"move_charged": "undertow",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "ripple_jab",
+							"move_ultimate": "ultimate_ripplet",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": {
+								"$tb_float64": "4a58cca6e77e5140"
+							},
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": {
+								"$tb_float64": "0000000000000000"
+							},
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "ripplet",
+							"swim_stamina_fraction": {
+								"$tb_float64": "000000000000f03f"
+							},
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-f9e0a97451080092dace74a67dc5b4a9",
+							"xp": 0
+						}
+					],
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-f9e0a97451080092dace74a67dc5b4a9": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"ripple_jab",
+									"undertow",
+									"ultimate_ripplet"
+								],
+								"loadout": {
+									"charged": "undertow",
+									"quick": "ripple_jab",
+									"ultimate": "ultimate_ripplet",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [],
+						"waystones_activated": {}
+					}
+				},
+				"character_id": "character-40de6a9cb316a2fb4692ead878e4a6ee",
+				"character_revision": 1,
+				"delivery_id": "altar_building:f20e19f25720633015627d4490f7ab4c39e48dc1c86c8562b1755ba1b53a19b4",
+				"intent": {
+					"cost": [
+						{
+							"id": "stone",
+							"n": 10
+						},
+						{
+							"id": "rootstone",
+							"n": 4
+						},
+						{
+							"id": "ironwood",
+							"n": 2
+						}
+					],
+					"record": {
+						"id": "altar",
+						"paid": true,
+						"position": [
+							{
+								"$tb_float64": "00000000000030c0"
+							},
+							{
+								"$tb_float64": "000000401b4df23f"
+							},
+							{
+								"$tb_float64": "0000000000002440"
+							}
+						],
+						"realm": "meadows",
+						"uid": "b1",
+						"yaw_deg": {
+							"$tb_float64": "0000000000000000"
+						}
+					},
+					"request": {
+						"id": "altar",
+						"kind": "place_building",
+						"paid": true,
+						"position": [
+							{
+								"$tb_float64": "00000000000030c0"
+							},
+							{
+								"$tb_float64": "000000401b4df23f"
+							},
+							{
+								"$tb_float64": "0000000000002440"
+							}
+						],
+						"realm": "meadows",
+						"txn_id": "8c938b8113f303cb079355c2a5dca619",
+						"yaw_deg": {
+							"$tb_float64": "0000000000000000"
+						}
+					}
+				},
+				"journal_revision": 1,
+				"kind": "altar_building",
+				"receipt": "craft:character-40de6a9cb316a2fb4692ead878e4a6ee:altar_build:07409c11a734e4dbe77b8c7efdd83ce93555ae0ff26dcfc345d49b3ae1087120:8c938b8113f303cb079355c2a5dca619:place_building:b1",
+				"session_id": "efaa3d1830029904c2f5b4ee73931c0d",
+				"status": "accepted",
+				"version": 1,
+				"world_id": "slot-0",
+				"world_namespace": "a7c7b169021eb1ef0ece871f54aef9c3"
+			},
+			"creature_training:252e7adc59eccef9d2e42f608ee13af46890c4d01a661e95d44f678fe74f8971": {
+				"action": "altar_spend",
+				"action_id": "c6457d68cc42e946cbb711870cb2141c",
+				"after": {
+					"inventory": [
+						null,
+						null,
+						null,
+						{
+							"id": "essence_water",
+							"n": 114
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": {
+								"$tb_float64": "3333333333733a40"
+							},
+							"base_attack": {
+								"$tb_float64": "0000000000003740"
+							},
+							"base_defence": {
+								"$tb_float64": "0000000000003240"
+							},
+							"base_hp": {
+								"$tb_float64": "0000000000805b40"
+							},
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "water",
+							"defence": {
+								"$tb_float64": "3333333333b33440"
+							},
+							"display_name": "Ripplet",
+							"distance_m_together": {
+								"$tb_float64": "000000aeac313540"
+							},
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": {
+								"$tb_float64": "8c3a058b757e4e40"
+							},
+							"hp": {
+								"$tb_float64": "9999999999396040"
+							},
+							"iv_attack": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_defence": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_hp": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"known_moves": [
+								"ripple_jab",
+								"undertow",
+								"ultimate_ripplet"
+							],
+							"landmarks_visited_together": 1,
+							"level": 4,
+							"levels_gained_with_you": 1,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": {
+								"$tb_float64": "9999999999396040"
+							},
+							"move_charged": "undertow",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "ripple_jab",
+							"move_ultimate": "ultimate_ripplet",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": {
+								"$tb_float64": "518168a8597a5140"
+							},
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": {
+								"$tb_float64": "0000000000000000"
+							},
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "ripplet",
+							"swim_stamina_fraction": {
+								"$tb_float64": "000000000000f03f"
+							},
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-f9e0a97451080092dace74a67dc5b4a9",
+							"xp": 0
+						}
+					],
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-f9e0a97451080092dace74a67dc5b4a9": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"ripple_jab",
+									"undertow",
+									"ultimate_ripplet"
+								],
+								"loadout": {
+									"charged": "undertow",
+									"quick": "ripple_jab",
+									"ultimate": "ultimate_ripplet",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:character-40de6a9cb316a2fb4692ead878e4a6ee:altar_build:07409c11a734e4dbe77b8c7efdd83ce93555ae0ff26dcfc345d49b3ae1087120:8c938b8113f303cb079355c2a5dca619:place_building:b1",
+							"essence_spend:character-40de6a9cb316a2fb4692ead878e4a6ee:c6457d68cc42e946cbb711870cb2141c:creature-f9e0a97451080092dace74a67dc5b4a9:3:essence_water:6:16"
+						],
+						"waystones_activated": {}
+					}
+				},
+				"before": {
+					"inventory": [
+						null,
+						null,
+						null,
+						{
+							"id": "essence_water",
+							"n": 120
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": {
+								"$tb_float64": "cdcccccccc4c3940"
+							},
+							"base_attack": {
+								"$tb_float64": "0000000000003740"
+							},
+							"base_defence": {
+								"$tb_float64": "0000000000003240"
+							},
+							"base_hp": {
+								"$tb_float64": "0000000000805b40"
+							},
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "water",
+							"defence": {
+								"$tb_float64": "cdcccccccccc3340"
+							},
+							"display_name": "Ripplet",
+							"distance_m_together": {
+								"$tb_float64": "000000aeac313540"
+							},
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": {
+								"$tb_float64": "8c3a058b757e4b40"
+							},
+							"hp": {
+								"$tb_float64": "cecccccccccc5e40"
+							},
+							"iv_attack": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_defence": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_hp": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"known_moves": [
+								"ripple_jab",
+								"undertow",
+								"ultimate_ripplet"
+							],
+							"landmarks_visited_together": 1,
+							"level": 3,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": {
+								"$tb_float64": "cecccccccccc5e40"
+							},
+							"move_charged": "undertow",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "ripple_jab",
+							"move_ultimate": "ultimate_ripplet",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": {
+								"$tb_float64": "518168a8597a5140"
+							},
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": {
+								"$tb_float64": "0000000000000000"
+							},
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "ripplet",
+							"swim_stamina_fraction": {
+								"$tb_float64": "000000000000f03f"
+							},
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-f9e0a97451080092dace74a67dc5b4a9",
+							"xp": 0
+						}
+					],
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-f9e0a97451080092dace74a67dc5b4a9": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"ripple_jab",
+									"undertow",
+									"ultimate_ripplet"
+								],
+								"loadout": {
+									"charged": "undertow",
+									"quick": "ripple_jab",
+									"ultimate": "ultimate_ripplet",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:character-40de6a9cb316a2fb4692ead878e4a6ee:altar_build:07409c11a734e4dbe77b8c7efdd83ce93555ae0ff26dcfc345d49b3ae1087120:8c938b8113f303cb079355c2a5dca619:place_building:b1"
+						],
+						"waystones_activated": {}
+					}
+				},
+				"character_id": "character-40de6a9cb316a2fb4692ead878e4a6ee",
+				"character_revision": 17,
+				"delivery_id": "creature_training:252e7adc59eccef9d2e42f608ee13af46890c4d01a661e95d44f678fe74f8971",
+				"intent": {
+					"creature_uid": "creature-f9e0a97451080092dace74a67dc5b4a9",
+					"expected_character_revision": 16,
+					"expected_level": 3,
+					"payment_item": "essence_water",
+					"spend_id": "c6457d68cc42e946cbb711870cb2141c"
+				},
+				"journal_revision": 1,
+				"kind": "creature_training",
+				"receipt": "essence_spend:character-40de6a9cb316a2fb4692ead878e4a6ee:c6457d68cc42e946cbb711870cb2141c:creature-f9e0a97451080092dace74a67dc5b4a9:3:essence_water:6:16",
+				"session_id": "efaa3d1830029904c2f5b4ee73931c0d",
+				"status": "accepted",
+				"version": 1,
+				"world_id": "slot-0",
+				"world_namespace": "a7c7b169021eb1ef0ece871f54aef9c3"
+			}
+		},
+		"reward_delivery_namespace": "a7c7b169021eb1ef0ece871f54aef9c3",
+		"version": 28,
+		"water_capture_claims": {},
+		"world_id": "slot-0",
+		"world_seed": 716412392
+	}
+}

@@ -35,7 +35,7 @@ F27 wild_defeat_essence | ON FIRST PASS exit0; +1Groundessence/+21reducedXP/exac
 F27 essence_node | ON FIRST PASS exit0/report20checks; +3Groundessence/+1AttunedGround on owner disk, accepted row+exactreceipt; independent review PASS; raw before/after saves retained; inherited starter/freeplay/6msetup, solo only; warnings retained
 F27 net essence_no_dup | ON OPEN
 
-CI SMOKE names from unchanged .github/workflows/ci.yml; every ON check OPEN.
+CI SMOKE names from unchanged .github/workflows/ci.yml; ON verdicts recorded below; all other checks OPEN.
 aggression | ON OPEN
 arena_contain | ON OPEN
 art | ON OPEN
@@ -49,11 +49,11 @@ build_two_creature_beds | ON OPEN
 catch_aim_slowdown | ON OPEN
 catching | ON OPEN
 cloudreach_arrival_walk | ON OPEN
-combat | ON OPEN
+combat | ON FIRST PASS exit0; real wild controller/movement/arena/hit+miss/typechart/win/no-autoheal/control-return; independent review PASS; inherited staging/crit-scale fixture disclosed; warnings retained
 combat_hud_left_column | ON OPEN
 dialogue_clears_the_world_hud | ON OPEN
 encounter_scaling | ON OPEN
-f27_altar_spend | ON OPEN
+f27_altar_spend | ON FIRST PASS exit0; controller paid6Water/RippletL3->4/one receipt+accepted saved row; independent source+disk review PASS; inherited grants/placement/relocation disclosed, single payment only; warnings retained
 f31_station_paid_path | ON OPEN
 free_build | ON OPEN
 gate_a_build_house | ON OPEN

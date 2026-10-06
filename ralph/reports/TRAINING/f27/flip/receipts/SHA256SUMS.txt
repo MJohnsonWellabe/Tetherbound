@@ -115,3 +115,13 @@ ec3554a0a222d665ceda18dd0db4f472b4bba9f178ea7d2f4eb85ce8594284cc  solo-f27-essen
 37cfa505d8694023956a12dc3da934b0687f8e0999712f3cf2dcc76286c4f682  solo-f27-essence-node-on/before-world.json.txt
 9953d7fd2dcb0b7ee858abe7502c401a25e803dd228db72a9892448c6c223e44  solo-f27-essence-node-on/after-character.json.txt
 c78ceac6a64579918361148f0747d038706994baabbe159ea9338bf0b108fd68  solo-f27-essence-node-on/after-world.json.txt
+5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  ci-f27-altar-spend-on/exit.txt
+ce3db577af8a9ad60be0bc6422247e7b2e44198fc84d56631668a6b58abf1071  ci-f27-altar-spend-on/r1-ci-f27-altar-on-20261006T0400Z.txt
+9686dc34161f47cbda7f3eb5d514f21b7f48dc78260e736a8247d7dbdf842fa2  ci-f27-altar-spend-on/stderr.txt
+c1c7c9e3d136b4463e39cb5f2eb0a1dec17016dd90d630a9d409b659aa683e0d  ci-f27-altar-spend-on/stdout.txt
+c40f5e9b11ba0a5c7d225036027b22f4d2ec060ac91d7691c41005aa97cb07ef  ci-f27-altar-spend-on/final-character.json.txt
+4b153f8a54e2067f5d0eb759454dca2af0e8c188ce705d5a8bdc3e65ecd338f2  ci-f27-altar-spend-on/final-world.json.txt
+5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  ci-combat-on/exit.txt
+78d719b5db28527808a72702a7ee3375cea2022eeb1dc8d1cde18870c808d313  ci-combat-on/r1-ci-combat-on-20261006T0405Z.txt
+9686dc34161f47cbda7f3eb5d514f21b7f48dc78260e736a8247d7dbdf842fa2  ci-combat-on/stderr.txt
+1cd2606b420c8d6340d628a6f8ddfa2d657a3776b68ebdb8130251d4704eda21  ci-combat-on/stdout.txt
