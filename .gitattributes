@@ -5,3 +5,4 @@
 # Preserve original native evidence bytes and their recorded hashes.
 ralph/reports/TRAINING/f28/r5/parser-first/** -text
 ralph/reports/TRAINING/f28/r5/offload-first/** -text
+ralph/reports/TRAINING/f28/r5/f48-existing-prepare/** -text
