@@ -180,7 +180,7 @@ func _complete_saddle_chain(game: Node, world: Node3D, director: Node, player: N
 	check(saddles == 1 and payload.get("party", []).size() == 1 \
 		and str(payload.party[0].get("uid", "")) == str(ally.uid),
 		"Actual owner disk holds exactly one crafted saddle and the same owned companion UID")
-	var world_instance := game.world.get_instance_id()
+	var world_instance: int = int(game.world.get_instance_id())
 	var world_id := str(game.world.world_id)
 	if not check(characters.apply(game, str(game.local.character_id)), "Production CharacterSave apply reloads the actual saved owner"):
 		return
