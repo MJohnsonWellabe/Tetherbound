@@ -1,0 +1,22 @@
+{
+  "inputs": {
+    "mode": "headless",
+    "timeout_minutes": "150",
+    "label": "r2-f22-gate-b15-delay02-20261006T1138Z",
+    "script": "tests/smoke_f22_pattern_bands.gd",
+    "checkout_ref": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+    "args": "--seeds=12 --trainers --band=cloudreach/gate_lower_cliffs --starters=terrapup --json=res://r2-f22-gate-b15-delay02-20261006T1138Z.json --config-patch=wind.burst_cost=15,wind.regen_delay=0.2"
+  },
+  "dispatched_utc": "2026-10-06T11:39:22.9487975Z",
+  "observed_render_count_before": 0,
+  "label": "r2-f22-gate-b15-delay02-20261006T1138Z",
+  "cap_authority_comment": 6014059487,
+  "local_priority_preserved": "R1 live tournament and priority P3 next local slot untouched; no local engine/import/render/writer launched.",
+  "qualification": "Hosted official4.7/default pacing; two-key resource batch comparison against retained hosted832 Gate control. No native fixed60/timing equivalence or acceptance claim.",
+  "status_code": 204,
+  "workflow_id": 367653314,
+  "run_id": 37457844923,
+  "workflow_head_sha": "603028087646d68e67fdcfbff2f976340934de6e",
+  "observed_status": "queued",
+  "observed_utc": "2026-10-06T11:40:12.1134273Z"
+}
