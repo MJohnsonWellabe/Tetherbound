@@ -6,6 +6,7 @@ extends SceneTree
 ## --seeds=12 --band=<substring> --json=<absolute output>
 ## A selected subset reports coverage=false and cannot certify all bands.
 const PILOT := preload("res://tests/helpers/f22_pattern_pilot.gd")
+const GEAR := preload("res://tests/helpers/f33_gear_fixture.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
@@ -28,6 +29,8 @@ var _trainers := false
 ## --named=<trainer id,...> (F22#4): those named trainers only, each with its
 ## authored F22 pattern row, judged on COMBAT §7's top-trainer bar.
 var _named: PackedStringArray = []
+## F33#2: --gear-tier / --gear-upgrade (tests/helpers/f33_gear_fixture.gd).
+var _gear: Dictionary = GEAR.from_args()
 
 
 func _init() -> void:
@@ -189,6 +192,7 @@ func _run() -> void:
 						if party.size() != 5 or foes.is_empty():
 							errors.append("missing actual species in " + str(entry.id))
 							continue
+						GEAR.equip(self, party, str(_gear.tier), int(_gear.upgrade))
 						var pilot := PILOT.new()
 						pilot.context = {"chapter": entry.chapter, "band": entry.id,
 							"floor_trainer": _trainers and _named.is_empty(),
@@ -253,7 +257,7 @@ func _run() -> void:
 	var coverage := _selection.is_empty() and rows.size() + gaps.size() * STARTERS.size() == cases.size() * STARTERS.size()
 	var receipt := {"kind": "actual flat-fixture C2; world/C3/authority proofs separate",
 		"pass": passed and coverage, "coverage": coverage, "seeds_per_band": _seeds,
-		"mode": "trainers" if _trainers else "wilds", "data_gaps": gaps,
+		"mode": "trainers" if _trainers else "wilds", "gear": GEAR.label(str(_gear.tier), int(_gear.upgrade)), "data_gaps": gaps,
 		"acceptance": false, "policy_scope": "quick/charged/spatial diagnostic; full F23/F24 policy and actual admission fixture required",
 		"switch_value": {"pass": switch_value, "tag_combo_live": combo_live,
 			"status": "full" if combo_live else "partial_no_f24: type matchup and per-identity HP only; F24 tag combo off, F22#2 not fully measured",

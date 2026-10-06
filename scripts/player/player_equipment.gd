@@ -263,6 +263,8 @@ func local_cold_regen_scale(realm: String, position: Vector3) -> float:
 				and position.y >= float(low[1]) and position.y <= float(high[1]) \
 				and position.z >= float(low[2]) and position.z <= float(high[2]):
 			penalty = maxf(penalty, float(zone.get("stamina_regen_penalty", 0.0)))
+	if penalty <= 0.0:
+		return 1.0 # Outside every zone: no worn-gear lookup on this per-frame path.
 	return cold_regen_scale(penalty)
 
 func static_duration_scale() -> float:
@@ -282,6 +284,12 @@ static func _gear_config() -> Dictionary:
 	var raw: Variant = preload("res://scripts/data/redesign_data.gd").json("res://data/config/gear.json")
 	_gear_rules = raw if raw is Dictionary else {}
 	return _gear_rules
+
+## F33#3: the trainer-gear hazard consumers (swim drowning and current, pond
+## submersion, Cloudreach cold, Stormwood Dynamo static, hazard terrain) are
+## gated together until each has its production-caller test.
+static func hazards_live() -> bool:
+	return _gear_enabled() and bool(_gear_config().get("feature_flags", {}).get("hazards_enabled", false))
 
 static func _gear_enabled() -> bool:
 	return bool(_gear_config().get("feature_flags", {}).get("runtime_enabled", false))

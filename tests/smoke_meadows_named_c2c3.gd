@@ -50,6 +50,7 @@ extends SceneTree
 ## framing (rendered captures), an earned-save party.
 
 const PILOT := preload("res://tests/helpers/f22_pattern_pilot.gd")
+const GEAR := preload("res://tests/helpers/f33_gear_fixture.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
@@ -86,6 +87,10 @@ var _selection := ""
 var _starter_only := ""
 var _party_level_override := 0
 var _json := ""
+## F33#2: equip every party member with this tier's Harness and Charm (and
+## upgrade) in the real Game.local record before each fight; "" = no gear.
+var _gear_tier: String = GEAR.from_args().tier
+var _gear_upgrade: int = GEAR.from_args().upgrade
 
 
 func _init() -> void:
@@ -173,6 +178,7 @@ func _run() -> void:
 							continue
 						foes.append(foe)
 					if party.size() != 5 or foes.size() != entry.foes.size(): break
+					GEAR.equip(self, party, _gear_tier, _gear_upgrade)
 					var pilot := PILOT.new()
 					pilot.context = {"chapter": "meadows", "band": entry.band,
 						"after_south_bridge": entry.kind == "top", "pattern_id": "named_" + str(entry.id)}
@@ -251,7 +257,7 @@ func _run() -> void:
 			errors.append("cannot write %s" % _json)
 		else:
 			file.store_string(JSON.stringify({"seeds": _seeds, "selection": _selection,
-				"party": {"lead": STARTERS, "retained": RETAINED, "level_override": _party_level_override},
+				"gear": GEAR.label(_gear_tier, _gear_upgrade), "party": {"lead": STARTERS, "retained": RETAINED, "level_override": _party_level_override},
 				"fixture": "production CombatManager + WildCreature bodies on a flat collider (combat_depth_pilot.gd)",
 				"rows": rows, "runs": runs, "errors": errors}, "  "))
 	for e in errors: print("MEADOWS_C2C3 ERROR: %s" % e)
@@ -337,3 +343,5 @@ static func _max(values: Array) -> float:
 	var best := 0.0
 	for v in values: best = maxf(best, float(v))
 	return best
+
+

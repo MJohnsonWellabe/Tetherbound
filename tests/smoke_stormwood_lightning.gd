@@ -22,6 +22,9 @@ func _run() -> void:
 		"test_impact_rechecks_fight_state_after_the_warning": 4,
 		"test_impact_hits_a_trainer_whose_fight_ended_before_it_landed": 3,
 		"test_process_negative_control_flag_off_hits_the_fighting_trainer": 4,
+		"test_charged_ground_host_tick_hits_and_each_receiver_applies_its_own_gear": 9,
+		"test_charged_ground_is_personal_idempotent_and_never_lethal": 4,
+		"test_charged_ground_tick_is_host_only": 1,
 	}
 	for method: String in methods:
 		var before := cases.assertion_count

@@ -11,6 +11,8 @@ uniform float band_width = 0.12;
 uniform float charm_band_center = 0.78;
 uniform float charm_band_width = 0.045;
 uniform float emission_energy = 0.7;
+uniform float harness_glow = 1.0;
+uniform float charm_glow = 1.0;
 varying float body_y;
 
 void vertex() {
@@ -18,12 +20,19 @@ void vertex() {
 }
 
 void fragment() {
-    float harness = 1.0 - smoothstep(band_width * 0.33, band_width * 0.5, abs(body_y - band_center));
-    float charm = 1.0 - smoothstep(charm_band_width * 0.25, charm_band_width * 0.5, abs(body_y - charm_band_center));
+    // A narrow trim: a crisp strap with a brighter core line, not a tinted slab.
+    float dh = abs(body_y - band_center);
+    float dc = abs(body_y - charm_band_center);
+    float harness = 1.0 - smoothstep(band_width * 0.42, band_width * 0.5, dh);
+    float charm = 1.0 - smoothstep(charm_band_width * 0.42, charm_band_width * 0.5, dc);
+    float h_core = 1.0 - smoothstep(0.0, band_width * 0.18, dh);
+    float c_core = 1.0 - smoothstep(0.0, charm_band_width * 0.2, dc);
     float h = harness * harness_color.a;
     float c = charm * charm_color.a;
-    vec3 tint = mix(harness_color.rgb, charm_color.rgb, c);
-    ALBEDO = tint;
-    EMISSION = tint * emission_energy * max(h, c);
-    ALPHA = max(h, c) * 0.78;
+    vec3 tint = mix(harness_color.rgb, charm_color.rgb, step(h, c));
+    float glow = mix(harness_glow, charm_glow, step(h, c));
+    float core = max(h_core * h, c_core * c);
+    ALBEDO = mix(tint * 0.85, vec3(1.0), core * 0.35);
+    EMISSION = tint * emission_energy * glow * (0.6 + core);
+    ALPHA = max(h, c) * 0.96;
 }

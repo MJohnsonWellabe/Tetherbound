@@ -51,9 +51,6 @@ class GameFixture extends Node:
 class Discoveries extends RefCounted:
 	var value := {}
 	func admission_landmarks() -> Dictionary: return value.duplicate(true)
-	func adopt_landmarks(discovered: Dictionary) -> bool:
-		value = discovered.duplicate(true)
-		return true
 
 class Session extends Node:
 	var game: Node
@@ -764,9 +761,17 @@ func test_cloud_portal_navigation_bind_rebases_only_host_proved_discoveries_befo
 		"after": session._character_authority.state(before.character_id)}
 	game.world.reward_deliveries[row.delivery_id] = row.duplicate(true)
 	game.local.data = row.after.duplicate(true)
+	# Review nit: the owner's map runs ahead of the proof (an extra region
+	# reveal), so only adopting the host's proof can produce the matching hash.
 	session.maps.value = discoveries.duplicate(true)
+	session.maps.value.cloudreach.append("three_bells_bridge")
+	var journaled: Array = session.messages.filter(func(m: Dictionary) -> bool: return m.get("op") == "journaled")
+	assert_false(journaled.is_empty(), "the host journals the grounded arrival to its owner")
+	if not journaled.is_empty():
+		assert_eq(journaled[-1].get("arrival_discoveries"), discoveries, "carrying the host's own proven navigation reveal")
 	session.host = false
 	service.receive_owner(_envelope({"op": "inputs_ack", "sequence": stream.cursor.sequence}))
+	if not journaled.is_empty(): service.receive_owner(journaled[-1].duplicate(true))
 	service.owner_settled(row)
 	var packet: Dictionary = session.messages[-1].duplicate(true)
 	assert_eq(packet.op, "rebase")
@@ -1271,7 +1276,8 @@ func test_rejoin_with_unreplayed_landmarks_readmits_on_the_hosts_held_set_and_pr
 	service.arm_owner(before, owner_seen)
 	assert_ne(service.local.prefix_hash, host_prefix, "before the readmit the two seeds differ (the G1 failure)")
 	service._readmit_owner(readmit)
-	assert_eq(session.maps.value, held, "the owner adopts the host's held landmarks")
+	assert_eq(service._discoveries(), held, "the owner adopts the host's held landmarks as its replay identity")
+	assert_eq(session.maps.value, owner_seen, "while its map keeps every landmark it saw")
 	assert_eq(service.local.prefix_hash, host_prefix, "and both input prefixes now start equal")
 	assert_eq(session.messages.back().get("op"), "readmitted")
 
@@ -1397,3 +1403,45 @@ func test_a_held_readmit_for_a_world_that_is_not_joined_is_dropped() -> void:
 	service.reset()
 	assert_true(service.held_readmit.is_empty(), "a disconnect clears a held readmit")
 
+
+func test_a_landmark_revealed_without_an_input_never_changes_the_owner_passive_identity() -> void:
+	# G1 follow-up (review-g1-landmarks.md finding 1): a manual landmark
+	# (Meadowhart herd) or a story-revealed one (Cloudreach sync_navigation)
+	# lands on the owner's map with no discovery input, so the host's replayed
+	# set never gains it. The owner's discovery identity (the seed of every
+	# rebase and readmit) must stay the replayed set; the map keeps the landmark.
+	var start := {"meadows": ["walked-landmark"]}
+	session.maps.value = start.duplicate(true)
+	service.arm_owner(before, start)
+	session.maps.value = {"meadows": ["walked-landmark", "story-revealed-landmark"]}
+	assert_eq(service._discoveries(), start, "a landmark with no input stays out of the replay identity")
+	service.record_input({"op": "discovery", "realm": "meadows", "from": [0.0, 0.0, 0.0], "to": [1.0, 0.0, 0.0],
+		"travel_valid": true, "new_landmarks": ["walked-second"]})
+	assert_eq(service._discoveries(), {"meadows": ["walked-landmark", "walked-second"]},
+		"a landmark the owner sent in a discovery input joins it, exactly as the host replays it")
+	assert_eq(session.maps.value.meadows.size(), 2, "the owner's map is never rewritten by the identity")
+
+
+func test_cloud_reentry_without_a_host_proof_keeps_the_identity_whatever_the_map_reveals() -> void:
+	# Review BLOCK finding 1: a guest that already explored Cloudreach (its map
+	# has region reveals the replayed set never gained) portals back in. The host
+	# proves no first-entry reveal, so it rebases on its replayed set; the owner
+	# must too, never its live map.
+	var identity := {"cloudreach": ["realm_gate_crag"]}
+	session.host = false
+	service.arm_owner(before, identity)
+	session.maps.value = {"cloudreach": ["realm_gate_crag", "three_bells_bridge"]}
+	var row := {"kind": "creature_training", "version": 2, "action": "portal_arrival", "status": "accepted",
+		"receipt": "reentry-receipt", "delivery_id": "fixture-reentry-delivery", "character_id": before.character_id,
+		"intent": {"permit_id": "reentry-permit", "realm": "cloudreach", "entry_id": "cloudreach_arrival_from_meadows"},
+		"after": session._character_authority.state(before.character_id)}
+	game.local.data = row.after.duplicate(true)
+	var discoveries := service._discoveries()
+	assert_eq(discoveries, identity, "no proof: the map's extra reveal stays out of the identity")
+	session.messages.clear()
+	service.owner_settled(row)
+	var rebases: Array = session.messages.filter(func(m: Dictionary) -> bool: return m.get("op") == "rebase")
+	assert_false(rebases.is_empty(), "the arrival settlement rebases")
+	if not rebases.is_empty():
+		assert_eq(rebases[-1].discoveries_hash, PREP.fingerprint({"discovered": identity}),
+			"seeded from the replayed identity, exactly what the host's unproven rebase uses")

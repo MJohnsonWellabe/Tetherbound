@@ -1183,6 +1183,15 @@ func _process(delta: float) -> void:
 	map.mark_visited(here)
 	map.update_region(here)
 	var landmarks_gained := int(map.discovered_landmark_count()) - landmarks_before
+	if record_passive and not canonical_passive and landmarks_gained > 0:
+		# Owner-passive: a landmark the host already holds (its replay identity)
+		# is not replayed again, so it earns no visit credit here either.
+		var identity: Variant = session.call("owner_passive_discoveries") if session.has_method("owner_passive_discoveries") else null
+		if identity is Dictionary:
+			var known: Array = (identity as Dictionary).get(current_realm, [])
+			landmarks_gained = 0
+			for id: String in (map.get("_discovered") as Dictionary):
+				if not discovered_before.has(id) and not known.has(id): landmarks_gained += 1
 	if not canonical_passive and landmarks_gained > 0 and party != null:
 		for member: Variant in (party.call("members") as Array):
 			BOND_MILESTONES.credit_landmark_visit(member as RefCounted)

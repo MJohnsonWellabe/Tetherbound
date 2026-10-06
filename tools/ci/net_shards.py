@@ -24,7 +24,7 @@ import sys
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 # Must equal the `shard:` matrix in ci.yml (tests/test_ci_net_shards.py).
-SHARD_COUNT = 21
+SHARD_COUNT = 23
 # Smoke time per shard: a 13-minute job less ~140 s of checkout, Godot setup
 # and upload (measured: 81-133 s before the first smoke, ~10 s after).
 SHARD_SMOKE_BUDGET_SECONDS = 640
@@ -48,6 +48,12 @@ MEASURED_SECONDS = {
     "f18_fixture_teaching": 232,
     "f20_home_diagnostic": 143,
     "f20_ending": 595,
+    # Provisional (lane A, tb/f17): F33/F34 net smokes at ~1.4x their local wall
+    # time (forward_camp 184 s, harness_max_hp 170 s; charged ground crosses two
+    # realms) until three green full runs give real durations.
+    "stormwood_charged_ground": 420,
+    "harness_max_hp": 240,
+    "forward_camp": 260,
     "behind_character_joins_ahead_world": 129,
     "boss_rewards_each_participant": 228,
     "catch_race": 158,
@@ -121,7 +127,7 @@ UNMEASURED_SECONDS = max(v for k, v in MEASURED_SECONDS.items() if k not in ISOL
 #   for f in tests/smoke_net_*.gd; do
 #     head -5 "$f" | grep -qE '^#[[:space:]]*peers:[[:space:]]*2$' && echo "$f"
 #   done | wc -l
-DISCOVERY_FLOOR = 36
+DISCOVERY_FLOOR = 62
 # Named registration on top of the count: a smoke that loses its `# peers: 2`
 # header in a rebase must fail discovery, not silently drop out of CI. Each
 # lane that ships a net smoke adds its file here.
@@ -135,6 +141,7 @@ ROSTER = (
     "storage_concurrency", "stormwood_hosted_trainers", "stormwood_livewire", "stormwood_realms",
     "trade", "two_peers_boot", "water_alpha", "water_mounted_swimming",
     "water_swim_stone_late_join", "water_swimming",
+    "stormwood_charged_ground", "harness_max_hp", "forward_camp",
 )
 
 PEERS_RE = re.compile(r"^#\s*peers:\s*2\s*$")
