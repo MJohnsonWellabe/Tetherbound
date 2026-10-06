@@ -108,11 +108,16 @@ func _run() -> void:
 	# of it road lookups in the regreen build. The host's guests are waiting
 	# on that frame; keep it bounded.
 	var landed := Time.get_ticks_msec()
+	var preparation_started := landed
 	var heal_frame_ms := 0
-	while not bool(healing.call("applied")):
+	while not bool(healing.call("applied")) and Time.get_ticks_msec() - preparation_started < FADE_TIMEOUT_MS:
 		await process_frame
 		heal_frame_ms = maxi(heal_frame_ms, Time.get_ticks_msec() - landed)
 		landed = Time.get_ticks_msec()
+	if not bool(healing.call("applied")):
+		_fail("(live) freeing preparation did not complete within the existing fade timeout")
+		_finish()
+		return
 	print("(live) longest frame while the freeing landed: %d ms" % heal_frame_ms)
 	if heal_frame_ms > MAX_HEAL_FRAME_MS:
 		_fail("(live) the freeing held one frame for %d ms (limit %d ms)" % [heal_frame_ms, MAX_HEAL_FRAME_MS])
