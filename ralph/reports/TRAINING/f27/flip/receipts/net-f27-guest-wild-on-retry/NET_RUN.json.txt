@@ -1,0 +1,160 @@
+{
+	"budgets": {
+		"desync_frames": 240.0,
+		"heartbeat_frames": 60.0,
+		"hello_budget_s": 180.0,
+		"near_tolerance_motion_m": 4.0,
+		"near_tolerance_rest_m": 1.5,
+		"smoke_step_budget_s_2peer": 300.0,
+		"smoke_step_budget_s_wide": 1500.0,
+		"step_budget_frames": 3000.0
+	},
+	"failures": [
+		"the guest holds exactly one new defeat receipt ([])",
+		"the host's row for the guest is its accepted wild_defeat share ({  })",
+		"the guest received its type essence (+0)",
+		"the guest's creature gained XP from the host share",
+		"the host participant holds exactly one new defeat receipt ([])",
+		"the host participant received its type essence (+0)"
+	],
+	"fatal": "",
+	"net_conditions": {},
+	"peers": [
+		{
+			"command_timeout_observation": null,
+			"control_port": 61085,
+			"exited": true,
+			"hashes": [
+				949396019,
+				949396019,
+				949396019
+			],
+			"hello": {
+				"enet_port": 28841.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "16aa8dbb6e18",
+				"peer": 0.0,
+				"pid": 13372.0,
+				"role": "host",
+				"type": "hello",
+				"user_data_dir": "D:/tetherbound/.artifacts/r1-f27-flip/net-f27-guest-wild-on-retry/home-0/Godot/app_userdata/Tetherbound"
+			},
+			"index": 0,
+			"last_heartbeat": {
+				"context": "world",
+				"frame": 3005.0,
+				"physics_frame": 19440.0,
+				"pos": [
+					-4.63784551620483,
+					-0.627502024173737,
+					64.3155136108398
+				],
+				"session_peers": [
+					1.0,
+					1530664930.0
+				],
+				"state_hash": 949396019.0,
+				"t": 813.962,
+				"type": "heartbeat"
+			},
+			"pid": 13372,
+			"role": "host",
+			"unexpected_exit": false
+		},
+		{
+			"command_timeout_observation": {
+				"action": "move_to",
+				"coordinator_deadline_ms": 410104.0,
+				"coordinator_observed_ms": 410108,
+				"heartbeat": {
+					"context": "world",
+					"frame": 22957.0,
+					"physics_frame": 11580.0,
+					"pos": [
+						-0.469218462705612,
+						4.35082960128784,
+						15.7953577041626
+					],
+					"session_peers": [
+						1.0,
+						956009174.0
+					],
+					"state_hash": 949396019.0,
+					"t": 395.924,
+					"type": "heartbeat"
+				},
+				"heartbeat_known": true,
+				"heartbeat_receive_age_ms": 835.0,
+				"heartbeat_receive_time_known": true,
+				"heartbeat_received_ms": 409273.0,
+				"id": "s17",
+				"phase": "timeout_before_finish"
+			},
+			"control_port": 61086,
+			"exited": true,
+			"hashes": [
+				949396019,
+				949396019,
+				949396019
+			],
+			"hello": {
+				"enet_port": 28842.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "16aa8dbb6e18",
+				"peer": 1.0,
+				"pid": 17756.0,
+				"role": "client",
+				"type": "hello",
+				"user_data_dir": "D:/tetherbound/.artifacts/r1-f27-flip/net-f27-guest-wild-on-retry/home-1/Godot/app_userdata/Tetherbound"
+			},
+			"index": 1,
+			"last_heartbeat": {
+				"context": "world",
+				"frame": 23915.0,
+				"physics_frame": 18859.0,
+				"pos": [
+					-1.58894634246826,
+					4.65094041824341,
+					14.0108127593994
+				],
+				"session_peers": [
+					1.0,
+					1530664930.0
+				],
+				"state_hash": 949396019.0,
+				"t": 814.49,
+				"type": "heartbeat"
+			},
+			"pid": 17756,
+			"role": "client",
+			"unexpected_exit": false
+		}
+	],
+	"proxies": [],
+	"run_id": "r1-f27-guest-wild-on-20261006T0440Z",
+	"scene": "title",
+	"state_hash_excluded_keys": [
+		"party",
+		"inventory",
+		"hotbar",
+		"satiety",
+		"map",
+		"realm_maps",
+		"alpha_pins",
+		"player_pose",
+		"clock_elapsed_seconds",
+		"current_realm",
+		"pending_realm_entry",
+		"realm_hearts",
+		"version"
+	],
+	"state_hash_hashed_keys": [
+		"flags",
+		"placed_buildings",
+		"farm_plots",
+		"death_satchels",
+		"harvested_vegetation",
+		"felled_vegetation",
+		"day"
+	]
+}

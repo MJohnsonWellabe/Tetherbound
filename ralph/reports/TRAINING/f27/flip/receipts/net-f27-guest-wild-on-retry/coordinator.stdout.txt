@@ -1,0 +1,56 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=13372 control_port=61085 home=D:\tetherbound\.artifacts\r1-f27-flip\net-f27-guest-wild-on-retry/home-0 log=D:\tetherbound\.artifacts\r1-f27-flip\net-f27-guest-wild-on-retry/peer-0.log
+coordinator: launched peer 1 (client) pid=17756 control_port=61086 home=D:\tetherbound\.artifacts\r1-f27-flip\net-f27-guest-wild-on-retry/home-1 log=D:\tetherbound\.artifacts\r1-f27-flip\net-f27-guest-wild-on-retry/peer-1.log
+coordinator: peer 1 hello: {"enet_port":28842.0,"godot_version":"4.7-stable (official)","main_sha":"16aa8dbb6e18","peer":1.0,"pid":17756.0,"role":"client","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-f27-guest-wild-on-retry/home-1/Godot/app_userdata/Tetherbound"}
+coordinator: peer 0 hello: {"enet_port":28841.0,"godot_version":"4.7-stable (official)","main_sha":"16aa8dbb6e18","peer":0.0,"pid":13372.0,"role":"host","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-f27-guest-wild-on-retry/home-0/Godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: peer 0 boot: booted world (240 settle frames)
+PASS: peer 1 boot: booted world (240 settle frames)
+PASS: peer 0 party_grant: 'terrapup' at level 9 joined the party (1 member(s))
+PASS: peer 1 party_grant: 'terrapup' at level 9 joined the party (1 member(s))
+PASS: peer 0 host: hosting udp/28841 as peer 1
+PASS: peer 1 join: joined 127.0.0.1:28841 as peer 956009174 after 41 frames; snapshot applied; 2 peer(s) in registry
+PASS: peer 0 expect_peers: registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: peer 1 expect_peers: registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: peer 0 deploy_creature: deployed AllyCreature
+PASS: peer 1 deploy_creature: deployed AllyCreature
+PASS: peer 0 engage_wild: engaged bramblebun as encounter 1:1 (bound after 0 frame(s))
+PASS: host minted a shared wild record
+PASS: the guest was told the fight exists and can be joined
+PASS: guest joined the host's wild record (joined 1:1 beside 'bramblebun' at (-13.1, 64.9))
+PASS: the guest's strikes brought the shared opponent down
+PASS: peer 1 leave: client left cleanly after 0 frames
+PASS: peer 0 expect_peers: registry reports 1 peer(s) after 17 frames (0.5 s)
+PASS: peer 1 production_join: title returning entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:28841 as peer 2082816263 after 224 frames
+projection diff (host stream error ):
+  .party[0].happiness owner=54.8051036550003 host=54.8047703216669
+  .party[0].nourishment owner=68.5707601366661 host=68.5683156922216
+wild runtime: { "1:1": { "has_source": true, "peers": {  }, "pending_actor": "[]", "phase": "done", "proposals": [{ "committed": true, "id": "1:1:enemy:1", "peer": 956009174.0, "presented": true }], "resolved": false, "result": { "code": "wild_training_unavailable", "durable": false, "ok": false, "resolved": false }, "wild_owner": true } }
+passive peer 0: { "altar_original": false, "committing": false, "host_stream": { "checkpoint": "", "checkpoint_keys": [], "cursor_sequence": 736.0, "error": "", "keys": ["peer", "character", "id", "world_id", "world_namespace", "epoch", "started_ms", "cursor", "revision", "seen", "checkpoint", "error", "travel_reset"] }, "is_host": true, "local": { "acked": <null>, "admission_pending": <null>, "error": <null>, "inputs": 0.0, "rebase": false, "sequence": <null> }, "pending": [], "recording_active": false, "saving": false }
+passive peer 1: { "altar_original": false, "committing": false, "is_host": false, "local": { "acked": 736.0, "admission_pending": false, "error": "", "inputs": 2.0, "rebase": false, "sequence": 738.0 }, "pending": [], "recording_active": true, "saving": false }
+FAIL: the guest holds exactly one new defeat receipt ([])
+FAIL: the host's row for the guest is its accepted wild_defeat share ({  })
+FAIL: the guest received its type essence (+0)
+FAIL: the guest's creature gained XP from the host share
+PASS: host admitted party equals the guest's: no legacy local award on top ([{ "level": 9.0, "species_id": "terrapup", "uid": "creature-381a5043b70911837a456f4f198dca8d", "xp": 0.0 }] vs [{ "level": 9.0, "species_id": "terrapup", "uid": "creature-381a5043b70911837a456f4f198dca8d", "xp": 0.0 }])
+PASS: host admitted items equals the guest's: no legacy local award on top ({ "essence_air": 0.0, "essence_dark": 0.0, "essence_electric": 0.0, "essence_fire": 0.0, "essence_ground": 0.0, "essence_ice": 0.0, "essence_psychic": 0.0, "essence_water": 0.0, "tether_candy": 0.0 } vs { "essence_air": 0.0, "essence_dark": 0.0, "essence_electric": 0.0, "essence_fire": 0.0, "essence_ground": 0.0, "essence_ice": 0.0, "essence_psychic": 0.0, "essence_water": 0.0, "tether_candy": 0.0 })
+PASS: host admitted defeat_receipts equals the guest's: no legacy local award on top ([] vs [])
+FAIL: the host participant holds exactly one new defeat receipt ([])
+FAIL: the host participant received its type essence (+0)
+PASS: peer 1 leave: client left cleanly after 0 frames
+PASS: peer 0 expect_peers: registry reports 1 peer(s) after 9 frames (0.7 s)
+PASS: peer 1 production_join: title returning entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:28841 as peer 1530664930 after 213 frames
+PASS: after reconnect party unchanged ([{ "level": 9.0, "species_id": "terrapup", "uid": "creature-381a5043b70911837a456f4f198dca8d", "xp": 0.0 }])
+PASS: after reconnect items unchanged ({ "essence_air": 0.0, "essence_dark": 0.0, "essence_electric": 0.0, "essence_fire": 0.0, "essence_ground": 0.0, "essence_ice": 0.0, "essence_psychic": 0.0, "essence_water": 0.0, "tether_candy": 0.0 })
+PASS: after reconnect defeat_receipts unchanged ([])
+PASS: peer 1 save_reload_here: client character reload preserved party=true selection=true hosted_world=true
+PASS: after reload party unchanged ([{ "level": 9.0, "species_id": "terrapup", "uid": "creature-381a5043b70911837a456f4f198dca8d", "xp": 0.0 }])
+PASS: after reload items unchanged ({ "essence_air": 0.0, "essence_dark": 0.0, "essence_electric": 0.0, "essence_fire": 0.0, "essence_ground": 0.0, "essence_ice": 0.0, "essence_psychic": 0.0, "essence_water": 0.0, "tether_candy": 0.0 })
+PASS: after reload defeat_receipts unchanged ([])
+FAIL: the guest holds exactly one new defeat receipt ([])
+FAIL: the host's row for the guest is its accepted wild_defeat share ({  })
+FAIL: the guest received its type essence (+0)
+FAIL: the guest's creature gained XP from the host share
+FAIL: the host participant holds exactly one new defeat receipt ([])
+FAIL: the host participant received its type essence (+0)

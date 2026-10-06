@@ -1,5 +1,5 @@
 R1 existing smoke coverage (OPEN; no flip acceptance claim)
-Product head: 93487a4e586c0e90e6261a136f9809cb6122d3c6 (full prior suite on374601 plus affected revalidation)
+Product head: d4f2af753795087b9d852afffe961016cb5c1a1c (predecessor full suite plus reviewed round/guard affected revalidation)
 Config committed OFF. See R1_PROGRESS.txt for first-attempt receipts.
 
 Fixture assertion coverage (reviewed reuse: predecessor full evidence + repaired-source 100 affected cases; 6085 unchanged cases carried forward under RD36):
@@ -14,7 +14,7 @@ client_trainer_rewards | OPEN | OPEN
 cloudreach_riding | OPEN | OPEN
 deploy_two_creatures | OPEN | OPEN (unowned exception)
 f22_forced_break | OPEN | OPEN
-f27_guest_wild_win | FIRST FAIL startup exit2 host boot silent150sec; both titlehellos PASS, no combat. Retry OPEN | N/A: manual flag-ON authority proof
+f27_guest_wild_win | RETRY FAIL actualsettlement exit1/6rewardfailures: guestkill+productionrejoin PASS, no XP/essence/receipt for eitherpeer, wild_training_unavailable. Director frozen-opponent guard d4f2af reviewed/final OFF+ON98/1033PASS; live recovery OPEN; FIRST startupFAIL retained | N/A: manual flag-ON authority proof
 fly | OPEN | OPEN
 gate_opens_for_both | OPEN | OPEN
 hearts | OPEN | OPEN
@@ -39,7 +39,7 @@ CI SMOKE names from unchanged .github/workflows/ci.yml; ON verdicts recorded bel
 aggression | ON OPEN
 arena_contain | ON OPEN
 art | ON OPEN
-audio | ON OPEN
+audio | ON FIRST PASS exit0; realworld footsteps/combatmixer/bandambience; devicehearing nottested; rawreceipts retained
 authored_camps | ON OPEN
 backpack_player_eats | ON FIRST PASS exit0; physicalSatchel eaterpicker/playerrow/satiety40->58/berries5->4/buff; existingstand-inPlayer/grants
 boss | ON OPEN
@@ -61,7 +61,7 @@ gate_a_opening_segment | ON OPEN
 gate_a_rest_torch | ON OPEN
 gate_e_finale | ON OPEN
 hud_freed_combat_prompt_lifecycle | ON FIRST PASS exit0/10checks; productionHUD/director freedwinner recovery; existingminimalfixture
-input | ON OPEN
+input | ON FIRST PASS exit0; actualactionmovement/animation/jump/staminadebit; devicehardwareuntested
 menu | ON OPEN
 menu_open_does_not_offer_to_drop | ON OPEN
 modal_stacking | ON FIRST PASS exit0; realUI menucontrols/refusedoverpicker+dialogue/recoveredafterclose; rawreceipts retained
@@ -94,3 +94,5 @@ wild_streaming | ON OPEN
 Tournament ON FIRST | FAIL exit1: quarter durable rewards PASS; semi both first strikes PASS, team completion command no verdict at unchanged 95000ms. Diagnosis OPEN. receipts/net-tournament-on-first
 Round identity repair93487a4e58 focused six-file coverage | OFF PASS union100tests/1318assertions/exit0 + ON PASS100/1318/exit0; all stderr empty. Full predecessor suite source374601 retained separately; fixed tournament live proof OPEN.
 Tournament fixed-source ON RETRY | FAIL startup exit2 hello180sec, no combat; receipts/net-tournament-on-retry. Repaired completion acceptance remains OPEN.
+
+Frozen-opponent guard d4f2af | Corrected RED unchanged93487 one exact-opponent failure; final corrected OFF+ON each98tests/1033assertions/0failed/exit0/empty stderr; independent review. Live co-op reward recovery OPEN.

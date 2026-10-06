@@ -1,0 +1,16 @@
+# Net smoke run r1-f27-guest-wild-on-20261006T0440Z
+
+Scene: title
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=13372 exited=true unexpected_exit=false
+- peer 1 (client) pid=17756 exited=true unexpected_exit=false
+
+FAILURES:
+- the guest holds exactly one new defeat receipt ([])
+- the host's row for the guest is its accepted wild_defeat share ({  })
+- the guest received its type essence (+0)
+- the guest's creature gained XP from the host share
+- the host participant holds exactly one new defeat receipt ([])
+- the host participant received its type essence (+0)

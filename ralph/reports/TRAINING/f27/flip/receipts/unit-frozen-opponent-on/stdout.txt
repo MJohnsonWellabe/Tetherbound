@@ -1,0 +1,39 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_shared_opponent_cue_shape.gd,test_shared_wild_host_fight.gd,test_f27_guest_wild_share.gd,test_director_join_snapshot.gd,test_actor_vitals_authority.gd: 5 of 799 test files
+  ok    test_actor_vitals_authority.gd :: test_actor_alias_and_pooled_body_rejoin_require_current_unique_generation
+  ok    test_actor_vitals_authority.gd :: test_actual_heal_stages_no_cost_then_commits_once_with_per_creature_cooldown
+  ok    test_actor_vitals_authority.gd :: test_actual_personal_stat_carriers_admit_defaults_and_refuse_bad_identity_shapes
+  ok    test_actor_vitals_authority.gd :: test_departed_actor_hp_waits_for_exact_durable_handoff_and_stays_private
+  ok    test_actor_vitals_authority.gd :: test_lost_ack_cumulative_recovery_and_latest_ack_reject_foreign_healthy_reseed
+  ok    test_actor_vitals_authority.gd :: test_owner_write_loss_keeps_accepted_hp_and_requires_real_retry_write
+  ok    test_actor_vitals_authority.gd :: test_prepared_writer_never_flushes_a_reentrant_replacement_fallback
+  ok    test_actor_vitals_authority.gd :: test_private_stage_world_failure_restores_hp_revision_and_replay_history
+  ok    test_actor_vitals_authority.gd :: test_round_reseat_without_uid_keeps_the_bound_active_creature
+  ok    test_actor_vitals_authority.gd :: test_same_admission_retains_personal_sources_but_exposes_only_proved_actor_power
+  ok    test_actor_vitals_authority.gd :: test_trainer_round_reseat_restores_a_departed_guests_retained_row
+  ok    test_actor_vitals_authority.gd :: test_trainer_round_waits_for_original_vitals_before_reseat_and_send_out
+  ok    test_director_join_snapshot.gd :: test_deployment_announced_before_any_session_is_sent_once_the_session_is_multi_peer
+  ok    test_director_join_snapshot.gd :: test_initial_join_and_reconnect_hold_then_resume_deployed_creature_announcement
+  ok    test_director_join_snapshot.gd :: test_native_guest_killing_strike_advances_host_trainer_round_once
+  ok    test_director_join_snapshot.gd :: test_native_realm_rpc_reaches_connected_peer_and_refuses_departed_or_unready_receiver
+  ok    test_director_join_snapshot.gd :: test_native_trainer_hp_fixture_survives_projectile_snapshot
+  ok    test_director_join_snapshot.gd :: test_solo_deployment_that_becomes_a_host_records_once_and_stops_holding
+  ok    test_f27_guest_wild_share.gd :: test_a_creature_knocked_out_in_the_fight_earns_no_share
+  ok    test_f27_guest_wild_share.gd :: test_a_heal_after_the_fight_is_not_overwritten_by_the_share
+  ok    test_f27_guest_wild_share.gd :: test_a_v1_training_row_follows_an_accepted_v3_action_row
+  ok    test_f27_guest_wild_share.gd :: test_owner_plan_accepts_only_the_owner_holding_the_settled_vitals
+  ok    test_f27_guest_wild_share.gd :: test_retained_share_duty_validates_and_rejects_tampering
+  ok    test_f27_guest_wild_share.gd :: test_settlement_applies_host_saved_hp_and_faint_only
+  ok    test_f27_guest_wild_share.gd :: test_share_action_requires_the_host_frozen_win
+  ok    test_f27_guest_wild_share.gd :: test_share_pays_once_on_the_settled_record_with_battle_credit_and_mood
+  ok    test_f27_guest_wild_share.gd :: test_wild_scope_is_never_a_trainer_round_scope
+  ok    test_shared_opponent_cue_shape.gd :: test_initialized_native_tree_preserves_all_shared_cue_assertions
+  ok    test_shared_wild_host_fight.gd :: test_catch_pause_suspends_authority_physics_and_breakout_resumes_prior_state
+  ok    test_shared_wild_host_fight.gd :: test_shared_runtime_forwards_pick_and_host_hit_through_its_authority_adapter
+  ok    test_shared_wild_host_fight.gd :: test_shared_runtime_never_claims_the_host_as_the_local_fallback_peer
+  ok    test_shared_wild_host_fight.gd :: test_terminal_outcome_is_latched_so_ecology_can_finalize_once
+  ok    test_shared_wild_host_fight.gd :: test_warrens_guardian_guest_admission_rejects_wrong_body_realm_species_and_terminal_record
+  ok    test_shared_wild_host_fight.gd :: test_warrens_guardian_guest_admission_selects_only_the_active_matching_announcement
+
+34 tests, 325 assertions, 0 failed
