@@ -15,6 +15,7 @@ uniform float opacity = 0.8;
 uniform float age = 0.0;
 uniform float glow_strength = 1.4;
 uniform float breakup = 0.35;
+uniform float scorch_breakup = 0.0;
 uniform float ring_width = 0.12;
 uniform float seed = 0.0;
 uniform int crack_count = 7;
@@ -55,9 +56,11 @@ void fragment() {
 	if (mode == 0) {
 		float body = 1.0 - smoothstep(edge * 0.55, edge * 0.92, r);
 		float soot = fbm(centered * 7.0 + seed);
+		body *= mix(1.0, smoothstep(0.27, 0.46, soot + (n - 0.35) * 0.65), scorch_breakup);
 		alpha = body * (0.55 + 0.45 * soot);
 		albedo = mix(mark_colour.rgb * 0.6, mark_colour.rgb * 1.5, soot);
 		float rim = smoothstep(edge * 0.40, edge * 0.70, r) * (1.0 - smoothstep(edge * 0.70, edge * 0.92, r));
+		rim *= mix(1.0, smoothstep(0.43, 0.68, soot), scorch_breakup);
 		float embers = smoothstep(0.55, 0.85, fbm(centered * 11.0 + vec2(seed)));
 		float heat = pow(1.0 - age, 2.2);
 		emission = glow_colour.rgb * glow_strength * heat * (rim * 0.8 + embers * body * 0.9);

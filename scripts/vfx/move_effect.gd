@@ -772,6 +772,7 @@ func _add_ground_mark(profile: Dictionary, centre: Vector3, scale: float, born: 
 	material.set_shader_parameter("opacity", 0.0)
 	material.set_shader_parameter("glow_strength", float(profile.get("glow_strength", 1.4)))
 	material.set_shader_parameter("breakup", float(profile.get("breakup", 0.35)))
+	material.set_shader_parameter("scorch_breakup", float(profile.get("scorch_breakup", 0.0)))
 	material.set_shader_parameter("ring_width", float(profile.get("ring_width", 0.12)))
 	material.set_shader_parameter("crack_count", int(profile.get("crack_count", 7)))
 	material.set_shader_parameter("seed", float(_rng.randi() % 997))

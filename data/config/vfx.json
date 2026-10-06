@@ -808,6 +808,7 @@
               "colour": "#2b1d14",
               "glow_colour": "#ff6a1a",
               "glow_strength": 2.2,
+              "scorch_breakup": 0.85,
               "opacity": 0.88,
               "hold": 0.65,
               "lift_m": 0.02,
