@@ -1,0 +1,16 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+PASS: Game autoload is available
+PASS: Game party is available
+PASS: the production party holds an available ally
+PASS: the production HUD built its exploration legend and contextual prompt
+PASS: the real EncounterDirector is the arbiter's published winner
+PASS: the bound ally produces the director's real Put-away offer
+PASS: PlaygroundHUD yields the director-owned prompt to CombatHUD
+PASS: the live director prompt suppresses the duplicate legend action
+PASS: the winning EncounterDirector is actually freed
+PASS: a freed cached winner is treated as absent without touching its class
+PASS: the available ally action returns after the stale director disappears
+PASS: stale-winner recovery does not invent an unavailable alternate-slot action
+
+PASS: freed EncounterDirector winner is safe and HUD action availability recovers

@@ -1,0 +1,15 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WARNING: HUD has no player; readout will stay empty
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://scripts/ui/playground_hud.gd:1068)
+       [1] _run (res://tests/smoke_satchel_owns_hotbar.gd:79)
+  ..    axe assigned to bar slot 1 (hotbar_2)
+  ok    no menu: hotbar_2 put the axe in hand
+  ok    Satchel open: hotbar_2 fired nothing
+  ok    Satchel open: the d-pad moved focus to slot 0
+  ok    close B owned through release; fresh world B heals (held stack: false)
+  ok    close B owned through release; fresh world B heals (held stack: true)
+
+Satchel owns the d-pad: OK

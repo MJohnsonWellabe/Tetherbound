@@ -1,0 +1,10 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+  ok    set_world_hud_visible reaches PlaygroundHUD and CombatHUD
+  ok    craft_panel.gd hides both layers on open and restores them on close
+  ok    storage_panel.gd hides both layers on open and restores them on close
+  ok    shop_panel.gd hides both layers on open and restores them on close
+  ok    swap_panel.gd hides both layers on open and restores them on close
+  ok    creature_bed_panel.gd hides both layers on open and restores them on close
+
+PASS: every station panel hides both world HUD layers and gives them back

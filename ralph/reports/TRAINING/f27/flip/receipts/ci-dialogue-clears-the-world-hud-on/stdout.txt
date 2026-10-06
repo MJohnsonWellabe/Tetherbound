@@ -1,0 +1,8 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+  ok    'grandpa_house' is on screen
+  ok    4 visible HUD widgets, none reaching the box [P: (211.2, 772.0), S: (1497.6, 252.0)]
+  ok    the bottom dock stands down for the conversation and comes back after it
+
+dialogue vs world HUD, measured at (1920, 1080)
+PASS: nothing the world HUD draws composites through the dialogue box

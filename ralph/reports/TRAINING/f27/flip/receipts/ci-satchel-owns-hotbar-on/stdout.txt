@@ -1,0 +1,10 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+  ..    axe assigned to bar slot 1 (hotbar_2)
+  ok    no menu: hotbar_2 put the axe in hand
+  ok    Satchel open: hotbar_2 fired nothing
+  ok    Satchel open: the d-pad moved focus to slot 0
+  ok    close B owned through release; fresh world B heals (held stack: false)
+  ok    close B owned through release; fresh world B heals (held stack: true)
+
+Satchel owns the d-pad: OK

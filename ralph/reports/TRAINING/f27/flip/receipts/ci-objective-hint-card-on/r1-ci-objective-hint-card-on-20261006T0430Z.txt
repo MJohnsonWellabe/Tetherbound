@@ -1,0 +1,19 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WARNING: HUD has no player; readout will stay empty
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://scripts/ui/playground_hud.gd:1068)
+       [1] _run (res://tests/smoke_objective_hint_card.gd:71)
+        measured against 7 visible widgets: BottomDock, PartyStrip, VitalsCluster, PlayerHealthBar, Minimap, ObjectiveBlock, DaytimeReadout
+  ok    28 authored hints all fit: tallest card 239px, band 168-490 (83px spare)
+        tallest was: Choose your three with Halda. Assign tired or unhappy entrants to Creature Beds with E, then sleep at your Bedroll. Feed hungry entrants; their selection cards show who still needs care. Your other two do not need to qualify for this round.
+  ok    Game.objective_hint reaches the card's own label
+  ok    a rung with no authored hint draws nothing
+  ok    the card stands down on its own deadline
+  ok    shortest authored objective wraps to 2 line(s) and uses its 166.0px measured plate: Make camp for your team.
+  ok    the objective plate holds its longest authored line (141px of text in a 211px plate)
+  ok    all 28 authored objective titles fit within OBJECTIVE_LINES (4) at (1920, 1080) -- none clipped
+
+objective hint card, measured at (1920, 1080)
+PASS: the objective hint reaches the screen and its card fits its band

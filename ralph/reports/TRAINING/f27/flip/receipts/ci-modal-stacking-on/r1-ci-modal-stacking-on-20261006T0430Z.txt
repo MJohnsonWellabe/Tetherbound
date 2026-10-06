@@ -1,0 +1,9 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+control: the shell opens and closes with no modal up
+refused over the starter picker: "Finish what's on screen first"
+picker: shell refused while open, allowed again after it closed
+refused over a conversation: "Finish what's on screen first"
+dialogue: shell refused while a conversation was on screen
+
+modal stacking smoke test passed

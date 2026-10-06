@@ -1,0 +1,6 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+same-frame `ui_right`+`menu_confirm`: picker closed, chose orb 0 of 3
+physical D-pad Right: highlight moved 0 -> 1
+
+starter picker smoke test passed

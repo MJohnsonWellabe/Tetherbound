@@ -1,0 +1,5 @@
+WARNING: HUD has no player; readout will stay empty
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://scripts/ui/playground_hud.gd:1068)
+       [1] _run (res://tests/smoke_objective_hint_card.gd:71)

@@ -1,0 +1,9 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+  ok    Use on Berries opened the eater picker
+  ok    the picker offers the player their own row: 'You                 FOOD 40%'
+  ok    focus landed on the trainer's row
+  ok    the player ate from the Satchel (satiety 40 -> 58, berries 5 -> 4)
+  ok    it applied the same buff the quick bar applies (berry_verve)
+
+backpack player-eats smoke test passed

@@ -1,0 +1,10 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+  info  AllyPanel authored top 874, real top 712 (grows 162px above its own offsets)
+  ok    _party_strip_position() measures from the plate's real top, not its offsets
+  ok    roster [P: (56.0, 374.4948), S: (232.0, 311.0)] clears the plate [P: (56.0, 712.0), S: (280.0, 312.0)] by 27px
+  ok    the roster's five rows fit its declared TOTAL_HEIGHT (311, deepest child 311)
+  ok    every child of the active-creature plate stays inside it
+
+combat HUD left column, measured at (1920, 1080)
+PASS: the roster and the active-creature plate cannot land on each other

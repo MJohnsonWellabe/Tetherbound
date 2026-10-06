@@ -41,7 +41,7 @@ arena_contain | ON OPEN
 art | ON OPEN
 audio | ON OPEN
 authored_camps | ON OPEN
-backpack_player_eats | ON OPEN
+backpack_player_eats | ON FIRST PASS exit0; physicalSatchel eaterpicker/playerrow/satiety40->58/berries5->4/buff; existingstand-inPlayer/grants
 boss | ON OPEN
 bramblebun_colourway_binding | ON OPEN
 build_owns_creature_cycle | ON OPEN
@@ -50,8 +50,8 @@ catch_aim_slowdown | ON OPEN
 catching | ON OPEN
 cloudreach_arrival_walk | ON OPEN
 combat | ON FIRST PASS exit0; real wild controller/movement/arena/hit+miss/typechart/win/no-autoheal/control-return; independent review PASS; inherited staging/crit-scale fixture disclosed; warnings retained
-combat_hud_left_column | ON OPEN
-dialogue_clears_the_world_hud | ON OPEN
+combat_hud_left_column | ON FIRST PASS exit0; actualHUD5memberroster/plategeometry at1920x1080; existingHUDfixture
+dialogue_clears_the_world_hud | ON FIRST PASS exit0; actualHUD/dialogue1920x1080/nooverlap/dockrestores; existingstand-inworld fixture
 encounter_scaling | ON OPEN
 f27_altar_spend | ON FIRST PASS exit0; controller paid6Water/RippletL3->4/one receipt+accepted saved row; independent source+disk review PASS; inherited grants/placement/relocation disclosed, single payment only; warnings retained
 f31_station_paid_path | ON OPEN
@@ -60,13 +60,13 @@ gate_a_build_house | ON OPEN
 gate_a_opening_segment | ON OPEN
 gate_a_rest_torch | ON OPEN
 gate_e_finale | ON OPEN
-hud_freed_combat_prompt_lifecycle | ON OPEN
+hud_freed_combat_prompt_lifecycle | ON FIRST PASS exit0/10checks; productionHUD/director freedwinner recovery; existingminimalfixture
 input | ON OPEN
 menu | ON OPEN
 menu_open_does_not_offer_to_drop | ON OPEN
-modal_stacking | ON OPEN
+modal_stacking | ON FIRST PASS exit0; realUI menucontrols/refusedoverpicker+dialogue/recoveredafterclose; rawreceipts retained
 night_ecology | ON OPEN
-objective_hint_card | ON OPEN
+objective_hint_card | ON FIRST PASS exit0;28hints/titles fit1920x1080/deadline+Game.signal; existingHUDfixture
 opening | ON OPEN
 party_count_after_catches | ON OPEN
 playground | ON OPEN
@@ -75,17 +75,17 @@ relay | ON OPEN
 relay_station | ON OPEN
 release | ON OPEN
 riding | ON OPEN
-satchel_owns_hotbar | ON OPEN
+satchel_owns_hotbar | ON FIRST PASS exit0; physicalinput ownership/control+heldstackvariants; existingminimalfixture
 settings | ON OPEN
-starter_picker | ON OPEN
-station_panels_hide_world_hud | ON OPEN
+starter_picker | ON FIRST PASS exit0; sameframechoice+physicalDpad navigation; isolatedpickerfixture
+station_panels_hide_world_hud | ON FIRST PASS exit0; fiveactualUIpanels hide+restore bothHUDlayers; existingstand-infixture
 stormwood_deepwood_circuit_wiring | ON OPEN
 stronghold | ON OPEN
 title_load_game | ON OPEN
 title_new_game | ON OPEN
 trainer_battle | ON FIRST PASS exit0; 2of2opponents/exact20coin+1potion/XPgain/no-rechallenge-payout; independent functional review PASS; duplicate-starterERROR retained/OFFcomparison PASS exactstderrparity reviewed; legacy local fixture/no durable proof
 trainer_battle_camera | ON FIRST PASS exit0; realMira deployedcamera/GUI focus/controllerorbit entry+exit; rawreceipt retained
-trainer_no_usable_ally | ON OPEN
+trainer_no_usable_ally | ON FIRST PASS exit0; faintedally honestrefusal/nofalsevictory/directheal restoreschallenge; rawreceipts retained, inheritedfault+heal fixture
 traversal | ON OPEN
 unstick | ON OPEN
 veridian_offer_choice | ON OPEN
