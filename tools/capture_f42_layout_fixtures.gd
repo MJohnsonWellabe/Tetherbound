@@ -92,13 +92,13 @@ func _run() -> void:
 		await _capture("altar-" + tab.to_lower())
 		if tab == "Gear":
 			for section: String in ["Trainer", "Protection", "Pouch"]:
-				if not await _choose(details, "gear:" + section):
+				if not await _choose(panel, "gear:" + section):
 					quit(1)
 					return
 				await _capture("altar-gear-" + section.to_lower())
 		if tab == "Loadout":
 			for slot: String in ["charged", "utility", "ultimate"]:
-				if not await _choose(details, "slot:" + slot):
+				if not await _choose(panel, "slot:" + slot):
 					quit(1)
 					return
 				await _capture("altar-loadout-" + slot)
