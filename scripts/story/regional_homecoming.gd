@@ -336,7 +336,8 @@ static func _acknowledge(game: Object, id: String, expected: Dictionary, flag: S
 	var raw: Variant = game.call("commit_regional_ending_ack", intent.duplicate(true))
 	var deadline := Time.get_ticks_msec() + ack_timeout_ms(game)
 	while raw is Dictionary and raw.get("status") == "pending":
-		if not context_matches(game, expected) or Time.get_ticks_msec() >= deadline \
+		if not context_matches(game, expected) \
+				or (Time.get_ticks_msec() >= deadline and not ack_journalled(game, intent)) \
 				or not game is Node or not game.is_inside_tree() \
 				or not game.has_method("regional_ending_ack_result"):
 			_notice(game, failure)
@@ -350,6 +351,19 @@ static func _acknowledge(game: Object, id: String, expected: Dictionary, flag: S
 		return true
 	_notice(game, failure)
 	return false
+
+
+## The host has durably journalled this exact acknowledgement: its row is
+## this character's retained regional_ack transaction. From then on it can
+## only settle (the owner applies, saves and ACKs); the presentation's window
+## bounds reaching the host, never that settlement. A slow guest round trip
+## (f20_ending, ~25 s at a low frame rate) otherwise gave up after the save
+## was safe, and credits never opened.
+static func ack_journalled(game: Object, intent: Dictionary) -> bool:
+	var owner_session: Variant = game.get("session") if game != null else null
+	if intent.is_empty() or not owner_session is Node or not owner_session.has_method("retained_training_transaction"):
+		return false
+	return owner_session.call("retained_training_transaction", ["regional_ack"]).get("intent") == intent
 
 
 static func receipt_matches(raw: Variant, intent: Dictionary) -> bool:
