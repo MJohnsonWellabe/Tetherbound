@@ -327,7 +327,14 @@ func apply(immediate: bool = false) -> Dictionary:
 		return _report
 	_applying = true
 	var prepared_regreen := -1
+	var killed_lights := -1
+	var toppled_pylons := -1
 	if not immediate and is_inside_tree():
+		# The machine dies when the flag lands. Its lights and authored fall
+		# cannot wait for the overlay's CPU preparation to finish across frames.
+		# Keep the original light-before-fall order and retain each result once.
+		killed_lights = _kill_the_tether_lights()
+		toppled_pylons = _topple_the_pylons(false)
 		# Reuse the world's existing CPU budget; the shell mode selects its
 		# fine slice without enabling network content staging on this node.
 		var budget := BUILD_BUDGET.new()
@@ -344,11 +351,11 @@ func apply(immediate: bool = false) -> Dictionary:
 		"regrown": _heal_the_scatter(),
 		"dead_ground_faded": _fade_the_drain_skins(immediate),
 		"regreened": prepared_regreen if prepared_regreen >= 0 else await _regreen_the_scars(immediate),
-		"lights_killed": _kill_the_tether_lights(),
+		"lights_killed": killed_lights if killed_lights >= 0 else _kill_the_tether_lights(),
 		"drain_lifted": _lift_the_drain(immediate),
 		"field_greened": _green_the_field(immediate),
 		# After the lights: what falls is already dead.
-		"pylons_toppled": _topple_the_pylons(immediate),
+		"pylons_toppled": toppled_pylons if toppled_pylons >= 0 else _topple_the_pylons(immediate),
 		"herd_returned": _return_the_herd(),
 		"bloomed": _bloom_the_healed_ground(immediate),
 		"barriers_opened": _open_the_barriers(),

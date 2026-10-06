@@ -110,10 +110,30 @@ func _run() -> void:
 	var landed := Time.get_ticks_msec()
 	var preparation_started := landed
 	var heal_frame_ms := 0
+	var checked_preparation_cues := false
 	while not bool(healing.call("applied")) and Time.get_ticks_msec() - preparation_started < FADE_TIMEOUT_MS:
 		await process_frame
 		heal_frame_ms = maxi(heal_frame_ms, Time.get_ticks_msec() - landed)
 		landed = Time.get_ticks_msec()
+		if bool(healing.get("_applying")) and not checked_preparation_cues:
+			checked_preparation_cues = true
+			var light_spec: Dictionary = _healing_config().get("tether_lights", {})
+			var lit_path := str(light_spec.get("lit_albedo", ""))
+			var dead_exists := ResourceLoader.exists(str(light_spec.get("dead_albedo", "")))
+			var still_lit := 0
+			for raw: Material in light_materials:
+				var user := world.get_node_or_null(NodePath(str(before_material_users.get(raw, ""))))
+				if user != null and not _retiring_from_world(user, world) \
+						and _tether_material_is_live(raw as StandardMaterial3D, healing, lit_path, dead_exists):
+					still_lit += 1
+			if still_lit != 0:
+				_fail("(live preparation) %d original tether materials still lit after the freeing flag" % still_lit)
+			var started_pylons: Array = healing.call("toppled_pylons")
+			if started_pylons.is_empty():
+				_fail("(live preparation) no authored pylon fall started before regreen preparation finished")
+			print("(live preparation) %d original materials still lit; %d pylon falls already started" % [still_lit, started_pylons.size()])
+	if not checked_preparation_cues:
+		_fail("(live) no preparation yield observed for the freeing-cue regression check")
 	if not bool(healing.call("applied")):
 		_fail("(live) freeing preparation did not complete within the existing fade timeout")
 		_finish()
