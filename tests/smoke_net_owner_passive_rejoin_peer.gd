@@ -100,6 +100,7 @@ func _execute_probe(msg: Dictionary) -> Variant:
 	for member: RefCounted in game.get("party").call("members"): out.levels.append(int(member.get("level")))
 	out["authority"] = {}
 	out["tonic"] = _tonic_state(game, session)
+	out["mastery"] = _mastery_state(game, session)
 	out["rejoin_codes"] = (session.get("last_rejoin_admission") as Dictionary).duplicate() if bool(session.call("is_host")) else {}
 	if bool(session.call("is_host")):
 		var authority: RefCounted = session.get("_character_authority")
@@ -236,6 +237,26 @@ func _tonic_state(game: Node, session: Node) -> Dictionary:
 		"disk_receipts":saved.get("redesign_character", {}).get("transaction_receipts", []),
 		"saved_result":session.get("_tether_item_saved_result").get("result", {}).duplicate(true),
 		"retry":session.get("_owner_training_retry").get("saved", false)}
+
+
+func _mastery_state(game: Node, session: Node) -> Dictionary:
+	var live := {}
+	for member: RefCounted in game.party.members():
+		live[str(member.uid)] = {"move":member.move_quick,
+			"uses":member.move_mastery_uses.duplicate(true), "receipts":member.move_mastery_receipts.duplicate(true)}
+	var saved: Dictionary = game.save_system.characters().read(str(game.local.character_id)) if _tonic_character_dir.is_empty() \
+		or game.save_system.characters().get("_dir") == _tonic_character_dir else {}
+	var disk := {}
+	for card: Dictionary in saved.get("party", []):
+		disk[str(card.uid)] = {"uses":card.get("move_mastery_uses", {}), "receipts":card.get("move_mastery_receipts", {})}
+	var held := {}
+	if session.is_host():
+		var authority: RefCounted = session.get("_character_authority")
+		for character: String in authority.get("_records"):
+			held[character] = {}
+			for card: Dictionary in authority.state(character).get("party", []):
+				held[character][str(card.uid)] = {"uses":card.get("move_mastery_uses", {}), "receipts":card.get("move_mastery_receipts", {})}
+	return {"live":live, "disk":disk, "held":held}
 
 
 static func _counts(slots: Variant) -> Dictionary:

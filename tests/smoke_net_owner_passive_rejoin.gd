@@ -42,6 +42,8 @@ var _guest_character := ""
 var _tonic_uid := ""
 var _tonic_receipt := ""
 var _tonic_remaining := 0.0
+var _earned_mastery: Dictionary = {}
+var _mastery_uid := ""
 
 
 func _initialize() -> void:
@@ -169,6 +171,13 @@ func _run() -> void:
 		"tonic: new admitted stream reconciles remaining duration without refreshing the saved Item")
 	check(int(rejoin_tonic.get("stock", -1)) == 1, "tonic: rejoin never debits the Item a second time")
 	check((rejoin_tonic.get("disk_receipts", []) as Array).has(_tonic_receipt), "tonic: owner disk retains the exact saved Item receipt")
+	var rejoin_mastery: Dictionary = (await _state(1)).get("mastery", {})
+	var held_mastery: Dictionary = (await _state(0)).get("mastery", {}).get("held", {}).get(_guest_character, {}).get(_mastery_uid, {})
+	check(rejoin_mastery.get("live", {}).get(_mastery_uid, {}).get("uses") == _earned_mastery.get("uses") \
+		and rejoin_mastery.get("live", {}).get(_mastery_uid, {}).get("receipts") == _earned_mastery.get("receipts"),
+		"mastery: plain rejoin preserves actual landed uses and never credits an admission replay")
+	check(rejoin_mastery.get("disk", {}).get(_mastery_uid, {}) == _earned_mastery and held_mastery == _earned_mastery,
+		"mastery: real owner disk and rejoined host hold exactly the earned per-UID mastery")
 
 	# 3. Passive inputs after the rejoin are acknowledged under the new id.
 	var before_walk: Dictionary = ((await _state(1)).get("local", {}) as Dictionary)
@@ -330,7 +339,26 @@ func _tonic_item_original() -> bool:
 	_ok(await step(1, "teleport", {"at":encounter.get("opponent_pos", [])}), "tonic: existing proximity fixture reaches the shared fight")
 	_ok(await step(1, "deploy_creature"), "tonic: guest deploys its same admitted owned creature")
 	if not _ok(await step(1, "join_encounter", {"encounter_id":id}), "tonic: guest joins the host's exact record"): return false
+	var before_mastery: Dictionary = (await _state(1)).get("mastery", {}).get("live", {})
 	if not _ok(await step(1, "op_tonic_hits"), "tonic: normal accepted quick hits earn Item meter"): return false
+	var earned := false
+	for poll in 20:
+		var mastery: Dictionary = (await _state(1)).get("mastery", {})
+		for uid: String in mastery.get("live", {}):
+			var card: Dictionary = mastery.live[uid]
+			var move := str(card.get("move", ""))
+			var uses := int(card.get("uses", {}).get(move, 0))
+			var receipts: Array = card.get("receipts", {}).get(move, [])
+			var unique := {}
+			for receipt: String in receipts: unique[receipt] = true
+			if uses > int(before_mastery.get(uid, {}).get("uses", {}).get(move, 0)) \
+				and receipts.size() == uses and unique.size() == uses:
+				_mastery_uid = uid
+				_earned_mastery = {"uses":card.uses.duplicate(true), "receipts":card.receipts.duplicate(true)}
+				earned = mastery.get("disk", {}).get(uid, {}) == _earned_mastery
+		if earned: break
+		await step(0, "wait", {"frames":30})
+	check(earned, "mastery: actual accepted quick hits credit unique creature-owned uses and save them to owner disk")
 	_ok(await step(1, "op_tonic_writer", {"block":true}), "tonic: actual owner character writer will return false")
 	var pending: Dictionary = await step(1, "op_tonic_item")
 	if not _ok(pending, "tonic: production Item request preserves its original while owner save refuses"): return false
