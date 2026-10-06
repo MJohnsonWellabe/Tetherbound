@@ -1,6 +1,6 @@
 extends SceneTree
 
-## QUEUE ONLY. Native UI layout fixtures; no earned service, co-op, save,
+## Native UI layout fixtures; no earned service, co-op, save,
 ## station reach, handheld hardware or visual PASS evidence. All fixtures
 ## are disclosed here and in the output manifest. Never changes disk flags.
 const SCREEN := preload("res://scripts/ui/system_screen.gd")
@@ -17,6 +17,7 @@ var _size := Vector2i(1920, 1080)
 var _game: Node
 var _uid := ""
 var _captures: Array[String] = []
+var _capture_combat := true
 
 class AltarFixture extends Node:
 	signal essence_spend_completed(id: String, result: Dictionary)
@@ -64,6 +65,8 @@ func _run() -> void:
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--out-dir="): _out = argument.trim_prefix("--out-dir=")
 		if argument == "--size=1280x800": _size = Vector2i(1280, 800)
+		if argument == "--size=1280x720": _size = Vector2i(1280, 720)
+		if argument == "--skip-combat-fixture": _capture_combat = false
 	if _out.is_empty() or DisplayServer.get_name() == "headless":
 		push_error("Explicit --out-dir and a native display are required; do not use --headless.")
 		quit(1)
@@ -72,8 +75,7 @@ func _run() -> void:
 		quit(1)
 		return
 	root.size = _size
-	root.content_scale_size = Vector2i(1920, 1200) if _size.y == 800 else Vector2i(1920, 1080)
-	root.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_IGNORE
+	root.content_scale_size = Vector2i.ZERO # Judge native font pixels at each requested raster.
 	SCREEN.config()["enabled"] = true # In-memory fixture opt-in; shipped flag stays false.
 	COMMANDS.config().feature_flags.ui_enabled = true # Presentation-only fixture opt-in.
 	_game = root.get_node("Game")
@@ -97,8 +99,10 @@ func _run() -> void:
 	root.add_child(level_service)
 	var altar := ALTAR.new()
 	root.add_child(altar)
-	altar.configure_service(level_service)
-	altar.open("layout-altar")
+	if not altar.configure_service(level_service) or not altar.open("layout-altar"):
+		push_error("Actual Altar Level surface refused to open")
+		quit(1)
+		return
 	await _capture("altar-level")
 	altar.close()
 	altar.queue_free()
@@ -108,14 +112,28 @@ func _run() -> void:
 	root.add_child(traits_service)
 	var traits := TRAITS_PANEL.new()
 	root.add_child(traits)
-	traits.open(traits_service, "layout-altar")
+	if not traits.open(traits_service, "layout-altar"):
+		push_error("Actual Altar Traits surface refused to open")
+		quit(1)
+		return
 	await _capture("altar-traits-release")
 	traits.close()
 	traits.queue_free()
 	await process_frame
+	var station: Dictionary = preload("res://tests/test_craft_station_confirm_lifetime.gd").new().call("_fixture", self, false)
+	if not station.panel.is_open():
+		push_error("Existing station component refused to open")
+		quit(1)
+		return
+	await _capture("station-forge")
+	station.panel.close()
+	station.holder.queue_free()
+	await process_frame
 	var research := RESEARCH.new()
 	root.add_child(research)
-	research.open(_research_fixture)
+	if not research.open(_research_fixture):
+		quit(1)
+		return
 	research.call("_inspect", "terrapup")
 	await _capture("research-log")
 	research.close()
@@ -125,16 +143,19 @@ func _run() -> void:
 	root.add_child(board)
 	var bounties := BOUNTY.new()
 	root.add_child(bounties)
-	bounties.open(board)
+	if not bounties.open(board):
+		quit(1)
+		return
 	await _capture("bounty-board")
 	bounties.close()
 	bounties.queue_free()
 	await process_frame
-	var overlay := OVERLAY.new()
-	root.add_child(overlay)
-	overlay.configure(_combat_fixture)
-	overlay.refresh(_uid, true)
-	await _capture("combat-meters-moves")
+	if _capture_combat:
+		var overlay := OVERLAY.new()
+		root.add_child(overlay)
+		overlay.configure(_combat_fixture)
+		overlay.refresh(_uid, true)
+		await _capture("combat-meters-moves")
 	var file := FileAccess.open(_out.path_join("fixture-manifest.json"), FileAccess.WRITE)
 	if file == null:
 		quit(1)
@@ -142,15 +163,17 @@ func _run() -> void:
 	file.store_string(JSON.stringify({"evidence_kind": "native UI layout fixtures only", "size": [_size.x, _size.y],
 		"captures": _captures, "earned_service_save_coop_device_visual_pass": false,
 		"fixtures": ["new-game Terrapup", "invented Altar quote", "empty trait quote", "invented research tasks",
-			"invented bounty rows", "invented local combat meter snapshot"],
-		"missing": ["actual station panel", "earned services", "code-blind judge", "world/HUD composite"]}, "\t"))
+			"invented bounty rows", "existing Forge station-confirm component"],
+		"combat_fixture_captured": _capture_combat,
+		"missing": ["earned services", "code-blind judge", "world/HUD composite"]}, "\t"))
 	quit(0)
 
 func _capture(name: String) -> void:
 	for index: int in 8: await process_frame
 	await RenderingServer.frame_post_draw
 	var path := _out.path_join("f42-" + name + "-%dx%d.png" % [_size.x, _size.y])
-	if root.get_texture().get_image().save_png(path) != OK:
+	var image := root.get_texture().get_image()
+	if image == null or image.get_size() != _size or image.save_png(path) != OK:
 		push_error("Could not save " + path)
 		quit(1)
 		return
