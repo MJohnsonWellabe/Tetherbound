@@ -71,6 +71,7 @@ var _id := ""
 var _directory := ""
 var _capture_dir := ""
 var _ultimate_prior_uses := 150
+var _prove_mastery_transition := false
 var _launches: Array[Dictionary] = []
 var _impacts: Array[Dictionary] = []
 var _captures: Array[String] = []
@@ -93,15 +94,19 @@ func _body(script: Script, species: String, at: Vector3) -> Node3D:
 	return body
 
 func _run() -> void:
+	_prove_mastery_transition = OS.get_cmdline_user_args().has("--prove-mastery-transition")
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--capture-dir="): _capture_dir = arg.trim_prefix("--capture-dir=")
 		if arg.begins_with("--ultimate-prior-uses="):
 			var prior := arg.trim_prefix("--ultimate-prior-uses=")
-			_check(prior.is_valid_int() and [0, 25, 75, 150, 300].has(int(prior)), "prior mastery fixture selects a canonical rank threshold")
+			var allowed: Array = [24, 74, 149, 299] if _prove_mastery_transition else [0, 25, 75, 150, 300]
+			_check(prior.is_valid_int() and allowed.has(int(prior)), "prior mastery fixture selects a canonical threshold or its preceding use")
 			if prior.is_valid_int(): _ultimate_prior_uses = int(prior)
 	_saved_visual_config = ULTIMATES.config()
 	var visual_override := OS.get_cmdline_user_args().has("--enable-ultimate-visual")
 	var slot_inputs := OS.get_cmdline_user_args().has("--prove-slot-inputs")
+	_check(not _prove_mastery_transition or (visual_override and [24, 74, 149, 299].has(_ultimate_prior_uses)),
+		"earned mastery transition requires the actual signature and disclosed prethreshold history")
 	if visual_override:
 		var candidate := _saved_visual_config.duplicate(true)
 		candidate.enabled = true
@@ -279,6 +284,60 @@ func _run() -> void:
 			and int(saved_owned.get("move_mastery_uses", {}).get("ultimate_ground_current", 0)) == maximum_mastery
 			and saved_owned.get("move_mastery_receipts", {}).get("ultimate_ground_current", []) == prior_ultimate_history,
 			"actual owner disk retains the same rank-five UID and exact capped history")
+	if _prove_mastery_transition and not ultimate_event.is_empty():
+		var previous_launch: Dictionary = _launches.back().duplicate(true)
+		var learned_rank := MASTERY.rank_from_uses(_ultimate_prior_uses + 1)
+		var learned_history: Array = prior_ultimate_history.duplicate()
+		learned_history.append(ultimate_event.duties[0].intent.action_id)
+		var saved_owned := {}
+		for card: Dictionary in _writer.character_store.read(DATA.CHARACTER).get("party", []):
+			if card.get("uid") == _creature.uid: saved_owned = card
+		_check(saved_owned.get("uid") == _creature.uid
+			and int(saved_owned.get("move_mastery_uses", {}).get("ultimate_ground_current", 0)) == _ultimate_prior_uses + 1
+			and saved_owned.get("move_mastery_receipts", {}).get("ultimate_ground_current", []) == learned_history,
+			"actual owner disk contains the earned threshold use and its exact original history")
+		_check(learned_rank == int(previous_launch.mastery_rank) + 1,
+			"the original positive Ultimate debit earns exactly the next mastery rank")
+		# Reuse the admitted owner and existing production nodes for the next
+		# disclosed fixture encounter. Target HP and all actor histories survive;
+		# new encounter resources come only from the ordinary host opener.
+		var target: Vector3 = _wild.call("centre")
+		var rec: Dictionary = _host.open(1, "meadows", "trainer", {"species_id": "staticub",
+			"creature_uid": _enemy.uid, "hp": _enemy.hp, "hp_max": _enemy.max_hp,
+			"position": [target.x, target.y, target.z]}, str(_creature.uid), DATA.CHARACTER)
+		_id = rec.encounter_id
+		_director.set("_encounter", rec)
+		_manager.call("bind_encounter", _director, _id, "trainer")
+		_manager.set("state", MANAGER.State.ACTIVE)
+		_manager.set_physics_process(true)
+		_check(_host.move_resource_snapshot(_id, 1, _creature.uid).is_empty(),
+			"next encounter retains no previous actor resource pool or Ultimate meter")
+		for hit in 17:
+			var quick := await _tap_move(JOY_BUTTON_X, "quick")
+			_check(not quick.is_empty(), "real quick %d fills the next encounter meter after earned rank advancement" % hit)
+			if quick.is_empty(): break
+		_check(is_equal_approx(float(_host.move_resource_snapshot(_id, 1, _creature.uid).ultimate_meter), 100.0),
+			"only actual landed hits refill the new encounter Ultimate meter")
+		await _wait_ready()
+		await _button(JOY_BUTTON_RIGHT_SHOULDER, true)
+		await _button(JOY_BUTTON_RIGHT_SHOULDER, false)
+		var upgraded := await _tap_move(JOY_BUTTON_Y, "ultimate")
+		_check(not upgraded.is_empty(), "fresh RB release then Y lands the newly earned rank signature")
+		if not upgraded.is_empty():
+			var launch: Dictionary = _launches.back()
+			_check(int(launch.mastery_rank) == learned_rank and int(launch.move.mastery_rank) == learned_rank,
+				"new accepted action freezes the rank earned by the saved original")
+			_check(is_equal_approx(float(launch.move.base_power), float(previous_launch.move.base_power))
+				and float(launch.move.power) > float(previous_launch.move.power)
+				and float(launch.move.power_multiplier) > float(previous_launch.move.power_multiplier),
+				"the same live move has a strictly higher frozen damage profile after earned rank advancement")
+			_check(int(launch.move.vfx.effect_tier) == learned_rank
+				and int(launch.move.vfx.effect_tier) > int(previous_launch.move.vfx.effect_tier)
+				and launch.get("presentation_mounted") == true,
+				"the newly ranked actual presentation uses the upgraded frozen effect tier")
+			_check(float(_impacts.back().damage) > 0.0 and float(_impacts.back().damage) <= float(_enemy.max_hp) * 0.2 + 0.001,
+				"the upgraded signature commits a real positive HP debit within the unchanged named cap")
+			await create_timer(2.6).timeout
 	_check(MATH.config().get("actor_vitals", {}).get("runtime_enabled") == false, "proof must not activate actor_vitals")
 	_finish()
 
@@ -444,17 +503,18 @@ func _on_launch(_on_enemy: bool, launch: Dictionary, presentation: Node3D) -> vo
 	if launch.slot == "ultimate" and not _capture_dir.is_empty(): _capture_ultimate(launch)
 
 func _capture_ultimate(launch: Dictionary) -> void:
-	DirAccess.make_dir_recursive_absolute(_capture_dir)
+	var capture_directory := _capture_dir.path_join("rank-%d" % int(launch.mastery_rank)) if _prove_mastery_transition else _capture_dir
+	DirAccess.make_dir_recursive_absolute(capture_directory)
 	var previous := 0.0
 	for at: float in [0.1, 0.35, 0.7, 1.2, 1.8, 2.25]:
 		await create_timer(at - previous).timeout
 		previous = at
 		await RenderingServer.frame_post_draw
-		var path := _capture_dir.path_join("ground-current-%04d.png" % int(at * 1000.0))
+		var path := capture_directory.path_join("ground-current-%04d.png" % int(at * 1000.0))
 		var rendered := root.get_texture().get_image()
 		_check(rendered != null and rendered.save_png(path) == OK, "rendered accepted-action capture " + path)
 		_captures.append(path)
-	var file := FileAccess.open(_capture_dir.path_join("accepted-action.json"), FileAccess.WRITE)
+	var file := FileAccess.open(capture_directory.path_join("accepted-action.json"), FileAccess.WRITE)
 	if file != null:
 		file.store_string(JSON.stringify({"launch": launch, "fixtures": "admitted level-5 Bramblebun; 600 HP static named target; visual gate enabled only for capture; no actor_vitals override", "captures": _captures}, "  "))
 
