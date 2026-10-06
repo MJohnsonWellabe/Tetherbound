@@ -10,7 +10,7 @@ Fighting net inventory: handoff item2; OFF inventory: its owned-fighter parity l
 smoke | ON | OFF
 boss_rewards_each_participant | MAIN DEBT / out of scope | MAIN DEBT per handoff / out of scope
 catch_race | OPEN | OPEN
-client_trainer_rewards | OPEN | OPEN
+client_trainer_rewards | ON FIRST ACTIVE owned:true/native budgets | OPEN
 cloudreach_riding | OPEN | OPEN
 deploy_two_creatures | OPEN | OPEN (unowned exception)
 f22_forced_break | OPEN | OPEN
@@ -88,8 +88,8 @@ trainer_battle_camera | ON FIRST PASS exit0; realMira deployedcamera/GUI focus/c
 trainer_no_usable_ally | ON FIRST PASS exit0; faintedally honestrefusal/nofalsevictory/directheal restoreschallenge; rawreceipts retained, inheritedfault+heal fixture
 traversal | ON FIRST PASS, exit0; mainlegs108m/perimeter/kill/crossinggates/rockalign/doors; nineperimeter/doorcollider-query/heightrecovery/analyticnormals/stagedposes-flags/recoveryinterruptions+routeoffsetnotes/no600mcontinuous-earned-hw-coop proof; independent qualified review PASS
 unstick | ON FIRST PASS, exit0/empty stderr; bareplayer sealed-pocket escape9.65m/wallnorecovery/originalfixtures; minimum1recovery/no Meadows-combat-earned-hw-coop proof; independent qualified review PASS
-veridian_offer_choice | ON SPACE FIRST PASS exit0/qualified independent review PASS; CAPACITY FIRST PASS exit0/qualified independent review PASS; RECOVERY ACTIVE; originalCI groups sequential/privatehomes/2700sec native deadline; allgroupsneeded
-warrens | ON OPEN
+veridian_offer_choice | ON allthree originalCI groups/six cases FIRST PASS exit0/qualified independent review PASS; in-process exactroster-resolution-reoffer proofs; release-one checkpoint preserves payout; finalunansweredchoice fixture retains priorrewardrow but clears charreceipts, no freshcanonicalprojection claim
+warrens | ON FIRST PASS exit0; default geometry/actionwalk/staged-clear-no-payout/Heartstone directsignal/in-memory guardianrebuild/AIpaused fixtures/no saves/zero approachsolidpieces; qualified independent review PASS
 wild_streaming | ON FIRST PASS exit0/empty stderr; bare live-tree/production Director/direct streaming fixtures/metadata-marker+position roundtrip only/no Meadows density-render-perf-combat-reload proof; qualified independent review PASS
 Tournament ON FIRST | FAIL exit1: quarter durable rewards PASS; semi both first strikes PASS, team completion command no verdict at unchanged 95000ms. Diagnosis OPEN. receipts/net-tournament-on-first
 Round identity repair93487a4e58 focused six-file coverage | OFF PASS union100tests/1318assertions/exit0 + ON PASS100/1318/exit0; all stderr empty. Full predecessor suite source374601 retained separately; fixed tournament live proof OPEN.
@@ -98,3 +98,5 @@ Tournament fixed-source ON RETRY | FAIL startup exit2 hello180sec, no combat; re
 Frozen-opponent guard d4f2af | Corrected RED unchanged93487 one exact-opponent failure; final corrected OFF+ON each98tests/1033assertions/0failed/exit0/empty stderr; independent review. Live co-op reward recovery PASS in corrected F27 proof below.
 
 F27 corrected twopeer proof7c44794 | ONPASSexit0; canonical validator+receipt continuity and event binding executed; finalraw10 incl3productionJSONs. Independent functional reviewPASS40checks/0fail/exit0; hostdepartureerrors/MTUwarning retained. CommitflagOFF/manualheader.
+
+2026-10-06 04:26 Chicago checkpoint: ALL55/55 explicitly required existing CI ON checks independently reviewed qualified PASS. Scoped ON/OFF networks and tournament remain OPEN; committed flag OFF/no flip or DONE claim.
