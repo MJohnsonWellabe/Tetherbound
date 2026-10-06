@@ -509,7 +509,7 @@
       "display_name": "Gale Peck",
       "type": "air",
       "slot": "quick",
-      "power": 0.95,
+      "power": 1.4,
       "energy_gain": 26,
       "range": 2.5,
       "cone_degrees": 100.0,
