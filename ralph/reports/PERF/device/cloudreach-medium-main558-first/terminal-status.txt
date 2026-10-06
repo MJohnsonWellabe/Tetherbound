@@ -1,0 +1,5 @@
+Observed2026-10-06T19:04Z: exact own supervisor24388/cmd21700/console21916/native11036 absent; original exec3966 handle unavailable.
+No exit.txt, no route.json and zeroPNG; exit code unavailable, do not fabricate an exit verdict.
+Original stderr repeats native realloc_static/cowdata mem and mem_new null errors at cloudreach_look::_dress_turf_fill line1028; no FPS/completed route acceptance.
+Foreign Valheim23680 then24864 observed during startup and disappeared; startup GPU/CPU contamination possible, not an isolated allocation cause.
+Matching own lease released only after all exact own processes absent; no foreign process stopped; original logs/homes retained/no retry.

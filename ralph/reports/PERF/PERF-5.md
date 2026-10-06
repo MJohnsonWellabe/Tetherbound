@@ -1,4 +1,4 @@
-Verdict: OPEN; First Shore Medium device route completed but misses60avg/40low target; Hall batching remains disabled.
+Verdict: OPEN; First Shore Medium complete but misses60avg/40low; Cloudreach incomplete/no FPS; Hall batching disabled.
 Device producer672b023d7f1b3ba2392628ee26c5a4387b54115e; existing unchanged capture_lookdev_route.gd, GTX10603GB/Vulkan/Forward+/fullscreen1920x1080/Medium/defaultclock/seed2042, fresh private homes.
 Actual exit0/complete=true/2of2waypoints/failures[];187timed frames over8.384397s, wall samples total8.360985s. avg22.3658FPS;1%low4.1341FPS (mean slowest ceil(187*.01)=2frames);min2.7202FPS.
 FPS=1000/meanwall_ms; low=1000/meanworst1%wall; min=1000/maxwall. Rawprocess monitor mean147.6016ms/physics13.6157ms are monitor snapshots, not per-function/GPU-only costs or a causal diagnosis.
@@ -6,3 +6,5 @@ One declared production start staging/physical InputMap collision route, ordinar
 Raw proof: device/water-medium-main558-first/{stdout,stderr,native}.log/source.txt/exit.txt/route/{route.json,start.png,end.png}; inherited interpolation warning retained, no SCRIPT/Parse/ERROR/leak; homes local.
 Hall candidate45b1ce1d49 uses existing static_mesh_batch.merge with dynamic surfaces/relic excluded; static_geometry_batching=false/actions/signs/collision retained. Earlier invalid detached/mounted outputs preserved; corrected b415 detached unit1/17/0/exit0/empty stderr in realms/hall-batch-detached-day-first.
 Hall native before/after gain/blind/finalreview and other realm measurements remain OPEN; no READY or flag flip. PERF4 accepted motion-path QUESTION6022570741 pending; no guessed CPU edit from monitor totals.
+Cloudreach producer96b69b12239: INCOMPLETE/exit unavailable/0PNG/no route.json; realloc_static/cowdata mem-null errors at near_transforms.append line1028; originals device/cloudreach-medium-main558-first/{stdout,stderr,native}.log/source.txt/terminal-status.txt; foreign Valheim overlapped startup, no isolated cause or retry.
+Packed staging candidatefde35e350280 replaces only four temporary Transform3D Variant arrays with packed basis columns/origins; cap900000/density/RNG/order/upload settings retained. Added existing grass-role upload-equivalence case UNRUN; no native memory/placement/gain acceptance.

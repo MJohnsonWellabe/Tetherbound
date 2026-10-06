@@ -1,0 +1,4 @@
+source=96b69b12239df28193fd4b87bbf0df6e8b4427a1
+tool=tools/capture_lookdev_route.gd unchanged; route revision F26-route-2
+Cloudreach native GTX1060 Forward+/fullscreen1920x1080/Medium/default clock
+Existing production start staging, seed2042, physical InputMap/collision timed route; no fixed-fps/profiling/route repair/earned/fight/co-op claim
