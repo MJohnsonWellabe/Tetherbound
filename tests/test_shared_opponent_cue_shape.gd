@@ -331,7 +331,8 @@ func _case_unreliable_pattern_pose_stays_below_mtu_without_changing_geometry() -
 		var original := body.presentation_shape()
 		var director := _director(original)
 		# Each opponent is sent separately to the other participant, even in a
-		# two-peer/two-creature fight; include the actual RPC argument envelope.
+		# two-peer/two-creature fight. Budget the serialized Variant argument
+		# Array below 1200 bytes, leaving headroom under the native 1392-byte MTU.
 		var payload := director._shared_presentation_payload("wild:meadows:two-peer-two-creature")
 		var bytes := var_to_bytes([payload]).size()
 		worst_bytes = maxi(worst_bytes, bytes)
@@ -349,7 +350,7 @@ func _case_unreliable_pattern_pose_stays_below_mtu_without_changing_geometry() -
 		var wire_remaining := transmitted.duplicate(true)
 		wire_remaining.erase("pattern")
 		assert_eq(wire_remaining, remaining, attack_id + " preserves lane/guard/route")
-		assert_eq(body._pattern_geometry.profile, profile, "host strike profile stays intact")
+		assert_eq(body._pattern_geometry.profile, old_pattern.profile, "host strike profile stays intact")
 		_free_director(director)
 	print("P3_MAX_TICK_ARGUMENT_BYTES=%d" % worst_bytes)
 	body.free()
