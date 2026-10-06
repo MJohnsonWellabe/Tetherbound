@@ -183,3 +183,21 @@ func test_real_recipe_book_splits_travel_tier_from_homestead_only() -> void:
 			refused += 1
 	assert_true(crafted >= 20, "travel-tier recipes craft at camp (%d)" % crafted)
 	assert_true(refused >= 30, "ingots, reinforcement, bracing and gear are refused (%d)" % refused)
+
+func test_personal_view_cache_requires_current_character_world_and_epoch() -> void:
+	var session := preload("res://scripts/net/session.gd").new()
+	var scope := {"character_id": "owner_a", "world_namespace": "world-a", "session_epoch": "epoch-a"}
+	var view := {"character_id": "owner_a", "registry_revision": 7, "redesign_character": {"tether_pouch": ["potion_small"]}}
+	for key: String in ["character_id", "world_namespace", "session_epoch", "missing"]:
+		session._foundation_personal_cache = view.duplicate(true)
+		session._foundation_personal_cache_scope = scope.duplicate(true)
+		assert_eq(session._personal_view_for_scope(scope), view)
+		var changed := scope.duplicate(true)
+		if key == "missing": changed = {}
+		else: changed[key] = "replacement"
+		assert_true(session._personal_view_for_scope(changed).is_empty(), key)
+		assert_true(session._foundation_personal_cache.is_empty())
+		assert_true(session._foundation_personal_cache_scope.is_empty())
+		assert_true(session._personal_view_for_scope(scope).is_empty(), "must await current reply; changing back cannot revive cleared cache")
+	session.free()
+
