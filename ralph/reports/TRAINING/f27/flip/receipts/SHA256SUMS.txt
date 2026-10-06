@@ -522,3 +522,10 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  net-gate-opens
 950b31db2bb9932314209b2a762d6d117261badba71735dfa0d7b42c74321d51  net-gate-opens-for-both-on/SUMMARY.txt
 8da95062c61bb8898d4c210a4235dc225ae5e5d94fc18433a2894448bbd74b88  net-gate-opens-for-both-on/NET_RUN.json.txt
 5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  net-gate-opens-for-both-on/exit.txt
+c58fc84189376284854bb744d506fef9c4886f3542ab0988c89045f0cd86dbbd  net-gate-opens-for-both-off/coordinator.stdout.txt
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  net-gate-opens-for-both-off/coordinator.stderr.txt
+8ec338bace9b03006541069d69be5c6fac2fe04fc43ab789c97257438b036d59  net-gate-opens-for-both-off/peer-0.txt
+ba7884cf1497730e346b710b71d4917de2b0ae3e457cf9b01a5b5467c880ef0f  net-gate-opens-for-both-off/peer-1.txt
+1507e78bda2a0a54bdaed2a7ada509c4c3db2ea7bc32cfc56187e8c9dfb3d147  net-gate-opens-for-both-off/SUMMARY.txt
+e1d4157c4ed628f063c58c45cda3f6432f2bb04f7c9045343112677dfdb7c13b  net-gate-opens-for-both-off/NET_RUN.json.txt
+5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  net-gate-opens-for-both-off/exit.txt

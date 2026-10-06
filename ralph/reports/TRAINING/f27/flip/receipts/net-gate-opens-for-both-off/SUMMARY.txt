@@ -1,0 +1,10 @@
+# Net smoke run r1-gate-opens-for-both-off-20261006T1039Z
+
+Scene: world
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=18608 exited=true unexpected_exit=false
+- peer 1 (client) pid=15732 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED
