@@ -3893,6 +3893,31 @@ func _stage_ordinary_enemy_hit(id: String, peer: int, payload: Dictionary) -> vo
 	_retry_ordinary_actor_vitals()
 
 
+func finalize_saved_tether_item(row: Dictionary) -> bool:
+	if not _is_host() or _session == null or _encounter_host == null: return false
+	var game: Node = _session.call("_game")
+	if game == null or game.get("world") == null: return false
+	var world: RefCounted = game.get("world")
+	var id: String = str(row.get("intent", {}).get("request", {}).get("encounter_id", ""))
+	for original: Dictionary in _encounter_host.call("pending_tether_items", id):
+		if original.get("intent") != row.get("intent") or original.get("context") != row.get("host_context"): continue
+		var finalized: Dictionary = _encounter_host.call("finalize_saved_tether_item", original, row,
+			world.reward_deliveries, world.reward_delivery_namespace, world.world_id)
+		if finalized.get("ok") != true: return false
+		# Guest cards are cached at deployment. Refresh saved condition/health;
+		# the canonical Host has already settled the same HP receipt.
+		var peer: int = int(original.peer_id)
+		var deployed: Dictionary = _deployed_by.get(peer, {})
+		if deployed.get("card", {}).get("creature_uid") == original.intent.effect.creature_uid:
+			for owned: Dictionary in row.after.party:
+				if owned.uid != original.intent.effect.creature_uid: continue
+				var creature: RefCounted = preload("res://scripts/save/water_capture_codec.gd").decode_owned(owned, row.after.redesign_character)
+				deployed.card.hp = owned.hp
+				deployed.card["nourishment_fraction"] = CONDITION.nourishment_fraction(creature, CONDITION.config())
+		_host_after_encounter_change(id)
+	return true
+
+
 func _retry_tether_items() -> void:
 	if not _is_host() or _session == null or _encounter_host == null: return
 	for id: String in _encounter_host.get("encounters"):

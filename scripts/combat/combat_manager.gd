@@ -458,6 +458,16 @@ func owner_tether_item_request_matches(envelope: Dictionary) -> bool:
 		and envelope.get("intent") is Dictionary and envelope.intent.get("request") == raw
 
 
+func _consume_saved_tether_item_result() -> void:
+	var result: Dictionary = _tether_command_view.get("item_result", {})
+	if result.is_empty() or result.get("request") != _tether_command_view.get("pending_request") \
+		or not is_instance_valid(_encounter_link): return
+	var session: Node = _encounter_link.get("_session") as Node
+	if session == null or session.call("tether_item_owner_result_saved", result) != true: return
+	_tether_command_view.erase("pending_request")
+	state_changed.emit()
+
+
 func throw_aim() -> Node:
 	return _throw
 
@@ -2431,6 +2441,7 @@ func _refuse_combat_input() -> void:
 
 
 func _tick_active(delta: float) -> void:
+	_consume_saved_tether_item_result()
 	if _tether_command_view.has("combo_remaining_s"):
 		_tether_command_view.combo_remaining_s = maxf(0.0, float(_tether_command_view.combo_remaining_s) - delta)
 	if not combat_input_available(): _clear_move_input()
@@ -3150,6 +3161,7 @@ func apply_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
 				_tether_command_view.merge(participant.get("tether_command_view", {}), true)
 				if pending.get("encounter_id") == _encounter_id:
 					_tether_command_view["pending_request"] = pending
+				_consume_saved_tether_item_result()
 			var creature := active_creature()
 			var uid := str(creature.get("uid")) if creature != null else ""
 			var resource: Dictionary = participant.get("move_resources", {}).get(uid, {})

@@ -912,6 +912,7 @@ func prepare_tether_item_command(request: Dictionary, peer: int, admitted: Dicti
 	var candidate := TETHER_COMMANDS.stage_item_use(admitted, plan.effect,
 		{"actor": actor, "owner_admitted": true, "encounter_active": true})
 	if candidate.get("ok") != true: return candidate
+	if not candidate.buff.is_empty(): return {"ok": false, "code": "item_buff_consumer_unavailable"}
 	var context := {"character_id": participant.character_id, "expected_revision": revision,
 		"source_key": "tether_item:" + str(receipt.action_id), "in_range": true, "in_combat": true,
 		"foundation_runtime_authorized": true, "item_runtime_authorized": true,
@@ -940,8 +941,44 @@ func pending_tether_items(id: String) -> Array[Dictionary]:
 	return pending
 
 
-## Release an untouched command reservation only when its transport leaves
-## before an item decision exists. A saved row retains its original duty.
+## Release only a saved original after its canonical actor commit. Retain one
+## correlated result in the same command state to repair a lost owner reply.
+func finalize_saved_tether_item(original: Dictionary, training: Dictionary, deliveries: Dictionary,
+		world_namespace: String, world_id: String) -> Dictionary:
+	if original.get("actor_committed") != true or original.get("presented") == true \
+		or training.get("action") != "tether_item" or training.get("status") != "accepted" \
+		or not TRAINING_WORLD.training_row_valid(training, world_namespace, world_id) \
+		or not ACTOR_AUTHORITY.equivalent(deliveries.get(training.get("delivery_id")), training) \
+		or not ACTOR_AUTHORITY.equivalent(original.get("intent"), training.get("intent")) \
+		or not ACTOR_AUTHORITY.equivalent(original.get("context"), training.get("host_context")):
+		return {"ok": false, "code": "item_decision_unavailable"}
+	# Keep the original until the authoritative timed-buff consumer is mounted.
+	var items: RefCounted = preload("res://scripts/world/death_satchel_rules.gd").db()
+	if items.call("definition", str(original.intent.effect.item_id)).has("creature_buff"):
+		return {"ok": false, "code": "item_buff_consumer_unavailable"}
+	var rec: Dictionary = encounters.get(original.encounter_id, {})
+	var rows: Array = rec.get("participants", {}).values()
+	rows.append_array(rec.get("retained_actor_participants", {}).values())
+	for participant: Dictionary in rows:
+		if not is_same(participant.get("tether_commands", {}).get("item_pending"), original): continue
+		var uid: String = original.intent.effect.creature_uid
+		var actor: Dictionary = participant.get("actor_vitals", {}).get(uid, {})
+		if actor.get("training_receipt") != training.receipt \
+			or actor.get("training_character_revision") != training.character_revision \
+			or participant.tether_commands.get("last_receipt") != original.command_plan.receipt:
+			return {"ok": false, "code": "item_commit_changed"}
+		var result := {"request": original.intent.request.duplicate(true), "receipt": training.receipt,
+			"character_id": training.character_id, "creature_uid": uid, "saved": true}
+		participant.tether_commands["item_result"] = result
+		participant.tether_commands.erase("item_pending")
+		original["presented"] = true
+		seq += 1
+		rec.seq = seq
+		return {"ok": true, "result": result.duplicate(true)}
+	return {"ok": false, "code": "item_original_unavailable"}
+
+
+## An untouched reservation may be cancelled only before a durable decision.
 func cancel_unjournaled_tether_item(original: Dictionary, deliveries: Dictionary,
 		world_namespace: String) -> bool:
 	if original.get("actor_committed") == true or original.get("presented") == true \
@@ -2162,7 +2199,7 @@ func _stage_tether_item_baseline(training: Dictionary, admitted: Dictionary,
 				if participant.get("character_id") != training.character_id: continue
 				var original: Dictionary = participant.get("tether_commands", {}).get("item_pending", {})
 				if original.is_empty():
-					if not retained and rec.get("phase") != "done": return {"ok": false, "code": "item_original_unavailable"}
+					# History without its private original cannot rewrite a later actor.
 					continue
 				if not ACTOR_AUTHORITY.equivalent(original.intent, training.intent) \
 					or not ACTOR_AUTHORITY.equivalent(original.context, training.host_context) \

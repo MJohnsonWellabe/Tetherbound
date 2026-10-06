@@ -1207,6 +1207,8 @@ func _tether_item_commit_original(director: Node, original: Dictionary) -> Dicti
 		if is_same(pending, original): found = true
 	if not found or director.call("uses_durable_trainer_rewards", str(original.encounter_id)) != true:
 		return FOUNDATION_ACTIONS.deny("item_original_unavailable")
+	if not _tether_item_live_consumer_ready({"action": "tether_item", "intent": original.intent}):
+		return FOUNDATION_ACTIONS.deny("item_buff_consumer_unavailable")
 	var game := _game()
 	var world: RefCounted = game.get("world")
 	var character: String = original.character_id
@@ -4773,10 +4775,12 @@ func host_ack_creature_training(peer: int, row: Dictionary) -> bool:
 	if row.get("status")!="accepted" or not ESSENCE._equivalent(world.reward_deliveries.get(row.get("delivery_id")),row): return false
 	var character := _authority_character(peer)
 	if character.is_empty() or character != row.get("character_id"): return false
-	if _character_authority.call("creature_training_is_pending", character) != true:
+	if not _tether_item_live_consumer_ready(row): return false
+	var pending: bool = _character_authority.call("creature_training_is_pending", character) == true
+	if not pending and (row.get("action") != "tether_item" or not _tether_item_original_pending(row)):
 		# A recovered saved marker is history, not permission to rewrite live HP.
 		return _character_authority.call("acknowledge_creature_training", character, row) == true
-	if _character_authority.call("creature_training_pending_matches", character, row) != true: return false
+	if pending and _character_authority.call("creature_training_pending_matches", character, row) != true: return false
 	if row.get("kind") == "altar_building": return _character_authority.call("acknowledge_creature_training", character, row) == true
 	var bundle: Dictionary=_training_actor_baseline_proposals(peer,row)
 	if bundle.get("ok")!=true: return false
@@ -4785,7 +4789,49 @@ func host_ack_creature_training(peer: int, row: Dictionary) -> bool:
 	for proposal: Dictionary in bundle.proposals:
 		if proposal.host.call("commit_actor_training_baseline",proposal.stage,row,bundle.admitted,
 			bundle.revision,world.reward_deliveries,world.reward_delivery_namespace,world.world_id)!=true: return false
-	return _character_authority.call("acknowledge_creature_training",_authority_character(peer),row)==true
+	if _character_authority.call("acknowledge_creature_training", character, row) != true: return false
+	return _finalize_tether_item_row(row) if row.get("action") == "tether_item" else true
+
+
+func _tether_item_original_pending(row: Dictionary) -> bool:
+	for director: Node in _foundation_directors_under(_foundation_realm_roots()):
+		if not _ordinary_combat_director_live(director): continue
+		var host: RefCounted = director.get("_encounter_host")
+		if host == null: continue
+		for original: Dictionary in host.call("pending_tether_items", str(row.get("intent", {}).get("request", {}).get("encounter_id", ""))):
+			if ESSENCE._equivalent(original.intent, row.get("intent")) and ESSENCE._equivalent(original.context, row.get("host_context")):
+				return true
+	return false
+
+
+func _tether_item_live_consumer_ready(row: Dictionary) -> bool:
+	if row.get("action") != "tether_item": return true
+	var items: RefCounted = preload("res://scripts/world/death_satchel_rules.gd").db()
+	return not items.call("definition", str(row.get("intent", {}).get("effect", {}).get("item_id", ""))).has("creature_buff")
+
+
+func _finalize_tether_item_row(row: Dictionary) -> bool:
+	for director: Node in _foundation_directors_under(_foundation_realm_roots()):
+		if not _ordinary_combat_director_live(director): continue
+		if director.call("finalize_saved_tether_item", row) != true: return false
+	return true
+
+
+## One validated owner result outlives replacement of the per-character world
+## row by a later station action. It is presentation correlation, never state.
+var _tether_item_saved_result: Dictionary = {}
+
+func tether_item_owner_result_saved(result: Dictionary) -> bool:
+	var game := _game()
+	if game == null or _tether_item_saved_result.is_empty(): return false
+	var proof: Dictionary = _tether_item_saved_result
+	if proof.player.get_ref() != game.get("local") or proof.world.get_ref() != game.get("world") \
+		or proof.world_namespace != game.get("world").reward_delivery_namespace \
+		or proof.world_id != game.get("world").world_id or proof.epoch != _altar_current_epoch():
+		_tether_item_saved_result.clear()
+		return false
+	return result == proof.result and game.get("local").character_id == result.get("character_id") \
+		and game.get("local").redesign_character.transaction_receipts.has(result.get("receipt"))
 
 
 func _training_decision(peer: int, row: Dictionary) -> Dictionary:
@@ -5051,6 +5097,11 @@ func _settle_owner_training_accepted(player: RefCounted, world: RefCounted, row:
 			or _owner_training_retry.receipt != row.receipt or _owner_training_retry.saved != true \
 			or not ESSENCE.owner_matches_after(preload("res://scripts/net/character_record_rules.gd").training_projection(player.call("save_data"), row, ESSENCE.training_projection), row.after): return false
 		_owner_training_retry = {}
+	if row.get("action") == "tether_item":
+		_tether_item_saved_result = {"player": weakref(player), "world": weakref(world),
+			"world_namespace": world.reward_delivery_namespace, "world_id": world.world_id, "epoch": _altar_current_epoch(),
+			"result": {"request": row.intent.request.duplicate(true), "receipt": row.receipt,
+				"character_id": row.character_id, "creature_uid": row.intent.effect.creature_uid, "saved": true}}
 	if _owner_passive != null: _owner_passive.call("owner_settled", row)
 	_advance_personal_view_revision(row)
 	if _owner_passive_altar_original.get("intent", {}).get("spend_id") == row.action_id:
@@ -5136,6 +5187,9 @@ func _training_actor_baseline_proposals(peer: int, training: Dictionary) -> Dict
 	return {"ok":not proposals.is_empty(),"proposals":proposals,"admitted":admitted,"revision":revision}
 
 func training_actor_baseline_ready(peer: int, training: Dictionary) -> bool:
+	# Also runs before Ledger's accepted World write, including recovery with
+	# no live private original. Unmounted tonics cannot become accepted here.
+	if not _tether_item_live_consumer_ready(training): return false
 	if training.get("kind") == "altar_building": return TRAINING_WORLD.altar_build_row_valid(training, _game().get("world").reward_delivery_namespace, _game().get("world").world_id) and training.character_id == _authority_character(peer)
 	return _training_actor_baseline_proposals(peer,training).get("ok")==true
 

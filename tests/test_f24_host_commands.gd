@@ -344,6 +344,17 @@ func test_retained_item_ack_preserves_active_body_and_settles_same_v3_decision_o
 			var binding := {"character_id": "owner_a", "creature_uid": uid, "deployment_generation": 1, "actor_generation": 1, "body_instance_id": 123}
 			var request := COMMANDS.intent(id, 1, 7, "item_throw")
 			var prepared: Dictionary = host.prepare_tether_item_command(request, 1, before, binding, 0, "item-world", "item-epoch", 2000)
+			if item == "attack_tonic":
+				assert_false(prepared.ok, "actual Host refuses unmounted tonic before reserving or journaling")
+				assert_eq(prepared.code, "item_buff_consumer_unavailable")
+				assert_true(host.pending_tether_items(id).is_empty())
+				assert_eq(_command_pool().meter, 100.0)
+				var policy := preload("res://scripts/net/session.gd").new()
+				var tonic_row := {"action": "tether_item", "intent": {"effect": {"item_id": item}}}
+				assert_false(policy.training_actor_baseline_ready(1, tonic_row), "recovered pending tonic refuses before the accepted World writer")
+				policy.free()
+				assert_eq(player.get("inventory").call("count", item), 2)
+				continue
 			assert_true(prepared.ok, str(prepared))
 			if not prepared.ok: continue
 			var original: Dictionary = prepared.original
@@ -417,6 +428,71 @@ func test_retained_item_ack_preserves_active_body_and_settles_same_v3_decision_o
 			if not depart: assert_false(snapshot.participants[1].tether_commands.has("item_pending"), "private original never enters network presentation")
 			assert_eq(creature.get("hp"), before.party[0].hp)
 			assert_eq(player.get("inventory").call("count", item), 2, "component prep/host ACK never mutates live owner inventory")
+			var unrelated := row.duplicate(true)
+			unrelated.intent.request.sequence += 1
+			assert_false(host.finalize_saved_tether_item(original, unrelated, {unrelated.delivery_id: unrelated}, "item-world", "item-slot").ok)
+			assert_false(host.finalize_saved_tether_item(original, row, {}, "item-world", "item-slot").ok)
+			var finalized: Dictionary = host.finalize_saved_tether_item(original, row, {row.delivery_id: row}, "item-world", "item-slot")
+			assert_true(finalized.ok, str(finalized))
+			if finalized.get("ok") == true:
+				assert_true(host.pending_tether_items(id).is_empty())
+				assert_eq(participant.tether_commands.item_result.request, request)
+				assert_eq(participant.tether_commands.item_result.receipt, row.receipt)
+				assert_eq(participant.actor_vitals[uid].body_instance_id, 123)
+				var finalized_record: Dictionary = host.record(id).duplicate(true)
+				assert_false(host.finalize_saved_tether_item(original, row, {row.delivery_id: row}, "item-world", "item-slot").ok)
+				assert_eq(host.record(id), finalized_record, "duplicate finalizer cannot publish or increment sequence again")
+				var history: Dictionary = host.stage_actor_training_baseline(row, token.state, 1, "item-world", "item-slot")
+				assert_true(history.ok)
+				assert_true(history.changes.is_empty(), "history without private original never rewrites the live body")
+				var fixture := preload("res://tests/test_foundation_resource_save.gd")
+				var game := fixture.FixtureGame.new()
+				game.local = player
+				game.world = preload("res://tests/test_foundation_resources.gd").new()._world()
+				game.world.world_id = "item-slot"
+				game.world.reward_delivery_namespace = "item-world"
+				game.world.reward_deliveries = {row.delivery_id: row}
+				var session := fixture.FixtureSession.new()
+				session.fixture = game
+				session._character_authority = authority_type.new()
+				var director := preload("res://tests/test_client_trainer_victory.gd").DirectorFixture.new()
+				director._session = session
+				var manager := MANAGER.new()
+				manager._encounter_link = director
+				manager._tether_command_view = {"pending_request": request, "item_result": finalized.result}
+				manager._consume_saved_tether_item_result()
+				assert_true(manager._tether_command_view.has("pending_request"), "accepted host result waits for owner saved receipt")
+				player.redesign_character.transaction_receipts.append(row.receipt)
+				assert_true(session._settle_owner_training_accepted(player, game.world, row))
+				game.world.reward_deliveries = {}
+				manager._consume_saved_tether_item_result()
+				assert_false(manager._tether_command_view.has("pending_request"), "later station row replacement cannot strand accepted item input")
+				manager._tether_command_view["pending_request"] = COMMANDS.intent(id, 1, 8, "item_throw")
+				manager._consume_saved_tether_item_result()
+				assert_true(manager._tether_command_view.has("pending_request"), "older publication cannot clear a newer request")
+				game.world.reward_delivery_namespace = "replacement-world"
+				assert_false(session.tether_item_owner_result_saved(finalized.result), "bounded proof cannot cross world scope")
+				manager.free()
+				director.free()
+				session.free()
+				game.free()
+
+func test_command_input_honors_the_mounted_command_view_before_allocating_sequence() -> void:
+	var input := preload("res://scripts/ui/tether_command_input.gd").new()
+	var snapshot := {"active": true, "input_context": "combat", "encounter_id": "input-original",
+		"generation": 2, "last_sequence": 0, "unlocked_commands": ["rally", "snare"]}
+	var submitted: Array[Dictionary] = []
+	input.configure(func() -> Dictionary: return snapshot,
+		func(request: Dictionary) -> bool: submitted.append(request.duplicate(true)); return true)
+	assert_false(input._request_snapshot("item_throw", snapshot), "unmounted finalizer cannot receive actual player input")
+	assert_false(input._request_snapshot("tag_combo", snapshot))
+	assert_true(submitted.is_empty())
+	assert_eq(input._sequence, 0, "locked input allocates no command sequence")
+	assert_true(input._request_snapshot("rally", snapshot))
+	assert_eq(submitted.size(), 1)
+	assert_eq(submitted[0], COMMANDS.intent("input-original", 2, 1, "rally"))
+	input.free()
+
 
 func test_first_item_dispatch_refuses_an_older_uncommitted_actor_original() -> void:
 	# Reuse the existing detached Director/Session fixtures. The dispatcher,

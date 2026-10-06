@@ -2,3 +2,5 @@
 *.gd text eol=lf
 *.json text eol=lf
 *.sh text eol=lf
+ralph/reports/COMBAT/f24/current/command-input-gate*.log -text
+ralph/reports/COMBAT/f24/current/item-finalizer*.log -text
