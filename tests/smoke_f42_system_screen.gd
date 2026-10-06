@@ -160,13 +160,19 @@ func _capture_research(panel: Node, tag: String, focus_key: String) -> void:
 		if image != null:
 			_check(image.save_png(ProjectSettings.globalize_path(path)) == OK, "readability PNG saved")
 			print("RESEARCH CAPTURE: " + path)
+		if selected != null:
+			_check(_visible_rect(selected, size).encloses(selected.get_global_rect()),
+				"selected species row remains visible after native resize: " + focus_key)
 		for label: Label in panel.get("body").find_children("*", "Label", true, false):
 			if not label.text.contains(" / "): continue
-			var visible_rect := Rect2(Vector2.ZERO, Vector2(size))
-			var ancestor := label.get_parent()
-			while ancestor != null:
-				if ancestor is Control and ancestor.clip_contents:
-					visible_rect = visible_rect.intersection(ancestor.get_global_rect())
-				ancestor = ancestor.get_parent()
-			_check(visible_rect.encloses(label.get_global_rect()),
+			_check(_visible_rect(label, size).encloses(label.get_global_rect()),
 				"selected task is fully visible at %dx%d: %s" % [size.x, size.y, label.text])
+
+func _visible_rect(control: Control, size: Vector2i) -> Rect2:
+	var visible_rect := Rect2(Vector2.ZERO, Vector2(size))
+	var ancestor := control.get_parent()
+	while ancestor != null:
+		if ancestor is Control and ancestor.clip_contents:
+			visible_rect = visible_rect.intersection(ancestor.get_global_rect())
+		ancestor = ancestor.get_parent()
+	return visible_rect

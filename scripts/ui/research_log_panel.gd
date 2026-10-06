@@ -62,6 +62,7 @@ func _rebuild() -> void:
 		if not seen or key != _species: continue
 		has_details = true
 		status.text += " · " + str(row.get("name", ""))
+		species_scroll.resized.connect(_reveal_species.bind(species_scroll, species_button))
 		_reveal_species.call_deferred(species_scroll, species_button)
 		for task: Dictionary in row.get("tasks", []):
 			var rewards: Array[String] = []
