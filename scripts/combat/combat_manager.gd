@@ -421,6 +421,40 @@ func tether_command_snapshot() -> Dictionary:
 	return snapshot
 
 
+## Read-only F42 view over the same acknowledged local pools used by combat.
+## Refuse an old creature's view while a switch/deployment is being admitted.
+func new_system_combat_snapshot() -> Dictionary:
+	var hidden := {"active":false}
+	if not preload("res://scripts/combat/tether_commands.gd").enabled("ui_enabled") \
+		or state != State.ACTIVE or not combat_input_available() or is_aiming() or is_resolving_catch(): return hidden
+	var creature := active_creature()
+	if creature == null or _moves == null or not is_instance_valid(_encounter_link) \
+		or not _encounter_link.has_method("tether_command_deployment"): return hidden
+	var uid := str(creature.uid)
+	var deployment: Dictionary = _encounter_link.call("tether_command_deployment")
+	var commands := tether_command_snapshot()
+	if deployment.get("creature_uid") != uid or int(deployment.get("generation", 0)) < 1 \
+		or commands.get("character_id") != deployment.get("character_id") \
+		or _tether_command_view.get("encounter_id") != _encounter_id or not _party_ultimate.has(uid): return hidden
+	var glyphs := preload("res://scripts/ui/input_glyph.gd")
+	var slots := {}
+	for slot: String in ["quick", "charged", "utility"]:
+		var move_id := str(creature.get("move_" + slot))
+		var move: Dictionary = _moves.move(move_id)
+		var remaining := utility_cooldown() if slot == "utility" else (_quick_cooldown if slot == "quick" else _charged_cooldown)
+		slots[slot] = {"glyph":glyphs.action_name("combat_" + slot),
+			"name":_moves.display_name(move_id) if _moves.has(move_id) else "No " + slot,
+			"ready":quick_ready() if slot == "quick" else (charged_ready() if slot == "charged" else utility_ready()),
+			"cooldown_remaining_s":maxf(0.0, remaining), "cooldown_total_s":float(move.get("cooldown", 0.0))}
+	slots["dodge"] = {"glyph":glyphs.action_name("jump"), "name":"Dodge",
+		"ready":not player_is_committed() and wind_value() >= wind_cost("burst")}
+	var maximum := float(MATH.config().ultimate.maximum)
+	return {"active":true, "input_context":"combat", "creature_uid":uid,
+		"ultimate_meter":clampf(float(_party_ultimate[uid]), 0.0, maximum), "ultimate_maximum":maximum,
+		"ultimate_armed":ultimate_armed(), "arm_fraction":clampf(_ultimate_armed_left / maxf(0.01,
+			float(MATH.config().ultimate.arm_window_s)), 0.0, 1.0), "commands":commands, "slots":slots}
+
+
 func submit_tether_command(request: Dictionary) -> bool:
 	if not preload("res://scripts/combat/tether_commands.gd").enabled() or not is_instance_valid(_encounter_link): return false
 	if request.get("command_id") == "item_throw":

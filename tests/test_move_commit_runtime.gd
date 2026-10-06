@@ -171,3 +171,50 @@ func test_f33_no_charm_keeps_the_ordinary_gain_and_power() -> void:
 	assert_true(_start(1).ok)
 	assert_true(_arrive(1).ok)
 	assert_eq(host.credit_move_hit(id, 1, 1, 10.0).ultimate_meter, 6.0)
+
+
+func test_new_system_hud_never_exposes_unadmitted_or_foreign_uid_resources() -> void:
+	var commands := preload("res://scripts/combat/tether_commands.gd")
+	var previous: Dictionary = commands.config()
+	commands._config = previous.duplicate(true)
+	commands._config.feature_flags.ui_enabled = true
+	var manager := preload("res://scripts/combat/combat_manager.gd").new()
+	manager._moves = preload("res://scripts/creatures/move_db.gd").load_default()
+	var species := preload("res://scripts/creatures/creature_species.gd")
+	var first: RefCounted = species.spawn("terrapup")
+	var second: RefCounted = species.spawn("ripplet")
+	manager._party.assign([first, second])
+	manager._active_index = 0
+	manager._apply_move_resources({"creature_uid":first.uid, "ultimate_meter":36.0, "energy":26.0})
+	var before: Dictionary = manager._party_ultimate.duplicate(true)
+	assert_eq(manager.new_system_combat_snapshot(), {"active":false}, "idle HUD stays hidden")
+	manager.state = manager.State.ACTIVE
+	assert_eq(manager.new_system_combat_snapshot(), {"active":false}, "resources alone cannot impersonate admitted deployment")
+	# Detached production deployment/resource projection, not a played fight.
+	var director := preload("res://scripts/combat/encounter_director.gd").new()
+	director._deployment_identity = {1:{"character_id":"owner_a", "creature_uid":first.uid, "generation":1}}
+	manager._encounter_link = director
+	manager._encounter_id = id
+	manager._tether_command_view = {"encounter_id":id, "character_id":"owner_a", "meter":25.0}
+	manager._initialize_wind()
+	var view: Dictionary = manager.new_system_combat_snapshot()
+	assert_true(view.get("active") == true)
+	assert_eq(view.get("ultimate_meter"), 36.0)
+	assert_eq(view.get("creature_uid"), first.uid)
+	view.commands.meter = 100.0
+	assert_eq(manager._tether_command_view.meter, 25.0, "returned command view cannot mutate the manager")
+	manager._tether_command_view.encounter_id = "prior-encounter"
+	assert_eq(manager.new_system_combat_snapshot(), {"active":false}, "prior encounter cannot supply a current view")
+	manager._tether_command_view.encounter_id = id
+	manager._active_index = 1
+	assert_eq(manager.new_system_combat_snapshot(), {"active":false}, "switch never exposes the previous creature's acknowledged meter")
+	director._deployment_identity[1].creature_uid = second.uid
+	assert_eq(manager.new_system_combat_snapshot(), {"active":false}, "new UID waits for its own acknowledged pool")
+	assert_eq(manager._party_ultimate, before, "HUD reads never transfer or spend a pool")
+	manager._apply_move_resources({"creature_uid":"foreign-creature", "ultimate_meter":100.0})
+	assert_eq(manager._party_ultimate, before, "foreign UID cannot populate the owner's displayed resources")
+	assert_eq(first.energy, 26.0)
+	assert_eq(second.energy, 0.0)
+	director.free()
+	manager.free()
+	commands._config = previous

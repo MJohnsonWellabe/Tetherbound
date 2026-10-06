@@ -352,6 +352,8 @@ func _ready() -> void:
 		_tether_meter.position = Vector2(_party_strip_position().x, maxf(24.0, _party_strip_position().y - 160.0))
 		if _manager != null:
 			_manager.connect("tether_command_refused", _tether_meter.refused)
+			if _manager.has_method("new_system_combat_snapshot"):
+				configure_new_system_view(Callable(_manager, "new_system_combat_snapshot"))
 
 	_build_orb_cluster()
 	_build_effect_banner()
