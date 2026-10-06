@@ -26,7 +26,8 @@ func _bind() -> bool:
 	_rig = tree.current_scene.get_node_or_null("CameraRig") as Node3D
 	return (_player != null and _rig != null and INPUT_OWNER.current(tree) == null \
 		and game.party.size() > 0 and game.party.size() <= 5 and game.pending_catch == null) \
-		or _fail("F49 travel requires ordinary world input and one to five actually owned creatures")
+		or _fail("F49 travel requires ordinary world input and one to five actually owned creatures (input owner %s, party %d, pending catch %s)" % [
+			str(INPUT_OWNER.current(tree)), game.party.size(), str(game.pending_catch != null)])
 
 func _uids() -> Array[String]:
 	var out: Array[String] = []
