@@ -18,8 +18,8 @@
     "_comment_revive_stamina_fraction": "Same, for stamina: you get up able to move, not able to sprint away for free. Satiety is deliberately NOT touched -- a revive is not a meal, and CLAUDE.md's light-satiety rule means it was never a danger in the first place."
   },
   "session": {
-    "_comment_redesign_portal_runtime_enabled": "F18 Crossing Hall portals are unfinished (every F18 criterion unproven). Off, travel uses the physical crossings main ships (biome_order.legacy_physical_crossings) and no portal permit is required. F18 turns this on when it lands.",
-    "redesign_portal_runtime_enabled": false,
+    "_comment_redesign_portal_runtime_enabled": "F18 (owner 2026-10-04): the Crossing Hall portals, Home Key and waystones are the only realm path (RD-17). On, biome_order.legacy_physical_crossings is false, retired gates refuse, and every inter-biome trip needs a host portal permit. Off is the emergency fallback to the old physical crossings; evidence in ralph/reports/HUB/f18/.",
+    "redesign_portal_runtime_enabled": true,
     "redesign_boss_handoff_runtime_enabled": true,
     "redesign_ending_runtime_enabled": true,
     "port": 27015,

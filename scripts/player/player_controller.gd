@@ -224,6 +224,17 @@ func _load_vitals_config() -> void:
 	vitals.configure_satiety(parsed as Dictionary)
 
 
+## F33#3: an authored cold zone (gear.json cold_zones) slows this trainer's
+## stamina regen; worn cold gear eases it. 1.0 everywhere else, and while
+## hazard mitigation is not live.
+func _cold_regen_scale() -> float:
+	if not preload("res://scripts/player/player_equipment.gd").hazards_live(): return 1.0
+	var game := get_node_or_null("/root/Game")
+	var personal: Variant = game.get("local") if game != null else null
+	var equipment: Variant = game.get("player_equipment") if game != null else null
+	if personal == null or equipment == null: return 1.0
+	return float(equipment.call("local_cold_regen_scale", str(personal.get("realm")), global_position))
+
 func _physics_process(delta: float) -> void:
 	var running_efficiency := 1.0
 	var activity_before := global_position
@@ -300,7 +311,7 @@ func _physics_process(delta: float) -> void:
 	if fly_controller != null:
 		fly_controller.call("observe_ground")
 
-	vitals.tick(delta, _sprinting and velocity.length() > 0.5, running_efficiency)
+	vitals.tick(delta, _sprinting and velocity.length() > 0.5, running_efficiency, _cold_regen_scale())
 	if _skills_activity != null and _sprinting:
 		_skills_activity.record_movement("running", global_position - before, _wanted_dir, delta, _sprint_speed)
 	vitals.tick_satiety(delta)
@@ -1037,5 +1048,5 @@ func _ride(delta: float) -> void:
 		_model.global_rotation.y = _carrier.global_rotation.y
 	_sprinting = false
 	if swim_controller == null or not swim_controller.is_swimming():
-		vitals.tick(delta, false)
+		vitals.tick(delta, false, 1.0, _cold_regen_scale())
 	vitals.tick_satiety(delta)

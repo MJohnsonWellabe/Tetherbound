@@ -161,13 +161,20 @@ var _idle_left: float = 0.0
 ## Creature node -> the tick it last made an alert sound, so a creature that
 ## re-notices the player every frame does not machine-gun.
 var _alert_msec: Dictionary = {}
-## Bodies whose `wants_to_engage` this has already connected to.
-var _voiced: Array = []
+## Instance ids of bodies whose `wants_to_engage` this has already connected
+## to. A set, not an Array: the Meadows holds ~1,160 wild bodies, and an
+## Array.has() per body per scan was ~1.3M comparisons (PERF, 2026-10-05).
+var _voiced: Dictionary = {}
+## Seconds until the next scan for newly spawned voices.
+var _connect_left: float = 0.0
 
 
 func _tick_creature_voices(delta: float) -> void:
 	var config := CONFIG.section("creatures")
-	_connect_new_creatures(config)
+	_connect_left -= delta
+	if _connect_left <= 0.0:
+		_connect_left = float(config.get("connect_poll_seconds", 0.5))
+		_connect_new_creatures(config)
 
 	_idle_left -= delta
 	if _idle_left > 0.0:
@@ -184,16 +191,20 @@ func _tick_creature_voices(delta: float) -> void:
 ##
 ## Polled rather than done once at `_ready`, because creatures spawn and despawn
 ## continuously as the player moves through the corridor -- there is no single
-## moment when "every creature" exists to connect to.
-func _connect_new_creatures(config: Dictionary) -> void:
+## moment when "every creature" exists to connect to. Polled every
+## `connect_poll_seconds`, not every frame: the scan walks the whole group, and
+## a creature that spawns cannot notice the player within half a second.
+func _connect_new_creatures(_config: Dictionary) -> void:
+	var current := {}
 	for node in get_tree().get_nodes_in_group(&"creature_voice"):
-		if _voiced.has(node):
+		var id := node.get_instance_id()
+		current[id] = true
+		if _voiced.has(id):
 			continue
-		_voiced.append(node)
 		if node.has_signal("wants_to_engage"):
 			node.connect("wants_to_engage", _on_creature_alert.bind(node))
-	# Freed creatures would otherwise accumulate here for the whole run.
-	_voiced = _voiced.filter(func(n: Variant) -> bool: return is_instance_valid(n))
+	# Rebuilt from the live group, so freed creatures never accumulate here.
+	_voiced = current
 
 
 func _on_creature_alert(who: Node) -> void:

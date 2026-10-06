@@ -1,0 +1,28 @@
+{
+  "commands": [
+    {
+      "label": "healing",
+      "command": [
+        "--headless",
+        "--path",
+        "D:/tetherbound/codex-p1",
+        "--check-only",
+        "--script",
+        "tests/smoke_meadow_healing_land_heals.gd"
+      ]
+    },
+    {
+      "label": "handoff",
+      "command": [
+        "--headless",
+        "--path",
+        "D:/tetherbound/codex-p1",
+        "--check-only",
+        "--script",
+        "tests/smoke_net_shared_boss.gd"
+      ]
+    }
+  ],
+  "source_head": "d6b6246278f5e94660cca2ff68a55973556cd230",
+  "claim": "native check-only existing healing and handoff scripts; no runtime criterion credit"
+}

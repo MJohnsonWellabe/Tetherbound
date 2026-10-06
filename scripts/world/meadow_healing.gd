@@ -56,6 +56,12 @@ const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 ## Set on a pylon the moment it is committed to falling, so a second `apply`
 ## (or any second pass) can never rotate an already-fallen pylon again.
 const TOPPLED_META := &"meadow_toppled"
+## Registered by the production builders. Resolve each group at its own
+## healing step: earlier steps can remove nodes, and another realm/world may
+## be alive in the same tree during travel or a proof reload.
+const PYLON_HOLDERS_GROUP := &"meadow_healing_pylon_holders"
+const CABLE_HOLDERS_GROUP := &"meadow_healing_cable_holders"
+const LIGHT_ROOTS_GROUP := &"meadow_healing_light_roots"
 ## F05#7 round 6: the drain and regreen overlays' own shader. Blind round 5
 ## read the works patch as "a hard-edged polygon that becomes a darker olive
 ## polygon -- a texture swap". Two causes, both fixed here rather than in any
@@ -165,6 +171,7 @@ var _last_block_reasons: Dictionary = {}
 var _bake_reasons: Dictionary = {}
 ## [grown Rect2, band] per road band, built once for the pre-filters.
 var _band_rects: Array = []
+var _road_reach: Array = []
 
 
 func build(world: Node3D) -> void:
@@ -657,18 +664,23 @@ func _kill_the_tether_lights() -> int:
 		dead_texture = load(dead_path)
 	var dead_darken := clampf(float(block.get("dead_darken", 0.25)), 0.0, 1.0)
 	var killed := 0
-	var seen: Array[Material] = []
-	for node: Node in _all_nodes(_world):
-		if not node is GeometryInstance3D:
-			continue
-		var geometry := node as GeometryInstance3D
-		for material: Material in _materials_of(geometry):
-			var standard := material as StandardMaterial3D
-			if standard == null or seen.has(standard):
+	var seen: Dictionary = {}
+	var visited: Dictionary = {}
+	for target_root: Node in _world_group_nodes(LIGHT_ROOTS_GROUP):
+		# These are small authored presentation roots, never the vegetation or
+		# the world. Roots can overlap (e.g. a conduit inside the stronghold).
+		for node: Node in _all_nodes(target_root):
+			if not is_instance_valid(node) or node.is_queued_for_deletion() \
+					or visited.has(node) or not node is GeometryInstance3D:
 				continue
-			seen.append(standard)
-			if _kill_one(standard, lit_path, dead_texture, dead_darken):
-				killed += 1
+			visited[node] = true
+			for material: Material in _materials_of(node as GeometryInstance3D):
+				var standard := material as StandardMaterial3D
+				if standard == null or seen.has(standard):
+					continue
+				seen[standard] = true
+				if _kill_one(standard, lit_path, dead_texture, dead_darken):
+					killed += 1
 	return killed
 
 
@@ -826,6 +838,7 @@ func _regreen_group(group_name: String, discs: Array, block: Dictionary,
 		bounds = rect if i == 0 else bounds.merge(rect)
 	var ask_roads := bool(block.get("spare_roads", true)) and field != null \
 		and not _bands_near(bounds, 0.0).is_empty()
+	var road_reach: Array = _road_reach_rects() if ask_roads else []
 
 	var corners: Dictionary = {}  # Vector2i -> [Vector3 point, alpha] or null
 	var surface := SurfaceTool.new()
@@ -843,7 +856,14 @@ func _regreen_group(group_name: String, discs: Array, block: Dictionary,
 				if is_nan(ground):
 					corners[at] = null
 				else:
-					var path := float(field.call("path_factor", x, z)) if ask_roads else 0.0
+					# `path_factor` walks every road band per call, ~10 s of
+					# the ~11 s regreen build (PERF, 2026-10-05). A corner
+					# outside every band's reach gets exactly 0 from it.
+					var path := 0.0
+					if ask_roads:
+						var reaching := _bands_reaching(road_reach, Vector2(x, z))
+						if not reaching.is_empty():
+							path = float(field.call("path_factor_over", x, z, reaching))
 					corners[at] = [Vector3(x, ground + lift, z),
 						regreen_alpha(Vector2(x, z) + edge_jitter(at, jitter), discs, global_strength, max_alpha, path)]
 			if corners[at] == null:
@@ -1392,7 +1412,7 @@ func _topple_the_pylons(immediate: bool) -> int:
 	var stagger := float(block.get("stagger_seconds", 0.35))
 	var lead := maxf(float(block.get("creak_seconds", 0.0)), 0.0) + maxf(float(block.get("creak_hold_seconds", 0.0)), 0.0)
 	var toppled := 0
-	for node: Node in _all_nodes(_world):
+	for node: Node in _world_group_nodes(PYLON_HOLDERS_GROUP):
 		var holder := node as Node3D
 		if holder == null or not _name_matches(str(holder.name), patterns):
 			continue
@@ -1412,10 +1432,10 @@ func _topple_the_pylons(immediate: bool) -> int:
 				var spans := _spans_hanging_from(holder, _pylon_index(pylons[i]), claimed)
 				_cables_hidden += spans.size()
 				_tear_after(spans, 0.0 if immediate else delay + lead)
-	for raw: Variant in (block.get("cable_holders", []) as Array):
-		for node: Node in _all_nodes(_world):
-			if str(node.name) == str(raw):
-				_cables_hidden += _hide_named(node, prefixes)
+	var cable_holders: Array = block.get("cable_holders", [])
+	for node: Node in _world_group_nodes(CABLE_HOLDERS_GROUP):
+		if cable_holders.has(str(node.name)):
+			_cables_hidden += _hide_named(node, prefixes)
 	return toppled
 
 
@@ -1974,6 +1994,42 @@ func _footprint_clear_of_roads(points: PackedVector2Array, block: Dictionary) ->
 
 ## Road bands (`playground_heightfield.road_bands()`) whose own bounds, grown by
 ## half-width + shoulder + `margin` (+ 2 m for the edge wobble), reach `rect`.
+## [reach rect, band] for every road band: its bounds grown by the farthest its
+## `path_factor` weight can reach (half-width + shoulder + the edge wobble;
+## noise is within +-1, and 1.5x plus a metre of slack keep the bound safe).
+## A band contributes exactly 0 to `playground_heightfield.gd::path_factor`
+## at any point outside its rect.
+func _road_reach_rects() -> Array:
+	if not _road_reach.is_empty():
+		return _road_reach
+	var field := _heightfield()
+	if field == null:
+		return _road_reach
+	var default_wobble := float(field.get("_path_wobble_metres"))
+	for raw: Variant in (field.call("road_bands") as Array):
+		var band: Dictionary = raw
+		var line: PackedVector2Array = band["line"]
+		if line.is_empty():
+			continue
+		var bounds := Rect2(line[0], Vector2.ZERO)
+		for point: Vector2 in line:
+			bounds = bounds.expand(point)
+		var shoulder := float(band["shoulder"])
+		var wobble := float(band.get("wobble", -1.0))
+		if wobble < 0.0:
+			wobble = default_wobble if default_wobble >= 0.0 else shoulder * 0.5
+		_road_reach.append([bounds.grow(float(band["half"]) + shoulder + absf(wobble) * 1.5 + 1.0), band])
+	return _road_reach
+
+
+static func _bands_reaching(reach: Array, point: Vector2) -> Array:
+	var out: Array = []
+	for pair: Array in reach:
+		if (pair[0] as Rect2).has_point(point):
+			out.append(pair[1])
+	return out
+
+
 func _bands_near(rect: Rect2, margin: float) -> Array:
 	var field := _heightfield()
 	if field == null:
@@ -2270,6 +2326,17 @@ func _find(node_name: String) -> Node:
 		return null
 	var direct := _world.get_node_or_null(NodePath(node_name))
 	return direct if direct != null else _world.find_child(node_name, true, false)
+
+
+func _world_group_nodes(group: StringName) -> Array[Node]:
+	var out: Array[Node] = []
+	if _world == null or not _world.is_inside_tree():
+		return out
+	for node: Node in _world.get_tree().get_nodes_in_group(group):
+		if is_instance_valid(node) and not node.is_queued_for_deletion() \
+				and (node == _world or _world.is_ancestor_of(node)):
+			out.append(node)
+	return out
 
 
 func _all_nodes(root: Node) -> Array[Node]:

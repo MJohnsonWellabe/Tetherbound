@@ -78,11 +78,15 @@ const GROUP := &"companion_presence"
 ## top of the script-suffix scan `camp.script_suffixes` configures. A fixture
 ## or a future camp piece opts in by joining; nothing else is required.
 const CAMP_GROUP := &"companion_camp"
+## Authored suffix-matched sources join this candidate group. It does not
+## override camp.script_suffixes the way the explicit opt-in group does.
+const CAMP_SOURCE_GROUP := &"companion_camp_sources"
 
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const REST_VISUAL := preload("res://scripts/creatures/water_rest_pose_visual.gd")
+const GEAR_ACCENT := preload("res://scripts/creatures/creature_gear_accent.gd")
 
 ## Reaction names. Also the keys of the config and of `_cooldowns`.
 const ACKNOWLEDGE := "acknowledge"
@@ -165,6 +169,10 @@ var _camp_sources: Array[Node3D] = []
 ## than reimplement it on this layer's pivot. Terrapup uses the proven full
 ## side-rest; the established partial-roll behavior remains for other bodies.
 var _body_rest_held := false
+## F33#1: the equipped-gear trim/glow on this (local) body, bound once per
+## active creature UID; the accent itself follows equip/unequip changes.
+var _gear_accent: RefCounted = null
+var _gear_accent_uid := ""
 
 var _last_bond_nodes := -1
 ## Which creature `_last_bond_nodes` was read from. A party cycle swaps the
@@ -285,6 +293,7 @@ func tick(delta: float) -> void:
 		return
 	_resolve_context()
 	_resolve_model()
+	_bind_gear_accent()
 	for name in _cooldowns.keys():
 		_cooldowns[name] = maxf(0.0, float(_cooldowns[name]) - delta)
 	for name in _pending.keys():
@@ -771,15 +780,58 @@ func _update_camp(delta: float, leader: Node3D) -> void:
 		_camp_standing_seconds = 0.0
 
 
-## Walks the tree for camp sources. Every `scan_every_s`, not every frame:
-## the world has thousands of nodes and this needs a handful of them. Skips
-## Control/CanvasLayer subtrees (the HUD holds no campfires).
+func _camp_group_nodes() -> Variant:
+	var tree := _tree()
+	if tree == null:
+		return null
+	var sources := tree.get_nodes_in_group(CAMP_SOURCE_GROUP)
+	for node: Node in tree.get_nodes_in_group(CAMP_GROUP):
+		if not sources.has(node):
+			sources.append(node)
+	return sources
+
+
+## Live sources are indexed by the tree; detached fixtures retain the small
+## legacy walk. A fresh group query includes newly built and removed beds.
 func _scan_camp_sources(cfg: Dictionary) -> Array[Node3D]:
 	var out: Array[Node3D] = []
 	var root := _root()
 	if root == null:
 		return out
 	var suffixes: Array = cfg.get("script_suffixes", [])
+	var grouped: Variant = _camp_group_nodes()
+	# Preserve custom configurations whose scripts have no authored group yet.
+	for suffix: Variant in suffixes:
+		if str(suffix) not in ["campfire_glow.gd", "creature_bed.gd", "player_bed.gd"]:
+			grouped = null
+			break
+	if grouped is Array:
+		last_camp_scan_nodes = (grouped as Array).size()
+		if root is Control or root is CanvasLayer:
+			return out
+		for candidate: Variant in grouped:
+			if not is_instance_valid(candidate) or not candidate is Node3D:
+				continue
+			var node := candidate as Node3D
+			var ancestor: Node = node
+			var eligible := true
+			while ancestor != null and ancestor != root:
+				if ancestor is Control or ancestor is CanvasLayer:
+					eligible = false
+					break
+				ancestor = ancestor.get_parent()
+			if not eligible or ancestor != root:
+				continue
+			if node.is_in_group(CAMP_GROUP):
+				out.append(node)
+				continue
+			var script := node.get_script() as Script
+			if script != null:
+				for suffix: Variant in suffixes:
+					if script.resource_path.ends_with(str(suffix)):
+						out.append(node)
+						break
+		return out
 	var stack: Array[Node] = [root]
 	var walked := 0
 	while not stack.is_empty():
@@ -971,6 +1023,41 @@ func _play_clip(role: String) -> void:
 	var animator: Variant = _body.get("_animator")
 	if animator != null and (animator as Object).has_method("play_if_exists"):
 		(animator as Object).call("play_if_exists", role)
+
+
+## F33#1. Only this player's own body: its gear is read from its owner's own
+## record. A remote body's owner record is not held by this process.
+func _bind_gear_accent() -> void:
+	if remote or _body == null or not _body.is_inside_tree() or _game == null or not is_instance_valid(_game):
+		return
+	var creature := _creature()
+	var uid := str(creature.get("uid")) if creature != null else ""
+	if uid == _gear_accent_uid:
+		return
+	_gear_accent_uid = uid
+	if _gear_accent != null:
+		_gear_accent.call("unbind_projection")
+		_gear_accent = null
+	var local: Variant = _game.get("local")
+	if uid.is_empty() or local == null:
+		return
+	var accent: RefCounted = GEAR_ACCENT.new()
+	if accent.call("bind_projection", _body, _gear_record, str(local.get("character_id")), uid) == true:
+		_gear_accent = accent
+
+
+## The published personal record the accent reads: the owner's party UIDs and
+## its redesign character (where each creature's gear lives).
+func _gear_record() -> Dictionary:
+	if _game == null or not is_instance_valid(_game) or _game.get("local") == null:
+		return {}
+	var local: RefCounted = _game.get("local")
+	var party: Array = []
+	var members: Variant = _game.get("party").call("members") if _game.get("party") != null else []
+	for member: Variant in members:
+		if member is RefCounted: party.append({"uid": str(member.get("uid"))})
+	return {"character_id": str(local.get("character_id")), "party": party,
+		"redesign_character": local.get("redesign_character")}
 
 
 func _resolve_model() -> void:

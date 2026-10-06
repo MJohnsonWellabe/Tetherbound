@@ -1,8 +1,9 @@
 extends "res://tests/test_case.gd"
 
-## Parts of this file assert the LEGACY PATH (Water key, Waterward hand-off);
-## see the LEGACY PATH note in
-## test_chapter_data_orders_release_offer_and_waterward_before_home_placement.
+## Stormwood is the last chapter of this pass (RD-10/RD-22): its boss hands
+## each participant the fifth portal key, then the Home Key homecoming runs.
+## The Waterward data that still grants `realm_key_water` is a known F19/F20
+## data conflict; see test_chapter_data_orders_release_offer_and_waterward_before_home_placement.
 ##
 ## The world scene and network smoke own the physical ceremony. These focused
 ## contracts make the chapter order, per-participant offers and authored seams fail
@@ -108,12 +109,30 @@ func test_chapter_data_orders_release_offer_and_waterward_before_home_placement(
 		"realm_heart_stormwood_earned"), "release awards the Spark")
 	assert_false(by_id.has("stormwood_spark_placed"),
 		"Spark placement belongs to the Meadows home circle, not the remote chapter")
-	# LEGACY PATH: asserts the shipped portal-off behaviour (the Stormwood finale
-	# reveals the Waterward route and grants the world-scoped Water key).
-	# Superseded by RD-10/RD-17/RD-22 (the finale now grants each participant a
-	# fifth portal key, then the Home Key homecoming, F19#2/F20) once F18 turns
-	# redesign_portal_runtime_enabled on; retire this test or rewrite it to the redesign rule at that
-	# point.
+	# Redesign rule (RD-20/RD-21/RD-22, F19#2/F20): the Stormwood finale hands
+	# every participant the fifth portal key ITEM once the legendary offer is
+	# answered, and the shipped session config routes the aftermath to the Home
+	# Key homecoming rather than the Waterward dialogue.
+	var marrow: Dictionary = preload("res://scripts/net/encounter_rewards.gd").chapter_hand_off(
+		"captain_marrow_dynamo_core", "stormwood")
+	assert_eq(str(marrow.get("portal_key_item", "")), "fifth_portal_key",
+		"Stormwood's boss drops the fifth portal key")
+	assert_eq(str(marrow.get("next_biome", "")), "biome5", "the key points at the sealed fifth arch")
+	assert_eq(str(marrow.get("delivery_phase", "")), "accepted_legendary_settlement",
+		"the key waits for the roster decision, like the Waterward reveal did")
+	assert_true((marrow.get("delivery_requires_world_flags", []) as Array).has(
+		"stormwood:legendary_offer_made"), "the hand-off follows the offer")
+	var session: Dictionary = (JSON.parse_string(FileAccess.get_file_as_string(
+		"res://data/config/multiplayer.json")) as Dictionary).session
+	assert_true(ENDING.homecoming_runtime_enabled(session),
+		"the shipped config hands the Stormwood aftermath to the homecoming")
+	# DATA CONFLICT (owned by F19/F20, not edited here): the authored
+	# `stormwood_waterward_revealed` objective still grants the world-scoped
+	# `realm_key_water`, which RD-17/RD-22 retire (biomes connect only through the
+	# Crossing Hall portals; the Stormwood finale's key is `fifth_portal_key`).
+	# With portals on the physical Water gate refuses that key ("Use the Crossing
+	# Hall portals."), so it opens nothing. This asserts the data as it ships so a
+	# removal is a deliberate, visible change.
 	assert_true((by_id["stormwood_waterward_revealed"].requires_flags as Array).has(
 		"stormwood:legendary_offer_made"), "Waterward follows the roster decision")
 	for flag: String in ["realm_key_water", "waterward_route_revealed", "stormwood:chapter_complete"]:

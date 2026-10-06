@@ -917,7 +917,7 @@ func _draw_ally() -> void:
 	if creature == null:
 		return
 	_ally_name.text = creature.label()
-	_ally_level.text = "Lv %d" % int(creature.level)
+	_ally_level.text = ally_level_text(creature, _manager)
 	_draw_ally_portrait(str(creature.species_id))
 
 	var fraction: float = creature.hp_fraction()
@@ -946,6 +946,16 @@ func _draw_ally() -> void:
 	if now_full and not _energy_was_full:
 		_pulse(_energy_pulse)
 	_energy_was_full = now_full
+
+
+## F33: a Harness raises maximum HP for the fight, so the raised HP is shown
+## beside the level; with no Harness the line is the level alone.
+static func ally_level_text(creature: RefCounted, manager: Node) -> String:
+	var text := "Lv %d" % int(creature.get("level"))
+	if manager == null or not manager.has_method("display_hp"): return text
+	var shown: Vector2 = manager.call("display_hp", creature)
+	if shown.y <= float(creature.get("max_hp")) + 0.001: return text
+	return "%s · HP %d/%d" % [text, roundi(shown.x), roundi(shown.y)]
 
 
 ## The same species resolver used by the roster supplies real identity art.

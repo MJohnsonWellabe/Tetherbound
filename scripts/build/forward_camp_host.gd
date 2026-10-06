@@ -19,7 +19,7 @@ static func placement_context(placer: Node, game: Node, actor: Node3D, character
 	var p: Array = original.position
 	var at := Vector3(p[0],p[1],p[2])
 	if actor.global_position.distance_to(at) > float(cfg.maximum_place_distance_m): return {}
-	var checked: Variant = placer.call("validate_forward_camp_ground",game,realm,at,original.get("yaw_deg",NAN))
+	var checked: Variant = placer.call("validate_forward_camp_ground",game,realm,at,original.get("yaw_deg",NAN),actor)
 	if not checked is Dictionary or checked.get("ok") != true: return {}
 	return {"character_id":character,"expected_revision":revision,"realm":realm,
 		"in_range":true,"in_combat":false,"host_ground_valid":true}
@@ -66,6 +66,11 @@ static func pack_context(placer: Node, game: Node, camp: Node3D, actor: Node3D,
 			if row.resting and row.get("rest_bed_index") == actual.camp_index: return {}
 	actual.all_parties_awake=true
 	actual.host_ground_valid=true # Packing validates the existing source, no new terrain claim.
+	# HOMESTEAD §8: placing a second camp in a biome packs up the first from
+	# wherever the owner stands in that loaded realm (stage_build still checks
+	# ownership and that no party rests there); reach gates use, not packing.
+	actual.in_range=true
+	actual.within_reach=true
 	return actual
 
 ## Reconcile before resolving the source again: an accepted pack removes it.

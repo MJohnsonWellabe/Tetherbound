@@ -4078,6 +4078,22 @@ func _story_gate_rows() -> Array:
 	for node in get_nodes_in_group("progression_restore"):
 		if not is_instance_valid(node) or not node.has_method("is_open"):
 			continue
+		if node.get_method_argument_count("is_open") > 0:
+			# A multi-gate owner (water_return_ramps.gd) answers per ramp id;
+			# calling it bare was a SCRIPT ERROR in every host log.
+			var ramps: Variant = node.get("_ramps")
+			if ramps is Array:
+				for ramp: Variant in ramps:
+					if not ramp is Dictionary:
+						continue
+					var id := str((ramp as Dictionary).get("id", ""))
+					rows.append({
+						"node": "%s/%s" % [node.name, id],
+						"flag": str((ramp as Dictionary).get("flag", "")),
+						"open": bool(node.call("is_open", id)),
+						"position": _opening_position(node),
+					})
+			continue
 		var flag: Variant = node.get("flag_id")
 		rows.append({
 			"node": str(node.name),
@@ -6276,6 +6292,43 @@ func _execute_probe(msg: Dictionary) -> Variant:
 						vcount += 1
 			var vparticipants: Array = [] if vclimax == null \
 				else vclimax.call("_warden_participant_characters")
+			# P1: read-only counts on the existing probe. Audit the complete
+			# current world, independently of the healing target groups.
+			var vremaining_lights := -1
+			var vtopples_by_id: Dictionary = {}
+			if vhealing != null and bool(vhealing.call("applied")):
+				vremaining_lights = 0
+				var vlight_spec: Dictionary = (vhealing.get("_config") as Dictionary).get("tether_lights", {})
+				var vlit_path := str(vlight_spec.get("lit_albedo", ""))
+				var vdead_exists := ResourceLoader.exists(str(vlight_spec.get("dead_albedo", "")))
+				var vseen_materials: Dictionary = {}
+				for vnode: Node in current_scene.find_children("*", "GeometryInstance3D", true, false):
+					var vancestor: Node = vnode
+					var vretiring := false
+					while vancestor != null:
+						if vancestor.is_queued_for_deletion():
+							vretiring = true
+							break
+						if vancestor == current_scene:
+							break
+						vancestor = vancestor.get_parent()
+					if vretiring:
+						continue
+					for vraw_material: Material in (vhealing.call("_materials_of", vnode) as Array):
+						var vmaterial := vraw_material as StandardMaterial3D
+						if vmaterial == null or vseen_materials.has(vmaterial):
+							continue
+						vseen_materials[vmaterial] = true
+						var vlit_texture := vdead_exists and vmaterial.albedo_texture != null \
+							and vmaterial.albedo_texture.resource_path == vlit_path
+						if vlit_texture or (vmaterial.emission_enabled \
+								and bool(vhealing.call("_is_tether_teal", vmaterial.emission))):
+							vremaining_lights += 1
+				for vpylon: Node in (vhealing.call("toppled_pylons") as Array):
+					var vid := "<invalid>"
+					if is_instance_valid(vpylon) and vpylon.get_parent() != null:
+						vid = "%s/%s" % [vpylon.get_parent().name, vpylon.name]
+					vtopples_by_id[vid] = int(vtopples_by_id.get(vid, 0)) + 1
 			# Where each prompt stands, for a witness that walks to it.
 			var vanchor := func(prompt_name: String) -> Array:
 				if vclimax == null:
@@ -6300,6 +6353,8 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"party_size": vsize,
 				"pending_catch": vgame.get("pending_catch") != null,
 				"healing_found": vhealing != null,
+				"healing_remaining_tether_materials": vremaining_lights,
+				"healing_pylons_by_id": vtopples_by_id,
 				"herd_display": vhealing != null and vhealing.has_method("herd_display")
 					and vhealing.call("herd_display") != null,
 				"freed": vclimax != null and bool(vclimax.call("legendary_is_freed")),
@@ -8321,6 +8376,11 @@ func _meadows_opening_state() -> Dictionary:
 	var name_prompt: Variant = director.get("_name_prompt")
 	out["sequence_present"] = true
 	out["beat"] = str(director.get("_beat"))
+	# F01#6a diagnostics: a held starter commit or Home Key grant keeps the
+	# opening modal (the arbiter off), which reads as "the press did nothing".
+	out["owns_input"] = bool(director.call("owns_input")) if director.has_method("owns_input") else false
+	out["starter_commit_pending"] = not (director.get("_pending_starter_adoption") as Dictionary).is_empty() \
+		if director.get("_pending_starter_adoption") is Dictionary else false
 	out["bed_prompt"] = _opening_position(bed_prompt)
 	out["grandpa_prompt"] = _opening_position(grandpa_prompt)
 	var opening_player: Variant = director.get("_player")

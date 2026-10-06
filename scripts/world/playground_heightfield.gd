@@ -1496,7 +1496,14 @@ func stream_factor(x: float, z: float) -> float:
 ## road — which is the same "no path leads there" reading with an extra step.
 ## Widening `paths.width` itself would have widened Grandpa's garden path too.
 func path_factor(x: float, z: float) -> float:
-	var bands: Array = road_bands()
+	return path_factor_over(x, z, road_bands())
+
+
+## `path_factor` over a caller-chosen subset of `road_bands()`. Identical to
+## it when every band that can reach the point is included; meadow_healing.gd
+## passes only those, because walking every band per corner was most of the
+## regreen build (PERF, 2026-10-05).
+func path_factor_over(x: float, z: float, bands: Array) -> float:
 	if bands.is_empty():
 		return 0.0
 	var spot := Vector2(x, z)

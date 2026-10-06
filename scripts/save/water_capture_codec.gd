@@ -23,7 +23,19 @@ static func encode(creature: RefCounted, character: Dictionary = {}) -> Dictiona
 	var payload: Dictionary = entries[0]
 	return payload if _valid(payload, character) else {}
 
+## Portable owner records (character_record_rules.portable_projection) leave
+## out each card's in-fight energy meter on purpose; every card shape this
+## codec writes carries it. A card missing only that transient field decodes
+## with an empty meter rather than failing as malformed.
+static func _with_transient_energy(payload: Variant) -> Variant:
+	if payload is Dictionary and not payload.has("energy"):
+		var completed: Dictionary = payload.duplicate(true)
+		completed.energy = 0.0
+		return completed
+	return payload
+
 static func decode(payload: Variant, trait_record: Dictionary = {}) -> RefCounted:
+	payload = _with_transient_energy(payload)
 	if not _valid(payload) or (not trait_record.is_empty() and not valid_capture_traits(trait_record)):
 		return null
 	var temporary := PARTY.new()
@@ -45,6 +57,7 @@ static func decode(payload: Variant, trait_record: Dictionary = {}) -> RefCounte
 ## including caught tiers. Its earned moves cannot be decoded as a tier-zero
 ## wild card. Validate both carriers before constructing the single member.
 static func decode_owned(payload: Variant, character: Dictionary) -> RefCounted:
+	payload = _with_transient_energy(payload)
 	if not _valid(payload, character) or not character.get("creatures", {}).has(str(payload.get("uid", ""))) \
 		or not SAVE.trait_party_errors([payload], character).is_empty(): return null
 	var temporary := PARTY.new()

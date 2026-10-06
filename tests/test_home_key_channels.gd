@@ -76,3 +76,39 @@ func test_production_tick_expires_orphaned_guest_channel_and_damage_cancels_with
 	assert_eq(key.ended[-1], begin.prepared.use_id)
 	owner.game.free()
 	owner.free()
+
+func test_late_guest_sample_keeps_raise_but_observed_refusal_or_damage_still_cancels() -> void:
+	var owner := SessionDouble.new()
+	owner.game.world.reward_delivery_namespace = "channel-world"
+	var key := KeyDouble.new()
+	key.name = "HomeKey"
+	owner.game.add_child(key)
+	var composition := Node.new()
+	owner.add_child(composition)
+	var channels := CHANNELS.new()
+	composition.add_child(channels)
+	owner._portal_policy.bind_world("channel-world")
+	var cfg: Dictionary = DATA.json("res://data/config/portals.json")
+	var stones: Dictionary = DATA.json("res://data/config/waystones.json")
+	var live: Dictionary = owner.context.duplicate(true)
+	var begin := owner._portal_policy.evaluate({"kind": "home_key_begin"}, live, cfg, stones, Time.get_ticks_msec())
+	assert_true(begin.ok)
+	owner.context = {} # The guest's sample is late: unknown, not a refusal.
+	channels._process(1.0)
+	assert_true(owner._portal_policy.has_open_channels(), "a late sample does not end a valid raise")
+	assert_eq(key.ended, [])
+	owner.context = live.duplicate(true)
+	owner.context.combat = true
+	channels._process(1.0)
+	assert_false(owner._portal_policy.has_open_channels(), "an observed fight still cancels")
+	assert_eq(key.ended, [begin.prepared.use_id])
+	begin = owner._portal_policy.evaluate({"kind": "home_key_begin"}, live, cfg, stones, Time.get_ticks_msec())
+	assert_true(begin.ok)
+	owner.context = {}
+	channels._process(1.0)
+	owner.context = live.duplicate(true)
+	owner.context.damage_revision = 3
+	channels._process(1.0)
+	assert_false(owner._portal_policy.has_open_channels(), "damage during a late sample cancels once observed")
+	owner.game.free()
+	owner.free()

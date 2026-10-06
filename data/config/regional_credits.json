@@ -82,6 +82,8 @@
     }
   },
   "ack_timeout_seconds": 8,
+  "guest_ack_timeout_seconds": 24,
+  "_comment_guest_ack_timeout_seconds": "A guest's acknowledgement is a host round trip (fresh personal view, send, host durable save, row delivery). On a slow frame rate (CI at ~1 fps) 8 s ran out before the first view reply (F18 #4, CI 37298008163 shard 5). The host's own ack commits in-frame and keeps ack_timeout_seconds.",
   "handoff_retry_seconds": 0.5,
   "saving_label": "Saving your homecoming…"
 }

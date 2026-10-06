@@ -7,13 +7,55 @@ extends "res://tools/net/proof_peer_runner.gd"
 ##  * probe `op_state`     this peer's owner-passive stream (`local`), and on
 ##                         the host every stream it holds per character.
 ##  * step `op_diverge`    FIXTURE (disclosed): before a rejoin, raise one owned
-##                         creature's level in this peer's live character, so
-##                         the portable state it declares no longer matches the
-##                         host's admitted authority -- a real conflict.
+##                         creature's level in this peer's live character -- an
+##                         offline portable change (as a solo session's XP).
+##  * step `op_hold`       FIXTURE (disclosed): pause (`hold`: true) or resume
+##                         this owner's owner-passive send timer, standing in for
+##                         "left before its inputs reached the host".
+##  * step `op_corrupt`    FIXTURE (disclosed): make the live record invalid for
+##                         admission (a creature's hp above its max), so the
+##                         host must refuse it under the first-join rules;
+##                         `op_corrupt {"restore": true}` puts it back.
+##  * step `op_rollback`   FIXTURE (disclosed): stand-in for a restored backup
+##                         made before one find -- this peer forgets that
+##                         payout (its settled escrow row whose source names
+##                         `find`, and `count` of `item` from its satchel).
+##  * probe `op_state`     also reports the host's held authority per character
+##                         (party levels, item counts) and this peer's counts.
+
+
+var _corrupt_hp := -1.0
 
 
 func _execute_step(msg: Dictionary) -> Dictionary:
-	if str(msg.get("action", "")) != "op_diverge":
+	var action := str(msg.get("action", ""))
+	if action == "op_hold":
+		var session: Node = root.get_node(^"Game").get_node_or_null(^"Session")
+		var service: RefCounted = session.call("_owner_passive_service")
+		var hold: bool = (msg.get("args", {}) as Dictionary).get("hold", true) == true
+		service.set("_left", 1.0e9 if hold else 0.0)
+		return {"verdict": "PASS", "detail": "owner-passive send %s" % ("held" if hold else "resumed"), "frames_used": 0}
+	if action == "op_corrupt":
+		var member0: RefCounted = root.get_node(^"Game").get("party").call("at", 0)
+		if (msg.get("args", {}) as Dictionary).get("restore") == true:
+			member0.set("hp", _corrupt_hp)
+			return {"verdict": "PASS", "detail": "hp restored to %.1f" % _corrupt_hp, "frames_used": 0}
+		_corrupt_hp = float(member0.get("hp"))
+		member0.set("hp", float(member0.get("max_hp")) + 50.0)
+		return {"verdict": "PASS", "detail": "hp above max on this peer only", "frames_used": 0}
+	if action == "op_rollback":
+		var args: Dictionary = msg.get("args", {})
+		var local: RefCounted = root.get_node(^"Game").get("local")
+		var escrow: Dictionary = local.get("satchel_escrow")
+		var forgot := 0
+		for key: Variant in escrow.keys():
+			var row: Variant = escrow[key]
+			if row is Dictionary and row.get("kind") == "reward_delivery" and str(row.get("source", "")).contains(str(args.get("find", "?"))):
+				escrow.erase(key)
+				forgot += 1
+		var taken: bool = local.get("inventory").call("remove", str(args.get("item", "")), int(args.get("count", 0))) == true
+		return {"verdict": "PASS" if forgot == 1 and taken else "FAIL", "detail": "forgot %d payout row(s), took %d %s: %s" % [forgot, int(args.get("count", 0)), str(args.get("item", "")), str(taken)], "frames_used": 0}
+	if action != "op_diverge":
 		return await super(msg)
 	var game := root.get_node_or_null(^"Game")
 	var party: RefCounted = game.get("party") if game != null else null
@@ -49,10 +91,31 @@ func _execute_probe(msg: Dictionary) -> Variant:
 		},
 		"hosts": {},
 	}
+	out["items"] = _counts((game.get("local").save_data() as Dictionary).get("inventory", []))
+	out["levels"] = []
+	for member: RefCounted in game.get("party").call("members"): out.levels.append(int(member.get("level")))
+	out["authority"] = {}
+	out["rejoin_codes"] = (session.get("last_rejoin_admission") as Dictionary).duplicate() if bool(session.call("is_host")) else {}
+	if bool(session.call("is_host")):
+		var authority: RefCounted = session.get("_character_authority")
+		for character: String in authority.get("_records"):
+			var held: Dictionary = authority.call("state", character)
+			out.authority[character] = {"items": _counts(held.get("inventory", [])),
+				"levels": (held.get("party", []) as Array).map(func(c: Dictionary) -> int: return int(c.get("level", 0))),
+				"revision": int(authority.call("revision", character))}
 	var hosts: Dictionary = service.get("hosts")
 	for character: String in hosts:
 		var stream: Dictionary = hosts[character]
 		out.hosts[character] = {"id": str(stream.get("id", "")), "peer": int(stream.get("peer", 0)),
 			"sequence": int((stream.get("cursor", {}) as Dictionary).get("sequence", -1)),
 			"departed": stream.get("departed") == true, "error": str(stream.get("error", ""))}
+	return out
+
+
+static func _counts(slots: Variant) -> Dictionary:
+	var out := {}
+	if slots is Array:
+		for slot: Variant in slots:
+			if slot is Dictionary and not str(slot.get("id", "")).is_empty():
+				out[str(slot.id)] = int(out.get(str(slot.id), 0)) + int(slot.get("n", 0))
 	return out

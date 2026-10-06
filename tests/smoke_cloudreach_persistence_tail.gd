@@ -4,24 +4,31 @@ extends "res://tests/smoke_cloudreach_continuous.gd"
 ## The fixture varies durable fields across all five members, then freezes only
 ## the observation window so real-time condition decay cannot race the reads.
 ##
-## LEGACY PATH: asserts the shipped portal-off behaviour (its F08 tail includes
-## the world-scoped Stormwood realm-key flag). Superseded by RD-20/RD-21 for
-## that key (Veyra now grants each participant their own Stormwood key item,
-## F19#2; F08#1 is history) once F18 turns redesign_portal_runtime_enabled on;
-## retire this test or rewrite it to the redesign rule at that point. The wind-road and Wings assertions are
-## not legacy.
+## REDESIGN (RD-17/RD-20/RD-21): the chapter's Stormwood entitlement is no
+## longer the world-scoped `realm_key_stormwood` flag behind a physical gate.
+## Captain Veyra's hand-off (chapter_rewards.json boss_handoffs, resolved by
+## encounter_rewards.gd::chapter_hand_off) gives EACH participant their own
+## `stormwood_portal_key` ITEM and the Cloudreach relic in
+## `redesign_character.relics_held`; the key is used once on the Hall's
+## Stormwood arch. This smoke now runs under the shipped config (portal runtime
+## on, no legacy-crossing override) and proves that personal end state survives
+## the same production save/reload exactly once. The wind-road and Wings
+## assertions are unchanged (not legacy).
 ##
 ## F08 tail: the chapter's end-state -- restored wind roads, the Wings of
-## Cloudreach with the Sky Shrine reached, and the Stormwood key -- must survive
-## the same real disk reload. The live store is a set, so a reload cannot show a
-## duplicate there; the on-disk check instead counts each flag across every
-## `flags` array in the two split halves this save wrote (this slot's
-## world.json and the local character's character.json; the slot file's merged
-## mirror is excluded), so a flag written into both halves -- the split-save
-## double grant -- or twice within one file fails. A second
-## save after the reload must write the same flag set (the reload granted
-## nothing new). This does NOT replay the finale's grant path; a re-grant by a
-## scene director on reload is outside this headless smoke. Negative control:
+## Cloudreach with the Sky Shrine reached, and the player's own Stormwood
+## portal key and Cloudreach relic -- must survive the same real disk reload.
+## The live flag store is a set, so a reload cannot show a duplicate there; the
+## on-disk check instead counts each flag across every `flags` array in the two
+## split halves this save wrote (this slot's world.json and the local
+## character's character.json; the slot file's merged mirror is excluded), so
+## a flag written into both halves -- the split-save double grant -- or twice
+## within one file fails. The key item is counted the same way (it must live
+## once, in the character half only). A second save after the reload must
+## write the same flag set and the same single key (the reload granted nothing
+## new). This does NOT replay the finale's grant path (F19's boss-delivery
+## tests own that); the personal hand-off state is a DISCLOSED FIXTURE shaped
+## exactly like Veyra's resolved hand-off row. Negative control:
 ## `-- --f08-unsaved=<flag>` grants that one flag only AFTER the save, so its
 ## reload and on-disk assertions must fail; `-- --f08-double=<flag>` writes that
 ## flag into the character half as well after the save (the split-save double
@@ -29,17 +36,16 @@ extends "res://tests/smoke_cloudreach_continuous.gd"
 
 const BIOME_ORDER := preload("res://scripts/data/biome_order.gd")
 
+const ENCOUNTER_REWARDS := preload("res://scripts/net/encounter_rewards.gd")
+const VEYRA := "captain_veyra_storm_anchor"
+
 const F08_DURABLE_FLAGS: Array[String] = ["cloudreach_winds_restored",
-	"realm_heart_cloudreach_earned", "sky_shrine_reached", "realm_key_stormwood"]
+	"realm_heart_cloudreach_earned", "sky_shrine_reached"]
 
 
 func _run() -> void:
-	# Legacy physical-gate regression; it ships while portals are off (see header).
-	if not BIOME_ORDER.set_test_overrides({"legacy_physical_crossings": true}):
-		push_error("Legacy F08 tail fixture requires the debug-only test flag")
-		quit(1)
-		return
-	print("F16 disclosure: legacy_physical_crossings enabled for retired F08 tail assertion only")
+	# Shipped config only: no legacy-crossing override (RD-17).
+	BIOME_ORDER.clear_test_overrides()
 	start_usec=Time.get_ticks_usec()
 	# Events go to user:// by default so a run never dirties the checkout
 	# (CI and every lane run this). Pass `-- --evidence-dir=<res:// or abs path>`
@@ -78,6 +84,24 @@ func _run() -> void:
 	for flag: String in F08_DURABLE_FLAGS:
 		if flag != unsaved:
 			game.progression.set_flag(flag)
+	# DISCLOSED FIXTURE: the personal state Veyra's resolved hand-off leaves on
+	# this participant (foundation_actions.gd boss_relic: one key item into the
+	# satchel, the relic biome into relics_held). Read from the authored row.
+	var handoff: Dictionary = ENCOUNTER_REWARDS.chapter_hand_off(VEYRA, "cloudreach")
+	var key_item := str(handoff.get("portal_key_item", ""))
+	var relic := str(handoff.get("relic_biome", ""))
+	_require(key_item == "stormwood_portal_key" and relic == "cloudreach"
+		and str(handoff.get("next_biome", "")) == "stormwood",
+		"Veyra's authored hand-off is the personal Stormwood key item and the Cloudreach relic (%s)" % str(handoff))
+	_require(not BIOME_ORDER.legacy_physical_crossings(game),
+		"Shipped config retires the physical crossings (portal runtime on, no override)")
+	var inventory: RefCounted = game.get("local").get("inventory")
+	_require(int(inventory.call("count", key_item)) == 0 and int(inventory.call("add", key_item, 1)) == 0,
+		"Fixture placed exactly one %s in the satchel" % key_item)
+	var personal: Dictionary = (game.get("local").get("redesign_character") as Dictionary).duplicate(true)
+	_require(not (personal.relics_held as Array).has(relic), "Fixture starts without the %s relic" % relic)
+	(personal.relics_held as Array).append(relic)
+	game.get("local").set("redesign_character", personal)
 	stage="persistence_tail_exact"
 	paused=true
 	var before:=_party_persistence_snapshot()
@@ -118,10 +142,26 @@ func _run() -> void:
 	flags_after_resave.sort()
 	_require(resave_ok and flags_after_resave == flags_after_reload,
 		"A second save/load after the reload kept the same flag set (nothing re-granted)")
+	_require(int(game.get("local").get("inventory").call("count", key_item)) == 1
+		and ((game.get("local").get("redesign_character") as Dictionary).get("relics_held", []) as Array).count(relic) == 1,
+		"A second save/load after the reload kept exactly one key and one held relic (nothing re-granted)")
 	_require(game.realm_hearts.is_earned("cloudreach", game.progression),
 		"Reload restored the Wings of Cloudreach as earned")
-	_require(game.realm_hearts.entry_key_for_realm("stormwood") == "realm_key_stormwood"
-		and game.can_enter_realm("stormwood"), "Reload restored the Stormwood key: the realm opens")
+	var reloaded_inventory: RefCounted = game.get("local").get("inventory")
+	var reloaded_relics: Array = (game.get("local").get("redesign_character") as Dictionary).get("relics_held", [])
+	_require(int(reloaded_inventory.call("count", key_item)) == 1,
+		"Reload restored exactly one personal %s (count %d)" % [key_item, int(reloaded_inventory.call("count", key_item))])
+	_require(reloaded_relics.count(relic) == 1,
+		"Reload restored the %s relic held exactly once (%s)" % [relic, str(reloaded_relics)])
+	var key_on_disk := _f08_disk_text_counts([root_dir.path_join("worlds/slot-0/world.json"),
+		root_dir.path_join("characters/%s/character.json" % character_id)], "\"%s\"" % key_item)
+	_require(int(key_on_disk[0]) == 0 and int(key_on_disk[1]) == 1,
+		"The save wrote the personal %s once, in the character half only (world %d, character %d)"
+			% [key_item, int(key_on_disk[0]), int(key_on_disk[1])])
+	# RD-20: the key is the gate, used once on its Hall arch. Holding it is not
+	# an unlock, and no world-scoped legacy key was written.
+	_require(not game.can_enter_realm("stormwood") and not loaded.has("realm_key_stormwood"),
+		"Holding the Stormwood key is not itself an unlock, and no world-scoped legacy key exists")
 	print("CLOUDREACH PERSISTENCE TAIL %s members=%d differences=%d"%[
 		"FAIL" if failed else "PASS",game.party.size(),differences.size()])
 	BIOME_ORDER.clear_test_overrides()
@@ -139,6 +179,14 @@ func _f08_disk_flag_counts(paths: Array) -> Dictionary:
 		_f08_count_flags(parsed, counts)
 	_log("persistence_f08_disk", {"files": paths})
 	return counts
+
+
+## Occurrences of `needle` in each file's text, in order (world, character).
+func _f08_disk_text_counts(paths: Array, needle: String) -> Array:
+	var out: Array = []
+	for path: String in paths:
+		out.append(FileAccess.get_file_as_string(path).count(needle) if FileAccess.file_exists(path) else -1)
+	return out
 
 
 func _f08_count_flags(node: Variant, counts: Dictionary) -> void:

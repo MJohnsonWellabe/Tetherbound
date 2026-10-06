@@ -26,3 +26,18 @@ static func stage(current: Dictionary, intent: Dictionary, context: Dictionary) 
 	next.redesign_character.last_waystones[stone.biome] = stone.id
 	next.redesign_character.transaction_receipts.append(receipt)
 	return {"ok": true, "state": next, "receipt": receipt}
+
+
+## Retryable host-side outcomes; anything else that is not durable is a
+## semantic refusal the same touch will always meet again. Those must be
+## terminal so an owner-passive checkpoint never retains it forever (the
+## guest would stay frozen). Same split as the forge's commit_prepared.
+const TRANSIENT_CODES := ["transaction_busy", "stage_changed", "world_save_failed",
+	"training_journal_failed", "world_not_prepared", "fallback_busy", "character_busy"]
+
+static func commit_outcome(result: Dictionary) -> Dictionary:
+	if result.get("durable") == true: return result
+	var code := str(result.get("code", result.get("reason", "waystone_refused")))
+	if code in TRANSIENT_CODES: return result
+	return {"ok": false, "resolved": true, "durable": false, "terminal_refusal": true,
+		"code": code, "reason": "Your waystone could not save. Touch it again."}

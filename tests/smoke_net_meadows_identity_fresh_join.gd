@@ -344,6 +344,7 @@ func _complete_fresh_opening(peer: int) -> bool:
 			return false
 		opening = await _wait_opening_modal(peer, "dialogue", 60)
 	if not bool((opening.get("dialogue", {}) as Dictionary).get("is_open", false)):
+		print("opening catch-supply state: ", opening)
 		_check(false, "peer %d returned to Grandpa but the catch-supply dialogue never opened" % peer)
 		return false
 	dismissed = await step(peer, "dismiss_dialogue", {"presses": 40, "settle": 30})

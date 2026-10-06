@@ -43,6 +43,12 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		return await _relic_power_attempt(args)
 	if action == "craft_home_key_trip":
 		return await _craft_home_key_trip()
+	if action == "seed_opening_complete":
+		return _seed_opening_complete()
+	if action == "seed_relic_hung":
+		return _seed_relic_hung(str(args.get("biome", "meadows")))
+	if action == "relic_pedestal_stand":
+		return await _relic_pedestal_stand(str(args.get("biome", "meadows")))
 	return await super._execute_step(msg)
 
 func _hall_guard(expected_peers: int = 2) -> Dictionary:
@@ -378,6 +384,12 @@ func _home_bed_rest(args: Dictionary) -> Dictionary:
 	var party: RefCounted = game.get("party")
 	var added := false
 	if int(party.call("size")) == 0:
+		# A just-admitted guest's saved decisions settle before its party takes
+		# a one-shot write (party.gd); wait for that like a player would.
+		for _frame in int(args.get("owner_wait_frames", 1200)):
+			if not bool(party.call("owner_mutation_blocked")):
+				break
+			await physics_frame
 		added = bool(party.call("add", game.call("make_creature", str(args.get("species", "terrapup")))))
 	var creature: RefCounted = party.call("at", 0)
 	if creature == null:
@@ -628,6 +640,8 @@ func _craft_at_host_kitchen(args: Dictionary) -> Dictionary:
 ## F31#2 co-op: a guest's relic power choice goes to the host, which saves or
 ## refuses it. While F18's redesign_portal_runtime_enabled is off (shipping),
 ## the host has no shrine context and must refuse; nothing changes locally.
+const POWER_PANEL := preload("res://scripts/ui/relic_power_panel.gd")
+
 func _relic_power_attempt(args: Dictionary) -> Dictionary:
 	var game := root.get_node("Game")
 	var session := _session()
@@ -635,8 +649,11 @@ func _relic_power_attempt(args: Dictionary) -> Dictionary:
 	session.connect("homestead_action_completed", func(op: String, _intent: Dictionary, result: Dictionary) -> void:
 		if op == "relic_power": reply.result = result)
 	var sent: Dictionary = session.call("request_relic_power", str(args.get("heart_id", "meadows")))
-	for i in 600:
-		if not (reply.result as Dictionary).is_empty() or sent.get("code") != "awaiting_saved_decision":
+	# A guest's first reply is the host's owner-passive checkpoint; the relic
+	# panel waits for the saved decision (relic_power_panel.reply_final), so
+	# does this check.
+	for i in 900:
+		if POWER_PANEL.reply_final(reply.result) or (reply.result.is_empty() and POWER_PANEL.reply_final(sent)):
 			break
 		await physics_frame
 	var verdict: Dictionary = reply.result if not (reply.result as Dictionary).is_empty() else sent
@@ -650,6 +667,25 @@ func _relic_power_attempt(args: Dictionary) -> Dictionary:
 ## Key trip home (production Satchel Use, f49_portal_travel) and arrives before
 ## its owner-gated craft. Portals off (shipping until F18): skipped, with the
 ## reason returned. Disclosed fixture when on: one home_key and its given flag.
+## Disclosed fixture (station craft): a returning player after a played
+## opening. Before its first save and admission this offline character gains
+## every opening beat flag (through free_play) and every configured onboarding
+## lesson's seen flag, the flags the opening and the lessons write in play.
+func _seed_opening_complete() -> Dictionary:
+	var game := root.get_node("Game")
+	var session := _session()
+	if session != null and bool(session.call("is_active")):
+		return {"verdict": "FAIL", "detail": "seed the opening before the first admission, not in a session"}
+	var flags: RefCounted = game.get("local").get("flags")
+	var set_ids: Array[String] = []
+	for beat: String in preload("res://scripts/story/opening_beats.gd").order():
+		set_ids.append("opening:beat:" + beat)
+	for lesson: Dictionary in preload("res://scripts/onboarding/lesson_rules.gd").config().get("lessons", []):
+		set_ids.append(preload("res://scripts/onboarding/lesson_rules.gd").PREFIX + str(lesson.id))
+	for id: String in set_ids: flags.call("set_flag", id, true)
+	return {"verdict": "PASS", "detail": "opening complete: %d beat and lesson flags" % set_ids.size()}
+
+
 func _craft_home_key_trip() -> Dictionary:
 	var game := root.get_node("Game")
 	var session := _session()
@@ -664,3 +700,48 @@ func _craft_home_key_trip() -> Dictionary:
 	var ok: bool = await travel.home_key()
 	return {"verdict": "PASS" if ok else "FAIL", "detail": "guest Home Key trip home and arrival" if ok else str(travel.failures),
 		"data": {"skipped": false, "realm": str(game.get("current_realm"))}}
+
+
+## Disclosed fixture (station craft, F31#2 relic power): a returning player
+## who has hung this biome's relic. Before its first save and admission the
+## offline character gains the relic in relics_hung with the receipt the
+## host's relic_hang transaction writes, the pair admission proves.
+func _seed_relic_hung(biome: String) -> Dictionary:
+	var game := root.get_node("Game")
+	var session := _session()
+	if session != null and bool(session.call("is_active")):
+		return {"verdict": "FAIL", "detail": "seed the relic before the first admission, not in a session"}
+	var player: RefCounted = game.get("local")
+	var character := str(player.get("character_id"))
+	if character.is_empty(): return {"verdict": "FAIL", "detail": "no local character to seed"}
+	var record: Dictionary = player.get("redesign_character")
+	var hung: Array = record.get("relics_hung", [])
+	if not hung.has(biome): hung.append(biome)
+	record.relics_hung = hung
+	var receipt := "relic_hang:%s:%s" % [biome, character]
+	if not (record.transaction_receipts as Array).has(receipt): record.transaction_receipts.append(receipt)
+	player.set("redesign_character", record)
+	return {"verdict": "PASS", "detail": "relic '%s' hung with its receipt for %s" % [biome, character]}
+
+
+## Guest: a real Home Key trip home (it arrives in the Crossing Hall, as the
+## F49 campaign does before hanging a relic), then the ordinary walk to this
+## biome's Shrine Room pedestal where a relic power is chosen. Portals off
+## (no runtime shrine context): skipped.
+func _relic_pedestal_stand(biome: String) -> Dictionary:
+	var game := root.get_node("Game")
+	if not bool(_session().call("portal_runtime_ready")):
+		return {"verdict": "PASS", "detail": "portal runtime off: no pedestal walk", "data": {"skipped": true}}
+	# A rejoined guest's input is held until the host answers its groom resume
+	# (opened on every snapshot apply); a player waits for it, so does this.
+	var session := _session()
+	var deadline := Time.get_ticks_msec() + 20000
+	while bool(session.call("owns_input")) and Time.get_ticks_msec() < deadline:
+		await physics_frame
+	if bool(session.call("owns_input")):
+		return {"verdict": "FAIL", "detail": "input still held 20 s after the rejoin: %s" % str(
+			session.call("_owner_snapshot_block_reason", game.get("local"))), "data": {"skipped": false}}
+	var travel := preload("res://tests/helpers/f49_portal_travel.gd").new(self, game)
+	var ok: bool = await travel.home_key() and await travel.walk_to_pedestal(biome)
+	return {"verdict": "PASS" if ok else "FAIL", "detail": "guest stands at the %s pedestal" % biome if ok else str(travel.failures),
+		"data": {"skipped": false}}

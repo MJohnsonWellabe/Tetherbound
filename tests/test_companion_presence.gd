@@ -34,6 +34,43 @@ const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 
 const TICK := 0.1
 
+
+class GroupedPresence extends PRESENCE:
+	var candidates: Array[Node] = []
+	func _camp_group_nodes() -> Variant:
+		return candidates
+
+
+func test_grouped_camp_scan_skips_unrelated_world_and_retains_suffix_and_ui_rules() -> void:
+	var presence := GroupedPresence.new()
+	presence.set("_body", _body)
+	_root.add_child(presence)
+	var fire := CAMPFIRE_GLOW.new()
+	_root.add_child(fire)
+	var opt_in := Node3D.new()
+	opt_in.add_to_group(PRESENCE.CAMP_GROUP)
+	_root.add_child(opt_in)
+	var panel := Control.new()
+	_root.add_child(panel)
+	var hidden_fire := CAMPFIRE_GLOW.new()
+	panel.add_child(hidden_fire)
+	var elsewhere := CAMPFIRE_GLOW.new()
+	for i in 200:
+		_root.add_child(Node3D.new())
+	presence.candidates = [fire, opt_in, hidden_fire, elsewhere]
+	var found: Array = presence.call("_scan_camp_sources", {"script_suffixes": ["campfire_glow.gd"]})
+	assert_eq(found.size(), 2)
+	assert_true(found.has(fire) and found.has(opt_in))
+	assert_eq(presence.last_camp_scan_nodes, 4, "only indexed sources inspected, not 200 unrelated nodes")
+	found = presence.call("_scan_camp_sources", {"script_suffixes": []})
+	assert_eq(found, [opt_in], "candidate registration does not override configured suffixes")
+	_root.remove_child(fire)
+	presence.candidates = [opt_in, hidden_fire]
+	found = presence.call("_scan_camp_sources", {"script_suffixes": ["campfire_glow.gd"]})
+	assert_eq(found, [opt_in], "the next scan reflects removal without a stale world cache")
+	fire.free()
+	elsewhere.free()
+
 var _root: Node3D = null
 var _body: Node3D = null
 var _leader: Node3D = null

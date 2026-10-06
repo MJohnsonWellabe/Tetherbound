@@ -302,6 +302,15 @@ func run(tree: SceneTree) -> Dictionary:
 	if not await _close_dialogue(20):
 		_fail("Grandpa's first-catch conversation did not return control")
 		return _result()
+	# With the portal runtime on, the spoken batch (orbs + Home Key) is held
+	# until the gift is durable and the director owns input meanwhile; a player
+	# regains control only once it lands. Count at that same moment.
+	for _i in 600:
+		if _sequence == null or _sequence.call("owns_input") != true: break
+		await _tree.physics_frame
+	if _sequence != null and _sequence.call("owns_input") == true:
+		_fail("the opening director still held input 600 frames after Grandpa's first-catch conversation")
+		return _result()
 	var opening_orbs := int(_game.inventory.count("orb_basic"))
 	if opening_orbs < 45 or opening_orbs > 50:
 		_fail("Grandpa's first-catch conversation left %d Basic Orbs; expected 45–50" % opening_orbs)
@@ -491,10 +500,16 @@ func _fight_until_catchable() -> bool:
 			_checkpoint("Bramblebun naturally weakened to %.0f/%d HP" % [foe.hp, foe.max_hp])
 			return true
 		await _drive_body_toward(ally, _wild.global_position, 1)
-		# COMBAT §5 contact spacing holds the pair apart by their rendered
-		# extents, so the strike gate follows that separation (plus the same
-		# 0.5 m the reach floors add) instead of a fixed 4 m.
+		# Tap when the game itself says the quick move reaches:
+		# CombatManager.combat_move_reach is the size-aware rule the impact
+		# resolver uses, provided for combat drivers. The earlier hand-rolled
+		# gate (contact pair need + 0.5 = 4.85 m for Terrapup) sat inside the
+		# opponent's own floored stand-off (5.86 m since F22), so a run where the
+		# Bramblebun held its spacing never tapped and timed out (main CI
+		# 37346752715). The bound and the assertion are unchanged.
 		var strike_gate := maxf(4.0, CONTACT_SPACING.pair_reach_need(ally, _wild) + 0.5)
+		if _combat.has_method("combat_move_reach"):
+			strike_gate = maxf(strike_gate, float(_combat.call("combat_move_reach", "quick")))
 		if ally.global_position.distance_to(_wild.global_position) < strike_gate and _i % 35 == 0:
 			await _tap_action("combat_quick")
 	_stop_left_stick()
