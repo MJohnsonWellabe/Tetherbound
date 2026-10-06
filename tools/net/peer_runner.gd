@@ -6443,6 +6443,43 @@ func _execute_probe(msg: Dictionary) -> Variant:
 						vcount += 1
 			var vparticipants: Array = [] if vclimax == null \
 				else vclimax.call("_warden_participant_characters")
+			# P1: read-only counts on the existing probe. Audit the complete
+			# current world, independently of the healing target groups.
+			var vremaining_lights := -1
+			var vtopples_by_id: Dictionary = {}
+			if vhealing != null and bool(vhealing.call("applied")):
+				vremaining_lights = 0
+				var vlight_spec: Dictionary = (vhealing.get("_config") as Dictionary).get("tether_lights", {})
+				var vlit_path := str(vlight_spec.get("lit_albedo", ""))
+				var vdead_exists := ResourceLoader.exists(str(vlight_spec.get("dead_albedo", "")))
+				var vseen_materials: Dictionary = {}
+				for vnode: Node in current_scene.find_children("*", "GeometryInstance3D", true, false):
+					var vancestor: Node = vnode
+					var vretiring := false
+					while vancestor != null:
+						if vancestor.is_queued_for_deletion():
+							vretiring = true
+							break
+						if vancestor == current_scene:
+							break
+						vancestor = vancestor.get_parent()
+					if vretiring:
+						continue
+					for vraw_material: Material in (vhealing.call("_materials_of", vnode) as Array):
+						var vmaterial := vraw_material as StandardMaterial3D
+						if vmaterial == null or vseen_materials.has(vmaterial):
+							continue
+						vseen_materials[vmaterial] = true
+						var vlit_texture := vdead_exists and vmaterial.albedo_texture != null \
+							and vmaterial.albedo_texture.resource_path == vlit_path
+						if vlit_texture or (vmaterial.emission_enabled \
+								and bool(vhealing.call("_is_tether_teal", vmaterial.emission))):
+							vremaining_lights += 1
+				for vpylon: Node in (vhealing.call("toppled_pylons") as Array):
+					var vid := "<invalid>"
+					if is_instance_valid(vpylon) and vpylon.get_parent() != null:
+						vid = "%s/%s" % [vpylon.get_parent().name, vpylon.name]
+					vtopples_by_id[vid] = int(vtopples_by_id.get(vid, 0)) + 1
 			# Where each prompt stands, for a witness that walks to it.
 			var vanchor := func(prompt_name: String) -> Array:
 				if vclimax == null:
@@ -6467,6 +6504,8 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"party_size": vsize,
 				"pending_catch": vgame.get("pending_catch") != null,
 				"healing_found": vhealing != null,
+				"healing_remaining_tether_materials": vremaining_lights,
+				"healing_pylons_by_id": vtopples_by_id,
 				"herd_display": vhealing != null and vhealing.has_method("herd_display")
 					and vhealing.call("herd_display") != null,
 				"freed": vclimax != null and bool(vclimax.call("legendary_is_freed")),

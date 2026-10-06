@@ -1,0 +1,4 @@
+/receipt.json -text whitespace=cr-at-eol
+/stdout.log -text whitespace=cr-at-eol
+/stderr.log -text whitespace=cr-at-eol
+/exit.txt -text whitespace=cr-at-eol

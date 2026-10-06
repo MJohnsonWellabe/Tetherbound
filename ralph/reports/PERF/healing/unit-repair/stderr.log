@@ -1,0 +1,18 @@
+WARNING: meadow_healing: ApproachConduits/Pylon_0 is left standing (authored null in pylons.falls, or no clear direction)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _topple_one (res://scripts/world/meadow_healing.gd:1551)
+       [1] test_an_authored_null_stays_standing_and_a_baked_azimuth_is_obeyed (res://tests/test_meadow_healing_land_heals.gd:416)
+       [2] _init (res://tests/run_tests.gd:120)
+WARNING: meadow_healing: UnbakedConduits/Pylon_0 is not in pylons.falls; searching (roads and ground only) -- re-bake the table
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _topple_one (res://scripts/world/meadow_healing.gd:1546)
+       [1] test_an_unbaked_pylon_with_no_clear_direction_stays_standing_and_is_counted (res://tests/test_meadow_healing_land_heals.gd:403)
+       [2] _init (res://tests/run_tests.gd:120)
+WARNING: meadow_healing: UnbakedConduits/Pylon_0 is left standing (authored null in pylons.falls, or no clear direction)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _topple_one (res://scripts/world/meadow_healing.gd:1551)
+       [1] test_an_unbaked_pylon_with_no_clear_direction_stays_standing_and_is_counted (res://tests/test_meadow_healing_land_heals.gd:403)
+       [2] _init (res://tests/run_tests.gd:120)

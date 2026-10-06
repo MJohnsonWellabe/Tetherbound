@@ -166,6 +166,7 @@ const RECEIPT_RETRY_MS := 5000
 
 
 func build(world: Node, player: Node3D) -> bool:
+	add_to_group(&"meadow_healing_light_roots")
 	_world = world
 	_player = player
 	_config = _load_config()

@@ -156,6 +156,7 @@ var _world_look: Node = null
 ## -- is the manual bloom in between: soft edge without replacing the
 ## flame's silhouette. 1.0 keeps every existing caller pixel-identical.
 func _init(include_halo: bool = true, halo_scale: float = 1.0, glow_scale: float = 1.0) -> void:
+	add_to_group(&"companion_camp_sources")
 	name = "CampfireGlow"
 	_glow_scale = glow_scale
 	if include_halo:

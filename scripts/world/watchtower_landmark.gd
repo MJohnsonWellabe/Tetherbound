@@ -40,6 +40,8 @@ const STONE_TILE := 1.4
 
 
 func build(world: Node, at: Vector2, facing_deg: float) -> void:
+	# Preserve the healing rule for the existing teal ward lenses too.
+	add_to_group(&"meadow_healing_light_roots")
 	var ground: float = float(world.call("ground_height_at", at.x, at.y))
 	if is_nan(ground):
 		push_error("no ground under the watchtower at %.0f, %.0f" % [at.x, at.y])

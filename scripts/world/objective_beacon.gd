@@ -284,6 +284,7 @@ func _load_config() -> Dictionary:
 func _build_visual() -> void:
 	_visual = Node3D.new()
 	_visual.name = "PingVisual"
+	_visual.add_to_group(&"meadow_healing_light_roots")
 	add_child(_visual)
 
 	var visible_range := float(_config.get("visible_range_m", 3200.0))
