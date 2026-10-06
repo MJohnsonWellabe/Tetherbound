@@ -33,7 +33,7 @@ class EpochSession extends SAVE_FIXTURE.FixtureSession:
 		return directors
 	func _ordinary_combat_director_live(director: Node) -> bool: return director == fixture_director
 
-class AckSession extends Node:
+class AckSession extends SAVE_FIXTURE.FixtureSession:
 	var arbiter: RefCounted
 	var fixture_character := "owner_a"
 	var refuse_once := true
@@ -139,30 +139,59 @@ func test_wild_actor_owner_scope_keeps_journal_and_transport_epochs_distinct() -
 func test_accepted_duplicate_repairs_lost_actual_arbiter_ack_without_world_write() -> void:
 	var f: Dictionary = _fixture()
 	assert_true(f.host.call("commit_actor_vitals", f.proposal).get("ok") == true)
-	var game := FixtureGame.new()
+	var directory: String = "user://test_actor_ack_publication_%s/" % Crypto.new().generate_random_bytes(12).hex_encode()
+	var game := SAVE_FIXTURE.FixtureGame.new()
 	game.world = WORLD.new()
 	game.world.world_id = "world_a"
 	game.world.reward_delivery_namespace = "namespace_a"
 	var row: Dictionary = f.row.duplicate(true)
-	row.status = "accepted" # Fixture begins at the original durable owner decision.
+	assert_eq(row.status, "pending")
 	game.world.reward_deliveries[row.delivery_id] = row.duplicate(true)
 	var ack := AckSession.new()
+	ack.fixture = game
 	ack.arbiter = f.host
 	game.session = ack
+	var writer := SAVE_FIXTURE.BoolWriter.new()
+	writer.world_store = preload("res://scripts/save/world_save.gd").new(directory.path_join("worlds"))
+	writer.refuse_world = true
+	game.save_system = writer
 	var transport := Transport.new()
 	transport.fixture_game = game
 	transport.ledger = LEDGER.new(game.world)
 	var before: Dictionary = game.world.save_data()
+	var publications: Array[Dictionary] = []
+	transport.delta_applied.connect(func(delta: Dictionary) -> void:
+		publications.append({"delta": delta.duplicate(true), "ack_calls": ack.calls,
+			"world_status": game.world.reward_deliveries[row.delivery_id].status,
+			"pending_count": f.host.call("pending_actor_vitals", f.id).size()})
+	)
+	assert_false(transport._accept_actor_vitals(row.delivery_id, 1, row.receipt, 2), "false World BOOL publishes and acknowledges nothing")
+	assert_eq(publications.size(), 0)
+	assert_eq(ack.calls, 0)
+	assert_true(ACTOR.equivalent(game.world.save_data(), before), "failed accepted write rolls back")
+	writer.refuse_world = false
 	assert_false(transport._accept_actor_vitals(row.delivery_id, 1, row.receipt, 2))
+	assert_eq(publications.size(), 1, "durable acceptance publishes despite refused actor ACK")
+	if publications.size() == 1:
+		assert_eq(publications[0].ack_calls, 0, "publication precedes the fallible actor ACK")
+		assert_eq(publications[0].world_status, "accepted")
+		assert_eq(publications[0].pending_count, 1)
+		assert_eq(publications[0].delta.ops.size(), 1)
+		assert_eq(publications[0].delta.ops[0].op, "actor_vitals_accept")
+		assert_eq(publications[0].delta.ops[0].receipt, row.receipt)
 	assert_eq(f.host.call("pending_actor_vitals", f.id).size(), 1)
+	var accepted: Dictionary = game.world.save_data()
+	var world_path: String = writer.world_store.call("path_for", "world_a")
+	assert_true(FileAccess.file_exists(world_path))
+	var saved_bytes := FileAccess.get_file_as_bytes(world_path)
 	assert_true(transport._accept_actor_vitals(row.delivery_id, 1, row.receipt, 2))
 	assert_true(f.host.call("pending_actor_vitals", f.id).is_empty())
 	assert_true(transport._accept_actor_vitals(row.delivery_id, 1, row.receipt, 2))
 	assert_eq(ack.calls, 3)
-	assert_true(ACTOR.equivalent(game.world.save_data(), before), "accepted duplicate never rewrites original row or decision")
-	transport.free()
-	ack.free()
-	game.free()
+	assert_eq(publications.size(), 1, "ACK repair never republishes or reapplies accepted HP")
+	assert_true(ACTOR.equivalent(game.world.save_data(), accepted), "accepted duplicate never rewrites original row or decision")
+	assert_eq(FileAccess.get_file_as_bytes(world_path), saved_bytes, "accepted ACK repair does not rewrite durable bytes")
+	SAVE_FIXTURE.new()._close(game, transport, directory)
 	_free_fixture(f)
 
 func test_rejoined_stable_owner_repairs_original_ack_and_rejects_foreign_proofs() -> void:

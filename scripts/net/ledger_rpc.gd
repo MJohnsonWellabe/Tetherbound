@@ -885,11 +885,14 @@ func _accept_actor_vitals(id: String, revision: int, receipt: Dictionary, peer_i
 		world.set("revision", before_revision)
 		ledger.set("seq", before_seq)
 		return false
+	# The accepted decision is durable even if the local actor ACK needs
+	# repair. Publish it before that fallible ACK so a later Heal/HP reply
+	# cannot refer to an acceptance that the guest never received.
+	publish_journaled_delta(verdict.delta)
 	var session: Node = game.get("session")
 	if session == null or not bool(session.call("host_ack_creature_vitals", peer_id,
 		str(row.creature_uid), int(row.character_revision), receipt)):
 		return false # Accepted world row remains authoritative recovery truth.
-	publish_journaled_delta(verdict.delta)
 	return true
 
 
