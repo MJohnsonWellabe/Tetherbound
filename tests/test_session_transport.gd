@@ -110,6 +110,8 @@ func test_failed_client_leave_does_not_call_the_character_store() -> void:
 	var box: Dictionary = session.get("_box")
 	box["handshake_snapshot_applied"] = false
 
+	assert_false(session.call("_apply_host_tether_tonics", {}),
+		"a pre-admission player without a party has no owned tonic consumer")
 	session.call("leave", "refused")
 
 	assert_eq(game.save_system.save_character_calls, 0,

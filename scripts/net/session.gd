@@ -5109,8 +5109,10 @@ func _tether_tonic_party_tick(observation: Dictionary) -> void:
 func _apply_host_tether_tonics(projected: Dictionary) -> bool:
 	var game := _game()
 	if game == null or game.get("local") == null: return false
+	var party: RefCounted = game.get("local").get("party") as RefCounted
+	if party == null or not party.has_method("members"): return false
 	var context := _tether_tonic_current_scope()
-	for member: RefCounted in game.get("local").party.call("members"):
+	for member: RefCounted in party.call("members"):
 		var uid := str(member.get("uid"))
 		var seen: Dictionary = member.get_meta("tether_tonic_projection", {})
 		if not seen.is_empty() and seen.get("context") != context:
