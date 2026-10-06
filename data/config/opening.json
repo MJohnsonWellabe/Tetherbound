@@ -44,6 +44,10 @@
     "_comment_spread": "Unused by the live opening since the reversal above; same reason as forward.",
     "spread": 3.5,
     "prompt_radius": 2.6,
+    "_comment_admission_notice": "F01#6a. A co-op guest's starter is committed by the host (scripts/net/starter_choice_action.gd); until the host's row is accepted the opening waits, retrying the idempotent request every 3 s. Every this-many seconds the guest is told it is still being asked, so the wait is never silent; a terminal host refusal releases the choice and reopens the picker. TUNABLE.",
+    "admission_notice_seconds": 10.0,
+    "_comment_admission_retry": "F01#6a. The bound on that wait: after this many seconds with no accepted row, the automatic retries stop and the guest is told plainly that the host has not confirmed the companion and that Interact asks again. The retry re-sends the request, re-runs the guest's install of a journalled row, or (when the follower no longer matches the host's staged card) re-adopts the host's own card so the install can finish. TUNABLE.",
+    "admission_retry_after_seconds": 45.0,
     "_comment_prompt": "Unused by the live opening since the reversal above; same reason as forward."
   },
   "follower": {

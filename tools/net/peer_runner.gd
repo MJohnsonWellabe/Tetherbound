@@ -2729,11 +2729,19 @@ func _step_join_encounter(args: Dictionary, command_budget_frames: int = NET_STE
 	var shared := str(director.get("_pending_shared_join_id")) == id \
 		or str(director.get("_shared_active_id")) == id
 	var admission_deadline := int(director.get("_pending_shared_join_deadline_ms")) if shared else 0
+	# A tournament join is the same asynchronous host admission with its own
+	# producer deadline (`_pending_tournament_join_deadline_ms`). Observe that
+	# deadline and report how the admission ended instead of a bare frame count.
+	var tournament := not shared and str(director.get("_pending_tournament_join_id")) == id
+	if tournament:
+		admission_deadline = int(director.get("_pending_tournament_join_deadline_ms"))
 	var frames := maxi(1, int(args.get("settle", 120)))
-	if shared:
+	if shared or tournament:
 		frames = maxi(1, command_budget_frames)
 		if args.has("settle"):
 			frames = mini(frames, maxi(1, int(args["settle"])))
+	var join_started_ms := Time.get_ticks_msec()
+	var bound_after_ms := -1
 	var manager := _combat_manager()
 	var bound := false
 	var failure := ""
@@ -2781,7 +2789,20 @@ func _step_join_encounter(args: Dictionary, command_budget_frames: int = NET_STE
 					and str(creature.get("uid")) == str(card.get("uid", "")) \
 					and str(creature.get("species_id")) == str(opponent.get("species_id", ""))
 			if bound:
+				bound_after_ms = Time.get_ticks_msec() - join_started_ms
 				break
+		if tournament and str(director.get("_pending_tournament_join_id")) != id:
+			var tgame := root.get_node_or_null(^"Game")
+			if tgame != null:
+				observed_world_message = str(tgame.get("_pending_world_message"))
+			# Admission resolved; give a successful begin the frame it binds in.
+			manager = _combat_manager()
+			if manager == null or not bool(manager.call("is_fighting")) or str(manager.call("encounter_id")) != id:
+				failure = "tournament admission ended without binding"
+				break
+		if tournament and (admission_deadline <= 0 or Time.get_ticks_msec() >= admission_deadline + 100):
+			failure = "tournament admission passed its original producer deadline"
+			break
 		if shared:
 			if str(director.get("_pending_shared_join_id")) != id:
 				failure = "shared admission ended without a matching host record and presentation"
@@ -2794,6 +2815,11 @@ func _step_join_encounter(args: Dictionary, command_budget_frames: int = NET_STE
 			return {"verdict": "FAIL", "detail": failure if not failure.is_empty() else "shared admission reached the caller frame limit",
 				"data": {"encounter_id": id, "producer_deadline_ms": admission_deadline,
 					"frame_limit": frames, "observed_world_message": observed_world_message}}
+		if tournament:
+			return {"verdict": "FAIL", "detail": "%s after %d ms (world message: '%s')" % [
+				failure if not failure.is_empty() else "tournament admission reached the caller frame limit",
+				Time.get_ticks_msec() - join_started_ms, observed_world_message],
+				"data": {"encounter_id": id, "producer_deadline_ms": admission_deadline, "frame_limit": frames}}
 		if manager == null or not bool(manager.call("is_fighting")):
 			return {"verdict": "FAIL", "detail": "the join did not put this peer in a fight"}
 		return {"verdict": "FAIL", "detail": "the join is fighting, but is bound to '%s' instead of '%s'"
@@ -2806,8 +2832,9 @@ func _step_join_encounter(args: Dictionary, command_budget_frames: int = NET_STE
 	if body != null and is_instance_valid(body):
 		species = str((body as Node3D).get("species_id"))
 		where = (body as Node3D).global_position
-	return {"verdict": "PASS", "detail": "joined %s beside '%s' at (%.1f, %.1f)"
-		% [id, species, where.x, where.z]}
+	return {"verdict": "PASS", "detail": "joined %s beside '%s' at (%.1f, %.1f)%s"
+		% [id, species, where.x, where.z,
+			(" after %d ms" % bound_after_ms) if bound_after_ms >= 0 else ""]}
 
 
 ## Stand this peer's OWN deployed creature somewhere. A peer owns its creature's
@@ -5524,10 +5551,12 @@ func _clear_open_dialogue(presses_allowed: int) -> String:
 	for i in maxi(1, presses_allowed):
 		if not bool(panel.call("is_open")):
 			break
-		await _press_edge("interact", true)
-		for f in 2:
-			await physics_frame
-		await _press_edge("interact", false)
+		# F01#6a (op14/op16, two runs sharing the CPU): raw edges here let a slow
+		# process frame flush the queued physical press after this loop had
+		# already re-read `is_open`, so one press too many landed on a closed
+		# box and reopened Grandpa's walk-out hint. `_inject` is the F11#3 tap:
+		# the physical press flushes while the polled press still holds.
+		await _inject("interact", 2)
 		for f in 6:
 			await physics_frame
 		presses += 1
@@ -6121,7 +6150,107 @@ func _original_starter_ownership(args: Dictionary) -> Dictionary:
 	var admitted_uids: Array[String] = []
 	for member: Dictionary in admitted.get("party", []):
 		admitted_uids.append(str(member.get("uid", "")))
+	# F01#6a: the host's admitted copy must hold the guest's starter receipt and
+	# flag, and match the guest's own record exactly as `owner_plan` compares it
+	# (`essence.owner_matches_after`), or the guest's next host-staged action
+	# meets owner_action_baseline_conflict.
+	var admitted_starter_receipts: Array[String] = []
+	for receipt: Variant in admitted.get("redesign_character", {}).get("transaction_receipts", []):
+		if str(receipt).begins_with("starter_choice:"):
+			admitted_starter_receipts.append(str(receipt))
+	var admitted_flag := false
+	var baseline_matches := false
+	var starter_fields_match := false
+	var differing_fields: Array[String] = []
+	var differing_paths: Array[String] = []
+	if not admitted.is_empty():
+		var admitted_peer := int(args.get("peer_id", session.call("local_peer_id")))
+		admitted_flag = (session.call("_foundation_flags", admitted_peer) as Dictionary).get("opening:starter_granted") == true
+		if args.get("projection") is Dictionary:
+			var essence := preload("res://scripts/creatures/essence.gd")
+			baseline_matches = essence.owner_matches_after(args.projection, admitted)
+			var mine: Dictionary = essence._without_passive(args.projection)
+			var theirs: Dictionary = essence._without_passive(admitted)
+			starter_fields_match = essence._equivalent(mine.get("party"), theirs.get("party")) \
+				and essence._equivalent(mine.get("redesign_character"), theirs.get("redesign_character"))
+			for field: String in mine:
+				if not essence._equivalent(mine.get(field), theirs.get(field)):
+					differing_fields.append(field)
+					_opening_diff_paths(mine.get(field), theirs.get(field), field, differing_paths)
+	var own_starter_receipts: Array[String] = []
+	if local != null:
+		for receipt: Variant in (local.get("redesign_character") as Dictionary).get("transaction_receipts", []):
+			if str(receipt).begins_with("starter_choice:"):
+				own_starter_receipts.append(str(receipt))
+	# Fingerprints computed on each side from its own exact values: comparing
+	# them never routes a record through the harness's JSON (which rounds
+	# floats), and they use the same exact-bits canonical form authority uses.
+	var fp := preload("res://scripts/net/research_passive_preparation.gd")
+	var essence_rules := preload("res://scripts/creatures/essence.gd")
+	var own_projection: Dictionary = preload("res://scripts/net/character_record_rules.gd").portable_projection(local.call("save_data")) if local != null else {}
+	var own_core: Dictionary = essence_rules._without_passive(own_projection) if not own_projection.is_empty() else {}
+	var admitted_core: Dictionary = essence_rules._without_passive(admitted) if not admitted.is_empty() else {}
+	var fingerprints := func(core: Dictionary) -> Dictionary:
+		if core.is_empty():
+			return {}
+		return {"whole": fp.fingerprint(core),
+			"party": fp.fingerprint({"party": core.get("party", [])}),
+			"creatures": fp.fingerprint({"redesign_character": core.get("redesign_character", {})}),
+			"inventory": fp.fingerprint({"inventory": core.get("inventory", [])})}
+	# The host's EFFECTIVE view of a guest is its owner-passive replay cursor:
+	# the admitted record plus every replayed care, travel and
+	# reward_delivery_applied input. A host-staged action checkpoints that state,
+	# so it -- not the raw admitted record -- is what owner_plan compares against.
+	var replayed_core: Dictionary = {}
+	if not admitted.is_empty() and session != null:
+		var passive: Variant = session.get("_owner_passive")
+		var hosts: Variant = passive.get("hosts") if passive is Object else null
+		var stream: Variant = (hosts as Dictionary).get(str(admitted.get("character_id", "")), {}) if hosts is Dictionary else {}
+		var cursor: Variant = (stream as Dictionary).get("cursor", {}) if stream is Dictionary else {}
+		if cursor is Dictionary and (cursor as Dictionary).get("state") is Dictionary:
+			replayed_core = essence_rules._without_passive((cursor as Dictionary).state)
+	# F01#6a part 2 evidence: which dialogue gifts arrived as deliveries, and
+	# whether the host's replay stream for this guest is live.
+	var own_gift_rows: Array[String] = []
+	if local != null:
+		for raw: Variant in (local.get("satchel_escrow") as Dictionary).values():
+			if raw is Dictionary and str((raw as Dictionary).get("source", "")).begins_with("dialogue_give:"):
+				own_gift_rows.append("%s=%s" % [str(raw.source), str(raw.get("status", ""))])
+	var host_gift_rows: Array[String] = []
+	var stream_info := {}
+	if not admitted.is_empty() and session != null:
+		var gift_world: Variant = root.get_node_or_null(^"Game").get("world") if root.get_node_or_null(^"Game") != null else null
+		if gift_world != null:
+			for raw: Variant in (gift_world.get("reward_deliveries") as Dictionary).values():
+				if raw is Dictionary and str((raw as Dictionary).get("source", "")).begins_with("dialogue_give:") \
+						and str(raw.get("character_id", "")) == str(admitted.get("character_id", "")):
+					host_gift_rows.append("%s=%s" % [str(raw.source), str(raw.get("status", ""))])
+		var passive_service: Variant = session.get("_owner_passive")
+		var host_streams: Variant = passive_service.get("hosts") if passive_service is Object else null
+		var guest_stream: Variant = (host_streams as Dictionary).get(str(admitted.get("character_id", "")), null) if host_streams is Dictionary else null
+		stream_info = {"present": guest_stream is Dictionary}
+		if guest_stream is Dictionary:
+			var gcursor: Variant = (guest_stream as Dictionary).get("cursor", {})
+			stream_info["error"] = str((guest_stream as Dictionary).get("error", ""))
+			stream_info["sequence"] = int((gcursor as Dictionary).get("sequence", -1)) if gcursor is Dictionary else -1
+			stream_info["has_state"] = gcursor is Dictionary and (gcursor as Dictionary).get("state") is Dictionary
+		var refused_map: Variant = passive_service.get("refused") if passive_service is Object else null
+		stream_info["refused"] = (refused_map as Dictionary).has(str(admitted.get("character_id", ""))) if refused_map is Dictionary else false
 	return {
+		"own_gift_rows": own_gift_rows,
+		"host_gift_rows": host_gift_rows,
+		"host_stream": stream_info,
+		"own_fingerprints": fingerprints.call(own_core),
+		"admitted_fingerprints": fingerprints.call(admitted_core),
+		"replayed_fingerprints": fingerprints.call(replayed_core),
+		"own_starter_receipts": own_starter_receipts,
+		"portable_projection": preload("res://scripts/net/character_record_rules.gd").portable_projection(local.call("save_data")) if local != null else {},
+		"admitted_starter_receipts": admitted_starter_receipts,
+		"admitted_starter_flag": admitted_flag,
+		"admitted_baseline_matches": baseline_matches,
+		"admitted_starter_fields_match": starter_fields_match,
+		"admitted_differing_fields": differing_fields,
+		"admitted_differing_paths": differing_paths,
 		"character_id": str(local.get("character_id")) if local != null else "",
 		"party_size": party.call("size") if party != null else -1,
 		"party_uids": uids,
@@ -6136,6 +6265,28 @@ func _original_starter_ownership(args: Dictionary) -> Dictionary:
 		"admitted_character_id": str(admitted.get("character_id", "")),
 		"admitted_party_uids": admitted_uids,
 	}
+
+
+## Bounded deep diff for F01#6a evidence: guest value vs host admitted value.
+func _opening_diff_paths(mine: Variant, theirs: Variant, path: String, out: Array[String]) -> void:
+	if out.size() >= 16:
+		return
+	var essence := preload("res://scripts/creatures/essence.gd")
+	if mine is Dictionary and theirs is Dictionary:
+		for key: Variant in mine:
+			if not (theirs as Dictionary).has(key):
+				out.append("%s/%s only on guest" % [path, str(key)])
+			elif not essence._equivalent(mine[key], theirs[key]):
+				_opening_diff_paths(mine[key], theirs[key], "%s/%s" % [path, str(key)], out)
+		for key: Variant in theirs:
+			if not (mine as Dictionary).has(key):
+				out.append("%s/%s only on host" % [path, str(key)])
+	elif mine is Array and theirs is Array and (mine as Array).size() == (theirs as Array).size():
+		for index in (mine as Array).size():
+			if not essence._equivalent(mine[index], theirs[index]):
+				_opening_diff_paths(mine[index], theirs[index], "%s/%d" % [path, index], out)
+	else:
+		out.append("%s: guest %s host %s" % [path, str(mine).left(80), str(theirs).left(80)])
 
 
 func _execute_probe(msg: Dictionary) -> Variant:
@@ -8381,6 +8532,20 @@ func _meadows_opening_state() -> Dictionary:
 	out["owns_input"] = bool(director.call("owns_input")) if director.has_method("owns_input") else false
 	out["starter_commit_pending"] = not (director.get("_pending_starter_adoption") as Dictionary).is_empty() \
 		if director.get("_pending_starter_adoption") is Dictionary else false
+	var opening_session := _session()
+	out["session_owns_input"] = opening_session != null and opening_session.has_method("owns_input") \
+		and bool(opening_session.call("owns_input"))
+	if opening_session != null:
+		var retry: Variant = opening_session.get("_owner_training_retry")
+		out["owner_training_retry"] = {} if not retry is Dictionary else {
+			"empty": (retry as Dictionary).is_empty(), "saved": (retry as Dictionary).get("saved", false)}
+		var training_row: Variant = opening_session.call("_owner_training_row") if opening_session.has_method("_owner_training_row") else {}
+		if training_row is Dictionary:
+			out["owner_training_row"] = {"action": (training_row as Dictionary).get("action", ""),
+				"status": (training_row as Dictionary).get("status", "")}
+	out["input_context"] = str(_probe.call("input_context")) if _probe != null else ""
+	out["arbiter_enabled"] = bool(director.get("_arbiter").call("enabled")) \
+		if director.get("_arbiter") != null and director.get("_arbiter").has_method("enabled") else false
 	out["bed_prompt"] = _opening_position(bed_prompt)
 	out["grandpa_prompt"] = _opening_position(grandpa_prompt)
 	var opening_player: Variant = director.get("_player")

@@ -1147,8 +1147,114 @@ static func client_grant_sources() -> Dictionary:
 					"flag": MEADOWHART_FOUND_FLAG if index == parts.size() - 1 else "",
 					"requires_any": [MEADOWHART_REVEAL_FLAG]}
 	table.erase("")
+	for give: Dictionary in dialogue_gives():
+		var gate: Variant = DIALOGUE_GIVE_GATES.get(str(give.conversation))
+		if not gate is Dictionary:
+			continue # Unclassified or refused: a guest may not claim it (DIALOGUE_GIVE_REFUSED).
+		table[dialogue_give_source(str(give.conversation), str(give.item))] = {
+			"item": str(give.item), "count": int(give.count), "flag": "",
+			"requires_any": ((gate as Dictionary).get("requires_any", []) as Array).duplicate()}
 	_client_grant_table = table
 	return table
+
+
+## --- F01#6a part 2: a guest's dialogue gifts --------------------------------
+##
+## Every `give:<item>:<count>` effect in data/dialogue/*.json used to land only
+## in the GUEST's local satchel (sequence_director.gd::_give_items), so the
+## host's admitted copy of that character never held Grandpa's pack, the catch
+## orbs or Tam's tools and the guest's next host-staged action met
+## owner_action_baseline_conflict. A guest now claims each one as this ordinary
+## reward_grant; the host reads the item and count from its OWN dialogue data,
+## the delivery id keys the receipt by world, source and character so it pays
+## once, and the guest's satchel changes only from the accepted delivery
+## (owner_passive_sync's reward_delivery_applied carries it into the host's
+## admitted record). Host and solo keep the direct give.
+##
+## The host cannot see which line of which conversation a guest is on, so every
+## conversation that gives anything is classified here by what the host CAN
+## verify (coordinator rule, F01#6a part 2):
+##   * `consumable`: only consumables (orbs, potions, food, revives, coin,
+##     materials); authored + once per character is the gate.
+##   * `progression`: grants a tool, key item or other progression item. Its
+##     authored prerequisite must be checkable against the host's own world
+##     flags (`requires_any`), or it is refused for guests and listed in
+##     DIALOGUE_GIVE_REFUSED. A ladder `unless_flag` the conversation itself sets
+##     is its once-condition, which the per-character receipt already enforces.
+## A conversation that gives and is in neither table is refused for guests, and
+## tests/test_dialogue_give_delivery.gd fails until it is classified.
+const DIALOGUE_DIR := "res://data/dialogue"
+const DIALOGUE_GIVE_GATES := {
+	"grandpa_first_catch": {"class": "consumable", "requires_any": [],
+		"_why": "the opening's catch supplies (orb_basic, potion_small, berries, revive)"},
+	"village_nessa_overlook_gift": {"class": "consumable", "requires_any": [],
+		"_why": "Nessa's look-back bench, band1 (village_npcs.json greeting_when: unless nessa_overlook_gift_taken, which this conversation sets). Three berries of trail food, once per trainer"},
+	"village_mira_shop_intro": {"class": "progression", "requires_any": [],
+		"_why": "Mira's first greeting, offered from the first visit (village_npcs.json greeting_when: unless opening:mira_visited, which this conversation sets). Axe and pickaxe with coin and fiber; nothing earlier gates it, so the per-character receipt is the whole prerequisite"},
+	"village_tam_tools": {"class": "progression", "requires_any": [],
+		"_why": "Tam's first greeting, offered from the first visit (unless tam_tools_given, which this conversation sets). Knife, torch and hammer"},
+	"relay_captive_freed": {"class": "progression", "requires_any": ["relay_captain_defeated"],
+		"_why": "relay_site.json greeting_when: if relay_captain_defeated (a world flag the host holds) unless captive_rescued. The mill bridge gear key"},
+}
+const DIALOGUE_GIVE_REFUSED := {
+	"village_quarry_foreman_hammer": "no NPC ladder in any config offers this conversation, so the host cannot verify a guest reached it; its hammer is also Tam's",
+}
+static var _dialogue_gives: Array[Dictionary] = []
+
+
+static func dialogue_give_source(conversation_id: String, item: String) -> String:
+	return "dialogue_give:%s:%s" % [conversation_id, item]
+
+
+## Every authored dialogue gift: {file, conversation, item, count}, read once.
+static func dialogue_gives() -> Array[Dictionary]:
+	if not _dialogue_gives.is_empty():
+		return _dialogue_gives
+	var out: Array[Dictionary] = []
+	# Recursive: the runner also plays `data/dialogue/bands/*.json`
+	# (dialogue_runner.gd EXTRA_DIALOGUE_PATHS), and a give authored there is
+	# a gift a guest must be able to claim (or be refused) like any other.
+	var files: Array[String] = []
+	_dialogue_files(DIALOGUE_DIR, "", files)
+	files.sort()
+	for file: String in files:
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("%s/%s" % [DIALOGUE_DIR, file]))
+		var conversations: Variant = (parsed as Dictionary).get("conversations", {}) if parsed is Dictionary else {}
+		if not conversations is Dictionary:
+			continue
+		for conversation: Variant in conversations:
+			var effects: Array[String] = []
+			_collect_give_effects(conversations[conversation], effects)
+			for effect: String in effects:
+				var parts := effect.split(":")
+				if parts.size() == 3 and parts[2].is_valid_int() and int(parts[2]) > 0:
+					out.append({"file": file, "conversation": str(conversation),
+						"item": parts[1], "count": int(parts[2])})
+	_dialogue_gives = out
+	return out
+
+
+## Every `.json` under `root`, as paths relative to it.
+static func _dialogue_files(root: String, relative: String, out: Array[String]) -> void:
+	var dir := DirAccess.open(root if relative.is_empty() else "%s/%s" % [root, relative])
+	if dir == null:
+		return
+	for file: String in dir.get_files():
+		if file.ends_with(".json"):
+			out.append(file if relative.is_empty() else "%s/%s" % [relative, file])
+	for sub: String in dir.get_directories():
+		_dialogue_files(root, sub if relative.is_empty() else "%s/%s" % [relative, sub], out)
+
+
+static func _collect_give_effects(value: Variant, out: Array[String]) -> void:
+	if value is String and (value as String).begins_with("give:"):
+		out.append(value)
+	elif value is Dictionary:
+		for key: Variant in value:
+			_collect_give_effects(value[key], out)
+	elif value is Array:
+		for entry: Variant in value:
+			_collect_give_effects(entry, out)
 
 
 ## Every named wild's authored once-only payout, keyed by the once id the

@@ -3987,10 +3987,24 @@ func _shared_presentation_payload(encounter_id: String) -> Dictionary:
 		"body_generation": int(runtime.get("body_generation")) if runtime != null else 0,
 		"presentation_seq": int(runtime.get("presentation_seq")) if runtime != null else 0,
 		"cue_serial": int(runtime.get("cue_serial")) if runtime != null else 0,
-		"shape": wild.call("presentation_shape") if is_instance_valid(wild) else {},
+		"shape": _pose_shape(wild.call("presentation_shape")) if is_instance_valid(wild) else {},
 		"foot_position": [feet.x, feet.y, feet.z],
 		"facing": [facing.x, facing.y, facing.z],
 	}
+
+
+## The 10 Hz pose rides the unreliable channel, so it must fit one packet
+## (ENet MTU 1392 bytes): over it, losing any fragment drops the whole pose.
+## A tell's pattern profile is the full attack row (several KB). It reaches
+## guests on the reliable telegraph/route cue, and in the record's cue for a
+## late joiner; the pose carries only the parts that move.
+static func _pose_shape(shape: Dictionary) -> Dictionary:
+	if not shape.get("pattern") is Dictionary: return shape
+	var moving: Dictionary = (shape.pattern as Dictionary).duplicate()
+	moving.erase("profile")
+	var trimmed := shape.duplicate()
+	trimmed["pattern"] = moving
+	return trimmed
 
 
 func _refresh_shared_record_presentation(rec: Dictionary) -> void:
@@ -6357,6 +6371,10 @@ func _begin_admitted_tournament_join() -> bool:
 			or not _tournament_entry_milestones_ready(party) \
 			or not _tournament_join_state_valid(party, selected) \
 			or not _same_tournament_members(selected, _pending_tournament_members):
+		print("[encounter] tournament join '%s' not presentable: fighting=%s milestones=%s state=%s same_members=%s" % [
+			encounter_id, _manager != null and bool(_manager.call("is_fighting")),
+			_tournament_entry_milestones_ready(party), _tournament_join_state_valid(party, selected),
+			_same_tournament_members(selected, _pending_tournament_members)])
 		return false
 	_tournament_members.assign(_pending_tournament_members)
 	_snapshot_tournament_entry_condition()
@@ -6423,6 +6441,7 @@ func _tick_pending_tournament_join() -> void:
 
 func _cancel_pending_tournament_join(reason: String, disengage: bool) -> void:
 	var encounter_id := _pending_tournament_join_id
+	print("[encounter] tournament join '%s' cancelled: %s" % [encounter_id, reason])
 	_pending_tournament_join_id = ""
 	_pending_tournament_join_deadline_ms = 0
 	_pending_tournament_join_announcement = {}
