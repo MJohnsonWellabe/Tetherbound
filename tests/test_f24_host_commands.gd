@@ -320,6 +320,76 @@ func test_pouch_assignment_uses_original_character_journal_and_owner_save_withou
 	assert_false(record.errors(forged_saved, "owner_a").is_empty())
 
 
+func test_saved_item_carrier_keeps_one_original_debit_and_owned_effect_with_runtime_off() -> void:
+	var actions := preload("res://scripts/net/foundation_actions.gd")
+	var record := preload("res://scripts/net/character_record_rules.gd")
+	var delivery := preload("res://scripts/net/foundation_delivery.gd")
+	var authority_type := preload("res://scripts/net/character_authority.gd")
+	var rules := preload("res://scripts/world/death_satchel_rules.gd")
+	for item: String in ["potion_small", "berries", "attack_tonic"]:
+		var player: RefCounted = DATA.new()._player()
+		player.set("character_id", "owner_a")
+		player.get("inventory").call("add", item, 2)
+		var creature: RefCounted = player.get("party").call("at", 0)
+		creature.set("hp", float(creature.get("max_hp")) - 10.0)
+		creature.set("nourishment", 10.0)
+		creature.set("happiness", 20.0)
+		var before := record.portable_projection(player.call("save_data"))
+		before.redesign_character["tether_pouch"] = [item]
+		var request := COMMANDS.intent("item-encounter", 2, 7, "item_throw")
+		var effect := {"kind": "item_throw", "character_id": "owner_a", "creature_uid": before.party[0].uid,
+			"generation": 2, "item_id": item, "count": 1, "action_id": "command:item-encounter:owner_a:2:7"}
+		var actor := {"character_id": "owner_a", "encounter_id": request.encounter_id, "creature_uid": before.party[0].uid,
+			"generation": 2, "body_generation": 1, "body_instance_id": 123, "vitals_revision": 0,
+			"hp": before.party[0].hp, "max_hp": before.party[0].max_hp}
+		var context := {"character_id": "owner_a", "expected_revision": 0, "source_key": "tether_item:" + str(effect.action_id),
+			"in_range": true, "in_combat": true, "foundation_runtime_authorized": true, "item_runtime_authorized": true,
+			"world_namespace": "item-world", "session_id": "item-epoch", "item_actor": actor}
+		var intent := {"request": request, "effect": effect}
+		var authority := authority_type.new()
+		assert_true(authority.bind_world("item-world"))
+		assert_true(authority.seed_admitted_character(before, "owner_a").ok)
+		var token: Dictionary = authority.stage_character_action("owner_a", 0, "tether_item", intent, context)
+		assert_true(token.ok, str(token))
+		if not token.ok: continue
+		assert_eq(rules.inventory_from(token.state.inventory).count(item), 1)
+		assert_eq(token.state.party[1], before.party[1])
+		assert_eq(token.intent, intent)
+		assert_true(authority.finish_creature_training(token, false))
+		assert_eq(authority.state("owner_a"), before, "false first writer restores BOTH inventory and selected HP/condition")
+		assert_eq(authority.revision("owner_a"), 0)
+		token = authority.stage_character_action("owner_a", 0, "tether_item", intent, context)
+		var row: Dictionary = delivery.make_record("item-slot", "item-world", "item-epoch", token, null, record.errors)
+		assert_false(row.is_empty())
+		if row.is_empty(): continue
+		row = preload("res://scripts/save/save_document.gd").parse(preload("res://scripts/save/save_document.gd").stringify(row))
+		COMMANDS._config.feature_flags.runtime_enabled = false
+		assert_true(delivery.valid(row, record.errors, "owner_a", "item-world", "item-slot"), "saved entitlement survives runtime OFF")
+		assert_false(COMMANDS.stage_item_use(before, effect, {"actor": actor, "owner_admitted": true, "encounter_active": true}).ok, "ordinary live helper still refuses OFF")
+		var recovered := authority_type.new()
+		assert_true(recovered.bind_world("item-world"))
+		assert_true(recovered.seed_admitted_character(before, "owner_a").ok)
+		assert_true(recovered.recover_durable_training("owner_a", {row.delivery_id: row}).ok)
+		assert_false(recovered.acknowledge_creature_training("owner_a", row), "pending world row cannot assert owner save")
+		var owner: Dictionary = delivery.owner_plan(before, row, record.errors)
+		assert_true(owner.ok and owner.requires_owner_save)
+		assert_eq(owner.state, row.after)
+		assert_true(delivery.owner_plan(owner.state, row, record.errors).duplicate, "retry never consumes a second stack")
+		assert_false(actions.stage(owner.state, 1, "tether_item", intent, context, record.errors).ok)
+		row.status = "accepted"
+		assert_true(recovered.acknowledge_creature_training("owner_a", row))
+		assert_eq(recovered.state("owner_a"), row.after)
+		for field: String in ["world_namespace", "session_id", "source_key", "item_runtime_authorized", "in_combat"]:
+			var forged := row.duplicate(true)
+			forged.host_context[field] = false if field in ["item_runtime_authorized", "in_combat"] else "foreign"
+			assert_false(delivery.valid(forged, record.errors), field)
+		if item == "potion_small": assert_eq(row.after.party[0].hp, before.party[0].max_hp)
+		if item == "berries": assert_eq(row.after.party[0].nourishment, 45.0)
+		if item == "attack_tonic": assert_eq(row.after.party, before.party, "timed tonic is not persisted in a card")
+		assert_eq(creature.get("hp"), before.party[0].hp, "detached carrier never writes the live creature")
+		assert_eq(player.get("inventory").call("count", item), 2)
+		COMMANDS._config.feature_flags.runtime_enabled = true
+
 func test_item_candidate_debits_one_own_stack_with_actual_heal_food_or_unsaved_tonic() -> void:
 	var rules := preload("res://scripts/world/death_satchel_rules.gd")
 	var record := preload("res://scripts/net/character_record_rules.gd")

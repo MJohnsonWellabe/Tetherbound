@@ -589,7 +589,7 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 		if context.is_empty(): return _foundation_refusal("release_ceremony_unavailable") # Terminal: the guest releases unpaid.
 	if context.is_empty() or context.expected_revision != envelope.revision: return _foundation_refusal("source_or_revision_changed")
 	var cfg := STATION_RULES.config()
-	if envelope.op == "boss_relic": return _foundation_refusal("host_outcome_required")
+	if envelope.op in ["boss_relic", "tether_item"]: return _foundation_refusal("host_outcome_required")
 	if envelope.op == "station_craft" and cfg.get("craft_runtime_enabled") != true: return _foundation_refusal("craft_disabled")
 	if envelope.op == "feast_cook" and cfg.get("craft_runtime_enabled") != true: return _foundation_refusal("craft_disabled")
 	if envelope.op == "den" and cfg.get("den_runtime_enabled") != true: return _foundation_refusal("den_disabled")

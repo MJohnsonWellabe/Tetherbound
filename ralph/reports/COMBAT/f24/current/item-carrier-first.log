@@ -1,0 +1,8 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_f24_host_commands.gd::test_saved_item_carrier_keeps_one_original_debit_and_owned_effect_with_runtime_off,test_f24_host_commands.gd::test_item_candidate_debits_one_own_stack_with_actual_heal_food_or_unsaved_tonic,test_f24_host_commands.gd::test_pouch_assignment_uses_original_character_journal_and_owner_save_without_moving_stacks: 1 of 817 test files
+  ok    test_f24_host_commands.gd :: test_item_candidate_debits_one_own_stack_with_actual_heal_food_or_unsaved_tonic
+  ok    test_f24_host_commands.gd :: test_pouch_assignment_uses_original_character_journal_and_owner_save_without_moving_stacks
+  ok    test_f24_host_commands.gd :: test_saved_item_carrier_keeps_one_original_debit_and_owned_effect_with_runtime_off
+
+3 tests, 200 assertions, 0 failed

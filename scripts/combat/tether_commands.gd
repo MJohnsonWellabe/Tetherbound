@@ -357,8 +357,11 @@ static func first_pouch_item(pouch: Array, items: Dictionary, counts: Dictionary
 ## character transaction. The adapter must first settle its canonical live
 ## baseline and retain this exact original until owner ACK; this helper never
 ## replaces a live actor, spends meter, publishes a buff or writes a file.
-static func stage_item_use(current: Dictionary, effect: Dictionary, host: Dictionary) -> Dictionary:
-	if not enabled(): return refuse("disabled")
+static func stage_item_use(current: Dictionary, effect: Dictionary, host: Dictionary,
+		frozen_runtime_authorized: bool = false) -> Dictionary:
+	# A validated immutable saved row must remain replayable with gameplay OFF.
+	# Live callers still use the default and cannot start a disabled command.
+	if not enabled() and not frozen_runtime_authorized: return refuse("disabled")
 	if not host.get("actor") is Dictionary: return refuse("stale_actor")
 	var record: GDScript = load("res://scripts/net/character_record_rules.gd")
 	var actor: Dictionary = host.get("actor", {})
