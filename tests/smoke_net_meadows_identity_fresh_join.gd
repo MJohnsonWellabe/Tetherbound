@@ -44,6 +44,8 @@ const STARTER_FLAG := "opening:starter_granted"
 const CATCH_UP_FRAMES := 300
 const DUPLICATE_GUARD_FRAMES := 240
 const MAP_MARKER_NEAR_M := 1.5
+const ORB_WAIT_ROUNDS := 20
+const LESSON_PAGES_MAX := 8
 
 var _assertions := 0
 var _opening_together := false
@@ -164,6 +166,7 @@ func _run() -> void:
 	_check(bool(client_identity.get("inside_grandpas_village", false)),
 		"the fresh client's real Player transform is inside Grandpa's Village (%s)"
 			% str((client_identity.get("body", {}) as Dictionary).get("position", [])))
+	await _assert_roads_agree("after the join")
 
 	# Every process holds both production remote-trainer bodies (including its
 	# own hidden outbound proxy). Check both identities on both viewers; then
@@ -182,6 +185,11 @@ func _run() -> void:
 	# T4#1 is asserted on the shipping map, not inferred from the bodies above.
 	# Open that surface with its real controller shortcut on each peer, then ask
 	# the active tab for the exact filtered rows its draw loop consumes.
+	# Standing beside Grandpa with the Home Key now held opens its onboarding
+	# lesson card; read it through with the production confirm, as a player
+	# would, before the map shortcut is pressed.
+	for viewer in 2:
+		await _read_through_open_lesson(viewer)
 	await _assert_full_map_remote_marker(0, host_peer_id, client_peer_id, CLIENT_NAME)
 	await _assert_full_map_remote_marker(1, client_peer_id, host_peer_id, HOST_NAME)
 
@@ -195,6 +203,7 @@ func _run() -> void:
 			_check(rows.size() == 1 and str(rows[0]).begins_with(chosen + "@"),
 				"peer %d holds the starter it picked in the real picker, %s (%s)" % [peer, chosen, str(rows)])
 			await _assert_named_starter(peer, "after the opening")
+		await _assert_host_admits_guest_starter(client_peer_id, "after the opening", true)
 	var first_party: Array = client_identity.get("party", []) as Array
 	_check(int(client_identity.get("party_size", -1)) == 1 and first_party.size() == 1,
 		("the completed opening left the fresh client exactly one starter (%s)" if _opening_together \
@@ -223,6 +232,7 @@ func _run() -> void:
 			_check(str(saved_orbs.get("verdict", "")) == "PASS",
 				"peer %d retained its opening catch supplies after load" % peer)
 			await _assert_named_starter(peer, "after load")
+		await _assert_roads_agree("after each peer's save and reload")
 		await _rejoin_with_starter(port)
 		await _assert_roads_agree("after the rejoin")
 		if _cold:
@@ -335,6 +345,15 @@ func _complete_fresh_opening(peer: int) -> bool:
 			"the two peers typed different names ('%s', '%s')" % [_typed_names[0], _typed_names[1]])
 	if not await _press_opening(peer, "menu_confirm", "finished naming the starter"):
 		return false
+	# F01#6a. A guest's starter is committed only once the host has staged and
+	# accepted it; until then the opening is modal ("waiting for the opening
+	# save") and a press is swallowed exactly as it would be for a player. Wait
+	# for the real admitted state, bounded, rather than pressing into the modal.
+	opening = await _wait_starter_admitted(peer, STARTER_ADMISSION_ATTEMPTS)
+	_check(str(opening.get("beat", "")) == "return_starter" and not bool(opening.get("starter_commit_pending", true)) \
+			and not bool(opening.get("owns_input", true)) and not bool(opening.get("session_owns_input", true)),
+		"peer %d's starter was admitted and the opening handed input back (beat %s, pending %s)" % [
+			peer, str(opening.get("beat", "")), str(opening.get("starter_commit_pending", ""))])
 	opening = await _opening(peer)
 	if not await _move_to_opening_point(peer, opening.get("grandpa_prompt", []), "return to Grandpa", 0.9):
 		return false
@@ -355,15 +374,83 @@ func _complete_fresh_opening(peer: int) -> bool:
 		"peer %d received exactly one named starter (%s)" % [peer, str(party.get("detail", ""))])
 	var orbs: Dictionary = await step(peer, "assert", {"check": "inventory_count",
 		"item": "orb_basic", "min": 45, "max": 50})
+	# The opening batch is held until the Home Key's owe/deliver settles (F18),
+	# so the gift lands after the box closes: wait a bounded time for it.
+	for attempt in ORB_WAIT_ROUNDS:
+		if str(orbs.get("verdict", "")) == "PASS": break
+		await step(peer, "wait_flag", {"flag": "smoke:never_set", "budget_frames": 60})
+		orbs = await step(peer, "assert", {"check": "inventory_count",
+			"item": "orb_basic", "min": 45, "max": 50})
 	_check(str(orbs.get("verdict", "")) == "PASS",
 		"peer %d received the opening Basic Orb grant (%s)" % [peer, str(orbs.get("detail", ""))])
 	return str(dismissed.get("verdict", "")) == "PASS" \
 		and str(party.get("verdict", "")) == "PASS" and str(orbs.get("verdict", "")) == "PASS"
 
 
+## F01#6a. The guest's starter is only finished when the host's admitted copy of
+## that character holds the same starter: same party uid, the same
+## `starter_choice:` receipt, the `opening:starter_granted` personal flag, and a
+## record equal to the guest's own as `owner_plan` compares them. Anything less
+## and the guest's next host-staged action meets owner_action_baseline_conflict.
+func _assert_host_admits_guest_starter(client_peer_id: int, when: String, full_record: bool = false) -> void:
+	var guest_value: Variant = await probe(1, "original_starter_ownership", {})
+	var guest: Dictionary = guest_value as Dictionary if guest_value is Dictionary else {}
+	var host_value: Variant = await probe(0, "original_starter_ownership",
+		{"peer_id": client_peer_id, "projection": guest.get("portable_projection", {})})
+	var host: Dictionary = host_value as Dictionary if host_value is Dictionary else {}
+	var guest_receipts: Array = guest.get("own_starter_receipts", []) as Array
+	_check(guest_receipts.size() == 1 and host.get("admitted_starter_receipts", []) == guest_receipts,
+		"the host's admitted copy holds the guest's own starter receipt %s (%s)"
+			% [when, str(host.get("admitted_starter_receipts", []))])
+	_check(host.get("admitted_party_uids", []) == guest.get("party_uids", []) \
+			and (guest.get("party_uids", []) as Array).size() == 1,
+		"the host's admitted party is the guest's starter %s (%s vs %s)"
+			% [when, str(host.get("admitted_party_uids", [])), str(guest.get("party_uids", []))])
+	_check(bool(host.get("admitted_starter_flag", false)) and bool(guest.get("starter_granted", false)),
+		"host and guest both record opening:starter_granted for the guest %s" % when)
+	# Compared as fingerprints each peer computes from its own exact record, so
+	# the harness's JSON transport (which rounds floats) cannot fake a mismatch.
+	var mine: Dictionary = guest.get("own_fingerprints", {}) as Dictionary
+	var theirs: Dictionary = host.get("admitted_fingerprints", {}) as Dictionary
+	_check(not mine.is_empty() and mine.get("party") == theirs.get("party") \
+			and mine.get("creatures") == theirs.get("creatures"),
+		"the guest's party and creature record equal the host's admitted copy %s (diff hint: %s)"
+			% [when, str(host.get("admitted_differing_paths", []))])
+	# The record a host-staged action checkpoints is the host's owner-passive
+	# replay of this guest (admitted record + replayed care, travel and
+	# reward_delivery_applied inputs). Equal to the guest's own record means
+	# the guest's next host-staged action meets no owner_action_baseline_conflict.
+	print("opening gift evidence %s: guest rows %s; host rows %s; host stream %s" % [when,
+		str(guest.get("own_gift_rows", [])), str(host.get("host_gift_rows", [])), str(host.get("host_stream", {}))])
+	var replayed: Dictionary = host.get("replayed_fingerprints", {}) as Dictionary
+	var whole: bool = not mine.is_empty() and mine.get("whole") == replayed.get("whole")
+	if full_record:
+		_check(whole, "the guest's whole record equals the host's replayed view of it %s: no owner_action_baseline_conflict (inventory %s; diff hint vs admitted: %s)"
+			% [when, str(mine.get("inventory") == replayed.get("inventory")), str(host.get("admitted_differing_paths", []))])
+	else:
+		print("opening replayed baseline %s: whole-record match=%s inventory match=%s admitted-inventory match=%s" % [when,
+			str(whole), str(mine.get("inventory") == replayed.get("inventory")), str(mine.get("inventory") == theirs.get("inventory"))])
+
+
 func _opening(peer: int) -> Dictionary:
 	var value: Variant = await probe(peer, "meadows_opening")
 	return value as Dictionary if value is Dictionary else {}
+
+
+## Up to STARTER_ADMISSION_ATTEMPTS x 2 frames for the host round trip (personal
+## view, staged request, journal, owner save and ACK, accept). A host commits
+## synchronously and passes on the first read.
+const STARTER_ADMISSION_ATTEMPTS := 600
+
+func _wait_starter_admitted(peer: int, attempts: int) -> Dictionary:
+	var state: Dictionary = {}
+	for _attempt in attempts:
+		state = await _opening(peer)
+		if str(state.get("beat", "")) == "return_starter" and not bool(state.get("starter_commit_pending", true)) \
+				and not bool(state.get("owns_input", true)) and not bool(state.get("session_owns_input", false)):
+			return state
+		await step(peer, "wait", {"frames": 2})
+	return state
 
 
 func _wait_opening_modal(peer: int, key: String, attempts: int) -> Dictionary:
@@ -460,6 +547,16 @@ func _assert_remote_identity(viewer: int, peer_key: String, raw: Variant,
 			"%s is the other player and both its body and chosen-name badge are visible" % label)
 
 
+func _read_through_open_lesson(viewer: int) -> void:
+	for page in LESSON_PAGES_MAX:
+		var context := str(await probe(viewer, "input_context"))
+		if not context.begins_with("panel:"): return
+		await step(viewer, "press", {"action": "ui_accept"})
+		await step(viewer, "wait_flag", {"flag": "smoke:never_set", "budget_frames": 20})
+	_check(not str(await probe(viewer, "input_context")).begins_with("panel:"),
+		"viewer %d read through the open lesson card" % viewer)
+
+
 func _assert_full_map_remote_marker(viewer: int, own_peer_id: int,
 		other_peer_id: int, other_name: String) -> void:
 	var opened: Dictionary = await step(viewer, "menu_toggle",
@@ -467,6 +564,8 @@ func _assert_full_map_remote_marker(viewer: int, own_peer_id: int,
 	_check(str(opened.get("verdict", "")) == "PASS",
 		"viewer %d opened the production full map with its physical map shortcut (%s)"
 			% [viewer, str(opened.get("detail", ""))])
+	if str(opened.get("verdict", "")) != "PASS":
+		print("map shortcut refused; viewer %d opening state: %s" % [viewer, str(await _opening(viewer))])
 	await step(viewer, "wait", {"frames": 12})
 	var value: Variant = await probe(viewer, "map_remote_players")
 	var report: Dictionary = value as Dictionary if value is Dictionary else {}
@@ -572,6 +671,7 @@ func _rejoin_with_starter(port: int) -> void:
 		want.sort()
 		_check(chars == want, "peer %d's registry after the rejoin holds exactly the host and the returning character (%s)" % [viewer, str(chars)])
 	await _assert_named_starter(1, "after rejoining")
+	await _assert_host_admits_guest_starter(int((await _session(1)).get("peer_id", 0)), "after the rejoin", true)
 	var story := await _story(1, [STARTER_FLAG])
 	_check(_player_flag(story, STARTER_FLAG) == true, "the rejoined guest kept its starter receipt")
 	var orbs: Dictionary = await step(1, "assert", {"check": "inventory_count", "item": "orb_basic",

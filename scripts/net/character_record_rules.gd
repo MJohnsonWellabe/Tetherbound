@@ -37,18 +37,26 @@ static func portable_projection(personal: Dictionary) -> Dictionary:
 	if party is Array:
 		var cards: Array = []
 		for card: Variant in party:
-			if card is Dictionary and card.has("energy"):
-				var trimmed: Dictionary = card.duplicate(true)
-				trimmed.erase("energy")
-				cards.append(trimmed)
-			else:
-				cards.append(card)
+			cards.append(portable_card(card))
 		party = cards
 	return {"character_id": personal.get("character_id"), "party": party,
 		"redesign_character": personal.get("redesign_character"), "inventory": personal.get("inventory"),
 		"portal_escrow": rows, "vitals_escrow": vitals,
 		"equipment": personal.get("equipment", empty_equipment()),
 		"realm_hearts": personal.get("realm_hearts", {"active_id": ""})}
+
+
+## One party card as the portable authority both sides compare. The single home
+## of the rule above: a creature's in-fight move meter (`energy`) is never owner
+## authority, so every producer that builds an admitted or staged card from a
+## live instance (portable_projection, essence.training_projection, the
+## starter_choice and capture stages) strips it through this one helper.
+static func portable_card(card: Variant) -> Variant:
+	if not card is Dictionary or not (card as Dictionary).has("energy"):
+		return card
+	var trimmed: Dictionary = (card as Dictionary).duplicate(true)
+	trimmed.erase("energy")
+	return trimmed
 
 
 ## Only the portable codec's legitimate absent-field defaults. A received
