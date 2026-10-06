@@ -55,6 +55,8 @@ class Discoveries extends RefCounted:
 class Session extends Node:
 	var game: Node
 	var host := false
+	var last_rejoin_admission: Dictionary = {}
+
 	var owner_peer := 2
 	var _character_authority: RefCounted
 	var messages: Array[Dictionary] = []
@@ -81,7 +83,8 @@ class Session extends Node:
 	func _foundation_flags(_peer: int) -> Dictionary: return {}
 	func is_host() -> bool: return host
 	func local_peer_id() -> int: return 1 if host else 2
-	func snapshot_ready() -> bool: return true
+	var snapshot_is_ready := true
+	func snapshot_ready() -> bool: return snapshot_is_ready
 	var snapshot_applied := true
 	func handshake_snapshot_applied() -> bool: return snapshot_applied
 	func _authority_character(peer: int) -> String: return game.local.character_id if peer == owner_peer else "host"
@@ -283,6 +286,49 @@ func test_recording_reset_and_authenticated_ordered_ack() -> void:
 	assert_eq(service.local.inputs.size(), 1)
 	assert_eq(service.local.inputs[0].sequence, 2)
 
+func test_owner_sends_each_input_once_and_the_window_again_only_when_acks_stall() -> void:
+	# F01#6b: a whole unacknowledged window every flush cost the host ~126 ms per
+	# packet. Stop-and-wait: one contiguous window, nothing until it is acked.
+	service.record_input(_input(0.1))
+	service.record_input(_input(0.2))
+	session.messages.clear()
+	service._flush()
+	assert_eq(session.messages.size(), 1)
+	assert_eq((session.messages[0].inputs as Array).map(func(i: Dictionary) -> int: return int(i.sequence)), [1, 2])
+	service.record_input(_input(0.3))
+	service._flush()
+	assert_eq(session.messages.size(), 1, "nothing more while that window is in flight")
+	service.receive_owner(_envelope({"op": "inputs_ack", "sequence": 2}))
+	service._flush()
+	assert_eq((session.messages[1].inputs as Array).map(func(i: Dictionary) -> int: return int(i.sequence)), [3],
+		"after the ACK only what follows it, contiguous with the host's cursor")
+	service._flush()
+	assert_eq(session.messages.size(), 2)
+	service.local.ack_progress_ms = Time.get_ticks_msec() - int(service.RESEND_STALL_S * 1000.0) - 1
+	service._flush()
+	assert_eq((session.messages[2].inputs as Array).map(func(i: Dictionary) -> int: return int(i.sequence)), [3],
+		"a stall resends the unacknowledged window from its first input (the host may have waited)")
+	service._flush()
+	assert_eq(session.messages.size(), 3, "and only once per stall")
+
+func test_a_window_dropped_before_the_join_snapshot_is_sent_on_the_next_flush() -> void:
+	# station_craft: the first window, dropped before the snapshot, was marked in
+	# flight and waited a whole stall; a Home Key trip inside it moved the host's
+	# body and the first discovery input was refused (initial pose unconfirmed).
+	service.record_input(_input(0.1))
+	session.messages.clear()
+	session.snapshot_is_ready = false
+	service._flush()
+	assert_eq(session.messages.size(), 0, "nothing sent before the snapshot")
+	assert_eq(int(service.local.get("inflight_through", 0)), 0, "and nothing marked in flight")
+	session.snapshot_is_ready = true
+	service.record_input(_input(0.2))
+	service._flush()
+	assert_eq(session.messages.size(), 1, "the next flush sends at once, without waiting a stall")
+	assert_eq((session.messages[0].inputs as Array).map(func(i: Dictionary) -> int: return int(i.sequence)), [1, 2])
+	service._flush()
+	assert_eq(session.messages.size(), 1, "then stop-and-wait as before")
+
 func test_host_duplicate_input_is_idempotent_and_conflict_does_not_promote() -> void:
 	service.record_input(_input())
 	var stream := _host_stream()
@@ -314,6 +360,64 @@ func test_host_sequence_gap_and_initial_remote_pose_refused() -> void:
 		"travel_valid": false, "new_landmarks": []}]}))
 	assert_eq(stream.error, "owner_passive_initial_pose_unconfirmed")
 	assert_eq(stream.cursor.sequence, 1)
+
+func _first_discovery_after(at: Array) -> Dictionary:
+	# A host stream whose cursor has applied one condition tick, then the
+	# stream's first discovery (travel baseline false) naming `at`.
+	service.record_input(_input())
+	var stream := _host_stream()
+	service.receive_host(2, _envelope({"op": "inputs", "inputs": [service.local.inputs[0].duplicate(true)]}))
+	assert_eq(stream.cursor.sequence, 1, "fixture: the condition tick applied")
+	service.receive_host(2, _envelope({"op": "inputs", "inputs": [{"version": 1, "sequence": 2,
+		"op": "discovery", "realm": "meadows", "from": at, "to": at,
+		"travel_valid": false, "new_landmarks": []}]}))
+	return stream
+
+func test_a_first_discovery_from_before_a_teleport_matches_the_hosts_recent_pose() -> void:
+	# station_craft: the guest landed at the Home Key point, the stream rebased,
+	# then the guest flew 101 m to the kitchen before the host judged the new
+	# stream's first discovery (recorded at the landing). The host's own body
+	# stood there inside INITIAL_POSE_LAG_S, so it counts.
+	service.body_position = Vector3(-4.4, 0.9, 21.6) # where the body is now
+	service._record_pose(2, "meadows", Vector3(96.2, 0.9, 14.0), Time.get_ticks_msec() - 300)
+	var stream := _first_discovery_after([96.2, 0.9, 14.0])
+	assert_eq(stream.error, "", "a pose the host observed 0.3 s ago is accepted")
+	assert_eq(stream.cursor.sequence, 2)
+
+func test_a_first_discovery_far_from_every_observed_pose_is_refused() -> void:
+	service.body_position = Vector3(-4.4, 0.9, 21.6)
+	service._record_pose(2, "meadows", Vector3(96.2, 0.9, 14.0), Time.get_ticks_msec() - 300)
+	var stream := _first_discovery_after([186.2, 0.9, 14.0]) # 90 m beyond the landing, 191 m from now
+	assert_eq(stream.error, "owner_passive_initial_pose_unconfirmed", "beyond 80 m of every sample")
+	assert_eq(stream.cursor.sequence, 1)
+
+func test_an_observed_pose_older_than_the_lag_window_does_not_count() -> void:
+	service.body_position = Vector3(-4.4, 0.9, 21.6)
+	service._record_pose(2, "meadows", Vector3(96.2, 0.9, 14.0), Time.get_ticks_msec() - 2500)
+	var stream := _first_discovery_after([96.2, 0.9, 14.0])
+	assert_eq(stream.error, "owner_passive_initial_pose_unconfirmed", "2.5 s old: outside INITIAL_POSE_LAG_S")
+
+func test_a_pose_observed_in_another_realm_does_not_count_and_a_realm_change_clears_the_ring() -> void:
+	service.body_position = Vector3(-4.4, 0.9, 21.6)
+	var now := Time.get_ticks_msec()
+	service._record_pose(2, "water", Vector3(96.2, 0.9, 14.0), now - 300)
+	var stream := _first_discovery_after([96.2, 0.9, 14.0])
+	assert_eq(stream.error, "owner_passive_initial_pose_unconfirmed", "a water pose never matches a meadows input")
+	service._record_pose(2, "meadows", Vector3(0, 0, 0), now)
+	assert_eq((service._pose_ring[2].samples as Array).size(), 1, "the realm change started a fresh ring")
+	assert_eq(service._pose_ring[2].realm, "meadows")
+
+func test_the_pose_ring_keeps_only_the_lag_window_and_its_cap() -> void:
+	var now := Time.get_ticks_msec()
+	for i in 300: service._record_pose(2, "meadows", Vector3(i, 0, 0), now - 3000 + i * 10)
+	var samples: Array = service._pose_ring[2].samples
+	assert_true(int(samples[0][0]) >= now - 10 - int(service.INITIAL_POSE_LAG_S * 1000.0), "nothing older than the window")
+	for i in 300: service._record_pose(3, "meadows", Vector3(i, 0, 0), now - 300 + i) # all inside the window
+	assert_eq((service._pose_ring[3].samples as Array).size(), service.MAX_POSE_SAMPLES, "and never more than the cap")
+	service.peer_departed(3)
+	assert_false(service._pose_ring.has(3), "a departing peer's ring goes at once")
+	service.reset()
+	assert_true(service._pose_ring.is_empty(), "reset clears every ring")
 
 func test_failed_bool_save_never_acks_or_installs_and_success_is_exact() -> void:
 	var prepared := _prepared_owner()
@@ -1402,6 +1506,111 @@ func test_a_held_readmit_for_a_world_that_is_not_joined_is_dropped() -> void:
 	service.receive_owner(readmit)
 	service.reset()
 	assert_true(service.held_readmit.is_empty(), "a disconnect clears a held readmit")
+
+
+func test_a_behind_rejoin_readmits_to_adopt_and_any_other_difference_is_refused() -> void:
+	# Owner ruling (STATE §0): the host world's held record wins inside it. A
+	# declaration that differs beyond passive drift (an offline catch) is not
+	# refused (that left the guest diverged for the whole session): the owner
+	# is sent the held record whole to adopt.
+	var character: String = before.character_id
+	var held: Dictionary = session._character_authority.discovered_landmarks(character)
+	var hash := preload("res://scripts/net/research_passive_preparation.gd")
+	var declared: Dictionary = before.duplicate(true)
+	var caught: Dictionary = declared.party[0].duplicate(true)
+	caught.uid = "creature-%s" % "d1b2c3d4e5f60718293a4b5c6d7e8f90"
+	declared.party.append(caught)
+	session.host = true
+	service.hosts.clear()
+	service.refused.clear()
+	session.messages.clear()
+	# Owner ruling 2026-10-05: a difference left after the hello means the
+	# hello found the declaration behind (held_wins); only then adopt.
+	session.last_rejoin_admission[character] = "held_wins"
+	service.admitted(2, {"portable_authority": declared, "discovered_landmarks": held,
+		"owner_passive_stream": {"id": "00112233445566778899aabbccddeeff", "baseline_hash": hash.fingerprint(declared)}})
+	assert_true(service.hosts.has(character) and not service.refused.has(character), "the rejoined stream is admitted, not refused")
+	var readmits := session.messages.filter(func(m: Dictionary) -> bool: return m.get("op") == "readmit")
+	assert_eq(readmits.size(), 1, "one readmit")
+	if readmits.size() != 1: return
+	assert_eq(readmits[0].get("adopt"), true, "marked adopt: the owner takes the held record whole")
+	assert_eq((readmits[0].baseline as Dictionary).party.size(), before.party.size(), "the baseline is the held record, without the offline catch")
+	# A declaration that does not match its own stream baseline is still refused.
+	service.hosts.clear()
+	session.messages.clear()
+	service.admitted(2, {"portable_authority": declared, "discovered_landmarks": held,
+		"owner_passive_stream": {"id": "ffeeddccbbaa99887766554433221100", "baseline_hash": hash.fingerprint(before)}})
+	assert_true(service.refused.has(character), "a malformed declaration is refused")
+	# A difference the hello did not find behind (e.g. an open host
+	# transaction kept the held record) is refused, never adopted over.
+	session.last_rejoin_admission[character] = "host_duties_unsettled"
+	service.hosts.clear()
+	service.refused.clear()
+	session.messages.clear()
+	service.admitted(2, {"portable_authority": declared, "discovered_landmarks": held,
+		"owner_passive_stream": {"id": "11223344556677889900aabbccddeeff", "baseline_hash": hash.fingerprint(declared)}})
+	assert_true(service.refused.has(character), "refused, not adopted")
+	assert_true(session.messages.filter(func(m: Dictionary) -> bool: return m.get("op") == "readmit").is_empty(), "no readmit")
+
+func test_a_pending_payout_the_held_record_holds_forces_a_readmit_that_settles_it() -> void:
+	# Re-review H1/M1: even an exact rejoin is readmitted while a payout the
+	# held record absorbed is still pending, carrying that row to settle; the
+	# owner's deliveries wait for admission so the readmit always comes first.
+	var character: String = before.character_id
+	var held: Dictionary = session._character_authority.discovered_landmarks(character)
+	var hash := preload("res://scripts/net/research_passive_preparation.gd")
+	var row := preload("res://scripts/net/reward_delivery.gd").make_record(event.world_id, event.world_namespace, "pickup:folded", character, "berries", 2)
+	row.status = "pending"
+	game.world.reward_deliveries[row.delivery_id] = row
+	session._character_authority.call("_absorbed", character)[row.delivery_id] = true
+	session._character_authority._records[character].unconfirmed_folds = {row.delivery_id: row.duplicate(true)}
+	session.host = true
+	service.hosts.clear()
+	session.messages.clear()
+	service.admitted(2, {"portable_authority": before.duplicate(true), "discovered_landmarks": held,
+		"owner_passive_stream": {"id": "0f1e2d3c4b5a69788796a5b4c3d2e1f0", "baseline_hash": hash.fingerprint(before)}})
+	var readmits := session.messages.filter(func(m: Dictionary) -> bool: return m.get("op") == "readmit")
+	assert_eq(readmits.size(), 1, "an exact rejoin is readmitted while the folded row is pending")
+	if readmits.size() != 1: return
+	assert_eq(readmits[0].get("adopt"), false, "not an adoption")
+	assert_eq((readmits[0].get("folded", []) as Array).map(func(r: Dictionary) -> String: return r.delivery_id), [row.delivery_id],
+		"carrying the row to settle")
+	# The owner's settlement is saved before "readmitted"; then the host
+	# confirms and the row leaves the record.
+	service.receive_host(2, _envelope({"op": "readmitted", "baseline_hash": readmits[0].baseline_hash}).merged(
+		{"stream_id": service.hosts[character].id}, true))
+	assert_true((session._character_authority.call("unconfirmed_folds", character) as Array).is_empty(), "confirmed by the saved readmit")
+	session.host = false
+	service.arm_owner(before, held)
+	assert_false(service.delivery_ready(), "the owner's deliveries wait for this join's admission")
+	service.local.hello_pending = false
+	assert_true(service.delivery_ready(), "and run once admitted")
+	service.local.admission_pending = true
+	assert_true(service.delivery_ready(), "a rebase (admission pending again) does not hold them")
+
+
+func test_an_open_host_duty_at_the_hello_refuses_and_never_adopts() -> void:
+	# The hello kept the held record while a host transaction was open: the
+	# stream is refused with a reason (as before the ruling), never adopted
+	# over and never parked on the stale declaration.
+	var character: String = before.character_id
+	var held: Dictionary = session._character_authority.discovered_landmarks(character)
+	var hash := preload("res://scripts/net/research_passive_preparation.gd")
+	var declared: Dictionary = before.duplicate(true)
+	var caught: Dictionary = declared.party[0].duplicate(true)
+	caught.uid = "creature-%s" % "e1b2c3d4e5f60718293a4b5c6d7e8f90"
+	declared.party.append(caught)
+	session.host = true
+	service.hosts.clear()
+	service.refused.clear()
+	session.messages.clear()
+	session.last_rejoin_admission[character] = "host_duties_unsettled"
+	service.admitted(2, {"portable_authority": declared, "discovered_landmarks": held, "personal_flags": {"flags": []},
+		"owner_passive_stream": {"id": "aa112233445566778899aabbccddeeff", "baseline_hash": hash.fingerprint(declared)}})
+	assert_true(service.refused.has(character) and not service.deferred.has(character), "refused, not parked")
+	assert_true(str(service.refused[character].reason).contains("host_duties_unsettled"), "naming why: %s" % str(service.refused[character].reason))
+	assert_true(session.messages.filter(func(m: Dictionary) -> bool: return m.get("op") == "readmit").is_empty(), "no adoption")
+	assert_eq((session._character_authority.call("state", character) as Dictionary).party.size(), before.party.size(), "the held record is untouched")
 
 
 func test_a_landmark_revealed_without_an_input_never_changes_the_owner_passive_identity() -> void:
