@@ -1,0 +1,1751 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_f24_host_commands.gd,test_owner_passive_game_hooks.gd,test_session_transport.gd,test_session_snapshot.gd,test_session_save_authority.gd,test_session_reconnect_reservation.gd: 6 of 825 test files
+  ok    test_f24_host_commands.gd :: test_admission_refuses_unknown_loadout_without_any_mutation
+  ok    test_f24_host_commands.gd :: test_charged_refusal_has_no_cost_and_does_not_replace_original
+  ok    test_f24_host_commands.gd :: test_command_input_honors_the_mounted_command_view_before_allocating_sequence
+  ok    test_f24_host_commands.gd :: test_equipped_authored_pouches_bind_each_upgrade_on_the_same_participant
+  ok    test_f24_host_commands.gd :: test_every_joint_damage_event_is_attributed_to_one_of_the_two_owned_creatures
+  ok    test_f24_host_commands.gd :: test_f33_charm_gain_frozen_in_the_accepted_action_scales_the_meter_once_and_is_capped
+  ok    test_f24_host_commands.gd :: test_f33_no_charm_keeps_the_ordinary_gain_and_power
+  ok    test_f24_host_commands.gd :: test_first_item_dispatch_refuses_an_older_uncommitted_actor_original
+  ok    test_f24_host_commands.gd :: test_idle_wind_ticks_each_uid_and_switched_burst_spends_current_creature
+  ok    test_f24_host_commands.gd :: test_item_candidate_debits_one_own_stack_with_actual_heal_food_or_unsaved_tonic
+  ok    test_f24_host_commands.gd :: test_item_input_tracks_current_trainer_scope_and_keeps_pending_request_fenced
+  ok    test_f24_host_commands.gd :: test_item_owner_checkpoint_matches_only_its_submitted_command_and_current_deployment
+  ok    test_f24_host_commands.gd :: test_meter_uses_original_host_hit_once_and_freezes_admitted_gear
+  ok    test_f24_host_commands.gd :: test_meters_require_positive_debit_and_credit_one_actual_action_once
+  ok    test_f24_host_commands.gd :: test_personal_view_cache_requires_current_character_world_and_epoch
+  FAIL  test_f24_host_commands.gd :: test_pouch_assignment_uses_original_character_journal_and_owner_save_without_moving_stacks
+          expected true, got false
+          expected true, got false  ({ "ok": false, "code": "transaction_busy", "durable": false })
+  ok    test_f24_host_commands.gd :: test_pouch_presentation_reads_first_live_stack_and_frozen_gear_without_spending
+  FAIL  test_f24_host_commands.gd :: test_rally_can_commit_on_current_owned_deployment_before_its_first_move
+          expected true, got false
+          expected 8000, got 0
+  FAIL  test_f24_host_commands.gd :: test_rally_spends_once_affects_only_owner_and_splits_wind_at_expiry
+          expected true, got false  ({ "ok": false, "kind": "tether_command", "peer": 1, "code": "stale_actor", "reason": "That encounter is unavailable.", "pending": false, "delta": {  } })
+  ok    test_f24_host_commands.gd :: test_retained_item_ack_preserves_active_body_and_settles_same_v3_decision_once
+  ok    test_f24_host_commands.gd :: test_satchel_pouch_recovers_same_original_and_waits_for_saved_ack
+  ok    test_f24_host_commands.gd :: test_saved_item_carrier_keeps_one_original_debit_and_owned_effect_with_runtime_off
+  ok    test_f24_host_commands.gd :: test_snare_canonical_status_has_one_shared_slow_and_own_catch_grant
+  ok    test_f24_host_commands.gd :: test_snare_presentation_uses_current_record_body_and_remaining_host_duration
+  ok    test_f24_host_commands.gd :: test_start_spends_once_and_impact_cannot_run_early_or_repeat
+  ok    test_f24_host_commands.gd :: test_switch_retains_each_creatures_resources_and_cooldown
+  ok    test_f24_host_commands.gd :: test_tonic_scope_cleanup_preserves_current_context_and_unmanaged_same_instance_buffs
+  ok    test_f24_host_commands.gd :: test_tonic_wind_boundaries_update_active_and_retained_character_uid_without_resetting_resources
+  ok    test_f24_host_commands.gd :: test_unsaved_mastery_and_resources_survive_peer_replacement_and_close
+  ok    test_f24_host_commands.gd :: test_wild_disposal_retains_same_actor_source_until_item_hp_prejournal_and_mastery_settle
+  ok    test_f24_host_commands.gd :: test_wild_item_input_requires_current_saved_scope_and_refuses_older_health_original
+  ok    test_f24_host_commands.gd :: test_wrong_move_or_body_lifetime_cannot_arrive
+PASSIVE_NATIVE_RESULT={"assertions":0.0,"case":"_native_case_backpack_target_guard_precedes_any_care_or_item_write","completed":false,"failures":[]}
+  FAIL  test_owner_passive_game_hooks.gd :: test_actual_backpack_target_fence
+          expected true, got false  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_backpack_target_guard_precedes_any_care_or_item_write","completed":false,"failures":[]}
+)
+          expected true, got false  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_backpack_target_guard_precedes_any_care_or_item_write","completed":false,"failures":[]}
+)
+          expected false, got true  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_backpack_target_guard_precedes_any_care_or_item_write","completed":false,"failures":[]}
+)
+          expected 0, got 1  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_backpack_target_guard_precedes_any_care_or_item_write","completed":false,"failures":[]}
+)
+PASSIVE_NATIVE_RESULT={"assertions":0.0,"case":"_native_case_game_fence_blocks_recording_but_disabled_recorder_keeps_care","completed":false,"failures":[]}
+  FAIL  test_owner_passive_game_hooks.gd :: test_actual_game_existing_fence_and_disabled_recorder
+          expected true, got false  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_game_fence_blocks_recording_but_disabled_recorder_keeps_care","completed":false,"failures":[]}
+)
+          expected true, got false  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_game_fence_blocks_recording_but_disabled_recorder_keeps_care","completed":false,"failures":[]}
+)
+          expected false, got true  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_game_fence_blocks_recording_but_disabled_recorder_keeps_care","completed":false,"failures":[]}
+)
+          expected 0, got 1  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_game_fence_blocks_recording_but_disabled_recorder_keeps_care","completed":false,"failures":[]}
+)
+PASSIVE_NATIVE_RESULT={"assertions":0.0,"case":"_native_case_game_records_exact_ticks_discoveries_and_replays_live_record","completed":false,"failures":[]}
+  FAIL  test_owner_passive_game_hooks.gd :: test_actual_game_input_hooks_replay_identically
+          expected true, got false  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_game_records_exact_ticks_discoveries_and_replays_live_record","completed":false,"failures":[]}
+)
+          expected true, got false  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_game_records_exact_ticks_discoveries_and_replays_live_record","completed":false,"failures":[]}
+)
+          expected false, got true  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_game_records_exact_ticks_discoveries_and_replays_live_record","completed":false,"failures":[]}
+)
+          expected 0, got 1  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_game_records_exact_ticks_discoveries_and_replays_live_record","completed":false,"failures":[]}
+)
+PASSIVE_NATIVE_RESULT={"assertions":0.0,"case":"_native_case_game_same_stream_fence_reset_replays_exactly","completed":false,"failures":[]}
+  FAIL  test_owner_passive_game_hooks.gd :: test_actual_game_same_stream_fence_reset
+          expected true, got false  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_game_same_stream_fence_reset_replays_exactly","completed":false,"failures":[]}
+)
+          expected true, got false  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_game_same_stream_fence_reset_replays_exactly","completed":false,"failures":[]}
+)
+          expected false, got true  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_game_same_stream_fence_reset_replays_exactly","completed":false,"failures":[]}
+)
+          expected 0, got 1  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_game_same_stream_fence_reset_replays_exactly","completed":false,"failures":[]}
+)
+  ok    test_session_reconnect_reservation.gd :: test_a_new_join_closes_a_still_lingering_transport_first
+  ok    test_session_reconnect_reservation.gd :: test_goodbye_teardown_ends_the_session_and_detaches_only_the_transport
+  ok    test_session_reconnect_reservation.gd :: test_held_seat_lapses_at_the_window
+  ok    test_session_reconnect_reservation.gd :: test_held_seat_refuses_a_different_character_with_a_readable_reason
+  ok    test_session_reconnect_reservation.gd :: test_live_or_empty_characters_are_not_reserved_and_clear_drops_seats
+  ok    test_session_reconnect_reservation.gd :: test_reservation_counts_only_against_others_when_seats_remain
+  ok    test_session_reconnect_reservation.gd :: test_reservation_is_host_bookkeeping_not_replicated_state
+  ok    test_session_reconnect_reservation.gd :: test_returning_character_reclaims_its_held_seat_under_a_new_peer_id
+  ok    test_session_reconnect_reservation.gd :: test_unadmitted_client_leave_tears_down_at_once
+  ok    test_session_save_authority.gd :: test_former_client_cannot_write_a_world_document
+  ok    test_session_save_authority.gd :: test_former_client_realm_restore_does_not_write_the_world
+  ok    test_session_save_authority.gd :: test_new_run_always_carries_an_explicit_identity
+  ok    test_session_save_authority.gd :: test_owning_host_realm_restore_still_writes_the_world
+[save] minted character id 'character-067bbbd1ec5dfcc942be5cb0b8c4980f' for slot 1 (no existing locator)
+  ok    test_session_save_authority.gd :: test_unidentified_local_cannot_mint_over_a_slot_that_names_a_character
+[save] minted character id 'character-cde294cb2c8fd6bb281661ea3eeca73a' for slot 2 (no existing locator)
+  ok    test_session_save_authority.gd :: test_unidentified_local_on_an_empty_slot_mints_explicitly
+  ok    test_session_snapshot.gd :: test_begin_is_boundary_and_early_chunk_finalizes_snapshot_then_delta
+  ok    test_session_snapshot.gd :: test_bootstrap_delta_overflow_fails_without_applying_entries
+  ok    test_session_snapshot.gd :: test_conflicting_early_chunk_fails_and_never_opens_readiness
+  ok    test_session_snapshot.gd :: test_malformed_redesign_snapshot_refuses_before_world_registry_delta_or_ack
+  ok    test_session_snapshot.gd :: test_populated_redesign_snapshot_applies_before_registry_delta_and_final_ack
+  ok    test_session_snapshot.gd :: test_training_transport_must_explicitly_confirm_readiness_before_ack
+  ok    test_session_snapshot.gd :: test_unacknowledged_host_transfer_expires_and_runs_peer_cleanup_once
+  ok    test_session_snapshot.gd :: test_world_snapshot_keeps_host_namespace_and_client_does_not_mint_one
+  ok    test_session_transport.gd :: test_client_character_is_not_saveable_until_snapshot_admission
+  ok    test_session_transport.gd :: test_disconnected_or_wrong_role_peers_are_refused_before_install
+  ok    test_session_transport.gd :: test_enet_physical_timeout_routing_remains_transport_specific
+  ok    test_session_transport.gd :: test_failed_client_leave_does_not_call_the_character_store
+  ok    test_session_transport.gd :: test_transport_closed_fires_after_peer_and_kind_are_cleared
+  ok    test_session_transport.gd :: test_world_first_preparation_closes_authority_snapshot_and_save_gates
+
+65 tests, 236 assertions, 7 failed
+
+  test_f24_host_commands.gd :: test_pouch_assignment_uses_original_character_journal_and_owner_save_without_moving_stacks — expected true, got false
+  test_f24_host_commands.gd :: test_pouch_assignment_uses_original_character_journal_and_owner_save_without_moving_stacks — expected true, got false  ({ "ok": false, "code": "transaction_busy", "durable": false })
+  test_f24_host_commands.gd :: test_rally_can_commit_on_current_owned_deployment_before_its_first_move — expected true, got false
+  test_f24_host_commands.gd :: test_rally_can_commit_on_current_owned_deployment_before_its_first_move — expected 8000, got 0
+  test_f24_host_commands.gd :: test_rally_spends_once_affects_only_owner_and_splits_wind_at_expiry — expected true, got false  ({ "ok": false, "kind": "tether_command", "peer": 1, "code": "stale_actor", "reason": "That encounter is unavailable.", "pending": false, "delta": {  } })
+  test_owner_passive_game_hooks.gd :: test_actual_backpack_target_fence — expected true, got false  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_backpack_target_guard_precedes_any_care_or_item_write","completed":false,"failures":[]}
+)
+  test_owner_passive_game_hooks.gd :: test_actual_backpack_target_fence — expected true, got false  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_backpack_target_guard_precedes_any_care_or_item_write","completed":false,"failures":[]}
+)
+  test_owner_passive_game_hooks.gd :: test_actual_backpack_target_fence — expected false, got true  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_backpack_target_guard_precedes_any_care_or_item_write","completed":false,"failures":[]}
+)
+  test_owner_passive_game_hooks.gd :: test_actual_backpack_target_fence — expected 0, got 1  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_backpack_target_guard_precedes_any_care_or_item_write","completed":false,"failures":[]}
+)
+  test_owner_passive_game_hooks.gd :: test_actual_game_existing_fence_and_disabled_recorder — expected true, got false  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_game_fence_blocks_recording_but_disabled_recorder_keeps_care","completed":false,"failures":[]}
+)
+  test_owner_passive_game_hooks.gd :: test_actual_game_existing_fence_and_disabled_recorder — expected true, got false  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_game_fence_blocks_recording_but_disabled_recorder_keeps_care","completed":false,"failures":[]}
+)
+  test_owner_passive_game_hooks.gd :: test_actual_game_existing_fence_and_disabled_recorder — expected false, got true  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_game_fence_blocks_recording_but_disabled_recorder_keeps_care","completed":false,"failures":[]}
+)
+  test_owner_passive_game_hooks.gd :: test_actual_game_existing_fence_and_disabled_recorder — expected 0, got 1  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_game_fence_blocks_recording_but_disabled_recorder_keeps_care","completed":false,"failures":[]}
+)
+  test_owner_passive_game_hooks.gd :: test_actual_game_input_hooks_replay_identically — expected true, got false  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_game_records_exact_ticks_discoveries_and_replays_live_record","completed":false,"failures":[]}
+)
+  test_owner_passive_game_hooks.gd :: test_actual_game_input_hooks_replay_identically — expected true, got false  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_game_records_exact_ticks_discoveries_and_replays_live_record","completed":false,"failures":[]}
+)
+  test_owner_passive_game_hooks.gd :: test_actual_game_input_hooks_replay_identically — expected false, got true  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_game_records_exact_ticks_discoveries_and_replays_live_record","completed":false,"failures":[]}
+)
+  test_owner_passive_game_hooks.gd :: test_actual_game_input_hooks_replay_identically — expected 0, got 1  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_game_records_exact_ticks_discoveries_and_replays_live_record","completed":false,"failures":[]}
+)
+  test_owner_passive_game_hooks.gd :: test_actual_game_same_stream_fence_reset — expected true, got false  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_game_same_stream_fence_reset_replays_exactly","completed":false,"failures":[]}
+)
+  test_owner_passive_game_hooks.gd :: test_actual_game_same_stream_fence_reset — expected true, got false  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_game_same_stream_fence_reset_replays_exactly","completed":false,"failures":[]}
+)
+  test_owner_passive_game_hooks.gd :: test_actual_game_same_stream_fence_reset — expected false, got true  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_game_same_stream_fence_reset_replays_exactly","completed":false,"failures":[]}
+)
+  test_owner_passive_game_hooks.gd :: test_actual_game_same_stream_fence_reset — expected 0, got 1  (Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/world_save.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/save/save_game.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/game_state.gd:0)
+ERROR: Failed to load script "res://autoload/game_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _run_native (res://tests/helpers/passive_native_case.gd:39)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+   GDScript backtrace (most recent call first):
+       [0] _native_setup (res://tests/test_owner_passive_game_hooks.gd:38)
+       [1] _run_native (res://tests/helpers/passive_native_case.gd:40)
+PASSIVE_NATIVE_RESULT={"assertions":0,"case":"_native_case_game_same_stream_fence_reset_replays_exactly","completed":false,"failures":[]}
+)

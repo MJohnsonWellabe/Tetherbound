@@ -1,0 +1,79 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_f24_host_commands.gd,test_owner_passive_game_hooks.gd,test_session_transport.gd,test_session_snapshot.gd,test_session_save_authority.gd,test_session_reconnect_reservation.gd: 6 of 825 test files
+  ok    test_f24_host_commands.gd :: test_admission_refuses_unknown_loadout_without_any_mutation
+  ok    test_f24_host_commands.gd :: test_charged_refusal_has_no_cost_and_does_not_replace_original
+  ok    test_f24_host_commands.gd :: test_command_input_honors_the_mounted_command_view_before_allocating_sequence
+  ok    test_f24_host_commands.gd :: test_equipped_authored_pouches_bind_each_upgrade_on_the_same_participant
+  ok    test_f24_host_commands.gd :: test_every_joint_damage_event_is_attributed_to_one_of_the_two_owned_creatures
+  ok    test_f24_host_commands.gd :: test_f33_charm_gain_frozen_in_the_accepted_action_scales_the_meter_once_and_is_capped
+  ok    test_f24_host_commands.gd :: test_f33_no_charm_keeps_the_ordinary_gain_and_power
+  ok    test_f24_host_commands.gd :: test_first_item_dispatch_refuses_an_older_uncommitted_actor_original
+  ok    test_f24_host_commands.gd :: test_idle_wind_ticks_each_uid_and_switched_burst_spends_current_creature
+  ok    test_f24_host_commands.gd :: test_item_candidate_debits_one_own_stack_with_actual_heal_food_or_unsaved_tonic
+  ok    test_f24_host_commands.gd :: test_item_input_tracks_current_trainer_scope_and_keeps_pending_request_fenced
+  ok    test_f24_host_commands.gd :: test_item_owner_checkpoint_matches_only_its_submitted_command_and_current_deployment
+  ok    test_f24_host_commands.gd :: test_meter_uses_original_host_hit_once_and_freezes_admitted_gear
+  ok    test_f24_host_commands.gd :: test_meters_require_positive_debit_and_credit_one_actual_action_once
+  ok    test_f24_host_commands.gd :: test_personal_view_cache_requires_current_character_world_and_epoch
+  ok    test_f24_host_commands.gd :: test_pouch_assignment_uses_original_character_journal_and_owner_save_without_moving_stacks
+  ok    test_f24_host_commands.gd :: test_pouch_presentation_reads_first_live_stack_and_frozen_gear_without_spending
+  ok    test_f24_host_commands.gd :: test_rally_can_commit_on_current_owned_deployment_before_its_first_move
+  ok    test_f24_host_commands.gd :: test_rally_spends_once_affects_only_owner_and_splits_wind_at_expiry
+  ok    test_f24_host_commands.gd :: test_retained_item_ack_preserves_active_body_and_settles_same_v3_decision_once
+  ok    test_f24_host_commands.gd :: test_satchel_pouch_recovers_same_original_and_waits_for_saved_ack
+  ok    test_f24_host_commands.gd :: test_saved_item_carrier_keeps_one_original_debit_and_owned_effect_with_runtime_off
+  ok    test_f24_host_commands.gd :: test_snare_canonical_status_has_one_shared_slow_and_own_catch_grant
+  ok    test_f24_host_commands.gd :: test_snare_presentation_uses_current_record_body_and_remaining_host_duration
+  ok    test_f24_host_commands.gd :: test_start_spends_once_and_impact_cannot_run_early_or_repeat
+  ok    test_f24_host_commands.gd :: test_switch_retains_each_creatures_resources_and_cooldown
+  ok    test_f24_host_commands.gd :: test_tonic_scope_cleanup_preserves_current_context_and_unmanaged_same_instance_buffs
+  ok    test_f24_host_commands.gd :: test_tonic_wind_boundaries_update_active_and_retained_character_uid_without_resetting_resources
+  ok    test_f24_host_commands.gd :: test_unsaved_mastery_and_resources_survive_peer_replacement_and_close
+  ok    test_f24_host_commands.gd :: test_wild_disposal_retains_same_actor_source_until_item_hp_prejournal_and_mastery_settle
+  ok    test_f24_host_commands.gd :: test_wild_item_input_requires_current_saved_scope_and_refuses_older_health_original
+  ok    test_f24_host_commands.gd :: test_wrong_move_or_body_lifetime_cannot_arrive
+PASSIVE_NATIVE_RESULT={"assertions":5.0,"case":"_native_case_backpack_target_guard_precedes_any_care_or_item_write","completed":true,"failures":[]}
+  ok    test_owner_passive_game_hooks.gd :: test_actual_backpack_target_fence
+PASSIVE_NATIVE_RESULT={"assertions":10.0,"case":"_native_case_game_fence_blocks_recording_but_disabled_recorder_keeps_care","completed":true,"failures":[]}
+  ok    test_owner_passive_game_hooks.gd :: test_actual_game_existing_fence_and_disabled_recorder
+PASSIVE_NATIVE_RESULT={"assertions":34.0,"case":"_native_case_game_records_exact_ticks_discoveries_and_replays_live_record","completed":true,"failures":[]}
+  ok    test_owner_passive_game_hooks.gd :: test_actual_game_input_hooks_replay_identically
+PASSIVE_NATIVE_RESULT={"assertions":25.0,"case":"_native_case_game_same_stream_fence_reset_replays_exactly","completed":true,"failures":[]}
+  ok    test_owner_passive_game_hooks.gd :: test_actual_game_same_stream_fence_reset
+  ok    test_session_reconnect_reservation.gd :: test_a_new_join_closes_a_still_lingering_transport_first
+  ok    test_session_reconnect_reservation.gd :: test_goodbye_teardown_ends_the_session_and_detaches_only_the_transport
+  ok    test_session_reconnect_reservation.gd :: test_held_seat_lapses_at_the_window
+  ok    test_session_reconnect_reservation.gd :: test_held_seat_refuses_a_different_character_with_a_readable_reason
+  ok    test_session_reconnect_reservation.gd :: test_live_or_empty_characters_are_not_reserved_and_clear_drops_seats
+  ok    test_session_reconnect_reservation.gd :: test_reservation_counts_only_against_others_when_seats_remain
+  ok    test_session_reconnect_reservation.gd :: test_reservation_is_host_bookkeeping_not_replicated_state
+  ok    test_session_reconnect_reservation.gd :: test_returning_character_reclaims_its_held_seat_under_a_new_peer_id
+  ok    test_session_reconnect_reservation.gd :: test_unadmitted_client_leave_tears_down_at_once
+  ok    test_session_save_authority.gd :: test_former_client_cannot_write_a_world_document
+  ok    test_session_save_authority.gd :: test_former_client_realm_restore_does_not_write_the_world
+  ok    test_session_save_authority.gd :: test_new_run_always_carries_an_explicit_identity
+  ok    test_session_save_authority.gd :: test_owning_host_realm_restore_still_writes_the_world
+[save] minted character id 'character-7ac6deb573560d0324aa141c05440051' for slot 1 (no existing locator)
+  ok    test_session_save_authority.gd :: test_unidentified_local_cannot_mint_over_a_slot_that_names_a_character
+[save] minted character id 'character-03fc05e3e9b959b4e58724bb42c35035' for slot 2 (no existing locator)
+  ok    test_session_save_authority.gd :: test_unidentified_local_on_an_empty_slot_mints_explicitly
+[session] snapshot applied (3 keys, day 7)
+  ok    test_session_snapshot.gd :: test_begin_is_boundary_and_early_chunk_finalizes_snapshot_then_delta
+  ok    test_session_snapshot.gd :: test_bootstrap_delta_overflow_fails_without_applying_entries
+  ok    test_session_snapshot.gd :: test_conflicting_early_chunk_fails_and_never_opens_readiness
+  ok    test_session_snapshot.gd :: test_malformed_redesign_snapshot_refuses_before_world_registry_delta_or_ack
+[session] snapshot applied (2 keys, day 7)
+  ok    test_session_snapshot.gd :: test_populated_redesign_snapshot_applies_before_registry_delta_and_final_ack
+  ok    test_session_snapshot.gd :: test_training_transport_must_explicitly_confirm_readiness_before_ack
+  ok    test_session_snapshot.gd :: test_unacknowledged_host_transfer_expires_and_runs_peer_cleanup_once
+  ok    test_session_snapshot.gd :: test_world_snapshot_keeps_host_namespace_and_client_does_not_mint_one
+  ok    test_session_transport.gd :: test_client_character_is_not_saveable_until_snapshot_admission
+  ok    test_session_transport.gd :: test_disconnected_or_wrong_role_peers_are_refused_before_install
+  ok    test_session_transport.gd :: test_enet_physical_timeout_routing_remains_transport_specific
+[session] client leave: handshake never applied a snapshot; portable character unchanged
+  ok    test_session_transport.gd :: test_failed_client_leave_does_not_call_the_character_store
+  ok    test_session_transport.gd :: test_transport_closed_fires_after_peer_and_kind_are_cleared
+  ok    test_session_transport.gd :: test_world_first_preparation_closes_authority_snapshot_and_save_gates
+
+65 tests, 1506 assertions, 0 failed

@@ -1,0 +1,17 @@
+{
+  "source_sha": "9aa6978c5f6e2f272bf093da3ac786afc2ea2db9",
+  "executable": "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64_console.exe",
+  "started_utc": "2026-10-06T13:43:35.1674198Z",
+  "process_scope": "warm-cache headless units; isolated APPDATA; known R1 untimed world smoke preserved; no import/render/world smoke/lease write",
+  "arguments": [
+    "--headless",
+    "--path",
+    "D:/tetherbound/codex-r4",
+    "--log-file",
+    "D:/tetherbound/.artifacts/r4-snare-scope-9aa6978c5f/native.log",
+    "--script",
+    "tests/run_tests.gd",
+    "--",
+    "--only=test_f24_host_commands.gd,test_owner_passive_game_hooks.gd,test_session_transport.gd,test_session_snapshot.gd,test_session_save_authority.gd,test_session_reconnect_reservation.gd"
+  ]
+}

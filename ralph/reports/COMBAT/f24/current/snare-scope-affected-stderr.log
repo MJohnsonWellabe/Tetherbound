@@ -1,0 +1,36 @@
+WARNING: Session.join_with_peer: peer is disconnected or identifies as a server
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] join_with_peer (res://scripts/net/session.gd:2780)
+       [1] test_a_new_join_closes_a_still_lingering_transport_first (res://tests/test_session_reconnect_reservation.gd:123)
+       [2] _init (res://tests/run_tests.gd:120)
+WARNING: save: slot 1 already belongs to character 'character-7ac6deb573560d0324aa141c05440051'; refusing to mint a new identity over it
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _character_id_for (res://scripts/save/save_game.gd:1278)
+       [1] _prepare_snapshot (res://scripts/save/save_game.gd:478)
+       [2] save (res://scripts/save/save_game.gd:417)
+       [3] test_unidentified_local_cannot_mint_over_a_slot_that_names_a_character (res://tests/test_session_save_authority.gd:62)
+       [4] _init (res://tests/run_tests.gd:120)
+WARNING: [session] snapshot for peer 22 failed: The world snapshot transfer timed out before the client acknowledged it.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _abort_host_snapshot (res://scripts/net/session.gd:3471)
+       [1] _expire_snapshot_sends (res://scripts/net/session.gd:4034)
+       [2] test_unacknowledged_host_transfer_expires_and_runs_peer_cleanup_once (res://tests/test_session_snapshot.gd:276)
+       [3] _init (res://tests/run_tests.gd:120)
+WARNING: Session.host_with_peer: capacity 5 is outside 1..4
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] host_with_peer (res://scripts/net/session.gd:2710)
+       [1] test_disconnected_or_wrong_role_peers_are_refused_before_install (res://tests/test_session_transport.gd:40)
+       [2] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid access to property or key 'party' on a base object of type 'RefCounted (PlayerStub)'.
+   at: _apply_host_tether_tonics (res://scripts/net/session.gd:5113)
+   GDScript backtrace (most recent call first):
+       [0] _apply_host_tether_tonics (res://scripts/net/session.gd:5113)
+       [1] _sync_tether_tonic_scope (res://scripts/net/session.gd:5075)
+       [2] _teardown (res://scripts/net/session.gd:4232)
+       [3] leave (res://scripts/net/session.gd:2945)
+       [4] test_failed_client_leave_does_not_call_the_character_store (res://tests/test_session_transport.gd:113)
+       [5] _init (res://tests/run_tests.gd:120)

@@ -1,0 +1,10 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_f24_host_commands.gd::test_retained_item_ack_preserves_active_body_and_settles_same_v3_decision_once,test_f24_host_commands.gd::test_tonic_scope_cleanup_preserves_current_context_and_unmanaged_same_instance_buffs,test_session_transport.gd::test_failed_client_leave_does_not_call_the_character_store,test_session_transport.gd::test_transport_closed_fires_after_peer_and_kind_are_cleared: 2 of 825 test files
+  ok    test_f24_host_commands.gd :: test_retained_item_ack_preserves_active_body_and_settles_same_v3_decision_once
+  ok    test_f24_host_commands.gd :: test_tonic_scope_cleanup_preserves_current_context_and_unmanaged_same_instance_buffs
+[session] client leave: handshake never applied a snapshot; portable character unchanged
+  ok    test_session_transport.gd :: test_failed_client_leave_does_not_call_the_character_store
+  ok    test_session_transport.gd :: test_transport_closed_fires_after_peer_and_kind_are_cleared
+
+4 tests, 487 assertions, 0 failed

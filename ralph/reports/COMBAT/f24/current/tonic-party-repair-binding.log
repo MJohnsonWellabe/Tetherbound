@@ -1,0 +1,17 @@
+{
+  "executable": "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64_console.exe",
+  "started_utc": "2026-10-06T13:48:28.0785950Z",
+  "process_scope": "warm-cache headless units; isolated APPDATA; no import/render/world smoke/lease write",
+  "arguments": [
+    "--headless",
+    "--path",
+    "D:/tetherbound/codex-r4",
+    "--log-file",
+    "D:/tetherbound/.artifacts/r4-tonic-party-589cf27cc3/native.log",
+    "--script",
+    "tests/run_tests.gd",
+    "--",
+    "--only=test_f24_host_commands.gd::test_retained_item_ack_preserves_active_body_and_settles_same_v3_decision_once,test_f24_host_commands.gd::test_tonic_scope_cleanup_preserves_current_context_and_unmanaged_same_instance_buffs,test_session_transport.gd::test_failed_client_leave_does_not_call_the_character_store,test_session_transport.gd::test_transport_closed_fires_after_peer_and_kind_are_cleared"
+  ],
+  "source_sha": "589cf27cc32a2170655bb908c59f6197bf95bbb5"
+}

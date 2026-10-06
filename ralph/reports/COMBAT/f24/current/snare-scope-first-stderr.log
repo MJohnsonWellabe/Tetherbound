@@ -1,0 +1,368 @@
+SCRIPT ERROR: Parse Error: Cannot infer the type of "live" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/net/session.gd:5078)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/night_rest.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/rest_point.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/props.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_aftermath.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/world/trainer_npc.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_rewards.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/foundation_actions.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://autoload/world_state.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/net/encounter_host.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/combat/accepted_action_host.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_move_commit_runtime.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://scripts/net/session.gd".
+   at: GDScript::reload (res://tests/test_tm_teach_transaction.gd:187)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_f24_host_commands.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+ERROR: Failed to load script "res://tests/test_f24_host_commands.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _admitted (res://tests/test_f24_host_commands.gd:85)
+   GDScript backtrace (most recent call first):
+       [0] _admitted (res://tests/test_f24_host_commands.gd:85)
+       [1] test_equipped_authored_pouches_bind_each_upgrade_on_the_same_participant (res://tests/test_f24_host_commands.gd:238)
+       [2] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid access to property or key 'equipment' on a base object of type 'Dictionary'.
+   at: test_equipped_authored_pouches_bind_each_upgrade_on_the_same_participant (res://tests/test_f24_host_commands.gd:239)
+   GDScript backtrace (most recent call first):
+       [0] test_equipped_authored_pouches_bind_each_upgrade_on_the_same_participant (res://tests/test_f24_host_commands.gd:239)
+       [1] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "p_script->implicit_initializer" is null.
+   at: _super_implicit_constructor (modules/gdscript/gdscript.cpp:146)
+   GDScript backtrace (most recent call first):
+       [0] test_first_item_dispatch_refuses_an_older_uncommitted_actor_original (res://tests/test_f24_host_commands.gd:949)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: test_item_candidate_debits_one_own_stack_with_actual_heal_food_or_unsaved_tonic (res://tests/test_f24_host_commands.gd:1152)
+   GDScript backtrace (most recent call first):
+       [0] test_item_candidate_debits_one_own_stack_with_actual_heal_food_or_unsaved_tonic (res://tests/test_f24_host_commands.gd:1152)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: test_item_input_tracks_current_trainer_scope_and_keeps_pending_request_fenced (res://tests/test_f24_host_commands.gd:611)
+   GDScript backtrace (most recent call first):
+       [0] test_item_input_tracks_current_trainer_scope_and_keeps_pending_request_fenced (res://tests/test_f24_host_commands.gd:611)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: test_item_owner_checkpoint_matches_only_its_submitted_command_and_current_deployment (res://tests/test_f24_host_commands.gd:1005)
+   GDScript backtrace (most recent call first):
+       [0] test_item_owner_checkpoint_matches_only_its_submitted_command_and_current_deployment (res://tests/test_f24_host_commands.gd:1005)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _admitted (res://tests/test_f24_host_commands.gd:85)
+   GDScript backtrace (most recent call first):
+       [0] _admitted (res://tests/test_f24_host_commands.gd:85)
+       [1] test_meter_uses_original_host_hit_once_and_freezes_admitted_gear (res://tests/test_f24_host_commands.gd:98)
+       [2] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid access to property or key 'tether_commands' on a base object of type 'Dictionary'.
+   at: _command_pool (res://tests/test_f24_host_commands.gd:95)
+   GDScript backtrace (most recent call first):
+       [0] _command_pool (res://tests/test_f24_host_commands.gd:95)
+       [1] test_meter_uses_original_host_hit_once_and_freezes_admitted_gear (res://tests/test_f24_host_commands.gd:106)
+       [2] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid access to property or key 'meter' on a base object of type 'Dictionary'.
+   at: test_meter_uses_original_host_hit_once_and_freezes_admitted_gear (res://tests/test_f24_host_commands.gd:106)
+   GDScript backtrace (most recent call first):
+       [0] test_meter_uses_original_host_hit_once_and_freezes_admitted_gear (res://tests/test_f24_host_commands.gd:106)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: test_personal_view_cache_requires_current_character_world_and_epoch (res://tests/test_f24_host_commands.gd:13)
+   GDScript backtrace (most recent call first):
+       [0] test_personal_view_cache_requires_current_character_world_and_epoch (res://tests/test_f24_host_commands.gd:13)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _admitted (res://tests/test_f24_host_commands.gd:85)
+   GDScript backtrace (most recent call first):
+       [0] _admitted (res://tests/test_f24_host_commands.gd:85)
+       [1] test_pouch_assignment_uses_original_character_journal_and_owner_save_without_moving_stacks (res://tests/test_f24_host_commands.gd:322)
+       [2] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: test_pouch_presentation_reads_first_live_stack_and_frozen_gear_without_spending (res://tests/test_f24_host_commands.gd:909)
+   GDScript backtrace (most recent call first):
+       [0] test_pouch_presentation_reads_first_live_stack_and_frozen_gear_without_spending (res://tests/test_f24_host_commands.gd:909)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _admitted (res://tests/test_f24_host_commands.gd:85)
+   GDScript backtrace (most recent call first):
+       [0] _admitted (res://tests/test_f24_host_commands.gd:85)
+       [1] test_rally_can_commit_on_current_owned_deployment_before_its_first_move (res://tests/test_f24_host_commands.gd:247)
+       [2] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid access to property or key 'tether_commands' on a base object of type 'Dictionary'.
+   at: _command_pool (res://tests/test_f24_host_commands.gd:95)
+   GDScript backtrace (most recent call first):
+       [0] _command_pool (res://tests/test_f24_host_commands.gd:95)
+       [1] test_rally_can_commit_on_current_owned_deployment_before_its_first_move (res://tests/test_f24_host_commands.gd:249)
+       [2] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _admitted (res://tests/test_f24_host_commands.gd:85)
+   GDScript backtrace (most recent call first):
+       [0] _admitted (res://tests/test_f24_host_commands.gd:85)
+       [1] test_rally_spends_once_affects_only_owner_and_splits_wind_at_expiry (res://tests/test_f24_host_commands.gd:122)
+       [2] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _admitted (res://tests/test_f24_host_commands.gd:85)
+   GDScript backtrace (most recent call first):
+       [0] _admitted (res://tests/test_f24_host_commands.gd:85)
+       [1] test_rally_spends_once_affects_only_owner_and_splits_wind_at_expiry (res://tests/test_f24_host_commands.gd:125)
+       [2] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid access to property or key 'tether_commands' on a base object of type 'Dictionary'.
+   at: _command_pool (res://tests/test_f24_host_commands.gd:95)
+   GDScript backtrace (most recent call first):
+       [0] _command_pool (res://tests/test_f24_host_commands.gd:95)
+       [1] test_rally_spends_once_affects_only_owner_and_splits_wind_at_expiry (res://tests/test_f24_host_commands.gd:126)
+       [2] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid access to property or key 'tether_commands' on a base object of type 'Dictionary'.
+   at: _command_pool (res://tests/test_f24_host_commands.gd:95)
+   GDScript backtrace (most recent call first):
+       [0] _command_pool (res://tests/test_f24_host_commands.gd:95)
+       [1] test_rally_spends_once_affects_only_owner_and_splits_wind_at_expiry (res://tests/test_f24_host_commands.gd:130)
+       [2] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid access to property or key 'meter' on a base object of type 'Dictionary'.
+   at: test_rally_spends_once_affects_only_owner_and_splits_wind_at_expiry (res://tests/test_f24_host_commands.gd:130)
+   GDScript backtrace (most recent call first):
+       [0] test_rally_spends_once_affects_only_owner_and_splits_wind_at_expiry (res://tests/test_f24_host_commands.gd:130)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: test_retained_item_ack_preserves_active_body_and_settles_same_v3_decision_once (res://tests/test_f24_host_commands.gd:390)
+   GDScript backtrace (most recent call first):
+       [0] test_retained_item_ack_preserves_active_body_and_settles_same_v3_decision_once (res://tests/test_f24_host_commands.gd:390)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: test_satchel_pouch_recovers_same_original_and_waits_for_saved_ack (res://tests/test_f24_host_commands.gd:31)
+   GDScript backtrace (most recent call first):
+       [0] test_satchel_pouch_recovers_same_original_and_waits_for_saved_ack (res://tests/test_f24_host_commands.gd:31)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: test_saved_item_carrier_keeps_one_original_debit_and_owned_effect_with_runtime_off (res://tests/test_f24_host_commands.gd:1020)
+   GDScript backtrace (most recent call first):
+       [0] test_saved_item_carrier_keeps_one_original_debit_and_owned_effect_with_runtime_off (res://tests/test_f24_host_commands.gd:1020)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _admitted (res://tests/test_f24_host_commands.gd:85)
+   GDScript backtrace (most recent call first):
+       [0] _admitted (res://tests/test_f24_host_commands.gd:85)
+       [1] test_snare_canonical_status_has_one_shared_slow_and_own_catch_grant (res://tests/test_f24_host_commands.gd:147)
+       [2] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid access to property or key 'tether_commands' on a base object of type 'Dictionary'.
+   at: _command_pool (res://tests/test_f24_host_commands.gd:95)
+   GDScript backtrace (most recent call first):
+       [0] _command_pool (res://tests/test_f24_host_commands.gd:95)
+       [1] test_snare_canonical_status_has_one_shared_slow_and_own_catch_grant (res://tests/test_f24_host_commands.gd:149)
+       [2] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid access to property or key 'tether_commands' on a base object of type 'Dictionary'.
+   at: _command_pool (res://tests/test_f24_host_commands.gd:95)
+   GDScript backtrace (most recent call first):
+       [0] _command_pool (res://tests/test_f24_host_commands.gd:95)
+       [1] test_snare_canonical_status_has_one_shared_slow_and_own_catch_grant (res://tests/test_f24_host_commands.gd:158)
+       [2] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid access to property or key 'meter' on a base object of type 'Dictionary'.
+   at: test_snare_canonical_status_has_one_shared_slow_and_own_catch_grant (res://tests/test_f24_host_commands.gd:158)
+   GDScript backtrace (most recent call first):
+       [0] test_snare_canonical_status_has_one_shared_slow_and_own_catch_grant (res://tests/test_f24_host_commands.gd:158)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: test_snare_presentation_uses_current_record_body_and_remaining_host_duration (res://tests/test_f24_host_commands.gd:174)
+   GDScript backtrace (most recent call first):
+       [0] test_snare_presentation_uses_current_record_body_and_remaining_host_duration (res://tests/test_f24_host_commands.gd:174)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: test_tonic_scope_cleanup_preserves_current_context_and_unmanaged_same_instance_buffs (res://tests/test_f24_host_commands.gd:1121)
+   GDScript backtrace (most recent call first):
+       [0] test_tonic_scope_cleanup_preserves_current_context_and_unmanaged_same_instance_buffs (res://tests/test_f24_host_commands.gd:1121)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: test_wild_disposal_retains_same_actor_source_until_item_hp_prejournal_and_mastery_settle (res://tests/test_f24_host_commands.gd:795)
+   GDScript backtrace (most recent call first):
+       [0] test_wild_disposal_retains_same_actor_source_until_item_hp_prejournal_and_mastery_settle (res://tests/test_f24_host_commands.gd:795)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: test_wild_item_input_requires_current_saved_scope_and_refuses_older_health_original (res://tests/test_f24_host_commands.gd:716)
+   GDScript backtrace (most recent call first):
+       [0] test_wild_item_input_requires_current_saved_scope_and_refuses_older_health_original (res://tests/test_f24_host_commands.gd:716)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/test_foundation_resource_save.gd::FixtureSession".
+   at: GDScript::reload (res://tests/test_den_groom_saved_transaction.gd:17)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_owner_passive_game_hooks.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+ERROR: Failed to load script "res://tests/test_owner_passive_game_hooks.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+SCRIPT ERROR: Invalid call. Nonexistent function '_teardown (via call)' in base 'Node'.
+   at: test_a_new_join_closes_a_still_lingering_transport_first (res://tests/test_session_reconnect_reservation.gd:121)
+   GDScript backtrace (most recent call first):
+       [0] test_a_new_join_closes_a_still_lingering_transport_first (res://tests/test_session_reconnect_reservation.gd:121)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function '_teardown (via call)' in base 'Node'.
+   at: test_goodbye_teardown_ends_the_session_and_detaches_only_the_transport (res://tests/test_session_reconnect_reservation.gd:90)
+   GDScript backtrace (most recent call first):
+       [0] test_goodbye_teardown_ends_the_session_and_detaches_only_the_transport (res://tests/test_session_reconnect_reservation.gd:90)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'leave' in base 'Node'.
+   at: test_unadmitted_client_leave_tears_down_at_once (res://tests/test_session_reconnect_reservation.gd:108)
+   GDScript backtrace (most recent call first):
+       [0] test_unadmitted_client_leave_tears_down_at_once (res://tests/test_session_reconnect_reservation.gd:108)
+       [1] _init (res://tests/run_tests.gd:120)
+WARNING: save: slot 1 already belongs to character 'character-067bbbd1ec5dfcc942be5cb0b8c4980f'; refusing to mint a new identity over it
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _character_id_for (res://scripts/save/save_game.gd:1278)
+       [1] _prepare_snapshot (res://scripts/save/save_game.gd:478)
+       [2] save (res://scripts/save/save_game.gd:417)
+       [3] test_unidentified_local_cannot_mint_over_a_slot_that_names_a_character (res://tests/test_session_save_authority.gd:62)
+       [4] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: test_begin_is_boundary_and_early_chunk_finalizes_snapshot_then_delta (res://tests/test_session_snapshot.gd:56)
+   GDScript backtrace (most recent call first):
+       [0] test_begin_is_boundary_and_early_chunk_finalizes_snapshot_then_delta (res://tests/test_session_snapshot.gd:56)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: test_bootstrap_delta_overflow_fails_without_applying_entries (res://tests/test_session_snapshot.gd:221)
+   GDScript backtrace (most recent call first):
+       [0] test_bootstrap_delta_overflow_fails_without_applying_entries (res://tests/test_session_snapshot.gd:221)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: test_conflicting_early_chunk_fails_and_never_opens_readiness (res://tests/test_session_snapshot.gd:245)
+   GDScript backtrace (most recent call first):
+       [0] test_conflicting_early_chunk_fails_and_never_opens_readiness (res://tests/test_session_snapshot.gd:245)
+       [1] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "p_script->implicit_initializer" is null.
+   at: _super_implicit_constructor (modules/gdscript/gdscript.cpp:146)
+   GDScript backtrace (most recent call first):
+       [0] _redesign_bootstrap (res://tests/test_session_snapshot.gd:111)
+       [1] test_malformed_redesign_snapshot_refuses_before_world_registry_delta_or_ack (res://tests/test_session_snapshot.gd:132)
+       [2] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid cast: could not convert value to 'Dictionary'.
+   at: _redesign_bootstrap (res://tests/test_session_snapshot.gd:117)
+   GDScript backtrace (most recent call first):
+       [0] _redesign_bootstrap (res://tests/test_session_snapshot.gd:117)
+       [1] test_malformed_redesign_snapshot_refuses_before_world_registry_delta_or_ack (res://tests/test_session_snapshot.gd:132)
+       [2] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid access to property or key 'game' on a base object of type 'Dictionary'.
+   at: test_malformed_redesign_snapshot_refuses_before_world_registry_delta_or_ack (res://tests/test_session_snapshot.gd:133)
+   GDScript backtrace (most recent call first):
+       [0] test_malformed_redesign_snapshot_refuses_before_world_registry_delta_or_ack (res://tests/test_session_snapshot.gd:133)
+       [1] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "p_script->implicit_initializer" is null.
+   at: _super_implicit_constructor (modules/gdscript/gdscript.cpp:146)
+   GDScript backtrace (most recent call first):
+       [0] _redesign_bootstrap (res://tests/test_session_snapshot.gd:111)
+       [1] test_populated_redesign_snapshot_applies_before_registry_delta_and_final_ack (res://tests/test_session_snapshot.gd:151)
+       [2] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid cast: could not convert value to 'Dictionary'.
+   at: _redesign_bootstrap (res://tests/test_session_snapshot.gd:117)
+   GDScript backtrace (most recent call first):
+       [0] _redesign_bootstrap (res://tests/test_session_snapshot.gd:117)
+       [1] test_populated_redesign_snapshot_applies_before_registry_delta_and_final_ack (res://tests/test_session_snapshot.gd:151)
+       [2] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid access to property or key 'game' on a base object of type 'Dictionary'.
+   at: test_populated_redesign_snapshot_applies_before_registry_delta_and_final_ack (res://tests/test_session_snapshot.gd:152)
+   GDScript backtrace (most recent call first):
+       [0] test_populated_redesign_snapshot_applies_before_registry_delta_and_final_ack (res://tests/test_session_snapshot.gd:152)
+       [1] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "p_script->implicit_initializer" is null.
+   at: _super_implicit_constructor (modules/gdscript/gdscript.cpp:146)
+   GDScript backtrace (most recent call first):
+       [0] _redesign_bootstrap (res://tests/test_session_snapshot.gd:111)
+       [1] test_training_transport_must_explicitly_confirm_readiness_before_ack (res://tests/test_session_snapshot.gd:165)
+       [2] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid cast: could not convert value to 'Dictionary'.
+   at: _redesign_bootstrap (res://tests/test_session_snapshot.gd:117)
+   GDScript backtrace (most recent call first):
+       [0] _redesign_bootstrap (res://tests/test_session_snapshot.gd:117)
+       [1] test_training_transport_must_explicitly_confirm_readiness_before_ack (res://tests/test_session_snapshot.gd:165)
+       [2] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid access to property or key 'session' on a base object of type 'Dictionary'.
+   at: test_training_transport_must_explicitly_confirm_readiness_before_ack (res://tests/test_session_snapshot.gd:166)
+   GDScript backtrace (most recent call first):
+       [0] test_training_transport_must_explicitly_confirm_readiness_before_ack (res://tests/test_session_snapshot.gd:166)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: test_unacknowledged_host_transfer_expires_and_runs_peer_cleanup_once (res://tests/test_session_snapshot.gd:261)
+   GDScript backtrace (most recent call first):
+       [0] test_unacknowledged_host_transfer_expires_and_runs_peer_cleanup_once (res://tests/test_session_snapshot.gd:261)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: test_client_character_is_not_saveable_until_snapshot_admission (res://tests/test_session_transport.gd:87)
+   GDScript backtrace (most recent call first):
+       [0] test_client_character_is_not_saveable_until_snapshot_admission (res://tests/test_session_transport.gd:87)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'transport_peer_valid' in base 'GDScript'.
+   at: test_disconnected_or_wrong_role_peers_are_refused_before_install (res://tests/test_session_transport.gd:24)
+   GDScript backtrace (most recent call first):
+       [0] test_disconnected_or_wrong_role_peers_are_refused_before_install (res://tests/test_session_transport.gd:24)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'transport_uses_enet_timeouts' in base 'GDScript'.
+   at: test_enet_physical_timeout_routing_remains_transport_specific (res://tests/test_session_transport.gd:48)
+   GDScript backtrace (most recent call first):
+       [0] test_enet_physical_timeout_routing_remains_transport_specific (res://tests/test_session_transport.gd:48)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: test_failed_client_leave_does_not_call_the_character_store (res://tests/test_session_transport.gd:106)
+   GDScript backtrace (most recent call first):
+       [0] test_failed_client_leave_does_not_call_the_character_store (res://tests/test_session_transport.gd:106)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: test_transport_closed_fires_after_peer_and_kind_are_cleared (res://tests/test_session_transport.gd:62)
+   GDScript backtrace (most recent call first):
+       [0] test_transport_closed_fires_after_peer_and_kind_are_cleared (res://tests/test_session_transport.gd:62)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: test_world_first_preparation_closes_authority_snapshot_and_save_gates (res://tests/test_session_transport.gd:121)
+   GDScript backtrace (most recent call first):
+       [0] test_world_first_preparation_closes_authority_snapshot_and_save_gates (res://tests/test_session_transport.gd:121)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'new' in base 'GDScript'.
+   at: _mount_session (res://autoload/game_state.gd:844)
+   GDScript backtrace (most recent call first):
+       [0] _mount_session (res://autoload/game_state.gd:844)
+       [1] _ready (res://autoload/game_state.gd:771)
+WARNING: 55 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2535)
+ERROR: 5 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
