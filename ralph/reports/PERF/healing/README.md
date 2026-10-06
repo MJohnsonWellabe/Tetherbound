@@ -40,7 +40,8 @@ foreign-world isolation and repeated light kill. **UNRUN.**
 
 `tests/smoke_meadow_healing_land_heals.gd` now audits every affected material
 through the whole production world before healing, outside the timed frame,
-requires registered-root coverage, compares the exact affected-material count
+requires registered-root coverage, accounts for changed material identities
+versus unchanged materials with no surviving users, compares the changed count
 to the kill receipt, and checks no matching live materials remain after healing
 or reload. It additionally checks unique topple receipts/markers. Existing
 29-pylon count, live/reloaded poses, save flag, walkability, cable, herd and
@@ -69,6 +70,19 @@ unchanged durable flags, focused tests and solo smoke assertions. No actionable
 source finding; imported/later-spawn material completeness and runtime/perf
 remain OPEN. A source review does not certify the smoke or compiler.
 No compiler or native PASS is claimed. `git diff --check` passed on this stage.
+
+Follow-up source inspection found a proof accounting trap: the climax can queue
+its cage before MeadowHealing's light step. The smoke now accounts by material
+identity/state rather than requiring every pre-flag material to survive until
+the kill step. Only an unchanged material with no surviving geometry users is
+classified as retired; changed retired materials still count, and a shared
+surviving material must go dark. The before-coverage, exact changed/kill count
+and whole-world end-state assertions remain. This audit runs after the fades,
+outside the timed frame and immediate alpha-start check. Runtime remains UNRUN.
+The same independent reviewer re-read the actual follow-up diff and returned
+**SOURCE PASS**: queued ancestry, shared surviving users, changed retired
+materials, exact expected count and preserved audits checked. No source-level
+parser issue found; native compilation and lifecycle reproduction remain OPEN.
 
 ## Native execution held
 

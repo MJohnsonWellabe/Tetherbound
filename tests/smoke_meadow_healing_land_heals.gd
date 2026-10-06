@@ -28,6 +28,7 @@ const HEALING := preload("res://scripts/world/meadow_healing.gd")
 
 var _failures: Array[String] = []
 var _game: Node = null
+var _lights_before: Array[Material] = []
 
 
 func _init() -> void:
@@ -80,6 +81,7 @@ func _run() -> void:
 	# Audit the entire production world OUTSIDE the timed healing frame and
 	# require every material the old rule could change to be indexed.
 	var light_materials := _live_tether_materials(world, healing)
+	_lights_before = light_materials
 	var indexed_materials: Dictionary = {}
 	for target_root: Node in (healing.call("_world_group_nodes", HEALING.LIGHT_ROOTS_GROUP) as Array):
 		for node: Node in _all(target_root):
@@ -113,9 +115,6 @@ func _run() -> void:
 		_fail("(live) the freeing held one frame for %d ms (limit %d ms)" % [heal_frame_ms, MAX_HEAL_FRAME_MS])
 	var report: Dictionary = healing.call("report")
 	print("live report: %s" % str(report))
-	if int(report.get("lights_killed", -1)) != light_materials.size():
-		_fail("(live) killed %d materials, whole-world before audit found %d" % [
-			int(report.get("lights_killed", -1)), light_materials.size()])
 	if not bool(healing.call("holding_presentation")):
 		_fail("(live) the heal payoff is not holding the presentation (X03 presentation_hold)")
 	var alpha_start := float(healing.call("regreen_alpha_now"))
@@ -231,9 +230,34 @@ func _run() -> void:
 
 func _check_end_state(world: Node, healing: Node, tag: String) -> void:
 	var report: Dictionary = healing.call("report")
-	var remaining := _live_tether_materials(world, healing)
+	var material_users: Dictionary = {}
+	var remaining := _live_tether_materials(world, healing, material_users)
 	if not remaining.is_empty():
 		_fail("(%s) %d affected tether materials remain lit" % [tag, remaining.size()])
+	if tag == "live":
+		# The climax can retire its cage before the healing step. Count by
+		# material identity/state, not by the number seen before flag delivery.
+		# A retired material that DID change still counts; a shared material
+		# cannot be retired while any surviving geometry still uses it.
+		var spec: Dictionary = _healing_config().get("tether_lights", {})
+		var lit_path := str(spec.get("lit_albedo", ""))
+		var dead_exists := ResourceLoader.exists(str(spec.get("dead_albedo", "")))
+		var changed := 0
+		var retired := 0
+		for raw: Material in _lights_before:
+			var material := raw as StandardMaterial3D
+			if not _tether_material_is_live(material, healing, lit_path, dead_exists):
+				changed += 1
+			elif not material_users.has(material):
+				retired += 1
+			else:
+				_fail("(live) a before-state tether material remains lit on surviving geometry")
+		var expected_killed := _lights_before.size() - retired
+		if int(report.get("lights_killed", -1)) != expected_killed:
+			_fail("(live) killed %d materials, identity audit found %d changed and %d unchanged/retired" % [
+				int(report.get("lights_killed", -1)), changed, retired])
+		print("(live) %d before materials accounted: %d changed, %d unchanged with no surviving users" % [
+			_lights_before.size(), changed, retired])
 	# (A)
 	var skins: Array = healing.call("regreen_nodes")
 	var group_count := (((_healing_config().get("regreen", {}) as Dictionary).get("groups", {})) as Dictionary).size()
@@ -537,26 +561,43 @@ func _fill_party() -> void:
 			party.call("add", creature)
 
 
-func _live_tether_materials(world: Node, healing: Node) -> Array[Material]:
+func _live_tether_materials(world: Node, healing: Node, material_users: Dictionary = {}) -> Array[Material]:
 	var out: Array[Material] = []
 	var seen: Dictionary = {}
 	var spec: Dictionary = _healing_config().get("tether_lights", {})
 	var lit_path := str(spec.get("lit_albedo", ""))
 	var dead_exists := ResourceLoader.exists(str(spec.get("dead_albedo", "")))
 	for node: Node in _all(world):
-		if not node is GeometryInstance3D or node.is_queued_for_deletion():
+		if not node is GeometryInstance3D or _retiring_from_world(node, world):
 			continue
 		for raw: Material in (healing.call("_materials_of", node) as Array):
 			var material := raw as StandardMaterial3D
 			if material == null or seen.has(material):
 				continue
 			seen[material] = true
-			var lit_texture := dead_exists and material.albedo_texture != null \
-				and material.albedo_texture.resource_path == lit_path
-			var teal_glow := material.emission_enabled and bool(healing.call("_is_tether_teal", material.emission))
-			if lit_texture or teal_glow:
+			material_users[material] = true
+			if _tether_material_is_live(material, healing, lit_path, dead_exists):
 				out.append(material)
 	return out
+
+
+func _tether_material_is_live(material: StandardMaterial3D, healing: Node,
+		lit_path: String, dead_exists: bool) -> bool:
+	var lit_texture := dead_exists and material.albedo_texture != null \
+		and material.albedo_texture.resource_path == lit_path
+	var teal_glow := material.emission_enabled and bool(healing.call("_is_tether_teal", material.emission))
+	return lit_texture or teal_glow
+
+
+func _retiring_from_world(node: Node, world: Node) -> bool:
+	var current := node
+	while current != null:
+		if current.is_queued_for_deletion():
+			return true
+		if current == world:
+			return false
+		current = current.get_parent()
+	return true
 
 
 func _all(root_node: Node) -> Array[Node]:
