@@ -6288,9 +6288,9 @@
           "_why": "ceiling and everything above it -- bottom (y 3.12) is the ground-floor room's ceiling, so this blocks nothing the interior walks on; top (y 9.6) clears the roof and chimney. Caps the second storey and roof shell as facade-only, same scope decision grandpa_house.gd's own bespoke loft avoided repeating here."
         },
         {
-          "at": [0.0, 2.36, 5.34],
-          "size": [2.02, 0.28, 2.04],
-          "_why": "F01#3: match Overhang_Roof_Plaster's installed bounds after its [0,2.55,5.35] placement. Bottom y 2.22 stays above walking head height and below the projecting roof surface, so the exploration arm cannot put the lens inside the entry awning on departure."
+          "at": [0.0, 2.6, 5.55],
+          "size": [5.64, 0.76, 2.46],
+          "_why": "F01#3: cover Overhang_Roof_Plaster plus InnExteriorIdentity's full-width pitched PorchAwning, fascia and header. Their combined local bounds reach x +/-2.81, y 2.225 to 2.979 and z 4.328 to 6.77. Bottom y 2.22 stays above walking head height; the exploration arm stops before the entire porch roof on departure."
         }
       ],
       "door": {
