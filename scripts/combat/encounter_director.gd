@@ -3781,6 +3781,7 @@ func ordinary_actor_vitals_pending(id: String) -> bool:
 	if not uses_durable_trainer_rewards(id): return false
 	if not _is_host():
 		return _encounter.get("ordinary_actor_vitals_pending") == true
+	if not (_encounter_host.call("pending_tether_items", id) as Array).is_empty(): return true
 	for original: Dictionary in _ordinary_actor_vitals_proposals.values():
 		if original.encounter_id == id and original.get("presented") != true: return true
 	return not (_encounter_host.call("pending_actor_vitals", id) as Array).is_empty()
@@ -3939,8 +3940,11 @@ func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0,
 	# Self buffs stay in the existing encounter. Each owner receives only
 	# the remaining modifier for their own UIDs, on the usual resource carrier.
 	rec = rec.duplicate(true)
+	for retained: Dictionary in rec.get("retained_actor_participants", {}).values():
+		if retained.get("tether_commands") is Dictionary: retained.tether_commands.erase("item_pending")
 	for participant: Dictionary in rec.get("participants", {}).values():
 		if participant.get("tether_commands") is Dictionary:
+			participant.tether_commands.erase("item_pending")
 			participant["tether_command_view"] = {"combo_remaining_s": maxf(0.0,
 				float(int(participant.tether_commands.get("combo", {}).get("until_ms", 0)) - Time.get_ticks_msec()) / 1000.0)}
 		for uid: String in participant.get("move_resources", {}):

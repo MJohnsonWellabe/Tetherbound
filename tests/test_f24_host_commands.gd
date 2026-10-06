@@ -320,6 +320,89 @@ func test_pouch_assignment_uses_original_character_journal_and_owner_save_withou
 	assert_false(record.errors(forged_saved, "owner_a").is_empty())
 
 
+func test_retained_item_ack_preserves_active_body_and_settles_same_v3_decision_once() -> void:
+	var record := preload("res://scripts/net/character_record_rules.gd")
+	var delivery := preload("res://scripts/net/foundation_delivery.gd")
+	var authority_type := preload("res://scripts/net/character_authority.gd")
+	for item: String in ["potion_small", "berries", "attack_tonic"]:
+		for depart: bool in [false, true]:
+			var player: RefCounted = DATA.new()._player()
+			player.set("character_id", "owner_a")
+			player.get("inventory").call("add", item, 2)
+			var creature: RefCounted = player.get("party").call("at", 0)
+			creature.set("hp", float(creature.get("max_hp")) - 10.0)
+			creature.set("nourishment", 10.0)
+			creature.set("happiness", 20.0)
+			var before := record.portable_projection(player.call("save_data"))
+			before.redesign_character["tether_pouch"] = [item]
+			var uid: String = before.party[0].uid
+			host = HOST.new(1)
+			id = host.open(1, "meadows", "wild", {"species_id": "bramblebun", "hp": 200.0, "hp_max": 200.0}, uid, "owner_a").encounter_id
+			assert_true(host.bind_actor_body(id, 1, "owner_a", before.party[0], 123).ok)
+			host.bind_tether_commands(id, 1, before)
+			_command_pool().meter = 100.0 # Existing component resource setup.
+			var binding := {"character_id": "owner_a", "creature_uid": uid, "deployment_generation": 1, "actor_generation": 1, "body_instance_id": 123}
+			var request := COMMANDS.intent(id, 1, 7, "item_throw")
+			var prepared: Dictionary = host.prepare_tether_item_command(request, 1, before, binding, 0, "item-world", "item-epoch", 2000)
+			assert_true(prepared.ok, str(prepared))
+			if not prepared.ok: continue
+			var original: Dictionary = prepared.original
+			assert_eq(host.prepare_tether_item_command(request, 1, before, binding, 0, "item-world", "item-epoch", 2001).original, original)
+			assert_false(host.prepare_tether_item_command(COMMANDS.intent(id, 1, 8, "item_throw"), 1, before, binding, 0, "item-world", "item-epoch", 2002).ok)
+			assert_eq(host.authorize_move_start({"encounter_id": id, "action": 8, "slot": "quick"}, 1, before.party[0], binding, _move(), WIND, 2000).code, "item_save_pending")
+			assert_eq(host.validate_strike({"encounter_id": id}, 1, {}).code, "item_save_pending")
+			assert_false(host.prepare_tether_item_command(request, 1, before, binding, 0, "foreign-world", "item-epoch", 2002).ok)
+			assert_false(host.commit_tether_command(COMMANDS.intent(id, 1, 8, "rally"), 1, {}, 2000).ok)
+			assert_false(host.bind_actor_body(id, 1, "owner_a", before.party[0], 456).ok)
+			assert_false(host.stage_actor_vitals(id, 1, uid, 1, 0, "interleaved-damage", "damage", 5.0, 128).ok)
+			host.close(id)
+			host.forget(id)
+			assert_eq(host.phase(id), "active")
+			assert_eq(_command_pool().meter, 100.0, "prepare and refused arrivals spend no meter")
+			var authority := authority_type.new()
+			assert_true(authority.bind_world("item-world"))
+			assert_true(authority.seed_admitted_character(before, "owner_a").ok)
+			var token: Dictionary = authority.stage_character_action("owner_a", 0, "tether_item", original.intent, original.context)
+			assert_true(token.ok, str(token))
+			if not token.ok: continue
+			var row: Dictionary = delivery.make_record("item-slot", "item-world", "item-epoch", token, null, record.errors)
+			assert_false(row.is_empty())
+			if row.is_empty(): continue
+			var stage: Dictionary = host.stage_actor_training_baseline(row, token.state, 1, "item-world", "item-slot")
+			assert_true(stage.ok, str(stage))
+			assert_false(host.commit_actor_training_baseline(stage, row, token.state, 1, {row.delivery_id: row}, "item-world", "item-slot"), "pending row is not accepted owner save")
+			assert_true(authority.finish_creature_training(token, false))
+			assert_eq(authority.state("owner_a"), before)
+			assert_eq(_command_pool().meter, 100.0)
+			assert_eq(host.record(id).participants[1].actor_vitals[uid].hp, before.party[0].hp)
+			token = authority.stage_character_action("owner_a", 0, "tether_item", original.intent, original.context)
+			assert_true(authority.finish_creature_training(token, true))
+			row.status = "accepted"
+			if depart: assert_true(host.leave(id, 1).ok)
+			stage = host.stage_actor_training_baseline(row, token.state, 1, "item-world", "item-slot")
+			assert_true(stage.ok, str(stage))
+			assert_eq(stage.changes.size(), 1)
+			assert_eq(stage.changes[0].vitals.is_empty(), item != "potion_small", "food/tonic invent no HP proposal")
+			assert_true(host.commit_actor_training_baseline(stage, row, token.state, 1, {row.delivery_id: row}, "item-world", "item-slot"))
+			var participant: Dictionary = host.record(id).retained_actor_participants["owner_a"] if depart else host.record(id).participants[1]
+			assert_eq(participant.tether_commands.meter, 75.0)
+			assert_eq(participant.actor_vitals[uid].hp, row.after.party[0].hp)
+			assert_eq(participant.actor_vitals[uid].body_generation, 1)
+			assert_eq(participant.actor_vitals[uid].body_instance_id, 123)
+			assert_eq(participant.actor_bound_uid, uid)
+			assert_true(host.pending_actor_vitals(id).is_empty(), "same v3 accepted decision settles the internal HP receipt")
+			var after: Dictionary = host.record(id).duplicate(true)
+			var duplicate: Dictionary = host.stage_actor_training_baseline(row, token.state, 1, "item-world", "item-slot")
+			assert_true(duplicate.ok)
+			assert_true(duplicate.changes.is_empty())
+			assert_true(host.commit_actor_training_baseline(duplicate, row, token.state, 1, {row.delivery_id: row}, "item-world", "item-slot"))
+			assert_eq(host.record(id), after, "accepted duplicate cannot heal or spend again")
+			assert_eq(host.pending_tether_items(id).size(), 1, "publication still retains the same original fence")
+			var snapshot: Dictionary = host.presentation_snapshot(host.record(id))
+			if not depart: assert_false(snapshot.participants[1].tether_commands.has("item_pending"), "private original never enters network presentation")
+			assert_eq(creature.get("hp"), before.party[0].hp)
+			assert_eq(player.get("inventory").call("count", item), 2, "component prep/host ACK never mutates live owner inventory")
+
 func test_saved_item_carrier_keeps_one_original_debit_and_owned_effect_with_runtime_off() -> void:
 	var actions := preload("res://scripts/net/foundation_actions.gd")
 	var record := preload("res://scripts/net/character_record_rules.gd")

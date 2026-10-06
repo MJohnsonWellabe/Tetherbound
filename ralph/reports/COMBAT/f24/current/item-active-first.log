@@ -1,0 +1,7 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_f24_host_commands.gd::test_retained_item_ack_preserves_active_body_and_settles_same_v3_decision_once,test_f24_host_commands.gd::test_saved_item_carrier_keeps_one_original_debit_and_owned_effect_with_runtime_off: 1 of 817 test files
+  ok    test_f24_host_commands.gd :: test_retained_item_ack_preserves_active_body_and_settles_same_v3_decision_once
+  ok    test_f24_host_commands.gd :: test_saved_item_carrier_keeps_one_original_debit_and_owned_effect_with_runtime_off
+
+2 tests, 324 assertions, 0 failed
