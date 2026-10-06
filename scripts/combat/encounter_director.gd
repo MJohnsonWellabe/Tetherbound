@@ -6068,9 +6068,7 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 			"body_scale": maxf(0.01, float(wild.get("body_scale"))),
 			"foot_position": [feet.x, feet.y, feet.z],
 			"facing": [facing.x, facing.y, facing.z],
-			# Reward completion compares against this trainer's authored team.
-			# Lifetime numbering is reserved for distinct body names.
-			"round": _trainer_battle_sent,
+			"round": _trainer_sent,
 			"round_continues": not _trainer_queue.is_empty(),
 		})
 	if not opponent_owned:
