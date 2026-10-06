@@ -1,0 +1,15 @@
+09:55:38 | INFO: Data are loaded, start creating Blender stuff
+09:55:38 | INFO: Blender create Mesh node output_unwrapped
+09:55:38 | INFO: glTF import finished in 0.11s
+Blender 4.2.9 LTS (hash a10f621e649a built 2025-04-15 03:32:43)
+Fra:1 Mem:46.36M (Peak 46.69M) | Time:00:01.43 | Rendering 1 / 64 samples
+Fra:1 Mem:46.36M (Peak 46.69M) | Time:00:01.54 | Rendering 25 / 64 samples
+Fra:1 Mem:46.36M (Peak 46.69M) | Time:00:01.64 | Rendering 50 / 64 samples
+Fra:1 Mem:46.36M (Peak 46.69M) | Time:00:01.71 | Rendering 64 / 64 samples
+Saved: 'D:\tetherbound\codex-c1\ralph\reports\HUB\f17\m1\nest-top-rotation0-first\top-facing-probe.png'
+Time: 00:02.05 (Saving: 00:00.29)
+
+Warning: No mesh data to join
+wrote D:\tetherbound\codex-c1\ralph\reports\HUB\f17\m1\nest-top-rotation0-first\top-facing-probe.png  dims=1.87,1.89,0.43
+
+Blender quit
