@@ -30,7 +30,7 @@ stormwood_livewire | OPEN | OPEN
 veridian_choices | OPEN | OPEN
 veridian_relic_key | OPEN | OPEN
 
-shared_boss --tournament | ON OPEN
+shared_boss --tournament | ON FIRST FAIL exit1: semifinal completion round4 rejected for authored two-member team; allowed director correction independently reviewed, retry OPEN. OFF original-source parity running.
 F27 wild_defeat_essence | ON OPEN
 F27 essence_node | ON OPEN
 F27 net essence_no_dup | ON OPEN
@@ -91,3 +91,4 @@ unstick | ON OPEN
 veridian_offer_choice | ON OPEN
 warrens | ON OPEN
 wild_streaming | ON OPEN
+Tournament ON FIRST | FAIL exit1: quarter durable rewards PASS; semi both first strikes PASS, team completion command no verdict at unchanged 95000ms. Diagnosis OPEN. receipts/net-tournament-on-first

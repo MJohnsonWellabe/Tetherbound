@@ -1,0 +1,33 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_director_join_snapshot.gd,test_actor_vitals_authority.gd,test_combat_round_reward.gd: 3 of 799 test files
+  ok    test_actor_vitals_authority.gd :: test_actor_alias_and_pooled_body_rejoin_require_current_unique_generation
+  ok    test_actor_vitals_authority.gd :: test_actual_heal_stages_no_cost_then_commits_once_with_per_creature_cooldown
+  ok    test_actor_vitals_authority.gd :: test_actual_personal_stat_carriers_admit_defaults_and_refuse_bad_identity_shapes
+  ok    test_actor_vitals_authority.gd :: test_departed_actor_hp_waits_for_exact_durable_handoff_and_stays_private
+  ok    test_actor_vitals_authority.gd :: test_lost_ack_cumulative_recovery_and_latest_ack_reject_foreign_healthy_reseed
+  ok    test_actor_vitals_authority.gd :: test_owner_write_loss_keeps_accepted_hp_and_requires_real_retry_write
+  ok    test_actor_vitals_authority.gd :: test_prepared_writer_never_flushes_a_reentrant_replacement_fallback
+  ok    test_actor_vitals_authority.gd :: test_private_stage_world_failure_restores_hp_revision_and_replay_history
+  ok    test_actor_vitals_authority.gd :: test_round_reseat_without_uid_keeps_the_bound_active_creature
+  ok    test_actor_vitals_authority.gd :: test_same_admission_retains_personal_sources_but_exposes_only_proved_actor_power
+  ok    test_actor_vitals_authority.gd :: test_trainer_round_reseat_restores_a_departed_guests_retained_row
+  ok    test_actor_vitals_authority.gd :: test_trainer_round_waits_for_original_vitals_before_reseat_and_send_out
+  ok    test_combat_round_reward.gd :: test_actual_settled_HP_and_reduced_round_award_keep_all_five_original_cards
+  ok    test_combat_round_reward.gd :: test_authored_completion_bonus_is_separate_without_an_extra_victory
+  ok    test_combat_round_reward.gd :: test_full_care_replay_plus_typed_terminal_HP_checkpoint_has_exact_authority_CAS
+[owner-passive] host resource-owner: input 4 waits: actor_vitals_saved has no host vitals proof yet (t=17049ms)
+  ok    test_combat_round_reward.gd :: test_interleaved_real_care_typed_HP_disk_retry_ACK_and_round_checkpoint_preserve_stream
+  ok    test_combat_round_reward.gd :: test_original_round_owner_BOOL_failure_retries_disk_once_without_replacing_creatures
+  ok    test_combat_round_reward.gd :: test_round_priority_keeps_all_190_originals_and_pending_or_invalid_order
+  ok    test_combat_round_reward.gd :: test_terminal_source_and_complete_owner_baseline_refuse_forged_fields
+  ok    test_combat_round_reward.gd :: test_typed_faint_applies_original_condition_once_with_full_core_CAS
+  ok    test_combat_round_reward.gd :: test_typed_faint_owner_disk_loss_retry_and_recovery_do_not_repeat_condition
+  ok    test_director_join_snapshot.gd :: test_deployment_announced_before_any_session_is_sent_once_the_session_is_multi_peer
+  ok    test_director_join_snapshot.gd :: test_initial_join_and_reconnect_hold_then_resume_deployed_creature_announcement
+  ok    test_director_join_snapshot.gd :: test_native_guest_killing_strike_advances_host_trainer_round_once
+  ok    test_director_join_snapshot.gd :: test_native_realm_rpc_reaches_connected_peer_and_refuses_departed_or_unready_receiver
+  ok    test_director_join_snapshot.gd :: test_native_trainer_hp_fixture_survives_projectile_snapshot
+  ok    test_director_join_snapshot.gd :: test_solo_deployment_that_becomes_a_host_records_once_and_stops_holding
+
+27 tests, 675 assertions, 0 failed
