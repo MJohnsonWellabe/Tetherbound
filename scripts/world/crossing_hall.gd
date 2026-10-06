@@ -543,7 +543,7 @@ func _refresh_home_membrane() -> void:
 	var material := surface.material_override as StandardMaterial3D if surface != null else null
 	if material == null:
 		return
-	var tree := get_tree()
+	var tree: SceneTree = get_tree() if is_inside_tree() else null
 	var look: Node = tree.current_scene.get_node_or_null(^"WorldLook") if tree != null and tree.current_scene != null else null
 	var dark := look != null and look.has_method("is_dark") and bool(look.call("is_dark"))
 	var scale := float(_config.get("home_membrane_night_emission_scale", 1.0)) if dark else 1.0

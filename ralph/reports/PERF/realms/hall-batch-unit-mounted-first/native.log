@@ -1,0 +1,11 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_crossing_hall_portal_mount.gd::test_static_batching_keeps_live_portal_and_relic_display_nodes: 1 of 824 test files
+SCRIPT ERROR: Invalid access to property or key 'root' on a base object of type 'null instance'.
+   at: test_static_batching_keeps_live_portal_and_relic_display_nodes (res://tests/test_crossing_hall_portal_mount.gd:11)
+   GDScript backtrace (most recent call first):
+       [0] test_static_batching_keeps_live_portal_and_relic_display_nodes (res://tests/test_crossing_hall_portal_mount.gd:11)
+       [1] _init (res://tests/run_tests.gd:120)
+  ok    test_crossing_hall_portal_mount.gd :: test_static_batching_keeps_live_portal_and_relic_display_nodes
+
+1 tests, 0 assertions, 0 failed
