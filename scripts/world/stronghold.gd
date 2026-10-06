@@ -208,6 +208,7 @@ var _palette_cache: Dictionary = {}
 ## and without anybody to greet.
 func build(world: Node, camera_rig: Node = null, player: Node3D = null,
 		build_budget: RefCounted = null) -> bool:
+	add_to_group(&"meadow_healing_light_roots")
 	_world = world
 	_camera_rig = camera_rig
 	_player = player
@@ -3051,6 +3052,7 @@ func _build_cable_landing() -> void:
 
 	var builder := Node3D.new()
 	builder.name = "HallCableLanding"
+	builder.add_to_group(&"meadow_healing_cable_holders")
 	_world.add_child(builder)
 	var spokes: Node3D = SEVERED_SPOKES.new()
 	# VP8: the exterior energy, not the interior value floor -- this is the

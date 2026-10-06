@@ -24,6 +24,7 @@ const SLOT := 4
 const FLAG := "legendary_freed"
 const FADE_TIMEOUT_MS := 40000
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
+const HEALING := preload("res://scripts/world/meadow_healing.gd")
 
 var _failures: Array[String] = []
 var _game: Node = null
@@ -75,6 +76,26 @@ func _run() -> void:
 	if float(healing.call("drain_alpha_now")) < 0.999:
 		_fail("(before) the drain stands at alpha %.2f, not 1" % float(healing.call("drain_alpha_now")))
 	print("(before) the land lies drained: %d drain meshes at alpha %.2f" % [drained.size(), float(healing.call("drain_alpha_now"))])
+	# A source inventory can miss an imported material or a later spawn.
+	# Audit the entire production world OUTSIDE the timed healing frame and
+	# require every material the old rule could change to be indexed.
+	var light_materials := _live_tether_materials(world, healing)
+	var indexed_materials: Dictionary = {}
+	for target_root: Node in (healing.call("_world_group_nodes", HEALING.LIGHT_ROOTS_GROUP) as Array):
+		for node: Node in _all(target_root):
+			if node is GeometryInstance3D:
+				for material: Material in (healing.call("_materials_of", node) as Array):
+					indexed_materials[material] = true
+	for material: Material in light_materials:
+		if not indexed_materials.has(material):
+			_fail("(before) an affected tether material has no registered production light root")
+	if light_materials.is_empty():
+		_fail("(before) no live tether materials; the kill check would be vacuous")
+	print("(before) %d affected materials, %d indexed materials, %d light roots, %d pylon holders, %d cable holders" % [
+		light_materials.size(), indexed_materials.size(),
+		(healing.call("_world_group_nodes", HEALING.LIGHT_ROOTS_GROUP) as Array).size(),
+		(healing.call("_world_group_nodes", HEALING.PYLON_HOLDERS_GROUP) as Array).size(),
+		(healing.call("_world_group_nodes", HEALING.CABLE_HOLDERS_GROUP) as Array).size()])
 
 	# --- 1. live: the flag lands ---------------------------------------------
 	_game.get("progression").call("set_flag", FLAG)
@@ -92,6 +113,9 @@ func _run() -> void:
 		_fail("(live) the freeing held one frame for %d ms (limit %d ms)" % [heal_frame_ms, MAX_HEAL_FRAME_MS])
 	var report: Dictionary = healing.call("report")
 	print("live report: %s" % str(report))
+	if int(report.get("lights_killed", -1)) != light_materials.size():
+		_fail("(live) killed %d materials, whole-world before audit found %d" % [
+			int(report.get("lights_killed", -1)), light_materials.size()])
 	if not bool(healing.call("holding_presentation")):
 		_fail("(live) the heal payoff is not holding the presentation (X03 presentation_hold)")
 	var alpha_start := float(healing.call("regreen_alpha_now"))
@@ -207,6 +231,9 @@ func _run() -> void:
 
 func _check_end_state(world: Node, healing: Node, tag: String) -> void:
 	var report: Dictionary = healing.call("report")
+	var remaining := _live_tether_materials(world, healing)
+	if not remaining.is_empty():
+		_fail("(%s) %d affected tether materials remain lit" % [tag, remaining.size()])
 	# (A)
 	var skins: Array = healing.call("regreen_nodes")
 	var group_count := (((_healing_config().get("regreen", {}) as Dictionary).get("groups", {})) as Dictionary).size()
@@ -222,6 +249,13 @@ func _check_end_state(world: Node, healing: Node, tag: String) -> void:
 		_fail("(%s) regreen alpha %.2f, not fully in" % [tag, float(healing.call("regreen_alpha_now"))])
 	# (C)
 	var pylons: Array = healing.call("toppled_pylons")
+	var seen_pylons: Dictionary = {}
+	for pylon: Node in pylons:
+		if seen_pylons.has(pylon):
+			_fail("(%s) a pylon has more than one topple receipt" % tag)
+		seen_pylons[pylon] = true
+		if is_instance_valid(pylon) and not pylon.has_meta(HEALING.TOPPLED_META):
+			_fail("(%s) a toppled pylon lacks its exactly-once marker" % tag)
 	# The owner decision is "the dark pylons are down": every pylon in the
 	# baked fall table falls, live and after reload. A stale table entry (a
 	# moved pylon, re-baked terrain) that leaves one standing fails HERE rather
@@ -501,6 +535,28 @@ func _fill_party() -> void:
 		var creature: RefCounted = _game.call("make_creature", species, species.capitalize())
 		if creature != null:
 			party.call("add", creature)
+
+
+func _live_tether_materials(world: Node, healing: Node) -> Array[Material]:
+	var out: Array[Material] = []
+	var seen: Dictionary = {}
+	var spec: Dictionary = _healing_config().get("tether_lights", {})
+	var lit_path := str(spec.get("lit_albedo", ""))
+	var dead_exists := ResourceLoader.exists(str(spec.get("dead_albedo", "")))
+	for node: Node in _all(world):
+		if not node is GeometryInstance3D or node.is_queued_for_deletion():
+			continue
+		for raw: Material in (healing.call("_materials_of", node) as Array):
+			var material := raw as StandardMaterial3D
+			if material == null or seen.has(material):
+				continue
+			seen[material] = true
+			var lit_texture := dead_exists and material.albedo_texture != null \
+				and material.albedo_texture.resource_path == lit_path
+			var teal_glow := material.emission_enabled and bool(healing.call("_is_tether_teal", material.emission))
+			if lit_texture or teal_glow:
+				out.append(material)
+	return out
 
 
 func _all(root_node: Node) -> Array[Node]:

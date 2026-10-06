@@ -21,6 +21,114 @@ func _config() -> Dictionary:
 	return _json(CONFIG_PATH)
 
 
+func test_healing_groups_are_scoped_to_the_live_world_and_refreshed_per_step() -> void:
+	var tree := Engine.get_main_loop() as SceneTree
+	var world := Node3D.new()
+	var foreign_world := Node3D.new()
+	tree.root.add_child(world)
+	tree.root.add_child(foreign_world)
+	var healing: Node3D = HEALING.new()
+	healing.set("_world", world)
+	var first := Node3D.new()
+	first.add_to_group(HEALING.PYLON_HOLDERS_GROUP)
+	world.add_child(first)
+	var foreign := Node3D.new()
+	foreign.add_to_group(HEALING.PYLON_HOLDERS_GROUP)
+	foreign_world.add_child(foreign)
+	var before: Array = healing.call("_world_group_nodes", HEALING.PYLON_HOLDERS_GROUP)
+	assert_eq(before.size(), 1, "another mounted world is excluded")
+	assert_true(before.has(first))
+	first.queue_free()
+	var later := Node3D.new()
+	later.add_to_group(HEALING.PYLON_HOLDERS_GROUP)
+	world.add_child(later)
+	var after: Array = healing.call("_world_group_nodes", HEALING.PYLON_HOLDERS_GROUP)
+	assert_eq(after.size(), 1, "the next step takes a fresh group snapshot")
+	assert_true(after.has(later), "a newly spawned holder is indexed")
+	assert_false(after.has(first), "a queued target cannot be reused")
+	world.free()
+	foreign_world.free()
+	healing.free()
+
+
+func test_grouped_topple_preserves_exactly_once_and_severed_spoke_exclusion() -> void:
+	var tree := Engine.get_main_loop() as SceneTree
+	var world := Node3D.new()
+	tree.root.add_child(world)
+	var healing: Node3D = HEALING.new()
+	healing.set("_world", world)
+	healing.set("_config", _config())
+	var parts := _bare_pylon(OFF_MAP)
+	var holder: Node3D = parts[0]
+	holder.add_to_group(HEALING.PYLON_HOLDERS_GROUP)
+	world.add_child(holder)
+	var severed := _bare_pylon(OFF_MAP + Vector3(20, 0, 0))
+	var spoke: Node3D = severed[0]
+	spoke.name = "Spoke_north"
+	spoke.add_to_group(HEALING.PYLON_HOLDERS_GROUP)
+	world.add_child(spoke)
+	var standing := (severed[1] as Node3D).transform
+	assert_eq(int(healing.call("_topple_the_pylons", true)), 1)
+	var fallen := (parts[1] as Node3D).transform
+	assert_true((parts[1] as Node).has_meta(HEALING.TOPPLED_META))
+	assert_eq(int(healing.call("_topple_the_pylons", true)), 0, "repeat refuses an already toppled pylon")
+	assert_true((parts[1] as Node3D).transform.is_equal_approx(fallen))
+	assert_eq((healing.call("toppled_pylons") as Array).size(), 1, "no duplicate topple receipt")
+	assert_true((severed[1] as Node3D).transform.is_equal_approx(standing), "severed run stays standing")
+	assert_false((severed[1] as Node).has_meta(HEALING.TOPPLED_META))
+	world.free()
+	healing.free()
+
+
+func test_grouped_lights_deduplicate_materials_and_preserve_warm_and_other_worlds() -> void:
+	var tree := Engine.get_main_loop() as SceneTree
+	var world := Node3D.new()
+	var foreign_world := Node3D.new()
+	tree.root.add_child(world)
+	tree.root.add_child(foreign_world)
+	var healing: Node3D = HEALING.new()
+	healing.set("_world", world)
+	healing.set("_config", _config())
+	var root := Node3D.new()
+	root.add_to_group(HEALING.LIGHT_ROOTS_GROUP)
+	world.add_child(root)
+	var nested := Node3D.new()
+	nested.add_to_group(HEALING.LIGHT_ROOTS_GROUP)
+	root.add_child(nested)
+	var teal := StandardMaterial3D.new()
+	teal.albedo_color = Color("#3fe8c4")
+	teal.emission = teal.albedo_color
+	teal.emission_enabled = true
+	var original := teal.albedo_color
+	for parent: Node in [root, nested]:
+		var geometry := MeshInstance3D.new()
+		geometry.material_override = teal
+		parent.add_child(geometry)
+	var warm := StandardMaterial3D.new()
+	warm.albedo_color = Color("#e8d79a")
+	warm.emission = warm.albedo_color
+	warm.emission_enabled = true
+	var warm_geometry := MeshInstance3D.new()
+	warm_geometry.material_override = warm
+	root.add_child(warm_geometry)
+	var foreign := MeshInstance3D.new()
+	var foreign_material := teal.duplicate() as StandardMaterial3D
+	foreign.material_override = foreign_material
+	foreign.add_to_group(HEALING.LIGHT_ROOTS_GROUP)
+	foreign_world.add_child(foreign)
+	assert_eq(int(healing.call("_kill_the_tether_lights")), 1, "one material shared across nested roots")
+	assert_false(teal.emission_enabled)
+	var darken := float((_config().get("tether_lights", {}) as Dictionary).get("dead_darken", 0.25))
+	assert_true(teal.albedo_color.is_equal_approx(original.darkened(darken)), "darkened exactly once")
+	assert_true(warm.emission_enabled, "the legendary's warm glow stays on")
+	assert_true(warm.albedo_color.is_equal_approx(Color("#e8d79a")))
+	assert_true(foreign_material.emission_enabled, "a different world stays untouched")
+	assert_eq(int(healing.call("_kill_the_tether_lights")), 0, "repeat cannot darken it again")
+	world.free()
+	foreign_world.free()
+	healing.free()
+
+
 # --- (A) regreen ---------------------------------------------------------------
 
 func test_station_falloff_is_full_in_the_core_and_zero_at_the_rim() -> void:
