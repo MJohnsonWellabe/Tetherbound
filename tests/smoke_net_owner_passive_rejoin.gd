@@ -355,9 +355,13 @@ func _run() -> void:
 
 
 func _prove_tag_combo() -> void:
-	if not _ok(await step(1, "op_tag_target"), "Tag: guest normally engages an actual live wild"): return
+	_ok(await step(0, "deploy_creature"), "Tag: host deploys its same actual owned companion")
+	if not _ok(await step(0, "op_tag_target"), "Tag: host normally engages an actual live wild"): return
+	var encounter: Dictionary = await probe(0, "encounter")
+	_ok(await step(1, "teleport", {"at":encounter.get("opponent_pos", [])}), "Tag: existing proximity setup reaches the actual host fight")
+	_ok(await step(1, "deploy_creature"), "Tag: guest deploys its same admitted owned companion")
+	if not _ok(await step(1, "join_encounter", {"encounter_id":str(encounter.get("id", ""))}), "Tag: guest joins the exact host encounter"): return
 	var owner: Dictionary = await probe(1, "op_tag_state")
-	if not _ok(await step(0, "join_encounter", {"encounter_id":str(owner.encounter_id)}), "Tag: host joins the same actual fight as observer"): return
 	var peer := int(owner.peer)
 	var host_before: Dictionary = await probe(0, "op_tag_state", {"peer":peer})
 	var combo: Dictionary = await step(1, "op_tag_combo")
