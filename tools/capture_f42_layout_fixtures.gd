@@ -20,6 +20,7 @@ var _captures: Array[String] = []
 
 class AltarFixture extends Node:
 	signal essence_spend_completed(id: String, result: Dictionary)
+	signal essence_quote_completed(key: String, uid: String, result: Dictionary)
 	var uid := ""
 	var level := 1
 	func station_available(_key: String) -> bool: return true
@@ -29,6 +30,7 @@ class AltarFixture extends Node:
 				{"id": "tether_candy", "name": "Tether Candy", "cost": 1, "available": 1}]}
 	func submit_essence_spend(_key: String, _request: Dictionary) -> void: pass
 	func reconcile_essence_spend(_id: String) -> void: pass
+	func invalidate_essence_quote() -> void: pass
 
 class TraitsFixture extends Node:
 	signal action_completed(result: Dictionary)

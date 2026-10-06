@@ -51,6 +51,7 @@ func _run() -> void:
 	await process_frame
 	_check(OWNER.current(self) == null, "disposal releases input")
 	await _research_rows()
+	await _system_screens()
 	for failure: String in _failures: push_error(failure)
 	print("SYSTEM SCREEN CHECKS: %d checks, %d failures" % [_checks, _failures.size()])
 	print("F42 MODAL SMOKE: PASS" if _failures.is_empty() else "F42 MODAL SMOKE: FAIL")
@@ -122,9 +123,87 @@ func _research_rows() -> void:
 		await process_frame
 		_check(_research_text(panel).contains("Paid ✓"), "restored paid task renders its paid tick")
 		await _capture_research(panel, "bramblebun-caught-history-paid", "species:bramblebun")
+	await _modal_lifecycle(panel, "Research")
 	panel.queue_free()
 	await process_frame
 	_check(OWNER.current(self) == null, "research disposal releases modal ownership")
+
+func _system_screens() -> void:
+	# Reuse the existing disclosed layout doubles and station component.
+	# These exercise production Controls and input, never earned transactions.
+	var fixtures := preload("res://tools/capture_f42_layout_fixtures.gd")
+	var game := root.get_node(^"Game")
+	game.call("reset_for_new_game")
+	var creature: RefCounted = preload("res://scripts/creatures/creature_species.gd").spawn("terrapup")
+	game.get("party").call("add", creature)
+	var level_service := fixtures.AltarFixture.new()
+	level_service.uid = str(creature.get("uid"))
+	level_service.level = int(creature.get("level"))
+	root.add_child(level_service)
+	var altar := preload("res://scripts/ui/altar_panel.gd").new()
+	root.add_child(altar)
+	_check(altar.configure_service(level_service), "Altar binds existing disclosed layout service")
+	_check(altar.open("layout-altar"), "Altar Level/Essence opens")
+	await _modal_lifecycle(altar, "Altar Level/Essence")
+	altar.queue_free()
+	level_service.queue_free()
+	await process_frame
+	for tab: String in ["Loadout", "Mastery", "Gear"]:
+		var details := preload("res://scripts/ui/companion_details_panel.gd").new()
+		root.add_child(details)
+		_check(details.open(game, str(creature.get("uid")), tab), "actual companion " + tab + " opens")
+		await _modal_lifecycle(details, "Companion " + tab)
+		details.queue_free()
+		await process_frame
+	var traits_service := fixtures.TraitsFixture.new()
+	traits_service.uid = str(creature.get("uid"))
+	root.add_child(traits_service)
+	var traits := preload("res://scripts/ui/altar_traits_panel.gd").new()
+	root.add_child(traits)
+	_check(traits.open(traits_service, "layout-altar"), "actual Altar Traits opens")
+	await _modal_lifecycle(traits, "Altar Traits")
+	traits.queue_free()
+	traits_service.queue_free()
+	await process_frame
+	var station: Dictionary = preload("res://tests/test_craft_station_confirm_lifetime.gd").new().call("_fixture", self, false)
+	_check(station.panel.is_open(), "actual station Craft controls open")
+	await _modal_lifecycle(station.panel, "Station Forge")
+	station.holder.queue_free()
+	await process_frame
+	var board := fixtures.BountyFixture.new()
+	root.add_child(board)
+	var bounties := preload("res://scripts/ui/bounty_board_panel.gd").new()
+	root.add_child(bounties)
+	_check(bounties.open(board), "actual Bounty opens")
+	await _modal_lifecycle(bounties, "Bounty")
+	bounties.queue_free()
+	board.queue_free()
+	await process_frame
+
+func _modal_lifecycle(panel: Node, name: String) -> void:
+	await process_frame
+	await process_frame
+	_check(OWNER.current(self) == panel, name + " owns input")
+	var focused := root.gui_get_focus_owner()
+	_check(is_instance_valid(focused) and panel.is_ancestor_of(focused) and focused.is_visible_in_tree(),
+		name + " has visible controller focus")
+	var injector := preload("res://tools/net/press_inject.gd")
+	_check(injector.edge(_pad_binding, "menu_cancel", true).get("ok") == true, name + " physical B down is injected")
+	await process_frame
+	await process_frame
+	var surface: Variant = panel.get("_root")
+	_check(not is_instance_valid(surface) or not surface.is_visible_in_tree(), name + " physical B closes its surface")
+	_check(OWNER.current(self) == null or OWNER.current(self) == panel, name + " closing B does not transfer input to another modal")
+	_check(injector.edge(_pad_binding, "menu_cancel", false).get("ok") == true, name + " physical B up is injected")
+	await process_frame
+	await process_frame
+	_check(OWNER.current(self) == null, name + " releases ownership after physical B release")
+	_check(not paused, name + " returns an unpaused tree")
+
+func _pad_binding(action: StringName) -> InputEvent:
+	for binding: InputEvent in InputMap.action_get_events(action):
+		if binding is InputEventJoypadButton: return binding
+	return null
 
 
 func _research_button(panel: Node, key: String) -> Button:
