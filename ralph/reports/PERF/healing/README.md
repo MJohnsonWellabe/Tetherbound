@@ -140,9 +140,19 @@ the actual two-file fix, with all 19 mounted assertions retained (5 scope/refres
 production world; calls run after initialization, outside the measured frame,
 and incomplete calls or assertion failures persist into the smoke's nonzero exit.
 This verdict does not establish native parsing or runtime success.
-The corrected focused unit selection and mounted smoke remain pending. Fresh
-before/after freeing-frame measurement and the two-peer handoff still require
-an uncontended window after R2 finishes. P1 remains OPEN.
+The corrected focused unit selection completed at `d19b10e26b807e327aa19824a598acb36cbfd9d5`:
+**30 pure tests / 587 assertions / 0 failed / exit 0**. Both streams contain zero
+SCRIPT ERROR, Parse Error, ERROR or leak diagnostics; the three inherited
+authored-null/unbaked-pylon warnings remain preserved. It used the existing
+runner, private APPDATA, the same local cache, global lock and approved original
+R2 background pair. Raw [receipt](unit-repair/receipt.json),
+[stdout](unit-repair/stdout.log), [stderr](unit-repair/stderr.log) and
+[exit](unit-repair/exit.txt) are retained byte-for-byte with a hash manifest.
+The owned engine exited and lock released. This covers pure behavior and loading
+the helper script, not the smoke's native parsing or its 19 mounted assertions.
+The initialized production smoke remains pending. Fresh before/after freeing-frame
+measurement and the two-peer handoff still require an uncontended window after
+R2 finishes. P1 remains OPEN.
 
 C2 is closed as BLOCKED/accepted with an existing-tool gap. Its custom fixture
 and cancelled export/profile queue must not be restored or executed for P1.
