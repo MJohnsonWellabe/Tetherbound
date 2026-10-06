@@ -1,0 +1,14 @@
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+   GDScript backtrace (most recent call first):
+       [0] _build_terrain (res://scripts/world/playground_world.gd:1173)
+       [1] _ready (res://scripts/world/playground_world.gd:806)
+       [2] _run (res://tools/capture_f21_hit_presentation.gd:72)
+       [3] _run (D:/tetherbound/.tmp/c1-existing-capture/capture_f21_native_hit.gd:47)
+[f21] FAIL could not enter combat
+[f21-native] FAIL could not enter combat
+[f21-native] FAIL Native parent timing must retain all 300 drawn fight frames
+[f21-native] FAIL Native hit sequence role is missing: quick
+[f21-native] FAIL Native hit sequence role is missing: charged
+[f21-native] FAIL Native hit sequence role is missing: crit
+[f21-native] FAIL Native hit sequence role is missing: incoming
