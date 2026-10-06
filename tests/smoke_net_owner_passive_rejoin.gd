@@ -171,6 +171,9 @@ func _run() -> void:
 			break
 		await step(0, "wait", {"frames":30})
 	check(mastery_settled, "mastery: normal exit settles exactly the actual earned uses on owner disk and host")
+	print("MASTERY actual exit observation: ", JSON.stringify({"earned":_earned_mastery,
+		"owner":(await _state(1)).get("mastery", {}), "host":(await _state(0)).get("mastery", {}),
+		"owner_encounter":await probe(1, "encounter"), "host_encounter":await probe(0, "encounter")}))
 
 	# 2. Plain leave + rejoin.
 	if not await _rejoin("rejoin"):
@@ -198,6 +201,7 @@ func _run() -> void:
 		"mastery: plain rejoin preserves actual landed uses and never credits an admission replay")
 	check(rejoin_mastery.get("disk", {}).get(_mastery_uid, {}) == _earned_mastery and held_mastery == _earned_mastery,
 		"mastery: real owner disk and rejoined host hold exactly the earned per-UID mastery")
+	print("MASTERY actual rejoin observation: ", JSON.stringify({"earned":_earned_mastery, "owner":rejoin_mastery, "held":held_mastery}))
 
 	# 3. Passive inputs after the rejoin are acknowledged under the new id.
 	# Saved mastery legitimately rebases the owner stream. Sample its current
