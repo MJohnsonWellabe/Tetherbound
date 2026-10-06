@@ -1,0 +1,32 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=11216 control_port=59568 home=D:\tetherbound\.artifacts\r1-f27-flip\net-client-trainer-rewards-off/home-0 log=D:\tetherbound\.artifacts\r1-f27-flip\net-client-trainer-rewards-off/peer-0.log
+coordinator: launched peer 1 (client) pid=9036 control_port=59569 home=D:\tetherbound\.artifacts\r1-f27-flip\net-client-trainer-rewards-off/home-1 log=D:\tetherbound\.artifacts\r1-f27-flip\net-client-trainer-rewards-off/peer-1.log
+coordinator: peer 0 hello: {"enet_port":30421.0,"godot_version":"4.7-stable (official)","main_sha":"511f32c30a33","peer":0.0,"pid":11216.0,"role":"host","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-client-trainer-rewards-off/home-0/Godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":30422.0,"godot_version":"4.7-stable (official)","main_sha":"511f32c30a33","peer":1.0,"pid":9036.0,"role":"client","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-client-trainer-rewards-off/home-1/Godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: a Session exists to host/join
+PASS: peer 0 hosted a world (hosting udp/30421 as peer 1)
+PASS: peer 1 joined peer 0's world on port 30421 (joined 127.0.0.1:30421 as peer 1055936520 after 41 frames; snapshot applied; 2 peer(s) in registry)
+PASS: peer 0's registry holds both players (registry reports 2 peer(s) after 0 frames (0.0 s))
+PASS: peer 1's registry holds both players (registry reports 2 peer(s) after 0 frames (0.0 s))
+PASS: peer 0 deployed its own creature (deployed AllyCreature)
+PASS: peer 1 deployed its own creature (deployed AllyCreature)
+PASS: the host's registry names peer 1's stable character
+PASS: peer 0 has not beaten Bryn yet
+PASS: peer 1 has not beaten Bryn yet
+PASS: peer 1 (client) challenged Bryn (challenged practice_trainer; bound to encounter '' (1 creatures to come))
+PASS: the host is not running a trainer battle of its own
+PASS: peer 1 beat Bryn's whole team (battle won in 1398 frames / 32 swings against 2 of their creatures)
+PASS: peer 0's world says Bryn has been beaten
+PASS: peer 1's world says Bryn has been beaten
+PASS: host and guest hold the same durable reward journal
+PASS: 'trainer:practice_trainer:coins' has an accepted delivery for exactly peer 1's character character-c52c54287553302f21e8e76316c10931 (got ["character-c52c54287553302f21e8e76316c10931"])
+PASS: 'trainer:practice_trainer:coins' journals no row for anybody else, accepted or pending (got ["character-c52c54287553302f21e8e76316c10931"])
+PASS: 'trainer:practice_trainer:item:potion_small' has an accepted delivery for exactly peer 1's character character-c52c54287553302f21e8e76316c10931 (got ["character-c52c54287553302f21e8e76316c10931"])
+PASS: 'trainer:practice_trainer:item:potion_small' journals no row for anybody else, accepted or pending (got ["character-c52c54287553302f21e8e76316c10931"])
+PASS: peer 1 gained Bryn's authored 20 coin exactly once (got 20)
+PASS: peer 1 gained the authored 1 potion exactly once (got 1)
+PASS: peer 0, who never fought, gained no coin (got 0)
+PASS: peer 0 gained no potion (got 0)
+ALL CHECKS PASSED

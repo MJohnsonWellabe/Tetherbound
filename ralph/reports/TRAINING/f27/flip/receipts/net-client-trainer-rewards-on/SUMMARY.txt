@@ -1,0 +1,10 @@
+# Net smoke run r1-client-trainer-rewards-on-20261006T0924Z
+
+Scene: world
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=7540 exited=true unexpected_exit=false
+- peer 1 (client) pid=9112 exited=true unexpected_exit=false
+
+ALL CHECKS PASSED
