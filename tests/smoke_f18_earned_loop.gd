@@ -558,6 +558,17 @@ func _craft_at_workbench() -> bool:
 		if node.get_meta("building_id", "") == "workbench": bench = node
 	if bench == null: return _fail("paid homestead Workbench missing")
 	var prompt := bench.find_child("CraftInteractable", true, false) as Node3D
+	# Portals on, the Home Key lands in the Crossing Hall and the locked-arch
+	# guard leaves the player at the Tidewake arch. A straight line from there
+	# meets the Hall's west wall; a player walks out of the authored entrance.
+	var halls := get_nodes_in_group(&"crossing_halls")
+	if prompt != null and halls.size() == 1:
+		var hall := halls[0] as Node3D
+		var entrance: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/crossing_hall.json")).entrance
+		var door := Vector3(float(entrance[0]), float(entrance[1]), float(entrance[2]))
+		var headings: Array[Vector3] = [hall.call("home_arrival"), hall.to_global(door),
+			hall.to_global(door + Vector3(0, 0, -2.4))]
+		if not await _walk(prompt.global_position, 2.5, headings): return false
 	if not await travel.activate(prompt): return _fail("homestead station input: " + str(travel.failures))
 	var panel: Node = prompt.get_parent().get("_panel")
 	if panel == null or panel.call("is_open") != true: return _fail("actual Workbench did not open Craft")
