@@ -1,0 +1,16 @@
+{
+  "started_utc": "2026-10-06T15:03:54.9540097Z",
+  "process_scope": "WORKFLOW4 untimed warm-cache isolated component; R1 full-world lease preserved, no import/render/Terrain3D world",
+  "source_sha": "701ee9b71bf701203448bfe71bf07fb6471bbec6",
+  "arguments": [
+    "--headless",
+    "--path",
+    "D:/tetherbound/codex-r4",
+    "--log-file",
+    "D:/tetherbound/.artifacts/r4-555-merge-701ee9b71b/native.log",
+    "--script",
+    "tests/run_tests.gd",
+    "--",
+    "--only=test_director_join_snapshot.gd::test_native_trainer_hp_fixture_survives_projectile_snapshot"
+  ]
+}

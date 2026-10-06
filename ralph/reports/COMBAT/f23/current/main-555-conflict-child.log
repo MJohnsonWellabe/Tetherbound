@@ -1,0 +1,3 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+DIRECTOR_HP_FIXTURE_RESULT={"assertions":148,"completed":true,"failures":[],"observations":[{"accepted_arrivals":3,"ceiling":6.0,"full_hp":95.0,"hp_after_control":86.2825074732304,"killed_by_host_arrival":true,"kind":"trainer","max_hp":95.0,"owner_npc":"native-hp-fixture","record_created_by_production_opener":true,"record_phase":"done","tracked_runtime":false},{"accepted_arrivals":3,"ceiling":6.0,"full_hp":95.0,"hp_after_control":86.6026491612196,"killed_by_host_arrival":true,"kind":"boss","max_hp":95.0,"owner_npc":"warden_aldis","record_created_by_production_opener":true,"record_phase":"done","tracked_runtime":false}]}
