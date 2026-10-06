@@ -379,3 +379,11 @@ e9ff80f57829a13325eb515c918772b5fe68532ad9d7291051e827e32cc5647e  ci-opening-on/
 6d05c0575a50dead938e3f96f1179d46e4e7cdb1f6d42636d5586374744f9190  ci-playground-on/r1-ci-playground-on-20261006T0804Z.txt
 9686dc34161f47cbda7f3eb5d514f21b7f48dc78260e736a8247d7dbdf842fa2  ci-playground-on/stderr.txt
 b1a957bdd35b8297f6ff3f0c3beb28379ced1abb606ec4225b910e21d9b56daa  ci-playground-on/stdout.txt
+5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  ci-relay-on/exit.txt
+ab58a6456afec6201b93a5ef72415ee1fa2bed63af75e0c21c1e5c951fd94f5f  ci-relay-on/r1-ci-relay-on-20261006T0806Z.txt
+e22904a3010c860a2cfa70792f1250a233e39cdeaa23c5265f77f9578fee719b  ci-relay-on/stderr.txt
+166b38f5131e26c54b9a5044f29523321077b5b1296a60836135b2c1daf0715b  ci-relay-on/stdout.txt
+5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  ci-relay-station-on/exit.txt
+b2e0ffc2c1e8f940e019723faf7571898f6eb04d672fa97fdfc6f3e50ad2daeb  ci-relay-station-on/r1-ci-relay-station-on-20261006T0818Z.txt
+9686dc34161f47cbda7f3eb5d514f21b7f48dc78260e736a8247d7dbdf842fa2  ci-relay-station-on/stderr.txt
+9d429644a999a6f66c6ba0e6f5a887eaf991940bd4ced7320cd2e07d0bc9ae3f  ci-relay-station-on/stdout.txt
