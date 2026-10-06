@@ -95,7 +95,7 @@ func _run() -> void:
 	if _failures.is_empty():
 		print("F27_ALTAR_SPEND: PASS controller-path Altar level-up L%d->L%d for %d Water Essence" % [level_before, level_before + 1, cost])
 		# F23: retain this same paid Altar, owned starter and saved progression.
-		# At L2 this Ripplet has no alternative move; prove the actual input/UI
+		# Below its first utility unlock this Ripplet has no alternative; prove the input/UI
 		# handoff without inventing knowledge or calling a same-move edit a change.
 		await _ui("menu_tab_right")
 		for i in 30: await physics_frame

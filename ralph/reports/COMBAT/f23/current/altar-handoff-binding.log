@@ -1,0 +1,7 @@
+Existing tests/smoke_f27_altar_spend.gd; original fixtures/assertions/budgets unchanged, plus a289's21 controller/UI handoff lines only.
+Exact checkout8881a2e28ce0666376a91a1ead097c98ecff77da; run37468061347/job112284023348 terminalSUCCESS; actualexit0,93seconds.
+Artifact11414938682 render-r4-altar-loadout-handoff-8881a2e2-37468061347; original9-file ZIP934147bytes; SHA25688326bd46694c904cd237a434efb2f142c021bdd14106d377b4c6233c54d54bc matchesAPI and local bytes.
+Actual RippletL3→L4, WaterEssence120→114/cost6; one original essence_spend receipt. Original accepted paid Altar and accepted spend persist in World, same owned UID/level4/loadout_revision0/matching receipt persist in Character. No new moves or same-move edit claimed.
+Actual menu_tab_right opens production Loadout for samepaidstation/ownedUID; actual current configured service quote and input owner match; ui_cancel returns input to same Altar panel. F27_ALTAR_SPEND and F23_ALTAR_HANDOFF both PASS.
+Full run/native contain no SCRIPT ERROR/Parse/Error; existing interpolation deprecation warning retained. Source association from exact checkout job, not embedded artifact run.log. Full original ZIP, byte-identical logs/exit retained.
+Independent f23_audit bounded SOURCE/EVIDENCE PASS. This is Altar handoff and existing paid spend only; no Altar full loadout edit/save/rejoin claim. F23#3 literal OR transaction already covered by independent mounted camp proof, READY6016811848 at8881a2e2. F23#1 still awaits R5#549 gate.
