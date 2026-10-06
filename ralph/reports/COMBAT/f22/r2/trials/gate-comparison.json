@@ -1,0 +1,25 @@
+{
+  "band": "cloudreach/gate_lower_cliffs",
+  "control": {
+    "floor_pass": false,
+    "masher_lead": 0.57450627315996,
+    "ratio": 1.2689970221528188,
+    "switch_lead": 0.729046749848103
+  },
+  "control_run_id": 37426567224,
+  "controls_and_trials_paired": true,
+  "platform": "Hosted Ubuntu/default pacing; separate from original native baseline",
+  "power": {
+    "floor_pass": false,
+    "masher_lead": 0.449800597576325,
+    "ratio": 1.5820290515469349,
+    "switch_lead": 0.711597612768918
+  },
+  "power_changed_key": "stone_rush.power=1.5",
+  "power_disposition": "Both floor rows FAIL; ratio is worse in power trial. Power1.5 also independently violates outgoing neutral single-hit ceiling. Do not author it. No complete Cloudreach/native acceptance claim.",
+  "power_run_id": 37426572546,
+  "product_sha": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+  "range_run_id": 37426570038,
+  "range_verdict": "OPEN; live run has no receipt yet",
+  "starter": "terrapup"
+}

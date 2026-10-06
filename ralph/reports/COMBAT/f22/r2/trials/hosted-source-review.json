@@ -1,56 +1,86 @@
 {
-  "reviewer": "/root/resolution_review",
-  "reviewed_receipt_commit": "8e93d090e11e36660fb9240c553d78abdd0b8b9d",
-  "product_sha": "8323965ec6a73a20adaca867c56b4478660b8cb2",
-  "workflow_sha": "8e7c11ceb5854f063c5241d62618c382803562c9",
-  "verdict": "PASS for dispatch/source consistency only",
-  "findings": [],
-  "verified": [
-    "Three populated Cloudreach bands times unchanged control, range7.5 and power1.5; nine immutable-source Terrapup12 ordinary-trainer diagnostics",
-    "Each trial changes exactly one independent in-memory move key; controls are unchanged",
-    "Unique labels/run IDs and recorded titles bind each dispatch to the product SHA",
-    "Actual main workflow recipe is text-identical to the inspected recipe",
-    "Seed hashes depend on band/starter/index and preserve policy/control/trial pairing",
-    "Root res:// JSON output needs no absent directory and is collected after expected subset exit1",
-    "Large-log truncation does not truncate the separate full JSON",
-    "Subset coverage=false and pass=false must remain distinct from individual cohort grades",
-    "No fixed-FPS input exists; paired hosted controls separate Linux/default-pacing diagnostics from the original Windows fixed-fps60 baseline"
-  ],
-  "runtime_verdict": "OPEN; dispatch/setup is not a completed cohort, clean runtime, native proof or global acceptance",
-  "reviewer_actions": "Read-only source and metadata; no edit, engine launch, import, test, new script or large-artifact work",
-  "stone_rush_ceiling_review": {
+  "causeways_pair_review": {
     "reviewer": "/root/resolution_review",
-    "verdict": "REJECT power1.5 as an authored candidate under literal COMBAT section7 single-hit ceiling, independently of pending floor results",
-    "product_sha": "8323965ec6a73a20adaca867c56b4478660b8cb2",
-    "scope": "Source-derived outgoing neutral counterexample; no runtime or full legal-TM certification",
+    "scope": "Broken Causeways hosted diagnostics only; no full Cloudreach/Windows/global/legal-TM acceptance",
+    "verdict": "PASS for exact control receipt and paired comparison; both numerical floors FAIL",
+    "verified": [
+      "Exact controlZIP658298B and all native member/extracted hashes",
+      "Summary preservation except events,36wins/no stalls/paired12 per policy/36complete incoming audits",
+      "Incoming bound.1580825752<.5; untruncated complete console JSON/no native errors or warnings",
+      "Exact decoded joblog464695B binds checkout832, official4.7, unchanged headless/no fixed FPS, Runexit1",
+      "Same seedsets vs power; Mlead.3712942587/Slead.5779624856 ratio1.5566157356 versus power2.1926313633"
+    ]
+  },
+  "completed_diagnostic_review": {
+    "limits": "Read-only integrity verdict, not global/native/visual acceptance or complete legal-TM/outgoing ceiling; paired control addition reviewed separately.",
+    "reviewer": "/root/resolution_review",
+    "verdict": "PASS for gate-power and causeways-power diagnostic integrity and official exit/source bindings; numerical floors FAIL",
+    "verified": [
+      "ZIP digests, every archive member length/hash and extracted native bytes",
+      "Summary retains all raw fields except events, adding declared provenance only",
+      "Each36 fights: three policies sharing12 unique seeds,36wins, no stalls,36 complete configured incoming audits",
+      "Maximum incoming bounds gate.169196638655462/causeways.158082575248564, strictly below.5",
+      "Untruncated native consoles have complete matching JSON and no native errors/warnings",
+      "Preserved exact UTF8 decoded official job logs bind product8323965ec6, officialGodot4.7, headless/default pacing and Run-step exit1",
+      "ZIP alone lacks exit footer/member; receipts explicitly retain this qualification"
+    ]
+  },
+  "findings": [],
+  "galewisp_extension": {
+    "reviewed_receipt_commit": "5996f23bf08b9fd3241336ddb09c5a84631aaee5",
+    "runtime_verdict": "OPEN; dispatch/setup/Run-step status is not a completed receipt or criterion acceptance",
+    "verdict": "PASS for source/metadata consistency only; no grounded findings",
+    "verified": [
+      "Four unique Galewisp12 control/wind25 dispatches bind immutable product8323965ec6 and the two failed Tidewake bands",
+      "Existing smoke patches cached MATH.config before fights; manager._wind_config reads it, wind_cost selects charged_cost and consume_wind debits the actual35-to25 cost",
+      "Species Wind config affects capacity/regen, not action costs; Galewisp base80/24 remains subject to ordinary condition/bond modifiers",
+      "Each pair differs only by wind.charged_cost=25; seed hashes exclude patches and preserve pairing",
+      "The cost is global, including retained companions and all starters; preservation requires final all-starter Windows proof"
+    ]
+  },
+  "gate_pair_review": {
+    "reviewer": "/root/resolution_review",
+    "scope": "Gate Lower Cliffs hosted diagnostics only; no full Cloudreach/Windows/global/legal-TM acceptance",
+    "verdict": "PASS for exact control receipt and paired comparison; both numerical floors FAIL",
+    "verified": [
+      "Exact controlZIP734229B and all native member/extracted hashes",
+      "Summary preservation except events,36wins/no stalls/paired12 per policy/36complete incoming audits",
+      "Incoming bound.1691966387<.5; untruncated7326230B complete console JSON/no native errors or warnings",
+      "Exact decoded joblog464437B binds checkout832, official4.7, unchanged headless/no fixed FPS, Runexit1",
+      "Same seedsets vs power; Mlead.5745062732/Slead.7290467498 ratio1.2689970222 versus power1.5820290515",
+      "Control lead medians numerically match original native row; hosted proof scope remains unchanged"
+    ]
+  },
+  "product_sha": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+  "reviewed_receipt_commit": "8e93d090e11e36660fb9240c553d78abdd0b8b9d",
+  "reviewer": "/root/resolution_review",
+  "reviewer_actions": "Read-only source and metadata; no edit, engine launch, import, test, new script or large-artifact work",
+  "runtime_verdict": "OPEN; dispatch/setup is not a completed cohort, clean runtime, native proof or global acceptance",
+  "stone_rush_ceiling_review": {
     "case": {
-      "attacker": "terrapup",
-      "defender": "mudsnout",
-      "level": 3,
-      "iv": 0.5,
-      "bonuses": "No bond, buffs, Best Creature, gear, mastery or stagger critical",
       "attack": 24.2,
-      "defence": 19.8,
-      "defender_max_hp": 112.0,
-      "slot_base_power": 38.0,
+      "attacker": "terrapup",
+      "bonuses": "No bond, buffs, Best Creature, gear, mastery or stagger critical",
+      "current_damage": 45.98,
+      "current_hp_fraction": 0.4105357142857143,
+      "current_move_power": 1.0,
       "damage_scale": 2.0,
+      "defence": 19.8,
+      "defender": "mudsnout",
+      "defender_max_hp": 112.0,
+      "iv": 0.5,
+      "level": 3,
       "neutral_type_multiplier": 1.0,
-      "worst_variance_multiplier": 1.1,
-      "trial_move_power": 1.5,
+      "slot_base_power": 38.0,
       "trial_damage": 68.97,
       "trial_hp_fraction": 0.6158035714285715,
-      "current_move_power": 1.0,
-      "current_damage": 45.98,
-      "current_hp_fraction": 0.4105357142857143
+      "trial_move_power": 1.5,
+      "worst_variance_multiplier": 1.1
     },
-    "verified": [
-      "Species base stats, linear level growth and average-IV multiplier yield the stated entry stats",
-      "Ground against Ground with no secondary type uses the neutral fallback",
-      "Solo, host and canonical hosted production use charged base, MoveDB multiplier, attack/defence, type and variance",
-      "Terrapup equips Stone Rush by default; this counterexample requires no hypothetical TM substitution",
-      "Primary-Ground TM teaching grants knowledge without automatically equipping it, and establishes no NPC TM loadout",
-      "Ultimate base84 has a named-target-only20% cap, but current presentation enabled=false blocks availability; no current runtime ultimate claim"
-    ],
+    "disposition": "Retain already-running power diagnostics without cancellation or retries; do not author power1.5. Range7.5 and global charged-cost25 remain unproven pending paired results. Authored damage/config data unchanged.",
+    "product_sha": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+    "reviewer": "/root/resolution_review",
+    "scope": "Source-derived outgoing neutral counterexample; no runtime or full legal-TM certification",
     "source_paths": [
       "docs/design/COMBAT.md:144",
       "data/creatures/species.json:16",
@@ -67,18 +97,27 @@
       "scripts/vfx/ultimates/ultimate_library.gd:18",
       "scripts/combat/combat_manager.gd:3287"
     ],
-    "disposition": "Retain already-running power diagnostics without cancellation or retries; do not author power1.5. Range7.5 and global charged-cost25 remain unproven pending paired results. Authored damage/config data unchanged."
-  },
-  "galewisp_extension": {
-    "reviewed_receipt_commit": "5996f23bf08b9fd3241336ddb09c5a84631aaee5",
-    "verdict": "PASS for source/metadata consistency only; no grounded findings",
+    "verdict": "REJECT power1.5 as an authored candidate under literal COMBAT section7 single-hit ceiling, independently of pending floor results",
     "verified": [
-      "Four unique Galewisp12 control/wind25 dispatches bind immutable product8323965ec6 and the two failed Tidewake bands",
-      "Existing smoke patches cached MATH.config before fights; manager._wind_config reads it, wind_cost selects charged_cost and consume_wind debits the actual35-to25 cost",
-      "Species Wind config affects capacity/regen, not action costs; Galewisp base80/24 remains subject to ordinary condition/bond modifiers",
-      "Each pair differs only by wind.charged_cost=25; seed hashes exclude patches and preserve pairing",
-      "The cost is global, including retained companions and all starters; preservation requires final all-starter Windows proof"
-    ],
-    "runtime_verdict": "OPEN; dispatch/setup/Run-step status is not a completed receipt or criterion acceptance"
-  }
+      "Species base stats, linear level growth and average-IV multiplier yield the stated entry stats",
+      "Ground against Ground with no secondary type uses the neutral fallback",
+      "Solo, host and canonical hosted production use charged base, MoveDB multiplier, attack/defence, type and variance",
+      "Terrapup equips Stone Rush by default; this counterexample requires no hypothetical TM substitution",
+      "Primary-Ground TM teaching grants knowledge without automatically equipping it, and establishes no NPC TM loadout",
+      "Ultimate base84 has a named-target-only20% cap, but current presentation enabled=false blocks availability; no current runtime ultimate claim"
+    ]
+  },
+  "verdict": "PASS for dispatch/source consistency only",
+  "verified": [
+    "Three populated Cloudreach bands times unchanged control, range7.5 and power1.5; nine immutable-source Terrapup12 ordinary-trainer diagnostics",
+    "Each trial changes exactly one independent in-memory move key; controls are unchanged",
+    "Unique labels/run IDs and recorded titles bind each dispatch to the product SHA",
+    "Actual main workflow recipe is text-identical to the inspected recipe",
+    "Seed hashes depend on band/starter/index and preserve policy/control/trial pairing",
+    "Root res:// JSON output needs no absent directory and is collected after expected subset exit1",
+    "Large-log truncation does not truncate the separate full JSON",
+    "Subset coverage=false and pass=false must remain distinct from individual cohort grades",
+    "No fixed-FPS input exists; paired hosted controls separate Linux/default-pacing diagnostics from the original Windows fixed-fps60 baseline"
+  ],
+  "workflow_sha": "8e7c11ceb5854f063c5241d62618c382803562c9"
 }

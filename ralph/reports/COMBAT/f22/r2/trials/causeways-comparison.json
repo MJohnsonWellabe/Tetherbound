@@ -1,0 +1,25 @@
+{
+  "band": "cloudreach/broken_causeways",
+  "control": {
+    "floor_pass": false,
+    "masher_lead": 0.371294258658245,
+    "ratio": 1.5566157356051153,
+    "switch_lead": 0.57796248556726
+  },
+  "control_run_id": 37426574817,
+  "controls_and_trials_paired": true,
+  "platform": "Hosted Ubuntu/default pacing; separate from original native baseline",
+  "power": {
+    "floor_pass": false,
+    "masher_lead": 0.21757870441056,
+    "ratio": 2.192631363313435,
+    "switch_lead": 0.477069891279697
+  },
+  "power_changed_key": "stone_rush.power=1.5",
+  "power_disposition": "Both floor rows FAIL; ratio is worse in power trial. Power1.5 also independently violates outgoing neutral single-hit ceiling. Do not author it. No complete Cloudreach/native acceptance claim.",
+  "power_run_id": 37426579598,
+  "product_sha": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+  "range_run_id": 37426577211,
+  "range_verdict": "OPEN; live run has no receipt yet",
+  "starter": "terrapup"
+}

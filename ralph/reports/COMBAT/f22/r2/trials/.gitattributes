@@ -1,1 +1,3 @@
 gate-range-checkout-attempt1.txt -text whitespace=-blank-at-eol
+*/artifact.zip -text
+*/job-log.txt -text whitespace=-blank-at-eol
