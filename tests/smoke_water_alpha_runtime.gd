@@ -73,15 +73,35 @@ func _run() -> void:
 	var tick := 0
 	while manager.is_fighting() and Time.get_ticks_msec() < deadline_fight:
 		var deployed: Node3D = director.get("_ally_body")
+		var in_reach := false
+		var stick := Vector3.ZERO
 		if deployed != null:
 			deployed.face_towards(alpha.body.global_position)
-		if tick % 24 == 0:
+			var toward: Vector3 = alpha.body.centre() - deployed.call("centre")
+			toward.y = 0.0
+			in_reach = toward.length() <= float(manager.combat_move_reach("quick")) * 0.95
+			# Continue through the ordinary movement reader after knockback or
+			# Alpha repositioning; a rooted attack cannot pursue the target.
+			if not in_reach:
+				var camera: Node = manager.get("_camera_rig")
+				var planar := Basis.IDENTITY
+				if camera != null and camera.has_method("planar_basis"):
+					planar = camera.call("planar_basis")
+				stick = planar.inverse() * toward.normalized()
+		for axis: String in ["move_right", "move_left", "move_back", "move_forward"]:
+			var strength := maxf(0.0, {"move_right":stick.x, "move_left":-stick.x,
+				"move_back":stick.z, "move_forward":-stick.z}[axis])
+			if strength > 0.001: Input.action_press(axis, strength)
+			else: Input.action_release(axis)
+		if tick % 24 == 0 and in_reach:
 			Input.action_press("combat_quick")
 		elif tick % 24 == 2:
 			Input.action_release("combat_quick")
 		tick += 1
 		await physics_frame
 	Input.action_release("combat_quick")
+	for axis: String in ["move_right", "move_left", "move_back", "move_forward"]:
+		Input.action_release(axis)
 	check(not manager.is_fighting(), "Real fight reaches an exit within bounded time")
 	check(str(alpha.authority.resolution.get("outcome", "")) == "defeated", "Normal attack input defeats actual Alpha")
 	check(game.world.flags.has("water_aquaryn_resolved"), "Defeat is journaled as world progression")
