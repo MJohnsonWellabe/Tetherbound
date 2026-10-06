@@ -347,6 +347,10 @@ func test_retained_item_ack_preserves_active_body_and_settles_same_v3_decision_o
 			assert_true(prepared.ok, str(prepared))
 			if not prepared.ok: continue
 			var original: Dictionary = prepared.original
+			assert_true(original.intent.is_read_only())
+			assert_true(original.intent.effect.is_read_only())
+			assert_true(original.command_plan.is_read_only())
+			assert_true(original.command_plan.state.is_read_only())
 			assert_eq(host.prepare_tether_item_command(request, 1, before, binding, 0, "item-world", "item-epoch", 2001).original, original)
 			assert_false(host.prepare_tether_item_command(COMMANDS.intent(id, 1, 8, "item_throw"), 1, before, binding, 0, "item-world", "item-epoch", 2002).ok)
 			assert_eq(host.authorize_move_start({"encounter_id": id, "action": 8, "slot": "quick"}, 1, before.party[0], binding, _move(), WIND, 2000).code, "item_save_pending")
@@ -375,10 +379,21 @@ func test_retained_item_ack_preserves_active_body_and_settles_same_v3_decision_o
 			assert_eq(authority.state("owner_a"), before)
 			assert_eq(_command_pool().meter, 100.0)
 			assert_eq(host.record(id).participants[1].actor_vitals[uid].hp, before.party[0].hp)
+			assert_false(host.cancel_unjournaled_tether_item(original, {row.delivery_id: row}, "item-world"), "durable pending original survives departure policy")
+			assert_false(host.cancel_unjournaled_tether_item(original, {}, "foreign-world"))
+			assert_true(host.cancel_unjournaled_tether_item(original, {}, "item-world"), "failed first writer leaves an untouched reservation that departure can release")
+			assert_true(host.pending_tether_items(id).is_empty())
+			assert_eq(_command_pool().meter, 100.0, "cancellation neither spends nor refunds")
+			assert_true(original.cancelled)
+			assert_false(host.cancel_unjournaled_tether_item(original, {}, "item-world"), "duplicate cancellation is read-only")
+			prepared = host.prepare_tether_item_command(request, 1, before, binding, 0, "item-world", "item-epoch", 2003)
+			assert_true(prepared.ok)
+			original = prepared.original
 			token = authority.stage_character_action("owner_a", 0, "tether_item", original.intent, original.context)
 			assert_true(authority.finish_creature_training(token, true))
 			row.status = "accepted"
 			if depart: assert_true(host.leave(id, 1).ok)
+			assert_false(host.cancel_unjournaled_tether_item(original, {row.delivery_id: row}, "item-world"), "saved accepted original must finish even after leaving")
 			stage = host.stage_actor_training_baseline(row, token.state, 1, "item-world", "item-slot")
 			assert_true(stage.ok, str(stage))
 			assert_eq(stage.changes.size(), 1)
@@ -402,6 +417,76 @@ func test_retained_item_ack_preserves_active_body_and_settles_same_v3_decision_o
 			if not depart: assert_false(snapshot.participants[1].tether_commands.has("item_pending"), "private original never enters network presentation")
 			assert_eq(creature.get("hp"), before.party[0].hp)
 			assert_eq(player.get("inventory").call("count", item), 2, "component prep/host ACK never mutates live owner inventory")
+
+func test_first_item_dispatch_refuses_an_older_uncommitted_actor_original() -> void:
+	# Reuse the existing detached Director/Session fixtures. The dispatcher,
+	# pending scan and real Host reservation remain production methods.
+	var fixture := preload("res://tests/test_foundation_resource_save.gd")
+	var game := fixture.FixtureGame.new()
+	game.world = preload("res://tests/test_foundation_resources.gd").new()._world()
+	var session := fixture.FixtureSession.new()
+	session.fixture = game
+	game.session = session
+	var director := preload("res://tests/test_client_trainer_victory.gd").DirectorFixture.new()
+	director._session = session
+	director._encounter_host = host
+	host.encounters[id].kind = "trainer"
+	host.encounters[id].opponent["owner_npc"] = "trainer_arden"
+	director._ordinary_combat_reward_owners[id] = preload("res://scripts/net/combat_round_reward.gd").scope(
+		game.world.reward_delivery_namespace, "resource-epoch", "meadows", "trainer_arden", id)
+	director._ordinary_actor_vitals_proposals["older-unsaved-hit"] = {"encounter_id": id, "presented": false}
+	assert_true(director.ordinary_actor_vitals_pending(id))
+	var request := COMMANDS.intent(id, 1, 7, "item_throw")
+	var verdict: Dictionary = director._host_commit_encounter({"kind": "tether_command", "encounter_id": id, "request": request}, 1)
+	assert_false(verdict.ok)
+	assert_eq(verdict.code, "pending_vitals")
+	assert_eq(verdict.command_request, request, "owner can release this matching refused command")
+	assert_true(host.pending_tether_items(id).is_empty(), "no new item original can reserve the stale HP baseline")
+	director.free()
+	session.free()
+	game.free()
+
+
+func test_item_owner_checkpoint_matches_only_its_submitted_command_and_current_deployment() -> void:
+	var manager := MANAGER.new()
+	var director := preload("res://scripts/combat/encounter_director.gd").new()
+	manager._encounter_link = director
+	manager._encounter_id = "item-original"
+	director._deployment_identity[1] = {"character_id": "owner_a", "generation": 2}
+	var request := COMMANDS.intent("item-original", 2, 7, "item_throw")
+	manager._tether_command_view["pending_request"] = request.duplicate(true)
+	var envelope := {"op": "tether_item", "character_id": "owner_a", "world_namespace": "item-world",
+		"session_epoch": "transport-epoch", "station_key": "tether_item:original", "revision": 0,
+		"intent": {"request": request, "effect": {}}}
+	assert_true(manager.owner_tether_item_request_matches(envelope))
+	for field: String in ["encounter_id", "generation", "sequence", "command_id"]:
+		var forged := envelope.duplicate(true)
+		forged.intent.request[field] = 3 if field in ["generation", "sequence"] else "replacement"
+		assert_false(manager.owner_tether_item_request_matches(forged), field)
+	var forged := envelope.duplicate(true)
+	forged.character_id = "other-owner"
+	assert_false(manager.owner_tether_item_request_matches(forged))
+	var refused := {"ok": false, "pending": false, "encounter_id": "item-original", "command_generation": 2,
+		"command_request": COMMANDS.intent("item-original", 2, 6, "item_throw")}
+	manager.apply_tether_command_verdict(refused)
+	assert_eq(manager._tether_command_view.pending_request, request, "late older refusal cannot clear the current original")
+	refused.command_request = request.duplicate(true)
+	refused.pending = true
+	manager.apply_tether_command_verdict(refused)
+	assert_eq(manager._tether_command_view.pending_request, request, "pending save keeps input fenced")
+	refused.pending = false
+	manager.apply_tether_command_verdict(refused)
+	assert_false(manager._tether_command_view.has("pending_request"), "matching asynchronous terminal refusal releases input")
+	manager._tether_command_view["pending_request"] = request.duplicate(true)
+	director._deployment_identity[1].generation = 3
+	assert_false(manager.owner_tether_item_request_matches(envelope), "old original cannot authorize replacement body")
+	var session := preload("res://scripts/net/session.gd").new()
+	assert_false(session._tether_item_commit_original(director, {}).ok, "detached/non-source Director cannot journal an item")
+	assert_false(session._owner_passive_request_matches("tether_item", envelope), "no actual Game/world scope")
+	session.free()
+	manager.free()
+	director.free()
+
 
 func test_saved_item_carrier_keeps_one_original_debit_and_owned_effect_with_runtime_off() -> void:
 	var actions := preload("res://scripts/net/foundation_actions.gd")

@@ -289,6 +289,7 @@ var _ordinary_combat_reward_owners: Dictionary = {}
 var _ordinary_combat_rounds: Dictionary = {}
 var _ordinary_combat_round_exit: Dictionary = {}
 var _ordinary_actor_vitals_proposals: Dictionary = {}
+var _tether_item_retry_left := 0.0
 var _ordinary_actor_hit_serial: int = 0
 var _remote_rematches: Dictionary = {}
 var _host_defence: Dictionary = {}
@@ -2338,6 +2339,11 @@ func tether_command_deployment() -> Dictionary:
 	return _deployment_identity.get(_local_peer_id(), {}).duplicate(true)
 
 
+func owner_tether_item_request_matches(envelope: Dictionary) -> bool:
+	return is_instance_valid(_manager) and _local_bound_encounter_id() == envelope.get("intent", {}).get("request", {}).get("encounter_id") \
+		and _manager.call("owner_tether_item_request_matches", envelope) == true
+
+
 ## The record this peer is rendering, or {}. Read by the net harness probe.
 func encounter_record() -> Dictionary:
 	return _encounter
@@ -2731,9 +2737,16 @@ func _host_commit_encounter(intent: Dictionary, peer_id: int) -> Dictionary:
 	var kind := str(intent.get("kind", ""))
 	var encounter_id := str(intent.get("encounter_id", ""))
 	if kind in ["move_start", "strike_intent", "burst_intent", "tether_command", "disengage"] \
-		and ordinary_actor_vitals_pending(encounter_id):
-		return {"ok": false, "pending": false, "kind": kind, "peer": peer_id,
+		and ordinary_actor_vitals_pending(encounter_id) \
+		and not (kind == "tether_command" and intent.get("request") is Dictionary \
+			and _tether_item_request_retained(encounter_id, peer_id, intent.request)):
+		var refusal := {"ok": false, "pending": false, "kind": kind, "peer": peer_id,
 			"code": "pending_vitals", "reason": "The original health change is still being saved.", "delta": {}, "encounter_id": encounter_id}
+		if kind == "tether_command" and intent.get("request") is Dictionary \
+			and preload("res://scripts/combat/tether_commands.gd").valid_intent(intent.request):
+			refusal["command_request"] = intent.request.duplicate(true)
+			refusal["command_generation"] = int(intent.request.generation)
+		return refusal
 	match kind:
 		"engage":
 			return _host_engage(intent, peer_id)
@@ -3360,13 +3373,22 @@ func _host_burst(intent: Dictionary, peer_id: int) -> Dictionary:
 
 ## §8, entirely delegated: `catch_arbiter.gd` owns the race and the roll, this
 ## function owns only handing it host truth.
+func _tether_item_request_retained(id: String, peer: int, request: Dictionary) -> bool:
+	if _encounter_host == null or request.get("command_id") != "item_throw": return false
+	for original: Dictionary in _encounter_host.call("pending_tether_items", id):
+		if original.peer_id == peer and original.intent.request == request: return true
+	return false
+
+
 func _host_tether_command(intent: Dictionary, peer: int) -> Dictionary:
 	var denied := {"ok": false, "kind": "tether_command", "peer": peer, "code": "stale_actor", "reason": "That command is unavailable.", "pending": false, "delta": {}, "encounter_id": str(intent.get("encounter_id", ""))}
 	var commands := preload("res://scripts/combat/tether_commands.gd")
-	if not commands.enabled("network_enabled") or intent.size() != 3 or not intent.get("request") is Dictionary: return denied
+	if intent.size() != 3 or not intent.get("request") is Dictionary: return denied
 	var request: Dictionary = intent.request
 	if not commands.valid_intent(request) or request.encounter_id != intent.get("encounter_id"): return denied
 	denied["command_generation"] = int(request.generation)
+	denied["command_request"] = request.duplicate(true)
+	if not commands.enabled("network_enabled"): return denied
 	var id: String = request.encounter_id
 	var body := deployed_body_for(peer)
 	if not is_instance_valid(body) or not _tournament_combat_identity_valid(id, peer) or _host_peer_staggered(id, peer) \
@@ -3383,6 +3405,33 @@ func _host_tether_command(intent: Dictionary, peer: int) -> Dictionary:
 	var opponent: RefCounted = wild.get("instance")
 	if opponent == null: return denied
 	_encounter_host.call("bind_tether_commands", id, peer, admitted)
+	if request.command_id == "item_throw":
+		if ordinary_actor_vitals_pending(id) and not _tether_item_request_retained(id, peer, request):
+			denied.code = "item_baseline_pending"
+			return denied
+		if not _tether_item_request_retained(id, peer, request) and _session.call("_tether_item_admission_ready", peer) != true:
+			denied.code = "item_baseline_pending"
+			return denied
+		# The wild incoming-HP/deployment fence is a separate open adapter.
+		# Admit only the existing coherent trainer actor-vitals path here.
+		if not uses_durable_trainer_rewards(id):
+			denied.code = "item_transaction_unavailable"
+			return denied
+		var actual := _ordinary_actor_binding(id, peer, body)
+		var game: Node = _session.call("_game")
+		if actual.is_empty() or game == null: return denied
+		var prepared: Dictionary = _encounter_host.call("prepare_tether_item_command", request, peer,
+			admitted, actual, int(_session.call("admitted_character_revision", peer)),
+			str(game.get("world").get("reward_delivery_namespace")),
+			str(_session.call("_ordinary_actor_vitals_journal_epoch")), Time.get_ticks_msec())
+		if prepared.get("ok") != true:
+			denied.code = prepared.get("code", "item_transaction_unavailable")
+			return denied
+		_host_after_encounter_change(id, peer)
+		_session.call("_tether_item_commit_original", self, prepared.original)
+		denied.code = "item_save_pending"
+		denied.pending = true
+		return denied
 	var profile := COMBAT_MANAGER.host_move_profile(preload("res://scripts/creatures/move_db.gd").load_default(), "player_utility", "snare",
 		_body_radius(body), _body_radius(wild), 1.0, CONTACT_SPACING.pair_reach_need(body, wild))
 	var view := {"actor": {"character_id": binding.character_id, "creature_uid": binding.creature_uid,
@@ -3842,6 +3891,13 @@ func _stage_ordinary_enemy_hit(id: String, peer: int, payload: Dictionary) -> vo
 	_encounter_host.call("cancel_move_start", id, peer)
 	_host_after_encounter_change(id)
 	_retry_ordinary_actor_vitals()
+
+
+func _retry_tether_items() -> void:
+	if not _is_host() or _session == null or _encounter_host == null: return
+	for id: String in _encounter_host.get("encounters"):
+		for original: Dictionary in _encounter_host.call("pending_tether_items", id):
+			_session.call("_tether_item_commit_original", self, original)
 
 
 func _retry_ordinary_actor_vitals() -> void:
@@ -5539,6 +5595,10 @@ func _process(delta: float) -> void:
 		_catch_waiting_for_owner = null
 		_resolve_catch(waiting)
 	_retry_ordinary_actor_vitals()
+	_tether_item_retry_left -= delta
+	if _tether_item_retry_left <= 0.0:
+		_tether_item_retry_left = 0.5
+		_retry_tether_items()
 	_retry_research_sources()
 	_tick_pending_shared_join()
 	_tick_pending_tournament_join()

@@ -920,6 +920,9 @@ func prepare_tether_item_command(request: Dictionary, peer: int, admitted: Dicti
 		"intent": {"request": request.duplicate(true), "effect": plan.effect.duplicate(true)}, "context": context,
 		"command_before": participant.tether_commands.duplicate(true), "command_plan": plan.duplicate(true),
 		"binding": binding.duplicate(true), "actor_committed": false, "presented": false}
+	var originals: GDScript = load("res://scripts/combat/accepted_action_host.gd")
+	for field: String in ["intent", "context", "command_before", "command_plan", "binding"]:
+		original[field] = originals._original(original[field])
 	participant.tether_commands["item_pending"] = original
 	return {"ok": true, "original": original}
 
@@ -935,6 +938,31 @@ func pending_tether_items(id: String) -> Array[Dictionary]:
 		var original: Dictionary = participant.get("tether_commands", {}).get("item_pending", {})
 		if not original.is_empty() and original.get("presented") != true: pending.append(original)
 	return pending
+
+
+## Release an untouched command reservation only when its transport leaves
+## before an item decision exists. A saved row retains its original duty.
+func cancel_unjournaled_tether_item(original: Dictionary, deliveries: Dictionary,
+		world_namespace: String) -> bool:
+	if original.get("actor_committed") == true or original.get("presented") == true \
+		or original.get("context", {}).get("world_namespace") != world_namespace: return false
+	var character: String = str(original.get("character_id", ""))
+	var row: Variant = deliveries.get(preload("res://scripts/creatures/essence.gd").training_delivery_id(world_namespace, character))
+	if row is Dictionary and row.get("action") == "tether_item" \
+		and row.get("intent", {}).get("request") == original.get("intent", {}).get("request"): return false
+	var rec: Dictionary = encounters.get(original.get("encounter_id"), {})
+	var rows: Array = rec.get("participants", {}).values()
+	rows.append_array(rec.get("retained_actor_participants", {}).values())
+	for participant: Dictionary in rows:
+		if not is_same(participant.get("tether_commands", {}).get("item_pending"), original): continue
+		var commands: Dictionary = participant.tether_commands.duplicate(true)
+		commands.erase("item_pending")
+		if not ACTOR_AUTHORITY.equivalent(commands, original.command_before): return false
+		participant.tether_commands.erase("item_pending")
+		original["cancelled"] = true
+		original["presented"] = true
+		return true
+	return false
 
 
 func acknowledge_move_mastery(id: String, peer: Variant, action: int, action_id: String) -> bool:

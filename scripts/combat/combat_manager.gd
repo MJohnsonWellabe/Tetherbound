@@ -413,14 +413,20 @@ func tether_command_snapshot() -> Dictionary:
 	var deployment: Dictionary = _encounter_link.call("tether_command_deployment") if is_instance_valid(_encounter_link) \
 		and _encounter_link.has_method("tether_command_deployment") else {}
 	snapshot["generation"] = int(deployment.get("generation", 0))
-	if int(snapshot.generation) < 1: snapshot.active = false
+	if int(snapshot.generation) < 1 or snapshot.has("pending_request"): snapshot.active = false
 	return snapshot
 
 
 func submit_tether_command(request: Dictionary) -> bool:
 	if not preload("res://scripts/combat/tether_commands.gd").enabled() or not is_instance_valid(_encounter_link): return false
+	if request.get("command_id") == "item_throw":
+		if _tether_command_view.has("pending_request") and _tether_command_view.pending_request != request: return false
+		_tether_command_view["pending_request"] = request.duplicate(true)
 	var verdict: Dictionary = _encounter_link.call("submit_encounter_intent", {"kind": "tether_command", "encounter_id": _encounter_id, "request": request})
-	if verdict.get("pending") != true: apply_tether_command_verdict(verdict)
+	if verdict.get("pending") != true:
+		if verdict.get("ok") != true and _tether_command_view.get("pending_request") == request:
+			_tether_command_view.erase("pending_request")
+		apply_tether_command_verdict(verdict)
 	return true
 
 
@@ -428,13 +434,28 @@ func apply_tether_command_verdict(verdict: Dictionary) -> void:
 	if verdict.get("encounter_id") != _encounter_id: return
 	var deployment: Dictionary = _encounter_link.call("tether_command_deployment") if is_instance_valid(_encounter_link) else {}
 	if verdict.has("command_generation") and int(verdict.command_generation) != int(deployment.get("generation", 0)): return
+	if verdict.get("pending") == true: return
 	if verdict.get("ok") != true:
+		if _tether_command_view.has("pending_request") and verdict.get("command_request") == _tether_command_view.pending_request:
+			_tether_command_view.erase("pending_request")
 		tether_command_refused.emit(str(verdict.get("reason", "Command unavailable.")))
 		return
 	var next: Dictionary = verdict.get("delta", {}).get("tether_commands", {})
 	if next.get("encounter_id") != _encounter_id or next.get("character_id") != deployment.get("character_id"): return
 	if int(next.get("revision", -1)) >= int(_tether_command_view.get("revision", 0)):
 		_tether_command_view.merge(next.duplicate(true), true)
+
+
+## The owner submitted only this four-field command. A host checkpoint may
+## derive its item and current body, but cannot substitute another command.
+func owner_tether_item_request_matches(envelope: Dictionary) -> bool:
+	var raw: Dictionary = _tether_command_view.get("pending_request", {})
+	var deployment: Dictionary = _encounter_link.call("tether_command_deployment") if is_instance_valid(_encounter_link) else {}
+	return envelope.size() == 7 and envelope.get("op") == "tether_item" \
+		and preload("res://scripts/combat/tether_commands.gd").valid_intent(raw) and raw.command_id == "item_throw" \
+		and raw.encounter_id == _encounter_id and raw.generation == deployment.get("generation") \
+		and envelope.get("character_id") == deployment.get("character_id") \
+		and envelope.get("intent") is Dictionary and envelope.intent.get("request") == raw
 
 
 func throw_aim() -> Node:
@@ -3124,8 +3145,11 @@ func apply_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
 		if participants.has(peer_id):
 			var participant: Dictionary = participants[peer_id]
 			if participant.get("tether_commands") is Dictionary:
+				var pending: Dictionary = _tether_command_view.get("pending_request", {})
 				_tether_command_view = participant.tether_commands.duplicate(true)
 				_tether_command_view.merge(participant.get("tether_command_view", {}), true)
+				if pending.get("encounter_id") == _encounter_id:
+					_tether_command_view["pending_request"] = pending
 			var creature := active_creature()
 			var uid := str(creature.get("uid")) if creature != null else ""
 			var resource: Dictionary = participant.get("move_resources", {}).get(uid, {})

@@ -88,7 +88,7 @@ class Session extends Node:
 	func _owner_passive_send_host(packet: Dictionary) -> void: messages.append(packet.duplicate(true))
 	func _owner_passive_send_peer(_peer: int, packet: Dictionary) -> void: messages.append(packet.duplicate(true))
 	func _owner_passive_request_matches(kind: String, request: Dictionary) -> bool:
-		return kind in ["foundation_request", "portal_arrival"] and PREP.exact(action_original, request)
+		return kind in ["foundation_request", "portal_arrival", "tether_item"] and PREP.exact(action_original, request)
 	func _owner_passive_request_terminal(kind: String, request: Dictionary, result: Dictionary) -> void:
 		action_terminals.append({"kind": kind, "request": request.duplicate(true), "result": result.duplicate(true)})
 	func _owner_passive_commit_request(peer: int, kind: String, request: Dictionary, context: Dictionary) -> Dictionary:
@@ -555,6 +555,78 @@ func _request_fixture(action: String = "station_craft") -> Dictionary:
 		context["station_kind"] = "personal_pouch"
 		context["owns_character"] = true
 	return {"request": request, "context": context}
+
+func test_active_item_checkpoint_saves_current_care_before_same_original_item_stage() -> void:
+	var rules := preload("res://scripts/world/death_satchel_rules.gd")
+	var inventory := rules.inventory_from(before.inventory)
+	assert_eq(inventory.add("berries", 2), 0)
+	before.inventory = rules.slots(inventory)
+	before.redesign_character["tether_pouch"] = ["berries"]
+	before.party[0].nourishment = 99.9 # Capped food must use the current saved care.
+	game.local.data = before.duplicate(true)
+	session._character_authority = AUTH.new()
+	assert_true(session._character_authority.bind_world(event.world_namespace))
+	assert_true(session._character_authority.seed_admitted_character(before, before.character_id).ok)
+	assert_true(session._character_authority.seed_discovered_landmarks(before.character_id, {}))
+	service.arm_owner(before, {})
+	var raw := preload("res://scripts/combat/tether_commands.gd").intent("item-encounter", 2, 7, "item_throw")
+	var action_id := "command:item-encounter:%s:2:7" % before.character_id
+	var effect := {"kind": "item_throw", "character_id": before.character_id, "creature_uid": before.party[0].uid,
+		"generation": 2, "item_id": "berries", "count": 1, "action_id": action_id}
+	var actor := {"character_id": before.character_id, "creature_uid": before.party[0].uid, "encounter_id": raw.encounter_id,
+		"generation": 2, "body_generation": 1, "body_instance_id": 123, "vitals_revision": 0,
+		"hp": before.party[0].hp, "max_hp": before.party[0].max_hp}
+	var context := {"character_id": before.character_id, "expected_revision": 0, "source_key": "tether_item:" + action_id,
+		"in_range": true, "in_combat": true, "foundation_runtime_authorized": true, "item_runtime_authorized": true,
+		"world_namespace": event.world_namespace, "session_id": "actual-writer-epoch", "item_actor": actor}
+	var request := {"op": "tether_item", "character_id": before.character_id, "world_namespace": event.world_namespace,
+		"session_epoch": "current-epoch", "station_key": context.source_key, "revision": 0,
+		"intent": {"request": raw, "effect": effect}}
+	service.record_input(_input())
+	var stream := _host_stream()
+	service.receive_host(2, _envelope({"op": "inputs", "inputs": service.local.inputs.duplicate(true)}))
+	assert_eq(service.action_gate(2, "tether_item", request, context).code, "owner_passive_checkpoint_pending")
+	var changed := request.duplicate(true)
+	changed.intent.effect.item_id = "attack_tonic"
+	assert_eq(service.action_gate(2, "tether_item", changed, context).code, "owner_passive_original_pending")
+	service.receive_host(2, _envelope({"op": "frozen", "id": stream.checkpoint.id, "sequence": stream.cursor.sequence,
+		"prefix_hash": stream.cursor.prefix_hash, "hash": PREP.fingerprint(stream.cursor.state)}))
+	assert_true(stream.checkpoint.has("prepared"))
+	if not stream.checkpoint.has("prepared"): return
+	assert_eq(stream.checkpoint.prepared.after.inventory, before.inventory, "checkpoint spends no item")
+	assert_true(float(stream.checkpoint.prepared.after.party[0].nourishment) < 99.9)
+	assert_true(PREP.owner_plan(stream.cursor.state, stream.checkpoint.prepared, {}, {}).ok)
+	var invalid_context := context.duplicate(true)
+	invalid_context.in_combat = false
+	assert_true(PREP.make_action(request, invalid_context, before, 0, "current-epoch", event.world_id,
+		stream.cursor, "b".repeat(32), "tether_item").is_empty())
+	assert_true(PREP.make_action(request, context, before, 0, "current-epoch", event.world_id,
+		stream.cursor, "b".repeat(32), "foundation_request").is_empty(), "public station kind cannot authorize active item")
+	session.capture_service = service
+	var saved := _envelope({"op": "saved", "id": stream.checkpoint.id, "hash": stream.checkpoint.prepared.hash, "saved": false})
+	service.receive_host(2, saved)
+	assert_true(session.action_calls.is_empty())
+	assert_eq(session._character_authority.state(before.character_id), before)
+	saved.saved = true
+	for attempt: int in 2:
+		service.receive_host(2, saved)
+		assert_eq(session.action_calls.size(), attempt + 1)
+		assert_true(session.action_calls[-1].gate.ok)
+		assert_eq(session.action_calls[-1].revision, 0)
+		assert_eq(session.action_calls[-1].request, request)
+		var candidate: Dictionary = preload("res://scripts/net/foundation_actions.gd").stage(session.action_calls[-1].state,
+			0, "tether_item", request.intent, context, preload("res://scripts/net/character_record_rules.gd").errors)
+		assert_true(candidate.ok, str(candidate))
+		assert_eq(rules.inventory_from(candidate.state.inventory).count("berries"), 1)
+		assert_eq(candidate.state.party[0].nourishment, 100.0)
+	assert_eq(stream.checkpoint.request, request)
+	var saved_care: Dictionary = session._character_authority.state(before.character_id)
+	service.peer_departed(2)
+	assert_false(service.hosts.has(before.character_id))
+	assert_false(session._character_authority.creature_training_is_pending(before.character_id), "departed unjournaled checkpoint releases its reservation")
+	assert_eq(session._character_authority.state(before.character_id), saved_care, "already saved care is never reverted on departure")
+	assert_eq(session._character_authority.revision(before.character_id), 0)
+
 
 func test_pouch_checkpoint_retains_original_through_failed_saved_ack_and_retry() -> void:
 	var f := _request_fixture("tether_pouch")

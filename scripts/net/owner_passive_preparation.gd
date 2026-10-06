@@ -81,13 +81,13 @@ static func _action_request_valid(raw: Dictionary) -> bool:
 	if raw.source_kind == "waystone_touch": return _waystone_request_valid(raw)
 	if raw.source_kind == "home_key": return _home_key_request_valid(raw)
 	var fields := ["op", "session_epoch", "world_namespace", "character_id", "station_key", "intent"]
-	if raw.source_kind in ["foundation_request", "manual_refine"]: fields.append("revision")
+	if raw.source_kind in ["foundation_request", "manual_refine", "tether_item"]: fields.append("revision")
 	if not _fields(request, fields) or not request.intent is Dictionary \
 		or request.session_epoch != raw.session_epoch or request.world_namespace != raw.world_namespace \
 		or request.character_id != raw.character_id or not E._opaque_id(request.station_key) \
 		or raw.host_context.get("character_id") != raw.character_id \
 		or raw.host_context.get("expected_revision") != raw.revision \
-		or raw.host_context.get("in_range") != true or raw.host_context.get("in_combat") != false \
+		or raw.host_context.get("in_range") != true or raw.host_context.get("in_combat") != (raw.source_kind == "tether_item") \
 		or raw.host_context.get("foundation_runtime_authorized") != true: return false
 	var expected_source: String = request.station_key
 	if raw.source_kind == "foundation_request" and request.op == "master_chest":
@@ -96,6 +96,14 @@ static func _action_request_valid(raw: Dictionary) -> bool:
 			or raw.host_context.get("master_id") != request.intent.master_id: return false
 		expected_source = "master_chest:" + str(request.intent.master_id)
 	if raw.host_context.get("source_key") != expected_source: return false
+	if raw.source_kind == "tether_item":
+		if request.op != "tether_item" or not E._integer(request.revision, 0, 2147483645) \
+			or request.revision != raw.revision or raw.host_context.get("world_namespace") != raw.world_namespace:
+			return false
+		# This only checks the typed frozen source and the replayed care state.
+		# Session separately proves the actual retained Director/body original.
+		return preload("res://scripts/net/foundation_actions.gd").stage(raw.after, int(raw.revision),
+			"tether_item", request.intent, raw.host_context, RECORD.errors).get("ok") == true
 	if raw.source_kind == "foundation_request" and request.op == "tether_pouch":
 		return request.station_key == "personal_pouch:" + str(raw.character_id) \
 			and raw.host_context.get("station_kind") == "personal_pouch" and raw.host_context.get("owns_character") == true \

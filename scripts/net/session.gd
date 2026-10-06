@@ -59,6 +59,16 @@ func owner_passive_research_gate(peer: int, action: String, intent: Dictionary, 
 	return _owner_passive_service().call("gate", peer, action, intent, event)
 
 func _owner_passive_request_matches(source_kind: String, request: Dictionary) -> bool:
+	if source_kind == "tether_item":
+		var game := _game()
+		if game == null or game.get("local") == null or game.get("world") == null \
+			or request.get("character_id") != str(game.get("local").get("character_id")) \
+			or request.get("world_namespace") != game.get("world").get("reward_delivery_namespace") \
+			or request.get("session_epoch") != _altar_current_epoch(): return false
+		for director: Node in _foundation_directors_under(_foundation_realm_roots()):
+			if director.has_method("owner_tether_item_request_matches") \
+				and director.call("owner_tether_item_request_matches", request) == true: return true
+		return false
 	if source_kind == "portal_arrival":
 		var arrival := get_node_or_null(^"FoundationComposition/PortalArrival")
 		return arrival != null and request.get("envelope") is Dictionary \
@@ -80,6 +90,14 @@ func _owner_passive_request_matches(source_kind: String, request: Dictionary) ->
 
 func _owner_passive_commit_request(peer: int, source_kind: String, request: Dictionary, context: Dictionary) -> Dictionary:
 	match source_kind:
+		"tether_item":
+			for director: Node in _foundation_directors_under(_foundation_realm_roots()):
+				var host: RefCounted = director.get("_encounter_host")
+				if host == null: continue
+				for original: Dictionary in host.call("pending_tether_items", str(request.get("intent", {}).get("request", {}).get("encounter_id", ""))):
+					if ESSENCE._equivalent(original.get("checkpoint_request"), request) and ESSENCE._equivalent(original.context, context):
+						return _tether_item_commit_original(director, original)
+			return FOUNDATION_ACTIONS.deny("item_original_unavailable")
 		"portal_arrival":
 			var result := foundation_grounded_arrival(get_node_or_null(^"FoundationComposition/PortalArrival"), request.envelope, request.permit)
 			if result.get("code") == "arrival_binding_changed":
@@ -1150,6 +1168,85 @@ func _ordinary_combat_director_live(director: Node) -> bool:
 		if root.is_ancestor_of(director) and root.is_ancestor_of(manager): return true
 	return false
 
+
+func _tether_item_admission_ready(peer: int) -> bool:
+	var character := _authority_character(peer)
+	if character.is_empty() or _character_authority == null \
+		or _character_authority.call("creature_training_is_pending", character) == true \
+		or _character_authority.call("_research_other_transaction", character) == true: return false
+	if peer == local_peer_id(): return true
+	var stream: Dictionary = _owner_passive_service().get("hosts").get(character, {})
+	return not stream.is_empty() and str(stream.get("error", "")).is_empty() \
+		and not stream.has("readmit") and stream.get("checkpoint", {}).is_empty()
+
+
+func _cancel_unjournaled_departed_items(peer: int) -> void:
+	var game := _game()
+	if not is_host() or game == null or game.get("world") == null: return
+	var world: RefCounted = game.get("world")
+	for director: Node in _foundation_directors_under(_foundation_realm_roots()):
+		if not _ordinary_combat_director_live(director): continue
+		var host: RefCounted = director.get("_encounter_host")
+		if host == null or not host.has_method("cancel_unjournaled_tether_item"): continue
+		for id: String in host.get("encounters"):
+			for original: Dictionary in host.call("pending_tether_items", id):
+				if int(original.peer_id) == peer:
+					host.call("cancel_unjournaled_tether_item", original, world.reward_deliveries, world.reward_delivery_namespace)
+
+
+## Private actual-combat ingress. The sole Host participant owns the original;
+## no RPC or public station envelope can author an effect or body binding.
+func _tether_item_commit_original(director: Node, original: Dictionary) -> Dictionary:
+	if not _ordinary_combat_director_live(director) or original.get("presented") == true:
+		return FOUNDATION_ACTIONS.deny("item_original_unavailable")
+	var host: RefCounted = director.get("_encounter_host")
+	var found := false
+	if host == null or host.get_script() != preload("res://scripts/combat/accepted_action_host.gd"):
+		return FOUNDATION_ACTIONS.deny("item_original_unavailable")
+	for pending: Dictionary in host.call("pending_tether_items", str(original.get("encounter_id", ""))):
+		if is_same(pending, original): found = true
+	if not found or director.call("uses_durable_trainer_rewards", str(original.encounter_id)) != true:
+		return FOUNDATION_ACTIONS.deny("item_original_unavailable")
+	var game := _game()
+	var world: RefCounted = game.get("world")
+	var character: String = original.character_id
+	var peer := int(_registry.call("peer_for_character", character))
+	if peer < 1 or _authority_character(peer) != character or world == null \
+		or original.context.world_namespace != world.reward_delivery_namespace:
+		return FOUNDATION_ACTIONS.deny("item_owner_unavailable")
+	var writer := get_node_or_null(^"LedgerRpc")
+	if writer == null: return FOUNDATION_ACTIONS.deny("writer_unavailable")
+	var prior: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character), {})
+	if prior.get("action") == "tether_item" and ESSENCE._equivalent(prior.get("intent"), original.intent) \
+		and ESSENCE._equivalent(prior.get("host_context"), original.context):
+		if not TRAINING_WORLD.training_row_valid(prior, world.reward_delivery_namespace, world.world_id):
+			return FOUNDATION_ACTIONS.deny("item_decision_changed")
+		writer.call("publish_creature_training", peer, character, prior.receipt)
+		return _foundation_decision(peer, world.reward_deliveries.get(prior.delivery_id, {}))
+	# Authenticate the original writer before the first journal. Its identity
+	# remains frozen even when an owner-save retry reaches a different peer ID.
+	if original.context.session_id != _ordinary_actor_vitals_journal_epoch():
+		return FOUNDATION_ACTIONS.deny("item_writer_changed")
+	var saver: RefCounted = game.get("save_system")
+	if saver == null: return FOUNDATION_ACTIONS.deny("writer_unavailable")
+	saver.call("finish_fallback")
+	if saver.call("fallback_busy") == true: return FOUNDATION_ACTIONS.deny("writer_busy")
+	if not original.has("checkpoint_request"):
+		original["checkpoint_request"] = preload("res://scripts/combat/accepted_action_host.gd")._original({
+			"op": "tether_item", "session_epoch": _altar_current_epoch(), "world_namespace": world.reward_delivery_namespace,
+			"character_id": character, "station_key": original.context.source_key,
+			"intent": original.intent, "revision": original.context.expected_revision})
+	var request: Dictionary = original.checkpoint_request
+	if request.session_epoch != _altar_current_epoch() or admitted_character_state(peer).is_empty():
+		return FOUNDATION_ACTIONS.deny("item_owner_unavailable")
+	if peer != local_peer_id():
+		var ready: Dictionary = _owner_passive_service().call("action_gate", peer, "tether_item", request, original.context)
+		if ready.get("ok") != true: return ready
+	var result := FOUNDATION_ACTIONS.commit(_character_authority, writer, peer, character,
+		int(request.revision), "tether_item", original.intent, original.context)
+	if result.get("durable") != true: return result
+	return _foundation_decision(peer, world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character), {}))
+
 ## Exact ordinary shared-round ownership is announced before Manager binding.
 ## An unavailable canonical writer refuses ownership; it never permits a local award.
 func ordinary_combat_reward_owner(director: Node, encounter_id: String) -> Dictionary:
@@ -1811,6 +1908,16 @@ func _request_window_close() -> void:
 func foundation_event_stage_epoch(accepted: Dictionary) -> String:
 	var context: Dictionary = accepted.get("host_context", {})
 	var world: RefCounted = _game().get("world")
+	if accepted.get("action") == "tether_item":
+		if context.get("session_id") != _ordinary_actor_vitals_journal_epoch(): return ""
+		for director: Node in _foundation_directors_under(_foundation_realm_roots()):
+			if not _ordinary_combat_director_live(director): continue
+			var host: RefCounted = director.get("_encounter_host")
+			if host == null: continue
+			for original: Dictionary in host.call("pending_tether_items", str(accepted.get("intent", {}).get("request", {}).get("encounter_id", ""))):
+				if original.character_id == accepted.get("character_id") and ESSENCE._equivalent(original.intent, accepted.get("intent")) \
+					and ESSENCE._equivalent(original.context, context): return context.session_id
+		return ""
 	var row: Variant = world.reward_deliveries.get(context.get("retained_event", ""))
 	if not preload("res://scripts/net/foundation_event.gd").valid(row, world.reward_delivery_namespace, world.world_id): return _altar_current_epoch()
 	for duty: Dictionary in row.duties:
@@ -3570,6 +3677,7 @@ func _on_peer_disconnected(peer_id: int) -> void:
 	# The departed transport's owner-passive stream ends with it, so the
 	# character's next stream is admitted instead of shadowed (re-proof).
 	if _owner_passive != null: _owner_passive.call("peer_departed", peer_id)
+	_cancel_unjournaled_departed_items(peer_id)
 	if bool(_registry.call("remove", peer_id)):
 		if not departed and _closing_frames == 0 and peer_id != HOST_PEER_ID:
 			var window_ms := int(1000.0 * float(_cfg("reconnect_window_s", 120.0)))
