@@ -203,7 +203,7 @@ func _add_light(at: Vector3, yaw_deg: float = 0.0) -> void:
 	var settings: Dictionary = _config.get("light", {})
 	# A visible flame, so the lantern reads as the light's source.
 	var flame_material := StandardMaterial3D.new()
-	flame_material.albedo_color = Color(str(settings.get("colour", "#ffd7a4")))
+	flame_material.albedo_color = Color(str(settings.get("flame_colour", settings.get("colour", "#ffd7a4"))))
 	flame_material.emission_enabled = true
 	flame_material.emission = flame_material.albedo_color
 	flame_material.emission_energy_multiplier = float(settings.get("flame_energy", 1.5))

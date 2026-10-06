@@ -190,7 +190,9 @@
     "_why_flame_at": "F17#6 r4 GPU judge: the flames floated as small white bulbs beside unlit cages. The installed Lantern_Wall bracket reaches about 0.85 m out from the wall and its cage hangs at y 0.3-0.55 (mesh vertex probe), so the flame and the light sit in the cage.",
     "flame_at": [0, 0.42, 0.85],
     "flame_radius_m": 0.08,
-    "flame_energy": 2.4
+    "_why_flame_colour": "F17#6 r6 judge: the flames read as white panes, not warm cores (a pale flame at 2.4 emission clips to white). A deeper amber at lower emission reads as fire. TUNABLE.",
+    "flame_colour": "#ff9b3d",
+    "flame_energy": 1.3
   },
   "labels": {
     "_why": "F17#6 r5 judge: pedestal names cut into their 1.44 m stands and every arch label in the nave showed at once, overlapping each other and the HUD. Pedestal names float above the stand; signs fade beyond these distances (metres; 0 = always). TUNABLE.",
@@ -230,8 +232,8 @@
     "night_ambient": 0.25,
     "_why_night_floor_albedo": "F17#6 r5 judge: the night nave floor was lit evenly cool by moonlight leaking through the roof (global night shadow opacity 0.68; Compatibility ignores a directional cull mask). While WorldLook is dark the Hall floor albedo is multiplied by this, and the lanterns carry it. TUNABLE; 1 disables.",
     "night_floor_albedo": 0.45,
-    "_why_night_wall_albedo": "F17#6 r5: with only the floor darkened the moonlit plaster walls read brighter than the floor. Hall wall and corner modules (one shell, so the exterior too) take this factor at night. TUNABLE; 1 disables.",
-    "night_wall_albedo": 0.6
+    "_why_night_wall_albedo": "F17#6 r5 tried 0.6 so the moonlit plaster would not outshine the floor. r6 judge: the Hall walls are one shell, so the front facade went darker than the cottages at night and the destination read regressed (F17#1). Held at 1 (off) until the interior can be shaded without the exterior. TUNABLE.",
+    "night_wall_albedo": 1.0
   },
   "_why_interior_lights": "F17#6 r1 judge: the nave had no warm interior light at night. Six wall lanterns between the aisle arches (with the two original lamps, eight interior lights, inside the reviewed Hall interior set) give the nave warm pools between the aisle arches (the east middle lamp hangs over the Shrine Room doorway). Lanterns show an emissive flame so the light has a visible source.",
   "interior_lights": [

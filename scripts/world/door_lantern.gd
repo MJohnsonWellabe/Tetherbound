@@ -40,10 +40,11 @@ func build(cfg: Dictionary) -> void:
 	lantern.position = Vector3(0.0, post_h - 0.15, 0.07)
 	lantern.rotation.y = deg_to_rad(float(cfg.get("yaw_deg", 0.0)))
 	add_child(lantern)
+	var flame_colour := Color(str(cfg.get("flame_colour", cfg.get("colour", "#ffc778"))))
 	var flame_material := StandardMaterial3D.new()
-	flame_material.albedo_color = colour
+	flame_material.albedo_color = flame_colour
 	flame_material.emission_enabled = true
-	flame_material.emission = colour
+	flame_material.emission = flame_colour
 	flame_material.emission_energy_multiplier = float(cfg.get("flame_energy", 2.4))
 	flame_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	_flame = MeshInstance3D.new()
