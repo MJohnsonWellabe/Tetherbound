@@ -1,0 +1,99 @@
+{
+  "product_checkout": "3ecf62faf47bf91630017a1cc4fe215898812f9d",
+  "workflow_head": "8e7c11ceb5854f063c5241d62618c382803562c9",
+  "engine": "Godot Engine v4.7.stable.official.5b4e0cb0f",
+  "scope": "Linux headless untimed functional correctness; no Windows/GPU/audio/performance/earned catch or campaign credit",
+  "runs": [
+    {
+      "name": "playground",
+      "run": 37426278457,
+      "job": 112146554364,
+      "artifact": {
+        "id": 11395263383,
+        "name": "render-r5-f28-local-20261006-065258-37426278457",
+        "size_in_bytes": 9532,
+        "url": "https://api.github.com/repos/MJohnsonWellabe/Tetherbound/actions/artifacts/11395263383",
+        "archive_download_url": "https://api.github.com/repos/MJohnsonWellabe/Tetherbound/actions/artifacts/11395263383/zip",
+        "expired": false,
+        "created_at": "2026-10-06T06:57:58Z",
+        "expires_at": "2026-10-13T06:57:57Z",
+        "updated_at": "2026-10-06T06:57:58Z",
+        "digest": "sha256:ba0569067fde5653fe6e8409d198156492af4bd2efd2138069f5e7bec38332c9",
+        "workflow_run": {
+          "id": 37426278457,
+          "repository_id": 1319534705,
+          "head_repository_id": 1319534705,
+          "head_branch": "main",
+          "head_sha": "8e7c11ceb5854f063c5241d62618c382803562c9"
+        }
+      },
+      "conclusion": "failure",
+      "native_exit_code_file": "absent in original due workflow bash -e early failure; no synthetic exit",
+      "verdict": "F28#5 OPEN",
+      "failure": "Both winning prompts decorated with input icon; erroneous added bare-text comparison stopped before claims",
+      "fix": "existing smoke assertion reads winner().label"
+    },
+    {
+      "name": "water",
+      "run": 37426280664,
+      "job": 112146559780,
+      "artifact": {
+        "id": 11395133952,
+        "name": "render-r5-f29-water-20261006-065258-37426280664",
+        "size_in_bytes": 51919,
+        "url": "https://api.github.com/repos/MJohnsonWellabe/Tetherbound/actions/artifacts/11395133952",
+        "archive_download_url": "https://api.github.com/repos/MJohnsonWellabe/Tetherbound/actions/artifacts/11395133952/zip",
+        "expired": false,
+        "created_at": "2026-10-06T06:58:03Z",
+        "expires_at": "2026-10-13T06:58:02Z",
+        "updated_at": "2026-10-06T06:58:03Z",
+        "digest": "sha256:54a51535ef5995a1822340fe2effacb8a8ce1245503eeccbf1787020d2b3449d",
+        "workflow_run": {
+          "id": 37426280664,
+          "repository_id": 1319534705,
+          "head_repository_id": 1319534705,
+          "head_branch": "main",
+          "head_sha": "8e7c11ceb5854f063c5241d62618c382803562c9"
+        }
+      },
+      "conclusion": "success",
+      "native_exit": 0,
+      "checks": 45,
+      "failures": 0,
+      "witnesses": 4,
+      "species": "water_cannonback"
+    },
+    {
+      "name": "cloud",
+      "run": 37426282853,
+      "job": 112146567310,
+      "artifact": {
+        "id": 11395378434,
+        "name": "render-r5-f29-cloud-20261006-065258-37426282853",
+        "size_in_bytes": 38481,
+        "url": "https://api.github.com/repos/MJohnsonWellabe/Tetherbound/actions/artifacts/11395378434",
+        "archive_download_url": "https://api.github.com/repos/MJohnsonWellabe/Tetherbound/actions/artifacts/11395378434/zip",
+        "expired": false,
+        "created_at": "2026-10-06T07:01:07Z",
+        "expires_at": "2026-10-13T07:01:06Z",
+        "updated_at": "2026-10-06T07:01:07Z",
+        "digest": "sha256:71b09eff832094298af94d4034805848e7d991e2c7c7231b0d68372560a6c6c0",
+        "workflow_run": {
+          "id": 37426282853,
+          "repository_id": 1319534705,
+          "head_repository_id": 1319534705,
+          "head_branch": "main",
+          "head_sha": "8e7c11ceb5854f063c5241d62618c382803562c9"
+        }
+      },
+      "conclusion": "success",
+      "native_exit": 0,
+      "f29_wild_verdict": "PASS",
+      "witnesses": 13,
+      "species": "stormcapra",
+      "diagnostics": "Unscoped tether_lieutenant_senn_defeated/keeper_maela_trial_defeated fixture flags and fly_tutorial_completed runtime flag; cr_candy_broken_route_good_07 placement and omitted broken_causeway_main_03/windscar_floor_loop_15 sites preserved. Independent reviewer: none invalidates witnessed IDs; other-lane handoff required."
+    }
+  ],
+  "evidence": "Original GitHub artifact.zip and job-logs.zip bytes retained per run; extracted native files preserved. Artifact SHA256 matches GitHub digest. raw-sha256.json binds committed original bytes.",
+  "independent_review": "/root/f28_review F29#4 evidence MET after actual checkout/import/original ZIP byte binding; Cloud diagnostics disclosed for owning-lane handoff. Playground one-line semantic API correction SOURCE PASS; native accepted ingredients pending."
+}

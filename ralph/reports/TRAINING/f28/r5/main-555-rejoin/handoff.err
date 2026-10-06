@@ -1,0 +1,8 @@
+WARNING: save slot 0 has split authority that could not be resolved
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] load_slot (res://scripts/save/save_game.gd:868)
+       [1] load_captured (res://tests/helpers/ci_segments.gd:235)
+       [2] staleness (res://tests/helpers/ci_segments.gd:368)
+       [3] test_old_version_checkpoint_is_stale (res://tests/test_ci_segment_handoffs.gd:123)
+       [4] _init (res://tests/run_tests.gd:120)

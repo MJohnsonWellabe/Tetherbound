@@ -1,0 +1,52 @@
+[
+  {
+    "path": "artifact.zip",
+    "bytes": 10029,
+    "sha256": "709ef29e54fc1ac950822dac1f300d775c40d024734d182d390c3ba551a3a899"
+  },
+  {
+    "path": "dispatch.json",
+    "bytes": 485,
+    "sha256": "5e40ac3280547d29861b646cca8482598cc06cafd36060614cf86f787b717c0c"
+  },
+  {
+    "path": "job-logs.zip",
+    "bytes": 95390,
+    "sha256": "7811d801a3d163b8d94155b450b2e5cffce421db79d3eeec73063a599eef2b36"
+  },
+  {
+    "path": "observed-runs.json",
+    "bytes": 381,
+    "sha256": "6d7ac8fa6a80f710faddb6e779788c32cfca1d88c388d4c54f774257b35cf458"
+  },
+  {
+    "path": "results.json",
+    "bytes": 2733,
+    "sha256": "64b8dd52adf915eb23de1ea5acd7ef360eec09375849ef945fdc51ca48088e7a"
+  },
+  {
+    "path": "native/exit_code",
+    "bytes": 2,
+    "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  {
+    "path": "native/MANIFEST.txt",
+    "bytes": 131,
+    "sha256": "449c984392fee8247d3627227a21367969cb5b361610457443e6601bcc22391b"
+  },
+  {
+    "path": "native/run.log",
+    "bytes": 10601,
+    "sha256": "4c3440006118b4c30aefa4d3908854ae0eac0ea563be0e25d0a2508a8329d221"
+  },
+  {
+    "path": "native/user/godot/app_userdata/Tetherbound/boot_log.txt",
+    "bytes": 2655,
+    "sha256": "77264ecbc92b4ae4d4396f2a2937309b1c2516cc7c345e3cf113cf9480ee7e43"
+  },
+  {
+    "path": "native/user/godot/app_userdata/Tetherbound/logs/godot.log",
+    "bytes": 10332,
+    "sha256": "ea7939b2f8455e2c871eaecd20de16780818fcb877b8a632f4d576261d3b8d48"
+  }
+]

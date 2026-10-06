@@ -1241,7 +1241,7 @@ func _heal_party() -> void:
 	for i in int(party.call("size")):
 		var creature: RefCounted = party.call("at", i)
 		if creature != null:
-			HOME_RECOVERY.rest(creature, cfg)
+			HOME_RECOVERY.rest(creature, cfg, game.get("local").get("redesign_character"))
 
 
 ## `give:orb_basic:50` — Grandpa's parting gifts, granted on the line that

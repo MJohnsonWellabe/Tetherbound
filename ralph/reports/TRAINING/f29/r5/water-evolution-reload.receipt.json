@@ -1,0 +1,19 @@
+{
+  "background": [],
+  "scope": "pure read-only already-imported project; no world/timing/visual claim",
+  "action": "existing Water feed regression exact reconstructed fields",
+  "source_head": "e410b10e5cb68245addbd4afcbdd06144e97a63c",
+  "since_utc": "2026-10-06T06:04:22.9943340Z",
+  "command": [
+    "--headless",
+    "--path",
+    "D:/tetherbound/codex-r5",
+    "--script",
+    "tests/run_tests.gd",
+    "--log-file",
+    "D:/tetherbound/codex-r5/ralph/reports/TRAINING/f29/r5/water-evolution-reload.godot.log",
+    "--",
+    "--only=test_evolution.gd::test_water_feast_preserves_ancestor_moves_through_real_character_admission_and_reload"
+  ],
+  "test_sha256": "F295C2AB5847BA21D2905707BBA5D83F222BDB734A448131237407BA2DE92E53"
+}

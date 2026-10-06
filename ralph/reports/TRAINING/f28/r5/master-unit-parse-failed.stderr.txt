@@ -1,0 +1,8 @@
+SCRIPT ERROR: Parse Error: Static function "get_main_loop()" not found in base "GDScriptNativeClass".
+   at: GDScript::reload (res://tests/test_f28_training_boundaries.gd:333)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+ERROR: Failed to load script "res://tests/test_f28_training_boundaries.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
