@@ -167,3 +167,70 @@ func test_every_joint_damage_event_is_attributed_to_one_of_the_two_owned_creatur
 	assert_false(COMMANDS.stage_joint_attack(forged, moves, view, preload("res://scripts/combat/combat_math.gd").config()).ok)
 	view.actors[1].character_id = "owner_b"
 	assert_false(COMMANDS.stage_joint_attack(effect, moves, view, preload("res://scripts/combat/combat_math.gd").config()).ok)
+
+
+func test_pouch_assignment_uses_original_character_journal_and_owner_save_without_moving_stacks() -> void:
+	var actions := preload("res://scripts/net/foundation_actions.gd")
+	var record := preload("res://scripts/net/character_record_rules.gd")
+	var delivery := preload("res://scripts/net/foundation_delivery.gd")
+	var authority_type := preload("res://scripts/net/character_authority.gd")
+	var before := _admitted()
+	var context := {"character_id": "owner_a", "expected_revision": 0, "source_key": "personal_pouch:owner_a",
+		"station_kind": "personal_pouch", "owns_character": true, "in_range": true, "in_combat": false, "foundation_runtime_authorized": true}
+	var intent := {"assignment_id": "pouch-original", "index": 0, "item_id": "potion_small"}
+	var authority := authority_type.new()
+	assert_true(authority.bind_world("pouch-world"))
+	assert_true(authority.seed_admitted_character(before, "owner_a").ok)
+	var token: Dictionary = authority.stage_character_action("owner_a", 0, "tether_pouch", intent, context)
+	assert_true(token.ok, str(token))
+	if not token.ok: return
+	assert_eq(token.state.inventory, before.inventory)
+	assert_eq(token.state.party, before.party)
+	assert_eq(token.state.redesign_character.tether_pouch, ["potion_small"])
+	assert_true(preload("res://scripts/creatures/receipt_windows.gd").is_kind(token.receipt, "station_craft", "owner_a"))
+	assert_true(authority.finish_creature_training(token, false))
+	assert_eq(authority.state("owner_a"), before, "failed world save rolls back the binding")
+	token = authority.stage_character_action("owner_a", 0, "tether_pouch", intent, context)
+	var row: Dictionary = delivery.make_record("pouch-slot", "pouch-world", "pouch-session", token, null, record.errors)
+	assert_false(row.is_empty())
+	if row.is_empty(): return
+	var codec := preload("res://scripts/save/save_document.gd")
+	row = codec.parse(codec.stringify(row))
+	assert_true(delivery.valid(row, record.errors, "owner_a", "pouch-world", "pouch-slot"))
+	var rejoined := authority_type.new()
+	assert_true(rejoined.bind_world("pouch-world"))
+	assert_true(rejoined.seed_admitted_character(before, "owner_a").ok)
+	assert_true(rejoined.recover_durable_training("owner_a", {row.delivery_id: row}).ok)
+	assert_false(rejoined.acknowledge_creature_training("owner_a", row), "owner save required")
+	var owner: Dictionary = delivery.owner_plan(before, row, record.errors)
+	assert_true(owner.ok and owner.get("requires_owner_save") == true)
+	assert_true(delivery.owner_plan(owner.state, row, record.errors).duplicate)
+	row.status = "accepted"
+	assert_true(rejoined.acknowledge_creature_training("owner_a", row))
+	assert_eq(rejoined.state("owner_a").inventory, before.inventory)
+	assert_eq(rejoined.state("owner_a").party, before.party)
+	assert_eq(rejoined.state("owner_a").redesign_character.tether_pouch, ["potion_small"])
+	assert_false(rejoined.stage_character_action("owner_a", 0, "tether_pouch", intent, context).ok, "old original revision cannot edit again")
+	var windows := preload("res://scripts/creatures/receipt_windows.gd")
+	var crowded := before.duplicate(true)
+	for index: int in range(windows.window("station_craft") + 1):
+		crowded.redesign_character.transaction_receipts.append("craft:owner_a:" + ("old_pouch:" + str(index)).sha256_text().substr(0, 32))
+	var compacted: Dictionary = actions.stage(crowded, 0, "tether_pouch", intent, context, record.errors)
+	assert_true(compacted.ok, str(compacted))
+	if compacted.ok:
+		assert_eq(compacted.state.redesign_character.transaction_receipts.size(), windows.window("station_craft"))
+		assert_eq(compacted.state.inventory, before.inventory)
+		assert_eq(compacted.state.party, before.party)
+	for defect: String in ["combat", "foreign_owner", "tier", "orb", "extra_field"]:
+		var forged := intent.duplicate(true)
+		var view := context.duplicate(true)
+		match defect:
+			"combat": view.in_combat = true
+			"foreign_owner": view.character_id = "owner_b"
+			"tier": forged.index = 2
+			"orb": forged.item_id = "orb_basic"
+			"extra_field": forged.meter = 100
+		assert_false(actions.stage(before, 0, "tether_pouch", forged, view, record.errors).ok, defect)
+	var forged_saved := before.duplicate(true)
+	forged_saved.redesign_character.tether_pouch = ["orb_basic"]
+	assert_false(record.errors(forged_saved, "owner_a").is_empty())

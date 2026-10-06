@@ -8,7 +8,7 @@ const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const STATION := preload("res://scripts/build/station_actions.gd")
 const GEAR := preload("res://scripts/creatures/creature_gear.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
-const ACTIONS := ["station_craft", "den", "groom", "gear", "loadout", "camp_rest", "camp_build", "relic_hang", "relic_power", "boss_relic", "portal_arrival", "regional_ack", "dock_conclusion", "wild_capture", "tm_teach", "resource", "combat_mastery", "waystone_touch", "combat_round_reward", "home_key_owe", "home_key_deliver", "wild_defeat_share"]
+const ACTIONS := ["station_craft", "den", "groom", "gear", "loadout", "camp_rest", "camp_build", "relic_hang", "relic_power", "boss_relic", "portal_arrival", "regional_ack", "dock_conclusion", "wild_capture", "tm_teach", "resource", "combat_mastery", "waystone_touch", "combat_round_reward", "home_key_owe", "home_key_deliver", "wild_defeat_share", "tether_pouch"]
 
 static func deny(code: String) -> Dictionary:
 	return {"ok": false, "code": code, "durable": false, "resolved": false}
@@ -53,6 +53,7 @@ static func stage(current: Dictionary, revision: int, action: String,
 		"gear": proposal = GEAR.stage_frozen_core(current, current.character_id, revision, intent, context,
 			preload("res://scripts/world/death_satchel_rules.gd").db(), GEAR.config())
 		"loadout": proposal = _loadout(current, intent, context)
+		"tether_pouch": proposal = _tether_pouch(current, intent, context)
 		"camp_rest": proposal = preload("res://scripts/build/forward_camp_actions.gd").stage_team_bed(current, revision, intent, context, true)
 		"camp_build": proposal = camp_plan(current, revision, intent, context)
 		"relic_hang", "boss_relic": proposal = _relic(current, action, intent, context)
@@ -64,6 +65,30 @@ static func stage(current: Dictionary, revision: int, action: String,
 		"before": current.duplicate(true), "state": proposal.state.duplicate(true),
 		"receipt": proposal.receipt, "intent": intent.duplicate(true), "host_context": context.duplicate(true),
 		"expected_character_revision": revision, "source_key": context.source_key, "durable": false, "resolved": false}
+
+
+## Personal ordered bindings share the original character transaction. A
+## binding supplies no item; command consumption later reads admitted stacks.
+static func _tether_pouch(current: Dictionary, intent: Dictionary, context: Dictionary) -> Dictionary:
+	if context.get("station_kind") != "personal_pouch" or context.get("owns_character") != true \
+		or intent.size() != 3 or not ESSENCE._component(intent.get("assignment_id")) \
+		or not ESSENCE._integer(intent.get("index"), 0, 2) or not intent.get("item_id") is String:
+		return deny("pouch_invalid")
+	var commands: GDScript = load("res://scripts/combat/tether_commands.gd")
+	var items: RefCounted = preload("res://scripts/world/death_satchel_rules.gd").db()
+	var equipment := preload("res://scripts/player/player_equipment.gd").new()
+	equipment.configure(items)
+	equipment.load_data(current.equipment)
+	var plan: Dictionary = commands.stage_pouch_assignment(current.redesign_character.get("tether_pouch", []),
+		int(intent.index), str(intent.item_id), equipment.command_pouch_tier(), items.get("_items"), true)
+	if plan.get("ok") != true: return deny("pouch_invalid")
+	var receipt := "craft:%s:%s" % [current.character_id, ("tether_pouch:" + str(current.character_id) + ":" + str(intent.assignment_id)).sha256_text().substr(0, 32)]
+	if current.redesign_character.transaction_receipts.has(receipt): return deny("duplicate")
+	var next := current.duplicate(true)
+	next.redesign_character["tether_pouch"] = plan.pouch
+	next.redesign_character.transaction_receipts = RECEIPT_WINDOWS.compact(next.redesign_character.transaction_receipts, "station_craft", str(current.character_id))
+	next.redesign_character.transaction_receipts.append(receipt)
+	return {"ok": true, "state": next, "receipt": receipt}
 
 
 ## A retained host hit obligation enters the same full-character journal after

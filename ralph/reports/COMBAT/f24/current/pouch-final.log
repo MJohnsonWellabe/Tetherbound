@@ -1,0 +1,22 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only f24_host_commands: 1 of 817 test files
+  ok    test_f24_host_commands.gd :: test_admission_refuses_unknown_loadout_without_any_mutation
+  ok    test_f24_host_commands.gd :: test_charged_refusal_has_no_cost_and_does_not_replace_original
+  ok    test_f24_host_commands.gd :: test_equipped_authored_pouches_bind_each_upgrade_on_the_same_participant
+  ok    test_f24_host_commands.gd :: test_every_joint_damage_event_is_attributed_to_one_of_the_two_owned_creatures
+  ok    test_f24_host_commands.gd :: test_f33_charm_gain_frozen_in_the_accepted_action_scales_the_meter_once_and_is_capped
+  ok    test_f24_host_commands.gd :: test_f33_no_charm_keeps_the_ordinary_gain_and_power
+  ok    test_f24_host_commands.gd :: test_idle_wind_ticks_each_uid_and_switched_burst_spends_current_creature
+  ok    test_f24_host_commands.gd :: test_meter_uses_original_host_hit_once_and_freezes_admitted_gear
+  ok    test_f24_host_commands.gd :: test_meters_require_positive_debit_and_credit_one_actual_action_once
+  ok    test_f24_host_commands.gd :: test_pouch_assignment_uses_original_character_journal_and_owner_save_without_moving_stacks
+  ok    test_f24_host_commands.gd :: test_rally_can_commit_on_current_owned_deployment_before_its_first_move
+  ok    test_f24_host_commands.gd :: test_rally_spends_once_affects_only_owner_and_splits_wind_at_expiry
+  ok    test_f24_host_commands.gd :: test_snare_canonical_status_has_one_shared_slow_and_own_catch_grant
+  ok    test_f24_host_commands.gd :: test_start_spends_once_and_impact_cannot_run_early_or_repeat
+  ok    test_f24_host_commands.gd :: test_switch_retains_each_creatures_resources_and_cooldown
+  ok    test_f24_host_commands.gd :: test_unsaved_mastery_and_resources_survive_peer_replacement_and_close
+  ok    test_f24_host_commands.gd :: test_wrong_move_or_body_lifetime_cannot_arrive
+
+17 tests, 182 assertions, 0 failed

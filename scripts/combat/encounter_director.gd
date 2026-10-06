@@ -3880,7 +3880,7 @@ func _stage_ordinary_self_heal(id: String, peer: int, intent: Dictionary, body: 
 	if limit < 1 or _ordinary_actor_proposal_count(id) >= limit: return denied
 	var bundle: Dictionary = _encounter_host.call("stage_actor_heal_utility", intent, peer,
 		{"source_uid": str(binding.creature_uid), "source_generation": int(binding.actor_generation),
-		"now_ms": Time.get_ticks_msec(), "origin": [origin.x, origin.y, origin.z]},
+		"now_ms": Time.get_ticks_msec(), "origin": origin},
 		str(move.get("move_id", "")), COMBAT_MANAGER.host_wind_profile(card), limit)
 	if bundle.get("ok") != true:
 		denied["code"] = str(bundle.get("code", "invalid_heal"))
