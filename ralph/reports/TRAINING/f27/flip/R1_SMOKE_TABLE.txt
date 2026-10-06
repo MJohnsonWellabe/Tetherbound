@@ -67,11 +67,11 @@ menu_open_does_not_offer_to_drop | ON FIRST PASS, exit0; two native joypad Menu/
 modal_stacking | ON FIRST PASS exit0; realUI menucontrols/refusedoverpicker+dialogue/recoveredafterclose; rawreceipts retained
 night_ecology | ON FIRST PASS, exit0; twelve live night bodies/ground/day-night gates/actionable prompt; directly positioned player/pinned clock, 3m ground tolerance/no walkability-travel-naturalclock-engage claim; independent qualified review PASS
 objective_hint_card | ON FIRST PASS exit0;28hints/titles fit1920x1080/deadline+Game.signal; existingHUDfixture
-opening | ON FIRST ACTIVE; original Meadows naming/party/door/home-key/gate smoke
-party_count_after_catches | ON OPEN
-playground | ON OPEN
+opening | ON FIRST PASS, exit0; Meadows wake/action-event naming Bud in gamepad mode/party/orb gift/locked gate+key unlock; optional Home Key lesson unproved; direct scene/private saver/waypoints, early Bud save only/no title/catch/unlocked-crossing/reload/hardware claim; independent qualified review PASS
+party_count_after_catches | ON FIRST PASS, exit0; three physical catches/party+HUD4/5/save-load count; starter/orb/HP/camera/pose fixtures, actualdistinctUIDroster+27orbs/emptyreceipt-journal, no exactUID equality or restart proof; independent review PASS
+playground | ON FIRST PASS, exit0; terrain/collision/harvest-chop/felledpickup/torch/HUD/build/farm integration; pose-tool-inventory-clock-directfarm/day fixtures/farm positiveyield observed+4/chop originalwindow only/no render-perf-journal-reload proof; independent qualified review PASS
 post_modal_control | ON FIRST PASS, exit0; three mixed joypad UI/rest/build/pause cycles with actual movement recovery; inherited fixtures; independent review PASS
-relay | ON OPEN
+relay | ON FIRST ACTIVE; default full captain/rescue sequence, optional rescue-only absent
 relay_station | ON OPEN
 release | ON OPEN
 riding | ON OPEN
