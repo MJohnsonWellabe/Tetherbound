@@ -331,3 +331,11 @@ func test_a_compacted_windowed_receipt_is_recognised_for_training_recovery() -> 
 	receipts.pop_back()
 	assert_false(AUTHORITY.receipt_compacted(character, "defeat:%s:old" % character, receipts), "below the window it is missing")
 	assert_false(AUTHORITY.receipt_compacted(character, "craft:%s:altar" % character, receipts), "an unwindowed kind is never compacted")
+	# Age anchored on the row's own receipts: a newer record dropped them all;
+	# a stale full-window backup still shares one (review M).
+	receipts.append("defeat:%s:newer-last" % character)
+	var row_older := ["defeat:%s:with-the-row" % character, "defeat:%s:old" % character]
+	assert_true(AUTHORITY.receipt_compacted(character, "defeat:%s:old" % character, receipts, row_older), "newer than the row: compacted")
+	var stale := receipts.duplicate()
+	stale[0] = "defeat:%s:with-the-row" % character
+	assert_false(AUTHORITY.receipt_compacted(character, "defeat:%s:old" % character, stale, row_older), "a backup sharing the row's older receipts is not")
