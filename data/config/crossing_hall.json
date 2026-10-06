@@ -1,5 +1,6 @@
 {
   "schema_version": 1,
+  "static_geometry_batching": false,
   "prefab": "crossing_hall_shell",
   "clearance_m": 1.5,
   "arches": [

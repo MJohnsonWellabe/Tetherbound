@@ -5,6 +5,55 @@ extends "res://tests/test_case.gd"
 const HALL := preload("res://scripts/world/crossing_hall.gd")
 const ACTION := preload("res://scripts/world/portal_arch.gd")
 
+func test_static_batching_keeps_live_portal_and_relic_display_nodes() -> void:
+	var hall: Node3D = HALL.new()
+	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(HALL.CONFIG_PATH))
+	hall.set("_config", config)
+	for entry: Dictionary in [config.arches[0], config.arches[1]]:
+		hall.call("_build_arch", entry)
+	hall.call("_build_pedestal", config.pedestals[1])
+	var arch: Node3D = hall.call("arch", "tidewake")
+	var membrane := arch.get_node(^"PortalSurface") as MeshInstance3D
+	var sign := arch.get_node(^"StateSign") as Label3D
+	var approach := arch.get_node(^"Approach") as Marker3D
+	hall.call("_add_hero_stone_infill", arch)
+	arch.set_meta("hero_art_used", true)
+	var stone := arch.get_node(^"PortalStoneInfill") as MeshInstance3D
+	var pedestal: Node3D = hall.get("_pedestals")["tidewake"]
+	var collider := pedestal.get_node(^"PedestalBody")
+	hall.call("_add_hero_relic", pedestal, "tidewake")
+	var relic := pedestal.get_node(^"DisplayedRelic") as Node3D
+	var session: Node = SessionGateDouble.new()
+	session.set("enabled", true)
+	hall.call("_mount_portal_actions", session)
+	var action := arch.get_node(^"PortalAction")
+	hall.call("apply_display", {"portal_unlocks": [], "shrine_display": {"tidewake": true}})
+	var original_material := membrane.material_override
+	assert_eq(int(hall.call("_batch_static_geometry").meshes), 0, "disabled candidate leaves installed geometry alone")
+	config.static_geometry_batching = true
+	var stats: Dictionary = hall.call("_batch_static_geometry")
+	assert_true(int(stats.meshes) > 0, "actual installed Hall kit meshes are merged")
+	assert_true(int(stats.batches) < int(stats.surfaces), "repeated installed surfaces share batches")
+	assert_eq(arch.get_node(^"PortalAction"), action)
+	assert_eq(arch.get_node(^"Approach"), approach)
+	assert_eq(pedestal.get_node(^"PedestalBody"), collider)
+	assert_eq(membrane.material_override, original_material)
+	assert_true(membrane.visible, "locked membrane cannot disappear into a static batch")
+	assert_true(relic.visible, "displayed relic remains an individually controlled node")
+	assert_true(sign.visible)
+	hall.call("apply_display", {"portal_unlocks": ["tidewake"], "shrine_display": {}})
+	assert_eq(sign.text, "Open")
+	assert_false(relic.visible, "a fresh shared display still clears the original relic")
+	hall.call("_set_hero_arch_state", arch, "sealed")
+	assert_false(membrane.visible)
+	assert_true(stone.visible, "previously hidden infill can still be shown after merging")
+	hall.call("_set_hero_arch_state", arch, "open")
+	assert_true(membrane.visible)
+	assert_false(stone.visible)
+	assert_eq(arch.get_node(^"StateSign"), sign)
+	hall.free()
+	session.free()
+
 func test_hero_plaque_preserves_visible_named_signs_and_a_separate_static_emblem() -> void:
 	var hall: Node3D = HALL.new()
 	var slot := Node3D.new()

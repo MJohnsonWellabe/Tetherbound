@@ -12,6 +12,7 @@ const OBJECTIVE_BEACON := preload("res://scripts/world/objective_beacon.gd")
 const LANTERN_MODEL := "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf"
 const CATALOG_PRESENTATION := preload("res://scripts/world/meadows_catalog_presentation.gd")
 const PORTAL_ACTION := preload("res://scripts/world/portal_arch.gd")
+const STATIC_BATCH := preload("res://scripts/world/static_mesh_batch.gd")
 
 var _config: Dictionary = {}
 var _arches: Dictionary = {}
@@ -43,8 +44,17 @@ func build(config: Dictionary) -> bool:
 	add_child(catalog)
 	catalog.build("hall")
 	refresh_from_game()
+	_batch_static_geometry()
 	set_process(true)
 	return true
+
+
+func _batch_static_geometry() -> Dictionary:
+	# Candidate stays off until the native Hall comparison passes. The existing
+	# merger retains source nodes, transforms, collision and material references.
+	if not bool(_config.get("static_geometry_batching", false)):
+		return {"meshes": 0, "surfaces": 0, "batches": 0}
+	return STATIC_BATCH.merge(self)
 
 
 static func validate_layout(config: Dictionary) -> bool:
@@ -107,6 +117,7 @@ func _build_arch(entry: Dictionary) -> void:
 	slot.add_child(arrival)
 	var membrane := MeshInstance3D.new()
 	membrane.name = "PortalSurface"
+	membrane.set_meta(STATIC_BATCH.SKIP_META, true)
 	var mesh := QuadMesh.new()
 	mesh.size = Vector2(1.45, 2.4)
 	membrane.mesh = mesh
@@ -234,6 +245,7 @@ func _add_hero_stone_infill(slot: Node3D) -> void:
 	var settings: Dictionary = (_config.get("hero_art", {}) as Dictionary).get("stone_infill", {})
 	var infill := MeshInstance3D.new()
 	infill.name = "PortalStoneInfill"
+	infill.set_meta(STATIC_BATCH.SKIP_META, true)
 	var stone := BoxMesh.new()
 	stone.size = _position(settings.get("size", [2.4, 3.6, .16]))
 	infill.mesh = stone
@@ -271,6 +283,7 @@ func _add_hero_relic(slot: Node3D, biome: String) -> void:
 	var settings: Dictionary = (_config.get("hero_art", {}) as Dictionary).get("relic_display", {})
 	var relic := Node3D.new()
 	relic.name = "DisplayedRelic"
+	relic.set_meta(STATIC_BATCH.SKIP_META, true)
 	relic.position = _position(settings.get("at", [0, 1.28, 0]))
 	relic.scale = Vector3.ONE * float(settings.get("scale", 1.0))
 	relic.visible = false
