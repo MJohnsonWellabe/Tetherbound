@@ -1,0 +1,100 @@
+{
+  "base_hp": {
+    "bramblebun": 95.0,
+    "galewisp": 105.0,
+    "mudsnout": 100.0,
+    "pipwing": 78.0,
+    "trailpup": 105.0
+  },
+  "formula": "conditional median_lead = historical median_party * sum(entry_max_hp) / entry_lead_max_hp",
+  "historical_report": "ralph/reports/COMBAT/f22/proof/f22_1_2_bands_r5.json",
+  "historical_report_sha256": "7df0b2726f95e51cba26fda018df79cb992d8de8fff2517cca5fedc115756e63",
+  "historical_source_sha": "a31ab858a760504b871ff1513a905a9db3714b4f",
+  "independent_review": {
+    "limits": "Bench-full assumption and unavailable raw runs retained; historical pre-fix12 source, no current24 proof and no chosen/authored HP tuning.",
+    "reviewer": "/root/resolution_review",
+    "verdict": "PASS for integrity and qualified historical source basis only",
+    "verified": [
+      "Historical report SHA256 and all8 pinned source-blob SHA256 values.",
+      "Old scorer aggregates party cost; default spawn/common growth give483/105=4.6.",
+      "All5 conditional medians; only band3 within15-30%."
+    ]
+  },
+  "kind": "Historical summary attribution; no new runtime or acceptance proof",
+  "limits": [
+    "Conditional conversion assumes unused bench retains full HP fraction; original per-run raw events are unavailable in this historical report.",
+    "Historical 12 seeds, pre-review switch-back bug/source. Does not certify current source or required 24-seed Gale Meadows wild bar.",
+    "No authored HP/stat tuning follows from this arithmetic; combat outcomes can change under any HP/resource adjustment.",
+    "No world/controller/authority/visual/single-hit acceptance claim."
+  ],
+  "party_to_lead_factor": 4.6,
+  "producer_description": "F22#1/#2 wild band sweep with the new READER/SWITCH_READER at pilot commit a31ab858 (BEFORE review fix 934c5da4: switch-back-to-<0.3HP bug present). 12 seeds/band, 3 starters, smoke_f22_pattern_bands.gd. F24 tag combo OFF (switch half = matchup + spent-lead rescue only).",
+  "rows": [
+    {
+      "band": "band1_lower_meadows",
+      "conditional_cost_within_15_30": false,
+      "conditional_lead_median": 0.36700433395349386,
+      "errors": 0,
+      "historical_party_median": 0.0797835508594552,
+      "historical_runs": 12,
+      "historical_win_rate": 0.916666666666667,
+      "tags": 0
+    },
+    {
+      "band": "band2_stone_and_root",
+      "conditional_cost_within_15_30": false,
+      "conditional_lead_median": 0.34748853170726146,
+      "errors": 0,
+      "historical_party_median": 0.0755409851537525,
+      "historical_runs": 12,
+      "historical_win_rate": 1.0,
+      "tags": 0
+    },
+    {
+      "band": "band3_the_river_lock",
+      "conditional_cost_within_15_30": true,
+      "conditional_lead_median": 0.27250397031131385,
+      "errors": 0,
+      "historical_party_median": 0.0592399935459378,
+      "historical_runs": 12,
+      "historical_win_rate": 1.0,
+      "tags": 0
+    },
+    {
+      "band": "band4_upper_meadows_ironwood",
+      "conditional_cost_within_15_30": false,
+      "conditional_lead_median": 0.3914682325988965,
+      "errors": 0,
+      "historical_party_median": 0.0851017896954123,
+      "historical_runs": 12,
+      "historical_win_rate": 1.0,
+      "tags": 0
+    },
+    {
+      "band": "band5_stronghold_approach",
+      "conditional_cost_within_15_30": false,
+      "conditional_lead_median": 0.3825045988256026,
+      "errors": 0,
+      "historical_party_median": 0.0831531736577397,
+      "historical_runs": 12,
+      "historical_win_rate": 1.0,
+      "tags": 0
+    }
+  ],
+  "source_basis": [
+    "Historical smoke constructs [starter, bramblebun, mudsnout, pipwing, trailpup] at one level with unrolled spawn defaults.",
+    "Historical scorer median_cost aggregates party_lost_frac, not lead_lost_frac.",
+    "Historical helper weights final HP fractions by entry max HP; common level growth/default individuality cancels in entry ratio.",
+    "MASHER routes directly to base _act; the base policy requests quick/charged and movement, without deliberate switching."
+  ],
+  "source_blob_sha256": {
+    "data/config/progression.json": "ee83ea8a3c65012d57133e1803abab87647452d5c7963552bdf8b175e96b6246",
+    "data/creatures/species.json": "b5721fc2ca8191a3da8f80199b50b9ae39231f8a7cf4ac18a43e584349c6d147",
+    "scripts/creatures/creature_instance.gd": "484bef84460c4db78d2e6e2f56b1d1fa1bb5dc61adfabb1e13c573c1efd44c8d",
+    "scripts/creatures/creature_species.gd": "22be0364b448437e0afc075c2141b709fd6ad1be22dfc85d34435290d30591e3",
+    "scripts/creatures/progression.gd": "72b6604008370ee0d8b77d898b7e7f36a199b7fc4baf63dd7ed7b14bfffdea68",
+    "tests/helpers/combat_depth_pilot.gd": "7ce498df260e4ce04d16ef783096a6eb0a2ef913186d45b4459ee7648bb25093",
+    "tests/helpers/f22_pattern_pilot.gd": "29a61bb44e625cf43aae7b28c7fa791b10867d4924d6ad047f518b0fd955db4c",
+    "tests/smoke_f22_pattern_bands.gd": "cdc4a3da95539ac8f2fa947ce07a7f61c881cf668b6a626e99f7588aa8208b5b"
+  }
+}

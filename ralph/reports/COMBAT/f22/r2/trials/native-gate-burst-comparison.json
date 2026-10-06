@@ -1,5 +1,17 @@
 {
+  "attack_attribution": "Reader/SwitchReader median misses=0 in both controls. Existing outcome counters provide no support for widening cone to cure aim misses. Landed hit/interrupt counts are descriptive, not causal damage or continuous action histories.",
+  "attack_attribution_review": {
+    "limits": "No cone/geometry or causal proof; no confirmed burst/debit receipt inferred from request counts.",
+    "reviewer": "/root/resolution_review",
+    "verdict": "PASS for exact counter medians and qualified source inference; numerical floor remains FAIL",
+    "verified": [
+      "All six attack-observation medians per policy independently recomputed from both native ZIPs.",
+      "Zero median misses does not mean every seed zero: control READER total9 misses/max2.",
+      "burst_uses counts pilot jump requests; quick/charged uses count observed WINDUP entries."
+    ]
+  },
   "changed_key": "wind.burst_cost=15",
+  "counter_qualification": "burst_uses counts pilot jump input requests, not confirmed accepted burst/debit receipts. quick_uses/charged_uses count observed WINDUP state entries. Other attack counters follow existing hit/miss/stagger callbacks; medians do not imply every seed has zero misses or establish full geometry/causation.",
   "disposition": "REJECT burst15 as standalone fix; small lead/time improvement but floor fails/charged uses fall. No authored data; further consumer attribution before next lever.",
   "limits": [
     "Native one-band control only; full2052/allstarter/after data preservation OPEN",
@@ -30,6 +42,14 @@
       "masher_lead": 0.57450627315996,
       "policies": {
         "MASHER": {
+          "attack_observation_medians": {
+            "charged_interrupts": 1.0,
+            "hits": 55.5,
+            "incoming_hits": 10.0,
+            "misses": 3.0,
+            "player_windup_cancellations": 8.0,
+            "stagger_events": 9.0
+          },
           "burst_uses": 0.0,
           "charged_uses": 11.0,
           "exhausted_frames": 2095.0,
@@ -37,6 +57,14 @@
           "seconds": 49.175
         },
         "READER": {
+          "attack_observation_medians": {
+            "charged_interrupts": 2.0,
+            "hits": 44.5,
+            "incoming_hits": 17.5,
+            "misses": 0.0,
+            "player_windup_cancellations": 0.0,
+            "stagger_events": 5.0
+          },
           "burst_uses": 55.0,
           "charged_uses": 2.0,
           "exhausted_frames": 38.0,
@@ -44,6 +72,14 @@
           "seconds": 111.70833333333351
         },
         "SWITCH_READER": {
+          "attack_observation_medians": {
+            "charged_interrupts": 2.0,
+            "hits": 42.5,
+            "incoming_hits": 13.0,
+            "misses": 0.0,
+            "player_windup_cancellations": 0.0,
+            "stagger_events": 6.0
+          },
           "burst_uses": 47.5,
           "charged_uses": 3.0,
           "exhausted_frames": 38.0,
@@ -74,6 +110,14 @@
       "masher_lead": 0.57450627315996,
       "policies": {
         "MASHER": {
+          "attack_observation_medians": {
+            "charged_interrupts": 1.0,
+            "hits": 55.5,
+            "incoming_hits": 10.0,
+            "misses": 3.0,
+            "player_windup_cancellations": 8.0,
+            "stagger_events": 9.0
+          },
           "burst_uses": 0.0,
           "charged_uses": 11.0,
           "exhausted_frames": 2095.0,
@@ -81,6 +125,14 @@
           "seconds": 49.175
         },
         "READER": {
+          "attack_observation_medians": {
+            "charged_interrupts": 4.0,
+            "hits": 37.0,
+            "incoming_hits": 18.0,
+            "misses": 0.0,
+            "player_windup_cancellations": 0.0,
+            "stagger_events": 6.0
+          },
           "burst_uses": 47.5,
           "charged_uses": 5.0,
           "exhausted_frames": 114.0,
@@ -88,6 +140,14 @@
           "seconds": 118.45
         },
         "SWITCH_READER": {
+          "attack_observation_medians": {
+            "charged_interrupts": 4.0,
+            "hits": 38.0,
+            "incoming_hits": 15.0,
+            "misses": 0.0,
+            "player_windup_cancellations": 0.0,
+            "stagger_events": 6.5
+          },
           "burst_uses": 44.0,
           "charged_uses": 5.0,
           "exhausted_frames": 87.5,
