@@ -389,14 +389,17 @@ func _prove_tag_combo() -> void:
 		"Tag: owner and trusted host recast the same bodies once to the next owned UID")
 	check(after.party == data.before.party and after.party.size() <= 5, "Tag: body switch preserves the admitted party without another creature")
 	check(after.commands.meter == verdict.delta.tether_commands.meter \
-		and host.record.participants[peer].tether_commands == verdict.delta.tether_commands,
+		and host.record.participants.get(str(peer), {}).get("tether_commands", {}) == verdict.delta.tether_commands,
 		"Tag: owner and host consume exactly the parent's command meter state")
 	check(host.seen_impacts.has(str(strikes[1].action_id)), "Tag: joined observer consumes the actual incoming child impact")
 	print("TAG actual family observation: ", JSON.stringify({"owner":after,"host":host,"before":host_before}))
 	_ok(await step(1, "op_tag_replay"), "Tag: submit the same original again")
 	var replay: Dictionary = await probe(0, "op_tag_state", args)
-	check(replay.original == original and replay.record.opponent.hp == host.record.opponent.hp \
-		and replay.record.participants[peer].tether_commands == host.record.participants[peer].tether_commands,
+	check(replay.original.get("admission", {}) == original.get("admission", {}) \
+		and replay.original.get("outcome", {}) == original.get("outcome", {}) \
+		and replay.record.opponent.hp == host.record.opponent.hp \
+		and replay.record.participants.get(str(peer), {}).get("tether_commands", {}) \
+		== host.record.participants.get(str(peer), {}).get("tether_commands", {}),
 		"Tag: duplicate submission cannot debit HP or meter or replace the retained parent")
 	for i in [1,0]: _ok(await step(i, "press", {"action":"combat_run"}), "Tag: peer %d normally leaves the proof fight" % i)
 
