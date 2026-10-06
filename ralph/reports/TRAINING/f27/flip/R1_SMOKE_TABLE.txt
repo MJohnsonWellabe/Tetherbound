@@ -73,20 +73,20 @@ playground | ON FIRST PASS, exit0; terrain/collision/harvest-chop/felledpickup/t
 post_modal_control | ON FIRST PASS, exit0; three mixed joypad UI/rest/build/pause cycles with actual movement recovery; inherited fixtures; independent review PASS
 relay | ON FIRST PASS, exit0; five opponents7147frames/exact victorydialogue/rescueoneGear/relocationchangedID; legacy unowned L16/directposes+HPsupports/no earned-coop-canonical-disk proof; actualarbiter greeting/villageIDlookuponly/optional rescue-only unexecuted; independent qualified review PASS
 relay_station | ON FIRST PASS, exit0; station collision/ramp/consolegate/localhealing597plants-idempotence; flaggrants/directcollisiondriver-positions-consolehandlers/storedflag notnotificationcount/threepoint analyticdrain/configphysicswait/no rendered-coop-disk proof; independent qualified review PASS
-release | ON FIRST ACTIVE; seeded5keeper/pendingcatch seam/ceremony input+typedrelease assertions
-riding | ON OPEN
+release | ON FIRST PASS, exit0; two ceremony decisions/cap/inputownership/firstGround3+receipt; seededkeeper/pendingcatch/focus inputfixtures/InputEventAction notjoypad/firstpaid-removal saveonly/no finalfive-physicalcatch-earn-hw-coop-reload proof; independent qualified review PASS
+riding | ON FIRST PASS, exit0; saddle-ride-turn-sprint-jump-camera/modal-despawn-recovery/legendarytier-midfightrefusal; seededparty-saddle-pose-input/Veridiantieraccessors notspeed-slope measurement/actionpressonly/extra ghostwarning/no subsequentwalk-earned-hw-coop-reload-perf proof; independent qualified review PASS
 satchel_owns_hotbar | ON FIRST PASS exit0; physicalinput ownership/control+heldstackvariants; existingminimalfixture
 settings | ON FIRST PASS, exit0; native input/rebinding/file/reset/panic/debug teleport; private controls file; original limits; independent review PASS
 starter_picker | ON FIRST PASS exit0; sameframechoice+physicalDpad navigation; isolatedpickerfixture
 station_panels_hide_world_hud | ON FIRST PASS exit0; fiveactualUIpanels hide+restore bothHUDlayers; existingstand-infixture
 stormwood_deepwood_circuit_wiring | ON FIRST PASS, exit0/empty stderr; isolated production chapter/ledger wiring with stubbed outcomes/projections; no actual combat/co-op/disk reload; independent review PASS
-stronghold | ON OPEN
+stronghold | ON FIRST PASS, exit0; fivefloors/route-shutters/trainers/machine-sightline/boundlegendary/bedindex-directrest; directcollision/poses/flags/roomtolerances/no livingally/successfulchallengeability notasserted/no actualgauntlet-earn-render proof; independent qualified review PASS
 title_load_game | ON FIRST PASS, exit0; real isolated save/title pad Load/Meadows/locomotion enabled/focus released/pose/day/party COUNT/inventory restoration; staged save fixture; raw4 plus actual saves2; independent review PASS
 title_new_game | ON FIRST PASS, exit0; native title pad activation/reset/Meadows entry; dirty-state fixture and prefilled name confirmation; independent review PASS
 trainer_battle | ON FIRST PASS exit0; 2of2opponents/exact20coin+1potion/XPgain/no-rechallenge-payout; independent functional review PASS; duplicate-starterERROR retained/OFFcomparison PASS exactstderrparity reviewed; legacy local fixture/no durable proof
 trainer_battle_camera | ON FIRST PASS exit0; realMira deployedcamera/GUI focus/controllerorbit entry+exit; rawreceipt retained
 trainer_no_usable_ally | ON FIRST PASS exit0; faintedally honestrefusal/nofalsevictory/directheal restoreschallenge; rawreceipts retained, inheritedfault+heal fixture
-traversal | ON OPEN
+traversal | ON FIRST ACTIVE; original collision/longwalk/fallguard/worldedge assertions
 unstick | ON OPEN
 veridian_offer_choice | ON OPEN
 warrens | ON OPEN
