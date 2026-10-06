@@ -1,0 +1,129 @@
+{
+	"budgets": {
+		"desync_frames": 240.0,
+		"heartbeat_frames": 60.0,
+		"hello_budget_s": 600.0,
+		"near_tolerance_motion_m": 4.0,
+		"near_tolerance_rest_m": 1.5,
+		"smoke_step_budget_s_2peer": 1500.0,
+		"smoke_step_budget_s_wide": 1500.0,
+		"step_budget_frames": 3000.0
+	},
+	"failures": [
+		"(b) the early-committed charge landed on the host ({ \"landed\": false, \"host_staggered\": false, \"guest_staggers\": 0, \"poise_before\": 1000000.0, \"poise_after\": 1000000.0, \"since_ms\": 235968, \"energy_hits\": 6, \"start\": \"sent charged move_start only (action 9007, rapid 0) { \\\"code\\\": \\\"pending\\\", \\\"ok\\\": false, \\\"pending\\\": true, \\\"rapid_action\\\": 0.0, \\\"rapid_code\\\": \\\"\\\", \\\"submitted_action\\\": 9007.0 }\", \"strike\": \"submitted charged strike (local verdict ok=false pending=true code=pending) { \\\"code\\\": \\\"pending\\\", \\\"ok\\\": false, \\\"pending\\\": true, \\\"reason\\\": \\\"\\\", \\\"submitted_action\\\": 9007.0 }\", \"hp\": [100000.0, 100000.0] })",
+		"(b) its blow drained poise normally instead ({ \"landed\": false, \"host_staggered\": false, \"guest_staggers\": 0, \"poise_before\": 1000000.0, \"poise_after\": 1000000.0, \"since_ms\": 235968, \"energy_hits\": 6, \"start\": \"sent charged move_start only (action 9007, rapid 0) { \\\"code\\\": \\\"pending\\\", \\\"ok\\\": false, \\\"pending\\\": true, \\\"rapid_action\\\": 0.0, \\\"rapid_code\\\": \\\"\\\", \\\"submitted_action\\\": 9007.0 }\", \"strike\": \"submitted charged strike (local verdict ok=false pending=true code=pending) { \\\"code\\\": \\\"pending\\\", \\\"ok\\\": false, \\\"pending\\\": true, \\\"reason\\\": \\\"\\\", \\\"submitted_action\\\": 9007.0 }\", \"hp\": [100000.0, 100000.0] })"
+	],
+	"fatal": "",
+	"net_conditions": {},
+	"peers": [
+		{
+			"command_timeout_observation": null,
+			"control_port": 52325,
+			"exited": true,
+			"hashes": [
+				949396019,
+				949396019,
+				949396019
+			],
+			"hello": {
+				"enet_port": 34701.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "9390abc95609",
+				"peer": 0.0,
+				"pid": 12348.0,
+				"role": "host",
+				"type": "hello",
+				"user_data_dir": "D:/tetherbound/.artifacts/r1-f27-flip/net-f22-forced-break-on/home-0/Godot/app_userdata/Tetherbound"
+			},
+			"index": 0,
+			"last_heartbeat": {
+				"context": "combat",
+				"frame": 310.0,
+				"physics_frame": 2142.0,
+				"pos": [
+					-4.63784551620483,
+					-0.627502024173737,
+					64.3155136108398
+				],
+				"session_peers": [
+					1.0,
+					698905585.0
+				],
+				"state_hash": 949396019.0,
+				"t": 355.253,
+				"type": "heartbeat"
+			},
+			"pid": 12348,
+			"role": "host",
+			"unexpected_exit": false
+		},
+		{
+			"command_timeout_observation": null,
+			"control_port": 52326,
+			"exited": true,
+			"hashes": [
+				949396019,
+				949396019,
+				949396019
+			],
+			"hello": {
+				"enet_port": 34702.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "9390abc95609",
+				"peer": 1.0,
+				"pid": 7736.0,
+				"role": "client",
+				"type": "hello",
+				"user_data_dir": "D:/tetherbound/.artifacts/r1-f27-flip/net-f22-forced-break-on/home-1/Godot/app_userdata/Tetherbound"
+			},
+			"index": 1,
+			"last_heartbeat": {
+				"context": "combat",
+				"frame": 767.0,
+				"physics_frame": 5793.0,
+				"pos": [
+					-14.5705976486206,
+					-1.02548539638519,
+					63.8941955566406
+				],
+				"session_peers": [
+					1.0,
+					698905585.0
+				],
+				"state_hash": 949396019.0,
+				"t": 354.827,
+				"type": "heartbeat"
+			},
+			"pid": 7736,
+			"role": "client",
+			"unexpected_exit": false
+		}
+	],
+	"proxies": [],
+	"run_id": "r1-f22-forced-break-on-20261006T0954Z",
+	"scene": "world",
+	"state_hash_excluded_keys": [
+		"party",
+		"inventory",
+		"hotbar",
+		"satiety",
+		"map",
+		"realm_maps",
+		"alpha_pins",
+		"player_pose",
+		"clock_elapsed_seconds",
+		"current_realm",
+		"pending_realm_entry",
+		"realm_hearts",
+		"version"
+	],
+	"state_hash_hashed_keys": [
+		"flags",
+		"placed_buildings",
+		"farm_plots",
+		"death_satchels",
+		"harvested_vegetation",
+		"felled_vegetation",
+		"day"
+	]
+}

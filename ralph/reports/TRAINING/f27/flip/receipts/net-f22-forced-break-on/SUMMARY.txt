@@ -1,0 +1,12 @@
+# Net smoke run r1-f22-forced-break-on-20261006T0954Z
+
+Scene: world
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=12348 exited=true unexpected_exit=false
+- peer 1 (client) pid=7736 exited=true unexpected_exit=false
+
+FAILURES:
+- (b) the early-committed charge landed on the host ({ "landed": false, "host_staggered": false, "guest_staggers": 0, "poise_before": 1000000.0, "poise_after": 1000000.0, "since_ms": 235968, "energy_hits": 6, "start": "sent charged move_start only (action 9007, rapid 0) { \"code\": \"pending\", \"ok\": false, \"pending\": true, \"rapid_action\": 0.0, \"rapid_code\": \"\", \"submitted_action\": 9007.0 }", "strike": "submitted charged strike (local verdict ok=false pending=true code=pending) { \"code\": \"pending\", \"ok\": false, \"pending\": true, \"reason\": \"\", \"submitted_action\": 9007.0 }", "hp": [100000.0, 100000.0] })
+- (b) its blow drained poise normally instead ({ "landed": false, "host_staggered": false, "guest_staggers": 0, "poise_before": 1000000.0, "poise_after": 1000000.0, "since_ms": 235968, "energy_hits": 6, "start": "sent charged move_start only (action 9007, rapid 0) { \"code\": \"pending\", \"ok\": false, \"pending\": true, \"rapid_action\": 0.0, \"rapid_code\": \"\", \"submitted_action\": 9007.0 }", "strike": "submitted charged strike (local verdict ok=false pending=true code=pending) { \"code\": \"pending\", \"ok\": false, \"pending\": true, \"reason\": \"\", \"submitted_action\": 9007.0 }", "hp": [100000.0, 100000.0] })
