@@ -224,6 +224,55 @@ func test_sample_freshness_is_judged_at_the_request_arrival() -> void:
 	assert_false(LIFECYCLE.sample_fresh({"sample": {}, "seen_at": now}, now - 5), "a sample after the request does not vouch for it")
 
 
+class PairingWorld extends RefCounted:
+	var reward_delivery_namespace := "world_a"
+
+class PairingGame extends Node:
+	var world := PairingWorld.new()
+
+class PairingSession extends Node:
+	var game := PairingGame.new()
+	func is_host() -> bool: return true
+	func _authority_character(_peer: int) -> String: return "guest_a"
+	func _altar_current_epoch() -> String: return "epoch_a"
+	func _game() -> Node: return game
+	func admitted_character_state(_peer: int) -> Dictionary: return {"character_id": "guest_a"}
+
+func _pairing_sample(sequence: int, damage_revision: int = 0) -> Dictionary:
+	return {"character_id": "guest_a", "world_instance_id": "world_a", "session_epoch": "epoch_a", "realm": "meadows",
+		"damage_revision": damage_revision, "dialogue": false, "cutscene": false, "swimming": false, "flying": false,
+		"downed": false, "station_ack_only": false, "ending_owner": true, "party_revision": 1,
+		"party_signature": "a".repeat(64), "sequence": sequence}
+
+## f20 render f20-fix-b (090fff3f): the guest's sample and its regional_ack
+## landed a slow (~1 s) host frame apart, and the host judged the request's
+## own sample stale ("stale_sample_1086ms last_refused=none") and refused the
+## acknowledgement terminally. A request is judged at its paired sample.
+func test_a_request_is_judged_at_its_paired_sample_a_slow_frame_later() -> void:
+	var owner := PairingSession.new()
+	var composition := Node.new()
+	var lifecycle: Node = LIFECYCLE.new()
+	owner.add_child(composition)
+	composition.add_child(lifecycle)
+	lifecycle.accept(2, _pairing_sample(1))
+	var observation: Dictionary = lifecycle._observations.get(2, {})
+	assert_false(observation.is_empty(), "the fixture sample is accepted")
+	assert_true(lifecycle.has_method("take_paired_arrival"), "the host pairs a request with its sample")
+	if not lifecycle.has_method("take_paired_arrival"):
+		owner.free()
+		return
+	var slow_frame: int = int(observation.get("seen_at", 0)) + 1100
+	var judged_at: int = lifecycle.take_paired_arrival(2, slow_frame)
+	assert_eq(judged_at, int(observation.get("seen_at", -1)), "the request is judged at its sample's arrival")
+	assert_true(LIFECYCLE.sample_fresh(observation, judged_at), "its own sample is fresh for it")
+	assert_eq(lifecycle.take_paired_arrival(2, slow_frame), slow_frame, "a second request without a new sample is judged now")
+	assert_false(LIFECYCLE.sample_fresh(observation, slow_frame), "and the old sample is stale for it")
+	lifecycle.accept(2, _pairing_sample(2))
+	lifecycle.accept(2, _pairing_sample(2))
+	assert_eq(lifecycle.take_paired_arrival(2, slow_frame), slow_frame, "a refused last sample pairs nothing")
+	owner.free()
+
+
 ## F18 #4 (render 37338210735: gate ending_fields party_decode): the host
 ## rebuilds a guest's party from its portable record, which deliberately
 ## drops each card's in-fight energy (character_record_rules, 187a3f24). The
