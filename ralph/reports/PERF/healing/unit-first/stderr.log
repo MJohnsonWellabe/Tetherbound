@@ -1,0 +1,35 @@
+WARNING: meadow_healing: ApproachConduits/Pylon_0 is left standing (authored null in pylons.falls, or no clear direction)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _topple_one (res://scripts/world/meadow_healing.gd:1551)
+       [1] test_an_authored_null_stays_standing_and_a_baked_azimuth_is_obeyed (res://tests/test_meadow_healing_land_heals.gd:401)
+       [2] _init (res://tests/run_tests.gd:120)
+WARNING: meadow_healing: UnbakedConduits/Pylon_0 is not in pylons.falls; searching (roads and ground only) -- re-bake the table
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _topple_one (res://scripts/world/meadow_healing.gd:1546)
+       [1] test_an_unbaked_pylon_with_no_clear_direction_stays_standing_and_is_counted (res://tests/test_meadow_healing_land_heals.gd:388)
+       [2] _init (res://tests/run_tests.gd:120)
+WARNING: meadow_healing: UnbakedConduits/Pylon_0 is left standing (authored null in pylons.falls, or no clear direction)
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _topple_one (res://scripts/world/meadow_healing.gd:1551)
+       [1] test_an_unbaked_pylon_with_no_clear_direction_stays_standing_and_is_counted (res://tests/test_meadow_healing_land_heals.gd:388)
+       [2] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid access to property or key 'root' on a base object of type 'null instance'.
+   at: test_grouped_lights_deduplicate_materials_and_preserve_warm_and_other_worlds (res://tests/test_meadow_healing_land_heals.gd:87)
+   GDScript backtrace (most recent call first):
+       [0] test_grouped_lights_deduplicate_materials_and_preserve_warm_and_other_worlds (res://tests/test_meadow_healing_land_heals.gd:87)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid access to property or key 'root' on a base object of type 'null instance'.
+   at: test_grouped_topple_preserves_exactly_once_and_severed_spoke_exclusion (res://tests/test_meadow_healing_land_heals.gd:57)
+   GDScript backtrace (most recent call first):
+       [0] test_grouped_topple_preserves_exactly_once_and_severed_spoke_exclusion (res://tests/test_meadow_healing_land_heals.gd:57)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid access to property or key 'root' on a base object of type 'null instance'.
+   at: test_healing_groups_are_scoped_to_the_live_world_and_refreshed_per_step (res://tests/test_meadow_healing_land_heals.gd:28)
+   GDScript backtrace (most recent call first):
+       [0] test_healing_groups_are_scoped_to_the_live_world_and_refreshed_per_step (res://tests/test_meadow_healing_land_heals.gd:28)
+       [1] _init (res://tests/run_tests.gd:120)
+WARNING: 5 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2535)

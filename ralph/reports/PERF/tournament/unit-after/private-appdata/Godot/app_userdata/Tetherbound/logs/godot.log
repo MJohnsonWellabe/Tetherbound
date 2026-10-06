@@ -1,0 +1,130 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_telegraph_glow.gd,test_companion_presence.gd,test_fight_ring_occluders.gd: 3 of 815 test files
+  ok    test_companion_presence.gd :: test_a_bond_node_completing_is_the_strongest_moment
+  ok    test_companion_presence.gd :: test_a_dialogue_panel_blocks_and_hurt_pose_lets_go_under_it
+  ok    test_companion_presence.gd :: test_a_loaded_save_or_party_swap_does_not_celebrate_old_bond
+  ok    test_companion_presence.gd :: test_a_moving_trainer_resets_the_stillness_clock
+  ok    test_companion_presence.gd :: test_a_victory_cut_by_the_teardown_turns_into_a_greeting_on_redeploy
+  ok    test_companion_presence.gd :: test_acknowledges_a_trainer_who_stands_still_for_the_configured_delay
+  ok    test_companion_presence.gd :: test_acknowledgment_respects_its_cooldown
+  ok    test_companion_presence.gd :: test_acknowledgment_walks_up_then_holds_the_pivot_and_restores_it
+  ok    test_companion_presence.gd :: test_aiming_riding_prompts_lockout_and_build_ghosts_all_block
+  ok    test_companion_presence.gd :: test_camera_safe_flank_does_not_swing_behind_the_view_during_diagonal_travel
+  ok    test_companion_presence.gd :: test_care_for_a_different_creature_is_not_this_creatures_moment
+  ok    test_companion_presence.gd :: test_care_from_the_satchel_waits_for_the_menu_to_close
+  ok    test_companion_presence.gd :: test_care_respects_its_cooldown
+  ok    test_companion_presence.gd :: test_each_care_kind_has_its_own_motion
+  ok    test_companion_presence.gd :: test_exploration_flank_turns_with_trainer_travel_not_the_unrotated_body_basis
+  ok    test_companion_presence.gd :: test_exploration_follower_targets_the_moving_trainer_flank_not_the_camera_line
+  ok    test_companion_presence.gd :: test_far_from_any_camp_nothing_settles
+  ok    test_companion_presence.gd :: test_galecrest_gaze_uses_an_upright_axis_and_tracks_upper_body
+  ok    test_companion_presence.gd :: test_grouped_camp_scan_skips_unrelated_world_and_retains_suffix_and_ui_rules
+  ok    test_companion_presence.gd :: test_higher_bond_acknowledges_sooner
+  ok    test_companion_presence.gd :: test_higher_bond_makes_the_victory_warmer
+  ok    test_companion_presence.gd :: test_hunger_reads_as_tired_too
+  ok    test_companion_presence.gd :: test_low_hp_slows_the_gait_lowers_the_head_and_flinches
+  ok    test_companion_presence.gd :: test_nothing_starts_in_combat_and_a_running_reaction_is_cut
+  ok    test_companion_presence.gd :: test_presence_approach_cannot_pull_a_large_follower_inside_its_safe_flank
+  ok    test_companion_presence.gd :: test_settles_beside_a_lit_campfire_and_stands_up_to_move
+  ok    test_companion_presence.gd :: test_the_bond_milestone_hook_is_the_same_entry
+  ok    test_companion_presence.gd :: test_the_camp_group_is_an_opt_in_camp_source
+  ok    test_companion_presence.gd :: test_the_camp_scan_costs_nothing_while_the_creature_is_moving
+  ok    test_companion_presence.gd :: test_the_fixture_is_a_real_rigged_follower
+  ok    test_companion_presence.gd :: test_the_head_turns_toward_a_near_trainer_and_not_a_far_one
+  ok    test_companion_presence.gd :: test_victory_fires_on_the_result_beat_and_hops
+  ok    test_companion_presence.gd :: test_victory_waits_out_a_fight_that_is_still_running
+  ok    test_fight_ring_occluders.gd :: test_a_bush_harvested_during_the_fight_stays_harvested
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/harvest_node.gd:522)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:338)
+       [2] setup (res://scripts/world/harvest_node.gd:160)
+       [3] _harvest (res://tests/test_fight_ring_occluders.gd:185)
+       [4] test_a_deadwood_node_joins_the_ring_group_and_a_rock_does_not (res://tests/test_fight_ring_occluders.gd:190)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_kind (res://scripts/world/harvest_node.gd:535)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:338)
+       [2] setup (res://scripts/world/harvest_node.gd:160)
+       [3] _harvest (res://tests/test_fight_ring_occluders.gd:185)
+       [4] test_a_deadwood_node_joins_the_ring_group_and_a_rock_does_not (res://tests/test_fight_ring_occluders.gd:190)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/harvest_node.gd:170)
+       [1] _harvest (res://tests/test_fight_ring_occluders.gd:185)
+       [2] test_a_deadwood_node_joins_the_ring_group_and_a_rock_does_not (res://tests/test_fight_ring_occluders.gd:190)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/harvest_node.gd:522)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:338)
+       [2] setup (res://scripts/world/harvest_node.gd:160)
+       [3] _harvest (res://tests/test_fight_ring_occluders.gd:185)
+       [4] test_a_deadwood_node_joins_the_ring_group_and_a_rock_does_not (res://tests/test_fight_ring_occluders.gd:193)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_kind (res://scripts/world/harvest_node.gd:535)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:338)
+       [2] setup (res://scripts/world/harvest_node.gd:160)
+       [3] _harvest (res://tests/test_fight_ring_occluders.gd:185)
+       [4] test_a_deadwood_node_joins_the_ring_group_and_a_rock_does_not (res://tests/test_fight_ring_occluders.gd:193)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/harvest_node.gd:170)
+       [1] _harvest (res://tests/test_fight_ring_occluders.gd:185)
+       [2] test_a_deadwood_node_joins_the_ring_group_and_a_rock_does_not (res://tests/test_fight_ring_occluders.gd:193)
+       [3] _init (res://tests/run_tests.gd:120)
+  ok    test_fight_ring_occluders.gd :: test_a_deadwood_node_joins_the_ring_group_and_a_rock_does_not
+  ok    test_fight_ring_occluders.gd :: test_an_overlapping_second_ring_does_not_take_the_same_plant_twice
+  ok    test_fight_ring_occluders.gd :: test_arena_refresh_updates_changed_cells_without_rebuilding_other_instances
+  ok    test_fight_ring_occluders.gd :: test_closing_the_arena_puts_every_hidden_plant_back_where_it_stood
+  ok    test_fight_ring_occluders.gd :: test_ground_a_site_cleared_for_good_is_never_restored_by_a_fight
+  ok    test_fight_ring_occluders.gd :: test_nothing_happens_without_an_instancer
+  ok    test_fight_ring_occluders.gd :: test_only_what_stands_inside_the_ring_is_hidden
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/harvest_node.gd:522)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:338)
+       [2] setup (res://scripts/world/harvest_node.gd:160)
+       [3] _harvest (res://tests/test_fight_ring_occluders.gd:185)
+       [4] test_overlapping_rings_keep_the_model_hidden_until_the_last_one_closes (res://tests/test_fight_ring_occluders.gd:201)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_kind (res://scripts/world/harvest_node.gd:535)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:338)
+       [2] setup (res://scripts/world/harvest_node.gd:160)
+       [3] _harvest (res://tests/test_fight_ring_occluders.gd:185)
+       [4] test_overlapping_rings_keep_the_model_hidden_until_the_last_one_closes (res://tests/test_fight_ring_occluders.gd:201)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/harvest_node.gd:170)
+       [1] _harvest (res://tests/test_fight_ring_occluders.gd:185)
+       [2] test_overlapping_rings_keep_the_model_hidden_until_the_last_one_closes (res://tests/test_fight_ring_occluders.gd:201)
+       [3] _init (res://tests/run_tests.gd:120)
+  ok    test_fight_ring_occluders.gd :: test_overlapping_rings_keep_the_model_hidden_until_the_last_one_closes
+  ok    test_fight_ring_occluders.gd :: test_the_first_ring_closing_leaves_plants_the_second_still_holds_hidden
+  ok    test_telegraph_glow.gd :: test_ground_ring_keeps_resampling_changed_heights_on_same_body
+  ok    test_telegraph_glow.gd :: test_shared_ground_point_is_sampled_once_and_cache_expires_each_rebuild
+  ok    test_telegraph_glow.gd :: test_state_ring_clears_body_footprint_and_follows_sloped_ground
+  ok    test_telegraph_glow.gd :: test_state_ring_rides_the_water_surface_over_a_seabed
+  ok    test_telegraph_glow.gd :: test_the_ring_spawns_lifted_depth_tested_and_frees_after_its_beat
+  ok    test_telegraph_glow.gd :: test_the_telegraph_colour_stays_out_of_the_reserved_oxblood_band
+  ok    test_telegraph_glow.gd :: test_unchanged_dry_ring_skips_vertices_but_pulse_and_move_redraw
+
+50 tests, 316 assertions, 0 failed

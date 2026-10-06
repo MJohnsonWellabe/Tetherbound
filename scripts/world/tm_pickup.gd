@@ -180,6 +180,7 @@ var _spinner: Node3D = null
 
 
 func _build_visual() -> void:
+	add_to_group(&"meadow_healing_light_roots")
 	var colour: Color = _tms.call("colour", _tm_id) if _tms != null else Color(0.6, 0.6, 0.6)
 
 	# The plinth, unchanged from the disc version: the same stone value every

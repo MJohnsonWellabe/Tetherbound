@@ -662,6 +662,10 @@ func _build_fallen_roadbed(world: Node3D, holder: Node3D, blocker: Dictionary, r
 ## `conduit_emission_scale`; defaults are 1.0, so only a site whose local value
 ## hierarchy requires restraint changes the established network grammar.
 func _build_pylons(world: Node3D, holder: Node3D, spoke: Dictionary) -> void:
+	holder.add_to_group(&"meadow_healing_light_roots")
+	# The healing config still decides which runs fall; severed Spoke_* runs
+	# are indexed here too, but are deliberately excluded by that config.
+	holder.add_to_group(&"meadow_healing_pylon_holders")
 	var config: Dictionary = spoke.get("pylons", {})
 	var list: Array = config.get("list", [])
 	if list.is_empty():
@@ -800,6 +804,7 @@ func _conduit_span(parent: Node3D, index: int, a: Vector3, b: Vector3,
 
 func _conduit_segment(parent: Node3D, node_name: String, a: Vector3, b: Vector3,
 		material: StandardMaterial3D, radius: float = CONDUIT_RADIUS) -> void:
+	parent.add_to_group(&"meadow_healing_light_roots")
 	var length := a.distance_to(b)
 	if length < 0.05:
 		return

@@ -1,0 +1,32 @@
+{
+  "run_id": "p2-tournament-profile-before",
+  "source_head": "ea5ac4bee71095c81bfdd6ca587582685977acf1",
+  "product_basis": "8e7c11ceb5854f063c5241d62618c382803562c9",
+  "temporary_original_paths": [
+    "scripts/build/creature_bed.gd",
+    "scripts/build/player_bed.gd",
+    "scripts/combat/telegraph_glow.gd",
+    "scripts/creatures/companion_presence.gd",
+    "scripts/world/campfire_glow.gd",
+    "scripts/world/vegetation.gd"
+  ],
+  "started_utc": "2026-10-06T10:01:41.9975455Z",
+  "command": [
+    "--headless",
+    "--path",
+    "D:/tetherbound/codex-p2",
+    "--script",
+    "tests/smoke_net_shared_boss.gd",
+    "--",
+    "--tournament"
+  ],
+  "host_peer": 0,
+  "temporary_host_args": [
+    "-d",
+    "--profiling"
+  ],
+  "temporary_helper_sha256": "91B8DF7C84A1C48D2B8F9650588C1BEF14F275BEB07051D85667B3B32893C5EB",
+  "claim": "quiet debug host function self-time profile only, not FPS or functional PASS; existing known shared-round failure retained if reached",
+  "assertions_budgets": "unchanged",
+  "cache_basis": "existing independent P2 cache, no copy/import"
+}
