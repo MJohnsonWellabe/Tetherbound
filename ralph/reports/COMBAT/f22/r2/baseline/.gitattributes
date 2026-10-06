@@ -2,3 +2,4 @@ native-error-first.txt -text whitespace=cr-at-eol
 console.log -text whitespace=cr-at-eol
 full.json -text whitespace=cr-at-eol
 hitstop-unit.log -text whitespace=cr-at-eol
+neutral-entry-parse.log -text whitespace=cr-at-eol

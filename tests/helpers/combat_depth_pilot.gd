@@ -23,6 +23,7 @@ var _incoming_windup := false
 var _enemy_windup_before_tick := false
 var _last_action: int = MANAGER.Action.READY
 var _entry_maxima: Dictionary = {}
+var _entry_defences: Dictionary = {}
 ## Test-only A/B lever: {move_id: {key: value}} written over the fight
 ## manager's own in-memory move table (never moves.json), e.g. to measure a
 ## data trial against the value it replaced on the same head.
@@ -33,15 +34,18 @@ func fight(tree: SceneTree, party: Array[RefCounted], foes: Array,
 		owned: bool, seed_value: int, policy: String) -> Dictionary:
 	_tally = {"won": false, "seconds": 0.0, "faints": 0,
 		"max_hit_frac": 0.0, "neutral_worst_frac": 0.0, "lead_lost_frac": 0.0, "party_lost_frac": 0.0,
+		"neutral_entry_bound_frac": 0.0, "neutral_entry_profiles": 0, "neutral_entry_foes": 0,
 		"stalled": false, "hits": 0, "incoming_hits": 0, "misses": 0,
 		"player_windup_cancellations": 0, "charged_interrupts": 0,
 		"stagger_events": 0, "exhausted_frames": 0, "events": [],
 		"burst_uses": 0, "charged_uses": 0, "quick_uses": 0,
 		"seed": seed_value, "pilot": policy, "physics_frames": 0}
 	var party_max := 0.0
+	_entry_defences.clear()
 	for member in party:
 		party_max += float(member.max_hp)
 		_entry_maxima[member.get_instance_id()] = float(member.max_hp)
+		_entry_defences[member.get_instance_id()] = float(member.call("effective_defence", PROGRESSION.config()))
 	var lead: RefCounted = party[0]
 	var world := Node3D.new()
 	world.name = "CombatDepthFixture"
@@ -118,6 +122,8 @@ func fight(tree: SceneTree, party: Array[RefCounted], foes: Array,
 			_release_attack()
 			_release_move()
 			_act(policy)
+			if round_frames == 0:
+				_audit_neutral_entry_hits(party)
 			_enemy_windup_before_tick = _wild.is_winding_up()
 			if _manager.wind_exhausted(): _tally.exhausted_frames += 1
 			await tree.physics_frame
@@ -180,6 +186,45 @@ func _neutral_worst_frac(creature: RefCounted) -> float:
 	var worst := MATH.rolled_damage(float(cfg.get("power", 8.0)), float(foe.call("effective_attack", prog)),
 		float(creature.call("effective_defence", prog, is_best, ability)), 1.0, float(moves.call("power", move_id)), 1.0)
 	return worst / maxf(1.0, float(_entry_maxima[creature.get_instance_id()]))
+
+
+## COMBAT §7 assertion inputs for every legal pattern at each send-out,
+## including attacks that never land. Reuse production selection, spacing
+## and damage; snapshot entry defence/HP so victory XP cannot soften the bar.
+## This reads profiles only and does not advance the body cursor or RNG.
+func _audit_neutral_entry_hits(party: Array[RefCounted]) -> void:
+	var patterns: Dictionary = _wild.get("_patterns")
+	if patterns.is_empty(): return
+	var context: Dictionary = _wild.call("_current_pattern_context")
+	var base: Dictionary = _wild.get("_combat_cfg")
+	var ids := AI.pattern_ids(patterns, AI.context_role(patterns, context), context)
+	var profiles: Array[Dictionary] = []
+	for index: int in ids.size():
+		var profile := AI.select_pattern(patterns, base, context, index)
+		if not profile.is_empty(): profiles.append(profile)
+	var punish := AI.punish_profile(patterns, base, context)
+	if not punish.is_empty(): profiles.append(punish)
+	if profiles.is_empty(): return
+	_tally.neutral_entry_foes += 1
+	var foe: RefCounted = _wild.get("instance")
+	var moves: RefCounted = _manager.get("_moves")
+	var attack := float(foe.call("effective_attack", PROGRESSION.config()))
+	for profile: Dictionary in profiles:
+		var spaced := WILD.spaced_config_for(profile, _wild.body_radius(), _ally.body_radius())
+		var move_id := str(profile.get("move_id", ""))
+		for member in party:
+			var defence := float(_entry_defences[member.get_instance_id()])
+			var entry_hp := maxf(1.0, float(_entry_maxima[member.get_instance_id()]))
+			var fraction := MATH.rolled_damage(float(spaced.get("power", 8.0)), attack,
+				defence, 1.0, float(moves.call("power", move_id)), 1.0) / entry_hp
+			_tally.neutral_entry_profiles += 1
+			if fraction > float(_tally.neutral_entry_bound_frac):
+				_tally.neutral_entry_bound_frac = fraction
+				_tally["neutral_entry_bound_by"] = {"foe": str(foe.get("species_id")),
+					"target": str(member.get("species_id")), "move": move_id,
+					"pattern_attack": str(profile.get("pattern_attack_id", "")),
+					"power": float(spaced.get("power", 8.0)), "attack": attack,
+					"defence": defence, "entry_hp": entry_hp}
 
 
 func _on_hit(on_enemy: bool, damage: float) -> void:

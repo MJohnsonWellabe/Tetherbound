@@ -238,6 +238,11 @@ func _run() -> void:
 					var scored := _score(scores[policy])
 					if int(scored.runs) != _seeds or int(scored.errors) > 0:
 						reasons.append(policy + " incomplete or invalid actual fixture")
+					if _named.is_empty():
+						if int(scored.neutral_entry_audits) != _seeds:
+							reasons.append(policy + " incomplete neutral entry-hit audit")
+						elif float(scored.neutral_entry_bound_frac) >= 0.5:
+							reasons.append(policy + " neutral maximum-variance entry hit reaches .5 HP")
 				# Trainer mode applies the coordinator's three-part F22#1 bar to
 				# the COMBAT §7 reader, which switches on a real mismatch.
 				var judged: Dictionary = switch_reader if _trainers else reader
@@ -309,9 +314,15 @@ func _score(runs: Array) -> Dictionary:
 	var faints := 0
 	var errors := 0
 	var tags := 0
+	var neutral_entry_audits := 0
+	var neutral_entry_bound := 0.0
 	var costs: Array[float] = []
 	var lead_costs: Array[float] = []
 	for row: Dictionary in runs:
+		if int(row.get("neutral_entry_profiles", 0)) > 0 \
+				and int(row.get("neutral_entry_foes", 0)) == int(row.get("f22_sendouts", -1)):
+			neutral_entry_audits += 1
+		neutral_entry_bound = maxf(neutral_entry_bound, float(row.get("neutral_entry_bound_frac", 0.0)))
 		lead_costs.append(float(row.get("lead_lost_frac", 1.0)))
 		wins += int(bool(row.get("won", false)))
 		faints += int(bool(row.get("lead_fainted", false)))
@@ -331,4 +342,5 @@ func _score(runs: Array) -> Dictionary:
 		lead_median = lead_costs[half] if lead_costs.size() % 2 == 1 else (lead_costs[half - 1] + lead_costs[half]) * 0.5
 	return {"runs": runs.size(), "win_rate": wins / count, "lead_faint_rate": faints / count,
 		"median_lead_cost": lead_median,
+		"neutral_entry_audits": neutral_entry_audits, "neutral_entry_bound_frac": neutral_entry_bound,
 		"median_cost": median, "tags": tags, "errors": errors}
