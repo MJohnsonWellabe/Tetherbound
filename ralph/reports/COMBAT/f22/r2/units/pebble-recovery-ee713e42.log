@@ -1,0 +1,18 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_moves_data.gd,test_combat_feel.gd::test_player_pace_shortens_timings_and_widens_only_the_charged_arc: 2 of 817 test files
+  ok    test_combat_feel.gd :: test_player_pace_shortens_timings_and_widens_only_the_charged_arc
+  ok    test_moves_data.gd :: test_a_species_charged_move_is_actually_slotted_charged
+  ok    test_moves_data.gd :: test_a_species_quick_move_is_actually_slotted_quick
+  ok    test_moves_data.gd :: test_an_unknown_move_id_degrades_gracefully
+  ok    test_moves_data.gd :: test_charged_moves_declare_energy_cost
+  ok    test_moves_data.gd :: test_every_move_has_a_display_name
+  ok    test_moves_data.gd :: test_every_move_has_a_valid_slot
+  ok    test_moves_data.gd :: test_every_move_has_positive_power
+  ok    test_moves_data.gd :: test_every_move_type_is_from_the_known_vocabulary
+  ok    test_moves_data.gd :: test_every_species_declares_a_quick_and_a_charged_move
+  ok    test_moves_data.gd :: test_every_species_move_id_exists_in_the_move_table
+  ok    test_moves_data.gd :: test_quick_moves_declare_energy_gain
+
+12 tests, 856 assertions, 0 failed
+R2_NATIVE_EXIT=0
