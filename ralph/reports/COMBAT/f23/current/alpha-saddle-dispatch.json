@@ -1,0 +1,15 @@
+{
+  "dispatch_utc": "2026-10-06T15:03:03.0097188Z",
+  "http_status": 204,
+  "inputs": {
+    "args": "",
+    "rendering_method": "gl_compatibility",
+    "mode": "headless",
+    "script": "tests/smoke_water_alpha_runtime.gd",
+    "timeout_minutes": "15",
+    "checkout_ref": "701ee9b71bf701203448bfe71bf07fb6471bbec6",
+    "resolution": "1280x720",
+    "label": "r4-alpha-saddle-701ee9b71b"
+  },
+  "active_before": 2
+}

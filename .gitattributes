@@ -20,3 +20,6 @@ ralph/reports/COMBAT/f23/current/saddle-component-*.log -text
 ralph/reports/COMBAT/f23/current/saddle-component-binding.json -text
 ralph/reports/COMBAT/f23/current/main-555-conflict-*.log -text
 ralph/reports/COMBAT/f23/current/main-555-conflict-binding.json -text
+ralph/reports/COMBAT/f23/current/alpha-saddle-*.log -text
+ralph/reports/COMBAT/f23/current/alpha-saddle-binding.json -text
+ralph/reports/COMBAT/f23/current/alpha-saddle-dispatch.json -text

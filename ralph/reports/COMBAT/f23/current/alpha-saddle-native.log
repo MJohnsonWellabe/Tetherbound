@@ -1,0 +1,50 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://scripts/world/water_world.gd:63)
+       [1] _run (res://tests/smoke_water_alpha_runtime.gd:34)
+[water vegetation] 4145 instances in 549 model batches; layers={"groundcover":2801,"rocks":515,"shrubs":373,"trees":456} islands={"brine_steps":304,"deep_watch":228,"drowned_garden":405,"first_shore":432,"gull_rest":225,"lantern_cove":311,"reedhaven":477,"salt_crown":413,"shellwatch":435,"sluice_isle":356,"tidal_cradle":552,"veilfall":7}
+[water vegetation] sheltered grove counts={"brine_steps":{"accepted":4,"attempts":256,"requested":6,"shrubs":18,"trees":20},"deep_watch":{"accepted":5,"attempts":105,"requested":5,"shrubs":22,"trees":31},"drowned_garden":{"accepted":7,"attempts":30,"requested":7,"shrubs":31,"trees":45},"first_shore":{"accepted":11,"attempts":73,"requested":11,"shrubs":49,"trees":64},"gull_rest":{"accepted":6,"attempts":86,"requested":6,"shrubs":27,"trees":37},"lantern_cove":{"accepted":5,"attempts":212,"requested":5,"shrubs":23,"trees":35},"reedhaven":{"accepted":8,"attempts":141,"requested":8,"shrubs":35,"trees":41},"salt_crown":{"accepted":8,"attempts":97,"requested":8,"shrubs":33,"trees":41},"shellwatch":{"accepted":9,"attempts":256,"requested":12,"shrubs":42,"trees":43},"sluice_isle":{"accepted":9,"attempts":37,"requested":9,"shrubs":46,"trees":57},"tidal_cradle":{"accepted":8,"attempts":256,"requested":16,"shrubs":40,"trees":42}}
+[grass_field] grass ring: 32748 instances over 9 lattice layers (tuft_count asked for 30000), 16m cull tiles
+[grass_field] cover tier strand_bushes 2024 instances over 1 lattice layers (count 280)
+[grass_field] cover tier strand_flowers 1868 instances over 1 lattice layers (count 100)
+[grass_field] 2 cover tier(s) up
+[grass_field] bound: 32748 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+PASS: Actual Water scene finishes building with Alpha service
+PASS: Live Aquaryn uses Water species and authority
+PASS: Authored Alpha level
+PASS: No fixture grants Stone
+PASS: Normal summon deploys owned Mosshell
+PASS: Normal local combat binds to host Alpha encounter
+PASS: Combat entry preserves shared enemy position
+PASS: Shared Alpha is not confined to a local arena
+PASS: Host records actual participant
+PASS: Real Alpha AI moves toward deployed opponent
+PASS: Host enemy strike reaches actual participant through transport
+PASS: An unfinished fight never grants Stone
+PASS: Real fight reaches an exit within bounded time
+PASS: Normal attack input defeats actual Alpha
+PASS: Defeat is journaled as world progression
+PASS: Eligible character receives Swim Stone unlock
+Alpha runtime evidence: phase=broken_wake ally_hp=441.341795492922 enemy_hp=0.0
+PASS: Victory alone does not teach the recipe
+PASS: No fixture supplies a Swim Saddle
+PASS: Iona's production NPC exists after victory
+PASS: Nearby Iona offers actual conversation
+PASS: Earned Stone selects Iona's guarded recipe conversation
+PASS: Opening conversation does not grant the recipe early
+PASS: Completing Iona's actual dialogue teaches the personal recipe
+PASS: Tidal Cradle has its actual preparation camp
+PASS: Nearby camp workbench offers actual crafting
+PASS: Camp interaction opens production CraftPanel
+PASS: Earned Stone and completed Iona lesson expose the real saddle row
+PASS: Real saddle craft consumes exactly eight reed, six driftwood and four reefstone
+PASS: Real craft produces one Swim Saddle
+PASS: Normal summon returns the surviving owned Mosshell after preparation
+PASS: Production RidingController mounts Mosshell using the crafted saddle and earned Stone
+PASS: Mounted body remains the same owned companion from the Alpha fight
+PASS: The reward chain never adds a hidden creature slot
+Alpha-to-saddle evidence: dialogue=water_iona_recipe camp=tidal_cradle materials=8reed/6drift/4reef mount=water_mosshell
+Water Alpha runtime smoke: 33 checks, 0 failures

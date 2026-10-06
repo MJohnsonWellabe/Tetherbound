@@ -1,0 +1,17 @@
+{
+  "original_zip_sha256": "5d9a8da19c18adc11bde41be0bcbb7f185602e51b3e038cfbe8c87cd8a3da149",
+  "mode": "headless",
+  "script": "tests/smoke_water_alpha_runtime.gd",
+  "original_manifest_files": 8,
+  "artifact_id": 11422722821,
+  "job_id": 112339530301,
+  "original_size_bytes": 67652,
+  "artifact_name": "render-r4-alpha-saddle-701ee9b71b-37484086895",
+  "run_exit": 0,
+  "qualification": "Existing real Water scene/controller quick input reward-dialogue-camp-craft-mount chain; L49 owned Mosshell fixture and camp material seeding unchanged; sole native diagnostic preexisting interpolation deprecation. No visual, co-op or whole F23#0 credit.",
+  "failures": 0,
+  "source_sha": "701ee9b71bf701203448bfe71bf07fb6471bbec6",
+  "elapsed_s": 105,
+  "run_id": 37484086895,
+  "checks": 33
+}
