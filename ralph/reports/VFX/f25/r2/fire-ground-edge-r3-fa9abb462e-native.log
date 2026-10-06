@@ -1,0 +1,9 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB
+
+F25 capture burning-orb:r3 launch wall=17321ms
+F25 capture burning-orb:r3 flight wall=18058ms
+F25 capture burning-orb:r3 contact wall=19086ms
+F25 capture burning-orb:r3 impact wall=19820ms
+F25 capture burning-orb:r3 aftermath wall=20897ms
+F25 batch=identities cases=1 failures=0 renderer=gl_compatibility out=D:/tetherbound/codex-r2/.artifacts/r2-f25-ground-edge-r3-fa9abb462e/raw scope=synthetic_no_combat

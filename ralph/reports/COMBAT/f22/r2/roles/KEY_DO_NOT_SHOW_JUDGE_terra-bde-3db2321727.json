@@ -1,0 +1,20 @@
+{
+	"creature_b": {
+		"frames": 36,
+		"role_override": "",
+		"species": "tuskroot",
+		"won": false
+	},
+	"creature_d": {
+		"frames": 36,
+		"role_override": "",
+		"species": "mosshell",
+		"won": false
+	},
+	"creature_e": {
+		"frames": 36,
+		"role_override": "",
+		"species": "brooktail",
+		"won": false
+	}
+}
