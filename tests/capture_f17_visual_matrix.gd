@@ -26,12 +26,17 @@ var _rows: Array[Dictionary] = []
 var _mid_done := false
 var _approach_done := false
 var _shot_events: Dictionary = {}
+var _only: PackedStringArray = []
 
 
 func _run() -> void:
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--capture-dir="):
 			_out = argument.substr("--capture-dir=".length())
+		elif argument.begins_with("--only="):
+			# Iteration aid: shoot only frames whose "station_time_weather"
+			# name starts with one of these comma-separated prefixes.
+			_only = argument.substr("--only=".length()).split(",", false)
 	if DisplayServer.get_name() == "headless" or _out.is_empty() or not _out.is_absolute_path():
 		print("F17 matrix FAIL: needs a native renderer and an absolute --capture-dir")
 		quit(2)
@@ -145,6 +150,12 @@ func _station(name: String, with_rain: bool) -> void:
 	if with_rain:
 		shots.append(["day", "rain"])
 		shots.append(["night", "rain"])
+	if not _only.is_empty():
+		shots = shots.filter(func(shot: Array) -> bool:
+			var shot_name := "%s_%s_%s" % [name, shot[0], shot[1]]
+			for prefix: String in _only:
+				if shot_name.begins_with(prefix): return true
+			return false)
 	for shot: Array in shots:
 		weather.call("set_weather", shot[1])
 		look.call("apply_time", shot[0])

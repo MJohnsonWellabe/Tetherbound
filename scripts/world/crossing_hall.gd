@@ -324,6 +324,7 @@ func _build_interior_ambient() -> void:
 			var material := mesh.get_active_material(index) as BaseMaterial3D
 			if material != null:
 				mesh.set_surface_override_material(index, _night_material(material, occlusion, seen))
+	_own_night_floor()
 	_refresh_interior_ambient()
 
 
@@ -355,6 +356,62 @@ func _refresh_interior_ambient() -> void:
 	_night_ambient_on = dark
 	for material: BaseMaterial3D in _night_materials:
 		material.ao_enabled = dark
+	_refresh_night_floor(dark)
+
+
+## F17#6 r5 judge: the night nave floor was lit evenly cool. The night moon's
+## shadow opacity (art.json, 0.68, a global night choice) lets about a third
+## of the moonlight through the Hall roof onto the floor (measured: night
+## floor luma 71 with the moon, 30 without). Compatibility ignores a
+## directional light's cull mask, so the Hall instead gives its floor and wall
+## modules their own material copies whose albedo drops to
+## `night_floor_albedo` / `night_wall_albedo` while WorldLook is dark; the
+## lanterns (`light.energy`) carry the room at night.
+var _night_floor_materials: Dictionary = {} # copy -> [day albedo colour, night factor]
+
+
+func _own_night_floor() -> void:
+	var cfg: Dictionary = _config.get("interior_ambient", {})
+	var building := get_parent() as Node3D
+	if building == null:
+		return
+	# Module prefix -> night albedo factor (1 leaves that module family alone).
+	var families := {"Floor_": float(cfg.get("night_floor_albedo", 1.0)),
+		"Wall_": float(cfg.get("night_wall_albedo", 1.0)), "Corner_": float(cfg.get("night_wall_albedo", 1.0))}
+	var copies: Dictionary = {}
+	for raw: Node in building.find_children("*", "MeshInstance3D", true, false):
+		var mesh := raw as MeshInstance3D
+		var walk: Node = mesh
+		var factor := 1.0
+		while walk != null and walk != building:
+			for prefix: String in families:
+				if str(walk.name).begins_with(prefix): factor = families[prefix]
+			if factor < 1.0: break
+			walk = walk.get_parent()
+		if factor >= 1.0 or mesh.mesh == null:
+			continue
+		for index in mesh.mesh.get_surface_count():
+			var material := mesh.get_active_material(index) as BaseMaterial3D
+			if material == null:
+				continue
+			var key := [material, factor]
+			if not copies.has(key):
+				var copy := material.duplicate() as BaseMaterial3D
+				# static_mesh_batch keys materials by stored properties; the tag
+				# keeps these modules in their own batch, on this copy.
+				copy.set_meta(&"crossing_hall_night_albedo", factor)
+				copies[key] = copy
+				_night_floor_materials[copy] = [copy.albedo_color, factor]
+				if _night_materials.has(material):
+					_night_materials.append(copy)
+			mesh.set_surface_override_material(index, copies[key])
+
+
+func _refresh_night_floor(dark: bool) -> void:
+	for copy: BaseMaterial3D in _night_floor_materials:
+		var day: Color = _night_floor_materials[copy][0]
+		var factor := clampf(float(_night_floor_materials[copy][1]), 0.0, 1.0)
+		copy.albedo_color = Color(day.r * factor, day.g * factor, day.b * factor, day.a) if dark else day
 
 
 ## Coordinator ruling (F17#6 r4): at night the home arch's open membrane, seen

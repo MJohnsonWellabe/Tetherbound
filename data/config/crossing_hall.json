@@ -184,7 +184,8 @@
   },
   "light": {
     "colour": "#ffd7a4",
-    "energy": 1.15,
+    "_why_energy": "F17#6 r5: 1.15 -> 1.8 so the Hall lanterns carry the night floor once its moonlit albedo is lowered (interior_ambient.night_floor_albedo). TUNABLE.",
+    "energy": 1.8,
     "range_m": 8.5,
     "_why_flame_at": "F17#6 r4 GPU judge: the flames floated as small white bulbs beside unlit cages. The installed Lantern_Wall bracket reaches about 0.85 m out from the wall and its cage hangs at y 0.3-0.55 (mesh vertex probe), so the flame and the light sit in the cage.",
     "flame_at": [0, 0.42, 0.85],
@@ -220,7 +221,11 @@
   ],
   "interior_ambient": {
     "_why": "F17#6 judges: the night sky ambient flooded the nave and Shrine Room flat blue. While WorldLook is dark, Hall materials carry a uniform ambient-only occlusion of this strength, so the lanterns shape the room (ReflectionProbe ambient has no effect under Compatibility). TUNABLE.",
-    "night_ambient": 0.25
+    "night_ambient": 0.25,
+    "_why_night_floor_albedo": "F17#6 r5 judge: the night nave floor was lit evenly cool by moonlight leaking through the roof (global night shadow opacity 0.68; Compatibility ignores a directional cull mask). While WorldLook is dark the Hall floor albedo is multiplied by this, and the lanterns carry it. TUNABLE; 1 disables.",
+    "night_floor_albedo": 0.45,
+    "_why_night_wall_albedo": "F17#6 r5: with only the floor darkened the moonlit plaster walls read brighter than the floor. Hall wall and corner modules (one shell, so the exterior too) take this factor at night. TUNABLE; 1 disables.",
+    "night_wall_albedo": 0.6
   },
   "_why_interior_lights": "F17#6 r1 judge: the nave had no warm interior light at night. Six wall lanterns between the aisle arches (with the two original lamps, eight interior lights, inside the reviewed Hall interior set) give the nave warm pools between the aisle arches (the east middle lamp hangs over the Shrine Room doorway). Lanterns show an emissive flame so the light has a visible source.",
   "interior_lights": [
