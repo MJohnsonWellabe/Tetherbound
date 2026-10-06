@@ -1,0 +1,4697 @@
+{
+	"complete": false,
+	"diagnostic_only": false,
+	"failure": "no progress for 3.0s at (6.3,13.0), arc 0.5/101.2",
+	"presets": [
+		"Medium",
+		"High"
+	],
+	"renderer": "forward_plus",
+	"resolution": [
+		1920,
+		1080
+	],
+	"scope": "physical village/Hall circuit and native views; independent visual verdict required; no earned opening, device, fight or multiplayer proof",
+	"shortcuts": [
+		"inherited post-opening flags and starter",
+		"one inherited initial farmhouse placement",
+		"injected physical joypad bindings including ordinary companion recall",
+		"production frozen day/night and selected clear/rain weather; weather scheduler held only for stationary capture",
+		"separately marked farmhouse-light-off diagnostic restores all original light energies; excluded from acceptance"
+	],
+	"source": "7e15f8e1fa1b394ece0959884de0ac8877359c16",
+	"views": [
+		{
+			"body": [
+				6.18905782699585,
+				1.02094161510468,
+				14.0
+			],
+			"camera": [
+				4.13494825363159,
+				2.95755624771118,
+				14.0
+			],
+			"camera_basis": [
+				[
+					-0.0000000437113563123148,
+					-0.00000000000000230400881411227,
+					1.0
+				],
+				[
+					0.2079117000103,
+					0.978147625923157,
+					0.00000000908810537936233
+				],
+				[
+					-0.978147625923157,
+					0.2079117000103,
+					-0.0000000427561595017778
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 286550,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Normal",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "Medium",
+				"ssao": true,
+				"ssil": false,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 96.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0000-travel-day-clear-medium.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.18905782699585,
+						2.32094144821167,
+						14.3500003814697
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 0.514087736606598,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "Medium",
+			"time": "day",
+			"weather": "clear"
+		},
+		{
+			"body": [
+				6.18905782699585,
+				1.02094161510468,
+				14.0
+			],
+			"camera": [
+				4.13494825363159,
+				2.95755624771118,
+				14.0
+			],
+			"camera_basis": [
+				[
+					-0.0000000437113563123148,
+					-0.00000000000000230400881411227,
+					1.0
+				],
+				[
+					0.2079117000103,
+					0.978147625923157,
+					0.00000000908810537936233
+				],
+				[
+					-0.978147625923157,
+					0.2079117000103,
+					-0.0000000427561595017778
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 288211,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Far",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "High",
+				"ssao": true,
+				"ssil": true,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 128.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0001-travel-day-clear-high.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.18905782699585,
+						2.32094144821167,
+						14.3500003814697
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 0.405819535255432,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "High",
+			"time": "day",
+			"weather": "clear"
+		},
+		{
+			"body": [
+				6.18905782699585,
+				1.02094161510468,
+				14.0
+			],
+			"camera": [
+				4.13494825363159,
+				2.95755624771118,
+				14.0
+			],
+			"camera_basis": [
+				[
+					-0.0000000437113563123148,
+					-0.00000000000000230400881411227,
+					1.0
+				],
+				[
+					0.2079117000103,
+					0.978147625923157,
+					0.00000000908810537936233
+				],
+				[
+					-0.978147625923157,
+					0.2079117000103,
+					-0.0000000427561595017778
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 300539,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Normal",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "Medium",
+				"ssao": true,
+				"ssil": false,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 96.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0002-travel-night-clear-medium.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.18905782699585,
+						2.32094144821167,
+						14.3500003814697
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 2.49820804595947,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "Medium",
+			"time": "night",
+			"weather": "clear"
+		},
+		{
+			"body": [
+				6.18905782699585,
+				1.02094161510468,
+				14.0
+			],
+			"camera": [
+				4.13494825363159,
+				2.95755624771118,
+				14.0
+			],
+			"camera_basis": [
+				[
+					-0.0000000437113563123148,
+					-0.00000000000000230400881411227,
+					1.0
+				],
+				[
+					0.2079117000103,
+					0.978147625923157,
+					0.00000000908810537936233
+				],
+				[
+					-0.978147625923157,
+					0.2079117000103,
+					-0.0000000427561595017778
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 302646,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Far",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "High",
+				"ssao": true,
+				"ssil": true,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 128.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0003-travel-night-clear-high.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.18905782699585,
+						2.32094144821167,
+						14.3500003814697
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 2.95569491386414,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "High",
+			"time": "night",
+			"weather": "clear"
+		},
+		{
+			"body": [
+				6.18905782699585,
+				1.02094161510468,
+				14.0
+			],
+			"camera": [
+				4.13494825363159,
+				2.95755624771118,
+				14.0
+			],
+			"camera_basis": [
+				[
+					-0.0000000437113563123148,
+					-0.00000000000000230400881411227,
+					1.0
+				],
+				[
+					0.2079117000103,
+					0.978147625923157,
+					0.00000000908810537936233
+				],
+				[
+					-0.978147625923157,
+					0.2079117000103,
+					-0.0000000427561595017778
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 309162,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Normal",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "Medium",
+				"ssao": true,
+				"ssil": false,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 96.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0004-travel-day-rain-medium.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.18905782699585,
+						2.32094144821167,
+						14.3500003814697
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 0.461261421442032,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "Medium",
+			"time": "day",
+			"weather": "rain"
+		},
+		{
+			"body": [
+				6.18905782699585,
+				1.02094161510468,
+				14.0
+			],
+			"camera": [
+				4.13494825363159,
+				2.95755624771118,
+				14.0
+			],
+			"camera_basis": [
+				[
+					-0.0000000437113563123148,
+					-0.00000000000000230400881411227,
+					1.0
+				],
+				[
+					0.2079117000103,
+					0.978147625923157,
+					0.00000000908810537936233
+				],
+				[
+					-0.978147625923157,
+					0.2079117000103,
+					-0.0000000427561595017778
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 310953,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Far",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "High",
+				"ssao": true,
+				"ssil": true,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 128.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0005-travel-day-rain-high.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.18905782699585,
+						2.32094144821167,
+						14.3500003814697
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 0.541765689849854,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "High",
+			"time": "day",
+			"weather": "rain"
+		},
+		{
+			"body": [
+				6.18905782699585,
+				1.02094161510468,
+				14.0
+			],
+			"camera": [
+				4.13494825363159,
+				2.95755624771118,
+				14.0
+			],
+			"camera_basis": [
+				[
+					-0.0000000437113563123148,
+					-0.00000000000000230400881411227,
+					1.0
+				],
+				[
+					0.2079117000103,
+					0.978147625923157,
+					0.00000000908810537936233
+				],
+				[
+					-0.978147625923157,
+					0.2079117000103,
+					-0.0000000427561595017778
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 312951,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Normal",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "Medium",
+				"ssao": true,
+				"ssil": false,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 96.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0006-travel-night-rain-medium.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.18905782699585,
+						2.32094144821167,
+						14.3500003814697
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 3.55829620361328,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "Medium",
+			"time": "night",
+			"weather": "rain"
+		},
+		{
+			"body": [
+				6.18905782699585,
+				1.02094161510468,
+				14.0
+			],
+			"camera": [
+				4.13494825363159,
+				2.95755624771118,
+				14.0
+			],
+			"camera_basis": [
+				[
+					-0.0000000437113563123148,
+					-0.00000000000000230400881411227,
+					1.0
+				],
+				[
+					0.2079117000103,
+					0.978147625923157,
+					0.00000000908810537936233
+				],
+				[
+					-0.978147625923157,
+					0.2079117000103,
+					-0.0000000427561595017778
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 314619,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Far",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "High",
+				"ssao": true,
+				"ssil": true,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 128.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0007-travel-night-rain-high.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.18905782699585,
+						2.32094144821167,
+						14.3500003814697
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 2.67721605300903,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "High",
+			"time": "night",
+			"weather": "rain"
+		},
+		{
+			"body": [
+				6.18890857696533,
+				1.02094388008118,
+				14.42897605896
+			],
+			"camera": [
+				4.19423961639404,
+				2.95755887031555,
+				13.938404083252
+			],
+			"camera_basis": [
+				[
+					-0.238823354244232,
+					-0.000000534448986400093,
+					0.971063077449799
+				],
+				[
+					0.201895162463188,
+					0.978147625923157,
+					0.0496546514332294
+				],
+				[
+					-0.949842989444733,
+					0.207911610603333,
+					-0.233604371547699
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 332553,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Normal",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "Medium",
+				"ssao": true,
+				"ssil": false,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 96.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0008-travel-day-clear-medium.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.18890857696533,
+						2.32094383239746,
+						14.7789764404297
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 0.509160101413727,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "Medium",
+			"time": "day",
+			"weather": "clear"
+		},
+		{
+			"body": [
+				6.18890857696533,
+				1.02094388008118,
+				14.42897605896
+			],
+			"camera": [
+				4.19423961639404,
+				2.95755887031555,
+				13.938404083252
+			],
+			"camera_basis": [
+				[
+					-0.238823339343071,
+					-0.000000534448872713256,
+					0.971063017845154
+				],
+				[
+					0.201895162463188,
+					0.978147625923157,
+					0.0496546551585197
+				],
+				[
+					-0.949842989444733,
+					0.207911610603333,
+					-0.233604371547699
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 336946,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Far",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "High",
+				"ssao": true,
+				"ssil": true,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 128.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0009-travel-day-clear-high.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.18890857696533,
+						2.32094383239746,
+						14.7789764404297
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 0.565961539745331,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "High",
+			"time": "day",
+			"weather": "clear"
+		},
+		{
+			"body": [
+				6.18890857696533,
+				1.02094388008118,
+				14.42897605896
+			],
+			"camera": [
+				4.19423961639404,
+				2.95755887031555,
+				13.938404083252
+			],
+			"camera_basis": [
+				[
+					-0.238823339343071,
+					-0.000000534448872713256,
+					0.971063017845154
+				],
+				[
+					0.201895162463188,
+					0.978147625923157,
+					0.0496546551585197
+				],
+				[
+					-0.949842989444733,
+					0.207911610603333,
+					-0.233604371547699
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 338668,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Normal",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "Medium",
+				"ssao": true,
+				"ssil": false,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 96.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0010-travel-night-clear-medium.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.18890857696533,
+						2.32094383239746,
+						14.7789764404297
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 3.33325791358948,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "Medium",
+			"time": "night",
+			"weather": "clear"
+		},
+		{
+			"body": [
+				6.18890857696533,
+				1.02094388008118,
+				14.42897605896
+			],
+			"camera": [
+				4.19423961639404,
+				2.95755887031555,
+				13.938404083252
+			],
+			"camera_basis": [
+				[
+					-0.238823354244232,
+					-0.000000534448986400093,
+					0.971063077449799
+				],
+				[
+					0.201895162463188,
+					0.978147625923157,
+					0.0496546514332294
+				],
+				[
+					-0.949842989444733,
+					0.207911610603333,
+					-0.233604371547699
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 340204,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Far",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "High",
+				"ssao": true,
+				"ssil": true,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 128.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0011-travel-night-clear-high.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.18890857696533,
+						2.32094383239746,
+						14.7789764404297
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 3.10379815101624,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "High",
+			"time": "night",
+			"weather": "clear"
+		},
+		{
+			"body": [
+				6.18890857696533,
+				1.02094388008118,
+				14.42897605896
+			],
+			"camera": [
+				4.19423961639404,
+				2.95755887031555,
+				13.938404083252
+			],
+			"camera_basis": [
+				[
+					-0.238823339343071,
+					-0.000000534448872713256,
+					0.971063017845154
+				],
+				[
+					0.201895162463188,
+					0.978147625923157,
+					0.0496546551585197
+				],
+				[
+					-0.949842989444733,
+					0.207911610603333,
+					-0.233604371547699
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 346611,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Normal",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "Medium",
+				"ssao": true,
+				"ssil": false,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 96.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0012-travel-day-rain-medium.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.18890857696533,
+						2.32094383239746,
+						14.7789764404297
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 0.480194538831711,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "Medium",
+			"time": "day",
+			"weather": "rain"
+		},
+		{
+			"body": [
+				6.18890857696533,
+				1.02094388008118,
+				14.42897605896
+			],
+			"camera": [
+				4.19423961639404,
+				2.95755887031555,
+				13.938404083252
+			],
+			"camera_basis": [
+				[
+					-0.238823339343071,
+					-0.000000534448872713256,
+					0.971063017845154
+				],
+				[
+					0.201895162463188,
+					0.978147625923157,
+					0.0496546551585197
+				],
+				[
+					-0.949842989444733,
+					0.207911610603333,
+					-0.233604371547699
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 348146,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Far",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "High",
+				"ssao": true,
+				"ssil": true,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 128.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0013-travel-day-rain-high.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.18890857696533,
+						2.32094383239746,
+						14.7789764404297
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 0.404700726270676,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "High",
+			"time": "day",
+			"weather": "rain"
+		},
+		{
+			"body": [
+				6.18890857696533,
+				1.02094388008118,
+				14.42897605896
+			],
+			"camera": [
+				4.19423961639404,
+				2.95755887031555,
+				13.938404083252
+			],
+			"camera_basis": [
+				[
+					-0.238823354244232,
+					-0.000000534448986400093,
+					0.971063077449799
+				],
+				[
+					0.201895162463188,
+					0.978147625923157,
+					0.0496546514332294
+				],
+				[
+					-0.949842989444733,
+					0.207911610603333,
+					-0.233604371547699
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 349931,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Normal",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "Medium",
+				"ssao": true,
+				"ssil": false,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 96.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0014-travel-night-rain-medium.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.18890857696533,
+						2.32094383239746,
+						14.7789764404297
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 2.60124135017395,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "Medium",
+			"time": "night",
+			"weather": "rain"
+		},
+		{
+			"body": [
+				6.18890857696533,
+				1.02094388008118,
+				14.42897605896
+			],
+			"camera": [
+				4.19423961639404,
+				2.95755887031555,
+				13.938404083252
+			],
+			"camera_basis": [
+				[
+					-0.238823354244232,
+					-0.000000534448986400093,
+					0.971063077449799
+				],
+				[
+					0.201895162463188,
+					0.978147625923157,
+					0.0496546514332294
+				],
+				[
+					-0.949842989444733,
+					0.207911610603333,
+					-0.233604371547699
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 351566,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Far",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "High",
+				"ssao": true,
+				"ssil": true,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 128.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0015-travel-night-rain-high.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.18890857696533,
+						2.32094383239746,
+						14.7789764404297
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 3.18006539344788,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "High",
+			"time": "night",
+			"weather": "rain"
+		},
+		{
+			"body": [
+				6.26405954360962,
+				1.02094316482544,
+				12.2202930450439
+			],
+			"camera": [
+				5.67101335525513,
+				2.70514011383057,
+				11.5884265899658
+			],
+			"camera_basis": [
+				[
+					-0.729149162769318,
+					-0.000000456306594287526,
+					0.684354841709137
+				],
+				[
+					0.142285123467445,
+					0.978147625923157,
+					0.151599019765854
+				],
+				[
+					-0.669400095939636,
+					0.207911804318428,
+					-0.713215470314026
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 360607,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Normal",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "Medium",
+				"ssao": true,
+				"ssil": false,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 96.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0016-travel-day-clear-medium.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.26405954360962,
+						2.32094311714172,
+						12.5702934265137
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 0.635389089584351,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "Medium",
+			"time": "day",
+			"weather": "clear"
+		},
+		{
+			"body": [
+				6.26405954360962,
+				1.02094316482544,
+				12.2202930450439
+			],
+			"camera": [
+				5.67101335525513,
+				2.70514011383057,
+				11.5884265899658
+			],
+			"camera_basis": [
+				[
+					-0.729149162769318,
+					-0.000000456306594287526,
+					0.684354841709137
+				],
+				[
+					0.142285123467445,
+					0.978147625923157,
+					0.151599019765854
+				],
+				[
+					-0.669400095939636,
+					0.207911804318428,
+					-0.713215470314026
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 362176,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Far",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "High",
+				"ssao": true,
+				"ssil": true,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 128.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0017-travel-day-clear-high.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.26405954360962,
+						2.32094311714172,
+						12.5702934265137
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 0.562534749507904,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "High",
+			"time": "day",
+			"weather": "clear"
+		},
+		{
+			"body": [
+				6.26405954360962,
+				1.02094316482544,
+				12.2202930450439
+			],
+			"camera": [
+				5.67101335525513,
+				2.70514011383057,
+				11.5884265899658
+			],
+			"camera_basis": [
+				[
+					-0.729149162769318,
+					-0.000000456306594287526,
+					0.684354841709137
+				],
+				[
+					0.142285123467445,
+					0.978147625923157,
+					0.151599019765854
+				],
+				[
+					-0.669400095939636,
+					0.207911804318428,
+					-0.713215470314026
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 365207,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Normal",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "Medium",
+				"ssao": true,
+				"ssil": false,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 96.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0018-travel-night-clear-medium.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.26405954360962,
+						2.32094311714172,
+						12.5702934265137
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 2.48823738098145,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "Medium",
+			"time": "night",
+			"weather": "clear"
+		},
+		{
+			"body": [
+				6.26405954360962,
+				1.02094316482544,
+				12.2202930450439
+			],
+			"camera": [
+				5.67101335525513,
+				2.70514011383057,
+				11.5884265899658
+			],
+			"camera_basis": [
+				[
+					-0.729149162769318,
+					-0.000000456306594287526,
+					0.684354841709137
+				],
+				[
+					0.142285123467445,
+					0.978147625923157,
+					0.151599019765854
+				],
+				[
+					-0.669400095939636,
+					0.207911804318428,
+					-0.713215470314026
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 366704,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Far",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "High",
+				"ssao": true,
+				"ssil": true,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 128.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0019-travel-night-clear-high.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.26405954360962,
+						2.32094311714172,
+						12.5702934265137
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 2.78424644470215,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "High",
+			"time": "night",
+			"weather": "clear"
+		},
+		{
+			"body": [
+				6.26405954360962,
+				1.02094316482544,
+				12.2202930450439
+			],
+			"camera": [
+				5.67101335525513,
+				2.70514011383057,
+				11.5884265899658
+			],
+			"camera_basis": [
+				[
+					-0.729149162769318,
+					-0.000000456306594287526,
+					0.684354841709137
+				],
+				[
+					0.142285123467445,
+					0.978147625923157,
+					0.151599019765854
+				],
+				[
+					-0.669400095939636,
+					0.207911804318428,
+					-0.713215470314026
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 372897,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Normal",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "Medium",
+				"ssao": true,
+				"ssil": false,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 96.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0020-travel-day-rain-medium.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.26405954360962,
+						2.32094311714172,
+						12.5702934265137
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 0.495724409818649,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "Medium",
+			"time": "day",
+			"weather": "rain"
+		},
+		{
+			"body": [
+				6.26405954360962,
+				1.02094316482544,
+				12.2202930450439
+			],
+			"camera": [
+				5.67101335525513,
+				2.70514011383057,
+				11.5884265899658
+			],
+			"camera_basis": [
+				[
+					-0.729149162769318,
+					-0.000000456306594287526,
+					0.684354841709137
+				],
+				[
+					0.142285123467445,
+					0.978147625923157,
+					0.151599019765854
+				],
+				[
+					-0.669400095939636,
+					0.207911804318428,
+					-0.713215470314026
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 374511,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Far",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "High",
+				"ssao": true,
+				"ssil": true,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 128.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0021-travel-day-rain-high.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.26405954360962,
+						2.32094311714172,
+						12.5702934265137
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 0.561679184436798,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "High",
+			"time": "day",
+			"weather": "rain"
+		},
+		{
+			"body": [
+				6.26405954360962,
+				1.02094316482544,
+				12.2202930450439
+			],
+			"camera": [
+				5.67101335525513,
+				2.70514011383057,
+				11.5884265899658
+			],
+			"camera_basis": [
+				[
+					-0.729149162769318,
+					-0.000000456306594287526,
+					0.684354841709137
+				],
+				[
+					0.142285123467445,
+					0.978147625923157,
+					0.151599019765854
+				],
+				[
+					-0.669400095939636,
+					0.207911804318428,
+					-0.713215470314026
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 376222,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Normal",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "Medium",
+				"ssao": true,
+				"ssil": false,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 96.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0022-travel-night-rain-medium.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.26405954360962,
+						2.32094311714172,
+						12.5702934265137
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 4.47975587844849,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "Medium",
+			"time": "night",
+			"weather": "rain"
+		},
+		{
+			"body": [
+				6.26405954360962,
+				1.02094316482544,
+				12.2202930450439
+			],
+			"camera": [
+				5.67101335525513,
+				2.70514011383057,
+				11.5884265899658
+			],
+			"camera_basis": [
+				[
+					-0.729149162769318,
+					-0.000000456306594287526,
+					0.684354841709137
+				],
+				[
+					0.142285123467445,
+					0.978147625923157,
+					0.151599019765854
+				],
+				[
+					-0.669400095939636,
+					0.207911804318428,
+					-0.713215470314026
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 377763,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Far",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "High",
+				"ssao": true,
+				"ssil": true,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 128.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0023-travel-night-rain-high.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.26405954360962,
+						2.32094311714172,
+						12.5702934265137
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 3.65492653846741,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "High",
+			"time": "night",
+			"weather": "rain"
+		},
+		{
+			"body": [
+				6.26336717605591,
+				1.02094078063965,
+				12.9674816131592
+			],
+			"camera": [
+				4.44233512878418,
+				2.95755577087402,
+				12.017107963562
+			],
+			"camera_basis": [
+				[
+					-0.462667971849442,
+					-0.000000568191921956895,
+					0.886531710624695
+				],
+				[
+					0.184320196509361,
+					0.978147566318512,
+					0.0961946547031403
+				],
+				[
+					-0.867158830165863,
+					0.207911878824234,
+					-0.452557414770126
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 385634,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Normal",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "Medium",
+				"ssao": true,
+				"ssil": false,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 96.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0024-travel-day-clear-medium.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.26336717605591,
+						2.32094073295593,
+						13.3174819946289
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 0.567681431770325,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "Medium",
+			"time": "day",
+			"weather": "clear"
+		},
+		{
+			"body": [
+				6.26336717605591,
+				1.02094078063965,
+				12.9674816131592
+			],
+			"camera": [
+				4.44233512878418,
+				2.95755577087402,
+				12.017107963562
+			],
+			"camera_basis": [
+				[
+					-0.462667971849442,
+					-0.000000568191921956895,
+					0.886531710624695
+				],
+				[
+					0.184320196509361,
+					0.978147566318512,
+					0.0961946547031403
+				],
+				[
+					-0.867158830165863,
+					0.207911878824234,
+					-0.452557414770126
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 387141,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Far",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "High",
+				"ssao": true,
+				"ssil": true,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 128.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0025-travel-day-clear-high.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.26336717605591,
+						2.32094073295593,
+						13.3174819946289
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 0.627146482467651,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "High",
+			"time": "day",
+			"weather": "clear"
+		},
+		{
+			"body": [
+				6.26336717605591,
+				1.02094078063965,
+				12.9674816131592
+			],
+			"camera": [
+				4.44233512878418,
+				2.95755577087402,
+				12.017107963562
+			],
+			"camera_basis": [
+				[
+					-0.462667971849442,
+					-0.000000568191921956895,
+					0.886531710624695
+				],
+				[
+					0.184320196509361,
+					0.978147566318512,
+					0.0961946547031403
+				],
+				[
+					-0.867158830165863,
+					0.207911878824234,
+					-0.452557414770126
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 388756,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Normal",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "Medium",
+				"ssao": true,
+				"ssil": false,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 96.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0026-travel-night-clear-medium.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.26336717605591,
+						2.32094073295593,
+						13.3174819946289
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 3.14263415336609,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "Medium",
+			"time": "night",
+			"weather": "clear"
+		},
+		{
+			"body": [
+				6.26336717605591,
+				1.02094078063965,
+				12.9674816131592
+			],
+			"camera": [
+				4.44233512878418,
+				2.95755577087402,
+				12.017107963562
+			],
+			"camera_basis": [
+				[
+					-0.462667971849442,
+					-0.000000568191921956895,
+					0.886531710624695
+				],
+				[
+					0.184320196509361,
+					0.978147566318512,
+					0.0961946547031403
+				],
+				[
+					-0.867158830165863,
+					0.207911878824234,
+					-0.452557414770126
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 390249,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Far",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "High",
+				"ssao": true,
+				"ssil": true,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 128.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0027-travel-night-clear-high.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.26336717605591,
+						2.32094073295593,
+						13.3174819946289
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 3.38827157020569,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "High",
+			"time": "night",
+			"weather": "clear"
+		},
+		{
+			"body": [
+				6.26336717605591,
+				1.02094078063965,
+				12.9674816131592
+			],
+			"camera": [
+				4.44233512878418,
+				2.95755577087402,
+				12.017107963562
+			],
+			"camera_basis": [
+				[
+					-0.462667971849442,
+					-0.000000568191921956895,
+					0.886531710624695
+				],
+				[
+					0.184320196509361,
+					0.978147566318512,
+					0.0961946547031403
+				],
+				[
+					-0.867158830165863,
+					0.207911878824234,
+					-0.452557414770126
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 396963,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Normal",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "Medium",
+				"ssao": true,
+				"ssil": false,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 96.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0028-travel-day-rain-medium.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.26336717605591,
+						2.32094073295593,
+						13.3174819946289
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 0.604679048061371,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "Medium",
+			"time": "day",
+			"weather": "rain"
+		},
+		{
+			"body": [
+				6.26336717605591,
+				1.02094078063965,
+				12.9674816131592
+			],
+			"camera": [
+				4.44233512878418,
+				2.95755577087402,
+				12.017107963562
+			],
+			"camera_basis": [
+				[
+					-0.462667971849442,
+					-0.000000568191921956895,
+					0.886531710624695
+				],
+				[
+					0.184320196509361,
+					0.978147566318512,
+					0.0961946547031403
+				],
+				[
+					-0.867158830165863,
+					0.207911878824234,
+					-0.452557414770126
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 398506,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Far",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "High",
+				"ssao": true,
+				"ssil": true,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 128.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0029-travel-day-rain-high.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.26336717605591,
+						2.32094073295593,
+						13.3174819946289
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 0.5942622423172,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "High",
+			"time": "day",
+			"weather": "rain"
+		},
+		{
+			"body": [
+				6.26336717605591,
+				1.02094078063965,
+				12.9674816131592
+			],
+			"camera": [
+				4.44233512878418,
+				2.95755577087402,
+				12.017107963562
+			],
+			"camera_basis": [
+				[
+					-0.462667971849442,
+					-0.000000568191921956895,
+					0.886531710624695
+				],
+				[
+					0.184320196509361,
+					0.978147566318512,
+					0.0961946547031403
+				],
+				[
+					-0.867158830165863,
+					0.207911878824234,
+					-0.452557414770126
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 400142,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Normal",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "Medium",
+				"ssao": true,
+				"ssil": false,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 96.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0030-travel-night-rain-medium.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.26336717605591,
+						2.32094073295593,
+						13.3174819946289
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 4.07155752182007,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "Medium",
+			"time": "night",
+			"weather": "rain"
+		},
+		{
+			"body": [
+				6.26336717605591,
+				1.02094078063965,
+				12.9674816131592
+			],
+			"camera": [
+				4.44233512878418,
+				2.95755577087402,
+				12.017107963562
+			],
+			"camera_basis": [
+				[
+					-0.462667971849442,
+					-0.000000568191921956895,
+					0.886531710624695
+				],
+				[
+					0.184320196509361,
+					0.978147566318512,
+					0.0961946547031403
+				],
+				[
+					-0.867158830165863,
+					0.207911878824234,
+					-0.452557414770126
+				]
+			],
+			"companion": {},
+			"diagnostic": "",
+			"elapsed_ms": 401632,
+			"encoding": "native-resolution PNG",
+			"equipped_tool": "",
+			"features": {
+				"cloudreach_rock_candidate": false,
+				"draw_distance": "Far",
+				"glow": true,
+				"renderer": "forward_plus",
+				"shadow_quality": "High",
+				"ssao": true,
+				"ssil": true,
+				"volumetric_fog": true,
+				"volumetric_fog_density": 0.0005,
+				"volumetric_fog_length": 128.0,
+				"volumetric_fog_sky_affect": 0.0
+			},
+			"image": "0031-travel-night-rain-high.png",
+			"label": "travel",
+			"motion_sample": false,
+			"nearby_lights": [
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.701960802078247,
+						0.400000005960464
+					],
+					"energy": 1.60000002384186,
+					"path": "/root/MeadowsPlayground/Player/Torch/TorchOmni",
+					"position": [
+						6.26336717605591,
+						2.32094073295593,
+						13.3174819946289
+					],
+					"range": 6.0,
+					"shadows": false,
+					"visible": false
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58646",
+					"position": [
+						2.0,
+						3.5,
+						14.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.40000009536743,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58647",
+					"position": [
+						-0.5,
+						6.09999990463257,
+						13.0
+					],
+					"range": 9.0,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.0,
+					"colour": [
+						1.0,
+						0.879999995231628,
+						0.699999988079071
+					],
+					"energy": 2.0,
+					"path": "/root/MeadowsPlayground/GrandpaHouse/@OmniLight3D@58648",
+					"position": [
+						2.5,
+						4.90000009536743,
+						11.8999996185303
+					],
+					"range": 4.5,
+					"shadows": true,
+					"visible": true
+				},
+				{
+					"attenuation": 1.79999995231628,
+					"colour": [
+						1.0,
+						0.680000007152557,
+						0.319999992847443
+					],
+					"energy": 3.14465379714966,
+					"path": "/root/MeadowsPlayground/Props/grandpa_door_lantern/Bonfire_Fire/CampfireGlow/Glow",
+					"position": [
+						8.60000038146973,
+						1.42000007629395,
+						12.8000001907349
+					],
+					"range": 8.0,
+					"shadows": false,
+					"visible": true
+				}
+			],
+			"on_floor": true,
+			"preset": "High",
+			"time": "night",
+			"weather": "rain"
+		}
+	]
+}
