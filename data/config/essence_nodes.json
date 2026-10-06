@@ -27,9 +27,9 @@
       },
       "respawn_days": 3,
       "at": [
-        22.0,
-        -28.0
-      ],
+  24.0,
+  -33.0
+ ],
       "label": "Gather Ground Essence",
       "model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
       "model_scale": 0.8,
@@ -37,13 +37,13 @@
         "id": "order:0",
         "config": "data/config/bands/band1_lower_meadows/harvest.json",
         "offset_xz_m": [
-          6,
-          0
-        ]
+   8,
+   -5
+  ]
       },
       "placement": {
         "off_route": false,
-        "main_route_distance_m": 2.828,
+        "main_route_distance_m": 5.139,
         "terrain_and_player_path_proven": true
       },
       "early_master_supply": "Early Meadows candidate; ROOT must prove walkable and enough accepted stock for each typed feast."

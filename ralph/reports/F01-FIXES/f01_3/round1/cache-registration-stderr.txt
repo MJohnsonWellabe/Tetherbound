@@ -1,0 +1,19 @@
+SCRIPT ERROR: Parse Error: Could not resolve class "res://tests/helpers/stick_navigator.gd".
+   at: GDScript::reload (res://tests/helpers/opening_geometry_navigator.gd:1)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/helpers/gate_a_npc_gather_segment.gd:0)
+SCRIPT ERROR: Parse Error: Could not find type "Terrain3D" in the current scope.
+   at: GDScript::reload (res://tests/helpers/stick_navigator.gd:801)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/helpers/gate_a_material_route.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/helpers/gate_a_opening_drive.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/capture_village_walk.gd:0)
+ERROR: Failed to load script "res://tests/capture_village_walk.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+ERROR: Terrain3D addon is not installed or failed to load. Check addons/terrain_3d/ and that the extension matches this Godot build.
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _build_terrain (res://scripts/world/playground_world.gd:1143)
+       [1] _ready (res://scripts/world/playground_world.gd:806)
