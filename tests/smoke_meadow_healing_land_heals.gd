@@ -145,6 +145,7 @@ func _run() -> void:
 			_fail("(live) drain mesh %s still stands after the fade" % str((raw as MeshInstance3D).name))
 	print("(live) the drain lifted: alpha %.3f, %d meshes hidden" % [float(healing.call("drain_alpha_now")), (healing.call("drain_nodes") as Array).size()])
 	_check_end_state(world, healing, "live")
+	await _check_regreen_matches_synchronous(world, healing)
 	var live_poses := _pylon_poses(world, healing)
 	_check_spokes_untouched(world, spokes_before, "live")
 
@@ -243,6 +244,43 @@ func _check_grouped_targets() -> void:
 		for failure: String in (checks.get("failures") as Array):
 			_fail("(groups) %s: %s" % [method, failure])
 	print("(groups) mounted checks executed %d assertions" % int(checks.get("assertion_count")))
+
+
+func _check_regreen_matches_synchronous(world: Node, healing: Node) -> void:
+	# Rebuild only the existing overlay on this same production terrain, with
+	# no frame budget. It remains hidden and never changes progression/save.
+	var reference := HEALING.new()
+	reference.visible = false
+	world.add_child(reference)
+	reference.set("_world", world)
+	reference.set("_config", _healing_config())
+	var quads: int = await reference.call("_regreen_the_scars", true)
+	if quads != int((healing.call("report") as Dictionary).get("regreened", -1)):
+		_fail("(slice) synchronous and live regreen quad counts differ")
+	var actual: Array = healing.call("regreen_nodes")
+	var expected: Array = reference.call("regreen_nodes")
+	var vertices := 0
+	if actual.size() != expected.size():
+		_fail("(slice) synchronous and live regreen group counts differ")
+	else:
+		for i in actual.size():
+			var live_mesh: Mesh = (actual[i] as MeshInstance3D).mesh
+			var snap_mesh: Mesh = (expected[i] as MeshInstance3D).mesh
+			if (actual[i] as Node).name != (expected[i] as Node).name \
+					or live_mesh.get_surface_count() != snap_mesh.get_surface_count():
+				_fail("(slice) regreen group/surface order differs at %d" % i)
+				continue
+			for j in live_mesh.get_surface_count():
+				var live_arrays := live_mesh.surface_get_arrays(j)
+				var snap_arrays := snap_mesh.surface_get_arrays(j)
+				vertices += (live_arrays[Mesh.ARRAY_VERTEX] as PackedVector3Array).size()
+				for channel in Mesh.ARRAY_MAX:
+					if live_arrays[channel] != snap_arrays[channel]:
+						_fail("(slice) regreen mesh %d surface %d channel %d differs" % [i, j, channel])
+	if vertices != 223824:
+		_fail("(slice) regreen has %d vertices, expected unchanged 223824" % vertices)
+	print("(slice) live/synchronous regreen compared %d vertices, all mesh channels" % vertices)
+	reference.free()
 
 
 func _check_end_state(world: Node, healing: Node, tag: String) -> void:
