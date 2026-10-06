@@ -4,6 +4,7 @@ const ALTAR_TRACE := preload("res://scripts/net/altar_commit_trace.gd")
 const BACKGROUND_TRACE := preload("res://scripts/net/background_work_trace.gd")
 
 const FOUNDATION_ACTIONS := preload("res://scripts/net/foundation_actions.gd")
+const CHARACTER_ACTIONS := preload("res://scripts/net/character_action_rules.gd")
 const FOUNDATION_RETRY_ORDER := preload("res://scripts/net/foundation_retry_order.gd")
 const WILD_ACTOR_SCOPE := preload("res://scripts/net/wild_actor_scope.gd")
 const COMBAT_ROUND_REWARD := preload("res://scripts/net/combat_round_reward.gd")
@@ -452,7 +453,7 @@ func _rpc_foundation_reply(envelope: Dictionary, result: Dictionary) -> void:
 	elif envelope.op == "personal_view":
 		_foundation_personal_cache = result.duplicate(true)
 		homestead_personal_view_completed.emit()
-	elif envelope.op in FOUNDATION_ACTIONS.ACTIONS:
+	elif envelope.op in FOUNDATION_ACTIONS.ACTIONS or envelope.op in CHARACTER_ACTIONS.ACTIONS:
 		# F34#4: a guest's camp request ends on the host's settled or refused
 		# answer (the host already holds any durable row); the revision moved.
 		if envelope.op == "camp_build" and ESSENCE._equivalent(_foundation_camp_pending.get("original"), envelope.intent) \
@@ -564,7 +565,7 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 			if card.uid == envelope.intent.get("creature_uid"):
 				return {"ok": true, "creature_uid": card.uid, "loadout_revision": card.get("loadout_revision", 0), "registry_revision": view.registry_revision}
 		return FOUNDATION_ACTIONS.deny("not_owned")
-	if envelope.op not in FOUNDATION_ACTIONS.ACTIONS and envelope.op not in ["feast_cook", "feast_feed", "master_chest", "essence_release"]: return FOUNDATION_ACTIONS.deny("action_unavailable")
+	if envelope.op not in FOUNDATION_ACTIONS.ACTIONS and envelope.op not in ["feast_cook", "feast_feed", "candy_feed", "master_chest", "essence_release"]: return FOUNDATION_ACTIONS.deny("action_unavailable")
 	var character := _authority_character(peer)
 	var world: RefCounted = _game().get("world")
 	var row: Variant = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character))
@@ -618,6 +619,9 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 	if envelope.op == "feast_feed" and STATION_RULES.config().get("runtime_enabled") == true and not _altar_peer_in_combat(peer):
 		context = {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
 			"in_range": true, "in_combat": false, "owns_character": true, "source_key": "personal_feast_feed"}
+	if envelope.op == "candy_feed" and envelope.station_key == "personal_candy_feed" and not _altar_peer_in_combat(peer):
+		context = {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
+			"in_range": true, "in_combat": false, "owns_character": true, "source_key": "personal_candy_feed"}
 	if envelope.op == "essence_release":
 		# F27#1 guest release: the host pays only for a creature in this
 		# admitted record (essence.stage_release); the newcomer stays the
@@ -1939,6 +1943,10 @@ func personal_tm_scope() -> Dictionary:
 func personal_tm_submit(original: Dictionary, revision: int, scope: Dictionary) -> Dictionary:
 	if scope.is_empty() or not ESSENCE._equivalent(scope, personal_tm_scope()): return _foundation_refusal("tm_owner_context_changed")
 	return _foundation_send("tm_teach", "personal_tm:" + _local_character_id(), original, revision)
+
+func personal_candy_submit(original: Dictionary, revision: int, scope: Dictionary) -> Dictionary:
+	if scope.is_empty() or not ESSENCE._equivalent(scope, personal_tm_scope()): return _foundation_refusal("candy_owner_context_changed")
+	return _foundation_send("candy_feed", "personal_candy_feed", original, revision)
 
 func homestead_submit_action(action: String, original: Dictionary, station: Node3D, revision: int) -> Dictionary:
 	var key := "homestead_recovery"
@@ -4740,7 +4748,7 @@ func _deliver_training_decision(peer: int, row: Dictionary) -> void:
 		# station panel stayed on "awaiting_saved_decision" with its buttons off.
 		# Guests hear theirs through _rpc_foundation_reply; groom has its own.
 		var action := str(row.get("action", ""))
-		if settled and action in FOUNDATION_ACTIONS.ACTIONS and action != "groom" and _homestead_completion_once(row):
+		if settled and (action in FOUNDATION_ACTIONS.ACTIONS or action in CHARACTER_ACTIONS.ACTIONS) and action != "groom" and _homestead_completion_once(row):
 			homestead_action_completed.emit(action, (row.get("intent", {}) as Dictionary).duplicate(true), _foundation_decision(peer, row))
 	elif bool(_registry.call("has", peer)):
 		rpc_id(peer, "_rpc_training_decision", _altar_epoch, row.delivery_id, int(row.journal_revision), row.receipt)
@@ -4773,7 +4781,7 @@ func _rpc_training_decision(epoch: String, id: String, revision: int, receipt: S
 		# "awaiting" marker; this saved settlement is the terminal answer its
 		# station panel waits for (groom keeps its own completion path).
 		var action := str(row.get("action", ""))
-		if settled and action in FOUNDATION_ACTIONS.ACTIONS and action != "groom" and _homestead_completion_once(row):
+		if settled and (action in FOUNDATION_ACTIONS.ACTIONS or action in CHARACTER_ACTIONS.ACTIONS) and action != "groom" and _homestead_completion_once(row):
 			homestead_action_completed.emit(action, (row.get("intent", {}) as Dictionary).duplicate(true),
 				{"ok": true, "resolved": true, "durable": true, "saved": true, "settled": true,
 					"owner_saved": true, "owner_acknowledged": true, "receipt": row.receipt})

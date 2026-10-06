@@ -72,7 +72,11 @@ func _wander_target_clear_of_road(at: Vector3) -> bool:
 	return absf(height - at.y) < 6.0
 
 
-func begin_trainer_battle(spec: Dictionary, _trainer: Node3D = null) -> bool:
+func begin_trainer_battle(spec: Dictionary, trainer: Node3D = null) -> bool:
+	# Foundation Masters use the inherited one-creature duel and personal win
+	# journal. They are not entries in the chapter hub's trainer catalogue.
+	if spec.get("master") == true:
+		return super.begin_trainer_battle(spec, trainer)
 	if not can_challenge(spec):
 		return false
 	var hub := get_parent().get_node_or_null("StormwoodEncounterHub")

@@ -1,0 +1,15 @@
+{
+  "workflow": ".github/workflows/render.yml",
+  "authority": "WORKFLOW8; PR5256011239602; reviewed one-line semantic label correction",
+  "inputs": {
+    "script": "tests/smoke_playground.gd",
+    "checkout_ref": "618c8714210013e9d54b5a262611f84234b79671",
+    "timeout_minutes": "30",
+    "mode": "headless",
+    "args": "",
+    "label": "r5-f28-semantic-20261006-070814"
+  },
+  "workflow_ref": "main",
+  "status_code": 204,
+  "requested_utc": "2026-10-06T07:08:52.7725308+00:00"
+}

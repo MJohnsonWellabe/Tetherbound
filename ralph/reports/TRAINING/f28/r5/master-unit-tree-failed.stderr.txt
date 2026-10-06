@@ -1,0 +1,11 @@
+SCRIPT ERROR: Invalid access to property or key 'root' on a base object of type 'null instance'.
+   at: test_master_deployment_cannot_overlap_after_cancel_and_reopen (res://tests/test_f28_training_boundaries.gd:333)
+   GDScript backtrace (most recent call first):
+       [0] test_master_deployment_cannot_overlap_after_cancel_and_reopen (res://tests/test_f28_training_boundaries.gd:333)
+       [1] _init (res://tests/run_tests.gd:120)
+WARNING: 2 RIDs of type "CanvasItem" were leaked.
+   at: _free_rids (servers/rendering/renderer_canvas_cull.cpp:2735)
+WARNING: 55 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2535)
+ERROR: 17 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)
