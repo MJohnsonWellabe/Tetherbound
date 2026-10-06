@@ -1,0 +1,20 @@
+08:25:22 | INFO: Data are loaded, start creating Blender stuff
+08:25:22 | INFO: Blender create Mesh node 0
+08:25:22 | INFO: glTF import finished in 0.06s
+wrote D:\tetherbound\codex-c1\ralph\reports\HUB\f17\m1\mesh-first\shrine_pedestal.json
+
+textured-candidate.glb
+  3,724 tris, 1 mesh(es), 1 material(s), 0 clip(s)
+  2.0m tall
+  8 problem(s):
+    - Mesh_0: 2786 non-manifold edges
+    - Mesh_0: 1747 duplicate vertices — will split under deformation
+    - Mesh_0: 296 microscopic disconnected components
+    - Mesh_0: ~212 inward-facing faces
+    - Mesh_0: 459 faces with texel density 4.0x off the median
+    - Mesh_0: 0% quads — generator triangle soup, poor for deformation
+    - does not stand on the origin (lowest point z=-1.0)
+    - no armature and no clips — nothing here can move
+Blender 4.2.9 LTS (hash a10f621e649a built 2025-04-15 03:32:43)
+
+Blender quit

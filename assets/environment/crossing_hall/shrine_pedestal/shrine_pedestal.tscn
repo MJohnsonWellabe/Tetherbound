@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/environment/crossing_hall/shrine_pedestal/shrine_pedestal.glb" id="1_mesh"]
+
+[node name="ShrinePedestal" type="Node3D"]
+
+[node name="StonePlinth" parent="." instance=ExtResource("1_mesh")]
+position = Vector3(0, 0.55, 0)
+scale = Vector3(0.41668836918589514, 0.55, 0.4171663972467018)

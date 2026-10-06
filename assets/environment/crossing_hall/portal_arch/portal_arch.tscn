@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://assets/environment/crossing_hall/portal_arch/portal_arch.glb" id="1_mesh"]
+
+[node name="PortalArch" type="Node3D"]
+
+[node name="StoneFrame" parent="." instance=ExtResource("1_mesh")]
+position = Vector3(0, 2.4, 0)
+scale = Vector3(2.800948283431381, 2.4, 2.683020314296665)

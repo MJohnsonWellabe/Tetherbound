@@ -15,5 +15,7 @@
   "texture_settings": "existing cmd_texture, exact reference as image_style_url, 2k, PBR enabled, regenerated UV, preview prompt",
   "preparation": "existing meshy.py commands via direct Python calls; existing f36_meshy_guard.submit_guarded reserves every task",
   "runtime_enabled": false,
+  "scene": "../shrine_pedestal.tscn; grounded wrapper fitted from measured source bounds to 0.8 x 0.8m base and 1.1m height; engine dimensions still unverified",
+  "source_geometry": "Existing Blender inspector: 3724 triangles, one mesh/material, native raw bounds 1.9199 x 1.9177 x 2.0m (Blender Z-up), base -1.0m. Inspector reports seam/non-manifold/disconnected/normal/UV warnings; these remain unresolved, not waived. Static prop has no rig or clips by design.",
   "acceptance": "OPEN: textured candidate inspection, native dimensions, integration, Medium/High Hall captures and blind judgment"
 }

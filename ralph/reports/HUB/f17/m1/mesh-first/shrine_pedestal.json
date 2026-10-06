@@ -1,0 +1,81 @@
+{
+  "model": "D:\\tetherbound\\codex-c1\\assets\\environment\\crossing_hall\\shrine_pedestal\\source\\textured-candidate.glb",
+  "bounds": {
+    "min": [
+      -0.9599,
+      -0.9588,
+      -1.0
+    ],
+    "max": [
+      0.9599,
+      0.9588,
+      1.0
+    ],
+    "size": [
+      1.9199,
+      1.9177,
+      2.0
+    ],
+    "height_m": 2.0,
+    "longest_axis_m": 2.0,
+    "sits_on_origin": false,
+    "centred_on_origin": true
+  },
+  "meshes": [
+    {
+      "name": "Mesh_0",
+      "vertices": 3611,
+      "edges": 6979,
+      "faces": 3724,
+      "triangles": 3724,
+      "tris": 3724,
+      "quads": 0,
+      "ngons": 0,
+      "quad_fraction": 0.0,
+      "non_manifold_edges": 2786,
+      "boundary_edges": 2786,
+      "loose_vertices": 0,
+      "duplicate_vertices": 1747,
+      "components": 356,
+      "debris_components": 296,
+      "flipped_normals": 212,
+      "uv_layers": 1,
+      "stretched_uv_faces": 459,
+      "materials": [
+        "Material_0"
+      ],
+      "shape_keys": 0,
+      "vertex_groups": 0
+    }
+  ],
+  "materials": [
+    {
+      "name": "Material_0",
+      "textures": [
+        "Image_0",
+        "Image_1",
+        "Image_2"
+      ],
+      "textured": true
+    }
+  ],
+  "armatures": [],
+  "animations": [],
+  "totals": {
+    "meshes": 1,
+    "triangles": 3724,
+    "vertices": 3611,
+    "materials": 1,
+    "animations": 0
+  },
+  "problems": [
+    "Mesh_0: 2786 non-manifold edges",
+    "Mesh_0: 1747 duplicate vertices \u2014 will split under deformation",
+    "Mesh_0: 296 microscopic disconnected components",
+    "Mesh_0: ~212 inward-facing faces",
+    "Mesh_0: 459 faces with texel density 4.0x off the median",
+    "Mesh_0: 0% quads \u2014 generator triangle soup, poor for deformation",
+    "does not stand on the origin (lowest point z=-1.0)",
+    "no armature and no clips \u2014 nothing here can move"
+  ]
+}

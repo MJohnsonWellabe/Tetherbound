@@ -1,0 +1,81 @@
+{
+  "model": "D:\\tetherbound\\codex-c1\\assets\\environment\\crossing_hall\\portal_arch\\source\\textured-candidate.glb",
+  "bounds": {
+    "min": [
+      -0.5695,
+      -0.1304,
+      -1.0
+    ],
+    "max": [
+      0.5695,
+      0.1304,
+      1.0
+    ],
+    "size": [
+      1.1389,
+      0.2609,
+      2.0
+    ],
+    "height_m": 2.0,
+    "longest_axis_m": 2.0,
+    "sits_on_origin": false,
+    "centred_on_origin": true
+  },
+  "meshes": [
+    {
+      "name": "Mesh_0",
+      "vertices": 5073,
+      "edges": 10106,
+      "faces": 5461,
+      "triangles": 5461,
+      "tris": 5461,
+      "quads": 0,
+      "ngons": 0,
+      "quad_fraction": 0.0,
+      "non_manifold_edges": 3829,
+      "boundary_edges": 3829,
+      "loose_vertices": 0,
+      "duplicate_vertices": 2330,
+      "components": 428,
+      "debris_components": 390,
+      "flipped_normals": 1027,
+      "uv_layers": 1,
+      "stretched_uv_faces": 153,
+      "materials": [
+        "Material_0"
+      ],
+      "shape_keys": 0,
+      "vertex_groups": 0
+    }
+  ],
+  "materials": [
+    {
+      "name": "Material_0",
+      "textures": [
+        "Image_0",
+        "Image_1",
+        "Image_2"
+      ],
+      "textured": true
+    }
+  ],
+  "armatures": [],
+  "animations": [],
+  "totals": {
+    "meshes": 1,
+    "triangles": 5461,
+    "vertices": 5073,
+    "materials": 1,
+    "animations": 0
+  },
+  "problems": [
+    "Mesh_0: 3829 non-manifold edges",
+    "Mesh_0: 2330 duplicate vertices \u2014 will split under deformation",
+    "Mesh_0: 390 microscopic disconnected components",
+    "Mesh_0: ~1027 inward-facing faces",
+    "Mesh_0: 153 faces with texel density 4.0x off the median",
+    "Mesh_0: 0% quads \u2014 generator triangle soup, poor for deformation",
+    "does not stand on the origin (lowest point z=-1.0)",
+    "no armature and no clips \u2014 nothing here can move"
+  ]
+}
