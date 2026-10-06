@@ -1,0 +1,13 @@
+MANIFEST.txt
+exit_code
+run.log
+tree/ralph/reports/HUB/f18/native/earned_695791954/home_key_stream_-9223301674804458134.wav
+tree/ralph/reports/HUB/f18/native/earned_695791954/presentation.json
+user/godot/app_userdata/Tetherbound/boot_log.txt
+user/godot/app_userdata/Tetherbound/cache/map_meadows.png
+user/godot/app_userdata/Tetherbound/cache/map_meadows.png.key
+user/godot/app_userdata/Tetherbound/f18_earned_loop_4447924/characters/character-46eb3336b6fa675e2c0baacf6c4e5073/character.json
+user/godot/app_userdata/Tetherbound/f18_earned_loop_4447924/slot_0.json
+user/godot/app_userdata/Tetherbound/f18_earned_loop_4447924/worlds/slot-0/world.json
+user/godot/app_userdata/Tetherbound/logs/godot.log
+user/godot/app_userdata/Tetherbound/settings.json
