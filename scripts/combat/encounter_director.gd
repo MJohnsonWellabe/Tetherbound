@@ -4819,7 +4819,49 @@ func _creature_card_for(peer_id: int) -> Dictionary:
 	if peer_id == _local_peer_id() and _ally != null:
 		return _creature_card(_ally)
 	var row: Dictionary = _deployed_by.get(peer_id, {}) as Dictionary
-	return row.get("card", {}) as Dictionary
+	var cached: Dictionary = row.get("card", {})
+	if _session == null or not _session.has_method("admitted_tether_tonics"): return cached
+	var uid := str(row.get("creature_uid", cached.get("creature_uid", "")))
+	var tonics: Dictionary = _session.call("admitted_tether_tonics", peer_id).get(uid, {})
+	if tonics.is_empty(): return cached
+	var admitted: Dictionary = _session.call("admitted_character_state", peer_id)
+	for owned: Dictionary in admitted.get("party", []):
+		if owned.get("uid") != uid: continue
+		var passive: Dictionary = _session.call("tether_tonic_passive_card", peer_id, uid, owned)
+		var creature: RefCounted = WATER_CAPTURE_CODEC.decode_owned(passive, admitted.redesign_character)
+		if creature == null: return {}
+		for effect: Dictionary in tonics.get("effects", []):
+			creature.call("apply_buff", str(effect.id), str(effect.stat), float(effect.scale), float(effect.remaining_s))
+		var best: bool = row.get("tonic_best_survivability", false)
+		var ability := SPECIES.best_creature_ability(str(creature.get("species_id")))
+		# On a fresh deployment/rejoin the cached card already includes the
+		# owner's current buff. Recognize only the authored Best multiplier.
+		if not row.has("tonic_best_survivability"):
+			best = ability.get("kind") == "survivability" and is_equal_approx(float(cached.get("defence", 0)),
+				float(creature.call("effective_defence", PROGRESSION.config(), true, ability)))
+			row["tonic_best_survivability"] = best
+		var rebuilt := cached.duplicate(true)
+		rebuilt.merge(_creature_card(creature), true)
+		rebuilt.defence = float(creature.call("effective_defence", PROGRESSION.config(), best, ability))
+		rebuilt.active_relic_id = str(admitted.get("realm_hearts", {}).get("active_id", ""))
+		return rebuilt
+	return {}
+
+## Capture the current authored Best contribution before first tonic install;
+## it must not get multiplied again by a stale cached attack/defence card.
+func capture_tether_tonic_card(peer: int, uid: String) -> void:
+	if peer == _local_peer_id() or _session == null: return
+	var row: Dictionary = _deployed_by.get(peer, {})
+	if row.get("creature_uid") != uid or row.has("tonic_best_survivability"): return
+	var admitted: Dictionary = _session.call("admitted_character_state", peer)
+	for owned: Dictionary in admitted.get("party", []):
+		if owned.get("uid") != uid: continue
+		var creature: RefCounted = WATER_CAPTURE_CODEC.decode_owned(owned, admitted.redesign_character)
+		if creature == null: return
+		var ability := SPECIES.best_creature_ability(str(creature.get("species_id")))
+		row["tonic_best_survivability"] = ability.get("kind") == "survivability" \
+			and is_equal_approx(float(row.get("card", {}).get("defence", 0)),
+				float(creature.call("effective_defence", PROGRESSION.config(), true, ability)))
 
 
 func _creature_card(creature: RefCounted) -> Dictionary:

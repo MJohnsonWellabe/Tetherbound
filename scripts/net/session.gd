@@ -4921,6 +4921,7 @@ func host_ack_creature_training(peer: int, row: Dictionary) -> bool:
 	for proposal: Dictionary in bundle.proposals:
 		if proposal.host.call("commit_actor_training_baseline",proposal.stage,row,bundle.admitted,
 			bundle.revision,world.reward_deliveries,world.reward_delivery_namespace,world.world_id)!=true: return false
+	if not _install_host_tether_tonic(peer, row): return false
 	if _character_authority.call("acknowledge_creature_training", character, row) != true: return false
 	return _finalize_tether_item_row(row) if row.get("action") == "tether_item" else true
 
@@ -4939,7 +4940,135 @@ func _tether_item_original_pending(row: Dictionary) -> bool:
 func _tether_item_live_consumer_ready(row: Dictionary) -> bool:
 	if row.get("action") != "tether_item": return true
 	var items: RefCounted = preload("res://scripts/world/death_satchel_rules.gd").db()
-	return not items.call("definition", str(row.get("intent", {}).get("effect", {}).get("item_id", ""))).has("creature_buff")
+	if not items.call("definition", str(row.get("intent", {}).get("effect", {}).get("item_id", ""))).has("creature_buff"): return true
+	var game := _game()
+	return is_inside_tree() and game != null and game.get("session") == self \
+		and game.has_signal("party_passive_tick") and _character_authority != null \
+		and _owner_passive_service() != null
+
+func _install_host_tether_tonic(peer: int, row: Dictionary) -> bool:
+	if row.get("action") != "tether_item": return true
+	var buff: Dictionary = preload("res://scripts/world/death_satchel_rules.gd").db().call("definition",
+		str(row.get("intent", {}).get("effect", {}).get("item_id", ""))).get("creature_buff", {})
+	if buff.is_empty(): return true
+	var character := _authority_character(peer)
+	var stream: Dictionary = _owner_passive.get("hosts").get(character, {})
+	if peer != local_peer_id() and (stream.is_empty() or stream.get("peer") != peer \
+		or stream.get("epoch") != _altar_current_epoch() or stream.get("departed") == true): return false
+	var stream_id := "local" if peer == local_peer_id() else str(stream.id)
+	if peer == local_peer_id() and not _game().is_connected("party_passive_tick", _tether_tonic_party_tick):
+		_game().connect("party_passive_tick", _tether_tonic_party_tick)
+	var sequence := int(_game().get("_passive_observation_sequence")) if peer == local_peer_id() else int(stream.cursor.sequence)
+	for director: Node in _foundation_directors_under(_foundation_realm_roots()):
+		if not _ordinary_combat_director_live(director): continue
+		var host: RefCounted = director.get("_encounter_host")
+		if host == null: continue
+		for original: Dictionary in host.call("pending_tether_items", str(row.intent.request.encounter_id)):
+			if not ESSENCE._equivalent(original.intent, row.intent) or not ESSENCE._equivalent(original.context, row.host_context): continue
+			_settle_tether_tonic_wind(str(row.intent.effect.creature_uid))
+			director.call("capture_tether_tonic_card", peer, str(row.intent.effect.creature_uid))
+			if _character_authority.call("install_saved_tether_tonic", character, row, original,
+				stream_id, _altar_current_epoch(), sequence) != true: return false
+			original["tonic_receipt"] = row.receipt
+			return true
+	return false
+
+func _settle_tether_tonic_wind(uid: String) -> void:
+	for director: Node in _foundation_directors_under(_foundation_realm_roots()):
+		if not _ordinary_combat_director_live(director): continue
+		var host: RefCounted = director.get("_encounter_host")
+		if host != null: host.call("settle_tether_tonic_wind", uid, Time.get_ticks_msec())
+
+func admitted_tether_tonics(peer: int) -> Dictionary:
+	if not is_host() or _character_authority == null: return {}
+	return _character_authority.call("tether_tonic_projection", _authority_character(peer))
+
+func tether_tonic_passive_card(peer: int, uid: String, owned: Dictionary) -> Dictionary:
+	var stream: Dictionary = _owner_passive.get("hosts").get(_authority_character(peer), {}) if _owner_passive != null else {}
+	if stream.get("peer") != peer or stream.get("epoch") != _altar_current_epoch() \
+		or stream.get("departed") == true or not str(stream.get("error", "")).is_empty(): return owned
+	var result := owned.duplicate(true)
+	for card: Dictionary in stream.get("cursor", {}).get("state", {}).get("party", []):
+		if card.get("uid") != uid: continue
+		for field: String in preload("res://scripts/net/owner_passive_replay.gd").PASSIVE_FIELDS:
+			if card.has(field): result[field] = card[field]
+	return result
+
+func _tick_host_tether_tonics(character: String, delta: float, uids: Array, stream_id: String,
+		epoch: String, sequence: int) -> void:
+	if not is_host() or _character_authority == null or epoch != _altar_current_epoch(): return
+	for uid: String in uids: _settle_tether_tonic_wind(uid)
+	_character_authority.call("tick_tether_tonics", character, delta, uids, stream_id, epoch, sequence)
+
+func _tether_tonic_party_tick(observation: Dictionary) -> void:
+	var game := _game()
+	if game == null or observation.get("character_id") != _local_character_id() \
+		or observation.get("world_namespace") != game.get("world").reward_delivery_namespace \
+		or observation.get("session_epoch") != _altar_current_epoch(): return
+	if is_host():
+		_tick_host_tether_tonics(_local_character_id(), float(observation.delta), [observation.uid],
+			"local", _altar_current_epoch(), int(observation.sequence))
+		var live := false
+		for held: Dictionary in _character_authority.call("tether_tonic_projection", _local_character_id()).values():
+			if not held.get("effects", []).is_empty(): live = true
+		if not live: game.disconnect("party_passive_tick", _tether_tonic_party_tick)
+
+## These projections arrive only on the existing authenticated passive carrier
+## after its character/world/epoch/current-stream checks. No portable buff import.
+func _apply_host_tether_tonics(projected: Dictionary) -> bool:
+	var game := _game()
+	if game == null or game.get("local") == null: return false
+	var context := [_local_character_id(), game.get("world").reward_delivery_namespace, _altar_current_epoch()]
+	for member: RefCounted in game.get("local").party.call("members"):
+		var uid := str(member.get("uid"))
+		var seen: Dictionary = member.get_meta("tether_tonic_projection", {})
+		if not seen.is_empty() and seen.get("context") != context:
+			var carried: Array = member.get("active_buffs")
+			for index: int in range(carried.size() - 1, -1, -1):
+				if seen.get("receipts", {}).has(str(carried[index].get("id", ""))): carried.remove_at(index)
+			seen = {}
+			member.set_meta("tether_tonic_projection", {"context": context, "version": -1, "receipts": {}})
+		var row: Dictionary = projected.get(uid, {})
+		if row.is_empty(): continue
+		if seen.get("context") == context and int(seen.get("version", -1)) >= int(row.get("version", -1)): continue
+		var previous: Dictionary = seen.get("receipts", {}) if seen.get("context") == context else {}
+		var buffs: Array = member.get("active_buffs")
+		var effects: Array = row.get("effects", [])
+		for index: int in range(buffs.size() - 1, -1, -1):
+			var id := str(buffs[index].get("id", ""))
+			if previous.has(id) and not effects.any(func(effect: Dictionary) -> bool: return effect.get("id") == id): buffs.remove_at(index)
+		for effect: Dictionary in effects:
+			var id := str(effect.id)
+			var live := -1.0
+			for buff: Dictionary in buffs:
+				if buff.get("id") == id: live = float(buff.remaining_s)
+			# A duplicate receipt cannot resurrect a locally expired effect.
+			if previous.get(id) == effect.get("receipt") and live < 0.0: continue
+			var remaining := minf(live, float(effect.remaining_s)) if live >= 0.0 and previous.get(id) == effect.get("receipt") else float(effect.remaining_s)
+			if remaining > 0.0: member.call("apply_buff", id, str(effect.stat), float(effect.scale), remaining)
+			previous[id] = effect.receipt
+		member.set_meta("tether_tonic_projection", {"context": context, "version": int(row.version), "receipts": previous})
+	return true
+
+func _install_owner_tether_tonic(player: RefCounted, row: Dictionary) -> bool:
+	if row.get("action") != "tether_item": return true
+	var buff: Dictionary = preload("res://scripts/world/death_satchel_rules.gd").db().call("definition",
+		str(row.intent.effect.item_id)).get("creature_buff", {})
+	if buff.is_empty(): return true
+	var uid := str(row.intent.effect.creature_uid)
+	for member: RefCounted in player.party.call("members"):
+		if member.get("uid") != uid: continue
+		var context := [_local_character_id(), _game().get("world").reward_delivery_namespace, _altar_current_epoch()]
+		var seen: Dictionary = member.get_meta("tether_tonic_projection", {})
+		var receipts: Dictionary = seen.get("receipts", {}) if seen.get("context") == context else {}
+		if receipts.get(str(buff.id)) == row.receipt: return true
+		# Recovery history has no new actual BOOL-save edge and cannot regrant it.
+		if _owner_training_retry.get("receipt") != row.receipt or _owner_training_retry.get("saved") != true: return true
+		if member.call("apply_buff", str(buff.id), str(buff.stat), float(buff.scale), float(buff.duration_s)) != true: return false
+		receipts[str(buff.id)] = row.receipt
+		member.set_meta("tether_tonic_projection", {"context": context, "version": -1, "receipts": receipts})
+		return true
+	return false
 
 
 func _finalize_tether_item_row(row: Dictionary) -> bool:
@@ -5231,6 +5360,7 @@ func _settle_owner_training_accepted(player: RefCounted, world: RefCounted, row:
 		if _owner_training_retry.player.get_ref() != player or _owner_training_retry.world.get_ref() != world \
 			or _owner_training_retry.receipt != row.receipt or _owner_training_retry.saved != true \
 			or not ESSENCE.owner_matches_after(preload("res://scripts/net/character_record_rules.gd").training_projection(player.call("save_data"), row, ESSENCE.training_projection), row.after): return false
+		if not _install_owner_tether_tonic(player, row): return false
 		_owner_training_retry = {}
 	if row.get("action") == "tether_item":
 		_tether_item_saved_result = {"player": weakref(player), "world": weakref(world),

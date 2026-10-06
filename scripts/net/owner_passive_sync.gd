@@ -208,6 +208,8 @@ func _send_owner(peer: int, stream: Dictionary, message: Dictionary) -> void:
 	var packet := {"character_id": stream.character, "world_id": stream.world_id,
 		"world_namespace": stream.world_namespace, "session_epoch": stream.epoch, "stream_id": stream.id}
 	packet.merge(message, true)
+	if message.get("op") in ["inputs_ack", "rebase_ack", "readmit"]:
+		packet["tether_tonics"] = owner().get("_character_authority").call("tether_tonic_projection", str(stream.character))
 	owner().call("_owner_passive_send_peer", peer, packet)
 
 func admitted(peer: int, summary: Dictionary) -> void:
@@ -405,6 +407,8 @@ func _add_host(peer: int, character: String, stream_id: String, before: Dictiona
 		"epoch": owner().call("_altar_current_epoch"), "started_ms": Time.get_ticks_msec(),
 		"cursor": cursor, "revision": owner().get("_character_authority").call("revision", character),
 		"seen": {}, "checkpoint": {}, "error": ""}
+	owner().get("_character_authority").call("bind_tether_tonic_stream", character, stream_id,
+		str(hosts[character].epoch), int(cursor.sequence))
 	return true
 
 func _host_scope(peer: int, packet: Dictionary) -> bool:
@@ -575,7 +579,7 @@ func _inputs_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 	# cursor (REPLAY.apply_condition_owned). It becomes the stream's cursor only
 	# after its record is validated (_settle_working): before any other input
 	# and on every exit, so the cursor never holds an unvalidated state.
-	var batch := {"working": {}}
+	var batch := {"working": {}, "tonic_ticks": []}
 	var completed := _inputs_host_batch(peer, stream, packet, batch)
 	if not _settle_working(stream, batch) or not completed or not str(stream.error).is_empty(): return
 	_send_owner(peer, stream, {"op": "inputs_ack", "sequence": stream.cursor.sequence})
@@ -593,6 +597,11 @@ func _settle_working(stream: Dictionary, batch: Dictionary) -> bool:
 		stream.error = "owner_passive_invalid_result"
 		return false
 	stream.cursor = working
+	# Only the validated new prefix ages the same admitted tonic companion.
+	for input: Dictionary in batch.get("tonic_ticks", []):
+		owner().call("_tick_host_tether_tonics", str(stream.character), float(input.delta),
+			input.uids, str(stream.id), str(stream.epoch), int(input.sequence))
+	batch["tonic_ticks"] = []
 	return true
 
 
@@ -671,6 +680,7 @@ func _inputs_host_batch(peer: int, stream: Dictionary, packet: Dictionary, batch
 				"cursor_sequence": stream.cursor.sequence, "sampled_ms": Time.get_ticks_msec()}
 			stream.error = str(applied.get("code", "owner_passive_replay_refused")); return false
 		if input.get("op") != "condition": stream.cursor = applied.cursor
+		else: (batch.tonic_ticks as Array).append(input.duplicate(true))
 		if input.get("op") == "actor_vitals_applied": stream.revision = applied.revision
 		stream.seen[sequence] = digest
 		if reset: stream.erase("travel_reset") # Only successful exact replay consumes it.
@@ -1201,6 +1211,7 @@ func receive_owner(packet: Dictionary) -> void:
 			var arrival := owner().get_node_or_null(^"FoundationComposition/PortalArrival")
 			if arrival != null: arrival.call("start_prepared", packet.request)
 		"rebase_ack":
+			owner().call("_apply_host_tether_tonics", packet.get("tether_tonics", {}))
 			local.rebase = {}
 			local.admission_pending = false
 		"readmit":
@@ -1216,6 +1227,7 @@ func receive_owner(packet: Dictionary) -> void:
 				game.call("push_world_message", "This world's record of your companions differs from yours. Their care and Altar actions are paused until you rejoin.")
 		"inputs_ack":
 			if not packet.get("sequence") is int or packet.sequence < local.acked or packet.sequence > local.sequence: return
+			owner().call("_apply_host_tether_tonics", packet.get("tether_tonics", {}))
 			local.admission_pending = false
 			local.hello_pending = false
 			if packet.sequence > int(local.acked): local.ack_progress_ms = Time.get_ticks_msec()
@@ -1398,6 +1410,7 @@ func _readmit_owner(packet: Dictionary) -> void:
 		_owner_undo(undo)
 		_note_ignored("readmit not saved; the host resends it")
 		return
+	owner().call("_apply_host_tether_tonics", packet.get("tether_tonics", {}))
 	var cursor := REPLAY.begin(baseline, _discoveries())
 	if cursor.is_empty(): return
 	local.base_hash = packet.baseline_hash

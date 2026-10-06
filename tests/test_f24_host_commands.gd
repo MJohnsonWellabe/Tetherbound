@@ -345,16 +345,14 @@ func test_retained_item_ack_preserves_active_body_and_settles_same_v3_decision_o
 			var request := COMMANDS.intent(id, 1, 7, "item_throw")
 			var prepared: Dictionary = host.prepare_tether_item_command(request, 1, before, binding, 0, "item-world", "item-epoch", 2000)
 			if item == "attack_tonic":
-				assert_false(prepared.ok, "actual Host refuses unmounted tonic before reserving or journaling")
-				assert_eq(prepared.code, "item_buff_consumer_unavailable")
-				assert_true(host.pending_tether_items(id).is_empty())
+				assert_true(prepared.ok, "tonic reserves the same private original; no effect before actual owner save")
+				assert_eq(host.pending_tether_items(id).size(), 1)
 				assert_eq(_command_pool().meter, 100.0)
 				var policy := preload("res://scripts/net/session.gd").new()
 				var tonic_row := {"action": "tether_item", "intent": {"effect": {"item_id": item}}}
 				assert_false(policy.training_actor_baseline_ready(1, tonic_row), "recovered pending tonic refuses before the accepted World writer")
 				policy.free()
 				assert_eq(player.get("inventory").call("count", item), 2)
-				continue
 			assert_true(prepared.ok, str(prepared))
 			if not prepared.ok: continue
 			var original: Dictionary = prepared.original
@@ -409,7 +407,27 @@ func test_retained_item_ack_preserves_active_body_and_settles_same_v3_decision_o
 			assert_true(stage.ok, str(stage))
 			assert_eq(stage.changes.size(), 1)
 			assert_eq(stage.changes[0].vitals.is_empty(), item != "potion_small", "food/tonic invent no HP proposal")
+			if item == "attack_tonic":
+				assert_false(authority.install_saved_tether_tonic("owner_a", row, original, "stream-a", "transport-epoch", 10), "no consumer before canonical actor commit")
 			assert_true(host.commit_actor_training_baseline(stage, row, token.state, 1, {row.delivery_id: row}, "item-world", "item-slot"))
+			if item == "attack_tonic":
+				assert_false(host.finalize_saved_tether_item(original, row, {row.delivery_id: row}, "item-world", "item-slot").ok, "saved actor alone cannot release an uninstalled tonic")
+				assert_true(authority.install_saved_tether_tonic("owner_a", row, original, "stream-a", "transport-epoch", 10))
+				original["tonic_receipt"] = row.receipt
+				var active: Dictionary = authority.tether_tonic_projection("owner_a")
+				assert_eq(active[uid].effects[0].remaining_s, 90.0)
+				authority.tick_tether_tonics("owner_a", 9.0, [uid], "stream-a", "transport-epoch", 10)
+				assert_eq(authority.tether_tonic_projection("owner_a"), active, "preactivation/duplicate input cannot age a tonic")
+				authority.tick_tether_tonics("owner_a", 9.0, [uid], "stream-a", "transport-epoch", 11)
+				assert_eq(authority.tether_tonic_projection("owner_a")[uid].effects[0].remaining_s, 81.0)
+				authority.bind_tether_tonic_stream("owner_a", "stream-b", "transport-epoch")
+				authority.tick_tether_tonics("owner_a", 10.0, [uid], "stream-a", "transport-epoch", 99)
+				assert_eq(authority.tether_tonic_projection("owner_a")[uid].effects[0].remaining_s, 81.0, "old buffered stream cannot age the rebased original")
+				for tick: int in range(1, 10): authority.tick_tether_tonics("owner_a", 10.0, [uid], "stream-b", "transport-epoch", tick)
+				assert_true(authority.tether_tonic_projection("owner_a")[uid].effects.is_empty())
+				assert_true(authority.install_saved_tether_tonic("owner_a", row, original, "stream-b", "transport-epoch", 9))
+				assert_true(authority.tether_tonic_projection("owner_a")[uid].effects.is_empty(), "accepted receipt retry never refreshes expired time")
+				assert_eq(authority.state("owner_a").party, row.after.party, "timers remain outside portable cards")
 			var participant: Dictionary = host.record(id).retained_actor_participants["owner_a"] if depart else host.record(id).participants[1]
 			assert_eq(participant.tether_commands.meter, 75.0)
 			assert_eq(participant.actor_vitals[uid].hp, row.after.party[0].hp)
@@ -826,7 +844,7 @@ func test_pouch_presentation_reads_first_live_stack_and_frozen_gear_without_spen
 	player.inventory.add("attack_tonic", 2)
 	admitted.inventory = record.portable_projection(player.save_data()).inventory
 	admitted.redesign_character.tether_pouch = ["attack_tonic", "berries"]
-	assert_eq(host.tether_pouch_view(id, 1, admitted), {"pouch_count": 2, "item_consumer_ready": false}, "first-slot tonic stays visible but unavailable; never skip to later food")
+	assert_eq(host.tether_pouch_view(id, 1, admitted), {"pouch_count": 2, "item_consumer_ready": true}, "first-slot tonic remains the selected stack; never skip to later food")
 	admitted = original.duplicate(true)
 	admitted.equipment.backpack = ""
 	admitted.redesign_character.tether_pouch = ["potion_small"]

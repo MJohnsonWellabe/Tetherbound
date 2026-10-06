@@ -824,8 +824,7 @@ func tether_pouch_view(id: String, peer: int, admitted: Dictionary) -> Dictionar
 		if stack is Dictionary: counts[stack.id] = inventory.call("count", str(stack.id))
 	var item := TETHER_COMMANDS.first_pouch_item(admitted.redesign_character.get("tether_pouch", []),
 		rules.db().get("_items"), counts, int(commands.tier))
-	return {"pouch_count": int(counts.get(item, 0)), "item_consumer_ready": not item.is_empty() \
-		and not rules.db().call("definition", item).has("creature_buff")}
+	return {"pouch_count": int(counts.get(item, 0)), "item_consumer_ready": not item.is_empty()}
 
 
 func tether_rally(id: String, peer: int, now_ms: int) -> Dictionary:
@@ -933,7 +932,6 @@ func prepare_tether_item_command(request: Dictionary, peer: int, admitted: Dicti
 	var candidate := TETHER_COMMANDS.stage_item_use(admitted, plan.effect,
 		{"actor": actor, "owner_admitted": true, "encounter_active": true})
 	if candidate.get("ok") != true: return candidate
-	if not candidate.buff.is_empty(): return {"ok": false, "code": "item_buff_consumer_unavailable"}
 	var context := {"character_id": participant.character_id, "expected_revision": revision,
 		"source_key": "tether_item:" + str(receipt.action_id), "in_range": true, "in_combat": true,
 		"foundation_runtime_authorized": true, "item_runtime_authorized": true,
@@ -973,9 +971,11 @@ func finalize_saved_tether_item(original: Dictionary, training: Dictionary, deli
 		or not ACTOR_AUTHORITY.equivalent(original.get("intent"), training.get("intent")) \
 		or not ACTOR_AUTHORITY.equivalent(original.get("context"), training.get("host_context")):
 		return {"ok": false, "code": "item_decision_unavailable"}
-	# Keep the original until the authoritative timed-buff consumer is mounted.
+	# A tonic stays private until Session has installed this SAME saved original
+	# into the admitted timed consumer, before releasing its debit/meter receipt.
 	var items: RefCounted = preload("res://scripts/world/death_satchel_rules.gd").db()
-	if items.call("definition", str(original.intent.effect.item_id)).has("creature_buff"):
+	if items.call("definition", str(original.intent.effect.item_id)).has("creature_buff") \
+		and original.get("tonic_receipt") != training.receipt:
 		return {"ok": false, "code": "item_buff_consumer_unavailable"}
 	var rec: Dictionary = encounters.get(original.encounter_id, {})
 	var rows: Array = rec.get("participants", {}).values()
@@ -997,6 +997,16 @@ func finalize_saved_tether_item(original: Dictionary, training: Dictionary, deli
 		rec.seq = seq
 		return {"ok": true, "result": result.duplicate(true)}
 	return {"ok": false, "code": "item_original_unavailable"}
+
+func settle_tether_tonic_wind(uid: String, now_ms: int) -> void:
+	for rec: Dictionary in encounters.values():
+		var rows: Array = rec.get("participants", {}).values()
+		rows.append_array(rec.get("retained_actor_participants", {}).values())
+		for participant: Dictionary in rows:
+			var pool: Dictionary = participant.get("move_resources", {}).get(uid, {})
+			if pool.is_empty(): continue
+			_advance_participant_wind(pool, {"max": pool.get("wind_max", 100.0),
+				"regen_per_second": pool.get("wind_regen_per_second", 18.0)}, now_ms)
 
 
 ## An untouched reservation may be cancelled only before a durable decision.
