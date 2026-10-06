@@ -29,12 +29,15 @@ var _tonic_character_dir := ""
 var _tonic_request: Dictionary = {}
 var _tonic_blocker: Callable
 var _tonic_refusal_armed := false
+var _tag_request: Dictionary = {}
 
 
 func _execute_step(msg: Dictionary) -> Dictionary:
 	var action := str(msg.get("action", ""))
 	if action.begins_with("op_tonic_"):
 		return await _tonic_step(action, msg.get("args", {}))
+	if action.begins_with("op_tag_"):
+		return await _tag_step(action)
 	if action == "op_hold":
 		var session: Node = root.get_node(^"Game").get_node_or_null(^"Session")
 		var service: RefCounted = session.call("_owner_passive_service")
@@ -75,6 +78,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 
 
 func _execute_probe(msg: Dictionary) -> Variant:
+	if str(msg.get("what", "")) == "op_tag_state":
+		return _tag_state(msg.get("args", {}))
 	if str(msg.get("what", "")) != "op_state":
 		return await super(msg)
 	var game := root.get_node_or_null(^"Game")
@@ -118,6 +123,85 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			"sequence": int((stream.get("cursor", {}) as Dictionary).get("sequence", -1)),
 			"departed": stream.get("departed") == true, "error": str(stream.get("error", ""))}
 	return out
+
+
+## Optional F24 continuation of the same real-peer smoke. Reuse its ordinary
+## strike input and proximity setup; never stage a meter, hit, HP or verdict.
+func _tag_step(action: String) -> Dictionary:
+	var manager: Node = _combat_manager()
+	var director: Node = _encounter_director()
+	if action == "op_tag_target": return await _tonic_step("op_tonic_target", {})
+	if manager == null or director == null or not manager.is_fighting():
+		return {"verdict":"FAIL", "detail":"Tag requires the actual live fight"}
+	if action == "op_tag_replay":
+		if _tag_request.is_empty() or not manager.submit_tether_command(_tag_request):
+			return {"verdict":"FAIL", "detail":"same Tag request could not be submitted"}
+		for frame in 90: await physics_frame
+		return {"verdict":"PASS", "detail":"submitted the same original Tag request again"}
+	if action != "op_tag_combo": return {"verdict":"ERROR", "detail":"unknown Tag step"}
+	var before := _tag_state({})
+	var incoming_index := int(manager.call("_next_switchable_index", 1))
+	if incoming_index < 0: return {"verdict":"FAIL", "detail":"no actual healthy next owned companion"}
+	var incoming: RefCounted = (manager.get("_party") as Array)[incoming_index]
+	for hit in 8:
+		var target: Node3D = director.get("_shared_opponent_proxy")
+		if target == null: target = director.get("_legacy_mirror")
+		var body: Node3D = director.ally_body()
+		if target == null or body == null or not manager.is_fighting():
+			return {"verdict":"FAIL", "detail":"actual Tag target or body lost before earned meter"}
+		body.global_position = target.global_position + Vector3(0, 0, 3.0)
+		body.face_towards(target.global_position)
+		for frame in 15: await physics_frame
+		var meter := float(manager.tether_command_snapshot().get("meter", 0.0))
+		var strike: Dictionary = await _step_strike({"facing":[0,0,-1], "settle":1})
+		if strike.get("verdict") != "PASS": return strike
+		for frame in 180:
+			await physics_frame
+			var snapshot: Dictionary = manager.tether_command_snapshot()
+			if float(snapshot.get("meter", 0.0)) <= meter: continue
+			if float(snapshot.meter) < 40.0: break
+			if manager.call("can_switch") != true: continue
+			var deployment: Dictionary = director.tether_command_deployment()
+			_tag_request = preload("res://scripts/combat/tether_commands.gd").intent(str(manager.encounter_id()),
+				int(deployment.generation), int(snapshot.get("last_sequence", 0)) + 1, "tag_combo")
+			var submitted: bool = manager.submit_tether_command(_tag_request)
+			if not submitted: return {"verdict":"FAIL", "detail":"actual Tag submission refused"}
+			for settle in 180:
+				await physics_frame
+				if manager.active_creature() == incoming:
+					return {"verdict":"PASS", "detail":"actual earned-meter Tag switched to the next owned companion",
+						"data":{"before":before, "after":_tag_state({}), "request":_tag_request,
+							"incoming_uid":str(incoming.uid)}}
+			return {"verdict":"FAIL", "detail":"Tag did not switch after actual fresh hit",
+				"data":{"request":_tag_request, "state":_tag_state({}), "refusal":manager.get("last_encounter_refusal")}}
+	return {"verdict":"FAIL", "detail":"eight actual quick attempts did not earn a usable Tag window"}
+
+
+func _tag_state(args: Dictionary) -> Dictionary:
+	var game: Node = root.get_node(^"Game")
+	var session: Node = game.get_node(^"Session")
+	var director: Node = _encounter_director()
+	var manager: Node = _combat_manager()
+	var peer := int(args.get("peer", session.local_peer_id()))
+	var request: Dictionary = args.get("request", _tag_request)
+	var body: Node3D = director.deployed_body_for(peer)
+	var id := str(request.get("encounter_id", manager.encounter_id()))
+	var original := {}
+	var record: Dictionary = director.get("_encounter")
+	if session.is_host():
+		var host: RefCounted = director.get("_encounter_host")
+		record = host.record(id)
+		if not request.is_empty():
+			var parent := "command:%s:%s:%d:%d" % [id, str(args.get("character_id", game.local.character_id)),
+				int(request.generation), int(request.sequence)]
+			original = host.move_action_original(id, peer, parent)
+	var pos := body.global_position if is_instance_valid(body) else Vector3.ZERO
+	return {"peer":session.local_peer_id(), "character_id":str(game.local.character_id),
+		"encounter_id":str(manager.encounter_id()), "deployment":director.tether_command_deployment(),
+		"body_instance":body.get_instance_id() if is_instance_valid(body) else 0, "position":[pos.x,pos.y,pos.z],
+		"commands":manager.tether_command_snapshot(), "record":record, "original":original,
+		"seen_impacts":(manager.get("_seen_impact_actions") as Dictionary).keys(),
+		"party":game.party.members().map(func(c: RefCounted) -> String: return str(c.uid))}
 
 
 func _tonic_step(action: String, args: Dictionary) -> Dictionary:

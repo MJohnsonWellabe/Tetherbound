@@ -134,6 +134,8 @@ func _run() -> void:
 			return
 		await step(i, "dismiss_dialogue", {})
 		_ok(await step(i, "party_grant", {"species": "terrapup", "level": 8}), "SETUP: peer %d owns a terrapup" % i)
+		if i == 1 and OS.get_cmdline_user_args().has("--prove-tag-combo"):
+			_ok(await step(i, "party_grant", {"species":"ripplet", "level":8}), "Tag SETUP: guest owns one additional healthy companion before admission")
 	_ok(await step(1, "op_tonic_supply"), "tonic: guest saves its initial two-item stock before admission")
 	if not _ok(await step(0, "host"), "peer 0 hosts"):
 		quit(await finish())
@@ -337,6 +339,9 @@ func _run() -> void:
 	for _i in 10: await step(0, "wait", {"frames": 30})
 	check(int(((await _state(1)).get("items", {}) as Dictionary).get("berries", 0)) == int(full.get("berries", -1)), "behind: the find is never paid a second time")
 
+	if OS.get_cmdline_user_args().has("--prove-tag-combo"):
+		await _prove_tag_combo()
+
 	# 5. Negative control: an invalid record is refused, never adopted.
 	if not _ok(await step(1, "leave"), "invalid: guest leaves"):
 		quit(await finish())
@@ -347,6 +352,53 @@ func _run() -> void:
 	check(str(refused.get("verdict", "")) != "PASS" and str(refused.get("detail", "")).contains("could not be admitted"),
 		"invalid: the rejoin is refused with a reason (%s)" % str(refused.get("detail", "")))
 	quit(await finish())
+
+
+func _prove_tag_combo() -> void:
+	if not _ok(await step(1, "op_tag_target"), "Tag: guest normally engages an actual live wild"): return
+	var owner: Dictionary = await probe(1, "op_tag_state")
+	if not _ok(await step(0, "join_encounter", {"encounter_id":str(owner.encounter_id)}), "Tag: host joins the same actual fight as observer"): return
+	var peer := int(owner.peer)
+	var host_before: Dictionary = await probe(0, "op_tag_state", {"peer":peer})
+	var combo: Dictionary = await step(1, "op_tag_combo")
+	if not _ok(combo, "Tag: actual hits earn meter and fresh-hit command switches normally"): return
+	var data: Dictionary = combo.data
+	var request: Dictionary = data.request
+	var args := {"peer":peer, "request":request, "character_id":_guest_character}
+	var host: Dictionary = await probe(0, "op_tag_state", args)
+	var after: Dictionary = await probe(1, "op_tag_state")
+	var original: Dictionary = host.original
+	var outcome: Dictionary = original.get("outcome", {})
+	var verdict: Dictionary = outcome.get("verdict", {})
+	var strikes: Array = verdict.get("delta", {}).get("effect", {}).get("strikes", [])
+	check(strikes.size() == 2 and verdict.get("ok") == true, "Tag: host retains one accepted parent with both actual child writes")
+	if strikes.size() != 2: return
+	check(strikes[0].source_kind == "creature" and strikes[1].source_kind == "creature" \
+		and strikes[0].attacker_uid == data.before.deployment.creature_uid and strikes[1].attacker_uid == data.incoming_uid \
+		and strikes[0].character_id == _guest_character and strikes[1].character_id == _guest_character,
+		"Tag: both damage events belong to the owner's distinct creatures")
+	check(float(strikes[0].actual_hp_debit) > 0.0 and float(strikes[1].actual_hp_debit) > 0.0 \
+		and strikes[0].target_hp_after == strikes[1].target_hp_before \
+		and host.record.opponent.hp == strikes[1].target_hp_after and verdict.delta.hp == strikes[1].target_hp_after,
+		"Tag: both positive actual HP debits form one exact chain and parent final HP")
+	check(strikes[0].power_multiplier == 0.5 and strikes[1].power_multiplier == 1.5,
+		"Tag: outgoing half quick and incoming full one-and-a-half quick retain authored factors")
+	check(after.body_instance == data.before.body_instance and host.body_instance == host_before.body_instance \
+		and after.deployment.creature_uid == data.incoming_uid \
+		and after.deployment.generation == int(request.generation) + 1,
+		"Tag: owner and trusted host recast the same bodies once to the next owned UID")
+	check(after.party == data.before.party and after.party.size() <= 5, "Tag: body switch preserves the admitted party without another creature")
+	check(after.commands.meter == verdict.delta.tether_commands.meter \
+		and host.record.participants[peer].tether_commands == verdict.delta.tether_commands,
+		"Tag: owner and host consume exactly the parent's command meter state")
+	check(host.seen_impacts.has(str(strikes[1].action_id)), "Tag: joined observer consumes the actual incoming child impact")
+	print("TAG actual family observation: ", JSON.stringify({"owner":after,"host":host,"before":host_before}))
+	_ok(await step(1, "op_tag_replay"), "Tag: submit the same original again")
+	var replay: Dictionary = await probe(0, "op_tag_state", args)
+	check(replay.original == original and replay.record.opponent.hp == host.record.opponent.hp \
+		and replay.record.participants[peer].tether_commands == host.record.participants[peer].tether_commands,
+		"Tag: duplicate submission cannot debit HP or meter or replace the retained parent")
+	for i in [1,0]: _ok(await step(i, "press", {"action":"combat_run"}), "Tag: peer %d normally leaves the proof fight" % i)
 
 
 func _tonic_seconds(state: Dictionary) -> float:
