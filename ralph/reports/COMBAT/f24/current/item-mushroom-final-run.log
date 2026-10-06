@@ -1,0 +1,18 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_creature_buffs.gd,test_f24_host_commands.gd::test_item_candidate_debits_one_own_stack_with_actual_heal_food_or_unsaved_tonic,test_f24_host_commands.gd::test_pouch_presentation_reads_first_live_stack_and_frozen_gear_without_spending,test_combat_wind.gd::test_stamina_shroom_truthfully_accelerates_wind_regen: 3 of 817 test files
+  ok    test_combat_wind.gd :: test_stamina_shroom_truthfully_accelerates_wind_regen
+  ok    test_creature_buffs.gd :: test_a_buff_expires_on_its_clock
+  ok    test_creature_buffs.gd :: test_apply_buff_scales_the_named_stat_only
+  ok    test_creature_buffs.gd :: test_authored_mushrooms_boost_the_drinker_refresh_expire_and_remain_unsaved
+  ok    test_creature_buffs.gd :: test_effective_attack_reads_the_buff
+  ok    test_creature_buffs.gd :: test_effective_defence_reads_the_buff
+  ok    test_creature_buffs.gd :: test_garbage_is_refused_without_a_trace
+  ok    test_creature_buffs.gd :: test_no_buffs_means_scale_one
+  ok    test_creature_buffs.gd :: test_redrinking_refreshes_the_clock_not_the_multiplier
+  ok    test_creature_buffs.gd :: test_ticking_with_no_buffs_is_a_no_op
+  ok    test_creature_buffs.gd :: test_two_different_tonics_multiply_together_on_one_stat
+  ok    test_f24_host_commands.gd :: test_item_candidate_debits_one_own_stack_with_actual_heal_food_or_unsaved_tonic
+  ok    test_f24_host_commands.gd :: test_pouch_presentation_reads_first_live_stack_and_frozen_gear_without_spending
+
+13 tests, 139 assertions, 0 failed

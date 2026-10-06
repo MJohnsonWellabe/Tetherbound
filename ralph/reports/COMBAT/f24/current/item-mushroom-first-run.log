@@ -1,0 +1,13 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_creature_buffs.gd::test_authored_mushrooms_boost_the_drinker_refresh_expire_and_remain_unsaved: 1 of 817 test files
+  FAIL  test_creature_buffs.gd :: test_authored_mushrooms_boost_the_drinker_refresh_expire_and_remain_unsaved
+          expected true, got false  (speed_mushroom promises faster or stronger, so must increase the stat)
+          expected true, got false  (wild_mushroom promises faster or stronger, so must increase the stat)
+          expected true, got false  (the real attack consumer must become stronger)
+
+1 tests, 27 assertions, 1 failed
+
+  test_creature_buffs.gd :: test_authored_mushrooms_boost_the_drinker_refresh_expire_and_remain_unsaved — expected true, got false  (speed_mushroom promises faster or stronger, so must increase the stat)
+  test_creature_buffs.gd :: test_authored_mushrooms_boost_the_drinker_refresh_expire_and_remain_unsaved — expected true, got false  (wild_mushroom promises faster or stronger, so must increase the stat)
+  test_creature_buffs.gd :: test_authored_mushrooms_boost_the_drinker_refresh_expire_and_remain_unsaved — expected true, got false  (the real attack consumer must become stronger)
