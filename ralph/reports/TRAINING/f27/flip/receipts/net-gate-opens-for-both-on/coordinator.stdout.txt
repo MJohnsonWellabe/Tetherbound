@@ -1,0 +1,28 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=14812 control_port=64523 home=D:\tetherbound\.artifacts\r1-f27-flip\net-gate-opens-for-both-on/home-0 log=D:\tetherbound\.artifacts\r1-f27-flip\net-gate-opens-for-both-on/peer-0.log
+coordinator: launched peer 1 (client) pid=9352 control_port=64524 home=D:\tetherbound\.artifacts\r1-f27-flip\net-gate-opens-for-both-on/home-1 log=D:\tetherbound\.artifacts\r1-f27-flip\net-gate-opens-for-both-on/peer-1.log
+coordinator: peer 0 hello: {"enet_port":34961.0,"godot_version":"4.7-stable (official)","main_sha":"f17ec9a55402","peer":0.0,"pid":14812.0,"role":"host","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-gate-opens-for-both-on/home-0/Godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":34962.0,"godot_version":"4.7-stable (official)","main_sha":"f17ec9a55402","peer":1.0,"pid":9352.0,"role":"client","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-gate-opens-for-both-on/home-1/Godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: coordinator tracked 2 peers
+PASS: a Session exists to host/join (lane 2.A); without it there is no world to share a gate in
+PASS: peer 0 hosted a world (hosting udp/34961 as peer 1)
+PASS: peer 1 joined peer 0's world on port 34961 (joined 127.0.0.1:34961 as peer 1883230396 after 41 frames; snapshot applied; 2 peer(s) in registry)
+PASS: peer 0's registry holds both players (registry reports 2 peer(s) after 0 frames (0.0 s))
+PASS: peer 1's registry holds both players (registry reports 2 peer(s) after 0 frames (0.0 s))
+PASS: peer 0 starts with the South Bridge shut
+PASS: peer 0 starts with the bridge's leaf still across the deck
+PASS: peer 1 starts with the South Bridge shut
+PASS: peer 1 starts with the bridge's leaf still across the deck
+PASS: peer 1 (the client) submitted the open-the-bridge intent (south_bridge_open: ok=false pending=true code='pending' reason='')
+PASS: peer 0 answered the story probe
+PASS: peer 0's WORLD says the South Bridge is open
+PASS: peer 0's own bridge gate has re-posed and is open ([{"flag":"","node":"SequenceDirector","open":false,"position":[]},{"flag":"road_gate_open","node":"RoadGate","open":false,"position":[38.7200012207031,-2.65568423271179,-19.8500003814697]},{"flag":"road_gate_open","node":"PondGate","open":false,"position":[-21.0,1.84279835224152,21.0]},{"flag":"road_gate_open","node":"TrailGate","open":false,"position":[13.789999961853,0.849999964237213,22.3999996185303]},{"flag":"hall_approach_open","node":"SigilGate","open":false,"position":[63.5999984741211,-1.13885045051575,7400.0]},{"flag":"south_bridge_open","node":"SouthBridge","open":true,"position":[8.0,-2.90000009536743,1330.0]},{"flag":"mill_crossing_restored","node":"MillCrossing","open":false,"position":[-152.0,-2.03105974197388,4203.0]}])
+PASS: peer 0 did not have an unrelated gate opened for it as well
+PASS: peer 1 answered the story probe
+PASS: peer 1's WORLD says the South Bridge is open
+PASS: peer 1's own bridge gate has re-posed and is open ([{"flag":"","node":"SequenceDirector","open":false,"position":[]},{"flag":"road_gate_open","node":"RoadGate","open":false,"position":[38.7200012207031,-2.65568423271179,-19.8500003814697]},{"flag":"road_gate_open","node":"PondGate","open":false,"position":[-21.0,1.84279835224152,21.0]},{"flag":"road_gate_open","node":"TrailGate","open":false,"position":[13.789999961853,0.849999964237213,22.3999996185303]},{"flag":"hall_approach_open","node":"SigilGate","open":false,"position":[63.5999984741211,-1.13885045051575,7400.0]},{"flag":"south_bridge_open","node":"SouthBridge","open":true,"position":[8.0,-2.90000009536743,1330.0]},{"flag":"mill_crossing_restored","node":"MillCrossing","open":false,"position":[-152.0,-2.03105974197388,4203.0]}])
+PASS: peer 1 did not have an unrelated gate opened for it as well
+PASS: both peers still hold the same world after the gate opened (contract §7 hashed keys)
+ALL CHECKS PASSED

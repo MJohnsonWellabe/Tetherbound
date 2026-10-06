@@ -1,0 +1,128 @@
+{
+	"budgets": {
+		"desync_frames": 240.0,
+		"heartbeat_frames": 60.0,
+		"hello_budget_s": 180.0,
+		"near_tolerance_motion_m": 4.0,
+		"near_tolerance_rest_m": 1.5,
+		"smoke_step_budget_s_2peer": 300.0,
+		"smoke_step_budget_s_wide": 1500.0,
+		"step_budget_frames": 3000.0
+	},
+	"failures": [
+		"peer 0 draws the flier at the altitude their owner is actually at: 41.09 m apart (tolerance 6.0)"
+	],
+	"fatal": "",
+	"net_conditions": {},
+	"peers": [
+		{
+			"command_timeout_observation": null,
+			"control_port": 58589,
+			"exited": true,
+			"hashes": [
+				1804074345,
+				1804074345,
+				1804074345
+			],
+			"hello": {
+				"enet_port": 30881.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "f17ec9a55402",
+				"peer": 0.0,
+				"pid": 4344.0,
+				"role": "host",
+				"type": "hello",
+				"user_data_dir": "D:/tetherbound/.artifacts/r1-f27-flip/net-fly-off/home-0/Godot/app_userdata/Tetherbound"
+			},
+			"index": 0,
+			"last_heartbeat": {
+				"context": "combat",
+				"frame": 256.0,
+				"physics_frame": 1703.0,
+				"pos": [
+					-4.63879442214966,
+					-0.62823086977005,
+					64.3151245117188
+				],
+				"session_peers": [
+					1.0,
+					1627688422.0
+				],
+				"state_hash": 1804074345.0,
+				"t": 204.596,
+				"type": "heartbeat"
+			},
+			"pid": 4344,
+			"role": "host",
+			"unexpected_exit": false
+		},
+		{
+			"command_timeout_observation": null,
+			"control_port": 58590,
+			"exited": true,
+			"hashes": [
+				2295815115,
+				2295815115,
+				2295815115
+			],
+			"hello": {
+				"enet_port": 30882.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "f17ec9a55402",
+				"peer": 1.0,
+				"pid": 19400.0,
+				"role": "client",
+				"type": "hello",
+				"user_data_dir": "D:/tetherbound/.artifacts/r1-f27-flip/net-fly-off/home-1/Godot/app_userdata/Tetherbound"
+			},
+			"index": 1,
+			"last_heartbeat": {
+				"context": "world",
+				"frame": 283.0,
+				"physics_frame": 1920.0,
+				"pos": [
+					38.5999984741211,
+					0.900940775871277,
+					14.2999992370605
+				],
+				"session_peers": [
+					1.0,
+					1627688422.0
+				],
+				"state_hash": 2295815115.0,
+				"t": 204.766,
+				"type": "heartbeat"
+			},
+			"pid": 19400,
+			"role": "client",
+			"unexpected_exit": false
+		}
+	],
+	"proxies": [],
+	"run_id": "r1-fly-off-20261006T1032Z",
+	"scene": "world",
+	"state_hash_excluded_keys": [
+		"party",
+		"inventory",
+		"hotbar",
+		"satiety",
+		"map",
+		"realm_maps",
+		"alpha_pins",
+		"player_pose",
+		"clock_elapsed_seconds",
+		"current_realm",
+		"pending_realm_entry",
+		"realm_hearts",
+		"version"
+	],
+	"state_hash_hashed_keys": [
+		"flags",
+		"placed_buildings",
+		"farm_plots",
+		"death_satchels",
+		"harvested_vegetation",
+		"felled_vegetation",
+		"day"
+	]
+}

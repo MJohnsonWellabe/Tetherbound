@@ -15,8 +15,8 @@ cloudreach_riding | ON FIRST functional PASS137assertions+2setup/0fail/exit0;32h
 deploy_two_creatures | OPEN | OPEN (unowned exception)
 f22_forced_break | ON unchanged RETRY PASS17checks/0fail/exit0; FIRST FAIL retained/cause unresolved; two recovered stale_move_start/hostMTU warning retained; qualified independent functional ON/OFF pair review PASS | OFF FIRST PASS17checks/0fail/exit0; qualified independent review PASS; one recovered stale_move_start/hostMTU warning retained
 f27_guest_wild_win | Corrected ON PASSexit0: canonical successor/one fresh receipt each/sameevent/distinctparticipant/+essence+XP/equality/productionrejoins+reload/no-dup. Hostperiodicdeparture errors+separateMTUwarning retained; independent functional reviewPASS40checks/0fail/exit0. All priorFAIL receipts retained | N/A: manual flag-ON authority proof
-fly | ON FIRST PASS46assertions/0fail/exit0; qualified independent review PASS/no flightanchor reload proof | OFF FIRST ACTIVE original source/native budgets
-gate_opens_for_both | OPEN | OPEN
+fly | ON FIRST PASS46assertions/0fail/exit0; qualified independent review PASS/no flightanchor reload proof | OFF FIRST FAIL46assertions/1failure/exit1: sampled altitude41.09m>6m;45checksPASS/independent failure diagnosis reviewed/cause unresolved/unchanged retry queued
+gate_opens_for_both | ON FIRST PASS20checks/0fail/exit0; defaultledger-flag/is_open/hash scope; qualified independent review PASS | OFF FIRST ACTIVE original default/source-budgets
 hearts | OPEN | OPEN
 host_exit_saves | OPEN | OPEN
 realm_owner_disconnect_mid_fight | PASS 25 checks/exit0; controlled-drop diagnostic retained | PASS 25 checks/exit0; no error markers

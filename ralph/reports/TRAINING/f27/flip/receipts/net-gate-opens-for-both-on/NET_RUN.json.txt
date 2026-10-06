@@ -1,0 +1,126 @@
+{
+	"budgets": {
+		"desync_frames": 240.0,
+		"heartbeat_frames": 60.0,
+		"hello_budget_s": 180.0,
+		"near_tolerance_motion_m": 4.0,
+		"near_tolerance_rest_m": 1.5,
+		"smoke_step_budget_s_2peer": 300.0,
+		"smoke_step_budget_s_wide": 1500.0,
+		"step_budget_frames": 3000.0
+	},
+	"failures": [],
+	"fatal": "",
+	"net_conditions": {},
+	"peers": [
+		{
+			"command_timeout_observation": null,
+			"control_port": 64523,
+			"exited": true,
+			"hashes": [
+				4161180423,
+				4161180423,
+				4161180423
+			],
+			"hello": {
+				"enet_port": 34961.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "f17ec9a55402",
+				"peer": 0.0,
+				"pid": 14812.0,
+				"role": "host",
+				"type": "hello",
+				"user_data_dir": "D:/tetherbound/.artifacts/r1-f27-flip/net-gate-opens-for-both-on/home-0/Godot/app_userdata/Tetherbound"
+			},
+			"index": 0,
+			"last_heartbeat": {
+				"context": "world",
+				"frame": 92.0,
+				"physics_frame": 394.0,
+				"pos": [
+					-1.40000009536743,
+					4.65094184875488,
+					14.2999992370605
+				],
+				"session_peers": [
+					1.0,
+					1883230396.0
+				],
+				"state_hash": 4161180423.0,
+				"t": 166.111,
+				"type": "heartbeat"
+			},
+			"pid": 14812,
+			"role": "host",
+			"unexpected_exit": false
+		},
+		{
+			"command_timeout_observation": null,
+			"control_port": 64524,
+			"exited": true,
+			"hashes": [
+				4161180423,
+				4161180423,
+				4161180423
+			],
+			"hello": {
+				"enet_port": 34962.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "f17ec9a55402",
+				"peer": 1.0,
+				"pid": 9352.0,
+				"role": "client",
+				"type": "hello",
+				"user_data_dir": "D:/tetherbound/.artifacts/r1-f27-flip/net-gate-opens-for-both-on/home-1/Godot/app_userdata/Tetherbound"
+			},
+			"index": 1,
+			"last_heartbeat": {
+				"context": "world",
+				"frame": 94.0,
+				"physics_frame": 411.0,
+				"pos": [
+					-1.40000009536743,
+					4.65094184875488,
+					14.2999992370605
+				],
+				"session_peers": [
+					1.0,
+					1883230396.0
+				],
+				"state_hash": 4161180423.0,
+				"t": 166.496,
+				"type": "heartbeat"
+			},
+			"pid": 9352,
+			"role": "client",
+			"unexpected_exit": false
+		}
+	],
+	"proxies": [],
+	"run_id": "r1-gate-opens-for-both-on-20261006T1036Z",
+	"scene": "world",
+	"state_hash_excluded_keys": [
+		"party",
+		"inventory",
+		"hotbar",
+		"satiety",
+		"map",
+		"realm_maps",
+		"alpha_pins",
+		"player_pose",
+		"clock_elapsed_seconds",
+		"current_realm",
+		"pending_realm_entry",
+		"realm_hearts",
+		"version"
+	],
+	"state_hash_hashed_keys": [
+		"flags",
+		"placed_buildings",
+		"farm_plots",
+		"death_satchels",
+		"harvested_vegetation",
+		"felled_vegetation",
+		"day"
+	]
+}

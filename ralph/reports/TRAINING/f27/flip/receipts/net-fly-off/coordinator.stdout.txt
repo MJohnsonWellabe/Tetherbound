@@ -1,0 +1,56 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=4344 control_port=58589 home=D:\tetherbound\.artifacts\r1-f27-flip\net-fly-off/home-0 log=D:\tetherbound\.artifacts\r1-f27-flip\net-fly-off/peer-0.log
+coordinator: launched peer 1 (client) pid=19400 control_port=58590 home=D:\tetherbound\.artifacts\r1-f27-flip\net-fly-off/home-1 log=D:\tetherbound\.artifacts\r1-f27-flip\net-fly-off/peer-1.log
+coordinator: peer 0 hello: {"enet_port":30881.0,"godot_version":"4.7-stable (official)","main_sha":"f17ec9a55402","peer":0.0,"pid":4344.0,"role":"host","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-fly-off/home-0/Godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":30882.0,"godot_version":"4.7-stable (official)","main_sha":"f17ec9a55402","peer":1.0,"pid":19400.0,"role":"client","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-fly-off/home-1/Godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: coordinator tracked 2 peers
+PASS: a Session exists to host/join (lane 2.A); without it there is no host to decide a landing
+PASS: peer 0 hosted a world (hosting udp/30881 as peer 1)
+PASS: peer 1 joined peer 0's world on port 30881 (joined 127.0.0.1:30881 as peer 1627688422 after 49 frames; snapshot applied; 2 peer(s) in registry)
+PASS: peer 0's registry holds both players (registry reports 2 peer(s) after 0 frames (0.0 s))
+PASS: peer 1's registry holds both players (registry reports 2 peer(s) after 0 frames (0.0 s))
+PASS: peer 0 is the listen server (id 1)
+PASS: peer 1 has its own distinct peer id (1627688422), and is therefore NOT the authority on where it lands
+PASS: SETUP: peer 0 is holding the world rather than a dialogue box (SETUP: no dialogue box was open; locomotion now true)
+PASS: SETUP: peer 1 is holding the world rather than a dialogue box (SETUP: no dialogue box was open; locomotion now true)
+PASS: SETUP: peer 1 has the Fly unlock and a galecrest carrier (SETUP: fly_traversal_unlocked set, galecrest active, anchor=(38.6, 0.98, 14.3), screen: no dialogue box was open, launch site: cleared at (38.6, 14.3) after 40 m (locomotion=true carried=false on_floor=true))
+PASS: peer 1 knows its anchor is the HOST's to give (it is a client, not the listen server)
+PASS: the host granted peer 1 a real landing anchor as it walked (accepts=8, proposals=11)
+PASS: peer 1 is holding a committed anchor to be pulled back to ([38.5999984741211, 0.98000007867813, 14.2999992370605])
+PASS: peer 1's position is readable
+PASS: peer 1 was able to SEND a landing claim at all (claimed (538.6, 0.9, 514.3); refusals 3 -> 4, accepts 8 -> 8, code 'too_far')
+PASS: the host REFUSED a landing 500 m from where it has peer 1 standing (refusals 3 -> 4, code 'too_far')
+PASS: the refusal carries a reason code, not silence (got 'too_far')
+PASS: the forged claim was not also counted as an accept (8 -> 8)
+PASS: peer 1's committed anchor is UNCHANGED by the forgery -- a refused claim must not become a teleport destination (was [38.5999984741211, 0.98000007867813, 14.2999992370605], now [38.5999984741211, 0.98000007867813, 14.2999992370605])
+PASS: SETUP: peer 0 has its own creature out to fight beside (deployed AllyCreature)
+smoke_net_fly: peer 1 before launch: blockers='' locomotion=true carried=false on_floor=true lockout={"adopting":false,"beat":"house","dialogue":false,"downed":false,"fading":false,"fighting":false,"name_prompt":false,"pending_build":"","picker":false,"trainer_battle":false}
+PASS: peer 1's second airborne Jump deployed Fly (flying (glide) at y=45.12 on attempt 0)
+PASS: peer 1 reports itself flying
+PASS: peer 1 is hanging off a galecrest (got 'galecrest')
+PASS: peer 1 has the carrier's art over its own head
+PASS: peer 0 holds a trainer body for peer 1627688422 at all
+PASS: peer 0 draws peer 1627688422 as FLYING, not as a trainer who stepped off a ledge
+PASS: peer 0 actually draws the flier
+PASS: peer 0 knows which carrier peer 1627688422 is under (got 'galecrest')
+PASS: peer 0 built the carrier's art over the remote flier's head -- the friend has a bird, not an empty sky
+PASS: the hanging pose reached the remote flier's skeleton
+PASS: peer 0 knows the flight's own state word (got 'glide')
+FAIL: peer 0 draws the flier at the altitude their owner is actually at: 41.09 m apart (tolerance 6.0)
+PASS: peer 0 placed a building WHILE peer 1 was airborne: peer 0 PASS (pressed Place for 'floor' (ghost_ok=true); records 0 -> 1); peer 1 PASS (waited 120 physics frames)
+PASS: peer 0 dropped a stack WHILE peer 1 was airborne: peer 0 PASS (drop 2 wood (txn drop:1:178113869:2027213530): ok=true pending=false); peer 1 PASS (waited 120 physics frames)
+PASS: peer 0 picked it back up WHILE peer 1 was airborne: peer 0 PASS (picked up wood: ok=true pending=false); peer 1 PASS (waited 120 physics frames)
+PASS: peer 0 started its own fight WHILE peer 1 was airborne: peer 0 PASS (engaged bramblebun as encounter 1:1 (bound after 0 frame(s))); peer 1 PASS (waited 120 physics frames)
+PASS: peer 0's building actually landed in the world during the flight (0 -> 1)
+PASS: peer 0 is still playing its own game beside a flight (context 'combat')
+PASS: peer 1 came down (landed at (38.60, 0.90, 14.30); anchor report {"accepts":9,"anchor":[38.5999984741211,0.979999840259552,14.2999992370605],"host_granted":true,"host_validated":true,"last_code":"ok","last_denial":"","pending":false,"proposals":12,"realm":"meadows","refusals":4})
+PASS: the host granted peer 1's real landing (accepts 8 -> 9)
+PASS: peer 1 is not left waiting on an answer that never came
+PASS: peer 0 stopped drawing peer 1627688422 as flying once they landed
+PASS: the carrier art was taken off the remote body -- a bird left behind is a bird that follows a landed trainer around
+PASS: the hanging pose came off too, so the remote trainer walks again
+PASS: peer 0 is still playing after the flight ended (context 'combat')
+smoke_net_fly: 46 assertions, 1 failures
+FAIL: peer 0 draws the flier at the altitude their owner is actually at: 41.09 m apart (tolerance 6.0)

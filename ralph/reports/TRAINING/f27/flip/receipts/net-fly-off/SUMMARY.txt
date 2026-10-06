@@ -1,0 +1,11 @@
+# Net smoke run r1-fly-off-20261006T1032Z
+
+Scene: world
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=4344 exited=true unexpected_exit=false
+- peer 1 (client) pid=19400 exited=true unexpected_exit=false
+
+FAILURES:
+- peer 0 draws the flier at the altitude their owner is actually at: 41.09 m apart (tolerance 6.0)
