@@ -994,6 +994,41 @@ func test_saved_item_carrier_keeps_one_original_debit_and_owned_effect_with_runt
 		assert_eq(player.get("inventory").call("count", item), 2)
 		COMMANDS._config.feature_flags.runtime_enabled = true
 
+func test_tonic_wind_boundaries_update_active_and_retained_character_uid_without_resetting_resources() -> void:
+	var move := _move()
+	move.wind_cost = 100.0
+	assert_true(host.authorize_move_start({"encounter_id": id, "action": 1, "slot": "quick"},
+		1, _owned(), _binding(), move, WIND, 1000).ok)
+	assert_true(host.join(id, 3, "creature_a", "owner_b").ok)
+	var foreign_binding := _binding()
+	foreign_binding.character_id = "owner_b"
+	assert_true(host.authorize_move_start({"encounter_id": id, "action": 1, "slot": "quick"},
+		3, _owned(), foreign_binding, move, WIND, 1000).ok)
+	var pool: Dictionary = host.encounters[id].participants[1].move_resources.creature_a
+	var foreign: Dictionary = host.encounters[id].participants[3].move_resources.creature_a.duplicate(true)
+	var cooldowns: Dictionary = pool.cooldowns.duplicate(true)
+	var ready := int(pool.wind_ready_at_ms)
+	var activation := ready + 500
+	host.settle_tether_tonic_wind("owner_a", "creature_a", activation)
+	host.settle_tether_tonic_wind("owner_a", "creature_a", activation, {"max": 200.0, "regen_per_second": 36.0})
+	assert_almost_eq(float(pool.wind), 9.0, 0.001, "the interval before activation uses the old rate")
+	assert_eq(pool.wind_max, 200.0)
+	assert_eq(host.encounters[id].participants[3].move_resources.creature_a, foreign, "the same UID under another character is untouched")
+	host.note_opponent_position(id, Vector3.ZERO, activation + 1000)
+	assert_almost_eq(float(pool.wind), 45.0, 0.001, "new rate is installed without another action")
+	assert_true(host.leave(id, 1).ok)
+	host.settle_tether_tonic_wind("owner_a", "creature_a", activation + 1500)
+	host.settle_tether_tonic_wind("owner_a", "creature_a", activation + 1500, WIND)
+	assert_almost_eq(float(pool.wind), 63.0, 0.001, "the final boosted interval survives expiry after departure")
+	assert_eq(pool.wind_max, 100.0)
+	host.settle_tether_tonic_wind("owner_a", "creature_a", activation + 2500)
+	assert_almost_eq(float(pool.wind), 81.0, 0.001, "retained pool immediately returns to its base rate")
+	assert_eq(pool.cooldowns, cooldowns)
+	assert_eq(pool.wind_ready_at_ms, ready)
+	assert_eq(pool.wind_last_action, 1)
+	assert_eq(pool.energy, 0.0)
+	assert_eq(pool.ultimate_meter, 0.0)
+
 func test_item_candidate_debits_one_own_stack_with_actual_heal_food_or_unsaved_tonic() -> void:
 	var rules := preload("res://scripts/world/death_satchel_rules.gd")
 	var record := preload("res://scripts/net/character_record_rules.gd")

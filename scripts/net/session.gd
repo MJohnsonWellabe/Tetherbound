@@ -4965,19 +4965,61 @@ func _install_host_tether_tonic(peer: int, row: Dictionary) -> bool:
 		if host == null: continue
 		for original: Dictionary in host.call("pending_tether_items", str(row.intent.request.encounter_id)):
 			if not ESSENCE._equivalent(original.intent, row.intent) or not ESSENCE._equivalent(original.context, row.host_context): continue
-			_settle_tether_tonic_wind(str(row.intent.effect.creature_uid))
+			var now_ms := Time.get_ticks_msec()
+			var uid := str(row.intent.effect.creature_uid)
+			var changes_wind: bool = buff.get("stat") in ["wind_cap", "wind_regen"]
+			if changes_wind: _settle_tether_tonic_wind(character, uid, now_ms)
 			director.call("capture_tether_tonic_card", peer, str(row.intent.effect.creature_uid))
 			if _character_authority.call("install_saved_tether_tonic", character, row, original,
 				stream_id, _altar_current_epoch(), sequence) != true: return false
+			if changes_wind:
+				_settle_tether_tonic_wind(character, uid, now_ms, _tether_tonic_wind_profile(character, uid))
 			original["tonic_receipt"] = row.receipt
 			return true
 	return false
 
-func _settle_tether_tonic_wind(uid: String) -> void:
+func _settle_tether_tonic_wind(character: String, uid: String, now_ms: int, profile: Dictionary = {}) -> void:
 	for director: Node in _foundation_directors_under(_foundation_realm_roots()):
 		if not _ordinary_combat_director_live(director): continue
 		var host: RefCounted = director.get("_encounter_host")
-		if host != null: host.call("settle_tether_tonic_wind", uid, Time.get_ticks_msec())
+		if host != null: host.call("settle_tether_tonic_wind", character, uid, now_ms, profile)
+
+func _tether_tonic_wind_profile(character: String, uid: String) -> Dictionary:
+	var admitted: Dictionary = _character_authority.call("state", character)
+	var stream: Dictionary = _owner_passive.get("hosts").get(character, {}) if _owner_passive != null else {}
+	for owned: Dictionary in admitted.get("party", []):
+		if owned.get("uid") != uid: continue
+		var passive := owned.duplicate(true)
+		var local_member: RefCounted
+		if character == _local_character_id() and _game() != null and _game().get("local") != null:
+			for member: RefCounted in _game().get("local").party.call("members"):
+				if member.get("uid") == uid: local_member = member
+			if local_member != null:
+				for field: String in preload("res://scripts/net/owner_passive_replay.gd").PASSIVE_FIELDS:
+					if field in local_member: passive[field] = local_member.get(field)
+		if stream.get("epoch") == _altar_current_epoch() and str(stream.get("error", "")).is_empty():
+			for card: Dictionary in stream.get("cursor", {}).get("state", {}).get("party", []):
+				if card.get("uid") != uid: continue
+				for field: String in preload("res://scripts/net/owner_passive_replay.gd").PASSIVE_FIELDS:
+					if card.has(field): passive[field] = card[field]
+		var creature: RefCounted = preload("res://scripts/save/water_capture_codec.gd").decode_owned(passive, admitted.redesign_character)
+		if creature == null: return {}
+		var projection: Dictionary = _character_authority.call("tether_tonic_projection", character)
+		if local_member != null:
+			var managed: Dictionary = local_member.get_meta("tether_tonic_projection", {}).get("receipts", {}).duplicate()
+			for effect: Dictionary in projection.get(uid, {}).get("effects", []): managed[str(effect.id)] = true
+			for native: Dictionary in local_member.get("active_buffs"):
+				if not managed.has(str(native.id)):
+					creature.call("apply_buff", str(native.id), str(native.stat), float(native.scale), float(native.remaining_s))
+		for effect: Dictionary in projection.get(uid, {}).get("effects", []):
+			creature.call("apply_buff", str(effect.id), str(effect.stat), float(effect.scale), float(effect.remaining_s))
+		var condition := preload("res://scripts/creatures/creature_condition.gd")
+		return preload("res://scripts/combat/combat_manager.gd").host_wind_profile({
+			"species_id": creature.get("species_id"), "bond_nodes": creature.call("bond_nodes"),
+			"nourishment_fraction": condition.nourishment_fraction(creature, condition.config()),
+			"wind_cap_scale": creature.call("buff_scale", "wind_cap"),
+			"wind_regen_scale": creature.call("buff_scale", "wind_regen")})
+	return {}
 
 func admitted_tether_tonics(peer: int) -> Dictionary:
 	if not is_host() or _character_authority == null: return {}
@@ -4997,8 +5039,20 @@ func tether_tonic_passive_card(peer: int, uid: String, owned: Dictionary) -> Dic
 func _tick_host_tether_tonics(character: String, delta: float, uids: Array, stream_id: String,
 		epoch: String, sequence: int) -> void:
 	if not is_host() or _character_authority == null or epoch != _altar_current_epoch(): return
-	for uid: String in uids: _settle_tether_tonic_wind(uid)
+	var now_ms := Time.get_ticks_msec()
+	var before: Dictionary = _character_authority.call("tether_tonic_projection", character)
+	var boundaries: Array[String] = []
+	for uid: String in uids:
+		for effect: Dictionary in before.get(uid, {}).get("effects", []):
+			if effect.get("stat") in ["wind_cap", "wind_regen"] and float(effect.remaining_s) <= delta:
+				if not boundaries.has(uid): boundaries.append(uid)
+	for uid: String in boundaries: _settle_tether_tonic_wind(character, uid, now_ms)
 	_character_authority.call("tick_tether_tonics", character, delta, uids, stream_id, epoch, sequence)
+	if boundaries.is_empty(): return
+	var after: Dictionary = _character_authority.call("tether_tonic_projection", character)
+	for uid: String in boundaries:
+		if after.get(uid, {}).get("version") != before.get(uid, {}).get("version"):
+			_settle_tether_tonic_wind(character, uid, now_ms, _tether_tonic_wind_profile(character, uid))
 
 func _tether_tonic_party_tick(observation: Dictionary) -> void:
 	var game := _game()

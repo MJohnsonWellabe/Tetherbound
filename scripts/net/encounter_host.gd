@@ -998,15 +998,17 @@ func finalize_saved_tether_item(original: Dictionary, training: Dictionary, deli
 		return {"ok": true, "result": result.duplicate(true)}
 	return {"ok": false, "code": "item_original_unavailable"}
 
-func settle_tether_tonic_wind(uid: String, now_ms: int) -> void:
+func settle_tether_tonic_wind(character: String, uid: String, now_ms: int, profile: Dictionary = {}) -> void:
 	for rec: Dictionary in encounters.values():
 		var rows: Array = rec.get("participants", {}).values()
 		rows.append_array(rec.get("retained_actor_participants", {}).values())
 		for participant: Dictionary in rows:
+			if participant.get("character_id") != character: continue
 			var pool: Dictionary = participant.get("move_resources", {}).get(uid, {})
 			if pool.is_empty(): continue
-			_advance_participant_wind(pool, {"max": pool.get("wind_max", 100.0),
-				"regen_per_second": pool.get("wind_regen_per_second", 18.0)}, now_ms)
+			var next := profile if not profile.is_empty() else {"max": pool.get("wind_max", 100.0),
+				"regen_per_second": pool.get("wind_regen_per_second", 18.0)}
+			_advance_participant_wind(pool, next, now_ms)
 
 
 ## An untouched reservation may be cancelled only before a durable decision.
