@@ -86,7 +86,7 @@ static func validate(scope: String, value: Variant, owned_uids: Array = [], worl
 			if not receipts is Array: continue
 			for receipt: Variant in receipts:
 				var pieces := str(receipt).split(":")
-				if pieces.size() < 2 or pieces[1].is_empty() or not pieces[0] in ["portal_unlock", "starter_choice", "relic_hang", "craft", "release", "essence_spend", "defeat", "care", "master_recipe", "feast_feed", "trait_teach", "loadout", "bounty", "research", "rematch", "groom"]:
+				if pieces.size() < 2 or pieces[1].is_empty() or not pieces[0] in ["portal_unlock", "starter_choice", "relic_hang", "craft", "release", "essence_spend", "defeat", "care", "master_recipe", "feast_feed", "candy_feed", "trait_teach", "loadout", "bounty", "research", "rematch", "groom"]:
 					errors.append("unknown transaction receipt %s" % receipt)
 	return errors
 

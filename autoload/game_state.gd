@@ -1464,7 +1464,7 @@ func complete_creature_bed_rests() -> int:
 		# rather than about resting: which slot the creature was in, and that it
 		# is no longer occupying one.
 		var bed_index := int(creature.get("rest_bed_index"))
-		HOME_RECOVERY.rest(creature, cfg)
+		HOME_RECOVERY.rest(creature, cfg, local.redesign_character)
 		creature.set("rested", true)
 		creature.set("resting", false)
 		creature.set("rest_bed_index", -1)

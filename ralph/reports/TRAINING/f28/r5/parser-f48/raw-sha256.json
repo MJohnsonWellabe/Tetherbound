@@ -1,0 +1,27 @@
+[
+  {
+    "path": "f48_prepare.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "f48_prepare.stdout.txt",
+    "bytes": 73,
+    "sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+  },
+  {
+    "path": "peer_runner.stderr.txt",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "path": "peer_runner.stdout.txt",
+    "bytes": 73,
+    "sha256": "bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d"
+  },
+  {
+    "path": "receipt.json",
+    "bytes": 1970,
+    "sha256": "b14d15a7afceefcc6a33e8c8107949d10ff7cec3999f7ea884607e6101ef96d4"
+  }
+]

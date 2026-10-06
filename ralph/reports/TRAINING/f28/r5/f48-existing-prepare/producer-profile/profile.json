@@ -1,0 +1,1427 @@
+{
+  "provenance": "DISCLOSED initial mechanics fixture: actual retained v28 characters/owned cards; added initial material stock, paid station records and starting pose. No earned campaign claim. Native producer, routes and terrain validation OPEN. See fixture-manifest.json. Original native shared_boss saves retained by the prior integration session. These are disclosed mechanics starter-level-9 sources, not earned redesigned campaign checkpoints. No new character, UID, level, receipt or outcome is synthesized. The existing fixture producer separately discloses initial stock, physical setup and legacy pre-boss flags. Explicit pre-boss legacy mechanics gates removed only in detached initial fixture; original rewards and all personal data retained. INITIAL Kitchen Spice rack attachment is a disclosed mechanics station fixture, not an earned upgrade/payment/transaction; real Master recipe, cooking and feed still required. One initial Basic Orb per actual character is disclosed stock for the real catch producer, never a caught companion or provenance grant. Explicit source-derived INPUT producer routes: actor/owned-ally placement, paused real Alpha RNG, real announced boss join, self-HP aid and ally placement, enemy HP ceiling0. No ordinary survival/balance/campaign credit. Captured source and every actual journal/owner write/ACK must be native; NOT a complete CI bundle.",
+  "saves": [
+    "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\mechanics-start\\peer-0",
+    "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\mechanics-start\\peer-1"
+  ],
+  "routes": {
+    "bootstrap_altar": [
+      {
+        "action": "press",
+        "args": {
+          "action": "build_open"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 30
+        }
+      },
+      {
+        "action": "f48_button",
+        "args": {
+          "text": "  Crafting"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 15
+        }
+      },
+      {
+        "action": "f48_build_cell",
+        "args": {
+          "id": "altar"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 30
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "build_place"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 180
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "build_cancel"
+        }
+      }
+    ],
+    "craft_prepare": [
+      {
+        "action": "f48_deploy_owned",
+        "args": {}
+      },
+      {
+        "action": "f48_fixture_approach",
+        "args": {
+          "target": "forge",
+          "fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "interact"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      }
+    ],
+    "craft_reopen": [
+      {
+        "action": "f48_deploy_owned",
+        "args": {}
+      },
+      {
+        "action": "f48_fixture_approach",
+        "args": {
+          "target": "forge",
+          "fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "interact"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      }
+    ],
+    "craft_commit": [
+      {
+        "action": "f48_button",
+        "args": {
+          "text": "Refine Rootiron Ingot"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 150
+        }
+      }
+    ],
+    "essence_spend_prepare": [
+      {
+        "action": "f48_deploy_owned",
+        "args": {}
+      },
+      {
+        "action": "f48_fixture_approach",
+        "args": {
+          "target": "altar",
+          "fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "interact"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      }
+    ],
+    "essence_spend_reopen": [
+      {
+        "action": "f48_deploy_owned",
+        "args": {}
+      },
+      {
+        "action": "f48_fixture_approach",
+        "args": {
+          "target": "altar",
+          "fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "interact"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      }
+    ],
+    "essence_spend_commit": [
+      {
+        "action": "f48_button",
+        "args": {
+          "text": "Ground Essence · Cost 20 · Have 100"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 120
+        }
+      }
+    ],
+    "hub_0": [
+      {
+        "action": "f48_deploy_owned",
+        "args": {}
+      },
+      {
+        "action": "f48_fixture_approach",
+        "args": {
+          "target": "altar",
+          "fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "interact"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      },
+      {
+        "action": "f48_button",
+        "args": {
+          "text": "Ground Essence · Cost 20 · Have 100"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 120
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "ui_cancel"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 15
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "ui_cancel"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 15
+        }
+      }
+    ],
+    "craft_0": [
+      {
+        "action": "f48_deploy_owned",
+        "args": {}
+      },
+      {
+        "action": "f48_fixture_approach",
+        "args": {
+          "target": "forge",
+          "fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "interact"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      },
+      {
+        "action": "f48_button",
+        "args": {
+          "text": "Refine Rootiron Ingot"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 150
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "ui_cancel"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 15
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "ui_cancel"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 15
+        }
+      }
+    ],
+    "portal_0": [
+      {
+        "action": "f48_deploy_owned",
+        "args": {}
+      },
+      {
+        "action": "f48_fixture_approach",
+        "args": {
+          "target": "home_arch",
+          "fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "interact"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 180
+        }
+      }
+    ],
+    "master_0": [
+      {
+        "action": "f48_deploy_owned",
+        "args": {}
+      },
+      {
+        "action": "f48_fixture_approach",
+        "args": {
+          "target": "master_t1",
+          "fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "interact"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      },
+      {
+        "action": "f48_button",
+        "args": {
+          "text": "A · Lv 10"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 60
+        }
+      },
+      {
+        "action": "f48_fixture_trainer_fight",
+        "args": {
+          "trainer_id": "master_t1",
+          "budget_frames": 3000,
+          "fixture_disclosure": {
+            "scope": "named_mechanics_only",
+            "self_hp_topups": true,
+            "ally_placement": true,
+            "enemy_hp_ceiling": 0,
+            "earned_campaign_credit": false
+          }
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 120
+        }
+      },
+      {
+        "action": "f48_deploy_owned",
+        "args": {}
+      },
+      {
+        "action": "f48_fixture_approach",
+        "args": {
+          "target": "master_t1_chest",
+          "fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "interact"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      }
+    ],
+    "feast_cook_0": [
+      {
+        "action": "f48_deploy_owned",
+        "args": {}
+      },
+      {
+        "action": "f48_fixture_approach",
+        "args": {
+          "target": "kitchen",
+          "fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "interact"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      },
+      {
+        "action": "f48_button",
+        "args": {
+          "text": "Cook learned Ascension Feasts"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      },
+      {
+        "action": "f48_button",
+        "args": {
+          "feast_recipe": "feast_t1_ground"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 120
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "ui_cancel"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 15
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "ui_cancel"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 15
+        }
+      }
+    ],
+    "feast_0": [
+      {
+        "action": "f48_deploy_owned",
+        "args": {}
+      },
+      {
+        "action": "f48_fixture_approach",
+        "args": {
+          "target": "kitchen",
+          "fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "interact"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      },
+      {
+        "action": "f48_button",
+        "args": {
+          "text": "Cook learned Ascension Feasts"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      },
+      {
+        "action": "f48_button",
+        "args": {
+          "text": "Feed creatures"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      },
+      {
+        "action": "f48_button",
+        "args": {
+          "text": "A · Breakthrough needed · Ascension Feast 1 (ground)"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 120
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "ui_cancel"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 15
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "ui_cancel"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 15
+        }
+      }
+    ],
+    "boss_prepare_0": [
+      {
+        "action": "f48_deploy_owned",
+        "args": {}
+      },
+      {
+        "action": "f48_fixture_approach",
+        "args": {
+          "target": "warden_aldis",
+          "fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"
+        }
+      }
+    ],
+    "relic_0": [
+      {
+        "action": "f48_deploy_owned",
+        "args": {}
+      },
+      {
+        "action": "f48_fixture_approach",
+        "args": {
+          "target": "meadows_pedestal",
+          "fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "interact"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 120
+        }
+      }
+    ],
+    "hub_1": [
+      {
+        "action": "f48_deploy_owned",
+        "args": {}
+      },
+      {
+        "action": "f48_fixture_approach",
+        "args": {
+          "target": "altar",
+          "fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "interact"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      },
+      {
+        "action": "f48_button",
+        "args": {
+          "text": "Ground Essence · Cost 20 · Have 100"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 120
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "ui_cancel"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 15
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "ui_cancel"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 15
+        }
+      }
+    ],
+    "craft_1": [
+      {
+        "action": "f48_deploy_owned",
+        "args": {}
+      },
+      {
+        "action": "f48_fixture_approach",
+        "args": {
+          "target": "forge",
+          "fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "interact"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      },
+      {
+        "action": "f48_button",
+        "args": {
+          "text": "Refine Rootiron Ingot"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 150
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "ui_cancel"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 15
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "ui_cancel"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 15
+        }
+      }
+    ],
+    "portal_1": [
+      {
+        "action": "f48_deploy_owned",
+        "args": {}
+      },
+      {
+        "action": "f48_fixture_approach",
+        "args": {
+          "target": "home_arch",
+          "fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "interact"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 180
+        }
+      }
+    ],
+    "master_1": [
+      {
+        "action": "f48_deploy_owned",
+        "args": {}
+      },
+      {
+        "action": "f48_fixture_approach",
+        "args": {
+          "target": "master_t1",
+          "fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "interact"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      },
+      {
+        "action": "f48_button",
+        "args": {
+          "text": "B · Lv 10"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 60
+        }
+      },
+      {
+        "action": "f48_fixture_trainer_fight",
+        "args": {
+          "trainer_id": "master_t1",
+          "budget_frames": 3000,
+          "fixture_disclosure": {
+            "scope": "named_mechanics_only",
+            "self_hp_topups": true,
+            "ally_placement": true,
+            "enemy_hp_ceiling": 0,
+            "earned_campaign_credit": false
+          }
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 120
+        }
+      },
+      {
+        "action": "f48_deploy_owned",
+        "args": {}
+      },
+      {
+        "action": "f48_fixture_approach",
+        "args": {
+          "target": "master_t1_chest",
+          "fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "interact"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      }
+    ],
+    "feast_cook_1": [
+      {
+        "action": "f48_deploy_owned",
+        "args": {}
+      },
+      {
+        "action": "f48_fixture_approach",
+        "args": {
+          "target": "kitchen",
+          "fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "interact"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      },
+      {
+        "action": "f48_button",
+        "args": {
+          "text": "Cook learned Ascension Feasts"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      },
+      {
+        "action": "f48_button",
+        "args": {
+          "feast_recipe": "feast_t1_ground"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 120
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "ui_cancel"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 15
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "ui_cancel"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 15
+        }
+      }
+    ],
+    "feast_1": [
+      {
+        "action": "f48_deploy_owned",
+        "args": {}
+      },
+      {
+        "action": "f48_fixture_approach",
+        "args": {
+          "target": "kitchen",
+          "fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "interact"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      },
+      {
+        "action": "f48_button",
+        "args": {
+          "text": "Cook learned Ascension Feasts"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      },
+      {
+        "action": "f48_button",
+        "args": {
+          "text": "Feed creatures"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      },
+      {
+        "action": "f48_button",
+        "args": {
+          "text": "B · Breakthrough needed · Ascension Feast 1 (ground)"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 120
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "ui_cancel"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 15
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "ui_cancel"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 15
+        }
+      }
+    ],
+    "boss_prepare_1": [
+      {
+        "action": "f48_deploy_owned",
+        "args": {}
+      },
+      {
+        "action": "f48_fixture_approach",
+        "args": {
+          "target": "warden_aldis",
+          "fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"
+        }
+      }
+    ],
+    "relic_1": [
+      {
+        "action": "f48_deploy_owned",
+        "args": {}
+      },
+      {
+        "action": "f48_fixture_approach",
+        "args": {
+          "target": "meadows_pedestal",
+          "fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "interact"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 120
+        }
+      }
+    ],
+    "boss_start": [
+      {
+        "action": "press",
+        "args": {
+          "action": "interact"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      },
+      {
+        "action": "f48_dialogue",
+        "args": {
+          "conversation": "stronghold_warden_challenge"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 90
+        }
+      }
+    ],
+    "boss_join_1": [
+      {
+        "action": "f48_fixture_join_boss",
+        "args": {
+          "fixture_disclosure": "named_mechanics_actual_announced_boss_join_no_earned_credit"
+        }
+      }
+    ],
+    "boss_fight": [
+      {
+        "action": "f48_fixture_trainer_fight",
+        "args": {
+          "trainer_id": "warden_aldis",
+          "budget_frames": 9000,
+          "fixture_disclosure": {
+            "scope": "named_mechanics_only",
+            "self_hp_topups": true,
+            "ally_placement": true,
+            "enemy_hp_ceiling": 0,
+            "earned_campaign_credit": false
+          }
+        }
+      }
+    ],
+    "feast_prepare": [
+      {
+        "action": "f48_deploy_owned",
+        "args": {}
+      },
+      {
+        "action": "f48_fixture_approach",
+        "args": {
+          "target": "kitchen",
+          "fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "interact"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      },
+      {
+        "action": "f48_button",
+        "args": {
+          "text": "Cook learned Ascension Feasts"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      },
+      {
+        "action": "f48_button",
+        "args": {
+          "text": "Feed creatures"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      }
+    ],
+    "feast_reopen": [
+      {
+        "action": "f48_deploy_owned",
+        "args": {}
+      },
+      {
+        "action": "f48_fixture_approach",
+        "args": {
+          "target": "kitchen",
+          "fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"
+        }
+      },
+      {
+        "action": "press",
+        "args": {
+          "action": "interact"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      },
+      {
+        "action": "f48_button",
+        "args": {
+          "text": "Cook learned Ascension Feasts"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      },
+      {
+        "action": "f48_button",
+        "args": {
+          "text": "Feed creatures"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 45
+        }
+      }
+    ],
+    "feast_commit": [
+      {
+        "action": "f48_button",
+        "args": {
+          "text": "B · Breakthrough needed · Ascension Feast 1 (ground)"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 120
+        }
+      }
+    ],
+    "key_prepare": [
+      {
+        "action": "f48_deploy_owned",
+        "args": {}
+      },
+      {
+        "action": "f48_fixture_approach",
+        "args": {
+          "target": "tidewake_arch",
+          "fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"
+        }
+      }
+    ],
+    "key_reopen": [
+      {
+        "action": "f48_deploy_owned",
+        "args": {}
+      },
+      {
+        "action": "f48_fixture_approach",
+        "args": {
+          "target": "tidewake_arch",
+          "fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"
+        }
+      }
+    ],
+    "key_commit": [
+      {
+        "action": "press",
+        "args": {
+          "action": "interact"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 120
+        }
+      }
+    ],
+    "relic_prepare": [
+      {
+        "action": "f48_deploy_owned",
+        "args": {}
+      },
+      {
+        "action": "f48_fixture_approach",
+        "args": {
+          "target": "meadows_pedestal",
+          "fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"
+        }
+      }
+    ],
+    "relic_reopen": [
+      {
+        "action": "f48_deploy_owned",
+        "args": {}
+      },
+      {
+        "action": "f48_fixture_approach",
+        "args": {
+          "target": "meadows_pedestal",
+          "fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"
+        }
+      }
+    ],
+    "relic_commit": [
+      {
+        "action": "press",
+        "args": {
+          "action": "interact"
+        }
+      },
+      {
+        "action": "wait",
+        "args": {
+          "frames": 120
+        }
+      }
+    ]
+  },
+  "outcomes": {
+    "essence_spend_0": {
+      "item_delta": {
+        "essence_ground": -20
+      },
+      "creature": {
+        "uid": "creature-90d325f68da4033a00d47730057cf38c",
+        "level": 10,
+        "breakthroughs": []
+      },
+      "equals": {
+        "redesign_character/creatures/creature-90d325f68da4033a00d47730057cf38c/cap_level": 10
+      }
+    },
+    "essence_spend_1": {
+      "item_delta": {
+        "essence_ground": -20
+      },
+      "creature": {
+        "uid": "creature-39db0f1e8b5584e6949b906a7b09ec76",
+        "level": 10,
+        "breakthroughs": []
+      },
+      "equals": {
+        "redesign_character/creatures/creature-39db0f1e8b5584e6949b906a7b09ec76/cap_level": 10
+      }
+    },
+    "feast_0": {
+      "creature": {
+        "uid": "creature-90d325f68da4033a00d47730057cf38c",
+        "level": 10,
+        "breakthroughs": [
+          1
+        ]
+      },
+      "item_delta": {
+        "feast_t1_ground": -1
+      },
+      "equals": {
+        "redesign_character/creatures/creature-90d325f68da4033a00d47730057cf38c/cap_level": 20
+      }
+    },
+    "feast_1": {
+      "creature": {
+        "uid": "creature-39db0f1e8b5584e6949b906a7b09ec76",
+        "level": 10,
+        "breakthroughs": [
+          1
+        ]
+      },
+      "item_delta": {
+        "feast_t1_ground": -1
+      },
+      "equals": {
+        "redesign_character/creatures/creature-39db0f1e8b5584e6949b906a7b09ec76/cap_level": 20
+      }
+    }
+  },
+  "test_configuration": [
+    {
+      "file": "res://data/config/stations.json",
+      "source_sha256": "8fd375347b19d86dd9db826d2f163d60c08430a719f1d098708280d3b2fac262",
+      "sha256": "8fd375347b19d86dd9db826d2f163d60c08430a719f1d098708280d3b2fac262",
+      "overlay_file": "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\mechanics-start\\test-configuration\\data\\config\\stations.json",
+      "enabled_fields": [
+        "runtime_enabled",
+        "craft_runtime_enabled",
+        "forge.runtime_enabled"
+      ]
+    },
+    {
+      "file": "res://data/config/essence.json",
+      "source_sha256": "024fd4614037d9b11c03a69908f05c454e15e503933e91acece1aadf38153c13",
+      "sha256": "024fd4614037d9b11c03a69908f05c454e15e503933e91acece1aadf38153c13",
+      "overlay_file": "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\mechanics-start\\test-configuration\\data\\config\\essence.json",
+      "enabled_fields": [
+        "altar_runtime_enabled",
+        "altar_building_runtime_enabled",
+        "altar_remote_spend_enabled"
+      ]
+    },
+    {
+      "file": "res://data/config/traits.json",
+      "source_sha256": "14e339286cb1e267b84e2c05407db92f8c86418cad4f16ef8e2500c4fee238b8",
+      "sha256": "14e339286cb1e267b84e2c05407db92f8c86418cad4f16ef8e2500c4fee238b8",
+      "overlay_file": "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\mechanics-start\\test-configuration\\data\\config\\traits.json",
+      "enabled_fields": [
+        "runtime_enabled"
+      ]
+    },
+    {
+      "file": "res://data/config/multiplayer.json",
+      "source_sha256": "c684e4c4a9d560b48fef910179942845337a5517118e927e01c9c345a1081961",
+      "sha256": "1917076c359fd4764904ca120a51c104b73b2c29b2971352a9b295174466384e",
+      "overlay_file": "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\mechanics-start\\test-configuration\\data\\config\\multiplayer.json",
+      "enabled_fields": [
+        "session.redesign_portal_runtime_enabled",
+        "session.redesign_boss_handoff_runtime_enabled"
+      ]
+    },
+    {
+      "file": "res://data/config/hud.json",
+      "source_sha256": "25414f95182ec6f3a9181217bd5a29304ba14c113e7f8387560e634339e5552f",
+      "sha256": "25414f95182ec6f3a9181217bd5a29304ba14c113e7f8387560e634339e5552f",
+      "overlay_file": "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\mechanics-start\\test-configuration\\data\\config\\hud.json",
+      "enabled_fields": [
+        "new_system_screens.enabled"
+      ]
+    },
+    {
+      "file": "res://data/config/alpha_respawns.json",
+      "source_sha256": "b5a92b9a73ba66bb39aed476354b012e9e0ac80beb1e9cad82df6213ba5e2b59",
+      "sha256": "b02e05dab1f45442b97d32d114762b90b22d0432f3217693375fed6eed55972e",
+      "overlay_file": "D:\\tetherbound\\codex-r5\\ralph\\reports\\TRAINING\\f28\\r5\\f48-existing-prepare\\mechanics-start\\test-configuration\\data\\config\\alpha_respawns.json",
+      "enabled_fields": [
+        "runtime_enabled"
+      ]
+    }
+  ],
+  "configuration_scope": "full",
+  "prepare_paid_altar": true,
+  "prepare_alpha_capture": true
+}

@@ -1,0 +1,32 @@
+{
+  "background": [
+    {
+      "ProcessId": 2364,
+      "ParentProcessId": 20632,
+      "Name": "Godot_v4.7-stable_win64_console.exe",
+      "CommandLine": "\"D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64_console.exe\" --headless --path D:/tetherbound/codex-r1 --log-file D:\\tetherbound\\.artifacts\\r1-f27-flip\\ci-settings-on\\r1-ci-settings-on-20261006T0600Z.log --script tests/smoke_settings.gd"
+    },
+    {
+      "ProcessId": 19428,
+      "ParentProcessId": 2364,
+      "Name": "Godot_v4.7-stable_win64.exe",
+      "CommandLine": "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe --headless --path D:/tetherbound/codex-r1 --log-file D:\\tetherbound\\.artifacts\\r1-f27-flip\\ci-settings-on\\r1-ci-settings-on-20261006T0600Z.log --script tests/smoke_settings.gd"
+    }
+  ],
+  "command": [
+    "--headless",
+    "--path",
+    "D:/tetherbound/codex-r5",
+    "--script",
+    "tests/run_tests.gd",
+    "--log-file",
+    "D:/tetherbound/codex-r5/ralph/reports/TRAINING/f29/r5/water-evolution-units.godot.log",
+    "--",
+    "--only=test_evolution.gd,test_evolution_discoverability.gd"
+  ],
+  "source_head": "bb83229cfb7f22989df081e8a6dded3bcbc9f969",
+  "action": "existing affected evolution and discoverability units",
+  "since_utc": "2026-10-06T06:01:48.6933995Z",
+  "test_sha256": "0BB0CE623B2E173860A14DB7CD2890C52AEB9E3E14573D77133220325F478377",
+  "scope": "pure read-only already-imported project; WORKFLOW read carve-out; no world/timing/visual claim"
+}

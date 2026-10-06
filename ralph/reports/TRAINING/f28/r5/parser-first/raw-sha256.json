@@ -1,0 +1,46 @@
+[
+  {
+    "file": "receipt.json",
+    "Hash": "6D16F91CE1859A532BB3C690BA325146E4FE4E930F6EE358B591972EED7D1E2C"
+  },
+  {
+    "file": "smoke_cloudreach_f07_windscar_cadence.exit.txt",
+    "Hash": "5FECEB66FFC86F38D952786C6D696C79C2DBC239DD4E91B46729D73A27FB57E9"
+  },
+  {
+    "file": "smoke_cloudreach_f07_windscar_cadence.stderr.txt",
+    "Hash": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+  },
+  {
+    "file": "smoke_cloudreach_f07_windscar_cadence.stdout.txt",
+    "Hash": "BB3BCF7181E550FE37F9235C4AECF24A81B757EDDFEFF554D88E7974FEB2ED1D"
+  },
+  {
+    "file": "smoke_playground.exit.txt",
+    "Hash": "5FECEB66FFC86F38D952786C6D696C79C2DBC239DD4E91B46729D73A27FB57E9"
+  },
+  {
+    "file": "smoke_playground.stderr.txt",
+    "Hash": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+  },
+  {
+    "file": "smoke_playground.stdout.txt",
+    "Hash": "BB3BCF7181E550FE37F9235C4AECF24A81B757EDDFEFF554D88E7974FEB2ED1D"
+  },
+  {
+    "file": "smoke_water_scene_encounters.exit.txt",
+    "Hash": "5FECEB66FFC86F38D952786C6D696C79C2DBC239DD4E91B46729D73A27FB57E9"
+  },
+  {
+    "file": "smoke_water_scene_encounters.stderr.txt",
+    "Hash": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+  },
+  {
+    "file": "smoke_water_scene_encounters.stdout.txt",
+    "Hash": "BB3BCF7181E550FE37F9235C4AECF24A81B757EDDFEFF554D88E7974FEB2ED1D"
+  },
+  {
+    "Hash": "B714830AB93D358B5FFBFB1B507D951E637B9BD3919FF2812ACE03842E9AD9D5",
+    "file": "command-binding.json"
+  }
+]
