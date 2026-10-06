@@ -1,0 +1,15 @@
+{
+  "subject": "crossing_hall_creature_nest",
+  "authorization": "M1 F17#6, #5256016508725; Crossing Hall handoff optional nest item 4",
+  "reference": "../reference/three_quarter.png",
+  "reference_service": "OpenAI imagegen, original plus one targeted simplification edit",
+  "reference_prompt": "../reference/imagegen-prompt.txt",
+  "reference_inspected": "2026-10-06; complete empty round woven rim and concave straw centre; broad straw clumps; transparent alpha. Native dimensions and rest clearance unverified.",
+  "service": "Meshy; existing project license, no purchased credits",
+  "preview_task_id": "01a11180-067f-7131-a97b-47cc2efed24f",
+  "preview_settings": "one preview candidate, triangle topology, 8000 target triangles; exact prompt/settings in preview-submission.json",
+  "preview_status": "submitted; service mesh and native inspection pending",
+  "actual_preview_credits": 20,
+  "runtime_enabled": false,
+  "acceptance": "OPEN: actual mesh inspection, native scale/creature clearance, unchanged bed footprint/prompt integration and blind camp/home views"
+}

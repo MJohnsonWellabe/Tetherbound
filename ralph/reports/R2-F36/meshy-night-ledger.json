@@ -44,7 +44,18 @@
       "submitted_utc": "2026-10-06T13:13:13.240703+00:00",
       "task_id": "01a11158-bfda-72a3-abf6-7df5e0b762f0",
       "status": "submitted_pending_inspection"
+    },
+    {
+      "reservation_id": "96faa974-14c8-4476-af7f-b3bc777cb731",
+      "night": "2026-10-05",
+      "subject": "crossing_hall_creature_nest",
+      "reference": "assets/environment/crossing_hall/creature_nest/reference/three_quarter.png",
+      "reference_sha256": "57a288995db321ccfdd0ea86473257d9ee0e4a6ab875e3403e59e1954dd665cb",
+      "endpoint": "/openapi/v1/multi-image-to-3d",
+      "submitted_utc": "2026-10-06T13:56:07.361603+00:00",
+      "task_id": "01a11180-067f-7131-a97b-47cc2efed24f",
+      "status": "submitted_pending_inspection"
     }
   ],
-  "actual_meshy_submissions": 4
+  "actual_meshy_submissions": 5
 }

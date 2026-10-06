@@ -1,0 +1,16 @@
+{
+  "species": "crossing_hall_creature_nest",
+  "tier": "preview",
+  "prompt": "One empty round woven willow-and-straw creature nest, about 4.5m across in game scale. Substantial rounded raised rim with a distinctly concave dished straw centre, broad readable golden straw clumps and pale warm willow bands. Complete flat stable base. Warm stylized Quaternius-compatible village game prop, no mattress, square cushion, timber frame, log bolster, sandpit, stone bowl, plinth or stage. Keep one cohesive mesh with visible concave top and substantial thickness; metre scale corrected after generation.. stylized PBR game environment prop, hand-painted fantasy style, clean readable forms, large clear colour regions, restrained surface detail, single object, upright, full structure visible",
+  "negative_prompt": "photorealistic hair strands, chaotic patchwork, wet plastic, rectangle, mattress, pillow, sandpit, stage, stone bowl, pedestal, text, watermark, occupants, people, creatures, floor plane, backdrop, floating fragments",
+  "views": {
+    "source": "assets\\environment\\crossing_hall\\creature_nest\\reference\\three_quarter.png"
+  },
+  "polycount": 8000,
+  "tasks": [
+    {
+      "candidate": "a",
+      "task_id": "01a11180-067f-7131-a97b-47cc2efed24f"
+    }
+  ]
+}
