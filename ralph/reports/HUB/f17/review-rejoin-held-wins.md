@@ -120,3 +120,31 @@ The held-wins design above was reverted in 83cb8cb1. CI (#544) showed it lost gu
 - `veridian_choices`, `home_creature_bed`, `rejoin_craft_control`, `gather_departure`, `harness_max_hp`, `forward_camp` and `shared_boss`.
 
 Text evidence: `rejoin-admission/guest-wins-*-2peer.txt`.
+
+## Landing round after #545 (merge, R1, two owner-passive fixes)
+
+**What changed:**
+- `origin/main` was merged after #545. The `_readmit_owner` conflict kept F18's note line and this lane's undo; F18's early-readmit hold is intact.
+- R1's tournament round fix: `cherry-pick -x 93487a4e58`.
+- **3a7677b5:** an owner-passive input window dropped before the join snapshot is no longer marked in flight. Before this, the first send waited the full 1.5 s stall. Review: APPROVE-WITH-NITS; the comment nit is fixed in fc4986d8.
+- **22dbc94c + 2466ab7f:** a stream's first discovery is now judged against the host's own observed poses over INITIAL_POSE_LAG_S, not only the current one. The ring is bounded, per realm, sampled per physics tick, and cleared on realm change, departure and reset. The 80 m limit is unchanged, and no pose the host didn't observe can count. Review: APPROVE-WITH-NITS; nits 1, 2, 4 and 5 are fixed in 2466ab7f.
+
+**Root cause** (station_craft, `owner_passive_initial_pose_unconfirmed`):
+1. The guest lands at the Home Key point (96.2, 14).
+2. The stream rebases.
+3. The smoke flies the guest 101 m to the kitchen (-4.4, 21.6).
+4. The host judges the new stream's first discovery, recorded at the landing, only after that flight, so it is 101 m from the current body and refused.
+
+This was not caused by this lane: `origin/main` failed the same way in 2 of 4 runs alone on the same box.
+
+**Units on 2466ab7f:** owner_passive_sync, rejoin_admission, adopt, replay and director_join_snapshot: 88 tests, 1218 assertions, 0 failed. The new teleport test fails with the old comparison.
+
+**Two-peer smokes on 2466ab7f, each run alone:**
+
+| Smoke | Runs | Result |
+|---|---|---|
+| `homestead_station_craft` (portals on) | 3 | ALL CHECKS PASSED in all 3 |
+| `owner_passive_rejoin` | 1 | ALL CHECKS PASSED |
+| `veridian_choices` | 1 | ALL CHECKS PASSED |
+
+The same five also passed on 22dbc94c.
