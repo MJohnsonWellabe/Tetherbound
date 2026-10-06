@@ -154,5 +154,20 @@ The initialized production smoke remains pending. Fresh before/after freeing-fra
 measurement and the two-peer handoff still require an uncontended window after
 R2 finishes. P1 remains OPEN.
 
+The fresh quiet baseline completed at exact source
+`f797d3c0c51776ca573780322214e2fbe979e26c` using its unchanged existing healing
+smoke: **6085 ms freeing frame / exit 0 / PASS**. The receipt records no native
+background jobs and cites R2's explicit packaging-finished report 6010403311.
+All 29 live, rebuilt-world and reload+30 pylon poses, road clearance, seven herd
+members and the actual slot-4 save/load passed. Both streams contain zero
+SCRIPT ERROR, Parse Error, ERROR, FAIL or leak diagnostics; inherited warnings
+remain. Raw [receipt](before-first/receipt.json), [stdout](before-first/stdout.log),
+[stderr](before-first/stderr.log) and [exit](before-first/exit.txt) are preserved
+byte-for-byte with [hashes](before-first/SHA256SUMS.txt). Its cache was an
+independent matching local copy under the owned global lock, with no import.
+The engine exited and the matching lease released. This baseline has none of
+the candidate's added material/mounted checks; candidate runtime, AFTER timing,
+tightened bound and two-peer handoff remain OPEN. No performance gain is claimed.
+
 C2 is closed as BLOCKED/accepted with an existing-tool gap. Its custom fixture
 and cancelled export/profile queue must not be restored or executed for P1.
