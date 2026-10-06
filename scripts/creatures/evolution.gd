@@ -78,9 +78,12 @@ static func prepare_feast_choice(
 	if patch.is_empty():
 		return _feast_failure("evolution_stats_invalid")
 	out.merge(patch, true)
-	choices[key] = target
+	# Permanent choices name the authored destination in the character schema;
+	# the individual itself keeps the corresponding runtime species identity.
+	var recorded_target := _authored_source(target)
+	choices[key] = recorded_target
 	out["evolution_choices"] = choices
-	return _feast_success(out, {"tier": key, "value": target}, patch, ingredient)
+	return _feast_success(out, {"tier": key, "value": recorded_target}, patch, ingredient)
 
 
 ## UI quotes use the same canonical authored lines as the host planner.

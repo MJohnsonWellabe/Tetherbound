@@ -1,0 +1,6 @@
+ERROR: Character schema refused: $.creatures.creature-dc5520b01445dd7a321486c8d5944bce.evolution_choices.3: unknown id/value water_cannonback
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] load_data (res://autoload/player_state.gd:434)
+       [1] test_water_feast_preserves_ancestor_moves_through_real_character_admission_and_reload (res://tests/test_evolution.gd:456)
+       [2] _init (res://tests/run_tests.gd:120)

@@ -353,8 +353,8 @@ func test_caught_water_mosshell_requires_choice_and_keeps_the_water_form_and_ind
 	if not bool(result.get("ok")): return
 	assert_eq(card, before, "planning must leave the saved input unchanged")
 	assert_eq(result.creature.species_id, "water_cannonback")
-	assert_eq(result.creature.evolution_choices, {"3": "water_cannonback"})
-	assert_eq(result.choice_record, {"tier": "3", "value": "water_cannonback"})
+	assert_eq(result.creature.evolution_choices, {"3": "cannonback"})
+	assert_eq(result.choice_record, {"tier": "3", "value": "cannonback"})
 	assert_eq(result.debit, {}, "a cooked feast never debits another catalyst")
 	for field: String in before:
 		if not result.species_patch.has(field) and field != "evolution_choices":
@@ -362,7 +362,7 @@ func test_caught_water_mosshell_requires_choice_and_keeps_the_water_form_and_ind
 	assert_almost_eq(float(result.creature.hp) / float(result.creature.max_hp), float(card.hp) / float(card.max_hp), 0.000001)
 	var durable: Dictionary = JSON.parse_string(JSON.stringify(result.creature))
 	assert_eq(durable.species_id, "water_cannonback")
-	assert_eq(durable.evolution_choices, {"3": "water_cannonback"})
+	assert_eq(durable.evolution_choices, {"3": "cannonback"})
 	assert_eq(durable.move_mastery_receipts, card.move_mastery_receipts)
 	assert_eq(EVOLUTION.feast_offer(durable, 3).code, "evolution_choice_permanent")
 	var target := SPECIES.definition(durable.species_id)
@@ -436,21 +436,33 @@ func test_water_feast_preserves_ancestor_moves_through_real_character_admission_
 		if not bool(staged.get("ok")): continue
 		assert_eq(before, frozen, "F28 planning leaves admitted state unchanged")
 		var durable: Dictionary = JSON.parse_string(JSON.stringify(staged.state))
+		var durable_before: Dictionary = JSON.parse_string(JSON.stringify(before))
 		assert_eq(record.errors(durable, player.character_id), [], "preserved Water ancestor moves remain legitimate after evolution")
 		assert_eq(durable.party[0].uid, uid)
 		assert_eq(durable.party[0].nickname, "Reed")
 		assert_eq(durable.party[0].battles_fought, 17)
-		assert_eq(durable.party[0].move_mastery_uses, before.party[0].move_mastery_uses)
+		assert_eq(durable.party[0].move_mastery_uses, durable_before.party[0].move_mastery_uses)
 		assert_eq(durable.party[0].move_mastery_receipts, before.party[0].move_mastery_receipts)
 		for slot: String in ["quick", "charged", "utility", "ultimate"]:
 			assert_eq(durable.party[0]["move_" + slot], before.party[0]["move_" + slot])
 		for move: String in before.party[0].known_moves:
 			assert_true(durable.party[0].known_moves.has(move), "ancestor knowledge survives: " + move)
 		assert_eq(durable.redesign_character.creatures[uid].cap_level, 40)
-		assert_eq(durable.redesign_character.creatures[uid].breakthroughs, [1, 2, 3])
+		assert_eq(durable.redesign_character.creatures[uid].breakthroughs, [1.0, 2.0, 3.0])
 		var target := "water_cannonback" if choice == "evolve" else "water_mosshell"
 		assert_eq(durable.party[0].species_id, target)
-		assert_eq(durable.redesign_character.creatures[uid].evolution_choices, {"3": target if choice == "evolve" else "stay"})
+		assert_eq(durable.redesign_character.creatures[uid].evolution_choices, {"3": "cannonback" if choice == "evolve" else "stay"})
+		var bag := preload("res://scripts/world/death_satchel_rules.gd")
+		assert_eq(bag.inventory_from(durable.inventory).count("feast_t3_water"), 0, "exactly one cooked feast is consumed")
+		var durable_frozen := durable.duplicate(true)
+		var replay: Dictionary = rules.prepare_feed(durable, uid, "feast_t3_water", choice,
+			{"in_combat": false, "owns_character": true},
+			func(id: String) -> Array: return [SPECIES.definition(id).get("type", "")],
+			EVOLUTION.prepare_feast_choice, rules.refresh_feast_moves)
+		assert_false(bool(replay.get("ok")))
+		assert_true(bool(replay.get("duplicate")))
+		assert_eq(replay.code, "reconcile_original_delivery")
+		assert_eq(durable, durable_frozen, "replay cannot debit or change the completed choice")
 		var restored := player_script.new()
 		restored.configure(preload("res://autoload/item_db.gd").new())
 		restored.load_data(durable)
