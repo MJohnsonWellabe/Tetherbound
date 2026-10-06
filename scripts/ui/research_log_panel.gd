@@ -51,7 +51,7 @@ func _rebuild() -> void:
 	species_scroll.add_child(species_list)
 	var details := VBoxContainer.new()
 	details.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	details.add_theme_constant_override("separation", 12)
+	details.add_theme_constant_override("separation", 8)
 	columns.add_child(details)
 	var has_details := false
 	for row: Dictionary in raw.get("species", []):
@@ -61,7 +61,8 @@ func _rebuild() -> void:
 		species_button.focus_entered.connect(_inspect.bind(key))
 		if not seen or key != _species: continue
 		has_details = true
-		line(details, str(row.get("name", "")), TOKENS.FONT_PROMPT)
+		status.text += " · " + str(row.get("name", ""))
+		_reveal_species.call_deferred(species_scroll, species_button)
 		for task: Dictionary in row.get("tasks", []):
 			var rewards: Array[String] = []
 			for stack: Dictionary in task.get("rewards", []):
@@ -81,6 +82,14 @@ func _rebuild() -> void:
 	if not has_details:
 		line(details, "Choose a seen creature to inspect its research tasks.")
 	finish(focus)
+
+func _reveal_species(scroll: ScrollContainer, selected: Button) -> void:
+	# A rebuilt list needs its container layout before follow_focus can find
+	# the selected row, especially after a viewport resize.
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if is_instance_valid(scroll) and is_instance_valid(selected):
+		scroll.ensure_control_visible(selected)
 
 func _claim(species: String, task: String) -> void:
 	if not claim_task.is_valid(): return
