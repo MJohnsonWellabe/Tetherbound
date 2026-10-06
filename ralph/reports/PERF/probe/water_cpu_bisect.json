@@ -1,0 +1,106 @@
+{
+	"animation_census": {
+		"active": 65,
+		"in_character_body": 9,
+		"in_dormant_character_body": 1,
+		"mixers": 65,
+		"playing": 64
+	},
+	"biome": "water",
+	"bisect": [
+		{
+			"baseline_wall_ms": 51.0325222222222,
+			"family": "water_first_shore_wild",
+			"members": 6,
+			"wall_ms_saved": 33.0486888888889
+		},
+		{
+			"baseline_wall_ms": 41.6518611111111,
+			"family": "RenewableResources",
+			"members": 1,
+			"wall_ms_saved": 26.1236166666667
+		},
+		{
+			"baseline_wall_ms": 45.4448666666667,
+			"family": "WaterGroundCover",
+			"members": 1,
+			"wall_ms_saved": 1.75326666666667
+		},
+		{
+			"baseline_wall_ms": 44.4568222222222,
+			"family": "WaterVegetation",
+			"members": 1,
+			"wall_ms_saved": -4.10298888888888
+		},
+		{
+			"baseline_wall_ms": 40.3915777777778,
+			"family": "WaterGateTideRaces",
+			"members": 1,
+			"wall_ms_saved": -4.31005555555556
+		},
+		{
+			"baseline_wall_ms": 48.6429277777778,
+			"family": "WaterCamps",
+			"members": 1,
+			"wall_ms_saved": -4.82275
+		},
+		{
+			"baseline_wall_ms": 41.9191666666667,
+			"family": "WaterLocalChains",
+			"members": 1,
+			"wall_ms_saved": -7.09345555555556
+		},
+		{
+			"baseline_wall_ms": 51.8609944444444,
+			"family": "WaterRestShoalMarkers",
+			"members": 1,
+			"wall_ms_saved": -7.31840555555555
+		}
+	],
+	"disclosure": "Headless Dummy renderer: CPU main-thread process and physics-step cost only.",
+	"display_server": "headless",
+	"frames_per_row": 150,
+	"processor_count": 4,
+	"rows": [
+		{
+			"label": "baseline",
+			"physics_step_ms_avg": 14.6025066666667,
+			"physics_steps_per_frame": 2.50666666666667,
+			"process_ms_avg": 26.5589733333333,
+			"process_ms_peak": 42.953,
+			"wall_ms_per_frame": 42.5343533333333
+		},
+		{
+			"label": "dormant_creature_animation_paused",
+			"physics_step_ms_avg": 14.61794,
+			"physics_steps_per_frame": 2.39333333333333,
+			"players_paused": 1,
+			"process_ms_avg": 26.20098,
+			"process_ms_peak": 29.219,
+			"wall_ms_per_frame": 39.9746333333333
+		},
+		{
+			"label": "all_animation_paused",
+			"physics_step_ms_avg": 14.3024066666667,
+			"physics_steps_per_frame": 2.6,
+			"players_paused": 65,
+			"process_ms_avg": 27.6451066666666,
+			"process_ms_peak": 30.772,
+			"wall_ms_per_frame": 43.6036333333333
+		},
+		{
+			"label": "baseline_again",
+			"physics_step_ms_avg": 16.7690466666666,
+			"physics_steps_per_frame": 2.81333333333333,
+			"process_ms_avg": 25.5164333333334,
+			"process_ms_peak": 32.529,
+			"wall_ms_per_frame": 46.8134
+		}
+	],
+	"schema": "perf_cpu_probe/1",
+	"stand": [
+		12.0,
+		3.45006728172302,
+		150.0
+	]
+}

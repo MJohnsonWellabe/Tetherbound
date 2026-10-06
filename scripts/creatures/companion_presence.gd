@@ -83,6 +83,7 @@ const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const REST_VISUAL := preload("res://scripts/creatures/water_rest_pose_visual.gd")
+const GEAR_ACCENT := preload("res://scripts/creatures/creature_gear_accent.gd")
 
 ## Reaction names. Also the keys of the config and of `_cooldowns`.
 const ACKNOWLEDGE := "acknowledge"
@@ -165,6 +166,10 @@ var _camp_sources: Array[Node3D] = []
 ## than reimplement it on this layer's pivot. Terrapup uses the proven full
 ## side-rest; the established partial-roll behavior remains for other bodies.
 var _body_rest_held := false
+## F33#1: the equipped-gear trim/glow on this (local) body, bound once per
+## active creature UID; the accent itself follows equip/unequip changes.
+var _gear_accent: RefCounted = null
+var _gear_accent_uid := ""
 
 var _last_bond_nodes := -1
 ## Which creature `_last_bond_nodes` was read from. A party cycle swaps the
@@ -285,6 +290,7 @@ func tick(delta: float) -> void:
 		return
 	_resolve_context()
 	_resolve_model()
+	_bind_gear_accent()
 	for name in _cooldowns.keys():
 		_cooldowns[name] = maxf(0.0, float(_cooldowns[name]) - delta)
 	for name in _pending.keys():
@@ -971,6 +977,41 @@ func _play_clip(role: String) -> void:
 	var animator: Variant = _body.get("_animator")
 	if animator != null and (animator as Object).has_method("play_if_exists"):
 		(animator as Object).call("play_if_exists", role)
+
+
+## F33#1. Only this player's own body: its gear is read from its owner's own
+## record. A remote body's owner record is not held by this process.
+func _bind_gear_accent() -> void:
+	if remote or _body == null or not _body.is_inside_tree() or _game == null or not is_instance_valid(_game):
+		return
+	var creature := _creature()
+	var uid := str(creature.get("uid")) if creature != null else ""
+	if uid == _gear_accent_uid:
+		return
+	_gear_accent_uid = uid
+	if _gear_accent != null:
+		_gear_accent.call("unbind_projection")
+		_gear_accent = null
+	var local: Variant = _game.get("local")
+	if uid.is_empty() or local == null:
+		return
+	var accent: RefCounted = GEAR_ACCENT.new()
+	if accent.call("bind_projection", _body, _gear_record, str(local.get("character_id")), uid) == true:
+		_gear_accent = accent
+
+
+## The published personal record the accent reads: the owner's party UIDs and
+## its redesign character (where each creature's gear lives).
+func _gear_record() -> Dictionary:
+	if _game == null or not is_instance_valid(_game) or _game.get("local") == null:
+		return {}
+	var local: RefCounted = _game.get("local")
+	var party: Array = []
+	var members: Variant = _game.get("party").call("members") if _game.get("party") != null else []
+	for member: Variant in members:
+		if member is RefCounted: party.append({"uid": str(member.get("uid"))})
+	return {"character_id": str(local.get("character_id")), "party": party,
+		"redesign_character": local.get("redesign_character")}
 
 
 func _resolve_model() -> void:

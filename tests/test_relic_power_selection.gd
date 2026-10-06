@@ -69,3 +69,80 @@ func test_the_host_action_saves_one_choice_and_refuses_an_unhung_one() -> void:
 		"actual_shrine_pedestal_required", "never mid-fight")
 	assert_eq(ACTIONS.relic_power(chosen.state, {"heart_id": "meadows", "edit_id": EDIT}, context).get("code"),
 		"reconcile_original_decision", "one edit applies once")
+	# render.yml 37400069833: a second choice of the same power (a new edit)
+	# saved a second row and receipt; it changes nothing, so the host refuses.
+	var again := ACTIONS.relic_power(chosen.state, {"heart_id": "meadows", "edit_id": EDIT.reverse()}, context)
+	assert_eq(again.get("code"), "relic_power_unchanged", "the active power chosen again stages nothing")
+	assert_false(again.has("state") or again.has("receipt"), "no record change, no receipt")
+	assert_true(PANEL.chosen_already(again), "the panel shows it as the active power, not an error")
+	assert_eq(ACTIONS.relic_power(current, {"heart_id": "", "edit_id": EDIT}, context).get("code"), "relic_power_unchanged",
+		"clearing an already empty choice is unchanged too")
+	var other: Dictionary = chosen.state.duplicate(true)
+	other.redesign_character.relics_hung.append("tidewake")
+	other.redesign_character.transaction_receipts.append("relic_hang:tidewake:owner_a")
+	assert_true(ACTIONS.relic_power(other, {"heart_id": "water", "edit_id": EDIT.reverse()}, context).get("ok") == true,
+		"a different hung power is still a new choice")
+
+
+func test_a_guest_choice_waits_past_the_host_checkpoint_for_its_saved_decision() -> void:
+	# Review of 0b5708c9: a guest's first reply is the host's owner-passive
+	# checkpoint (unresolved). The panel and the hall's relic hang treated it
+	# as final, showed its code and never heard the saved decision.
+	assert_false(PANEL.reply_final({"ok": false, "resolved": false, "code": "owner_passive_checkpoint_pending"}))
+	assert_false(PANEL.reply_final({"ok": false, "durable": true, "resolved": false, "code": "awaiting_saved_decision"}))
+	assert_false(PANEL.reply_final({}))
+	assert_true(PANEL.reply_final({"ok": true, "durable": true, "settled": true}), "the saved decision ends the wait")
+	assert_true(PANEL.reply_final({"ok": false, "resolved": true, "terminal_refusal": true, "code": "relic_not_hung"}), "a resolved refusal ends it")
+	assert_true(PANEL.reply_final({"ok": false, "resolved": false, "code": "owner_passive_recording_unavailable"}),
+		"a refusal no decision follows still ends it (the player can try again)")
+
+
+func test_the_owner_installs_a_saved_relic_power_choice() -> void:
+	# F18 diagnostic render 37394711198: a guest's relic_power row stalled at
+	# owner_action_install_conflict (live == before; the only differences from
+	# after were its receipt and realm_hearts.active_id). The owner installer
+	# wrote inventory, character and equipment but never the active heart, so
+	# no relic power choice could ever settle on its owner.
+	const TM := preload("res://tests/test_tm_teach_transaction.gd")
+	const OWNER := preload("res://scripts/net/character_action_owner.gd")
+	const RECORD := preload("res://scripts/net/character_record_rules.gd")
+	const DELIVERY := preload("res://scripts/net/foundation_delivery.gd")
+	var directory := "user://test_relic_owner_%s/" % Crypto.new().generate_random_bytes(12).hex_encode()
+	var player := PLAYER.new()
+	player.configure(ITEMS.new())
+	player.character_id = "owner_a"
+	player.party.add(INSTANCE.from_species("terrapup", SPECIES.table().terrapup))
+	player.redesign_character.relics_hung = ["meadows"]
+	player.redesign_character.transaction_receipts = ["relic_hang:meadows:owner_a"]
+	var game: Node = TM.OwnerGameFixture.new()
+	game.local = player
+	game.world = preload("res://autoload/world_state.gd").new()
+	game.world.world_id = "relic-slot"
+	game.world.reward_delivery_namespace = TM.NAMESPACE
+	var session: Node = TM.OwnerSessionFixture.new()
+	session.fixture = game
+	game.session = session
+	var writer: RefCounted = TM.BoolWriterFixture.new()
+	writer.store = preload("res://scripts/save/character_save.gd").new(directory)
+	game.save_system = writer
+	var saved: Dictionary = player.save_data()
+	saved.redesign_character = TEACHING.character_loadout_mirror(saved.party, saved.redesign_character)
+	player.redesign_character = saved.redesign_character
+	var before := RECORD.portable_projection(player.save_data())
+	var staged := ACTIONS.stage(before, 0, "relic_power", {"heart_id": "meadows", "edit_id": EDIT},
+		{"character_id": "owner_a", "expected_revision": 0, "in_range": true, "in_combat": false,
+			"shrine_power": true, "realm": "meadows", "source_key": "shrine_power", "foundation_runtime_authorized": true}, RECORD.errors)
+	assert_true(staged.get("ok") == true, str(staged))
+	if staged.get("ok") == true:
+		staged.character_revision = 1
+		var row := DELIVERY.make_record("relic-slot", TM.NAMESPACE, "tm-session", staged, null, RECORD.errors)
+		assert_false(row.is_empty())
+		if not row.is_empty():
+			game.world.reward_deliveries[row.delivery_id] = row.duplicate(true)
+			var applied := OWNER.apply_owner(game, row)
+			assert_true(applied.get("ok") == true and applied.get("saved") == true, "the owner installs and saves the choice: %s" % str(applied))
+			assert_eq(player.hearts.active_id(), "meadows", "the chosen power is active on the owner")
+			assert_true(preload("res://scripts/creatures/essence.gd")._equivalent(RECORD.portable_projection(player.save_data()), row.after))
+	session.free()
+	game.free()
+	preload("res://tests/helpers/split_save_fixture.gd").wipe(directory)

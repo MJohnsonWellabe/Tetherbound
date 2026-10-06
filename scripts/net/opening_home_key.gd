@@ -106,13 +106,49 @@ static func _opening_source(session: Node, peer: int) -> Node:
 		or grandpa.is_queued_for_deletion() or prompt.is_queued_for_deletion(): return null
 	var radius: Variant = prompt.get("radius")
 	if not (radius is float or radius is int) or not is_finite(float(radius)) or float(radius) <= 0.0 \
-		or not actor.global_position.is_finite() or actor.global_position.distance_to(prompt.global_position) > float(radius): return null
+		or not actor.global_position.is_finite(): return null
+	if actor.global_position.distance_to(prompt.global_position) <= float(radius): return found
+	# The same conversation is also opened by the authored door callout: on the
+	# return_starter beat, walking at the farmhouse door calls the player back
+	# to Grandpa from beyond his talk radius (sequence_director
+	# _refresh_door_gate). Accept exactly that authored geometry too.
+	var house: Node3D = found.get("_house")
+	var constants: Dictionary = (found.get_script() as Script).get_script_constant_map()
+	var callout: Variant = constants.get("DOOR_CALLOUT_RADIUS")
+	var callout_beats: Variant = constants.get("DOOR_CALLOUT_BEATS")
+	# The host's director tracks the host's own opening. A guest's beat is its
+	# own persisted opening history (sequence_director _persist_beat_history).
+	var beat: Variant = found.call("beat") if peer == session.call("local_peer_id") and found.has_method("beat") \
+		else peer_beat(session.call("_foundation_flags", peer))
+	if not callout_beats is Array or not (callout_beats as Array).has(beat): return null
+	if house == null or not world_node.is_ancestor_of(house) or house.is_queued_for_deletion() \
+		or not house.has_method("marker") or not (callout is float or callout is int) or float(callout) <= 0.0: return null
+	var door: Variant = house.call("marker", "door")
+	if not door is Vector3 or not (door as Vector3).is_finite() \
+		or actor.global_position.distance_to(door) > float(callout): return null
 	return found
+
+
+## The furthest opening beat recorded in a character's persisted flags.
+static func peer_beat(flags: Dictionary) -> String:
+	var reached := ""
+	for beat: String in preload("res://scripts/story/opening_beats.gd").order():
+		if flags.get("opening:beat:" + beat) == true: reached = beat
+	return reached
 
 
 static func host_grant(session: Node, peer: int, request: Dictionary) -> Dictionary:
 	var bound := _binding(session, peer, request)
 	if bound.is_empty(): return {"durable": false, "code": "not_admitted"}
+	if _opening_source(session, peer) == null \
+		or starter_uid(bound.personal, session.call("_foundation_flags", peer)).is_empty():
+		return {"durable": false, "code": "opening_context_changed"}
+	# A verified gift request is the host's own evidence that this character
+	# reached Grandpa's first-catch gift; a guest's opening beats stay local.
+	# It is recorded only after the checks above pass, and stands even if a
+	# later re-check (writer flush, geometry) fails this request: the armed
+	# reconcile then redelivers the key under its own gates.
+	if session.has_method("note_opening_gift_requested"): session.call("note_opening_gift_requested", peer)
 	var game: Node = bound.game
 	var saver: RefCounted = game.get("save_system")
 	if saver == null or not bool(saver.call("finish_fallback")) or saver.call("fallback_busy") == true:
@@ -123,10 +159,67 @@ static func host_grant(session: Node, peer: int, request: Dictionary) -> Diction
 		or starter_uid(bound.personal, session.call("_foundation_flags", peer)).is_empty():
 		return {"durable": false, "code": "opening_context_changed"}
 	var gift := _journal_prepared(session, peer, bound)
-	if gift.get("durable") == true:
+	# A guest's own delivery request settles it (after its finds have
+	# replayed); only the host's own character reconciles here at once.
+	if gift.get("durable") == true and peer == session.call("local_peer_id"):
 		var reconcile := request.duplicate(true)
 		reconcile.delivery_id = gift.delivery_id
 		reconcile.origin_namespace = bound.world.reward_delivery_namespace
+		host_reconcile(session, peer, reconcile)
+	return gift
+
+
+## Saves made while the portal runtime was off finished Grandpa's first-catch
+## conversation without a Home Key; with portals on they would be stranded
+## outside Meadows. The host journals the same deterministic grant row for any
+## admitted character past that beat who holds no key, no owed escrow and no
+## home_key_given fact. Idempotent: the row id is fixed per character/world and
+## the ordinary delivery path settles it exactly once.
+const PAST_FIRST_CATCH_FLAG := "opening:beat:walk_out"
+
+static func legacy_grant_due(personal: Dictionary, flags: Dictionary, character: String) -> bool:
+	if character.is_empty() or personal.get("character_id") != character: return false
+	if flags.get(PAST_FIRST_CATCH_FLAG) != true or flags.get("home_key_given") == true: return false
+	if HOME_ACTION.key_count(personal) != 0: return false
+	var escrow: Variant = personal.get("portal_escrow", {})
+	if escrow is Dictionary:
+		for row: Variant in (escrow as Dictionary).values():
+			if HOME_ACTION.valid_escrow(row, character): return false
+	return true
+
+
+static func host_legacy_grant(session: Node, peer: int) -> Dictionary:
+	if session == null or session.call("is_host") != true or session.call("portal_runtime_ready") != true: return {}
+	var game: Node = session.call("_game")
+	if game == null or game.get("world") == null: return {}
+	var world: RefCounted = game.get("world")
+	var character: String = session.call("_authority_character", peer)
+	if character.is_empty(): return {"durable": false, "code": "not_ready"}
+	# Cheap gates first; the admitted record re-projects the whole character.
+	var flags: Dictionary = session.call("_foundation_flags", peer).duplicate()
+	if flags.get("home_key_given") == true: return {}
+	if session.has_method("opening_gift_requested") and session.call("opening_gift_requested", peer) == true:
+		flags[PAST_FIRST_CATCH_FLAG] = true
+	# Not yet past the first catch: keep the arm (its window bounds it), the
+	# beat may still be on its way (the host's own batch writes it after).
+	if flags.get(PAST_FIRST_CATCH_FLAG) != true: return {"durable": false, "code": "not_past_first_catch"}
+	if peer == session.call("local_peer_id") and game.get("inventory").count("home_key") != 0: return {}
+	var personal: Dictionary = session.call("admitted_character_state", peer)
+	if personal.is_empty(): return {"durable": false, "code": "not_ready"}
+	if not legacy_grant_due(personal, flags, character): return {}
+	var saver: RefCounted = game.get("save_system")
+	if saver == null or not bool(saver.call("finish_fallback")) or saver.call("fallback_busy") == true:
+		return {"durable": false, "code": "writer_busy"}
+	var request := envelope(character, world.reward_delivery_namespace, str(session.call("_altar_current_epoch")))
+	var bound := _binding(session, peer, request)
+	if bound.is_empty(): return {"durable": false, "code": "not_admitted"}
+	var gift := _journal_prepared(session, peer, bound)
+	# A guest's own delivery request settles it (after its finds have
+	# replayed); only the host's own character reconciles here at once.
+	if gift.get("durable") == true and peer == session.call("local_peer_id"):
+		var reconcile := request.duplicate(true)
+		reconcile.delivery_id = gift.delivery_id
+		reconcile.origin_namespace = world.reward_delivery_namespace
 		host_reconcile(session, peer, reconcile)
 	return gift
 
@@ -198,20 +291,12 @@ static func host_reconcile(session: Node, peer: int, request: Dictionary) -> Dic
 	var authority: RefCounted = session.get("_character_authority")
 	if authority == null or authority.call("_training_locked", bound.character) == true:
 		return {"ok": false, "code": "owner_action_pending"}
+	if _owner_delivery_unsettled(bound.world, bound.character, request.delivery_id):
+		return {"ok": false, "code": "owner_delivery_pending"}
 	if session.call("_altar_peer_in_combat", peer) == true: return {"ok": false, "code": "actor_in_combat"}
-	var source: Variant = bound.personal.get("portal_escrow", {}).get(request.delivery_id)
-	var action := "home_key_deliver"
-	if source == null:
-		# A first debt comes only from this host's actual saved opening producer.
-		# An old world's ID without its admitted finite escrow is refused.
-		if request.origin_namespace != bound.world.reward_delivery_namespace:
-			return {"ok": false, "code": "admitted_home_key_debt_required"}
-		var canonical: Variant = bound.world.reward_deliveries.get(request.delivery_id)
-		if not valid_row(canonical, bound.world, bound.character): return {"ok": false, "code": "finite_home_key_source_required"}
-		source = HOME_ACTION.due(canonical, bound.character)
-		action = "home_key_owe"
-	if not HOME_ACTION.valid_escrow(source, bound.character) or source.world_namespace != request.origin_namespace:
-		return {"ok": false, "code": "admitted_home_key_debt_required"}
+	var found := _source(bound, request)
+	if found.has("code"): return {"ok": false, "code": found.code}
+	var source: Dictionary = found.source
 	# A copied packet cannot introduce another world's escrow. The source is
 	# the host's admitted baseline or its own saved original opening decision.
 	var mirrored := _journal_prepared(session, peer, bound)
@@ -221,14 +306,81 @@ static func host_reconcile(session: Node, peer: int, request: Dictionary) -> Dic
 		return {"ok": false, "code": "owner_action_pending"}
 	if source.status == "settled":
 		return {"ok": HOME_ACTION.key_count(bound.personal) == 1, "durable": true, "resolved": true}
-	var intent := {"delivery_id": request.delivery_id, "origin_namespace": request.origin_namespace}
 	var context := {"character_id": bound.character, "expected_revision": int(authority.call("revision", bound.character)),
 		"in_range": true, "in_combat": false, "foundation_runtime_authorized": true,
 		"home_key_authorized": true, "home_key_record": source.duplicate(true),
 		"source_key": "opening_home_key:" + request.delivery_id}
+	# A guest's portable record keeps drifting (care, walking, finds) between
+	# host samples, and a full-record row staged against a stale admitted
+	# record strands its owner-passive stream. Freeze and replay the owner's
+	# exact inputs first, as every other guest owner request does; the
+	# checkpoint commits through commit_reconcile.
+	if peer != session.call("local_peer_id"):
+		var ready: Dictionary = session.call("_owner_passive_service").call("action_gate", peer, "home_key",
+			preload("res://scripts/net/owner_passive_preparation.gd").home_key_request(request), context)
+		if ready.get("ok") != true: return ready
+	return commit_reconcile(session, peer, request, context)
+
+
+## Stages the owe/deliver row with exactly the context that was (for a guest)
+## checkpointed. The admitted source must still be the one frozen.
+static func commit_reconcile(session: Node, peer: int, request: Dictionary, context: Dictionary) -> Dictionary:
+	var identity := request.duplicate()
+	identity.erase("delivery_id")
+	identity.erase("origin_namespace")
+	var bound := _binding(session, peer, identity)
+	if bound.is_empty(): return _terminal("not_admitted")
+	var authority: RefCounted = session.get("_character_authority")
+	if authority == null or authority.call("_training_locked", bound.character) == true:
+		return {"ok": false, "code": "owner_action_pending"}
+	var found := _source(bound, request)
+	if found.has("code"): return _terminal(found.code)
+	if not ESSENCE._equivalent(found.source, context.get("home_key_record")) or found.source.status == "settled":
+		return _terminal("home_key_source_changed")
+	var intent := {"delivery_id": request.delivery_id, "origin_namespace": request.origin_namespace}
 	var actions: Script = load("res://scripts/net/foundation_actions.gd")
-	return actions.commit(authority, session.get_node(^"LedgerRpc"), peer, bound.character,
-		context.expected_revision, action, intent, context)
+	var result: Dictionary = actions.commit(authority, session.get_node(^"LedgerRpc"), peer, bound.character,
+		int(context.get("expected_revision", -1)), found.action, intent, context)
+	if result.get("durable") == true or str(result.get("code", "")) in TRANSIENT_CODES: return result
+	return _terminal(str(result.get("code", result.get("reason", "home_key_refused"))))
+
+
+## A refusal that leaves the record untouched: a checkpointed owner rebases
+## and its next delivery request retries from the live admitted record.
+const TRANSIENT_CODES := ["transaction_busy", "stage_changed", "world_save_failed",
+	"training_journal_failed", "world_not_prepared", "fallback_busy", "character_busy"]
+
+static func _terminal(code: String) -> Dictionary:
+	return {"ok": false, "resolved": true, "durable": false, "terminal_refusal": true, "code": code, "reason": code}
+
+
+## The admitted escrow row (deliver), or this host's own saved opening grant as
+## a first debt (owe). An old world's ID without its admitted escrow is refused.
+static func _source(bound: Dictionary, request: Dictionary) -> Dictionary:
+	var source: Variant = bound.personal.get("portal_escrow", {}).get(request.delivery_id)
+	var action := "home_key_deliver"
+	if source == null:
+		if request.origin_namespace != bound.world.reward_delivery_namespace:
+			return {"code": "admitted_home_key_debt_required"}
+		var canonical: Variant = bound.world.reward_deliveries.get(request.delivery_id)
+		if not valid_row(canonical, bound.world, bound.character): return {"code": "finite_home_key_source_required"}
+		source = HOME_ACTION.due(canonical, bound.character)
+		action = "home_key_owe"
+	if not HOME_ACTION.valid_escrow(source, bound.character) or source.world_namespace != request.origin_namespace:
+		return {"code": "admitted_home_key_debt_required"}
+	return {"source": source, "action": action}
+
+
+## A reward delivery (a find, a gather batch) the owner may already hold but
+## the host has not yet accepted: the admitted record lacks it, so a
+## full-record Home Key row staged now would conflict on the owner's baseline
+## and hold every later owner write. The owner re-sends its delivery request,
+## so this waits for the next one. Typed rows have their own guards; the gift's
+## own row is the one being reconciled.
+static func _owner_delivery_unsettled(world: RefCounted, character: String, gift_id: String) -> bool:
+	for row: Dictionary in REWARD.pending_for_character(world, character):
+		if row.get("delivery_id") != gift_id and not row.has("kind"): return true
+	return false
 
 
 static func authoritative_owned(session: Node, peer: int) -> bool:

@@ -1,0 +1,22 @@
+{
+ "pair1": {
+  "comparison": "on_vs_off_day",
+  "X": "cull_off-day",
+  "Y": "cull_on-day"
+ },
+ "pair2": {
+  "comparison": "on_vs_off_night",
+  "X": "cull_off-night",
+  "Y": "cull_on-night"
+ },
+ "pair3": {
+  "comparison": "on_vs_old_night",
+  "X": "cull_on-night",
+  "Y": "cc22c6c5-night"
+ },
+ "pair4": {
+  "comparison": "on_vs_old_day",
+  "X": "cc22c6c5-day",
+  "Y": "cull_on-day"
+ }
+}

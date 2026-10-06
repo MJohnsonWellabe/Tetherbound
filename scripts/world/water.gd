@@ -349,6 +349,11 @@ func _apply_hazard_damage(player: CharacterBody3D, damage: float) -> void:
 		return
 	if bool(vitals.call("is_dead")):
 		return
+	# F33#3: the trainer's worn gear eases drowning, while hazard mitigation is live.
+	if preload("res://scripts/player/player_equipment.gd").hazards_live():
+		var game := get_node_or_null(^"/root/Game")
+		var equipment: Variant = game.get("player_equipment") if game != null else null
+		if equipment != null: damage = float(equipment.call("mitigate_hazard_damage", damage, "drowning"))
 	vitals.health = maxf(0.0, float(vitals.health) - damage)
 	if bool(vitals.call("is_dead")) and player.has_signal("died"):
 		player.emit_signal("died")

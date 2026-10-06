@@ -1,0 +1,341 @@
+extends SceneTree
+
+## F34 forward camps in a REAL realm world, through the production placer and
+## Session transaction (BuildPlacer._place -> session.forward_camp_submit_build
+## -> Foundation camp_build -> world building_add -> ForwardCamp planted):
+##   #0 a Workbench-crafted kit places on valid ground: bed, cookpot, workbench;
+##   #4 the record carries the placer's character id and survives save/reload;
+##   one camp per character per biome (a second is refused, kit kept);
+##   #2 resting at the camp bed is the saved team rest (party recovers).
+##
+##   godot --headless --path . --script tests/smoke_f34_forward_camp.gd -- [--scene=<world tscn> --realm=<id>] [--shot=<png>]
+##
+## Disclosed fixtures: the kit is added straight to the satchel (the Workbench
+## craft is test_forward_camp / station-craft territory); the spot is found by
+## a ring search with the placer's own preview_placement (snap + ground), the player
+## stands 3 m from it and the ghost is aimed at it (what the camera would do);
+## party HP is lowered directly before the rest; wild bodies near the start
+## are parked away with their AI paused (a chasing wild blocks a camp).
+
+const DEFAULT_SCENE := "res://scenes/world/meadows_playground.tscn"
+const KIT := "forward_camp_kit"
+const SAVE := preload("res://scripts/save/save_game.gd")
+
+var failures := 0
+var checks := 0
+var _scene := DEFAULT_SCENE
+var _realm := ""
+var _shot := ""
+
+
+func _initialize() -> void:
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--scene="): _scene = arg.trim_prefix("--scene=")
+		elif arg.begins_with("--realm="): _realm = arg.trim_prefix("--realm=")
+		elif arg.begins_with("--shot="): _shot = arg.trim_prefix("--shot=")
+	_run.call_deferred()
+
+
+func _check(ok: bool, what: String) -> void:
+	checks += 1
+	if not ok: failures += 1
+	print(("PASS: " if ok else "FAIL: ") + what)
+
+
+func _camps(game: Node) -> Array:
+	return (game.get("placed_buildings") as Array).filter(func(r: Dictionary) -> bool:
+		return r.get("id") == "forward_camp" and r.get("removed") != true)
+
+
+func _camp_nodes() -> Array:
+	return get_nodes_in_group("placed_building").filter(func(n: Node) -> bool:
+		return n.get_script() == preload("res://scripts/build/forward_camp.gd"))
+
+
+func _find_spot(game: Node, placer: Node, player: Node3D, realm: String, away_from := Vector3.INF) -> Vector3:
+	var origin := player.global_position
+	for ring in range(1, 60):
+		for step in 16:
+			var angle := TAU * float(step) / 16.0
+			var at := origin + Vector3(cos(angle), 0.0, sin(angle)) * float(ring) * 4.0
+			var height := float(placer.call("_ground_height", at))
+			if not is_finite(height): continue
+			at.y = height
+			# The placer's own preview (grid snap + the camp ground check).
+			var preview: Dictionary = placer.call("preview_placement", game, "forward_camp", at)
+			if preview.get("ok") == true and preview.get("position") is Vector3 \
+					and (away_from == Vector3.INF or (preview.position as Vector3).distance_to(away_from) > 12.0):
+				return preview.position
+	return Vector3.INF
+
+
+var _last_message := ""
+
+
+## Disclosed fixture: wild bodies near the spot are parked far away with their
+## AI paused before each press (spawners may add one late). A creature chasing
+## the trainer rightly blocks a camp's clearance; this smoke measures the
+## placement path, not that chase.
+func _park_wilds(at: Vector3) -> void:
+	for node: Node in current_scene.find_children("*_wild_*", "CharacterBody3D", true, false):
+		var body := node as CharacterBody3D
+		if body.global_position.distance_to(at) < 120.0:
+			body.process_mode = Node.PROCESS_MODE_DISABLED
+			body.global_position += Vector3(0.0, -500.0, 0.0)
+			print("parked wild ", body.name)
+
+
+func _place_at(game: Node, placer: Node, player: Node3D, at: Vector3, read_message := false, presses := 1) -> void:
+	player.global_position = at + Vector3(0.0, 0.5, 3.0)
+	player.velocity = Vector3.ZERO
+	game.set("pending_build", "forward_camp")
+	for _frame in 20:
+		await physics_frame
+		player.global_position = at + Vector3(0.0, 0.5, 3.0)
+	_park_wilds(at)
+	for press in presses:
+		# Aimed at the spot for every press (the placer re-aims the ghost from
+		# the camera each frame; a player holds the aim between presses).
+		placer.set("_yaw_deg", 0.0)
+		(placer.get("_ghost") as Node3D).global_position = at
+		game.set("_pending_world_message", "")
+		placer.call("_place", game, "forward_camp")
+		if read_message and press == 0: _last_message = str(game.get("_pending_world_message"))
+		for _frame in 2:
+			await physics_frame
+	for _frame in 30:
+		await physics_frame
+	game.set("pending_build", "")
+
+
+func _run() -> void:
+	await process_frame
+	var game := root.get_node("Game")
+	if not _realm.is_empty(): game.set("current_realm", _realm)
+	var load_started := Time.get_ticks_msec()
+	var world := (load(_scene) as PackedScene).instantiate() as Node3D
+	root.add_child(world)
+	current_scene = world
+	for _frame in 900:
+		await physics_frame
+		if not world.has_method("shell_build_complete") or bool(world.call("shell_build_complete")): break
+	print("F34 world load %s: %d ms to shell built" % [_scene.get_file(), Time.get_ticks_msec() - load_started])
+	for _frame in 120:
+		await physics_frame
+	var player := world.get_node_or_null("Player") as CharacterBody3D
+	var placer := world.get_node_or_null("BuildPlacer")
+	_check(player != null and placer != null, "the real world has a Player and a BuildPlacer (%s)" % _scene)
+	if player == null or placer == null:
+		_finish()
+		return
+	player.set_physics_process(false)
+	var realm := str(preload("res://scripts/world/realm_world_records.gd").active(game))
+	var local: RefCounted = game.get("local")
+	var inventory: RefCounted = local.get("inventory")
+	inventory.call("add", KIT, 2)
+	if (local.get("party").call("members") as Array).is_empty():
+		local.get("party").call("add", preload("res://scripts/creatures/creature_species.gd").spawn("terrapup"))
+	var kits_before := int(inventory.call("count", KIT))
+	# Sea and shallows refuse a camp (water_depth_at > 0 anywhere under it).
+	if world.has_method("water_depth_at"):
+		var wet := Vector3.INF
+		for ring in range(1, 80):
+			for step in 16:
+				var angle := TAU * float(step) / 16.0
+				var at := player.global_position + Vector3(cos(angle), 0.0, sin(angle)) * float(ring) * 5.0
+				if float(world.call("water_depth_at", at)) > 0.3:
+					wet = at
+					break
+			if wet != Vector3.INF: break
+		_check(wet != Vector3.INF, "%s has sea or shallows near the start" % realm)
+		if wet != Vector3.INF:
+			var ground := float(placer.call("_ground_height", wet))
+			wet.y = ground if is_finite(ground) else wet.y
+			var refused: Dictionary = placer.call("validate_forward_camp_ground", game, realm, wet, 0.0)
+			_check(refused.get("ok") != true and str(refused.get("code", "")) == "camp_ground",
+				"a camp in the water at %s is refused (%s)" % [str(wet), str(refused.get("reason", ""))])
+	var spot := _find_spot(game, placer, player, realm)
+	_check(spot != Vector3.INF, "valid camp ground found in %s at %s" % [realm, str(spot)])
+	# A second valid spot, found before the first camp exists (12 m clear of it:
+	# footprint plus clearance), searched from beside the first (terrain
+	# collision streams around the player; Tidewake's first flat ground can be
+	# far from the start).
+	var second := Vector3.INF
+	if spot != Vector3.INF:
+		player.global_position = spot + Vector3(0.0, 0.5, 3.0)
+		for _frame in 30:
+			await physics_frame
+		_park_wilds(spot)
+		second = _find_spot(game, placer, player, realm, spot)
+	_check(second != Vector3.INF, "a second valid spot exists in %s (for the one-camp-per-biome checks)" % realm)
+	if spot == Vector3.INF:
+		_finish()
+		return
+	await _place_at(game, placer, player, spot)
+	# A wild that wandered onto the spot since the search rightly blocks it:
+	# search again from here and press again (at most three spots).
+	for _retry in 2:
+		if not _camps(game).is_empty(): break
+		var again := _find_spot(game, placer, player, realm, second)
+		if again == Vector3.INF: break
+		print("spot %s became blocked; trying %s" % [str(spot), str(again)])
+		spot = again
+		await _place_at(game, placer, player, spot)
+	var camps := _camps(game)
+	_check(camps.size() == 1, "one forward-camp record placed (%d)" % camps.size())
+	if camps.size() == 1:
+		_check(str(camps[0].get("character_id", "")) == str(local.get("character_id")) and str(camps[0].get("realm")) == realm,
+			"it carries the placer's character id and realm (%s, %s)" % [str(camps[0].get("character_id")), str(camps[0].get("realm"))])
+	_check(int(inventory.call("count", KIT)) == kits_before - 1, "exactly one kit spent (%d -> %d)" % [kits_before, int(inventory.call("count", KIT))])
+	var nodes := _camp_nodes()
+	_check(nodes.size() == 1, "one ForwardCamp planted in the world (%d)" % nodes.size())
+	if nodes.size() == 1:
+		var prompts: Array = nodes[0].get("_prompts")
+		var labels := prompts.map(func(n: Node) -> String: return str(n.get("label")) if "label" in n else n.name)
+		_check((nodes[0].get("_pieces") as Array).size() == 4 and prompts.size() == 3,
+			"it stands as tent-sheltered bed, cookpot and field workbench with three prompts (%d pieces)" % (nodes[0].get("_pieces") as Array).size())
+		if not _shot.is_empty(): await _capture(nodes[0])
+		# Ground inside the allowed rise is not an obstruction, but a standing
+		# structure is: the camp's own footprint now refuses another camp.
+		var occupied: Dictionary = placer.call("validate_forward_camp_ground", game, realm, (nodes[0] as Node3D).global_position, 0.0)
+		_check(occupied.get("ok") != true, "ground under a standing camp is refused (%s)" % str(occupied.get("reason", "")))
+
+	# Rest at the camp bed: the saved team rest recovers the party.
+	if nodes.size() == 1:
+		var camp: Node3D = nodes[0]
+		var members: Array = local.get("party").call("members")
+		for creature: RefCounted in members:
+			creature.set("hp", float(creature.get("max_hp")) * 0.3)
+		# Stand at the bed piece (forward_camps.json bed_offset, camp-local).
+		var bed_at: Vector3 = camp.global_transform * Vector3(-2.0, 0.0, 0.0)
+		player.global_position = bed_at + Vector3(0.0, 0.5, 1.0)
+		for _frame in 10:
+			await physics_frame
+		var day_before := int(game.get("world").get("day")) if game.get("world") != null else -1
+
+		# The rest waits for the owner's saved decision; the camp keeps the same
+		# intent and the player presses again (what a held-out save looks like).
+		var presses := 0
+		while presses < 20:
+			presses += 1
+			camp.call("_activate", "bed")
+			for _frame in 30:
+				await physics_frame
+			if (camp.get("_pending_rest") as Dictionary).is_empty(): break
+		print("rest settled after %d press(es)" % presses)
+		for _frame in 240:
+			await physics_frame
+		var healed := members.size() > 0
+		for creature: RefCounted in members:
+			healed = healed and float(creature.get("hp")) >= float(creature.get("max_hp")) - 0.01 \
+				and creature.get("resting") != true
+		_check(healed, "resting at the camp bed recovered the team to full and woke it (%d member(s))" % members.size())
+		var day_after := int(game.get("world").get("day")) if game.get("world") != null else -1
+		_check(day_after > day_before, "the rest passed the night (day %d -> %d)" % [day_before, day_after])
+
+	# Loadouts are changed at the camp's field workbench (F34#2): the real
+	# open_loadouts opens the companion panel on the Foundation loadout service.
+	if nodes.size() == 1 and is_instance_valid(nodes[0]):
+		var camp: Node3D = nodes[0]
+		player.global_position = camp.global_transform * Vector3(2.0, 0.0, 1.1) + Vector3(0.0, 0.5, 1.0)
+		for _frame in 10:
+			await physics_frame
+		camp.call("open_loadouts")
+		await process_frame
+		var panels := game.get_children().filter(func(n: Node) -> bool:
+			return n.get_script() == preload("res://scripts/ui/companion_details_panel.gd"))
+		_check(panels.size() == 1 and (panels[0] as CanvasLayer).visible,
+			"the camp workbench opens the team loadout panel (%d panel(s))" % panels.size())
+		for panel: Node in panels: panel.queue_free()
+		await process_frame
+		player.global_position = camp.global_position + Vector3(0.0, 40.0, 0.0)
+		camp.call("open_loadouts")
+		await process_frame
+		var far := game.get_children().filter(func(n: Node) -> bool:
+			return n.get_script() == preload("res://scripts/ui/companion_details_panel.gd") and not n.is_queued_for_deletion())
+		_check(far.is_empty(), "away from the camp no loadout panel opens")
+
+	# Travel-tier craft at the camp cookpot (F34#1) through the real panel:
+	# a Small Potion settles; a Harness is refused naming the Forge.
+	if nodes.size() == 1 and is_instance_valid(nodes[0]):
+		var camp: Node3D = nodes[0]
+		player.global_position = camp.global_transform * Vector3(2.0, 0.0, -1.1) + Vector3(0.0, 0.5, 1.0)
+		for _frame in 10:
+			await physics_frame
+		inventory.call("add", "berries", 8)
+		inventory.call("add", "fiber", 2)
+		var potions := int(inventory.call("count", "potion_small"))
+		camp.call("_activate", "cookpot")
+		for _frame in 20:
+			await physics_frame
+		var panel: Node = camp.get("_panel")
+		_check(panel != null and bool(panel.call("is_open")), "the camp cookpot opens its craft panel")
+		if panel != null and bool(panel.call("is_open")):
+			panel.call("_station_action", "station_craft", {"recipe_id": "potion_small"})
+			for _frame in 600:
+				if (panel.get("_station_intent") as Dictionary).is_empty() \
+						and int(inventory.call("count", "potion_small")) > potions: break
+				await physics_frame
+			_check(int(inventory.call("count", "potion_small")) == potions + 1,
+				"a Small Potion crafts at the camp cookpot (%d -> %d)" % [potions, int(inventory.call("count", "potion_small"))])
+			var route: Dictionary = preload("res://scripts/build/forward_camp_rules.gd").recipe("craft_rootiron_harness",
+				game.get("items").call("recipe", "craft_rootiron_harness"), "workbench")
+			_check(route.get("ok") != true and str(route.get("reason", "")) == "Needs the homestead — use the Forge.",
+				"a Harness is refused at the camp, naming the Forge: \"%s\"" % str(route.get("reason", "")))
+			panel.call("close")
+			for _frame in 5:
+				await physics_frame
+
+	# One per character per biome (HOMESTEAD §8): the first press on a second
+	# spot refuses and offers to pack the first up; the second press packs it
+	# (kit refunded) and pitches here. Kits end where they were before.
+	if second != Vector3.INF:
+		var first_uid := str(_camps(game)[0].get("uid", "")) if _camps(game).size() == 1 else ""
+		# Both presses inside the offer's window, as a player presses twice.
+		await _place_at(game, placer, player, second, true, 2)
+		_check(_last_message.contains("Press Place again to pack it up"),
+			"a second camp in %s is not placed at first: the player is offered to pack up the first (\"%s\")" % [realm, _last_message])
+		# The pack waits for its saved decision (retried once a second), then the
+		# placement follows; within the placer's own 15 s repack timeout.
+		for _frame in 900:
+			await physics_frame
+			var now := _camps(game)
+			if now.size() == 1 and str(now[0].get("uid")) != first_uid: break
+		var after := _camps(game)
+		var moved: bool = after.size() == 1 and str(after[0].get("uid")) != first_uid \
+			and Vector3(float(after[0].position[0]), float(after[0].position[1]), float(after[0].position[2])).distance_to(second) < 0.01
+		_check(moved, "the second press packed the first camp up and pitched the new one here (%d camp(s) %s, first %s, here %s; last message \"%s\")" % [
+			after.size(), JSON.stringify(after.map(func(r: Dictionary) -> Array: return [str(r.uid).left(8), r.position])), first_uid.left(8),
+			str(second), str(game.get("_pending_world_message"))])
+		_check(int(inventory.call("count", KIT)) == kits_before - 1, "the old camp's kit was refunded and the new one spent (%d)" % int(inventory.call("count", KIT)))
+		_check(_camp_nodes().size() == 1, "one ForwardCamp stands in the world (%d)" % _camp_nodes().size())
+
+	# Save and reload the world record: the camp persists.
+	_check(bool(game.call("autosave_here")), "the world saves through the autosave path")
+	print("F34 FORWARD CAMP (%s): %d checks, %d failures" % [realm, checks, failures])
+	_finish()
+
+
+## `--shot=<png>` (render mode only): a three-quarter view of the placed camp.
+func _capture(camp: Node3D) -> void:
+	# The player's rig reclaims `current` each frame; it is paused for the shot.
+	var rig := current_scene.get_node_or_null("CameraRig")
+	if rig != null: rig.process_mode = Node.PROCESS_MODE_DISABLED
+	var camera := Camera3D.new()
+	camp.get_parent().add_child(camera)
+	camera.global_position = camp.global_transform * Vector3(9.0, 6.0, 11.0)
+	camera.look_at(camp.global_position + Vector3(0.0, 0.8, 0.0))
+	camera.current = true
+	for _frame in 20:
+		await process_frame
+	await RenderingServer.frame_post_draw
+	var image := root.get_texture().get_image()
+	var saved := image != null and image.save_png(_shot) == OK
+	print("shot %s: %s" % [_shot, str(saved)])
+	camera.current = false
+	camera.queue_free()
+	if rig != null: rig.process_mode = Node.PROCESS_MODE_INHERIT
+
+
+func _finish() -> void:
+	quit(1 if failures > 0 else 0)

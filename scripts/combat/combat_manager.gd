@@ -239,6 +239,9 @@ var _stagger_glows: Dictionary = {}
 var _burst_awaiting_host := false
 var _move_awaiting_host := false
 var _party_ultimate: Dictionary = {}
+## F33 Harness max HP per creature uid this fight (creature_gear.hp_scale):
+## the host's value when a hit carried one, else the owner's own record.
+var _party_hp_scale: Dictionary = {}
 var _party_utility_cooldown: Dictionary = {}
 var _ultimate_waiting_release := false
 var _ultimate_armed_left := 0.0
@@ -628,6 +631,7 @@ func begin(
 	_initialize_wind()
 	_move_awaiting_host = false
 	_party_ultimate.clear()
+	_party_hp_scale.clear()
 	_party_utility_cooldown.clear()
 	_clear_move_input()
 	_reset_player_poise()
@@ -2905,7 +2909,7 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 	var killed: bool = killed_override
 	if damage_override < 0.0:
 		damage = MATH.rolled_damage(
-			float(_pending_move.get("power", 9.0)),
+			float(_pending_move.get("power", 9.0)) * _gear_power_scale(creature),
 			creature.effective_attack(cfg), _enemy.effective_defence(cfg), _rng.randf(),
 			_moves.power(move_id), type_mult
 		)
@@ -3354,7 +3358,7 @@ static func host_move_profile(moves: RefCounted, block: String, move_id: String,
 		profile["energy_cost"] = float(move.get("energy_cost", 0.0))
 		profile["energy_gain"] = float(move.get("energy_gain", 0.0))
 		profile["power"] = float(move.get("base_power", profile.get("power", 9.0))) * float(move.get("power_multiplier", 1.0))
-		for key: String in ["base_power", "utility", "ultimate", "actor_binding", "action_id", "mastery_rank", "breakthrough_count", "power_multiplier"]:
+		for key: String in ["base_power", "utility", "ultimate", "actor_binding", "action_id", "mastery_rank", "breakthrough_count", "power_multiplier", "gear_ultimate_gain_multiplier"]:
 			if move.has(key): profile[key] = move[key]
 	profile = MATH.with_player_pace(profile, block)
 	if profile.get("slot") == "ultimate":
@@ -3433,6 +3437,8 @@ func _host_resolve_enemy_strike_for_a_participant(cfg: Dictionary, origin: Vecto
 			"type_mult": type_mult,
 			"move_id": move_id,
 			"lunge": float(cfg.get("lunge", 3.4)),
+			"hp_scale": maxf(1.0, float(card.get("hp_scale", 1.0))),
+			"creature_uid": str(card.get("creature_uid", "")),
 		})
 	return true
 
@@ -3468,7 +3474,8 @@ func apply_host_enemy_hit(payload: Dictionary) -> void:
 	var stagger_crit: bool = bool(payload.get("critical", false)) if canonical else _consume_player_stagger_critical()
 	if stagger_crit and not canonical:
 		damage *= _poise_crit_scale()
-	var killed: bool = bool(payload.get("actor_vitals_fainted")) if canonical else creature.take_damage(damage)
+	_adopt_host_hp_scale(creature, payload)
+	var killed: bool = bool(payload.get("actor_vitals_fainted")) if canonical else creature.take_damage(damage / _gear_hp_scale(creature))
 	var stagger_triggered := false if killed else _take_player_poise_damage(damage)
 	var facing: Vector3 = _ally_body.call("facing")
 	_ally_body.call("add_impulse", -facing, float(payload.get("lunge", 3.4)) * 0.4)
@@ -3483,7 +3490,7 @@ func apply_host_enemy_hit(payload: Dictionary) -> void:
 	if incoming.is_empty():
 		incoming = _new_impact(move_id, "quick", damage, float(payload.get("type_mult", 1.0)), stagger_crit, -facing, _ally_body)
 	_present_local_contact(_ally_body.call("centre"), str(incoming.get("weight", "light")) in ["heavy", "ultimate"],
-		VFX.tint_for_type(_moves.type_of(move_id)), damage / maxf(1.0, float(creature.max_hp)), incoming, false)
+		VFX.tint_for_type(_moves.type_of(move_id)), damage / maxf(1.0, float(creature.max_hp) * _gear_hp_scale(creature)), incoming, false)
 	hit_effectiveness.emit(false, TYPE_CHART.classify(float(payload.get("type_mult", 1.0))))
 	if stagger_triggered:
 		_announce_stagger(false)
@@ -4101,6 +4108,81 @@ func active_move_cooldown_multiplier() -> float:
 	return clampf(float(power.get("cooldown_multiplier", 1.0)), 0.1, 1.0)
 
 
+## F33: the active creature's equipped Harness, read from its owner's own
+## record (this process's character). Absent or invalid gear scales by one.
+func _gear_defence_scale(creature: RefCounted) -> float:
+	return float(_gear_modifiers(creature).get("defence", 1.0))
+
+
+## F33: the solo strike's Charm move power. A session's host already froze the
+## Charm into the accepted action (encounter_director), so this applies only
+## where solo rolls its own damage (no encounter link, no host verdict).
+func _gear_power_scale(creature: RefCounted) -> float:
+	if _uses_host_move_start(): return 1.0
+	return float(_gear_modifiers(creature).get("move_power", 1.0))
+
+
+## F33 Harness max HP (creature_gear.hp_scale). Out of a fight, or for a
+## creature not in this fight's party, it is 1: the raise is fight-scoped.
+func _gear_hp_scale(creature: RefCounted) -> float:
+	if creature == null or not is_fighting() or not _party.has(creature): return 1.0
+	var uid := str(creature.get("uid"))
+	if not _party_hp_scale.has(uid):
+		_party_hp_scale[uid] = maxf(1.0, float(_gear_modifiers(creature).get("max_hp", 1.0)))
+	return float(_party_hp_scale[uid])
+
+
+## A session hit carries the host's s for the struck creature; it is the
+## authority (bounded by the authored strongest Harness).
+func _adopt_host_hp_scale(creature: RefCounted, payload: Dictionary) -> void:
+	var value: Variant = payload.get("hp_scale")
+	if creature == null or not (value is float or value is int) or not is_finite(float(value)): return
+	# A hit aimed at a creature switched out meanwhile does not re-scale this one.
+	if not str(payload.get("creature_uid", "")) in ["", str(creature.get("uid"))]: return
+	_party_hp_scale[str(creature.get("uid"))] = clampf(float(value), 1.0, _max_hp_scale())
+
+
+static var _max_hp_scale_cached := 0.0
+
+
+static func _max_hp_scale() -> float:
+	if _max_hp_scale_cached > 0.0: return _max_hp_scale_cached
+	var gear := preload("res://scripts/creatures/creature_gear.gd")
+	var cfg: Dictionary = gear.config()
+	var bonus := 0.0
+	for tier: Dictionary in cfg.get("tiers", []):
+		bonus = maxf(bonus, float(tier.get("bonuses", {}).get("max_hp", 0.0)))
+	_max_hp_scale_cached = 1.0 + clampf(bonus, 0.0, 1.0) * (1.0 + int(cfg.get("max_upgrade", 0)) * float(cfg.get("upgrade_bonus_step", 0.0)))
+	return _max_hp_scale_cached
+
+
+## A flat heal (potion) in shown HP: in a fight it restores amount / s of
+## stored HP, the share of the raised maximum it would restore; returns the
+## shown HP restored. Out of a fight s is 1 and this is creature.heal().
+func scaled_heal(creature: RefCounted, amount: float) -> float:
+	if creature == null: return 0.0
+	var hp_scale := _gear_hp_scale(creature)
+	return float(creature.call("heal", amount / hp_scale)) * hp_scale
+
+
+## The HP a fighting creature shows: [hp, max] x its Harness s in a fight,
+## the stored values otherwise. Stored and saved HP never hold the raise.
+func display_hp(creature: RefCounted) -> Vector2:
+	if creature == null: return Vector2.ZERO
+	var hp_scale := _gear_hp_scale(creature)
+	return Vector2(float(creature.get("hp")) * hp_scale, float(creature.get("max_hp")) * hp_scale)
+
+
+func _gear_modifiers(creature: RefCounted) -> Dictionary:
+	var gear := preload("res://scripts/creatures/creature_gear.gd")
+	var cfg: Dictionary = gear.config()
+	var game := get_node_or_null(^"/root/Game") if is_inside_tree() else null
+	var local: Variant = game.get("local") if game != null else null
+	if creature == null or local == null or not gear._runtime_enabled(cfg): return {}
+	var record := {"redesign_character": local.get("redesign_character")}
+	return gear.modifiers(gear.gear_for(record, str(creature.get("uid"))), cfg)
+
+
 func _uses_host_move_start() -> bool:
 	return _encounter_link != null and _encounter_link.has_method("supports_host_move_start") \
 		and _encounter_link.call("supports_host_move_start") == true \
@@ -4363,14 +4445,14 @@ func _resolve_enemy_strike(cfg: Dictionary, origin: Vector3, facing: Vector3, lu
 	)
 	var damage: float = MATH.rolled_damage(
 		float(cfg.get("power", 8.0)),
-		_enemy.effective_attack(prog_cfg), creature.effective_defence(prog_cfg, is_best, ability),
+		_enemy.effective_attack(prog_cfg), creature.effective_defence(prog_cfg, is_best, ability) * _gear_defence_scale(creature),
 		_rng.randf(), _moves.power(move_id), type_mult
 	)
 	damage = _incoming_owned_damage(damage)
 	var stagger_crit := _consume_player_stagger_critical()
 	if stagger_crit:
 		damage *= _poise_crit_scale()
-	var killed: bool = creature.take_damage(damage)
+	var killed: bool = creature.take_damage(damage / _gear_hp_scale(creature))
 	var stagger_triggered := false if killed else _take_player_poise_damage(damage)
 	# F21#0: the foe's blow freezes a receipt too; weight comes from its move.
 	var incoming := _new_impact(move_id, "quick", damage, type_mult, stagger_crit, facing, _ally_body)
@@ -4384,7 +4466,7 @@ func _resolve_enemy_strike(cfg: Dictionary, origin: Vector3, facing: Vector3, lu
 		_play_combat_flinch(_ally_body, facing)
 	# W09-VFX: the foe's blow carries its own element's hue, sized to the bite it took.
 	_present_local_contact(_ally_body.call("centre"), str(incoming.get("weight", "light")) in ["heavy", "ultimate"],
-		VFX.tint_for_type(_moves.type_of(move_id)), damage / maxf(1.0, float(creature.max_hp)), incoming, false)
+		VFX.tint_for_type(_moves.type_of(move_id)), damage / maxf(1.0, float(creature.max_hp) * _gear_hp_scale(creature)), incoming, false)
 
 	hit_effectiveness.emit(false, TYPE_CHART.classify(type_mult))
 	if stagger_triggered:

@@ -5,6 +5,7 @@ extends RefCounted
 const REPLAY := preload("res://scripts/net/owner_passive_replay.gd")
 const PREP := preload("res://scripts/net/owner_passive_preparation.gd")
 const HASH := preload("res://scripts/net/research_passive_preparation.gd")
+const REWARD := preload("res://scripts/net/reward_delivery.gd")
 const RECORD := preload("res://scripts/net/character_record_rules.gd")
 const E := preload("res://scripts/creatures/essence.gd")
 const EVENT := preload("res://scripts/net/foundation_event.gd")
@@ -12,17 +13,23 @@ const GROOM := preload("res://scripts/net/groom_passive_sync.gd")
 const RESEARCH := preload("res://scripts/creatures/research_actions.gd")
 const CLOUD_MAP := preload("res://scripts/world/cloudreach_map_state.gd")
 const DATA := preload("res://scripts/data/redesign_data.gd")
-const REQUEST_KINDS := ["foundation_request", "altar_spend", "manual_refine", "altar_traits", "portal_arrival"]
-const REQUEST_ACTIONS := ["station_craft", "feast_cook", "feast_feed", "relic_hang", "master_chest", "essence_release"]
+const REQUEST_KINDS := ["foundation_request", "altar_spend", "manual_refine", "altar_traits", "portal_arrival", "waystone_touch", "home_key"]
+const REQUEST_ACTIONS := ["station_craft", "feast_cook", "feast_feed", "relic_hang", "relic_power", "master_chest", "essence_release"]
 const RETAINED_ACTIONS := ["research_event", "master_win", "boss_relic", "combat_mastery", "combat_round_reward", "wild_defeat_share"]
 const MAX_BUFFER := 120000
 const MAX_BATCH := 64
+## Owner: without new acknowledgements for this long, resend the window.
+const RESEND_STALL_S := 1.5
+const CHECKPOINT_RESEND_S := 1.0
 const MAX_PEERS := 4
 const MAX_SPEED := 40.0
 ## The recorder starts before the existing connection+snapshot handshake.
 ## This bounded initial allowance does not replace or extend those deadlines.
 const ADMISSION_ALLOWANCE_S := 80.0
 const INITIAL_POSE_LAG_S := 2.0
+## Hard bound on one peer's pose ring (INITIAL_POSE_LAG_S at 60 physics ticks
+## per second is 120); a slower or faster tick only changes how many fit.
+const MAX_POSE_SAMPLES := 256
 ## A live-body endpoint match is horizontal within this distance...
 const ENDPOINT_HORIZONTAL_M := 2.0
 ## ...and vertical within this one. The owner can report an endpoint while its
@@ -34,6 +41,11 @@ const ENDPOINT_VERTICAL_M := 6.0
 var _session: WeakRef
 var local: Dictionary = {}
 var hosts: Dictionary = {}
+## Host: where this host itself saw each owner's body over the last
+## INITIAL_POSE_LAG_S, per physics tick: peer -> {realm, samples: [[ms, Vector3]]}.
+## A realm change starts a fresh ring; a missing body or a gone/departed stream
+## drops it (_sample_poses), so a pose from another realm or session never counts.
+var _pose_ring: Dictionary = {}
 ## Host: a rejoined stream refused for a real conflict, by character, so the
 ## reason is re-sent to that owner rather than left as silence.
 var refused: Dictionary = {}
@@ -45,6 +57,10 @@ var saving := false
 var _left := 0.0
 var _reported_error := ""
 var _reported_ignore := ""
+## F18 rejoin: a host readmit that reached this owner before its handshake
+## snapshot set the joined world's scope. One, replayed by tick() once the
+## snapshot lands (dropped then if the scope still differs); cleared by reset().
+var held_readmit: Dictionary = {}
 
 class NavigationFlags extends RefCounted:
 	var flags: Dictionary = {}
@@ -60,7 +76,15 @@ func owner() -> Node:
 func _game() -> Node:
 	return owner().call("_game") as Node if owner() != null else null
 
+## The owner's discovery identity: the landmarks this stream was admitted with
+## plus those its own discovery inputs carried, i.e. exactly what the host
+## replays. A landmark that reaches the map with no input (a manual find such as
+## the Meadowhart herd, a story reveal such as Cloudreach sync_navigation) never
+## enters it, so rebase/readmit seeds always match the host's (G1 follow-up).
+## Before a stream is armed, the map's admission landmarks.
 func _discoveries() -> Dictionary:
+	if local.get("discovered") is Dictionary:
+		return (local.discovered as Dictionary).duplicate(true)
 	return owner().call("_groom_service").call("admission_landmarks")
 
 func _projection() -> Dictionary:
@@ -71,7 +95,9 @@ func arm_owner(before: Dictionary, discoveries: Dictionary) -> Dictionary:
 	if cursor.is_empty(): return {}
 	local = {"id": Crypto.new().generate_random_bytes(16).hex_encode(), "character": before.character_id,
 		"base_hash": HASH.fingerprint(before), "sequence": 0, "prefix_hash": cursor.prefix_hash,
-		"inputs": [], "acked": 0, "error": "", "last_settlement": "", "rebase": {}, "admission_pending": true}
+		"inputs": [], "acked": 0, "error": "", "last_settlement": "", "rebase": {}, "admission_pending": true,
+		"hello_pending": true,
+		"discovered": discoveries.duplicate(true)}
 	pending.clear()
 	var game := _game()
 	if game != null:
@@ -85,11 +111,20 @@ func record_input(input: Dictionary) -> void:
 		local.error = "owner_passive_buffer_full"
 		return # Never discard an unacknowledged transition.
 	var packet := input.duplicate(true)
+	if packet.get("op") == "discovery" and packet.get("new_landmarks") is Array and local.get("discovered") is Dictionary:
+		# The host replays only landmarks its set lacks (it refuses a known one).
+		var known: Array = (local.discovered as Dictionary).get(str(packet.get("realm", "")), [])
+		packet.new_landmarks = (packet.new_landmarks as Array).filter(func(id: Variant) -> bool: return not known.has(id))
 	packet.version = 1
 	packet.sequence = int(local.sequence) + 1
 	local.sequence = packet.sequence
 	local.prefix_hash = HASH.fingerprint({"previous": local.prefix_hash, "packet": packet})
 	local.inputs.append(packet)
+	if packet.get("op") == "discovery" and local.get("discovered") is Dictionary and packet.get("new_landmarks") is Array:
+		var known: Array = (local.discovered as Dictionary).get(str(packet.get("realm", "")), []).duplicate()
+		for id: Variant in packet.new_landmarks:
+			if id is String and not known.has(id): known.append(id)
+		local.discovered[str(packet.get("realm", ""))] = known
 
 func record_vitals(row: Dictionary, saved: bool) -> bool:
 	if local.is_empty(): return false
@@ -126,8 +161,32 @@ func record_delivery(row: Dictionary) -> bool:
 		"stacks_hash": HASH.fingerprint({"stacks": row.get("stacks")})})
 	return true
 
+## An applied reward delivery this owner has not yet replayed to the host:
+## the host's admitted record does not hold it yet (owner side only).
+func reward_replay_pending() -> bool:
+	for input: Variant in local.get("inputs", []):
+		if input is Dictionary and input.get("op") == "reward_delivery_applied": return true
+	return false
+
 func recording_active() -> bool:
 	return not local.is_empty() and pending.is_empty() and str(local.error).is_empty()
+
+## A reward delivery waits until the host has first admitted this join's
+## stream (and any readmit settled the payouts its held record already holds,
+## _settle_folded). A rebase never folds payouts, so it does not hold them
+## (re-review M-2); a join whose admission never lands tells the player once.
+const HELLO_WAIT_TELL_MS := 20000
+func delivery_ready() -> bool:
+	if not recording_active(): return false
+	if local.get("hello_pending", false) != true: return true
+	# The clock starts at the first payout held after the snapshot (the dial
+	# and world build are not waiting on admission; review L-1).
+	if not local.has("hello_wait_from_ms"): local.hello_wait_from_ms = Time.get_ticks_msec()
+	if not local.get("hello_wait_told", false) and Time.get_ticks_msec() - int(local.hello_wait_from_ms) > HELLO_WAIT_TELL_MS:
+		local.hello_wait_told = true
+		var game := _game()
+		if game != null and game.has_method("push_world_message"): game.call("push_world_message", "Rewards wait until the host has taken your character in.")
+	return false
 
 func _scope() -> Dictionary:
 	var game := _game()
@@ -136,12 +195,14 @@ func _scope() -> Dictionary:
 		"world_namespace": game.get("world").reward_delivery_namespace,
 		"session_epoch": owner().call("_altar_current_epoch")}
 
-func _send_host(message: Dictionary, stream_id: String = "") -> void:
-	if local.is_empty() or owner() == null or owner().call("snapshot_ready") != true: return
+## False when nothing was sent (no stream, or the join snapshot not applied yet).
+func _send_host(message: Dictionary, stream_id: String = "") -> bool:
+	if local.is_empty() or owner() == null or owner().call("snapshot_ready") != true: return false
 	var packet := _scope()
 	packet.merge(message, true)
 	packet.stream_id = local.id if stream_id.is_empty() else stream_id
 	owner().call("_owner_passive_send_host", packet)
+	return true
 
 func _send_owner(peer: int, stream: Dictionary, message: Dictionary) -> void:
 	var packet := {"character_id": stream.character, "world_id": stream.world_id,
@@ -175,16 +236,20 @@ func admitted(peer: int, summary: Dictionary) -> void:
 	var declared_discoveries: Variant = summary.get("discovered_landmarks", {})
 	var discoveries_match: bool = declared_discoveries is Dictionary \
 		and HASH.fingerprint({"discovered": declared_discoveries}) == HASH.fingerprint({"discovered": discoveries})
-	if E._equivalent(before, declared) and HASH.fingerprint(before) == declaration.get("baseline_hash") and discoveries_match:
+	# Payouts a rejoin folded into the held record that the owner has not yet
+	# confirmed settling: it marks them settled (and saves) on the readmit
+	# before it may process their redelivery, so any such row forces one.
+	var folded: Array = authority.call("unconfirmed_folds", character)
+	if E._equivalent(before, declared) and HASH.fingerprint(before) == declaration.get("baseline_hash") and discoveries_match and folded.is_empty():
 		_add_host(peer, character, str(declaration.id), before, discoveries)
 		return
-	# Rejoin: the owner kept ticking care/travel drift the host never
-	# acknowledged, so the declaration differs from the host's recovered
-	# authority. Re-admit against that authority when the difference is ONLY
-	# in the passive fields owner-passive replay itself governs
-	# (owner_passive_replay.gd `_core`); the owner adopts the host's values
-	# (`readmit`). Any other difference is a real conflict: refuse it with a
-	# reason the owner receives, never silently.
+	# Rejoin: the declaration differs from the host's held record. Passive
+	# care/travel drift the host never acknowledged readmits those fields only
+	# (owner_passive_replay.gd `_core`). Under "guest wins unless behind" (owner
+	# ruling 2026-10-05) a declaration that is not behind was already adopted
+	# by the hello (character_authority.rejoin_admission), so any other
+	# difference here is a declaration that IS behind: the owner adopts the
+	# whole held record (`adopt`). Anything else is refused with a reason.
 	var core_matches: bool = declared is Dictionary and HASH.fingerprint(declared) == declaration.get("baseline_hash") \
 		and E._equivalent(REPLAY._core(before), REPLAY._core(declared))
 	if not core_matches and not (authority.call("pending_creature_vitals", character) as Dictionary).is_empty():
@@ -195,8 +260,22 @@ func admitted(peer: int, summary: Dictionary) -> void:
 		print("[owner-passive] admission of %s waits for its in-flight vitals ACK" % character.left(18))
 		return
 	deferred.erase(character)
-	if not core_matches:
-		var reason := "owner_passive_admission_conflict: %s" % ", ".join(_differing_paths("", before, declared, 0, []).slice(0, 8))
+	if not declared is Dictionary or HASH.fingerprint(declared) != declaration.get("baseline_hash"):
+		var reason := "owner_passive_admission_conflict: declaration does not match its stream baseline"
+		refused[character] = {"id": str(declaration.id), "reason": reason, "peer": peer}
+		push_warning("[owner-passive] refused rejoined stream for %s: %s" % [character.left(18), reason])
+		_send_refusal(peer, character)
+		return
+	var adopt := not E._equivalent(REPLAY._core(before), REPLAY._core(declared))
+	var rejoin_code := str((session.get("last_rejoin_admission") as Dictionary).get(character, "")) if "last_rejoin_admission" in session else ""
+	if adopt and rejoin_code != "held_wins":
+		# Never adopt over a declaration that was not found behind. An open host
+		# transaction at the hello (host_duties_unsettled) kept the held record:
+		# refused as before the ruling; nothing is lost (the owner keeps its
+		# file) and its next rejoin, after the transaction settled, carries a
+		# fresh declaration that wins unless behind. (A parked re-decide judged
+		# the stale hello declaration and could wait forever: review of 40df9738.)
+		var reason := "owner_passive_admission_conflict: %s %s" % [rejoin_code, ", ".join(_differing_paths("", before, declared, 0, []).slice(0, 8))]
 		refused[character] = {"id": str(declaration.id), "reason": reason, "peer": peer}
 		push_warning("[owner-passive] refused rejoined stream for %s: %s" % [character.left(18), reason])
 		_send_refusal(peer, character)
@@ -204,8 +283,11 @@ func admitted(peer: int, summary: Dictionary) -> void:
 	if not _add_host(peer, character, str(declaration.id), before, discoveries): return
 	hosts[character].readmit = {"op": "readmit", "baseline": before.duplicate(true),
 		"baseline_hash": HASH.fingerprint(before), "discoveries_hash": HASH.fingerprint({"discovered": discoveries}),
-		"discovered": discoveries.duplicate(true)}
-	print("[owner-passive] re-admitting %s on the host's recovered authority (passive drift only)" % character.left(18))
+		"discovered": discoveries.duplicate(true), "adopt": adopt, "folded": folded}
+	if adopt:
+		print("[owner-passive] %s is behind this world's record; it adopts the held record: %s" % [character.left(18), ", ".join(_differing_paths("", before, declared, 0, []).slice(0, 8))])
+	else:
+		print("[owner-passive] re-admitting %s on the host's recovered authority (passive drift only)" % character.left(18))
 	_send_owner(peer, hosts[character], hosts[character].readmit)
 
 
@@ -213,6 +295,7 @@ func admitted(peer: int, summary: Dictionary) -> void:
 ## stream stays for `_recovery_admitted`; anything else would shadow the
 ## owner's next stream forever (re-proof: rejoin left admission pending).
 func peer_departed(peer: int) -> void:
+	_pose_ring.erase(peer)
 	for character: String in deferred.keys():
 		if int(deferred[character].get("peer", 0)) == peer: deferred.erase(character)
 	for character: String in hosts.keys():
@@ -353,6 +436,8 @@ func receive_host(peer: int, packet: Dictionary) -> void:
 		if stream.is_empty(): return
 	if stream.has("readmit") and stream.peer == peer and stream.id == packet.get("stream_id"):
 		if packet.get("op") == "readmitted" and packet.get("baseline_hash") == stream.readmit.baseline_hash:
+			# The owner saved its settlement of the folded rows: they leave the record.
+			owner().get("_character_authority").call("confirm_folds", str(stream.character), stream.readmit.get("folded", []))
 			stream.erase("readmit")
 			_send_owner(peer, stream, {"op": "inputs_ack", "sequence": stream.cursor.sequence})
 		else:
@@ -373,26 +458,84 @@ func receive_host(peer: int, packet: Dictionary) -> void:
 
 func _context(peer: int, stream: Dictionary) -> Dictionary:
 	var session := owner()
-	var registry: RefCounted = session.call("registry")
-	var realm := ""
-	for row: Dictionary in registry.call("rows"):
-		if row.get("peer_id") == peer: realm = str(row.get("realm", ""))
+	var realm := _peer_realm(peer)
 	var map: RefCounted = _game().get("local").call("map_for", realm)
 	var definitions := GROOM.landmark_definitions(map, realm, session.call("_foundation_flags", peer),
 		_game().get("world").flags.call("all_set"))
 	var context := {"realm": realm, "landmarks": definitions, "max_speed": MAX_SPEED,
 		"max_elapsed": ADMISSION_ALLOWANCE_S + float(Time.get_ticks_msec() - int(stream.started_ms)) / 1000.0}
-	var lifecycle := session.get_node_or_null(^"FoundationComposition/TravelLifecycle")
-	var actor: CharacterBody3D = lifecycle.call("remote_body", peer) if lifecycle != null else null
-	var shell: Node3D = session.call("_portal_world_node", realm)
-	if actor != null and shell != null and shell.is_ancestor_of(actor):
-		context.initial_position = actor.global_position
+	var body: Variant = _host_body_position(peer, realm)
+	if body is Vector3:
+		context.initial_position = body
 		context.initial_max_distance = MAX_SPEED * INITIAL_POSE_LAG_S
 	return context
 
+## The host's own view of this peer's body in `realm`, or null without one.
+func _host_body_position(peer: int, realm: String) -> Variant:
+	var session := owner()
+	var lifecycle := session.get_node_or_null(^"FoundationComposition/TravelLifecycle")
+	var actor: CharacterBody3D = lifecycle.call("remote_body", peer) if lifecycle != null else null
+	var shell: Node3D = session.call("_portal_world_node", realm)
+	if actor != null and shell != null and shell.is_ancestor_of(actor): return actor.global_position
+	return null
+
+func _peer_realm(peer: int) -> String:
+	for row: Dictionary in owner().call("registry").call("rows"):
+		if row.get("peer_id") == peer: return str(row.get("realm", ""))
+	return ""
+
+## Host, every physics tick: record each streaming owner's body.
+func _sample_poses() -> void:
+	var session := owner()
+	if session == null or not session.is_inside_tree() or session.call("is_host") != true:
+		_pose_ring.clear()
+		return
+	var now := Time.get_ticks_msec()
+	var live: Dictionary = {}
+	for character: String in hosts:
+		var stream: Dictionary = hosts[character]
+		if stream.get("departed") == true or not stream.get("peer") is int: continue
+		var peer: int = stream.peer
+		live[peer] = true
+		var realm := _peer_realm(peer)
+		var body: Variant = _host_body_position(peer, realm)
+		if body is Vector3: _record_pose(peer, realm, body, now)
+		else: _pose_ring.erase(peer)
+	for peer: Variant in _pose_ring.keys():
+		if not live.has(peer): _pose_ring.erase(peer)
+
+func _record_pose(peer: int, realm: String, position: Vector3, now_ms: int) -> void:
+	var ring: Dictionary = _pose_ring.get(peer, {})
+	if ring.get("realm") != realm: ring = {"realm": realm, "samples": []}
+	var samples: Array = ring.samples
+	samples.append([now_ms, position])
+	var oldest := now_ms - int(INITIAL_POSE_LAG_S * 1000.0)
+	while not samples.is_empty() and (int(samples[0][0]) < oldest or samples.size() > MAX_POSE_SAMPLES):
+		samples.pop_front()
+	_pose_ring[peer] = ring
+
+## The first discovery of a stream may lag the guest by INITIAL_POSE_LAG_S
+## (MAX_SPEED x lag of walking). Across a teleport (fly landing, Home Key) the
+## current body alone breaks that allowance, so a pose the host's own body held
+## within the same window, in the same realm, counts too: never any pose the
+## host did not observe, never a wider distance.
+func _pose_observed_near(peer: int, context: Dictionary, at: Vector3) -> bool:
+	var limit := float(context.initial_max_distance)
+	if (context.initial_position as Vector3).distance_to(at) <= limit: return true
+	var ring: Dictionary = _pose_ring.get(peer, {})
+	if ring.get("realm") != context.get("realm"): return false
+	var oldest := Time.get_ticks_msec() - int(INITIAL_POSE_LAG_S * 1000.0)
+	for sample: Array in ring.get("samples", []):
+		if int(sample[0]) >= oldest and (sample[1] as Vector3).distance_to(at) <= limit: return true
+	return false
+
 ## A host-accepted physical placement explains one same-stream false travel
 ## baseline. Peer inputs cannot create this capability or choose its anchor.
-func travel_reset_confirmed(peer: int, realm: String, anchor: Vector3) -> void:
+## A fly landing names the guest's own claimed pose, matched exactly. An
+## accepted portal/Home Key arrival (arrival_endpoint) names the host's view
+## of the guest's body; the guest's own endpoint is bound only by the live
+## host body (as every reset is), not by that stale replica.
+func travel_reset_confirmed(peer: int, realm: String, anchor: Vector3, arrival_endpoint: bool = false) -> void:
 	if owner() == null or owner().call("is_host") != true or not anchor.is_finite(): return
 	var character: String = owner().call("_authority_character", peer)
 	var stream: Dictionary = hosts.get(character, {})
@@ -403,7 +546,7 @@ func travel_reset_confirmed(peer: int, realm: String, anchor: Vector3) -> void:
 	var context := _context(peer, stream)
 	if context.realm != realm or not context.get("initial_position") is Vector3: return
 	stream.travel_reset = {"peer": peer, "stream_id": stream.id, "epoch": stream.epoch, "realm": realm,
-		"anchor": [anchor.x, anchor.y, anchor.z], "sequence": stream.cursor.sequence}
+		"anchor": [anchor.x, anchor.y, anchor.z], "sequence": stream.cursor.sequence, "arrival": arrival_endpoint}
 
 func _reset_matches(peer: int, stream: Dictionary, input: Dictionary, context: Dictionary) -> bool:
 	var proof: Dictionary = stream.get("travel_reset", {})
@@ -411,9 +554,13 @@ func _reset_matches(peer: int, stream: Dictionary, input: Dictionary, context: D
 		or stream.cursor.travel_valid != true or proof.peer != peer or proof.stream_id != stream.id \
 		or proof.epoch != stream.epoch or proof.realm != context.realm or input.get("realm") != proof.realm \
 		or int(input.sequence) <= int(proof.sequence) or not E._equivalent(input.get("from"), stream.cursor.position) \
-		or not E._equivalent(input.get("to"), proof.anchor) or not REPLAY._position(input.get("to")) \
+		or not REPLAY._position(input.get("to")) or not REPLAY._position(proof.anchor) \
 		or not context.get("initial_position") is Vector3: return false
 	var at := Vector3(float(input.to[0]), float(input.to[1]), float(input.to[2]))
+	# An arrival proof's anchor is the host's replica at mint time; the guest
+	# reports where it stands at its next poll. The live-body check below is
+	# the bound for it. A fly proof names the guest's own claim: exact.
+	if proof.get("arrival") != true and not E._equivalent(input.get("to"), proof.anchor): return false
 	# Reuse the existing live-body discontinuity endpoint tolerance.
 	return _endpoint_matches(context.initial_position, at)
 
@@ -424,28 +571,56 @@ static func _endpoint_matches(host_body: Vector3, endpoint: Vector3) -> bool:
 func _inputs_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 	if not str(stream.error).is_empty() or not packet.get("inputs") is Array \
 		or packet.inputs.is_empty() or packet.inputs.size() > MAX_BATCH: return
+	# F01#6b: condition ticks of this batch apply to ONE private copy of the
+	# cursor (REPLAY.apply_condition_owned). It becomes the stream's cursor only
+	# after its record is validated (_settle_working): before any other input
+	# and on every exit, so the cursor never holds an unvalidated state.
+	var batch := {"working": {}}
+	var completed := _inputs_host_batch(peer, stream, packet, batch)
+	if not _settle_working(stream, batch) or not completed or not str(stream.error).is_empty(): return
+	_send_owner(peer, stream, {"op": "inputs_ack", "sequence": stream.cursor.sequence})
+	if stream.checkpoint.get("recovery") == true and not stream.checkpoint.has("frozen"):
+		_recovery_freeze(peer, stream)
+	if not stream.checkpoint.is_empty() and stream.checkpoint.has("frozen"):
+		_prepare_host(peer, stream)
+
+
+func _settle_working(stream: Dictionary, batch: Dictionary) -> bool:
+	if (batch.working as Dictionary).is_empty(): return true
+	var working: Dictionary = batch.working
+	batch.working = {}
+	if not REPLAY._record_valid(working.state):
+		stream.error = "owner_passive_invalid_result"
+		return false
+	stream.cursor = working
+	return true
+
+
+func _inputs_host_batch(peer: int, stream: Dictionary, packet: Dictionary, batch: Dictionary) -> bool:
 	var context := _context(peer, stream)
 	for input: Variant in packet.inputs:
+		if input is Dictionary and input.get("op") != "condition" and not _settle_working(stream, batch): return false
 		if not input is Dictionary or not input.get("sequence") is int:
-			stream.error = "owner_passive_invalid_input"; return
+			stream.error = "owner_passive_invalid_input"; return false
 		var sequence: int = input.sequence
 		var digest := HASH.fingerprint(input)
-		if sequence <= int(stream.cursor.sequence):
+		var at_sequence: int = int(batch.working.sequence) if not (batch.working as Dictionary).is_empty() else int(stream.cursor.sequence)
+		if sequence <= at_sequence:
 			if stream.seen.get(sequence) != digest: stream.error = "owner_passive_conflicting_duplicate"
-			if not str(stream.error).is_empty(): return
+			if not str(stream.error).is_empty(): return false
 			continue
 		if stream.seen.size() >= MAX_BUFFER:
-			stream.error = "owner_passive_host_buffer_full"; return
+			stream.error = "owner_passive_host_buffer_full"; return false
 		if input.get("op") == "discovery" and (stream.cursor.travel_valid != true or stream.cursor.realm != context.realm):
 			var at: Variant = input.get("to")
 			if not context.get("initial_position") is Vector3:
 				_note_host(stream, "input %d waits: no host body for this owner in %s" % [sequence, str(context.realm)])
-				return # Realm body has not arrived; retry this exact prefix.
+				return false # Realm body has not arrived; retry this exact prefix.
 			if not REPLAY._position(at) \
-				or context.initial_position.distance_to(Vector3(float(at[0]), float(at[1]), float(at[2]))) > float(context.initial_max_distance):
+				or not _pose_observed_near(peer, context, Vector3(float(at[0]), float(at[1]), float(at[2]))):
 				stream.first_input_refusal = {"input": input.duplicate(true), "context": context.duplicate(true),
 					"cursor_sequence": stream.cursor.sequence, "sampled_ms": Time.get_ticks_msec()}
-				stream.error = "owner_passive_initial_pose_unconfirmed"; return
+				stream.error = "owner_passive_initial_pose_unconfirmed"; return false
 		var input_context := context.duplicate()
 		var reset: bool = _reset_matches(peer, stream, input, context)
 		if reset:
@@ -460,46 +635,46 @@ func _inputs_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 				if not context.get("initial_position") is Vector3 or not _endpoint_matches(context.initial_position, to):
 					_note_host(stream, "input %d waits: discontinuity to %s, host body at %s" % [sequence, str(to),
 						str(context.get("initial_position", "none"))])
-					return
+					return false
 				input_context.discontinuity_authorized = true
 		var applied: Dictionary
 		if input.get("op") in ["actor_vitals_applied", "actor_vitals_saved"]:
-			if not owner().has_method("_owner_passive_actor_vitals_context"): return
+			if not owner().has_method("_owner_passive_actor_vitals_context"): return false
 			var proof: Dictionary = owner().call("_owner_passive_actor_vitals_context", peer, input)
 			if proof.is_empty():
 				_note_host(stream, "input %d waits: %s has no host vitals proof yet" % [sequence, str(input.op)])
-				return # Exact saved op waits the existing authenticated world ACK.
+				return false # Exact saved op waits the existing authenticated world ACK.
 			if input.op == "actor_vitals_applied" and proof.get("revision_before") != stream.revision:
-				stream.error = "owner_passive_vitals_revision_conflict"; return
+				stream.error = "owner_passive_vitals_revision_conflict"; return false
 			if input.op == "actor_vitals_saved" and int(proof.row.character_revision) > int(stream.revision):
-				stream.error = "owner_passive_vitals_saved_before_applied"; return
+				stream.error = "owner_passive_vitals_saved_before_applied"; return false
 			applied = REPLAY.apply_vitals(stream.cursor, input, proof)
 		elif input.get("op") == "reward_delivery_applied":
 			var row: Variant = _game().get("world").reward_deliveries.get(input.get("delivery_id"))
 			applied = REPLAY.apply_delivery(stream.cursor, input, row)
 			if applied.get("ok") == true and owner().get("_character_authority").call("apply_owner_reward_delivery",
-				stream.character, stream.cursor.base, applied.cursor.base) != true:
-				stream.error = "owner_passive_delivery_authority_changed"; return
+				stream.character, stream.cursor.base, applied.cursor.base, str(input.get("delivery_id", ""))) != true:
+				stream.error = "owner_passive_delivery_authority_changed"; return false
 			if applied.get("ok") == true and row is Dictionary:
 				# Ruling (b): a batched gather is now credited; its row may be
 				# pruned once the guest's ACK has also landed.
 				var gather_writer: Node = owner().get_node_or_null(^"LedgerRpc")
 				if gather_writer != null: gather_writer.call("mark_gather_replayed", stream.character, row)
+		elif input.get("op") == "condition":
+			if (batch.working as Dictionary).is_empty(): batch.working = stream.cursor.duplicate(true)
+			var reason := REPLAY.apply_condition_owned(batch.working, input, input_context)
+			applied = {"ok": true, "code": "ok"} if reason.is_empty() else {"ok": false, "code": reason}
 		else:
 			applied = REPLAY.apply(stream.cursor, input, input_context)
 		if applied.get("ok") != true:
 			stream.first_input_refusal = {"input": input.duplicate(true), "context": input_context.duplicate(true),
 				"cursor_sequence": stream.cursor.sequence, "sampled_ms": Time.get_ticks_msec()}
-			stream.error = str(applied.get("code", "owner_passive_replay_refused")); return
-		stream.cursor = applied.cursor
+			stream.error = str(applied.get("code", "owner_passive_replay_refused")); return false
+		if input.get("op") != "condition": stream.cursor = applied.cursor
 		if input.get("op") == "actor_vitals_applied": stream.revision = applied.revision
 		stream.seen[sequence] = digest
 		if reset: stream.erase("travel_reset") # Only successful exact replay consumes it.
-	_send_owner(peer, stream, {"op": "inputs_ack", "sequence": stream.cursor.sequence})
-	if stream.checkpoint.get("recovery") == true and not stream.checkpoint.has("frozen"):
-		_recovery_freeze(peer, stream)
-	if not stream.checkpoint.is_empty() and stream.checkpoint.has("frozen"):
-		_prepare_host(peer, stream)
+	return true
 
 func gate(peer: int, action: String, intent: Dictionary, event: Dictionary) -> Dictionary:
 	var session := owner()
@@ -938,7 +1113,13 @@ func _completion(peer: int, stream: Dictionary) -> void:
 	var op := "journaled"
 	if checkpoint.get("no_effect") == true: op = "no_effect"
 	elif checkpoint.result.get("code") == "research_no_progress": op = "no_progress"
-	_send_owner(peer, stream, {"op": op, "id": checkpoint.id, "hash": checkpoint.prepared.hash, "result": checkpoint.result})
+	var packet := {"op": op, "id": checkpoint.id, "hash": checkpoint.prepared.hash, "result": checkpoint.result}
+	# The host's proven first-arrival navigation reveal, sent exactly when its
+	# _rebase_host will seed from it; the owner adopts it, never its own map.
+	if checkpoint.get("source_kind") == "portal_arrival" and checkpoint.get("grounded") == true \
+		and checkpoint.get("arrival_discoveries") is Dictionary and checkpoint.result.get("durable") == true:
+		packet["arrival_discoveries"] = checkpoint.arrival_discoveries.duplicate(true)
+	_send_owner(peer, stream, packet)
 
 func receive_owner(packet: Dictionary) -> void:
 	if local.is_empty():
@@ -947,6 +1128,9 @@ func receive_owner(packet: Dictionary) -> void:
 	var scope := _scope()
 	for field: String in scope:
 		if packet.get(field) != scope[field]:
+			if packet.get("op") == "readmit" and owner().call("handshake_snapshot_applied") != true:
+				held_readmit = packet.duplicate(true) # This world's scope is not set yet.
+				return
 			_note_ignored("%s for another %s" % [str(packet.get("op", "")), field])
 			return
 	if packet.get("stream_id") != local.id and packet.get("op") != "inputs_ack":
@@ -1033,6 +1217,8 @@ func receive_owner(packet: Dictionary) -> void:
 		"inputs_ack":
 			if not packet.get("sequence") is int or packet.sequence < local.acked or packet.sequence > local.sequence: return
 			local.admission_pending = false
+			local.hello_pending = false
+			if packet.sequence > int(local.acked): local.ack_progress_ms = Time.get_ticks_msec()
 			local.acked = packet.sequence
 			while not local.inputs.is_empty() and int(local.inputs[0].sequence) <= int(local.acked): local.inputs.pop_front()
 		"freeze":
@@ -1076,6 +1262,10 @@ func receive_owner(packet: Dictionary) -> void:
 				or prepared.world_id != scope.world_id or prepared.final_sequence != pending.sequence \
 				or prepared.input_prefix_hash != pending.prefix_hash or HASH.fingerprint(prepared.after) != pending.hash: return
 			if pending.has("prepared") and not E._equivalent(pending.prepared, prepared): return
+			# F01#6b: the host answers every resent "frozen" with this same
+			# preparation; a duplicate must not move a saving/saved owner back
+			# to "save" (each such regress was another character save round).
+			if pending.has("prepared") and pending.phase != "frozen": return
 			pending.prepared = prepared.duplicate(true)
 			pending.retained = retained.duplicate(true)
 			pending.phase = "save"
@@ -1083,6 +1273,11 @@ func receive_owner(packet: Dictionary) -> void:
 		"journaled":
 			if not pending.is_empty() and pending.id == packet.get("id"):
 				pending.phase = "journaled" # Existing original owner-row settlement releases the fence.
+			# The host's proven arrival reveal for this stream's arrival receipt;
+			# used only by the settlement of that exact receipt (owner_settled).
+			var proven: Variant = packet.get("arrival_discoveries")
+			if proven is Dictionary and packet.get("result", {}).get("receipt") is String:
+				local.arrival_proof = {"receipt": packet.result.receipt, "discovered": (proven as Dictionary).duplicate(true)}
 		"no_progress", "no_effect":
 			if pending.is_empty() or pending.id != packet.get("id") or not pending.has("prepared") \
 				or packet.get("hash") != pending.prepared.hash \
@@ -1112,6 +1307,7 @@ func _retry_owner() -> void:
 	if pending.is_empty() or pending.scope != _scope() or not str(local.error).is_empty(): return
 	_flush()
 	if pending.phase == "frozen":
+		if not _resend_due("frozen"): return
 		_send_host({"op": "frozen", "id": pending.id, "sequence": pending.sequence,
 			"prefix_hash": pending.prefix_hash, "hash": pending.hash})
 	elif pending.phase == "save":
@@ -1129,12 +1325,23 @@ func _retry_owner() -> void:
 		if not PREP.exact(_projection(), pending.prepared.after):
 			local.error = "owner_passive_owner_changed_after_save"; return
 		pending.phase = "saved"
-	if pending.phase == "saved":
+	if pending.phase == "saved" and _resend_due("saved"):
 		_send_host({"op": "saved", "id": pending.id, "hash": pending.prepared.hash, "saved": true})
 
+
+## F01#6b: a checkpoint message goes once when its phase starts, then at most
+## once per CHECKPOINT_RESEND_S while the host has not answered (reliable
+## transport; the resend only covers a host that dropped the stream).
+func _resend_due(phase: String) -> bool:
+	var now := Time.get_ticks_msec()
+	if pending.get("sent_phase") == phase and now - int(pending.get("sent_ms", 0)) < int(CHECKPOINT_RESEND_S * 1000.0): return false
+	pending.sent_phase = phase
+	pending.sent_ms = now
+	return true
+
 ## Owner: the host re-admitted this stream on its recovered authority (see
-## `admitted`). Adopt the host's passive values, which are the only fields that
-## may differ, and restart this stream's cursor on that baseline. Inputs
+## `admitted`). Adopt the host's passive values (or, marked `adopt`, its whole
+## held record) and restart this stream's cursor on that baseline. Inputs
 ## recorded on the old base since joining are dropped with it.
 func _readmit_owner(packet: Dictionary) -> void:
 	var baseline: Variant = packet.get("baseline")
@@ -1147,6 +1354,22 @@ func _readmit_owner(packet: Dictionary) -> void:
 	# carry them; anything else must already match this owner's.
 	var held: Variant = packet.get("discovered")
 	var adopt: bool = held is Dictionary and HASH.fingerprint({"discovered": held}) == packet.get("discoveries_hash")
+	# A durable change (adoption, settled payouts) is saved before "readmitted"
+	# (re-review M-1); a failed save puts the owner back and the host resends.
+	var durable: bool = packet.get("adopt") == true or not (packet.get("folded", []) as Array).is_empty()
+	var undo := _owner_undo_point() if durable and game != null else {}
+	var adopted := false
+	if pending.is_empty() and game != null and packet.get("adopt") == true \
+		and not E._equivalent(REPLAY._core(baseline), REPLAY._core(_projection())):
+		# Owner ruling (STATE §0): this world's held record wins; adopt it whole.
+		adopted = true
+		var outcome := _adopt_held_record(baseline)
+		if outcome != "ok":
+			_note_ignored("held-record adoption deferred: " + outcome)
+			if not local.get("adopt_wait_told", false):
+				local.adopt_wait_told = true
+				game.call("push_world_message", "Joining this world's record of your character… (" + outcome + ")")
+			return
 	if not pending.is_empty() or game == null \
 		or (not adopt and HASH.fingerprint({"discovered": _discoveries()}) != packet.get("discoveries_hash")) \
 		or not E._equivalent(REPLAY._core(baseline), REPLAY._core(_projection())):
@@ -1155,22 +1378,25 @@ func _readmit_owner(packet: Dictionary) -> void:
 	var members: Dictionary = {}
 	for member: RefCounted in game.get("party").call("members"): members[str(member.get("uid"))] = member
 	for card: Dictionary in baseline.party:
-		if members.get(str(card.get("uid", ""))) == null: return
-	var previous_landmarks := _discoveries()
-	if adopt and HASH.fingerprint({"discovered": previous_landmarks}) != packet.discoveries_hash:
-		if owner().call("_groom_service").call("adopt_landmarks", held) != true \
-			or HASH.fingerprint({"discovered": _discoveries()}) != packet.discoveries_hash:
-			owner().call("_groom_service").call("adopt_landmarks", previous_landmarks)
-			_note_ignored("readmit whose landmarks this owner cannot adopt")
+		if members.get(str(card.get("uid", ""))) == null:
+			_owner_undo(undo)
+			_note_ignored("readmit naming creature %s this owner does not hold" % str(card.get("uid", "")))
 			return
+	if adopt:
+		local.discovered = (held as Dictionary).duplicate(true) # The host's held set wins; maps untouched.
 	for card: Dictionary in baseline.party:
 		var member: RefCounted = members.get(str(card.get("uid", "")))
 		for field: String in REPLAY.PASSIVE_FIELDS:
 			if card.has(field) and field in member: member.set(field, card[field])
 	if not E._equivalent(_projection(), baseline):
+		_owner_undo(undo) # never left adopted, unsaved and unsettled (review L4)
 		local.admission_refused = "owner_passive_readmit_mismatch"
 		local.error = local.admission_refused
 		push_warning("owner passive readmit did not reproduce the host's baseline")
+		return
+	if (_settle_folded(packet.get("folded", [])) > 0 or adopted) and not _save_owner_now():
+		_owner_undo(undo)
+		_note_ignored("readmit not saved; the host resends it")
 		return
 	var cursor := REPLAY.begin(baseline, _discoveries())
 	if cursor.is_empty(): return
@@ -1179,6 +1405,7 @@ func _readmit_owner(packet: Dictionary) -> void:
 	local.prefix_hash = cursor.prefix_hash
 	local.inputs = []
 	local.acked = 0
+	local.inflight_through = 0
 	local.vitals_seen = {}
 	local.readmitted_hash = packet.baseline_hash
 	# A cursor restarted on a new base restarts the travel/discovery clocks,
@@ -1187,6 +1414,181 @@ func _readmit_owner(packet: Dictionary) -> void:
 	game.set("_travel_pos_valid", false)
 	game.set("_discovery_elapsed", 0.0)
 	_send_host({"op": "readmitted", "baseline_hash": packet.baseline_hash})
+
+
+## The owner's whole state and creature instances, to put back exactly.
+func _owner_undo_point() -> Dictionary:
+	var party: RefCounted = _game().get("party")
+	var player: RefCounted = _game().get("local")
+	if party == null or player == null or not player.has_method("save_data"): return {}
+	var members := {}
+	for member: RefCounted in party.call("members"): members[str(member.get("uid"))] = member
+	var active: Variant = party.call("at", int(party.get("_active"))) if "_active" in party else null
+	var best: Variant = party.call("at", int(party.get("_best"))) if "_best" in party else null
+	return {"data": player.call("save_data"), "members": members,
+		"active": str((active as RefCounted).get("uid")) if active is RefCounted else "",
+		"best": str((best as RefCounted).get("uid")) if best is RefCounted else ""}
+
+
+func _owner_undo(undo: Dictionary) -> void:
+	if undo.is_empty(): return
+	var party: RefCounted = _game().get("party")
+	var ordered := _load_keeping_instances(_game().get("local"), party, undo.data, undo.members)
+	var uids := ordered.map(func(m: RefCounted) -> String: return str(m.get("uid")))
+	party.set("_active", maxi(0, uids.find(undo.active)))
+	party.set("_best", uids.find(undo.best) if not str(undo.best).is_empty() else -1)
+	party.set("revision", int(party.get("revision")) + 1)
+
+
+func _save_owner_now() -> bool:
+	var saver: RefCounted = _game().get("save_system")
+	if saver == null: return false
+	if saver.has_method("finish_fallback"): saver.call("finish_fallback") # as the freeze path does
+	if saver.call("fallback_busy") == true: return false
+	saving = true
+	var saved: bool = saver.call("save_character_prepared", _game(), str(local.character)) == true
+	saving = false
+	return saved
+
+
+## Owner, on every readmit: the payout rows the host's held record already
+## holds while their world row is pending are marked settled here, before this
+## owner may process their redelivery (delivery waits for admission,
+## session._owner_passive_delivery_ready), so it acknowledges without paying a
+## second time (re-review H1). A row this owner already settled is untouched.
+func _settle_folded(folded: Variant) -> int:
+	if not folded is Array or (folded as Array).is_empty(): return 0
+	var player: RefCounted = _game().get("local")
+	if player == null or not player.get("satchel_escrow") is Dictionary: return 0
+	var escrow: Dictionary = player.get("satchel_escrow")
+	var settled_count := 0
+	for row: Variant in folded:
+		if not row is Dictionary or str(row.get("character_id", "")) != str(player.get("character_id")) \
+			or str(row.get("delivery_id", "")) != REWARD.delivery_id(str(row.get("world_namespace", "")), str(row.get("source", "")), str(row.get("character_id", ""))): continue
+		if escrow.get(row.delivery_id) is Dictionary and str(escrow[row.delivery_id].get("status", "")) == "settled": continue
+		var settled: Dictionary = (row as Dictionary).duplicate(true)
+		settled.kind = "reward_delivery"
+		settled.status = "settled"
+		var flag := str(settled.get("completion_flag", ""))
+		if not flag.is_empty() and player.get("flags") != null: (player.get("flags") as RefCounted).call("set_flag", flag, true)
+		settled.erase("stacks")
+		settled.erase("completion_flag")
+		settled.erase("status_ms")
+		escrow[row.delivery_id] = settled
+		settled_count += 1
+	if settled_count > 0: print("[owner-passive] %d payout(s) this world already holds marked settled" % settled_count)
+	return settled_count
+
+
+## Owner, on a readmit marked `adopt`: replace this character's portable
+## fields with the host's held record (party, satchel, gear, loadouts,
+## receipts, portal/vitals escrow, heart selection). Creatures the record keeps
+## are updated in place, so a deployed body still drives the same instance; a
+## creature the record lacks (an offline catch) leaves the party, its body put
+## away first. (The payouts the record holds are settled by _settle_folded.)
+## All or nothing: a failed attempt restores the owner's state exactly (review
+## M2). Returns "ok", or why it must wait (the host resends the readmit).
+const _RUNTIME_ONLY := ["active_buffs", "combat_override"] # never saved; kept per instance
+
+func _adopt_held_record(baseline: Dictionary) -> String:
+	var game := _game()
+	var player: RefCounted = game.get("local")
+	var party: RefCounted = game.get("party")
+	if player == null or party == null: return "no local character"
+	var inventory: RefCounted = player.get("inventory")
+	if party.call("owner_mutation_blocked") == true \
+		or (inventory.has_method("_owner_mutation_blocked") and inventory.call("_owner_mutation_blocked") == true):
+		return "a saved companion decision is still settling"
+	var kept := {}
+	for card: Variant in baseline.get("party", []):
+		if card is Dictionary: kept[str(card.get("uid", ""))] = true
+	# Bodies of creatures the record lacks are put away only once it applies
+	# (review L4). A freed body is checked before its type (review L3).
+	var away: Array = []
+	for director: Node in _portal_directors(game):
+		var ally: Variant = director.get("_ally")
+		var body: Variant = director.get("_ally_body")
+		if ally is RefCounted and is_instance_valid(body) and not kept.has(str((ally as RefCounted).get("uid"))):
+			if not _can_dismiss(director): return "a companion this world does not know is in a fight"
+			away.append(director)
+	var restore: Dictionary = player.call("save_data")
+	var data: Dictionary = restore.duplicate(true)
+	var energy := {}
+	for card: Dictionary in data.get("party", []): energy[str(card.get("uid", ""))] = card.get("energy", 0.0)
+	var cards: Array = []
+	for card: Dictionary in baseline.party:
+		var copy := card.duplicate(true)
+		if energy.has(str(copy.get("uid", ""))): copy.energy = energy[str(copy.uid)]
+		cards.append(copy)
+	data.party = cards
+	data.redesign_character = (baseline.redesign_character as Dictionary).duplicate(true)
+	data.inventory = (baseline.inventory as Array).duplicate(true)
+	data.equipment = (baseline.equipment as Dictionary).duplicate(true)
+	data.realm_hearts = (baseline.realm_hearts as Dictionary).duplicate(true)
+	# The escrow rows the projection carries come from the held record; every
+	# other row (not portable authority) stays the owner's.
+	var mine: Dictionary = RECORD.portable_projection({"character_id": data.get("character_id"), "satchel_escrow": data.get("satchel_escrow", {})})
+	var escrow := {}
+	for key: Variant in data.get("satchel_escrow", {}):
+		if not (mine.portal_escrow as Dictionary).has(key) and not (mine.vitals_escrow as Dictionary).has(key): escrow[key] = data.satchel_escrow[key]
+	for key: Variant in baseline.get("portal_escrow", {}): escrow[key] = baseline.portal_escrow[key]
+	for key: Variant in baseline.get("vitals_escrow", {}): escrow[key] = baseline.vitals_escrow[key]
+	data.satchel_escrow = escrow
+	var before := {}
+	for member: RefCounted in party.call("members"): before[str(member.get("uid"))] = member
+	var active_uid := str((party.call("at", int(party.get("_active"))) as RefCounted).get("uid")) if party.call("at", int(party.get("_active"))) != null else ""
+	var best_uid := str((party.call("at", int(party.get("_best"))) as RefCounted).get("uid")) if party.call("at", int(party.get("_best"))) != null else ""
+	var ordered := _load_keeping_instances(player, party, data, before)
+	var uids := ordered.map(func(m: RefCounted) -> String: return str(m.get("uid")))
+	party.set("_active", maxi(0, uids.find(active_uid)))
+	party.set("_best", uids.find(best_uid) if not best_uid.is_empty() else -1)
+	party.set("revision", int(party.get("revision")) + 1)
+	var refused := "" if E._equivalent(REPLAY._core(_projection()), REPLAY._core(baseline)) else "the record could not be applied here"
+	for director: Node in away:
+		if refused.is_empty() and director.call("dismiss_active_creature") != true: refused = "a companion this world does not know is in a fight"
+	if not refused.is_empty():
+		var back := _load_keeping_instances(player, party, restore, before)
+		var back_uids := back.map(func(m: RefCounted) -> String: return str(m.get("uid")))
+		party.set("_active", maxi(0, back_uids.find(active_uid)))
+		party.set("_best", back_uids.find(best_uid) if not best_uid.is_empty() else -1)
+		party.set("revision", int(party.get("revision")) + 1)
+		return refused
+	if not local.get("adopt_told", false): # once, even if a failed save retries it (review L-2)
+		local.adopt_told = true
+		game.call("push_world_message", "This world keeps your character as it was here; changes made elsewhere are not used in it.")
+	print("[owner-passive] adopted this world's held record (%d creature(s))" % ordered.size())
+	return "ok"
+
+
+## The director would put its creature away now (the same refusals as
+## dismiss_active_creature), checked before anything changes (review L-2).
+static func _can_dismiss(director: Node) -> bool:
+	var manager: Variant = director.get("_manager")
+	if manager is Object and (manager as Object).has_method("is_fighting") and manager.call("is_fighting") == true: return false
+	return not (director.has_method("trainer_battle_active") and director.call("trainer_battle_active") == true)
+
+
+## The encounter directors that may hold this owner's deployed creature.
+func _portal_directors(game: Node) -> Array:
+	return game.get_tree().get_nodes_in_group(&"foundation_portal_directors") if game.is_inside_tree() else []
+
+
+## load_data, then keep each creature the data also holds as the SAME
+## instance (a deployed body drives it), updated from the freshly loaded one.
+func _load_keeping_instances(player: RefCounted, party: RefCounted, data: Dictionary, before: Dictionary) -> Array:
+	player.call("load_data", data)
+	var ordered: Array = []
+	for fresh: RefCounted in party.call("members"):
+		var existing: RefCounted = before.get(str(fresh.get("uid")))
+		if existing == null:
+			ordered.append(fresh)
+			continue
+		for property: Dictionary in fresh.get_property_list():
+			if int(property.usage) & PROPERTY_USAGE_SCRIPT_VARIABLE and not property.name in _RUNTIME_ONLY:
+				existing.set(property.name, fresh.get(property.name))
+		ordered.append(existing)
+	party.set("_creatures", ordered)
+	return ordered
 
 
 func _flush() -> void:
@@ -1203,7 +1605,21 @@ func _flush() -> void:
 	if local.inputs.is_empty():
 		if pending.is_empty() and local.admission_pending: _send_host({"op": "resume"})
 		return
-	_send_host({"op": "inputs", "inputs": local.inputs.slice(0, mini(MAX_BATCH, local.inputs.size())).duplicate(true)})
+	# F01#6b: stop-and-wait. A window goes from the first unacknowledged input
+	# (always contiguous with the host's cursor: the host refuses a gap), then
+	# nothing more until it is acknowledged, or until acknowledgements stall
+	# (the host returns early on a "waits" input and needs that prefix again).
+	# Re-sending the whole window every flush cost the host ~126 ms per packet.
+	var now := Time.get_ticks_msec()
+	if not local.has("ack_progress_ms"): local.ack_progress_ms = now
+	var in_flight: bool = int(local.get("inflight_through", 0)) > int(local.acked)
+	if in_flight and now - int(local.ack_progress_ms) < int(RESEND_STALL_S * 1000.0): return
+	var batch: Array = local.inputs.slice(0, mini(MAX_BATCH, local.inputs.size())).duplicate(true)
+	# A window is in flight only once actually sent (a drop before the join
+	# snapshot would otherwise wait a whole stall).
+	if not _send_host({"op": "inputs", "inputs": batch}): return
+	local.ack_progress_ms = now
+	local.inflight_through = int(batch[-1].sequence)
 
 ## Diagnostic only, once per character and reason: a host checkpoint that
 ## silently waits leaves the fight's round reward held with no other trace.
@@ -1216,6 +1632,10 @@ func _note_host(stream: Dictionary, reason: String) -> void:
 	_host_notes[character] = reason
 	print("[owner-passive] host %s: %s (t=%dms)" % [character.left(18), reason, Time.get_ticks_msec()])
 
+## Diagnostic: why a host refused an owner's rebase (once per character and reason).
+func _note_rebase_refused(character: String, reason: String) -> void:
+	_note_host({"character": character}, "rebase refused: " + reason)
+
 ## Diagnostic only, once per distinct reason: a packet this owner drops is
 ## otherwise invisible, and the host simply resends it forever.
 func _note_ignored(reason: String) -> void:
@@ -1225,10 +1645,16 @@ func _note_ignored(reason: String) -> void:
 	print("[owner-passive] ignored " + reason)
 
 func tick(delta: float) -> void:
+	if owner() != null and owner().is_inside_tree() and not owner().get_tree().physics_frame.is_connected(_sample_poses):
+		owner().get_tree().physics_frame.connect(_sample_poses)
 	_left -= delta
 	if _left > 0.0: return
 	_left = 0.25
 	if owner() == null or owner().call("is_host") == true: return
+	if not held_readmit.is_empty() and owner().call("handshake_snapshot_applied") == true:
+		var readmit := held_readmit
+		held_readmit = {}
+		receive_owner(readmit)
 	if not local.is_empty() and str(local.get("error", "")) != _reported_error:
 		_reported_error = str(local.get("error", ""))
 		if not _reported_error.is_empty():
@@ -1242,13 +1668,22 @@ func owner_settled(row: Dictionary) -> void:
 		or local.get("last_settlement") == row.get("receipt") \
 		or not PREP.exact(RECORD.training_projection(_projection(), row, E.training_projection), row.after): return
 	var previous := local.duplicate(true)
-	var declaration := arm_owner(_projection(), _discoveries())
+	var discoveries := _discoveries()
+	var proof: Variant = local.get("arrival_proof")
+	if row.get("action") == "portal_arrival" and proof is Dictionary and proof.get("receipt") == row.get("receipt"):
+		# Only the host's own proven arrival reveal (journaled packet) joins the
+		# identity; without that proof the host rebases on its replayed set too.
+		discoveries = (proof.discovered as Dictionary).duplicate(true)
+	var declaration := arm_owner(_projection(), discoveries)
 	if declaration.is_empty(): return
 	local.last_settlement = row.receipt
 	_queue_rebase(declaration, previous, {"receipt": row.receipt, "delivery_id": row.delivery_id})
 	_flush()
 
 func _queue_rebase(declaration: Dictionary, previous: Dictionary, binding: Dictionary) -> void:
+	local.hello_pending = previous.get("hello_pending", false) == true # a rebase is not a join
+	for key: String in ["hello_wait_from_ms", "hello_wait_told", "adopt_told"]:
+		if previous.has(key): local[key] = previous[key]
 	local.rebase = {"op": "rebase", "baseline_hash": declaration.baseline_hash,
 		"old_stream": previous.id, "old_sequence": previous.sequence, "old_prefix_hash": previous.prefix_hash,
 		"old_inputs": previous.inputs.duplicate(true), "discoveries_hash": HASH.fingerprint({"discovered": _discoveries()})}
@@ -1269,7 +1704,9 @@ func _rebase_host(peer: int, packet: Dictionary) -> void:
 	if hosts.has(character):
 		var previous: Dictionary = hosts[character]
 		if previous.id != packet.get("old_stream") or previous.cursor.sequence != packet.get("old_sequence") \
-			or previous.cursor.prefix_hash != packet.get("old_prefix_hash"): return
+			or previous.cursor.prefix_hash != packet.get("old_prefix_hash"):
+			_note_rebase_refused(character, "old stream/sequence/prefix differs (readmit=%s)" % str(previous.has("readmit")))
+			return
 		discoveries = previous.cursor.discovered.duplicate(true)
 		var checkpoint: Dictionary = previous.checkpoint
 		if not packet.has("checkpoint_id") and row is Dictionary and checkpoint.get("source_kind") == "portal_arrival" \
@@ -1280,7 +1717,9 @@ func _rebase_host(peer: int, packet: Dictionary) -> void:
 				"permit_id": checkpoint.request.permit.request_id, "realm": checkpoint.request.permit.realm,
 				"entry_id": checkpoint.request.permit.entry_id}):
 			discoveries = checkpoint.arrival_discoveries.duplicate(true)
-	if HASH.fingerprint({"discovered": discoveries}) != packet.get("discoveries_hash"): return
+	if HASH.fingerprint({"discovered": discoveries}) != packet.get("discoveries_hash"):
+		_note_rebase_refused(character, "discoveries differ")
+		return
 	if packet.has("checkpoint_id"):
 		if not hosts.has(character): return
 		var old: Dictionary = hosts[character]
@@ -1296,7 +1735,10 @@ func _rebase_host(peer: int, packet: Dictionary) -> void:
 	if not row is Dictionary or row.get("status") != "accepted" or row.get("receipt") != packet.get("receipt") \
 		or row.get("character_id") != character or not row.get("after") is Dictionary \
 		or not PREP.exact(RECORD.training_projection(before, row, E.training_projection), row.after) \
-		or HASH.fingerprint(before) != packet.get("baseline_hash"): return
+		or HASH.fingerprint(before) != packet.get("baseline_hash"):
+		_note_rebase_refused(character, "settled row/baseline differs (row=%s, baseline_match=%s)" % [
+			str(row.get("status", "none") if row is Dictionary else "none"), str(HASH.fingerprint(before) == packet.get("baseline_hash"))])
+		return
 	if hosts.has(character):
 		var checkpoint: Dictionary = hosts[character].checkpoint
 		if checkpoint.has("prepared") and not checkpoint.has("result"): return
@@ -1305,6 +1747,7 @@ func _rebase_host(peer: int, packet: Dictionary) -> void:
 		_send_owner(peer, hosts[character], {"op": "rebase_ack"})
 
 func reset() -> void:
+	_pose_ring.clear()
 	if owner() != null:
 		var authority: RefCounted = owner().get("_character_authority")
 		if authority != null:
@@ -1312,6 +1755,7 @@ func reset() -> void:
 				if stream.checkpoint.has("prepared"):
 					authority.call("cancel_owner_passive_checkpoint", stream.character, stream.checkpoint.prepared.hash)
 	local.clear()
+	held_readmit.clear()
 	hosts.clear()
 	refused.clear()
 	pending.clear()

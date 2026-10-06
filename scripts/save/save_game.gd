@@ -440,7 +440,7 @@ func _prepare_snapshot(game: Object, slot: int, write_split: bool = true,
 		return {} # Refuse before identity generation or any live/disk mutation.
 	if portal_owner is RefCounted and session is Node and session.has_method("_owner_training_snapshot_allowed") \
 			and session.call("_owner_training_snapshot_allowed", portal_owner, owner_guard_data) != true:
-		_note_refusal("owner training state is mid-transaction (%s)" % str(session.call("_owner_snapshot_block_reason", portal_owner)) \
+		_note_refusal("owner training state is mid-transaction (%s)" % str(session.call("_owner_snapshot_block_reason", portal_owner, true)) \
 			if session.has_method("_owner_snapshot_block_reason") else "owner training state is mid-transaction")
 		return {}
 	# The merged slot payload keeps file identity in its split locator. Typed

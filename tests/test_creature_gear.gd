@@ -168,3 +168,86 @@ func test_host_prepare_applies_equipped_gear_once_and_keeps_portable_hp_intrinsi
 	var back := GEAR.intrinsic_vitals(float(prepared.stats.max_hp) * 0.5, prepared.stats.max_hp, card.max_hp)
 	assert_almost_eq(float(back.hp), float(card.max_hp) * 0.5, 0.001, "half geared HP is half intrinsic HP on the portable row")
 	assert_eq(float(back.max_hp), float(card.max_hp))
+
+
+func test_charm_reaches_strike_power_through_the_real_freeze_and_host_profile() -> void:
+	# The encounter director's host move start: F23 freeze_action, then the
+	# F33 Charm freeze, then COMBAT_MANAGER.host_move_profile (what the host
+	# strikes with). The Charm raises the profile's power by its multiplier.
+	var cfg := GEAR.config()
+	var creature: RefCounted = preload("res://scripts/creatures/creature_species.gd").spawn("terrapup")
+	var moves := preload("res://scripts/creatures/move_db.gd").load_default()
+	var actor := {"character_id": CHARACTER, "creature_uid": str(creature.get("uid")), "encounter_id": "gear-encounter",
+		"generation": 1, "action": 1}
+	var frozen := preload("res://scripts/creatures/move_mastery.gd").freeze_action(creature, "quick", actor, [], moves)
+	assert_true(frozen.get("ok") == true, str(frozen))
+	if frozen.get("ok") != true: return
+	var manager := preload("res://scripts/combat/combat_manager.gd")
+	var move_id := str(creature.get("move_quick"))
+	var plain: Dictionary = manager.host_move_profile(moves, "player_quick", move_id, 0.5, 0.5, 1.0, 0.0,
+		GEAR.freeze_move_profile(frozen.move, GEAR.empty_slots(), cfg))
+	var charmed: Dictionary = manager.host_move_profile(moves, "player_quick", move_id, 0.5, 0.5, 1.0, 0.0,
+		GEAR.freeze_move_profile(frozen.move, {"harness": "", "charm": "tidesteel_charm_plus_1"}, cfg))
+	var mods := GEAR.modifiers({"harness": "", "charm": "tidesteel_charm_plus_1"}, cfg)
+	assert_almost_eq(float(charmed.power), float(plain.power) * float(mods.move_power), 0.0001, "the Charm scales strike power once")
+	assert_eq(float(charmed.gear_ultimate_gain_multiplier), float(mods.ultimate_gain), "and carries its ultimate gain to the host credit")
+
+
+class AdmittedSession extends Node:
+	var record: Dictionary = {}
+	func local_peer_id() -> int: return 1
+	func admitted_character_state(_peer: int) -> Dictionary: return record.duplicate(true)
+
+
+func test_harness_raises_the_defence_the_host_rolls_a_guest_hit_against() -> void:
+	# The encounter director's struck-participant card (host_pick_struck_
+	# participant -> _geared_card): the guest's equipped Harness comes from the
+	# host's ADMITTED record, never the card the guest announced.
+	var cfg := GEAR.config()
+	var record := _record()
+	var uid := str(record.party[0].uid)
+	record.redesign_character.creatures[uid]["gear"] = {"harness": "stormglass_harness_plus_1", "charm": ""}
+	var director: Node = preload("res://scripts/combat/encounter_director.gd").new()
+	var session := AdmittedSession.new()
+	session.record = record
+	director.set("_session", session)
+	var card := {"creature_uid": uid, "defence": 20.0}
+	var geared: Dictionary = director.call("_geared_card", 2, card)
+	var mods := GEAR.modifiers(record.redesign_character.creatures[uid].gear, cfg)
+	assert_almost_eq(float(geared.defence), 20.0 * float(mods.defence), 0.0001, "Harness defence applied once on the host")
+	assert_eq(float(card.defence), 20.0, "the announced card itself is untouched")
+	var forged := card.duplicate(true)
+	forged["gear"] = {"harness": "stormglass_harness_plus_3"}
+	assert_almost_eq(float(director.call("_geared_card", 2, forged).defence), 20.0 * float(mods.defence), 0.0001,
+		"gear named on the card is ignored")
+	session.record = _record()
+	assert_eq(float(director.call("_geared_card", 2, card).defence), 20.0, "no Harness, no change")
+	director.free()
+	session.free()
+
+
+func test_harness_max_hp_scale_comes_from_the_admitted_record_on_the_host() -> void:
+	# F33 Harness max HP (coordinator ruling 2026-10-05): the host's s for a
+	# guest's deployed creature rides on its struck card and stages durable
+	# vitals as damage / s; the announced card cannot name it.
+	var cfg := GEAR.config()
+	var record := _record()
+	var uid := str(record.party[0].uid)
+	record.redesign_character.creatures[uid]["gear"] = {"harness": "tidesteel_harness_plus_2", "charm": ""}
+	var director: Node = preload("res://scripts/combat/encounter_director.gd").new()
+	var session := AdmittedSession.new()
+	session.record = record
+	director.set("_session", session)
+	var card := {"creature_uid": uid, "defence": 20.0, "hp": 50.0, "max_hp": 100.0, "hp_scale": 1.7}
+	director.set("_deployed_by", {2: {"card": card}})
+	var s := float(GEAR.modifiers(record.redesign_character.creatures[uid].gear, cfg).max_hp)
+	assert_true(s > 1.24, "Tidesteel +2 raises max HP above its +0 (s=%.3f)" % s)
+	assert_almost_eq(float(director.call("_geared_card", 2, card).hp_scale), s, 0.0001, "the struck card carries the admitted s")
+	assert_almost_eq(float(director.call("_host_hp_scale", 2)), s, 0.0001, "durable vitals stage damage / the admitted s")
+	assert_almost_eq(float(director.call("_ordinary_hit_amount", 2, {"damage": 100.0})), 100.0 / s, 0.0001,
+		"the durable host hit stages rolled damage / s")
+	assert_eq(float(card.max_hp), 100.0, "the announced card's HP is untouched")
+	session.record = _record()
+	assert_eq(float(director.call("_host_hp_scale", 2)), 1.0, "no Harness: s = 1, though the announced card said 1.7")
+	director.free()
+	session.free()

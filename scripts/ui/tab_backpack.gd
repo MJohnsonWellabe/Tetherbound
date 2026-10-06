@@ -2385,7 +2385,11 @@ func _on_target_row(index: int) -> void:
 		_end_targeting()
 		return
 
-	var restored := float(creature.call("heal", _targeting_heal))
+	# F33: in a fight a Harness raises the shown maximum; the heal is in shown HP.
+	var scene := get_tree().get_current_scene() if is_inside_tree() else null
+	var combat: Node = scene.get_node_or_null(^"CombatManager") if scene != null else null
+	var restored := float(combat.call("scaled_heal", creature, _targeting_heal)) if combat != null and combat.has_method("scaled_heal") \
+		else float(creature.call("heal", _targeting_heal))
 	inventory.call("remove", id, 1)
 	get_tree().call_group(&"companion_presence", "on_care", creature, "heal")  # W12-COMPANION-0904
 	say("%s recovers %d." % [str(creature.call("label")), int(restored)])

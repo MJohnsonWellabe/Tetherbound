@@ -302,6 +302,15 @@ func run(tree: SceneTree) -> Dictionary:
 	if not await _close_dialogue(20):
 		_fail("Grandpa's first-catch conversation did not return control")
 		return _result()
+	# With the portal runtime on, the spoken batch (orbs + Home Key) is held
+	# until the gift is durable and the director owns input meanwhile; a player
+	# regains control only once it lands. Count at that same moment.
+	for _i in 600:
+		if _sequence == null or _sequence.call("owns_input") != true: break
+		await _tree.physics_frame
+	if _sequence != null and _sequence.call("owns_input") == true:
+		_fail("the opening director still held input 600 frames after Grandpa's first-catch conversation")
+		return _result()
 	var opening_orbs := int(_game.inventory.count("orb_basic"))
 	if opening_orbs < 45 or opening_orbs > 50:
 		_fail("Grandpa's first-catch conversation left %d Basic Orbs; expected 45–50" % opening_orbs)

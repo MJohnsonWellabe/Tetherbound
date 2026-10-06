@@ -6,6 +6,7 @@ extends SceneTree
 ## --seeds=12 --band=<substring> --json=<absolute output>
 ## A selected subset reports coverage=false and cannot certify all bands.
 const PILOT := preload("res://tests/helpers/f22_pattern_pilot.gd")
+const GEAR := preload("res://tests/helpers/f33_gear_fixture.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
@@ -36,6 +37,8 @@ var _move_patch: Dictionary = {}
 ## memory (never the file). Both are recorded in the receipt.
 var _starters: Array = STARTERS.duplicate()
 var _config_patch: Dictionary = {}
+## F33#2: --gear-tier / --gear-upgrade (tests/helpers/f33_gear_fixture.gd).
+var _gear: Dictionary = GEAR.from_args()
 
 
 func _init() -> void:
@@ -215,6 +218,7 @@ func _run() -> void:
 						if party.size() != 5 or foes.is_empty():
 							errors.append("missing actual species in " + str(entry.id))
 							continue
+						GEAR.equip(self, party, str(_gear.tier), int(_gear.upgrade))
 						var pilot := PILOT.new()
 						pilot.move_patch = _move_patch.duplicate(true)
 						pilot.context = {"chapter": entry.chapter, "band": entry.id,
@@ -295,7 +299,7 @@ func _run() -> void:
 	var coverage := _selection.is_empty() and rows.size() + gaps.size() * STARTERS.size() == cases.size() * STARTERS.size()
 	var receipt := {"move_patch": _move_patch, "config_patch": _config_patch, "starters": _starters, "kind": "actual flat-fixture C2; world/C3/authority proofs separate",
 		"pass": passed and coverage, "coverage": coverage, "seeds_per_band": _seeds,
-		"mode": "trainers" if _trainers else "wilds", "data_gaps": gaps,
+		"mode": "trainers" if _trainers else "wilds", "gear": GEAR.label(str(_gear.tier), int(_gear.upgrade)), "data_gaps": gaps,
 		"acceptance": false, "policy_scope": "quick/charged/spatial diagnostic; full F23/F24 policy and actual admission fixture required",
 		"switch_value": {"pass": switch_value, "tag_combo_live": combo_live,
 			"status": "full" if combo_live else "partial_no_f24: type matchup and per-identity HP only; F24 tag combo off, F22#2 not fully measured",

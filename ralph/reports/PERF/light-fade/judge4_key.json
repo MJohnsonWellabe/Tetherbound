@@ -1,0 +1,34 @@
+{
+ "meadows__route_00__day": {
+  "X": "before",
+  "Y": "after"
+ },
+ "meadows__route_00__night": {
+  "X": "after",
+  "Y": "before"
+ },
+ "meadows__route_01__day": {
+  "X": "after",
+  "Y": "before"
+ },
+ "meadows__route_01__night": {
+  "X": "after",
+  "Y": "before"
+ },
+ "meadows__route_02__day": {
+  "X": "after",
+  "Y": "before"
+ },
+ "meadows__route_02__night": {
+  "X": "after",
+  "Y": "before"
+ },
+ "meadows__route_03__day": {
+  "X": "after",
+  "Y": "before"
+ },
+ "meadows__route_03__night": {
+  "X": "before",
+  "Y": "after"
+ }
+}
