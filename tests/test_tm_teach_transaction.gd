@@ -264,3 +264,37 @@ func test_actual_owner_installer_preserves_instances_and_failed_bool_write_retri
 	session.free()
 	game.free()
 	preload("res://tests/helpers/split_save_fixture.gd").wipe(directory)
+
+func test_owner_apply_tolerates_passive_care_drift_but_refuses_real_conflicts() -> void:
+	# Care accrues between the host's stage and the owner's apply (single
+	# player and guest alike). A transaction that writes no care field is not
+	# in conflict with that drift; anything else still is.
+	var before := _before()
+	var proposal := ACTIONS.stage(before, 0, "tm_teach", _intent(before), _context(), RECORD.errors)
+	assert_true(proposal.get("ok") == true)
+	if proposal.get("ok") != true: return
+	proposal.character_revision = 1
+	var row := DELIVERY.make_record("tm-slot", NAMESPACE, "tm-session", proposal, null, RECORD.errors)
+	assert_false(row.is_empty())
+	if row.is_empty(): return
+	var drifted := before.duplicate(true)
+	drifted.party[0].nourishment = float(drifted.party[0].nourishment) - 0.5
+	drifted.party[1].happiness = float(drifted.party[1].happiness) - 0.1
+	drifted.party[0].distance_m_together = float(drifted.party[0].distance_m_together) + 40.0
+	drifted.party[1].landmarks_visited_together = int(drifted.party[1].landmarks_visited_together) + 1
+	var tolerated := DELIVERY.owner_plan(drifted, row, RECORD.errors)
+	assert_true(tolerated.get("ok", false), "passive care drift is not a baseline conflict")
+	assert_eq(tolerated.get("state"), row.after, "the owner applies the row's exact after, matching the host")
+	var after_drift: Dictionary = row.after.duplicate(true)
+	after_drift.party[0].nourishment = float(after_drift.party[0].nourishment) - 0.5
+	assert_true(DELIVERY.owner_plan(after_drift, row, RECORD.errors).get("duplicate", false), "an applied row recognises itself through drift")
+	for edit: Callable in [
+		func(r: Dictionary) -> void: r.party[1].xp = int(r.party[1].xp) + 1,
+		func(r: Dictionary) -> void: r.party[0].known_moves.append("burrow_strike"),
+		func(r: Dictionary) -> void: r.inventory[0] = {"id": "wood", "n": 1},
+		func(r: Dictionary) -> void: r.redesign_character.transaction_receipts.append("craft:another"),
+	]:
+		var conflicting := drifted.duplicate(true)
+		edit.call(conflicting)
+		assert_eq(DELIVERY.owner_plan(conflicting, row, RECORD.errors).get("code"), "owner_action_baseline_conflict",
+			"a real conflicting edit is still refused")

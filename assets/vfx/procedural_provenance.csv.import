@@ -1,0 +1,19 @@
+[remap]
+
+importer="csv_translation"
+type="Translation"
+uid="uid://j1yqmjkdvgsw"
+
+[deps]
+
+files=["res://assets/vfx/procedural_provenance.sha256.translation", "res://assets/vfx/procedural_provenance.origin.translation", "res://assets/vfx/procedural_provenance.reference.translation", "res://assets/vfx/procedural_provenance.method.translation", "res://assets/vfx/procedural_provenance.generation.translation", "res://assets/vfx/procedural_provenance.release.translation"]
+
+source_file="res://assets/vfx/procedural_provenance.csv"
+dest_files=["res://assets/vfx/procedural_provenance.sha256.translation", "res://assets/vfx/procedural_provenance.origin.translation", "res://assets/vfx/procedural_provenance.reference.translation", "res://assets/vfx/procedural_provenance.method.translation", "res://assets/vfx/procedural_provenance.generation.translation", "res://assets/vfx/procedural_provenance.release.translation"]
+
+[params]
+
+compress=1
+delimiter=0
+unescape_keys=false
+unescape_translations=true

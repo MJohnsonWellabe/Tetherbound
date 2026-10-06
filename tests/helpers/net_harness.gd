@@ -1075,10 +1075,14 @@ func check(condition: bool, message: String) -> void:
 	print(("PASS: " if condition else "FAIL: ") + message)
 
 
-func require_peer_logs_without(patterns: Array, label: String) -> void:
+## `exempt_lines` removes exact, named whole lines before counting (e.g. a
+## third-party engine-compat notice no project script can avoid). Every other
+## match of `patterns` still fails the check.
+func require_peer_logs_without(patterns: Array, label: String, exempt_lines: Array = []) -> void:
 	_forbidden_peer_log_checks.append({
 		"patterns": patterns.duplicate(),
 		"label": label,
+		"exempt_lines": exempt_lines.duplicate(),
 	})
 
 
@@ -1096,6 +1100,8 @@ func _check_forbidden_peer_logs() -> void:
 				continue
 			var contents := log_file.get_as_text()
 			log_file.close()
+			for exempt: Variant in requested.get("exempt_lines", []):
+				contents = contents.replace(str(exempt) + "\n", "")
 			for pattern_value in requested.get("patterns", []):
 				var pattern := str(pattern_value)
 				var count := contents.count(pattern)

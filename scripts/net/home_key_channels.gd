@@ -34,7 +34,11 @@ func _process(delta: float) -> void:
 		_publish(expired, false)
 	for row: Dictionary in policy.call("open_channels"):
 		var context: Dictionary = owner.call("_host_portal_context", row.peer_id)
-		if context.is_empty(): context = {"character_id": row.character_id, "combat": true}
+		# A late or missing guest sample (> 1 s under load or jitter) is
+		# unknown, not a refusal. Cancel only on an observed refusal, realm or
+		# damage change. Finish re-evaluates a fresh context with the frozen
+		# realm/damage revision, and tick_expired bounds an abandoned channel.
+		if context.is_empty(): continue
 		if policy.call("cancel_invalid", context) == true:
 			_publish(row, false)
 

@@ -49,13 +49,47 @@ func _walk_to_grandpa(prompt: Node3D) -> bool:
 	var recoveries_before := int(_player.get("_unstick_count"))
 	var nav := NAV.new(tree, _player, _rig, _stick)
 	var distance := _player.global_position.distance_to(prompt.global_position)
-	var reached: bool = await nav.walk_to(prompt.global_position, maxi(1200, int(distance * 65.0)), 2.5)
+	var budget := maxi(1200, int(distance * 65.0))
+	# Grandpa stands inside the farmhouse. A straight line from the Hall meets
+	# its wall beside the door, so walk the authored doorway first: a point
+	# outside on the inside->door line, then the prompt. The same total frame
+	# budget is shared in proportion to each leg; checks below are unchanged.
+	var house: Node = tree.current_scene.find_child("GrandpaHouse", true, false)
+	var legs: Array[Vector3] = [prompt.global_position]
+	if house != null and house.has_method("marker"):
+		var door: Variant = house.call("marker", "door")
+		var inside: Variant = house.call("marker", "inside")
+		if door is Vector3 and inside is Vector3 and (door as Vector3).distance_to(inside) > 0.1:
+			var out_dir: Vector3 = ((door as Vector3) - (inside as Vector3)).normalized()
+			legs.push_front((door as Vector3) + out_dir * 2.0)
+	var total := 0.0
+	var at := _player.global_position
+	for leg: Vector3 in legs:
+		total += at.distance_to(leg)
+		at = leg
+	at = _player.global_position
+	var reached := true
+	for index in legs.size():
+		var leg: Vector3 = legs[index]
+		var share := int(float(budget) * at.distance_to(leg) / maxf(total, 0.001))
+		var close := 2.5 if index == legs.size() - 1 else 1.0
+		reached = await nav.walk_to(leg, maxi(1, share), close)
+		at = leg
+		if not reached: break
 	_stick(0, 0)
 	if not reached: return _fail("F20 ordinary capsule walk failed to Grandpa")
 	for frame in 8: await tree.physics_frame
 	for frame in 2: await tree.process_frame
 	if int(_player.get("_unstick_count")) != recoveries_before or not _player.is_on_floor() \
 			or arbiter.call("winning_provider") != prompt:
+		var winning: Variant = arbiter.call("winning_provider")
+		print("F20 APPROACH unstick=%d->%d on_floor=%s winner=%s at=%s prompt=%s" % [recoveries_before,
+			int(_player.get("_unstick_count")), str(_player.is_on_floor()),
+			str(winning.get_path()) if winning is Node else "none", str(_player.global_position), str(prompt.global_position)])
+		var ending: Variant = game.call("regional_ending_context") if game.has_method("regional_ending_context") else {}
+		var lifecycle: Node = game.get("session").get_node_or_null(^"FoundationComposition/TravelLifecycle") if game.get("session") != null else null
+		print("F20 APPROACH ending=%s sample=%s offer=%s" % [str(ending), str(lifecycle.call("local_sample")) if lifecycle != null else "none",
+			str(arbiter.call("winner"))])
 		return _fail("F20 Grandpa approach requires grounded exact provider without recovery")
 	var offer: Dictionary = arbiter.call("winner")
 	return offer.get("actionable") == true or _fail("F20 actual Grandpa approach refused its action")

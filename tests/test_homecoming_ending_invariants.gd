@@ -92,17 +92,29 @@ func test_ending_sources_never_name_a_realm_key() -> void:
 
 
 func test_ending_path_adds_no_realm_key_to_either_store() -> void:
-	# LEGACY PATH: asserts the shipped portal-off behaviour (its fixture carries
-	# the world-scoped `realm_key_water` from the old Stormwood -> Water hand-off).
-	# Superseded by RD-10/RD-21/RD-22 (the Stormwood finale now grants each
-	# participant a fifth portal key item, F19#2/F20#2) once F18 turns
-	# redesign_portal_runtime_enabled on; retire this test or rewrite it to the redesign rule at that
-	# point. The no-key-from-the-ending invariant itself is current.
-	# The fixture world legitimately holds the spent Water key from Stormwood's
-	# finale; the ending may neither add another key nor touch that one.
+	# RD-20/RD-21/RD-22 (F19#2/F20#2): the character arrives home holding the
+	# fifth portal key ITEM Stormwood's boss handed each participant. The ending
+	# neither mints a realm-key flag in either store nor adds or spends a key.
 	var game := _ending_game([["terrapup", "Pip"]])
+	assert_eq(game.local.inventory.add("fifth_portal_key", 1), 0)
 	var before := _realm_keys(game)
-	assert_eq(before, ["realm_key_water"], "fixture carries the earned Water key")
+	assert_eq(before, [], "the redesign path carries no realm-key flag")
+	var keys_before := _portal_key_counts(game)
+	assert_eq(int(keys_before.get("fifth_portal_key", 0)), 1, "fixture holds the earned fifth key")
+	await _run_homecoming_and_credits(game)
+	assert_eq(_realm_keys(game), before, "ending path adds no realm key")
+	assert_eq(_portal_key_counts(game), keys_before, "ending path adds or spends no portal key item")
+
+
+func test_ending_leaves_a_still_shipped_water_key_flag_untouched() -> void:
+	# DATA CONFLICT (F19/F20): data/config/stormwood_chapter.json's
+	# stormwood_waterward_revealed still grants the world-scoped realm_key_water
+	# that RD-17/RD-22 retire, so a world can still hold it. The ending must not
+	# add another key or touch that one.
+	var game := _ending_game([["terrapup", "Pip"]])
+	game.world.flags.set_flag("realm_key_water")
+	var before := _realm_keys(game)
+	assert_eq(before, ["realm_key_water"], "fixture carries the Waterward grant")
 	await _run_homecoming_and_credits(game)
 	assert_eq(_realm_keys(game), before, "ending path adds or removes no realm key")
 
@@ -274,7 +286,6 @@ func _ending_game(members: Array) -> GameStub:
 	world.world_id = "world-ending-invariants"
 	world.flags.set_flag(HOMECOMING.WORLD_FLAG)
 	world.flags.set_flag("water_captain_nerissa_defeated")
-	world.flags.set_flag("realm_key_water")
 	var local: RefCounted = PLAYER_STATE.new()
 	local.configure(ITEM_DB.new())
 	local.character_id = "character-ending-invariants"
@@ -340,6 +351,16 @@ func _realm_keys(game: GameStub) -> Array[String]:
 		for id: Variant in store.save_data().get("flags", []):
 			if str(id).begins_with("realm_key_"):
 				out.append(str(id))
+	return out
+
+
+## Every portal key item (data/config/portals.json arches) the character holds.
+func _portal_key_counts(game: GameStub) -> Dictionary:
+	var out := {}
+	for arch: Dictionary in _json("res://data/config/portals.json").get("arches", []):
+		var item := str(arch.get("key_item", ""))
+		if not item.is_empty():
+			out[item] = game.local.inventory.count(item)
 	return out
 
 

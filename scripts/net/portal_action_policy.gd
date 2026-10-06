@@ -147,18 +147,31 @@ func evaluate(payload: Dictionary, context: Dictionary, config: Dictionary,
 	if not last is Dictionary or not active is Dictionary:
 		return _deny(kind, "Your waystone progress is not ready.")
 	var selected: String = str(last.get(biome, ""))
+	if biome == "meadows" and not meadows_waystone_return(config):
+		selected = ""
 	if not selected.is_empty():
 		var activated: Variant = active.get(biome, [])
-		if not activated is Array or not activated.has(selected):
+		var stone := _find_stone(stones, selected) if selected != biome + "_entry" else {}
+		var valid: bool = activated is Array and activated.has(selected) \
+			and (selected == biome + "_entry" or (not stone.is_empty() and stone.get("biome") == biome))
+		# The home arch is the only way home: a stale or unknown saved Meadows
+		# stone lands at the Meadows entry instead of refusing travel.
+		if not valid and biome != "meadows":
 			return _deny(kind, "Your saved return point is invalid.")
 		# v28 schema retains canonical entry markers; they mean the authored
 		# entry anchor, never an invented stone or a client-selected coordinate.
-		if selected != biome + "_entry":
-			var stone := _find_stone(stones, selected)
-			if stone.is_empty() or stone.get("biome") != biome:
-				return _deny(kind, "Your saved return point is invalid.")
+		if valid and selected != biome + "_entry":
 			entry = selected
 	return _permit(kind, _mint(character), context, "water" if biome == "tidewake" else biome, entry)
+
+
+## STATE owner decision #11 (settled 2026-10-05): true (shipped) returns the
+## home arch to the last Meadows waystone; false lands at the Meadows entry.
+static func meadows_waystone_return(config: Variant) -> bool:
+	if not config is Dictionary: return false
+	var home: Variant = config.get("home_arch", {})
+	return home is Dictionary and home.get("returns_to_last_meadows_waystone") is bool \
+		and bool(home.returns_to_last_meadows_waystone)
 
 
 ## RealmTransition consumes this permit. Bare client-selected destinations
