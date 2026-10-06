@@ -1,0 +1,4 @@
+source=17436eb251b3b41ade32246e61e77cbf230a0a04
+product=fe861cd7e190b129af04544628f7476be684aaf0
+tool=tests/smoke_meadow_healing_land_heals.gd existing; original bars + early freeing cues
+Headless default clock; original real save/reload/mesh equality; no profile/FPS
