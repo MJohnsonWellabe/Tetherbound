@@ -44,4 +44,18 @@ Independent `resolution_review`: **PASS** for the exact 57-line two-file additio
 
 Existing Godot 4.7 parser invocation: `--headless --check-only --script res://tests/smoke_f22_pattern_bands.gd`, same isolated imported checkout and private unit APPDATA. Exit 0, no errors; original `neutral-entry-parse.log` is 73 bytes, SHA256 `bb3bcf7181e550fe37f9235c4aecf24a81b757eddfeff554d88e7974feb2ed1d`. No gameplay cohort or full suite was rerun for this check. Fresh trial/final receipts must verify actual audit counts and numerical bounds. All criterion closures remain open.
 
-This baseline cannot be clean engine acceptance. Its complete table, fixture validity and single-hit results are pending. Final validation must retain the floor-trainer bars, all starters, Tidewake passes and the neutral worst-variance single-hit ceiling. P1 cleared the expired owner reservation at 02:05 UTC after verifying Valheim absent; R2 captures remain queued until heavy jobs finish and the render lock is available.
+## Completed original baseline
+
+The original baseline is terminal: session 20834 exited 1, both original engine processes ended, and complete receipts were inspected. JSON was last written at 00:50:16 Chicago on October 6; console output at 00:50:37. This is numerical failure evidence, not a crashed/incomplete cohort. The full result has 57 rows and 2,052 fights: 19 bands × three unique default starters × three policies × 12 unique paired seeds. Every band has all three starters, every cohort has 12 runs, and the policy seed sets match. No top-level fixture error or stalled run is recorded. All three policies won 684/684 runs. The original loaded schema has no new neutral-entry audit fields, and move/config patches are empty. Game data still match the original `785057d4a3` pin.
+
+| Starter | Floor-form passing rows | Failing rows |
+|---|---:|---:|
+| Terrapup | 6/19 | Meadows 5, Cloudreach 3, Stormwood 5 |
+| Ripplet | 19/19 | 0 |
+| Galewisp | 17/19 | Tidewake outer reaches and Veilfall |
+
+Terrapup's six Tidewake rows pass and must be preserved. Galewisp outer reaches has masher/reader median lead costs 0.444515/0.712507 (ratio 1.602887); Veilfall has 0.806906/0.586115 (ratio 0.726373). Full values, per-policy run scalars and the other failed rows are retained in `full-summary.json`, explicitly a derived summary. The original raw JSON/log are preserved byte-for-byte in `full.json.gz` and `console.log.gz`; `raw-manifest.json` records original and archive lengths/SHA256. Both archives were decompressed and matched to original lengths/hashes. Originals remain local, too large for ordinary Git blobs.
+
+The raw observed neutral maximum is 0.260141111399188. The reviewed conservative observed-only bound `1.30 × (N + 1e-12)` is 0.3381834448202444, below 0.5. This does not cover unlanded attacks, all legal TM alternatives, outgoing/world/authority behavior or the fresh assertion. The original overall result is false; its existing partial switching-value check passes, with F24 tag combo off and `acceptance=false`. Four no-roster bands remain explicit data gaps: Cloudreach Windscar Ravine, High Roost/Sky Shrine, Summit/Final Stronghold, and Stormwood Dynamo.
+
+The complete native log contains two identical finished-Tween errors, both at the old `set_combat_hitstop` release path already repaired in `422aa7c1`, and no SCRIPT/Parse error. Both original stacks plus the data-gap line are preserved byte-for-byte in `native-error-final.txt` (1,945 bytes; SHA256 `76c2209fcfb285ae172c48fdaca3f0f73259ab2e3ebeecc3c00d199dc545e7c7`). Consequently this baseline is not clean engine acceptance. Fresh trials/final validation must verify the repaired path, numerical neutral-entry assertions, all original bars and passing rows. Wild and blind-clip checks remain open; no criterion closure is claimed.

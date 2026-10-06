@@ -1,0 +1,43 @@
+{
+  "data_unchanged_against_source_pin_verified": true,
+  "default_starters_verified": true,
+  "native_prefix": {
+    "bytes": 1945,
+    "file": "native-error-final.txt",
+    "sha256": "76c2209fcfb285ae172c48fdaca3f0f73259ab2e3ebeecc3c00d199dc545e7c7"
+  },
+  "observed_neutral_max": 0.260141111399188,
+  "observed_only_corrected_bound": 0.33818344482024437,
+  "original_schema_verified": true,
+  "paired_unique_seeds_verified": true,
+  "raw": [
+    {
+      "bytes": 410650392,
+      "file": "full.json",
+      "gzip": "full.json.gz",
+      "gzip_bytes": 33807841,
+      "gzip_roundtrip_verified": true,
+      "gzip_sha256": "79a73bad4cc7339c1b9ff24cf86928d5f3aad4b19d54010bbbdfa84bab80a30c",
+      "sha256": "c838791562cf01738b39f24efeb83b9b29abff755fa22ac4297efbd61420189a"
+    },
+    {
+      "bytes": 378877685,
+      "file": "console.log",
+      "gzip": "console.log.gz",
+      "gzip_bytes": 32916872,
+      "gzip_roundtrip_verified": true,
+      "gzip_sha256": "4fcd84f402a977b70b3e577dc4fd13f87a15cdd75c7961ffd50fe958228f361a",
+      "native_line_counts": {
+        "ERROR:": 2,
+        "Parse Error:": 0,
+        "SCRIPT ERROR:": 0
+      },
+      "sha256": "4f09f732a12a3b13e24146793388cd05c745202047fc52138f9a5ac3ba0c7369"
+    }
+  ],
+  "rows": 57,
+  "runs": 2052,
+  "seeds_per_band": 12,
+  "source_pin": "785057d4a3b48faa7445b4cc1c5d35e649466416",
+  "terminal_exit_code": 1
+}

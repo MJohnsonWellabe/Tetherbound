@@ -3,3 +3,6 @@ console.log -text whitespace=cr-at-eol
 full.json -text whitespace=cr-at-eol
 hitstop-unit.log -text whitespace=cr-at-eol
 neutral-entry-parse.log -text whitespace=cr-at-eol
+native-error-final.txt -text whitespace=cr-at-eol
+full.json.gz -text
+console.log.gz -text
