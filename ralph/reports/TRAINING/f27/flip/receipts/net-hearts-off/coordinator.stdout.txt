@@ -1,0 +1,58 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=3492 control_port=59351 home=D:\tetherbound\.artifacts\r1-f27-flip\net-hearts-off/home-0 log=D:\tetherbound\.artifacts\r1-f27-flip\net-hearts-off/peer-0.log
+coordinator: launched peer 1 (client) pid=1384 control_port=59352 home=D:\tetherbound\.artifacts\r1-f27-flip\net-hearts-off/home-1 log=D:\tetherbound\.artifacts\r1-f27-flip\net-hearts-off/peer-1.log
+coordinator: peer 0 hello: {"enet_port":31761.0,"godot_version":"4.7-stable (official)","main_sha":"b61d4341c966","peer":0.0,"pid":3492.0,"role":"host","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-hearts-off/home-0/Godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":31762.0,"godot_version":"4.7-stable (official)","main_sha":"b61d4341c966","peer":1.0,"pid":1384.0,"role":"client","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-hearts-off/home-1/Godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: coordinator tracked 2 peers
+PASS: a Session exists to host/join; without it nothing here is shared
+PASS: peer 0 hosted a world (hosting udp/31761 as peer 1)
+PASS: peer 1 joined peer 0's world on port 31761 (joined 127.0.0.1:31761 as peer 176430946 after 33 frames; snapshot applied; 2 peer(s) in registry)
+PASS: peer 0's registry holds both players (registry reports 2 peer(s) after 0 frames (0.0 s))
+PASS: peer 1's registry holds both players (registry reports 2 peer(s) after 0 frames (0.0 s))
+PASS: both peers hold the same world after the handshake
+PASS: peer 0 is standing at a Realm Heart shrine (shrine bound to 'meadows', state unearned)
+PASS: peer 1 is standing at a Realm Heart shrine (shrine bound to 'meadows', state unearned)
+PASS: peer 0 starts with no Heart in the socket
+PASS: peer 1 starts with no Heart in the socket
+PASS: peer 0 earned the Heart through the ledger (earned 'realm_heart_meadows_earned' (committed))
+PASS: peer 0's WORLD says the Heart is earned
+PASS: peer 0's world still has an empty socket
+PASS: peer 1's WORLD says the Heart is earned
+PASS: peer 1's world still has an empty socket
+PASS: peer 1 pressed Place at the shrine (submitted; the host has still to answer)
+PASS: peer 0's WORLD says the Heart is placed -- one player put it in, both see it
+PASS: peer 0's shrine repainted off the placement (state 'placed_inactive')
+PASS: peer 1's WORLD says the Heart is placed -- one player put it in, both see it
+PASS: peer 1's shrine repainted off the placement (state 'placed_inactive')
+PASS: peer 1 is wearing the Heart's power (wearing 'meadows')
+PASS: peer 1's active Heart is 'meadows' (got 'meadows')
+PASS: peer 0 wears no Heart while peer 1 wears one (got '')
+PASS: the two peers hold DIFFERENT active Hearts at the same time
+PASS: peer 1's Heart power is actually in effect and peer 0's is not (2.00 vs 1.00)
+PASS: peer 0 can wear the same placed Heart too (wearing 'meadows')
+PASS: peer 1 took its Heart power off (released)
+PASS: peer 0 is now wearing the Heart (got 'meadows')
+PASS: peer 1 is now wearing none (got '')
+PASS: peer 0's world still holds the placed Heart after both selections moved
+PASS: peer 1's world still holds the placed Heart after both selections moved
+PASS: peer 0 has a creature out (deployed AllyCreature)
+PASS: peer 1 has a creature out (deployed AllyCreature)
+PASS: peer 0 is drawing peer 1's creature (1 bodies it does not own)
+PASS: peer 0 is drawing peer 1's trainer (1 bodies it does not own)
+PASS: the friend's creature carries a companion layer of its own
+PASS: peer 1's creature took a blow (hp 134.4 -> 94.1)
+PASS: peer 0 still has peer 1's creature body to draw on
+PASS: a hit on peer 1's creature drew something on peer 0's copy of it (1 plays)
+PASS: the picture peer 0 drew was the hit (got 'hit')
+PASS: the hit built a real effect node on peer 0's screen ('BodyGlow')
+PASS: peer 1 published its creature going down (AllyCreature_176430946 published 'knockout')
+PASS: the knockout drew again on peer 0 (2 plays, was 1)
+PASS: the last picture peer 0 drew was the knockout (got 'knockout')
+PASS: peer 1 published its catch (Trainer_176430946 published 'catch')
+PASS: peer 0 still has peer 1's trainer body to draw on
+PASS: peer 1's catch drew a sparkle on peer 0's copy of peer 1 (1 plays)
+PASS: the catch built a real effect node on peer 0's screen ('CatchBurst')
+PASS: peer 1 drew nothing on its own copy of peer 0's creature from its own publishes
+ALL CHECKS PASSED

@@ -17,8 +17,8 @@ f22_forced_break | ON unchanged RETRY PASS17checks/0fail/exit0; FIRST FAIL retai
 f27_guest_wild_win | Corrected ON PASSexit0: canonical successor/one fresh receipt each/sameevent/distinctparticipant/+essence+XP/equality/productionrejoins+reload/no-dup. Hostperiodicdeparture errors+separateMTUwarning retained; independent functional reviewPASS40checks/0fail/exit0. All priorFAIL receipts retained | N/A: manual flag-ON authority proof
 fly | ON FIRST PASS46assertions/0fail/exit0; qualified independent review PASS/no flightanchor reload proof | OFF unchanged RETRY PASS46assertions/0fail/exit0; FIRST FAILaltitude41.09m retained/cause unresolved; qualified independent functional ON/OFF pair review PASS
 gate_opens_for_both | ON FIRST PASS20checks/0fail/exit0; defaultledger-flag/is_open/hash scope; qualified independent review PASS | OFF FIRST PASS20checks/0fail/exit0; qualified independent functional ON/OFF pair review PASS/nodiskproof
-hearts | ON FIRST ACTIVE native default/source-fixtures unchanged | OPEN
-host_exit_saves | OPEN | OPEN
+hearts | FIRST PASS50/exit0; independently reviewed qualified functional pair; raw7/no saves/0ERROR-SCRIPT-Parse/stderrEMPTY | FIRST PASS50/exit0; same50orderedchecks/source-fixtures180hello300TOTAL3000steps; sharedplacement/personal-selection/mechanical remote presentation only; stamina inequality first selection direction ONLY; no earnedfight/durablevitals/render/reload-reconnect
+host_exit_saves | FIRST ACTIVE r1-host-exit-saves-on-20261006T1055Z; original180hello/custom480TOTALposthello | OPEN queued
 realm_owner_disconnect_mid_fight | PASS 25 checks/exit0; controlled-drop diagnostic retained | PASS 25 checks/exit0; no error markers
 riding | PASS retry 43 assertions/0 failures/exit0; FIRST startup FAIL retained | PASS 43 assertions/0 failures/exit0
 shared_boss | OPEN | OPEN
@@ -100,3 +100,6 @@ Frozen-opponent guard d4f2af | Corrected RED unchanged93487 one exact-opponent f
 F27 corrected twopeer proof7c44794 | ONPASSexit0; canonical validator+receipt continuity and event binding executed; finalraw10 incl3productionJSONs. Independent functional reviewPASS40checks/0fail/exit0; hostdepartureerrors/MTUwarning retained. CommitflagOFF/manualheader.
 
 2026-10-06 04:26 Chicago checkpoint: ALL55/55 explicitly required existing CI ON checks independently reviewed qualified PASS. Scoped ON/OFF networks and tournament remain OPEN; committed flag OFF/no flip or DONE claim.
+
+Hearts OFF FIRST: PASS50/exit0; raw7 exact/no saves/0ERROR-SCRIPT-Parse/stderrEMPTY; ON FIRST PASS50; independent pair review pending. Synthetic shrines/direct earned-ledger-place and personal activation/direct mechanical presentation samplers only; original native source-budget-fixtures unchanged; no durable-reward, earned-route, actual fight/catch, rendered-quality, reload/reconnect claims.
+host_exit_saves ON FIRST ACTIVE 20261006T1055Z; original180hello/custom480TOTALposthello; OFF queued; review-qualified setup/graceful-leave/world-save scope only.
