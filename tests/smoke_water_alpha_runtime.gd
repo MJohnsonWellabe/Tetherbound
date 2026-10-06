@@ -156,6 +156,41 @@ func _complete_saddle_chain(game: Node, world: Node3D, director: Node, player: N
 	check(riding.is_mounted() and riding.mount_body() == director.ally_body() and director.ally_instance() == ally, "Mounted body remains the same owned companion from the Alpha fight")
 	check(game.local.party.members().size() == 1, "The reward chain never adds a hidden creature slot")
 	print("Alpha-to-saddle evidence: dialogue=water_iona_recipe camp=tidal_cradle materials=8reed/6drift/4reef mount=", riding.mount_body().species_id)
+	# Complete the same earned path through the real owner writer and reload.
+	# The earlier combat, dialogue, craft and mount assertions stay intact.
+	check(riding.dismount(), "Normal dismount ends the earned saddle ride before character reload")
+	director.dismiss_active_creature()
+	await _frames(3)
+	var saved := false
+	for attempt in 40:
+		if game.autosave_here():
+			saved = true
+			break
+		await _frames(15)
+	if not check(saved, "Actual Game autosave returns TRUE for the earned owner record"):
+		return
+	var characters: RefCounted = game.save_system.characters()
+	var payload: Dictionary = characters.read(str(game.local.character_id))
+	var flags: Array = payload.get("flags", {}).get("flags", [])
+	check(flags.has("water_swim_stone_earned") and flags.has("water_swim_saddle_recipe_learned"),
+		"Actual owner disk preserves the earned Stone and completed Iona lesson")
+	var saddles := 0
+	for slot: Dictionary in payload.get("inventory", []):
+		if slot.get("id") == "swim_saddle": saddles += int(slot.get("n", 0))
+	check(saddles == 1 and payload.get("party", []).size() == 1 \
+		and str(payload.party[0].get("uid", "")) == str(ally.uid),
+		"Actual owner disk holds exactly one crafted saddle and the same owned companion UID")
+	var world_instance := game.world.get_instance_id()
+	var world_id := str(game.world.world_id)
+	if not check(characters.apply(game, str(game.local.character_id)), "Production CharacterSave apply reloads the actual saved owner"):
+		return
+	check(game.local.flags.has("water_swim_stone_earned") and game.local.flags.has("water_swim_saddle_recipe_learned") \
+		and game.inventory.count("swim_saddle") == 1 and game.local.party.members().size() == 1 \
+		and str(game.local.party.at(0).uid) == str(ally.uid),
+		"Owner reload preserves the earned Stone, recipe, single saddle and companion identity")
+	check(game.world.get_instance_id() == world_instance and str(game.world.world_id) == world_id \
+		and game.world.flags.has("water_aquaryn_resolved"),
+		"Owner reload preserves the actual resolved host World")
 
 func _frames(count: int) -> void:
 	for frame in count:
