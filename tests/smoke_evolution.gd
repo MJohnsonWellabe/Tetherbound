@@ -12,6 +12,7 @@ const RULES := preload("res://scripts/creatures/breakthrough.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const RECORD := preload("res://scripts/net/character_record_rules.gd")
 const TRAITS := preload("res://scripts/creatures/traits.gd")
+const FEED := preload("res://scripts/creatures/progression_feed.gd")
 const CHARACTER_SAVE := preload("res://scripts/save/character_save.gd")
 const PRESERVED := ["uid", "nickname", "level", "xp", "bond", "battles_fought", "landmarks_visited_together", "distance_m_together", "iv_hp", "iv_attack", "iv_defence", "trait_primary", "trait_secondary", "move_quick", "move_charged", "move_utility", "move_ultimate", "move_mastery_uses", "move_mastery_receipts"]
 var _failures: Array[String] = []
@@ -53,6 +54,7 @@ func _run() -> void:
 	_game.session.connect("homestead_action_completed", _completed)
 	_check(_game.call("save_game", int(_game.call("autosave_slot"))) == true, "disclosed pre-choice state BOOL-saved")
 	_check(not _game.session.call("homestead_personal_view").is_empty(), "real host admits the disclosed original character")
+	_capped_live_growth_refused()
 	await _held_stone_shortcut_refused()
 	await _choose_and_reload(_uids[0], "evolve", "tuskroot")
 	await _choose_and_reload(_uids[1], "stay", "mudsnout")
@@ -97,13 +99,44 @@ func _seed_existing_setup() -> bool:
 	_check(errors.is_empty(), "canonical disclosed setup: " + str(errors))
 	return errors.is_empty()
 
+## F28#0 shares this existing capped setup. These are the actual live legacy
+## callers, not an earned combat award or a host transaction proof.
+func _capped_live_growth_refused() -> void:
+	var before: Dictionary = _game.local.call("save_data")
+	var cursor := FEED.latest_seq()
+	for index: int in _uids.size():
+		var creature: RefCounted = _game.party.call("at", index)
+		var uid := _uids[index]
+		_check(str(creature.get("uid")) == uid and int(creature.get("level")) == 20
+			and int(before.redesign_character.creatures[uid].cap_level) == 20,
+			"existing individual starts at its admitted Lv20 cap")
+		_check(int(creature.call("gain_xp", int(creature.call("xp_to_next", PROGRESSION.config())) * 10, PROGRESSION.config())) == 0,
+			"capped live-owned XP caller grants no levels")
+		_check(int(creature.call("gain_levels", 3, PROGRESSION.config())) == 0,
+			"capped live-owned legacy candy caller grants no levels")
+		_check(int(creature.get("level")) == 20 and int(creature.get("xp")) == 0,
+			"locked cap discards XP rather than banking it")
+	_check(_game.local.call("save_data") == before, "cap refusals leave original character state unchanged")
+	_check(FEED.latest_seq() == cursor, "cap refusals announce no unearned XP or level-up")
+
 func _held_stone_shortcut_refused() -> void:
 	await _press("inventory")
 	_check(bool(_menu.call("is_open")), "inventory input opens the actual menu")
 	_menu.call("select", 1)
 	for _frame: int in 4: await process_frame
 	var body: Node = _menu.get("_bodies")[1]
+	for index: int in _uids.size():
+		(body.get("_rows")[index] as Button).grab_focus()
+		for _frame: int in 4: await process_frame
+		var cap_label: Label = body.get("_detail_training_cap")
+		var next_label: Label = body.get("_detail_xp_next")
+		_check(cap_label != null and cap_label.is_visible_in_tree()
+			and cap_label.text == "Level 20 / Cap 20 · Breakthrough needed",
+			"actual focused Team row visibly names its locked personal cap")
+		_check(next_label != null and next_label.is_visible_in_tree() and next_label.text == "Breakthrough needed",
+			"actual Team XP-next label explains why growth stopped")
 	(body.get("_rows")[0] as Button).grab_focus()
+	for _frame: int in 4: await process_frame
 	await _press("backpack_drop")
 	_check(str(body.get("_evolution_stage")).is_empty(), "held stone cannot start the retired Team ceremony")
 	_check(str(_menu.get("_status").text).contains("Ascension Feast"), "Team explains the current feast path")

@@ -28,7 +28,7 @@ F28 source_risk_check: initial two frozen-F32 hash failures retained; current-ma
 F29 check_source: stops at historical whole-water-encounter-catalogue equality. Raw stderr and exit1 retained. Current main wild catalogues remain unchanged by R5.
 
 Criteria
-F28#0: source repairs authored; focused/native proof OPEN.
+F28#0: source repairs and all-six-cap focused units authored/passing. Existing RD/F29 smoke now also reuses its two admitted capped Lv20 creatures for actual live-owned gain_xp/gain_levels refusal, no XP banking/state/feed mutation, and focused real Team cap/XP-next labels. No new setup; these direct caller checks claim no host combat reward. Native proof OPEN.
 F28#5: current authored ingredient reachability ledger reconciled with limited prior native local-node receipts. Earned campaign, catalyst route and repeated five-creature supply OPEN.
 F28#3: existing canonical Kitchen/cook/feed implementation audited; asynchronous repeat-cook repair authored; unit/native proof OPEN.
 F28#1/#2: chooser deployment and chapter integration defects repaired; source review PASS. Authorized existing all-five/loss-retry producer extension authored. Native route pack and code-blind perch capture gaps remain OPEN at6009524234; ordinary swim/Fly gaps recorded per6009171478.
