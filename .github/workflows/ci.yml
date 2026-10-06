@@ -3157,9 +3157,8 @@ jobs:
     # same stone. Measured 15.4 min locally (headless).
     runs-on: ubuntu-latest
     timeout-minutes: 35
-    needs:
-      - changes
-      - queue-after-long
+    # A ~15-min job: queued first, on `changes` only (QUEUE ORDER above).
+    needs: changes
     if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-f18-earned-loop|'))
     steps:
       - uses: actions/checkout@v4

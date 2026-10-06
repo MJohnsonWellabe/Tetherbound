@@ -468,7 +468,7 @@ func load_data(data: Dictionary) -> void:
 		var raw_hearts: Variant = data.get("realm_hearts", {})
 		hearts.call("load_data",
 			raw_hearts as Dictionary if typeof(raw_hearts) == TYPE_DICTIONARY else {},
-			flag_reader, redesign_character.get("relics_hung", []).duplicate() if redesign_character.get("relics_hung") is Array else [])
+			flag_reader, preload("res://autoload/realm_heart_state.gd").proved_hung(redesign_character, character_id))
 
 
 func _hotbar_array() -> Array:
