@@ -316,3 +316,18 @@ func test_an_unconfirmed_fold_stays_required_after_its_row_is_pruned() -> void:
 	assert_true(str(result.get("detail", "")).begins_with("payout"))
 	assert_eq((authority.call("rejoin_admission", character, backup, deliveries, ["home_key_given"], [g.delivery_id]) as Dictionary).get("code"),
 		"readmitted_portable", "once the owner holds it settled it is not behind")
+
+
+func test_a_compacted_windowed_receipt_is_recognised_for_training_recovery() -> void:
+	# Review of 8ca5ca73 H1: a guest adopted after 1024 wild defeats elsewhere
+	# no longer carries the accepted training row's defeat receipt; the record's
+	# own full window shows it compacted, so recovery must not refuse the hello.
+	var character := "character-rejoin-owner"
+	var window: int = preload("res://scripts/creatures/receipt_windows.gd").window("wild_defeat")
+	assert_true(window > 0, "wild_defeat is windowed (%d)" % window)
+	var receipts: Array = []
+	for i in window: receipts.append("defeat:%s:newer-%d" % [character, i])
+	assert_true(AUTHORITY.receipt_compacted(character, "defeat:%s:old" % character, receipts), "a full window compacted it")
+	receipts.pop_back()
+	assert_false(AUTHORITY.receipt_compacted(character, "defeat:%s:old" % character, receipts), "below the window it is missing")
+	assert_false(AUTHORITY.receipt_compacted(character, "craft:%s:altar" % character, receipts), "an unwindowed kind is never compacted")

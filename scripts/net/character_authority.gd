@@ -425,6 +425,20 @@ static func host_rows_unsettled(character: String, deliveries: Dictionary) -> bo
 	return false
 
 
+## A windowed transaction receipt absent from `receipts` because their own
+## window of that kind is full (receipt_windows keeps only the newest N).
+static func receipt_compacted(character: String, receipt: String, receipts: Array) -> bool:
+	var windows := preload("res://scripts/creatures/receipt_windows.gd")
+	var f32_prefix := "craft:%s:f32:" % character
+	if receipt.begins_with(f32_prefix):
+		var f32_window := int(preload("res://scripts/data/redesign_data.gd").json("res://data/config/f32_runtime.json").get("f32_receipt_window", 0))
+		return f32_window > 0 and receipts.filter(func(r: Variant) -> bool: return str(r).begins_with(f32_prefix)).size() >= f32_window
+	for kind: String in ["essence_spend", "wild_defeat", "shed_win", "combat_mastery", "trainer_round", "groom", "station_craft", "bounty_decision"]:
+		if windows.window(kind) > 0 and windows.is_kind(receipt, kind, character):
+			return receipts.filter(func(r: Variant) -> bool: return windows.is_kind(str(r), kind, character)).size() >= windows.window(kind)
+	return false
+
+
 ## True while a host-side transaction for this character is still open.
 func owes_unsettled(character: String) -> bool:
 	return _portal_stages.has(character) or _loadout_pending.has(character) or _vitals_pending.has(character) \
@@ -1215,7 +1229,11 @@ func recover_durable_training(character: String, deliveries: Dictionary) -> Dict
 	var current := state(character)
 	if row.status == "accepted":
 		# Old accepted history must never replace a later earned portable state.
-		if not current.redesign_character.transaction_receipts.has(row.receipt):
+		# A windowed receipt the record's own full window compacted (a guest
+		# adopted on rejoin after 1024 wild defeats elsewhere) is the same later
+		# earned state, not a missing one (review of 8ca5ca73, H1).
+		if not current.redesign_character.transaction_receipts.has(row.receipt) \
+				and not receipt_compacted(character, str(row.receipt), current.redesign_character.transaction_receipts):
 			return {"ok": false, "code": "accepted_training_marker_missing"}
 		if _research_reserved(character) and int(row.character_revision) > revision(character):
 			return {"ok": false, "code": "transaction_busy"}

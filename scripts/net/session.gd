@@ -37,10 +37,15 @@ var last_rejoin_admission: Dictionary = {}
 const MAX_SETTLED_DELIVERIES := 16384
 
 
-## The hello's settled and owed payout ids, filtered to this world's rows.
+## The hello's settled and owed payout ids, filtered to this world's rows --
+## and to folds this character has not yet confirmed, whose rows may already
+## be pruned (review L1: a lost "readmitted" must not read as behind).
 func rejoin_payout_lists(summary: Dictionary) -> Dictionary:
 	var out := {"valid": true, "settled": [], "owed": []}
-	var rows: Dictionary = _game().get("world").reward_deliveries if _game() != null else {}
+	var rows: Dictionary = (_game().get("world").reward_deliveries as Dictionary).duplicate() if _game() != null else {}
+	if _character_authority != null:
+		for fold: Variant in _character_authority.call("unconfirmed_folds", str(summary.get("character_id", ""))):
+			if fold is Dictionary: rows[str(fold.get("delivery_id", ""))] = true
 	for key: String in ["settled", "owed"]:
 		var raw: Variant = summary.get(key + "_deliveries", [])
 		if not raw is Array or (raw as Array).size() > MAX_SETTLED_DELIVERIES \
@@ -52,8 +57,7 @@ func rejoin_payout_lists(summary: Dictionary) -> Dictionary:
 
 
 ## The hello's rejoin decision; records its code for owner-passive admission.
-func rejoin_admission_for(character_id: String, portable: Dictionary, summary: Dictionary, lists: Dictionary = {}) -> Dictionary:
-	if lists.is_empty(): lists = rejoin_payout_lists(summary)
+func rejoin_admission_for(character_id: String, portable: Dictionary, summary: Dictionary, lists: Dictionary) -> Dictionary:
 	var rejoin: Dictionary = {"ok": false, "code": "payout_list_invalid"}
 	if lists.get("valid") == true:
 		rejoin = _character_authority.call("rejoin_admission", character_id, portable, _game().get("world").reward_deliveries,
