@@ -441,7 +441,7 @@ func test_tag_parent_retains_two_frozen_quicks_and_rejects_stale_or_duplicate_ar
 			assert_eq(pending.outcomes[1].binding, incoming_binding)
 			assert_eq(pending.outcomes[0].part, "outgoing")
 			assert_eq(pending.outcomes[1].part, "incoming")
-			for defect: String in ["none", "owner", "parent", "incoming", "generation", "request", "part"]:
+			for verdict_defect: String in ["none", "owner", "parent", "incoming", "generation", "request", "part"]:
 				var manager := MANAGER.new()
 				var director := preload("res://scripts/combat/encounter_director.gd").new()
 				var species := preload("res://scripts/creatures/creature_species.gd")
@@ -464,7 +464,7 @@ func test_tag_parent_retains_two_frozen_quicks_and_rejects_stale_or_duplicate_ar
 					signals[0] += 1
 					director._note_deployment_identity(1, "character-a", str(manager.active_creature().uid)))
 				var result := committed.duplicate(true)
-				match defect:
+				match verdict_defect:
 					"owner": result.delta.tether_commands.character_id = "foreign-owner"
 					"parent": result.delta.tether_commands.last_receipt.action_id = "foreign-parent"
 					"incoming": result.delta.switched_to_uid = "foreign-creature"
@@ -472,10 +472,10 @@ func test_tag_parent_retains_two_frozen_quicks_and_rejects_stale_or_duplicate_ar
 					"request": result.command_request.sequence = 2
 					"part": result.delta.effect.strikes[1].part = "outgoing"
 				manager.apply_tether_command_verdict(result)
-				assert_eq(manager.active_creature(), b if defect == "none" else a, defect)
-				assert_eq(signals[0], 1 if defect == "none" else 0)
+				assert_eq(manager.active_creature(), b if verdict_defect == "none" else a, verdict_defect)
+				assert_eq(signals[0], 1 if verdict_defect == "none" else 0)
 				assert_eq(manager._ally_body, body, "same piloted body survives accepted or refused Tag")
-				if defect == "none":
+				if verdict_defect == "none":
 					assert_eq(manager._switch_lockout, 1.5)
 					assert_false(manager._tether_command_view.has("pending_request"))
 					manager.apply_tether_command_verdict(result)
