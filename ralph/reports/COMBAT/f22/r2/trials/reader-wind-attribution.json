@@ -1,0 +1,156 @@
+{
+  "aggregate": {
+    "fraction": 0.6708661417322834,
+    "incoming_hit_snapshots": 635,
+    "wind_below30": 426
+  },
+  "attack_label_qualification": "Labels reflect foe current callback-time profile, not guaranteed originating-cast identities for persistent effects.",
+  "cohorts": {
+    "causeways-control": {
+      "artifact_zip_sha256": "40905c1ac5bf737fd2a8d213a0693307b97ba05d1d0c12878a064178620f8a23",
+      "count_wind_below": {
+        "15": 32,
+        "27": 58,
+        "30": 64,
+        "50": 120,
+        "65": 120
+      },
+      "enemy_attack_counts": {
+        "charger_check": 4,
+        "charger_double_rush": 72,
+        "charger_rush": 26,
+        "diver_leap": 18
+      },
+      "incoming_event_count": 120,
+      "median_hit_snapshot_wind": 27.9,
+      "player_action_counts": {
+        "0": 117,
+        "2": 3
+      },
+      "raw_member": "tree/r2-f22-causeways-control-20261006T0657Z.json",
+      "raw_member_sha256": "31904cc6961abb3f3b3596f4acd5e710f03f436aed63ebb186552acbc8ca9dc7",
+      "run_id": 37426574817
+    },
+    "gale-outer-control": {
+      "artifact_zip_sha256": "d2d454359dc0c92cf28bae787cec08b967e8bb404680f0ecea34bdff7420d33b",
+      "count_wind_below": {
+        "15": 49,
+        "27": 72,
+        "30": 76,
+        "50": 88,
+        "65": 96
+      },
+      "enemy_attack_counts": {
+        "charger_check": 4,
+        "charger_double_rush": 18,
+        "charger_rush": 12,
+        "current_volley": 15,
+        "current_zone": 32,
+        "diver_leap": 15,
+        "diver_retreat": 2
+      },
+      "incoming_event_count": 98,
+      "median_hit_snapshot_wind": 14.999999999999499,
+      "player_action_counts": {
+        "0": 79,
+        "2": 3,
+        "3": 11,
+        "4": 5
+      },
+      "raw_member": "tree/r2-f22-gale-outer-control-20261006T0712Z.json",
+      "raw_member_sha256": "4f1e14bea41efe65d1985f45a62748029754f7ce10dc6401b3c9733b08074b18",
+      "run_id": 37428055123
+    },
+    "gale-veilfall-control": {
+      "artifact_zip_sha256": "18a1174e137b89af7f01bd20c6227daa2b65b6edc44dc07c7668b5caea189761",
+      "count_wind_below": {
+        "15": 25,
+        "27": 49,
+        "30": 54,
+        "50": 65,
+        "65": 69
+      },
+      "enemy_attack_counts": {
+        "current_volley": 11,
+        "current_zone": 36,
+        "diver_leap": 22,
+        "diver_retreat": 1
+      },
+      "incoming_event_count": 70,
+      "median_hit_snapshot_wind": 18.599999999999497,
+      "player_action_counts": {
+        "0": 60,
+        "3": 7,
+        "4": 3
+      },
+      "raw_member": "tree/r2-f22-gale-veilfall-control-20261006T0712Z.json",
+      "raw_member_sha256": "92116c494d4fe32d617d986587d2ea18904871fb8d4a41ca5ea1a8b40c9fc5b3",
+      "run_id": 37428060530
+    },
+    "gate-control": {
+      "artifact_zip_sha256": "3cdbe07e6481fb45056b1774ad2e924cd6d59b1d70aed9a9ace59fbc80dc6a13",
+      "count_wind_below": {
+        "15": 73,
+        "27": 133,
+        "30": 136,
+        "50": 166,
+        "65": 176
+      },
+      "enemy_attack_counts": {
+        "current_volley": 63,
+        "current_zone": 118
+      },
+      "incoming_event_count": 181,
+      "median_hit_snapshot_wind": 19.1999999999994,
+      "player_action_counts": {
+        "0": 167,
+        "3": 9,
+        "4": 5
+      },
+      "raw_member": "tree/r2-f22-gate-control-20261006T0657Z.json",
+      "raw_member_sha256": "6892d6c51d5d81818efb460dc8326a31fd06c030e2967a48ec7af2fc82187381",
+      "run_id": 37426567224
+    },
+    "upper-control": {
+      "artifact_zip_sha256": "4a9edada39e6e6d318d08c813b869872049c077e814144a11ca27f18121f302d",
+      "count_wind_below": {
+        "15": 49,
+        "27": 87,
+        "30": 96,
+        "50": 166,
+        "65": 166
+      },
+      "enemy_attack_counts": {
+        "charger_check": 7,
+        "charger_double_rush": 82,
+        "charger_rush": 29,
+        "diver_leap": 37,
+        "diver_retreat": 11
+      },
+      "incoming_event_count": 166,
+      "median_hit_snapshot_wind": 25.0999999999995,
+      "player_action_counts": {
+        "0": 165,
+        "2": 1
+      },
+      "raw_member": "tree/r2-f22-upper-control-20261006T0657Z.json",
+      "raw_member_sha256": "076239b04e24ee3002d58de4b018c1554d33ba287a2a2b48a05e55b47a854d9f",
+      "run_id": 37426581942
+    }
+  },
+  "independent_review": {
+    "limits": "No pre-hit affordability/continuous Wind history/causal/escape/numerical acceptance proof.",
+    "reviewer": "/root/resolution_review",
+    "verdict": "PASS for exact five-control attribution/provenance only",
+    "verified": [
+      "Five ZIP/member/extracted hashes/run IDs",
+      "12 unique switching-reader seeds per cohort",
+      "Event totals equal incoming-hit counters",
+      "All medians/strict threshold bins/action counts/callback-profile label counts recomputed"
+    ]
+  },
+  "inference": "Most observed incoming hits coincide with Wind below original burst30. This supports measuring burst15 affordability with unchanged policy, without proving cause, pre-hit affordability, actual escape completion or numerical success.",
+  "pilot": "SWITCH_READER",
+  "product_sha": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+  "scope": "Attribution of incoming-hit events in preserved hosted controls; snapshot values after hit, not continuous Wind history or acceptance proof"
+}

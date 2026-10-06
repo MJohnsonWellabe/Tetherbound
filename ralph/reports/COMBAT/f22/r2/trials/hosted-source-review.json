@@ -184,6 +184,19 @@
       "Identical seed sets and single-key trial separation"
     ]
   },
+  "upper_range_final_review": {
+    "reviewer": "/root/resolution_review",
+    "scope": "Initial13 hosted cohorts complete/reviewed; no global/Windows/outgoing/legal-TM/visual acceptance.",
+    "verdict": "PASS for exact final original receipt and three-variant comparison; numerical floor FAIL",
+    "verified": [
+      "ZIP1087129B sha4abfe4f5796f6d4576b530da68999c6f1b1b6bc447864d336a8de956cbeb9f5f",
+      "All member/extracted hashes and lengths/summary conservation",
+      "Exact decoded official log source832/official4.7/intended arguments/Runexit1",
+      "36wins/zero stalls/paired12 perpolicy/complete incoming audits; bound.1514465717<.5",
+      "Untruncated10555604B console/complete matching JSON/no engine errors or warnings",
+      "Mlead.5663527633/Slead.7241350264/ratio1.2785936139FAIL; all three variant medians recomputed"
+    ]
+  },
   "verdict": "PASS for dispatch/source consistency only",
   "verified": [
     "Three populated Cloudreach bands times unchanged control, range7.5 and power1.5; nine immutable-source Terrapup12 ordinary-trainer diagnostics",

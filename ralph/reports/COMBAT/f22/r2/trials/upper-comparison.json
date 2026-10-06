@@ -1,7 +1,10 @@
 {
   "band": "cloudreach/upper_cloudreach",
-  "changed_key": "stone_rush.power=1.5",
-  "disposition": "No authored change. Power1.5 rejected independently by neutral single-hit ceiling; charged25 rejected as standalone fix by both Tidewake failures. Preserve completed measurements.",
+  "changed_keys": [
+    "stone_rush.power=1.5",
+    "pebble_toss.range=7.5"
+  ],
+  "disposition": "Allthree original Cloudreach pairs completed. Power1.5 rejected by neutral ceiling and numerical failures; range7.5 fails allthree floors. No authored candidate from initial matrix; next lever global burst15.",
   "paired_seed_sets_equal": true,
   "platform": "Hosted Ubuntu/default pacing; separate from original Windows baseline",
   "product_sha": "8323965ec6a73a20adaca867c56b4478660b8cb2",
@@ -67,6 +70,36 @@
       "ratio": 1.5105963780112535,
       "run_id": 37426587048,
       "switch_lead": 0.597539731229254
+    },
+    "upper-range": {
+      "floor_pass": false,
+      "masher_lead": 0.566352763322105,
+      "policies": {
+        "MASHER": {
+          "burst_uses": 0.0,
+          "charged_uses": 17.0,
+          "exhausted_frames": 3462.0,
+          "quick_uses": 86.0,
+          "seconds": 85.56666666666669
+        },
+        "READER": {
+          "burst_uses": 74.5,
+          "charged_uses": 4.5,
+          "exhausted_frames": 111.0,
+          "quick_uses": 72.0,
+          "seconds": 205.625
+        },
+        "SWITCH_READER": {
+          "burst_uses": 57.5,
+          "charged_uses": 5.0,
+          "exhausted_frames": 88.0,
+          "quick_uses": 68.5,
+          "seconds": 175.91666666666652
+        }
+      },
+      "ratio": 1.2785936138602834,
+      "run_id": 37426584500,
+      "switch_lead": 0.724135026375768
     }
   }
 }
