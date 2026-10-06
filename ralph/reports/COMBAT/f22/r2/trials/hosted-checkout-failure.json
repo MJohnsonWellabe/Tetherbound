@@ -1,0 +1,22 @@
+{
+  "run_id": 37426570038,
+  "label": "r2-f22-gate-range-20261006T0657Z",
+  "product_sha": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+  "workflow_sha": "8e7c11ceb5854f063c5241d62618c382803562c9",
+  "original_job_id": 112147457594,
+  "failed_step": "Run actions/checkout@v4",
+  "engine_started": false,
+  "diagnosis": "Partial-clone promisor fetch failed before setup or Godot execution; sibling control passed checkout. One confirming infrastructure retry only.",
+  "error_lines": [
+    "fatal: remote error: upload-pack: not our ref 77f336f45784906ffbeda5a050ad9b306428103e",
+    "fatal: could not fetch f1dd2c09108dde1a5f56097cee8461b3ea834499 from promisor remote"
+  ],
+  "log": "gate-range-checkout-attempt1.txt",
+  "log_provenance": "Exact UTF-8 serialization of decoded content returned by GitHub fetch_workflow_job_logs; not a raw log ZIP or native engine console.",
+  "log_bytes": 18762,
+  "log_sha256": "dc4c1516fce6ca95fb729927538485b3fe2774c0980752c9edad35dce240b588",
+  "retry_action": "rerun_workflow_job for original_job_id; API success true",
+  "retry_job_id_observed": 112148981060,
+  "retry_status_observed": "queued",
+  "trial_verdict": "OPEN; no numerical receipt or engine result exists for this trial"
+}

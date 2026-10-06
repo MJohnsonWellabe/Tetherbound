@@ -1,0 +1,21 @@
+{
+  "reviewer": "/root/resolution_review",
+  "reviewed_receipt_commit": "8e93d090e11e36660fb9240c553d78abdd0b8b9d",
+  "product_sha": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+  "workflow_sha": "8e7c11ceb5854f063c5241d62618c382803562c9",
+  "verdict": "PASS for dispatch/source consistency only",
+  "findings": [],
+  "verified": [
+    "Three populated Cloudreach bands times unchanged control, range7.5 and power1.5; nine immutable-source Terrapup12 ordinary-trainer diagnostics",
+    "Each trial changes exactly one independent in-memory move key; controls are unchanged",
+    "Unique labels/run IDs and recorded titles bind each dispatch to the product SHA",
+    "Actual main workflow recipe is text-identical to the inspected recipe",
+    "Seed hashes depend on band/starter/index and preserve policy/control/trial pairing",
+    "Root res:// JSON output needs no absent directory and is collected after expected subset exit1",
+    "Large-log truncation does not truncate the separate full JSON",
+    "Subset coverage=false and pass=false must remain distinct from individual cohort grades",
+    "No fixed-FPS input exists; paired hosted controls separate Linux/default-pacing diagnostics from the original Windows fixed-fps60 baseline"
+  ],
+  "runtime_verdict": "OPEN; dispatch/setup is not a completed cohort, clean runtime, native proof or global acceptance",
+  "reviewer_actions": "Read-only source and metadata; no edit, engine launch, import, test, new script or large-artifact work"
+}
