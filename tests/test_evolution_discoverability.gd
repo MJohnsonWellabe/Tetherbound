@@ -1,27 +1,9 @@
 extends "res://tests/test_case.gd"
 
-## OP-0905-18 (docs/owner/OWNER_PLAYTEST_2026-09-05.md): "When and how does
-## the pig evolve?" -- the gate itself (`tests/test_evolution.gd`) was always
-## real; nothing ever told the player it existed. This proves the fix:
-##
-##   * `progression_feed.gd::evolution_eligibility_event()` fires exactly
-##     once per creature, the moment `evolution.gd::check()` first reports
-##     every requirement met (level, bond tier AND the catalyst item) --
-##     never before the item is actually held, and never a second time for
-##     the same creature.
-##   * `progression_feed.gd::catalyst_pickup_text()`/`announce_catalyst_pickup()`
-##     name the real shipped gate (level, bond tier, the pre-evolution
-##     species) for a known evolution catalyst, and say nothing for an
-##     ordinary item.
-##   * `tab_creatures.gd`'s Team-tab detail text names every requirement a
-##     creature has NOT yet met, with its current value beside it, instead of
-##     the old line that only ever quoted the level gate.
-##
-## Reads the REAL shipped `progression.json`/`species.json`/
-## `bond_milestones.json` throughout (like `test_evolution.gd`'s own SD17
-## section) rather than a hand-built config, because the whole point is
-## whether a player reading these exact words learns the REAL rule.
-
+## Historical held-stone helper regressions keep an explicit legacy config.
+## Shipping catalyst copy uses the actual feast config. Current cap, saved
+## completion and held-stone refusal are tested in test_f28_training_boundaries.
+## No legacy helper assertion is skipped or disabled by the mode switch.
 const FEED := preload("res://scripts/creatures/progression_feed.gd")
 const EVOLUTION := preload("res://scripts/creatures/evolution.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
@@ -45,6 +27,14 @@ class FakeInventory:
 		counts[id] = int(counts.get(id, 0)) - n
 		return true
 
+
+## Legacy helper behavior remains tested explicitly. The shipping feast gate,
+## saved choice and cap are covered by test_f28_training_boundaries and the
+## existing feast choice component proof; catalyst copy below uses shipping config.
+func _legacy_config() -> Dictionary:
+	var cfg := PROGRESSION.config().duplicate(true)
+	cfg.erase("evolution_mode")
+	return cfg
 
 func before_each() -> void:
 	FEED.clear()
@@ -81,7 +71,7 @@ func _mudsnout(level: int, tier: int) -> RefCounted:
 # --- evolution_eligibility_event: fires once, only once every gate is met --
 
 func test_evolution_eligible_fires_once_for_a_creature_that_crosses_every_gate() -> void:
-	var cfg := PROGRESSION.config()
+	var cfg := _legacy_config()
 	var entry: Dictionary = cfg.get("evolution", {}).get("mudsnout", {}) as Dictionary
 	var level: int = int(entry.get("level", 15))
 	var bond_tier: int = int(entry.get("bond_tier", 3))
@@ -104,7 +94,7 @@ func test_evolution_eligible_fires_once_for_a_creature_that_crosses_every_gate()
 
 
 func test_evolution_eligible_does_not_fire_while_the_catalyst_is_missing() -> void:
-	var cfg := PROGRESSION.config()
+	var cfg := _legacy_config()
 	var entry: Dictionary = cfg.get("evolution", {}).get("mudsnout", {}) as Dictionary
 	var item_id := str(entry.get("item_id", ""))
 	if item_id == "":
@@ -116,7 +106,7 @@ func test_evolution_eligible_does_not_fire_while_the_catalyst_is_missing() -> vo
 
 
 func test_evolution_eligible_does_not_fire_below_the_level_or_bond_gate() -> void:
-	var cfg := PROGRESSION.config()
+	var cfg := _legacy_config()
 	var creature := _mudsnout(3, 0)
 	var event := FEED.evolution_eligibility_event(creature, cfg, FakeInventory.new())
 	assert_true(event.is_empty())
@@ -126,7 +116,7 @@ func test_evolution_eligible_does_not_fire_below_the_level_or_bond_gate() -> voi
 func test_a_species_with_no_evolution_link_is_never_announced() -> void:
 	var creature: RefCounted = SPECIES.spawn("bramblebun")
 	creature.set("level", 50)
-	var event := FEED.evolution_eligibility_event(creature, PROGRESSION.config(), null)
+	var event := FEED.evolution_eligibility_event(creature, _legacy_config(), null)
 	assert_true(event.is_empty())
 
 
@@ -136,8 +126,8 @@ func test_catalyst_pickup_text_names_the_real_gate_for_both_shipped_stones() -> 
 	var cfg := PROGRESSION.config()
 	var heartstone := FEED.catalyst_pickup_text("heartstone", cfg)
 	assert_true(heartstone.contains("Heartstone"), heartstone)
-	assert_true(heartstone.contains("Lv 15"), heartstone)
-	assert_true(heartstone.contains("bond tier 3"), heartstone)
+	assert_true(heartstone.contains("Lv 20"), heartstone)
+	assert_true(heartstone.contains("Kitchen"), heartstone)
 	assert_true(heartstone.contains("Mudsnout"), heartstone)
 
 	var sunstone := FEED.catalyst_pickup_text("sunstone", cfg)
@@ -146,8 +136,8 @@ func test_catalyst_pickup_text_names_the_real_gate_for_both_shipped_stones() -> 
 
 
 func test_catalyst_pickup_text_is_empty_for_an_ordinary_item() -> void:
-	assert_eq(FEED.catalyst_pickup_text("good_candy", PROGRESSION.config()), "")
-	assert_eq(FEED.catalyst_pickup_text("", PROGRESSION.config()), "")
+	assert_eq(FEED.catalyst_pickup_text("good_candy", _legacy_config()), "")
+	assert_eq(FEED.catalyst_pickup_text("", _legacy_config()), "")
 
 
 func test_announce_catalyst_pickup_pushes_one_catalyst_found_event_for_a_real_catalyst() -> void:
@@ -182,14 +172,14 @@ func test_evolution_eligible_and_catalyst_found_are_moments_with_the_actual_verb
 
 func test_missing_text_names_all_three_unmet_requirements_with_current_values() -> void:
 	var creature := _mudsnout(11, 2)
-	var text := TAB_CREATURES._evolution_missing_text(creature, PROGRESSION.config(), null)
+	var text := TAB_CREATURES._evolution_missing_text(creature, _legacy_config(), null)
 	assert_true(text.contains("Lv 15 (now 11)"), text)
 	assert_true(text.contains("Bond tier 3 (now 2)"), text)
 	assert_true(text.contains("needs Heartstone"), text)
 
 
 func test_missing_text_names_only_what_is_actually_unmet() -> void:
-	var cfg := PROGRESSION.config()
+	var cfg := _legacy_config()
 	var entry: Dictionary = cfg.get("evolution", {}).get("mudsnout", {}) as Dictionary
 	var creature := _mudsnout(int(entry.get("level", 15)), int(entry.get("bond_tier", 3)))
 	var text := TAB_CREATURES._evolution_missing_text(creature, cfg, null)
@@ -199,7 +189,7 @@ func test_missing_text_names_only_what_is_actually_unmet() -> void:
 
 
 func test_missing_text_is_empty_once_every_requirement_including_the_item_is_met() -> void:
-	var cfg := PROGRESSION.config()
+	var cfg := _legacy_config()
 	var entry: Dictionary = cfg.get("evolution", {}).get("mudsnout", {}) as Dictionary
 	var creature := _mudsnout(int(entry.get("level", 15)), int(entry.get("bond_tier", 3)))
 	var inventory := FakeInventory.new()
@@ -211,11 +201,11 @@ func test_missing_text_is_empty_once_every_requirement_including_the_item_is_met
 
 func test_missing_text_is_empty_for_a_species_that_does_not_evolve() -> void:
 	var creature: RefCounted = SPECIES.spawn("bramblebun")
-	assert_eq(TAB_CREATURES._evolution_missing_text(creature, PROGRESSION.config(), null), "")
+	assert_eq(TAB_CREATURES._evolution_missing_text(creature, _legacy_config(), null), "")
 
 
 func test_xp_next_line_reports_ready_to_evolve_once_every_gate_is_met() -> void:
-	var cfg := PROGRESSION.config()
+	var cfg := _legacy_config()
 	var entry: Dictionary = cfg.get("evolution", {}).get("mudsnout", {}) as Dictionary
 	var creature := _mudsnout(int(entry.get("level", 15)), int(entry.get("bond_tier", 3)))
 	var inventory := FakeInventory.new()
@@ -228,5 +218,5 @@ func test_xp_next_line_reports_ready_to_evolve_once_every_gate_is_met() -> void:
 
 func test_xp_next_line_names_missing_requirements_when_not_yet_eligible() -> void:
 	var creature := _mudsnout(5, 0)
-	var line := TAB_CREATURES._xp_next_line(creature, PROGRESSION.config(), null)
+	var line := TAB_CREATURES._xp_next_line(creature, _legacy_config(), null)
 	assert_true(line.contains("Lv 15 (now 5)"), line)

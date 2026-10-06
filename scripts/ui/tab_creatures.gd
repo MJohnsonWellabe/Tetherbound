@@ -1570,7 +1570,7 @@ static func _xp_next_line(creature: RefCounted, cfg: Dictionary, inventory: RefC
 		parts.append("%d EXP to Lv %d" % [PROGRESSION_FEED.xp_remaining(creature, cfg), level + 1])
 		if PROGRESSION_FEED.xp_near(creature, cfg):
 			parts.append("one fight away")
-	var req: Dictionary = cfg.get("evolution", {}).get(str(creature.get("species_id")), {})
+	var req: Dictionary = EVOLUTION.requirements(str(creature.get("species_id")), cfg)
 	if not req.is_empty():
 		var missing := _evolution_missing_text(creature, cfg, inventory)
 		parts.append(missing if missing != "" else "ready to evolve")

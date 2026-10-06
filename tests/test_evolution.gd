@@ -290,7 +290,7 @@ func test_refusal_with_no_catalyst_names_both_stones() -> void:
 		"a refusal with no stone held should name the whole fork, not one branch of it: '%s'" % reason)
 
 
-func test_the_shipped_gate_refuses_without_the_catalyst_and_allows_with_it() -> void:
+func test_the_shipped_gate_refuses_held_stone_shortcut_and_preserves_the_catalyst() -> void:
 	var cfg := _shipped_config()
 	var entry: Dictionary = cfg.get("evolution", {}).get("mudsnout", {}) as Dictionary
 	var item_id := str(entry.get("item_id", ""))
@@ -306,7 +306,9 @@ func test_the_shipped_gate_refuses_without_the_catalyst_and_allows_with_it() -> 
 	assert_true(str(without.get("reason")).length() > 0,
 		"the refusal must say what is missing, not fail silently")
 	inventory.counts[item_id] = 1
-	assert_true(bool(EVOLUTION.check(creature, cfg, inventory).get("eligible")),
-		"carrying the catalyst the Burrow Warrens drops must open the gate")
-	assert_true(EVOLUTION.evolve(creature, cfg, inventory))
-	assert_eq(inventory.count(item_id), 0, "evolving must spend the catalyst")
+	assert_eq(cfg.get("evolution_mode"), "breakthrough")
+	assert_false(bool(EVOLUTION.check(creature, cfg, inventory).get("eligible")),
+		"a held stone cannot bypass the Kitchen feast and explicit choice")
+	assert_false(EVOLUTION.evolve(creature, cfg, inventory))
+	assert_eq(inventory.count(item_id), 1, "shortcut refusal must preserve the stone")
+	assert_eq(creature.species_id, "mudsnout")

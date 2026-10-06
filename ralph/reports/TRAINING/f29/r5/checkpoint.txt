@@ -1,0 +1,1 @@
+F29 candidate and holds are recorded in ../f28/r5/checkpoint.txt. No acceptance credit. Source relations checker raw error/exit retained here.

@@ -9,12 +9,38 @@ const SITE := preload("res://scripts/masters/master_site.gd")
 var _submit: Callable
 var _view: Callable
 var _panel: Control
+var _producer: Object
 
 func bind_actions(submit_action: Callable, personal_view: Callable) -> bool:
 	if not submit_action.is_valid() or not personal_view.is_valid(): return false
+	if is_instance_valid(_producer) and _producer.has_signal("homestead_action_completed") and _producer.is_connected("homestead_action_completed", _action_completed):
+		_producer.disconnect("homestead_action_completed", _action_completed)
+	if is_instance_valid(_producer) and _producer.has_signal("foundation_reply_received") and _producer.is_connected("foundation_reply_received", _foundation_reply):
+		_producer.disconnect("foundation_reply_received", _foundation_reply)
 	_submit = submit_action
 	_view = personal_view
+	var producer: Object = _submit.get_object()
+	_producer = producer
+	if producer != null and producer.has_signal("homestead_action_completed") \
+			and not producer.is_connected("homestead_action_completed", _action_completed):
+		producer.connect("homestead_action_completed", _action_completed)
+	if producer != null and producer.has_signal("foundation_reply_received") \
+			and not producer.is_connected("foundation_reply_received", _foundation_reply):
+		producer.connect("foundation_reply_received", _foundation_reply)
 	return true
+
+## Session already fenced this reply to the exact sent envelope. Admission
+## failure has no saved reward; it releases the chooser for another attempt.
+func _foundation_reply(envelope: Dictionary, result: Dictionary) -> void:
+	if envelope.get("op") != "master_duel" or not envelope.get("intent") is Dictionary \
+			or result.get("ok") != false or result.get("code") == "awaiting_saved_decision": return
+	var refused := result.duplicate(true)
+	refused.terminal_refusal = true
+	_action_completed("master_duel", envelope.intent, refused)
+
+func _action_completed(action: String, original: Dictionary, result: Dictionary) -> void:
+	if is_instance_valid(_panel):
+		_panel.call("accept_completion", action, original, result)
 
 func submit(op: String, intent: Dictionary, source: Node) -> Dictionary:
 	if not _submit.is_valid():
@@ -113,4 +139,8 @@ func _message(message: String) -> void:
 	if game != null and not message.is_empty(): game.call("push_world_message", message)
 
 func _exit_tree() -> void:
+	if is_instance_valid(_producer) and _producer.has_signal("homestead_action_completed") and _producer.is_connected("homestead_action_completed", _action_completed):
+		_producer.disconnect("homestead_action_completed", _action_completed)
+	if is_instance_valid(_producer) and _producer.has_signal("foundation_reply_received") and _producer.is_connected("foundation_reply_received", _foundation_reply):
+		_producer.disconnect("foundation_reply_received", _foundation_reply)
 	if is_instance_valid(_panel): _panel.queue_free()

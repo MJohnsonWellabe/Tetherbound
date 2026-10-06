@@ -12,6 +12,8 @@ var _list: VBoxContainer
 var _message: Label
 var _craft_id := ""
 var _recipe := ""
+var _pending_action := ""
+var _pending_intent: Dictionary = {}
 
 func _ready() -> void:
 	add_to_group(INPUT.GROUP)
@@ -111,6 +113,9 @@ func _button(label: String, action: Callable, disabled: bool = false) -> void:
 	_list.add_child(button)
 
 func _cook(recipe: String) -> void:
+	if _pending_action == "feast_cook":
+		_send(_pending_action, _pending_intent.duplicate(true))
+		return
 	if _recipe != recipe or _craft_id.is_empty():
 		_recipe = recipe
 		_craft_id = Crypto.new().generate_random_bytes(16).hex_encode()
@@ -132,6 +137,11 @@ func _feed(uid: String, item: String, choice: String) -> void:
 	_send("feast_feed", {"creature_uid": uid, "feast_item": item, "choice": choice})
 
 func _send(op: String, intent: Dictionary) -> void:
+	if not _pending_action.is_empty() and (op != _pending_action or intent != _pending_intent):
+		_message.text = "Waiting for your original character transaction to save."
+		return
+	_pending_action = op
+	_pending_intent = intent.duplicate(true)
 	var result: Dictionary = _service.call("submit", op, intent, _source)
 	_message.text = str(result.get("reason", result.get("code", "Awaiting durable character save…")))
 	# Admission starts combat; it is not a saved Master win. Release this
@@ -139,12 +149,35 @@ func _send(op: String, intent: Dictionary) -> void:
 	# its input ownership cannot hold the newly started fight behind a menu.
 	if op == "master_duel" and result.get("ok") == true \
 		and result.get("encounter_id") is String and not result.encounter_id.is_empty():
+		_pending_action = ""
+		_pending_intent = {}
 		close()
 		return
-	if result.get("ok") == true and result.get("settled") == true:
-		_craft_id = ""
+	accept_completion(op, intent, result)
+
+## The authenticated producer emits this only after the existing owner-save
+## settlement. An unrelated or delayed transaction must never clear the ID
+## belonging to the next cook; retries keep their original immutable intent.
+func accept_completion(action: String, original: Dictionary, result: Dictionary) -> bool:
+	if action == _pending_action and original == _pending_intent \
+			and result.get("ok") == false and result.get("terminal_refusal") == true:
+		_pending_action = ""
+		_pending_intent = {}
+		if action == "feast_cook": _craft_id = ""
+		if is_instance_valid(_message): _message.text = str(result.get("reason", result.get("code", "Character transaction refused.")))
+		return true
+	if action != _pending_action or original != _pending_intent \
+			or result.get("ok") != true or result.get("settled") != true \
+			or result.get("durable") != true or result.get("owner_saved") != true \
+			or result.get("owner_acknowledged") != true:
+		return false
+	_pending_action = ""
+	_pending_intent = {}
+	if action == "feast_cook": _craft_id = ""
+	if visible:
 		if _mode == "duel": close()
 		else: _rebuild()
+	return true
 
 func _unhandled_input(event: InputEvent) -> void:
 	if visible and event.is_action_pressed("ui_cancel"):
@@ -152,5 +185,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		close()
 
 func close() -> void:
+	if _pending_action == "master_duel":
+		_pending_action = ""
+		_pending_intent = {}
 	INPUT.suppress_pause_reopen(get_tree())
 	hide()

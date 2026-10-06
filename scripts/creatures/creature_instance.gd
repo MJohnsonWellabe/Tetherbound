@@ -640,19 +640,22 @@ func _forget_unlocks_above_level() -> void:
 ## bonus, rest bonus) reaches the feed through here without being edited;
 ## a multi-level jump pushes ONE `level_up` with `levels_gained > 1`.
 func gain_xp(amount: int, cfg: Dictionary) -> int:
-	if amount <= 0:
+	var cap := _admitted_level_cap(cfg)
+	if cap < 0: return 0
+	if level >= cap:
+		xp = 0
 		return 0
+	if amount <= 0: return 0
 	var old_level := level
 	var before := _stat_snapshot()
 	xp += amount
-
-	var cap := int(cfg.get("level", {}).get("cap", level))
 	var levels_gained := 0
 	while level < cap and xp >= xp_to_next(cfg):
 		xp -= xp_to_next(cfg)
 		level += 1
 		levels_gained += 1
 		_apply_level_stats(cfg)
+	if level == cap: xp = 0
 	FEED.push("xp_gained", self, {
 		"amount": amount, "xp": xp, "xp_to_next": xp_to_next(cfg), "level": level,
 	})
@@ -672,20 +675,42 @@ func gain_xp(amount: int, cfg: Dictionary) -> int:
 ## through the same `level_up` event so candy and combat share one feedback
 ## language.
 func gain_levels(count: int, cfg: Dictionary) -> int:
-	if count <= 0:
+	var cap := _admitted_level_cap(cfg)
+	if cap < 0: return 0
+	if level >= cap:
+		xp = 0
 		return 0
-	var cap := int(cfg.get("level", {}).get("cap", 50))
+	if count <= 0: return 0
 	var old_level := level
 	var target := clampi(level + count, 1, cap)
 	var gained := target - old_level
 	if gained <= 0:
+		if level >= cap: xp = 0
 		return 0
 	var before := _stat_snapshot()
 	level = target
+	if level == cap: xp = 0
 	_apply_level_stats(cfg)
 	TEACHING.refresh_known_moves(self)
 	_announce_level_up(old_level, before, cfg, "candy")
 	return gained
+
+
+## Legacy live XP callers still pass the shared curve. The exact owned
+## instance must respect its admitted mirror too; detached spawn/library
+## callers retain their explicitly supplied cap. No cap is inferred from level.
+func _admitted_level_cap(cfg: Dictionary, personal: Variant = null) -> int:
+	var cap := int(cfg.get("level", {}).get("cap", level))
+	if personal == null:
+		var owner := FEED.game()
+		var player: RefCounted = owner.get("local") if owner != null else null
+		var owned_party: RefCounted = player.get("party") if player != null else null
+		if owned_party == null or not (owned_party.call("members") as Array).has(self): return cap
+		personal = player.get("redesign_character")
+	if not personal is Dictionary: return -1
+	var essence: GDScript = load("res://scripts/creatures/essence.gd")
+	var admitted: int = essence.call("creature_cap", personal, uid)
+	return mini(cap, admitted) if admitted >= 0 else -1
 
 
 func _stat_snapshot() -> Dictionary:
@@ -703,6 +728,7 @@ func _stat_snapshot() -> Dictionary:
 ## the Team screen's own evolve check).
 func _announce_level_up(old_level: int, before: Dictionary, cfg: Dictionary, source: String) -> void:
 	var req: Dictionary = cfg.get("evolution", {}).get(species_id, {})
+	if cfg.get("evolution_mode") == "breakthrough": req = {}
 	var level_needed := int(req.get("level", 0))
 	var level_reached := level_needed > 0 and old_level < level_needed and level >= level_needed
 	var nodes := bond_nodes(cfg)
