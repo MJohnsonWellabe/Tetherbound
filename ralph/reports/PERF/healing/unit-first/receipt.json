@@ -1,0 +1,32 @@
+{
+  "source_head": "5c81904d9fb07a78c4c7eb308cf15117879d88d8",
+  "approved_by": "PR525 comment6009171478",
+  "cache_basis": "tracked project.godot/assets/addons identical to R1; all cached script paths exist; local copy, no import",
+  "background": [
+    {
+      "ProcessId": 15796,
+      "ParentProcessId": 7800,
+      "Name": "Godot_v4.7-stable_win64_console.exe",
+      "CommandLine": "\"D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64_console.exe\" --headless --path D:\\tetherbound\\codex-r2 --fixed-fps 60 --script tests/smoke_f22_pattern_bands.gd -- --seeds=12 --trainers --json=D:/tetherbound/codex-r2/ralph/reports/COMBAT/f22/r2/baseline/full.json"
+    },
+    {
+      "ProcessId": 8624,
+      "ParentProcessId": 15796,
+      "Name": "Godot_v4.7-stable_win64.exe",
+      "CommandLine": "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe --headless --path D:\\tetherbound\\codex-r2 --fixed-fps 60 --script tests/smoke_f22_pattern_bands.gd -- --seeds=12 --trainers --json=D:/tetherbound/codex-r2/ralph/reports/COMBAT/f22/r2/baseline/full.json"
+    }
+  ],
+  "started_utc": "2026-10-06T04:57:25.6031612+00:00",
+  "claim": "focused correctness only; no timing acceptance",
+  "run_id": "p1-healing-unit-first",
+  "cache_source": "D:/tetherbound/codex-r1/.godot",
+  "command": [
+    "--headless",
+    "--path",
+    "D:/tetherbound/codex-p1",
+    "--script",
+    "tests/run_tests.gd",
+    "--",
+    "--only=meadow_healing_land_heals"
+  ]
+}

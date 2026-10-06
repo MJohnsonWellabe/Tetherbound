@@ -1,0 +1,5 @@
+** -text whitespace=cr-at-eol
+compiler/handoff.stdout.log whitespace=cr-at-eol,-blank-at-eof
+compiler/healing.stdout.log whitespace=cr-at-eol,-blank-at-eof
+private-home/Godot/app_userdata/Tetherbound/logs/godot2026-10-06T02.06.17.log whitespace=cr-at-eol,-blank-at-eof
+private-home/Godot/app_userdata/Tetherbound/logs/godot2026-10-06T02.06.28.log whitespace=cr-at-eol,-blank-at-eof

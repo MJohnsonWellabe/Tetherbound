@@ -229,6 +229,7 @@ static func gate_presentation_fit(mesh: Mesh, collision_opening: float,
 ## climb `village.gd`, `old_quarry.gd` and `severed_spokes.gd` use (D09: never
 ## a raycast for ground).
 func build(world: Node3D) -> bool:
+	add_to_group(&"meadow_healing_light_roots")
 	_config = _load_config()
 	if _config.is_empty():
 		push_warning("tether_relay.json missing or unreadable; the relay station does not stand")
@@ -2029,6 +2030,7 @@ func _build_cable_links() -> void:
 
 	var holder := Node3D.new()
 	holder.name = "CableLinks"
+	holder.add_to_group(&"meadow_healing_cable_holders")
 	add_child(holder)
 	# The SAME cached lit-conduit material every span already carries, by
 	# identity — so `_kill_the_conduits`' material-identity sweep turns these

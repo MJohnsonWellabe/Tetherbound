@@ -62,6 +62,7 @@ var _arrival_scatter_removed := 0
 ## climb `village.gd`, `road_gate.gd` and `severed_spokes.gd` use (D09: never
 ## a raycast for ground).
 func build(world: Node3D) -> void:
+	add_to_group(&"meadow_healing_light_roots")
 	var config := _load_config()
 	if config.is_empty():
 		push_warning("old_quarry.json missing or unreadable; the quarry has no foundations or hardware")

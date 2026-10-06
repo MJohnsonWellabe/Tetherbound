@@ -1,0 +1,22 @@
+[
+  {
+    "path": "receipt.json",
+    "bytes": 2779,
+    "sha256": "123439865AB6B29CC662FA5D800F973114FFBE25A4B8885A70443FC55BB1BAB9"
+  },
+  {
+    "path": "stdout.log",
+    "bytes": 469,
+    "sha256": "F3AA3FCE1035BB743BAEC9DDE219EDD5ADC1A5D0B8E077731560167A9B16D570"
+  },
+  {
+    "path": "stderr.log",
+    "bytes": 5187,
+    "sha256": "138B0B97D842E2D989E685CF254E86D2531FE52DB5D2F820244AC271746F5AA6"
+  },
+  {
+    "path": "exit.txt",
+    "bytes": 1,
+    "sha256": "5FECEB66FFC86F38D952786C6D696C79C2DBC239DD4E91B46729D73A27FB57E9"
+  }
+]

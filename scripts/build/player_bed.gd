@@ -1,5 +1,9 @@
 extends Node3D
 
+
+func _init() -> void:
+	add_to_group(&"companion_camp_sources")
+
 ## OWNER-0902-CAMP-SPLIT: the player's own bedroll, split out of camp.gd's
 ## bundled camp into its own independently placeable buildable
 ## (`data/items/buildables.json`'s `bedroll`) -- carries the "Rest until
