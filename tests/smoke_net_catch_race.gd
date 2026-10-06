@@ -409,6 +409,7 @@ func _run() -> void:
 	# so the normal guest throw is aimed at the same current centre the host will
 	# validate.  It supplies no outcome data.
 	var positive_record := await _encounter(0)
+	var positive_guest_record := await _encounter(1)
 	var positive_target := _vec(positive_record.get("opponent_pos", []))
 	var guest_before_positive := await _catch_row(1, "guest before deterministic catch")
 	var canonical_card: Dictionary = positive_record.get("opponent_card", {}) as Dictionary
@@ -470,7 +471,7 @@ func _run() -> void:
 		and int((delivered_cards[0] as Dictionary).get("caught_on_day", 0)) >= 1,
 		"guest received the host-confirmed canonical identity and stats; only caught_on_day is stamped at grant")
 	if preload("res://scripts/creatures/traits.gd").runtime_enabled():
-		await _assert_ordinary_capture_traits(positive_record, guest_after_positive, delivered_cards)
+		await _assert_ordinary_capture_traits(positive_record, positive_guest_record, guest_after_positive, delivered_cards)
 
 	print("assertions run: %d" % _asserts)
 	quit(await finish())
@@ -478,14 +479,16 @@ func _run() -> void:
 
 # --- reading peers -----------------------------------------------------------
 
-func _assert_ordinary_capture_traits(host_record: Dictionary, guest: Dictionary, delivered: Array) -> void:
+func _assert_ordinary_capture_traits(host_record: Dictionary, guest_record: Dictionary, guest: Dictionary, delivered: Array) -> void:
 	var reply: Dictionary = guest.get("finish_reply", {}) as Dictionary
 	var packet: Dictionary = reply.get("capture_traits", {}) as Dictionary
 	want(preload("res://scripts/save/water_capture_codec.gd").valid_capture_traits(packet),
 		"the real host catch finish carries a valid initialized F30 trait packet")
 	var source: Dictionary = packet.get("captured_from", {}) as Dictionary
-	want(source.get("spawn_id") == host_record.get("id") and int(source.get("spawn_generation", 0)) > 0,
-		"the packet retains the actual ordinary encounter identity and a positive body generation")
+	want(source.get("spawn_id") == host_record.get("id") and guest_record.get("id") == host_record.get("id")
+		and int(source.get("spawn_generation", 0)) > 0
+		and int(source.get("spawn_generation", 0)) == int(guest_record.get("presentation_body_generation", 0)),
+		"the packet retains the actual ordinary encounter identity and its pre-catch guest body generation")
 	var carrier_reply: Dictionary = await step(1, "foundations_state", {"mode": "inspect"})
 	want(str(carrier_reply.get("verdict", "")) == "PASS",
 		"the guest's existing full character carrier inspection succeeds")
