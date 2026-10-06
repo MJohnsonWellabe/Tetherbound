@@ -1,9 +1,48 @@
 {
+  "burst15_delay02_proposal": {
+    "acceptance": "OPEN; source hypothesis alone establishes no criterion.",
+    "candidate": "wind.burst_cost=15,wind.regen_delay=0.2",
+    "comparison_separation": "Against failed native burst15 control, only quiet delay changes .6 to .2; hosted original controls would be a qualified two-key resource batch comparison.",
+    "consumer_source": [
+      "scripts/combat/combat_manager.gd:2605",
+      "scripts/combat/combat_manager.gd:2631",
+      "scripts/net/encounter_host.gd:615",
+      "scripts/combat/encounter_director.gd:3079",
+      "scripts/combat/encounter_director.gd:3265"
+    ],
+    "expected_effect": "Earlier replenishment during actual quiet READY time, with commitment states still excluded and spend still resetting quiet. Species cap/rate overrides unchanged. Masher can also benefit from real quiet gaps; final allstarter preservation required.",
+    "independent_review": {
+      "limits": "No causal/numerical/timing-equivalence/full-authority/criterion proof.",
+      "reviewer": "/root/resolution_review",
+      "verdict": "PASS for existing source-consumer hypothesis only",
+      "verified": [
+        "Native delay read/state exclusion/quiet reset on spending",
+        "Species capacity and regeneration-rate override only",
+        "Existing hosted/Stormwood/canonical callers read or forward shared delay",
+        "Host scheduling and commit scheduling accept0.2",
+        "Against failed burst15 native pair onlydelay.6to.2changes; MASHER may also be affected"
+      ]
+    },
+    "product_pin": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+    "proposal_comment_id": 6012860836,
+    "runtime_grounding": "Native15 incoming-hit snapshot medianWind5.8 and113/162 below15 vsnativecontrol18.9 and75/181; not continuous or causal proof. Charged uses fell5 to3, showing cost-only change insufficient.",
+    "status": "UNEXECUTED; no authored data. Independent source-consumer PASS only. Local follow-up respects P2quiet reservation; hosted respects landingCI hold.",
+    "unchanged": [
+      "damage powers",
+      "variance",
+      "type/TM modifiers",
+      "body size",
+      "move reach",
+      "burst distance/duration",
+      "control policy"
+    ]
+  },
   "burst15_refinement_source_review": {
     "candidate": "wind.burst_cost=15",
     "limits": "Assumes full base Wind and no other spending/regeneration; actual reach, energy, punish window and acceptance remain measurement questions. No policy, geometry, damage or authored data change.",
     "proposal_comment_id": 6012322891,
     "reviewer": "/root/resolution_review",
+    "runtime_disposition": "Native Gate12 paired trial completed FAIL: ratio1.2428390912 vscontrol1.2689970222; no authored burst15 standalone fix. Exact native receipts/comparison preserved separately.",
     "verdict": "PASS for unchanged production consumer and recovery-guard arithmetic only; runtime OPEN",
     "verified": [
       "Existing wind_cost and consume_wind debit the patched player burst cost",

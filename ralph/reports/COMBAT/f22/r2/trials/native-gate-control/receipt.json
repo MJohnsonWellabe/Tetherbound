@@ -1,0 +1,192 @@
+{
+  "all_audits_complete": true,
+  "all_wins": true,
+  "archive_inventory": [
+    {
+      "length": 7331971,
+      "path": "console.log",
+      "sha256": "558dd28002c004defbc8d9d71f2176d163b3357f6a160d668375e8338fb4f2b3"
+    },
+    {
+      "length": 92,
+      "path": "exit.json",
+      "sha256": "41074d3b95c18adb34097c88352c1b48b1c481788866947d0425239d45de7d55"
+    },
+    {
+      "length": 7928765,
+      "path": "full.json",
+      "sha256": "209f1b3a9af9532ec2928380dae4f5183b1d206047c71ea638b63751ffe925c3"
+    },
+    {
+      "length": 390,
+      "path": "launch.json",
+      "sha256": "eff6e8228b4ee07ba7693cfcdbdc3debe4484f7a63ba35026661f97e9b8fef59"
+    },
+    {
+      "length": 219,
+      "path": "private-appdata/Godot/app_userdata/Tetherbound/boot_log.txt",
+      "sha256": "d376bdc9318f17af35502065c9f8c45eacbb01077b2da8a129aa8c92374b3e8b"
+    },
+    {
+      "length": 7331968,
+      "path": "private-appdata/Godot/app_userdata/Tetherbound/logs/godot.log",
+      "sha256": "e6f667532dc381cabc00730a9d61d40728b04dee9477c5026aeb78aef64ea494"
+    },
+    {
+      "length": 2774528,
+      "path": "private-appdata/Godot/app_userdata/Tetherbound/saves/redesign-v28/characters/character-30832b38e52593002db33d8ee53706cc/character.json",
+      "sha256": "0558a8bdbac3baaa8f6f64ff38782ad7bfecb0b25e289ae778a2593f9b2d21be"
+    },
+    {
+      "length": 4173492,
+      "path": "private-appdata/Godot/app_userdata/Tetherbound/saves/redesign-v28/slot_0.json",
+      "sha256": "973485ae43399df9ca81c9b2417338300b54e56488c5358dd9409076b5facc57"
+    },
+    {
+      "length": 923,
+      "path": "private-appdata/Godot/app_userdata/Tetherbound/saves/redesign-v28/worlds/slot-0/world.json",
+      "sha256": "a1d362f4d9995835c2affaf690867b7c235b03b72cceffc51d6b2e5936b932fb"
+    },
+    {
+      "length": 0,
+      "path": "stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "artifact_size": 722456,
+  "artifact_zip_sha256": "6b761f448af7f0cd0eb3849a262e69b15f995235c0ece2103c0bdabcceb2455d",
+  "exit_binding": "Captured waited console-wrapper process ExitCode, retained raw exit.json. JSON output and native console agree; subset overallpass=false.",
+  "independent_review": {
+    "platform_qualification": "Matching medians do not prove identical runs: native plain READER faint8/12 versus hosted9/12. One-band native control only, not global acceptance.",
+    "reviewer": "/root/resolution_review",
+    "verdict": "PASS for completed native control integrity; numerical floor FAIL",
+    "verified": [
+      "Exact722456B ZIP/all10members/original hashes/summary conservation",
+      "832 to b655 diff contains evidence-only paths",
+      "Fixed60 intended native arguments/PID6896 terminal exit1 retained",
+      "Official4.7 complete matching console JSON/noerrors-warnings/stderr0",
+      "36wins/zero stalls/paired12/all configured incoming audits; bound.1691966387<.5",
+      "Mlead.5745062732/Slead.7290467498/ratio1.2689970222 recomputed"
+    ]
+  },
+  "launch": {
+    "args": "--seeds=12 --trainers --band=cloudreach/gate_lower_cliffs --starters=terrapup",
+    "fixed_fps": 60,
+    "mode": "already-imported flat fixture/no render lease",
+    "pid": 6896,
+    "product_pin": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+    "source_sha": "b655facf78f9de0310e64bcad18d4af3b6f412e2",
+    "started_utc": "2026-10-06T08:37:08.0432744Z",
+    "status": "running"
+  },
+  "limits": [
+    "Native one-band control only; full2052/allstarter/after data preservation OPEN",
+    "Configured reached incoming profiles/5partyentries, not complete legal-TM/outgoing/world ceiling",
+    "Not a world, authority, visual or performance proof"
+  ],
+  "max_configured_incoming_neutral_entry_bound": 0.169196638655462,
+  "paired_seed_sets": {
+    "MASHER": [
+      487950808,
+      487950809,
+      1446442151,
+      1446442152,
+      1446442153,
+      1446442154,
+      1446442155,
+      1446442156,
+      1446442157,
+      1446442158,
+      1446442159,
+      1446442160
+    ],
+    "READER": [
+      487950808,
+      487950809,
+      1446442151,
+      1446442152,
+      1446442153,
+      1446442154,
+      1446442155,
+      1446442156,
+      1446442157,
+      1446442158,
+      1446442159,
+      1446442160
+    ],
+    "SWITCH_READER": [
+      487950808,
+      487950809,
+      1446442151,
+      1446442152,
+      1446442153,
+      1446442154,
+      1446442155,
+      1446442156,
+      1446442157,
+      1446442158,
+      1446442159,
+      1446442160
+    ]
+  },
+  "platform": "Native Windows official Godot4.7 stable; fixed-fps60; already-imported flat100m fixture",
+  "product_equivalent_to": "8323965ec6a73a20adaca867c56b4478660b8cb2",
+  "raw_console_bytes": 7331971,
+  "raw_console_engine_error_lines": [],
+  "row": {
+    "band": "cloudreach/gate_lower_cliffs",
+    "context": [
+      "lead-faint gap 0.00 < 0.25 (context only)"
+    ],
+    "lead_faint_gap": 0.0,
+    "masher": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.138435246544569,
+      "median_lead_cost": 0.57450627315996,
+      "neutral_entry_audits": 12,
+      "neutral_entry_bound_frac": 0.169196638655462,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+    },
+    "pass": false,
+    "reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.666666666666667,
+      "median_cost": 0.240963855421687,
+      "median_lead_cost": 1.0,
+      "neutral_entry_audits": 12,
+      "neutral_entry_bound_frac": 0.169196638655462,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+    },
+    "reasons": [
+      "reader median lead cost above .55x masher"
+    ],
+    "starter": "terrapup",
+    "switch_reader": {
+      "errors": 0,
+      "lead_faint_rate": 0.0,
+      "median_cost": 0.214295286859526,
+      "median_lead_cost": 0.729046749848103,
+      "neutral_entry_audits": 12,
+      "neutral_entry_bound_frac": 0.169196638655462,
+      "runs": 12,
+      "tags": 0,
+      "win_rate": 1.0
+    }
+  },
+  "run_count": 36,
+  "scope": "Direct current native Gate control for burst15 comparison; individual numerical floor FAIL/expected subset overall flags false/exit1",
+  "source_identity_check": "git diff832..launch has evidence-only paths; no gameplay/data/control differences",
+  "source_sha": "b655facf78f9de0310e64bcad18d4af3b6f412e2",
+  "stderr_bytes": 0,
+  "switch_to_masher_lead_ratio": 1.2689970221528188,
+  "terminal": {
+    "completed_utc": "2026-10-06T08:44:00.8463405Z",
+    "exit_code": 1,
+    "pid": 6896
+  }
+}
