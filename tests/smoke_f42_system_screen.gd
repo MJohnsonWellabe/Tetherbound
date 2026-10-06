@@ -8,8 +8,12 @@ const SCREEN := preload("res://scripts/ui/system_screen.gd")
 const OWNER := preload("res://scripts/ui/input_owner.gd")
 var _failures: Array[String] = []
 var _checks := 0
+var _capture_root := ""
 
 func _init() -> void:
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--capture-research="):
+			_capture_root = argument.trim_prefix("--capture-research=")
 	_run.call_deferred()
 
 func _run() -> void:
@@ -98,6 +102,7 @@ func _research_rows() -> void:
 		var focus := root.gui_get_focus_owner()
 		_check(is_instance_valid(focus) and str(focus.get_meta("system_focus_key", "")) == "species:terrapup",
 			"task rebuild retains focused species identity")
+		await _capture_research(panel, "terrapup-never-owned", "species:terrapup")
 	var released := _research_button(panel, "species:bramblebun")
 	_check(released != null and released.text.contains("Caught"), "caught history remains visible with an empty roster")
 	if released != null:
@@ -116,19 +121,52 @@ func _research_rows() -> void:
 		panel.call("_process", 0.6)
 		await process_frame
 		_check(_research_text(panel).contains("Paid ✓"), "restored paid task renders its paid tick")
+		await _capture_research(panel, "bramblebun-caught-history-paid", "species:bramblebun")
 	panel.queue_free()
 	await process_frame
 	_check(OWNER.current(self) == null, "research disposal releases modal ownership")
 
 
 func _research_button(panel: Node, key: String) -> Button:
-	for child: Node in panel.get("body").get_children():
-		if child is Button and child.get_meta("system_focus_key", "") == key: return child
+	for child: Button in panel.get("body").find_children("*", "Button", true, false):
+		if child.get_meta("system_focus_key", "") == key: return child
 	return null
 
 
 func _research_text(panel: Node) -> String:
 	var lines: PackedStringArray = []
-	for child: Node in panel.get("body").get_children():
-		if child is Label: lines.append(child.text)
+	for child: Label in panel.get("body").find_children("*", "Label", true, false):
+		lines.append(child.text)
 	return "\n".join(lines)
+
+
+func _capture_research(panel: Node, tag: String, focus_key: String) -> void:
+	if _capture_root.is_empty(): return
+	if DisplayServer.get_name() == "headless":
+		_check(false, "research readability capture needs the native render mode")
+		return
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_capture_root))
+	root.content_scale_size = Vector2i.ZERO
+	for size: Vector2i in [Vector2i(1920, 1080), Vector2i(1280, 720)]:
+		root.size = size
+		for _frame in 4: await process_frame
+		var selected := _research_button(panel, focus_key)
+		if selected != null: selected.grab_focus()
+		for _frame in 4: await process_frame
+		await RenderingServer.frame_post_draw
+		var image := root.get_texture().get_image()
+		var path := _capture_root.path_join("%s-%dx%d.png" % [tag, size.x, size.y])
+		_check(image != null and image.get_size() == size, "readability frame has the requested native dimensions")
+		if image != null:
+			_check(image.save_png(ProjectSettings.globalize_path(path)) == OK, "readability PNG saved")
+			print("RESEARCH CAPTURE: " + path)
+		for label: Label in panel.get("body").find_children("*", "Label", true, false):
+			if not label.text.contains(" / "): continue
+			var visible_rect := Rect2(Vector2.ZERO, Vector2(size))
+			var ancestor := label.get_parent()
+			while ancestor != null:
+				if ancestor is Control and ancestor.clip_contents:
+					visible_rect = visible_rect.intersection(ancestor.get_global_rect())
+				ancestor = ancestor.get_parent()
+			_check(visible_rect.encloses(label.get_global_rect()),
+				"selected task is fully visible at %dx%d: %s" % [size.x, size.y, label.text])
