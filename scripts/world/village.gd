@@ -232,7 +232,7 @@ func _place(spec: Dictionary) -> void:
 	if retint is Dictionary and not (retint as Dictionary).is_empty():
 		_prefabs.call("apply_retint", building, retint)
 	add_child(building)
-	_exterior_identity(building, prefab_name)
+	_exterior_identity(building, prefab_name, spec)
 
 	_declare_ground(building, prefab_name)
 	_collide(building, prefab_name)
@@ -260,7 +260,7 @@ func _batch(building: Node3D) -> void:
 ## private farmhouse's read. Attach its public frontage in the same local frame
 ## as its authored door before collision/interior setup; every other prefab is
 ## deliberately unchanged.
-func _exterior_identity(building: Node3D, prefab_name: String) -> void:
+func _exterior_identity(building: Node3D, prefab_name: String, spec: Dictionary = {}) -> void:
 	var identity: Node3D
 	if prefab_name == "inn":
 		identity = INN_EXTERIOR_IDENTITY.new()
@@ -273,10 +273,16 @@ func _exterior_identity(building: Node3D, prefab_name: String) -> void:
 		var lantern_cfg: Variant = _config.get("door_lanterns", {})
 		if not lantern_cfg is Dictionary or not bool((lantern_cfg as Dictionary).get("enabled", false)):
 			return
-		identity = DOOR_LANTERN.new()
-		identity.name = "DoorLantern"
-		building.add_child(identity)
-		identity.call("build", lantern_cfg)
+		# A structure may place its own lanterns (`lanterns_at`, doorstep-local
+		# [x, z] pairs; [] for none), e.g. one each side of the Hall forecourt.
+		var spots: Variant = spec.get("lanterns_at", [(lantern_cfg as Dictionary).get("at", [2.3, 0.8])])
+		for index in (spots as Array).size() if spots is Array else 0:
+			var lantern := DOOR_LANTERN.new()
+			lantern.name = "DoorLantern%d" % index if index > 0 else "DoorLantern"
+			building.add_child(lantern)
+			var one: Dictionary = (lantern_cfg as Dictionary).duplicate()
+			one["at"] = spots[index]
+			lantern.call("build", one)
 		return
 	elif prefab_name == "crossing_hall_shell":
 		identity = CROSSING_HALL.new()

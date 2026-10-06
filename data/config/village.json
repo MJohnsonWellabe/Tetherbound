@@ -221,6 +221,22 @@
       "_why_f01": "F01-b Berry Field's west rail (z -28.5..-22.5), 4.4m clear of Grandpa's south-east work-yard props and 3m clear of the twins' yard crate."
     },
     {
+      "id": "crossing_hall_forecourt_inner",
+      "prefab": "doorstep",
+      "at": [88.6, 14],
+      "yaw_deg": -90,
+      "lanterns_at": [[-2.3, 0.4], [2.3, 0.4]],
+      "_why": "F17#6 r5 code-blind judge: the road ran straight into the Hall's facade with no threshold. Two of the doorstep's paving pairs make a ~4 x 4 m forecourt outside the Hall door (the facade stands at world x ~90, door facing -x), with a lantern each side of it at night."
+    },
+    {
+      "id": "crossing_hall_forecourt_outer",
+      "prefab": "doorstep",
+      "at": [86.6, 14],
+      "yaw_deg": -90,
+      "lanterns_at": [],
+      "_why": "The forecourt's outer half; no lanterns (the inner pair flanks the door)."
+    },
+    {
       "id": "mira_shop_threshold",
       "prefab": "doorstep",
       "at": [
