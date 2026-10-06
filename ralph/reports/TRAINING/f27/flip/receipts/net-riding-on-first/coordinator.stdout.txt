@@ -1,0 +1,5 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=5496 control_port=58721 home=D:\tetherbound\.artifacts\r1-f27-flip\net-riding-on-first/home-0 log=D:\tetherbound\.artifacts\r1-f27-flip\net-riding-on-first/peer-0.log
+coordinator: launched peer 1 (client) pid=14072 control_port=58722 home=D:\tetherbound\.artifacts\r1-f27-flip\net-riding-on-first/home-1 log=D:\tetherbound\.artifacts\r1-f27-flip\net-riding-on-first/peer-1.log
+FAIL: ERROR: not every peer said hello within 180 s
