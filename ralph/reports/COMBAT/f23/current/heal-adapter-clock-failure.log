@@ -1,0 +1,19 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_f23_live_moves.gd::test_frozen_heal,test_actor_vitals_authority.gd::test_actual_heal: 2 of 817 test files
+  ok    test_actor_vitals_authority.gd :: test_actual_heal_stages_no_cost_then_commits_once_with_per_creature_cooldown
+SCRIPT ERROR: Invalid access to property or key 'wind' on a base object of type 'Dictionary'.
+   at: test_frozen_heal_keeps_actual_profile_uid_resources_and_self_mastery_receipt (res://tests/test_f23_live_moves.gd:55)
+   GDScript backtrace (most recent call first):
+       [0] test_frozen_heal_keeps_actual_profile_uid_resources_and_self_mastery_receipt (res://tests/test_f23_live_moves.gd:55)
+       [1] _init (res://tests/run_tests.gd:120)
+  FAIL  test_f23_live_moves.gd :: test_frozen_heal_keeps_actual_profile_uid_resources_and_self_mastery_receipt
+          expected true, got false  ({ "ok": false, "code": "stale_bundle" })
+          expected 62.000000 +/- 0.000100, got 50.000000
+
+2 tests, 48 assertions, 1 failed
+
+  test_f23_live_moves.gd :: test_frozen_heal_keeps_actual_profile_uid_resources_and_self_mastery_receipt — expected true, got false  ({ "ok": false, "code": "stale_bundle" })
+  test_f23_live_moves.gd :: test_frozen_heal_keeps_actual_profile_uid_resources_and_self_mastery_receipt — expected 62.000000 +/- 0.000100, got 50.000000
+WARNING: 1 ObjectDB instance was leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2535)

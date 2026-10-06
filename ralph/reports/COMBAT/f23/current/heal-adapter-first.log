@@ -1,0 +1,37 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_f23_live_moves.gd::test_frozen_heal,test_actor_vitals_authority.gd::test_actual_heal: 2 of 817 test files
+SCRIPT ERROR: Parse Error: Could not resolve class "res://scripts/combat/stormwood_authoritative_fight.gd".
+   at: GDScript::reload (res://scripts/combat/shared_wild_host_fight.gd:1)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+SCRIPT ERROR: Parse Error: Cannot infer the type of "saved_scope" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://scripts/combat/combat_manager.gd:3628)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/combat/encounter_director.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://tests/test_actor_vitals_authority.gd:0)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+ERROR: Failed to load script "res://tests/test_actor_vitals_authority.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+  ok    test_actor_vitals_authority.gd :: test_actual_heal_stages_no_cost_then_commits_once_with_per_creature_cooldown
+SCRIPT ERROR: Parse Error: Could not resolve class "res://scripts/combat/combat_manager.gd".
+   at: GDScript::reload (res://tests/test_f23_live_moves.gd:73)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+ERROR: Failed to load script "res://tests/test_f23_live_moves.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+  FAIL  test_f23_live_moves.gd :: could not be parsed or instantiated
+
+2 tests, 35 assertions, 1 failed
+
+  res://tests/test_f23_live_moves.gd: parse error, see SCRIPT ERROR above

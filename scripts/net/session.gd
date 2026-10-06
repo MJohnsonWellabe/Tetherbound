@@ -1324,8 +1324,15 @@ func _ordinary_actor_vitals_commit_source(director: Node, encounter_id: String, 
 				or host.call("verify_original_fixture_actor_topup", proposal, source_record) != true: return refused
 		elif proposal.get("kind") == "heal":
 			if heal.is_empty() or not ESSENCE._equivalent(heal.get("vitals_proposal"), proposal): return refused
+			var frozen_heal: Dictionary = heal.get("frozen_move", {})
+			if not frozen_heal.is_empty():
+				if not ESSENCE._equivalent(frozen_heal, original.get("payload", {}).get("move")) \
+					or frozen_heal.get("mastery_context", {}).get("world_namespace") != scope.world_namespace \
+					or frozen_heal.get("mastery_context", {}).get("session_id") != scope.session_id: return refused
+				if Time.get_ticks_msec() < int(heal.view.now_ms) + ceili(float(frozen_heal.windup) * 1000.0):
+					return {"ok": false, "durable": false, "resolved": false, "code": "heal_windup_pending"}
 			var heal_verified: Dictionary = host.call("stage_actor_heal_utility", heal.intent, peer, heal.view,
-				heal.move_id, heal.wind_profile, int(heal.receipt_limit))
+				heal.move_id, heal.wind_profile, int(heal.receipt_limit), frozen_heal)
 			if heal_verified.get("ok") != true or not ESSENCE._equivalent(heal_verified, heal): return refused
 		var canonical: Dictionary = _character_authority.call("state", character)
 		var owned: Dictionary = {}
@@ -1341,6 +1348,11 @@ func _ordinary_actor_vitals_commit_source(director: Node, encounter_id: String, 
 			or not ESSENCE._equivalent(owned.get("max_hp"), proposal.get("max_hp")) \
 			or (owned.get("fainted") != (float(proposal.hp_before) == 0.0) \
 				and not (original_saved and owned.get("fainted") == proposal.get("fainted"))): return refused
+		if not heal.get("frozen_move", {}).is_empty():
+			var frozen_owned: Dictionary = heal.view.owned.duplicate(true)
+			frozen_owned.hp = owned.hp
+			frozen_owned.fainted = owned.fainted
+			if not ESSENCE._equivalent(frozen_owned, owned): return refused
 		proofs[receipt.receipt_id] = {"scope": scope.duplicate(true), "world_id": str(world.get("world_id")),
 			"journal_epoch": journal_epoch,
 			"character_id": character, "proposal": proposal.duplicate(true), "source_record": source_record.duplicate(true),

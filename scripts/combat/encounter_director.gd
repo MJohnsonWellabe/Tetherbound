@@ -3038,9 +3038,13 @@ func _host_move_start(intent: Dictionary, peer: int) -> Dictionary:
 		_body_radius(body), _body_radius(wild), host_card_cooldown_multiplier(card), CONTACT_SPACING.pair_reach_need(body, wild), frozen.move)
 	move["mastery_context"] = {"world_namespace": _session.call("_game").get("world").reward_delivery_namespace,
 		"session_id": _session.call("_altar_current_epoch")}
-	if uses_durable_trainer_rewards(id) and slot == "utility" \
+	if slot == "utility" \
 		and move.get("utility", {}).get("kind") == "heal" and move.get("utility", {}).get("scope") == "self":
-		return _stage_ordinary_self_heal(id, peer, intent, body, move, card)
+		if not uses_durable_trainer_rewards(id):
+			deny.code = "canonical_heal_unavailable"
+			deny.reason = "That fight cannot save the heal safely yet."
+			return deny
+		return _stage_ordinary_self_heal(id, peer, intent, body, move, card, owned, binding)
 	var verdict: Dictionary = _encounter_host.call("authorize_move_start", intent, peer, owned,
 		binding, move, COMBAT_MANAGER.host_wind_profile(card), Time.get_ticks_msec())
 	if verdict.get("ok") == true: _host_after_encounter_change(id, peer)
@@ -3869,7 +3873,7 @@ func _retry_ordinary_actor_vitals() -> void:
 
 
 func _stage_ordinary_self_heal(id: String, peer: int, intent: Dictionary, body: Node3D,
-		move: Dictionary, card: Dictionary) -> Dictionary:
+		move: Dictionary, card: Dictionary, owned: Dictionary, strike_binding: Dictionary) -> Dictionary:
 	var denied: Dictionary = {"ok": false, "pending": false, "kind": "move_start", "peer": peer,
 		"code": "pending_vitals", "reason": "The original health change is still being saved.", "delta": {}}
 	if ordinary_actor_vitals_pending(id): return denied
@@ -3880,8 +3884,8 @@ func _stage_ordinary_self_heal(id: String, peer: int, intent: Dictionary, body: 
 	if limit < 1 or _ordinary_actor_proposal_count(id) >= limit: return denied
 	var bundle: Dictionary = _encounter_host.call("stage_actor_heal_utility", intent, peer,
 		{"source_uid": str(binding.creature_uid), "source_generation": int(binding.actor_generation),
-		"now_ms": Time.get_ticks_msec(), "origin": origin},
-		str(move.get("move_id", "")), COMBAT_MANAGER.host_wind_profile(card), limit)
+		"now_ms": Time.get_ticks_msec(), "origin": origin, "owned": owned.duplicate(true), "binding": strike_binding.duplicate(true)},
+		str(move.get("move_id", "")), COMBAT_MANAGER.host_wind_profile(card), limit, move)
 	if bundle.get("ok") != true:
 		denied["code"] = str(bundle.get("code", "invalid_heal"))
 		denied["reason"] = "That heal could not commit safely."

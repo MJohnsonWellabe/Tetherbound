@@ -3640,6 +3640,9 @@ func apply_host_actor_heal(payload: Dictionary) -> void:
 	_pending_move = {}
 	_action = Action.RECOVERY
 	_action_timer = maxf(0.0, float(move.get("windup", 0.0)) + float(move.get("recovery", 0.0)))
+	if not move.get("actor_binding", {}).is_empty():
+		# The frozen heal's original windup elapsed before its durable commit.
+		_action_timer = maxf(0.0, float(move.get("recovery", 0.0)))
 	_ally_body.call("play_attack")
 	_flash_at(_ally_body.call("centre"), false, VFX.tint_for_type(_moves.type_of(str(move.get("move_id", "")))), _ally_body, 0.0)
 	state_changed.emit()

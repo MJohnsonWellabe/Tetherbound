@@ -1,0 +1,27 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_f23_live_moves.gd,test_actor_vitals_authority.gd::test_actual_heal: 2 of 817 test files
+  ok    test_actor_vitals_authority.gd :: test_actual_heal_stages_no_cost_then_commits_once_with_per_creature_cooldown
+  ok    test_f23_live_moves.gd :: test_admission_refuses_unknown_loadout_without_any_mutation
+  ok    test_f23_live_moves.gd :: test_all_authored_ultimate_presentations_share_the_same_host_admission_gate
+  ok    test_f23_live_moves.gd :: test_charged_refusal_has_no_cost_and_does_not_replace_original
+  ok    test_f23_live_moves.gd :: test_compensated_frame_cannot_arrive_before_accepted_monotonic_windup
+  ok    test_f23_live_moves.gd :: test_disabled_ultimate_presentation_refuses_before_any_resource_mutation
+  ok    test_f23_live_moves.gd :: test_f33_charm_gain_frozen_in_the_accepted_action_scales_the_meter_once_and_is_capped
+  ok    test_f23_live_moves.gd :: test_f33_no_charm_keeps_the_ordinary_gain_and_power
+  ok    test_f23_live_moves.gd :: test_frozen_heal_keeps_actual_profile_uid_resources_and_self_mastery_receipt
+  ok    test_f23_live_moves.gd :: test_idle_wind_ticks_each_uid_and_switched_burst_spends_current_creature
+  ok    test_f23_live_moves.gd :: test_meters_require_positive_debit_and_credit_one_actual_action_once
+  ok    test_f23_live_moves.gd :: test_root_status_uses_body_clock_and_never_cancels_protected_tell
+  ok    test_f23_live_moves.gd :: test_self_buff_commits_without_hostile_geometry_and_keeps_original_mastery_and_own_uid
+  ok    test_f23_live_moves.gd :: test_snare_uses_frozen_rank_and_one_landed_original_without_energy_gain
+  ok    test_f23_live_moves.gd :: test_start_spends_once_and_impact_cannot_run_early_or_repeat
+  ok    test_f23_live_moves.gd :: test_switch_retains_each_creatures_resources_and_cooldown
+  ok    test_f23_live_moves.gd :: test_target_utilities_have_live_consumers_and_effect_expiry
+  ok    test_f23_live_moves.gd :: test_ultimate_requires_real_landed_meter_spends_once_and_freezes_growth
+  ok    test_f23_live_moves.gd :: test_ultimate_tap_sequence_rejects_a_held_chord_and_fires_only_new_edge
+  ok    test_f23_live_moves.gd :: test_unsaved_mastery_and_resources_survive_peer_replacement_and_close
+  ok    test_f23_live_moves.gd :: test_unsupported_utility_and_low_wind_refuse_without_spending
+  ok    test_f23_live_moves.gd :: test_wrong_move_or_body_lifetime_cannot_arrive
+
+22 tests, 470 assertions, 0 failed

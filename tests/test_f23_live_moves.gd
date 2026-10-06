@@ -8,6 +8,78 @@ const WILD := preload("res://scripts/creatures/wild_creature.gd")
 const ULTIMATES := preload("res://scripts/vfx/ultimates/ultimate_library.gd")
 const UTILITY := preload("res://scripts/combat/utility_effects.gd")
 
+func test_frozen_heal_keeps_actual_profile_uid_resources_and_self_mastery_receipt() -> void:
+	for uses: int in [0, 25, 75, 150, 300]:
+		var heal_host := HOST.new(1)
+		var owned := _new_owned()
+		owned.hp = 50.0
+		owned["max_hp"] = 100.0
+		owned.move_utility = "heal_pulse"
+		owned.known_moves.append("heal_pulse")
+		owned.move_mastery_uses["heal_pulse"] = uses
+		var record: Dictionary = heal_host.open(1, "meadows", "wild", {"hp": 200.0}, owned.uid, "owner_a")
+		var heal_id := str(record.encounter_id)
+		var body := Node.new()
+		assert_true(heal_host.bind_actor_body(heal_id, 1, "owner_a", owned, body.get_instance_id()).ok)
+		var binding := _binding()
+		binding.body_instance_id = body.get_instance_id()
+		binding.actor_generation = 1
+		var frozen := MASTERY.freeze_action(MASTERY.owned_record(owned), "utility",
+			{"character_id": "owner_a", "creature_uid": owned.uid, "encounter_id": heal_id, "generation": 1, "action": 1}, [], MOVES.load_default())
+		assert_true(frozen.ok)
+		var move := MANAGER.host_move_profile(MOVES.load_default(), "player_utility", "heal_pulse", 0.5, 0.5, 1.0, 0.0, frozen.move)
+		move["mastery_context"] = {"world_namespace": "heal-world", "session_id": "heal-session"}
+		var view := {"source_uid": owned.uid, "source_generation": 1, "now_ms": Time.get_ticks_msec(), "origin": Vector3.ZERO,
+			"owned": owned, "binding": binding}
+		var intent := {"encounter_id": heal_id, "action": 1, "slot": "utility"}
+		var original := record.duplicate(true)
+		assert_eq(heal_host.authorize_move_start(intent, 1, owned, binding, move, WIND, int(view.now_ms)).code, "canonical_heal_required")
+		assert_eq(record, original, "normal start cannot authorize a self-heal as a hostile arrival")
+		var bundle: Dictionary = heal_host.stage_actor_heal_utility(intent, 1, view, "heal_pulse", WIND, 16, move)
+		assert_true(bundle.ok, str(bundle))
+		if not bundle.ok:
+			body.free()
+			continue
+		assert_eq(record, original, "discarded world stage has no HP/Wind/action mutation")
+		assert_eq(bundle.effect.receipt.action_id, move.action_id)
+		assert_eq(bundle.frozen_move.mastery_rank, MASTERY.rank_from_uses(uses))
+		assert_eq(bundle.frozen_move.vfx.effect_tier, MASTERY.rank_from_uses(uses))
+		assert_eq(bundle.authority.move_starts["1"].binding, binding)
+		assert_eq(bundle.verdict.delta.utility_cooldown_s, move.cooldown, "retained projection uses accepted clock, not changing current ticks")
+		assert_eq(heal_host.stage_actor_heal_utility(intent, 1, bundle.view, "heal_pulse", WIND, 16, move), bundle,
+			"complete staged resources/deadlines/verdict recheck exactly while cooldown is positive")
+		assert_almost_eq(bundle.vitals_proposal.hp_after, 62.0)
+		var forged := bundle.duplicate(true)
+		forged.effect.receipt.hp_after = 99.0
+		assert_false(heal_host.commit_actor_heal_utility(forged).ok, "changed prepared effect cannot commit")
+		assert_eq(record, original)
+		var committed: Dictionary = heal_host.commit_actor_heal_utility(bundle)
+		assert_true(committed.ok, str(committed))
+		if not committed.ok:
+			body.free()
+			continue
+		assert_almost_eq(heal_host.actor_vitals(heal_id, 1, owned.uid, 1).hp, 62.0)
+		var resources: Dictionary = heal_host.move_resource_snapshot(heal_id, 1, owned.uid)
+		assert_eq(resources.wind, 76.0)
+		assert_eq(resources.energy, 0.0)
+		assert_eq(resources.ultimate_meter, 0.0)
+		assert_eq(record.opponent, original.opponent, "self heal never changes opponent HP/poise or any opponent field")
+		var started: Dictionary = heal_host.move_commit(heal_id, 1, 1)
+		assert_true(started.resolved and started.credited)
+		var expected_move := move.duplicate(true)
+		expected_move["wind_exhausted"] = false
+		assert_eq(started.move, expected_move)
+		var outcome: Dictionary = heal_host.move_mastery_outcome(heal_id, 1, 1)
+		if uses < 300:
+			assert_true(preload("res://scripts/net/foundation_event.gd").valid_effect_mastery(outcome.outcome, heal_id))
+			assert_eq(outcome.context, move.mastery_context)
+			assert_eq(outcome.outcome.effect_receipt, bundle.effect.receipt)
+		else: assert_true(outcome.is_empty(), "rank five saturates without another journal obligation")
+		var after := record.duplicate(true)
+		assert_false(heal_host.commit_actor_heal_utility(bundle).ok)
+		assert_eq(record, after, "same original cannot heal/spend/credit again")
+		body.free()
+
 class TapManager extends "res://scripts/combat/combat_manager.gd":
 	var arm_edge := false
 	var arm_held := false
@@ -97,10 +169,10 @@ func test_disabled_ultimate_presentation_refuses_before_any_resource_mutation() 
 
 func test_unsupported_utility_and_low_wind_refuse_without_spending() -> void:
 	var owned := _new_owned()
-	owned.move_utility = "heal_pulse"
-	owned.known_moves.append("heal_pulse")
+	owned.move_utility = "unmounted_utility"
+	owned.known_moves.append("unmounted_utility")
 	var move := _frozen("utility", 1)
-	move.move_id = "heal_pulse"
+	move.move_id = "unmounted_utility"
 	var before: Dictionary = host.record(id).duplicate(true)
 	assert_eq(host.authorize_move_start({"encounter_id": id, "action": 1, "slot": "utility"},
 		1, owned, _binding(), move, WIND, 1000).code, "move_not_mounted")

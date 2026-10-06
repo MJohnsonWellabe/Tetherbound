@@ -56,6 +56,7 @@ const UTILITY_EFFECTS := preload("res://scripts/combat/utility_effects.gd")
 const TETHER_COMMANDS := preload("res://scripts/combat/tether_commands.gd")
 const ACTOR_MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 var _actor_moves: RefCounted = null
+var _staging_saved_self_heal := false
 
 const CONFIG_PATH := "res://data/config/multiplayer.json"
 
@@ -576,6 +577,8 @@ func authorize_move_start(intent: Dictionary, peer: int, owned: Dictionary,
 	if (slot == "ultimate" and not preload("res://scripts/vfx/ultimates/ultimate_library.gd").available(move_id)) \
 		or (slot == "utility" and not (MATH.config().get("move_commit", {}).get("live_moves", []) as Array).has(move_id)):
 		return _refuse("move_start", peer, "move_not_mounted", "That move is not available in this build yet.")
+	if slot == "utility" and move.get("utility", {}).get("kind") == "heal" and not _staging_saved_self_heal:
+		return _refuse("move_start", peer, "canonical_heal_required", "That heal must use the original saved health transaction.")
 	var authority: Dictionary = _strike_state_for(id).get(peer, {})
 	var starts: Dictionary = authority.get("move_starts", {})
 	if starts.size() >= int(MATH.config().get("utility_limits", {}).get("receipt_limit_per_encounter", 4096)):
@@ -1710,7 +1713,7 @@ static func presentation_snapshot(rec: Dictionary) -> Dictionary:
 ## it is scoped to this one encounter/action and never kept as another roster.
 ## Real resources/HP stay untouched until silent world durability succeeds.
 func stage_actor_heal_utility(intent: Dictionary, peer_id: int, view: Dictionary,
-		move_id: String, wind_profile: Dictionary, receipt_limit: int) -> Dictionary:
+		move_id: String, wind_profile: Dictionary, receipt_limit: int, frozen_move: Dictionary = {}) -> Dictionary:
 	var id := str(intent.get("encounter_id", ""))
 	var rec: Dictionary = encounters.get(id, {})
 	if rec.is_empty() or str(rec.get("phase", "")) != "active" \
@@ -1731,8 +1734,24 @@ func stage_actor_heal_utility(intent: Dictionary, peer_id: int, view: Dictionary
 	# Same host tuning as ordinary player moves; raw MoveDB timings cannot
 	# define a second unpaced utility action lifecycle.
 	move = MATH.with_player_pace(move, "player_utility")
+	if not frozen_move.is_empty():
+		var binding: Dictionary = view.get("binding", {})
+		var frozen_actor: Dictionary = frozen_move.get("actor_binding", {})
+		if not view.get("owned") is Dictionary or view.owned.get("uid") != uid \
+			or view.owned.get("move_utility") != move_id or frozen_move.get("move_id") != move_id \
+			or frozen_move.get("slot") != "utility" or not UTILITY_EFFECTS.valid_definition(frozen_move) \
+			or frozen_move.get("utility", {}).get("kind") != "heal" or float(frozen_move.get("base_power", -1.0)) != 0.0 \
+			or frozen_actor.get("creature_uid") != uid or frozen_actor.get("encounter_id") != id \
+			or frozen_actor.get("action") != intent.action or frozen_actor.get("generation") != binding.get("deployment_generation") \
+			or frozen_actor.get("character_id") != rec.participants[peer_id].character_id \
+			or binding.get("actor_generation") != view.source_generation \
+			or binding.get("body_instance_id") != rec.participants[peer_id].actor_vitals[uid].get("body_instance_id") \
+			or not UTILITY_EFFECTS._identity(frozen_move.get("action_id")):
+			return {"ok": false, "code": "invalid_frozen_heal"}
+		move = frozen_move.duplicate(true)
 	var state: Dictionary = rec.get("utility_state", UTILITY_EFFECTS.empty_state(id, 0))
 	var action_id := "%s:%d:%d:heal" % [id, peer_id, int(intent.action)]
+	if not frozen_move.is_empty(): action_id = str(frozen_move.action_id)
 	var host := {"encounter_id": id, "generation": 0, "action_id": action_id,
 		"source_uid": uid, "target_uid": uid, "source_position": view.origin,
 		"target_position": view.origin, "source_hp": float(actor.hp),
@@ -1748,20 +1767,35 @@ func stage_actor_heal_utility(intent: Dictionary, peer_id: int, view: Dictionary
 	trial.seq = seq
 	var canonical_view := view.duplicate(true)
 	canonical_view["move_id"] = move_id
-	var verdict: Dictionary = trial._authorize_actor_self_heal(intent, peer_id, canonical_view, move, wind_profile)
+	var verdict: Dictionary
+	if frozen_move.is_empty():
+		verdict = trial._authorize_actor_self_heal(intent, peer_id, canonical_view, move, wind_profile)
+	else:
+		trial._staging_saved_self_heal = true
+		verdict = trial.authorize_move_start(intent, peer_id, canonical_view.owned, canonical_view.binding,
+			move, wind_profile, int(view.now_ms))
+		if verdict.get("ok") == true:
+			trial._strike_authority[id][peer_id].move_starts[str(intent.action)]["resolved"] = true
+			# HUD snapshots normally sample the live clock. A retained save
+			# proposal instead freezes that projection at its original start.
+			verdict.delta.utility_cooldown_s = float(move.cooldown)
 	if not bool(verdict.get("ok", false)): return verdict
 	var after: Dictionary = (trial.encounters[id].participants[peer_id] as Dictionary)
 	var resource_fields := ["wind", "wind_max", "wind_regen_per_second", "wind_updated_ms",
 		"wind_last_action", "wind_ready_at_ms", "utility_deadlines"]
+	if not frozen_move.is_empty(): resource_fields.append_array(["move_resources", "move_resource_uid"])
 	var resources := {}
-	for key: String in resource_fields: resources[key] = after[key]
-	# No self heal can mint hostile landed authorization or meter/mastery gain.
+	for key: String in resource_fields:
+		if after.has(key): resources[key] = after[key]
+	# A self heal cannot mint a hostile hit or a landed-hit meter grant.
 	var authority: Dictionary = (trial._strike_authority[id][peer_id] as Dictionary).duplicate(true)
-	return {"ok": true, "encounter_id": id, "peer_id": peer_id,
+	var bundle := {"ok": true, "encounter_id": id, "peer_id": peer_id,
 		"expected_seq": int(rec.seq), "intent": intent.duplicate(true), "view": canonical_view,
 		"move_id": move_id, "wind_profile": wind_profile.duplicate(true), "receipt_limit": receipt_limit,
 		"vitals_proposal": proposal, "effect": effect, "resources": resources,
 		"authority": authority, "verdict": verdict, "resource_seq_delta": trial.seq - seq}
+	if not frozen_move.is_empty(): bundle["frozen_move"] = frozen_move.duplicate(true)
+	return bundle
 
 
 ## Exact re-stage before ANY write. After success, no callbacks or fallible
@@ -1772,7 +1806,7 @@ func commit_actor_heal_utility(bundle: Dictionary) -> Dictionary:
 		or not bundle.get("move_id") is String or typeof(bundle.get("peer_id")) != TYPE_INT \
 		or typeof(bundle.get("receipt_limit")) != TYPE_INT: return {"ok": false, "code": "invalid_bundle"}
 	var verified := stage_actor_heal_utility(bundle.intent, int(bundle.peer_id), bundle.view,
-		str(bundle.move_id), bundle.wind_profile, int(bundle.receipt_limit))
+		str(bundle.move_id), bundle.wind_profile, int(bundle.receipt_limit), bundle.get("frozen_move", {}))
 	if not bool(verified.get("ok", false)) or verified != bundle:
 		return {"ok": false, "code": "stale_bundle"}
 	var committed := commit_actor_vitals(bundle.vitals_proposal)
@@ -1788,6 +1822,8 @@ func commit_actor_heal_utility(bundle: Dictionary) -> Dictionary:
 	rec["utility_state"] = (bundle.effect.state as Dictionary).duplicate(true)
 	seq += int(bundle.resource_seq_delta)
 	rec["seq"] = seq
+	if not bundle.get("frozen_move", {}).is_empty():
+		credit_move_effect(str(bundle.encounter_id), int(bundle.peer_id), int(bundle.intent.action), bundle.effect.receipt)
 	var verdict: Dictionary = bundle.verdict.duplicate(true)
 	(verdict.delta as Dictionary)["utility_receipt"] = (bundle.effect.receipt as Dictionary).duplicate(true)
 	return {"ok": true, "vitals": committed.vitals, "verdict": verdict}
