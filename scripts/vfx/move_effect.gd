@@ -613,7 +613,9 @@ func _update_impact(u: float, delta: float) -> void:
 	for child: Node in _impact.get_children():
 		if child is Node3D and child != _motes and child != _puffs: child.scale = Vector3.ONE * growth
 	if _motes != null:
-		var mote_alpha := (1.0 - u) * float(profile.get("opacity", 0.82))
+		# Solid fragments need their own alpha instead of the dust cloud's.
+		var mote_opacity := float(profile.get("mote_opacity", profile.get("opacity", 0.82)))
+		var mote_alpha := (1.0 - u) * mote_opacity
 		if str(profile.get("mote_shape", "")) == "spark":
 			# Sparks stay solid and shrink away instead of going glassy.
 			mote_alpha = 1.0 - pow(u, 4.0)
@@ -621,7 +623,7 @@ func _update_impact(u: float, delta: float) -> void:
 			# Settled chips/embers stay as the visible aftermath, then fade
 			# over the last part of the authored linger.
 			var remaining := float(profile.get("duration", 0.45)) + _mote_linger - (_elapsed - _travel)
-			mote_alpha = float(profile.get("opacity", 0.82)) * clampf(remaining / maxf(0.001, _mote_linger * 0.35), 0.0, 1.0)
+			mote_alpha = mote_opacity * clampf(remaining / maxf(0.001, _mote_linger * 0.35), 0.0, 1.0)
 		_set_opacity(_motes.material_override, mote_alpha)
 	for i in _mote_positions.size():
 		_velocities[i].y -= float(profile.get("gravity", 5.0)) * delta
