@@ -49,24 +49,31 @@ func _rebuild() -> void:
 		finish()
 		return
 	status.text = "Waiting for the host to save the original claim." if _waiting else "All three bounties are active for your character. New bounties at dawn."
+	var cards := HBoxContainer.new()
+	cards.add_theme_constant_override("separation", 24)
+	body.add_child(cards)
 	for row: Dictionary in raw.rows:
+		var card := VBoxContainer.new()
+		card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		card.add_theme_constant_override("separation", 8)
+		cards.add_child(card)
 		var instance := str(row.get("instance", ""))
-		line(body, "%s · %s" % [str(row.get("kind", "")).replace("_", " ").capitalize(), str(row.get("biome", "")).capitalize()], TOKENS.FONT_SECTION)
-		line(body, str(row.get("title", row.get("id", "Bounty"))))
+		line(card, "%s · %s" % [str(row.get("kind", "")).replace("_", " ").capitalize(), str(row.get("biome", "")).capitalize()])
+		line(card, str(row.get("title", row.get("id", "Bounty"))))
 		if row.get("kind") == "material_delivery":
 			var game := get_node_or_null(^"/root/Game")
 			var local: RefCounted = game.get("local") if game != null else null
 			var inventory: RefCounted = local.get("inventory") if local != null else null
 			var owned := int(inventory.call("count", str(row.get("item", "")))) if inventory != null else -1
-			line(body, "Deliver %s ×%d%s" % [str(row.get("item", "")), int(row.get("count", 0)), " · Have %d" % owned if owned >= 0 else " · Inventory unavailable"])
+			line(card, "Deliver %s ×%d%s" % [str(row.get("item", "")), int(row.get("count", 0)), " · Have %d" % owned if owned >= 0 else " · Inventory unavailable"])
 		else:
-			line(body, "Complete" if row.get("complete") == true else "In progress")
+			line(card, "Complete" if row.get("complete") == true else "In progress")
 		var rewards: Array[String] = []
 		for reward: Dictionary in row.get("rewards", []):
 			rewards.append("%s ×%d" % [str(reward.get("id", "")).replace("_", " ").capitalize(), int(reward.get("n", 0))])
-		line(body, "Reward: " + " · ".join(rewards))
+		line(card, "Reward: " + " · ".join(rewards))
 		var paid: bool = row.get("paid") == true
-		button(body, "Claimed" if paid else "Deliver and claim" if row.get("kind") == "material_delivery" else "Claim",
+		button(card, "Claimed" if paid else "Deliver and claim" if row.get("kind") == "material_delivery" else "Claim",
 			_claim.bind(instance), instance, not paid and row.get("claimable") == true and not _waiting)
 	if _waiting:
 		button(body, "Check original claim", _reconcile, "reconcile")
