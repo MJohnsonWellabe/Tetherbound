@@ -440,6 +440,29 @@ func test_owned_round_finish_retains_actual_enemy_and_link_until_saved_ack() -> 
 	assert_eq(manager.get("_encounter_link"), link, "save failure cannot release the exact owner")
 
 
+func test_owned_saved_faint_can_cycle_to_a_healthy_member_without_healing() -> void:
+	var first: RefCounted = _creature(3, "Fainted")
+	first.hp = 0.0
+	first.fainted = true
+	var second: RefCounted = _creature(3, "Healthy")
+	second.hp = 41.0
+	var manager: Node = _in_combat([first, second] as Array[RefCounted], 0)
+	var link: Node = DurableTrainerRewardsFixture.new()
+	manager.add_child(link)
+	manager.set("_encounter_link", link)
+	manager.set("_encounter_id", "host-owned-round")
+	var before_first := CREATURE_CODEC.encode(first)
+	var before_second := CREATURE_CODEC.encode(second)
+	link.set("vitals_pending", true)
+	assert_false(bool(manager.call("cycle_active", 1)), "the original faint must finish saving before a switch")
+	assert_eq(manager.call("active_creature"), first)
+	link.set("vitals_pending", false)
+	assert_true(bool(manager.call("cycle_active", 1)))
+	assert_eq(manager.call("active_creature"), second)
+	assert_eq(CREATURE_CODEC.encode(first), before_first)
+	assert_eq(CREATURE_CODEC.encode(second), before_second)
+
+
 func test_owned_pending_health_refuses_switch_without_changing_party() -> void:
 	var first: RefCounted = _creature(3, "First")
 	var second: RefCounted = _creature(3, "Second")
