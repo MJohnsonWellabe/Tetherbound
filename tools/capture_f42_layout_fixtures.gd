@@ -138,6 +138,10 @@ func _run() -> void:
 		quit(1)
 		return
 	await _capture("station-forge")
+	if not await _focus(station.panel, "refine:rootiron_ingot"):
+		quit(1)
+		return
+	await _capture("station-forge-refine")
 	station.panel.close()
 	station.holder.queue_free()
 	await process_frame
@@ -197,13 +201,17 @@ func _capture(name: String) -> void:
 	print("FIXTURE UI CAPTURE: " + path)
 
 func _choose(panel: Node, key: String) -> bool:
+	if not await _focus(panel, key): return false
+	var result := await preload("res://tools/net/press_inject.gd").tap(self, _pad_binding, "ui_accept", 1)
+	return result.get("ok") == true
+
+func _focus(panel: Node, key: String) -> bool:
 	for choice: Button in panel.find_children("*", "Button", true, false):
-		if choice.get_meta("system_focus_key", "") != key: continue
+		if choice.get_meta("system_focus_key", choice.get_meta("station_focus_key", "")) != key: continue
 		if choice.disabled: return false
 		choice.grab_focus()
 		for _frame in 2: await process_frame
-		var result := await preload("res://tools/net/press_inject.gd").tap(self, _pad_binding, "ui_accept", 1)
-		return result.get("ok") == true
+		return true
 	push_error("No actual focus target for " + key)
 	return false
 

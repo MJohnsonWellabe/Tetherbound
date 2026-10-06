@@ -164,6 +164,8 @@ func _rebuild() -> void:
 			line(body, "Tether Command pouch · Tier %d · %d slots\nMeter gain ×%.2f · Snare slows to %.0f%% speed · Catch bonus +%.0f%%" % [
 				int(equipment.call("command_pouch_tier")), int(commands.get("pouch_size", 0)), float(commands.get("meter_rate", 1)),
 				float(commands.get("movement_multiplier", 1)) * 100, float(commands.get("catch_bonus", 0)) * 100])
+		for item: Control in readouts.get_children():
+			item.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	finish(focus if not focus.is_empty() else "tab:" + _tab)
 
 func _select_gear_section(section: String) -> void:

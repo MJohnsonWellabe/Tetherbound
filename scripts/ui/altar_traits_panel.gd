@@ -22,6 +22,8 @@ var _closing := false
 var _mouse_before := Input.MOUSE_MODE_VISIBLE
 var return_to := Callable()
 var _opened_context: Dictionary = {}
+var _fields: GridContainer
+var _actions: HBoxContainer
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -51,36 +53,53 @@ func _ready() -> void:
 	_root.add_child(scroll)
 	_body = VBoxContainer.new()
 	_body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_body.add_theme_constant_override("separation",12)
+	_body.add_theme_constant_override("separation",8 if candidate else 12)
 	scroll.add_child(_body)
 	_line("Altar · Traits and Seeds",TOKENS.FONT_TITLE if candidate else 26)
 	_line("Teach your companions. Releasing a caught creature is permanent.",20)
+	_status = _line("",20)
+	if candidate:
+		_fields = GridContainer.new()
+		_fields.columns = 3
+		_fields.add_theme_constant_override("h_separation", 16)
+		_fields.add_theme_constant_override("v_separation", 12)
+		_body.add_child(_fields)
 	_creature = _choice("Companion")
 	_creature.item_selected.connect(func(_index: int) -> void: _refresh())
-	_status = _line("",20)
 	_seed = _choice("Trait Seed")
-	_slot = _choice("Taught slot · old trait is destroyed")
+	_slot = _choice("Taught slot · replaces old trait")
 	_payment = _choice("Pay with type essence")
+	_distil = _choice("Trait to distil when releasing")
+	if candidate:
+		_actions = HBoxContainer.new()
+		_actions.add_theme_constant_override("separation", 12)
+		_body.add_child(_actions)
 	_teach = _button("Teach chosen seed",_submit_teach)
-	_distil = _choice("One trait to distil when releasing")
-	_release = _button("Release companion and distil chosen trait",_submit_release)
+	_release = _button("Release and distil trait",_submit_release)
 	_button("Back",close)
+	if candidate: _line("A Choose · B Back", TOKENS.FONT_READ)
 	_root.hide()
 
-func _line(text: String, size: int) -> Label:
+func _line(text: String, size: int, parent: Node = null) -> Label:
 	var label := Label.new()
 	label.text = text
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	label.add_theme_font_size_override("font_size",maxi(size,TOKENS.FONT_READ) if SCREEN.config().get("enabled") == true else size)
-	_body.add_child(label)
+	(parent if parent != null else _body).add_child(label)
 	return label
 
 func _choice(title: String) -> OptionButton:
-	_line(title,20)
+	var parent: Node = _body
+	if _fields != null:
+		var field := VBoxContainer.new()
+		field.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		_fields.add_child(field)
+		parent = field
+	_line(title,20,parent)
 	var button := OptionButton.new()
 	button.custom_minimum_size.y = 66 if SCREEN.config().get("enabled") == true else 38
 	button.add_theme_font_size_override("font_size",TOKENS.FONT_PROMPT if SCREEN.config().get("enabled") == true else 20)
-	_body.add_child(button)
+	parent.add_child(button)
 	return button
 
 func _button(title: String, callback: Callable) -> Button:
@@ -89,7 +108,7 @@ func _button(title: String, callback: Callable) -> Button:
 	button.add_theme_font_size_override("font_size",TOKENS.FONT_PROMPT if SCREEN.config().get("enabled") == true else 20)
 	button.custom_minimum_size.y = 66 if SCREEN.config().get("enabled") == true else 40
 	button.pressed.connect(callback)
-	_body.add_child(button)
+	(_actions if _actions != null else _body).add_child(button)
 	return button
 
 func open(service: Node, station_key: String) -> bool:
