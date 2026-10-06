@@ -427,7 +427,8 @@ func _apply_saved_mastery(event: Dictionary, move_id: String, initial: int) -> v
 	var duty: Dictionary = event.duties[0]
 	var expected_receipts: Array = _creature.move_mastery_receipts.get(move_id, []).duplicate()
 	_check(expected_receipts.size() == initial, "prior mastery history is complete for " + move_id)
-	expected_receipts.append(duty.intent.action_id)
+	var maximum := int(MASTERY.config().rank_thresholds[4])
+	if initial < maximum: expected_receipts.append(duty.intent.action_id)
 	var context: Dictionary = duty.context.duplicate(true)
 	var revision: int = _authority.revision(DATA.CHARACTER)
 	context.merge({"character_id": DATA.CHARACTER, "expected_revision": revision,
@@ -449,9 +450,9 @@ func _apply_saved_mastery(event: Dictionary, move_id: String, initial: int) -> v
 	_writer.refuse_owner = false
 	var saved := OWNER.apply_owner(_game, row)
 	_check(saved.get("saved") == true and saved.get("duplicate") == true, "owner retry saves without a second award")
-	_check(int(_creature.move_mastery_uses.get(move_id, 0)) == initial + 1, "one mastery use for " + move_id)
+	_check(int(_creature.move_mastery_uses.get(move_id, 0)) == mini(initial + 1, maximum), "one mastery use below cap or exact saturated count for " + move_id)
 	_check(_creature.move_mastery_receipts.get(move_id, []) == expected_receipts,
-		"prior history plus one exact accepted-action receipt for " + move_id)
+		"exact canonical mastery receipt history for " + move_id)
 	_check(_rpc._accept_creature_training(str(row.delivery_id), int(row.journal_revision), str(row.receipt), 1), "existing host ACK commits " + move_id)
 
 func _finish() -> void:
