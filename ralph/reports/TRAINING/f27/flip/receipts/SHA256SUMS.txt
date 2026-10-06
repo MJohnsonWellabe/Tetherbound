@@ -106,3 +106,12 @@ f2dbec2638129433af9df0ee3612e8739f9b9b8d8b356284769be522ceb435e6  net-f27-guest-
 e9ec3f9d8a4a3c733cfff476993cf3a4c9a45a756c212381dd40dfe95b00bd90  solo-f27-wild-defeat-on/r1-f27-solo-wild-on-20261006T0339Z.txt
 9686dc34161f47cbda7f3eb5d514f21b7f48dc78260e736a8247d7dbdf842fa2  solo-f27-wild-defeat-on/stderr.txt
 4bcb3f842385cb64a01ed4b55a9e3a7843133f0c8a8d03db1cffd21a737cbfc1  solo-f27-wild-defeat-on/stdout.txt
+5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  solo-f27-essence-node-on/exit.txt
+df4ea449343829f3cbf3c607665934252ff719d2e968ede842a2684c09ee5062  solo-f27-essence-node-on/r1-f27-essence-node-on-20261006T0350Z.txt
+9686dc34161f47cbda7f3eb5d514f21b7f48dc78260e736a8247d7dbdf842fa2  solo-f27-essence-node-on/stderr.txt
+a8fa17770e347880f753595646c5936bc01aa4d78d70b76da6fb42f65f7a36cf  solo-f27-essence-node-on/stdout.txt
+ec3554a0a222d665ceda18dd0db4f472b4bba9f178ea7d2f4eb85ce8594284cc  solo-f27-essence-node-on/report.json.txt
+445595a552f143e527d94d8bd9491d09b6be77aca948705bc029f32dcf3fcbe7  solo-f27-essence-node-on/before-character.json.txt
+37cfa505d8694023956a12dc3da934b0687f8e0999712f3cf2dcc76286c4f682  solo-f27-essence-node-on/before-world.json.txt
+9953d7fd2dcb0b7ee858abe7502c401a25e803dd228db72a9892448c6c223e44  solo-f27-essence-node-on/after-character.json.txt
+c78ceac6a64579918361148f0747d038706994baabbe159ea9338bf0b108fd68  solo-f27-essence-node-on/after-world.json.txt

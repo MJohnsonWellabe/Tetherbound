@@ -32,7 +32,7 @@ veridian_relic_key | OPEN | OPEN
 
 shared_boss --tournament | ON FIRST FAIL exit1: semifinal completion round4 rejected for authored two-member team; allowed director correction independently reviewed, retry OPEN. OFF original-source FAIL exit2 overall smoke budget at semifinal; fixed-source ON/OFF retry OPEN.
 F27 wild_defeat_essence | ON FIRST PASS exit0; +1Groundessence/+21reducedXP/exactone receipt+battle; noERROR/SCRIPT/Parse, legacywarningsretained; independent review PASS; inherited starter/relocation setup disclosed, no survival aid
-F27 essence_node | ON OPEN
+F27 essence_node | ON FIRST PASS exit0/report20checks; +3Groundessence/+1AttunedGround on owner disk, accepted row+exactreceipt; independent review PASS; raw before/after saves retained; inherited starter/freeplay/6msetup, solo only; warnings retained
 F27 net essence_no_dup | ON OPEN
 
 CI SMOKE names from unchanged .github/workflows/ci.yml; every ON check OPEN.

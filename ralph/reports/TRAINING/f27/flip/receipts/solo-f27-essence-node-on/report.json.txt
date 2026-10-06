@@ -1,0 +1,115 @@
+{
+	"checks": [
+		{
+			"label": "essence_meadows_ground_01 is a shipped essence node",
+			"ok": true
+		},
+		{
+			"label": "request actual baked realm scene",
+			"ok": true
+		},
+		{
+			"label": "actual realm procedural build completed",
+			"ok": true
+		},
+		{
+			"label": "production player and resource adapter mounted",
+			"ok": true
+		},
+		{
+			"label": "physical controller driver resolves production camera and arbiter",
+			"ok": true
+		},
+		{
+			"label": "essence_meadows_ground_01 production world mount placed the essence node",
+			"ok": true
+		},
+		{
+			"label": "essence_meadows_ground_01 actual gather prompt exists",
+			"ok": true
+		},
+		{
+			"label": "essence_meadows_ground_01 controller approach walked 4.7m",
+			"ok": true
+		},
+		{
+			"label": "essence_meadows_ground_01 the essence prompt wins ordinary interaction",
+			"ok": true
+		},
+		{
+			"label": "essence_meadows_ground_01 pre-gather owner and world saved to isolated disk",
+			"ok": true
+		},
+		{
+			"label": "before_essence_meadows_ground_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_meadows_ground_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "before_essence_meadows_ground_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "before_essence_meadows_ground_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_meadows_ground_01 gather reaches real owner save and ACK",
+			"ok": true
+		},
+		{
+			"label": "after_essence_meadows_ground_01 retains exact world bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_meadows_ground_01 decodes world save document",
+			"ok": true
+		},
+		{
+			"label": "after_essence_meadows_ground_01 retains exact character bytes",
+			"ok": true
+		},
+		{
+			"label": "after_essence_meadows_ground_01 decodes character save document",
+			"ok": true
+		},
+		{
+			"label": "essence_meadows_ground_01 disk gained exactly { \"essence_ground\": 3.0, \"attuned_ground\": 1.0 } with an accepted journal and receipt (gained { \"essence_ground\": 3, \"attuned_ground\": 1 })",
+			"ok": true
+		}
+	],
+	"earned_campaign": false,
+	"fixture": "one owned Terrapup; opening free-play; realm selection; 6m trainer/camera starts with collision-streaming wait; in-memory candidate definitions after real validation",
+	"ok": true,
+	"sites": [
+		{
+			"accepted_disk_gather": true,
+			"controller_approach": true,
+			"gained": {
+				"attuned_ground": 1,
+				"essence_ground": 3
+			},
+			"id": "essence_meadows_ground_01",
+			"settlement": {
+				"action_id": "8b2c1bc5d8ebea0d8dba7b368f6d1aac",
+				"verdict": {
+					"character_revision": 1,
+					"durable": true,
+					"journal_revision": 1,
+					"ok": true,
+					"owner_acknowledged": true,
+					"owner_saved": true,
+					"receipt": "craft:f27-node-owner:f32:f2461afdf30d06b46242e2a26ee82bb2d89902819aa5c1294cb3c3bf27bac15b",
+					"resolved": true,
+					"saved": true,
+					"settled": true
+				}
+			},
+			"walked_metres": 4.68569087982178
+		}
+	],
+	"two_peer_rejoin": false
+}

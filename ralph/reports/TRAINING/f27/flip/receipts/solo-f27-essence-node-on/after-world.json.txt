@@ -1,0 +1,545 @@
+{
+	"codec_version": 1,
+	"format": "tetherbound-save",
+	"payload": {
+		"clock_elapsed_seconds": {
+			"$tb_float64": "000000000000f0bf"
+		},
+		"created_at": "2026-10-06T03:53:23",
+		"day": 1,
+		"death_satchels": [],
+		"display_name": "",
+		"farm_plots": [],
+		"felled_vegetation": {},
+		"flags": {
+			"flags": []
+		},
+		"harvested_vegetation": {},
+		"last_played": "2026-10-06T03:53:25",
+		"migrated_from": "",
+		"placed_buildings": [],
+		"realm_environment": {},
+		"redesign_world": {
+			"alpha_cycles": {},
+			"bounty_day": {
+				"$tb_float64": "0000000000000000"
+			},
+			"fifth_arch_stirred": false,
+			"node_cycles": {
+				"sites": {
+					"meadows:essence_meadows_ground_01": {
+						"generation": 2,
+						"next_ready_day": 4,
+						"revision": 1
+					}
+				}
+			},
+			"portal_unlocks": [],
+			"rematch_cycles": {},
+			"shrine_display": {},
+			"station_tiers": {}
+		},
+		"reward_deliveries": {
+			"creature_training:4d1839eba0e5300dfb2559528b4387976d2ab55fd8a437708a8ed4bf28121ace": {
+				"action": "resource",
+				"action_id": "456a3700f43d49a8980380f92b6764c568ebad9955cc6e4b697c8436982b1567",
+				"after": {
+					"character_id": "f27-node-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						{
+							"id": "essence_ground",
+							"n": 3
+						},
+						{
+							"id": "attuned_ground",
+							"n": 1
+						},
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": {
+								"$tb_float64": "0000000000003640"
+							},
+							"base_attack": {
+								"$tb_float64": "0000000000003640"
+							},
+							"base_defence": {
+								"$tb_float64": "0000000000003440"
+							},
+							"base_hp": {
+								"$tb_float64": "0000000000005e40"
+							},
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": {
+								"$tb_float64": "0000000000003440"
+							},
+							"display_name": "Terrapup",
+							"distance_m_together": {
+								"$tb_float64": "000000c8b64e1a40"
+							},
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": {
+								"$tb_float64": "894160e5d07e4b40"
+							},
+							"hp": {
+								"$tb_float64": "0000000000005e40"
+							},
+							"iv_attack": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_defence": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_hp": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 2,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": {
+								"$tb_float64": "0000000000005e40"
+							},
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": {
+								"$tb_float64": "4cf0609ea87b5140"
+							},
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": {
+								"$tb_float64": "0000000000000000"
+							},
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": {
+								"$tb_float64": "000000000000f03f"
+							},
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-5f33edb14a4eb6267eaa1dc9ae92a835",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-5f33edb14a4eb6267eaa1dc9ae92a835": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [
+							"craft:f27-node-owner:f32:f2461afdf30d06b46242e2a26ee82bb2d89902819aa5c1294cb3c3bf27bac15b"
+						],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"before": {
+					"character_id": "f27-node-owner",
+					"equipment": {
+						"backpack": "",
+						"boots": "",
+						"helmet": "",
+						"lower_body": "",
+						"upper_body": ""
+					},
+					"inventory": [
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null
+					],
+					"party": [
+						{
+							"attack": {
+								"$tb_float64": "0000000000003640"
+							},
+							"base_attack": {
+								"$tb_float64": "0000000000003640"
+							},
+							"base_defence": {
+								"$tb_float64": "0000000000003440"
+							},
+							"base_hp": {
+								"$tb_float64": "0000000000005e40"
+							},
+							"battles_fought": 0,
+							"bond": 0,
+							"boost_attack": 0,
+							"boost_defence": 0,
+							"boost_hp": 0,
+							"caught_on_day": 0,
+							"creature_type": "ground",
+							"defence": {
+								"$tb_float64": "0000000000003440"
+							},
+							"display_name": "Terrapup",
+							"distance_m_together": {
+								"$tb_float64": "000000c8b64e1a40"
+							},
+							"fainted": false,
+							"feeds_together": 0,
+							"happiness": {
+								"$tb_float64": "894160e5d07e4b40"
+							},
+							"hp": {
+								"$tb_float64": "0000000000005e40"
+							},
+							"iv_attack": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_defence": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"iv_hp": {
+								"$tb_float64": "000000000000e03f"
+							},
+							"known_moves": [
+								"pebble_toss",
+								"stone_rush",
+								"ultimate_terrapup"
+							],
+							"landmarks_visited_together": 2,
+							"level": 1,
+							"levels_gained_with_you": 0,
+							"loadout_last_edit": {},
+							"loadout_revision": 0,
+							"max_hp": {
+								"$tb_float64": "0000000000005e40"
+							},
+							"move_charged": "stone_rush",
+							"move_mastery_receipts": {},
+							"move_mastery_uses": {},
+							"move_quick": "pebble_toss",
+							"move_ultimate": "ultimate_terrapup",
+							"move_utility": "",
+							"nickname": "",
+							"nourishment": {
+								"$tb_float64": "4cf0609ea87b5140"
+							},
+							"rest_bed_index": -1,
+							"rest_nights_together": 0,
+							"rested": false,
+							"rested_seconds_left": {
+								"$tb_float64": "0000000000000000"
+							},
+							"resting": false,
+							"secondary_type": "",
+							"shiny": false,
+							"species_id": "terrapup",
+							"swim_stamina_fraction": {
+								"$tb_float64": "000000000000f03f"
+							},
+							"trait_primary": "",
+							"trait_secondary": "",
+							"uid": "creature-5f33edb14a4eb6267eaa1dc9ae92a835",
+							"xp": 0
+						}
+					],
+					"portal_escrow": {},
+					"realm_hearts": {
+						"active_id": ""
+					},
+					"redesign_character": {
+						"attachment_recipes": [],
+						"bounties": {
+							"anchor_day": {
+								"$tb_float64": "0000000000000000"
+							},
+							"anchor_world": "",
+							"cycle": {
+								"$tb_float64": "0000000000000000"
+							},
+							"slots": []
+						},
+						"bounty_receipts": [],
+						"creatures": {
+							"creature-5f33edb14a4eb6267eaa1dc9ae92a835": {
+								"best": false,
+								"breakthroughs": [],
+								"cap_level": 10,
+								"evolution_choices": {},
+								"known_moves": [
+									"pebble_toss",
+									"stone_rush",
+									"ultimate_terrapup"
+								],
+								"loadout": {
+									"charged": "stone_rush",
+									"quick": "pebble_toss",
+									"ultimate": "ultimate_terrapup",
+									"utility": ""
+								},
+								"loadout_last_edit": {},
+								"loadout_revision": 0,
+								"mastery": {},
+								"mastery_receipts": {},
+								"rolled_traits": [],
+								"taught_traits": {}
+							}
+						},
+						"feast_recipes": [],
+						"last_waystones": {},
+						"master_wins": [],
+						"portal_unlocks": [],
+						"pouch_tier": {
+							"$tb_float64": "0000000000000000"
+						},
+						"release_receipts": [],
+						"relics_held": [],
+						"relics_hung": [],
+						"research": {
+							"event_receipts": [],
+							"species": {},
+							"titles": []
+						},
+						"research_receipts": [],
+						"transaction_receipts": [],
+						"waystones_activated": {}
+					},
+					"vitals_escrow": {}
+				},
+				"character_id": "f27-node-owner",
+				"character_revision": 1,
+				"delivery_id": "creature_training:4d1839eba0e5300dfb2559528b4387976d2ab55fd8a437708a8ed4bf28121ace",
+				"host_context": {
+					"actor_realm": "meadows",
+					"character_id": "f27-node-owner",
+					"equipped_tool": "",
+					"expected_revision": 0,
+					"foundation_runtime_authorized": true,
+					"host_day": 1,
+					"in_combat": false,
+					"in_range": true,
+					"modal_open": false,
+					"realm": "meadows",
+					"registered_live_source": true,
+					"resource_runtime_authorized": true,
+					"retained_seed_roll": {
+						"$tb_float64": "0000004c622bdd3f"
+					},
+					"source_available": true,
+					"source_definition": {
+						"amount": {
+							"$tb_float64": "0000000000000840"
+						},
+						"anchor": {
+							"config": "data/config/bands/band1_lower_meadows/harvest.json",
+							"id": "order:0",
+							"offset_xz_m": [
+								{
+									"$tb_float64": "0000000000001840"
+								},
+								{
+									"$tb_float64": "0000000000000000"
+								}
+							]
+						},
+						"at": [
+							{
+								"$tb_float64": "0000000000003640"
+							},
+							{
+								"$tb_float64": "0000000000003cc0"
+							}
+						],
+						"early_master_supply": "Early Meadows candidate; ROOT must prove walkable and enough accepted stock for each typed feast.",
+						"id": "essence_meadows_ground_01",
+						"item": "essence_ground",
+						"label": "Gather Ground Essence",
+						"model": "res://assets/environment/stylized_nature/Rock_Medium_1.gltf",
+						"model_scale": {
+							"$tb_float64": "9a9999999999e93f"
+						},
+						"order": "essence:meadows:ground:01",
+						"outputs": {
+							"attuned_ground": {
+								"$tb_float64": "000000000000f03f"
+							},
+							"essence_ground": {
+								"$tb_float64": "0000000000000840"
+							}
+						},
+						"placement": {
+							"main_route_distance_m": {
+								"$tb_float64": "39b4c876be9f0640"
+							},
+							"off_route": false,
+							"terrain_and_player_path_proven": true
+						},
+						"realm": "meadows",
+						"region_id": "band1_lower_meadows",
+						"respawn_days": {
+							"$tb_float64": "0000000000000840"
+						},
+						"seed_drop": {
+							"amount": {
+								"$tb_float64": "000000000000f03f"
+							},
+							"chance": {
+								"$tb_float64": "000000000000d03f"
+							},
+							"item": "seed_ground"
+						},
+						"source_config": "res://data/config/essence_nodes.json",
+						"type": "ground"
+					},
+					"source_generation": "1",
+					"source_id": "essence_meadows_ground_01",
+					"source_key": "resource:meadows:essence_meadows_ground_01",
+					"stock": {
+						"generation": 1,
+						"next_ready_day": 1,
+						"revision": 0
+					},
+					"world_id": "f27-node-world",
+					"world_namespace": "98e1e3300773144ecd7df65dc456fa82"
+				},
+				"intent": {
+					"operation": "node",
+					"request": {
+						"action_id": "8b2c1bc5d8ebea0d8dba7b368f6d1aac",
+						"expected_stock_revision": 0,
+						"site_id": "essence_meadows_ground_01"
+					}
+				},
+				"journal_revision": 1,
+				"kind": "creature_training",
+				"receipt": "craft:f27-node-owner:f32:f2461afdf30d06b46242e2a26ee82bb2d89902819aa5c1294cb3c3bf27bac15b",
+				"session_id": "4f6062b4b688f13e49365657406b7b28",
+				"source_key": "resource:meadows:essence_meadows_ground_01",
+				"status": "accepted",
+				"version": 3,
+				"world_id": "f27-node-world",
+				"world_namespace": "98e1e3300773144ecd7df65dc456fa82"
+			}
+		},
+		"reward_delivery_namespace": "98e1e3300773144ecd7df65dc456fa82",
+		"version": 28,
+		"water_capture_claims": {},
+		"world_id": "f27-node-world",
+		"world_seed": 734742223
+	}
+}
