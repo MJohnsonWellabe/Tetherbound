@@ -1,0 +1,21 @@
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+   GDScript backtrace (most recent call first):
+       [0] _build_terrain (res://scripts/world/playground_world.gd:1173)
+       [1] _ready (res://scripts/world/playground_world.gd:806)
+ERROR: physical interact meant for Interactable activated competing provider Prompt
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _fail (res://tests/helpers/gate_a_npc_gather_segment.gd:1521)
+       [1] _one_approach (res://tests/helpers/gate_a_npc_gather_segment.gd:1138)
+       [2] _press_and_observe_activation (res://tests/helpers/gate_a_npc_gather_segment.gd:1264)
+       [3] _tap_action (res://tests/helpers/gate_a_npc_gather_segment.gd:1443)
+ERROR: natural controller travel could not activate Bram cycle 3 (3.8m away, arbiter winner=Prompt under Door). A winner that is not Bram means something nearer took the interact line.
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _fail (res://tests/helpers/gate_a_npc_gather_segment.gd:1521)
+       [1] _visit_villager (res://tests/helpers/gate_a_npc_gather_segment.gd:255)
+       [2] _walk_to_and_activate (res://tests/helpers/gate_a_npc_gather_segment.gd:1085)
+       [3] _one_approach (res://tests/helpers/gate_a_npc_gather_segment.gd:1140)
+       [4] _press_and_observe_activation (res://tests/helpers/gate_a_npc_gather_segment.gd:1264)
+       [5] _tap_action (res://tests/helpers/gate_a_npc_gather_segment.gd:1443)

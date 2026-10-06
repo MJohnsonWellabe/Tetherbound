@@ -1,0 +1,129 @@
+{
+  "disclosures": [],
+  "failures": [
+    "physical interact meant for Interactable activated competing provider Prompt",
+    "natural controller travel could not activate Bram cycle 3 (3.8m away, arbiter winner=Prompt under Door). A winner that is not Bram means something nearer took the interact line."
+  ],
+  "flags_gained": [
+    "camp_hammer_given",
+    "home_key_given",
+    "mira_shop_open",
+    "opening:beat:choose",
+    "opening:beat:encounter",
+    "opening:beat:house",
+    "opening:beat:name",
+    "opening:beat:return_starter",
+    "opening:beat:road",
+    "opening:beat:wake",
+    "opening:beat:walk_out",
+    "opening:lesson:home_key",
+    "opening:mira_visited",
+    "opening:starter_granted",
+    "oskar_trade_open",
+    "pickup:castle_gate_key",
+    "recipe_orb_basic",
+    "road_gate_open",
+    "tam_tools_given"
+  ],
+  "flags_total": 19,
+  "free_build": false,
+  "game_clock_seconds": -1.0,
+  "game_day": 1,
+  "helper_receipts": [
+    {
+      "passed": true,
+      "receipts": [
+        "title interactive",
+        "answered the character-choice step",
+        "confirmed the configured trainer-name prefill",
+        "new game world entered",
+        "wake/Get Up complete",
+        "Grandpa briefing and pack complete",
+        "starter picker order [\"terrapup\", \"ripplet\", \"galewisp\"]; 0 ui_right press(es) to 'terrapup'",
+        "starter selected and named (terrapup, uid creature-7a32aa3646c5c48d9dade66a40108c58)",
+        "Grandpa's first-catch supplies received (50 Basic Orbs)",
+        "Home Key lesson read through physical confirm (2 lines), personal acknowledgement applied",
+        "usable house/front doorway exited",
+        "engaged exact live target Wild_bramblebun_0_2 (bramblebun)",
+        "tutorial Bramblebun combat entered",
+        "Bramblebun naturally weakened to 27/105 HP",
+        "live catch begins with 50 earned orbs; no HP or inventory fixture",
+        "catch complete; exploration resumed with two-creature party"
+      ],
+      "segment": "opening"
+    },
+    {
+      "passed": true,
+      "receipts": [
+        "title interactive",
+        "answered the character-choice step",
+        "confirmed the configured trainer-name prefill",
+        "new game world entered",
+        "wake/Get Up complete",
+        "Grandpa briefing and pack complete",
+        "starter picker order [\"terrapup\", \"ripplet\", \"galewisp\"]; 0 ui_right press(es) to 'terrapup'",
+        "starter selected and named (terrapup, uid creature-7a32aa3646c5c48d9dade66a40108c58)",
+        "Grandpa's first-catch supplies received (50 Basic Orbs)",
+        "Home Key lesson read through physical confirm (2 lines), personal acknowledgement applied",
+        "usable house/front doorway exited",
+        "engaged exact live target Wild_bramblebun_0_2 (bramblebun)",
+        "tutorial Bramblebun combat entered",
+        "Bramblebun naturally weakened to 27/105 HP",
+        "live catch begins with 50 earned orbs; no HP or inventory fixture",
+        "catch complete; exploration resumed with two-creature party",
+        "village key earned and consumed by the real gate"
+      ],
+      "segment": "road_gate"
+    }
+  ],
+  "inventory": {
+    "axe": 1,
+    "berries": 5,
+    "coin": 140,
+    "fiber": 29,
+    "hammer": 1,
+    "home_key": 1,
+    "knife": 1,
+    "orb_basic": 48,
+    "pickaxe": 1,
+    "potion_small": 3,
+    "revive": 10,
+    "stone": 4,
+    "torch": 1,
+    "wood": 4
+  },
+  "key_items": {
+    "home_key": 1
+  },
+  "location": {
+    "player": [
+      44.3078727722168,
+      0.920941650867462,
+      5.39269590377808
+    ],
+    "realm": "meadows",
+    "scene": "MeadowsPlayground"
+  },
+  "party_after": [
+    {
+      "hp": 99,
+      "level": 3,
+      "nickname": "Bud",
+      "species": "terrapup",
+      "uid": "creature-7a32aa3646c5c48d9dade66a40108c58"
+    },
+    {
+      "hp": 26,
+      "level": 2,
+      "nickname": "",
+      "species": "bramblebun",
+      "uid": "creature-fcfa41e13d722fdc99e52a9c71d72252"
+    }
+  ],
+  "party_before": [],
+  "passed": false,
+  "saved_world_seed": 1439164423,
+  "segment": "opening_team",
+  "wall_seconds": 280.888,
+  "world_seed_env": "4"
+}
