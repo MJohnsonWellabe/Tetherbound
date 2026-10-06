@@ -1,0 +1,5 @@
+Prelaunch guard only, not a native result.
+Source d6b6246278f5e94660cca2ff68a55973556cd230.
+Atomic owned lease acquired after R1 two-beds supervisor exited; second process guard threw: CPU-heavy process present; yield.
+No compiler or handoff engine started, no native receipt/stdout/stderr/exit produced. Finally released only matching owned lease. Empty evidence directory retained and not reused.
+Subsequent immediate census found no heavy/native process; attempted fresh handoff-second then yielded before lease acquisition because R1 catch-aim started. handoff-second directory remains absent.

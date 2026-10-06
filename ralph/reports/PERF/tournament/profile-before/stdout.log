@@ -1,0 +1,6 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=4028 control_port=54468 home=D:\tetherbound\codex-p2\ralph\reports\PERF\tournament\profile-before\native-net/home-0 log=D:\tetherbound\codex-p2\ralph\reports\PERF\tournament\profile-before\native-net/peer-0.log
+coordinator: launched peer 1 (client) pid=1440 control_port=54469 home=D:\tetherbound\codex-p2\ralph\reports\PERF\tournament\profile-before\native-net/home-1 log=D:\tetherbound\codex-p2\ralph\reports\PERF\tournament\profile-before\native-net/peer-1.log
+coordinator: peer 1 hello: {"enet_port":34502.0,"godot_version":"4.7-stable (official)","main_sha":"ea5ac4bee710","peer":1.0,"pid":1440.0,"role":"client","type":"hello","user_data_dir":"D:/tetherbound/codex-p2/ralph/reports/PERF/tournament/profile-before/native-net/home-1/Godot/app_userdata/Tetherbound"}
+FAIL: ERROR: not every peer said hello within 180 s

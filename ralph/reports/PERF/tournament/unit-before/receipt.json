@@ -1,0 +1,26 @@
+{
+  "run_id": "p2-tournament-focused-first",
+  "stage": "unit-before",
+  "source_head": "fd3e095bc32bef2202a33b79ed89c07cd8d3405d",
+  "product_basis": "8e7c11ceb5854f063c5241d62618c382803562c9",
+  "temporary_baseline_paths": [
+    "scripts/build/creature_bed.gd",
+    "scripts/build/player_bed.gd",
+    "scripts/combat/telegraph_glow.gd",
+    "scripts/creatures/companion_presence.gd",
+    "scripts/world/campfire_glow.gd",
+    "scripts/world/vegetation.gd"
+  ],
+  "started_utc": "2026-10-06T09:35:54.8708694Z",
+  "command": [
+    "--headless",
+    "--path",
+    "D:/tetherbound/codex-p2",
+    "--script",
+    "tests/run_tests.gd",
+    "--",
+    "--only=test_telegraph_glow.gd::test_unchanged_dry_ring,test_telegraph_glow.gd::test_shared_ground_point,test_companion_presence.gd::test_grouped_camp_scan,test_fight_ring_occluders.gd::test_arena_refresh"
+  ],
+  "claim": "focused correctness only, no performance claim",
+  "cache_basis": "independent P1 copied cache, no import; unchanged actual assets/addon/project inputs; only new shader UID/provenance CSV import metadata differ"
+}

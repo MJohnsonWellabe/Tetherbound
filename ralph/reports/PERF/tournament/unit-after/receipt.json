@@ -1,0 +1,19 @@
+{
+  "run_id": "p2-tournament-focused-first",
+  "stage": "unit-after",
+  "source_head": "fd3e095bc32bef2202a33b79ed89c07cd8d3405d",
+  "product_basis": "fd3e095bc32bef2202a33b79ed89c07cd8d3405d",
+  "temporary_baseline_paths": null,
+  "started_utc": "2026-10-06T09:36:08.6784781Z",
+  "command": [
+    "--headless",
+    "--path",
+    "D:/tetherbound/codex-p2",
+    "--script",
+    "tests/run_tests.gd",
+    "--",
+    "--only=test_telegraph_glow.gd,test_companion_presence.gd,test_fight_ring_occluders.gd"
+  ],
+  "claim": "focused correctness only, no performance claim",
+  "cache_basis": "independent P1 copied cache, no import; unchanged actual assets/addon/project inputs; only new shader UID/provenance CSV import metadata differ"
+}

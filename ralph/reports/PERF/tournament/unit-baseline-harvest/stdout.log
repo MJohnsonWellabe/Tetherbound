@@ -1,0 +1,7 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_fight_ring_occluders.gd::test_a_deadwood_node,test_fight_ring_occluders.gd::test_overlapping_rings_keep_the_model: 1 of 815 test files
+  ok    test_fight_ring_occluders.gd :: test_a_deadwood_node_joins_the_ring_group_and_a_rock_does_not
+  ok    test_fight_ring_occluders.gd :: test_overlapping_rings_keep_the_model_hidden_until_the_last_one_closes
+
+2 tests, 6 assertions, 0 failed

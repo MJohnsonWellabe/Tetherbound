@@ -1,0 +1,13 @@
+diff --git a/tests/helpers/net_harness.gd b/tests/helpers/net_harness.gd
+index b1267d7ae..dc67b4e73 100644
+--- a/tests/helpers/net_harness.gd
++++ b/tests/helpers/net_harness.gd
+@@ -394,6 +394,8 @@ func _spawn_peer(i: int, role: String, control_port: int, enet_port: int, scene:
+ 	var args := [
+ 		"--headless", "--path", project_path,
+ 	]
++	if OS.get_environment("TB_PROFILE_PEER") == str(i):
++		args.append_array(["-d", "--profiling"])
+ 	if _is_windows():
+ 		# Godot 4.7 has no --user-data-dir command line option. On Windows its
+ 		# supported user-data lookup honors APPDATA, so set a fresh APPDATA root
