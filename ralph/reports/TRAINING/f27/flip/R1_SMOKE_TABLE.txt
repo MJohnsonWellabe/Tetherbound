@@ -1,8 +1,8 @@
 R1 existing smoke coverage (OPEN; no flip acceptance claim)
-Product head: 374601578f99f49e579ed3cba0efbf620cc95b9d
+Product head: 93487a4e586c0e90e6261a136f9809cb6122d3c6 (full prior suite on374601 plus affected revalidation)
 Config committed OFF. See R1_PROGRESS.txt for first-attempt receipts.
 
-Fixture assertion coverage:
+Fixture assertion coverage (reviewed reuse: predecessor full evidence + repaired-source 100 affected cases; 6085 unchanged cases carried forward under RD36):
 OFF | 6185 distinct passing cases across full first attempt plus unchanged ledger rerun; independent evidence review PASS. Full first receipt remains FAIL/exit1 (6184 passed, one sparse-evidence input failure). Exact HEAD inputs restored; target rerun 2/28/0/exit0. Legacy diagnostics and resource leaks prevent clean-runtime claim.
 ON | Full first attempt PASS assertions: 6185 tests / 4090876 assertions / 0 failed / exit0 at 2026-10-06 02:12 UTC. No SCRIPT ERROR/Parse Error. Legacy fixture diagnostics and exit resource leaks retained; no clean-runtime claim.
 
@@ -30,7 +30,7 @@ stormwood_livewire | OPEN | OPEN
 veridian_choices | OPEN | OPEN
 veridian_relic_key | OPEN | OPEN
 
-shared_boss --tournament | ON FIRST FAIL exit1: semifinal completion round4 rejected for authored two-member team; allowed director correction independently reviewed, retry OPEN. OFF original-source parity running.
+shared_boss --tournament | ON FIRST FAIL exit1: semifinal completion round4 rejected for authored two-member team; allowed director correction independently reviewed, retry OPEN. OFF original-source FAIL exit2 overall smoke budget at semifinal; fixed-source ON/OFF retry OPEN.
 F27 wild_defeat_essence | ON OPEN
 F27 essence_node | ON OPEN
 F27 net essence_no_dup | ON OPEN
@@ -92,3 +92,4 @@ veridian_offer_choice | ON OPEN
 warrens | ON OPEN
 wild_streaming | ON OPEN
 Tournament ON FIRST | FAIL exit1: quarter durable rewards PASS; semi both first strikes PASS, team completion command no verdict at unchanged 95000ms. Diagnosis OPEN. receipts/net-tournament-on-first
+Round identity repair93487a4e58 focused six-file coverage | OFF PASS union100tests/1318assertions/exit0 + ON PASS100/1318/exit0; all stderr empty. Full predecessor suite source374601 retained separately; fixed tournament live proof OPEN.
