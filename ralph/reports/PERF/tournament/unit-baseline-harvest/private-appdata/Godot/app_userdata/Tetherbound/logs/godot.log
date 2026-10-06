@@ -1,0 +1,82 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_fight_ring_occluders.gd::test_a_deadwood_node,test_fight_ring_occluders.gd::test_overlapping_rings_keep_the_model: 1 of 815 test files
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/harvest_node.gd:522)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:338)
+       [2] setup (res://scripts/world/harvest_node.gd:160)
+       [3] _harvest (res://tests/test_fight_ring_occluders.gd:185)
+       [4] test_a_deadwood_node_joins_the_ring_group_and_a_rock_does_not (res://tests/test_fight_ring_occluders.gd:190)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_kind (res://scripts/world/harvest_node.gd:535)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:338)
+       [2] setup (res://scripts/world/harvest_node.gd:160)
+       [3] _harvest (res://tests/test_fight_ring_occluders.gd:185)
+       [4] test_a_deadwood_node_joins_the_ring_group_and_a_rock_does_not (res://tests/test_fight_ring_occluders.gd:190)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/harvest_node.gd:170)
+       [1] _harvest (res://tests/test_fight_ring_occluders.gd:185)
+       [2] test_a_deadwood_node_joins_the_ring_group_and_a_rock_does_not (res://tests/test_fight_ring_occluders.gd:190)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/harvest_node.gd:522)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:338)
+       [2] setup (res://scripts/world/harvest_node.gd:160)
+       [3] _harvest (res://tests/test_fight_ring_occluders.gd:185)
+       [4] test_a_deadwood_node_joins_the_ring_group_and_a_rock_does_not (res://tests/test_fight_ring_occluders.gd:193)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_kind (res://scripts/world/harvest_node.gd:535)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:338)
+       [2] setup (res://scripts/world/harvest_node.gd:160)
+       [3] _harvest (res://tests/test_fight_ring_occluders.gd:185)
+       [4] test_a_deadwood_node_joins_the_ring_group_and_a_rock_does_not (res://tests/test_fight_ring_occluders.gd:193)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/harvest_node.gd:170)
+       [1] _harvest (res://tests/test_fight_ring_occluders.gd:185)
+       [2] test_a_deadwood_node_joins_the_ring_group_and_a_rock_does_not (res://tests/test_fight_ring_occluders.gd:193)
+       [3] _init (res://tests/run_tests.gd:120)
+  ok    test_fight_ring_occluders.gd :: test_a_deadwood_node_joins_the_ring_group_and_a_rock_does_not
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_colour (res://scripts/world/harvest_node.gd:522)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:338)
+       [2] setup (res://scripts/world/harvest_node.gd:160)
+       [3] _harvest (res://tests/test_fight_ring_occluders.gd:185)
+       [4] test_overlapping_rings_keep_the_model_hidden_until_the_last_one_closes (res://tests/test_fight_ring_occluders.gd:201)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _item_kind (res://scripts/world/harvest_node.gd:535)
+       [1] _build_visual (res://scripts/world/harvest_node.gd:338)
+       [2] setup (res://scripts/world/harvest_node.gd:160)
+       [3] _harvest (res://tests/test_fight_ring_occluders.gd:185)
+       [4] test_overlapping_rings_keep_the_model_hidden_until_the_last_one_closes (res://tests/test_fight_ring_occluders.gd:201)
+       [5] _init (res://tests/run_tests.gd:120)
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] setup (res://scripts/world/harvest_node.gd:170)
+       [1] _harvest (res://tests/test_fight_ring_occluders.gd:185)
+       [2] test_overlapping_rings_keep_the_model_hidden_until_the_last_one_closes (res://tests/test_fight_ring_occluders.gd:201)
+       [3] _init (res://tests/run_tests.gd:120)
+  ok    test_fight_ring_occluders.gd :: test_overlapping_rings_keep_the_model_hidden_until_the_last_one_closes
+
+2 tests, 6 assertions, 0 failed

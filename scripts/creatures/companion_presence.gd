@@ -78,6 +78,9 @@ const GROUP := &"companion_presence"
 ## top of the script-suffix scan `camp.script_suffixes` configures. A fixture
 ## or a future camp piece opts in by joining; nothing else is required.
 const CAMP_GROUP := &"companion_camp"
+## Authored suffix-matched sources join this candidate group. It does not
+## override camp.script_suffixes the way the explicit opt-in group does.
+const CAMP_SOURCE_GROUP := &"companion_camp_sources"
 
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 const CONDITION := preload("res://scripts/creatures/creature_condition.gd")
@@ -777,15 +780,58 @@ func _update_camp(delta: float, leader: Node3D) -> void:
 		_camp_standing_seconds = 0.0
 
 
-## Walks the tree for camp sources. Every `scan_every_s`, not every frame:
-## the world has thousands of nodes and this needs a handful of them. Skips
-## Control/CanvasLayer subtrees (the HUD holds no campfires).
+func _camp_group_nodes() -> Variant:
+	var tree := _tree()
+	if tree == null:
+		return null
+	var sources := tree.get_nodes_in_group(CAMP_SOURCE_GROUP)
+	for node: Node in tree.get_nodes_in_group(CAMP_GROUP):
+		if not sources.has(node):
+			sources.append(node)
+	return sources
+
+
+## Live sources are indexed by the tree; detached fixtures retain the small
+## legacy walk. A fresh group query includes newly built and removed beds.
 func _scan_camp_sources(cfg: Dictionary) -> Array[Node3D]:
 	var out: Array[Node3D] = []
 	var root := _root()
 	if root == null:
 		return out
 	var suffixes: Array = cfg.get("script_suffixes", [])
+	var grouped: Variant = _camp_group_nodes()
+	# Preserve custom configurations whose scripts have no authored group yet.
+	for suffix: Variant in suffixes:
+		if str(suffix) not in ["campfire_glow.gd", "creature_bed.gd", "player_bed.gd"]:
+			grouped = null
+			break
+	if grouped is Array:
+		last_camp_scan_nodes = (grouped as Array).size()
+		if root is Control or root is CanvasLayer:
+			return out
+		for candidate: Variant in grouped:
+			if not is_instance_valid(candidate) or not candidate is Node3D:
+				continue
+			var node := candidate as Node3D
+			var ancestor: Node = node
+			var eligible := true
+			while ancestor != null and ancestor != root:
+				if ancestor is Control or ancestor is CanvasLayer:
+					eligible = false
+					break
+				ancestor = ancestor.get_parent()
+			if not eligible or ancestor != root:
+				continue
+			if node.is_in_group(CAMP_GROUP):
+				out.append(node)
+				continue
+			var script := node.get_script() as Script
+			if script != null:
+				for suffix: Variant in suffixes:
+					if script.resource_path.ends_with(str(suffix)):
+						out.append(node)
+						break
+		return out
 	var stack: Array[Node] = [root]
 	var walked := 0
 	while not stack.is_empty():

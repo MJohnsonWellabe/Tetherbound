@@ -49,6 +49,13 @@ var water_depth_source: Object = null
 
 var _ring: MeshInstance3D = null
 var _ring_mesh: ImmediateMesh = null
+## Heights belong to one mesh rebuild, never to a later pulse or moved body.
+var _ground_seen: Dictionary = {}
+var _drawn: Array = []
+var _draw_origin := Vector3.ZERO
+var _draw_has_ground := false
+var _draw_water: Object = null
+var _draw_has_water := false
 
 
 ## `at` is the creature's feet, not its centre — this is a ring on the ground,
@@ -168,8 +175,12 @@ func _physics_process(delta: float) -> void:
 
 
 func _ground_vertex(offset: Vector3) -> Vector3:
-	if is_instance_valid(_follow_body) and _follow_body.has_method("_ground_height"):
-		var origin := global_position if is_inside_tree() else position
+	var key := Vector2(offset.x, offset.z)
+	if _ground_seen.has(key):
+		offset.y = float(_ground_seen[key])
+		return offset
+	var origin := _draw_origin
+	if _draw_has_ground:
 		var height := float(_follow_body.call("_ground_height", origin.x + offset.x, origin.z + offset.z))
 		if is_finite(height):
 			height += _water_depth(Vector3(origin.x + offset.x, height, origin.z + offset.z))
@@ -177,18 +188,15 @@ func _ground_vertex(offset: Vector3) -> Vector3:
 	else:
 		# No ground query: the ring stays at the feet, lifted to any water
 		# surface above them.
-		var origin := global_position if is_inside_tree() else position
 		offset.y += _water_depth(origin - Vector3.UP * GROUND_LIFT + Vector3(offset.x, 0.0, offset.z))
+	_ground_seen[key] = offset.y
 	return offset
 
 
 func _water_depth(at: Vector3) -> float:
-	var source: Object = water_depth_source
-	if source == null and is_inside_tree():
-		source = get_tree().current_scene
-	if source == null or not source.has_method("water_depth_at"):
+	if not _draw_has_water:
 		return 0.0
-	var depth := float(source.call("water_depth_at", at))
+	var depth := float(_draw_water.call("water_depth_at", at))
 	return depth if is_finite(depth) and depth > 0.0 else 0.0
 
 
@@ -208,6 +216,24 @@ func _water_depth(at: Vector3) -> float:
 ## see the header comment above) -- that is the remaining lead, not a second
 ## logic bug to hunt for blind.
 func _draw_ring(radius: float, alpha: float) -> void:
+	var origin := global_position if is_inside_tree() else position
+	var water: Object = water_depth_source
+	if water == null and is_inside_tree():
+		water = get_tree().current_scene
+	var inputs := [origin, radius, alpha, _colour, _follow_body, water]
+	# These APIs can change their heights without changing object identity.
+	# Only a ring with no ground/water query has an unchanged aim for certain.
+	var queries_ground := is_instance_valid(_follow_body) and _follow_body.has_method("_ground_height")
+	var queries_water := is_instance_valid(water) and water.has_method("water_depth_at")
+	if not queries_ground and not queries_water and inputs == _drawn:
+		return
+	_drawn = inputs
+	# This rebuild is synchronous: resolve these once, not for every vertex.
+	_draw_origin = origin
+	_draw_has_ground = queries_ground
+	_draw_water = water
+	_draw_has_water = queries_water
+	_ground_seen.clear()
 	var inner := radius * 0.72
 	_ring_mesh.clear_surfaces()
 	_ring_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLE_STRIP)

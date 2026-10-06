@@ -1,0 +1,31 @@
+{
+  "run_id": "p2-tournament-profile-after-warm",
+  "source_head": "108eb16ac8fe82f0585b78a1f6cef86592e0aa48",
+  "product_basis": "108eb16ac8fe82f0585b78a1f6cef86592e0aa48",
+  "temporary_original_paths": null,
+  "started_utc": "2026-10-06T10:16:51.9038539Z",
+  "command": [
+    "--headless",
+    "--path",
+    "D:/tetherbound/codex-p2",
+    "--script",
+    "tests/smoke_net_shared_boss.gd",
+    "--",
+    "--tournament"
+  ],
+  "host_peer": 0,
+  "temporary_host_args": [
+    "-d",
+    "--profiling"
+  ],
+  "temporary_helper_sha256": "91B8DF7C84A1C48D2B8F9650588C1BEF14F275BEB07051D85667B3B32893C5EB",
+  "claim": "quiet debug host function self-time profile only, not FPS or functional PASS; existing known shared-round failure retained if reached",
+  "assertions_budgets": "unchanged",
+  "cache_basis": "existing independent P2 Godot cache, no copy/import",
+  "map_cache_source": "D:\\tetherbound\\codex-p2\\ralph\\reports\\PERF\\tournament\\profile-before\\native-net\\home-0\\Godot\\app_userdata\\Tetherbound\\cache",
+  "map_cache_sha256": {
+    "map_meadows.png": "42C9D546F84A53F683F33F04A2397AF82DD3B57C333570A046E7F536F4A7AAFA",
+    "map_meadows.png.key": "E60FF57921A155CB0FA58351E62AFA97E9F505AEB762A387442FCEA73EC245BE"
+  },
+  "map_cache_scope": "actual original production map cache seeded identically in both independent peer homes; native hit not asserted by receipt"
+}

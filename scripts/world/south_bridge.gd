@@ -159,6 +159,7 @@ func _init() -> void:
 ## `GateLeaf`, already positioned and rotated by the time `build()` reaches
 ## this call.
 func _build_extras(world: Node3D, prefabs: RefCounted, _deck_ground: float) -> void:
+	add_to_group(&"meadow_healing_light_roots")
 	_world = world
 	if _mesh == null:
 		return

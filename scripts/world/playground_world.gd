@@ -868,13 +868,6 @@ func _ready() -> void:
 	# director. Added after the player is placed so its `../Player` lookup finds
 	# a body already standing on the terrain.
 	add_child(ALPHA_PINS.new())
-	# OWNER-0912-WAYFINDING. One production objective source, now visible in
-	# the world as well as on MapState. Simulation shells must not present or
-	# mutate the local trainer's personal objective marker.
-	if not simulation_only:
-		var objective_beacon := OBJECTIVE_BEACON.new()
-		objective_beacon.name = "ObjectiveBeacon"
-		add_child(objective_beacon)
 	# A shell must never touch the mouse: `get_window()` is the REAL window
 	# even for a world that is not the current scene, so an unguarded capture
 	# here takes the pointer away from the player standing in the host's own
@@ -1775,6 +1768,14 @@ func _build_settlement() -> void:
 	crossing.name = "RiftCrossing"
 	add_child(crossing)
 	crossing.call("build", self)
+
+	# The existing objective's cyan materials obey the same healing rule as
+	# other world fittings, including a saved flag applied during construction.
+	# Mount it before healing so live freeing and rebuilt worlds agree.
+	if not simulation_only:
+		var objective_beacon := OBJECTIVE_BEACON.new()
+		objective_beacon.name = "ObjectiveBeacon"
+		add_child(objective_beacon)
 
 	# SG46 / D41: and the local half of the same event -- the meadow itself is
 	# freed. After everything it heals (the vegetation, the relay, the pylon
