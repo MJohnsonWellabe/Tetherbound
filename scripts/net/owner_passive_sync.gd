@@ -1177,7 +1177,9 @@ func _readmit_owner(packet: Dictionary) -> void:
 	var members: Dictionary = {}
 	for member: RefCounted in game.get("party").call("members"): members[str(member.get("uid"))] = member
 	for card: Dictionary in baseline.party:
-		if members.get(str(card.get("uid", ""))) == null: return
+		if members.get(str(card.get("uid", ""))) == null:
+			_note_ignored("readmit naming creature %s this owner does not hold" % str(card.get("uid", "")))
+			return
 	var previous_landmarks := _discoveries()
 	if adopt and HASH.fingerprint({"discovered": previous_landmarks}) != packet.discoveries_hash:
 		if owner().call("_groom_service").call("adopt_landmarks", held) != true \
@@ -1240,6 +1242,10 @@ func _note_host(stream: Dictionary, reason: String) -> void:
 
 ## Diagnostic only, once per distinct reason: a packet this owner drops is
 ## otherwise invisible, and the host simply resends it forever.
+## Diagnostic: why a host refused an owner's rebase (logged once per reason).
+func _note_rebase_refused(character: String, reason: String) -> void:
+	_note_ignored("rebase for %s: %s" % [character.left(18), reason])
+
 func _note_ignored(reason: String) -> void:
 	if reason == _reported_ignore:
 		return
@@ -1295,7 +1301,9 @@ func _rebase_host(peer: int, packet: Dictionary) -> void:
 	if hosts.has(character):
 		var previous: Dictionary = hosts[character]
 		if previous.id != packet.get("old_stream") or previous.cursor.sequence != packet.get("old_sequence") \
-			or previous.cursor.prefix_hash != packet.get("old_prefix_hash"): return
+			or previous.cursor.prefix_hash != packet.get("old_prefix_hash"):
+			_note_rebase_refused(character, "old stream/sequence/prefix differs (readmit=%s)" % str(previous.has("readmit")))
+			return
 		discoveries = previous.cursor.discovered.duplicate(true)
 		var checkpoint: Dictionary = previous.checkpoint
 		if not packet.has("checkpoint_id") and row is Dictionary and checkpoint.get("source_kind") == "portal_arrival" \
@@ -1306,7 +1314,9 @@ func _rebase_host(peer: int, packet: Dictionary) -> void:
 				"permit_id": checkpoint.request.permit.request_id, "realm": checkpoint.request.permit.realm,
 				"entry_id": checkpoint.request.permit.entry_id}):
 			discoveries = checkpoint.arrival_discoveries.duplicate(true)
-	if HASH.fingerprint({"discovered": discoveries}) != packet.get("discoveries_hash"): return
+	if HASH.fingerprint({"discovered": discoveries}) != packet.get("discoveries_hash"):
+		_note_rebase_refused(character, "discoveries differ")
+		return
 	if packet.has("checkpoint_id"):
 		if not hosts.has(character): return
 		var old: Dictionary = hosts[character]
@@ -1322,7 +1332,10 @@ func _rebase_host(peer: int, packet: Dictionary) -> void:
 	if not row is Dictionary or row.get("status") != "accepted" or row.get("receipt") != packet.get("receipt") \
 		or row.get("character_id") != character or not row.get("after") is Dictionary \
 		or not PREP.exact(RECORD.training_projection(before, row, E.training_projection), row.after) \
-		or HASH.fingerprint(before) != packet.get("baseline_hash"): return
+		or HASH.fingerprint(before) != packet.get("baseline_hash"):
+		_note_rebase_refused(character, "settled row/baseline differs (row=%s, baseline_match=%s)" % [
+			str(row.get("status", "none") if row is Dictionary else "none"), str(HASH.fingerprint(before) == packet.get("baseline_hash"))])
+		return
 	if hosts.has(character):
 		var checkpoint: Dictionary = hosts[character].checkpoint
 		if checkpoint.has("prepared") and not checkpoint.has("result"): return

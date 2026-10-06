@@ -1404,6 +1404,10 @@ func _process_creature_training(row: Dictionary) -> void:
 		if outcome.get("code") == "owner_action_baseline_conflict":
 			stall_detail = " " + str(_differing_paths(preload("res://scripts/net/character_record_rules.gd").portable_projection(
 				player.call("save_data")), row.get("before", {}), ""))
+		elif outcome.get("code") == "owner_action_install_conflict":
+			var live: Dictionary = preload("res://scripts/net/character_record_rules.gd").portable_projection(player.call("save_data"))
+			stall_detail = " %s/%s live vs before %s; live vs after %s" % [str(row.get("action", "")), str(row.get("status", "")),
+				str(_differing_paths(live, row.get("before", {}), "")), str(_differing_paths(live, row.get("after", {}), ""))]
 		_note_training_stall("owner apply %s%s" % [str(outcome.get("code", outcome.get("reason", "unsaved"))), stall_detail])
 		return
 	_observe_training_boundary(row, "after_owner_write_before_ack")
