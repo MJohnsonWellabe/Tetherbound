@@ -20,6 +20,15 @@ const LOADOUT_PANEL := preload("res://scripts/ui/companion_details_panel.gd")
 var _camp_answers: Array = []
 
 
+func _initialize() -> void:
+	if OS.get_cmdline_user_args().has("--heal-pulse"):
+		# Disclosed candidate scope, before world boot; shipping flags stay OFF.
+		var math: Script = preload("res://scripts/combat/combat_math.gd")
+		math._config = math.config().duplicate(true)
+		math._config.actor_vitals.runtime_enabled = true
+	super._initialize()
+
+
 func _on_action_completed(op: String, _intent: Dictionary, result: Dictionary) -> void:
 	if op == "camp_build": _camp_answers.append(result.duplicate(true))
 
@@ -49,15 +58,62 @@ func _camp_dispatch(action: String, args: Dictionary) -> Dictionary:
 		"camp_place":
 			return await _place(game, float(args.get("away", 20.0)), int(args.get("presses", 1)))
 		"camp_loadout_edit":
-			return await _edit_loadout(game)
+			return await _edit_loadout(game, args)
 		"camp_loadout_view":
 			return _loadout_view(game, str(args.get("character_id", "")), str(args.get("uid", "")))
+		"camp_heal_deploy":
+			for cycle: int in game.party.size():
+				if game.party.active().species_id == "meadowhart": break
+				var pressed: Dictionary = await _step_press({"action":"party_cycle", "settle":30})
+				if pressed.get("verdict") != "PASS": return pressed
+			if game.party.active().species_id != "meadowhart": return {"verdict":"FAIL", "detail":"normal LB did not select the owned healer"}
+			return await _step_deploy_creature({})
+		"camp_heal_target":
+			var director: Node = _encounter_director()
+			var selected: Node3D = null
+			var largest := 0.0
+			for wild: Node3D in director.get("_wild_creatures"):
+				if not is_instance_valid(wild) or not wild.is_inside_tree() or not wild.visible or not wild.is_alive(): continue
+				var creature: RefCounted = wild.get("instance")
+				if creature != null and float(creature.hp) > largest:
+					selected = wild
+					largest = float(creature.hp)
+			if selected == null: return {"verdict":"FAIL", "detail":"no actual living wild"}
+			var at := selected.global_position + Vector3(2, 0, 0)
+			await _step_teleport({"at":[at.x, at.y, at.z], "settle":6})
+			var engaged: Dictionary = await _step_engage_wild({})
+			var record: Dictionary = director.encounter_record()
+			return {"verdict":engaged.get("verdict", "FAIL"), "detail":engaged.get("detail", ""),
+				"encounter_id":record.get("encounter_id", ""), "position":[selected.global_position.x, selected.global_position.y, selected.global_position.z]}
+		"camp_heal_wounded":
+			var manager: Node = _combat_manager()
+			var director: Node = _encounter_director()
+			var target: Node3D = director.get("_shared_opponent_proxy")
+			var body: Node3D = director.ally_body()
+			if target == null or body == null: return {"verdict":"FAIL", "detail":"shared combat bodies missing"}
+			# The existing proximity fixture supplies position, never HP or an AI hit.
+			body.global_position = target.global_position + Vector3(0, 0, 3)
+			for wound_frame: int in 600:
+				var observed := _heal_view(game, str(game.local.character_id), str(args.get("uid", "")))
+				if not manager.is_fighting() or manager.active_creature() == null or manager.active_creature().fainted:
+					return {"verdict":"FAIL", "detail":"actual wild fight ended before saved damage", "observation":observed}
+				if float(observed.get("hp", 0.0)) > 0.0 and float(observed.get("hp", 0.0)) < float(observed.get("max_hp", 0.0)) \
+					and observed.get("marker", {}).get("status") == "settled" and observed.get("disk", {}).get("hp") == observed.get("hp"):
+					var clear := target.global_position + Vector3(18, 0, 0)
+					clear.y = body.global_position.y
+					body.global_position = clear
+					for clear_frame: int in 30: await physics_frame
+					return {"verdict":"PASS", "detail":"actual enemy damage saved before the Heal tap", "observation":_heal_view(game, str(game.local.character_id), str(args.get("uid", "")))}
+				await physics_frame
+			return {"verdict":"FAIL", "detail":"actual enemy damage did not settle within the existing 600-frame budget", "observation":_heal_view(game, str(game.local.character_id), str(args.get("uid", "")))}
+		"camp_heal_view":
+			return {"verdict":"PASS", "detail":"read-only canonical Heal observation", "observation":_heal_view(game, str(args.get("character_id", "")), str(args.get("uid", "")))}
 	return {"verdict": "ERROR", "detail": "unknown action " + action}
 
 
 ## F23: same camp and granted creature; press the production panel's equip
 ## callback. No direct mutation of moves or admitted character state.
-func _edit_loadout(game: Node) -> Dictionary:
+func _edit_loadout(game: Node, args: Dictionary = {}) -> Dictionary:
 	var camp: Node3D = null
 	var camp_uid := ""
 	for row: Dictionary in game.get("placed_buildings"):
@@ -75,22 +131,62 @@ func _edit_loadout(game: Node) -> Dictionary:
 	for node: Node in game.get_children():
 		if node.get_script() == LOADOUT_PANEL: panel = node
 	if panel == null or panel.get("_shown") != true: return {"verdict": "FAIL", "detail": "camp loadout panel did not open"}
+	if not str(args.get("species", "")).is_empty():
+		for member: RefCounted in game.party.members():
+			if member.species_id == str(args.species):
+				panel.call("_select_owned", str(member.uid))
+				break
 	var uid: String = panel.get("_uid")
 	var before := _loadout_view(game, "", uid)
-	if before.card.get("move_utility") == "quake_ring":
+	var move_id: String = str(args.get("move_id", "quake_ring"))
+	if before.card.get("move_utility") == move_id:
 		panel.call("close")
 		return {"verdict": "FAIL", "detail": "utility must actually change", "card": before.card}
 	panel.call("_choose_slot", "utility")
 	for frame: int in 600:
 		if panel.get("_pending_edit") == "" and int(_loadout_view(game, "", uid).card.get("loadout_revision", -1)) == int(before.card.get("loadout_revision", -1)):
-			panel.call("_equip", "quake_ring")
+			panel.call("_equip", move_id)
 		elif frame % 30 == 0: panel.call("_reconcile_loadout")
 		await physics_frame
 		var current := _loadout_view(game, "", uid)
-		if current.card.get("move_utility") == "quake_ring" and not current.card.get("loadout_last_edit", {}).is_empty() and int(current.card.get("loadout_revision", -1)) == int(before.card.get("loadout_revision", -1)) + 1 and panel.get("_pending_edit") == "":
+		if current.card.get("move_utility") == move_id and not current.card.get("loadout_last_edit", {}).is_empty() and int(current.card.get("loadout_revision", -1)) == int(before.card.get("loadout_revision", -1)) + 1 and panel.get("_pending_edit") == "":
 			panel.call("close")
 			return current
 	return {"verdict": "FAIL", "detail": "loadout original did not settle", "card": _loadout_view(game, "", uid).card}
+
+
+func _heal_view(game: Node, character: String, uid: String) -> Dictionary:
+	var session: Node = game.get("session")
+	var row := {}
+	for delivery: Dictionary in game.world.reward_deliveries.values():
+		if delivery.get("kind") == "actor_vitals" and delivery.get("character_id") == character and delivery.get("creature_uid") == uid:
+			row = delivery.duplicate(true)
+	var out := {"row":row, "originals":[]}
+	var director: Node = _encounter_director()
+	for original: Dictionary in director.get("_ordinary_actor_vitals_proposals").values():
+		if original.has("heal_bundle") and original.get("proposal", {}).get("creature_uid") == uid:
+			out.originals.append(original.duplicate(true))
+	if character != str(game.local.character_id): return out
+	var creature: RefCounted = null
+	for member: RefCounted in game.party.members():
+		if str(member.uid) == uid: creature = member
+	if creature == null: return out
+	var saved: Dictionary = game.save_system.characters().read(character)
+	var disk := {}
+	for card: Dictionary in saved.get("party", []):
+		if card.get("uid") == uid: disk = card.duplicate(true)
+	var manager: Node = _combat_manager()
+	var receipt: String = str(row.get("receipt", {}).get("receipt_id", ""))
+	var hash: String = preload("res://scripts/net/research_passive_preparation.gd").fingerprint(row.get("receipt", {}))
+	var seen: Dictionary = session._owner_passive_service().get("local").get("vitals_seen", {})
+	out.merge({"hp":creature.hp, "max_hp":creature.max_hp, "disk":disk,
+		"marker":game.local.satchel_escrow.get(row.get("delivery_id", ""), {}).duplicate(true),
+		"saved_bool_seen":seen.has("actor_vitals_saved:" + hash + ":" + str(row.get("journal_revision", -1))),
+		"feedback_seen":not receipt.is_empty() and manager.get("_seen_impact_actions").has(receipt),
+		"uses":creature.move_mastery_uses.duplicate(true), "receipts":creature.move_mastery_receipts.duplicate(true),
+		"active_uid":str(manager.active_creature().uid) if manager.active_creature() != null else "",
+		"awaiting":manager.get("_move_awaiting_host")}, true)
+	return out
 
 
 func _loadout_view(game: Node, character: String, uid: String) -> Dictionary:

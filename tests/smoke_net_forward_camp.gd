@@ -17,6 +17,10 @@ extends "res://tests/helpers/net_harness.gd"
 ## DISCLOSED FIXTURES (tests/helpers/forward_camp_net_peer.gd): kits added
 ## straight to the satchel; ground found by the placer's own preview; Player
 ## stood 3 m from the spot and the ghost aimed at it before the Place press.
+## Optional --heal-pulse reuses the grant seam for a guest L15 Meadowhart,
+## enables candidate saved vitals in memory before boot, and AFTER all original
+## assertions proves legal camp equip -> actual wild damage -> B Heal -> saved
+## receipt/Manager feedback. No HP, AI, RNG or mastery fixture is introduced.
 
 const PEER_SCRIPT := "res://tests/helpers/forward_camp_net_peer.gd"
 const STEP_BUDGET := 3000
@@ -32,7 +36,8 @@ func _initialize() -> void:
 
 
 func _run() -> void:
-	if not await launch(2, "world"):
+	var heal_mode: bool = OS.get_cmdline_user_args().has("--heal-pulse")
+	if not await launch(2, "world", ["--heal-pulse"] if heal_mode else []):
 		quit(await finish())
 		return
 	for i in 2:
@@ -40,6 +45,10 @@ func _run() -> void:
 		if i == 1: grant["level"] = 15
 		var granted: Dictionary = await step(i, "party_grant", grant)
 		check(granted.get("verdict") == "PASS", "peer %d owns a creature" % i)
+		if heal_mode and i == 1:
+			# Same disclosed pre-admission grant seam; L15 naturally learns Heal.
+			var healer: Dictionary = await step(i, "party_grant", {"species":"meadowhart", "level":15})
+			check(healer.get("verdict") == "PASS", "Heal setup: guest owns a legally eligible L15 Meadowhart")
 		# The guest brings two: one for its camp, one to place a second (the
 		# pack-up offer applies when a kit is in hand to place).
 		var kit: Dictionary = await _cstep(i, "camp_grant_kit", {"n": 1 + i})
@@ -135,7 +144,83 @@ func _run() -> void:
 		"after rejoining the guest receives both camps (%s)" % str(guest_view.get("detail", "")))
 	check(await _await_loadout(0, view_args, expected), "host re-admits the guest's persisted loadout")
 	check(await _await_loadout(1, view_args, expected), "guest rejoin preserves the saved loadout and receipt")
+	if heal_mode: await _prove_heal(guest_id)
 	quit(await finish())
+
+
+func _prove_heal(character: String) -> void:
+	var edit := await _cstep(1, "camp_loadout_edit", {"species":"meadowhart", "move_id":"heal_pulse"}, STEP_BUDGET)
+	check(edit.get("verdict") == "PASS", "Heal: actual camp panel saves the legal owned utility (%s)" % str(edit.get("detail", "")))
+	var expected: Dictionary = edit.get("card", {})
+	var uid: String = str(expected.get("uid", ""))
+	var args := {"character_id":character, "uid":uid}
+	check(not uid.is_empty() and expected.get("move_utility") == "heal_pulse" and not expected.get("loadout_last_edit", {}).is_empty(),
+		"Heal: equipped utility has its exact saved loadout receipt")
+	if uid.is_empty() or edit.get("verdict") != "PASS": return
+	check(await _await_loadout(0, args, expected), "Heal: host admits the actual equipped owner loadout")
+	var deployed := await _cstep(1, "camp_heal_deploy")
+	check(deployed.get("verdict") == "PASS", "Heal: normal LB selects and deploys the owned healer")
+	if deployed.get("verdict") != "PASS": return
+	var host_deployed: Dictionary = await step(0, "deploy_creature")
+	check(host_deployed.get("verdict") == "PASS", "Heal: host deploys its actual owned creature")
+	var target := await _cstep(0, "camp_heal_target")
+	check(target.get("verdict") == "PASS" and not str(target.get("encounter_id", "")).is_empty(), "Heal: normal interact opens an actual canonical wild")
+	if target.get("verdict") != "PASS" or str(target.get("encounter_id", "")).is_empty(): return
+	await step(1, "teleport", {"at":target.get("position", [])})
+	var joined: Dictionary = await step(1, "join_encounter", {"encounter_id":str(target.encounter_id)})
+	check(joined.get("verdict") == "PASS", "Heal: guest joins the host's exact wild record")
+	if joined.get("verdict") != "PASS": return
+	var left: Dictionary = await step(0, "press", {"action":"combat_run"})
+	check(left.get("verdict") == "PASS", "Heal: host normally disengages while the guest remains")
+	var wounded := await _cstep(1, "camp_heal_wounded", args, STEP_BUDGET)
+	var before: Dictionary = wounded.get("observation", {})
+	print("HEAL actual wounded observation: ", JSON.stringify(before))
+	check(wounded.get("verdict") == "PASS" and before.get("active_uid") == uid and before.get("saved_bool_seen") == true,
+		"Heal: real enemy damage reaches the current owned body and the actual owner save BOOL")
+	if wounded.get("verdict") != "PASS": return
+	var pressed: Dictionary = await step(1, "press", {"action":"combat_utility"})
+	check(pressed.get("verdict") == "PASS", "Heal: physical B utility tap reaches the mounted combat input")
+	var after := {}
+	var host := {}
+	var completed := false
+	var heal_action := ""
+	for heal_poll: int in 40:
+		after = (await _cstep(1, "camp_heal_view", args)).get("observation", {})
+		host = (await _cstep(0, "camp_heal_view", args)).get("observation", {})
+		var row: Dictionary = after.get("row", {})
+		var originals: Array = host.get("originals", [])
+		for original: Dictionary in originals:
+			if original.get("proposal", {}).get("settlement_receipt") == row.get("receipt") \
+				and original.get("heal_bundle", {}).get("move_id") == "heal_pulse" \
+				and original.get("proposal", {}).get("hp_before") == before.get("hp") \
+				and original.get("proposal", {}).get("hp_after", 0.0) > original.get("proposal", {}).get("hp_before", 0.0) \
+				and original.get("committed") == true and original.get("presented") == true \
+				and row.get("creature_uid") == uid and row.get("receipt") != before.get("row", {}).get("receipt") \
+				and row.get("receipt", {}).get("encounter_id") == str(target.encounter_id) \
+				and after.get("disk", {}).get("hp") == row.get("hp") and after.get("hp") == row.get("hp") \
+				and after.get("marker", {}).get("receipt") == row.get("receipt") and after.get("marker", {}).get("status") == "settled" \
+				and after.get("saved_bool_seen") == true and after.get("feedback_seen") == true and after.get("awaiting") == false:
+				completed = true
+				heal_action = str(original.get("heal_bundle", {}).get("effect", {}).get("receipt", {}).get("action_id", ""))
+		if completed: break
+		await step(1, "wait", {"frames":15})
+	print("HEAL actual completion observation: ", JSON.stringify({"owner":after, "host":host}))
+	check(completed, "Heal: one canonical positive heal saves its exact owner receipt before Manager completion")
+	var exit: Dictionary = await step(1, "press", {"action":"combat_run"})
+	check(exit.get("verdict") == "PASS", "Heal: normal guest disengage settles its earned mastery")
+	var earned := false
+	for mastery_poll: int in 40:
+		var final: Dictionary = (await _cstep(1, "camp_heal_view", args)).get("observation", {})
+		var old_uses: int = int(before.get("uses", {}).get("heal_pulse", 0))
+		var old_receipts: Array = before.get("receipts", {}).get("heal_pulse", [])
+		var new_receipts: Array = final.get("disk", {}).get("move_mastery_receipts", {}).get("heal_pulse", [])
+		if int(final.get("disk", {}).get("move_mastery_uses", {}).get("heal_pulse", -1)) == old_uses + 1 \
+			and new_receipts.size() == old_receipts.size() + 1 and not heal_action.is_empty() \
+			and not old_receipts.has(heal_action) and new_receipts.has(heal_action):
+			earned = true
+			break
+		await step(1, "wait", {"frames":15})
+	check(earned, "Heal: actual owner disk credits exactly one new equipped Heal use after exit")
 
 
 func _await_loadout(peer: int, args: Dictionary, expected: Dictionary) -> bool:
