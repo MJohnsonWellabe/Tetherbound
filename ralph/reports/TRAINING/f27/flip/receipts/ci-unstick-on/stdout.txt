@@ -1,0 +1,7 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+[player] entombed at 0.00, 0.00, -14.89 -- recovering to 0.00, 0.00, -7.66
+sealed in and recovered 9.65m clear after 1 recovery
+leant on a cliff for 6.0s at z=-5.10 and was left alone
+
+unstick smoke test passed

@@ -86,9 +86,9 @@ title_new_game | ON FIRST PASS, exit0; native title pad activation/reset/Meadows
 trainer_battle | ON FIRST PASS exit0; 2of2opponents/exact20coin+1potion/XPgain/no-rechallenge-payout; independent functional review PASS; duplicate-starterERROR retained/OFFcomparison PASS exactstderrparity reviewed; legacy local fixture/no durable proof
 trainer_battle_camera | ON FIRST PASS exit0; realMira deployedcamera/GUI focus/controllerorbit entry+exit; rawreceipt retained
 trainer_no_usable_ally | ON FIRST PASS exit0; faintedally honestrefusal/nofalsevictory/directheal restoreschallenge; rawreceipts retained, inheritedfault+heal fixture
-traversal | ON FIRST ACTIVE; original collision/longwalk/fallguard/worldedge assertions
-unstick | ON OPEN
-veridian_offer_choice | ON OPEN
+traversal | ON FIRST PASS, exit0; mainlegs108m/perimeter/kill/crossinggates/rockalign/doors; nineperimeter/doorcollider-query/heightrecovery/analyticnormals/stagedposes-flags/recoveryinterruptions+routeoffsetnotes/no600mcontinuous-earned-hw-coop proof; independent qualified review PASS
+unstick | ON FIRST PASS, exit0/empty stderr; bareplayer sealed-pocket escape9.65m/wallnorecovery/originalfixtures; minimum1recovery/no Meadows-combat-earned-hw-coop proof; independent qualified review PASS
+veridian_offer_choice | ON FIRST space group ACTIVE; originalCIspace-capacity-recovery groups sequential/privatehomes/2700sec native deadline; allgroupsneeded
 warrens | ON OPEN
 wild_streaming | ON OPEN
 Tournament ON FIRST | FAIL exit1: quarter durable rewards PASS; semi both first strikes PASS, team completion command no verdict at unchanged 95000ms. Diagnosis OPEN. receipts/net-tournament-on-first
