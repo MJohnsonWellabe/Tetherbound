@@ -107,7 +107,7 @@ func _choice(title: String) -> OptionButton:
 		button.fit_to_longest_item = false
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	button.custom_minimum_size.y = 66 if SCREEN.config().get("enabled") == true else 38
-	button.add_theme_font_size_override("font_size",TOKENS.FONT_PROMPT if SCREEN.config().get("enabled") == true else 20)
+	button.add_theme_font_size_override("font_size",TOKENS.FONT_READ if SCREEN.config().get("enabled") == true else 20)
 	parent.add_child(button)
 	return button
 
@@ -223,7 +223,7 @@ func _refresh() -> void:
 		_seed.set_item_metadata(_seed.item_count-1,row.id)
 	for slot: int in _quote.get("unlocked_slots",[]):
 		var old: String = _quote.get("taught_traits",{}).get(str(slot),"")
-		_slot.add_item("Slot %s · %s · %s essence" % [slot,"empty" if old == "" else TRAITS.definition(old).get("display_name",old),slot*int(_quote.essence_cost_per_slot)])
+		_slot.add_item(("%s · %s · %s essence" if _fields != null else "Slot %s · %s · %s essence") % [slot,"empty" if old == "" else TRAITS.definition(old).get("display_name",old),slot*int(_quote.essence_cost_per_slot)])
 		_slot.set_item_metadata(_slot.item_count-1,slot)
 	for item: String in _quote.get("payment_items",[]):
 		_payment.add_item(item.trim_prefix("essence_").capitalize()+" Essence")
