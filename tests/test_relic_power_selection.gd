@@ -146,3 +146,34 @@ func test_the_owner_installs_a_saved_relic_power_choice() -> void:
 	session.free()
 	game.free()
 	preload("res://tests/helpers/split_save_fixture.gd").wipe(directory)
+
+
+class NoPlacedFlags extends RefCounted:
+	func has(_id: String) -> bool: return false
+
+
+func test_a_hung_relic_choice_survives_a_save_and_reload() -> void:
+	# Review of cc114109: the redesign hangs relics per character
+	# (relics_hung + receipt) and never sets the world placed flag, but the
+	# reload validated the active power only against that flag, so a saved
+	# choice came back empty while the host's record kept it.
+	var player := PLAYER.new()
+	player.configure(ITEMS.new())
+	player.character_id = "owner_a"
+	player.party.add(INSTANCE.from_species("terrapup", SPECIES.table().terrapup))
+	player.flag_reader = NoPlacedFlags.new()
+	player.redesign_character.relics_hung = ["meadows"]
+	player.redesign_character.transaction_receipts = ["relic_hang:meadows:owner_a"]
+	assert_true(player.hearts.activate_hung("meadows", ["meadows"]))
+	var saved: Dictionary = player.save_data()
+	var reloaded := PLAYER.new()
+	reloaded.configure(ITEMS.new())
+	reloaded.flag_reader = NoPlacedFlags.new()
+	reloaded.load_data(saved)
+	assert_eq(reloaded.hearts.active_id(), "meadows", "a hung (not world-placed) relic's power is still active after reload")
+	saved.redesign_character.relics_hung = []
+	var unhung := PLAYER.new()
+	unhung.configure(ITEMS.new())
+	unhung.flag_reader = NoPlacedFlags.new()
+	unhung.load_data(saved)
+	assert_eq(unhung.hearts.active_id(), "", "an unhung, unplaced selection still loads inactive")

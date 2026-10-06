@@ -163,11 +163,14 @@ func save_data() -> Dictionary:
 
 ## Unknown, malformed, or no-longer-placed selections load inactive.  A save
 ## must never manufacture a power that its story flags do not support.
-func load_data(data: Dictionary, progression: RefCounted = null) -> void:
+## F31#2 / RD-20: a selection whose relic this character has HUNG
+## (`relics_hung`) stays selected; the world placed flag is the legacy proof.
+func load_data(data: Dictionary, progression: RefCounted = null, relics_hung: Array = []) -> void:
 	var candidate := str(data.get("active_id", ""))
 	if candidate != "" and heart(candidate).is_empty():
 		candidate = ""
-	if candidate != "" and progression != null and not is_placed(candidate, progression):
+	if candidate != "" and progression != null and not is_placed(candidate, progression) \
+			and not hung_allows(candidate, relics_hung):
 		candidate = ""
 	_active_id = candidate
 	revision += 1
