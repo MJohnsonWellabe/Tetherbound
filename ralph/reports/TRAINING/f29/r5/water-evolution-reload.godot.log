@@ -1,0 +1,6 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_evolution.gd::test_water_feast_preserves_ancestor_moves_through_real_character_admission_and_reload: 1 of 816 test files
+  ok    test_evolution.gd :: test_water_feast_preserves_ancestor_moves_through_real_character_admission_and_reload
+
+1 tests, 86 assertions, 0 failed

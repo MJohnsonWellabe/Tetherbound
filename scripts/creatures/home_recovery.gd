@@ -13,12 +13,23 @@ extends RefCounted
 ## presentation.
 
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const ESSENCE := preload("res://scripts/creatures/essence.gd")
 
 
-static func rest(creature: RefCounted, cfg: Dictionary) -> void:
+static func training_config(creature: RefCounted, cfg: Dictionary, personal: Dictionary) -> Dictionary:
+	if creature == null: return {}
+	var cap := ESSENCE.creature_cap(personal, str(creature.get("uid")))
+	if cap < 0 or int(creature.get("level")) > cap: return {}
+	var result := cfg.duplicate(true)
+	result.level.cap = cap
+	return result
+
+static func rest(creature: RefCounted, cfg: Dictionary, personal: Variant = null) -> void:
 	if creature == null:
 		return
 	creature.call("heal_fully")
-	var bonus := PROGRESSION.rest_xp(cfg)
+	var training := training_config(creature, cfg, personal) if personal is Dictionary else cfg
+	if training.is_empty(): return # Recovery remains available during reconciliation.
+	var bonus := PROGRESSION.rest_xp(training)
 	if bonus > 0:
-		creature.call("gain_xp", bonus, cfg)
+		creature.call("gain_xp", bonus, training)

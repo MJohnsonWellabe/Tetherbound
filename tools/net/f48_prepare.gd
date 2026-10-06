@@ -13,6 +13,11 @@ func _build() -> Dictionary:
 		return {}
 	var steps: Array = []
 	steps.append(_entry("all", "f48_watch_owner_saves", {}, "Arm actual saved-edge observation before production admission; no save or ACK"))
+	if OS.get_cmdline_user_args().has("--masters"):
+		_admit(steps, saves, 2)
+		_masters(steps)
+		return {"name": "F28 existing F48 five-Master producer", "claim": "Disclosed mechanics only; travel/recovery routes required, no earned placement credit. " + str(_profile.provenance),
+			"peers": 2, "scene": "title", "budget_s": 3600, "build_allowance_s": 300, "steps": steps}
 	# The explicit producer may build its real paid prerequisite in the same
 	# startup. The original suites and their admitted baseline stay unchanged.
 	if bool(_profile.get("prepare_paid_altar", false)):

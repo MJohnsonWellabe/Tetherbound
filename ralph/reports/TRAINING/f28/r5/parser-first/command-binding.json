@@ -1,0 +1,41 @@
+{
+  "provenance": "Exact argv from the executed tool call; supplements original unchanged receipt.json",
+  "source_head": "e6f2d83d61685c4e1a07cbc984c2e58b1e831c98",
+  "independent_raw_review": "All original10 hashes match, all three scripts match source, all exits0/empty stderr; /root/f28_review scoped PASS",
+  "commands": [
+    {
+      "argv": [
+        "--headless",
+        "--path",
+        "D:/tetherbound/codex-r5",
+        "--check-only",
+        "--script",
+        "tests/smoke_playground.gd"
+      ],
+      "executable": "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64_console.exe"
+    },
+    {
+      "argv": [
+        "--headless",
+        "--path",
+        "D:/tetherbound/codex-r5",
+        "--check-only",
+        "--script",
+        "tests/smoke_water_scene_encounters.gd"
+      ],
+      "executable": "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64_console.exe"
+    },
+    {
+      "argv": [
+        "--headless",
+        "--path",
+        "D:/tetherbound/codex-r5",
+        "--check-only",
+        "--script",
+        "tests/smoke_cloudreach_f07_windscar_cadence.gd"
+      ],
+      "executable": "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64_console.exe"
+    }
+  ],
+  "scope": "Parser only; no world instantiated or gameplay criterion credit"
+}

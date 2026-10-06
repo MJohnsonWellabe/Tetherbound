@@ -1,0 +1,34 @@
+{
+  "claim": "existing focused unit only, background R2 untimed correctness; no world/visual claim",
+  "source_head": "561c1d494f2132d14553670199308a5c0ae47fb0",
+  "since_utc": "2026-10-06T05:29:52.4111750Z",
+  "run_id": "r5-feast-menu-unit-20261006T0535Z",
+  "background": [
+    {
+      "ProcessId": 15796,
+      "ParentProcessId": 7800,
+      "Name": "Godot_v4.7-stable_win64_console.exe",
+      "CommandLine": "\"D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64_console.exe\" --headless --path D:\\tetherbound\\codex-r2 --fixed-fps 60 --script tests/smoke_f22_pattern_bands.gd -- --seeds=12 --trainers --json=D:/tetherbound/codex-r2/ralph/reports/COMBAT/f22/r2/baseline/full.json"
+    },
+    {
+      "ProcessId": 8624,
+      "ParentProcessId": 15796,
+      "Name": "Godot_v4.7-stable_win64.exe",
+      "CommandLine": "D:\\Tetherbound-tools\\godot\\Godot_v4.7-stable_win64.exe --headless --path D:\\tetherbound\\codex-r2 --fixed-fps 60 --script tests/smoke_f22_pattern_bands.gd -- --seeds=12 --trainers --json=D:/tetherbound/codex-r2/ralph/reports/COMBAT/f22/r2/baseline/full.json"
+    }
+  ],
+  "pid": 19880,
+  "action": "existing bounded feast-button unit, untimed",
+  "held_by": "tb/codex-r5",
+  "private_appdata": "D:/tetherbound/.artifacts/r5-feast-menu-unit/appdata",
+  "private_localappdata": "D:/tetherbound/.artifacts/r5-feast-menu-unit/localappdata",
+  "command": [
+    "--headless",
+    "--path",
+    "D:/tetherbound/codex-r5",
+    "--script",
+    "tests/run_tests.gd",
+    "--",
+    "--only=test_f28_training_boundaries.gd::test_feast_buttons_require_the_actual_locked_tier_and_never_reoffer_a_lifted_cap"
+  ]
+}

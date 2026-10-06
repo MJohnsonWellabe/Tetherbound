@@ -8,11 +8,12 @@ const FEASTS := preload("res://scripts/creatures/breakthrough.gd")
 const EVOLUTION := preload("res://scripts/creatures/evolution.gd")
 const TRAITS := preload("res://scripts/creatures/traits.gd")
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
+const CANDY := preload("res://scripts/creatures/candy.gd")
 const BOUNTIES := preload("res://scripts/world/bounty_board.gd")
 const REMATCH := preload("res://scripts/repeatables/rematch_rules.gd")
 const RESEARCH := preload("res://scripts/creatures/research_log.gd")
 const RECORD_FIELDS := ["character_id", "party", "redesign_character", "inventory", "portal_escrow", "vitals_escrow", "equipment", "realm_hearts"]
-const ACTIONS := ["master_win", "master_chest", "feast_cook", "feast_feed", "trait_teach", "trait_release", "essence_release", "bounty_rotate", "bounty_event", "bounty_claim", "rematch_win", "research_event", "research_claim"]
+const ACTIONS := ["master_win", "master_chest", "feast_cook", "feast_feed", "candy_feed", "trait_teach", "trait_release", "essence_release", "bounty_rotate", "bounty_event", "bounty_claim", "rematch_win", "research_event", "research_claim"]
 
 
 static func stage(current: Dictionary, revision: int, action: String,
@@ -28,7 +29,9 @@ static func stage(current: Dictionary, revision: int, action: String,
 	if not before_errors is Array or not before_errors.is_empty(): return deny("invalid_admitted_character")
 	var proposal: Dictionary
 	var callback_before := current
-	if action in RESEARCH.ACTIONS:
+	if action == "candy_feed":
+		proposal = CANDY.stage(current, revision, intent, context)
+	elif action in RESEARCH.ACTIONS:
 		proposal = RESEARCH.stage(current, revision, action, intent, context)
 	elif action in BOUNTIES.ACTIONS:
 		proposal = BOUNTIES.stage(current, revision, action, intent, context)

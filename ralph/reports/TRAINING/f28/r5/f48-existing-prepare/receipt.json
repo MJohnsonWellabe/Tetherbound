@@ -1,0 +1,30 @@
+{
+  "source_commit": "d6e30a639233ce6a80b02772403045cbe5aea5e4",
+  "tool": "tools/net/f48_produce_actual.py",
+  "argv": [
+    "--prepare-only",
+    "--producer",
+    "loop",
+    "--godot",
+    "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64_console.exe",
+    "--output",
+    "D:/tetherbound/codex-r5/ralph/reports/TRAINING/f28/r5/f48-existing-prepare"
+  ],
+  "exit_code": 0,
+  "native_run": false,
+  "production_config_changed": false,
+  "profile_sha256": "23a365679f106f99e67f621cd22f17c09c8a59bf7c46ae57f23322ba7f1ad5b9",
+  "original_output_files": 20,
+  "archive_sha256": "7b06d680d7063364d3320f0e890c0dc243b946164e9414273262ec3c405c7579",
+  "all_six_source_pins_match": true,
+  "all_six_effective_pins_match": true,
+  "effective_semantic_changes": [
+    "alpha_respawns.runtime_enabled false to true"
+  ],
+  "multiplayer_hash_difference": "Serialization/formatting only; existing altered_fields returns empty",
+  "independent_review": "/root/f28_review metadata/source PASS; canonical existing seed+fixture+producer reuse, no new fixture rule/tool/route definition",
+  "status": "Current-pinned Kitchen producer inputs AVAILABLE; native Kitchen cooking UNRUN; not ready CI bundle/acceptance",
+  "native_next": "Existing unmodified f48_produce_actual.gd --producer=loop once landing CI and shared hosted cap permit. Re-generates immutable-source inputs on runner; actual cook/feed stock/save/ACK prefix may close scoped F28#3 despite unrelated later failure; retain full failure, no F48 credit.",
+  "remaining_master_routes": "Only original master_0/master_1 wins; all40 start/lose/retry/chest per-tier/per-peer plus real choice UID routes missing",
+  "authority": "PR5256008394969/6009171478/6009787763; existing preparation6011508700; shared CI hold6011289628"
+}

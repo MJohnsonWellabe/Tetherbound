@@ -1464,7 +1464,7 @@ func complete_creature_bed_rests() -> int:
 		# rather than about resting: which slot the creature was in, and that it
 		# is no longer occupying one.
 		var bed_index := int(creature.get("rest_bed_index"))
-		HOME_RECOVERY.rest(creature, cfg)
+		HOME_RECOVERY.rest(creature, cfg, local.redesign_character)
 		creature.set("rested", true)
 		creature.set("resting", false)
 		creature.set("rest_bed_index", -1)
@@ -3209,6 +3209,9 @@ func commit_original_starter(source: Node, instance: RefCounted, nickname: Strin
 	if not party.add(instance):
 		instance.set("nickname", before_nickname)
 		return false
+	# Retain the same canonical training mirror the owner save writes. A fresh
+	# starter must have its cap in memory before the first rest or XP award.
+	local.redesign_character = local.save_data().redesign_character
 	local.redesign_character.transaction_receipts.append(receipt)
 	local.flags.call("set_flag", "opening:starter_granted", true)
 	if not bool(save_system.call("save_character_prepared", self, local.character_id)):
