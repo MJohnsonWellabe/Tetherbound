@@ -64,6 +64,15 @@ var _aborted := false
 
 
 func _init() -> void:
+	# Opt in only for cases exercising production nodes after autoload/tree
+	# initialization. Pure unit invocations retain their existing _init path.
+	if OS.get_cmdline_user_args().has("--initialized-tree"):
+		_run.call_deferred()
+	else:
+		_run()
+
+
+func _run() -> void:
 	var files := _find_tests(TESTS_DIR)
 	files.sort()
 	files = _apply_only(files)

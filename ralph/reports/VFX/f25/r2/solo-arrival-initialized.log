@@ -1,0 +1,11 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_f21_hit_presentation.gd: 1 of 825 test files
+  ok    test_f21_hit_presentation.gd :: test_crit_sharp_rumble_and_class_shake_follow_their_settings
+  ok    test_f21_hit_presentation.gd :: test_damage_number_setting_cycles_and_survives_a_relaunch
+  ok    test_f21_hit_presentation.gd :: test_hud_numbers_style_by_class_honour_own_only_and_fade_out
+  ok    test_f21_hit_presentation.gd :: test_solo_hit_on_the_player_freezes_a_weighted_receipt_and_reaches_the_hud
+F25_SOLO_ARRIVAL_NATIVE={"assertions":237.0,"completed":true,"failures":[]}
+  ok    test_f21_hit_presentation.gd :: test_solo_player_strike_uses_slot_weight_for_knockback_and_hitstop
+
+5 tests, 34 assertions, 0 failed

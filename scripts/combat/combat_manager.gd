@@ -2873,7 +2873,7 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 		killed_override: bool = false, crit_override: bool = false,
 		stagger_triggered_override: bool = false, impact: Dictionary = {}) -> void:
 	var creature := active_creature()
-	if creature == null or _enemy == null or _ally_body == null or _wild == null:
+	if creature == null or _enemy == null or not is_instance_valid(_ally_body) or not is_instance_valid(_wild):
 		return
 	var origin: Vector3 = _ally_body.call("centre")
 	var facing: Vector3 = _ally_body.call("facing")
@@ -2938,6 +2938,7 @@ func _perform_player_strike(connected: bool, damage_override: float = -1.0,
 		var receipt := _new_impact(move_id, slot, rolled, type_mult, false, facing, target_body)
 		if receipt.is_empty(): return
 		var commit := func() -> void:
+			if not is_instance_valid(game) or game.get("local") != local: return
 			if state != State.ACTIVE or _encounter_id != encounter_id or _arena != arena \
 					or not is_instance_valid(arena) or arena.is_queued_for_deletion(): return
 			if not is_instance_valid(source_body) or not is_instance_valid(target_body) \

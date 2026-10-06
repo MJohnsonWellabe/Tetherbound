@@ -130,7 +130,23 @@ func test_solo_hit_on_the_player_freezes_a_weighted_receipt_and_reaches_the_hud(
 
 func test_solo_player_strike_uses_slot_weight_for_knockback_and_hitstop() -> void:
 	if not Engine.get_main_loop() is SceneTree:
-		assert_true(false, "Actual library birth needs the initialized existing native test entry point; _init is not proof")
+		var output: Array = []
+		var code := OS.execute(OS.get_executable_path(), ["--headless", "--path",
+			ProjectSettings.globalize_path("res://"), "--script", "res://tests/run_tests.gd", "--",
+			"--only=test_f21_hit_presentation.gd::test_solo_player_strike_uses_slot_weight_for_knockback_and_hitstop",
+			"--initialized-tree"], output, true)
+		var combined := "\n".join(output)
+		var completed: Dictionary = {}
+		for line: String in combined.split("\n"):
+			if line.begins_with("F25_SOLO_ARRIVAL_COMPLETE="):
+				var parsed: Variant = JSON.parse_string(line.trim_prefix("F25_SOLO_ARRIVAL_COMPLETE="))
+				if parsed is Dictionary: completed = parsed
+		assert_eq(code, 0, combined)
+		assert_false(combined.contains("ERROR:") or combined.contains("ObjectDB instances") or combined.contains("resources still in use"), combined)
+		assert_true(completed.get("completed") == true, combined)
+		assert_true(int(completed.get("assertions", 0)) >= 200, combined)
+		assert_eq(completed.get("failures", ["missing receipt"]), [], combined)
+		print("F25_SOLO_ARRIVAL_NATIVE=" + JSON.stringify(completed))
 		return
 	var library_was := bool(LIBRARY.config().get("enabled", false))
 	LIBRARY.config()["enabled"] = true
@@ -236,6 +252,8 @@ func test_solo_player_strike_uses_slot_weight_for_knockback_and_hitstop() -> voi
 			_free(fight)
 	LIBRARY.config()["enabled"] = library_was
 	assert_true(_expected_impulse("heavy") > _expected_impulse("light"), "a heavy hit throws further")
+	print("F25_SOLO_ARRIVAL_COMPLETE=" + JSON.stringify({"completed": true,
+		"assertions": assertion_count, "failures": failures}))
 
 
 func test_crit_sharp_rumble_and_class_shake_follow_their_settings() -> void:
