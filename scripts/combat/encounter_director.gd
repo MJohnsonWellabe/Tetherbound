@@ -79,6 +79,7 @@ const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
 const WILD_SCRIPT := preload("res://scripts/creatures/wild_creature.gd")
 const SHARED_OPPONENT_PROXY := preload("res://scripts/creatures/shared_opponent_proxy.gd")
 const SHARED_WILD_HOST_FIGHT := preload("res://scripts/combat/shared_wild_host_fight.gd")
+const SHARED_POSE_CODEC := preload("res://scripts/combat/shared_opponent_pose_codec.gd")
 const WATER_CAPTURE_CODEC := preload("res://scripts/save/water_capture_codec.gd")
 ## The player's own creature walks around the world now instead of appearing for a
 ## fight, so it gets the follower subclass rather than the bare body.
@@ -3970,7 +3971,7 @@ func _shared_presentation_payload(encounter_id: String) -> Dictionary:
 		"body_generation": int(runtime.get("body_generation")) if runtime != null else 0,
 		"presentation_seq": int(runtime.get("presentation_seq")) if runtime != null else 0,
 		"cue_serial": int(runtime.get("cue_serial")) if runtime != null else 0,
-		"shape": wild.call("presentation_shape") if is_instance_valid(wild) else {},
+		"shape": SHARED_POSE_CODEC.encode_shape(wild.call("presentation_shape")) if is_instance_valid(wild) else {},
 		"foot_position": [feet.x, feet.y, feet.z],
 		"facing": [facing.x, facing.y, facing.z],
 	}

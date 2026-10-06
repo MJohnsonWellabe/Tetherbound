@@ -17,6 +17,7 @@ const NATIVE_CASES := [
 	"unset_or_malformed_shape_keys_draw_nothing_and_clear_stale_marks",
 	"wild_body_reports_its_shape_and_announces_a_route_cue",
 	"a_new_tell_redraws_rather_than_reusing_an_earlier_tells_marks",
+	"unreliable_pattern_pose_stays_below_mtu_without_changing_geometry",
 ]
 
 class WildShell extends "res://scripts/creatures/wild_creature.gd":
@@ -314,6 +315,46 @@ func _case_a_new_tell_redraws_rather_than_reusing_an_earlier_tells_marks() -> vo
 	proxy.free()
 
 
+func _case_unreliable_pattern_pose_stays_below_mtu_without_changing_geometry() -> void:
+	var combat: Dictionary = preload("res://scripts/combat/combat_math.gd").config()
+	var body := WildShell.new()
+	_fixture_root.add_child(body)
+	body._intent = AI.Intent.TELEGRAPH
+	var worst_bytes := 0
+	for attack_id: String in combat.patterns.attacks:
+		var profile: Dictionary = combat.enemy.duplicate(true)
+		profile.merge(combat.patterns.attacks[attack_id], true)
+		profile["pattern_attack_id"] = attack_id
+		body._selected_attack = profile
+		body._pattern_geometry = {"profile": profile, "origin": Vector3(100, 3, 200),
+			"heading": Vector3.FORWARD, "marker": Vector3(102, 3, 204)}
+		var original := body.presentation_shape()
+		var director := _director(original)
+		# Each opponent is sent separately to the other participant, even in a
+		# two-peer/two-creature fight; include the actual RPC argument envelope.
+		var payload := director._shared_presentation_payload("wild:meadows:two-peer-two-creature")
+		var bytes := var_to_bytes([payload]).size()
+		worst_bytes = maxi(worst_bytes, bytes)
+		assert_true(bytes < 1200, "%s tick payload is %d bytes" % [attack_id, bytes])
+		var transmitted: Dictionary = payload.shape
+		var old_pattern: Dictionary = original.pattern
+		var new_pattern: Dictionary = transmitted.pattern
+		for key: String in ["origin", "heading", "marker"]:
+			assert_eq(new_pattern[key], old_pattern[key], attack_id + " preserves " + key)
+		for key: String in ["telegraph_shape", "range", "inner_radius_m", "marker_radius_m",
+				"cone_degrees", "lane_half_width_m", "lunge", "field_duration_s"]:
+			assert_eq(new_pattern.profile.get(key), profile.get(key), attack_id + " preserves " + key)
+		var remaining := original.duplicate(true)
+		remaining.erase("pattern")
+		var wire_remaining := transmitted.duplicate(true)
+		wire_remaining.erase("pattern")
+		assert_eq(wire_remaining, remaining, attack_id + " preserves lane/guard/route")
+		assert_eq(body._pattern_geometry.profile, profile, "host strike profile stays intact")
+		_free_director(director)
+	print("P3_MAX_TICK_ARGUMENT_BYTES=%d" % worst_bytes)
+	body.free()
+
+
 func run_initialized_cases(tree: SceneTree) -> Dictionary:
 	var completed: Array[String] = []
 	for name: String in NATIVE_CASES:
@@ -344,7 +385,8 @@ func run():
 	var result = test.run_initialized_cases(self)
 	await process_frame
 	print("SHARED_CUE_SHAPE_RESULT=" + JSON.stringify(result))
-	quit(0 if result.failures.is_empty() and result.cases.size() == 8 and result.assertions == 66 else 1)
+	var expected = 66 + 14 * load("res://scripts/combat/combat_math.gd").config().patterns.attacks.size()
+	quit(0 if result.failures.is_empty() and result.cases.size() == 9 and result.assertions == expected else 1)
 ''')
 	runner.close()
 	var output: Array = []
@@ -362,8 +404,9 @@ func run():
 			var parsed: Variant = JSON.parse_string(line.trim_prefix("SHARED_CUE_SHAPE_RESULT="))
 			if parsed is Dictionary: result = parsed
 	assert_eq(result_count, 1, combined)
-	assert_eq(result.get("cases", []), NATIVE_CASES, "all eight original cases must run")
-	assert_eq(result.get("assertions", 0), 66, "preserve every original cue assertion")
+	assert_eq(result.get("cases", []), NATIVE_CASES, "all eight original cases and the MTU regression must run")
+	assert_eq(result.get("assertions", 0), 66 + 14 * preload("res://scripts/combat/combat_math.gd").config().patterns.attacks.size(),
+		"preserve every original cue assertion and every authored attack's wire checks")
 	assert_eq(result.get("failures", ["missing result"]), [], combined)
 	assert_false(combined.contains("ERROR:") or combined.contains("SCRIPT ERROR"), combined)
 	assert_false(combined.contains("ObjectDB instances leaked") or combined.contains("resources still in use") \
