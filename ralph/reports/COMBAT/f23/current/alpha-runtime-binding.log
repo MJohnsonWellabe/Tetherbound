@@ -1,0 +1,9 @@
+Original unchanged tests/smoke_water_alpha_runtime.gd on exact source000fa9091a87b00e8982d8ab770276ef452ab3fb
+Run37462532284; job112265409004; terminalFAIL; job log reports process exit1.
+Artifact11413966271; original7-file ZIP67494bytes; SHA2569600a5644bafbd8e31ea835ce2fca9f4c9e4191a0f0f6aeed3acd0ed72aad969 verified against API digest and local bytes.
+No exit_code file exists in original artifact: bash set-e stopped before echo. No exit-code artifact invented.
+Original run and native logs preserved byte-for-byte; original ZIP contains World disk and all7files. No SCRIPT ERROR/Parse/Error in logs; existing interpolation deprecation warning retained.
+27checks2failures: stale smoke level49 versus authored config26; production reads actual authored config. Current independent source review confirms that mismatch.
+Second failure is real route conflict: actual camp RestPoint opens field CraftPanel; enabled station recipe_routes.field_allowed omits saddles and defines them homestead-only, while Water saddle recipe authors existing_campfire_or_workbench. Original saddle assertion retained; no field allowlist change.
+Bounded PASS only: normal summon, same persistent Aquaryn and authoritative host record/body, incoming ordinary AI strike, normal quick-input defeat, original World progression and eligible personal Swim Stone, guarded Iona dialogue completion and actual camp CraftPanel. Actual saddle crafting/mounting and clean full smoke remain unproven.
+Independent reviewer f23_audit confirmed source causes, ZIP digest, retained raw failures and bounded combat/progression evidence. No whole F23/global Alpha criterion credit.
