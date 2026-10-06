@@ -354,3 +354,13 @@ bc7d7c1168aef4e0160d6362845c1f3c4493d211a9c91e5c8aff42e26fd5c1a2  ci-gate-a-open
 1c3b01739ddbcabb7377748923002c4e037b4c7dfc6a21fcdc6e20d652e1c112  ci-gate-a-rest-torch-on/r1-ci-gate-a-rest-torch-on-20261006T0745Z.txt
 9686dc34161f47cbda7f3eb5d514f21b7f48dc78260e736a8247d7dbdf842fa2  ci-gate-a-rest-torch-on/stderr.txt
 cf7e629b0f342a15198afe4dcbf7d095492db65939464c978ae8bb9f79740d0e  ci-gate-a-rest-torch-on/stdout.txt
+5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  ci-gate-e-finale-on/exit.txt
+f0eae74637ba9e52efbcaa0da61681be1b1b03bb1d4a6b8e66ef10b3ad1c4d95  ci-gate-e-finale-on/r1-ci-gate-e-finale-on-20261006T0747Z.txt
+9686dc34161f47cbda7f3eb5d514f21b7f48dc78260e736a8247d7dbdf842fa2  ci-gate-e-finale-on/stderr.txt
+4c8dc417578818b115dffb1de96e6e5b9c912a01e9b579e0c7a12c50e053c642  ci-gate-e-finale-on/stdout.txt
+b4bd42378ab97630ceaacae4e9b5a5422e12c5a2d3aa356d7f1d42be1bfa46de  ci-gate-e-finale-on/finale-character.json.txt
+b4bd060aee4706920190c7aa3a1b0ffd882ebc8ff46e95df68959fafaf1ec873  ci-gate-e-finale-on/finale-world.json.txt
+5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  ci-night-ecology-on/exit.txt
+6ad6e2f066b419284972f816fb067280b59476e12091b21845250497b62e15ae  ci-night-ecology-on/r1-ci-night-ecology-on-20261006T0754Z.txt
+9686dc34161f47cbda7f3eb5d514f21b7f48dc78260e736a8247d7dbdf842fa2  ci-night-ecology-on/stderr.txt
+31a2a56686ced6d7df211eb23a720ad5a1b11790eaaba48d56609f14c9a7cfe2  ci-night-ecology-on/stdout.txt

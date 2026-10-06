@@ -59,15 +59,15 @@ free_build | ON FIRST functional PASS, exit0; toggle/UI/empty-satchel selection-
 gate_a_build_house | ON FIRST PASS, exit0; focused FlatWorld/paid grants/joypad placements; direct-spawn paid dismantle targets/direct physics call/refund/Cancel cleared+unpaused; five dummy material errors/no SCRIPT/Parse; independent qualified review PASS
 gate_a_opening_segment | ON FIRST PASS, exit0; title-through-catch/party COUNT2+locomotion enabled; acceptance:false road/prefill/orb drain/HP hold fixtures; earlier save only starter/no durable catch or subsequent-walk claim; optional core unexecuted; independent review PASS
 gate_a_rest_torch | ON FIRST PASS, exit0; creature recovery/six torch cycles/overnight heal/shelter refusal-recovery/loft walk+sleep; free-build/party/pose/injury/direct orphan-tent fixtures; no reload/rendered-light proof; independent qualified review PASS
-gate_e_finale | ON FIRST ACTIVE; original finale wiring/gauntlet/rest/Warden/ceremony/acknowledgment fixtures
+gate_e_finale | ON FIRST PASS, exit0; full gauntlet/rest/Warden/ceremony/region/acknowledgment wiring; seeded team/progression/HP/direct collision route+positions/direct recovery+postwin dialogue fixtures; intermediate release save only/no final roster-ack disk or reload proof; independent qualified review PASS
 hud_freed_combat_prompt_lifecycle | ON FIRST PASS exit0/10checks; productionHUD/director freedwinner recovery; existingminimalfixture
 input | ON FIRST PASS exit0; actualactionmovement/animation/jump/staminadebit; devicehardwareuntested
 menu | ON FIRST PASSexit0; realworld/nativeUI input/focus/inventory/saveisolatedslot/controlreturn + acceptedTMjournal/receipt/learnedmove; existing grants; independentreviewPASS/raw4+actualsaves4
 menu_open_does_not_offer_to_drop | ON FIRST PASS, exit0; two native joypad Menu/B cycles with stocked-satchel fixture (three stacks of5); original limits; independent review PASS
 modal_stacking | ON FIRST PASS exit0; realUI menucontrols/refusedoverpicker+dialogue/recoveredafterclose; rawreceipts retained
-night_ecology | ON OPEN
+night_ecology | ON FIRST PASS, exit0; twelve live night bodies/ground/day-night gates/actionable prompt; directly positioned player/pinned clock, 3m ground tolerance/no walkability-travel-naturalclock-engage claim; independent qualified review PASS
 objective_hint_card | ON FIRST PASS exit0;28hints/titles fit1920x1080/deadline+Game.signal; existingHUDfixture
-opening | ON OPEN
+opening | ON FIRST ACTIVE; original Meadows naming/party/door/home-key/gate smoke
 party_count_after_catches | ON OPEN
 playground | ON OPEN
 post_modal_control | ON FIRST PASS, exit0; three mixed joypad UI/rest/build/pause cycles with actual movement recovery; inherited fixtures; independent review PASS
