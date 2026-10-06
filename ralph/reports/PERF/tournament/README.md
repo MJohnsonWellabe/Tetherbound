@@ -24,14 +24,41 @@ ralph/reports/PERF/HANDOFF.md item 6 and Known traps; reference 10cdde31.
   marks additions/removals dirty, creates missing cells, skips clean cells,
   and destroys all buffers only for the full rebuild option.
 
-All native checks and old-code regression demonstrations remain **UNRUN**.
 No before/after profiler self-time rows or visual verdict exist yet. The first
 independent source review rejected across-draw reuse of dynamic terrain/water;
 the candidate now resamples those queries on every rebuild. Independent
 `c3_journal_review` final SOURCE PASS covers all nine source/test files against
 8e7c11ceb: no stale dynamic-height reuse, camp matching/ancestry preserved,
 native dirty/missing-cell contract supports the refresh. Native buffers,
-real SceneTree group behavior, compilation and measured gain remain OPEN.
+real SceneTree group behavior and measured gain remain OPEN.
+
+## Native component evidence, qualified PASS
+
+Producer fd3e095bc32bef2202a33b79ed89c07cd8d3405d, Godot 4.7 official.
+The quiet global lease covered one independent P1 cache copy (2751 files,
+957549007 bytes, matching actual asset/addon/project inputs) and the first
+two existing-runner stages. No import or writable cache sharing occurred.
+
+- `unit-before`: six original product files at 8e7c11ceb, current new tests.
+  Four selected tests / 19 assertions / four expected failed methods / exit 1,
+  empty stderr. Camp visits 232 nodes instead of four; Compatibility vegetation
+  requests two full rebuilds; dry-ring redraw and collapsed-point sampling fail.
+- `unit-after`: current candidate, all three affected existing test files.
+  50 tests / 316 assertions / zero failed / exit 0. Nine native ERROR rows from
+  detached harvest absolute-path lookups remain; no SCRIPT/Parse error or leak.
+- `unit-baseline-harvest`: only the two unchanged harvest methods on original
+  product, two tests / six assertions / zero failed / exit 0. Its 5187-byte stderr
+  is identical to `unit-after`: SHA256
+  `138B0B97D842E2D989E685CF254E86D2531FE52DB5D2F820244AC271746F5AA6`.
+  These logged null lookups take explicit fallbacks; assertions continue.
+  This attribution ran under WORKFLOW §4's warm-cache read-only unit carve-out
+  beside the exact known R1 job recorded in its receipt; no timing claim.
+
+Original receipts/stdout/stderr/exit and per-stage hashes are retained unchanged,
+including expected RED and native diagnostics. Recursive `UNIT_SHA256.json`
+also covers incidental private boot/engine logs. Independent c3_journal_review verifies all 12 original manifest entries and
+the byte-identical inherited diagnostics: qualified component PASS. This is component evidence,
+not clean runtime acceptance, live group/native buffer proof or measured gain.
 
 Required existing checks: telegraph_glow, companion_presence and
 fight_ring_occluders focused tests; demonstrate the new performance regressions
@@ -41,5 +68,5 @@ profiling patch is temporary and must never be committed. Quote callee self-time
 rows, accounting for Godot's call() double counting; no FPS/device claim.
 
 No new harness, fixture, pilot, capture tool, measurement script, network code,
-test-budget change, PR or production flag change. Source-only candidate; no
+test-budget change, PR or production flag change. Profile acceptance is still OPEN; no
 criterion closure. Failed and incomplete future native logs stay preserved.
