@@ -33,7 +33,8 @@ func _rebuild() -> void:
 	for row: Dictionary in raw.get("species", []):
 		var seen: bool = row.get("seen") == true
 		var key := str(row.get("species_id", ""))
-		button(body, "%s · %s" % [str(row.get("name", "")) if seen else "Unseen creature", "Caught" if row.get("caught") == true else "Seen" if seen else "Unknown"], _inspect.bind(key), "species:" + key)
+		var species_button := button(body, "%s · %s" % [str(row.get("name", "")) if seen else "Unseen creature", "Caught" if row.get("caught") == true else "Seen" if seen else "Unknown"], _inspect.bind(key), "species:" + key)
+		species_button.focus_entered.connect(_inspect.bind(key))
 		if not seen or key != _species: continue
 		for task: Dictionary in row.get("tasks", []):
 			var rewards: Array[String] = []
@@ -68,6 +69,9 @@ func _select(biome: String) -> void:
 	_rebuild()
 
 func _inspect(species: String) -> void:
+	# Rebuilding keeps the same focused row. Its new focus signal must not
+	# start another rebuild; A on an already inspected row is also a no-op.
+	if _species == species: return
 	_species = species
 	_rebuild()
 
