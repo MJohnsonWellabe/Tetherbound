@@ -1,0 +1,20 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_crossing_hall_portal_mount.gd::test_static_batching_keeps_live_portal_and_relic_display_nodes: 1 of 824 test files
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _refresh_home_membrane (res://scripts/world/crossing_hall.gd:546)
+       [1] apply_display (res://scripts/world/crossing_hall.gd:605)
+       [2] test_static_batching_keeps_live_portal_and_relic_display_nodes (res://tests/test_crossing_hall_portal_mount.gd:30)
+       [3] _init (res://tests/run_tests.gd:120)
+ERROR: Parameter "data.tree" is null.
+   at: get_tree (scene/main/node.h:559)
+   GDScript backtrace (most recent call first):
+       [0] _refresh_home_membrane (res://scripts/world/crossing_hall.gd:546)
+       [1] apply_display (res://scripts/world/crossing_hall.gd:605)
+       [2] test_static_batching_keeps_live_portal_and_relic_display_nodes (res://tests/test_crossing_hall_portal_mount.gd:44)
+       [3] _init (res://tests/run_tests.gd:120)
+  ok    test_crossing_hall_portal_mount.gd :: test_static_batching_keeps_live_portal_and_relic_display_nodes
+
+1 tests, 17 assertions, 0 failed

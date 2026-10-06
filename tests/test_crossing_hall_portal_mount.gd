@@ -7,6 +7,8 @@ const ACTION := preload("res://scripts/world/portal_arch.gd")
 
 func test_static_batching_keeps_live_portal_and_relic_display_nodes() -> void:
 	var hall: Node3D = HALL.new()
+	# The home membrane reads its actual tree for day/night presentation.
+	(Engine.get_main_loop() as SceneTree).root.add_child(hall)
 	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(HALL.CONFIG_PATH))
 	hall.set("_config", config)
 	for entry: Dictionary in [config.arches[0], config.arches[1]]:
