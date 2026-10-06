@@ -1,0 +1,180 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_f24_host_commands.gd,test_owner_passive_sync.gd,test_owner_passive_replay.gd,test_owner_passive_preparation.gd,test_owner_passive_game_hooks.gd,test_owner_passive_adopt.gd,test_encounter_host_wind_publish.gd,test_combat_wind.gd: 8 of 819 test files
+  ok    test_combat_wind.gd :: test_authoritative_absolute_wind_is_safe_to_apply_twice
+  ok    test_combat_wind.gd :: test_costs_spend_once_and_exhausted_attacks_still_start_slow_and_weak
+  ok    test_combat_wind.gd :: test_host_owns_wind_spend_quiet_timing_and_exhaustion
+  ok    test_combat_wind.gd :: test_host_wind_commit_is_action_idempotent
+  ok    test_combat_wind.gd :: test_regen_waits_for_delay_and_pauses_during_commitment
+  ok    test_combat_wind.gd :: test_satiety_fed_and_bond_change_capacity_and_regen
+  ok    test_combat_wind.gd :: test_species_profiles_are_safe_and_inverse
+  ok    test_combat_wind.gd :: test_stamina_shroom_truthfully_accelerates_wind_regen
+  ok    test_combat_wind.gd :: test_wind_tuning_has_every_ordered_cost_and_penalty
+  ok    test_encounter_host_wind_publish.gd :: test_duplicate_action_still_cannot_double_drain_after_ticks
+  ok    test_encounter_host_wind_publish.gd :: test_participant_who_never_spent_has_no_fabricated_pool
+  ok    test_encounter_host_wind_publish.gd :: test_profile_changes_regenerate_the_previous_interval_before_installing_the_new_profile
+  ok    test_encounter_host_wind_publish.gd :: test_published_record_carries_regenerated_wind_while_waiting
+  ok    test_encounter_host_wind_publish.gd :: test_tick_regeneration_does_not_double_count_with_a_later_commit
+  ok    test_f24_host_commands.gd :: test_admission_refuses_unknown_loadout_without_any_mutation
+  ok    test_f24_host_commands.gd :: test_charged_refusal_has_no_cost_and_does_not_replace_original
+  ok    test_f24_host_commands.gd :: test_command_input_honors_the_mounted_command_view_before_allocating_sequence
+  ok    test_f24_host_commands.gd :: test_equipped_authored_pouches_bind_each_upgrade_on_the_same_participant
+  ok    test_f24_host_commands.gd :: test_every_joint_damage_event_is_attributed_to_one_of_the_two_owned_creatures
+  ok    test_f24_host_commands.gd :: test_f33_charm_gain_frozen_in_the_accepted_action_scales_the_meter_once_and_is_capped
+  ok    test_f24_host_commands.gd :: test_f33_no_charm_keeps_the_ordinary_gain_and_power
+  ok    test_f24_host_commands.gd :: test_first_item_dispatch_refuses_an_older_uncommitted_actor_original
+  ok    test_f24_host_commands.gd :: test_idle_wind_ticks_each_uid_and_switched_burst_spends_current_creature
+  ok    test_f24_host_commands.gd :: test_item_candidate_debits_one_own_stack_with_actual_heal_food_or_unsaved_tonic
+  ok    test_f24_host_commands.gd :: test_item_input_tracks_current_trainer_scope_and_keeps_pending_request_fenced
+  ok    test_f24_host_commands.gd :: test_item_owner_checkpoint_matches_only_its_submitted_command_and_current_deployment
+  ok    test_f24_host_commands.gd :: test_meter_uses_original_host_hit_once_and_freezes_admitted_gear
+  ok    test_f24_host_commands.gd :: test_meters_require_positive_debit_and_credit_one_actual_action_once
+  ok    test_f24_host_commands.gd :: test_personal_view_cache_requires_current_character_world_and_epoch
+  ok    test_f24_host_commands.gd :: test_pouch_assignment_uses_original_character_journal_and_owner_save_without_moving_stacks
+  ok    test_f24_host_commands.gd :: test_pouch_presentation_reads_first_live_stack_and_frozen_gear_without_spending
+  ok    test_f24_host_commands.gd :: test_rally_can_commit_on_current_owned_deployment_before_its_first_move
+  ok    test_f24_host_commands.gd :: test_rally_spends_once_affects_only_owner_and_splits_wind_at_expiry
+  ok    test_f24_host_commands.gd :: test_retained_item_ack_preserves_active_body_and_settles_same_v3_decision_once
+  ok    test_f24_host_commands.gd :: test_satchel_pouch_recovers_same_original_and_waits_for_saved_ack
+  ok    test_f24_host_commands.gd :: test_saved_item_carrier_keeps_one_original_debit_and_owned_effect_with_runtime_off
+  ok    test_f24_host_commands.gd :: test_snare_canonical_status_has_one_shared_slow_and_own_catch_grant
+  ok    test_f24_host_commands.gd :: test_start_spends_once_and_impact_cannot_run_early_or_repeat
+  ok    test_f24_host_commands.gd :: test_switch_retains_each_creatures_resources_and_cooldown
+  ok    test_f24_host_commands.gd :: test_tonic_wind_boundaries_update_active_and_retained_character_uid_without_resetting_resources
+  ok    test_f24_host_commands.gd :: test_unsaved_mastery_and_resources_survive_peer_replacement_and_close
+  ok    test_f24_host_commands.gd :: test_wild_disposal_retains_same_actor_source_until_item_hp_prejournal_and_mastery_settle
+  ok    test_f24_host_commands.gd :: test_wild_item_input_requires_current_saved_scope_and_refuses_older_health_original
+  ok    test_f24_host_commands.gd :: test_wrong_move_or_body_lifetime_cannot_arrive
+[owner-passive] adopted this world's held record (2 creature(s))
+  ok    test_owner_passive_adopt.gd :: test_a_companion_fighting_waits_and_changes_nothing
+[owner-passive] adopted this world's held record (2 creature(s))
+[owner-passive] 1 payout(s) this world already holds marked settled
+  ok    test_owner_passive_adopt.gd :: test_a_grant_due_escrow_row_the_held_record_holds_is_settled
+  ok    test_owner_passive_adopt.gd :: test_a_record_that_cannot_apply_restores_the_owner_exactly
+[owner-passive] adopted this world's held record (2 creature(s))
+  ok    test_owner_passive_adopt.gd :: test_adopts_the_held_record_keeping_instances_and_dropping_the_offline_catch
+[owner-passive] adopted this world's held record (2 creature(s))
+[owner-passive] 1 payout(s) this world already holds marked settled
+  ok    test_owner_passive_adopt.gd :: test_folded_payouts_are_marked_settled_and_never_paid_twice
+[owner-passive] adopted this world's held record (2 creature(s))
+[owner-passive] 1 payout(s) this world already holds marked settled
+[owner-passive] ignored readmit not saved; the host resends it
+[owner-passive] adopted this world's held record (2 creature(s))
+[owner-passive] 1 payout(s) this world already holds marked settled
+  ok    test_owner_passive_adopt.gd :: test_the_readmit_is_confirmed_only_after_its_settlement_is_saved
+[owner-passive] adopted this world's held record (2 creature(s))
+  ok    test_owner_passive_adopt.gd :: test_waits_without_change_while_a_companion_decision_settles
+PASSIVE_NATIVE_RESULT={"assertions":5.0,"case":"_native_case_backpack_target_guard_precedes_any_care_or_item_write","completed":true,"failures":[]}
+  ok    test_owner_passive_game_hooks.gd :: test_actual_backpack_target_fence
+PASSIVE_NATIVE_RESULT={"assertions":10.0,"case":"_native_case_game_fence_blocks_recording_but_disabled_recorder_keeps_care","completed":true,"failures":[]}
+  ok    test_owner_passive_game_hooks.gd :: test_actual_game_existing_fence_and_disabled_recorder
+PASSIVE_NATIVE_RESULT={"assertions":34.0,"case":"_native_case_game_records_exact_ticks_discoveries_and_replays_live_record","completed":true,"failures":[]}
+  ok    test_owner_passive_game_hooks.gd :: test_actual_game_input_hooks_replay_identically
+PASSIVE_NATIVE_RESULT={"assertions":25.0,"case":"_native_case_game_same_stream_fence_reset_replays_exactly","completed":true,"failures":[]}
+  ok    test_owner_passive_game_hooks.gd :: test_actual_game_same_stream_fence_reset
+  ok    test_owner_passive_preparation.gd :: test_a_guest_relic_power_choice_is_a_frozen_owner_request
+  ok    test_owner_passive_preparation.gd :: test_capture_checkpoint_binds_original_offer_without_granting_its_creature
+  ok    test_owner_passive_preparation.gd :: test_exact_cas_retry_after_failed_real_research_stage_and_stale_ack
+  ok    test_owner_passive_preparation.gd :: test_home_key_request_binds_its_own_reconcile_request_and_frozen_host_context
+  ok    test_owner_passive_preparation.gd :: test_owner_requires_full_exact_checkpoint_and_original_source
+  ok    test_owner_passive_preparation.gd :: test_pouch_checkpoint_binds_personal_source_and_exact_saved_original
+  ok    test_owner_passive_preparation.gd :: test_request_cas_preserves_quote_then_original_altar_stage_advances_once_and_retries
+  ok    test_owner_passive_preparation.gd :: test_request_codec_preserves_distinct_authenticated_source_kinds_and_exact_owner_state
+  ok    test_owner_passive_preparation.gd :: test_reservation_requires_local_cursor_and_same_existing_lock
+  ok    test_owner_passive_preparation.gd :: test_same_revision_request_checkpoint_rejects_stale_before_and_other_transaction_locks
+  ok    test_owner_passive_preparation.gd :: test_waystone_touch_request_binds_its_own_envelope_and_frozen_host_context
+  ok    test_owner_passive_replay.gd :: test_clone_isolation_and_trusted_realm_transition_start_new_travel_baseline
+  ok    test_owner_passive_replay.gd :: test_complete_roster_order_is_required_and_all_existing_cards_tick
+  ok    test_owner_passive_replay.gd :: test_confirmed_reset_keeps_landmark_range_and_one_visit_per_poll
+  ok    test_owner_passive_replay.gd :: test_discovery_refuses_bad_cadence_speed_realm_geometry_and_replayed_ids
+  ok    test_owner_passive_replay.gd :: test_discovery_uses_original_polyline_and_one_credit_per_poll
+  ok    test_owner_passive_replay.gd :: test_exact_original_condition_steps_cross_threshold_and_preserve_full_core
+  ok    test_owner_passive_replay.gd :: test_in_place_condition_batch_equals_the_copying_replay_and_refusal_leaves_it_untouched
+  ok    test_owner_passive_replay.gd :: test_only_trusted_long_discontinuity_bypasses_speed_without_walking_credit
+  ok    test_owner_passive_replay.gd :: test_record_verdicts_are_never_reused_for_a_changed_record
+  ok    test_owner_passive_replay.gd :: test_rejects_bad_sequence_roster_time_and_replacement_without_mutation
+  ok    test_owner_passive_replay.gd :: test_same_stream_reset_requires_exact_host_endpoint_and_preserves_original_credit
+[owner-passive] resource-owner is behind this world's record; it adopts the held record: /party
+WARNING: [owner-passive] refused rejoined stream for resource-owner: owner_passive_admission_conflict: declaration does not match its stream baseline
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] admitted (res://scripts/net/owner_passive_sync.gd:268)
+         [1] test_a_behind_rejoin_readmits_to_adopt_and_any_other_difference_is_refused (res://tests/test_owner_passive_sync.gd:1650)
+         [2] _init (res://tests/run_tests.gd:120)
+WARNING: [owner-passive] refused rejoined stream for resource-owner: owner_passive_admission_conflict: host_duties_unsettled /party
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] admitted (res://scripts/net/owner_passive_sync.gd:282)
+         [1] test_a_behind_rejoin_readmits_to_adopt_and_any_other_difference_is_refused (res://tests/test_owner_passive_sync.gd:1659)
+         [2] _init (res://tests/run_tests.gd:120)
+  ok    test_owner_passive_sync.gd :: test_a_behind_rejoin_readmits_to_adopt_and_any_other_difference_is_refused
+  ok    test_owner_passive_sync.gd :: test_a_first_discovery_far_from_every_observed_pose_is_refused
+  ok    test_owner_passive_sync.gd :: test_a_first_discovery_from_before_a_teleport_matches_the_hosts_recent_pose
+[owner-passive] re-admitting resource-owner on the host's recovered authority (passive drift only)
+[owner-passive] ignored readmit for another world_namespace
+  ok    test_owner_passive_sync.gd :: test_a_held_readmit_for_a_world_that_is_not_joined_is_dropped
+  ok    test_owner_passive_sync.gd :: test_a_landmark_revealed_without_an_input_never_changes_the_owner_passive_identity
+[owner-passive] re-admitting resource-owner on the host's recovered authority (passive drift only)
+  ok    test_owner_passive_sync.gd :: test_a_pending_payout_the_held_record_holds_forces_a_readmit_that_settles_it
+  ok    test_owner_passive_sync.gd :: test_a_pose_observed_in_another_realm_does_not_count_and_a_realm_change_clears_the_ring
+[owner-passive] re-admitting resource-owner on the host's recovered authority (passive drift only)
+  ok    test_owner_passive_sync.gd :: test_a_rejoin_readmit_after_the_snapshot_applies_at_once
+[owner-passive] re-admitting resource-owner on the host's recovered authority (passive drift only)
+  ok    test_owner_passive_sync.gd :: test_a_rejoin_readmit_before_the_snapshot_waits_for_the_joined_world_scope
+  ok    test_owner_passive_sync.gd :: test_a_settled_owner_row_advances_the_cached_view_revision
+  ok    test_owner_passive_sync.gd :: test_a_window_dropped_before_the_join_snapshot_is_sent_on_the_next_flush
+  ok    test_owner_passive_sync.gd :: test_active_item_checkpoint_saves_current_care_before_same_original_item_stage
+  ok    test_owner_passive_sync.gd :: test_an_observed_pose_older_than_the_lag_window_does_not_count
+WARNING: [owner-passive] refused rejoined stream for resource-owner: owner_passive_admission_conflict: host_duties_unsettled /party
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] admitted (res://scripts/net/owner_passive_sync.gd:282)
+         [1] test_an_open_host_duty_at_the_hello_refuses_and_never_adopts (res://tests/test_owner_passive_sync.gd:1717)
+         [2] _init (res://tests/run_tests.gd:120)
+  ok    test_owner_passive_sync.gd :: test_an_open_host_duty_at_the_hello_refuses_and_never_adopts
+  ok    test_owner_passive_sync.gd :: test_an_unreplayed_reward_delivery_holds_the_home_key_request
+  ok    test_owner_passive_sync.gd :: test_capture_choice_checkpoint_keeps_original_and_only_saved_ack_reenters_handler
+[owner-passive] host resource-owner: rebase refused: discoveries differ (t=31983ms)
+[owner-passive] host resource-owner: rebase refused: old stream/sequence/prefix differs (readmit=false) (t=31983ms)
+[owner-passive] host resource-owner: rebase refused: discoveries differ (t=31983ms)
+  ok    test_owner_passive_sync.gd :: test_cloud_portal_navigation_bind_rebases_only_host_proved_discoveries_before_next_portal
+  ok    test_owner_passive_sync.gd :: test_cloud_reentry_without_a_host_proof_keeps_the_identity_whatever_the_map_reveals
+  ok    test_owner_passive_sync.gd :: test_core_change_before_checkpoint_refuses_without_owner_write
+  ok    test_owner_passive_sync.gd :: test_failed_bool_save_never_acks_or_installs_and_success_is_exact
+  ok    test_owner_passive_sync.gd :: test_gate_binds_a_remote_boss_relic_duty_with_its_world_namespace
+  ok    test_owner_passive_sync.gd :: test_gate_binds_real_retained_duty_and_reuses_original_checkpoint
+  ok    test_owner_passive_sync.gd :: test_host_accepted_travel_reset_is_exact_single_use_and_grants_no_distance
+  ok    test_owner_passive_sync.gd :: test_host_duplicate_input_is_idempotent_and_conflict_does_not_promote
+  ok    test_owner_passive_sync.gd :: test_host_minted_arrival_reset_tolerates_its_body_view_once_and_grants_no_distance
+  ok    test_owner_passive_sync.gd :: test_host_sequence_gap_and_initial_remote_pose_refused
+  ok    test_owner_passive_sync.gd :: test_legacy_typed_accepted_row_rebases_full_record_and_duplicate_keeps_progress
+[owner-passive] host resource-owner: input 2 waits: no host body for this owner in meadows (t=32644ms)
+  ok    test_owner_passive_sync.gd :: test_missing_remote_body_defers_exact_discovery_without_poisoning_stream
+  ok    test_owner_passive_sync.gd :: test_no_progress_exact_reply_releases_fence_into_retryable_rebase
+  ok    test_owner_passive_sync.gd :: test_owner_sends_each_input_once_and_the_window_again_only_when_acks_stall
+  ok    test_owner_passive_sync.gd :: test_portal_codec_binds_consumed_permit_without_faking_grounded_departure
+  ok    test_owner_passive_sync.gd :: test_portal_known_origin_save_disconnect_preserves_rejoin_baseline_without_arrival
+  ok    test_owner_passive_sync.gd :: test_portal_lost_origin_ack_rejoin_requires_fresh_bool_and_replays_new_care
+  ok    test_owner_passive_sync.gd :: test_portal_origin_checkpoint_reserves_without_promoting_until_actual_ground
+  ok    test_owner_passive_sync.gd :: test_portal_owner_freeze_blocks_new_inputs_and_pose_save_requires_exact_saved_token
+  ok    test_owner_passive_sync.gd :: test_portal_recovery_refuses_changed_hello_and_old_scope_without_discarding_original
+  ok    test_owner_passive_sync.gd :: test_portal_refusal_owner_fence_releases_only_after_exact_no_effect_rebase
+  ok    test_owner_passive_sync.gd :: test_portal_refusal_preserves_saved_care_and_immutable_journal
+  ok    test_owner_passive_sync.gd :: test_portal_repeated_recovery_bool_ack_loss_keeps_only_exact_latest_candidates
+  ok    test_owner_passive_sync.gd :: test_portal_unsaved_origin_rejoin_cancels_original_only_after_fresh_bool
+  ok    test_owner_passive_sync.gd :: test_pouch_checkpoint_retains_original_through_failed_saved_ack_and_retry
+[owner-passive] ignored inputs_ack for another session_epoch
+  ok    test_owner_passive_sync.gd :: test_recording_reset_and_authenticated_ordered_ack
+  ok    test_owner_passive_sync.gd :: test_rejoin_with_matching_landmarks_still_admits_directly
+[owner-passive] re-admitting resource-owner on the host's recovered authority (passive drift only)
+  ok    test_owner_passive_sync.gd :: test_rejoin_with_unreplayed_landmarks_readmits_on_the_hosts_held_set_and_prefixes_match
+  ok    test_owner_passive_sync.gd :: test_request_host_preserves_original_scope_and_same_revision_on_failed_world_retry
+  ok    test_owner_passive_sync.gd :: test_request_owner_requires_existing_exact_request_and_actual_bool_save
+  ok    test_owner_passive_sync.gd :: test_terminal_request_refusal_rebases_only_the_exact_saved_checkpoint
+  ok    test_owner_passive_sync.gd :: test_the_pose_ring_keeps_only_the_lag_window_and_its_cap
+  ok    test_owner_passive_sync.gd :: test_the_reported_owner_hold_names_an_untouched_groom_resume
+  ok    test_owner_passive_sync.gd :: test_typed_vitals_records_host_journal_epoch_independently_of_transport_and_guest_writer
+  ok    test_owner_passive_sync.gd :: test_typed_vitals_requires_current_transport_scope_and_exact_original_host_journal
+
+128 tests, 2747 assertions, 0 failed
+exit=0 took=36s

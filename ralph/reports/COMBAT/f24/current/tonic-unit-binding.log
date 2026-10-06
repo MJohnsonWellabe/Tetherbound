@@ -1,0 +1,8 @@
+Existing tests/run_tests.gd affected batch: --only=test_f24_host_commands.gd,test_owner_passive_sync.gd,test_owner_passive_replay.gd,test_owner_passive_preparation.gd,test_owner_passive_game_hooks.gd,test_owner_passive_adopt.gd,test_encounter_host_wind_publish.gd,test_combat_wind.gd
+Exact checked out source8d5b303e8fc59864455b53e4a774b62f7d6228f2; run37466533910; job112278868553 terminalSUCCESS; actual exit_code0.
+Artifact11415901234 render-r4-tonic-passive-wind-8d5b303e-37466533910; original9files12273bytes; SHA2569aa2ccf9ffd38f45dc511804072bfec04b73e36d46ecd2b42068f5a2744e4f44 matches API digest and local archive bytes.
+Actual128 named methods/2747assertions0failed. CombatWind9, HostWindPublish5, F24HostCommands30, Adopt7, GameHooks4, Preparation11, Replay11, Sync51. All4 existing passive-native child logs end with empty failures;5/10/34/25 assertions.
+Full run/native logs contain no SCRIPT ERROR, Parse Error or ERROR. Three deliberate owner_passive_admission_conflict warnings per duplicate run/native log match malformed declaration, unsettled-duty and open-duty rejection tests; retained unmodified. No warning-free claim.
+Independent f23_audit SOURCE and bounded EVIDENCE PASS. New Host active/retained same-character+UID activation/expiry method and same-v3 tonic receipt/expiry/rebase method actually execute. No new harness/fixture/RPC/portable schema.
+Source association is exact checkout in terminal job/API binding; artifact run.log does not embed source SHA. Full original ZIP retained; selected logs/exit copied byte-for-byte.
+Actual Session BOOL-owner installation, production local observer aging and live guest reconstruction/rejoin consumer remain runtime-unproven. No full F24 criterion or feature-flag activation credit.
