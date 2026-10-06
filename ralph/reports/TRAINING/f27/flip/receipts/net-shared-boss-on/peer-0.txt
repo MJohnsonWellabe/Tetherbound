@@ -1,0 +1,178 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+peer[0/host]: starting scene=world control_port=54205 enet_port=31861 xdg_data_home=D:\tetherbound\.artifacts\r1-f27-flip\net-shared-boss-on/home-0 user_data_dir=D:/tetherbound/.artifacts/r1-f27-flip/net-shared-boss-on/home-0/Godot/app_userdata/Tetherbound
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+   GDScript backtrace (most recent call first):
+       [0] _build_terrain (res://scripts/world/playground_world.gd:1180)
+       [1] _ready (res://scripts/world/playground_world.gd:806)
+[playground] spawned at 0.0, 2.9, 0.0
+[scatter bake] load phases (ms): read[256 regions, 387893 placements, 431212 skipped]=3108 reorder[16 layers]=3748
+[vegetation] grass field is on; 431212 placements across 2 layers left unbuilt (grass, flowers)
+[vegetation] boot phases (ms): placements=7055 mark_harvestable=133 group_by_model=593 register_mesh_assets=73 build_batches_total=5888 (of which harvest_points[56283 nodes]=3592, initial_collision_stream[51210 solid]=176) update_mmis=541
+[grass_field] grass ring: 62140 instances over 13 lattice layers (tuft_count asked for 75000), 24m cull tiles
+[grass_field] stone ring: 6084 instances over 8 lattice layers (count 25000)
+[grass_field] cover tier bushes   4876 instances over 4 lattice layers (count 6000)
+[grass_field] cover tier flowers  9432 instances over 6 lattice layers (count 12000)
+[grass_field] cover tier flowers_gold 5740 instances over 4 lattice layers (count 7000)
+[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)
+[grass_field] 4 cover tier(s) up
+[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach
+[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots
+[grass_field] stone tier: rid_valid=true height_map=<null> region_map=-1 entries
+[playground] scattered 386505 props in 36 batches (56283 harvestable, 0 already chopped, 266/51210 collision resident)
+[water] pond quads 2538, stream points 46, reeds 188, marginals 32, bank flowers 72, rocks 40, driftwood 5, lilypads 54, jetty 18, level -17.0
+[water] stream bank reeds 77, bank scrub 12
+[water] river quads 390, bank reeds 134, bank scrub 57
+[village] placed 29 structures
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+WARNING: prop 'Torch_Metal' has glow:"campfire" but no `Fire` surface to light
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] place (res://scripts/world/props.gd:286)
+       [1] build (res://scripts/world/props.gd:65)
+       [2] _build_settlement (res://scripts/world/playground_world.gd:1541)
+       [3] _ready (res://scripts/world/playground_world.gd:863)
+[props] placed 434 props in 54 clusters (6 usable rest points)
+[village_npcs] placed 18 of 20
+[relay_site] placed 3 of 3
+[pond_npc] placed 1 of 1
+[trainers] placed 21 trainer(s)
+[south_bridge_dressing] placed 1 of 1
+[quarry] 2 foundations, 4 pylons, 1 finish treatment standing
+[relay] cleared 152 scattered pieces inside the 27m station radius
+[relay] station at 350, 3760: 4 wall runs, 2 decks, 1 ramps, 10 pylons
+[river] 18 course segments, 18 recovery volumes
+[playground] severed spokes standing: river_gorge, storm_road, mountain_trail, stone_gate, high_pass, cliff_road, blighted_road
+[playground] placed 198 harvest nodes
+[playground] placed 6 farm plots
+[playground] placed 147 band pickups (0 already taken, 34 nudged off scatter, 0 unclear, 0 without ground)
+[warrens] cleared 821 scattered trees/rocks inside the 30m site radius and the chambers
+[warrens] hero clearing: removed 803 more scattered pieces out to 55m (was 30m) so no background tree competes with the mound
+[warrens] bank cap closes the dome over the throat (297 quads)
+[warrens] planted 20 pieces of ground cover around the site
+[warrens] earth bank 65x90m, crest 17.0m above the mouth (9.5x the 1.8m trainer); chamber clearance past the required 1.5m: mouth +4.8m, hall +3.8m, warren +4.1m, den +2.5m, vault +4.1m (worst 2.5m)
+[warrens] 4 flora pieces beside the mouth
+[warrens] 7 claw scrapes beside the mouth
+[warrens] 5 crest trees standing on the bank
+[warrens] scattered 78 rubble pieces across the face foot, spoil fans and threshold
+[warrens] 220 pieces of growth on the bank
+[warrens] 182 pieces of interior rock across 5 chambers
+[warrens] 8 connected excavated terrain masses preserve the original collision route
+[warrens] 12 root masses
+[warrens] 8 fungus clusters, 3 species
+[warrens] 40 litter pieces
+[warrens] 4 haze cards
+[warrens] guardian carries an alert bearing (neck -30, head -12, spine -7 deg)
+[warrens] guardian idle faces the den's entrance passage (yaw -169.0 deg)
+[approach-drain] 690 drained quads over the approach corridor
+[stronghold] approach ramp: 11.3m of rise over 40m (16 degrees)
+[stronghold] 407 structural members across 5 spaces
+[stronghold] hall massing exterior lift: 1.30x height on 17/18 module(s)
+[stronghold] massing grounded: 17 of 35 module foot shaft(s) to skirt y=-18.0
+[stronghold] waist: 3 inter-chamber gap(s) wrapped on both flanks
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 78.7), enclosing LargeTower
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 78.7), enclosing _MeshInstance3D_66436
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (-10.8, 101.7), enclosing _MeshInstance3D_66437
+[stronghold] tower pier in warden_arena: 2.6 x 3.1 m at local (10.8, 101.7), enclosing _MeshInstance3D_66438
+[stronghold] tower pier in legendary_chamber: 5.0 x 5.1 m at local (-43.5, 78.7), enclosing PointyTower
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-20.0, 102.2), enclosing _MeshInstance3D_66439
+[stronghold] tower pier in legendary_chamber: 4.0 x 4.1 m at local (-44.0, 102.2), enclosing _MeshInstance3D_66440
+[stronghold] tower pier in legendary_chamber: 3.5 x 3.6 m at local (-19.7, 77.9), enclosing _MeshInstance3D_66441
+[stronghold] 8 tower pier(s) enclosing massing that reached inside a roofed chamber
+[stronghold] 87 interior dressing prop(s) in the roofed rooms
+[trainers] placed 3 trainer(s) for group 'stronghold'
+[stronghold] cleared 90 scattered prop(s) standing inside the five spaces
+[stronghold] 21 exterior omni light(s) at the Hall (budget 22), 11 of them flickering fires
+[stronghold] 5 spaces on the route (outer_works -> courtyard -> tether_approach -> warden_arena -> legendary_chamber), floor y=6.17, 3 gauntlet trainer(s), 15 approach pylon(s)
+[trainers] placed 1 trainer(s) for group 'stronghold_climax'
+[climax] the freed stand is 6.00 m from the machine's axis, inside its 8.05 m plinth on that bearing; moved out to 10.55 m
+[climax] the legendary stands inside the machine: dais 4.06 m up, void 7.67 m tall, body 7.08 m, headroom 0.59 m
+[meadow] the land lies drained: 15161 quads over 8 groups, grass field thinned
+[session] hosting via enet (cap 4); local peer id 1
+[session] hosting on udp/31861 (cap 4, channels 2); local peer id 1
+[session] transport: peer 1053213703 connected
+[session] peer 1053213703 joined as 'Trainer' (character-c822353f6a3f0e6aa4e8116dc975f850) in meadows
+[trainers] spawning a body for peer 1 at (0.3, 14.9)
+[trainers] built Trainer_1 for peer 1, authority 1 (this peer is 1)
+[trainers] Trainer_1 stands up: authority 1, this peer is 1 (our own proxy)
+[trainers] spawning a body for peer 1053213703 at (0.3, 14.9)
+[trainers] built Trainer_1053213703 for peer 1053213703, authority 1053213703 (this peer is 1)
+[trainers] Trainer_1053213703 stands up: authority 1053213703, this peer is 1 (another player)
+[creatures] spawning 1's creature 'terrapup' at (0.3, 14.9)
+[creatures] built AllyCreature_1 for peer 1, authority 1 (this peer is 1)
+[creatures] AllyCreature_1 stands up: owner 1, authority 1, this peer is 1 (our own proxy)
+[creatures] spawning 1053213703's creature 'terrapup' at (0.3, 14.9)
+[creatures] built AllyCreature_1053213703 for peer 1053213703, authority 1053213703 (this peer is 1)
+[creatures] AllyCreature_1053213703 stands up: owner 1053213703, authority 1053213703, this peer is 1 (another player's creature)
+[fly] peer 1053213703 claimed a landing at (0.316966, 1.020942, 14.94506) -- granted (ok)
+[fly] peer 1053213703 claimed a landing at (8.196235, 6.17285, 7657.461) -- granted (ok)
+[session] combat_round_reward duty for character-0360a4ca5a8b25740c0c17a7be12245c held: unresolved {"durable":true,"ok":true,"receipt":"defeat:trainer_round_ce05cc3b4496105e34e952e8ed8afa3f9b3dd6d323169cda7673e6da4442c33b:character-0360a4ca5a8b25740c0c17a7be1 (t=237964ms)
+[session] combat_round_reward duty for character-c822353f6a3f0e6aa4e8116dc975f850 held: owner passive gate owner_passive_checkpoint_pending (t=237978ms)
+[session] combat_round_reward duty for character-0360a4ca5a8b25740c0c17a7be12245c held: unresolved {"durable":true,"ok":true,"receipt":"defeat:trainer_round_e29384f4457c1e8ee2201e837c06f19eb69024579015a61168dfda8db63e20e8:character-0360a4ca5a8b25740c0c17a7be1 (t=303650ms)
+[session] combat_round_reward duty for character-0360a4ca5a8b25740c0c17a7be12245c held: unresolved {"durable":true,"ok":true,"receipt":"defeat:trainer_round_820c8e4c686e5d41147b31f6b307b937c531a5e287cf9c0a3d2b359114e99b7c:character-0360a4ca5a8b25740c0c17a7be1 (t=320317ms)
+[session] combat_round_reward duty for character-0360a4ca5a8b25740c0c17a7be12245c held: unresolved {"durable":true,"ok":true,"receipt":"defeat:trainer_round_2e56e025e08ba5e87607210595a36e94dd7d97756ecd26551b8f66fe3336105f:character-0360a4ca5a8b25740c0c17a7be1 (t=331350ms)
+[session] combat_round_reward duty for character-0360a4ca5a8b25740c0c17a7be12245c held: unresolved {"durable":true,"ok":true,"receipt":"defeat:trainer_round_dfce0d11b411c77904d1a58a4c0bdfca76ee7dc9a18786191af15d5b7a8794a8:character-0360a4ca5a8b25740c0c17a7be1 (t=348506ms)
+[session] combat_round_reward duty for character-0360a4ca5a8b25740c0c17a7be12245c held: unresolved {"durable":true,"ok":true,"receipt":"defeat:trainer_round_d526a200073af1a2e09e695037b4f9befe817c1a90e502bb9bd7501241fd485b:character-0360a4ca5a8b25740c0c17a7be1 (t=356851ms)
+[session] boss_relic duty for character-0360a4ca5a8b25740c0c17a7be12245c held: unresolved {"durable":true,"ok":true,"receipt":"defeat:boss_warden_aldis_5e9b369ad2eb9fea424551a32990eebc18580a29453b43fd731ee8b7f3e8ce58:character-0360a4ca5a8b25740c0c17a (t=364375ms)
+[session] boss_relic duty for character-c822353f6a3f0e6aa4e8116dc975f850 held: owner passive gate owner_passive_checkpoint_pending (t=364396ms)
+[session] research_event duty for character-0360a4ca5a8b25740c0c17a7be12245c held: unresolved {"action_id":"6dd2fae08dd6dbc2002487ceaba0122e944564b2f779b0ae8f48553935a2d67c","character_revision":88,"delivery_id":"creature_training:1baf78d262b3371a8e6f5f1 (t=368174ms)
+[session] research_event duty for character-c822353f6a3f0e6aa4e8116dc975f850 held: owner_passive_original_pending (t=368196ms)
+[session] research_event duty for character-c822353f6a3f0e6aa4e8116dc975f850 held: owner_passive_checkpoint_pending (t=371202ms)
+[session] combat_mastery duty for character-0360a4ca5a8b25740c0c17a7be12245c held: unresolved {"durable":true,"ok":true,"receipt":"craft:combat_mastery_f89429fabbcaad8bbe193efba6ab4a35c5cf7b7f893436a85769d12783449fd7:character-0360a4ca5a8b25740c0c17a7be1 (t=371431ms)
+[creatures] spawning 1's creature 'terrapup' at (5.5, 7659.1)
+[creatures] built AllyCreature_1 for peer 1, authority 1 (this peer is 1)
+[creatures] AllyCreature_1 stands up: owner 1, authority 1, this peer is 1 (our own proxy)
+[session] combat_mastery duty for character-0360a4ca5a8b25740c0c17a7be12245c held: unresolved {"durable":true,"ok":true,"receipt":"craft:combat_mastery_f84070f004b654639ea0793fe605a0f86bf16d0cf691e958ea1fbb805f6c3fca:character-0360a4ca5a8b25740c0c17a7be1 (t=375004ms)
+[session] combat_mastery duty for character-c822353f6a3f0e6aa4e8116dc975f850 held: owner passive gate owner_passive_original_pending (t=375015ms)
+[creatures] spawning 1053213703's creature 'terrapup' at (8.2, 7657.5)
+[creatures] built AllyCreature_1053213703 for peer 1053213703, authority 1053213703 (this peer is 1)
+[creatures] AllyCreature_1053213703 stands up: owner 1053213703, authority 1053213703, this peer is 1 (another player's creature)

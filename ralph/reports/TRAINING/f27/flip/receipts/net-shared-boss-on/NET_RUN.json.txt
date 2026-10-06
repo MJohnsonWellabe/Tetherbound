@@ -1,0 +1,126 @@
+{
+	"budgets": {
+		"desync_frames": 240.0,
+		"heartbeat_frames": 60.0,
+		"hello_budget_s": 180.0,
+		"near_tolerance_motion_m": 4.0,
+		"near_tolerance_rest_m": 1.5,
+		"smoke_step_budget_s_2peer": 300.0,
+		"smoke_step_budget_s_wide": 1500.0,
+		"step_budget_frames": 3000.0
+	},
+	"failures": [],
+	"fatal": "",
+	"net_conditions": {},
+	"peers": [
+		{
+			"command_timeout_observation": null,
+			"control_port": 54205,
+			"exited": true,
+			"hashes": [
+				4039149140,
+				4039149140,
+				4039149140
+			],
+			"hello": {
+				"enet_port": 31861.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "9f03667d463c",
+				"peer": 0.0,
+				"pid": 6364.0,
+				"role": "host",
+				"type": "hello",
+				"user_data_dir": "D:/tetherbound/.artifacts/r1-f27-flip/net-shared-boss-on/home-0/Godot/app_userdata/Tetherbound"
+			},
+			"index": 0,
+			"last_heartbeat": {
+				"context": "narrative_modal",
+				"frame": 638.0,
+				"physics_frame": 4759.0,
+				"pos": [
+					5.54423522949219,
+					6.17288303375244,
+					7659.1435546875
+				],
+				"session_peers": [
+					1.0,
+					1053213703.0
+				],
+				"state_hash": 4039149140.0,
+				"t": 375.798,
+				"type": "heartbeat"
+			},
+			"pid": 6364,
+			"role": "host",
+			"unexpected_exit": false
+		},
+		{
+			"command_timeout_observation": null,
+			"control_port": 54206,
+			"exited": true,
+			"hashes": [
+				4039149140,
+				4039149140,
+				4039149140
+			],
+			"hello": {
+				"enet_port": 31862.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "9f03667d463c",
+				"peer": 1.0,
+				"pid": 20072.0,
+				"role": "client",
+				"type": "hello",
+				"user_data_dir": "D:/tetherbound/.artifacts/r1-f27-flip/net-shared-boss-on/home-1/Godot/app_userdata/Tetherbound"
+			},
+			"index": 1,
+			"last_heartbeat": {
+				"context": "world",
+				"frame": 941.0,
+				"physics_frame": 7182.0,
+				"pos": [
+					8.19623470306396,
+					6.1728835105896,
+					7657.46142578125
+				],
+				"session_peers": [
+					1.0,
+					1053213703.0
+				],
+				"state_hash": 4039149140.0,
+				"t": 376.208,
+				"type": "heartbeat"
+			},
+			"pid": 20072,
+			"role": "client",
+			"unexpected_exit": false
+		}
+	],
+	"proxies": [],
+	"run_id": "r1-shared-boss-on-20261006T1103Z",
+	"scene": "world",
+	"state_hash_excluded_keys": [
+		"party",
+		"inventory",
+		"hotbar",
+		"satiety",
+		"map",
+		"realm_maps",
+		"alpha_pins",
+		"player_pose",
+		"clock_elapsed_seconds",
+		"current_realm",
+		"pending_realm_entry",
+		"realm_hearts",
+		"version"
+	],
+	"state_hash_hashed_keys": [
+		"flags",
+		"placed_buildings",
+		"farm_plots",
+		"death_satchels",
+		"harvested_vegetation",
+		"felled_vegetation",
+		"day"
+	]
+}

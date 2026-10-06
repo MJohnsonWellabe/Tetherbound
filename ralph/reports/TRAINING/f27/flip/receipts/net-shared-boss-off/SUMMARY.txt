@@ -1,0 +1,10 @@
+# Net smoke run r1-shared-boss-off-20261006T1110Z
+
+Scene: world
+Peers: 2
+Net conditions: clean (no proxy)
+
+- peer 0 (host) pid=13036 exited=false unexpected_exit=false
+- peer 1 (client) pid=7616 exited=true unexpected_exit=false
+
+FATAL: ERROR: smoke budget exceeded
