@@ -1,0 +1,1 @@
+d5d692934fbca93dde191f7d8974a3148d486498 --check-only tests/smoke_meadow_healing_land_heals.gd; no world execution

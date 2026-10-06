@@ -1,0 +1,1 @@
+eead1daf9cf946c87f0c044b835b4fe9f0008f0f tests/smoke_meadow_healing_land_heals.gd; headless production world, frame ceiling 4500ms, fade timeout 40000ms; no imported/copied cache
