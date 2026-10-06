@@ -90,3 +90,36 @@ func test_participant_who_never_spent_has_no_fabricated_pool() -> void:
 	var row: Dictionary = ((host.call("record", encounter_id) as Dictionary)
 		.get("participants", {}) as Dictionary).get(3, {})
 	assert_false(row.has("wind"), "a row without a host pool keeps the client's local pool")
+
+
+func test_profile_changes_regenerate_the_previous_interval_before_installing_the_new_profile() -> void:
+	var setup := _host_after_commit()
+	var host: RefCounted = setup[0]
+	var encounter_id: String = setup[1]
+	var baseline: Dictionary = setup[2]
+	host.call("commit_wind", encounter_id, 2, 2, baseline, MAX - COST,
+		1000, RECOVERY, DELAY)
+	var boosted := {"max": MAX, "regen_per_second": REGEN * 2.0}
+	var applied: Dictionary = host.call("preview_wind", encounter_id, 2, boosted, 0.0, 2300)
+	assert_almost_eq(float(applied.wind), 9.0, 0.001,
+		"the new rate must not boost the half-second before it was applied")
+	host.call("note_opponent_position", encounter_id, Vector3.ZERO, 3300)
+	assert_almost_eq(_published_wind(host, encounter_id, 2), 45.0, 0.001,
+		"idle publications use the installed boost without requiring another action")
+	var expired: Dictionary = host.call("preview_wind", encounter_id, 2, baseline, 0.0, 3800)
+	assert_almost_eq(float(expired.wind), 63.0, 0.001,
+		"expiry preserves the final half-second earned under the boost")
+	host.call("note_opponent_position", encounter_id, Vector3.ZERO, 4800)
+	assert_almost_eq(_published_wind(host, encounter_id, 2), 81.0, 0.001)
+	var larger := {"max": 200.0, "regen_per_second": REGEN}
+	var resized: Dictionary = host.call("preview_wind", encounter_id, 2, larger, 0.0, 6800)
+	assert_almost_eq(float(resized.wind), MAX, 0.001,
+		"capacity growth cannot regenerate above the old cap before its boundary")
+	assert_almost_eq(float(resized.wind_max), 200.0, 0.001)
+	host.call("note_opponent_position", encounter_id, Vector3.ZERO, 7800)
+	assert_almost_eq(_published_wind(host, encounter_id, 2), 118.0, 0.001)
+	var duplicate: Dictionary = host.call("commit_wind", encounter_id, 2, 2, larger,
+		MAX - COST, 7800, RECOVERY, DELAY)
+	assert_true(bool(duplicate.get("wind_duplicate", false)))
+	assert_almost_eq(float(duplicate.wind), 118.0, 0.001,
+		"a profile transition never reopens an accepted action for spending")
