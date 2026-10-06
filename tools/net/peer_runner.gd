@@ -4322,8 +4322,12 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 		# and let its normal commitment/save guards decide when it can proceed.
 		# Never revive the actor or manufacture a replacement party member here.
 		if mine != null and bool(mine.get("fainted")):
+			# No healthy member left: in a shared fight the partner can still
+			# finish the round, so wait. A loss ends the battle, and the outcome
+			# check after this loop reports it.
 			if (manager.call("switchable_indices") as Array).is_empty():
-				return {"verdict": "FAIL", "detail": "active creature fainted; no healthy party member can take the field"}
+				_trainer_fight_progress["phase"] = "fainted_no_switch"
+				continue
 			_trainer_fight_progress["phase"] = "switch_fainted_actor"
 			var switched := await _inject("party_cycle", 1)
 			if not bool(switched.get("ok", false)):
