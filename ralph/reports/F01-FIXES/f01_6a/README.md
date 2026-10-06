@@ -153,6 +153,6 @@ Local 4 vCPU, headless, Godot 4.7-stable.
 |---|---|
 | opening-together 1/3, 2/3, 3/3 | ALL CHECKS PASSED, 158 assertions each; road layout `00cf42f4bb81` (47 bands / 289 points) equal on both peers after the join, the reloads and the rejoin |
 | meadows_identity_fresh_join (default mode) | ALL CHECKS PASSED |
-| harness_max_hp ×2 (with the shared-runtime hold) | ALL CHECKS PASSED; guest at 134.40/134.40 immediately before the scripted hit |
+| harness_max_hp ×2 on 262c098a (the shared-runtime hold; the opening rows are unaffected by it) | ALL CHECKS PASSED; guest at 134.40/134.40 immediately before the scripted hit |
 
 The first harness run on 5fd6937c, with the hold on the CombatManager only, failed the new named check (an unscripted hit landed: 126.08/134.40). That showed the shared fight runs its own enemy AI; the hold now covers it.
