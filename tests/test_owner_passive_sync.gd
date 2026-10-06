@@ -361,6 +361,59 @@ func test_host_sequence_gap_and_initial_remote_pose_refused() -> void:
 	assert_eq(stream.error, "owner_passive_initial_pose_unconfirmed")
 	assert_eq(stream.cursor.sequence, 1)
 
+func _first_discovery_after(at: Array) -> Dictionary:
+	# A host stream whose cursor has applied one condition tick, then the
+	# stream's first discovery (travel baseline false) naming `at`.
+	service.record_input(_input())
+	var stream := _host_stream()
+	service.receive_host(2, _envelope({"op": "inputs", "inputs": [service.local.inputs[0].duplicate(true)]}))
+	assert_eq(stream.cursor.sequence, 1, "fixture: the condition tick applied")
+	service.receive_host(2, _envelope({"op": "inputs", "inputs": [{"version": 1, "sequence": 2,
+		"op": "discovery", "realm": "meadows", "from": at, "to": at,
+		"travel_valid": false, "new_landmarks": []}]}))
+	return stream
+
+func test_a_first_discovery_from_before_a_teleport_matches_the_hosts_recent_pose() -> void:
+	# station_craft: the guest landed at the Home Key point, the stream rebased,
+	# then the guest flew 101 m to the kitchen before the host judged the new
+	# stream's first discovery (recorded at the landing). The host's own body
+	# stood there inside INITIAL_POSE_LAG_S, so it counts.
+	service.body_position = Vector3(-4.4, 0.9, 21.6) # where the body is now
+	service._record_pose(2, "meadows", Vector3(96.2, 0.9, 14.0), Time.get_ticks_msec() - 300)
+	var stream := _first_discovery_after([96.2, 0.9, 14.0])
+	assert_eq(stream.error, "", "a pose the host observed 0.3 s ago is accepted")
+	assert_eq(stream.cursor.sequence, 2)
+
+func test_a_first_discovery_far_from_every_observed_pose_is_refused() -> void:
+	service.body_position = Vector3(-4.4, 0.9, 21.6)
+	service._record_pose(2, "meadows", Vector3(96.2, 0.9, 14.0), Time.get_ticks_msec() - 300)
+	var stream := _first_discovery_after([186.2, 0.9, 14.0]) # 90 m beyond the landing, 191 m from now
+	assert_eq(stream.error, "owner_passive_initial_pose_unconfirmed", "beyond 80 m of every sample")
+	assert_eq(stream.cursor.sequence, 1)
+
+func test_an_observed_pose_older_than_the_lag_window_does_not_count() -> void:
+	service.body_position = Vector3(-4.4, 0.9, 21.6)
+	service._record_pose(2, "meadows", Vector3(96.2, 0.9, 14.0), Time.get_ticks_msec() - 2500)
+	var stream := _first_discovery_after([96.2, 0.9, 14.0])
+	assert_eq(stream.error, "owner_passive_initial_pose_unconfirmed", "2.5 s old: outside INITIAL_POSE_LAG_S")
+
+func test_a_pose_observed_in_another_realm_does_not_count_and_a_realm_change_clears_the_ring() -> void:
+	service.body_position = Vector3(-4.4, 0.9, 21.6)
+	var now := Time.get_ticks_msec()
+	service._record_pose(2, "water", Vector3(96.2, 0.9, 14.0), now - 300)
+	var stream := _first_discovery_after([96.2, 0.9, 14.0])
+	assert_eq(stream.error, "owner_passive_initial_pose_unconfirmed", "a water pose never matches a meadows input")
+	service._record_pose(2, "meadows", Vector3(0, 0, 0), now)
+	assert_eq((service._pose_ring[2].samples as Array).size(), 1, "the realm change started a fresh ring")
+	assert_eq(service._pose_ring[2].realm, "meadows")
+
+func test_the_pose_ring_keeps_only_the_lag_window() -> void:
+	var now := Time.get_ticks_msec()
+	for i in 300: service._record_pose(2, "meadows", Vector3(i, 0, 0), now - 3000 + i * 10)
+	var samples: Array = service._pose_ring[2].samples
+	assert_true(samples.size() <= service.MAX_POSE_SAMPLES, "bounded")
+	assert_true(int(samples[0][0]) >= now - 10 - int(service.INITIAL_POSE_LAG_S * 1000.0), "nothing older than the window")
+
 func test_failed_bool_save_never_acks_or_installs_and_success_is_exact() -> void:
 	var prepared := _prepared_owner()
 	assert_true(service.blocked(game.local))

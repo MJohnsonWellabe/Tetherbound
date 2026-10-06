@@ -27,6 +27,9 @@ const MAX_SPEED := 40.0
 ## This bounded initial allowance does not replace or extend those deadlines.
 const ADMISSION_ALLOWANCE_S := 80.0
 const INITIAL_POSE_LAG_S := 2.0
+## Hard bound on one peer's pose ring (INITIAL_POSE_LAG_S at 60 physics ticks
+## per second is 120); a slower or faster tick only changes how many fit.
+const MAX_POSE_SAMPLES := 256
 ## A live-body endpoint match is horizontal within this distance...
 const ENDPOINT_HORIZONTAL_M := 2.0
 ## ...and vertical within this one. The owner can report an endpoint while its
@@ -38,6 +41,11 @@ const ENDPOINT_VERTICAL_M := 6.0
 var _session: WeakRef
 var local: Dictionary = {}
 var hosts: Dictionary = {}
+## Host: where this host itself saw each owner's body over the last
+## INITIAL_POSE_LAG_S, per physics tick: peer -> {realm, samples: [[ms, Vector3]]}.
+## A realm change starts a fresh ring; a missing body or a gone/departed stream
+## drops it (_sample_poses), so a pose from another realm or session never counts.
+var _pose_ring: Dictionary = {}
 ## Host: a rejoined stream refused for a real conflict, by character, so the
 ## reason is re-sent to that owner rather than left as silence.
 var refused: Dictionary = {}
@@ -458,13 +466,70 @@ func _context(peer: int, stream: Dictionary) -> Dictionary:
 		_game().get("world").flags.call("all_set"))
 	var context := {"realm": realm, "landmarks": definitions, "max_speed": MAX_SPEED,
 		"max_elapsed": ADMISSION_ALLOWANCE_S + float(Time.get_ticks_msec() - int(stream.started_ms)) / 1000.0}
+	var body: Variant = _host_body_position(peer, realm)
+	if body is Vector3:
+		context.initial_position = body
+		context.initial_max_distance = MAX_SPEED * INITIAL_POSE_LAG_S
+	return context
+
+## The host's own view of this peer's body in `realm`, or null without one.
+func _host_body_position(peer: int, realm: String) -> Variant:
+	var session := owner()
 	var lifecycle := session.get_node_or_null(^"FoundationComposition/TravelLifecycle")
 	var actor: CharacterBody3D = lifecycle.call("remote_body", peer) if lifecycle != null else null
 	var shell: Node3D = session.call("_portal_world_node", realm)
-	if actor != null and shell != null and shell.is_ancestor_of(actor):
-		context.initial_position = actor.global_position
-		context.initial_max_distance = MAX_SPEED * INITIAL_POSE_LAG_S
-	return context
+	if actor != null and shell != null and shell.is_ancestor_of(actor): return actor.global_position
+	return null
+
+func _peer_realm(peer: int) -> String:
+	for row: Dictionary in owner().call("registry").call("rows"):
+		if row.get("peer_id") == peer: return str(row.get("realm", ""))
+	return ""
+
+## Host, every physics tick: record each streaming owner's body.
+func _sample_poses() -> void:
+	var session := owner()
+	if session == null or session.call("is_host") != true:
+		_pose_ring.clear()
+		return
+	var now := Time.get_ticks_msec()
+	var live: Dictionary = {}
+	for character: String in hosts:
+		var stream: Dictionary = hosts[character]
+		if stream.get("departed") == true or not stream.get("peer") is int: continue
+		var peer: int = stream.peer
+		live[peer] = true
+		var realm := _peer_realm(peer)
+		var body: Variant = _host_body_position(peer, realm)
+		if body is Vector3: _record_pose(peer, realm, body, now)
+		else: _pose_ring.erase(peer)
+	for peer: Variant in _pose_ring.keys():
+		if not live.has(peer): _pose_ring.erase(peer)
+
+func _record_pose(peer: int, realm: String, position: Vector3, now_ms: int) -> void:
+	var ring: Dictionary = _pose_ring.get(peer, {})
+	if ring.get("realm") != realm: ring = {"realm": realm, "samples": []}
+	var samples: Array = ring.samples
+	samples.append([now_ms, position])
+	var oldest := now_ms - int(INITIAL_POSE_LAG_S * 1000.0)
+	while not samples.is_empty() and (int(samples[0][0]) < oldest or samples.size() > MAX_POSE_SAMPLES):
+		samples.pop_front()
+	_pose_ring[peer] = ring
+
+## The first discovery of a stream may lag the guest by INITIAL_POSE_LAG_S
+## (MAX_SPEED x lag of walking). Across a teleport (fly landing, Home Key) the
+## current body alone breaks that allowance, so a pose the host's own body held
+## within the same window, in the same realm, counts too: never any pose the
+## host did not observe, never a wider distance.
+func _pose_observed_near(peer: int, context: Dictionary, at: Vector3) -> bool:
+	var limit := float(context.initial_max_distance)
+	if (context.initial_position as Vector3).distance_to(at) <= limit: return true
+	var ring: Dictionary = _pose_ring.get(peer, {})
+	if ring.get("realm") != context.get("realm"): return false
+	var oldest := Time.get_ticks_msec() - int(INITIAL_POSE_LAG_S * 1000.0)
+	for sample: Array in ring.get("samples", []):
+		if int(sample[0]) >= oldest and (sample[1] as Vector3).distance_to(at) <= limit: return true
+	return false
 
 ## A host-accepted physical placement explains one same-stream false travel
 ## baseline. Peer inputs cannot create this capability or choose its anchor.
@@ -554,7 +619,7 @@ func _inputs_host_batch(peer: int, stream: Dictionary, packet: Dictionary, batch
 				_note_host(stream, "input %d waits: no host body for this owner in %s" % [sequence, str(context.realm)])
 				return false # Realm body has not arrived; retry this exact prefix.
 			if not REPLAY._position(at) \
-				or context.initial_position.distance_to(Vector3(float(at[0]), float(at[1]), float(at[2]))) > float(context.initial_max_distance):
+				or not _pose_observed_near(peer, context, Vector3(float(at[0]), float(at[1]), float(at[2]))):
 				stream.first_input_refusal = {"input": input.duplicate(true), "context": context.duplicate(true),
 					"cursor_sequence": stream.cursor.sequence, "sampled_ms": Time.get_ticks_msec()}
 				stream.error = "owner_passive_initial_pose_unconfirmed"; return false
@@ -1582,6 +1647,8 @@ func _note_ignored(reason: String) -> void:
 	print("[owner-passive] ignored " + reason)
 
 func tick(delta: float) -> void:
+	if owner() != null and owner().is_inside_tree() and not owner().get_tree().physics_frame.is_connected(_sample_poses):
+		owner().get_tree().physics_frame.connect(_sample_poses)
 	_left -= delta
 	if _left > 0.0: return
 	_left = 0.25
