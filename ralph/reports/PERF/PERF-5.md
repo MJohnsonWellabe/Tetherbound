@@ -1,8 +1,8 @@
-Verdict: OPEN; Crossing Hall static batching is a disabled candidate, not a device performance or visual verdict.
-Product: 45b1ce1d49cc7f00de45b3909638bc8d271d2402; existing static_mesh_batch.merge only, static_geometry_batching=false.
-PortalSurface, PortalStoneInfill and DisplayedRelic are excluded; original actions, signs, approaches, light/material updates and collision remain independently controlled.
-Existing Hall control at 45b1ce1d49: 1 test/17 assertions/0 failed/exit0, INVALID because the detached home membrane emitted two get_tree ERRORs.
-Raw failed proof: realms/hall-batch-unit-first/{stdout.log,stderr.log,native.log,exit.txt,source.txt}; private homes remain local, original assertions retained.
-The mounted control at 659f8595cb failed before all assertions: Engine main loop is null in runner _init; SCRIPT ERROR/leaks retained in realms/hall-batch-unit-mounted-first. This attempt is INVALID.
-Changed approach: original detached control/all17 assertions and mounted-only tree lookup preserve the null-tree day fallback. At merged source b415f044e41cda1ea545e613a7e286c89797d0f5, 1 test/17 assertions/0 failed/exit0/empty stderr; realms/hall-batch-detached-day-first/{stdout.log,stderr.log,native.log,exit.txt,source.txt}, untimed warm component only.
-Medium1080p realm routes, Hall before/after visual equivalence, real draw/frame gain and one final independent review remain OPEN; no READY or flag flip.
+Verdict: OPEN; First Shore Medium device route completed but misses60avg/40low target; Hall batching remains disabled.
+Device producer672b023d7f1b3ba2392628ee26c5a4387b54115e; existing unchanged capture_lookdev_route.gd, GTX10603GB/Vulkan/Forward+/fullscreen1920x1080/Medium/defaultclock/seed2042, fresh private homes.
+Actual exit0/complete=true/2of2waypoints/failures[];187timed frames over8.384397s, wall samples total8.360985s. avg22.3658FPS;1%low4.1341FPS (mean slowest ceil(187*.01)=2frames);min2.7202FPS.
+FPS=1000/meanwall_ms; low=1000/meanworst1%wall; min=1000/maxwall. Rawprocess monitor mean147.6016ms/physics13.6157ms are monitor snapshots, not per-function/GPU-only costs or a causal diagnosis.
+One declared production start staging/physical InputMap collision route, ordinary day8.046→8.376 and possible holds/minimum-frame padding; PNGI/O outside timing. Two original1920x1080 start/end PNGs inspected; no earned/fight/co-op/whole-realm claim.
+Raw proof: device/water-medium-main558-first/{stdout,stderr,native}.log/source.txt/exit.txt/route/{route.json,start.png,end.png}; inherited interpolation warning retained, no SCRIPT/Parse/ERROR/leak; homes local.
+Hall candidate45b1ce1d49 uses existing static_mesh_batch.merge with dynamic surfaces/relic excluded; static_geometry_batching=false/actions/signs/collision retained. Earlier invalid detached/mounted outputs preserved; corrected b415 detached unit1/17/0/exit0/empty stderr in realms/hall-batch-detached-day-first.
+Hall native before/after gain/blind/finalreview and other realm measurements remain OPEN; no READY or flag flip. PERF4 accepted motion-path QUESTION6022570741 pending; no guessed CPU edit from monitor totals.

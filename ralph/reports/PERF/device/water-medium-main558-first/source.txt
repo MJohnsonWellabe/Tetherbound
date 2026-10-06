@@ -1,0 +1,4 @@
+source=672b023d7f1b3ba2392628ee26c5a4387b54115e
+tool=tools/capture_lookdev_route.gd unchanged; route revision F26-route-2
+First Shore native GTX1060 Forward+/fullscreen1920x1080/Medium/default clock
+Existing production start staging, seed2042, physical InputMap/collision timed route; no fixed-fps/profiling/route repair/earned/fight/co-op claim
