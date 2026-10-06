@@ -2339,13 +2339,14 @@ func tether_command_deployment() -> Dictionary:
 	return _deployment_identity.get(_local_peer_id(), {}).duplicate(true)
 
 
-## Presentation capability follows the same scoped trainer consumer as ingress.
+## Presentation capability follows the same scoped saved consumer as ingress.
 ## The host still validates the current body, admitted inventory and saved ACK.
 func tether_item_command_available(id: String) -> bool:
 	var commands := preload("res://scripts/combat/tether_commands.gd")
 	if id.is_empty() or id != _local_bound_encounter_id() or not commands.enabled() \
-		or not commands.enabled("network_enabled") or not uses_durable_trainer_rewards(id): return false
-	var record: Dictionary = _encounter_host.call("record", id) if _is_host() and _encounter_host != null else _encounter
+		or not commands.enabled("network_enabled") or not uses_saved_actor_vitals(id): return false
+	var host := _is_host() or _owns_canonical_wild(id)
+	var record: Dictionary = _encounter_host.call("record", id) if host and _encounter_host != null else _encounter
 	var deployment := tether_command_deployment()
 	var participant: Dictionary = record.get("participants", {}).get(_local_peer_id(), {})
 	var game: Node = _session.call("_game")
@@ -3436,9 +3437,9 @@ func _host_tether_command(intent: Dictionary, peer: int) -> Dictionary:
 		if not _tether_item_request_retained(id, peer, request) and _session.call("_tether_item_admission_ready", peer) != true:
 			denied.code = "item_baseline_pending"
 			return denied
-		# The wild incoming-HP/deployment fence is a separate open adapter.
-		# Admit only the existing coherent trainer actor-vitals path here.
-		if not uses_durable_trainer_rewards(id):
+		# Canonical wild and trainer fights share the same settled actor and
+		# saved owner ACK fence. Legacy wild records cannot enter this door.
+		if not uses_saved_actor_vitals(id):
 			denied.code = "item_transaction_unavailable"
 			return denied
 		var actual := _ordinary_actor_binding(id, peer, body)
@@ -3854,10 +3855,23 @@ func ordinary_actor_vitals_pending(id: String) -> bool:
 	if not uses_saved_actor_vitals(id): return false
 	if not (_is_host() or _owns_canonical_wild(id)):
 		return _encounter.get("ordinary_actor_vitals_pending") == true
+	return _host_actor_settlement_pending(id)
+
+
+func _host_actor_settlement_pending(id: String) -> bool:
+	if _encounter_host == null: return false
 	if not (_encounter_host.call("pending_tether_items", id) as Array).is_empty(): return true
 	for original: Dictionary in _ordinary_actor_vitals_proposals.values():
 		if original.encounter_id == id and original.get("presented") != true: return true
 	return not (_encounter_host.call("pending_actor_vitals", id) as Array).is_empty()
+
+
+func _host_fight_disposal_pending(id: String) -> bool:
+	if _host_actor_settlement_pending(id): return true
+	if _encounter_host == null: return false
+	for original: Dictionary in _encounter_host.call("pending_move_mastery"):
+		if original.get("encounter_id") == id: return true
+	return false
 
 
 func _ordinary_deployment_pending(peer: int, next_uid: String) -> bool:
@@ -3920,13 +3934,14 @@ func _stage_ordinary_enemy_hit(id: String, peer: int, payload: Dictionary) -> vo
 
 
 func finalize_saved_tether_item(row: Dictionary) -> bool:
-	if not _is_host() or _session == null or _encounter_host == null: return false
+	if _session == null or _encounter_host == null: return false
 	var game: Node = _session.call("_game")
 	if game == null or game.get("world") == null: return false
 	var world: RefCounted = game.get("world")
 	var id: String = str(row.get("intent", {}).get("request", {}).get("encounter_id", ""))
 	for original: Dictionary in _encounter_host.call("pending_tether_items", id):
 		if original.get("intent") != row.get("intent") or original.get("context") != row.get("host_context"): continue
+		if not (_is_host() or _owns_canonical_wild(id)) or not uses_saved_actor_vitals(id): return false
 		var finalized: Dictionary = _encounter_host.call("finalize_saved_tether_item", original, row,
 			world.reward_deliveries, world.reward_delivery_namespace, world.world_id)
 		if finalized.get("ok") != true: return false
@@ -3945,8 +3960,9 @@ func finalize_saved_tether_item(row: Dictionary) -> bool:
 
 
 func _retry_tether_items() -> void:
-	if not _is_host() or _session == null or _encounter_host == null: return
+	if _session == null or _encounter_host == null: return
 	for id: String in _encounter_host.get("encounters"):
+		if not (_is_host() or _owns_canonical_wild(id)): continue
 		for original: Dictionary in _encounter_host.call("pending_tether_items", id):
 			_session.call("_tether_item_commit_original", self, original)
 
@@ -4122,6 +4138,12 @@ func _tick_encounter(delta: float) -> void:
 		"shared_opponent_presentation_hz", 10.0)))
 	for encounter_id: String in _shared_host_fights.keys().duplicate():
 		var runtime := _shared_host_fight(encounter_id)
+		if runtime != null and runtime.has_meta(&"dispose_after_actor_settlement"):
+			if _host_fight_disposal_pending(encounter_id): continue
+			var restore_ambient: bool = runtime.get_meta(&"dispose_after_actor_settlement")
+			runtime.remove_meta(&"dispose_after_actor_settlement")
+			_dispose_shared_host_fight(encounter_id, restore_ambient)
+			continue
 		if _guest_master_duels.has(encounter_id):
 			var duel: Dictionary = _guest_master_duels[encounter_id]
 			if duel.won:
@@ -4679,6 +4701,14 @@ func _dispose_shared_host_fight(encounter_id: String, restore_ambient: bool) -> 
 	var runtime := _shared_host_fight(encounter_id)
 	if runtime == null:
 		_shared_host_fights.erase(encounter_id)
+		return
+	# Offline saved actors derive ownership from this exact runtime. Keep it
+	# through both pre-journal proposals and owner-save ACK retries; Host.forget
+	# alone cannot preserve that source after the runtime has been erased.
+	if _host_fight_disposal_pending(encounter_id):
+		if not runtime.has_meta(&"dispose_after_actor_settlement"):
+			runtime.set_meta(&"dispose_after_actor_settlement", restore_ambient)
+		runtime.call("stop_opponent")
 		return
 	var master: Dictionary = _guest_master_duels.get(encounter_id, {})
 	if master.get("won") == true and master.get("durable") != true and not retained_guest_master_win(encounter_id).is_empty():

@@ -599,6 +599,201 @@ func test_item_input_tracks_current_trainer_scope_and_keeps_pending_request_fenc
 	game.free()
 
 
+func test_wild_item_input_requires_current_saved_scope_and_refuses_older_health_original() -> void:
+	# Reuse the actual guest record consumer and existing owner fixture. No
+	# mounted solo/host runtime, physical input, journal or transport is claimed.
+	COMMANDS._config.feature_flags.network_enabled = true
+	var fixture := preload("res://tests/test_foundation_resource_save.gd")
+	var game := fixture.FixtureGame.new()
+	game.world = preload("res://tests/test_foundation_resources.gd").new()._world()
+	game.local = DATA.new()._player()
+	game.local.character_id = "owner_a"
+	game.local.party.at(0).uid = "creature_a"
+	game.local.inventory.add("potion_small", 2)
+	var session := fixture.FixtureSession.new()
+	session.fixture = game
+	game.session = session
+	var director := preload("res://tests/test_client_trainer_victory.gd").DirectorFixture.new()
+	director.host = false
+	director._session = session
+	director._encounter_host = host
+	var manager := MANAGER.new()
+	director._manager = manager
+	manager._encounter_link = director
+	manager._encounter_id = id
+	manager._encounter_kind = "wild"
+	manager.state = MANAGER.State.ACTIVE
+	var members: Array[RefCounted] = [game.local.party.at(0)]
+	manager._party = members
+	director._deployment_identity[1] = {"character_id": "owner_a", "creature_uid": "creature_a", "generation": 1}
+	var record: Dictionary = host.record(id)
+	record["wild_actor_owner"] = preload("res://scripts/net/wild_actor_scope.gd").make(
+		game.world.reward_delivery_namespace, session._altar_current_epoch(), "meadows", id)
+	director._encounter = record
+	var admitted := preload("res://scripts/net/character_record_rules.gd").portable_projection(game.local.save_data())
+	admitted.redesign_character["tether_pouch"] = ["potion_small"]
+	host.bind_tether_commands(id, 1, admitted)
+	manager._tether_command_view = host.tether_pouch_view(id, 1, admitted)
+	assert_true(director.tether_item_command_available(id), "same current wild saved-HP scope exposes Item")
+	assert_true(manager.tether_command_snapshot().unlocked_commands.has("item_throw"))
+	assert_false(director.uses_durable_trainer_rewards(id), "no trainer/round reward capability is installed")
+	record["ordinary_actor_vitals_pending"] = true
+	var request := COMMANDS.intent(id, 1, 1, "item_throw")
+	var refused: Dictionary = director._host_commit_encounter({"kind": "tether_command", "encounter_id": id, "request": request}, 1)
+	assert_eq(refused.code, "pending_vitals")
+	assert_eq(refused.command_request, request)
+	assert_true(host.pending_tether_items(id).is_empty(), "an older saved HP proposal prevents first Item reservation")
+	record.ordinary_actor_vitals_pending = false
+	for field: String in ["world_namespace", "session_id", "realm", "encounter_id"]:
+		var original: Dictionary = record.wild_actor_owner.duplicate(true)
+		record.wild_actor_owner[field] = "foreign"
+		assert_false(director.tether_item_command_available(id), field)
+		assert_false(manager.tether_command_snapshot().unlocked_commands.has("item_throw"), field)
+		record.wild_actor_owner = original
+	record.erase("wild_actor_owner")
+	assert_false(director.tether_item_command_available(id), "legacy wild record cannot offer an unsaved Item consumer")
+	var before := record.duplicate(true)
+	assert_true(director.finalize_saved_tether_item({"intent": {"request": {"encounter_id": "another-director"}}}),
+		"unrelated offline director is a no-op, not a veto on another source's exact saved ACK")
+	assert_eq(record, before)
+	assert_eq(session._registry.peer_for_character("owner_a"), 0, "offline has no network registry row")
+	assert_eq(session._saved_actor_delivery_peer("owner_a"), 1, "actual local owner can receive its saved Item/Heal")
+	assert_eq(session._saved_actor_delivery_peer(""), 0)
+	assert_eq(session._saved_actor_delivery_peer("foreign"), 0)
+	session._registry.add(2, "guest_a")
+	assert_eq(session._saved_actor_delivery_peer("guest_a"), 2, "guest still resolves through actual registry")
+	game.local.character_id = "replacement"
+	assert_eq(session._saved_actor_delivery_peer("owner_a"), 0, "an old local owner cannot borrow the replacement's peer")
+	assert_eq(session._saved_actor_delivery_peer("replacement"), 1)
+	manager.free()
+	director.free()
+	session.free()
+	game.free()
+
+
+func test_wild_disposal_retains_same_actor_source_until_item_hp_prejournal_and_mastery_settle() -> void:
+	# Existing actual runtime and Session context; detached bodies and prepared
+	# component originals only. No mounted fight, transport or disk-save claim.
+	var fixture := preload("res://tests/test_foundation_resource_save.gd")
+	var essence := preload("res://scripts/creatures/essence.gd")
+	var saved_essence: Dictionary = essence.config().duplicate(true)
+	essence._configuration = saved_essence.duplicate(true)
+	essence._configuration.wild_victory_runtime_enabled = true
+	for pending_kind: String in ["item", "hp", "prejournal", "mastery"]:
+		for restore_ambient: bool in [false, true]:
+			var game := fixture.FixtureGame.new()
+			game.world = preload("res://tests/test_foundation_resources.gd").new()._world()
+			game.local = DATA.new()._player()
+			game.local.character_id = "owner_a"
+			var owned: RefCounted = game.local.party.at(0)
+			owned.uid = "creature_a"
+			owned.hp = owned.max_hp - 10.0
+			game.local.inventory.add("potion_small", 2)
+			game.save_system = fixture.BoolWriter.new()
+			var session := fixture.FixtureSession.new()
+			session.fixture = game
+			game.session = session
+			var transport := fixture.FixtureRpc.new()
+			transport.name = "LedgerRpc"
+			transport.fixture = game
+			transport.ledger = preload("res://scripts/net/world_ledger.gd").new(game.world)
+			session.add_child(transport)
+			assert_false(session._ordinary_actor_vitals_journal_epoch().is_empty())
+			var context: Dictionary = session._host_wild_training_context()
+			assert_true(context.ready, "same actual prepared writer/context supports solo ownership")
+			var director := preload("res://tests/test_client_trainer_victory.gd").DirectorFixture.new()
+			director.host = false
+			director._session = session
+			director._encounter_host = HOST.new(1)
+			director._catch_arbiter = preload("res://scripts/net/catch_arbiter.gd").new()
+			var before := preload("res://scripts/net/character_record_rules.gd").portable_projection(game.local.save_data())
+			before.redesign_character["tether_pouch"] = ["potion_small"]
+			var rec: Dictionary = director._encounter_host.open(1, "meadows", "wild",
+				{"hp": 200.0, "hp_max": 200.0, "species_id": "bramblebun"}, owned.uid, "owner_a")
+			var wild_id: String = rec.encounter_id
+			rec["wild_actor_owner"] = preload("res://scripts/net/wild_actor_scope.gd").make(
+				game.world.reward_delivery_namespace, session._altar_current_epoch(), "meadows", wild_id)
+			director._encounter = rec
+			var body := preload("res://tests/test_shared_wild_host_fight.gd").Body.new()
+			body.visible = false
+			body.set_meta(&"tether_snare", {"until_ms": 2500})
+			body.set_meta(&"tether_body_generation", 1)
+			assert_true(director._encounter_host.bind_actor_body(wild_id, 1, "owner_a", before.party[0], body.get_instance_id()).ok)
+			var runtime := preload("res://scripts/combat/shared_wild_host_fight.gd").new()
+			runtime.authority_body = body
+			runtime.set_meta(&"canonical_wild_context", context)
+			director._shared_host_fights[wild_id] = runtime
+			assert_true(director._owns_canonical_wild(wild_id))
+			var original: Dictionary = {}
+			match pending_kind:
+				"item":
+					director._encounter_host.bind_tether_commands(wild_id, 1, before)
+					rec.participants[1].tether_commands.meter = 100.0
+					var binding := {"character_id": "owner_a", "creature_uid": owned.uid,
+						"deployment_generation": 1, "actor_generation": 1, "body_instance_id": body.get_instance_id()}
+					var prepared: Dictionary = director._encounter_host.prepare_tether_item_command(
+						COMMANDS.intent(wild_id, 1, 7, "item_throw"), 1, before, binding, 0,
+						game.world.reward_delivery_namespace, session._ordinary_actor_vitals_journal_epoch(), 2000)
+					assert_true(prepared.ok, str(prepared))
+					original = prepared.get("original", {})
+				"hp":
+					original = director._encounter_host.stage_actor_vitals(wild_id, 1, owned.uid, 1, 0, "saved-hit", "damage", 3.0, 128)
+					assert_true(director._encounter_host.commit_actor_vitals(original).ok)
+				"prejournal":
+					var proposal: Dictionary = director._encounter_host.stage_actor_vitals(wild_id, 1, owned.uid, 1, 0, "before-save-hit", "damage", 3.0, 128)
+					assert_true(proposal.ok)
+					original = {"encounter_id": wild_id, "proposal": proposal, "presented": false}
+					director._ordinary_actor_vitals_proposals["before-world-save"] = original
+				"mastery":
+					var binding := {"character_id": "owner_a", "creature_uid": owned.uid,
+						"deployment_generation": 1, "actor_generation": 1, "body_instance_id": body.get_instance_id()}
+					assert_true(director._encounter_host.authorize_move_start(
+						{"encounter_id": wild_id, "action": 1, "slot": "quick"}, 1, _owned(), binding, _move(), WIND, 1000).ok)
+					var started: Dictionary = director._encounter_host.move_commit(wild_id, 1, 1)
+					assert_true(director._encounter_host.validate_strike(
+						{"encounter_id": wild_id, "action": 1, "slot": "quick", "move_id": started.move_id, "move": started.move, "facing": Vector3.RIGHT},
+						1, {"now_ms": 1300, "origin": Vector3.ZERO, "bodies": [], "move_actor_binding": binding, "f22_actor_binding": binding}).ok)
+					director._encounter_host.credit_move_hit(wild_id, 1, 1, 10.0, "opponent_a", 200.0)
+					original = director._encounter_host.move_mastery_outcome(wild_id, 1, 1)
+					assert_false(original.is_empty())
+					assert_true(director._encounter_host.pending_actor_vitals(wild_id).is_empty(), "mastery can outlive settled HP")
+			assert_true(director._encounter_host.leave(wild_id, 1).ok)
+			assert_eq(director._encounter_host.phase(wild_id), "done")
+			director._dispose_shared_host_fight(wild_id, restore_ambient)
+			assert_true(is_same(director._shared_host_fight(wild_id), runtime), pending_kind)
+			assert_true(director._owns_canonical_wild(wild_id), "retry keeps exact canonical solo source")
+			assert_eq(runtime.get_meta(&"dispose_after_actor_settlement"), restore_ambient)
+			assert_false(body.visible, "pending source does not restore ambient presentation")
+			assert_true(body.has_meta(&"tether_body_generation"), "pending source preserves body identity")
+			director._tick_encounter(0.1)
+			assert_true(is_same(director._shared_host_fight(wild_id), runtime), "tick retains pending source")
+			match pending_kind:
+				"item":
+					assert_true(is_same(director._encounter_host.pending_tether_items(wild_id)[0], original))
+					assert_true(director._encounter_host.cancel_unjournaled_tether_item(original, {}, game.world.reward_delivery_namespace))
+				"hp":
+					assert_true(director._encounter_host.acknowledge_actor_vitals(wild_id, "owner_a", owned.uid, original.revision, original.settlement_receipt))
+				"prejournal": original.presented = true
+				"mastery":
+					assert_eq(director._encounter_host.pending_move_mastery().size(), 1)
+					assert_true(director._encounter_host.acknowledge_move_mastery(wild_id, "owner_a", 1, original.outcome.action_id))
+			director._tick_encounter(0.1)
+			assert_eq(director._shared_host_fight(wild_id), null, "settled source resumes deferred disposal")
+			assert_false(runtime.has_meta(&"dispose_after_actor_settlement"))
+			assert_false(director._owns_canonical_wild(wild_id))
+			assert_true(director._encounter_host.record(wild_id).is_empty(), "finished Host record is forgotten after settlement")
+			assert_eq(body.visible, restore_ambient, "actual disposal applies retained restoration policy")
+			assert_eq(body.engagements, [false] if restore_ambient else [])
+			assert_false(body.has_meta(&"tether_snare"))
+			assert_false(body.has_meta(&"tether_body_generation"))
+			runtime.free()
+			body.free()
+			director.free()
+			session.free()
+			game.free()
+	essence._configuration = saved_essence
+
+
 func test_pouch_presentation_reads_first_live_stack_and_frozen_gear_without_spending() -> void:
 	var player: RefCounted = DATA.new()._player()
 	player.character_id = "owner_a"

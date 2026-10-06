@@ -1200,6 +1200,15 @@ func _cancel_unjournaled_departed_items(peer: int) -> void:
 					host.call("cancel_unjournaled_tether_item", original, world.reward_deliveries, world.reward_delivery_namespace)
 
 
+## Offline local owners have no network registry row. Guests retain the
+## existing stable-character registry lookup and ingress revalidates identity.
+func _saved_actor_delivery_peer(character: String) -> int:
+	if character.is_empty(): return 0
+	var local_peer: int = local_peer_id()
+	if _authority_character(local_peer) == character: return local_peer
+	return int(_registry.call("peer_for_character", character))
+
+
 ## Private actual-combat ingress. The sole Host participant owns the original;
 ## no RPC or public station envelope can author an effect or body binding.
 func _tether_item_commit_original(director: Node, original: Dictionary) -> Dictionary:
@@ -1211,14 +1220,14 @@ func _tether_item_commit_original(director: Node, original: Dictionary) -> Dicti
 		return FOUNDATION_ACTIONS.deny("item_original_unavailable")
 	for pending: Dictionary in host.call("pending_tether_items", str(original.get("encounter_id", ""))):
 		if is_same(pending, original): found = true
-	if not found or director.call("uses_durable_trainer_rewards", str(original.encounter_id)) != true:
+	if not found or director.call("uses_saved_actor_vitals", str(original.encounter_id)) != true:
 		return FOUNDATION_ACTIONS.deny("item_original_unavailable")
 	if not _tether_item_live_consumer_ready({"action": "tether_item", "intent": original.intent}):
 		return FOUNDATION_ACTIONS.deny("item_buff_consumer_unavailable")
 	var game := _game()
 	var world: RefCounted = game.get("world")
 	var character: String = original.character_id
-	var peer := int(_registry.call("peer_for_character", character))
+	var peer: int = _saved_actor_delivery_peer(character)
 	if peer < 1 or _authority_character(peer) != character or world == null \
 		or original.context.world_namespace != world.reward_delivery_namespace:
 		return FOUNDATION_ACTIONS.deny("item_owner_unavailable")
@@ -1393,7 +1402,7 @@ func _ordinary_actor_vitals_commit_source(director: Node, encounter_id: String, 
 	var source_record: Dictionary = original.get("host_record", {})
 	var source_member: Dictionary = source_record.get("participants", {}).get(peer, {})
 	var character: String = str(source_member.get("character_id", ""))
-	var delivery_peer: int = int(_registry.call("peer_for_character", character))
+	var delivery_peer: int = _saved_actor_delivery_peer(character)
 	if delivery_peer < 1 or _authority_character(delivery_peer) != character:
 		return {"ok": false, "durable": false, "resolved": false, "code": "original_actor_owner_unavailable"}
 	var record: Dictionary = host.call("record", encounter_id)
