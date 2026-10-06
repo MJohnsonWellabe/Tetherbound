@@ -517,6 +517,19 @@
           "_why_smoke_f26": "F26 code-blind judge (Low, burrow_warrens__04): the #4f4a45 / 0.9 / fade 0.35 column read as a black pole, not smoke. Tuned to the accepted Tidewake long-range plume (default campfire smoke grey, alpha 0.55-0.7, fade 0.5-0.6); height and width unchanged so it still reads from the road."
         }
       ]
+    },
+    {
+      "order": 2016,
+      "name": "tether_night_watch_camp",
+      "_why": "F03#0: Farro's existing Company equipment dialogue and nearby night-gated Duskhush have no physical posting to discover. A compact installed shelter, two oxblood Tether standards and a warm watch fire make that occupation visible beside the oak habitat. Every collider is at least 16m from Farro [95,2900], behind his east side and outside the ordinary 11m battle staging ring. Presentation only: no rest offer, interaction, new trainer, spawn, reward or flag; the existing activity remains the night meeting and fight.",
+      "props": [
+        {"name": "NightWatchStandardNorth", "model": "Banner_1", "at": [112.0, 2886.0], "yaw_deg": 245.0, "sink_m": -2.4, "scale": 1.55, "retint": {"MI_Banner": {"color": "#7a2430", "profile": "dimensional_cloth"}}},
+        {"name": "NightWatchStandardSouth", "model": "Banner_1", "at": [112.0, 2915.0], "yaw_deg": 245.0, "sink_m": -2.4, "scale": 1.55, "retint": {"MI_Banner": {"color": "#7a2430", "profile": "dimensional_cloth"}}},
+        {"name": "NightWatchFireRing", "model": "campfire_stone_ring", "dir": "res://assets/props/generated_camp", "at": [112.0, 2902.0], "yaw_deg": 10.0, "sink_m": 0.03, "scale": 0.6},
+        {"name": "NightWatchFire", "model": "Bonfire_Fire", "dir": "res://assets/props/quaternius_survival", "at": [112.0, 2902.0], "yaw_deg": 25.0, "sink_m": 0.02, "scale": 0.45, "glow": "campfire", "glow_scale": 2.0},
+        {"name": "NightWatchShelter", "model": "camp_tent", "dir": "res://assets/props/generated_camp", "at": [116.0, 2908.0], "yaw_deg": 245.0, "sink_m": -0.64, "scale": 1.3},
+        {"name": "NightWatchEquipment", "model": "Crate_Wooden", "at": [116.0, 2904.0], "yaw_deg": 20.0, "sink_m": 0.06, "scale": 1.0}
+      ]
     }
   ]
 }

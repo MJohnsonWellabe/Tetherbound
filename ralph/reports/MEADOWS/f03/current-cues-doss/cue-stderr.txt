@@ -1,0 +1,11 @@
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+   GDScript backtrace (most recent call first):
+       [0] _build_terrain (res://scripts/world/playground_world.gd:1173)
+       [1] _ready (res://scripts/world/playground_world.gd:806)
+       [2] _run (res://tests/capture_lure_cue_views.gd:64)
+WARNING: [grass_field] the rendering camera (@Camera3D@67425) is not the one bind() was given (Camera3D); following the rendering one. In a CAPTURE this is expected -- see _follow_camera. In GAMEPLAY it means the ground is being dressed around the wrong eye.
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _follow_camera (res://scripts/world/grass_field.gd:1804)
+       [1] _process (res://scripts/world/grass_field.gd:2242)
