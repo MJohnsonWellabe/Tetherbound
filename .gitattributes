@@ -15,3 +15,4 @@ ralph/reports/COMBAT/f24/current/tonic-unit-*.log -text
 ralph/reports/COMBAT/f23/current/altar-handoff-*.log -text
 ralph/reports/COMBAT/f24/current/snare-scope-*.log -text
 ralph/reports/COMBAT/f24/current/tonic-party-*.log -text
+ralph/reports/COMBAT/f24/current/snare-generation*.log -text

@@ -1,0 +1,17 @@
+{
+  "process_scope": "warm-cache headless unit; isolated APPDATA; no import/render/world smoke/lease write",
+  "started_utc": "2026-10-06T14:01:38.8115085Z",
+  "arguments": [
+    "--headless",
+    "--path",
+    "D:/tetherbound/codex-r4",
+    "--log-file",
+    "D:/tetherbound/.artifacts/r4-snare-generation-0ea8c87a5e/native.log",
+    "--script",
+    "tests/run_tests.gd",
+    "--",
+    "--only=test_f24_host_commands.gd::test_snare_presentation_uses_current_record_body_and_remaining_host_duration"
+  ],
+  "executable": "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64_console.exe",
+  "source_sha": "0ea8c87a5e4824494f97b7d5e1fdf085d9f2aa01"
+}
