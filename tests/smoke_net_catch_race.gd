@@ -63,9 +63,11 @@ extends "res://tests/helpers/net_harness.gd"
 ## shipping host arbiter consume it. The simultaneous race is pinned to break
 ## out; a second guest throw in that same released encounter is pinned to catch.
 ##
-## **Handover:** each peer owns exactly its deployed starter (`deploy_creature`
-## with `owned: true`, as the opening owns it; actor_vitals refuses an unowned
-## fighter). The successful guest catch must raise that peer's count by one.
+## **Handover:** each peer receives exactly one starter through `party_grant`
+## before host/join admission, then deploys it (`deploy_creature` with
+## `owned: true`; actor_vitals refuses an unowned fighter). Preparing the same
+## starter before admission keeps the host's immutable owner roster honest.
+## The successful guest catch must raise that peer's count by one.
 ## This does not exercise a full belt or its release ceremony.
 ## With F30 enabled, the confirmed guest grant also compares the host's trait
 ## packet with the owner's complete character carrier through existing probes.
@@ -139,6 +141,17 @@ func _run() -> void:
 	if not have_session:
 		quit(await finish())
 		return
+
+	# A direct fixture grant after admission cannot be replayed as a gameplay
+	# owner input. Prepare the existing one-starter fixture before the host
+	# freezes either portable roster; keep the same species and starting level.
+	for i in 2:
+		var granted: Dictionary = await step(i, "party_grant", {"species": "terrapup"})
+		want(str(granted.get("verdict", "")) == "PASS",
+			"setup: peer %d owns its starter before canonical admission (%s)" % [i, str(granted.get("detail", ""))])
+		if str(granted.get("verdict", "")) != "PASS":
+			quit(await finish())
+			return
 
 	var hosted: Dictionary = await step(0, "host", {})
 	want(str(hosted.get("verdict", "")) == "PASS",
