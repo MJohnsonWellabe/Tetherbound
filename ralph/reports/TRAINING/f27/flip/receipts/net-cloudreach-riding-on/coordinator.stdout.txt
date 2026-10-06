@@ -1,0 +1,165 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=14112 control_port=56389 home=D:\tetherbound\.artifacts\r1-f27-flip\net-cloudreach-riding-on/home-0 log=D:\tetherbound\.artifacts\r1-f27-flip\net-cloudreach-riding-on/peer-0.log
+coordinator: launched peer 1 (client) pid=6120 control_port=56390 home=D:\tetherbound\.artifacts\r1-f27-flip\net-cloudreach-riding-on/home-1 log=D:\tetherbound\.artifacts\r1-f27-flip\net-cloudreach-riding-on/peer-1.log
+coordinator: peer 0 hello: {"enet_port":28781.0,"godot_version":"4.7-stable (official)","main_sha":"6a9cb031ec88","peer":0.0,"pid":14112.0,"role":"host","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-cloudreach-riding-on/home-0/Godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":28782.0,"godot_version":"4.7-stable (official)","main_sha":"6a9cb031ec88","peer":1.0,"pid":6120.0,"role":"client","type":"hello","user_data_dir":"D:/tetherbound/.artifacts/r1-f27-flip/net-cloudreach-riding-on/home-1/Godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: disclosed retired crossing fixture enabled
+PASS: disclosed retired crossing fixture enabled
+PASS: peer 0 hosted a world (hosting udp/28781 as peer 1)
+PASS: peer 1 joined on port 28781 (joined 127.0.0.1:28781 as peer 435135433 after 33 frames; snapshot applied; 2 peer(s) in registry)
+PASS: peer 0's registry holds both players (registry reports 2 peer(s) after 0 frames (0.0 s))
+PASS: peer 1's registry holds both players (registry reports 2 peer(s) after 0 frames (0.0 s))
+PASS: peer 0 is the listen server and peer 1 has its own id ([1, 435135433])
+PASS: SETUP: peer 0 holds the world, not a dialogue box (SETUP: no dialogue box was open; locomotion now true)
+PASS: SETUP: peer 1 holds the world, not a dialogue box (SETUP: no dialogue box was open; locomotion now true)
+PASS: SETUP: the Cloudreach route is open (realm_key_cloudreach: ok=true pending=false code='' reason='')
+PASS: SETUP: peer 0 sees the key (flag realm_key_cloudreach (any) set after 0 frames)
+PASS: SETUP: peer 1 sees the key (flag realm_key_cloudreach (any) set after 0 frames)
+PASS: SETUP: peer 0 starts with an empty party, so the seeded five are the whole party (had 0)
+PASS: SETUP: peer 0 party_grant meadowhart ('meadowhart' at level 3 joined the party (1 member(s)))
+PASS: SETUP: peer 0 party_grant bramblebun ('bramblebun' at level 3 joined the party (2 member(s)))
+PASS: SETUP: peer 0 party_grant mudsnout ('mudsnout' at level 3 joined the party (3 member(s)))
+PASS: SETUP: peer 0 party_grant terrapup ('terrapup' at level 3 joined the party (4 member(s)))
+PASS: SETUP: peer 0 party_grant brooktail ('brooktail' at level 3 joined the party (5 member(s)))
+PASS: SETUP: peer 0 has a saddle in the satchel (granted 1 saddle (0 did not fit; waited 0 guard frame(s)))
+PASS: SETUP: peer 0 owns exactly five, meadowhart first (["meadowhart", "bramblebun", "mudsnout", "terrapup", "brooktail"])
+PASS: SETUP: peer 1 starts with an empty party, so the seeded five are the whole party (had 0)
+PASS: SETUP: peer 1 party_grant meadowhart ('meadowhart' at level 3 joined the party (1 member(s)))
+PASS: SETUP: peer 1 party_grant bramblebun ('bramblebun' at level 3 joined the party (2 member(s)))
+PASS: SETUP: peer 1 party_grant mudsnout ('mudsnout' at level 3 joined the party (3 member(s)))
+PASS: SETUP: peer 1 party_grant terrapup ('terrapup' at level 3 joined the party (4 member(s)))
+PASS: SETUP: peer 1 party_grant brooktail ('brooktail' at level 3 joined the party (5 member(s)))
+PASS: SETUP: peer 1 has a saddle in the satchel (granted 1 saddle (0 did not fit; waited 0 guard frame(s)))
+PASS: SETUP: peer 1 owns exactly five, meadowhart first (["meadowhart", "bramblebun", "mudsnout", "terrapup", "brooktail"])
+PASS: after the fixture: peer 0 has the same five companions, same order, no sixth (5)
+PASS: after the fixture: peer 1 has the same five companions, same order, no sixth (5)
+coordinator: s34 enter_realm 'cloudreach' attributes the existing bounded shell window to connected host peer 0
+PASS: peer 1 crossed into Cloudreach (crossed 'meadows' -> 'cloudreach' after 914 observed physics frames / 56930 ms (budget 6000 physics frames); current scene is /root/CloudreachCliffs)
+PASS: peer 0 crossed into Cloudreach (crossed 'meadows' -> 'cloudreach' after 789 observed physics frames / 53173 ms (budget 6000 physics frames); current scene is /root/CloudreachCliffs)
+PASS: peer 0 stands in the production Cloudreach scene (cloudreach / CloudreachCliffs)
+PASS: peer 0's registry has both players in Cloudreach ({ "1": "cloudreach", "435135433": "cloudreach" })
+PASS: peer 1 stands in the production Cloudreach scene (cloudreach / CloudreachCliffs)
+PASS: peer 1's registry has both players in Cloudreach ({ "1": "cloudreach", "435135433": "cloudreach" })
+PASS: after the crossing: peer 0 has the same five companions, same order, no sixth (5)
+PASS: after the crossing: peer 1 has the same five companions, same order, no sixth (5)
+PASS: peer 0 called its Meadowhart out in Cloudreach with creature_recall
+PASS: peer 1 called its Meadowhart out in Cloudreach with creature_recall
+PASS: the guest's companion is its Meadowhart (meadowhart)
+PASS: on foot in Cloudreach, before any ride: the host draws the guest's trainer where the guest stands (0.00 m apart; host copy [-0.95704275369644, 105.03092956543, -256.428527832031], guest (-0.957052, 105.0309, -256.4285))
+PASS: on foot in Cloudreach, before any ride: the guest's walking anchor has reached the host and been granted ({"accepts":1.0,"anchor":[0.0,105.110000610352,-260.0],"host_granted":true,"host_validated":true,"last_code":"ok","last_denial":"The wind put you down somewhere else.","pending":false,"proposals":3.0,"realm":"cloudreach","refusals":2.0})
+ANCHOR before mount: {"accepts":1.0,"anchor":[0.0,105.110000610352,-260.0],"host_granted":true,"host_validated":true,"last_code":"ok","last_denial":"The wind put you down somewhere else.","pending":false,"proposals":3.0,"realm":"cloudreach","refusals":2.0}
+first mount: walk 1 to mount at (-6.207392, 105.194, -252.92) -> arrived within 2.20 m of (-6.2, -252.9); prompt '[img=36x36]res://assets/ui/input_prompts/xbox_button_x.png[/img]   Ride Meadowhart'
+PASS: first mount: the guest pressed interact (pressed 'interact' x1)
+PASS: first mount: the interact press put the guest on its own meadowhart ({"mount":"AllyCreature","mounted":true,"saddle_worn":true,"seated":true,"species":"meadowhart","speed":10.0})
+PASS: first mount: the guest's own mount wears the saddle and the guest is seated
+PASS: first mount: the guest's trainer is carried by the mount
+PASS: the host holds a trainer body for the guest
+PASS: the host draws the guest as RIDING and visible ({"above":2.18780517578125,"carried":true,"gap":2.20232033729553,"mount":"AllyCreature_435135433","mount_saddle_worn":true,"mount_species":"meadowhart","pos":[-10.3240938186646,107.218719482422,-250.317504882813],"riding":true,"saddled":true,"seated":true,"visible":true})
+PASS: the host knows the guest is on a meadowhart (got 'meadowhart')
+PASS: the seated pose reached the guest's skeleton on the host
+PASS: the saddle the guest's mount fitted is worn on the host's copy (published true, worn true)
+PASS: the host draws the guest IN the saddle: 0.00 m off the seat (tolerance 0.35)
+PASS: mounted: peer 0 has the same five companions, same order, no sixth (5)
+PASS: mounted: peer 1 has the same five companions, same order, no sixth (5)
+ANCHOR at mount: {"accepts":2.0,"anchor":[-11.5668354034424,105.110000610352,-252.719528198242],"host_granted":true,"host_validated":true,"last_code":"ok","last_denial":"The wind put you down somewhere else.","pending":false,"proposals":5.0,"realm":"cloudreach","refusals":3.0}
+ride round 1: guest mount at [-2.46356558799744, 105.055191040039, -253.643676757813]
+PASS: round 1: the guest rode by stick along the arrival road WHILE the host played: peer 1 PASS (arrived within 3.00 m of (-1.6, -254.0)); peer 0 PASS (left stick (1.00, 0.00) for 120 frames)
+ride round 2: guest mount at [-4.88175868988037, 106.01237487793, -242.11344909668]
+PASS: round 2: the guest rode by stick along the arrival road WHILE the host played: peer 0 PASS (drop 2 wood (txn drop:1:294837314:1188565261): ok=true pending=false); peer 1 PASS (arrived within 3.00 m of (-5.3, -240.0))
+ride round 3: guest mount at [-10.0790567398071, 107.741279602051, -222.231292724609]
+PASS: round 3: the guest rode by stick along the arrival road WHILE the host played: peer 0 PASS (picked up wood: ok=true pending=false); peer 1 PASS (arrived within 3.00 m of (-10.7, -220.0))
+ride round 4: guest mount at [-15.5089664459229, 109.514457702637, -201.842834472656]
+PASS: round 4: the guest rode by stick along the arrival road WHILE the host played: peer 1 PASS (arrived within 3.00 m of (-16.0, -200.0)); peer 0 PASS (left stick (-1.00, -1.00) for 120 frames)
+PASS: the host SAW the guest ride: its copy of the guest moved 48.43 m (wanted >= 4.0)
+PASS: the guest is still drawn riding and seated on the host after the ride (0.00 m off the seat)
+PASS: the host's own trainer moved during the ride: 9.89 m
+PASS: the host is still playing its own game (world context)
+PASS: the guest stayed mounted through every round
+ANCHOR after ride: {"accepts":8.0,"anchor":[-11.2945690155029,109.063331604004,-207.201705932617],"host_granted":true,"host_validated":true,"last_code":"ok","last_denial":"The wind put you down somewhere else.","pending":false,"proposals":11.0,"realm":"cloudreach","refusals":3.0}
+HOST CLAIMS during ride: [{ "at": (-4.114419, 105.0805, -255.8722), "granted": true, "code": "ok" }, { "at": (-1.276663, 105.6373, -246.1492), "granted": true, "code": "ok" }, { "at": (-3.438205, 106.4602, -236.7923), "granted": true, "code": "ok" }, { "at": (-6.103689, 107.3357, -226.7248), "granted": true, "code": "ok" }, { "at": (-8.613558, 108.1584, -217.265), "granted": true, "code": "ok" }, { "at": (-11.29457, 109.037, -207.2017), "granted": true, "code": "ok" }]
+PASS: the guest's fly controller treats its anchor as the host's to give throughout the ride
+PASS: riding over new ground PROPOSED the anchor to the host (6 proposals while carried; observe_ground refuses while carried, so these are observe_carried_ground's)
+PASS: the host received each proposal (6 claims logged by the host for peer 435135433, 6 proposals sent)
+PASS: the host GRANTED them and the guest counted exactly those grants (6 granted on the host, 6 accepts on the guest)
+PASS: the guest's current anchor is a host grant, not a local write (host_granted true, pending false)
+PASS: the guest's anchor is the LAST claim the host granted (anchor (-11.29457, 109.0633, -207.2017), last grant (-11.29457, 109.037, -207.2017))
+PASS: its height is the HOST's ground plus the arbiter's 0.08 m, not the guest's claimed height (anchor y 109.063, claim y 109.037, floor under the claim 108.987)
+PASS: the anchor followed the ride (moved 45.52 m from where it was at mount)
+PASS: the guest's ride was a long one: 49.4 m by stick (wanted >= 30)
+PASS: after a 49.4 m ride the guest's safe anchor is 7.5 m from where the ride ended (wanted <= 14): the anchor kept following, no proposal froze it
+PASS: after the ride: peer 0 has the same five companions, same order, no sixth (5)
+PASS: after the ride: peer 1 has the same five companions, same order, no sixth (5)
+first dismount: before the press the guest's mount is at [-15.7538213729858, 109.592758178711, -200.923828125]; prompt '[img=36x36]res://assets/ui/input_prompts/xbox_button_x.png[/img]   Dismount'
+PASS: first dismount: the guest pressed interact (pressed 'interact' x1)
+PASS: first dismount: the interact press dismounted the guest
+PASS: first dismount: the guest stands on a floor, no longer carried -- collision mask restored (carried false, on_floor true/true)
+PASS: first dismount: the guest stays put on that ground for a second (moved 0.00 m, dy 0.00)
+PASS: first dismount: the guest is set down BESIDE the mount, not inside it (5.34 m from its centre at the dismount, body radius 1.35)
+PASS: first dismount: on the mount's ground level, not on its back or under it (trainer y 109.59, mount y 109.90 at the dismount)
+PASS: first dismount: the spot the guest was set down on is the spot it then stands on (0.00 m, dy 0.00)
+PASS: the host stops drawing the guest as riding or carried ({"above":-0.384002685546875,"carried":false,"gap":6.32871437072754,"mount":"AllyCreature_435135433","mount_saddle_worn":true,"mount_species":"meadowhart","pos":[-13.1514339447021,109.591590881348,-200.232376098633],"riding":false,"saddled":true,"seated":false,"visible":true})
+PASS: the host draws the guest STANDING: not seated, visible
+PASS: the saddle stays on the guest's mount on the host's screen
+PASS: the host draws the guest where the guest stands (0.00 m apart)
+PASS: after the dismount: peer 0 has the same five companions, same order, no sixth (5)
+PASS: after the dismount: peer 1 has the same five companions, same order, no sixth (5)
+remount: walk 1 to mount at (-18.54806, 109.9742, -196.9487) -> arrived within 2.20 m of (-18.5, -196.9); prompt '[img=36x36]res://assets/ui/input_prompts/xbox_button_x.png[/img]   Ride Meadowhart'
+PASS: remount: the guest pressed interact (pressed 'interact' x1)
+PASS: remount: the interact press put the guest on its own meadowhart ({"mount":"AllyCreature","mounted":true,"saddle_worn":true,"seated":true,"species":"meadowhart","speed":10.0})
+PASS: remount: the guest's own mount wears the saddle and the guest is seated
+PASS: remount: the guest's trainer is carried by the mount
+PASS: the host draws the guest riding and seated again after the remount ({"above":2.18780517578125,"carried":true,"gap":2.20232081413269,"mount":"AllyCreature_435135433","mount_saddle_worn":true,"mount_species":"meadowhart","pos":[-18.3469104766846,112.570861816406,-191.637481689453],"riding":true,"saddled":true,"seated":true,"visible":true})
+PASS: the remounted guest rides again while the host moves: peer 1 PASS (left stick (0.00, 1.00) for 90 frames); peer 0 PASS (left stick (1.00, 0.00) for 90 frames)
+PASS: the guest is still on the mount after riding the remount
+PASS: after the remount: peer 0 has the same five companions, same order, no sixth (5)
+PASS: after the remount: peer 1 has the same five companions, same order, no sixth (5)
+dismount after the remount: before the press the guest's mount is at [-18.2914657592773, 110.383071899414, -191.8837890625]; prompt '[img=36x36]res://assets/ui/input_prompts/xbox_button_x.png[/img]   Dismount'
+PASS: dismount after the remount: the guest pressed interact (pressed 'interact' x1)
+PASS: dismount after the remount: the interact press dismounted the guest
+PASS: dismount after the remount: the guest stands on a floor, no longer carried -- collision mask restored (carried false, on_floor true/true)
+PASS: dismount after the remount: the guest stays put on that ground for a second (moved 0.00 m, dy 0.00)
+PASS: dismount after the remount: the guest is set down BESIDE the mount, not inside it (3.84 m from its centre at the dismount, body radius 1.35)
+PASS: dismount after the remount: on the mount's ground level, not on its back or under it (trainer y 110.39, mount y 110.48 at the dismount)
+PASS: dismount after the remount: the spot the guest was set down on is the spot it then stands on (0.00 m, dy 0.00)
+PASS: re-entry: the guest crossed back to the Meadows (crossed 'cloudreach' -> 'meadows' after 1760 observed physics frames / 109479 ms (budget 6000 physics frames); current scene is /root/MeadowsPlayground)
+coordinator: s166 enter_realm 'cloudreach' attributes the existing bounded shell window to connected host peer 0
+PASS: re-entry: the guest walked back into the host's Cloudreach (crossed 'meadows' -> 'cloudreach' after 1245 observed physics frames / 59347 ms (budget 6000 physics frames); current scene is /root/CloudreachCliffs)
+PASS: re-entry: the guest called its Meadowhart out again
+PASS: re-entry, host arrived first: the host draws the guest's trainer where the guest stands (0.00 m apart; host copy [-0.9570489525795, 105.03092956543, -256.428527832031], guest (-0.957052, 105.0309, -256.4285))
+PASS: re-entry, host arrived first: the guest's walking anchor has reached the host and been granted ({"accepts":1.0,"anchor":[0.0,105.110000610352,-260.0],"host_granted":true,"host_validated":true,"last_code":"ok","last_denial":"The wind put you down somewhere else.","pending":false,"proposals":3.0,"realm":"cloudreach","refusals":2.0})
+re-entry mount: walk 1 to mount at (-6.207392, 105.194, -252.92) -> arrived within 2.20 m of (-6.2, -252.9); prompt '[img=36x36]res://assets/ui/input_prompts/xbox_button_x.png[/img]   Ride Meadowhart'
+PASS: re-entry mount: the guest pressed interact (pressed 'interact' x1)
+PASS: re-entry mount: the interact press put the guest on its own meadowhart ({"mount":"AllyCreature","mounted":true,"saddle_worn":true,"seated":true,"species":"meadowhart","speed":10.0})
+PASS: re-entry mount: the guest's own mount wears the saddle and the guest is seated
+PASS: re-entry mount: the guest's trainer is carried by the mount
+PASS: re-entry: the host draws the guest riding and seated ({"above":2.18780517578125,"carried":true,"gap":2.20232033729553,"mount":"AllyCreature_435135433","mount_saddle_worn":true,"mount_species":"meadowhart","pos":[-10.3240938186646,107.218719482422,-250.317504882813],"riding":true,"saddled":true,"seated":true,"visible":true})
+re-entry dismount: before the press the guest's mount is at [-10.1116933822632, 105.030899047852, -250.453887939453]; prompt '[img=36x36]res://assets/ui/input_prompts/xbox_button_x.png[/img]   Dismount'
+PASS: re-entry dismount: the guest pressed interact (pressed 'interact' x1)
+PASS: re-entry dismount: the interact press dismounted the guest
+PASS: re-entry dismount: the guest stands on a floor, no longer carried -- collision mask restored (carried false, on_floor true/true)
+PASS: re-entry dismount: the guest stays put on that ground for a second (moved 0.00 m, dy 0.00)
+PASS: re-entry dismount: the guest is set down BESIDE the mount, not inside it (4.25 m from its centre at the dismount, body radius 1.35)
+PASS: re-entry dismount: on the mount's ground level, not on its back or under it (trainer y 105.03, mount y 105.20 at the dismount)
+PASS: re-entry dismount: the spot the guest was set down on is the spot it then stands on (0.00 m, dy 0.00)
+PASS: after the re-entry: peer 0 has the same five companions, same order, no sixth (5)
+PASS: after the re-entry: peer 1 has the same five companions, same order, no sixth (5)
+mount before the host's fight: walk 1 to mount at (-8.089716, 105.0296, -247.4527) -> arrived within 2.20 m of (-8.1, -247.5); prompt '[img=36x36]res://assets/ui/input_prompts/xbox_button_x.png[/img]   Ride Meadowhart'
+PASS: mount before the host's fight: the guest pressed interact (pressed 'interact' x1)
+PASS: mount before the host's fight: the interact press put the guest on its own meadowhart ({"mount":"AllyCreature","mounted":true,"saddle_worn":true,"seated":true,"species":"meadowhart","speed":10.0})
+PASS: mount before the host's fight: the guest's own mount wears the saddle and the guest is seated
+PASS: mount before the host's fight: the guest's trainer is carried by the mount
+PASS: forced leg: the guest is mounted before the host's fight
+PASS: forced leg: the host minted an encounter record (1:1)
+PASS: forced leg: the mounted guest was told the host's fight exists (["1:1"])
+PASS: forced leg: the host admitted the mounted guest into its fight (joined 1:1 beside 'galecrest' at (-261.4, 547.9))
+PASS: forced leg: the host's fight ended the guest's ride
+PASS: forced leg: the guest is in the fight (context 'combat')
+PASS: forced leg: the guest is not carried after the forced dismount
+PASS: forced leg: the guest is set down beside the mount, not inside it (2.69 m, dy 1.08)
+PASS: forced leg: the host stops drawing the guest as a rider ({"above":1.08281707763672,"carried":false,"gap":2.90288186073303,"mount":"AllyCreature_435135433","mount_saddle_worn":true,"mount_species":"meadowhart","pos":[-7.33031129837036,106.099456787109,-241.678024291992],"riding":false,"saddled":true,"seated":false,"visible":true})
+PASS: end of run: peer 0 has the same five companions, same order, no sixth (5)
+PASS: end of run: peer 1 has the same five companions, same order, no sixth (5)
+smoke_net_cloudreach_riding: 137 assertions, 0 failures
+ALL CHECKS PASSED

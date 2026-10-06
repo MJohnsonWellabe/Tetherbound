@@ -11,9 +11,9 @@ smoke | ON | OFF
 boss_rewards_each_participant | MAIN DEBT / out of scope | MAIN DEBT per handoff / out of scope
 catch_race | OPEN | OPEN
 client_trainer_rewards | ON FIRST PASS24checks/0fail/exit0; guest-only exact authored payout/equallegacyv1journal/owned:true; qualified independent review PASS | OFF FIRST PASS24checks/0fail/exit0/owned:true; qualified independent ON/OFF parity review PASS
-cloudreach_riding | ON FIRST ACTIVE original fixtures/native budgets | OPEN
+cloudreach_riding | ON FIRST functional PASS137assertions+2setup/0fail/exit0;32hostsync-cacheerrors retained/qualified independent ON/OFF functional parity review PASS; same classes OFF/no exactmain baseline | OFF FIRST functional PASS137assertions+2setup/0fail/exit0;44hostsame-sync-cacheerrors retained; qualified independent ON/OFF functional parity review PASS/no cleanruntime
 deploy_two_creatures | OPEN | OPEN (unowned exception)
-f22_forced_break | OPEN | OPEN
+f22_forced_break | ON FIRST ACTIVE original fixture/native budgets | OPEN
 f27_guest_wild_win | Corrected ON PASSexit0: canonical successor/one fresh receipt each/sameevent/distinctparticipant/+essence+XP/equality/productionrejoins+reload/no-dup. Hostperiodicdeparture errors+separateMTUwarning retained; independent functional reviewPASS40checks/0fail/exit0. All priorFAIL receipts retained | N/A: manual flag-ON authority proof
 fly | OPEN | OPEN
 gate_opens_for_both | OPEN | OPEN
