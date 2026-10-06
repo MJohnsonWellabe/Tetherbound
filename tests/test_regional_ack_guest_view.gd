@@ -309,5 +309,7 @@ func test_a_host_journalled_ack_is_waited_out_past_the_window() -> void:
 	assert_false(homecoming.ack_journalled(game, {}), "an empty intent is never journalled")
 	game.session = null
 	assert_false(homecoming.ack_journalled(game, intent), "no session: the window applies")
+	assert_true(homecoming.ack_settle_ceiling_ms() > homecoming.ack_timeout_ms(game),
+		"a journalled ack still has a finite ceiling, past the reach window")
 	session.free()
 	game.free()

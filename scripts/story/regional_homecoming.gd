@@ -335,9 +335,11 @@ static func _acknowledge(game: Object, id: String, expected: Dictionary, flag: S
 	var intent := acknowledgement_intent(expected, flag)
 	var raw: Variant = game.call("commit_regional_ending_ack", intent.duplicate(true))
 	var deadline := Time.get_ticks_msec() + ack_timeout_ms(game)
+	var settle_ceiling := deadline + ack_settle_ceiling_ms()
 	while raw is Dictionary and raw.get("status") == "pending":
 		if not context_matches(game, expected) \
 				or (Time.get_ticks_msec() >= deadline and not ack_journalled(game, intent)) \
+				or Time.get_ticks_msec() >= settle_ceiling \
 				or not game is Node or not game.is_inside_tree() \
 				or not game.has_method("regional_ending_ack_result"):
 			_notice(game, failure)
@@ -429,6 +431,14 @@ static func ack_timeout_ms(game: Object) -> int:
 	var guest: bool = session is Node and session.has_method("is_host") and session.call("is_host") != true
 	var seconds: Variant = settings.get("guest_ack_timeout_seconds" if guest else "ack_timeout_seconds", 8.0)
 	if not (seconds is float or seconds is int): seconds = 8.0
+	return int(float(seconds) * 1000.0)
+
+
+## A journalled acknowledgement that never settles while connected still
+## ends with the failure notice (never a silent, endless "saving").
+static func ack_settle_ceiling_ms() -> int:
+	var seconds: Variant = _settings().get("guest_ack_settle_ceiling_seconds", 120.0)
+	if not (seconds is float or seconds is int) or float(seconds) <= 0.0: seconds = 120.0
 	return int(float(seconds) * 1000.0)
 
 
