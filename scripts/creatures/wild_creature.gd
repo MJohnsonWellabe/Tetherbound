@@ -894,7 +894,13 @@ func utility_damage_multiplier(_source_uid: String) -> float:
 
 func utility_movement_multiplier() -> float:
 	var where := global_position if is_inside_tree() else position
-	return UTILITY_EFFECTS.movement_multiplier(_landed_utility_state, str(instance.get("uid")), where, int(_utility_clock_ms)) if instance != null else 1.0
+	if instance == null: return 1.0
+	var movement := UTILITY_EFFECTS.movement_multiplier(_landed_utility_state, str(instance.get("uid")), where, int(_utility_clock_ms))
+	if preload("res://scripts/combat/tether_commands.gd").enabled():
+		var snare := preload("res://scripts/combat/tether_commands.gd").snare_modifiers(get_meta(&"tether_snare", {}), str(instance.uid),
+			int(get_meta(&"tether_body_generation", 0)), "", Time.get_ticks_msec())
+		movement = minf(movement, float(snare.movement))
+	return movement
 
 
 func hold_ultimate_reaction(seconds: float) -> void:

@@ -36,7 +36,9 @@ func _run() -> void:
 		quit(await finish())
 		return
 	for i in 2:
-		var granted: Dictionary = await step(i, "party_grant", {"species": "terrapup"})
+		var grant := {"species": "terrapup"}
+		if i == 1: grant["level"] = 15
+		var granted: Dictionary = await step(i, "party_grant", grant)
 		check(granted.get("verdict") == "PASS", "peer %d owns a creature" % i)
 		# The guest brings two: one for its camp, one to place a second (the
 		# pack-up offer applies when a kit is in hand to place).
@@ -101,12 +103,25 @@ func _run() -> void:
 		"the host holds exactly one guest camp, the new one (%s)" % str(host_view.get("detail", "")))
 	check(await _await_kits(1, 1) == 1, "the old camp's kit was refunded and one spent on the new camp (one left)")
 
+	# F23: existing party_grant's level parameter unlocks the authored L15
+	# utility; same guest/camp, production panel equip -> journal -> owner ACK.
+	var edit := await _cstep(1, "camp_loadout_edit", {}, STEP_BUDGET)
+	check(edit.get("verdict") == "PASS", "guest equips Quake Ring at its camp (%s)" % str(edit.get("detail", "")))
+	var expected: Dictionary = edit.get("card", {})
+	check(expected.get("move_utility") == "quake_ring" and int(expected.get("loadout_revision", 0)) == 1 and not expected.get("loadout_last_edit", {}).is_empty(),
+		"camp equip changes the guest utility and saves its original revision")
+	var view_args := {"character_id": guest_id, "uid": str(expected.get("uid", ""))}
+	check(await _await_loadout(0, view_args, expected), "host admits the guest's saved loadout before reload")
+
 	# --- host save and reload -------------------------------------------------
 	var reload: Dictionary = await step(0, "save_reload_here", {}, STEP_BUDGET)
 	check(reload.get("verdict") == "PASS", "the host saves and reloads its world (%s)" % str(reload.get("detail", "")))
 	host_view = await _await_records(0, 2)
 	check(_owners(host_view).has(host_id) and _owners(host_view).has(guest_id),
 		"after the host reload both camps are in the world (%s)" % str(host_view.get("detail", "")))
+	var guest_reload: Dictionary = await step(1, "save_reload_here", {}, STEP_BUDGET)
+	check(guest_reload.get("verdict") == "PASS", "guest saves and reloads its character (%s)" % str(guest_reload.get("detail", "")))
+	check(await _await_loadout(1, view_args, expected), "guest character reload preserves every loadout field and original receipt")
 
 	# --- guest leave and rejoin -----------------------------------------------
 	var left: Dictionary = await step(1, "leave", {})
@@ -118,7 +133,18 @@ func _run() -> void:
 	guest_view = await _await_records(1, 2)
 	check(_owners(guest_view).has(host_id) and _owners(guest_view).has(guest_id) and int(guest_view.get("nodes", 0)) == 2,
 		"after rejoining the guest receives both camps (%s)" % str(guest_view.get("detail", "")))
+	check(await _await_loadout(0, view_args, expected), "host re-admits the guest's persisted loadout")
+	check(await _await_loadout(1, view_args, expected), "guest rejoin preserves the saved loadout and receipt")
 	quit(await finish())
+
+
+func _await_loadout(peer: int, args: Dictionary, expected: Dictionary) -> bool:
+	if expected.is_empty(): return false
+	for _poll: int in 40:
+		var view := await _cstep(peer, "camp_loadout_view", args)
+		if view.get("verdict") == "PASS" and view.get("card") == expected: return true
+		await step(peer, "wait", {"frames": 15})
+	return false
 
 
 func _owners(view: Dictionary) -> Array:

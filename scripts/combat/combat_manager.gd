@@ -335,6 +335,8 @@ var _rng := RandomNumberGenerator.new()
 ## because a bar that un-drops is worse than a bar that lags.
 var _encounter_link: Node = null
 var _encounter_id: String = ""
+var _tether_command_view: Dictionary = {}
+signal tether_command_refused(reason: String)
 var _ordinary_reward_owned_id: String = ""
 var _realm_owned_opponent := false
 
@@ -395,6 +397,44 @@ func _ready() -> void:
 	# After a release the aim camera is kept deliberately — watching your own
 	# throw arc away is the shot — and the strike or miss decides what's next.
 	_throw.connect("aim_exited", _on_aim_exited)
+	if preload("res://scripts/combat/tether_commands.gd").enabled():
+		var commands := preload("res://scripts/ui/tether_command_input.gd").new()
+		commands.configure(tether_command_snapshot, submit_tether_command)
+		add_child(commands)
+
+
+func tether_command_snapshot() -> Dictionary:
+	var snapshot := _tether_command_view.duplicate(true)
+	snapshot["active"] = state == State.ACTIVE and combat_input_available() and not is_aiming() and not is_resolving_catch()
+	snapshot["input_context"] = "combat"
+	snapshot["encounter_id"] = _encounter_id
+	snapshot["wild_target"] = _encounter_kind == "wild"
+	snapshot["unlocked_commands"] = ["rally", "snare"]
+	var deployment: Dictionary = _encounter_link.call("tether_command_deployment") if is_instance_valid(_encounter_link) \
+		and _encounter_link.has_method("tether_command_deployment") else {}
+	snapshot["generation"] = int(deployment.get("generation", 0))
+	if int(snapshot.generation) < 1: snapshot.active = false
+	return snapshot
+
+
+func submit_tether_command(request: Dictionary) -> bool:
+	if not preload("res://scripts/combat/tether_commands.gd").enabled() or not is_instance_valid(_encounter_link): return false
+	var verdict: Dictionary = _encounter_link.call("submit_encounter_intent", {"kind": "tether_command", "encounter_id": _encounter_id, "request": request})
+	if verdict.get("pending") != true: apply_tether_command_verdict(verdict)
+	return true
+
+
+func apply_tether_command_verdict(verdict: Dictionary) -> void:
+	if verdict.get("encounter_id") != _encounter_id: return
+	var deployment: Dictionary = _encounter_link.call("tether_command_deployment") if is_instance_valid(_encounter_link) else {}
+	if verdict.has("command_generation") and int(verdict.command_generation) != int(deployment.get("generation", 0)): return
+	if verdict.get("ok") != true:
+		tether_command_refused.emit(str(verdict.get("reason", "Command unavailable.")))
+		return
+	var next: Dictionary = verdict.get("delta", {}).get("tether_commands", {})
+	if next.get("encounter_id") != _encounter_id or next.get("character_id") != deployment.get("character_id"): return
+	if int(next.get("revision", -1)) >= int(_tether_command_view.get("revision", 0)):
+		_tether_command_view.merge(next.duplicate(true), true)
 
 
 func throw_aim() -> Node:
@@ -433,6 +473,7 @@ func bind_encounter(link: Node, encounter_id: String, kind: String) -> void:
 
 func unbind_encounter() -> void:
 	_move_awaiting_host = false
+	_tether_command_view.clear()
 	_encounter_link = null
 	_encounter_id = ""
 	_ordinary_reward_owned_id = ""
@@ -635,6 +676,7 @@ func begin(
 	_party_hp_scale.clear()
 	_party_utility_cooldown.clear()
 	_party_utility_movement.clear()
+	_tether_command_view.clear()
 	_clear_move_input()
 	_reset_player_poise()
 	_hitstop_left = 0.0
@@ -2368,6 +2410,8 @@ func _refuse_combat_input() -> void:
 
 
 func _tick_active(delta: float) -> void:
+	if _tether_command_view.has("combo_remaining_s"):
+		_tether_command_view.combo_remaining_s = maxf(0.0, float(_tether_command_view.combo_remaining_s) - delta)
 	if not combat_input_available(): _clear_move_input()
 	_ultimate_armed_left = maxf(0.0, _ultimate_armed_left - delta)
 	for uid: String in _party_utility_cooldown:
@@ -2437,6 +2481,11 @@ func _tick_action(delta: float) -> void:
 		_ally_body.call("face_towards", _wild.call("centre"))
 
 	_action_timer -= delta
+	if _action == Action.WINDUP and _pending_move.has("local_strike_at_ms"):
+		# Engine delta can compensate for a slow frame. The host's immutable
+		# start uses monotonic milliseconds; never submit before a full local
+		# windup has elapsed since its acknowledgement (conservative on guests).
+		_action_timer = maxf(_action_timer, float(int(_pending_move.local_strike_at_ms) - Time.get_ticks_msec()) / 1000.0)
 	if _action_timer > 0.0:
 		return
 
@@ -3074,6 +3123,9 @@ func apply_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
 		var participants: Dictionary = rec.get("participants", {}) as Dictionary
 		if participants.has(peer_id):
 			var participant: Dictionary = participants[peer_id]
+			if participant.get("tether_commands") is Dictionary:
+				_tether_command_view = participant.tether_commands.duplicate(true)
+				_tether_command_view.merge(participant.get("tether_command_view", {}), true)
 			var creature := active_creature()
 			var uid := str(creature.get("uid")) if creature != null else ""
 			var resource: Dictionary = participant.get("move_resources", {}).get(uid, {})
@@ -4245,6 +4297,7 @@ func apply_host_move_start(payload: Dictionary) -> void:
 	_apply_move_resources(payload)
 	var move: Dictionary = payload.move.duplicate(true)
 	move["accepted_action"] = int(payload.get("accepted_action", 0))
+	move["local_strike_at_ms"] = Time.get_ticks_msec() + ceili(float(move.get("windup", 0.0)) * 1000.0)
 	_begin_move_presentation(move)
 
 

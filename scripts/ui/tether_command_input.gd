@@ -19,7 +19,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not COMMANDS.enabled() or not _read.is_valid() or not _send.is_valid() \
 		or OWNER.current(get_tree()) != null or event.is_echo(): return
 	for id: String in COMMANDS.COMMAND_IDS:
-		var action := str(COMMANDS.config().commands[id].action)
+		var action := COMMANDS.input_action(id)
 		if InputMap.has_action(action) and event.is_action_pressed(action):
 			if request(id): get_viewport().set_input_as_handled()
 			return

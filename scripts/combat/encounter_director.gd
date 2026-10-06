@@ -2334,6 +2334,10 @@ func local_encounter_peer_id() -> int:
 	return _local_peer_id()
 
 
+func tether_command_deployment() -> Dictionary:
+	return _deployment_identity.get(_local_peer_id(), {}).duplicate(true)
+
+
 ## The record this peer is rendering, or {}. Read by the net harness probe.
 func encounter_record() -> Dictionary:
 	return _encounter
@@ -2519,7 +2523,7 @@ func _rpc_encounter_intent(intent: Dictionary) -> void:
 		_send_realm_rpc(sender, "_rpc_encounter_verdict", [verdict])
 		return
 	if str(intent.get("kind", "")) in ["move_start", "strike_intent", "burst_intent",
-			"catch_attempt", "catch_finished", "trainer_victory"]:
+			"tether_command", "catch_attempt", "catch_finished", "trainer_victory"]:
 		# An accepted strike or throw carries numbers only its own author needs
 		# (the damage it did, the wobble it earned). Everybody else gets the
 		# record. An accepted `trainer_victory` tells its sender to stop retrying.
@@ -2705,6 +2709,8 @@ func _deliver_encounter_verdict(verdict: Dictionary) -> void:
 				_manager.call("apply_host_burst_verdict", verdict.get("delta", {}))
 			else:
 				_manager.call("note_encounter_refusal", verdict)
+		"tether_command":
+			_manager.call("apply_tether_command_verdict", verdict)
 		"catch_attempt":
 			if bool(_manager.call("apply_host_catch_verdict", verdict)):
 				_shared_catch_finish_pending = {}
@@ -2724,10 +2730,10 @@ func _host_commit_encounter(intent: Dictionary, peer_id: int) -> Dictionary:
 	_ensure_encounter_arbiters()
 	var kind := str(intent.get("kind", ""))
 	var encounter_id := str(intent.get("encounter_id", ""))
-	if kind in ["move_start", "strike_intent", "burst_intent", "disengage"] \
+	if kind in ["move_start", "strike_intent", "burst_intent", "tether_command", "disengage"] \
 		and ordinary_actor_vitals_pending(encounter_id):
 		return {"ok": false, "pending": false, "kind": kind, "peer": peer_id,
-			"code": "pending_vitals", "reason": "The original health change is still being saved.", "delta": {}}
+			"code": "pending_vitals", "reason": "The original health change is still being saved.", "delta": {}, "encounter_id": encounter_id}
 	match kind:
 		"engage":
 			return _host_engage(intent, peer_id)
@@ -2741,6 +2747,8 @@ func _host_commit_encounter(intent: Dictionary, peer_id: int) -> Dictionary:
 			return verdict
 		"burst_intent":
 			return _host_burst(intent, peer_id)
+		"tether_command":
+			return _host_tether_command(intent, peer_id)
 		"catch_attempt":
 			return _host_catch(intent, peer_id)
 		"catch_finished":
@@ -3194,14 +3202,16 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 		rolled = engine.call("host_roll_damage", card,
 		str(launch.move_id), float(move.get("power", 9.0)) * armor, str(launch.slot) == "charged",
 		{"action_id": str(launch.action_id), "striker_body": striker, "move": move,
-		 "source_utility_power": _encounter_host.call("self_utility_power", encounter_id, str(current_card.get("creature_uid", "")), Time.get_ticks_msec()),
+		 "source_utility_power": float(_encounter_host.call("self_utility_power", encounter_id, str(current_card.get("creature_uid", "")), Time.get_ticks_msec())) \
+			* float((_encounter_host.call("tether_rally", encounter_id, peer_id, Time.get_ticks_msec()) as Dictionary).damage),
 		 "travel_seconds": float(launch.travel_seconds), "body_generation": int(launch.body_generation),
 		 "direction": (launch.to as Vector3) - (launch.from as Vector3)})
 	if rolled.is_empty(): return {}
 	if hp_before > float(rolled.get("hp", hp_before)):
 		_encounter_host.call("consume_self_utility", encounter_id, str(current_card.get("creature_uid", "")), Time.get_ticks_msec())
 	var resources: Dictionary = _encounter_host.call("credit_move_hit", encounter_id, peer_id,
-		int(intent.get("action", 0)), maxf(0.0, hp_before - float(rolled.get("hp", hp_before))), str(opponent.get("uid")), hp_before)
+		int(intent.get("action", 0)), maxf(0.0, hp_before - float(rolled.get("hp", hp_before))), str(opponent.get("uid")), hp_before,
+		int(record.get("opponent", {}).get("body_generation", 0)), float(current_card.get("hp", 0.0)))
 	if rolled.get("utility_applied") == true:
 		_encounter_host.call("credit_move_effect", encounter_id, peer_id, int(intent.get("action", 0)), rolled.get("utility_receipt", {}))
 	var impact: Dictionary = {}
@@ -3346,6 +3356,48 @@ func _host_burst(intent: Dictionary, peer_id: int) -> Dictionary:
 
 ## §8, entirely delegated: `catch_arbiter.gd` owns the race and the roll, this
 ## function owns only handing it host truth.
+func _host_tether_command(intent: Dictionary, peer: int) -> Dictionary:
+	var denied := {"ok": false, "kind": "tether_command", "peer": peer, "code": "stale_actor", "reason": "That command is unavailable.", "pending": false, "delta": {}, "encounter_id": str(intent.get("encounter_id", ""))}
+	var commands := preload("res://scripts/combat/tether_commands.gd")
+	if not commands.enabled("network_enabled") or intent.size() != 3 or not intent.get("request") is Dictionary: return denied
+	var request: Dictionary = intent.request
+	if not commands.valid_intent(request) or request.encounter_id != intent.get("encounter_id"): return denied
+	denied["command_generation"] = int(request.generation)
+	var id: String = request.encounter_id
+	var body := deployed_body_for(peer)
+	if not is_instance_valid(body) or not _tournament_combat_identity_valid(id, peer) or _host_peer_staggered(id, peer) \
+		or _session == null or not _session.has_method("admitted_character_state"): return denied
+	var admitted: Dictionary = _session.call("admitted_character_state", peer)
+	var binding := _strike_actor_binding(id, peer, body)
+	var card := _creature_card_for(peer)
+	if binding.is_empty() or admitted.get("character_id") != binding.get("character_id") \
+		or binding.get("deployment_generation") != request.generation or float(card.get("hp", 0.0)) <= 0.0: return denied
+	var runtime := _shared_host_fight(id)
+	var wild: Node3D = runtime.call("body") as Node3D if runtime != null else _engaged_with
+	if not is_instance_valid(wild): return denied
+	var record: Dictionary = _encounter_host.call("record", id)
+	var opponent: RefCounted = wild.get("instance")
+	if opponent == null: return denied
+	_encounter_host.call("bind_tether_commands", id, peer, admitted)
+	var profile := COMBAT_MANAGER.host_move_profile(preload("res://scripts/creatures/move_db.gd").load_default(), "player_utility", "snare",
+		_body_radius(body), _body_radius(wild), 1.0, CONTACT_SPACING.pair_reach_need(body, wild))
+	var view := {"actor": {"character_id": binding.character_id, "creature_uid": binding.creature_uid,
+		"encounter_id": id, "generation": binding.deployment_generation, "hp": card.hp},
+		"target": {"uid": opponent.uid, "generation": int(record.get("opponent", {}).get("body_generation", 0)), "hp": opponent.hp, "hostile": true,
+			"ownership_kind": str(record.get("kind", "")), "trainer_owned": not str(record.get("opponent", {}).get("owner_npc", "")).is_empty(),
+			"snare_immune": bool((wild.call("combat_config") as Dictionary).get("snare_immune", false)) \
+				or (wild.has_method("named_combat_target") and bool(wild.call("named_combat_target")))},
+		"snare_geometry_connected": MATH.move_connects(profile, body.call("centre"), body.call("facing"), wild.call("centre"))}
+	var verdict: Dictionary = _encounter_host.call("commit_tether_command", request, peer, view, Time.get_ticks_msec())
+	verdict["encounter_id"] = id
+	verdict["command_generation"] = int(request.generation)
+	if verdict.get("ok") == true:
+		if verdict.delta.effect.kind == "snare":
+			wild.set_meta(&"tether_snare", verdict.delta.effect.status.duplicate(true))
+		_host_after_encounter_change(id, peer)
+	return verdict
+
+
 func _host_catch(intent: Dictionary, peer_id: int) -> Dictionary:
 	var encounter_id := str(intent.get("encounter_id", ""))
 	var runtime := _shared_host_fight(encounter_id)
@@ -3383,7 +3435,7 @@ func _host_catch(intent: Dictionary, peer_id: int) -> Dictionary:
 		"direction": intent.get("direction", []),
 		"orb_id": str(intent.get("orb_id", "")),
 		"roll": roll,
-		"skill_bonus": _catching_bonus_for(peer_id),
+		"skill_bonus": _catching_bonus_for(peer_id) + _host_command_catch_bonus(encounter_id, peer_id, wild, record),
 	}, Time.get_ticks_msec())
 	verdict["encounter_id"] = encounter_id
 	verdict["attempt"] = int(intent.get("attempt", 0))
@@ -3410,6 +3462,16 @@ func _host_catch(intent: Dictionary, peer_id: int) -> Dictionary:
 ## The winner's wobble ended. On a catch the record goes `resolving` and §8 step
 ## 4's `caught_by` goes to everybody else; on a breakout the fight goes back to
 ## `active` and anybody may throw again.
+func _host_command_catch_bonus(id: String, peer: int, wild: Node3D, record: Dictionary) -> float:
+	if not preload("res://scripts/combat/tether_commands.gd").enabled() or not is_instance_valid(wild): return 0.0
+	var instance: RefCounted = wild.get("instance")
+	if instance == null: return 0.0
+	var participant: Dictionary = record.get("participants", {}).get(peer, {})
+	var modifiers := preload("res://scripts/combat/tether_commands.gd").snare_modifiers(record.get("opponent", {}).get("tether_snare", {}),
+		str(instance.uid), int(record.get("opponent", {}).get("body_generation", 0)), str(participant.get("character_id", "")), Time.get_ticks_msec())
+	return float(modifiers.catch_bonus)
+
+
 func _catching_bonus_for(peer_id: int) -> float:
 	var game := get_node_or_null("/root/Game")
 	if game == null:
@@ -3864,10 +3926,19 @@ func _ordinary_host_leave(id: String, peer: int) -> Dictionary:
 func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0,
 		terminal_catcher: int = 0, resolved_impact: Dictionary = {}) -> void:
 	var rec: Dictionary = _encounter_host.call("record", encounter_id)
+	if preload("res://scripts/combat/tether_commands.gd").enabled() and rec.get("phase") == "active" \
+		and _session != null and _session.has_method("admitted_character_state"):
+		for peer: int in rec.get("participants", {}):
+			if not rec.participants[peer].has("tether_commands"):
+				_encounter_host.call("bind_tether_commands", encounter_id, peer, _session.call("admitted_character_state", peer))
+		rec = _encounter_host.call("record", encounter_id)
 	# Self buffs stay in the existing encounter. Each owner receives only
 	# the remaining modifier for their own UIDs, on the usual resource carrier.
 	rec = rec.duplicate(true)
 	for participant: Dictionary in rec.get("participants", {}).values():
+		if participant.get("tether_commands") is Dictionary:
+			participant["tether_command_view"] = {"combo_remaining_s": maxf(0.0,
+				float(int(participant.tether_commands.get("combo", {}).get("until_ms", 0)) - Time.get_ticks_msec()) / 1000.0)}
 		for uid: String in participant.get("move_resources", {}):
 			participant.move_resources[uid]["source_utility"] = _encounter_host.call("self_utility_view", encounter_id, uid, Time.get_ticks_msec())
 	if uses_durable_trainer_rewards(encounter_id):
@@ -4484,6 +4555,9 @@ func _dispose_shared_host_fight(encounter_id: String, restore_ambient: bool) -> 
 		return
 	var wild: Node3D = runtime.call("body") as Node3D
 	var terminal := str(runtime.get("terminal_outcome"))
+	if is_instance_valid(wild):
+		wild.remove_meta(&"tether_snare")
+		wild.remove_meta(&"tether_body_generation")
 	if wild != null and is_instance_valid(wild) and wild.has_signal("route_cue_started"):
 		var route_cue := _on_shared_host_route.bind(encounter_id)
 		if wild.route_cue_started.is_connected(route_cue):
@@ -6097,6 +6171,7 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 			"foot_position": [feet.x, feet.y, feet.z],
 			"facing": [facing.x, facing.y, facing.z],
 			"round": _trainer_sent,
+			"body_generation": _trainer_sent,
 			"round_continues": not _trainer_queue.is_empty(),
 		})
 	if not opponent_owned:
@@ -6182,6 +6257,10 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 
 
 func _start_shared_host_runtime(encounter_id: String, wild: Node3D, generation: int) -> void:
+	# The actual lifecycle owns this generation. A returned ambient body never
+	# imports the previous encounter's short-lived target status.
+	wild.remove_meta(&"tether_snare")
+	wild.set_meta(&"tether_body_generation", generation)
 	var runtime := SHARED_WILD_HOST_FIGHT.new()
 	runtime.name = "SharedWildHostFight_%s" % encounter_id
 	add_child(runtime)

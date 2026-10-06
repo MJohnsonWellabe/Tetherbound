@@ -71,6 +71,11 @@ static func valid_config(raw: Variant) -> bool:
 static func enabled(flag: String = "runtime_enabled") -> bool:
 	return bool(config().get("feature_flags", {}).get(flag, false))
 
+## These authored slot bindings remain the single rebindable input source.
+## Exploration uses items; enabled combat assigns the same directions here.
+static func input_action(command_id: String) -> String:
+	return str({"item_throw": "hotbar_2", "rally": "hotbar_3", "tag_combo": "hotbar_4", "snare": "hotbar_5"}.get(command_id, ""))
+
 static func tier_profile(tier: int) -> Dictionary:
 	return (config().get("tiers", {}).get(str(tier), {}) as Dictionary).duplicate(true)
 
