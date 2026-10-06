@@ -1,0 +1,8 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_water_alpha_state.gd: 1 of 819 test files
+  FAIL  test_water_alpha_state.gd :: could not be parsed or instantiated
+
+1 tests, 0 assertions, 1 failed
+
+  res://tests/test_water_alpha_state.gd: parse error, see SCRIPT ERROR above

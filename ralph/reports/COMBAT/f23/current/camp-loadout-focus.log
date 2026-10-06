@@ -1,0 +1,42 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+coordinator: launched peer 0 (host) pid=2254 control_port=34051 home=/tmp/net-run-local-5246151/home-0 log=/tmp/net-run-local-5246151/peer-0.log
+coordinator: launched peer 1 (client) pid=2255 control_port=38931 home=/tmp/net-run-local-5246151/home-1 log=/tmp/net-run-local-5246151/peer-1.log
+coordinator: peer 0 hello: {"enet_port":30781.0,"godot_version":"4.7-stable (official)","main_sha":"5925f37d2c49","peer":0.0,"pid":2254.0,"role":"host","type":"hello","user_data_dir":"/tmp/net-run-local-5246151/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":30782.0,"godot_version":"4.7-stable (official)","main_sha":"5925f37d2c49","peer":1.0,"pid":2255.0,"role":"client","type":"hello","user_data_dir":"/tmp/net-run-local-5246151/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: peer 0 owns a creature
+PASS: peer 0 holds 1 forward-camp kit(s)
+PASS: peer 1 owns a creature
+PASS: peer 1 holds 2 forward-camp kit(s)
+PASS: peer 0 hosts (hosting udp/30781 as peer 1)
+PASS: peer 1 joins (joined 127.0.0.1:30781 as peer 994567096 after 9 frames; snapshot applied; 2 peer(s) in registry)
+PASS: peer 0 sees both players
+PASS: peer 1 sees both players
+PASS: two distinct characters
+PASS: the host places its camp (placed at (18.0, 0.9, 14.0): 1 record(s), 1 node(s); pending {}; answers [{"character_revision":15,"durable":true,"journal_revision":1,"ok":true,"owner_acknowledged":true,"owner_saved":true,"receipt":"craft:character-b8a5cb4f4d7275dbfb4cf245e9dd4629:camp:9d6192314b2a7f9b230eb7726c4e0d9e","resolved":true,"saved":true,"settled":true}])
+PASS: the host's kit is spent
+PASS: the guest receives the host's camp record and planted camp (1 record(s), 1 node(s))
+PASS: after joining the guest still holds its kits (2)
+PASS: the guest places its own camp (placed at (52.0, 0.9, 16.0): 2 record(s), 2 node(s); pending {"character_id":"character-a85052c7394655a8103bfe9459db1f5a","original":{"action":"place","action_id":"c6792a3e5ec3e3c4a4a7e1b9f7b65f2c","position":[52.0,0.899999976158142,16.0],"realm":"meadows","yaw_deg":0.0},"revision":0,"world_namespace":"979d22c5214567e6c8c15226ad2049f5"}; answers [{"code":"awaiting_saved_decision","durable":true,"ok":false,"owner_acknowledged":false,"owner_saved":false,"receipt":"craft:character-a85052c7394655a8103bfe9459db1f5a:camp:c6792a3e5ec3e3c4a4a7e1b9f7b65f2c","resolved":false,"saved":false,"settled":false}])
+PASS: the host holds the guest's camp with the guest's character id (2 record(s), 2 node(s))
+PASS: the guest holds both camps
+PASS: the host debited one of the guest's own kits (1 left)
+PASS: the guest's camp request settles (no pending original left)
+PASS: the guest is offered a pack-up and, pressing again, pitches a new camp (placed at (72.0, 0.9, 0.0): 2 record(s), 2 node(s); pending {"character_id":"character-a85052c7394655a8103bfe9459db1f5a","original":{"action":"place","action_id)
+PASS: the host holds exactly one guest camp, the new one (2 record(s), 2 node(s))
+PASS: the old camp's kit was refunded and one spent on the new camp (one left)
+PASS: guest equips Quake Ring at its camp (saved loadout projection)
+PASS: camp equip changes the guest utility and saves its original revision
+PASS: host admits the guest's saved loadout before reload
+PASS: the host saves and reloads its world (host slot reload preserved party=true selection=true hosted_world=true)
+PASS: after the host reload both camps are in the world (2 record(s), 2 node(s))
+PASS: guest saves and reloads its character (client character reload preserved party=true selection=true hosted_world=true)
+PASS: guest character reload preserves every loadout field and original receipt
+PASS: the guest leaves (client left cleanly after 0 frames)
+PASS: the guest rejoins (joined 127.0.0.1:30781 as peer 2017101084 after 15 frames; snapshot applied; 2 peer(s) in registry)
+PASS: after rejoining the guest receives both camps (2 record(s), 2 node(s))
+PASS: host re-admits the guest's persisted loadout
+PASS: guest rejoin preserves the saved loadout and receipt
+ALL CHECKS PASSED
+exit=0 took=116s

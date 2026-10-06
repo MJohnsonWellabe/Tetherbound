@@ -1,5 +1,5 @@
 Source: 7105089113dedf8f57ad97620c331a763d3516a3
-Command: Godot_v4.7-stable_win64_console.exe --headless --path D:/tetherbound/codex-r4 --script tests/runner.gd -- --only=test_forward_camp.gd,test_f24_host_commands.gd::test_personal_view_cache_requires_current_character_world_and_epoch,test_f23_loadout_contract.gd::test_loadout_station_ownership_and_save_recovery_use_the_existing_original
+Command: Godot_v4.7-stable_win64_console.exe --headless --path D:/tetherbound/codex-r4 --script tests/run_tests.gd -- --only=test_forward_camp.gd,test_f24_host_commands.gd::test_personal_view_cache_requires_current_character_world_and_epoch,test_f23_loadout_contract.gd::test_loadout_station_ownership_and_save_recovery_use_the_existing_original
 Result: 12 tests / 272 assertions / 0 failed / exit 0; empty stderr, clean native logs.
 Scope: warm-cache read-only focused units, private APPDATA. Known R1 tournament OFF background preserved; no lock mutation, import, world or timing proof.
 Independent /root/f23_audit SOURCE and bounded EVIDENCE PASS. Mounted guest panel remains OPEN pending existing two-peer smoke.

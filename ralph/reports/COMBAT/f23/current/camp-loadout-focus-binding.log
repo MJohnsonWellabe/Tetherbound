@@ -1,0 +1,12 @@
+Source: 5925f37d2c49937ea83017c64d9ec0a9b4596ed7
+Existing smoke: tests/smoke_net_forward_camp.gd, unchanged fixtures/assertions/budgets.
+Workflow run: 37460678501, job112259182203, terminal SUCCESS; normal60m ceiling.
+Original artifact:11412842461 render-r4-camp-focus-5925f37d-37460678501,1882504bytes.
+ZIP SHA256: efadb173687035f95a14f9bf1524a513ea8f2df7d75bc17fb4a017e3739e4863 (matches API).
+All20 original artifact files retained in the ZIP, including NET_RUN, both full peer logs and actual isolated homes/saves.
+exit0, ALL CHECKS PASSED,116s.
+Actual guest mounted camp Quake Ring edit; exact saved loadout revision/receipt, host admission, world reload, character reload, leave/rejoin preserved.
+Independent /root/f23_audit bounded EVIDENCE PASS: actual guest disk UID creature-81df97e66a4f6c0cd675fbb6451aa91d, Quake Ring,revision1,original edit2ab48333db46e8067d76092131ae7106 at expectedrevision0.
+No ERROR/SCRIPT ERROR/Parse Error in extracted full logs. Both peers retain the preexisting instance_reset_physics_interpolation deprecation warning.
+Prior37459089097 had a detached grab_focus ERROR despite passing gameplay assertions; original files retained in D:/tetherbound/.artifacts/r4-camp-guest-hosted-965fca47. This retry verifies guarded production focus repair013de6a.
+This is bounded transaction evidence; no controller/visual/Altar/global F23#3 closure.

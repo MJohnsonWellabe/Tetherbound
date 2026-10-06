@@ -1,0 +1,5 @@
+5925f37d: existing tests/run_tests.gd --only=test_water_alpha_state.gd. Invalid unit setup: parse errors on inference/assert_null;1test0assertions1failedexit1. Fixedb879.
+b879d5a1: same selector;11tests96assertions0failedexit0 IS INVALID due SCRIPT ERROR missing opponent.creature_uid aborting new method.
+000fa9091 fixes actual encoded opponent.card.uid used by AcceptedActionHost and safe assertion. Valid evidence pending.
+Wrong hosted dispatch37460672704 @5925f37d asked nonexistent tests/runner.gd. Job112259163299 failed Check script exists before engine. No unit/gameplay credit.
+Original failure bytes retained; independent review sourcePASS000fa9091 only.

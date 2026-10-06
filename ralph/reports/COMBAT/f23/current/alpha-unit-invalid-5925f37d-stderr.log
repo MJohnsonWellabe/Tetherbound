@@ -1,0 +1,12 @@
+SCRIPT ERROR: Parse Error: Cannot infer the type of "original" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://tests/test_water_alpha_state.gd:66)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+SCRIPT ERROR: Parse Error: Function "assert_null()" not found in base self.
+   at: GDScript::reload (res://tests/test_water_alpha_state.gd:86)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)
+ERROR: Failed to load script "res://tests/test_water_alpha_state.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+   GDScript backtrace (most recent call first):
+       [0] _init (res://tests/run_tests.gd:88)

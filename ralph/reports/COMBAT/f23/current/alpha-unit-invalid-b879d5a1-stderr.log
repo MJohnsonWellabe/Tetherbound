@@ -1,0 +1,5 @@
+SCRIPT ERROR: Invalid access to property or key 'creature_uid' on a base object of type 'Dictionary'.
+   at: test_accepted_terminal_preserves_alpha_resolution_and_real_opponent_identity (res://tests/test_water_alpha_state.gd:62)
+   GDScript backtrace (most recent call first):
+       [0] test_accepted_terminal_preserves_alpha_resolution_and_real_opponent_identity (res://tests/test_water_alpha_state.gd:62)
+       [1] _init (res://tests/run_tests.gd:120)
