@@ -123,7 +123,15 @@ func finish(preferred: String = "") -> void:
 		control.focus_next = control.focus_neighbor_bottom
 		if str(control.get_meta("system_focus_key", "")) == preferred: target = control
 	TOKENS.make_text_legible(_root)
-	target.call_deferred("grab_focus")
+	_focus_button.call_deferred(target)
+
+func _focus_button(target: Button) -> void:
+	# A synchronous equip/rebuild or close can detach the earlier target before
+	# deferred focus runs. Focus only the current, mounted screen's controls.
+	if _shown and is_instance_valid(target) and target.is_inside_tree() \
+		and not target.disabled and target.is_visible_in_tree() \
+		and is_instance_valid(_root) and _root.is_ancestor_of(target):
+		target.grab_focus()
 
 func clear_body() -> String:
 	var focused := get_viewport().gui_get_focus_owner()
