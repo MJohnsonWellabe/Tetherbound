@@ -403,3 +403,59 @@ func test_water_mosshell_stay_is_permanent_and_canonical_mosshell_stays_canonica
 	assert_eq(canonical.branches[0].source, "mosshell")
 	assert_eq(canonical.branches[0].target, "cannonback")
 	assert_eq(EVOLUTION.prepare_feast_choice(card, 3, "evolve", "").creature.species_id, "cannonback")
+
+
+func test_water_feast_preserves_ancestor_moves_through_real_character_admission_and_reload() -> void:
+	var rules := preload("res://scripts/creatures/breakthrough.gd")
+	var record := preload("res://scripts/net/character_record_rules.gd")
+	var player_script := preload("res://autoload/player_state.gd")
+	for choice: String in ["evolve", "stay"]:
+		var player := player_script.new()
+		player.configure(preload("res://autoload/item_db.gd").new())
+		player.character_id = "water-evolution-owner"
+		var creature := SPECIES.spawn("water_mosshell")
+		creature.call("set_level", 30, preload("res://scripts/creatures/progression.gd").config())
+		creature.set("nickname", "Reed")
+		creature.set("battles_fought", 17)
+		var quick := str(creature.get("move_quick"))
+		creature.set("move_mastery_uses", {quick: 2})
+		creature.set("move_mastery_receipts", {quick: ["water-use-1", "water-use-2"]})
+		assert_true(player.party.add(creature))
+		assert_eq(player.inventory.add("feast_t3_water", 1), 0)
+		var saved: Dictionary = player.save_data()
+		player.redesign_character = rules.initialize_caught(saved.redesign_character, saved.party[0])
+		var before: Dictionary = record.portable_projection(player.save_data())
+		var uid := str(creature.get("uid"))
+		assert_eq(record.errors(before, player.character_id), [], "original caught Water card is admitted")
+		var frozen := before.duplicate(true)
+		var staged: Dictionary = rules.prepare_feed(before, uid, "feast_t3_water", choice,
+			{"in_combat": false, "owns_character": true},
+			func(id: String) -> Array: return [SPECIES.definition(id).get("type", ""), SPECIES.definition(id).get("type_secondary", "")],
+			EVOLUTION.prepare_feast_choice, rules.refresh_feast_moves)
+		assert_true(bool(staged.get("ok")), str(staged))
+		if not bool(staged.get("ok")): continue
+		assert_eq(before, frozen, "F28 planning leaves admitted state unchanged")
+		var durable: Dictionary = JSON.parse_string(JSON.stringify(staged.state))
+		assert_eq(record.errors(durable, player.character_id), [], "preserved Water ancestor moves remain legitimate after evolution")
+		assert_eq(durable.party[0].uid, uid)
+		assert_eq(durable.party[0].nickname, "Reed")
+		assert_eq(durable.party[0].battles_fought, 17)
+		assert_eq(durable.party[0].move_mastery_uses, before.party[0].move_mastery_uses)
+		assert_eq(durable.party[0].move_mastery_receipts, before.party[0].move_mastery_receipts)
+		for slot: String in ["quick", "charged", "utility", "ultimate"]:
+			assert_eq(durable.party[0]["move_" + slot], before.party[0]["move_" + slot])
+		for move: String in before.party[0].known_moves:
+			assert_true(durable.party[0].known_moves.has(move), "ancestor knowledge survives: " + move)
+		assert_eq(durable.redesign_character.creatures[uid].cap_level, 40)
+		assert_eq(durable.redesign_character.creatures[uid].breakthroughs, [1, 2, 3])
+		var target := "water_cannonback" if choice == "evolve" else "water_mosshell"
+		assert_eq(durable.party[0].species_id, target)
+		assert_eq(durable.redesign_character.creatures[uid].evolution_choices, {"3": target if choice == "evolve" else "stay"})
+		var restored := player_script.new()
+		restored.configure(preload("res://autoload/item_db.gd").new())
+		restored.load_data(durable)
+		assert_eq(restored.party.size(), 1, "real load restores the evolved Water individual")
+		if restored.party.size() != 1: continue
+		assert_eq(restored.party.at(0).get("species_id"), target)
+		assert_eq(record.errors(record.portable_projection(restored.save_data()), player.character_id), [])
+		assert_eq(restored.redesign_character.creatures[uid].evolution_choices, durable.redesign_character.creatures[uid].evolution_choices)
