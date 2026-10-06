@@ -126,6 +126,23 @@ func test_solo_player_strike_uses_slot_weight_for_knockback_and_hitstop() -> voi
 		assert_almost_eq((fight.wild as CombatBody).impulses[0], _expected_impulse(weight), 0.0001, slot)
 		var hitstop := float(FEEDBACK.config().get("weights", {}).get(weight, {}).get("hitstop_seconds", 0.0))
 		assert_almost_eq(float(manager.get("_hitstop_left")), hitstop, 0.0001, slot)
+		if impacts.size() == 1:
+			var receipt: Dictionary = impacts[0].receipt
+			MATH.config().get("impact", {})["enabled"] = false
+			impacts.clear()
+			manager.set("state", COMBAT.State.RESOLVING)
+			manager.call("_present_local_contact", Vector3.ZERO, slot == "charged", null, 0.1, receipt)
+			assert_eq(impacts.size(), 1, "final contact still reaches the HUD during the result pause")
+			impacts.clear()
+			manager.set("state", COMBAT.State.INACTIVE)
+			manager.call("_present_local_contact", Vector3.ZERO, slot == "charged", null, 0.1, receipt)
+			assert_eq(impacts.size(), 0, "a closed encounter cannot present an old contact")
+			manager.set("state", COMBAT.State.ACTIVE)
+			var replaced: Dictionary = receipt.duplicate()
+			replaced["target_uid"] = "replaced-target"
+			manager.call("_present_local_contact", Vector3.ZERO, slot == "charged", null, 0.1, replaced)
+			assert_eq(impacts.size(), 0, "contact cannot be redirected onto a replacement target")
+			MATH.config().get("impact", {})["enabled"] = flash_was
 		_free(fight)
 	assert_true(_expected_impulse("heavy") > _expected_impulse("light"), "a heavy hit throws further")
 
