@@ -1,0 +1,137 @@
+{
+	"budgets": {
+		"desync_frames": 240.0,
+		"heartbeat_frames": 60.0,
+		"hello_budget_s": 180.0,
+		"near_tolerance_motion_m": 4.0,
+		"near_tolerance_rest_m": 1.5,
+		"smoke_step_budget_s_2peer": 300.0,
+		"smoke_step_budget_s_wide": 1500.0,
+		"step_budget_frames": 3000.0
+	},
+	"failures": [
+		"the guest owner carrier copies the original host packet field traits_initialized",
+		"the guest owner carrier copies the original host packet field rolled_traits",
+		"the guest owner carrier copies the original host packet field taught_traits",
+		"the guest owner carrier copies the original host packet field captured_from"
+	],
+	"fatal": "",
+	"net_conditions": {},
+	"peers": [
+		{
+			"command_timeout_observation": null,
+			"control_port": 34953,
+			"exited": true,
+			"hashes": [
+				949396019,
+				949396019,
+				949396019
+			],
+			"hello": {
+				"enet_port": 29401.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "a1e95ed2c556",
+				"peer": 0.0,
+				"pid": 2463.0,
+				"role": "host",
+				"type": "hello",
+				"user_data_dir": "/tmp/net-run-local-6278264/home-0/godot/app_userdata/Tetherbound"
+			},
+			"index": 0,
+			"last_heartbeat": {
+				"context": "world",
+				"frame": 551.0,
+				"physics_frame": 1380.0,
+				"pos": [
+					-4.63784551620483,
+					-0.627502024173737,
+					64.3155136108398
+				],
+				"session_peers": [
+					1.0,
+					1926489177.0
+				],
+				"state_hash": 949396019.0,
+				"t": 119.06,
+				"type": "heartbeat"
+			},
+			"pid": 2463,
+			"role": "host",
+			"unexpected_exit": false
+		},
+		{
+			"command_timeout_observation": null,
+			"control_port": 46459,
+			"exited": true,
+			"hashes": [
+				949396019,
+				949396019,
+				949396019
+			],
+			"hello": {
+				"enet_port": 29402.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "a1e95ed2c556",
+				"peer": 1.0,
+				"pid": 2464.0,
+				"role": "client",
+				"type": "hello",
+				"user_data_dir": "/tmp/net-run-local-6278264/home-1/godot/app_userdata/Tetherbound"
+			},
+			"index": 1,
+			"last_heartbeat": {
+				"context": "panel:Session",
+				"frame": 837.0,
+				"panel_observation": {
+					"focus_path": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@38/@HBoxContainer@67478/@VBoxContainer@67479/@MarginContainer@67493/@Button@67480",
+					"owner_path": "/root/Game/Session",
+					"owner_script": "res://scripts/net/session.gd",
+					"tree_paused": false
+				},
+				"physics_frame": 1680.0,
+				"pos": [
+					-8.16314888000488,
+					-0.787087380886078,
+					64.7438735961914
+				],
+				"session_peers": [
+					1.0,
+					1926489177.0
+				],
+				"state_hash": 949396019.0,
+				"t": 119.717,
+				"type": "heartbeat"
+			},
+			"pid": 2464,
+			"role": "client",
+			"unexpected_exit": false
+		}
+	],
+	"proxies": [],
+	"run_id": "local-6278264",
+	"scene": "world",
+	"state_hash_excluded_keys": [
+		"party",
+		"inventory",
+		"hotbar",
+		"satiety",
+		"map",
+		"realm_maps",
+		"alpha_pins",
+		"player_pose",
+		"clock_elapsed_seconds",
+		"current_realm",
+		"pending_realm_entry",
+		"realm_hearts",
+		"version"
+	],
+	"state_hash_hashed_keys": [
+		"flags",
+		"placed_buildings",
+		"farm_plots",
+		"death_satchels",
+		"harvested_vegetation",
+		"felled_vegetation",
+		"day"
+	]
+}
