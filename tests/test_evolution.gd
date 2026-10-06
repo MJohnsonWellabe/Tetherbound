@@ -469,5 +469,10 @@ func test_water_feast_preserves_ancestor_moves_through_real_character_admission_
 		assert_eq(restored.party.size(), 1, "real load restores the evolved Water individual")
 		if restored.party.size() != 1: continue
 		assert_eq(restored.party.at(0).get("species_id"), target)
-		assert_eq(record.errors(record.portable_projection(restored.save_data()), player.character_id), [])
+		var restored_record: Dictionary = record.portable_projection(restored.save_data())
+		assert_eq(record.errors(restored_record, player.character_id), [])
+		var restored_json: Dictionary = JSON.parse_string(JSON.stringify(restored_record))
+		for field: String in ["uid", "nickname", "battles_fought", "known_moves", "move_quick", "move_charged",
+				"move_utility", "move_ultimate", "move_mastery_uses", "move_mastery_receipts"]:
+			assert_eq(restored_json.party[0][field], durable.party[0][field], "real reload preserves " + field)
 		assert_eq(restored.redesign_character.creatures[uid].evolution_choices, durable.redesign_character.creatures[uid].evolution_choices)
