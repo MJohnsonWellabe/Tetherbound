@@ -7,6 +7,45 @@ const ROLE_WIDTH_RATIOS: Array[Vector2] = [Vector2(2.5, 2.9), Vector2(1.9, 2.3),
 	Vector2(1.5, 1.9)]
 
 
+func test_packed_turf_fill_preserves_uploaded_transforms_and_presentation() -> void:
+	var look := preload("res://scripts/world/cloudreach_look.gd").new()
+	var parent := Node3D.new()
+	var mesh := ArrayMesh.new()
+	var material := StandardMaterial3D.new()
+	var legacy := MultiMesh.new()
+	legacy.transform_format = MultiMesh.TRANSFORM_3D
+	legacy.mesh = mesh
+	legacy.instance_count = 3
+	var packed := PackedVector3Array()
+	var expected: Array[Transform3D] = [Transform3D.IDENTITY,
+		Transform3D(Basis(Vector3.UP, 1.37).scaled(Vector3(2.1, 0.63, 1.8)), Vector3(-304, 830, 3970)),
+		Transform3D(Basis(Vector3(-2, 0.2, 0), Vector3(0.1, 0.8, 0.3), Vector3(0, 0.4, 1.7)), Vector3(9, -4, 18))]
+	assert_eq(look._commit_tufts(parent, "Empty", packed, mesh, material, 360.0), 0)
+	assert_eq(parent.get_child_count(), 0, "empty tiers do not create drawing nodes")
+	for i in expected.size():
+		var transform := expected[i]
+		legacy.set_instance_transform(i, transform)
+		packed.append(transform.basis.x)
+		packed.append(transform.basis.y)
+		packed.append(transform.basis.z)
+		packed.append(transform.origin)
+	assert_eq(look._commit_tufts(parent, "CoverFillMain", packed, mesh, material, 360.0), 3)
+	var uploaded: MultiMeshInstance3D = parent.get_child(0)
+	assert_eq(uploaded.multimesh.instance_count, legacy.instance_count)
+	for i in expected.size():
+		assert_eq(uploaded.multimesh.get_instance_transform(i), legacy.get_instance_transform(i),
+			"actual engine upload preserves translation, rotation, nonuniform scale and shear in order")
+	assert_eq(uploaded.name, &"CoverFillMain")
+	assert_eq(uploaded.multimesh.mesh, mesh)
+	assert_eq(uploaded.material_override, material)
+	assert_eq(uploaded.cast_shadow, GeometryInstance3D.SHADOW_CASTING_SETTING_OFF)
+	assert_eq(uploaded.visibility_range_end, 360.0)
+	assert_eq(uploaded.visibility_range_end_margin, 40.0)
+	assert_eq(uploaded.visibility_range_fade_mode, GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF)
+	parent.free()
+	look.free()
+
+
 class RecordingCover extends COVER:
 	var recorded: Dictionary = {}
 

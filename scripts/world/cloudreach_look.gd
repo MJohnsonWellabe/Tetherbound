@@ -994,10 +994,13 @@ func _dress_turf_fill(root: Node3D, ellipse_patches: Array, cfg: Dictionary, bud
 	# would leave whatever surfaces came later with no grass at all, which is
 	# the very thing this pass exists to make impossible.
 	var scale_factor := 1.0 if desired <= 0.0 else minf(1.0, float(cap) / desired)
-	var near_transforms: Array[Transform3D] = []
-	var dry_transforms: Array[Transform3D] = []
-	var far_transforms: Array[Transform3D] = []
-	var far_dry_transforms: Array[Transform3D] = []
+	# Keep the same four ordered tiers without a heap-backed Transform3D
+	# Variant for each of up to 900,000 tufts. Four packed vectors preserve
+	# every basis column and origin; sampling and its RNG stream stay intact.
+	var near_transforms := PackedVector3Array()
+	var dry_transforms := PackedVector3Array()
+	var far_transforms := PackedVector3Array()
+	var far_dry_transforms := PackedVector3Array()
 	for raw: Variant in cells:
 		var tri: Dictionary = raw
 		var a: Vector3 = tri["a"]
@@ -1023,14 +1026,26 @@ func _dress_turf_fill(root: Node3D, ellipse_patches: Array, cfg: Dictionary, bud
 			var xform: Transform3D = placed
 			if i < target:
 				if dry_tri:
-					dry_transforms.append(xform)
+					dry_transforms.append(xform.basis.x)
+					dry_transforms.append(xform.basis.y)
+					dry_transforms.append(xform.basis.z)
+					dry_transforms.append(xform.origin)
 				else:
-					near_transforms.append(xform)
+					near_transforms.append(xform.basis.x)
+					near_transforms.append(xform.basis.y)
+					near_transforms.append(xform.basis.z)
+					near_transforms.append(xform.origin)
 			else:
 				if dry_tri:
-					far_dry_transforms.append(xform)
+					far_dry_transforms.append(xform.basis.x)
+					far_dry_transforms.append(xform.basis.y)
+					far_dry_transforms.append(xform.basis.z)
+					far_dry_transforms.append(xform.origin)
 				else:
-					far_transforms.append(xform)
+					far_transforms.append(xform.basis.x)
+					far_transforms.append(xform.basis.y)
+					far_transforms.append(xform.basis.z)
+					far_transforms.append(xform.origin)
 
 	_cover_fill_grid = {"turf_triangles": cells.size(), "surfaces": _cover_fill_surfaces,
 		"turf_area_m2": int(_cover_fill_area), "density_scale": scale_factor}
@@ -1074,16 +1089,19 @@ func _fill_tuft(at: Vector2, height_hint: float, extra_clear: float, rng: Random
 	return Transform3D(basis, ground + Vector3.UP * 0.02)
 
 
-func _commit_tufts(parent: Node3D, label: String, transforms: Array[Transform3D],
+func _commit_tufts(parent: Node3D, label: String, transforms: PackedVector3Array,
 		mesh: ArrayMesh, material: Material, visibility_range: float) -> int:
 	if transforms.is_empty():
 		return 0
 	var mm := MultiMesh.new()
 	mm.transform_format = MultiMesh.TRANSFORM_3D
 	mm.mesh = mesh
-	mm.instance_count = transforms.size()
-	for i in transforms.size():
-		mm.set_instance_transform(i, transforms[i])
+	var count := transforms.size() / 4
+	mm.instance_count = count
+	for i in count:
+		var offset := i * 4
+		mm.set_instance_transform(i, Transform3D(Basis(transforms[offset],
+			transforms[offset + 1], transforms[offset + 2]), transforms[offset + 3]))
 	var instances := MultiMeshInstance3D.new()
 	instances.name = label
 	instances.multimesh = mm
@@ -1093,7 +1111,7 @@ func _commit_tufts(parent: Node3D, label: String, transforms: Array[Transform3D]
 	instances.visibility_range_end_margin = 40.0
 	instances.visibility_range_fade_mode = GeometryInstance3D.VISIBILITY_RANGE_FADE_SELF
 	parent.add_child(instances)
-	return transforms.size()
+	return count
 
 
 ## Every triangle of every surface in the world whose material IS one of the
