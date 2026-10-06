@@ -1,0 +1,25 @@
+F34 world load water_archipelago.tscn: 8790 ms to shell built
+PASS: the real world has a Player and a BuildPlacer (res://scenes/world/water_archipelago.tscn)
+PASS: tidewake has sea or shallows near the start
+PASS: a camp in the water at (7.653668, -0.398992, 180.9776) is refused (Place the whole camp on clear, supported, dry ground.)
+PASS: valid camp ground found in tidewake at (30.0, 23.6775, 92.0)
+PASS: a second valid spot exists in tidewake (for the one-camp-per-biome checks)
+PASS: one forward-camp record placed (1)
+PASS: it carries the placer's character id and realm (character-f4f9d3b42e03353e9fde1625b01d1b57, tidewake)
+PASS: exactly one kit spent (2 -> 1)
+PASS: one ForwardCamp planted in the world (1)
+PASS: it stands as tent-sheltered bed, cookpot and field workbench with three prompts (4 pieces)
+PASS: ground under a standing camp is refused (Place the whole camp on clear, supported, dry ground.)
+PASS: resting at the camp bed recovered the team to full and woke it (1 member(s))
+PASS: the rest passed the night (day 1 -> 2)
+PASS: the camp workbench opens the team loadout panel (1 panel(s))
+PASS: away from the camp no loadout panel opens
+PASS: the camp cookpot opens its craft panel
+PASS: a Small Potion crafts at the camp cookpot (0 -> 1)
+PASS: a Harness is refused at the camp, naming the Forge: "Needs the homestead — use the Forge."
+PASS: a second camp in tidewake is not placed at first: the player is offered to pack up the first ("You already have a camp in Tidewake. Press Place again to pack it up (kit refunded) and pitch here.")
+PASS: the second press packed the first camp up and pitched the new one here (1 camp(s) [["b2",[22.0,23.5363674163818,76.0]]], first b1, here (22.0, 23.53637, 76.0); last message "")
+PASS: the old camp's kit was refunded and the new one spent (1)
+PASS: one ForwardCamp stands in the world (1)
+PASS: the world saves through the autosave path
+F34 FORWARD CAMP (tidewake): 23 checks, 0 failures

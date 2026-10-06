@@ -3022,6 +3022,10 @@ func _host_move_start(intent: Dictionary, peer: int) -> Dictionary:
 	var frozen := preload("res://scripts/creatures/move_mastery.gd").freeze_action(
 		preload("res://scripts/creatures/move_mastery.gd").owned_record(owned), slot, actor, tiers, moves)
 	if frozen.get("ok") != true: return deny
+	# F33: the owner's equipped Charm enters this accepted action exactly once,
+	# here on the host, from the admitted record (never an intent or a card).
+	var gear := preload("res://scripts/creatures/creature_gear.gd")
+	frozen.move = gear.freeze_move_profile(frozen.move, gear.gear_for(admitted, str(binding.creature_uid)), gear.config())
 	var move := COMBAT_MANAGER.host_move_profile(moves, "player_" + slot, move_id,
 		_body_radius(body), _body_radius(wild), host_card_cooldown_multiplier(card), CONTACT_SPACING.pair_reach_need(body, wild), frozen.move)
 	move["mastery_context"] = {"world_namespace": _session.call("_game").get("world").reward_delivery_namespace,
@@ -3589,7 +3593,45 @@ func host_pick_struck_participant(encounter_id: String, cfg: Dictionary,
 	var body: Node3D = deployed_body_for(struck)
 	if uses_durable_trainer_rewards(encounter_id) \
 		and _ordinary_actor_binding(encounter_id, struck, body).is_empty(): return {}
-	return {"peer_id": struck, "card": _creature_card_for(struck), "body": body}
+	return {"peer_id": struck, "card": _geared_card(struck, _creature_card_for(struck)), "body": body}
+
+
+## F33: the struck creature's equipped Harness raises the defence the host
+## rolls this hit against, once, from the host's own record of its owner (the
+## admitted record for a guest; the host's own for itself), never the card.
+func _geared_card(peer_id: int, card: Dictionary) -> Dictionary:
+	var gear := preload("res://scripts/creatures/creature_gear.gd")
+	var cfg: Dictionary = gear.config()
+	if card.has("hp_scale"):
+		# s is the host's alone: a value on the announced card is discarded.
+		card = card.duplicate(true)
+		card.erase("hp_scale")
+	if card.is_empty() or not gear._runtime_enabled(cfg): return card
+	var record: Dictionary = {}
+	if peer_id == _local_peer_id():
+		var game := get_node_or_null(^"/root/Game")
+		var local: Variant = game.get("local") if game != null else null
+		if local != null: record = {"redesign_character": local.get("redesign_character")}
+	elif _session != null and _session.has_method("admitted_character_state"):
+		record = _session.call("admitted_character_state", peer_id)
+	var mods: Dictionary = gear.modifiers(gear.gear_for(record, str(card.get("creature_uid", ""))), cfg)
+	var geared := card.duplicate(true)
+	geared["defence"] = float(card.get("defence", 1.0)) * float(mods.defence)
+	# Harness max HP (creature_gear.hp_scale): the host's s rides on the hit.
+	geared["hp_scale"] = maxf(1.0, float(mods.max_hp))
+	return geared
+
+
+## Harness max HP for the participant's deployed creature, from the admitted
+## record (the host's own record for itself). Durable vitals lose damage / s.
+func _host_hp_scale(peer_id: int) -> float:
+	return clampf(float(_geared_card(peer_id, _creature_card_for(peer_id)).get("hp_scale", 1.0)),
+		1.0, preload("res://scripts/combat/combat_manager.gd")._max_hp_scale())
+
+
+## The stored HP a durable host hit stages: rolled damage / the admitted s.
+func _ordinary_hit_amount(peer_id: int, resolved: Dictionary) -> float:
+	return float(resolved.get("damage", 0.0)) / _host_hp_scale(peer_id)
 
 
 func _f22_enemy_connects(encounter_id: String, profile: Dictionary, origin: Vector3,
@@ -3699,7 +3741,7 @@ func _stage_ordinary_enemy_hit(id: String, peer: int, payload: Dictionary) -> vo
 	if resolved.is_empty(): return
 	var proposal: Dictionary = _encounter_host.call("stage_actor_vitals", id, peer,
 		str(binding.creature_uid), int(binding.actor_generation), int(actor.revision),
-		action_id, "damage", float(resolved.damage), limit)
+		action_id, "damage", _ordinary_hit_amount(peer, resolved), limit)
 	if proposal.get("ok") != true: return
 	var retained: Dictionary = {"encounter_id": id, "peer_id": peer,
 		"proposal": preload("res://scripts/combat/accepted_action_host.gd")._original(proposal),
@@ -8750,6 +8792,7 @@ func host_resolve_enemy_hit(encounter_id: String, peer_id: int, payload: Diction
 	resolved["critical"] = bool(defence.critical)
 	resolved["defence"] = defence
 	resolved["host_resolved_defence"] = true
+	resolved["hp_scale"] = _host_hp_scale(peer_id)
 	resolved["impact"] = HIT_FEEDBACK.with_defence(impact, defence)
 	return resolved
 

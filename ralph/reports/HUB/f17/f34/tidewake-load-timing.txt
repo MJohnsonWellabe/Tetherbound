@@ -1,0 +1,7 @@
+F34 Tidewake world-load timing with and without the BuildPlacer hook
+(tests/smoke_f34_forward_camp.gd "world load" print: instantiate + add_child until shell_build_complete;
+headless, same container, runs back to back, nothing else running)
+with hook (986c76ab):    8664 ms, 8633 ms
+without hook (986c76ab~1 water_world.gd): 9456 ms, 8816 ms
+Verdict: no measurable increase (difference within run-to-run noise). The perf lane's on-device
+measurement remains its own proof.

@@ -14,7 +14,7 @@ def main():
     cfg = read("data/config/forward_camps.json")
     stations = read("data/config/stations.json")
     builds = read("data/items/buildables.json")
-    assert cfg["runtime_enabled"] is False
+    assert cfg["runtime_enabled"] is True  # production gameplay enabled (data/config/forward_camps.json _scope)
     assert stations["forward_camp"]["maximum_per_character_per_biome"] == 1
     assert cfg["biomes"] == ["meadows", "tidewake", "cloudreach", "stormwood"]
     kit = cfg["recipes"]["forward_camp_kit"]

@@ -539,16 +539,6 @@ func is_region_discovered(id: String) -> bool:
 ## Manual discovery for story beats (e.g. a cutscene that reveals the
 ## stronghold silhouette). Returns true only when the id is a real landmark
 ## and was not already discovered.
-## Owner-passive rejoin readmit (groom_passive_sync `adopt_landmarks`): the
-## host's held set replaces ONLY the discovered landmarks, in its order. Fog,
-## regions, markers, pins and the current region are untouched.
-func set_discovered_landmarks(ids: Array) -> void:
-	_discovered.clear()
-	for id: Variant in ids:
-		if id is String and _landmark_defs.has(id):
-			_discovered[id] = true
-	revision += 1
-
 func discover_landmark(id: String) -> bool:
 	if not _landmark_defs.has(id):
 		return false

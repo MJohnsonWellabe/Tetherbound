@@ -157,7 +157,9 @@ func can_sprint() -> bool:
 
 ## Advance one frame. `sprinting` should be what the player is ACTUALLY doing,
 ## not what they asked for; the caller resolves that with can_sprint().
-func tick(delta: float, sprinting: bool, sprint_efficiency: float = 1.0) -> void:
+## `env_regen_scale` is a local environment's regen scale (F33#3 Cloudreach
+## cold heights); it slows regen, never drains, and there is no cold meter.
+func tick(delta: float, sprinting: bool, sprint_efficiency: float = 1.0, env_regen_scale: float = 1.0) -> void:
 	if sprinting:
 		_spend(_sprint_drain * delta * clampf(sprint_efficiency, 0.0, 1.0))
 	elif _regen_cooldown > 0.0:
@@ -165,7 +167,7 @@ func tick(delta: float, sprinting: bool, sprint_efficiency: float = 1.0) -> void
 	else:
 		# D29: hunger and food buffs scale how fast stamina comes back, never
 		# whether it does.
-		stamina = minf(max_stamina, stamina + _regen * stamina_regen_scale() * delta)
+		stamina = minf(max_stamina, stamina + _regen * stamina_regen_scale() * clampf(env_regen_scale, 0.0, 1.0) * delta)
 
 	if _exhausted and stamina >= _exhausted_below:
 		_exhausted = false

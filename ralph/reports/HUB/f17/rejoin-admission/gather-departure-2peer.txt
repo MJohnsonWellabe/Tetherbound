@@ -1,0 +1,34 @@
+PASS: peer 0 production_host: title fresh identity 'GatherHost'/trainer entered 'MeadowsPlayground' and hosted udp/32401 after 1 frames; real mounted world released and admitted host stable30 frames
+PASS: peer 1 production_join: title fresh entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:32401 as peer 1251248141 after 61 frames
+PASS: peer 0 craft_place_kitchen: host planted a Kitchen and its Spice rack through the paid journal {"effective_tier":1.0,"kitchen_uid":"b1","rack_uid":"b2"}
+PASS: peer 0 gather_node_stand: stood harvest node 'g1_berry_a'
+PASS: peer 1 gather_node_stand: stood harvest node 'g1_berry_a'
+PASS: peer 1 gather_node_take: gathered 'g1_berry_a'
+PASS: peer 0 gather_node_stand: stood harvest node 'g1_berry_b'
+PASS: peer 1 gather_node_stand: stood harvest node 'g1_berry_b'
+PASS: peer 1 gather_node_take: gathered 'g1_berry_b'
+PASS: peer 1 craft_count: counts read {"character_id":"character-1ddd0054488326c0bd1988ebf06bc880","counts":{"berries":0.0,"fiber":0.0,"potion_small":0.0}}
+PASS: peer 0 gather_rows: gather rows read {"batch":{"hits":2.0,"next_seq":1.0,"open":{"berries":4.0},"replayed":[]},"rows":0.0}
+PASS: peer 0 gather_rows: gather rows read {"batch":{"hits":2.0,"next_seq":1.0,"open":{"berries":4.0},"replayed":[]},"rows":0.0}
+PASS: peer 0 gather_rows: gather rows read {"batch":{"hits":0.0,"next_seq":2.0,"open":{},"replayed":[]},"rows":0.0}
+PASS: the guest's harvest batches flushed, were credited and pruned on the host
+PASS: peer 1 hall_leave_guest: production client leave saved its own portable character; production reader confirmed disk payload
+PASS: peer 0 expect_peers: registry reports 1 peer(s) after 0 frames (0.0 s)
+PASS: peer 1 production_join: title returning entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:32401 as peer 586479100 after 64 frames
+PASS: peer 1 craft_count: counts read {"character_id":"character-1ddd0054488326c0bd1988ebf06bc880","counts":{"berries":4.0,"fiber":0.0,"potion_small":0.0}}
+PASS: peer 0 craft_authority_count: host authority counts read {"character_id":"character-1ddd0054488326c0bd1988ebf06bc880","counts":{"berries":4.0,"fiber":0.0,"potion_small":0.0}}
+PASS: the rejoined guest still holds exactly its four berries { "berries": 4.0, "fiber": 0.0, "potion_small": 0.0 }
+PASS: the host's authority record matches the rejoined guest { "berries": 4.0, "fiber": 0.0, "potion_small": 0.0 }
+PASS: peer 0 pickup_stand: stood 'g1_fiber' (fiber)
+PASS: peer 1 pickup_stand: stood 'g1_fiber' (fiber)
+PASS: peer 1 pickup_take: pressed 'g1_fiber'
+PASS: peer 1 craft_at_host_kitchen: guest crafted at the host's Kitchen and kept the output {"after":{"berries":0.0,"fiber":0.0,"potion_small":1.0},"before":{"berries":4.0,"fiber":1.0,"potion_small":0.0},"reply":{"durable":true,"ok":true,"owner_acknowledged":true,"owner_saved":true,"receipt":"craft:character-1ddd0054488326c0bd1988ebf06bc880:2a45cc576949685363eb8252ebd47e10","resolved":true,"saved":true,"settled":true},"sent":{"code":"awaiting_saved_decision","ok":false,"resolved":false},"view_revision":0.0}
+PASS: peer 1 owner_passive_probe: owner-passive state {"host":{"checkpoint":[],"cursor_sequence":null,"error":"","has_stream":false,"refused":[]},"owner":{"acked":0.0,"admission_pending":false,"armed":true,"base_hash":"7d55882edc70","error":"","inputs":1.0,"pending_kind":"","pending_phase":"","prefix_hash":"771e9e04b585","projection":{"character_id":"character-1ddd0054488326c0bd1988ebf06bc880","equipment":{"backpack":"","boots":"","helmet":"","lower_body":"","upper_body":""},"inventory":[{"id":"potion_small","n":1.0},null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],"party":[],"portal_escrow":{},"realm_hearts":{"active_id":""},"redesign_character":{"attachment_recipes":[],"bounties":{"anchor_day":0.0,"anchor_world":"","cycle":0.0,"slots":[]},"bounty_receipts":[],"creatures":{},"feast_recipes":[],"last_waystones":{},"master_wins":[],"portal_unlocks":[],"pouch_tier":0.0,"release_receipts":[],"relics_held":[],"relics_hung":[],"research":{"event_receipts":[],"species":{},"titles":[]},"research_receipts":[],"transaction_receipts":["craft:character-1ddd0054488326c0bd1988ebf06bc880:2a45cc576949685363eb8252ebd47e10"],"waystones_activated":{}},"vitals_escrow":{}},"sequence":1.0,"stream_id":"7861c50197e2d82975a1e7074a8b0abb"}}
+PASS: peer 0 owner_passive_probe: owner-passive state {"host":{"base_hash":"7d55882edc70","checkpoint":[],"cursor_sequence":2.0,"cursor_state":{"character_id":"character-1ddd0054488326c0bd1988ebf06bc880","equipment":{"backpack":"","boots":"","helmet":"","lower_body":"","upper_body":""},"inventory":[{"id":"potion_small","n":1.0},null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null],"party":[],"portal_escrow":{},"realm_hearts":{"active_id":""},"redesign_character":{"attachment_recipes":[],"bounties":{"anchor_day":0.0,"anchor_world":"","cycle":0.0,"slots":[]},"bounty_receipts":[],"creatures":{},"feast_recipes":[],"last_waystones":{},"master_wins":[],"portal_unlocks":[],"pouch_tier":0.0,"release_receipts":[],"relics_held":[],"relics_hung":[],"research":{"event_receipts":[],"species":{},"titles":[]},"research_receipts":[],"transaction_receipts":["craft:character-1ddd0054488326c0bd1988ebf06bc880:2a45cc576949685363eb8252ebd47e10"],"waystones_activated":{}},"vitals_escrow":{}},"error":"","frozen_prefix":"","has_stream":true,"prefix_match":false,"refused":[],"stream_id":"7861c50197e2d82975a1e7074a8b0abb"},"owner":{"acked":null,"admission_pending":null,"armed":false,"error":"","inputs":0.0,"pending_kind":"","pending_phase":"","sequence":null}}
+PASS: the rejoined guest's owner-passive stream is alive: it crafts at the host's Kitchen
+PASS: peer 0 craft_authority_count: host authority counts read {"character_id":"character-1ddd0054488326c0bd1988ebf06bc880","counts":{"berries":0.0,"fiber":0.0,"potion_small":1.0}}
+PASS: peer 1 craft_count: counts read {"character_id":"character-1ddd0054488326c0bd1988ebf06bc880","counts":{"berries":0.0,"fiber":0.0,"potion_small":1.0}}
+PASS: host authority still equals the guest after the craft { "berries": 0.0, "fiber": 0.0, "potion_small": 1.0 }
+PASS: departure peer logs have no script errors and no owner-passive refusal
+ALL CHECKS PASSED
+ALL CHECKS PASSED
