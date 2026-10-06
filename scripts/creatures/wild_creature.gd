@@ -752,6 +752,7 @@ func _tick_combat(delta: float) -> void:
 	if not is_alive() or _opponent == null:
 		return
 	_utility_clock_ms += delta * 1000.0
+	_tick_utility_traps()
 	_ultimate_reaction_left = maxf(0.0, _ultimate_reaction_left - delta)
 	# An already committed protected heavy still runs. Only this opponent's
 	# issuance/movement pauses; other hosted opponents keep their own clocks.
@@ -818,6 +819,7 @@ func _tick_combat(delta: float) -> void:
 		var movement_profile := spaced.duplicate()
 		if _intent == AI.Intent.DODGE: movement_profile.merge(_patterns.get("reactions", {}), true)
 		var speed := AI.speed_for(_intent, movement_profile, waiting)
+		speed *= utility_movement_multiplier()
 		if _catch_aim_active:
 			speed *= _catch_aim_slowdown_scale
 		request_move(_unstick(direction), speed)
@@ -856,14 +858,38 @@ func named_combat_target() -> bool:
 ## The one host HP writer calls this after a positive landed debit. Utility
 ## receipts and expiry use this opponent's clock, which pauses with hitstop.
 func apply_landed_utility(move: Dictionary, context: Dictionary) -> bool:
-	if move.get("move_id") != "snare" or not engaged or not is_alive(): return false
+	if not UTILITY_EFFECTS.valid_definition(move) or not engaged or not is_alive(): return false
+	# Healing goes through the saved actor-vitals transaction, never this
+	# encounter-only status consumer.
+	if move.utility.scope == "self": return false
 	if _landed_utility_state.is_empty():
 		_landed_utility_state = UTILITY_EFFECTS.empty_state(str(context.get("encounter_id", "")), int(context.get("generation", 0)))
-	var staged := UTILITY_EFFECTS.stage_application(_landed_utility_state, "snare", move,
+	var staged := UTILITY_EFFECTS.stage_application(_landed_utility_state, str(move.get("move_id", "")), move,
 		context, int(_utility_clock_ms), int(MATH.config().get("utility_limits", {}).get("receipt_limit_per_encounter", 4096)))
 	if staged.get("ok") != true: return false
 	_landed_utility_state = staged.state
+	var receipt: Dictionary = staged.receipt
+	if float(receipt.requested_push_metres) > 0.0 and not protected_heavy_committed():
+		begin_combat_burst(context.target_position - context.source_position,
+			float(receipt.requested_push_metres), float(move.get("recovery", 0.35)))
+	var source := context.get("source_body") as Node3D
+	if float(receipt.requested_advance_metres) > 0.0 and is_instance_valid(source) and source.has_method("begin_combat_burst"):
+		var direction: Vector3 = context.target_position - context.source_position
+		var distance := maxf(0.0, direction.length() - body_radius() - float(source.call("body_radius")))
+		source.call("begin_combat_burst", direction, minf(distance, float(receipt.requested_advance_metres)), float(move.get("recovery", 0.35)))
 	return true
+
+
+func _tick_utility_traps() -> void:
+	if instance == null or _landed_utility_state.is_empty(): return
+	for source_uid: String in (_landed_utility_state.get("fields", {}) as Dictionary):
+		var triggered := UTILITY_EFFECTS.stage_trap_trigger(_landed_utility_state,
+			source_uid, str(instance.uid), global_position, true, float(instance.hp), named_combat_target(), int(_utility_clock_ms))
+		if triggered.get("ok") == true: _landed_utility_state = triggered.state
+
+
+func utility_damage_multiplier(_source_uid: String) -> float:
+	return UTILITY_EFFECTS.damage_taken_multiplier(_landed_utility_state, str(instance.uid), int(_utility_clock_ms)) if instance != null else 1.0
 
 
 func utility_movement_multiplier() -> float:

@@ -512,7 +512,10 @@ func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dict
 	# §5's whole point, and the reason `friendly_target` is a refusal rather
 	# than a damage number of zero: WHO the swing resolved onto is decided
 	# BEFORE any roll, from bodies the host holds, by owner id (4.B's H5).
-	var friendly := _friendly_body_struck(move, host_origin, facing, peer_id, rec, view)
+	# Scope comes only from the immutable host-owned start. A packet cannot
+	# turn a hostile attack into a self cast by supplying a utility block.
+	var self_cast: bool = from_start and started.slot == "utility" and started.move.get("utility", {}).get("scope") == "self"
+	var friendly := {} if self_cast else _friendly_body_struck(move, host_origin, facing, peer_id, rec, view)
 	if not friendly.is_empty():
 		if from_start:
 			started["resolved"] = true
@@ -522,7 +525,7 @@ func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dict
 			_refuse("strike_intent", peer_id, "friendly_target",
 				"You can't attack your own side."), true)
 
-	var connected := _connects_now_or_recently(move, host_origin, facing, rec, intent, now_ms)
+	var connected := {"hit": true, "at_ms": now_ms} if self_cast else _connects_now_or_recently(move, host_origin, facing, rec, intent, now_ms)
 	var lock_ms := move_lock_ms(move)
 	var deadline_ms := int(authority.deadline_ms) if from_start else now_ms + lock_ms
 	var starts: Dictionary = _strike_state_for(encounter_id).get(peer_id, {}).get("move_starts", {})
@@ -541,7 +544,7 @@ func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dict
 		_ok("strike_intent", peer_id, {
 		"encounter_id": encounter_id,
 		"hit": bool(connected.get("hit", false)),
-		"target": "opponent" if bool(connected.get("hit", false)) else "",
+		"target": "self" if self_cast else ("opponent" if bool(connected.get("hit", false)) else ""),
 		"connected_at_ms": int(connected.get("at_ms", now_ms)),
 		"accepted_action": action,
 		"accepted_at_ms": now_ms,
@@ -569,10 +572,9 @@ func authorize_move_start(intent: Dictionary, peer: int, owned: Dictionary,
 		or move.get("move_id") != move_id or move.get("slot") != slot \
 		or typeof(intent.get("action")) != TYPE_INT or int(intent.action) <= 0 or now_ms < 0:
 		return _refuse("move_start", peer, "invalid_actor_move", "That equipped move is unavailable.")
-	if slot in ["utility", "ultimate"] and not (MATH.config().get("move_commit", {}).get("live_moves", []) as Array).has(move_id):
+	if (slot == "ultimate" and not preload("res://scripts/vfx/ultimates/ultimate_library.gd").available(move_id)) \
+		or (slot == "utility" and not (MATH.config().get("move_commit", {}).get("live_moves", []) as Array).has(move_id)):
 		return _refuse("move_start", peer, "move_not_mounted", "That move is not available in this build yet.")
-	if slot == "ultimate" and not preload("res://scripts/vfx/ultimates/ultimate_library.gd").available(move_id):
-		return _refuse("move_start", peer, "move_not_mounted", "That ultimate is not available in this build yet.")
 	var authority: Dictionary = _strike_state_for(id).get(peer, {})
 	var starts: Dictionary = authority.get("move_starts", {})
 	if starts.size() >= int(MATH.config().get("utility_limits", {}).get("receipt_limit_per_encounter", 4096)):
@@ -709,6 +711,61 @@ func move_mastery_outcome(id: String, peer: Variant, action: int) -> Dictionary:
 	return {"encounter_id": id, "peer": peer, "action": action,
 		"binding": started.binding.duplicate(true), "outcome": started.mastery_outcome.duplicate(true),
 		"context": started.move.get("mastery_context", {}).duplicate(true)}
+
+
+## The director calls this after the live utility consumer committed its
+## original effect. Status casts earn mastery without inventing an HP debit.
+func credit_move_effect(id: String, peer: int, action: int, receipt: Dictionary) -> void:
+	var started: Dictionary = (_strike_authority.get(id, {}) as Dictionary).get(peer, {}).get("move_starts", {}).get(str(action), {})
+	if started.get("resolved") != true or started.get("credited") == true or started.get("slot") != "utility" \
+		or float(started.get("move", {}).get("base_power", -1.0)) != 0.0 \
+		or receipt.get("damaging") != false or receipt.get("action_id") != started.get("action_id") \
+		or receipt.get("move_id") != started.get("move_id") or receipt.get("source_uid") != started.get("creature_uid") \
+		or receipt.get("encounter_id") != id or receipt.get("kind") != started.move.get("utility", {}).get("kind"):
+		return
+	started["credited"] = true
+	if int(started.get("mastery_uses", 300)) >= 300: return
+	started["mastery_pending"] = true
+	started["mastery_outcome"] = {"action_id": str(started.action_id), "move_id": str(started.move_id),
+		"attacker_uid": str(started.creature_uid), "effect_receipt": receipt.duplicate(true)}
+	seq += 1
+	encounters[id].seq = seq
+
+
+func apply_self_utility(id: String, peer: int, action: int, card: Dictionary, position: Vector3, now_ms: int) -> Dictionary:
+	var rec: Dictionary = encounters.get(id, {})
+	var started := move_commit(id, peer, action)
+	if rec.get("phase") != "active" or started.get("resolved") != true or started.get("cancelled") == true \
+		or started.get("slot") != "utility" or started.get("creature_uid") != card.get("creature_uid") \
+		or started.get("move", {}).get("utility", {}).get("kind") not in ["movement_buff", "next_hit_buff"]:
+		return {}
+	var uid := str(started.creature_uid)
+	var state: Dictionary = rec.get("utility_state", UTILITY_EFFECTS.empty_state(id, 0))
+	var staged := UTILITY_EFFECTS.stage_application(state, str(started.move_id), started.move,
+		{"encounter_id": id, "generation": 0, "action_id": str(started.action_id),
+		"source_uid": uid, "target_uid": uid, "source_position": position, "target_position": position,
+		"source_hp": card.get("hp"), "source_max_hp": card.get("hp_max", card.get("max_hp"))}, now_ms,
+		int(MATH.config().get("utility_limits", {}).get("receipt_limit_per_encounter", 4096)))
+	if staged.get("ok") != true: return {}
+	rec["utility_state"] = staged.state
+	return staged.receipt.duplicate(true)
+
+
+func self_utility_view(id: String, uid: String, now_ms: int) -> Dictionary:
+	var state: Dictionary = encounters.get(id, {}).get("utility_state", {})
+	var status: Dictionary = state.get("statuses", {}).get(uid, {}).get("movement_buff", {})
+	return {"movement_multiplier": float(status.get("value", 1.0)), "movement_action_id": str(status.get("action_id", "")),
+		"movement_remaining_s": maxf(0.0, float(int(status.get("expires_at_ms", 0)) - now_ms) / 1000.0)}
+
+
+func self_utility_power(id: String, uid: String, now_ms: int) -> float:
+	return UTILITY_EFFECTS.power_multiplier(encounters.get(id, {}).get("utility_state", {}), uid, now_ms)
+
+
+func consume_self_utility(id: String, uid: String, now_ms: int) -> void:
+	var rec: Dictionary = encounters.get(id, {})
+	var staged := UTILITY_EFFECTS.stage_consume_next_hit(rec.get("utility_state", {}), uid, now_ms)
+	if staged.get("ok") == true: rec["utility_state"] = staged.state
 
 
 func acknowledge_move_mastery(id: String, peer: Variant, action: int, action_id: String) -> bool:

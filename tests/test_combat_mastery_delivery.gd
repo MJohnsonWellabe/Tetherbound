@@ -40,6 +40,71 @@ func _context(duty: Dictionary, retained: Dictionary) -> Dictionary:
 		"retained_event": retained.delivery_id})
 	return context
 
+func test_effect_mastery_retains_exact_status_receipt_and_recovers_through_existing_delivery() -> void:
+	var fixture := DATA.new()
+	var player: RefCounted = fixture._player()
+	player.party.remove_at(0)
+	player.party.add(preload("res://scripts/creatures/creature_species.gd").spawn("ripplet"))
+	player.party.at(0).set_level(15, preload("res://scripts/creatures/progression.gd").config())
+	var saved: Dictionary = player.save_data()
+	saved.redesign_character = preload("res://scripts/creatures/teaching.gd").character_loadout_mirror(saved.party, saved.redesign_character)
+	var before := RECORD.portable_projection(saved)
+	var duty := _duty(before)
+	var move: Dictionary = preload("res://scripts/creatures/move_db.gd").load_default().move("hearten")
+	var effect := preload("res://scripts/combat/utility_effects.gd").stage_application(
+		preload("res://scripts/combat/utility_effects.gd").empty_state("mastery-encounter", 0), "hearten", move,
+		{"encounter_id": "mastery-encounter", "generation": 0, "action_id": ACTION_ID,
+		"source_uid": before.party[0].uid, "target_uid": before.party[0].uid, "source_position": Vector3.ZERO,
+		"target_position": Vector3.RIGHT, "target_point": Vector3.RIGHT, "source_hp": before.party[0].hp,
+		"source_max_hp": before.party[0].max_hp, "target_hp": 100.0, "hostile": true, "geometry_connected": true}, 1000, 4096)
+	assert_true(effect.ok, str(effect))
+	if not effect.ok: return
+	duty.context.outcome = {"action_id": ACTION_ID, "move_id": "hearten", "attacker_uid": before.party[0].uid, "effect_receipt": effect.receipt.duplicate(true)}
+	var retained := EVENT.make(fixture._world(), "resource-epoch", "mastery:" + ACTION_ID, [duty])
+	assert_false(retained.is_empty(), "the existing journal accepts effective status mastery")
+	if retained.is_empty(): return
+	assert_true(EVENT.valid(JSON.parse_string(JSON.stringify(retained)), "resource-namespace", "resource-slot"))
+	for defect: String in ["source", "action", "move", "encounter", "kind", "damaging", "target", "extra"]:
+		var bad := retained.duplicate(true)
+		var receipt: Dictionary = bad.duties[0].context.outcome.effect_receipt
+		match defect:
+			"source": receipt.source_uid = "foreign-owned-creature"
+			"action": receipt.action_id = "foreign-original"
+			"move": receipt.move_id = "slow_field"
+			"encounter": receipt.encounter_id = "foreign-encounter"
+			"kind": receipt.kind = "heal"
+			"damaging": receipt.damaging = true
+			"target": receipt.target_uid = "host-opponent"
+			"extra": receipt.snapshot_replay = true
+		assert_false(EVENT.valid(bad, "resource-namespace", "resource-slot"), defect)
+	var authority := AUTHORITY.new()
+	assert_true(authority.bind_world("resource-namespace"))
+	assert_true(authority.seed_admitted_character(before, DATA.CHARACTER).ok)
+	var original := authority.stage_character_action(DATA.CHARACTER, 0, "combat_mastery", duty.intent, _context(duty, retained))
+	assert_true(original.ok, str(original))
+	if not original.ok: return
+	assert_true(authority.finish_creature_training(original, false))
+	assert_true(E._equivalent(authority.state(DATA.CHARACTER), before))
+	original = authority.stage_character_action(DATA.CHARACTER, 0, "combat_mastery", duty.intent, _context(duty, retained))
+	var delivery := DELIVERY.make_record("resource-slot", "resource-namespace", "resource-epoch", original, null, RECORD.errors)
+	assert_false(delivery.is_empty())
+	if delivery.is_empty(): return
+	var codec := preload("res://scripts/save/save_document.gd")
+	var row: Dictionary = codec.parse(codec.stringify(delivery))
+	assert_true(DELIVERY.valid(row, RECORD.errors))
+	var rejoined := AUTHORITY.new()
+	assert_true(rejoined.bind_world("resource-namespace"))
+	assert_true(rejoined.seed_admitted_character(before, DATA.CHARACTER).ok)
+	var recovered := rejoined.recover_durable_training(DATA.CHARACTER, {row.delivery_id: row})
+	assert_true(recovered.ok, str(recovered))
+	assert_eq(int(rejoined.state(DATA.CHARACTER).party[0].move_mastery_uses.get("hearten", 0)), 1)
+	assert_eq(rejoined.state(DATA.CHARACTER).party[0].hp, before.party[0].hp)
+	var owner := DELIVERY.owner_plan(before, row, RECORD.errors)
+	assert_true(owner.ok and owner.requires_owner_save)
+	var replay := DELIVERY.owner_plan(owner.state, row, RECORD.errors)
+	assert_true(replay.ok and replay.duplicate)
+	assert_true(E._equivalent(owner.state, replay.state))
+
 func test_retained_hit_rejects_forged_binding_damage_or_epoch_and_preserves_hp() -> void:
 	var fixture := DATA.new()
 	var before: Dictionary = fixture._before()

@@ -78,8 +78,11 @@ static func _duty_valid(duty: Dictionary, row: Dictionary) -> bool:
 			or not ESSENCE._integer(context.binding.get("deployment_generation"), 1, 2147483647) \
 			or not ESSENCE._opaque_id(context.get("encounter_id")): return false
 		var event: Dictionary = context.outcome
-		if event.size() != 6 or event.get("action_id") != intent.action_id \
-			or event.get("attacker_uid") != intent.creature_uid or not ESSENCE._component(event.get("move_id")) \
+		if event.get("action_id") != intent.action_id or event.get("attacker_uid") != intent.creature_uid \
+			or not ESSENCE._component(event.get("move_id")): return false
+		if event.has("effect_receipt"):
+			return valid_effect_mastery(event, str(context.encounter_id))
+		if event.size() != 6 \
 			or not ESSENCE._opaque_id(event.get("target_uid")) or event.target_uid == event.attacker_uid \
 			or not _positive_number(event.get("target_hp_before")) or not _positive_number(event.get("applied_damage")) \
 			or float(event.applied_damage) > float(event.target_hp_before): return false
@@ -122,6 +125,27 @@ static func _duty_valid(duty: Dictionary, row: Dictionary) -> bool:
 		if profile.is_empty(): return false
 		if profile.kind == "master" and (context.participants.size() != 1 or context.get("single_creature_duel") != true or not ESSENCE._opaque_id(context.get("creature_uid"))): return false
 	return true
+
+
+## Additive event shape on the existing retained mastery carrier. These are
+## effective host status receipts, with no fabricated hostile damage fields.
+static func valid_effect_mastery(event: Dictionary, encounter_id: String) -> bool:
+	var receipt: Variant = event.get("effect_receipt")
+	if event.size() != 4 or not receipt is Dictionary or receipt.size() != 13 \
+		or receipt.get("action_id") != event.get("action_id") or receipt.get("move_id") != event.get("move_id") \
+		or receipt.get("source_uid") != event.get("attacker_uid") or receipt.get("encounter_id") != encounter_id \
+		or receipt.get("damaging") != false or not ESSENCE._opaque_id(receipt.get("target_uid")) \
+		or not ESSENCE._integer(receipt.get("generation"), 0, 2147483647) \
+		or not ESSENCE._integer(receipt.get("accepted_at_ms"), 0, 9223372036854775807) \
+		or receipt.get("requested_push_metres") != 0.0 or receipt.get("requested_advance_metres") != 0.0 \
+		or not _positive_number(receipt.get("hp_before")) or not _positive_number(receipt.get("hp_after")): return false
+	var moves := preload("res://scripts/creatures/move_db.gd").load_default()
+	var definition: Dictionary = moves.move(str(event.get("move_id", "")))
+	if not preload("res://scripts/combat/utility_effects.gd").valid_definition(definition) \
+		or float(definition.base_power) != 0.0 or definition.utility.kind != receipt.get("kind"): return false
+	var self_cast: bool = definition.utility.scope == "self"
+	if self_cast != (receipt.target_uid == receipt.source_uid): return false
+	return float(receipt.hp_after) > float(receipt.hp_before) if receipt.kind == "heal" else float(receipt.hp_after) == float(receipt.hp_before)
 
 static func _positive_number(value: Variant) -> bool:
 	return (value is int or value is float) and is_finite(float(value)) and float(value) > 0.0

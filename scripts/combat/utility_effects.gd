@@ -145,7 +145,8 @@ static func _refresh(state: Dictionary, host: Dictionary, kind: String,
 	var statuses: Dictionary = state.statuses.get(host.target_uid, {})
 	var previous: Dictionary = statuses.get(kind, {})
 	statuses[kind] = {"source_uid": str(host.source_uid), "target_uid": str(host.target_uid),
-		"kind": kind, "value": value, "expires_at_ms": maxi(int(previous.get("expires_at_ms", 0)), now_ms + int(duration * 1000.0))}
+		"kind": kind, "value": value, "action_id": str(host.get("action_id", "")),
+		"expires_at_ms": maxi(int(previous.get("expires_at_ms", 0)), now_ms + int(duration * 1000.0))}
 	state.statuses[host.target_uid] = statuses
 
 ## Pure reads apply the strongest active modifier once, never multiply fields.
@@ -200,7 +201,7 @@ static func stage_trap_trigger(state: Dictionary, source_uid: String, target_uid
 	if duration <= 0.0: return {"ok": false, "code": "immune"}
 	var next := state.duplicate(true)
 	next.fields[source_uid].trap.triggered = true
-	_refresh(next, {"source_uid": source_uid, "target_uid": target_uid}, "root", now_ms, duration, 0.0)
+	_refresh(next, {"source_uid": source_uid, "target_uid": target_uid, "action_id": str(field.action_id)}, "root", now_ms, duration, 0.0)
 	next.revision = int(state.get("revision", 0)) + 1
 	return {"ok": true, "expected_revision": int(state.get("revision", 0)), "state": next,
 		"action_id": str(field.action_id), "source_uid": source_uid, "target_uid": target_uid}

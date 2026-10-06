@@ -3130,6 +3130,7 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 
 	var from: Vector3 = striker.call("centre")
 	var target: Vector3 = wild.call("centre")
+	if move.get("utility", {}).get("scope") == "self": target = from
 	var direction := (target - from).normalized()
 	var muzzle := from + direction * _body_radius(striker)
 	var opponent := wild.get("instance") as RefCounted
@@ -3184,17 +3185,30 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 	var publication := _f22_begin_publication(encounter_id, peer_id, int(intent.get("action", 0)), striker, wild)
 	if publication.get("ok") != true: return {}
 	var hp_before := float(opponent.get("hp"))
-	var rolled: Dictionary = engine.call("host_roll_damage", card,
+	var rolled: Dictionary
+	if move.get("utility", {}).get("scope") == "self":
+		var effect: Dictionary = _encounter_host.call("apply_self_utility", encounter_id, peer_id, int(intent.get("action", 0)), current_card, striker.global_position, Time.get_ticks_msec())
+		rolled = {"damage": 0.0, "killed": false, "hp": opponent.hp, "hp_max": opponent.max_hp,
+			"impact": {}, "utility_applied": not effect.is_empty(), "utility_receipt": effect}
+	else:
+		rolled = engine.call("host_roll_damage", card,
 		str(launch.move_id), float(move.get("power", 9.0)) * armor, str(launch.slot) == "charged",
 		{"action_id": str(launch.action_id), "striker_body": striker, "move": move,
+		 "source_utility_power": _encounter_host.call("self_utility_power", encounter_id, str(current_card.get("creature_uid", "")), Time.get_ticks_msec()),
 		 "travel_seconds": float(launch.travel_seconds), "body_generation": int(launch.body_generation),
 		 "direction": (launch.to as Vector3) - (launch.from as Vector3)})
 	if rolled.is_empty(): return {}
+	if hp_before > float(rolled.get("hp", hp_before)):
+		_encounter_host.call("consume_self_utility", encounter_id, str(current_card.get("creature_uid", "")), Time.get_ticks_msec())
 	var resources: Dictionary = _encounter_host.call("credit_move_hit", encounter_id, peer_id,
 		int(intent.get("action", 0)), maxf(0.0, hp_before - float(rolled.get("hp", hp_before))), str(opponent.get("uid")), hp_before)
-	var impact: Dictionary = HIT_FEEDBACK.with_launch(rolled.get("impact", {}) as Dictionary, launch, move.get("vfx", {})).duplicate()
-	impact["presentation_launched"] = true
-	impact["killed"] = bool(rolled.get("killed", false))
+	if rolled.get("utility_applied") == true:
+		_encounter_host.call("credit_move_effect", encounter_id, peer_id, int(intent.get("action", 0)), rolled.get("utility_receipt", {}))
+	var impact: Dictionary = {}
+	if float(rolled.get("damage", 0.0)) > 0.0:
+		impact = HIT_FEEDBACK.with_launch(rolled.get("impact", {}) as Dictionary, launch, move.get("vfx", {})).duplicate()
+		impact["presentation_launched"] = true
+		impact["killed"] = bool(rolled.get("killed", false))
 	impact.make_read_only()
 	rolled["impact"] = impact
 	_host_pause_peer_defence(encounter_id, peer_id, impact)
@@ -3203,6 +3217,14 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 	delta.erase("launch")
 	delta.merge(rolled, true)
 	delta.merge(resources, true)
+	delta["creature_uid"] = str(current_card.get("creature_uid", ""))
+	delta["source_utility"] = _encounter_host.call("self_utility_view", encounter_id, str(current_card.get("creature_uid", "")), Time.get_ticks_msec())
+	if move.get("utility", {}).get("kind") == "dash_strike" and hp_before > float(rolled.get("hp", hp_before)):
+		var direction: Vector3 = wild.global_position - striker.global_position
+		delta["utility_advance"] = {"accepted_action": int(intent.get("action", 0)),
+			"direction": [direction.x, 0.0, direction.z],
+			"distance": minf(float(move.utility.advance_metres), maxf(0.0, direction.length() - _body_radius(wild) - _body_radius(striker))),
+			"duration": float(move.get("recovery", 0.35))}
 	_encounter_host.call("set_opponent_hp", encounter_id,
 		float(rolled.get("hp", 0.0)), float(rolled.get("hp_max", 1.0)), rolled)
 	if publication.get("tracked") == true and not _encounter_host.call("record_move_action_outcome",
@@ -3842,6 +3864,12 @@ func _ordinary_host_leave(id: String, peer: int) -> Dictionary:
 func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0,
 		terminal_catcher: int = 0, resolved_impact: Dictionary = {}) -> void:
 	var rec: Dictionary = _encounter_host.call("record", encounter_id)
+	# Self buffs stay in the existing encounter. Each owner receives only
+	# the remaining modifier for their own UIDs, on the usual resource carrier.
+	rec = rec.duplicate(true)
+	for participant: Dictionary in rec.get("participants", {}).values():
+		for uid: String in participant.get("move_resources", {}):
+			participant.move_resources[uid]["source_utility"] = _encounter_host.call("self_utility_view", encounter_id, uid, Time.get_ticks_msec())
 	if uses_durable_trainer_rewards(encounter_id):
 		rec = rec.duplicate(true)
 		rec["ordinary_actor_vitals_pending"] = ordinary_actor_vitals_pending(encounter_id)

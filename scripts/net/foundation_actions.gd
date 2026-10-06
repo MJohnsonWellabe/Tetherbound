@@ -85,7 +85,16 @@ static func _combat_mastery(current: Dictionary, intent: Dictionary, context: Di
 		if card.uid == intent.creature_uid: selected = card
 	if selected.is_empty(): return deny("not_owned")
 	var mastery := preload("res://scripts/creatures/move_mastery.gd")
-	var plan := mastery.stage_landed_use(mastery.owned_record(selected), event)
+	var plan: Dictionary
+	if event.has("effect_receipt"):
+		var effect: Variant = event.effect_receipt
+		if not preload("res://scripts/net/foundation_event.gd").valid_effect_mastery(event, str(context.get("encounter_id", ""))) \
+			or not effect is Dictionary or effect.get("action_id") != event.action_id \
+			or effect.get("move_id") != event.get("move_id") or effect.get("source_uid") != intent.creature_uid:
+			return deny("retained_mastery_required")
+		plan = mastery.stage_accepted_effect(mastery.owned_record(selected), effect)
+	else:
+		plan = mastery.stage_landed_use(mastery.owned_record(selected), event)
 	if plan.get("ok") != true:
 		# Rank five retains the obligation's durable receipt without adding an
 		# unbounded per-move history or refusing a completed combat action.

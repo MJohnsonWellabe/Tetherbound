@@ -6,6 +6,7 @@ const MOVES := preload("res://scripts/creatures/move_db.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const WILD := preload("res://scripts/creatures/wild_creature.gd")
 const ULTIMATES := preload("res://scripts/vfx/ultimates/ultimate_library.gd")
+const UTILITY := preload("res://scripts/combat/utility_effects.gd")
 
 class TapManager extends "res://scripts/combat/combat_manager.gd":
 	var arm_edge := false
@@ -162,4 +163,84 @@ func test_root_status_uses_body_clock_and_never_cancels_protected_tell() -> void
 	assert_eq(body.utility_movement_multiplier(), 1.0, "named root uses the authored half-second")
 	body.hold_ultimate_reaction(2.0)
 	assert_true(body.protected_heavy_committed(), "reaction must preserve the committed heavy")
+	body.free()
+
+func test_all_authored_ultimate_presentations_share_the_same_host_admission_gate() -> void:
+	var original := ULTIMATES.config()
+	var enabled := original.duplicate(true)
+	enabled.enabled = true # Mechanics only; native visual acceptance stays open.
+	ULTIMATES._config = enabled
+	for move_id: String in enabled.visuals:
+		assert_true(MANAGER.live_move_supported("ultimate", move_id), move_id)
+		var owned := _new_owned()
+		owned.move_ultimate = move_id
+		if not owned.known_moves.has(move_id): owned.known_moves.append(move_id)
+		var frozen := MASTERY.freeze_action(MASTERY.owned_record(owned), "ultimate",
+			{"character_id": "owner_a", "creature_uid": owned.uid, "encounter_id": id, "generation": 1, "action": 1}, [], MOVES.load_default())
+		assert_true(frozen.ok, move_id)
+		if not frozen.ok: continue
+		var move := MANAGER.host_move_profile(MOVES.load_default(), "player_ultimate", move_id, 0.5, 0.5, 1.0, 0.0, frozen.move)
+		assert_eq(host.authorize_move_start({"encounter_id": id, "action": 1, "slot": "ultimate"},
+			1, owned, _binding(), move, WIND, 1000).code, "ultimate_not_ready", move_id)
+	ULTIMATES._config = original
+
+func test_self_buff_commits_without_hostile_geometry_and_keeps_original_mastery_and_own_uid() -> void:
+	var owned := _new_owned()
+	owned.move_utility = "veil"
+	owned.known_moves.append("veil")
+	var frozen := MASTERY.freeze_action(MASTERY.owned_record(owned), "utility",
+		{"character_id": "owner_a", "creature_uid": owned.uid, "encounter_id": id, "generation": 1, "action": 1}, [], MOVES.load_default())
+	var move := MANAGER.host_move_profile(MOVES.load_default(), "player_utility", "veil", 0.5, 0.5, 1.0, 0.0, frozen.move)
+	assert_true(host.authorize_move_start({"encounter_id": id, "action": 1, "slot": "utility"}, 1, owned, _binding(), move, WIND, 1000).ok)
+	assert_eq(_arrive(1, 1300).delta.target, "self", "opponent is outside Veil's zero range")
+	var receipt: Dictionary = host.apply_self_utility(id, 1, 1,
+		{"creature_uid": owned.uid, "hp": 100.0, "hp_max": 100.0}, Vector3.ZERO, 1300)
+	assert_false(receipt.is_empty())
+	assert_false(receipt.damaging)
+	assert_eq(receipt.hp_before, receipt.hp_after)
+	assert_true(host.apply_self_utility(id, 1, 1, {"creature_uid": owned.uid, "hp": 100.0, "hp_max": 100.0}, Vector3.ZERO, 1301).is_empty())
+	host.credit_move_effect(id, 1, 1, receipt)
+	var original: Dictionary = host.move_mastery_outcome(id, 1, 1)
+	assert_eq(original.outcome.effect_receipt, receipt)
+	host.credit_move_effect(id, 1, 1, receipt)
+	assert_eq(host.move_mastery_outcome(id, 1, 1), original)
+	assert_eq(host.move_resource_snapshot(id, 1, owned.uid).ultimate_meter, 0.0)
+	assert_eq(host.self_utility_view(id, owned.uid, 1400).movement_remaining_s, 1.4)
+	assert_eq(host.self_utility_view(id, "foreign_uid", 1400).movement_remaining_s, 0.0)
+	assert_eq(host.self_utility_view(id, owned.uid, 2800).movement_remaining_s, 0.0)
+	var manager := MANAGER.new()
+	manager.set("_party", [SPECIES.spawn("terrapup")] as Array[RefCounted])
+	var creature: RefCounted = manager.get("_party")[0]
+	var view := {"creature_uid": creature.uid, "source_utility": host.self_utility_view(id, owned.uid, 1400)}
+	manager._apply_move_resources(view)
+	manager.get("_party_utility_movement")[creature.uid].remaining_s = 0.5
+	manager._apply_move_resources(view)
+	assert_eq(manager.get("_party_utility_movement")[creature.uid].remaining_s, 0.5, "duplicate authority view never extends expiry")
+	manager.free()
+
+func test_target_utilities_have_live_consumers_and_effect_expiry() -> void:
+	for move_id: String in ["snare", "slow_field", "shove", "dash_strike", "bramble_trap", "sap", "quake_ring"]:
+		assert_true(MANAGER.live_move_supported("utility", move_id), move_id)
+		assert_true(UTILITY.valid_definition(MOVES.load_default().move(move_id)), move_id)
+	var body := WILD.new()
+	body.instance = SPECIES.spawn("bramblebun")
+	body.engaged = true
+	var context := {"action_id": "slow-original", "encounter_id": id, "generation": 0,
+		"source_uid": "creature_a", "target_uid": body.instance.uid, "source_position": Vector3.ZERO,
+		"target_position": Vector3.ZERO, "target_point": Vector3.ZERO, "source_hp": 100.0, "source_max_hp": 100.0,
+		"target_hp": body.instance.hp, "hostile": true, "geometry_connected": true, "target_is_boss": false}
+	var hp := float(body.instance.hp)
+	var move: Dictionary = MOVES.load_default().move("slow_field")
+	move.move_id = "slow_field"
+	assert_true(body.apply_landed_utility(move, context))
+	assert_eq(body.utility_movement_multiplier(), 0.5)
+	assert_eq(body.instance.hp, hp, "status-only field never deals HP damage")
+	context.action_id = "sap-original"
+	move = MOVES.load_default().move("sap")
+	move.move_id = "sap"
+	assert_true(body.apply_landed_utility(move, context))
+	assert_eq(body.utility_damage_multiplier("creature_a"), 1.1)
+	body.set("_utility_clock_ms", 4001.0)
+	assert_eq(body.utility_movement_multiplier(), 1.0)
+	assert_eq(body.utility_damage_multiplier("creature_a"), 1.0)
 	body.free()

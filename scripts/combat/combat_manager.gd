@@ -243,6 +243,7 @@ var _party_ultimate: Dictionary = {}
 ## the host's value when a hit carried one, else the owner's own record.
 var _party_hp_scale: Dictionary = {}
 var _party_utility_cooldown: Dictionary = {}
+var _party_utility_movement: Dictionary = {}
 var _ultimate_waiting_release := false
 var _ultimate_armed_left := 0.0
 var _ultimate_face_release := false
@@ -633,6 +634,7 @@ func begin(
 	_party_ultimate.clear()
 	_party_hp_scale.clear()
 	_party_utility_cooldown.clear()
+	_party_utility_movement.clear()
 	_clear_move_input()
 	_reset_player_poise()
 	_hitstop_left = 0.0
@@ -2370,6 +2372,8 @@ func _tick_active(delta: float) -> void:
 	_ultimate_armed_left = maxf(0.0, _ultimate_armed_left - delta)
 	for uid: String in _party_utility_cooldown:
 		_party_utility_cooldown[uid] = maxf(0.0, float(_party_utility_cooldown[uid]) - delta)
+	for uid: String in _party_utility_movement:
+		_party_utility_movement[uid].remaining_s = maxf(0.0, float(_party_utility_movement[uid].remaining_s) - delta)
 	_buffer_flee_while_input_unread(delta)
 	if _hitstop_left > 0.0:
 		_buffer_attack_while_hitstopped()
@@ -2846,9 +2850,15 @@ func apply_host_strike_verdict(payload: Dictionary) -> void:
 		_wild.call("sync_poise", float(payload["poise"]),
 			bool(payload.get("staggered", false)), bool(payload.get("critical_ready", true)),
 			float(payload.get("stagger_left", -1.0)), float(payload.get("poise_max", -1.0)))
+	if payload.has("utility_applied") and float(payload.get("damage", 0.0)) == 0.0:
+		_apply_move_resources(payload)
+		if payload.utility_applied != true: attack_missed.emit(true)
+		state_changed.emit()
+		return
 	_perform_player_strike(bool(payload.get("hit", false)),
 		float(payload.get("damage", 0.0)), bool(payload.get("killed", false)),
 		bool(payload.get("stagger_crit", false)), bool(payload.get("stagger_triggered", false)), impact)
+	if payload.get("utility_advance") is Dictionary: apply_host_burst_verdict(payload.utility_advance)
 	_apply_move_resources(payload)
 
 
@@ -2860,6 +2870,14 @@ func _apply_move_resources(payload: Dictionary) -> void:
 		if payload.has("energy"): creature.set("energy", clampf(float(payload.energy), 0.0, float(MATH.config().get("energy", {}).get("max", 100.0))))
 		if payload.has("ultimate_meter"): _party_ultimate[uid] = clampf(float(payload.ultimate_meter), 0.0, float(MATH.config().get("ultimate", {}).get("maximum", 100.0)))
 		if payload.has("utility_cooldown_s"): _party_utility_cooldown[uid] = maxf(0.0, float(payload.utility_cooldown_s))
+		if payload.get("source_utility") is Dictionary:
+			var utility: Dictionary = payload.source_utility
+			var remaining := maxf(0.0, float(utility.get("movement_remaining_s", 0.0)))
+			var action_id := str(utility.get("movement_action_id", ""))
+			var previous: Dictionary = _party_utility_movement.get(uid, {})
+			if previous.get("action_id") == action_id: remaining = minf(remaining, float(previous.remaining_s))
+			_party_utility_movement[uid] = {"multiplier": float(utility.get("movement_multiplier", 1.0)),
+				"remaining_s": remaining, "action_id": action_id}
 
 
 ## The performance of a strike, and -- solo -- the decision too.
@@ -3270,6 +3288,12 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 		return {}
 	# A delayed shared strike requires the consolidated receipt dependency.
 	if not impact_context.is_empty() and _shared_hit_feedback() == null: return {}
+	var frozen: Dictionary = impact_context.get("move", {})
+	var slot := str(frozen.get("slot", "charged" if charged else "quick"))
+	if slot == "utility" and float(frozen.get("base_power", -1.0)) == 0.0:
+		var applied := _host_apply_utility(card, frozen, impact_context, float(_enemy.hp))
+		return {"damage": 0.0, "killed": false, "hp": _enemy.hp, "hp_max": _enemy.max_hp,
+			"impact": {}, "utility_applied": applied, "utility_receipt": _host_utility_receipt(frozen)}
 	var cfg: Dictionary = PROGRESSION.config()
 	var type_mult: float = TYPE_CHART.multiplier_dual(
 		_moves.type_of(move_id), str(_enemy.creature_type), str(_enemy.get("secondary_type"))
@@ -3282,13 +3306,15 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 		_moves.power(move_id),
 		type_mult
 	)
+	var encounter_bonus := float(impact_context.get("source_utility_power", 1.0))
+	if is_instance_valid(_wild) and _wild.has_method("utility_damage_multiplier"):
+		encounter_bonus *= float(_wild.call("utility_damage_multiplier", str(card.get("creature_uid", ""))))
 	var stagger_crit := false
 	if _wild != null and _wild.has_method("consume_stagger_critical"):
 		stagger_crit = bool(_wild.call("consume_stagger_critical"))
 		if stagger_crit:
-			damage *= _poise_crit_scale()
-	var frozen: Dictionary = impact_context.get("move", {})
-	var slot := str(frozen.get("slot", "charged" if charged else "quick"))
+			encounter_bonus *= _poise_crit_scale()
+	damage *= minf(encounter_bonus, float(MATH.config().get("damage", {}).get("max_bonus_product", 1.6)))
 	var named := is_instance_valid(_wild) and _wild.has_method("named_combat_target") and bool(_wild.call("named_combat_target"))
 	if slot == "ultimate" and named:
 		damage = minf(damage, float(_enemy.max_hp) * float(MATH.config().get("ultimate", {}).get("max_fraction_of_named_hp", 0.2)))
@@ -3303,16 +3329,8 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 			and charge_read_the_tell(_host_charged_windup(impact_context, move_id), int(frozen.get("started_at_ms", -1)))
 		stagger_triggered = bool(_wild.call("apply_poise_damage", damage, force_interrupt))
 	if hp_before > float(_enemy.hp) and not killed and is_instance_valid(_wild):
-		if slot == "utility" and _wild.has_method("apply_landed_utility"):
-			var source := impact_context.get("striker_body") as Node3D
-			var actor: Dictionary = frozen.get("actor_binding", {})
-			if is_instance_valid(source):
-				_wild.call("apply_landed_utility", frozen, {"action_id": str(frozen.get("action_id", "")),
-					"encounter_id": str(actor.get("encounter_id", "")), "generation": int(impact_context.get("body_generation", 0)),
-					"source_uid": str(card.get("creature_uid", "")), "target_uid": str(_enemy.get("uid")),
-					"source_position": source.global_position, "target_position": _wild.global_position,
-					"source_hp": float(card.get("hp", 0.0)), "source_max_hp": float(card.get("hp_max", card.get("max_hp", 0.0))),
-					"target_hp": hp_before, "hostile": true, "geometry_connected": true, "target_is_boss": named})
+		if slot == "utility":
+			_host_apply_utility(card, frozen, impact_context, hp_before)
 		elif slot == "ultimate" and _wild.has_method("hold_ultimate_reaction"):
 			_wild.call("hold_ultimate_reaction", maxf(0.0, float(frozen.get("ultimate", {}).get("presentation_seconds", 2.4)) - float(impact_context.get("travel_seconds", 0.0))))
 	var direction: Vector3 = impact_context.get("direction", Vector3.ZERO)
@@ -3332,6 +3350,27 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 		"critical_ready": stagger_triggered, "stagger_crit": stagger_crit,
 		"stagger_triggered": stagger_triggered,
 		"stagger_left": float(_wild.call("stagger_seconds_left")) if _wild != null and _wild.has_method("stagger_seconds_left") else 0.0}
+
+
+func _host_apply_utility(card: Dictionary, move: Dictionary, context: Dictionary, target_hp: float) -> bool:
+	var source := context.get("striker_body") as Node3D
+	if not is_instance_valid(source) or not is_instance_valid(_wild) or not _wild.has_method("apply_landed_utility"): return false
+	var actor: Dictionary = move.get("actor_binding", {})
+	var self_cast: bool = move.get("utility", {}).get("scope") == "self"
+	var named := _wild.has_method("named_combat_target") and bool(_wild.call("named_combat_target"))
+	return _wild.call("apply_landed_utility", move, {"action_id": str(move.get("action_id", "")),
+		"encounter_id": str(actor.get("encounter_id", "")), "generation": int(context.get("body_generation", 0)),
+		"source_uid": str(card.get("creature_uid", "")), "target_uid": str(card.get("creature_uid", "")) if self_cast else str(_enemy.get("uid")),
+		"source_body": source, "source_position": source.global_position,
+		"target_position": source.global_position if self_cast else _wild.global_position, "target_point": _wild.global_position,
+		"source_hp": float(card.get("hp", 0.0)), "source_max_hp": float(card.get("hp_max", card.get("max_hp", 0.0))),
+		"target_hp": target_hp, "hostile": true, "geometry_connected": true,
+		"target_is_boss": named, "target_is_heavy_boss": named and _wild.has_method("protected_heavy_committed") and bool(_wild.call("protected_heavy_committed"))}) == true
+
+
+func _host_utility_receipt(move: Dictionary) -> Dictionary:
+	if not is_instance_valid(_wild): return {}
+	return (_wild.get("_landed_utility_state") as Dictionary).get("receipts", {}).get(str(move.get("action_id", "")), {}).duplicate(true)
 
 
 ## The move profile the HOST tests a strike against: its own `combat.json`, its
@@ -3372,7 +3411,7 @@ static func host_move_profile(moves: RefCounted, block: String, move_id: String,
 ## before authorization, spending, or presentation until their own path exists.
 static func live_move_supported(slot: String, move_id: String) -> bool:
 	if slot in ["quick", "charged"]: return true
-	if slot == "ultimate" and not preload("res://scripts/vfx/ultimates/ultimate_library.gd").available(move_id): return false
+	if slot == "ultimate": return preload("res://scripts/vfx/ultimates/ultimate_library.gd").available(move_id)
 	return (MATH.config().get("move_commit", {}).get("live_moves", []) as Array).has(move_id)
 
 
@@ -3652,6 +3691,9 @@ func _drive_player_creature() -> void:
 	var creature_for_speed := active_creature()
 	var speed_scale: float = float(creature_for_speed.call("buff_scale", "speed")) \
 			if creature_for_speed != null else 1.0
+	if creature_for_speed != null:
+		var utility: Dictionary = _party_utility_movement.get(str(creature_for_speed.get("uid")), {})
+		if float(utility.get("remaining_s", 0.0)) > 0.0: speed_scale *= float(utility.get("multiplier", 1.0))
 	if speed_scale != 1.0 and _ally_body.has_method("base_speed"):
 		_ally_body.call("request_move", direction, float(_ally_body.call("base_speed")) * speed_scale)
 	else:
