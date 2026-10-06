@@ -31,6 +31,7 @@ class FixtureGame extends SAVE.FixtureGame:
 	var current_realm := "meadows"
 	var messages: Array[String] = []
 	func push_world_message(message: String) -> void: messages.append(message)
+	func is_multi_peer() -> bool: return session != null and bool(session.call("is_multi_peer"))
 
 class FixtureSession extends SAVE.FixtureSession:
 	func _ready() -> void: pass # Canonical admission below replaces only transport bootstrap.
@@ -121,11 +122,18 @@ func _run() -> void:
 	_check(float(_wild.call("utility_movement_multiplier")) == 0.0, "landed Snare installs the actual movement root")
 	_check(bool(_wild.call("protected_heavy_committed")), "Snare preserves the committed protected tell")
 	_check(float(_host.move_resource_snapshot(_id, 1, _creature.uid).energy) == 0.0, "Snare never grants charged Energy")
-	var energy_before: Dictionary = _host.move_resource_snapshot(_id, 1, _creature.uid)
+	# The owner HUD snapshot contains a remaining cooldown computed from the
+	# current clock. Compare the full canonical resource row/deadlines instead
+	# so elapsed milliseconds cannot masquerade as a duplicate resource write.
+	var energy_before: Dictionary = _host.record(_id).participants[1].move_resources[_creature.uid].duplicate(true)
+	var original_before: Dictionary = _host.move_commit(_id, 1, int(snare.action)).duplicate(true)
+	var hp_before := float(_enemy.hp)
 	var duplicate: Dictionary = _director.call("_host_strike", {"encounter_id": _id,
 		"action": snare.action, "slot": "utility", "move_id": "snare", "facing": Vector3.RIGHT}, 1)
 	_check(duplicate.get("ok") == false, "same accepted strike cannot land twice")
-	_check(_host.move_resource_snapshot(_id, 1, _creature.uid) == energy_before, "replayed arrival cannot credit resources")
+	_check(_host.record(_id).participants[1].move_resources[_creature.uid] == energy_before, "replayed arrival cannot credit resources")
+	_check(_host.move_commit(_id, 1, int(snare.action)) == original_before, "replayed arrival cannot change its original commit")
+	_check(float(_enemy.hp) == hp_before, "replayed arrival cannot debit target HP")
 	_writer.refuse_world = false
 	var retained: Dictionary = _session.foundation_combat_mastery(_director, _id, 1, int(snare.action))
 	_check(retained.get("durable") == true and _host.pending_move_mastery().is_empty(), "same original retries into a durable world row")
@@ -246,6 +254,7 @@ func _setup() -> void:
 	_director = Node.new()
 	_world.add_child(_director)
 	_director.set_script(DIRECTOR)
+	_director.call("_enter_tree") # Existing real source index; script attached after entry.
 	_director.set_process(false)
 	_director.set_physics_process(false)
 	_director.set("_session", _session)
@@ -387,7 +396,7 @@ func _apply_saved_mastery(event: Dictionary, move_id: String, initial: int) -> v
 	_check(token.get("ok") == true, "durable original stages " + move_id + ": " + str(token))
 	if token.get("ok") != true: return
 	var journal: Dictionary = _rpc.journal_creature_training_prepared(1, DATA.CHARACTER, _authority.staged_creature_training(token))
-	_check(journal.get("durable") == true, "personal journal saved for " + move_id)
+	_check(journal.get("durable") == true, "personal journal saved for " + move_id + ": " + str(journal))
 	_authority.finish_creature_training(token, journal.get("durable") == true)
 	if journal.get("durable") != true: return
 	var row: Dictionary = _game.world.reward_deliveries[journal.delivery_id]
