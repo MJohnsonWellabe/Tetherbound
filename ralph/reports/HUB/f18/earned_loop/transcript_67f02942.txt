@@ -1,0 +1,29 @@
+GATE A OPENING +0.33s — title interactive
+GATE A OPENING +0.47s — answered the character-choice step
+GATE A OPENING +7.07s — confirmed the configured trainer-name prefill
+GATE A OPENING +7.07s — new game world entered
+GATE A OPENING +76.75s — wake/Get Up complete
+GATE A OPENING +80.86s — Grandpa briefing and pack complete
+GATE A OPENING +80.86s — starter picker order ["terrapup", "ripplet", "galewisp"]; 0 ui_right press(es) to 'terrapup'
+GATE A OPENING +84.89s — starter selected and named (terrapup, uid creature-80891168ba012640f42fe53ad1ef0b21)
+GATE A OPENING +87.53s — Grandpa's first-catch supplies received (50 Basic Orbs)
+GATE A OPENING +87.78s — Home Key lesson read through physical confirm (2 lines), personal acknowledgement applied
+GATE A OPENING +90.29s — usable house/front doorway exited
+GATE A OPENING +102.31s — engaged exact live target Wild_bramblebun_0_2 (bramblebun)
+GATE A OPENING +103.15s — tutorial Bramblebun combat entered
+GATE A OPENING +113.87s — Bramblebun naturally weakened to 25/105 HP
+GATE A OPENING +113.87s — live catch begins with 50 earned orbs; no HP or inventory fixture
+GATE A OPENING +122.86s — catch complete; exploration resumed with two-creature party
+GATE A NPC/GATHER +11.47s — Mira cycle 1 exited and movement resumed
+GATE A NPC/GATHER +12.80s — Mira handed over axe, pickaxe and the Basic Orb pattern through dialogue
+GATE A NPC/GATHER +16.10s — Tam cycle 1 exited and movement resumed
+GATE A NPC/GATHER +16.10s — Tam handed over knife, torch and build hammer through dialogue
+GATE A NPC/GATHER +19.84s — Satchel assigned four tools by focused controller input
+GATE A NPC/GATHER +37.49s — axe equipped, swung, gathered +4 Wood
+GATE A NPC/GATHER +41.00s — pickaxe equipped, swung, gathered +4 Stone
+GATE A NPC/GATHER +47.25s — knife equipped, swung, gathered +4 Fiber
+GATE A NPC/GATHER +70.63s — Oskar cycle 1 exited and movement resumed
+GATE A NPC/GATHER +77.87s — Bram cycle 1 exited and movement resumed
+GATE A NPC/GATHER +79.50s — Bram cycle 2 exited and movement resumed
+GATE A NPC/GATHER +81.13s — Bram cycle 3 exited and movement resumed
+GATE A NPC/GATHER +82.58s — five NPC/modal exits and three equipped-tool gathers returned world control
