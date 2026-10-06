@@ -1995,7 +1995,7 @@ func _foundation_groom_context(peer: int, key: String) -> Dictionary:
 		if safety.get(hazard) != false: return {}
 	var shell := _portal_world_node("meadows")
 	if shell == null or not shell.is_ancestor_of(actor) or not shell.is_ancestor_of(station) \
-		or actor.global_position.distance_to(station.global_position) > float(cfg.den.radius_m): return {}
+		or actor.global_position.distance_to(_station_interaction_origin(station)) > float(cfg.den.radius_m): return {}
 	var world: RefCounted = game.get("world")
 	var uid := str(station.get_meta("building_uid", ""))
 	if not ESSENCE._integer(world.day, 1, 2147483646) or not ESSENCE._opaque_id(world.world_id) \
