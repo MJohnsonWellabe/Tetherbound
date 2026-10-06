@@ -4,3 +4,7 @@ unit-baseline-harvest/** -text whitespace=cr-at-eol,-blank-at-eof
 UNIT_SHA256.json -text whitespace=cr-at-eol
 profile-before/** -text whitespace=cr-at-eol,-blank-at-eof
 profile-before/temporary-peer-args.diff -text whitespace=cr-at-eol,-blank-at-eof,-space-before-tab
+profile-before-warm/** -text whitespace=cr-at-eol,-blank-at-eof
+profile-after-warm/** -text whitespace=cr-at-eol,-blank-at-eof
+profile-before-warm/temporary-peer-args.diff -text whitespace=cr-at-eol,-blank-at-eof,-space-before-tab
+profile-after-warm/temporary-peer-args.diff -text whitespace=cr-at-eol,-blank-at-eof,-space-before-tab

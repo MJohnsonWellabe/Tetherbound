@@ -91,3 +91,68 @@ original/candidate private homes has independent SOURCE PASS: unchanged cache
 key/schema/terrain input, real PNG decoding and honest miss fallback. Actual cache
 hit observation must come from native rows, not a receipt assertion. No budget change
 or fresh target timing has been accepted.
+
+## Warm production-map host profiles: terminal, functional FAIL
+
+Both existing profiles ran serially and alone at producer
+108eb16ac8fe82f0585b78a1f6cef86592e0aa48. The original uses six original
+product files at 8e7c11ceb; the candidate uses the unchanged P2 product.
+Host 0 has -d --profiling; guest arguments, assertions and budgets are unchanged.
+Both fresh independent pairs were seeded with the exact completed original
+production map PNG and key, validated before copying. Native bake_cached rows
+are 0.017589 / 0.018200 seconds SELF, one call, with no bake child row in either
+dump. This supports the shipping cached branch; no synthetic cache or hit log.
+
+Example raw native callee SELF rows (seconds; caller totals are not additive):
+
+| Target | Original SELF / calls | Candidate SELF / calls | Scope |
+| --- | --- | --- | --- |
+| vegetation::_refresh_render_instances | 27.147906 / 37 | 3.202467 / 37 | Same boot-time clear_area call count; not an arena window or buffer-content equivalence. |
+| companion_presence::_scan_camp_sources | 0.389037 / 1 | 0.000160 / 1 | Later raw rows also retained; helper work and membership need review. |
+| telegraph_glow::_ground_vertex | 0.165152 / 400 | 0.166780 / 400 | First matching-count samples overlap; no clear glow gain claimed. |
+
+These are examples from full retained frame dumps, not a repeatable benchmark,
+matched full-tournament workload, FPS/feel claim or all-frame aggregate. Other
+glow rows vary: original 0.184951 / 400 and candidate 0.165080 / 400 also occur.
+No cherry-picked later row is substituted for the inconclusive first comparison;
+hoisted context/helper work must be considered in the independent verdict.
+
+Original profile-before-warm exits 1: both peers opened/joined/deployed Mira's
+shared quarter encounter and reduced its opponent HP, but round completion
+reached the original deadline with no verdict. Candidate profile-after-warm
+exits 1: Mira completes, but guest join/hit/reward checks and its accepted durable
+reward receipts fail; Tam then reaches the original deadline with no verdict.
+All failures, character/world saves and pre-teardown observations are retained.
+No authority-cause claim, functional PASS or P2 criterion closure follows.
+
+Own peers exited, helper bytes match HEAD exactly, candidate tracked sources
+are clean, and only matching owned leases were released. The actual quiet pair
+is serviced; root released R2's P2 CPU reservation in #525 comment 6014265515.
+Per-stage SHA256.json preserves every original raw file (23 before, 24 after).
+Independent review of native costs, shifted work and remaining acceptance is
+pending. No repeated unit, cold baseline or profiler run is requested.
+## Independent final scope verdict
+
+c3_journal_review verifies all 47 original manifest entries, retained map bytes,
+restored harness/product sources and actual all-own-engines-gone census. Evidence
+integrity PASS; source PASS; functional acceptance HOLD. The summary's
+host exited=false is a pre-teardown snapshot, retained without rewriting.
+
+- Vegetation: bounded COST PASS for 37 world-construction/clear_area calls,
+  reported SELF 27.147906 -> 3.202467 seconds (about 88.2% lower). Combat arena
+  hide/restore cost and native buffer/visual equivalence remain OPEN.
+- Camp: bounded COST PASS across all samples, original 15 one-call rows
+  0.387228-0.425123 seconds/call; candidate 11 rows/13 calls
+  0.000146-0.000169 seconds/call, plus 4-6 microseconds/call group helper.
+  Live group-result equivalence is not established by timing alone.
+- Glow: GAIN HOLD after reviewing all 11 original and 48 candidate rows.
+  Equal-400-call ranges overlap (0.163091-0.184951 vs 0.161910-0.185572 seconds).
+  First inclusive draw work also lacks a benefit (0.166575 -> 0.167889 seconds).
+  Different encounters/exposure prevent a matched sustained-combat claim.
+
+These findings prove no authority cause or P2 regression. FPS, feel,
+repeatability, native equivalence and successful tournament acceptance remain
+OPEN. Coordinator disposition or a reviewed round/reward dependency is needed
+before repeating the affected existing combat proof. No protected source,
+assertion, fixture, profiling API or budget workaround is authorized by this
+review. P2 is not DONE; the three completed profiler stages remain immutable.
