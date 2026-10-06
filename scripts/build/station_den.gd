@@ -130,8 +130,11 @@ func _current_plan(actor: CharacterBody3D, creature_uid: String) -> Dictionary:
 			or _world.get_world_3d() == null or get_world_3d() != _world.get_world_3d() \
 			or actor.get_world_3d() != _world.get_world_3d():
 		return _refusal("wrong_residency", "Groom at your live homestead Den.")
-	if not actor.global_position.is_finite() or not global_position.is_finite() \
-			or actor.global_position.distance_to(global_position) > float(_config["radius_m"]):
+	# Reach is measured where the Den's own prompt is offered, as the host's
+	# station check and the Forge's channel do.
+	var origin: Vector3 = get_parent().call("interaction_origin") if get_parent() != null and get_parent().has_method("interaction_origin") else global_position
+	if not actor.global_position.is_finite() or not origin.is_finite() \
+			or actor.global_position.distance_to(origin) > float(_config["radius_m"]):
 		return _refusal("out_of_radius", "Stand beside the Den to groom.")
 	var raw: Variant = _reader.call(actor, _uid)
 	if not raw is Dictionary or not raw.get("world") is Dictionary \
