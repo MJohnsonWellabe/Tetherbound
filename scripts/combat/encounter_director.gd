@@ -2339,6 +2339,30 @@ func tether_command_deployment() -> Dictionary:
 	return _deployment_identity.get(_local_peer_id(), {}).duplicate(true)
 
 
+## Presentation capability follows the same scoped trainer consumer as ingress.
+## The host still validates the current body, admitted inventory and saved ACK.
+func tether_item_command_available(id: String) -> bool:
+	var commands := preload("res://scripts/combat/tether_commands.gd")
+	if id.is_empty() or id != _local_bound_encounter_id() or not commands.enabled() \
+		or not commands.enabled("network_enabled") or not uses_durable_trainer_rewards(id): return false
+	var record: Dictionary = _encounter_host.call("record", id) if _is_host() and _encounter_host != null else _encounter
+	var deployment := tether_command_deployment()
+	var participant: Dictionary = record.get("participants", {}).get(_local_peer_id(), {})
+	var game: Node = _session.call("_game")
+	var player: RefCounted = game.get("local") if game != null else null
+	var creature: RefCounted = _manager.call("active_creature") if is_instance_valid(_manager) else null
+	var party: RefCounted = player.get("party") if player != null else null
+	return record.get("phase") == "active" and int(deployment.get("generation", 0)) > 0 \
+		and player != null and creature != null and party != null \
+		and not str(deployment.get("character_id", "")).is_empty() \
+		and not str(deployment.get("creature_uid", "")).is_empty() \
+		and player.get("character_id") == deployment.get("character_id") \
+		and (party.call("members") as Array).has(creature) \
+		and creature.get("uid") == deployment.get("creature_uid") \
+		and participant.get("character_id") == deployment.character_id \
+		and participant.get("creature_uid") == deployment.creature_uid
+
+
 func owner_tether_item_request_matches(envelope: Dictionary) -> bool:
 	return is_instance_valid(_manager) and _local_bound_encounter_id() == envelope.get("intent", {}).get("request", {}).get("encounter_id") \
 		and _manager.call("owner_tether_item_request_matches", envelope) == true
@@ -4026,11 +4050,15 @@ func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0,
 	rec = rec.duplicate(true)
 	for retained: Dictionary in rec.get("retained_actor_participants", {}).values():
 		if retained.get("tether_commands") is Dictionary: retained.tether_commands.erase("item_pending")
-	for participant: Dictionary in rec.get("participants", {}).values():
+	for peer: int in rec.get("participants", {}):
+		var participant: Dictionary = rec.participants[peer]
 		if participant.get("tether_commands") is Dictionary:
 			participant.tether_commands.erase("item_pending")
 			participant["tether_command_view"] = {"combo_remaining_s": maxf(0.0,
 				float(int(participant.tether_commands.get("combo", {}).get("until_ms", 0)) - Time.get_ticks_msec()) / 1000.0)}
+			if _session != null and _session.has_method("admitted_character_state"):
+				participant.tether_command_view.merge(_encounter_host.call("tether_pouch_view", encounter_id, peer,
+					_session.call("admitted_character_state", peer)), true)
 		for uid: String in participant.get("move_resources", {}):
 			participant.move_resources[uid]["source_utility"] = _encounter_host.call("self_utility_view", encounter_id, uid, Time.get_ticks_msec())
 	if uses_saved_actor_vitals(encounter_id):

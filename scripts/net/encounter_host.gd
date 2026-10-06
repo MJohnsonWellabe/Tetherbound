@@ -807,6 +807,27 @@ func bind_tether_commands(id: String, peer: int, admitted: Dictionary) -> void:
 	encounters[id].seq = seq
 
 
+## A presentation count from the same first non-empty saved pouch slot used by
+## Item staging. Current owner inventory is read; the admitted gear tier stays
+## frozen. This neither chooses a packet item nor spends a stack.
+func tether_pouch_view(id: String, peer: int, admitted: Dictionary) -> Dictionary:
+	var unavailable := {"pouch_count": 0, "item_consumer_ready": false}
+	var participant: Dictionary = encounters.get(id, {}).get("participants", {}).get(peer, {})
+	var commands: Dictionary = participant.get("tether_commands", {})
+	if not TETHER_COMMANDS.enabled() or commands.is_empty() \
+		or admitted.get("character_id") != participant.get("character_id") \
+		or not ACTOR_AUTHORITY.errors(admitted, str(participant.get("character_id", ""))).is_empty(): return unavailable
+	var rules := preload("res://scripts/world/death_satchel_rules.gd")
+	var inventory: RefCounted = rules.inventory_from(admitted.inventory)
+	var counts := {}
+	for stack: Variant in admitted.inventory:
+		if stack is Dictionary: counts[stack.id] = inventory.call("count", str(stack.id))
+	var item := TETHER_COMMANDS.first_pouch_item(admitted.redesign_character.get("tether_pouch", []),
+		rules.db().get("_items"), counts, int(commands.tier))
+	return {"pouch_count": int(counts.get(item, 0)), "item_consumer_ready": not item.is_empty() \
+		and not rules.db().call("definition", item).has("creature_buff")}
+
+
 func tether_rally(id: String, peer: int, now_ms: int) -> Dictionary:
 	var participant: Dictionary = encounters.get(id, {}).get("participants", {}).get(peer, {})
 	return TETHER_COMMANDS.rally_modifiers(participant.get("tether_commands", {}), str(participant.get("character_id", "")), now_ms)

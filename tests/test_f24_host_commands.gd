@@ -489,7 +489,7 @@ func test_command_input_honors_the_mounted_command_view_before_allocating_sequen
 	var submitted: Array[Dictionary] = []
 	input.configure(func() -> Dictionary: return snapshot,
 		func(request: Dictionary) -> bool: submitted.append(request.duplicate(true)); return true)
-	assert_false(input._request_snapshot("item_throw", snapshot), "unmounted finalizer cannot receive actual player input")
+	assert_false(input._request_snapshot("item_throw", snapshot), "a view without the scoped Item consumer cannot allocate an Item sequence")
 	assert_false(input._request_snapshot("tag_combo", snapshot))
 	assert_true(submitted.is_empty())
 	assert_eq(input._sequence, 0, "locked input allocates no command sequence")
@@ -497,6 +497,141 @@ func test_command_input_honors_the_mounted_command_view_before_allocating_sequen
 	assert_eq(submitted.size(), 1)
 	assert_eq(submitted[0], COMMANDS.intent("input-original", 2, 1, "rally"))
 	input.free()
+
+
+func test_item_input_tracks_current_trainer_scope_and_keeps_pending_request_fenced() -> void:
+	COMMANDS._config.feature_flags.network_enabled = true
+	var fixture := preload("res://tests/test_foundation_resource_save.gd")
+	var game := fixture.FixtureGame.new()
+	game.world = preload("res://tests/test_foundation_resources.gd").new()._world()
+	game.local = DATA.new()._player()
+	game.local.character_id = "owner_a"
+	game.local.party.at(0).uid = "creature_a"
+	game.local.inventory.add("potion_small", 3)
+	var session := fixture.FixtureSession.new()
+	session.fixture = game
+	game.session = session
+	var director := preload("res://tests/test_client_trainer_victory.gd").DirectorFixture.new()
+	var manager := MANAGER.new()
+	director._session = session
+	director._encounter_host = host
+	director._manager = manager
+	manager._encounter_link = director
+	manager._encounter_id = id
+	manager._encounter_kind = "trainer"
+	manager.state = MANAGER.State.ACTIVE
+	var owner_party: RefCounted = game.local.party
+	var members: Array[RefCounted] = [game.local.party.at(0)]
+	manager._party = members
+	director._deployment_identity[1] = {"character_id": "owner_a", "creature_uid": "creature_a", "generation": 1}
+	host.encounters[id].kind = "trainer"
+	host.encounters[id].opponent["owner_npc"] = "trainer_arden"
+	var scope := preload("res://scripts/net/combat_round_reward.gd").scope(
+		game.world.reward_delivery_namespace, "resource-epoch", "meadows", "trainer_arden", id)
+	director._ordinary_combat_reward_owners[id] = scope
+	host.encounters[id]["ordinary_combat_reward_owner"] = scope
+	var admitted := preload("res://scripts/net/character_record_rules.gd").portable_projection(game.local.save_data())
+	admitted.redesign_character["tether_pouch"] = ["potion_small"]
+	host.bind_tether_commands(id, 1, admitted)
+	var pouch_view: Dictionary = host.tether_pouch_view(id, 1, admitted)
+	assert_eq(pouch_view, {"pouch_count": 3, "item_consumer_ready": true})
+	var input := preload("res://scripts/ui/tether_command_input.gd").new()
+	var submitted: Array[Dictionary] = []
+	input.configure(manager.tether_command_snapshot,
+		func(request: Dictionary) -> bool: submitted.append(request.duplicate(true)); return true)
+	for on_host: bool in [true, false]:
+		director.host = on_host
+		director._encounter = host.record(id).duplicate(true)
+		manager._tether_command_view = pouch_view.duplicate(true)
+		var snapshot: Dictionary = manager.tether_command_snapshot()
+		assert_true(snapshot.active)
+		assert_true(snapshot.unlocked_commands.has("item_throw"), "current host/guest scoped trainer exposes Item")
+		assert_false(snapshot.unlocked_commands.has("tag_combo"))
+		assert_true(input._request_snapshot("item_throw", snapshot))
+		assert_eq(submitted.back(), COMMANDS.intent(id, 1, submitted.size(), "item_throw"), "only four original command fields")
+		manager._tether_command_view["pending_request"] = submitted.back().duplicate(true)
+		var sequence := input._sequence
+		assert_false(input._request_snapshot("item_throw", manager.tether_command_snapshot()))
+		assert_eq(input._sequence, sequence, "unsettled original allocates no second request")
+		manager._tether_command_view = pouch_view.duplicate(true)
+		for defect: String in ["world", "epoch", "realm", "character", "uid", "owner", "active_uid", "party", "phase", "kind", "encounter", "network", "runtime", "consumer"]:
+			var record: Dictionary = host.encounters[id] if on_host else director._encounter
+			var saved_record := record.duplicate(true)
+			var saved_deployment: Dictionary = director._deployment_identity[1].duplicate(true)
+			var current_scope: Dictionary = scope if on_host else record.ordinary_combat_reward_owner
+			match defect:
+				"world": game.world.reward_delivery_namespace = "foreign-world"
+				"epoch": current_scope.session_id = "foreign-epoch"
+				"realm": current_scope.realm = "cloudreach"
+				"character": director._deployment_identity[1].character_id = "foreign-owner"
+				"uid": director._deployment_identity[1].creature_uid = "foreign-creature"
+				"owner": game.local.character_id = "foreign-owner"
+				"active_uid": manager._active_index = -1
+				"party": game.local.party = preload("res://autoload/party.gd").new()
+				"phase": record.phase = "done"
+				"kind": record.kind = "wild"
+				"encounter": manager._encounter_id = "foreign-encounter"
+				"network": COMMANDS._config.feature_flags.network_enabled = false
+				"runtime": COMMANDS._config.feature_flags.runtime_enabled = false
+				"consumer": manager._tether_command_view.item_consumer_ready = false
+			assert_false(manager.tether_command_snapshot().unlocked_commands.has("item_throw"), defect)
+			assert_false(input._request_snapshot("item_throw", manager.tether_command_snapshot()), defect)
+			assert_eq(input._sequence, sequence)
+			game.world.reward_delivery_namespace = "resource-namespace"
+			game.local.character_id = "owner_a"
+			game.local.party = owner_party
+			manager._active_index = 0
+			manager._tether_command_view = pouch_view.duplicate(true)
+			scope.session_id = "resource-epoch"
+			scope.realm = "meadows"
+			director._deployment_identity[1] = saved_deployment
+			record.clear()
+			record.merge(saved_record, true)
+			# Copies on the guest record must rebind the same restored scope.
+			record.ordinary_combat_reward_owner = scope
+			manager._encounter_id = id
+			COMMANDS._config.feature_flags.network_enabled = true
+			COMMANDS._config.feature_flags.runtime_enabled = true
+	input.free()
+	manager.free()
+	director.free()
+	session.free()
+	game.free()
+
+
+func test_pouch_presentation_reads_first_live_stack_and_frozen_gear_without_spending() -> void:
+	var player: RefCounted = DATA.new()._player()
+	player.character_id = "owner_a"
+	player.inventory.add("potion_small", 3)
+	player.inventory.add("berries", 4)
+	var record := preload("res://scripts/net/character_record_rules.gd")
+	var admitted := record.portable_projection(player.save_data())
+	admitted.equipment.backpack = "stormglass_command_pouch"
+	admitted.redesign_character["tether_pouch"] = ["potion_small", "berries", ""]
+	host.bind_tether_commands(id, 1, admitted)
+	var original := admitted.duplicate(true)
+	assert_eq(host.tether_pouch_view(id, 1, admitted), {"pouch_count": 3, "item_consumer_ready": true})
+	assert_eq(admitted, original, "HUD count never edits inventory or pouch")
+	assert_eq(_command_pool().meter, 0.0)
+	player.inventory.remove("potion_small", 3)
+	admitted.inventory = record.portable_projection(player.save_data()).inventory
+	assert_eq(host.tether_pouch_view(id, 1, admitted), {"pouch_count": 4, "item_consumer_ready": true}, "next assigned non-empty stack is the same staging selection")
+	admitted.character_id = "foreign-owner"
+	assert_eq(host.tether_pouch_view(id, 1, admitted), {"pouch_count": 0, "item_consumer_ready": false})
+	admitted.character_id = "owner_a"
+	admitted.redesign_character.tether_pouch = ["orb_basic"]
+	assert_eq(host.tether_pouch_view(id, 1, admitted), {"pouch_count": 0, "item_consumer_ready": false}, "invalid/unsupported saved pouch fails closed")
+	player.inventory.add("attack_tonic", 2)
+	admitted.inventory = record.portable_projection(player.save_data()).inventory
+	admitted.redesign_character.tether_pouch = ["attack_tonic", "berries"]
+	assert_eq(host.tether_pouch_view(id, 1, admitted), {"pouch_count": 2, "item_consumer_ready": false}, "first-slot tonic stays visible but unavailable; never skip to later food")
+	admitted = original.duplicate(true)
+	admitted.equipment.backpack = ""
+	admitted.redesign_character.tether_pouch = ["potion_small"]
+	host.bind_tether_commands(id, 1, admitted)
+	assert_eq(_command_pool().tier, 4, "live presentation cannot re-admit a different gear tier")
+	assert_eq(host.tether_pouch_view(id, 1, admitted), {"pouch_count": 3, "item_consumer_ready": true})
+	assert_eq(_command_pool().meter, 0.0)
 
 
 func test_first_item_dispatch_refuses_an_older_uncommitted_actor_original() -> void:
