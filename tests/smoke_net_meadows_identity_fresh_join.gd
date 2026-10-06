@@ -166,6 +166,7 @@ func _run() -> void:
 	_check(bool(client_identity.get("inside_grandpas_village", false)),
 		"the fresh client's real Player transform is inside Grandpa's Village (%s)"
 			% str((client_identity.get("body", {}) as Dictionary).get("position", [])))
+	await _assert_roads_agree("after the join")
 
 	# Every process holds both production remote-trainer bodies (including its
 	# own hidden outbound proxy). Check both identities on both viewers; then
@@ -231,6 +232,7 @@ func _run() -> void:
 			_check(str(saved_orbs.get("verdict", "")) == "PASS",
 				"peer %d retained its opening catch supplies after load" % peer)
 			await _assert_named_starter(peer, "after load")
+		await _assert_roads_agree("after each peer's save and reload")
 		await _rejoin_with_starter(port)
 		await _assert_roads_agree("after the rejoin")
 		if _cold:
