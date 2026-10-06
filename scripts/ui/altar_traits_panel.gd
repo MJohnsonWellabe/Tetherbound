@@ -70,13 +70,15 @@ func _ready() -> void:
 	_creature = _choice("Companion")
 	_creature.item_selected.connect(func(_index: int) -> void: _refresh())
 	_seed = _choice("Trait Seed")
-	_slot = _choice("Taught slot · replaces old trait")
+	_slot = _choice("Replace taught slot")
 	_payment = _choice("Pay with type essence")
 	_distil = _choice("Trait to distil when releasing")
 	if candidate:
 		_seed_detail = _line("", TOKENS.FONT_READ)
+		_seed_detail.hide()
 		_seed.item_selected.connect(func(_index: int) -> void: _describe_seed())
 		_release_warning = _line("", TOKENS.FONT_READ)
+		_release_warning.hide()
 		_actions = HBoxContainer.new()
 		_actions.add_theme_constant_override("separation", 12)
 		_body.add_child(_actions)
@@ -205,8 +207,12 @@ func _selected(button: OptionButton) -> Variant:
 func _refresh() -> void:
 	if not _shown: return
 	_release.text = "Release and distil trait" if _actions != null else "Release companion and distil chosen trait"
-	if _release_warning != null: _release_warning.text = ""
-	if _seed_detail != null: _seed_detail.text = ""
+	if _release_warning != null:
+		_release_warning.text = ""
+		_release_warning.hide()
+	if _seed_detail != null:
+		_seed_detail.text = ""
+		_seed_detail.hide()
 	if _release.has_meta("confirmed_uid"): _release.remove_meta("confirmed_uid")
 	_quote = _service.call("quote",_station,str(_selected(_creature)))
 	for button: OptionButton in [_seed,_slot,_payment,_distil]: button.clear()
@@ -240,9 +246,11 @@ func _refresh() -> void:
 func _describe_seed() -> void:
 	if _seed_detail == null: return
 	_seed_detail.text = ""
+	_seed_detail.hide()
 	for row: Dictionary in _quote.get("seeds", []):
 		if row.id == str(_selected(_seed)):
 			_seed_detail.text = "%s: %s" % [row.display_name, row.description]
+			_seed_detail.show()
 			return
 
 func _intent(action: String, trait_id: String, slot: int, payment: String) -> Dictionary:
@@ -263,6 +271,7 @@ func _submit_release() -> void:
 		var warning := "Release %s? This can't be undone. A confirms; B leaves." % _creature.get_item_text(_creature.selected)
 		if _release_warning != null:
 			_release_warning.text = warning
+			_release_warning.show()
 			_release.text = "Confirm release"
 		else:
 			_release.text = warning
