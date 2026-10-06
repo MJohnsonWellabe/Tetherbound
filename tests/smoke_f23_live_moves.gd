@@ -101,6 +101,7 @@ func _run() -> void:
 			if prior.is_valid_int(): _ultimate_prior_uses = int(prior)
 	_saved_visual_config = ULTIMATES.config()
 	var visual_override := OS.get_cmdline_user_args().has("--enable-ultimate-visual")
+	var slot_inputs := OS.get_cmdline_user_args().has("--prove-slot-inputs")
 	if visual_override:
 		var candidate := _saved_visual_config.duplicate(true)
 		candidate.enabled = true
@@ -126,6 +127,22 @@ func _run() -> void:
 	var prior_ultimate_history: Array = _creature.move_mastery_receipts.get("ultimate_ground_current", []).duplicate()
 	var maximum_mastery := int(MASTERY.config().rank_thresholds[4])
 	var old_world := FileAccess.get_file_as_bytes(_writer.world_store.path_for("resource-slot"))
+	if slot_inputs:
+		var before_burst: Dictionary = _host.strike_authority_state(_id, 1).duplicate(true)
+		var before_wind: float = _manager.wind_value()
+		await _button(JOY_BUTTON_A, true)
+		var burst: Dictionary = _host.strike_authority_state(_id, 1).duplicate(true)
+		_check(int(burst.get("last_action", 0)) > int(before_burst.get("last_action", 0))
+			and int(_manager.get("_action")) == MANAGER.Action.BURST and _ally.call("combat_burst_active") == true,
+			"physical A starts the real host-authorized dodge state")
+		_check(is_equal_approx(_manager.wind_value(), maxf(0.0, before_wind - _manager.wind_cost("burst"))),
+			"physical A spends the canonical dodge Wind cost once")
+		await _wait_ready()
+		while Time.get_ticks_msec() < int(burst.get("deadline_ms", 0)): await process_frame
+		await physics_frame
+		await process_frame
+		_check(_host.strike_authority_state(_id, 1) == burst, "holding A after the dodge deadline creates no repeated accepted action")
+		await _button(JOY_BUTTON_A, false)
 	_writer.refuse_world = true
 	var snare := await _tap_move(JOY_BUTTON_B, "utility")
 	_check(not snare.is_empty(), "B must start and land admitted Snare")
@@ -162,6 +179,31 @@ func _run() -> void:
 		var quick := await _tap_move(JOY_BUTTON_X, "quick")
 		_check(not quick.is_empty(), "physical quick %d did not land" % hit)
 		if quick.is_empty(): break
+		if slot_inputs and hit == 4:
+			var charged := await _tap_move(JOY_BUTTON_Y, "charged")
+			_check(not charged.is_empty(), "ordinary physical Y tap completes its charged move after release")
+	if slot_inputs:
+		await _wait_ready()
+		var before_charged := _impacts.size()
+		await _button(JOY_BUTTON_Y, true)
+		var held_charged: Dictionary = _host.move_commit(_id, 1)
+		_check(held_charged.get("slot") == "charged", "one fresh ordinary Y edge starts a charged move while held")
+		var until_charged := Time.get_ticks_msec() + 5000
+		while _impacts.size() == before_charged and Time.get_ticks_msec() < until_charged: await process_frame
+		_check(_impacts.size() == before_charged + 1 and _impacts.back().slot == "charged"
+			and float(_impacts.back().damage) > 0.0, "held Y completes one actual charged HP debit")
+		for refill in 4:
+			var quick := await _tap_move(JOY_BUTTON_X, "quick")
+			_check(not quick.is_empty(), "real quick %d refills charged Energy while Y remains held" % refill)
+		await _wait_ready()
+		await physics_frame
+		await process_frame
+		var charged_launches := 0
+		for launch: Dictionary in _launches:
+			if launch.slot == "charged": charged_launches += 1
+		_check(_manager.charged_ready() and is_equal_approx(float(_host.move_resource_snapshot(_id, 1, _creature.uid).energy), 100.0)
+			and charged_launches == 2, "held Y never repeats even after actual hits restore full Energy and charged readiness")
+		await _button(JOY_BUTTON_Y, false)
 	_check(is_equal_approx(float(_host.move_resource_snapshot(_id, 1, _creature.uid).ultimate_meter), 100.0), "real landed hits fill the host Ultimate meter")
 	_check(is_equal_approx(float(_manager.call("ultimate_fraction")), 1.0), "Manager snapshot mirrors the host's full meter")
 	await process_frame
@@ -479,7 +521,7 @@ func _apply_saved_mastery(event: Dictionary, move_id: String, initial: int) -> v
 
 func _finish() -> void:
 	ULTIMATES._config = _saved_visual_config
-	for button: JoyButton in [JOY_BUTTON_X, JOY_BUTTON_Y, JOY_BUTTON_B, JOY_BUTTON_RIGHT_SHOULDER]:
+	for button: JoyButton in [JOY_BUTTON_X, JOY_BUTTON_Y, JOY_BUTTON_B, JOY_BUTTON_A, JOY_BUTTON_RIGHT_SHOULDER]:
 		var event := InputEventJoypadButton.new()
 		event.button_index = button
 		event.pressed = false
