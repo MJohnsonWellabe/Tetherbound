@@ -17,6 +17,9 @@
   "workflow_id": 367653314,
   "run_id": 37457844923,
   "workflow_head_sha": "603028087646d68e67fdcfbff2f976340934de6e",
-  "observed_status": "queued",
-  "observed_utc": "2026-10-06T11:40:12.1134273Z"
+  "observed_status": "in_progress",
+  "observed_utc": "2026-10-06T11:59:48.1472431Z",
+  "job_id": 112249736810,
+  "fight_step_started_at": "2026-10-06T11:49:10Z",
+  "follow_through": "Owner standing15-minute checks installed as current-thread heartbeat r2-f22-follow-through; quiet on unchanged state, exact handle only, collect/review/result-stop rule retained."
 }
