@@ -305,3 +305,11 @@ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  ci-bramble-bin
 9686dc34161f47cbda7f3eb5d514f21b7f48dc78260e736a8247d7dbdf842fa2  ci-build-owns-cycle-on/stderr.txt
 dcdef2b6656b8a634fe295a921d07a433b117e3361fe6cfb836faffdc0569801  ci-build-owns-cycle-on/r1-ci-build-owns-cycle-on-20261006T0651Z.txt
 5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  ci-build-owns-cycle-on/exit.txt
+5bb946ab75466563861c71932dee682deac6a92e3f6c11295bce79dd37d684e2  ci-build-two-beds-on/stdout.txt
+28bfdf3df6645a1fe135fe30a9caca337a913ddb8daed1999c6cee9f0484e2d5  ci-build-two-beds-on/stderr.txt
+e91ae3ed663dab8889bb5288559ff3fc16a225cfcd9c5a8d239c604a74f2f70b  ci-build-two-beds-on/r1-ci-build-two-beds-on-20261006T0701Z.txt
+5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  ci-build-two-beds-on/exit.txt
+915ec2ee94020dd3bb2816e5c514b51b34fdfd6652238dba70b7d5667c7a6f83  ci-catch-aim-on/stdout.txt
+9686dc34161f47cbda7f3eb5d514f21b7f48dc78260e736a8247d7dbdf842fa2  ci-catch-aim-on/stderr.txt
+41d1f4c540dcc28b11a0f8421686fb708642b08c5c8f44a1724d66a91b3a0507  ci-catch-aim-on/r1-ci-catch-aim-on-20261006T0704Z.txt
+5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9  ci-catch-aim-on/exit.txt

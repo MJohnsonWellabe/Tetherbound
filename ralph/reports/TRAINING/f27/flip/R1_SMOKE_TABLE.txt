@@ -45,8 +45,8 @@ backpack_player_eats | ON FIRST PASS exit0; physicalSatchel eaterpicker/playerro
 boss | ON FIRST functional PASS, exit0; Warden5creatures/959frames/finale/offer/road/full-party ceremony OPENING; inherited HP/party/relocation fixtures; duplicate-starter ERROR identical to OFF trainer diagnostic; independent functional review PASS
 bramblebun_colourway_binding | ON FIRST PASS, exit0/12assertions/0failures/empty stderr; actual three variant dressing permitted binding/source ownership; direct assets; independent review PASS/no distinct-appearance claim
 build_owns_creature_cycle | ON FIRST PASS, exit0; no-menu LB control/Build Dpad focus+no world cycle/Build LB no cycle; direct party/catalogue setup; independent review PASS
-build_two_creature_beds | ON OPEN
-catch_aim_slowdown | ON OPEN
+build_two_creature_beds | ON FIRST PASS, exit0; ten two-bed placement/delta runs/default2s soak/finish_fallback accepted; no save completion observed; free-build fixture; independent review PASS/no post-warmup or180s fallback proof
+catch_aim_slowdown | ON FIRST PASS, exit0; accumulated path length baseline1.22m/aimed0.49m/ratio0.40 over equal60frame windows; CLOSE/placement/owned-starter fixture; independent review PASS
 catching | ON OPEN
 cloudreach_arrival_walk | ON OPEN
 combat | ON FIRST PASS exit0; real wild controller/movement/arena/hit+miss/typechart/win/no-autoheal/control-return; independent review PASS; inherited staging/crit-scale fixture disclosed; warnings retained
