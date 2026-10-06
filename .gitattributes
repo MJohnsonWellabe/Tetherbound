@@ -8,3 +8,4 @@ ralph/reports/COMBAT/f23/current/camp-loadout*.log -text
 ralph/reports/COMBAT/f24/current/saved-command-*.log -text
 ralph/reports/COMBAT/f24/current/item-mushroom-*.log -text
 ralph/reports/COMBAT/f24/current/wind-profile-*.log -text
+ralph/reports/COMBAT/f23/current/camp-guest-unit-*.log -text

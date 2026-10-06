@@ -1,0 +1,17 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_forward_camp.gd,test_f24_host_commands.gd::test_personal_view_cache_requires_current_character_world_and_epoch,test_f23_loadout_contract.gd::test_loadout_station_ownership_and_save_recovery_use_the_existing_original: 3 of 819 test files
+  ok    test_f23_loadout_contract.gd :: test_loadout_station_ownership_and_save_recovery_use_the_existing_original
+  ok    test_f24_host_commands.gd :: test_personal_view_cache_requires_current_character_world_and_epoch
+  ok    test_forward_camp.gd :: test_atomic_kit_place_pack_replay_and_stale_revision
+  ok    test_forward_camp.gd :: test_commit_reconciles_original_before_removed_source_and_never_publishes_failed_save
+  ok    test_forward_camp.gd :: test_disabled_forward_camp_refuses_placement_and_source_context
+  ok    test_forward_camp.gd :: test_feasts_power_gear_and_refining_fail_even_on_allowlisted_id
+  ok    test_forward_camp.gd :: test_guest_camp_presentation_requires_the_current_record_pose_and_reach
+  ok    test_forward_camp.gd :: test_one_camp_per_stable_character_per_biome
+  ok    test_forward_camp.gd :: test_real_recipe_book_splits_travel_tier_from_homestead_only
+  ok    test_forward_camp.gd :: test_record_rejects_duplicate_removed_unpaid_and_bad_identity
+  ok    test_forward_camp.gd :: test_saved_world_preflight_preserves_old_worlds_and_rejects_duplicate_slots
+  ok    test_forward_camp.gd :: test_source_context_is_realm_and_reach_bound
+
+12 tests, 272 assertions, 0 failed
