@@ -1256,6 +1256,7 @@ static func oskar_approach_path(meadow: Array[Vector2], street: Array[Vector2], 
 ## insufficient: `interaction_arbiter.gd::_physics_process()` deliberately
 ## recomputes it at the button edge to avoid an idle/physics-clock race.
 func _press_and_observe_activation(target: Object) -> int:
+	_stop_left_stick()
 	_activation_target = target
 	_activation_verdict = ActivationVerdict.NONE
 	_competing_activation = ""
