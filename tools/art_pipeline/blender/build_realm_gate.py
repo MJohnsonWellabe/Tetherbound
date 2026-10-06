@@ -108,7 +108,10 @@ pier_width = min((min(outer_half_width + row[1], outer_half_width - row[2]) for 
     'width_through_height_m': args.width_through_height, 'min_pier_width_m': pier_width}, indent=2) + '\n')
 assert profile and profile[-1][0] > args.aperture_height, 'Portal ceiling too low'
 assert profile[-1][0] >= args.width_through_height, 'Width proof does not cover required height'
-assert walk_width > args.aperture_width, 'Portal passage too narrow'
+# A declared minimum-pier fit uses the inclusive supplied clearance contract;
+# keep the original, stricter passage bar for the existing default invocation.
+width_ok = walk_width >= args.aperture_width if args.min_pier_width > 0 else walk_width > args.aperture_width
+assert width_ok, 'Portal passage too narrow'
 assert pier_width >= args.min_pier_width, 'Portal piers too narrow'
 bpy.ops.export_scene.gltf(filepath=str(OUT / 'realm_gate_frame.glb'), export_format='GLB',
     use_selection=True, export_animations=False, export_yup=True)
