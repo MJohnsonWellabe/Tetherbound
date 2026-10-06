@@ -81,7 +81,8 @@ func _run() -> void:
 	# A source inventory can miss an imported material or a later spawn.
 	# Audit the entire production world OUTSIDE the timed healing frame and
 	# require every material the old rule could change to be indexed.
-	var light_materials := _live_tether_materials(world, healing)
+	var before_material_users: Dictionary = {}
+	var light_materials := _live_tether_materials(world, healing, before_material_users)
 	_lights_before = light_materials
 	var indexed_materials: Dictionary = {}
 	for target_root: Node in (healing.call("_world_group_nodes", HEALING.LIGHT_ROOTS_GROUP) as Array):
@@ -91,7 +92,8 @@ func _run() -> void:
 					indexed_materials[material] = true
 	for material: Material in light_materials:
 		if not indexed_materials.has(material):
-			_fail("(before) an affected tether material has no registered production light root")
+			_fail("(before) affected tether material '%s' on %s has no registered production light root" % [
+				material.resource_name, str(before_material_users.get(material, "unknown"))])
 	if light_materials.is_empty():
 		_fail("(before) no live tether materials; the kill check would be vacuous")
 	print("(before) %d affected materials, %d indexed materials, %d light roots, %d pylon holders, %d cable holders" % [
@@ -266,7 +268,8 @@ func _check_end_state(world: Node, healing: Node, tag: String) -> void:
 			elif not material_users.has(material):
 				retired += 1
 			else:
-				_fail("(live) a before-state tether material remains lit on surviving geometry")
+				_fail("(live) before-state tether material '%s' remains lit on %s" % [
+					material.resource_name, str(material_users[material])])
 		var expected_killed := _lights_before.size() - retired
 		if int(report.get("lights_killed", -1)) != expected_killed:
 			_fail("(live) killed %d materials, identity audit found %d changed and %d unchanged/retired" % [
@@ -590,7 +593,7 @@ func _live_tether_materials(world: Node, healing: Node, material_users: Dictiona
 			if material == null or seen.has(material):
 				continue
 			seen[material] = true
-			material_users[material] = true
+			material_users[material] = str(world.get_path_to(node))
 			if _tether_material_is_live(material, healing, lit_path, dead_exists):
 				out.append(material)
 	return out

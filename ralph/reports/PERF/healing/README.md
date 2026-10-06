@@ -169,5 +169,35 @@ The engine exited and the matching lease released. This baseline has none of
 the candidate's added material/mounted checks; candidate runtime, AFTER timing,
 tightened bound and two-peer handoff remain OPEN. No performance gain is claimed.
 
+The first quiet candidate at `7ba419929be0c8a488b7ec5957d6d2ea6315ad74`
+completed **exit 1 / FAIL**. All 19 mounted assertions executed; native parsing
+produced no SCRIPT ERROR or Parse Error. The full-world audit found 143 affected
+materials, but grouped healing changed only 28 and left 115 lit live, after the
+fresh-world reload and reload+30. The 4162 ms frame is an observed failed run,
+**not accepted performance evidence**. All 29 pylon poses, clearance, cables,
+herd and per-pylon save/rebuild comparisons passed. Raw
+[receipt](after-first/receipt.json), [stdout](after-first/stdout.log),
+[stderr](after-first/stderr.log) and [exit](after-first/exit.txt) remain unchanged,
+with [hashes](after-first/SHA256SUMS.txt); the owned engine exited and lease released.
+
+Source investigation found omitted pickup and objective presentation roots:
+53 Good Candy pickups generate 106 matching crest/ring materials; four placed
+TM orb colors match the unchanged hue rule; the objective adds four cyan
+materials. These counts explain 114 of the 115 identities from source, without
+claiming exact native identity attribution. The repair registers the existing
+pickup, TM and objective visual roots. It mounts the same objective before the
+saved-flag healing step so live and rebuilt-world coverage agree. Existing
+failure messages now name the material's first geometry path; all assertions
+remain. Corrected runtime and performance acceptance are still OPEN.
+
+Independent read-only review by `/root/c3_journal_review` and
+`/root/stormursa_reference_review`: **SOURCE PASS** on the focused repair.
+World scope, material identity, the unchanged simulation guard and assertion
+strength are preserved. Required player, terrain, map, quest and actor inputs
+already exist at the new objective construction point. Its `_ready` also
+attaches OnboardingLessons earlier in sliced construction; no incorrect
+selection or startup failure is proved, so actual startup remains a runtime
+qualification. The remaining material requires the new native path diagnostic.
+
 C2 is closed as BLOCKED/accepted with an existing-tool gap. Its custom fixture
 and cancelled export/profile queue must not be restored or executed for P1.

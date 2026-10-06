@@ -542,6 +542,7 @@ static func _badge_colour(game: Node, item_id: String) -> Color:
 ## spin starts, so a field of candies does not turn in lockstep; see
 ## `spin_phase_for()`.
 static func dress(pickup: Node3D, item_id: String, badge: Color, spin_phase: float = 0.0) -> void:
+	pickup.add_to_group(&"meadow_healing_light_roots")
 	var mesh := _first_mesh(pickup)
 	if mesh == null or mesh.mesh == null:
 		return
