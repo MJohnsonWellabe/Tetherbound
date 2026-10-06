@@ -282,6 +282,9 @@ static func _relic(current: Dictionary, action: String, intent: Dictionary, cont
 	next.redesign_character.transaction_receipts.append(receipt)
 	return {"ok": true, "state": next, "receipt": receipt}
 
+## Configured hearts, read once for relic_power's id check.
+static var _hearts: RefCounted
+
 ## F31#2 / RD-20: the one active relic power, chosen in the Shrine Room. Any
 ## relic this character has PROVED hung (relic_hang receipt) may be chosen,
 ## "" clears; one write replaces the old choice. Repeatable, so each edit is
@@ -292,6 +295,14 @@ static func relic_power(current: Dictionary, intent: Dictionary, context: Dictio
 	if context.get("shrine_power") != true or context.get("in_combat") != false: return deny("actual_shrine_pedestal_required")
 	var heart: String = intent.heart_id
 	var character: String = current.character_id
+	# A committed choice replays as itself before any rule is re-judged.
+	var receipt := "craft:%s:relic_power_%s" % [character, intent.edit_id]
+	if current.redesign_character.transaction_receipts.has(receipt): return deny("reconcile_original_decision")
+	# A choice names a configured heart by its runtime id (Tidewake's is
+	# "water"); a biome alias would pass the hung check but load as nothing.
+	if _hearts == null: _hearts = preload("res://autoload/realm_heart_state.gd").new()
+	if not heart.is_empty() and _hearts.heart(heart).is_empty():
+		return deny("unknown_heart")
 	if not heart.is_empty():
 		var biome := preload("res://scripts/data/biome_order.gd").canonical_id(heart)
 		if not current.redesign_character.get("relics_hung", []).has(biome) \
@@ -299,8 +310,6 @@ static func relic_power(current: Dictionary, intent: Dictionary, context: Dictio
 			return deny("relic_not_hung")
 	var next := current.duplicate(true)
 	next.realm_hearts = {"active_id": heart}
-	var receipt := "craft:%s:relic_power_%s" % [character, intent.edit_id]
-	if next.redesign_character.transaction_receipts.has(receipt): return deny("reconcile_original_decision")
 	# Choosing the power already active changes nothing: no row, no receipt.
 	if str((current.get("realm_hearts", {}) as Dictionary).get("active_id", "")) == heart: return deny("relic_power_unchanged")
 	next.redesign_character.transaction_receipts.append(receipt)

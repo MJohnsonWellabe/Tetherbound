@@ -6407,13 +6407,13 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 	if opponent_owned:
 		# F14#1: a guest who joins a trainer/boss fight mirrors THIS creature
 		# (`_legacy_mirror_body`), so the record carries its card and pose too.
-		# `round` tells two identical consecutive team members apart.
+		# `round` tells two identical consecutive team members apart within this battle.
 		opponent.merge({
 			"card": WATER_CAPTURE_CODEC.encode(instance as RefCounted),
 			"body_scale": maxf(0.01, float(wild.get("body_scale"))),
 			"foot_position": [feet.x, feet.y, feet.z],
 			"facing": [facing.x, facing.y, facing.z],
-			"round": _trainer_sent,
+			"round": _trainer_battle_sent,
 			"body_generation": _trainer_sent,
 			"round_continues": not _trainer_queue.is_empty(),
 		})
