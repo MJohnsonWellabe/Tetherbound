@@ -56,13 +56,7 @@ class Session extends Node:
 	var game: Node
 	var host := false
 	var last_rejoin_admission: Dictionary = {}
-	var credited: Array = []
-	func rejoin_admission_for(character: String, portable: Dictionary, summary: Dictionary) -> Dictionary:
-		var result: Dictionary = _character_authority.call("rejoin_admission", character, portable, game.world.reward_deliveries,
-			(summary.get("personal_flags", {"flags": []}) as Dictionary).get("flags", []), summary.get("settled_deliveries", []), summary.get("owed_deliveries", []))
-		last_rejoin_admission[character] = str(result.get("code", ""))
-		return result
-	func credit_rejoin_gathers(_character: String, ids: Array) -> void: credited.append_array(ids)
+
 	var owner_peer := 2
 	var _character_authority: RefCounted
 	var messages: Array[Dictionary] = []
@@ -1312,9 +1306,9 @@ func test_a_behind_rejoin_readmits_to_adopt_and_any_other_difference_is_refused(
 	service.admitted(2, {"portable_authority": declared, "discovered_landmarks": held,
 		"owner_passive_stream": {"id": "ffeeddccbbaa99887766554433221100", "baseline_hash": hash.fingerprint(before)}})
 	assert_true(service.refused.has(character), "a malformed declaration is refused")
-	# A difference the hello did not find behind (e.g. a malformed payout list
-	# kept the held record) is refused, never adopted over.
-	session.last_rejoin_admission[character] = "payout_list_invalid"
+	# A difference the hello did not find behind (e.g. an open host
+	# transaction kept the held record) is refused, never adopted over.
+	session.last_rejoin_admission[character] = "host_duties_unsettled"
 	service.hosts.clear()
 	service.refused.clear()
 	session.messages.clear()
@@ -1360,9 +1354,10 @@ func test_a_pending_payout_the_held_record_holds_forces_a_readmit_that_settles_i
 	assert_true(service.delivery_ready(), "a rebase (admission pending again) does not hold them")
 
 
-func test_an_open_host_duty_parks_the_rejoin_and_decides_again_once_settled() -> void:
-	# Review M1: the hello kept the held record while a host transaction was
-	# open; once it settles the owner, not behind, wins (owner ruling).
+func test_an_open_host_duty_at_the_hello_refuses_and_never_adopts() -> void:
+	# The hello kept the held record while a host transaction was open: the
+	# stream is refused with a reason (as before the ruling), never adopted
+	# over and never parked on the stale declaration.
 	var character: String = before.character_id
 	var held: Dictionary = session._character_authority.discovered_landmarks(character)
 	var hash := preload("res://scripts/net/research_passive_preparation.gd")
@@ -1374,17 +1369,13 @@ func test_an_open_host_duty_parks_the_rejoin_and_decides_again_once_settled() ->
 	service.hosts.clear()
 	service.refused.clear()
 	session.messages.clear()
-	session._character_authority.get("_loadout_pending")[character] = {"uid": "x"}
 	session.last_rejoin_admission[character] = "host_duties_unsettled"
-	var summary := {"portable_authority": declared, "discovered_landmarks": held, "personal_flags": {"flags": []},
-		"owner_passive_stream": {"id": "aa112233445566778899aabbccddeeff", "baseline_hash": hash.fingerprint(declared)}}
-	service.admitted(2, summary)
-	assert_true(service.deferred.has(character) and not service.refused.has(character), "parked, not refused")
-	session._character_authority.get("_loadout_pending").erase(character)
-	service.retry_deferred(character)
-	assert_eq(session.last_rejoin_admission.get(character), "readmitted_portable", "decided again: the owner wins")
-	assert_true(service.hosts.has(character) and not service.refused.has(character), "and its stream is admitted")
-	assert_eq((session._character_authority.call("state", character) as Dictionary).party.size(), 2, "with its offline catch")
+	service.admitted(2, {"portable_authority": declared, "discovered_landmarks": held, "personal_flags": {"flags": []},
+		"owner_passive_stream": {"id": "aa112233445566778899aabbccddeeff", "baseline_hash": hash.fingerprint(declared)}})
+	assert_true(service.refused.has(character) and not service.deferred.has(character), "refused, not parked")
+	assert_true(str(service.refused[character].reason).contains("host_duties_unsettled"), "naming why: %s" % str(service.refused[character].reason))
+	assert_true(session.messages.filter(func(m: Dictionary) -> bool: return m.get("op") == "readmit").is_empty(), "no adoption")
+	assert_eq((session._character_authority.call("state", character) as Dictionary).party.size(), before.party.size(), "the held record is untouched")
 
 
 func test_a_landmark_revealed_without_an_input_never_changes_the_owner_passive_identity() -> void:

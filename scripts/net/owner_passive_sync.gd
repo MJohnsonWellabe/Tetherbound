@@ -247,24 +247,13 @@ func admitted(peer: int, summary: Dictionary) -> void:
 		return
 	var adopt := not E._equivalent(REPLAY._core(before), REPLAY._core(declared))
 	var rejoin_code := str((session.get("last_rejoin_admission") as Dictionary).get(character, "")) if "last_rejoin_admission" in session else ""
-	if adopt and rejoin_code == "host_duties_unsettled" and session.has_method("rejoin_admission_for"):
-		# The hello kept the held record while a host transaction for this
-		# character was open. Park until it settles, then decide again (review M1).
-		if not _duties_settled(character):
-			deferred[character] = {"peer": peer, "summary": summary.duplicate(true)}
-			print("[owner-passive] admission of %s waits for its open host transaction" % character.left(18))
-			return
-		var again: Dictionary = session.call("rejoin_admission_for", character, declared, summary)
-		print("[owner-passive] rejoin of %s decided again after its host transaction settled: %s" % [character.left(18), str(again.get("code", ""))])
-		if again.get("code") == "readmitted_portable":
-			authority.call("seed_personal_flags", character, summary.get("personal_flags", {"flags": []}))
-		session.call("credit_rejoin_gathers", character, again.get("applied", []))
-		if again.get("code") != "host_duties_unsettled":
-			admitted(peer, summary)
-			return
 	if adopt and rejoin_code != "held_wins":
-		# Never adopt over a declaration that was not found behind (e.g. an open
-		# host transaction kept the held record): refuse, as before the ruling.
+		# Never adopt over a declaration that was not found behind. An open host
+		# transaction at the hello (host_duties_unsettled) kept the held record:
+		# refused as before the ruling; nothing is lost (the owner keeps its
+		# file) and its next rejoin, after the transaction settled, carries a
+		# fresh declaration that wins unless behind. (A parked re-decide judged
+		# the stale hello declaration and could wait forever: review of 40df9738.)
 		var reason := "owner_passive_admission_conflict: %s %s" % [rejoin_code, ", ".join(_differing_paths("", before, declared, 0, []).slice(0, 8))]
 		refused[character] = {"id": str(declaration.id), "reason": reason, "peer": peer}
 		push_warning("[owner-passive] refused rejoined stream for %s: %s" % [character.left(18), reason])
@@ -296,14 +285,6 @@ func peer_departed(peer: int) -> void:
 
 
 ## Host: re-run a rejoin admission parked behind in-flight vitals.
-## No open host transaction and no unsettled typed row for this character.
-func _duties_settled(character: String) -> bool:
-	var authority: RefCounted = owner().get("_character_authority")
-	return authority.call("owes_unsettled", character) != true \
-		and authority.call("host_rows_unsettled", character, _game().get("world").reward_deliveries) != true \
-		and (authority.call("pending_creature_vitals", character) as Dictionary).is_empty()
-
-
 func retry_deferred(character: String) -> void:
 	var parked: Dictionary = deferred.get(character, {})
 	if parked.is_empty(): return
@@ -423,7 +404,9 @@ func receive_host(peer: int, packet: Dictionary) -> void:
 		if refused.get(character, {}).get("id") == packet.get("stream_id"): _send_refusal(peer, character)
 		# A parked rejoin admission re-checks on the owner's own traffic once its
 		# in-flight vitals are settled (backstop for a lost ACK-side retry).
-		if deferred.get(character, {}).get("peer") == peer and _duties_settled(character): retry_deferred(character)
+		if deferred.get(character, {}).get("peer") == peer:
+			var authority: RefCounted = owner().get("_character_authority")
+			if (authority.call("pending_creature_vitals", character) as Dictionary).is_empty(): retry_deferred(character)
 		return
 	var stream: Dictionary = hosts[character]
 	if stream.get("departed") == true:

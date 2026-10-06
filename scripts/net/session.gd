@@ -51,8 +51,7 @@ func rejoin_payout_lists(summary: Dictionary) -> Dictionary:
 	return out
 
 
-## One rejoin decision (the hello, or a deferred admission once the host's
-## open duties settled); records its code for owner-passive admission.
+## The hello's rejoin decision; records its code for owner-passive admission.
 func rejoin_admission_for(character_id: String, portable: Dictionary, summary: Dictionary, lists: Dictionary = {}) -> Dictionary:
 	if lists.is_empty(): lists = rejoin_payout_lists(summary)
 	var rejoin: Dictionary = {"ok": false, "code": "payout_list_invalid"}
