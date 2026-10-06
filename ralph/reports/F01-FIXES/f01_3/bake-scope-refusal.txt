@@ -1,0 +1,1 @@
+Refused source outside approved village snapshot: data/config/terrain_playground.json

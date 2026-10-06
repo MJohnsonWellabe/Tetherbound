@@ -1,0 +1,25 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only gate_a_npc_gather_segment_contract: 1 of 823 test files
+  ok    test_gate_a_npc_gather_segment_contract.gd :: test_activation_verdict_distinguishes_target_competitor_and_nothing
+  ok    test_gate_a_npc_gather_segment_contract.gd :: test_actual_stone_heading_accounts_for_the_concave_fence
+  ok    test_gate_a_npc_gather_segment_contract.gd :: test_advisory_avoidance_accounts_for_real_turning_distance_without_crossing_the_waypoint
+  ok    test_gate_a_npc_gather_segment_contract.gd :: test_controller_activation_is_confirmed_by_the_live_arbiter_signal
+  ok    test_gate_a_npc_gather_segment_contract.gd :: test_fatal_approach_failure_stops_at_the_outer_retry_boundary
+  ok    test_gate_a_npc_gather_segment_contract.gd :: test_indoor_movement_resume_uses_the_existing_doorway_axis
+  ok    test_gate_a_npc_gather_segment_contract.gd :: test_local_wood_errand_leaves_the_actual_pond_road_before_the_distant_pond
+  ok    test_gate_a_npc_gather_segment_contract.gd :: test_meadow_auto_run_releases_failed_taps_and_cleans_up_a_refused_walk
+  ok    test_gate_a_npc_gather_segment_contract.gd :: test_meadow_auto_run_uses_two_taps_and_returns_to_walk_at_the_original_road_node
+  ok    test_gate_a_npc_gather_segment_contract.gd :: test_mira_return_uses_painted_bends_and_same_standoff_without_stepping_onto_lip
+  ok    test_gate_a_npc_gather_segment_contract.gd :: test_ordinary_preview_uses_locomotion_speed_and_preserves_cached_momentum
+  ok    test_gate_a_npc_gather_segment_contract.gd :: test_oskar_approach_refuses_unjoined_roads_nonfinite_and_remote_prompt
+  ok    test_gate_a_npc_gather_segment_contract.gd :: test_oskar_return_preserves_authored_street_and_house_approach_bends
+  ok    test_gate_a_npc_gather_segment_contract.gd :: test_pre_press_winner_snapshot_is_not_returned_as_success
+  ok    test_gate_a_npc_gather_segment_contract.gd :: test_prospective_tangent_does_not_push_into_the_unreported_opposite_wall
+  ok    test_gate_a_npc_gather_segment_contract.gd :: test_road_prefix_keeps_authored_order_and_uses_the_first_nearest_exit
+  ok    test_gate_a_npc_gather_segment_contract.gd :: test_road_prefix_refuses_malformed_and_out_of_scope_inputs
+  ok    test_gate_a_npc_gather_segment_contract.gd :: test_road_slice_returns_in_original_reverse_order_and_refuses_broken_input
+  ok    test_gate_a_npc_gather_segment_contract.gd :: test_stone_fence_hint_keeps_clearance_and_refuses_invalid_scope
+  ok    test_gate_a_npc_gather_segment_contract.gd :: test_stone_heading_through_a_placed_prop_collider_uses_the_meadow_road
+
+20 tests, 128 assertions, 0 failed

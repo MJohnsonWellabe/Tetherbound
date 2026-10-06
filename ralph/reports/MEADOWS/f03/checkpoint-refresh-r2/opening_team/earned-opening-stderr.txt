@@ -1,0 +1,17 @@
+WARNING: instance_reset_physics_interpolation() is deprecated.
+   at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+   GDScript backtrace (most recent call first):
+       [0] _build_terrain (res://scripts/world/playground_world.gd:1173)
+       [1] _ready (res://scripts/world/playground_world.gd:806)
+WARNING: save: target slot conflicts with retained world transactions
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] _prepare_snapshot (res://scripts/save/save_game.gd:475)
+       [1] save (res://scripts/save/save_game.gd:417)
+       [2] save_game (res://autoload/game_state.gd:1571)
+       [3] _run (res://tools/earned_saves/earned_chain_runner.gd:103)
+       [4] _opening_team (res://tools/earned_saves/earned_chain_runner.gd:126)
+       [5] run (res://tests/helpers/meadows_earned_team_segment.gd:183)
+       [6] _win_live_fight (res://tests/helpers/meadows_earned_team_segment.gd:991)
+       [7] fight_to_the_end (res://tools/combat_pilot.gd:203)
+       [8] _act (res://tests/helpers/cloudreach_live_segment.gd:64)

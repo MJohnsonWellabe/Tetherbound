@@ -1,0 +1,554 @@
+{
+  "branch": "tb/codex-r3",
+  "png_count": 97,
+  "saved_png_resolution": "1280x720",
+  "isolated_appdata": "D:/tetherbound/.artifacts/r3-night-proof/round5-home",
+  "supervisor_pid": 5184,
+  "capture_script": "tests/capture_village_walk.gd",
+  "render_lock": "D:/tetherbound/RENDER_LOCK.json",
+  "frames": [
+    {
+      "sha256": "C58B30A3C4D4BB23C6B38818F75902A16A6FBE7C33D3622E5738EE888950D211",
+      "bytes": 1495778,
+      "file": "visits_night_001_start-after-opening.png"
+    },
+    {
+      "sha256": "C893413392E02BD6545F3593F1F8CFFC17ACCDABC3D1A7270268011898F24FDC",
+      "bytes": 1100424,
+      "file": "visits_night_002_end.png"
+    },
+    {
+      "sha256": "0EED51F655F2E578BC2865C88F8EB358522C5AF62A92C7F125FEF8D8CAC58853",
+      "bytes": 1154723,
+      "file": "visits_night_003_reached-grandpa.png"
+    },
+    {
+      "sha256": "FD27EF06C17C321A456C1F1045A465AC9502B92DED3C8861E0CA88403FBDA2A8",
+      "bytes": 1375128,
+      "file": "visits_night_004_travel.png"
+    },
+    {
+      "sha256": "937AECFE51BF25F24A856443A1C00030EA20187EB321BBACAD6874D2AD18F423",
+      "bytes": 1426206,
+      "file": "visits_night_005_travel.png"
+    },
+    {
+      "sha256": "A153D1448547C78E5E60EC783B33600E97168E5D8A7EC91B0BFA82E3FCC6D0B2",
+      "bytes": 1396530,
+      "file": "visits_night_006_travel.png"
+    },
+    {
+      "sha256": "E4902888FDE30DE8BA3638579D51A4062B5332ED450C641E82E029871958E514",
+      "bytes": 1407886,
+      "file": "visits_night_007_travel.png"
+    },
+    {
+      "sha256": "E24D4ED92B8F5FD8A6451FEE02E7B722245FC1E1614776DBEFD9777DB513515D",
+      "bytes": 1354867,
+      "file": "visits_night_008_travel.png"
+    },
+    {
+      "sha256": "4254CF83C033C0EA135D7E6EC4C02E6F7B7BEB1553BEEBB7B3B7FB07931503D1",
+      "bytes": 1249734,
+      "file": "visits_night_009_travel.png"
+    },
+    {
+      "sha256": "846851B13ABB57FE54E1EBAB513117F806F7A87A24C45EFB8AA6967AFA730F0B",
+      "bytes": 1582672,
+      "file": "visits_night_010_travel.png"
+    },
+    {
+      "sha256": "720443A6892098BD60564932EA7148271DE2FD7A49EA16BF2CDDFE92530023B5",
+      "bytes": 1416874,
+      "file": "visits_night_011_travel.png"
+    },
+    {
+      "sha256": "FE4F470A75D400EF27A2FF317682C3DE67DA8F8D9E2C4585F2F15B1F05F38A96",
+      "bytes": 1416710,
+      "file": "visits_night_012_end.png"
+    },
+    {
+      "sha256": "60BDB72FBE648F15C12104FF5BD37E45767979EF9A25D5A5DBA9C6DF6039D5FA",
+      "bytes": 1305213,
+      "file": "visits_night_013_reached-tam.png"
+    },
+    {
+      "sha256": "75F23F623F0EDC9744620D9C386B306BC125DB48598B888DCC61EAA177D43620",
+      "bytes": 1447243,
+      "file": "visits_night_014_travel.png"
+    },
+    {
+      "sha256": "A3F44FA16DC73D0948A8A9D53CDBD9F6668861BE423B88D3F794B841D586F6FF",
+      "bytes": 1465252,
+      "file": "visits_night_015_travel.png"
+    },
+    {
+      "sha256": "54F868102F13E2328379066249C41321DF445BB236B5EE2C4F5D4B9D39D4A131",
+      "bytes": 1497731,
+      "file": "visits_night_016_travel.png"
+    },
+    {
+      "sha256": "72F0041D02A2BDE385A0CE4127E401C68D30C01BB23754846BF41D20FB53EE07",
+      "bytes": 1443477,
+      "file": "visits_night_017_travel.png"
+    },
+    {
+      "sha256": "3002D31D6D2896F35BFAFD3EA959FF0372C4526800D5510A46741628C51DA05C",
+      "bytes": 1320754,
+      "file": "visits_night_018_travel.png"
+    },
+    {
+      "sha256": "09FBACD380FB9AF95B56196CF382403D5DDA0A4CBB12A7E43D36086130941B1A",
+      "bytes": 1472675,
+      "file": "visits_night_019_travel.png"
+    },
+    {
+      "sha256": "BF22E638C1FF074BD1EBCA8C2094748857D6E2F536D64EE0085571CB9A6DFD30",
+      "bytes": 1368862,
+      "file": "visits_night_020_travel.png"
+    },
+    {
+      "sha256": "1BD9C58BA5C00EB45FA956F24E20C0B038E7E6B336060FDC88D5C14B8410B1C5",
+      "bytes": 1202507,
+      "file": "visits_night_021_travel.png"
+    },
+    {
+      "sha256": "D6F99AF44008583536DC21811600C409039E7AD96DF4C00330BC1FF7CED62BB0",
+      "bytes": 1603327,
+      "file": "visits_night_022_travel.png"
+    },
+    {
+      "sha256": "48C32379D16D1EF80C9238AAAA9945883DDDD603E7AB87561032B09A5EE3FB99",
+      "bytes": 1374429,
+      "file": "visits_night_023_travel.png"
+    },
+    {
+      "sha256": "DE30CAEC81AEB14D77F56552D13F046BC0463C9972A4A29F8FBBCFC911327E17",
+      "bytes": 1386881,
+      "file": "visits_night_024_end.png"
+    },
+    {
+      "sha256": "F0154EC844EDEBF40D783ECF75E10E3BD45D0A94BD681503D4DDE5FC4C404DD6",
+      "bytes": 1387639,
+      "file": "visits_night_025_reached-mira.png"
+    },
+    {
+      "sha256": "164AC1C5CFE33A65DEB38806539A42006863378BBAF81ADB027280E1B9FF9C51",
+      "bytes": 1260096,
+      "file": "visits_night_026_travel.png"
+    },
+    {
+      "sha256": "C2CD1976C6DB331DA850350C79A13D7EF9E7AA9FA065B88F110DB4C5E7AB0C40",
+      "bytes": 237300,
+      "file": "visits_night_027_travel.png"
+    },
+    {
+      "sha256": "CCB6CC42922BA745EFFFC3AE13638AB4D6265C0CF1D769B6B94938C761416717",
+      "bytes": 1396276,
+      "file": "visits_night_028_travel.png"
+    },
+    {
+      "sha256": "2155EA8BAD9AF9D16F2DF7F2861E9420D2EF8AD3CEF367F5DD0299DDB9514B00",
+      "bytes": 1359660,
+      "file": "visits_night_029_travel.png"
+    },
+    {
+      "sha256": "AB4544AEEF0B83E8FECA3D4A7908EF917231BD2E93121AC0D0C1AE24C0B1AC2F",
+      "bytes": 1359578,
+      "file": "visits_night_030_travel.png"
+    },
+    {
+      "sha256": "30944359188FDC1A12FAA4B1CABD27BE2C46E7072463D56DC6EAC1FAA01537BE",
+      "bytes": 1508422,
+      "file": "visits_night_031_travel.png"
+    },
+    {
+      "sha256": "5958268600B5C1C051AF44F34349DF19A8457F783BDA2E1518D51DE58C76BE2C",
+      "bytes": 1473743,
+      "file": "visits_night_032_travel.png"
+    },
+    {
+      "sha256": "99DD512B67E1C7AC421144E72D4628BBA9E10C1820352DAC2D54D6BF07CF2807",
+      "bytes": 1029538,
+      "file": "visits_night_033_end.png"
+    },
+    {
+      "sha256": "3C51BD0D55DBCE95E80B8860472D01E9485AEFA28E4F96748527BB5E717BB083",
+      "bytes": 1072290,
+      "file": "visits_night_034_reached-bram.png"
+    },
+    {
+      "sha256": "F8BF85E0C524D43EA6ADF8E148D5E782C825F578AA4A32B86B92C0CFE6A31C08",
+      "bytes": 365796,
+      "file": "visits_night_035_travel.png"
+    },
+    {
+      "sha256": "FF58AC0734EF5396F9744E55606C1F1A20CCB9B2A73532F8EFC38F1922A0816D",
+      "bytes": 1387069,
+      "file": "visits_night_036_travel.png"
+    },
+    {
+      "sha256": "CB65634ACD08410C677983190BA4559510B10444C77DF6EFC49A2C2AA8DBDED0",
+      "bytes": 1461888,
+      "file": "visits_night_037_travel.png"
+    },
+    {
+      "sha256": "C42AE9280C6D4CE2AF9F6EB149F9DB573F625A6A501F29D7B438B50C8E5ACBC4",
+      "bytes": 1387665,
+      "file": "visits_night_038_end.png"
+    },
+    {
+      "sha256": "D73CDA1140CF9ADA0A3DD55B71CFD59D379E0942FC76550E89A9191254147409",
+      "bytes": 1417852,
+      "file": "visits_night_039_reached-nessa.png"
+    },
+    {
+      "sha256": "D8FF064C96BE3928E7523278673EF3EE25D0C7BE2D1B757D7C3C71E37C769B1B",
+      "bytes": 1547017,
+      "file": "visits_night_040_travel.png"
+    },
+    {
+      "sha256": "1AEDEEA516B9E49A8A61EA42296CC86AA8C7EA9A255C855484D239A21817B53F",
+      "bytes": 1538020,
+      "file": "visits_night_041_end.png"
+    },
+    {
+      "sha256": "55EE77B9CD8880F5099D6CBC8F1D008FF1D4EE14CF1326A54FA2A36E5C54CAB8",
+      "bytes": 1634867,
+      "file": "visits_night_042_reached-maren.png"
+    },
+    {
+      "sha256": "537FCC66DADC9BB8113B91C5263B87898E7BAFCD58F57D3DF043CF73702D595E",
+      "bytes": 1245491,
+      "file": "visits_night_043_travel.png"
+    },
+    {
+      "sha256": "B824AB9F1576A0404FCD3C84BF8A771A306218D3998581F72B0787736101B50D",
+      "bytes": 1403674,
+      "file": "visits_night_044_travel.png"
+    },
+    {
+      "sha256": "9511BE32D23BFEECDD4AF0874D3059729EE2480ACA35FEEB113AC2B37B53B29C",
+      "bytes": 1338667,
+      "file": "visits_night_045_travel.png"
+    },
+    {
+      "sha256": "8E1FA6CBD027118C792262D26CA84E681E5BC5FA60D102BD3A7CEAF55A2DACC4",
+      "bytes": 1445477,
+      "file": "visits_night_046_end.png"
+    },
+    {
+      "sha256": "EF6DDB862FA5C75E23C16A9829DD4BC5E8314AECDE0F91B926E602174FB56DB1",
+      "bytes": 1461379,
+      "file": "visits_night_047_reached-oskar.png"
+    },
+    {
+      "sha256": "546132DD1834AD396EB8C7E18216F416961C8EBF53A02008FE88F5C4E63F99CC",
+      "bytes": 1453044,
+      "file": "visits_night_048_travel.png"
+    },
+    {
+      "sha256": "C820FEF7E498D88FED71856F5CD3382DA4512FFBBAAAF58597FDAE2B7232BA2B",
+      "bytes": 1381433,
+      "file": "visits_night_049_travel.png"
+    },
+    {
+      "sha256": "7239E842D182A9552013916A6CC3C271C9F3C5154661560D5D92D0A705AEEB28",
+      "bytes": 1419086,
+      "file": "visits_night_050_travel.png"
+    },
+    {
+      "sha256": "9583765C93A98186EC3C59C373D43984169D18C9C6B7CAC6CBAD98A8D22F3151",
+      "bytes": 1359101,
+      "file": "visits_night_051_travel.png"
+    },
+    {
+      "sha256": "0ACEC3CC7D2C3CEE1CFFAB503F1ED61E117E0D5A838A5A40F53F0A624C6F7AD6",
+      "bytes": 1465737,
+      "file": "visits_night_052_travel.png"
+    },
+    {
+      "sha256": "D0301A154FFF2E192E770C75C18DC0DE28993176CA92A77FB940E38EB2FB8FF9",
+      "bytes": 1453307,
+      "file": "visits_night_053_travel.png"
+    },
+    {
+      "sha256": "0CC80489986450A2B94790631EDFB2FA34A86947DE6F526979364580DB84510C",
+      "bytes": 1320479,
+      "file": "visits_night_054_travel.png"
+    },
+    {
+      "sha256": "E6B4432615C84640F1ED9936DA97E114C015D0A13A3B859E720CB3E27129F80B",
+      "bytes": 1478090,
+      "file": "visits_night_055_travel.png"
+    },
+    {
+      "sha256": "AE49BB82E86D732A75779DF89247851D4AD9CE19EA9B955C53A99ABEFE213545",
+      "bytes": 1423655,
+      "file": "visits_night_056_travel.png"
+    },
+    {
+      "sha256": "A6C0AEACF00601123E8684F14DF1A778221F76FD8F866A967B975E5782024D83",
+      "bytes": 1431468,
+      "file": "visits_night_057_travel.png"
+    },
+    {
+      "sha256": "66F93DF514EB84DB704908178409785CF6168181CD766FFC404E49BBA063F471",
+      "bytes": 1339949,
+      "file": "visits_night_058_travel.png"
+    },
+    {
+      "sha256": "4FDCC2A08AE019BA8C5B78451DE57B425900F509D13DC4AFBC1CBAF3C79DBE90",
+      "bytes": 1502212,
+      "file": "visits_night_059_travel.png"
+    },
+    {
+      "sha256": "67E9D9C62AA964FF28AFD738812559A970EF24BDAE4F4118463DC7F430F085B0",
+      "bytes": 1518062,
+      "file": "visits_night_060_travel.png"
+    },
+    {
+      "sha256": "68299146F4D2407CFE4F0F73897C9D623D2437E0C7380C5073E6816C42811E97",
+      "bytes": 1364112,
+      "file": "visits_night_061_end.png"
+    },
+    {
+      "sha256": "7C071513B284F1FB26923D8395FA0AF9DB345EEF48F218243ED2A1FEFBC8DDB1",
+      "bytes": 1452684,
+      "file": "visits_night_062_take-the-old-key.png"
+    },
+    {
+      "sha256": "5531243220534CA4C3EF3BE22804C4FDB21055ADB8168EC88638261E0C5BC097",
+      "bytes": 1446629,
+      "file": "visits_night_063_reached-the-old-key.png"
+    },
+    {
+      "sha256": "36416CCCF8574F50CBF721C50664CE3DCF382284C7A0020AE69FE91062670C17",
+      "bytes": 1385433,
+      "file": "visits_night_064_travel.png"
+    },
+    {
+      "sha256": "3D6D51B851D7A1E3C9DB6FF1DB1DE200489D761C32D14B9C85E6ECD8FA5B19BA",
+      "bytes": 1320935,
+      "file": "visits_night_065_end.png"
+    },
+    {
+      "sha256": "BFF5F66058A27E7D4AFE8E4B891A6B80B6C2CE2ACC8C13A1D97B68D8A1BB13C6",
+      "bytes": 1319846,
+      "file": "visits_night_066_at-gate-roadgate_-closed.png"
+    },
+    {
+      "sha256": "BAC4D8CAAB733BF033970D5AC6D7AB00C5B6CD94D4B63FBE614671CCC82BCA70",
+      "bytes": 1261391,
+      "file": "visits_night_067_reached-gate-roadgate.png"
+    },
+    {
+      "sha256": "0C450FC6817DF4484CA8C56852F51A86220AE4544E309FEDCF218221427AD36A",
+      "bytes": 1351022,
+      "file": "visits_night_068_travel.png"
+    },
+    {
+      "sha256": "5B57794E2C106517DE8307EA59545249D29736D22115C0526CDA50851AE76851",
+      "bytes": 1461870,
+      "file": "visits_night_069_travel.png"
+    },
+    {
+      "sha256": "73E0B94A5498AC20F028F98EDCF5EEE26CBDFC29A102C42E79D9998513764C90",
+      "bytes": 1493324,
+      "file": "visits_night_070_travel.png"
+    },
+    {
+      "sha256": "E314ABDDEBA2FB0E259F1F70E283D9ADA7BE524B7733A218A4D91A5A72C3C703",
+      "bytes": 1534897,
+      "file": "visits_night_071_end.png"
+    },
+    {
+      "sha256": "AFB42CA9D21730D0F258F64F326A40C364B1FAB573C8027BC5E2D669D7594852",
+      "bytes": 1466288,
+      "file": "visits_night_072_reached-practice-meadow-camp.png"
+    },
+    {
+      "sha256": "0B4526F09604BC2D6D6423241F71E5AAED118C03F31DAED9BC01A453A0438F9F",
+      "bytes": 1406261,
+      "file": "visits_night_073_travel.png"
+    },
+    {
+      "sha256": "770AA05739D13C14FDD2BA5675FEE586D713FAB99F45530D817474178FCC2D07",
+      "bytes": 1386072,
+      "file": "visits_night_074_travel.png"
+    },
+    {
+      "sha256": "7B4375BAC6F6244E0818F8C13C243AB12AF4B5937CEC756C43373BEC9B5C0DBD",
+      "bytes": 1350284,
+      "file": "visits_night_075_travel.png"
+    },
+    {
+      "sha256": "F0C1D16CFCDC0DC0137927DD709E49A86A5C8F75435AE77FC8A4308475D62EAA",
+      "bytes": 1450156,
+      "file": "visits_night_076_travel.png"
+    },
+    {
+      "sha256": "6AB56C1770EB4BBD647DA0E20E93D240401E2230BD07E9FDD8164B4D4D0133D8",
+      "bytes": 1367166,
+      "file": "visits_night_077_travel.png"
+    },
+    {
+      "sha256": "1AD0B1D5B46FF8F390B994522E60293A36DD2E235C4B2C7B914459173893EC0D",
+      "bytes": 1299315,
+      "file": "visits_night_078_travel.png"
+    },
+    {
+      "sha256": "F2E7D7CE831BCD4B00B55CC3890F7116E4BE81C647B969C347F1DB646D48E052",
+      "bytes": 1320943,
+      "file": "visits_night_079_travel.png"
+    },
+    {
+      "sha256": "F165922A04C043CFAEB5D096F01110A29C5623478546C15850A64D7C51775729",
+      "bytes": 1211902,
+      "file": "visits_night_080_end.png"
+    },
+    {
+      "sha256": "E2757B158F4ECFDCBA3CD1F6D64DBD1C22EB6C520B77C0406F67B0A65322C2FA",
+      "bytes": 1578982,
+      "file": "visits_night_081_reached-gate-trailgate.png"
+    },
+    {
+      "sha256": "CF8DDFE2576E5174A07FF0735A4222DA8A35EF7D683262F3D10441CDC40F10B7",
+      "bytes": 1432503,
+      "file": "visits_night_082_travel.png"
+    },
+    {
+      "sha256": "1D8D34B4C1263B12C97BE3C8524920E584ECC4BB0DE35503AFEEBC2B86AFAC84",
+      "bytes": 1405592,
+      "file": "visits_night_083_travel.png"
+    },
+    {
+      "sha256": "D4A24B7F299C2CAF27B78C4A18519678CD937C1FFA2F222E2E9A3FF2F896990A",
+      "bytes": 1479491,
+      "file": "visits_night_084_travel.png"
+    },
+    {
+      "sha256": "4071720A7CC0D4DB967B2D7E0040FB4BA0959EF5F9BD7465D90A5FACC8010296",
+      "bytes": 1419103,
+      "file": "visits_night_085_travel.png"
+    },
+    {
+      "sha256": "50BF2E7BF31FD962E4EA310559233315E91810EA25C8F75A15DEAEA77D5C6CDF",
+      "bytes": 1410701,
+      "file": "visits_night_086_travel.png"
+    },
+    {
+      "sha256": "49BF6E3713603670129E37053B881CB4600763CCA450C8C2750315537CB6BC43",
+      "bytes": 1432376,
+      "file": "visits_night_087_travel.png"
+    },
+    {
+      "sha256": "74CAE35E0DA46328A3BAAE55B1DBE8C124D8C9148C69FC0D4099B83B453F60DF",
+      "bytes": 1470709,
+      "file": "visits_night_088_travel.png"
+    },
+    {
+      "sha256": "418A15F7EE9939246F6266BAB9241625A7777FB28D5A67AF61C1D650C6836D63",
+      "bytes": 1465931,
+      "file": "visits_night_089_travel.png"
+    },
+    {
+      "sha256": "544BBAFB15BE46DB996E59069747C69B314730262943F8B3480F5E3EC0C4AE7F",
+      "bytes": 1454892,
+      "file": "visits_night_090_travel.png"
+    },
+    {
+      "sha256": "B93C545D6DA494E56CFC2634D4E194B8436EFAEBC2B42BE8A1446191406BE922",
+      "bytes": 1388740,
+      "file": "visits_night_091_travel.png"
+    },
+    {
+      "sha256": "2D60542FA876A798ED26C80D082FEF31745FC105B2D495048B113601C0B56ADA",
+      "bytes": 1410282,
+      "file": "visits_night_092_travel.png"
+    },
+    {
+      "sha256": "BAC11BC2986D3D14021FEB89A2B4B7E76D2C69E038992AD07092D2E7994ECA0B",
+      "bytes": 1340782,
+      "file": "visits_night_093_travel.png"
+    },
+    {
+      "sha256": "84A0877529666AF8B886B01105DBB9BDE320353D55FC75AEAC04CB5D534F4323",
+      "bytes": 1339646,
+      "file": "visits_night_094_travel.png"
+    },
+    {
+      "sha256": "26D43C8FE3028FD66498436FF63232226E12B5C4203A6914D72CA81964CB4A1A",
+      "bytes": 1393485,
+      "file": "visits_night_095_travel.png"
+    },
+    {
+      "sha256": "46A5CC127AFD2B68F37643D5931E2E49E1027F03EE9A1A19E41944BCF405D7DD",
+      "bytes": 1380924,
+      "file": "visits_night_096_end.png"
+    },
+    {
+      "sha256": "5244B3F2D37E793F5A9834FE9FBA43DC8DB01F4B6C931E2938704E4CE4A89FDC",
+      "bytes": 1387314,
+      "file": "visits_night_097_reached-gate-pondgate.png"
+    }
+  ],
+  "product_source": "4f4c200673d3db216537d4e00810569bfc5793ed",
+  "approved_game_blobs": [
+    {
+      "blob": "d7deaf71c7f65cb29ee15d73b6fcd21ee4a466a5",
+      "file": "data/config/bands/band1_lower_meadows/harvest.json"
+    },
+    {
+      "blob": "1a5e0cacf2c9b5eb559c799e18f4404e789607ca",
+      "file": "data/config/bands/band1_lower_meadows/props.json"
+    },
+    {
+      "blob": "48ff779c51806d6e3420fcdd3dcdd8bef8debe3e",
+      "file": "data/config/essence_nodes.json"
+    },
+    {
+      "blob": "d526a9be1e0b000d90d96c15b799a1657a4ebfc4",
+      "file": "data/config/village_npcs.json"
+    },
+    {
+      "blob": "ee0f121f81905b70b80933ba5188ac15a29ea35a",
+      "file": "scripts/world/village_npcs.gd"
+    },
+    {
+      "blob": "e78767b39e39ff0b02eb293835dd172fae58436f",
+      "file": "scripts/world/villager_night_light.gd"
+    }
+  ],
+  "accepted_main": "f267c2b97",
+  "native_resolution": "1920x1080",
+  "performance_claim": "none; concurrent R2 CPU-only headless baseline",
+  "renderer": "GTX 1060 3GB / NVIDIA 560.94 / OpenGL 3.3 / Compatibility",
+  "engine_script_errors": 0,
+  "console_pid": 10688,
+  "exit_code": 0,
+  "result": "PASS route=visits time=night captures=97 max_off_road_m=0.00 visited=12",
+  "raw_receipts": [
+    {
+      "sha256": "5FECEB66FFC86F38D952786C6D696C79C2DBC239DD4E91B46729D73A27FB57E9",
+      "bytes": 1,
+      "file": "night-walk-exit.txt"
+    },
+    {
+      "sha256": "9686DC34161F47CBDA7F3EB5D514F21B7F48DC78260E736A8247D7DBDF842FA2",
+      "bytes": 3864,
+      "file": "night-walk-stderr.txt"
+    },
+    {
+      "sha256": "96464791448CA804F1EF281C32C1B49C7F061844EA352C2D06D7F6046543056F",
+      "bytes": 21510,
+      "file": "night-walk-stdout.txt"
+    }
+  ],
+  "capture_script_blob": "827b97903fcb394f2610828d211a9f84dd4f6f82",
+  "arguments": [
+    "--time=night",
+    "--route=visits",
+    "--from-title"
+  ]
+}

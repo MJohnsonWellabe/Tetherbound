@@ -8,7 +8,7 @@ extends SceneTree
 ##
 ##   flock <render-lock> xvfb-run -a -s "-screen 0 1280x720x24" godot --path . \
 ##     --rendering-driver opengl3 --resolution 1280x720 \
-##     --script tests/capture_lure_cue_views.gd -- --cue=bram|doss|juno|vault|herd --out=DIR [--distances=m,m] [--time=night]
+##     --script tests/capture_lure_cue_views.gd -- --cue=bram|doss|juno|vault|herd|hall|night_watch --out=DIR [--distances=m,m] [--time=night]
 ##
 ## Camera: a third-person rig's height (EYE_M over the terrain), 60 degree
 ## vertical FOV. The clock is frozen in the morning, or at `--time=` (a named
@@ -24,12 +24,16 @@ const FOV_DEG := 60.0
 const DISTANCES_M := [220.0, 160.0, 110.0, 70.0]
 ## `--distances=480,420` overrides (Juno's patrol camp is ~470 m off any road).
 const CUES := {
-	"bram": Vector2(184.0, 901.0),
+	"bram": Vector2(313.4, 979.2),
 	"doss": Vector2(-23.5, 4160.5),
 	"juno": Vector2(-175.0, 5470.0),
 	"vault": Vector2(-351.0, 2611.8),
 	# The herd-watcher's fire (props.json meadowhart_watch_fire), the herd's night cue.
 	"herd": Vector2(-74.0, 1296.0),
+	# Existing band5 spawn order5001: the off-road Alpha Galecrest pack.
+	"hall": Vector2(-36.0, 7290.0),
+	# Existing band2 trainer night_watch_farro, sharing the Duskhush oak habitat.
+	"night_watch": Vector2(95.0, 2900.0),
 }
 
 var _world: Node3D

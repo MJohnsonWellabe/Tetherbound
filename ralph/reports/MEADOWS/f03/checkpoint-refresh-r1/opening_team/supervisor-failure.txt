@@ -1,0 +1,1 @@
+F03 corrected startup failed; all raw evidence retained

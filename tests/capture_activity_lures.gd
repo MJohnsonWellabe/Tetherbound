@@ -182,6 +182,13 @@ func _run() -> void:
 	if not bool(_game.call("load_game", SLOT)):
 		_finish("FAIL", "Game.load_game refused the real save")
 		return
+	# Match title_screen.gd's Load -> _enter_world: solo is a one-peer session.
+	# Loaded training/reward rows need that normal character admission before
+	# the world can reconcile them or accept an activity action.
+	var session := _game.get("session") as Node
+	if session == null or (not bool(session.call("is_active")) and not bool(session.call("host"))):
+		_finish("FAIL", "Session.host refused the loaded one-peer world")
+		return
 	var scene_path := str(_game.call("current_realm_scene"))
 	if scene_path.is_empty():
 		scene_path = DEFAULT_SCENE
