@@ -891,6 +891,27 @@ func _case_native_guest_kill_advances_host_trainer_round() -> void:
 	assert_eq(foe.faint_notifications, 1)
 	assert_eq(int(host_creature.battles_fought), 1)
 	assert_eq(int(guest_creature.battles_fought), 1)
+	# F27: even a round already marked resolved must retain any unpublished
+	# health original. Exercise the real host/durable-scope fast path and
+	# production start guard using this same native trainer regression.
+	var scope: Dictionary = preload("res://scripts/net/combat_round_reward.gd").scope(
+		"native_director_namespace", "native_director_epoch", "meadows", "native-trainer-regression", encounter_id)
+	rec["ordinary_combat_reward_owner"] = scope.duplicate(true)
+	_native_host.set("_ordinary_combat_reward_owners", {encounter_id: scope})
+	_native_host.set("_ordinary_combat_rounds", {encounter_id: {"round": 1, "resolved": true}})
+	_native_host.set("_ordinary_actor_vitals_proposals", {"round_boundary_pending":
+		{"encounter_id": encounter_id, "presented": false}})
+	assert_true(_native_host.uses_durable_trainer_rewards(encounter_id), "use the actual live durable host scope")
+	assert_false(_native_host._resolve_ordinary_combat_round(encounter_id),
+		"resolved round reward cannot bypass an unpublished health original")
+	var record_before: Dictionary = rec.duplicate(true)
+	var encounter_count := (arbiter.get("encounters") as Dictionary).size()
+	var next_body := _native_trainer_body(host_root, next_creature, Vector3.ZERO)
+	_native_host._start_fight(next_body, true)
+	assert_eq(rec, record_before, "a pending start cannot replace the opponent or re-seat the old round")
+	assert_eq((arbiter.get("encounters") as Dictionary).size(), encounter_count,
+		"a pending re-seat cannot fall through and mint a second encounter")
+	assert_eq(host_manager.state, NATIVE_COMBAT.State.INACTIVE, "the next fight waits for health settlement")
 	_native_trainer_completed = true
 
 func test_native_guest_killing_strike_advances_host_trainer_round_once() -> void:

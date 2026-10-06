@@ -1,0 +1,69 @@
+R1 actor-vitals flip progress (2026-10-05)
+
+Base: origin/main e2fa5e4e6bb0060e5f98f9129f2f2e949f8a37f3.
+Isolated branch: tb/codex-r1. Prep head: 960bba634.
+Authorized prep mapping:
+658ff0dd -> fe5ef8996
+98a9ba08 -> d22f96ac5
+f00fea41 -> 1500d21b8
+40b228cf -> 183361793
+e2985e27 -> 960bba634
+81b9ee10 excluded. Shipped actor_vitals.runtime_enabled remains false.
+
+Prepared product fixes:
+1. Guest local wild admission does not request host-only canonical readiness.
+2. Pending original HP receipts hold round resolution/reseat/send-out/start;
+   no receipt deletion, fabricated ACK or HP reset. Pending health remains
+   attached to its original opponent until real settlement.
+Focused tests extend existing native ENet and actor-vitals authority tests.
+No new smoke/harness/fixture/capture/measurement script.
+Protected session/passive/game-state/CI files unchanged.
+
+Independent source review: PASS WITH ISSUES (runtime pending). Coverage
+suggestion for resolved-round fast path/no fresh encounter was added to the
+existing native trainer regression. Final review and runtime checks OPEN.
+
+Existing proof plan:
+- focused units failing-first, then fixed; affected fixtures off and on;
+- riding and realm_owner_disconnect_mid_fight off and on;
+- existing tournament bracket on;
+- 21 handoff fighting net smokes on (boss_rewards_each_participant is main debt);
+- owned:true net smokes off;
+- full unit suite off and on; 55 existing CI smoke jobs rechecked with flag on.
+Every run is first attempt evidence; no retries relabeled as pass.
+
+Logs: D:/tetherbound/.artifacts/r1-f27-flip/ (uncommitted payload).
+Import started 22:36 UTC under global atomic RENDER_LOCK, PID20400.
+No completion/acceptance claimed.
+Independent source re-review after the native coverage additions: PASS; no remaining actionable source finding. Runtime remains unverified.
+Import completed 22:48 UTC: normal completion markers; no ERROR/SCRIPT ERROR;
+material importer warnings retained locally. Original process exit not captured.
+Focused failing-first run: 3 tests / 33 assertions / 3 failed / exit1, with
+explicit guest tracking=true readiness refusal, premature round/send-out, and
+resolved-round bypass failures. Red runtime errors/leaks are retained as red.
+First fixed run: 3 tests / 33 assertions / 0 failed / exit0, but new detached
+actor test logged an absolute Game lookup. This is not a clean PASS receipt.
+Reused the existing DirectorProbe local identity for that one test (independent
+review approved); production pending/resume/round methods remain inherited.
+Clean focused rerun pending. No new fixture or harness.
+Clean focused rerun (existing detached probe reuse): PASS 3 tests / 33 outer
+assertions / 0 failed / exit0 / empty stderr. Native trainer child completed
+109 assertions with no failures; native transport completed 35. Existing
+refusal diagnostics are expected assertions, no ERROR/leak text.
+Tracked generated import sidecars restored; only director and two test files
+have tracked product/test edits. Wider smokes, all fixtures and flip OPEN.
+First affected flag-off run: 54 tests / 768 assertions / 0 failed / exit0.
+It exposed the same pre-existing detached Game lookup in the original guest
+re-seat test. That existing test now also reuses DirectorProbe with its named
+local participant; guest admission/re-seat assertions are unchanged.
+Affected file parity reruns on this corrected test setup pending.
+Guest fix committed separately: 66d4c4eb1688ceff2ea6033b3003b0d664e3a41e.
+Affected parity after existing-probe fixture correction: PASS flag OFF and ON,
+each 54 tests / 768 assertions / 0 failed / exit0 / empty stderr.
+Command: --headless --path D:/tetherbound/codex-r1 --script tests/run_tests.gd --
+--only=test_actor_vitals_authority.gd,test_director_join_snapshot.gd,test_move_commit_runtime.gd,test_f23_live_moves.gd,test_process_exit_settlement.gd,test_combat_mastery_delivery.gd
+Logs: affected-off-clean.{stdout,stderr}.log and affected-on.{stdout,stderr}.log.
+Original first runs and cleanup error receipts retained; no retry relabeled.
+Final pending product/test source review: PASS (review_r1), no actionable
+finding, inherited production methods and identity assertions retained.
+Scratch flag restored false after parity. World smokes/all fixtures still OPEN.
