@@ -1398,6 +1398,19 @@ func _spawn_slicing_wanted() -> bool:
 ## F30: freeze the host roll at the first canonical publication of this body.
 ## Re-engaging keeps the original encounter identity; a replacement instance
 ## gets its own actual record and generation. No alpha cycle is created here.
+func _ordinary_trait_authority_ready() -> bool:
+	if _is_host(): return true
+	# UDP bind failure still permits canonical solo play. The existing owning
+	# world/prepared-writer context proves that authority; an offline peer alone
+	# does not, and a client cannot satisfy Session.is_host().
+	if _session == null or _session.call("is_host") != true \
+		or not _session.has_method("_host_wild_training_context"): return false
+	var context: Variant = _session.call("_host_wild_training_context")
+	var game: Node = _session.call("_game")
+	return context is Dictionary and context.get("ready") == true and game != null \
+		and context.get("world_namespace") == game.world.reward_delivery_namespace \
+		and context.get("session_id") == _session.call("_altar_current_epoch")
+
 func _ordinary_trait_environment() -> Dictionary:
 	var realm: Node = _session.call("_portal_world_node", _encounter_realm())
 	if realm == null or not realm.is_ancestor_of(self): return {}
@@ -1412,7 +1425,7 @@ func _ordinary_trait_environment() -> Dictionary:
 		"weather": preload("res://scripts/net/foundation_alphas.gd").unusual_weather(look.get("_weather"))}
 
 func foundation_wild_capture_traits(wild: Node3D) -> Dictionary:
-	if not _is_host() or wild == null or not is_instance_valid(wild): return {}
+	if not _ordinary_trait_authority_ready() or wild == null or not is_instance_valid(wild): return {}
 	var retained: Dictionary = wild.get_meta("foundation_wild_traits", {})
 	if retained.is_empty(): return {}
 	var game: Node = _session.call("_game")
@@ -1426,7 +1439,7 @@ func foundation_wild_capture_traits(wild: Node3D) -> Dictionary:
 	return retained.packet.duplicate(true)
 
 func foundation_register_wild_traits(wild: Node3D, record: Dictionary) -> bool:
-	if not _is_host() or wild == null or not is_instance_valid(wild): return false
+	if not _ordinary_trait_authority_ready() or wild == null or not is_instance_valid(wild): return false
 	if not preload("res://scripts/creatures/traits.gd").runtime_enabled() \
 		or wild.has_meta("foundation_alpha_packet"): return true
 	var instance: RefCounted = wild.get("instance")

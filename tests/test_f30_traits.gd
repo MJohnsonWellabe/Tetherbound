@@ -16,12 +16,16 @@ class WildTraitGame extends Node:
 
 class WildTraitSession extends Node:
 	var host := true
+	var active := true
+	var canonical_ready := false
 	var epoch := "traits-session"
 	var game := WildTraitGame.new()
-	func is_active() -> bool: return true
+	func is_active() -> bool: return active
 	func is_host() -> bool: return host
 	func _game() -> Node: return game
 	func _altar_current_epoch() -> String: return epoch
+	func _host_wild_training_context() -> Dictionary:
+		return {"ready": canonical_ready, "world_namespace": game.world.reward_delivery_namespace, "session_id": epoch}
 
 class WildTraitDirector extends "res://scripts/combat/encounter_director.gd":
 	var environment := {"night": false, "weather": false}
@@ -51,8 +55,13 @@ func test_ordinary_host_publication_retains_packet_and_catch_copies_it() -> void
 	assert_false(director.foundation_register_wild_traits(body, record), "client rolled a host packet")
 	assert_false(body.has_meta("foundation_wild_traits"))
 	session.host = true
+	session.active = false
+	assert_false(director.foundation_register_wild_traits(body, record), "offline peer presence supplied authority")
+	session.canonical_ready = true
 	assert_true(director.foundation_register_wild_traits(body, record))
 	var packet := director.foundation_wild_capture_traits(body)
+	assert_false(packet.is_empty(), "canonical offline solo could not preserve its catch packet")
+	session.active = true
 	assert_false(packet.is_empty())
 	if packet.is_empty():
 		body.free(); director.free(); session.game.free(); session.free()
