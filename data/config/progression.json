@@ -1,5 +1,6 @@
 {
   "_comment": "Creature progression (D30). All tunable. Move power multiplies existing combat_math damage, so 1.0 preserves today's balance exactly.",
+  "evolution_mode": "breakthrough",
   "level": {
     "cap": 100,
     "wild_band": [

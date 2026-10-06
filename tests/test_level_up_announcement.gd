@@ -111,12 +111,29 @@ func test_a_multi_level_jump_is_one_line_naming_the_levels_gained() -> void:
 func test_the_line_reports_the_evolution_level_when_the_jump_crosses_it() -> void:
 	var cfg := PROGRESSION.config()
 	var gate := int(cfg.get("evolution", {}).get("mudsnout", {}).get("level", 0))
-	assert_true(gate > 0, "progression.json has no mudsnout evolution level")
+	if cfg.get("evolution_mode") == "breakthrough":
+		gate = 0
+		var rows: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/evolution_lines.json"))
+		for row: Dictionary in rows:
+			if row.source == "mudsnout" and row.enabled: gate = int(row.breaks_level)
+	assert_true(gate > 0, "the active evolution data has no mudsnout evolution level")
 	var creature := _mudsnout(gate - 1)
 	var line := _line_after_award(creature, _xp_for_one_level(creature))
 	assert_eq(int(creature.get("level")), gate)
 	assert_true(line.contains("evolution level reached") or line.contains("evolution ready"),
 		"crossing Mudsnout's evolution level must be said on the line: '%s'" % line)
+
+
+func test_breakthrough_threshold_notice_does_not_offer_xp_only_evolution() -> void:
+	assert_eq(PROGRESSION.config().get("evolution_mode"), "breakthrough")
+	var creature := _mudsnout(19)
+	var line := _line_after_award(creature, _xp_for_one_level(creature))
+	assert_true(line.contains("evolution level reached"), line)
+	assert_false(line.contains("evolution ready"), "XP does not supply a feast or its permanent choice")
+	assert_eq(creature.get("species_id"), "mudsnout")
+	var legacy_gate := _mudsnout(14)
+	assert_false(_line_after_award(legacy_gate, _xp_for_one_level(legacy_gate)).contains("evolution"),
+		"the old Lv15 catalyst gate must not advertise the active Lv20 feast")
 
 
 func test_another_creatures_award_does_not_write_the_active_creatures_line() -> void:

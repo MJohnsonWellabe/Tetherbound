@@ -1,15 +1,15 @@
 {
  "boundary": "bracket/after_semi",
  "generated_by": "tools/ci/segments/regen.sh bracket/after_semi",
- "produced_at_commit": "3c1747db2090dfe047dc2e3fbcf363000553ad18+dirty",
+ "produced_at_commit": "3f9dd025ab2ed780a1280974b30e7a36c21ec23e",
  "roles": {
   "solo": {
-   "character_id": "character-f2d58547c5e35bedf9cda327ef414b70",
-   "digest": "1a922c6d9097922d82e9a2c6e7f6580962664860654260c84f15b80b8c90ffe6",
+   "character_id": "character-04eea7e22dfaf3cd9f3e0b251e9d2c0f",
+   "digest": "c4646994b80fe5f4808e5b45a148fb91fc7f59199d770a0e684ee06c9fbcee82",
    "files": {
-    "characters/redesign-v28/character-f2d58547c5e35bedf9cda327ef414b70/character.json.gz": "75ad915696e9c5f61d58ea6435dd1614c12857d29424164a243d01458335449b",
-    "saves/redesign-v28/slot_0.json.gz": "ba278d2bc4fe1bcb470d0897fd544ac6c840cf9a94069c416a3e70c593ff91df",
-    "worlds/redesign-v28/slot-0/world.json.gz": "24b034a2f25ce8c0939fc23fb28a528dbffec93de4bbb244ea1bb466ebc3a76d"
+    "characters/redesign-v28/character-04eea7e22dfaf3cd9f3e0b251e9d2c0f/character.json.gz": "a58d35b416618c760aa274ca4eeee0dd07bcca1738b61acc1d41b4e12f2306cd",
+    "saves/redesign-v28/slot_0.json.gz": "3b3ccff4df3b07762c9863dc456b45d3a7322a186f93c7d386853cf083587f1d",
+    "worlds/redesign-v28/slot-0/world.json.gz": "2c9b463b725e068d969b60eb0cef0062eb95b6e85bbabb7e15917fc6274c2eee"
    },
    "producer": "tests/smoke_tournament_bracket.gd",
    "producer_fingerprint": "0691c12355fbd3b111e1509b681f496abf79f60c5a9456d5e0f104c338400ab3",
@@ -125,9 +125,9 @@
      ]
     },
     "party": [
-     "terrapup@7",
-     "terrapup@6",
-     "bramblebun@6",
+     "terrapup@5",
+     "terrapup@5",
+     "bramblebun@5",
      "mudsnout@5",
      "terrapup@5"
     ],

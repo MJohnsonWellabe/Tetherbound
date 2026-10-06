@@ -1,0 +1,52 @@
+{
+  "claim": "Existing-cache detached planner unit and parser only; no world/peer/owner ACK/ordinary-input acceptance",
+  "source_sha256": {
+    "tests/test_f28_training_boundaries.gd": "7fa5a7ed45b17ef7b5ab863eeb44758f098bc641bceffeac1dd96c877903fd58",
+    "tests/helpers/f48_net_proof.gd": "ca03082849540a103e9bd65fece4ab6cd36350892d7fe6ab5f2b1b5211196526"
+  },
+  "source_base": "aec1db0e5de92695da4f242b0457de501ca1088a",
+  "checks": [
+    {
+      "stderr_bytes": 0,
+      "argv": [
+        "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:/tetherbound/codex-r5",
+        "--script",
+        "tests/run_tests.gd",
+        "--",
+        "--only=test_f28_training_boundaries.gd::test_each_master_recipe_is_personal_and_replays_never_pay_again"
+      ],
+      "exit_code": 0,
+      "stdout_bytes": 342,
+      "name": "personal-recipes-unit"
+    },
+    {
+      "stderr_bytes": 0,
+      "argv": [
+        "D:/Tetherbound-tools/godot/Godot_v4.7-stable_win64_console.exe",
+        "--headless",
+        "--path",
+        "D:/tetherbound/codex-r5",
+        "--check-only",
+        "--script",
+        "tools/net/f48_prepare.gd"
+      ],
+      "exit_code": 0,
+      "stdout_bytes": 73,
+      "name": "producer-parser"
+    }
+  ],
+  "foreign_native_pids": [
+    3724,
+    9468
+  ],
+  "independent_review": {
+    "native_status": "UNRUN; chest provider/raw input/original accepted owner BOOL-save and ACK mandatory before F28#4 credit",
+    "evidence_verdict": "PASS1test205assertions0failed,unit/parserexit0stderr0;both changed-fileSHA match",
+    "all_five_duel_loss_retry": "F28#2 remains OPEN",
+    "source_verdict": "PASS after check argument and idempotent existing owner-save observer repairs",
+    "reviewer": "/root/f28_review"
+  }
+}

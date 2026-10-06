@@ -221,6 +221,7 @@ static func allowed_saved_moves(saved: Dictionary, character: Dictionary) -> Arr
 	var raw_tiers: Variant = record.get("breakthroughs",[])
 	var tiers: Array = raw_tiers if raw_tiers is Array else []
 	var ancestry: Array[String] = [id]
+	var water := preload("res://scripts/creatures/water_species_catalog.gd")
 	# Repeated backward closure supports lines with more than one evolution.
 	for _step: int in species.size():
 		var changed := false
@@ -231,6 +232,19 @@ static func allowed_saved_moves(saved: Dictionary, character: Dictionary) -> Arr
 			if variants is Dictionary:
 				for variant: Variant in variants.values():
 					if not targets.has(variant): targets.append(variant)
+			# Water definitions keep stable runtime IDs and distinct traversal
+			# data. Translate their board species' authored ancestry so retained
+			# moves are admitted after evolution without trusting saved knowledge.
+			var board_id := water.board_id(candidate)
+			if not board_id.is_empty():
+				var authored: Dictionary = species.get(board_id, {})
+				var board_target: Variant = authored.get("evolves_into", "")
+				var board_targets: Array = board_target.duplicate() if board_target is Array else [board_target]
+				var board_variants: Variant = authored.get("evolves_into_variants", {})
+				if board_variants is Dictionary: board_targets.append_array(board_variants.values())
+				for descendant: Variant in board_targets:
+					var runtime_target := water.runtime_id(str(descendant))
+					if species.has(runtime_target) and not targets.has(runtime_target): targets.append(runtime_target)
 			for descendant: Variant in targets:
 				if ancestry.has(str(descendant)) and not ancestry.has(candidate):
 					ancestry.append(candidate)

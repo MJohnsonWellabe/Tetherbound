@@ -12,6 +12,10 @@ var _list: VBoxContainer
 var _message: Label
 var _craft_id := ""
 var _recipe := ""
+var _pending_action := ""
+var _pending_intent: Dictionary = {}
+var _duel_generation := 0
+var _preparing_duel := false
 
 func _ready() -> void:
 	add_to_group(INPUT.GROUP)
@@ -43,6 +47,7 @@ func is_open() -> bool:
 func open(service: Node, mode: String, source: Node, master_id: String) -> void:
 	if INPUT.current(get_tree()) != null and INPUT.current(get_tree()) != self: return
 	_service = service
+	_cancel_duel_preparation()
 	_source = source
 	_mode = mode
 	_master = master_id
@@ -68,7 +73,7 @@ func _rebuild() -> void:
 		for card: Dictionary in state.get("party", []):
 			var uid := str(card.uid)
 			_button("%s · Lv %d" % [str(card.get("nickname", card.species_id)), int(card.level)],
-				func() -> void: _send("master_duel", {"master_id": _master, "creature_uid": uid}), bool(card.get("fainted", false)))
+				func() -> void: _duel(uid), bool(card.get("fainted", false)) or bool(card.get("resting", false)))
 	elif _mode == "cook":
 		for id: String in BREAKTHROUGH.feasts().get("recipes", {}):
 			var row: Dictionary = BREAKTHROUGH.feasts().recipes[id]
@@ -84,7 +89,7 @@ func _rebuild() -> void:
 				if not stack is Dictionary: continue
 				var item := str(stack.id)
 				var def: Dictionary = BREAKTHROUGH.feasts().items.get(item, {})
-				if def.get("kind") != "ascension_feast" or int(def.breaks_level) != int(card.level): continue
+				if not feast_matches_current_cap(card, mirror, def): continue
 				var planning := card.duplicate(true)
 				planning.evolution_choices = mirror.get("evolution_choices", {}).duplicate(true)
 				var offer: Dictionary = EVOLUTION.feast_offer(planning, int(def.tier))
@@ -102,6 +107,15 @@ func _rebuild() -> void:
 			node.grab_focus()
 			break
 
+## Only offer a feast at this individual's current locked tier. Level stays
+## unchanged after feeding, so level alone would re-offer the consumed tier.
+static func feast_matches_current_cap(card: Dictionary, mirror: Dictionary, definition: Dictionary) -> bool:
+	if definition.get("kind") != "ascension_feast": return false
+	var tiers: Array = mirror.get("breakthroughs", [])
+	var cap := BREAKTHROUGH.level_cap(tiers)
+	return cap > 0 and int(mirror.get("cap_level", -1)) == cap and int(card.get("level", -1)) == cap \
+		and int(definition.get("breaks_level", -1)) == cap and not tiers.has(int(definition.get("tier", -1)))
+
 func _button(label: String, action: Callable, disabled: bool = false) -> void:
 	var button := Button.new()
 	button.text = label
@@ -111,6 +125,9 @@ func _button(label: String, action: Callable, disabled: bool = false) -> void:
 	_list.add_child(button)
 
 func _cook(recipe: String) -> void:
+	if _pending_action == "feast_cook":
+		_send(_pending_action, _pending_intent.duplicate(true))
+		return
 	if _recipe != recipe or _craft_id.is_empty():
 		_recipe = recipe
 		_craft_id = Crypto.new().generate_random_bytes(16).hex_encode()
@@ -131,7 +148,29 @@ func _retry_retained_feast(original: Dictionary) -> void:
 func _feed(uid: String, item: String, choice: String) -> void:
 	_send("feast_feed", {"creature_uid": uid, "feast_item": item, "choice": choice})
 
+func _duel(uid: String) -> void:
+	if not visible or _mode != "duel" or _preparing_duel or not _pending_action.is_empty(): return
+	var generation := _duel_generation
+	var service := _service
+	var source := _source
+	var intent := {"master_id": _master, "creature_uid": uid}
+	_preparing_duel = true
+	_message.text = "Calling out your chosen companion…"
+	var result: Dictionary = await service.call("prepare_duel", uid, source)
+	if generation != _duel_generation or not visible or _mode != "duel" \
+			or not is_instance_valid(service) or service != _service or source != _source: return
+	_preparing_duel = false
+	if result.get("ok") != true:
+		_message.text = str(result.get("reason", result.get("code", "Deployment refused.")))
+		return
+	_send("master_duel", intent)
+
 func _send(op: String, intent: Dictionary) -> void:
+	if not _pending_action.is_empty() and (op != _pending_action or intent != _pending_intent):
+		_message.text = "Waiting for your original character transaction to save."
+		return
+	_pending_action = op
+	_pending_intent = intent.duplicate(true)
 	var result: Dictionary = _service.call("submit", op, intent, _source)
 	_message.text = str(result.get("reason", result.get("code", "Awaiting durable character save…")))
 	# Admission starts combat; it is not a saved Master win. Release this
@@ -139,18 +178,49 @@ func _send(op: String, intent: Dictionary) -> void:
 	# its input ownership cannot hold the newly started fight behind a menu.
 	if op == "master_duel" and result.get("ok") == true \
 		and result.get("encounter_id") is String and not result.encounter_id.is_empty():
+		_pending_action = ""
+		_pending_intent = {}
 		close()
 		return
-	if result.get("ok") == true and result.get("settled") == true:
-		_craft_id = ""
+	accept_completion(op, intent, result)
+
+## The authenticated producer emits this only after the existing owner-save
+## settlement. An unrelated or delayed transaction must never clear the ID
+## belonging to the next cook; retries keep their original immutable intent.
+func accept_completion(action: String, original: Dictionary, result: Dictionary) -> bool:
+	if action == _pending_action and original == _pending_intent \
+			and result.get("ok") == false and result.get("terminal_refusal") == true:
+		_pending_action = ""
+		_pending_intent = {}
+		if action == "feast_cook": _craft_id = ""
+		if is_instance_valid(_message): _message.text = str(result.get("reason", result.get("code", "Character transaction refused.")))
+		return true
+	if action != _pending_action or original != _pending_intent \
+			or result.get("ok") != true or result.get("settled") != true \
+			or result.get("durable") != true or result.get("owner_saved") != true \
+			or result.get("owner_acknowledged") != true:
+		return false
+	_pending_action = ""
+	_pending_intent = {}
+	if action == "feast_cook": _craft_id = ""
+	if visible:
 		if _mode == "duel": close()
 		else: _rebuild()
+	return true
 
 func _unhandled_input(event: InputEvent) -> void:
 	if visible and event.is_action_pressed("ui_cancel"):
 		get_viewport().set_input_as_handled()
 		close()
 
+func _cancel_duel_preparation() -> void:
+	_duel_generation += 1
+	_preparing_duel = false
+	if _pending_action == "master_duel":
+		_pending_action = ""
+		_pending_intent = {}
+
 func close() -> void:
+	_cancel_duel_preparation()
 	INPUT.suppress_pause_reopen(get_tree())
 	hide()

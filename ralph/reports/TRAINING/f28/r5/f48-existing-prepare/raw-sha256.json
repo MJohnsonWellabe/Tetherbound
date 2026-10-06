@@ -1,0 +1,102 @@
+[
+  {
+    "path": "mechanics-start/fixture-manifest.json",
+    "bytes": 14726,
+    "sha256": "e1234556c043491fd1f919317fb52798f7b07f79f9ebb18196fd7f1b9dc1d01a"
+  },
+  {
+    "path": "mechanics-start/profile.json",
+    "bytes": 8340,
+    "sha256": "5d776772e2962dafdd86d112364dea77263c9009be0a16feb1ad136cd186e6c9"
+  },
+  {
+    "path": "mechanics-start/peer-0/characters/redesign-v28/character-626300bee616b52bfa1d40ab32fb776a/character.json",
+    "bytes": 2782736,
+    "sha256": "48289d457580a72f0a791d4d2e8c4451f4e19d9b3a42c935dc661a01c15b36e5"
+  },
+  {
+    "path": "mechanics-start/peer-0/saves/redesign-v28/slot_0.json",
+    "bytes": 4202029,
+    "sha256": "c207428705adb761c2ecef8935184ebecd538db12e61a7015ff244ef2f7d57cb"
+  },
+  {
+    "path": "mechanics-start/peer-0/worlds/redesign-v28/slot-0/world.json",
+    "bytes": 20989,
+    "sha256": "71b59819d2a8bcae12d555d05d819ea0755e49909138e7447e7574f1a6c95324"
+  },
+  {
+    "path": "mechanics-start/peer-1/characters/redesign-v28/character-a79c7bee9128c2ef03d266ce0352c666/character.json",
+    "bytes": 2782724,
+    "sha256": "b7eb1ad4489e484792d9fc0a91bd7d54a684f563ec9f8c28ea5f4aafdc73ebf3"
+  },
+  {
+    "path": "mechanics-start/test-configuration/data/config/alpha_respawns.json",
+    "bytes": 8829,
+    "sha256": "b02e05dab1f45442b97d32d114762b90b22d0432f3217693375fed6eed55972e"
+  },
+  {
+    "path": "mechanics-start/test-configuration/data/config/essence.json",
+    "bytes": 2253,
+    "sha256": "024fd4614037d9b11c03a69908f05c454e15e503933e91acece1aadf38153c13"
+  },
+  {
+    "path": "mechanics-start/test-configuration/data/config/hud.json",
+    "bytes": 1649,
+    "sha256": "25414f95182ec6f3a9181217bd5a29304ba14c113e7f8387560e634339e5552f"
+  },
+  {
+    "path": "mechanics-start/test-configuration/data/config/multiplayer.json",
+    "bytes": 16109,
+    "sha256": "1917076c359fd4764904ca120a51c104b73b2c29b2971352a9b295174466384e"
+  },
+  {
+    "path": "mechanics-start/test-configuration/data/config/stations.json",
+    "bytes": 28444,
+    "sha256": "8fd375347b19d86dd9db826d2f163d60c08430a719f1d098708280d3b2fac262"
+  },
+  {
+    "path": "mechanics-start/test-configuration/data/config/traits.json",
+    "bytes": 7988,
+    "sha256": "14e339286cb1e267b84e2c05407db92f8c86418cad4f16ef8e2500c4fee238b8"
+  },
+  {
+    "path": "originals/peer-0/characters/redesign-v28/character-626300bee616b52bfa1d40ab32fb776a/character.json",
+    "bytes": 2778245,
+    "sha256": "06fea685d133a680a4d7dcc887fbd6179b7675f36b2c87a54753c7b7c81d2063"
+  },
+  {
+    "path": "originals/peer-0/saves/redesign-v28/slot_0.json",
+    "bytes": 4195925,
+    "sha256": "b187d4f8abeffd9bbe6e6d4daedf28a472368ce1d849bf0f69d27d2f9562fe2b"
+  },
+  {
+    "path": "originals/peer-0/worlds/redesign-v28/slot-0/world.json",
+    "bytes": 19008,
+    "sha256": "4e5b04e982f85a10d38c07865306bb0f1e13fa08b0e1624e501873c3ac2f35bc"
+  },
+  {
+    "path": "originals/peer-1/characters/redesign-v28/character-a79c7bee9128c2ef03d266ce0352c666/character.json",
+    "bytes": 2778248,
+    "sha256": "8d2deab960882f4f25172de6147a965fe3fb2b9366ebea9b40402a55e4b37172"
+  },
+  {
+    "path": "originals/peer-2/characters/redesign-v28/character-219d55c08e26227b4ccba505c7b3c409/character.json",
+    "bytes": 2778066,
+    "sha256": "fd4973fee083df26a95244be1ec4bd9339bf677196646f59f694148e15c474d9"
+  },
+  {
+    "path": "originals/peer-3/characters/redesign-v28/character-92a3946dcc1ebef20650b2c4f6675001/character.json",
+    "bytes": 2778065,
+    "sha256": "26f893c26cf4394dcfc4856f72d71c5395ead32cde54b5418607b950578f1e9b"
+  },
+  {
+    "path": "producer-profile/profile.json",
+    "bytes": 33126,
+    "sha256": "23a365679f106f99e67f621cd22f17c09c8a59bf7c46ae57f23322ba7f1ad5b9"
+  },
+  {
+    "path": "producer-profile/source.json",
+    "bytes": 441,
+    "sha256": "31a6406808c85638bd8e0395e6e64ddb348b8e4ac46646964fe7daef1cc91b44"
+  }
+]
