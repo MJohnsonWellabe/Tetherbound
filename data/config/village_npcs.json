@@ -245,7 +245,6 @@
     },
     {
       "name": "Bram",
-      "_why_f01_3": "Native night walk: counter placements put the camera behind the lodging screen or sent the departing player toward the west wall. Bram welcomes guests in the inn's public entrance aisle, clear of the tables, barrels and door posts. The doorway approach and nearest road departure share the same open aisle. No interior geometry or conversation changes; fresh walk and blind verdict required.",
       "hair": {
         "visible": true,
         "color": "#9c8450",
@@ -253,8 +252,8 @@
       },
       "config_key": "villager_keeper",
       "position": [
-        43.65,
-        1.6
+        44,
+        -2.39
       ],
       "facing_deg": 0,
       "greeting": "village_bram",
