@@ -83,7 +83,8 @@ class Session extends Node:
 	func _foundation_flags(_peer: int) -> Dictionary: return {}
 	func is_host() -> bool: return host
 	func local_peer_id() -> int: return 1 if host else 2
-	func snapshot_ready() -> bool: return true
+	var snapshot_is_ready := true
+	func snapshot_ready() -> bool: return snapshot_is_ready
 	var snapshot_applied := true
 	func handshake_snapshot_applied() -> bool: return snapshot_applied
 	func _authority_character(peer: int) -> String: return game.local.character_id if peer == owner_peer else "host"
@@ -309,6 +310,24 @@ func test_owner_sends_each_input_once_and_the_window_again_only_when_acks_stall(
 		"a stall resends the unacknowledged window from its first input (the host may have waited)")
 	service._flush()
 	assert_eq(session.messages.size(), 3, "and only once per stall")
+
+func test_a_window_dropped_before_the_join_snapshot_is_sent_on_the_next_flush() -> void:
+	# station_craft: the first window, dropped before the snapshot, was marked in
+	# flight and waited a whole stall; a Home Key trip inside it moved the host's
+	# body and the first discovery input was refused (initial pose unconfirmed).
+	service.record_input(_input(0.1))
+	session.messages.clear()
+	session.snapshot_is_ready = false
+	service._flush()
+	assert_eq(session.messages.size(), 0, "nothing sent before the snapshot")
+	assert_eq(int(service.local.get("inflight_through", 0)), 0, "and nothing marked in flight")
+	session.snapshot_is_ready = true
+	service.record_input(_input(0.2))
+	service._flush()
+	assert_eq(session.messages.size(), 1, "the next flush sends at once, without waiting a stall")
+	assert_eq((session.messages[0].inputs as Array).map(func(i: Dictionary) -> int: return int(i.sequence)), [1, 2])
+	service._flush()
+	assert_eq(session.messages.size(), 1, "then stop-and-wait as before")
 
 func test_host_duplicate_input_is_idempotent_and_conflict_does_not_promote() -> void:
 	service.record_input(_input())

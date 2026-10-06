@@ -187,12 +187,14 @@ func _scope() -> Dictionary:
 		"world_namespace": game.get("world").reward_delivery_namespace,
 		"session_epoch": owner().call("_altar_current_epoch")}
 
-func _send_host(message: Dictionary, stream_id: String = "") -> void:
-	if local.is_empty() or owner() == null or owner().call("snapshot_ready") != true: return
+## False when nothing was sent (no stream, or the join snapshot not applied yet).
+func _send_host(message: Dictionary, stream_id: String = "") -> bool:
+	if local.is_empty() or owner() == null or owner().call("snapshot_ready") != true: return false
 	var packet := _scope()
 	packet.merge(message, true)
 	packet.stream_id = local.id if stream_id.is_empty() else stream_id
 	owner().call("_owner_passive_send_host", packet)
+	return true
 
 func _send_owner(peer: int, stream: Dictionary, message: Dictionary) -> void:
 	var packet := {"character_id": stream.character, "world_id": stream.world_id,
@@ -1549,10 +1551,14 @@ func _flush() -> void:
 	if not local.has("ack_progress_ms"): local.ack_progress_ms = now
 	var in_flight: bool = int(local.get("inflight_through", 0)) > int(local.acked)
 	if in_flight and now - int(local.ack_progress_ms) < int(RESEND_STALL_S * 1000.0): return
-	local.ack_progress_ms = now
 	var batch: Array = local.inputs.slice(0, mini(MAX_BATCH, local.inputs.size())).duplicate(true)
+	# A window dropped before the join snapshot is not in flight: the next flush
+	# sends it. Marked in flight anyway, it waited a whole stall, and a first
+	# discovery input reached the host after a Home Key trip had moved the body
+	# (smoke_net_homestead_station_craft: owner_passive_initial_pose_unconfirmed).
+	if not _send_host({"op": "inputs", "inputs": batch}): return
+	local.ack_progress_ms = now
 	local.inflight_through = int(batch[-1].sequence)
-	_send_host({"op": "inputs", "inputs": batch})
 
 ## Diagnostic only, once per character and reason: a host checkpoint that
 ## silently waits leaves the fight's round reward held with no other trace.
