@@ -23,7 +23,8 @@ func _run() -> void:
 	var game := root.get_node("Game")
 	game.current_realm = "water"
 	game.local.character_id = "alpha-runtime-smoke"
-	game.world.world_id = "alpha-runtime-world"
+	# Match the production autosave slot before any immutable world receipt.
+	game.world.world_id = "slot-%d" % game.autosave_slot()
 	game.save_system = SAVE.new("user://water_alpha_runtime_%d/" % Time.get_ticks_usec())
 	var catalog: Dictionary = CATALOG.merge_catalogue(SPECIES.table())
 	SPECIES.table().merge(catalog.catalogue, true)
