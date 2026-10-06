@@ -39,6 +39,9 @@ const ADMIT_FRAMES := 600
 
 var _port := 0
 var _guest_character := ""
+var _tonic_uid := ""
+var _tonic_receipt := ""
+var _tonic_remaining := 0.0
 
 
 func _initialize() -> void:
@@ -123,11 +126,13 @@ func _run() -> void:
 		return
 	_step_phase_deadline_ms = Time.get_ticks_msec() + 3600.0 * 1000.0
 	for i in 2:
+		_ok(await step(i, "op_tonic_candidate"), "tonic: process-local candidate gates before world boot")
 		if not _ok(await step(i, "boot", {"scene": "world"}, BUILD_BUDGET), "SETUP: peer %d boots its own Meadows world" % i):
 			quit(await finish())
 			return
 		await step(i, "dismiss_dialogue", {})
 		_ok(await step(i, "party_grant", {"species": "terrapup", "level": 8}), "SETUP: peer %d owns a terrapup" % i)
+	_ok(await step(1, "op_tonic_supply"), "tonic: guest saves its initial two-item stock before admission")
 	if not _ok(await step(0, "host"), "peer 0 hosts"):
 		quit(await finish())
 		return
@@ -146,6 +151,9 @@ func _run() -> void:
 	var first := await _await_admitted("first-join")
 	check(_admitted(first), "first join: the guest's owner-passive stream is admitted by the host")
 	var first_id := str(((first.guest as Dictionary).get("local", {}) as Dictionary).get("id", ""))
+	if not await _tonic_item_original():
+		quit(await finish())
+		return
 
 	# 2. Plain leave + rejoin.
 	if not await _rejoin("rejoin"):
@@ -155,6 +163,12 @@ func _run() -> void:
 	var rejoined_id := str(((after.guest as Dictionary).get("local", {}) as Dictionary).get("id", ""))
 	check(rejoined_id != first_id and not rejoined_id.is_empty(), "rejoin: the guest armed a new stream")
 	check(_admitted(after), "rejoin: the host admitted the rejoined guest's NEW stream (not pending, same id)")
+	var rejoin_tonic: Dictionary = (await _state(1)).get("tonic", {})
+	var rejoin_remaining := _tonic_seconds(rejoin_tonic)
+	check(rejoin_remaining > 0.0 and rejoin_remaining <= _tonic_remaining,
+		"tonic: new admitted stream reconciles remaining duration without refreshing the saved Item")
+	check(int(rejoin_tonic.get("stock", -1)) == 1, "tonic: rejoin never debits the Item a second time")
+	check((rejoin_tonic.get("disk_receipts", []) as Array).has(_tonic_receipt), "tonic: owner disk retains the exact saved Item receipt")
 
 	# 3. Passive inputs after the rejoin are acknowledged under the new id.
 	var before_walk: Dictionary = ((await _state(1)).get("local", {}) as Dictionary)
@@ -174,6 +188,24 @@ func _run() -> void:
 			break
 	check(acked_ok, "rejoin: the walking guest's passive inputs are acknowledged by the host (%s -> %s)"
 		% [JSON.stringify(before_walk), JSON.stringify(walked)])
+	# Natural authored ninety-second timer, not a forged prefix or accelerated clock.
+	var expired := false
+	for poll in 110:
+		await step(1, "wait", {"frames":60})
+		var owner_tonic: Dictionary = (await _state(1)).get("tonic", {})
+		var host_tonic: Dictionary = (await _state(0)).get("tonic", {})
+		var effects: Array = host_tonic.get("projected", {}).get(_guest_character, {}).get(_tonic_uid, {}).get("effects", [])
+		if _tonic_seconds(owner_tonic) == 0.0 and effects.is_empty():
+			expired = true
+			break
+	check(expired, "tonic: actual owner passive ticks expire the same effect on guest and host")
+	check(_tonic_seconds((await _state(0)).get("tonic", {})) == 0.0, "tonic: the guest command never buffs the other player's creature")
+	if not await _rejoin("expired-tonic"):
+		quit(await finish())
+		return
+	check(_admitted(await _await_admitted("expired-tonic")), "tonic: expired receipt rejoins normally")
+	check(_tonic_seconds((await _state(1)).get("tonic", {})) == 0.0,
+		"tonic: accepting the saved receipt after expiry cannot resurrect its old duration")
 
 	# 3b. Deliver-then-leave.
 	var base_items: Dictionary = (await _state(1)).get("items", {})
@@ -277,3 +309,58 @@ func _run() -> void:
 	check(str(refused.get("verdict", "")) != "PASS" and str(refused.get("detail", "")).contains("could not be admitted"),
 		"invalid: the rejoin is refused with a reason (%s)" % str(refused.get("detail", "")))
 	quit(await finish())
+
+
+func _tonic_seconds(state: Dictionary) -> float:
+	for owned: Dictionary in state.get("owned", {}).values():
+		for buff: Dictionary in owned.get("buffs", []):
+			if buff.get("id") == "attack_tonic": return float(buff.get("remaining_s", 0.0))
+	return 0.0
+
+
+func _tonic_item_original() -> bool:
+	if not _ok(await step(1, "op_tonic_pouch"), "tonic: production personal pouch assignment saves"): return false
+	_ok(await step(0, "deploy_creature"), "tonic: host deploys its actual owned creature")
+	if not _ok(await step(0, "op_tonic_target"), "tonic: normal interact opens a real canonical wild fight"): return false
+	var encounter: Dictionary = await probe(0, "encounter")
+	var id := str(encounter.get("id", ""))
+	if id.is_empty():
+		check(false, "tonic: actual host encounter identity is required")
+		return false
+	_ok(await step(1, "teleport", {"at":encounter.get("opponent_pos", [])}), "tonic: existing proximity fixture reaches the shared fight")
+	_ok(await step(1, "deploy_creature"), "tonic: guest deploys its same admitted owned creature")
+	if not _ok(await step(1, "join_encounter", {"encounter_id":id}), "tonic: guest joins the host's exact record"): return false
+	if not _ok(await step(1, "op_tonic_hits"), "tonic: normal accepted quick hits earn Item meter"): return false
+	_ok(await step(1, "op_tonic_writer", {"block":true}), "tonic: actual owner character writer will return false")
+	var pending: Dictionary = await step(1, "op_tonic_item")
+	if not _ok(pending, "tonic: production Item request preserves its original while owner save refuses"): return false
+	var guest: Dictionary = (await _state(1)).get("tonic", {})
+	var host: Dictionary = (await _state(0)).get("tonic", {})
+	var original: Dictionary = host.get("rows", {}).get(_guest_character, {})
+	check(original.get("status") == "pending" and not str(original.get("receipt", "")).is_empty(),
+		"tonic: host journal retains the precise original awaiting owner TRUE BOOL")
+	check(_tonic_seconds(guest) == 0.0 and host.get("projected", {}).get(_guest_character, {}).is_empty(),
+		"tonic: owner save refusal installs no owner or authoritative effect")
+	check(int(guest.get("stock", -1)) == 2 and guest.get("saved_result", {}).get("saved") != true,
+		"tonic: failed owner save rolls back the live debit and produces no saved result")
+	_tonic_receipt = str(original.get("receipt", ""))
+	_tonic_uid = str(original.get("uid", ""))
+	_ok(await step(1, "op_tonic_writer", {"block":false}), "tonic: original actual owner writer is restored")
+	if not _ok(await step(1, "op_tonic_retry"), "tonic: retry sends the same original request"): return false
+	for poll in 30:
+		guest = (await _state(1)).get("tonic", {})
+		host = (await _state(0)).get("tonic", {})
+		if guest.get("saved_result", {}).get("saved") == true and host.get("rows", {}).get(_guest_character, {}).get("status") == "accepted": break
+		await step(0, "wait", {"frames":30})
+	check(guest.get("saved_result", {}).get("saved") == true \
+		and guest.get("saved_result", {}).get("receipt") == _tonic_receipt,
+		"tonic: actual TRUE owner-write BOOL precedes the exact saved result")
+	check(int(guest.get("stock", -1)) == 1 and int(guest.get("disk_stock", -1)) == 1 \
+		and (guest.get("disk_receipts", []) as Array).has(_tonic_receipt),
+		"tonic: real owner disk holds one debit and the original receipt")
+	check(host.get("rows", {}).get(_guest_character, {}).get("receipt") == _tonic_receipt \
+		and host.get("rows", {}).get(_guest_character, {}).get("request") == original.get("request"),
+		"tonic: retry neither substitutes nor duplicates the accepted original")
+	_tonic_remaining = _tonic_seconds(guest)
+	check(_tonic_remaining > 0.0 and _tonic_remaining <= 90.0, "tonic: actual saved effect starts its authored timer")
+	return _tonic_remaining > 0.0
