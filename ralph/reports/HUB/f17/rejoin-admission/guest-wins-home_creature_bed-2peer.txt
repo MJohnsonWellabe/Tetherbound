@@ -1,0 +1,20 @@
+PASS: peer 0 production_host: title fresh identity 'BedHost'/trainer entered 'MeadowsPlayground' and hosted udp/33221 after 1 frames; real mounted world released and admitted host stable30 frames
+PASS: peer 1 production_join: title fresh entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:33221 as peer 893976421 after 80 frames
+PASS: peer 0 home_bed_rest: own creature rested in the shared home bed and healed to full {"assigned":true,"bed_index":-40.0,"character_id":"character-892b18ba1ef116c3c5d697e6bdd4f0ab","heal_seconds":120.0,"hosting":true,"hp":120.0,"max_hp":120.0,"occupied_by_own_party_before":false,"resting":true,"starter_added_fixture":true}
+PASS: peer 1 home_bed_rest: own creature rested in the shared home bed and healed to full {"assigned":true,"bed_index":-40.0,"character_id":"character-f88c9d383f07f31b467064286d582e47","heal_seconds":120.0,"hosting":false,"hp":120.0,"max_hp":120.0,"occupied_by_own_party_before":false,"resting":true,"starter_added_fixture":true}
+PASS: two separate admitted characters
+PASS: actual host/client roles
+PASS: both peers rest in the same world bed (index -40)
+PASS: the host's resting creature does not block the guest's rest
+PASS: peer 0 home_bed_status: home bed status read {"character_id":"character-892b18ba1ef116c3c5d697e6bdd4f0ab","hp":120.0,"max_hp":120.0,"occupied":true,"rest_bed_index":-40.0,"resting":true}
+PASS: the guest's rest did not evict the host's creature
+PASS: host creature stays healed
+PASS: peer 1 hall_leave_guest: production client leave saved its own portable character; production reader confirmed disk payload
+PASS: peer 0 expect_peers: registry reports 1 peer(s) after 0 frames (0.0 s)
+PASS: peer 1 production_join: title returning entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:33221 as peer 1619729078 after 78 frames
+PASS: peer 1 home_bed_status: home bed status read {"character_id":"character-f88c9d383f07f31b467064286d582e47","hp":120.0,"max_hp":120.0,"occupied":true,"rest_bed_index":-40.0,"resting":true}
+PASS: same saved guest character rejoined
+PASS: guest's home-bed heal persisted through leave and rejoin (hp 120.0 / 120.0)
+PASS: home bed peer logs have no script errors
+ALL CHECKS PASSED
+ALL CHECKS PASSED

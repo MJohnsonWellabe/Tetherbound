@@ -87,3 +87,36 @@ After two failed fixes the approach changed. Instead of deriving the rows from t
 - `forward_camp`;
 - `rejoin_craft_control`;
 - `gather_departure`.
+
+# The rebuild under the owner ruling "guest wins unless behind" (2026-10-05)
+
+The held-wins design above was reverted in 83cb8cb1. CI (#544) showed it lost guest-side progress the held record never carried; the evidence is in `rejoin_audit.md`. This section covers the rebuild under the owner ruling.
+
+| Round | Commit | Verdict | Findings and fixes |
+|---|---|---|---|
+| 1 | 82c1635b | BLOCK | **H1:** an open host transaction read as "behind" (progress lost, or a lockout). **H2:** owed (grant_due) payouts were absorbed, so their later settle killed the stream (first joins too). Also M1, M2 and L1–L5. Fixed in 40df9738 |
+| 2 | 40df9738 | BLOCK | Parking an admission behind an open host duty never re-decided after a training or Altar ACK, and the re-decide judged a stale hello declaration. After two attempts the approach changed: an open duty at the hello now refuses the stream as main does (nothing lost; the next rejoin decides on a fresh declaration). Fixed in 8ca5ca73 |
+| 3 | 8ca5ca73 | BLOCK | **H1:** a guest adopted after 1024 wild defeats elsewhere lost the accepted training row's receipt to compaction, and recovery refused every hello, a permanent lockout. Fixed in 8b331f75 by tolerating a receipt the record's own full window compacted. **L1:** an unconfirmed fold kept in the hello's list (fixed). **M1** (a missing personal flag counts as behind): sent to the coordinator and owner, because the ruling lists flags. **L2** (a non-fitting accepted row while behind): follow-up |
+| 4 | 8b331f75 | APPROVE-WITH-NITS | **M:** anchor the compaction age on the training row's own receipts, so a stale full-window backup is still refused. **L-a:** windows below 2 are never compacted. Both fixed in 66b2f539 |
+
+## Checks on 66b2f539
+
+**Unit tests:**
+
+| Suite | Tests | Assertions |
+|---|---|---|
+| `test_rejoin_admission` (one test per ruling case) | 15 | 81 |
+| `test_owner_passive_sync` | 36 | 577 |
+| `test_owner_passive_adopt` | 7 | 41 |
+| `test_owner_passive_replay` | 11 | 381 |
+| `test_forward_camp` | 9 | 186 |
+| `test_altar_building_recovery` | 5 | 156 |
+
+**Two-peer smokes:** all report ALL CHECKS PASSED.
+- `owner_passive_rejoin`:
+  - deliver-then-leave and an offline change are adopted;
+  - a rolled-back backup is behind and adopts the held record, with the find back once and never paid twice;
+  - an invalid record is refused.
+- `veridian_choices`, `home_creature_bed`, `rejoin_craft_control`, `gather_departure`, `harness_max_hp`, `forward_camp` and `shared_boss`.
+
+Text evidence: `rejoin-admission/guest-wins-*-2peer.txt`.
