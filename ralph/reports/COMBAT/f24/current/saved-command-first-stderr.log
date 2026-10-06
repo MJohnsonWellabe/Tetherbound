@@ -1,0 +1,29 @@
+ERROR: Can't take value from empty array.
+   at: back (core/variant/array.cpp:360)
+   GDScript backtrace (most recent call first):
+       [0] test_item_input_tracks_current_trainer_scope_and_keeps_pending_request_fenced (res://tests/test_f24_host_commands.gd:551)
+       [1] _init (res://tests/run_tests.gd:120)
+ERROR: Can't take value from empty array.
+   at: back (core/variant/array.cpp:360)
+   GDScript backtrace (most recent call first):
+       [0] test_item_input_tracks_current_trainer_scope_and_keeps_pending_request_fenced (res://tests/test_f24_host_commands.gd:552)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid call. Nonexistent function 'duplicate' in base 'Nil'.
+   at: test_item_input_tracks_current_trainer_scope_and_keeps_pending_request_fenced (res://tests/test_f24_host_commands.gd:552)
+   GDScript backtrace (most recent call first):
+       [0] test_item_input_tracks_current_trainer_scope_and_keeps_pending_request_fenced (res://tests/test_f24_host_commands.gd:552)
+       [1] _init (res://tests/run_tests.gd:120)
+ERROR: The object does not have any 'meta' values with the key 'dispose_after_actor_settlement'.
+   at: get_meta (core/object/object.cpp:1052)
+   GDScript backtrace (most recent call first):
+       [0] test_wild_disposal_retains_same_actor_source_until_item_hp_prejournal_and_mastery_settle (res://tests/test_f24_host_commands.gd:765)
+       [1] _init (res://tests/run_tests.gd:120)
+SCRIPT ERROR: Invalid access of index '0' on a base object of type: 'Array[Dictionary]'.
+   at: test_wild_disposal_retains_same_actor_source_until_item_hp_prejournal_and_mastery_settle (res://tests/test_f24_host_commands.gd:772)
+   GDScript backtrace (most recent call first):
+       [0] test_wild_disposal_retains_same_actor_source_until_item_hp_prejournal_and_mastery_settle (res://tests/test_f24_host_commands.gd:772)
+       [1] _init (res://tests/run_tests.gd:120)
+WARNING: 107 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2535)
+ERROR: 34 resources still in use at exit (run with --verbose for details).
+   at: clear (core/io/resource.cpp:822)

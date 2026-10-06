@@ -1,0 +1,8 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_f24_host_commands.gd::test_item_input_tracks_current_trainer_scope_and_keeps_pending_request_fenced,test_f24_host_commands.gd::test_wild_disposal_retains_same_actor_source_until_item_hp_prejournal_and_mastery_settle,test_f24_host_commands.gd::test_wild_item_input_requires_current_saved_scope_and_refuses_older_health_original: 1 of 817 test files
+  ok    test_f24_host_commands.gd :: test_item_input_tracks_current_trainer_scope_and_keeps_pending_request_fenced
+  ok    test_f24_host_commands.gd :: test_wild_disposal_retains_same_actor_source_until_item_hp_prejournal_and_mastery_settle
+  ok    test_f24_host_commands.gd :: test_wild_item_input_requires_current_saved_scope_and_refuses_older_health_original
+
+3 tests, 319 assertions, 0 failed

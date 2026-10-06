@@ -1,0 +1,72 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_f24_host_commands.gd,test_f23_live_moves.gd::test_current_wild_actor_scope_fences_moves_and_switch_without_round_rewards,test_ordinary_actor_vitals_recovery.gd,test_shared_wild_host_fight.gd: 4 of 817 test files
+  ok    test_f23_live_moves.gd :: test_current_wild_actor_scope_fences_moves_and_switch_without_round_rewards
+  ok    test_f24_host_commands.gd :: test_admission_refuses_unknown_loadout_without_any_mutation
+  ok    test_f24_host_commands.gd :: test_charged_refusal_has_no_cost_and_does_not_replace_original
+  ok    test_f24_host_commands.gd :: test_command_input_honors_the_mounted_command_view_before_allocating_sequence
+  ok    test_f24_host_commands.gd :: test_equipped_authored_pouches_bind_each_upgrade_on_the_same_participant
+  ok    test_f24_host_commands.gd :: test_every_joint_damage_event_is_attributed_to_one_of_the_two_owned_creatures
+  ok    test_f24_host_commands.gd :: test_f33_charm_gain_frozen_in_the_accepted_action_scales_the_meter_once_and_is_capped
+  ok    test_f24_host_commands.gd :: test_f33_no_charm_keeps_the_ordinary_gain_and_power
+  ok    test_f24_host_commands.gd :: test_first_item_dispatch_refuses_an_older_uncommitted_actor_original
+  ok    test_f24_host_commands.gd :: test_idle_wind_ticks_each_uid_and_switched_burst_spends_current_creature
+  ok    test_f24_host_commands.gd :: test_item_candidate_debits_one_own_stack_with_actual_heal_food_or_unsaved_tonic
+  FAIL  test_f24_host_commands.gd :: test_item_input_tracks_current_trainer_scope_and_keeps_pending_request_fenced
+          expected { "pouch_count": 3, "item_consumer_ready": true }, got { "pouch_count": 0, "item_consumer_ready": false }
+          expected true, got false  (current host/guest scoped trainer exposes Item)
+          expected true, got false
+          expected { "encounter_id": "1:1", "generation": 1, "sequence": 0, "command_id": "item_throw" }, got <null>  (only four original command fields)
+  ok    test_f24_host_commands.gd :: test_item_owner_checkpoint_matches_only_its_submitted_command_and_current_deployment
+  ok    test_f24_host_commands.gd :: test_meter_uses_original_host_hit_once_and_freezes_admitted_gear
+  ok    test_f24_host_commands.gd :: test_meters_require_positive_debit_and_credit_one_actual_action_once
+  ok    test_f24_host_commands.gd :: test_personal_view_cache_requires_current_character_world_and_epoch
+  ok    test_f24_host_commands.gd :: test_pouch_assignment_uses_original_character_journal_and_owner_save_without_moving_stacks
+  ok    test_f24_host_commands.gd :: test_pouch_presentation_reads_first_live_stack_and_frozen_gear_without_spending
+  ok    test_f24_host_commands.gd :: test_rally_can_commit_on_current_owned_deployment_before_its_first_move
+  ok    test_f24_host_commands.gd :: test_rally_spends_once_affects_only_owner_and_splits_wind_at_expiry
+  ok    test_f24_host_commands.gd :: test_retained_item_ack_preserves_active_body_and_settles_same_v3_decision_once
+  ok    test_f24_host_commands.gd :: test_satchel_pouch_recovers_same_original_and_waits_for_saved_ack
+  ok    test_f24_host_commands.gd :: test_saved_item_carrier_keeps_one_original_debit_and_owned_effect_with_runtime_off
+  ok    test_f24_host_commands.gd :: test_snare_canonical_status_has_one_shared_slow_and_own_catch_grant
+  ok    test_f24_host_commands.gd :: test_start_spends_once_and_impact_cannot_run_early_or_repeat
+  ok    test_f24_host_commands.gd :: test_switch_retains_each_creatures_resources_and_cooldown
+  ok    test_f24_host_commands.gd :: test_unsaved_mastery_and_resources_survive_peer_replacement_and_close
+  FAIL  test_f24_host_commands.gd :: test_wild_disposal_retains_same_actor_source_until_item_hp_prejournal_and_mastery_settle
+          expected true, got false  ({ "ok": false, "code": "stale_actor" })
+          expected true, got false  (item)
+          expected true, got false  (retry keeps exact canonical solo source)
+          expected false, got <null>
+          expected true, got false  (pending source preserves body identity)
+          expected true, got false  (tick retains pending source)
+  FAIL  test_f24_host_commands.gd :: test_wild_item_input_requires_current_saved_scope_and_refuses_older_health_original
+          expected true, got false
+  ok    test_f24_host_commands.gd :: test_wrong_move_or_body_lifetime_cannot_arrive
+  ok    test_ordinary_actor_vitals_recovery.gd :: test_accepted_duplicate_repairs_lost_actual_arbiter_ack_without_world_write
+  ok    test_ordinary_actor_vitals_recovery.gd :: test_actual_prepared_damage_fixture_heal_BOOL_retry_next_damage_and_round_projection
+  ok    test_ordinary_actor_vitals_recovery.gd :: test_completion_replays_exact_accepted_round_actor_promotion_without_new_body
+  ok    test_ordinary_actor_vitals_recovery.gd :: test_fixture_full_heal_refuses_foreign_peer_generation_epoch_amount_pending_and_terminal_sources
+  ok    test_ordinary_actor_vitals_recovery.gd :: test_rejoined_stable_owner_repairs_original_ack_and_rejects_foreign_proofs
+  ok    test_ordinary_actor_vitals_recovery.gd :: test_terminal_actual_leave_composes_original_ack_with_global_sequence_proof
+  ok    test_ordinary_actor_vitals_recovery.gd :: test_terminal_full_record_requires_exact_original_accepted_hp_transition
+  ok    test_ordinary_actor_vitals_recovery.gd :: test_wild_actor_owner_scope_keeps_journal_and_transport_epochs_distinct
+  ok    test_shared_wild_host_fight.gd :: test_catch_pause_suspends_authority_physics_and_breakout_resumes_prior_state
+  ok    test_shared_wild_host_fight.gd :: test_shared_runtime_forwards_pick_and_host_hit_through_its_authority_adapter
+  ok    test_shared_wild_host_fight.gd :: test_shared_runtime_never_claims_the_host_as_the_local_fallback_peer
+  ok    test_shared_wild_host_fight.gd :: test_terminal_outcome_is_latched_so_ecology_can_finalize_once
+  ok    test_shared_wild_host_fight.gd :: test_warrens_guardian_guest_admission_rejects_wrong_body_realm_species_and_terminal_record
+  ok    test_shared_wild_host_fight.gd :: test_warrens_guardian_guest_admission_selects_only_the_active_matching_announcement
+
+44 tests, 1048 assertions, 3 failed
+
+  test_f24_host_commands.gd :: test_item_input_tracks_current_trainer_scope_and_keeps_pending_request_fenced — expected { "pouch_count": 3, "item_consumer_ready": true }, got { "pouch_count": 0, "item_consumer_ready": false }
+  test_f24_host_commands.gd :: test_item_input_tracks_current_trainer_scope_and_keeps_pending_request_fenced — expected true, got false  (current host/guest scoped trainer exposes Item)
+  test_f24_host_commands.gd :: test_item_input_tracks_current_trainer_scope_and_keeps_pending_request_fenced — expected true, got false
+  test_f24_host_commands.gd :: test_item_input_tracks_current_trainer_scope_and_keeps_pending_request_fenced — expected { "encounter_id": "1:1", "generation": 1, "sequence": 0, "command_id": "item_throw" }, got <null>  (only four original command fields)
+  test_f24_host_commands.gd :: test_wild_disposal_retains_same_actor_source_until_item_hp_prejournal_and_mastery_settle — expected true, got false  ({ "ok": false, "code": "stale_actor" })
+  test_f24_host_commands.gd :: test_wild_disposal_retains_same_actor_source_until_item_hp_prejournal_and_mastery_settle — expected true, got false  (item)
+  test_f24_host_commands.gd :: test_wild_disposal_retains_same_actor_source_until_item_hp_prejournal_and_mastery_settle — expected true, got false  (retry keeps exact canonical solo source)
+  test_f24_host_commands.gd :: test_wild_disposal_retains_same_actor_source_until_item_hp_prejournal_and_mastery_settle — expected false, got <null>
+  test_f24_host_commands.gd :: test_wild_disposal_retains_same_actor_source_until_item_hp_prejournal_and_mastery_settle — expected true, got false  (pending source preserves body identity)
+  test_f24_host_commands.gd :: test_wild_disposal_retains_same_actor_source_until_item_hp_prejournal_and_mastery_settle — expected true, got false  (tick retains pending source)
+  test_f24_host_commands.gd :: test_wild_item_input_requires_current_saved_scope_and_refuses_older_health_original — expected true, got false

@@ -5,3 +5,4 @@
 ralph/reports/COMBAT/f24/current/command-input-gate*.log -text
 ralph/reports/COMBAT/f24/current/item-finalizer*.log -text
 ralph/reports/COMBAT/f23/current/camp-loadout*.log -text
+ralph/reports/COMBAT/f24/current/saved-command-*.log -text
