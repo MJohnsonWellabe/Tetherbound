@@ -27,6 +27,7 @@ import json
 import math
 
 import bpy
+from mathutils import Matrix, Vector
 
 
 def argv_after_double_dash() -> list[str]:
@@ -47,8 +48,10 @@ def main() -> None:
     out = pathlib.Path(option(args, "--out", textured_path.with_name("rigged_textured.glb"))).resolve()
     preserve = "--preserve-target-geometry" in args
     yaw = float(option(args, "--alignment-yaw-deg", "0"))
-    report_path = option(args, "--report")
+    report_value = option(args, "--report")
+    report_path = pathlib.Path(report_value).resolve() if report_value else None
     if preserve and (out in (donor_path, textured_path) or out.exists() or not report_path
+                     or report_path in (donor_path, textured_path, out) or report_path.exists()
                      or not math.isfinite(yaw) or abs(yaw) > 180):
         raise SystemExit("Preserved transfer requires fresh separate output, report and finite alignment yaw")
     input_hashes = {str(p): hashlib.sha256(p.read_bytes()).hexdigest()
@@ -114,12 +117,12 @@ def main() -> None:
     target = bpy.context.view_layer.objects.active
     def geometry_signature(obj):
         return (tuple(tuple(v.co) for v in obj.data.vertices),
-                tuple(tuple(p.vertices) for p in obj.data.polygons),
+                tuple((tuple(p.vertices), p.material_index) for p in obj.data.polygons),
                 tuple(tuple(tuple(loop.uv) for loop in layer.data) for layer in obj.data.uv_layers),
                 tuple(obj.data.materials))
     original_geometry = geometry_signature(target) if preserve else None
     if preserve:
-        target.rotation_euler.z += math.radians(yaw)
+        target.matrix_world = Matrix.Rotation(math.radians(yaw), 4, "Z") @ target.matrix_world
         bpy.context.view_layer.update()
     else:
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
@@ -127,7 +130,6 @@ def main() -> None:
     # The donor was normalised by its rig script (feet on z=0, centred); the
     # textured mesh arrives however Meshy left it. Align by bounding box so
     # nearest-face lookups land on the right body parts.
-    from mathutils import Vector
     def box(obj):
         low = Vector((math.inf,) * 3)
         high = Vector((-math.inf,) * 3)
@@ -216,10 +218,8 @@ def main() -> None:
                               export_skins=True, export_animations=True,
                               export_yup=True)
     if preserve:
-        if any(hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest() != digest
-               for p, digest in input_hashes.items()):
-            raise SystemExit("Transfer overwrote an input asset")
-        pathlib.Path(report_path).write_text(json.dumps({
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        report_path.write_text(json.dumps({
             "mode": "preserved_target_skin_transfer", "input_sha256": input_hashes,
             "output_sha256": hashlib.sha256(out.read_bytes()).hexdigest(),
             "target_geometry_uv_material_bindings_unchanged_before_export": True,
@@ -230,6 +230,9 @@ def main() -> None:
             "trimmed_influences": trimmed, "weights_normalized": True,
             "scope": "Pre-export data and source guards only; export reimport/deformation/native scale/judge still required"
         }, indent=2) + "\n")
+        if any(hashlib.sha256(pathlib.Path(p).read_bytes()).hexdigest() != digest
+               for p, digest in input_hashes.items()):
+            raise SystemExit("Transfer overwrote an input asset")
     print(f"\n{textured_path.name} skinned from {donor_path.name} -> {out.name}")
     print(f"  {len(target.data.vertices)} vertices, {unweighted} unweighted after transfer")
     if unweighted:
