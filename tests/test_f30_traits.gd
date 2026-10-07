@@ -112,6 +112,7 @@ func test_slots_use_breakthroughs_and_persistence_identity() -> void:
 	assert_false(packet.is_empty(), "actual fresh instance consumes the host-spawn helper")
 	assert_eq(fresh.get("rolled_traits"), packet.get("rolled_traits"))
 	assert_true(fresh.get("traits_initialized"))
+	assert_eq(fresh.get_meta("ordinary_trait_packet", {}), packet, "the actual spawned instance keeps its original catch provenance")
 	assert_almost_eq(float(fresh.call("hp_fraction")), 1.0, 0.00001, "fresh trait max-HP effects preserve a full-health spawn")
 	var retained: Array = fresh.get("rolled_traits").duplicate()
 	identity.spawn_generation = 2

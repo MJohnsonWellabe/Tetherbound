@@ -266,6 +266,8 @@ func test_fresh_starter_saved_mirror_allows_rest_xp_without_inventing_missing_hi
 	caught.set_level(3, cfg)
 	caught.set("traits_initialized", true)
 	caught.set("rolled_traits", ["sturdy", "swift"])
+	caught.set_meta("ordinary_trait_packet", {"traits_initialized": true, "rolled_traits": ["sturdy", "swift"], "taught_traits": {},
+		"captured_from": {"kind": "wild", "world_namespace": "f28-owned-catch", "spawn_id": "ordinary", "spawn_generation": 1}})
 	var before_catch: Dictionary = player.redesign_character.duplicate(true)
 	assert_true(player.party.add(caught))
 	var rules := preload("res://scripts/creatures/breakthrough.gd")
@@ -276,6 +278,7 @@ func test_fresh_starter_saved_mirror_allows_rest_xp_without_inventing_missing_hi
 	assert_eq(initialized.transaction_receipts, before_catch.transaction_receipts, "local catch initialization grants no training reward receipt")
 	assert_eq(initialized.creatures[caught.uid].rolled_traits, ["sturdy", "swift"], "the actual newly owned spawn roll is retained in its one durable UID mirror")
 	assert_true(initialized.creatures[caught.uid].traits_initialized)
+	assert_eq(initialized.creatures[caught.uid].captured_from, caught.get_meta("ordinary_trait_packet").captured_from, "actual original catch provenance reaches only its newly owned UID")
 	assert_eq(caught.get("rolled_traits"), ["sturdy", "swift"], "catch projection never rerolls the instance")
 	player.redesign_character = initialized
 	assert_eq(caught.call("_admitted_level_cap", cfg, initialized), 10)

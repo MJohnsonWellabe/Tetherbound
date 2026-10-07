@@ -89,6 +89,14 @@ static func initialize_owned_catch(party: RefCounted, personal: Dictionary, crea
 				"taught_traits": creature.get("taught_traits")}
 			if not preload("res://scripts/creatures/traits.gd").trait_state_errors(traits).is_empty(): return {}
 			for field: String in traits: candidate.creatures[uid][field] = traits[field].duplicate(true) if traits[field] is Array or traits[field] is Dictionary else traits[field]
+			var packet: Variant = creature.get_meta("ordinary_trait_packet", {})
+			if not packet is Dictionary: return {}
+			if not packet.is_empty():
+				var codec: Script = load("res://scripts/save/water_capture_codec.gd")
+				if codec == null or codec.call("valid_capture_traits", packet) != true: return {}
+				for field: String in traits:
+					if packet.get(field) != traits[field]: return {}
+				candidate.creatures[uid].captured_from = packet.captured_from.duplicate(true)
 		return candidate
 	return {}
 

@@ -183,10 +183,14 @@ func _run() -> void:
 	var caught_uid := str(caught.get("uid"))
 	var caught_species := str(caught.get("species_id"))
 	var caught_level := int(caught.get("level"))
-	var game := root.get_node_or_null(^"Game")
 	var owned_traits: Dictionary = game.get("local").get("redesign_character").get("creatures", {}).get(caught_uid, {})
 	if not _require(owned_traits.get("traits_initialized") == true and owned_traits.get("rolled_traits") == rolled_before,
 			"actual catch admission retains the original spawn roll in its durable creature mirror"):
+		_report()
+		return
+	if not _require(preload("res://scripts/save/water_capture_codec.gd").valid_capture_traits(trait_packet)
+			and owned_traits.get("captured_from") == trait_packet.captured_from,
+			"actual solo catch admission retains its original wild provenance"):
 		_report()
 		return
 

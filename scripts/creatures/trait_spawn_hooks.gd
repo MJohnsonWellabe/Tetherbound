@@ -25,6 +25,7 @@ static func initialize_host_instance(creature: RefCounted, host_identity: Dictio
 	var hp_fraction: float = creature.call("hp_fraction")
 	creature.call("recompute_stats_from_base", preload("res://scripts/creatures/progression.gd").config())
 	creature.set("hp", float(creature.get("max_hp")) * hp_fraction)
+	creature.set_meta("ordinary_trait_packet", packet.duplicate(true))
 	return packet
 
 ## Catch producer copies the HOST retained packet; inspect requests and
