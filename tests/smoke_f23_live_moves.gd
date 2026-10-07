@@ -497,9 +497,14 @@ func _tap_move(button: JoyButton, slot: String) -> Dictionary:
 	_check(_impacts.back().slot == slot, "arrival receipt retains %s" % slot)
 	_check(float(_impacts.back().damage) > 0.0, "arrival has actual positive HP debit")
 	if _prove_library_arrival:
+		# Director keys presentation/HP feedback by encounter:peer:action.
+		# The durable mastery original has its own identity; keep both intact.
+		var presentation_id := "%s:%d:%d" % [_id, 1, int(accepted.action)]
+		_check(str(_impacts.back().action_id) == presentation_id,
+			"arrival receipt belongs to the accepted host action")
 		var found := false
 		for number: Label in _hud.get("_damage_numbers"):
-			if is_instance_valid(number) and str(number.get_meta("receipt", {}).get("action_id", "")) == str(accepted.action_id):
+			if is_instance_valid(number) and str(number.get_meta("receipt", {}).get("action_id", "")) == presentation_id:
 				found = true
 		_check(found, "actual CombatHUD creates the landed action's number after contact")
 	return accepted
