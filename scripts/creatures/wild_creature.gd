@@ -818,6 +818,7 @@ func _tick_combat(delta: float) -> void:
 		var movement_profile := spaced.duplicate()
 		if _intent == AI.Intent.DODGE: movement_profile.merge(_patterns.get("reactions", {}), true)
 		var speed := AI.speed_for(_intent, movement_profile, waiting)
+		speed *= utility_movement_multiplier()
 		if _catch_aim_active:
 			speed *= _catch_aim_slowdown_scale
 		request_move(_unstick(direction), speed)
@@ -868,7 +869,13 @@ func apply_landed_utility(move: Dictionary, context: Dictionary) -> bool:
 
 func utility_movement_multiplier() -> float:
 	var where := global_position if is_inside_tree() else position
-	return UTILITY_EFFECTS.movement_multiplier(_landed_utility_state, str(instance.get("uid")), where, int(_utility_clock_ms)) if instance != null else 1.0
+	if instance == null: return 1.0
+	var movement := UTILITY_EFFECTS.movement_multiplier(_landed_utility_state, str(instance.get("uid")), where, int(_utility_clock_ms))
+	if preload("res://scripts/combat/tether_commands.gd").enabled():
+		var snare := preload("res://scripts/combat/tether_commands.gd").snare_modifiers(get_meta(&"tether_snare", {}), str(instance.uid),
+			int(get_meta(&"tether_body_generation", 0)), "", Time.get_ticks_msec())
+		movement = minf(movement, float(snare.movement))
+	return movement
 
 
 func hold_ultimate_reaction(seconds: float) -> void:

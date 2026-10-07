@@ -85,6 +85,7 @@ func _replace_record(character: String, next_revision: int, next_state: Dictiona
 	var discovered: Variant = _records.get(character, {}).get("discovered_landmarks")
 	var absorbed: Variant = _records.get(character, {}).get("absorbed_deliveries")
 	var unconfirmed: Variant = _records.get(character, {}).get("unconfirmed_folds")
+	var tonics: Variant = _records.get(character, {}).get("tether_tonics")
 	_records[character] = {"revision": next_revision, "state": next_state}
 	if carried: _records[character].personal_flags = flags
 	if discovered is Dictionary: _records[character].discovered_landmarks = discovered.duplicate(true)
@@ -92,6 +93,81 @@ func _replace_record(character: String, next_revision: int, next_state: Dictiona
 	if absorbed is Dictionary: _records[character].absorbed_deliveries = absorbed.duplicate(true)
 	# Folded payouts the owner has not yet confirmed settling (unconfirmed_folds).
 	if unconfirmed is Dictionary: _records[character].unconfirmed_folds = unconfirmed.duplicate(true)
+	if tonics is Dictionary: _records[character].tether_tonics = tonics.duplicate(true)
+
+## Transient companion on this world's SAME admitted record. A historical
+## accepted delivery alone cannot install or refresh an expired tonic.
+func install_saved_tether_tonic(character: String, row: Dictionary, original: Dictionary,
+		stream_id: String, stream_epoch: String, sequence: int) -> bool:
+	if not _records.has(character) or row.get("action") != "tether_item" \
+		or row.get("status") != "accepted" or row.get("character_id") != character \
+		or original.get("actor_committed") != true or original.get("presented") == true \
+		or not equivalent(original.get("intent"), row.get("intent")) \
+		or not equivalent(original.get("context"), row.get("host_context")) \
+		or row.get("host_context", {}).get("world_namespace") != _world_instance \
+		or stream_id.is_empty() or stream_epoch.is_empty() or sequence < 0: return false
+	var effect: Dictionary = row.get("intent", {}).get("effect", {})
+	var uid := str(effect.get("creature_uid", ""))
+	var receipt := str(row.get("receipt", ""))
+	var epoch := stream_epoch
+	var buff: Dictionary = RULES.db().call("definition", str(effect.get("item_id", ""))).get("creature_buff", {})
+	if buff.is_empty() or receipt.is_empty() or epoch.is_empty(): return false
+	var all: Dictionary = _records[character].get("tether_tonics", {})
+	var held: Dictionary = all.get(uid, {})
+	var identity := {"intent": row.intent, "context": row.host_context}
+	if held.get("receipts", {}).has(receipt):
+		return equivalent(held.receipts[receipt], identity) # Even after expiry.
+	if not creature_training_pending_matches(character, row): return false
+	var owns := false
+	for card: Dictionary in state(character).get("party", []):
+		if card.get("uid") == uid: owns = true
+	if not owns: return false
+	if held.is_empty():
+		held = {"receipts": {}, "effects": {}, "version": 0, "epoch": epoch}
+	if held.epoch != epoch: return false
+	held["stream_id"] = stream_id
+	held["sequence"] = sequence
+	held.receipts[receipt] = identity.duplicate(true)
+	held.effects[str(buff.id)] = {"id": str(buff.id), "stat": str(buff.stat),
+		"scale": float(buff.scale), "remaining_s": float(buff.duration_s), "receipt": receipt}
+	held.version = int(held.version) + 1
+	all[uid] = held
+	_records[character]["tether_tonics"] = all
+	return true
+
+## Only the existing authenticated stream admission/rebase calls this. Clocks
+## survive that cursor change; inputs from its old stream cannot age them.
+func bind_tether_tonic_stream(character: String, stream_id: String, epoch: String, sequence: int = 0) -> void:
+	if stream_id.is_empty() or sequence < 0: return
+	for held: Dictionary in _records.get(character, {}).get("tether_tonics", {}).values():
+		if held.epoch != epoch: continue
+		held.stream_id = stream_id
+		held.sequence = sequence
+
+## A successful NEW condition input (or actual local party tick) advances each
+## named owned creature once. No wall clock, duplicate, or elapsed rebase debit.
+func tick_tether_tonics(character: String, delta: float, uids: Array,
+		stream_id: String, epoch: String, sequence: int) -> void:
+	if not is_finite(delta) or delta < 0.0 or delta > 10.0: return
+	var all: Dictionary = _records.get(character, {}).get("tether_tonics", {})
+	for uid: Variant in uids:
+		var held: Dictionary = all.get(uid, {})
+		if held.is_empty() or held.epoch != epoch or held.stream_id != stream_id \
+			or sequence <= int(held.sequence): continue
+		held.sequence = sequence
+		if delta == 0.0 or held.effects.is_empty(): continue
+		for id: String in held.effects.keys():
+			var effect: Dictionary = held.effects[id]
+			effect.remaining_s = maxf(0.0, float(effect.remaining_s) - delta)
+			if effect.remaining_s <= 0.0: held.effects.erase(id)
+		held.version = int(held.version) + 1
+
+func tether_tonic_projection(character: String) -> Dictionary:
+	var projected := {}
+	for uid: String in _records.get(character, {}).get("tether_tonics", {}):
+		var held: Dictionary = _records[character].tether_tonics[uid]
+		projected[uid] = {"version": held.version, "effects": held.effects.values().duplicate(true)}
+	return projected
 
 ## Admission-only companion on the SAME record. A rejoin never refreshes it.
 ## Session validates every ID against the authored realm map catalogue first.

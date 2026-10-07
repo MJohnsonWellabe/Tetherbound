@@ -53,8 +53,10 @@ const MATH := preload("res://scripts/combat/combat_math.gd")
 const TRAINING_WORLD := preload("res://autoload/world_state.gd")
 const ACTOR_AUTHORITY := preload("res://scripts/net/character_authority.gd")
 const UTILITY_EFFECTS := preload("res://scripts/combat/utility_effects.gd")
+const TETHER_COMMANDS := preload("res://scripts/combat/tether_commands.gd")
 const ACTOR_MOVE_DB := preload("res://scripts/creatures/move_db.gd")
 var _actor_moves: RefCounted = null
+var _staging_saved_item_character := ""
 
 const CONFIG_PATH := "res://data/config/multiplayer.json"
 
@@ -456,6 +458,8 @@ func opponent_hp(encounter_id: String) -> float:
 ## in `combat_manager.gd` beside the creature stats it reads, and a second copy
 ## of it in this file would be a second copy that eventually disagrees).
 func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dictionary:
+	if not pending_tether_items(str(intent.get("encounter_id", ""))).is_empty():
+		return _refuse("strike_intent", peer_id, "item_save_pending", "The original item is still being saved.")
 	var encounter_id := str(intent.get("encounter_id", ""))
 	var rec: Dictionary = encounters.get(encounter_id, {})
 	if rec.is_empty():
@@ -555,6 +559,7 @@ func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dict
 func authorize_move_start(intent: Dictionary, peer: int, owned: Dictionary,
 		binding: Dictionary, move: Dictionary, wind_profile: Dictionary, now_ms: int) -> Dictionary:
 	var id := str(intent.get("encounter_id", ""))
+	if not pending_tether_items(id).is_empty(): return _refuse("move_start", peer, "item_save_pending", "The original item is still being saved.")
 	var rec: Dictionary = encounters.get(id, {})
 	var participant: Dictionary = rec.get("participants", {}).get(peer, {})
 	var uid := str(owned.get("uid", ""))
@@ -587,6 +592,7 @@ func authorize_move_start(intent: Dictionary, peer: int, owned: Dictionary,
 	if resources.is_empty() and participant.has("wind"):
 		for key: String in ["wind", "wind_updated_ms", "wind_ready_at_ms", "wind_last_action"]:
 			if participant.has(key): actor[key] = participant[key]
+	actor["tether_rally_until_ms"] = int(participant.get("tether_commands", {}).get("rally_until_ms", 0))
 	_advance_participant_wind(actor, wind_profile, now_ms)
 	if now_ms < int(actor.get("cooldowns", {}).get(slot, 0)):
 		return _refuse("move_start", peer, "cooldown", "That move is still cooling down.")
@@ -670,13 +676,27 @@ func cancel_move_start(id: String, peer: int) -> void:
 ## Called only after the existing host damage writer committed a positive
 ## actual HP debit. One retained action can credit these encounter meters once.
 func credit_move_hit(id: String, peer: int, action: int, actual_hp_debit: float,
-		target_uid: String = "", target_hp_before: float = 0.0) -> Dictionary:
+		target_uid: String = "", target_hp_before: float = 0.0, target_generation: int = 0,
+		source_hp: float = 0.0) -> Dictionary:
 	var started: Dictionary = (_strike_authority.get(id, {}) as Dictionary).get(peer, {}).get("move_starts", {}).get(str(action), {})
 	if started.get("action") != action or started.get("resolved") != true or started.get("credited") == true \
 		or not is_finite(actual_hp_debit) or actual_hp_debit <= 0.0: return {}
 	var participant: Dictionary = encounters.get(id, {}).get("participants", {}).get(peer, {})
 	var actor: Dictionary = participant.get("move_resources", {}).get(started.creature_uid, {})
 	if actor.is_empty(): return {}
+	if TETHER_COMMANDS.enabled() and participant.get("tether_commands") is Dictionary:
+		var binding: Dictionary = started.move.get("actor_binding", {})
+		var command_actor := {"character_id": participant.character_id, "encounter_id": id,
+			"creature_uid": started.creature_uid, "generation": int(started.binding.deployment_generation), "hp": source_hp}
+		var receipt := {"action_id": started.action_id, "attacker_uid": started.creature_uid,
+			"generation": int(started.binding.deployment_generation), "landed": true,
+			"command_meter_credited": started.get("command_meter_credited", false)}
+		if not binding.is_empty():
+			var command := TETHER_COMMANDS.stage_landed(participant.tether_commands, command_actor,
+				started.move, receipt, actual_hp_debit, target_uid, target_generation, Time.get_ticks_msec())
+			if command.get("ok") == true:
+				participant.tether_commands = command.state
+				started["command_meter_credited"] = command.receipt.command_meter_credited
 	var energy: Dictionary = MATH.config().get("energy", {})
 	var ultimate: Dictionary = MATH.config().get("ultimate", {})
 	if started.slot == "quick": actor.energy = minf(float(energy.get("max", 100.0)), float(actor.energy) + float(started.move.get("energy_gain", energy.get("gain_per_quick", 26.0))))
@@ -711,6 +731,256 @@ func move_mastery_outcome(id: String, peer: Variant, action: int) -> Dictionary:
 		"context": started.move.get("mastery_context", {}).duplicate(true)}
 
 
+## The director calls this after the live utility consumer committed its
+## original effect. Status casts earn mastery without inventing an HP debit.
+func self_utility_power(id: String, uid: String, now_ms: int) -> float:
+	return UTILITY_EFFECTS.power_multiplier(encounters.get(id, {}).get("utility_state", {}), uid, now_ms)
+
+
+## Tier is frozen once on the existing admitted participant, from host gear.
+func bind_tether_commands(id: String, peer: int, admitted: Dictionary) -> void:
+	if not TETHER_COMMANDS.enabled(): return
+	var participant: Dictionary = encounters.get(id, {}).get("participants", {}).get(peer, {})
+	if participant.is_empty() or participant.has("tether_commands") \
+		or admitted.get("character_id") != participant.get("character_id"): return
+	var equipment := preload("res://scripts/player/player_equipment.gd").new()
+	equipment.configure(preload("res://autoload/item_db.gd").new())
+	equipment.load_data(admitted.get("equipment", {}))
+	var state := TETHER_COMMANDS.admission(str(participant.character_id), id, equipment.command_pouch_tier())
+	if state.is_empty(): return
+	participant["tether_commands"] = state
+	seq += 1
+	encounters[id].seq = seq
+
+
+## A presentation count from the same first non-empty saved pouch slot used by
+## Item staging. Current owner inventory is read; the admitted gear tier stays
+## frozen. This neither chooses a packet item nor spends a stack.
+func tether_pouch_view(id: String, peer: int, admitted: Dictionary) -> Dictionary:
+	var unavailable := {"pouch_count": 0, "item_consumer_ready": false}
+	var participant: Dictionary = encounters.get(id, {}).get("participants", {}).get(peer, {})
+	var commands: Dictionary = participant.get("tether_commands", {})
+	if not TETHER_COMMANDS.enabled() or commands.is_empty() \
+		or admitted.get("character_id") != participant.get("character_id") \
+		or not ACTOR_AUTHORITY.errors(admitted, str(participant.get("character_id", ""))).is_empty(): return unavailable
+	var rules := preload("res://scripts/world/death_satchel_rules.gd")
+	var inventory: RefCounted = rules.inventory_from(admitted.inventory)
+	var counts := {}
+	for stack: Variant in admitted.inventory:
+		if stack is Dictionary: counts[stack.id] = inventory.call("count", str(stack.id))
+	var item := TETHER_COMMANDS.first_pouch_item(admitted.redesign_character.get("tether_pouch", []),
+		rules.db().get("_items"), counts, int(commands.tier))
+	return {"pouch_count": int(counts.get(item, 0)), "item_consumer_ready": not item.is_empty()}
+
+
+func tether_rally(id: String, peer: int, now_ms: int) -> Dictionary:
+	var participant: Dictionary = encounters.get(id, {}).get("participants", {}).get(peer, {})
+	return TETHER_COMMANDS.rally_modifiers(participant.get("tether_commands", {}), str(participant.get("character_id", "")), now_ms)
+
+
+## Host actor/geometry view only. No packet-owned gear, HP, inventory or UID.
+## Item and joint switch stay unavailable until their atomic adapters exist.
+func commit_tether_command(request: Dictionary, peer: int, view: Dictionary, now_ms: int) -> Dictionary:
+	if not TETHER_COMMANDS.valid_intent(request): return _refuse("tether_command", peer, "invalid_request", "That command is unavailable.")
+	var id: String = request.encounter_id
+	if not pending_tether_items(id).is_empty(): return _refuse("tether_command", peer, "item_save_pending", "The original item is still being saved.")
+	var rec: Dictionary = encounters.get(id, {})
+	var participant: Dictionary = rec.get("participants", {}).get(peer, {})
+	if rec.get("phase") != "active" or participant.is_empty() or not participant.get("tether_commands") is Dictionary:
+		return _refuse("tether_command", peer, "stale_actor", "That encounter is unavailable.")
+	var actor: Dictionary = view.get("actor", {})
+	# The director already authenticated the current body/UID/generation.
+	# move_resource_uid identifies the last spent pool, including after switch.
+	if actor.get("character_id") != participant.character_id or actor.get("encounter_id") != id:
+		return _refuse("tether_command", peer, "stale_actor", "That creature is unavailable.")
+	var host := view.duplicate(true)
+	host.merge({"peer_id": peer, "owner_admitted": true, "encounter_active": true,
+		"unlocked_commands": ["rally", "snare"],
+		"accepted_receipt": {"action_id": "command:%s:%s:%d:%d" % [id, participant.character_id, int(request.generation), int(request.sequence)],
+			"character_id": participant.character_id, "encounter_id": id, "attacker_uid": actor.creature_uid,
+			"generation": actor.generation, "sequence": request.sequence, "command_id": request.command_id, "command_committed": false}}, true)
+	host["target_snare"] = rec.get("opponent", {}).get("tether_snare", {})
+	host["admitted_character_ids"] = []
+	for row: Dictionary in rec.participants.values(): host.admitted_character_ids.append(row.character_id)
+	var plan := TETHER_COMMANDS.stage_command(participant.tether_commands, request, host, now_ms)
+	if plan.get("ok") != true: return _refuse("tether_command", peer, str(plan.get("code", "invalid_request")), str(plan.get("reason", "Command unavailable.")))
+	if plan.effect.kind == "rally":
+		for pool: Dictionary in participant.get("move_resources", {}).values():
+			_advance_participant_wind(pool, {"max": pool.get("wind_max", 100.0), "regen_per_second": pool.get("wind_regen_per_second", 18.0)}, now_ms)
+			pool["tether_rally_until_ms"] = plan.effect.until_ms
+	elif plan.effect.kind == "snare":
+		rec.opponent["tether_snare"] = plan.effect.status
+	else: return _refuse("tether_command", peer, "transaction_unavailable", "That command is unavailable.")
+	participant["tether_commands"] = plan.state
+	participant.tether_commands["last_receipt"] = plan.receipt
+	seq += 1
+	rec.seq = seq
+	return {"ok": true, "kind": "tether_command", "peer": peer, "code": "accepted", "reason": "", "pending": false,
+		"delta": {"tether_commands": plan.state.duplicate(true), "effect": plan.effect.duplicate(true)}}
+
+
+## Freeze the real host command before its single full-character decision.
+## Only a current bound actor and settled admitted health may reserve it.
+## This spends neither inventory nor meter and never changes HP or a body.
+func prepare_tether_item_command(request: Dictionary, peer: int, admitted: Dictionary,
+		binding: Dictionary, revision: int, world_namespace: String, epoch: String, now_ms: int) -> Dictionary:
+	if not TETHER_COMMANDS.enabled() or not TETHER_COMMANDS.valid_intent(request) or request.command_id != "item_throw" \
+		or revision < 0 or revision >= 2147483647 or not UTILITY_EFFECTS._identity(world_namespace) \
+		or not UTILITY_EFFECTS._identity(epoch) or not has_method("_binding_current"):
+		return {"ok": false, "code": "item_unavailable"}
+	var id: String = request.encounter_id
+	var rec: Dictionary = encounters.get(id, {})
+	var participant: Dictionary = rec.get("participants", {}).get(peer, {})
+	if participant.is_empty() or rec.get("phase") != "active" or not participant.get("tether_commands") is Dictionary \
+		or admitted.get("character_id") != participant.get("character_id") \
+		or not ACTOR_AUTHORITY.errors(admitted, str(participant.character_id)).is_empty() \
+		or binding.get("deployment_generation") != request.generation \
+		or call("_binding_current", id, peer, binding) != true: return {"ok": false, "code": "stale_actor"}
+	var existing: Dictionary = participant.tether_commands.get("item_pending", {})
+	if not existing.is_empty():
+		if existing.intent.request != request or existing.binding != binding \
+			or existing.context.world_namespace != world_namespace or existing.context.session_id != epoch:
+			return {"ok": false, "code": "item_original_pending"}
+		return {"ok": true, "original": existing}
+	if not pending_tether_items(id).is_empty() or not pending_actor_vitals(id).is_empty() \
+		or call("move_action_publication_pending", id) == true: return {"ok": false, "code": "item_baseline_pending"}
+	for state: Dictionary in _strike_authority.get(id, {}).values():
+		for started: Dictionary in state.get("move_starts", {}).values():
+			if started.get("resolved") != true and started.get("cancelled") != true:
+				return {"ok": false, "code": "item_baseline_pending"}
+	var uid: String = binding.creature_uid
+	var vitals: Dictionary = participant.get("actor_vitals", {}).get(uid, {})
+	var owned: Dictionary = {}
+	for card: Dictionary in admitted.party:
+		if card.uid == uid: owned = card
+	if owned.is_empty() or int(vitals.get("revision", -1)) != int(vitals.get("settled_revision", -2)) \
+		or not ACTOR_AUTHORITY.equivalent(vitals.get("hp"), owned.hp) \
+		or not ACTOR_AUTHORITY.equivalent(vitals.get("max_hp"), owned.max_hp) or vitals.get("fainted") != owned.fainted:
+		return {"ok": false, "code": "item_baseline_pending"}
+	var actor := {"character_id": participant.character_id, "creature_uid": uid, "encounter_id": id,
+		"generation": request.generation, "body_generation": vitals.body_generation,
+		"body_instance_id": vitals.body_instance_id, "vitals_revision": vitals.revision,
+		"hp": vitals.hp, "max_hp": vitals.max_hp}
+	var receipt := {"action_id": "command:%s:%s:%d:%d" % [id, participant.character_id, int(request.generation), int(request.sequence)],
+		"character_id": participant.character_id, "encounter_id": id, "attacker_uid": uid,
+		"generation": request.generation, "sequence": request.sequence, "command_id": "item_throw", "command_committed": false}
+	var inventory := preload("res://scripts/world/death_satchel_rules.gd").inventory_from(admitted.inventory)
+	var counts := {}
+	for stack: Variant in admitted.inventory:
+		if stack is Dictionary: counts[stack.id] = inventory.call("count", str(stack.id))
+	var items: RefCounted = preload("res://scripts/world/death_satchel_rules.gd").db()
+	var plan := TETHER_COMMANDS.stage_command(participant.tether_commands, request,
+		{"actor": actor, "peer_id": peer, "owner_admitted": true, "encounter_active": true,
+			"unlocked_commands": ["item_throw"], "accepted_receipt": receipt,
+			"pouch": admitted.redesign_character.get("tether_pouch", []), "items": items.get("_items"),
+			"inventory_counts": counts, "item_transaction_ready": true, "item_can_apply": true}, now_ms)
+	if plan.get("ok") != true: return plan
+	var candidate := TETHER_COMMANDS.stage_item_use(admitted, plan.effect,
+		{"actor": actor, "owner_admitted": true, "encounter_active": true})
+	if candidate.get("ok") != true: return candidate
+	var context := {"character_id": participant.character_id, "expected_revision": revision,
+		"source_key": "tether_item:" + str(receipt.action_id), "in_range": true, "in_combat": true,
+		"foundation_runtime_authorized": true, "item_runtime_authorized": true,
+		"world_namespace": world_namespace, "session_id": epoch, "item_actor": actor}
+	var original := {"encounter_id": id, "peer_id": peer, "character_id": participant.character_id,
+		"intent": {"request": request.duplicate(true), "effect": plan.effect.duplicate(true)}, "context": context,
+		"command_before": participant.tether_commands.duplicate(true), "command_plan": plan.duplicate(true),
+		"binding": binding.duplicate(true), "actor_committed": false, "presented": false}
+	var originals: GDScript = load("res://scripts/combat/accepted_action_host.gd")
+	for field: String in ["intent", "context", "command_before", "command_plan", "binding"]:
+		original[field] = originals._original(original[field])
+	participant.tether_commands["item_pending"] = original
+	return {"ok": true, "original": original}
+
+
+## At most one original per participant. Departed originals remain on the
+## same retained participant and also fence round teardown and replacement.
+func pending_tether_items(id: String) -> Array[Dictionary]:
+	var rec: Dictionary = encounters.get(id, {})
+	var rows: Array = rec.get("participants", {}).values()
+	rows.append_array(rec.get("retained_actor_participants", {}).values())
+	var pending: Array[Dictionary] = []
+	for participant: Dictionary in rows:
+		var original: Dictionary = participant.get("tether_commands", {}).get("item_pending", {})
+		if not original.is_empty() and original.get("presented") != true: pending.append(original)
+	return pending
+
+
+## Release only a saved original after its canonical actor commit. Retain one
+## correlated result in the same command state to repair a lost owner reply.
+func finalize_saved_tether_item(original: Dictionary, training: Dictionary, deliveries: Dictionary,
+		world_namespace: String, world_id: String) -> Dictionary:
+	if original.get("actor_committed") != true or original.get("presented") == true \
+		or training.get("action") != "tether_item" or training.get("status") != "accepted" \
+		or not TRAINING_WORLD.training_row_valid(training, world_namespace, world_id) \
+		or not ACTOR_AUTHORITY.equivalent(deliveries.get(training.get("delivery_id")), training) \
+		or not ACTOR_AUTHORITY.equivalent(original.get("intent"), training.get("intent")) \
+		or not ACTOR_AUTHORITY.equivalent(original.get("context"), training.get("host_context")):
+		return {"ok": false, "code": "item_decision_unavailable"}
+	# A tonic stays private until Session has installed this SAME saved original
+	# into the admitted timed consumer, before releasing its debit/meter receipt.
+	var items: RefCounted = preload("res://scripts/world/death_satchel_rules.gd").db()
+	if items.call("definition", str(original.intent.effect.item_id)).has("creature_buff") \
+		and original.get("tonic_receipt") != training.receipt:
+		return {"ok": false, "code": "item_buff_consumer_unavailable"}
+	var rec: Dictionary = encounters.get(original.encounter_id, {})
+	var rows: Array = rec.get("participants", {}).values()
+	rows.append_array(rec.get("retained_actor_participants", {}).values())
+	for participant: Dictionary in rows:
+		if not is_same(participant.get("tether_commands", {}).get("item_pending"), original): continue
+		var uid: String = original.intent.effect.creature_uid
+		var actor: Dictionary = participant.get("actor_vitals", {}).get(uid, {})
+		if actor.get("training_receipt") != training.receipt \
+			or actor.get("training_character_revision") != training.character_revision \
+			or participant.tether_commands.get("last_receipt") != original.command_plan.receipt:
+			return {"ok": false, "code": "item_commit_changed"}
+		var result := {"request": original.intent.request.duplicate(true), "receipt": training.receipt,
+			"character_id": training.character_id, "creature_uid": uid, "saved": true}
+		participant.tether_commands["item_result"] = result
+		participant.tether_commands.erase("item_pending")
+		original["presented"] = true
+		seq += 1
+		rec.seq = seq
+		return {"ok": true, "result": result.duplicate(true)}
+	return {"ok": false, "code": "item_original_unavailable"}
+
+func settle_tether_tonic_wind(character: String, uid: String, now_ms: int, profile: Dictionary = {}) -> void:
+	for rec: Dictionary in encounters.values():
+		var rows: Array = rec.get("participants", {}).values()
+		rows.append_array(rec.get("retained_actor_participants", {}).values())
+		for participant: Dictionary in rows:
+			if participant.get("character_id") != character: continue
+			var pool: Dictionary = participant.get("move_resources", {}).get(uid, {})
+			if pool.is_empty(): continue
+			var next := profile if not profile.is_empty() else {"max": pool.get("wind_max", 100.0),
+				"regen_per_second": pool.get("wind_regen_per_second", 18.0)}
+			_advance_participant_wind(pool, next, now_ms)
+
+
+## An untouched reservation may be cancelled only before a durable decision.
+func cancel_unjournaled_tether_item(original: Dictionary, deliveries: Dictionary,
+		world_namespace: String) -> bool:
+	if original.get("actor_committed") == true or original.get("presented") == true \
+		or original.get("context", {}).get("world_namespace") != world_namespace: return false
+	var character: String = str(original.get("character_id", ""))
+	var row: Variant = deliveries.get(preload("res://scripts/creatures/essence.gd").training_delivery_id(world_namespace, character))
+	if row is Dictionary and row.get("action") == "tether_item" \
+		and row.get("intent", {}).get("request") == original.get("intent", {}).get("request"): return false
+	var rec: Dictionary = encounters.get(original.get("encounter_id"), {})
+	var rows: Array = rec.get("participants", {}).values()
+	rows.append_array(rec.get("retained_actor_participants", {}).values())
+	for participant: Dictionary in rows:
+		if not is_same(participant.get("tether_commands", {}).get("item_pending"), original): continue
+		var commands: Dictionary = participant.tether_commands.duplicate(true)
+		commands.erase("item_pending")
+		if not ACTOR_AUTHORITY.equivalent(commands, original.command_before): return false
+		participant.tether_commands.erase("item_pending")
+		original["cancelled"] = true
+		original["presented"] = true
+		return true
+	return false
+
+
 func acknowledge_move_mastery(id: String, peer: Variant, action: int, action_id: String) -> bool:
 	var started: Dictionary = (_strike_authority.get(id, {}) as Dictionary).get(peer, {}).get("move_starts", {}).get(str(action), {})
 	if started.get("action_id") != action_id or started.get("mastery_pending") != true: return false
@@ -738,6 +1008,7 @@ func pending_move_mastery() -> Array[Dictionary]:
 func authorize_burst(encounter_id: String, peer_id: int, intent: Dictionary,
 		profile: Dictionary, cost: float, now_ms: int, distance: float,
 		duration: float, regen_delay_seconds: float) -> Dictionary:
+	if not pending_tether_items(encounter_id).is_empty(): return _refuse("burst_intent", peer_id, "item_save_pending", "The original item is still being saved.")
 	var rec: Dictionary = encounters.get(encounter_id, {})
 	if rec.is_empty():
 		return _refuse("burst_intent", peer_id, "unknown_encounter", "That fight is over.")
@@ -885,6 +1156,7 @@ func _participant_wind_row(participant: Dictionary, active_uid: String = "", ins
 			for key: String in ["wind", "wind_updated_ms", "wind_ready_at_ms", "wind_last_action"]:
 				if participant.has(key): row[key] = participant[key]
 	if install:
+		row["tether_rally_until_ms"] = int(participant.get("tether_commands", {}).get("rally_until_ms", 0))
 		resources[uid] = row
 		participant["move_resources"] = resources
 		participant["move_resource_uid"] = uid
@@ -899,16 +1171,23 @@ func _advance_participant_wind(row: Dictionary, profile: Dictionary, now_ms: int
 		row["wind_updated_ms"] = now_ms
 		row["wind_ready_at_ms"] = now_ms
 		row["wind_last_action"] = 0
-	row["wind_max"] = maximum
-	row["wind_regen_per_second"] = regen
-	row["wind"] = clampf(float(row.get("wind", maximum)), 0.0, maximum)
+	# The supplied profile starts at this observation, not at the previous
+	# update. Earn elapsed Wind under the stored rate/cap before changing it.
+	var previous_maximum := maxf(1.0, float(row.get("wind_max", maximum)))
+	var previous_regen := maxf(0.0, float(row.get("wind_regen_per_second", regen)))
+	row["wind"] = clampf(float(row.get("wind", previous_maximum)), 0.0, previous_maximum)
 	var updated := int(row.get("wind_updated_ms", now_ms))
 	var ready := int(row.get("wind_ready_at_ms", now_ms))
 	var regen_from := maxi(updated, ready)
-	if now_ms > regen_from and float(row["wind"]) < maximum:
-		row["wind"] = minf(maximum, float(row["wind"])
-			+ regen * float(now_ms - regen_from) / 1000.0)
+	if now_ms > regen_from and float(row["wind"]) < previous_maximum:
+		var boosted_ms := maxi(0, mini(now_ms, int(row.get("tether_rally_until_ms", 0))) - regen_from)
+		var bonus := float(TETHER_COMMANDS.config().get("commands", {}).get("rally", {}).get("wind_regen_multiplier", 1.0)) - 1.0
+		row["wind"] = minf(previous_maximum, float(row["wind"])
+			+ previous_regen * (float(now_ms - regen_from) + float(boosted_ms) * bonus) / 1000.0)
 	row["wind_updated_ms"] = maxi(updated, now_ms)
+	row["wind_max"] = maximum
+	row["wind_regen_per_second"] = regen
+	row["wind"] = minf(float(row["wind"]), maximum)
 
 
 ## Preserve exactly one action-correlated observation per active participant.
@@ -1237,6 +1516,7 @@ func _restamp_scaling(rec: Dictionary) -> void:
 ## it wins lives here, because the phase is the record's and the record is this
 ## file's.
 func set_phase(encounter_id: String, phase: String) -> void:
+	if not pending_tether_items(encounter_id).is_empty(): return
 	var rec: Dictionary = encounters.get(encounter_id, {})
 	if rec.is_empty():
 		return
@@ -1264,6 +1544,7 @@ func kind(encounter_id: String) -> String:
 
 
 func close(encounter_id: String) -> void:
+	if not pending_tether_items(encounter_id).is_empty(): return
 	var rec: Dictionary = encounters.get(encounter_id, {})
 	if rec.is_empty():
 		return
@@ -1283,7 +1564,7 @@ func forget(encounter_id: String) -> void:
 	# A failed owner save/disconnect cannot turn an accepted faint into healthy
 	# old portable HP. Teardown waits for the single Session registry's durable
 	# handoff of every exact latest revision, including departed participants.
-	if not pending_actor_vitals(encounter_id).is_empty(): return
+	if not pending_actor_vitals(encounter_id).is_empty() or not pending_tether_items(encounter_id).is_empty(): return
 	encounters.erase(encounter_id)
 	_strike_authority.erase(encounter_id)
 	_strike_receipts.erase(encounter_id)
@@ -1375,6 +1656,7 @@ static func _refuse(kind_name: String, peer_id: int, code: String, reason: Strin
 ## admitted character/UID and the actual current host body; never packet HP.
 func bind_actor_vitals(encounter_id: String, peer_id: int, character_id: String,
 		owned_row: Dictionary, body_generation: int) -> Dictionary:
+	if not pending_tether_items(encounter_id).is_empty(): return {"ok": false, "code": "item_save_pending"}
 	var participant := _actor_participant(encounter_id, peer_id, character_id)
 	var uid: Variant = owned_row.get("uid")
 	var hp: Variant = owned_row.get("hp")
@@ -1406,6 +1688,7 @@ func bind_actor_vitals(encounter_id: String, peer_id: int, character_id: String,
 
 func bind_actor_body(encounter_id: String, peer_id: int, character_id: String,
 		owned_row: Dictionary, host_body_instance_id: int) -> Dictionary:
+	if not pending_tether_items(encounter_id).is_empty(): return {"ok": false, "code": "item_save_pending"}
 	var participant := _actor_participant(encounter_id, peer_id, character_id)
 	if participant.is_empty() or host_body_instance_id < 1 \
 		or not UTILITY_EFFECTS._identity(owned_row.get("uid")):
@@ -1427,13 +1710,15 @@ func actor_vitals(encounter_id: String, peer_id: int, creature_uid: String,
 		body_generation: int) -> Dictionary:
 	var participant := _actor_participant(encounter_id, peer_id)
 	var actor: Dictionary = (participant.get("actor_vitals", {}) as Dictionary).get(creature_uid, {})
-	if str(participant.get("creature_uid", "")) != creature_uid or actor.is_empty() \
+	if (_staging_saved_item_character.is_empty() and str(participant.get("creature_uid", "")) != creature_uid) or actor.is_empty() \
 		or int(actor.body_generation) != body_generation: return {}
 	return _actor_vitals_view(actor)
 
 func stage_actor_vitals(encounter_id: String, peer_id: int, creature_uid: String,
 		body_generation: int, expected_revision: int, action_id: String, kind: String,
 		amount: float, receipt_limit: int) -> Dictionary:
+	if _staging_saved_item_character.is_empty() and not pending_tether_items(encounter_id).is_empty():
+		return {"ok": false, "code": "item_save_pending"}
 	var before := actor_vitals(encounter_id, peer_id, creature_uid, body_generation)
 	if before.is_empty() or expected_revision != int(before.revision) \
 		or not UTILITY_EFFECTS._identity(action_id) or kind not in ["damage", "heal"] \
@@ -1539,6 +1824,15 @@ func actor_encounter_is_current(encounter_id: String, peer_id: int, character_id
 
 func _actor_participant(encounter_id: String, peer_id: int, character_id: String = "") -> Dictionary:
 	var rec: Dictionary = encounters.get(encounter_id, {})
+	# Only the exact saved-item baseline branch enters this private scope.
+	# It settles the original retained canonical row after departure, without
+	# making a departed body active or writing a replacement creature.
+	if not _staging_saved_item_character.is_empty():
+		var rows: Array = rec.get("participants", {}).values()
+		rows.append_array(rec.get("retained_actor_participants", {}).values())
+		for row: Dictionary in rows:
+			if row.get("character_id") == _staging_saved_item_character: return row
+		return {}
 	if rec.is_empty() or str(rec.get("phase", "")) != "active": return {}
 	var participant: Dictionary = (rec.get("participants", {}) as Dictionary).get(peer_id, {})
 	if str(participant.get("character_id", "")).is_empty() \
@@ -1559,6 +1853,7 @@ static func presentation_snapshot(rec: Dictionary) -> Dictionary:
 	out.erase("retained_actor_participants")
 	out.erase("utility_state")
 	for participant: Dictionary in (out.get("participants", {}) as Dictionary).values():
+		if participant.get("tether_commands") is Dictionary: participant.tether_commands.erase("item_pending")
 		participant.erase("actor_generation")
 		participant.erase("actor_bound_uid")
 		for actor: Dictionary in (participant.get("actor_vitals", {}) as Dictionary).values():
@@ -1720,6 +2015,8 @@ func stage_actor_training_baseline(training: Dictionary, admitted: Dictionary,
 	if full_action and (not preload("res://scripts/net/character_record_rules.gd").errors(admitted, training.character_id).is_empty() \
 		or not has_method("move_action_publication_pending")):
 		return {"ok":false,"code":"canonical_action_fence_unavailable"}
+	if training.get("action") == "tether_item":
+		return _stage_tether_item_baseline(training, admitted, character_revision, world_namespace, world_id)
 	var old_party: Dictionary = {}
 	var next_party: Dictionary = {}
 	var current_party: Dictionary = {}
@@ -1824,10 +2121,93 @@ func commit_actor_training_baseline(proposal: Dictionary, training: Dictionary,
 	if training.get("status")!="accepted" or not ACTOR_AUTHORITY.equivalent(deliveries.get(training.get("delivery_id")),training): return false
 	var verified: Dictionary=stage_actor_training_baseline(training,admitted,character_revision,world_namespace,world_id)
 	if verified.get("ok")!=true or not ACTOR_AUTHORITY.equivalent(verified,proposal): return false
+	if proposal.get("kind") == "tether_item":
+		return _commit_tether_item_baseline(proposal, training)
 	for change: Dictionary in proposal.changes:
 		var participants: Dictionary=encounters[change.encounter_id].get("retained_actor_participants" if change.retained else "participants",{})
 		var participant: Dictionary=participants[change.participant_key]
 		participant.actor_vitals[change.uid]=change.after.duplicate(true)
 		participant.actor_generation=maxi(int(participant.get("actor_generation",0)),int(change.after.body_generation))
 		if participant.get("actor_bound_uid")==change.uid: participant.actor_bound_uid=""
+	return true
+
+
+## The saved item alone can carry an active owned effect. Its private
+## participant original attests the real bound body; ordinary training still
+## retires only inactive bodies through the unchanged branch above.
+func _stage_tether_item_baseline(training: Dictionary, admitted: Dictionary,
+		character_revision: int, world_namespace: String, world_id: String) -> Dictionary:
+	if character_revision != int(training.character_revision) \
+		or not preload("res://scripts/creatures/essence.gd").owner_matches_after(admitted, training.after):
+		return {"ok": false, "code": "item_character_changed"}
+	var changes: Array[Dictionary] = []
+	for id: String in encounters:
+		var rec: Dictionary = encounters[id]
+		for retained: bool in [false, true]:
+			var participants: Dictionary = rec.get("retained_actor_participants" if retained else "participants", {})
+			for key: Variant in participants:
+				var participant: Dictionary = participants[key]
+				if participant.get("character_id") != training.character_id: continue
+				var original: Dictionary = participant.get("tether_commands", {}).get("item_pending", {})
+				if original.is_empty():
+					# History without its private original cannot rewrite a later actor.
+					continue
+				if not ACTOR_AUTHORITY.equivalent(original.intent, training.intent) \
+					or not ACTOR_AUTHORITY.equivalent(original.context, training.host_context) \
+					or original.encounter_id != id: return {"ok": false, "code": "item_original_changed"}
+				var frozen: Dictionary = original.context.item_actor
+				var uid: String = frozen.creature_uid
+				var actor: Dictionary = participant.get("actor_vitals", {}).get(uid, {})
+				var next: Dictionary = {}
+				for card: Dictionary in training.after.party:
+					if card.uid == uid: next = card
+				if actor.is_empty() or next.is_empty() or actor.get("body_generation") != frozen.body_generation \
+					or actor.get("body_instance_id") != frozen.body_instance_id \
+					or not ACTOR_AUTHORITY.equivalent(actor.max_hp, frozen.max_hp): return {"ok": false, "code": "item_body_changed"}
+				if original.get("actor_committed") == true:
+					if actor.get("training_receipt") != training.receipt or actor.get("training_character_revision") != training.character_revision \
+						or not ACTOR_AUTHORITY.equivalent(actor.hp, next.hp) or actor.fainted != next.fainted \
+						or participant.tether_commands.get("last_receipt") != original.command_plan.receipt:
+						return {"ok": false, "code": "item_commit_changed"}
+					continue
+				var commands: Dictionary = participant.tether_commands.duplicate(true)
+				commands.erase("item_pending")
+				if not ACTOR_AUTHORITY.equivalent(commands, original.command_before) \
+					or int(actor.revision) != int(frozen.vitals_revision) or actor.settled_revision != actor.revision \
+					or not ACTOR_AUTHORITY.equivalent(actor.hp, frozen.hp) or actor.fainted != false:
+					return {"ok": false, "code": "item_baseline_changed"}
+				var vitals: Dictionary = {}
+				if not ACTOR_AUTHORITY.equivalent(next.hp, frozen.hp):
+					_staging_saved_item_character = str(training.character_id)
+					vitals = stage_actor_vitals(id, int(original.peer_id), uid, int(frozen.body_generation), int(frozen.vitals_revision),
+						str(original.intent.effect.action_id), "heal", float(next.hp) - float(frozen.hp),
+						int(MATH.config().get("utility_limits", {}).get("receipt_limit_per_encounter", 0)))
+					_staging_saved_item_character = ""
+					if vitals.get("ok") != true: return {"ok": false, "code": "item_vitals_unavailable"}
+				changes.append({"encounter_id": id, "retained": retained, "participant_key": key,
+					"uid": uid, "vitals": vitals, "receipt": training.receipt})
+	return {"ok": true, "kind": "tether_item", "receipt": training.receipt, "character_revision": training.character_revision,
+		"world_namespace": world_namespace, "world_id": world_id, "changes": changes}
+
+
+func _commit_tether_item_baseline(proposal: Dictionary, training: Dictionary) -> bool:
+	for change: Dictionary in proposal.changes:
+		var participant: Dictionary = encounters[change.encounter_id].get("retained_actor_participants" if change.retained else "participants", {})[change.participant_key]
+		var original: Dictionary = participant.tether_commands.item_pending
+		if not change.vitals.is_empty():
+			_staging_saved_item_character = str(training.character_id)
+			var committed := commit_actor_vitals(change.vitals)
+			_staging_saved_item_character = ""
+			if committed.get("ok") != true: return false
+			if not acknowledge_actor_vitals(str(change.encounter_id), str(training.character_id), str(change.uid),
+				int(change.vitals.revision), change.vitals.settlement_receipt): return false
+		var actor: Dictionary = participant.actor_vitals[change.uid]
+		actor["training_receipt"] = training.receipt
+		actor["training_character_revision"] = training.character_revision
+		participant.tether_commands = original.command_plan.state.duplicate(true)
+		participant.tether_commands["last_receipt"] = original.command_plan.receipt.duplicate(true)
+		participant.tether_commands["item_pending"] = original
+		original["actor_committed"] = true
+		seq += 1
+		encounters[change.encounter_id].seq = seq
 	return true

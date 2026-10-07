@@ -22,6 +22,7 @@
     "max_fraction_of_named_hp": 0.2
   },
   "damage": {
+    "max_bonus_product": 1.6,
     "_comment": "damage = power * scale * attack / (attack + defence). Bounded on purpose: a raw attack/defence ratio explodes when defence is low and produces one-shot kills that read as bugs. With scale 2, equal attack and defence deals exactly the move's power.",
     "scale": 2.0,
     "_comment_variance": "Half-width of the random spread, as a fraction. 0.1 means every hit lands between 90% and 110%. Enough that two identical fights are not identical, small enough that it never decides one.",

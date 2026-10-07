@@ -114,6 +114,11 @@ static func errors(raw: Variant, expected_character: String) -> Array[String]:
 		return ["portable authority belongs to another character"]
 	var failures := TEACHING.admitted_party_errors(raw.party, raw.redesign_character)
 	failures.append_array(REDESIGN.validate("character", raw.redesign_character, REDESIGN.uids(raw.party)))
+	if raw.redesign_character is Dictionary and raw.redesign_character.has("tether_pouch"):
+		var commands: GDScript = load("res://scripts/combat/tether_commands.gd")
+		var items: RefCounted = RULES.db()
+		if not commands.valid_pouch(raw.redesign_character.tether_pouch, items.get("_items"), 0):
+			failures.append("invalid supported command pouch bindings")
 	var normalized := preload("res://scripts/creatures/traits.gd").normalize_admitted(raw)
 	if normalized.get("redesign_character") is Dictionary and normalized.redesign_character.get("creatures") is Dictionary:
 		for uid: Variant in normalized.redesign_character.creatures:
