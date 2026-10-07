@@ -1626,6 +1626,34 @@ func test_an_open_host_duty_at_the_hello_refuses_and_never_adopts() -> void:
 
 func test_deferred_rejoin_requires_real_vitals_release_saved_fresh_declaration_and_bound_resend() -> void:
 	var character: String = before.character_id
+	# A pending personal bounty rotation uses the same first-rejoin gate as
+	# vitals. Exercise its real authority stage and accepted journal ACK.
+	var bounty_context: Dictionary = preload("res://tests/test_bounty_board.gd").new()._context(before)
+	bounty_context.world_namespace = game.world.reward_delivery_namespace
+	var bounty_stage: Dictionary = session._character_authority.stage_character_action(character, 0, "bounty_rotate", {}, bounty_context)
+	assert_true(bounty_stage.get("ok") == true)
+	assert_true(session._character_authority.finish_creature_training(bounty_stage, true))
+	var bounty_row := preload("res://scripts/net/character_action_delivery.gd").make_record(game.world.world_id,
+		game.world.reward_delivery_namespace, session._altar_current_epoch(), bounty_stage, null,
+		preload("res://scripts/net/character_record_rules.gd").errors)
+	assert_false(bounty_row.is_empty())
+	session.host = true
+	service.admitted(2, {"character_id": character, "portable_authority": before, "personal_flags": {"flags": []},
+		"discovered_landmarks": {}, "owner_passive_stream": {"id": service.local.id, "baseline_hash": service.local.base_hash}})
+	assert_true(service.deferred.has(character), "a pending bounty row parks the rejoin instead of refusing it")
+	session.messages.clear()
+	service.retry_deferred(character)
+	assert_true(session.messages.is_empty(), "training ACK must precede a fresh declaration")
+	bounty_row.status = "accepted"
+	assert_true(session._character_authority.acknowledge_creature_training(character, bounty_row))
+	service.retry_deferred(character)
+	assert_eq(session.messages.size(), 1)
+	assert_eq(session.messages.back().op, "redeclaration")
+	# Restore the existing admission setup before its full vitals/save/retry
+	# proof below; no bounty result is imported as a vitals success.
+	after_each()
+	before_each()
+	character = before.character_id
 	var card: Dictionary = before.party[0]
 	var receipt := {"receipt_id": "deferred-hit", "encounter_id": "deferred-encounter", "creature_uid": card.uid,
 		"body_generation": 1, "vitals_revision": 1}
