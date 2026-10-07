@@ -6,6 +6,9 @@ extends SceneTree
 ##   xvfb-run -a -s "-screen 0 1920x1080x24" \
 ##     godot --path . --rendering-driver opengl3 --resolution 1920x1080 \
 ##     --script tools/capture_f21_hit_presentation.gd -- --out=/abs/dir
+## Optional --medium requires a native Forward+ run and selects authored Medium
+## before world loading. Its frame timings include screenshot readback/write
+## stalls; this capture alone supplies neither a matched before nor an FPS pass.
 ##
 ## Shots (each at contact +2 frames, and +14 frames as the number rises):
 ##   quick      an ordinary quick hit (light weight)
@@ -21,6 +24,7 @@ extends SceneTree
 
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const MATH := preload("res://scripts/combat/combat_math.gd")
+const GRAPHICS := preload("res://scripts/ui/graphics_prefs.gd")
 const SETTLE_FRAMES := 240
 
 var _out := ""
@@ -34,17 +38,27 @@ var _log: Array[Dictionary] = []
 var _failures: Array[String] = []
 var _last_impact: Dictionary = {}
 var _missed := false
+var _medium := false
+var _frame_samples: Array[Dictionary] = []
+var _frame_sampler := Callable()
 
 
 func _init() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--out="): _out = arg.trim_prefix("--out=")
+		if arg == "--medium": _medium = true
 	if _out.is_empty(): _out = ProjectSettings.globalize_path("res://shots/_diag/f21")
 	_run()
 
 
 func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(_out)
+	if _medium:
+		if DisplayServer.get_name() == "headless" or RenderingServer.get_current_rendering_method() != "forward_plus" \
+				or GRAPHICS.choose("Medium") != OK or GRAPHICS.selected() != "Medium" or GRAPHICS.restart_required():
+			_failures.append("--medium requires a native Forward+ renderer and the actual authored Medium preset before world load")
+			_finish()
+			return
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
 	for i in SETTLE_FRAMES: await physics_frame
@@ -60,6 +74,20 @@ func _run() -> void:
 		_failures.append("scene is missing the player, rig, manager or director")
 		_finish()
 		return
+	if _medium:
+		var clock := {"last_usec":Time.get_ticks_usec(),"last_frame":Engine.get_process_frames(),"was_fighting":false}
+		_frame_sampler = func() -> void:
+			var now: int = Time.get_ticks_usec()
+			var fighting: bool = is_instance_valid(_manager) and bool(_manager.call("is_fighting"))
+			# Include every whole process-frame wall interval begun in combat,
+			# including its exit boundary and any intervening PNG readback/write.
+			if bool(clock.was_fighting):
+				_frame_samples.append({"from_process_frame":int(clock.last_frame),"process_frame":Engine.get_process_frames(),
+					"wall_end_usec":now,"wall_dt_ms":float(now-int(clock.last_usec))/1000.0,"fighting_at_end":fighting})
+			clock.last_usec = now
+			clock.last_frame = Engine.get_process_frames()
+			clock.was_fighting = fighting
+		process_frame.connect(_frame_sampler)
 	_wild = _director.call("wild_creature") as Node3D
 	if _wild == null:
 		_failures.append("no wild creature spawned")
@@ -90,6 +118,8 @@ func _run() -> void:
 		_wild.call("apply_poise_damage", 10000.0, true)
 	await _strike("crit", "combat_quick")
 	await _incoming()
+	# Observe the process-frame boundary after the final PNG write as well.
+	if _medium: await process_frame
 	_finish()
 
 
@@ -191,9 +221,26 @@ func _save(name: String) -> String:
 
 
 func _finish() -> void:
+	if _frame_sampler.is_valid() and process_frame.is_connected(_frame_sampler):
+		process_frame.disconnect(_frame_sampler)
+	var sorted: Array[float] = []
+	for sample: Dictionary in _frame_samples: sorted.append(float(sample.wall_dt_ms))
+	sorted.sort()
+	var performance := {"sampling_requested":_medium,"sample_count":sorted.size(),
+		"metric":"process-frame wall milliseconds; intervals begin while is_fighting is true; exit boundary included",
+		"includes_screenshot_readback_and_png_write_stalls":true,"percentile_method":"nearest rank",
+		"p50_ms":null,"p95_ms":null,"p99_ms":null,"raw_active_fight_frames":_frame_samples}
+	if not sorted.is_empty():
+		for percentile: int in [50,95,99]:
+			performance["p%d_ms" % percentile] = sorted[clampi(ceili(float(sorted.size())*float(percentile)/100.0)-1,0,sorted.size()-1)]
+	elif _medium:
+		_failures.append("Medium capture observed no active-fight process-frame wall intervals")
+	var resolution: Vector2 = root.get_visible_rect().size
 	var file := FileAccess.open(_out.path_join("receipts.json"), FileAccess.WRITE)
 	if file != null:
 		file.store_string(JSON.stringify({"renderer": RenderingServer.get_current_rendering_method(),
+			"preset":GRAPHICS.selected(),"requested_preset":"Medium" if _medium else "unchanged",
+			"resolution":[int(resolution.x),int(resolution.y)],"performance":performance,
 			"shots": _log, "failures": _failures}, "  "))
 	for failure in _failures: printerr("[f21] FAIL ", failure)
 	quit(1 if not _failures.is_empty() else 0)
