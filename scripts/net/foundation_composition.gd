@@ -41,6 +41,7 @@ func _ready() -> void:
 	add_child(_interaction)
 	_interaction.call("bind_actions", bounty_claim, personal_view, bounty_reconcile)
 	get_parent().connect("foundation_reply_received", _reply)
+	get_parent().connect("homestead_action_completed", _bounty_completed)
 	preload("res://scripts/ui/bounty_board_panel.gd").attach(_interaction)
 	var rematches: Node = preload("res://scripts/net/foundation_rematches.gd").new()
 	rematches.name = "Rematches"
@@ -185,6 +186,36 @@ func bounty_reconcile(pending: Dictionary) -> Dictionary:
 	if pending.get("character_id") != session.call("_local_character_id") \
 		or pending.get("world_namespace") != session.call("_game").get("world").reward_delivery_namespace: return {"ok": false, "resolved": false}
 	return session.call("_foundation_send", "bounty_reconcile", "halda_bounty_board", {"instance": pending.get("instance")}, -1)
+
+func _bounty_completed(action: String, intent: Dictionary, result: Dictionary) -> void:
+	# The first reply may only announce the care checkpoint. The original
+	# claim finishes through Session's exact owner-save/accepted-ACK signal.
+	if action != "bounty_claim" or intent.size() != 1 or not intent.get("instance") is String \
+		or result.get("ok") != true or result.get("resolved") != true or result.get("durable") != true \
+		or result.get("owner_saved") != true or result.get("owner_acknowledged") != true \
+		or not is_instance_valid(_interaction): return
+	var session := get_parent()
+	var game: Node = session.call("_game")
+	if game == null or game.get("session") != session: return
+	var original: Dictionary = session.call("_altar_envelope", action, "halda_bounty_board")
+	if original.is_empty(): return
+	original.intent = intent.duplicate(true)
+	original.revision = -1
+	# Compare against the actual retained request; this never sends one.
+	if session.call("_owner_passive_request_matches", "foundation_request", original) != true: return
+	var pending := {"instance": intent.instance, "character_id": original.character_id,
+		"world_namespace": original.world_namespace}
+	if _interaction.get("_pending") != pending: return
+	var row: Dictionary = session.call("_owner_training_row")
+	if row.get("action") != action or row.get("status") != "accepted" \
+		or row.get("session_id") != original.session_epoch or row.get("character_id") != original.character_id \
+		or row.get("source_key") != original.station_key or row.get("intent") != intent \
+		or row.get("receipt") != "bounty:%s:%s" % [intent.instance, original.character_id] \
+		or row.get("receipt") != result.get("receipt"): return
+	var accepted: Dictionary = session.call("_foundation_decision", int(session.call("local_peer_id")), row)
+	if accepted.get("ok") != true or accepted.get("owner_saved") != true \
+		or accepted.get("owner_acknowledged") != true or accepted.get("receipt") != result.receipt: return
+	_interaction.call("settled", result, pending)
 
 func _reply(envelope: Dictionary, result: Dictionary) -> void:
 	if envelope.op == "bounty_view":
