@@ -20,10 +20,9 @@ extends RefCounted
 ## Fixture switches belong to the caller: `continuous = false` keeps the
 ## standalone witness's disclosed island-landing position writes and Tidecoil
 ## / Lastlight fixtures (printed as POSE / DISCLOSED); the four-biome caller
-## always runs continuous and passes the earned swimmer, so no position,
-## flag, ledger or party write happens here. The only remaining write in
-## continuous mode is the Tidecoil stranding POSE, and only when no mount is
-## available (the standalone witness).
+## always runs continuous with earned=true; the new-order run human-swims
+## with its original five, while the legacy diagnostic supplies a swimmer.
+## Earned mode refuses Tidecoil stranding before the standalone POSE fallback.
 const NAV := preload("res://tests/helpers/stick_navigator.gd")
 const POCKET := preload("res://tests/smoke_water_pocket_walk_claim.gd")
 const FIELD := preload("res://scripts/world/water_heightfield.gd")
@@ -252,6 +251,9 @@ func _deep_watch() -> String:
 			_check(await _ride_to_point(_landing("deep_watch"), "Tidecoil return to the Deep Watch landing"),
 				"Deep Watch: rode the owned swimmer from the fight back to the landing")
 		elif not await _tidecoil_walk_back(fight, up):
+			if earned:
+				_check(false, "Deep Watch: retained-five human return could not reach the landing by input")
+				return "CHAIN side_water_deep_watch FAIL human return to landing"
 			_pose(_landing("deep_watch"), "deep_watch arrival landing after the Tidecoil win (stranded below the cliff)")
 			await _frames(60)
 	else:

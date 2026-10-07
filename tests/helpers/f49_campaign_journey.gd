@@ -126,10 +126,17 @@ func run(owner: SceneTree) -> void:
 			return
 		visited.append("tidewake")
 		driver.live["world"] = driver.current_scene
+		var tidewake_party_uids := _dock_party_uids()
+		if tidewake_party_uids.size() != 5:
+			_fail("F49 Tidewake requires the five carried from Meadows")
+			return
 		await driver._stage_water_to_ending(game, true)
 		if driver.finished or not driver.failures.is_empty(): return
 		if driver.reached != "tidewake_ending_earned":
 			_fail("F49 Tidewake did not settle its real chapter")
+			return
+		if _dock_party_uids() != tidewake_party_uids:
+			_fail("F49 Tidewake replaced or reordered the five carried from Meadows")
 			return
 		if not await _dock_conclusion_available(): return
 		if not await _boundary("tidewake_settled"): return
@@ -227,9 +234,9 @@ func _dock_conclusion_available() -> bool:
 	var chains: RefCounted = driver.local_chains
 	var world := driver.current_scene as Node3D
 	var cave := world.get_node_or_null("WaterVeilfall")
-	if chains == null or chains.mount == null or cave == null or not chains.continuous \
+	if chains == null or cave == null or not chains.continuous \
 		or not chains.earned or not cave.call("contains_interior", chains.player.global_position):
-		_fail("F49 dock continuation requires the same earned swimmer and actual Veilfall chamber")
+		_fail("F49 dock continuation requires earned continuous travel and the actual Veilfall chamber")
 		return false
 	var party_before := _dock_party_uids()
 	var origin: Vector3 = cave.get("interior").global_position
@@ -249,7 +256,7 @@ func _dock_conclusion_available() -> bool:
 		_fail("F49 ordinary exit input did not leave Veilfall")
 		return false
 	chains.last_island = "veilfall"
-	# _talk uses the existing continuous island path, paid swimmer, ground
+	# _talk uses the existing continuous human-swim island path, ground
 	# navigator, exact NPC provider and Interact-driven natural completion.
 	var heard: Array = await chains._talk("water_mara")
 	if heard.is_empty() or heard[0] != "water_mara_post" or not chains.failures.is_empty():
