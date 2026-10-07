@@ -1,0 +1,46 @@
+# CI-SPEED suite group (tools/ci/run_suite.py). Steps copied verbatim from
+# the former ci.yml job; each step runs in order in one lane, with the
+# lane's own XDG_DATA_HOME, RUNNER_TEMP and network namespace.
+### job: verify-regions-shard
+### group: tidewake
+### seconds: 469
+### job-timeout-minutes: 35
+
+### step: Verify Tidewake closed-gate tide-race seal
+timeout 300s godot --headless --path . --script tests/smoke_water_closed_gate_seal.gd
+### step: Verify Tidewake dismount leaves no mounted state
+timeout 240s godot --headless --path . --script tests/smoke_water_dismount_state.gd
+### step: Verify Tidewake drowning and safe shore
+timeout 240s godot --headless --path . --script tests/smoke_water_swimming.gd
+### step: Verify Tidewake drowned recovery
+timeout 120s godot --headless --path . --script tests/smoke_water_player_death.gd
+### step: Verify Tidewake reload mid-water
+timeout 120s godot --headless --path . --script tests/smoke_water_reconnect_save.gd
+### step: Verify Tidewake mounted reload mid-water
+timeout 120s godot --headless --path . --script tests/smoke_water_mounted_reconnect_save.gd
+### step: Verify Tidewake combat pause while swimming
+timeout 240s godot --headless --path . --script tests/smoke_water_combat_pause.gd
+### step: Verify Tidewake Guardian offer keeps controller focus across a drop
+timeout 240s godot --headless --path . --script tests/smoke_water_guardian_drop_refocus.gd
+### step: Verify Tidewake chain side_water_lantern_return
+timeout 120s godot --headless --path . --script tests/smoke_water_lantern_return.gd
+### step: Verify Tidewake chain side_water_gull_research
+timeout 120s godot --headless --path . --script tests/smoke_water_gull_research.gd
+### step: Verify Tidewake chain side_water_cradle_care
+timeout 120s godot --headless --path . --script tests/smoke_water_cradle_care.gd
+### step: Verify Tidewake chain side_water_garden_records
+timeout 120s godot --headless --path . --script tests/smoke_water_garden_records.gd
+### step: Verify Tidewake chain side_water_deep_watch_chart
+timeout 120s godot --headless --path . --script tests/smoke_water_deep_watch_chart.gd
+### step: Verify Tidewake chain side_water_lastlight_shelter
+timeout 120s godot --headless --path . --script tests/smoke_water_lastlight_shelter.gd
+### step: Verify regional credits survive a disk reload
+timeout 120s godot --headless --path . --script tests/smoke_regional_credits_reload.gd
+### step: Verify pending regional ending receipts and reconnect rejection
+set -euo pipefail
+pending_log="$RUNNER_TEMP/regional-homecoming-pending.log"
+timeout 120s godot --headless --path . --script tests/smoke_regional_homecoming_pending.gd 2>&1 | tee "$pending_log"
+if grep -Eq 'SCRIPT ERROR:|^ERROR:|instances were leaked|resources still in use' "$pending_log"; then
+  echo "Regional pending acknowledgement emitted engine or cleanup errors."
+  exit 1
+fi
