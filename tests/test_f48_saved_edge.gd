@@ -28,7 +28,7 @@ func before_each() -> void:
 		"redesign_character": {"transaction_receipts": ["receipt"], "portal_unlocks": []},
 		"satchel_escrow": {}, "equipment": RECORDS.empty_equipment(), "realm_hearts": {"active_id": ""}}
 	edge = {"row": {"kind": "altar_building", "version": 1,
-		"after": {"inventory": memory.inventory.duplicate(true), "party": memory.party.duplicate(true), "redesign_character": memory.redesign_character.duplicate(true)}},
+		"after": preload("res://scripts/creatures/essence.gd").training_projection(memory)},
 		"files": {"memory": memory.duplicate(true), "disk": memory.duplicate(true)}}
 
 func test_complete_v1_carriers_at_actual_edge_match_original_after() -> void:
