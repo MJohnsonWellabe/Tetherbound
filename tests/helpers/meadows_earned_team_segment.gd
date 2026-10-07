@@ -9,6 +9,9 @@ const CLOUDREACH := preload("res://tests/helpers/cloudreach_live_segment.gd")
 const NAV := preload("res://tests/helpers/opening_geometry_navigator.gd")
 const TOURNAMENT := preload("res://scripts/world/tournament.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const BED_INPUT := preload("res://tests/helpers/gate_b_tail_segment.gd")
+const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const MAX_TRAINING_FIGHTS := 40
 const APPROACH_FRAMES := 3600
 const SATCHEL_COLUMNS := 6
@@ -998,8 +1001,12 @@ func _prepare_pilot(training: bool) -> bool:
 	# miss ordinary party XP and cannot silently count as a healthy training team.
 	for index in int(_party().call("size")):
 		var member: RefCounted = _party().call("at", index)
-		if bool(member.get("fainted")) and not await _use_remedy("revive", index):
-			return false
+		if bool(member.get("fainted")):
+			if int((_game.get("inventory") as RefCounted).call("count", "revive")) > 0:
+				if not await _use_remedy("revive", index):
+					return false
+			elif not await _recover_at_home_bed(index):
+				return false
 	var potion_stock := int((_game.get("inventory") as RefCounted).call("count", "potion_small"))
 	# Prefer an under-level pilot while carried care can make that choice safe.
 	# Once it cannot, health alone selects the strongest usable member; shared
@@ -1021,6 +1028,8 @@ func _prepare_pilot(training: bool) -> bool:
 			_receipt("care_depleted_pilot", {"creature_id": active.get_instance_id(),
 				"hp": active.get("hp"), "max_hp": active.get("max_hp"),
 				"level": active.get("level")})
+			if not await _recover_at_home_bed(best):
+				return false
 			break
 		if not await _use_remedy("potion_small", best):
 			return false
@@ -1035,6 +1044,70 @@ func _prepare_pilot(training: bool) -> bool:
 	if int(_party().call("active_index")) == best:
 		return true
 	return _fail("Party-cycle input did not select the available training creature")
+
+
+## Grandpa's installed bed is available before a paid camp. Use the existing
+## controller bed driver, let production recovery tick, then press Wake early.
+## This provides HP only; it never supplies the tournament's full-rest bonus.
+func _recover_at_home_bed(index: int) -> bool:
+	var bed := _world.find_child("HomeCreatureBed", true, false) as Node3D
+	if bed == null or int(bed.call("build_index")) > -10 or int(bed.call("occupant_index")) >= 0:
+		return _fail("Depleted carried care needs Grandpa's available installed bed")
+	var member: RefCounted = _party().call("at", index)
+	var retained := _party_ids()
+	var inventory_before := _inventory_snapshot()
+	var progression: RefCounted = _game.get("progression")
+	var paid_bed_before := bool(progression.call("has", "creature_bed_built"))
+	var before_hp := float(member.get("hp"))
+	var driver := BED_INPUT.new()
+	driver._tree = _tree
+	driver._world = _world
+	driver._game = _game
+	driver._player = _player
+	driver._rig = _rig
+	driver._party = _party()
+	driver._arbiter = _arbiter
+	driver._bed = bed
+	driver._resolve_move_bindings()
+	if not driver.failures.is_empty() or not await driver._assign_to_bed(index):
+		return _fail("Controller home-bed assignment failed: " + str(driver.failures))
+	var started := Time.get_ticks_msec()
+	var heal_seconds := PROGRESSION.creature_bed_full_heal_seconds(PROGRESSION.config())
+	var deadline := started + int((heal_seconds * 5.0 + 30.0) * 1000.0)
+	while float(member.get("hp")) < float(member.get("max_hp")) - 0.01:
+		if Time.get_ticks_msec() >= deadline or _tree.paused or _fighting() \
+				or not bool(member.get("resting")) or INPUT_OWNER.current(_tree) != null:
+			return _fail("Production home-bed recovery stopped before full HP")
+		await _tree.process_frame
+	var prompt := bed.get_node_or_null("Interactable") as Node3D
+	if prompt == null or not await driver._walk_to_prompt(prompt, "Grandpa's creature bed"):
+		return _fail("Controller could not return to the installed bed: " + str(driver.failures))
+	await driver._tap(&"interact")
+	var panel: Node = await driver._wait_for_panel("creature_bed_panel.gd")
+	if panel == null or not await driver._focus_the_row_for(panel, index):
+		return _fail("Controller could not select its sleeping creature to wake")
+	await driver._tap(&"ui_accept")
+	await driver._tap(&"menu_cancel")
+	if _tree.paused or bool(member.get("resting")) or bool(member.get("fainted")) \
+			or bool(member.get("rested")) or _party_ids() != retained \
+			or inventory_before != _inventory_snapshot() \
+			or paid_bed_before != bool(progression.call("has", "creature_bed_built")):
+		return _fail("Home-bed early wake changed retained inventory/team or supplied a paid/full-rest credit")
+	_receipt("home_bed_hp_recovery", {"party_index": index, "uid": member.get("uid"),
+		"before_hp": before_hp, "after_hp": member.get("hp"), "max_hp": member.get("max_hp"),
+		"elapsed_wall_seconds": float(Time.get_ticks_msec() - started) / 1000.0,
+		"authored_full_heal_seconds": heal_seconds, "bed_index": bed.call("build_index"),
+		"controller_assignment_and_early_wake": true, "full_rest_bonus": false,
+		"synthetic_recovery_ticks": false, "party_ids_unchanged": true, "inventory_unchanged": true})
+	return true
+
+
+func _inventory_snapshot() -> Array[Dictionary]:
+	var inventory: RefCounted = _game.get("inventory")
+	var slots: Array[Dictionary] = []
+	for slot in int(inventory.call("slot_count")):
+		slots.append(inventory.call("stack_at", slot))
+	return slots
 
 
 ## Pure selection seam for the live pilot policy. The caller owns revival and
@@ -1227,9 +1300,12 @@ func _party_ids() -> Array[int]:
 
 func _party_snapshot() -> Array[Dictionary]:
 	var rows: Array[Dictionary] = []
+	var local: RefCounted = _game.get("local")
+	var personal: Dictionary = local.get("redesign_character") if local != null else {}
 	for index in int(_party().call("size")):
 		var member: RefCounted = _party().call("at", index)
 		rows.append({"id": member.get_instance_id(), "species": member.get("species_id"),
+			"uid": member.get("uid"), "live_admitted_cap": ESSENCE.creature_cap(personal, str(member.get("uid"))),
 			"level": member.get("level"), "xp": member.get("xp"), "hp": member.get("hp")})
 	return rows
 
