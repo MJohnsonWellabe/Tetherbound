@@ -29,6 +29,7 @@ import json
 import math
 import pathlib
 import sys
+import hashlib
 
 import bpy
 from mathutils import Vector, kdtree
@@ -255,6 +256,84 @@ def skin(body: bpy.types.Object, rig: bpy.types.Object) -> None:
     bpy.ops.object.parent_set(type="ARMATURE_AUTO")
 
 
+def skin_anatomical(body: bpy.types.Object, rig: bpy.types.Object, legs: dict) -> dict:
+    """Bounded no-heat experiment: own limb capsules plus torso parents.
+
+    This is a starting weight map, never a deformation acceptance verdict.
+    Disconnected UV copies receive the same weights without modifying mesh data.
+    """
+    low, high = bounds(body)
+    height = high.z - low.z
+    if height <= 1e-6:
+        raise SystemExit("Anatomical weights require a nonzero standing height")
+    soften = height * 0.025
+    torso_names = ("pelvis", "spine", "neck", "head", "tail_1", "tail_2")
+    groups = {bone.name: body.vertex_groups.new(name=bone.name) for bone in rig.data.bones}
+    segments = {bone.name: (rig.matrix_world @ bone.head_local, rig.matrix_world @ bone.tail_local)
+                for bone in rig.data.bones}
+
+    def capsule(point, name):
+        start, end = segments[name]
+        line = end - start
+        along = max(0.0, min(1.0, (point - start).dot(line) / max(line.length_squared, 1e-12)))
+        return (point - (start + along * line)).length
+
+    def smooth(start, end, value):
+        t = max(0.0, min(1.0, (value - start) / max(end - start, 1e-12)))
+        return t * t * (3.0 - 2.0 * t)
+
+    def normalized(distances):
+        weights = {name: 1.0 / (distance * distance + soften * soften)
+                   for name, distance in distances}
+        total = sum(weights.values())
+        return {name: value / total for name, value in weights.items()}
+
+    seam_weights = {}
+    limb_regions = {key: 0 for key in legs}
+    for vertex in body.data.vertices:
+        # Object alignment is reversible; local positions, UVs and faces stay intact.
+        point = body.matrix_world @ vertex.co
+        seam = tuple(round(c, 6) for c in vertex.co)
+        if seam not in seam_weights:
+            region = min(legs, key=lambda name: (point.x - legs[name].x) ** 2 + (point.y - legs[name].y) ** 2)
+            prefix, side = region.split("_")
+            upper, lower = f"{prefix}_upper_{side}", f"{prefix}_lower_{side}"
+            distance_xy = math.hypot(point.x - legs[region].x, point.y - legs[region].y)
+            hip_z = segments[upper][0].z
+            limb = (1.0 - smooth(height * 0.13, height * 0.26, distance_xy)) \
+                * (1.0 - smooth(hip_z - height * 0.15, hip_z + height * 0.05, point.z))
+            # At a limb/torso boundary use only that limb's parent region.
+            # Tail/head and other limbs cannot drag a haunch or shoulder.
+            parent_names = ("spine", "neck") if prefix == "front" else ("pelvis", "spine")
+            names = parent_names if limb > 1e-6 else torso_names
+            nearest = sorted(((name, capsule(point, name)) for name in names), key=lambda row: row[1])[:2]
+            weights = {name: weight * (1.0 - limb) for name, weight in normalized(nearest).items()}
+            for name, weight in normalized(((upper, capsule(point, upper)), (lower, capsule(point, lower)))).items():
+                weights[name] = weight * limb
+            weights = {name: value for name, value in weights.items() if value > 1e-8}
+            total = sum(weights.values())
+            if total <= 1e-6 or not all(math.isfinite(value) and value > 0.0 for value in weights.values()):
+                raise SystemExit("Anatomical weights unresolved; no nearest-neighbour fallback")
+            seam_weights[seam] = {name: value / total for name, value in weights.items()}
+        weights = seam_weights[seam]
+        for name, value in weights.items():
+            groups[name].add([vertex.index], value, "REPLACE")
+        limb_regions[region] += 1
+    modifier = body.modifiers.new("Armature", "ARMATURE")
+    modifier.object = rig
+    world = body.matrix_world.copy()
+    body.parent = rig
+    body.matrix_world = world
+    bpy.context.view_layer.update()
+    if any(abs(sum(g.weight for g in v.groups) - 1.0) > 1e-5 or len(v.groups) > 4 for v in body.data.vertices):
+        raise SystemExit("Anatomical skin must be normalized with at most four influences")
+    return {"method": "own_rest_rig_region_constrained_capsules", "limb_regions": limb_regions,
+            "coincident_weight_keys": len(seam_weights), "heat_invoked": False, "orphan_fallback_invoked": False,
+            "max_influences": max(len(v.groups) for v in body.data.vertices),
+            "joint_world_positions": {name: {"head": list(start), "tail": list(end)}
+                                      for name, (start, end) in segments.items()}}
+
+
 def repair_unweighted(body: bpy.types.Object) -> int:
     """Give every zero-weight vertex the weights of its nearest weighted neighbour.
 
@@ -337,19 +416,53 @@ def main() -> None:
     out = pathlib.Path(option(args, "--out", model.with_name("rigged.glb"))).resolve()
     report_path = option(args, "--report")
     skip_weld = "--skip-weld" in args
+    anatomical = "--anatomical-weights" in args
+    preserve = "--preserve-target-geometry" in args
+    report_file = pathlib.Path(report_path).resolve() if report_path else None
+    if anatomical != preserve or (preserve and (not skip_weld or out == model or out.exists()
+            or report_file is None or report_file in (model, out) or report_file.exists())):
+        raise SystemExit("Anatomical experiment requires geometry preservation, --skip-weld and fresh separate output/report")
+    source_hash = hashlib.sha256(model.read_bytes()).hexdigest() if preserve else None
 
     load(model)
-    body = join_and_normalise(weld_enabled=not skip_weld)
+    if preserve:
+        import inspect_glb
+        inspect_glb.drop_import_phantoms()
+        meshes = mesh_objects()
+        if len(meshes) != 1 or meshes[0].vertex_groups or any(o.type == "ARMATURE" for o in bpy.data.objects):
+            raise SystemExit("Anatomical experiment requires one untouched unskinned mesh")
+        body = meshes[0]
+        def signature():
+            return (tuple(tuple(v.co) for v in body.data.vertices),
+                    tuple((tuple(p.vertices), p.material_index) for p in body.data.polygons),
+                    tuple(tuple(tuple(loop.uv) for loop in layer.data) for layer in body.data.uv_layers),
+                    tuple(body.data.materials))
+        before_geometry = signature()
+        low, high = bounds(body)
+        body.location += Vector((-(low.x + high.x) / 2, -(low.y + high.y) / 2, -low.z))
+        bpy.context.view_layer.update()
+    else:
+        body = join_and_normalise(weld_enabled=not skip_weld)
     legs = find_legs(body)
     rig = build_armature(body, legs)
-    skin(body, rig)
-    repaired = repair_unweighted(body)
+    experiment = skin_anatomical(body, rig, legs) if anatomical else {}
+    if not anatomical:
+        skin(body, rig)
+    repaired = 0 if anatomical else repair_unweighted(body)
+    if preserve and signature() != before_geometry:
+        raise SystemExit("Anatomical experiment changed target positions/faces/UV/material bindings")
 
     report = weight_report(body)
     report["repaired_vertices"] = repaired
     report["weld_skipped"] = skip_weld
     report["bones"] = [b.name for b in rig.data.bones]
     report["legs_found_at"] = {k: [round(c, 4) for c in v] for k, v in legs.items()}
+    if preserve:
+        if report["unweighted_vertices"]:
+            raise SystemExit("Anatomical weights left unresolved vertices; refusing export")
+        report.update(experiment)
+        report.update(source_sha256=source_hash, target_data_unchanged_before_export=True,
+                      scope="Staged own-rest-rig experiment only; DCC deformation, clips and native scale/poses remain required")
 
     out.parent.mkdir(parents=True, exist_ok=True)
     bpy.ops.object.select_all(action="SELECT")
@@ -359,6 +472,9 @@ def main() -> None:
 
     if report_path:
         pathlib.Path(report_path).write_text(json.dumps(report, indent=2))
+    if preserve:
+        if hashlib.sha256(model.read_bytes()).hexdigest() != source_hash:
+            raise SystemExit("Anatomical experiment overwrote source asset")
 
     bad = report["unweighted_vertices"]
     print(f"\nrigged {model.name} -> {out.name}")
