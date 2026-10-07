@@ -6,11 +6,15 @@
   "neck_lift_deg": -18.0,
   "head_lift_deg": -25.0,
   "stroke_seconds": 1.8,
-  "arm_lateral": 0.45,
-  "arm_depth": -0.25,
-  "forearm_lateral_scale": 0.55,
-  "forearm_minimum_reach": 0.15,
-  "forearm_depth": -0.45,
+  "_stroke_axes": "Installed skeleton frame: +Y is toward the head, +Z is toward the chest/front and becomes downward after body pitch. X is mirrored per arm. Directions preserve the installed bone rest roll; the right arm follows half a cycle later.",
+  "stroke_keys": [
+    {"phase": 0.0, "name": "reach", "upper": [0.12, 1.0, 0.04], "forearm": [0.04, 1.0, 0.08]},
+    {"phase": 0.18, "name": "catch", "upper": [0.24, 0.65, 0.72], "forearm": [-0.08, 0.10, 1.0]},
+    {"phase": 0.42, "name": "pull", "upper": [0.22, -0.65, 0.72], "forearm": [-0.08, -0.85, 0.55]},
+    {"phase": 0.60, "name": "push", "upper": [0.14, -1.0, 0.08], "forearm": [0.06, -1.0, 0.12]},
+    {"phase": 0.70, "name": "lift", "upper": [0.50, -0.65, -0.55], "forearm": [0.35, 0.30, -0.85]},
+    {"phase": 0.80, "name": "recovery", "upper": [0.55, -0.18, -0.82], "forearm": [-0.24, 0.96, 0.28]}
+  ],
   "kick_deg": 9.0,
   "knee_deg": 14.0
 }
