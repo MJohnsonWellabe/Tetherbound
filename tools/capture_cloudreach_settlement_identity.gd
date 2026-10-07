@@ -22,11 +22,14 @@ func _run() -> void:
 
 
 func _parse_args() -> void:
-	super._parse_args()
 	# The general matrix uses numeric selectors; this child owns its explicit
-	# two-view supplement and never forwards it as a row number.
-	if _windwatch_only:
-		_only.clear()
+	# two-view supplement. Parse its output/active options without converting
+	# the literal "windwatch" selector to an integer in the parent parser.
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--output="):
+			OUT = arg.trim_prefix("--output=").strip_edges().trim_suffix("/")
+		elif arg.begins_with("--active="):
+			_active_species = arg.trim_prefix("--active=").strip_edges()
 
 
 func _run_matrix() -> void:
