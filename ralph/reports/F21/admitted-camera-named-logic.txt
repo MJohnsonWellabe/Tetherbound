@@ -1,0 +1,7 @@
+F21#4 admitted-motion correction: logicPASS, native/visual gatesOPEN
+Source:f2e0ed068958daea7ebfb1adc88afa7d78eb294a; hostedcut6f3dc5a74f27813657924b9588585110a514adc6.
+Namedproof:37687325019 tests/run_tests.gd,51existingtestfiles selected by references to combat_manager.gd,fight_camera.gd,camera.json. Artifact11511617821.
+Actualresult:412tests5488assertions0failed; exit0/114s. Existing deliberate corrupt-controls JSON case retained;3ObjectDB leaks at exit retained.
+Same independent F21 reviewer f25_arrival_review APPROVE: backtracking preserves each already-satisfied framing,overlap,foreground,support,HUDguard; speed limits and full lens sweeps remain; rig follows admitted pose rather than refused endpoint. Geometry reused onlywithin onecandidate score, context freshlymeasured; finite/degenerate/near-plane guards retained.
+Coordinator native original9pair size matrix and baseline LT/B/3m/9m proof remainpending; no READY claim, no threshold/budget/scale relaxed. A ran no nativeengine.
+Separate F21#5 preparation557b07f950ec1bc366487139994dc76637698a86 addsoptionalMedium actualfight walltime sampling toexisting capture_f21_hit_presentation.gd; sameF21reviewerAPPROVE. Matchedbefore/afterblindpreference and measuredhardwareFPS remainOPEN.
