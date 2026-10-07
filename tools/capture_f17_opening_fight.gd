@@ -13,6 +13,7 @@ var _fight_source := ""
 var _fight_preset := ""
 var _observer: FightObserver
 var _ending_fight_capture := false
+var _tell_unit_preflight: Dictionary = {"requested": false}
 
 class FightObserver extends Node:
 	var output := ""
@@ -466,6 +467,20 @@ func _run() -> void:
 		if argument.begins_with("--output="): _fight_output = argument.trim_prefix("--output=")
 		elif argument.begins_with("--source-commit="): _fight_source = argument.trim_prefix("--source-commit=")
 		elif argument.begins_with("--preset="): _fight_preset = argument.trim_prefix("--preset=")
+	if arguments.has("--with-tell-units"):
+		# Existing named tests run before any proof gate or ordinary input.
+		# Keep this preflight in the existing capture, rather than a new runner.
+		var selectors := "test_combat_feedback.gd,test_enemy_pattern_telegraph.gd,test_stormwood_surge_presentation.gd,test_telegraph_glow.gd"
+		var output: Array = []
+		var exit_code := OS.execute(OS.get_executable_path(), PackedStringArray([
+			"--headless", "--path", ProjectSettings.globalize_path("res://"),
+			"--audio-driver", "Dummy", "--script", "res://tests/run_tests.gd", "--", "--only=" + selectors]), output, true)
+		for chunk: Variant in output: print(str(chunk))
+		_tell_unit_preflight = {"requested": true, "selectors": selectors.split(","), "exit_code": exit_code}
+		if exit_code != 0:
+			failures.append("existing four named tell unit files failed before the earned capture")
+			super._finish(false)
+			return
 	var pattern := RegEx.new()
 	pattern.compile("^[0-9a-f]{40}$")
 	var renderer := "gl_compatibility" if _fight_preset == "Low" else "forward_plus"
@@ -534,6 +549,7 @@ func _write_fight_manifest(complete: bool, prefix_passed: bool) -> bool:
 			else "incomplete native earned-opening observation; opening/catch completion and >=30s motion remain unproved")
 			+ "; no full M1, visual bar, multiplayer or device claim",
 		"canonical_wild_process_opt_in": _observer.prove_canonical_wild,
+		"tell_unit_preflight": _tell_unit_preflight,
 		"shortcuts": ["inherited ordinary-input fresh opening driver", "observational JPEG95 frames at actual timestamps", "motion may include ordinary post-catch aftermath", "no added gameplay inputs, target replacement, HP edits or admission bypass by observer",
 			"optional --prove-canonical-wild selects only cached actor_vitals before original fresh spawn/admission and restores the gate at close; source config bytes and shipping flags unchanged",
 			"optional --prove-library-arrival previews library in this process; event-triggered native PNGs retain first draw after contact, not an assumed exact periodic frame"]}, "\t") + "\n")
