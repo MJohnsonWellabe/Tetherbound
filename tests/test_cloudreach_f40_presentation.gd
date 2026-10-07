@@ -12,7 +12,8 @@ func test_candidate_keeps_collision_contract_and_baseline_immutable() -> void:
 	var combined := MERGE._merge(base, candidate.aviary)
 	assert_false(candidate.enabled)
 	assert_false(base.crown_arcade.enabled)
-	assert_false(combined.towers.enabled)
+	assert_true(base.towers.enabled, "shipping Aviary towers remain enabled")
+	assert_eq(combined.towers, base.towers, "candidate preserves the shipping landmark towers")
 	for field: String in ["throat", "drum", "arches", "footprint", "dome", "pylon_anchor"]:
 		assert_eq(combined[field], base[field], "candidate preserves " + field)
 	assert_true(AVIARY.throat_clear(combined))

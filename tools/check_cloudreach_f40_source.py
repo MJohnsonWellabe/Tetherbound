@@ -12,10 +12,10 @@ candidate = json.loads((ROOT / 'data/config/cloudreach_f40_visual.json').read_te
 visual = json.loads((ROOT / 'data/config/cloudreach_visual.json').read_text())
 assert candidate['enabled'] is False
 assert base['crown_arcade']['enabled'] is False
-assert base['towers']['enabled'] is False
+assert base['towers']['enabled'] is True, 'shipping Aviary landmark towers remain enabled'
 assert visual['skyline_profile']['enabled'] is False
 assert visual['settlement']['occupied_terrace']['enabled'] is False
-assert candidate['aviary']['towers']['enabled'] is False
+assert 'towers' not in candidate['aviary'], 'candidate inherits the shipping tower configuration'
 assert candidate['visual']['settlement']['occupied_terrace']['enabled'] is False
 
 arcade = candidate['aviary']['crown_arcade']
