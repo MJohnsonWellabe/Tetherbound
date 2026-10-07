@@ -270,6 +270,8 @@ var _pending_tournament_join_id: String = ""
 var _pending_tournament_join_deadline_ms: int = 0
 var _pending_tournament_join_announcement: Dictionary = {}
 var _pending_tournament_members: Array[RefCounted] = []
+## Correlate the optimistic legacy mirror with its outstanding host admission.
+var _pending_legacy_join_id: String = ""
 var _shared_opponent_proxy: Node3D = null
 ## F14#1. A guest's body for the host's CURRENT trainer/boss creature, built
 ## from the record's opponent row (card, level, hp) rather than borrowing a
@@ -2399,6 +2401,7 @@ func _on_net_peer_left(peer_id: int, _reason: Variant = null) -> void:
 ## and any body still tracked by the spawner is a spawn held under a peer that
 ## is not the one it was made under. Drop them all, on host and client alike.
 func _on_net_session_ended(_reason: Variant = null) -> void:
+	_pending_legacy_join_id = ""
 	_shared_catch_finish_pending = {}
 	_shared_catch_finish_reply = {}
 	_shared_catch_finish_results.clear()
@@ -2682,6 +2685,8 @@ func _rpc_encounter_intent(intent: Dictionary) -> void:
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
 func _rpc_encounter_verdict(verdict: Dictionary) -> void:
 	_note_host_xp_owner(verdict)
+	if _receive_legacy_join_verdict(verdict):
+		return
 	if str(verdict.get("kind", "")) == "engage" and not _pending_tournament_join_id.is_empty():
 		if str(verdict.get("encounter_id", "")) != _pending_tournament_join_id:
 			return
@@ -6890,8 +6895,27 @@ func join_encounter(encounter_id: String) -> bool:
 func _join_legacy_encounter(encounter_id: String, announced: Dictionary) -> bool:
 	if not _begin_legacy_encounter_body(encounter_id, announced):
 		return false
-	submit_encounter_intent({"kind": "engage", "encounter_id": encounter_id,
+	_pending_legacy_join_id = encounter_id
+	var verdict := submit_encounter_intent({"kind": "engage", "encounter_id": encounter_id,
 		"character_id": _local_character_id()})
+	if not bool(verdict.get("pending", false)):
+		_receive_legacy_join_verdict(verdict)
+		return bool(verdict.get("ok", false))
+	return true
+
+
+func _receive_legacy_join_verdict(verdict: Dictionary) -> bool:
+	if str(verdict.get("kind", "")) != "engage" or _pending_legacy_join_id.is_empty() \
+			or str(verdict.get("encounter_id", "")) != _pending_legacy_join_id \
+			or bool(verdict.get("pending", false)):
+		return false
+	var encounter_id := _pending_legacy_join_id
+	_pending_legacy_join_id = ""
+	if not bool(verdict.get("ok", false)) and _manager != null:
+		# A rejected admission must leave through the normal combat exit, without
+		# granting a win, resetting the player or unwinding a different fight.
+		_manager.call("refuse_pending_encounter_join", encounter_id)
+		_manager.call("note_encounter_refusal", verdict)
 	return true
 
 
@@ -7300,6 +7324,7 @@ func _on_combat_creature_switched(_index: int) -> void:
 
 
 func _on_combat_exited(outcome: String) -> void:
+	_pending_legacy_join_id = ""
 	# Keep exploration's active party in sync even when the switch signal
 	# already updated the director's deployment during the fight.
 	_on_combat_creature_switched(-1)
