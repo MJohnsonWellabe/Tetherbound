@@ -1,0 +1,14 @@
+{
+  "kind": "pinned_native_night_cut",
+  "source_sha": "53fa3c2686d34fb145f491c007d1f90fa0ac72ba",
+  "dependencies": ["7a5ac84230e4fa1d680c14015f05cbaa419638b3", "6bf651f76dbc0132f4fdd911174bc63caa82cf30", "4ecc804cea4e8f0f02c7616fa37a1db5b4ffa58a"],
+  "retained_b_input_fix": "975bb3f4f799a5caaed219ad93af3b6c8d3caa21",
+  "source_review": "APPROVE /root/b_f49_review; scoped restored production and existing baseline blobs match the exact allocated D/C inputs",
+  "script": "tests/capture_village_walk.gd",
+  "args": "--time=night --route=visits --from-title --capture-dir=<absolute output>",
+  "renderer": "Compatibility",
+  "resolution": "1280x720",
+  "execution": "Queued by coordinator issue572 comment6040316365 on separate authorized PC writer; this Lane B invocation runs no native engine.",
+  "criterion_pass": false,
+  "remaining": "Native complete night/visits walk, actual captures and code-blind judge. No earned-campaign claim."
+}

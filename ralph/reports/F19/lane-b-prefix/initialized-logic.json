@@ -1,0 +1,24 @@
+{
+  "kind": "existing_unit_lifecycle_repair_proof",
+  "source_sha": "2ac0a7f4ba9978703a1a25f384ab6138706b896b",
+  "run_id": 37637419760,
+  "workflow_result": "success",
+  "script": "tests/run_tests.gd",
+  "args": "--only=test_portal_arrival_travel_reset.gd,test_meadows_earned_route_ledger_segment.gd,test_gate_a_npc_gather_segment_contract.gd,test_f28_training_boundaries.gd,test_characterize_game_process_ticks.gd",
+  "reported": {"tests": 53, "assertions": 609, "failed": 0},
+  "same_existing_portal_case_child": {"tests": 1, "assertions": 7, "failed": 0},
+  "clean_logic_pass": true,
+  "script_errors": 0,
+  "engine_errors": 0,
+  "object_leak_markers": 0,
+  "source_review": "APPROVE /root/b_f20_review; original default runner lifecycle and strict no-main-loop characterization retained, initialized child executes the original seven assertions",
+  "artifact": {
+    "id": 11490837410,
+    "name": "render-lane-b-initialized-proof-37637419760",
+    "bytes": 5037,
+    "sha256": "7a540c5fe72fa83297dacec1b630aa1e0ef1a375073075fe44950c600833d788"
+  },
+  "log_location": "Workflow render job step Run; artifact manifest names run.log but the uploaded archive omits it. Authenticated workflow log archive was inspected independently.",
+  "criterion_pass": false,
+  "remaining": "Fresh earned route, disk checkpoints, behavior, visual and final criterion reviews remain open. This closes only the disclosed unit lifecycle error."
+}
