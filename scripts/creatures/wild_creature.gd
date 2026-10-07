@@ -752,6 +752,7 @@ func _tick_combat(delta: float) -> void:
 	if not is_alive() or _opponent == null:
 		return
 	_utility_clock_ms += delta * 1000.0
+	_tick_utility_fields()
 	_ultimate_reaction_left = maxf(0.0, _ultimate_reaction_left - delta)
 	# An already committed protected heavy still runs. Only this opponent's
 	# issuance/movement pauses; other hosted opponents keep their own clocks.
@@ -854,17 +855,31 @@ func named_combat_target() -> bool:
 		or str(_pattern_context.get("pattern_id", "")).begins_with("named_")
 
 
-## The one host HP writer calls this after a positive landed debit. Utility
-## receipts and expiry use this opponent's clock, which pauses with hitstop.
+## The host calls this after the admitted utility reaches its frozen target.
+## Damage remains the sole HP writer's job. These target statuses and fields
+## use this opponent's clock, which pauses with hitstop.
 func apply_landed_utility(move: Dictionary, context: Dictionary) -> bool:
-	if move.get("move_id") != "snare" or not engaged or not is_alive(): return false
+	if not engaged or not is_alive() or instance == null or not UTILITY_EFFECTS.valid_definition(move): return false
+	var kind := str(move.utility.kind)
+	# Travel/push and self effects have separate physical/owned consumers.
+	if kind not in ["root", "slow_field", "trap", "damage_taken_debuff"] \
+		or str(context.get("target_uid", "")) != str(instance.get("uid")): return false
 	if _landed_utility_state.is_empty():
 		_landed_utility_state = UTILITY_EFFECTS.empty_state(str(context.get("encounter_id", "")), int(context.get("generation", 0)))
-	var staged := UTILITY_EFFECTS.stage_application(_landed_utility_state, "snare", move,
+	var staged := UTILITY_EFFECTS.stage_application(_landed_utility_state, str(move.get("move_id", "")), move,
 		context, int(_utility_clock_ms), int(MATH.config().get("utility_limits", {}).get("receipt_limit_per_encounter", 4096)))
 	if staged.get("ok") != true: return false
 	_landed_utility_state = staged.state
 	return true
+
+
+func _tick_utility_fields() -> void:
+	if _landed_utility_state.is_empty() or instance == null or not is_alive(): return
+	var boss := named_combat_target()
+	for source_uid: String in _landed_utility_state.get("fields", {}):
+		var triggered := UTILITY_EFFECTS.stage_trap_trigger(_landed_utility_state, source_uid,
+			str(instance.get("uid")), global_position, true, float(instance.get("hp")), boss, int(_utility_clock_ms))
+		if triggered.get("ok") == true: _landed_utility_state = triggered.state
 
 
 func utility_movement_multiplier() -> float:
@@ -876,6 +891,12 @@ func utility_movement_multiplier() -> float:
 			int(get_meta(&"tether_body_generation", 0)), "", Time.get_ticks_msec())
 		movement = minf(movement, float(snare.movement))
 	return movement
+
+
+func utility_damage_multiplier(_source_uid: String = "") -> float:
+	if instance == null: return 1.0
+	return UTILITY_EFFECTS.damage_taken_multiplier(_landed_utility_state,
+		str(instance.get("uid")), int(_utility_clock_ms))
 
 
 func hold_ultimate_reaction(seconds: float) -> void:
