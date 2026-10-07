@@ -1,0 +1,24 @@
+{
+  "criteria": "F38/F17/F42 visual criteria OPEN; affected logic coverage only",
+  "source_commit": "2740551df848e18299c104e7e3ec395a51380678",
+  "run_id": "37657009651",
+  "artifact_id": "11500025372",
+  "script": "tests/run_tests.gd",
+  "args": "--only=test_alpha_pins,test_cloudreach_atmosphere,test_cloudreach_fly_build_shortcut,test_cloudreach_no_legendary_offer,test_combat_hud_handheld_floors,test_combat_roster_pin_visual,test_controls,test_dialogue_runner,test_f19_order_consumers,test_gate_a_front_door_and_world,test_grandpas_village_visual_identity,test_hammer_keeps_the_interact_button,test_hud_party_vitals,test_hud_toast_and_drowning,test_hud_widgets,test_inn_exterior_identity,test_input_context_collisions,test_loft_bed_reachable,test_map_fog,test_map_icons,test_map_legibility,test_map_player_heading,test_map_realm_view,test_map_zoom_persistence,test_menu_data,test_multiplayer_identity_0912,test_opening_home_camera_guard,test_player_map_markers,test_quest_log,test_realm_map_persistence,test_river_crossings_stay_open,test_stormwood_fenn_clearance,test_stormwood_settlement_grounding,test_telegraph_glow,test_village_main_street,test_village_redesign_topology,test_village_road_topology,test_village_street_0912,test_world_verb_input_owner_enforcement",
+  "selected_files": 39,
+  "tests": 459,
+  "assertions": 11695,
+  "failed": 0,
+  "exit_code": 0,
+  "engine": "Godot4.7",
+  "elapsed_seconds": 25,
+  "log_sha256": "a882ba82b118e9ae23d3ab9091d21e34d7b8c2c1a4ecbafd48e043e9d310f72e",
+  "selection": "Existing tests found by filenames/config-key references for current UI, map, exploration roster, building recipes and farmhouse lighting; production source through2740551.",
+  "discarded_batch_claim": "37656586726 repeated --only flags selected final file only:4tests5assertions. Not39-file coverage and not counted.",
+  "remaining_gates": [
+    "Latest Players-card hunk5b8a90325c needs its two existing Steam test files",
+    "Current real map-area smoke",
+    "Actual full-bar visual matrix/independent judge",
+    "Village/Hall and Tidewake named area smoke/physical circuit"
+  ]
+}
