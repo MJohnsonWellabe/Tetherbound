@@ -1,0 +1,80 @@
+{
+  "model": "D:\\tetherbound\\codex-e\\assets_raw\\stormursa\\shoulder-a\\model.glb",
+  "bounds": {
+    "min": [
+      -0.5,
+      -0.1735,
+      -0.4282
+    ],
+    "max": [
+      0.5,
+      0.1734,
+      0.4265
+    ],
+    "size": [
+      1.0,
+      0.3468,
+      0.8548
+    ],
+    "height_m": 0.8548,
+    "longest_axis_m": 1.0,
+    "sits_on_origin": false,
+    "centred_on_origin": true
+  },
+  "meshes": [
+    {
+      "name": "Mesh_0",
+      "vertices": 1718,
+      "edges": 3097,
+      "faces": 1554,
+      "triangles": 1554,
+      "tris": 1554,
+      "quads": 0,
+      "ngons": 0,
+      "quad_fraction": 0.0,
+      "non_manifold_edges": 1532,
+      "boundary_edges": 1532,
+      "loose_vertices": 0,
+      "duplicate_vertices": 939,
+      "components": 175,
+      "debris_components": 82,
+      "flipped_normals": 120,
+      "uv_layers": 1,
+      "stretched_uv_faces": 20,
+      "materials": [
+        "Material_0"
+      ],
+      "shape_keys": 0,
+      "vertex_groups": 0
+    }
+  ],
+  "materials": [
+    {
+      "name": "Material_0",
+      "textures": [
+        "Image_0",
+        "Image_1",
+        "Image_2"
+      ],
+      "textured": true
+    }
+  ],
+  "armatures": [],
+  "animations": [],
+  "totals": {
+    "meshes": 1,
+    "triangles": 1554,
+    "vertices": 1718,
+    "materials": 1,
+    "animations": 0
+  },
+  "problems": [
+    "Mesh_0: 1532 non-manifold edges",
+    "Mesh_0: 939 duplicate vertices \u2014 will split under deformation",
+    "Mesh_0: 82 microscopic disconnected components",
+    "Mesh_0: ~120 inward-facing faces",
+    "Mesh_0: 20 faces with texel density 4.0x off the median",
+    "does not stand on the origin (lowest point z=-0.4282)",
+    "no armature and no clips \u2014 nothing here can move"
+  ]
+}

@@ -16,7 +16,8 @@
   "meshy_task_ids": [
     "01a1165e-e5b9-754f-8aaf-ff5f40c68d64",
     "01a11671-f9fa-746e-8e29-98fc32496010",
-    "01a1169c-70ef-77b1-856a-32d3120cc810"
+    "01a1169c-70ef-77b1-856a-32d3120cc810",
+    "01a11758-bd56-737c-91e6-2c260913964f"
   ],
   "default_enabled": false,
   "existing_f29_provenance": "source/provenance.json stays disabled and unearned; this separate receipt does not flip acceptance gates.",
@@ -47,5 +48,21 @@
       "sha256": "d3c58b909909c35cd4a97803513cf4062b8d8d1883a62afb5d6d69e5482dd21b",
       "result": "BLOCK"
     }
-  ]
+  ],
+  "shoulder_component": {
+    "reference": "res://assets/creatures/tetherbound/stormursa/reference/f36-shoulder-component-v1.png",
+    "reference_sha256": "7b7d905952d003660d46ec9217f508a1c04c4efcacb78bad1f834e8e004230a4",
+    "method": "built_in_imagegen_derivative_of_existing_identity_reference",
+    "identity_reference_unchanged": "res://assets/creatures/tetherbound/stormursa/reference/f36-three-quarter-v1.png",
+    "prompt": "Isolated left shoulder component, three connected overlapping raised natural copper horn ridges with jagged swept-back points, genuine thickness, concave shoulder-fitting underside, small violet-white inset faceted glass; established Stormursa shoulder identity only, no bear body or mechanical armour. Even neutral studio lighting, plain grey background, whole component visible. Pair must fit2816total additions under30000composite triangles.",
+    "inspection": "Connected organic copper ridge silhouette, thickness, recessed faceted glass and concave underside observed. This reference does not prove generated topology, composite fit, skin deformation or native acceptance.",
+    "task_id": "01a11758-bd56-737c-91e6-2c260913964f",
+    "model_type": "smart-topology",
+    "ai_model": "meshy-t2",
+    "requested_faces": 1400,
+    "enable_pbr": true,
+    "observed_credit_cost": 15,
+    "owner_allocation": "https://github.com/MJohnsonWellabe/Tetherbound/issues/572#issuecomment-6042684639",
+    "default_enabled": false
+  }
 }
