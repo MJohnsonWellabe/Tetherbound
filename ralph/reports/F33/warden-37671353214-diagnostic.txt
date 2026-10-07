@@ -25,3 +25,14 @@ Party HP cost: reader0.177674771683873 / masher0.769461363952061.
 Matching Rootiron diagnostic failed the C2 ratio; this comparison is not evidence matching tier passes or previous tier is clearly harder.
 No cohort, remaining bosses, full F23/F24 policy, earned-save or co-op acceptance claimed.
 Independent retained review: APPROVE bounded JSON-parent repair and d2915aab4744 opt-in Tidewake gear steps only, not F33#2 acceptance.
+
+Nerissa actual original-world opt-in gear diagnostic — FAIL
+Run37674265658 @d2915aab47449dde3f8fc0620c5e47f6ebedcfc0.
+Existing batch_tidewake_named_inworld_c2.gd -> original smoke_tidewake_named_inworld_c2.gd.
+Ripplet; L32 per current BOSSES range; Tidesteel+0; READER; one seed.
+Child exit1 after59s: challenge did not start the fight; wonfalse.
+Batch exit0 after64s means a result line was collected (missing0); not a successful fight/C2 result.
+Opt-in direct owner-row fixture/save detachment remains disclosed; no admission or save guard bypass.
+No actual battle, gear effectiveness, named-pattern, earned/canonical/co-op or F33#2 acceptance claim.
+After two failed named probes, criterion is parked under owner stop rule; next root-allocated F21 source correction.
+Independent retained F33 reviewer APPROVE optional gear forwarding/preparation only; behavior remains failed.
