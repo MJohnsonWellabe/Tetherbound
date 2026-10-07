@@ -22,9 +22,25 @@ func frames(count: int) -> void:
 	for frame in count: await physics_frame
 
 func tap(action: String) -> void:
-	Input.action_press(action)
-	await physics_frame
-	Input.action_release(action)
+	var binding: InputEventJoypadButton
+	for candidate: InputEvent in InputMap.action_get_events(action):
+		if candidate is InputEventJoypadButton:
+			binding = candidate.duplicate() as InputEventJoypadButton
+			break
+	if binding == null:
+		check(false, "physical controller binding exists for " + action)
+		return
+	await process_frame
+	binding.pressed = true
+	Input.parse_input_event(binding)
+	Input.flush_buffered_events()
+	await process_frame
+	await frames(2)
+	binding = binding.duplicate() as InputEventJoypadButton
+	binding.pressed = false
+	Input.parse_input_event(binding)
+	Input.flush_buffered_events()
+	await process_frame
 	await frames(3)
 
 func run() -> void:
@@ -43,7 +59,11 @@ func run() -> void:
 	creature.level = 30
 	creature.recompute_stats_from_base(preload("res://scripts/creatures/progression.gd").config())
 	game.party.add(creature)
-	game.local.save_data()
+	# Serialization returns a normalized COPY; it does not admit a live UID.
+	# Keep this pre-admission L30 fixture explicit, including its earlier caps.
+	game.local.redesign_character = game.local.save_data().redesign_character
+	game.local.redesign_character.creatures[creature.uid].breakthroughs = [10,20]
+	game.local.redesign_character.creatures[creature.uid].cap_level = 30
 	world = SCENE.instantiate()
 	root.add_child(world)
 	current_scene = world
@@ -60,7 +80,7 @@ func run() -> void:
 	var body: CharacterBody3D = director.ally_body()
 	player.global_position = body.global_position + Vector3(2,0,0)
 	await frames(2)
-	riding.interaction_activate()
+	await tap("interact")
 	await frames(10)
 	check(riding.is_mounted(),"ordinary Interact mounts with host authorization")
 	if not riding.is_mounted():
