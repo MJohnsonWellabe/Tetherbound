@@ -1,0 +1,15 @@
+{
+  "agent": "/root/judge_stormursa_anatomy",
+  "verdict": "PASS",
+  "scope": "Bounded neutral DCC anatomy continuity only",
+  "sheet": "stormursa-anatomy-comparison.jpg",
+  "reason": "Cleaned and pruned views retain rounded ears, projecting muzzle, heavy shoulders, torso proportions and four planted limbs/paws; no visible fused limbs, missing parts or major openings.",
+  "visible_caveat": "Fur surfaces show pronounced irregular recesses, but the mane and outer fur silhouette remain recognizable.",
+  "unproven": [
+    "Native gameplay full bar",
+    "Texture/palette identity",
+    "Scale",
+    "Rig/deformation",
+    "F29 acceptance"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "mode": "debris_only_no_weld_voxel_smooth_decimation",
+  "input_sha256": "d4408a1727dfdb583ef9bff74f3e053248eafe14043f36c5ff1ec2de7afdfd5b",
+  "output_sha256": "44ceb83975f3879bc3bf1f2156d573b933cf3960dd899d0582ae5ca79b687856",
+  "primary_vertices": 11486,
+  "primary_faces": 27184,
+  "primary_exact_positions_and_oriented_faces_unchanged": true,
+  "deleted_debris_vertices": 1088,
+  "output_triangles": 27184
+}

@@ -35,6 +35,8 @@ manual pass. This gets the mesh through texturing, rigging and the visual
 gate without lying about being production topology.
 """
 
+import hashlib
+import json
 import math
 import pathlib
 import sys
@@ -100,15 +102,7 @@ def longest_axis(obj: bpy.types.Object) -> float:
     return max(high - low)
 
 
-def merge_and_deburr(body: bpy.types.Object) -> tuple[int, int]:
-    mesh = bmesh.new()
-    mesh.from_mesh(body.data)
-
-    before = len(mesh.verts)
-    bmesh.ops.remove_doubles(mesh, verts=mesh.verts, dist=MERGE_DISTANCE)
-    merged = before - len(mesh.verts)
-
-    # Debris islands, found by flood fill, removed outright.
+def components(mesh: bmesh.types.BMesh) -> list[list[int]]:
     mesh.verts.ensure_lookup_table()
     unvisited = set(v.index for v in mesh.verts)
     islands = []
@@ -124,6 +118,37 @@ def merge_and_deburr(body: bpy.types.Object) -> tuple[int, int]:
                     stack.append(other)
                     members.append(other)
         islands.append(members)
+    return islands
+
+
+def primary_geometry(body: bpy.types.Object) -> tuple:
+    """Exact positions and oriented faces, independent of exporter indices."""
+    mesh = bmesh.new()
+    mesh.from_mesh(body.data)
+    primary = set(max(components(mesh), key=len))
+    positions = sorted(tuple(mesh.verts[i].co) for i in primary)
+    faces = []
+    for face in mesh.faces:
+        if not all(v.index in primary for v in face.verts):
+            continue
+        points = tuple(tuple(v.co) for v in face.verts)
+        # Cyclic index rotation is equivalent; reversed winding is not.
+        faces.append(min(points[i:] + points[:i] for i in range(len(points))))
+    mesh.free()
+    return tuple(positions), tuple(sorted(faces))
+
+
+def merge_and_deburr(body: bpy.types.Object, weld: bool = True) -> tuple[int, int]:
+    mesh = bmesh.new()
+    mesh.from_mesh(body.data)
+
+    before = len(mesh.verts)
+    if weld:
+        bmesh.ops.remove_doubles(mesh, verts=mesh.verts, dist=MERGE_DISTANCE)
+    merged = before - len(mesh.verts)
+
+    # Debris islands, found by flood fill, removed outright.
+    islands = components(mesh)
 
     total = len(mesh.verts)
     keep_threshold = max(total * DEBRIS_FRACTION, 4)
@@ -177,6 +202,9 @@ def main() -> None:
     # which is how it was finally pinned on the remesh rather than on thin
     # walls). Decimation alone preserves the topology it is given.
     skip_voxel = "--skip-voxel" in args
+    debris_only = "--debris-only" in args
+    if debris_only and model == out:
+        raise SystemExit("--debris-only requires a separate output; preserve the input")
 
     load(model)
     body = join_all()
@@ -195,11 +223,15 @@ def main() -> None:
                          f"voxel-remesh a textured model. Run cleanup before texturing.")
 
     before_tris = sum(len(p.vertices) - 2 for p in body.data.polygons)
-    merged, debris = merge_and_deburr(body)
-    if not skip_voxel:
+    original_primary = primary_geometry(body) if debris_only else None
+    merged, debris = merge_and_deburr(body, weld=not debris_only)
+    if not skip_voxel and not debris_only:
         voxel_remesh(body, divisor)
-    decimate_to(body, target)
-    bpy.ops.object.shade_smooth()
+    if not debris_only:
+        decimate_to(body, target)
+        bpy.ops.object.shade_smooth()
+    elif body.data.validate(verbose=True):
+        raise SystemExit("--debris-only still contains invalid mesh data; refusing export")
 
     after_tris = sum(len(p.vertices) - 2 for p in body.data.polygons)
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -207,9 +239,29 @@ def main() -> None:
     body.select_set(True)
     bpy.ops.export_scene.gltf(filepath=str(out), export_format="GLB", use_selection=True)
 
+    if debris_only:
+        load(out)
+        exported_primary = primary_geometry(join_all())
+        if original_primary != exported_primary:
+            raise SystemExit("--debris-only changed primary positions or oriented faces after export")
+        report = {
+            "mode": "debris_only_no_weld_voxel_smooth_decimation",
+            "input_sha256": hashlib.sha256(model.read_bytes()).hexdigest(),
+            "output_sha256": hashlib.sha256(out.read_bytes()).hexdigest(),
+            "primary_vertices": len(original_primary[0]),
+            "primary_faces": len(original_primary[1]),
+            "primary_exact_positions_and_oriented_faces_unchanged": True,
+            "deleted_debris_vertices": debris,
+            "output_triangles": after_tris,
+        }
+        report_path = option(args, "--report")
+        if report_path:
+            pathlib.Path(report_path).write_text(json.dumps(report, indent=2) + "\n")
+        print(json.dumps(report))
+
     print(f"\n{model.name}: {before_tris:,} tris -> {after_tris:,}")
     print(f"  {merged} duplicate verts merged, {debris} debris verts removed, "
-          f"{'decimated only (--skip-voxel)' if skip_voxel else f'voxel-remeshed to one manifold surface (divisor {divisor:g})'}")
+          f"{'debris only; primary geometry verified after export' if debris_only else 'decimated only (--skip-voxel)' if skip_voxel else f'voxel-remeshed to one manifold surface (divisor {divisor:g})'}")
     print(f"  -> {out}")
 
 
