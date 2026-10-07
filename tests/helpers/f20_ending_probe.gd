@@ -11,6 +11,31 @@ var failures: Array[String] = []
 var checks := 0
 var _heard := ""
 var _expected_choices: Array[String] = ["meadows:refused", "water:refused", "cloudreach:refused", "stormwood:refused"]
+var _capture_index := 0
+
+## Optional observations on the existing proof; no camera or gameplay writes.
+## Hosted screenshots stay in the run artifact for independent visual review.
+func capture(tree: SceneTree, label: String) -> bool:
+	if not OS.get_cmdline_user_args().has("--capture-ending"): return true
+	if not check(DisplayServer.get_name() != "headless" and RenderingServer.render_loop_enabled,
+		"ending capture requires an actual drawing display"): return false
+	var drawn: Array[bool] = [false]
+	var observer := func() -> void: drawn[0] = true
+	RenderingServer.frame_post_draw.connect(observer)
+	var deadline := Time.get_ticks_msec() + 30000
+	while not drawn[0] and Time.get_ticks_msec() < deadline: await tree.process_frame
+	RenderingServer.frame_post_draw.disconnect(observer)
+	if not check(drawn[0], "ending capture observes a completed frame within 30 seconds"): return false
+	var image := tree.root.get_texture().get_image()
+	var directory := "res://shots/f20-ending-%d" % OS.get_process_id()
+	var path := directory.path_join("%03d-%s.png" % [_capture_index, label])
+	_capture_index += 1
+	if not check(DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(directory)) == OK \
+		and image != null and not image.is_empty() and image.save_png(path) == OK,
+		"actual ending framebuffer saved: " + label): return false
+	print("F20 ENDING CAPTURE " + JSON.stringify({"path": path, "label": label,
+		"width": image.get_width(), "height": image.get_height()}))
+	return true
 
 func check(value: bool, message: String) -> bool:
 	checks += 1
@@ -226,6 +251,9 @@ func open_credits(tree: SceneTree, game: Node) -> bool:
 	while panel.call("is_open") and presses < line_count + 2:
 		opened = true
 		_heard += "\n" + str(panel.get("_body").text)
+		if not await capture(tree, "grandpa-%02d" % presses):
+			panel.disconnect("completed", completion_observer)
+			return false
 		print("F20 TALK tap start index=", presses, " ticks_ms=", Time.get_ticks_msec())
 		await travel.tap("interact")
 		print("F20 TALK tap returned index=", presses, " ticks_ms=", Time.get_ticks_msec())
@@ -261,7 +289,8 @@ func open_credits(tree: SceneTree, game: Node) -> bool:
 		var owner := INPUT_OWNER.current(tree)
 		if owner != null and owner.get_script() == load("res://scripts/ui/regional_credits.gd"):
 			credits = owner; break
-	return check(credits != null and credits.call("is_open"), "production credits own this player's input after acknowledgement")
+	if not check(credits != null and credits.call("is_open"), "production credits own this player's input after acknowledgement"): return false
+	return await capture(tree, "credits")
 
 func finish_credits(tree: SceneTree, game: Node) -> bool:
 	var credits := INPUT_OWNER.current(tree)
@@ -397,6 +426,7 @@ func resumed(tree: SceneTree, game: Node, before: Dictionary) -> bool:
 	travel.call("_stick", 0.0, 0.0)
 	if not check(player.is_on_floor() and player.global_position.distance_to(position_before) > 0.1 \
 		and HOME.journey_context(game).get("regional_credits_seen") == true, "safe completed world returns ordinary movement"): return false
+	if not await capture(tree, "completed-world"): return false
 	return await continuation_content(tree, game)
 
 func continuation_content(tree: SceneTree, game: Node) -> bool:
@@ -425,6 +455,7 @@ func continuation_content(tree: SceneTree, game: Node) -> bool:
 			" world_day=", game.world.day, " bounty_day=", game.world.redesign_world.bounty_day)
 	if not check(view.get("ready") == true and view.get("rows", []).size() == 3,
 		"reloaded character has three active bounties in the live board"): return false
+	if not await capture(tree, "completed-bounties"): return false
 	await travel.tap("menu_cancel")
 	if not check(INPUT_OWNER.current(tree) == null, "bounty screen returns ordinary world input"): return false
 	return await admit_endgame_rematch(tree, game, rematches)
