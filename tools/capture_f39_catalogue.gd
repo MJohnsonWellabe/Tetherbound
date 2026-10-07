@@ -107,7 +107,7 @@ func _prepare_capture_shell() -> bool:
 		return false
 	else:
 		var order: Variant = _weather.get("_order")
-		if not _weather.has_meta(&"tidewake_presentation_only") \
+		if _weather.get_meta(&"tidewake_presentation_only", false) != true \
 				or _weather.is_in_group("weather") or not (order is Array) or not order.is_empty():
 			_failures.append("F39 weather must be non-cycling presentation only, outside canonical weather queries")
 			return false
@@ -201,7 +201,8 @@ func _pin_time(time_name: String) -> Dictionary:
 		observed["f39_weather_source"] = str(_manifest.get("f39_weather_source", ""))
 		return observed
 	var order: Variant = _weather.get("_order")
-	if _weather.is_in_group("weather") or not (order is Array) or not order.is_empty():
+	if _weather.get_meta(&"tidewake_presentation_only", false) != true \
+			or _weather.is_in_group("weather") or not (order is Array) or not order.is_empty():
 		_failures.append("F39 presentation weather entered canonical queries or enabled cycling before capture")
 		return {}
 	_weather.call("set_weather", _weather_name)
