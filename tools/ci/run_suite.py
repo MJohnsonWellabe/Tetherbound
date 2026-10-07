@@ -245,7 +245,8 @@ def netns_prefix():
         return []
     uid, gid = os.getuid(), os.getgid()
     return ["sudo", "-n", "--preserve-env", "unshare", "--net", "--", "sh", "-c",
-            'ip link set lo up && exec setpriv --reuid=%d --regid=%d --init-groups -- env PATH="$0" HOME="$1" "$@"'
+            'ip link set lo up && p="$0" && h="$1" && shift && '
+            'exec setpriv --reuid=%d --regid=%d --init-groups -- env PATH="$p" HOME="$h" "$@"'
             % (uid, gid), os.environ.get("PATH", ""), os.environ.get("HOME", "")]
 
 
