@@ -506,7 +506,21 @@ func _loop() -> bool:
 	for candidate: Node in get_nodes_in_group(&"portal_arches"):
 		if candidate.get("arch_id") == "home": arch = candidate
 	if arch == null: return _fail("real Hall home arch absent")
-	if not await travel.activate(arch.get_node(^"Interactable")):
+	var halls := get_nodes_in_group(&"crossing_halls")
+	if halls.size() != 1: return _fail("actual home return requires the retained authored Crossing Hall")
+	var hall := halls[0] as Node3D
+	var entrance: Array = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/crossing_hall.json")).entrance
+	var door := Vector3(float(entrance[0]), float(entrance[1]), float(entrance[2]))
+	var road := _trail_camp_headings((current_scene.get_node("Waystones/" + STONE_ID) as Node3D).global_position)
+	if road.is_empty(): return _fail("actual home return Lower Meadows road headings could not be resolved")
+	# Reverse precisely the authored HomeArrival/door/MainStreet/Workbench
+	# route this same run already walked. The helper keeps its original total
+	# distance*65 budget and every floor/provider/actionable/input guard.
+	var headings: Array[Vector3] = [_workbench_stance, road[0], hall.to_global(door + Vector3(0, 0, -2.4)),
+		hall.to_global(door), hall.call("home_arrival")]
+	var entered: bool = await travel.activate(arch.get_node(^"Interactable"), headings)
+	receipts.append(travel.last_approach.duplicate(true))
+	if not entered:
 		return _fail("actual home portal input: " + str(travel.failures))
 	var arrival := preload("res://scripts/world/waystone.gd").resolve_position(current_scene,
 		stone.get("_row"), true)
