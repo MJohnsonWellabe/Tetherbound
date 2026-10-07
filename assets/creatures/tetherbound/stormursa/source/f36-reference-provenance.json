@@ -11,10 +11,11 @@
     "family_resemblance": "Rounded ears, blue eyes, broad muzzle, four separate paws, brown/slate-violet fur and lightning seams preserved. Adult shoulder and forepaw mass increased.",
     "palette": "Copper shoulder ridges and small glass seams match F29 brief; visible fur retains source brown family resemblance.",
     "limitations": "Studio single view does not prove 4.10m size, closed topology, rig contact, reverse anatomy or gameplay appeal. Strong copper shoulder masses and fine fur detail need native readability review.",
-    "disposition": "Inspected image-to-3D reference; one guarded preview submitted. Rig, scale, full pose set and native art acceptance remain open."
+    "disposition": "Original inspected reference reused for one legacy preview and one coordinator-authorized Smart Topology trial. No texture or rig spend on Smart Topology. Native art gates remain open and default disabled."
   },
   "meshy_task_ids": [
-    "01a1165e-e5b9-754f-8aaf-ff5f40c68d64"
+    "01a1165e-e5b9-754f-8aaf-ff5f40c68d64",
+    "01a11671-f9fa-746e-8e29-98fc32496010"
   ],
   "default_enabled": false,
   "existing_f29_provenance": "source/provenance.json stays disabled and unearned; this separate receipt does not flip acceptance gates."
