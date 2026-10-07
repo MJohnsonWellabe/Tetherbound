@@ -1,0 +1,405 @@
+{
+  "source_sha": "bc695dfa6d3e6a8b963ae4faa394c674644c115b",
+  "run_id": 37670661208,
+  "artifact_id": 11506375502,
+  "exit_code": 0,
+  "duration_seconds": 1287,
+  "png_count": 114,
+  "scale_audit": true,
+  "scale_failures": [],
+  "actual_named_fights": [
+    {
+      "ally_fight_scale": {
+        "height_m": 1.95,
+        "instance_id": 3042447555491,
+        "radius_m": 0.660706,
+        "render_height_m": 1.95000016689301,
+        "root_scale": [
+          0.999999761581421,
+          1.0,
+          0.999999761581421
+        ],
+        "species": "sparkit"
+      },
+      "ended_at_s": 6.1,
+      "enemy_is_named": true,
+      "engaged_by": "Engage press",
+      "fight_scale": {
+        "height_m": 4.25,
+        "instance_id": 2951313717254,
+        "radius_m": 1.4875,
+        "render_height_m": 4.25,
+        "root_scale": [
+          0.999999284744263,
+          1.0,
+          0.999999284744263
+        ],
+        "species": "voltarach"
+      },
+      "fighting_at_end": true,
+      "frames": 18,
+      "hits": [
+        "hollows_alpha t=1.60 enemy miss",
+        "hollows_alpha t=4.42 enemy miss"
+      ],
+      "id": "hollows_alpha",
+      "note": "",
+      "saved_combat_frames": 18,
+      "started": true,
+      "tells": [
+        {
+          "authored": 0.9,
+          "kind": "strike_ready",
+          "measured_tell_s": 0.9,
+          "n": 1
+        },
+        {
+          "authored": 1.1,
+          "kind": "strike_ready",
+          "measured_tell_s": 1.1,
+          "n": 2
+        }
+      ],
+      "travel_scale": {
+        "height_m": 4.25,
+        "instance_id": 2951313717254,
+        "radius_m": 1.4875,
+        "render_height_m": 4.25,
+        "root_scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "species": "voltarach"
+      }
+    },
+    {
+      "ally_fight_scale": {
+        "height_m": 1.95,
+        "instance_id": 3042447555491,
+        "radius_m": 0.660706,
+        "render_height_m": 1.95000016689301,
+        "root_scale": [
+          0.999997496604919,
+          1.0,
+          0.999997496604919
+        ],
+        "species": "sparkit"
+      },
+      "ended_at_s": 6.0,
+      "enemy_is_named": true,
+      "engaged_by": "aggressive named wild initiated",
+      "fight_scale": {
+        "height_m": 4.25,
+        "instance_id": 2953561864236,
+        "radius_m": 1.4875,
+        "render_height_m": 4.25,
+        "root_scale": [
+          0.999998986721039,
+          1.0,
+          0.999998986721039
+        ],
+        "species": "voltarach"
+      },
+      "fighting_at_end": true,
+      "frames": 13,
+      "hits": [
+        "capacitor_alpha t=2.55 enemy miss"
+      ],
+      "id": "capacitor_alpha",
+      "note": "",
+      "saved_combat_frames": 13,
+      "started": true,
+      "tells": [
+        {
+          "authored": 0.900000000000003,
+          "kind": "strike_ready",
+          "measured_tell_s": 0.917,
+          "n": 1
+        }
+      ],
+      "travel_scale": {
+        "height_m": 4.25,
+        "instance_id": 2953561864236,
+        "radius_m": 1.4875,
+        "render_height_m": 4.25,
+        "root_scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "species": "voltarach"
+      }
+    },
+    {
+      "ally_fight_scale": {
+        "height_m": 1.95,
+        "instance_id": 3042447555491,
+        "radius_m": 0.660706,
+        "render_height_m": 1.95000016689301,
+        "root_scale": [
+          0.999993503093719,
+          1.0,
+          0.999993503093719
+        ],
+        "species": "sparkit"
+      },
+      "ended_at_s": 6.1,
+      "enemy_is_named": true,
+      "engaged_by": "Engage press",
+      "fight_scale": {
+        "height_m": 3.25,
+        "instance_id": 2954987927638,
+        "radius_m": 1.1375,
+        "render_height_m": 3.25,
+        "root_scale": [
+          0.999999821186066,
+          1.0,
+          0.999999821186066
+        ],
+        "species": "staticub"
+      },
+      "fighting_at_end": true,
+      "frames": 18,
+      "hits": [
+        "crown_guardian t=1.60 enemy->ally 24.3",
+        "crown_guardian t=2.88 ally->enemy 9.9",
+        "crown_guardian t=4.50 enemy miss"
+      ],
+      "id": "crown_guardian",
+      "note": "",
+      "saved_combat_frames": 18,
+      "started": true,
+      "tells": [
+        {
+          "authored": 0.9,
+          "kind": "strike_ready",
+          "measured_tell_s": 0.9,
+          "n": 1
+        },
+        {
+          "authored": 1.1,
+          "kind": "strike_ready",
+          "measured_tell_s": 1.1,
+          "n": 2
+        }
+      ],
+      "travel_scale": {
+        "height_m": 3.25,
+        "instance_id": 2954987927638,
+        "radius_m": 1.1375,
+        "render_height_m": 3.25,
+        "root_scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "species": "staticub"
+      }
+    },
+    {
+      "ally_fight_scale": {
+        "height_m": 1.95,
+        "instance_id": 3042447555491,
+        "radius_m": 0.660706,
+        "render_height_m": 1.95000016689301,
+        "root_scale": [
+          0.999987602233887,
+          1.0,
+          0.999987602233887
+        ],
+        "species": "sparkit"
+      },
+      "ended_at_s": 6.0,
+      "enemy_is_named": true,
+      "engaged_by": "aggressive named wild initiated",
+      "fight_scale": {
+        "height_m": 3.4,
+        "instance_id": 2956447545455,
+        "radius_m": 1.19,
+        "render_height_m": 3.40000033378601,
+        "root_scale": [
+          0.999999225139618,
+          1.0,
+          0.999999225139618
+        ],
+        "species": "tanglevolt"
+      },
+      "fighting_at_end": true,
+      "frames": 17,
+      "hits": [
+        "old_rodfolk_hall_guardian t=3.27 enemy->ally 28.9",
+        "old_rodfolk_hall_guardian t=4.38 ally->enemy 10.4",
+        "old_rodfolk_hall_guardian t=5.48 enemy->ally 33.5"
+      ],
+      "id": "old_rodfolk_hall_guardian",
+      "note": "",
+      "saved_combat_frames": 17,
+      "started": true,
+      "tells": [
+        {
+          "authored": 0.9,
+          "kind": "strike_ready",
+          "measured_tell_s": 0.9,
+          "n": 1
+        },
+        {
+          "authored": 1.1,
+          "kind": "strike_ready",
+          "measured_tell_s": 1.15,
+          "n": 2
+        }
+      ],
+      "travel_scale": {
+        "height_m": 3.4,
+        "instance_id": 2956447545455,
+        "radius_m": 1.19,
+        "render_height_m": 3.40000033378601,
+        "root_scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "species": "tanglevolt"
+      }
+    },
+    {
+      "ally_fight_scale": {
+        "height_m": 1.95,
+        "instance_id": 3042447555491,
+        "radius_m": 0.660706,
+        "render_height_m": 1.95000016689301,
+        "root_scale": [
+          0.999979615211487,
+          1.0,
+          0.999979615211487
+        ],
+        "species": "sparkit"
+      },
+      "ended_at_s": 6.1,
+      "enemy_is_named": true,
+      "engaged_by": "Engage press",
+      "fight_scale": {
+        "height_m": 2.95,
+        "instance_id": 2957907163272,
+        "radius_m": 1.475,
+        "render_height_m": 2.95000004768372,
+        "root_scale": [
+          0.999999642372131,
+          1.0,
+          0.999999642372131
+        ],
+        "species": "mosshock"
+      },
+      "fighting_at_end": true,
+      "frames": 18,
+      "hits": [
+        "blackwater_elder t=1.60 enemy->ally 15.3",
+        "blackwater_elder t=2.75 ally->enemy 10.4",
+        "blackwater_elder t=5.23 enemy miss",
+        "blackwater_elder t=6.08 ally->enemy 9.5"
+      ],
+      "id": "blackwater_elder",
+      "note": "",
+      "saved_combat_frames": 18,
+      "started": true,
+      "tells": [
+        {
+          "authored": 0.9,
+          "kind": "strike_ready",
+          "measured_tell_s": 0.9,
+          "n": 1
+        },
+        {
+          "authored": 1.1,
+          "kind": "strike_ready",
+          "measured_tell_s": 1.533,
+          "n": 2
+        }
+      ],
+      "travel_scale": {
+        "height_m": 2.95,
+        "instance_id": 2957907163272,
+        "radius_m": 1.475,
+        "render_height_m": 2.95000004768372,
+        "root_scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "species": "mosshock"
+      }
+    },
+    {
+      "ally_fight_scale": {
+        "height_m": 1.95,
+        "instance_id": 3042447555491,
+        "radius_m": 0.660706,
+        "render_height_m": 1.95000016689301,
+        "root_scale": [
+          0.999977111816406,
+          1.0,
+          0.999977111816406
+        ],
+        "species": "sparkit"
+      },
+      "ended_at_s": 6.0,
+      "enemy_is_named": true,
+      "engaged_by": "aggressive named wild initiated",
+      "fight_scale": {
+        "height_m": 4.25,
+        "instance_id": 2959366781089,
+        "radius_m": 1.4875,
+        "render_height_m": 4.25,
+        "root_scale": [
+          0.999998807907104,
+          1.0,
+          0.999998807907104
+        ],
+        "species": "voltarach"
+      },
+      "fighting_at_end": true,
+      "frames": 18,
+      "hits": [
+        "glass_field_alpha t=1.43 enemy miss",
+        "glass_field_alpha t=4.25 enemy miss"
+      ],
+      "id": "glass_field_alpha",
+      "note": "",
+      "saved_combat_frames": 18,
+      "started": true,
+      "tells": [
+        {
+          "authored": 0.9,
+          "kind": "strike_ready",
+          "measured_tell_s": 0.9,
+          "n": 1
+        },
+        {
+          "authored": 1.1,
+          "kind": "strike_ready",
+          "measured_tell_s": 1.1,
+          "n": 2
+        }
+      ],
+      "travel_scale": {
+        "height_m": 4.25,
+        "instance_id": 2959366781089,
+        "radius_m": 1.4875,
+        "render_height_m": 4.25,
+        "root_scale": [
+          1.0,
+          1.0,
+          1.0
+        ],
+        "species": "voltarach"
+      }
+    }
+  ],
+  "disclosure": "Existing staged named-wild fixture: authored named actors, direct placement, hidden neighboring wilds, pinned Calm, real Engage/aggression and live AI/creature-input fights. Not an earned route or full roster fight matrix.",
+  "remaining_gates": [
+    "Blind real-fight visual verdict",
+    "Roster-wide full presentation",
+    "Species outside these five unique fighters not exercised in combat here"
+  ]
+}

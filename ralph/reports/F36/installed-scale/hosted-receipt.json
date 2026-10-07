@@ -1,0 +1,431 @@
+{
+  "species": 69,
+  "source_sha": "fa69cee0b4438023871a1d9dd0f2b7dee47a42d4",
+  "duration_seconds": 148,
+  "measurements": [
+    {
+      "species": "abyssal_guardian",
+      "standing_height_m": 7.19999980926514,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "aeriex",
+      "standing_height_m": 4.0,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "aquaryn",
+      "standing_height_m": 3.40000009536743,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "ashtusk",
+      "standing_height_m": 3.60000038146973,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "bramblebun",
+      "standing_height_m": 2.04999995231628,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "breezetail",
+      "standing_height_m": 3.25000023841858,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "brooktail",
+      "standing_height_m": 2.09999990463257,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "burrowback",
+      "standing_height_m": 2.95000004768372,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "cannonback",
+      "standing_height_m": 3.69999980926514,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "cindercub",
+      "standing_height_m": 2.5,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "cliffspike",
+      "standing_height_m": 3.25,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "cloudfang",
+      "standing_height_m": 3.85000014305115,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "cragclaw",
+      "standing_height_m": 2.95000004768372,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "craghorn",
+      "standing_height_m": 3.5,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "duskhush",
+      "standing_height_m": 2.29999995231628,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "frostclaw",
+      "standing_height_m": 3.40000009536743,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "fulgocobra",
+      "standing_height_m": 5.19999980926514,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "galecrest",
+      "standing_height_m": 3.49999976158142,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "galewisp",
+      "standing_height_m": 3.24999976158142,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "glimmermoth",
+      "standing_height_m": 3.10000014305115,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "mangrove_monitor",
+      "standing_height_m": 3.40000009536743,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "meadowhart",
+      "standing_height_m": 3.44999980926514,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "mirejaw",
+      "standing_height_m": 2.79999995231628,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "mosshell",
+      "standing_height_m": 2.5,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "mosshock",
+      "standing_height_m": 2.95000004768372,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "mudsnout",
+      "standing_height_m": 1.99999988079071,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "nightburrow",
+      "standing_height_m": 3.5,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "paddlenewt",
+      "standing_height_m": 2.14999985694885,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "pebbik",
+      "standing_height_m": 3.24999976158142,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "pipwing",
+      "standing_height_m": 1.89999997615814,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "reedwing",
+      "standing_height_m": 2.64999985694885,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "ribbonray",
+      "standing_height_m": 3.70000004768372,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "riftfrill",
+      "standing_height_m": 2.14999985694885,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "ripplet",
+      "standing_height_m": 3.59999990463257,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "riptusk",
+      "standing_height_m": 4.25,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "riverdrake",
+      "standing_height_m": 4.00000047683716,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "shadelet",
+      "standing_height_m": 2.79999995231628,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "sirenseal",
+      "standing_height_m": 3.25,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "skyrill",
+      "standing_height_m": 3.25,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "solmane",
+      "standing_height_m": 6.69999980926514,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "sparkit",
+      "standing_height_m": 1.95000016689301,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "staticub",
+      "standing_height_m": 3.25,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "stormbrush",
+      "standing_height_m": 3.25,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "stormcapra",
+      "standing_height_m": 3.84999990463257,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "stormraven",
+      "standing_height_m": 3.39999985694885,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "stormtrail",
+      "standing_height_m": 2.54999995231628,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "tanglevolt",
+      "standing_height_m": 3.40000033378601,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "tempestwing",
+      "standing_height_m": 4.15000009536743,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "terrapup",
+      "standing_height_m": 3.84999990463257,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "thundertunnel",
+      "standing_height_m": 2.79999995231628,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "tidecoil",
+      "standing_height_m": 5.50000047683716,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "torrentoad",
+      "standing_height_m": 3.25,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "trailpup",
+      "standing_height_m": 2.29999995231628,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "tuskroot",
+      "standing_height_m": 3.60000038146973,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "veridian",
+      "standing_height_m": 5.80000019073486,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "voltarach",
+      "standing_height_m": 4.25,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "voltwig",
+      "standing_height_m": 3.25,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "water_abyssal_guardian",
+      "standing_height_m": 7.19999980926514,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "water_aquaryn",
+      "standing_height_m": 5.0,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "water_cannonback",
+      "standing_height_m": 4.15000009536743,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "water_cragclaw",
+      "standing_height_m": 3.69999980926514,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "water_mangrove_monitor",
+      "standing_height_m": 3.85000038146973,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "water_mirejaw",
+      "standing_height_m": 3.55000042915344,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "water_mosshell",
+      "standing_height_m": 2.5,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "water_riptusk",
+      "standing_height_m": 4.44999980926514,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "water_riverdrake",
+      "standing_height_m": 4.15000057220459,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "water_sirenseal",
+      "standing_height_m": 3.69999980926514,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "water_tidecoil",
+      "standing_height_m": 5.50000047683716,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    },
+    {
+      "species": "water_torrentoad",
+      "standing_height_m": 3.70000028610229,
+      "trainer_measured_height_m": 1.79999995231628,
+      "installed_model": true
+    }
+  ],
+  "frames": 138,
+  "criterion_claim": "none",
+  "proof": "existing capture_f36_poses.gd --all --scale-only",
+  "review": "APPROVE source extension",
+  "remaining_gates": [
+    "Code-blind full scale and appearance judgment",
+    "Actual named-fight scale receipt and frames"
+  ],
+  "run_id": 37669449150,
+  "exit_code": 0
+}

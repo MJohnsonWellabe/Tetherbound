@@ -1,0 +1,20 @@
+{
+  "criterion": "F36#2",
+  "reviewer": "/root/review_f36_cap",
+  "verdict": "APPROVE",
+  "owner_directive": "https://github.com/MJohnsonWellabe/Tetherbound/issues/572#issuecomment-6045342186",
+  "source_cut": {
+    "fight_capture": "bc695dfa6d3e6a8b963ae4faa394c674644c115b",
+    "standing_capture": "fa69cee0b4438023871a1d9dd0f2b7dee47a42d4"
+  },
+  "independent_verification": [
+    "Standing receipt compared against actual runtime base+Water catalogue:69 unique IDs, no missing/extra species, every installed_model true.",
+    "Every measured height >1.80m; minimum1.899999976m; actualtrainer1.799999952m throughout.",
+    "Raw capture_log.json and run.log match all6 fight rows: actual named Engage/aggression, sameinstance/species, unchanged height/radius/renderheight.",
+    "Maximum enemy root-scale delta1.1921e-6; every enemy and Sparkit ally>1.80m.",
+    "102 successful live combat frames/114 total, exit0/no scale failures; fight heights match standing measurements.",
+    "Canonical body/species/installedmodels unchanged againstmain apart from reference/provenance assets."
+  ],
+  "scope_limits": "69 standing subjects;6 real staged fights with5 unique fighters. Not69 combat subjects, earnedroute, full art, F36#0/#1, F29 or device performance.",
+  "landing_scope": "Existing capture tool exactfile cut@fa69 and existing named-fight capture exactfile cut@bc695; scale/fight evidence only. Exclude all unREADY material/traversal/world/F29 production ancestry."
+}

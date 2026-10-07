@@ -1,0 +1,19 @@
+{
+  "criterion": "F36#2",
+  "source_sha": "fa69cee0b4438023871a1d9dd0f2b7dee47a42d4",
+  "run_id": 37669449150,
+  "reviewer": "/root/judge_stormursa_anatomy",
+  "blind_inputs": "138 standing views across contact sheets1-8;69 installed subjects including Water; full-resolution Pipwing and Sparkit checks",
+  "standing_scale": "PASS bounded: every visible overall silhouette stands taller than the supplied trainer; compact, large and legendary hierarchy readable.",
+  "full_bar": "BLOCK",
+  "defects": [
+    "Stormtrail contact6 F1: nearly black face and torso obscure muzzle, eyes and limb separation.",
+    "Stormbrush contact5 F13: jagged saturated blue forms dominate; eyes poorly resolved.",
+    "Cloudfang contact2 F5: white material loses chest and foreleg shading.",
+    "Abyssal Guardian, Fulgocobra and Voltarach partly hide the trainer, weakening comparative readability."
+  ],
+  "limits": [
+    "Standing stills cannot prove motion clipping, unintended floating, ordinary gameplay or High/Medium lighting.",
+    "Actual fight scale consistency unproved; F36#2 remains open."
+  ]
+}
