@@ -41,6 +41,7 @@ var _missed := false
 var _medium := false
 var _frame_samples: Array[Dictionary] = []
 var _frame_sampler := Callable()
+var _entry: Dictionary = {}
 
 
 func _init() -> void:
@@ -61,6 +62,7 @@ func _run() -> void:
 			return
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
+	current_scene = _world
 	for i in SETTLE_FRAMES: await physics_frame
 	var director := _world.get_node_or_null(^"EncounterDirector")
 	if director != null and director.call("ally_instance") == null:
@@ -99,11 +101,24 @@ func _run() -> void:
 		_last_impact = {"on_enemy": on_enemy, "receipt": receipt, "where": where, "frame": Engine.get_process_frames()})
 	_manager.connect("attack_missed", func(by_player: bool) -> void:
 		if by_player: _missed = true)
-	await _walk_to_the_wild()
-	Input.action_press("interact")
-	await physics_frame
-	await physics_frame
-	Input.action_release("interact")
+	if not await _walk_to_the_wild():
+		_failures.append("ordinary Engage entry preconditions not ready after walk")
+		_finish()
+		return
+	# Match the working combat-camera smoke's physical X delivery across both
+	# input clocks. Action state alone bypasses the ordinary controller event.
+	var down := InputEventJoypadButton.new()
+	down.device = 0
+	down.button_index = JOY_BUTTON_X
+	down.pressed = true
+	Input.parse_input_event(down)
+	await process_frame
+	await process_frame
+	var up := InputEventJoypadButton.new()
+	up.device = 0
+	up.button_index = JOY_BUTTON_X
+	up.pressed = false
+	Input.parse_input_event(up)
 	for i in 45: await physics_frame
 	if not bool(_manager.call("is_fighting")):
 		_failures.append("could not enter combat")
@@ -132,17 +147,34 @@ func _leave_the_farmhouse() -> void:
 	player.velocity = Vector3.ZERO
 
 
-func _walk_to_the_wild() -> void:
+func _walk_to_the_wild() -> bool:
 	var engage_range := float(MATH.config().get("flow", {}).get("engage_range", 6.0))
+	var arbiter := get_first_node_in_group("interaction_arbiter")
+	if arbiter == null: return false
 	for i in 1800:
 		var to := _wild.global_position - _player.global_position
 		to.y = 0.0
-		if to.length() <= engage_range * 0.6: break
+		# A nearby harvest/NPC can win even inside engage range. Walk until the
+		# published provider AND its actual target agree, without forcing either.
+		if to.length() <= engage_range * 0.6 and arbiter.call("winning_provider") == _director \
+				and _director.call("_engageable") == _wild: break
 		_rig.set("yaw", atan2(-to.x, -to.z))
 		Input.action_press("move_forward")
 		await physics_frame
 	Input.action_release("move_forward")
 	for i in 10: await physics_frame
+	var winner := arbiter.call("winning_provider") as Node
+	var candidate := _director.call("_engageable") as Node
+	var owner := preload("res://scripts/ui/input_owner.gd").current(self)
+	var canonical: Dictionary = _director.call("_canonical_wild_start_state", _wild)
+	_entry = {"winner": str(winner.get_path()) if winner != null else "",
+		"target": str(candidate.get_path()) if candidate != null else "",
+		"selected": str(_wild.get_path()), "input_owner": str(owner.get_path()) if owner != null else "",
+		"canonical_enabled": canonical.get("enabled", false), "canonical_ready": canonical.get("ready", false),
+		"distance": _player.global_position.distance_to(_wild.global_position)}
+	print("[f21] entry ", JSON.stringify(_entry))
+	return owner == null and winner == _director and candidate == _wild \
+		and (not bool(canonical.get("enabled", false)) or bool(canonical.get("ready", false)))
 
 
 func _prime_energy() -> void:
@@ -241,6 +273,6 @@ func _finish() -> void:
 		file.store_string(JSON.stringify({"renderer": RenderingServer.get_current_rendering_method(),
 			"preset":GRAPHICS.selected(),"requested_preset":"Medium" if _medium else "unchanged",
 			"resolution":[int(resolution.x),int(resolution.y)],"performance":performance,
-			"shots": _log, "failures": _failures}, "  "))
+			"entry": _entry, "shots": _log, "failures": _failures}, "  "))
 	for failure in _failures: printerr("[f21] FAIL ", failure)
 	quit(1 if not _failures.is_empty() else 0)
