@@ -346,6 +346,28 @@ func _capture_row(row: Dictionary) -> void:
 	var game := root.get_node_or_null(^"Game")
 	var moved := game != null and bool(game.call("debug_teleport_to", at.x, at.y, _biome_id, ""))
 	if not moved:
+		# Read the same production guards after refusal; do not bypass them or
+		# replace the requested stand with a successful neighbouring fixture.
+		var refusal := {"frame_id": str(row.frame_id), "requested_xz": [at.x, at.y],
+			"ground_height": str(_world.call("ground_height_at", at.x, at.y)),
+			"player_floor_max_angle_deg": rad_to_deg(_player.floor_max_angle),
+			"combat_running": bool(game.call("_debug_teleport_combat_running")) if game != null else false,
+			"walkable": bool(game.call("_debug_teleport_walkable", _world, _player, at.x, at.y)) if game != null else false}
+		var camps := _world.get_node_or_null(^"WaterCamps")
+		if camps != null:
+			var camp_samples: Array[Dictionary] = []
+			var built: Dictionary = camps.get("camps")
+			for id: String in built:
+				var camp := built[id] as Node3D
+				if camp != null:
+					var p := camp.global_position
+					camp_samples.append({"id": id, "position": _vec3(p),
+						"walkable": bool(game.call("_debug_teleport_walkable", _world, _player, p.x, p.z))})
+			refusal["authored_camp_samples"] = camp_samples
+		var refusals: Array = _manifest.get("refused_destinations", [])
+		refusals.append(refusal)
+		_manifest["refused_destinations"] = refusals
+		print("CATALOGUE REFUSAL ", JSON.stringify(refusal))
 		_failures.append("%s: Game.debug_teleport_to refused destination" % str(row.frame_id))
 		_write_manifest()
 		return
