@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-10-07T14:04:32.800517+00:00",
- "main_sha": "b3ad69a6f (PR #571)",
+ "generated_at": "2026-10-07T16:12:15.471210+00:00",
+ "main_sha": "cef976bc4 (PR #574)",
  "batch4_sha": "next batch assembling",
  "rows": [
   {
@@ -1111,9 +1111,9 @@
     {
      "text": "Overhead plan and topology test: one straight road, 8–10 houses facing it on both sides, the homestead plot at the road's start beside the Meadows exit, the Crossing Hall at the road's end; road-graph test passes.",
      "status": "met",
-     "evidence": "tests/test_village_redesign_topology.gd (unit)",
+     "evidence": "F17 DONE report: topology units 33/3691 (HUB/f17/f17-0-r1); no house/road/door moved since",
      "gap": "",
-     "note": "Audit 2026-10-04 on b4e4897d5: CURRENT. Asserts straight road, 8–10 houses facing it on both sides, farm door at start and Hall nave at end. Village layout is unchanged since 582b.",
+     "note": "Landed: F17 DONE report: topology units 33/3691 (HUB/f17/f17-0-r1); no house/road/door moved since",
      "audit_index": 0
     },
     {
@@ -1127,9 +1127,9 @@
     {
      "text": "The Hall nave holds the home arch plus 7 portal arches (3 live-capable, 4 sealed and dark but visible), each signed by biome; a Shrine Room holds 8 pedestals; a controller walk reaches every arch and pedestal with no collision snag.",
      "status": "met",
-     "evidence": "tb/reproof-retest: ralph/reports/INTEGRATION/reproof/retest/F17-2.md",
+     "evidence": "PR #530: smoke_crossing_hall_circuit 0 sidesteps (HUB/f17/reproof-r1)",
      "gap": "Re-run smoke_crossing_hall_circuit.gd (all 16 approaches, no snag) and add it to CI.",
-     "note": "Re-proof 2026-10-04: PASS on tb/reproof-retest.",
+     "note": "Landed: PR #530: smoke_crossing_hall_circuit 0 sidesteps (HUB/f17/reproof-r1)",
      "audit_index": 2
     },
     {
@@ -1631,9 +1631,9 @@
     {
      "text": "Every move in data/moves/moves.json maps to an archetype with parameters; a test fails on an unmapped move.",
      "status": "met",
-     "evidence": "tests/test_move_effects.gd::test_every_move_resolves_and_all_24_bodies_impacts_trails_and_cues_exist (unit, CI)",
+     "evidence": "PR #555 merged 2026-10-06: all 94 moves resolve to 24 archetypes (test_move_effects, run 37467907168)",
      "gap": "",
-     "note": "Audit 2026-10-04 on b4e4897d5: CURRENT. Resolves every move's vfx block, asserts 24 archetypes, and asserts an unknown or empty archetype resolves empty. Holds even with the library off.",
+     "note": "Landed: PR #555 merged 2026-10-06: all 94 moves resolve to 24 archetypes (test_move_effects, run 37467907168)",
      "audit_index": 1
     },
     {
@@ -1696,9 +1696,9 @@
     {
      "text": "Low/Medium/High presets control volumetric fog, SSAO, SSIL, glow, shadow quality and draw distance; the setting persists.",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-d 1ac70327dc (READY #572 6038294610, 7:51 AM CT 10-07): smoke_graphics_settings 78 checks PASS run 37623256097; review APPROVE; not yet on main",
+     "evidence": "PR #574 (consolidation 1) merged 2026-10-07 9:54 AM CT: lane D preset controls and persistence, smoke_graphics_settings 78 checks (1ac70327dc)",
      "gap": "Re-run smoke_graphics_settings.gd -- --graphics-proof and the per-preset GPU range check. Consider wiring it into CI.",
-     "note": "Landed: Evidenced on tb/codex-d 1ac70327dc (READY #572 6038294610, 7:51 AM CT 10-07): smoke_graphics_settings 78 checks PASS run 37623256097; review APPROVE; not yet on main",
+     "note": "Landed: PR #574 (consolidation 1) merged 2026-10-07 9:54 AM CT: lane D preset controls and persistence, smoke_graphics_settings 78 checks (1ac70327dc)",
      "audit_index": 1
     },
     {
@@ -1818,9 +1818,9 @@
     {
      "text": "Caps at 10, 20, 30, 40 and 50 (ceiling 60 this pass; data holds up to 100); a capped creature stops gaining levels and shows 'breakthrough needed'.",
      "status": "met",
-     "evidence": "PR #555 (batch 2b) merged 2026-10-06 9:38 AM CT: earned loop with portals on, f20 guest ACK, veridian arrival (renders 4/4 each)",
+     "evidence": "PR #558 (batch 3c) merged 2026-10-06 12:23 PM CT: R5 level caps, feasts, evolution lines and natural witnesses; full CI 61/61",
      "gap": "Unit test for the capped readout text, plus an engine smoke where a capped creature gains no level and shows the message.",
-     "note": "Landed: PR #555 (batch 2b) merged 2026-10-06 9:38 AM CT: earned loop with portals on, f20 guest ACK, veridian arrival (renders 4/4 each)",
+     "note": "Landed: PR #558 (batch 3c) merged 2026-10-06 12:23 PM CT: R5 level caps, feasts, evolution lines and natural witnesses; full CI 61/61",
      "audit_index": 0
     },
     {
@@ -1858,9 +1858,9 @@
     {
      "text": "A ledger proves every feast ingredient is reachable in or before its biome.",
      "status": "met",
-     "evidence": "PR #555 (batch 2b) merged 2026-10-06 9:38 AM CT: earned loop with portals on, f20 guest ACK, veridian arrival (renders 4/4 each)",
+     "evidence": "PR #558 (batch 3c) merged 2026-10-06 12:23 PM CT: R5 level caps, feasts, evolution lines and natural witnesses; full CI 61/61",
      "gap": "Ledger script over feasts.json, harvest/essence node sites and crops per biome order.",
-     "note": "Landed: PR #555 (batch 2b) merged 2026-10-06 9:38 AM CT: earned loop with portals on, f20 guest ACK, veridian arrival (renders 4/4 each)",
+     "note": "Landed: PR #558 (batch 3c) merged 2026-10-06 12:23 PM CT: R5 level caps, feasts, evolution lines and natural witnesses; full CI 61/61",
      "audit_index": 5
     }
    ]
@@ -1883,25 +1883,25 @@
     {
      "text": "Four lines: Mudsnout → Tuskroot or Ashtusk at L20 (heartstone/sunstone as feast ingredient), Mosshell → Cannonback at L30, Craghorn → Stormcapra at L40, Staticub → the new Stormwood storm bear at L50.",
      "status": "met",
-     "evidence": "PR #555 (batch 2b) merged 2026-10-06 9:38 AM CT: earned loop with portals on, f20 guest ACK, veridian arrival (renders 4/4 each)",
+     "evidence": "PR #558 (batch 3c) merged 2026-10-06 12:23 PM CT: R5 level caps, feasts, evolution lines and natural witnesses; full CI 61/61",
      "gap": "Needs F29#3's bear plus provenance gates, then enable the Stormursa line and add a per-line unit test.",
-     "note": "Landed: PR #555 (batch 2b) merged 2026-10-06 9:38 AM CT: earned loop with portals on, f20 guest ACK, veridian arrival (renders 4/4 each)",
+     "note": "Landed: PR #558 (batch 3c) merged 2026-10-06 12:23 PM CT: R5 level caps, feasts, evolution lines and natural witnesses; full CI 61/61",
      "audit_index": 0
     },
     {
      "text": "The breakthrough offers evolve or stay; staying is permanent for that tier.",
      "status": "met",
-     "evidence": "PR #555 (batch 2b) merged 2026-10-06 9:38 AM CT: earned loop with portals on, f20 guest ACK, veridian arrival (renders 4/4 each)",
+     "evidence": "PR #558 (batch 3c) merged 2026-10-06 12:23 PM CT: R5 level caps, feasts, evolution lines and natural witnesses; full CI 61/61",
      "gap": "Unit test of the stay-permanent rule plus an engine smoke of the feast choice UI.",
-     "note": "Landed: PR #555 (batch 2b) merged 2026-10-06 9:38 AM CT: earned loop with portals on, f20 guest ACK, veridian arrival (renders 4/4 each)",
+     "note": "Landed: PR #558 (batch 3c) merged 2026-10-06 12:23 PM CT: R5 level caps, feasts, evolution lines and natural witnesses; full CI 61/61",
      "audit_index": 1
     },
     {
      "text": "Evolution preserves uid, nickname, level, bond history, IVs, traits and mastery.",
      "status": "met",
-     "evidence": "PR #555 (batch 2b) merged 2026-10-06 9:38 AM CT: earned loop with portals on, f20 guest ACK, veridian arrival (renders 4/4 each)",
+     "evidence": "PR #558 (batch 3c) merged 2026-10-06 12:23 PM CT: R5 level caps, feasts, evolution lines and natural witnesses; full CI 61/61",
      "gap": "Unit test on the prepare_feast_choice/feed path asserting every listed identity field, plus a save/reload.",
-     "note": "Landed: PR #555 (batch 2b) merged 2026-10-06 9:38 AM CT: earned loop with portals on, f20 guest ACK, veridian arrival (renders 4/4 each)",
+     "note": "Landed: PR #558 (batch 3c) merged 2026-10-06 12:23 PM CT: R5 level caps, feasts, evolution lines and natural witnesses; full CI 61/61",
      "audit_index": 2
     },
     {
@@ -1915,9 +1915,9 @@
     {
      "text": "Cannonback and Stormcapra remain wild where they already appear; Tuskroot, Ashtusk and the storm bear are not wild.",
      "status": "met",
-     "evidence": "PR #555 (batch 2b) merged 2026-10-06 9:38 AM CT: earned loop with portals on, f20 guest ACK, veridian arrival (renders 4/4 each)",
+     "evidence": "PR #558 (batch 3c) merged 2026-10-06 12:23 PM CT: R5 level caps, feasts, evolution lines and natural witnesses; full CI 61/61",
      "gap": "Unit test over all wild spawn tables: Cannonback and Stormcapra present, Tuskroot, Ashtusk and Stormursa absent.",
-     "note": "Landed: PR #555 (batch 2b) merged 2026-10-06 9:38 AM CT: earned loop with portals on, f20 guest ACK, veridian arrival (renders 4/4 each)",
+     "note": "Landed: PR #558 (batch 3c) merged 2026-10-06 12:23 PM CT: R5 level caps, feasts, evolution lines and natural witnesses; full CI 61/61",
      "audit_index": 4
     }
    ]
@@ -2330,9 +2330,9 @@
     {
      "text": "The nightly Meshy cap (30 generations) is respected and logged with task ids.",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-e 2da1b79491 (READY #572 6038117986, 7:41 AM CT 10-07): Meshy ledger within the 30/night cap; review APPROVE; not yet on main",
+     "evidence": "PR #574 (consolidation 1) merged 2026-10-07 9:54 AM CT: lane E Meshy ledger within the nightly cap (2da1b79491)",
      "gap": "Codex Meshy: run the batch through f36_meshy_guard.py and commit a ledger with the real task IDs.",
-     "note": "Landed: Evidenced on tb/codex-e 2da1b79491 (READY #572 6038117986, 7:41 AM CT 10-07): Meshy ledger within the 30/night cap; review APPROVE; not yet on main",
+     "note": "Landed: PR #574 (consolidation 1) merged 2026-10-07 9:54 AM CT: lane E Meshy ledger within the nightly cap (2da1b79491)",
      "audit_index": 3
     }
    ]
@@ -2883,10 +2883,10 @@
     },
     {
      "text": "No stacked modals; every prompt uses input_owner.",
-     "status": "not_started",
-     "evidence": "scripts/onboarding/lesson_panel.gd (registers OWNER.GROUP); smoke_modal_stacking has no lesson case",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-c 5249eae72d (READY #572 6040343126, 9:40 AM CT 10-07): modal smoke 37636734289 plus 65 affected tests PASS, blinded judge PASS; review APPROVE",
      "gap": "Add a lesson-panel case to smoke_modal_stacking (Altar/Masters lesson during combat/dialogue/menu).",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No CI test exercises the lesson panel. The smoke_opening lesson path is skipped while portals are off.",
+     "note": "Landed: Evidenced on tb/codex-c 5249eae72d (READY #572 6040343126, 9:40 AM CT 10-07): modal smoke 37636734289 plus 65 affected tests PASS, blinded judge PASS; review APPROVE",
      "audit_index": 2
     }
    ]
