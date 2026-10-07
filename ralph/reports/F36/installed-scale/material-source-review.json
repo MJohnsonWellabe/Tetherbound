@@ -1,0 +1,20 @@
+{
+  "source_sha": "7b54b16063849c6df7b3b0f7ccd11305c07dafdf",
+  "criterion": "F36#2",
+  "reviewer": "/root/review_f36_cap",
+  "verdict": "APPROVE",
+  "scope": "Bounded source review only; no visual or criterion closure",
+  "findings": [
+    "Shipping gate explicitly off; missing or malformed blocks preserve original materials.",
+    "Stormtrail uses the existing clamped brightness curve; Stormbrush and Cloudfang adjust emission energy on copied colourway materials with gain clamped to 0..1.",
+    "No geometry, scale, texture replacement, durable or network writes.",
+    "Existing capture preview enables only cached in-memory config and records its use.",
+    "Existing test extension covers gate and resolver fallback; rendered material energy and visual improvement remain unproven."
+  ],
+  "remaining_gates": [
+    "Mapped logic tests",
+    "Matching candidate renders",
+    "Code-blind full-bar before/after judgment",
+    "Real fight scale proof"
+  ]
+}
