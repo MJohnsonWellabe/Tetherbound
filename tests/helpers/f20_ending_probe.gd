@@ -17,7 +17,8 @@ var continuation_content_entered := false
 ## Optional observations on the existing proof; no camera or gameplay writes.
 ## Hosted screenshots stay in the run artifact for independent visual review.
 func capture(tree: SceneTree, label: String, frame_ready: Callable = Callable()) -> bool:
-	if not OS.get_cmdline_user_args().has("--capture-ending") and not OS.get_cmdline_user_args().has("--capture-order-ui"): return true
+	if not OS.get_cmdline_user_args().has("--capture-ending") and not OS.get_cmdline_user_args().has("--capture-order-ui") \
+		and not (OS.get_cmdline_user_args().has("--capture-lessons") and label.begins_with("lesson-")): return true
 	if not check(DisplayServer.get_name() != "headless" and RenderingServer.render_loop_enabled,
 		"ending capture requires an actual drawing display"): return false
 	var drawn: Array[bool] = [false]
@@ -120,6 +121,70 @@ func order_ui(tree: SceneTree, game: Node) -> bool:
 			"grounded":player.is_on_floor(),"unstick_unchanged":true,"entered_or_unlocked":false}))
 		if not await capture(tree, "order-sign-" + ids[index]): return false
 	return check(travel.failures.is_empty(), "order UI observations retain the real navigation and Home Key guards")
+
+## The existing fixture already opened these personal arches. Enter them by
+## their real provider; do not weaken the earned helper's still-locked key check.
+func order_journals(tree: SceneTree, game: Node) -> bool:
+	if not check(OS.get_cmdline_user_args().has("--capture-order-ui"), "journal extension requires actual frame captures"): return false
+	if not await return_home(tree, game): return false
+	var travel := TRAVEL.new(tree, game)
+	var character_id := str(game.local.character_id)
+	var original_uids: Array[String] = travel._uids()
+	if not check(not character_id.is_empty() and original_uids.size() == 5 and not original_uids.has(""),
+		"journal extension retains the fixture's actual stable character and five companions"): return false
+	var expected: Array[String] = ["meadows", "water", "cloudreach", "stormwood"]
+	var destinations := [["tidewake", "water", "Chapter 2 · Tidewake"],
+		["cloudreach", "cloudreach", "Chapter 3 · Cloudreach Cliffs"],
+		["stormwood", "stormwood", "Chapter 4 · The Stormwood"]]
+	for index in destinations.size():
+		var arch_id := str(destinations[index][0])
+		var realm := str(destinations[index][1])
+		var heading := str(destinations[index][2])
+		var view: Dictionary = game.call("portal_view", arch_id)
+		var arch: Node3D
+		for candidate: Node in tree.get_nodes_in_group("portal_arches"):
+			if candidate.get("arch_id") == arch_id: arch = candidate as Node3D
+		if not check(str(game.current_realm) == "meadows" and arch != null \
+			and view.get("ready") == true and view.get("character_open") == true \
+			and str(game.local.character_id) == character_id and travel._uids() == original_uids,
+			"journal route retains its character and actual already-open arch " + arch_id): return false
+		var prompt := arch.get_node_or_null("Interactable") as Node3D
+		if not check(prompt != null, "already-open journal destination has its actual provider"): return false
+		if not await travel.activate(prompt): failures.append_array(travel.failures); return false
+		var arrived := false
+		for frame in 7200:
+			await tree.process_frame
+			if travel._ready_world(realm): arrived = true; break
+		if not check(arrived and str(game.local.character_id) == character_id and travel._uids() == original_uids,
+			"ordinary portal Enter reaches the ready journal realm with the same five: " + realm): return false
+		await travel.tap("inventory")
+		var menu: Node = game.call("menu")
+		if not check(menu != null and menu.call("is_open") and INPUT_OWNER.current(tree) == menu,
+			"ordinary inventory input opens the actual destination menu"): return false
+		for step in 12:
+			if menu.call("current_tab_id") == "quest_log": break
+			await travel.tap("menu_tab_right")
+		if not check(menu.call("current_tab_id") == "quest_log", "ordinary tabs reach the destination quest log"): return false
+		var body: Node = menu.get("_bodies")[int(menu.get("_index"))]
+		var heading_label: Label
+		for label: Node in body.find_children("*", "Label", true, false):
+			if (label as Label).is_visible_in_tree() and (label as Label).text == heading: heading_label = label as Label
+		var journal_visible := func() -> bool:
+			return is_instance_valid(menu) and menu.call("is_open") and INPUT_OWNER.current(tree) == menu \
+				and menu.call("current_tab_id") == "quest_log" and is_instance_valid(body) \
+				and body.get("_log").call("chapter_order") == expected and body.get("_log").call("chapter_heading") == heading \
+				and is_instance_valid(heading_label) and heading_label.is_visible_in_tree() and heading_label.text == heading \
+				and str(game.current_realm) == realm and str(game.local.character_id) == character_id and travel._uids() == original_uids
+		if not check(journal_visible.call() == true, "actual destination journal displays " + heading): return false
+		if not await capture(tree, "order-journal-" + realm, journal_visible): return false
+		if not check(journal_visible.call() == true, "destination journal identity and heading survive the completed capture"): return false
+		print("F19 ORDER JOURNAL " + JSON.stringify({"realm": realm, "order": expected, "visible_heading": heading,
+			"character_id": character_id, "party_uids": original_uids, "fixture_unlocks": true, "earned_campaign": false}))
+		await travel.tap("menu_cancel")
+		if not check(not menu.call("is_open") and INPUT_OWNER.current(tree) == null, "journal cancel returns ordinary world input"): return false
+		if index < destinations.size() - 1:
+			if not await travel.home_key(): failures.append_array(travel.failures); return false
+	return check(travel.failures.is_empty(), "three destination journals retain ordinary portal and Home Key guards")
 
 func fixture(game: Node, label: String) -> bool:
 	game.call("reset_for_new_game")

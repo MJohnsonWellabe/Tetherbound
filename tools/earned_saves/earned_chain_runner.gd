@@ -104,8 +104,8 @@ func _run() -> void:
 			functional_offload = true
 		elif arg == "--observe-next-goal":
 			observe_next_goal = true
-		elif arg == "--lesson-controller-witness":
-			pass  # The existing F20 reader consumes this opt-in when a real lesson opens.
+		elif arg in ["--lesson-controller-witness", "--capture-lessons"] or arg.begins_with("--lesson-skip-line"):
+			pass  # Validated below; only the existing reader can witness an actual lesson.
 		elif arg.begins_with("--handoff-from="):
 			if not handoff_from.is_empty() or arg == "--handoff-from=":
 				failures.append("Supply one nonempty --handoff-from")
@@ -119,6 +119,8 @@ func _run() -> void:
 				compatibility_paths.append(path)
 		else:
 			failures.append("Unknown earned-piece option: " + arg)
+	var lesson_options := TRAVEL.lesson_witness_options()
+	failures.append_array(lesson_options.failures)
 	if not SEGMENTS.has(segment) or save_dir.is_empty() or receipt_path.is_empty():
 		failures.append("usage: --segment=<%s> --save-dir=<dir> --receipt=<json>" % "|".join(SEGMENTS))
 		_finish()

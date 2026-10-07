@@ -10,6 +10,37 @@ var _lesson_generation := 0
 var before_interact: Callable
 var trace_input := false
 var _lesson_controller_input := false
+var _lesson_capture_probe: RefCounted
+
+static func lesson_witness_options() -> Dictionary:
+	var options := {"controller": false, "capture": false, "skip_line": 0, "failures": []}
+	var seen := {}
+	for arg: String in OS.get_cmdline_user_args():
+		var key := ""
+		if arg.begins_with("--lesson-controller-witness"):
+			key = "controller"
+			if arg != "--lesson-controller-witness": options.failures.append("Use --lesson-controller-witness without a value")
+			options.controller = true
+		elif arg.begins_with("--capture-lessons"):
+			key = "capture"
+			if arg != "--capture-lessons": options.failures.append("Use --capture-lessons without a value")
+			options.capture = true
+		elif arg.begins_with("--lesson-skip-line"):
+			key = "skip_line"
+			var value := arg.trim_prefix("--lesson-skip-line=")
+			if not arg.begins_with("--lesson-skip-line=") or not value.is_valid_int() \
+				or int(value) < 0 or str(int(value)) != value:
+				options.failures.append("--lesson-skip-line requires one nonnegative zero-based integer")
+			else:
+				options.skip_line = int(value)
+		if not key.is_empty():
+			if seen.has(key): options.failures.append("Duplicate lesson option: " + key)
+			seen[key] = true
+	if seen.has("skip_line") and not options.controller:
+		options.failures.append("--lesson-skip-line requires --lesson-controller-witness")
+	if options.capture and OS.get_cmdline_user_args().has("--functional-offload"):
+		options.failures.append("--capture-lessons requires drawing and cannot use --functional-offload")
+	return options
 
 func _portal_result(result: Dictionary) -> void:
 	super._portal_result(result)
@@ -28,6 +59,10 @@ func activate(prompt: Node3D) -> bool:
 
 func _with_navigation_lessons(navigate: Callable) -> bool:
 	if _lesson_active or _lesson_busy: return _fail("F20 navigation re-entered its active lesson reader")
+	var options := lesson_witness_options()
+	if not options.failures.is_empty():
+		failures.append_array(options.failures)
+		return false
 	var failures_before := failures.size()
 	_lesson_generation += 1
 	_lesson_active = true
@@ -168,8 +203,12 @@ func _continue_navigation_lesson(generation: int) -> void:
 	if not _lesson_active or generation != _lesson_generation or _lesson_busy: return
 	var owner := INPUT_OWNER.current(tree)
 	if owner == null or owner.get_script() != LESSON_PANEL or not owner.call("is_open"): return
+	var options := lesson_witness_options()
+	if not options.failures.is_empty():
+		failures.append_array(options.failures)
+		return
 	_lesson_busy = true
-	var row: Dictionary = owner.get("_row")
+	var row: Dictionary = (owner.get("_row") as Dictionary).duplicate(true)
 	var id := str(row.get("id", ""))
 	var character_id := str(game.local.character_id)
 	var began := Time.get_ticks_msec()
@@ -177,12 +216,29 @@ func _continue_navigation_lesson(generation: int) -> void:
 	var start_line := int(owner.get("_line"))
 	var presses := 0
 	var input_ok := not id.is_empty() and start_line >= 0 and start_line < line_count
-	var controller_witness := OS.get_cmdline_user_args().has("--lesson-controller-witness")
-	var action := "menu_cancel" if controller_witness else "menu_confirm"
+	var controller_witness: bool = options.controller
+	var capture_lessons: bool = options.capture
+	var observing := controller_witness or capture_lessons
+	var skip_line: int = options.skip_line
+	if controller_witness and (skip_line < start_line or skip_line >= line_count):
+		_fail("Requested lesson skip line %d is outside actual %s lines %d..%d" % [skip_line, id, start_line, line_count - 1])
+		_lesson_busy = false
+		return
+	if capture_lessons and _lesson_capture_probe == null:
+		# Runtime load only: the existing probe preloads this travel helper.
+		var capture_script := load("res://tests/helpers/f20_ending_probe.gd") as GDScript
+		if capture_script == null:
+			_fail("Existing F20 completed-frame capture could not load")
+			_lesson_busy = false
+			return
+		_lesson_capture_probe = capture_script.new()
+	var action := "menu_confirm"
+	var skip_presses := 0
+	var observed_lines: Array[Dictionary] = []
 	var witness := {}
-	if controller_witness:
+	var service := game.get_node_or_null(^"OnboardingLessons")
+	if observing:
 		var label := owner.get("_text") as Label
-		var service := game.get_node_or_null(^"OnboardingLessons")
 		witness = {"lesson": id, "character_id": character_id, "party_uids": _uids(),
 			"conversation": row.get("conversation", ""), "speaker": row.get("speaker", ""),
 			"line": start_line, "authored_lines": line_count,
@@ -208,13 +264,44 @@ func _continue_navigation_lesson(generation: int) -> void:
 			input_ok = false
 			break
 		var before_line := int(owner.get("_line"))
+		if observing:
+			if before_line != start_line + presses or before_line < 0 or before_line >= line_count:
+				input_ok = false
+				break
+			var expected_text := str(row.lines[before_line]) + "\n\nNext: " + str(row.get("goal", ""))
+			var line_matches := func() -> bool:
+				if not is_instance_valid(owner) or not is_instance_valid(service) or INPUT_OWNER.current(tree) != owner \
+					or service.get("_panel") != owner or service.get("_replaying") != false \
+					or not owner.call("is_open") or owner.get("_row") != row or owner.get("_line") != before_line \
+					or str(game.local.character_id) != character_id or _uids() != witness.party_uids:
+					return false
+				var label := owner.get("_text") as Label
+				return is_instance_valid(label) and label.is_visible_in_tree() and label.text == expected_text
+			input_ok = line_matches.call() == true
+			if not input_ok: break
+			var capture_label := "lesson-%s-reader-%d-generation-%d-line-%02d" % [id, get_instance_id(), generation, before_line]
+			if capture_lessons:
+				if not await _lesson_capture_probe.capture(tree, capture_label, line_matches):
+					failures.append_array(_lesson_capture_probe.failures)
+					input_ok = false
+					break
+				input_ok = line_matches.call() == true
+				if not input_ok: break
+			observed_lines.append({"line": before_line, "text": owner.get("_text").text,
+				"capture_label": capture_label if capture_lessons else "", "captured": capture_lessons})
 		print("F20 LESSON rendered ", owner.get("_text").text)
+		action = "menu_cancel" if controller_witness and before_line == skip_line else "menu_confirm"
 		_lesson_controller_input = controller_witness
 		await tap(action)
 		_lesson_controller_input = false
 		presses += 1
-		input_ok = dismissed == [id] or (not controller_witness and is_instance_valid(owner) and owner.call("is_open") \
+		if action == "menu_cancel": skip_presses += 1
+		input_ok = (dismissed == [id] and (not controller_witness or action == "menu_cancel")) \
+			or (action == "menu_confirm" and is_instance_valid(owner) and owner.call("is_open") \
 			and str(owner.get("_row").get("id", "")) == id and int(owner.get("_line")) == before_line + 1)
+		if observing:
+			input_ok = input_ok and not Input.is_action_pressed(action) and _uids() == witness.party_uids \
+				and str(game.local.character_id) == character_id
 	var released := not Input.is_action_pressed(action)
 	if is_instance_valid(owner): owner.disconnect("dismissed", dismissal_observer)
 	var receipt_began := Time.get_ticks_msec()
@@ -228,16 +315,20 @@ func _continue_navigation_lesson(generation: int) -> void:
 		and str(owner.get("_row").get("id", "")) == id
 	var completed := input_ok and released and is_instance_valid(owner) and not original_open \
 		and dismissed == [id] and acknowledged
-	if controller_witness:
-		completed = completed and presses == 1 and _uids() == witness.party_uids \
+	if observing:
+		completed = completed and _uids() == witness.party_uids \
 			and str(game.local.character_id) == character_id \
-			and not Input.is_action_pressed("menu_confirm") and not Input.is_action_pressed("ui_accept")
-		witness.merge({"action": action, "presses": presses, "dismissed": dismissed,
+			and not Input.is_action_pressed("menu_cancel") and not Input.is_action_pressed("menu_confirm") and not Input.is_action_pressed("ui_accept")
+		if controller_witness:
+			completed = completed and skip_presses == 1 and presses == skip_line - start_line + 1
+		witness.merge({"action": action, "presses": presses, "skip_presses": skip_presses,
+			"requested_skip_line": skip_line if controller_witness else null, "observed_lines": observed_lines,
+			"controller_input": controller_witness, "dismissed": dismissed,
 			"ack_after": acknowledged, "released": released, "original_open": original_open,
 			"party_uids_after": _uids(), "passed": completed,
 			"render_loop_enabled": RenderingServer.render_loop_enabled,
-			"scope": "Observed-line skip attempt only; replay, other lines and full F46 remain unproven"})
-		print("F46 LESSON CONTROLLER WITNESS " + JSON.stringify(witness))
+			"scope": "Observed lesson lines only; replay, unvisited lines and full F46 remain unproven"})
+		print(("F46 LESSON CONTROLLER WITNESS " if controller_witness else "F46 LESSON OBSERVATION ") + JSON.stringify(witness))
 	print("F20 LESSON result id=", id, " reader=", get_instance_id(), " generation=", generation,
 		" completed=", completed, " elapsed_ms=", Time.get_ticks_msec() - began,
 		" receipt_ms=", Time.get_ticks_msec() - receipt_began, " authored_lines=", line_count,
@@ -359,13 +450,13 @@ func tap(action: String) -> void:
 			_fail("F20 ordinary camera preparation failed before interaction")
 			return
 	var pad: InputEventJoypadButton = null
-	if _lesson_controller_input and action == "menu_cancel":
+	if _lesson_controller_input and action in ["menu_cancel", "menu_confirm"]:
 		for binding: InputEvent in InputMap.action_get_events(action):
 			if binding is InputEventJoypadButton:
 				pad = binding.duplicate() as InputEventJoypadButton
 				break
 		if pad == null:
-			_fail("F46 lesson Skip has no actual joypad button binding")
+			_fail("F46 lesson action has no actual joypad button binding: " + action)
 			return
 	for pressed: bool in [true, false]:
 		if trace_input: _trace_clock(action, pressed, "before input")
