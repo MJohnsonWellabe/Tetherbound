@@ -1,5 +1,5 @@
 {
-  "criteria": "F39#0–#5 OPEN",
+  "criteria": "F39#0\u2013#5 OPEN",
   "reviewer": "/root/f39_visual_review",
   "mode": "Scoped independent source review; no engine or visual acceptance claim",
   "verdict": "APPROVE",
@@ -50,7 +50,7 @@
     },
     {
       "commit": "ea9e8202097859b468f1f118188043219cf9567a",
-      "scope": "Actual waterfall near fade1.5–8m; distant density, opacity bounds, gates, collision and progression unchanged. Same F39 reviewer APPROVE; actual near day/night and distant capture pending."
+      "scope": "Actual waterfall near fade1.5\u20138m; distant density, opacity bounds, gates, collision and progression unchanged. Same F39 reviewer APPROVE; actual near day/night and distant capture pending."
     },
     {
       "commit": "fef9a280ca1f17892af2e413e9df5b016af8ee77",
@@ -72,5 +72,14 @@
   "existing_candidate_consumers": "APPROVE: capture override changes allowlisted local falls/current shader uniforms only. Physical inputs and restoration flags unchanged; production candidate flags OFF.",
   "validation": "Affected village/water production logic has passing54-file coverage on75864a6c across37647732624 (53files pass; sparse ledger inputs caused one failure) and37649172962 (exact failed ledger2tests28assertions PASS). See F38/lane-d/affected-logic.json. Corrected full240 Low capture, before/after code-blind BarsA/B PASS, area smoke, motion and full matrix remain required.",
   "baseline_visual_verdict": "Low pilot Bars A/B BLOCK; baseline is not READY",
-  "shipping_flags": "none flipped"
+  "shipping_flags": "none flipped",
+  "criterion_scoped_final": {
+    "criterion": "F39#4",
+    "reviewer": "/root/f39_visual_review",
+    "verdict": "APPROVE",
+    "owner_directive": "572#6045342186",
+    "landing_scope": "263ccc50 curtain script/shader; ea9e8202 waterfall config plus prerequisite10440c5d ground_feather2to8 config hunk ONLY; exclude104 F42 evidence. Approved explicit-stand/floor/receipt guards may accompany existing capture-tool paths. Exclude weather install/UI/pumps/bluffs/other flags.",
+    "proofs": "37677560955 distance6/6,37662801275 near20,37662277200 logic148/1909/0,37671873221 area97/0",
+    "excluded": "Other source/flags, full matrix/weather/earned/co-op/full bars"
+  }
 }
