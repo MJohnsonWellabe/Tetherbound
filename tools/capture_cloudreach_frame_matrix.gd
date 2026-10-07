@@ -783,9 +783,19 @@ func _finish(written: int) -> void:
 		print(line)
 	var summary := "frame matrix: %d frames written, %d rows skipped" % [written, _skips.size()]
 	_manifest_line("# " + summary)
+	var receipt_ok := _manifest != null
 	if _manifest != null:
+		_manifest.flush()
+		receipt_ok = _manifest.get_error() == OK
 		_manifest.close()
-	quit(0 if written > 0 and (_graphics_capture.is_empty() or _skips.is_empty()) else 1)
+	var path := OUT + ("/motion/manifest.txt" if _motion else "/manifest.txt")
+	var receipt := FileAccess.get_file_as_string(path) if receipt_ok else ""
+	receipt_ok = receipt_ok and receipt.contains("# " + summary)
+	if not _graphics_capture.is_empty():
+		receipt_ok = receipt_ok and receipt.contains("# graphics_capture " + JSON.stringify(_graphics_capture))
+	if not receipt_ok:
+		push_error("frame matrix: final receipt open/write/flush/readback failed")
+	quit(0 if written > 0 and receipt_ok and (_graphics_capture.is_empty() or _skips.is_empty()) else 1)
 
 
 ## --- motion witness -------------------------------------------------------------------
