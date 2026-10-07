@@ -450,7 +450,19 @@ func _run() -> void:
 	for _grant_poll in range(0, 2 * SETTLE_FRAMES, GRANT_POLL_FRAMES):
 		await step(1, "wait", {"frames": GRANT_POLL_FRAMES})
 		var grant_poll: Variant = await probe(1, "catch")
+		var grant_host_accepted := false
+		if grant_poll is Dictionary:
+			for raw: Variant in grant_poll.get("reward_deliveries", {}).values():
+				if not raw is Dictionary or raw.get("kind") != "creature_training" or raw.get("status") != "accepted" \
+					or raw.get("character_id") != guest_before_positive.get("character_id"): continue
+				var mirror: Dictionary = raw.get("after", {}).get("redesign_character", {}).get("creatures", {}).get(grant_uid, {})
+				var matches := not mirror.is_empty()
+				for field: String in ["traits_initialized", "rolled_traits", "taught_traits", "captured_from"]:
+					if mirror.get(field) != grant_traits.get(field): matches = false
+				if matches and raw.get("after", {}).get("redesign_character", {}).get("transaction_receipts", []).count(grant_receipt) == 1:
+					grant_host_accepted = true
 		if grant_poll is Dictionary \
+				and grant_host_accepted \
 				and int((grant_poll as Dictionary).get("party_size", -1)) > int(guest_before_positive.get("party_size", -1)) \
 				and (grant_poll as Dictionary).get("live_owned_traits", {}).has(grant_uid) \
 				and (grant_poll as Dictionary).get("canonical_owned_traits", {}).has(grant_uid) \
