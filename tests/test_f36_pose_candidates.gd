@@ -3,6 +3,7 @@ extends "res://tests/test_case.gd"
 ## Queue with ROOT. These test candidate wiring/restoration, not visual PASS.
 const BODY := preload("res://scripts/creatures/creature_body.gd")
 const SCENE := preload("res://scenes/creatures/creature.tscn")
+const POSES := preload("res://scripts/creatures/creature_pose_candidates.gd")
 
 
 func test_candidate_library_and_ordinary_body_on_initialized_scene_tree() -> void:
@@ -20,7 +21,7 @@ func test_candidate_library_and_ordinary_body_on_initialized_scene_tree() -> voi
 			var parsed: Variant = JSON.parse_string(line.trim_prefix("F36_POSE_RESULT="))
 			if parsed is Dictionary: result = parsed
 	assert_eq(code, 0, log_text)
-	assert_eq(result.get("assertions"), 15.0, log_text)
+	assert_eq(result.get("assertions"), 16.0, log_text)
 	assert_eq(result.get("failures"), [], log_text)
 	for marker: String in ["SCRIPT ERROR", "ERROR:", "Parse Error", "resources still in use", "instances were leaked"]:
 		assert_false(log_text.contains(marker), log_text)
@@ -52,6 +53,10 @@ func _case_preview_library_preserves_installed_clips_and_revive_pivot() -> void:
 	body.call("play_faint")
 	player.seek(1.2, true)
 	assert_true(not pivot.transform.is_equal_approx(before), "collapse changes only visual pivot")
+	var skeleton := pivot.find_children("*", "Skeleton3D", true, false)[0] as Skeleton3D
+	skeleton.force_update_all_bone_transforms()
+	assert_almost_eq(POSES._posed_lowest_y(pivot, skeleton, pivot.basis) + pivot.position.y,
+		0.0, 0.015, "collapsed posed skin reaches ground without scaling the installed body")
 	body.call("revive_animation")
 	assert_true(pivot.transform.is_equal_approx(before), "revive restores the pre-collapse pivot")
 	body.call("set_traversal_pose", "swim")

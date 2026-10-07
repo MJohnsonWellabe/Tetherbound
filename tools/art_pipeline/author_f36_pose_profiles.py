@@ -32,7 +32,9 @@ def rotation(bone, role, phase, winged, biped):
         elif bone == 'head':
             angle = 12
         if 'wing' in bone:
-            return [0, 0, opposite * (52 if 'upper' in bone else -34) * envelope]
+            # The installed folded wing is the stable collapse shape. Opening
+            # it while rolling made the bird balance on an upright wing tip.
+            return [0, 0, 0]
         return [angle * envelope, 0, 0]
     if role == 'swim':
         if 'tail' in bone:
@@ -92,7 +94,7 @@ def main():
             for sample in range(9):
                 phase = sample / 8
                 frames.append({'phase': phase, 'bones': {bone: rotation(bone, role, phase, winged, biped) for bone in bones},
-                               'pivot_roll_deg': 82 * min(1, phase / .7) if role == 'faint' else 0})
+                               'pivot_roll_deg': 90 * min(1, phase / .7) if role == 'faint' else 0})
             roles[role] = {'duration_s': {'hit': .24, 'faint': 1.2, 'swim': 1.15, 'fly_grip': .9, 'ride': .8}[role],
                            'loop': role in ('swim', 'fly_grip', 'ride'), 'frames': frames}
         profile = f'{family}_{len(profiles) + 1}'
