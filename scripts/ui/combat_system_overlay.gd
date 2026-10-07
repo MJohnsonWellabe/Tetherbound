@@ -111,6 +111,7 @@ func refresh(expected_uid: String, using_pad: bool) -> bool:
 	_ring.set("arm_fraction", clampf(float(raw.get("arm_fraction", 0)), 0, 1))
 	_ring.queue_redraw()
 	_meter_caption.text = "Ultimate · %d%%\n%s" % [int(clampf(meter / maximum, 0, 1) * 100),
+		"Ultimate unavailable" if raw.get("ultimate_available", true) != true else \
 		"Choose X / Y / B" if raw.get("ultimate_armed") == true else "Ready · Tap RB" if meter >= maximum else "Build with landed hits"]
 	_commands.call("present", raw.commands, using_pad)
 	for slot: String in _cells:

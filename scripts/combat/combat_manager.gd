@@ -219,6 +219,7 @@ var _arena_centre: Vector3 = Vector3.ZERO
 
 var _action: Action = Action.READY
 var _action_timer: float = 0.0
+var _accepted_strike_not_before_ms: int = 0
 var _pending_move: Dictionary = {}
 var _quick_cooldown: float = 0.0
 var _charged_cooldown: float = 0.0
@@ -243,6 +244,7 @@ var _party_ultimate: Dictionary = {}
 ## the host's value when a hit carried one, else the owner's own record.
 var _party_hp_scale: Dictionary = {}
 var _party_utility_cooldown: Dictionary = {}
+var _party_action_resources: Dictionary = {}
 var _ultimate_waiting_release := false
 var _ultimate_armed_left := 0.0
 var _ultimate_face_release := false
@@ -334,6 +336,8 @@ var _rng := RandomNumberGenerator.new()
 ## because a bar that un-drops is worse than a bar that lags.
 var _encounter_link: Node = null
 var _encounter_id: String = ""
+var _tether_command_view: Dictionary = {}
+signal tether_command_refused(reason: String)
 var _ordinary_reward_owned_id: String = ""
 var _realm_owned_opponent := false
 
@@ -394,6 +398,202 @@ func _ready() -> void:
 	# After a release the aim camera is kept deliberately — watching your own
 	# throw arc away is the shot — and the strike or miss decides what's next.
 	_throw.connect("aim_exited", _on_aim_exited)
+	if preload("res://scripts/combat/tether_commands.gd").enabled():
+		var commands := preload("res://scripts/ui/tether_command_input.gd").new()
+		commands.configure(tether_command_snapshot, submit_tether_command)
+		add_child(commands)
+
+
+func tether_command_snapshot() -> Dictionary:
+	var snapshot := _tether_command_view.duplicate(true)
+	snapshot["active"] = state == State.ACTIVE and combat_input_available() and not is_aiming() and not is_resolving_catch()
+	snapshot["input_context"] = "combat"
+	snapshot["encounter_id"] = _encounter_id
+	snapshot["wild_target"] = _encounter_kind == "wild"
+	snapshot["unlocked_commands"] = ["rally", "snare"]
+	if snapshot.get("item_consumer_ready") == true and is_instance_valid(_encounter_link) \
+		and _encounter_link.has_method("tether_item_command_available") \
+		and _encounter_link.call("tether_item_command_available", _encounter_id) == true:
+		snapshot.unlocked_commands.append("item_throw")
+	var deployment: Dictionary = _encounter_link.call("tether_command_deployment") if is_instance_valid(_encounter_link) \
+		and _encounter_link.has_method("tether_command_deployment") else {}
+	snapshot["generation"] = int(deployment.get("generation", 0))
+	if int(snapshot.generation) < 1 or snapshot.has("pending_request"): snapshot.active = false
+	return snapshot
+
+
+## Read-only F42 view over the same acknowledged local pools used by combat.
+## Refuse an old creature's view while a switch/deployment is being admitted.
+func new_system_combat_snapshot() -> Dictionary:
+	var hidden := {"active":false}
+	if not preload("res://scripts/combat/tether_commands.gd").enabled("ui_enabled") \
+		or state != State.ACTIVE or not combat_input_available() or is_aiming() or is_resolving_catch(): return hidden
+	var creature := active_creature()
+	if creature == null or _moves == null or not is_instance_valid(_encounter_link) \
+		or not _encounter_link.has_method("tether_command_deployment"): return hidden
+	var uid := str(creature.uid)
+	var deployment: Dictionary = _encounter_link.call("tether_command_deployment")
+	var commands := tether_command_snapshot()
+	if deployment.get("creature_uid") != uid or int(deployment.get("generation", 0)) < 1 \
+		or commands.get("character_id") != deployment.get("character_id") \
+		or _tether_command_view.get("encounter_id") != _encounter_id or not _party_ultimate.has(uid): return hidden
+	var glyphs := preload("res://scripts/ui/input_glyph.gd")
+	var slots := {}
+	for slot: String in ["quick", "charged", "utility"]:
+		var move_id := str(creature.get("move_" + slot))
+		var move: Dictionary = _moves.move(move_id)
+		var remaining := utility_cooldown() if slot == "utility" else (_quick_cooldown if slot == "quick" else _charged_cooldown)
+		slots[slot] = {"glyph":glyphs.action_name("combat_" + slot),
+			"name":_moves.display_name(move_id) if _moves.has(move_id) else "No " + slot,
+			"ready":quick_ready() if slot == "quick" else (charged_ready() if slot == "charged" else utility_ready()),
+			"cooldown_remaining_s":maxf(0.0, remaining), "cooldown_total_s":float(move.get("cooldown", 0.0))}
+	slots["dodge"] = {"glyph":glyphs.action_name("jump"), "name":"Dodge",
+		"ready":not player_is_committed() and wind_value() >= wind_cost("burst")}
+	var maximum := float(MATH.config().ultimate.maximum)
+	return {"active":true, "input_context":"combat", "creature_uid":uid,
+		"ultimate_meter":clampf(float(_party_ultimate[uid]), 0.0, maximum), "ultimate_maximum":maximum,
+		"ultimate_available":live_move_supported("ultimate", str(creature.get("move_ultimate"))),
+		"ultimate_armed":ultimate_armed(), "arm_fraction":clampf(_ultimate_armed_left / maxf(0.01,
+			float(MATH.config().ultimate.arm_window_s)), 0.0, 1.0), "commands":commands, "slots":slots}
+
+
+
+func submit_tether_command(request: Dictionary) -> bool:
+	if not preload("res://scripts/combat/tether_commands.gd").enabled() or not is_instance_valid(_encounter_link): return false
+	if request.get("command_id") in ["item_throw", "tag_combo"]:
+		if _tether_command_view.has("pending_request") and _tether_command_view.pending_request != request: return false
+		_tether_command_view["pending_request"] = request.duplicate(true)
+	var verdict: Dictionary = _encounter_link.call("submit_encounter_intent", {"kind": "tether_command", "encounter_id": _encounter_id, "request": request})
+	if verdict.get("pending") != true:
+		if verdict.get("ok") != true and _tether_command_view.get("pending_request") == request:
+			_tether_command_view.erase("pending_request")
+		apply_tether_command_verdict(verdict)
+	return true
+
+
+func apply_tether_command_verdict(verdict: Dictionary) -> void:
+	if verdict.get("encounter_id") != _encounter_id: return
+	var deployment: Dictionary = _encounter_link.call("tether_command_deployment") if is_instance_valid(_encounter_link) else {}
+	var effect: Dictionary = verdict.get("delta", {}).get("effect", {})
+	var tag: bool = verdict.get("ok") == true and effect.get("kind") == "tag_combo"
+	if not tag and verdict.has("command_generation") and int(verdict.command_generation) != int(deployment.get("generation", 0)): return
+	if verdict.get("pending") == true: return
+	if verdict.get("ok") != true:
+		if _tether_command_view.has("pending_request") and verdict.get("command_request") == _tether_command_view.pending_request:
+			_tether_command_view.erase("pending_request")
+		tether_command_refused.emit(str(verdict.get("reason", "Command unavailable.")))
+		return
+	var next: Dictionary = verdict.get("delta", {}).get("tether_commands", {})
+	if next.get("encounter_id") != _encounter_id or next.get("character_id") != deployment.get("character_id"): return
+	if tag:
+		var commands := preload("res://scripts/combat/tether_commands.gd")
+		if state != State.ACTIVE or _enemy == null or str(_enemy.get("uid")) != str(effect.get("target_uid", "")): return
+		var request: Dictionary = verdict.get("command_request", {})
+		var receipt: Dictionary = next.get("last_receipt", {})
+		var strikes: Array = effect.get("strikes", [])
+		var creature := active_creature()
+		var incoming := str(verdict.get("delta", {}).get("switched_to_uid", ""))
+		if not commands.enabled() or not commands.valid_intent(request) or request.command_id != "tag_combo" \
+			or _tether_command_view.get("pending_request") != request or creature == null \
+			or int(next.get("revision", -1)) < int(_tether_command_view.get("revision", 0)) \
+			or effect.get("encounter_id") != _encounter_id or effect.get("character_id") != deployment.get("character_id") \
+			or verdict.get("command_generation") != request.generation or receipt.get("command_committed") != true \
+			or receipt.get("command_id") != "tag_combo" or receipt.get("character_id") != deployment.get("character_id") \
+			or receipt.get("encounter_id") != _encounter_id or receipt.get("generation") != request.generation \
+			or receipt.get("sequence") != request.sequence or strikes.size() != 2: return
+		var parent := "command:%s:%s:%d:%d" % [_encounter_id, deployment.character_id, request.generation, request.sequence]
+		var outgoing := str(receipt.get("attacker_uid", ""))
+		if receipt.get("action_id") != parent or incoming.is_empty() or incoming == outgoing: return
+		for index in 2:
+			var strike: Variant = strikes[index]
+			var uid := outgoing if index == 0 else incoming
+			var part := "outgoing" if index == 0 else "incoming"
+			var generation := int(request.generation) + index
+			if not strike is Dictionary or strike.get("parent_action_id") != parent or strike.get("part") != part \
+				or strike.get("attacker_uid") != uid or strike.get("character_id") != deployment.character_id \
+				or strike.get("generation") != generation or strike.get("source_kind") != "creature" \
+				or strike.get("target_uid") != effect.get("target_uid") \
+				or strike.get("target_generation") != effect.get("target_generation") \
+				or strike.get("slot") != "quick" \
+				or strike.get("action_id") != JSON.stringify([parent, part, uid, generation]).sha256_text(): return
+			for key: String in ["target_hp_before", "target_hp_after", "actual_hp_debit"]:
+				var value: Variant = strike.get(key)
+				if not (value is int or value is float) or not is_finite(float(value)) or float(value) < 0.0: return
+			if float(strike.target_hp_after) > float(strike.target_hp_before) \
+				or not is_equal_approx(float(strike.actual_hp_debit), float(strike.target_hp_before) - float(strike.target_hp_after)): return
+			var impact: Dictionary = strike.get("impact", {})
+			if float(strike.actual_hp_debit) == 0.0:
+				if not impact.is_empty(): return
+			else:
+				for key: String in ["action_id", "parent_action_id", "part", "attacker_uid", "character_id", "generation", "target_uid", "target_generation", "source_kind", "slot", "tag_combo"]:
+					if impact.get(key) != strike.get(key): return
+				if impact.get("encounter_id") != _encounter_id or impact.get("command_generation") != request.generation \
+					or impact.get("command_sequence") != request.sequence \
+					or not preload("res://scripts/combat/hit_feedback.gd").admit({}, impact, false): return
+		var delta: Dictionary = verdict.delta
+		for key: String in ["hp", "hp_max", "damage"]:
+			var value: Variant = delta.get(key)
+			if not (value is int or value is float) or not is_finite(float(value)) or float(value) < 0.0: return
+		if float(delta.hp_max) <= 0.0 or float(delta.hp) > float(delta.hp_max) \
+			or delta.hp != strikes[1].target_hp_after or strikes[0].target_hp_after != strikes[1].target_hp_before \
+			or not is_equal_approx(float(delta.damage), float(strikes[0].actual_hp_debit) + float(strikes[1].actual_hp_debit)) \
+			or not delta.get("killed") is bool or delta.killed != (float(delta.hp) == 0.0) \
+			or delta.get("impact", {}) != strikes[1].get("impact", {}): return
+		var index := -1
+		for i in _party.size():
+			if _party[i] != null and str(_party[i].get("uid")) == incoming and _can_take_the_field(_party[i]): index = i
+		if index < 0: return
+		if str(creature.get("uid")) == outgoing and deployment.get("creature_uid") == outgoing \
+			and deployment.get("generation") == request.generation:
+			_clear_move_input()
+			_activate_party_member(index)
+			creature_switched.emit(index)
+		elif str(creature.get("uid")) != incoming or deployment.get("creature_uid") != incoming \
+			or deployment.get("generation") != int(request.generation) + 1: return
+		_switch_lockout = maxf(_switch_lockout, float(commands.config().switch_lockout_s))
+		_tether_command_view.erase("pending_request")
+		# The parent already owns both HP writes. Draw each accepted creature
+		# receipt once, without a strike resolver's energy or meter gain.
+		_enemy.hp = clampf(float(delta.hp), 0.0, float(_enemy.max_hp))
+		for strike: Dictionary in strikes:
+			var impact: Dictionary = strike.get("impact", {})
+			if impact.is_empty() or not _admit_host_feedback(_seen_impact_actions, impact): continue
+			if is_instance_valid(_wild):
+				_host_body_hitstop(_wild, impact)
+				_flash_host_impact(_wild.call("centre"), false, VFX.tint_for_type(_moves.type_of(str(impact.move_id))),
+					_wild, float(impact.damage) / maxf(1.0, float(_enemy.max_hp)), impact)
+				if impact.get("killed") == true: _wild.call("play_faint")
+				elif float(_enemy.hp) > 0.0: _play_combat_flinch(_wild, impact.get("direction", Vector3.ZERO))
+				_emit_host_impact(true, impact, _wild)
+	if int(next.get("revision", -1)) >= int(_tether_command_view.get("revision", 0)):
+		_tether_command_view.merge(next.duplicate(true), true)
+	if tag:
+		if verdict.delta.killed == true:
+			_award_victory()
+			_begin_resolve("won")
+		state_changed.emit()
+
+
+## The owner submitted only this four-field command. A host checkpoint may
+## derive its item and current body, but cannot substitute another command.
+func owner_tether_item_request_matches(envelope: Dictionary) -> bool:
+	var raw: Dictionary = _tether_command_view.get("pending_request", {})
+	var deployment: Dictionary = _encounter_link.call("tether_command_deployment") if is_instance_valid(_encounter_link) else {}
+	return envelope.size() == 7 and envelope.get("op") == "tether_item" \
+		and preload("res://scripts/combat/tether_commands.gd").valid_intent(raw) and raw.command_id == "item_throw" \
+		and raw.encounter_id == _encounter_id and raw.generation == deployment.get("generation") \
+		and envelope.get("character_id") == deployment.get("character_id") \
+		and envelope.get("intent") is Dictionary and envelope.intent.get("request") == raw
+
+
+func _consume_saved_tether_item_result() -> void:
+	var result: Dictionary = _tether_command_view.get("item_result", {})
+	if result.is_empty() or result.get("request") != _tether_command_view.get("pending_request") \
+		or not is_instance_valid(_encounter_link): return
+	var session: Node = _encounter_link.get("_session") as Node
+	if session == null or session.call("tether_item_owner_result_saved", result) != true: return
+	_tether_command_view.erase("pending_request")
+	state_changed.emit()
 
 
 func throw_aim() -> Node:
@@ -432,6 +632,7 @@ func bind_encounter(link: Node, encounter_id: String, kind: String) -> void:
 
 func unbind_encounter() -> void:
 	_move_awaiting_host = false
+	_tether_command_view.clear()
 	_encounter_link = null
 	_encounter_id = ""
 	_ordinary_reward_owned_id = ""
@@ -633,6 +834,8 @@ func begin(
 	_party_ultimate.clear()
 	_party_hp_scale.clear()
 	_party_utility_cooldown.clear()
+	_party_action_resources.clear()
+	_tether_command_view.clear()
 	_clear_move_input()
 	_reset_player_poise()
 	_hitstop_left = 0.0
@@ -2366,6 +2569,9 @@ func _refuse_combat_input() -> void:
 
 
 func _tick_active(delta: float) -> void:
+	_consume_saved_tether_item_result()
+	if _tether_command_view.has("combo_remaining_s"):
+		_tether_command_view.combo_remaining_s = maxf(0.0, float(_tether_command_view.combo_remaining_s) - delta)
 	if not combat_input_available(): _clear_move_input()
 	_ultimate_armed_left = maxf(0.0, _ultimate_armed_left - delta)
 	for uid: String in _party_utility_cooldown:
@@ -2379,6 +2585,17 @@ func _tick_active(delta: float) -> void:
 		return
 	_quick_cooldown = maxf(0.0, _quick_cooldown - delta)
 	_charged_cooldown = maxf(0.0, _charged_cooldown - delta)
+	if preload("res://scripts/combat/tether_commands.gd").enabled():
+		var active := active_creature()
+		for uid: String in _party_action_resources:
+			if active != null and uid == str(active.get("uid")): continue
+			var resources: Dictionary = _party_action_resources[uid]
+			resources.quick = maxf(0.0, float(resources.quick) - delta)
+			resources.charged = maxf(0.0, float(resources.charged) - delta)
+			resources.quiet = maxf(0.0, float(resources.quiet) - delta)
+			if resources.quiet <= 0.0:
+				resources.poise = minf(float(resources.maximum), float(resources.poise)
+					+ float(_poise_config().get("regen_per_second", 20.0)) * delta)
 	_input_guard = maxf(0.0, _input_guard - delta)
 	_buffer_left = maxf(0.0, _buffer_left - delta)
 	_switch_lockout = maxf(0.0, _switch_lockout - delta)
@@ -2437,6 +2654,9 @@ func _tick_action(delta: float) -> void:
 		return
 
 	if _action == Action.WINDUP:
+		# Physics catch-up can consume wind-up before the host's real-time fence.
+		if Time.get_ticks_msec() < _accepted_strike_not_before_ms:
+			return
 		_resolve_player_strike()
 		_action = Action.RECOVERY
 		_action_timer = float(_pending_move.get("recovery", 0.2))
@@ -3056,6 +3276,13 @@ func apply_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
 		var participants: Dictionary = rec.get("participants", {}) as Dictionary
 		if participants.has(peer_id):
 			var participant: Dictionary = participants[peer_id]
+			if participant.get("tether_commands") is Dictionary:
+				var pending: Dictionary = _tether_command_view.get("pending_request", {})
+				_tether_command_view = participant.tether_commands.duplicate(true)
+				_tether_command_view.merge(participant.get("tether_command_view", {}), true)
+				if pending.get("encounter_id") == _encounter_id:
+					_tether_command_view["pending_request"] = pending
+				_consume_saved_tether_item_result()
 			var creature := active_creature()
 			var uid := str(creature.get("uid")) if creature != null else ""
 			var resource: Dictionary = participant.get("move_resources", {}).get(uid, {})
@@ -3282,11 +3509,15 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 		_moves.power(move_id),
 		type_mult
 	)
+	var encounter_bonus := float(impact_context.get("source_utility_power", 1.0))
+	if is_instance_valid(_wild) and _wild.has_method("utility_damage_multiplier"):
+		encounter_bonus *= float(_wild.call("utility_damage_multiplier", str(card.get("creature_uid", ""))))
 	var stagger_crit := false
 	if _wild != null and _wild.has_method("consume_stagger_critical"):
 		stagger_crit = bool(_wild.call("consume_stagger_critical"))
 		if stagger_crit:
-			damage *= _poise_crit_scale()
+			encounter_bonus *= _poise_crit_scale()
+	damage *= minf(encounter_bonus, float(MATH.config().get("damage", {}).get("max_bonus_product", 1.6)))
 	var frozen: Dictionary = impact_context.get("move", {})
 	var slot := str(frozen.get("slot", "charged" if charged else "quick"))
 	var named := is_instance_valid(_wild) and _wild.has_method("named_combat_target") and bool(_wild.call("named_combat_target"))
@@ -3519,14 +3750,22 @@ func _saved_actor_vitals_matches(creature: RefCounted, payload: Dictionary) -> b
 	var world: RefCounted = game.get("world") if game != null else null
 	if player == null or world == null: return false
 	var session: Node = game.get("session") as Node
-	if not is_instance_valid(session) or not session.has_method("_altar_current_epoch"): return false
+	if not is_instance_valid(session) or not session.has_method("_altar_current_epoch") \
+		or not session.has_method("_owner_passive_actor_vitals_scope"): return false
 	var character: String = str(player.get("character_id"))
 	var namespace_id: String = str(world.get("reward_delivery_namespace"))
 	var actor_delivery: Script = preload("res://scripts/net/actor_vitals_delivery.gd")
 	var marker: Variant = player.get("satchel_escrow").get(actor_delivery.delivery_id(namespace_id, character, str(payload.creature_uid)))
-	return actor_delivery.valid(marker, character, namespace_id) and marker.get("status") == "settled" \
-		and marker.get("world_id") == world.get("world_id") \
-		and marker.get("session_id") == session.call("_altar_current_epoch") \
+	if not actor_delivery.valid(marker, character, namespace_id) or marker.get("status") != "settled" \
+		or marker.get("world_id") != world.get("world_id"): return false
+	var row: Dictionary = world.get("reward_deliveries").get(marker.delivery_id, {})
+	if row.get("status") != "accepted": return false
+	var accepted_marker: Dictionary = marker.duplicate(true)
+	accepted_marker.status = "accepted"
+	if not actor_delivery.equivalent(accepted_marker, row): return false
+	var bound: Dictionary = session.call("_owner_passive_actor_vitals_scope", row)
+	return not bound.is_empty() and bound.get("session_epoch") == session.call("_altar_current_epoch") \
+		and bound.get("journal_session_id") == marker.session_id \
 		and marker.get("receipt", {}).get("encounter_id") == _encounter_id \
 		and marker.get("receipt") == payload.actor_vitals_receipt and marker.get("creature_uid") == payload.creature_uid \
 		and marker.get("hp") == payload.actor_vitals_hp and marker.get("fainted") == payload.actor_vitals_fainted
@@ -4214,6 +4453,10 @@ func _begin_move_presentation(move: Dictionary) -> void:
 	elif slot == "charged": _charged_cooldown = float(move.get("cooldown", 1.2))
 	_action = Action.WINDUP
 	_action_timer = float(_pending_move.get("windup", 0.18))
+	# Receipt-local time needs no clock synchronization with the host. The host
+	# froze this duration before sending it, so a full local wait cannot be early.
+	_accepted_strike_not_before_ms = Time.get_ticks_msec() + ceili(_action_timer * 1000.0) \
+		if int(_pending_move.get("accepted_action", 0)) > 0 else 0
 	# Face and lunge at the START of the wind-up, not at the strike. The lunge
 	# used to fire on the same frame as the connect test, and an impulse only
 	# changes velocity — position is integrated NEXT physics frame — so the
@@ -4572,9 +4815,14 @@ func _nudge_camera_on_landing(charged: bool) -> void:
 ## never before the effect arrives (COMBAT §11, F25#3).
 func _present_local_contact(where: Vector3, charged: bool, tint: Variant, hit_fraction: float,
 		receipt: Dictionary, on_enemy: bool = true) -> void:
+	if state != State.ACTIVE and state != State.RESOLVING: return
 	var struck := _wild if on_enemy else _ally_body
+	var target_instance := _enemy if on_enemy else active_creature()
+	if not is_instance_valid(struck): return
+	if not receipt.is_empty() and (target_instance == null \
+			or str(receipt.get("target_uid", "")) != str(target_instance.get("uid"))): return
 	_flash_host_impact(where, charged, tint, struck, hit_fraction, receipt)
-	if receipt.is_empty() or state != State.ACTIVE: return
+	if receipt.is_empty(): return
 	_play_impact_feel(receipt)
 	if is_instance_valid(struck): _emit_host_impact(on_enemy, receipt, struck)
 
@@ -5297,6 +5545,12 @@ func request_switch(index: int) -> bool:
 ## already refused this call unless the fight was between actions.
 func _activate_party_member(index: int) -> void:
 	_move_awaiting_host = false
+	var retain := preload("res://scripts/combat/tether_commands.gd").enabled()
+	var outgoing := active_creature()
+	if retain and outgoing != null:
+		_party_action_resources[str(outgoing.get("uid"))] = {"quick":_quick_cooldown, "charged":_charged_cooldown,
+			"poise":_player_poise, "quiet":_player_poise_quiet_left, "maximum":_player_poise_max(),
+			"critical":_player_stagger_critical_ready}
 	var incoming: RefCounted = _party[index]
 	_active_index = index
 
@@ -5313,6 +5567,13 @@ func _activate_party_member(index: int) -> void:
 	_buffer_left = 0.0
 	_burst_awaiting_host = false
 	_reset_player_poise()
+	if retain and _party_action_resources.has(str(incoming.get("uid"))):
+		var resources: Dictionary = _party_action_resources[str(incoming.get("uid"))]
+		_quick_cooldown = float(resources.quick)
+		_charged_cooldown = float(resources.charged)
+		_player_poise = minf(_player_poise_max(), float(resources.poise))
+		_player_poise_quiet_left = float(resources.quiet)
+		_player_stagger_critical_ready = resources.critical == true
 
 
 ## --- readouts for the HUD -------------------------------------------------

@@ -89,9 +89,10 @@ static func launch(parent: Node, from: Vector3, to: Vector3, spec: Dictionary,
 	var override := MOVE_LIBRARY.ultimate_override(str(spec.get("move_id", "")))
 	if not override.is_empty():
 		# Owner direction: some signatures draw as the move library's staged
-		# effect (a wave, a water ball). Breakthroughs select its growth tier.
+		# effect (a wave, a water ball). Earned mastery and breakthroughs grow
+		# independently; a breakthrough cannot replace the accepted rank.
 		var staged := frozen.duplicate(true)
-		staged["mastery_rank"] = clampi(1 + int(count), 1, 5)
+		staged["breakthrough_growth"] = row.growth.duplicate(true)
 		staged["ultimate"] = true
 		staged["impact_audio_owner"] = "receipt"
 		return MOVE_LIBRARY.launch_presentation(parent, from, to, override, staged)

@@ -154,6 +154,7 @@ var _last_reticle_screen_pos: Vector2 = Vector2.ZERO
 ## The always-on party strip (spec 9.4). Built in code, mounted at
 ## `_party_strip_position()`.
 var _party_strip: Control = null
+var _tether_meter: Control
 ## Full-rect holder the subject fade dims in place of the strip itself.
 var _strip_fader: Control = null
 ## Per-panel subject-fade level, 1.0 = opaque (see `_update_subject_fade`).
@@ -345,6 +346,14 @@ func _ready() -> void:
 	# leave `_rest_position` at its `_ready()`-time default and every later
 	# reveal would animate back to the wrong spot.
 	_party_strip.call("set_rest_position", _party_strip_position())
+	if preload("res://scripts/combat/tether_commands.gd").enabled("ui_enabled"):
+		_tether_meter = preload("res://scripts/ui/tether_command_meter.gd").new()
+		$Root.add_child(_tether_meter)
+		_tether_meter.position = Vector2(_party_strip_position().x, maxf(24.0, _party_strip_position().y - 160.0))
+		if _manager != null:
+			_manager.connect("tether_command_refused", _tether_meter.refused)
+			if _manager.has_method("new_system_combat_snapshot"):
+				configure_new_system_view(Callable(_manager, "new_system_combat_snapshot"))
 
 	_build_orb_cluster()
 	_build_effect_banner()
@@ -551,6 +560,8 @@ func _quiet_panel_box() -> StyleBoxFlat:
 
 
 func _process(delta: float) -> void:
+	if _tether_meter != null and _manager != null:
+		_tether_meter.present(_manager.call("tether_command_snapshot"), INPUT_GLYPH.using_gamepad())
 	_sync_feed_epoch()
 	if _world_presentation_mode == "relays":
 		relinquish_result_presentation()
@@ -585,6 +596,7 @@ func _process(delta: float) -> void:
 		var active: RefCounted = _manager.call("active_creature") if _manager.has_method("active_creature") else null
 		if active != null and _system_overlay.call("refresh", str(active.get("uid")), not Input.get_connected_joypads().is_empty()) == true:
 			_grid_panel.hide()
+			if _tether_meter != null: _tether_meter.hide()
 	_update_capture_reticle()
 	_handle_switch_input()
 	_update_party_strip()

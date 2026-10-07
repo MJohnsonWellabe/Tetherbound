@@ -3,6 +3,12 @@
   "$id": "tetherbound/character_state",
   "type": "object",
   "properties": {
+    "tether_pouch": {
+      "description": "Optional ordered item bindings for Tether Commands; inventory stacks stay in the Satchel.",
+      "type": "array",
+      "maxItems": 3,
+      "items": {"type": "string"}
+    },
     "research": {
       "description": "Optional additive personal history; absence means no earned events. Party release never removes this carrier. All writes use existing character_action atomic registry/journal.",
       "properties": {
