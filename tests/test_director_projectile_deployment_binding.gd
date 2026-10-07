@@ -13,6 +13,8 @@ const DEFINITION := {"display_name": "Terrapup", "type": "ground",
 class BodyFixture extends Node3D:
 	var species_id := "terrapup"
 	var shiny := false
+	var deploy_species := "terrapup"
+	var deploy_shiny := false
 	var setup_calls := 0
 	func setup(species: String, is_shiny: bool) -> void:
 		species_id = species
@@ -27,6 +29,7 @@ class SessionFixture extends Node:
 
 
 class HostFixture extends RefCounted:
+	var encounters := {}
 	func record(_encounter_id: String) -> Dictionary:
 		return {"participants": {1: {"actor_generation": 0}, 2: {"actor_generation": 0}}}
 
@@ -85,6 +88,31 @@ func _dispose(fixture: Dictionary) -> void:
 
 func _binding(fixture: Dictionary, peer_id: int = 1) -> Dictionary:
 	return fixture.director.call("_strike_actor_binding", "encounter-1", peer_id, fixture.body)
+
+
+func test_host_switch_recasts_the_same_proxy_without_retiring_its_body_or_position() -> void:
+	var fixture := _fixture()
+	var director: Node = fixture.director
+	var proxy: Node3D = fixture.body
+	proxy.position = Vector3(7.0, 2.0, -4.0)
+	director.set("_deployed_by", {2: {"character_id": "character-guest", "creature_uid": "owned-a",
+		"species_id": "terrapup", "shiny": false}})
+	director.set("_creature_proxies", {2: proxy})
+	director.call("_note_deployment_identity", 2, "character-guest", "owned-a")
+	var instance_id := proxy.get_instance_id()
+	director.call("_host_set_deployed", 2, {"creature_uid": "owned-b", "species_id": "ripplet", "shiny": false})
+	assert_eq((director.get("_creature_proxies") as Dictionary)[2].get_instance_id(), instance_id)
+	assert_eq(proxy.position, Vector3(7.0, 2.0, -4.0), "switching preserves the real proxy's physical position")
+	assert_eq(proxy.get("species_id"), "ripplet")
+	assert_eq(proxy.get_meta(&"creature_uid"), "owned-b")
+	assert_eq(proxy.get("setup_calls"), 1)
+	assert_eq((director.get("_deployment_identity") as Dictionary)[2].generation, 2)
+	assert_eq(director.get("proxy_spawns"), 0, "the admitted incoming UID reuses the existing body")
+	director.call("_host_set_deployed", 2, {"creature_uid": "owned-b", "species_id": "ripplet", "shiny": false,
+		"card": {"attack": 22.0}})
+	assert_eq(proxy.get("setup_calls"), 1, "card-only refreshes preserve the same creature sample")
+	assert_eq((director.get("_deployment_identity") as Dictionary)[2].generation, 2)
+	_dispose(fixture)
 
 
 func _arrival_matches(fixture: Dictionary, binding: Dictionary, peer_id: int = 1) -> bool:

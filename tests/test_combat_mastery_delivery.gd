@@ -71,6 +71,70 @@ func test_retained_hit_rejects_forged_binding_damage_or_epoch_and_preserves_hp()
 	assert_true(DELIVERY.valid(JSON.parse_string(JSON.stringify(delivery)), RECORD.errors))
 	context.in_combat = true
 	assert_false(ACTIONS.stage(before, 0, "combat_mastery", duty.intent, context, RECORD.errors).ok)
+	# Tag retains one command parent and two ordinary creature-owned uses.
+	# These are codec/owner-plan fixtures; the live host still owns HP writes.
+	var player: RefCounted = fixture._player()
+	player.party.add(preload("res://scripts/creatures/creature_species.gd").spawn("terrapup"))
+	before = RECORD.portable_projection(player.save_data())
+	assert_eq(RECORD.errors(before, DATA.CHARACTER), [] as Array[String], "both cards use the canonical owned save projection")
+	var parent := "command:mastery-encounter:%s:1:7" % DATA.CHARACTER
+	var duties: Array = []
+	for index in 2:
+		var part := "outgoing" if index == 0 else "incoming"
+		var tag := _duty(before)
+		var card: Dictionary = before.party[index]
+		var child := JSON.stringify([parent, part, card.uid, index + 1]).sha256_text()
+		tag.intent = {"action_id":child, "creature_uid":card.uid}
+		tag.context.source_key = "combat_mastery:" + child
+		tag.context.parent_action_id = parent
+		tag.context.tag_part = part
+		tag.context.binding.creature_uid = card.uid
+		tag.context.binding.deployment_generation = index + 1
+		tag.context.outcome.action_id = child
+		tag.context.outcome.attacker_uid = card.uid
+		duties.append(tag)
+	var joint := EVENT.make(world, "resource-epoch", "mastery:" + parent, duties)
+	assert_false(joint.is_empty(), "both owned quicks share the one retained command parent")
+	if joint.is_empty(): return
+	assert_true(EVENT.valid(JSON.parse_string(JSON.stringify(joint)), "resource-namespace", "resource-slot"))
+	for defect: String in ["parent", "part", "generation", "uid", "target", "duplicate", "third", "missing"]:
+		var bad: Dictionary = joint.duplicate(true)
+		match defect:
+			"parent": bad.duties[1].context.parent_action_id = "command:other:owner:1:7"
+			"part": bad.duties[1].context.tag_part = "outgoing"
+			"generation": bad.duties[1].context.binding.deployment_generation = 3
+			"uid": bad.duties[1].intent.creature_uid = "foreign-owned"
+			"target": bad.duties[1].context.outcome.target_uid = "other-opponent"
+			"duplicate": bad.duties[1] = bad.duties[0].duplicate(true)
+			"third": bad.duties.append(bad.duties[0].duplicate(true))
+			"missing": bad.duties[1].context.erase("tag_part")
+		assert_false(EVENT.valid(bad, "resource-namespace", "resource-slot"), defect)
+	var state := before.duplicate(true)
+	for index in 2:
+		var tag: Dictionary = duties[index]
+		var tag_context := _context(tag, joint)
+		tag_context.expected_revision = index
+		var accepted := ACTIONS.stage(state, index, "combat_mastery", tag.intent, tag_context, RECORD.errors)
+		assert_true(accepted.get("ok") == true, str(accepted))
+		if accepted.get("ok") != true: return
+		accepted.character_revision = index + 1
+		var child_row := DELIVERY.make_record("resource-slot", "resource-namespace", "resource-epoch", accepted, null, RECORD.errors)
+		assert_true(DELIVERY.valid(JSON.parse_string(JSON.stringify(child_row)), RECORD.errors))
+		var owned_plan := DELIVERY.owner_plan(state, child_row, RECORD.errors)
+		assert_true(owned_plan.get("ok") == true and owned_plan.get("requires_owner_save") == true)
+		state = owned_plan.state
+		assert_eq(state.party[index].move_mastery_uses[move], 1)
+		assert_eq(state.party[index].move_mastery_receipts[move], [tag.intent.action_id])
+		assert_eq(state.party[index].hp, before.party[index].hp)
+		var wrong := tag_context.duplicate(true)
+		wrong.parent_action_id = "command:other:owner:1:7"
+		assert_false(ACTIONS.stage(before, 0, "combat_mastery", tag.intent, wrong, RECORD.errors).ok)
+	var directory := "user://test_tag_mastery_children_%s/" % Crypto.new().generate_random_bytes(12).hex_encode()
+	var store := preload("res://scripts/save/character_save.gd").new(directory)
+	assert_true(store.write(DATA.CHARACTER, state), "real CharacterSave BOOL persists the two owned child uses")
+	var reloaded: Dictionary = store.read(DATA.CHARACTER)
+	assert_eq(RECORD.portable_projection(reloaded).party, state.party)
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(store.path_for(DATA.CHARACTER)))
 
 func test_character_snapshot_without_world_id_accepts_a_valid_retained_event() -> void:
 	# A character snapshot carries world identity in its split envelope, so the
