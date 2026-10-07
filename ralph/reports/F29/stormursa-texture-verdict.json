@@ -1,0 +1,15 @@
+{
+  "agent": "/root/judge_stormursa_anatomy",
+  "verdict": "BLOCK",
+  "scope": "Bounded DCC texture identity/appearance",
+  "sheet": "stormursa-texture-comparison.jpg",
+  "retained": "Blue eyes, broad muzzle, rounded ears and four separate paws; no obvious invented armor or Team Tether red",
+  "reason": "Copper becomes irregular shoulder/back/hindquarter patches instead of distinct shoulder forms; glass-lightning strands at mane/flank/legs are unclear; fur reads muddy brown-violet.",
+  "shipping_enabled": false,
+  "remaining_gates": [
+    "Reference accent/material identity",
+    "Textured rig/deformation",
+    "Scale/full gameplay poses",
+    "Native full-bar acceptance"
+  ]
+}
