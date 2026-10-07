@@ -7,7 +7,10 @@
   "actual_arguments": "--biome=meadows --paired-720 --tabs=map,build,players,save,settings --map-cycle --map-zoom-samples --idle-hud --output=res://ralph/reports/VISUAL/phase2/lane-d/f42-candidate-paired",
   "renderer": "Compatibility/OpenGL4.5 Mesa25.2.8 llvmpipe",
   "captured_images": 22,
-  "actual_rasters": {"1920x1080": 11, "1280x720": 11},
+  "actual_rasters": {
+    "1920x1080": 11,
+    "1280x720": 11
+  },
   "runtime_result": "Run step reached its45-minute cap; GitHub job log records process exit124. Final manifest and artifact exit_code are absent. No engine crash is reported in the retained run.log; the precise unfinished stage was not recorded.",
   "complete": false,
   "judge": "/root/f42_visual_review",
@@ -22,10 +25,47 @@
     "P2-004": "BLOCK: HP/Food clearer; story/quickbar boxes and four empty roster rows remain in the initial reveal. Natural-idle expiry unwitnessed; subdued story/time text.",
     "P2-007": "BLOCK: Build/Save useful and readable720; installed thumbnails tiny/dim; sparse Players failure state. Quests, populated saves, free-build and multiplayer states missing."
   },
-  "missing_witnesses": ["Completion manifest and clean exit", "Natural idle and realm-cycle images", "Fresh Satchel/Creatures/Quests and relevant state variants", "Controller/focus/scroll and motion", "1280x800 and required outdoor/night/weather/combat context"],
+  "missing_witnesses": [
+    "Completion manifest and clean exit",
+    "Natural idle and realm-cycle images",
+    "Fresh Satchel/Creatures/Quests and relevant state variants",
+    "Controller/focus/scroll and motion",
+    "1280x800 and required outdoor/night/weather/combat context"
+  ],
   "fixture": "Production Meadows scene, stocked1-creature party and small satchel, no earned/save proof",
-  "followup_source_review": {"commit": "762afab7f2fe65190664f2d323daa71d5d4d45dc", "verdict": "APPROVE", "scope": "Five player note strings and truthful incremental incomplete capture receipts; no binding/action/progression changes. Fresh images required."},
-  "thumbnail_source_review": {"commit": "431e1e8cfe16d22fe125360ee556447109b72107", "reviewer": "/root/f42_visual_review", "verdict": "APPROVE", "scope": "Existing Image alpha bounds and AtlasTexture APIs, bounded padding/height, null/empty fallbacks; original bitmaps, costs, placement, focus and free-build unchanged.", "watchpoint": "Fresh720 free-build off/on initial-focus captures must verify extra thumbnail height and scrolling."},
+  "followup_source_review": {
+    "commit": "762afab7f2fe65190664f2d323daa71d5d4d45dc",
+    "verdict": "APPROVE",
+    "scope": "Five player note strings and truthful incremental incomplete capture receipts; no binding/action/progression changes. Fresh images required."
+  },
+  "thumbnail_source_review": {
+    "commit": "431e1e8cfe16d22fe125360ee556447109b72107",
+    "reviewer": "/root/f42_visual_review",
+    "verdict": "APPROVE",
+    "scope": "Existing Image alpha bounds and AtlasTexture APIs, bounded padding/height, null/empty fallbacks; original bitmaps, costs, placement, focus and free-build unchanged.",
+    "watchpoint": "Fresh720 free-build off/on initial-focus captures must verify extra thumbnail height and scrolling."
+  },
   "shipping_flags": "none",
-  "raw_images": "Run artifact only; both committed contact JPGs retain all22 images"
+  "raw_images": "Run artifact only; both committed contact JPGs retain all22 images",
+  "map_followup_source_review": {
+    "commit": "8063b8c75af6e0e420a22f0c7e7c8e8a735239ed",
+    "reviewer": "/root/f42_visual_review",
+    "verdict": "APPROVE",
+    "scope": "32x local scale and bounded margin labels for visible discovered region centres; truthful fog, markers and input unchanged.",
+    "watchpoint": "Fresh32x, edge pan and multiregion label images required."
+  },
+  "build_state_capture_source_review": {
+    "commit": "b6d82a6764",
+    "reviewer": "/root/f42_visual_review",
+    "verdict": "APPROVE",
+    "scope": "Existing Settings button selects off/on, actual Build banner verified, original preference restored. Conflicting implicit map-only request is rejected before boot.",
+    "controller_claim": false
+  },
+  "exploration_roster_source_review": {
+    "commit": "7c3e31186f",
+    "reviewer": "/root/f42_visual_review",
+    "verdict": "APPROVE",
+    "scope": "Only exploration instance hides vacant rows; combat default, TEAMn/5, capacity, order and timers retained.",
+    "watchpoint": "Reduced-roster geometry and overlays require actual720 images."
+  }
 }
