@@ -267,7 +267,8 @@ func _rebuild(prefer_payment: bool = false) -> void:
 	_root.add_child(dim)
 	var margin := MarginContainer.new()
 	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
-	for edge: String in ["left", "right", "top", "bottom"]: margin.add_theme_constant_override("margin_" + edge, 36)
+	var inset := int(DETAILS.config().get("safe_margin", 48)) if DETAILS.config().get("enabled") == true else 36
+	for edge: String in ["left", "right", "top", "bottom"]: margin.add_theme_constant_override("margin_" + edge, inset)
 	_root.add_child(margin)
 	var panel := PanelContainer.new()
 	panel.add_theme_stylebox_override("panel", TOKENS.panel_box(TOKENS.BG_PANEL, TOKENS.BORDER))

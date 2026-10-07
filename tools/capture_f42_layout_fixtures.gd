@@ -1,6 +1,6 @@
 extends SceneTree
 
-## QUEUE ONLY. Native UI layout fixtures; no earned service, co-op, save,
+## Native UI layout fixtures; no earned service, co-op, save,
 ## station reach, handheld hardware or visual PASS evidence. All fixtures
 ## are disclosed here and in the output manifest. Never changes disk flags.
 const SCREEN := preload("res://scripts/ui/system_screen.gd")
@@ -17,9 +17,11 @@ var _size := Vector2i(1920, 1080)
 var _game: Node
 var _uid := ""
 var _captures: Array[String] = []
+var _capture_combat := true
 
 class AltarFixture extends Node:
 	signal essence_spend_completed(id: String, result: Dictionary)
+	signal essence_quote_completed(key: String, uid: String, result: Dictionary)
 	var uid := ""
 	var level := 1
 	func station_available(_key: String) -> bool: return true
@@ -29,12 +31,24 @@ class AltarFixture extends Node:
 				{"id": "tether_candy", "name": "Tether Candy", "cost": 1, "available": 1}]}
 	func submit_essence_spend(_key: String, _request: Dictionary) -> void: pass
 	func reconcile_essence_spend(_id: String) -> void: pass
+	func invalidate_essence_quote() -> void: pass
 
 class TraitsFixture extends Node:
 	signal action_completed(result: Dictionary)
 	var uid := ""
+	var populated := false
 	func creature_choices() -> Array[Dictionary]: return [{"uid": uid, "name": "Terrapup"}]
 	func quote(_key: String, _uid: String) -> Dictionary:
+		if populated:
+			var traits := preload("res://scripts/creatures/traits.gd")
+			var active: Dictionary = traits.definition("bold").duplicate(true)
+			active["id"] = "bold"
+			var seed: Dictionary = traits.definition("curious").duplicate(true)
+			seed["id"] = "curious"
+			return {"ok": true, "traits": [active], "seeds": [seed], "unlocked_slots": [1, 2, 3],
+				"taught_traits": {"1": "bold"}, "essence_cost_per_slot": 10,
+				"payment_items": ["essence_ground"], "release_allowed": true,
+				"expected_character_revision": 0}
 		return {"ok": true, "traits": [], "seeds": [], "unlocked_slots": [], "taught_traits": {},
 			"essence_cost_per_slot": 5, "payment_items": ["essence_ground"], "release_allowed": false,
 			"expected_character_revision": 0}
@@ -62,6 +76,8 @@ func _run() -> void:
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--out-dir="): _out = argument.trim_prefix("--out-dir=")
 		if argument == "--size=1280x800": _size = Vector2i(1280, 800)
+		if argument == "--size=1280x720": _size = Vector2i(1280, 720)
+		if argument == "--skip-combat-fixture": _capture_combat = false
 	if _out.is_empty() or DisplayServer.get_name() == "headless":
 		push_error("Explicit --out-dir and a native display are required; do not use --headless.")
 		quit(1)
@@ -70,8 +86,7 @@ func _run() -> void:
 		quit(1)
 		return
 	root.size = _size
-	root.content_scale_size = Vector2i(1920, 1200) if _size.y == 800 else Vector2i(1920, 1080)
-	root.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_IGNORE
+	root.content_scale_size = Vector2i.ZERO # Judge native font pixels at each requested raster.
 	SCREEN.config()["enabled"] = true # In-memory fixture opt-in; shipped flag stays false.
 	COMMANDS.config().feature_flags.ui_enabled = true # Presentation-only fixture opt-in.
 	_game = root.get_node("Game")
@@ -86,6 +101,18 @@ func _run() -> void:
 			quit(1)
 			return
 		await _capture("altar-" + tab.to_lower())
+		if tab == "Gear":
+			for section: String in ["Trainer", "Protection", "Pouch"]:
+				if not await _choose(panel, "gear:" + section):
+					quit(1)
+					return
+				await _capture("altar-gear-" + section.to_lower())
+		if tab == "Loadout":
+			for slot: String in ["charged", "utility", "ultimate"]:
+				if not await _choose(panel, "slot:" + slot):
+					quit(1)
+					return
+				await _capture("altar-loadout-" + slot)
 		panel.close()
 		panel.queue_free()
 		await process_frame
@@ -95,8 +122,10 @@ func _run() -> void:
 	root.add_child(level_service)
 	var altar := ALTAR.new()
 	root.add_child(altar)
-	altar.configure_service(level_service)
-	altar.open("layout-altar")
+	if not altar.configure_service(level_service) or not altar.open("layout-altar"):
+		push_error("Actual Altar Level surface refused to open")
+		quit(1)
+		return
 	await _capture("altar-level")
 	altar.close()
 	altar.queue_free()
@@ -106,15 +135,52 @@ func _run() -> void:
 	root.add_child(traits_service)
 	var traits := TRAITS_PANEL.new()
 	root.add_child(traits)
-	traits.open(traits_service, "layout-altar")
+	if not traits.open(traits_service, "layout-altar"):
+		push_error("Actual Altar Traits surface refused to open")
+		quit(1)
+		return
 	await _capture("altar-traits-release")
+	traits.close()
+	for _frame in 2: await process_frame
+	traits_service.populated = true
+	if not traits.open(traits_service, "layout-altar"):
+		quit(1)
+		return
+	await _capture("altar-traits-populated")
+	var release_button: Button = traits.get("_release")
+	release_button.grab_focus()
+	await preload("res://tools/net/press_inject.gd").tap(self, _pad_binding, "ui_accept", 1)
+	if not release_button.has_meta("confirmed_uid"):
+		push_error("Actual first release tap did not reach confirmation")
+		quit(1)
+		return
+	await _capture("altar-traits-confirm")
 	traits.close()
 	traits.queue_free()
 	await process_frame
+	var station: Dictionary = preload("res://tests/test_craft_station_confirm_lifetime.gd").new().call("_fixture", self, false)
+	if not station.panel.is_open():
+		push_error("Existing station component refused to open")
+		quit(1)
+		return
+	await _capture("station-forge")
+	if not await _focus(station.panel, "refine:rootiron_ingot"):
+		quit(1)
+		return
+	await _capture("station-forge-refine")
+	station.panel.close()
+	station.holder.queue_free()
+	await process_frame
 	var research := RESEARCH.new()
 	root.add_child(research)
-	research.open(_research_fixture)
-	research.call("_inspect", "terrapup")
+	if not research.open(_research_fixture):
+		quit(1)
+		return
+	for _frame in 2: await process_frame
+	for choice: Button in research.body.find_children("*", "Button", true, false):
+		if choice.get_meta("system_focus_key", "") == "species:terrapup":
+			choice.grab_focus()
+			break
 	await _capture("research-log")
 	research.close()
 	research.queue_free()
@@ -123,37 +189,62 @@ func _run() -> void:
 	root.add_child(board)
 	var bounties := BOUNTY.new()
 	root.add_child(bounties)
-	bounties.open(board)
+	if not bounties.open(board):
+		quit(1)
+		return
 	await _capture("bounty-board")
 	bounties.close()
 	bounties.queue_free()
 	await process_frame
-	var overlay := OVERLAY.new()
-	root.add_child(overlay)
-	overlay.configure(_combat_fixture)
-	overlay.refresh(_uid, true)
-	await _capture("combat-meters-moves")
+	if _capture_combat:
+		var overlay := OVERLAY.new()
+		root.add_child(overlay)
+		overlay.configure(_combat_fixture)
+		overlay.refresh(_uid, true)
+		await _capture("combat-meters-moves")
 	var file := FileAccess.open(_out.path_join("fixture-manifest.json"), FileAccess.WRITE)
 	if file == null:
 		quit(1)
 		return
 	file.store_string(JSON.stringify({"evidence_kind": "native UI layout fixtures only", "size": [_size.x, _size.y],
 		"captures": _captures, "earned_service_save_coop_device_visual_pass": false,
-		"fixtures": ["new-game Terrapup", "invented Altar quote", "empty trait quote", "invented research tasks",
-			"invented bounty rows", "invented local combat meter snapshot"],
-		"missing": ["actual station panel", "earned services", "code-blind judge", "world/HUD composite"]}, "\t"))
+		"fixtures": ["new-game Terrapup", "invented Altar quote", "empty and canonical-display populated trait quotes; confirmation only, no submit", "invented research tasks",
+			"invented bounty rows", "existing Forge station-confirm component"],
+		"combat_fixture_captured": _capture_combat,
+		"missing": ["earned services", "code-blind judge", "world/HUD composite"]}, "\t"))
 	quit(0)
 
 func _capture(name: String) -> void:
 	for index: int in 8: await process_frame
 	await RenderingServer.frame_post_draw
 	var path := _out.path_join("f42-" + name + "-%dx%d.png" % [_size.x, _size.y])
-	if root.get_texture().get_image().save_png(path) != OK:
+	var image := root.get_texture().get_image()
+	if image == null or image.get_size() != _size or image.save_png(path) != OK:
 		push_error("Could not save " + path)
 		quit(1)
 		return
 	_captures.append(path)
 	print("FIXTURE UI CAPTURE: " + path)
+
+func _choose(panel: Node, key: String) -> bool:
+	if not await _focus(panel, key): return false
+	var result := await preload("res://tools/net/press_inject.gd").tap(self, _pad_binding, "ui_accept", 1)
+	return result.get("ok") == true
+
+func _focus(panel: Node, key: String) -> bool:
+	for choice: Button in panel.find_children("*", "Button", true, false):
+		if choice.get_meta("system_focus_key", choice.get_meta("station_focus_key", "")) != key: continue
+		if choice.disabled: return false
+		choice.grab_focus()
+		for _frame in 2: await process_frame
+		return true
+	push_error("No actual focus target for " + key)
+	return false
+
+func _pad_binding(action: StringName) -> InputEvent:
+	for binding: InputEvent in InputMap.action_get_events(action):
+		if binding is InputEventJoypadButton: return binding
+	return null
 
 func _research_fixture(_biome: String) -> Dictionary:
 	return {"ready": true, "completion_percent": 33, "species": [{"species_id": "terrapup", "name": "Terrapup",

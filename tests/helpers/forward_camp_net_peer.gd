@@ -15,6 +15,7 @@ extends "res://tools/net/peer_runner.gd"
 
 const KIT := "forward_camp_kit"
 const CAMP_SCRIPT := preload("res://scripts/build/forward_camp.gd")
+const LOADOUT_PANEL := preload("res://scripts/ui/companion_details_panel.gd")
 
 var _camp_answers: Array = []
 
@@ -47,7 +48,68 @@ func _camp_dispatch(action: String, args: Dictionary) -> Dictionary:
 			return _records(game)
 		"camp_place":
 			return await _place(game, float(args.get("away", 20.0)), int(args.get("presses", 1)))
+		"camp_loadout_edit":
+			return await _edit_loadout(game)
+		"camp_loadout_view":
+			return _loadout_view(game, str(args.get("character_id", "")), str(args.get("uid", "")))
 	return {"verdict": "ERROR", "detail": "unknown action " + action}
+
+
+## F23: same camp and granted creature; press the production panel's equip
+## callback. No direct mutation of moves or admitted character state.
+func _edit_loadout(game: Node) -> Dictionary:
+	var camp: Node3D = null
+	var camp_uid := ""
+	for row: Dictionary in game.get("placed_buildings"):
+		if row.get("id") == "forward_camp" and row.get("removed") != true and row.get("character_id") == game.get("local").get("character_id"):
+			camp_uid = str(row.get("uid", ""))
+	for node: Node in get_nodes_in_group("placed_building"):
+		if not camp_uid.is_empty() and node.get_script() == CAMP_SCRIPT and node.get_meta("building_uid", "") == camp_uid:
+			camp = node
+			break
+	if camp == null: return {"verdict": "FAIL", "detail": "guest camp unavailable"}
+	var at := camp.global_position + Vector3(0, 0.5, 2)
+	await _step_teleport({"at": [at.x, at.y, at.z], "settle": 30})
+	camp.call("open_loadouts")
+	var panel: Node = null
+	for node: Node in game.get_children():
+		if node.get_script() == LOADOUT_PANEL: panel = node
+	if panel == null or panel.get("_shown") != true: return {"verdict": "FAIL", "detail": "camp loadout panel did not open"}
+	var uid: String = panel.get("_uid")
+	var before := _loadout_view(game, "", uid)
+	if before.card.get("move_utility") == "quake_ring":
+		panel.call("close")
+		return {"verdict": "FAIL", "detail": "utility must actually change", "card": before.card}
+	panel.call("_choose_slot", "utility")
+	for frame: int in 600:
+		if panel.get("_pending_edit") == "" and int(_loadout_view(game, "", uid).card.get("loadout_revision", -1)) == int(before.card.get("loadout_revision", -1)):
+			panel.call("_equip", "quake_ring")
+		elif frame % 30 == 0: panel.call("_reconcile_loadout")
+		await physics_frame
+		var current := _loadout_view(game, "", uid)
+		if current.card.get("move_utility") == "quake_ring" and not current.card.get("loadout_last_edit", {}).is_empty() and int(current.card.get("loadout_revision", -1)) == int(before.card.get("loadout_revision", -1)) + 1 and panel.get("_pending_edit") == "":
+			panel.call("close")
+			return current
+	return {"verdict": "FAIL", "detail": "loadout original did not settle", "card": _loadout_view(game, "", uid).card}
+
+
+func _loadout_view(game: Node, character: String, uid: String) -> Dictionary:
+	var party: Array = []
+	var local: RefCounted = game.get("local")
+	if character.is_empty() or character == local.get("character_id"):
+		party = local.call("save_data").get("party", [])
+	else:
+		var session: Node = game.get("session")
+		var registry: RefCounted = session.get("_registry")
+		var peer := int(registry.call("peer_for_character", character))
+		party = session.call("admitted_character_state", peer).get("party", [])
+	for raw: Dictionary in party:
+		if uid.is_empty() or raw.get("uid") == uid:
+			var card := {}
+			for field: String in ["uid", "move_quick", "move_charged", "move_utility", "move_ultimate", "loadout_revision", "loadout_last_edit"]:
+				card[field] = raw.get(field)
+			return {"verdict": "PASS", "detail": "saved loadout projection", "card": card}
+	return {"verdict": "FAIL", "detail": "owned loadout absent", "card": {}}
 
 
 func _records(game: Node) -> Dictionary:

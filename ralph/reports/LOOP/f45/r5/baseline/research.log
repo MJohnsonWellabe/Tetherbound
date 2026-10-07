@@ -1,0 +1,22 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_research_log.gd,test_research_passive_preparation.gd,test_research_passive_authority.gd: 3 of 825 test files
+  ok    test_research_log.gd :: test_all_tasks_complete_biome_title_and_no_combat_reward
+  ok    test_research_log.gd :: test_cast_signature_catch_history_and_unconfirmed_events_refuse
+  ok    test_research_log.gd :: test_claim_atomic_capacity_replay_and_existing_journal_owner_plan
+  ok    test_research_log.gd :: test_every_registered_species_tasks_types_and_no_unknown_catalog_ids
+  ok    test_research_log.gd :: test_personal_replay_progress_released_and_never_owned_serialization
+  ok    test_research_passive_authority.gd :: test_commit_and_failed_world_write_retry_preserve_exact_original
+  ok    test_research_passive_authority.gd :: test_research_and_existing_transaction_reservations_exclude_each_other
+  ok    test_research_passive_authority.gd :: test_reserve_does_not_promote_before_bool_ack_and_rejoin_cannot_replace_it
+  ok    test_research_passive_authority.gd :: test_revision_core_hash_and_retained_source_changes_refuse_without_mutation
+  ok    test_research_passive_preparation.gd :: test_exact_retained_duty_derivation_and_input_isolation
+  ok    test_research_passive_preparation.gd :: test_hash_keeps_large_integral_floats_without_int64_conversion
+  ok    test_research_passive_preparation.gd :: test_hash_retains_float_bits_and_lossless_document_roundtrip
+  ok    test_research_passive_preparation.gd :: test_malformed_shapes_revisions_observations_and_discoveries_refuse
+  ok    test_research_passive_preparation.gd :: test_owner_plan_preserves_progress_maps_and_every_nonpassive_field
+  ok    test_research_passive_preparation.gd :: test_passive_counters_keep_existing_storage_range_and_exact_owner_progress
+  ok    test_research_passive_preparation.gd :: test_passive_field_omissions_and_invalid_scalars_refuse_cleanly
+  ok    test_research_passive_preparation.gd :: test_rejects_unretained_foreign_operation_identity_and_tampering
+
+17 tests, 881 assertions, 0 failed
