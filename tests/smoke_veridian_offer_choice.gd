@@ -332,6 +332,11 @@ func _drive_to_choice(climax: Node, label: String) -> bool:
 	var panel := _world.get_node_or_null(^"DialoguePanel")
 	for i in CHOICE_FRAME_BUDGET:
 		await _frame()
+		var healing := _world.get_node_or_null(^"MeadowHealing")
+		if healing != null and bool(healing.get("_applying")) \
+				and str(climax.get("_stage")) in ["join", "choice"]:
+			_fail("(%s) the offer advanced while live healing was still preparing" % label)
+			return false
 		if bool(climax.call("choice_open")):
 			return true
 		if panel != null and bool(panel.call("is_open")):

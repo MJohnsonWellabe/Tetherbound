@@ -1,0 +1,5 @@
+source=6116c8b7990a32ab4bc081f72013d7b16b3498a7
+test_local_meadow_healing=080d7afb47d89763e0b03af53d1b22b7ad7b432a; only regreen slicing differs; current-main fixture/tool/config unchanged
+tool=tools/capture_f05_heal.gd unchanged
+Compatibility/fullscreen1920x1080/fixed-fps12/unprofiled
+Existing disclosed flags, party, camera placement and hidden transient HUD; matched unprofiled staged appearance only, not CPU/earned/co-op/device FPS

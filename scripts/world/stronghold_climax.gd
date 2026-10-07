@@ -807,6 +807,14 @@ func _announce_choice() -> void:
 ## nothing lands on top of an open box, and the five-creature decision gets a
 ## whole stage of its own because it is a decision the player may sit with.
 func _advance() -> void:
+	# Healing used to finish in the freeing frame. Its CPU preparation now
+	# yields, so the join approach and choice must not run through that work.
+	# Keep the freeing dialogue live; only resume the offer once preparation
+	# is complete, without waiting for the land's presentation fade to end.
+	if _stage in [STAGE_FREED, STAGE_JOIN] and _world != null:
+		var healing := _world.get_node_or_null(^"MeadowHealing")
+		if healing != null and bool(healing.get("_applying")):
+			return
 	match _stage:
 		"":
 			# A PARTICIPANT WHO DID NOT PULL THE LEVER still gets their own
