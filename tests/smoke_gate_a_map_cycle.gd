@@ -128,18 +128,35 @@ func _check_actual_travel_drives_minimap() -> void:
 		_fail("minimap heading %.3f does not match resolved travel %.3f" % [movement_yaw, expected])
 		return
 
-	# Orbit with the real right stick while standing still. World orientation
-	# must retain travel-up; the independently drawn look marker must change.
+	# Orbit with the real right stick while standing still. Travel owns map-up;
+	# the marker follows the trainer's visible +Z heading, independently of camera.
 	var retained := movement_yaw
-	var look_before := float(_minimap.get("_look_yaw"))
+	var model := _player.get_node_or_null(^"Model") as Node3D
+	var camera := _world.get_node_or_null(^"CameraRig/Camera3D") as Camera3D
+	var facing_before: Variant = _minimap.get("_facing_yaw")
+	if model == null or camera == null or not (facing_before is float or facing_before is int):
+		_fail("real trainer model, camera or minimap facing sample is unavailable")
+		return
+	var model_before := atan2(model.global_basis.z.x, model.global_basis.z.z)
+	if absf(angle_difference(float(facing_before), model_before)) > 0.02:
+		_fail("minimap tip does not match the visible trainer heading before orbit")
+		return
+	var camera_before := atan2(camera.global_basis.z.x, camera.global_basis.z.z)
 	await _hold_axis(JOY_AXIS_RIGHT_X, 1.0, 35)
-	var look_after := float(_minimap.get("_look_yaw"))
+	var camera_after := atan2(camera.global_basis.z.x, camera.global_basis.z.z)
+	var model_after := atan2(model.global_basis.z.x, model.global_basis.z.z)
+	var facing_after: Variant = _minimap.get("_facing_yaw")
+	if not (facing_after is float or facing_after is int):
+		_fail("minimap facing sample disappeared during real camera orbit")
+		return
 	if absf(angle_difference(retained, float(_minimap.get("_movement_yaw")))) > 0.02:
 		_fail("stationary camera orbit rotated the movement-up map")
-	elif absf(angle_difference(look_before, look_after)) < 0.15:
-		_fail("physical right stick did not update the minimap's independent look heading")
+	elif absf(angle_difference(camera_before, camera_after)) < 0.15:
+		_fail("physical right stick did not independently orbit the real camera")
+	elif absf(angle_difference(float(facing_after), model_after)) > 0.02:
+		_fail("minimap tip does not match the visible trainer heading after orbit")
 	else:
-		print("  ok    resolved travel stays map-up while stationary right-stick look remains independent")
+		print("  ok    resolved travel stays map-up; real camera orbits independently; tip follows trainer heading")
 
 
 func _check_full_map_controller_ownership_and_recovery() -> void:
