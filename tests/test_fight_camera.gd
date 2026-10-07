@@ -167,3 +167,29 @@ func test_foreground_envelopes_cover_feet_but_bodies_behind_do_not_occlude() -> 
 	cover_pose.origin.z=-12.0
 	cover={"box":cover_box,"pose":cover_pose,"inverse":cover_pose.affine_inverse(),"points":FIT.box_points(cover_box,cover_pose)}
 	assert_false(FIT.bounds_occlude(Transform3D.IDENTITY,actor,cover,68.0,16.0/9.0,0.05),"a projected overlap behind the actor is not foreground cover")
+	cover_pose.origin=Vector3(10,0,0)
+	cover={"box":cover_box,"pose":cover_pose,"inverse":cover_pose.affine_inverse(),"points":FIT.box_points(cover_box,cover_pose)}
+	assert_false(FIT.bounds_occlude(Transform3D.IDENTITY,actor,cover,68.0,16.0/9.0,0.05),"an off-screen body crossing the near plane does not cover the actor")
+	cover_pose.origin=Vector3.ZERO
+	cover={"box":cover_box,"pose":cover_pose,"inverse":cover_pose.affine_inverse(),"points":FIT.box_points(cover_box,cover_pose)}
+	assert_true(FIT.bounds_occlude(Transform3D.IDENTITY,actor,cover,68.0,16.0/9.0,0.05),"near-plane clipping retains real foreground cover")
+	cover_pose.origin=Vector3(0,0,2)
+	cover={"box":cover_box,"pose":cover_pose,"inverse":cover_pose.affine_inverse(),"points":FIT.box_points(cover_box,cover_pose)}
+	assert_false(FIT.bounds_occlude(Transform3D.IDENTITY,actor,cover,68.0,16.0/9.0,0.05),"a body entirely behind the lens does not cover the actor")
+	var invalid := cover.duplicate(true)
+	var collapsed := PackedVector3Array()
+	for index: int in 8: collapsed.append(Vector3(0,0,-4))
+	invalid.points=collapsed
+	assert_true(FIT.bounds_occlude(Transform3D.IDENTITY,actor,invalid,68.0,16.0/9.0,0.05),"degenerate front geometry is unavailable, not an all-behind envelope")
+	invalid=cover.duplicate(true)
+	invalid.points[0]=Vector3(INF,0,0)
+	assert_true(FIT.bounds_occlude(Transform3D.IDENTITY,actor,invalid,68.0,16.0/9.0,0.05),"nonfinite envelope points fail closed even behind the lens")
+	for field: String in ["pose","inverse"]:
+		invalid=cover.duplicate(true)
+		invalid[field]=Transform3D(Basis.IDENTITY,Vector3(INF,0,0))
+		assert_true(FIT.bounds_occlude(Transform3D.IDENTITY,actor,invalid,68.0,16.0/9.0,0.05),"nonfinite "+field+" fails closed")
+	for invalid_box: AABB in [AABB(Vector3.ZERO,Vector3(INF,1,1)),AABB(Vector3.ZERO,Vector3.ZERO)]:
+		invalid=cover.duplicate(true)
+		invalid.box=invalid_box
+		assert_true(FIT.bounds_occlude(Transform3D.IDENTITY,actor,invalid,68.0,16.0/9.0,0.05),"nonfinite or degenerate box fails closed")
+	assert_true(FIT.bounds_occlude(Transform3D.IDENTITY,invalid,cover,68.0,16.0/9.0,0.05),"actor envelopes use the same validation")
