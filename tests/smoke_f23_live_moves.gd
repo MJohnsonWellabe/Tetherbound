@@ -138,7 +138,9 @@ func _run() -> void:
 			"test_f23_live_moves.gd", "test_f24_host_commands.gd", "test_harness_max_hp.gd",
 			"test_hud_presentation_lifecycle.gd", "test_hud_widgets.gd", "test_level_up_announcement.gd",
 			"test_motion_prefs.gd", "test_move_commit_runtime.gd", "test_world_verb_input_owner_enforcement.gd",
-			"test_net_harness_heartbeat_allowance.gd"])
+			"test_net_harness_heartbeat_allowance.gd", "test_combat_progression.gd",
+			"test_director_join_snapshot.gd", "test_multiplayer_identity_0912.gd",
+			"test_net_boss_snapshot.gd", "test_net_state_hash_scope.gd", "test_world_save_format.gd"])
 	if not selectors.is_empty():
 		var output: Array = []
 		var exit_code := OS.execute(OS.get_executable_path(), PackedStringArray([
