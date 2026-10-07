@@ -7,10 +7,19 @@ const CANDIDATE_PATH := "res://data/config/cloudreach_f40_visual.json"
 const CHAPTER := preload("res://tools/capture_cloudreach_frame_matrix.gd")
 var _capture_config: Dictionary = {}
 var _active_weather := "clear"
+var _segment := ""
+var _full_planned_frames := 0
 
 
 func _run() -> void:
 	_capture_config = JSON.parse_string(FileAccess.get_file_as_string(CANDIDATE_PATH)).get("capture", {})
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--segment="):
+			if not _segment.is_empty() or arg.trim_prefix("--segment=") not in ["dawn", "day", "golden", "night"]:
+				push_error("F40 requires one known clock segment, or none for the full matrix")
+				quit(2)
+				return
+			_segment = arg.trim_prefix("--segment=")
 	seed(int(_capture_config.get("seed", 2042)))
 	await super._run()
 
@@ -67,6 +76,18 @@ func _load_plan() -> bool:
 	if _planned.size() < int(_capture_config.minimum_frames):
 		_failures.append("F40 recapture plan has fewer than 200 distinct frames")
 		return false
+	_full_planned_frames = _planned.size()
+	# Hosted quarters preserve the whole plan above. Every clock quarter is
+	# required; a successful quarter never certifies the >=200-frame recapture.
+	if not _segment.is_empty():
+		var selected: Array[Dictionary] = []
+		for row: Dictionary in _planned:
+			if str(row.time) == _segment:
+				selected.append(row)
+		if selected.is_empty() or selected.size() * _capture_config.times.size() != _full_planned_frames:
+			_failures.append("F40 segment does not contain a complete clock quarter")
+			return false
+		_planned = selected
 	return true
 
 
@@ -75,8 +96,17 @@ func _begin_manifest() -> void:
 	_manifest["f40_revision"] = JSON.parse_string(FileAccess.get_file_as_string(CANDIDATE_PATH)).revision
 	_manifest["candidate_preview"] = OS.get_cmdline_user_args().has("--f40-candidate")
 	_manifest["capture_plan"] = _capture_config
+	_manifest["segment"] = _segment
+	_manifest["required_segments"] = _capture_config.times
+	_manifest["full_matrix_planned_frames"] = _full_planned_frames
 	_manifest["candidate_config_sha256"] = FileAccess.get_file_as_string(CANDIDATE_PATH).sha256_text()
 	_manifest["fixture_disclosure"] = "Direct chapter mount, upper-route flags, catalogue teleports plus declared 12m/3m stand offsets, pinned production dawn/day/golden/night and clear/rain. Production CameraRig; no earned route, fight, Ally or visual PASS claim. Obstructed or unsupported stands fail and require a corrected matched pair."
+
+
+func _finish(complete: bool) -> void:
+	_manifest["full_matrix_complete"] = _segment.is_empty() and complete and _failures.is_empty() \
+		and _records.size() == _full_planned_frames
+	super._finish(complete)
 
 
 func _capture_row(row: Dictionary) -> void:
