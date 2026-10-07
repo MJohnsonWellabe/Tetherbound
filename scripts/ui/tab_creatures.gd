@@ -1967,8 +1967,9 @@ func _maybe_begin_release() -> void:
 		# holder, said out loud.
 		if bool(party.call("add", pending)):
 			var owner: RefCounted = game.get("local")
-			if owner != null:
-				var initialized := preload("res://scripts/creatures/breakthrough.gd").initialize_owned_catch(party, owner.get("redesign_character"), pending)
+			var personal: Variant = owner.get("redesign_character") if owner != null else null
+			if personal is Dictionary:
+				var initialized := preload("res://scripts/creatures/breakthrough.gd").initialize_owned_catch(party, personal, pending)
 				if not initialized.is_empty(): owner.set("redesign_character", initialized)
 			game.set("pending_catch", null)
 			say("%s joins the belt." % str(pending.call("label")))
@@ -2627,8 +2628,9 @@ func _do_release() -> void:
 			push_error("the freed holder refused %s" % str(pending.call("label")))
 			return
 		var owner: RefCounted = game.get("local")
-		if owner != null:
-			var initialized := preload("res://scripts/creatures/breakthrough.gd").initialize_owned_catch(party, owner.get("redesign_character"), pending)
+		var personal: Variant = owner.get("redesign_character") if owner != null else null
+		if personal is Dictionary:
+			var initialized := preload("res://scripts/creatures/breakthrough.gd").initialize_owned_catch(party, personal, pending)
 			if not initialized.is_empty(): owner.set("redesign_character", initialized)
 		_release_land = maxi(int(party.call("size")) - 1, 0)
 	game.set("pending_catch", null)
