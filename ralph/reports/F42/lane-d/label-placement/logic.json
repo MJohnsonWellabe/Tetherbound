@@ -6,7 +6,7 @@
   "independent_review": {
     "reviewer": "/root/f42_visual_review",
     "verdict": "APPROVE source only",
-    "pending": "Existing actual map controller-cycle smoke and paired map16/map32 images"
+    "pending": "Paired actual map16/map32 capture and final original reviewer verdict"
   },
   "proof": "tests/run_tests.gd",
   "run_id": 37679905106,
@@ -40,5 +40,15 @@
     "Heavy HUD box presentation"
   ],
   "flags": "none",
-  "disposition": "Affected logic passes. No criterion READY or visual/controller claim from source/unit proof alone."
+  "disposition": "Affected logic passes. No criterion READY or visual/controller claim from source/unit proof alone.",
+  "area_proof": {
+    "run_id": 37680516233,
+    "artifact_id": 11507629839,
+    "source_commit": "d46a507effc9c0b21160aaa388cfb4a865c82eed",
+    "proof": "tests/smoke_gate_a_map_cycle.gd",
+    "exit": 0,
+    "seconds": 104,
+    "result": "PASS: physical LB cycles all five and skips resting; resolved travel drives minimap; real camera orbit independent; Map/Back repeated open/close, RT/LT zoom, right-stick pan/clamp, world recovery. Honest world-edge clamp499.3m reported.",
+    "fixture": "Existing five-creature seeded party; sixth refusal checked. Existing headless area smoke, not an earned journey or pixel proof."
+  }
 }
