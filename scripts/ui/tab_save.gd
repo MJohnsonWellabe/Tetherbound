@@ -20,9 +20,16 @@ func build() -> void:
 	_status.clear()
 
 	var header := Label.new()
-	header.text = "Save / Load"
-	header.add_theme_font_size_override("font_size", 24)
+	header.text = "Your journey"
+	header.add_theme_font_size_override("font_size", UITokens.FONT_SECTION)
+	header.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	add_child(header)
+	var explanation := Label.new()
+	explanation.text = "Resting updates the autosave. Keep your own checkpoints in slots 2–5; Save writes the selected slot and Load returns to it."
+	explanation.add_theme_font_size_override("font_size", UITokens.FONT_READ)
+	explanation.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+	explanation.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	add_child(explanation)
 
 	var list := VBoxContainer.new()
 	list.add_theme_constant_override("separation", 10)
@@ -33,13 +40,16 @@ func build() -> void:
 		row.add_theme_constant_override("separation", 16)
 
 		var label := Label.new()
-		label.custom_minimum_size = Vector2(420, 0)
-		label.add_theme_font_size_override("font_size", 22)
+		label.custom_minimum_size = Vector2(560, 0)
+		label.add_theme_font_size_override("font_size", UITokens.FONT_READ)
+		label.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
+		label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		row.add_child(label)
 		_status.append(label)
 
 		var save_button := Button.new()
 		save_button.text = "Save"
+		save_button.add_theme_font_size_override("font_size", 30)
 		save_button.custom_minimum_size = Vector2(140, 56)
 		save_button.focus_mode = Control.FOCUS_ALL
 		var slot := i
@@ -48,6 +58,7 @@ func build() -> void:
 
 		var load_button := Button.new()
 		load_button.text = "Load"
+		load_button.add_theme_font_size_override("font_size", 30)
 		load_button.custom_minimum_size = Vector2(140, 56)
 		load_button.focus_mode = Control.FOCUS_ALL
 		load_button.pressed.connect(func() -> void: _on_load(slot))
@@ -57,6 +68,7 @@ func build() -> void:
 		_rows.append({"save": save_button, "load": load_button})
 
 	poll()
+	UITokens.make_text_legible(self)
 
 
 func first_focus() -> Control:
