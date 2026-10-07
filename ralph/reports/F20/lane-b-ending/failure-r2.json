@@ -2,7 +2,7 @@
   "criterion_pass": false,
   "observed": {
     "fresh_contact_window_msec": 12000,
-    "lesson": "Two actual Continue readers for portals; one personal acknowledgment followed by the other failure",
+    "lesson": "Two logged reader entries for portals, both authored lines, one personal acknowledgment and one retained failure; log does not establish concurrency.",
     "home_key_finish_ticks_ms": 331734,
     "fifth_arch_assertions": "Actual key consumed, sealed, durable glow/SFX result, one line, no new quest, retry refused: all PASS",
     "home_key_result": {
@@ -16,7 +16,7 @@
   "re_attack": {
     "reasoning": "xhigh",
     "model": "gpt-6-astra",
-    "scope": "Existing f20_portal_travel lesson callback invocation lifetime; no receipt/input bypass",
+    "scope": "Existing lesson reader authored-line bound and invocation lifetime; investigate total30s expiry/retry and stale dispatch separately; retain physical input and receipt oracle.",
     "owner_rule": "issue572 comment6039597390: new approach on stronger model after second failure",
     "agent": "/root/b_ending_reattack"
   },
@@ -49,5 +49,6 @@
     "Code-blind visual PASS",
     "Two-peer credits/reload",
     "Full F20#3 continuation still depends on C bounty runtime"
-  ]
+  ],
+  "diagnosis_limit": "Failures are accumulated then printed at exit. The later ACK does not prove concurrent readers; a first reader timing out and retrying on a later frame is consistent with the log. Corrected before claiming a root cause or criterion."
 }

@@ -5,6 +5,8 @@ extends "res://tests/helpers/f49_portal_travel.gd"
 ## while inventory/credits also read idle frames.
 const LESSON_PANEL := preload("res://scripts/onboarding/lesson_panel.gd")
 var _lesson_busy := false
+var _lesson_active := false
+var _lesson_generation := 0
 var before_interact: Callable
 var trace_input := false
 
@@ -18,14 +20,35 @@ func _portal_result(result: Dictionary) -> void:
 		_home_result = result.duplicate(true)
 
 func activate(prompt: Node3D) -> bool:
-	var failures_before := failures.size()
 	# A lesson may be due on this character's first walk past its teacher.
 	# Read/continue its real card; retain the original navigation budget and
 	# exact grounded/provider checks after ordinary world input returns.
-	await _continue_navigation_lesson()
-	tree.process_frame.connect(_continue_navigation_lesson)
-	var passed := await _activate_world(prompt)
-	tree.process_frame.disconnect(_continue_navigation_lesson)
+	return await _with_navigation_lessons(_activate_world.bind(prompt))
+
+func _with_navigation_lessons(navigate: Callable) -> bool:
+	if _lesson_active or _lesson_busy: return _fail("F20 navigation re-entered its active lesson reader")
+	var failures_before := failures.size()
+	_lesson_generation += 1
+	_lesson_active = true
+	var reader := _continue_navigation_lesson.bind(_lesson_generation)
+	# The service can offer another due lesson on the same panel after the
+	# first receipt. Finish each actual card before binding world input.
+	while failures.size() == failures_before:
+		var owner := INPUT_OWNER.current(tree)
+		if owner == null or owner.get_script() != LESSON_PANEL or not owner.call("is_open"): break
+		await reader.call()
+	var passed := false
+	if failures.size() == failures_before:
+		tree.process_frame.connect(reader)
+		passed = await navigate.call()
+		# Signal emission copies its callable list. Invalidate this invocation
+		# before disconnect so a copied callback cannot enter after it returns,
+		# including when this helper is reused by the next navigation command.
+		_lesson_active = false
+		tree.process_frame.disconnect(reader)
+	else:
+		_lesson_active = false
+	# An entered reader still owns its press/release and personal receipt.
 	while _lesson_busy: await tree.process_frame
 	return passed and failures.size() == failures_before
 
@@ -34,13 +57,7 @@ func activate(prompt: Node3D) -> bool:
 func approach_grandpa(prompt: Node3D) -> bool:
 	if prompt == null or prompt.get_parent().name != "Grandpa":
 		return _fail("F20 approach requires the actual Grandpa prompt")
-	var failures_before := failures.size()
-	await _continue_navigation_lesson()
-	tree.process_frame.connect(_continue_navigation_lesson)
-	var passed := await _walk_to_grandpa(prompt)
-	tree.process_frame.disconnect(_continue_navigation_lesson)
-	while _lesson_busy: await tree.process_frame
-	return passed and failures.size() == failures_before
+	return await _with_navigation_lessons(_walk_to_grandpa.bind(prompt))
 
 func _walk_to_grandpa(prompt: Node3D) -> bool:
 	if not _bind(): return false
@@ -98,13 +115,7 @@ func _walk_to_grandpa(prompt: Node3D) -> bool:
 ## Approach this actual provider closely through the original capsule walker;
 ## preserve range/LOS/winner/input checks without editing either prompt.
 func activate_endgame_rematch(prompt: Node3D) -> bool:
-	var failures_before := failures.size()
-	await _continue_navigation_lesson()
-	tree.process_frame.connect(_continue_navigation_lesson)
-	var passed := await _activate_endgame_rematch(prompt)
-	tree.process_frame.disconnect(_continue_navigation_lesson)
-	while _lesson_busy: await tree.process_frame
-	return passed and failures.size() == failures_before
+	return await _with_navigation_lessons(_activate_endgame_rematch.bind(prompt))
 
 func _activate_endgame_rematch(prompt: Node3D) -> bool:
 	if prompt == null or prompt.get("label") != "Endgame rematch" or not _bind():
@@ -152,23 +163,59 @@ func _activate_endgame_rematch(prompt: Node3D) -> bool:
 			" fighting=", manager.call("is_fighting") if manager != null else false)
 	return _activated == prompt or _fail("F20 rematch X did not record its expected provider activation")
 
-func _continue_navigation_lesson() -> void:
-	if _lesson_busy: return
+func _continue_navigation_lesson(generation: int) -> void:
+	if not _lesson_active or generation != _lesson_generation or _lesson_busy: return
 	var owner := INPUT_OWNER.current(tree)
 	if owner == null or owner.get_script() != LESSON_PANEL or not owner.call("is_open"): return
 	_lesson_busy = true
 	var row: Dictionary = owner.get("_row")
 	var id := str(row.get("id", ""))
-	var deadline := Time.get_ticks_msec() + 30000
-	print("F20 LESSON actual ordinary Continue id=", id)
-	while is_instance_valid(owner) and INPUT_OWNER.current(tree) == owner \
-		and owner.call("is_open") and Time.get_ticks_msec() < deadline:
+	var character_id := str(game.local.character_id)
+	var began := Time.get_ticks_msec()
+	var line_count := int(row.get("lines", []).size())
+	var start_line := int(owner.get("_line"))
+	var presses := 0
+	var input_ok := not id.is_empty() and start_line >= 0 and start_line < line_count
+	var dismissed: Array[String] = []
+	var dismissal_observer := func(lesson_id: String) -> void: dismissed.append(lesson_id)
+	owner.connect("dismissed", dismissal_observer)
+	print("F20 LESSON actual ordinary Continue id=", id, " reader=", get_instance_id(),
+		" generation=", generation, " ticks_ms=", began, " start_line=", start_line)
+	# Each normal edge spans both clocks. Slow drawing can exhaust 30 seconds
+	# during one edge, so bound input by the actual remaining authored lines;
+	# the unchanged receipt deadline starts after the last released edge.
+	while input_ok and dismissed.is_empty() and presses < line_count - start_line:
+		if not is_instance_valid(owner) or INPUT_OWNER.current(tree) != owner \
+			or not owner.call("is_open") or str(owner.get("_row").get("id", "")) != id \
+			or str(game.local.character_id) != character_id:
+			input_ok = false
+			break
+		var before_line := int(owner.get("_line"))
 		print("F20 LESSON rendered ", owner.get("_text").text)
 		await tap("menu_confirm")
-	while Time.get_ticks_msec() < deadline and game.local.flags.call("has", "opening:lesson:" + id) != true:
+		presses += 1
+		input_ok = dismissed == [id] or (is_instance_valid(owner) and owner.call("is_open") \
+			and str(owner.get("_row").get("id", "")) == id and int(owner.get("_line")) == before_line + 1)
+	var released := not Input.is_action_pressed("menu_confirm")
+	if is_instance_valid(owner): owner.disconnect("dismissed", dismissal_observer)
+	var receipt_began := Time.get_ticks_msec()
+	var deadline := receipt_began + 30000
+	while str(game.local.character_id) == character_id and Time.get_ticks_msec() < deadline \
+		and game.local.flags.call("has", "opening:lesson:" + id) != true:
 		await tree.process_frame
-	if id.is_empty() or not is_instance_valid(owner) or owner.call("is_open") \
-		or game.local.flags.call("has", "opening:lesson:" + id) != true:
+	var acknowledged: bool = str(game.local.character_id) == character_id \
+		and game.local.flags.call("has", "opening:lesson:" + id) == true
+	var original_open: bool = is_instance_valid(owner) and owner.call("is_open") \
+		and str(owner.get("_row").get("id", "")) == id
+	var completed := input_ok and released and is_instance_valid(owner) and not original_open \
+		and dismissed == [id] and acknowledged
+	print("F20 LESSON result id=", id, " reader=", get_instance_id(), " generation=", generation,
+		" completed=", completed, " elapsed_ms=", Time.get_ticks_msec() - began,
+		" receipt_ms=", Time.get_ticks_msec() - receipt_began, " authored_lines=", line_count,
+		" start_line=", start_line, " presses=", presses, " input_ok=", input_ok,
+		" released=", released, " dismissed=", dismissed, " original_open=", original_open,
+		" personal_ack=", acknowledged)
+	if not completed:
 		_fail("F20 ordinary lesson Continue did not complete this character's actual " + id)
 	else:
 		print("F20 LESSON actual personal acknowledgement id=", id)
