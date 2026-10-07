@@ -1,0 +1,28 @@
+{
+  "kind": "f20_existing_ending_capture_source_review",
+  "source_candidate": "46561ce17d5d1b470f3b131f1b3390dcb465b47e",
+  "path": "tests/helpers/f20_ending_probe.gd",
+  "independent_review": {
+    "agent": "/root/b_f20_review",
+    "scope": "Source only; actual hosted and visual gates open",
+    "exact_sha": "46561ce17d5d1b470f3b131f1b3390dcb465b47e",
+    "verdict": "SOURCE APPROVE"
+  },
+  "checks": {
+    "command": "git diff --check",
+    "result": "PASS"
+  },
+  "change": "Optional capture of existing ordinary Grandpa dialogue, credits, completed world and bounty screen; unique monotonically indexed files; draw callback disconnected on success or bounded30s timeout",
+  "disclosures": [
+    "Disclosed existing post-finale fixture remains unchanged",
+    "Capture-disabled behavior and all existing proof assertions preserved",
+    "No camera, gameplay, authority or durable-state writes added",
+    "Raw PNG captures stay in hosted artifact; only JPG contact sheet and code-blind verdict may be committed",
+    "Existing net proof remains headless unchanged"
+  ],
+  "unmet_gates": [
+    "Current pinned named logic and solo/net ending proofs",
+    "Actual capture and code-blind visual judgment",
+    "Independent criterion evidence verdict and issue572 READY"
+  ]
+}
