@@ -61,6 +61,7 @@ func _run() -> void:
 	await _check_the_shell_refuses_over_the_starter_picker()
 	await _check_the_shell_refuses_over_a_conversation()
 	await _check_lessons_own_skip_and_menu_input()
+	await _check_lesson_service_departures(game)
 
 	print("")
 	if _failures.is_empty():
@@ -229,6 +230,51 @@ func _check_lessons_own_skip_and_menu_input() -> void:
 	lesson.queue_free()
 	for release_frame: int in 4: await process_frame
 	print("lessons: every configured exchange skips at every line; menu refused; departure and opening edge preserved")
+
+
+## Exercise the actual mounted service's departure handling, not just panel
+## close(false). Identity/realm changes are disclosed lifecycle inputs in this
+## isolated smoke; no unlocks or earned progression are claimed or granted.
+func _check_lesson_service_departures(game: Node) -> void:
+	var rules := preload("res://scripts/onboarding/lesson_rules.gd")
+	var owner := preload("res://scripts/ui/input_owner.gd")
+	var service := preload("res://scripts/onboarding/lesson_service.gd").attach(game)
+	service.set_process(false)
+	var panel: CanvasLayer = service.get("_panel")
+	var player: RefCounted = game.get("local")
+	var identity: String = str(player.get("character_id"))
+	var realm: String = str(game.get("current_realm"))
+	var flags: Array = player.get("flags").call("all_set").duplicate()
+	var acknowledgements: Array[String] = []
+	var observe := func(id: String) -> void: acknowledgements.append(id)
+	panel.connect("dismissed", observe)
+	service.call("_process", 0.0)
+	var row: Dictionary = rules.config().get("lessons", [])[0].duplicate(true)
+	var dialogue: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(str(row.dialogue_path)))
+	var conversation: Dictionary = dialogue.get("conversations", {}).get(str(row.conversation), {})
+	row["speaker"] = conversation.get("speaker", "")
+	row["lines"] = conversation.get("lines", [])
+	for departure: String in ["character", "realm"]:
+		if not panel.call("open", row):
+			_fail("mounted lesson service would not open for " + departure + " departure")
+			continue
+		if owner.current(self) != panel: _fail("mounted lesson service did not own input")
+		if departure == "character": player.set("character_id", identity + "-departed")
+		else: game.set("current_realm", "water" if realm != "water" else "meadows")
+		service.call("_process", 0.0)
+		for departure_frame: int in 4: await process_frame
+		if panel.call("is_open") == true or owner.current(self) != null:
+			_fail("service " + departure + " departure did not release the lesson/world input")
+		if not acknowledgements.is_empty() or not (service.get("_pending") as Dictionary).is_empty() \
+				or player.get("flags").call("all_set") != flags:
+			_fail("service " + departure + " departure acknowledged a lesson for either identity")
+		player.set("character_id", identity)
+		game.set("current_realm", realm)
+		service.call("_process", 0.0)
+	panel.disconnect("dismissed", observe)
+	service.queue_free()
+	for release_frame: int in 4: await process_frame
+	print("lesson service: actual character/realm departures release input without dismissal or lesson receipt")
 
 
 ## A refusal the player cannot see is the same broken-looking dead button
