@@ -1,0 +1,35 @@
+{
+  "criterion": "F36#0 OPEN",
+  "subject": "terrapup",
+  "task_id": "01a116be-dd09-708f-8441-3971076c7c98",
+  "source_commit": "912cc57670",
+  "source_guard_review": {
+    "commit": "4d6563b8c4670429a3bd6b6466c0075f183b0103",
+    "agent": "/root/review_f36_cap",
+    "verdict": "APPROVE",
+    "scope": "Guarded existing skin transfer only; retained actual yaw0 result unaffected by report/yaw corrections"
+  },
+  "donor_sha256": "dfaf9519476da87d485e5ed8ee435989135810bc3b06e05a901d084143f52a21",
+  "target_sha256": "71da04a5c57f569be37369c03942fe4f9f450e1ef547fef10fcc12a415468721",
+  "output_sha256": "a1410b8c6ba1c289eec53285bae8daba9fc294f79029e517d63c187302ddef1b",
+  "numeric_transfer": "14283vertices/0unweighted/max4normalized; pre-export geometry/UV/material slots and source files untouched; inherited15bones7clips reimported15741tris",
+  "comparison_key": {
+    "A": "installed original",
+    "B": "Smart candidate with installed donor skin"
+  },
+  "judge": {
+    "agent": "/root/blind_listener_f10",
+    "verdict": "BLOCK B; prefer A",
+    "defects": [
+      "B F10/F12 crouch hip/thigh collapses to sharp flattened wedge; A preserves rounded haunch",
+      "B F2/F4 stride hip pinches and adjacent paws crowd; A cleaner limb separation",
+      "B F10 tail underside dark blade-like slab; reference chunky cap lost",
+      "B narrowed eyes/pointed brow feel stern; A round face/bulky paws preserve puppy appeal"
+    ],
+    "strengths": "Both preserve teal eyes/cream blaze/chest/brown/moss/stone identity; B clearer fur detail, broadly coherent shoulder/neck/look poses",
+    "limits": "DCC four extremes/two views/16frames only; per-pose envelope camera rule, no ground contact/continuity/native/gameplay/full-bar criterion PASS; A tailflick obscures tail"
+  },
+  "candidate_enabled": false,
+  "runtime_integration": "none",
+  "next_gate": "Coordinator stronger re-scope after bounded transfer BLOCK; no further generation spend authorized for retry by this result"
+}

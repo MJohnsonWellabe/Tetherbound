@@ -19,12 +19,18 @@
       "scope": "Explicit Low stress resolution while retaining1080 default",
       "verdict": "APPROVE",
       "reason": "All presets default1920x1080; empty/invalid/duplicate/cross-preset options fail; SHA/renderer/fresh-output checks unchanged"
+    },
+    {
+      "source_commit": "76496b47f939f4b810435e57e619133febb55a9d",
+      "scope": "Incremental explicit partial R2 receipts",
+      "verdict": "APPROVE",
+      "reason": "Progress false; final320/80 all checks+restore; partialquartersneverfull; unnecessary ancestor raster/HUD changes removeda402cace20; R2 F10 override alreadykeepsnativepixels"
     }
   ],
   "native_matrix_run": 37632862387,
   "native_matrix_checkout": "7266a88f6db5a1a399c7ad9cdb722a64a8395a6e",
-  "native_result": "Medium baseline failed on lane and unchanged main; full Low run37637690708 pending",
-  "visual_result": "pending",
+  "native_result": "Low37637690708 FAILtimeout124 with103/320actualnativeJPGs; nofinalreceipt",
+  "visual_result": "BLOCK partialLowbaseline bysame designatedblind agent",
   "shipping_flags": "unchanged OFF",
   "remaining_gates": [
     "Full Low native capture and catalog rescore (owner issue6039900185)",
@@ -34,5 +40,7 @@
     "Relevant unit/area-smoke batch; High/Medium PC confirmation deferred"
   ],
   "native_low_run": 37637690708,
-  "native_low_checkout": "16bfbb2d0581080517a9b0e3601d9435095e2b68"
+  "native_low_checkout": "16bfbb2d0581080517a9b0e3601d9435095e2b68",
+  "native_low_evidence": "ralph/reports/F41/lane-e-low-baseline-partial.json",
+  "visual_evidence": "ralph/reports/F41/lane-e-low-baseline-verdict.json"
 }

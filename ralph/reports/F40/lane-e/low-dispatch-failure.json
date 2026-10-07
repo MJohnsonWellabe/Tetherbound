@@ -1,0 +1,24 @@
+{
+  "criterion": "F40 OPEN",
+  "attempt_utc": "2026-10-07T15:12:00Z to15:17:00Z",
+  "attempted_checkout": "4d6563b8c4670429a3bd6b6466c0075f183b0103",
+  "result": "No dispatch confirmed; repeated empty HTTP500 on GitHub workflow-dispatch POST and issue572 comment POST",
+  "clients": "PowerShell REST UTF8 explicit, Python urllib; GET and git push succeed",
+  "run_id": null,
+  "browser_fallback": "No enabled browser surfaces; IAB unavailable",
+  "next_dispatch_payload": {
+    "ref": "main",
+    "inputs": {
+      "checkout_ref": "a402cace20bc7665929a225deb9a4a6a7334b0a7",
+      "script": "tools/capture_cloudreach_f40_matrix.gd",
+      "args": "--biome=cloudreach --preset=Low --low-resolution=1280x720 --source-commit=a402cace20bc7665929a225deb9a4a6a7334b0a7 --segment=dawn --output=res://shots/lane-e/f40-low-dawn-baseline",
+      "label": "lane-e-f40-low-dawn-baseline",
+      "mode": "render",
+      "rendering_method": "gl_compatibility",
+      "resolution": "1280x720",
+      "timeout_minutes": "30"
+    }
+  },
+  "guards": "Inspect live runs before dispatch; one E/max5; all4 clock quarters384frames still required; no nativeGodot on this PC",
+  "remaining_gate": "Hosted write transport needs restoration or coordinator dispatch on another client"
+}
