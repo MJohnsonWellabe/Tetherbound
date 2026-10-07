@@ -21,6 +21,7 @@ var _paired_720 := false
 var _tabs: Array[String] = []
 var _idle_hud := false
 var _build_states := false
+var _save_state := false
 var _idle_observation: Dictionary = {}
 var _records: Array[Dictionary] = []
 var _failures: Array[String] = []
@@ -56,6 +57,8 @@ func _run() -> void:
 			_idle_hud = true
 		elif arg == "--build-states":
 			_build_states = true
+		elif arg == "--save-state":
+			_save_state = true
 	if not SCENES.has(_biome) or not _output.begins_with("res://ralph/reports/VISUAL/phase2/"):
 		push_error("Use --biome and --output under the Phase 2 evidence directory")
 		quit(1)
@@ -80,6 +83,10 @@ func _run() -> void:
 		return
 	if _build_states and ((_map_cycle and _tabs.is_empty()) or (not _tabs.is_empty() and "build" not in _tabs)):
 		push_error("Build state evidence requires build in the requested tab set")
+		quit(1)
+		return
+	if _save_state and ((_map_cycle and _tabs.is_empty()) or (not _tabs.is_empty() and "save" not in _tabs)):
+		push_error("Save state evidence requires save in the requested tab set")
 		quit(1)
 		return
 	seed(_seed)
@@ -170,6 +177,8 @@ func _run() -> void:
 			await _shoot_settings_sections(menu, world)
 		if tab_id == "build" and _build_states:
 			await _shoot_build_states(menu, world, game)
+		if tab_id == "save" and _save_state:
+			await _shoot_populated_save(menu, world, game)
 	_stage = "closing_menu"
 	_write_manifest(false)
 	menu.call("close")
@@ -195,6 +204,7 @@ func _write_manifest(complete: bool) -> void:
 		"natural_idle_hud": _idle_hud,
 		"natural_idle_observation": _idle_observation,
 		"build_preference_states": _build_states,
+		"populated_save_state": _save_state,
 		"map_landmarks_sha256": FileAccess.get_sha256("res://data/config/map_landmarks.json"),
 		"input_contexts_sha256": FileAccess.get_sha256("res://data/config/input_contexts.json"),
 		"project_sha256": FileAccess.get_sha256("res://project.godot"),
@@ -264,6 +274,44 @@ func _choose_free_build(menu: Node, game: Node, enabled: bool) -> bool:
 		_failures.append("Existing Free build button did not select requested state")
 		return false
 	return true
+
+
+## Produce a real UI-written checkpoint from the existing disclosed stock.
+## Never overwrite a slot or claim an earned journey or reload proof.
+func _shoot_populated_save(menu: Node, world: Node, game: Node) -> void:
+	var bodies: Array = menu.get("_bodies")
+	var index := int(menu.get("_index"))
+	var tab: Node = bodies[index] if index >= 0 and index < bodies.size() else null
+	var rows: Array = tab.get("_rows") if tab != null else []
+	var slot := -1
+	for candidate in range(1, rows.size()):
+		if not bool(game.call("has_save", candidate)):
+			slot = candidate
+			break
+	if slot < 0:
+		_failures.append("No empty manual save slot; capture refuses to overwrite")
+		return
+	var button: Button = rows[slot].get("save") as Button
+	if button == null or button.disabled:
+		_failures.append("Existing manual Save button unavailable")
+		return
+	button.pressed.emit()
+	for frame in 6:
+		await process_frame
+	if not bool(game.call("has_save", slot)):
+		_failures.append("Real Save button did not write its empty manual slot")
+		return
+	var info: Dictionary = game.call("save_slot_info", slot)
+	var party: Object = game.get("party")
+	if party == null or int(info.get("party_size", -1)) != int(party.call("size")):
+		_failures.append("Written manual save summary does not match the captured party")
+		return
+	var before := _records.size()
+	await _shoot("menu_save_populated", "Real manual Save button wrote empty slot %d; disclosed stock, not earned play" % (slot + 1), world)
+	for record_index in range(before, _records.size()):
+		_records[record_index]["save_slot"] = slot
+		_records[record_index]["save_slot_info"] = info.duplicate(true)
+	_write_manifest(false)
 
 
 func _shoot_map_cycle(menu: Node, world: Node) -> void:
