@@ -1,7 +1,7 @@
 {
   "mode": "Independent source only; no engine/visual acceptance",
   "findings": [
-    "Installed Quaternius wood/normal paths; texture V .02–.29 inspected within longitudinal grain, avoiding end-grain/plaster",
+    "Installed Quaternius wood/normal paths; texture V .02\u2013.29 inspected within longitudinal grain, avoiding end-grain/plaster",
     "UV mapping/local material caching/config-before-build routing sound",
     "Original floor rise/size, counter/crate collisions, stair/ceiling geometry, NPC/traversal/save/authority unchanged; joinery solid=false",
     "Eight installed native Hall windows use mesh-only imports and existing apertures; no collider/state",
@@ -20,7 +20,7 @@
   "source_commit": "2909f57b6c45cfd3556f77757f6159145ebab4de",
   "reviewer": "/root/f42_visual_review",
   "verdict": "APPROVE",
-  "criteria": "F38#0–#5 andF17#6 OPEN",
+  "criteria": "F38#0\u2013#5 andF17#6 OPEN",
   "pending": [
     "actual grain scale/normal appearance",
     "shorter light reach/night lower-body readability",
@@ -31,6 +31,32 @@
     "commit": "f21fa6b6b28596818a0fccdd3f6406a6863796d4",
     "reviewer": "/root/f42_visual_review",
     "verdict": "APPROVE",
-    "scope": "Existing farm_to_hall X98→8.3 matches authored road start and actual house marker checked by existing smoke. Same21other sites/count528/time/weather/view/support guards; actual image/floor support still pending."
+    "scope": "Existing farm_to_hall X98\u21928.3 matches authored road start and actual house marker checked by existing smoke. Same21other sites/count528/time/weather/view/support guards; actual image/floor support still pending."
+  },
+  "criterion_scoped_final": {
+    "criterion": "F38#4",
+    "owner_directive": "572#6045342186",
+    "reviewer": "/root/f42_visual_review",
+    "verdict": "APPROVE",
+    "production_scope": [
+      "858a2428",
+      "55047e20",
+      "75864a6",
+      "7ec03315",
+      "2740551",
+      "9fe788c5",
+      "f4276281"
+    ],
+    "mixed_commit_exclusion": "858a2428 approval covers F38 building_prefabs/shop_interior only; catalogue_survey hunk excluded from this landing",
+    "proof_corrections": [
+      "f21fa6b6b28596818a0fccdd3f6406a6863796d4",
+      "1035a4eb7170c082e81440c6d72adebc2f9e9135"
+    ],
+    "proofs": {
+      "literal_blind_visual": "37667014067 eight day/night images PASS by /root/f26_presets_review",
+      "affected_logic": "37669603978 24files270tests10128assertions0fail",
+      "actual_area": "37673885907 farmdoor/road/nave/all16 arch-pedestal approaches PASS"
+    },
+    "excluded": "Other branch source, F17#6, otherF38 rows, release Visual bar, device/earned/co-op gates"
   }
 }
