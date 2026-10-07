@@ -1,6 +1,6 @@
 {
   "criterion": "F14#2",
-  "status": "VISUAL_PASS_SOURCE_REVIEW_PENDING",
+  "status": "PASS_AFFECTED_LOGIC_PENDING",
   "source_commit": "a63c508b3f3e173e8a0635542cea6ca0b0cbaadd",
   "run_id": 37671873221,
   "artifact_id": 11505218741,
@@ -24,7 +24,7 @@
     "reloaded": 0.5
   },
   "capture": "Each fixed production Camera3D transform/current status asserted after draw; whole SpringArm subtree disabled; interpolation reset. FOV70/far6500/1280x720. Directly posed landscape stills, trainer/HUD hidden, frozen day. Not ordinary traversal/motion or the full biome matrix.",
-  "presentation_candidate": "Existing material-only grouped-foam config locally enabled in both initial and reloaded worlds; shipping enabled=false and ridges_enabled=false retained. No new shaders, route, physics, ownership, reward or save mutation.",
+  "presentation_candidate": "Production promotion enabled=true; ridges_enabled=false retained. Existing paired run used exactly this material tuple in initial and reloaded worlds. No physics, progression, ownership or save mutation.",
   "reviewer": "/root/f26_presets_review",
   "review_mode": "Code-blind all four A/B images plus approved Tidewake reference; no source/state mapping supplied",
   "blind_mapping_revealed_after_review": {
@@ -44,12 +44,17 @@
     "Motion for coherent flow/speed/foam behavior",
     "Ordinary shore/swimming context"
   ],
-  "disposition": "Visible state difference and production restoration/save-reload PASS. Overall art notes retained separately. Shipping promotion and independent source approval pending; no READY yet.",
+  "disposition": "Literal criterion visual change + production restoration persistence PASS; bounded source APPROVE. Shipping tuple promoted; affected named unit on promoted commit pending. Overall BarA/B follow-up stays OPEN; no earned/motion/co-op claim.",
   "historical_full_bar_status": "BLOCKED",
   "owner_scoped_directive": "572#6045342186: literal restoration criterion only; overall art finish is separately tracked",
   "scoped_rejudgment": {
     "reviewer": "/root/f26_presets_review",
     "verdict": "PASS for visible change",
     "reason": "Both matched pairs clearly distinguish calmer A from stronger B through localized current streaks. Persistence comes from separate actual mechanics/state proof."
+  },
+  "independent_source_review": {
+    "reviewer": "/root/f39_visual_review",
+    "verdict": "APPROVE",
+    "scope": "enabled=true/ridges_enabled=false only plus existing f216/a63 smoke extensions; checked actual97/0 proof and material allowlist"
   }
 }
