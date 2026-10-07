@@ -335,6 +335,17 @@ func _initialize() -> void:
 	_control_port = int(args.get("control-port", 0))
 	_enet_port = int(args.get("enet-port", 0))
 	_scene_name = str(args.get("scene", "world"))
+	# A named hosted proof selects only this child's isolated device preset.
+	# It changes no character/world state, admission, fixture or gameplay flag.
+	if args.get("f25-library-preview") == true:
+		preload("res://scripts/vfx/move_effect_library.gd").config()["enabled"] = true
+	if args.get("f25-capture-preset") == "Medium":
+		if _peer_index != 0 or DisplayServer.get_name() == "headless" \
+			or RenderingServer.get_current_rendering_method() != "forward_plus" \
+			or preload("res://scripts/ui/graphics_prefs.gd").choose("Medium") != OK:
+			push_error("F25 capture requires the actual rendered Medium listen host")
+			quit(2)
+			return
 
 	if _role.is_empty() or _control_port <= 0:
 		push_error("peer_runner: --role and --control-port are required (got role='%s' control-port=%d)"
@@ -821,6 +832,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = await _step_place_creature(args)
 		"strike":
 			out = await _step_strike(args)
+		"f25_fight_capture":
+			out = await _step_f25_fight_capture(args)
 		"f22_pin_tell":
 			out = _step_f22_pin_tell(args)
 		"f22_enemy_staggers":
@@ -2988,6 +3001,93 @@ func _strike_transaction_snapshot() -> Dictionary:
 		"opponent_hp": float((rec.get("opponent", {}) as Dictionary).get("hp", -1.0)),
 		"struck_count": int((rec.get("struck_counts", {}) as Dictionary).get(victim, 0)),
 		"host_now_ms": Time.get_ticks_msec()}
+
+
+## Existing peer vocabulary: observe a live host while the coordinator races
+## the other peers' ordinary inputs. Never creates actors/effects, changes HP,
+## mastery/meter, pauses simulation or filters slow frames out of the sample.
+func _step_f25_fight_capture(args: Dictionary) -> Dictionary:
+	var graphics := preload("res://scripts/ui/graphics_prefs.gd")
+	var library := preload("res://scripts/vfx/move_effect_library.gd")
+	var budget := preload("res://scripts/vfx/move_effect_budget.gd")
+	var director := _encounter_director()
+	var manager := _combat_manager()
+	var output := str(args.get("out", ""))
+	var frame_budget_ms := float(args.get("frame_budget_ms", 0.0))
+	var sample_frames := int(args.get("sample_frames", 120))
+	if _peer_index != 0 or DisplayServer.get_name() == "headless" \
+		or RenderingServer.get_current_rendering_method() != "forward_plus" or graphics.selected() != "Medium" \
+		or not bool(library.config().get("enabled", false)) or director == null or manager == null \
+		or not output.begins_with("ralph/reports/F25/") or ".." in output \
+		or not is_finite(frame_budget_ms) or frame_budget_ms <= 0.0 or sample_frames < 30 or sample_frames > 600:
+		return {"verdict": "ERROR", "detail": "Actual Medium host, library opt-in, fresh F25 output and named frame budget required"}
+	if DirAccess.dir_exists_absolute(output) or DirAccess.make_dir_recursive_absolute(output) != OK:
+		return {"verdict": "ERROR", "detail": "Fresh capture output required; prior evidence preserved"}
+	var host := director.get("_encounter_host") as RefCounted
+	var id := str(manager.call("encounter_id"))
+	if host == null or id.is_empty(): return {"verdict": "FAIL", "detail": "No live host encounter"}
+	var cap := int(library.config().get("encounter_particle_cap", 0))
+	var wall_frames: Array[float] = []
+	var worst_frames: Array[float] = []
+	var observations: Array[Dictionary] = []
+	var capture: Image = null
+	var previous := Time.get_ticks_usec()
+	var errors: Array[String] = []
+	for frame: int in sample_frames:
+		await RenderingServer.frame_post_draw
+		var now := Time.get_ticks_usec()
+		var elapsed_ms := float(now - previous) / 1000.0
+		previous = now
+		wall_frames.append(elapsed_ms)
+		var record: Dictionary = host.call("record", id)
+		var owned := {}
+		for participant: Dictionary in record.get("participants", {}).values():
+			var uid := str(participant.get("creature_uid", ""))
+			if not uid.is_empty(): owned[uid] = true
+		if record.get("phase") != "active" or owned.size() != 4 or not bool(manager.call("is_fighting")):
+			errors.append("Four distinct owned participants must remain in the same active fight")
+			break
+		var effects: Array[Dictionary] = []
+		var sources := {}
+		for node: Node in get_nodes_in_group("move_effect_presentation"):
+			if not is_instance_valid(node) or node.is_queued_for_deletion(): continue
+			var context: Variant = node.get("_context")
+			if not context is Dictionary or context.get("encounter_id") != id: continue
+			var uid := str(context.get("actor_binding", {}).get("creature_uid", ""))
+			if not owned.has(uid): continue
+			var rank := int(context.get("mastery_rank", 0))
+			effects.append({"action_id": str(context.get("action_id", "")), "creature_uid": uid,
+				"move_id": str(context.get("move_id", "")), "rank": rank})
+			if rank == 5: sources[uid] = true
+		var used := int(budget.used(id))
+		if used > cap: errors.append("Live particle leases exceeded the encounter cap")
+		var saturated := sources.size() == 4 and used == cap and cap > 0
+		if saturated:
+			worst_frames.append(elapsed_ms)
+			if capture == null: capture = root.get_texture().get_image()
+		observations.append({"process_frame": Engine.get_process_frames(), "wall_frame_ms": elapsed_ms,
+			"used_slots": used, "four_rank5_sources_at_cap": saturated, "effects": effects})
+	if worst_frames.size() < 30: errors.append("Fewer than 30 rendered frames with four rank-5 sources at the actual encounter cap")
+	wall_frames.sort()
+	worst_frames.sort()
+	var p95 := wall_frames[clampi(ceili(wall_frames.size() * 0.95) - 1, 0, wall_frames.size() - 1)] if not wall_frames.is_empty() else INF
+	var worst_p95 := worst_frames[clampi(ceili(worst_frames.size() * 0.95) - 1, 0, worst_frames.size() - 1)] if not worst_frames.is_empty() else INF
+	if p95 > frame_budget_ms or worst_p95 > frame_budget_ms: errors.append("Measured frame time exceeded the caller's named budget")
+	if capture == null or capture.save_png(output.path_join("four-creature-medium.png")) != OK:
+		errors.append("No rendered saturated-fight frame retained")
+	var report := {"scope": "actual_four_owned_participant_fight; computer capture, no Ally hardware",
+		"renderer": RenderingServer.get_current_rendering_method(), "preset": graphics.selected(),
+		"resolution": [root.size.x, root.size.y], "adapter": RenderingServer.get_video_adapter_name(),
+		"encounter_id": id, "cap": cap, "frame_budget_ms": frame_budget_ms,
+		"frames": wall_frames.size(), "worst_frames": worst_frames.size(),
+		"p95_ms": p95 if is_finite(p95) else -1.0, "worst_p95_ms": worst_p95 if is_finite(worst_p95) else -1.0,
+		"observations": observations, "errors": errors,
+		"limits": ["GPU readback cost remains in subsequent frame intervals", "No simulation pause or durable mutation", "Visual judgment still required"]}
+	var file := FileAccess.open(output.path_join("fight.json"), FileAccess.WRITE)
+	if file == null: return {"verdict": "ERROR", "detail": "Cannot retain actual fight measurement"}
+	file.store_string(JSON.stringify(report, "\t"))
+	file.close()
+	return {"verdict": "PASS" if errors.is_empty() else "FAIL", "detail": "F25 live Medium fight measurement: " + str(errors), "data": report}
 
 
 func _step_strike(args: Dictionary) -> Dictionary:
