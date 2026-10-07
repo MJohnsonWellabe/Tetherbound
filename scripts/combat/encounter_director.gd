@@ -4091,12 +4091,35 @@ func host_pick_struck_participant(encounter_id: String, cfg: Dictionary,
 	var body: Node3D = deployed_body_for(struck)
 	if uses_saved_actor_vitals(encounter_id) \
 		and _ordinary_actor_binding(encounter_id, struck, body).is_empty(): return {}
+	var motion_context: Dictionary = {}
+	if _combat_motion_transport_enabled() and not uses_saved_actor_vitals(encounter_id):
+		var binding := _strike_actor_binding(encounter_id, struck, body)
+		var scope := _combat_motion_scope(encounter_id, struck, binding)
+		var runtime := _shared_host_fight(encounter_id)
+		var opponent: Node3D = runtime.call("body") as Node3D if runtime != null else _engaged_with
+		var source: RefCounted = opponent.get("instance") if is_instance_valid(opponent) else null
+		if scope.is_empty() or source == null or source.get("uid") != scope.opponent_uid \
+			or not host_enemy_target_current(encounter_id, struck, str(scope.creature_uid)) \
+			or _encounter_host.call("_self_utility_actor_current", encounter_id, struck, binding) != true: return {}
+		var away: Vector3 = -(body.call("facing") as Vector3)
+		var strength := maxf(0.0, float(cfg.get("lunge", 3.4))) * 0.4
+		if not away.is_finite() or not is_finite(strength): return {}
+		# Freeze before the resolver creates a receipt. These host-local body
+		# IDs never leave in the owner's presentation payload.
+		motion_context = preload("res://scripts/combat/accepted_action_host.gd")._original({
+			"scope":scope, "source_body_instance_id":opponent.get_instance_id(),
+			"target_body_instance_id":body.get_instance_id(),
+			"move_id":str(cfg.get("move_id", source.get("move_quick"))),
+			"direction":[away.x, away.y, away.z],
+			"strength":strength})
 	_encounter_host.call("note_struck", encounter_id, struck)
 	# The private presentation copy must reflect this blow immediately, rather
 	# than exposing an earlier count when the next player action republishes it.
 	if str(_encounter.get("encounter_id", "")) == encounter_id:
 		_encounter["struck_counts"] = (_encounter_host.call("record", encounter_id).get("struck_counts", {}) as Dictionary).duplicate()
-	return {"peer_id": struck, "card": _geared_card(struck, _creature_card_for(struck)), "body": body}
+	var picked := {"peer_id": struck, "card": _geared_card(struck, _creature_card_for(struck)), "body": body}
+	if not motion_context.is_empty(): picked["motion_context"] = motion_context
+	return picked
 
 
 ## F33: the struck creature's equipped Harness raises the defence the host
@@ -4182,6 +4205,43 @@ func host_deliver_enemy_hit(encounter_id: String, peer_id: int, payload: Diction
 	if uses_saved_actor_vitals(encounter_id):
 		_stage_ordinary_enemy_hit(encounter_id, peer_id, payload)
 		return
+	if _combat_motion_transport_enabled():
+		if not payload.get("motion_context") is Dictionary or not payload.get("impact") is Dictionary: return
+		var context: Dictionary = payload.get("motion_context", {})
+		var impact: Dictionary = payload.get("impact", {})
+		var body := deployed_body_for(peer_id)
+		var runtime := _shared_host_fight(encounter_id)
+		var opponent: Node3D = runtime.call("body") as Node3D if runtime != null else _engaged_with
+		var source: RefCounted = opponent.get("instance") if is_instance_valid(opponent) else null
+		var scope := _combat_motion_scope(encounter_id, peer_id, _strike_actor_binding(encounter_id, peer_id, body))
+		var direction: Variant = _wire_vec3(context.get("direction", []))
+		if context.is_empty() or scope.is_empty() or source == null or context.get("scope") != scope \
+			or context.get("source_body_instance_id") != opponent.get_instance_id() \
+			or context.get("target_body_instance_id") != body.get_instance_id() or source.get("uid") != scope.opponent_uid \
+			or payload.get("creature_uid") != scope.creature_uid or impact.get("target_uid") != scope.creature_uid \
+			or impact.get("move_id") != context.get("move_id") or payload.get("move_id") != context.get("move_id") \
+			or impact.get("damage") != payload.get("damage") or impact.get("type_mult") != payload.get("type_mult") \
+			or not direction is Vector3 or not (context.get("strength") is int or context.get("strength") is float) \
+			or not is_finite(float(context.strength)) or float(context.strength) < 0.0: return
+		var issuer := "%s:incoming:%s:" % [encounter_id, JSON.stringify([
+			scope, context.source_body_instance_id, context.target_body_instance_id]).sha256_text()]
+		var action_id := str(impact.get("action_id", ""))
+		if not action_id.begins_with(issuer): return
+		var serial := action_id.trim_prefix(issuer)
+		if not serial.is_valid_int() or int(serial) < 1 or serial != str(int(serial)) \
+			or not (impact.get("hitstop_seconds") is int or impact.get("hitstop_seconds") is float) \
+			or not is_finite(float(impact.hitstop_seconds)) or float(impact.hitstop_seconds) < 0.0: return
+		var motion := _host_motion_original(encounter_id, peer_id, body, "knockback", action_id,
+			direction, float(context.strength))
+		if motion.is_empty() or motion.scope != scope: return
+		var resolved := host_resolve_enemy_hit(encounter_id, peer_id, payload, context)
+		if resolved.is_empty(): return
+		payload = resolved
+		payload.erase("motion_context")
+		payload["motion_original"] = preload("res://scripts/combat/accepted_action_host.gd")._original(motion)
+		if payload.defence.get("staggered") == true and body.has_method("cancel_combat_burst"):
+			body.call("cancel_combat_burst")
+		_apply_host_motion_original(peer_id, body, payload.motion_original)
 	if _encounter_host != null and float(payload.get("damage", 0.0)) > 0.0:
 		_encounter_host.call("cancel_move_start", encounter_id, peer_id)
 	if peer_id == _local_peer_id():
@@ -9837,18 +9897,56 @@ func _host_pause_peer_defence(encounter_id: String, peer_id: int, impact: Dictio
 	HIT_FEEDBACK.pause_defence(state, Time.get_ticks_msec(),
 		float(impact.get("hitstop_seconds", 0.0)), HIT_FEEDBACK.MATH.config().get("poise", {}))
 
-func host_resolve_enemy_hit(encounter_id: String, peer_id: int, payload: Dictionary) -> Dictionary:
+func host_resolve_enemy_hit(encounter_id: String, peer_id: int, payload: Dictionary,
+		trusted_motion: Dictionary = {}) -> Dictionary:
 	var impact: Dictionary = payload.get("impact", {})
 	var target_uid := str(impact.get("target_uid", ""))
 	if not host_enemy_target_current(encounter_id, peer_id, target_uid): return {}
 	var card := _creature_card_for(peer_id)
+	var admitted_multiplier := 1.0
+	if not trusted_motion.is_empty():
+		if not _combat_motion_transport_enabled() or _session == null \
+			or payload.get("motion_context") != trusted_motion: return {}
+		var body := deployed_body_for(peer_id)
+		var binding := _strike_actor_binding(encounter_id, peer_id, body)
+		var scope := _combat_motion_scope(encounter_id, peer_id, binding)
+		var runtime := _shared_host_fight(encounter_id)
+		var opponent: Node3D = runtime.call("body") as Node3D if runtime != null else _engaged_with
+		if scope.is_empty() or not is_instance_valid(opponent) or trusted_motion.get("scope") != scope \
+			or scope.get("creature_uid") != target_uid or payload.get("creature_uid") != target_uid \
+			or trusted_motion.get("source_body_instance_id") != opponent.get_instance_id() \
+			or trusted_motion.get("target_body_instance_id") != body.get_instance_id() \
+			or _encounter_host.call("_self_utility_actor_current", encounter_id, peer_id, binding) != true: return {}
+		# actor_stat_state has already proved this character's personal hang
+		# receipt. A world socket or announced card is not its relic authority.
+		var admitted: Dictionary = _session.call("admitted_character_state", peer_id)
+		if admitted.get("character_id") != scope.character_id or not admitted.get("party") is Array \
+			or not admitted.get("realm_hearts") is Dictionary: return {}
+		var matches := 0
+		for owned: Dictionary in admitted.party:
+			if owned.get("uid") == target_uid: matches += 1
+		if matches != 1: return {}
+		var game: Node = _session.call("_game")
+		var hearts: RefCounted = game.get("realm_hearts") if game != null else null
+		if hearts == null or not admitted.realm_hearts.get("active_id") is String: return {}
+		var active_id: String = admitted.realm_hearts.active_id
+		if not active_id.is_empty():
+			var relic: Dictionary = hearts.call("heart", active_id)
+			if relic.is_empty() or not relic.get("power") is Dictionary: return {}
+			var multiplier: Variant = relic.power.get("incoming_damage_multiplier", 1.0)
+			if not (multiplier is int or multiplier is float) or not is_finite(float(multiplier)): return {}
+			admitted_multiplier = clampf(float(multiplier), 0.0, 1.0)
+		if not _strike_actor_binding_matches(encounter_id, peer_id, body, binding) \
+			or scope != _combat_motion_scope(encounter_id, peer_id, binding): return {}
 	var state := _host_defence_state(encounter_id, peer_id, target_uid)
 	if not HIT_FEEDBACK.admit(state.actions, impact): return {}
 	var cfg: Dictionary = HIT_FEEDBACK.MATH.config().get("poise", {})
-	var critical := bool(state.critical_ready) and Time.get_ticks_msec() < int(state.stagger_until_ms)
+	var resolved_at_ms: int = Time.get_ticks_msec() if not trusted_motion.is_empty() else -1
+	var critical: bool = bool(state.critical_ready) and (resolved_at_ms if resolved_at_ms >= 0 else Time.get_ticks_msec()) < int(state.stagger_until_ms)
 	var stop := float(HIT_FEEDBACK.config().get("critical_hitstop_seconds", 0.0)) if critical else float(impact.get("hitstop_seconds", 0.0))
 	var defence := HIT_FEEDBACK.resolve_defence_hit(state, float(payload.get("damage", 0.0)),
-		host_card_incoming_multiplier(card), Time.get_ticks_msec(), stop, cfg)
+		host_card_incoming_multiplier(card) if trusted_motion.is_empty() else admitted_multiplier,
+		resolved_at_ms if resolved_at_ms >= 0 else Time.get_ticks_msec(), stop, cfg)
 	var resolved := payload.duplicate()
 	resolved["damage"] = float(defence.damage)
 	resolved["critical"] = bool(defence.critical)

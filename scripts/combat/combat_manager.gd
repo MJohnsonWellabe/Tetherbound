@@ -3423,16 +3423,34 @@ func _admit_host_feedback(history: Dictionary, value: Dictionary, commit: bool =
 
 
 func _new_impact(move_id: String, slot: String, damage: float, type_mult: float,
-		critical: bool, direction: Vector3, target_body: Node3D, action_id: String = "") -> Dictionary:
+		critical: bool, direction: Vector3, target_body: Node3D, action_id: String = "",
+		trusted_context: Dictionary = {}) -> Dictionary:
 	var feedback := _shared_hit_feedback()
 	if feedback == null: return {}
+	var target_uid := ""
+	if not trusted_context.is_empty():
+		var scope: Dictionary = trusted_context.get("scope", {})
+		if not direction.is_finite() or not is_finite(damage) or damage < 0.0 or not is_finite(type_mult) or type_mult < 0.0 \
+			or not action_id.is_empty() or scope.is_empty() or str(scope.get("encounter_id", "")).is_empty() \
+			or scope.get("encounter_id") != _encounter_id or not is_instance_valid(_wild) or _enemy == null \
+			or not is_instance_valid(target_body) or str(scope.get("creature_uid", "")).is_empty() \
+			or scope.get("opponent_uid") != _enemy.get("uid") or int(scope.get("opponent_generation", 0)) < 1 \
+			or trusted_context.get("source_body_instance_id") != _wild.get_instance_id() \
+			or trusted_context.get("target_body_instance_id") != target_body.get_instance_id() \
+			or trusted_context.get("move_id") != move_id: return {}
+		# The actual host pick fixes the issuer and target before receipt(). A
+		# remote target never borrows this manager's local active creature UID.
+		_impact_serial += 1
+		action_id = "%s:incoming:%s:%d" % [str(scope.encounter_id), JSON.stringify([
+			scope, trusted_context.source_body_instance_id, trusted_context.target_body_instance_id]).sha256_text(), _impact_serial]
+		target_uid = str(scope.creature_uid)
 	if action_id.is_empty():
 		_impact_serial += 1
 		action_id = "%s:impact:%d" % [_encounter_id, _impact_serial]
 	var height := float(target_body.call("body_height")) if is_instance_valid(target_body) and target_body.has_method("body_height") else 0.0
 	var profile: Dictionary = target_body.call("combat_config") if is_instance_valid(target_body) and target_body.has_method("combat_config") else {}
 	var target_instance := _enemy if target_body == _wild else active_creature()
-	var target_uid := str(target_instance.get("uid")) if target_instance != null else ""
+	if trusted_context.is_empty(): target_uid = str(target_instance.get("uid")) if target_instance != null else ""
 	var move: Dictionary = _moves.move(move_id)
 	var contact := Vector3.INF
 	if is_instance_valid(target_body):
@@ -3751,15 +3769,23 @@ func _host_resolve_enemy_strike_for_a_participant(cfg: Dictionary, origin: Vecto
 		maxf(1.0, float(card.get("defence", 1.0))),
 		_rng.randf(), _moves.power(move_id), type_mult
 	)
-	_encounter_link.call("host_deliver_enemy_hit", _encounter_id,
-		int(pick.get("peer_id", 0)), {
-			"damage": damage,
-			"type_mult": type_mult,
-			"move_id": move_id,
-			"lunge": float(cfg.get("lunge", 3.4)),
-			"hp_scale": maxf(1.0, float(card.get("hp_scale", 1.0))),
-			"creature_uid": str(card.get("creature_uid", "")),
-		})
+	var payload := {"damage":damage, "type_mult":type_mult, "move_id":move_id,
+		"lunge":float(cfg.get("lunge", 3.4)), "hp_scale":maxf(1.0, float(card.get("hp_scale", 1.0))),
+		"creature_uid":str(card.get("creature_uid", ""))}
+	var context: Dictionary = pick.get("motion_context", {})
+	if not context.is_empty():
+		var scope: Dictionary = context.get("scope", {})
+		var target: Node3D = pick.get("body")
+		if scope.get("encounter_id") != _encounter_id or scope.get("peer_id") != pick.get("peer_id") \
+			or scope.get("creature_uid") != card.get("creature_uid") or scope.get("opponent_uid") != _enemy.get("uid") \
+			or not is_instance_valid(target) or not is_instance_valid(_wild) \
+			or context.get("source_body_instance_id") != _wild.get_instance_id() \
+			or context.get("target_body_instance_id") != target.get_instance_id(): return true
+		var impact := _new_impact(move_id, "quick", damage, type_mult, false, facing, target, "", context)
+		if impact.is_empty(): return true
+		payload["impact"] = impact
+		payload["motion_context"] = context
+	_encounter_link.call("host_deliver_enemy_hit", _encounter_id, int(pick.get("peer_id", 0)), payload)
 	return true
 
 
@@ -3786,32 +3812,74 @@ func apply_host_enemy_hit(payload: Dictionary) -> void:
 	# saved the host's vitals row, carrying that receipt (wild_actor_scope.gd).
 	var canonical: bool = _durable_trainer_reward_owned() or payload.get("actor_vitals_receipt") is Dictionary
 	if canonical and not _saved_actor_vitals_matches(creature, payload): return
-	if canonical and not _admit_host_feedback(_seen_impact_actions, payload.get("impact", {})): return
-	# Host rolls the base strike; this character's one active relic applies
-	# once at the owning health mutation, also for a host on another island.
-	var damage: float = float(payload.get("damage", 0.0)) if canonical else _incoming_owned_damage(float(payload.get("damage", 0.0)))
+	if not payload.get("motion_original", {}) is Dictionary or not payload.get("impact", {}) is Dictionary: return
+	var motion: Dictionary = payload.get("motion_original", {})
+	var incoming: Dictionary = payload.get("impact", {})
+	var resolved_legacy: bool = not canonical and not motion.is_empty()
+	var defence: Dictionary = payload.get("defence", {}) if payload.get("defence", {}) is Dictionary else {}
+	if not motion.is_empty():
+		if motion.get("kind") != "knockback" or motion.get("action_id") != incoming.get("action_id") \
+			or incoming.get("target_uid") != creature.get("uid") or payload.get("creature_uid") != creature.get("uid") \
+			or incoming.get("move_id") != payload.get("move_id") \
+			or not (incoming.get("hitstop_seconds") is int or incoming.get("hitstop_seconds") is float) \
+			or not is_finite(float(incoming.hitstop_seconds)) or float(incoming.hitstop_seconds) < 0.0 \
+			or _encounter_link == null or _encounter_link.call("combat_motion_original_current", motion, _ally_body) != true: return
+		if not canonical and (incoming.get("damage") != payload.get("damage") \
+			or incoming.get("type_mult") != payload.get("type_mult")): return
+	if resolved_legacy:
+		if payload.get("host_resolved_defence") != true or incoming.get("host_resolved_defence") != true \
+			or not defence.get("critical") is bool or not defence.get("staggered") is bool \
+			or not defence.get("critical_ready") is bool or defence.get("critical") != incoming.get("critical") \
+			or defence.get("critical") != payload.get("critical") or defence.get("damage") != payload.get("damage"): return
+		for key: String in ["poise", "quiet_left", "stagger_left"]:
+			if not (defence.get(key) is int or defence.get(key) is float) \
+				or not is_finite(float(defence[key])) or float(defence[key]) < 0.0: return
+	if (canonical or not motion.is_empty()) and not _admit_host_feedback(_seen_impact_actions, incoming): return
+	# Resolved host hits already include the proved relic and critical once.
+	# Older session payloads retain the owning character's existing formula.
+	var damage: float = float(payload.get("damage", 0.0)) if canonical or resolved_legacy else _incoming_owned_damage(float(payload.get("damage", 0.0)))
 	var move_id := str(payload.get("move_id", ""))
-	var stagger_crit: bool = bool(payload.get("critical", false)) if canonical else _consume_player_stagger_critical()
-	if stagger_crit and not canonical:
+	var stagger_crit: bool = bool(payload.get("critical", false)) if canonical or resolved_legacy else _consume_player_stagger_critical()
+	if stagger_crit and not canonical and not resolved_legacy:
 		damage *= _poise_crit_scale()
 	_adopt_host_hp_scale(creature, payload)
 	var killed: bool = bool(payload.get("actor_vitals_fainted")) if canonical else creature.take_damage(damage / _gear_hp_scale(creature))
-	var stagger_triggered := false if killed else _take_player_poise_damage(damage)
+	var stagger_triggered := false
+	if not killed and resolved_legacy:
+		# The host already consumed this hit's critical window and poise once.
+		# Adopt its remaining actor-clock durations after ordinary interruption.
+		_clear_move_input()
+		if _action == Action.WINDUP:
+			_pending_move = {}
+			_buffered_attack = ""
+			_buffer_left = 0.0
+			_action = Action.READY
+			_action_timer = 0.0
+		_player_poise = float(defence.poise)
+		_player_poise_quiet_left = float(defence.quiet_left)
+		_player_stagger_critical_ready = bool(defence.critical_ready)
+		stagger_triggered = bool(defence.staggered)
+		if stagger_triggered:
+			if _action == Action.BURST and _ally_body.has_method("cancel_combat_burst"):
+				_ally_body.call("cancel_combat_burst")
+			_action = Action.STAGGER
+			_action_timer = float(defence.stagger_left)
+		elif _action == Action.STAGGER:
+			_action = Action.READY
+			_action_timer = 0.0
+	elif not killed:
+		stagger_triggered = _take_player_poise_damage(damage)
 	var facing: Vector3 = _ally_body.call("facing")
-	var motion: Dictionary = payload.get("motion_original", {})
 	if not motion.is_empty():
-		if _encounter_link != null and _encounter_link.call("combat_motion_original_current", motion, _ally_body):
-			_ally_body.call("add_impulse", _encounter_link.call("_wire_vec3", motion.direction), float(motion.strength))
+		_ally_body.call("add_impulse", _encounter_link.call("_wire_vec3", motion.direction), float(motion.strength))
 	else:
 		_ally_body.call("add_impulse", -facing, float(payload.get("lunge", 3.4)) * 0.4)
 	if killed:
 		_ally_body.call("play_faint")
 	else:
 		_play_combat_flinch(_ally_body, -facing)
-	# F21#0/#1: a canonical host hit carries its frozen receipt; the legacy
-	# session payload gets one built here for presentation (flash class, own
-	# number, shake/rumble). Displacement above stays the session's own.
-	var incoming: Dictionary = payload.get("impact", {})
+	# Canonical and mounted legacy hits carry the host's original receipt.
+	# Older session payloads retain their local presentation receipt fallback.
 	if incoming.is_empty():
 		incoming = _new_impact(move_id, "quick", damage, float(payload.get("type_mult", 1.0)), stagger_crit, -facing, _ally_body)
 	_present_local_contact(_ally_body.call("centre"), str(incoming.get("weight", "light")) in ["heavy", "ultimate"],
@@ -3820,7 +3888,7 @@ func apply_host_enemy_hit(payload: Dictionary) -> void:
 	if stagger_triggered:
 		_announce_stagger(false)
 	hit_landed.emit(false, damage)
-	_begin_hitstop(_hitstop_seconds(true, stagger_crit))
+	_begin_hitstop(float(incoming.hitstop_seconds) if not motion.is_empty() else _hitstop_seconds(true, stagger_crit))
 	state_changed.emit()
 	if killed:
 		if not canonical: CONDITION.note_faint(creature, CONDITION.config())
