@@ -564,23 +564,47 @@ func _transit_shutter(row: Dictionary, from: Vector3, to: Vector3, target_bounds
 		extent += Vector3(float(offset[0]), float(offset[1]), float(offset[2])).length()
 		radius = maxf(radius, float(row.parameters.size) * extent)
 	var body_radius := radius + float((_scenarios.transit_shutter as Dictionary).clearance_m)
-	var spread := maxf(0.0, float(row.parameters.get("spread", 0.0)))
+	var spread := absf(float(row.parameters.get("spread", 0.0)))
 	if int(row.parameters.count) > 1:
 		spread = maxf(spread, float(row.parameters.size) * float(profile.get("volley_separation_scale", 2.8)))
-		spread += float(int(row.parameters.count) - 1) * 0.5 * float(profile.get("volley_stagger_m", 0.25))
+	spread *= maxf(1.0, absf(float(profile.get("volley_vertical_ratio", 1.0))))
+	if int(row.parameters.count) > 1:
+		spread += float(int(row.parameters.count) - 1) * 0.5 * absf(float(profile.get("volley_stagger_m", 0.25)))
+	spread += absf(float(row.parameters.get("arc", 0.0)))
 	radius += spread
 	var cfg: Dictionary = _scenarios.transit_shutter
 	radius += float(cfg.clearance_m)
-	var expanded := target_bounds.grow(radius)
-	if expanded.has_point(from): return {"error": "No independently clear transit origin"}
-	var entry: Variant = expanded.intersects_segment(from, to)
-	if not entry is Vector3: return {"error": "Transit does not intersect measured target envelope"}
-	var fraction := from.distance_to(entry as Vector3) / maxf(0.001, from.distance_to(to))
-	var shutter := minf(float(cfg.maximum_fraction), fraction * float(cfg.before_entry_scale))
-	if shutter < float(cfg.minimum_fraction): return {"error": "No usable clear transit interval"}
+	# Volley offsets begin at zero and grow with sin(t*PI). A full-lifetime
+	# spread at launch falsely removes the rank-five volley's clear interval.
+	# Bound ALL offsets over [0, shutter], then find a shutter before the
+	# intersection of that conservative envelope. The separate actual-body
+	# clearance assertion at texture readback remains unchanged.
+	var minimum := float(cfg.minimum_fraction)
+	var lower := minimum
+	var upper := float(cfg.maximum_fraction)
+	var shutter := minimum
+	var fraction := 0.0
+	var interval_radius := body_radius
+	for iteration in 25:
+		var candidate := minimum if iteration == 0 else (lower + upper) * 0.5
+		var peak_spread := spread * sin(minf(candidate, 0.5) * PI)
+		var expanded := target_bounds.grow(body_radius + peak_spread)
+		var entry: Variant = expanded.intersects_segment(from, to)
+		var clear := not expanded.has_point(from) and entry is Vector3
+		var entry_fraction := from.distance_to(entry as Vector3) / maxf(0.001, from.distance_to(to)) if clear else 0.0
+		clear = clear and candidate <= entry_fraction * float(cfg.before_entry_scale)
+		if iteration == 0 and not clear: return {"error": "No usable clear transit interval"}
+		if clear:
+			lower = candidate
+			shutter = candidate
+			fraction = entry_fraction
+			interval_radius = body_radius + peak_spread
+		else:
+			upper = candidate
 	return {"fraction": shutter, "clear_transit_required": true, "envelope_radius_m": radius,
 		"body_envelope_radius_m": body_radius,
-		"entry_fraction": fraction, "method": str(cfg.method), "revision": "r6-separate-body-and-group-envelopes"}
+		"interval_envelope_radius_m": interval_radius,
+		"entry_fraction": fraction, "method": str(cfg.method), "revision": "r8-sine-bounded-volley-interval"}
 
 func _percentile(samples: Array[float], fraction: float) -> float:
 	if samples.is_empty(): return 0.0
