@@ -107,6 +107,9 @@ func test_two_participants_join_the_same_wounded_enemy_without_reset() -> void:
 	assert_eq(state.enemy, enemy)
 	assert_eq(state.phase().id, "tidal_run")
 	assert_eq(state.eligible_characters.size(), 2)
+	assert_true(state.engage(42, "outsider", "other", _enemy()).is_empty())
+	assert_eq(state.enemy, enemy)
+	assert_eq(state.eligible_characters.size(), 2)
 
 func test_alpha_pending_ledgers_fence_results_and_leave_without_primary_prerequisites() -> void:
 	var alpha := ALPHA_RUNTIME.new()
@@ -136,9 +139,6 @@ func test_alpha_pending_ledgers_fence_results_and_leave_without_primary_prerequi
 	assert_false(alpha._alpha_results_pending(id))
 	assert_true(alpha.realm_transition_alpha_results_settled())
 	alpha.free()
-	assert_true(state.engage(42, "outsider", "other", _enemy()).is_empty())
-	assert_eq(state.enemy, enemy)
-	assert_eq(state.eligible_characters.size(), 2)
 
 func test_repeated_peer_cannot_add_a_different_character_entitlement() -> void:
 	var state := _opened()
