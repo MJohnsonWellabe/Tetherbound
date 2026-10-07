@@ -102,6 +102,8 @@ func run(tree: SceneTree, world: Node3D, game: Node, player: CharacterBody3D,
 func _nearest_supply(item: String, refused: Array[int] = []) -> Node3D:
 	var nearest: Node3D = null
 	var distance := INF
+	var nearest_authored: Node3D = null
+	var authored_distance := INF
 	for candidate: Node in _tree.get_nodes_in_group(&"harvestable"):
 		if not candidate is Node3D or not candidate.has_method("resource_item"):
 			continue
@@ -125,10 +127,16 @@ func _nearest_supply(item: String, refused: Array[int] = []) -> Node3D:
 		if bool(route.required) and (route.points as Array).is_empty():
 			continue
 		var gap := _player.global_position.distance_squared_to(candidate.global_position)
-		if gap < distance:
+		# Prefer the world's authored harvest nodes only after every eligibility
+		# guard. Live scatter remains the fallback when no authored supply qualifies.
+		if script.resource_path == HARVEST_NODE_PATH:
+			if gap < authored_distance:
+				authored_distance = gap
+				nearest_authored = candidate
+		elif gap < distance:
 			distance = gap
 			nearest = candidate
-	return nearest
+	return nearest_authored if nearest_authored != null else nearest
 
 
 static func before_crossing(at: Vector3, crossing: Dictionary) -> bool:
