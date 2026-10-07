@@ -34,6 +34,22 @@ func test_each_relic_unlocks_the_next_tier_and_stormwood_the_reserved_fifth() ->
 	assert_eq(fifth.size(), 4, "Stormwood's relic unlocks the reserved tier 5 column")
 	assert_true(fifth.has("altar_biome5"))
 	assert_true(RULES.next_tier_blueprints(cfg, "not_a_biome").is_empty())
+	# Exercise the actual hang action for every live handoff, including the
+	# reserved fifth column, rather than only the configuration helper.
+	for biome: String in ["meadows", "tidewake", "cloudreach", "stormwood"]:
+		var expected := RULES.next_tier_blueprints(cfg, biome)
+		expected.sort()
+		var original := _character([biome])
+		var frozen := var_to_bytes(original)
+		var granted := _hang(original, biome)
+		assert_true(granted.get("ok") == true, "actual hang: " + biome)
+		assert_eq(var_to_bytes(original), frozen, "staging preserves the original owner record")
+		if granted.get("ok") != true: continue
+		var actual: Array = granted.state.redesign_character.attachment_recipes
+		actual.sort()
+		assert_eq(actual, expected, "exact next-column action grant: " + biome)
+		assert_eq(granted.state.redesign_character.relics_hung, [biome])
+		assert_eq((granted.state.redesign_character.transaction_receipts as Array).count("relic_hang:%s:character-test" % biome), 1)
 
 
 func test_the_grant_is_once_and_keeps_earlier_blueprints() -> void:

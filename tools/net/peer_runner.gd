@@ -881,6 +881,8 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			out = _step_heart_place(args)
 		"heart_activate":
 			out = await _step_heart_activate(args)
+		"f31_shrine_hang":
+			out = await _step_f31_shrine_hang(args)
 		"present_publish":
 			out = _step_present_publish(args)
 		"present_damage":
@@ -3712,6 +3714,126 @@ func _step_heart_activate(args: Dictionary) -> Dictionary:
 	if not bool((hearts as RefCounted).call("activate", heart, game.get("progression"))):
 		return {"verdict": "FAIL", "detail": "activate('%s') refused -- not placed here" % heart}
 	return {"verdict": "PASS", "detail": "wearing '%s'" % heart}
+
+
+## Opt-in F31 continuation of the existing shared Warden smoke. Its earned
+## personal relic is the only input; reuse the existing disclosed approach
+## placement and ordinary physical prompt/button helpers. No state grants.
+func _step_f31_shrine_hang(_args: Dictionary) -> Dictionary:
+	var started := Engine.get_physics_frames()
+	var game := root.get_node_or_null(^"Game")
+	var session: Node = _session()
+	if game == null or session == null or session.call("portal_runtime_ready") != true:
+		return {"verdict": "FAIL", "detail": "actual Shrine runtime is unavailable"}
+	var local: RefCounted = game.get("local")
+	var world: RefCounted = game.get("world")
+	var character: String = local.get("character_id")
+	var namespace: String = world.get("reward_delivery_namespace")
+	var world_id: String = world.get("world_id")
+	var epoch: String = session.call("_altar_current_epoch")
+	var live := func() -> bool:
+		return is_instance_valid(game) and root.get_node_or_null(^"Game") == game \
+			and game.get("session") == session and game.get("local") == local and game.get("world") == world \
+			and local.get("character_id") == character and world.get("reward_delivery_namespace") == namespace \
+			and world.get("world_id") == world_id and session.call("_altar_current_epoch") == epoch
+	var before := _foundations_payload()
+	var active_before: String = game.get("realm_hearts").call("active_id")
+	var receipt := "relic_hang:meadows:" + character
+	if (before.character.get("relics_held", []) as Array).count("meadows") != 1 \
+		or (before.character.get("relics_hung", []) as Array).has("meadows") \
+		or (before.character.get("transaction_receipts", []) as Array).has(receipt):
+		return {"verdict": "FAIL", "detail": "requires the original un-hung Warden relic", "data": before}
+	var proof: Script = preload("res://tools/net/proof_steps_f48.gd")
+	var deployed: Dictionary = await proof._deploy_owned(self)
+	if deployed.get("verdict") != "PASS": return deployed
+	if not live.call(): return {"verdict": "FAIL", "detail": "original Shrine owner changed during deployment"}
+	var approached: Dictionary = await proof._fixture_approach(self, {"target": "meadows_pedestal",
+		"fixture_disclosure": "named_mechanics_actor_and_owned_ally_placement_no_earned_credit"})
+	if approached.get("verdict") != "PASS": return approached
+	if not live.call(): return {"verdict": "FAIL", "detail": "original Shrine owner changed during approach"}
+	var halls := get_nodes_in_group("crossing_halls")
+	if halls.size() != 1: return {"verdict": "FAIL", "detail": "requires one actual mounted Hall"}
+	var hall: Node = halls[0]
+	var pedestal: Node = hall.get("_pedestals").get("meadows")
+	var prompt: Node
+	if pedestal != null:
+		for child: Node in pedestal.get_children():
+			if child.get_script() == preload("res://scripts/world/interactable.gd"):
+				if prompt != null: return {"verdict": "FAIL", "detail": "ambiguous mounted Meadows pedestal prompt"}
+				prompt = child
+	var arbiter := get_first_node_in_group("interaction_arbiter")
+	if prompt == null or arbiter == null or arbiter.call("winning_provider") != prompt:
+		return {"verdict": "FAIL", "detail": "actual Meadows pedestal must win physical interaction"}
+	if not proof._watch_owner_saves(self): return {"verdict": "FAIL", "detail": "actual owner BOOL-write observer unavailable"}
+	var pressed := await _step_press({"action": "interact"})
+	if pressed.get("verdict") != "PASS": return pressed
+	var row: Dictionary = {}
+	var accepted: Dictionary = {}
+	var hang_edge: Dictionary = {}
+	for frame in maxi(0, NET_STEP_BUDGET_FRAMES - (Engine.get_physics_frames() - started)):
+		if not live.call(): break
+		row = session.call("_owner_training_row")
+		if row.get("action") == "relic_hang" and row.get("intent") == {"biome": "meadows"} \
+			and row.get("character_id") == character and row.get("world_namespace") == namespace \
+			and row.get("world_id") == world_id and row.get("receipt") == receipt and row.get("status") == "accepted":
+			accepted = session.call("_foundation_decision", int(session.call("local_peer_id")), row)
+			var edge: Dictionary = get_meta("f48_latest_owner_save", {})
+			if edge.get("row", {}).get("receipt") == receipt and proof._fallback_parent_matches(edge, row):
+				hang_edge = edge.duplicate(true)
+			if accepted.get("owner_saved") == true and accepted.get("owner_acknowledged") == true and not hang_edge.is_empty(): break
+		await physics_frame
+	var after := _foundations_payload()
+	var known: Array = after.character.get("attachment_recipes", [])
+	var disk_known: Array = after.character_disk_redesign.get("attachment_recipes", [])
+	var blueprints: Array[String] = preload("res://scripts/build/station_rules.gd").next_tier_blueprints(
+		preload("res://scripts/build/station_rules.gd").config(), "meadows")
+	var valid: bool = live.call() and not hang_edge.is_empty() and proof._fallback_parent_matches(hang_edge, row) \
+		and accepted.get("owner_saved") == true and accepted.get("owner_acknowledged") == true \
+		and row.get("receipt") == receipt and blueprints.size() == 4 \
+		and (after.character.get("relics_hung", []) as Array).count("meadows") == 1 \
+		and (after.character_disk_redesign.get("relics_hung", []) as Array).count("meadows") == 1 \
+		and (after.character.get("transaction_receipts", []) as Array).count(receipt) == 1 \
+		and (after.character_disk_redesign.get("transaction_receipts", []) as Array).count(receipt) == 1
+	for blueprint: String in blueprints:
+		valid = valid and known.count(blueprint) == 1 and disk_known.count(blueprint) == 1
+	var owner: Node = preload("res://scripts/ui/input_owner.gd").current(self)
+	if not valid or owner == null or owner.get_script() != preload("res://scripts/ui/relic_power_panel.gd") \
+		or (owner.get("_rows") as Array).size() != 1:
+		return {"verdict": "FAIL", "detail": "actual hang must save/ACK all four Tidewake blueprints and open one-power choice",
+			"data": {"before": before, "after": after, "row": row, "accepted": accepted}}
+	var choice: Button = owner.get("_rows")[0]
+	var chosen: Dictionary = await proof._button(self, {"text": choice.text})
+	if chosen.get("verdict") != "PASS": return chosen
+	var disk: Dictionary = {}
+	var active := ""
+	var power_edge: Dictionary = {}
+	var power_row: Dictionary = {}
+	for frame in maxi(0, NET_STEP_BUDGET_FRAMES - (Engine.get_physics_frames() - started)):
+		if not live.call() or not is_instance_valid(owner): break
+		disk = game.get("save_system").get("_characters").call("state", character)
+		active = game.get("realm_hearts").call("active_id")
+		if active_before != "meadows":
+			power_row = session.call("_owner_training_row")
+			var edge: Dictionary = get_meta("f48_latest_owner_save", {})
+			if power_row.get("action") == "relic_power" and power_row.get("character_id") == character \
+				and proof._fallback_parent_matches(edge, power_row): power_edge = edge.duplicate(true)
+		if active == "meadows" and disk.get("realm_hearts", {}).get("active_id") == active \
+			and owner.get("_pending_heart") == "" and (active_before == "meadows" or not power_edge.is_empty()): break
+		await physics_frame
+	if not live.call() or active != "meadows" or disk.get("realm_hearts", {}).get("active_id") != active \
+		or not is_instance_valid(owner) or owner.get("_pending_heart") != "" \
+		or (active_before != "meadows" and power_edge.is_empty()):
+		return {"verdict": "FAIL", "detail": "original carried-power choice did not settle in the existing step budget", "data": {"active_id": active, "disk": disk}}
+	var closed := await _step_press({"action": "menu_cancel"})
+	if closed.get("verdict") != "PASS": return closed
+	valid = live.call() and active == "meadows" and disk.get("realm_hearts", {}).get("active_id") == active \
+		and preload("res://scripts/ui/input_owner.gd").current(self) == null
+	return {"verdict": "PASS" if valid else "FAIL", "detail": "original earned Meadows relic hung once; four personal Tidewake blueprints saved/ACKed; one carried power selected by ordinary A",
+		"data": {"before": before, "after": after, "row": row, "accepted": accepted, "approach": approached,
+			"owner_write_packet": hang_edge.packet, "owner_write_row": hang_edge.row, "owner_write_path": hang_edge.path,
+			"power_mode": "unchanged_original_active_power" if active_before == "meadows" else "actual_saved_power_choice",
+			"power_owner_write_packet": power_edge.get("packet", {}), "power_row": power_row,
+			"active_id": active, "disk_active_id": disk.get("realm_hearts", {}).get("active_id")}}
 
 
 # --- lane 6.D: a friend's fight is not silent ---------------------------------
