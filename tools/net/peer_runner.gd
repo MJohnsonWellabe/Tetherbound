@@ -4387,6 +4387,12 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 			var staged := _stage_trainer_hp_ceiling(director, manager, opponent as Node3D, ceiling)
 			if not bool(staged.get("ok", false)):
 				return {"verdict": "ERROR", "detail": str(staged.get("why", "trainer HP fixture failed"))}
+		# Optional staging preserves committed motion and the original save/ACK fence.
+		if args.get("stage_when_ready", false) == true \
+				and (not bool(manager.call("quick_ready")) \
+					or manager.get("_move_awaiting_host") == true \
+					or director.call("ordinary_actor_vitals_pending", str(manager.call("encounter_id"))) == true):
+			continue
 		var target: Vector3 = (opponent as Node3D).call("centre")
 		var stand := target + Vector3(1.1, 0.0, 0.0)
 		if args.get("retain_fixture_actions") == true:
