@@ -1,0 +1,11 @@
+{
+  "agent": "/root/judge_stormursa_anatomy",
+  "source_commit": "4aee31756e",
+  "verdict": "BLOCK",
+  "preference": "B slight cool palette/face contrast improvement; neither fullidentity",
+  "sheet": "stormursa-local-surface-comparison.jpg",
+  "scope": "Bounded8-frame DCC reference appearance only",
+  "reason": "B F4/F8 clear blueeyes/ears/muzzle/paws. F2/F6/F8 scattered blue patches replace small glass-lightningseams. F6/F8 indistinct copper orangepatch instead of sculpted shoulderforms. F8 coarse triangular shoulder/flank facets. No visible tearing.",
+  "shipping_enabled": false,
+  "remaining": "Geometry/materialidentity, clips/deformation/native scale/fullF29 OPEN; two local material approaches nowfailed, re-scope required"
+}

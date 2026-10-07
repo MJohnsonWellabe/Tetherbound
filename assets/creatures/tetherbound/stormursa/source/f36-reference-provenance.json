@@ -1,7 +1,7 @@
 {
   "subject": "stormursa",
   "working_name": "Stormursa",
-  "status": "drafted_inspected_reference_only_not_runtime_art_PASS",
+  "status": "local_material_attempts_BLOCK_reference_shoulder_forms_unresolved_OFF",
   "method": "built_in_imagegen",
   "prompt": "Use case: stylized-concept. Asset type: original Tetherbound Stormursa image-to-3D reference. Input image 1 is an established identity reference for Staticub, not an edit target. Generate ONE clean full-body three-quarter studio view of Staticub grown into an adult Stormwood storm bear. Preserve the rounded bear ears, blue eyes, broad muzzle and lightning-fur family resemblance of the reference. Broad shoulders, massive forepaws, short tail, natural bear anatomy, four separate visibly articulated legs and paws with grounded weight; balanced neutral standing posture, mouth closed, face clearly visible. F29 settled direction: muted slate-violet fur, warm copper colored horn-like shoulder ridges, restrained small translucent glass accents, fine white-violet lightning seams in fur with no floating sparks or haze. Read as a 4.10-meter withers-height adult compared with Staticub 3.25m, without adding a scale ruler or person. Tactile stylized fur masses, original high-quality creature adventure design. Plain neutral light gray background, even studio lighting, whole body and all four paws fully inside frame, no props, no clothing, no mechanical armor, no text, no logos, no Team Tether red. Produce a riggable coherent single body, avoid fused limbs, avoid floating decoration, do not copy comparison-game characters.",
   "reference": "res://assets/creatures/tetherbound/stormursa/reference/f36-three-quarter-v1.png",
@@ -33,5 +33,19 @@
       0.07,
       1
     ]
-  }
+  },
+  "local_material_attempts": [
+    {
+      "method": "selected_to_active_colour_projection",
+      "evidence": "ralph/reports/F29/stormursa-local-colour-verdict.json",
+      "sha256": "b11be009fed5da436a1a16a7043a62296397f182b9b9769c6405eaa823bce99d",
+      "result": "BLOCK"
+    },
+    {
+      "method": "nearest_surface_UV_colour",
+      "evidence": "ralph/reports/F29/stormursa-local-surface-verdict.json",
+      "sha256": "d3c58b909909c35cd4a97803513cf4062b8d8d1883a62afb5d6d69e5482dd21b",
+      "result": "BLOCK"
+    }
+  ]
 }

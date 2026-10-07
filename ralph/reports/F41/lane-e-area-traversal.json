@@ -1,0 +1,12 @@
+{
+  "run_id": 37651592632,
+  "source_commit": "e81fa614cb5bdd9d75ad5fdc704db2c704149cd9",
+  "artifact_id": 11497855506,
+  "artifact_sha256": "a6ee05fb9d87ddd544c857f0b2c2f51661f1ed55ccbfd836cf66b66a24e86bfe",
+  "proof": "tests/smoke_stormwood_b_surge_phase_traversal.gd",
+  "passed": 58,
+  "failed": 0,
+  "exit_code": 0,
+  "runtime_seconds": 189,
+  "scope": "Actual Stormwood scene/controllerstick ConductorRun under4pinnedphases; staged rod/forced attempts disclosed byexisting smoke; no visual/fullcampaign/flag-on acceptance"
+}
