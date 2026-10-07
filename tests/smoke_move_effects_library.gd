@@ -770,6 +770,11 @@ func _exercise_ultimate(move_id: String, count: int, cfg: Dictionary, rank: int 
 		"target_ground": _ground_point(_target_x, 0.0)}
 	var effect: Node3D = ULTIMATES.launch(_arena, from, to, spec, context)
 	if effect == null: _failures.append("Ultimate launch refused " + encounter); return
+	if not LIBRARY.ultimate_override(move_id).is_empty():
+		var actual_row: Dictionary = effect.get("_row")
+		var actual_frozen: Dictionary = effect.get("_context")
+		if actual_row.get("mastery_rank") != rank or actual_frozen.get("mastery_rank") != rank:
+			_failures.append("Ultimate override replaced earned mastery " + encounter)
 	if _current_attacker != null and _current_attacker.has_method("play_attack"): _current_attacker.call("play_attack")
 	var arrivals := [0]
 	var away := (to - from).normalized()
