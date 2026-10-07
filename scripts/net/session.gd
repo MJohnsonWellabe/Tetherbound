@@ -61,7 +61,12 @@ func rejoin_payout_lists(summary: Dictionary) -> Dictionary:
 ## The hello's rejoin decision; records its code for owner-passive admission.
 func rejoin_admission_for(character_id: String, portable: Dictionary, summary: Dictionary, lists: Dictionary) -> Dictionary:
 	var rejoin: Dictionary = {"ok": false, "code": "payout_list_invalid"}
-	if lists.get("valid") == true:
+	# A post-ACK declaration passes the same portable checks as the hello.
+	if not CHARACTER_AUTHORITY.errors(portable, character_id).is_empty() \
+		or not CHARACTER_AUTHORITY.personal_flags_valid(summary.get("personal_flags", {"flags": []})) \
+		or _groom_service().call("admission_valid", summary.get("discovered_landmarks"), true) != true:
+		rejoin = {"ok": false, "code": "invalid_character"}
+	elif lists.get("valid") == true:
 		rejoin = _character_authority.call("rejoin_admission", character_id, portable, _game().get("world").reward_deliveries,
 			(summary.get("personal_flags", {"flags": []}) as Dictionary).get("flags", []), lists.settled, lists.owed)
 	last_rejoin_admission[character_id] = str(rejoin.get("code", ""))
