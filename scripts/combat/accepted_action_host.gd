@@ -505,11 +505,13 @@ func join(id: String, peer: int, uid: String = "", character: String = "") -> Di
 
 
 func authorize_burst(id: String, peer: int, intent: Dictionary, profile: Dictionary,
-		cost: float, now_ms: int, distance: float, duration: float, regen_delay_seconds: float) -> Dictionary:
+		cost: float, now_ms: int, distance: float, duration: float, regen_delay_seconds: float,
+		motion_original: Dictionary = {}) -> Dictionary:
 	if move_action_publication_pending(id):
 		return _refuse("burst_intent", peer, "pending_action", "The original hit is still being published.")
 	var before: Dictionary = (_strike_authority.get(id, {}) as Dictionary).duplicate()
-	var verdict: Dictionary = super.authorize_burst(id, peer, intent, profile, cost, now_ms, distance, duration, regen_delay_seconds)
+	var verdict: Dictionary = super.authorize_burst(id, peer, intent, profile, cost, now_ms,
+		distance, duration, regen_delay_seconds, motion_original)
 	_retain_originals(id, before)
 	return verdict
 

@@ -41,3 +41,13 @@ not constitute PASS. These three declarations are now explicitly bool;
 same independent reviewer APPROVE, expressions unchanged. Next proof forces
 these classes through four existing named files before repeating full mapped
 logic or the actual opening. No test is skipped/disabled or assertion weakened.
+
+Hosted compile-forcing run37656840714 on450d1749b9ed9e131911753f27d6dd8b8b6b0576
+PASS: test_actor_vitals_authority.gd, test_companion_presence.gd,
+test_hit_feedback.gd, test_move_commit_runtime.gd;69 tests/615 assertions/0 failed,
+exit0/9s. Artifact11500126044 independently inspected: no SCRIPT ERROR,
+Parse Error, failed-load or failed-test markers. This verifies the corrected
+lazy classes on that exact cut, not the subsequent guest-core/camera/producer
+changes, actual collision paths, arrival visuals or Medium performance.
+The131 mapped files including remote_creature references remain the wider
+necessary logic batch; dispatched separately on40267285699ae8a88ecee8e37ac80afe1059762b.
