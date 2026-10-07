@@ -78,6 +78,7 @@ var _graphics_capture: Dictionary = {}
 var _time_name := "day"
 ## Grounded first presses repeated before a departure launch (evidence).
 var _departure_jump_presses := 0
+var _departure_launches: Array[Dictionary] = []
 
 
 func _init() -> void:
@@ -253,7 +254,12 @@ func _departure() -> void:
 	for step in 60 * 5:
 		_steer(NORTH_OUT)
 		await physics_frame
-		if _player.global_position.z - CROWN.z > 10.0:
+		# Launch beside the north lip, rather than seven metres inside the
+		# 34 m crown. The first owned-carrier run touched down at z+15.9:
+		# its normal descending glide reached the floor before clearing it.
+		# This remains the same input-driven walk/jump, with no reposition,
+		# velocity override or change to production flight/landing behavior.
+		if _player.global_position.z - CROWN.z > 15.0:
 			break
 	# A player whose first press did not leave the ground presses again. The
 	# night run stepped onto the low roost rack on the jump frame, so the press
@@ -285,6 +291,9 @@ func _departure() -> void:
 		_fail("%s departure: second Jump did not launch (%s) at %s, overhead: %s" % [_time_name,
 			str(_fly.call("launch_blockers")), _player.global_position, _overhead_colliders()])
 		return
+	_departure_launches.append({"time":_time_name, "player_position":_v(_player.global_position),
+		"velocity":_v(_player.velocity), "flying":bool(_fly.call("is_flying")),
+		"crown_flat_distance_m":_flat(_player.global_position, CROWN)})
 	for i in 60:
 		_steer(NORTH_OUT)
 		await physics_frame
@@ -429,7 +438,8 @@ func _finish() -> void:
 		"camera": "production CameraRig, processing on throughout; yaw written as the right stick; no evidence camera",
 		"graphics_capture": _graphics_capture,
 		"fixture_disclosure": "reset_for_new_game; realm cloudreach; scene instantiated directly; Act I-II flags incl. fly_traversal_unlocked (frame matrix BOOT_FLAGS); five-owned matrix party, Galecrest active and summoned, no loaner; trainer teleported to the arrival start in the air once per time of day, then Jump launches the glide; yaw written each physics frame as the stick; pitch -32 deg for the rim-out frame only; clock pinned; HUD hidden for each frame. Visual fixture, not earned unlock/trial/bond/save evidence.",
-		"records": _records, "failures": _failures, "departure_repeated_ground_presses": _departure_jump_presses, "complete": _failures.is_empty() and _records.size() == expected,
+		"records": _records, "failures": _failures, "departure_repeated_ground_presses": _departure_jump_presses,
+		"departure_launches": _departure_launches, "complete": _failures.is_empty() and _records.size() == expected,
 		"finished_utc": Time.get_datetime_string_from_system(true)}
 	var file := FileAccess.open(OUT + "/manifest.json", FileAccess.WRITE)
 	if file == null:
