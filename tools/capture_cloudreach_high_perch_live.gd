@@ -16,7 +16,7 @@ extends SceneTree
 ## Per time of day (day 10:00, night 23:00), one continuous sequence:
 ##   1. ARRIVAL. The trainer is placed 80 m south of the crown, 14 m above it,
 ##      and presses Jump in the air, which launches the production glide on
-##      Maela's loaner (the party has no flier). Move forward is held with the
+##      the active owned Galecrest. Move forward is held with the
 ##      camera yaw on the crown, as a player's stick would hold it, until the
 ##      glide lands. Frames: `arrival-far` (~50 m out), `arrival-lip` (~22 m
 ##      out), `arrival-landed` (1 s after touchdown).
