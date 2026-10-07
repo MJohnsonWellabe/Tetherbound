@@ -3054,6 +3054,10 @@ func _step_f25_fight_capture(args: Dictionary) -> Dictionary:
 		var drawn_particles := 0
 		for node: Node in get_nodes_in_group("move_effect_presentation"):
 			if not is_instance_valid(node) or node.is_queued_for_deletion(): continue
+			# Legacy travel shares this group but has no library context/load.
+			var effect_script := node.get_script() as Script
+			if effect_script == null or effect_script.resource_path not in [
+				"res://scripts/vfx/move_effect.gd", "res://scripts/vfx/ultimates/ultimate_effect.gd"]: continue
 			var context: Variant = node.get("_context")
 			if not context is Dictionary or context.get("encounter_id") != id: continue
 			var uid := str(context.get("actor_binding", {}).get("creature_uid", ""))
