@@ -3,7 +3,7 @@
  "baseline_set": "2026-10-04T23:30:00Z",
  "start": "2026-10-04T23:00:00Z",
  "sprint_hours": 8,
- "sprints": 33,
+ "sprints": 13,
  "rebaselines": [
   "2026-10-04 6:50 PM CDT, before any tracking: baseline measurement corrected. F29#3, F36#0, F36#3 and F47#0 (agent half) were labelled blocked but are agent work. The F49 bars now also measure the 13 chapter cards and the 4 release-wide requirements. Bar dates unchanged.",
   "2026-10-04 7:50 PM CDT (owner): added lane P, a temporary performance lane for sprints 1–4. Codex's desktop timings showed Meadows 11, Tidewake 7 and Stormwood 17 fps average at Medium 1080p. No other bar moved.",
@@ -11,599 +11,293 @@
   "2026-10-05 9:05 AM CDT: F02 (earned Meadows spine, 7 open rows) moved from lane A's F17 bar to its F49 bar: every open F02 row's audit gap reads 'Folds into F49' (or F47), so F17 was being measured on end-of-pass integrated runs. F01's four open rows stay on F17; they are stale 2026-10-04 re-proofs of criteria F17 has since closed and are being re-run now.",
   "2026-10-06 7:20 AM CDT (owner: 'redo the delivery board based on actual progress'). Measured pace 10-04 6:30 PM → 10-06 7 AM CT: 26 criteria met in ~37 h across 6–9 lanes, about one criterion per lane per 8-hour sprint, Claude and Codex alike. Lanes now match reality: Claude Lane A and F18 finish their bars and archive (owner 10-05: no new Claude lanes); six Codex lanes (root, R1–R5) take their current work, then pull the rest in ROADMAP order. Features over 6 open criteria are split across lanes. Each bar is sized at 1 sprint per open criterion. F49 follows the last feature. Planned finish moves from Sat 10 Oct 10 AM CT (S17) to Thu 15 Oct 12 PM CT (S33). Old bars stay as dashed ghosts.",
   "2026-10-06 7:15 AM CDT (owner): F03#0/#1 move from Claude Lane A to Codex R3; Lane A keeps F01#6b and F17#6 then archives.",
-  "2026-10-06 12:35 PM CDT: Claude Lane A archived (owner: no more Claude lanes); its F17#6 scene items and hero art move to Codex root (M1). No other dates change."
+  "2026-10-06 12:35 PM CDT: Claude Lane A archived (owner: no more Claude lanes); its F17#6 scene items and hero art move to Codex root (M1). No other dates change.",
+  "2026-10-07 9:15 AM CDT (owner): Codex restarted as five sprint lanes A–E from consolidated main b3ad69a; target about 24 hours (lane work ends Thu 08 Oct about 7 AM CDT, owner items after). A criterion counts once evidenced on its lane branch (READY on #572); Claude consolidates to main every 2 hours. Previous plan (finish Thu 15 Oct) kept as history."
  ],
  "lanes": [
   {
-   "name": "Lane A · Claude (F17 bar, then archive)",
-   "bars": [
-    {
-     "label": "F17 village + Hall close-out (F01#6b, F17#6)",
-     "features": [
-      "F17",
-      "F01"
-     ],
-     "start": 4.6,
-     "end": 5.32,
-     "orig_start": 0,
-     "orig_end": 2,
-     "note": "archived 12:20 PM CT 10-06; F17#6 scene items to Codex root M1",
-     "baseline_pct": 85.7
-    }
-   ],
    "id": "A",
-   "session": "tb/f17"
-  },
-  {
-   "name": "Lane F18 · Claude (then archive)",
+   "name": "Lane A · Codex (combat, moves, commands, ultimates)",
+   "session": "tb/codex-a",
    "bars": [
     {
-     "label": "F18 earned loop (#546)",
-     "features": [
-      "F18"
-     ],
-     "start": 4.6,
-     "end": 5.1,
-     "orig_start": 0,
-     "orig_end": 1.5,
-     "baseline_pct": 100.0
-    }
-   ],
-   "id": "F18",
-   "session": "tb/f18"
-  },
-  {
-   "name": "Codex root · Codex",
-   "bars": [
-    {
-     "label": "F21 close-out (C1 F21#5)",
-     "features": [
-      "F21"
-     ],
-     "start": 5.6,
-     "end": 7.6,
-     "orig_start": 9.5,
-     "orig_end": 10.5,
-     "note": "after P3: oversized encounter tick (main CI flake)",
-     "baseline_pct": 66.7
-    },
-    {
-     "label": "F17#6 Hall/village scene + hero art (M1, from Lane A)",
-     "features": [
-      "F17"
-     ],
-     "start": 7.6,
-     "end": 8.6,
-     "baseline_pct": 85.7
-    },
-    {
-     "label": "F19 reorder + level curve (part 1/2)",
-     "features": [
-      "F19",
-      "F06",
-      "F07",
-      "F08",
-      "F09"
-     ],
-     "start": 7.6,
-     "end": 13.6,
-     "orig_start": 1.5,
-     "orig_end": 4,
-     "baseline_pct": 55.6
-    },
-    {
-     "label": "F20 ending (folds F10–F15) (part 4/4)",
-     "features": [
-      "F20",
-      "F10",
-      "F11",
-      "F12",
-      "F13",
-      "F14",
-      "F15"
-     ],
-     "start": 13.6,
-     "end": 18.6,
-     "orig_start": 4,
-     "orig_end": 6.5,
-     "baseline_pct": 45.9
-    },
-    {
-     "label": "F43 bounty board",
-     "features": [
-      "F43"
-     ],
-     "start": 18.6,
-     "end": 22.6,
-     "orig_start": 6.5,
-     "orig_end": 7.5,
-     "baseline_pct": 0.0
-    },
-    {
-     "label": "F41 Stormwood visuals",
-     "features": [
-      "F41"
-     ],
-     "start": 22.6,
-     "end": 28.6,
-     "orig_start": 9,
-     "orig_end": 10.5,
-     "baseline_pct": 0.0
-    },
-    {
-     "label": "F49 integrated run, 13 chapter cards, release-wide",
-     "features": [
-      "F49",
-      "CARDS",
-      "XCUT",
-      "F02"
-     ],
-     "start": 29.6,
-     "end": 32.27,
-     "orig_start": 11,
-     "orig_end": 13,
-     "baseline_pct": 34.5
-    }
-   ],
-   "id": "root",
-   "session": "tb/codex-p*"
-  },
-  {
-   "name": "Codex R1 · Codex",
-   "bars": [
-    {
-     "label": "F27 actor_vitals flip + round fence",
-     "features": [
-      "F27"
-     ],
-     "start": 4.6,
-     "end": 5.6,
-     "orig_start": 0,
-     "orig_end": 1.5,
-     "baseline_pct": 83.3
-    },
-    {
-     "label": "F30 traits",
-     "features": [
-      "F30"
-     ],
-     "start": 5.6,
-     "end": 6.6,
-     "orig_start": 1.5,
-     "orig_end": 2.5,
-     "baseline_pct": 80.0
-    },
-    {
-     "label": "F45 research log",
-     "features": [
-      "F45"
-     ],
-     "start": 6.6,
-     "end": 7.6,
-     "orig_start": 5,
-     "orig_end": 5.5,
-     "baseline_pct": 75.0
-    },
-    {
-     "label": "F19 reorder + level curve (part 2/2)",
-     "features": [
-      "F19",
-      "F06",
-      "F07",
-      "F08",
-      "F09"
-     ],
-     "start": 7.6,
-     "end": 13.6,
-     "orig_start": 1.5,
-     "orig_end": 4,
-     "baseline_pct": 55.6
-    },
-    {
-     "label": "F26 renderer + look dev",
-     "features": [
-      "F26"
-     ],
-     "start": 13.6,
-     "end": 17.6,
-     "orig_start": 0,
-     "orig_end": 3,
-     "baseline_pct": 16.7
-    },
-    {
-     "label": "F37 Ripplet swim + dive",
-     "features": [
-      "F37"
-     ],
-     "start": 17.6,
-     "end": 21.6,
-     "orig_start": 6.5,
-     "orig_end": 7.5,
-     "baseline_pct": 20.0
-    },
-    {
-     "label": "F46 onboarding",
-     "features": [
-      "F46"
-     ],
-     "start": 21.6,
-     "end": 24.6,
-     "orig_start": 8.5,
-     "orig_end": 10,
-     "baseline_pct": 0.0
-    },
-    {
-     "label": "F47 economy + clear time",
-     "features": [
-      "F47"
-     ],
-     "start": 24.6,
-     "end": 29.6,
-     "orig_start": 8.5,
-     "orig_end": 11,
-     "baseline_pct": 0.0
-    },
-    {
-     "label": "F49 integrated run, 13 chapter cards, release-wide",
-     "features": [
-      "F49",
-      "CARDS",
-      "XCUT",
-      "F02"
-     ],
-     "start": 29.6,
-     "end": 32.27,
-     "orig_start": 11,
-     "orig_end": 13,
-     "baseline_pct": 34.5
-    }
-   ],
-   "id": "R1",
-   "session": "tb/codex-r1"
-  },
-  {
-   "name": "Codex R2 · Codex",
-   "bars": [
-    {
-     "label": "F22 + F04 balance and patterns",
-     "features": [
-      "F22",
-      "F04"
-     ],
-     "start": 4.6,
-     "end": 11.6,
-     "orig_start": 0,
-     "orig_end": 2.5,
-     "baseline_pct": 42.9
-    },
-    {
-     "label": "F20 ending (folds F10–F15) (part 2/4)",
-     "features": [
-      "F20",
-      "F10",
-      "F11",
-      "F12",
-      "F13",
-      "F14",
-      "F15"
-     ],
-     "start": 11.6,
-     "end": 16.6,
-     "orig_start": 4,
-     "orig_end": 6.5,
-     "baseline_pct": 45.9
-    },
-    {
-     "label": "F25 move effects",
+     "label": "F25 move effects library (flag on)",
      "features": [
       "F25"
      ],
-     "start": 16.6,
-     "end": 21.6,
-     "orig_start": 6.5,
-     "orig_end": 8,
+     "start": 7.652,
+     "end": 8.107,
      "baseline_pct": 16.7
     },
     {
-     "label": "F39 Tidewake visuals",
-     "features": [
-      "F39"
-     ],
-     "start": 21.6,
-     "end": 27.6,
-     "orig_start": 6.5,
-     "orig_end": 8,
-     "baseline_pct": 0.0
-    },
-    {
-     "label": "F49 integrated run, 13 chapter cards, release-wide",
-     "features": [
-      "F49",
-      "CARDS",
-      "XCUT",
-      "F02"
-     ],
-     "start": 29.6,
-     "end": 32.27,
-     "orig_start": 11,
-     "orig_end": 13,
-     "baseline_pct": 34.5
-    }
-   ],
-   "id": "R2",
-   "session": "tb/codex-r2"
-  },
-  {
-   "name": "Codex R3 · Codex",
-   "bars": [
-    {
-     "label": "F03 Meadows lures + distinct activities (from Lane A)",
-     "features": [
-      "F03"
-     ],
-     "start": 4.7,
-     "end": 6.7,
-     "baseline_pct": 75.0
-    },
-    {
-     "label": "F31 last criterion",
-     "features": [
-      "F31"
-     ],
-     "start": 4.6,
-     "end": 5.6,
-     "orig_start": 2,
-     "orig_end": 4,
-     "baseline_pct": 85.7
-    },
-    {
-     "label": "F32 close-out",
-     "features": [
-      "F32"
-     ],
-     "start": 5.6,
-     "end": 6.6,
-     "orig_start": 2.5,
-     "orig_end": 3,
-     "baseline_pct": 83.3
-    },
-    {
-     "label": "F33 gear",
-     "features": [
-      "F33"
-     ],
-     "start": 6.6,
-     "end": 10.6,
-     "orig_start": 4,
-     "orig_end": 5.5,
-     "baseline_pct": 20.0
-    },
-    {
-     "label": "F20 ending (folds F10–F15) (part 1/4)",
-     "features": [
-      "F20",
-      "F10",
-      "F11",
-      "F12",
-      "F13",
-      "F14",
-      "F15"
-     ],
-     "start": 10.6,
-     "end": 15.6,
-     "orig_start": 4,
-     "orig_end": 6.5,
-     "baseline_pct": 45.9
-    },
-    {
-     "label": "Performance to target",
-     "features": [
-      "XPERF",
-      "F26"
-     ],
-     "start": 15.6,
-     "end": 20.6,
-     "orig_start": 0.1,
-     "orig_end": 4,
-     "baseline_pct": 14.3
-    },
-    {
-     "label": "F44 rematches",
-     "features": [
-      "F44"
-     ],
-     "start": 20.6,
-     "end": 23.6,
-     "orig_start": 7.5,
-     "orig_end": 8.5,
-     "baseline_pct": 25.0
-    },
-    {
-     "label": "F38 Meadows visuals",
-     "features": [
-      "F38"
-     ],
-     "start": 23.6,
-     "end": 29.6,
-     "orig_start": 10.5,
-     "orig_end": 12,
-     "baseline_pct": 0.0
-    },
-    {
-     "label": "F49 integrated run, 13 chapter cards, release-wide",
-     "features": [
-      "F49",
-      "CARDS",
-      "XCUT",
-      "F02"
-     ],
-     "start": 29.6,
-     "end": 32.27,
-     "orig_start": 11,
-     "orig_end": 13,
-     "baseline_pct": 34.5
-    }
-   ],
-   "id": "R3",
-   "session": "tb/codex-r3"
-  },
-  {
-   "name": "Codex R4 · Codex",
-   "bars": [
-    {
-     "label": "F23 loadout + mastery",
+     "label": "F23 loadout + ultimate meter",
      "features": [
       "F23"
      ],
-     "start": 4.6,
-     "end": 10.6,
-     "orig_start": 2.5,
-     "orig_end": 4.5,
-     "baseline_pct": 0.0
-    },
-    {
-     "label": "F24 Tether Commands",
-     "features": [
-      "F24"
-     ],
-     "start": 10.6,
-     "end": 16.6,
-     "orig_start": 4.5,
-     "orig_end": 6.5,
-     "baseline_pct": 0.0
+     "start": 8.107,
+     "end": 8.379,
+     "baseline_pct": 50.0
     },
     {
      "label": "F35 ultimates",
      "features": [
       "F35"
      ],
-     "start": 16.6,
-     "end": 21.6,
-     "orig_start": 8,
-     "orig_end": 9.5,
+     "start": 8.379,
+     "end": 8.834,
      "baseline_pct": 0.0
     },
     {
-     "label": "F40 Cloudreach visuals",
+     "label": "F24 Tether Commands (flags on)",
      "features": [
-      "F40"
+      "F24"
      ],
-     "start": 21.6,
-     "end": 27.6,
-     "orig_start": 8,
-     "orig_end": 9,
-     "baseline_pct": 0.0
-    },
-    {
-     "label": "F49 integrated run, 13 chapter cards, release-wide",
-     "features": [
-      "F49",
-      "CARDS",
-      "XCUT",
-      "F02"
-     ],
-     "start": 29.6,
-     "end": 32.27,
-     "orig_start": 11,
-     "orig_end": 13,
-     "baseline_pct": 34.5
-    }
-   ],
-   "id": "R4",
-   "session": "tb/codex-r4"
-  },
-  {
-   "name": "Codex R5 · Codex",
-   "bars": [
-    {
-     "label": "F28 Masters, feasts",
-     "features": [
-      "F28"
-     ],
-     "start": 4.6,
-     "end": 9.6,
-     "orig_start": 3,
-     "orig_end": 5,
+     "start": 8.834,
+     "end": 9.198,
      "baseline_pct": 33.3
     },
     {
-     "label": "F29 evolution lines",
+     "label": "F42#2 combat HUD + F21 camera/impact",
      "features": [
-      "F29"
+      "F21"
      ],
-     "start": 9.6,
-     "end": 11.6,
-     "orig_start": 5.5,
-     "orig_end": 7,
-     "baseline_pct": 80.0
+     "start": 9.198,
+     "end": 9.561,
+     "baseline_pct": 66.7
     },
     {
-     "label": "F20 ending (folds F10–F15) (part 3/4)",
+     "label": "F22 + named fights (folds F04, F14#0/#1, F10#2) + F33#2",
      "features": [
-      "F20",
-      "F10",
+      "F22",
+      "F04"
+     ],
+     "start": 9.561,
+     "end": 10.652,
+     "baseline_pct": 42.9
+    }
+   ]
+  },
+  {
+   "id": "B",
+   "name": "Lane B · Codex (earned route, story, ending, swim)",
+   "session": "tb/codex-b",
+   "bars": [
+    {
+     "label": "F19 order, offers, earned saves",
+     "features": [
+      "F19"
+     ],
+     "start": 7.652,
+     "end": 7.909,
+     "baseline_pct": 50.0
+    },
+    {
+     "label": "F20 ending",
+     "features": [
+      "F20"
+     ],
+     "start": 7.909,
+     "end": 8.252,
+     "baseline_pct": 20.0
+    },
+    {
+     "label": "F49#0 continuous run (folds F02, F03, F06, F09, F11, F13#0, F15)",
+     "features": [
+      "F02",
+      "F03",
+      "F06",
+      "F09",
       "F11",
-      "F12",
-      "F13",
-      "F14",
       "F15"
      ],
-     "start": 11.6,
-     "end": 16.6,
-     "orig_start": 4,
-     "orig_end": 6.5,
-     "baseline_pct": 45.9
+     "start": 8.252,
+     "end": 10.052,
+     "baseline_pct": 42.4
     },
     {
-     "label": "F36 creature art",
+     "label": "F37 Ripplet swim + dive",
      "features": [
-      "F36"
+      "F37"
      ],
-     "start": 16.6,
-     "end": 20.6,
-     "orig_start": 3,
-     "orig_end": 6.5,
+     "start": 10.052,
+     "end": 10.395,
+     "baseline_pct": 20.0
+    },
+    {
+     "label": "F46 onboarding + F01#3 night walk",
+     "features": [
+      "F46",
+      "F01"
+     ],
+     "start": 10.395,
+     "end": 10.652,
+     "baseline_pct": 60.0
+    }
+   ]
+  },
+  {
+   "id": "C",
+   "name": "Lane C · Codex (power, homestead, economy, co-op)",
+   "session": "tb/codex-c",
+   "bars": [
+    {
+     "label": "F27 + F28 Masters, feasts",
+     "features": [
+      "F27",
+      "F28"
+     ],
+     "start": 7.652,
+     "end": 8.229,
+     "baseline_pct": 58.3
+    },
+    {
+     "label": "F30, F31, F32, F33 gear",
+     "features": [
+      "F30",
+      "F31",
+      "F32",
+      "F33"
+     ],
+     "start": 8.229,
+     "end": 8.921,
+     "baseline_pct": 69.6
+    },
+    {
+     "label": "F43 bounties",
+     "features": [
+      "F43"
+     ],
+     "start": 8.921,
+     "end": 9.383,
      "baseline_pct": 0.0
     },
     {
-     "label": "F42 HUD + screens",
+     "label": "F44 rematches + alphas",
      "features": [
-      "F42"
+      "F44"
      ],
-     "start": 20.6,
-     "end": 24.6,
-     "orig_start": 7,
-     "orig_end": 8.5,
+     "start": 9.383,
+     "end": 9.729,
+     "baseline_pct": 25.0
+    },
+    {
+     "label": "F47 economy + exploits",
+     "features": [
+      "F47"
+     ],
+     "start": 9.729,
+     "end": 10.191,
      "baseline_pct": 0.0
     },
     {
-     "label": "F48 co-op across the loop",
+     "label": "F48 co-op loop",
      "features": [
       "F48"
      ],
-     "start": 24.6,
-     "end": 28.6,
-     "orig_start": 7.5,
-     "orig_end": 11,
+     "start": 10.191,
+     "end": 10.652,
      "baseline_pct": 0.0
+    }
+   ]
+  },
+  {
+   "id": "D",
+   "name": "Lane D · Codex (visual bar: Meadows, village, Tidewake, renderer)",
+   "session": "tb/codex-d",
+   "bars": [
+    {
+     "label": "F26 renderer presets + census",
+     "features": [
+      "F26"
+     ],
+     "start": 7.652,
+     "end": 8.252,
+     "baseline_pct": 33.3
     },
     {
-     "label": "F49 integrated run, 13 chapter cards, release-wide",
+     "label": "F38 Meadows + F17#6 village/Hall",
      "features": [
-      "F49",
-      "CARDS",
-      "XCUT",
-      "F02"
+      "F38",
+      "F17"
      ],
-     "start": 29.6,
-     "end": 32.27,
-     "orig_start": 11,
-     "orig_end": 13,
-     "baseline_pct": 34.5
+     "start": 8.252,
+     "end": 9.302,
+     "baseline_pct": 46.2
+    },
+    {
+     "label": "F39 Tidewake (+ F13#5, F14#2)",
+     "features": [
+      "F39",
+      "F13",
+      "F14"
+     ],
+     "start": 9.302,
+     "end": 10.502,
+     "baseline_pct": 38.9
+    },
+    {
+     "label": "F42#0 catalog UI",
+     "features": [
+      "F42"
+     ],
+     "start": 10.502,
+     "end": 10.652,
+     "baseline_pct": 50.0
     }
-   ],
-   "id": "R5",
-   "session": "tb/codex-r5"
+   ]
+  },
+  {
+   "id": "E",
+   "name": "Lane E · Codex (visual bar: Cloudreach, Stormwood, art, audio)",
+   "session": "tb/codex-e",
+   "bars": [
+    {
+     "label": "F40 Cloudreach + F08 camera/settlements",
+     "features": [
+      "F40",
+      "F08"
+     ],
+     "start": 7.652,
+     "end": 8.743,
+     "baseline_pct": 18.2
+    },
+    {
+     "label": "F41 Stormwood + F10 lightning/forest/audio",
+     "features": [
+      "F41",
+      "F10"
+     ],
+     "start": 8.743,
+     "end": 9.97,
+     "baseline_pct": 7.7
+    },
+    {
+     "label": "F36 creature art + F29 storm bear",
+     "features": [
+      "F36",
+      "F29"
+     ],
+     "start": 9.97,
+     "end": 10.652,
+     "baseline_pct": 55.6
+    }
+   ]
+  },
+  {
+   "id": "owner",
+   "name": "Owner (after the lanes)",
+   "session": "owner",
+   "bars": [
+    {
+     "label": "Owner: ROG Ally test (F26#5, F49#2), play pass (F49#1), F47#0 owner half, F10#5 listen",
+     "features": [
+      "XPERF"
+     ],
+     "start": 10.652,
+     "end": 11.402,
+     "baseline_pct": 0.0
+    }
+   ]
   }
  ]
 }

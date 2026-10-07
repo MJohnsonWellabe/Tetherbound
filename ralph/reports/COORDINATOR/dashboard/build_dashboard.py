@@ -47,6 +47,8 @@ rows = {r["id"]: r for r in crit["rows"]}
 all_c = [x for r in crit["rows"] for x in r.get("criteria", [])]
 counts = {k: sum(1 for x in all_c if norm(x.get("status")) == k) for k in ORDER}
 overall = round(sum(pct(r) for r in crit["rows"]) / max(1, len(crit["rows"])))
+# Owner 2026-10-07: a criterion counts once evidenced on a lane branch; show how many are not yet on main.
+evidenced_only = sum(1 for x in all_c if norm(x.get("status")) == "met" and str(x.get("note", "")).startswith("Landed: Evidenced"))
 redesign_c = [x for r in crit["rows"] if r["id"] not in _ORIG for x in r.get("criteria", [])]
 redesign_met = sum(1 for x in redesign_c if norm(x.get("status")) == "met")
 last_id = crit["rows"][-1]["id"] if crit["rows"] else "F15"
@@ -314,7 +316,8 @@ if _plan_path.exists():
     now_html = (f'<div class="gnow" style="left:{100 * now_pos / n_sprints:.3f}%"><span>now</span></div>'
                 if 0 <= now_pos <= n_sprints else "")
     cur = int(now_pos) + 1 if now_pos >= 0 else 0
-    finish = at(n_sprints)
+    # Finish = end of the last lane bar (owner-only items follow it; owner 2026-10-07).
+    finish = at(max(float(b["end"]) for l in plan["lanes"] if l.get("id") != "owner" for b in l["bars"]))
     tsum = " · ".join(f'{TRACK[k]} {v}' for k, v in counts_t.items())
     plan_html = f"""
   <section class="panel gantt-panel" aria-labelledby="plan-h"><h2 id="plan-h">Delivery plan</h2>
@@ -454,8 +457,8 @@ ul.plain{{margin:0;padding-left:18px;display:grid;gap:6px}}
   <div class="pane pane-acc">
   <div class="kpis">
     <div class="kpi"><b>{accepted} / {len(crit["rows"])}</b><span>F rows accepted (every criterion met)</span></div>
-    <div class="kpi"><b>{overall}%</b><span>Criteria evidenced, weighted (met 1, partial ½, in progress ¼)</span></div>
-    <div class="kpi"><b>{counts["met"]} / {len(all_c)}</b><span>Atomic criteria fully met</span></div>
+    <div class="kpi"><b>{overall}%</b><span>Criteria met, averaged across features (met criteria only)</span></div>
+    <div class="kpi"><b>{counts["met"]} / {len(all_c)}</b><span>Criteria met: {counts["met"] - evidenced_only} on main, {evidenced_only} evidenced on lane branches</span></div>
     <div class="kpi"><b>{redesign_met} / {len(redesign_c)}</b><span>Redesign criteria met (F16 onward)</span></div>
     <div class="kpi"><b>{counts["failing"] + counts["blocked"]}</b><span>Criteria failing or blocked</span></div>
   </div>
