@@ -42,3 +42,12 @@ Reviewed commit:fd57339cee26008a1b8c67a74cea44145890a9d7.
 Reviewer:/root/f25_medium_review.
 Completed-draw priming removes the partial first interval. Visible geometry/MultiMesh counts distinguish drawing from stale reservations; no gameplay/durable mutation. Counts submitted geometry rather than frustum/occlusion-confirmed pixels; ribbon leases are not particles; faded-parent pruning conservatively undercounts opaque child materials. Existing proof coordinator launch override remains BLOCKED pending allocation/routing. No engine execution or criterion certification.
 All shipping flags remain OFF. No READY or criterion completion is asserted by this artifact.
+
+F23#5 below-full live-input extension:APPROVE
+Reviewed commit:fad962c6fe6fe031e51dbc4b5226b46335595722.
+Reviewer:/root/f25_arrival_review.
+Valid equipped preview ultimate reaches ultimate_not_ready before resource/frontier/original writes. Physical RB assertions and immediate synchronous resource/original comparisons are valid; subsequent lower-numbered actions check frontier preservation indirectly. Hosted execution and visual verdict pending.
+F25#4 existing proof launch override:APPROVE
+Reviewed commit:87f28c2999b3a4922c9f28caa8c75d93c53de8b4.
+Reviewer:/root/f25_medium_review.
+Continuous Forward+/Vulkan1280x720 host, all-peer library preview and host-only Medium selection preserve defaults/private homes/logs/PIDs/cleanup. f48_net_proof inherits this launch/capture dispatch. Producer forwarding/profile/concurrent inputs remain unresolved; no dispatch readiness or criterion certification.
