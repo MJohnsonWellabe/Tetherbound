@@ -21,6 +21,7 @@ var _paired_720 := false
 var _tabs: Array[String] = []
 var _idle_hud := false
 var _build_states := false
+var _idle_observation: Dictionary = {}
 var _records: Array[Dictionary] = []
 var _failures: Array[String] = []
 var _stage := "boot"
@@ -122,10 +123,24 @@ func _run() -> void:
 		var hud := world.get_node_or_null(^"PlaygroundHUD")
 		var strip: Control = hud.get("_party_strip") as Control if hud != null else null
 		var idle_deadline := Time.get_ticks_msec() + 300000
+		# Use the real handheld raster while observing the capped per-frame
+		# timer on Mesa. The timer and widget state are never advanced by us.
+		root.size = Vector2i(1280, 720)
+		var observed_frames := 0
+		var observation_started := Time.get_ticks_msec()
 		_stage = "observing_natural_roster_expiry"
 		_write_manifest(false)
 		while strip != null and strip.visible and Time.get_ticks_msec() < idle_deadline:
 			await process_frame
+			observed_frames += 1
+			_idle_observation = {"raster": [root.size.x, root.size.y],
+				"frames": observed_frames, "elapsed_ms": Time.get_ticks_msec() - observation_started,
+				"visible": strip.visible, "fade_timer": strip.get("_fade_timer"),
+				"pinned": strip.get("_pinned"), "readable_presentation": strip.get("_readable_presentation")}
+			if observed_frames % 20 == 0:
+				_write_manifest(false)
+		root.size = Vector2i(1920, 1080)
+		_write_manifest(false)
 		if strip == null or strip.visible:
 			_failures.append("Real exploration roster did not reach its natural idle state")
 		else:
@@ -178,6 +193,7 @@ func _write_manifest(complete: bool) -> void:
 		"paired_720": _paired_720,
 		"requested_tabs": _tabs,
 		"natural_idle_hud": _idle_hud,
+		"natural_idle_observation": _idle_observation,
 		"build_preference_states": _build_states,
 		"map_landmarks_sha256": FileAccess.get_sha256("res://data/config/map_landmarks.json"),
 		"input_contexts_sha256": FileAccess.get_sha256("res://data/config/input_contexts.json"),
