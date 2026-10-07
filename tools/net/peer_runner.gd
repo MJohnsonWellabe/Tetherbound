@@ -9046,41 +9046,152 @@ func _step_foundations_state(args: Dictionary) -> Dictionary:
 			payload.bounty_prompt = [prompt.global_position.x, prompt.global_position.y, prompt.global_position.z]
 			payload.bounty_board = [board.global_position.x, board.global_position.y, board.global_position.z]
 			return {"verdict": "PASS", "detail": "read actual personal board and saves without settling writers", "data": payload}
+		var proof: Script = preload("res://tools/net/proof_steps_f48.gd")
+		var claim_session: Node = _session()
+		var claim_scene: Node = current_scene
+		var claim_character: String = local.get("character_id")
+		var claim_namespace: String = world.get("reward_delivery_namespace")
+		var claim_world_id: String = world.get("world_id")
+		var claim_epoch: String = claim_session.call("_altar_current_epoch")
+		var claim_host: bool = claim_session.call("is_host")
+		var claim_started_frame: int = Engine.get_physics_frames()
+		var panel := adapter.get_node_or_null(^"BountyBoardPanel") as CanvasLayer
+		if panel == null: return {"verdict": "FAIL", "detail": "shipping bounty panel is not mounted"}
+		var teaching: Array[Dictionary] = []
+		var claim_live: Callable = func() -> bool:
+			return is_instance_valid(game) and root.get_node_or_null(^"Game") == game and current_scene == claim_scene \
+				and is_instance_valid(claim_session) and _session() == claim_session and game.get("session") == claim_session \
+				and game.get("local") == local and game.get("world") == world and local.get("character_id") == claim_character \
+				and world.get("world_id") == claim_world_id and world.get("reward_delivery_namespace") == claim_namespace \
+				and claim_session.call("_altar_current_epoch") == claim_epoch and claim_session.call("is_host") == claim_host \
+				and is_instance_valid(composition) and claim_session.get_node_or_null(^"FoundationComposition") == composition \
+				and is_instance_valid(adapter) and composition.get_node_or_null(^"BountyInteraction") == adapter \
+				and is_instance_valid(board) and composition.get("_board") is WeakRef and composition.get("_board").get_ref() == board \
+				and is_instance_valid(prompt) and adapter.get("_prompt") == prompt \
+				and is_instance_valid(panel) and adapter.get_node_or_null(^"BountyBoardPanel") == panel
 		var instance := str(args.get("instance", ""))
 		var selected: Dictionary = {}
 		for row: Dictionary in view.get("rows", []):
 			if row.get("instance") == instance: selected = row
 		if selected.is_empty() or selected.get("kind") != "material_delivery" or selected.get("paid") == true:
 			return {"verdict": "FAIL", "detail": "original issued unclaimed material notice required"}
-		var panel := adapter.get_node_or_null(^"BountyBoardPanel") as CanvasLayer
-		if panel == null: return {"verdict": "FAIL", "detail": "shipping bounty panel is not mounted"}
+		# The F16 stock can make genuine teaching due before the Halda visit.
+		# Read/continue only the actual currently owning lesson, once per its
+		# configured remaining line. Never dismiss another modal or write flags.
+		# These inputs share the caller's unchanged 6000-frame step allowance;
+		# the original 1800 post-submit settlement frames below stay unchanged.
+		var lesson: Node = preload("res://scripts/ui/input_owner.gd").current(self)
+		if lesson != null:
+			var service: Node = game.get_node_or_null(^"OnboardingLessons")
+			if lesson.get_script() != preload("res://scripts/onboarding/lesson_panel.gd") or service == null \
+				or service.get("_panel") != lesson or service.get("_identity") != claim_character or lesson.call("is_open") != true:
+				return {"verdict": "FAIL", "detail": "Halda claim has a competing input owner; no original claim attempted",
+					"data": {"input": proof._capture_input_state(self), "pending": proof._capture_pending_diagnostic(game)}}
+			var lesson_row: Dictionary = lesson.get("_row").duplicate(true)
+			var configured: Dictionary = {}
+			for candidate: Dictionary in preload("res://scripts/onboarding/lesson_rules.gd").config().get("lessons", []):
+				if candidate.get("id") == lesson_row.get("id"): configured = candidate.duplicate(true)
+			var dialogue: Variant = preload("res://scripts/data/redesign_data.gd").json(str(configured.get("dialogue_path", ""))) \
+				if not configured.is_empty() else {}
+			var conversation: Dictionary = dialogue.get("conversations", {}).get(str(configured.get("conversation", "")), {}) if dialogue is Dictionary else {}
+			configured["speaker"] = str(conversation.get("speaker", ""))
+			configured["lines"] = conversation.get("lines", [])
+			var lines: Array = configured.lines
+			var first_line: int = int(lesson.get("_line"))
+			if configured != lesson_row or lines.is_empty() or first_line < 0 or first_line >= lines.size() \
+				or lesson.get("_opening_edge") == true:
+				return {"verdict": "FAIL", "detail": "Current Halda teaching does not match its configured lesson/cursor/released input",
+					"data": {"lesson": lesson_row, "line": first_line, "input": proof._capture_input_state(self)}}
+			for line: int in range(first_line, lines.size()):
+				if not claim_live.call() or not is_instance_valid(service) or game.get_node_or_null(^"OnboardingLessons") != service \
+					or not is_instance_valid(lesson) or service.get("_panel") != lesson or service.get("_identity") != claim_character \
+					or lesson.get("_row") != lesson_row or lesson.get("_line") != line or lesson.call("is_open") != true \
+					or preload("res://scripts/ui/input_owner.gd").current(self) != lesson:
+					return {"verdict": "FAIL", "detail": "Original owner or lesson changed before ordinary Continue",
+						"data": {"teaching": teaching, "input": proof._capture_input_state(self)}}
+				teaching.append({"lesson_id": lesson_row.id, "line": line, "text": str(lesson.get("_text").get("text")),
+					"character_id": claim_character, "panel_path": str(lesson.get_path()), "physics_frame": Engine.get_physics_frames()})
+				var continued: Dictionary = await _step_press({"action": "menu_confirm", "tap_frames": 2})
+				if not claim_live.call() or not is_instance_valid(service) or game.get_node_or_null(^"OnboardingLessons") != service \
+					or not is_instance_valid(lesson) or service.get("_panel") != lesson or service.get("_identity") != claim_character \
+					or lesson.get("_row") != lesson_row or lesson.get("_line") != line + 1 or continued.get("verdict") != "PASS":
+					return {"verdict": "FAIL", "detail": "Original lesson did not consume exactly one ordinary Continue",
+						"data": {"teaching": teaching, "press": continued, "input": proof._capture_input_state(self)}}
+			# Dismissal submits the real lesson receipt. Observe its release; do
+			# not acknowledge it here or send X through a legitimate Session hold.
+			# This is only the remaining part of the existing outer 6000 allowance,
+			# reserving the unchanged 1800 settlement frames. The outer deadline
+			# continues to include every teaching/open/claim/close input as before.
+			var lesson_receipt := preload("res://scripts/onboarding/lesson_rules.gd").PREFIX + str(lesson_row.id)
+			var lesson_released := false
+			for frame in maxi(0, 6000 - 1800 - int(Engine.get_physics_frames() - claim_started_frame)):
+				if not claim_live.call() or not is_instance_valid(service) or game.get_node_or_null(^"OnboardingLessons") != service \
+					or not is_instance_valid(lesson) or service.get("_panel") != lesson or service.get("_identity") != claim_character \
+					or lesson.get("_row") != lesson_row or lesson.get("_line") != lines.size() or lesson.call("is_open") != false:
+					break
+				var holder: Node = preload("res://scripts/ui/input_owner.gd").current(self)
+				if holder != null and holder != lesson and holder != claim_session: break
+				if local.get("flags").call("has", lesson_receipt) == true and not (service.get("_pending") as Dictionary).has(lesson_receipt) \
+					and holder == null and _probe.call("input_context") == "world":
+					lesson_released = true
+					break
+				await physics_frame
+			if not lesson_released or not claim_live.call():
+				return {"verdict": "FAIL", "detail": "Original lesson receipt/input did not release within the existing Halda allowance; no claim attempted",
+					"data": {"teaching": teaching, "lesson_receipt": lesson_receipt, "input": proof._capture_input_state(self),
+						"pending": proof._capture_pending_diagnostic(game)}}
+		if not claim_live.call() or not is_instance_valid(panel) or adapter.get_node_or_null(^"BountyBoardPanel") != panel \
+			or preload("res://scripts/ui/input_owner.gd").current(self) != null or _probe.call("input_context") != "world":
+			return {"verdict": "FAIL", "detail": "Original Halda source must have ordinary world input before its one X/A attempt",
+				"data": {"teaching": teaching, "input": proof._capture_input_state(self), "pending": proof._capture_pending_diagnostic(game)}}
 		var arbiter := get_first_node_in_group(&"interaction_arbiter")
 		if arbiter == null or arbiter.call("winning_provider") != prompt:
-			return {"verdict": "FAIL", "detail": "actual Halda bounty prompt must win ordinary physical interaction"}
+			return {"verdict": "FAIL", "detail": "actual Halda bounty prompt must win ordinary physical interaction",
+				"data": {"teaching": teaching, "input": proof._capture_input_state(self)}}
 		var opened := await _step_press({"action": "interact"})
 		if opened.get("verdict") != "PASS": return opened
-		for frame in 6: await physics_frame
+		for frame in 6:
+			if not claim_live.call(): break
+			await physics_frame
+		if not claim_live.call() or not is_instance_valid(panel) or adapter.get_node_or_null(^"BountyBoardPanel") != panel:
+			return {"verdict": "FAIL", "detail": "Original Halda source changed during its one physical open",
+				"data": {"teaching": teaching, "input": proof._capture_input_state(self)}}
 		if panel.get("_shown") != true or preload("res://scripts/ui/input_owner.gd").current(self) != panel:
-			return {"verdict": "FAIL", "detail": "physical X did not open one input-owning Halda panel"}
+			return {"verdict": "FAIL", "detail": "physical X did not open one input-owning Halda panel",
+				"data": {"teaching": teaching, "input": proof._capture_input_state(self)}}
 		var button: Button = null
 		for candidate: Button in panel.get("_buttons"):
 			if candidate.get_meta("system_focus_key", "") == instance: button = candidate
 		if button == null or button.disabled:
-			return {"verdict": "FAIL", "detail": "original admitted material notice has no enabled claim control"}
+			return {"verdict": "FAIL", "detail": "original admitted material notice has no enabled claim control",
+				"data": {"teaching": teaching, "bounty_original": selected, "input": proof._capture_input_state(self)}}
 		var observed := {"result": {}}
 		var observer: Callable = func(result: Dictionary) -> void: observed.result = result.duplicate(true)
 		adapter.connect("action_completed", observer)
 		button.grab_focus()
-		for frame in 2: await physics_frame
+		for frame in 2:
+			if not claim_live.call(): break
+			await physics_frame
+		if not claim_live.call():
+			if is_instance_valid(adapter) and adapter.is_connected("action_completed", observer): adapter.disconnect("action_completed", observer)
+			return {"verdict": "FAIL", "detail": "Original Halda source changed before its one claim press",
+				"data": {"teaching": teaching, "input": proof._capture_input_state(self)}}
 		var pressed := await _step_press({"action": "ui_accept"})
-		if pressed.get("verdict") != "PASS":
-			adapter.disconnect("action_completed", observer)
+		if pressed.get("verdict") != "PASS" or not claim_live.call():
+			if is_instance_valid(adapter) and adapter.is_connected("action_completed", observer): adapter.disconnect("action_completed", observer)
+			if not claim_live.call():
+				return {"verdict": "FAIL", "detail": "Original Halda source changed during its one claim press",
+					"data": {"teaching": teaching, "press": pressed, "input": proof._capture_input_state(self)}}
 			return pressed
 		for frame in 1800:
+			if not claim_live.call(): break
 			var result: Dictionary = observed.result
 			if result.get("ok") == true and result.get("owner_saved") == true and result.get("durable") == true and result.get("owner_acknowledged") == true: break
 			await physics_frame
-		adapter.disconnect("action_completed", observer)
+		if is_instance_valid(adapter) and adapter.is_connected("action_completed", observer): adapter.disconnect("action_completed", observer)
+		if not claim_live.call():
+			return {"verdict": "FAIL", "detail": "Original Halda source changed during claim settlement",
+				"data": {"teaching": teaching, "bounty_claim": observed.result, "input": proof._capture_input_state(self)}}
 		var result: Dictionary = observed.result
 		var expected := "bounty:%s:%s" % [instance, local.get("character_id")]
 		var complete: bool = result.get("ok") == true and result.get("owner_saved") == true and result.get("durable") == true \
@@ -9088,7 +9199,11 @@ func _step_foundations_state(args: Dictionary) -> Dictionary:
 		var payload := _foundations_payload()
 		payload.bounty_claim = result
 		payload.bounty_original = selected
+		payload.bounty_teaching = teaching
+		payload.bounty_input = proof._capture_input_state(self)
+		if not complete: payload.bounty_pending = proof._capture_pending_diagnostic(game)
 		await _step_press({"action": "ui_cancel"})
+		if not claim_live.call(): return {"verdict": "FAIL", "detail": "Original Halda source changed during ordinary close", "data": payload}
 		return {"verdict": "PASS" if complete else "FAIL", "detail": "actual physical bounty claim requires original owner BOOL-save and accepted ACK", "data": payload}
 	elif mode != "inspect":
 		return {"verdict": "ERROR", "detail": "unknown F16 witness mode " + mode}
