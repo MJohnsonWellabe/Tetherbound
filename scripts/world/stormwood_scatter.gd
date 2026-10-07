@@ -43,7 +43,6 @@ static func seats() -> Array[Dictionary]:
 				continue
 			var z := float(p[1]) if p.size() == 2 else float(p[2])
 			out.append({"kind": kind, "id": str(row.id), "at": Vector2(float(p[0]), z)})
-	_clear_ordinary_trunk_envelopes(out, cfg)
 	return out
 
 
@@ -210,6 +209,7 @@ static func placements(field: RefCounted, world: Dictionary) -> Dictionary:
 					for j in 2:
 						var under := at+Vector2.from_angle(rng.randf()*TAU)*rng.randf_range(3,8)
 						_add(out,cfg,field,world,rng,occupied,["storm_fern","storm_mushroom"][j%2],under)
+	_clear_ordinary_trunk_envelopes(out, cfg)
 	return out
 
 ## The largest collider surface any baked layer can reach from its centre:
