@@ -5,8 +5,9 @@
   "source_change": "Only tab_map.gd region-label placement: finite obstacle-edge columns and sorted monotone clearance, full font/text/inset/padding. Fog/discovery/state/input untouched.",
   "independent_review": {
     "reviewer": "/root/f42_visual_review",
-    "verdict": "APPROVE source only",
-    "pending": "Original source reviewer final actualproof; cannot override retained pixelBLOCK."
+    "verdict": "APPROVE source with actuallogic/controller/captureproof; pixelacceptance remainsBLOCK",
+    "pending": null,
+    "final": "Original reviewer read actual12framemanifest/exit and exact31/-25hunk. No source issues; no override of16pixelBLOCK."
   },
   "proof": "tests/run_tests.gd",
   "run_id": 37679905106,

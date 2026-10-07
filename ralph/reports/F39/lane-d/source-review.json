@@ -81,5 +81,16 @@
     "landing_scope": "263ccc50 curtain script/shader; ea9e8202 waterfall config plus prerequisite10440c5d ground_feather2to8 config hunk ONLY; exclude104 F42 evidence. Approved explicit-stand/floor/receipt guards may accompany existing capture-tool paths. Exclude weather install/UI/pumps/bluffs/other flags.",
     "proofs": "37677560955 distance6/6,37662801275 near20,37662277200 logic148/1909/0,37671873221 area97/0",
     "excluded": "Other source/flags, full matrix/weather/earned/co-op/full bars"
+  },
+  "shipping_recapture_source_review": {
+    "reviewer": "/root/f39_visual_review",
+    "verdict": "APPROVE source only",
+    "commits": [
+      "e07055a2c8",
+      "e834913c27",
+      "288881998e5db8255bbc9304a1f97459a27e6164"
+    ],
+    "scope": "Existing capture_f39_catalogue.gd shipping observation mode only. No production override; expectedgates match enabled AND ridges, configuredscalars verified onlyenabled; receiptaccurate. Old comparisonmodes preserved.",
+    "remaining": "Actualshippingcamp proof37685616751; >=200 recapture andcatalogrescore F39#0 stillOPEN. No READY."
   }
 }
