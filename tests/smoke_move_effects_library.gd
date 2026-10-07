@@ -18,6 +18,7 @@ const WORLD_LOOK := preload("res://scripts/world/world_look.gd")
 const HEIGHTFIELD := preload("res://scripts/world/playground_heightfield.gd")
 const ULTIMATES := preload("res://scripts/vfx/ultimates/ultimate_library.gd")
 const COMBAT_VFX := preload("res://scripts/vfx/combat_vfx.gd")
+const GRAPHICS := preload("res://scripts/ui/graphics_prefs.gd")
 var _arena: Node3D
 var _target: CharacterBody3D
 var _attackers: Dictionary = {}
@@ -162,6 +163,19 @@ func _run() -> void:
 	if _medium:
 		if RenderingServer.get_current_rendering_method() != "forward_plus":
 			push_error("Medium requires actual Forward+"); quit(1); return
+		if GRAPHICS.choose("Medium") != OK:
+			push_error("Cannot select authored Medium preset"); quit(1); return
+		if _stage == "world":
+			var look := _world.get_node_or_null(^"WorldLook")
+			if look == null or not look.has_method("refresh_graphics"):
+				push_error("World stage requires the live production preset owner"); quit(1); return
+			look.call("refresh_graphics")
+			# The synthetic arena Environment has been removed on this stage.
+			# Refresh and inspect the Environment that the loaded world owns.
+			var holder := look.get_node_or_null(look.get("environment_path")) as WorldEnvironment
+			if holder == null or holder.environment == null:
+				push_error("World stage Medium environment missing"); quit(1); return
+			environment = holder.environment
 		var art: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/art.json"))
 		var cfg: Dictionary = art.get("graphics_presets", {}).get("Medium", {})
 		if cfg.is_empty():
