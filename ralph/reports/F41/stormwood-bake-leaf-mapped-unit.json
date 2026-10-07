@@ -1,0 +1,16 @@
+{
+  "failed": 0,
+  "review": "APPROVE",
+  "exit_code": 0,
+  "duration_seconds": 273,
+  "tests": 216,
+  "proof": "existing tests/run_tests.gd: 28 mapped scatter/vegetation/identity files",
+  "source_sha": "ae26e7d0a079ceacc56d6354fe67bdca2007a1f4",
+  "assertions": 1101592,
+  "run_id": 37664169085,
+  "remaining_gates": [
+    "New-bake existing area behavior smoke",
+    "Code-blind native visual verdict",
+    "F41 criteria not claimed"
+  ]
+}
