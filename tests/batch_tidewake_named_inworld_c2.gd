@@ -43,6 +43,7 @@ func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(out.get_base_dir()))
 	var file := FileAccess.open(out, FileAccess.WRITE)
 	var failures := 0
+	var child_failures := 0
 	for seed_value in range(first, last + 1):
 		var json := "user://c2_child_%d.json" % seed_value
 		var args := PackedStringArray(["--headless", "--path", ProjectSettings.globalize_path("res://"), "--fixed-fps", "60",
@@ -52,6 +53,7 @@ func _run() -> void:
 		var output: Array = []
 		var started := Time.get_ticks_msec()
 		var code := OS.execute(OS.get_executable_path(), args, output, true)
+		if code != 0: child_failures += 1
 		var line := ""
 		for chunk: Variant in output:
 			for row: String in str(chunk).split("\n"):
@@ -66,6 +68,6 @@ func _run() -> void:
 		file.flush()
 		print("BATCH seed=%d exit=%d wall_s=%.0f %s" % [seed_value, code, (Time.get_ticks_msec() - started) / 1000.0, line])
 	file.close()
-	print("BATCH DONE trainer=%s starter=%s policy=%s seeds=%d-%d missing=%d out=%s gear=%s" % [trainer, starter, policy, first, last,
-		failures, ProjectSettings.globalize_path(out), gear_label])
-	quit(0 if failures == 0 else 1)
+	print("BATCH DONE trainer=%s starter=%s policy=%s seeds=%d-%d missing=%d failed_children=%d out=%s gear=%s" % [trainer, starter, policy, first, last,
+		failures, child_failures, ProjectSettings.globalize_path(out), gear_label])
+	quit(0 if failures == 0 and child_failures == 0 else 1)
