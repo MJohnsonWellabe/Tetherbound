@@ -23,6 +23,7 @@ var resume_source := ""
 var stop_boundary := ""
 var resumed_boundary := ""
 var segmented := false
+var meadows_piece_prefix := false
 
 func run(owner: SceneTree) -> void:
 	driver = owner
@@ -40,6 +41,8 @@ func run(owner: SceneTree) -> void:
 				return
 			resume_source = arg.trim_prefix("--handoff-from=")
 			segmented = true
+		if arg == "--meadows-piece-prefix":
+			meadows_piece_prefix = true
 		if arg.begins_with("--through-boundary="):
 			if not stop_boundary.is_empty() or arg == "--through-boundary=":
 				_fail("F49 accepts one nonempty segment stop")
@@ -52,6 +55,14 @@ func run(owner: SceneTree) -> void:
 				_fail("--world-seed must be an integer")
 				return
 			OS.set_environment("TB_WORLD_SEED", seed)
+	if meadows_piece_prefix:
+		if resume_source.is_empty():
+			_fail("--meadows-piece-prefix requires an actual --handoff-from earned Hall or chapter prefix")
+			return
+		var requested := ProjectSettings.globalize_path(resume_source).simplify_path().trim_suffix("/").get_file()
+		if requested != "hall" and not HANDOFF.BOUNDARIES.has(requested):
+			_fail("F49 Meadows-piece continuation starts at Hall or a later chapter boundary")
+			return
 	if not stop_boundary.is_empty() and not HANDOFF.BOUNDARIES.has(stop_boundary):
 		_fail("F49 segment stop must name a new-order chapter boundary")
 		return
@@ -93,7 +104,11 @@ func run(owner: SceneTree) -> void:
 	driver.local_chains = driver.LOCAL_CHAINS.new()
 	driver.local_chains.earned = true
 	travel = TRAVEL.new(driver, game)
-	disk = HANDOFF.new(driver, game, driver.scratch + "_handoffs")
+	if meadows_piece_prefix:
+		disk = HANDOFF.new(driver, game, driver.scratch + "_handoffs",
+			HANDOFF.MEADOWS_PIECES + HANDOFF.BOUNDARIES, HANDOFF.MEADOWS_REALMS + HANDOFF.REALMS, HANDOFF.MEADOWS_SLOT)
+	else:
+		disk = HANDOFF.new(driver, game, driver.scratch + "_handoffs")
 	var from := -1
 	if not resume_source.is_empty():
 		resumed_boundary = disk.import_prefix(resume_source)
@@ -114,9 +129,14 @@ func run(owner: SceneTree) -> void:
 		driver.resume_boundary = resumed_boundary
 		driver.resume_info = {"source": resume_source, "boundary": resumed_boundary,
 			"source_kind": "f49_hash_linked_production_prefix", "journey_id": disk.journey_id}
+		if meadows_piece_prefix:
+			driver.resume_info.source_kind = "f49_complete_meadows_piece_and_chapter_prefix"
+			driver.resume_info.meadows_pieces = HANDOFF.MEADOWS_PIECES.duplicate()
 		for index in from + 1: visited.append(["meadows", "tidewake", "cloudreach", "stormwood"][index])
 	if from < 0:
-		if not await driver._stage_fresh_through_hall(game): return
+		# A resumed Hall was earned, saved and loaded with its complete prefix.
+		# Its real arena stance and unbeaten Warden are still checked by finale.
+		if resumed_boundary != "hall" and not await driver._stage_fresh_through_hall(game): return
 		visited.append("meadows")
 		if not driver._accepted(await WARDEN.new().run_finale(driver, driver.current_scene, game), "passed"): return
 		if not await _boundary("meadows_settled"): return

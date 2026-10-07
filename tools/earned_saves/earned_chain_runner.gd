@@ -55,14 +55,15 @@ const RELAY := preload("res://tests/helpers/meadows_earned_relay_segment.gd")
 const HALL := preload("res://tests/helpers/meadows_earned_hall_segment.gd")
 const HANDOFF := preload("res://tests/helpers/f49_disk_handoff.gd")
 const CHECKPOINTS := preload("res://tests/helpers/four_biome_checkpoints.gd")
+const OFFLOAD := preload("res://tests/helpers/f19_functional_offload.gd")
 const TRAVEL := preload("res://tests/helpers/f20_portal_travel.gd")
 const ORDER := preload("res://scripts/data/biome_order.gd")
 const WARDEN_ACCEPT_PATH := "res://tools/earned_saves/warden_accept.gd"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
-const CHAIN_SLOT := 1
+const CHAIN_SLOT := HANDOFF.MEADOWS_SLOT
 const SEGMENTS := ["opening_team", "camp_tournament", "bridge", "warrens", "relay", "hall", "warden", "kell_rift"]
-const MEADOWS_PIECES := ["opening_team", "camp_tournament", "bridge", "warrens", "relay", "hall"]
-const MEADOWS_REALMS := ["meadows", "meadows", "meadows", "meadows", "meadows", "meadows"]
+const MEADOWS_PIECES := HANDOFF.MEADOWS_PIECES
+const MEADOWS_REALMS := HANDOFF.MEADOWS_REALMS
 const LOAD_SETTLE_FRAMES := 300
 
 var segment := ""
@@ -76,6 +77,7 @@ var flags_before: Array = []
 var party_before: Array = []
 var disclosures: Array[String] = []
 var legacy_order_diagnostic := false
+var functional_offload := false
 var handoff_from := ""
 var disk: RefCounted
 var retained_uids: Array[String] = []
@@ -96,6 +98,8 @@ func _run() -> void:
 			receipt_path = arg.get_slice("=", 1)
 		elif arg == "--legacy-order-diagnostic":
 			legacy_order_diagnostic = true
+		elif arg == "--functional-offload":
+			functional_offload = true
 		elif arg.begins_with("--handoff-from="):
 			if not handoff_from.is_empty() or arg == "--handoff-from=":
 				failures.append("Supply one nonempty --handoff-from")
@@ -111,6 +115,10 @@ func _run() -> void:
 		return
 	if legacy_order_diagnostic and not handoff_from.is_empty():
 		failures.append("Legacy diagnostics cannot import new-order piece provenance")
+		_finish()
+		return
+	if legacy_order_diagnostic and functional_offload:
+		failures.append("Functional offload is only for the new-order ordinary-input pieces")
 		_finish()
 		return
 	if legacy_order_diagnostic and OS.get_environment("TB_WORLD_SEED").is_empty():
@@ -155,6 +163,12 @@ func _run() -> void:
 		disk = HANDOFF.new(self, game, output_root, MEADOWS_PIECES, MEADOWS_REALMS, CHAIN_SLOT)
 		disk.source_commit = source_commit
 		game.set("save_system", SAVE.new(working))
+	# Reuse the existing hosted mechanics mode. It keeps the real display,
+	# physics, input and saves; disabled rasterization never supplies visual proof.
+	if functional_offload and not OFFLOAD.configure("full_fresh_campaign"):
+		failures.append("Existing Compatibility functional offload refused this piece")
+		_finish()
+		return
 	print("EARNED CHAIN segment=%s save_dir=%s seed=%s" % [segment, save_dir, OS.get_environment("TB_WORLD_SEED")])
 	match segment:
 		"opening_team":
@@ -400,6 +414,7 @@ func _finish() -> void:
 	var receipt := {
 		"segment": segment,
 		"mode": "legacy_order_diagnostic" if legacy_order_diagnostic else "new_order_meadows_piece",
+		"functional_offload": functional_offload,
 		"handoff_from": handoff_from,
 		"passed": failures.is_empty(),
 		"failures": failures,

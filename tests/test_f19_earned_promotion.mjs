@@ -118,6 +118,12 @@ try {
   refused(/Seed provenance must match actual handoff log/);
   refused(/Provide all ordered preceding segment logs/, ['--segment-logs=']);
   refused(/Segment logs must be distinct original witnesses/, [`--segment-logs=${logFile}`]);
+  // The same five fabricated chapter inputs cannot impersonate the original
+  // six-piece Meadows lineage; these controls create no additional saves.
+  refused(/Meadows piece logs require explicit/, [`--meadows-piece-logs=${logFile}`]);
+  refused(/Combined promotion requires explicit ordered/, ['--meadows-piece-prefix']);
+  refused(/Complete six-piece Meadows prefix required/, ['--meadows-piece-prefix', '--segment-logs=',
+    `--meadows-piece-logs=${Array(6).fill(logFile).join(',')}`]);
   const originalSegment = path.join(dir, 'original-segment.log');
   fs.copyFileSync(logFile, originalSegment);
   writeLog({...result, counts_as_proof: false, campaign_complete: false, requested_prefix_passed: true,

@@ -10,6 +10,9 @@ const COMMITS := preload("res://tests/helpers/four_biome_checkpoints.gd")
 const SPAWNS := preload("res://scripts/combat/spawn_tables.gd")
 const BOUNDARIES := ["meadows_settled", "tidewake_settled", "cloudreach_settled", "stormwood_settled", "completed_world"]
 const REALMS := ["meadows", "water", "cloudreach", "stormwood", "meadows"]
+const MEADOWS_PIECES := ["opening_team", "camp_tournament", "bridge", "warrens", "relay", "hall"]
+const MEADOWS_REALMS := ["meadows", "meadows", "meadows", "meadows", "meadows", "meadows"]
+const MEADOWS_SLOT := 1
 var tree: SceneTree
 var game: Node
 var base: String
@@ -35,6 +38,9 @@ func _init(owner: SceneTree, actual_game: Node, destination: String,
 	if piece_prefix:
 		boundaries = ordered_boundaries.duplicate()
 		realms = ordered_realms.duplicate()
+		if save_slot != MEADOWS_SLOT or not ((boundaries == MEADOWS_PIECES and realms == MEADOWS_REALMS) \
+			or (boundaries == MEADOWS_PIECES + BOUNDARIES and realms == MEADOWS_REALMS + REALMS)):
+			_fail("Custom handoffs must preserve the six Meadows pieces, optionally followed by the authored chapters, in slot 1")
 	if boundaries.size() != realms.size() or (not piece_prefix and not ordered_realms.is_empty()):
 		_fail("Handoff boundary and realm orders must match")
 	var seen := {}
@@ -57,9 +63,9 @@ func export_boundary(label: String, piece_proof: Dictionary = {}) -> bool:
 	if not source_commit.is_empty() and source_commit != commit: return _fail("F49 source identity changed between handoffs")
 	source_commit = commit
 	if boundaries.find(label) != history.size(): return _fail("F49 handoffs must be earned in declared order")
-	if piece_prefix and (piece_proof.get("passed") != true or piece_proof.get("segment") != label \
-		or piece_proof.get("mode") != "new_order_meadows_piece" \
-		or str(game.current_realm) != str(realms[history.size()])):
+	var meadow_piece := piece_prefix and MEADOWS_PIECES.has(label)
+	if meadow_piece and (piece_proof.get("passed") != true or piece_proof.get("segment") != label \
+		or piece_proof.get("mode") != "new_order_meadows_piece"):
 		return _fail("Meadows piece needs its actual passed helper proof and authored realm")
 	if journey_id.is_empty(): journey_id = source_commit + ":" + base
 	var destination := base.path_join(label)
@@ -68,6 +74,32 @@ func export_boundary(label: String, piece_proof: Dictionary = {}) -> bool:
 	if not bool(game.call("save_game", save_slot)): return _fail("F49 production save refused at " + label)
 	if not bool(game.save_system.call("finish_fallback")):
 		return _fail("F49 production save fallback did not finish at " + label)
+	if piece_prefix:
+		# The original opening remains the identity anchor after Hall. Never
+		# reset its journey/history when a later chapter gains its own receipt.
+		# Check after the production save resolves its slot locator, before copy.
+		var current := _state()
+		var uids: Array = []
+		var distinct := {}
+		for member: Dictionary in current.party:
+			uids.append(str(member.uid))
+			distinct[str(member.uid)] = true
+		if uids.size() != 5 or distinct.size() != 5 or uids.has("") \
+			or current.realm != realms[history.size()] or OS.has_environment(SPAWNS.SEED_ENV_VAR) \
+			or SPAWNS.resolve_seed(int(current.world_seed)) != int(current.world_seed):
+			return _fail("Meadows-rooted handoff must retain five distinct UIDs, the authored realm and its saved population")
+		for field: String in ["character_id", "world_id", "reward_delivery_namespace"]:
+			if str(current.get(field, "")).is_empty(): return _fail("Meadows-rooted handoff has no stable " + field)
+		if not history.is_empty():
+			if not snapshots.has(MEADOWS_PIECES[0]): return _fail("Meadows-rooted handoff lost its original opening receipt")
+			var original: Dictionary = snapshots[MEADOWS_PIECES[0]].state
+			var original_uids: Array = []
+			for member: Dictionary in original.party: original_uids.append(str(member.uid))
+			if uids != original_uids: return _fail("Meadows-rooted chapter replaced or reordered the original five")
+			for field: String in ["character_id", "world_id", "reward_delivery_namespace", "world_seed"]:
+				if current.get(field) != original.get(field): return _fail("Meadows-rooted chapter changed its original " + field)
+			if snapshots[MEADOWS_PIECES[0]].journey_id != journey_id:
+				return _fail("Meadows-rooted chapter changed its original journey identity")
 	# SaveSystem._dir is the actual installed scratch root, never a guessed
 	# slot file. Include portable characters/worlds/locator and all other files.
 	var source := ProjectSettings.globalize_path(str(game.save_system.get("_dir")))
@@ -83,13 +115,15 @@ func export_boundary(label: String, piece_proof: Dictionary = {}) -> bool:
 		"journey_id": journey_id, "predecessors": history.duplicate(true),
 		"population_provenance": population_provenance(),
 		"files_sha256": hashes, "state": _state(), "earned_claim": "continuous caller only; hashes do not prove play"}
-	if piece_prefix:
+	if meadow_piece:
 		receipt.kind = "earned_meadows_piece"
 		receipt.save_slot = save_slot
 		receipt.piece_proof = piece_proof.duplicate(true)
 		receipt.earned_claim = "one ordinary-input Meadows piece; production Load joins its complete earned prefix; hashes do not prove play"
 	elif save_slot != 0:
 		receipt.save_slot = save_slot
+		if piece_prefix:
+			receipt.earned_claim = "ordinary-input chapter continuing the complete earned Meadows-piece prefix through production Load; hashes do not prove play"
 	var output := FileAccess.open(destination.path_join("receipt.json"), FileAccess.WRITE)
 	if output == null: return _fail("F49 immutable receipt write failed")
 	# Receipt comparisons must retain the same exact numbers as the copied save.
@@ -137,6 +171,7 @@ func import_prefix(source_boundary: String) -> String:
 	var chain: Array = []
 	for step in index + 1:
 		var boundary: String = boundaries[step]
+		var meadow_piece := piece_prefix and MEADOWS_PIECES.has(boundary)
 		var directory := source_root.path_join(boundary)
 		var receipt_hash := FileAccess.get_sha256(directory.path_join("receipt.json"))
 		var parsed: Variant = DOCUMENT.parse(FileAccess.get_file_as_string(directory.path_join("receipt.json")))
@@ -162,7 +197,7 @@ func import_prefix(source_boundary: String) -> String:
 		var current_identity := [receipt.get("commit"), receipt.get("journey_id"), state.get("character_id"),
 			state.get("world_id"), state.get("reward_delivery_namespace"), state.get("world_seed"), uids]
 		if step == 0: identity = current_identity
-		if receipt.get("kind") != ("earned_meadows_piece" if piece_prefix else "f49_ordinary_input_handoff") \
+		if receipt.get("kind") != ("earned_meadows_piece" if meadow_piece else "f49_ordinary_input_handoff") \
 			or receipt.get("boundary") != boundary or receipt.get("save_slot", 0) != save_slot \
 			or receipt.get("commit") != commit or str(receipt.get("journey_id", "")).is_empty() \
 			or receipt.get("realm") != realms[step] or state.get("realm") != realms[step] \
@@ -174,9 +209,13 @@ func import_prefix(source_boundary: String) -> String:
 			_fail("F49 resume rejected mismatched source, identity, order, lineage or save hashes at " + boundary)
 			return ""
 		if piece_prefix:
+			if uids.size() != 5 or distinct_uids.size() != 5:
+				_fail("Meadows-rooted prefix requires the original five distinct UIDs through every chapter")
+				return ""
+		if meadow_piece:
 			var proof: Variant = receipt.get("piece_proof")
 			if not proof is Dictionary or proof.get("passed") != true or proof.get("segment") != boundary \
-				or proof.get("mode") != "new_order_meadows_piece" or uids.size() != 5 or distinct_uids.size() != 5:
+				or proof.get("mode") != "new_order_meadows_piece":
 				_fail("Meadows prefix requires passed pieces and the original five distinct UIDs")
 				return ""
 		var population: Dictionary = receipt.get("population_provenance", {})
