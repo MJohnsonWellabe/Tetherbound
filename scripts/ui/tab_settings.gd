@@ -684,11 +684,11 @@ func _build_controls(list: VBoxContainer, section: Dictionary, controls: Diction
 
 	var hint := Label.new()
 	hint.add_theme_font_size_override("font_size", 22)
-	hint.add_theme_color_override("font_color", COLOUR_QUIET)
+	hint.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 	hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	# Said on the screen as well as in the footer, because a player who has
 	# rebound their way out of the menu cannot read the footer.
-	hint.text = "A on a binding to change it, then press the button you want. B leaves it alone. From anywhere in the game, hold Menu + View on the pad — or F10 — for a second and a half to put every control back."
+	hint.text = "A on a binding to change it, then press the button you want. B leaves it alone.\n\nFrom anywhere in the game, hold Menu + View on the pad — or F10 — for a second and a half to put every control back."
 	list.add_child(hint)
 
 	list.add_child(_column_header())
@@ -713,7 +713,7 @@ func _column_header() -> Control:
 		var cell := Label.new()
 		cell.custom_minimum_size = Vector2(float(pair[1]), 0)
 		cell.add_theme_font_size_override("font_size", 22)
-		cell.add_theme_color_override("font_color", COLOUR_QUIET)
+		cell.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 		cell.text = str(pair[0])
 		row.add_child(cell)
 	return row
@@ -730,7 +730,7 @@ func _build_group(list: VBoxContainer, group: Dictionary, labels: Dictionary) ->
 	if not note.is_empty():
 		var note_label := Label.new()
 		note_label.add_theme_font_size_override("font_size", 20)
-		note_label.add_theme_color_override("font_color", COLOUR_QUIET)
+		note_label.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 		note_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		note_label.custom_minimum_size = Vector2(1100, 0)
 		note_label.text = note
@@ -757,6 +757,7 @@ func _build_row(action: String, label_text: String) -> Control:
 
 	var name_label := Label.new()
 	name_label.custom_minimum_size = Vector2(LABEL_WIDTH, 0)
+	name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	name_label.add_theme_font_size_override("font_size", 24)
 	name_label.text = label_text
 	row.add_child(name_label)
@@ -1342,7 +1343,7 @@ func _build_accessibility(list: VBoxContainer, section: Dictionary, access: Dict
 
 	var note := Label.new()
 	note.add_theme_font_size_override("font_size", 22)
-	note.add_theme_color_override("font_color", COLOUR_QUIET)
+	note.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.custom_minimum_size = Vector2(1100, 0)
 	note.text = str(access.get("reduced_motion_note", ""))
@@ -1380,10 +1381,10 @@ func _build_accessibility(list: VBoxContainer, section: Dictionary, access: Dict
 
 	var look_note := Label.new()
 	look_note.add_theme_font_size_override("font_size", 22)
-	look_note.add_theme_color_override("font_color", COLOUR_QUIET)
+	look_note.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 	look_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	look_note.custom_minimum_size = Vector2(1100, 0)
-	look_note.text = str(access.get("look_note", ""))
+	look_note.text = str(access.get("look_note", "")).replace(". ", ".\n\n")
 	list.add_child(look_note)
 
 

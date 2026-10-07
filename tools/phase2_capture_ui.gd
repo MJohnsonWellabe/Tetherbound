@@ -195,17 +195,24 @@ func _shoot_settings_sections(menu: Node, world: Node) -> void:
 		{"label": "Controls", "id": "settings_controls"},
 		{"label": "Quick items", "id": "quick_bindings"},
 	]:
+		print("PHASE2 UI settings heading search: ", label_and_id.id)
 		var heading: Control = null
 		for candidate: Node in tab.find_children("*", "Label", true, false):
 			if (candidate as Label).text.strip_edges() == str(label_and_id.label):
 				heading = candidate as Control
 				break
 		if heading == null:
+			print("PHASE2 UI settings heading unavailable: ", label_and_id.id)
 			_failures.append("Settings label %s unavailable" % str(label_and_id.label))
 			continue
+		print("PHASE2 UI settings scroll begin: ", label_and_id.id, " heading=", heading.get_path())
 		scroll.ensure_control_visible(heading)
+		# Show the section below its heading, rather than only its last visible pixel.
+		scroll.scroll_vertical += int(heading.global_position.y - scroll.global_position.y)
+		print("PHASE2 UI settings scroll returned: ", label_and_id.id)
 		for frame in 4:
 			await process_frame
+		print("PHASE2 UI settings deferred frames complete: ", label_and_id.id)
 		await _shoot(str(label_and_id.id), str(label_and_id.label), world)
 
 
@@ -224,7 +231,9 @@ func _stock_fixture(game: Node) -> void:
 func _shoot(frame_id: String, subject: String, world: Node) -> void:
 	for frame in 4:
 		await process_frame
+	print("PHASE2 UI draw wait: ", frame_id)
 	await RenderingServer.frame_post_draw
+	print("PHASE2 UI draw completed: ", frame_id)
 	var image := root.get_texture().get_image()
 	if image == null or image.is_empty() or image.get_width() != 1920 or image.get_height() != 1080:
 		_failures.append("%s: expected 1920x1080 image" % frame_id)
