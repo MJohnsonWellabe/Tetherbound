@@ -7,7 +7,7 @@ class CandidateTree:
 	func _read_presentation() -> Dictionary:
 		var config := super._read_presentation()
 		config.enabled = true
-		for key: String in ["ancient_trunk","built_detail","branching_crown","canopy_atlas"]:
+		for key: String in ["ancient_trunk","built_detail","branching_crown","canopy_atlas","visible_roots"]:
 			config[key].enabled = true
 		return config
 
@@ -22,6 +22,15 @@ func test_integrated_candidate_preserves_every_physical_shape() -> void:
 	assert_true(candidate.has_node("BuiltDetail"),"execute the enabled production dressing path")
 	assert_false(baseline.has_node("BuiltDetail"),"production defaults remain off")
 	assert_true(candidate.has_node("BranchCrownWestLow"),"exercise integrated crown and articulated trunk")
+	var root_visual := candidate.get_node("ButtressRoot1") as MeshInstance3D
+	var root_vertices: PackedVector3Array = root_visual.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+	var outer_reach := 0.0
+	for vertex: Vector3 in root_vertices:
+		assert_true(vertex.is_finite(), "visible root surface stays finite")
+		outer_reach = maxf(outer_reach, Vector2(vertex.x, vertex.z).length())
+	assert_true(outer_reach > 110.0, "candidate root visibly extends beyond the wide trunk")
+	assert_eq(root_visual.find_children("*", "CollisionObject3D", true, false).size(), 0,
+		"visible roots add no physical route or barrier")
 	assert_eq(candidate.get_node("BuiltDetail").find_children("*","CollisionObject3D",true,false).size(),0,
 		"detail must not introduce another physical route/barrier")
 	_free_visuals(baseline)
