@@ -289,6 +289,106 @@ func test_existing_journal_replays_exactly_and_registry_rolls_back_failed_world_
 	journal.status = "accepted"
 	assert_true(restarted.acknowledge_creature_training(current.character_id, journal))
 	assert_false(restarted.creature_training_is_pending(current.character_id))
+	# Reuse the existing disk/BOOL fixtures for the missing consumer callback.
+	# The physical board/request send is a double; stage, owner install, saves,
+	# world acceptance, registry ACK and Session completion are production code.
+	var save_fixture := preload("res://tests/test_foundation_resource_save.gd").new()
+	var directory := "user://test_bounty_completion_%s/" % Crypto.new().generate_random_bytes(12).hex_encode()
+	var claim_game := preload("res://tests/test_foundation_resource_save.gd").FixtureGame.new()
+	claim_game.local = preload("res://autoload/player_state.gd").new()
+	claim_game.local.configure(preload("res://autoload/item_db.gd").new())
+	claim_game.local.character_id = issued.character_id
+	claim_game.local.redesign_character = issued.redesign_character.duplicate(true)
+	claim_game.local.inventory.add("wood", 6)
+	claim_game.world = preload("res://autoload/world_state.gd").new()
+	claim_game.world.world_id = "slot-0"
+	claim_game.world.reward_delivery_namespace = "world-f43-a"
+	var claim_session := preload("res://tests/test_foundation_resource_save.gd").FixtureSession.new()
+	claim_session.fixture = claim_game
+	claim_game.session = claim_session
+	var claim_authority := AUTHORITY.new()
+	claim_session.set("_character_authority", claim_authority)
+	var claim_writer := preload("res://tests/test_foundation_resource_save.gd").BoolWriter.new()
+	claim_writer.world_store = preload("res://scripts/save/world_save.gd").new(directory.path_join("worlds"))
+	claim_writer.character_store = preload("res://scripts/save/character_save.gd").new(directory.path_join("characters"))
+	claim_game.save_system = claim_writer
+	var claim_rpc := preload("res://tests/test_foundation_resource_save.gd").FixtureRpc.new()
+	claim_rpc.fixture = claim_game
+	claim_rpc.ledger = preload("res://scripts/net/world_ledger.gd").new(claim_game.world)
+	var claim_composition := preload("res://scripts/net/foundation_composition.gd").new()
+	claim_session.add_child(claim_composition)
+	var claim_adapter := preload("res://scripts/world/bounty_interaction_adapter.gd").new()
+	claim_composition.add_child(claim_adapter)
+	claim_composition.set("_interaction", claim_adapter)
+	claim_session.homestead_action_completed.connect(claim_composition._bounty_completed)
+	var completions: Array[Dictionary] = []
+	claim_adapter.action_completed.connect(func(answer: Dictionary) -> void: completions.append(answer.duplicate(true)))
+	claim_adapter.bind_actions(func(original: Dictionary) -> Dictionary:
+		# Actual request retention; this detached source cannot dispatch a claim.
+		claim_session.call("_foundation_send", "bounty_claim", "halda_bounty_board", original, -1)
+		return pending_result.duplicate(true), func() -> Dictionary:
+		var view := BOARD.view(claim_game.local.redesign_character, issued.character_id)
+		view.world_namespace = "world-f43-a"; return view, func(_original: Dictionary) -> Dictionary:
+		return pending_result.duplicate(true))
+	assert_eq(claim_adapter.claim(instance).code, "owner_passive_checkpoint_pending")
+	var claim_requests: Dictionary = claim_session.get("_foundation_requests").duplicate(true)
+	var claim_before := RECORD.portable_projection(claim_game.local.save_data())
+	assert_true(claim_authority.bind_world("world-f43-a"))
+	assert_true(claim_authority.seed_admitted_character(claim_before, issued.character_id).ok)
+	var claim_token := claim_authority.stage_character_action(issued.character_id, 0, "bounty_claim", {"instance": instance}, _context(claim_before))
+	assert_true(claim_token.get("ok") == true, str(claim_token))
+	if claim_token.get("ok") != true:
+		save_fixture._close(claim_game, claim_rpc, directory); return
+	var claim_journal: Dictionary = claim_rpc.journal_creature_training_prepared(1, issued.character_id, claim_authority.staged_creature_training(claim_token))
+	assert_true(claim_journal.get("durable") == true, str(claim_journal))
+	assert_true(claim_authority.finish_creature_training(claim_token, claim_journal.get("durable") == true))
+	if claim_journal.get("durable") != true:
+		save_fixture._close(claim_game, claim_rpc, directory); return
+	var claim_row: Dictionary = claim_game.world.reward_deliveries[claim_journal.delivery_id].duplicate(true)
+	var claimed: Dictionary = preload("res://scripts/net/character_action_owner.gd").apply_owner(claim_game, claim_row)
+	assert_true(claimed.get("saved") == true, str(claimed))
+	claim_session.call("_deliver_training_decision", 1, claim_row)
+	assert_eq(completions.size(), 1, "owner BOOL alone leaves the original pending consumer")
+	assert_true(claim_rpc.ledger.accept_creature_training_delivery(claim_row.delivery_id, issued.character_id,
+		int(claim_row.journal_revision), claim_row.receipt, 1).get("ok") == true)
+	assert_true(claim_writer.save_world_prepared(claim_game, "slot-0"))
+	claim_row = claim_game.world.reward_deliveries[claim_row.delivery_id].duplicate(true)
+	claim_session.call("_deliver_training_decision", 1, claim_row)
+	assert_eq(completions.size(), 1, "accepted world still waits for the original registry ACK")
+	claim_composition.call("_bounty_completed", "bounty_claim", claim_row.intent, settled)
+	assert_eq(completions.size(), 1, "claimed success cannot replace the actual registry ACK")
+	assert_true(claim_authority.acknowledge_creature_training(issued.character_id, claim_row))
+	var claim_result: Dictionary = claim_session.call("_foundation_decision", 1, claim_row)
+	assert_true(claim_result.get("owner_saved") == true and claim_result.get("owner_acknowledged") == true)
+	for defect: String in ["session_epoch", "character_id", "world_namespace", "station_key", "revision", "intent", "receipt", "ack"]:
+		var requests: Dictionary = claim_requests.duplicate(true)
+		var request: Dictionary = requests.values()[0]
+		var answer := claim_result.duplicate(true)
+		match defect:
+			"revision": request.revision = 0
+			"intent": request.intent = {"instance": "foreign".sha256_text()}
+			"receipt": answer.receipt = "foreign-receipt"
+			"ack": answer.owner_acknowledged = false
+			_: request[defect] = "foreign"
+		claim_session.set("_foundation_requests", requests)
+		claim_composition.call("_bounty_completed", "bounty_claim", claim_row.intent, answer)
+		assert_eq(completions.size(), 1, "refuse mismatched original completion: " + defect)
+		assert_false((claim_adapter.get("_pending") as Dictionary).is_empty())
+	claim_session.set("_foundation_requests", claim_requests)
+	var claim_row_bytes := var_to_bytes(claim_row)
+	claim_session.call("_deliver_training_decision", 1, claim_row)
+	assert_eq(completions.size(), 2, "actual saved Session completion reaches the original bounty consumer")
+	assert_true((claim_adapter.get("_pending") as Dictionary).is_empty())
+	assert_true(completions[-1].get("owner_saved") == true and completions[-1].get("owner_acknowledged") == true)
+	assert_eq(completions[-1].get("receipt"), claim_row.receipt)
+	claim_session.call("_deliver_training_decision", 1, claim_row)
+	assert_eq(completions.size(), 2, "accepted redelivery does not repeat completion")
+	assert_eq(var_to_bytes(claim_game.world.reward_deliveries[claim_row.delivery_id]), claim_row_bytes)
+	assert_eq(claim_game.local.inventory.count("wood"), 0)
+	assert_eq(claim_game.local.inventory.count("essence_ground"), 8)
+	assert_eq(claim_game.local.inventory.count("stone"), 3)
+	assert_eq(claim_writer.character_store.call("read", issued.character_id).redesign_character.bounty_receipts.count(claim_row.receipt), 1)
+	save_fixture._close(claim_game, claim_rpc, directory)
 
 func test_four_kinds_reward_catalog_and_additive_save_shape() -> void:
 	assert_true(BOARD.configuration_errors(BOARD.config()).is_empty())
