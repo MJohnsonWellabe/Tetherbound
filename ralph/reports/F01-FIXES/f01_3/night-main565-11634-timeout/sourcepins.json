@@ -13,7 +13,7 @@
   "archive_sha256": "f24d211e9e2d4a8f37e689253959602c5ea0ec0c3d8886618315ebc11b5e6718",
   "archive_bytes": 54095061,
   "consumed_once": true,
-  "archive_retention": "Original complete ZIP retained in RAM session60494 and original CI artifact; no local copy while foreign Valheim is live",
+  "archive_retention": "Original complete ZIP saved/verified under private .artifacts after archival-only approval6031418229; original once/no second download",
   "native_exit": 124,
   "native_elapsed_seconds": 5400,
   "exit_code_file_present": false,
@@ -409,5 +409,15 @@
       "bytes": 14000,
       "sha256": "711150229f81118a5a6b8d8f68d72ab5239ff1c3c35e4dc4294ad4220356341c"
     }
-  ]
+  ],
+  "archived_original": {
+    "artifact": 11460843437,
+    "path": "D:/tetherbound/.artifacts/r3-f01-proof/main565-night-11634/artifact-11460843437.zip",
+    "sha256": "f24d211e9e2d4a8f37e689253959602c5ea0ec0c3d8886618315ebc11b5e6718",
+    "original_capture_dir": "D:/tetherbound/.artifacts/r3-f01-proof/main565-night-11634/captures",
+    "approved_archival_only": "6031418229",
+    "original_once": true,
+    "capture_hashes_verified": 40,
+    "live_source_cache_save_writes": 0
+  }
 }
