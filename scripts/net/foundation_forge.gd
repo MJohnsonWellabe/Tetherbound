@@ -8,6 +8,7 @@ const FORGE := preload("res://scripts/build/station_forge.gd")
 const PIECE := preload("res://scripts/build/station_piece.gd")
 const ACTIONS := preload("res://scripts/net/foundation_actions.gd")
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
+const TRACE := preload("res://scripts/net/background_work_trace.gd")
 var _channels: Dictionary = {}
 var _pending: Dictionary = {}
 var _left: float = 0.0
@@ -92,6 +93,12 @@ func actor_context(actor: CharacterBody3D, uid: String) -> Dictionary:
 		"plot_allowed": source.get("homestead") == true}
 
 func start(peer: int, envelope: Dictionary) -> Dictionary:
+	var traced := TRACE.begin("forge.start", peer)
+	var result := _start(peer, envelope)
+	_trace_result("forge.start", traced, peer, envelope, result)
+	return result
+
+func _start(peer: int, envelope: Dictionary) -> Dictionary:
 	var owner: Node = session()
 	if owner.call("is_host") != true or envelope.get("op") != "refine_start" \
 		or owner.call("_foundation_envelope_live", peer, envelope) != true: return ACTIONS.deny("invalid_refining_owner")
@@ -111,6 +118,28 @@ func start(peer: int, envelope: Dictionary) -> Dictionary:
 	return result
 
 func commit_unit(plan: Dictionary, ticket: String, actor: CharacterBody3D) -> Dictionary:
+	var context: Dictionary = {}
+	if OS.get_environment("TB_BACKGROUND_WORK_TRACE") == "1":
+		context = {"character_id": plan.get("character_id"), "world_id": plan.get("world_id"),
+			"world_namespace": plan.get("world_namespace"), "station_uid": plan.get("station_uid"),
+			"recipe_id": plan.get("recipe_id"), "txn_id": ticket}
+		# Read only the request this real channel already retained. No authority,
+		# station context, quote, save or actor-policy producer is called to trace.
+		for channel: Dictionary in _channels.values():
+			var request: Variant = channel.get("request", {})
+			if not request is Dictionary: continue
+			if request.get("character_id") == plan.get("character_id") \
+				and request.get("station_key") == "forge:meadows:" + str(plan.get("station_uid", "")):
+				context.peer = channel.get("peer", -1)
+				context.session_epoch = channel.get("epoch", "")
+				context.station_key = request.get("station_key")
+				break
+	var traced := TRACE.begin("forge.commit_unit", int(context.get("peer", -1)))
+	var result := _commit_unit(plan, ticket, actor)
+	_trace_result("forge.commit_unit", traced, int(context.get("peer", -1)), context, result)
+	return result
+
+func _commit_unit(plan: Dictionary, ticket: String, actor: CharacterBody3D) -> Dictionary:
 	var owner: Node = session()
 	if owner.call("is_host") != true or not preload("res://scripts/build/station_actions.gd").transaction_id(ticket): return {}
 	var peer := _peer(actor)
@@ -168,6 +197,18 @@ func commit_unit(plan: Dictionary, ticket: String, actor: CharacterBody3D) -> Di
 ## Called synchronously only after this original unit's exact owner BOOL/CAS.
 ## Re-resolve the live actor, Forge, completed ticket and full plan in commit_unit.
 func commit_prepared(peer: int, request: Dictionary, context: Dictionary) -> Dictionary:
+	var traced := TRACE.begin("forge.commit_prepared", peer)
+	var original: Dictionary = {}
+	if traced != 0:
+		original = request.duplicate()
+		original.txn_id = context.get("manual_unit_ticket")
+		var plan: Variant = context.get("manual_unit_plan")
+		if plan is Dictionary: original.world_id = plan.get("world_id")
+	var result := _commit_prepared(peer, request, context)
+	_trace_result("forge.commit_prepared", traced, peer, original, result)
+	return result
+
+func _commit_prepared(peer: int, request: Dictionary, context: Dictionary) -> Dictionary:
 	var ticket := str(context.get("manual_unit_ticket", ""))
 	var original: Dictionary = _pending.get(ticket, {})
 	if original.is_empty() or original.get("phase") != "preparing" or original.peer != peer \
@@ -191,6 +232,27 @@ func commit_prepared(peer: int, request: Dictionary, context: Dictionary) -> Dic
 		return {"ok": false, "durable": false, "resolved": true, "terminal_refusal": true,
 			"code": code}
 	return ACTIONS.deny(str(verdict.get("reason", "refining_original_pending")))
+
+## Opt-in branch attribution only. Whitelist bounded scalar identities/results;
+## never serialize a full request, character, inventory or transaction plan.
+static func _trace_result(phase: String, traced: int, peer: int, context: Dictionary, result: Dictionary) -> void:
+	if traced == 0: return
+	var identities: Dictionary = {}
+	for key: String in ["character_id", "world_id", "world_namespace", "session_epoch", "station_key", "station_uid", "txn_id", "recipe_id"]:
+		var value: Variant = context.get(key)
+		if value is String: identities[key] = value.substr(0, 192)
+	if context.get("intent") is Dictionary:
+		var recipe: Variant = context.intent.get("recipe_id")
+		var amount: Variant = context.intent.get("amount")
+		if recipe is String: identities.recipe_id = recipe.substr(0, 192)
+		if amount is int: identities.amount = amount
+	var outcome: Dictionary = {}
+	for key: String in ["ok", "started", "crafted", "pending", "durable", "resolved", "saved", "terminal_refusal", "code", "reason"]:
+		var value: Variant = result.get(key)
+		if value is bool: outcome[key] = value
+		elif value is String: outcome[key] = value.substr(0, 256)
+	print("TB_BACKGROUND_WORK_TRACE RESULT phase=%s peer=%d context=%s result=%s" % [phase, peer, JSON.stringify(identities), JSON.stringify(outcome)])
+	TRACE.end(phase, traced, peer)
 
 static func unit_verdict(ticket: String, plan: Dictionary, decision: Dictionary) -> Dictionary:
 	var saved: bool = decision.get("ok") == true and decision.get("saved") == true

@@ -188,6 +188,16 @@ func completed_unit_plan(ticket: String, actor: CharacterBody3D) -> Dictionary:
 ## is canceled; an unresolved canonical unit retains its correlation ticket.
 func stop_refining(code: String = "cancelled", reason: String = "Refining stopped.") -> void:
 	var was_running := _running
+	if was_running and OS.get_environment("TB_BACKGROUND_WORK_TRACE") == "1":
+		# Already-held channel identity/state, before the existing stop clears its
+		# timer. No context reader or canonical producer is invoked to observe it.
+		print("TB_BACKGROUND_WORK_TRACE RESULT phase=forge.channel_stopped at_usec=%d engine_physics_frame=%d context=%s result=%s" % [
+			Time.get_ticks_usec(), Engine.get_physics_frames(),
+			JSON.stringify({"character_id": _character_id.substr(0, 192), "world_id": _world_id.substr(0, 192),
+				"world_namespace": _namespace.substr(0, 192), "station_uid": _uid.substr(0, 192),
+				"recipe_id": _recipe_id.substr(0, 192), "txn_id": str(_pending.get("txn_id", "")).substr(0, 192),
+				"completed": _completed, "remaining": _remaining, "elapsed": _elapsed}),
+			JSON.stringify({"code": code.substr(0, 256), "reason": reason.substr(0, 256)})])
 	_running = false
 	_remaining = 0
 	_elapsed = 0.0
