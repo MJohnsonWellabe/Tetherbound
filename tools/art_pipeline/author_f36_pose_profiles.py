@@ -59,6 +59,7 @@ def aim_delta(rest, parent, direction, twist_deg=0):
 STARTER_TUCKS = {
     # Knees/paws curl toward the belly instead of remaining below the flank.
     'terrapup': {
+        'spine': [-.25, 0, .968],
         'neck': [.3, .8, .52],
         **{f'{end}_upper_{side}': [.55, -.35, .76]
            for end in ('front', 'rear') for side in ('l', 'r')},
@@ -92,9 +93,11 @@ STARTER_TUCKS = {
     },
 }
 
-STARTER_TWISTS = {'terrapup': {'front_upper_l': 45, 'front_upper_r': 45},
+STARTER_TWISTS = {'terrapup': {f'{end}_upper_{side}': 90
+                             for end in ('front', 'rear') for side in ('l', 'r')},
+                  'ripplet': {'neck': 90},
                   'galewisp': {'wing_upper_l': 150, 'wing_upper_r': -90,
-                              'wing_tip_l': 90, 'wing_tip_r': -90}}
+                              'wing_tip_l': 90, 'wing_tip_r': -90, 'neck': 90}}
 
 
 def author_starter_tuck(name, row, roles):
