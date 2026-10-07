@@ -219,6 +219,12 @@ static func is_full_generation_usable(world_name: String, base_seed: int, finger
 			or not TERRAIN_BAKE.same_regions(catalog, receipt.get("regions", [])) \
 			or files.size() != catalog.size() or not manifest.get("identity_high_water") is Dictionary:
 		return false
+	if manifest.identity_high_water != receipt.get("identity_high_water"):
+		return false
+	for value: Variant in manifest.identity_high_water.values():
+		if not (value is int or value is float) or not is_finite(float(value)) \
+				or float(value) < -1.0 or float(value) != floor(float(value)):
+			return false
 	for pair: Array in catalog:
 		var name := _region_path(world_name, Vector2i(int(pair[0]), int(pair[1]))).get_file()
 		if not files.has(name) or not files[name] is String or str(files[name]).length() != 64 \
@@ -702,6 +708,8 @@ static func _write_identity_regions(world_name: String, by_layer: Dictionary, dr
 		var cell := [region.x,region.y]
 		if not catalog.has(cell):
 			catalog.append(cell)
+	if full_fingerprint >= 0:
+		catalog = selection.duplicate(true)
 	var patch := {"config_fingerprint": config_fingerprint(), "regions": selection.duplicate(true),
 		"identity_high_water": high_water, "region_catalog": catalog,
 		"scope": "explicit regional scatter update; outside bytes and base provenance retained"}
