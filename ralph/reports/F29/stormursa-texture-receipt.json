@@ -1,0 +1,29 @@
+{
+  "task_id": "01a1169c-70ef-77b1-856a-32d3120cc810",
+  "night_count": 3,
+  "budget": 10,
+  "official_price_url": "https://docs.meshy.ai/en/api/pricing",
+  "endpoint": "/openapi/v1/retexture",
+  "input_model_sha256": "44ceb83975f3879bc3bf1f2156d573b933cf3960dd899d0582ae5ca79b687856",
+  "reference_sha256": "ea0a0d7a0716f9fc599a91769a560afda60418c6615330064abd2e8caf841f33",
+  "settings": {
+    "texture_resolution": "2k",
+    "enable_pbr": true,
+    "enable_original_uv": false,
+    "model_mime": "application/octet-stream",
+    "image_style_url": "inspected same-reference PNG data URI"
+  },
+  "balance_before": {
+    "balance": 13410
+  },
+  "balance_after": {
+    "balance": 13400
+  },
+  "shipping_enabled": false,
+  "scope": "One guarded retexture; no extra mesh/rig-service task or shipping flag",
+  "observed_charge": 10,
+  "status": "SUCCEEDED; output inspection and identity/deformation gates open",
+  "inspection": "stormursa-texture-inspection.json",
+  "model_triangles": 27146,
+  "raw_uv_seam_duplicates": 18108
+}
