@@ -128,7 +128,6 @@ def main() -> None:
     # textured mesh arrives however Meshy left it. Align by bounding box so
     # nearest-face lookups land on the right body parts.
     from mathutils import Vector
-    import math
     def box(obj):
         low = Vector((math.inf,) * 3)
         high = Vector((-math.inf,) * 3)
