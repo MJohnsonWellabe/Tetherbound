@@ -3652,6 +3652,7 @@ func _host_tether_tag(request: Dictionary, peer: int, admitted: Dictionary,
 	var connected := MATH.move_connects(profiles[0], position, facing, wild.call("centre")) \
 		and MATH.move_connects(profiles[1], position, facing, wild.call("centre"))
 	var view := {"actor": actors[0], "incoming": actors[1], "actors": actors, "rolls": [0.5, 0.5],
+		"outgoing_status_now_ms": _host_self_utility_now(id, peer, str(binding.creature_uid), now_ms),
 		"target": {"uid": str(target.uid), "generation": generation, "hp": float(target.hp), "hostile": true,
 			"position": wild.call("centre"), "defence": float(target.call("effective_defence", PROGRESSION.config())),
 			"type": str(target.get("creature_type")), "secondary_type": str(target.get("secondary_type"))},
@@ -3659,6 +3660,7 @@ func _host_tether_tag(request: Dictionary, peer: int, admitted: Dictionary,
 	var prepared: Dictionary = _encounter_host.call("prepare_tether_tag_command", request, peer, binding, view, profiles, now_ms)
 	if prepared.get("ok") != true: return prepared
 	var parent := str(prepared.original.action_id)
+	view["outgoing_status_now_ms"] = _host_self_utility_now(id, peer, str(binding.creature_uid), Time.get_ticks_msec())
 	var arrival: Dictionary = _encounter_host.call("begin_tether_tag_resolution", id, peer, parent, binding, view)
 	if arrival.get("ok") != true: return arrival
 	var original: Dictionary = arrival.original
@@ -3671,7 +3673,7 @@ func _host_tether_tag(request: Dictionary, peer: int, admitted: Dictionary,
 		var move: Dictionary = original.moves[index]
 		var child: Dictionary = arrival.joint.strikes[index]
 		var child_hp_before := float(target.hp)
-		var bonus := float(_encounter_host.call("self_utility_power", id, str(cards[index].creature_uid), now_ms)) \
+		var bonus := float(child.get("source_utility_power", 1.0)) \
 			* float((_encounter_host.call("tether_rally", id, peer, now_ms) as Dictionary).damage)
 		var rolled: Dictionary = engine.call("host_roll_damage", cards[index], str(move.move_id),
 			float(move.power) * float(child.power_multiplier) * armor, false,

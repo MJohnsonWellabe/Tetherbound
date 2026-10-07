@@ -1,0 +1,8 @@
+Bounded F23 utility and HUD source review
+Base: dfac5bbbc8be37faeedd3153ac236615a96df850
+Reviewer: /root/f25_arrival_review (retained independent F23 reviewer)
+Verdict: APPROVE
+Physical preflight is side-effect-free before HP write; ordinary Shove/Quake use real collision sweep, arena and existing tunnelling guards, requested/actual displacement receipt, no additional knockback. Named Shove fails closed pending canonical heavy-boss classification (issue572 comment6041192138).
+Tag Hearten is bound to the outgoing cast receipt and pause-aware arrival tick; only validated positive outgoing child HP debit consumes it once after original chained HP/opponent/incoming binding checks. Incoming bench status is neutral. No fake credit_move_hit, second meters, mastery or save/ACK changes.
+HUD uses rebound-aware compact RB-to-face glyphs, gold ultimate fill and actual availability; existing focused smoke assertion follows the actual supported state. No new fixture, test class, harness or unit test added.
+No blocking static finding; no native engine. Actual utility path, collision, guest movement/authority, tag replay/expiry and visual proofs remain open. Shipping flags and live whitelist remain unchanged. This is not F23/F24/F42 acceptance.

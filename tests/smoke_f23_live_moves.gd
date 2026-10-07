@@ -26,6 +26,7 @@ const WILD := preload("res://scripts/creatures/wild_creature.gd")
 const DIRECTOR := preload("res://scripts/combat/encounter_director.gd")
 const MANAGER := preload("res://scripts/combat/combat_manager.gd")
 const HUD := preload("res://scenes/combat/combat_hud.tscn")
+const HUD_SCRIPT := preload("res://scripts/ui/combat_hud.gd")
 const ULTIMATES := preload("res://scripts/vfx/ultimates/ultimate_library.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const MOVE_LIBRARY := preload("res://scripts/vfx/move_effect_library.gd")
@@ -301,8 +302,11 @@ func _run() -> void:
 	await process_frame
 	_check(shown_meter.is_visible_in_tree() and is_equal_approx(shown_meter.value, 100.0),
 		"mounted actual CombatHUD shows the full landed-hit Ultimate meter")
-	_check(shown_readout.is_visible_in_tree() and shown_readout.get_parsed_text().contains("Tap, then a move"),
-		"mounted actual CombatHUD displays the full-meter ready instruction")
+	var ultimate_available: bool = _manager.call("live_move_supported", "ultimate", str(_creature.move_ultimate))
+	_check(shown_readout.is_visible_in_tree() and (shown_readout.get_parsed_text().contains("Tap →")
+		and shown_readout.text.contains(preload("res://scripts/ui/input_glyph.gd").icon("combat_utility", HUD_SCRIPT.CELL_GLYPH_PX, HUD_SCRIPT.VERB_READY))
+		if ultimate_available else shown_readout.get_parsed_text().contains("Unavailable")),
+		"mounted actual CombatHUD displays the actual full-meter availability and rebound-aware tap sequence")
 	if not _capture_dir.is_empty():
 		DirAccess.make_dir_recursive_absolute(_capture_dir)
 		await RenderingServer.frame_post_draw

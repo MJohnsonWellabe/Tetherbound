@@ -3552,6 +3552,9 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 	if not impact_context.is_empty() and _shared_hit_feedback() == null: return {}
 	var frozen: Dictionary = impact_context.get("move", {})
 	var slot := str(frozen.get("slot", "charged" if charged else "quick"))
+	var physical_utility := slot == "utility" and frozen.get("utility", {}).get("kind") in ["push", "quake_ring"]
+	if physical_utility and not _host_landed_target_utility(card, frozen, impact_context, float(_enemy.hp), false):
+		return {}
 	if slot == "utility" and float(frozen.get("base_power", -1.0)) == 0.0:
 		# Generic rolled_damage has a minimum HP hit. Non-damaging utilities
 		# must instead commit their live host target consumer, or fail closed.
@@ -3607,6 +3610,12 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 	var direction: Vector3 = impact_context.get("direction", Vector3.ZERO)
 	var impact: Dictionary = {} if impact_context.is_empty() else _new_impact(move_id, slot, damage, type_mult,
 		stagger_crit, direction, _wild, str(impact_context.get("action_id", "")))
+	if physical_utility and not impact.is_empty():
+		# The utility's swept metres replace this hit's ordinary knockback.
+		# Keep damage/hitstop/poise feedback, with no second impulse tail.
+		impact = impact.duplicate(true)
+		impact["knockback_m"] = 0.0
+		impact.make_read_only()
 	if not impact.is_empty():
 		var feedback := _shared_hit_feedback()
 		if is_instance_valid(_wild):
@@ -3626,7 +3635,7 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 ## Only Director's admitted, geometry-resolved original reaches this seam.
 ## Field placement uses its frozen launch point, never the foe's later seat.
 func _host_landed_target_utility(card: Dictionary, frozen: Dictionary,
-		impact_context: Dictionary, target_hp_before: float) -> bool:
+		impact_context: Dictionary, target_hp_before: float, commit: bool = true) -> bool:
 	var source := impact_context.get("striker_body") as Node3D
 	var actor: Dictionary = frozen.get("actor_binding", {})
 	if not is_instance_valid(source) or not is_instance_valid(_wild) or _enemy == null \
@@ -3642,7 +3651,7 @@ func _host_landed_target_utility(card: Dictionary, frozen: Dictionary,
 		"target_hp": target_hp_before, "hostile": true, "geometry_connected": true,
 		"target_is_boss": _wild.has_method("named_combat_target") and bool(_wild.call("named_combat_target"))}
 	if impact_context.get("target_point") is Vector3: context["target_point"] = impact_context.target_point
-	return _wild.call("apply_landed_utility", frozen, context) == true
+	return _wild.call("apply_landed_utility", frozen, context, commit) == true
 
 
 ## The move profile the HOST tests a strike against: its own `combat.json`, its

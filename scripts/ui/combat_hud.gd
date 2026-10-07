@@ -325,6 +325,7 @@ func _ready() -> void:
 	_ultimate_meter.custom_minimum_size.y = 8.0
 	_ultimate_meter.show_percentage = false
 	_ultimate_meter.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_dress(_ultimate_meter, UITokens.fill_box(UITokens.WARNING))
 	$Root/AllyPanel/AllyVBox.add_child(_ultimate_meter)
 
 	_party_strip = PARTY_STRIP.new()
@@ -947,9 +948,22 @@ func _draw_ally() -> void:
 	var ultimate: float = float(_manager.call("ultimate_fraction"))
 	_ultimate_meter.value = ultimate * 100.0
 	var signature := _move_name(str(creature.get("move_ultimate")), "Ultimate")
-	var arm := INPUT_GLYPH.icon("combat_ultimate_arm", CELL_GLYPH_PX, VERB_READY if ultimate >= 1.0 else VERB_DIMMED)
-	var instruction := "Tap, then a move" if ultimate >= 1.0 else "[font_size=%d]%d%%[/font_size]" % [UITokens.FONT_NUMBER, roundi(ultimate * 100.0)]
-	if bool(_manager.call("ultimate_armed")): instruction = "tap a move"
+	var available: bool = bool(_manager.call("live_move_supported", "ultimate", str(creature.get("move_ultimate"))))
+	var ready := available and ultimate >= 1.0
+	var arm := INPUT_GLYPH.icon("combat_ultimate_arm", CELL_GLYPH_PX, VERB_READY if ready else VERB_DIMMED)
+	var instruction := "[font_size=%d]%d%%[/font_size]" % [UITokens.FONT_NUMBER, roundi(ultimate * 100.0)]
+	if not available: instruction = "Unavailable"
+	elif ready:
+		# Compact, rebound-aware face glyphs keep the sequence together at the
+		# handheld raster. The ready state never shrinks its instruction font.
+		var faces := ""
+		for action: String in ["quick", "charged", "combat_utility"]:
+			faces += INPUT_GLYPH.icon(action, CELL_GLYPH_PX, VERB_READY)
+		instruction = "Tap → %s" % faces
+		if bool(_manager.call("ultimate_armed")):
+			arm = ""
+			instruction = "Choose %s" % faces
+	_ultimate_readout.add_theme_color_override("default_color", UITokens.TEXT_PRIMARY if ready else UITokens.TEXT_SECONDARY)
 	_ultimate_readout.text = "%s\n%s %s" % [signature, arm, instruction]
 
 	# Once, not constantly: a bar that pulses every frame it happens to be full

@@ -858,17 +858,55 @@ func named_combat_target() -> bool:
 ## The host calls this after the admitted utility reaches its frozen target.
 ## Damage remains the sole HP writer's job. These target statuses and fields
 ## use this opponent's clock, which pauses with hitstop.
-func apply_landed_utility(move: Dictionary, context: Dictionary) -> bool:
+func apply_landed_utility(move: Dictionary, context: Dictionary, commit: bool = true) -> bool:
 	if not engaged or not is_alive() or instance == null or not UTILITY_EFFECTS.valid_definition(move): return false
 	var kind := str(move.utility.kind)
-	# Travel/push and self effects have separate physical/owned consumers.
-	if kind not in ["root", "slow_field", "trap", "damage_taken_debuff"] \
+	# Advancing the source and self effects have separate owned consumers.
+	if kind not in ["root", "slow_field", "trap", "damage_taken_debuff", "push", "quake_ring"] \
 		or str(context.get("target_uid", "")) != str(instance.get("uid")): return false
-	if _landed_utility_state.is_empty():
-		_landed_utility_state = UTILITY_EFFECTS.empty_state(str(context.get("encounter_id", "")), int(context.get("generation", 0)))
-	var staged := UTILITY_EFFECTS.stage_application(_landed_utility_state, str(move.get("move_id", "")), move,
-		context, int(_utility_clock_ms), int(MATH.config().get("utility_limits", {}).get("receipt_limit_per_encounter", 4096)))
+	var physical := kind in ["push", "quake_ring"]
+	var host := context.duplicate(true)
+	if physical:
+		if not is_inside_tree() or not is_instance_valid(arena) or not arena.is_inside_tree() \
+			or not arena.has_method("clamp_point") or not arena.has_method("contains") \
+			or not arena.has_method("_crossed_a_surface") or get_world_3d() == null \
+			or not is_finite(float(instance.get("hp"))) or float(instance.get("hp")) <= 0.0 \
+			or arena.call("contains", global_position) != true: return false
+		# Heavy-boss classification has no authored production source yet.
+		# A named opponent is not evidence of either Shove distance.
+		if kind == "push" and named_combat_target(): return false
+		host["target_is_heavy_boss"] = false
+	var current := _landed_utility_state if not _landed_utility_state.is_empty() else \
+		UTILITY_EFFECTS.empty_state(str(context.get("encounter_id", "")), int(context.get("generation", 0)))
+	var staged := UTILITY_EFFECTS.stage_application(current, str(move.get("move_id", "")), move,
+		host, int(_utility_clock_ms), int(MATH.config().get("utility_limits", {}).get("receipt_limit_per_encounter", 4096)))
 	if staged.get("ok") != true: return false
+	# Manager checks availability before its sole HP writer. Preparation has
+	# no movement/status side effects; the positive-debit call commits once.
+	if not commit: return true
+	if physical:
+		var start := global_position
+		var away: Vector3 = start - (host.source_position as Vector3)
+		away.y = 0.0
+		var requested := float(staged.receipt.requested_push_metres)
+		if not away.is_zero_approx() and requested > 0.0:
+			var target: Vector3 = arena.call("clamp_point", start + away.normalized() * requested, 0.0)
+			# Metres of displacement, not an impulse. One collision sweep stops
+			# at the first obstruction; the ring clips its destination first.
+			move_and_collide((target - start).limit_length(requested))
+			# Reuse the arena's Terrain3D tunnelling guard. A rejected result
+			# returns to its legal start, never writes the requested endpoint.
+			if arena.call("_crossed_a_surface", self, start) == true \
+				or arena.call("contains", global_position) != true \
+				or global_position.distance_to(start) > requested + 0.001:
+				global_position = start
+		var moved := global_position - start
+		var receipt: Dictionary = staged.receipt.duplicate(true)
+		receipt["applied_push_metres"] = Vector2(moved.x, moved.z).length()
+		receipt["push_from"] = start
+		receipt["push_to"] = global_position
+		receipt.make_read_only()
+		(staged.state.receipts as Dictionary)[str(receipt.action_id)] = receipt
 	_landed_utility_state = staged.state
 	return true
 
