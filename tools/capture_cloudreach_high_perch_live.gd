@@ -110,7 +110,8 @@ func _run() -> void:
 	if not await _boot():
 		_finish()
 		return
-	var capture_times: Array[String] = ["day"] if _departure_only else ["day", "night"]
+	var capture_times: Array[String] = []
+	capture_times.assign(["day"] if _departure_only else ["day", "night"])
 	for time_name: String in capture_times:
 		_time_name = time_name
 		_pin_hour(float(HOURS[time_name]))
