@@ -42,8 +42,21 @@
       "observed_credit_cost": 10,
       "candidate_enabled": false,
       "inspection_evidence": "ralph/reports/F29/stormursa-texture-verdict.json"
+    },
+    {
+      "reservation_id": "9fcde34d-2b09-4d1a-98d1-2c7dc0cc95ac",
+      "night": "2026-10-07",
+      "subject": "terrapup",
+      "reference": "assets/creatures/tetherbound/terrapup/reference/f36-standing-v1.png",
+      "reference_sha256": "7d077b8cf53b3539b348d354bebbd6bf539f39136b9b349b7ba263c712ccee50",
+      "endpoint": "/openapi/v1/image-to-3d",
+      "submitted_utc": "2026-10-07T09:22:51.552723-05:00",
+      "task_id": "01a116be-dd09-708f-8441-3971076c7c98",
+      "status": "submitted_pending_inspection",
+      "observed_credit_cost": 15,
+      "candidate_enabled": false
     }
   ],
-  "actual_meshy_submissions": 3,
+  "actual_meshy_submissions": 4,
   "note": "Lane E is the attended generation owner. Every POST uses f36_meshy_guard.py. Current real task IDs and reference hashes are recorded below; mocked cap tests use a temporary ledger and create no Meshy tasks. Generation or a successful cap check does not certify art."
 }

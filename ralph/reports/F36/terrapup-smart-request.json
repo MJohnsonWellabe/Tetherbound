@@ -1,0 +1,18 @@
+{
+  "subject": "terrapup",
+  "reference": "assets/creatures/tetherbound/terrapup/reference/f36-standing-v1.png",
+  "reference_sha256": "7d077b8cf53b3539b348d354bebbd6bf539f39136b9b349b7ba263c712ccee50",
+  "settings": {
+    "model_type": "smart-topology",
+    "ai_model": "meshy-t2",
+    "should_texture": true,
+    "enable_pbr": true,
+    "texture_resolution": "2k",
+    "target_polycount": 15000
+  },
+  "expected_credit_cost": 15,
+  "balance_before": 13400,
+  "candidate_enabled": false,
+  "task_id": "01a116be-dd09-708f-8441-3971076c7c98",
+  "balance_after_submission": 13385
+}

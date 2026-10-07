@@ -1,6 +1,6 @@
 {
   "subject": "terrapup",
-  "status": "drafted_inspected_reference_candidate_OFF",
+  "status": "inspected_reference_guarded_meshy_candidate_pending_OFF",
   "method": "built_in_imagegen",
   "reference": "res://assets/creatures/tetherbound/terrapup/reference/f36-standing-v1.png",
   "sha256": "7d077b8cf53b3539b348d354bebbd6bf539f39136b9b349b7ba263c712ccee50",
@@ -14,6 +14,18 @@
   },
   "installed_height_reference_m": 3.8499999046,
   "native_scale_reference_run": 37630787255,
-  "meshy_task_ids": [],
-  "default_enabled": false
+  "meshy_task_ids": [
+    "01a116be-dd09-708f-8441-3971076c7c98"
+  ],
+  "default_enabled": false,
+  "meshy_settings": {
+    "enable_pbr": true,
+    "target_polycount": 15000,
+    "texture_resolution": "2k",
+    "should_texture": true,
+    "model_type": "smart-topology",
+    "ai_model": "meshy-t2"
+  },
+  "credit_cost": 15,
+  "license_workflow": "Existing owner-held Meshy license; guarded attended RD-26 current-roster priority refinement; no purchase"
 }
