@@ -23,10 +23,19 @@ class RealRepository(unittest.TestCase):
     def test_every_group_is_planned_exactly_once(self):
         bins, _ = R.plan(self.groups)
         self.assertEqual(len(bins), R.SUITE_COUNT * R.LANES)
-        labels = [g.label for lane in bins for g in lane]
+        labels = [g.label for lane in bins for g in lane] + \
+            [g.label for gs in R.solo_plan(self.groups).values() for g in gs]
         self.assertEqual(sorted(labels), sorted(g.label for g in self.groups))
         owned = [lane for n in range(1, R.SUITE_COUNT + 1) for lane in R.suite_lanes(bins, n)]
         self.assertEqual(owned, bins)
+
+    def test_exclusive_groups_run_alone_once(self):
+        solo = R.solo_plan(self.groups)
+        alone = [g.label for gs in solo.values() for g in gs]
+        self.assertEqual(sorted(alone), sorted(g.label for g in self.groups if g.exclusive))
+        self.assertIn("verify-owner-regressions-shard (catching)", alone)
+        bins, _ = R.plan(self.groups)
+        self.assertFalse(set(alone) & {g.label for lane in bins for g in lane})
 
     def test_every_group_has_steps_and_no_unresolved_expression(self):
         for g in self.groups:

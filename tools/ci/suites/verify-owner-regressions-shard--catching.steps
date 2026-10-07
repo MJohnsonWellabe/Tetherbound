@@ -4,6 +4,7 @@
 ### job: verify-owner-regressions-shard
 ### group: catching
 ### seconds: 130
+### exclusive
 ### job-timeout-minutes: 28
 
 ### step: Verify party_count_after_catches

@@ -29,6 +29,7 @@ Step semantics: every step of a group runs even after an earlier one failed
 only add failures), with `bash --noprofile --norc -eo pipefail` like a ci.yml
 `run:` step, the step's own `timeout-minutes` or else the group's job limit.
 `### nightly` steps run only on the scheduled/dispatched tier (--nightly).
+An `### exclusive` group runs alone on its suite's runner after the lanes.
 A KEY=VALUE a step appends to $GITHUB_ENV reaches the group's later steps.
 Leftover processes of a group are swept when the group ends.
 
@@ -75,11 +76,12 @@ class Group:
         self.seconds = None
         self.job_timeout = DEFAULT_STEP_TIMEOUT_MINUTES
         self.tier = "full"
+        self.exclusive = False
         self.steps = []
         step = None
         with open(path, encoding="utf-8") as f:
             for raw in f.read().splitlines():
-                m = re.match(r"^### (job-timeout-minutes|timeout-minutes|seconds|group|job|tier|step|env|nightly)(?:: ?| |$)(.*)$", raw)
+                m = re.match(r"^### (job-timeout-minutes|timeout-minutes|seconds|group|job|tier|exclusive|step|env|nightly)(?:: ?| |$)(.*)$", raw)
                 if m:
                     key, val = m.group(1), m.group(2)
                     if key == "step":
@@ -94,6 +96,8 @@ class Group:
                             self.seconds = int(val)
                         elif key == "job-timeout-minutes":
                             self.job_timeout = int(val)
+                        elif key == "exclusive":
+                            self.exclusive = True
                         elif key == "tier":
                             if val not in ("fast", "full"):
                                 raise PlanError("%s: tier must be fast or full" % self.file)
@@ -127,15 +131,31 @@ def load(directory=SUITES_DIR):
     return groups
 
 
+def solo_plan(groups, suite_count=SUITE_COUNT):
+    """{suite: [Group]}: `### exclusive` groups, which run ALONE on their
+    suite's runner after its lanes finish, spread from the last suite."""
+    alone = sorted((g for g in groups if g.exclusive), key=lambda g: g.label)
+    out = {}
+    for i, g in enumerate(alone):
+        out.setdefault(suite_count - (i % suite_count), []).append(g)
+    return out
+
+
 def plan(groups, suite_count=SUITE_COUNT, lanes=LANES):
-    """[[Group]] per lane; suite N owns lanes (N-1)*lanes .. N*lanes-1."""
+    """[[Group]] per lane; suite N owns lanes (N-1)*lanes .. N*lanes-1. An
+    exclusive group is on no lane (solo_plan); its seconds are pre-loaded
+    onto every lane of its suite."""
     bins = [[] for _ in range(suite_count * lanes)]
     loads = [0] * len(bins)
-    for g in sorted(groups, key=lambda g: (-g.seconds, g.label)):
+    solo = solo_plan(groups, suite_count)
+    for suite, alone in solo.items():
+        for i in range((suite - 1) * lanes, suite * lanes):
+            loads[i] += sum(g.seconds for g in alone)
+    for g in sorted((g for g in groups if not g.exclusive), key=lambda g: (-g.seconds, g.label)):
         i = min(range(len(bins)), key=lambda i: (loads[i], i))
         bins[i].append(g)
         loads[i] += g.seconds
-    seen = [g.label for lane in bins for g in lane]
+    seen = [g.label for lane in bins for g in lane] + [g.label for alone in solo.values() for g in alone]
     if sorted(seen) != sorted(g.label for g in groups) or len(seen) != len(set(seen)):
         raise PlanError("suite plan is not an exact one-time cover")
     return bins, loads
@@ -157,8 +177,9 @@ def selected(group, jobs, tier):
 
 def suites_with_work(groups, jobs, tier):
     bins, _ = plan(groups)
+    solo = solo_plan(groups)
     return [n for n in range(1, SUITE_COUNT + 1)
-            if any(selected(g, jobs, tier) for lane in suite_lanes(bins, n) for g in lane)]
+            if any(selected(g, jobs, tier) for lane in suite_lanes(bins, n) + [solo.get(n, [])] for g in lane)]
 
 
 # --- lane execution (runs inside the lane's own namespace) -------------------
@@ -254,8 +275,12 @@ def netns_prefix():
 def run_suite(suite, jobs, tier, nightly, groups):
     bins, _ = plan(groups)
     mine = [[g for g in lane if selected(g, jobs, tier)] for lane in suite_lanes(bins, suite)]
+    alone = [g for g in solo_plan(groups).get(suite, []) if selected(g, jobs, tier)]
     for i, lane in enumerate(mine, start=1):
         print("suite %d lane %d: %s" % (suite, i, ", ".join(g.label for g in lane) or "(nothing selected)"))
+    if alone:
+        print("suite %d alone after its lanes (lane %d): %s" % (suite, len(mine) + 1,
+                                                               ", ".join(g.label for g in alone)))
     work = os.environ.get("RUN_SUITE_DIR") or tempfile.mkdtemp(prefix="run-suite-")
     prefix = netns_prefix()
     if prefix:
@@ -290,9 +315,8 @@ def run_suite(suite, jobs, tier, nightly, groups):
                     print("lane %d: %s" % (lane_no, raw.rstrip("\n")), flush=True)
 
     threads = []
-    for i, lane in enumerate(mine, start=1):
-        if not lane:
-            continue
+
+    def start(i, lane):
         lane_dir = os.path.join(work, "lane%d" % i)
         os.makedirs(lane_dir, exist_ok=True)
         argv = prefix + [sys.executable, os.path.abspath(__file__), "--run-lane", lane_dir] + \
@@ -303,6 +327,11 @@ def run_suite(suite, jobs, tier, nightly, groups):
         t = threading.Thread(target=relay, args=(i, proc), daemon=True)
         t.start()
         threads.append(t)
+        return proc, t
+
+    for i, lane in enumerate(mine, start=1):
+        if lane:
+            start(i, lane)
 
     def stop(signum, _frame):
         for p in procs:
@@ -315,7 +344,12 @@ def run_suite(suite, jobs, tier, nightly, groups):
     signal.signal(signal.SIGTERM, stop)
     signal.signal(signal.SIGINT, stop)
     status = 0
-    for p, t in zip(procs, threads):
+    for p, t in list(zip(procs, threads)):
+        if p.wait() != 0:
+            status = 1
+        t.join()
+    if alone:
+        p, t = start(len(mine) + 1, alone)
         if p.wait() != 0:
             status = 1
         t.join()
@@ -353,6 +387,8 @@ def main(argv=None):
                   "in tools/ci/run_suite.py" % (i + 1, load_s, LANE_BUDGET_SECONDS))
         print("plan suite %d/%d lane %d: %d s: %s" % (i // LANES + 1, SUITE_COUNT, i % LANES + 1, load_s,
                                                      ", ".join(g.label for g in lane)))
+    for suite, alone in sorted(solo_plan(groups).items()):
+        print("plan suite %d/%d alone after its lanes: %s" % (suite, SUITE_COUNT, ", ".join(g.label for g in alone)))
     if args.check:
         return 0
     if args.list:
