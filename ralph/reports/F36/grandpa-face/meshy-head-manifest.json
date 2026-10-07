@@ -1,0 +1,15 @@
+{
+  "species": "grandpa",
+  "mode": "head-only",
+  "prompt": "the SAME Grandpa from the reference, stylised elderly man's HEAD AND SHORT NECK ONLY, no shoulders or body. Preserve his face likeness, head proportions, elderly age, kind slightly concerned closed mouth, long rounded nose and softly squared jaw. Model deep eye sockets, actual eyelids, warm dark eyes and thick grey eyebrows. Preserve swept wavy silver hair with the reference's uneven side curls and part, round ears, short full grey beard and moustache. Clean softened game-sculpt forms with readable cheek and lip geometry; no identity redesign or invented ornaments. stylized PBR game character, clean readable forms, large clear colour regions, restrained surface detail, appealing stylised proportions, single creature, neutral standing pose, T-pose-adjacent, full body",
+  "negative_prompt": "photorealistic skin, realistic human proportions, armor, weapons, sword, staff, gun, cape, robe, extra fingers, fused fingers, noisy surface detail, wet plastic shading, text, watermark, multiple people, base, pedestal",
+  "views": {
+    "head": "assets\\characters\\grandpa\\reference\\f36-face-v1.png"
+  },
+  "tasks": [
+    {
+      "candidate": "head-a",
+      "task_id": "01a118ab-c9e1-7121-b488-52473510552c"
+    }
+  ]
+}

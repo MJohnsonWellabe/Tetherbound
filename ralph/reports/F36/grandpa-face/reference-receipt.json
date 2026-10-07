@@ -33,5 +33,18 @@
   "reference": "assets/characters/grandpa/reference/f36-face-v1.png",
   "transparent_background": false,
   "tool": "image_gen.imagegen",
-  "prompt": "Create one identity-preserving production sculpture reference for the SAME installed Grandpa character in these two Tetherbound reference images. Image 1 defines his head identity; image 2 defines clothing and proportions. Crop: a single centered three-quarter head and short neck, facing nearly forward, with the complete hair silhouette and ears visible, no shoulders or scarf, isolated on plain pale grey. Refine only anatomical definition and clean sculpted surface quality for image-to-3D head generation: readable deep-set warm dark eyes with modeled lids, grey eyebrows, kind slightly concerned elderly expression, same long rounded nose, same softly squared jaw and short full grey beard and moustache; swept wavy silver hair with the same uneven side curls and part. Preserve perceived ethnicity, elderly age, head width/height, forehead, face likeness, ear placement, hair length and all recognizable features from the references. Art style: stylized premium creature-expedition game character sculpt, warm natural skin, coherent softened forms, crisp actual facial geometry rather than painted lines, restrained roughness, clean rounded clumps of hair and beard. Neutral even studio illumination showing eye sockets, cheeks and lips, no dramatic shadows. No new character redesign, no ornaments, no red accents, no text, no labels, no extra views, no pedestal, no photoreal pores, no heroic younger face. Intended as a faithful face refinement of the existing Grandpa, not a replacement identity."
+  "prompt": "Create one identity-preserving production sculpture reference for the SAME installed Grandpa character in these two Tetherbound reference images. Image 1 defines his head identity; image 2 defines clothing and proportions. Crop: a single centered three-quarter head and short neck, facing nearly forward, with the complete hair silhouette and ears visible, no shoulders or scarf, isolated on plain pale grey. Refine only anatomical definition and clean sculpted surface quality for image-to-3D head generation: readable deep-set warm dark eyes with modeled lids, grey eyebrows, kind slightly concerned elderly expression, same long rounded nose, same softly squared jaw and short full grey beard and moustache; swept wavy silver hair with the same uneven side curls and part. Preserve perceived ethnicity, elderly age, head width/height, forehead, face likeness, ear placement, hair length and all recognizable features from the references. Art style: stylized premium creature-expedition game character sculpt, warm natural skin, coherent softened forms, crisp actual facial geometry rather than painted lines, restrained roughness, clean rounded clumps of hair and beard. Neutral even studio illumination showing eye sockets, cheeks and lips, no dramatic shadows. No new character redesign, no ornaments, no red accents, no text, no labels, no extra views, no pedestal, no photoreal pores, no heroic younger face. Intended as a faithful face refinement of the existing Grandpa, not a replacement identity.",
+  "meshy_task_id": "01a118ab-c9e1-7121-b488-52473510552c",
+  "meshy_submission": {
+    "polycount": 30000,
+    "cap": 30,
+    "estimated_existing_credit_cost": 20,
+    "balance_before": 13355,
+    "status": "submitted_pending_inspection",
+    "night": "2026-10-07",
+    "mode": "preview",
+    "candidates": 1,
+    "running_count": 7,
+    "endpoint": "/openapi/v1/multi-image-to-3d"
+  }
 }
