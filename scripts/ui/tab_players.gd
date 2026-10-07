@@ -70,6 +70,7 @@ func build() -> void:
 		if _steam_retry_pending_reason().is_empty():
 			_invite_button = Button.new()
 			_invite_button.text = "Retry Friends Hosting"
+			_invite_button.add_theme_font_size_override("font_size", UITokens.FONT_PROMPT)
 			_invite_button.custom_minimum_size = Vector2(0, 56)
 			_invite_button.focus_mode = Control.FOCUS_ALL
 			_invite_button.pressed.connect(_on_retry_friends_hosting)
@@ -77,6 +78,7 @@ func build() -> void:
 	elif _is_host() and _transport_kind() == "steam":
 		_invite_button = Button.new()
 		_invite_button.text = "Invite Friends"
+		_invite_button.add_theme_font_size_override("font_size", UITokens.FONT_PROMPT)
 		_invite_button.custom_minimum_size = Vector2(0, 56)
 		_invite_button.focus_mode = Control.FOCUS_ALL
 		_invite_button.pressed.connect(_on_invite_friends)
@@ -109,6 +111,7 @@ func _add_row(peer: Dictionary) -> void:
 	# is refused when pressed is worse than a button that is not there.
 	if _is_host() and peer_id != PEER_REGISTRY.HOST_PEER_ID and peer_id != 0:
 		kick = Button.new()
+		kick.add_theme_font_size_override("font_size", UITokens.FONT_PROMPT)
 		kick.text = "Remove"
 		kick.custom_minimum_size = Vector2(160, 52)
 		kick.focus_mode = Control.FOCUS_ALL

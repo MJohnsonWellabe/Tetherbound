@@ -78,6 +78,7 @@ func build() -> void:
 
 	_open_button = Button.new()
 	_open_button.text = "  Open Build Menu"
+	_open_button.add_theme_font_size_override("font_size", UITokens.FONT_PROMPT)
 	_open_button.custom_minimum_size = Vector2(320, 66)
 	_open_button.focus_mode = Control.FOCUS_ALL
 	_open_button.pressed.connect(_on_open_pressed)

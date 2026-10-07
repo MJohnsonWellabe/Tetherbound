@@ -49,7 +49,7 @@ func build() -> void:
 
 		var save_button := Button.new()
 		save_button.text = "Save"
-		save_button.add_theme_font_size_override("font_size", 30)
+		save_button.add_theme_font_size_override("font_size", UITokens.FONT_PROMPT)
 		save_button.custom_minimum_size = Vector2(140, 56)
 		save_button.focus_mode = Control.FOCUS_ALL
 		var slot := i
@@ -58,7 +58,7 @@ func build() -> void:
 
 		var load_button := Button.new()
 		load_button.text = "Load"
-		load_button.add_theme_font_size_override("font_size", 30)
+		load_button.add_theme_font_size_override("font_size", UITokens.FONT_PROMPT)
 		load_button.custom_minimum_size = Vector2(140, 56)
 		load_button.focus_mode = Control.FOCUS_ALL
 		load_button.pressed.connect(func() -> void: _on_load(slot))
