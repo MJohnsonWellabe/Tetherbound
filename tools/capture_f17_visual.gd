@@ -14,6 +14,7 @@ var _captured_companion: Node3D
 var _captured_member: RefCounted
 var _companion_required := false
 var _farm_diagnostic_only := false
+var _expected_resolution := Vector2i(1920, 1080)
 
 
 func _run() -> void:
@@ -28,16 +29,21 @@ func _run() -> void:
 			_paired_high = true
 		elif argument == "--farm-diagnostic-only":
 			_farm_diagnostic_only = true
+		elif argument.begins_with("--expected-resolution="):
+			var dimensions := argument.trim_prefix("--expected-resolution=").split("x")
+			_expected_resolution = Vector2i(int(dimensions[0]), int(dimensions[1])) if dimensions.size() == 2 else Vector2i.ZERO
 	var pattern := RegEx.new()
 	pattern.compile("^[0-9a-f]{40}$")
 	var renderer := "gl_compatibility" if _preset == "Low" else "forward_plus"
 	if DisplayServer.get_name() == "headless" or not GRAPHICS.PRESETS.has(_preset) \
 			or (_paired_high and _preset != "Medium") \
+			or (_expected_resolution != Vector2i(1920, 1080) and not (_preset == "Low" and _expected_resolution == Vector2i(1280, 720))) \
 			or RenderingServer.get_current_rendering_method() != renderer \
-			or DisplayServer.window_get_size() != Vector2i(1920, 1080) \
+			or DisplayServer.window_get_size() != _expected_resolution \
+			or root.size != _expected_resolution \
 			or pattern.search(_source) == null or not _output.is_absolute_path() \
 			or DirAccess.dir_exists_absolute(_output):
-		_finish_failure("require native 1920x1080, matching preset/renderer, exact source and fresh absolute output")
+		_finish_failure("require matching native raster (1080p or Low720), preset/renderer, exact source and fresh absolute output")
 		return
 	if DirAccess.make_dir_recursive_absolute(_output) != OK:
 		_finish_failure("could not create fresh evidence directory")
@@ -128,7 +134,7 @@ func _save_view(label: String, time_name: String, weather_name: String = "clear"
 		_failed = "observed weather differs from capture label " + weather_name
 		return false
 	var pixels := root.get_viewport().get_texture().get_image()
-	if pixels == null or pixels.is_empty() or pixels.get_size() != Vector2i(1920, 1080):
+	if pixels == null or pixels.is_empty() or pixels.get_size() != _expected_resolution:
 		_failed = "native original image is missing or wrong resolution"
 		return false
 	var extension := "jpg" if motion else "png"
@@ -294,7 +300,7 @@ func _write_manifest(complete: bool) -> void:
 		return
 	file.store_string(JSON.stringify({"source": _source, "complete": complete and not _farm_diagnostic_only,
 		"presets": _capture_presets(), "renderer": RenderingServer.get_current_rendering_method(),
-		"resolution": [1920, 1080], "views": _views, "failure": _failed,
+		"resolution": [_expected_resolution.x, _expected_resolution.y], "views": _views, "failure": _failed,
 		"shortcuts": ["inherited post-opening flags and starter", "one inherited initial farmhouse placement", "injected physical joypad bindings including ordinary companion recall", "production frozen day/night and selected clear/rain weather; weather scheduler held only for stationary capture", "separately marked farmhouse-light-off diagnostic restores all original light energies; excluded from acceptance"],
 		"diagnostic_only": _farm_diagnostic_only,
 		"scope": "partial farm-door light diagnostic only; no Hall circuit, motion or acceptance claim" if _farm_diagnostic_only else "physical village/Hall circuit and native views; independent visual verdict required; no earned opening, device, fight or multiplayer proof"}, "\t") + "\n")
