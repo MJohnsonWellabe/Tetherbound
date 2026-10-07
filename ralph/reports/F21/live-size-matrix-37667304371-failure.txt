@@ -1,0 +1,21 @@
+F21#4 — existing live size matrix: FAIL
+Hosted run: 37667304371; source: 9600a2c826dd19d465cb8b940c7d34587b362222
+Existing proof: tests/smoke_combat_camera.gd --matrix-live --matrix-preset=Low
+Renderer: Compatibility; 1920x1080; nine actual authored size pairs.
+Required: 120 settling + 180 observed physics ticks; six distinct drawn capture milestones per pair.
+All nine cases exhausted the unchanged 30-second per-case wall budget during settling.
+No case reached observation: zero scored frames, zero captures, zero input travel, no quick action.
+This receipt is failed behavior evidence; no visual, performance or acceptance PASS.
+No budget inflation, skipped pairs, confirming run or shipping flag change.
+Retain native queue for the existing strict matrix; no native engine executed by this lane.
+
+pair | elapsed_ms | settling_ticks | drawn_setup_samples | scored_frames | captures
+small/small | 30375 | 16 | 3 | 0 | 0
+small/normal | 39097 | 32 | 4 | 0 | 0
+small/giant | 35261 | 32 | 4 | 0 | 0
+normal/small | 38158 | 32 | 4 | 0 | 0
+normal/normal | 30097 | 24 | 3 | 0 | 0
+normal/giant | 33866 | 32 | 4 | 0 | 0
+giant/small | 34542 | 32 | 4 | 0 | 0
+giant/normal | 37880 | 32 | 4 | 0 | 0
+giant/giant | 34251 | 32 | 4 | 0 | 0
