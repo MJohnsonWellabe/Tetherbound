@@ -36,8 +36,22 @@
   },
   "setup": "Existing explicit ownedL30Ripplet/breakthrough fixture beforeadmission +hostFirstShore placement. No earnedfeast/campaignclaim.",
   "flag_disposition": "presentation_enabled returnedOFF after actualfailure; no flag-on READY",
-  "review": "Same original b_f37_review examining bounded actual restorecause; no unchanged rerun",
-  "visual": "Same original b_night_visual judging retained actualframes; functional/rejoin unassessed",
+  "review": {
+    "reviewer": "b_f37_review",
+    "verdict": "Verified actual passed prefix and actual restore failure; no unchanged rerun justified",
+    "saved_record": "Same awake/nonresting UID, breakthrough[1,2,3]/cap40, positive spent stamina; exact final debt14.9000000000002 seconds; savecodec retained",
+    "return_observation": "Saved XZ restored; HUMAN at surfacey=-0.7 with no new carrier deployment",
+    "cause_boundary": "restore_save_data -> _restore_mount -> restore_swim_mount; sole refusing branch unproven"
+  },
+  "visual": {
+    "reviewer": "b_night_visual",
+    "verdict": "BLOCK",
+    "surface": "PASS actual recognizable rider/Ripplet inwater and readableDismount cue",
+    "dive": "BLOCK submergedscene/cue readable in010; riderattachment obscured behinduprightRipplet onrock; active019lacksDivecue",
+    "record": "ralph/reports/F37/lane-b-ripplet/surface-dive-r3-scope-verdict.json",
+    "contact_sheet": "ralph/reports/F37/lane-b-ripplet/surface-dive-r3-contact.jpg",
+    "full_bars": "OPEN"
+  },
   "affected_logic": {
     "run_id": 37701115492,
     "tests": 608,
