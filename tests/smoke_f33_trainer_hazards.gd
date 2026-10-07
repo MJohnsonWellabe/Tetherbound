@@ -2,6 +2,8 @@ extends SceneTree
 
 ## F33#3: trainer gear mitigates the trainer's actual hazards, proven on the
 ## PRODUCTION callers in the real Meadows world (Game, Player, pond Water):
+## - falls: the real Player falls 8 m onto existing world collision; its public
+##   landed signal and actual health loss compare bare and full Skyglass gear;
 ## - cold heights: player_controller._cold_regen_scale (the scale it passes to
 ##   vitals.tick) inside gear.json's authored Cloudreach cold zone, then the
 ##   real vitals.tick regen with it;
@@ -14,6 +16,10 @@ extends SceneTree
 ## Disclosed fixtures: realm/position set on the player for the cold zone;
 ## gear equipped straight onto the trainer; the hazard flag is switched by the
 ## equipment's own config cache, as gear.json would switch it.
+## The fall setup raises the grounded body once with zero velocity; gravity,
+## collision and landing damage then run normally, within 120 physics frames.
+## Fall's OFF control uses runtime_enabled, retaining legacy item defense;
+## hazards_enabled gates the later cold/pond/static consumers, not legacy falls.
 const SCENE := "res://scenes/world/meadows_playground.tscn"
 const EQUIP := preload("res://scripts/player/player_equipment.gd")
 const DYNAMO := preload("res://scripts/world/stormwood_dynamo.gd")
@@ -61,6 +67,105 @@ func _run() -> void:
 	var local: RefCounted = game.get("local")
 	var vitals: RefCounted = player.get("vitals")
 	_check(equipment != null and vitals != null, "real Game equipment and Player vitals")
+
+	# --- Physical fall ------------------------------------------------------
+	var gear_cache_before := EQUIP._gear_rules.duplicate(true)
+	var fall_gear_config := EQUIP._gear_config().duplicate(true)
+	var worn_before: Dictionary = equipment.call("save_data")
+	var health_before_falls := float(vitals.get("health"))
+	# The arrival stand can be underneath a roof. Select existing open terrain
+	# by actual collision rays across the capsule footprint, never by adding a
+	# test floor or accepting a shortened impact on a nearby building.
+	var arrival_position := player.global_position
+	var open_ground := Vector3(INF, INF, INF)
+	for offset: Vector3 in [Vector3(16, 0, 0), Vector3(-16, 0, 0), Vector3(0, 0, 16), Vector3(0, 0, -16),
+			Vector3(32, 0, 0), Vector3(-32, 0, 0), Vector3(0, 0, 32), Vector3(0, 0, -32)]:
+		var candidate := arrival_position + offset
+		candidate.y = float(world.call("ground_height_at", candidate.x, candidate.z))
+		if not is_finite(candidate.y): continue
+		var clear := true
+		for footprint: Vector3 in [Vector3.ZERO, Vector3(0.5, 0, 0), Vector3(-0.5, 0, 0), Vector3(0, 0, 0.5), Vector3(0, 0, -0.5)]:
+			var ray := PhysicsRayQueryParameters3D.create(candidate + footprint + Vector3.UP * 10.0,
+				candidate + footprint - Vector3.UP * 0.5, player.collision_mask, [player.get_rid()])
+			var hit := player.get_world_3d().direct_space_state.intersect_ray(ray)
+			if hit.is_empty() or absf((hit.position as Vector3).y - candidate.y) > 0.15 \
+				or (hit.normal as Vector3).y < 0.98:
+				clear = false
+				break
+		if clear:
+			open_ground = candidate
+			break
+	_check(is_finite(open_ground.y), "existing terrain has a clear 8 m drop across the capsule footprint")
+	if not is_finite(open_ground.y):
+		quit(1)
+		return
+	player.global_position = open_ground + Vector3.UP * 0.15
+	player.velocity = Vector3.ZERO
+	for _frame in 120: await physics_frame
+	var landing_origin := player.global_position
+	print("F33 fall surface: arrival=%s terrain=%s grounded=%s" % [arrival_position, open_ground, landing_origin])
+	_check(player.is_on_floor(), "fall starts from the actual grounded Player")
+	var movement: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/movement.json"))
+	# Same height and zero initial velocity: contact quantization may differ
+	# by one fixed gravity step, so compare within that step plus 0.05 m/s.
+	var impact_tolerance := float(movement.jump.gravity) * float(movement.jump.fall_gravity_multiplier) \
+		/ float(Engine.physics_ticks_per_second) + 0.05
+	var landed_samples: Array[Dictionary] = []
+	var observe_landing := func(speed: float, damage: float) -> void:
+		landed_samples.append({"speed": speed, "damage": damage, "position": player.global_position})
+	player.connect("landed", observe_landing)
+	var falls := {}
+	for label: String in ["bare", "dressed", "off"]:
+		var fall_config := fall_gear_config.duplicate(true)
+		fall_config.feature_flags.runtime_enabled = label != "off"
+		EQUIP._gear_rules = fall_config
+		_wear(equipment, "" if label == "bare" else "skyglass")
+		equipment.call("unequip", "backpack")
+		var authored_defense := 0.0
+		for slot: String in EQUIP.SLOTS:
+			var item: Dictionary = game.get("items").call("definition", equipment.call("equipped_in", slot))
+			authored_defense += float(item.get("defense", 0.0) if label == "off" \
+				else item.get("fall_damage_reduction", item.get("defense", 0.0)))
+		var defense_cap: float = EQUIP.MAX_TOTAL_DEFENSE if label == "off" \
+			else minf(EQUIP.MAX_TOTAL_DEFENSE, float(fall_config.mitigation_cap))
+		authored_defense = clampf(authored_defense, 0.0, defense_cap)
+		_check(is_equal_approx(float(equipment.call("total_defense")), authored_defense),
+			"%s: real worn fall defense matches authored fields (%.3f)" % [label, authored_defense])
+		landed_samples.clear()
+		vitals.set("health", float(vitals.get("max_health")))
+		player.global_position = landing_origin + Vector3.UP * 8.0
+		player.velocity = Vector3.ZERO
+		var saw_airborne := false
+		for _frame in 120:
+			await physics_frame
+			if not player.is_on_floor(): saw_airborne = true
+			if not landed_samples.is_empty(): break
+		_check(saw_airborne and player.is_on_floor() and landed_samples.size() == 1,
+			"%s: ordinary gravity and collision produced one landing within 120 frames" % label)
+		if landed_samples.size() != 1: continue
+		var landed: Dictionary = landed_samples[0]
+		var loss := float(vitals.get("max_health")) - float(vitals.get("health"))
+		var unprotected := float(vitals.call("fall_damage_for", float(landed.speed)))
+		falls[label] = {"speed": landed.speed, "loss": loss, "base": unprotected, "defense": authored_defense}
+		_check((landed.position as Vector3).distance_to(landing_origin) < 0.1,
+			"%s: the body landed back on the same real world surface (%s -> %s)" % [label, landing_origin, landed.position])
+		_check(unprotected > 0.0 and loss > 0.0 and float(vitals.get("health")) > 0.0,
+			"%s: a damaging nonlethal physical fall (%.3f m/s, %.3f HP)" % [label, landed.speed, loss])
+		_check(absf(loss - float(landed.damage)) < 0.01 \
+			and absf(loss - unprotected * (1.0 - authored_defense)) < 0.01,
+			"%s: actual HP loss and landed damage apply the authored fall reduction" % label)
+	player.disconnect("landed", observe_landing)
+	if falls.size() == 3:
+		_check(absf(float(falls.dressed.speed) - float(falls.bare.speed)) <= impact_tolerance \
+			and absf(float(falls.off.speed) - float(falls.bare.speed)) <= impact_tolerance,
+			"same 8 m fall impacts agree within one gravity step (%.3f m/s)" % impact_tolerance)
+		_check(float(falls.dressed.defense) > float(falls.bare.defense) \
+			and float(falls.dressed.loss) < float(falls.bare.loss), "Skyglass reduces the actual landing's health loss")
+		_check(float(falls.off.defense) < float(falls.dressed.defense) \
+			and float(falls.off.loss) > float(falls.dressed.loss), "runtime OFF retains only authored legacy defense")
+	EQUIP._gear_rules = gear_cache_before
+	equipment.call("load_data", worn_before)
+	vitals.set("health", health_before_falls)
 
 	# --- Cold heights -------------------------------------------------------
 	var zone: Dictionary = (EQUIP._gear_config().get("cold_zones", []) as Array)[0]
