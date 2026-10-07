@@ -1,0 +1,17 @@
+{
+  "exit_code": 0,
+  "assertions": 66943,
+  "source_verdict": "APPROVE6f156+706",
+  "proof": "tests/run_tests.gd",
+  "selection": "--only=test_bramblebun_low_light_floor,test_cloudreach_no_legendary_offer,test_cloudreach_world_presets,test_day_cycle_night_contrast,test_day_cycle,test_gate_f_harness_predicates,test_gate_f_instrumentation,test_grass_field_profiles,test_hud_widgets,test_long_water_visual_identity,test_night_shadow_contract,test_realm_camera_far_floor,test_realm_look_overlay,test_spawn_tables,test_spawns_data,test_starters_are_exclusive,test_stormwood_surge_presentation,test_water_first_shore_horizon_stones,test_water_return_connection,test_water_surface_material,test_world_look_fog_energy,test_world_weather",
+  "run_id": "37666289283",
+  "criteria": "F39 visual umbrella PARKED; no READY",
+  "tests": 292,
+  "reviewer": "/root/f39_visual_review",
+  "elapsed_seconds": 51,
+  "artifact_id": "11503371803",
+  "failed": 0,
+  "scope": "Existing world/clock/weather/spawn unit checks. Presentation service isolated from canonical weather group and episodes; exact emptyclear restored. No rain images/canonical or co-op weather acceptance.",
+  "source_commit": "07c6387b2a3087882eb3a6e7d8de032d8ebabc76",
+  "selected_files": 22
+}
