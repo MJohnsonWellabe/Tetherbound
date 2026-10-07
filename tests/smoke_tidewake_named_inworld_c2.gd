@@ -89,7 +89,17 @@ func _run() -> void:
 		creature.set_level(level, PROGRESSION.config())
 		game.local.party.add(creature)
 		party.append(creature)
-	GEAR.equip(self, party, str(gear.tier), int(gear.upgrade))
+	# Ordinary named fights require the same complete owner carrier and saved
+	# authority as play. Keep this smoke's unique SaveSystem; never save the
+	# gear-only legacy fixture rows used by detached balance simulations.
+	game.local.redesign_character = game.local.save_data().redesign_character
+	GEAR.equip(self, party, str(gear.tier), int(gear.upgrade), false)
+	var result := {"trainer": trainer_id, "starter": starter, "pilot": policy, "seed": seed_value,
+		"gear": GEAR.label(str(gear.tier), int(gear.upgrade)),
+		"party_level": level, "fixture": "actual Water world; granted party; player placed at the trainer; pump flags set; isolated canonical save/admission",
+		"won": false, "error": ""}
+	if not str(gear.tier).is_empty():
+		result.fixture += "; granted Harness/Charm gear merged into complete owner records; not earned gear"
 	var entry_max: Dictionary = {}
 	var party_max := 0.0
 	for member in party:
@@ -97,18 +107,24 @@ func _run() -> void:
 		party_max += float(member.max_hp)
 	for flag: String in INTERIOR_FLAGS:
 		game.world.flags.set_flag(flag)
+	if not game.save_system.save(game, SAVE.AUTOSAVE_SLOT):
+		_finish(out, result, "isolated fixture save refused")
+		return
+	var admitted: Dictionary = game.session.admitted_character_state(game.session.local_peer_id())
+	var admitted_party: Array = admitted.get("party", [])
+	if admitted.get("character_id") != game.local.character_id or admitted_party.size() != party.size():
+		_finish(out, result, "isolated fixture party admission refused")
+		return
+	for index in party.size():
+		if not admitted_party[index] is Dictionary or admitted_party[index].get("uid") != party[index].get("uid"):
+			_finish(out, result, "isolated fixture party admission changed identity")
+			return
 	var world: Node3D = load("res://scenes/world/water_archipelago.tscn").instantiate()
 	root.add_child(world)
 	current_scene = world
 	var deadline := Time.get_ticks_msec() + 600000
 	while not world.shell_build_complete() and Time.get_ticks_msec() < deadline:
 		await process_frame
-	var result := {"trainer": trainer_id, "starter": starter, "pilot": policy, "seed": seed_value,
-		"gear": GEAR.label(str(gear.tier), int(gear.upgrade)),
-		"party_level": level, "fixture": "actual Water world; granted party; player placed at the trainer; pump flags set",
-		"won": false, "error": ""}
-	if not str(gear.tier).is_empty():
-		result.fixture += "; direct owner-row Harness/Charm gear fixture; save system detached; not earned or canonical gear admission"
 	if not world.shell_build_complete():
 		_finish(out, result, "Water world did not build")
 		return
