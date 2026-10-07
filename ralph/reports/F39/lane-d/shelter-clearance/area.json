@@ -1,0 +1,18 @@
+{
+  "scope": "Authored Water shelter clearance regression only",
+  "source_commit": "e2c7f475e25cbcbdc044d9d98e2ed9f19a41a93f",
+  "proof_commit": "ce8356d9cf56475f3a94da8136a4abe757afb78a",
+  "run_id": 37692707868,
+  "artifact_id": 11514486425,
+  "proof": "tests/smoke_water_camps.gd",
+  "result": {
+    "checks": 129,
+    "failures": 0,
+    "exit": 0,
+    "seconds": 52
+  },
+  "covered": "Real Water terrain mount, all eight grounded camps and built components, rest/craft offers, unique reserved bed indices, production CraftPanel consumes2driftwood/grants6wood, rest day+1, production save/load slot2.",
+  "fixtures": "Teleported proximity and inventory/story fixture. No ordinary earned journey, multiplayer or pixels claim.",
+  "warnings": "Existing physics-interpolation deprecation retained.",
+  "remaining": "Matched ten afterframes/code-blind scoped judge/final original reviewer. Whole F39#0/#5 OPEN."
+}
