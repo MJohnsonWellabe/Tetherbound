@@ -55,17 +55,31 @@
     "watchpoint": "Fresh32x, edge pan and multiregion label images required."
   },
   "build_state_capture_source_review": {
-    "commit": "b6d82a6764",
+    "commit": "b6d82a6764bd432eebf0172fa0a6b4cb2ee93a65",
     "reviewer": "/root/f42_visual_review",
     "verdict": "APPROVE",
     "scope": "Existing Settings button selects off/on, actual Build banner verified, original preference restored. Conflicting implicit map-only request is rejected before boot.",
     "controller_claim": false
   },
   "exploration_roster_source_review": {
-    "commit": "7c3e31186f",
+    "commit": "7c3e31186fbcc79f795e9386bc12e8981eb22eae",
     "reviewer": "/root/f42_visual_review",
     "verdict": "APPROVE",
     "scope": "Only exploration instance hides vacant rows; combat default, TEAMn/5, capacity, order and timers retained.",
     "watchpoint": "Reduced-roster geometry and overlays require actual720 images."
+  },
+  "idle_observer_source_review": {
+    "commit": "b943375ad46bb564aafc8e17fb0af3e84cf5452b",
+    "reviewer": "/root/f42_visual_review",
+    "verdict": "APPROVE",
+    "scope": "Actual720 observation of unmodified roster timer, original300s wall cap, incomplete observed-frame/fade/pin/readable receipts, restore1080 before paired shots.",
+    "runtime": "pending"
+  },
+  "populated_save_source_review": {
+    "commit": "ce5ffd3b5e10c561e520697a9e8fec7525e54522",
+    "reviewer": "/root/f42_visual_review",
+    "verdict": "APPROVE",
+    "scope": "Real Save callback writes first empty manual slot, refuses overwrite, verifies actual saved party size and annotates both rasters. Existing disclosed stock; no earned/reload proof.",
+    "runtime": "pending"
   }
 }
