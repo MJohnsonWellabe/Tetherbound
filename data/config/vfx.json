@@ -279,8 +279,8 @@
         "mastery_owner": "f25"
       },
       "ultimate_ripplet": {
-        "archetype": "tidal_wave",
-        "presentation_variant": "great_wave",
+        "archetype": "bubble_volley",
+        "presentation_variant": "water_ball",
         "count": 1,
         "size": 1.4,
         "colour": "#3c9ad8",

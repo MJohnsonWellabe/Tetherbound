@@ -74,7 +74,7 @@ func _run() -> void:
 		push_error("Identity/performance evidence requires a native display"); quit(1); return
 	if OS.get_cmdline_user_args().has("--with-vfx-units"):
 		var output: Array = []
-		var selectors := ["test_move_effects.gd", "test_combat_vfx.gd",
+		var selectors := ["test_move_effects.gd", "test_combat_vfx.gd", "test_f23_live_moves.gd",
 			"test_combat_progression.gd", "test_director_join_snapshot.gd",
 			"test_multiplayer_identity_0912.gd", "test_net_boss_snapshot.gd",
 			"test_net_state_hash_scope.gd", "test_world_save_format.gd",
