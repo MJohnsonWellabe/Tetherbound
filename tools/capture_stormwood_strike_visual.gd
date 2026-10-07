@@ -1,11 +1,85 @@
 extends "res://tools/capture_stormwood_surge_phases.gd"
 ## Native production-camera presentation fixtures; no earned or damage proof.
 const STRIKE_MOTION = preload("res://scripts/ui/motion_prefs.gd")
+const STRIKE_BOOTSTRAP := preload("res://tools/lookdev_capture_bootstrap.gd")
+const SURGE_CONFIG := "res://data/config/stormwood_surge.json"
 var _receipt: FileAccess
 var _serial := 8000
 var _timed := false
+var _graphics_capture: Dictionary = {}
+var _native_resolution := Vector2i(1920, 1080)
+var _original_surge := PackedByteArray()
+var _volume_preview := false
 
 func _run() -> void:
+	var args := OS.get_cmdline_user_args()
+	var named_preset := false
+	for arg: String in args:
+		if arg.begins_with("--preset="):
+			named_preset = true
+	_volume_preview = args.has("--leader-volume-candidate")
+	if named_preset:
+		_graphics_capture = STRIKE_BOOTSTRAP.prepare(self, "--out=")
+		if _graphics_capture.is_empty():
+			quit(1)
+			return
+		var size: Array = _graphics_capture.resolution
+		_native_resolution = Vector2i(size[0], size[1])
+	elif _volume_preview:
+		push_error("Warning candidate requires named preset, exact source SHA and fresh output")
+		quit(2)
+		return
+	if _volume_preview and not _stage_volume():
+		_restore_volume()
+		quit(1)
+		return
+	await _capture_run()
+	_restore_volume()
+	if _receipt != null:
+		_receipt.close()
+	for failure: String in _failures:
+		push_error(failure)
+	print("STRIKE_CAPTURE_COMPLETE failures=", _failures)
+	quit(0 if _failures.is_empty() else 1)
+
+
+func _stage_volume() -> bool:
+	_original_surge = FileAccess.get_file_as_bytes(SURGE_CONFIG)
+	var parsed: Variant = JSON.parse_string(_original_surge.get_string_from_utf8())
+	if not parsed is Dictionary or not parsed.get("presentation", {}).get("telegraph", {}).get("leader_volume_candidate") is Dictionary:
+		_failures.append("Warning candidate config missing")
+		return false
+	parsed.presentation.telegraph.leader_volume_candidate.enabled = true
+	var file := FileAccess.open(SURGE_CONFIG, FileAccess.WRITE)
+	if file == null:
+		_failures.append("Warning candidate config cannot be staged")
+		return false
+	file.store_string(JSON.stringify(parsed, "\t") + "\n")
+	file.flush()
+	var error := file.get_error()
+	file.close()
+	if error != OK:
+		_failures.append("Warning candidate config flush failed")
+	return error == OK
+
+
+func _restore_volume() -> void:
+	if _original_surge.is_empty():
+		return
+	var file := FileAccess.open(SURGE_CONFIG, FileAccess.WRITE)
+	if file == null:
+		_failures.append("Warning original config cannot be restored")
+		return
+	file.store_buffer(_original_surge)
+	file.flush()
+	var error := file.get_error()
+	file.close()
+	if error != OK or FileAccess.get_file_as_bytes(SURGE_CONFIG) != _original_surge:
+		_failures.append("Warning config byte restoration failed")
+	_original_surge.clear()
+
+
+func _capture_run() -> void:
 	_t0 = Time.get_ticks_msec()
 	_biome_id = "stormwood"
 	_character_id = "trainer"
@@ -15,11 +89,14 @@ func _run() -> void:
 			_timed = true
 		if arg.begins_with("--out="):
 			_output_dir = arg.trim_prefix("--out=")
-	root.size = Vector2i(1920,1080)
+	root.size = _native_resolution
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_output_dir))
 	_receipt = FileAccess.open(_output_dir.path_join("manifest.jsonl"), FileAccess.WRITE)
+	if _receipt == null:
+		_failures.append("Warning receipt could not be opened")
+		return
 	if not await _mount_production_world() or not _prepare_capture_shell():
-		_done()
+		_failures.append("Warning production world or camera shell did not mount")
 		return
 	_game = root.get_node(^"Game")
 	_surge = _world.get_node(^"StormwoodSurge")
@@ -29,8 +106,6 @@ func _run() -> void:
 	if _timed:
 		await _timed_views()
 		STRIKE_MOTION.set_reduced_motion(false)
-		print("STRIKE_CAPTURE_COMPLETE failures=", _failures)
-		quit(0 if _failures.is_empty() else 1)
 		return
 	for place: Dictionary in [
 		{"id":"clearing", "at":Vector2(-610,755)},
@@ -66,14 +141,12 @@ func _run() -> void:
 			for _frame in 45:
 				await process_frame
 	STRIKE_MOTION.set_reduced_motion(false)
-	print("STRIKE_CAPTURE_COMPLETE failures=", _failures)
-	quit(0 if _failures.is_empty() else 1)
 
 func _frame(id: String, target: Vector3, progress: float) -> void:
 	await process_frame
 	await RenderingServer.frame_post_draw
 	var image := root.get_texture().get_image()
-	if image == null or image.get_size() != Vector2i(1920,1080):
+	if image == null or image.is_empty() or image.get_size() != _native_resolution:
 		_failures.append(id + ": native image missing")
 		return
 	if image.save_png(_output_dir.path_join(id + ".png")) != OK:
@@ -82,7 +155,8 @@ func _frame(id: String, target: Vector3, progress: float) -> void:
 		"feet":_vec(_player.global_position), "camera":_vec(_camera.global_position),
 		"rotation":_vec(_camera.global_rotation_degrees), "fov":_camera.fov,
 		"warning_progress":progress,"phase":_surge.get("phase"),"flash":_surge.call("flash_level"),
-		"reduced_motion":STRIKE_MOTION.reduced_motion()}
+		"reduced_motion":STRIKE_MOTION.reduced_motion(), "graphics_capture":_graphics_capture,
+		"candidate_preview":_volume_preview, "surge_config_sha256":FileAccess.get_file_as_string(SURGE_CONFIG).sha256_text()}
 	_receipt.store_line(JSON.stringify(record))
 	_receipt.flush()
 	print("STRIKE_FRAME ", JSON.stringify(record))
@@ -127,7 +201,9 @@ func _timed_views() -> void:
 					records.append({"file":id+".png","proof":"DRY RUN — does not count", "frame":frame,
 						"warning_progress":progress,"impact":impact,"flash":_surge.call("flash_level"),
 						"reduced_motion":reduced,"target":_vec(target),"feet":_vec(_player.global_position),
-						"camera":_vec(_camera.global_position),"rotation":_vec(_camera.global_rotation_degrees),"fov":_camera.fov})
+						"camera":_vec(_camera.global_position),"rotation":_vec(_camera.global_rotation_degrees),"fov":_camera.fov,
+						"graphics_capture":_graphics_capture,"candidate_preview":_volume_preview,
+						"surge_config_sha256":FileAccess.get_file_as_string(SURGE_CONFIG).sha256_text()})
 				if impact:
 					end_frames += 1
 					if end_frames >= 24:
@@ -138,7 +214,7 @@ func _timed_views() -> void:
 			if not impact:
 				_failures.append(str(view.id)+": warning never reached impact")
 			for i in images.size():
-				if images[i].get_size() != Vector2i(1920,1080) or images[i].save_png(_output_dir.path_join(records[i].file)) != OK:
+				if images[i] == null or images[i].is_empty() or images[i].get_size() != _native_resolution or images[i].save_png(_output_dir.path_join(records[i].file)) != OK:
 					_failures.append(str(records[i].file)+": image write/size failed")
 				_receipt.store_line(JSON.stringify(records[i]))
 			_receipt.flush()

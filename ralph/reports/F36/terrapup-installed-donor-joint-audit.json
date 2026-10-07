@@ -1,0 +1,260 @@
+{
+  "scope": "DCC rest joint heads, quadrant low-band centroids and foreign limb influence diagnostics; no automatic inside/outside or anatomical acceptance verdict",
+  "models": {
+    "A_installed": {
+      "source": "assets/creatures/tetherbound/terrapup/models/creature_terrapup_lod0.glb",
+      "source_sha256": "dfaf9519476da87d485e5ed8ee435989135810bc3b06e05a901d084143f52a21",
+      "rest_bounds": {
+        "min": [
+          -0.6277120113372803,
+          -0.9979421496391296,
+          2.0276554550946457e-06
+        ],
+        "max": [
+          0.6277118921279907,
+          0.9979425072669983,
+          1.5054261684417725
+        ]
+      },
+      "legs": {
+        "front_l": {
+          "paw_band_centroid": [
+            -0.3466281294822693,
+            -0.39931756258010864,
+            0.17440268397331238
+          ],
+          "hip_or_shoulder": [
+            -0.35053807497024536,
+            -0.39770618081092834,
+            0.827984094619751
+          ],
+          "low_band_vertices": 1519,
+          "foreign_limb_weight_gt_001_vertices": 234,
+          "max_foreign_limb_weight": 0.2191377580165863,
+          "terminal_display_tail_not_ankle": [
+            -0.3505381643772125,
+            -0.6746645569801331,
+            -0.4235829710960388
+          ],
+          "lower_joint_head": [
+            -0.3505381643772125,
+            -0.3977071940898895,
+            0.17155694961547852
+          ],
+          "lower_joint_to_paw_centroid_m": 0.005097044593617018,
+          "lower_joint_to_paw_fraction_height": 0.003385786407646363
+        },
+        "front_r": {
+          "paw_band_centroid": [
+            0.34906741976737976,
+            -0.40217599272727966,
+            0.17074477672576904
+          ],
+          "hip_or_shoulder": [
+            0.3507212996482849,
+            -0.40154021978378296,
+            0.8279839158058167
+          ],
+          "low_band_vertices": 1545,
+          "foreign_limb_weight_gt_001_vertices": 233,
+          "max_foreign_limb_weight": 0.23558245599269867,
+          "terminal_display_tail_not_ankle": [
+            0.3507213294506073,
+            -0.6823385953903198,
+            -0.4263606071472168
+          ],
+          "lower_joint_head": [
+            0.3507213294506073,
+            -0.4015413522720337,
+            0.16938215494155884
+          ],
+          "lower_joint_to_paw_centroid_m": 0.0022349326331039233,
+          "lower_joint_to_paw_fraction_height": 0.0014845866839471346
+        },
+        "rear_l": {
+          "paw_band_centroid": [
+            -0.3295589089393616,
+            0.3413172960281372,
+            0.17146874964237213
+          ],
+          "hip_or_shoulder": [
+            -0.33196696639060974,
+            0.34236299991607666,
+            0.827983558177948
+          ],
+          "low_band_vertices": 1516,
+          "foreign_limb_weight_gt_001_vertices": 264,
+          "max_foreign_limb_weight": 0.6919835135340691,
+          "terminal_display_tail_not_ankle": [
+            -0.3319672644138336,
+            0.060673683881759644,
+            -0.42699122428894043
+          ],
+          "lower_joint_head": [
+            -0.3319672644138336,
+            0.3423624634742737,
+            0.16888266801834106
+          ],
+          "lower_joint_to_paw_centroid_m": 0.003685155254264612,
+          "lower_joint_to_paw_fraction_height": 0.0024479182672995873
+        },
+        "rear_r": {
+          "paw_band_centroid": [
+            0.3305453658103943,
+            0.3402785062789917,
+            0.17093153297901154
+          ],
+          "hip_or_shoulder": [
+            0.3352964222431183,
+            0.33901745080947876,
+            0.827983558177948
+          ],
+          "low_band_vertices": 1462,
+          "foreign_limb_weight_gt_001_vertices": 257,
+          "max_foreign_limb_weight": 0.6429000794887543,
+          "terminal_display_tail_not_ankle": [
+            0.3352968692779541,
+            0.05664694309234619,
+            -0.42746782302856445
+          ],
+          "lower_joint_head": [
+            0.3352968692779541,
+            0.33901676535606384,
+            0.16850334405899048
+          ],
+          "lower_joint_to_paw_centroid_m": 0.005483144790185355,
+          "lower_joint_to_paw_fraction_height": 0.003642259109330732
+        }
+      },
+      "input_hash_unchanged": true
+    },
+    "B_transferred": {
+      "source": "assets_raw/terrapup/f36-smart-a/rigged-installed-donor.glb",
+      "source_sha256": "a1410b8c6ba1c289eec53285bae8daba9fc294f79029e517d63c187302ddef1b",
+      "rest_bounds": {
+        "min": [
+          -0.7196221351623535,
+          -0.9979422688484192,
+          2.174731434934074e-06
+        ],
+        "max": [
+          0.719622015953064,
+          0.9979425072669983,
+          1.7246259450912476
+        ]
+      },
+      "legs": {
+        "front_l": {
+          "paw_band_centroid": [
+            -0.5153929591178894,
+            -0.4669754207134247,
+            0.16069911420345306
+          ],
+          "hip_or_shoulder": [
+            -0.350538045167923,
+            -0.39770618081092834,
+            0.8279840350151062
+          ],
+          "low_band_vertices": 1029,
+          "foreign_limb_weight_gt_001_vertices": 70,
+          "max_foreign_limb_weight": 0.14751026034355164,
+          "terminal_display_tail_not_ankle": [
+            -0.35053813457489014,
+            -0.6746644973754883,
+            -0.4235827326774597
+          ],
+          "lower_joint_head": [
+            -0.35053813457489014,
+            -0.39770716428756714,
+            0.1715570092201233
+          ],
+          "lower_joint_to_paw_centroid_m": 0.1791454671700472,
+          "lower_joint_to_paw_fraction_height": 0.10387510032560414
+        },
+        "front_r": {
+          "paw_band_centroid": [
+            0.39644497632980347,
+            -0.6195794939994812,
+            0.15013284981250763
+          ],
+          "hip_or_shoulder": [
+            0.3507212698459625,
+            -0.40154018998146057,
+            0.8279838562011719
+          ],
+          "low_band_vertices": 1141,
+          "foreign_limb_weight_gt_001_vertices": 10,
+          "max_foreign_limb_weight": 0.12885385751724243,
+          "terminal_display_tail_not_ankle": [
+            0.35072124004364014,
+            -0.6823384761810303,
+            -0.426360547542572
+          ],
+          "lower_joint_head": [
+            0.35072124004364014,
+            -0.4015412926673889,
+            0.16938215494155884
+          ],
+          "lower_joint_to_paw_centroid_m": 0.2236109412529985,
+          "lower_joint_to_paw_fraction_height": 0.12965781006621865
+        },
+        "rear_l": {
+          "paw_band_centroid": [
+            -0.3571214973926544,
+            0.613836407661438,
+            0.15203872323036194
+          ],
+          "hip_or_shoulder": [
+            -0.33196690678596497,
+            0.3423629701137543,
+            0.8279834985733032
+          ],
+          "low_band_vertices": 1109,
+          "foreign_limb_weight_gt_001_vertices": 17,
+          "max_foreign_limb_weight": 0.2193378359079361,
+          "terminal_display_tail_not_ankle": [
+            -0.33196720480918884,
+            0.06067377328872681,
+            -0.42699098587036133
+          ],
+          "lower_joint_head": [
+            -0.33196720480918884,
+            0.3423624634742737,
+            0.16888272762298584
+          ],
+          "lower_joint_to_paw_centroid_m": 0.27315666071302186,
+          "lower_joint_to_paw_fraction_height": 0.1583862320626791
+        },
+        "rear_r": {
+          "paw_band_centroid": [
+            0.5088045001029968,
+            0.4774899184703827,
+            0.15042784810066223
+          ],
+          "hip_or_shoulder": [
+            0.3352963626384735,
+            0.33901742100715637,
+            0.8279834985733032
+          ],
+          "low_band_vertices": 1118,
+          "foreign_limb_weight_gt_001_vertices": 9,
+          "max_foreign_limb_weight": 0.2543949484825134,
+          "terminal_display_tail_not_ankle": [
+            0.3352968096733093,
+            0.05664697289466858,
+            -0.4274676442146301
+          ],
+          "lower_joint_head": [
+            0.3352968096733093,
+            0.33901673555374146,
+            0.16850340366363525
+          ],
+          "lower_joint_to_paw_centroid_m": 0.2227250922869266,
+          "lower_joint_to_paw_fraction_height": 0.1291441624050322
+        }
+      },
+      "input_hash_unchanged": true
+    }
+  },
+  "limitations": "glTF imports reconstruct terminal display bone tails. They are not encoded ankle pivots; only bone head positions are actual joint data. Quadrant low-band centroids are heuristic paw landmarks, not segmented anatomy."
+}
