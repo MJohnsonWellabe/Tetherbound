@@ -59,6 +59,14 @@
     {
       "commit": "b0d04301ea8c2fcfb2bc776264ea9a2a1ae5b9e8",
       "scope": "Explicit stand rows and receipt use effective heading offset0; plain catalogue retains all five headings. Same F39 source reviewer APPROVE."
+    },
+    {
+      "commit": "6f1561767f9a81c0a83bcb59d34061b0c73d8d51",
+      "scope": "Root604396 approved existing presentation-weather reuse; synchronous nonsim install, remove gameplay weather group, processingOFF/emptyepisodeorder, clear restores oldemptydelta; no durable/authority state. APPROVE only with706 guard correction."
+    },
+    {
+      "commit": "706e3542c98c7b17be6e514f82ec3e474c58c5c1",
+      "scope": "Same source reviewer APPROVE: marker value true, group exclusion and emptyepisodeorder required preflight and perpose; all rain images explicitly presentation fixtures, not canonical/co-op weather proof."
     }
   ],
   "existing_candidate_consumers": "APPROVE: capture override changes allowlisted local falls/current shader uniforms only. Physical inputs and restoration flags unchanged; production candidate flags OFF.",
