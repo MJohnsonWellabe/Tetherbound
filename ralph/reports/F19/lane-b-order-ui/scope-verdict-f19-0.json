@@ -1,0 +1,60 @@
+{
+  "criterion": "F19#0",
+  "verdict": "BLOCK",
+  "scope": "Literal visual presentation: Meadows -> Tidewake -> Cloudreach -> Stormwood drives map, journal, portal signs and credits.",
+  "authority": "Owner issue 572 comment 6045342186: judge each literal criterion; full release Visual Bars A/B remain separately OPEN.",
+  "method": "Same retained code-blind judge. Inspected composed order-contact.jpg, all six native 1280x720 Low Compatibility captures and retained native F20 credits frame 011. No source, implementation narrative, engine execution or new capture.",
+  "components": {
+    "map": {
+      "verdict": "PASS",
+      "frames": [
+        "000-order-map.png"
+      ],
+      "observation": "Readable tabs run left to right Meadows, Tidewake, Cloudreach Cliffs, The Stormwood."
+    },
+    "journal": {
+      "verdict": "BLOCK",
+      "frames": [
+        "001-order-quest_log.png"
+      ],
+      "observation": "Chapter 1 · The Meadows is readable. This frame does not show the other three chapter headings, so the four-chapter journal sequence is not visually established.",
+      "missing_visual_witnesses": [
+        "Journal Chapter 2 · Tidewake heading.",
+        "Journal Chapter 3 · Cloudreach Cliffs heading.",
+        "Journal Chapter 4 · The Stormwood heading."
+      ]
+    },
+    "portal_signs": {
+      "verdict": "PASS",
+      "frames": [
+        "002-order-sign-home.png",
+        "003-order-sign-tidewake.png",
+        "004-order-sign-cloudreach.png",
+        "005-order-sign-stormwood.png"
+      ],
+      "observation": "Readable entry labels identify The Meadows, Tidewake, Cloudreach Cliffs and The Stormwood, with Recommended Lv 3, 20, 31 and 42 respectively. The three later portal captures place the camera very close to a blue portal surface, obscuring most world context, but the required displayed labels remain readable."
+    },
+    "credits": {
+      "verdict": "PASS",
+      "frames": [
+        "F20 native-2f73 / 011-credits.png"
+      ],
+      "observation": "The Journey lists The Meadows, Tidewake, Cloudreach Cliffs and The Stormwood in that vertical order; text is readable at native 1280x720."
+    }
+  },
+  "remaining_literal_blocker": "Missing visual journal headings for chapters 2, 3 and 4. No conflicting order is visible in the provided captures.",
+  "full_visual_bar": {
+    "status": "OPEN",
+    "observation": "This scoped verdict does not certify full Visual Bars A/B or supersede retained broader art observations."
+  },
+  "limitations": [
+    "Menu and portal stills do not prove earned campaign progression, unlocking, actual portal traversal, controller behavior or persistent state.",
+    "Do not infer the three absent journal headings from the map, portal labels or credits.",
+    "No High/Medium renderer, physical ROG Ally readability or full-region visual certification."
+  ],
+  "evidence": {
+    "native_capture_directory": "ralph/reports/F19/lane-b-prefix/37685420467/artifact/tree/shots/f20-ending-2473",
+    "contact_sheet": "ralph/reports/F19/lane-b-order-ui/order-contact.jpg",
+    "retained_credits": "D:/CodexTemp/tetherbound-proof/native-b-2f73f756c2/ending-frames/011-credits.png"
+  }
+}

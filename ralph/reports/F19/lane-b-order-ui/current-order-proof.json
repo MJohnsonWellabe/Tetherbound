@@ -1,0 +1,85 @@
+{
+  "criterion": "F19#0",
+  "source_sha": "ec4bd64438e60ff153e6a3265e2eeace7d5d8c8a",
+  "implementation_sha": "af750ac48324b8f5adf2ca2abf18d83abe8043a4",
+  "run_id": 37685420467,
+  "script": "tests/smoke_f20_ending.gd",
+  "args": "--order-ui-only --capture-order-ui",
+  "renderer": "Compatibility",
+  "resolution": "1280x720",
+  "exit": 0,
+  "took_seconds": 639,
+  "result": {
+    "checks": 44,
+    "earned_campaign": false,
+    "ending_criterion_proof": false,
+    "failures": [],
+    "passed": true,
+    "setup": "existing disclosed post-finale fixture with personal portal unlocks"
+  },
+  "engine_errors": 0,
+  "observations": [
+    "Production Home Key returned the fixture character to the Hall",
+    "Ordinary inventory and tab inputs expose all four visible map destinations in chapter order",
+    "Current Meadows journal heading rendered; all four chapter headings pinned by unchanged named consumer logic",
+    "Ordinary grounded approaches expose each actual signed arch winner at recommended levels 3,20,31,42",
+    "Retained native F20 credits frame011 shows the same four-chapter journey order"
+  ],
+  "logic": {
+    "reused_run_id": 37624917011,
+    "source_sha": "a83c8f969e43aa536a25931112f4373cb3ea1357",
+    "script": "tests/run_tests.gd",
+    "named_file": "test_f19_order_consumers.gd",
+    "named_tests_passed": 3,
+    "batch_tests": 38,
+    "batch_assertions": 3699,
+    "batch_failed": 0,
+    "exit": 0,
+    "reason": "Relevant order consumers/config and journey credits section remain unchanged; same retained independent reviewer approved reuse"
+  },
+  "visual": {
+    "contact_sheet": "order-contact.jpg",
+    "verdict_file": "scope-verdict-f19-0.json",
+    "retained_credits": "../../F20/lane-b-ending/native-2f73/ending-contact-2.jpg",
+    "scoped_verdict": "BLOCK_PARTIAL",
+    "passed": [
+      "map",
+      "four signed arches",
+      "retained credits"
+    ],
+    "missing": [
+      "Chapter 2 Tidewake journal capture",
+      "Chapter 3 Cloudreach Cliffs journal capture",
+      "Chapter 4 The Stormwood journal capture"
+    ]
+  },
+  "review": {
+    "reviewer": "/root/b_f20_review",
+    "source_behavior": "APPROVE",
+    "final_criterion": "PENDING_SCOPED_JUDGE"
+  },
+  "landing_scope": {
+    "source_paths": [
+      "tests/smoke_f20_ending.gd",
+      "tests/helpers/f20_ending_probe.gd"
+    ],
+    "hunks": "Only optional order-ui-only endpoint, capture-order-ui capture switch and order_ui routine introduced at af750; exclude F46/F37/F49 unREADY ancestry"
+  },
+  "disclosures": {
+    "setup": "Existing post-finale fixture with personal portal unlocks, outcome flags, current party and items",
+    "earned_campaign": false,
+    "other_journal_headings_captured": false,
+    "entered_or_unlocked_arches": false
+  },
+  "criterion_pass": false,
+  "remaining": [
+    "Actual existing-smoke journal extension through ordinary production portal travel",
+    "Same retained scoped judge on only missing journal frames",
+    "Final independent approval, pushed evidence and READY"
+  ],
+  "separate_open": [
+    "F19#5 earned fixtures",
+    "F49#0 continuous earned campaign",
+    "Full release Visual bar"
+  ]
+}
