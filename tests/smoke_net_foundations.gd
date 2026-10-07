@@ -127,11 +127,11 @@ func _run() -> void:
 			and row.get("after", {}).get("inventory") == paid.get("inventory"): accepted = true
 	check(accepted, "host accepted row binds the exact original personal receipt and paid inventory")
 	check(authority.get("character") == host.get("character") and authority.get("inventory") == host.get("inventory"), "guest claim changes no host personal carrier or inventory")
-	var reopen := await step(1, "foundations_state", {"mode": "bounty_inspect"})
+	var paid_inspection := await step(1, "foundations_state", {"mode": "bounty_inspect"})
 	var paid_notice := false
-	for row: Dictionary in reopen.get("data", {}).get("bounty_view", {}).get("rows", []):
+	for row: Dictionary in paid_inspection.get("data", {}).get("bounty_view", {}).get("rows", []):
 		if row.get("instance") == original_instance and row.get("paid") == true: paid_notice = true
-	check(paid_notice and reopen.get("data", {}).get("inventory") == paid.get("inventory"), "reopening original paid notice retains one reward with no second debit")
+	check(paid_notice and paid_inspection.get("data", {}).get("inventory") == paid.get("inventory"), "read-only paid-notice inspection retains the original reward and inventory")
 	guest = await _settled_carrier(1)
 	if not await _pass(1, "foundations_state", {"mode": "forge_world"}): return
 	var host_after_forgery := await _carrier(0)
