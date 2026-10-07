@@ -5,7 +5,8 @@ extends SceneTree
 ## opponent with 600 HP, a flat capture stage, and no autonomous AI/movement.
 ## Real physical taps drive CombatManager -> Director -> AcceptedActionHost;
 ## the real host timer writes HP and Session journals that exact original.
-## --enable-ultimate-visual is the ONLY feature override. --capture-dir=<path>
+## --enable-ultimate-visual and --prove-library-arrival are process-local
+## presentation overrides. --capture-dir=<path>
 ## saves rendered frames of the same accepted action for independent judging.
 const SAVE := preload("res://tests/test_foundation_resource_save.gd")
 const DATA := preload("res://tests/test_foundation_resources.gd")
@@ -23,6 +24,7 @@ const MANAGER := preload("res://scripts/combat/combat_manager.gd")
 const HUD := preload("res://scenes/combat/combat_hud.tscn")
 const ULTIMATES := preload("res://scripts/vfx/ultimates/ultimate_library.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
+const MOVE_LIBRARY := preload("res://scripts/vfx/move_effect_library.gd")
 
 class FixtureGame extends SAVE.FixtureGame:
 	var party: RefCounted:
@@ -76,6 +78,11 @@ var _launches: Array[Dictionary] = []
 var _impacts: Array[Dictionary] = []
 var _captures: Array[String] = []
 var _saved_visual_config: Dictionary
+var _saved_library_enabled := false
+var _prove_library_arrival := false
+var _arrival_records: Dictionary = {}
+var _captured_library_slots: Dictionary = {}
+var _pending_library_captures := 0
 
 func _init() -> void:
 	_run.call_deferred()
@@ -94,6 +101,9 @@ func _body(script: Script, species: String, at: Vector3) -> Node3D:
 	return body
 
 func _run() -> void:
+	_saved_library_enabled = bool(MOVE_LIBRARY.config().get("enabled", false))
+	_prove_library_arrival = OS.get_cmdline_user_args().has("--prove-library-arrival")
+	if _prove_library_arrival: MOVE_LIBRARY.config()["enabled"] = true
 	_prove_mastery_transition = OS.get_cmdline_user_args().has("--prove-mastery-transition")
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--capture-dir="): _capture_dir = arg.trim_prefix("--capture-dir=")
@@ -339,6 +349,7 @@ func _run() -> void:
 				"the upgraded signature commits a real positive HP debit within the unchanged named cap")
 			await create_timer(2.6).timeout
 	_check(MATH.config().get("actor_vitals", {}).get("runtime_enabled") == false, "proof must not activate actor_vitals")
+	while _pending_library_captures > 0: await process_frame
 	_finish()
 
 func _setup() -> void:
@@ -434,8 +445,7 @@ func _setup() -> void:
 	_director.set("_encounter", rec)
 	_manager.call("bind_encounter", _director, _id, "trainer")
 	_manager.connect("attack_launched", _on_launch)
-	_manager.connect("impact_confirmed", func(on_enemy: bool, receipt: Dictionary, _where: Vector3) -> void:
-		if on_enemy: _impacts.append(receipt.duplicate(true)))
+	_manager.connect("impact_confirmed", _on_impact)
 	_capture_stage()
 	_hud = HUD.instantiate()
 	_hud.set("manager_path", NodePath("../CombatManager"))
@@ -473,6 +483,17 @@ func _tap_move(button: JoyButton, slot: String) -> Dictionary:
 	if _impacts.size() != previous + 1: return {}
 	_check(_impacts.back().slot == slot, "arrival receipt retains %s" % slot)
 	_check(float(_impacts.back().damage) > 0.0, "arrival has actual positive HP debit")
+	if _prove_library_arrival:
+		# Director keys presentation/HP feedback by encounter:peer:action.
+		# The durable mastery original has its own identity; keep both intact.
+		var presentation_id := "%s:%d:%d" % [_id, 1, int(accepted.action)]
+		_check(str(_impacts.back().action_id) == presentation_id,
+			"arrival receipt belongs to the accepted host action")
+		var found := false
+		for number: Label in _hud.get("_damage_numbers"):
+			if is_instance_valid(number) and str(number.get_meta("receipt", {}).get("action_id", "")) == presentation_id:
+				found = true
+		_check(found, "actual CombatHUD creates the landed action's number after contact")
 	return accepted
 
 func _wait_ready() -> void:
@@ -500,7 +521,105 @@ func _on_launch(_on_enemy: bool, launch: Dictionary, presentation: Node3D) -> vo
 	var observed := launch.duplicate(true)
 	observed["presentation_mounted"] = is_instance_valid(presentation)
 	_launches.append(observed)
+	if _prove_library_arrival and str(launch.slot) != "ultimate":
+		var action_id := str(launch.action_id)
+		_check(is_instance_valid(presentation), "library mounts the actual accepted action " + action_id)
+		if is_instance_valid(presentation):
+			var before := float(_enemy.hp)
+			var witness: Dictionary = {}
+			if not _capture_dir.is_empty() and not _captured_library_slots.has(str(launch.slot)):
+				var travel: float = float(launch.get("travel_seconds", NAN))
+				var visual: Dictionary = (launch.get("move", {}) as Dictionary).get("vfx", {})
+				var effect: Dictionary = MOVE_LIBRARY.resolve(visual, int(launch.get("mastery_rank", 1)))
+				var instant_contact: bool = travel == 0.0 and visual.get("kind") == "melee" and effect.get("arrival") == "contact"
+				_check(is_finite(travel) and (travel > 0.0 or instant_contact),
+					"visual witness has positive travel or the documented instant contact exception " + action_id)
+				witness = {"action_id":action_id,"slot":str(launch.slot),
+					"capture_sequence":_captured_library_slots.size(),"launch_frame":Engine.get_process_frames(),
+					"hp_at_launch":before,"travel_seconds":travel,"arrival_kind":str(effect.get("arrival", "")),
+					"pre_arrival_required":travel > 0.0,
+					"pre_arrival_exception":"instant contact exception" if instant_contact else ""}
+				_captured_library_slots[str(launch.slot)] = witness
+			presentation.connect("arrived", func() -> void:
+				_check(presentation.get("_impact") != null, "contact geometry exists before arrival " + action_id)
+				_check(is_equal_approx(float(_enemy.hp), before), "target HP remains unchanged until visible contact " + action_id)
+				for number: Label in _hud.get("_damage_numbers"):
+					_check(str(number.get_meta("receipt", {}).get("action_id", "")) != action_id,
+						"no actual HUD number precedes visible contact " + action_id)
+				_arrival_records[action_id] = {"move_id": str(launch.move_id),
+					"contact_frame": Engine.get_process_frames(), "hp_at_contact": float(_enemy.hp)}
+				if not witness.is_empty():
+					witness.merge(_arrival_records[action_id], true)
+					_arrival_records[action_id] = witness
+					_capture_library_contact(action_id, witness)
+			, CONNECT_ONE_SHOT)
+			if bool(witness.get("pre_arrival_required", false)):
+				_capture_library_contact(action_id, witness, presentation, true)
 	if launch.slot == "ultimate" and not _capture_dir.is_empty(): _capture_ultimate(launch)
+
+func _on_impact(on_enemy: bool, receipt: Dictionary, _where: Vector3) -> void:
+	if not on_enemy: return
+	_impacts.append(receipt.duplicate(true))
+	if not _prove_library_arrival or str(receipt.slot) == "ultimate": return
+	var action_id := str(receipt.action_id)
+	_check(_arrival_records.has(action_id), "host impact follows the same action's visible contact " + action_id)
+	if _arrival_records.has(action_id):
+		_arrival_records[action_id]["impact_frame"] = Engine.get_process_frames()
+		_arrival_records[action_id]["hp_after_impact"] = float(_enemy.hp)
+		_check(float(_enemy.hp) < float(_arrival_records[action_id].hp_at_contact),
+			"host applies positive HP debit after contact " + action_id)
+
+func _capture_library_contact(action_id: String, witness: Dictionary,
+		presentation: Node3D = null, before_arrival: bool = false) -> void:
+	_pending_library_captures += 1
+	var sequence: int = int(witness.capture_sequence)
+	DirAccess.make_dir_recursive_absolute(_capture_dir)
+	await RenderingServer.frame_post_draw
+	var frame: int = Engine.get_process_frames()
+	var hp: float = float(_enemy.hp)
+	var numbers: Array[String] = []
+	for number: Label in _hud.get("_damage_numbers"):
+		if is_instance_valid(number) and str(number.get_meta("receipt", {}).get("action_id", "")) == action_id:
+			numbers.append(number.text)
+	if before_arrival:
+		# A callback beginning before arrival does not prove its eventual draw
+		# did. Read the real presentation/contact and HUD state AFTER drawing.
+		var in_transit: bool = not witness.has("contact_frame") and not _arrival_records.has(action_id) \
+			and is_instance_valid(presentation) and presentation.is_inside_tree() \
+			and not presentation.is_queued_for_deletion() and presentation.is_visible_in_tree() \
+			and presentation.get("_arrived") == false and presentation.get("_impact") == null \
+			and presentation.has_method("action_id") and str(presentation.call("action_id")) == action_id
+		witness["pre_arrival_observation"] = {"action_id":action_id,"process_frame":frame,
+			"drawn_frame":Engine.get_frames_drawn(),"hp":hp,"hud_numbers":numbers,"in_transit":in_transit}
+		_check(in_transit, "requested positive-travel witness has an actual pre-arrival drawn frame " + action_id)
+		_check(is_equal_approx(hp, float(witness.hp_at_launch)), "pre-arrival drawn frame retains launch HP " + action_id)
+		_check(numbers.is_empty(), "pre-arrival drawn frame has no same-action HUD damage number " + action_id)
+		if in_transit and is_equal_approx(hp, float(witness.hp_at_launch)) and numbers.is_empty():
+			var pre_path := _capture_dir.path_join("library-pre-arrival-%02d.png" % sequence)
+			var pre_image := root.get_texture().get_image()
+			var saved: bool = pre_image != null and pre_image.save_png(pre_path) == OK
+			_check(saved, "rendered library pre-arrival from the accepted action " + action_id)
+			if saved:
+				_captures.append(pre_path)
+				witness["pre_arrival_capture"] = pre_path
+				witness["pre_arrival_draw_frame"] = frame
+		_pending_library_captures -= 1
+		return
+	if bool(witness.get("pre_arrival_required", false)):
+		_check(witness.has("pre_arrival_capture") and int(witness.get("pre_arrival_draw_frame", frame)) < int(witness.contact_frame),
+			"positive-travel contact is paired with its own earlier drawn pre-arrival witness " + action_id)
+	var path := _capture_dir.path_join("library-contact-%02d.png" % sequence)
+	var rendered := root.get_texture().get_image()
+	_check(rendered != null and rendered.save_png(path) == OK, "rendered library contact from the accepted action " + action_id)
+	_captures.append(path)
+	_arrival_records[action_id]["capture"] = path
+	_arrival_records[action_id]["draw_frame"] = frame
+	_arrival_records[action_id]["drawn_frame"] = Engine.get_frames_drawn()
+	_arrival_records[action_id]["hp_at_draw"] = hp
+	_arrival_records[action_id]["hud_numbers_at_draw"] = numbers
+	_check(hp < float(witness.hp_at_contact), "contact drawn frame follows the same action's HP debit " + action_id)
+	_check(not numbers.is_empty(), "contact drawn frame shows the same action's HUD damage number " + action_id)
+	_pending_library_captures -= 1
 
 func _capture_ultimate(launch: Dictionary) -> void:
 	var capture_directory := _capture_dir.path_join("rank-%d" % int(launch.mastery_rank)) if _prove_mastery_transition else _capture_dir
@@ -581,6 +700,7 @@ func _apply_saved_mastery(event: Dictionary, move_id: String, initial: int) -> v
 
 func _finish() -> void:
 	ULTIMATES._config = _saved_visual_config
+	MOVE_LIBRARY.config()["enabled"] = _saved_library_enabled
 	for button: JoyButton in [JOY_BUTTON_X, JOY_BUTTON_Y, JOY_BUTTON_B, JOY_BUTTON_A, JOY_BUTTON_RIGHT_SHOULDER]:
 		var event := InputEventJoypadButton.new()
 		event.button_index = button
@@ -589,6 +709,7 @@ func _finish() -> void:
 	print("F23_LIVE_MOVES " + JSON.stringify({"checks": _checks, "errors": _errors,
 		"launches": _launches.size(), "impacts": _impacts.size(), "captures": _captures,
 		"visual_gate_override": OS.get_cmdline_user_args().has("--enable-ultimate-visual"),
+		"library_arrival_override": _prove_library_arrival, "arrival_records": _arrival_records,
 		"claim": "focused fixture; no campaign, co-op, device or visual acceptance"}))
 	if is_instance_valid(_world): _world.free()
 	if is_instance_valid(_session): _session.free()

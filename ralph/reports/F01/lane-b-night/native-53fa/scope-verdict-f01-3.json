@@ -1,0 +1,59 @@
+{
+  "criterion": "F01#3",
+  "literal_ask": "Normal-controller NIGHT walk reaches every opening NPC, camp and gate.",
+  "reviewer": "same retained code-blind visual judge",
+  "authority": {
+    "owner_issue": 572,
+    "owner_comment": 6045342186,
+    "scope_rule": "Literal criterion only; full release Visual Bars A/B remain separately OPEN. Reuse relevant captures without recapture."
+  },
+  "scoped_visual_verdict": "PASS",
+  "scope": "Readability of the provided opening destinations and visible trainer presence at them during the retained Low Compatibility native 1280x720 night route. Actual movement/input, collision reachability and completeness of the opening-NPC census are not inferred from stills.",
+  "evidence": {
+    "contact_sheets": ["night-contact-1.jpg", "night-contact-2.jpg", "night-contact-3.jpg", "night-contact-4.jpg"],
+    "frames": "All 97 consecutive supplied route frames, visits_night_001 through visits_night_097, showing Day 1 at 23:00.",
+    "native_review_reused": "This same judge previously inspected selected original native frames, including 013, 030, 031, 043, 047, 061, 064, 070, 071, 072, 091 and 096. All four complete contact sheets were re-inspected for this scoped judgment.",
+    "new_capture": false
+  },
+  "destination_findings": [
+    {"destination": "Grandpa", "verdict": "PASS", "frames": ["visits_night_002_end.png", "visits_night_003_reached-grandpa.png"], "observation": "Trainer is visibly beside Grandpa; NPC and Talk to Grandpa label are readable."},
+    {"destination": "Tam", "verdict": "PASS", "frames": ["visits_night_011_travel.png", "visits_night_012_end.png", "visits_night_013_reached-tam.png"], "observation": "Trainer and Tam are visible at the paved entrance with a readable Greet Tam label."},
+    {"destination": "Mira", "verdict": "PASS", "frames": ["visits_night_022_travel.png", "visits_night_023_end.png", "visits_night_024_reached-mira.png"], "observation": "Exterior door location and interior trainer/NPC stand are readable; Greet Mira identifies the destination."},
+    {"destination": "Bram", "verdict": "PASS", "frames": ["visits_night_029_travel.png", "visits_night_032_travel.png", "visits_night_033_end.png", "visits_night_034_reached-bram.png"], "observation": "Approach and interior location are visible. Bram remains identifiable above the counter and Greet Bram is readable in the destination frames."},
+    {"destination": "Nessa", "verdict": "PASS", "frames": ["visits_night_038_travel.png", "visits_night_039_end.png", "visits_night_040_reached-nessa.png"], "observation": "The house entrance, trainer and Nessa are readable with the destination label visible."},
+    {"destination": "Maren", "verdict": "PASS", "frames": ["visits_night_041_end.png", "visits_night_042_reached-maren.png"], "observation": "Trainer is visibly at the NPC stand; Maren and Greet Maren are readable."},
+    {"destination": "Oskar", "verdict": "PASS", "frames": ["visits_night_045_travel.png", "visits_night_046_end.png", "visits_night_047_reached-oskar.png"], "observation": "Approach and trainer/NPC stand remain visible; Greet Oskar is readable."},
+    {"destination": "Practice meadow camp", "verdict": "PASS", "frames": ["visits_night_059_travel.png", "visits_night_068_travel.png", "visits_night_070_travel.png", "visits_night_071_end.png", "visits_night_072_reached-practice-meadow-camp.png"], "observation": "The camp is identifiable from its tent/bed and fire, and the trainer is visibly beside it. The literal reach criterion does not require a camp interaction prompt."},
+    {"destination": "The Rise road gate", "verdict": "PASS", "frames": ["visits_night_064_travel.png", "visits_night_065_end.png", "visits_night_066_at-gate-roadgate_closed.png", "visits_night_067_reached-gate-roadgate.png"], "observation": "Trainer, gate boundary and The Rise sign remain readable; Try the gate is legible where displayed. Gate operation is not certified by these stills."},
+    {"destination": "South Bridge trail gate", "verdict": "PASS", "frames": ["visits_night_078_travel.png", "visits_night_079_travel.png", "visits_night_080_end.png", "visits_night_081_reached-gate-trailgate.png"], "observation": "Approach, gate sign, road edges and trainer stand at the gateway remain readable."},
+    {"destination": "The Pond gate", "verdict": "PASS", "frames": ["visits_night_093_travel.png", "visits_night_094_travel.png", "visits_night_095_travel.png", "visits_night_096_end.png", "visits_night_097_reached-gate-pondgate.png"], "observation": "Approach, fence/road edges, Pond sign and trainer at the gateway remain distinguishable in the night lighting."}
+  ],
+  "route_readability": {
+    "verdict": "PASS_FOR_SUPPLIED_VIEWS",
+    "reason": "Ordinary exterior views preserve the trainer's legs and distinguish road edges, turns and the required destination stands. Darker stretches do not conceal their route footprint.",
+    "frames": ["visits_night_005_travel.png through visits_night_010_travel.png", "visits_night_057_travel.png", "visits_night_058_travel.png", "visits_night_073_travel.png through visits_night_075_travel.png", "visits_night_091_travel.png through visits_night_094_travel.png"]
+  },
+  "concrete_occlusions_retained": [
+    {
+      "frames": ["visits_night_030_travel.png", "visits_night_031_travel.png"],
+      "defect": "Consecutive doorway close views crop the trainer's lower body and largely remove surrounding route context.",
+      "literal_scope_assessment": "This remains a real camera/context defect. Open Door is readable, and 029/032-034 independently show the approach and Bram destination. These frames do not remove the required readable destination witness or demonstrate a failure to reach it. They do not establish that the obstruction is harmless in continuous play."
+    },
+    {
+      "frames": ["visits_night_043_travel.png"],
+      "defect": "Roof/geometry obscures roughly the left half of the frame.",
+      "literal_scope_assessment": "This remains a real obstruction. The central trainer and forward path remain visible; 042 preserves Maren's reached stand and 044-047 preserve the following Oskar approach/stand. No required destination is concealed throughout its witness. Persistence or input impact is unproven by stills."
+    }
+  ],
+  "remaining_literal_visual_missing_witness": [],
+  "camp_prompt_assessment": "The previously noted missing camp prompt in 071-072 is not a missing reach witness. The illuminated camp and trainer beside it are visible. No camp interaction or functional success is claimed.",
+  "behavioral_limit": {
+    "status": "NOT_ASSESSED_BY_STILLS",
+    "reason": "Controller glyphs and visible endpoint positions do not establish normal-controller traversal, collision paths, absence of developer repositioning, functional interactions or a complete opening-target census. Those require the retained actual-path/input evidence outside this visual judgment. No gameplay trace or game source was inspected here."
+  },
+  "full_visual_bar": {
+    "status": "OPEN_SEPARATE_FOLLOW_UP",
+    "reason": "The retained art, material, camp-flame, lighting-depth and camera-defect observations remain available for the full visual work. No full Bar A/B, region, day/weather/fight, device or High/Medium certification is issued or used as a gate for this literal scoped visual judgment."
+  },
+  "method": "Same frames, same retained judge, no source/change narrative, no engine execution and no recapture. Only scope-verdict-f01-3.json was written for this reassessment."
+}

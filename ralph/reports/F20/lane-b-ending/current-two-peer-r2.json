@@ -1,0 +1,101 @@
+{
+  "criteria": [
+    "F20#1",
+    "F20#4"
+  ],
+  "verdict": "PASS",
+  "source_sha": "1861efb8c1d3254b01ed76d3594a336dfc96b51c",
+  "main_baseline": "056563843cd06a49cdc9bb369d66b13788d944c0",
+  "branch": "tb/codex-b",
+  "behavior": {
+    "run_id": 37677835870,
+    "script": "tests/smoke_net_f20_ending.gd",
+    "pass": 48,
+    "fail": 0,
+    "exit_code": 0,
+    "elapsed_seconds": 944,
+    "findings": [
+      "Both participants use personal Home Keys and receive current-five, starter, bond-memory and chapter-choice acknowledgement.",
+      "Guest disconnects with credits open and production title rejoin retains original creature UIDs and incomplete interrupted credits.",
+      "Host and guest disk reload/revisit preserve exactly-once homecoming_seen and regional_credits_seen receipts.",
+      "Parent has zero script/engine error matches; mandatory peer error check passes; NET_RUN fatal is empty and failures is empty."
+    ],
+    "artifact": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37677835870"
+  },
+  "logic": {
+    "run_id": 37648982026,
+    "source_sha": "f815d73cbbc538d64feaef88af23c2b380e194a1",
+    "reused_unchanged_relevant_source": true,
+    "tests": 92,
+    "assertions": 4220,
+    "failures": 0,
+    "named_files": [
+      "tests/test_regional_homecoming.gd",
+      "tests/test_ending_presentation_owner.gd",
+      "tests/test_ending_return_provenance.gd",
+      "tests/test_foundation_travel_protocol.gd",
+      "tests/test_homecoming_ending_invariants.gd",
+      "tests/test_objective_beacon.gd",
+      "tests/test_regional_ack_guest_view.gd"
+    ],
+    "warnings": "Six ObjectDB exit warning instances disclosed; zero engine/script errors. Not warning-free.",
+    "evidence": "ralph/reports/F19/lane-b-prefix/exterior-ending-logic.json"
+  },
+  "visual": {
+    "judge": "retained code-blind b_night_visual",
+    "verdict": "PASS scoped visible acknowledgement and credits readability",
+    "capture_sha": "2f73f756c2d78569fa43f1d27766da1c812c7e75",
+    "renderer": "Low Compatibility",
+    "resolution": "1280x720",
+    "frames": 13,
+    "sheets": [
+      "native-2f73/ending-contact-1.jpg",
+      "native-2f73/ending-contact-2.jpg"
+    ],
+    "verdicts": [
+      "native-2f73/scope-verdict-f20-1.json",
+      "native-2f73/scope-verdict-f20-4.json"
+    ],
+    "owner_scope_comment": 6045342186,
+    "release_visual_bar": "OPEN separately"
+  },
+  "independent_review": {
+    "agent": "b_f20_review",
+    "verdict": "FINAL CRITERION APPROVE",
+    "criteria": [
+      "F20#1",
+      "F20#4"
+    ],
+    "source_sha": "1861efb8c1d3254b01ed76d3594a336dfc96b51c",
+    "basis": "Actual 48/0 current two-peer behavior, reused named logic with warnings disclosed, retained scoped blind visual PASS; matches owning spec."
+  },
+  "flags": {
+    "flipped": [],
+    "already_on": [
+      "multiplayer.redesign_boss_handoff_runtime_enabled",
+      "multiplayer.redesign_ending_runtime_enabled"
+    ]
+  },
+  "disclosed_start_and_limits": [
+    "Post-finale personal/world outcomes, five companions and Home Key/Fifth Key/potion inventory are injected by the existing area smoke under ACCEPTANCE 6.2 disclosed-start rule.",
+    "Actual Home Key return, Grandpa flow and controller Skip are exercised. Uninterrupted full credit scroll and earned campaign are not certified.",
+    "Visible fixture retains the starter; alternate starter variants have named logic coverage, not captured presentation.",
+    "F20#2, F20#3, F49#0, owner Ally pass and full release Visual bar remain OPEN."
+  ],
+  "landing_scope": {
+    "source_paths": [
+      "data/config/regional_credits.json",
+      "scripts/net/foundation_portal_arrival.gd",
+      "scripts/story/regional_homecoming.gd",
+      "tests/helpers/f20_ending_probe.gd",
+      "tests/helpers/f20_portal_travel.gd",
+      "tests/smoke_f20_ending.gd",
+      "tests/test_regional_homecoming.gd"
+    ],
+    "evidence_paths": [
+      "ralph/reports/F20/lane-b-ending/current-two-peer-r2.json",
+      "ralph/reports/F20/lane-b-ending/native-2f73/"
+    ],
+    "instruction": "F20 production arrival/homecoming and existing ending-proof hunks plus their evidence only. Exclude unrelated unREADY F49, Human, Ripplet and mounted/Fly source."
+  }
+}

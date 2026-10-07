@@ -1,0 +1,19 @@
+{
+  "criterion": "F41#4",
+  "source_sha": "3c536b1ec1a87650de1f317a47085141d4595bd6",
+  "reviewer": "/root/review_cloud_startup",
+  "verdict": "APPROVE",
+  "scope": "Only four shipping flag and existing explicit baseline/surface proof files",
+  "findings": [
+    "Only hero master flag and six presentation subflags enabled; hero geometry unchanged.",
+    "Existing CandidateTree explicit disabled baseline exercises original path; collision comparisons and surface assertions intact.",
+    "Existing surface proof names actual active crown/canopy per flag path; no assertion removed."
+  ],
+  "pending": [
+    "Mapped checks",
+    "Actual shipping flag capture"
+  ],
+  "limits": [
+    "No release Visual bar or other regional overlays accepted."
+  ]
+}

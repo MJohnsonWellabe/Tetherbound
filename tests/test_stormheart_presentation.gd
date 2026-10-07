@@ -5,7 +5,8 @@ const TREE := preload("res://scripts/world/stormheart_tree.gd")
 func test_split_tree_builds_real_bark_and_leaf_surfaces_around_existing_floors() -> void:
 	var tree := TREE.new()
 	tree.build()
-	for id: String in ["EastLivingTrunk", "WestLivingTrunk", "CrownBough0", "ButtressRoot1"]:
+	var crown := "BranchCrownWestLow" if tree._presentation_enabled("branching_crown") else "CrownBough0"
+	for id: String in ["EastLivingTrunk", "WestLivingTrunk", crown, "ButtressRoot1"]:
 		var mesh := tree.get_node_or_null(id) as MeshInstance3D
 		assert_true(mesh != null, id + " is built")
 		if mesh != null:
@@ -17,7 +18,8 @@ func test_split_tree_builds_real_bark_and_leaf_surfaces_around_existing_floors()
 				"visual bark remains outside the entire 44 m physical arena")
 	for id: String in ["OuterWorks", "DynamoCore", "CrownChamber", "HollowTrunkAscent"]:
 		assert_true(tree.get_node_or_null(id) is StaticBody3D, id + " keeps its production floor")
-	assert_true(tree.get_node_or_null("LivingCanopy0") != null, "the split trunk carries installed-family leaves")
+	var canopy := "BranchLeavesWestLow0" if tree._presentation_enabled("branching_crown") else "LivingCanopy0"
+	assert_true(tree.get_node_or_null(canopy) != null, "the split trunk carries installed-family leaves")
 	for child in tree.get_children():
 		if child is MeshInstance3D and str(child.name).begins_with("ButtressRoot"):
 			var bounds: AABB = child.mesh.get_aabb()

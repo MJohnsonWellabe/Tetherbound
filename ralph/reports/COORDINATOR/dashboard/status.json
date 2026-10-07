@@ -1,11 +1,11 @@
 {
- "updated": "2026-10-07T20:40Z",
+ "updated": "2026-10-07T22:25Z",
  "headline": [
-  "3:40 PM CT Wed 07 Oct: 135 criteria met, 130 on main and 5 evidenced on lane branches, all in consolidation 4 (CI running).",
-  "Pace picked up after the 1 PM rule reset and the 2:30 PM criterion-only visual judging: 6 READYs in the last 2 hours against 1 in the 2 before.",
-  "Consolidation 4: A F35#0, D F38#4, F14#2, F39#4 and the F17#2 doorway regression fix, E F36#2.",
-  "CI speed: #573 merged at 1:54 PM CT, so full CI takes about 22 minutes. Lane C is root-causing the flaky co-op smokes.",
-  "Bounced: F46#2 still fails smoke_f18_earned_loop's Home portal walk; it is with lane C."
+  "5:45 PM CT Wed 07 Oct: 153 criteria met, 135 on main and 18 evidenced, all in consolidation 5 (CI running).",
+  "Pace: 16 READYs (19 new criteria) between 3:10 and 5:10 PM CT, against 6 the two hours before and 1 before that. Lanes are now above the 5-per-hour target.",
+  "Consolidation 5: A F25#2/#3/#5, F35#2/#4; B F20#1/#4, F01#3, F19#0; C flaky co-op smoke fixes, F32#4, F48#2, F43#0–#3; D F26#4; E F41#4, F40#4. F30#0 bounced: its commits need unREADY F28 code.",
+  "Landed today: #571, #574, #576, #573 (CI about 22 minutes), #577 (F35#0, F38#4, F14#2, F39#4, F36#2).",
+  "F46#2 is still with lane C (Home portal walk in smoke_f18_earned_loop)."
  ],
  "batches": [
   {
@@ -441,37 +441,43 @@
    "contents": "Full CI about 32 → 22 minutes, 13 jobs; low-risk long checks moved to the 8-hourly run."
   },
   {
-   "name": "Consolidation 4",
+   "name": "Consolidation 4 (PR #577)",
+   "sha": "",
+   "state": "Merged 10-07 3:52 PM CT",
+   "contents": "F35#0, F38#4, F14#2, F39#4, F36#2 and the F17#2 doorway fix. Met 135."
+  },
+  {
+   "name": "Consolidation 5",
    "sha": "",
    "state": "CI running",
-   "contents": "F35#0, F38#4, F14#2, F39#4, F36#2 and the F17#2 doorway fix."
+   "contents": "18 criteria plus the flaky co-op smoke fixes."
   }
  ],
  "lanes": [
   {
    "lane": "tb/codex-a (Codex A: combat, moves, commands)",
-   "now": "F35#0 in consolidation 4. F21#4 parked (settling budget); F33#2 Warden diagnostic running.",
-   "next": "F21#4 Low size matrix."
+   "now": "F25#2, #3, #5 and F35#2, #4 READY.",
+   "next": "F25#0/#4, F35#1/#3, F21#4."
   },
   {
    "lane": "tb/codex-b (Codex B: earned route, story, ending)",
-   "now": "F49#0 earned route run (folds 8 older route rows): opening team piece failing on stick-zero velocity and save slot 0.",
-   "next": "Keep going on F49#0 (exempt from the 2-hour park rule)."
+   "now": "F20#1, #4, F01#3 and F19#0 READY; F49#0 route run continuing.",
+   "next": "F49#0."
   },
   {
    "lane": "tb/codex-c (Codex C: power, homestead, economy, co-op)",
-   "now": "Owner priority: root-cause the flaky co-op smokes. F46#2 Home portal walk still failing. F28#2–#4, F43 and F48#2 parked.",
-   "next": "Flaky smoke fixes, then F46#2 re-READY."
+   "now": "Flaky co-op smoke fixes (12/12 runs PASS), F30#0, F32#4, F48#2, F43#0–#3 READY.",
+   "next": "F46#2, F28#2–#4."
   },
   {
    "lane": "tb/codex-d (Codex D: Meadows, village, Tidewake visuals)",
-   "now": "F38#4, F14#2, F39#4 and the F17#2 doorway fix in consolidation 4.",
+   "now": "F26#4 frame-time matrix READY.",
    "next": "Next smallest D criterion."
   },
   {
    "lane": "tb/codex-e (Codex E: Cloudreach, Stormwood, art, audio)",
-   "now": "F36#2 in consolidation 4.",
-   "next": "Personal Fly fix; next smallest E criterion."
+   "now": "F41#4 and F40#4 READY; Meshy ledger snapshot.",
+   "next": "Next smallest E criterion."
   },
   {
    "lane": "tb/ci-speed (Claude)",

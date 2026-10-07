@@ -60,6 +60,7 @@ class Session extends Node:
 
 	var owner_peer := 2
 	var _character_authority: RefCounted
+	var _owner_passive: RefCounted
 	var messages: Array[Dictionary] = []
 	var maps: RefCounted
 	var capture_service: RefCounted
@@ -106,6 +107,8 @@ class Session extends Node:
 	func _owner_passive_request_terminal(kind: String, request: Dictionary, result: Dictionary) -> void:
 		action_terminals.append({"kind": kind, "request": request.duplicate(true), "result": result.duplicate(true)})
 	func _owner_passive_commit_request(peer: int, kind: String, request: Dictionary, context: Dictionary) -> Dictionary:
+		if kind == "bounty_rotation":
+			return get_node(^"BountyHost").call("commit_rotation_prepared", peer, request, context)
 		var gate: Dictionary = capture_service.call("action_gate", peer, kind, request, context)
 		action_calls.append({"request": request.duplicate(true), "gate": gate,
 			"revision": _character_authority.call("revision", game.local.character_id),
@@ -160,6 +163,7 @@ func before_each() -> void:
 	assert_true(session._character_authority.seed_admitted_character(before, before.character_id).ok)
 	assert_true(session._character_authority.seed_discovered_landmarks(before.character_id, {}))
 	service = Service.new(session)
+	session._owner_passive = service
 	service.arm_owner(before, {})
 
 func after_each() -> void:
@@ -741,6 +745,29 @@ func test_terminal_request_refusal_rebases_only_the_exact_saved_checkpoint() -> 
 	var input_ack: Dictionary = session.messages[-1].duplicate(true)
 	assert_eq(service.action_gate(2, "foundation_request", f.request, f.context).code, "owner_passive_checkpoint_pending")
 	var freeze: Dictionary = session.messages[-1].duplicate(true)
+	# Reuse the real host producer and the existing refusing writer. Its clock
+	# callback is the disclosed source seam; no player request or reward event
+	# is fabricated for an automatic morning.
+	var morning := preload("res://scripts/world/bounty_host_adapter.gd").new()
+	morning.name = "BountyHost"
+	session.add_child(morning)
+	var board_writer := preload("res://tests/test_foundation_retry_admission.gd").ResearchRecorder.new()
+	board_writer.name = "LedgerRpc"
+	session.add_child(board_writer)
+	var clock_context := {"day": 1}
+	assert_true(morning.configure(session, func(_peer: int) -> Dictionary:
+		return preload("res://tests/test_bounty_board.gd").new()._context(
+			session._character_authority.state(before.character_id), session._character_authority.revision(before.character_id),
+			int(clock_context.day), event.world_namespace), func(_peer: int, _token: String) -> Dictionary: return {}))
+	var frozen_checkpoint: PackedByteArray = var_to_bytes(stream.checkpoint)
+	var original_journal: PackedByteArray = var_to_bytes(game.world.reward_deliveries)
+	assert_false(stream.checkpoint.has("prepared"))
+	assert_false(session._character_authority.creature_training_is_pending(before.character_id))
+	assert_eq(morning.morning(2).get("code"), "owner_passive_original_pending")
+	assert_true(board_writer.proposals.is_empty())
+	assert_eq(var_to_bytes(stream.checkpoint), frozen_checkpoint, "morning preserves the original awaiting-freeze checkpoint")
+	assert_true(PREP.exact(session._character_authority.state(before.character_id), before))
+	assert_eq(var_to_bytes(game.world.reward_deliveries), original_journal)
 	session.host = false
 	service.receive_owner(input_ack)
 	service.receive_owner(freeze)
@@ -785,6 +812,88 @@ func test_terminal_request_refusal_rebases_only_the_exact_saved_checkpoint() -> 
 	session.host = false
 	service.receive_owner(session.messages[-1])
 	assert_true(service.local.rebase.is_empty())
+	# Once that original settles, the ordinary poll starts its own host-source
+	# freeze. Further real care must be replayed and BOOL-saved before rotation.
+	service.record_input(_input(0.4))
+	session.host = true
+	var board_stream: Dictionary = service.hosts[before.character_id]
+	service.receive_host(2, _envelope({"op": "inputs", "inputs": service.local.inputs.duplicate(true)}))
+	game.local.data = board_stream.cursor.state.duplicate(true)
+	var board_input_ack: Dictionary = session.messages[-1].duplicate(true)
+	assert_eq(morning.morning(2).get("code"), "owner_passive_checkpoint_pending")
+	var board_freeze: Dictionary = session.messages[-1].duplicate(true)
+	assert_eq(board_freeze.source_kind, "bounty_rotation")
+	assert_eq(board_freeze.request.kind, "host_bounty_rotation")
+	assert_false(board_freeze.request.has("op"), "the host clock is not an invented player operation")
+	assert_false(board_freeze.request.has("intent"))
+	assert_eq(service.action_gate(2, "bounty_rotation", board_freeze.request, {}).code, "owner_passive_request_kind")
+	var original_board_checkpoint: PackedByteArray = var_to_bytes(board_stream.checkpoint)
+	assert_eq(morning.morning(2).get("code"), "owner_passive_checkpoint_pending")
+	assert_eq(var_to_bytes(board_stream.checkpoint), original_board_checkpoint)
+	assert_true(board_writer.proposals.is_empty(), "no board stage precedes frozen care or owner BOOL")
+	session.host = false
+	service.receive_owner(board_input_ack)
+	var foreign_freeze: Dictionary = board_freeze.duplicate(true)
+	foreign_freeze.request.world_id = "another-world"
+	foreign_freeze.request_hash = PREP.fingerprint(foreign_freeze.request)
+	service.receive_owner(foreign_freeze)
+	assert_true(service.pending.is_empty())
+	service.receive_owner(board_freeze)
+	assert_eq(service.pending.get("source_kind"), "bounty_rotation")
+	var board_frozen: Dictionary = session.messages[-1].duplicate(true)
+	var frozen_sequence: int = service.local.sequence
+	service.record_input(_input(0.4))
+	assert_eq(service.local.sequence, frozen_sequence, "clock freeze uses the existing care fence")
+	session.host = true
+	service.receive_host(2, board_frozen)
+	var board_prepared: Dictionary = session.messages[-1].duplicate(true)
+	assert_eq(board_prepared.op, "prepared")
+	assert_true(PREP.exact(board_prepared.prepared.after, game.local.data))
+	assert_eq(board_prepared.prepared.final_sequence, frozen_sequence)
+	assert_eq(board_prepared.prepared.input_prefix_hash, service.local.prefix_hash)
+	var original_prepared: PackedByteArray = var_to_bytes(board_prepared.prepared)
+	session.host = false
+	game.save_system.accepted = false
+	service.receive_owner(board_prepared)
+	assert_eq(service.pending.phase, "save")
+	assert_true(board_writer.proposals.is_empty(), "failed BOOL cannot stage rotation")
+	game.save_system.accepted = true
+	service._retry_owner()
+	var board_saved: Dictionary = session.messages[-1].duplicate(true)
+	assert_eq(board_saved.op, "saved")
+	session.host = true
+	var stale_saved: Dictionary = board_saved.duplicate(true)
+	stale_saved.hash = "a".repeat(64)
+	service.receive_host(2, stale_saved)
+	assert_true(board_writer.proposals.is_empty())
+	for attempt: int in 2:
+		service.receive_host(2, board_saved)
+		assert_eq(board_writer.proposals.size(), attempt + 1)
+		assert_eq(board_stream.checkpoint.last_result.code, "fixture_no_write")
+		assert_eq(var_to_bytes(board_stream.checkpoint.prepared), original_prepared)
+		assert_true(PREP.exact(board_writer.proposals.back().before, board_prepared.prepared.after),
+			"the ordinary rotation producer stages only from the exact saved replay")
+	assert_eq(var_to_bytes(game.world.reward_deliveries), original_journal, "the refusing writer grants no durable rotation")
+	clock_context.day = 2
+	service.receive_host(2, board_saved)
+	assert_eq(board_writer.proposals.size(), 2, "a changed host day never substitutes a new board under the original ACK")
+	var changed_day: Dictionary = session.messages[-1].duplicate(true)
+	assert_eq(changed_day.op, "no_effect")
+	assert_eq(changed_day.result.code, "bounty_rotation_source_changed")
+	assert_true(PREP.exact(session._character_authority.state(before.character_id), board_prepared.prepared.after))
+	session.host = false
+	service.receive_owner(changed_day)
+	var clock_rebase: Dictionary = session.messages[-1].duplicate(true)
+	assert_eq(clock_rebase.op, "rebase")
+	session.host = true
+	service.receive_host(2, clock_rebase)
+	assert_eq(session.messages[-1].op, "rebase_ack")
+	session.host = false
+	service.receive_owner(session.messages[-1])
+	session.host = true
+	assert_eq(morning.morning(2).get("code"), "owner_passive_checkpoint_pending")
+	assert_eq(service.hosts[before.character_id].checkpoint.request.host_day, 2,
+		"only a fresh ordinary poll may bind the new host day after exact rebase")
 
 func _portal_request() -> Dictionary:
 	var envelope := {"request_id": "current-epoch:actual-request", "session_epoch": "current-epoch",
@@ -1626,6 +1735,34 @@ func test_an_open_host_duty_at_the_hello_refuses_and_never_adopts() -> void:
 
 func test_deferred_rejoin_requires_real_vitals_release_saved_fresh_declaration_and_bound_resend() -> void:
 	var character: String = before.character_id
+	# A pending personal bounty rotation uses the same first-rejoin gate as
+	# vitals. Exercise its real authority stage and accepted journal ACK.
+	var bounty_context: Dictionary = preload("res://tests/test_bounty_board.gd").new()._context(before)
+	bounty_context.world_namespace = game.world.reward_delivery_namespace
+	var bounty_stage: Dictionary = session._character_authority.stage_character_action(character, 0, "bounty_rotate", {}, bounty_context)
+	assert_true(bounty_stage.get("ok") == true)
+	assert_true(session._character_authority.finish_creature_training(bounty_stage, true))
+	var bounty_row := preload("res://scripts/net/character_action_delivery.gd").make_record(game.world.world_id,
+		game.world.reward_delivery_namespace, session._altar_current_epoch(), bounty_stage, null,
+		preload("res://scripts/net/character_record_rules.gd").errors)
+	assert_false(bounty_row.is_empty())
+	session.host = true
+	service.admitted(2, {"character_id": character, "portable_authority": before, "personal_flags": {"flags": []},
+		"discovered_landmarks": {}, "owner_passive_stream": {"id": service.local.id, "baseline_hash": service.local.base_hash}})
+	assert_true(service.deferred.has(character), "a pending bounty row parks the rejoin instead of refusing it")
+	session.messages.clear()
+	service.retry_deferred(character)
+	assert_true(session.messages.is_empty(), "training ACK must precede a fresh declaration")
+	bounty_row.status = "accepted"
+	assert_true(session._character_authority.acknowledge_creature_training(character, bounty_row))
+	service.retry_deferred(character)
+	assert_eq(session.messages.size(), 1)
+	assert_eq(session.messages.back().op, "redeclaration")
+	# Restore the existing admission setup before its full vitals/save/retry
+	# proof below; no bounty result is imported as a vitals success.
+	after_each()
+	before_each()
+	character = before.character_id
 	var card: Dictionary = before.party[0]
 	var receipt := {"receipt_id": "deferred-hit", "encounter_id": "deferred-encounter", "creature_uid": card.uid,
 		"body_generation": 1, "vitals_revision": 1}

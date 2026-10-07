@@ -54,19 +54,23 @@
     "memories": [
       {
         "counter": "landmarks_visited_together",
-        "line": "%s has discovered %d landmarks with you. You have seen a great deal together."
+        "line": "%s has discovered %d landmarks with you. Those places are part of your journey together.",
+        "line_singular": "%s has discovered %d landmark with you. That place is part of your journey together."
       },
       {
         "counter": "battles_fought",
-        "line": "%s has stood with you through %d battles. I am glad you both made it home."
+        "line": "%s has stood with you through %d battles. I am glad you both made it home.",
+        "line_singular": "%s has stood with you through %d battle. I am glad you both made it home."
       },
       {
         "counter": "rest_nights_together",
-        "line": "You and %s have shared %d nights of rest. Quiet care is part of a journey, too."
+        "line": "You and %s have shared %d nights of rest. Quiet care is part of a journey, too.",
+        "line_singular": "You and %s have shared %d night of rest. Quiet care is part of a journey, too."
       },
       {
         "counter": "feeds_together",
-        "line": "You have cared for %s through %d meals. That care belongs in their story."
+        "line": "You have cared for %s through %d meals. That care belongs in their story.",
+        "line_singular": "You have cared for %s through %d meal. That care belongs in their story."
       }
     ],
     "choices_empty": "Those you met had their own wishes. Their invitations were yours to answer.",

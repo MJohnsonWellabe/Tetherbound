@@ -84,7 +84,15 @@ func _row(before: Dictionary, intent: Dictionary, context: Dictionary) -> Dictio
 	return DELIVERY.make_record("resource-slot", "resource-namespace", "resource-epoch", proposal, null, RECORD.errors)
 
 func test_groom_combines_care_shed_and_empty_miss_once_per_owned_uid_day() -> void:
-	for species: String in ["mudsnout", "terrapup"]:
+	var expected_outputs := {
+		"mudsnout": {"essence": "essence_ground", "shed": "fiber"},
+		"terrapup": {"essence": "essence_ground", "shed": ""},
+		"galecrest": {"essence": "essence_air", "shed": "skyplume"},
+		"sparkit": {"essence": "essence_electric", "shed": "sparkfur"},
+		"staticub": {"essence": "essence_electric", "shed": "sparkfur"},
+	}
+	for species: String in ["mudsnout", "terrapup", "galecrest", "sparkit", "staticub"]:
+		var expected: Dictionary = expected_outputs[species]
 		var before := _before(species)
 		var original := before.duplicate(true)
 		var row := _row(before, _intent(before), _context())
@@ -93,8 +101,10 @@ func test_groom_combines_care_shed_and_empty_miss_once_per_owned_uid_day() -> vo
 		assert_eq(before, original)
 		assert_true(E._equivalent(row.after.party, before.party), "care does not replace or heal an owned creature")
 		var bag := BAG.inventory_from(row.after.inventory)
-		assert_eq(bag.count("essence_ground"), 1)
-		assert_eq(bag.count("fiber"), 1 if species == "mudsnout" else 0)
+		for essence: String in ["essence_ground", "essence_air", "essence_electric"]:
+			assert_eq(bag.count(essence), 1 if essence == expected.essence else 0, species + " care essence: " + essence)
+		for item: String in ["fiber", "reed_fiber", "skyplume", "sparkfur"]:
+			assert_eq(bag.count(item), 1 if item == expected.shed else 0, species + " shed output: " + item)
 		assert_eq(row.after.redesign_character.transaction_receipts.size(), before.redesign_character.transaction_receipts.size() + 3,
 			"care, shed (including empty miss), and original transaction commit together")
 		var decoded: Dictionary = JSON.parse_string(JSON.stringify(row))
@@ -103,7 +113,12 @@ func test_groom_combines_care_shed_and_empty_miss_once_per_owned_uid_day() -> vo
 		assert_eq(ACTIONS.stage(row.after, 1, "groom", _intent(before, SECOND), _context(1, 1), RECORD.errors).get("code"), "already_groomed")
 		var tomorrow := ACTIONS.stage(row.after, 1, "groom", _intent(before, SECOND), _context(2, 1), RECORD.errors)
 		assert_true(tomorrow.get("ok") == true, str(tomorrow))
-		if tomorrow.get("ok") == true: assert_eq(BAG.inventory_from(tomorrow.state.inventory).count("essence_ground"), 2)
+		if tomorrow.get("ok") == true:
+			var tomorrow_bag := BAG.inventory_from(tomorrow.state.inventory)
+			for essence: String in ["essence_ground", "essence_air", "essence_electric"]:
+				assert_eq(tomorrow_bag.count(essence), 2 if essence == expected.essence else 0, species + " next-day care essence: " + essence)
+			for item: String in ["fiber", "reed_fiber", "skyplume", "sparkfur"]:
+				assert_eq(tomorrow_bag.count(item), 2 if item == expected.shed else 0, species + " next-day shed output: " + item)
 
 func test_full_bag_refuses_before_consuming_care_or_shed_receipts() -> void:
 	for care_stack_room: bool in [false, true]:

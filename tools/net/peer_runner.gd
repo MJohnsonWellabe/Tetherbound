@@ -796,7 +796,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"alpha_clear":
 			out = _step_alpha_clear(args)
 		"explore_at":
-			out = await _step_explore_at(args)
+			out = await _step_explore_at(args, int(msg.get("budget_frames", NET_STEP_BUDGET_FRAMES)))
 		"trade_offer":
 			out = _step_trade_offer(args)
 		"trade_accept":
@@ -816,7 +816,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"join_encounter":
 			out = await _step_join_encounter(args, int(msg.get("budget_frames", NET_STEP_BUDGET_FRAMES)))
 		"teleport":
-			out = await _step_teleport(args)
+			out = await _step_teleport(args, int(msg.get("budget_frames", NET_STEP_BUDGET_FRAMES)))
 		"place_creature":
 			out = await _step_place_creature(args)
 		"strike":
@@ -832,7 +832,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"stand_by_downed":
 			out = await _step_stand_by_downed(args)
 		"trainer_battle":
-			return await _step_trainer_battle(args)
+			return await _step_trainer_battle(args, int(msg.get("budget_frames", NET_STEP_BUDGET_FRAMES)))
 		"win_trainer_battle":
 			_trainer_fight_command_budget_frames = int(msg.get("budget_frames", NET_STEP_BUDGET_FRAMES))
 			var trainer_result: Dictionary = await _step_win_trainer_battle(args)
@@ -2660,30 +2660,135 @@ func _step_engage_wild(args: Dictionary) -> Dictionary:
 			% bind_budget}
 
 
-## A harness placement is a jump no player can make. The host's owner-passive
-## replay accepts a long discontinuity only while its own copy of this body
-## stands within 2 m of the new spot (owner_passive_sync.gd _inputs_host), so a
-## step that places the player and moves on at once can strand that input for
-## good: CI 37189095290 client_trainer_rewards waited on 'discontinuity to
-## (80.0, 0.9, 46.0), host body at (81.06, 0.9, 50.45)' and every round reward
-## behind it stalled. On a client, give the discovery tick time to record the
-## jump, then wait (bounded) until the host has acknowledged every recorded
-## input, as a real arrival would before play continues.
-func _await_owner_passive_caught_up(budget_frames: int = 600) -> void:
+## Observe production discovery and its authenticated prefix ACK before and
+## after a disclosed placement. Moving first can invalidate an unacknowledged
+## initial pose; an empty buffer alone can precede stream admission/discovery.
+## Callers share one original catch-up allowance across both observations.
+func _await_owner_passive_caught_up(budget_frames: int = 600,
+		require_new_discovery: bool = false, binding: Dictionary = {}) -> Dictionary:
+	var phase := "post-placement" if require_new_discovery else "pre-placement"
 	var game := root.get_node_or_null(^"Game")
-	var session: Variant = game.get("session") if game != null else null
-	if not session is Node or not (session as Node).has_method("is_host") \
-			or bool((session as Node).call("is_host")) or not bool((session as Node).call("is_active")):
-		return
-	var passive: Variant = (session as Node).get("_owner_passive")
+	var session: Node = game.get("session") as Node if game != null else null
+	if game == null or session == null:
+		return {"verdict": "FAIL", "detail": "placement has no original Game/Session", "data": {"phase": phase}}
+	if binding.is_empty():
+		binding.merge({"game": game, "session": session, "scene": current_scene,
+			"player": _probe.call("player"), "owner": game.get("local"), "world": game.get("world"),
+			"character": game.get("local").get("character_id"), "realm": game.get("current_realm"),
+			"world_id": game.get("world").get("world_id"), "namespace": game.get("world").get("reward_delivery_namespace"),
+			"epoch": session.call("_altar_current_epoch"), "host": session.call("is_host"), "active": session.call("is_active")})
+	var source_live: Callable = func() -> bool:
+		return is_instance_valid(game) and root.get_node_or_null(^"Game") == binding.game and game == binding.game \
+			and is_instance_valid(session) and session == binding.session and game.get("session") == session \
+			and current_scene == binding.scene and is_instance_valid(binding.player) and _probe.call("player") == binding.player \
+			and game.get("local") == binding.owner and game.get("world") == binding.world \
+			and binding.owner.get("character_id") == binding.character and game.get("current_realm") == binding.realm \
+			and binding.world.get("world_id") == binding.world_id and binding.world.get("reward_delivery_namespace") == binding.namespace \
+			and session.call("_altar_current_epoch") == binding.epoch and session.call("is_host") == binding.host \
+			and session.call("is_active") == binding.active
+	if not source_live.call():
+		return {"verdict": "FAIL", "detail": "original placement owner/world/session/player changed", "data": {"phase": phase}}
+	if binding.host == true or binding.active != true:
+		return {"verdict": "PASS", "detail": "placement has no remote owner stream"}
+	var passive: RefCounted = session.get("_owner_passive") as RefCounted
 	if passive == null:
-		return
-	for frame in budget_frames:
-		var local: Dictionary = passive.get("local")
-		if frame >= 45 and (local.is_empty() or not str(local.get("error", "")).is_empty() \
-				or (local.get("inputs", []) as Array).is_empty()):
-			return
+		return {"verdict": "FAIL", "detail": "admitted guest has no owner-passive service", "data": {"phase": phase}}
+	var observed := {"stream": "", "sequence": -1, "prefix_sequence": -1, "position": Vector3.INF, "via": ""}
+	# Game emits this observation immediately before recording its one discovery
+	# input (after the condition input). Freeze the first eligible prefix, not a
+	# moving target of later care ticks. No recorder/timer/ACK is driven here.
+	var discovery_observer: Callable = func(tick: Dictionary) -> void:
+		if not source_live.call() or session.get("_owner_passive") != passive \
+			or tick.get("operation") != "discovery" or tick.get("character_id") != binding.character \
+			or tick.get("world_namespace") != binding.namespace or tick.get("session_epoch") != binding.epoch \
+			or tick.get("realm") != binding.realm or passive.call("recording_active") != true: return
+		var stream: Dictionary = passive.get("local")
+		var at: Array = tick.get("to", [])
+		if at.size() != 3 or str(stream.get("id", "")).is_empty() or observed.stream == stream.id: return
+		var position := Vector3(float(at[0]), float(at[1]), float(at[2]))
+		if not preload("res://scripts/net/owner_passive_sync.gd")._endpoint_matches(binding.player.global_position, position): return
+		if require_new_discovery and stream.id == binding.get("placement_stream") \
+			and int(stream.sequence) + 1 <= int(binding.get("placement_sequence", -1)): return
+		observed.stream = stream.id
+		observed.sequence = int(stream.sequence) + 1
+		observed.prefix_sequence = observed.sequence
+		observed.position = position
+		observed.via = "discovery_signal"
+	game.connect("party_passive_tick", discovery_observer)
+	var reason := "original discovery prefix was not acknowledged within the existing placement allowance"
+	var ready := false
+	var observation: Dictionary = {"phase": phase}
+	for frame in maxi(0, budget_frames) + 1:
+		if not source_live.call() or session.get("_owner_passive") != passive:
+			reason = "original placement owner/world/session/player/passive service changed"
+			break
+		var stream: Dictionary = passive.get("local")
+		# Retain the actual recorded input too, including for an empty party whose
+		# discovery has no per-creature observation signal. A changed stream must
+		# supply its own discovery; the old stream's ACK cannot satisfy this one.
+		for input: Dictionary in stream.get("inputs", []):
+			if observed.stream == stream.get("id"): break
+			if input.get("op") == "discovery" and input.get("realm") == binding.realm \
+				and (not require_new_discovery or stream.id != binding.get("placement_stream") \
+					or int(input.sequence) > int(binding.get("placement_sequence", -1))):
+				var position := Vector3(float(input.to[0]), float(input.to[1]), float(input.to[2]))
+				if not preload("res://scripts/net/owner_passive_sync.gd")._endpoint_matches(binding.player.global_position, position): continue
+				observed.stream = stream.id
+				observed.sequence = input.sequence
+				observed.prefix_sequence = maxi(int(stream.sequence), int(input.sequence))
+				observed.position = position
+				observed.via = "recorded_discovery_input"
+		var admitted: bool = not stream.is_empty() and stream.get("character") == binding.character \
+			and session.call("snapshot_ready") == true and stream.get("hello_pending") == false \
+			and stream.get("admission_pending") == false and (stream.get("rebase", {}) as Dictionary).is_empty() \
+			and (passive.get("pending") as Dictionary).is_empty()
+		var discovered: bool = game.get("_travel_pos_valid") == true \
+			and preload("res://scripts/net/owner_passive_sync.gd")._endpoint_matches(binding.player.global_position, game.get("_travel_pos"))
+		# arm_owner resets travel_valid. Game sets it only in the synchronous
+		# discovery path that appends its input, so an already observed pose can
+		# bind the current prefix before placement even after its input was ACKed.
+		if not require_new_discovery and admitted and discovered and int(stream.get("sequence", 0)) > 0 \
+			and observed.stream != stream.get("id"):
+			observed.stream = stream.id
+			observed.sequence = int(stream.sequence)
+			observed.prefix_sequence = int(stream.sequence)
+			observed.position = game.get("_travel_pos")
+			observed.via = "current_travel_baseline"
+		var prefix_acked: bool = observed.stream == stream.get("id") and int(observed.sequence) > 0 \
+			and int(stream.get("acked", -1)) >= int(observed.prefix_sequence) \
+			and int(stream.get("sequence", -1)) >= int(observed.prefix_sequence)
+		discovered = discovered and observed.stream == stream.get("id") \
+			and preload("res://scripts/net/owner_passive_sync.gd")._endpoint_matches(binding.player.global_position, observed.position)
+		if require_new_discovery:
+			discovered = discovered and (observed.stream != binding.get("placement_stream") \
+				or int(observed.sequence) > int(binding.get("placement_sequence", -1)))
+		observation = {"phase": phase, "frame": frame, "budget_frames": budget_frames,
+			"character_id": binding.character, "session_epoch": binding.epoch,
+			"stream_id": stream.get("id"), "sequence": stream.get("sequence"), "acked": stream.get("acked"),
+			"admission_pending": stream.get("admission_pending"), "hello_pending": stream.get("hello_pending"),
+			"error": stream.get("error"), "pending": passive.get("pending").duplicate(true),
+			"observed_discovery_sequence": observed.sequence, "observed_discovery_stream": observed.stream,
+			"observed_via": observed.via,
+			"required_prefix_sequence": observed.prefix_sequence, "prefix_acked": prefix_acked,
+			"admitted": admitted, "discovered": discovered, "remaining_inputs": (stream.get("inputs", []) as Array).size(),
+			"observed_position": observed.position, "player_position": binding.player.global_position,
+			"travel_position": game.get("_travel_pos"), "travel_valid": game.get("_travel_pos_valid")}
+		if not str(stream.get("error", "")).is_empty():
+			reason = "owner-passive placement refused: " + str(stream.error)
+			break
+		# Later care remains queued for its ordinary replay. The placement needs
+		# this exact discovery prefix ACK, not an idle producer with no new input.
+		if admitted and discovered and prefix_acked:
+			binding.placement_sequence = int(stream.sequence)
+			binding.placement_stream = str(stream.id)
+			ready = true
+			break
+		if frame >= budget_frames: break
 		await physics_frame
+	if is_instance_valid(game) and game.is_connected("party_passive_tick", discovery_observer):
+		game.disconnect("party_passive_tick", discovery_observer)
+	return {"verdict": "PASS" if ready else "FAIL", "detail": "original discovery prefix acknowledged" if ready else reason,
+		"data": observation}
 
 
 ## Stand the trainer at a point. The travel itself, not a game action.
@@ -2693,7 +2798,7 @@ func _await_owner_passive_caught_up(budget_frames: int = 600) -> void:
 ## walk dying against a Terrain3D snag, and a smoke that fails there is
 ## reporting on terrain rather than on what it is testing. Same teleport
 ## `tests/smoke_combat_camera.gd` uses to stand a trainer beside a creature.
-func _step_teleport(args: Dictionary) -> Dictionary:
+func _step_teleport(args: Dictionary, command_budget_frames: int = NET_STEP_BUDGET_FRAMES) -> Dictionary:
 	var player := _probe.call("player") as Node3D
 	if player == null:
 		return {"verdict": "ERROR", "detail": "no live player"}
@@ -2706,15 +2811,23 @@ func _step_teleport(args: Dictionary) -> Dictionary:
 		at = [near.x, near.y, near.z]
 	if at.size() != 3:
 		return {"verdict": "ERROR", "detail": "teleport needs args.at = [x, y, z]"}
+	var settle := maxi(0, int(args.get("settle", 30)))
+	var catchup_budget := mini(600, maxi(0, command_budget_frames - settle))
+	var placement_binding: Dictionary = {}
+	var before_catchup := Engine.get_physics_frames()
+	var ready := await _await_owner_passive_caught_up(catchup_budget, false, placement_binding)
+	if ready.get("verdict") != "PASS": return ready
+	catchup_budget = maxi(0, catchup_budget - int(Engine.get_physics_frames() - before_catchup))
 	# A teleport, not a motion (`remote_creature.teleport_body`): set as a plain
 	# position, GodotPhysics sweeps the body across the whole jump and the next
 	# move_and_slide against Terrain3D collision took ~4.4 s for a 4 km jump
 	# (F14#3), stalling the peer the proof is measuring.
 	REMOTE_CREATURE_TP.teleport_body(player as PhysicsBody3D, Vector3(float(at[0]), float(at[1]), float(at[2])))
 	player.velocity = Vector3.ZERO
-	for i in maxi(0, int(args.get("settle", 30))):
+	for i in settle:
 		await physics_frame
-	await _await_owner_passive_caught_up()
+	ready = await _await_owner_passive_caught_up(catchup_budget, true, placement_binding)
+	if ready.get("verdict") != "PASS": return ready
 	var p: Vector3 = player.global_position
 	return {"verdict": "PASS", "detail": "trainer stands at (%.2f, %.2f, %.2f)" % [p.x, p.y, p.z]}
 
@@ -2727,6 +2840,8 @@ func _step_join_encounter(args: Dictionary, command_budget_frames: int = NET_STE
 	var id := str(args.get("encounter_id", ""))
 	if id.is_empty():
 		return {"verdict": "ERROR", "detail": "join_encounter needs args.encounter_id"}
+	var join_session := _session()
+	var join_epoch := str(join_session.call("_altar_current_epoch")) if join_session != null else ""
 	if not bool(director.call("join_encounter", id)):
 		return {"verdict": "FAIL", "detail": "join_encounter('%s') refused locally" % id}
 	# A shared join returns while the host's admission/record is still pending.
@@ -2754,6 +2869,10 @@ func _step_join_encounter(args: Dictionary, command_budget_frames: int = NET_STE
 	var observed_world_message := ""
 	for i in frames:
 		await physics_frame
+		if not is_instance_valid(director) or _encounter_director() != director \
+				or _session() != join_session or (join_session != null and str(join_session.call("_altar_current_epoch")) != join_epoch):
+			failure = "join source changed before host admission"
+			break
 		if shared:
 			if (director.get("_cancelled_shared_joins") as Dictionary).has(id):
 				failure = "shared admission was cancelled by the producer"
@@ -2768,7 +2887,14 @@ func _step_join_encounter(args: Dictionary, command_budget_frames: int = NET_STE
 		if manager != null and bool(manager.call("is_fighting")) \
 				and str(manager.call("encounter_id")) == id:
 			if not shared:
-				bound = true
+				# The legacy mirror binds locally before its engage RPC is answered.
+				# Starting the host fight at that point can finish the encounter before
+				# the guest is admitted. Require the host's actual participant record
+				# within the original legacy/tournament observation allowance.
+				var admitted: Dictionary = director.call("encounter_record")
+				bound = str(admitted.get("encounter_id", "")) == id \
+					and admitted.get("phase") == "active" \
+					and (admitted.get("participants", {}) as Dictionary).has(int(director.call("_local_peer_id")))
 			else:
 				var rec: Dictionary = director.call("encounter_record")
 				var opponent: Dictionary = rec.get("opponent", {})
@@ -2828,6 +2954,10 @@ func _step_join_encounter(args: Dictionary, command_budget_frames: int = NET_STE
 				"data": {"encounter_id": id, "producer_deadline_ms": admission_deadline, "frame_limit": frames}}
 		if manager == null or not bool(manager.call("is_fighting")):
 			return {"verdict": "FAIL", "detail": "the join did not put this peer in a fight"}
+		if not failure.is_empty():
+			return {"verdict": "FAIL", "detail": failure}
+		if str(manager.call("encounter_id")) == id:
+			return {"verdict": "FAIL", "detail": "the local mirror bound, but no matching active host participant record arrived within %d frames" % frames}
 		return {"verdict": "FAIL", "detail": "the join is fighting, but is bound to '%s' instead of '%s'"
 			% [str(manager.call("encounter_id")), id]}
 	# Report the actual body. The shared-wild smoke asserts its host identity
@@ -3733,7 +3863,7 @@ func _sequence_director() -> Node:
 ## `_DISCOVERY_INTERVAL_S` clock, over the local player's own `MapState`. The
 ## body is placed the same way `operator_harness.gd::_step_teleport` places it,
 ## ground height included, so it lands on real terrain rather than under it.
-func _step_explore_at(args: Dictionary) -> Dictionary:
+func _step_explore_at(args: Dictionary, command_budget_frames: int = NET_STEP_BUDGET_FRAMES) -> Dictionary:
 	var player := _probe.call("player") as Node3D
 	if player == null:
 		return {"verdict": "ERROR", "detail": "no live Player to stand anywhere"}
@@ -3749,6 +3879,13 @@ func _step_explore_at(args: Dictionary) -> Dictionary:
 		y = float(at[2]) + 1.0
 	elif world != null and world.has_method("ground_height_at"):
 		y = float(world.call("ground_height_at", float(at[0]), float(at[1]))) + 1.0
+	var settle := maxi(1, int(args.get("settle", 240)))
+	var catchup_budget := mini(600, maxi(0, command_budget_frames - settle))
+	var placement_binding: Dictionary = {}
+	var before_catchup := Engine.get_physics_frames()
+	var ready := await _await_owner_passive_caught_up(catchup_budget, false, placement_binding)
+	if ready.get("verdict") != "PASS": return ready
+	catchup_budget = maxi(0, catchup_budget - int(Engine.get_physics_frames() - before_catchup))
 	player.global_position = Vector3(float(at[0]), y, float(at[1]))
 	if player is CharacterBody3D:
 		(player as CharacterBody3D).velocity = Vector3.ZERO
@@ -3759,8 +3896,10 @@ func _step_explore_at(args: Dictionary) -> Dictionary:
 	# the nominal rate; the default is four of them, which is slack enough that
 	# a slow headless process still gets sampled and short enough that a fog
 	# system that has stopped ticking still shows up as zero new cells.
-	for i in maxi(1, int(args.get("settle", 240))):
+	for i in settle:
 		await physics_frame
+	ready = await _await_owner_passive_caught_up(catchup_budget, true, placement_binding)
+	if ready.get("verdict") != "PASS": return ready
 	var settled := player.global_position
 	return {
 		"verdict": "PASS",
@@ -4153,7 +4292,7 @@ func _story_gate_rows() -> Array:
 ## use, and for the reason `smoke_aggression.gd`'s header documents: a scripted
 ## walk across the Meadows dies against a Terrain3D snag, and a smoke that fails
 ## there is reporting on terrain rather than on what it is testing.
-func _step_trainer_battle(args: Dictionary) -> Dictionary:
+func _step_trainer_battle(args: Dictionary, command_budget_frames: int = NET_STEP_BUDGET_FRAMES) -> Dictionary:
 	var director := _encounter_director()
 	if director == null:
 		return {"verdict": "ERROR", "detail": "no EncounterDirector in this scene"}
@@ -4166,11 +4305,24 @@ func _step_trainer_battle(args: Dictionary) -> Dictionary:
 	if player == null:
 		return {"verdict": "ERROR", "detail": "no live player"}
 	if body != null:
+		var catchup_budget := mini(600, maxi(0, command_budget_frames - 20 - maxi(0, int(args.get("settle", 45)))))
+		var placement_binding: Dictionary = {}
+		var before_catchup := Engine.get_physics_frames()
+		var ready := await _await_owner_passive_caught_up(catchup_budget, false, placement_binding)
+		if ready.get("verdict") != "PASS": return ready
+		catchup_budget = maxi(0, catchup_budget - int(Engine.get_physics_frames() - before_catchup))
+		if not is_instance_valid(body) or _trainer_body_named(trainer_id) != body \
+			or not is_instance_valid(director) or _encounter_director() != director:
+			return {"verdict": "FAIL", "detail": "original trainer changed before placement"}
 		player.global_position = body.global_position + Vector3(2.0, 0.0, 2.0)
 		player.velocity = Vector3.ZERO
 		for i in 20:
 			await physics_frame
-		await _await_owner_passive_caught_up()
+		ready = await _await_owner_passive_caught_up(catchup_budget, true, placement_binding)
+		if ready.get("verdict") != "PASS": return ready
+		if not is_instance_valid(body) or _trainer_body_named(trainer_id) != body \
+			or not is_instance_valid(director) or _encounter_director() != director:
+			return {"verdict": "FAIL", "detail": "original trainer changed during placement"}
 	if not bool(director.call("can_challenge", spec)):
 		return {"verdict": "FAIL", "detail": "'%s' will not take the challenge (already beaten: %s, nothing out: %s)"
 			% [trainer_id, str(NET_TRAINERS.already_beaten(spec, _progression_store())),
@@ -5165,7 +5317,8 @@ func _step_f48_fixture_capture(args: Dictionary) -> Dictionary:
 	var requested := Vector3(float(target[0]) + 3.0, float(target[1]) + 2.0, float(target[2]))
 	load("res://scripts/creatures/remote_creature.gd").teleport_body(player, requested)
 	player.velocity = Vector3.ZERO
-	await _await_owner_passive_caught_up()
+	var placement_ready: Dictionary = await _await_owner_passive_caught_up(600, false, {})
+	if placement_ready.get("verdict") != "PASS": return placement_ready
 	var fixture := {"actor_before": [actor_before.x, actor_before.y, actor_before.z],
 		"actor_requested": [requested.x, requested.y, requested.z], "announcement": announcement,
 		"owner_before": before, "fixture_disclosure": args.fixture_disclosure, "acceptance_credit": false}
@@ -8682,8 +8835,8 @@ func _step_guardian_pilot(args: Dictionary) -> Dictionary:
 	return {"verdict": "PASS" if won else "FAIL", "data": result,
 		"detail": "input pilot outcome=%s hits=%d frames=%d gap=%.2f" % [str(result.get("outcome", "")), pilot.hits_dealt, int(result.get("frames", 0)), float(result.get("final_gap", -1.0))]}
 
-## F16 storage witness only. Future training/portal/craft transaction verbs are
-## not earned or invoked here; these are declared, valid carrier fixtures.
+## Existing F16 storage carriers and F43 observations. Read-only inspection
+## never completes pending fallback jobs or changes their save/ACK timing.
 func _foundations_payload() -> Dictionary:
 	var game := root.get_node_or_null(^"Game")
 	if game == null: return {}
@@ -8692,8 +8845,11 @@ func _foundations_payload() -> Dictionary:
 	var saver: RefCounted = game.get("save_system")
 	var world_id := str(world.get("world_id"))
 	var character_id := str(local.get("character_id"))
-	var world_path := str((saver.call("worlds") as RefCounted).call("path_for", world_id))
-	var character_path := str((saver.call("characters") as RefCounted).call("path_for", character_id))
+	var world_store := saver.get("_worlds") as RefCounted
+	var character_store := saver.get("_characters") as RefCounted
+	var world_path := str(world_store.call("path_for", world_id)) if world_store != null else ""
+	var character_path := str(character_store.call("path_for", character_id)) if character_store != null else ""
+	var disk: Dictionary = character_store.call("state", character_id) if character_store != null else {}
 	# Compare the complete JSON payload in its persisted numeric domain. Godot
 	# otherwise treats runtime int 20 and parsed JSON float 20.0 as unequal.
 	return {"world": JSON.parse_string(JSON.stringify(world.get("redesign_world"))),
@@ -8705,6 +8861,10 @@ func _foundations_payload() -> Dictionary:
 		# autosaves legitimately rewrite.
 		"world_disk_redesign": _disk_redesign_world(world_path),
 		"character_disk_sha256": FileAccess.get_sha256(character_path) if FileAccess.file_exists(character_path) else "",
+		"inventory": JSON.parse_string(JSON.stringify(local.get("inventory").get("_slots"))),
+		"character_disk_redesign": disk.get("redesign_character", {}).duplicate(true),
+		"inventory_disk": disk.get("inventory", []).duplicate(true),
+		"reward_deliveries": world.get("reward_deliveries").duplicate(true),
 		"schema": FOUNDATIONS_SAVE.VERSION, "host": bool(game.call("is_host"))}
 
 func _disk_redesign_world(path: String) -> Variant:
@@ -8839,6 +8999,222 @@ func _step_foundations_state(args: Dictionary) -> Dictionary:
 		if session != null and bool(session.call("is_active")):
 			return {"verdict": "FAIL", "detail": "memory-loss world fixture requires a disconnected peer"}
 		world.set("redesign_world", FOUNDATIONS_STATE.defaults("world"))
+	elif mode in ["bounty_inspect", "bounty_claim"]:
+		var composition := _session().get_node_or_null(^"FoundationComposition") if _session() != null else null
+		var adapter := composition.get_node_or_null(^"BountyInteraction") if composition != null else null
+		var board_ref: WeakRef = composition.get("_board") if composition != null else null
+		var board: Node3D = board_ref.get_ref() as Node3D if board_ref != null else null
+		if adapter == null or board == null:
+			return {"verdict": "FAIL", "detail": "actual grounded Halda board and adapter are not mounted"}
+		var view: Dictionary
+		if mode == "bounty_inspect":
+			if not adapter.has_signal("view_changed"):
+				return {"verdict": "FAIL", "detail": "actual Halda adapter has no authenticated view reply signal"}
+			var inspection_session: Node = _session()
+			var inspection_character: String = local.get("character_id")
+			var inspection_namespace: String = world.get("reward_delivery_namespace")
+			var inspection_world_id: String = world.get("world_id")
+			var inspection_epoch: String = inspection_session.call("_altar_current_epoch")
+			var inspection_host: bool = inspection_session.call("is_host")
+			var inspection_live: Callable = func() -> bool:
+				return is_instance_valid(game) and root.get_node_or_null(^"Game") == game \
+					and is_instance_valid(inspection_session) and game.get("session") == inspection_session and _session() == inspection_session \
+					and game.get("local") == local and game.get("world") == world and local.get("character_id") == inspection_character \
+					and world.get("reward_delivery_namespace") == inspection_namespace and world.get("world_id") == inspection_world_id \
+					and inspection_session.call("_altar_current_epoch") == inspection_epoch and inspection_session.call("is_host") == inspection_host \
+					and is_instance_valid(composition) and inspection_session.get_node_or_null(^"FoundationComposition") == composition \
+					and is_instance_valid(adapter) and composition.get_node_or_null(^"BountyInteraction") == adapter \
+					and is_instance_valid(board) and composition.get("_board") is WeakRef and composition.get("_board").get_ref() == board
+			var observed_view := {"received": false, "view": {}}
+			var view_observer: Callable = func(snapshot: Dictionary) -> void:
+				if not inspection_live.call() or snapshot.get("character_id") != inspection_character \
+					or snapshot.get("world_namespace") != inspection_namespace: return
+				observed_view.received = true
+				observed_view.view = snapshot.duplicate(true)
+			adapter.connect("view_changed", view_observer)
+			view = adapter.call("view") # One original request; no polling admission or settlement.
+			if not inspection_host:
+				for frame in NET_STEP_BUDGET_FRAMES:
+					if observed_view.received or not inspection_live.call(): break
+					await physics_frame
+					if not inspection_live.call(): break
+				view = observed_view.view
+			if is_instance_valid(adapter) and adapter.is_connected("view_changed", view_observer):
+				adapter.disconnect("view_changed", view_observer)
+			if not inspection_live.call():
+				return {"verdict": "FAIL", "detail": "original Halda inspection owner/world/session/adapter changed", "data": view}
+			if not inspection_host and not observed_view.received:
+				return {"verdict": "FAIL", "detail": "original authenticated Halda view reply did not arrive within the existing step budget", "data": view}
+		else:
+			view = adapter.call("view")
+		var prompt: Node3D = adapter.get("_prompt")
+		if prompt == null or view.get("ready") != true:
+			return {"verdict": "FAIL", "detail": "actual Halda prompt or admitted personal board is not ready", "data": view}
+		if mode == "bounty_inspect":
+			var payload := _foundations_payload()
+			payload.bounty_view = view
+			payload.bounty_prompt = [prompt.global_position.x, prompt.global_position.y, prompt.global_position.z]
+			payload.bounty_board = [board.global_position.x, board.global_position.y, board.global_position.z]
+			return {"verdict": "PASS", "detail": "read actual personal board and saves without settling writers", "data": payload}
+		var proof: Script = preload("res://tools/net/proof_steps_f48.gd")
+		var claim_session: Node = _session()
+		var claim_scene: Node = current_scene
+		var claim_character: String = local.get("character_id")
+		var claim_namespace: String = world.get("reward_delivery_namespace")
+		var claim_world_id: String = world.get("world_id")
+		var claim_epoch: String = claim_session.call("_altar_current_epoch")
+		var claim_host: bool = claim_session.call("is_host")
+		var claim_started_frame: int = Engine.get_physics_frames()
+		var panel := adapter.get_node_or_null(^"BountyBoardPanel") as CanvasLayer
+		if panel == null: return {"verdict": "FAIL", "detail": "shipping bounty panel is not mounted"}
+		var teaching: Array[Dictionary] = []
+		var claim_live: Callable = func() -> bool:
+			return is_instance_valid(game) and root.get_node_or_null(^"Game") == game and current_scene == claim_scene \
+				and is_instance_valid(claim_session) and _session() == claim_session and game.get("session") == claim_session \
+				and game.get("local") == local and game.get("world") == world and local.get("character_id") == claim_character \
+				and world.get("world_id") == claim_world_id and world.get("reward_delivery_namespace") == claim_namespace \
+				and claim_session.call("_altar_current_epoch") == claim_epoch and claim_session.call("is_host") == claim_host \
+				and is_instance_valid(composition) and claim_session.get_node_or_null(^"FoundationComposition") == composition \
+				and is_instance_valid(adapter) and composition.get_node_or_null(^"BountyInteraction") == adapter \
+				and is_instance_valid(board) and composition.get("_board") is WeakRef and composition.get("_board").get_ref() == board \
+				and is_instance_valid(prompt) and adapter.get("_prompt") == prompt \
+				and is_instance_valid(panel) and adapter.get_node_or_null(^"BountyBoardPanel") == panel
+		var instance := str(args.get("instance", ""))
+		var selected: Dictionary = {}
+		for row: Dictionary in view.get("rows", []):
+			if row.get("instance") == instance: selected = row
+		if selected.is_empty() or selected.get("kind") != "material_delivery" or selected.get("paid") == true:
+			return {"verdict": "FAIL", "detail": "original issued unclaimed material notice required"}
+		# The F16 stock can make genuine teaching due before the Halda visit.
+		# Read/continue only the actual currently owning lesson, once per its
+		# configured remaining line. Never dismiss another modal or write flags.
+		# These inputs share the caller's unchanged 6000-frame step allowance;
+		# the original 1800 post-submit settlement frames below stay unchanged.
+		var lesson: Node = preload("res://scripts/ui/input_owner.gd").current(self)
+		if lesson != null:
+			var service: Node = game.get_node_or_null(^"OnboardingLessons")
+			if lesson.get_script() != preload("res://scripts/onboarding/lesson_panel.gd") or service == null \
+				or service.get("_panel") != lesson or service.get("_identity") != claim_character or lesson.call("is_open") != true:
+				return {"verdict": "FAIL", "detail": "Halda claim has a competing input owner; no original claim attempted",
+					"data": {"input": proof._capture_input_state(self), "pending": proof._capture_pending_diagnostic(game)}}
+			var lesson_row: Dictionary = lesson.get("_row").duplicate(true)
+			var configured: Dictionary = {}
+			for candidate: Dictionary in preload("res://scripts/onboarding/lesson_rules.gd").config().get("lessons", []):
+				if candidate.get("id") == lesson_row.get("id"): configured = candidate.duplicate(true)
+			var dialogue: Variant = preload("res://scripts/data/redesign_data.gd").json(str(configured.get("dialogue_path", ""))) \
+				if not configured.is_empty() else {}
+			var conversation: Dictionary = dialogue.get("conversations", {}).get(str(configured.get("conversation", "")), {}) if dialogue is Dictionary else {}
+			configured["speaker"] = str(conversation.get("speaker", ""))
+			configured["lines"] = conversation.get("lines", [])
+			var lines: Array = configured.lines
+			var first_line: int = int(lesson.get("_line"))
+			if configured != lesson_row or lines.is_empty() or first_line < 0 or first_line >= lines.size() \
+				or lesson.get("_opening_edge") == true:
+				return {"verdict": "FAIL", "detail": "Current Halda teaching does not match its configured lesson/cursor/released input",
+					"data": {"lesson": lesson_row, "line": first_line, "input": proof._capture_input_state(self)}}
+			for line: int in range(first_line, lines.size()):
+				if not claim_live.call() or not is_instance_valid(service) or game.get_node_or_null(^"OnboardingLessons") != service \
+					or not is_instance_valid(lesson) or service.get("_panel") != lesson or service.get("_identity") != claim_character \
+					or lesson.get("_row") != lesson_row or lesson.get("_line") != line or lesson.call("is_open") != true \
+					or preload("res://scripts/ui/input_owner.gd").current(self) != lesson:
+					return {"verdict": "FAIL", "detail": "Original owner or lesson changed before ordinary Continue",
+						"data": {"teaching": teaching, "input": proof._capture_input_state(self)}}
+				teaching.append({"lesson_id": lesson_row.id, "line": line, "text": str(lesson.get("_text").get("text")),
+					"character_id": claim_character, "panel_path": str(lesson.get_path()), "physics_frame": Engine.get_physics_frames()})
+				var continued: Dictionary = await _step_press({"action": "menu_confirm", "tap_frames": 2})
+				if not claim_live.call() or not is_instance_valid(service) or game.get_node_or_null(^"OnboardingLessons") != service \
+					or not is_instance_valid(lesson) or service.get("_panel") != lesson or service.get("_identity") != claim_character \
+					or lesson.get("_row") != lesson_row or lesson.get("_line") != line + 1 or continued.get("verdict") != "PASS":
+					return {"verdict": "FAIL", "detail": "Original lesson did not consume exactly one ordinary Continue",
+						"data": {"teaching": teaching, "press": continued, "input": proof._capture_input_state(self)}}
+			# Dismissal submits the real lesson receipt. Observe its release; do
+			# not acknowledge it here or send X through a legitimate Session hold.
+			# This is only the remaining part of the existing outer 6000 allowance,
+			# reserving the unchanged 1800 settlement frames. The outer deadline
+			# continues to include every teaching/open/claim/close input as before.
+			var lesson_receipt := preload("res://scripts/onboarding/lesson_rules.gd").PREFIX + str(lesson_row.id)
+			var lesson_released := false
+			for frame in maxi(0, 6000 - 1800 - int(Engine.get_physics_frames() - claim_started_frame)):
+				if not claim_live.call() or not is_instance_valid(service) or game.get_node_or_null(^"OnboardingLessons") != service \
+					or not is_instance_valid(lesson) or service.get("_panel") != lesson or service.get("_identity") != claim_character \
+					or lesson.get("_row") != lesson_row or lesson.get("_line") != lines.size() or lesson.call("is_open") != false:
+					break
+				var holder: Node = preload("res://scripts/ui/input_owner.gd").current(self)
+				if holder != null and holder != lesson and holder != claim_session: break
+				if local.get("flags").call("has", lesson_receipt) == true and not (service.get("_pending") as Dictionary).has(lesson_receipt) \
+					and holder == null and _probe.call("input_context") == "world":
+					lesson_released = true
+					break
+				await physics_frame
+			if not lesson_released or not claim_live.call():
+				return {"verdict": "FAIL", "detail": "Original lesson receipt/input did not release within the existing Halda allowance; no claim attempted",
+					"data": {"teaching": teaching, "lesson_receipt": lesson_receipt, "input": proof._capture_input_state(self),
+						"pending": proof._capture_pending_diagnostic(game)}}
+		if not claim_live.call() or not is_instance_valid(panel) or adapter.get_node_or_null(^"BountyBoardPanel") != panel \
+			or preload("res://scripts/ui/input_owner.gd").current(self) != null or _probe.call("input_context") != "world":
+			return {"verdict": "FAIL", "detail": "Original Halda source must have ordinary world input before its one X/A attempt",
+				"data": {"teaching": teaching, "input": proof._capture_input_state(self), "pending": proof._capture_pending_diagnostic(game)}}
+		var arbiter := get_first_node_in_group(&"interaction_arbiter")
+		if arbiter == null or arbiter.call("winning_provider") != prompt:
+			return {"verdict": "FAIL", "detail": "actual Halda bounty prompt must win ordinary physical interaction",
+				"data": {"teaching": teaching, "input": proof._capture_input_state(self)}}
+		var opened := await _step_press({"action": "interact"})
+		if opened.get("verdict") != "PASS": return opened
+		for frame in 6:
+			if not claim_live.call(): break
+			await physics_frame
+		if not claim_live.call() or not is_instance_valid(panel) or adapter.get_node_or_null(^"BountyBoardPanel") != panel:
+			return {"verdict": "FAIL", "detail": "Original Halda source changed during its one physical open",
+				"data": {"teaching": teaching, "input": proof._capture_input_state(self)}}
+		if panel.get("_shown") != true or preload("res://scripts/ui/input_owner.gd").current(self) != panel:
+			return {"verdict": "FAIL", "detail": "physical X did not open one input-owning Halda panel",
+				"data": {"teaching": teaching, "input": proof._capture_input_state(self)}}
+		var button: Button = null
+		for candidate: Button in panel.get("_buttons"):
+			if candidate.get_meta("system_focus_key", "") == instance: button = candidate
+		if button == null or button.disabled:
+			return {"verdict": "FAIL", "detail": "original admitted material notice has no enabled claim control",
+				"data": {"teaching": teaching, "bounty_original": selected, "input": proof._capture_input_state(self)}}
+		var observed := {"result": {}}
+		var observer: Callable = func(result: Dictionary) -> void: observed.result = result.duplicate(true)
+		adapter.connect("action_completed", observer)
+		button.grab_focus()
+		for frame in 2:
+			if not claim_live.call(): break
+			await physics_frame
+		if not claim_live.call():
+			if is_instance_valid(adapter) and adapter.is_connected("action_completed", observer): adapter.disconnect("action_completed", observer)
+			return {"verdict": "FAIL", "detail": "Original Halda source changed before its one claim press",
+				"data": {"teaching": teaching, "input": proof._capture_input_state(self)}}
+		var pressed := await _step_press({"action": "ui_accept"})
+		if pressed.get("verdict") != "PASS" or not claim_live.call():
+			if is_instance_valid(adapter) and adapter.is_connected("action_completed", observer): adapter.disconnect("action_completed", observer)
+			if not claim_live.call():
+				return {"verdict": "FAIL", "detail": "Original Halda source changed during its one claim press",
+					"data": {"teaching": teaching, "press": pressed, "input": proof._capture_input_state(self)}}
+			return pressed
+		for frame in 1800:
+			if not claim_live.call(): break
+			var result: Dictionary = observed.result
+			if result.get("ok") == true and result.get("owner_saved") == true and result.get("durable") == true and result.get("owner_acknowledged") == true: break
+			await physics_frame
+		if is_instance_valid(adapter) and adapter.is_connected("action_completed", observer): adapter.disconnect("action_completed", observer)
+		if not claim_live.call():
+			return {"verdict": "FAIL", "detail": "Original Halda source changed during claim settlement",
+				"data": {"teaching": teaching, "bounty_claim": observed.result, "input": proof._capture_input_state(self)}}
+		var result: Dictionary = observed.result
+		var expected := "bounty:%s:%s" % [instance, local.get("character_id")]
+		var complete: bool = result.get("ok") == true and result.get("owner_saved") == true and result.get("durable") == true \
+			and result.get("owner_acknowledged") == true and result.get("receipt") == expected
+		var payload := _foundations_payload()
+		payload.bounty_claim = result
+		payload.bounty_original = selected
+		payload.bounty_teaching = teaching
+		payload.bounty_input = proof._capture_input_state(self)
+		if not complete: payload.bounty_pending = proof._capture_pending_diagnostic(game)
+		await _step_press({"action": "ui_cancel"})
+		if not claim_live.call(): return {"verdict": "FAIL", "detail": "Original Halda source changed during ordinary close", "data": payload}
+		return {"verdict": "PASS" if complete else "FAIL", "detail": "actual physical bounty claim requires original owner BOOL-save and accepted ACK", "data": payload}
 	elif mode != "inspect":
 		return {"verdict": "ERROR", "detail": "unknown F16 witness mode " + mode}
 	var payload := _foundations_payload()

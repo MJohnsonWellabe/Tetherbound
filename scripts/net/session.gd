@@ -140,6 +140,10 @@ func _owner_passive_request_matches(source_kind: String, request: Dictionary) ->
 
 func _owner_passive_commit_request(peer: int, source_kind: String, request: Dictionary, context: Dictionary) -> Dictionary:
 	match source_kind:
+		"bounty_rotation":
+			var bounty := get_node_or_null(^"FoundationComposition/BountyHost")
+			return bounty.call("commit_rotation_prepared", peer, request, context) if bounty != null \
+				else {"ok": false, "durable": false, "resolved": true, "terminal_refusal": true, "code": "bounty_source_unavailable"}
 		"tether_item":
 			for director: Node in _foundation_directors_under(_foundation_realm_roots()):
 				var host: RefCounted = director.get("_encounter_host")
@@ -585,6 +589,17 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 		if saver == null: return FOUNDATION_ACTIONS.deny("writer_unavailable")
 		saver.call("finish_fallback")
 		if saver.call("fallback_busy") == true or not _altar_envelope_matches(peer, envelope, ["op", "session_epoch", "world_namespace", "character_id", "station_key", "intent", "revision"]): return FOUNDATION_ACTIONS.deny("writer_busy")
+		# Preserve the original board request's -1 quote and actual instance.
+		# Re-entry after the saved care checkpoint remeasures this same live
+		# actor/board/day context; immutable decisions above still redeliver first.
+		if peer != local_peer_id():
+			var context: Dictionary = host_adapter.call("_context", peer)
+			if context.is_empty(): return _foundation_refusal("bounty_source_unavailable")
+			var proposal := preload("res://scripts/world/bounty_board.gd").stage(
+				_character_authority.call("state", character), int(context.expected_revision), "bounty_claim", envelope.intent, context)
+			if proposal.get("ok") != true: return _foundation_refusal(str(proposal.get("code", "claim_refused")))
+			var ready: Dictionary = _owner_passive_service().call("action_gate", peer, "foundation_request", envelope, context)
+			if ready.get("ok") != true: return ready
 		var result: Dictionary = host_adapter.call("claim", peer, envelope.intent)
 		if result.get("durable") != true: return _foundation_refusal(str(result.get("code", "claim_refused")))
 		var row: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character), {})
@@ -4953,9 +4968,9 @@ func host_ack_creature_training(peer: int, row: Dictionary) -> bool:
 	var pending: bool = _character_authority.call("creature_training_is_pending", character) == true
 	if not pending and (row.get("action") != "tether_item" or not _tether_item_original_pending(row)):
 		# A recovered saved marker is history, not permission to rewrite live HP.
-		return _character_authority.call("acknowledge_creature_training", character, row) == true
+		return _acknowledge_training_and_readmit(character, row)
 	if pending and _character_authority.call("creature_training_pending_matches", character, row) != true: return false
-	if row.get("kind") == "altar_building": return _character_authority.call("acknowledge_creature_training", character, row) == true
+	if row.get("kind") == "altar_building": return _acknowledge_training_and_readmit(character, row)
 	var bundle: Dictionary=_training_actor_baseline_proposals(peer,row)
 	if bundle.get("ok")!=true: return false
 	# Private actor commits have no publishing/reentrant callback. All proposed
@@ -4964,8 +4979,16 @@ func host_ack_creature_training(peer: int, row: Dictionary) -> bool:
 		if proposal.host.call("commit_actor_training_baseline",proposal.stage,row,bundle.admitted,
 			bundle.revision,world.reward_deliveries,world.reward_delivery_namespace,world.world_id)!=true: return false
 	if not _install_host_tether_tonic(peer, row): return false
-	if _character_authority.call("acknowledge_creature_training", character, row) != true: return false
+	if not _acknowledge_training_and_readmit(character, row): return false
 	return _finalize_tether_item_row(row) if row.get("action") == "tether_item" else true
+
+
+func _acknowledge_training_and_readmit(character: String, row: Dictionary) -> bool:
+	if _character_authority.call("acknowledge_creature_training", character, row) != true: return false
+	# A pending bounty/training row may have held this character's first
+	# rejoin declaration. Only its actual accepted owner ACK releases it.
+	if _owner_passive != null: _owner_passive.call("retry_deferred", character)
+	return true
 
 
 func _tether_item_original_pending(row: Dictionary) -> bool:
