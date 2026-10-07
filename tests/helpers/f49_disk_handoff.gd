@@ -8,6 +8,7 @@ const DOCUMENT := preload("res://scripts/save/save_document.gd")
 const HOME := preload("res://scripts/story/regional_homecoming.gd")
 const COMMITS := preload("res://tests/helpers/four_biome_checkpoints.gd")
 const SPAWNS := preload("res://scripts/combat/spawn_tables.gd")
+const STATE_DIFF := preload("res://scripts/net/owner_passive_sync.gd")
 const BOUNDARIES := ["meadows_settled", "tidewake_settled", "cloudreach_settled", "stormwood_settled", "completed_world"]
 const REALMS := ["meadows", "water", "cloudreach", "stormwood", "meadows"]
 const MEADOWS_PIECES := ["opening_team", "camp_tournament", "bridge", "warrens", "relay", "hall"]
@@ -524,7 +525,25 @@ func reload_boundary(label: String, travel: RefCounted, completed: bool = false)
 	for frame in 7200:
 		await tree.process_frame
 		if tree.current_scene != title and travel._ready_world(str(receipt.realm)):
-			if _state() != receipt.state: return _fail("F49 party/rewards/ending changed when loading actual disk bytes")
+			var observed := _state()
+			if observed != receipt.state:
+				var paths: Array = STATE_DIFF._differing_paths("", receipt.state, observed, 0, [])
+				if paths.is_empty(): paths.append("") # Retain exact values if only Variant types differ.
+				var differences: Array = []
+				for path: String in paths:
+					var pair: Array = [receipt.state, observed]
+					for side: int in 2:
+						for key: String in path.replace("[", "/").replace("]", "").split("/", false):
+							if pair[side] is Dictionary: pair[side] = pair[side].get(key)
+							elif pair[side] is Array and key.is_valid_int() and int(key) >= 0 and int(key) < pair[side].size():
+								pair[side] = pair[side][int(key)]
+							else: pair[side] = null
+					differences.append({"path": path, "expected": pair[0], "actual": pair[1],
+						"expected_type": typeof(pair[0]), "actual_type": typeof(pair[1])})
+				# One failure-only record; the production codec preserves exact floats.
+				print("F49 LOAD STATE MISMATCH " + DOCUMENT.stringify({"boundary": label, "frame": frame,
+					"differences": differences, "path_limit": 16}))
+				return _fail("F49 party/rewards/ending changed when loading actual disk bytes")
 			if _hash_tree(source) != receipt.files_sha256: return _fail("F49 reload modified its immutable input")
 			return await travel.walk_continuation() if completed else true
 	return _fail("F49 completed-world production Load did not become ready")
