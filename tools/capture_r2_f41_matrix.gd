@@ -129,6 +129,9 @@ func _capture(frame_id: String, description: String, full_size: bool, extra: Dic
 		sources[path] = FileAccess.get_file_as_string("res://data/config/%s.json" % path).sha256_text()
 	await super._capture(frame_id, description, full_size, extra.merged({"regional_config_sha256": sources,
 		"candidate_preview": _candidate_preview}, true))
+	# Preserve exact per-frame metadata when a hosted timeout stops a quarter.
+	# A progress receipt is always partial and never upgrades a stopped run.
+	_write_receipt(false)
 
 
 func _done() -> void:
@@ -137,6 +140,15 @@ func _done() -> void:
 	var expected := full_expected if _segment.is_empty() else FULL_STAND_COUNT * 4 * PHASES.size()
 	if _frames.size() != expected:
 		_failures.append("F41 matrix captured %d/%d required native frames" % [_frames.size(), expected])
+	_write_receipt(_failures.is_empty() and _frames.size() == expected)
+	for failure: String in _failures:
+		push_error(failure)
+	quit(0 if _failures.is_empty() else 1)
+
+
+func _write_receipt(complete: bool) -> void:
+	var full_expected := FULL_STAND_COUNT * 4 * PHASES.size() * 2 * 2
+	var expected := full_expected if _segment.is_empty() else FULL_STAND_COUNT * 4 * PHASES.size()
 	var file := FileAccess.open("%s/frames_%s.json" % [_output_dir, _label], FileAccess.WRITE)
 	if file == null:
 		_failures.append("F41 receipt could not be opened")
@@ -144,13 +156,11 @@ func _done() -> void:
 		file.store_string(JSON.stringify({"graphics_capture": _graphics_capture, "candidate_preview": _candidate_preview,
 			"frames": _frames, "planned_frames": expected, "failures": _failures,
 			"segment": _segment, "required_segments": SEGMENTS, "full_matrix_planned_frames": full_expected,
-			"full_matrix_complete": _segment.is_empty() and _failures.is_empty(),
-			"complete": _failures.is_empty(), "scope": "Staged native visual matrix. All four Surge phases before/after release; day/night pins verify fixed purple grading. Four production-camera headings per stand. No earned progression, audio, performance or Ally claim."}, "\t") + "\n")
+			"full_matrix_complete": complete and _segment.is_empty() and _failures.is_empty() and _frames.size() == full_expected,
+			"complete": complete and _failures.is_empty() and _frames.size() == expected,
+			"scope": "Staged native visual matrix. All four Surge phases before/after release; day/night pins verify fixed purple grading. Four production-camera headings per stand. Progress receipts are incomplete until all required frames pass. No earned progression, audio, performance or Ally claim."}, "\t") + "\n")
 		file.flush()
 		var error := file.get_error()
 		file.close()
 		if error != OK:
 			_failures.append("F41 receipt flush failed")
-	for failure: String in _failures:
-		push_error(failure)
-	quit(0 if _failures.is_empty() else 1)

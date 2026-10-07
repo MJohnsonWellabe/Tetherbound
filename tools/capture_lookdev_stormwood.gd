@@ -24,7 +24,7 @@ func _run() -> void:
 
 
 func _capture(frame_id: String, description: String, full_size: bool, extra: Dictionary = {}) -> void:
-	await super._capture(frame_id, description, full_size, extra.merged({"graphics_capture": _graphics_capture}, true))
+	await super._capture(frame_id, description, full_size, extra.merged({"graphics_capture": _graphics_capture, "hud": true}, true))
 	if not _frames.is_empty() and _frames.back().get("size", []) != _graphics_capture.get("resolution", []):
 		_failures.append("Stormwood look-dev frame does not match its declared native preset raster")
 

@@ -355,6 +355,17 @@ func _capture(frame_id: String, description: String, full_size: bool, extra: Dic
 	var image := await _grab()
 	var width := FRAME_W_FULL if full_size else STRIP_W
 	var height := FRAME_H_FULL if full_size else STRIP_H
+	var graphics: Dictionary = extra.get("graphics_capture", {})
+	if not graphics.is_empty():
+		var raster: Array = graphics.get("resolution", [])
+		if raster.size() != 2 or image == null or image.get_width() != int(raster[0]) \
+				or image.get_height() != int(raster[1]):
+			_failures.append("%s: viewport differs from the declared native preset raster" % frame_id)
+			return
+		# Quality proofs retain native pixels; legacy diagnostic strips keep
+		# their existing dimensions. Never downscale a 1080p named-preset cut.
+		width = int(raster[0])
+		height = int(raster[1])
 	if not _save(image, "%s/%s.jpg" % [_output_dir, frame_id], width, height):
 		return
 	var record := {
