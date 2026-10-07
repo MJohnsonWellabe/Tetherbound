@@ -59,5 +59,18 @@
     "rerun_failed": 0,
     "rerun_log_sha256": "f016072ef65a085321a006902f0718a54612beff308eeda1e52fd57c65a4f981",
     "scope": "Retain the other111 passing unchanged test files; correction mirrors two historical visual tuning lines in an existing frozen fixture, retaining strict comparator and identity fields."
+  },
+  "low_ui_followup": {
+    "source_commit": "f4aa1ecbdeaea553bef201ca96601d4f31d88a8c",
+    "run_id": "37640198990",
+    "artifact_id": "11492365837",
+    "proof": "tests/run_tests.gd --only=13 affected UI/HUD/preset/input files",
+    "tests": 243,
+    "assertions": 4107,
+    "failed": 0,
+    "exit_code": 0,
+    "elapsed_seconds": 9,
+    "log_sha256": "ab1c9628c95b502f59c2f9aa304bb9a9bd4d55191a2cc0c74be73d8c84f66d32",
+    "scope": "Settings presentation, HUD idle opacity, Save/Build/Players prompt sizing, F17 Low raster preflight; actual visual and final review gates remain open"
   }
 }
