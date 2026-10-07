@@ -67,3 +67,8 @@ e68cd457c5781683afe5a984d54e013ec9b6bb7c — f25_medium_review APPROVE: known-li
 
 F23#2 bounded host target-utility contact source review — f25_arrival_review APPROVE:
 Zero-base-power utility exits before RNG/minimum damage/poise; target consumer success required. Utility-only local/peer receipt suppresses hit feedback/numbers/flinch and retains authored effect contact. Shared runtime encounter binding checked; damaging Snare keeps HP-first consumer order. Frozen Director field/source points, peer status sync and actual zero-damage original publication still require integration/runtime. No shipping flag flip or criterion claim.
+
+F33#2 admitted named-solo source adapter — f25_medium_review APPROVE:
+Authenticates mounted Session/world/character/epoch/prepared writer lifetimes; exact authored send-out UID/round/generation/owned deployment retained privately. Entry and per-round refresh reuse existing ordinary actor binding, BOOL/ACK retries, terminal round/completion and close/replay fences. _is_host/canonical-wild/catch gates unchanged. Existing utility host guards are outside this review. No engine/parser/runtime or earned-load C2 proof; F23/F35/F24 prerequisites and full C2 policy/gear matrix remain open.
+
+Hosted37641089339 checkoutabaf61ef63fadf3b15744f70468a9e09be64077f passed74 existing selected files:609tests/10525assertions/0failed, live335checks/25launches/25impacts/0errors. Original62 selectors passing on6da are superseded for changed VFX/wild paths. Deliberate corrupt JSON and off-tree unit fixture diagnostics remain in raw run.log; no live smoke SCRIPT ERROR. Focused fixture excludes campaign/co-op/device/full visual acceptance. Artifact11492806963 retains native PNGs, accepted-action.json and logs; raw files uncommitted.

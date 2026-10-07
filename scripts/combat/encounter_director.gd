@@ -289,6 +289,9 @@ var _shared_telegraph_until_ms: int = 0
 ## authority engines survive the local host leaving or binding another fight.
 var _shared_host_fights: Dictionary = {}
 var _ordinary_combat_reward_owners: Dictionary = {}
+## Private, transient admission of an offline ordinary named fight. Never a
+## network-host capability or a saved/guest-supplied combat scope.
+var _local_named_admissions: Dictionary = {}
 var _ordinary_combat_rounds: Dictionary = {}
 var _ordinary_combat_round_exit: Dictionary = {}
 var _ordinary_actor_vitals_proposals: Dictionary = {}
@@ -2393,7 +2396,8 @@ func _on_net_session_ended(_reason: Variant = null) -> void:
 ## cached, for `_is_host()`'s reason -- and it goes through `_is_host()` rather
 ## than `multiplayer.is_server()`, which is TRUE with no session at all.
 func is_encounter_host() -> bool:
-	return _is_host() or _owns_canonical_wild(_local_bound_encounter_id())
+	return _is_host() or _owns_canonical_wild(_local_bound_encounter_id()) \
+		or _owns_local_named_encounter(_local_bound_encounter_id())
 
 
 ## This process's own peer id, for the manager to compare a host decision
@@ -2413,7 +2417,7 @@ func tether_item_command_available(id: String) -> bool:
 	var commands := preload("res://scripts/combat/tether_commands.gd")
 	if id.is_empty() or id != _local_bound_encounter_id() or not commands.enabled() \
 		or not commands.enabled("network_enabled") or not uses_saved_actor_vitals(id): return false
-	var host := _is_host() or _owns_canonical_wild(id)
+	var host := _is_host() or _owns_canonical_wild(id) or _owns_local_named_encounter(id)
 	var record: Dictionary = _encounter_host.call("record", id) if host and _encounter_host != null else _encounter
 	var deployment := tether_command_deployment()
 	var participant: Dictionary = record.get("participants", {}).get(_local_peer_id(), {})
@@ -2530,7 +2534,8 @@ func submit_encounter_intent(intent: Dictionary) -> Dictionary:
 		else:
 			_encounter_action += 1
 			outbound["action"] = _encounter_action
-	if _is_host() or _owns_canonical_wild(str(outbound.get("encounter_id", ""))):
+	if _is_host() or _owns_canonical_wild(str(outbound.get("encounter_id", ""))) \
+		or _owns_local_named_encounter(str(outbound.get("encounter_id", ""))):
 		return _host_commit_encounter(outbound, _local_peer_id())
 	if not _can_encounter_rpc():
 		return _encounter_pending(outbound, false, "You are not connected to this world.")
@@ -3279,7 +3284,7 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 	var engine: Node = runtime if runtime != null else _manager
 	var wild: Node3D = runtime.call("body") as Node3D if runtime != null else _engaged_with
 	var striker := deployed_body_for(peer_id)
-	if not (_is_host() or _owns_canonical_wild(encounter_id)) or not is_instance_valid(engine) or not is_instance_valid(wild) \
+	if not (_is_host() or _owns_canonical_wild(encounter_id) or _owns_local_named_encounter(encounter_id)) or not is_instance_valid(engine) or not is_instance_valid(wild) \
 		or not is_instance_valid(striker) or str(record.get("phase", "")) != "active" \
 		or not (_encounter_host.call("participants_of", encounter_id) as Array).has(peer_id): return {}
 	if not _strike_actor_binding_matches(encounter_id, peer_id, striker, launch.get("attacker_binding", {})): return {}
@@ -4034,7 +4039,7 @@ func _f22_enemy_connects(encounter_id: String, profile: Dictionary, origin: Vect
 
 ## Deliver a blow the host rolled to the peer whose creature took it.
 func host_enemy_target_current(encounter_id: String, peer_id: int, target_uid: String) -> bool:
-	return (_is_host() or _owns_canonical_wild(encounter_id)) \
+	return (_is_host() or _owns_canonical_wild(encounter_id) or _owns_local_named_encounter(encounter_id)) \
 		and str(_encounter_host.call("phase", encounter_id)) == "active" \
 		and _guest_master_identity_valid(encounter_id, peer_id) \
 		and (_encounter_host.call("participants_of", encounter_id) as Array).has(peer_id) \
@@ -4070,7 +4075,7 @@ func host_deliver_enemy_hit(encounter_id: String, peer_id: int, payload: Diction
 
 func ordinary_actor_vitals_pending(id: String) -> bool:
 	if not uses_saved_actor_vitals(id): return false
-	if not (_is_host() or _owns_canonical_wild(id)):
+	if not (_is_host() or _owns_canonical_wild(id) or _owns_local_named_encounter(id)):
 		return _encounter.get("ordinary_actor_vitals_pending") == true
 	return _host_actor_settlement_pending(id)
 
@@ -4116,7 +4121,7 @@ func _ordinary_bind_deployed_peer(peer: int) -> void:
 
 
 func _stage_ordinary_enemy_hit(id: String, peer: int, payload: Dictionary) -> void:
-	if not (_is_host() or _owns_canonical_wild(id)) or ordinary_actor_vitals_pending(id): return
+	if not (_is_host() or _owns_canonical_wild(id) or _owns_local_named_encounter(id)) or ordinary_actor_vitals_pending(id): return
 	var body: Node3D = deployed_body_for(peer)
 	var binding: Dictionary = _ordinary_actor_binding(id, peer, body)
 	if binding.is_empty(): return
@@ -4158,7 +4163,7 @@ func finalize_saved_tether_item(row: Dictionary) -> bool:
 	var id: String = str(row.get("intent", {}).get("request", {}).get("encounter_id", ""))
 	for original: Dictionary in _encounter_host.call("pending_tether_items", id):
 		if original.get("intent") != row.get("intent") or original.get("context") != row.get("host_context"): continue
-		if not (_is_host() or _owns_canonical_wild(id)) or not uses_saved_actor_vitals(id): return false
+		if not (_is_host() or _owns_canonical_wild(id) or _owns_local_named_encounter(id)) or not uses_saved_actor_vitals(id): return false
 		var finalized: Dictionary = _encounter_host.call("finalize_saved_tether_item", original, row,
 			world.reward_deliveries, world.reward_delivery_namespace, world.world_id)
 		if finalized.get("ok") != true: return false
@@ -4179,7 +4184,7 @@ func finalize_saved_tether_item(row: Dictionary) -> bool:
 func _retry_tether_items() -> void:
 	if _session == null or _encounter_host == null: return
 	for id: String in _encounter_host.get("encounters"):
-		if not (_is_host() or _owns_canonical_wild(id)): continue
+		if not (_is_host() or _owns_canonical_wild(id) or _owns_local_named_encounter(id)): continue
 		for original: Dictionary in _encounter_host.call("pending_tether_items", id):
 			_session.call("_tether_item_commit_original", self, original)
 
@@ -4188,7 +4193,8 @@ func _retry_ordinary_actor_vitals() -> void:
 	if _session == null: return
 	for original: Dictionary in _ordinary_actor_vitals_proposals.values():
 		if original.get("presented") == true: continue
-		if not (_is_host() or _owns_canonical_wild(str(original.encounter_id))): continue
+		if not (_is_host() or _owns_canonical_wild(str(original.encounter_id)) \
+			or _owns_local_named_encounter(str(original.encounter_id))): continue
 		# The disclosed harness source retries its own original typed heal.
 		# It remains in this map's pending fence even if its provider is lost.
 		if original.has("fixture_provider"): continue
@@ -4346,7 +4352,8 @@ func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0,
 
 ## §5 step 3's history, taken on the host's own clock from the host's own body.
 func _tick_encounter(delta: float) -> void:
-	if not _is_host() and not _has_canonical_wild_runtime():
+	if not _is_host() and not _has_canonical_wild_runtime() \
+		and not _owns_local_named_encounter(_local_bound_encounter_id()):
 		return
 	_prune_host_defence()
 	var hz := maxf(1.0, float(ENCOUNTER_HOST_SCRIPT.config().get(
@@ -4664,10 +4671,110 @@ func uses_saved_actor_vitals(id: String) -> bool:
 	return uses_durable_trainer_rewards(id) or uses_wild_actor_vitals(id)
 
 
+## Same mounted Session and prepared writers as ordinary co-op, with no fake
+## host mode. This capability expires on world/character/session replacement.
+func _local_named_authority_context() -> Dictionary:
+	if _session == null or not _session.has_method("is_active") or _session.call("is_active") == true \
+		or not _session.has_method("is_host") or _session.call("is_host") != true \
+		or not _session.has_method("_ordinary_combat_director_live") \
+		or _session.call("_ordinary_combat_director_live", self) != true: return {}
+	var game: Node = _session.call("_game")
+	if game == null or game != get_node_or_null(^"/root/Game") or game.get("session") != _session \
+		or not game.get("world") is RefCounted or not game.get("local") is RefCounted: return {}
+	var world: RefCounted = game.get("world")
+	var local: RefCounted = game.get("local")
+	var saver: RefCounted = game.get("save_system")
+	var writer: Node = _session.get_node_or_null(^"LedgerRpc")
+	if saver == null or not saver.has_method("save_world_prepared") \
+		or not saver.has_method("save_character_prepared") or writer == null \
+		or not writer.has_method("journal_creature_training_prepared") \
+		or not _session.has_method("_altar_current_epoch") \
+		or not _session.has_method("_authority_character") \
+		or not _session.has_method("admitted_character_state"): return {}
+	var context := {"world_id": world.get("world_id"), "world_namespace": world.get("reward_delivery_namespace"),
+		"session_id": _session.call("_altar_current_epoch"), "character_id": local.get("character_id")}
+	for value: Variant in context.values():
+		if not preload("res://scripts/creatures/essence.gd")._opaque_id(value): return {}
+	var peer := _local_peer_id()
+	if peer != 1 or _session.call("_authority_character", peer) != context.character_id: return {}
+	context["peer_id"] = peer
+	context["session_instance_id"] = _session.get_instance_id()
+	context["world_instance_id"] = world.get_instance_id()
+	context["owner_instance_id"] = local.get_instance_id()
+	context["save_instance_id"] = saver.get_instance_id()
+	context["writer_instance_id"] = writer.get_instance_id()
+	return context
+
+
+## Called before Manager.begin. Only the real ordinary trainer send-out may
+## request local admission; no enemy/card supplied by an intent is accepted.
+func _local_named_start_state(wild: Node3D) -> Dictionary:
+	var disabled := {"enabled": false, "ready": false}
+	if _is_host() or _is_multi_peer() or _trainer_spec.has("master") or _trainer_spec.has("rematch") \
+		or MATH.config().get("move_commit", {}).get("runtime_enabled") != true: return disabled
+	# A client's legacy local fight is not authority over a host's world.
+	if _session != null and _session.has_method("is_host") and _session.call("is_host") != true: return disabled
+	var refused := {"enabled": true, "ready": false}
+	var context := _local_named_authority_context()
+	var trainer := str(_trainer_spec.get("id", ""))
+	if context.is_empty() or TRAINERS.trainer(trainer).is_empty() or _trainer_battle_sent < 1 \
+		or not is_instance_valid(wild) or wild != _trainer_body or wild.get("trainer_owned") != true \
+		or not wild.get("instance") is RefCounted or not is_instance_valid(_ally_body) or _ally == null: return refused
+	var admitted: Dictionary = _session.call("admitted_character_state", int(context.peer_id))
+	var uid := str(_ally.get("uid"))
+	var deployment: Dictionary = _deployment_identity.get(int(context.peer_id), {})
+	if admitted.get("character_id") != context.character_id or not admitted.get("party") is Array \
+		or admitted.party.is_empty() or admitted.party.size() > 5 \
+		or deployment.get("character_id") != context.character_id or deployment.get("creature_uid") != uid \
+		or int(deployment.get("generation", 0)) < 1 or deployed_body_for(int(context.peer_id)) != _ally_body: return refused
+	var matches := 0
+	for owned: Variant in admitted.party:
+		if owned is Dictionary and owned.get("uid") == uid and owned.get("fainted") == false:
+			matches += 1
+	if matches != 1: return refused
+	return {"enabled": true, "ready": true, "context": context, "trainer_id": trainer,
+		"round": _trainer_battle_sent, "body_generation": _trainer_sent,
+		"enemy_uid": str(wild.get("instance").get("uid")), "creature_uid": uid}
+
+
+## Retain the authenticated entry scope privately before installing the normal
+## reward owner. Every actor still passes _ordinary_actor_binding on use/switch.
+func _bind_local_named_admission(id: String, start: Dictionary) -> bool:
+	if start.get("ready") != true or start != _local_named_start_state(_trainer_body) \
+		or _encounter_host == null or start.get("trainer_id") != _trainer_spec.get("id"): return false
+	_local_named_admissions[id] = start.duplicate(true)
+	if not _owns_local_named_encounter(id):
+		_local_named_admissions.erase(id)
+		return false
+	return true
+
+
+func _owns_local_named_encounter(id: String) -> bool:
+	var admitted: Dictionary = _local_named_admissions.get(id, {})
+	if admitted.is_empty() or _encounter_host == null \
+		or admitted.get("context") != _local_named_authority_context(): return false
+	var rec: Dictionary = _encounter_host.call("record", id)
+	var opponent: Dictionary = rec.get("opponent", {})
+	if rec.get("encounter_id") != id or rec.get("kind") not in ["trainer", "boss"] \
+		or rec.get("phase") not in ["active", "done"] or rec.get("realm") != _encounter_realm() \
+		or opponent.get("owner_npc") != admitted.trainer_id or opponent.get("round") != admitted.round \
+		or opponent.get("body_generation") != admitted.body_generation \
+		or opponent.get("card", {}).get("uid") != admitted.enemy_uid: return false
+	# Empty participants are lawful during the already-settled send-out gap;
+	# a foreign participant can never turn this private scope into host authority.
+	for peer: Variant in rec.get("participants", {}):
+		if peer != admitted.context.peer_id \
+			or rec.participants[peer].get("character_id") != admitted.context.character_id: return false
+	for character: Variant in rec.get("retained_actor_participants", {}):
+		if character != admitted.context.character_id: return false
+	return true
+
+
 func uses_durable_trainer_rewards(id: String) -> bool:
 	if id.is_empty() or _session == null: return false
-	var record: Dictionary = _encounter_host.call("record", id) if _is_host() and _encounter_host != null else _encounter
-	var scope_value: Variant = _ordinary_combat_reward_owners.get(id) if _is_host() else record.get("ordinary_combat_reward_owner")
+	var owns := _is_host() or _owns_local_named_encounter(id)
+	var record: Dictionary = _encounter_host.call("record", id) if owns and _encounter_host != null else _encounter
+	var scope_value: Variant = _ordinary_combat_reward_owners.get(id) if owns else record.get("ordinary_combat_reward_owner")
 	if not preload("res://scripts/net/combat_round_reward.gd").scope_valid(scope_value) \
 		or record.get("encounter_id") != id or record.get("kind") not in ["trainer", "boss"]: return false
 	var scope: Dictionary = scope_value
@@ -4699,7 +4806,7 @@ func _install_ordinary_combat_reward_owner(id: String) -> bool:
 ## Freeze the real host terminal record before manager disengage removes its
 ## participants. Session retains the canonical duty before any journal retry.
 func _capture_ordinary_combat_round(id: String, enemy: RefCounted) -> void:
-	if not uses_durable_trainer_rewards(id) or not _is_host(): return
+	if not uses_durable_trainer_rewards(id) or not (_is_host() or _owns_local_named_encounter(id)): return
 	var record: Dictionary = _encounter_host.call("record", id)
 	var round_number: int = int(record.get("opponent", {}).get("round", 0))
 	var previous: Dictionary = _ordinary_combat_rounds.get(id, {})
@@ -4712,7 +4819,8 @@ func _capture_ordinary_combat_round(id: String, enemy: RefCounted) -> void:
 
 func _resolve_ordinary_combat_round(id: String) -> bool:
 	var retained: Dictionary = _ordinary_combat_rounds.get(id, {})
-	if retained.is_empty() or not uses_durable_trainer_rewards(id) or not _is_host(): return false
+	if retained.is_empty() or not uses_durable_trainer_rewards(id) \
+		or not (_is_host() or _owns_local_named_encounter(id)): return false
 	if retained.get("resolved") == true: return true
 	if ordinary_actor_vitals_pending(id): return false
 	if not retained.has("settled_record"):
@@ -4729,7 +4837,7 @@ func _resolve_ordinary_combat_round(id: String) -> bool:
 
 
 func ordinary_combat_vitals_ready(id: String) -> bool:
-	if not _is_host() or _session == null or not _session.has_method("ordinary_actor_vitals_commit") \
+	if not (_is_host() or _owns_local_named_encounter(id)) or _session == null or not _session.has_method("ordinary_actor_vitals_commit") \
 		or not _session.has_method("host_ack_creature_vitals") or _encounter_host == null \
 		or _trainer_spec.has("master") or _trainer_spec.has("rematch"): return false
 	var rec: Dictionary = _encounter_host.call("record", id)
@@ -4743,7 +4851,7 @@ func ordinary_combat_vitals_ready(id: String) -> bool:
 
 func _resolve_ordinary_combat_completion(id: String) -> bool:
 	var retained: Dictionary = _ordinary_combat_rounds.get(id, {})
-	if retained.get("resolved") != true or not _is_host(): return false
+	if retained.get("resolved") != true or not (_is_host() or _owns_local_named_encounter(id)): return false
 	if retained.get("completion_resolved") == true: return true
 	var result: Variant = _session.call("foundation_combat_round_resolution", self, id,
 		int(retained.round), retained.enemy.duplicate(true), str(retained.outcome), "completion")
@@ -4756,7 +4864,7 @@ func _resolve_ordinary_combat_completion(id: String) -> bool:
 ## Keep the original enemy/body/source alive until every owner saved its row.
 func ordinary_combat_round_release_ready(id: String) -> bool:
 	if not uses_durable_trainer_rewards(id): return true
-	if _is_host():
+	if _is_host() or _owns_local_named_encounter(id):
 		if not _resolve_ordinary_combat_round(id): return false
 		return not _trainer_queue.is_empty() or _resolve_ordinary_combat_completion(id)
 	return _encounter.get("ordinary_combat_round_saved") == _encounter.get("opponent", {}).get("round") \
@@ -6556,6 +6664,10 @@ func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
 	var canonical := _canonical_wild_start_state(wild) if not opponent_owned else {}
 	if bool(canonical.get("enabled", false)) and not bool(canonical.get("ready", false)):
 		return
+	var local_named := _local_named_start_state(wild) if opponent_owned else {}
+	if local_named.get("enabled") == true and local_named.get("ready") != true:
+		_tournament_refusal("This fight is waiting for your saved creature record. Try again after saving.")
+		return
 	var shared_host_wild := not opponent_owned and ((_is_multi_peer() and _is_host()) \
 		or bool(canonical.get("ready", false)))
 	wild.set_meta(&"canonical_wild_runtime", bool(canonical.get("ready", false)))
@@ -6566,7 +6678,7 @@ func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
 		return
 	_engaged_with = wild
 	_set_exploration_active(false)
-	_open_encounter_if_networked(wild, opponent_owned)
+	_open_encounter_if_networked(wild, opponent_owned, local_named)
 	# D112 / §10, and the ORDER is the fix: the record has to exist before the
 	# scaler can read a participant count off it. Trainer-owned opponents only,
 	# which is the scope lane 4.D shipped -- see `_scale_opponent_for_the_session`.
@@ -6589,11 +6701,13 @@ func _start_fight(wild: Node3D, opponent_owned: bool = false) -> void:
 ## actually do. When wild replication lands, minting from a client's `engage`
 ## becomes one more branch here.
 ##
-## Solo is not merely unaffected: `_is_multi_peer()` is false, so not one line
-## below runs.
-func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
+## Offline ordinary named fights enter only with the preflight's authenticated
+## local admission. Network authority and the canonical wild gate stay distinct.
+func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool, local_named: Dictionary = {}) -> void:
 	var canonical := _canonical_wild_start_state(wild) if not opponent_owned else {}
-	if not _trainer_spec.has("master") and not _trainer_spec.has("rematch") and not bool(canonical.get("ready", false)) and (not _is_multi_peer() or not _is_host()):
+	if not _trainer_spec.has("master") and not _trainer_spec.has("rematch") \
+		and not bool(canonical.get("ready", false)) and local_named.get("ready") != true \
+		and (not _is_multi_peer() or not _is_host()):
 		return
 	_ensure_encounter_arbiters()
 	var instance: Variant = wild.get("instance")
@@ -6654,6 +6768,9 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 			and bool(_encounter_host.call("set_opponent", live_id, opponent)):
 		_encounter = _encounter_host.call("record", live_id)
 		_encounter_sample_countdown = 0
+		if local_named.get("ready") == true and not _bind_local_named_admission(live_id, local_named):
+			_manager.call("_begin_resolve", "fled")
+			return
 		if not _install_ordinary_combat_reward_owner(live_id):
 			_manager.call("_begin_resolve", "fled")
 			return
@@ -6668,6 +6785,9 @@ func _open_encounter_if_networked(wild: Node3D, opponent_owned: bool) -> void:
 		opponent,
 		str(_ally.get("uid")) if _ally != null else "", character_id)
 	_encounter = rec
+	if local_named.get("ready") == true and not _bind_local_named_admission(str(rec["encounter_id"]), local_named):
+		_manager.call("_begin_resolve", "fled")
+		return
 	if opponent_owned and not _install_ordinary_combat_reward_owner(str(rec["encounter_id"])):
 		_manager.call("_begin_resolve", "fled")
 		return
@@ -8075,7 +8195,7 @@ func _on_trainer_round_ended(outcome: String) -> void:
 		_ordinary_combat_round_exit = {"encounter_id": ordinary_id, "outcome": outcome}
 		return
 	if outcome == "won" and _trainer_queue.is_empty() and uses_durable_trainer_rewards(ordinary_id) \
-		and _is_host() and not _resolve_ordinary_combat_completion(ordinary_id):
+		and (_is_host() or _owns_local_named_encounter(ordinary_id)) and not _resolve_ordinary_combat_completion(ordinary_id):
 		_ordinary_combat_round_exit = {"encounter_id": ordinary_id, "outcome": outcome}
 		return
 	_ordinary_combat_round_exit.clear()
@@ -8137,11 +8257,12 @@ func _tick_trainer_battle(delta: float) -> void:
 func _finish_trainer_battle(won: bool) -> void:
 	var spec := _trainer_spec
 	var ordinary_id: String = str(_encounter.get("encounter_id", ""))
-	if won and uses_durable_trainer_rewards(ordinary_id) and _is_host() \
+	if won and uses_durable_trainer_rewards(ordinary_id) and (_is_host() or _owns_local_named_encounter(ordinary_id)) \
 		and not _resolve_ordinary_combat_completion(ordinary_id):
 		_boss_pending_win = true
 		return
-	if won and not spec.has("master") and not spec.has("rematch") and _session != null and _is_host():
+	if won and not spec.has("master") and not spec.has("rematch") and _session != null \
+		and (_is_host() or _owns_local_named_encounter(ordinary_id)):
 		var handoff: Dictionary = _session.call("foundation_boss_outcome", self, spec.duplicate(true), _encounter.duplicate(true))
 		if handoff.get("durable") != true:
 			_boss_pending_win = true
@@ -8940,6 +9061,7 @@ func _close_trainer_encounter() -> void:
 	var id := str(_encounter.get("encounter_id", ""))
 	if id.is_empty():
 		id = _tournament_host_encounter_id
+	var owns_local := _owns_local_named_encounter(id)
 	_encounter = {}
 	_trainer_battle_participants = {}
 	# D112: the battle is over and its opponent is gone, so the base it was
@@ -8951,7 +9073,7 @@ func _close_trainer_encounter() -> void:
 	_release_tournament_roster(id)
 	_tournament_host_encounter_id = ""
 	_joinable_encounters.erase(id)
-	if _is_host() and _encounter_host != null:
+	if (_is_host() or owns_local) and _encounter_host != null:
 		_encounter_host.call("close", id)
 		# `close()` makes the terminal record. Broadcast that snapshot before
 		# forgetting it, so joined peers leave their local combat presentation too.
@@ -8959,6 +9081,7 @@ func _close_trainer_encounter() -> void:
 		_encounter_host.call("forget", id)
 		if _catch_arbiter != null:
 			_catch_arbiter.call("forget", id)
+	_local_named_admissions.erase(id)
 
 
 func _clear_fallen_bodies() -> void:
