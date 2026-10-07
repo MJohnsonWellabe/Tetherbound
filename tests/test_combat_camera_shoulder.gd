@@ -75,3 +75,24 @@ func test_the_room_distance_cap_is_one_shipped_config_value_and_it_is_off() -> v
 		.get("camera", {}) as Dictionary).get("framing", {}) as Dictionary)
 	assert_true(framing.has("room_distance_cap"), "the room cap is declared in config")
 	assert_false(bool(framing.get("room_distance_cap", true)), "the shipped room cap is off")
+
+
+func test_guardian_lens_override_is_local_and_keeps_the_shared_camera_guards() -> void:
+	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
+		"res://data/config/burrow_warrens.json"))
+	var guardian: Dictionary = config.get("guardian", {})
+	var camera: Dictionary = guardian.get("combat_camera", {})
+	var manager := MANAGER.new()
+	var foe := Node3D.new()
+	manager.set("_wild", foe)
+	var ordinary: Dictionary = manager.call("_combat_camera_profile")
+	foe.set_meta("combat_camera", camera.duplicate(true))
+	var named: Dictionary = manager.call("_combat_camera_profile")
+	assert_eq(named.fov, (camera.profile as Dictionary).fov, "actual manager consumes the authored guardian lens")
+	assert_true(float(named.fov) > float(ordinary.fov), "the den lens admits more of the constrained frame")
+	for key: String in ["distance", "height", "pitch_start_deg", "body_clear", "framing", "tracking"]:
+		assert_eq(named[key], ordinary[key], "guardian lens retains %s" % key)
+	foe.remove_meta("combat_camera")
+	assert_eq(manager.call("_combat_camera_profile"), ordinary, "ordinary encounters do not inherit the guardian lens")
+	manager.free()
+	foe.free()

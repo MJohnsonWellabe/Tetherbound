@@ -7659,6 +7659,9 @@ func _spawn_population(director: Node) -> void:
 		to_global(Vector3(g_centre.x + g_offset.x, _floor_y + 0.5, g_centre.z + g_offset.z)), guardian_opts)
 	if _guardian != null:
 		_guardian_seen_alive = true
+		var guardian_camera: Variant = guardian.get("combat_camera", {})
+		if guardian_camera is Dictionary and not (guardian_camera as Dictionary).is_empty():
+			_guardian.set_meta("combat_camera", (guardian_camera as Dictionary).duplicate(true))
 		_dress_the_guardian(guardian)
 		_markers["guardian"] = _guardian.global_position
 		# THIRD-PASS-0906, JUDGE-round2.md 'guardian scale': the guardian's
