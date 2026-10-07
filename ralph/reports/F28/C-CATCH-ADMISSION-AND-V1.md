@@ -1,5 +1,9 @@
 # Lane C catch admission and V1 owner-edge evidence
 
+Latest original Kitchen run `37654302677` on `112e26764bba737e5b2a6bc34fc59e5cda7a210a`, artifact `11497898389`, passed the exact original capture ownership/receipt checks, then failed step 25's ordinary menu-close observer. B closed GameMenu; the immediate input owner was Session, and a later heartbeat returned to world. Stronger read-only audit recomputed the catch-bound Research source hash exactly and found its subsequent accepted revision 9 after capture revision 7. Catch completion guarantees durable outcome retention, not settlement of every Research duty. Attributing the sampled fence specifically to Research remains an inference because that sample does not record its individual pending branch. No production defect or justified fence/UI hunk was established. Profile, manifest, six config identities and trace flags match the earlier original diagnostic. Coordinator re-scope is requested at issue 572 comment `6042847818`; the original observer and transaction fences are preserved.
+
+The existing capture checkpoint controls ran in `37653899813`, artifact `11496814202`: **10 tests / 323 assertions / zero failures**. Independent `/root/kitchen_review`: **APPROVE** for source and verified named controls. Kitchen/Master/feast/co-op completion remains open.
+
 This is an evidence artifact, not an earned campaign or criterion completion claim.
 
 The retained Kitchen observer was restored unchanged from `c072fb3e651e42015d7ca20f558e4a3428ed1bde` in `462618437697bc15f5cd4778a7f07d03b2a128be`.
