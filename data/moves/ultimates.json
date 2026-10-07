@@ -204,6 +204,7 @@
         "accent": "#fff0c9"
       },
       "visual": {
+        "material_archetype": "stone_throw",
         "radius_m": 3.6,
         "height_m": 2.6,
         "object_scale": 0.78,
