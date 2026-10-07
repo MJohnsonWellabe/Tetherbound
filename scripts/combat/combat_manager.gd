@@ -6024,6 +6024,7 @@ func _fight_visibility_context(camera: Camera3D, cfg: Dictionary) -> Dictionary:
 		var rect := Rect2((lo-Vector2.ONE*margin)/extent, (hi-lo+Vector2.ONE*margin*2.0)/extent)
 		if rect.has_area(): rectangles.append(rect)
 	var occluders: Array = []
+	var support: Dictionary = {}
 	var overflow: bool = false
 	var geometry_valid: bool = extent.is_finite() and extent.x>0.0 and extent.y>0.0
 	var centre: Vector3 = (_ally_body.global_position+_wild.global_position)*0.5
@@ -6057,6 +6058,7 @@ func _fight_visibility_context(camera: Camera3D, cfg: Dictionary) -> Dictionary:
 			continue
 		occluders.append({"box":bounds,"pose":pose,"inverse":pose.affine_inverse(),
 			"points":FIGHT_CAMERA.box_points(bounds,pose),"body_id":candidate.get_instance_id()})
+		if candidate==_player: support = occluders[-1]
 	# Conservative whole model envelopes replace the inscribed ellipsoid and
 	# sparse head/torso rays that missed feet. These bounds are not a claim of
 	# exact skinned pixels: blind review still owns whole-silhouette quality.
@@ -6073,8 +6075,137 @@ func _fight_visibility_context(camera: Camera3D, cfg: Dictionary) -> Dictionary:
 			geometry_valid = false
 			continue
 		subjects.append({"box":bounds,"pose":pose,"inverse":pose.affine_inverse(),
-			"points":FIGHT_CAMERA.box_points(bounds,pose)})
-	return {"hud_rects":rectangles,"occluders":occluders,"subjects":subjects,
+			"points":FIGHT_CAMERA.box_points(bounds,pose),"body_id":body.get_instance_id()})
+	# The trainer is support, never a replacement anchor. Only request its
+	# visibility when its entire render envelope already lies within the
+	# fighters' world extent; a distant trainer cannot widen the encounter.
+	if not support.is_empty() and subjects.size()==2:
+		var pair_bounds: AABB = (subjects[0].pose as Transform3D) * (subjects[0].box as AABB)
+		pair_bounds = pair_bounds.merge((subjects[1].pose as Transform3D) * (subjects[1].box as AABB))
+		if not pair_bounds.encloses((support.pose as Transform3D) * (support.box as AABB)):
+			support = {}
+	else:
+		support = {}
+	# These are concrete opaque render meshes, not collision cylinders or a
+	# scene-wide bounding box. Cache the static Props inventory per encounter;
+	# transforms, visibility and material opacity are read again on each use.
+	var world: Node = (_camera_rig as Node).get_parent()
+	var props: Node = world.get_node_or_null(^"Props")
+	var cache: Dictionary = get_meta(&"fight_scenery_visibility", {})
+	var props_id: int = props.get_instance_id() if props!=null else 0
+	var props_children: int = props.get_child_count() if props!=null else 0
+	if int(cache.get("world",0))!=world.get_instance_id() \
+		or int(cache.get("foe",0))!=_wild.get_instance_id() \
+		or int(cache.get("props",0))!=props_id or int(cache.get("props_children",-1))!=props_children:
+		cache = {"world":world.get_instance_id(),"foe":_wild.get_instance_id(),
+			"props":props_id,"props_children":props_children,"prop_meshes":[],"registered":{}}
+		if props!=null: cache.prop_meshes = props.find_children("*","MeshInstance3D",true,false)
+		set_meta(&"fight_scenery_visibility",cache)
+	var opaque_mesh: Callable = func(mesh: Mesh, instance: MeshInstance3D = null) -> bool:
+		if mesh==null or mesh.get_surface_count()==0: return false
+		for surface: int in mesh.get_surface_count():
+			var material: Material = instance.get_active_material(surface) if instance!=null else mesh.surface_get_material(surface)
+			# Cutouts, transparency and shaders do not provide an opaque whole
+			# envelope. Their visibility remains outside this bounded coverage.
+			if material!=null and (not material is BaseMaterial3D \
+				or (material as BaseMaterial3D).transparency!=BaseMaterial3D.TRANSPARENCY_DISABLED): return false
+		return true
+	var scenery: Array[Dictionary] = []
+	var scenery_bounds: Callable = func(box: AABB, pose: Transform3D) -> Dictionary:
+		var determinant: float = pose.basis.determinant()
+		if not box.position.is_finite() or not box.size.is_finite() \
+			or box.size.x<=0.0 or box.size.y<=0.0 or box.size.z<=0.0 \
+			or not pose.origin.is_finite() or not pose.basis.x.is_finite() \
+			or not pose.basis.y.is_finite() or not pose.basis.z.is_finite() \
+			or not is_finite(determinant) or absf(determinant)<=0.000001: return {"valid":false}
+		var world_box: AABB = pose * box
+		var bound_centre: Vector3 = world_box.get_center()
+		var bound_radius: float = world_box.size.length()*0.5
+		var inverse: Transform3D = pose.affine_inverse()
+		var points: PackedVector3Array = FIGHT_CAMERA.box_points(box,pose)
+		if not world_box.position.is_finite() or not world_box.size.is_finite() \
+			or not world_box.end.is_finite() or world_box.size.x<=0.0 \
+			or world_box.size.y<=0.0 or world_box.size.z<=0.0 \
+			or not bound_centre.is_finite() or not is_finite(bound_radius) or bound_radius<=0.0 \
+			or not inverse.origin.is_finite() or not inverse.basis.x.is_finite() \
+			or not inverse.basis.y.is_finite() or not inverse.basis.z.is_finite(): return {"valid":false}
+		for point: Vector3 in points:
+			if not point.is_finite(): return {"valid":false}
+		# Invalid covered geometry must fail visibility; only valid geometry
+		# outside the configured discovery radius may be omitted harmlessly.
+		if bound_centre.distance_to(centre)>radius+bound_radius: return {"valid":true,"in_range":false}
+		return {"valid":true,"in_range":true,"box":box,"pose":pose,"inverse":inverse,
+			"points":points,"centre":bound_centre,"radius":bound_radius}
+	for entry: Variant in cache.prop_meshes:
+		if not is_instance_valid(entry) or not entry is MeshInstance3D: continue
+		var mesh_node: MeshInstance3D = entry as MeshInstance3D
+		if not mesh_node.is_inside_tree() or mesh_node.is_queued_for_deletion() \
+			or not mesh_node.is_visible_in_tree() or mesh_node.skin!=null or mesh_node.transparency>0.0 \
+			or not bool(opaque_mesh.call(mesh_node.mesh,mesh_node)): continue
+		var record: Dictionary = scenery_bounds.call(mesh_node.mesh.get_aabb(),mesh_node.global_transform)
+		if not bool(record.get("valid",false)):
+			geometry_valid = false
+			continue
+		if not bool(record.get("in_range",false)): continue
+		record["range_begin"] = maxf(0.0,mesh_node.visibility_range_begin-mesh_node.visibility_range_begin_margin)
+		record["range_end"] = mesh_node.visibility_range_end+mesh_node.visibility_range_end_margin if mesh_node.visibility_range_end>0.0 else 0.0
+		scenery.append(record)
+	# Vegetation already owns the spatial index and residency. Read only the
+	# nearby indexed cells, then require the current resident shape as lifetime
+	# evidence. The shape's dimensions never stand in for the rendered rock.
+	for provider: Node in get_tree().get_nodes_in_group(&"harvest_state"):
+		if not provider is Node3D or not provider.is_inside_tree() or provider.is_queued_for_deletion() \
+			or not world.is_ancestor_of(provider) or not (provider as Node3D).is_visible_in_tree() \
+			or not provider.has_method("registered_mesh"): continue
+		var batches: Variant = provider.get("_collision_batches")
+		var assets: Object = provider.get("_assets") as Object
+		var instancer: Object = provider.get("_instancer") as Object
+		var mesh_ids: Dictionary = provider.get("_mesh_ids")
+		var constants: Dictionary = (provider.get_script() as Script).get_script_constant_map()
+		var sink: float = float(constants.get("SINK",NAN))
+		var cell_size: float = float(provider.get("COLLISION_STREAM_CELL"))
+		if not batches is Array or not is_instance_valid(assets) or not is_instance_valid(instancer) or not is_finite(sink) \
+			or not is_finite(cell_size) or cell_size<=0.0: continue
+		var cell_centre := Vector2i(floori(centre.x/cell_size),floori(centre.z/cell_size))
+		var cell_reach: int = ceili(radius/cell_size)+1
+		for batch: Dictionary in batches:
+			var model_path: String = str(batch.get("model",""))
+			if not mesh_ids.has(model_path) or (constants.get("RIDGELINE_CLOVER_MODELS",[]) as Array).has(model_path): continue
+			var asset: Object = assets.call("get_mesh_asset",int(mesh_ids[model_path])) as Object
+			if not is_instance_valid(asset): continue
+			var scene: PackedScene = asset.get("scene_file") as PackedScene
+			if scene==null: continue
+			var key: String = "%d:%s" % [provider.get_instance_id(),model_path]
+			var registered: Dictionary = cache.registered.get(key,{})
+			if int(registered.get("scene",0))!=scene.get_instance_id():
+				registered = {"scene":scene.get_instance_id(),"mesh":provider.call("registered_mesh",model_path)}
+				cache.registered[key] = registered
+			var mesh: Mesh = registered.get("mesh") as Mesh
+			if not bool(opaque_mesh.call(mesh)): continue
+			var placements: Array = batch.get("placements",[])
+			var residents: Array = batch.get("resident",[])
+			var cells: Dictionary = batch.get("cells",{})
+			for dx: int in range(-cell_reach,cell_reach+1):
+				for dz: int in range(-cell_reach,cell_reach+1):
+					for index: int in (cells.get(cell_centre+Vector2i(dx,dz),PackedInt32Array()) as PackedInt32Array):
+						if index<0 or index>=placements.size() or index>=residents.size(): continue
+						if not is_instance_valid(residents[index]): continue
+						var resident: CollisionShape3D = residents[index] as CollisionShape3D
+						if not is_instance_valid(resident) or not resident.is_inside_tree() or resident.is_queued_for_deletion(): continue
+						var placement: Dictionary = placements[index]
+						var basis := Basis(Vector3.UP,float(placement.get("yaw",0.0)))
+						if placement.has("normal"):
+							basis = Basis(Quaternion(Vector3.UP,placement.normal as Vector3))*basis
+						basis = basis.scaled(Vector3.ONE*float(placement.get("scale",1.0)))
+						# Matches _build_batch's world-space submitted transform.
+						var pose := Transform3D(basis,(placement.position as Vector3)-Vector3.UP*sink)
+						var record: Dictionary = scenery_bounds.call(mesh.get_aabb(),pose)
+						if not bool(record.get("valid",false)):
+							geometry_valid = false
+							continue
+						if bool(record.get("in_range",false)): scenery.append(record)
+	return {"hud_rects":rectangles,"occluders":occluders,"subjects":subjects,"support":support,
+		"scenery":scenery,"occluder_limit":cap,
 		"overflow":overflow,"hud_available":hud!=null and hud_valid,"geometry_valid":geometry_valid,
 		"invalid_hud_paths":invalid_hud,"viewport":extent,"fov":camera.fov,"near":camera.near}
 
@@ -6088,23 +6219,83 @@ func _fight_visibility_score(transform: Transform3D, ally_rect: Rect2, foe_rect:
 	for occupied: Rect2 in context.hud_rects:
 		for subject: Rect2 in [ally_rect,foe_rect]:
 			hud_overlap += subject.intersection(occupied).get_area()
+	var aspect: float = float(context.viewport.x)/maxf(float(context.viewport.y),0.000001)
+	var sight_subjects: Array = context.subjects.duplicate()
+	var support: Dictionary = context.get("support",{})
+	var support_in_frame: bool = true
+	var support_hud_overlap: float = 0.0
+	if not support.is_empty():
+		sight_subjects.append(support)
+		var projected: Dictionary = FIGHT_CAMERA.project_points(support.points,transform,
+			float(context.fov),aspect,float(context.near))
+		support_in_frame = bool(projected.get("valid",false)) and bool(projected.get("in_frame",false))
+		if support_in_frame:
+			for occupied: Rect2 in context.hud_rects:
+				support_hud_overlap += (projected.rect as Rect2).intersection(occupied).get_area()
+	var relevant: Array = context.occluders.duplicate()
+	var scenery_overflow: bool = false
+	var scenery_count: int = 0
+	# A sightline to any subject point lies inside this conservative capsule.
+	# Reject scenery wholly outside it before the exact projected-envelope
+	# check; a radius/candidate cap must not count irrelevant distant rocks.
+	for scenery: Dictionary in context.get("scenery",[]):
+		var scenery_radius: float = float(scenery.radius)
+		var lens_distance: float = transform.origin.distance_to(scenery.centre as Vector3)
+		var range_begin: float = float(scenery.get("range_begin",0.0))
+		var range_end: float = float(scenery.get("range_end",0.0))
+		if lens_distance+scenery_radius<range_begin \
+			or (range_end>0.0 and lens_distance-scenery_radius>range_end): continue
+		var may_occlude: bool = false
+		for subject: Dictionary in sight_subjects:
+			var world_box: AABB = (subject.pose as Transform3D) * (subject.box as AABB)
+			var axis: Vector3 = world_box.get_center()-transform.origin
+			var offset: Vector3 = (scenery.centre as Vector3)-transform.origin
+			var fraction: float = clampf(offset.dot(axis)/maxf(axis.length_squared(),0.000001),0.0,1.0)
+			var combined_radius: float = world_box.size.length()*0.5+scenery_radius
+			if (offset-axis*fraction).length_squared()<=combined_radius*combined_radius:
+				may_occlude = true
+				break
+		if not may_occlude: continue
+		if relevant.size()>=int(context.get("occluder_limit",32)):
+			scenery_overflow = true
+			break
+		relevant.append(scenery)
+		scenery_count += 1
 	var hidden: int = 0
-	if not bool(context.overflow) and bool(context.geometry_valid):
-		for subject: Dictionary in context.subjects:
-			for occluder: Dictionary in context.occluders:
+	var support_hidden: bool = false
+	if not bool(context.overflow) and not scenery_overflow and bool(context.geometry_valid):
+		for subject: Dictionary in sight_subjects:
+			var foreground: Array = relevant
+			var is_support: bool = not support.is_empty() and int(subject.get("body_id",0))==int(support.body_id)
+			# The trainer can be hidden by either fighter. Their own mutual
+			# overlap remains the solver's existing two-body constraint.
+			if is_support: foreground = relevant+context.subjects
+			for occluder: Dictionary in foreground:
+				if int(subject.get("body_id",0))!=0 \
+					and int(subject.get("body_id",0))==int(occluder.get("body_id",0)): continue
 				if FIGHT_CAMERA.bounds_occlude(transform,subject,occluder,float(context.fov),
-					float(context.viewport.x)/float(context.viewport.y),float(context.near)):
-					hidden += 1
+					aspect,float(context.near)):
+					if is_support: support_hidden = true
+					else: hidden += 1
 					break
 	var hud_clear: bool = bool(context.hud_available) and hud_overlap==0.0
-	var sight_clear: bool = bool(context.geometry_valid) and not bool(context.overflow) and hidden==0
+	var sight_clear: bool = bool(context.geometry_valid) and not bool(context.overflow) and not scenery_overflow and hidden==0
+	var support_clear: bool = support.is_empty() or (bool(context.geometry_valid) \
+		and not bool(context.overflow) and not scenery_overflow \
+		and support_in_frame and support_hud_overlap==0.0 and not support_hidden)
 	var occupied_records: Array = []
 	for rect: Rect2 in context.hud_rects:
 		occupied_records.append([rect.position.x,rect.position.y,rect.size.x,rect.size.y])
-	return {"pass":hud_clear and sight_clear,"hud_clear":hud_clear,
+	return {"pass":hud_clear and sight_clear and support_clear,"hud_clear":hud_clear,
 		"hud_overlap":hud_overlap,"foreground_clear":sight_clear,
 		"hidden_head_torso_points":hidden,"occluder_overflow":bool(context.overflow),
 		"hud_rectangle_count":context.hud_rects.size(),"hud_rectangles":occupied_records,
 		"hud_available":bool(context.hud_available),"invalid_hud_paths":context.invalid_hud_paths,
 		"occluder_count":context.occluders.size(),"geometry_valid":bool(context.geometry_valid),
-		"penalty":hud_overlap+float(hidden)+(1.0 if bool(context.overflow) or not bool(context.hud_available) or not bool(context.geometry_valid) else 0.0)}
+		"scenery_candidate_count":(context.get("scenery",[]) as Array).size(),
+		"scenery_relevant_count":scenery_count,"scenery_overflow":scenery_overflow,
+		"scenery_coverage":"opaque_props_and_resident_scatter",
+		"support_requested":not support.is_empty(),"support_in_frame":support_in_frame,
+		"support_clear":support_clear,"support_hidden":support_hidden,"support_hud_overlap":support_hud_overlap,
+		"penalty":hud_overlap+support_hud_overlap+float(hidden)+(0.0 if support_clear else 1.0)
+			+(1.0 if bool(context.overflow) or scenery_overflow or not bool(context.hud_available) or not bool(context.geometry_valid) else 0.0)}

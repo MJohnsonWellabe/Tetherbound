@@ -6,3 +6,11 @@ Physical preflight is side-effect-free before HP write; ordinary Shove/Quake use
 Tag Hearten is bound to the outgoing cast receipt and pause-aware arrival tick; only validated positive outgoing child HP debit consumes it once after original chained HP/opponent/incoming binding checks. Incoming bench status is neutral. No fake credit_move_hit, second meters, mastery or save/ACK changes.
 HUD uses rebound-aware compact RB-to-face glyphs, gold ultimate fill and actual availability; existing focused smoke assertion follows the actual supported state. No new fixture, test class, harness or unit test added.
 No blocking static finding; no native engine. Actual utility path, collision, guest movement/authority, tag replay/expiry and visual proofs remain open. Shipping flags and live whitelist remain unchanged. This is not F23/F24/F42 acceptance.
+
+Production fight visibility source candidate (F21#4 / F25 full-bar blocker)
+Base:40267285699ae8a88ecee8e37ac80afe1059762b
+Reviewer:/root/f25_arrival_review (retained independent reviewer)
+Revised frozen patch SHA256:f0b10d350e95ddb37f1b80d10af1b03ef01eedcdbc75d1d43e83883cece15027
+Verdict:APPROVE, bounded source only after invalid-geometry correction
+Only Manager._fight_visibility_context/_fight_visibility_score change. Pair anchors/fit, authored creature scale, camera config/controls, collision and exploration remain unchanged. Trainer support is requested only when its whole rendered envelope already lies within the pair's existing world extent. Opaque unskinned Props inventory and registered currently resident scatter use actual render transforms/bounds; conservatively relevant scenery participates in unchanged-cap overflow failure. Invalid transformed bounds/extent/centre/radius/inverse/corners now fail geometry validity instead of being silently omitted.
+Coverage excludes terrain, shader/cutout scenery, arbitrary other world generators and aftermath exploration View07. Props inventory follows authored static topology, invalidated by world/foe/Props identity/direct-child-count; current lifetime/visibility/transform/opacity rechecked. No engine run, cost measurement, live size matrix, production capture or visual acceptance. These remain required; source review is not F21/F25 completion.
