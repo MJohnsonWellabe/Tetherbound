@@ -4900,6 +4900,12 @@ func _local_named_authority_context() -> Dictionary:
 	return context
 
 
+## Realm directors validate their own authored catalogue and mounted source.
+## Meadows retains its existing band-trainer registry membership check.
+func _local_named_trainer_source_matches() -> bool:
+	return not TRAINERS.trainer(str(_trainer_spec.get("id", ""))).is_empty()
+
+
 ## Called before Manager.begin. Only the real ordinary trainer send-out may
 ## request local admission; no enemy/card supplied by an intent is accepted.
 func _local_named_start_state(wild: Node3D) -> Dictionary:
@@ -4911,7 +4917,7 @@ func _local_named_start_state(wild: Node3D) -> Dictionary:
 	var refused := {"enabled": true, "ready": false}
 	var context := _local_named_authority_context()
 	var trainer := str(_trainer_spec.get("id", ""))
-	if context.is_empty() or TRAINERS.trainer(trainer).is_empty() or _trainer_battle_sent < 1 \
+	if context.is_empty() or not _local_named_trainer_source_matches() or _trainer_battle_sent < 1 \
 		or not is_instance_valid(wild) or wild != _trainer_body or wild.get("trainer_owned") != true \
 		or not wild.get("instance") is RefCounted or not is_instance_valid(_ally_body) or _ally == null: return refused
 	var admitted: Dictionary = _session.call("admitted_character_state", int(context.peer_id))
