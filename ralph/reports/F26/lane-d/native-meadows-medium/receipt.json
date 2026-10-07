@@ -1,0 +1,13 @@
+{
+  "criterion_scope": "F26#0 mounted Forward+ Meadows/village/Crossing Hall supplement only",
+  "source_commit": "f21fa6b6b28596818a0fccdd3f6406a6863796d4",
+  "producer": "Coordinator-owned native engine slot; Lane D only reads explicitly shared artifacts",
+  "artifact_root": "D:/CodexTemp/tetherbound-proof/native-d-f21fa6b6b2-medium",
+  "proof": "tools/capture_lookdev_route_stills.gd, meadows day, Medium, 1920x1080",
+  "result": {"exit": 0, "frames": 4, "planned": 4, "complete": true, "failures": []},
+  "adapter": "NVIDIA GeForce GTX 1060 3GB, Forward+",
+  "actual_route": "Current farmhouse street -> road48 -> Hall entrance91 -> Crossing Hall nave107, Z14. This is not the old stronghold Hall at8,7590.",
+  "fixture_disclosure": "Existing still route declares opening flags, debug travel and clock pin. Not earned progression, physical traversal, GPU performance or Ally proof.",
+  "diagnostics": "Terrain interpolation compatibility deprecation logged; process exits0. This native scene mounts and renders while the two retained hosted Forward+ attempts crash before first image. Hardware dependence is an inference, not a proven addon/engine root cause.",
+  "disposition": "Partial renderer evidence only. F26#0 all-four-biome material proof/census and independent review remain open; F26#3 bars, F26#4 timed routes and F26#5 owner Ally remain open. No renderer default change, no READY. Raw frames remain with coordinator artifact."
+}
