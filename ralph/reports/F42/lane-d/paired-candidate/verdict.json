@@ -30,9 +30,9 @@
     "Natural idle and realm-cycle images",
     "Fresh Satchel/Creatures/Quests and relevant state variants",
     "Controller/focus/scroll and motion",
-    "1280x800 and required outdoor/night/weather/combat context"
+    "Required outdoor/night/weather/combat context"
   ],
-  "fixture": "Production Meadows scene, stocked1-creature party and small satchel, no earned/save proof",
+  "fixture": "Production Meadows scene, stocked1-creature party and small satchel; original paired run had no earned/save proof. Later opt-in real Save callback is separately source-approved, runtime pending.",
   "followup_source_review": {
     "commit": "762afab7f2fe65190664f2d323daa71d5d4d45dc",
     "verdict": "APPROVE",

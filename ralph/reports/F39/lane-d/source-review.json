@@ -39,6 +39,10 @@
     {
       "commit": "879454fb8e5c4f2550223ea9156897df434edbf5",
       "scope": "Eight exact tracked ledger proof inputs; both hosted launch branches retain actual nonzero exit result and unchanged strict final gate. No assertion changed."
+    },
+    {
+      "commit": "ab724c81f459d5cb7d8414c4752681fc11ab2bc7",
+      "scope": "Clear-only production WorldLook empty-delta observation when Tidewake has no WorldWeather; rain rejected before poses, actual delta rechecked per frame. Same reviewer APPROVE; no weather injection or bad-weather credit."
     }
   ],
   "existing_candidate_consumers": "APPROVE: capture override changes allowlisted local falls/current shader uniforms only. Physical inputs and restoration flags unchanged; production candidate flags OFF.",
