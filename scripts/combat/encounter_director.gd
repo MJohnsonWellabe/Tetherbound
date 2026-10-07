@@ -1350,7 +1350,7 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 					wild.queue_free()
 					continue
 				if not member_packet.is_empty(): wild.visible = true
-			_initialize_wild_traits(wild, n == 0 and (not alpha_block.is_empty() or not once_alpha.is_empty()))
+			wild.set_meta("ordinary_trait_alpha", n == 0 and (not alpha_block.is_empty() or not once_alpha.is_empty()))
 			wild.call("configure", wild_cfg)
 			wild.set("home", wild.global_position)
 			# An aggressive creature asks; this node decides. Keeping the decision
@@ -1375,6 +1375,7 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 			if not gate.is_empty():
 				_wild_gates[wild] = gate
 				wild.visible = _gate_active(gate)
+			if wild.visible: _initialize_wild_traits(wild, bool(wild.get_meta("ordinary_trait_alpha", false)))
 
 			# T3-CREATURES: the entry's own respawn cooldown, if it named one.
 			# Read here rather than looked up from the spawn table at respawn
@@ -1605,6 +1606,8 @@ func spawn_wild(species: String, spot: Vector3, opts: Dictionary = {}) -> Node3D
 		wild.global_position = spot
 	wild.set("home", wild.global_position)
 	wild.connect("wants_to_engage", _on_wild_wants_to_engage.bind(wild))
+	if not bool(opts.get("retained_alpha_pending", false)):
+		_initialize_wild_traits(wild, bool(opts.get("ordinary_trait_alpha", false)))
 	_wild_creatures.append(wild)
 	if once_id != "":
 		_once_only[wild] = once_id
@@ -1763,14 +1766,18 @@ func _initialize_wild_traits(wild: Node3D, alpha: bool = false) -> void:
 	var game := get_node_or_null(^"/root/Game")
 	var creature: RefCounted = wild.get("instance")
 	if game == null or game.get("world") == null or creature == null or bool(creature.get("traits_initialized")): return
-	# Resident simulation shells deliberately remove presentation clocks. Use
-	# the same carried-world clock/default-day semantics as WorldLook, never
-	# another resident realm's first group member or weather override.
+	# Weather belongs to this realm. Resident shells share the host's live
+	# world clock but deliberately omit its presentation nodes.
 	var look := get_parent().get_node_or_null(^"WorldLook")
 	var weather_node := get_parent().get_node_or_null(^"WorldWeather")
+	if weather_node == null: weather_node = get_parent().get_node_or_null(^"StormwoodSurge")
+	var clock := look
+	if clock == null:
+		var active := _session.call("_portal_world_node", str(game.get("current_realm"))) as Node
+		if active != null: clock = active.get_node_or_null(^"WorldLook")
 	var night := false
-	if look != null and look.has_method("is_dark"):
-		night = bool(look.call("is_dark"))
+	if clock != null and clock.has_method("is_dark"):
+		night = bool(clock.call("is_dark"))
 	else:
 		var art: Dictionary = preload("res://scripts/data/redesign_data.gd").json("res://data/config/art.json")
 		var cycle := preload("res://scripts/world/day_cycle.gd").new(art)
@@ -6129,7 +6136,8 @@ func _tick_respawn(delta: float) -> void:
 			continue
 		_respawn_timers.erase(wild)
 		if is_instance_valid(wild):
-			_initialize_wild_traits(wild, bool(wild.get_meta("ordinary_trait_alpha", false)))
+			if not _wild_gates.has(wild) or _gate_active(_wild_gates[wild]):
+				_initialize_wild_traits(wild, bool(wild.get_meta("ordinary_trait_alpha", false)))
 			wild.call("revive_at_home")
 			# `revive_at_home()` unconditionally turns physics_process back ON
 			# (it predates streaming and is right to, on its own terms — a
@@ -6209,6 +6217,7 @@ func _sync_spawn_gates() -> void:
 				or _faint_timers.has(wild) or _respawn_timers.has(wild):
 			continue
 		var open := _gate_active(_wild_gates[wild])
+		if open: _initialize_wild_traits(wild, bool(wild.get_meta("ordinary_trait_alpha", false)))
 		if wild.visible == open:
 			continue
 		wild.visible = open
