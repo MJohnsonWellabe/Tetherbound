@@ -104,7 +104,7 @@ func _run() -> void:
 			functional_offload = true
 		elif arg == "--observe-next-goal":
 			observe_next_goal = true
-		elif arg in ["--lesson-controller-witness", "--capture-lessons"] or arg.begins_with("--lesson-skip-line"):
+		elif arg in ["--lesson-controller-witness", "--lesson-replay-witness", "--capture-lessons"] or arg.begins_with("--lesson-skip-line"):
 			pass  # Validated below; only the existing reader can witness an actual lesson.
 		elif arg.begins_with("--handoff-from="):
 			if not handoff_from.is_empty() or arg == "--handoff-from=":
