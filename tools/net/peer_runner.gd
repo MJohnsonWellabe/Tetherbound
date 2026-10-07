@@ -796,7 +796,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"alpha_clear":
 			out = _step_alpha_clear(args)
 		"explore_at":
-			out = await _step_explore_at(args)
+			out = await _step_explore_at(args, int(msg.get("budget_frames", NET_STEP_BUDGET_FRAMES)))
 		"trade_offer":
 			out = _step_trade_offer(args)
 		"trade_accept":
@@ -816,7 +816,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"join_encounter":
 			out = await _step_join_encounter(args, int(msg.get("budget_frames", NET_STEP_BUDGET_FRAMES)))
 		"teleport":
-			out = await _step_teleport(args)
+			out = await _step_teleport(args, int(msg.get("budget_frames", NET_STEP_BUDGET_FRAMES)))
 		"place_creature":
 			out = await _step_place_creature(args)
 		"strike":
@@ -832,7 +832,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"stand_by_downed":
 			out = await _step_stand_by_downed(args)
 		"trainer_battle":
-			return await _step_trainer_battle(args)
+			return await _step_trainer_battle(args, int(msg.get("budget_frames", NET_STEP_BUDGET_FRAMES)))
 		"win_trainer_battle":
 			_trainer_fight_command_budget_frames = int(msg.get("budget_frames", NET_STEP_BUDGET_FRAMES))
 			var trainer_result: Dictionary = await _step_win_trainer_battle(args)
@@ -2660,30 +2660,101 @@ func _step_engage_wild(args: Dictionary) -> Dictionary:
 			% bind_budget}
 
 
-## A harness placement is a jump no player can make. The host's owner-passive
-## replay accepts a long discontinuity only while its own copy of this body
-## stands within 2 m of the new spot (owner_passive_sync.gd _inputs_host), so a
-## step that places the player and moves on at once can strand that input for
-## good: CI 37189095290 client_trainer_rewards waited on 'discontinuity to
-## (80.0, 0.9, 46.0), host body at (81.06, 0.9, 50.45)' and every round reward
-## behind it stalled. On a client, give the discovery tick time to record the
-## jump, then wait (bounded) until the host has acknowledged every recorded
-## input, as a real arrival would before play continues.
-func _await_owner_passive_caught_up(budget_frames: int = 600) -> void:
+## Observe production discovery and its authenticated prefix ACK before and
+## after a disclosed placement. Moving first can invalidate an unacknowledged
+## initial pose; an empty buffer alone can precede stream admission/discovery.
+## Callers share one original catch-up allowance across both observations.
+func _await_owner_passive_caught_up(budget_frames: int = 600,
+		require_new_discovery: bool = false, binding: Dictionary = {}) -> Dictionary:
 	var game := root.get_node_or_null(^"Game")
-	var session: Variant = game.get("session") if game != null else null
-	if not session is Node or not (session as Node).has_method("is_host") \
-			or bool((session as Node).call("is_host")) or not bool((session as Node).call("is_active")):
-		return
-	var passive: Variant = (session as Node).get("_owner_passive")
+	var session: Node = game.get("session") as Node if game != null else null
+	if game == null or session == null:
+		return {"verdict": "FAIL", "detail": "placement has no original Game/Session"}
+	if binding.is_empty():
+		binding.merge({"game": game, "session": session, "scene": current_scene,
+			"player": _probe.call("player"), "owner": game.get("local"), "world": game.get("world"),
+			"character": game.get("local").get("character_id"), "realm": game.get("current_realm"),
+			"world_id": game.get("world").get("world_id"), "namespace": game.get("world").get("reward_delivery_namespace"),
+			"epoch": session.call("_altar_current_epoch"), "host": session.call("is_host"), "active": session.call("is_active")})
+	var source_live: Callable = func() -> bool:
+		return is_instance_valid(game) and root.get_node_or_null(^"Game") == binding.game and game == binding.game \
+			and is_instance_valid(session) and session == binding.session and game.get("session") == session \
+			and current_scene == binding.scene and is_instance_valid(binding.player) and _probe.call("player") == binding.player \
+			and game.get("local") == binding.owner and game.get("world") == binding.world \
+			and binding.owner.get("character_id") == binding.character and game.get("current_realm") == binding.realm \
+			and binding.world.get("world_id") == binding.world_id and binding.world.get("reward_delivery_namespace") == binding.namespace \
+			and session.call("_altar_current_epoch") == binding.epoch and session.call("is_host") == binding.host \
+			and session.call("is_active") == binding.active
+	if not source_live.call():
+		return {"verdict": "FAIL", "detail": "original placement owner/world/session/player changed"}
+	if binding.host == true or binding.active != true:
+		return {"verdict": "PASS", "detail": "placement has no remote owner stream"}
+	var passive: RefCounted = session.get("_owner_passive") as RefCounted
 	if passive == null:
-		return
-	for frame in budget_frames:
-		var local: Dictionary = passive.get("local")
-		if frame >= 45 and (local.is_empty() or not str(local.get("error", "")).is_empty() \
-				or (local.get("inputs", []) as Array).is_empty()):
-			return
+		return {"verdict": "FAIL", "detail": "admitted guest has no owner-passive service"}
+	var observed := {"stream": "", "sequence": -1, "position": Vector3.INF}
+	# Game emits this observation immediately before recording its one discovery
+	# input (after the condition input). No recorder/timer/ACK is driven here.
+	var discovery_observer: Callable = func(tick: Dictionary) -> void:
+		if not source_live.call() or session.get("_owner_passive") != passive \
+			or tick.get("operation") != "discovery" or tick.get("character_id") != binding.character \
+			or tick.get("world_namespace") != binding.namespace or tick.get("session_epoch") != binding.epoch \
+			or tick.get("realm") != binding.realm or passive.call("recording_active") != true: return
+		var stream: Dictionary = passive.get("local")
+		var at: Array = tick.get("to", [])
+		if at.size() != 3 or str(stream.get("id", "")).is_empty(): return
+		observed.stream = stream.id
+		observed.sequence = int(stream.sequence) + 1
+		observed.position = Vector3(float(at[0]), float(at[1]), float(at[2]))
+	game.connect("party_passive_tick", discovery_observer)
+	var reason := "original discovery prefix was not acknowledged within the existing placement allowance"
+	var ready := false
+	var observation: Dictionary = {}
+	for frame in maxi(0, budget_frames) + 1:
+		if not source_live.call() or session.get("_owner_passive") != passive:
+			reason = "original placement owner/world/session/player/passive service changed"
+			break
+		var stream: Dictionary = passive.get("local")
+		# Retain the actual recorded input too, including for an empty party whose
+		# discovery has no per-creature observation signal.
+		for input: Dictionary in stream.get("inputs", []):
+			if input.get("op") == "discovery" and input.get("realm") == binding.realm \
+				and (not require_new_discovery or stream.id != binding.get("placement_stream") \
+					or int(input.sequence) > int(binding.get("placement_sequence", -1))):
+				observed.stream = stream.id
+				observed.sequence = input.sequence
+				observed.position = Vector3(float(input.to[0]), float(input.to[1]), float(input.to[2]))
+		observation = {"character_id": binding.character, "session_epoch": binding.epoch,
+			"stream_id": stream.get("id"), "sequence": stream.get("sequence"), "acked": stream.get("acked"),
+			"admission_pending": stream.get("admission_pending"), "hello_pending": stream.get("hello_pending"),
+			"error": stream.get("error"), "pending": passive.get("pending").duplicate(true),
+			"observed_discovery_sequence": observed.sequence, "observed_discovery_stream": observed.stream,
+			"travel_position": game.get("_travel_pos"), "travel_valid": game.get("_travel_pos_valid")}
+		if not str(stream.get("error", "")).is_empty():
+			reason = "owner-passive placement refused: " + str(stream.error)
+			break
+		var discovered: bool = game.get("_travel_pos_valid") == true \
+			and preload("res://scripts/net/owner_passive_sync.gd")._endpoint_matches(binding.player.global_position, game.get("_travel_pos"))
+		if require_new_discovery:
+			discovered = discovered and observed.stream == stream.get("id") and int(observed.sequence) > 0 \
+				and (observed.stream != binding.get("placement_stream") or int(observed.sequence) > int(binding.get("placement_sequence", -1))) \
+				and int(stream.get("acked", -1)) >= int(observed.sequence) \
+				and preload("res://scripts/net/owner_passive_sync.gd")._endpoint_matches(binding.player.global_position, observed.position)
+		if not stream.is_empty() and stream.get("character") == binding.character and session.call("snapshot_ready") == true \
+			and stream.get("hello_pending") == false and stream.get("admission_pending") == false \
+			and (stream.get("rebase", {}) as Dictionary).is_empty() and (passive.get("pending") as Dictionary).is_empty() \
+			and (stream.get("inputs", []) as Array).is_empty() and int(stream.get("acked", -1)) == int(stream.get("sequence", -2)) \
+			and discovered:
+			binding.placement_sequence = int(stream.sequence)
+			binding.placement_stream = str(stream.id)
+			ready = true
+			break
+		if frame >= budget_frames: break
 		await physics_frame
+	if is_instance_valid(game) and game.is_connected("party_passive_tick", discovery_observer):
+		game.disconnect("party_passive_tick", discovery_observer)
+	return {"verdict": "PASS" if ready else "FAIL", "detail": "original discovery prefix acknowledged" if ready else reason,
+		"data": observation}
 
 
 ## Stand the trainer at a point. The travel itself, not a game action.
@@ -2693,7 +2764,7 @@ func _await_owner_passive_caught_up(budget_frames: int = 600) -> void:
 ## walk dying against a Terrain3D snag, and a smoke that fails there is
 ## reporting on terrain rather than on what it is testing. Same teleport
 ## `tests/smoke_combat_camera.gd` uses to stand a trainer beside a creature.
-func _step_teleport(args: Dictionary) -> Dictionary:
+func _step_teleport(args: Dictionary, command_budget_frames: int = NET_STEP_BUDGET_FRAMES) -> Dictionary:
 	var player := _probe.call("player") as Node3D
 	if player == null:
 		return {"verdict": "ERROR", "detail": "no live player"}
@@ -2706,15 +2777,23 @@ func _step_teleport(args: Dictionary) -> Dictionary:
 		at = [near.x, near.y, near.z]
 	if at.size() != 3:
 		return {"verdict": "ERROR", "detail": "teleport needs args.at = [x, y, z]"}
+	var settle := maxi(0, int(args.get("settle", 30)))
+	var catchup_budget := mini(600, maxi(0, command_budget_frames - settle))
+	var placement_binding: Dictionary = {}
+	var before_catchup := Engine.get_physics_frames()
+	var ready := await _await_owner_passive_caught_up(catchup_budget, false, placement_binding)
+	if ready.get("verdict") != "PASS": return ready
+	catchup_budget = maxi(0, catchup_budget - int(Engine.get_physics_frames() - before_catchup))
 	# A teleport, not a motion (`remote_creature.teleport_body`): set as a plain
 	# position, GodotPhysics sweeps the body across the whole jump and the next
 	# move_and_slide against Terrain3D collision took ~4.4 s for a 4 km jump
 	# (F14#3), stalling the peer the proof is measuring.
 	REMOTE_CREATURE_TP.teleport_body(player as PhysicsBody3D, Vector3(float(at[0]), float(at[1]), float(at[2])))
 	player.velocity = Vector3.ZERO
-	for i in maxi(0, int(args.get("settle", 30))):
+	for i in settle:
 		await physics_frame
-	await _await_owner_passive_caught_up()
+	ready = await _await_owner_passive_caught_up(catchup_budget, true, placement_binding)
+	if ready.get("verdict") != "PASS": return ready
 	var p: Vector3 = player.global_position
 	return {"verdict": "PASS", "detail": "trainer stands at (%.2f, %.2f, %.2f)" % [p.x, p.y, p.z]}
 
@@ -2727,6 +2806,8 @@ func _step_join_encounter(args: Dictionary, command_budget_frames: int = NET_STE
 	var id := str(args.get("encounter_id", ""))
 	if id.is_empty():
 		return {"verdict": "ERROR", "detail": "join_encounter needs args.encounter_id"}
+	var join_session := _session()
+	var join_epoch := str(join_session.call("_altar_current_epoch")) if join_session != null else ""
 	if not bool(director.call("join_encounter", id)):
 		return {"verdict": "FAIL", "detail": "join_encounter('%s') refused locally" % id}
 	# A shared join returns while the host's admission/record is still pending.
@@ -2754,6 +2835,10 @@ func _step_join_encounter(args: Dictionary, command_budget_frames: int = NET_STE
 	var observed_world_message := ""
 	for i in frames:
 		await physics_frame
+		if not is_instance_valid(director) or _encounter_director() != director \
+				or _session() != join_session or (join_session != null and str(join_session.call("_altar_current_epoch")) != join_epoch):
+			failure = "join source changed before host admission"
+			break
 		if shared:
 			if (director.get("_cancelled_shared_joins") as Dictionary).has(id):
 				failure = "shared admission was cancelled by the producer"
@@ -2768,7 +2853,14 @@ func _step_join_encounter(args: Dictionary, command_budget_frames: int = NET_STE
 		if manager != null and bool(manager.call("is_fighting")) \
 				and str(manager.call("encounter_id")) == id:
 			if not shared:
-				bound = true
+				# The legacy mirror binds locally before its engage RPC is answered.
+				# Starting the host fight at that point can finish the encounter before
+				# the guest is admitted. Require the host's actual participant record
+				# within the original legacy/tournament observation allowance.
+				var admitted: Dictionary = director.call("encounter_record")
+				bound = str(admitted.get("encounter_id", "")) == id \
+					and admitted.get("phase") == "active" \
+					and (admitted.get("participants", {}) as Dictionary).has(int(director.call("_local_peer_id")))
 			else:
 				var rec: Dictionary = director.call("encounter_record")
 				var opponent: Dictionary = rec.get("opponent", {})
@@ -2828,6 +2920,10 @@ func _step_join_encounter(args: Dictionary, command_budget_frames: int = NET_STE
 				"data": {"encounter_id": id, "producer_deadline_ms": admission_deadline, "frame_limit": frames}}
 		if manager == null or not bool(manager.call("is_fighting")):
 			return {"verdict": "FAIL", "detail": "the join did not put this peer in a fight"}
+		if not failure.is_empty():
+			return {"verdict": "FAIL", "detail": failure}
+		if str(manager.call("encounter_id")) == id:
+			return {"verdict": "FAIL", "detail": "the local mirror bound, but no matching active host participant record arrived within %d frames" % frames}
 		return {"verdict": "FAIL", "detail": "the join is fighting, but is bound to '%s' instead of '%s'"
 			% [str(manager.call("encounter_id")), id]}
 	# Report the actual body. The shared-wild smoke asserts its host identity
@@ -3733,7 +3829,7 @@ func _sequence_director() -> Node:
 ## `_DISCOVERY_INTERVAL_S` clock, over the local player's own `MapState`. The
 ## body is placed the same way `operator_harness.gd::_step_teleport` places it,
 ## ground height included, so it lands on real terrain rather than under it.
-func _step_explore_at(args: Dictionary) -> Dictionary:
+func _step_explore_at(args: Dictionary, command_budget_frames: int = NET_STEP_BUDGET_FRAMES) -> Dictionary:
 	var player := _probe.call("player") as Node3D
 	if player == null:
 		return {"verdict": "ERROR", "detail": "no live Player to stand anywhere"}
@@ -3749,6 +3845,13 @@ func _step_explore_at(args: Dictionary) -> Dictionary:
 		y = float(at[2]) + 1.0
 	elif world != null and world.has_method("ground_height_at"):
 		y = float(world.call("ground_height_at", float(at[0]), float(at[1]))) + 1.0
+	var settle := maxi(1, int(args.get("settle", 240)))
+	var catchup_budget := mini(600, maxi(0, command_budget_frames - settle))
+	var placement_binding: Dictionary = {}
+	var before_catchup := Engine.get_physics_frames()
+	var ready := await _await_owner_passive_caught_up(catchup_budget, false, placement_binding)
+	if ready.get("verdict") != "PASS": return ready
+	catchup_budget = maxi(0, catchup_budget - int(Engine.get_physics_frames() - before_catchup))
 	player.global_position = Vector3(float(at[0]), y, float(at[1]))
 	if player is CharacterBody3D:
 		(player as CharacterBody3D).velocity = Vector3.ZERO
@@ -3759,8 +3862,10 @@ func _step_explore_at(args: Dictionary) -> Dictionary:
 	# the nominal rate; the default is four of them, which is slack enough that
 	# a slow headless process still gets sampled and short enough that a fog
 	# system that has stopped ticking still shows up as zero new cells.
-	for i in maxi(1, int(args.get("settle", 240))):
+	for i in settle:
 		await physics_frame
+	ready = await _await_owner_passive_caught_up(catchup_budget, true, placement_binding)
+	if ready.get("verdict") != "PASS": return ready
 	var settled := player.global_position
 	return {
 		"verdict": "PASS",
@@ -4153,7 +4258,7 @@ func _story_gate_rows() -> Array:
 ## use, and for the reason `smoke_aggression.gd`'s header documents: a scripted
 ## walk across the Meadows dies against a Terrain3D snag, and a smoke that fails
 ## there is reporting on terrain rather than on what it is testing.
-func _step_trainer_battle(args: Dictionary) -> Dictionary:
+func _step_trainer_battle(args: Dictionary, command_budget_frames: int = NET_STEP_BUDGET_FRAMES) -> Dictionary:
 	var director := _encounter_director()
 	if director == null:
 		return {"verdict": "ERROR", "detail": "no EncounterDirector in this scene"}
@@ -4166,11 +4271,24 @@ func _step_trainer_battle(args: Dictionary) -> Dictionary:
 	if player == null:
 		return {"verdict": "ERROR", "detail": "no live player"}
 	if body != null:
+		var catchup_budget := mini(600, maxi(0, command_budget_frames - 20 - maxi(0, int(args.get("settle", 45)))))
+		var placement_binding: Dictionary = {}
+		var before_catchup := Engine.get_physics_frames()
+		var ready := await _await_owner_passive_caught_up(catchup_budget, false, placement_binding)
+		if ready.get("verdict") != "PASS": return ready
+		catchup_budget = maxi(0, catchup_budget - int(Engine.get_physics_frames() - before_catchup))
+		if not is_instance_valid(body) or _trainer_body_named(trainer_id) != body \
+			or not is_instance_valid(director) or _encounter_director() != director:
+			return {"verdict": "FAIL", "detail": "original trainer changed before placement"}
 		player.global_position = body.global_position + Vector3(2.0, 0.0, 2.0)
 		player.velocity = Vector3.ZERO
 		for i in 20:
 			await physics_frame
-		await _await_owner_passive_caught_up()
+		ready = await _await_owner_passive_caught_up(catchup_budget, true, placement_binding)
+		if ready.get("verdict") != "PASS": return ready
+		if not is_instance_valid(body) or _trainer_body_named(trainer_id) != body \
+			or not is_instance_valid(director) or _encounter_director() != director:
+			return {"verdict": "FAIL", "detail": "original trainer changed during placement"}
 	if not bool(director.call("can_challenge", spec)):
 		return {"verdict": "FAIL", "detail": "'%s' will not take the challenge (already beaten: %s, nothing out: %s)"
 			% [trainer_id, str(NET_TRAINERS.already_beaten(spec, _progression_store())),
@@ -5165,7 +5283,8 @@ func _step_f48_fixture_capture(args: Dictionary) -> Dictionary:
 	var requested := Vector3(float(target[0]) + 3.0, float(target[1]) + 2.0, float(target[2]))
 	load("res://scripts/creatures/remote_creature.gd").teleport_body(player, requested)
 	player.velocity = Vector3.ZERO
-	await _await_owner_passive_caught_up()
+	var placement_ready: Dictionary = await _await_owner_passive_caught_up(600, false, {})
+	if placement_ready.get("verdict") != "PASS": return placement_ready
 	var fixture := {"actor_before": [actor_before.x, actor_before.y, actor_before.z],
 		"actor_requested": [requested.x, requested.y, requested.z], "announcement": announcement,
 		"owner_before": before, "fixture_disclosure": args.fixture_disclosure, "acceptance_credit": false}
