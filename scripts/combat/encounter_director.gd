@@ -3212,6 +3212,34 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 		_body_radius(striker), _body_radius(wild),
 		host_card_cooldown_multiplier(card), CONTACT_SPACING.pair_reach_need(striker, wild))
 	var now_ms := Time.get_ticks_msec()
+	var utility: Dictionary = move.get("utility", {})
+	if utility.get("scope") == "self" and utility.get("kind") in ["movement_buff", "next_hit_buff"]:
+		# The original start already paid for this cast. Self effects resolve
+		# here without hostile geometry or a second Wind commit.
+		if started.is_empty() or started.get("slot") != intent.get("slot") \
+			or started.get("move_id") != intent.get("move_id"):
+			return {"ok": false, "kind": "strike_intent", "peer": peer_id, "pending": false,
+				"code": "move_start_required", "reason": "That utility has no matching committed start.", "delta": {}}
+		var uid := str(card.get("creature_uid", ""))
+		var status_now_ms := _host_self_utility_now(encounter_id, peer_id, uid, now_ms)
+		var self_verdict: Dictionary = _encounter_host.call("resolve_self_utility", encounter_id,
+			peer_id, int(intent.get("action", 0)), attacker_binding, striker.call("centre"),
+			float(card.get("hp", 0.0)), float(card.get("max_hp", 0.0)), now_ms, status_now_ms)
+		if self_verdict.get("ok") != true: return self_verdict
+		var centre: Vector3 = striker.call("centre")
+		var self_launch := HIT_FEEDBACK.launch("%s:%d:%d" % [encounter_id, peer_id, int(started.action)],
+			encounter_id, uid, uid, str(started.move_id), "utility", centre, centre, 0.0,
+			int(attacker_binding.deployment_generation), striker.global_position, _host_visual_bounds(striker)).duplicate(true)
+		self_launch["self_utility"] = true
+		self_launch["attacker_binding"] = attacker_binding
+		self_launch["move"] = move.duplicate(true)
+		self_launch["mastery_rank"] = int(move.get("mastery_rank", 1))
+		self_launch["source_ground"] = striker.global_position
+		self_launch.make_read_only()
+		(self_verdict.delta as Dictionary)["launch"] = self_launch
+		_publish_host_attack_launch(encounter_id, peer_id, self_launch)
+		_host_after_encounter_change(encounter_id, peer_id)
+		return self_verdict
 	var wind_cfg: Dictionary = MATH.config().get("wind", {})
 	var cost := float(move.get("wind_cost", wind_cfg.get(slot + "_cost", 0.0)))
 	var wind_profile: Dictionary = COMBAT_MANAGER.host_wind_profile(card)
@@ -3303,17 +3331,21 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 	var publication := _f22_begin_publication(encounter_id, peer_id, int(intent.get("action", 0)), striker, wild)
 	if publication.get("ok") != true: return {}
 	var hp_before := float(opponent.get("hp"))
+	var status_now_ms := _host_self_utility_now(encounter_id, peer_id,
+		str(current_card.get("creature_uid", "")), Time.get_ticks_msec())
 	var rolled: Dictionary = engine.call("host_roll_damage", card,
 		str(launch.move_id), float(move.get("power", 9.0)) * armor, str(launch.slot) == "charged",
 		{"action_id": str(launch.action_id), "striker_body": striker, "move": move,
-		 "source_utility_power": float(_encounter_host.call("self_utility_power", encounter_id, str(current_card.get("creature_uid", "")), Time.get_ticks_msec())) \
+		 "source_utility_power": float(_encounter_host.call("self_utility_power", encounter_id, str(current_card.get("creature_uid", "")), status_now_ms, launch.attacker_binding)) \
 			* float((_encounter_host.call("tether_rally", encounter_id, peer_id, Time.get_ticks_msec()) as Dictionary).damage),
 		 "travel_seconds": float(launch.travel_seconds), "body_generation": int(launch.body_generation),
+		 "source_position": launch.get("source_ground", striker.global_position),
+		 "target_point": launch.get("target_ground", launch.get("to", Vector3.INF)),
 		 "direction": (launch.to as Vector3) - (launch.from as Vector3)})
 	if rolled.is_empty(): return {}
 	var resources: Dictionary = _encounter_host.call("credit_move_hit", encounter_id, peer_id,
 		int(intent.get("action", 0)), maxf(0.0, hp_before - float(rolled.get("hp", hp_before))), str(opponent.get("uid")), hp_before,
-		int(record.get("opponent", {}).get("body_generation", 0)), float(current_card.get("hp", 0.0)))
+		int(record.get("opponent", {}).get("body_generation", 0)), float(current_card.get("hp", 0.0)), launch.attacker_binding, status_now_ms)
 	var impact: Dictionary = HIT_FEEDBACK.with_launch(rolled.get("impact", {}) as Dictionary, launch, move.get("vfx", {})).duplicate()
 	impact["presentation_launched"] = true
 	impact["killed"] = bool(rolled.get("killed", false))
@@ -9445,6 +9477,31 @@ static func validate_card_incoming_multiplier(card: Dictionary, hearts: RefCount
 	var power: Variant = spec.get("power", {})
 	if not power is Dictionary: return 1.0
 	return clampf(float((power as Dictionary).get("incoming_damage_multiplier", 1.0)), 0.0, 1.0)
+
+## Self status durations share this actor's accepted hitstop leases. A
+## missing authority/clock is never replaced with a wall-time status read.
+func _host_self_utility_now(encounter_id: String, peer_id: int, uid: String, now_ms: int) -> int:
+	if _encounter_host == null or uid.is_empty() or now_ms < 0 \
+		or not host_enemy_target_current(encounter_id, peer_id, uid): return -1
+	var state := _host_defence_state(encounter_id, peer_id, uid)
+	if not state.has("status_clock_ms"): return -1
+	HIT_FEEDBACK.advance_defence(state, now_ms, HIT_FEEDBACK.MATH.config().get("poise", {}))
+	return int(state.status_clock_ms)
+
+
+## Only the locally authoritative body can consume this movement status.
+## Guest prediction needs the movement transport's matching host allowance.
+func local_self_utility_movement(uid: String, body: Node3D) -> float:
+	var id := _local_bound_encounter_id()
+	var peer := _local_peer_id()
+	if id.is_empty() or not is_instance_valid(body) or deployed_body_for(peer) != body: return 1.0
+	var status_now_ms := _host_self_utility_now(id, peer, uid, Time.get_ticks_msec())
+	if status_now_ms < 0: return 1.0
+	var binding := _strike_actor_binding(id, peer, body)
+	if binding.is_empty() or binding.get("creature_uid") != uid: return 1.0
+	return float(_encounter_host.call("self_utility_movement", id, uid,
+		body.call("centre"), status_now_ms, binding))
+
 
 func _host_defence_state(encounter_id: String, peer_id: int, target_uid: String) -> Dictionary:
 	var peers: Dictionary = _host_defence.get(encounter_id, {})

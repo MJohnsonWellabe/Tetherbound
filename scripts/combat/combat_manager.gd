@@ -3044,6 +3044,27 @@ func _submit_strike_intent() -> void:
 ## A refusal never arrives here -- it goes to `_note_encounter_refusal()` -- so
 ## this function is only ever the performance of a decision already made.
 func apply_host_strike_verdict(payload: Dictionary) -> void:
+	if payload.get("utility_committed") == true:
+		if state != State.ACTIVE or active_creature() == null: return
+		var launch: Dictionary = payload.get("launch", {})
+		var receipt: Dictionary = payload.get("utility_receipt", {})
+		var uid := str(active_creature().get("uid"))
+		if payload.get("encounter_id") != _encounter_id or payload.get("creature_uid") != uid \
+			or receipt.get("encounter_id") != _encounter_id or receipt.get("source_uid") != uid \
+			or receipt.get("target_uid") != uid or receipt.get("kind") not in ["movement_buff", "next_hit_buff"] \
+			or receipt.get("kind") != launch.get("move", {}).get("utility", {}).get("kind") \
+			or receipt.get("move_id") != launch.get("move_id") \
+			or receipt.get("action_id") != launch.get("move", {}).get("action_id") \
+			or receipt.get("original", {}).get("action_id") != receipt.get("action_id") \
+			or receipt.get("original", {}).get("binding") != launch.get("attacker_binding") \
+			or payload.get("accepted_action") != launch.get("move", {}).get("actor_binding", {}).get("action") \
+			or not _self_utility_launch_current(launch, _ally_body): return
+		if not _admit_host_feedback(_seen_impact_actions, launch): return
+		_sync_authoritative_wind(payload)
+		_apply_move_resources(payload)
+		present_host_attack_launch(launch, _ally_body)
+		state_changed.emit()
+		return
 	if bool(payload.get("scheduled", false)):
 		if state == State.ACTIVE:
 			_sync_authoritative_wind(payload)
@@ -3428,14 +3449,38 @@ func _host_body_hitstop(body: Node3D, impact: Dictionary) -> void:
 
 
 ## Admission and damage belong to Director's host timer; this only draws launch.
+## A host self-cast still uses the ordinary reliable launch envelope. Match
+## stable deployment identity; a host body instance ID is not a client ID.
+func _self_utility_launch_current(launch: Dictionary, striker: Node3D) -> bool:
+	if launch.get("self_utility") != true or not is_instance_valid(striker) \
+		or launch.get("encounter_id") != _encounter_id or launch.get("slot") != "utility" \
+		or _encounter_link == null or not _encounter_link.has_method("presentation_move_actor"): return false
+	var move: Dictionary = launch.get("move", {})
+	var binding: Dictionary = move.get("actor_binding", {})
+	var utility: Dictionary = move.get("utility", {})
+	var uid := str(binding.get("creature_uid", ""))
+	if uid.is_empty() or launch.get("attacker_uid") != uid or launch.get("target_uid") != uid \
+		or move.get("slot") != "utility" or move.get("move_id") != launch.get("move_id") \
+		or utility.get("scope") != "self" or utility.get("kind") not in ["movement_buff", "next_hit_buff"] \
+		or float(move.get("base_power", -1.0)) != 0.0 or float(move.get("power", -1.0)) != 0.0: return false
+	var current: Dictionary = _encounter_link.call("presentation_move_actor", launch, striker)
+	return preload("res://scripts/vfx/move_presentation_contract.gd").same_actor(binding, current)
+
+
 func present_host_attack_launch(launch: Dictionary, striker: Node3D = null, on_enemy: bool = true) -> void:
 	var target_body := _wild if on_enemy else _ally_body
 	var target_instance := _enemy if on_enemy else active_creature()
-	if state != State.ACTIVE or not is_instance_valid(target_body) or target_instance == null: return
-	if str(launch.get("encounter_id", "")) != _encounter_id \
-		or str(launch.get("target_uid", "")) != str(target_instance.get("uid")): return
+	if state != State.ACTIVE: return
 	if striker == null: striker = _ally_body if on_enemy else _wild
 	if not is_instance_valid(striker): return
+	if launch.get("self_utility") == true:
+		if not _self_utility_launch_current(launch, striker): return
+		target_body = striker
+		on_enemy = false
+	else:
+		if not is_instance_valid(target_body) or target_instance == null: return
+		if str(launch.get("encounter_id", "")) != _encounter_id \
+			or str(launch.get("target_uid", "")) != str(target_instance.get("uid")): return
 	if not _admit_host_feedback(_seen_launch_actions, launch): return
 	var parent: Node = _arena if is_instance_valid(_arena) else get_parent()
 	var move: Dictionary = launch.get("move", _moves.move(str(launch.get("move_id", "")))).duplicate(true)
@@ -3926,6 +3971,9 @@ func _drive_player_creature() -> void:
 	var creature_for_speed := active_creature()
 	var speed_scale: float = float(creature_for_speed.call("buff_scale", "speed")) \
 			if creature_for_speed != null else 1.0
+	if creature_for_speed != null and _encounter_link != null and _encounter_link.has_method("local_self_utility_movement"):
+		speed_scale *= float(_encounter_link.call("local_self_utility_movement",
+			str(creature_for_speed.get("uid")), _ally_body))
 	if speed_scale != 1.0 and _ally_body.has_method("base_speed"):
 		_ally_body.call("request_move", direction, float(_ally_body.call("base_speed")) * speed_scale)
 	else:

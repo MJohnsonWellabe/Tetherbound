@@ -631,6 +631,8 @@ func authorize_move_start(intent: Dictionary, peer: int, owned: Dictionary,
 		"move_id": move_id, "slot": slot, "move": frozen, "started_at_ms": now_ms,
 		"strike_at_ms": now_ms + windup_ms, "ready_at_ms": ready_at,
 		"resolved": false, "credited": false,
+		"utility_opponent": {"uid": str(rec.get("opponent", {}).get("card", {}).get("uid", "")),
+			"body_generation": int(rec.get("opponent", {}).get("body_generation", 0))},
 		"mastery_uses": int(owned.get("move_mastery_uses", {}).get(move_id, 0)),
 		"action_id": action_identity}
 	# Preserve immutable accepted-action history owned by AcceptedActionHost.
@@ -677,7 +679,7 @@ func cancel_move_start(id: String, peer: int) -> void:
 ## actual HP debit. One retained action can credit these encounter meters once.
 func credit_move_hit(id: String, peer: int, action: int, actual_hp_debit: float,
 		target_uid: String = "", target_hp_before: float = 0.0, target_generation: int = 0,
-		source_hp: float = 0.0) -> Dictionary:
+		source_hp: float = 0.0, current_binding: Dictionary = {}, status_now_ms: int = -1) -> Dictionary:
 	var started: Dictionary = (_strike_authority.get(id, {}) as Dictionary).get(peer, {}).get("move_starts", {}).get(str(action), {})
 	if started.get("action") != action or started.get("resolved") != true or started.get("credited") == true \
 		or not is_finite(actual_hp_debit) or actual_hp_debit <= 0.0: return {}
@@ -703,6 +705,8 @@ func credit_move_hit(id: String, peer: int, action: int, actual_hp_debit: float,
 	actor.ultimate_meter = minf(float(ultimate.get("maximum", 100.0)), float(actor.ultimate_meter)
 		+ float(ultimate.get("landed_gain", {}).get(started.slot, 0.0)) * _gear_gain(started.move))
 	started.credited = true
+	var utility_consumed := _consume_landed_self_utility(id, peer, started, current_binding,
+		actual_hp_debit, target_uid, target_hp_before, target_generation, source_hp, status_now_ms)
 	if int(started.get("mastery_uses", 300)) < 300 and not target_uid.is_empty() \
 		and target_uid != started.creature_uid and is_finite(target_hp_before) and target_hp_before >= actual_hp_debit:
 		started["mastery_pending"] = true
@@ -711,7 +715,9 @@ func credit_move_hit(id: String, peer: int, action: int, actual_hp_debit: float,
 			"target_hp_before": target_hp_before, "applied_damage": actual_hp_debit}
 	seq += 1
 	encounters[id].seq = seq
-	return move_resource_snapshot(id, peer, str(started.creature_uid))
+	var snapshot := move_resource_snapshot(id, peer, str(started.creature_uid))
+	if not utility_consumed.is_empty(): snapshot["utility_consumed"] = utility_consumed
+	return snapshot
 
 
 ## F33: the Charm's ultimate gain, frozen into the accepted action on the
@@ -731,10 +737,153 @@ func move_mastery_outcome(id: String, peer: Variant, action: int) -> Dictionary:
 		"context": started.move.get("mastery_context", {}).duplicate(true)}
 
 
-## The director calls this after the live utility consumer committed its
-## original effect. Status casts earn mastery without inventing an HP debit.
-func self_utility_power(id: String, uid: String, now_ms: int) -> float:
-	return UTILITY_EFFECTS.power_multiplier(encounters.get(id, {}).get("utility_state", {}), uid, now_ms)
+## Resolve only the existing admitted self cast at its original strike tick.
+## The director supplies its current host body/card; no move or effect comes
+## from this call, and admission remains the sole resource/cooldown writer.
+func resolve_self_utility(id: String, peer: int, action: int, current_binding: Dictionary,
+		origin: Vector3, source_hp: float, source_max_hp: float, now_ms: int, status_now_ms: int = -1) -> Dictionary:
+	var rec: Dictionary = encounters.get(id, {})
+	var authority: Dictionary = (_strike_authority.get(id, {}) as Dictionary).get(peer, {})
+	var started: Dictionary = authority.get("move_starts", {}).get(str(action), {})
+	if not _self_utility_actor_current(id, peer, current_binding) \
+		or started.get("action") != action or started.get("binding") != current_binding \
+		or started.get("cancelled") == true or started.get("resolved") != false \
+		or authority.get("last_action") != action or now_ms < int(started.get("strike_at_ms", -1)) \
+		or not _self_utility_opponent_current(rec, started.get("utility_opponent", {})) \
+		or not origin.is_finite() or not UTILITY_EFFECTS._number(source_hp, 0.001, source_max_hp) \
+		or not UTILITY_EFFECTS._number(source_max_hp, 1.0, INF) or now_ms < 0 or status_now_ms < 0:
+		return _refuse("strike_intent", peer, "stale_self_utility", "That utility can no longer resolve from this creature.")
+	if not pending_tether_items(id).is_empty() \
+		or (has_method("move_action_publication_pending") and call("move_action_publication_pending", id) == true):
+		return _refuse("strike_intent", peer, "pending_action", "The original action is still being committed.")
+	var move: Dictionary = started.get("move", {})
+	if started.get("slot") != "utility" or not UTILITY_EFFECTS.valid_definition(move) \
+		or move.utility.get("scope") != "self" or move.utility.get("kind") not in ["movement_buff", "next_hit_buff"] \
+		or float(move.get("base_power", -1.0)) != 0.0 or float(move.get("power", -1.0)) != 0.0:
+		return _refuse("strike_intent", peer, "unsupported_self_utility", "That move does not use this utility effect.")
+	var uid := str(started.creature_uid)
+	# Generation zero is the shared encounter-state convention also used by
+	# durable heal. The exact deployment/opponent lifetime rides this receipt.
+	var state: Dictionary = rec.get("utility_state", UTILITY_EFFECTS.empty_state(id, 0))
+	# A redeployment starts a fresh actor clock. Do not refresh an old expiry
+	# from a different clock domain into this admitted lifetime. Keep original
+	# receipts and heal state; stale status removal stays detached until success.
+	state = state.duplicate(true)
+	var previous_statuses: Dictionary = state.get("statuses", {}).get(uid, {})
+	for previous_kind: String in ["movement_buff", "next_hit_buff"]:
+		var previous: Dictionary = previous_statuses.get(previous_kind, {})
+		var previous_original: Dictionary = previous.get("original", {})
+		if not previous.is_empty() and (previous_original.get("binding") != current_binding \
+			or previous_original.get("opponent") != started.utility_opponent):
+			previous_statuses.erase(previous_kind)
+	var host := {"encounter_id": id, "generation": 0, "action_id": str(started.action_id),
+		"source_uid": uid, "target_uid": uid, "source_position": origin, "target_position": origin,
+		"source_hp": source_hp, "source_max_hp": source_max_hp}
+	var effect := UTILITY_EFFECTS.stage_application(state, str(started.move_id), move, host, status_now_ms,
+		int(MATH.config().get("utility_limits", {}).get("receipt_limit_per_encounter", 0)))
+	if effect.get("ok") != true:
+		return _refuse("strike_intent", peer, str(effect.get("code", "invalid_self_utility")), "That utility could not commit safely.")
+	var guard := {"action_id": str(started.action_id), "binding": current_binding.duplicate(true),
+		"opponent": (started.utility_opponent as Dictionary).duplicate(true)}
+	var kind := str(move.utility.kind)
+	var next: Dictionary = effect.state
+	(next.statuses[uid][kind] as Dictionary)["original"] = guard.duplicate(true)
+	var receipt: Dictionary = effect.receipt.duplicate(true)
+	receipt["original"] = guard.duplicate(true)
+	next.receipts[str(started.action_id)] = receipt.duplicate(true)
+	# No callbacks or other writers intervene between status and resolution.
+	rec["utility_state"] = next
+	started["resolved"] = true
+	started["utility_receipt"] = receipt.duplicate(true)
+	seq += 1
+	rec.seq = seq
+	var delta := move_resource_snapshot(id, peer, uid)
+	delta.merge({"encounter_id": id, "accepted_action": action, "accepted_at_ms": now_ms,
+		"cooldown_deadline_ms": int(authority.get("deadline_ms", 0)), "hit": false,
+		"utility_committed": true, "utility_receipt": receipt}, true)
+	return _ok("strike_intent", peer, delta)
+
+
+func _self_utility_actor_current(id: String, peer: int, binding: Dictionary) -> bool:
+	var rec: Dictionary = encounters.get(id, {})
+	var participant: Dictionary = rec.get("participants", {}).get(peer, {})
+	var uid := str(binding.get("creature_uid", ""))
+	if rec.get("phase") != "active" or participant.is_empty() \
+		or participant.get("character_id") != binding.get("character_id") \
+		or participant.get("creature_uid") != uid or not UTILITY_EFFECTS._identity(uid) \
+		or not UTILITY_EFFECTS._identity(binding.get("character_id")) \
+		or int(binding.get("deployment_generation", 0)) < 1 or int(binding.get("body_instance_id", 0)) < 1:
+		return false
+	var actor: Dictionary = participant.get("actor_vitals", {}).get(uid, {})
+	if not actor.is_empty():
+		return participant.get("actor_bound_uid") == uid and actor.get("fainted") == false \
+			and float(actor.get("hp", 0.0)) > 0.0 and actor.get("body_generation") == binding.get("actor_generation") \
+			and actor.get("body_instance_id") == binding.get("body_instance_id")
+	return true # Legacy deployment is re-observed by the director, never a packet.
+
+
+func _self_utility_opponent_current(rec: Dictionary, original: Dictionary) -> bool:
+	var opponent: Dictionary = rec.get("opponent", {})
+	return UTILITY_EFFECTS._identity(original.get("uid")) and int(original.get("body_generation", 0)) > 0 \
+		and original.uid == opponent.get("card", {}).get("uid") \
+		and original.body_generation == opponent.get("body_generation")
+
+
+func _current_self_utility(id: String, uid: String, kind: String, now_ms: int, binding: Dictionary) -> Dictionary:
+	var rec: Dictionary = encounters.get(id, {})
+	var state: Dictionary = rec.get("utility_state", {})
+	var status: Dictionary = state.get("statuses", {}).get(uid, {}).get(kind, {})
+	var original: Dictionary = status.get("original", {})
+	if binding.is_empty() or binding.get("creature_uid") != uid or now_ms < 0 \
+		or int(status.get("expires_at_ms", 0)) <= now_ms or original.get("binding") != binding \
+		or state.get("encounter_id") != id or state.get("generation") != 0 \
+		or not _self_utility_opponent_current(rec, original.get("opponent", {})): return {}
+	var receipt: Dictionary = state.get("receipts", {}).get(str(original.get("action_id", "")), {})
+	if receipt.get("kind") != kind or receipt.get("source_uid") != uid \
+		or receipt.get("target_uid") != uid or receipt.get("original") != original \
+		or receipt.has("consumed_by"): return {}
+	for peer: Variant in rec.get("participants", {}):
+		if peer is int and _self_utility_actor_current(id, peer, binding): return status
+	return {}
+
+
+func self_utility_power(id: String, uid: String, now_ms: int, current_binding: Dictionary = {}) -> float:
+	if _current_self_utility(id, uid, "next_hit_buff", now_ms, current_binding).is_empty(): return 1.0
+	return UTILITY_EFFECTS.power_multiplier(encounters[id].utility_state, uid, now_ms)
+
+
+func self_utility_movement(id: String, uid: String, origin: Vector3, now_ms: int,
+		current_binding: Dictionary = {}) -> float:
+	if not origin.is_finite() or _current_self_utility(id, uid, "movement_buff", now_ms, current_binding).is_empty(): return 1.0
+	return UTILITY_EFFECTS.movement_multiplier(encounters[id].utility_state, uid, origin, now_ms)
+
+
+## The existing positive-debit credit gate is the only caller. A missed,
+## cancelled, duplicate or replacement-body result never consumes Hearten.
+func _consume_landed_self_utility(id: String, peer: int, started: Dictionary, binding: Dictionary,
+		actual_hp_debit: float, target_uid: String, target_hp_before: float, target_generation: int,
+		source_hp: float, now_ms: int) -> Dictionary:
+	if started.get("resolved") != true or started.get("credited") != true or started.get("cancelled") == true \
+		or started.get("binding") != binding or started.has("utility_consumed") \
+		or not _self_utility_actor_current(id, peer, binding) or not is_finite(source_hp) or source_hp <= 0.0 \
+		or not is_finite(actual_hp_debit) or actual_hp_debit <= 0.0 \
+		or not is_finite(target_hp_before) or target_hp_before < actual_hp_debit \
+		or target_uid == str(started.get("creature_uid", "")) \
+		or started.get("utility_opponent", {}) != {"uid": target_uid, "body_generation": target_generation}: return {}
+	var uid := str(started.creature_uid)
+	var status := _current_self_utility(id, uid, "next_hit_buff", now_ms, binding)
+	if status.is_empty(): return {}
+	var rec: Dictionary = encounters[id]
+	var consumed := UTILITY_EFFECTS.stage_consume_next_hit(rec.utility_state, uid, now_ms)
+	if consumed.get("ok") != true: return {}
+	var receipt := {"action_id": str(started.action_id), "cast_action_id": str(status.original.action_id),
+		"source_uid": uid, "target_uid": target_uid, "target_generation": target_generation,
+		"actual_hp_debit": actual_hp_debit, "accepted_at_ms": now_ms}
+	var next: Dictionary = consumed.state
+	(next.receipts[receipt.cast_action_id] as Dictionary)["consumed_by"] = receipt.duplicate(true)
+	rec["utility_state"] = next
+	started["utility_consumed"] = receipt.duplicate(true)
+	return receipt
 
 
 ## Tier is frozen once on the existing admitted participant, from host gear.
