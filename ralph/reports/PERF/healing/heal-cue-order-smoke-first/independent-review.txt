@@ -1,0 +1,8 @@
+APPROVE at17436eb251b3b41ade32246e61e77cbf230a0a04 — ONE final independent /root/c3_journal_review.
+Exact origin/main→HEAD meadow_healing.gd/existing smoke diff reviewed with callers/scheduler as relevant; no engine/edit/tool run by reviewer.
+_applying prevents duplicate preparation; _applied publishes after preparation; single SurfaceTool/corner cache preserves cell/triangle/channel ordering.
+Lights/pylon launches occur once before first yield; hidden master-alpha-zero groups become visible in final fade; immediate/saved/out-of-tree paths do not actually yield.
+Existing station healing consumes scatter/drain skins atomically without mutating regreen geometry; world-group filtering and authority/network unchanged; existing peer probe waits for applied().
+Original4500ms/40000ms bars and end-state/save/reload checks retained. Same-world unbudgeted mesh equality covers223824 ordered vertices/all channels; preparation observation0lit/29falls.
+Actual changed-source smoke1854ms/frame, exit0,143 materials accounted, real save/reload/29poses/168cables/7herd pass; inherited interpolation warning retained.
+Approval covers bounded source/solo CPU/equality/cue-order proof under6022595813, not live co-op/GPU/FPS/earned/repeatability. Separate fresh code-blind pixel judge completed EQUIVALENT.
