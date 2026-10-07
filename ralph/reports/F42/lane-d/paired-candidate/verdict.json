@@ -1,0 +1,30 @@
+{
+  "criterion": "F42#0 OPEN",
+  "source_commit": "528da7d15d03e9b1044cf47ff9599baae0068e64",
+  "run_id": "37642229986",
+  "artifact_id": "11494932535",
+  "script": "tools/phase2_capture_ui.gd",
+  "actual_arguments": "--biome=meadows --paired-720 --tabs=map,build,players,save,settings --map-cycle --map-zoom-samples --idle-hud --output=res://ralph/reports/VISUAL/phase2/lane-d/f42-candidate-paired",
+  "renderer": "Compatibility/OpenGL4.5 Mesa25.2.8 llvmpipe",
+  "captured_images": 22,
+  "actual_rasters": {"1920x1080": 11, "1280x720": 11},
+  "runtime_result": "Run step reached its45-minute cap; GitHub job log records process exit124. Final manifest and artifact exit_code are absent. No engine crash is reported in the retained run.log; the precise unfinished stage was not recorded.",
+  "complete": false,
+  "judge": "/root/f42_visual_review",
+  "judge_input": "Both full JPG sheets, all22 enlarged original JPGs, retained baseline contact sheet and key-art/Palworld references. No new source or catalogue status read before image verdict.",
+  "owner_override": "6039900185: Low720 is valid evidence against the same full visual bar; High/Medium are later PC confirmation, not current visual-row gates.",
+  "bar_a": "BLOCK",
+  "bar_b": "BLOCK",
+  "bar_b_reason": "Observed flat warm room, broad undifferentiated light and hard dark shadows lack the layered depth/mood required by the written bar. Renderer eligibility is not the cause of rejection.",
+  "rows": {
+    "P2-001": "BLOCK: Settings text/focus/footer improve at720, but Quick items displays historical commit, code path and OW1 prose; fresh omitted panels absent.",
+    "P2-002": "BLOCK:16x reveals roads/green/hill, but small blurred patch, clustered central icons and large region label obscure context.4x/8x largely empty. Preserve truthful fog.",
+    "P2-004": "BLOCK: HP/Food clearer; story/quickbar boxes and four empty roster rows remain in the initial reveal. Natural-idle expiry unwitnessed; subdued story/time text.",
+    "P2-007": "BLOCK: Build/Save useful and readable720; installed thumbnails tiny/dim; sparse Players failure state. Quests, populated saves, free-build and multiplayer states missing."
+  },
+  "missing_witnesses": ["Completion manifest and clean exit", "Natural idle and realm-cycle images", "Fresh Satchel/Creatures/Quests and relevant state variants", "Controller/focus/scroll and motion", "1280x800 and required outdoor/night/weather/combat context"],
+  "fixture": "Production Meadows scene, stocked1-creature party and small satchel, no earned/save proof",
+  "followup_source_review": {"commit": "762afab7f2fe65190664f2d323daa71d5d4d45dc", "verdict": "APPROVE", "scope": "Five player note strings and truthful incremental incomplete capture receipts; no binding/action/progression changes. Fresh images required."},
+  "shipping_flags": "none",
+  "raw_images": "Run artifact only; both committed contact JPGs retain all22 images"
+}
