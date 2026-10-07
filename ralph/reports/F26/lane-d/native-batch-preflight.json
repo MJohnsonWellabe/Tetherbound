@@ -1,0 +1,70 @@
+{
+  "environment": {
+    "sandbox": "danger-full-access",
+    "approval_policy": "never",
+    "native_engine_launched": false
+  },
+  "installed_gpu": {
+    "actual_render_adapter": "UNPROVEN",
+    "driver": "32.0.15.6094",
+    "name": "NVIDIA GeForce GTX1060 3GB"
+  },
+  "status": "PREFLIGHT_ONLY",
+  "godot": {
+    "file_version": "4.7",
+    "gui_sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
+    "console_sha256": "d8055fb8c7e7f5010d7439ec69be051554055dae55a265f8647bd7301c34161c",
+    "console": "C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe",
+    "executed": false
+  },
+  "assets": {
+    "gltf_companions_missing": 0,
+    "tracked_missing": 0,
+    "excluded": "assets_raw, archive, shots remain excluded except exact existing patterns",
+    "tracked_bytes": 1979051129,
+    "sparse_add": "/assets/",
+    "gltf_files": 175
+  },
+  "python": {
+    "version": "3.12.14",
+    "existing_runner_ast": "PASS",
+    "path": "C:/Users/mattj/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe"
+  },
+  "requested_batch": {
+    "maximum_seconds": 2760,
+    "renderer": "forward_plus",
+    "resolution": [
+      1920,
+      1080
+    ],
+    "stop_on_first_failure": true,
+    "runner": "tools/run_lookdev_routes.py",
+    "single_process": true,
+    "source": "Existing runner records exact clean branch HEAD at launch; receipt-only commits preserve inspected source",
+    "arguments": "--godot C:/Users/mattj/.cache/tetherbound-tools/godot-4.7/Godot_v4.7-stable_win64_console.exe --biome meadows --preset High --preset Medium --output D:/tetherbound/codex-d/ralph/reports/F26/lane-d/native-meadows-high-medium",
+    "minimum_samples_per_preset": 120,
+    "waypoints": [
+      [
+        48,
+        14
+      ],
+      [
+        91,
+        14
+      ],
+      [
+        107,
+        14
+      ]
+    ]
+  },
+  "gates": [
+    "Coordinator assignment and owner free PC window; no native engine authorization in this receipt",
+    "Clean exact branch HEAD at launch",
+    "Actual native adapter/Forward+ verification",
+    "Both preset receipts, all physical waypoints,120timed samples each",
+    "Census old Hall [8,7590] is Warden stronghold; no Crossing Hall census claim",
+    "Full village circuit capture and blind High/Medium visual judgment remain separate"
+  ],
+  "preflight_source_commit": "91fd18c99726be8e2a29d6a9e1eb8de16a0e59ef"
+}
