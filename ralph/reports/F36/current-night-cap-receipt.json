@@ -2,7 +2,7 @@
   "criterion": "F36#3",
   "named_proof": "Attended Meshy ledger with task IDs and 30-generation cap",
   "source_sha": "7027f3bf4ef8846a3b0da8a36837240ca76b8516",
-  "ledger_last_source": "a49b26084e",
+  "ledger_last_source": "53b8a3345f179f6bad8c1323b28550f4ce7210b2",
   "ledger": "ralph/reports/R2-F36/meshy-night-ledger.json",
   "night": "2026-10-07",
   "task_ids": [
@@ -47,8 +47,16 @@
     "No new generation, credentials, purchase or runtime integration."
   ],
   "landing_scope": [
-    "Current six-task ledger exact file at a49b26084e.",
+    "Current six-task ledger exact file at53b8a3345f179f6bad8c1323b28550f4ce7210b2; lastcandidate remainsOFF after identityBLOCK.",
     "This accounting receipt only. Existing cap guard/tests and earlier cap proof already on main.",
     "Exclude all unREADY F29/world/material/traversal ancestors."
-  ]
+  ],
+  "maintenance_review": {
+    "scope": "Sixth-task disposition matches retained B BLOCK; count6/30/IDs/reference hashes/credits/allOFF unchanged; same UTC instants after timestamp normalization",
+    "tests": "Reuse unchanged cap guard/tests; no rerun",
+    "verdict": "APPROVE",
+    "sha": "53b8a3345f179f6bad8c1323b28550f4ce7210b2",
+    "reviewer": "/root/review_f36_cap",
+    "new_criteria_closed": 0
+  }
 }
