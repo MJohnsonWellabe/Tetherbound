@@ -1,7 +1,19 @@
 {
   "cap_per_night": 30,
   "timezone": "America/Chicago",
-  "tasks": [],
-  "actual_meshy_submissions": 0,
-  "note": "No Meshy API credential in the F36 session. Imagegen reference drafting is recorded separately and is not a Meshy task. Unit-test mocked task IDs are confined to a temporary fixture and never recorded here. Use f36_meshy_guard.py for every attended generation/refine/retexture/retry; uncertain submissions retain cap slots. F36 is the sole generation owner."
+  "tasks": [
+    {
+      "reservation_id": "68afbd89-c82e-4f29-9761-69a78526952f",
+      "night": "2026-10-07",
+      "subject": "stormursa",
+      "reference": "assets/creatures/tetherbound/stormursa/reference/f36-three-quarter-v1.png",
+      "reference_sha256": "ea0a0d7a0716f9fc599a91769a560afda60418c6615330064abd2e8caf841f33",
+      "endpoint": "/openapi/v1/multi-image-to-3d",
+      "submitted_utc": "2026-10-07T12:38:02.008464+00:00",
+      "task_id": "01a1165e-e5b9-754f-8aaf-ff5f40c68d64",
+      "status": "submitted_pending_inspection"
+    }
+  ],
+  "actual_meshy_submissions": 1,
+  "note": "Lane E is the attended generation owner. Every POST uses f36_meshy_guard.py. Current real task IDs and reference hashes are recorded below; mocked cap tests use a temporary ledger and create no Meshy tasks. Generation or a successful cap check does not certify art."
 }
