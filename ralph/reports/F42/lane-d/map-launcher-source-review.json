@@ -11,5 +11,14 @@
   "verdict": "APPROVE",
   "agent": "/root/f42_visual_review",
   "criterion_status": "OPEN",
-  "tests": "Reviewer did not run tests; selected112-file logic run37632007173 separately pending."
+  "tests": "Reviewer did not run tests; selected112-file logic run37632007173 separately pending.",
+  "idle_vitals_capture_review": {
+    "production_source": "8262f892a6ff56a267cb46a2065c93513fa2bf45",
+    "capture_guard_commit": "424715c4bf75ddf0575f5b88c50910b49980f035",
+    "verdict": "APPROVE",
+    "agent": "/root/f42_visual_review",
+    "checked": "Config scope and finite clamp; relevant states1.0; bounded natural roster expiry without forced hiding; settings section start; requested tab validation and Map evidence selector guard",
+    "runtime_proof": "PENDING",
+    "visual_verdict": "PENDING"
+  }
 }
