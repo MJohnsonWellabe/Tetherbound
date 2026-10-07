@@ -47,14 +47,16 @@ func build() -> void:
 	_rows.clear()
 
 	var header := Label.new()
-	header.text = "Players"
-	header.add_theme_font_size_override("font_size", 24)
+	header.text = "Your expedition"
+	header.add_theme_font_size_override("font_size", UITokens.FONT_SECTION)
+	header.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	add_child(header)
 
 	_summary = Label.new()
-	_summary.add_theme_font_size_override("font_size", 20)
+	_summary.add_theme_font_size_override("font_size", UITokens.FONT_READ)
+	_summary.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	_summary.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	add_child(_summary)
+	add_child(_panel(_summary, UITokens.PAD))
 
 	_list = VBoxContainer.new()
 	_list.add_theme_constant_override("separation", 10)
@@ -81,12 +83,13 @@ func build() -> void:
 		add_child(_invite_button)
 
 	_detail = Label.new()
-	_detail.add_theme_font_size_override("font_size", 19)
+	_detail.add_theme_font_size_override("font_size", UITokens.FONT_READ)
 	_detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_detail.add_theme_color_override("font_color", Color("#9db3a8"))
-	add_child(_detail)
+	_detail.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+	add_child(_panel(_detail, UITokens.PAD))
 
 	poll()
+	UITokens.make_text_legible(self)
 
 
 func _add_row(peer: Dictionary) -> void:
@@ -95,7 +98,8 @@ func _add_row(peer: Dictionary) -> void:
 
 	var who := Label.new()
 	who.custom_minimum_size = Vector2(460, 0)
-	who.add_theme_font_size_override("font_size", 22)
+	who.add_theme_font_size_override("font_size", UITokens.FONT_READ)
+	who.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	line.add_child(who)
 
 	var peer_id := int(peer.get("peer_id", 0))

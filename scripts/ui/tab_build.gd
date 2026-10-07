@@ -22,6 +22,7 @@ extends "res://scripts/ui/menu_tab.gd"
 ## never mint two competing instances.
 
 const BUILD_MENU := preload("res://scripts/ui/build_menu.gd")
+const BUILDABLES_PATH := "res://data/items/buildables.json"
 
 ## D16's free-build banner survives the launcher rewrite: the rule is that
 ## free build says so out loud on the Build tab the whole time it is on, and
@@ -39,20 +40,28 @@ func build() -> void:
 	var panel := VBoxContainer.new()
 	panel.add_theme_constant_override("separation", 16)
 	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	# OF31 sweep, frame 16: the pause menu's own tab bar already reads "Build"
-	# immediately above this panel (`game_menu.gd`'s tab strip) -- a second
-	# "Build" heading in here was a literal duplicate, not a distinct label
-	# the way tab_map.gd's "THE MEADOWS" or tab_quest_log.gd's "QUEST LOG"
-	# read next to their own "Map"/"Quests" tab buttons. This tab has one
-	# real job (hand off to the live build menu) and nothing else to say, so
-	# there is no second heading to replace it with -- see ALIGNMENT_CENTER
-	# below for the other half of that sweep finding, the near-empty panel.
-	panel.alignment = BoxContainer.ALIGNMENT_CENTER
+	panel.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	# The launcher previews real camp pieces; placement still has one owner.
+	panel.alignment = BoxContainer.ALIGNMENT_BEGIN
+
+	var title := Label.new()
+	title.text = "Make a place to return to"
+	title.add_theme_font_size_override("font_size", UITokens.FONT_SECTION)
+	title.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
+	panel.add_child(title)
+
+	var previews := HBoxContainer.new()
+	previews.add_theme_constant_override("separation", UITokens.PAD)
+	panel.add_child(previews)
+	var catalogue: Variant = JSON.parse_string(FileAccess.get_file_as_string(BUILDABLES_PATH))
+	if catalogue is Dictionary:
+		for entry: Variant in catalogue.get("buildables", []):
+			if entry is Dictionary and str(entry.get("id", "")) in ["tent", "campfire", "bedroll"]:
+				previews.add_child(_build_preview(entry))
 
 	_free_note = Label.new()
 	_free_note.text = "Free build is on — pieces cost nothing until it is switched off in Settings."
-	_free_note.add_theme_font_size_override("font_size", 24)
+	_free_note.add_theme_font_size_override("font_size", UITokens.FONT_READ)
 	_free_note.add_theme_color_override("font_color", FREE_NOTE_COLOUR)
 	_free_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_free_note.custom_minimum_size = Vector2(520, 0)
@@ -60,9 +69,9 @@ func build() -> void:
 	panel.add_child(_free_note)
 
 	var blurb := Label.new()
-	blurb.text = "Pick what to place from the full build menu — categories, a piece grid, and what it costs, all in one screen you can see the world through."
-	blurb.add_theme_font_size_override("font_size", 24)
-	blurb.add_theme_color_override("font_color", Color(0.6, 0.62, 0.55))
+	blurb.text = "Open the catalogue to choose a piece and check its materials. Placement continues in the world."
+	blurb.add_theme_font_size_override("font_size", UITokens.FONT_READ)
+	blurb.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
 	blurb.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	blurb.custom_minimum_size = Vector2(520, 0)
 	panel.add_child(blurb)
@@ -74,7 +83,53 @@ func build() -> void:
 	_open_button.pressed.connect(_on_open_pressed)
 	panel.add_child(_open_button)
 
-	add_child(_panel(panel))
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.follow_focus = true
+	scroll.add_child(_panel(panel))
+	add_child(scroll)
+	UITokens.make_text_legible(self)
+
+
+## Read-only previews of the same authored entries the live catalogue uses.
+## They make the launcher useful without introducing another placement action.
+func _build_preview(entry: Dictionary) -> Control:
+	var column := VBoxContainer.new()
+	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	column.custom_minimum_size = Vector2(320, 0)
+	column.add_theme_constant_override("separation", UITokens.GAP)
+	var image := TextureRect.new()
+	image.custom_minimum_size = Vector2(0, 86)
+	image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	var path := str(entry.get("thumbnail", ""))
+	if ResourceLoader.exists(path):
+		image.texture = load(path)
+	column.add_child(image)
+	var name_label := Label.new()
+	name_label.text = str(entry.get("name", ""))
+	name_label.add_theme_font_size_override("font_size", UITokens.FONT_SECTION)
+	name_label.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
+	column.add_child(name_label)
+	var description := Label.new()
+	description.text = str(entry.get("blurb", ""))
+	description.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	description.add_theme_font_size_override("font_size", UITokens.FONT_READ)
+	description.add_theme_color_override("font_color", UITokens.TEXT_SECONDARY)
+	column.add_child(description)
+	var costs := PackedStringArray()
+	for cost: Variant in entry.get("cost", []):
+		if cost is Dictionary:
+			costs.append("%s %s" % [str(cost.get("n", 0)), str(cost.get("id", "")).capitalize()])
+	var materials := Label.new()
+	materials.text = "Normal cost: " + " + ".join(costs) if not costs.is_empty() else "No materials"
+	materials.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	materials.add_theme_font_size_override("font_size", UITokens.FONT_READ)
+	materials.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
+	column.add_child(materials)
+	return _panel(column, UITokens.PAD)
 
 
 func first_focus() -> Control:

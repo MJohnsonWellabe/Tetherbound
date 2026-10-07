@@ -251,7 +251,12 @@ func build() -> void:
 	# this on open/select), so hardcoding MIN_ZOOM here reset the player's
 	# zoom on every single visit. Clamped against the current ZOOM_LEVELS in
 	# case the saved value came from a build with a different level set.
-	var remembered_zoom := float(state().get("map_last_zoom")) if state() != null else MIN_ZOOM
+	var remembered_zoom := float(state().get("map_last_zoom")) if state() != null else -1.0
+	if remembered_zoom < MIN_ZOOM:
+		var map_config: Variant = JSON.parse_string(FileAccess.get_file_as_string(MAP_CONFIG_PATH))
+		remembered_zoom = float(map_config.get("initial_zoom", MAX_ZOOM)) if map_config is Dictionary else MAX_ZOOM
+		if state() != null:
+			state().set("map_last_zoom", clampf(remembered_zoom, MIN_ZOOM, MAX_ZOOM))
 	_zoom = clampf(remembered_zoom, MIN_ZOOM, MAX_ZOOM)
 	_pan_world = Vector2.ZERO
 	_manual_pan = false
