@@ -8,6 +8,8 @@ const PHASES := [0.0, 0.25, 0.5, 0.75, 1.0]
 var _pose_failures: Array[String] = []
 var _scale_only := false
 var _material_candidate := false
+var _selected_roles: Array[String] = []
+var _selected_phases: Array[float] = []
 
 
 func _run() -> void:
@@ -31,6 +33,22 @@ func _run() -> void:
 			all_roster = true
 		elif arg == "--material-candidate":
 			_material_candidate = true
+		elif arg.begins_with("--roles="):
+			var values := arg.trim_prefix("--roles=").split(",", true)
+			for value: String in values:
+				if value not in ROLES or value in _selected_roles:
+					_pose_failures.append("F36 needs unique supported pose roles")
+				else:
+					_selected_roles.append(value)
+		elif arg.begins_with("--phases="):
+			for value: String in arg.trim_prefix("--phases=").split(",", true):
+				var phase := value.to_float()
+				if not value.is_valid_float() or not is_finite(phase) or phase < 0.0 or phase > 1.0:
+					_pose_failures.append("F36 phases must be finite values in0..1")
+				elif _selected_phases.any(func(prior: float) -> bool: return int(prior * 100) == int(phase * 100)):
+					_pose_failures.append("F36 phase filenames must be unique")
+				else:
+					_selected_phases.append(phase)
 		elif arg.begins_with("--out="):
 			out = arg.trim_prefix("--out=")
 		elif arg.begins_with("--source-commit="):
@@ -38,6 +56,13 @@ func _run() -> void:
 	if all_roster:
 		ids.assign(SPECIES.table().keys())
 		ids.sort()
+	if _scale_only and (not _selected_roles.is_empty() or not _selected_phases.is_empty()):
+		_pose_failures.append("Installed scale audit keeps its standing/end-point coverage")
+	if not _pose_failures.is_empty():
+		for failure: String in _pose_failures:
+			push_error(failure)
+		quit(1)
+		return
 	if _material_candidate:
 		var finish_config: Dictionary = preload("res://scripts/creatures/creature_visual.gd").config()
 		(finish_config["f36_material_finish"] as Dictionary)["enabled"] = true
@@ -123,6 +148,10 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 	var receipt: Array = []
 	var roles: Array = ["standing"] if _scale_only else ROLES
 	var phases: Array = [0.0, 1.0] if _scale_only else PHASES
+	if not _selected_roles.is_empty():
+		roles = _selected_roles
+	if not _selected_phases.is_empty():
+		phases = _selected_phases
 	for role: String in roles:
 		var clip := "f36_candidate/%s" % role if candidate else str(map.get(role, ""))
 		if not _scale_only and (clip.is_empty() or not player.has_animation(clip)):
@@ -156,6 +185,7 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 			"whole_body_camera": whole_body, "camera_position": [_camera.global_position.x, _camera.global_position.y, _camera.global_position.z],
 			"camera_fov": _camera.fov, "resting_size_m": [resting_bounds.size.x, resting_bounds.size.y, resting_bounds.size.z],
 			"resolution": [root.size.x, root.size.y], "planned_frames": roles.size() * phases.size(),
+			"selected_roles": roles, "selected_phases": phases,
 			"frames": receipt}, "\t"))
 		file.flush()
 		if file.get_error() != OK:
