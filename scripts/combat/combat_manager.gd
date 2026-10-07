@@ -3798,7 +3798,12 @@ func apply_host_enemy_hit(payload: Dictionary) -> void:
 	var killed: bool = bool(payload.get("actor_vitals_fainted")) if canonical else creature.take_damage(damage / _gear_hp_scale(creature))
 	var stagger_triggered := false if killed else _take_player_poise_damage(damage)
 	var facing: Vector3 = _ally_body.call("facing")
-	_ally_body.call("add_impulse", -facing, float(payload.get("lunge", 3.4)) * 0.4)
+	var motion: Dictionary = payload.get("motion_original", {})
+	if not motion.is_empty():
+		if _encounter_link != null and _encounter_link.call("combat_motion_original_current", motion, _ally_body):
+			_ally_body.call("add_impulse", _encounter_link.call("_wire_vec3", motion.direction), float(motion.strength))
+	else:
+		_ally_body.call("add_impulse", -facing, float(payload.get("lunge", 3.4)) * 0.4)
 	if killed:
 		_ally_body.call("play_faint")
 	else:
@@ -4558,8 +4563,15 @@ func _begin_move_presentation(move: Dictionary) -> void:
 	# wind-up and genuinely closes the gap the test will be run over. The
 	# animation starts here too, so the body moves when the motion does.
 	if _ally_body != null and _wild != null:
-		_ally_body.call("face_towards", _wild.call("centre"))
-		_ally_body.call("add_impulse", _ally_body.call("facing"), float(_pending_move.get("lunge", 0.0)))
+		var motion: Dictionary = move.get("motion_original", {})
+		if not motion.is_empty():
+			if _encounter_link != null and _encounter_link.call("combat_motion_original_current", motion, _ally_body):
+				var direction: Vector3 = _encounter_link.call("_wire_vec3", motion.direction)
+				_ally_body.call("face_towards", _ally_body.global_position + direction)
+				_ally_body.call("add_impulse", direction, float(motion.strength))
+		else:
+			_ally_body.call("face_towards", _wild.call("centre"))
+			_ally_body.call("add_impulse", _ally_body.call("facing"), float(_pending_move.get("lunge", 0.0)))
 		_ally_body.call("play_attack")
 	state_changed.emit()
 

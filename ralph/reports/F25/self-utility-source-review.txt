@@ -5,3 +5,10 @@ Scope: encounter_host.gd retained original self-cast and positive-hit consumer; 
 Casts, power reads and positive-hit consumption use the same pause-aware actor tick. Strike scheduling retains wall time. Detached stale-status cleanup prevents expiry carry across binding/opponent changes and preserves original receipts and heal state. Self-route envelopes retain identity and replay guards; Manager presentation avoids miss, HP and poise effects.
 Open: guest Veil transport/validation; tag-combo Hearten; selected runtime checks; actual presentation proof. No native execution. This is not whole-F23 acceptance. Runtime whitelist and shipping flags remain unchanged.
 Existing proof extension: /root/f25_arrival_review APPROVE for seven status_clock_ms assertions added within test_hit_feedback.gd::test_host_defensive_pause_unions_overlap_and_outgoing_hits_extend_stagger against645465d413. No new test function/class/fixture; union-end170ms gives540 at wall710,601 at771; stale710 read and independent actor preserved. Hosted runtime remains pending.
+
+Guest Veil core source review against450d1749b9ed9e131911753f27d6dd8b8b6b0576
+Reviewer: /root/f25_arrival_review (same retained independent F23 reviewer)
+Verdict: APPROVE, bounded frozen core patch only
+Frozen patch SHA256: bd50929b3afc7308ba3c89370ec7ee0923ae949a65267846e3927b1984ec3ae6
+Scope: existing Host Burst original/projection, Director/Manager transient movement input and correction, Remote host swept guest movement. Current character/deployment/actor/opponent/realm/epoch bind movement; actual host physics consumes validated input rather than guest position. Correction sequences fence replacement input and duplicate application; sanitized status projection and save-fenced record publication retained. Flag-off movement preserves legacy path.
+No blocking source finding; no engine executed. ACK-loss, collision and lifecycle proofs remain open. The missing legacy incoming-impact original producer is still a mounting gate and is separately allocated in issue572 comments6042685859/6042736728. This verdict does not approve full Guest Veil, F23 acceptance or any shipping flip.

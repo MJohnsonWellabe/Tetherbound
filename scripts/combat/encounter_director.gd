@@ -2284,7 +2284,7 @@ func _spawn_deployed_creature(data: Variant) -> Node:
 ## property (`docs/specs/MP_ENCOUNTER_PROTOCOL.md` §3).
 func _creature_replication_config() -> SceneReplicationConfig:
 	var cfg := SceneReplicationConfig.new()
-	for path in [^".:net_position", ^".:net_yaw", ^".:net_aquatic"]:
+	for path in [^".:net_position", ^".:net_yaw", ^".:net_aquatic", ^".:net_combat_motion"]:
 		cfg.add_property(path)
 		cfg.property_set_spawn(path, true)
 		cfg.property_set_replication_mode(path, SceneReplicationConfig.REPLICATION_MODE_ALWAYS)
@@ -2660,6 +2660,8 @@ func _rpc_encounter_verdict(verdict: Dictionary) -> void:
 ## that changes a client's copy of them.
 @rpc("authority", "call_remote", "reliable", CHANNEL_LEDGER)
 func _rpc_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
+	if _manager != null and str(rec.get("encounter_id", "")) == _local_bound_encounter_id() \
+		and int(rec.get("seq", 0)) < int(_manager.get("_encounter_seq")): return
 	_note_host_xp_owner(rec)
 	if str(rec.get("kind", "")) != "wild" and not _record_is_local_guest_master(rec) and not _record_is_remote_rematch(rec):
 		var encounter_id := str(rec.get("encounter_id", ""))
@@ -2670,6 +2672,7 @@ func _rpc_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
 			_encounter = rec
 			_refresh_legacy_mirror(rec.get("opponent", {}) as Dictionary)
 			_manager.call("apply_encounter_record", rec, quiet)
+			_receive_combat_motion_projection(rec)
 		return
 	if not _shared_record_is_current_realm(rec):
 		return
@@ -2694,6 +2697,7 @@ func _rpc_encounter_record(rec: Dictionary, quiet: bool = false) -> void:
 	_refresh_shared_rematch_round(rec)
 	if _manager != null:
 		_manager.call("apply_encounter_record", rec, quiet)
+	_receive_combat_motion_projection(rec)
 	_apply_shared_record_presentation(rec)
 
 
@@ -2810,6 +2814,8 @@ func _deliver_encounter_verdict(verdict: Dictionary) -> void:
 				_manager.call("note_encounter_refusal", verdict)
 		"burst_intent":
 			if bool(verdict.get("ok", false)):
+				var motion: Dictionary = verdict.get("delta", {}).get("motion_original", {})
+				if not motion.is_empty() and not combat_motion_original_current(motion, _manager.get("_ally_body")): return
 				_manager.call("apply_host_burst_verdict", verdict.get("delta", {}))
 			else:
 				_manager.call("note_encounter_refusal", verdict)
@@ -3157,9 +3163,18 @@ func _host_move_start(intent: Dictionary, peer: int) -> Dictionary:
 	if uses_durable_trainer_rewards(id) and slot == "utility" \
 		and move.get("utility", {}).get("kind") == "heal" and move.get("utility", {}).get("scope") == "self":
 		return _stage_ordinary_self_heal(id, peer, intent, body, move, card)
+	if _combat_motion_transport_enabled():
+		var lunge_direction: Vector3 = (wild.call("centre") as Vector3) - (body.call("centre") as Vector3)
+		lunge_direction.y = 0.0
+		if lunge_direction.is_zero_approx(): lunge_direction = body.call("facing")
+		move["motion_original"] = _host_motion_original(id, peer, body, "lunge", str(move.get("action_id", "")),
+			lunge_direction, maxf(0.0, float(move.get("lunge", 0.0))))
+		if move.motion_original.is_empty(): return deny
 	var verdict: Dictionary = _encounter_host.call("authorize_move_start", intent, peer, owned,
 		binding, move, COMBAT_MANAGER.host_wind_profile(card), Time.get_ticks_msec())
-	if verdict.get("ok") == true: _host_after_encounter_change(id, peer)
+	if verdict.get("ok") == true:
+		_apply_host_motion_original(peer, body, verdict.delta.move.get("motion_original", {}))
+		_host_after_encounter_change(id, peer)
 	return verdict
 
 
@@ -3512,22 +3527,36 @@ func _host_burst(intent: Dictionary, peer_id: int) -> Dictionary:
 	var burst: Dictionary = MATH.config().get("burst", {}) as Dictionary
 	var wind: Dictionary = MATH.config().get("wind", {}) as Dictionary
 	var wind_profile := COMBAT_MANAGER.host_wind_profile(card)
+	var motion: Dictionary = {}
+	if _combat_motion_transport_enabled():
+		var requested: Variant = _wire_vec3(intent.get("direction", []))
+		if not requested is Vector3 or not intent.get("action") is int or int(intent.action) < 1:
+			return {"ok":false, "kind":"burst_intent", "code":"malformed", "delta":{}}
+		var flat := Vector3(requested.x, 0.0, requested.z)
+		motion = _host_motion_original(encounter_id, peer_id, body, "burst",
+			"burst:%s:%s:%d" % [encounter_id, _strike_authority_character(peer_id), int(intent.action)], flat, 0.0)
+		if motion.is_empty() or flat.is_zero_approx(): return {"ok":false, "kind":"burst_intent", "code":"stale_motion", "delta":{}}
+		motion["distance"] = maxf(0.0, float(burst.get("distance", 3.0)))
+		motion["duration"] = maxf(0.01, float(burst.get("duration", 0.2)))
 	if supports_host_move_start() and MATH.config().get("move_commit", {}).get("runtime_enabled") == true:
 		wind_profile["creature_uid"] = str(card.get("creature_uid", ""))
 	var verdict: Dictionary = _encounter_host.call("authorize_burst", encounter_id,
 		peer_id, intent, wind_profile,
 		float(wind.get("burst_cost", 30.0)), Time.get_ticks_msec(),
 		float(burst.get("distance", 3.0)), float(burst.get("duration", 0.2)),
-		float(wind.get("regen_delay", 0.6)))
+		float(wind.get("regen_delay", 0.6)), motion)
 	if not bool(verdict.get("ok", false)):
 		return verdict
 	var delta: Dictionary = verdict.get("delta", {}) as Dictionary
-	var raw: Array = delta.get("direction", []) as Array
-	var direction := Vector3(float(raw[0]), 0.0, float(raw[2]))
-	var local_body: Node3D = _manager.get("_ally_body") as Node3D if _manager != null else null
-	if body != local_body and body.has_method("begin_combat_burst"):
-		body.call("begin_combat_burst", direction, float(delta.get("distance", 3.0)),
-			float(delta.get("duration", 0.2)), int(delta.get("accepted_action", 0)))
+	if not motion.is_empty():
+		_apply_host_motion_original(peer_id, body, delta.get("motion_original", {}))
+	else:
+		var raw: Array = delta.get("direction", []) as Array
+		var direction := Vector3(float(raw[0]), 0.0, float(raw[2]))
+		var local_body: Node3D = _manager.get("_ally_body") as Node3D if _manager != null else null
+		if body != local_body and body.has_method("begin_combat_burst"):
+			body.call("begin_combat_burst", direction, float(delta.get("distance", 3.0)),
+				float(delta.get("duration", 0.2)), int(delta.get("accepted_action", 0)))
 	_host_after_encounter_change(encounter_id, peer_id)
 	return verdict
 
@@ -4223,6 +4252,10 @@ func _stage_ordinary_enemy_hit(id: String, peer: int, payload: Dictionary) -> vo
 	_ordinary_actor_hit_serial += 1
 	var action_id: String = "%s:enemy:%d" % [id, _ordinary_actor_hit_serial]
 	var original: Dictionary = payload.duplicate(true)
+	if _combat_motion_transport_enabled():
+		original["motion_original"] = _host_motion_original(id, peer, body, "knockback", action_id,
+			-(body.call("facing") as Vector3), maxf(0.0, float(payload.get("lunge", 3.4))) * 0.4)
+		if original.motion_original.is_empty(): return
 	original["impact"] = HIT_FEEDBACK.receipt(action_id, str(payload.get("move_id", "")),
 		preload("res://scripts/creatures/move_db.gd").load_default().move(str(payload.get("move_id", ""))),
 		"quick", float(payload.get("damage", 0.0)), float(payload.get("type_mult", 1.0)), false,
@@ -4302,6 +4335,9 @@ func _retry_ordinary_actor_vitals() -> void:
 		if original.has("heal_bundle"):
 			payload["heal_verdict"] = original.get("heal_verdict", {}).duplicate(true)
 		original["presented"] = true
+		if not original.has("heal_bundle"):
+			_apply_host_motion_original(int(original.peer_id), deployed_body_for(int(original.peer_id)),
+				payload.get("motion_original", {}))
 		_host_after_encounter_change(str(original.encounter_id))
 		if int(original.peer_id) == _local_peer_id():
 			if _manager != null and _local_bound_encounter_id() == str(original.encounter_id):
@@ -4363,20 +4399,12 @@ func _ordinary_host_leave(id: String, peer: int) -> Dictionary:
 	return result
 
 
-## The record changed, so everybody in it is told. §3: nothing else is
-## authoritative, so this is the only broadcast a participant's HUD needs.
-func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0,
-		terminal_catcher: int = 0, resolved_impact: Dictionary = {}) -> void:
-	var rec: Dictionary = _encounter_host.call("record", encounter_id)
-	if preload("res://scripts/combat/tether_commands.gd").enabled() and rec.get("phase") == "active" \
-		and _session != null and _session.has_method("admitted_character_state"):
-		for peer: int in rec.get("participants", {}):
-			if not rec.participants[peer].has("tether_commands"):
-				_encounter_host.call("bind_tether_commands", encounter_id, peer, _session.call("admitted_character_state", peer))
-		rec = _encounter_host.call("record", encounter_id)
+## Every use of the existing record carrier retains its pending-save and
+## round presentation fences, including combat motion corrections.
+func _host_encounter_presentation_record(encounter_id: String) -> Dictionary:
+	var rec: Dictionary = _encounter_host.call("record", encounter_id).duplicate(true)
 	# Self buffs stay in the existing encounter. Each owner receives only
 	# the remaining modifier for their own UIDs, on the usual resource carrier.
-	rec = rec.duplicate(true)
 	for retained: Dictionary in rec.get("retained_actor_participants", {}).values():
 		if retained.get("tether_commands") is Dictionary: retained.tether_commands.erase("item_pending")
 	for peer: int in rec.get("participants", {}):
@@ -4389,13 +4417,26 @@ func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0,
 				participant.tether_command_view.merge(_encounter_host.call("tether_pouch_view", encounter_id, peer,
 					_session.call("admitted_character_state", peer)), true)
 	if uses_saved_actor_vitals(encounter_id):
-		rec = rec.duplicate(true)
 		rec["ordinary_actor_vitals_pending"] = ordinary_actor_vitals_pending(encounter_id)
 	if uses_durable_trainer_rewards(encounter_id):
 		var round_source: Dictionary = _ordinary_combat_rounds.get(encounter_id, {})
 		if round_source.get("resolved") == true:
 			rec["ordinary_combat_round_saved"] = int(round_source.round)
 			rec["ordinary_combat_completion_saved"] = round_source.get("completion_resolved") == true
+	return rec
+
+
+## The record changed, so everybody in it is told. §3: nothing else is
+## authoritative, so this is the only broadcast a participant's HUD needs.
+func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0,
+		terminal_catcher: int = 0, resolved_impact: Dictionary = {}) -> void:
+	var rec: Dictionary = _encounter_host.call("record", encounter_id)
+	if preload("res://scripts/combat/tether_commands.gd").enabled() and rec.get("phase") == "active" \
+		and _session != null and _session.has_method("admitted_character_state"):
+		for peer: int in rec.get("participants", {}):
+			if not rec.participants[peer].has("tether_commands"):
+				_encounter_host.call("bind_tether_commands", encounter_id, peer, _session.call("admitted_character_state", peer))
+	rec = _host_encounter_presentation_record(encounter_id)
 	# Presentation metadata on this accepted-hit snapshot only; not save state.
 	if not resolved_impact.is_empty(): rec["resolved_impact"] = resolved_impact.duplicate()
 	if rec.is_empty():
@@ -4437,7 +4478,10 @@ func _host_after_encounter_change(encounter_id: String, author_peer_id: int = 0,
 		# The author still receives the authoritative record, but renders from
 		# its richer verdict. Marking that copy quiet prevents the record and
 		# verdict from flinching/announcing the same strike twice.
-		_send_realm_rpc(peer_id, "_rpc_encounter_record", [_with_host_xp_owner(encounter_id, rec), peer_id == author_peer_id])
+		var owner_record := rec.duplicate(true)
+		owner_record.erase("utility_state")
+		owner_record["combat_motion"] = _host_combat_motion_projection(peer_id, deployed_body_for(peer_id))
+		_send_realm_rpc(peer_id, "_rpc_encounter_record", [_with_host_xp_owner(encounter_id, owner_record), peer_id == author_peer_id])
 
 
 ## §5 step 3's history, taken on the host's own clock from the host's own body.
@@ -9553,12 +9597,228 @@ func local_self_utility_movement(uid: String, body: Node3D) -> float:
 	var id := _local_bound_encounter_id()
 	var peer := _local_peer_id()
 	if id.is_empty() or not is_instance_valid(body) or deployed_body_for(peer) != body: return 1.0
+	if _is_guest():
+		var projection: Dictionary = body.get_meta(&"host_combat_motion", {})
+		if uid != projection.get("scope", {}).get("creature_uid") \
+			or not _guest_combat_motion_current(projection.get("scope", {}), body): return 1.0
+		var status: Dictionary = projection.get("status", {})
+		return float(status.get("multiplier", 1.0)) if float(status.get("remaining_ms", 0.0)) > 0.0 else 1.0
 	var status_now_ms := _host_self_utility_now(id, peer, uid, Time.get_ticks_msec())
 	if status_now_ms < 0: return 1.0
 	var binding := _strike_actor_binding(id, peer, body)
 	if binding.is_empty() or binding.get("creature_uid") != uid: return 1.0
 	return float(_encounter_host.call("self_utility_movement", id, uid,
 		body.call("centre"), status_now_ms, binding))
+
+
+## Reuse the actual mounted-move gate. Until Veil is mounted, existing
+## ordinary/legacy movement remains on its established replication path.
+func _combat_motion_transport_enabled() -> bool:
+	var mounted: Dictionary = MATH.config().get("move_commit", {})
+	var live: Variant = mounted.get("live_moves", [])
+	return mounted.get("runtime_enabled") == true and live is Array and live.has("veil")
+
+
+## Presentation-safe identity; private body IDs stay on host originals.
+func _combat_motion_scope(id: String, peer: int, binding: Dictionary) -> Dictionary:
+	if _session == null or _encounter_host == null or binding.is_empty(): return {}
+	var rec: Dictionary = _encounter_host.call("record", id)
+	var opponent: Dictionary = rec.get("opponent", {})
+	var epoch := str(_session.call("_altar_current_epoch"))
+	if epoch.is_empty() or rec.get("realm") != _encounter_realm() \
+		or rec.get("participants", {}).get(peer, {}).get("character_id") != binding.get("character_id") \
+		or str(opponent.get("card", {}).get("uid", "")).is_empty() or int(opponent.get("body_generation", 0)) < 1: return {}
+	return {"encounter_id":id, "realm":_encounter_realm(), "epoch":epoch, "peer_id":peer,
+		"character_id":binding.character_id, "creature_uid":binding.creature_uid,
+		"deployment_generation":binding.deployment_generation, "actor_generation":binding.actor_generation,
+		"opponent_uid":opponent.card.uid, "opponent_generation":opponent.body_generation}
+
+
+func _host_motion_original(id: String, peer: int, body: Node3D, kind: String,
+		action_id: String, direction: Vector3, strength: float) -> Dictionary:
+	if not is_instance_valid(body) or deployed_body_for(peer) != body or action_id.is_empty() \
+		or not direction.is_finite() or not is_finite(strength) or strength < 0.0: return {}
+	var binding := _strike_actor_binding(id, peer, body)
+	var scope := _combat_motion_scope(id, peer, binding)
+	if scope.is_empty() or not host_enemy_target_current(id, peer, str(binding.get("creature_uid", ""))) \
+		or _encounter_host.call("_self_utility_actor_current", id, peer, binding) != true: return {}
+	var flat := direction.normalized()
+	var origin := body.global_position
+	return {"scope":scope, "kind":kind, "action_id":action_id, "direction":[flat.x, flat.y, flat.z],
+		"strength":strength, "origin":[origin.x, origin.y, origin.z]}
+
+
+func _apply_host_motion_original(peer: int, body: Node3D, original: Dictionary) -> void:
+	# The local Manager consumes its own original once. Remote proxies have
+	# no Manager; their inherited physics now integrates this exact same input.
+	if peer == _local_peer_id() or not is_instance_valid(body) or original.is_empty(): return
+	var context := host_combat_motion_context(peer, body)
+	if context.get("valid") != true or context.scope != original.get("scope"): return
+	body.call("bind_host_combat_motion", context.scope)
+	var direction: Variant = _wire_vec3(original.get("direction", []))
+	if not direction is Vector3: return
+	if original.get("kind") == "burst":
+		body.call("begin_combat_burst", direction, float(original.distance), float(original.duration))
+	else:
+		if original.get("kind") == "lunge": body.call("face_towards", body.global_position + (direction as Vector3))
+		body.call("add_impulse", direction, float(original.strength))
+
+
+func combat_motion_original_current(original: Dictionary, body: Node3D) -> bool:
+	if not is_instance_valid(body) or body != deployed_body_for(_local_peer_id()) \
+		or str(original.get("action_id", "")).is_empty() or not _wire_vec3(original.get("direction", [])) is Vector3 \
+		or not (original.get("strength") is int or original.get("strength") is float) \
+		or not is_finite(float(original.strength)) or float(original.strength) < 0.0: return false
+	var scope: Dictionary = original.get("scope", {})
+	if _is_guest(): return _guest_combat_motion_current(scope, body)
+	return scope == _combat_motion_scope(_local_bound_encounter_id(), _local_peer_id(),
+		_strike_actor_binding(_local_bound_encounter_id(), _local_peer_id(), body))
+
+
+## Combat mode is chosen from authenticated membership, never from a packet
+## claiming to be field movement. Invalid active bindings freeze that proxy.
+func host_combat_motion_context(peer: int, body: Node3D) -> Dictionary:
+	if not _is_host() or not _combat_motion_transport_enabled(): return {"combat":false}
+	if _encounter_host == null or _session == null: return {"combat":true, "valid":false}
+	var id := ""
+	for candidate: String in _encounter_host.get("encounters"):
+		var row: Dictionary = _encounter_host.call("record", candidate)
+		if row.get("participants", {}).has(peer) and row.get("phase") in ["active", "catching", "resolving"]:
+			if not id.is_empty(): return {"combat":true, "valid":false}
+			id = candidate
+	if id.is_empty(): return {"combat":false}
+	var denied := {"combat":true, "valid":false}
+	if not is_instance_valid(body) or deployed_body_for(peer) != body \
+		or int(body.get("owner_peer_id")) != peer or body.get_multiplayer_authority() != peer \
+		or body.get("owner_character_id") != _strike_authority_character(peer) \
+		or _session.call("realm_of", peer) != _encounter_realm() or not _realm_rpc_allowed(peer) \
+		or str(body.get_meta(REPLICATION_SCOPE.BODY_REALM, "")) != _encounter_realm(): return denied
+	var transition := REPLICATION_SCOPE.coordinator(self)
+	if transition != null and transition.call("body_rpc_allowed", _encounter_realm(), peer,
+		str(body.get_meta(REPLICATION_SCOPE.BODY_ORIGIN, ""))) != true: return denied
+	var binding := _strike_actor_binding(id, peer, body)
+	if binding.is_empty() or not host_enemy_target_current(id, peer, str(binding.creature_uid)) \
+		or _encounter_host.call("_self_utility_actor_current", id, peer, binding) != true: return denied
+	var scope := _combat_motion_scope(id, peer, binding)
+	var runtime := _shared_host_fight(id)
+	var opponent: Node3D = runtime.call("body") as Node3D if runtime != null else _engaged_with
+	if scope.is_empty() or not is_instance_valid(opponent) or not is_instance_valid(opponent.get("arena")): return denied
+	var status_tick := _host_self_utility_now(id, peer, str(binding.creature_uid), Time.get_ticks_msec())
+	if status_tick < 0: return denied
+	var status: Dictionary = _encounter_host.call("self_utility_movement_projection", id, peer, binding, status_tick)
+	var speed := float(body.call("base_speed"))
+	# Only accepted, currently live tonic effects contribute. No announced
+	# card speed, unmounted combat-speed trait or Rally multiplier is inferred.
+	var tonics: Dictionary = _session.call("admitted_tether_tonics", peer).get(str(binding.creature_uid), {})
+	for effect: Dictionary in tonics.get("effects", []):
+		if effect.get("stat") == "speed" and float(effect.get("remaining_s", 0.0)) > 0.0:
+			speed *= float(effect.get("scale", 1.0))
+	speed *= float(status.multiplier)
+	if not is_finite(speed) or speed < 0.0: return denied
+	var defence := _host_defence_state(id, peer, str(binding.creature_uid))
+	var now_ms := Time.get_ticks_msec()
+	var authority: Dictionary = _encounter_host.call("strike_authority_state", id, peer)
+	return {"combat":true, "valid":true, "scope":scope, "binding":binding,
+		"opponent":opponent, "arena":opponent.get("arena"), "speed":speed, "status":status,
+		"paused":now_ms < int(defence.get("pause_until_ms", 0)),
+		"walking":now_ms >= int(authority.get("deadline_ms", 0)) and not _host_peer_staggered(id, peer)
+			and not ordinary_actor_vitals_pending(id)}
+
+
+func _host_combat_motion_projection(peer: int, body: Node3D) -> Dictionary:
+	var context := host_combat_motion_context(peer, body)
+	if context.get("valid") != true: return {}
+	body.call("bind_host_combat_motion", context.scope)
+	var rec: Dictionary = _encounter_host.call("record", str(context.scope.encounter_id))
+	return {"scope":context.scope, "record_seq":int(rec.get("seq", 0)),
+		"status":context.status, "correction":body.call("host_combat_motion_correction")}
+
+
+## Uses the existing authenticated record RPC. Movement samples never alter
+## encounter/save counters; their transient correction sequence belongs to the
+## existing deployed body and cannot survive its scope changing.
+func publish_host_combat_motion(peer: int, body: Node3D) -> void:
+	var projection := _host_combat_motion_projection(peer, body)
+	if projection.is_empty(): return
+	var id := str(projection.scope.encounter_id)
+	var rec := _host_encounter_presentation_record(id)
+	rec.erase("utility_state")
+	rec["combat_motion"] = projection
+	_send_realm_rpc(peer, "_rpc_encounter_record", [_with_host_xp_owner(id, rec), true])
+
+
+func _guest_combat_motion_current(scope: Dictionary, body: Node3D) -> bool:
+	if not _is_guest() or not _combat_motion_transport_enabled() or _session == null or _manager == null or scope.is_empty() \
+		or not is_instance_valid(body) or deployed_body_for(_local_peer_id()) != body \
+		or _manager.call("is_fighting") != true or _encounter.get("phase") != "active" \
+		or scope.get("encounter_id") != _local_bound_encounter_id() or scope.get("realm") != _encounter_realm() \
+		or scope.get("peer_id") != _local_peer_id() \
+		or scope.get("epoch") != _session.call("_altar_current_epoch") or not _realm_rpc_allowed(1): return false
+	var member: Dictionary = _encounter.get("participants", {}).get(_local_peer_id(), {})
+	var deployment: Dictionary = _deployment_identity.get(_local_peer_id(), {})
+	var creature: RefCounted = _manager.call("active_creature")
+	var opponent: Dictionary = _encounter.get("opponent", {})
+	return creature != null and scope.get("character_id") == _local_character_id() \
+		and member.get("character_id") == scope.character_id and member.get("creature_uid") == scope.get("creature_uid") \
+		and int(member.get("actor_generation", 0)) == scope.get("actor_generation") \
+		and creature.get("uid") == scope.get("creature_uid") and deployment.get("creature_uid") == scope.get("creature_uid") \
+		and deployment.get("generation") == scope.get("deployment_generation") \
+		and opponent.get("card", {}).get("uid") == scope.get("opponent_uid") \
+		and opponent.get("body_generation") == scope.get("opponent_generation")
+
+
+func _receive_combat_motion_projection(rec: Dictionary) -> void:
+	var body := deployed_body_for(_local_peer_id())
+	if not is_instance_valid(body): return
+	var projection: Dictionary = rec.get("combat_motion", {})
+	if not _guest_combat_motion_current(projection.get("scope", {}), body):
+		body.remove_meta(&"host_combat_motion")
+		return
+	var previous: Dictionary = body.get_meta(&"host_combat_motion", {})
+	var correction: Dictionary = projection.get("correction", {})
+	var status: Dictionary = projection.get("status", {})
+	if not projection.get("record_seq") is int or int(projection.record_seq) < 0 \
+		or not status.get("cast_action_id") is String: return
+	if not status.get("multiplier") is float and not status.get("multiplier") is int: return
+	if not is_finite(float(status.multiplier)) or float(status.multiplier) < 1.0 \
+		or not status.get("remaining_ms") is int or int(status.remaining_ms) < 0: return
+	if int(status.remaining_ms) > 0 and str(status.cast_action_id).is_empty(): return
+	if previous.get("scope") == projection.scope:
+		if int(projection.get("record_seq", -1)) < int(previous.get("record_seq", -1)) \
+			or int(correction.get("sequence", 0)) < int(previous.get("correction", {}).get("sequence", 0)): return
+		if projection.get("record_seq") == previous.get("record_seq") \
+			and correction.get("sequence", 0) == previous.get("correction", {}).get("sequence", 0): return
+	body.set_meta(&"host_combat_motion", projection.duplicate(true))
+	var proxy: Node = _creature_proxies.get(_local_peer_id())
+	if is_instance_valid(proxy): proxy.call("apply_owner_combat_correction", projection, body)
+
+
+func local_combat_motion_sample(body: Node3D, delta: float) -> Dictionary:
+	var projection: Dictionary = body.get_meta(&"host_combat_motion", {}) if is_instance_valid(body) else {}
+	if not _guest_combat_motion_current(projection.get("scope", {}), body):
+		# A Tag record can precede the command verdict that actually switches
+		# this owner's body. Re-observe that same authenticated record only
+		# after its actual local binding matches; never predict the switch.
+		_receive_combat_motion_projection(_encounter)
+		projection = body.get_meta(&"host_combat_motion", {}) if is_instance_valid(body) else {}
+		if not _guest_combat_motion_current(projection.get("scope", {}), body): return {}
+	var status: Dictionary = projection.get("status", {})
+	if float(_manager.get("_hitstop_left")) <= 0.0:
+		status["remaining_ms"] = maxf(0.0, float(status.get("remaining_ms", 0.0)) - maxf(0.0, delta) * 1000.0)
+	var direction := Vector3.ZERO
+	var thrower: Node = _manager.get("_throw")
+	if _manager.call("combat_input_available") == true and _manager.call("player_is_committed") == false \
+		and _manager.get("_burst_awaiting_host") == false and _manager.get("_move_awaiting_host") == false \
+		and is_instance_valid(thrower) and thrower.call("is_aiming") == false:
+		# Match ordinary walking's analog magnitude; Burst intentionally uses
+		# the normalized _combat_input_direction and has its own original.
+		var input := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
+		var basis_value := Basis.IDENTITY
+		var camera: Node = _manager.get("_camera_rig")
+		if is_instance_valid(camera) and camera.has_method("planar_basis"): basis_value = camera.call("planar_basis")
+		direction = basis_value * Vector3(input.x, 0.0, input.y)
+	return {"scope":projection.scope.duplicate(true), "direction":direction,
+		"position":body.global_position, "yaw":body.rotation.y}
 
 
 func _host_defence_state(encounter_id: String, peer_id: int, target_uid: String) -> Dictionary:

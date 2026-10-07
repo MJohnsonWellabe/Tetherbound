@@ -926,6 +926,20 @@ func self_utility_movement(id: String, uid: String, origin: Vector3, now_ms: int
 	return UTILITY_EFFECTS.movement_multiplier(encounters[id].utility_state, uid, origin, now_ms)
 
 
+## Owner presentation receives a remaining actor-clock duration, never the
+## private status map, host body IDs or a guest-authored movement multiplier.
+func self_utility_movement_projection(id: String, peer: int, binding: Dictionary, status_now_ms: int) -> Dictionary:
+	var neutral := {"cast_action_id":"", "multiplier":1.0, "remaining_ms":0}
+	if not _self_utility_actor_current(id, peer, binding): return neutral
+	var status := _current_self_utility(id, str(binding.get("creature_uid", "")),
+		"movement_buff", status_now_ms, binding)
+	if status.is_empty(): return neutral
+	var multiplier := float(status.get("value", 1.0))
+	if not is_finite(multiplier) or multiplier < 1.0: return neutral
+	return {"cast_action_id":str(status.original.action_id), "multiplier":multiplier,
+		"remaining_ms":maxi(0, int(status.expires_at_ms) - status_now_ms)}
+
+
 ## The existing positive-debit credit gate is the only caller. A missed,
 ## cancelled, duplicate or replacement-body result never consumes Hearten.
 func _consume_landed_self_utility(id: String, peer: int, started: Dictionary, binding: Dictionary,
@@ -1224,7 +1238,7 @@ func pending_move_mastery() -> Array[Dictionary]:
 ## distance/duration/cost/profile are all host inputs.
 func authorize_burst(encounter_id: String, peer_id: int, intent: Dictionary,
 		profile: Dictionary, cost: float, now_ms: int, distance: float,
-		duration: float, regen_delay_seconds: float) -> Dictionary:
+		duration: float, regen_delay_seconds: float, motion_original: Dictionary = {}) -> Dictionary:
 	if not pending_tether_items(encounter_id).is_empty(): return _refuse("burst_intent", peer_id, "item_save_pending", "The original item is still being saved.")
 	var rec: Dictionary = encounters.get(encounter_id, {})
 	if rec.is_empty():
@@ -1278,15 +1292,26 @@ func authorize_burst(encounter_id: String, peer_id: int, intent: Dictionary,
 		(tired.get("delta", {}) as Dictionary).merge(wind_preview, true)
 		return tired
 	var safe_duration := maxf(0.01, duration)
+	if not motion_original.is_empty() and (motion_original.get("kind") != "burst" \
+		or motion_original.get("direction") != [direction.x, direction.y, direction.z] or motion_original.get("distance") != maxf(0.0, distance) \
+		or motion_original.get("duration") != safe_duration \
+		or motion_original.get("scope", {}).get("encounter_id") != encounter_id \
+		or motion_original.get("scope", {}).get("peer_id") != peer_id \
+		or motion_original.get("scope", {}).get("character_id") != row.get("character_id") \
+		or motion_original.get("scope", {}).get("creature_uid") != row.get("creature_uid") \
+		or motion_original.get("scope", {}).get("opponent_uid") != rec.get("opponent", {}).get("card", {}).get("uid") \
+		or motion_original.get("scope", {}).get("opponent_generation") != rec.get("opponent", {}).get("body_generation")):
+		return _refuse("burst_intent", peer_id, "stale_motion", "That movement belongs to another deployment.")
 	var wind_delta := commit_wind(encounter_id, peer_id, action, profile, cost,
 		now_ms, safe_duration, regen_delay_seconds)
 	var deadline_ms := now_ms + ceili(safe_duration * 1000.0)
 	var starts: Dictionary = _strike_state_for(encounter_id).get(peer_id, {}).get("move_starts", {})
-	_strike_state_for(encounter_id)[peer_id] = {
-		"last_action": action, "accepted_at_ms": now_ms,
-		"deadline_ms": deadline_ms, "cooldown_ms": ceili(safe_duration * 1000.0),
-		"move_starts": starts,
-	}
+	# Keep the original beside existing action authority. Do not discard
+	# publication originals when a legal ordinary Burst updates its deadline.
+	authority.merge({"last_action":action, "accepted_at_ms":now_ms,
+		"deadline_ms":deadline_ms, "cooldown_ms":ceili(safe_duration * 1000.0),
+		"move_starts":starts, "burst_motion":motion_original.duplicate(true)}, true)
+	_strike_state_for(encounter_id)[peer_id] = authority
 	var delta := {
 		"encounter_id": encounter_id,
 		"accepted_action": action,
@@ -1296,6 +1321,7 @@ func authorize_burst(encounter_id: String, peer_id: int, intent: Dictionary,
 		"distance": maxf(0.0, distance),
 		"duration": safe_duration,
 	}
+	if not motion_original.is_empty(): delta["motion_original"] = motion_original.duplicate(true)
 	delta.merge(wind_delta, true)
 	return _ok("burst_intent", peer_id, delta)
 
