@@ -1,0 +1,35 @@
+{
+  "producer_commit": "1861efb8c1d3254b01ed76d3594a336dfc96b51c",
+  "consumer_commit": "55d59dd5d4e8ee4f950ebf25d808bd0c007dbee3",
+  "reviewer": "b_f49_review",
+  "verdict": "compatible",
+  "source_verdict": "SOURCE APPROVE",
+  "source_paths": [
+    "scripts/world/south_bridge.gd",
+    "scripts/combat/combat_manager.gd",
+    "tests/test_south_bridge_visual_scale.gd"
+  ],
+  "scope": "Coordinator-rescoped supported SouthBridge bank provider uses authored trench geometry and actual max fighter capsule; existing provider seam preserves negative/zero/positive claims and indoor behavior. Original1861 opening+camp save/schema/identity/economy/transactions and full retained-state guard unchanged. No capsule shrink, state injection, synthetic checkpoint or budget change.",
+  "preflight": {
+    "packet": "D:/CodexTemp/tetherbound-proof/f49-bridge-terrain-preflight-20261007-2153-r1",
+    "tests": 3,
+    "assertions": 28,
+    "failed": 0,
+    "exit": 0,
+    "stderr_empty": true,
+    "not_passing_packet": "2157"
+  },
+  "affected_logic": "Existing test files naming changed manager/bridge; scoped hosted batch remains required",
+  "runtime": "Original bridge R1/R2 remain failed. Genuine changed-source productionLoad→supportedfight→victory→crossing→export remainsOPEN; thismanifest only authorizes exact consumer/source compatibility.",
+  "producers": [
+    {
+      "boundary": "opening_team",
+      "run_id": "37677583782"
+    },
+    {
+      "boundary": "camp_tournament",
+      "run_id": "37679254472"
+    }
+  ],
+  "unchanged_original_bindings": true
+}
