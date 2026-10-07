@@ -218,8 +218,9 @@ func _capture_actual_bounty(game: Node) -> void:
 
 
 ## F28#1 placement-only opt-in. Actual mounted sites/signs in the four shipping
-## scenes, with disclosed trainer/camera poses. No party, stock, recipe, win,
-## travel, clock, save or configuration grants; no duel/access proof.
+## scenes, with disclosed capture-realm selection and trainer/camera poses.
+## No party, stock, recipe, win, clock, save or configuration grants; no
+## earned travel, duel or access proof.
 func _capture_actual_master_sites() -> void:
 	if DisplayServer.get_name() == "headless":
 		push_error("Master placement capture requires the existing render mode")
@@ -228,12 +229,22 @@ func _capture_actual_master_sites() -> void:
 	var written: Array[String] = []
 	var failures: Array[String] = []
 	var observed: Array[Dictionary] = []
+	var game := root.get_node_or_null(^"Game")
+	if game == null or game.get("local") == null:
+		push_error("Actual capture owner is missing")
+		quit(1)
+		return
+	var original_realm := str(game.get("current_realm"))
 	var cases := [
 		{"biome": "meadows", "scene": SCENE, "ids": ["master_t1", "master_t2"]},
 		{"biome": "tidewake", "scene": "res://scenes/world/water_archipelago.tscn", "ids": ["master_t3"]},
 		{"biome": "cloudreach", "scene": "res://scenes/world/cloudreach_cliffs.tscn", "ids": ["master_t4"]},
 		{"biome": "stormwood", "scene": "res://scenes/world/stormwood.tscn", "ids": ["master_t5"]}]
 	for entry: Dictionary in cases:
+		# Existing regional capture convention: bind the displayed realm so
+		# ordinary occupied-world mounting observes the matching live scene.
+		# This is capture setup, not a portal crossing or a permanent unlock.
+		game.set("current_realm", preload("res://scripts/data/biome_order.gd").runtime_id(str(entry.biome)))
 		var packed := load(str(entry.scene)) as PackedScene
 		if packed == null:
 			failures.append("Missing actual scene: " + str(entry.scene))
@@ -251,6 +262,10 @@ func _capture_actual_master_sites() -> void:
 		# while this capture tool supplies its disclosed composition.
 		camera.get_parent().set_process(false)
 		camera.get_parent().set_physics_process(false)
+		# SpringArm3D internally rewrites direct children's transforms even
+		# with its script stopped. Retain the shipping lens outside that arm
+		# while the existing capture tool supplies its disclosed composition.
+		camera.reparent(world)
 		for id: String in entry.ids:
 			var matches: Array[Node3D] = []
 			for node: Node in get_nodes_in_group("foundation_master_sites"):
@@ -310,7 +325,8 @@ func _capture_actual_master_sites() -> void:
 		world.queue_free()
 		for frame in POSE_FRAMES: await physics_frame
 	print("MASTER PLACEMENT OBSERVED ", JSON.stringify(observed))
-	print("Master placement capture: trainer/camera pose only; no earned route, access, duel, recipe or reward claim.")
+	game.set("current_realm", original_realm)
+	print("Master placement capture: capture-realm selection and trainer/camera pose only; no earned route, access, duel, recipe or reward claim.")
 	for failure: String in failures: push_error(failure)
 	quit(0 if failures.is_empty() and observed.size() == 5 and written.size() == 10 else 1)
 
