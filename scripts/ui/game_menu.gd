@@ -178,13 +178,16 @@ func restart_for_graphics() -> String:
 	return reason
 
 
-## A sibling of `_root`, not a child of it, so it can be shown while the menu
-## itself stays closed. This layer draws above the combat HUD (layer 20 vs 1,
-## see game_menu.tscn), so the hint reaches the player mid-fight, which is the
-## one moment it exists to explain.
+## Passive status above modal shades, visible while the menu stays closed.
+## It never owns input or intercepts the current modal's controls.
 func _build_refusal_label() -> void:
+	var status := CanvasLayer.new()
+	status.name = "RefusalStatus"
+	status.layer = 81
+	add_child(status)
 	_refusal_label = Label.new()
 	_refusal_label.name = "RefusalHint"
+	_refusal_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_refusal_label.visible = false
 	_refusal_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_refusal_label.set_anchors_preset(Control.PRESET_CENTER_TOP)
@@ -199,7 +202,7 @@ func _build_refusal_label() -> void:
 	_refusal_label.add_theme_color_override("font_outline_color", UITokens.OUTLINE)
 	_refusal_label.add_theme_color_override("font_shadow_color", Color(UITokens.OUTLINE, 0.6))
 	_refusal_label.add_theme_constant_override("shadow_offset_y", 3)
-	add_child(_refusal_label)
+	status.add_child(_refusal_label)
 
 
 ## Snapshot the input map as project.godot left it, then lay the player's
