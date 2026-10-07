@@ -27,14 +27,16 @@ func test_an_accepted_guest_arrival_confirms_the_travel_reset_at_its_body() -> v
 	lifecycle.add_child(body)
 	body.position = Vector3(12.0, 1.5, -4.0)
 	lifecycle.body = body
+	# The production proof reads global_position. Keep this existing fixture
+	# inside the actual tree so the coordinate read is valid and nonzero.
+	var tree := Engine.get_main_loop() as SceneTree
+	tree.root.add_child(session)
 	ARRIVAL._confirm_travel_reset(session, 7, "meadows")
 	assert_eq(session.confirmed.size(), 1)
 	assert_eq(session.confirmed[0][0], 7)
 	assert_eq(session.confirmed[0][1], "meadows")
-	# The anchor is the host's live body (global_position needs the scene
-	# tree, which this runner lacks; the replay bounds the endpoint by the
-	# live body, test_owner_passive_sync).
-	assert_true(session.confirmed[0][2] is Vector3)
+	assert_eq(session.confirmed[0][2], body.global_position, "the host's actual live body anchor")
+	assert_eq(session.confirmed[0][2], Vector3(12.0, 1.5, -4.0), "never an out-of-tree zero transform")
 	assert_true(session.confirmed[0][3], "an arrival-sourced proof")
 	lifecycle.body = null
 	ARRIVAL._confirm_travel_reset(session, 7, "meadows")
