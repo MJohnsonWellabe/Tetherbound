@@ -1661,6 +1661,17 @@ func _spawn_the_cast() -> void:
 ## frames after this director's. Null after the wait means this world has no
 ## house, which is a legal world — the smoke tests' bare boots included.
 func _wait_for_the_house() -> Node3D:
+	# The production shell mounts settlement after terrain/scatter uploads.
+	# Its time-sliced Forward+ build can outlast the short collision wait;
+	# falling back before it finishes permanently leaves _house unbound and
+	# its opening DoorGate closed, even for a character at walk_out.
+	# Use the world's actual readiness, not a larger arbitrary frame budget.
+	var world := get_parent()
+	while world.has_method("shell_build_complete") and not bool(world.call("shell_build_complete")):
+		var mounted := world.get_node_or_null(^"GrandpaHouse") as Node3D
+		if mounted != null:
+			return mounted
+		await get_tree().physics_frame
 	for i in GROUND_WAIT_FRAMES:
 		var house := get_parent().get_node_or_null(^"GrandpaHouse") as Node3D
 		if house != null:

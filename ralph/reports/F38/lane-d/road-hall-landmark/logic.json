@@ -1,0 +1,12 @@
+{
+  "criteria": ["F38#4", "F17#6"],
+  "scope": "Affected village/Hall source logic only; failed visual criterion remains open",
+  "source_commit": "6f978342c55eeef64955de6a372fc5f618e577b9",
+  "run_id": 37669603978,
+  "artifact_id": 11505495021,
+  "proof": "tests/run_tests.gd",
+  "args": "--only=test_band_dialogue,test_crossing_hall_portal_mount,test_crossing_hall_relic_hang,test_dialogue_runner,test_farming,test_gate_a_front_door_and_world,test_gate_f_segments,test_grandpas_village_visual_identity,test_inn_exterior_identity,test_inn_interior_visual_identity,test_loft_bed_reachable,test_meadows_south_trail_pulls_0912,test_opening_home_camera_guard,test_quest_log,test_river_crossings_stay_open,test_shop_floor_support,test_stormwood_fenn_clearance,test_stormwood_settlement_grounding,test_telegraph_glow,test_village_boundary,test_village_main_street,test_village_redesign_topology,test_village_road_topology,test_village_street_0912",
+  "result": {"files": 24, "tests": 270, "assertions": 10128, "failed": 0, "exit": 0, "seconds": 17},
+  "diagnostics": "Exit reported 14 leaked ObjectDB instances and one resource still in use; selected assertions all passed. No engine behavior or visual PASS implied.",
+  "disposition": "Reuse for unchanged source paths; no confirming run. Existing physical area smoke is not yet evidenced on this cut."
+}
