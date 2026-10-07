@@ -29,6 +29,8 @@ func _physics_process(_delta: float) -> void:
 	if is_instance_valid(body):
 		body.clear_environment_velocity_modifier(&"water_buoyancy")
 		body.remove_meta("water_aquatic")
+		if body.has_method("set_traversal_pose"):
+			body.call("set_traversal_pose", "")
 	body = current
 	state = STATE.new()
 	if body == null:
@@ -50,6 +52,16 @@ func _apply_buoyancy(actor: CharacterBody3D, delta: float) -> void:
 	var player := world.local_rig() as CharacterBody3D
 	var human: Node = player.swim_controller
 	var fighting: bool = world.get_node("CombatManager").is_fighting() or director.trainer_battle_active()
+	# Presentation follows this owner-authored traversal state, never grants it.
+	# A flag-off body without the role retains its installed locomotion clips.
+	if actor.has_method("set_traversal_pose"):
+		var pose := ""
+		if not fighting:
+			pose = "ride" if mounted else ""
+			if depth > float(_rules.human.exit_depth_m) \
+					and (depth >= float(_rules.human.entry_depth_m) or state.mode != STATE.Mode.LAND):
+				pose = "swim"
+		actor.call("set_traversal_pose", pose)
 	if depth <= float(_rules.human.exit_depth_m):
 		if state.mode != STATE.Mode.LAND:
 			state.leave_water()

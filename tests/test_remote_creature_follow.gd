@@ -31,6 +31,35 @@ func test_recast_starts_a_new_sample_without_replacing_or_moving_the_remote_body
 	assert_eq(proxy.position, Vector3(2.0, 1.0, 3.0))
 	assert_true((proxy.get("_sampled") as Dictionary).is_empty(), "two creatures cannot fabricate a damage/level difference")
 	assert_eq(proxy.get("species_id"), "ripplet")
+	# Existing replicated traversal fields also drive the viewer's clips, without
+	# replacing this stable body or fabricating abilities/resource state.
+	var trainer := preload("res://scripts/net/remote_trainer.gd").new()
+	var player := AnimationPlayer.new()
+	var animator := preload("res://scripts/creatures/creature_animator.gd").new(player, {})
+	proxy.set("_animator", animator)
+	proxy.leader = trainer
+	trainer.net_riding = true
+	proxy.call("_sync_traversal_pose")
+	assert_eq(animator.get("_traversal_role"), "ride", "existing owner ride bit selects ride")
+	trainer.net_riding = false
+	proxy.call("_sync_traversal_pose")
+	assert_eq(animator.get("_traversal_role"), "", "dismount clears the viewer pose")
+	proxy.aquatic.enter_water(true, 2.0)
+	proxy.net_aquatic = proxy.aquatic.snapshot()
+	proxy.call("_sync_traversal_pose")
+	assert_eq(animator.get("_traversal_role"), "swim", "validated aquatic state selects swim")
+	proxy.aquatic.pause_for_combat()
+	trainer.net_riding = true
+	proxy.call("_sync_traversal_pose")
+	assert_eq(animator.get("_traversal_role"), "", "combat cannot retain swim or ride presentation")
+	proxy.aquatic.leave_water()
+	trainer.net_riding = false
+	proxy.call("_sync_traversal_pose")
+	assert_eq(animator.get("_traversal_role"), "", "dry land restores ordinary locomotion")
+	assert_eq(proxy.get_instance_id(), instance_id, "presentation keeps the stable creature body")
+	proxy.leader = null
+	trainer.free()
+	player.free()
 	proxy.free()
 
 

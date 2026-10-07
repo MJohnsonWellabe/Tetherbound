@@ -350,6 +350,8 @@ func mount() -> bool:
 	_mount = body
 	_riding_now = true
 	_last_mount_position = body.global_position
+	if body.has_method("set_traversal_pose"):
+		body.call("set_traversal_pose", "ride")
 
 	# The follower stops following. It is being driven by the stick now, and two
 	# things calling `request_move` on one creature in one frame is one of them
@@ -392,6 +394,8 @@ func dismount() -> bool:
 	var alive := is_instance_valid(body)
 	if alive:
 		_last_mount_position = body.global_position
+		if body.has_method("set_traversal_pose"):
+			body.call("set_traversal_pose", "")
 	_restore_climb_limit(body if alive else null)
 
 	if _player != null and is_instance_valid(_player):
