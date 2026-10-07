@@ -1,0 +1,51 @@
+{
+  "criteria": [
+    "F37#0",
+    "F37#1",
+    "F37#4"
+  ],
+  "source_sha": "220ea0bb0217bd263b232e13d9f259514abb9e2d",
+  "run_id": 37702491315,
+  "artifact_id": 11518351838,
+  "verdict": "FAIL: changed-source R3; no READY",
+  "actual_failure": "Step39 after real production returning Title/Join: riding.local.mounted false after1800polls",
+  "passed_prefix": [
+    "Original ownedL30Ripplet/breakthrough fixture +realhostjoin",
+    "Ordinary saddless mount/currentcrossing/deepapproach within originalsharedbudgets",
+    "RealDive input/state and1280x720native dry/deepSurface/earlyDive/activeDiveframes",
+    "Guest own plus host foreignrideridentity agree (corrected exactRipplet saddle oracle)",
+    "Guestproductioncharacter save +before_dropcapture",
+    "Actual droppedtransport and retainedfinaldisconnectwrittenUID/debt",
+    "Livepartywiped and productionTitle returningJoin restoredoriginalCID undernewpeerID",
+    "Host/guest actualregistrycount2"
+  ],
+  "unreached": [
+    "Restoredridebody visibility/UID/debt matching",
+    "Optionalcache/node claims and authoredroute",
+    "Postrejoin after-frame ownership oracle/final persistedguard"
+  ],
+  "failed_step": 39,
+  "exit": 1,
+  "exit_evidence": "Original PROOF.md exit1; originalparentnoexitmarker",
+  "engine_errors": {
+    "parent": 0,
+    "guest": 1,
+    "guest_message": "Unable to send packet on channel1,maxchannels0",
+    "script_errors": 0,
+    "scope": "Guest error retained; cause of restore refusal not yet established"
+  },
+  "setup": "Existing explicit ownedL30Ripplet/breakthrough fixture beforeadmission +hostFirstShore placement. No earnedfeast/campaignclaim.",
+  "flag_disposition": "presentation_enabled returnedOFF after actualfailure; no flag-on READY",
+  "review": "Same original b_f37_review examining bounded actual restorecause; no unchanged rerun",
+  "visual": "Same original b_night_visual judging retained actualframes; functional/rejoin unassessed",
+  "affected_logic": {
+    "run_id": 37701115492,
+    "tests": 608,
+    "assertions": 917217,
+    "failed": 0,
+    "exit": 0,
+    "source_sha": "220ea0bb0217bd263b232e13d9f259514abb9e2d",
+    "review": "APPROVE scoped logic;28ENGINE fixture/controlmessages disclosed"
+  },
+  "stop_rule": "No unchanged fourth attempt. Move to F37#2 human segment and F46 durable lesson proof while nativeF49 Warrens queued."
+}

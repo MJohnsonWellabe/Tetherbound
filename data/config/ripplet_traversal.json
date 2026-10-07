@@ -13,7 +13,7 @@
     1.45,
     -0.15
   ],
-  "presentation_enabled": true,
+  "presentation_enabled": false,
   "_comment": "F37 starting values. Mechanics reuse Water's owner body and current field. Closed tide races retain full force. Installed prop dressing is flag-off pending code-blind proof; Compatibility is unchanged.",
   "sites": [
     {
