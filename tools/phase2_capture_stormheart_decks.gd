@@ -8,6 +8,80 @@ extends "res://tools/capture_stormwood_f10_matrix.gd"
 var _deck_height := NAN
 var _deck_floor_hit := {}
 var _expected_floor := ""
+const HERO_CONFIG := "res://data/config/stormheart_presentation.json"
+var _hero_original := PackedByteArray()
+var _hero_candidate := false
+var _hero_source := ""
+var _hero_config_sha256 := ""
+
+
+func _run() -> void:
+	# Reuse the exterior matrix's hero-only overlay. This explicit preview
+	# changes no shipping flag or regional material and restores exact bytes.
+	_hero_candidate = OS.get_cmdline_user_args().has("--f41-candidate")
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--source-commit="):
+			_hero_source = arg.trim_prefix("--source-commit=")
+	if _hero_candidate:
+		var sha := RegEx.new()
+		sha.compile("^[0-9a-f]{40}$")
+		if sha.search(_hero_source) == null:
+			push_error("Stormheart candidate needs an exact --source-commit")
+			quit(2)
+			return
+		_hero_original = FileAccess.get_file_as_bytes(HERO_CONFIG)
+		var parsed: Variant = JSON.parse_string(_hero_original.get_string_from_utf8())
+		if not parsed is Dictionary:
+			_failures.append("Stormheart candidate config is invalid")
+			_done()
+			return
+		var config: Dictionary = parsed
+		config.enabled = true
+		for part: String in ["ancient_trunk", "built_detail", "branching_crown", "canopy_atlas", "core_finish", "visible_roots"]:
+			config[part].enabled = true
+		var file := FileAccess.open(HERO_CONFIG, FileAccess.WRITE)
+		if file == null:
+			_failures.append("Stormheart candidate config cannot be staged")
+			_done()
+			return
+		file.store_string(JSON.stringify(config, "\t") + "\n")
+		file.flush()
+		var error := file.get_error()
+		file.close()
+		if error != OK:
+			_failures.append("Stormheart candidate config flush failed")
+			_done()
+			return
+	_hero_config_sha256 = FileAccess.get_file_as_string(HERO_CONFIG).sha256_text()
+	await super._run()
+	_restore_hero_config()
+
+
+func _restore_hero_config() -> void:
+	if _hero_original.is_empty():
+		return
+	var file := FileAccess.open(HERO_CONFIG, FileAccess.WRITE)
+	if file == null:
+		_failures.append("Stormheart original config cannot be restored")
+		return
+	file.store_buffer(_hero_original)
+	file.flush()
+	var error := file.get_error()
+	file.close()
+	if error != OK or FileAccess.get_file_as_bytes(HERO_CONFIG) != _hero_original:
+		_failures.append("Stormheart original config restore mismatch")
+	_hero_original.clear()
+
+
+func _capture(frame_id: String, description: String, full_size: bool, extra: Dictionary = {}) -> void:
+	await super._capture(frame_id, description, full_size, extra.merged({
+		"candidate_preview": _hero_candidate, "source_commit": _hero_source,
+		"stormheart_config_sha256": _hero_config_sha256}, true))
+
+
+func _done() -> void:
+	_restore_hero_config()
+	super._done()
 
 
 func _matrix_pass(aftermath: bool) -> void:
