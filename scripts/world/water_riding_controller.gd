@@ -35,10 +35,13 @@ func apply_ripplet_action(action: String, uid: String) -> void:
 			dive_remaining_s = minf(dive_remaining_s, float(get_meta("restored_dive_budget")))
 			remove_meta("restored_dive_budget")
 			remove_meta("restored_dive_uid")
+		get_node("/root/Game").push_world_message("Ripplet is diving. Tap Jump to surface.")
 	elif action == "surface":
 		surface()
 
 func surface() -> void:
+	if diving:
+		get_node("/root/Game").push_world_message("Ripplet has surfaced.")
 	diving = false
 	dive_remaining_s = 0.0
 
