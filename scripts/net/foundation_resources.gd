@@ -22,6 +22,7 @@ func _ready() -> void:
 	add_child(_service)
 	_service.call("configure", submit, stock, plot)
 	session().connect("foundation_reply_received", _reply)
+	session().connect("homestead_action_completed", _completed)
 	session().connect("session_ended", func(_reason: String) -> void: _pending.clear())
 
 func _enabled() -> bool:
@@ -140,6 +141,27 @@ func _reply(envelope: Dictionary, result: Dictionary) -> void:
 	var pending: Dictionary = _pending.get(id, {})
 	if pending.is_empty() or not E._equivalent(pending.intent, envelope.intent) \
 		or pending.revision != envelope.get("revision") or pending.key != envelope.get("station_key"): return
+	_consider(id, result)
+
+## Session announces this synchronously at the original accepted owner ACK.
+## Consume it while that canonical row is current, before a later morning or
+## station decision replaces the one-row journal. A receipt alone is no ACK.
+func _completed(action: String, intent: Dictionary, result: Dictionary) -> void:
+	if action != "resource" or not saved_decision(result): return
+	var id := str(intent.get("request", {}).get("action_id", ""))
+	var pending: Dictionary = _pending.get(id, {})
+	var owner := session()
+	if pending.is_empty() or int(pending.revision) < 0 or not E._equivalent(pending.intent, intent) \
+		or pending.world.get_ref() != _world() or pending.epoch != owner.call("_altar_current_epoch") \
+		or pending.character_id != owner.call("_local_character_id"): return
+	var row: Dictionary = owner.call("_owner_training_row")
+	if row.get("action") != action or row.get("status") != "accepted" or row.get("session_id") != pending.epoch \
+		or row.get("character_id") != pending.character_id or row.get("source_key") != pending.key \
+		or not E._equivalent(row.get("intent"), intent) or row.get("receipt") != result.get("receipt") \
+		or row.get("host_context", {}).get("expected_revision") != pending.revision \
+		or row.get("character_revision") != int(pending.revision) + 1: return
+	var accepted: Dictionary = owner.call("_foundation_decision", int(owner.call("local_peer_id")), row)
+	if not saved_decision(accepted) or accepted.get("receipt") != result.get("receipt"): return
 	_consider(id, result)
 
 static func saved_decision(result: Dictionary) -> bool:
