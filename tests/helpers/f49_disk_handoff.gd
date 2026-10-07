@@ -58,9 +58,55 @@ func configure_compatibility(paths: Array[String]) -> bool:
 				or not binding.get("log_path") is String or binding.log_path.strip_edges().is_empty() \
 				or not _hex(binding.get("producer_commit"), 40) \
 				or not _hex(binding.get("receipt_sha256"), 64) or not _hex(binding.get("log_sha256"), 64) \
-				or not _hex(binding.get("artifact_sha256"), 64) or not binding.get("files_sha256") is Dictionary \
-				or binding.files_sha256.is_empty() or not _decimal(binding.get("run_id")) or not _decimal(binding.get("artifact_id")):
-				return _fail("F49 compatibility requires actual producer run/artifact/log/receipt/save bindings")
+				or not binding.get("files_sha256") is Dictionary or binding.files_sha256.is_empty():
+				return _fail("F49 compatibility requires actual producer log/receipt/save bindings")
+			var producer_kind: Variant = binding.get("producer_kind", "github_actions")
+			if producer_kind == "native_process":
+				var native: Variant = binding.get("native_process_receipt")
+				if binding.has("run_id") or binding.has("artifact_id") or binding.has("artifact_sha256") \
+					or not native is Dictionary or not native.get("path") is String or native.path.strip_edges().is_empty() \
+					or not native.get("stderr_path") is String or native.stderr_path.strip_edges().is_empty() \
+					or not _hex(native.get("sha256"), 64) or not _hex(native.get("stderr_sha256"), 64):
+					return _fail("F49 native compatibility requires disjoint supervisor receipt and stderr byte bindings")
+				var process_path := _evidence_path(absolute, str(native.path))
+				var stderr_path := _evidence_path(absolute, str(native.stderr_path))
+				if FileAccess.get_sha256(process_path) != native.sha256 or FileAccess.get_sha256(stderr_path) != native.stderr_sha256:
+					return _fail("F49 native supervisor receipt or stderr digest changed or is missing")
+				var process_receipt: Variant = JSON.parse_string(FileAccess.get_file_as_string(process_path))
+				if not process_receipt is Dictionary or process_receipt.get("source") != binding.producer_commit \
+					or typeof(process_receipt.get("exit_code")) not in [TYPE_INT, TYPE_FLOAT] or process_receipt.exit_code != 0 \
+					or process_receipt.get("stop_reason") != "" \
+					or typeof(process_receipt.get("pid")) not in [TYPE_INT, TYPE_FLOAT]:
+					return _fail("F49 native producer did not finish successfully on its bound source")
+				var pid: float = float(process_receipt.pid)
+				if not is_finite(pid) or pid <= 0.0 or floorf(pid) != pid:
+					return _fail("F49 native producer requires a positive integer process id")
+				var utc := RegEx.new()
+				utc.compile("^([0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])T(?:[01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9])(?:\\.([0-9]{1,9}))?Z$")
+				var seconds: Array[int] = []
+				var fractions: Array[int] = []
+				for field: String in ["started_utc", "finished_utc"]:
+					var stamp: Variant = process_receipt.get(field)
+					if not stamp is String: return _fail("F49 native supervisor requires UTC start and finish timestamps")
+					var match_utc := utc.search(stamp)
+					if match_utc == null or match_utc.get_string(0) != stamp:
+						return _fail("F49 native supervisor timestamp is not strict UTC")
+					var epoch: int = Time.get_unix_time_from_datetime_string(match_utc.get_string(1))
+					if Time.get_datetime_string_from_unix_time(epoch) != match_utc.get_string(1):
+						return _fail("F49 native supervisor timestamp is not a valid calendar date")
+					seconds.append(epoch)
+					fractions.append(int(match_utc.get_string(2).rpad(9, "0")))
+				if seconds[1] < seconds[0] or (seconds[1] == seconds[0] and fractions[1] <= fractions[0]):
+					return _fail("F49 native supervisor finish must follow its start")
+				for line: String in FileAccess.get_file_as_string(stderr_path).split("\n"):
+					if line.begins_with("ERROR:") or line.begins_with("SCRIPT ERROR:") or line.begins_with("SCRIPTERROR:"):
+						return _fail("F49 native compatibility cannot credit an engine-error producer")
+			elif producer_kind == "github_actions":
+				if binding.has("native_process_receipt") or not _hex(binding.get("artifact_sha256"), 64) \
+					or not _decimal(binding.get("run_id")) or not _decimal(binding.get("artifact_id")):
+					return _fail("F49 compatibility requires actual producer run/artifact/log/receipt/save bindings")
+			else:
+				return _fail("F49 compatibility has an unknown producer kind")
 			for hash: Variant in binding.files_sha256.values():
 				if not _hex(hash, 64): return _fail("F49 compatibility has an invalid save digest")
 			if not _hex(binding.get("save_tree_sha256"), 64) or binding.save_tree_sha256 != _tree_digest(binding.files_sha256):
@@ -69,9 +115,18 @@ func configure_compatibility(paths: Array[String]) -> bool:
 			if FileAccess.get_sha256(log_path) != binding.log_sha256:
 				return _fail("F49 compatibility producer log digest changed or is missing")
 			var matches := 0
+			var results := 0
 			for line: String in FileAccess.get_file_as_string(log_path).split("\n"):
 				if line.begins_with("ERROR:") or line.begins_with("SCRIPT ERROR:"):
 					return _fail("F49 compatibility cannot credit an engine-error producer")
+				if producer_kind == "native_process":
+					if line.begins_with("SCRIPTERROR:"): return _fail("F49 native compatibility cannot credit an engine-error producer")
+					if line.begins_with("EARNED CHAIN RESULT "):
+						var result: Variant = JSON.parse_string(line.trim_prefix("EARNED CHAIN RESULT "))
+						if not result is Dictionary or result.get("segment") != binding.boundary \
+							or result.get("passed") != true or result.get("failures") != []:
+							return _fail("F49 native producer result is malformed, failed or for another boundary")
+						results += 1
 				if not line.begins_with("F49 DISK HANDOFF "): continue
 				var row: Variant = JSON.parse_string(line.trim_prefix("F49 DISK HANDOFF "))
 				if not row is Dictionary: return _fail("F49 compatibility has a malformed producer handoff")
@@ -80,6 +135,8 @@ func configure_compatibility(paths: Array[String]) -> bool:
 						return _fail("F49 compatibility producer log does not bind the actual saved cut")
 					matches += 1
 			if matches != 1: return _fail("F49 compatibility needs one actual producer handoff in its log")
+			if producer_kind == "native_process" and results != 1:
+				return _fail("F49 native compatibility needs exactly one passed earned-chain result in its stdout")
 		compatibility_manifests[digest] = manifest
 		compatibility_files[digest] = absolute
 	return true
