@@ -28,6 +28,7 @@ var _attune_pending := false
 var last_verdict: Dictionary = {}
 var _challenge_prompt: Node3D
 var _absent_seconds: Dictionary = {}
+var _terminal_author_peer := 0
 
 func _ready() -> void:
 	pass
@@ -46,7 +47,7 @@ func _retire_completed_body() -> void:
 	# _engaged_with cleanup. A durable result must clear its physical body in
 	# the same live realm too, after the local manager finishes its result beat.
 	# Observers and late ledger recipients take the identical completed state.
-	if _local_fight or not is_instance_valid(body):
+	if _local_fight or not is_instance_valid(body) or (authority != null and _alpha_results_pending(authority.encounter_id)):
 		return
 	var game := get_node_or_null("/root/Game")
 	if game == null or not game.world.flags.has(str(rules.get("completion_flag", ""))):
@@ -58,6 +59,7 @@ func _retire_completed_body() -> void:
 func build(realm: Node3D, director: Node) -> void:
 	world = realm
 	primary = director
+	_session = get_node("/root/Game").session
 	rules = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_alpha.json"))
 	swimming_rules = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_swimming.json"))
 	authority = ALPHA_STATE.new(rules)
@@ -104,6 +106,11 @@ func is_alpha_authority() -> bool:
 func is_encounter_host() -> bool:
 	return is_alpha_authority()
 
+## This persistent realm service is also the authority for an offline fight.
+## The ordinary director's network-only predicate remains unchanged.
+func _is_host() -> bool:
+	return is_inside_tree() and _session != null and _session.call("is_host") == true
+
 func phase_definition() -> Dictionary:
 	return authority.phase()
 
@@ -132,7 +139,110 @@ func _creature_card_for(peer_id: int) -> Dictionary:
 	return primary._creature_card_for(peer_id)
 
 func supports_host_move_start() -> bool:
-	return false # This persistent transport retains its existing strike protocol.
+	return true
+
+
+func _strike_actor_binding(id: String, peer: int, deployed: Node3D) -> Dictionary:
+	if not is_instance_valid(primary) or primary == self: return {}
+	var binding: Dictionary = primary.call("_strike_actor_binding", id, peer, deployed)
+	if binding.is_empty(): return {}
+	binding = binding.duplicate(true)
+	var member: Dictionary = _encounter_host.call("record", id).get("participants", {}).get(peer, {})
+	binding["actor_generation"] = int(member.get("actor_generation", 0))
+	binding.make_read_only()
+	return binding
+
+func presentation_move_actor(launch: Dictionary, deployed: Node3D) -> Dictionary:
+	if not is_instance_valid(primary) or primary == self: return {}
+	return primary.call("presentation_move_actor", launch, deployed)
+
+func _bind_alpha_actions(rec: Dictionary, peer: int) -> bool:
+	var id: String = str(rec.get("encounter_id", ""))
+	if id.is_empty() or _session == null: return false
+	if _shared_host_fight(id) == null:
+		var resolver: Node = SHARED_WILD_HOST_FIGHT.new()
+		add_child(resolver)
+		resolver.call("bind_persistent_opponent", body, self, id, 1)
+		_shared_host_fights[id] = resolver
+	var context: Dictionary = _session.call("_host_wild_training_context")
+	if MATH.config().get("actor_vitals", {}).get("runtime_enabled") == true and context.get("ready") == true:
+		var scope := WILD_ACTOR_SCOPE.make(str(context.world_namespace), str(context.session_id), "water", id)
+		if scope.is_empty(): return false
+		rec["wild_actor_owner"] = scope
+		_shared_host_fight(id).set_meta(&"canonical_wild_context", context.duplicate(true))
+		if _ordinary_actor_binding(id, peer, deployed_body_for(peer)).is_empty(): return false
+	return true
+
+
+## Alpha owns this record, while the primary director owns deployments. Read
+## the existing saved-action ledgers directly, including a disabled gate's
+## retained original; never substitute the primary's trainer-only registry.
+func ordinary_actor_vitals_pending(id: String) -> bool:
+	if authority == null or id != authority.encounter_id: return false
+	if is_inside_tree() and not _is_host(): return _encounter.get("ordinary_actor_vitals_pending") == true
+	for original: Dictionary in _ordinary_actor_vitals_proposals.values():
+		if original.get("encounter_id") == id and original.get("presented") != true: return true
+	return not (_encounter_host.call("pending_actor_vitals", id) as Array).is_empty()
+
+
+func _alpha_results_pending(id: String) -> bool:
+	if ordinary_actor_vitals_pending(id): return true
+	if _encounter_host == null: return false
+	if _encounter_host.call("move_action_publication_pending", id) == true: return true
+	for original: Dictionary in _encounter_host.call("pending_move_mastery"):
+		if original.get("encounter_id") == id: return true
+	return false
+
+
+func _ordinary_deployment_pending(peer: int, next_uid: String) -> bool:
+	if authority == null or not ordinary_actor_vitals_pending(authority.encounter_id): return false
+	var member: Dictionary = authority.record().get("participants", {}).get(peer, {})
+	if member.is_empty() or member.get("actor_bound_uid") == next_uid: return false
+	var refusal := {"ok":false, "pending":false, "kind":"deployment", "peer":peer,
+		"code":"pending_vitals", "reason":"The original health change is still being saved.", "delta":{}}
+	if peer == _local_peer_id(): _deliver_encounter_verdict(refusal)
+	else: _send_realm_rpc(peer, "_rpc_encounter_verdict", [refusal])
+	return true
+
+
+func _ordinary_bind_deployed_peer(peer: int) -> void:
+	if authority == null or not uses_wild_actor_vitals(authority.encounter_id) \
+		or ordinary_actor_vitals_pending(authority.encounter_id): return
+	var rec := authority.record()
+	if rec.get("phase") == "active" and rec.get("participants", {}).has(peer):
+		_ordinary_actor_binding(authority.encounter_id, peer, deployed_body_for(peer))
+
+
+## Aquaryn keeps its original resolution and body through owner-save retries.
+## Ordinary wild XP never replaces the Alpha's existing reward producer.
+func _capture_wild_victory_source(_id: String, _accepted: Dictionary) -> void:
+	pass
+
+
+func canonical_wild_encounter(_id: String) -> bool:
+	return false
+
+
+func _finalize_shared_host_fight(id: String, _outcome: String) -> void:
+	if authority != null and id == authority.encounter_id:
+		authority.synchronise_damage()
+		_publish_snapshot()
+
+
+func _send_realm_rpc(peer: int, method: String, arguments: Array, _completing: bool = false) -> bool:
+	if transport == null: return false
+	match method:
+		"_rpc_encounter_verdict": transport.deliver(peer, "verdict", arguments[0])
+		"_rpc_encounter_attack_launch":
+			transport.deliver(peer, "attack_launch", {"encounter_id": arguments[0], "author": arguments[1], "launch": arguments[2]})
+		"_rpc_encounter_peer_impact":
+			transport.deliver(peer, "peer_impact", {"encounter_id": arguments[0], "impact": arguments[1]})
+		"_rpc_encounter_enemy_hit":
+			transport.deliver(peer, "enemy_hit", arguments[1])
+		"_rpc_encounter_record":
+			transport.deliver(peer, "combat_record", {"record": arguments[0], "quiet": arguments[1]})
+		_: return false
+	return true
 
 
 func submit_encounter_intent(intent: Dictionary) -> Dictionary:
@@ -141,7 +251,7 @@ func submit_encounter_intent(intent: Dictionary) -> Dictionary:
 	# monotonic action id. Keep the same protocol invariant here: the host's
 	# replay/cooldown authority refuses missing or repeated action ids.
 	var outbound := intent
-	if str(intent.get("kind", "")) in ["strike_intent", "burst_intent"]:
+	if str(intent.get("kind", "")) in ["move_start", "strike_intent", "burst_intent"]:
 		outbound = intent.duplicate(true)
 		if intent.has("action"):
 			_encounter_action = maxi(_encounter_action, int(intent.get("action", 0)))
@@ -160,30 +270,40 @@ func host_commit(intent: Dictionary, peer: int, actor: Dictionary) -> Dictionary
 	if kind == "attune":
 		return _host_attune(intent, peer, actor)
 	if kind == "engage":
+		if not authority.encounter_id.is_empty() and _alpha_results_pending(authority.encounter_id):
+			return _refusal(intent, "The previous combat result is still being saved.")
 		if get_node("/root/Game").world.flags.has(str(rules.completion_flag)):
 			return _refusal(intent, "Aquaryn has already been resolved in this world.")
 		var deployed := deployed_body_for(peer)
 		if deployed == null or deployed.global_position.distance_to(body.global_position) > float(rules.authority.engage_radius_m):
 			return _refusal(intent, "Bring your creature closer to Aquaryn.")
-		var rec: Dictionary = authority.engage(peer, str(actor.get("character_id", "")), "", body.instance)
+		var card := _creature_card_for(peer)
+		var rec: Dictionary = authority.engage(peer, str(actor.get("character_id", "")), str(card.get("creature_uid", "")), body.instance)
 		if rec.is_empty():
 			return _refusal(intent, "Aquaryn cannot be challenged right now.")
 		_engaged_with = body
 		_encounter = rec
+		if not _bind_alpha_actions(rec, peer):
+			_leave_alpha(peer, true)
+			return _refusal(intent, "Your creature's saved combat state is not ready.")
 		authority.host.note_opponent_position(authority.encounter_id, body.centre(), Time.get_ticks_msec())
 		_publish_snapshot()
 		return {"ok": true, "kind": kind, "record": rec}
 	if str(intent.get("encounter_id", "")) != str(authority.encounter_id) or not authority.host.is_participant(authority.encounter_id, peer):
 		return _refusal(intent, "You are not participating in this fight.")
+	if kind in ["catch_attempt", "catch_finished", "disengage"] and ordinary_actor_vitals_pending(authority.encounter_id):
+		return _refusal(intent, "The original health change is still being saved.")
 	match kind:
-		"strike_intent":
-			return _alpha_strike(intent, peer)
-		"burst_intent":
-			return _host_burst(intent, peer)
+		"move_start", "strike_intent", "burst_intent":
+			return _host_commit_encounter(intent, peer)
 		"catch_attempt":
 			return _host_catch(intent, peer)
 		"catch_finished":
 			var result: Dictionary = authority.finish_catch(peer, _catch_arbiter, Time.get_ticks_msec())
+			if str(result.get("outcome", "")) == "escaped":
+				var resolver := _shared_host_fight(authority.encounter_id)
+				var target := target_body()
+				if resolver != null and target != null: resolver.call("resume_after_catch", target)
 			_publish_snapshot()
 			if str(result.get("outcome", "")) == "caught" and not _resolution_published:
 				return {"ok": false, "pending": true, "kind": kind}
@@ -231,56 +351,25 @@ func _refusal(intent: Dictionary, reason: String) -> Dictionary:
 	return {"ok": false, "pending": false, "kind": str(intent.get("kind", "")), "reason": reason, "delta": {}}
 
 func _alpha_strike(intent: Dictionary, peer: int) -> Dictionary:
-	var striker := deployed_body_for(peer)
-	if striker == null:
-		return _refusal(intent, "Your deployed creature is unavailable.")
-	var card := _creature_card_for(peer)
-	var slot := str(intent.get("slot", "quick"))
-	var move_id := str(intent.get("move_id", ""))
-	if slot not in ["quick", "charged"] or move_id != str(card.get("move_" + slot, "")):
-		return _refusal(intent, "That move is not equipped.")
-	var moves: RefCounted = _manager.get("_moves")
-	var move := COMBAT_MANAGER.host_move_profile(moves, "player_" + slot, move_id, _body_radius(striker), _body_radius(body),
-		1.0, CONTACT_SPACING.pair_reach_need(striker, body))
-	var now_ms := Time.get_ticks_msec()
-	var wind_cfg: Dictionary = MATH.config().get("wind", {})
-	var wind_cost := float(wind_cfg.get("quick_cost" if slot == "quick" else "charged_cost", 0.0))
-	var wind_profile: Dictionary = COMBAT_MANAGER.host_wind_profile(card)
-	var wind_preview: Dictionary = authority.host.preview_wind(authority.encounter_id,
-		peer, wind_profile, wind_cost, now_ms)
-	move = COMBAT_MANAGER.with_wind_exhaustion(move,
-		bool(wind_preview.get("wind_exhausted", false)))
-	var request := intent.duplicate(true)
-	request.move = move
-	var verdict: Dictionary = authority.host.validate_strike(request, peer, {
-		"now_ms": now_ms, "origin": striker.centre(), "bodies": _encounter_body_rows()})
-	if not verdict.get("ok", false):
-		(verdict.get("delta", {}) as Dictionary).merge(wind_preview, true)
-		return verdict
-	var wind_delta: Dictionary = authority.host.commit_wind(authority.encounter_id,
-		peer, int(intent.get("action", 0)), wind_profile, wind_cost, now_ms,
-		float(move.get("recovery", 0.2)), float(wind_cfg.get("regen_delay", 0.6)))
-	(verdict.get("delta", {}) as Dictionary).merge(wind_delta, true)
-	if not verdict.get("delta", {}).get("hit", false):
-		_publish_snapshot()
-		return verdict
-	var enemy: RefCounted = body.instance
-	var type_mult: float = preload("res://scripts/combat/type_chart.gd").multiplier_dual(moves.type_of(move_id), enemy.creature_type, enemy.secondary_type)
-	var damage: float = MATH.rolled_damage(float(move.power), maxf(1, float(card.get("attack", 1))), enemy.effective_defence(PROGRESSION.config()), _encounter_roll(), moves.power(move_id), type_mult)
-	var killed: bool = enemy.take_damage(damage)
-	verdict.delta.merge({"damage": damage, "killed": killed, "hp": enemy.hp, "hp_max": enemy.max_hp, "type_mult": type_mult}, true)
+	return _host_strike(intent, peer)
+func _host_after_encounter_change(id: String, author: int = 0,
+		terminal_catcher: int = 0, resolved_impact: Dictionary = {}) -> void:
+	if authority.record().get("phase") == "done" and author > 0:
+		_terminal_author_peer = author
 	authority.synchronise_damage()
-	_publish_snapshot()
-	return verdict
-
-func _host_after_encounter_change(_id: String, _author: int = 0,
-		_terminal_catcher: int = 0, _resolved_impact: Dictionary = {}) -> void:
+	super._host_after_encounter_change(id, author, terminal_catcher, resolved_impact)
 	_publish_snapshot()
 
 func _publish_snapshot() -> void:
 	_settle_resolution()
 	_pose_sequence += 1
-	var snapshot := {"sequence": _pose_sequence, "record": authority.record().duplicate(true),
+	var rec: Dictionary = authority.record().duplicate(true)
+	for members: Dictionary in [rec.get("participants", {}), rec.get("retained_actor_participants", {})]:
+		for member: Dictionary in members.values():
+			member.get("tether_commands", {}).erase("item_pending")
+	if uses_wild_actor_vitals(authority.encounter_id) or ordinary_actor_vitals_pending(authority.encounter_id):
+		rec["ordinary_actor_vitals_pending"] = ordinary_actor_vitals_pending(authority.encounter_id)
+	var snapshot := {"sequence": _pose_sequence, "record": rec, "terminal_author": _terminal_author_peer,
 		"position": body.global_position, "rotation": body.rotation, "velocity": body.velocity,
 		"phase_index": authority.phase_index, "resolution": authority.resolution.duplicate(true) if _resolution_published else {}}
 	var game := get_node("/root/Game")
@@ -353,7 +442,17 @@ func receive_authority(kind: String, payload: Dictionary) -> void:
 			_deliver_encounter_verdict(payload)
 	elif kind == "enemy_hit":
 		if _local_fight:
-			_manager.apply_host_enemy_hit(payload)
+			_manager.call("apply_host_actor_heal" if payload.get("canonical_self_heal") == true else "apply_host_enemy_hit", payload)
+	elif kind == "attack_launch":
+		if _local_fight and payload.get("encounter_id") == _manager.encounter_id():
+			_manager.present_host_attack_launch(payload.launch, deployed_body_for(int(payload.author)))
+	elif kind == "peer_impact":
+		if _local_fight and payload.get("encounter_id") == _manager.encounter_id():
+			_manager.present_host_peer_impact(payload.impact)
+	elif kind == "combat_record":
+		if _local_fight and payload.get("record", {}).get("encounter_id") == _manager.encounter_id():
+			_encounter = payload.record
+			_manager.apply_encounter_record(_encounter, bool(payload.get("quiet", false)))
 	elif kind == "snapshot":
 		if int(payload.get("sequence", -1)) <= _received_sequence:
 			return
@@ -368,11 +467,17 @@ func receive_authority(kind: String, payload: Dictionary) -> void:
 			if not opponent.is_empty():
 				body.instance.hp = float(opponent.hp)
 		if _local_fight:
-			_manager.apply_encounter_record(_encounter)
+			# The author's killing verdict carries its one impact and resource
+			# projection. Observers can consume the earlier terminal snapshot.
+			if not (_encounter.get("phase") == "done" and int(payload.get("terminal_author", 0)) == _local_peer_id()):
+				_manager.apply_encounter_record(_encounter)
 			var result: Dictionary = payload.get("resolution", {})
 			if not result.is_empty() and _presented_resolution.is_empty():
 				_presented_resolution = result.duplicate(true)
-				_present_resolution.call_deferred()
+				# A reliable snapshot can arrive a frame before the rich verdict.
+				# Only that verdict resolves its author, after the killing impact.
+				if not (result.get("outcome") == "defeated" and int(payload.get("terminal_author", 0)) == _local_peer_id()):
+					_present_resolution.call_deferred()
 
 func _present_resolution() -> void:
 	if not _local_fight or not is_instance_valid(_manager):
@@ -428,6 +533,7 @@ func _begin_local(rec: Dictionary) -> void:
 	_local_fight = true
 	_encounter = rec
 	_manager.bind_encounter(self, str(rec.encounter_id), "wild")
+	_manager.apply_encounter_record(rec, true)
 	# The realm service owns enemy strikes, including a host without a local
 	# combat camera. Remove the local-manager connection to avoid a double hit.
 	var local_strike := Callable(_manager, "_on_enemy_strike")
@@ -439,6 +545,8 @@ func _decline_enrollment(rec: Dictionary) -> void:
 	submit_encounter_intent({"kind": "disengage", "encounter_id": str(rec.encounter_id), "enrollment_declined": true})
 
 func _leave_alpha(peer: int, declined: bool = false) -> Dictionary:
+	if _alpha_results_pending(authority.encounter_id):
+		return {"ok": false, "pending": false, "kind": "disengage", "code": "pending_vitals", "delta": {}}
 	var participant: Dictionary = authority.record().get("participants", {}).get(peer, {})
 	if declined:
 		authority.eligible_characters.erase(str(participant.get("character_id", "")))
@@ -449,7 +557,8 @@ func _leave_alpha(peer: int, declined: bool = false) -> Dictionary:
 ## The primary director owns the registered proxy scope, but this service
 ## owns Alpha's pending replies and authority. Only the mover calls settlement.
 func realm_transition_alpha_results_settled() -> bool:
-	return not _engage_pending and not _attune_pending and not _catch_finish_pending
+	return not _engage_pending and not _attune_pending and not _catch_finish_pending \
+		and (authority == null or not _alpha_results_pending(authority.encounter_id))
 
 func realm_transition_alpha_departing(peer: int) -> void:
 	if not is_alpha_authority() or authority == null:
@@ -504,6 +613,10 @@ func _on_alpha_strike() -> void:
 	host_deliver_enemy_hit(authority.encounter_id, int(picked.peer_id), {"damage": damage, "type_mult": type_mult, "move_id": move_id, "lunge": float(cfg.get("lunge", 0))})
 
 func host_deliver_enemy_hit(_id: String, peer: int, payload: Dictionary) -> void:
+	if uses_wild_actor_vitals(_id):
+		_stage_ordinary_enemy_hit(_id, peer, payload)
+		return
+	authority.host.cancel_move_start(_id, peer)
 	transport.deliver(peer, "enemy_hit", payload)
 
 func surface_run_target() -> Vector3:
@@ -522,11 +635,15 @@ func _physics_process(delta: float) -> void:
 	if not ready_for_intents:
 		return
 	if is_alpha_authority():
+		_retry_ordinary_actor_vitals()
 		_prune_absent_participants(delta)
 		if str(authority.record().get("phase", "")) == "catching" and _catch_arbiter.owner_of(authority.encounter_id, Time.get_ticks_msec()) == 0:
 			# A disconnected thrower or expired animation acknowledgement cannot
 			# hold all other participants in a permanently paused fight.
 			authority.host.set_phase(authority.encounter_id, "active")
+			var resolver := _shared_host_fight(authority.encounter_id)
+			var target := target_body()
+			if resolver != null and target != null: resolver.call("resume_after_catch", target)
 		authority.advance(delta)
 		var interval := float(authority.phase().surface_run_every_s)
 		if is_fight_active() and interval > 0 and authority.phase_elapsed >= interval and _surface_waypoint < 0 and not rules.placement.surface_route.is_empty():
