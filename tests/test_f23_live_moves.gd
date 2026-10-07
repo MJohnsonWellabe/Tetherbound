@@ -13,6 +13,8 @@ class TapManager extends "res://scripts/combat/combat_manager.gd":
 	var face_held := false
 	var face_edge := ""
 	var refusals: Array[String] = []
+	var resolved_strikes := 0
+	func _resolve_player_strike() -> void: resolved_strikes += 1
 	func _ultimate_arm_pressed() -> bool: return arm_edge
 	func _ultimate_arm_held() -> bool: return arm_held
 	func _ultimate_face_held() -> bool: return face_held
@@ -163,3 +165,37 @@ func test_root_status_uses_body_clock_and_never_cancels_protected_tell() -> void
 	body.hold_ultimate_reaction(2.0)
 	assert_true(body.protected_heavy_committed(), "reaction must preserve the committed heavy")
 	body.free()
+
+func test_compensated_frame_cannot_arrive_before_accepted_monotonic_windup() -> void:
+	var manager := TapManager.new()
+	manager.set("_action", MANAGER.Action.WINDUP)
+	manager.set("_action_timer", 0.3)
+	manager.set("_pending_move", {"local_strike_at_ms": Time.get_ticks_msec() + 1000, "recovery": 0.2})
+	manager._tick_action(2.0)
+	assert_eq(manager.resolved_strikes, 0)
+	assert_eq(manager.get("_action"), MANAGER.Action.WINDUP)
+	manager.get("_pending_move").local_strike_at_ms = 0
+	manager._tick_action(2.0)
+	assert_eq(manager.resolved_strikes, 1)
+	assert_eq(manager.get("_action"), MANAGER.Action.RECOVERY)
+	manager.free()
+
+func test_all_authored_ultimate_presentations_share_the_same_host_admission_gate() -> void:
+	var original := ULTIMATES.config()
+	var enabled := original.duplicate(true)
+	enabled.enabled = true # Mechanics only; native visual acceptance stays open.
+	ULTIMATES._config = enabled
+	for move_id: String in enabled.visuals:
+		assert_true(MANAGER.live_move_supported("ultimate", move_id), move_id)
+		var owned := _new_owned()
+		owned.move_ultimate = move_id
+		if not owned.known_moves.has(move_id): owned.known_moves.append(move_id)
+		var frozen := MASTERY.freeze_action(MASTERY.owned_record(owned), "ultimate",
+			{"character_id": "owner_a", "creature_uid": owned.uid, "encounter_id": id, "generation": 1, "action": 1}, [], MOVES.load_default())
+		assert_true(frozen.ok, move_id)
+		if not frozen.ok: continue
+		var move := MANAGER.host_move_profile(MOVES.load_default(), "player_ultimate", move_id, 0.5, 0.5, 1.0, 0.0, frozen.move)
+		assert_eq(host.authorize_move_start({"encounter_id": id, "action": 1, "slot": "ultimate"},
+			1, owned, _binding(), move, WIND, 1000).code, "ultimate_not_ready", move_id)
+	ULTIMATES._config = original
+
