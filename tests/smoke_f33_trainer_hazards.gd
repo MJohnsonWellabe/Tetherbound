@@ -73,7 +73,37 @@ func _run() -> void:
 	var fall_gear_config := EQUIP._gear_config().duplicate(true)
 	var worn_before: Dictionary = equipment.call("save_data")
 	var health_before_falls := float(vitals.get("health"))
+	# The arrival stand can be underneath a roof. Select existing open terrain
+	# by actual collision rays across the capsule footprint, never by adding a
+	# test floor or accepting a shortened impact on a nearby building.
+	var arrival_position := player.global_position
+	var open_ground := Vector3(INF, INF, INF)
+	for offset: Vector3 in [Vector3(16, 0, 0), Vector3(-16, 0, 0), Vector3(0, 0, 16), Vector3(0, 0, -16),
+			Vector3(32, 0, 0), Vector3(-32, 0, 0), Vector3(0, 0, 32), Vector3(0, 0, -32)]:
+		var candidate := arrival_position + offset
+		candidate.y = float(world.call("ground_height_at", candidate.x, candidate.z))
+		if not is_finite(candidate.y): continue
+		var clear := true
+		for footprint: Vector3 in [Vector3.ZERO, Vector3(0.5, 0, 0), Vector3(-0.5, 0, 0), Vector3(0, 0, 0.5), Vector3(0, 0, -0.5)]:
+			var ray := PhysicsRayQueryParameters3D.create(candidate + footprint + Vector3.UP * 10.0,
+				candidate + footprint - Vector3.UP * 0.5, player.collision_mask, [player.get_rid()])
+			var hit := player.get_world_3d().direct_space_state.intersect_ray(ray)
+			if hit.is_empty() or absf((hit.position as Vector3).y - candidate.y) > 0.15 \
+				or (hit.normal as Vector3).y < 0.98:
+				clear = false
+				break
+		if clear:
+			open_ground = candidate
+			break
+	_check(is_finite(open_ground.y), "existing terrain has a clear 8 m drop across the capsule footprint")
+	if not is_finite(open_ground.y):
+		quit(1)
+		return
+	player.global_position = open_ground + Vector3.UP * 0.15
+	player.velocity = Vector3.ZERO
+	for _frame in 120: await physics_frame
 	var landing_origin := player.global_position
+	print("F33 fall surface: arrival=%s terrain=%s grounded=%s" % [arrival_position, open_ground, landing_origin])
 	_check(player.is_on_floor(), "fall starts from the actual grounded Player")
 	var movement: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/movement.json"))
 	# Same height and zero initial velocity: contact quantization may differ
@@ -118,7 +148,7 @@ func _run() -> void:
 		var unprotected := float(vitals.call("fall_damage_for", float(landed.speed)))
 		falls[label] = {"speed": landed.speed, "loss": loss, "base": unprotected, "defense": authored_defense}
 		_check((landed.position as Vector3).distance_to(landing_origin) < 0.1,
-			"%s: the body landed back on the same real world surface" % label)
+			"%s: the body landed back on the same real world surface (%s -> %s)" % [label, landing_origin, landed.position])
 		_check(unprotected > 0.0 and loss > 0.0 and float(vitals.get("health")) > 0.0,
 			"%s: a damaging nonlethal physical fall (%.3f m/s, %.3f HP)" % [label, landed.speed, loss])
 		_check(absf(loss - float(landed.damage)) < 0.01 \
