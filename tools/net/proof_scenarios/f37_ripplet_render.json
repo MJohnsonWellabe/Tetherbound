@@ -1,6 +1,6 @@
 {
   "name": "F37 rendered Ripplet surface, Dive and rejoin captures",
-  "claim": "Pending runtime fixture proof only. Owned Ripplet and L30 breakthrough are explicit pre-admission fixtures. Real Interact/Jump, host admission, replicated carrier identity, disk character save and new-peer returning join. Save restores the mount at the surface with spent stamina and remaining dive debt, per WORLD 6.7. No earned feast, campaign, device or visual acceptance.",
+  "claim": "Pending runtime fixture proof only. Owned Ripplet and L30 breakthrough are explicit pre-admission fixtures; existing summon alignment and host First Shore placement remain disclosed setup. Subsequent travel uses ordinary mapped movement. Actual current crossing is measured against configured human speed, not a paired human trial. Real Interact/Jump, sunken cache/node claims and duplicate refusal, host admission, replicated carrier identity, disk character save and new-peer returning join. Save restores the mount at the surface with its exact saved remaining dive debt, per WORLD 6.7. No earned feast, campaign, device or visual acceptance.",
   "peers": 2,
   "scene": "water",
   "budget_s": 1800,
@@ -64,8 +64,22 @@
     },
     {
       "peer": 1,
+      "action": "move_to",
+      "args": {
+        "x": -161.911,
+        "z": 78.643,
+        "close_enough": 1,
+        "budget_frames": 2400
+      },
+      "label": "Ordinary mounted approach to the open First Shore–Lantern current"
+    },
+    {
+      "peer": 1,
       "action": "f37_deep_fixture",
-      "label": "SETUP submerged-save area near Lantern Cove"
+      "args": {
+        "current_crossing": true
+      },
+      "label": "Measured current crossing and ordinary deep approach near Lantern Cove"
     },
     {
       "peer": "all",
@@ -145,6 +159,19 @@
     },
     {
       "peer": 1,
+      "action": "f37_status",
+      "args": {
+        "remember_saved_dive": true
+      },
+      "expect_data": {
+        "mounted": true,
+        "diving": true,
+        "saved_dive_recorded": true
+      },
+      "label": "Read the actual character file after save_character_here and capture_saves' production autosave"
+    },
+    {
+      "peer": 1,
       "action": "check_saved",
       "args": {
         "label": "before_drop",
@@ -182,6 +209,14 @@
       },
       "expect": "any",
       "label": "tear down if anything is left (after a dropped link there is no session, as smoke_net_reconnect_keeps_character expects)"
+    },
+    {
+      "peer": 1,
+      "action": "f37_record_disconnect",
+      "expect_data": {
+        "saved_dive_recorded": true
+      },
+      "label": "Read the final production disconnect-written character file before wiping live memory; retain exact spent UID/debt"
     },
     {
       "peer": 1,
@@ -300,9 +335,13 @@
     {
       "peer": 1,
       "action": "f37_status",
+      "args": {
+        "require_saved_dive": "surface"
+      },
       "expect_data": {
         "mounted": true,
-        "diving": false
+        "diving": false,
+        "saved_dive_matches": true
       },
       "label": "Reconnect seats surface, with remaining dive debt on saved owned mount"
     },
@@ -324,8 +363,12 @@
     {
       "peer": 1,
       "action": "f37_status",
+      "args": {
+        "require_saved_dive": "resumed"
+      },
       "expect_data": {
-        "diving": true
+        "diving": true,
+        "resumed_dive_within_saved": true
       },
       "label": "A fresh tap resumes the saved bounded dive budget"
     },
@@ -339,6 +382,43 @@
         "captured": true
       },
       "label": "Rendered evidence required; headless capture is a failure"
+    },
+    {
+      "peer": 1,
+      "action": "f37_sunken_claim",
+      "args": {
+        "site_id": "lantern_arch_cache"
+      },
+      "expect_data": {
+        "gained": 3,
+        "flag_commits": 1,
+        "duplicate_refused": true
+      },
+      "label": "Physical Interact opens the actual sunken cache once"
+    },
+    {
+      "peer": 1,
+      "action": "f37_sunken_claim",
+      "args": {
+        "site_id": "lantern_pearl_bed"
+      },
+      "expect_data": {
+        "gained": 4,
+        "flag_commits": 1,
+        "duplicate_refused": true
+      },
+      "label": "Ordinary nine-metre swim and physical Interact gather the nearby node once"
+    },
+    {
+      "peer": 1,
+      "action": "screenshot",
+      "args": {
+        "name": "f37_33_sunken_finds"
+      },
+      "expect_data": {
+        "captured": true
+      },
+      "label": "Installed sunken cache, flower bed and rock presentation candidate"
     }
   ]
 }
