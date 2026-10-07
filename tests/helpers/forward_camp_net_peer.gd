@@ -213,7 +213,9 @@ func _place(game: Node, away: float, presses: int = 1) -> Dictionary:
 		out.detail += " original continuation " + JSON.stringify({"started_ms": started_ms,
 			"finished_ms": Time.get_ticks_msec(), "press_observations": press_observations,
 			"camp_after_pack": (placer.get("_camp_after_pack") as Dictionary).duplicate(true),
-			"placement_available": session.call("forward_camp_placement_available") if session != null else false,
+			"snapshot_ready": session.call("snapshot_ready") if session != null else false,
+			"host": session.call("is_host") if session != null else false,
+			"cached_registry_revision": (session.get("_foundation_personal_cache") as Dictionary).get("registry_revision") if session != null else null,
 			"owner_blocked": session.call("_owner_training_mutation_blocked", game.get("local")) if session != null else null,
 			"guard": session.call("_owner_snapshot_block_reason", game.get("local")) if session != null else "unavailable",
 			"final_world_message": game.get("_pending_world_message")})
