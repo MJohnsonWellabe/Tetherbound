@@ -48,5 +48,28 @@
     "Portal recommended-level and underlevel host-policy engine proof",
     "Independent actual evidence verdict and issue572 READY",
     "F49 full chapter-card motion/fight/visual proofs remain separately required"
-  ]
+  ],
+  "portal_sign_observation": {
+    "source_candidate": "a83c8f969e43aa536a25931112f4373cb3ea1357",
+    "path": "tests/helpers/f49_portal_travel.gd",
+    "independent_review": {
+      "agent": "/root/b_f49_review",
+      "verdict": "SOURCE APPROVE"
+    },
+    "scope": "Actual mounted recommendation label and portal view20/31/42 before/after key unlock; runtime unrun; existing test_f19_order_consumers covers all live arches and level-one policy"
+  },
+  "home_bed_fallback": {
+    "source_candidate": "3d1f0511b464d636d46631982d5d9ecad647b4c7",
+    "path": "tests/helpers/meadows_earned_team_segment.gd",
+    "independent_review": {
+      "agent": "/root/b_f49_review",
+      "verdict": "SOURCE APPROVE"
+    },
+    "scope": "Production-time HP recovery via existing controller bed assignment and early wake; retained inventory/party/paid-bed flag asserted unchanged, no full-rest bonus or synthetic recovery ticks",
+    "remaining": [
+      "Affected test_meadows_earned_team_segment.gd hosted unit",
+      "Earned controller free-bed runtime",
+      "Lane C/A legacy caught breakthrough initialization dependency"
+    ]
+  }
 }

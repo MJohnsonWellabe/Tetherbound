@@ -1,0 +1,17 @@
+{
+  "kind": "hosted_f19_f20_named_logic_batch",
+  "source_sha": "a83c8f969e43aa536a25931112f4373cb3ea1357",
+  "run_id": 37624917011,
+  "script": "tests/run_tests.gd",
+  "args": "--only=test_f19_order_consumers.gd,test_regional_homecoming.gd,test_ending_return_provenance.gd,test_ending_presentation_owner.gd,test_homecoming_ending_invariants.gd",
+  "tests": 38,
+  "assertions": 3699,
+  "failed": 0,
+  "artifact": {
+    "id": 11484176041,
+    "name": "render-lane-b-f19-f20-focused-37624917011",
+    "sha256": "65d02f574f20f6d977940d396054071946c0ab584f27adf958043954b063749c",
+    "run_log_sha256": "078e2f868e61633b4432b5fb5d9c63a24161eace505c814806100b27dd99855e"
+  },
+  "scope": "Named logic only; no gameplay, visual or criterion closure"
+}

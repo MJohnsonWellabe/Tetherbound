@@ -1,0 +1,46 @@
+{
+  "kind": "failed_unchanged_main_earned_prefix",
+  "source_sha": "b3ad69a6ff641d640ec6f7a48ee427c6030867aa",
+  "run_id": 37622139785,
+  "script": "tests/smoke_f19_campaign_functional.gd",
+  "args": "--through-rest",
+  "renderer": "gl_compatibility",
+  "resolution": "1280x720",
+  "world_seed_override": false,
+  "artifact": {
+    "id": 11482514321,
+    "name": "render-lane-b-f19-rested-base-37622139785",
+    "sha256": "c66497910a0dbc6ad81e25536d651c93dee87d64ae40d8738d25887c8a26389a",
+    "run_log_sha256": "b3142dcad1cb38e4e199b29d3191ab8c47c413a8265aa7e63c6d55c55673abc1"
+  },
+  "result": {
+    "campaign_complete": false,
+    "checkpoints": [],
+    "counts_as_proof": false,
+    "cumulative_elapsed_seconds": 861.703,
+    "dry_run": false,
+    "elapsed_seconds": 861.703,
+    "failures": [
+      "Ordinary wild training did not win: { \"outcome\": \"lost\", \"frames\": 802, \"timed_out\": false, \"final_gap\": 4.73544216156006 }"
+    ],
+    "local_chains": [],
+    "reached": "village",
+    "requested_prefix_passed": false,
+    "resume": {},
+    "resumed_from": "",
+    "scratch": "user://f49_campaign_2479_28037"
+  },
+  "observations": [
+    "13 ordinary training wins preceded the final loss",
+    "Three newly caught members remained level3/2/2 with zero XP through all13 wins",
+    "Saved character carries cap10 rows for all5; live cap admission was not logged and remains under Lane C investigation",
+    "Potions exhausted before L5 Bramblebun loss; installed free-bed controller fallback now pushed separately"
+  ],
+  "criterion_pass": false,
+  "remaining": [
+    "Rested-team earned prefix",
+    "All five new-order boundary saves and production promotion",
+    "Positive segment continuation",
+    "Runtime and independent evidence review"
+  ]
+}
