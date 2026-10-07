@@ -5,21 +5,42 @@ extends "res://tools/_capture_creature_roster.gd"
 ## This stage is deformation evidence, not an ordinary-input traversal proof.
 const ROLES := ["hit", "faint", "swim", "fly_grip", "ride"]
 const PHASES := [0.0, 0.25, 0.5, 0.75, 1.0]
+var _pose_failures: Array[String] = []
 
 
 func _run() -> void:
-	var id := "terrapup"
+	var ids: Array[String] = ["terrapup"]
 	var candidate := false
 	var out := "res://ralph/reports/R2-F36/frames"
+	var source := ""
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--species="):
-			id = arg.trim_prefix("--species=")
+			ids.assign(arg.trim_prefix("--species=").split(",", false))
 		elif arg == "--candidate":
 			candidate = true
 		elif arg.begins_with("--out="):
 			out = arg.trim_prefix("--out=")
-	if DisplayServer.get_name() == "headless" or not SPECIES.has(id):
+		elif arg.begins_with("--source-commit="):
+			source = arg.trim_prefix("--source-commit=")
+	var seen := {}
+	for id: String in ids:
+		if not SPECIES.has(id) or seen.has(id):
+			push_error("F36 needs unique current species ids")
+			quit(1)
+			return
+		seen[id] = true
+	var sha_pattern := RegEx.new()
+	sha_pattern.compile("^[0-9a-f]{40}$")
+	if DisplayServer.get_name() == "headless" or ids.is_empty() \
+			or (not source.is_empty() and sha_pattern.search(source) == null):
 		push_error("F36 needs a native renderer and a current species id")
+		quit(1)
+		return
+	if DirAccess.dir_exists_absolute(ProjectSettings.globalize_path(out)):
+		push_error("F36 needs a fresh output folder; existing frames preserved")
+		quit(1)
+		return
+	if DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(out)) != OK:
 		quit(1)
 		return
 	await process_frame
@@ -28,22 +49,32 @@ func _run() -> void:
 	_build_environment()
 	for frame in BOOT_FRAMES:
 		await physics_frame
+	for id: String in ids:
+		await _capture_species_poses(id, candidate, out, source)
+	for failure: String in _pose_failures:
+		push_error(failure)
+	quit(0 if _pose_failures.is_empty() else 1)
+
+
+func _capture_species_poses(id: String, candidate: bool, out: String, source: String) -> void:
 	var body := _spawn_creature(id, false, PAIR_CREATURE_POS, 90.0)
 	body.set_physics_process(false)
 	if candidate:
 		body.set_meta("f36_pose_preview", true)
 		body.call("_build_placeholder")
 	if candidate and not bool(body.get_meta("f36_pose_candidate_installed", false)):
-		push_error("F36 candidate did not install; refusing baseline-labelled candidate frames")
-		quit(1)
+		_pose_failures.append("%s: F36 candidate did not install" % id)
+		body.queue_free()
+		await process_frame
 		return
 	var players := body.find_children("*", "AnimationPlayer", true, false)
 	if players.size() != 1:
-		quit(1)
+		_pose_failures.append("%s: expected one AnimationPlayer, found %d" % [id, players.size()])
+		body.queue_free()
+		await process_frame
 		return
 	var player := players[0] as AnimationPlayer
 	player.process_mode = Node.PROCESS_MODE_DISABLED
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(out))
 	var look: Dictionary = SPECIES.placeholder(id)
 	var map: Dictionary = look.get("animations", {})
 	var receipt: Array = []
@@ -51,6 +82,7 @@ func _run() -> void:
 		var clip := "f36_candidate/%s" % role if candidate else str(map.get(role, ""))
 		if clip.is_empty() or not player.has_animation(clip):
 			receipt.append({"role": role, "status": "missing_baseline_clip"})
+			_pose_failures.append("%s: missing %s clip" % [id, role])
 			continue
 		for phase: float in PHASES:
 			player.play(clip)
@@ -61,6 +93,19 @@ func _run() -> void:
 			var path := "%s/%s-%s-%03d.png" % [out, id, role, int(phase * 100)]
 			var captured := await _capture(path)
 			receipt.append({"role": role, "phase": phase, "path": path, "captured": captured})
+			if not captured:
+				_pose_failures.append("%s: PNG capture failed" % path)
 	var file := FileAccess.open("%s/%s-receipt.json" % [out, id], FileAccess.WRITE)
-	file.store_string(JSON.stringify({"species": id, "candidate": candidate, "stage_only": true, "frames": receipt}, "\t"))
-	quit(0)
+	if file == null:
+		_pose_failures.append("%s: receipt could not be opened" % id)
+	else:
+		file.store_string(JSON.stringify({"species": id, "candidate": candidate, "stage_only": true,
+			"source_commit": source, "renderer": RenderingServer.get_current_rendering_method(),
+			"resolution": [root.size.x, root.size.y], "planned_frames": ROLES.size() * PHASES.size(),
+			"frames": receipt}, "\t"))
+		file.flush()
+		if file.get_error() != OK:
+			_pose_failures.append("%s: receipt flush failed" % id)
+		file.close()
+	body.queue_free()
+	await process_frame
