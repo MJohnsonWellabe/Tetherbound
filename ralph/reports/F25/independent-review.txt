@@ -51,3 +51,9 @@ F25#4 existing proof launch override:APPROVE
 Reviewed commit:87f28c2999b3a4922c9f28caa8c75d93c53de8b4.
 Reviewer:/root/f25_medium_review.
 Continuous Forward+/Vulkan1280x720 host, all-peer library preview and host-only Medium selection preserve defaults/private homes/logs/PIDs/cleanup. f48_net_proof inherits this launch/capture dispatch. Producer forwarding/profile/concurrent inputs remain unresolved; no dispatch readiness or criterion certification.
+
+Additional independent source reviews:
+4be7d698aaf226c8999d642e504a0bc5fee5a75b — f25_review APPROVE: existing world-stage Medium selector refreshes active production WorldLook and binds live Environment, retains timing/shutters/leases/diagnostic scope. Actual Medium capture remains open.
+6da65712ed2d4c8888e16ffad26059e4c984f3f8 — f25_arrival_review APPROVE: authored_contact class accent requires arrived visible known F25/F35 object with matching action/encounter; class style/fallback preserved; configured0.35radius/0.7duration/1strength/0.85softness reaches existing FLASH. Existing62named selectors retain sequential nonzero failure gate. Hosted logic/contact capture pending37635757694.
+22757807069b13c60eef978524c9d27e3610a5ec — same f25_arrival_review APPROVE after actor-lifetime and lethal-draw corrections: actual admitted deployment/body/Director identity checked at launch/contact/impact/draw; overkill clamp and terminal RESOLVING identity validated; aborted/no-launch/mismatched observations fail closed. Actual production runtime/capture/judge pending.
+Resolution-only observer diff atop22757807069b13c60eef978524c9d27e3610a5ec — same reviewer APPROVE: supported1280x720/1920x1080 startup frozen; each native image/window must match; honest metadata; no resizing/newflag/order-guard weakening. Actual runtime pending.

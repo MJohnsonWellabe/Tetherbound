@@ -16,6 +16,8 @@ var _ending_fight_capture := false
 class FightObserver extends Node:
 	var output := ""
 	var preset := ""
+	# Frozen from the validated startup window; never resize a window or image.
+	var expected_resolution := Vector2i.ZERO
 	var rows: Array[Dictionary] = []
 	var began_ms := -1
 	var next_ms := 0
@@ -95,8 +97,9 @@ class FightObserver extends Node:
 			next_ms = at + 100
 			return
 		var pixels := get_viewport().get_texture().get_image()
-		if pixels == null or pixels.is_empty() or pixels.get_size() != Vector2i(1920, 1080):
-			failure = "native fight image missing or wrong resolution"
+		if pixels == null or pixels.is_empty() or pixels.get_size() != expected_resolution \
+				or DisplayServer.window_get_size() != expected_resolution:
+			failure = "native fight image/window missing or changed from %dx%d" % [expected_resolution.x, expected_resolution.y]
 			return
 		var camera := get_viewport().get_camera_3d()
 		var ally := director.call("ally_body") as Node3D if director != null else null
@@ -117,6 +120,7 @@ class FightObserver extends Node:
 		if began_ms < 0: began_ms = at
 		if live: live_frames += 1
 		rows.append({"image": image_name, "still_png": still_name, "elapsed_ms": at, "motion_sample": true,
+			"resolution": [pixels.get_width(), pixels.get_height()],
 			"label": "earned opening fight and ordinary aftermath", "preset": actual_preset,
 			"renderer": renderer, "graphics_values": GRAPHICS.values(), "combat_state": state,
 			"time_of_day": _world_value(world, "WorldLook", "time_of_day"),
@@ -371,11 +375,12 @@ class FightObserver extends Node:
 			if not is_instance_valid(ally) or not is_instance_valid(enemy): _arrival_error(action_id, "creature bodies missing at contact draw")
 		var pixels := get_viewport().get_texture().get_image()
 		var name := "contact-%04d-%s.png" % [int(row.launch.event_sequence), preset.to_lower()]
-		if pixels == null or pixels.is_empty() or pixels.get_size() != Vector2i(1920, 1080) \
+		if pixels == null or pixels.is_empty() or pixels.get_size() != expected_resolution \
+				or DisplayServer.window_get_size() != expected_resolution \
 				or GRAPHICS.selected() != preset \
 				or RenderingServer.get_current_rendering_method() != ("gl_compatibility" if preset == "Low" else "forward_plus") \
 				or pixels.save_png(output.path_join(name)) != OK:
-			_arrival_error(action_id, "native1920 first contact draw could not be retained with the requested renderer/preset")
+			_arrival_error(action_id, "native %dx%d first contact draw could not be retained with matching window/renderer/preset" % [expected_resolution.x, expected_resolution.y])
 		else:
 			row["contact_png"] = name
 			row["contact_resolution"] = [pixels.get_width(), pixels.get_height()]
@@ -428,12 +433,13 @@ func _run() -> void:
 	var pattern := RegEx.new()
 	pattern.compile("^[0-9a-f]{40}$")
 	var renderer := "gl_compatibility" if _fight_preset == "Low" else "forward_plus"
-	if DisplayServer.get_name() == "headless" or DisplayServer.window_get_size() != Vector2i(1920, 1080) \
+	var requested_resolution := DisplayServer.window_get_size()
+	if DisplayServer.get_name() == "headless" or requested_resolution not in [Vector2i(1280, 720), Vector2i(1920, 1080)] \
 			or not GRAPHICS.PRESETS.has(_fight_preset) or RenderingServer.get_current_rendering_method() != renderer \
 			or pattern.search(_fight_source) == null or not _fight_output.is_absolute_path() \
 			or DirAccess.dir_exists_absolute(_fight_output) or not arguments.has("--through-opening") \
 			or not arguments.has("--no-checkpoints"):
-		failures.append("earned fight capture requires native1920, matching preset/renderer, exact source, fresh output and through-opening/no-checkpoints")
+		failures.append("earned fight capture requires native 1280x720 or 1920x1080, matching preset/renderer, exact source, fresh output and through-opening/no-checkpoints")
 		super._finish(false)
 		return
 	if DirAccess.make_dir_recursive_absolute(_fight_output) != OK or GRAPHICS.choose(_fight_preset) != OK:
@@ -444,6 +450,7 @@ func _run() -> void:
 	_observer.name = "F17EarnedOpeningFightObserver"
 	_observer.output = _fight_output
 	_observer.preset = _fight_preset
+	_observer.expected_resolution = requested_resolution
 	_observer.prove_library_arrival = arguments.has("--prove-library-arrival")
 	_observer.retain_sample = _write_fight_manifest.bind(false, false)
 	_observer.process_mode = Node.PROCESS_MODE_ALWAYS
@@ -477,7 +484,8 @@ func _write_fight_manifest(complete: bool, prefix_passed: bool) -> bool:
 	var file := FileAccess.open(_fight_output.path_join("manifest.json"), FileAccess.WRITE)
 	if file == null: return false
 	file.store_string(JSON.stringify({"complete": complete, "source": _fight_source,
-		"presets": [_fight_preset], "renderer": RenderingServer.get_current_rendering_method(), "resolution": [1920, 1080],
+		"presets": [_fight_preset], "renderer": RenderingServer.get_current_rendering_method(),
+		"resolution": [_observer.expected_resolution.x, _observer.expected_resolution.y],
 		"views": _observer.rows, "live_fight_frames": _observer.live_frames, "requested_prefix_passed": prefix_passed,
 		"library_arrival": {"requested": _observer.prove_library_arrival,
 			"complete": complete and prefix_passed and _observer.arrival_proof_complete(),
