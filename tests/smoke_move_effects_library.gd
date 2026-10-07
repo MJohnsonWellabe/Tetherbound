@@ -472,6 +472,8 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 							if bounds.position.y < ground.y - 0.001:
 								_failures.append("Debris penetrates frozen ground %s %s mote=%d" % [encounter, phase, mote])
 					captured[phase]["grounded_debris_checked"] = checked
+					if phase in ["contact", "impact"] and checked == 0:
+						_failures.append("No ground-bound debris inspected %s %s" % [encounter, phase])
 		# A capture also waits for every configured shutter; an aftermath frame
 		# after the effect freed itself honestly records an empty aftermath.
 		if int(arrivals[0]) == simultaneous and BUDGET.used(encounter) == 0 and int(independent_result_frame[0]) >= 0 \
