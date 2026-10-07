@@ -1,0 +1,13 @@
+{
+  "criterion": "F36#2",
+  "source_sha": "bc695dfa6d3e6a8b963ae4faa394c674644c115b",
+  "run_id": 37670661208,
+  "reviewer": "/root/judge_stormursa_anatomy",
+  "inputs": "Six unretouched sheets,114 stills;Sparkit ally and Voltarach/Staticub/Tanglevolt/Mosshock enemies; images only",
+  "relative_fight_size": "PASS bounded: Sparkit visibly smaller than the four enemy species; sampled hierarchy coherent.",
+  "travel_to_fight_continuity": "UNASSESSED: camera distance/angle/posture differ; some00-before frames already have combat HUD.",
+  "framing": "BLOCK: Capacitor F7 almost entirely obscured by foreground geometry; Glass Field F1/F3 heavily covered by foliage; Sparkit often blends into dark vegetation.",
+  "ground_contact": "UNASSESSED: clear frames no obvious gross penetration; vegetation hides feet; stills cannot establish motion or persistent clipping.",
+  "full_bar": "BLOCK: Voltarach cobalt surfaces lose material separation; bright magenta telegraphs dominate; dark foliage/ground weaken separation and faces.",
+  "limits": "Compatibility staged stills only; no all-roster, continuous motion, earned traversal or High/Medium acceptance; F36#2 remains open."
+}

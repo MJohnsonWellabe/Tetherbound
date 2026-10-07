@@ -1,0 +1,51 @@
+{
+  "criterion": "F36#2",
+  "result": "PASS under owner criterion-scoped ruling",
+  "main_merged": "056563843cd06a49cdc9bb369d66b13788d944c0",
+  "merge_commit": "56d42bbdedd9f27229e0219cc48d8b62b006a877",
+  "standing_proof": {
+    "frames": 138,
+    "subjects": 69,
+    "exit_code": 0,
+    "sha": "fa69cee0b4438023871a1d9dd0f2b7dee47a42d4",
+    "run_id": 37669449150
+  },
+  "fight_proof": {
+    "total_frames": 114,
+    "run_id": 37670661208,
+    "actual_named_fights": 6,
+    "combat_frames": 102,
+    "exit_code": 0,
+    "sha": "bc695dfa6d3e6a8b963ae4faa394c674644c115b"
+  },
+  "logic": "rg across existing test_*.gd found no unit file naming either changed capture file or scale audit CLI key. No production scale/model logic changed. Existing passing scale/body/pose checks retained; no new test class or confirming run.",
+  "visual": "PASS /root/judge_stormursa_anatomy retained Low captures rejudged under owner6045342186",
+  "independent_review": "APPROVE /root/review_f36_cap verified runtime catalogue and raw behavior",
+  "flags": "none",
+  "landing_files": [
+    {
+      "exact_file_revision": "fa69cee0b4438023871a1d9dd0f2b7dee47a42d4",
+      "note": "Whole exactfile includes preceding capture-only hunks; do not cherry-pick unrelated F29 ancestry.",
+      "path": "tools/art_pipeline/capture_f36_poses.gd"
+    },
+    {
+      "path": "tests/capture_stormwood_b_named_fights.gd",
+      "exact_file_revision": "bc695dfa6d3e6a8b963ae4faa394c674644c115b"
+    },
+    {
+      "note": "Include contacts/standing receipt/blind verdict/scoped verdict/source review/final receipt; EXCLUDE material-source-review.json and material-mapped-tests.json.",
+      "path": "ralph/reports/F36/installed-scale"
+    },
+    {
+      "note": "Include all6JPGs,hostedreceipt and retainedblindverdict.",
+      "path": "ralph/reports/F36/fight-scale"
+    }
+  ],
+  "excluded_production": [
+    "World/Cloudreach/Stormwood changes",
+    "F29/Stormursa art/rig/reference changes",
+    "F36 material candidate",
+    "F36 traversal bridge"
+  ],
+  "release_followups": "Full release Visual bar remains open, including material/tone/telegraph/camera occlusion/motion and High/Medium quality. CriterionPASS does not resolve those."
+}

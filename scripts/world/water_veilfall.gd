@@ -199,9 +199,12 @@ func _build_waterfall() -> void:
 	material.set_shader_parameter("water_colour", Color(fall.colour))
 	for key in ["opacity_min", "opacity_max", "flow_speed", "edge_feather", "ground_feather_m", "albedo_min", "albedo_max"]:
 		material.set_shader_parameter(key, float(fall[key]))
+	material.set_shader_parameter("near_clear_m", float(fall.get("near_clear_m", 0.0)))
+	material.set_shader_parameter("near_full_m", float(fall.get("near_full_m", 0.0)))
 	# Match the curtain's exact world X/Z, including its -2m depth offset.
 	# A line texture avoids renderer-dependent depth readback on Compatibility.
 	var heights := Image.create(64, 1, false, Image.FORMAT_RF)
+	var minimum_ground := INF
 	for sample_index in 64:
 		var local_x := (float(sample_index) / 63.0 - 0.5) * float(fall.width_m)
 		var sample_at := exterior.to_global(Vector3(local_x, 0, -2))
@@ -209,15 +212,25 @@ func _build_waterfall() -> void:
 		if not is_finite(height):
 			push_error("Veilfall curtain terrain sample is not finite at %s" % sample_at)
 			height = entrance.y
+		minimum_ground = minf(minimum_ground, height)
 		heights.set_pixel(sample_index, 0, Color(height, 0, 0))
 	material.set_shader_parameter("ground_heights", ImageTexture.create_from_image(heights))
 	material.set_shader_parameter("ground_span", Vector2(
 		exterior.to_global(Vector3(-float(fall.width_m) * 0.5, 0, -2)).x,
 		exterior.to_global(Vector3(float(fall.width_m) * 0.5, 0, -2)).x))
 	plane.material = material
+	# The original fixed bottom could end above lower terrain across the
+	# curtain's width, cutting a literal translucent rectangle into the ledge.
+	# Extend only its visual lower bound beneath every sampled ground height;
+	# keep the original top and let the existing terrain-contact fade clip it.
+	var original_top := float(fall.height_m) - 2.0
+	var curtain_at := exterior.to_global(Vector3(0, 0, -2))
+	var ground_bottom := exterior.to_local(Vector3(curtain_at.x, minimum_ground - 2.0, curtain_at.z)).y
+	var bottom := minf(-2.0, ground_bottom)
+	plane.size.y = original_top - bottom
 	mesh.mesh = plane
 	mesh.rotation.x = PI * 0.5
-	mesh.position = Vector3(0, float(fall.height_m) * 0.5 - 2, -2)
+	mesh.position = Vector3(0, (original_top + bottom) * 0.5, -2)
 	exterior.add_child(mesh)
 
 ## F13#5 material pass: wet rock and distance tone on the mountain, white
@@ -864,4 +877,3 @@ func _build_camera_occluders() -> void:
 	for raw: Variant in boxes:
 		var box := raw as Dictionary
 		_collision_box(body, _v(box.get("at", [0.0, 0.0, 0.0])), _v(box.get("size", [1.0, 1.0, 1.0])))
-

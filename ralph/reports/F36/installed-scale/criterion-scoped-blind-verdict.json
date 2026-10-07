@@ -1,0 +1,31 @@
+{
+  "criterion": "F36#2",
+  "owner_directive": "https://github.com/MJohnsonWellabe/Tetherbound/issues/572#issuecomment-6045342186",
+  "coordinator_routing": "https://github.com/MJohnsonWellabe/Tetherbound/issues/572#issuecomment-6045452493",
+  "reviewer": "/root/judge_stormursa_anatomy",
+  "verdict": "PASS scoped visual assessment",
+  "retained_producers": {
+    "fight": {
+      "frames": 114,
+      "run_id": 37670661208,
+      "sha": "bc695dfa6d3e6a8b963ae4faa394c674644c115b",
+      "matrices": 6,
+      "combat_frames": 102
+    },
+    "standing": {
+      "subjects": 69,
+      "run_id": 37669449150,
+      "sha": "fa69cee0b4438023871a1d9dd0f2b7dee47a42d4",
+      "frames": 138
+    }
+  },
+  "finding": "Every installed subject in retained standing views visibly exceeds the supplied1.80m trainer. All six fight matrices contain sufficient clear frames showing Sparkit and the four enemy species with a consistent relative size hierarchy. Isolated CapacitorF7/GlassFieldF1/F3 occlusion does not prevent required size judgment.",
+  "limits": "One allied and four enemy combat species; stills alone do not establish uninterrupted travel-to-fight continuity. That is separate actual behavior evidence.",
+  "release_visual_followups": [
+    "Foreground camera occlusion",
+    "Dark faces and poor habitat separation",
+    "Cobalt/white material wash",
+    "Magenta telegraph rings/sectors",
+    "Motion/contact and High/Medium presentation"
+  ]
+}
