@@ -589,6 +589,17 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 		if saver == null: return FOUNDATION_ACTIONS.deny("writer_unavailable")
 		saver.call("finish_fallback")
 		if saver.call("fallback_busy") == true or not _altar_envelope_matches(peer, envelope, ["op", "session_epoch", "world_namespace", "character_id", "station_key", "intent", "revision"]): return FOUNDATION_ACTIONS.deny("writer_busy")
+		# Preserve the original board request's -1 quote and actual instance.
+		# Re-entry after the saved care checkpoint remeasures this same live
+		# actor/board/day context; immutable decisions above still redeliver first.
+		if peer != local_peer_id():
+			var context: Dictionary = host_adapter.call("_context", peer)
+			if context.is_empty(): return _foundation_refusal("bounty_source_unavailable")
+			var proposal := preload("res://scripts/world/bounty_board.gd").stage(
+				_character_authority.call("state", character), int(context.expected_revision), "bounty_claim", envelope.intent, context)
+			if proposal.get("ok") != true: return _foundation_refusal(str(proposal.get("code", "claim_refused")))
+			var ready: Dictionary = _owner_passive_service().call("action_gate", peer, "foundation_request", envelope, context)
+			if ready.get("ok") != true: return ready
 		var result: Dictionary = host_adapter.call("claim", peer, envelope.intent)
 		if result.get("durable") != true: return _foundation_refusal(str(result.get("code", "claim_refused")))
 		var row: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character), {})
