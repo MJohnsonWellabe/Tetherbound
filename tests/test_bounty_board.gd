@@ -44,6 +44,9 @@ func test_empty_board_survives_character_json_reload_without_accepting_partial_s
 func test_rotation_exactly_three_unlocked_deterministic_personal_and_no_reroll() -> void:
 	var current := _record()
 	var context := _context(current)
+	var fresh_world := STATE.defaults("world")
+	assert_eq(fresh_world.bounty_day, 0, "saved clock starts before the first rollover")
+	context.host_day = BOARD.host_day(fresh_world)
 	var first := BOARD.stage(current, 0, "bounty_rotate", {}, context)
 	assert_true(first.get("ok") == true)
 	if first.get("ok") != true: return
@@ -55,7 +58,8 @@ func test_rotation_exactly_three_unlocked_deterministic_personal_and_no_reroll()
 	var other := _record("character-f43-b")
 	var other_board: Dictionary = BOARD.stage(other, 0, "bounty_rotate", {}, _context(other)).state.redesign_character.bounties
 	assert_ne(other_board.slots, first.state.redesign_character.bounties.slots)
-	var tomorrow := BOARD.stage(first.state, 1, "bounty_rotate", {}, _context(first.state, 1, 2))
+	fresh_world.bounty_day += 1
+	var tomorrow := BOARD.stage(first.state, 1, "bounty_rotate", {}, _context(first.state, 1, BOARD.host_day(fresh_world)))
 	assert_true(tomorrow.ok)
 	assert_ne(tomorrow.state.redesign_character.bounties.slots, first.state.redesign_character.bounties.slots)
 	var unlocked := _context(current)
