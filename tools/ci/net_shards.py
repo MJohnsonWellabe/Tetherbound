@@ -4,15 +4,17 @@ verify-multiplayer-shard matrix (.github/workflows/ci.yml).
 
     net_shards.py --check              roster, floor and plan (the `changes` job)
     net_shards.py --shard N            one shard: the same checks, then this
-                                       shard's files to $GITHUB_OUTPUT
+                                       shard's files and lanes to $GITHUB_OUTPUT
 
 Every shard runs the discovery itself, so the shards need only `changes` and
 queue with the first wave of jobs.
 Discovery reads only the checkout, so every shard computes the same plan.
 
-The plan is longest-processing-time first over MEASURED_SECONDS. It fails if
-any discovered smoke is unassigned or assigned twice. A shard over
-SHARD_SMOKE_BUDGET_SECONDS is a warning: it costs wall time, not coverage.
+The plan is longest-processing-time first over MEASURED_SECONDS, onto
+SHARD_COUNT * LANES_PER_SHARD lanes; each shard job runs its lanes at the same
+time (tools/ci/run_net_lanes.sh). It fails if any discovered smoke is
+unassigned or assigned twice. A lane over SHARD_SMOKE_BUDGET_SECONDS is a
+warning: it costs wall time, not coverage.
 """
 import argparse
 import glob
@@ -24,98 +26,95 @@ import sys
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 # Must equal the `shard:` matrix in ci.yml (tests/test_ci_net_shards.py).
-SHARD_COUNT = 23
-# Smoke time per shard: a 13-minute job less ~140 s of checkout, Godot setup
-# and upload (measured: 81-133 s before the first smoke, ~10 s after).
-SHARD_SMOKE_BUDGET_SECONDS = 640
+SHARD_COUNT = 8
+# Each shard job runs LANES_PER_SHARD lanes AT ONCE (tools/ci/run_net_lanes.sh,
+# CI-SPEED 2026-10-07): a 4-vCPU runner fits two two-peer smokes side by side
+# at ~1.1x their solo time (three at once missed the 180 s hello budget).
+LANES_PER_SHARD = 2
+# Solo-measured smoke time per LANE: ~12 min, so with the ~1.1x of running
+# two lanes together plus ~2 min of checkout and Godot setup a shard job
+# stays near 15 minutes.
+SHARD_SMOKE_BUDGET_SECONDS = 720
 
-# Seconds per smoke: the SLOWEST of the three green full runs 37289058162,
-# 37282220875 and 37270789359 (2026-10-05), from one smoke's
+# Seconds per smoke, measured SOLO: the SLOWEST of the three green full runs
+# 37615388024, 37575215387 and 37563845433 (2026-10-07), from one smoke's
 # `##[group]smoke_net_<name>.gd attempt` log line to the next (the last smoke
 # of a shard ends at the upload step).
-# Refresh it from newer full runs when a shard drifts past the budget.
+# Refresh it from newer full runs when a lane drifts past the budget (the
+# lane runner prints each smoke's seconds; they include the ~1.1x of two
+# lanes sharing a runner, so divide by 1.1 when refreshing from those).
 MEASURED_SECONDS = {
-    # Provisional (coordinator, 2026-10-05): smokes new in batch #542, planned at a
-    # conservative 330 s until three green full runs give real durations.
-    "f22_forced_break": 330,
-    "f27_guest_wild_win": 330,
-    "gather_departure": 330,
-    "homestead_station_craft": 330,
-    # F18 (portal runtime on) adds these to the gate. Measured in full run
-    # 37320223520 @ea685537 (2026-10-05). f20_ending failed partway there,
-    # so its 595 s is only a lower bound; it runs alone (ISOLATED) until a
-    # green run measures it.
-    "f18_fixture_teaching": 232,
-    "f20_home_diagnostic": 143,
-    "f20_ending": 595,
-    # Provisional (lane A, tb/f17): F33/F34 net smokes at ~1.4x their local wall
-    # time (forward_camp 184 s, harness_max_hp 170 s; charged ground crosses two
-    # realms) until three green full runs give real durations.
-    "stormwood_charged_ground": 420,
-    "harness_max_hp": 240,
-    "forward_camp": 260,
-    "behind_character_joins_ahead_world": 129,
-    "boss_rewards_each_participant": 228,
-    "catch_race": 158,
-    "client_trainer_rewards": 249,
-    "cloudreach_riding": 422,
-    "crossing_hall_agreement": 351,
-    "deploy_two_creatures": 131,
-    "f32_node_contention": 165,
-    "farm_race": 133,
-    "fly": 159,
-    "fog_is_personal": 137,
-    "foundations": 186,
-    "gate_opens_for_both": 131,
-    "hearts": 137,
-    "home_creature_bed": 265,
-    "host_exit_saves": 149,
-    "host_join_leave": 124,
-    "identity_admission": 125,
-    "join_by_address": 125,
-    "join_version_mismatch": 131,
-    "late_join_modified_world": 124,
-    "meadows_identity_fresh_join": 196,
-    "menu_does_not_freeze_peer": 256,
-    "movement_two_peers": 133,
-    "peer_death": 124,
-    "pickup_race": 137,
-    "realm_owner_disconnect_mid_fight": 275,
-    "reconnect_keeps_character": 192,
-    "revive": 156,
-    "riding": 186,
-    "session_host_first_realm": 267,
-    "shared_boss": 291,
-    "shared_building": 129,
-    "shared_wild_fight": 202,
-    "sleep_vote": 136,
-    "split_realms": 306,
-    "storage_concurrency": 135,
-    "stormwood_finalized_death": 202,
-    "stormwood_glass_for_bryn": 198,
-    "stormwood_hosted_trainers": 178,
-    "stormwood_livewire": 177,
-    "stormwood_realms": 240,
-    "trade": 137,
-    "two_peers_boot": 125,
-    "veridian_choices": 396,
-    "veridian_full_refusal": 172,
-    "veridian_mixed": 156,
-    "veridian_relic_key": 282,
-    "veridian_same_five": 293,
-    "water_alpha": 152,
-    "water_deep_watch_chart": 83,
-    "water_local_chains": 95,
-    "water_mounted_swimming": 82,
-    "water_return": 95,
-    "water_swim_stone_late_join": 74,
-    "water_swimming": 95,
+    "behind_character_joins_ahead_world": 124,
+    "boss_rewards_each_participant": 171,
+    "catch_race": 132,
+    "client_trainer_rewards": 183,
+    "cloudreach_riding": 360,
+    "crossing_hall_agreement": 270,
+    "deploy_two_creatures": 107,
+    "f18_fixture_teaching": 182,
+    "f20_ending": 620,
+    "f20_home_diagnostic": 136,
+    "f22_forced_break": 169,
+    "f32_node_contention": 136,
+    "farm_race": 112,
+    "fly": 127,
+    "fog_is_personal": 118,
+    "forward_camp": 152,
+    "foundations": 148,
+    "gate_opens_for_both": 108,
+    "gather_departure": 240,
+    "harness_max_hp": 122,
+    "hearts": 114,
+    "home_creature_bed": 222,
+    "homestead_station_craft": 289,
+    "host_exit_saves": 124,
+    "host_join_leave": 100,
+    "identity_admission": 100,
+    "join_by_address": 102,
+    "join_version_mismatch": 101,
+    "late_join_modified_world": 103,
+    "meadows_identity_fresh_join": 171,
+    "menu_does_not_freeze_peer": 226,
+    "movement_two_peers": 112,
+    "peer_death": 100,
+    "pickup_race": 115,
+    "realm_owner_disconnect_mid_fight": 206,
+    "reconnect_keeps_character": 158,
+    "revive": 129,
+    "riding": 147,
+    "session_host_first_realm": 209,
+    "shared_boss": 181,
+    "shared_building": 113,
+    "shared_wild_fight": 159,
+    "sleep_vote": 113,
+    "split_realms": 268,
+    "storage_concurrency": 112,
+    "stormwood_charged_ground": 181,
+    "stormwood_finalized_death": 178,
+    "stormwood_glass_for_bryn": 152,
+    "stormwood_hosted_trainers": 165,
+    "stormwood_livewire": 137,
+    "stormwood_realms": 181,
+    "trade": 117,
+    "two_peers_boot": 112,
+    "veridian_choices": 256,
+    "veridian_full_refusal": 129,
+    "veridian_mixed": 124,
+    "veridian_relic_key": 203,
+    "veridian_same_five": 130,
+    "water_alpha": 131,
+    "water_deep_watch_chart": 84,
+    "water_local_chains": 96,
+    "water_mounted_swimming": 85,
+    "water_return": 155,
+    "water_swim_stone_late_join": 76,
+    "water_swimming": 97,
 }
-# Each alone on the LAST shard(s), so a hang cannot take a shard's other
-# smokes down with it at the 30-minute job limit: split_realms once ran 24+
-# minutes and was cancelled with the smokes queued behind it
-# (ralph/reports/FOUR-BIOME-BUILD/ci-shard-balance/REPORT.md).
-ISOLATED = ("split_realms", "f20_ending")
+# Smokes that must run alone in their LANE (none today). A shard used to be
+# reserved for each of split_realms and f20_ending so a hang could not take
+# other smokes down at the job limit; tools/ci/run_net_lanes.sh now ends any
+# single smoke at NET_SMOKE_TIMEOUT_SECONDS, which bounds that on its own.
+ISOLATED = ()
 # An unmeasured smoke is planned as the slowest measured one until measured.
 # Isolated smokes run alone, so their (possibly lower-bound) times are not a
 # guide for an ordinary smoke.
@@ -197,16 +196,18 @@ def weight(path):
     return MEASURED_SECONDS.get(smoke_name(path), UNMEASURED_SECONDS)
 
 
-def plan(files, shard_count=SHARD_COUNT, isolated=ISOLATED):
-    """[(files, seconds)] per shard: each ISOLATED smoke alone on the last
-    shards, the rest longest first onto the lightest ordinary shard."""
+def plan(files, shard_count=SHARD_COUNT, isolated=ISOLATED, lanes_per_shard=LANES_PER_SHARD):
+    """[(files, seconds)] per LANE (shard N owns lanes (N-1)*L .. N*L-1): each
+    ISOLATED smoke alone on the last lanes, the rest longest first onto the
+    lightest ordinary lane."""
+    lane_count = shard_count * lanes_per_shard
     alone = [p for p in files if smoke_name(p) in isolated]
     if len(alone) != len(isolated):
         raise PlanError("isolated net smokes not discovered: %s"
                         % sorted(set(isolated) - {smoke_name(p) for p in alone}))
-    ordinary = shard_count - len(alone)
+    ordinary = lane_count - len(alone)
     if ordinary < 1:
-        raise PlanError("no ordinary shard left beside %d isolated" % len(alone))
+        raise PlanError("no ordinary lane left beside %d isolated" % len(alone))
     bins = [[] for _ in range(ordinary)] + [[p] for p in sorted(alone)]
     loads = [0] * ordinary + [weight(p) for p in sorted(alone)]
     for path in sorted((p for p in files if p not in alone), key=lambda p: (-weight(p), p)):
@@ -216,8 +217,13 @@ def plan(files, shard_count=SHARD_COUNT, isolated=ISOLATED):
     check_cover(files, bins)
     for group in bins[ordinary:]:
         if len(group) != 1:
-            raise PlanError("%s must be the only smoke on its shard" % group)
+            raise PlanError("%s must be the only smoke on its lane" % group)
     return list(zip(bins, loads))
+
+
+def shard_lanes(lanes, shard, lanes_per_shard=LANES_PER_SHARD):
+    """The lanes shard `shard` (1-based) runs."""
+    return lanes[(shard - 1) * lanes_per_shard:shard * lanes_per_shard]
 
 
 def check_cover(files, bins):
@@ -258,16 +264,19 @@ def main(argv=None):
         return 1
     for i, (group, load) in enumerate(shards, start=1):
         if load > SHARD_SMOKE_BUDGET_SECONDS:
-            print("::warning::net shard %d is planned at %d s, over the %d s budget: refresh MEASURED_SECONDS "
+            print("::warning::net lane %d is planned at %d s, over the %d s budget: refresh MEASURED_SECONDS "
                   "or raise SHARD_COUNT in tools/ci/net_shards.py" % (i, load, SHARD_SMOKE_BUDGET_SECONDS))
-        print("plan shard %d/%d: %d s: %s" % (i, SHARD_COUNT, load, " ".join(group)))
+        print("plan shard %d/%d lane %d: %d s: %s" % ((i - 1) // LANES_PER_SHARD + 1, SHARD_COUNT,
+                                                     (i - 1) % LANES_PER_SHARD + 1, load, " ".join(group)))
     if args.shard is not None:
-        group, load = shards[args.shard - 1]
+        mine = shard_lanes(shards, args.shard)
         out = os.environ.get("GITHUB_OUTPUT")
         if out:
             with open(out, "a", encoding="utf-8") as f:
-                f.write("files=%s\n" % " ".join(group))
-                f.write("scheduling_weight_seconds=%d\n" % load)
+                f.write("files=%s\n" % " ".join(p for group, _ in mine for p in group))
+                # One line per lane, `lanes=` joins them with `;` for the runner.
+                f.write("lanes=%s\n" % ";".join(" ".join(group) for group, _ in mine))
+                f.write("scheduling_weight_seconds=%d\n" % max((load for _, load in mine), default=0))
     return 0
 
 

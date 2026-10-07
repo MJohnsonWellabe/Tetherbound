@@ -34,7 +34,7 @@ class Cover(unittest.TestCase):
             N.check_cover(files("a"), [files("a"), files("z")])
 
     def test_unmeasured_smokes_are_planned_as_the_slowest(self):
-        shards = N.plan(files("never_measured", "fly"), shard_count=2, isolated=())
+        shards = N.plan(files("never_measured", "fly"), shard_count=2, isolated=(), lanes_per_shard=1)
         self.assertEqual(sorted(load for _, load in shards), [N.MEASURED_SECONDS["fly"], N.UNMEASURED_SECONDS])
 
 
@@ -60,6 +60,17 @@ class RealRepository(unittest.TestCase):
         for name in N.ISOLATED:
             group = next(g for g, _ in shards if any(N.smoke_name(p) == name for p in g))
             self.assertEqual([N.smoke_name(p) for p in group], [name])
+
+    def test_each_shard_owns_its_own_lanes(self):
+        lanes = N.plan(self.files)
+        self.assertEqual(len(lanes), N.SHARD_COUNT * N.LANES_PER_SHARD)
+        owned = [lane for s in range(1, N.SHARD_COUNT + 1) for lane in N.shard_lanes(lanes, s)]
+        self.assertEqual(owned, lanes)
+
+    def test_ci_runs_each_shards_lanes_together(self):
+        block = CI[CI.index("  verify-multiplayer-shard:\n"):CI.index("  export:\n")]
+        self.assertIn("steps.select.outputs.lanes", block)
+        self.assertIn("tools/ci/run_net_lanes.sh", block)
 
     def test_ci_matrix_matches_shard_count(self):
         block = CI[CI.index("  verify-multiplayer-shard:\n"):]

@@ -2700,20 +2700,21 @@ jobs:
   # rule docs/WORKFLOW.md §5 already holds every other smoke to.
   verify-multiplayer-shard:
     runs-on: ubuntu-latest
-    # Twenty-one shards: nineteen longest-processing-time first on MEASURED
-    # durations (tools/ci/net_shards.py: the slowest of three green full runs
-    # per smoke), so the longest shard's job stays under ~13 minutes, then
-    # f20_ending and split_realms each alone (a hang cannot take other smokes
-    # down with it). The
-    # original 30-minute job limit stays. Each shard discovers the smokes
-    # itself, so this matrix needs only `changes` and queues in the FIRST
-    # wave rather than behind discover-net-smokes (it used to wait ~6 min for
-    # a runner behind ~30 jobs). The F48 co-op suites (owner, 2026-10-03)
-    # live on `tb/coop` until F48 itself is built; they return with it.
+    # CI-SPEED (owner, 2026-10-07): eight shard jobs, each running TWO lanes of
+    # net smokes at the same time (tools/ci/run_net_lanes.sh), planned
+    # longest-processing-time first onto 16 lanes from MEASURED durations
+    # (tools/ci/net_shards.py: the slowest of three green full runs per
+    # smoke). Was 23 one-lane jobs: ~206 runner-minutes of which ~50 were
+    # checkout/setup, and the most queue tickets of any job in a full run.
+    # Every discovered smoke still runs exactly once (the plan check fails
+    # otherwise), with the same RETRIES. Each shard discovers the smokes
+    # itself, so this matrix needs only `changes`. The F48 co-op suites
+    # (owner, 2026-10-03) live on `tb/coop` until F48 itself is built; they
+    # return with it.
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+        shard: [1, 2, 3, 4, 5, 6, 7, 8]
     timeout-minutes: 30
     needs: changes
     if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-multiplayer-shard|'))
@@ -2733,60 +2734,17 @@ jobs:
         id: select
         run: python3 tools/ci/net_shards.py --shard ${{ matrix.shard }}
       - uses: ./.github/actions/setup-godot
-      - name: Run net smokes
+      - name: Run net smokes (two lanes at once)
         if: ${{ !cancelled() && steps.select.outputs.files != '' }}
         env:
           RETRIES: 1
+          LANES: ${{ steps.select.outputs.lanes }}
+          NET_OUT_DIR: /tmp/net-ci
+          NET_SMOKE_TIMEOUT_SECONDS: 1200
         run: |
           set -uo pipefail
-          command -v setsid >/dev/null || {
-            echo "::error::setsid is required to contain each net smoke's process tree"
-            exit 1
-          }
-          active_runner_pid=""
-          cleanup_active_group() {
-            local pgid="${active_runner_pid:-}"
-            [ -n "$pgid" ] || return 0
-            # The runner, coordinator and OS.create_process peers all inherit
-            # this dedicated process group. Sweep it on success, failure,
-            # SIGINT/SIGTERM cancellation, and the step's EXIT path.
-            kill -TERM -- "-${pgid}" 2>/dev/null || true
-            for _ in $(seq 1 20); do
-              kill -0 -- "-${pgid}" 2>/dev/null || break
-              sleep 0.1
-            done
-            kill -KILL -- "-${pgid}" 2>/dev/null || true
-            wait "$pgid" 2>/dev/null || true
-            active_runner_pid=""
-          }
-          trap cleanup_active_group EXIT
-          trap 'exit 130' INT TERM HUP
-          status=0
-          for f in ${{ steps.select.outputs.files }}; do
-            name="$(basename "$f" .gd)"
-            name="${name#smoke_net_}"
-            n=0
-            until [ "$n" -ge "$RETRIES" ]; do
-              n=$((n + 1))
-              echo "::group::smoke_net_${name}.gd attempt ${n}/${RETRIES}"
-              setsid tools/net/run_net_smoke.sh "$name" --out=/tmp/net-ci &
-              active_runner_pid=$!
-              if wait "$active_runner_pid"; then
-                run_status=0
-              else
-                run_status=$?
-              fi
-              cleanup_active_group
-              if [ "$run_status" -eq 0 ]; then
-                echo "::endgroup::"
-                continue 2
-              fi
-              echo "::endgroup::"
-              echo "smoke_net_${name}.gd failed on attempt ${n}/${RETRIES}"
-            done
-            status=1
-          done
-          exit "$status"
+          IFS=';' read -r -a lanes <<< "$LANES"
+          tools/ci/run_net_lanes.sh "${lanes[@]}"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
