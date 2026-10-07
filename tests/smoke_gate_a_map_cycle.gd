@@ -152,8 +152,10 @@ func _check_full_map_controller_ownership_and_recovery() -> void:
 		return
 	var bodies: Array = _menu.get("_bodies")
 	var map_tab := bodies[int(_menu.get("_index"))] as Control
-	if map_tab == null or float(map_tab.get("_zoom")) != 1.0:
-		_fail("full map did not open at whole-world fit")
+	var map_config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/map.json"))
+	var initial_zoom := clampf(float(map_config.get("initial_zoom", 16.0)), 1.0, 16.0)
+	if map_tab == null or not is_equal_approx(float(map_tab.get("_zoom")), initial_zoom):
+		_fail("first full map did not open at the configured local scale")
 		return
 	var controls := map_tab.get("_controls_label") as RichTextLabel
 	if controls == null or not controls.text.contains("Zoom") or not controls.text.contains("Pan"):
@@ -163,7 +165,28 @@ func _check_full_map_controller_ownership_and_recovery() -> void:
 	if canvas == null or not canvas.clip_contents:
 		_fail("full-map canvas does not clip scaled map content inside its panel")
 		return
+	var initial_rect: Rect2 = map_tab.call("_map_rect_for_canvas", canvas.size)
+	var initial_pan: Vector2 = map_tab.get("_pan_world")
+	map_tab.set("_pan_world", map_tab.call("_pan_world_for_player", _player.global_position))
+	map_tab.call("_clamp_pan")
+	var initial_follow_target: Vector2 = map_tab.get("_pan_world")
+	map_tab.set("_pan_world", initial_pan)
+	if initial_pan.distance_to(initial_follow_target) > 1.0:
+		_fail("initial local map did not follow the real player within world bounds")
+		return
+	# Preserve the whole-world/RT regression below after reaching overview with
+	# real LT presses. Each configured local step must remain reachable.
+	for step in 4:
+		if float(map_tab.get("_zoom")) <= 1.0:
+			break
+		await _pulse_motion_action("map_zoom_out")
+	if float(map_tab.get("_zoom")) != 1.0:
+		_fail("physical LT could not reach whole-world fit from the initial local scale")
+		return
 	var fit_rect: Rect2 = map_tab.call("_map_rect_for_canvas", canvas.size)
+	if initial_rect.size.distance_to(fit_rect.size * initial_zoom) > 1.0:
+		_fail("initial local scale did not visibly enlarge the real terrain rectangle")
+		return
 
 	await _pulse_motion_action("map_zoom_in")
 	if float(map_tab.get("_zoom")) <= 1.0:
@@ -260,6 +283,11 @@ func _check_full_map_controller_ownership_and_recovery() -> void:
 	await _press_action("party_cycle")
 	if int(_party.call("active_index")) != active_before:
 		_fail("party cycling leaked through while the full map owned input")
+	await _pulse_motion_action("map_zoom_in")
+	var remembered_zoom := float(map_tab.get("_zoom"))
+	if remembered_zoom <= 1.0:
+		_fail("physical RT could not select a non-fit scale before reopening")
+		return
 
 	await _press_action("menu_cancel")
 	if bool(_menu.call("is_open")) or paused:
@@ -277,6 +305,9 @@ func _check_full_map_controller_ownership_and_recovery() -> void:
 		return
 	var reopened_bodies: Array = _menu.get("_bodies")
 	var reopened_map := reopened_bodies[int(_menu.get("_index"))] as Control
+	if reopened_map == null or not is_equal_approx(float(reopened_map.get("_zoom")), remembered_zoom):
+		_fail("closing/reopening discarded the player's physically selected local zoom")
+		return
 	var reopened_canvas := reopened_map.get("_canvas") as Control if reopened_map != null else null
 	if reopened_map == null or reopened_canvas == null or not reopened_canvas.clip_contents:
 		_fail("second full-map open did not build a valid clipped map canvas")
