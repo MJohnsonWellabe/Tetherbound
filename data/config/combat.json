@@ -1127,6 +1127,7 @@
       "named_warrens_guardian": {
         "encounter_id": "warrens_guardian",
         "pattern_id": "named_warrens_guardian",
+        "authored_move_cadence": true,
         "chapter": "meadows",
         "kernel": "Sidestep armored front; Earth Fist final cone",
         "sendouts": [
