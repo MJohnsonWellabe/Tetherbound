@@ -332,6 +332,11 @@ func _drive_to_choice(climax: Node, label: String) -> bool:
 	var panel := _world.get_node_or_null(^"DialoguePanel")
 	for i in CHOICE_FRAME_BUDGET:
 		await _frame()
+		var healing := _world.get_node_or_null(^"MeadowHealing")
+		if healing != null and bool(healing.get("_applying")) \
+				and str(climax.get("_stage")) in ["join", "choice"]:
+			_fail("(%s) the offer advanced while live healing was still preparing" % label)
+			return false
 		if bool(climax.call("choice_open")):
 			return true
 		if panel != null and bool(panel.call("is_open")):
@@ -344,6 +349,10 @@ func _drive_to_choice(climax: Node, label: String) -> bool:
 ## Also proves the OTHER prompt is not what the press reached, and that where
 ## the player stood when the choice opened, neither prompt was live.
 func _answer_at_prompt(climax: Node, answer: String, label: String) -> bool:
+	var player := _world.get_node_or_null(^"Player") as Node3D
+	var before_read := player.global_position if player != null else Vector3.ZERO
+	var legendary := climax.get("_legendary") as Node3D
+	var legendary_before_read := legendary.global_position if legendary != null else Vector3.ZERO
 	if not await _read_the_choice(climax, label):
 		return false
 	var accept_prompt: Node3D = climax.get("_accept_prompt")
@@ -351,10 +360,21 @@ func _answer_at_prompt(climax: Node, answer: String, label: String) -> bool:
 	if accept_prompt == null or refuse_prompt == null:
 		_fail("(%s) the choice opened without both prompts" % label)
 		return false
-	var player := _world.get_node_or_null(^"Player") as Node3D
 	if player == null:
 		_fail("(%s) no Player" % label)
 		return false
+	print("(%s) choice-readout positions: player %s -> %s; stag %s -> %s; prompts %s / %s" % [label,
+		str(before_read), str(player.global_position), str(legendary_before_read),
+		str(legendary.global_position if legendary != null else Vector3.ZERO),
+		str(accept_prompt.global_position), str(refuse_prompt.global_position)])
+	if player is CharacterBody3D:
+		var body := player as CharacterBody3D
+		print("(%s) choice-readout motion: velocity %s, slides %d" % [label, str(body.velocity), body.get_slide_collision_count()])
+		for index in body.get_slide_collision_count():
+			var contact := body.get_slide_collision(index)
+			var collider := contact.get_collider() as Node
+			print("(%s) choice-readout contact: %s normal %s" % [label,
+				str(collider.get_path()) if collider != null else "<non-node>", str(contact.get_normal())])
 	for prompt: Node3D in [accept_prompt, refuse_prompt]:
 		var offer: Dictionary = prompt.call("interaction_offer", player.global_position)
 		if not offer.is_empty():
