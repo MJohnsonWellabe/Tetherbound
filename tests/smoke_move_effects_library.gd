@@ -435,6 +435,11 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 				var ready := bool(phase_ready.get(phase, false))
 				var pre_arrival := phase == "flight" or float(_scenarios.capture_phases[phase]) < 1.0
 				if not ready: continue
+				# Keep this observed simulation state through GPU readback. On a
+				# slow renderer, awaiting the next draw otherwise advances another
+				# frame and can turn a pre-contact shutter into a contact frame.
+				# Both presentation and independent timers use process_always=false.
+				paused = true
 				await RenderingServer.frame_post_draw
 				# Neutral filenames keep archetype and rank out of blind-judge
 				# inputs; the private results record retains the mapping.
@@ -443,6 +448,7 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 				if root.get_texture().get_image().save_png(path) != OK: _failures.append("Capture failed " + path)
 				var captured_elapsed := float(Time.get_ticks_usec() - started) / 1000000.0
 				captured[phase] = {"wall_seconds": captured_elapsed, "arrivals": arrivals[0],
+					"simulation_paused_for_readback": true,
 					"nominal_travel_fraction": float(transit.fraction) if phase == "flight" else _scenarios.capture_phases[phase]}
 				if phase == "flight" and bool(transit.get("clear_transit_required", false)):
 					var clear := true
@@ -474,6 +480,7 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 					captured[phase]["grounded_debris_checked"] = checked
 					if phase in ["contact", "impact"] and checked == 0:
 						_failures.append("No ground-bound debris inspected %s %s" % [encounter, phase])
+				paused = false
 		# A capture also waits for every configured shutter; an aftermath frame
 		# after the effect freed itself honestly records an empty aftermath.
 		if int(arrivals[0]) == simultaneous and BUDGET.used(encounter) == 0 and int(independent_result_frame[0]) >= 0 \
