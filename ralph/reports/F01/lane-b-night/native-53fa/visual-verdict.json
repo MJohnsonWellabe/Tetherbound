@@ -1,0 +1,45 @@
+{
+  "criterion": "F01#3",
+  "source_sha": "53fa3c2686d34fb145f491c007d1f90fa0ac72ba",
+  "reviewer": "/root/b_night_visual",
+  "code_blind": true,
+  "verdict": "BLOCK",
+  "inputs": "All four complete contact sheets, both owner Meadows reference boards, selected originals at native resolution; no game source or change narrative",
+  "scope": "Low Compatibility night navigability still-frame witness; not full regional/day/weather/fight or High/Medium certification",
+  "positive": "Main exterior route, trainer legs/boots, road edges and intersections remain readable, including057-058,073-075,091-094. Blue exterior and localized warm pools establish night contrast. NPC013,039-042,047, key060-062 and gate064-066 prompts are legible.",
+  "blocking_observations": [
+    {"frames": "030-031", "finding": "Consecutive doorway views crop the trainer lower body and largely remove surrounding route context"},
+    {"frames": "043", "finding": "Large roof/geometry surface obstructs roughly the left half of the screen; adjacent frames recover, persistence beyond this still unproved"},
+    {"frames": "071-072", "finding": "Camp visible and illuminated but no camp interaction prompt supplied; prompt readability unwitnessed, not established broken interaction"}
+  ],
+  "domains": {
+    "grounds_paths": "Navigable exterior; coarse repeated dirt and abrupt paving transitions limit reference appeal",
+    "vegetation_rocks": "Readable silhouettes; dense repeated grass and simplified rocks have less natural variation than references,070/091",
+    "architecture": "Coherent timber/stone and welcoming windows,005-008/049-054; flat white windows and obstruction limit polish",
+    "props_pickups": "Key/signs read,061/064/080/096; camp flame repeatedly resembles solid yellow polygonal placeholder,059/071-072, limiting BarB atmosphere",
+    "humans": "Recognizable NPCs; trainer highlights and some faces excessively bright,013/047",
+    "creatures": "Visible silhouettes/faces readable,070-071; stills do not certify movement/combat",
+    "sky_light_water": "Cool sky and warm pools support mood; lacks reference depth/material integration; no useful water sample",
+    "ui": "Displayed text readable; large right HUD covers scenery; no confidently diagnosed persistent missing material or floating asset"
+  },
+  "native_behavior": {
+    "executor": "separate coordinator-authorized PC writer; Lane B ran no native engine",
+    "script": "tests/capture_village_walk.gd",
+    "args": "--time=night --route=visits --from-title",
+    "renderer": "gl_compatibility",
+    "resolution": "1280x720",
+    "hardware": "NVIDIA GTX1060, Godot4.7",
+    "exit_code": 0,
+    "visits": 12,
+    "png_frames": 97,
+    "max_off_road_metres": 0.0,
+    "engine_errors": 0,
+    "warning": "Existing deprecated instance_reset_physics_interpolation terrain call",
+    "stdout_sha256": "d59ee1c31aa3f88fa546857ab5ef649d4d264b14a9e1bb9a57b179c44a3af142",
+    "stderr_sha256": "b4abd2e811082fc282a78ccb2f41642accb3e433290d0e194fc8e7a4e54ce004",
+    "raw_frames": "D:/CodexTemp/tetherbound-proof/native-b-53fa3c2686/night-visits"
+  },
+  "source_review": "APPROVE /root/b_f49_review for scoped exact D/C inputs",
+  "criterion_pass": false,
+  "remaining": "Resolve or properly scope observed visual defects, recapture and same-judge review; verify scoped logic and branch integration. No READY."
+}
