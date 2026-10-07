@@ -2154,6 +2154,8 @@ def cmd_texture(args) -> None:
     description of the drawing. The words come along too, but the image is the
     stronger signal and it is the exact likeness being scored.
     """
+    if args.head_only and args.species not in HEAD_PROMPTS:
+        sys.exit(f"no inspected head identity prompt for '{args.species}'")
     model = pathlib.Path(args.model).resolve()
     if not model.exists():
         sys.exit(f"no such model: {model}")
@@ -2175,7 +2177,8 @@ def cmd_texture(args) -> None:
     payload = {
         "model_url": ("data:application/octet-stream;base64,"
                       + __import__("base64").b64encode(model.read_bytes()).decode()),
-        "text_style_prompt": prompt_for(args.species)[:600],
+        "text_style_prompt": (HEAD_PROMPTS[args.species] if args.head_only
+                              else prompt_for(args.species))[:600],
         "image_style_url": data_uri(style_image),
         "enable_pbr": True,
         "enable_original_uv": False,
@@ -2265,6 +2268,8 @@ def main() -> None:
     texture.add_argument("--resolution", choices=["2k", "4k"], default="2k")
     texture.add_argument("--image", default=None,
                          help="one inspected PNG instead of the authored view set")
+    texture.add_argument("--head-only", action="store_true",
+                         help="use the installed head identity prompt without body/clothing instructions")
     texture.add_argument("--style-from", default=None,
                          help="take the style image from another species' crops")
     texture.set_defaults(func=cmd_texture)

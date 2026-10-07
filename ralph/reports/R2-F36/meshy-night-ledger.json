@@ -94,9 +94,21 @@
       "reference": "assets/characters/grandpa/reference/f36-face-v1.png",
       "reference_sha256": "1ea6457203a80eba92299113297d06711636819c879910fe4481a9b80e793997",
       "endpoint": "/openapi/v1/multi-image-to-3d",
-      "submitted_utc": "2026-10-07T23:21:17.616247+00:00",
+      "submitted_utc": "2026-10-07T18:21:17.616247-05:00",
       "task_id": "01a118ab-c9e1-7121-b488-52473510552c",
-      "status": "submitted_pending_inspection"
+      "status": "succeeded_preview_inspected_off_identity_partial_material_fit_native_gates_open",
+      "credits": {
+        "after": 13335,
+        "before": 13355,
+        "observed_cost": 20
+      },
+      "inspection": {
+        "raw_triangles": 54566,
+        "documented_humanoid_cleanup_triangles": 17999,
+        "identity": "PARTIAL original blind judge: recognizable, sterner/angular; frontal textured comparison needed",
+        "voxel_cleanup_rejected_triangles": 115668,
+        "candidate_enabled": false
+      }
     }
   ],
   "actual_meshy_submissions": 7,
