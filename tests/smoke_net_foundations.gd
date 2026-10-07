@@ -102,8 +102,9 @@ func _run() -> void:
 	host = await _settled_carrier(0)
 	guest = await _settled_carrier(1)
 	var claim := await step(1, "foundations_state", {"mode": "bounty_claim", "instance": original_instance}, 6000)
-	check(claim.get("verdict") == "PASS", "physical Halda claim reaches owner BOOL-save and accepted host ACK")
+	check(claim.get("verdict") == "PASS", "physical Halda claim reaches owner BOOL-save and accepted host ACK: " + str(claim.get("detail", "")))
 	if claim.get("verdict") != "PASS":
+		print("Original Halda claim failure: ", JSON.stringify(claim))
 		quit(await finish())
 		return
 	var paid: Dictionary = claim.get("data", {})
