@@ -17,6 +17,10 @@ var game: Node
 var travel: RefCounted
 var disk: RefCounted
 var visited: Array[String] = []
+var resume_source := ""
+var stop_boundary := ""
+var resumed_boundary := ""
+var segmented := false
 
 func run(owner: SceneTree) -> void:
 	driver = owner
@@ -28,12 +32,35 @@ func run(owner: SceneTree) -> void:
 				or arg.begins_with("--checkpoint-dir=") or arg == "--dry-run-water-fixture" or arg == "--m4-finale":
 			_fail("F49 refuses legacy resume/setup options; use --legacy-order-diagnostic for isolated debugging")
 			return
+		if arg.begins_with("--handoff-from="):
+			if not resume_source.is_empty() or arg == "--handoff-from=":
+				_fail("F49 accepts one nonempty segment source")
+				return
+			resume_source = arg.trim_prefix("--handoff-from=")
+			segmented = true
+		if arg.begins_with("--through-boundary="):
+			if not stop_boundary.is_empty() or arg == "--through-boundary=":
+				_fail("F49 accepts one nonempty segment stop")
+				return
+			stop_boundary = arg.trim_prefix("--through-boundary=")
+			segmented = true
 		if arg.begins_with("--world-seed="):
 			var seed := arg.trim_prefix("--world-seed=")
 			if not seed.is_valid_int():
 				_fail("--world-seed must be an integer")
 				return
 			OS.set_environment("TB_WORLD_SEED", seed)
+	if not stop_boundary.is_empty() and not HANDOFF.BOUNDARIES.has(stop_boundary):
+		_fail("F49 segment stop must name a new-order chapter boundary")
+		return
+	if segmented:
+		for arg: String in OS.get_cmdline_user_args():
+			if arg.begins_with("--through-") and not arg.begins_with("--through-boundary="):
+				_fail("F49 chapter segments cannot be combined with opening prefix stops")
+				return
+		if OS.has_environment("TB_WORLD_SEED"):
+			_fail("F49 chapter segments preserve the actual fresh population without seed overrides")
+			return
 	var session: Node = game.get("session")
 	var config: Dictionary = session.call("config") if session != null and session.has_method("config") else {}
 	for field: String in REQUIRED_FLAGS:
@@ -65,53 +92,80 @@ func run(owner: SceneTree) -> void:
 	driver.local_chains.earned = true
 	travel = TRAVEL.new(driver, game)
 	disk = HANDOFF.new(driver, game, driver.scratch + "_handoffs")
-	if not await driver._stage_fresh_through_hall(game): return
-	visited.append("meadows")
-	if not driver._accepted(await WARDEN.new().run_finale(driver, driver.current_scene, game), "passed"): return
-	if not await _boundary("meadows_settled"): return
-	if not await travel.home_key() or not await travel.hang_relic("meadows") or not await travel.enter("tidewake", "water"):
-		_failures(travel.failures)
-		return
-	visited.append("tidewake")
-	driver.live["world"] = driver.current_scene
-	await driver._stage_water_to_ending(game, true)
-	if driver.finished or not driver.failures.is_empty(): return
-	if driver.reached != "tidewake_ending_earned":
-		_fail("F49 Tidewake did not settle its real chapter")
-		return
-	if not await _dock_conclusion_available(): return
-	if not await _boundary("tidewake_settled"): return
-	if not _dock_saved():
-		_fail("F49 Tidewake departure lost its actual world conclusion or owner receipt on disk reload")
-		return
-	if not await travel.home_key() or not await travel.hang_relic("tidewake") or not await travel.enter("cloudreach", "cloudreach"):
-		_failures(travel.failures)
-		return
-	visited.append("cloudreach")
-	if not driver._accepted(await CLOUD.new().run(driver, driver.current_scene, game), "ok"): return
-	if not await _boundary("cloudreach_settled"): return
-	if not await travel.home_key() or not await travel.hang_relic("cloudreach") or not await travel.enter("stormwood", "stormwood"):
-		_failures(travel.failures)
-		return
-	visited.append("stormwood")
-	for helper: GDScript in [driver.STORMWOOD, driver.CROWN, driver.ROOTGATE, driver.DYNAMO, driver.MARROW]:
-		var segment: RefCounted = driver.STORMWOOD.Segment.new() if helper == driver.STORMWOOD else helper.new()
-		if not driver._accepted(await segment.run(driver, driver.current_scene, game), "passed"): return
-	if not driver._accepted(await STORM_SETTLEMENT.new().run(driver, driver.current_scene, game), "passed"): return
-	if HOME.journey_context(game).is_empty():
-		_fail("F49 missing producer: accepted Stormheart outcome has no Game.regional_ending_context")
-		return
-	if not await _boundary("stormwood_settled"): return
-	if not await travel.home_key() or not await travel.hang_relic("stormwood") or not await travel.grandpa_and_credits():
-		_failures(travel.failures)
-		return
-	visited.append("homecoming_credits")
-	if not await _boundary("completed_world", false): return
+	var from := -1
+	if not resume_source.is_empty():
+		resumed_boundary = disk.import_prefix(resume_source)
+		if resumed_boundary.is_empty():
+			_failures(disk.failures)
+			return
+		from = HANDOFF.BOUNDARIES.find(resumed_boundary)
+		if not stop_boundary.is_empty() and HANDOFF.BOUNDARIES.find(stop_boundary) <= from:
+			_fail("F49 segment must advance beyond its imported boundary")
+			return
+		if not await disk.reload_boundary(resumed_boundary, travel):
+			_failures(disk.failures)
+			return
+		driver.live = {"world": driver.current_scene, "game": game,
+			"player": driver.current_scene.get_node_or_null("Player"),
+			"rig": driver.current_scene.get_node_or_null("CameraRig")}
+		driver.reached = resumed_boundary
+		driver.resume_boundary = resumed_boundary
+		driver.resume_info = {"source": resume_source, "boundary": resumed_boundary,
+			"source_kind": "f49_hash_linked_production_prefix", "journey_id": disk.journey_id}
+		for index in from + 1: visited.append(["meadows", "tidewake", "cloudreach", "stormwood"][index])
+	if from < 0:
+		if not await driver._stage_fresh_through_hall(game): return
+		visited.append("meadows")
+		if not driver._accepted(await WARDEN.new().run_finale(driver, driver.current_scene, game), "passed"): return
+		if not await _boundary("meadows_settled"): return
+	if from < 1:
+		if not await travel.home_key() or not await travel.hang_relic("meadows") or not await travel.enter("tidewake", "water"):
+			_failures(travel.failures)
+			return
+		visited.append("tidewake")
+		driver.live["world"] = driver.current_scene
+		await driver._stage_water_to_ending(game, true)
+		if driver.finished or not driver.failures.is_empty(): return
+		if driver.reached != "tidewake_ending_earned":
+			_fail("F49 Tidewake did not settle its real chapter")
+			return
+		if not await _dock_conclusion_available(): return
+		if not await _boundary("tidewake_settled"): return
+		if not _dock_saved():
+			_fail("F49 Tidewake departure lost its actual world conclusion or owner receipt on disk reload")
+			return
+	if from < 2:
+		if not await travel.home_key() or not await travel.hang_relic("tidewake") or not await travel.enter("cloudreach", "cloudreach"):
+			_failures(travel.failures)
+			return
+		visited.append("cloudreach")
+		if not driver._accepted(await CLOUD.new().run(driver, driver.current_scene, game), "ok"): return
+		if not await _boundary("cloudreach_settled"): return
+	if from < 3:
+		if not await travel.home_key() or not await travel.hang_relic("cloudreach") or not await travel.enter("stormwood", "stormwood"):
+			_failures(travel.failures)
+			return
+		visited.append("stormwood")
+		for helper: GDScript in [driver.STORMWOOD, driver.CROWN, driver.ROOTGATE, driver.DYNAMO, driver.MARROW]:
+			var segment: RefCounted = driver.STORMWOOD.Segment.new() if helper == driver.STORMWOOD else helper.new()
+			if not driver._accepted(await segment.run(driver, driver.current_scene, game), "passed"): return
+		if not driver._accepted(await STORM_SETTLEMENT.new().run(driver, driver.current_scene, game), "passed"): return
+		if HOME.journey_context(game).is_empty():
+			_fail("F49 missing producer: accepted Stormheart outcome has no Game.regional_ending_context")
+			return
+		if not await _boundary("stormwood_settled"): return
+	if from < 4:
+		if not await travel.home_key() or not await travel.hang_relic("stormwood") or not await travel.grandpa_and_credits():
+			_failures(travel.failures)
+			return
+		visited.append("homecoming_credits")
+		if not await _boundary("completed_world", false): return
 	if not await disk.reload_completed(travel):
 		_failures(disk.failures)
 		return
 	driver.reached = "completed_world_continuation"
-	driver.campaign_complete = true
+	driver.campaign_complete = not segmented
+	if segmented: _segment_result("completed_world", true)
 	print("F49 JOURNEY " + JSON.stringify({"order": visited, "shortcuts": ["agent emits ordinary actions", "declines pending legendaries to retain the earned five", "production saves copied to immutable handoffs", "credits skipped by controller after their actual opening", "inherited helpers retain their original simulation clocks; wall time is not owner/device timing"], "legacy_cards": {"M2": "same-route ledger/reloads; two-loss/four-character proof queued separately", "M3": "fight/optional activity/visual proof remains separate", "T2": "same-route six chains; island/fight/art/four-character proof remains separate", "S2": "storm/fight/activity/visual proof remains separate"}, "owner_play": "pending", "ally_hardware": "pending", "published_download": "pending"}))
 	driver._finish(true)
 
@@ -123,7 +177,21 @@ func _boundary(label: String, reload_disk: bool = true) -> bool:
 	if reload_disk and not await disk.reload_boundary(label, travel):
 		_failures(disk.failures)
 		return false
+	if label == "tidewake_settled" and not _dock_saved():
+		_fail("F49 Tidewake segment lost its saved conclusion on production reload")
+		return false
+	if segmented and label == stop_boundary and label != "completed_world":
+		_segment_result(label, false)
+		driver._finish(true)
+		return false
 	return true
+
+func _segment_result(label: String, completed: bool) -> void:
+	print("F49 SEGMENT RESULT " + JSON.stringify({"kind": "f49_earned_segment",
+		"journey_id": disk.journey_id, "commit": disk.source_commit,
+		"from_boundary": resumed_boundary, "through_boundary": label,
+		"predecessors": disk.history, "visited": visited,
+		"completed_world_reloaded": completed, "counts_as_uninterrupted_proof": false}))
 
 func _fail(message: String) -> void:
 	driver.failures.append(message)

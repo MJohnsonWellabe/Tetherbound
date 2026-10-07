@@ -11,7 +11,12 @@ import {parseSaveDocument} from './save_document.mjs';
 // option keeps the original runner paths in provenance and still requires all
 // five receipts and every production byte to match the unedited witness.
 // node tools/earned_saves/promote_f19.mjs <campaign.log> <handoffs directory> [--relocated-from-ci]
-const [logFile, handoffDirectory, relocation] = process.argv.slice(2);
+const [logFile, handoffDirectory, ...options] = process.argv.slice(2);
+const relocation = options.includes('--relocated-from-ci') ? '--relocated-from-ci' : undefined;
+const segmentOption = options.find(option => option.startsWith('--segment-logs='));
+const segmentLogs = segmentOption ? segmentOption.slice('--segment-logs='.length).split(',') : [];
+assert.ok(options.every(option => option === '--relocated-from-ci' || option === segmentOption), 'Unknown promotion option');
+assert.equal(new Set(options).size, options.length, 'Duplicate promotion option');
 assert.ok(logFile && handoffDirectory, 'Expected campaign log and immutable handoff directory');
 assert.ok(relocation === undefined || relocation === '--relocated-from-ci', 'Unknown promotion option');
 const root = process.cwd();
@@ -28,10 +33,12 @@ const readLine = prefix => {
   return JSON.parse(found[0].slice(prefix.length));
 };
 const result = readLine('FRESH CAMPAIGN RESULT ');
-assert.equal(result.counts_as_proof, true, 'A resumed, legacy, dry or failed campaign is not earned proof');
-assert.equal(result.campaign_complete, true);
+if (!segmentOption) {
+  assert.equal(result.counts_as_proof, true, 'A resumed, legacy, dry or failed campaign is not earned proof');
+  assert.equal(result.campaign_complete, true);
+  assert.equal(result.resumed_from, '');
+}
 assert.deepEqual(result.failures, []);
-assert.equal(result.resumed_from, '');
 assert.equal(result.dry_run, false);
 const journey = readLine('F49 JOURNEY ');
 assert.deepEqual(journey.order, ['meadows', 'tidewake', 'cloudreach', 'stormwood', 'homecoming_credits']);
@@ -44,13 +51,79 @@ if (offload) {
   assert.equal(offload.continuous_drawing, false);
   assert.equal(offload.ordinary_controller_physics_saves, true);
 }
-const emitted = lines.filter(line => line.startsWith('F49 DISK HANDOFF '))
+let emitted = lines.filter(line => line.startsWith('F49 DISK HANDOFF '))
   .map(line => JSON.parse(line.slice('F49 DISK HANDOFF '.length)));
 const boundaries = ['meadows_settled', 'tidewake_settled', 'cloudreach_settled', 'stormwood_settled', 'completed_world'];
 const bosses = ['warden_aldis', 'water_trainer_nerissa', 'captain_veyra_storm_anchor', 'captain_marrow_dynamo_core'];
+let segmentWitnesses = [];
+if (segmentOption) {
+  assert.ok(segmentLogs.length > 0 && segmentLogs.length < 5 && segmentLogs.every(Boolean), 'Provide all ordered preceding segment logs');
+  const allLogs = [...segmentLogs, logFile];
+  assert.equal(new Set(allLogs.map(file => fs.realpathSync(file))).size, allLogs.length, 'Segment logs must be distinct original witnesses');
+  let previous = '';
+  let campaignIdentity;
+  emitted = [];
+  for (const file of allLogs) {
+    const text = fs.readFileSync(file, 'utf8');
+    assert.ok(!/(?:SCRIPT ERROR:|^ERROR:)/m.test(text), 'Engine errors invalidate every segment witness');
+    const rows = text.split(/\r?\n/);
+    const one = prefix => {
+      const matches = rows.filter(line => line.startsWith(prefix));
+      assert.equal(matches.length, 1, `Exactly one ${prefix} required in every segment`);
+      return JSON.parse(matches[0].slice(prefix.length));
+    };
+    const final = one('FRESH CAMPAIGN RESULT ');
+    const segment = one('F49 SEGMENT RESULT ');
+    assert.equal(final.requested_prefix_passed, true, 'Every original segment must pass');
+    assert.deepEqual(final.failures, []);
+    assert.equal(final.counts_as_proof, false, 'A segment is never uninterrupted proof');
+    assert.equal(final.campaign_complete, false);
+    assert.equal(final.dry_run, false);
+    assert.equal(final.resumed_from, previous, 'Each segment resumes the preceding earned boundary');
+    assert.equal(segment.kind, 'f49_earned_segment');
+    assert.equal(segment.from_boundary, previous);
+    assert.equal(segment.counts_as_uninterrupted_proof, false);
+    assert.match(segment.commit, /^[0-9a-f]{40}$/);
+    assert.ok(segment.journey_id);
+    campaignIdentity ||= [segment.commit, segment.journey_id];
+    assert.deepEqual([segment.commit, segment.journey_id], campaignIdentity);
+    const through = boundaries.indexOf(segment.through_boundary);
+    const from = boundaries.indexOf(previous);
+    assert.ok(through > from, 'Every segment advances in new chapter order');
+    const produced = rows.filter(line => line.startsWith('F49 DISK HANDOFF '))
+      .map(line => JSON.parse(line.slice('F49 DISK HANDOFF '.length)));
+    assert.deepEqual(produced.map(row => row.boundary), boundaries.slice(from + 1, through + 1));
+    const chain = boundaries.slice(0, through + 1).map(boundary => ({boundary,
+      receipt_sha256: sha256(path.join(sourceRoot, boundary, 'receipt.json'))}));
+    assert.deepEqual(segment.predecessors, chain, 'Segment output must match the final immutable chain');
+    if (previous) {
+      const input = one('F49 SEGMENT INPUT ');
+      assert.equal(input.boundary, previous);
+      assert.deepEqual([input.commit, input.journey_id], campaignIdentity);
+      assert.deepEqual(input.predecessors, chain.slice(0, from + 1), 'Original segment input must bind every preceding receipt');
+    } else assert.ok(!rows.some(line => line.startsWith('F49 SEGMENT INPUT ')), 'Exactly one fresh first producer');
+    assert.equal(segment.completed_world_reloaded, file === logFile, 'Only the terminal segment proves completed-world reload and continuation');
+    assert.equal(final.reached, file === logFile ? 'completed_world_continuation' : segment.through_boundary,
+      'Every original segment must reach its reported boundary or terminal continuation');
+    const functional = rows.filter(line => line.startsWith('F19 FUNCTIONAL OFFLOAD '));
+    assert.ok(functional.length <= 1);
+    if (functional.length) {
+      const configured = one('F19 FUNCTIONAL OFFLOAD ');
+      assert.equal(configured.scenario, 'full_fresh_campaign');
+      assert.equal(configured.rendering_method, 'gl_compatibility');
+      assert.equal(configured.continuous_drawing, false);
+      assert.equal(configured.ordinary_controller_physics_saves, true);
+    }
+    emitted.push(...produced);
+    segmentWitnesses.push({log_sha256: sha256(file), ...segment});
+    previous = segment.through_boundary;
+  }
+  assert.equal(previous, 'completed_world', 'The chain must finish its actual completed-world continuation');
+}
 assert.deepEqual(emitted.map(row => row.boundary), boundaries, 'Each actual new boundary must be captured in order');
 let sourceCommit = '';
 let emittedRoot = '';
+let retainedIdentity;
 let savedWorldSeed;
 const candidates = [];
 for (let index = 0; index < boundaries.length; index++) {
@@ -64,12 +137,13 @@ for (let index = 0; index < boundaries.length; index++) {
   sourceCommit ||= receipt.commit;
   assert.equal(receipt.commit, sourceCommit);
   assert.equal(emitted[index].commit, sourceCommit);
+  if (segmentOption) assert.equal(sourceCommit, segmentWitnesses[0].commit, 'Original segment logs must name the actual saved receipt source');
   const originalPath = emitted[index].path.replaceAll('\\', '/');
   assert.ok(path.posix.isAbsolute(originalPath) || /^[A-Za-z]:\//.test(originalPath), 'Absolute original runner path required');
   assert.equal(path.posix.normalize(originalPath), originalPath, 'Original paths must be canonical');
   assert.equal(path.posix.basename(originalPath), boundary, 'Original runner path must identify this boundary');
   emittedRoot ||= path.posix.dirname(originalPath);
-  assert.equal(path.posix.dirname(originalPath), emittedRoot, 'All five boundaries must come from the same original handoff root');
+  if (!segmentOption) assert.equal(path.posix.dirname(originalPath), emittedRoot, 'All five boundaries must come from the same original handoff root');
   if (relocation === undefined) assert.equal(fs.realpathSync(emitted[index].path), fs.realpathSync(directory));
   assert.deepEqual(receipt.files_sha256, emitted[index].files_sha256);
   assert.equal(receipt.realm, ['meadows', 'water', 'cloudreach', 'stormwood', 'meadows'][index]);
@@ -123,6 +197,16 @@ for (let index = 0; index < boundaries.length; index++) {
   const worlds = files.filter(file => file.endsWith(`${path.sep}world.json`)).map(file => parseSaveDocument(fs.readFileSync(file, 'utf8')));
   assert.equal(worlds.length, 1, 'A fresh campaign must retain exactly its actual world');
   const world = worlds[0];
+  if (segmentOption) {
+    const identity = [character.character_id, world.world_id, world.reward_delivery_namespace, character.party.map(member => member.uid)];
+    retainedIdentity ||= identity;
+    assert.deepEqual(identity, retainedIdentity, 'Segments retain the original character, world and five');
+    assert.equal(receipt.journey_id, segmentWitnesses[0].journey_id);
+    assert.equal(receipt.state.world_id, world.world_id);
+    assert.equal(receipt.state.reward_delivery_namespace, world.reward_delivery_namespace);
+    assert.deepEqual(receipt.predecessors, boundaries.slice(0, index).map(boundary => ({boundary,
+      receipt_sha256: sha256(path.join(sourceRoot, boundary, 'receipt.json'))})), 'Each boundary binds the preceding original receipts');
+  }
   const population = receipt.population_provenance;
   assert.ok(population && typeof population === 'object', 'Actual population seed provenance required');
   assert.ok(Number.isSafeInteger(world.world_seed), 'Actual fresh saved world seed required');
@@ -155,7 +239,7 @@ const provenance = {kind: 'f19_earned_boundary_promotion', source_commit: source
   command: `Godot 4.7 ${/^OpenGL.*(?:API|Renderer)/m.test(log) ? '' : '--headless '}--script tests/${offload ? 'smoke_f19_campaign_functional' : 'smoke_four_biome_continuous'}.gd`,
   functional_offload: offload,
   population_provenance: candidates.map(row => ({boundary: row.boundary, ...row.receipt.population_provenance})),
-  source_log_sha256: sha256(logFile), journey, boundaries,
+  source_log_sha256: sha256(logFile), segment_witnesses: segmentWitnesses, journey, boundaries,
   transport: relocation ? {kind: 'downloaded_ci_artifact', original_handoff_root: emittedRoot, original_paths: emitted.map(row => row.path)} : {kind: 'local_original_paths'},
   disclosures: journey.shortcuts, scope: 'Earned progression/save boundaries; no hardware, timing or visual acceptance claim'};
 for (const candidate of candidates) {

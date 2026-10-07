@@ -2,18 +2,22 @@ extends RefCounted
 
 ## Immutable byte-identical copies of the actual production split save.
 ## Hashes attest bytes, not earned play. Only the continuous caller can earn a
-## boundary. No supplied fixture/resume is accepted by F49's campaign driver.
+## boundary. Segments accept only a complete, hash-linked production prefix.
 const SAVE := preload("res://scripts/save/save_game.gd")
 const DOCUMENT := preload("res://scripts/save/save_document.gd")
 const HOME := preload("res://scripts/story/regional_homecoming.gd")
 const COMMITS := preload("res://tests/helpers/four_biome_checkpoints.gd")
 const SPAWNS := preload("res://scripts/combat/spawn_tables.gd")
+const BOUNDARIES := ["meadows_settled", "tidewake_settled", "cloudreach_settled", "stormwood_settled", "completed_world"]
+const REALMS := ["meadows", "water", "cloudreach", "stormwood", "meadows"]
 var tree: SceneTree
 var game: Node
 var base: String
 var failures: Array[String] = []
 var snapshots: Dictionary = {}
 var source_commit := ""
+var journey_id := ""
+var history: Array = []
 
 func _init(owner: SceneTree, actual_game: Node, destination: String) -> void:
 	tree = owner
@@ -31,6 +35,8 @@ func export_boundary(label: String) -> bool:
 	if sha.search(commit) == null: return _fail("F49 handoff requires an exact clean source commit (TB_COMMIT_SHA for exported builds)")
 	if not source_commit.is_empty() and source_commit != commit: return _fail("F49 source identity changed between handoffs")
 	source_commit = commit
+	if BOUNDARIES.find(label) != history.size(): return _fail("F49 handoffs must be earned in new chapter order")
+	if journey_id.is_empty(): journey_id = source_commit + ":" + base
 	var destination := base.path_join(label)
 	if DirAccess.dir_exists_absolute(destination): return _fail("F49 immutable handoff already exists: " + destination)
 	if not bool(game.call("save_game", 0)): return _fail("F49 production save refused at " + label)
@@ -48,6 +54,7 @@ func export_boundary(label: String) -> bool:
 		return _fail("F49 save changed during the immutable disk handoff")
 	var receipt := {"kind": "f49_ordinary_input_handoff", "boundary": label,
 		"commit": source_commit, "realm": str(game.current_realm),
+		"journey_id": journey_id, "predecessors": history.duplicate(true),
 		"population_provenance": population_provenance(),
 		"files_sha256": hashes, "state": _state(), "earned_claim": "continuous caller only; hashes do not prove play"}
 	var output := FileAccess.open(destination.path_join("receipt.json"), FileAccess.WRITE)
@@ -60,9 +67,84 @@ func export_boundary(label: String) -> bool:
 	output.store_string(encoded)
 	output.close()
 	snapshots[label] = receipt
+	history.append({"boundary": label, "receipt_sha256": FileAccess.get_sha256(destination.path_join("receipt.json"))})
 	print("F49 DISK HANDOFF " + JSON.stringify({"path": destination, "boundary": label, "commit": source_commit,
 		"files_sha256": hashes, "population_provenance": receipt.population_provenance}))
 	return true
+
+## Validate the entire prefix before copying or installing a writable save.
+## Exact source identity is conservative: a changed cut needs a fresh chain.
+func import_prefix(source_boundary: String) -> String:
+	var source := ProjectSettings.globalize_path(source_boundary).simplify_path().trim_suffix("/")
+	var label := source.get_file()
+	var index := BOUNDARIES.find(label)
+	if index < 0 or index >= BOUNDARIES.size() - 1:
+		_fail("F49 resume requires an unfinished new-order chapter boundary")
+		return ""
+	var source_root := source.get_base_dir()
+	if source_root == base or source_root.begins_with(base + "/") or base.begins_with(source_root + "/") \
+		or DirAccess.dir_exists_absolute(base):
+		_fail("F49 imported and writable handoff roots must be separate and output must be absent")
+		return ""
+	var commit := COMMITS.commit_sha()
+	var identity: Array = []
+	var retained: Dictionary = {}
+	var chain: Array = []
+	for step in index + 1:
+		var boundary: String = BOUNDARIES[step]
+		var directory := source_root.path_join(boundary)
+		var parsed: Variant = DOCUMENT.parse(FileAccess.get_file_as_string(directory.path_join("receipt.json")))
+		if not parsed is Dictionary:
+			_fail("F49 resume has no readable exact receipt for " + boundary)
+			return ""
+		var receipt: Dictionary = parsed
+		if not receipt.get("state") is Dictionary or not receipt.get("population_provenance") is Dictionary \
+			or not receipt.get("files_sha256") is Dictionary or not receipt.get("predecessors") is Array \
+			or not receipt.state.get("party") is Array:
+			_fail("F49 resume receipt has malformed state, population, hashes or lineage at " + boundary)
+			return ""
+		var state: Dictionary = receipt.get("state", {})
+		var uids: Array = []
+		for member: Variant in state.party:
+			if not member is Dictionary or str(member.get("uid", "")).is_empty():
+				_fail("F49 resume receipt has no stable party identity at " + boundary)
+				return ""
+			uids.append(member.uid)
+		var current_identity := [receipt.get("commit"), receipt.get("journey_id"), state.get("character_id"),
+			state.get("world_id"), state.get("reward_delivery_namespace"), state.get("world_seed"), uids]
+		if step == 0: identity = current_identity
+		if receipt.get("kind") != "f49_ordinary_input_handoff" or receipt.get("boundary") != boundary \
+			or receipt.get("commit") != commit or str(receipt.get("journey_id", "")).is_empty() \
+			or receipt.get("realm") != REALMS[step] or state.get("realm") != REALMS[step] \
+			or str(state.get("character_id", "")).is_empty() or str(state.get("world_id", "")).is_empty() \
+			or str(state.get("reward_delivery_namespace", "")).is_empty() or current_identity != identity \
+			or receipt.get("predecessors") != chain or state.get("party", []).is_empty() or state.get("party", []).size() > 5 \
+			or receipt.get("files_sha256", {}).is_empty() \
+			or _hash_tree(directory.path_join("save")) != receipt.get("files_sha256"):
+			_fail("F49 resume rejected mismatched source, identity, order, lineage or save hashes at " + boundary)
+			return ""
+		var population: Dictionary = receipt.get("population_provenance", {})
+		if population.get("saved_world_seed") != state.get("world_seed") \
+			or population.get("effective_encounter_seed") != state.get("world_seed") \
+			or population.get("has_environment_override") != false:
+			_fail("F49 segmented prefix requires its original reproducible population without seed overrides")
+			return ""
+		retained[boundary] = receipt
+		chain.append({"boundary": boundary, "receipt_sha256": FileAccess.get_sha256(directory.path_join("receipt.json"))})
+	for step in index + 1:
+		var boundary: String = BOUNDARIES[step]
+		if not tree.copy_tree(source_root.path_join(boundary), base.path_join(boundary)) \
+			or _hash_tree(base.path_join(boundary + "/save")) != retained[boundary].files_sha256 \
+			or FileAccess.get_sha256(base.path_join(boundary + "/receipt.json")) != chain[step].receipt_sha256:
+			_fail("F49 resume immutable prefix copy changed bytes at " + boundary)
+			return ""
+	snapshots = retained
+	history = chain
+	source_commit = commit
+	journey_id = str(identity[1])
+	print("F49 SEGMENT INPUT " + JSON.stringify({"path": source, "boundary": label,
+		"commit": commit, "journey_id": journey_id, "predecessors": history}))
+	return label
 
 func population_provenance() -> Dictionary:
 	# The capture override belongs to the encounter director, not save data.
@@ -100,6 +182,7 @@ func _state() -> Dictionary:
 		if not stack.is_empty(): inventory[str(slot)] = stack.duplicate(true)
 	var context := HOME.journey_context(game)
 	return {"party": party, "flags": flags, "inventory": inventory,
+		"world_id": str(game.world.world_id), "reward_delivery_namespace": str(game.world.reward_delivery_namespace),
 		"world_seed": int(game.get("world_seed")),
 		"redesign_character": game.local.get("redesign_character").duplicate(true),
 		"realm": str(game.current_realm), "character_id": HOME.character_id(game),
