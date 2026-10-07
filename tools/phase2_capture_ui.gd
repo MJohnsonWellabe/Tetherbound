@@ -22,6 +22,7 @@ var _tabs: Array[String] = []
 var _idle_hud := false
 var _records: Array[Dictionary] = []
 var _failures: Array[String] = []
+var _stage := "boot"
 
 
 func _init() -> void:
@@ -114,6 +115,8 @@ func _run() -> void:
 		var hud := world.get_node_or_null(^"PlaygroundHUD")
 		var strip: Control = hud.get("_party_strip") as Control if hud != null else null
 		var idle_deadline := Time.get_ticks_msec() + 300000
+		_stage = "observing_natural_roster_expiry"
+		_write_manifest(false)
 		while strip != null and strip.visible and Time.get_ticks_msec() < idle_deadline:
 			await process_frame
 		if strip == null or strip.visible:
@@ -143,7 +146,17 @@ func _run() -> void:
 			await _shoot_map_zoom_samples(menu, world)
 		if tab_id == "settings":
 			await _shoot_settings_sections(menu, world)
+	_stage = "closing_menu"
+	_write_manifest(false)
 	menu.call("close")
+	_stage = "finished"
+	_write_manifest(_failures.is_empty())
+	quit(0 if _failures.is_empty() else 1)
+
+
+## Retain truthful partial receipts if a hosted cap interrupts a later stage.
+## Completion still requires the entire requested capture to finish.
+func _write_manifest(complete: bool) -> void:
 	var manifest := {
 		"biome": _biome, "scene": SCENES[_biome], "seed": _seed,
 		"display_server": DisplayServer.get_name(),
@@ -160,12 +173,21 @@ func _run() -> void:
 		"input_contexts_sha256": FileAccess.get_sha256("res://data/config/input_contexts.json"),
 		"project_sha256": FileAccess.get_sha256("res://project.godot"),
 		"frames": _records, "failures": _failures,
-		"complete": _failures.is_empty(),
+		"stage": _stage, "elapsed_ms": Time.get_ticks_msec(),
+		"complete": complete,
 	}
 	var file := FileAccess.open("%s/manifest.json" % _output, FileAccess.WRITE)
+	if file == null:
+		_failures.append("UI capture manifest could not be opened")
+		push_error(_failures.back())
+		return
 	file.store_string(JSON.stringify(manifest, "\t") + "\n")
+	file.flush()
+	var error := file.get_error()
 	file.close()
-	quit(0 if _failures.is_empty() else 1)
+	if error != OK:
+		_failures.append("UI capture manifest could not be flushed")
+		push_error(_failures.back())
 
 
 func _shoot_map_cycle(menu: Node, world: Node) -> void:
@@ -300,5 +322,8 @@ func _shoot_raster(frame_id: String, subject: String, world: Node, size: Vector2
 	_records.append({"id": frame_id, "subject": subject, "path": path,
 		"scene": str(SCENES[_biome]), "camera": "production CameraRig/Camera3D",
 		"resolution": [image.get_width(), image.get_height()],
-		"ui": true, "player_present": world.get_node_or_null(^"Player") != null})
+		"ui": true, "elapsed_ms": Time.get_ticks_msec(),
+		"player_present": world.get_node_or_null(^"Player") != null})
 	print("PHASE2 UI %s -> %s" % [frame_id, path])
+	_stage = "captured:" + frame_id
+	_write_manifest(false)
