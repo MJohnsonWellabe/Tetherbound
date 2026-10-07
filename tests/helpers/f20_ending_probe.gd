@@ -11,12 +11,179 @@ var failures: Array[String] = []
 var checks := 0
 var _heard := ""
 var _expected_choices: Array[String] = ["meadows:refused", "water:refused", "cloudreach:refused", "stormwood:refused"]
+var _capture_index := 0
+var continuation_content_entered := false
+
+## Optional observations on the existing proof; no camera or gameplay writes.
+## Hosted screenshots stay in the run artifact for independent visual review.
+func capture(tree: SceneTree, label: String, frame_ready: Callable = Callable()) -> bool:
+	if not OS.get_cmdline_user_args().has("--capture-ending") and not OS.get_cmdline_user_args().has("--capture-order-ui"): return true
+	if not check(DisplayServer.get_name() != "headless" and RenderingServer.render_loop_enabled,
+		"ending capture requires an actual drawing display"): return false
+	var drawn: Array[bool] = [false]
+	var frame_image: Array[Image] = []
+	var deadline := Time.get_ticks_msec() + 30000
+	var observer := func() -> void:
+		if drawn[0] or Time.get_ticks_msec() >= deadline: return
+		if frame_ready.is_valid() and frame_ready.call() != true: return
+		drawn[0] = true
+		# Retain this completed draw, including transient effects that could
+		# finish before the awaiting reader resumes on the next idle edge.
+		frame_image.append(tree.root.get_texture().get_image())
+	RenderingServer.frame_post_draw.connect(observer)
+	while not drawn[0] and Time.get_ticks_msec() < deadline: await tree.process_frame
+	RenderingServer.frame_post_draw.disconnect(observer)
+	if not check(drawn[0], "ending capture observes a completed frame within 30 seconds"): return false
+	var image: Image = frame_image[0]
+	var directory := "res://shots/f20-ending-%d" % OS.get_process_id()
+	var path := directory.path_join("%03d-%s.png" % [_capture_index, label])
+	_capture_index += 1
+	if not check(DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(directory)) == OK \
+		and image != null and not image.is_empty() and image.save_png(path) == OK,
+		"actual ending framebuffer saved: " + label): return false
+	print("F20 ENDING CAPTURE " + JSON.stringify({"path": path, "label": label,
+		"width": image.get_width(), "height": image.get_height()}))
+	return true
 
 func check(value: bool, message: String) -> bool:
 	checks += 1
 	print("F20 ", "PASS " if value else "FAIL ", message)
 	if not value: failures.append(message)
 	return value
+
+## F19 presentation observations reuse this area's disclosed fixture and real
+## Home Key return. No realm/pose/unlock changes are made after fixture setup.
+func order_ui(tree: SceneTree, game: Node) -> bool:
+	if not check(OS.get_cmdline_user_args().has("--capture-order-ui"), "order UI proof requires its actual frame captures"): return false
+	if not await return_home(tree, game): return false
+	var travel := TRAVEL.new(tree, game)
+	var expected: Array[String] = ["meadows", "water", "cloudreach", "stormwood"]
+	var names: Array[String] = ["The Meadows", "Tidewake", "Cloudreach Cliffs", "The Stormwood"]
+	var map_names: Array[String] = ["Meadows", "Tidewake", "Cloudreach Cliffs", "The Stormwood"]
+	await travel.tap("inventory")
+	var menu: Node = game.call("menu")
+	if not check(menu != null and menu.call("is_open") and INPUT_OWNER.current(tree) == menu,
+		"ordinary inventory input opens the production owned menu"): return false
+	for tab_id: String in ["map", "quest_log"]:
+		for step in 12:
+			if menu.call("current_tab_id") == tab_id: break
+			await travel.tap("menu_tab_right")
+		if not check(menu.call("current_tab_id") == tab_id, "ordinary menu navigation reaches " + tab_id): return false
+		var body: Node = menu.get("_bodies")[int(menu.get("_index"))]
+		if tab_id == "map":
+			var available: Array = body.call("_available_realms")
+			var row := body.get("_realm_row") as Control
+			var labels: Array[String] = []
+			if row != null:
+				for button: Node in row.get_children():
+					if button is Button: labels.append((button as Button).text)
+			if not check(available == expected and row != null and row.is_visible_in_tree() and labels == map_names,
+				"actual available map destinations and visible selector labels follow all four chapters"): return false
+			print("F19 ORDER MAP " + JSON.stringify({"realms":available,"visible_labels":labels,"fixture_unlocks":true}))
+		else:
+			var heading := "Chapter 1 · The Meadows"
+			var visible_heading := false
+			for label: Node in body.find_children("*", "Label", true, false):
+				if (label as Label).is_visible_in_tree() and (label as Label).text == heading: visible_heading = true
+			if not check(body.get("_log").call("chapter_order") == expected and visible_heading,
+				"production journal retains the chapter order and displays the current Meadows chapter heading"): return false
+			print("F19 ORDER JOURNAL " + JSON.stringify({"order":expected,"visible_heading":heading,"other_chapter_headings_captured":false}))
+		if not await capture(tree, "order-" + tab_id): return false
+	await travel.tap("menu_cancel")
+	if not check(not menu.call("is_open") and INPUT_OWNER.current(tree) == null, "menu cancel returns input before signed arch approaches"): return false
+	var ids: Array[String] = ["home", "tidewake", "cloudreach", "stormwood"]
+	var levels: Array[int] = [3, 20, 31, 42]
+	for index in ids.size():
+		var arch: Node3D
+		for candidate: Node in tree.get_nodes_in_group("portal_arches"):
+			if candidate.get("arch_id") == ids[index]: arch = candidate as Node3D
+		if not check(arch != null, "production Hall mounts signed live arch " + ids[index]): return false
+		var prompt := arch.get_node("Interactable") as Node3D
+		var player := tree.current_scene.get_node("Player") as CharacterBody3D
+		var rig := tree.current_scene.get_node("CameraRig") as Node3D
+		var recoveries_before := int(player.get("_unstick_count"))
+		var nav := preload("res://tests/helpers/stick_navigator.gd").new(tree, player, rig, Callable(travel, "_stick"))
+		var approach := arch.get_parent().get_node_or_null("Approach") as Node3D
+		var headings: Array[Vector3] = []
+		if approach != null: headings.append(approach.global_position)
+		var arrived: bool = await nav.walk_to_guided(prompt.global_position, 2400, 1.3, headings)
+		travel.call("_stick", 0.0, 0.0)
+		for frame in 8: await tree.physics_frame
+		var arbiter: Node = tree.current_scene.get_node("InteractionArbiter")
+		var offer: Dictionary = arbiter.call("winner")
+		var text := str(prompt.get("label"))
+		if not check(arrived and player.is_on_floor() and int(player.get("_unstick_count")) == recoveries_before \
+			and INPUT_OWNER.current(tree) == null and arbiter.call("winning_provider") == prompt \
+			and str(offer.get("label", "")) == text and text.contains(names[index]) and text.contains("Recommended Lv %d" % levels[index]),
+			"actual grounded winner shows its chapter name and recommended level: " + ids[index]): return false
+		print("F19 ORDER SIGN " + JSON.stringify({"id":ids[index],"label":text,"recommended_level":levels[index],
+			"grounded":player.is_on_floor(),"unstick_unchanged":true,"entered_or_unlocked":false}))
+		if not await capture(tree, "order-sign-" + ids[index]): return false
+	return check(travel.failures.is_empty(), "order UI observations retain the real navigation and Home Key guards")
+
+## The existing fixture already opened these personal arches. Enter them by
+## their real provider; do not weaken the earned helper's still-locked key check.
+func order_journals(tree: SceneTree, game: Node) -> bool:
+	if not check(OS.get_cmdline_user_args().has("--capture-order-ui"), "journal extension requires actual frame captures"): return false
+	if not await return_home(tree, game): return false
+	var travel := TRAVEL.new(tree, game)
+	var character_id := str(game.local.character_id)
+	var original_uids: Array[String] = travel._uids()
+	if not check(not character_id.is_empty() and original_uids.size() == 5 and not original_uids.has(""),
+		"journal extension retains the fixture's actual stable character and five companions"): return false
+	var expected: Array[String] = ["meadows", "water", "cloudreach", "stormwood"]
+	var destinations := [["tidewake", "water", "Chapter 2 · Tidewake"],
+		["cloudreach", "cloudreach", "Chapter 3 · Cloudreach Cliffs"],
+		["stormwood", "stormwood", "Chapter 4 · The Stormwood"]]
+	for index in destinations.size():
+		var arch_id := str(destinations[index][0])
+		var realm := str(destinations[index][1])
+		var heading := str(destinations[index][2])
+		var view: Dictionary = game.call("portal_view", arch_id)
+		var arch: Node3D
+		for candidate: Node in tree.get_nodes_in_group("portal_arches"):
+			if candidate.get("arch_id") == arch_id: arch = candidate as Node3D
+		if not check(str(game.current_realm) == "meadows" and arch != null \
+			and view.get("ready") == true and view.get("character_open") == true \
+			and str(game.local.character_id) == character_id and travel._uids() == original_uids,
+			"journal route retains its character and actual already-open arch " + arch_id): return false
+		var prompt := arch.get_node_or_null("Interactable") as Node3D
+		if not check(prompt != null, "already-open journal destination has its actual provider"): return false
+		if not await travel.activate(prompt): failures.append_array(travel.failures); return false
+		var arrived := false
+		for frame in 7200:
+			await tree.process_frame
+			if travel._ready_world(realm): arrived = true; break
+		if not check(arrived and str(game.local.character_id) == character_id and travel._uids() == original_uids,
+			"ordinary portal Enter reaches the ready journal realm with the same five: " + realm): return false
+		await travel.tap("inventory")
+		var menu: Node = game.call("menu")
+		if not check(menu != null and menu.call("is_open") and INPUT_OWNER.current(tree) == menu,
+			"ordinary inventory input opens the actual destination menu"): return false
+		for step in 12:
+			if menu.call("current_tab_id") == "quest_log": break
+			await travel.tap("menu_tab_right")
+		if not check(menu.call("current_tab_id") == "quest_log", "ordinary tabs reach the destination quest log"): return false
+		var body: Node = menu.get("_bodies")[int(menu.get("_index"))]
+		var heading_label: Label
+		for label: Node in body.find_children("*", "Label", true, false):
+			if (label as Label).is_visible_in_tree() and (label as Label).text == heading: heading_label = label as Label
+		var journal_visible := func() -> bool:
+			return is_instance_valid(menu) and menu.call("is_open") and INPUT_OWNER.current(tree) == menu \
+				and menu.call("current_tab_id") == "quest_log" and is_instance_valid(body) \
+				and body.get("_log").call("chapter_order") == expected and body.get("_log").call("chapter_heading") == heading \
+				and is_instance_valid(heading_label) and heading_label.is_visible_in_tree() and heading_label.text == heading \
+				and str(game.current_realm) == realm and str(game.local.character_id) == character_id and travel._uids() == original_uids
+		if not check(journal_visible.call() == true, "actual destination journal displays " + heading): return false
+		if not await capture(tree, "order-journal-" + realm, journal_visible): return false
+		if not check(journal_visible.call() == true, "destination journal identity and heading survive the completed capture"): return false
+		print("F19 ORDER JOURNAL " + JSON.stringify({"realm": realm, "order": expected, "visible_heading": heading,
+			"character_id": character_id, "party_uids": original_uids, "fixture_unlocks": true, "earned_campaign": false}))
+		await travel.tap("menu_cancel")
+		if not check(not menu.call("is_open") and INPUT_OWNER.current(tree) == null, "journal cancel returns ordinary world input"): return false
+		if index < destinations.size() - 1:
+			if not await travel.home_key(): failures.append_array(travel.failures); return false
+	return check(travel.failures.is_empty(), "three destination journals retain ordinary portal and Home Key guards")
 
 func fixture(game: Node, label: String) -> bool:
 	game.call("reset_for_new_game")
@@ -204,7 +371,8 @@ func open_credits(tree: SceneTree, game: Node) -> bool:
 		# memory to override a newly earned one. No counter is set here.
 		var landmarks := int(first_companion.get("landmarks_visited_together"))
 		var battles := int(first_companion.get("battles_fought"))
-		var memory_fact := "%d landmarks" % landmarks if landmarks > 0 else "%d battles" % battles
+		var memory_fact := "%d %s" % [landmarks, "landmark" if landmarks == 1 else "landmarks"] if landmarks > 0 \
+			else "%d %s" % [battles, "battle" if battles == 1 else "battles"]
 		if not check(battles >= 4 and str(prose.get("starter_status", "")).contains(HOME.party_names(game.party)[0]) \
 			and str(prose.get("bond_memory", "")).contains(HOME.party_names(game.party)[0]) \
 			and str(prose.get("bond_memory", "")).contains(memory_fact),
@@ -226,6 +394,9 @@ func open_credits(tree: SceneTree, game: Node) -> bool:
 	while panel.call("is_open") and presses < line_count + 2:
 		opened = true
 		_heard += "\n" + str(panel.get("_body").text)
+		if not await capture(tree, "grandpa-%02d" % presses):
+			panel.disconnect("completed", completion_observer)
+			return false
 		print("F20 TALK tap start index=", presses, " ticks_ms=", Time.get_ticks_msec())
 		await travel.tap("interact")
 		print("F20 TALK tap returned index=", presses, " ticks_ms=", Time.get_ticks_msec())
@@ -261,7 +432,8 @@ func open_credits(tree: SceneTree, game: Node) -> bool:
 		var owner := INPUT_OWNER.current(tree)
 		if owner != null and owner.get_script() == load("res://scripts/ui/regional_credits.gd"):
 			credits = owner; break
-	return check(credits != null and credits.call("is_open"), "production credits own this player's input after acknowledgement")
+	if not check(credits != null and credits.call("is_open"), "production credits own this player's input after acknowledgement"): return false
+	return await capture(tree, "credits")
 
 func finish_credits(tree: SceneTree, game: Node) -> bool:
 	var credits := INPUT_OWNER.current(tree)
@@ -315,7 +487,7 @@ func fifth(tree: SceneTree, game: Node, travel: RefCounted = null) -> bool:
 	journal.call("set_realm", "meadows")
 	var quests_before: Array = journal.call("main_entries", game.progression).duplicate(true)
 	var tracked_before: String = journal.call("tracked_text", game.progression)
-	var moment := {"results": 0, "presented": false}
+	var moment := {"results": 0, "presented": false, "capture_started": false, "capture_done": false, "captured": false}
 	# The actual arch subscribes in _ready, before this observer. Its durable
 	# result creates the transient source; observe it on that real edge.
 	var result_observer := func(result: Dictionary) -> void:
@@ -327,6 +499,18 @@ func fifth(tree: SceneTree, game: Node, travel: RefCounted = null) -> bool:
 		moment.presented = arch.get("_stir_seen") == true and is_instance_valid(light) \
 			and light.light_energy > float(arch.get("_stir_settings").resting_energy) \
 			and is_instance_valid(sound) and sound.playing and sound.stream != null and sound.bus == "SFX"
+		if moment.results == 1 and moment.presented and OS.get_cmdline_user_args().has("--capture-ending"):
+			moment.capture_started = true
+			var visible_stir := func() -> bool:
+				if not is_instance_valid(arch) or not is_instance_valid(light) or tree.current_scene == null: return false
+				var hud: Node = tree.current_scene.get_node_or_null("PlaygroundHUD")
+				var label: Label = hud.get("_hotbar_message") if hud != null else null
+				return light.is_visible_in_tree() and light.light_energy > float(arch.get("_stir_settings").resting_energy) \
+					and label != null and label.is_visible_in_tree() and label.text == "It stirred, but it is not ready yet."
+			# Arm at the durable result, while activation is still releasing X.
+			# The observed HUD line and bright light must coexist in the draw.
+			moment.captured = await capture(tree, "fifth-arch-stir", visible_stir)
+			moment.capture_done = true
 	game.connect("portal_action_result", result_observer)
 	var messages: Array[String] = []
 	var observer := func() -> void:
@@ -341,6 +525,7 @@ func fifth(tree: SceneTree, game: Node, travel: RefCounted = null) -> bool:
 	if not activated:
 		tree.process_frame.disconnect(observer)
 		game.disconnect("portal_action_result", result_observer)
+		while moment.capture_started and not moment.capture_done: await tree.process_frame
 		failures.append_array(travel.failures); return false
 	var stir_deadline := Time.get_ticks_msec() + 30000 # wall-clock: slow runners exceed 1 s/frame
 	while Time.get_ticks_msec() < stir_deadline:
@@ -349,11 +534,14 @@ func fifth(tree: SceneTree, game: Node, travel: RefCounted = null) -> bool:
 	for frame in 8: await tree.process_frame
 	tree.process_frame.disconnect(observer)
 	game.disconnect("portal_action_result", result_observer)
+	while moment.capture_started and not moment.capture_done: await tree.process_frame
 	var view: Dictionary = game.call("portal_view", "biome5")
 	if not check(view.get("character_stirred") == true and view.get("open") == false \
 		and game.local.inventory.call("count", "fifth_portal_key") == 0, "one real key consumed; fifth arch stays sealed"): return false
 	if not check(moment.results == 1 and moment.presented, "one actual durable result creates bright glow and a playing diegetic SFX source"): return false
 	if not check(messages.has("It stirred, but it is not ready yet."), "actual key use emits the single not-ready line"): return false
+	if OS.get_cmdline_user_args().has("--capture-ending") and not check(moment.capture_done and moment.captured,
+		"fifth stir frame captured while the actual light is bright and the not-ready line is visible"): return false
 	if not check(journal.call("main_entries", game.progression) == quests_before \
 		and journal.call("tracked_text", game.progression) == tracked_before,
 		"fifth-key use adds no main quest or sequel objective"): return false
@@ -377,7 +565,7 @@ func retained_valid(value: Dictionary) -> bool:
 		and value.get("uids") is Array and value.uids.size() == value.names.size() \
 		and value.get("receipts") is Array and value.get("inventory") is Array and not value.inventory.is_empty()
 
-func resumed(tree: SceneTree, game: Node, before: Dictionary) -> bool:
+func resumed(tree: SceneTree, game: Node, before: Dictionary, continuation: bool = true) -> bool:
 	if not check(retained_valid(before), "reload proof starts with a complete detached character snapshot"): return false
 	if not await ready(tree, game): return false
 	var now := retained(game)
@@ -397,9 +585,14 @@ func resumed(tree: SceneTree, game: Node, before: Dictionary) -> bool:
 	travel.call("_stick", 0.0, 0.0)
 	if not check(player.is_on_floor() and player.global_position.distance_to(position_before) > 0.1 \
 		and HOME.journey_context(game).get("regional_credits_seen") == true, "safe completed world returns ordinary movement"): return false
+	if not await capture(tree, "completed-world"): return false
+	# A named F20#1 endpoint retains disk/revisit/once-only credits checks.
+	# Full/default callers still require all F20#3 continuation assertions.
+	if not continuation: return true
 	return await continuation_content(tree, game)
 
 func continuation_content(tree: SceneTree, game: Node) -> bool:
+	continuation_content_entered = true
 	var journal := preload("res://scripts/world/quest_log.gd").new(game)
 	var unfinished := false
 	for entry: Dictionary in journal.call("local_entries", game.progression):
@@ -425,6 +618,7 @@ func continuation_content(tree: SceneTree, game: Node) -> bool:
 			" world_day=", game.world.day, " bounty_day=", game.world.redesign_world.bounty_day)
 	if not check(view.get("ready") == true and view.get("rows", []).size() == 3,
 		"reloaded character has three active bounties in the live board"): return false
+	if not await capture(tree, "completed-bounties"): return false
 	await travel.tap("menu_cancel")
 	if not check(INPUT_OWNER.current(tree) == null, "bounty screen returns ordinary world input"): return false
 	return await admit_endgame_rematch(tree, game, rematches)

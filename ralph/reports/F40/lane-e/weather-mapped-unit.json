@@ -1,0 +1,13 @@
+{
+  "run_id": 37653322093,
+  "source_commit": "4ffbf07a263a484ffdf044ba18d6fe39f61f01e6",
+  "artifact_id": 11496714364,
+  "artifact_sha256": "469c8d4f72e12d21fa922d49fbc9e8451a1f17c9b8659a2a278eeeb48b89e934",
+  "proof": "tests/run_tests.gd --only=test_cloudreach_act_one.gd,test_cloudreach_broken_skyroad_arch.gd,test_cloudreach_cast_dialogue.gd,test_cloudreach_counterweight_seal.gd,test_cloudreach_continuous_harness.gd,test_cloudreach_environment.gd,test_cloudreach_flight_aerie_presentation.gd,test_cloudreach_galefoot_waycamp.gd,test_cloudreach_friendly_palette.gd,test_cloudreach_high_perches_presentation.gd,test_cloudreach_grass_roles.gd,test_cloudreach_no_legendary_offer.gd,test_cloudreach_production_integration.gd,test_cloudreach_realm_gate_crag.gd,test_cloudreach_rejoin_gate.gd,test_cloudreach_resource_node_reach.gd,test_cloudreach_sky_shrine_presentation.gd,test_cloudreach_stormward_overlook.gd,test_cloudreach_three_bells_bridge.gd,test_cloudreach_windscar_beacon_site.gd,test_cloudreach_world_presets.gd,test_realm_camera_far_floor.gd,test_realm_look_overlay.gd,test_realm_shell_transition_guard.gd,test_tether_pylon_material_binding.gd",
+  "tests": 164,
+  "assertions": 4298,
+  "failed": 0,
+  "exit_code": 0,
+  "runtime_seconds": 23,
+  "scope": "25 mapped existing files; production weather presentation API/source logic only. Native full frame/floor/visual gates remain open."
+}

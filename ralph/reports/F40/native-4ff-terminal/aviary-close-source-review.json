@@ -1,0 +1,19 @@
+{
+  "limits": [
+    "Full biome Visual bar remains open",
+    "Standalone capsule smoke proves fixture clearance only"
+  ],
+  "scope": "Existing recorder receipt guards and row29 collision-bearing close stands",
+  "criterion": "F40#4",
+  "source_sha": "78f202eb082c15ac2e6bcdcc61ac3f7603931b4b",
+  "pending": [
+    "Actual close capture and blind verdict",
+    "Existing standalone capsule smoke"
+  ],
+  "verdict": "APPROVE",
+  "reviewer": "/root/review_cloud_startup",
+  "findings": [
+    "Production camera, floor checks, preset preflight and installed Aviary runtime/config unchanged",
+    "Final receipt checks open/flush errors and required frame/source/preset metadata including motion path"
+  ]
+}
