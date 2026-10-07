@@ -203,9 +203,9 @@ func test_stable_generation_restores_old_bitset_prefix_and_empty_layer_bounds() 
 	assert_eq(int(rows.trees[0].order),9,"full regeneration cannot reuse a retired slot")
 	assert_true(bool(BAKE.write_all("stormwood",{"trees":[_placement(40),_placement(-20)]},{},512,7,41,true,root).get("ok",false)))
 	assert_true(BAKE.is_full_generation_usable("stormwood",7,41,root),"new cell sorting before base catalog remains usable")
-	assert_false(BAKE.is_full_generation_usable("stormwood",8,40,root),"foreign seed refused")
+	assert_false(BAKE.is_full_generation_usable("stormwood",8,41,root),"foreign seed refused")
 	_write(root.path_join("region_0_0.bin"),"corrupt complete-catalog bytes")
-	assert_false(BAKE.is_full_generation_usable("stormwood",7,40,root),"full hashes cannot be bypassed by source freshness")
+	assert_false(BAKE.is_full_generation_usable("stormwood",7,41,root),"full hashes cannot be bypassed by source freshness")
 	assert_eq(str(BAKE.write_all("stormwood",{}, {},512,7,41,true,root).get("code")),
 		"corrupt_full_identity_generation","damaged prior identities are never reinterpreted")
 

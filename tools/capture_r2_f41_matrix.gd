@@ -57,7 +57,9 @@ func _stage_candidate_configs() -> bool:
 				for part: String in ["ancient_trunk", "built_detail", "branching_crown", "canopy_atlas", "core_finish", "visible_roots"]:
 					config[part].enabled = true
 			"stormwood_road_current": config.finish_candidate.enabled = true
-			"stormwood_ground_finish": config.enabled = true
+			"stormwood_ground_finish":
+				config.enabled = true
+				config.leaf_original_alpha.enabled = true
 			"stormwood_glass_field": config.scorched_scars = true
 			"stormwood_surge": config.presentation.telegraph.leader_volume_candidate.enabled = true
 		var file := FileAccess.open(path, FileAccess.WRITE)

@@ -59,6 +59,7 @@ const RIDGELINE_GROUNDMAT_VISUAL_PATH := "res://data/config/ridgeline_groundmat_
 ## playground. Separate because scatter_bake.gd fingerprints vegetation.json
 ## whole, and a colour must not mark a placement bake stale.
 const PRESENTATION_RETINT_PATH := "res://data/config/vegetation_presentation.json"
+const STORMWOOD_LEAF_PRESENTATION_PATH := "res://data/config/stormwood_ground_finish.json"
 const CATALOG_PRESENTATION := preload("res://scripts/world/meadows_catalog_presentation.gd")
 const RIDGELINE_CLOVER_MODELS: Array[String] = [
 	"res://assets/environment/stylized_nature/Clover_1.gltf",
@@ -92,6 +93,20 @@ func _vegetation_config() -> Dictionary:
 
 
 var _presentation_retint_cache: Variant = null
+var _stormwood_leaf_profile_cache: Variant = null
+
+
+func _stormwood_leaf_profile() -> Dictionary:
+	if _realm_bake_name != "stormwood":
+		return {}
+	if _stormwood_leaf_profile_cache == null:
+		_stormwood_leaf_profile_cache = {}
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(STORMWOOD_LEAF_PRESENTATION_PATH))
+		if parsed is Dictionary and bool(parsed.get("enabled", false)):
+			var leaf: Dictionary = parsed.get("leaf_original_alpha", {})
+			if bool(leaf.get("enabled", false)):
+				_stormwood_leaf_profile_cache = leaf
+	return _stormwood_leaf_profile_cache
 
 
 ## The playground's presentation tint overlay, or {} for any realm shell (they
@@ -930,6 +945,18 @@ func _tint_for(name: String, source: Material, overrides: Dictionary, swaps: Dic
 	# so a layer can point a material at the green leaf and desaturate it in
 	# one breath.
 	var adjust: Dictionary = adjusts.get(name, {})
+	# The normal-tree atlas has different leaf cutouts/UV islands. Stormwood's
+	# optional finish keeps the installed twisted-tree sheet's actual alpha,
+	# neutralizes its crimson RGB on a copy, then applies a cooler green tint.
+	# The existing adjustment preserves alpha, regenerates mips and retains a
+	# synthetic resource identity through the Terrain3D scene-pack roundtrip.
+	if name == "Leaves_TwistedTree":
+		var forest_leaf := _stormwood_leaf_profile()
+		if not forest_leaf.is_empty():
+			swap = ""
+			colour = str(forest_leaf.get("tint", "#8eaa91"))
+			adjust = {"brightness": float(forest_leaf.get("brightness", 1.35)),
+				"contrast": float(forest_leaf.get("contrast", 0.9)), "saturation": 0.0}
 
 	# Keyed by everything that can change the result, so two layers overriding
 	# the same source material get two materials while everything else still

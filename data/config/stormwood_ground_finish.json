@@ -1,6 +1,7 @@
 {
   "enabled": false,
   "scope": "client_presentation",
+  "leaf_original_alpha": {"enabled": false, "scope": "client_presentation", "tint": "#8eaa91", "brightness": 1.35, "contrast": 0.9, "_comment": "Keep installed Leaves_TwistedTree_C original UV alpha; neutralize original crimsonRGB and green-tint using existing cached Image.adjust_bsc. No normal-tree atlas substitution. Full native/blind foliage gates still open."},
   "_comment": "F41/P2-039 realm-local profile through existing grass_field.configure_profile. The native candidate showed a cyan tuft carpet and its litter only admitted forest_floor. Short dark ground cover, low clustered broadleaf shrubs and wet litter on the existing grass/soil/damp slots add understory layers without admitting path or rock. Counts and existing generated cover meshes are unchanged. No scatter bake, terrain, collision, authority or save edits; flag stays off pending native before/after full-bar judgment.",
   "grass": {
     "height_near": 0.10,
