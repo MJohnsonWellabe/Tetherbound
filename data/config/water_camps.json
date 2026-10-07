@@ -4,6 +4,7 @@
   "_comment": "Eight authored camps use existing NightRest sleep voting and CraftPanel. Terrain grounding and interaction smoke required; no visual acceptance implied.",
   "tuning": {
     "shelter_height_scale": 1.35,
+    "shelter_footprint_scale": 1.35,
     "prompt_radius_m": 3.2,
     "craft_offset_xz": [
       0.0,
@@ -18,7 +19,7 @@
       0.0
     ],
     "workbench_scale": 1.0,
-    "_comment": "Authored Water shelter height grows above the standing trainer without changing its floor footprint or rest/craft anchors. Starting layout separates rest, creature care, fire and craft prompts. Reserved Water creature-bed indices -41 through -48 do not overlap installed Meadows/Cloudreach beds."
+    "_comment": "Authored Water shelters grow above and around the standing trainer, including sleeve/backpack clearance on the sloping canvas. Rest/craft anchors and the shared placeable tent stay unchanged. Starting layout separates rest, creature care, fire and craft prompts. Reserved Water creature-bed indices -41 through -48 do not overlap installed Meadows/Cloudreach beds."
   },
   "camps": [
     {
