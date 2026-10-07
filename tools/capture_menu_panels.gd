@@ -36,6 +36,9 @@ func _run() -> void:
 
 	var world: Node = packed.instantiate()
 	root.add_child(world)
+	if OS.get_cmdline_user_args().has("--actual-bounty-board"):
+		# Shipping local authority resolves its actual realm through this scene.
+		current_scene = world
 
 	for i in SETTLE_FRAMES:
 		await physics_frame
