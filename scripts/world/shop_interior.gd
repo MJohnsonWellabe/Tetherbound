@@ -61,13 +61,13 @@ const CREST_LIGHT_COLOUR := Color("#ffd17a")
 
 
 ## This interior keeps its measured footprint; the prefab room supplies only
-## counter presentation tunables. Signature matches `cottage_interior.gd`'s so village.gd can
+## counter and lamp presentation tunables. Signature matches `cottage_interior.gd`'s so village.gd can
 ## dispatch either template through the same `interior.call("build", room)`.
 func build(room: Dictionary = {}) -> void:
 	_build_floor()
 	_build_counter(room.get("shop_counter", {}))
 	_build_shelf()
-	_build_light()
+	_build_light(room.get("shop_light", {}))
 	_build_trade_crest()
 	_build_crest_light()
 
@@ -165,13 +165,13 @@ func _build_shelf() -> void:
 
 ## One warm lamp. The kit shell blocks the sun completely, and an unlit shop is
 ## a black doorway the player never walks into.
-func _build_light() -> void:
+func _build_light(presentation: Dictionary = {}) -> void:
 	var light := OmniLight3D.new()
 	light.name = "ShopLight"
 	light.position = Vector3(0.0, 2.4, 0.3)
-	light.light_color = Color(1.0, 0.88, 0.7)
-	light.light_energy = 2.6
-	light.omni_range = 7.0
+	light.light_color = Color(str(presentation.get("colour", "#ffe0b3")))
+	light.light_energy = float(presentation.get("energy", 2.6))
+	light.omni_range = float(presentation.get("range_m", 7.0))
 	light.shadow_enabled = true
 	add_child(light)
 

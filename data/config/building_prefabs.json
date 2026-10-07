@@ -3887,6 +3887,13 @@
         "inner_half_d": 2.69,
         "door_x": 1.0,
         "door_w": 1.6,
+        "shop_light": {
+          "_scope": "deterministic_world_presentation",
+          "_why": "F38 Low night sample: Mira's face and bare counter read chalk-white. A restrained warm interior pool preserves material depth; actual light position, shadows, room geometry, NPC identity and interaction remain unchanged.",
+          "colour": "#ffd8a5",
+          "energy": 1.65,
+          "range_m": 5.5
+        },
         "shop_counter": {
           "_scope": "Deterministic world presentation only; shop_interior consumes this, generic cottage interiors ignore it. Existing counter and crate collision footprints remain unchanged.",
           "albedo": "res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png",
@@ -3905,7 +3912,7 @@
             {"size": [0.09, 0.82, 0.04], "at": [0.79, 0.50, -0.08]}
           ]
         },
-        "_why": "Stormwood settlement grounding, 2026-09-09: cottage_a's generic home now uses cottage_interior.gd as well as Mira's bespoke shop. These are the same measured inner faces and doorway dimensions shop_interior.gd already hardcodes for this exact shell; adding the recipe metadata makes the reused generic floor fill the real 4x6m room instead of falling back to cottage_b's 4x4m room. shop_interior.gd retains its measured floor footprint and consumes only the nested shop_counter presentation tunables."
+        "_why": "Stormwood settlement grounding, 2026-09-09: cottage_a's generic home now uses cottage_interior.gd as well as Mira's bespoke shop. These are the same measured inner faces and doorway dimensions shop_interior.gd already hardcodes for this exact shell; adding the recipe metadata makes the reused generic floor fill the real 4x6m room instead of falling back to cottage_b's 4x4m room. shop_interior.gd retains its measured floor footprint and consumes only the nested shop_counter and shop_light presentation tunables."
       },
       "retint": {
         "MI_WindowGlass": {
