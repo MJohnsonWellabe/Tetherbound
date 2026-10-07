@@ -1,0 +1,17 @@
+# Lane C network readiness races
+
+CI-FLAKE remains OPEN. The owner requires each of four original network smokes to pass three consecutive hosted runs on one source SHA, followed by one independent review. No retry, skip, weakened assertion or native PC engine run is authorized.
+
+Candidate source: `5e9e121a8a83554892d0148bcc0f123383e322e5` correlates refused legacy encounter admission and uses the original fled exit; its existing presentation unit method covers accepted, stale and refused admission. `90a283b1fb0eb4c224ff1e068275e3e8e7c04b34` fences original fixture placement with authentic owner-passive discovery/ACK, waits for actual legacy participant admission, and samples boss reward inventory after the existing journal barrier. Reward amounts, identities, journals, deadlines and original smoke assertions remain unchanged.
+
+The original cited shared-boss failures in runs `37615388024` and `37657532733` retain `owner_passive_initial_pose_unconfirmed` on the first guest ordinary-round receipt. The Veridian failure in `37652189377` retains an unknown-encounter admission followed by a guest staying in combat while the host is in world context. Later freed-player errors occur during cleanup. The cited reward smoke itself passed; its source had a distinct pre-journal inventory snapshot ordering hazard. No new failure is claimed for the cited shared-wild run.
+
+Hosted `37670627480` at `f1a5206564eb932955003c6764d84ba45f29e1d2`, artifact `11504432822`: 110 affected existing unit files, **955 tests / 27,828 assertions / zero failures**. The corrupt-controls JSON error is the expected negative-case input in `test_controls`; it is not a script parse failure.
+
+First actual shared-boss attempt `37671404750` at that source, artifact `11504194277`: **FAIL** on the guest fixture-travel acknowledgement assertion. Original actual boss admission, scaled HP/damage, friendly refusal, five rounds, participant facts, production reload and final peer state agreement passed, but the failed travel assertion prevents acceptance. The old proof discarded the failed verdict data, so its first failed conjunct is unknown. A pre-placement failure is a hypothesis rather than a measured result.
+
+`7e05fdc3c3f890bcbff54de9807c873f1589d687` freezes the first authentic discovery prefix per current stream. Its ACK target no longer follows future care appended by the shipping producer. Later care remains queued for normal replay. Admission, owner/world/epoch/realm identity, error, pending/rebase, actual pose and newer post-placement discovery guards remain; both placement phases share the original 600-frame allowance. The existing shared-boss assertion only adds failed verdict data to its message.
+
+Retained independent reviewer `/root/kitchen_review`: **SOURCE APPROVE** for the combined production and proof fixes, including the revised frozen prefix. Runtime acceptance remains open pending the four three-pass sequences. The first failure is retained and is not counted as a pass.
+
+Revised-prefix affected logic: hosted `37674108752` at exact `7e05fdc3c3f890bcbff54de9807c873f1589d687`, artifact `11507161071`: **73 tests / 426 assertions / zero failures** in six existing files (`test_combat_progression`, `test_director_join_snapshot`, `test_multiplayer_identity_0912`, `test_net_boss_snapshot`, `test_net_state_hash_scope`, `test_world_save_format`). The earlier 110-file production batch remains relevant for unchanged production hunks. The revised shared-boss first run is `37674659217`; its result is pending, so it is not counted as a pass.
