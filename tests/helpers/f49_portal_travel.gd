@@ -91,6 +91,7 @@ func enter(arch_id: String, realm: String) -> bool:
 		return _fail("F49 missing earned boss-key delivery for still-locked personal arch " + arch_id)
 	var before := _uids()
 	var prompt := arch.get_node_or_null("Interactable") as Node3D
+	if not _recommended_sign(arch_id, prompt, view, "before_unlock"): return false
 	if not await activate(prompt): return false
 	for frame in 720:
 		await tree.process_frame
@@ -98,12 +99,23 @@ func enter(arch_id: String, realm: String) -> bool:
 		if view.get("character_open") == true: break
 	if view.get("character_open") != true or view.get("has_key") == true:
 		return _fail("F49 actual arch Use did not durably consume exactly the earned key: " + arch_id)
+	if not _recommended_sign(arch_id, prompt, view, "after_unlock"): return false
 	if not await activate(prompt): return false
 	for frame in 7200:
 		await tree.process_frame
 		if _ready_world(realm):
 			return _uids() == before or _fail("F49 actual portal travel changed the carried party")
 	return _fail("F49 portal Enter never produced the ready " + realm + " scene")
+
+func _recommended_sign(arch_id: String, prompt: Node3D, view: Dictionary, phase: String) -> bool:
+	var expected: int = {"tidewake": 20, "cloudreach": 31, "stormwood": 42}.get(arch_id, 0)
+	var label := str(prompt.get("label")) if prompt != null else ""
+	if expected == 0 or int(view.get("recommended_level", 0)) != expected \
+		or not label.contains("Recommended Lv %d" % expected):
+		return _fail("F19 actual portal recommendation missing or out of chapter order at " + arch_id + ":" + phase)
+	print("F19 PORTAL SIGN " + JSON.stringify({"arch": arch_id, "phase": phase,
+		"recommended_level": expected, "label": label, "party": _uids()}))
+	return true
 
 func hang_relic(biome: String) -> bool:
 	if not _bind(): return false
