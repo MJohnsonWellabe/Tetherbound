@@ -11,6 +11,7 @@ const SPAWN_TABLES := preload("res://scripts/combat/spawn_tables.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
 const HEADINGS := [0.0, -45.0, 45.0, 90.0, 180.0]
 var _candidate := false
+var _shipping := false
 var _weather_name := "clear"
 var _candidate_applied := false
 var _candidate_verified := false
@@ -23,6 +24,8 @@ func _run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg == "--f39-candidate":
 			_candidate = true
+		elif arg == "--f39-shipping":
+			_shipping = true
 		elif arg.begins_with("--f39-weather="):
 			_weather_name = arg.trim_prefix("--f39-weather=")
 		elif arg.begins_with("--seed="):
@@ -32,6 +35,10 @@ func _run() -> void:
 				quit(2)
 				return
 			_seed = int(raw)
+	if _shipping and _candidate:
+		push_error("F39 shipping capture cannot also request candidate overrides")
+		quit(2)
+		return
 	if _weather_name not in ["clear", "rain"]:
 		push_error("F39 weather must be clear or rain")
 		quit(2)
@@ -131,21 +138,26 @@ func _capture_row(row: Dictionary) -> void:
 	if not _candidate_applied:
 		_candidate_applied = true
 		var fall_settings: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(FALLS.VISUAL_CONFIG))
-		fall_settings["enabled"] = _candidate
 		var flow_settings: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(FLOW.VISUAL_CONFIG))
-		flow_settings["enabled"] = _candidate
-		flow_settings["ridges_enabled"] = _candidate
+		# Recapture shipping materials as mounted. Preserve the original local
+		# before/after comparison modes for their retained paired proofs.
+		if not _shipping:
+			fall_settings["enabled"] = _candidate
+			flow_settings["enabled"] = _candidate
+			flow_settings["ridges_enabled"] = _candidate
 		var observations: Array[Dictionary] = []
 		var falls_count := 0
 		var flow_count := 0
 		for found: Node in _world.find_children("*", "MeshInstance3D", true, false):
 			if found.name == "VeilfallFallColumns":
-				FALLS.apply_visual_settings((found as MeshInstance3D).material_override as ShaderMaterial, fall_settings)
+				if not _shipping:
+					FALLS.apply_visual_settings((found as MeshInstance3D).material_override as ShaderMaterial, fall_settings)
 				falls_count += 1
 				observations.append(_observe_material(found as MeshInstance3D,
 					["visual_far_core_enabled"], FALLS.VISUAL_UNIFORMS, fall_settings))
 			elif found.get_script() == FLOW:
-				found.call("apply_visual_settings", flow_settings)
+				if not _shipping:
+					found.call("apply_visual_settings", flow_settings)
 				flow_count += 1
 				observations.append(_observe_material(found as MeshInstance3D,
 					["visual_groups_enabled", "visual_ridges_enabled"], FLOW.VISUAL_UNIFORMS, flow_settings))
@@ -175,12 +187,13 @@ func _observe_material(node: MeshInstance3D, gates: Array, uniforms: Array,
 		for key: String in gates:
 			var actual: Variant = material.get_shader_parameter(key)
 			observed.gates[key] = actual
-			if actual != _candidate:
+			var expected := bool(settings.get("ridges_enabled", false)) if key == "visual_ridges_enabled" else bool(settings.get("enabled", false))
+			if actual != expected:
 				observed.matches_requested = false
 		for key: String in uniforms:
 			var actual: Variant = material.get_shader_parameter(key)
 			observed.uniforms[key] = actual
-			if _candidate and settings.get("shader", {}).has(key):
+			if (_candidate or _shipping) and settings.get("shader", {}).has(key):
 				if actual == null or not is_equal_approx(float(actual), float(settings.shader[key])):
 					observed.matches_requested = false
 	if not bool(observed.matches_requested):
@@ -218,6 +231,8 @@ func _pin_time(time_name: String) -> Dictionary:
 func _begin_manifest() -> void:
 	super._begin_manifest()
 	_manifest["f39_candidate"] = _candidate
+	_manifest["f39_shipping"] = _shipping
+	_manifest["f39_material_mode"] = "Observe production materials; no visual override" if _shipping else "Process-local candidate/baseline comparison override"
 	_manifest["f39_seed"] = _seed
 	_manifest["f39_weather"] = _weather_name
 	_manifest["f39_heading_offsets_deg"] = [0.0] if _explicit_stands else HEADINGS
