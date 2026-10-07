@@ -1,0 +1,12 @@
+{
+  "run": 37663014038,
+  "source_commit": "d5cd796a1c352ce3bd11b4ead1f2e1c92e48ed2d",
+  "proof": "tests/smoke_earned_material_selection.gd: check_live_supply",
+  "result": "PASS",
+  "assertions": 8,
+  "failures": 0,
+  "exit_code": 0,
+  "engine_script_warnings": 0,
+  "review": "b_f49_review SOURCE APPROVE for authored-first selection; scoped runtime assertions passed",
+  "scope": "Authored eligible supplies preferred before eligible scatter; refusal, height, resource and crossing guards retained. Does not prove the physical gather/camp route or regenerate an earned checkpoint."
+}

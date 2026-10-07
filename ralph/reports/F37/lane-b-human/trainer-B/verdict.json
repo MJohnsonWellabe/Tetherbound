@@ -1,0 +1,25 @@
+{
+  "criterion": "F37#2 human swim visual component; not complete route acceptance",
+  "run": 37660456610,
+  "source_commit": "d8eb35c826ba3b9451a11caaba74f5563c127939",
+  "reviewer": "b_night_visual (code-blind)",
+  "verdict": "BLOCK",
+  "comparison": "Absolute candidate B assessment; matched A not yet reviewed",
+  "runtime": {"result": "PASS", "exit_code": 0, "sampled_moving_seconds": 30.01666667, "moving_sim_seconds": 35.78333, "resolution": "1280x720", "renderer": "Compatibility", "seed": 2042},
+  "scope": "Diagnostic installed trainer capture; not an earned route. Shipping human swim pose remains off.",
+  "human_identity": "PASS: hair, teal jacket, pack, trousers and boots preserve the installed reference identity in shown views.",
+  "human_pose": "BLOCK: repeated raised-V arms and alternating knees do not convincingly communicate reach/pull/recovery. See native-surface_mid and motion-detail-1 c1 1.12/2.05/3.92/14.18 seconds, motion-detail-2 c2 19.07/20.00/29.33 seconds.",
+  "human_lower_limbs": "BLOCK: translucent straight legs appear beneath differently posed solid legs. Rendering cause unproven. See raw 0002_motion/0008_surface_west and motion-detail-1 c1 1.12, motion-detail-2 c2 19.07 seconds.",
+  "transitions": "INCOMPLETE: endpoints show recognizable recovered standing poses, but entry and foot-contact transitions lack close sampling. No definite persistent body/terrain penetration established.",
+  "other_domains": {
+    "water": "Readable cyan and shallow/deep separation, no visible surface hole; weak wake/splash relationship and doubled submerged silhouette.",
+    "ground_vegetation_rocks": "Warm sand and sparse upright grass follow dune direction; repeated ripples, smooth berms and simplified trees/rocks limit appeal.",
+    "creatures": "Readable shore creature with coarse/angular treatment; close approach dominates one sample without proving penetration.",
+    "sky_light": "Useful daylight contrast, flat horizon haze and graphic clouds below full Bar B.",
+    "architecture_props": "Insufficient views.",
+    "ui": "Most text readable at native720; weak health/food contrast, little coastline minimap context, keyboard bindings do not prove controller readability."
+  },
+  "remaining": ["convincing swim stroke", "unambiguous lower-limb rendering", "closer entry/exit samples", "matched A comparison", "continuous playback", "other three human bodies", "required water routes", "High/Medium and night/weather matrix"],
+  "whole_frame_bars_A_B": "BLOCK",
+  "raw_frames": "Retained in hosted run artifact, not committed; ten JPG contact artifacts accompany this verdict."
+}
