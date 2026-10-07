@@ -1,0 +1,23 @@
+{
+  "criterion": "F14#2",
+  "status": "BLOCKED",
+  "source_commit": "a63c508b3f3e173e8a0635542cea6ca0b0cbaadd",
+  "run_id": 37671873221,
+  "artifact_id": 11505218741,
+  "proof": "tests/smoke_tidewake_b_current_restore.gd --capture=res://shots/lane-d/f14-current-restore-matched --current-flow-candidate",
+  "result": {"checks": 97, "failed": 0, "exit": 0, "seconds": 210, "images": 4},
+  "mechanics": "PASS: confirmed production Guardian decline, world journal, save0, world destruction/reset, load0 and rebuilt current parameters/physics. Authored freed/dock facts are a disclosed fixture, not earned progression or participant-offer proof.",
+  "speed_m_s": {"live": 1.3, "restored": 0.325, "reloaded": 0.325},
+  "calm_scale": {"live": 1.0, "restored": 0.5, "reloaded": 0.5},
+  "capture": "Each fixed production Camera3D transform/current status asserted after draw; whole SpringArm subtree disabled; interpolation reset. FOV70/far6500/1280x720. Directly posed landscape stills, trainer/HUD hidden, frozen day. Not ordinary traversal/motion or the full biome matrix.",
+  "presentation_candidate": "Existing material-only grouped-foam config locally enabled in both initial and reloaded worlds; shipping enabled=false and ridges_enabled=false retained. No new shaders, route, physics, ownership, reward or save mutation.",
+  "reviewer": "/root/f26_presets_review",
+  "review_mode": "Code-blind all four A/B images plus approved Tidewake reference; no source/state mapping supplied",
+  "blind_mapping_revealed_after_review": {"A": "restored after reload", "B": "live before settlement"},
+  "difference_readability": "PASS: reviewer correctly identified A calmer and B stronger; overview current corridor and shore streaks visibly differ",
+  "bar_a": "BLOCK",
+  "bar_b": "BLOCK",
+  "defects": ["Shore B white streaks read as repeated pointed/blurred wedges, not convincing foam-water interaction", "Underlying surface looks similarly calm in both sets", "Repetitive fine water texture, flat lighting and weak island depth", "Bare grey landmark and painted-looking distant falls weaken pictured world appeal"],
+  "missing_witnesses": ["Motion for coherent flow/speed/foam behavior", "Ordinary shore/swimming context"],
+  "disposition": "Parked after corrected second attempt. State/persistence and visible difference components passed; full-bar visual acceptance did not. No flag flip or READY. Raw images remain in the run artifact."
+}
