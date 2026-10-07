@@ -124,7 +124,7 @@ try {
     resumed_from: 'stormwood_settled', reached: 'completed_world_continuation'}, journey, emitted,
     'F49 SEGMENT RESULT ' + JSON.stringify({kind: 'f49_earned_segment', from_boundary: 'stormwood_settled',
       through_boundary: 'completed_world', journey_id: 'negative-control', commit: '0'.repeat(40)}) + '\n');
-  refused(/Exactly one F49 SEGMENT RESULT required in every segment/, [`--segment-logs=${originalSegment}`]);
+  refused(/Exactly one F49 SEGMENT RESULT\s+required in every segment/, [`--segment-logs=${originalSegment}`]);
   console.log(JSON.stringify({test: 'F19-earned-promotion-negative-controls', checks, result: 'PASS', scope: 'fabricated rejection controls only; no earned saves were generated'}));
 } finally {
   assert.ok(path.resolve(dir).startsWith(path.resolve(os.tmpdir()) + path.sep), 'Cleanup stays inside the named temporary root');
