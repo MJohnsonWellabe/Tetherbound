@@ -113,7 +113,7 @@ func _dress(site: Node3D, world: Node3D, anchor: Dictionary, cfg: Dictionary, si
 			site.add_child(post)
 			# Lanterns on the seaward pair and the landward pair.
 			if i == 0 or i == posts - 1:
-				_lantern(site, lantern_cfg, Vector3(at.x, top, at.y), yaw + (PI if edge < 0.0 else 0.0))
+				add_lantern(site, lantern_cfg, Vector3(at.x, top, at.y), yaw + (PI if edge < 0.0 else 0.0))
 	# A little working cargo at the seaward end of the deck itself.
 	var deck_items: Array = cfg.get("deck_cargo", [])
 	for item: Variant in deck_items:
@@ -149,7 +149,8 @@ func _dress(site: Node3D, world: Node3D, anchor: Dictionary, cfg: Dictionary, si
 		site.add_child(prop)
 
 
-func _lantern(site: Node3D, cfg: Dictionary, at: Vector3, yaw: float) -> void:
+## Shared installed fixture for Tidewake piers and pump work lights.
+func add_lantern(site: Node3D, cfg: Dictionary, at: Vector3, yaw: float) -> void:
 	var lantern := _fit_height(str(cfg.get("model", "")), float(cfg.get("height_m", 0.62)), "PierLantern")
 	if lantern == null:
 		return
