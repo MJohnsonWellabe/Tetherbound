@@ -8,7 +8,7 @@ const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const STATION := preload("res://scripts/build/station_actions.gd")
 const GEAR := preload("res://scripts/creatures/creature_gear.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
-const ACTIONS := ["station_craft", "den", "groom", "gear", "loadout", "camp_rest", "camp_build", "relic_hang", "relic_power", "boss_relic", "portal_arrival", "regional_ack", "dock_conclusion", "wild_capture", "tm_teach", "resource", "combat_mastery", "waystone_touch", "combat_round_reward", "home_key_owe", "home_key_deliver", "wild_defeat_share", "starter_choice"]
+const ACTIONS := ["station_craft", "den", "groom", "gear", "loadout", "camp_rest", "camp_build", "relic_hang", "relic_power", "boss_relic", "portal_arrival", "regional_ack", "dock_conclusion", "wild_capture", "tm_teach", "resource", "combat_mastery", "waystone_touch", "combat_round_reward", "home_key_owe", "home_key_deliver", "wild_defeat_share", "tether_pouch", "tether_item", "starter_choice"]
 
 static func deny(code: String) -> Dictionary:
 	return {"ok": false, "code": code, "durable": false, "resolved": false}
@@ -29,7 +29,7 @@ static func stage(current: Dictionary, revision: int, action: String,
 		intent: Dictionary, context: Dictionary, schema_check: Callable) -> Dictionary:
 	if action not in ACTIONS or not schema_check.is_valid() or context.get("character_id") != current.get("character_id") \
 		or context.get("expected_revision") != revision or context.get("in_range") != true \
-		or context.get("in_combat") != false or str(context.get("source_key", "")).is_empty(): return deny("station_context_changed")
+		or context.get("in_combat") != (action == "tether_item") or str(context.get("source_key", "")).is_empty(): return deny("station_context_changed")
 	if not schema_check.call(current, current.character_id).is_empty(): return deny("invalid_admitted_character")
 	if context.get("foundation_runtime_authorized") != true: return deny("missing_frozen_authorization")
 	var proposal: Dictionary
@@ -54,6 +54,8 @@ static func stage(current: Dictionary, revision: int, action: String,
 		"gear": proposal = GEAR.stage_frozen_core(current, current.character_id, revision, intent, context,
 			preload("res://scripts/world/death_satchel_rules.gd").db(), GEAR.config())
 		"loadout": proposal = _loadout(current, intent, context)
+		"tether_pouch": proposal = _tether_pouch(current, intent, context)
+		"tether_item": proposal = _tether_item(current, intent, context)
 		"camp_rest": proposal = preload("res://scripts/build/forward_camp_actions.gd").stage_team_bed(current, revision, intent, context, true)
 		"camp_build": proposal = camp_plan(current, revision, intent, context)
 		"relic_hang", "boss_relic": proposal = _relic(current, action, intent, context)
@@ -67,6 +69,62 @@ static func stage(current: Dictionary, revision: int, action: String,
 		"expected_character_revision": revision, "source_key": context.source_key, "durable": false, "resolved": false}
 
 
+## Personal ordered bindings share the original character transaction. A
+## binding supplies no item; command consumption later reads admitted stacks.
+static func _tether_pouch(current: Dictionary, intent: Dictionary, context: Dictionary) -> Dictionary:
+	if context.get("station_kind") != "personal_pouch" or context.get("owns_character") != true \
+		or intent.size() != 3 or not ESSENCE._component(intent.get("assignment_id")) \
+		or not ESSENCE._integer(intent.get("index"), 0, 2) or not intent.get("item_id") is String:
+		return deny("pouch_invalid")
+	var commands: GDScript = load("res://scripts/combat/tether_commands.gd")
+	var items: RefCounted = preload("res://scripts/world/death_satchel_rules.gd").db()
+	var equipment := preload("res://scripts/player/player_equipment.gd").new()
+	equipment.configure(items)
+	equipment.load_data(current.equipment)
+	var plan: Dictionary = commands.stage_pouch_assignment(current.redesign_character.get("tether_pouch", []),
+		int(intent.index), str(intent.item_id), equipment.command_pouch_tier(), items.get("_items"), true)
+	if plan.get("ok") != true: return deny("pouch_invalid")
+	var receipt := "craft:%s:%s" % [current.character_id, ("tether_pouch:" + str(current.character_id) + ":" + str(intent.assignment_id)).sha256_text().substr(0, 32)]
+	if current.redesign_character.transaction_receipts.has(receipt): return deny("duplicate")
+	var next := current.duplicate(true)
+	next.redesign_character["tether_pouch"] = plan.pouch
+	next.redesign_character.transaction_receipts = RECEIPT_WINDOWS.compact(next.redesign_character.transaction_receipts, "station_craft", str(current.character_id))
+	next.redesign_character.transaction_receipts.append(receipt)
+	return {"ok": true, "state": next, "receipt": receipt}
+
+
+## One immutable full-character decision carries the consumed stack together
+## with selected owned HP/condition. Live body/meter publication belongs to
+## the original retained host command; this callback never writes either.
+static func _tether_item(current: Dictionary, intent: Dictionary, context: Dictionary) -> Dictionary:
+	var commands: GDScript = load("res://scripts/combat/tether_commands.gd")
+	if intent.size() != 2 or not intent.get("request") is Dictionary or not intent.get("effect") is Dictionary \
+		or not commands.valid_intent(intent.request) or intent.request.command_id != "item_throw" \
+		or context.get("item_runtime_authorized") != true or not context.get("item_actor") is Dictionary \
+		or not ESSENCE._opaque_id(context.get("world_namespace")) or not ESSENCE._opaque_id(context.get("session_id")):
+		return deny("retained_item_required")
+	var actor: Dictionary = context.item_actor
+	var request: Dictionary = intent.request
+	var effect: Dictionary = intent.effect
+	var original := "command:%s:%s:%d:%d" % [request.encounter_id, current.character_id, int(request.generation), int(request.sequence)]
+	if actor.get("encounter_id") != request.encounter_id or actor.get("generation") != request.generation \
+		or actor.get("character_id") != current.character_id or effect.get("action_id") != original \
+		or context.source_key != "tether_item:" + original \
+		or not ESSENCE._integer(actor.get("body_instance_id"), 1, 9223372036854775807) \
+		or not ESSENCE._integer(actor.get("body_generation"), 1, 2147483647) \
+		or not ESSENCE._integer(actor.get("vitals_revision"), 0, 2147483646): return deny("retained_item_required")
+	var receipt := "craft:%s:%s" % [current.character_id,
+		JSON.stringify([context.world_namespace, context.session_id, original]).sha256_text().substr(0, 32)]
+	if current.redesign_character.transaction_receipts.has(receipt): return deny("duplicate")
+	var plan: Dictionary = commands.stage_item_use(current, effect,
+		{"actor": actor, "owner_admitted": true, "encounter_active": true}, true)
+	if plan.get("ok") != true: return deny(str(plan.get("code", "item_unavailable")))
+	var next: Dictionary = plan.state
+	next.redesign_character.transaction_receipts = RECEIPT_WINDOWS.compact(next.redesign_character.transaction_receipts, "station_craft", str(current.character_id))
+	next.redesign_character.transaction_receipts.append(receipt)
+	return {"ok": true, "state": next, "receipt": receipt}
+
+
 ## A retained host hit obligation enters the same full-character journal after
 ## combat settles. This stage touches mastery maps only; it never restores HP.
 static func _combat_mastery(current: Dictionary, intent: Dictionary, context: Dictionary) -> Dictionary:
@@ -77,7 +135,11 @@ static func _combat_mastery(current: Dictionary, intent: Dictionary, context: Di
 		or not context.participants.has(current.character_id):
 		return deny("retained_mastery_required")
 	var event: Dictionary = context.outcome
-	var retained := "foundation_event:" + JSON.stringify([context.world_namespace, context.session_id, "mastery:" + str(intent.action_id)]).sha256_text()
+	var source := str(intent.action_id)
+	if context.has("parent_action_id") or context.has("tag_part"):
+		source = preload("res://scripts/net/foundation_event.gd").tag_mastery_parent(context, intent, current.character_id)
+		if source.is_empty(): return deny("retained_mastery_required")
+	var retained := "foundation_event:" + JSON.stringify([context.world_namespace, context.session_id, "mastery:" + source]).sha256_text()
 	if context.get("retained_event") != retained or context.get("source_key") != "combat_mastery:" + str(intent.action_id) \
 		or event.get("action_id") != intent.action_id or event.get("attacker_uid") != intent.creature_uid:
 		return deny("retained_mastery_required")

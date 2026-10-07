@@ -39,6 +39,11 @@ const ADMIT_FRAMES := 600
 
 var _port := 0
 var _guest_character := ""
+var _tonic_uid := ""
+var _tonic_receipt := ""
+var _tonic_remaining := 0.0
+var _earned_mastery: Dictionary = {}
+var _mastery_uid := ""
 
 
 func _initialize() -> void:
@@ -123,11 +128,15 @@ func _run() -> void:
 		return
 	_step_phase_deadline_ms = Time.get_ticks_msec() + 3600.0 * 1000.0
 	for i in 2:
+		_ok(await step(i, "op_tonic_candidate"), "tonic: process-local candidate gates before world boot")
 		if not _ok(await step(i, "boot", {"scene": "world"}, BUILD_BUDGET), "SETUP: peer %d boots its own Meadows world" % i):
 			quit(await finish())
 			return
 		await step(i, "dismiss_dialogue", {})
 		_ok(await step(i, "party_grant", {"species": "terrapup", "level": 8}), "SETUP: peer %d owns a terrapup" % i)
+		if i == 1 and OS.get_cmdline_user_args().has("--prove-tag-combo"):
+			_ok(await step(i, "party_grant", {"species":"ripplet", "level":8}), "Tag SETUP: guest owns one additional healthy companion before admission")
+	_ok(await step(1, "op_tonic_supply"), "tonic: guest saves its initial two-item stock before admission")
 	if not _ok(await step(0, "host"), "peer 0 hosts"):
 		quit(await finish())
 		return
@@ -146,6 +155,27 @@ func _run() -> void:
 	var first := await _await_admitted("first-join")
 	check(_admitted(first), "first join: the guest's owner-passive stream is admitted by the host")
 	var first_id := str(((first.guest as Dictionary).get("local", {}) as Dictionary).get("id", ""))
+	if not await _tonic_item_original():
+		quit(await finish())
+		return
+	# Mastery settles after a normal wild exit, before testing plain rejoin.
+	# The actual Item remains timed; neither exit fabricates a win or reward.
+	for i in [1, 0]:
+		if not _ok(await step(i, "press", {"action":"combat_run"}), "mastery: normal disengage input exits peer %d's wild fight" % i):
+			quit(await finish())
+			return
+	var mastery_settled := false
+	for poll in 30:
+		var owner: Dictionary = (await _state(1)).get("mastery", {})
+		var held: Dictionary = (await _state(0)).get("mastery", {}).get("held", {}).get(_guest_character, {}).get(_mastery_uid, {})
+		if owner.get("disk", {}).get(_mastery_uid, {}) == _earned_mastery and held == _earned_mastery:
+			mastery_settled = true
+			break
+		await step(0, "wait", {"frames":30})
+	check(mastery_settled, "mastery: normal exit settles exactly the actual earned uses on owner disk and host")
+	print("MASTERY actual exit observation: ", JSON.stringify({"earned":_earned_mastery,
+		"owner":(await _state(1)).get("mastery", {}), "host":(await _state(0)).get("mastery", {}),
+		"owner_encounter":await probe(1, "encounter"), "host_encounter":await probe(0, "encounter")}))
 
 	# 2. Plain leave + rejoin.
 	if not await _rejoin("rejoin"):
@@ -155,8 +185,32 @@ func _run() -> void:
 	var rejoined_id := str(((after.guest as Dictionary).get("local", {}) as Dictionary).get("id", ""))
 	check(rejoined_id != first_id and not rejoined_id.is_empty(), "rejoin: the guest armed a new stream")
 	check(_admitted(after), "rejoin: the host admitted the rejoined guest's NEW stream (not pending, same id)")
+	var rejoin_tonic: Dictionary = (await _state(1)).get("tonic", {})
+	var rejoin_remaining := _tonic_seconds(rejoin_tonic)
+	check(rejoin_remaining > 0.0 and rejoin_remaining <= _tonic_remaining,
+		"tonic: new admitted stream reconciles remaining duration without refreshing the saved Item")
+	check(int(rejoin_tonic.get("stock", -1)) == 1, "tonic: rejoin never debits the Item a second time")
+	check((rejoin_tonic.get("disk_receipts", []) as Array).has(_tonic_receipt), "tonic: owner disk retains the exact saved Item receipt")
+	var rejoin_mastery := {}
+	var held_mastery := {}
+	for poll in 30:
+		rejoin_mastery = (await _state(1)).get("mastery", {})
+		held_mastery = (await _state(0)).get("mastery", {}).get("held", {}).get(_guest_character, {}).get(_mastery_uid, {})
+		if rejoin_mastery.get("disk", {}).get(_mastery_uid, {}) == _earned_mastery and held_mastery == _earned_mastery: break
+		await step(0, "wait", {"frames":30})
+	check(rejoin_mastery.get("live", {}).get(_mastery_uid, {}).get("uses") == _earned_mastery.get("uses") \
+		and rejoin_mastery.get("live", {}).get(_mastery_uid, {}).get("receipts") == _earned_mastery.get("receipts"),
+		"mastery: plain rejoin preserves actual landed uses and never credits an admission replay")
+	check(rejoin_mastery.get("disk", {}).get(_mastery_uid, {}) == _earned_mastery and held_mastery == _earned_mastery,
+		"mastery: real owner disk and rejoined host hold exactly the earned per-UID mastery")
+	print("MASTERY actual rejoin observation: ", JSON.stringify({"earned":_earned_mastery, "owner":rejoin_mastery, "held":held_mastery}))
 
 	# 3. Passive inputs after the rejoin are acknowledged under the new id.
+	# Saved mastery legitimately rebases the owner stream. Sample its current
+	# admitted identity after settlement before testing additional inputs.
+	var walking_stream := await _await_admitted("before-walk")
+	check(_admitted(walking_stream), "rejoin: the current post-settlement walking stream is admitted")
+	rejoined_id = str(walking_stream.guest.get("local", {}).get("id", ""))
 	var before_walk: Dictionary = ((await _state(1)).get("local", {}) as Dictionary)
 	await step(1, "stick", {"x": 0.0, "y": -1.0, "frames": 180})
 	await step(1, "stick", {"x": 1.0, "y": 0.0, "frames": 120})
@@ -174,6 +228,24 @@ func _run() -> void:
 			break
 	check(acked_ok, "rejoin: the walking guest's passive inputs are acknowledged by the host (%s -> %s)"
 		% [JSON.stringify(before_walk), JSON.stringify(walked)])
+	# Natural authored ninety-second timer, not a forged prefix or accelerated clock.
+	var expired := false
+	for poll in 110:
+		await step(1, "wait", {"frames":60})
+		var owner_tonic: Dictionary = (await _state(1)).get("tonic", {})
+		var host_tonic: Dictionary = (await _state(0)).get("tonic", {})
+		var effects: Array = host_tonic.get("projected", {}).get(_guest_character, {}).get(_tonic_uid, {}).get("effects", [])
+		if _tonic_seconds(owner_tonic) == 0.0 and effects.is_empty():
+			expired = true
+			break
+	check(expired, "tonic: actual owner passive ticks expire the same effect on guest and host")
+	check(_tonic_seconds((await _state(0)).get("tonic", {})) == 0.0, "tonic: the guest command never buffs the other player's creature")
+	if not await _rejoin("expired-tonic"):
+		quit(await finish())
+		return
+	check(_admitted(await _await_admitted("expired-tonic")), "tonic: expired receipt rejoins normally")
+	check(_tonic_seconds((await _state(1)).get("tonic", {})) == 0.0,
+		"tonic: accepting the saved receipt after expiry cannot resurrect its old duration")
 
 	# 3b. Deliver-then-leave.
 	var base_items: Dictionary = (await _state(1)).get("items", {})
@@ -267,6 +339,9 @@ func _run() -> void:
 	for _i in 10: await step(0, "wait", {"frames": 30})
 	check(int(((await _state(1)).get("items", {}) as Dictionary).get("berries", 0)) == int(full.get("berries", -1)), "behind: the find is never paid a second time")
 
+	if OS.get_cmdline_user_args().has("--prove-tag-combo"):
+		await _prove_tag_combo()
+
 	# 5. Negative control: an invalid record is refused, never adopted.
 	if not _ok(await step(1, "leave"), "invalid: guest leaves"):
 		quit(await finish())
@@ -277,3 +352,159 @@ func _run() -> void:
 	check(str(refused.get("verdict", "")) != "PASS" and str(refused.get("detail", "")).contains("could not be admitted"),
 		"invalid: the rejoin is refused with a reason (%s)" % str(refused.get("detail", "")))
 	quit(await finish())
+
+
+func _prove_tag_combo() -> void:
+	_ok(await step(0, "deploy_creature"), "Tag: host deploys its same actual owned companion")
+	if not _ok(await step(0, "op_tag_target"), "Tag: host normally engages an actual live wild"): return
+	var encounter: Dictionary = await probe(0, "encounter")
+	_ok(await step(1, "teleport", {"at":encounter.get("opponent_pos", [])}), "Tag: existing proximity setup reaches the actual host fight")
+	_ok(await step(1, "deploy_creature"), "Tag: guest deploys its same admitted owned companion")
+	if not _ok(await step(1, "join_encounter", {"encounter_id":str(encounter.get("id", ""))}), "Tag: guest joins the exact host encounter"): return
+	var owner: Dictionary = await probe(1, "op_tag_state")
+	var peer := int(owner.peer)
+	var host_before: Dictionary = await probe(0, "op_tag_state", {"peer":peer})
+	var combo: Dictionary = await step(1, "op_tag_combo")
+	if combo.get("verdict") != "PASS":
+		var failed_data: Dictionary = combo.get("data", {})
+		var failed_request: Dictionary = failed_data.get("request", {})
+		print("TAG failed owner observation: ", JSON.stringify(failed_data))
+		if not failed_request.is_empty():
+			var failed_host: Dictionary = await probe(0, "op_tag_state", {"peer":peer,
+				"request":failed_request, "character_id":_guest_character})
+			print("TAG failed host observation: ", JSON.stringify(failed_host))
+	if not _ok(combo, "Tag: actual hits earn meter and fresh-hit command switches normally"): return
+	var data: Dictionary = combo.data
+	var request: Dictionary = data.request
+	var args := {"peer":peer, "request":request, "character_id":_guest_character}
+	var host: Dictionary = await probe(0, "op_tag_state", args)
+	var after: Dictionary = await probe(1, "op_tag_state")
+	var original: Dictionary = host.original
+	var outcome: Dictionary = original.get("outcome", {})
+	var verdict: Dictionary = outcome.get("verdict", {})
+	var strikes: Array = verdict.get("delta", {}).get("effect", {}).get("strikes", [])
+	check(strikes.size() == 2 and verdict.get("ok") == true, "Tag: host retains one accepted parent with both actual child writes")
+	if strikes.size() != 2: return
+	check(strikes[0].source_kind == "creature" and strikes[1].source_kind == "creature" \
+		and strikes[0].attacker_uid == data.before.deployment.creature_uid and strikes[1].attacker_uid == data.incoming_uid \
+		and strikes[0].character_id == _guest_character and strikes[1].character_id == _guest_character,
+		"Tag: both damage events belong to the owner's distinct creatures")
+	check(float(strikes[0].actual_hp_debit) > 0.0 and float(strikes[1].actual_hp_debit) > 0.0 \
+		and strikes[0].target_hp_after == strikes[1].target_hp_before \
+		and host.record.opponent.hp == strikes[1].target_hp_after and verdict.delta.hp == strikes[1].target_hp_after,
+		"Tag: both positive actual HP debits form one exact chain and parent final HP")
+	check(strikes[0].power_multiplier == 0.5 and strikes[1].power_multiplier == 1.5,
+		"Tag: outgoing half quick and incoming full one-and-a-half quick retain authored factors")
+	check(after.body_instance == data.before.body_instance and host.body_instance == host_before.body_instance \
+		and after.deployment.creature_uid == data.incoming_uid \
+		and after.deployment.generation == int(request.generation) + 1,
+		"Tag: owner and trusted host recast the same bodies once to the next owned UID")
+	check(after.party == data.before.party and after.party.size() <= 5, "Tag: body switch preserves the admitted party without another creature")
+	check(after.commands.meter == verdict.delta.tether_commands.meter \
+		and host.record.participants.get(str(peer), {}).get("tether_commands", {}) == verdict.delta.tether_commands,
+		"Tag: owner and host consume exactly the parent's command meter state")
+	for index in 2:
+		var strike: Dictionary = strikes[index]
+		var issuer := "command:%s:%s:%d:%s:%s:%d" % [request.encounter_id, _guest_character,
+			int(request.generation), strike.part, strike.attacker_uid, int(strike.generation)]
+		check(host.impact_history.get(issuer, {}).get("seen", {}).has(str(int(request.sequence))) \
+			and after.impact_history.get(issuer, {}).get("seen", {}).has(str(int(request.sequence))),
+			"Tag: owner and joined observer consume the actual %s child impact once" % strike.part)
+	check(after.enemy_hp == verdict.delta.hp, "Tag: the owner consumes the parent absolute HP without another debit")
+	print("TAG actual family observation: ", JSON.stringify({"owner":after,"host":host,"before":host_before}))
+	_ok(await step(1, "op_tag_replay"), "Tag: submit the same original again")
+	var replay: Dictionary = await probe(0, "op_tag_state", args)
+	check(replay.original.get("admission", {}) == original.get("admission", {}) \
+		and replay.original.get("outcome", {}) == original.get("outcome", {}) \
+		and replay.record.opponent.hp == host.record.opponent.hp \
+		and replay.record.participants.get(str(peer), {}).get("tether_commands", {}) \
+		== host.record.participants.get(str(peer), {}).get("tether_commands", {}),
+		"Tag: duplicate submission cannot debit HP or meter or replace the retained parent")
+	for i in [1,0]: _ok(await step(i, "press", {"action":"combat_run"}), "Tag: peer %d normally leaves the proof fight" % i)
+
+
+func _tonic_seconds(state: Dictionary) -> float:
+	for owned: Dictionary in state.get("owned", {}).values():
+		for buff: Dictionary in owned.get("buffs", []):
+			if buff.get("id") == "attack_tonic": return float(buff.get("remaining_s", 0.0))
+	return 0.0
+
+
+func _tonic_item_original() -> bool:
+	if not _ok(await step(1, "op_tonic_pouch"), "tonic: production personal pouch assignment saves"): return false
+	_ok(await step(0, "deploy_creature"), "tonic: host deploys its actual owned creature")
+	if not _ok(await step(0, "op_tonic_target"), "tonic: normal interact opens a real canonical wild fight"): return false
+	var encounter: Dictionary = await probe(0, "encounter")
+	var id := str(encounter.get("id", ""))
+	if id.is_empty():
+		check(false, "tonic: actual host encounter identity is required")
+		return false
+	_ok(await step(1, "teleport", {"at":encounter.get("opponent_pos", [])}), "tonic: existing proximity fixture reaches the shared fight")
+	_ok(await step(1, "deploy_creature"), "tonic: guest deploys its same admitted owned creature")
+	if not _ok(await step(1, "join_encounter", {"encounter_id":id}), "tonic: guest joins the host's exact record"): return false
+	var before_mastery: Dictionary = (await _state(1)).get("mastery", {}).get("live", {})
+	if not _ok(await step(1, "op_tonic_hits"), "tonic: normal accepted quick hits earn Item meter"): return false
+	var retained: Array = (await _state(0)).get("mastery", {}).get("retained", {}).get(_guest_character, [])
+	var seen := {}
+	for event: Dictionary in retained:
+		var uid := str(event.get("attacker_uid", ""))
+		var move := str(event.get("move_id", ""))
+		var action := str(event.get("action_id", ""))
+		if not before_mastery.has(uid) or seen.has(action) or float(event.get("applied_damage", 0.0)) <= 0.0: continue
+		if _mastery_uid.is_empty():
+			_mastery_uid = uid
+			_earned_mastery = {"uses":before_mastery[uid].uses.duplicate(true), "receipts":before_mastery[uid].receipts.duplicate(true)}
+		if uid != _mastery_uid: continue
+		seen[action] = true
+		if not _earned_mastery.receipts.has(move): _earned_mastery.receipts[move] = []
+		if not _earned_mastery.receipts[move].has(action):
+			_earned_mastery.receipts[move].append(action)
+			# Probe/save JSON counts are floats; Dictionary equality keeps types.
+			_earned_mastery.uses[move] = float(_earned_mastery.uses.get(move, 0.0)) + 1.0
+	check(not seen.is_empty(), "mastery: actual landed quick hits retain unique creature-owned mastery obligations")
+	print("MASTERY actual earned expectation: ", JSON.stringify({"uid":_mastery_uid, "before":before_mastery, "retained":retained, "earned":_earned_mastery}))
+	_ok(await step(1, "op_tonic_clear"), "tonic: existing proximity fixture clears reach while previous actual HP writes settle")
+	var ready := false
+	for poll in 20:
+		var current: Dictionary = (await _state(0)).get("tonic", {}).get("readiness", {}).get(_guest_character, {})
+		if current.get("admission") == true and current.get("vitals_pending") == false:
+			ready = true
+			break
+		await step(0, "wait", {"frames":30})
+	check(ready, "tonic: host confirms the actual previous owner HP saves are settled before writer refusal")
+	if not ready: return false
+	var pending: Dictionary = await step(1, "op_tonic_item")
+	if not _ok(pending, "tonic: production Item request preserves its original while owner save refuses"): return false
+	var guest: Dictionary = (await _state(1)).get("tonic", {})
+	var host: Dictionary = (await _state(0)).get("tonic", {})
+	var original: Dictionary = host.get("rows", {}).get(_guest_character, {})
+	print("TONIC original actual owner/host: ", JSON.stringify({"owner":guest, "host":host}))
+	check(original.get("status") == "pending" and not str(original.get("receipt", "")).is_empty(),
+		"tonic: host journal retains the precise original awaiting owner TRUE BOOL")
+	check(_tonic_seconds(guest) == 0.0 and host.get("projected", {}).get(_guest_character, {}).is_empty(),
+		"tonic: owner save refusal installs no owner or authoritative effect")
+	check(int(guest.get("stock", -1)) == 1 and int(guest.get("disk_stock", -1)) == 2 \
+		and guest.get("fenced") == true and not (guest.get("disk_receipts", []) as Array).has(str(original.get("receipt", ""))) \
+		and guest.get("saved_result", {}).get("saved") != true,
+		"tonic: failed owner save fences the pending debit, keeps disk unchanged and produces no saved result")
+	_tonic_receipt = str(original.get("receipt", ""))
+	_tonic_uid = str(original.get("uid", ""))
+	_ok(await step(1, "op_tonic_writer", {"block":false}), "tonic: original actual owner writer is restored")
+	if not _ok(await step(1, "op_tonic_retry"), "tonic: retry sends the same original request"): return false
+	for poll in 30:
+		guest = (await _state(1)).get("tonic", {})
+		host = (await _state(0)).get("tonic", {})
+		if guest.get("saved_result", {}).get("saved") == true and host.get("rows", {}).get(_guest_character, {}).get("status") == "accepted": break
+		await step(0, "wait", {"frames":30})
+	check(guest.get("saved_result", {}).get("saved") == true \
+		and guest.get("saved_result", {}).get("receipt") == _tonic_receipt,
+		"tonic: actual TRUE owner-write BOOL precedes the exact saved result")
+	check(int(guest.get("stock", -1)) == 1 and int(guest.get("disk_stock", -1)) == 1 \
+		and (guest.get("disk_receipts", []) as Array).has(_tonic_receipt),
+		"tonic: real owner disk holds one debit and the original receipt")
+	check(host.get("rows", {}).get(_guest_character, {}).get("receipt") == _tonic_receipt \
+		and host.get("rows", {}).get(_guest_character, {}).get("request") == original.get("request"),
+		"tonic: retry neither substitutes nor duplicates the accepted original")
+	_tonic_remaining = _tonic_seconds(guest)
+	check(_tonic_remaining > 0.0 and _tonic_remaining <= 90.0, "tonic: actual saved effect starts its authored timer")
+	return _tonic_remaining > 0.0

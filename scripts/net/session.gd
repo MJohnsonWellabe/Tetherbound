@@ -104,6 +104,16 @@ func owner_passive_research_gate(peer: int, action: String, intent: Dictionary, 
 	return _owner_passive_service().call("gate", peer, action, intent, event)
 
 func _owner_passive_request_matches(source_kind: String, request: Dictionary) -> bool:
+	if source_kind == "tether_item":
+		var game := _game()
+		if game == null or game.get("local") == null or game.get("world") == null \
+			or request.get("character_id") != str(game.get("local").get("character_id")) \
+			or request.get("world_namespace") != game.get("world").get("reward_delivery_namespace") \
+			or request.get("session_epoch") != _altar_current_epoch(): return false
+		for director: Node in _foundation_directors_under(_foundation_realm_roots()):
+			if director.has_method("owner_tether_item_request_matches") \
+				and director.call("owner_tether_item_request_matches", request) == true: return true
+		return false
 	if source_kind == "portal_arrival":
 		var arrival := get_node_or_null(^"FoundationComposition/PortalArrival")
 		return arrival != null and request.get("envelope") is Dictionary \
@@ -125,6 +135,14 @@ func _owner_passive_request_matches(source_kind: String, request: Dictionary) ->
 
 func _owner_passive_commit_request(peer: int, source_kind: String, request: Dictionary, context: Dictionary) -> Dictionary:
 	match source_kind:
+		"tether_item":
+			for director: Node in _foundation_directors_under(_foundation_realm_roots()):
+				var host: RefCounted = director.get("_encounter_host")
+				if host == null: continue
+				for original: Dictionary in host.call("pending_tether_items", str(request.get("intent", {}).get("request", {}).get("encounter_id", ""))):
+					if ESSENCE._equivalent(original.get("checkpoint_request"), request) and ESSENCE._equivalent(original.context, context):
+						return _tether_item_commit_original(director, original)
+			return FOUNDATION_ACTIONS.deny("item_original_unavailable")
 		"portal_arrival":
 			var result := foundation_grounded_arrival(get_node_or_null(^"FoundationComposition/PortalArrival"), request.envelope, request.permit)
 			if result.get("code") == "arrival_binding_changed":
@@ -223,9 +241,15 @@ func _owner_passive_actor_vitals_scope(row: Dictionary) -> Dictionary:
 		or not ESSENCE._equivalent(world.get("reward_deliveries").get(row.delivery_id), row): return {}
 	for director: Node in _foundation_directors_under(_foundation_realm_roots()):
 		if _ordinary_actor_vitals_owned_origin(director, row):
+			var record: Dictionary = director.get("_encounter_host").call("record", str(row.receipt.encounter_id)) \
+				if is_host() and director.get("_encounter_host") != null else director.get("_encounter")
 			var scope: Dictionary = director.get("_ordinary_combat_reward_owners").get(str(row.receipt.encounter_id), {}) \
-				if is_host() else director.get("_encounter").get("ordinary_combat_reward_owner", {})
-			if not COMBAT_ROUND_REWARD.scope_valid(scope) or scope.session_id != _altar_current_epoch() \
+				if is_host() else record.get("ordinary_combat_reward_owner", {})
+			var wild_scope := false
+			if scope.is_empty():
+				scope = record.get("wild_actor_owner", {})
+				wild_scope = WILD_ACTOR_SCOPE.owns(scope, record, str(row.receipt.encounter_id))
+			if not (wild_scope or COMBAT_ROUND_REWARD.scope_valid(scope)) or scope.session_id != _altar_current_epoch() \
 				or scope.encounter_id != row.receipt.encounter_id or scope.world_namespace != row.world_namespace: return {}
 			if is_host():
 				var proof: Dictionary = director.get_meta("foundation_ordinary_vitals_commits", {}).get(row.receipt.receipt_id, {})
@@ -590,6 +614,7 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 		if route.get("ok") == true: part = route.part
 	var context: Dictionary = {}
 	if envelope.op == "tm_teach": context = _personal_tm_context(peer, envelope.station_key)
+	elif envelope.op == "tether_pouch": context = _personal_pouch_context(peer, envelope.station_key)
 	elif envelope.op == "resource":
 		var resources := get_node_or_null(^"FoundationComposition/Resources")
 		if resources != null: context = resources.call("host_context", peer, envelope.station_key, envelope.intent)
@@ -637,7 +662,7 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 		if context.is_empty(): return _foundation_refusal("release_ceremony_unavailable") # Terminal: the guest releases unpaid.
 	if context.is_empty() or context.expected_revision != envelope.revision: return _foundation_refusal("source_or_revision_changed")
 	var cfg := STATION_RULES.config()
-	if envelope.op == "boss_relic": return _foundation_refusal("host_outcome_required")
+	if envelope.op in ["boss_relic", "tether_item"]: return _foundation_refusal("host_outcome_required")
 	if envelope.op == "station_craft" and cfg.get("craft_runtime_enabled") != true: return _foundation_refusal("craft_disabled")
 	if envelope.op == "feast_cook" and cfg.get("craft_runtime_enabled") != true: return _foundation_refusal("craft_disabled")
 	if envelope.op == "den" and cfg.get("den_runtime_enabled") != true: return _foundation_refusal("den_disabled")
@@ -686,7 +711,7 @@ func _foundation_journal_refusal(action: String, journal: Dictionary) -> Diction
 	# The actual prepared BOOL writer rolls back the hidden host stage. Keep
 	# the TM's original request for its next attempt, rather than minting a new
 	# teach ID. Malformed/foreign/semantic refusals retain their terminal meaning.
-	if action in ["tm_teach", "resource", "groom"] and code in ["training_journal_failed", "world_not_prepared", "world_save_failed"]:
+	if action in ["tm_teach", "resource", "groom", "tether_pouch"] and code in ["training_journal_failed", "world_not_prepared", "world_save_failed"]:
 		return {"ok": false, "resolved": false, "durable": false, "terminal_refusal": false, "code": code, "reason": code}
 	return _foundation_refusal(code)
 
@@ -1199,6 +1224,96 @@ func _ordinary_combat_director_live(director: Node) -> bool:
 		if root.is_ancestor_of(director) and root.is_ancestor_of(manager): return true
 	return false
 
+
+func _tether_item_admission_ready(peer: int) -> bool:
+	var character := _authority_character(peer)
+	if character.is_empty() or _character_authority == null \
+		or _character_authority.call("creature_training_is_pending", character) == true \
+		or _character_authority.call("_research_other_transaction", character) == true: return false
+	if peer == local_peer_id(): return true
+	var stream: Dictionary = _owner_passive_service().get("hosts").get(character, {})
+	return not stream.is_empty() and str(stream.get("error", "")).is_empty() \
+		and not stream.has("readmit") and stream.get("checkpoint", {}).is_empty()
+
+
+func _cancel_unjournaled_departed_items(peer: int) -> void:
+	var game := _game()
+	if not is_host() or game == null or game.get("world") == null: return
+	var world: RefCounted = game.get("world")
+	for director: Node in _foundation_directors_under(_foundation_realm_roots()):
+		if not _ordinary_combat_director_live(director): continue
+		var host: RefCounted = director.get("_encounter_host")
+		if host == null or not host.has_method("cancel_unjournaled_tether_item"): continue
+		for id: String in host.get("encounters"):
+			for original: Dictionary in host.call("pending_tether_items", id):
+				if int(original.peer_id) == peer:
+					host.call("cancel_unjournaled_tether_item", original, world.reward_deliveries, world.reward_delivery_namespace)
+
+
+## Offline local owners have no network registry row. Guests retain the
+## existing stable-character registry lookup and ingress revalidates identity.
+func _saved_actor_delivery_peer(character: String) -> int:
+	if character.is_empty(): return 0
+	var local_peer: int = local_peer_id()
+	if _authority_character(local_peer) == character: return local_peer
+	return int(_registry.call("peer_for_character", character))
+
+
+## Private actual-combat ingress. The sole Host participant owns the original;
+## no RPC or public station envelope can author an effect or body binding.
+func _tether_item_commit_original(director: Node, original: Dictionary) -> Dictionary:
+	if not _ordinary_combat_director_live(director) or original.get("presented") == true:
+		return FOUNDATION_ACTIONS.deny("item_original_unavailable")
+	var host: RefCounted = director.get("_encounter_host")
+	var found := false
+	if host == null or host.get_script() != preload("res://scripts/combat/accepted_action_host.gd"):
+		return FOUNDATION_ACTIONS.deny("item_original_unavailable")
+	for pending: Dictionary in host.call("pending_tether_items", str(original.get("encounter_id", ""))):
+		if is_same(pending, original): found = true
+	if not found or director.call("uses_saved_actor_vitals", str(original.encounter_id)) != true:
+		return FOUNDATION_ACTIONS.deny("item_original_unavailable")
+	if not _tether_item_live_consumer_ready({"action": "tether_item", "intent": original.intent}):
+		return FOUNDATION_ACTIONS.deny("item_buff_consumer_unavailable")
+	var game := _game()
+	var world: RefCounted = game.get("world")
+	var character: String = original.character_id
+	var peer: int = _saved_actor_delivery_peer(character)
+	if peer < 1 or _authority_character(peer) != character or world == null \
+		or original.context.world_namespace != world.reward_delivery_namespace:
+		return FOUNDATION_ACTIONS.deny("item_owner_unavailable")
+	var writer := get_node_or_null(^"LedgerRpc")
+	if writer == null: return FOUNDATION_ACTIONS.deny("writer_unavailable")
+	var prior: Dictionary = world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character), {})
+	if prior.get("action") == "tether_item" and ESSENCE._equivalent(prior.get("intent"), original.intent) \
+		and ESSENCE._equivalent(prior.get("host_context"), original.context):
+		if not TRAINING_WORLD.training_row_valid(prior, world.reward_delivery_namespace, world.world_id):
+			return FOUNDATION_ACTIONS.deny("item_decision_changed")
+		writer.call("publish_creature_training", peer, character, prior.receipt)
+		return _foundation_decision(peer, world.reward_deliveries.get(prior.delivery_id, {}))
+	# Authenticate the original writer before the first journal. Its identity
+	# remains frozen even when an owner-save retry reaches a different peer ID.
+	if original.context.session_id != _ordinary_actor_vitals_journal_epoch():
+		return FOUNDATION_ACTIONS.deny("item_writer_changed")
+	var saver: RefCounted = game.get("save_system")
+	if saver == null: return FOUNDATION_ACTIONS.deny("writer_unavailable")
+	saver.call("finish_fallback")
+	if saver.call("fallback_busy") == true: return FOUNDATION_ACTIONS.deny("writer_busy")
+	if not original.has("checkpoint_request"):
+		original["checkpoint_request"] = preload("res://scripts/combat/accepted_action_host.gd")._original({
+			"op": "tether_item", "session_epoch": _altar_current_epoch(), "world_namespace": world.reward_delivery_namespace,
+			"character_id": character, "station_key": original.context.source_key,
+			"intent": original.intent, "revision": original.context.expected_revision})
+	var request: Dictionary = original.checkpoint_request
+	if request.session_epoch != _altar_current_epoch() or admitted_character_state(peer).is_empty():
+		return FOUNDATION_ACTIONS.deny("item_owner_unavailable")
+	if peer != local_peer_id():
+		var ready: Dictionary = _owner_passive_service().call("action_gate", peer, "tether_item", request, original.context)
+		if ready.get("ok") != true: return ready
+	var result := FOUNDATION_ACTIONS.commit(_character_authority, writer, peer, character,
+		int(request.revision), "tether_item", original.intent, original.context)
+	if result.get("durable") != true: return result
+	return _foundation_decision(peer, world.reward_deliveries.get(ESSENCE.training_delivery_id(world.reward_delivery_namespace, character), {}))
+
 ## Exact ordinary shared-round ownership is announced before Manager binding.
 ## An unavailable canonical writer refuses ownership; it never permits a local award.
 func ordinary_combat_reward_owner(director: Node, encounter_id: String) -> Dictionary:
@@ -1337,7 +1452,7 @@ func _ordinary_actor_vitals_commit_source(director: Node, encounter_id: String, 
 	var source_record: Dictionary = original.get("host_record", {})
 	var source_member: Dictionary = source_record.get("participants", {}).get(peer, {})
 	var character: String = str(source_member.get("character_id", ""))
-	var delivery_peer: int = int(_registry.call("peer_for_character", character))
+	var delivery_peer: int = _saved_actor_delivery_peer(character)
 	if delivery_peer < 1 or _authority_character(delivery_peer) != character:
 		return {"ok": false, "durable": false, "resolved": false, "code": "original_actor_owner_unavailable"}
 	var record: Dictionary = host.call("record", encounter_id)
@@ -1685,25 +1800,55 @@ func foundation_combat_mastery(director: Node, encounter_id: String, peer: Varia
 	if host == null or not host.has_method("move_mastery_outcome"): return {"ok": false, "durable": false}
 	var original: Dictionary = host.call("move_mastery_outcome", encounter_id, peer, action)
 	if original.is_empty(): return {"ok": true, "durable": true, "no_mastery": true}
-	var event: Dictionary = original.get("outcome", {})
-	var binding: Dictionary = original.get("binding", {})
-	var character := str(binding.get("character_id", ""))
 	var world: RefCounted = _game().get("world")
-	if character.is_empty() or event.get("attacker_uid") != binding.get("creature_uid") \
-		or original.get("encounter_id") != encounter_id or original.get("action") != action \
-		or world == null or _altar_current_epoch().is_empty() \
-		or original.get("context", {}).get("world_namespace") != world.reward_delivery_namespace \
-		or original.get("context", {}).get("session_id") != _altar_current_epoch(): return {"ok": false, "durable": false}
-	var context := {"source_key": "combat_mastery:" + str(event.action_id), "event_confirmed": true,
-		"world_namespace": world.reward_delivery_namespace, "session_id": _altar_current_epoch(),
-		"encounter_id": encounter_id, "participants": [character], "binding": binding.duplicate(true),
-		"outcome": event.duplicate(true)}
-	var duties: Array = [{"character_id": character, "action": "combat_mastery",
-		"intent": {"action_id": str(event.action_id), "creature_uid": str(event.attacker_uid)}, "context": context}]
+	if original.get("encounter_id") != encounter_id or original.get("action") != action \
+		or world == null or _altar_current_epoch().is_empty(): return {"ok": false, "durable": false}
+	var outcomes: Array = [original]
+	var parent := str(original.get("outcome", {}).get("action_id", ""))
+	if action < 0:
+		if not original.get("outcomes") is Array or original.outcomes.is_empty() \
+			or original.outcomes.size() > 2: return {"ok": false, "durable": false}
+		outcomes = original.outcomes
+		parent = str(original.get("action_id", ""))
+	if parent.is_empty(): return {"ok": false, "durable": false}
+	var duties: Array = []
+	var child_ids := {}
+	var creatures := {}
+	var owner := ""
+	for source: Variant in outcomes:
+		if not source is Dictionary or not source.get("outcome") is Dictionary \
+			or not source.get("binding") is Dictionary or not source.get("context") is Dictionary:
+			return {"ok": false, "durable": false}
+		var event: Dictionary = source.outcome
+		var binding: Dictionary = source.binding
+		var character := str(binding.get("character_id", ""))
+		var child := str(event.get("action_id", ""))
+		var creature := str(binding.get("creature_uid", ""))
+		if character.is_empty() or creature.is_empty() or event.get("attacker_uid") != creature \
+			or source.context.get("world_namespace") != world.reward_delivery_namespace \
+			or source.context.get("session_id") != _altar_current_epoch() or child.is_empty() \
+			or child_ids.has(child) or (not owner.is_empty() and owner != character) \
+			or (action < 0 and (creatures.has(creature) or child == parent)):
+			return {"ok": false, "durable": false}
+		owner = character
+		child_ids[child] = true
+		creatures[creature] = true
+		var context := {"source_key": "combat_mastery:" + child, "event_confirmed": true,
+			"world_namespace": world.reward_delivery_namespace, "session_id": _altar_current_epoch(),
+			"encounter_id": encounter_id, "participants": [character], "binding": binding.duplicate(true),
+			"outcome": event.duplicate(true)}
+		if action < 0:
+			context["parent_action_id"] = parent
+			context["tag_part"] = source.get("part")
+			if preload("res://scripts/net/foundation_event.gd").tag_mastery_parent(context,
+				{"action_id":child, "creature_uid":creature}, character) != parent:
+				return {"ok": false, "durable": false}
+		duties.append({"character_id": character, "action": "combat_mastery",
+			"intent": {"action_id": child, "creature_uid": creature}, "context": context})
 	var writer := get_node_or_null(^"LedgerRpc")
-	var result: Dictionary = writer.call("journal_foundation_event", "mastery:" + str(event.action_id), duties) if writer != null else {}
+	var result: Dictionary = writer.call("journal_foundation_event", "mastery:" + parent, duties) if writer != null else {}
 	if result.get("ok") == true and result.get("durable") == true:
-		host.call("acknowledge_move_mastery", encounter_id, peer, action, str(event.action_id))
+		host.call("acknowledge_move_mastery", encounter_id, peer, action, parent)
 	return result
 
 
@@ -1848,6 +1993,16 @@ func _request_window_close() -> void:
 func foundation_event_stage_epoch(accepted: Dictionary) -> String:
 	var context: Dictionary = accepted.get("host_context", {})
 	var world: RefCounted = _game().get("world")
+	if accepted.get("action") == "tether_item":
+		if context.get("session_id") != _ordinary_actor_vitals_journal_epoch(): return ""
+		for director: Node in _foundation_directors_under(_foundation_realm_roots()):
+			if not _ordinary_combat_director_live(director): continue
+			var host: RefCounted = director.get("_encounter_host")
+			if host == null: continue
+			for original: Dictionary in host.call("pending_tether_items", str(accepted.get("intent", {}).get("request", {}).get("encounter_id", ""))):
+				if original.character_id == accepted.get("character_id") and ESSENCE._equivalent(original.intent, accepted.get("intent")) \
+					and ESSENCE._equivalent(original.context, context): return context.session_id
+		return ""
 	var row: Variant = world.reward_deliveries.get(context.get("retained_event", ""))
 	if not preload("res://scripts/net/foundation_event.gd").valid(row, world.reward_delivery_namespace, world.world_id): return _altar_current_epoch()
 	for duty: Dictionary in row.duties:
@@ -1959,6 +2114,24 @@ func personal_tm_submit(original: Dictionary, revision: int, scope: Dictionary) 
 	if scope.is_empty() or not ESSENCE._equivalent(scope, personal_tm_scope()): return _foundation_refusal("tm_owner_context_changed")
 	return _foundation_send("tm_teach", "personal_tm:" + _local_character_id(), original, revision)
 
+func _personal_pouch_context(peer: int, key: String) -> Dictionary:
+	var character := _authority_character(peer)
+	if not preload("res://scripts/combat/tether_commands.gd").enabled() or character.is_empty() \
+		or key != "personal_pouch:" + character or _altar_peer_in_combat(peer): return {}
+	return {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
+		"source_key": key, "station_kind": "personal_pouch", "in_range": true, "in_combat": false, "owns_character": true}
+
+func personal_pouch_scope() -> Dictionary:
+	var envelope := _altar_envelope("tether_pouch", "personal_pouch:" + _local_character_id())
+	if envelope.is_empty(): return {}
+	return {"character_id": envelope.character_id, "world_namespace": envelope.world_namespace, "session_epoch": envelope.session_epoch}
+
+func personal_pouch_available() -> bool:
+	return preload("res://scripts/combat/tether_commands.gd").enabled() and not _altar_peer_in_combat(local_peer_id())
+
+func personal_pouch_submit(original: Dictionary, revision: int, scope: Dictionary) -> Dictionary:
+	if scope.is_empty() or not ESSENCE._equivalent(scope, personal_pouch_scope()): return _foundation_refusal("pouch_owner_context_changed")
+	return _foundation_send("tether_pouch", "personal_pouch:" + _local_character_id(), original, revision)
 func personal_candy_submit(original: Dictionary, revision: int, scope: Dictionary) -> Dictionary:
 	if scope.is_empty() or not ESSENCE._equivalent(scope, personal_tm_scope()): return _foundation_refusal("candy_owner_context_changed")
 	return _foundation_send("candy_feed", "personal_candy_feed", original, revision)
@@ -2335,6 +2508,7 @@ const HOST_PEER_ID := PEER_REGISTRY.HOST_PEER_ID
 
 var _altar_epoch := Crypto.new().generate_random_bytes(16).hex_encode()
 var _altar_host_epoch := ""
+var _tether_tonic_observer_scope: Array = []
 var _altar_host_namespace := ""
 var _altar_stations: Dictionary = {} # Weak mounted nodes, never placement truth.
 var _altar_quote_request: Dictionary = {}
@@ -3369,6 +3543,7 @@ func _finalize_snapshot_receive() -> bool:
 		_fail_snapshot_receive("Queued world changes could not be applied after the snapshot.", true)
 		return false
 	game.call("apply_world_snapshot", data)
+	_sync_tether_tonic_scope()
 	if not _latest_bootstrap_registry.is_empty():
 		_apply_registry(_latest_bootstrap_registry)
 	for delta: Dictionary in _bootstrap_deltas:
@@ -3670,6 +3845,7 @@ func _on_peer_disconnected(peer_id: int) -> void:
 	# The departed transport's owner-passive stream ends with it, so the
 	# character's next stream is admitted instead of shadowed (re-proof).
 	if _owner_passive != null: _owner_passive.call("peer_departed", peer_id)
+	_cancel_unjournaled_departed_items(peer_id)
 	if bool(_registry.call("remove", peer_id)):
 		if not departed and _closing_frames == 0 and peer_id != HOST_PEER_ID:
 			var window_ms := int(1000.0 * float(_cfg("reconnect_window_s", 120.0)))
@@ -4083,6 +4259,7 @@ func _teardown(linger_transport: bool = false) -> void:
 			_peer.close()
 	_peer = null
 	_mode = ""
+	_sync_tether_tonic_scope()
 	_transport_kind = ""
 	_preparing_client = false
 	_capacity = 0
@@ -4446,6 +4623,7 @@ func _bind_character_authority() -> bool:
 		_world_snapshot()
 		raw = game.get("world").get("reward_delivery_namespace")
 	if not raw is String or not bool(_character_authority.call("bind_world", raw)): return false
+	_sync_tether_tonic_scope()
 	_character_authority.call("bind_portal_pending_reader", _pending_portal_for)
 	return true
 
@@ -4506,6 +4684,7 @@ func _rpc_altar_epoch(epoch: String, world_namespace: String, character: String)
 	if is_host() or not _altar_hex_id(epoch) or character != _local_character_id() or world_namespace.is_empty(): return
 	_altar_host_epoch = epoch
 	_altar_host_namespace = world_namespace
+	_sync_tether_tonic_scope()
 
 
 static func _altar_hex_id(raw: Variant) -> bool:
@@ -4765,10 +4944,12 @@ func host_ack_creature_training(peer: int, row: Dictionary) -> bool:
 	if row.get("status")!="accepted" or not ESSENCE._equivalent(world.reward_deliveries.get(row.get("delivery_id")),row): return false
 	var character := _authority_character(peer)
 	if character.is_empty() or character != row.get("character_id"): return false
-	if _character_authority.call("creature_training_is_pending", character) != true:
+	if not _tether_item_live_consumer_ready(row): return false
+	var pending: bool = _character_authority.call("creature_training_is_pending", character) == true
+	if not pending and (row.get("action") != "tether_item" or not _tether_item_original_pending(row)):
 		# A recovered saved marker is history, not permission to rewrite live HP.
 		return _character_authority.call("acknowledge_creature_training", character, row) == true
-	if _character_authority.call("creature_training_pending_matches", character, row) != true: return false
+	if pending and _character_authority.call("creature_training_pending_matches", character, row) != true: return false
 	if row.get("kind") == "altar_building": return _character_authority.call("acknowledge_creature_training", character, row) == true
 	var bundle: Dictionary=_training_actor_baseline_proposals(peer,row)
 	if bundle.get("ok")!=true: return false
@@ -4777,7 +4958,267 @@ func host_ack_creature_training(peer: int, row: Dictionary) -> bool:
 	for proposal: Dictionary in bundle.proposals:
 		if proposal.host.call("commit_actor_training_baseline",proposal.stage,row,bundle.admitted,
 			bundle.revision,world.reward_deliveries,world.reward_delivery_namespace,world.world_id)!=true: return false
-	return _character_authority.call("acknowledge_creature_training",_authority_character(peer),row)==true
+	if not _install_host_tether_tonic(peer, row): return false
+	if _character_authority.call("acknowledge_creature_training", character, row) != true: return false
+	return _finalize_tether_item_row(row) if row.get("action") == "tether_item" else true
+
+
+func _tether_item_original_pending(row: Dictionary) -> bool:
+	for director: Node in _foundation_directors_under(_foundation_realm_roots()):
+		if not _ordinary_combat_director_live(director): continue
+		var host: RefCounted = director.get("_encounter_host")
+		if host == null: continue
+		for original: Dictionary in host.call("pending_tether_items", str(row.get("intent", {}).get("request", {}).get("encounter_id", ""))):
+			if ESSENCE._equivalent(original.intent, row.get("intent")) and ESSENCE._equivalent(original.context, row.get("host_context")):
+				return true
+	return false
+
+
+func _tether_item_live_consumer_ready(row: Dictionary) -> bool:
+	if row.get("action") != "tether_item": return true
+	var items: RefCounted = preload("res://scripts/world/death_satchel_rules.gd").db()
+	if not items.call("definition", str(row.get("intent", {}).get("effect", {}).get("item_id", ""))).has("creature_buff"): return true
+	var game := _game()
+	return is_inside_tree() and game != null and game.get("session") == self \
+		and game.has_signal("party_passive_tick") and _character_authority != null \
+		and _owner_passive_service() != null
+
+func _install_host_tether_tonic(peer: int, row: Dictionary) -> bool:
+	if row.get("action") != "tether_item": return true
+	var buff: Dictionary = preload("res://scripts/world/death_satchel_rules.gd").db().call("definition",
+		str(row.get("intent", {}).get("effect", {}).get("item_id", ""))).get("creature_buff", {})
+	if buff.is_empty(): return true
+	var character := _authority_character(peer)
+	var stream: Dictionary = _owner_passive.get("hosts").get(character, {})
+	if peer != local_peer_id() and (stream.is_empty() or stream.get("peer") != peer \
+		or stream.get("epoch") != _altar_current_epoch() or stream.get("departed") == true): return false
+	var stream_id := "local" if peer == local_peer_id() else str(stream.id)
+	var sequence := int(_game().get("_passive_observation_sequence")) if peer == local_peer_id() else int(stream.cursor.sequence)
+	for director: Node in _foundation_directors_under(_foundation_realm_roots()):
+		if not _ordinary_combat_director_live(director): continue
+		var host: RefCounted = director.get("_encounter_host")
+		if host == null: continue
+		for original: Dictionary in host.call("pending_tether_items", str(row.intent.request.encounter_id)):
+			if not ESSENCE._equivalent(original.intent, row.intent) or not ESSENCE._equivalent(original.context, row.host_context): continue
+			var now_ms := Time.get_ticks_msec()
+			var uid := str(row.intent.effect.creature_uid)
+			var changes_wind: bool = buff.get("stat") in ["wind_cap", "wind_regen"]
+			if changes_wind: _settle_tether_tonic_wind(character, uid, now_ms)
+			director.call("capture_tether_tonic_card", peer, str(row.intent.effect.creature_uid))
+			if _character_authority.call("install_saved_tether_tonic", character, row, original,
+				stream_id, _altar_current_epoch(), sequence) != true: return false
+			if peer == local_peer_id():
+				_tether_tonic_observer_scope = _tether_tonic_current_scope()
+				_sync_tether_tonic_scope()
+			if changes_wind:
+				_settle_tether_tonic_wind(character, uid, now_ms, _tether_tonic_wind_profile(character, uid))
+			original["tonic_receipt"] = row.receipt
+			return true
+	return false
+
+func _settle_tether_tonic_wind(character: String, uid: String, now_ms: int, profile: Dictionary = {}) -> void:
+	for director: Node in _foundation_directors_under(_foundation_realm_roots()):
+		if not _ordinary_combat_director_live(director): continue
+		var host: RefCounted = director.get("_encounter_host")
+		if host != null: host.call("settle_tether_tonic_wind", character, uid, now_ms, profile)
+
+func _tether_tonic_wind_profile(character: String, uid: String) -> Dictionary:
+	var admitted: Dictionary = _character_authority.call("state", character)
+	var stream: Dictionary = _owner_passive.get("hosts").get(character, {}) if _owner_passive != null else {}
+	for owned: Dictionary in admitted.get("party", []):
+		if owned.get("uid") != uid: continue
+		var passive := owned.duplicate(true)
+		var local_member: RefCounted
+		if character == _local_character_id() and _game() != null and _game().get("local") != null:
+			for member: RefCounted in _game().get("local").party.call("members"):
+				if member.get("uid") == uid: local_member = member
+			if local_member != null:
+				for field: String in preload("res://scripts/net/owner_passive_replay.gd").PASSIVE_FIELDS:
+					if field in local_member: passive[field] = local_member.get(field)
+		if stream.get("epoch") == _altar_current_epoch() and str(stream.get("error", "")).is_empty():
+			for card: Dictionary in stream.get("cursor", {}).get("state", {}).get("party", []):
+				if card.get("uid") != uid: continue
+				for field: String in preload("res://scripts/net/owner_passive_replay.gd").PASSIVE_FIELDS:
+					if card.has(field): passive[field] = card[field]
+		var creature: RefCounted = preload("res://scripts/save/water_capture_codec.gd").decode_owned(passive, admitted.redesign_character)
+		if creature == null: return {}
+		var projection: Dictionary = _character_authority.call("tether_tonic_projection", character)
+		if local_member != null:
+			var managed: Dictionary = local_member.get_meta("tether_tonic_projection", {}).get("receipts", {}).duplicate()
+			for effect: Dictionary in projection.get(uid, {}).get("effects", []): managed[str(effect.id)] = true
+			for native: Dictionary in local_member.get("active_buffs"):
+				if not managed.has(str(native.id)):
+					creature.call("apply_buff", str(native.id), str(native.stat), float(native.scale), float(native.remaining_s))
+		for effect: Dictionary in projection.get(uid, {}).get("effects", []):
+			creature.call("apply_buff", str(effect.id), str(effect.stat), float(effect.scale), float(effect.remaining_s))
+		var condition := preload("res://scripts/creatures/creature_condition.gd")
+		return preload("res://scripts/combat/combat_manager.gd").host_wind_profile({
+			"species_id": creature.get("species_id"), "bond_nodes": creature.call("bond_nodes"),
+			"nourishment_fraction": condition.nourishment_fraction(creature, condition.config()),
+			"wind_cap_scale": creature.call("buff_scale", "wind_cap"),
+			"wind_regen_scale": creature.call("buff_scale", "wind_regen")})
+	return {}
+
+func admitted_tether_tonics(peer: int) -> Dictionary:
+	if not is_host() or _character_authority == null: return {}
+	return _character_authority.call("tether_tonic_projection", _authority_character(peer))
+
+func tether_tonic_passive_card(peer: int, uid: String, owned: Dictionary) -> Dictionary:
+	var stream: Dictionary = _owner_passive.get("hosts").get(_authority_character(peer), {}) if _owner_passive != null else {}
+	if stream.get("peer") != peer or stream.get("epoch") != _altar_current_epoch() \
+		or stream.get("departed") == true or not str(stream.get("error", "")).is_empty(): return owned
+	var result := owned.duplicate(true)
+	for card: Dictionary in stream.get("cursor", {}).get("state", {}).get("party", []):
+		if card.get("uid") != uid: continue
+		for field: String in preload("res://scripts/net/owner_passive_replay.gd").PASSIVE_FIELDS:
+			if card.has(field): result[field] = card[field]
+	return result
+
+func _tick_host_tether_tonics(character: String, delta: float, uids: Array, stream_id: String,
+		epoch: String, sequence: int) -> void:
+	if not is_host() or _character_authority == null or epoch != _altar_current_epoch(): return
+	var now_ms := Time.get_ticks_msec()
+	var before: Dictionary = _character_authority.call("tether_tonic_projection", character)
+	var boundaries: Array[String] = []
+	for uid: String in uids:
+		for effect: Dictionary in before.get(uid, {}).get("effects", []):
+			if effect.get("stat") in ["wind_cap", "wind_regen"] and float(effect.remaining_s) <= delta:
+				if not boundaries.has(uid): boundaries.append(uid)
+	for uid: String in boundaries: _settle_tether_tonic_wind(character, uid, now_ms)
+	_character_authority.call("tick_tether_tonics", character, delta, uids, stream_id, epoch, sequence)
+	if boundaries.is_empty(): return
+	var after: Dictionary = _character_authority.call("tether_tonic_projection", character)
+	for uid: String in boundaries:
+		if after.get(uid, {}).get("version") != before.get(uid, {}).get("version"):
+			_settle_tether_tonic_wind(character, uid, now_ms, _tether_tonic_wind_profile(character, uid))
+
+func _tether_tonic_current_scope() -> Array:
+	var game := _game()
+	if game == null or game.get("local") == null or game.get("world") == null: return []
+	return [_local_character_id(), game.get("world").reward_delivery_namespace, _altar_current_epoch()]
+
+func _sync_tether_tonic_scope() -> void:
+	var game := _game()
+	var scope := _tether_tonic_current_scope()
+	if game == null: return
+	# Empty projection only retires managed buffs from a different context.
+	_apply_host_tether_tonics({})
+	if _tether_tonic_observer_scope != scope: _tether_tonic_observer_scope.clear()
+	if not game.has_signal("party_passive_tick"): return
+	var live: bool = not scope.is_empty() and is_host() and _character_authority != null \
+		and _tether_tonic_observer_scope == scope and _character_authority.get("_world_instance") == scope[1]
+	if live:
+		live = false
+		for held: Dictionary in _character_authority.call("tether_tonic_projection", _local_character_id()).values():
+			if not held.get("effects", []).is_empty(): live = true
+	var connected := game.is_connected("party_passive_tick", _tether_tonic_party_tick)
+	if live and not connected: game.connect("party_passive_tick", _tether_tonic_party_tick)
+	elif not live and connected: game.disconnect("party_passive_tick", _tether_tonic_party_tick)
+
+func _tether_tonic_party_tick(observation: Dictionary) -> void:
+	var game := _game()
+	if game == null: return
+	if game.get("world") == null or not is_host() or _character_authority == null \
+		or _tether_tonic_observer_scope != _tether_tonic_current_scope() \
+		or _character_authority.get("_world_instance") != game.get("world").reward_delivery_namespace:
+		_sync_tether_tonic_scope()
+		return
+	if game == null or observation.get("character_id") != _local_character_id() \
+		or observation.get("world_namespace") != game.get("world").reward_delivery_namespace \
+		or observation.get("session_epoch") != _altar_current_epoch(): return
+	if is_host():
+		_tick_host_tether_tonics(_local_character_id(), float(observation.delta), [observation.uid],
+			"local", _altar_current_epoch(), int(observation.sequence))
+		var live := false
+		for held: Dictionary in _character_authority.call("tether_tonic_projection", _local_character_id()).values():
+			if not held.get("effects", []).is_empty(): live = true
+		if not live: _sync_tether_tonic_scope()
+
+## These projections arrive only on the existing authenticated passive carrier
+## after its character/world/epoch/current-stream checks. No portable buff import.
+func _apply_host_tether_tonics(projected: Dictionary) -> bool:
+	var game := _game()
+	if game == null or game.get("local") == null: return false
+	var party: RefCounted = game.get("local").get("party") as RefCounted
+	if party == null or not party.has_method("members"): return false
+	var context := _tether_tonic_current_scope()
+	for member: RefCounted in party.call("members"):
+		var uid := str(member.get("uid"))
+		var seen: Dictionary = member.get_meta("tether_tonic_projection", {})
+		if not seen.is_empty() and seen.get("context") != context:
+			var carried: Array = member.get("active_buffs")
+			for index: int in range(carried.size() - 1, -1, -1):
+				if seen.get("receipts", {}).has(str(carried[index].get("id", ""))): carried.remove_at(index)
+			seen = {}
+			member.set_meta("tether_tonic_projection", {"context": context, "version": -1, "receipts": {}})
+		var row: Dictionary = projected.get(uid, {})
+		if row.is_empty() or context.is_empty(): continue
+		if seen.get("context") == context and int(seen.get("version", -1)) >= int(row.get("version", -1)): continue
+		var previous: Dictionary = seen.get("receipts", {}) if seen.get("context") == context else {}
+		var buffs: Array = member.get("active_buffs")
+		var effects: Array = row.get("effects", [])
+		for index: int in range(buffs.size() - 1, -1, -1):
+			var id := str(buffs[index].get("id", ""))
+			if previous.has(id) and not effects.any(func(effect: Dictionary) -> bool: return effect.get("id") == id): buffs.remove_at(index)
+		for effect: Dictionary in effects:
+			var id := str(effect.id)
+			var live := -1.0
+			for buff: Dictionary in buffs:
+				if buff.get("id") == id: live = float(buff.remaining_s)
+			# A duplicate receipt cannot resurrect a locally expired effect.
+			if previous.get(id) == effect.get("receipt") and live < 0.0: continue
+			var remaining := minf(live, float(effect.remaining_s)) if live >= 0.0 and previous.get(id) == effect.get("receipt") else float(effect.remaining_s)
+			if remaining > 0.0: member.call("apply_buff", id, str(effect.stat), float(effect.scale), remaining)
+			previous[id] = effect.receipt
+		member.set_meta("tether_tonic_projection", {"context": context, "version": int(row.version), "receipts": previous})
+	return true
+
+func _install_owner_tether_tonic(player: RefCounted, row: Dictionary) -> bool:
+	if row.get("action") != "tether_item": return true
+	var buff: Dictionary = preload("res://scripts/world/death_satchel_rules.gd").db().call("definition",
+		str(row.intent.effect.item_id)).get("creature_buff", {})
+	if buff.is_empty(): return true
+	var uid := str(row.intent.effect.creature_uid)
+	for member: RefCounted in player.party.call("members"):
+		if member.get("uid") != uid: continue
+		var context := [_local_character_id(), _game().get("world").reward_delivery_namespace, _altar_current_epoch()]
+		var seen: Dictionary = member.get_meta("tether_tonic_projection", {})
+		var receipts: Dictionary = seen.get("receipts", {}) if seen.get("context") == context else {}
+		if receipts.get(str(buff.id)) == row.receipt: return true
+		# Recovery history has no new actual BOOL-save edge and cannot regrant it.
+		if _owner_training_retry.get("receipt") != row.receipt or _owner_training_retry.get("saved") != true: return true
+		if member.call("apply_buff", str(buff.id), str(buff.stat), float(buff.scale), float(buff.duration_s)) != true: return false
+		receipts[str(buff.id)] = row.receipt
+		member.set_meta("tether_tonic_projection", {"context": context, "version": -1, "receipts": receipts})
+		return true
+	return false
+
+
+func _finalize_tether_item_row(row: Dictionary) -> bool:
+	for director: Node in _foundation_directors_under(_foundation_realm_roots()):
+		if not _ordinary_combat_director_live(director): continue
+		if director.call("finalize_saved_tether_item", row) != true: return false
+	return true
+
+
+## One validated owner result outlives replacement of the per-character world
+## row by a later station action. It is presentation correlation, never state.
+var _tether_item_saved_result: Dictionary = {}
+
+func tether_item_owner_result_saved(result: Dictionary) -> bool:
+	var game := _game()
+	if game == null or not game.get("local") is RefCounted or not game.get("world") is RefCounted:
+		_tether_item_saved_result.clear()
+		return false
+	if _tether_item_saved_result.is_empty(): return false
+	var proof: Dictionary = _tether_item_saved_result
+	if proof.player.get_ref() != game.get("local") or proof.world.get_ref() != game.get("world") \
+		or proof.world_namespace != game.get("world").reward_delivery_namespace \
+		or proof.world_id != game.get("world").world_id or proof.epoch != _altar_current_epoch():
+		_tether_item_saved_result.clear()
+		return false
+	return result == proof.result and game.get("local").character_id == result.get("character_id") \
+		and game.get("local").redesign_character.transaction_receipts.has(result.get("receipt"))
 
 
 func _training_decision(peer: int, row: Dictionary) -> Dictionary:
@@ -5042,7 +5483,13 @@ func _settle_owner_training_accepted(player: RefCounted, world: RefCounted, row:
 		if _owner_training_retry.player.get_ref() != player or _owner_training_retry.world.get_ref() != world \
 			or _owner_training_retry.receipt != row.receipt or _owner_training_retry.saved != true \
 			or not ESSENCE.owner_matches_after(preload("res://scripts/net/character_record_rules.gd").training_projection(player.call("save_data"), row, ESSENCE.training_projection), row.after): return false
+		if not _install_owner_tether_tonic(player, row): return false
 		_owner_training_retry = {}
+	if row.get("action") == "tether_item":
+		_tether_item_saved_result = {"player": weakref(player), "world": weakref(world),
+			"world_namespace": world.reward_delivery_namespace, "world_id": world.world_id, "epoch": _altar_current_epoch(),
+			"result": {"request": row.intent.request.duplicate(true), "receipt": row.receipt,
+				"character_id": row.character_id, "creature_uid": row.intent.effect.creature_uid, "saved": true}}
 	if _owner_passive != null: _owner_passive.call("owner_settled", row)
 	_advance_personal_view_revision(row)
 	if _owner_passive_altar_original.get("intent", {}).get("spend_id") == row.action_id:
@@ -5128,6 +5575,9 @@ func _training_actor_baseline_proposals(peer: int, training: Dictionary) -> Dict
 	return {"ok":not proposals.is_empty(),"proposals":proposals,"admitted":admitted,"revision":revision}
 
 func training_actor_baseline_ready(peer: int, training: Dictionary) -> bool:
+	# Also runs before Ledger's accepted World write, including recovery with
+	# no live private original. Unmounted tonics cannot become accepted here.
+	if not _tether_item_live_consumer_ready(training): return false
 	if training.get("kind") == "altar_building": return TRAINING_WORLD.altar_build_row_valid(training, _game().get("world").reward_delivery_namespace, _game().get("world").world_id) and training.character_id == _authority_character(peer)
 	return _training_actor_baseline_proposals(peer,training).get("ok")==true
 
