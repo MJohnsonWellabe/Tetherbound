@@ -66,11 +66,11 @@ func _action_id(id: String, peer: int, action: int, binding: Dictionary,
 	return ""
 
 
-func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dictionary:
+func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary, dash_sweep: Callable = Callable()) -> Dictionary:
 	var id := str(intent.get("encounter_id", ""))
 	if move_action_publication_pending(id):
 		return _refuse("strike_intent", peer_id, "pending_action", "The original hit is still being published.")
-	if not _tracking_enabled_for(id): return super.validate_strike(intent, peer_id, view)
+	if not _tracking_enabled_for(id): return super.validate_strike(intent, peer_id, view, dash_sweep)
 	var binding: Dictionary = view.get("f22_actor_binding", {})
 	if not _binding_current(id, peer_id, binding):
 		return _refuse("strike_intent", peer_id, "stale_actor", "Your deployed creature is no longer current.")
@@ -78,7 +78,7 @@ func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dict
 	var limit := int(MATH.config().get("utility_limits", {}).get("receipt_limit_per_encounter", 0))
 	if limit < 1 or actions.size() >= limit:
 		return _refuse("strike_intent", peer_id, "receipt_budget", "This encounter cannot accept another action safely.")
-	var verdict: Dictionary = super.validate_strike(intent, peer_id, view)
+	var verdict: Dictionary = super.validate_strike(intent, peer_id, view, dash_sweep)
 	# The base validator replaces cooldown state. Restore the SAME originals,
 	# including misses, before appending this first actual accepted decision.
 	if (_strike_authority.get(id, {}) as Dictionary).has(peer_id):

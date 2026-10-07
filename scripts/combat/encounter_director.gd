@@ -3147,6 +3147,11 @@ func _host_move_start(intent: Dictionary, peer: int) -> Dictionary:
 	frozen.move = gear.freeze_move_profile(frozen.move, gear.gear_for(admitted, str(binding.creature_uid)), gear.config())
 	var move := COMBAT_MANAGER.host_move_profile(moves, "player_" + slot, move_id,
 		_body_radius(body), _body_radius(wild), host_card_cooldown_multiplier(card), CONTACT_SPACING.pair_reach_need(body, wild), frozen.move)
+	if move.get("utility", {}).get("kind") == "dash_strike" \
+		and (peer != _local_peer_id() or not body.has_method("apply_admitted_dash")):
+		deny.code = "dash_transport_unavailable"
+		deny.reason = "That dash is not available for this deployment yet."
+		return deny
 	move["mastery_context"] = {"world_namespace": _session.call("_game").get("world").reward_delivery_namespace,
 		"session_id": _session.call("_altar_current_epoch")}
 	if uses_durable_trainer_rewards(id) and slot == "utility" \
@@ -3240,6 +3245,29 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 		_publish_host_attack_launch(encounter_id, peer_id, self_launch)
 		_host_after_encounter_change(encounter_id, peer_id)
 		return self_verdict
+	var is_dash := utility.get("kind") == "dash_strike"
+	var dash_sweep := Callable()
+	if is_dash:
+		var target_instance := wild.get("instance") as RefCounted
+		if peer_id != _local_peer_id() or not striker.has_method("apply_admitted_dash") \
+			or started.is_empty() or started.get("cancelled") == true or target_instance == null \
+			or float(card.get("hp", 0.0)) <= 0.0 or float(target_instance.get("hp")) <= 0.0 \
+			or started.get("utility_opponent", {}) != {"uid": str(target_instance.get("uid")),
+				"body_generation": int(record.get("opponent", {}).get("body_generation", 0))}:
+			return {"ok": false, "kind": "strike_intent", "peer": peer_id, "pending": false,
+				"code": "dash_unavailable", "reason": "That dash's original deployment is unavailable.", "delta": {}}
+		var original := {"action_id": str(started.action_id), "binding": attacker_binding.duplicate(true),
+			"target_uid": str(target_instance.get("uid")), "target_generation": int(started.utility_opponent.body_generation),
+			"target_body_instance_id": wild.get_instance_id(), "source_position": striker.global_position,
+			"facing": striker.call("facing")}
+		dash_sweep = func() -> Dictionary:
+			if deployed_body_for(peer_id) != striker or not _strike_actor_binding_matches(encounter_id, peer_id, striker, attacker_binding) \
+				or not is_instance_valid(wild) or wild.get_instance_id() != original.target_body_instance_id: return {}
+			var swept: Dictionary = striker.call("apply_admitted_dash", started.move, original, wild)
+			if deployed_body_for(peer_id) != striker or not _strike_actor_binding_matches(encounter_id, peer_id, striker, attacker_binding) \
+				or not is_instance_valid(wild) or wild.get("instance") != target_instance \
+				or float(_creature_card_for(peer_id).get("hp", 0.0)) <= 0.0 or float(target_instance.get("hp")) <= 0.0: return {}
+			return swept
 	var wind_cfg: Dictionary = MATH.config().get("wind", {})
 	var cost := float(move.get("wind_cost", wind_cfg.get(slot + "_cost", 0.0)))
 	var wind_profile: Dictionary = COMBAT_MANAGER.host_wind_profile(card)
@@ -3251,6 +3279,9 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 	# The host's own position for the striking creature, never the intent's.
 	var host_intent := intent.duplicate()
 	host_intent["move"] = move
+	if is_dash:
+		var facing: Vector3 = striker.call("facing")
+		host_intent["facing"] = [facing.x, facing.y, facing.z]
 	var view := {
 		"now_ms": now_ms,
 		"origin": striker.call("centre"),
@@ -3258,7 +3289,8 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 		"f22_actor_binding": publication_binding,
 		"move_actor_binding": attacker_binding,
 	}
-	var verdict: Dictionary = _encounter_host.call("validate_strike", host_intent, peer_id, view)
+	var verdict: Dictionary = _encounter_host.call("validate_strike", host_intent, peer_id, view, dash_sweep) if is_dash \
+		else _encounter_host.call("validate_strike", host_intent, peer_id, view)
 	if not bool(verdict.get("ok", false)):
 		(verdict.get("delta", {}) as Dictionary).merge(wind_preview, true)
 		return verdict
@@ -3271,27 +3303,38 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 		peer_id, int(intent.get("action", 0)), wind_profile, cost, now_ms,
 		float(move.get("recovery", 0.2)), float(wind_cfg.get("regen_delay", 0.6)))
 	delta.merge(wind_delta, true)
-	if not bool(delta.get("hit", false)):
+	if not bool(delta.get("hit", false)) and not is_dash:
 		_host_after_encounter_change(encounter_id, peer_id)
 		return verdict
 
+	var dash: Dictionary = delta.get("dash_strike", {})
 	var from: Vector3 = striker.call("centre")
 	var target: Vector3 = wild.call("centre")
+	if is_dash:
+		var centre_offset: Vector3 = striker.call("centre") - striker.global_position
+		from = (dash.from as Vector3) + centre_offset
+		target = dash.get("contact", (dash.to as Vector3) + centre_offset)
 	var direction := (target - from).normalized()
-	var muzzle := from + direction * _body_radius(striker)
+	var muzzle := from if is_dash else from + direction * _body_radius(striker)
 	var opponent := wild.get("instance") as RefCounted
 	if opponent == null: return {"ok": false, "kind": "strike_intent", "code": "unknown_encounter", "delta": {}}
 	var launch := HIT_FEEDBACK.launch("%s:%d:%d" % [encounter_id, peer_id, int(intent.get("action", 0))],
 		encounter_id, str(card.get("creature_uid", "")), str(opponent.get("uid")),
 		str(intent.get("move_id", "")), slot, muzzle, target,
-		MOVE_PROJECTILE.travel_seconds(muzzle, target, move.get("vfx", {})),
-		int(runtime.get("body_generation")) if runtime != null else 0, wild.global_position, _host_visual_bounds(wild)).duplicate(true)
+		0.0 if is_dash else MOVE_PROJECTILE.travel_seconds(muzzle, target, move.get("vfx", {})),
+		int(runtime.get("body_generation")) if runtime != null else 0,
+		dash.to if is_dash and not bool(delta.get("hit", false)) else wild.global_position, _host_visual_bounds(wild)).duplicate(true)
 	launch["attacker_binding"] = attacker_binding
 	launch["move"] = move.duplicate(true)
 	launch["mastery_rank"] = int(move.get("mastery_rank", 1))
-	launch["source_ground"] = striker.global_position
+	launch["source_ground"] = dash.from if is_dash else striker.global_position
+	if is_dash: launch["dash_strike"] = dash.duplicate(true)
 	launch.make_read_only()
 	_publish_host_attack_launch(encounter_id, peer_id, launch)
+	if is_dash and not bool(delta.get("hit", false)):
+		delta["launch"] = launch
+		_host_after_encounter_change(encounter_id, peer_id)
+		return verdict
 	if float(launch.travel_seconds) <= 0.0:
 		return _finish_host_strike(encounter_id, peer_id, card, move, launch, verdict, false, intent.duplicate(true))
 	delta["scheduled"] = true
@@ -3326,6 +3369,19 @@ func _finish_host_strike(encounter_id: String, peer_id: int, card: Dictionary,
 	if opponent == null or not HIT_FEEDBACK.launch_matches(launch, encounter_id,
 		str(current_card.get("creature_uid", "")), str(opponent.get("uid")),
 		int(runtime.get("body_generation")) if runtime != null else 0): return {}
+	if move.get("utility", {}).get("kind") == "dash_strike":
+		var dash: Dictionary = launch.get("dash_strike", {})
+		if committed.get("resolved") != true or committed.get("credited") == true \
+			or committed.get("dash_resolution", {}).get("phase") != "resolved" \
+			or committed.get("dash_resolution", {}).get("receipt") != dash or dash.get("hit") != true \
+			or dash.get("binding") != launch.get("attacker_binding") \
+			or dash.get("target_uid") != str(opponent.get("uid")) \
+			or dash.get("target_generation") != record.get("opponent", {}).get("body_generation") \
+			or dash.get("target_body_instance_id") != wild.get_instance_id() or float(opponent.get("hp")) <= 0.0 \
+			or not striker.global_position.is_equal_approx(dash.get("to", Vector3.INF)) \
+			or not wild.global_position.is_equal_approx(dash.get("target_position", Vector3.INF)): return {}
+		if not _encounter_host.call("begin_dash_damage", encounter_id, peer_id,
+			int(intent.get("action", 0)), launch.attacker_binding, dash): return {}
 	var enemy_profile: Dictionary = wild.call("combat_config")
 	var armor := COMBAT_AI.armored_front_scale(enemy_profile, wild.call("centre"), wild.call("facing"), striker.call("centre"))
 	var publication := _f22_begin_publication(encounter_id, peer_id, int(intent.get("action", 0)), striker, wild)

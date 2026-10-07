@@ -149,7 +149,7 @@ func _run() -> void:
 			"test_creature_history.gd", "test_director_join_snapshot.gd", "test_director_projectile_deployment_binding.gd",
 			"test_enemy_named_attack.gd", "test_f21_hit_presentation.gd", "test_f23_live_moves.gd",
 			"test_f24_host_commands.gd", "test_foundation_combat_manager_context.gd", "test_foundation_retry_admission.gd",
-			"test_harness_max_hp.gd", "test_hosted_combat_staging.gd", "test_hud_presentation_lifecycle.gd",
+			"test_harness_max_hp.gd", "test_hit_feedback.gd", "test_hosted_combat_staging.gd", "test_hud_presentation_lifecycle.gd",
 			"test_hud_widgets.gd", "test_input_device.gd", "test_input_glyph_rebinding.gd",
 			"test_input_glyph_verbs.gd", "test_level_up_announcement.gd", "test_livewire_cooldowns.gd",
 			"test_motion_prefs.gd", "test_move_commit_runtime.gd", "test_multiplayer_identity_0912.gd",

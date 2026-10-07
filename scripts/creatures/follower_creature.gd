@@ -205,6 +205,63 @@ func is_local_deployment() -> bool:
 	return true
 
 
+## Called once by the host's retained Dash Strike resolution, at its admitted
+## strike tick. This is a displacement in metres, with no burst/iframe state.
+func apply_admitted_dash(move: Dictionary, original: Dictionary, target: Node3D) -> Dictionary:
+	var effects := preload("res://scripts/combat/utility_effects.gd")
+	var binding: Dictionary = original.get("binding", {})
+	if not effects.valid_definition(move) or move.get("slot") != "utility" \
+		or move.utility.get("kind") != "dash_strike" or move.utility.get("invulnerable") != false \
+		or _following or not is_inside_tree() or not is_instance_valid(target) or target == self \
+		or not target.is_inside_tree() or not target is PhysicsBody3D or not target.has_method("body_radius") \
+		or binding.get("body_instance_id") != get_instance_id() \
+		or binding.get("creature_uid") != move.get("actor_binding", {}).get("creature_uid") \
+		or original.get("action_id") != move.get("action_id") \
+		or original.get("target_body_instance_id") != target.get_instance_id() \
+		or not is_instance_valid(arena) or not arena.is_inside_tree() \
+		or not arena.has_method("clamp_point") or not arena.has_method("_crossed_a_surface") \
+		or not arena.has_method("contains") or arena.call("contains", global_position) != true \
+		or get_world_3d() == null or floor_snap_length <= 0.0 or body_radius() <= 0.0: return {}
+	var opponent := target.get("instance") as RefCounted
+	if opponent == null or str(opponent.get("uid")) != original.get("target_uid") \
+		or not is_finite(float(opponent.get("hp"))) or float(opponent.get("hp")) <= 0.0 \
+		or not original.get("source_position") is Vector3 or not original.get("facing") is Vector3: return {}
+	var start := global_position
+	var direction: Vector3 = original.facing
+	direction.y = 0.0
+	if not start.is_equal_approx(original.source_position) or not direction.is_finite() or direction.is_zero_approx(): return {}
+	var requested := float(move.utility.advance_metres)
+	var destination: Vector3 = arena.call("clamp_point", start + direction.normalized() * requested, 0.0)
+	var motion := (destination - start).limit_length(requested)
+	# A contact-tick sweep cannot bridge a hole. Use the body's existing snap
+	# reach and walkable-floor normal, without seating or teleporting the body.
+	var steps := maxi(1, ceili(motion.length() / minf(body_radius(), floor_snap_length)))
+	var supported := start
+	for index in range(1, steps + 1):
+		var sample := start + motion * (float(index) / float(steps))
+		var query := PhysicsRayQueryParameters3D.create(sample + Vector3.UP * safe_margin,
+			sample - Vector3.UP * floor_snap_length, collision_mask, [get_rid(), (target as PhysicsBody3D).get_rid()])
+		var support := get_world_3d().direct_space_state.intersect_ray(query)
+		if support.is_empty() or (support.normal as Vector3).dot(Vector3.UP) < cos(floor_max_angle): break
+		supported = sample
+	var collision: KinematicCollision3D = move_and_collide(supported - start) if not supported.is_equal_approx(start) else null
+	if not is_inside_tree() or is_queued_for_deletion() or not is_instance_valid(target) or not target.is_inside_tree(): return {}
+	var safe := is_instance_valid(arena) and arena.call("_crossed_a_surface", self, start) != true \
+		and arena.call("contains", global_position) == true and global_position.distance_to(start) <= requested + 0.001
+	if not safe: global_position = start
+	var gap := Vector2(global_position.x - target.global_position.x, global_position.z - target.global_position.z).length()
+	var hit := safe and collision != null and collision.get_collider() == target \
+		and gap <= body_radius() + float(target.call("body_radius")) + safe_margin * 2.0
+	var receipt := {"ok": true, "action_id": str(original.action_id), "binding": binding.duplicate(true),
+		"target_uid": str(original.target_uid), "target_generation": int(original.target_generation),
+		"target_body_instance_id": int(original.target_body_instance_id),
+		"requested_advance_metres": requested, "applied_advance_metres": start.distance_to(global_position),
+		"from": start, "to": global_position, "target_position": target.global_position, "hit": hit}
+	if hit: receipt["contact"] = collision.get_position()
+	receipt.make_read_only()
+	return receipt
+
+
 func _ready() -> void:
 	super()
 	add_to_group(DEPLOYED_GROUP)

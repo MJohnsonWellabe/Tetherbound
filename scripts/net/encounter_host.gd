@@ -457,7 +457,7 @@ func opponent_hp(encounter_id: String) -> float:
 ## `_rng` (the roll is deliberately NOT made here: the damage arithmetic lives
 ## in `combat_manager.gd` beside the creature stats it reads, and a second copy
 ## of it in this file would be a second copy that eventually disagrees).
-func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dictionary:
+func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary, dash_sweep: Callable = Callable()) -> Dictionary:
 	if not pending_tether_items(str(intent.get("encounter_id", ""))).is_empty():
 		return _refuse("strike_intent", peer_id, "item_save_pending", "The original item is still being saved.")
 	var encounter_id := str(intent.get("encounter_id", ""))
@@ -526,7 +526,53 @@ func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dict
 			_refuse("strike_intent", peer_id, "friendly_target",
 				"You can't attack your own side."), true)
 
-	var connected := _connects_now_or_recently(move, host_origin, facing, rec, intent, now_ms)
+	var connected: Dictionary
+	var dash_receipt := {}
+	if move.get("utility", {}).get("kind") == "dash_strike":
+		# The callback is a separate, trusted Director argument, never an intent
+		# value. All ordinary admission/friendly/publication guards ran first.
+		if not from_start or not dash_sweep.is_valid() or started.get("slot") != "utility" \
+			or not UTILITY_EFFECTS.valid_definition(move) or move.utility.get("invulnerable") != false \
+			or not _self_utility_actor_current(encounter_id, peer_id, started.binding) \
+			or not _self_utility_opponent_current(rec, started.get("utility_opponent", {})):
+			return _refuse("strike_intent", peer_id, "dash_unavailable", "That dash cannot resolve from this creature.")
+		# Consume the retained start before physics can notify another caller.
+		# A failed/cancelled callback stays consumed and can never sweep again.
+		started["resolved"] = true
+		started["dash_resolution"] = {"phase": "sweeping"}
+		_strike_state_for(encounter_id)[peer_id]["move_start"] = started
+		_strike_state_for(encounter_id)[peer_id]["move_starts"][str(action)] = started
+		var swept: Variant = dash_sweep.call()
+		var retained := move_commit(encounter_id, peer_id, action)
+		if retained.get("action_id") != started.action_id or retained.get("binding") != started.binding \
+			or retained.get("move") != started.move or retained.get("cancelled") == true \
+			or retained.get("dash_resolution", {}).get("phase") != "sweeping" \
+			or strike_authority_state(encounter_id, peer_id).get("last_action") != action \
+			or not _self_utility_actor_current(encounter_id, peer_id, started.binding) \
+			or not _self_utility_opponent_current(encounters.get(encounter_id, {}), started.utility_opponent):
+			return _refuse("strike_intent", peer_id, "cancelled_dash", "That dash's original actor is no longer current.")
+		var valid := swept is Dictionary and swept.get("ok") == true \
+			and swept.get("action_id") == started.action_id and swept.get("binding") == started.binding \
+			and swept.get("target_uid") == started.utility_opponent.uid \
+			and swept.get("target_generation") == started.utility_opponent.body_generation \
+			and swept.get("hit") is bool and swept.get("from") is Vector3 and swept.get("to") is Vector3 \
+			and (swept.from as Vector3).is_finite() and (swept.to as Vector3).is_finite() \
+			and swept.get("target_position") is Vector3 and (swept.target_position as Vector3).is_finite() \
+			and UTILITY_EFFECTS._number(swept.get("target_body_instance_id"), 1.0, INF) \
+			and swept.get("requested_advance_metres") == move.utility.advance_metres \
+			and UTILITY_EFFECTS._number(swept.get("applied_advance_metres"), 0.0, float(move.utility.advance_metres) + 0.001) \
+			and (swept.from as Vector3).distance_to(swept.to) <= float(move.utility.advance_metres) + 0.001 \
+			and absf(float(swept.applied_advance_metres) - (swept.from as Vector3).distance_to(swept.to)) <= 0.001
+		retained["dash_resolution"] = {"phase": "resolved" if valid else "failed"}
+		if valid: retained.dash_resolution["receipt"] = swept.duplicate(true)
+		_strike_state_for(encounter_id)[peer_id]["move_start"] = retained
+		_strike_state_for(encounter_id)[peer_id]["move_starts"][str(action)] = retained
+		if not valid: return _refuse("strike_intent", peer_id, "failed_dash", "That dash could not resolve safely.")
+		started = retained
+		dash_receipt = swept.duplicate(true)
+		connected = {"hit": bool(dash_receipt.hit), "at_ms": now_ms}
+	else:
+		connected = _connects_now_or_recently(move, host_origin, facing, rec, intent, now_ms)
 	var lock_ms := move_lock_ms(move)
 	var deadline_ms := int(authority.deadline_ms) if from_start else now_ms + lock_ms
 	var starts: Dictionary = _strike_state_for(encounter_id).get(peer_id, {}).get("move_starts", {})
@@ -541,8 +587,7 @@ func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dict
 		_strike_state_for(encounter_id)[peer_id]["move_start"] = started
 		starts[str(action)] = started
 	_strike_state_for(encounter_id)[peer_id]["move_starts"] = starts
-	return _record_strike_receipt(intent, peer_id, view, rec,
-		_ok("strike_intent", peer_id, {
+	var delta := {
 		"encounter_id": encounter_id,
 		"hit": bool(connected.get("hit", false)),
 		"target": "opponent" if bool(connected.get("hit", false)) else "",
@@ -550,7 +595,10 @@ func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary) -> Dict
 		"accepted_action": action,
 		"accepted_at_ms": now_ms,
 		"cooldown_deadline_ms": deadline_ms,
-		}), true)
+		}
+	if not dash_receipt.is_empty(): delta["dash_strike"] = dash_receipt
+	return _record_strike_receipt(intent, peer_id, view, rec,
+		_ok("strike_intent", peer_id, delta), true)
 
 
 ## The director supplies the admitted owned row and actual body binding. The
@@ -656,6 +704,26 @@ func move_commit(id: String, peer: int, action: int = 0) -> Dictionary:
 	var authority: Dictionary = (_strike_authority.get(id, {}) as Dictionary).get(peer, {})
 	var started: Dictionary = authority.get("move_start", {}) if action == 0 else authority.get("move_starts", {}).get(str(action), {})
 	return started.duplicate(true)
+
+
+## Dash's source sweep is already consumed. Claim its same retained original
+## before the HP writer, including on an untracked local wild encounter.
+func begin_dash_damage(id: String, peer: int, action: int, binding: Dictionary, receipt: Dictionary) -> bool:
+	var started := move_commit(id, peer, action)
+	var rec: Dictionary = encounters.get(id, {})
+	if started.get("action") != action or started.get("binding") != binding \
+		or started.get("resolved") != true or started.get("cancelled") == true or started.get("credited") == true \
+		or started.get("slot") != "utility" or started.get("move", {}).get("utility", {}).get("kind") != "dash_strike" \
+		or started.get("dash_resolution", {}).get("phase") != "resolved" \
+		or started.get("dash_resolution", {}).get("receipt") != receipt or receipt.get("hit") != true \
+		or strike_authority_state(id, peer).get("last_action") != action \
+		or not _self_utility_actor_current(id, peer, binding) \
+		or not _self_utility_opponent_current(rec, started.get("utility_opponent", {})) \
+		or not UTILITY_EFFECTS._number(rec.get("opponent", {}).get("hp"), 0.001, INF): return false
+	started.dash_resolution["phase"] = "damage_committing"
+	_strike_state_for(id)[peer]["move_start"] = started
+	_strike_state_for(id)[peer]["move_starts"][str(action)] = started
+	return true
 
 
 func move_resource_snapshot(id: String, peer: int, uid: String) -> Dictionary:
