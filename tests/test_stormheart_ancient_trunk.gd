@@ -4,23 +4,25 @@ const TREE := preload("res://scripts/world/stormheart_tree.gd")
 
 class CandidateTree:
 	extends "res://scripts/world/stormheart_tree.gd"
+	var presentation_enabled := true
 	func _read_presentation() -> Dictionary:
 		var config := super._read_presentation()
-		config.enabled = true
+		config.enabled = presentation_enabled
 		for key: String in ["ancient_trunk","built_detail","branching_crown","canopy_atlas","visible_roots"]:
 			config[key].enabled = true
 		return config
 
 
 func test_integrated_candidate_preserves_every_physical_shape() -> void:
-	var baseline := TREE.new()
+	var baseline := CandidateTree.new()
+	baseline.presentation_enabled = false
 	baseline.build()
 	var candidate := CandidateTree.new()
 	candidate.build()
 	assert_eq(_physics_signature(candidate),_physics_signature(baseline),
 		"all floor, ramp and rail collision shapes/transforms must be byte-identical")
 	assert_true(candidate.has_node("BuiltDetail"),"execute the enabled production dressing path")
-	assert_false(baseline.has_node("BuiltDetail"),"production defaults remain off")
+	assert_false(baseline.has_node("BuiltDetail"),"explicit flag-off baseline preserves the original dressing path")
 	assert_true(candidate.has_node("BranchCrownWestLow"),"exercise integrated crown and articulated trunk")
 	var root_visual := candidate.get_node("ButtressRoot1") as MeshInstance3D
 	var root_vertices: PackedVector3Array = root_visual.mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
