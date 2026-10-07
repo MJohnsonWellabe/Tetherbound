@@ -1,13 +1,13 @@
 {
-  "scored_rows": 6,
+  "scored_rows": 7,
   "result": "OPEN",
   "scope": "Full release bar per owning ART9.1, separate from literalF41#4 identity PASS",
   "judge": "/root/blind_listener_f10",
-  "unassessed_rows": 38,
+  "unassessed_rows": 37,
   "recapture": "COMPLETE: retained shippingbaseline348abfaebb320frames, candidate94ed320frames and9b320supplementalhero",
   "rule": "Unassessed rows retain prior priority floor only, not claimed as rescored; no central catalogue edit",
   "review": "REQUEST_CHANGES for closure; numeric rescore incomplete",
-  "next": "Targeted applicable post-F26 captures for38 gaps; no repeat200-frame scenery run",
+  "next": "Targeted applicable post-F26 captures for37 incompletely assessed rows, including hurt coverage of P2-016; no repeat200-frame scenery run",
   "rows": [
     {
       "item_id": "P2-042",
@@ -45,11 +45,13 @@
       "importance": 5,
       "prior_status": "needs_capture",
       "subject": "creature hurt and movement poses",
-      "finding": "UNASSESSED: targeted current biome capture missing for creature hurt and movement poses; no inferred score/improvement",
+      "finding": "PARTIAL severity3/5 for movement: Hollows/Glass Field F9-F14 Voltarach silhouette similar across tell/strike/recovery, state chiefly HUD/effects; Sparkit changes crouched/upright. Hurt UNASSESSED: Old Rodfolk F19 effects obscure body; need unobscured hurt onset/recovery and identified locomotion. Remains BLOCKED for complete rescore.",
       "exposure": 5,
       "original_defect": "Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename",
       "severity_new": null,
-      "impact_new": null
+      "impact_new": null,
+      "partial_severity_new": 3,
+      "partial_impact_new": 75
     },
     {
       "item_id": "P2-037",
@@ -67,17 +69,17 @@
     },
     {
       "item_id": "P2-092",
-      "status": "BLOCKED",
+      "status": "OPEN",
       "prior_priority_floor": 100,
       "owner_lane": "A",
       "importance": 5,
       "prior_status": "open",
       "subject": "named wild fight actor spacing",
-      "finding": "UNASSESSED: targeted current biome capture missing for named wild fight actor spacing; no inferred score/improvement",
+      "finding": "Retained actual Stormwood fight37670661208: hollows_alpha F1 trainer masked under Voltarach legs; glass_field_alpha F6 similarly masked; Hollows F12-F14 partially merge Sparkit with front-leg cluster. Projected occlusion visible; physical intersection unproven. Same blind F41 judge; full release bar remains OPEN.",
       "exposure": 5,
       "original_defect": "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer",
-      "severity_new": null,
-      "impact_new": null
+      "severity_new": 4,
+      "impact_new": 100
     },
     {
       "item_id": "P2-002",
