@@ -1,0 +1,17 @@
+F33#2 Warden gear diagnostic — not acceptance evidence
+Run37671353214 @b8d1cbef518f163e6dd6cb0030d981b72e7734bd
+Existing smoke_meadows_named_c2c3.gd; one seed; Terrapup; Rootiron +0; Warden L18; retained five.
+Actual production Manager/AI bodies on existing flat simulation stage; direct gear fixture, no earned/save/co-op/canonical admission claim.
+Both pilots reach combat and win; no admission refusal or simulation stall reported.
+C2 cost-ratio FAIL: READER0.275 / MASHER0.432 >0.55. One seed cannot establish a cohort verdict.
+Separate output failure: caller-selected JSON parent was absent; no JSON receipt produced.
+No shipping flags, balance numbers, policies or thresholds changed.
+
+Actual run lines:
+MEADOWS_C2C3 warden_aldis terrapup MASHER L18 runs=1 win=1.00 med_lead=1.000 lead_faint=1.00 wipe=0.00 max_hit=0.274 tell=[0.90,1.40] diver_tell=-1.00 med_s=100.6 stalled=0
+MEADOWS_C2C3_HITS warden_aldis terrapup MASHER neutral_worst=0.286 by={ "foe": "tuskroot", "target": "bramblebun", "move": "earth_fist" } | any_matchup_worst=0.274 by={ "foe": "tuskroot", "target": "bramblebun", "move": "earth_fist", "type_mult": 1.0 }
+MEADOWS_C2C3 warden_aldis terrapup READER L18 runs=1 win=1.00 med_lead=0.745 lead_faint=0.00 wipe=0.00 max_hit=0.411 tell=[0.90,1.40] diver_tell=-1.00 med_s=164.2 stalled=0
+MEADOWS_C2C3_HITS warden_aldis terrapup READER neutral_worst=0.416 by={ "foe": "brooktail", "target": "pipwing", "move": "aqua_shot" } | any_matchup_worst=0.411 by={ "foe": "brooktail", "target": "pipwing", "move": "aqua_shot", "type_mult": 0.8 }
+MEADOWS_C2C3_VERDICT warden_aldis terrapup FAIL -- reader/masher party cost 0.275/0.432 > 0.55
+MEADOWS_C2C3 ERROR: cannot write /home/runner/work/Tetherbound/Tetherbound/ralph/reports/F33/hosted-a-warden-admission-probe/warden.json
+MEADOWS_C2C3 done: 1 rows, 1 failing rows, 2 runs, 1 errors
