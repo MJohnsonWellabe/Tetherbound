@@ -10,6 +10,8 @@ extends SceneTree
 ## saves rendered frames of the same accepted action for independent judging.
 ## --with-vfx-units runs the existing move-effects unit selector first, in a
 ## separate headless process, before this smoke mounts any gameplay nodes.
+## --with-combat-units batches the existing files naming combat_hud.gd and
+## the changed peer/harness preload guard in that same sequential child.
 const SAVE := preload("res://tests/test_foundation_resource_save.gd")
 const DATA := preload("res://tests/test_foundation_resources.gd")
 const AUTHORITY := preload("res://scripts/net/character_authority.gd")
@@ -128,14 +130,23 @@ func _run() -> void:
 	if not _errors.is_empty():
 		_finish()
 		return
+	var selectors: Array[String] = []
 	if OS.get_cmdline_user_args().has("--with-vfx-units"):
+		selectors.append("test_move_effects.gd")
+	if OS.get_cmdline_user_args().has("--with-combat-units"):
+		selectors.append_array(["test_combat_hud_handheld_floors.gd", "test_combat_wind.gd",
+			"test_f23_live_moves.gd", "test_f24_host_commands.gd", "test_harness_max_hp.gd",
+			"test_hud_presentation_lifecycle.gd", "test_hud_widgets.gd", "test_level_up_announcement.gd",
+			"test_motion_prefs.gd", "test_move_commit_runtime.gd", "test_world_verb_input_owner_enforcement.gd",
+			"test_net_harness_heartbeat_allowance.gd"])
+	if not selectors.is_empty():
 		var output: Array = []
 		var exit_code := OS.execute(OS.get_executable_path(), PackedStringArray([
 			"--headless", "--path", ProjectSettings.globalize_path("res://"),
 			"--audio-driver", "Dummy", "--script", "res://tests/run_tests.gd", "--",
-			"--only=test_move_effects.gd"]), output, true)
+			"--only=" + ",".join(selectors)]), output, true)
 		for chunk: Variant in output: print(str(chunk))
-		_check(exit_code == 0, "existing test_move_effects.gd selector passes before the live smoke")
+		_check(exit_code == 0, "existing named unit selectors pass before the live smoke: " + ",".join(selectors))
 		if exit_code != 0:
 			_finish()
 			return
