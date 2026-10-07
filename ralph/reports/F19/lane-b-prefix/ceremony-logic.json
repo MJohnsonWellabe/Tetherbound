@@ -1,0 +1,23 @@
+{
+  "tests": 175,
+  "source_sha": "e3260ec919f1ba20052dff945e63576f4d8422e7",
+  "kind": "reused_scoped_ceremony_logic",
+  "failed": 0,
+  "checkout_input_verified": true,
+  "upstream_source_commits": [
+    "b37a7430d4a8d085612e6ad61ff088243205d16f",
+    "0a6c5153405e5279a6190de638c566a5f40220b1",
+    "e3260ec919f1ba20052dff945e63576f4d8422e7"
+  ],
+  "run_id": 37632771665,
+  "artifact_sha256": "255792301145bb830e694f5c095cf0f1d51073f117d8fc406b5386f0a669bc6a",
+  "scope": "Logic reused for unchanged ceremony source. No earned-route or criterion claim.",
+  "authorization": "issue572 comment6040920694 scoped three cherries, upstream SOURCE APPROVE",
+  "artifact_id": 11487655813,
+  "local_cherry_commits": [
+    "6f2fd41198be7ca38c81e20d2b812151139ef2ad",
+    "4f0b3410a96df7c5b04f53ae54b5b3f11db2e83d",
+    "ffc51c4e544b40d8c65a919928aaa172a69b0786"
+  ],
+  "assertions": 4926
+}

@@ -1,0 +1,20 @@
+{
+  "stderr_sha256": "72026dc449a9e9b9a014c50600027b2ab0e1310007bbb9740f614757a2839cc3",
+  "source_sha": "2f73f756c2d78569fa43f1d27766da1c812c7e75",
+  "visual": "Pending retained code-blind judge",
+  "checks": 94,
+  "independent_criterion_review": "Pending retained F20 reviewer",
+  "script": "tests/smoke_f20_ending.gd",
+  "resolution": "1280x720",
+  "raw_frame_count": 13,
+  "failures": 0,
+  "criterion_pass": false,
+  "renderer": "gl_compatibility",
+  "fixture_scope": "Explicit settled-finale fixture, not earned campaign or F20#3",
+  "raw_location": "D:/CodexTemp/tetherbound-proof/native-b-2f73f756c2/ending-frames",
+  "source_clean": true,
+  "kind": "native_f20_ending_component_proof",
+  "args": "--through-credits --capture-ending",
+  "stdout_sha256": "efdac7ecb9f848fc85096df01a72968007f885cb324d61b952fe459412ce1b29",
+  "exit_code": 0
+}
