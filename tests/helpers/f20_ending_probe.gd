@@ -406,7 +406,7 @@ func retained_valid(value: Dictionary) -> bool:
 		and value.get("uids") is Array and value.uids.size() == value.names.size() \
 		and value.get("receipts") is Array and value.get("inventory") is Array and not value.inventory.is_empty()
 
-func resumed(tree: SceneTree, game: Node, before: Dictionary) -> bool:
+func resumed(tree: SceneTree, game: Node, before: Dictionary, continuation: bool = true) -> bool:
 	if not check(retained_valid(before), "reload proof starts with a complete detached character snapshot"): return false
 	if not await ready(tree, game): return false
 	var now := retained(game)
@@ -427,6 +427,9 @@ func resumed(tree: SceneTree, game: Node, before: Dictionary) -> bool:
 	if not check(player.is_on_floor() and player.global_position.distance_to(position_before) > 0.1 \
 		and HOME.journey_context(game).get("regional_credits_seen") == true, "safe completed world returns ordinary movement"): return false
 	if not await capture(tree, "completed-world"): return false
+	# A named F20#1 endpoint retains disk/revisit/once-only credits checks.
+	# Full/default callers still require all F20#3 continuation assertions.
+	if not continuation: return true
 	return await continuation_content(tree, game)
 
 func continuation_content(tree: SceneTree, game: Node) -> bool:

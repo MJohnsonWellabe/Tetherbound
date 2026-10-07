@@ -5,12 +5,14 @@ extends SceneTree
 const PROOF := preload("res://tests/helpers/f20_ending_probe.gd")
 var proof := PROOF.new()
 var _completed := false
+var _credits_only := false
 
 func _init() -> void:
 	_run.call_deferred()
 
 func _run() -> void:
 	await process_frame
+	_credits_only = OS.get_cmdline_user_args().has("--through-credits")
 	var game := root.get_node("Game")
 	if not proof.fixture(game, "Solo"): finish(); return
 	game.set("current_realm", "stormwood")
@@ -26,7 +28,7 @@ func _run() -> void:
 	game.call("reset_for_new_game")
 	if not proof.check(game.call("load_game", 0), "production disk reload succeeds after memory reset"): finish(); return
 	change_scene_to_file("res://scenes/world/meadows_playground.tscn")
-	var resumed_result: Variant = await proof.resumed(self, game, before)
+	var resumed_result: Variant = await proof.resumed(self, game, before, not _credits_only)
 	proof.check(resumed_result == true, "all reload and completed-world continuation checks reached their final result")
 	_completed = resumed_result == true
 	finish()
@@ -36,4 +38,8 @@ func finish() -> void:
 		proof.check(false, "ending proof aborted before all required phases completed")
 	for failure: String in proof.failures: print("F20 FAIL ", failure)
 	print("F20 SOLO: %d checks, %d failures; actual input/UI/authority/disk with disclosed post-finale fixture" % [proof.checks, proof.failures.size()])
+	print("F20 SOLO ENDPOINT " + JSON.stringify({"requested": "credits_and_reload" if _credits_only else "full_continuation",
+		"passed": _completed and proof.failures.is_empty(), "continuation_content_run": not _credits_only,
+		"counts_as_f20_3_proof": _completed and proof.failures.is_empty() and not _credits_only,
+		"earned_finale_fixture": false}))
 	quit(0 if proof.failures.is_empty() else 1)
