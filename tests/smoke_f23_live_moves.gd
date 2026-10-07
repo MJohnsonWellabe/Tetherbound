@@ -5,7 +5,8 @@ extends SceneTree
 ## opponent with 600 HP, a flat capture stage, and no autonomous AI/movement.
 ## Real physical taps drive CombatManager -> Director -> AcceptedActionHost;
 ## the real host timer writes HP and Session journals that exact original.
-## --enable-ultimate-visual is the ONLY feature override. --capture-dir=<path>
+## --enable-ultimate-visual and --prove-library-arrival are process-local
+## presentation overrides. --capture-dir=<path>
 ## saves rendered frames of the same accepted action for independent judging.
 const SAVE := preload("res://tests/test_foundation_resource_save.gd")
 const DATA := preload("res://tests/test_foundation_resources.gd")
@@ -23,6 +24,7 @@ const MANAGER := preload("res://scripts/combat/combat_manager.gd")
 const HUD := preload("res://scenes/combat/combat_hud.tscn")
 const ULTIMATES := preload("res://scripts/vfx/ultimates/ultimate_library.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
+const MOVE_LIBRARY := preload("res://scripts/vfx/move_effect_library.gd")
 
 class FixtureGame extends SAVE.FixtureGame:
 	var party: RefCounted:
@@ -76,6 +78,9 @@ var _launches: Array[Dictionary] = []
 var _impacts: Array[Dictionary] = []
 var _captures: Array[String] = []
 var _saved_visual_config: Dictionary
+var _saved_library_enabled := false
+var _prove_library_arrival := false
+var _arrival_records: Dictionary = {}
 
 func _init() -> void:
 	_run.call_deferred()
@@ -94,6 +99,9 @@ func _body(script: Script, species: String, at: Vector3) -> Node3D:
 	return body
 
 func _run() -> void:
+	_saved_library_enabled = bool(MOVE_LIBRARY.config().get("enabled", false))
+	_prove_library_arrival = OS.get_cmdline_user_args().has("--prove-library-arrival")
+	if _prove_library_arrival: MOVE_LIBRARY.config()["enabled"] = true
 	_prove_mastery_transition = OS.get_cmdline_user_args().has("--prove-mastery-transition")
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--capture-dir="): _capture_dir = arg.trim_prefix("--capture-dir=")
@@ -434,8 +442,7 @@ func _setup() -> void:
 	_director.set("_encounter", rec)
 	_manager.call("bind_encounter", _director, _id, "trainer")
 	_manager.connect("attack_launched", _on_launch)
-	_manager.connect("impact_confirmed", func(on_enemy: bool, receipt: Dictionary, _where: Vector3) -> void:
-		if on_enemy: _impacts.append(receipt.duplicate(true)))
+	_manager.connect("impact_confirmed", _on_impact)
 	_capture_stage()
 	_hud = HUD.instantiate()
 	_hud.set("manager_path", NodePath("../CombatManager"))
@@ -473,6 +480,12 @@ func _tap_move(button: JoyButton, slot: String) -> Dictionary:
 	if _impacts.size() != previous + 1: return {}
 	_check(_impacts.back().slot == slot, "arrival receipt retains %s" % slot)
 	_check(float(_impacts.back().damage) > 0.0, "arrival has actual positive HP debit")
+	if _prove_library_arrival:
+		var found := false
+		for number: Label in _hud.get("_damage_numbers"):
+			if is_instance_valid(number) and str(number.get_meta("receipt", {}).get("action_id", "")) == str(accepted.action_id):
+				found = true
+		_check(found, "actual CombatHUD creates the landed action's number after contact")
 	return accepted
 
 func _wait_ready() -> void:
@@ -500,7 +513,33 @@ func _on_launch(_on_enemy: bool, launch: Dictionary, presentation: Node3D) -> vo
 	var observed := launch.duplicate(true)
 	observed["presentation_mounted"] = is_instance_valid(presentation)
 	_launches.append(observed)
+	if _prove_library_arrival and str(launch.slot) != "ultimate":
+		var action_id := str(launch.action_id)
+		_check(is_instance_valid(presentation), "library mounts the actual accepted action " + action_id)
+		if is_instance_valid(presentation):
+			var before := float(_enemy.hp)
+			presentation.connect("arrived", func() -> void:
+				_check(presentation.get("_impact") != null, "contact geometry exists before arrival " + action_id)
+				_check(is_equal_approx(float(_enemy.hp), before), "target HP remains unchanged until visible contact " + action_id)
+				for number: Label in _hud.get("_damage_numbers"):
+					_check(str(number.get_meta("receipt", {}).get("action_id", "")) != action_id,
+						"no actual HUD number precedes visible contact " + action_id)
+				_arrival_records[action_id] = {"move_id": str(launch.move_id),
+					"contact_frame": Engine.get_process_frames(), "hp_at_contact": float(_enemy.hp)}
+			, CONNECT_ONE_SHOT)
 	if launch.slot == "ultimate" and not _capture_dir.is_empty(): _capture_ultimate(launch)
+
+func _on_impact(on_enemy: bool, receipt: Dictionary, _where: Vector3) -> void:
+	if not on_enemy: return
+	_impacts.append(receipt.duplicate(true))
+	if not _prove_library_arrival or str(receipt.slot) == "ultimate": return
+	var action_id := str(receipt.action_id)
+	_check(_arrival_records.has(action_id), "host impact follows the same action's visible contact " + action_id)
+	if _arrival_records.has(action_id):
+		_arrival_records[action_id]["impact_frame"] = Engine.get_process_frames()
+		_arrival_records[action_id]["hp_after_impact"] = float(_enemy.hp)
+		_check(float(_enemy.hp) < float(_arrival_records[action_id].hp_at_contact),
+			"host applies positive HP debit after contact " + action_id)
 
 func _capture_ultimate(launch: Dictionary) -> void:
 	var capture_directory := _capture_dir.path_join("rank-%d" % int(launch.mastery_rank)) if _prove_mastery_transition else _capture_dir
@@ -581,6 +620,7 @@ func _apply_saved_mastery(event: Dictionary, move_id: String, initial: int) -> v
 
 func _finish() -> void:
 	ULTIMATES._config = _saved_visual_config
+	MOVE_LIBRARY.config()["enabled"] = _saved_library_enabled
 	for button: JoyButton in [JOY_BUTTON_X, JOY_BUTTON_Y, JOY_BUTTON_B, JOY_BUTTON_A, JOY_BUTTON_RIGHT_SHOULDER]:
 		var event := InputEventJoypadButton.new()
 		event.button_index = button
@@ -589,6 +629,7 @@ func _finish() -> void:
 	print("F23_LIVE_MOVES " + JSON.stringify({"checks": _checks, "errors": _errors,
 		"launches": _launches.size(), "impacts": _impacts.size(), "captures": _captures,
 		"visual_gate_override": OS.get_cmdline_user_args().has("--enable-ultimate-visual"),
+		"library_arrival_override": _prove_library_arrival, "arrival_records": _arrival_records,
 		"claim": "focused fixture; no campaign, co-op, device or visual acceptance"}))
 	if is_instance_valid(_world): _world.free()
 	if is_instance_valid(_session): _session.free()
