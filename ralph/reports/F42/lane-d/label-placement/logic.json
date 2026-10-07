@@ -6,7 +6,7 @@
   "independent_review": {
     "reviewer": "/root/f42_visual_review",
     "verdict": "APPROVE source only",
-    "pending": "Paired actual map16/map32 capture and final original reviewer verdict"
+    "pending": "Original source reviewer final actualproof; cannot override retained pixelBLOCK."
   },
   "proof": "tests/run_tests.gd",
   "run_id": 37679905106,
@@ -40,7 +40,7 @@
     "Heavy HUD box presentation"
   ],
   "flags": "none",
-  "disposition": "Affected logic passes. No criterion READY or visual/controller claim from source/unit proof alone.",
+  "disposition": "BLOCKED visual component; no READY. Unit/controller and32pixelsPASS,16mapcontextfails. Preserve source onlanebranch unREADY; coordinator mayrescope. Next:F39#0 correctedauthoredcamp shippingcapture.",
   "area_proof": {
     "run_id": 37680516233,
     "artifact_id": 11507629839,
@@ -50,5 +50,42 @@
     "seconds": 104,
     "result": "PASS: physical LB cycles all five and skips resting; resolved travel drives minimap; real camera orbit independent; Map/Back repeated open/close, RT/LT zoom, right-stick pan/clamp, world recovery. Honest world-edge clamp499.3m reported.",
     "fixture": "Existing five-creature seeded party; sixth refusal checked. Existing headless area smoke, not an earned journey or pixel proof."
-  }
+  },
+  "visual_proof": {
+    "source_commit": "d46a507effc9c0b21160aaa388cfb4a865c82eed",
+    "run_id": 37682719528,
+    "artifact_id": 11510458948,
+    "proof": "tools/phase2_capture_ui.gd --tabs=map --paired-720 --map-zoom-samples",
+    "complete": true,
+    "frames": 12,
+    "failures": [],
+    "exit": 0,
+    "seconds": 1109,
+    "resolutions": [
+      "1920x1080",
+      "1280x720"
+    ],
+    "fixture": "Stocked existing party/satchel, actual production Meadows scene; direct zoom view-state only, original fog/discoveries, no earned journey/peer/save proof.",
+    "reviewer": "/root/f26_presets_review",
+    "verdict": "BLOCK",
+    "map16": "Bothrasters names legible/unclipped/clearcentralicons but cover lowerpartofrevealedterrain/road.",
+    "map32": "PASS bothrasters; labelinupperleftblackmargin clearterrain/icons/edges."
+  },
+  "capture_attempts": [
+    {
+      "run_id": 37681271001,
+      "artifact_id": 11509435628,
+      "exit": 1,
+      "seconds": 7,
+      "frames": 0,
+      "cause": "D supplied shots path; existing tool requires res://ralph/reports/VISUAL/phase2/. Preflight refused beforeworldboot; guard retained."
+    },
+    {
+      "run_id": 37682719528,
+      "artifact_id": 11510458948,
+      "exit": 0,
+      "frames": 12,
+      "disposition": "ExecutionPASS, scopedpixelBLOCK at16terraincoverage;32PASS. No third boundedattempt."
+    }
+  ]
 }
