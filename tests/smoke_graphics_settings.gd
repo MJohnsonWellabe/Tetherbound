@@ -239,4 +239,23 @@ func _run_forward_controls() -> void:
 	for line: String in output:
 		print(line)
 	_check(exit_code == 0, "fresh native process reloads all six custom controls and persisted renderer")
+	# Run the unchanged complementary Low/default/focus/save-routing branch
+	# with a separate device profile, sequentially in this same hosted batch.
+	var data_key := "XDG_DATA_HOME" if OS.get_name() == "Linux" else "APPDATA"
+	var had_data_key := OS.has_environment(data_key)
+	var previous_data_root := OS.get_environment(data_key)
+	OS.set_environment(data_key, ProjectSettings.globalize_path("user://graphics-low-%d" % OS.get_process_id()))
+	output.clear()
+	exit_code = OS.execute(OS.get_executable_path(), PackedStringArray([
+		"--path", ProjectSettings.globalize_path("res://"), "--audio-driver", "Dummy",
+		"--rendering-method", "gl_compatibility", "--rendering-driver", "opengl3",
+		"--resolution", "1920x1080", "--script", "res://tests/smoke_graphics_settings.gd",
+		"--", "--graphics-proof"]), output, true)
+	if had_data_key:
+		OS.set_environment(data_key, previous_data_root)
+	else:
+		OS.unset_environment(data_key)
+	for line: String in output:
+		print(line)
+	_check(exit_code == 0, "complementary Low/default/focus/restart-save smoke passes in a separate native process")
 	print("Forward+ graphics controls proof: %d failures; no biome appearance or performance claim" % _failures.size())
