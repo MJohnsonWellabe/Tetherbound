@@ -219,6 +219,7 @@ var _arena_centre: Vector3 = Vector3.ZERO
 
 var _action: Action = Action.READY
 var _action_timer: float = 0.0
+var _accepted_strike_not_before_ms: int = 0
 var _pending_move: Dictionary = {}
 var _quick_cooldown: float = 0.0
 var _charged_cooldown: float = 0.0
@@ -2437,6 +2438,9 @@ func _tick_action(delta: float) -> void:
 		return
 
 	if _action == Action.WINDUP:
+		# Physics catch-up can consume wind-up before the host's real-time fence.
+		if Time.get_ticks_msec() < _accepted_strike_not_before_ms:
+			return
 		_resolve_player_strike()
 		_action = Action.RECOVERY
 		_action_timer = float(_pending_move.get("recovery", 0.2))
@@ -4214,6 +4218,10 @@ func _begin_move_presentation(move: Dictionary) -> void:
 	elif slot == "charged": _charged_cooldown = float(move.get("cooldown", 1.2))
 	_action = Action.WINDUP
 	_action_timer = float(_pending_move.get("windup", 0.18))
+	# Receipt-local time needs no clock synchronization with the host. The host
+	# froze this duration before sending it, so a full local wait cannot be early.
+	_accepted_strike_not_before_ms = Time.get_ticks_msec() + ceili(_action_timer * 1000.0) \
+		if int(_pending_move.get("accepted_action", 0)) > 0 else 0
 	# Face and lunge at the START of the wind-up, not at the strike. The lunge
 	# used to fire on the same frame as the connect test, and an impulse only
 	# changes velocity — position is integrated NEXT physics frame — so the
@@ -4572,9 +4580,14 @@ func _nudge_camera_on_landing(charged: bool) -> void:
 ## never before the effect arrives (COMBAT §11, F25#3).
 func _present_local_contact(where: Vector3, charged: bool, tint: Variant, hit_fraction: float,
 		receipt: Dictionary, on_enemy: bool = true) -> void:
+	if state != State.ACTIVE and state != State.RESOLVING: return
 	var struck := _wild if on_enemy else _ally_body
+	var target_instance := _enemy if on_enemy else active_creature()
+	if not is_instance_valid(struck): return
+	if not receipt.is_empty() and (target_instance == null \
+			or str(receipt.get("target_uid", "")) != str(target_instance.get("uid"))): return
 	_flash_host_impact(where, charged, tint, struck, hit_fraction, receipt)
-	if receipt.is_empty() or state != State.ACTIVE: return
+	if receipt.is_empty(): return
 	_play_impact_feel(receipt)
 	if is_instance_valid(struck): _emit_host_impact(on_enemy, receipt, struck)
 
