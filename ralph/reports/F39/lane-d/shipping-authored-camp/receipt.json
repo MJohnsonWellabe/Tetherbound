@@ -1,0 +1,2325 @@
+{
+  "criterion": "F39#0 OPEN; corrected camp and shipping-driver bounded proof only",
+  "source_commit": "288881998e5db8255bbc9304a1f97459a27e6164",
+  "run_id": 37685616751,
+  "artifact_id": 11512056061,
+  "proof": "tools/capture_f39_catalogue.gd --f39-shipping --subset=Saddle --times=day,night",
+  "result": {
+    "complete": true,
+    "frames": 10,
+    "failures": [],
+    "exit": 0,
+    "seconds": 491
+  },
+  "resolution": [
+    1280,
+    720
+  ],
+  "renderer": "gl_compatibility",
+  "material_mode": "Observe production materials; no visual override",
+  "material_observations": [
+    {
+      "gates": {
+        "visual_far_core_enabled": false
+      },
+      "matches_requested": true,
+      "node": "/root/WaterArchipelago/WaterVeilfall/VeilfallWhiteFalls/VeilfallFallColumns",
+      "uniforms": {
+        "visual_far_core_floor": null,
+        "visual_far_edge_floor": null,
+        "visual_far_end_m": null,
+        "visual_far_start_m": null
+      }
+    },
+    {
+      "gates": {
+        "visual_groups_enabled": true,
+        "visual_ridges_enabled": false
+      },
+      "matches_requested": true,
+      "node": "/root/WaterArchipelago/WaterVeilfall/WaterCurrentFlow",
+      "uniforms": {
+        "visual_band_gain": 0.55,
+        "visual_breakup": 0.55,
+        "visual_cell_length_m": 11.0,
+        "visual_cell_width_m": 3.6,
+        "visual_density": 0.62,
+        "visual_ridge_gain": 0.7,
+        "visual_ridge_spacing_m": 23.0,
+        "visual_ridge_width_m": 4.5
+      }
+    }
+  ],
+  "frames": [
+    {
+      "actual_position_ground_y": 6.23875951766968,
+      "band_display_name": "Island 5 \u00e2\u20ac\u201d Tidal Cradle",
+      "band_id": "tidal_cradle",
+      "biome_display_name": "Tidewake",
+      "biome_id": "water",
+      "bytes": 1519788,
+      "camera_player_distance_m": 5.8211464881897,
+      "camera_position": [
+        557.804443359375,
+        9.47976398468018,
+        1362.38903808594
+      ],
+      "camera_rig_spring_length": 5.19999980926514,
+      "camera_rig_transform": {
+        "basis_x": [
+          -0.941633522510529,
+          0.0,
+          -0.336639702320099
+        ],
+        "basis_y": [
+          -0.0699913278222084,
+          0.978147625923157,
+          0.195776611566544
+        ],
+        "basis_z": [
+          0.329283326864243,
+          0.207911685109138,
+          -0.921056568622589
+        ],
+        "origin": [
+          556.092163085938,
+          8.39864826202393,
+          1367.17846679688
+        ]
+      },
+      "camera_transform": {
+        "basis_x": [
+          -0.941633582115173,
+          -6.4498401286528e-08,
+          -0.336639702320099
+        ],
+        "basis_y": [
+          -0.0699913501739502,
+          0.978147625923157,
+          0.195776507258415
+        ],
+        "basis_z": [
+          0.329283326864243,
+          0.207911595702171,
+          -0.921056628227234
+        ],
+        "origin": [
+          557.804443359375,
+          9.47976398468018,
+          1362.38903808594
+        ]
+      },
+      "consecutive_grounded_frames": 3,
+      "debug_travel": true,
+      "destination_display_name": "Tidal Cradle Saddle Camp",
+      "destination_index": 10,
+      "f39_heading_offset_deg": 0.0,
+      "file": "res://shots/lane-d/f39-shipping-authored-camp/water__tidal_cradle__10__tidal_cradle_saddle_camp__day__heading_0.0.png",
+      "frame_id": "water__tidal_cradle__10__tidal_cradle_saddle_camp__day__heading_0.0",
+      "nearby_creature_records_160m": [
+        {
+          "body_height_m": 3.55,
+          "body_radius_m": 1.18230355813953,
+          "node_path": "road_visibility_shellwatch_to_tidal_cradle_sheltered_01_0",
+          "node_scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "position": [
+            508.349975585938,
+            -0.994000017642975,
+            1322.65002441406
+          ],
+          "species_id": "water_mirejaw"
+        },
+        {
+          "body_height_m": 4.15,
+          "body_radius_m": 1.38212951162791,
+          "node_path": "road_visibility_shellwatch_to_tidal_cradle_sheltered_01_1",
+          "node_scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "position": [
+            501.801635742188,
+            -1.16199994087219,
+            1322.65161132812
+          ],
+          "species_id": "water_riverdrake"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_01_0",
+          "node_scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "position": [
+            575.0,
+            35.3214683532715,
+            1425.0
+          ],
+          "species_id": "water_mosshell"
+        },
+        {
+          "body_height_m": 3.7,
+          "body_radius_m": 1.34070566101695,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_01_1",
+          "node_scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "position": [
+            578.0,
+            35.268482208252,
+            1425.0
+          ],
+          "species_id": "water_cragclaw"
+        },
+        {
+          "body_height_m": 3.7,
+          "body_radius_m": 1.34070566101695,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_02_0",
+          "node_scale": [
+            0.999999761581421,
+            1.0,
+            0.999999761581421
+          ],
+          "position": [
+            625.855102539062,
+            36.5359420776367,
+            1422.46362304688
+          ],
+          "species_id": "water_cragclaw"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_02_1",
+          "node_scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "position": [
+            627.692321777344,
+            36.6856117248535,
+            1424.08337402344
+          ],
+          "species_id": "water_mosshell"
+        },
+        {
+          "body_height_m": 4.15,
+          "body_radius_m": 1.38212951162791,
+          "node_path": "water_tidal_cradle_wild_009_0",
+          "node_scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "position": [
+            567.630981445312,
+            2.39973330497742,
+            1317.24499511719
+          ],
+          "species_id": "water_riverdrake"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "water_tidal_cradle_wild_016_0",
+          "node_scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "position": [
+            494.769012451172,
+            2.35497307777405,
+            1386.001953125
+          ],
+          "species_id": "water_mosshell"
+        }
+      ],
+      "nearby_creatures_160m": 8,
+      "observed_clock": {
+        "elapsed_seconds": 200.133989333333,
+        "f39_weather": "clear",
+        "hour": 8.00535957333333,
+        "requested": "day",
+        "time_of_day": "day"
+      },
+      "player_character": "trainer",
+      "player_position": [
+        556.092163085938,
+        6.64864826202393,
+        1367.17846679688
+      ],
+      "position_xz": [
+        556.092163085938,
+        1367.17846679688
+      ],
+      "production_is_on_floor": true,
+      "resolved_ground_y": 6.23875951766968,
+      "spot_index_in_band": 2,
+      "terrain_ground_y": 6.23875951766968,
+      "time": "day",
+      "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+      "trainer_visible_intent": true,
+      "view_heading_deg": null,
+      "view_heading_xz": [
+        -0.336639702320099,
+        0.941633522510529
+      ]
+    },
+    {
+      "actual_position_ground_y": 6.23875951766968,
+      "band_display_name": "Island 5 \u00e2\u20ac\u201d Tidal Cradle",
+      "band_id": "tidal_cradle",
+      "biome_display_name": "Tidewake",
+      "biome_id": "water",
+      "bytes": 1816136,
+      "camera_player_distance_m": 5.82106399536133,
+      "camera_position": [
+        553.916259765625,
+        9.4797534942627,
+        1362.58117675781
+      ],
+      "camera_rig_spring_length": 5.19999980926514,
+      "camera_rig_transform": {
+        "basis_x": [
+          -0.903875648975372,
+          0.0,
+          0.427795112133026
+        ],
+        "basis_y": [
+          0.0889436155557632,
+          0.978147625923157,
+          0.187926337122917
+        ],
+        "basis_z": [
+          -0.418446809053421,
+          0.2079117000103,
+          -0.884123861789703
+        ],
+        "origin": [
+          556.092163085938,
+          8.39864826202393,
+          1367.17846679688
+        ]
+      },
+      "camera_transform": {
+        "basis_x": [
+          -0.903876721858978,
+          6.15578926499438e-07,
+          0.427793145179749
+        ],
+        "basis_y": [
+          0.0889433398842812,
+          0.978147804737091,
+          0.187925428152084
+        ],
+        "basis_z": [
+          -0.418444782495499,
+          0.207910761237144,
+          -0.884125053882599
+        ],
+        "origin": [
+          553.916259765625,
+          9.4797534942627,
+          1362.58117675781
+        ]
+      },
+      "consecutive_grounded_frames": 3,
+      "debug_travel": true,
+      "destination_display_name": "Tidal Cradle Saddle Camp",
+      "destination_index": 10,
+      "f39_heading_offset_deg": -45.0,
+      "file": "res://shots/lane-d/f39-shipping-authored-camp/water__tidal_cradle__10__tidal_cradle_saddle_camp__day__heading_minus45.0.png",
+      "frame_id": "water__tidal_cradle__10__tidal_cradle_saddle_camp__day__heading_minus45.0",
+      "nearby_creature_records_160m": [
+        {
+          "body_height_m": 3.55,
+          "body_radius_m": 1.18230355813953,
+          "node_path": "road_visibility_shellwatch_to_tidal_cradle_sheltered_01_0",
+          "node_scale": [
+            0.999999701976776,
+            1.0,
+            0.999999701976776
+          ],
+          "position": [
+            508.815704345703,
+            -0.994000017642975,
+            1322.87780761719
+          ],
+          "species_id": "water_mirejaw"
+        },
+        {
+          "body_height_m": 4.15,
+          "body_radius_m": 1.38212951162791,
+          "node_path": "road_visibility_shellwatch_to_tidal_cradle_sheltered_01_1",
+          "node_scale": [
+            0.999998569488525,
+            1.0,
+            0.999998569488525
+          ],
+          "position": [
+            504.248077392578,
+            -1.16199994087219,
+            1322.72436523438
+          ],
+          "species_id": "water_riverdrake"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_01_0",
+          "node_scale": [
+            0.999999463558197,
+            1.0,
+            0.999999463558197
+          ],
+          "position": [
+            575.63427734375,
+            35.318531036377,
+            1425.29528808594
+          ],
+          "species_id": "water_mosshell"
+        },
+        {
+          "body_height_m": 3.7,
+          "body_radius_m": 1.34070566101695,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_01_1",
+          "node_scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "position": [
+            578.0,
+            35.268482208252,
+            1425.0
+          ],
+          "species_id": "water_cragclaw"
+        },
+        {
+          "body_height_m": 3.7,
+          "body_radius_m": 1.34070566101695,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_02_0",
+          "node_scale": [
+            0.999999940395355,
+            1.0,
+            0.999999940395355
+          ],
+          "position": [
+            626.054260253906,
+            36.5898361206055,
+            1423.36145019531
+          ],
+          "species_id": "water_cragclaw"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_02_1",
+          "node_scale": [
+            0.999998867511749,
+            1.0,
+            0.999998867511749
+          ],
+          "position": [
+            627.590270996094,
+            36.7412185668945,
+            1425.21228027344
+          ],
+          "species_id": "water_mosshell"
+        },
+        {
+          "body_height_m": 4.15,
+          "body_radius_m": 1.38212951162791,
+          "node_path": "water_tidal_cradle_wild_009_0",
+          "node_scale": [
+            0.999999344348907,
+            1.0,
+            0.999999344348907
+          ],
+          "position": [
+            567.612243652344,
+            2.08420944213867,
+            1315.7685546875
+          ],
+          "species_id": "water_riverdrake"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "water_tidal_cradle_wild_016_0",
+          "node_scale": [
+            0.999999761581421,
+            1.0,
+            0.999999761581421
+          ],
+          "position": [
+            495.241882324219,
+            2.50355005264282,
+            1386.35827636719
+          ],
+          "species_id": "water_mosshell"
+        }
+      ],
+      "nearby_creatures_160m": 8,
+      "observed_clock": {
+        "elapsed_seconds": 200.133182333333,
+        "f39_weather": "clear",
+        "hour": 8.00532729333333,
+        "requested": "day",
+        "time_of_day": "day"
+      },
+      "player_character": "trainer",
+      "player_position": [
+        556.092163085938,
+        6.64864826202393,
+        1367.17846679688
+      ],
+      "position_xz": [
+        556.092163085938,
+        1367.17846679688
+      ],
+      "production_is_on_floor": true,
+      "resolved_ground_y": 6.23875951766968,
+      "spot_index_in_band": 2,
+      "terrain_ground_y": 6.23875951766968,
+      "time": "day",
+      "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+      "trainer_visible_intent": true,
+      "view_heading_deg": null,
+      "view_heading_xz": [
+        0.427795231342316,
+        0.903875648975372
+      ]
+    },
+    {
+      "actual_position_ground_y": 6.23875951766968,
+      "band_display_name": "Island 5 \u00e2\u20ac\u201d Tidal Cradle",
+      "band_id": "tidal_cradle",
+      "biome_display_name": "Tidewake",
+      "biome_id": "water",
+      "bytes": 1333437,
+      "camera_player_distance_m": 5.82122755050659,
+      "camera_position": [
+        560.689636230469,
+        9.47979164123535,
+        1365.00256347656
+      ],
+      "camera_rig_spring_length": 5.19999980926514,
+      "camera_rig_transform": {
+        "basis_x": [
+          -0.427795141935349,
+          0.0,
+          -0.903875648975372
+        ],
+        "basis_y": [
+          -0.187926337122917,
+          0.978147625923157,
+          0.0889436230063438
+        ],
+        "basis_z": [
+          0.884123861789703,
+          0.2079117000103,
+          -0.418446838855743
+        ],
+        "origin": [
+          556.092163085938,
+          8.39864826202393,
+          1367.17846679688
+        ]
+      },
+      "camera_transform": {
+        "basis_x": [
+          -0.427793145179749,
+          6.4363848650828e-07,
+          -0.903876721858978
+        ],
+        "basis_y": [
+          -0.187925428152084,
+          0.978147804737091,
+          0.0889433622360229
+        ],
+        "basis_z": [
+          0.884125053882599,
+          0.207910761237144,
+          -0.418444782495499
+        ],
+        "origin": [
+          560.689636230469,
+          9.47979164123535,
+          1365.00256347656
+        ]
+      },
+      "consecutive_grounded_frames": 3,
+      "debug_travel": true,
+      "destination_display_name": "Tidal Cradle Saddle Camp",
+      "destination_index": 10,
+      "f39_heading_offset_deg": 45.0,
+      "file": "res://shots/lane-d/f39-shipping-authored-camp/water__tidal_cradle__10__tidal_cradle_saddle_camp__day__heading_45.0.png",
+      "frame_id": "water__tidal_cradle__10__tidal_cradle_saddle_camp__day__heading_45.0",
+      "nearby_creature_records_160m": [
+        {
+          "body_height_m": 3.55,
+          "body_radius_m": 1.18230355813953,
+          "node_path": "road_visibility_shellwatch_to_tidal_cradle_sheltered_01_0",
+          "node_scale": [
+            0.999999701976776,
+            1.0,
+            0.999999701976776
+          ],
+          "position": [
+            510.743041992188,
+            -0.994000017642975,
+            1323.82043457031
+          ],
+          "species_id": "water_mirejaw"
+        },
+        {
+          "body_height_m": 4.15,
+          "body_radius_m": 1.38212951162791,
+          "node_path": "road_visibility_shellwatch_to_tidal_cradle_sheltered_01_1",
+          "node_scale": [
+            0.999998569488525,
+            1.0,
+            0.999998569488525
+          ],
+          "position": [
+            504.248077392578,
+            -1.16199994087219,
+            1322.72436523438
+          ],
+          "species_id": "water_riverdrake"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_01_0",
+          "node_scale": [
+            0.999999463558197,
+            1.0,
+            0.999999463558197
+          ],
+          "position": [
+            575.63427734375,
+            35.318531036377,
+            1425.29528808594
+          ],
+          "species_id": "water_mosshell"
+        },
+        {
+          "body_height_m": 3.7,
+          "body_radius_m": 1.34070566101695,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_01_1",
+          "node_scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "position": [
+            578.0,
+            35.268482208252,
+            1425.0
+          ],
+          "species_id": "water_cragclaw"
+        },
+        {
+          "body_height_m": 3.7,
+          "body_radius_m": 1.34070566101695,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_02_0",
+          "node_scale": [
+            0.99999988079071,
+            1.0,
+            0.99999988079071
+          ],
+          "position": [
+            626.572570800781,
+            36.6387977600098,
+            1423.93957519531
+          ],
+          "species_id": "water_cragclaw"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_02_1",
+          "node_scale": [
+            0.999998033046722,
+            1.0,
+            0.999998033046722
+          ],
+          "position": [
+            627.479431152344,
+            36.801097869873,
+            1426.44189453125
+          ],
+          "species_id": "water_mosshell"
+        },
+        {
+          "body_height_m": 4.15,
+          "body_radius_m": 1.38212951162791,
+          "node_path": "water_tidal_cradle_wild_009_0",
+          "node_scale": [
+            0.999999344348907,
+            1.0,
+            0.999999344348907
+          ],
+          "position": [
+            567.612243652344,
+            2.08420944213867,
+            1315.7685546875
+          ],
+          "species_id": "water_riverdrake"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "water_tidal_cradle_wild_016_0",
+          "node_scale": [
+            0.99999988079071,
+            1.0,
+            0.99999988079071
+          ],
+          "position": [
+            495.440612792969,
+            2.56450915336609,
+            1386.50476074219
+          ],
+          "species_id": "water_mosshell"
+        }
+      ],
+      "nearby_creatures_160m": 8,
+      "observed_clock": {
+        "elapsed_seconds": 200.133562666667,
+        "f39_weather": "clear",
+        "hour": 8.00534250666667,
+        "requested": "day",
+        "time_of_day": "day"
+      },
+      "player_character": "trainer",
+      "player_position": [
+        556.092163085938,
+        6.64864826202393,
+        1367.17846679688
+      ],
+      "position_xz": [
+        556.092163085938,
+        1367.17846679688
+      ],
+      "production_is_on_floor": true,
+      "resolved_ground_y": 6.23875951766968,
+      "spot_index_in_band": 2,
+      "terrain_ground_y": 6.23875951766968,
+      "time": "day",
+      "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+      "trainer_visible_intent": true,
+      "view_heading_deg": null,
+      "view_heading_xz": [
+        -0.903875648975372,
+        0.427795231342316
+      ]
+    },
+    {
+      "actual_position_ground_y": 6.23875951766968,
+      "band_display_name": "Island 5 \u00e2\u20ac\u201d Tidal Cradle",
+      "band_id": "tidal_cradle",
+      "biome_display_name": "Tidewake",
+      "biome_id": "water",
+      "bytes": 1219028,
+      "camera_player_distance_m": 5.8212103843689,
+      "camera_position": [
+        560.881652832031,
+        9.47979164123535,
+        1368.89074707031
+      ],
+      "camera_rig_spring_length": 5.19999980926514,
+      "camera_rig_transform": {
+        "basis_x": [
+          0.336639732122421,
+          0.0,
+          -0.941633462905884
+        ],
+        "basis_y": [
+          -0.195776626467705,
+          0.978147625923157,
+          -0.0699913427233696
+        ],
+        "basis_z": [
+          0.921056568622589,
+          0.2079117000103,
+          0.329283386468887
+        ],
+        "origin": [
+          556.092163085938,
+          8.39864826202393,
+          1367.17846679688
+        ]
+      },
+      "camera_transform": {
+        "basis_x": [
+          0.336641699075699,
+          6.64763149416103e-07,
+          -0.941632866859436
+        ],
+        "basis_y": [
+          -0.195775792002678,
+          0.978147804737091,
+          -0.0699908137321472
+        ],
+        "basis_z": [
+          0.921056091785431,
+          0.207910746335983,
+          0.329285472631454
+        ],
+        "origin": [
+          560.881652832031,
+          9.47979164123535,
+          1368.89074707031
+        ]
+      },
+      "consecutive_grounded_frames": 3,
+      "debug_travel": true,
+      "destination_display_name": "Tidal Cradle Saddle Camp",
+      "destination_index": 10,
+      "f39_heading_offset_deg": 90.0,
+      "file": "res://shots/lane-d/f39-shipping-authored-camp/water__tidal_cradle__10__tidal_cradle_saddle_camp__day__heading_90.0.png",
+      "frame_id": "water__tidal_cradle__10__tidal_cradle_saddle_camp__day__heading_90.0",
+      "nearby_creature_records_160m": [
+        {
+          "body_height_m": 3.55,
+          "body_radius_m": 1.18230355813953,
+          "node_path": "road_visibility_shellwatch_to_tidal_cradle_sheltered_01_0",
+          "node_scale": [
+            0.999999701976776,
+            1.0,
+            0.999999701976776
+          ],
+          "position": [
+            510.743041992188,
+            -0.994000017642975,
+            1323.82043457031
+          ],
+          "species_id": "water_mirejaw"
+        },
+        {
+          "body_height_m": 4.15,
+          "body_radius_m": 1.38212951162791,
+          "node_path": "road_visibility_shellwatch_to_tidal_cradle_sheltered_01_1",
+          "node_scale": [
+            0.999997437000275,
+            1.0,
+            0.999997437000275
+          ],
+          "position": [
+            503.886901855469,
+            -1.16199994087219,
+            1320.38928222656
+          ],
+          "species_id": "water_riverdrake"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_01_0",
+          "node_scale": [
+            0.999999463558197,
+            1.0,
+            0.999999463558197
+          ],
+          "position": [
+            575.63427734375,
+            35.318531036377,
+            1425.29528808594
+          ],
+          "species_id": "water_mosshell"
+        },
+        {
+          "body_height_m": 3.7,
+          "body_radius_m": 1.34070566101695,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_01_1",
+          "node_scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "position": [
+            578.0,
+            35.268482208252,
+            1425.0
+          ],
+          "species_id": "water_cragclaw"
+        },
+        {
+          "body_height_m": 3.7,
+          "body_radius_m": 1.34070566101695,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_02_0",
+          "node_scale": [
+            0.99999988079071,
+            1.0,
+            0.99999988079071
+          ],
+          "position": [
+            626.572570800781,
+            36.6387977600098,
+            1423.93957519531
+          ],
+          "species_id": "water_cragclaw"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_02_1",
+          "node_scale": [
+            0.999998033046722,
+            1.0,
+            0.999998033046722
+          ],
+          "position": [
+            627.479431152344,
+            36.801097869873,
+            1426.44189453125
+          ],
+          "species_id": "water_mosshell"
+        },
+        {
+          "body_height_m": 4.15,
+          "body_radius_m": 1.38212951162791,
+          "node_path": "water_tidal_cradle_wild_009_0",
+          "node_scale": [
+            0.999999284744263,
+            1.0,
+            0.999999284744263
+          ],
+          "position": [
+            567.328002929688,
+            2.08338856697083,
+            1315.94067382812
+          ],
+          "species_id": "water_riverdrake"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "water_tidal_cradle_wild_016_0",
+          "node_scale": [
+            0.999999701976776,
+            1.0,
+            0.999999701976776
+          ],
+          "position": [
+            494.081146240234,
+            2.18452382087708,
+            1385.79138183594
+          ],
+          "species_id": "water_mosshell"
+        }
+      ],
+      "nearby_creatures_160m": 8,
+      "observed_clock": {
+        "elapsed_seconds": 200.133333333333,
+        "f39_weather": "clear",
+        "hour": 8.00533333333333,
+        "requested": "day",
+        "time_of_day": "day"
+      },
+      "player_character": "trainer",
+      "player_position": [
+        556.092163085938,
+        6.64864826202393,
+        1367.17846679688
+      ],
+      "position_xz": [
+        556.092163085938,
+        1367.17846679688
+      ],
+      "production_is_on_floor": true,
+      "resolved_ground_y": 6.23875951766968,
+      "spot_index_in_band": 2,
+      "terrain_ground_y": 6.23875951766968,
+      "time": "day",
+      "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+      "trainer_visible_intent": true,
+      "view_heading_deg": null,
+      "view_heading_xz": [
+        -0.941633522510529,
+        -0.336639732122421
+      ]
+    },
+    {
+      "actual_position_ground_y": 6.23875951766968,
+      "band_display_name": "Island 5 \u00e2\u20ac\u201d Tidal Cradle",
+      "band_id": "tidal_cradle",
+      "biome_display_name": "Tidewake",
+      "biome_id": "water",
+      "bytes": 1345003,
+      "camera_player_distance_m": 5.82124853134155,
+      "camera_position": [
+        554.379943847656,
+        9.47980403900146,
+        1371.96801757812
+      ],
+      "camera_rig_spring_length": 5.19999980926514,
+      "camera_rig_transform": {
+        "basis_x": [
+          0.941633462905884,
+          0.0,
+          0.336639732122421
+        ],
+        "basis_y": [
+          0.0699913427233696,
+          0.978147625923157,
+          -0.195776626467705
+        ],
+        "basis_z": [
+          -0.329283386468887,
+          0.2079117000103,
+          0.921056568622589
+        ],
+        "origin": [
+          556.092163085938,
+          8.39864826202393,
+          1367.17846679688
+        ]
+      },
+      "camera_transform": {
+        "basis_x": [
+          0.941632628440857,
+          5.30694535427756e-07,
+          0.336642146110535
+        ],
+        "basis_y": [
+          0.0699910745024681,
+          0.978147804737091,
+          -0.195775836706161
+        ],
+        "basis_z": [
+          -0.329285889863968,
+          0.207910850644112,
+          0.921055853366852
+        ],
+        "origin": [
+          554.379943847656,
+          9.47980403900146,
+          1371.96801757812
+        ]
+      },
+      "consecutive_grounded_frames": 3,
+      "debug_travel": true,
+      "destination_display_name": "Tidal Cradle Saddle Camp",
+      "destination_index": 10,
+      "f39_heading_offset_deg": 180.0,
+      "file": "res://shots/lane-d/f39-shipping-authored-camp/water__tidal_cradle__10__tidal_cradle_saddle_camp__day__heading_180.0.png",
+      "frame_id": "water__tidal_cradle__10__tidal_cradle_saddle_camp__day__heading_180.0",
+      "nearby_creature_records_160m": [
+        {
+          "body_height_m": 3.55,
+          "body_radius_m": 1.18230355813953,
+          "node_path": "road_visibility_shellwatch_to_tidal_cradle_sheltered_01_0",
+          "node_scale": [
+            0.999999344348907,
+            1.0,
+            0.999999344348907
+          ],
+          "position": [
+            510.387084960938,
+            -0.994000017642975,
+            1322.72705078125
+          ],
+          "species_id": "water_mirejaw"
+        },
+        {
+          "body_height_m": 4.15,
+          "body_radius_m": 1.38212951162791,
+          "node_path": "road_visibility_shellwatch_to_tidal_cradle_sheltered_01_1",
+          "node_scale": [
+            0.999997496604919,
+            1.0,
+            0.999997496604919
+          ],
+          "position": [
+            503.574157714844,
+            -1.16199994087219,
+            1318.36071777344
+          ],
+          "species_id": "water_riverdrake"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_01_0",
+          "node_scale": [
+            0.999999463558197,
+            1.0,
+            0.999999463558197
+          ],
+          "position": [
+            575.63427734375,
+            35.318531036377,
+            1425.29528808594
+          ],
+          "species_id": "water_mosshell"
+        },
+        {
+          "body_height_m": 3.7,
+          "body_radius_m": 1.34070566101695,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_01_1",
+          "node_scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "position": [
+            578.0,
+            35.268482208252,
+            1425.0
+          ],
+          "species_id": "water_cragclaw"
+        },
+        {
+          "body_height_m": 3.7,
+          "body_radius_m": 1.34070566101695,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_02_0",
+          "node_scale": [
+            0.999999761581421,
+            1.0,
+            0.999999761581421
+          ],
+          "position": [
+            627.193359375,
+            36.6100540161133,
+            1422.95300292969
+          ],
+          "species_id": "water_cragclaw"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_02_1",
+          "node_scale": [
+            0.999997854232788,
+            1.0,
+            0.999997854232788
+          ],
+          "position": [
+            629.153869628906,
+            36.8202629089355,
+            1425.63928222656
+          ],
+          "species_id": "water_mosshell"
+        },
+        {
+          "body_height_m": 4.15,
+          "body_radius_m": 1.38212951162791,
+          "node_path": "water_tidal_cradle_wild_009_0",
+          "node_scale": [
+            0.999999284744263,
+            1.0,
+            0.999999284744263
+          ],
+          "position": [
+            567.328002929688,
+            2.08338856697083,
+            1315.94067382812
+          ],
+          "species_id": "water_riverdrake"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "water_tidal_cradle_wild_016_0",
+          "node_scale": [
+            0.999999701976776,
+            1.0,
+            0.999999701976776
+          ],
+          "position": [
+            494.081146240234,
+            2.18452382087708,
+            1385.79138183594
+          ],
+          "species_id": "water_mosshell"
+        }
+      ],
+      "nearby_creatures_160m": 8,
+      "observed_clock": {
+        "elapsed_seconds": 200.132199666667,
+        "f39_weather": "clear",
+        "hour": 8.00528798666667,
+        "requested": "day",
+        "time_of_day": "day"
+      },
+      "player_character": "trainer",
+      "player_position": [
+        556.092163085938,
+        6.64864826202393,
+        1367.17846679688
+      ],
+      "position_xz": [
+        556.092163085938,
+        1367.17846679688
+      ],
+      "production_is_on_floor": true,
+      "resolved_ground_y": 6.23875951766968,
+      "spot_index_in_band": 2,
+      "terrain_ground_y": 6.23875951766968,
+      "time": "day",
+      "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+      "trainer_visible_intent": true,
+      "view_heading_deg": null,
+      "view_heading_xz": [
+        0.336639791727066,
+        -0.941633522510529
+      ]
+    },
+    {
+      "actual_position_ground_y": 6.23875951766968,
+      "band_display_name": "Island 5 \u00e2\u20ac\u201d Tidal Cradle",
+      "band_id": "tidal_cradle",
+      "biome_display_name": "Tidewake",
+      "biome_id": "water",
+      "bytes": 1407107,
+      "camera_player_distance_m": 5.82138967514038,
+      "camera_position": [
+        557.804504394531,
+        9.47981452941895,
+        1362.38879394531
+      ],
+      "camera_rig_spring_length": 5.19999980926514,
+      "camera_rig_transform": {
+        "basis_x": [
+          -0.941633224487305,
+          0.0,
+          -0.336639612913132
+        ],
+        "basis_y": [
+          -0.0699913278222084,
+          0.978147625923157,
+          0.195776611566544
+        ],
+        "basis_z": [
+          0.329283326864243,
+          0.207911685109138,
+          -0.921056568622589
+        ],
+        "origin": [
+          556.092163085938,
+          8.39864826202393,
+          1367.17846679688
+        ]
+      },
+      "camera_transform": {
+        "basis_x": [
+          -0.941632628440857,
+          5.21962363109196e-07,
+          -0.336642354726791
+        ],
+        "basis_y": [
+          -0.0699911192059517,
+          0.978147804737091,
+          0.195775836706161
+        ],
+        "basis_z": [
+          0.329286068677902,
+          0.207910865545273,
+          -0.921055793762207
+        ],
+        "origin": [
+          557.804504394531,
+          9.47981452941895,
+          1362.38879394531
+        ]
+      },
+      "consecutive_grounded_frames": 3,
+      "debug_travel": true,
+      "destination_display_name": "Tidal Cradle Saddle Camp",
+      "destination_index": 10,
+      "f39_heading_offset_deg": 0.0,
+      "file": "res://shots/lane-d/f39-shipping-authored-camp/water__tidal_cradle__10__tidal_cradle_saddle_camp__night__heading_0.0.png",
+      "frame_id": "water__tidal_cradle__10__tidal_cradle_saddle_camp__night__heading_0.0",
+      "nearby_creature_records_160m": [
+        {
+          "body_height_m": 3.55,
+          "body_radius_m": 1.18230355813953,
+          "node_path": "road_visibility_shellwatch_to_tidal_cradle_sheltered_01_0",
+          "node_scale": [
+            0.999999403953552,
+            1.0,
+            0.999999403953552
+          ],
+          "position": [
+            509.519592285156,
+            -0.994000017642975,
+            1320.06103515625
+          ],
+          "species_id": "water_mirejaw"
+        },
+        {
+          "body_height_m": 4.15,
+          "body_radius_m": 1.38212951162791,
+          "node_path": "road_visibility_shellwatch_to_tidal_cradle_sheltered_01_1",
+          "node_scale": [
+            0.999997496604919,
+            1.0,
+            0.999997496604919
+          ],
+          "position": [
+            503.574157714844,
+            -1.16199994087219,
+            1318.36071777344
+          ],
+          "species_id": "water_riverdrake"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_01_0",
+          "node_scale": [
+            0.999999463558197,
+            1.0,
+            0.999999463558197
+          ],
+          "position": [
+            575.63427734375,
+            35.318531036377,
+            1425.29528808594
+          ],
+          "species_id": "water_mosshell"
+        },
+        {
+          "body_height_m": 3.7,
+          "body_radius_m": 1.34070566101695,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_01_1",
+          "node_scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "position": [
+            578.0,
+            35.268482208252,
+            1425.0
+          ],
+          "species_id": "water_cragclaw"
+        },
+        {
+          "body_height_m": 3.7,
+          "body_radius_m": 1.34070566101695,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_02_0",
+          "node_scale": [
+            0.999999761581421,
+            1.0,
+            0.999999761581421
+          ],
+          "position": [
+            627.193359375,
+            36.6100540161133,
+            1422.95300292969
+          ],
+          "species_id": "water_cragclaw"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_02_1",
+          "node_scale": [
+            0.999997854232788,
+            1.0,
+            0.999997854232788
+          ],
+          "position": [
+            629.153869628906,
+            36.8202629089355,
+            1425.63928222656
+          ],
+          "species_id": "water_mosshell"
+        },
+        {
+          "body_height_m": 4.15,
+          "body_radius_m": 1.38212951162791,
+          "node_path": "water_tidal_cradle_wild_009_0",
+          "node_scale": [
+            0.999999284744263,
+            1.0,
+            0.999999284744263
+          ],
+          "position": [
+            567.252502441406,
+            2.09686541557312,
+            1316.05065917969
+          ],
+          "species_id": "water_riverdrake"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "water_tidal_cradle_wild_016_0",
+          "node_scale": [
+            0.999999701976776,
+            1.0,
+            0.999999701976776
+          ],
+          "position": [
+            494.624816894531,
+            2.12912321090698,
+            1384.63537597656
+          ],
+          "species_id": "water_mosshell"
+        }
+      ],
+      "nearby_creatures_160m": 8,
+      "observed_clock": {
+        "elapsed_seconds": 575.133333333333,
+        "f39_weather": "clear",
+        "hour": 23.0053333333333,
+        "requested": "night",
+        "time_of_day": "night"
+      },
+      "player_character": "trainer",
+      "player_position": [
+        556.092163085938,
+        6.64864826202393,
+        1367.17846679688
+      ],
+      "position_xz": [
+        556.092163085938,
+        1367.17846679688
+      ],
+      "production_is_on_floor": true,
+      "resolved_ground_y": 6.23875951766968,
+      "spot_index_in_band": 2,
+      "terrain_ground_y": 6.23875951766968,
+      "time": "night",
+      "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+      "trainer_visible_intent": true,
+      "view_heading_deg": null,
+      "view_heading_xz": [
+        -0.336639702320099,
+        0.941633522510529
+      ]
+    },
+    {
+      "actual_position_ground_y": 6.23875951766968,
+      "band_display_name": "Island 5 \u00e2\u20ac\u201d Tidal Cradle",
+      "band_id": "tidal_cradle",
+      "biome_display_name": "Tidewake",
+      "biome_id": "water",
+      "bytes": 1708121,
+      "camera_player_distance_m": 5.82128190994263,
+      "camera_position": [
+        553.916259765625,
+        9.47980403900146,
+        1362.58093261719
+      ],
+      "camera_rig_spring_length": 5.19999980926514,
+      "camera_rig_transform": {
+        "basis_x": [
+          -0.903875410556793,
+          0.0,
+          0.427794992923737
+        ],
+        "basis_y": [
+          0.0889436155557632,
+          0.978147625923157,
+          0.187926337122917
+        ],
+        "basis_z": [
+          -0.418446809053421,
+          0.2079117000103,
+          -0.884123861789703
+        ],
+        "origin": [
+          556.092163085938,
+          8.39864826202393,
+          1367.17846679688
+        ]
+      },
+      "camera_transform": {
+        "basis_x": [
+          -0.903876900672913,
+          5.23054040968418e-07,
+          0.427792608737946
+        ],
+        "basis_y": [
+          0.0889432057738304,
+          0.978147804737091,
+          0.18792562186718
+        ],
+        "basis_z": [
+          -0.41844430565834,
+          0.207910880446434,
+          -0.884125232696533
+        ],
+        "origin": [
+          553.916259765625,
+          9.47980403900146,
+          1362.58093261719
+        ]
+      },
+      "consecutive_grounded_frames": 3,
+      "debug_travel": true,
+      "destination_display_name": "Tidal Cradle Saddle Camp",
+      "destination_index": 10,
+      "f39_heading_offset_deg": -45.0,
+      "file": "res://shots/lane-d/f39-shipping-authored-camp/water__tidal_cradle__10__tidal_cradle_saddle_camp__night__heading_minus45.0.png",
+      "frame_id": "water__tidal_cradle__10__tidal_cradle_saddle_camp__night__heading_minus45.0",
+      "nearby_creature_records_160m": [
+        {
+          "body_height_m": 3.55,
+          "body_radius_m": 1.18230355813953,
+          "node_path": "road_visibility_shellwatch_to_tidal_cradle_sheltered_01_0",
+          "node_scale": [
+            0.999999344348907,
+            1.0,
+            0.999999344348907
+          ],
+          "position": [
+            508.652435302734,
+            -0.994000017642975,
+            1317.39501953125
+          ],
+          "species_id": "water_mirejaw"
+        },
+        {
+          "body_height_m": 4.15,
+          "body_radius_m": 1.38212951162791,
+          "node_path": "road_visibility_shellwatch_to_tidal_cradle_sheltered_01_1",
+          "node_scale": [
+            0.99999725818634,
+            1.0,
+            0.99999725818634
+          ],
+          "position": [
+            502.348266601562,
+            -1.16199994087219,
+            1320.40698242188
+          ],
+          "species_id": "water_riverdrake"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_01_0",
+          "node_scale": [
+            0.999999463558197,
+            1.0,
+            0.999999463558197
+          ],
+          "position": [
+            575.63427734375,
+            35.318531036377,
+            1425.29528808594
+          ],
+          "species_id": "water_mosshell"
+        },
+        {
+          "body_height_m": 3.7,
+          "body_radius_m": 1.34070566101695,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_01_1",
+          "node_scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "position": [
+            578.0,
+            35.268482208252,
+            1425.0
+          ],
+          "species_id": "water_cragclaw"
+        },
+        {
+          "body_height_m": 3.7,
+          "body_radius_m": 1.34070566101695,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_02_0",
+          "node_scale": [
+            0.999998211860657,
+            1.0,
+            0.999998211860657
+          ],
+          "position": [
+            625.675964355469,
+            36.5419311523438,
+            1422.70349121094
+          ],
+          "species_id": "water_cragclaw"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_02_1",
+          "node_scale": [
+            0.999997735023499,
+            1.0,
+            0.999997735023499
+          ],
+          "position": [
+            627.493347167969,
+            36.7425956726074,
+            1425.306640625
+          ],
+          "species_id": "water_mosshell"
+        },
+        {
+          "body_height_m": 4.15,
+          "body_radius_m": 1.38212951162791,
+          "node_path": "water_tidal_cradle_wild_009_0",
+          "node_scale": [
+            0.999999284744263,
+            1.0,
+            0.999999284744263
+          ],
+          "position": [
+            567.252502441406,
+            2.09686541557312,
+            1316.05065917969
+          ],
+          "species_id": "water_riverdrake"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "water_tidal_cradle_wild_016_0",
+          "node_scale": [
+            0.999999701976776,
+            1.0,
+            0.999999701976776
+          ],
+          "position": [
+            494.624816894531,
+            2.12912321090698,
+            1384.63537597656
+          ],
+          "species_id": "water_mosshell"
+        }
+      ],
+      "nearby_creatures_160m": 8,
+      "observed_clock": {
+        "elapsed_seconds": 575.139516333333,
+        "f39_weather": "clear",
+        "hour": 23.0055806533333,
+        "requested": "night",
+        "time_of_day": "night"
+      },
+      "player_character": "trainer",
+      "player_position": [
+        556.092163085938,
+        6.64864826202393,
+        1367.17846679688
+      ],
+      "position_xz": [
+        556.092163085938,
+        1367.17846679688
+      ],
+      "production_is_on_floor": true,
+      "resolved_ground_y": 6.23875951766968,
+      "spot_index_in_band": 2,
+      "terrain_ground_y": 6.23875951766968,
+      "time": "night",
+      "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+      "trainer_visible_intent": true,
+      "view_heading_deg": null,
+      "view_heading_xz": [
+        0.427795231342316,
+        0.903875648975372
+      ]
+    },
+    {
+      "actual_position_ground_y": 6.23875951766968,
+      "band_display_name": "Island 5 \u00e2\u20ac\u201d Tidal Cradle",
+      "band_id": "tidal_cradle",
+      "biome_display_name": "Tidewake",
+      "biome_id": "water",
+      "bytes": 1246399,
+      "camera_player_distance_m": 5.82117319107056,
+      "camera_position": [
+        560.689575195312,
+        9.47977924346924,
+        1365.00256347656
+      ],
+      "camera_rig_spring_length": 5.19999980926514,
+      "camera_rig_transform": {
+        "basis_x": [
+          -0.427795022726059,
+          0.0,
+          -0.903875410556793
+        ],
+        "basis_y": [
+          -0.187926337122917,
+          0.978147625923157,
+          0.0889436230063438
+        ],
+        "basis_z": [
+          0.884123861789703,
+          0.2079117000103,
+          -0.418446838855743
+        ],
+        "origin": [
+          556.092163085938,
+          8.39864826202393,
+          1367.17846679688
+        ]
+      },
+      "camera_transform": {
+        "basis_x": [
+          -0.427792638540268,
+          5.29250200997922e-07,
+          -0.903876900672913
+        ],
+        "basis_y": [
+          -0.18792562186718,
+          0.978147804737091,
+          0.088943213224411
+        ],
+        "basis_z": [
+          0.884125292301178,
+          0.207910880446434,
+          -0.418444335460663
+        ],
+        "origin": [
+          560.689575195312,
+          9.47977924346924,
+          1365.00256347656
+        ]
+      },
+      "consecutive_grounded_frames": 3,
+      "debug_travel": true,
+      "destination_display_name": "Tidal Cradle Saddle Camp",
+      "destination_index": 10,
+      "f39_heading_offset_deg": 45.0,
+      "file": "res://shots/lane-d/f39-shipping-authored-camp/water__tidal_cradle__10__tidal_cradle_saddle_camp__night__heading_45.0.png",
+      "frame_id": "water__tidal_cradle__10__tidal_cradle_saddle_camp__night__heading_45.0",
+      "nearby_creature_records_160m": [
+        {
+          "body_height_m": 3.55,
+          "body_radius_m": 1.18230355813953,
+          "node_path": "road_visibility_shellwatch_to_tidal_cradle_sheltered_01_0",
+          "node_scale": [
+            0.999999344348907,
+            1.0,
+            0.999999344348907
+          ],
+          "position": [
+            508.558990478516,
+            -0.994000017642975,
+            1317.10778808594
+          ],
+          "species_id": "water_mirejaw"
+        },
+        {
+          "body_height_m": 4.15,
+          "body_radius_m": 1.38212951162791,
+          "node_path": "road_visibility_shellwatch_to_tidal_cradle_sheltered_01_1",
+          "node_scale": [
+            0.99999725818634,
+            1.0,
+            0.99999725818634
+          ],
+          "position": [
+            500.909057617188,
+            -1.16199994087219,
+            1322.80932617188
+          ],
+          "species_id": "water_riverdrake"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_01_0",
+          "node_scale": [
+            0.999999463558197,
+            1.0,
+            0.999999463558197
+          ],
+          "position": [
+            575.63427734375,
+            35.318531036377,
+            1425.29528808594
+          ],
+          "species_id": "water_mosshell"
+        },
+        {
+          "body_height_m": 3.7,
+          "body_radius_m": 1.34070566101695,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_01_1",
+          "node_scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "position": [
+            578.0,
+            35.268482208252,
+            1425.0
+          ],
+          "species_id": "water_cragclaw"
+        },
+        {
+          "body_height_m": 3.7,
+          "body_radius_m": 1.34070566101695,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_02_0",
+          "node_scale": [
+            0.999997496604919,
+            1.0,
+            0.999997496604919
+          ],
+          "position": [
+            623.794067382812,
+            36.4577980041504,
+            1422.40185546875
+          ],
+          "species_id": "water_cragclaw"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_02_1",
+          "node_scale": [
+            0.999997735023499,
+            1.0,
+            0.999997735023499
+          ],
+          "position": [
+            627.493347167969,
+            36.7425956726074,
+            1425.306640625
+          ],
+          "species_id": "water_mosshell"
+        },
+        {
+          "body_height_m": 4.15,
+          "body_radius_m": 1.38212951162791,
+          "node_path": "water_tidal_cradle_wild_009_0",
+          "node_scale": [
+            0.999999284744263,
+            1.0,
+            0.999999284744263
+          ],
+          "position": [
+            567.252502441406,
+            2.09686541557312,
+            1316.05065917969
+          ],
+          "species_id": "water_riverdrake"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "water_tidal_cradle_wild_016_0",
+          "node_scale": [
+            0.999999701976776,
+            1.0,
+            0.999999701976776
+          ],
+          "position": [
+            494.624816894531,
+            2.12912321090698,
+            1384.63537597656
+          ],
+          "species_id": "water_mosshell"
+        }
+      ],
+      "nearby_creatures_160m": 8,
+      "observed_clock": {
+        "elapsed_seconds": 575.135010333333,
+        "f39_weather": "clear",
+        "hour": 23.0054004133333,
+        "requested": "night",
+        "time_of_day": "night"
+      },
+      "player_character": "trainer",
+      "player_position": [
+        556.092163085938,
+        6.64864826202393,
+        1367.17846679688
+      ],
+      "position_xz": [
+        556.092163085938,
+        1367.17846679688
+      ],
+      "production_is_on_floor": true,
+      "resolved_ground_y": 6.23875951766968,
+      "spot_index_in_band": 2,
+      "terrain_ground_y": 6.23875951766968,
+      "time": "night",
+      "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+      "trainer_visible_intent": true,
+      "view_heading_deg": null,
+      "view_heading_xz": [
+        -0.903875648975372,
+        0.427795231342316
+      ]
+    },
+    {
+      "actual_position_ground_y": 6.23875951766968,
+      "band_display_name": "Island 5 \u00e2\u20ac\u201d Tidal Cradle",
+      "band_id": "tidal_cradle",
+      "biome_display_name": "Tidewake",
+      "biome_id": "water",
+      "bytes": 1175649,
+      "camera_player_distance_m": 5.82121753692627,
+      "camera_position": [
+        560.881652832031,
+        9.47980690002441,
+        1368.89074707031
+      ],
+      "camera_rig_spring_length": 5.19999980926514,
+      "camera_rig_transform": {
+        "basis_x": [
+          0.336639642715454,
+          0.0,
+          -0.94163316488266
+        ],
+        "basis_y": [
+          -0.195776626467705,
+          0.978147625923157,
+          -0.0699913427233696
+        ],
+        "basis_z": [
+          0.921056568622589,
+          0.2079117000103,
+          0.329283386468887
+        ],
+        "origin": [
+          556.092163085938,
+          8.39864826202393,
+          1367.17846679688
+        ]
+      },
+      "camera_transform": {
+        "basis_x": [
+          0.336642384529114,
+          5.29250144154503e-07,
+          -0.941632568836212
+        ],
+        "basis_y": [
+          -0.195775896310806,
+          0.978147804737091,
+          -0.0699911564588547
+        ],
+        "basis_z": [
+          0.921055793762207,
+          0.207910940051079,
+          0.329286128282547
+        ],
+        "origin": [
+          560.881652832031,
+          9.47980690002441,
+          1368.89074707031
+        ]
+      },
+      "consecutive_grounded_frames": 3,
+      "debug_travel": true,
+      "destination_display_name": "Tidal Cradle Saddle Camp",
+      "destination_index": 10,
+      "f39_heading_offset_deg": 90.0,
+      "file": "res://shots/lane-d/f39-shipping-authored-camp/water__tidal_cradle__10__tidal_cradle_saddle_camp__night__heading_90.0.png",
+      "frame_id": "water__tidal_cradle__10__tidal_cradle_saddle_camp__night__heading_90.0",
+      "nearby_creature_records_160m": [
+        {
+          "body_height_m": 3.55,
+          "body_radius_m": 1.18230355813953,
+          "node_path": "road_visibility_shellwatch_to_tidal_cradle_sheltered_01_0",
+          "node_scale": [
+            0.999998807907104,
+            1.0,
+            0.999998807907104
+          ],
+          "position": [
+            509.01416015625,
+            -0.994000017642975,
+            1319.06530761719
+          ],
+          "species_id": "water_mirejaw"
+        },
+        {
+          "body_height_m": 4.15,
+          "body_radius_m": 1.38212951162791,
+          "node_path": "road_visibility_shellwatch_to_tidal_cradle_sheltered_01_1",
+          "node_scale": [
+            0.99999725818634,
+            1.0,
+            0.99999725818634
+          ],
+          "position": [
+            499.471557617188,
+            -1.16199994087219,
+            1325.21166992188
+          ],
+          "species_id": "water_riverdrake"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_01_0",
+          "node_scale": [
+            0.999999463558197,
+            1.0,
+            0.999999463558197
+          ],
+          "position": [
+            575.63427734375,
+            35.318531036377,
+            1425.29528808594
+          ],
+          "species_id": "water_mosshell"
+        },
+        {
+          "body_height_m": 3.7,
+          "body_radius_m": 1.34070566101695,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_01_1",
+          "node_scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "position": [
+            578.0,
+            35.268482208252,
+            1425.0
+          ],
+          "species_id": "water_cragclaw"
+        },
+        {
+          "body_height_m": 3.7,
+          "body_radius_m": 1.34070566101695,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_02_0",
+          "node_scale": [
+            0.999997198581696,
+            1.0,
+            0.999997198581696
+          ],
+          "position": [
+            625.076843261719,
+            36.4618034362793,
+            1421.58093261719
+          ],
+          "species_id": "water_cragclaw"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_02_1",
+          "node_scale": [
+            0.999997735023499,
+            1.0,
+            0.999997735023499
+          ],
+          "position": [
+            627.493347167969,
+            36.7425956726074,
+            1425.306640625
+          ],
+          "species_id": "water_mosshell"
+        },
+        {
+          "body_height_m": 4.15,
+          "body_radius_m": 1.38212951162791,
+          "node_path": "water_tidal_cradle_wild_009_0",
+          "node_scale": [
+            0.999999284744263,
+            1.0,
+            0.999999284744263
+          ],
+          "position": [
+            567.252502441406,
+            2.09686541557312,
+            1316.05065917969
+          ],
+          "species_id": "water_riverdrake"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "water_tidal_cradle_wild_016_0",
+          "node_scale": [
+            0.999998688697815,
+            1.0,
+            0.999998688697815
+          ],
+          "position": [
+            493.546997070312,
+            1.87456429004669,
+            1384.39526367188
+          ],
+          "species_id": "water_mosshell"
+        }
+      ],
+      "nearby_creatures_160m": 8,
+      "observed_clock": {
+        "elapsed_seconds": 575.138888888889,
+        "f39_weather": "clear",
+        "hour": 23.0055555555556,
+        "requested": "night",
+        "time_of_day": "night"
+      },
+      "player_character": "trainer",
+      "player_position": [
+        556.092163085938,
+        6.64864826202393,
+        1367.17846679688
+      ],
+      "position_xz": [
+        556.092163085938,
+        1367.17846679688
+      ],
+      "production_is_on_floor": true,
+      "resolved_ground_y": 6.23875951766968,
+      "spot_index_in_band": 2,
+      "terrain_ground_y": 6.23875951766968,
+      "time": "night",
+      "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+      "trainer_visible_intent": true,
+      "view_heading_deg": null,
+      "view_heading_xz": [
+        -0.941633522510529,
+        -0.336639732122421
+      ]
+    },
+    {
+      "actual_position_ground_y": 6.23875951766968,
+      "band_display_name": "Island 5 \u00e2\u20ac\u201d Tidal Cradle",
+      "band_id": "tidal_cradle",
+      "biome_display_name": "Tidewake",
+      "biome_id": "water",
+      "bytes": 1278261,
+      "camera_player_distance_m": 5.82124853134155,
+      "camera_position": [
+        554.379943847656,
+        9.47980403900146,
+        1371.96801757812
+      ],
+      "camera_rig_spring_length": 5.19999980926514,
+      "camera_rig_transform": {
+        "basis_x": [
+          0.94163316488266,
+          0.0,
+          0.336639642715454
+        ],
+        "basis_y": [
+          0.0699913427233696,
+          0.978147625923157,
+          -0.195776626467705
+        ],
+        "basis_z": [
+          -0.329283386468887,
+          0.2079117000103,
+          0.921056568622589
+        ],
+        "origin": [
+          556.092163085938,
+          8.39864826202393,
+          1367.17846679688
+        ]
+      },
+      "camera_transform": {
+        "basis_x": [
+          0.941632568836212,
+          5.29250144154503e-07,
+          0.336642384529114
+        ],
+        "basis_y": [
+          0.0699911564588547,
+          0.978147804737091,
+          -0.195775896310806
+        ],
+        "basis_z": [
+          -0.329286128282547,
+          0.207910940051079,
+          0.921055793762207
+        ],
+        "origin": [
+          554.379943847656,
+          9.47980403900146,
+          1371.96801757812
+        ]
+      },
+      "consecutive_grounded_frames": 3,
+      "debug_travel": true,
+      "destination_display_name": "Tidal Cradle Saddle Camp",
+      "destination_index": 10,
+      "f39_heading_offset_deg": 180.0,
+      "file": "res://shots/lane-d/f39-shipping-authored-camp/water__tidal_cradle__10__tidal_cradle_saddle_camp__night__heading_180.0.png",
+      "frame_id": "water__tidal_cradle__10__tidal_cradle_saddle_camp__night__heading_180.0",
+      "nearby_creature_records_160m": [
+        {
+          "body_height_m": 3.55,
+          "body_radius_m": 1.18230355813953,
+          "node_path": "road_visibility_shellwatch_to_tidal_cradle_sheltered_01_0",
+          "node_scale": [
+            0.999998807907104,
+            1.0,
+            0.999998807907104
+          ],
+          "position": [
+            509.648345947266,
+            -0.994000017642975,
+            1321.78991699219
+          ],
+          "species_id": "water_mirejaw"
+        },
+        {
+          "body_height_m": 4.15,
+          "body_radius_m": 1.38212951162791,
+          "node_path": "road_visibility_shellwatch_to_tidal_cradle_sheltered_01_1",
+          "node_scale": [
+            0.99999725818634,
+            1.0,
+            0.99999725818634
+          ],
+          "position": [
+            499.340698242188,
+            -1.16199994087219,
+            1325.43041992188
+          ],
+          "species_id": "water_riverdrake"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_01_0",
+          "node_scale": [
+            0.999999463558197,
+            1.0,
+            0.999999463558197
+          ],
+          "position": [
+            575.63427734375,
+            35.318531036377,
+            1425.29528808594
+          ],
+          "species_id": "water_mosshell"
+        },
+        {
+          "body_height_m": 3.7,
+          "body_radius_m": 1.34070566101695,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_01_1",
+          "node_scale": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "position": [
+            578.0,
+            35.268482208252,
+            1425.0
+          ],
+          "species_id": "water_cragclaw"
+        },
+        {
+          "body_height_m": 3.7,
+          "body_radius_m": 1.34070566101695,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_02_0",
+          "node_scale": [
+            0.999997019767761,
+            1.0,
+            0.999997019767761
+          ],
+          "position": [
+            625.860473632812,
+            36.4642143249512,
+            1421.07849121094
+          ],
+          "species_id": "water_cragclaw"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "road_visibility_tidal_cradle_exploration_spine_02_1",
+          "node_scale": [
+            0.999996781349182,
+            1.0,
+            0.999996781349182
+          ],
+          "position": [
+            625.748352050781,
+            36.6766662597656,
+            1425.25903320312
+          ],
+          "species_id": "water_mosshell"
+        },
+        {
+          "body_height_m": 4.15,
+          "body_radius_m": 1.38212951162791,
+          "node_path": "water_tidal_cradle_wild_009_0",
+          "node_scale": [
+            0.999999165534973,
+            1.0,
+            0.999999165534973
+          ],
+          "position": [
+            566.634033203125,
+            2.17454719543457,
+            1316.80212402344
+          ],
+          "species_id": "water_riverdrake"
+        },
+        {
+          "body_height_m": 2.5,
+          "body_radius_m": 1.042857,
+          "node_path": "water_tidal_cradle_wild_016_0",
+          "node_scale": [
+            0.999998688697815,
+            1.0,
+            0.999998688697815
+          ],
+          "position": [
+            493.546997070312,
+            1.87456429004669,
+            1384.39526367188
+          ],
+          "species_id": "water_mosshell"
+        }
+      ],
+      "nearby_creatures_160m": 8,
+      "observed_clock": {
+        "elapsed_seconds": 575.132674666667,
+        "f39_weather": "clear",
+        "hour": 23.0053069866667,
+        "requested": "night",
+        "time_of_day": "night"
+      },
+      "player_character": "trainer",
+      "player_position": [
+        556.092163085938,
+        6.64864826202393,
+        1367.17846679688
+      ],
+      "position_xz": [
+        556.092163085938,
+        1367.17846679688
+      ],
+      "production_is_on_floor": true,
+      "resolved_ground_y": 6.23875951766968,
+      "spot_index_in_band": 2,
+      "terrain_ground_y": 6.23875951766968,
+      "time": "night",
+      "trainer_visibility_limit": "Production spring-arm framing; manifest does not prove pixels are unobstructed. Judge the frame.",
+      "trainer_visible_intent": true,
+      "view_heading_deg": null,
+      "view_heading_xz": [
+        0.336639791727066,
+        -0.941633522510529
+      ]
+    }
+  ],
+  "independent_source_review": {
+    "reviewer": "/root/f39_visual_review",
+    "verdict": "APPROVE shipping-driver source; actualcamp proof/final fullcriterion review pending"
+  },
+  "visual_rescore": {
+    "reviewer": "/root/f26_presets_review",
+    "verdict": "PENDING actualcamp rescoring; no fullbar claim"
+  },
+  "scope": "Existing catalogue point corrected on main ac151d4d4c from old steep841.3839,1595.9279 to actualauthored556.092163,1367.178467. No terrain/slope/collision guard changes, no newfixture, no visual override/save/progression proof. Tenactualdifferentheading/daynight images; rawPNGs retained inrunartifact only.",
+  "remaining": "Atleast200 totalrecapture and owningcatalogrescore; allunwitnessed swim/fight/catch/UI states remainexplicitlyunverified. NoREADY."
+}
