@@ -70,6 +70,26 @@ func _load_plan() -> bool:
 						float(origin[1]) + forward.y * offset]
 					var yaw := atan2(forward.x, forward.y)
 					row.view_heading_deg = rad_to_deg(yaw + (PI if view == "reverse" else 0.0))
+					# A look bearing is not a walkable route bearing. Three narrow
+					# authored thresholds rejected the generic backwards offset.
+					# Use disclosed route/pad stands for both sides of a matched
+					# pair; travel, on-floor and obstruction checks still apply.
+					var authored: Dictionary = _capture_config.get("authored_stands", {}).get(
+						_slug(str(destination.destination_display_name)), {}).get(view, {})
+					if not authored.is_empty():
+						var at: Variant = authored.get("position_xz")
+						var bearing: Variant = authored.get("view_heading_deg")
+						if not at is Array or at.size() != 2 \
+								or typeof(at[0]) not in [TYPE_INT, TYPE_FLOAT] \
+								or typeof(at[1]) not in [TYPE_INT, TYPE_FLOAT] \
+								or typeof(bearing) not in [TYPE_INT, TYPE_FLOAT] \
+								or not is_finite(float(at[0])) or not is_finite(float(at[1])) \
+								or not is_finite(float(bearing)) or str(authored.get("basis", "")).is_empty():
+							_failures.append("F40 invalid authored stand: %s/%s" % [destination.destination_display_name, view])
+							return false
+						row.position_xz = at.duplicate()
+						row.view_heading_deg = float(bearing)
+						row["authored_stand_basis"] = str(authored.basis)
 					row.frame_id = str(destination.frame_id).trim_suffix("__" + str(destination.time)) \
 						+ "__%s__%s__%s" % [view, time_name, weather_name]
 					_planned.append(row)
@@ -100,7 +120,7 @@ func _begin_manifest() -> void:
 	_manifest["required_segments"] = _capture_config.times
 	_manifest["full_matrix_planned_frames"] = _full_planned_frames
 	_manifest["candidate_config_sha256"] = FileAccess.get_file_as_string(CANDIDATE_PATH).sha256_text()
-	_manifest["fixture_disclosure"] = "Direct chapter mount, upper-route flags, catalogue teleports plus declared 12m/3m stand offsets, pinned production dawn/day/golden/night and clear/rain. Production CameraRig; no earned route, fight, Ally or visual PASS claim. Obstructed or unsupported stands fail and require a corrected matched pair."
+	_manifest["fixture_disclosure"] = "Direct chapter mount, upper-route flags, catalogue teleports with default 12m/3m offsets except three explicitly declared existing route/threshold approach stands in capture_plan.authored_stands; pinned production dawn/day/golden/night and clear/rain. Both sides of a comparison must use the same stand plan. Production CameraRig; no earned route, fight, Ally or visual PASS claim. Obstructed or unsupported stands still fail."
 
 
 func _finish(complete: bool) -> void:

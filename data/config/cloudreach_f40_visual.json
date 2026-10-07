@@ -65,6 +65,11 @@
     "views": ["approach", "gameplay", "reverse", "detail"],
     "approach_offset_m": 12.0,
     "detail_offset_m": 3.0,
+    "authored_stands": {
+      "galefoot_waycamp": {"approach": {"position_xz": [-280.0, 502.0], "view_heading_deg": 0.0, "basis": "Existing arrival_gate_road level entry and 48m SettlementWalkableTerrace; north-facing arrival. Generic backwards offset left the terrace at z545.88."}},
+      "three_bells_bridge": {"approach": {"position_xz": [-526.89, 1265.65], "view_heading_deg": 48.4, "basis": "Existing broken_causeway_main incoming centreline toward (-540,330,1280), before the bridge turn; previous offset followed the look bearing sideways off the ribbon."}},
+      "broken_skyroad_arch": {"approach": {"position_xz": [350.0, 1923.0], "view_heading_deg": 0.0, "basis": "Existing south threshold on the 32m ledge centred at local z-4, inside its 15.04m flat crown; generic 12m extension passed beyond the severed road's edge. This is a threshold approach, not a distant route view."}}
+    },
     "weather_settle_frames": 24,
     "minimum_frames": 200
   }
