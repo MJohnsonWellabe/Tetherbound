@@ -63,6 +63,26 @@ func _capture_forward(row: Dictionary) -> Vector2:
 	return super._capture_forward(row).rotated(deg_to_rad(float(row.get("f39_heading_offset_deg", 0.0))))
 
 
+func _prepare_capture_shell() -> bool:
+	if not super._prepare_capture_shell():
+		return false
+	# Tidewake currently mounts WorldLook without a WorldWeather service.
+	# Its empty production delta is clear weather, not a simulated rain state.
+	# Reject unsupported weather before spending a settle interval per pose.
+	if _weather == null:
+		var delta: Variant = _look.get("_weather")
+		if _weather_name != "clear" or not (delta is Dictionary) or not delta.is_empty():
+			_failures.append("F39 requested weather unavailable: production WorldLook has no matching clear delta/WorldWeather service")
+			return false
+		_manifest["f39_weather_source"] = "production WorldLook empty weather delta; no WorldWeather service"
+	elif not _weather.has_method("set_weather") or not _weather.has_method("weather"):
+		_failures.append("F39 production weather service API unavailable")
+		return false
+	else:
+		_manifest["f39_weather_source"] = str(_weather.get_path())
+	return true
+
+
 func _mount_production_world() -> bool:
 	var game := root.get_node_or_null(^"Game")
 	if game == null:
@@ -137,9 +157,16 @@ func _observe_material(node: MeshInstance3D, gates: Array, uniforms: Array,
 
 func _pin_time(time_name: String) -> Dictionary:
 	var observed: Dictionary = await super._pin_time(time_name)
-	if _weather == null or not _weather.has_method("set_weather"):
-		_failures.append("F39 production weather service unavailable")
+	if observed.is_empty():
 		return {}
+	if _weather == null:
+		var delta: Variant = _look.get("_weather")
+		if _weather_name != "clear" or not (delta is Dictionary) or not delta.is_empty():
+			_failures.append("F39 production clear weather delta changed before capture")
+			return {}
+		observed["f39_weather"] = "clear"
+		observed["f39_weather_source"] = str(_manifest.get("f39_weather_source", ""))
+		return observed
 	_weather.call("set_weather", _weather_name)
 	for _frame in LIGHT_SETTLE_FRAMES:
 		await physics_frame
