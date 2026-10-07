@@ -106,7 +106,13 @@ func _prepare_capture_shell() -> bool:
 		_failures.append("F39 production weather service API unavailable")
 		return false
 	else:
+		var order: Variant = _weather.get("_order")
+		if not _weather.has_meta(&"tidewake_presentation_only") \
+				or _weather.is_in_group("weather") or not (order is Array) or not order.is_empty():
+			_failures.append("F39 weather must be non-cycling presentation only, outside canonical weather queries")
+			return false
 		_manifest["f39_weather_source"] = str(_weather.get_path())
+		_manifest["f39_weather_scope"] = "Presentation fixture only; no canonical weather group, automatic episode, durable state or co-op weather proof"
 	return true
 
 
@@ -194,6 +200,10 @@ func _pin_time(time_name: String) -> Dictionary:
 		observed["f39_weather"] = "clear"
 		observed["f39_weather_source"] = str(_manifest.get("f39_weather_source", ""))
 		return observed
+	var order: Variant = _weather.get("_order")
+	if _weather.is_in_group("weather") or not (order is Array) or not order.is_empty():
+		_failures.append("F39 presentation weather entered canonical queries or enabled cycling before capture")
+		return {}
 	_weather.call("set_weather", _weather_name)
 	for _frame in LIGHT_SETTLE_FRAMES:
 		await physics_frame

@@ -49,6 +49,8 @@ func _ready() -> void:
 		_strip_local_presentation()
 	config = JSON.parse_string(FileAccess.get_file_as_string(CONFIG_PATH))
 	_visual = JSON.parse_string(FileAccess.get_file_as_string(VISUAL_PATH))
+	if not simulation_only:
+		_install_presentation_weather()
 	field = FIELD.new(config)
 	var traversal: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_swimming.json"))
 	var current_config: Dictionary = CURRENTS.with_closed_gates(config, traversal)
@@ -263,6 +265,40 @@ func ground_height_at(x: float, z: float) -> float:
 			return built
 	# Terrain3D 1.0.2's near-vertex get_height shortcut: see terrain_height.gd.
 	return TERRAIN_HEIGHT.height_at(terrain, x, z)
+
+
+## F39 presentation fixture support, not canonical/co-op weather. Installed
+## before encounter services, removed from gameplay weather queries, and
+## unable to cycle even when a capture briefly processes the rain follower.
+## Shipping remains the exact existing clear look; only explicit set_weather
+## calls select a presentation preset. No world/player state is written.
+func _install_presentation_weather() -> void:
+	var look := get_node_or_null(^"WorldLook")
+	if look == null or not look.has_method("set_weather"):
+		return
+	var base: Variant = look.get("_weather")
+	if not (base is Dictionary) or not base.is_empty():
+		push_error("Tidewake presentation weather requires its existing empty clear delta")
+		return
+	var weather := preload("res://scripts/world/world_weather.gd").new()
+	weather.name = "WorldWeather"
+	weather.look_path = NodePath("../WorldLook")
+	weather.player_path = NodePath("../Player")
+	weather.set_meta(&"tidewake_presentation_only", true)
+	add_child(weather)
+	weather.remove_from_group("weather")
+	weather.set_process(false)
+	weather.set_physics_process(false)
+	weather.set("_order", [])
+	var presets: Dictionary = (weather.get("_presets") as Dictionary).duplicate(true)
+	if not presets.has("clear"):
+		look.call("set_weather", base)
+		weather.queue_free()
+		push_error("Tidewake presentation weather has no installed clear preset")
+		return
+	presets["clear"] = base.duplicate(true)
+	weather.set("_presets", presets)
+	weather.call("set_weather", "clear")
 
 
 func ground_height_near(x: Variant, z: float = 0.0, _reference_y: float = 0.0) -> float:
