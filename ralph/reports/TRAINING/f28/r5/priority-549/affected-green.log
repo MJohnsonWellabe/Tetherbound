@@ -1,0 +1,31 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_level_up_announcement.gd,test_f28_training_boundaries.gd: 2 of 818 test files
+  ok    test_f28_training_boundaries.gd :: test_candy_clamps_every_admitted_cap_and_stages_one_debit
+  ok    test_f28_training_boundaries.gd :: test_candy_original_receipt_refuses_a_second_debit_even_below_cap
+  ok    test_f28_training_boundaries.gd :: test_candy_refuses_cap_faint_missing_item_and_changed_owner_without_mutation
+  ok    test_f28_training_boundaries.gd :: test_each_master_recipe_is_personal_and_replays_never_pay_again
+  ok    test_f28_training_boundaries.gd :: test_feast_buttons_require_the_actual_locked_tier_and_never_reoffer_a_lifted_cap
+  ok    test_f28_training_boundaries.gd :: test_feast_completion_requires_original_intent_and_all_saved_fences
+  ok    test_f28_training_boundaries.gd :: test_fresh_starter_saved_mirror_allows_rest_xp_without_inventing_missing_history
+  ok    test_f28_training_boundaries.gd :: test_guest_master_refusal_releases_only_the_matching_attempt
+  ok    test_f28_training_boundaries.gd :: test_master_deployment_cannot_overlap_after_cancel_and_reopen
+  ok    test_f28_training_boundaries.gd :: test_master_selection_deploys_the_chosen_owned_companion_and_fences_context
+  ok    test_f28_training_boundaries.gd :: test_personal_rest_heals_but_cannot_bank_xp_or_cross_locked_cap
+  ok    test_f28_training_boundaries.gd :: test_saved_candy_completion_announces_partial_growth_once
+  ok    test_f28_training_boundaries.gd :: test_shipping_evolution_uses_feast_and_catalyst_text_names_actual_gate
+  ok    test_f28_training_boundaries.gd :: test_stormwood_master_uses_the_real_inherited_duel_instead_of_chapter_catalogue
+  ok    test_f28_training_boundaries.gd :: test_tidewake_and_cloudreach_master_admission_keeps_combat_and_diving_fences
+  ok    test_f28_training_boundaries.gd :: test_two_stable_characters_share_no_candy_receipt_or_inventory
+  ok    test_level_up_announcement.gd :: test_a_multi_level_jump_is_one_line_naming_the_levels_gained
+  ok    test_level_up_announcement.gd :: test_an_ordinary_award_produces_the_plain_xp_line
+  ok    test_level_up_announcement.gd :: test_another_creatures_award_does_not_write_the_active_creatures_line
+  ok    test_level_up_announcement.gd :: test_breakthrough_threshold_notice_does_not_offer_xp_only_evolution
+  ok    test_level_up_announcement.gd :: test_disconnecting_the_event_path_removes_the_announcement
+  ok    test_level_up_announcement.gd :: test_the_level_up_line_names_the_creature_and_its_new_level
+  ok    test_level_up_announcement.gd :: test_the_level_up_line_says_what_changed
+  ok    test_level_up_announcement.gd :: test_the_line_reports_the_evolution_level_when_the_jump_crosses_it
+  ok    test_level_up_announcement.gd :: test_the_previous_fights_award_is_not_re_announced
+  ok    test_level_up_announcement.gd :: test_the_unlock_threshold_is_data_driven_and_gates
+
+26 tests, 452 assertions, 0 failed

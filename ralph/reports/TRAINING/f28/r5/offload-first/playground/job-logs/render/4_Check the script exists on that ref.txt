@@ -1,0 +1,8 @@
+﻿2026-10-06T06:56:06.5282150Z ##[group]Run test -f "$SCRIPT" || { echo "::error::$SCRIPT not found on $CHECKOUT_REF"; exit 1; }
+2026-10-06T06:56:06.5282701Z [36;1mtest -f "$SCRIPT" || { echo "::error::$SCRIPT not found on $CHECKOUT_REF"; exit 1; }[0m
+2026-10-06T06:56:06.5335241Z shell: /usr/bin/bash -e {0}
+2026-10-06T06:56:06.5335398Z env:
+2026-10-06T06:56:06.5335520Z   GODOT_VERSION: 4.7-stable
+2026-10-06T06:56:06.5335661Z   SCRIPT: tests/smoke_playground.gd
+2026-10-06T06:56:06.5335844Z   CHECKOUT_REF: 3ecf62faf47bf91630017a1cc4fe215898812f9d
+2026-10-06T06:56:06.5336049Z ##[endgroup]

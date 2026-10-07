@@ -1,0 +1,30 @@
+﻿2026-10-06T07:10:25.8872033Z ##[group]Run set -euo pipefail
+2026-10-06T07:10:25.8872762Z [36;1mset -euo pipefail[0m
+2026-10-06T07:10:25.8873372Z [36;1mfail() { echo "::error::$1"; exit 1; }[0m
+2026-10-06T07:10:25.8874401Z [36;1m[[ "$CHECKOUT_REF" =~ ^[A-Za-z0-9._/-]{1,200}$ ]] || fail "checkout_ref has disallowed characters"[0m
+2026-10-06T07:10:25.8875584Z [36;1m[[ "$CHECKOUT_REF" != *..* ]] || fail "checkout_ref may not contain .."[0m
+2026-10-06T07:10:25.8876597Z [36;1m[[ "$CHECKOUT_REF" != -* ]] || fail "checkout_ref may not start with -"[0m
+2026-10-06T07:10:25.8877780Z [36;1m[[ "$SCRIPT" =~ ^(tests|tools)/[A-Za-z0-9_/.-]+\.gd$ ]] || fail "script must be tests/*.gd or tools/*.gd"[0m
+2026-10-06T07:10:25.8878904Z [36;1m[[ "$SCRIPT" != *..* ]] || fail "script may not contain .."[0m
+2026-10-06T07:10:25.8879860Z [36;1m[[ "$ARGS" =~ ^[A-Za-z0-9_=,./:@+\ -]*$ ]] || fail "args has disallowed characters"[0m
+2026-10-06T07:10:25.8881060Z [36;1m[[ "$RES" =~ ^[0-9]{3,4}x[0-9]{3,4}$ ]] || fail "resolution must look like 1280x720"[0m
+2026-10-06T07:10:25.8882204Z [36;1m[[ "$TMIN" =~ ^[0-9]{1,3}$ ]] && (( TMIN >= 1 && TMIN <= 150 )) || fail "timeout_minutes must be 1-150"[0m
+2026-10-06T07:10:25.8883358Z [36;1m[[ "$LABEL" =~ ^[A-Za-z0-9_.-]{1,60}$ ]] || fail "label must be 1-60 of [A-Za-z0-9_.-]"[0m
+2026-10-06T07:10:25.8884420Z [36;1mif [[ -n "$SOURCE_RUN_ID" || -n "$SOURCE_ARTIFACT_NAME" ]]; then[0m
+2026-10-06T07:10:25.8885740Z [36;1m  [[ "$SOURCE_RUN_ID" =~ ^[1-9][0-9]{0,19}$ ]] || fail "source_run_id must be a positive decimal run ID; supply both source inputs"[0m
+2026-10-06T07:10:25.8887822Z [36;1m  [[ "$SOURCE_ARTIFACT_NAME" =~ ^[A-Za-z0-9][A-Za-z0-9_.-]{0,199}$ ]] || fail "source_artifact_name must be 1-200 of [A-Za-z0-9_.-], beginning with a letter or digit; supply both source inputs"[0m
+2026-10-06T07:10:25.8889354Z [36;1mfi[0m
+2026-10-06T07:10:25.8890424Z [36;1m[[ "$RENDERING_METHOD" = gl_compatibility || "$RENDERING_METHOD" = forward_plus ]] || fail "unknown rendering method"[0m
+2026-10-06T07:10:25.9396120Z shell: /usr/bin/bash -e {0}
+2026-10-06T07:10:25.9397180Z env:
+2026-10-06T07:10:25.9397798Z   GODOT_VERSION: 4.7-stable
+2026-10-06T07:10:25.9398699Z   CHECKOUT_REF: 618c8714210013e9d54b5a262611f84234b79671
+2026-10-06T07:10:25.9399739Z   SCRIPT: tests/smoke_playground.gd
+2026-10-06T07:10:25.9400681Z   ARGS: 
+2026-10-06T07:10:25.9401283Z   RES: 1280x720
+2026-10-06T07:10:25.9401907Z   TMIN: 30
+2026-10-06T07:10:25.9402613Z   LABEL: r5-f28-semantic-20261006-070814
+2026-10-06T07:10:25.9403474Z   SOURCE_RUN_ID: 
+2026-10-06T07:10:25.9404159Z   SOURCE_ARTIFACT_NAME: 
+2026-10-06T07:10:25.9404955Z   RENDERING_METHOD: gl_compatibility
+2026-10-06T07:10:25.9405789Z ##[endgroup]

@@ -1,0 +1,6 @@
+=== launch 2026-10-06T08:17:18 (Godot 4.7-stable (official)) ===
+[2026-10-06T08:17:18] Game autoload: _ready start (first autoload, before any world scene)
+[2026-10-06T08:17:19] Game autoload: _ready done, menu mounted
+=== launch 2026-10-06T08:18:32 (Godot 4.7-stable (official)) ===
+[2026-10-06T08:18:32] Game autoload: _ready start (first autoload, before any world scene)
+[2026-10-06T08:18:33] Game autoload: _ready done, menu mounted

@@ -1,0 +1,98 @@
+[2J[m[H]0;C:\Users\mattj\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\powershell\pwsh.exe[?25h{"entries":23,"raster":[{"name":"exploration_hud.jpg","width":1920,"height":1080
+},{"name":"menu_backpack.jpg","width":1920,"height":1080},{"name":"menu_build.jp
+g","width":1920,"height":1080},{"name":"menu_creatures.jpg","width":1920,"height
+":1080},{"name":"menu_map.jpg","width":1920,"height":1080},{"name":"menu_map_zoo
+m_16.jpg","width":1920,"height":1080},{"name":"menu_map_zoom_4.jpg","width":1920
+,"height":1080},{"name":"menu_map_zoom_8.jpg","width":1920,"height":1080},{"name
+":"menu_players.jpg","width":1920,"height":1080},{"name":"menu_quest_log.jpg","w
+idth":1920,"height":1080},{"name":"menu_settings.jpg","width":1920,"height":1080
+},{"name":"menu_save.jpg","width":1920,"height":1080},{"name":"menu_skills.jpg",
+"width":1920,"height":1080},{"name":"quick_bindings.jpg","width":1920,"height":1
+080},{"name":"settings_controls.jpg","width":1920,"height":1080}],"exit_code":"0
+","manifest":{"adapter":"llvmpipe (LLVM 20.1.2, 256 bits)","biome":"meadows","co
+mplete":true,"display_server":"X11","failures":[],"fixture":"Stocked party and s
+atchel in production scene; no save or progression proof","frames":[{"camera":"p
+roduction CameraRig/Camera3D","id":"exploration_hud","path":"res://ralph/reports
+/VISUAL/phase2/meadows/ui-r5-catalogue-main4bee-87dadfdcfd/exploration_hud.jpg",
+"player_present":true,"scene":"res://scenes/world/meadows_playground.tscn","subj
+ect":"HUD in exploration","ui":true},{"camera":"production CameraRig/Camera3D","
+id":"menu_backpack","path":"res://ralph/reports/VISUAL/phase2/meadows/ui-r5-cata
+logue-main4bee-87dadfdcfd/menu_backpack.jpg","player_present":true,"scene":"res:
+//scenes/world/meadows_playground.tscn","subject":"Menu backpack","ui":true},{"c
+amera":"production CameraRig/Camera3D","id":"menu_creatures","path":"res://ralph
+/reports/VISUAL/phase2/meadows/ui-r5-catalogue-main4bee-87dadfdcfd/menu_creature
+s.jpg","player_present":true,"scene":"res://scenes/world/meadows_playground.tscn
+","subject":"Menu creatures","ui":true},{"camera":"production CameraRig/Camera3D
+","id":"menu_map","path":"res://ralph/reports/VISUAL/phase2/meadows/ui-r5-catalo
+gue-main4bee-87dadfdcfd/menu_map.jpg","player_present":true,"scene":"res://scene
+s/world/meadows_playground.tscn","subject":"Menu map","ui":true},{"camera":"prod
+uction CameraRig/Camera3D","id":"menu_map_zoom_4","path":"res://ralph/reports/VI
+SUAL/phase2/meadows/ui-r5-catalogue-main4bee-87dadfdcfd/menu_map_zoom_4.jpg","pl
+ayer_present":true,"scene":"res://scenes/world/meadows_playground.tscn","subject
+":"Map at 4x; direct view-state fixture, original fog and discoveries","ui":true
+},{"camera":"production CameraRig/Camera3D","id":"menu_map_zoom_8","path":"res:/
+/ralph/reports/VISUAL/phase2/meadows/ui-r5-catalogue-main4bee-87dadfdcfd/menu_ma
+p_zoom_8.jpg","player_present":true,"scene":"res://scenes/world/meadows_playgrou
+nd.tscn","subject":"Map at 8x; direct view-state fixture, original fog and disco
+veries","ui":true},{"camera":"production CameraRig/Camera3D","id":"menu_map_zoom
+_16","path":"res://ralph/reports/VISUAL/phase2/meadows/ui-r5-catalogue-main4bee-
+87dadfdcfd/menu_map_zoom_16.jpg","player_present":true,"scene":"res://scenes/wor
+ld/meadows_playground.tscn","subject":"Map at 16x; direct view-state fixture, or
+iginal fog and discoveries","ui":true},{"camera":"production CameraRig/Camera3D"
+,"id":"menu_skills","path":"res://ralph/reports/VISUAL/phase2/meadows/ui-r5-cata
+logue-main4bee-87dadfdcfd/menu_skills.jpg","player_present":true,"scene":"res://
+scenes/world/meadows_playground.tscn","subject":"Menu skills","ui":true},{"camer
+a":"production CameraRig/Camera3D","id":"menu_quest_log","path":"res://ralph/rep
+orts/VISUAL/phase2/meadows/ui-r5-catalogue-main4bee-87dadfdcfd/menu_quest_log.jp
+g","player_present":true,"scene":"res://scenes/world/meadows_playground.tscn","s
+ubject":"Menu quest_log","ui":true},{"camera":"production CameraRig/Camera3D","i
+d":"menu_build","path":"res://ralph/reports/VISUAL/phase2/meadows/ui-r5-catalogu
+e-main4bee-87dadfdcfd/menu_build.jpg","player_present":true,"scene":"res://scene
+s/world/meadows_playground.tscn","subject":"Menu build","ui":true},{"camera":"pr
+oduction CameraRig/Camera3D","id":"menu_players","path":"res://ralph/reports/VIS
+UAL/phase2/meadows/ui-r5-catalogue-main4bee-87dadfdcfd/menu_players.jpg","player
+_present":true,"scene":"res://scenes/world/meadows_playground.tscn","subject":"M
+enu players","ui":true},{"camera":"production CameraRig/Camera3D","id":"menu_sav
+e","path":"res://ralph/reports/VISUAL/phase2/meadows/ui-r5-catalogue-main4bee-87
+dadfdcfd/menu_save.jpg","player_present":true,"scene":"res://scenes/world/meadow
+s_playground.tscn","subject":"Menu save","ui":true},{"camera":"production Camera
+Rig/Camera3D","id":"menu_settings","path":"res://ralph/reports/VISUAL/phase2/mea
+dows/ui-r5-catalogue-main4bee-87dadfdcfd/menu_settings.jpg","player_present":tru
+e,"scene":"res://scenes/world/meadows_playground.tscn","subject":"Menu settings"
+,"ui":true},{"camera":"production CameraRig/Camera3D","id":"settings_controls","
+path":"res://ralph/reports/VISUAL/phase2/meadows/ui-r5-catalogue-main4bee-87dadf
+dcfd/settings_controls.jpg","player_present":true,"scene":"res://scenes/world/me
+adows_playground.tscn","subject":"Controls","ui":true},{"camera":"production Cam
+eraRig/Camera3D","id":"quick_bindings","path":"res://ralph/reports/VISUAL/phase2
+/meadows/ui-r5-catalogue-main4bee-87dadfdcfd/quick_bindings.jpg","player_present
+":true,"scene":"res://scenes/world/meadows_playground.tscn","subject":"Quick ite
+ms","ui":true}],"map_cycle":false,"map_zoom_samples":true,"rendering_method":"gl
+_compatibility","resolution":[1920,1080],"scene":"res://scenes/world/meadows_pla
+yground.tscn","seed":2042},"errors":[],"renderer":["WARNING: Could not set V-Syn
+c mode, as changing V-Sync mode is not supported by the graphics driver.","OpenG
+L API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.2 - Compatibility - Using De
+vice: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)","WARNING: instance_reset_physics_
+interpolation() is deprecated."],"tail":["PHASE2 UI draw wait: menu_players","PH
+ASE2 UI draw completed: menu_players","PHASE2 UI menu_players -> res://ralph/rep
+orts/VISUAL/phase2/meadows/ui-r5-catalogue-main4bee-87dadfdcfd/menu_players.jpg"
+,"PHASE2 UI draw wait: menu_save","PHASE2 UI draw completed: menu_save","PHASE2 
+UI menu_save -> res://ralph/reports/VISUAL/phase2/meadows/ui-r5-catalogue-main4b
+ee-87dadfdcfd/menu_save.jpg","PHASE2 UI draw wait: menu_settings","PHASE2 UI dra
+w completed: menu_settings","PHASE2 UI menu_settings -> res://ralph/reports/VISU
+AL/phase2/meadows/ui-r5-catalogue-main4bee-87dadfdcfd/menu_settings.jpg","PHASE2
+ UI settings heading search: settings_controls","PHASE2 UI settings scroll begin
+: settings_controls heading=/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@V
+BoxContainer@20/@ScrollContainer@67917/@VBoxContainer@67918/@Label@67956","PHASE
+2 UI settings scroll returned: settings_controls","PHASE2 UI settings deferred f
+rames complete: settings_controls","PHASE2 UI draw wait: settings_controls","PHA
+SE2 UI draw completed: settings_controls","PHASE2 UI settings_controls -> res://
+ralph/reports/VISUAL/phase2/meadows/ui-r5-catalogue-main4bee-87dadfdcfd/settings
+_controls.jpg","PHASE2 UI settings heading search: quick_bindings","PHASE2 UI se
+ttings scroll begin: quick_bindings heading=/root/Game/GameMenu/Root/Frame/Panel
+/Body/Content/@VBoxContainer@20/@ScrollContainer@67917/@VBoxContainer@67918/@Lab
+el@68083","PHASE2 UI settings scroll returned: quick_bindings","PHASE2 UI settin
+gs deferred frames complete: quick_bindings","PHASE2 UI draw wait: quick_binding
+s","PHASE2 UI draw completed: quick_bindings","PHASE2 UI quick_bindings -> res:/
+/ralph/reports/VISUAL/phase2/meadows/ui-r5-catalogue-main4bee-87dadfdcfd/quick_b
+indings.jpg","exit=0 took=1734s",""]}
+PIXELS_ONLY_MEMORY_READER_READY

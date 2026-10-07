@@ -1,0 +1,14 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB
+
+RESEARCH CAPTURE: res://ralph/reports/LOOP/f45/r5/native-after/terrapup-never-owned-1920x1080.png
+RESEARCH CAPTURE: res://ralph/reports/LOOP/f45/r5/native-after/terrapup-never-owned-1280x720.png
+RESEARCH CAPTURE: res://ralph/reports/LOOP/f45/r5/native-after/bramblebun-caught-history-paid-1920x1080.png
+RESEARCH CAPTURE: res://ralph/reports/LOOP/f45/r5/native-after/bramblebun-caught-history-paid-1280x720.png
+ERROR: selected task is fully visible at 1280x720: Observe three completed move casts · 1 / 3 · Essence Ground ×15
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tests/smoke_f42_system_screen.gd:54)
+       [1] _research_rows (res://tests/smoke_f42_system_screen.gd:127)
+SYSTEM SCREEN CHECKS: 44 checks, 1 failures
+F42 MODAL SMOKE: FAIL

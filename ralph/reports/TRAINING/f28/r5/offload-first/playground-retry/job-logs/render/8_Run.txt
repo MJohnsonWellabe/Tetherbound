@@ -1,0 +1,94 @@
+﻿2026-10-06T07:12:12.3097707Z ##[group]Run set -uo pipefail
+2026-10-06T07:12:12.3097926Z [36;1mset -uo pipefail[0m
+2026-10-06T07:12:12.3098085Z [36;1mexport XDG_DATA_HOME="$RUNNER_TEMP/userdata"[0m
+2026-10-06T07:12:12.3098283Z [36;1mmkdir -p "$XDG_DATA_HOME" "$RUNNER_TEMP/out"[0m
+2026-10-06T07:12:12.3098454Z [36;1mread -r -a user_args <<< "$ARGS"[0m
+2026-10-06T07:12:12.3098599Z [36;1mextra=()[0m
+2026-10-06T07:12:12.3098756Z [36;1m[ ${#user_args[@]} -gt 0 ] && extra=(-- "${user_args[@]}")[0m
+2026-10-06T07:12:12.3098946Z [36;1mtouch "$RUNNER_TEMP/start_marker"[0m
+2026-10-06T07:12:12.3099098Z [36;1mt0=$SECONDS[0m
+2026-10-06T07:12:12.3099224Z [36;1mif [ "$MODE" = render ]; then[0m
+2026-10-06T07:12:12.3099369Z [36;1m  driver=opengl3[0m
+2026-10-06T07:12:12.3099553Z [36;1m  if [ "$RENDERING_METHOD" = forward_plus ]; then driver=vulkan; fi[0m
+2026-10-06T07:12:12.3099808Z [36;1m  timeout "$((TMIN * 60))" xvfb-run -a -s "-screen 0 ${RES}x24" \[0m
+2026-10-06T07:12:12.3100165Z [36;1m    godot --path . --rendering-method "$RENDERING_METHOD" --rendering-driver "$driver" --audio-driver Dummy --resolution "$RES" \[0m
+2026-10-06T07:12:12.3100755Z [36;1m    --script "$SCRIPT" "${extra[@]}" > "$RUNNER_TEMP/out/run.log" 2>&1[0m
+2026-10-06T07:12:12.3100946Z [36;1melse[0m
+2026-10-06T07:12:12.3101100Z [36;1m  timeout "$((TMIN * 60))" godot --headless --path . \[0m
+2026-10-06T07:12:12.3101328Z [36;1m    --script "$SCRIPT" "${extra[@]}" > "$RUNNER_TEMP/out/run.log" 2>&1[0m
+2026-10-06T07:12:12.3101515Z [36;1mfi[0m
+2026-10-06T07:12:12.3101621Z [36;1mrc=$?[0m
+2026-10-06T07:12:12.3101800Z [36;1mecho "exit=$rc took=$((SECONDS - t0))s" | tee -a "$RUNNER_TEMP/out/run.log"[0m
+2026-10-06T07:12:12.3102026Z [36;1mtail -60 "$RUNNER_TEMP/out/run.log"[0m
+2026-10-06T07:12:12.3102199Z [36;1mecho "$rc" > "$RUNNER_TEMP/out/exit_code"[0m
+2026-10-06T07:12:12.3151658Z shell: /usr/bin/bash -e {0}
+2026-10-06T07:12:12.3151920Z env:
+2026-10-06T07:12:12.3152029Z   GODOT_VERSION: 4.7-stable
+2026-10-06T07:12:12.3152168Z   SCRIPT: tests/smoke_playground.gd
+2026-10-06T07:12:12.3152312Z   ARGS: 
+2026-10-06T07:12:12.3152411Z   RES: 1280x720
+2026-10-06T07:12:12.3152520Z   TMIN: 30
+2026-10-06T07:12:12.3152620Z   MODE: headless
+2026-10-06T07:12:12.3152745Z   RENDERING_METHOD: gl_compatibility
+2026-10-06T07:12:12.3152889Z ##[endgroup]
+2026-10-06T07:13:06.4034921Z exit=0 took=54s
+2026-10-06T07:13:06.4050007Z pond bake mill south-east footprint      intended= -16.50 baked= -16.50 delta=0.000
+2026-10-06T07:13:06.4051326Z pond bake mill north-west footprint      intended= -16.50 baked= -16.50 delta=0.000
+2026-10-06T07:13:06.4051773Z pond bake mill north-east footprint      intended= -16.50 baked= -16.50 delta=0.000
+2026-10-06T07:13:06.4052126Z pond bake ranger centre                  intended= -15.80 baked= -15.80 delta=0.000
+2026-10-06T07:13:06.4052559Z pond bake ranger south-west footprint    intended= -15.80 baked= -15.80 delta=0.000
+2026-10-06T07:13:06.4053083Z pond bake ranger south-east footprint    intended= -15.80 baked= -15.80 delta=0.000
+2026-10-06T07:13:06.4053530Z pond bake ranger north-west footprint    intended= -15.80 baked= -15.80 delta=0.000
+2026-10-06T07:13:06.4053942Z pond bake ranger north-east footprint    intended= -15.80 baked= -15.80 delta=0.000
+2026-10-06T07:13:06.4054294Z player at -1.4, 4.7, 14.3  on_floor=true  vy=+0.00
+2026-10-06T07:13:06.4054579Z ground beneath player: 0.90 (player 4.65, gap 3.75)
+2026-10-06T07:13:06.4054760Z 
+2026-10-06T07:13:06.4054839Z --- perf overlay ---
+2026-10-06T07:13:06.4055099Z perf (F3 again for movement/input, once more to hide)
+2026-10-06T07:13:06.4055284Z 
+2026-10-06T07:13:06.4055387Z fps        145      frame 6.9 ms   min 6.9   max 6.9
+2026-10-06T07:13:06.4055640Z draw calls 0      primitives 0
+2026-10-06T07:13:06.4055860Z video mem  0 MB   textures 0 MB
+2026-10-06T07:13:06.4056076Z static mem 1649 MB   nodes 183967
+2026-10-06T07:13:06.4056311Z cpu        process 6.03 ms   physics 3.85 ms
+2026-10-06T07:13:06.4056531Z 3d scale   1.00  (1920 x 1920)   msaa 1
+2026-10-06T07:13:06.4056677Z vsync      -1      max_fps 0
+2026-10-06T07:13:06.4057018Z  | gl_compatibility | driver /
+2026-10-06T07:13:06.4057104Z 
+2026-10-06T07:13:06.4057162Z top costs  ms/s   per call   rate
+2026-10-06T07:13:06.4057314Z   HUD                      81.4    0.42 ms  195.4 Hz
+2026-10-06T07:13:06.4057488Z   wild cluster streaming   22.2    0.12 ms  188.7 Hz
+2026-10-06T07:13:06.4057662Z   interaction arbiter      19.0    0.10 ms  195.8 Hz
+2026-10-06T07:13:06.4057834Z draw calls this frame: 0  (rendering: false)
+2026-10-06T07:13:06.4058243Z headless dummy driver — render counters not asserted
+2026-10-06T07:13:06.4067719Z torch lit: visible prop 'TorchProp' present
+2026-10-06T07:13:06.4068063Z equipped-tool gate: pickaxe refused, axe rewarded and wore once
+2026-10-06T07:13:06.4068457Z chop-then-gather: satchel total 12 -> 14 after gathering the felled pickup
+2026-10-06T07:13:06.4068705Z authored gather feedback: +4 Wood
+2026-10-06T07:13:06.4068854Z full-satchel feedback: Satchel is full.
+2026-10-06T07:13:06.4069432Z F28 ingredient witness {"item":"berries","label":"Pick berries","on_floor":true,"once_flag":"harvest_node:order:10.0","player_at":"(-4.511112, 0.889983, -24.68224)","setup":"existing local ground pose; real interact input","source_at":"(-6.0, 0.891517, -24.5)","spent_prompt":true,"stock_after":3,"stock_before":0}
+2026-10-06T07:13:06.4070544Z F28 ingredient witness {"item":"sunstone","label":"Take the sunstone","on_floor":true,"once_flag":"pickup:sunstone","player_at":"(120.9744, 4.781143, 7334.5)","setup":"existing local ground pose; real interact input","source_at":"(121.0, 4.738902, 7336.0)","spent_prompt":true,"stock_after":1,"stock_before":0}
+2026-10-06T07:13:06.4072179Z chop impact diagnostic: {"clip":"chop","clip_position":0.363168333333333,"durability_at_signal":38,"durability_before":39,"durability_changed_wall_seconds":0.425,"durability_observed_seconds":0.447,"durability_slot":4,"required_tool":"knife","signal_node":"@Node3D@63504","signal_seen":true,"signal_wall_seconds":0.425,"swing_seconds_elapsed":0.377106333333333}
+2026-10-06T07:13:06.4073466Z chop swing: role=chop clip=idle impact at 0.68 of 0.625s (want ~0.60)
+2026-10-06T07:13:06.4073809Z build_open opened the build menu straight from the world
+2026-10-06T07:13:06.4074266Z recall offer: '[img=36x36]res://assets/ui/input_prompts/keyboard_r.png[/img]   Call out Terrapup'
+2026-10-06T07:13:06.4074810Z hotbar rect [P: (1308.0, 1254.0), S: (556.0, 233.0)]   prompt rect [P: (860.0, 1623.0), S: (200.0, 147.0)]   intersects=false
+2026-10-06T07:13:06.4075218Z recall offer: '[img=36x36]res://assets/ui/input_prompts/keyboard_r.png[/img]   Put Terrapup away'
+2026-10-06T07:13:06.4075552Z hotbar rect [P: (1308.0, 1344.0), S: (556.0, 233.0)]   prompt rect [P: (696.0, 1713.0), S: (528.0, 57.0)]   intersects=false
+2026-10-06T07:13:06.4075921Z recall offer (hotbar message showing): '[img=36x36]res://assets/ui/input_prompts/keyboard_r.png[/img]   Put Terrapup away'
+2026-10-06T07:13:06.4076320Z hotbar rect [P: (1308.0, 1344.0), S: (556.0, 233.0)]   prompt rect [P: (696.0, 1713.0), S: (528.0, 57.0)]   intersects=false (hotbar message showing)
+2026-10-06T07:13:06.4076545Z 
+2026-10-06T07:13:06.4076595Z --- berry farm ---
+2026-10-06T07:13:06.4076715Z beds placed: 6
+2026-10-06T07:13:06.4076837Z empty-handed label: 'Needs a Hoe'
+2026-10-06T07:13:06.4076999Z after till: state=tilled  hoe durability 40 -> 39
+2026-10-06T07:13:06.4077171Z after sow: state=sown  seeds left 1
+2026-10-06T07:13:06.4077318Z day 1 -> 2, label now 'Pick berries'
+2026-10-06T07:13:06.4077468Z after pick: +4 berries, state=tilled
+2026-10-06T07:13:06.4077563Z 
+2026-10-06T07:13:06.4077610Z smoke: OK
+2026-10-06T07:13:06.4077790Z WARNING: 8 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+2026-10-06T07:13:06.4078025Z    at: cleanup (core/object/object.cpp:2535)
+2026-10-06T07:13:06.4078231Z ERROR: 4 resources still in use at exit (run with --verbose for details).
+2026-10-06T07:13:06.4078435Z    at: clear (core/io/resource.cpp:822)
+2026-10-06T07:13:06.4078577Z exit=0 took=54s

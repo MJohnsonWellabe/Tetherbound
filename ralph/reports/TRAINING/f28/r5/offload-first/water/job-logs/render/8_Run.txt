@@ -1,0 +1,54 @@
+﻿2026-10-06T06:57:10.0234128Z ##[group]Run set -uo pipefail
+2026-10-06T06:57:10.0234480Z [36;1mset -uo pipefail[0m
+2026-10-06T06:57:10.0234776Z [36;1mexport XDG_DATA_HOME="$RUNNER_TEMP/userdata"[0m
+2026-10-06T06:57:10.0235153Z [36;1mmkdir -p "$XDG_DATA_HOME" "$RUNNER_TEMP/out"[0m
+2026-10-06T06:57:10.0235484Z [36;1mread -r -a user_args <<< "$ARGS"[0m
+2026-10-06T06:57:10.0236104Z [36;1mextra=()[0m
+2026-10-06T06:57:10.0236403Z [36;1m[ ${#user_args[@]} -gt 0 ] && extra=(-- "${user_args[@]}")[0m
+2026-10-06T06:57:10.0236770Z [36;1mtouch "$RUNNER_TEMP/start_marker"[0m
+2026-10-06T06:57:10.0237068Z [36;1mt0=$SECONDS[0m
+2026-10-06T06:57:10.0237299Z [36;1mif [ "$MODE" = render ]; then[0m
+2026-10-06T06:57:10.0237573Z [36;1m  driver=opengl3[0m
+2026-10-06T06:57:10.0237920Z [36;1m  if [ "$RENDERING_METHOD" = forward_plus ]; then driver=vulkan; fi[0m
+2026-10-06T06:57:10.0238400Z [36;1m  timeout "$((TMIN * 60))" xvfb-run -a -s "-screen 0 ${RES}x24" \[0m
+2026-10-06T06:57:10.0239095Z [36;1m    godot --path . --rendering-method "$RENDERING_METHOD" --rendering-driver "$driver" --audio-driver Dummy --resolution "$RES" \[0m
+2026-10-06T06:57:10.0239836Z [36;1m    --script "$SCRIPT" "${extra[@]}" > "$RUNNER_TEMP/out/run.log" 2>&1[0m
+2026-10-06T06:57:10.0240203Z [36;1melse[0m
+2026-10-06T06:57:10.0240484Z [36;1m  timeout "$((TMIN * 60))" godot --headless --path . \[0m
+2026-10-06T06:57:10.0240939Z [36;1m    --script "$SCRIPT" "${extra[@]}" > "$RUNNER_TEMP/out/run.log" 2>&1[0m
+2026-10-06T06:57:10.0241302Z [36;1mfi[0m
+2026-10-06T06:57:10.0241502Z [36;1mrc=$?[0m
+2026-10-06T06:57:10.0241832Z [36;1mecho "exit=$rc took=$((SECONDS - t0))s" | tee -a "$RUNNER_TEMP/out/run.log"[0m
+2026-10-06T06:57:10.0242262Z [36;1mtail -60 "$RUNNER_TEMP/out/run.log"[0m
+2026-10-06T06:57:10.0242582Z [36;1mecho "$rc" > "$RUNNER_TEMP/out/exit_code"[0m
+2026-10-06T06:57:10.0305422Z shell: /usr/bin/bash -e {0}
+2026-10-06T06:57:10.0305915Z env:
+2026-10-06T06:57:10.0306122Z   GODOT_VERSION: 4.7-stable
+2026-10-06T06:57:10.0306416Z   SCRIPT: tests/smoke_water_scene_encounters.gd
+2026-10-06T06:57:10.0306762Z   ARGS: 
+2026-10-06T06:57:10.0306946Z   RES: 1280x720
+2026-10-06T06:57:10.0307144Z   TMIN: 30
+2026-10-06T06:57:10.0307325Z   MODE: headless
+2026-10-06T06:57:10.0307542Z   RENDERING_METHOD: gl_compatibility
+2026-10-06T06:57:10.0307808Z ##[endgroup]
+2026-10-06T06:58:02.6057298Z exit=0 took=52s
+2026-10-06T06:58:02.6073700Z Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+2026-10-06T06:58:02.6074086Z 
+2026-10-06T06:58:02.6074440Z WARNING: instance_reset_physics_interpolation() is deprecated.
+2026-10-06T06:58:02.6075524Z      at: _instance_reset_physics_interpolation_bind_compat_104269 (servers/rendering/rendering_server.compat.inc:62)
+2026-10-06T06:58:02.6076735Z      GDScript backtrace (most recent call first):
+2026-10-06T06:58:02.6077346Z          [0] _ready (res://scripts/world/water_world.gd:63)
+2026-10-06T06:58:02.6078053Z          [1] run (res://tests/smoke_water_scene_encounters.gd:28)
+2026-10-06T06:58:02.6080260Z [water vegetation] 4145 instances in 549 model batches; layers={"groundcover":2801,"rocks":515,"shrubs":373,"trees":456} islands={"brine_steps":304,"deep_watch":228,"drowned_garden":405,"first_shore":432,"gull_rest":225,"lantern_cove":311,"reedhaven":477,"salt_crown":413,"shellwatch":435,"sluice_isle":356,"tidal_cradle":552,"veilfall":7}
+2026-10-06T06:58:02.6087073Z [water vegetation] sheltered grove counts={"brine_steps":{"accepted":4,"attempts":256,"requested":6,"shrubs":18,"trees":20},"deep_watch":{"accepted":5,"attempts":105,"requested":5,"shrubs":22,"trees":31},"drowned_garden":{"accepted":7,"attempts":30,"requested":7,"shrubs":31,"trees":45},"first_shore":{"accepted":11,"attempts":73,"requested":11,"shrubs":49,"trees":64},"gull_rest":{"accepted":6,"attempts":86,"requested":6,"shrubs":27,"trees":37},"lantern_cove":{"accepted":5,"attempts":212,"requested":5,"shrubs":23,"trees":35},"reedhaven":{"accepted":8,"attempts":141,"requested":8,"shrubs":35,"trees":41},"salt_crown":{"accepted":8,"attempts":97,"requested":8,"shrubs":33,"trees":41},"shellwatch":{"accepted":9,"attempts":256,"requested":12,"shrubs":42,"trees":43},"sluice_isle":{"accepted":9,"attempts":37,"requested":9,"shrubs":46,"trees":57},"tidal_cradle":{"accepted":8,"attempts":256,"requested":16,"shrubs":40,"trees":42}}
+2026-10-06T06:58:02.6092779Z [grass_field] grass ring: 32748 instances over 9 lattice layers (tuft_count asked for 30000), 16m cull tiles
+2026-10-06T06:58:02.6093501Z [grass_field] cover tier strand_bushes 2024 instances over 1 lattice layers (count 280)
+2026-10-06T06:58:02.6094105Z [grass_field] cover tier strand_flowers 1868 instances over 1 lattice layers (count 100)
+2026-10-06T06:58:02.6094558Z [grass_field] 2 cover tier(s) up
+2026-10-06T06:58:02.6095000Z [grass_field] bound: 32748 tufts, radius 56m, region_size 512, vertex_spacing 1.0, 1024 region slots
+2026-10-06T06:58:02.6096711Z F29 wild witness {"body":"/root/WaterArchipelago/water_first_shore_wild_021_0","position":"(-27.418, -0.404193, 179.366)","site":"water_first_shore_wild_021","species":"water_cannonback","table":"water_first_shore_shallows","trainer_owned":false}
+2026-10-06T06:58:02.6098265Z F29 wild witness {"body":"/root/WaterArchipelago/water_first_shore_wild_020_0","position":"(20.297, 2.117856, -170.539)","site":"water_first_shore_wild_020","species":"water_cannonback","table":"water_first_shore_land","trainer_owned":false}
+2026-10-06T06:58:02.6099747Z F29 wild witness {"body":"/root/WaterArchipelago/water_first_shore_wild_015_0","position":"(12.695, 15.94787, -106.476)","site":"water_first_shore_wild_015","species":"water_cannonback","table":"water_first_shore_land","trainer_owned":false}
+2026-10-06T06:58:02.6101217Z F29 wild witness {"body":"/root/WaterArchipelago/water_first_shore_wild_011_0","position":"(70.662, 23.44604, -52.98)","site":"water_first_shore_wild_011","species":"water_cannonback","table":"water_first_shore_land","trainer_owned":false}
+2026-10-06T06:58:02.6102368Z Water encounter smoke: 45 checks, 0 failures
+2026-10-06T06:58:02.6102658Z exit=0 took=52s

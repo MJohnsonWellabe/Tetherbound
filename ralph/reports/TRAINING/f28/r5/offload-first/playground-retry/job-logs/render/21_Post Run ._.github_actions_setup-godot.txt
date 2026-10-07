@@ -1,0 +1,13 @@
+﻿2026-10-06T07:13:07.3182530Z Post job cleanup.
+2026-10-06T07:13:07.3184904Z ##[start-action display=Run actions/cache@v4;id=__19cbfe86-aa61-4ff5-8ea4-26022db851f2.__actions_cache]
+2026-10-06T07:13:08.2362446Z Post job cleanup.
+2026-10-06T07:13:08.3025765Z Cache hit occurred on the primary key import-4.7-stable-de0c944e157463687959d085d027731cdddfe5bc8c33adf8c370eca59e231f29, not saving cache.
+2026-10-06T07:13:08.3026707Z (node:2283) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-06T07:13:08.3027102Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-06T07:13:08.3074322Z ##[end-action id=__19cbfe86-aa61-4ff5-8ea4-26022db851f2.__actions_cache;outcome=success;conclusion=success;duration_ms=988]
+2026-10-06T07:13:08.3076155Z ##[start-action display=Run actions/cache@v4;id=__19cbfe86-aa61-4ff5-8ea4-26022db851f2.cache-godot]
+2026-10-06T07:13:08.3113743Z Post job cleanup.
+2026-10-06T07:13:08.3783514Z Cache hit occurred on the primary key godot-editor-4.7-stable, not saving cache.
+2026-10-06T07:13:08.3784568Z (node:2291) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-06T07:13:08.3785144Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-06T07:13:08.3839259Z ##[end-action id=__19cbfe86-aa61-4ff5-8ea4-26022db851f2.cache-godot;outcome=success;conclusion=success;duration_ms=76]

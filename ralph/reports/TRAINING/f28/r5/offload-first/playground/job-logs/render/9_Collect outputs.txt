@@ -1,0 +1,35 @@
+﻿2026-10-06T06:57:57.5267313Z ##[group]Run set -uo pipefail
+2026-10-06T06:57:57.5267563Z [36;1mset -uo pipefail[0m
+2026-10-06T06:57:57.5267718Z [36;1mout="$RUNNER_TEMP/out"[0m
+2026-10-06T06:57:57.5267873Z [36;1mmkdir -p "$out/tree" "$out/user"[0m
+2026-10-06T06:57:57.5275092Z [36;1m# Every file the run created or modified in the working tree,[0m
+2026-10-06T06:57:57.5275348Z [36;1m# ignored paths (shots/ etc.) included, by mtime against a marker[0m
+2026-10-06T06:57:57.5277585Z [36;1m# touched just before the run. NUL-separated, so any path is safe.[0m
+2026-10-06T06:57:57.5277816Z [36;1mif [ -f "$RUNNER_TEMP/start_marker" ]; then[0m
+2026-10-06T06:57:57.5278035Z [36;1m  find . \( -path ./.git -o -path ./.godot \) -prune -o \[0m
+2026-10-06T06:57:57.5279674Z [36;1m    -type f -newer "$RUNNER_TEMP/start_marker" -print0 \[0m
+2026-10-06T06:57:57.5281611Z [36;1m    | xargs -0 -r cp --parents -t "$out/tree/"[0m
+2026-10-06T06:57:57.5283563Z [36;1mfi[0m
+2026-10-06T06:57:57.5283731Z [36;1m# Bare native net smokes use /tmp/net-run-<unique invocation>.[0m
+2026-10-06T06:57:57.5284029Z [36;1m# Retain this run's peer logs/saves without changing their runtime paths.[0m
+2026-10-06T06:57:57.5299013Z [36;1mif [ -f "$RUNNER_TEMP/start_marker" ]; then[0m
+2026-10-06T06:57:57.5299218Z [36;1m  mkdir -p "$out/net-runs"[0m
+2026-10-06T06:57:57.5299470Z [36;1m  find /tmp -maxdepth 1 -type d -name 'net-run-*' -newer "$RUNNER_TEMP/start_marker" \[0m
+2026-10-06T06:57:57.5299743Z [36;1m    -exec cp -a -- {} "$out/net-runs/" \;[0m
+2026-10-06T06:57:57.5300070Z [36;1mfi[0m
+2026-10-06T06:57:57.5300252Z [36;1m# user:// minus Godot's shader cache (tens of MB nobody reads).[0m
+2026-10-06T06:57:57.5300567Z [36;1m(cd "$RUNNER_TEMP/userdata" 2>/dev/null && find . -path '*/shader_cache' -prune -o -type f -print0 \[0m
+2026-10-06T06:57:57.5300863Z [36;1m  | xargs -0 -r cp --parents -t "$out/user/") || true[0m
+2026-10-06T06:57:57.5301115Z [36;1m# A log-spamming script can write gigabytes (a capture tool once wrote[0m
+2026-10-06T06:57:57.5301391Z [36;1m# ~12 GB of run.log and godot.log). Keep the first 5 MB and last 20 MB[0m
+2026-10-06T06:57:57.5301650Z [36;1m# of any log over 25 MB so the artifact stays downloadable.[0m
+2026-10-06T06:57:57.5301928Z [36;1mfind "$out" -type f -name '*.log' -size +25M -print0 | while IFS= read -r -d '' f; do[0m
+2026-10-06T06:57:57.5302359Z [36;1m  { head -c 5000000 "$f"; printf '\n\n[... truncated by render.yml: %s bytes total ...]\n\n' "$(stat -c%s "$f")"; tail -c 20000000 "$f"; } > "$f.cut" && mv "$f.cut" "$f"[0m
+2026-10-06T06:57:57.5302695Z [36;1mdone[0m
+2026-10-06T06:57:57.5302866Z [36;1mfind "$out" -type f | sed "s|$out/||" | sort > "$out/MANIFEST.txt"[0m
+2026-10-06T06:57:57.5303089Z [36;1mecho "files=$(wc -l < "$out/MANIFEST.txt")"[0m
+2026-10-06T06:57:57.5368939Z shell: /usr/bin/bash -e {0}
+2026-10-06T06:57:57.5369097Z env:
+2026-10-06T06:57:57.5369220Z   GODOT_VERSION: 4.7-stable
+2026-10-06T06:57:57.5369357Z ##[endgroup]
+2026-10-06T06:57:57.5929997Z files=4

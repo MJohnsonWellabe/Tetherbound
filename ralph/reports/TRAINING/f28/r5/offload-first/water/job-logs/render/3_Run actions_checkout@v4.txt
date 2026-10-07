@@ -1,0 +1,211 @@
+﻿2026-10-06T06:55:15.8987224Z ##[group]Run actions/checkout@v4
+2026-10-06T06:55:15.8987895Z with:
+2026-10-06T06:55:15.8988524Z   ref: 3ecf62faf47bf91630017a1cc4fe215898812f9d
+2026-10-06T06:55:15.8989163Z   filter: blob:none
+2026-10-06T06:55:15.8989705Z   sparse-checkout-cone-mode: false
+2026-10-06T06:55:15.8990429Z   sparse-checkout: /*
+!/ralph/
+!/docs/
+!/shots/
+!/assets_raw/
+!/archive/
+
+2026-10-06T06:55:15.8991217Z   repository: MJohnsonWellabe/Tetherbound
+2026-10-06T06:55:15.8995348Z   token: ***
+2026-10-06T06:55:15.8995991Z   ssh-strict: true
+2026-10-06T06:55:15.8996464Z   ssh-user: git
+2026-10-06T06:55:15.8996943Z   persist-credentials: true
+2026-10-06T06:55:15.8997458Z   clean: true
+2026-10-06T06:55:15.8997912Z   fetch-depth: 1
+2026-10-06T06:55:15.8998378Z   fetch-tags: false
+2026-10-06T06:55:15.8998860Z   show-progress: true
+2026-10-06T06:55:15.8999337Z   lfs: false
+2026-10-06T06:55:15.8999779Z   submodules: false
+2026-10-06T06:55:15.9000283Z   set-safe-directory: true
+2026-10-06T06:55:15.9000838Z   allow-unsafe-pr-checkout: false
+2026-10-06T06:55:15.9001414Z env:
+2026-10-06T06:55:15.9001861Z   GODOT_VERSION: 4.7-stable
+2026-10-06T06:55:15.9002363Z ##[endgroup]
+2026-10-06T06:55:16.0124290Z Syncing repository: MJohnsonWellabe/Tetherbound
+2026-10-06T06:55:16.0128458Z ##[group]Getting Git version info
+2026-10-06T06:55:16.0130203Z Working directory is '/home/runner/work/Tetherbound/Tetherbound'
+2026-10-06T06:55:16.0132361Z [command]/usr/bin/git version
+2026-10-06T06:55:16.0222171Z git version 2.55.0
+2026-10-06T06:55:16.0250217Z ##[endgroup]
+2026-10-06T06:55:16.0272378Z Temporarily overriding HOME='/home/runner/work/_temp/0c868fc1-38d2-453a-ae0d-76c9ada4cb6f' before making global git config changes
+2026-10-06T06:55:16.0274994Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-06T06:55:16.0278362Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Tetherbound/Tetherbound
+2026-10-06T06:55:16.0342883Z Deleting the contents of '/home/runner/work/Tetherbound/Tetherbound'
+2026-10-06T06:55:16.0346005Z ##[group]Initializing the repository
+2026-10-06T06:55:16.0347671Z [command]/usr/bin/git init /home/runner/work/Tetherbound/Tetherbound
+2026-10-06T06:55:16.0478270Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-06T06:55:16.0498842Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-06T06:55:16.0500872Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-06T06:55:16.0502169Z hint: call:
+2026-10-06T06:55:16.0502823Z hint:
+2026-10-06T06:55:16.0503954Z hint: 	git config --global init.defaultBranch <name>
+2026-10-06T06:55:16.0504878Z hint:
+2026-10-06T06:55:16.0505550Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-06T06:55:16.0507144Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-06T06:55:16.0507964Z hint:
+2026-10-06T06:55:16.0508462Z hint: 	git branch -m <name>
+2026-10-06T06:55:16.0508993Z hint:
+2026-10-06T06:55:16.0509703Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-06T06:55:16.0510825Z Initialized empty Git repository in /home/runner/work/Tetherbound/Tetherbound/.git/
+2026-10-06T06:55:16.0513691Z [command]/usr/bin/git remote add origin https://github.com/MJohnsonWellabe/Tetherbound
+2026-10-06T06:55:16.0554551Z ##[endgroup]
+2026-10-06T06:55:16.0556293Z ##[group]Disabling automatic garbage collection
+2026-10-06T06:55:16.0559668Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-06T06:55:16.0597148Z ##[endgroup]
+2026-10-06T06:55:16.0598489Z ##[group]Setting up auth
+2026-10-06T06:55:16.0605123Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-06T06:55:16.0646496Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-06T06:55:16.1111947Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-06T06:55:16.1326862Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-06T06:55:16.1335144Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-06T06:55:16.1375806Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-06T06:55:16.1606028Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-06T06:55:16.1647436Z ##[endgroup]
+2026-10-06T06:55:16.1649157Z ##[group]Fetching the repository
+2026-10-06T06:55:16.1660193Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --filter=blob:none --depth=1 origin 3ecf62faf47bf91630017a1cc4fe215898812f9d
+2026-10-06T06:55:16.5308238Z From https://github.com/MJohnsonWellabe/Tetherbound
+2026-10-06T06:55:16.5311274Z  * branch            3ecf62faf47bf91630017a1cc4fe215898812f9d -> FETCH_HEAD
+2026-10-06T06:55:16.5318101Z ##[endgroup]
+2026-10-06T06:55:16.5320738Z ##[group]Determining the checkout info
+2026-10-06T06:55:16.5323859Z ##[endgroup]
+2026-10-06T06:55:16.5326956Z ##[group]Setting up sparse checkout
+2026-10-06T06:55:16.5329105Z [command]/usr/bin/git config core.sparseCheckout true
+2026-10-06T06:55:16.5364764Z [command]/usr/bin/git rev-parse --git-path info/sparse-checkout
+2026-10-06T06:55:16.5390004Z .git/info/sparse-checkout
+2026-10-06T06:55:16.5399569Z ##[endgroup]
+2026-10-06T06:55:16.5401176Z ##[group]Checking out the ref
+2026-10-06T06:55:16.5404684Z [command]/usr/bin/git checkout --progress --force 3ecf62faf47bf91630017a1cc4fe215898812f9d
+2026-10-06T06:56:16.5382866Z Updating files:   0% (1/11434)
+2026-10-06T06:56:16.6092880Z Updating files:   1% (115/11434)
+2026-10-06T06:56:16.6299063Z Updating files:   2% (229/11434)
+2026-10-06T06:56:16.6603619Z Updating files:   3% (344/11434)
+2026-10-06T06:56:16.6682465Z Updating files:   4% (458/11434)
+2026-10-06T06:56:16.7327536Z Updating files:   5% (572/11434)
+2026-10-06T06:56:16.7936408Z Updating files:   6% (687/11434)
+2026-10-06T06:56:17.2059671Z Updating files:   6% (715/11434)
+2026-10-06T06:56:17.5495407Z Updating files:   7% (801/11434)
+2026-10-06T06:56:17.7947222Z Updating files:   8% (915/11434)
+2026-10-06T06:56:17.8476226Z Updating files:   8% (994/11434)
+2026-10-06T06:56:17.9907578Z Updating files:   9% (1030/11434)
+2026-10-06T06:56:18.2593828Z Updating files:  10% (1144/11434)
+2026-10-06T06:56:18.3943157Z Updating files:  11% (1258/11434)
+2026-10-06T06:56:18.6735455Z Updating files:  12% (1373/11434)
+2026-10-06T06:56:18.7872268Z Updating files:  13% (1487/11434)
+2026-10-06T06:56:18.8457436Z Updating files:  13% (1561/11434)
+2026-10-06T06:56:19.0585183Z Updating files:  14% (1601/11434)
+2026-10-06T06:56:19.4150378Z Updating files:  15% (1716/11434)
+2026-10-06T06:56:19.6703668Z Updating files:  16% (1830/11434)
+2026-10-06T06:56:19.7899135Z Updating files:  17% (1944/11434)
+2026-10-06T06:56:19.8904371Z Updating files:  17% (1998/11434)
+2026-10-06T06:56:20.0318901Z Updating files:  18% (2059/11434)
+2026-10-06T06:56:20.1608255Z Updating files:  19% (2173/11434)
+2026-10-06T06:56:20.1837099Z Updating files:  20% (2287/11434)
+2026-10-06T06:56:20.2909387Z Updating files:  21% (2402/11434)
+2026-10-06T06:56:20.5439335Z Updating files:  22% (2516/11434)
+2026-10-06T06:56:20.6403310Z Updating files:  23% (2630/11434)
+2026-10-06T06:56:20.7234259Z Updating files:  24% (2745/11434)
+2026-10-06T06:56:20.7870562Z Updating files:  25% (2859/11434)
+2026-10-06T06:56:20.8482865Z Updating files:  25% (2918/11434)
+2026-10-06T06:56:20.8601788Z Updating files:  26% (2973/11434)
+2026-10-06T06:56:20.8654936Z Updating files:  27% (3088/11434)
+2026-10-06T06:56:20.9457403Z Updating files:  28% (3202/11434)
+2026-10-06T06:56:20.9963123Z Updating files:  29% (3316/11434)
+2026-10-06T06:56:21.0070453Z Updating files:  30% (3431/11434)
+2026-10-06T06:56:21.0187451Z Updating files:  31% (3545/11434)
+2026-10-06T06:56:21.0282011Z Updating files:  32% (3659/11434)
+2026-10-06T06:56:21.0423815Z Updating files:  33% (3774/11434)
+2026-10-06T06:56:21.0511910Z Updating files:  34% (3888/11434)
+2026-10-06T06:56:21.0663517Z Updating files:  35% (4002/11434)
+2026-10-06T06:56:21.1254155Z Updating files:  36% (4117/11434)
+2026-10-06T06:56:21.1902209Z Updating files:  37% (4231/11434)
+2026-10-06T06:56:21.2082655Z Updating files:  38% (4345/11434)
+2026-10-06T06:56:21.2536792Z Updating files:  39% (4460/11434)
+2026-10-06T06:56:21.3275061Z Updating files:  40% (4574/11434)
+2026-10-06T06:56:21.4135490Z Updating files:  41% (4688/11434)
+2026-10-06T06:56:21.4228264Z Updating files:  42% (4803/11434)
+2026-10-06T06:56:21.4304414Z Updating files:  43% (4917/11434)
+2026-10-06T06:56:21.4390354Z Updating files:  44% (5031/11434)
+2026-10-06T06:56:21.4469219Z Updating files:  45% (5146/11434)
+2026-10-06T06:56:21.4563160Z Updating files:  46% (5260/11434)
+2026-10-06T06:56:21.4650828Z Updating files:  47% (5374/11434)
+2026-10-06T06:56:21.4731393Z Updating files:  48% (5489/11434)
+2026-10-06T06:56:21.4827390Z Updating files:  49% (5603/11434)
+2026-10-06T06:56:21.4908968Z Updating files:  50% (5717/11434)
+2026-10-06T06:56:21.5006279Z Updating files:  51% (5832/11434)
+2026-10-06T06:56:21.5072714Z Updating files:  52% (5946/11434)
+2026-10-06T06:56:21.5333862Z Updating files:  53% (6061/11434)
+2026-10-06T06:56:21.5510286Z Updating files:  54% (6175/11434)
+2026-10-06T06:56:21.5596578Z Updating files:  55% (6289/11434)
+2026-10-06T06:56:21.5664112Z Updating files:  56% (6404/11434)
+2026-10-06T06:56:21.5738875Z Updating files:  57% (6518/11434)
+2026-10-06T06:56:21.5804642Z Updating files:  58% (6632/11434)
+2026-10-06T06:56:21.5869056Z Updating files:  59% (6747/11434)
+2026-10-06T06:56:21.5947688Z Updating files:  60% (6861/11434)
+2026-10-06T06:56:21.6028981Z Updating files:  61% (6975/11434)
+2026-10-06T06:56:21.6101755Z Updating files:  62% (7090/11434)
+2026-10-06T06:56:21.6178882Z Updating files:  63% (7204/11434)
+2026-10-06T06:56:21.6259600Z Updating files:  64% (7318/11434)
+2026-10-06T06:56:21.6326431Z Updating files:  65% (7433/11434)
+2026-10-06T06:56:21.6391377Z Updating files:  66% (7547/11434)
+2026-10-06T06:56:21.6461537Z Updating files:  67% (7661/11434)
+2026-10-06T06:56:21.6530186Z Updating files:  68% (7776/11434)
+2026-10-06T06:56:21.6597239Z Updating files:  69% (7890/11434)
+2026-10-06T06:56:21.6664200Z Updating files:  70% (8004/11434)
+2026-10-06T06:56:21.6736563Z Updating files:  71% (8119/11434)
+2026-10-06T06:56:21.6792032Z Updating files:  72% (8233/11434)
+2026-10-06T06:56:21.6853650Z Updating files:  73% (8347/11434)
+2026-10-06T06:56:21.6919687Z Updating files:  74% (8462/11434)
+2026-10-06T06:56:21.6976765Z Updating files:  75% (8576/11434)
+2026-10-06T06:56:21.7040081Z Updating files:  76% (8690/11434)
+2026-10-06T06:56:21.7106697Z Updating files:  77% (8805/11434)
+2026-10-06T06:56:21.7171592Z Updating files:  78% (8919/11434)
+2026-10-06T06:56:21.7233698Z Updating files:  79% (9033/11434)
+2026-10-06T06:56:21.7308224Z Updating files:  80% (9148/11434)
+2026-10-06T06:56:21.7369240Z Updating files:  81% (9262/11434)
+2026-10-06T06:56:21.7425982Z Updating files:  82% (9376/11434)
+2026-10-06T06:56:21.7484177Z Updating files:  83% (9491/11434)
+2026-10-06T06:56:21.7540684Z Updating files:  84% (9605/11434)
+2026-10-06T06:56:21.7597224Z Updating files:  85% (9719/11434)
+2026-10-06T06:56:21.7650835Z Updating files:  86% (9834/11434)
+2026-10-06T06:56:21.7707253Z Updating files:  87% (9948/11434)
+2026-10-06T06:56:21.7798489Z Updating files:  88% (10062/11434)
+2026-10-06T06:56:21.7829360Z Updating files:  89% (10177/11434)
+2026-10-06T06:56:21.7866773Z Updating files:  89% (10227/11434)
+2026-10-06T06:56:21.7930781Z Updating files:  90% (10291/11434)
+2026-10-06T06:56:21.8005735Z Updating files:  91% (10405/11434)
+2026-10-06T06:56:21.8070749Z Updating files:  92% (10520/11434)
+2026-10-06T06:56:21.8143578Z Updating files:  93% (10634/11434)
+2026-10-06T06:56:21.8250104Z Updating files:  94% (10748/11434)
+2026-10-06T06:56:21.8369081Z Updating files:  95% (10863/11434)
+2026-10-06T06:56:21.8465146Z Updating files:  96% (10977/11434)
+2026-10-06T06:56:21.8528337Z Updating files:  97% (11091/11434)
+2026-10-06T06:56:21.8595324Z Updating files:  98% (11206/11434)
+2026-10-06T06:56:21.8662001Z Updating files:  99% (11320/11434)
+2026-10-06T06:56:21.8662682Z Updating files: 100% (11434/11434)
+2026-10-06T06:56:21.8663106Z Updating files: 100% (11434/11434), done.
+2026-10-06T06:56:21.9114740Z Note: switching to '3ecf62faf47bf91630017a1cc4fe215898812f9d'.
+2026-10-06T06:56:21.9115410Z 
+2026-10-06T06:56:21.9116109Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-06T06:56:21.9117332Z changes and commit them, and you can discard any commits you make in this
+2026-10-06T06:56:21.9118445Z state without impacting any branches by switching back to a branch.
+2026-10-06T06:56:21.9119077Z 
+2026-10-06T06:56:21.9119495Z If you want to create a new branch to retain commits you create, you may
+2026-10-06T06:56:21.9120530Z do so (now or later) by using -c with the switch command. Example:
+2026-10-06T06:56:21.9121096Z 
+2026-10-06T06:56:21.9121321Z   git switch -c <new-branch-name>
+2026-10-06T06:56:21.9121746Z 
+2026-10-06T06:56:21.9121949Z Or undo this operation with:
+2026-10-06T06:56:21.9122292Z 
+2026-10-06T06:56:21.9122465Z   git switch -
+2026-10-06T06:56:21.9122722Z 
+2026-10-06T06:56:21.9123083Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-06T06:56:21.9123637Z 
+2026-10-06T06:56:21.9123979Z HEAD is now at 3ecf62fa Preserve original parser evidence bytes and hashes
+2026-10-06T06:56:21.9388582Z ##[endgroup]
+2026-10-06T06:56:21.9433074Z [command]/usr/bin/git log -1 --format=%H
+2026-10-06T06:56:21.9462059Z 3ecf62faf47bf91630017a1cc4fe215898812f9d

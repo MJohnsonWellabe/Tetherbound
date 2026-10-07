@@ -1,0 +1,7 @@
+﻿2026-10-06T07:01:07.3832372Z ##[group]Run rc=$(cat "$RUNNER_TEMP/out/exit_code" 2>/dev/null || echo 1)
+2026-10-06T07:01:07.3832784Z [36;1mrc=$(cat "$RUNNER_TEMP/out/exit_code" 2>/dev/null || echo 1)[0m
+2026-10-06T07:01:07.3833355Z [36;1m[ "$rc" = 0 ] || { echo "::error::script exited $rc (124 = timeout)"; exit 1; }[0m
+2026-10-06T07:01:07.3868845Z shell: /usr/bin/bash -e {0}
+2026-10-06T07:01:07.3869071Z env:
+2026-10-06T07:01:07.3869240Z   GODOT_VERSION: 4.7-stable
+2026-10-06T07:01:07.3869435Z ##[endgroup]

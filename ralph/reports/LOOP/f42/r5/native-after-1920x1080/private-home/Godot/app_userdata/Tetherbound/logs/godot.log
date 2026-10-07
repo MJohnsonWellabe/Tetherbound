@@ -1,0 +1,9 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB
+
+SCRIPT ERROR: Parse Error: Identifier "details" not declared in the current scope.
+   at: GDScript::reload (res://tools/capture_f42_layout_fixtures.gd:95)
+SCRIPT ERROR: Parse Error: Identifier "details" not declared in the current scope.
+   at: GDScript::reload (res://tools/capture_f42_layout_fixtures.gd:101)
+ERROR: Failed to load script "res://tools/capture_f42_layout_fixtures.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)

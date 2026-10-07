@@ -1,0 +1,8 @@
+﻿2026-10-06T06:57:15.9712602Z ##[group]Run test -f "$SCRIPT" || { echo "::error::$SCRIPT not found on $CHECKOUT_REF"; exit 1; }
+2026-10-06T06:57:15.9713312Z [36;1mtest -f "$SCRIPT" || { echo "::error::$SCRIPT not found on $CHECKOUT_REF"; exit 1; }[0m
+2026-10-06T06:57:15.9750203Z shell: /usr/bin/bash -e {0}
+2026-10-06T06:57:15.9750586Z env:
+2026-10-06T06:57:15.9750851Z   GODOT_VERSION: 4.7-stable
+2026-10-06T06:57:15.9751185Z   SCRIPT: tests/smoke_cloudreach_f07_windscar_cadence.gd
+2026-10-06T06:57:15.9751524Z   CHECKOUT_REF: 3ecf62faf47bf91630017a1cc4fe215898812f9d
+2026-10-06T06:57:15.9751796Z ##[endgroup]

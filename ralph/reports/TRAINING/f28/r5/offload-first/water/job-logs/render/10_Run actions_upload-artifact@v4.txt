@@ -1,0 +1,26 @@
+﻿2026-10-06T06:58:02.7008401Z ##[group]Run actions/upload-artifact@v4
+2026-10-06T06:58:02.7008716Z with:
+2026-10-06T06:58:02.7008971Z   name: render-r5-f29-water-20261006-065258-37426280664
+2026-10-06T06:58:02.7009313Z   path: /home/runner/work/_temp/out/
+2026-10-06T06:58:02.7009580Z   retention-days: 7
+2026-10-06T06:58:02.7009802Z   if-no-files-found: warn
+2026-10-06T06:58:02.7010037Z   compression-level: 6
+2026-10-06T06:58:02.7010255Z   overwrite: false
+2026-10-06T06:58:02.7010524Z   include-hidden-files: false
+2026-10-06T06:58:02.7010765Z env:
+2026-10-06T06:58:02.7010953Z   GODOT_VERSION: 4.7-stable
+2026-10-06T06:58:02.7011187Z ##[endgroup]
+2026-10-06T06:58:02.8680382Z (node:2499) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-10-06T06:58:02.8681730Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-06T06:58:02.8827894Z With the provided path, there will be 7 files uploaded
+2026-10-06T06:58:02.8828794Z Artifact name is valid!
+2026-10-06T06:58:02.8829303Z Root directory input is valid!
+2026-10-06T06:58:03.0817379Z Beginning upload of artifact content to blob storage
+2026-10-06T06:58:03.1135075Z (node:2499) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-10-06T06:58:03.1685844Z Uploaded bytes 51919
+2026-10-06T06:58:03.1922602Z Finished uploading artifact content to blob storage!
+2026-10-06T06:58:03.1923958Z SHA256 digest of uploaded artifact zip is 54a51535ef5995a1822340fe2effacb8a8ce1245503eeccbf1787020d2b3449d
+2026-10-06T06:58:03.1925943Z Finalizing artifact upload
+2026-10-06T06:58:03.4045846Z Artifact render-r5-f29-water-20261006-065258-37426280664.zip successfully finalized. Artifact ID 11395133952
+2026-10-06T06:58:03.4047879Z Artifact render-r5-f29-water-20261006-065258-37426280664 has been successfully uploaded! Final size is 51919 bytes. Artifact ID is 11395133952
+2026-10-06T06:58:03.4053918Z Artifact download URL: https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37426280664/artifacts/11395133952

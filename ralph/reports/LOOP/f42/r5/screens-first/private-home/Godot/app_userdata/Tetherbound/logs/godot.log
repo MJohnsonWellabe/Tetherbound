@@ -1,0 +1,25 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+SCRIPT ERROR: Trying to assign invalid previously freed instance.
+   at: _modal_lifecycle (res://tests/smoke_f42_system_screen.gd:195)
+   GDScript backtrace (most recent call first):
+       [0] _modal_lifecycle (res://tests/smoke_f42_system_screen.gd:195)
+SCRIPT ERROR: Trying to assign invalid previously freed instance.
+   at: _modal_lifecycle (res://tests/smoke_f42_system_screen.gd:195)
+   GDScript backtrace (most recent call first):
+       [0] _modal_lifecycle (res://tests/smoke_f42_system_screen.gd:195)
+SCRIPT ERROR: Trying to assign invalid previously freed instance.
+   at: _modal_lifecycle (res://tests/smoke_f42_system_screen.gd:195)
+   GDScript backtrace (most recent call first):
+       [0] _modal_lifecycle (res://tests/smoke_f42_system_screen.gd:195)
+SCRIPT ERROR: Trying to assign invalid previously freed instance.
+   at: _modal_lifecycle (res://tests/smoke_f42_system_screen.gd:195)
+   GDScript backtrace (most recent call first):
+       [0] _modal_lifecycle (res://tests/smoke_f42_system_screen.gd:195)
+ERROR: Station Forge physical B closes its surface
+   at: push_error (core/variant/variant_utility.cpp:1023)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tests/smoke_f42_system_screen.gd:55)
+       [1] _system_screens (res://tests/smoke_f42_system_screen.gd:181)
+SYSTEM SCREEN CHECKS: 64 checks, 1 failures
+F42 MODAL SMOKE: FAIL

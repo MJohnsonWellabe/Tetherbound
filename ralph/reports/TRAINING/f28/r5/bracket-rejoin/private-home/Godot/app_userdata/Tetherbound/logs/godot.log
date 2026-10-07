@@ -1,0 +1,141 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only ci_segment_handoffs,test_f28_training_boundaries.gd,test_level_up_announcement.gd,test_evolution.gd,test_evolution_links.gd,test_evolution_discoverability.gd,test_breakthrough_saved_move_history.gd,test_starter_install.gd,test_starter_choice_action.gd,test_original_starter_guest_commit.gd: 10 of 824 test files
+  ok    test_breakthrough_saved_move_history.gd :: test_actual_saved_move_import_retains_the_original_earned_tier_options
+  ok    test_breakthrough_saved_move_history.gd :: test_every_authored_tier_move_preserves_eligibility_after_canonical_json_reload
+  ok    test_breakthrough_saved_move_history.gd :: test_malformed_saved_prefix_cannot_grant_an_authored_tier_move
+  ok    test_breakthrough_saved_move_history.gd :: test_stormursa_repeated_hearten_gate_retains_the_actual_earlier_unlock
+  ok    test_ci_segment_handoffs.gd :: test_changed_producer_makes_checkpoint_stale
+  ok    test_ci_segment_handoffs.gd :: test_contract_mismatch_is_reported
+  ok    test_ci_segment_handoffs.gd :: test_edit_outside_the_digest_is_stale
+  ok    test_ci_segment_handoffs.gd :: test_every_boundary_has_a_committed_checkpoint_per_role
+  ok    test_ci_segment_handoffs.gd :: test_every_checkpoint_is_fresh
+  ok    test_ci_segment_handoffs.gd :: test_every_checkpoint_loads_and_meets_its_start_contract
+  ok    test_ci_segment_handoffs.gd :: test_hand_edited_checkpoint_is_stale
+WARNING: save slot 0 has split authority that could not be resolved
+   at: push_warning (core/variant/variant_utility.cpp:1033)
+   GDScript backtrace (most recent call first):
+       [0] load_slot (res://scripts/save/save_game.gd:868)
+       [1] load_captured (res://tests/helpers/ci_segments.gd:235)
+       [2] staleness (res://tests/helpers/ci_segments.gd:368)
+       [3] test_old_version_checkpoint_is_stale (res://tests/test_ci_segment_handoffs.gd:123)
+       [4] _init (res://tests/run_tests.gd:120)
+  ok    test_ci_segment_handoffs.gd :: test_old_version_checkpoint_is_stale
+  ok    test_ci_segment_handoffs.gd :: test_the_selected_chain_has_boundaries
+  ok    test_ci_segment_handoffs.gd :: test_unedited_copy_is_fresh
+  ok    test_evolution.gd :: test_a_species_with_no_evolution_link_reports_ineligible
+  ok    test_evolution.gd :: test_caught_water_mosshell_requires_choice_and_keeps_the_water_form_and_individual
+  ok    test_evolution.gd :: test_eligible_once_level_and_bond_are_both_met_with_no_item_required
+  ok    test_evolution.gd :: test_evolve_changes_species_and_stats_but_preserves_what_the_player_earned
+  ok    test_evolution.gd :: test_evolve_refuses_and_changes_nothing_when_not_eligible
+  ok    test_evolution.gd :: test_holding_both_stones_refuses_as_ambiguous_and_spends_nothing
+  ok    test_evolution.gd :: test_holding_neither_stone_still_reports_tuskroot_as_the_default_target
+  ok    test_evolution.gd :: test_item_gate_passes_and_consumes_exactly_one_with_the_item_in_hand
+  ok    test_evolution.gd :: test_item_gate_refuses_without_the_item_and_spends_nothing
+  ok    test_evolution.gd :: test_not_eligible_below_the_bond_requirement
+  ok    test_evolution.gd :: test_not_eligible_below_the_level_requirement
+  ok    test_evolution.gd :: test_refusal_with_no_catalyst_names_both_stones
+  ok    test_evolution.gd :: test_requirements_names_the_real_species_json_target
+  ok    test_evolution.gd :: test_sunstone_branch_evolves_into_ashtusk_and_consumes_only_the_sunstone
+  ok    test_evolution.gd :: test_the_shipped_evolution_catalyst_is_a_real_item
+  ok    test_evolution.gd :: test_the_shipped_gate_refuses_held_stone_shortcut_and_preserves_the_catalyst
+  ok    test_evolution.gd :: test_water_feast_preserves_ancestor_moves_through_real_character_admission_and_reload
+  ok    test_evolution.gd :: test_water_mosshell_stay_is_permanent_and_canonical_mosshell_stays_canonical
+  ok    test_evolution_discoverability.gd :: test_a_species_with_no_evolution_link_is_never_announced
+  ok    test_evolution_discoverability.gd :: test_announce_catalyst_pickup_is_silent_for_an_ordinary_item
+  ok    test_evolution_discoverability.gd :: test_announce_catalyst_pickup_pushes_one_catalyst_found_event_for_a_real_catalyst
+  ok    test_evolution_discoverability.gd :: test_catalyst_pickup_text_is_empty_for_an_ordinary_item
+  ok    test_evolution_discoverability.gd :: test_catalyst_pickup_text_names_the_real_gate_for_both_shipped_stones
+  ok    test_evolution_discoverability.gd :: test_evolution_eligible_and_catalyst_found_are_moments_with_the_actual_verb
+  ok    test_evolution_discoverability.gd :: test_evolution_eligible_does_not_fire_below_the_level_or_bond_gate
+  ok    test_evolution_discoverability.gd :: test_evolution_eligible_does_not_fire_while_the_catalyst_is_missing
+  ok    test_evolution_discoverability.gd :: test_evolution_eligible_fires_once_for_a_creature_that_crosses_every_gate
+  ok    test_evolution_discoverability.gd :: test_missing_text_is_empty_for_a_species_that_does_not_evolve
+  ok    test_evolution_discoverability.gd :: test_missing_text_is_empty_once_every_requirement_including_the_item_is_met
+  ok    test_evolution_discoverability.gd :: test_missing_text_names_all_three_unmet_requirements_with_current_values
+  ok    test_evolution_discoverability.gd :: test_missing_text_names_only_what_is_actually_unmet
+  ok    test_evolution_discoverability.gd :: test_xp_next_line_names_missing_requirements_when_not_yet_eligible
+  ok    test_evolution_discoverability.gd :: test_xp_next_line_reports_ready_to_evolve_once_every_gate_is_met
+  ok    test_evolution_links.gd :: test_a_variant_evolution_is_also_larger_than_what_it_came_from
+  ok    test_evolution_links.gd :: test_an_evolution_is_larger_than_what_it_came_from
+  ok    test_evolution_links.gd :: test_every_evolution_source_exists
+  ok    test_evolution_links.gd :: test_every_evolution_target_exists
+  ok    test_evolution_links.gd :: test_every_evolution_variant_target_exists
+  ok    test_evolution_links.gd :: test_every_species_in_an_evolution_line_declares_a_height
+  ok    test_evolution_links.gd :: test_the_biome_still_has_its_one_evolution_line
+  ok    test_evolution_links.gd :: test_the_reverse_link_agrees
+  ok    test_evolution_links.gd :: test_the_reverse_link_agrees_for_variants
+  ok    test_f28_training_boundaries.gd :: test_candy_clamps_every_admitted_cap_and_stages_one_debit
+  ok    test_f28_training_boundaries.gd :: test_candy_original_receipt_refuses_a_second_debit_even_below_cap
+  ok    test_f28_training_boundaries.gd :: test_candy_refuses_cap_faint_missing_item_and_changed_owner_without_mutation
+  ok    test_f28_training_boundaries.gd :: test_each_master_recipe_is_personal_and_replays_never_pay_again
+  ok    test_f28_training_boundaries.gd :: test_feast_buttons_require_the_actual_locked_tier_and_never_reoffer_a_lifted_cap
+  ok    test_f28_training_boundaries.gd :: test_feast_completion_requires_original_intent_and_all_saved_fences
+  ok    test_f28_training_boundaries.gd :: test_fresh_starter_saved_mirror_allows_rest_xp_without_inventing_missing_history
+  ok    test_f28_training_boundaries.gd :: test_guest_master_refusal_releases_only_the_matching_attempt
+  ok    test_f28_training_boundaries.gd :: test_master_deployment_cannot_overlap_after_cancel_and_reopen
+  ok    test_f28_training_boundaries.gd :: test_master_selection_deploys_the_chosen_owned_companion_and_fences_context
+  ok    test_f28_training_boundaries.gd :: test_personal_rest_heals_but_cannot_bank_xp_or_cross_locked_cap
+  ok    test_f28_training_boundaries.gd :: test_saved_candy_completion_announces_partial_growth_once
+  ok    test_f28_training_boundaries.gd :: test_shipping_evolution_uses_feast_and_catalyst_text_names_actual_gate
+  ok    test_f28_training_boundaries.gd :: test_stormwood_master_uses_the_real_inherited_duel_instead_of_chapter_catalogue
+  ok    test_f28_training_boundaries.gd :: test_tidewake_and_cloudreach_master_admission_keeps_combat_and_diving_fences
+  ok    test_f28_training_boundaries.gd :: test_two_stable_characters_share_no_candy_receipt_or_inventory
+  ok    test_level_up_announcement.gd :: test_a_multi_level_jump_is_one_line_naming_the_levels_gained
+  ok    test_level_up_announcement.gd :: test_an_ordinary_award_produces_the_plain_xp_line
+  ok    test_level_up_announcement.gd :: test_another_creatures_award_does_not_write_the_active_creatures_line
+  ok    test_level_up_announcement.gd :: test_breakthrough_threshold_notice_does_not_offer_xp_only_evolution
+  ok    test_level_up_announcement.gd :: test_disconnecting_the_event_path_removes_the_announcement
+  ok    test_level_up_announcement.gd :: test_the_level_up_line_names_the_creature_and_its_new_level
+  ok    test_level_up_announcement.gd :: test_the_level_up_line_says_what_changed
+  ok    test_level_up_announcement.gd :: test_the_line_reports_the_evolution_level_when_the_jump_crosses_it
+  ok    test_level_up_announcement.gd :: test_the_previous_fights_award_is_not_re_announced
+  ok    test_level_up_announcement.gd :: test_the_unlock_threshold_is_data_driven_and_gates
+  ok    test_original_starter_guest_commit.gd :: test_a_guest_asks_with_its_live_instance_and_never_writes_its_own_party
+  ok    test_original_starter_guest_commit.gd :: test_a_guest_is_finished_only_when_the_host_row_reads_accepted
+  ok    test_original_starter_guest_commit.gd :: test_a_joiner_whose_snapshot_has_not_landed_may_not_write
+  ok    test_original_starter_guest_commit.gd :: test_a_journalled_starter_is_never_released_by_a_late_refusal
+  ok    test_original_starter_guest_commit.gd :: test_a_late_acceptance_is_seen_without_a_resend
+  ok    test_original_starter_guest_commit.gd :: test_a_retry_offers_the_host_card_only_when_the_installer_refuses_the_follower
+  ok    test_original_starter_guest_commit.gd :: test_a_retry_with_an_installable_pending_row_reinstalls_it
+  ok    test_original_starter_guest_commit.gd :: test_a_retry_with_nothing_journalled_resends_the_first_card
+  ok    test_original_starter_guest_commit.gd :: test_an_admitted_guest_is_ready_to_ask_for_its_starter
+  ok    test_original_starter_guest_commit.gd :: test_an_adoption_is_in_flight_only_for_its_own_character_world_and_epoch
+  ok    test_original_starter_guest_commit.gd :: test_an_invalid_row_is_never_adopted
+  ok    test_original_starter_guest_commit.gd :: test_no_session_or_no_saver_refuses
+  ok    test_original_starter_guest_commit.gd :: test_restores_keep_an_in_flight_choice_and_finishing_closes_the_picker
+  ok    test_original_starter_guest_commit.gd :: test_the_guest_install_save_is_its_own_character_file_and_never_a_world
+  ok    test_original_starter_guest_commit.gd :: test_the_host_is_its_own_admitted_record
+  ok    test_original_starter_guest_commit.gd :: test_the_host_may_still_write
+  ok    test_starter_choice_action.gd :: test_a_chosen_nickname_is_accepted_within_the_naming_rules
+  ok    test_starter_choice_action.gd :: test_a_fresh_starter_is_admitted_with_its_receipt
+  ok    test_starter_choice_action.gd :: test_a_non_empty_admitted_party_is_refused
+  ok    test_starter_choice_action.gd :: test_a_non_starter_species_is_refused
+  ok    test_starter_choice_action.gd :: test_a_second_original_starter_is_refused
+  ok    test_starter_choice_action.gd :: test_a_tampered_card_is_refused
+  ok    test_starter_choice_action.gd :: test_an_inflated_card_that_round_trips_is_refused
+  ok    test_starter_choice_action.gd :: test_host_context_is_required
+  ok    test_starter_choice_action.gd :: test_the_installed_guest_record_equals_the_staged_after_state
+  ok    test_starter_choice_action.gd :: test_the_owner_side_rerun_accepts_the_staged_row
+  ok    test_starter_install.gd :: test_a_late_acceptance_finishes_a_stalled_wait
+  ok    test_starter_install.gd :: test_a_readopt_waits_while_the_follower_is_fighting
+  ok    test_starter_install.gd :: test_a_readopted_card_replaces_the_follower
+  ok    test_starter_install.gd :: test_a_stalled_accept_without_the_local_install_keeps_waiting
+ERROR: Can't use get_node() with absolute paths from outside the active scene tree.
+   at: get_node_or_null (scene/main/node.cpp:1910)
+   GDScript backtrace (most recent call first):
+       [0] _effect_game (res://scripts/story/sequence_director.gd:828)
+       [1] cancel_starter_adoption (res://scripts/story/sequence_director.gd:2216)
+       [2] _on_starter_action_completed (res://scripts/story/sequence_director.gd:2212)
+       [3] test_a_terminal_host_refusal_releases_the_choice (res://tests/test_starter_install.gd:185)
+       [4] _init (res://tests/run_tests.gd:120)
+  ok    test_starter_install.gd :: test_a_terminal_host_refusal_releases_the_choice
+  ok    test_starter_install.gd :: test_party_rollback_reaches_the_guard_as_a_rollback
+  ok    test_starter_install.gd :: test_the_composed_roster_guard_admits_only_the_staged_starter
+  ok    test_starter_install.gd :: test_the_host_never_stalls
+  ok    test_starter_install.gd :: test_the_installer_appends_the_very_live_instance
+  ok    test_starter_install.gd :: test_the_installer_refuses_any_other_shape
+  ok    test_starter_install.gd :: test_the_retry_rearms_the_wait_and_asks_again
+  ok    test_starter_install.gd :: test_the_wait_is_bounded_and_then_offers_a_clear_retry
+
+120 tests, 3390 assertions, 0 failed
