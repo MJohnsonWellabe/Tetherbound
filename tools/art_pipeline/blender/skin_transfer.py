@@ -191,8 +191,8 @@ def main() -> None:
             total = sum(w for _, w in weights)
             if total < 1e-4:
                 raise SystemExit("Preserved transfer left an unweighted vertex; refusing export")
-            for group in list(vertex.groups):
-                target.vertex_groups[group.group].remove([vertex.index])
+            for group_index in [g.group for g in vertex.groups]:
+                target.vertex_groups[group_index].remove([vertex.index])
             for group, weight in weights:
                 target.vertex_groups[group].add([vertex.index], weight / total, "REPLACE")
         if geometry_signature(target) != original_geometry or rig.matrix_world != rig_transform:
