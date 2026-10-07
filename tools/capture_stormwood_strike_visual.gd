@@ -10,6 +10,9 @@ var _graphics_capture: Dictionary = {}
 var _native_resolution := Vector2i(1920, 1080)
 var _original_surge := PackedByteArray()
 var _volume_preview := false
+var _live_strikes := false
+var _live_clock := 0.0
+var _live_events: Array[Dictionary] = []
 
 func _run() -> void:
 	var args := OS.get_cmdline_user_args()
@@ -18,6 +21,11 @@ func _run() -> void:
 		if arg.begins_with("--preset="):
 			named_preset = true
 	_volume_preview = args.has("--leader-volume-candidate")
+	_live_strikes = args.has("--live-strikes")
+	if _live_strikes and (not named_preset or _volume_preview or args.has("--timed")):
+		push_error("Live strikes require a named shipping preset and cannot use dry-run/candidate modes")
+		quit(2)
+		return
 	if named_preset:
 		_graphics_capture = STRIKE_BOOTSTRAP.prepare(self, "--out=")
 		if _graphics_capture.is_empty():
@@ -40,6 +48,20 @@ func _run() -> void:
 		if _receipt.get_error() != OK:
 			_failures.append("Warning receipt final flush failed")
 		_receipt.close()
+	if _live_strikes:
+		var receipt_path := _output_dir.path_join("manifest.jsonl")
+		var reader := FileAccess.open(receipt_path, FileAccess.READ)
+		if reader == null:
+			_failures.append("Live strike final receipt cannot be read back")
+		else:
+			var rows := reader.get_as_text().strip_edges().split("\n", false)
+			reader.close()
+			if rows.size() != 20:
+				_failures.append("Live strike final receipt expected 20 frames, got %d" % rows.size())
+			for row: String in rows:
+				var parsed: Variant = JSON.parse_string(row)
+				if not parsed is Dictionary or bool(parsed.get("candidate_preview", true)):
+					_failures.append("Live strike final receipt contains an invalid/non-shipping row")
 	for failure: String in _failures:
 		push_error(failure)
 	print("STRIKE_CAPTURE_COMPLETE failures=", _failures)
@@ -106,6 +128,10 @@ func _capture_run() -> void:
 	_lightning = _world.get_node(^"StormwoodLightning")
 	_lightning.set_process(false)
 	_pin_day()
+	if _live_strikes:
+		await _live_strike_views()
+		STRIKE_MOTION.set_reduced_motion(false)
+		return
 	if _timed:
 		await _timed_views()
 		STRIKE_MOTION.set_reduced_motion(false)
@@ -172,6 +198,104 @@ func _frame(id: String, target: Vector3, progress: float) -> void:
 
 func _vec(v: Vector3) -> Array:
 	return [v.x,v.y,v.z]
+
+
+## Observe real host scheduling/publish/resolve in the production world. The
+## stand and Break entry are staged, but no warning/impact is injected and no
+## timer, damage, radius or RNG is changed. Images are retained in memory until
+## impact/decay completes so PNG writes do not stall the warning being observed.
+func _live_strike_event(event: Dictionary) -> void:
+	if str(event.get("kind", "")) in ["warning", "impact"]:
+		var row := event.duplicate(true)
+		row["observed_game_seconds"] = _live_clock
+		_live_events.append(row)
+
+
+func _live_strike_views() -> void:
+	var session: Node = _game.get_node("Session")
+	if not session.is_host():
+		_failures.append("Live strike capture requires the actual host")
+		return
+	session.stormwood_strike_received.connect(_live_strike_event)
+	for place: Dictionary in [
+		{"id":"clearing", "at":Vector2(-610,755)},
+		{"id":"verge", "at":Vector2(-598,753)}]:
+		for reduced: bool in [false, true]:
+			_lightning.set_process(false)
+			var xz: Vector2 = place.at
+			var ground := float(_world.call("ground_height_at", xz.x, xz.y))
+			await _stand(xz, Vector3(xz.x, ground, xz.y + 10.0), -12.0)
+			await _enter_phase("break", false)
+			STRIKE_MOTION.set_reduced_motion(reduced)
+			_heal()
+			if not is_equal_approx(float(_lightning.get("rules").get("config").strike.radius_m), 3.0):
+				_failures.append("Live host strike radius is not 3 metres")
+				continue
+			if not bool(_lightning.call("exposed", _player.global_position, _player)):
+				_failures.append(str(place.id) + ": live stand is sheltered")
+				continue
+			_live_events.clear()
+			_live_clock = 0.0
+			_lightning.set_process(true)
+			var strike_id := -1
+			var target := Vector3.ZERO
+			var warning_at := -1.0
+			var impact_at := -1.0
+			var thresholds: Array[float] = [0.0, 0.5, 0.9]
+			var images: Array[Image] = []
+			var records: Array[Dictionary] = []
+			var threshold_index := 0
+			var impact_captured := false
+			var decay_captured := false
+			while _live_clock < 30.0 and not decay_captured:
+				await process_frame
+				_live_clock += _lightning.get_process_delta_time()
+				await RenderingServer.frame_post_draw
+				for event: Dictionary in _live_events:
+					if strike_id < 0 and str(event.kind) == "warning":
+						strike_id = int(event.id)
+						target = event.at
+						warning_at = float(event.observed_game_seconds)
+						if not is_equal_approx(float(event.remaining), 1.2):
+							_failures.append("Live host warning does not carry 1.2 seconds")
+					elif int(event.id) == strike_id and str(event.kind) == "impact":
+						impact_at = float(event.observed_game_seconds)
+				_live_events.clear()
+				var progress := -1.0
+				var stage := ""
+				if strike_id >= 0 and impact_at < 0.0:
+					var ring: Variant = _lightning.get("_visuals").get(strike_id)
+					if is_instance_valid(ring):
+						progress = float((ring.material_override as ShaderMaterial).get_shader_parameter("progress"))
+						if threshold_index < thresholds.size() and progress >= thresholds[threshold_index]:
+							stage = "warning_%d" % threshold_index
+							threshold_index += 1
+				elif impact_at >= 0.0 and not impact_captured:
+					stage = "impact"
+					impact_captured = true
+				elif impact_captured and _live_clock - impact_at >= 0.3:
+					stage = "decay"
+					decay_captured = true
+				if not stage.is_empty():
+					var id := "live_%s_%s_%s" % [str(place.id), "reduced" if reduced else "normal", stage]
+					images.append(root.get_texture().get_image())
+					records.append({"file":id + ".png", "proof":"production host scheduled strike; staged stand/Break entry",
+						"strike_id":strike_id, "stage":stage, "warning_progress":progress,
+						"warning_game_seconds":warning_at, "impact_game_seconds":impact_at,
+						"sample_game_seconds":_live_clock, "target":_vec(target),
+						"feet":_vec(_player.global_position), "camera":_vec(_camera.global_position),
+						"reduced_motion":reduced, "phase":_surge.get("phase"),
+						"radius_m":float(_lightning.get("rules").get("config").strike.radius_m),
+						"graphics_capture":_graphics_capture, "candidate_preview":false})
+			_lightning.set_process(false)
+			if records.size() != 5 or threshold_index != 3 or not decay_captured:
+				_failures.append("%s reduced=%s: expected three real warnings, impact and decay; got %d" % [place.id, reduced, records.size()])
+			for index in images.size():
+				if images[index] == null or images[index].is_empty() or images[index].get_size() != _native_resolution or images[index].save_png(_output_dir.path_join(records[index].file)) != OK:
+					_failures.append(str(records[index].file) + ": live image write/size failed")
+				_record_frame(records[index])
+			print("LIVE_STRIKE_CAPTURE ", place.id, " reduced=", reduced, " frames=", records.size(), " warning=", warning_at, " impact=", impact_at)
+	session.stormwood_strike_received.disconnect(_live_strike_event)
 
 ## Real production warning tween, sampled without saving PNGs in the timed
 ## loop. Fixed-FPS frames are simulation-time evidence, not a performance run.
