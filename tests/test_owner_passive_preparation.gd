@@ -257,7 +257,7 @@ func test_request_codec_preserves_distinct_authenticated_source_kinds_and_exact_
 	var bag := BAG.inventory_from(board_before.inventory)
 	assert_true(BAG.give_stack(bag, {"id": material.item, "n": int(material.count)}))
 	board_before.inventory = BAG.slots(bag)
-	var board_cursor := REPLAY.apply(REPLAY.begin(board_before, {}), {"version": 1, "sequence": 1, "op": "condition", "delta": 0.1,
+	var board_cursor: Dictionary = REPLAY.apply(REPLAY.begin(board_before, {}), {"version": 1, "sequence": 1, "op": "condition", "delta": 0.1,
 		"uids": [board_before.party[0].uid]}, {"max_elapsed": 1.0, "max_speed": 20.0, "realm": "meadows", "landmarks": {}}).cursor
 	var claim := {"op": "bounty_claim", "session_epoch": "current-epoch", "world_namespace": "resource-namespace",
 		"character_id": DATA.CHARACTER, "station_key": "halda_bounty_board", "intent": {"instance": "delivery".sha256_text()}, "revision": -1}
