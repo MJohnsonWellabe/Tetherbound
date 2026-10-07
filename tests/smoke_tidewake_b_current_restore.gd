@@ -47,12 +47,15 @@ var failures: Array[String] = []
 var finished := false
 var game: Node
 var capture_dir := ""
+var current_flow_candidate := false
 
 
 func _init() -> void:
 	for argument: String in OS.get_cmdline_user_args():
 		if argument.begins_with("--capture="):
 			capture_dir = argument.trim_prefix("--capture=")
+		elif argument == "--current-flow-candidate":
+			current_flow_candidate = true
 	_run.call_deferred()
 
 
@@ -83,7 +86,28 @@ func _build_world() -> Node3D:
 		await process_frame
 		if world.shell_build_complete():
 			break
-	return world if world.shell_build_complete() else null
+	if not world.shell_build_complete() or not _apply_flow_candidate(world):
+		return null
+	return world
+
+
+## Optional local presentation comparison using the existing material gate.
+## No restoration, route, physics, ownership or saved-state inputs are changed.
+## Both the initial and reloaded worlds must show the same candidate setting.
+func _apply_flow_candidate(world: Node3D) -> bool:
+	if not current_flow_candidate:
+		return true
+	var flow := world.get_node_or_null("WaterVeilfall/WaterCurrentFlow") as MeshInstance3D
+	if not check(flow != null and flow.has_method("apply_visual_settings"), "Candidate uses the production current presentation gate"):
+		return false
+	var configured: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_current_flow_visual.json"))
+	if not check(configured is Dictionary, "Candidate reads the existing current presentation config"):
+		return false
+	var local_settings: Dictionary = (configured as Dictionary).duplicate(true)
+	local_settings["enabled"] = true
+	flow.call("apply_visual_settings", local_settings)
+	var material := flow.material_override as ShaderMaterial
+	return check(material != null and bool(material.get_shader_parameter("visual_groups_enabled")), "Local grouped-foam candidate actually applied; shipping config unchanged")
 
 
 func _calm(world: Node3D) -> float:
@@ -217,6 +241,9 @@ func _run() -> void:
 		check(bool(pair[0]), str(pair[1]))
 	var fresh: Node3D = reloaded.world
 	if fresh == null:
+		finish()
+		return
+	if not _apply_flow_candidate(fresh):
 		finish()
 		return
 	await _frames(4)
