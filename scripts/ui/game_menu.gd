@@ -194,6 +194,7 @@ func _build_refusal_label() -> void:
 	_refusal_label.offset_right = 400
 	_refusal_label.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	_refusal_label.add_theme_font_size_override("font_size", 28)
+	_refusal_label.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	_refusal_label.add_theme_constant_override("outline_size", UITokens.OUTLINE_SIZE)
 	_refusal_label.add_theme_color_override("font_outline_color", UITokens.OUTLINE)
 	_refusal_label.add_theme_color_override("font_shadow_color", Color(UITokens.OUTLINE, 0.6))
