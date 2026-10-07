@@ -20,5 +20,13 @@
     "checked": "Config scope and finite clamp; relevant states1.0; bounded natural roster expiry without forced hiding; settings section start; requested tab validation and Map evidence selector guard",
     "runtime_proof": "PENDING",
     "visual_verdict": "PENDING"
+  },
+  "settings_readability_review": {
+    "source_commit": "5c76bdf5c37b3a1b87bf8f80c5d80bfeb7b57276",
+    "agent": "/root/f42_visual_review",
+    "verdict": "APPROVE",
+    "checked": "Font floors preserve larger sizes; section and secondary text tokens; unchanged F26 graphics child lifecycle, callbacks, rebinding/reset, focus and persistence",
+    "watchpoint": "Actual paired binding-cell/action-label clipping at raised fonts",
+    "actual_visual": "PENDING"
   }
 }
