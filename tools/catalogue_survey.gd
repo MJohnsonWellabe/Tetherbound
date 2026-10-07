@@ -83,6 +83,7 @@ func _run() -> void:
 	if not _prepare_capture_shell():
 		_finish(false)
 		return
+	_capture_checkpoint("capture_shell_ready")
 	for row: Dictionary in _planned:
 		await _capture_row(row)
 	_finish(_failures.is_empty() and _records.size() == _planned.size())
@@ -340,17 +341,20 @@ func _prepare_capture_shell() -> bool:
 
 
 func _capture_row(row: Dictionary) -> void:
+	_capture_checkpoint("row_begin", row)
 	var position_values := row.position_xz as Array
 	var at := Vector2(float(position_values[0]), float(position_values[1]))
 	var forward := _capture_forward(row)
 	var game := root.get_node_or_null(^"Game")
 	var moved := game != null and bool(game.call("debug_teleport_to", at.x, at.y, _biome_id, ""))
+	_capture_checkpoint("teleport_returned", row)
 	if not moved:
 		_failures.append("%s: Game.debug_teleport_to refused destination" % str(row.frame_id))
 		_write_manifest()
 		return
 	for _frame in ARRIVE_FRAMES:
 		await physics_frame
+	_capture_checkpoint("arrival_physics_complete", row)
 	var terrain_ground := float(_world.call("ground_height_at", at.x, at.y))
 	if is_nan(terrain_ground):
 		_failures.append("%s: destination has no ground height" % str(row.frame_id))
@@ -375,13 +379,17 @@ func _capture_row(row: Dictionary) -> void:
 	_camera.reset_physics_interpolation()
 	for _frame in POPULATE_FRAMES:
 		await physics_frame
+	_capture_checkpoint("populate_physics_complete", row)
 	var observed_clock := await _pin_time(str(row.time))
+	_capture_checkpoint("time_weather_returned", row)
 	if observed_clock.is_empty():
 		_write_manifest()
 		return
 	for _frame in POSE_FRAMES:
 		await process_frame
+	_capture_checkpoint("pose_process_complete_before_draw", row)
 	await RenderingServer.frame_post_draw
+	_capture_checkpoint("frame_post_draw_returned", row)
 	var image := root.get_texture().get_image()
 	var path := "%s/%s.png" % [_output_dir, str(row.frame_id)]
 	if image == null or image.is_empty() or image.get_width() != root.size.x or image.get_height() != root.size.y:
@@ -411,6 +419,19 @@ func _capture_row(row: Dictionary) -> void:
 		record["bytes"] = FileAccess.get_file_as_bytes(path).size()
 		_records.append(record)
 		print("CATALOGUE CAPTURE %s -> %s" % [str(row.frame_id), path])
+	_write_manifest()
+
+
+func _capture_checkpoint(stage: String, row: Dictionary = {}) -> void:
+	# Existing producer diagnostics only. These receipts do not replace a
+	# completed frame, the production renderer or any acceptance assertion.
+	if not OS.get_cmdline_user_args().has("--trace-capture-awaits"):
+		return
+	_manifest["capture_progress"] = {
+		"stage": stage, "frame_id": str(row.get("frame_id", "")),
+		"ticks_msec": Time.get_ticks_msec(), "captured_frames": _records.size(),
+	}
+	print("CATALOGUE AWAIT %s %s t=%d" % [stage, str(row.get("frame_id", "")), Time.get_ticks_msec()])
 	_write_manifest()
 
 
