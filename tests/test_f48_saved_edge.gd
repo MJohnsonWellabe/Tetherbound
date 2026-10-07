@@ -33,6 +33,29 @@ func before_each() -> void:
 
 func test_complete_v1_carriers_at_actual_edge_match_original_after() -> void:
 	assert_true(PROOF._saved_edge_errors(edge).is_empty())
+	# The real V1 Altar journal omits encounter energy through the production
+	# Essence codec; full saved cards retain it. That one non-authority meter
+	# may differ, while every canonical HP/item/receipt still matches exactly.
+	edge.row.kind = "creature_training"
+	edge.row.action = "altar_spend"
+	edge.row.after = preload("res://scripts/creatures/essence.gd").training_projection(memory)
+	edge.files.memory.party[0].energy = 26.0
+	edge.files.disk.party[0].energy = 7.0
+	assert_true(PROOF._saved_edge_errors(edge).is_empty(), "V1 uses the authentic energy-free training projection")
+	var saved_files: Dictionary = edge.files.duplicate(true)
+	var saved_after: Dictionary = edge.row.after.duplicate(true)
+	for scope: String in ["memory", "disk"]:
+		edge.files[scope].party[0].hp -= 1.0
+		assert_false(PROOF._saved_edge_errors(edge).is_empty(), scope + " HP mismatch remains refused")
+		edge.files = saved_files.duplicate(true)
+		edge.files[scope].inventory.append({"id": "wood", "n": 1})
+		assert_false(PROOF._saved_edge_errors(edge).is_empty(), scope + " inventory mismatch remains refused")
+		edge.files = saved_files.duplicate(true)
+		edge.files[scope].redesign_character.transaction_receipts.append("foreign-receipt")
+		assert_false(PROOF._saved_edge_errors(edge).is_empty(), scope + " receipt mismatch remains refused")
+		edge.files = saved_files.duplicate(true)
+	assert_eq(edge.row.after, saved_after, "observer never rewrites the immutable canonical row")
+	assert_eq(edge.files, saved_files, "observer never rewrites the actual full saved energy")
 
 func test_saved_edge_cannot_accept_old_party_even_if_writer_reported_true() -> void:
 	edge.files.disk.party[0].attack += 1.0

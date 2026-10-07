@@ -503,7 +503,7 @@ static func _saved_edge_errors(edge: Dictionary) -> Array[String]:
 				errors.append(scope + ": exact portal owner codec/key debit/unlock/receipt not persisted")
 		else:
 			var full: Dictionary = RECORD_RULES.portable_projection(carrier) if RECORD_RULES.training_version(row) in [2, 3] \
-				else {"inventory": carrier.get("inventory"), "party": carrier.get("party"), "redesign_character": carrier.get("redesign_character")}
+				else preload("res://scripts/creatures/essence.gd").training_projection(carrier)
 			if row.get("kind") == "altar_building" and full.get("party") is Array:
 				full.party = full.party.map(RECORD_RULES.portable_card)
 			if not _json_equal(full, row.get("after")):
