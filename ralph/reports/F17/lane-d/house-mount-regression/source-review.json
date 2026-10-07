@@ -1,0 +1,22 @@
+{
+  "scope": "Coordinator-allocated F17 farmhouse doorway regression only; visual umbrella remains open",
+  "source_commit": "68401e9c6b7dd14d77a4c3b77feff43c5ffbec3d",
+  "reviewer": "/root/f42_visual_review",
+  "source_verdict": "APPROVE",
+  "findings": [
+    "Original native shell253.3s/2144 yields exceeds300-physics-frame cast wait; fallback permanently leaves _house null and the real DoorGate closed",
+    "Candidate returns the actual house mounted by the production world; house build is synchronous before the next shell breathe, so no partial-marker/gate race",
+    "No readiness cycle: shell construction does not wait for director/cast",
+    "Completed or bare worlds retain original300-frame/terrainless exit; simulation-only director exits before await/listener; teardown removes the director with its parent",
+    "Existing physical smoke requires exact actual director-house identity and disabled real gate collider before unchanged controller route",
+    "No opening beat/gate policy, fixture, geometry, collision, movement budget, durable state, authority or catch-up relaxation"
+  ],
+  "logic_run": 37673121411,
+  "logic_artifact": 11505304923,
+  "logic_proof": "tests/run_tests.gd, single --only selection from28 existing test files naming sequence_director.gd or house-wait keys",
+  "logic_result": {"files": 28, "tests": 465, "assertions": 9332, "failed": 0, "exit": 0, "seconds": 13},
+  "runtime_gate": "PASS37673885907/11507365488: actual director-house binding/open collider, farm-road-nave maxoffroad0 and all8 arches/all8 pedestals on real floor within0.6m; exit0/255s. Original parsed joypad/look, budgets and collisions retained.",
+  "final_review_verdict": "APPROVE: same reviewer read exact pushed two-file diff and both actual pass/fail logs; only68401e9c6b plus regression evidence may land. Headless access/game-code regression only; renderer-specific visual recapture and other criteria remain open.",
+  "native_failure_artifact": "D:/CodexTemp/tetherbound-proof/native-d-f21fa6b6b2-hall-fullscreen",
+  "native_failure": "Real farm floor, initial path5.8,14 ->8.3,14 ->91,14 ->107,14; stops6.189,14, then sidesteps6.3,13; arc0.5/101.2. Predicted closed gate capsule stop matches6.19. Native frames are partial, not Hall circuit success."
+}
