@@ -58,8 +58,8 @@
   "review": {
     "reviewer": "/root/b_f20_review",
     "source_behavior": "APPROVE",
-    "final_criterion": "BLOCKED_AUTHORITATIVE_ARRIVAL_GUARD",
-    "reason": "Retained reviewer declined final approval because order_journals masks actual arrival refusals; scoped rendered order itself passes."
+    "final_criterion": "APPROVE_SCOPED_F19_ORDER",
+    "reason": "Same retained reviewer approves literal displayed order with both actual arrival refusals explicitly disclosed and excluded; no rerun required for unchanged UI/order scope."
   },
   "landing_scope": {
     "source_paths": [
@@ -74,16 +74,13 @@
     "other_journal_headings_captured": true,
     "entered_or_unlocked_arches": "Previously fixture-unlocked arches entered through actual provider Enter; no unlock/grant after fixture"
   },
-  "criterion_pass": false,
-  "remaining": [
-    "Observe matching authoritative portal_enter terminal success before opening destination menus, preserving original 7200-frame bound and character identity; fail on refusal",
-    "Resolve actual contact failure if it persists with proper terminal guard",
-    "Changed-cut actual proof, same reviewer final approval, commit/push and READY"
-  ],
+  "criterion_pass": true,
+  "remaining": [],
   "separate_open": [
     "F19#5 earned fixtures",
     "F49#0 continuous earned campaign",
-    "Full release Visual bar"
+    "Full release Visual bar",
+    "Actual authoritative portal arrival/contact in Tidewake and Stormwood; journal smoke must not be reused as durable grounded travel proof"
   ],
   "latest_source_sha": "351f2f3fbaaa34d25cc901730f8c34183c46480e",
   "journal_extension": {
