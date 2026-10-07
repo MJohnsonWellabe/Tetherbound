@@ -1,0 +1,66 @@
+{
+  "kind": "f49_reviewed_cross_cut",
+  "version": 1,
+  "consumer_commit": "ad95e0dd6fe490cfb6f2d1bf6f09ae93d18b9cfe",
+  "producer_commit": "55d59dd5d4e8ee4f950ebf25d808bd0c007dbee3",
+  "imported_boundary": "bridge",
+  "review": {
+    "verdict": "compatible",
+    "reviewer": "b_f49_review",
+    "record_url": "https://github.com/MJohnsonWellabe/Tetherbound/blob/tb/codex-b/ralph/reports/F19/lane-b-prefix/reviewed-cut-55d59-to-ad95-native.json"
+  },
+  "prefix": [
+    {
+      "boundary": "opening_team",
+      "producer_commit": "1861efb8c1d3254b01ed76d3594a336dfc96b51c",
+      "receipt_sha256": "ab08f4cbb3ec191dbad9efec24ecc506e6efb99d2b8700653a006d98a6c9b974",
+      "log_sha256": "5ffd2c97d7e9fc183232a9e318fd1763554d9ad55a6b7198745855c6bd6d0fc5",
+      "artifact_sha256": "9edbc4d7bc902f90dd7c4fe0ece24d5ff20dfbff2f04a053b0d817d281740ef2",
+      "files_sha256": {
+        "characters/character-cb1b88c682cd3219e5c3d8d63558473d/character.json": "36fd9fb887805ebcb03b7f942c3c603c961999729c5d1bd4e1f91e635e5151a1",
+        "slot_0.json": "4236c8cbe4f1ce5f1c5c1e0e7cf4c2bfd781ba246b04fd2f574b770fad3b3198",
+        "worlds/slot-0/world.json": "aa8ddb23c49e606e853d4636a9535b6d8289b4a5ec8b4f55314e95f787134b98"
+      },
+      "save_tree_sha256": "1cbd554cee82b27ad384d38396e953986d6612b1ae3cffe64cb92dbeada0089c",
+      "run_id": "37677583782",
+      "artifact_id": "11508961678",
+      "log_path": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/reviewed-evidence/ralph/reports/F19/lane-b-prefix/producer-37677583782-original.log"
+    },
+    {
+      "boundary": "camp_tournament",
+      "producer_commit": "1861efb8c1d3254b01ed76d3594a336dfc96b51c",
+      "receipt_sha256": "67b5aa80126a7e5a882f5cde638755e17b2b2330c8e1ea1a27d192d9c4022e4a",
+      "log_sha256": "af7b83e7211a21df4102a7c9a7203d8a4625def20a9c814c6d712eb2a8a09d32",
+      "artifact_sha256": "86b927735a94a3d361a2e7582c388bebad176d5b547d88f180e7c232b3bf258f",
+      "files_sha256": {
+        "characters/character-cb1b88c682cd3219e5c3d8d63558473d/character.json": "45fccdde0df1f35c36c03a198b28de375231d219b89889b10aeafd4c4a70e2a4",
+        "slot_0.json": "813a801774e108b159d4e79b0ffafe1a132d237eb4abea428b732147a7cfacbd",
+        "worlds/slot-0/world.json": "f6e708d05c80128fce5bb41d8bce53e52016215c56a0c0679e07cab217eb8ba8"
+      },
+      "save_tree_sha256": "f48830a8ea99ec0ef1d8b7b652b88182a00b4158571449f770e4df7683f1626d",
+      "run_id": "37679254472",
+      "artifact_id": "11507719910",
+      "log_path": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/producer-source/run.log"
+    },
+    {
+      "boundary": "bridge",
+      "producer_commit": "55d59dd5d4e8ee4f950ebf25d808bd0c007dbee3",
+      "producer_kind": "native_process",
+      "receipt_sha256": "e5d6a754a906a613bb235baef4209d6040e87c6cdf988287e82e0f48d3339557",
+      "log_sha256": "f0a8e1d1ba49dade947e88f47941b515a6a9aea6c49fb6e3c2668edd506e4e0f",
+      "files_sha256": {
+        "characters/character-cb1b88c682cd3219e5c3d8d63558473d/character.json": "6a38e3d805a96c70e0abaf3713a921161076eeae622a34fdef44edc45808f550",
+        "slot_0.json": "c856d35dacc4b4e7431c5b9b0cc82dbbd69c4530ed3e4391ae6fb2ca0ad205bf",
+        "worlds/slot-0/world.json": "ae4319dbcf1982e861504f4f6fa10921fe6bb291fcfe37dc4457701d50e88be6"
+      },
+      "save_tree_sha256": "c8ab44b91edf87075367be484fcf8c50c8349c343d49888de8cdbaa595a0d774",
+      "log_path": "D:/CodexTemp/tetherbound-proof/native-b-55d59dd5d4-supported-bridge-r1/earned-bridge.stdout.log",
+      "native_process_receipt": {
+        "path": "D:/CodexTemp/tetherbound-proof/native-b-55d59dd5d4-supported-bridge-r1/earned-bridge-receipt.json",
+        "sha256": "e7a51cc9ba65221ac0c78f297c0115231b24476fa5d8df4697ea1d68baed62db",
+        "stderr_path": "D:/CodexTemp/tetherbound-proof/native-b-55d59dd5d4-supported-bridge-r1/earned-bridge.stderr.log",
+        "stderr_sha256": "a6f9028bb9c26bea01464983d4cd292d7dd5b9347da473f10a031c27ca3554cb"
+      }
+    }
+  ]
+}

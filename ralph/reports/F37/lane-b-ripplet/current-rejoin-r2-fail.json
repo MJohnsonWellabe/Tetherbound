@@ -84,5 +84,26 @@
     },
     "presentation": "Flag-on proof candidate only; no READY or shipping acceptance. Revert OFF on failed runtime or literal visual gate.",
     "required": "Existing affected units and corrected original two-peer scenario plus retained code-blind captures remain OPEN"
+  },
+  "corrected_merged_source_logic": {
+    "source_sha": "220ea0bb0217bd263b232e13d9f259514abb9e2d",
+    "run_id": 37701115492,
+    "artifact_id": 11517224946,
+    "tests": 608,
+    "assertions": 917217,
+    "failed": 0,
+    "exit": 0,
+    "took_seconds": 631,
+    "engine_errors": 28,
+    "script_errors": 0,
+    "error_attribution": "27 unchanged detached-harvest fixture errors +1 intentional corrupt-controls JSON control",
+    "reviewer": "b_f37_review",
+    "review_verdict": "APPROVE scoped named water/oracle logic"
+  },
+  "corrected_actual_r3": {
+    "source_sha": "220ea0bb0217bd263b232e13d9f259514abb9e2d",
+    "run_id": 37702491315,
+    "status": "LIVE; actual current/Dive/claims/disconnect/debt/rejoin/visual still OPEN",
+    "presentation_flag": "ON proof candidate; not READY"
   }
 }

@@ -13,11 +13,105 @@
   "engine_errors": 0,
   "records": [
     {
+      "ack_after": true,
+      "ack_before": false,
+      "action": "menu_cancel",
+      "authored_lines": 2,
+      "character_id": "character-49107e93eceebc202fb9670b1984078f",
+      "controller_input": true,
+      "conversation": "lesson_home_key",
+      "dismissed": [
+        "home_key"
+      ],
+      "goal": "Catch a second creature, then return to Grandpa.",
+      "lesson": "home_key",
+      "line": 0,
+      "observed_lines": [
+        {
+          "capture_label": "lesson-home_key-reader--9223364946786474022-generation-1-line-00",
+          "captured": true,
+          "line": 0,
+          "text": "That Home Key is yours. Assign it to a quick slot, or use it from your Satchel. One tap starts the two-second raise; you never need to hold it.\n\nNext: Catch a second creature, then return to Grandpa."
+        },
+        {
+          "capture_label": "lesson-home_key-reader--9223364946786474022-generation-1-line-01",
+          "captured": true,
+          "line": 1,
+          "text": "It takes you to the Crossing Hall for free, with no cooldown. Finish a fight or conversation first, leave the water, and land before using it. You can cancel the raise.\n\nNext: Catch a second creature, then return to Grandpa."
+        }
+      ],
+      "original_open": false,
+      "party_uids": [
+        "creature-ea323891d1f55075676b6925a7a7e1b5"
+      ],
+      "party_uids_after": [
+        "creature-ea323891d1f55075676b6925a7a7e1b5"
+      ],
+      "passed": true,
+      "presses": 2,
+      "released": true,
+      "render_loop_enabled": true,
+      "replay": false,
+      "requested_skip_line": 1,
+      "scope": "Observed lesson lines only; Settings replay is reported separately and full F46 remains unproven",
+      "skip_presses": 1,
+      "speaker": "Grandpa Elias",
+      "text": "That Home Key is yours. Assign it to a quick slot, or use it from your Satchel. One tap starts the two-second raise; you never need to hold it.\n\nNext: Catch a second creature, then return to Grandpa.",
+      "visible": true
+    },
+    {
       "focused_title": "Home Key",
       "heading": "Help · System lessons",
       "lesson": "home_key",
       "provider": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@47/@ScrollContainer@67933/@VBoxContainer@67934/@Button@67936",
       "tab": "settings"
+    },
+    {
+      "ack_after": true,
+      "ack_before": true,
+      "action": "menu_confirm",
+      "authored_lines": 2,
+      "character_id": "character-49107e93eceebc202fb9670b1984078f",
+      "controller_input": true,
+      "conversation": "lesson_home_key",
+      "dismissed": [
+        "home_key"
+      ],
+      "goal": "Catch a second creature, then return to Grandpa.",
+      "lesson": "home_key",
+      "line": 0,
+      "observed_lines": [
+        {
+          "capture_label": "lesson-home_key-reader--9223364946786474022-generation-1-replay-line-00",
+          "captured": true,
+          "line": 0,
+          "text": "That Home Key is yours. Assign it to a quick slot, or use it from your Satchel. One tap starts the two-second raise; you never need to hold it.\n\nNext: Catch a second creature, then return to Grandpa."
+        },
+        {
+          "capture_label": "lesson-home_key-reader--9223364946786474022-generation-1-replay-line-01",
+          "captured": true,
+          "line": 1,
+          "text": "It takes you to the Crossing Hall for free, with no cooldown. Finish a fight or conversation first, leave the water, and land before using it. You can cancel the raise.\n\nNext: Catch a second creature, then return to Grandpa."
+        }
+      ],
+      "original_open": false,
+      "party_uids": [
+        "creature-ea323891d1f55075676b6925a7a7e1b5"
+      ],
+      "party_uids_after": [
+        "creature-ea323891d1f55075676b6925a7a7e1b5"
+      ],
+      "passed": true,
+      "presses": 2,
+      "released": true,
+      "render_loop_enabled": true,
+      "replay": true,
+      "requested_skip_line": null,
+      "scope": "Observed lesson lines only; Settings replay is reported separately and full F46 remains unproven",
+      "skip_presses": 0,
+      "speaker": "Grandpa Elias",
+      "text": "That Home Key is yours. Assign it to a quick slot, or use it from your Satchel. One tap starts the two-second raise; you never need to hold it.\n\nNext: Catch a second creature, then return to Grandpa.",
+      "visible": true
     },
     {
       "character_id": "character-49107e93eceebc202fb9670b1984078f",
@@ -66,6 +160,10 @@
     "selection": "70 existing files naming changed B source/config plus seven related opening/input/menu/water files",
     "engine_errors": 28,
     "script_errors": 0,
-    "error_attribution": "27 unchanged detached harvest fixture messages +1 intentional corrupt-controls JSON negative control"
+    "error_attribution": "27 unchanged detached harvest fixture messages +1 intentional corrupt-controls JSON negative control",
+    "review": {
+      "reviewer": "b_f37_review",
+      "verdict": "APPROVE scoped affected logic; no changed-path failure"
+    }
   }
 }
