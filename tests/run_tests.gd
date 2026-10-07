@@ -6,6 +6,7 @@ extends SceneTree
 ##   godot --headless --path . --script tests/run_tests.gd -- --shard=1/2
 ##   godot --headless --path . --script tests/run_tests.gd -- --only=veg_corridor
 ##   godot --headless --path . --script tests/run_tests.gd -- --only=test_veg_corridor.gd::test_specific_case
+##   godot --headless --path . --script tests/run_tests.gd -- --initialized --only=test_portal_arrival_travel_reset.gd
 ##
 ## Discovers every `test_*.gd` under res://tests/, instantiates it, and runs
 ## every method whose name starts with `test_`. Exits non-zero on any failure so
@@ -56,14 +57,25 @@ const TEST_CASE := preload("res://tests/test_case.gd")
 var _only_selectors: Array = []
 
 ## Set by `_apply_only`/`_apply_shard` right before `quit(2)` on a malformed or
-## empty-matching flag. `quit()` only *requests* a shutdown -- `_init` keeps
+## empty-matching flag. `quit()` only *requests* a shutdown -- `_run_tests` keeps
 ## running afterward -- so without this, the unconditional `quit(1 if failed >
-## 0 else 0)` at the end of `_init` overwrites exit code 2 with 0 on every
+## 0 else 0)` at the end of `_run_tests` overwrites exit code 2 with 0 on every
 ## invalid-flag run and the "hard error" documented above silently isn't one.
 var _aborted := false
 
 
 func _init() -> void:
+	# Proof-only, process-local lifecycle option: selected synchronous cases
+	# that read live transforms run after the engine installs and attaches the
+	# tree. No gameplay/config/save flag; default tests still run inside _init.
+	# Both modes use the identical selectors, case loop and exit codes below.
+	if OS.get_cmdline_user_args().has("--initialized"):
+		call_deferred("_run_tests")
+		return
+	_run_tests()
+
+
+func _run_tests() -> void:
 	var files := _find_tests(TESTS_DIR)
 	files.sort()
 	files = _apply_only(files)
