@@ -97,5 +97,16 @@
       "ralph/reports/F20/lane-b-ending/native-2f73/"
     ],
     "instruction": "F20 production arrival/homecoming and existing ending-proof hunks plus their evidence only. Exclude unrelated unREADY F49, Human, Ripplet and mounted/Fly source."
+  },
+  "consolidation_head_behavior": {
+    "run": 37698106346,
+    "source_sha": "127001c4a1e09fe8e57d6c1cb1b15fa620ce846e",
+    "artifact_id": 11516508228,
+    "checks": 48,
+    "failed": 0,
+    "exit": 0,
+    "seconds": 494,
+    "actual_peer_log_check": "PASS: F20 actual peer logs have no engine/script errors",
+    "scope": "Existing post-finale two-peer fixture; actual Home Keys, fifth key debit, personal Grandpa acknowledgements, interrupted guest credits/title returning join, original five identities and both disk reloads; controller Skip disclosed. No earned campaign, fifth-arch audio or F20#3 continuation proof."
   }
 }
