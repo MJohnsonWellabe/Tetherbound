@@ -32,5 +32,19 @@
     "full catalog code-blind PASS",
     "existing area smoke after map32"
   ],
-  "shipping_flags": "none"
+  "shipping_flags": "none",
+  "owner_scoped_directive": "572#6045342186: literal catalog UI asks only; release art/four-peer witnesses are separate",
+  "scoped_rejudgment": {
+    "reviewer": "/root/f26_presets_review",
+    "verdict": "BLOCK",
+    "map_context": "Default32 useful roads/terrain;4 effectively markers on black,8 tiny context,16 label/central-marker overlap. Own map-context ask remains open.",
+    "bare_menus": "PASS pictured Map/Players headings/content/instructions/identity/status; solo empty space is not itself blocker.",
+    "heavy_hud_boxes": "BLOCK substantial dark five-slot container, five separate dark tiles/padding plus boxed story/team/vitals.",
+    "low_contrast_text": "PASS pictured labels/instructions at1920x1080 and1280x720.",
+    "excluded_causes": [
+      "General world art/commercial polish",
+      "Four-peer witness not named byF42#0"
+    ]
+  },
+  "disposition": "F42#0 remains BLOCK on literal map-context and heavy-HUD asks. Retain original images/source approvals. No new capture, production edit, flag flip or READY."
 }
