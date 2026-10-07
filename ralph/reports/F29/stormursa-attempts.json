@@ -1,0 +1,43 @@
+{
+  "criterion": "F29#3",
+  "status": "BLOCKED candidate OFF",
+  "task_id": "01a1165e-e5b9-754f-8aaf-ff5f40c68d64",
+  "reference_sha256": "ea0a0d7a0716f9fc599a91769a560afda60418c6615330064abd2e8caf841f33",
+  "meshy_stage": "preview SUCCEEDED;1 real generation",
+  "scope": "DCC candidate inspection only; no native Godot run on PC",
+  "attempts": [
+    {
+      "file": "stormursa-preview-inspection.json",
+      "tris": 58564,
+      "non_manifold_edges": 39570,
+      "disposition": "raw preview requires cleanup, textures and rig"
+    },
+    {
+      "file": "stormursa-clean-inspection.json",
+      "tris": 46302,
+      "non_manifold_edges": 1392,
+      "disposition": "cleanup1 FAILED geometry/budget"
+    },
+    {
+      "file": "stormursa-clean-r2-inspection.json",
+      "tris": 74827,
+      "non_manifold_edges": 8142,
+      "disposition": "cleanup2 validation/pruning/lower-resolution remesh FAILED geometry/budget; experimental cleanup code discarded"
+    }
+  ],
+  "next": "Coordinator re-scopes topology; no further generation or texture spend in this approach",
+  "remaining_gates": [
+    "connected deformation-ready geometry and budget",
+    "rig",
+    "full pose set",
+    "scale >Staticub3.25m and trainer1.80m",
+    "High/Medium native ordinary-gameplay code-blind Bars A/B PASS",
+    "activation/provenance"
+  ],
+  "license": {
+    "basis": "existing owner-held Meshy license; no purchase",
+    "provider_policy": "https://help.meshy.ai/en/articles/9992001-can-i-use-meshy-assets-commercially-license-copyright-explained",
+    "scope": "paid customer owns outputs when uploaded source does not infringe; original project-drafted reference; no community publication"
+  },
+  "model_sha256": "12e2c11c28aae8e1ce7071eb7ea8c6a2923a5b582cab05dec2aae55cf766825d"
+}

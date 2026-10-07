@@ -1,0 +1,16 @@
+{
+  "criterion": "F10#5",
+  "review_agent": "blind_listener_f10",
+  "verdict": "UNAVAILABLE",
+  "reason": "Audio item emission succeeded but this runtime provided no perceivable audio. No phase, cue or audible readability judgment can be issued.",
+  "remaining_gate": "Independent auditory-capable blinded listener",
+  "source_files": {
+    "sample-a.wav": "surge_fading_decay.wav",
+    "sample-b.wav": "surge_calm_bed.wav",
+    "sample-c.wav": "surge_break_bed.wav",
+    "sample-d.wav": "surge_building_bed.wav",
+    "sample-e.wav": "strike_warning.wav",
+    "sample-f.wav": "strike_crack.wav"
+  },
+  "scope": "Offline audibility only; no live mix/spatial/Ally claim"
+}

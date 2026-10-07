@@ -2158,14 +2158,14 @@ def cmd_texture(args) -> None:
     # pass at a species that does, which is how thirteen separately-generated
     # animals end up looking like one pack.
     style_species = args.style_from or args.species
-    views = reference_views(style_species)
+    views = generation_views(style_species, args.image)
     # New replacement concepts can live beside the legacy turnaround crops.
     # Prefer the deliberately composed Meshy candidate for retexturing when
     # present; several older board crops are too tight to carry the full
     # palette and face treatment on their own.
     candidate_style = (REFERENCE_ROOT / style_species / "reference"
                        / "meshy_candidate_01.png")
-    style_image = (candidate_style if candidate_style.exists()
+    style_image = (views["source"] if args.image else candidate_style if candidate_style.exists()
                    else views.get("three_quarter") or views.get("front")
                    or next(iter(views.values())))
 
@@ -2258,6 +2258,8 @@ def main() -> None:
     texture.add_argument("species")
     texture.add_argument("model", help="path to the winning candidate's GLB")
     texture.add_argument("--resolution", choices=["2k", "4k"], default="2k")
+    texture.add_argument("--image", default=None,
+                         help="one inspected PNG instead of the authored view set")
     texture.add_argument("--style-from", default=None,
                          help="take the style image from another species' crops")
     texture.set_defaults(func=cmd_texture)

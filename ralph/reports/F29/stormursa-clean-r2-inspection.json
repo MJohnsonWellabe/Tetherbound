@@ -1,0 +1,71 @@
+{
+  "model": "D:\\tetherbound\\codex-e\\assets_raw\\stormursa\\preview-a\\clean-r2.glb",
+  "bounds": {
+    "min": [
+      -0.4987,
+      -0.925,
+      -0.6352
+    ],
+    "max": [
+      0.4982,
+      0.9171,
+      0.6205
+    ],
+    "size": [
+      0.997,
+      1.8421,
+      1.2557
+    ],
+    "height_m": 1.2557,
+    "longest_axis_m": 1.8421,
+    "sits_on_origin": false,
+    "centred_on_origin": true
+  },
+  "meshes": [
+    {
+      "name": "Mesh0",
+      "vertices": 28780,
+      "edges": 106775,
+      "faces": 74827,
+      "triangles": 74827,
+      "tris": 74827,
+      "quads": 0,
+      "ngons": 0,
+      "quad_fraction": 0.0,
+      "non_manifold_edges": 8142,
+      "boundary_edges": 567,
+      "loose_vertices": 0,
+      "duplicate_vertices": 1095,
+      "components": 14,
+      "debris_components": 13,
+      "flipped_normals": 24802,
+      "uv_layers": 1,
+      "stretched_uv_faces": 50437,
+      "materials": [],
+      "shape_keys": 0,
+      "vertex_groups": 0
+    }
+  ],
+  "materials": [],
+  "armatures": [],
+  "animations": [],
+  "totals": {
+    "meshes": 1,
+    "triangles": 74827,
+    "vertices": 28780,
+    "materials": 0,
+    "animations": 0
+  },
+  "problems": [
+    "74,827 triangles, over the 30,000 budget \u2014 needs a decimate or retopology pass",
+    "no material carries a texture \u2014 this is the exact defect two blind reviews named on the existing roster (archive/reports/docs-reviews-full/MA-01, MA-02)",
+    "Mesh0: 8142 non-manifold edges",
+    "Mesh0: 1095 duplicate vertices \u2014 will split under deformation",
+    "Mesh0: 13 microscopic disconnected components",
+    "Mesh0: ~24802 inward-facing faces",
+    "Mesh0: 50437 faces with texel density 4.0x off the median",
+    "Mesh0: 0% quads \u2014 generator triangle soup, poor for deformation",
+    "does not stand on the origin (lowest point z=-0.6352)",
+    "no armature and no clips \u2014 nothing here can move"
+  ]
+}
