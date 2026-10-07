@@ -1,0 +1,25 @@
+{
+  "scope": "P2-057 named Water character grass-clearance candidate; full F39#2 remains OPEN",
+  "source_commit": "ff28875bbd8e77a7c413788ce8c0eb0de2190a56",
+  "source_files": [
+    "data/config/water_named_grass_clearance.json",
+    "tests/test_water_named_grass_clearance.gd"
+  ],
+  "change": "Enable existing 2.5m clearance gate. Existing five-test file now asserts the candidate ON setting and supplies explicit OFF to preserve the exact no-op checks; no new test class or weakened guard.",
+  "review": {
+    "agent": "/root/f39_visual_review",
+    "verdict": "APPROVE",
+    "scope": "Source candidate only; paired costume visibility and natural clearing edges required before landing."
+  },
+  "main_dependencies": {
+    "main_commit": "26540050262ca9351a60be50632d60c8ee61f09e",
+    "existing_consumer_and_spawn_hook": "scripts/world/water_named_grass_clearance.gd and water_scene_npcs.gd match main; no unREADY call dependency required."
+  },
+  "remaining_gates": [
+    "Existing test_water_named_grass_clearance on flag-on source",
+    "Existing Water area smoke on flag-on source",
+    "Nine authored character posts before/after with original blind judge",
+    "Original source reviewer actual-proof intake"
+  ],
+  "failure_disposition": "Restore gate OFF if the paired visual proof fails. No READY or whole-row closure."
+}
