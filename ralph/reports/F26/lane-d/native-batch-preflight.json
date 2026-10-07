@@ -9,7 +9,7 @@
     "driver": "32.0.15.6094",
     "name": "NVIDIA GeForce GTX1060 3GB"
   },
-  "status": "INPUTS_READY_RUNTIME_CACHE_BLOCKED",
+  "status": "PREPARED_FOR_ASSIGNED_IMPORT_THEN_CAPTURE_SLOT",
   "godot": {
     "file_version": "4.7",
     "gui_sha256": "b2ca888d5115a6cedee564764a2ee494a625f2ec2edbabd010fe33c9a88a6bf8",
@@ -56,7 +56,10 @@
         107,
         14
       ]
-    ]
+    ],
+    "import_plan": "--headless --editor --import --path D:/tetherbound/codex-d --rendering-method gl_compatibility; proposed only, assigned writer required",
+    "maximum_import_seconds": 900,
+    "combined_maximum_seconds": 3660
   },
   "gates": [
     "Coordinator assignment and owner free PC window; no native engine authorization in this receipt",
@@ -66,11 +69,13 @@
     "Census old Hall [8,7590] is Warden stronghold; no Crossing Hall census claim",
     "Full village circuit capture and blind High/Medium visual judgment remain separate"
   ],
-  "preflight_source_commit": "91fd18c99726be8e2a29d6a9e1eb8de16a0e59ef",
+  "preflight_source_commit": "6bf651f76dbc0132f4fdd911174bc63caa82cf30",
   "import_cache": {
     "missing_tracked_remap_targets": 934,
     "directory_present": false,
-    "required_next_step": "Coordinator must include an import stage in separately assigned PC window before route capture",
-    "scope": "Tracked import sidecars inspected across the checkout; no native engine executed"
+    "required_next_step": "Separately assigned PC slot: stock4.7 headless editor import first, audit/coordinate generated sidecars, commit/push any required source metadata, then existing clean-HEAD route runner. No native engine started during preparation.",
+    "scope": "Tracked import sidecars inspected across the checkout; no native engine executed",
+    "existing_scripts_missing_uid": 13,
+    "clean_checkout_gate": "Import can generate13missing .gd.uid sidecars; runner refuses untracked files. Integrator must resolve source metadata under ownership before clean capture, never discard unrelated changes."
   }
 }
