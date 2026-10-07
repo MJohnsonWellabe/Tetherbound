@@ -1,0 +1,44 @@
+{
+  "criteria": "F39#0–#5 OPEN",
+  "source_commit": "5b8a90325c13382a737794727973434bdfa88d60",
+  "run_id": "37657600328",
+  "artifact_id": "11500173153",
+  "script": "tools/capture_f39_catalogue.gd",
+  "preset": "Low",
+  "renderer": "gl_compatibility",
+  "raster": [
+    1280,
+    720
+  ],
+  "planned": 10,
+  "captured": 10,
+  "complete": true,
+  "exit_code": 0,
+  "elapsed_s": 398,
+  "weather_source": "Observed production WorldLook empty delta, no WorldWeather node; clear only, no bad-weather credit",
+  "materials": "Actual fall/current overrides verified",
+  "grounding": "All10 records observed actual is_on_floor, three consecutive samples and final pre-readback check",
+  "judge": "/root/f26_presets_review",
+  "judge_mode": "Image-only full section4 applicable BarsA/B, all10 originals plus contact; no source task/diffs provided",
+  "bar_a": "FAIL",
+  "bar_b": "FAIL",
+  "defects": [
+    "Cascade90: rectangular translucent-white lower boundary washes trainer/ledge/creature",
+    "Cascade0/45/minus45: white sheet hides entry, repetitive gray cliff material lacks wet-rock/spray hierarchy",
+    "Crown all: repetitive pale grass/mottled green ground, generic mound/empty flat sea horizon; summit detail absent in views"
+  ],
+  "strengths": [
+    "Readable grounded trainer silhouettes/shadows",
+    "Open maritime palette and island silhouettes",
+    "Crown180 readable green creature taller than trainer"
+  ],
+  "limits": [
+    "10 teleported clear08:00 day stands, not>=200 or full rescore",
+    "No night/weather/fight/motion/earned or distance/near/entrance full matrix"
+  ],
+  "log_sha256": "114c7a921949a4f24b34a43aa6532d97fe41657118fa0d4633391a3a0d15016f",
+  "manifest_sha256": "ae9a4b562fcac20ad837fb1a2e2881311ad5e3b1a5490e0b8d43078f75948dad",
+  "next": "Source263ccc505f/ea9e820209 changes actual visual curtain bottom and camera-local fade; source review/named affected checks/matched recapture pending.",
+  "flags": "None flipped; process-local fall/current overrides only",
+  "raw_images": "All10 PNGs retained in hosted artifact only; contact.jpg committed"
+}
