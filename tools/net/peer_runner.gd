@@ -3031,6 +3031,8 @@ func _step_f25_fight_capture(args: Dictionary) -> Dictionary:
 	var worst_frames: Array[float] = []
 	var observations: Array[Dictionary] = []
 	var capture: Image = null
+	# Prime at a completed draw: command arrival is not a frame boundary.
+	await RenderingServer.frame_post_draw
 	var previous := Time.get_ticks_usec()
 	var errors: Array[String] = []
 	for frame: int in sample_frames:
@@ -3049,6 +3051,7 @@ func _step_f25_fight_capture(args: Dictionary) -> Dictionary:
 			break
 		var effects: Array[Dictionary] = []
 		var sources := {}
+		var drawn_particles := 0
 		for node: Node in get_nodes_in_group("move_effect_presentation"):
 			if not is_instance_valid(node) or node.is_queued_for_deletion(): continue
 			var context: Variant = node.get("_context")
@@ -3056,17 +3059,21 @@ func _step_f25_fight_capture(args: Dictionary) -> Dictionary:
 			var uid := str(context.get("actor_binding", {}).get("creature_uid", ""))
 			if not owned.has(uid): continue
 			var rank := int(context.get("mastery_rank", 0))
+			var load := _f25_drawing_load(node)
+			drawn_particles += int(load.particles)
 			effects.append({"action_id": str(context.get("action_id", "")), "creature_uid": uid,
-				"move_id": str(context.get("move_id", "")), "rank": rank})
-			if rank == 5: sources[uid] = true
+				"move_id": str(context.get("move_id", "")), "rank": rank,
+				"drawing_meshes": int(load.meshes), "drawing_particles": int(load.particles)})
+			if rank == 5 and int(load.meshes) > 0 and int(load.particles) > 0: sources[uid] = true
 		var used := int(budget.used(id))
 		if used > cap: errors.append("Live particle leases exceeded the encounter cap")
-		var saturated := sources.size() == 4 and used == cap and cap > 0
+		var saturated := sources.size() == 4 and used == cap and drawn_particles >= cap and cap > 0
 		if saturated:
 			worst_frames.append(elapsed_ms)
 			if capture == null: capture = root.get_texture().get_image()
 		observations.append({"process_frame": Engine.get_process_frames(), "wall_frame_ms": elapsed_ms,
-			"used_slots": used, "four_rank5_sources_at_cap": saturated, "effects": effects})
+			"reserved_slots": used, "drawing_particles": drawn_particles,
+			"four_drawing_rank5_sources_at_cap": saturated, "effects": effects})
 	if worst_frames.size() < 30: errors.append("Fewer than 30 rendered frames with four rank-5 sources at the actual encounter cap")
 	wall_frames.sort()
 	worst_frames.sort()
@@ -3088,6 +3095,39 @@ func _step_f25_fight_capture(args: Dictionary) -> Dictionary:
 	file.store_string(JSON.stringify(report, "\t"))
 	file.close()
 	return {"verdict": "PASS" if errors.is_empty() else "FAIL", "detail": "F25 live Medium fight measurement: " + str(errors), "data": report}
+
+
+## Read the submitted geometry, not a lease/context that can outlive drawing.
+## A hidden/faded subtree and zero-scale instances contribute no live load.
+func _f25_drawing_load(node: Node) -> Dictionary:
+	var load := {"meshes": 0, "particles": 0}
+	if node is Node3D and not (node as Node3D).is_visible_in_tree(): return load
+	if node is GeometryInstance3D:
+		var geometry := node as GeometryInstance3D
+		if absf(geometry.global_basis.determinant()) <= 0.0000001: return load
+		var material := geometry.material_override
+		if material is ShaderMaterial:
+			var opacity: Variant = (material as ShaderMaterial).get_shader_parameter("opacity")
+			if opacity is float and float(opacity) <= 0.001: return load
+		elif material is StandardMaterial3D:
+			if (material as StandardMaterial3D).albedo_color.a <= 0.001: return load
+		if node is MeshInstance3D:
+			var mesh := (node as MeshInstance3D).mesh
+			if mesh != null and mesh.get_surface_count() > 0: load.meshes += 1
+		elif node is MultiMeshInstance3D:
+			var multimesh := (node as MultiMeshInstance3D).multimesh
+			if multimesh != null and multimesh.mesh != null and multimesh.mesh.get_surface_count() > 0:
+				var count := multimesh.visible_instance_count
+				if count < 0: count = multimesh.instance_count
+				for i: int in mini(count, multimesh.instance_count):
+					if absf(multimesh.get_instance_transform(i).basis.determinant()) > 0.0000001:
+						load.particles += 1
+				if int(load.particles) > 0: load.meshes += 1
+	for child: Node in node.get_children():
+		var child_load := _f25_drawing_load(child)
+		load.meshes += int(child_load.meshes)
+		load.particles += int(child_load.particles)
+	return load
 
 
 func _step_strike(args: Dictionary) -> Dictionary:
