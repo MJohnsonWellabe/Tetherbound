@@ -26,5 +26,11 @@
   "native_engine_run_on_PC": false,
   "engine_behavior_changed": false,
   "visual_art_acceptance": "UNPROVEN; all runtime gates remain off",
-  "review": "PENDING"
+  "review": {
+    "verdict": "APPROVE",
+    "agent": "review_f36_cap",
+    "reviewed_commit": "c82425807e036371b9d49ffd41425a5f04cdafcf",
+    "independent_checks": "tools/art_pipeline/test_meshy.py:4 PASS; tools/art_pipeline/tests/test_f36_source_contracts.py:2 PASS",
+    "scope": "F36#3 accounting only:1/30, real task ID and inspected reference hash, reserve-before-POST, task31 refused, uncertain slot retained. No art or runtime gate acceptance."
+  }
 }
