@@ -631,6 +631,7 @@ func bind_encounter(link: Node, encounter_id: String, kind: String) -> void:
 
 
 func unbind_encounter() -> void:
+	_pending_move.erase("ultimate_presentation_clock")
 	_move_awaiting_host = false
 	_tether_command_view.clear()
 	_encounter_link = null
@@ -2674,6 +2675,11 @@ func _tick_active(delta: float) -> void:
 	for uid: String in _party_utility_cooldown:
 		_party_utility_cooldown[uid] = maxf(0.0, float(_party_utility_cooldown[uid]) - delta)
 	_buffer_flee_while_input_unread(delta)
+	# The accepted ultimate's presentation clock continues through impact
+	# hitstop. Expire only its recovery here; hitstop still gates input/motion.
+	if _action == Action.RECOVERY and _pending_move.get("slot") == "ultimate" \
+		and _pending_move.has("ultimate_presentation_clock"):
+		_tick_action(0.0)
 	if _hitstop_left > 0.0:
 		_buffer_attack_while_hitstopped()
 		_hitstop_left = maxf(0.0, _hitstop_left - delta)
@@ -2746,7 +2752,38 @@ func _tick_action(delta: float) -> void:
 	if _action == Action.WINDUP and _ally_body != null and _wild != null:
 		_ally_body.call("face_towards", _wild.call("centre"))
 
-	_action_timer -= delta
+	var presentation_recovery: bool = false
+	if _action == Action.RECOVERY and _pending_move.get("slot") == "ultimate" \
+		and _pending_move.get("ultimate_presentation_clock") is Dictionary:
+		var clock: Dictionary = _pending_move.ultimate_presentation_clock
+		var launch: Dictionary = clock.get("launch", {})
+		var frozen: Dictionary = launch.get("move", {})
+		var binding: Dictionary = frozen.get("actor_binding", {})
+		var creature := active_creature()
+		var duration: float = float(frozen.get("ultimate", {}).get("presentation_seconds", NAN))
+		var matching: bool = state == State.ACTIVE and is_instance_valid(_ally_body) and creature != null \
+			and is_instance_valid(_wild) and _enemy != null and is_instance_valid(_encounter_link) \
+			and _encounter_link.has_method("presentation_move_actor") \
+			and int(clock.get("local_body_id", 0)) == _ally_body.get_instance_id() \
+			and launch.get("encounter_id") == _encounter_id and launch.get("slot") == "ultimate" \
+			and launch.get("attacker_uid") == creature.get("uid") and launch.get("target_uid") == _enemy.get("uid") \
+			and launch.get("move_id") == _pending_move.get("move_id") and frozen.get("move_id") == launch.get("move_id") \
+			and frozen.get("slot") == "ultimate" and binding == _pending_move.get("actor_binding", {}) \
+			and int(_pending_move.get("accepted_action", 0)) > 0 \
+			and binding.get("action") == _pending_move.accepted_action \
+			and is_finite(duration) and duration >= 2.0 and duration <= 3.0 \
+			and frozen.get("ultimate") == _pending_move.get("ultimate") \
+			and clock.get("started_ms") is int and clock.get("deadline_ms") is int \
+			and int(clock.deadline_ms) == int(clock.started_ms) + floori(duration * 1000.0)
+		if matching:
+			var current: Variant = _encounter_link.call("presentation_move_actor", launch, _ally_body)
+			matching = current is Dictionary and preload("res://scripts/vfx/move_presentation_contract.gd").same_actor(binding, current)
+		if not matching:
+			_pending_move.erase("ultimate_presentation_clock")
+			return # A stale clock cannot release this or a replacement action.
+		_action_timer = maxf(0.0, float(int(clock.deadline_ms) - Time.get_ticks_msec()) / 1000.0)
+		presentation_recovery = true
+	if not presentation_recovery: _action_timer -= delta
 	if _action_timer > 0.0:
 		return
 
@@ -3612,6 +3649,25 @@ func present_host_attack_launch(launch: Dictionary, striker: Node3D = null, on_e
 	var presentation: Node3D = PROJECTILE.launch(parent,
 		launch.get("from", striker.global_position), launch.get("to", target_body.global_position),
 		move, context)
+	if is_instance_valid(presentation) and presentation.is_inside_tree() and not presentation.is_queued_for_deletion() \
+		and on_enemy and striker == _ally_body and move.get("slot") == "ultimate" and launch.get("slot") == "ultimate" \
+		and _action in [Action.WINDUP, Action.RECOVERY] and not _pending_move.has("ultimate_presentation_clock"):
+		var creature := active_creature()
+		var binding: Dictionary = move.get("actor_binding", {})
+		var duration: float = float(move.get("ultimate", {}).get("presentation_seconds", NAN))
+		if creature != null and launch.get("attacker_uid") == creature.get("uid") \
+			and _pending_move.get("slot") == "ultimate" and _pending_move.get("move_id") == launch.get("move_id") \
+			and move.get("move_id") == launch.get("move_id") and binding == _pending_move.get("actor_binding", {}) \
+			and int(_pending_move.get("accepted_action", 0)) > 0 and binding.get("action") == _pending_move.accepted_action \
+			and move.get("ultimate") == _pending_move.get("ultimate") \
+			and is_finite(duration) and duration >= 2.0 and duration <= 3.0 \
+			and preload("res://scripts/vfx/move_presentation_contract.gd").same_actor(binding, context.get("current_actor", {})):
+			# Device-local, transient presentation state only: never serialized or
+			# sent to authority. Guests use their own validated local launch clock.
+			var started_ms: int = Time.get_ticks_msec()
+			_pending_move["ultimate_presentation_clock"] = {"launch":launch.duplicate(true),
+				"local_body_id":_ally_body.get_instance_id(),"started_ms":started_ms,
+				"deadline_ms":started_ms + floori(duration * 1000.0)}
 	attack_launched.emit(on_enemy, launch, presentation)
 
 
@@ -4710,6 +4766,7 @@ func apply_host_move_start(payload: Dictionary) -> void:
 func _begin_move_presentation(move: Dictionary) -> void:
 	_clear_move_input()
 	_pending_move = move.duplicate(true)
+	_pending_move.erase("ultimate_presentation_clock") # Only the local validated launch may create this clock.
 	var slot := str(move.get("slot", "quick" if move.get("is_quick") == true else "charged"))
 	if slot == "quick": _quick_cooldown = float(move.get("cooldown", 0.45))
 	elif slot == "charged": _charged_cooldown = float(move.get("cooldown", 1.2))
@@ -5610,6 +5667,7 @@ func caught_instance() -> RefCounted:
 ## --- resolution -----------------------------------------------------------
 
 func _begin_resolve(outcome: String) -> void:
+	_pending_move.erase("ultimate_presentation_clock")
 	if state == State.RESOLVING:
 		return
 	_outcome = outcome
