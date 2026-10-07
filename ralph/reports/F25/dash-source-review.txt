@@ -30,3 +30,5 @@ Manager.physical_utility line3555 could not infer bool through Variant reads.
 Both corrected with explicit bool annotations; semantics unchanged. Artifact
 11495219200 is empty, retained job logs name both parser errors. No unit result
 comes from that run. Corrected affected proof remains required.
+Independent reviewer /root/f25_arrival_review APPROVE both explicit bool
+declarations: expressions and behavior unchanged; import confirmation pending.
