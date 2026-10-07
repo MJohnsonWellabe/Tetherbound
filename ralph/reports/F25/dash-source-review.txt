@@ -51,3 +51,14 @@ lazy classes on that exact cut, not the subsequent guest-core/camera/producer
 changes, actual collision paths, arrival visuals or Medium performance.
 The131 mapped files including remote_creature references remain the wider
 necessary logic batch; dispatched separately on40267285699ae8a88ecee8e37ac80afe1059762b.
+
+Subsequent complete mapped logic (including both tell source references):
+37659056291 @48b4fe8458097cf10cf989076f5bf0f696fb6408 PASS134 files,
+1243 tests/42039 assertions/0 failed, exit0/206s; artifact11500347120 verified.
+Final revised-original source cut76a766ebd4320a84052d2c94de954f8dc54229e5:
+37660697781 PASS same134 files/1243 tests/42039 assertions/0 failed,
+exit0/215s; artifact11500841448 verified. Neither log has SCRIPT ERROR,
+Parse Error, failed-load or failed-test lines. Deliberate fail-closed fixture
+warnings and3 leaked ObjectDB instances remain disclosed in raw artifacts.
+No skipped/disabled tests. These are logic proofs, not actual guest movement,
+capture/judge, four-creature Medium performance or criterion completion.

@@ -75,3 +75,6 @@ Hosted37641089339 checkoutabaf61ef63fadf3b15744f70468a9e09be64077f passed74 exis
 
 F35 Ground Current material candidate — f25_review APPROVE:
 Only data-opted-in opaque rock parts reuse existing F25 stone mineral/scree surface; authored ultimate palette retained. Peer opacity0.48 and missing resource/script/profile/material retain original alpha/fallback material. Geometry/choreography/timing/counts/leases unchanged; ultimates.enabled remains false. Source only; hosted material/runtime/capture/full§4 judge still required.
+
+F33#2 Stormwood existing-smoke gear step — f25_medium_review APPROVE:
+Bounded8-line extension to tests/smoke_stormwood_b_named_c2c3.gd against76a766ebd4320a84052d2c94de954f8dc54229e5. Reviewed file SHA256955cb51d1c402db84455c342c133cb50d36f7d07e19b155f7e61b22a017eb444. Reuses existing f33_gear_fixture preload/from_args/equip before each valid party's original pilot; records gear labels per run/row/report. Default bare remains no-op. Seeds, policies, levels, thresholds, cases and verdicts unchanged. No new fixture/function/class/tool. Existing helper save-detachment/partial-row admission limitations remain OPEN; no fake writer/receipt or authority bypass was added. No engine execution or F33/C2 certification; real admission and matching-vs-previous-tier simulations remain required.
