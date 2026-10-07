@@ -2433,6 +2433,11 @@ func _tick_action(delta: float) -> void:
 		_ally_body.call("face_towards", _wild.call("centre"))
 
 	_action_timer -= delta
+	if _action == Action.WINDUP and _pending_move.has("local_strike_at_ms"):
+		# Engine delta can compensate for a slow frame. The host's immutable
+		# start uses monotonic milliseconds; never submit before a full local
+		# windup has elapsed since its acknowledgement (conservative on guests).
+		_action_timer = maxf(_action_timer, float(int(_pending_move.local_strike_at_ms) - Time.get_ticks_msec()) / 1000.0)
 	if _action_timer > 0.0:
 		return
 
@@ -3372,7 +3377,7 @@ static func host_move_profile(moves: RefCounted, block: String, move_id: String,
 ## before authorization, spending, or presentation until their own path exists.
 static func live_move_supported(slot: String, move_id: String) -> bool:
 	if slot in ["quick", "charged"]: return true
-	if slot == "ultimate" and not preload("res://scripts/vfx/ultimates/ultimate_library.gd").available(move_id): return false
+	if slot == "ultimate": return preload("res://scripts/vfx/ultimates/ultimate_library.gd").available(move_id)
 	return (MATH.config().get("move_commit", {}).get("live_moves", []) as Array).has(move_id)
 
 
@@ -4203,6 +4208,7 @@ func apply_host_move_start(payload: Dictionary) -> void:
 	_apply_move_resources(payload)
 	var move: Dictionary = payload.move.duplicate(true)
 	move["accepted_action"] = int(payload.get("accepted_action", 0))
+	move["local_strike_at_ms"] = Time.get_ticks_msec() + ceili(float(move.get("windup", 0.0)) * 1000.0)
 	_begin_move_presentation(move)
 
 

@@ -569,7 +569,8 @@ func authorize_move_start(intent: Dictionary, peer: int, owned: Dictionary,
 		or move.get("move_id") != move_id or move.get("slot") != slot \
 		or typeof(intent.get("action")) != TYPE_INT or int(intent.action) <= 0 or now_ms < 0:
 		return _refuse("move_start", peer, "invalid_actor_move", "That equipped move is unavailable.")
-	if slot in ["utility", "ultimate"] and not (MATH.config().get("move_commit", {}).get("live_moves", []) as Array).has(move_id):
+	if (slot == "ultimate" and not preload("res://scripts/vfx/ultimates/ultimate_library.gd").available(move_id)) \
+		or (slot == "utility" and not (MATH.config().get("move_commit", {}).get("live_moves", []) as Array).has(move_id)):
 		return _refuse("move_start", peer, "move_not_mounted", "That move is not available in this build yet.")
 	if slot == "ultimate" and not preload("res://scripts/vfx/ultimates/ultimate_library.gd").available(move_id):
 		return _refuse("move_start", peer, "move_not_mounted", "That ultimate is not available in this build yet.")

@@ -19,6 +19,18 @@ var _catch_paused := false
 var _catch_physics_was_processing := true
 
 
+## A realm service already owns this opponent's AI and position. Reuse only
+## the production damage resolver; never create a second arena or AI loop.
+func bind_persistent_opponent(opponent: Node3D, link: Node, encounter_id: String,
+		generation: int) -> void:
+	authority_body = opponent
+	authority_link = link
+	body_generation = generation
+	_wild = opponent
+	_enemy = opponent.get("instance")
+	bind_encounter(link, encounter_id, "wild")
+
+
 func start_shared(body: Node3D, target: Node3D, centre: Vector3, radius: float,
 		link: Node, encounter_id: String, generation: int, kind: String = "wild") -> void:
 	body_generation = generation
