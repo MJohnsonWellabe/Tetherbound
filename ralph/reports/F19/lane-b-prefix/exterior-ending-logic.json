@@ -1,0 +1,23 @@
+{
+  "failed": 0,
+  "logic_assertions_pass": true,
+  "assertions": 4220,
+  "script": "tests/run_tests.gd",
+  "run_id": 37648982026,
+  "next": "Fresh earned R4 prefix on same cut, run37651310924",
+  "engine_errors": 0,
+  "artifact": {
+    "name": "render-lane-b-exterior-bed-ending-logic-37648982026",
+    "id": 11496421779,
+    "sha256": "09bffa59cbb34687b263cc681f18e574193ccc901e6271e574338cade30c4149"
+  },
+  "exit_objectdb_warning_instances": 6,
+  "tests": 92,
+  "script_errors": 0,
+  "args": "--only=test_meadows_earned_team_segment.gd,test_meadows_earned_material_segment.gd,test_regional_homecoming.gd,test_ending_presentation_owner.gd,test_ending_return_provenance.gd,test_foundation_travel_protocol.gd,test_homecoming_ending_invariants.gd,test_objective_beacon.gd,test_regional_ack_guest_view.gd",
+  "warning_disposition": "Disclosed; source origin remains under audit. No claim of warning-free execution.",
+  "criterion_pass": false,
+  "kind": "existing_exterior_bed_and_ending_affected_logic",
+  "run_log_sha256": "118a76580c5bee7ad8cc51a9dce4e7a6817fcc8e98959e2834b00cb75b0546c3",
+  "source_sha": "f815d73cbbc538d64feaef88af23c2b380e194a1"
+}
