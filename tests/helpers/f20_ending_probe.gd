@@ -19,6 +19,17 @@ var continuation_content_entered := false
 func capture(tree: SceneTree, label: String, frame_ready: Callable = Callable()) -> bool:
 	if not OS.get_cmdline_user_args().has("--capture-ending") and not OS.get_cmdline_user_args().has("--capture-order-ui") \
 		and not (OS.get_cmdline_user_args().has("--capture-lessons") and label.begins_with("lesson-")): return true
+	# Explicit functional offload may draw this guarded lesson frame only. The
+	# original capture still observes a real completed native draw; ordinary
+	# physics, input and lesson state continue, and continuous drawing is restored.
+	if label.begins_with("lesson-") and OS.get_cmdline_user_args().has("--functional-offload") \
+		and not RenderingServer.render_loop_enabled:
+		if not check(DisplayServer.get_name() != "headless" and RenderingServer.get_current_rendering_method() == "gl_compatibility",
+			"offloaded lesson capture requires the real Compatibility display"): return false
+		RenderingServer.render_loop_enabled = true
+		var captured: bool = await capture(tree, label, frame_ready)
+		RenderingServer.render_loop_enabled = false
+		return captured
 	if not check(DisplayServer.get_name() != "headless" and RenderingServer.render_loop_enabled,
 		"ending capture requires an actual drawing display"): return false
 	var drawn: Array[bool] = [false]

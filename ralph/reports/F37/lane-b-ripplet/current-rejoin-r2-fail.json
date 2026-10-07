@@ -69,9 +69,9 @@
     "full_visual_bar": "OPEN"
   },
   "corrective_candidate": {
-    "source_sha": "973737ccc6",
+    "source_sha": "973737ccc6c9e35eeb773c82a2243d8ca15691c2",
     "oracle_sha": "645b47f61fdc0b68e371d1b83f5d4ad224b90cd9",
-    "cue_sha": "851e2a2d8c",
+    "cue_sha": "851e2a2d8cd176c5ed89e0f89c60d729738a66cb",
     "review": "Same original b_f37_review SOURCE APPROVE for oracle, transition cues and seven read-only capture steps",
     "coordinator_release": "https://github.com/MJohnsonWellabe/Tetherbound/issues/572#issuecomment-6048072309",
     "coordinator_development_preflight": {

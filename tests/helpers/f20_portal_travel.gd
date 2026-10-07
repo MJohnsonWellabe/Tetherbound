@@ -44,8 +44,9 @@ static func lesson_witness_options() -> Dictionary:
 			seen[key] = true
 	if seen.has("skip_line") and not options.controller:
 		options.failures.append("--lesson-skip-line requires --lesson-controller-witness")
-	if options.capture and OS.get_cmdline_user_args().has("--functional-offload"):
-		options.failures.append("--capture-lessons requires drawing and cannot use --functional-offload")
+	if options.capture and OS.get_cmdline_user_args().has("--functional-offload") \
+		and (DisplayServer.get_name() == "headless" or RenderingServer.get_current_rendering_method() != "gl_compatibility"):
+		options.failures.append("Offloaded --capture-lessons requires a real Compatibility display and a guarded native draw")
 	return options
 
 func _portal_result(result: Dictionary) -> void:
