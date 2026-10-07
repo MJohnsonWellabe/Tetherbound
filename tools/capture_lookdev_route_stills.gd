@@ -62,6 +62,7 @@ func _begin_manifest() -> void:
 	super._begin_manifest()
 	_manifest["graphics_capture"] = _graphics_capture
 	_manifest["route"] = _route
+	_manifest["fixture_disclosure"] = "Production scene, CameraRig and ordinary HUD. Debug travel at each declared route point and audit-only clock pin. Meadows seeds the timed route's declared MEADOWS_OPENING_FLAGS to skip its opening modal; other biomes use the base catalogue character fixture. Not an earned opening, campaign, traversal, save or frame-time proof."
 	_manifest["route_stills_scope"] = "Visual-only stills at declared route points with production camera/HUD. Debug travel and clock pin. No frame time, traversal, collision or performance claim."
 
 
