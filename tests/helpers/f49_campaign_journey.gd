@@ -5,7 +5,9 @@ extends RefCounted
 ## their elapsed time never supplies owner play or hardware performance proof.
 const ORDER := preload("res://scripts/data/biome_order.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
-const TRAVEL := preload("res://tests/helpers/f49_portal_travel.gd")
+# Reuse F20's ordinary dual-clock input, personal lesson reader and authored
+# Hall approach. It extends the F49 travel checks; no fixture setup is used.
+const TRAVEL := preload("res://tests/helpers/f20_portal_travel.gd")
 const HANDOFF := preload("res://tests/helpers/f49_disk_handoff.gd")
 const HOME := preload("res://scripts/story/regional_homecoming.gd")
 const WARDEN := preload("res://tests/helpers/f49_warden_finale.gd")
@@ -155,7 +157,26 @@ func run(owner: SceneTree) -> void:
 			return
 		if not await _boundary("stormwood_settled"): return
 	if from < 4:
-		if not await travel.home_key() or not await travel.hang_relic("stormwood") or not await travel.grandpa_and_credits():
+		if not await travel.home_key() or not await travel.hang_relic("stormwood"):
+			_failures(travel.failures)
+			return
+		var grandpa: Node3D
+		for node: Node in driver.current_scene.find_children("*", "", true, false):
+			if node.has_method("interaction_offer") and node.get_parent().name == "Grandpa":
+				grandpa = node as Node3D
+		var dialogue: Node = driver.current_scene.get_node_or_null("DialoguePanel")
+		if grandpa == null or dialogue == null or dialogue.call("is_open"):
+			_fail("F49 homecoming approach requires the actual Grandpa prompt and closed dialogue")
+			return
+		# The existing approach walks the authored farmhouse doorway without X;
+		# inherited homecoming then proves the exact provider's ordinary input.
+		if not await travel.approach_grandpa(grandpa):
+			_failures(travel.failures)
+			return
+		if dialogue.call("is_open"):
+			_fail("F49 Grandpa dialogue opened before ordinary homecoming input")
+			return
+		if not await travel.grandpa_and_credits():
 			_failures(travel.failures)
 			return
 		visited.append("homecoming_credits")
