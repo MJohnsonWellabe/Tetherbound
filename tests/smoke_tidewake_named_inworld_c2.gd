@@ -13,13 +13,14 @@ extends SceneTree
 ##
 ##   godot --headless --path . --fixed-fps 60 --script tests/smoke_tidewake_named_inworld_c2.gd \
 ##     -- --trainer=water_trainer_nerissa --starter=ripplet --policy=READER --seed=0 \
-##        [--party-level=43] --json=<file>
+##        [--party-level=43] [--gear-tier=<tier>] [--gear-upgrade=0..3] --json=<file>
 ##
 ## Preparation that is NOT ordinary play, disclosed in the JSON: the party is
 ## granted (the original five at --party-level, starter leading), the player
 ## is placed in front of the trainer, and Nerissa's two upstream pump flags are
 ## set so the Heart Chamber stands. No HP, damage, victory or roster injection.
 const PILOT := preload("res://tests/helpers/combat_depth_pilot.gd")
+const GEAR := preload("res://tests/helpers/f33_gear_fixture.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
@@ -68,6 +69,7 @@ func _run() -> void:
 	var seed_value := 0
 	var level := 43
 	var out := ""
+	var gear: Dictionary = GEAR.from_args()
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--trainer="): trainer_id = arg.trim_prefix("--trainer=")
 		elif arg.begins_with("--starter="): starter = arg.trim_prefix("--starter=")
@@ -87,6 +89,7 @@ func _run() -> void:
 		creature.set_level(level, PROGRESSION.config())
 		game.local.party.add(creature)
 		party.append(creature)
+	GEAR.equip(self, party, str(gear.tier), int(gear.upgrade))
 	var entry_max: Dictionary = {}
 	var party_max := 0.0
 	for member in party:
@@ -101,8 +104,11 @@ func _run() -> void:
 	while not world.shell_build_complete() and Time.get_ticks_msec() < deadline:
 		await process_frame
 	var result := {"trainer": trainer_id, "starter": starter, "pilot": policy, "seed": seed_value,
+		"gear": GEAR.label(str(gear.tier), int(gear.upgrade)),
 		"party_level": level, "fixture": "actual Water world; granted party; player placed at the trainer; pump flags set",
 		"won": false, "error": ""}
+	if not str(gear.tier).is_empty():
+		result.fixture += "; direct owner-row Harness/Charm gear fixture; save system detached; not earned or canonical gear admission"
 	if not world.shell_build_complete():
 		_finish(out, result, "Water world did not build")
 		return
