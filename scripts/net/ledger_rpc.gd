@@ -1045,7 +1045,9 @@ func _apply_player_ops(delta: Dictionary) -> void:
 					if remaining > 0 and not OS.get_environment("TB_NET_RUN_ID").is_empty():
 						var session: Node = game.get("session") as Node
 						print("[ledger] original item_grant unapplied: ", JSON.stringify({"op": op,
-							"remaining": remaining, "guard": session.call("_owner_snapshot_block_reason", local)
+							"remaining": remaining, "blocked": session.call("_owner_training_mutation_blocked", local)
+								if session != null and session.has_method("_owner_training_mutation_blocked") else null,
+							"guard": session.call("_owner_snapshot_block_reason", local)
 								if session != null and session.has_method("_owner_snapshot_block_reason") else "unavailable"}))
 				PROGRESSION_FEED.announce_catalyst_pickup(str(op.get("item", "")))
 			"item_take":
@@ -1056,7 +1058,9 @@ func _apply_player_ops(delta: Dictionary) -> void:
 					if not removed and not OS.get_environment("TB_NET_RUN_ID").is_empty():
 						var session: Node = game.get("session") as Node
 						print("[ledger] original item_take unapplied: ", JSON.stringify({"op": op,
-							"removed": removed, "guard": session.call("_owner_snapshot_block_reason", local)
+							"removed": removed, "blocked": session.call("_owner_training_mutation_blocked", local)
+								if session != null and session.has_method("_owner_training_mutation_blocked") else null,
+							"guard": session.call("_owner_snapshot_block_reason", local)
 								if session != null and session.has_method("_owner_snapshot_block_reason") else "unavailable"}))
 
 
