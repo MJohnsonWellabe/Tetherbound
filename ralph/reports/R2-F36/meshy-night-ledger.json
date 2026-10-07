@@ -9,9 +9,11 @@
       "reference": "assets/creatures/tetherbound/stormursa/reference/f36-three-quarter-v1.png",
       "reference_sha256": "ea0a0d7a0716f9fc599a91769a560afda60418c6615330064abd2e8caf841f33",
       "endpoint": "/openapi/v1/multi-image-to-3d",
-      "submitted_utc": "2026-10-07T12:38:02.008464+00:00",
+      "submitted_utc": "2026-10-07T07:38:02.008464-05:00",
       "task_id": "01a1165e-e5b9-754f-8aaf-ff5f40c68d64",
-      "status": "submitted_pending_inspection"
+      "status": "inspection_BLOCK_cleanup_topology",
+      "observed_credit_cost": 20,
+      "candidate_enabled": false
     },
     {
       "reservation_id": "2618c833-a3af-492c-b02e-cfab57259d35",
@@ -20,9 +22,12 @@
       "reference": "assets/creatures/tetherbound/stormursa/reference/f36-three-quarter-v1.png",
       "reference_sha256": "ea0a0d7a0716f9fc599a91769a560afda60418c6615330064abd2e8caf841f33",
       "endpoint": "/openapi/v1/image-to-3d",
-      "submitted_utc": "2026-10-07T12:58:52.440425+00:00",
+      "submitted_utc": "2026-10-07T07:58:52.440425-05:00",
       "task_id": "01a11671-f9fa-746e-8e29-98fc32496010",
-      "status": "submitted_pending_inspection"
+      "status": "anatomy_debris_only_rig_deformation_subgates_PASS_native_OPEN",
+      "observed_credit_cost": 5,
+      "candidate_enabled": false,
+      "inspection_evidence": "ralph/reports/F29/stormursa-rig-no-weld-verdict.json"
     },
     {
       "reservation_id": "408872e9-588b-4856-980f-abd44d6f7811",
@@ -31,9 +36,12 @@
       "reference": "assets/creatures/tetherbound/stormursa/reference/f36-three-quarter-v1.png",
       "reference_sha256": "ea0a0d7a0716f9fc599a91769a560afda60418c6615330064abd2e8caf841f33",
       "endpoint": "/openapi/v1/retexture",
-      "submitted_utc": "2026-10-07T13:45:15.558280+00:00",
+      "submitted_utc": "2026-10-07T08:45:15.55828-05:00",
       "task_id": "01a1169c-70ef-77b1-856a-32d3120cc810",
-      "status": "submitted_pending_inspection"
+      "status": "texture_appearance_judge_BLOCK",
+      "observed_credit_cost": 10,
+      "candidate_enabled": false,
+      "inspection_evidence": "ralph/reports/F29/stormursa-texture-verdict.json"
     }
   ],
   "actual_meshy_submissions": 3,
