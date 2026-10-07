@@ -1,6 +1,11 @@
 {
   "_comment": "Presentation-only tuning for scripts/ui/playground_hud.gd. Nothing here is read by authority, reward, inventory or progression code. A missing or invalid value falls back to the constant named in playground_hud.gd.",
   "party_vitals_refresh_candidate": false,
+  "exploration_roster": {
+    "scope": "device_local_presentation",
+    "show_empty_slots": false,
+    "_comment": "The temporary exploration reveal lists owned companions; TEAM n/5 still states the capacity. The combat roster keeps its own presentation. No timer, order or party state changes."
+  },
   "exploration_vitals": {
     "scope": "device_local_presentation",
     "_comment": "Healthy idle vitals remain readable over outdoor scenery. Relevant health, hunger and sprint states retain full opacity.",
