@@ -8,6 +8,8 @@ extends SceneTree
 ## --enable-ultimate-visual and --prove-library-arrival are process-local
 ## presentation overrides. --capture-dir=<path>
 ## saves rendered frames of the same accepted action for independent judging.
+## --with-vfx-units runs the existing move-effects unit selector first, in a
+## separate headless process, before this smoke mounts any gameplay nodes.
 const SAVE := preload("res://tests/test_foundation_resource_save.gd")
 const DATA := preload("res://tests/test_foundation_resources.gd")
 const AUTHORITY := preload("res://scripts/net/character_authority.gd")
@@ -126,6 +128,17 @@ func _run() -> void:
 	if not _errors.is_empty():
 		_finish()
 		return
+	if OS.get_cmdline_user_args().has("--with-vfx-units"):
+		var output: Array = []
+		var exit_code := OS.execute(OS.get_executable_path(), PackedStringArray([
+			"--headless", "--path", ProjectSettings.globalize_path("res://"),
+			"--audio-driver", "Dummy", "--script", "res://tests/run_tests.gd", "--",
+			"--only=test_move_effects.gd"]), output, true)
+		for chunk: Variant in output: print(str(chunk))
+		_check(exit_code == 0, "existing test_move_effects.gd selector passes before the live smoke")
+		if exit_code != 0:
+			_finish()
+			return
 	_setup()
 	await process_frame
 	if not _errors.is_empty():
