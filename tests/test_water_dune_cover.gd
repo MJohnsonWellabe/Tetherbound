@@ -59,6 +59,11 @@ func test_colony_and_arc_overrides_bind_only_to_the_dune_material() -> void:
 		field._material.shader = load(GRASS.SHADER_PATH)
 	ordinary._apply_config(source)
 	dunes._apply_config(candidate)
+	# The Water-local soft foreground treatment must reach both ordinary and
+	# dune materials without changing the supplied source dictionary.
+	for key: String in ["lens_clear_m", "lens_clear_band"]:
+		assert_almost_eq(float(ordinary._material.get_shader_parameter(key)), float(source[key]))
+		assert_almost_eq(float(dunes._material.get_shader_parameter(key)), float(source[key]))
 	for key: String in ["clump_patch_start", "clump_patch_full"]:
 		var ordinary_value: Variant = ordinary._material.get_shader_parameter(key)
 		assert_true(ordinary_value == null or is_equal_approx(float(ordinary_value), 0.0),

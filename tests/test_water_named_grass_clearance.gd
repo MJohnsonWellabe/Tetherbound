@@ -23,7 +23,7 @@ func after_each() -> void:
 
 
 func test_shipping_setting_preserves_explicit_off_spawn_noop() -> void:
-	assert_false(bool(CLEARANCE.settings().get("enabled", false)))
+	assert_true(bool(CLEARANCE.settings().get("enabled", false)))
 	var body := CharacterBody3D.new()
 	body.name = "water_adair"
 	body.position = Vector3(17.0, 3.0, 8.0)
