@@ -1,11 +1,12 @@
 extends "res://tools/_capture_creature_roster.gd"
 
-## ROOT queue only. Explicit --candidate previews flag-off recipes on one
+## Existing pose/scale stage. Explicit --candidate previews flag-off recipes on one
 ## stage body. Capture the same command without it for the matched baseline.
 ## This stage is deformation evidence, not an ordinary-input traversal proof.
 const ROLES := ["hit", "faint", "swim", "fly_grip", "ride"]
 const PHASES := [0.0, 0.25, 0.5, 0.75, 1.0]
 var _pose_failures: Array[String] = []
+var _scale_only := false
 
 
 func _run() -> void:
@@ -14,6 +15,7 @@ func _run() -> void:
 	var whole_body := false
 	var out := "res://ralph/reports/R2-F36/frames"
 	var source := ""
+	var all_roster := false
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--species="):
 			ids.assign(arg.trim_prefix("--species=").split(",", false))
@@ -21,10 +23,22 @@ func _run() -> void:
 			candidate = true
 		elif arg == "--whole-body":
 			whole_body = true
+		elif arg == "--scale-only":
+			_scale_only = true
+			whole_body = true
+		elif arg == "--all":
+			all_roster = true
 		elif arg.begins_with("--out="):
 			out = arg.trim_prefix("--out=")
 		elif arg.begins_with("--source-commit="):
 			source = arg.trim_prefix("--source-commit=")
+	if all_roster:
+		ids.assign(SPECIES.table().keys())
+		ids.sort()
+	if _scale_only and candidate:
+		push_error("Installed scale audit cannot preview pose candidates")
+		quit(1)
+		return
 	var seen := {}
 	for id: String in ids:
 		if not SPECIES.has(id) or seen.has(id):
@@ -77,6 +91,10 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 	if measured_height <= TRAINER_HEIGHT:
 		_pose_failures.append("%s: rendered height %.3fm does not clear trainer %.2fm" %
 			[id, measured_height, TRAINER_HEIGHT])
+	if _scale_only and not bool(body.call("has_model")):
+		_pose_failures.append("%s: installed model missing; capsule cannot establish visual scale" % id)
+	if _scale_only and absf(measured_trainer - TRAINER_HEIGHT) > 0.02:
+		_pose_failures.append("%s: trainer ruler renders %.3fm rather than %.2fm" % [id, measured_trainer, TRAINER_HEIGHT])
 	if candidate:
 		body.set_meta("f36_pose_preview", true)
 		body.call("_build_placeholder")
@@ -86,26 +104,32 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 		await process_frame
 		return
 	var players := body.find_children("*", "AnimationPlayer", true, false)
-	if players.size() != 1:
+	if not _scale_only and players.size() != 1:
 		_pose_failures.append("%s: expected one AnimationPlayer, found %d" % [id, players.size()])
 		body.queue_free()
 		await process_frame
 		return
-	var player := players[0] as AnimationPlayer
-	player.process_mode = Node.PROCESS_MODE_DISABLED
+	var player := players[0] as AnimationPlayer if players.size() == 1 else null
+	if player != null:
+		player.process_mode = Node.PROCESS_MODE_DISABLED
 	var look: Dictionary = SPECIES.placeholder(id)
 	var map: Dictionary = look.get("animations", {})
 	var receipt: Array = []
-	for role: String in ROLES:
+	var roles: Array = ["standing"] if _scale_only else ROLES
+	var phases: Array = [0.0, 1.0] if _scale_only else PHASES
+	for role: String in roles:
 		var clip := "f36_candidate/%s" % role if candidate else str(map.get(role, ""))
-		if clip.is_empty() or not player.has_animation(clip):
+		if not _scale_only and (clip.is_empty() or not player.has_animation(clip)):
 			receipt.append({"role": role, "status": "missing_baseline_clip"})
 			_pose_failures.append("%s: missing %s clip" % [id, role])
 			continue
-		for phase: float in PHASES:
-			player.play(clip)
-			player.seek(player.get_animation(clip).length * phase, true)
-			player.pause()
+		for phase: float in phases:
+			if _scale_only:
+				body.rotation.y = deg_to_rad(phase * 180.0)
+			else:
+				player.play(clip)
+				player.seek(player.get_animation(clip).length * phase, true)
+				player.pause()
 			for frame in 3:
 				await process_frame
 			var path := "%s/%s-%s-%03d.png" % [out, id, role, int(phase * 100)]
@@ -118,12 +142,13 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 		_pose_failures.append("%s: receipt could not be opened" % id)
 	else:
 		file.store_string(JSON.stringify({"species": id, "candidate": candidate, "stage_only": true,
+			"scale_only": _scale_only, "installed_model": bool(body.call("has_model")),
 			"source_commit": source, "renderer": RenderingServer.get_current_rendering_method(),
 			"standing_height_m": measured_height, "trainer_reference_height_m": TRAINER_HEIGHT,
 			"trainer_measured_height_m": measured_trainer, "scale_scope": "Installed standing stage; no fight-scale claim",
 			"whole_body_camera": whole_body, "camera_position": [_camera.global_position.x, _camera.global_position.y, _camera.global_position.z],
 			"camera_fov": _camera.fov, "resting_size_m": [resting_bounds.size.x, resting_bounds.size.y, resting_bounds.size.z],
-			"resolution": [root.size.x, root.size.y], "planned_frames": ROLES.size() * PHASES.size(),
+			"resolution": [root.size.x, root.size.y], "planned_frames": roles.size() * phases.size(),
 			"frames": receipt}, "\t"))
 		file.flush()
 		if file.get_error() != OK:
