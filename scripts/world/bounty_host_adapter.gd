@@ -9,6 +9,7 @@ const BOARD := preload("res://scripts/world/bounty_board.gd")
 const ACTIONS := preload("res://scripts/net/character_action_rules.gd")
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const WORLD := preload("res://autoload/world_state.gd")
+const PASSIVE := preload("res://scripts/net/owner_passive_preparation.gd")
 var _session: Node
 var _source_context: Callable
 var _accepted_event: Callable
@@ -87,6 +88,12 @@ func _commit(peer: int, action: String, intent: Dictionary, context: Dictionary)
 		var in_combat: Variant = context.get("in_combat")
 		if not in_combat is bool: return ACTIONS.deny("bounty_combat_state_unavailable")
 		if in_combat: return ACTIONS.deny("combat_still_active")
+		if action == "bounty_rotate" and peer != int(_session.call("local_peer_id")):
+			var passive: RefCounted = _session.get("_owner_passive")
+			if passive == null: passive = _session.call("_owner_passive_service")
+			var source := PASSIVE.bounty_rotation_source(context, world.world_id, str(_session.call("_altar_current_epoch")))
+			var gate: Dictionary = passive.call("bounty_rotation_gate", peer, source, context)
+			if gate.get("ok") != true: return gate
 	return ACTIONS.commit_host_action(registry, writer, peer, context.character_id,
 		int(context.expected_revision), action, intent, context)
 
@@ -98,6 +105,21 @@ func morning(peer: int) -> Dictionary:
 	if context.is_empty() or context.get("clock_confirmed") != true: return ACTIONS.deny("host_morning_required")
 	context["in_range"] = true # clock event; no spatial interaction
 	context["source_key"] = "halda_bounty_clock"
+	return _commit(peer, "bounty_rotate", {}, context)
+
+## Only the saved original host-clock checkpoint may re-enter this producer.
+## Re-measure the day/world/unlocks/revision; a crossed morning settles saved
+## care without rotating, then the ordinary poll can request the new source.
+func commit_rotation_prepared(peer: int, source: Dictionary, original: Dictionary) -> Dictionary:
+	var context := _context(peer)
+	if not context.is_empty():
+		context["in_range"] = true
+		context["source_key"] = "halda_bounty_clock"
+	var game: Node = _session.call("_game")
+	var current_source := PASSIVE.bounty_rotation_source(context, str(game.get("world").get("world_id")),
+		str(_session.call("_altar_current_epoch"))) if game != null and game.get("world") != null else {}
+	if context.is_empty() or not PASSIVE.exact(context, original) or not PASSIVE.exact(current_source, source):
+		return {"ok": false, "durable": false, "resolved": true, "terminal_refusal": true, "code": "bounty_rotation_source_changed"}
 	return _commit(peer, "bounty_rotate", {}, context)
 
 func claim(peer: int, intent: Dictionary) -> Dictionary:
