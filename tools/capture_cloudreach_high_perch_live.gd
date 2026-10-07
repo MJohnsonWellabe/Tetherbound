@@ -1,6 +1,6 @@
 extends SceneTree
 
-## F08#3 (Phase 1): the High Perches seen ONLY through the live production
+## F08#2 (current board; formerly Phase1#3): High Perches through live production
 ## camera, in one continuous flight per time of day. The re-check of the c3
 ## verdict found its height/crowding PASS rested on a fixed evidence camera and
 ## on a rig frozen at the exploration arm; this tool never freezes the rig or
@@ -30,8 +30,8 @@ extends SceneTree
 ##
 ## DISCLOSED FIXTURE: `Game.reset_for_new_game()`, realm cloudreach, the scene
 ## instantiated directly; progression flags up to Act II (the frame matrix's
-## BOOT_FLAGS, which include fly_traversal_unlocked); a four-creature party with
-## no flier so Maela's loaner carries every flight; the trainer is teleported to
+## BOOT_FLAGS, which include fly_traversal_unlocked); the existing five-owned
+## matrix party, with Galecrest active and summoned; the trainer is teleported to
 ## the arrival start once per time of day; WorldLook's clock is pinned; HUD
 ## CanvasLayers are hidden for the frame. Camera yaw is written the way the
 ## right stick writes it (`camera_rig.gd::yaw`); pitch is left to the rig.
@@ -43,7 +43,7 @@ const LANE := preload("res://tools/capture_cloudreach_lane_common.gd")
 const MATRIX := preload("res://tools/capture_cloudreach_frame_matrix.gd")
 
 const DEFAULT_OUT := "res://ralph/reports/CLOUDREACH/f08-3-high-perch-camera/r5"
-const PARTY := ["terrapup", "bramblebun", "mudsnout", "brooktail"]
+const PARTY := MATRIX.PARTY
 const CROWN := Vector3(900.0, 1020.0, 2700.0)
 ## The south-east rim (an r3 production-rig stand, 18.4 m out) and a point
 ## east over the drop, where the lowland and cloud floor lie far below.
@@ -74,6 +74,7 @@ var _director: Node
 var _frames: Array = []
 var _records: Array = []
 var _failures: Array[String] = []
+var _graphics_capture: Dictionary = {}
 var _time_name := "day"
 ## Grounded first presses repeated before a departure launch (evidence).
 var _departure_jump_presses := 0
@@ -91,6 +92,13 @@ func _run() -> void:
 		print("high perch live: needs a rendering display (xvfb-run, opengl3)")
 		quit(1)
 		return
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--preset="):
+			_graphics_capture = preload("res://tools/lookdev_capture_bootstrap.gd").prepare(self)
+			if _graphics_capture.is_empty():
+				quit(1)
+				return
+			break
 	if not await _boot():
 		_finish()
 		return
@@ -114,6 +122,8 @@ func _boot() -> bool:
 	var party: RefCounted = _game.get("party")
 	for species: String in PARTY:
 		party.call("add", SPECIES.spawn(species))
+	if (party.call("members") as Array).size() != 5:
+		return _fail("visual fixture must contain exactly five owned companions")
 	var flags: RefCounted = _game.get("progression")
 	for flag: String in MATRIX.BOOT_FLAGS:
 		flags.call("set_flag", flag)
@@ -147,8 +157,16 @@ func _boot() -> bool:
 	_fly = _player.get("fly_controller")
 	if _fly == null:
 		return _fail("player has no fly_controller")
-	if _fly.call("eligible_creature") == null:
-		return _fail("no Fly carrier eligible (Maela's loaner expected)")
+	var carrier: RefCounted = _fly.call("eligible_creature")
+	if carrier == null or carrier != party.call("active") or not (party.call("members") as Array).has(carrier):
+		return _fail("active owned Fly carrier is not eligible")
+	_director.call("summon_active_creature")
+	for i in 120:
+		if _director.call("ally_body") != null:
+			break
+		await physics_frame
+	if _director.call("ally_body") == null:
+		return _fail("owned carrier did not appear in the production world")
 	_camera.make_current()
 	return true
 
@@ -340,6 +358,9 @@ func _flat(a: Vector3, b: Vector3) -> float:
 
 
 func _capture(label: String, subject: Vector3) -> void:
+	if bool(_fly.call("last_flight_used_mentor_loaner")):
+		_fail("owned-carrier camera proof cannot use a mentor loaner")
+		return
 	_hide_overlays()
 	_set_render(true)
 	for i in RENDERED_FRAMES:
@@ -406,12 +427,22 @@ func _finish() -> void:
 	var manifest := {"schema_version": 1, "tool": "tools/capture_cloudreach_high_perch_live.gd",
 		"scene": "res://scenes/world/cloudreach_cliffs.tscn", "named_location": "The High Perches",
 		"camera": "production CameraRig, processing on throughout; yaw written as the right stick; no evidence camera",
-		"fixture_disclosure": "reset_for_new_game; realm cloudreach; scene instantiated directly; Act I-II flags incl. fly_traversal_unlocked (frame matrix BOOT_FLAGS); party terrapup/bramblebun/mudsnout/brooktail (no flier: Maela's loaner carries every flight); trainer teleported to the arrival start in the air once per time of day, then Jump launches the glide; yaw written each physics frame as the stick; pitch -32 deg for the rim-out frame only; clock pinned; HUD hidden for each frame.",
+		"graphics_capture": _graphics_capture,
+		"fixture_disclosure": "reset_for_new_game; realm cloudreach; scene instantiated directly; Act I-II flags incl. fly_traversal_unlocked (frame matrix BOOT_FLAGS); five-owned matrix party, Galecrest active and summoned, no loaner; trainer teleported to the arrival start in the air once per time of day, then Jump launches the glide; yaw written each physics frame as the stick; pitch -32 deg for the rim-out frame only; clock pinned; HUD hidden for each frame. Visual fixture, not earned unlock/trial/bond/save evidence.",
 		"records": _records, "failures": _failures, "departure_repeated_ground_presses": _departure_jump_presses, "complete": _failures.is_empty() and _records.size() == expected,
 		"finished_utc": Time.get_datetime_string_from_system(true)}
 	var file := FileAccess.open(OUT + "/manifest.json", FileAccess.WRITE)
-	if file != null:
-		file.store_string(JSON.stringify(manifest, "\t") + "\n")
+	if file == null:
+		_fail("final camera receipt could not be opened")
+	else:
+		var text := JSON.stringify(manifest, "\t") + "\n"
+		file.store_string(text)
+		file.flush()
+		if file.get_error() != OK:
+			_fail("final camera receipt could not be flushed")
 		file.close()
+		if FileAccess.get_file_as_string(OUT + "/manifest.json") != text:
+			_fail("final camera receipt readback did not match")
+	manifest.complete = _failures.is_empty() and _records.size() == expected
 	print("HIGH PERCH LIVE %s: %d/%d frames, %d failures" % ["OK" if bool(manifest.complete) else "FAIL", _records.size(), expected, _failures.size()])
 	quit(0 if bool(manifest.complete) else 1)
