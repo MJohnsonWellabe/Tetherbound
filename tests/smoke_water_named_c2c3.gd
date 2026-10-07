@@ -267,6 +267,9 @@ func _run() -> void:
 			rows.append(row)
 	if rows.is_empty(): errors.append("no cases matched: %s" % _selection)
 	if not _json.is_empty():
+		var output_parent: String = _json.get_base_dir()
+		if not output_parent.is_empty():
+			DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(output_parent))
 		var file := FileAccess.open(_json, FileAccess.WRITE)
 		if file == null:
 			errors.append("cannot write %s" % _json)

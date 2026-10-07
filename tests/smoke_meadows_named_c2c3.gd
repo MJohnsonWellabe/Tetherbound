@@ -252,6 +252,9 @@ func _run() -> void:
 	if rows.is_empty(): errors.append("no cases matched: %s" % _selection)
 	failures += _chapter_verdict(rows)
 	if not _json.is_empty():
+		var output_parent: String = _json.get_base_dir()
+		if not output_parent.is_empty():
+			DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(output_parent))
 		var file := FileAccess.open(_json, FileAccess.WRITE)
 		if file == null:
 			errors.append("cannot write %s" % _json)
@@ -343,5 +346,4 @@ static func _max(values: Array) -> float:
 	var best := 0.0
 	for v in values: best = maxf(best, float(v))
 	return best
-
 
