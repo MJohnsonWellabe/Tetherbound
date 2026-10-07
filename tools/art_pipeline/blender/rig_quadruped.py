@@ -290,6 +290,7 @@ def skin_anatomical(body: bpy.types.Object, rig: bpy.types.Object, legs: dict) -
 
     seam_weights = {}
     limb_regions = {key: 0 for key in legs}
+    trimmed_unique_influences = 0
     for vertex in body.data.vertices:
         # Object alignment is reversible; local positions, UVs and faces stay intact.
         point = body.matrix_world @ vertex.co
@@ -305,12 +306,17 @@ def skin_anatomical(body: bpy.types.Object, rig: bpy.types.Object, legs: dict) -
             # At a limb/torso boundary use only that limb's parent region.
             # Tail/head and other limbs cannot drag a haunch or shoulder.
             parent_names = ("spine", "neck") if prefix == "front" else ("pelvis", "spine")
-            names = parent_names if limb > 1e-6 else torso_names
-            nearest = sorted(((name, capsule(point, name)) for name in names), key=lambda row: row[1])[:2]
-            weights = {name: weight * (1.0 - limb) for name, weight in normalized(nearest).items()}
+            torso = normalized(((name, capsule(point, name)) for name in torso_names))
+            parents = normalized(((name, capsule(point, name)) for name in parent_names))
+            parent_mix = smooth(0.0, 0.2, limb)
+            weights = {name: (1.0 - limb) * (weight * (1.0 - parent_mix) + parents.get(name, 0.0) * parent_mix)
+                       for name, weight in torso.items()}
             for name, weight in normalized(((upper, capsule(point, upper)), (lower, capsule(point, lower)))).items():
                 weights[name] = weight * limb
             weights = {name: value for name, value in weights.items() if value > 1e-8}
+            selected = sorted(weights.items(), key=lambda row: (-row[1], row[0]))[:4]
+            trimmed_unique_influences += len(weights) - len(selected)
+            weights = dict(selected)
             total = sum(weights.values())
             if total <= 1e-6 or not all(math.isfinite(value) and value > 0.0 for value in weights.values()):
                 raise SystemExit("Anatomical weights unresolved; no nearest-neighbour fallback")
@@ -329,6 +335,7 @@ def skin_anatomical(body: bpy.types.Object, rig: bpy.types.Object, legs: dict) -
         raise SystemExit("Anatomical skin must be normalized with at most four influences")
     return {"method": "own_rest_rig_region_constrained_capsules", "limb_regions": limb_regions,
             "coincident_weight_keys": len(seam_weights), "heat_invoked": False, "orphan_fallback_invoked": False,
+            "trimmed_unique_influences": trimmed_unique_influences,
             "max_influences": max(len(v.groups) for v in body.data.vertices),
             "joint_world_positions": {name: {"head": list(start), "tail": list(end)}
                                       for name, (start, end) in segments.items()}}
