@@ -95,6 +95,15 @@ func test_trainer_levels_rewards_and_unique_defeat_flags_preserve_content() -> v
 			assert_eq(spec.team[index].species, CATALOG.runtime_id(source))
 	assert_eq(result.encounter_config.active_wild_cap_per_peer, 16)
 	assert_eq(result.encounter_config.activation_distance_m, 100)
+	var meadows := preload("res://scripts/combat/encounter_director.gd").new()
+	var known: Dictionary = preload("res://scripts/world/trainer_npc.gd").trainers()[0]
+	meadows.set("_trainer_spec", known.duplicate(true))
+	assert_true(meadows.call("_local_named_trainer_source_matches"), "Meadows keeps its authored band trainer membership")
+	meadows.set("_trainer_spec", {"id": "caller_only_trainer"})
+	assert_false(meadows.call("_local_named_trainer_source_matches"), "unknown Meadows identity refuses")
+	meadows.set("_trainer_spec", {"id": "water_trainer_nerissa"})
+	assert_false(meadows.call("_local_named_trainer_source_matches"), "Water membership cannot be borrowed by Meadows")
+	meadows.free()
 	# The real Water translation is authoritative even though Nerissa is not
 	# in Meadows' band registry. Membership still binds the exact mounted NPC.
 	var mounted_world := Node3D.new()
