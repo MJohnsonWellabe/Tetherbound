@@ -78,5 +78,31 @@
       "Once-only natural revisit and grounded movement"
     ],
     "source_sha": "7067450f0b0ff0472f0b9e02b8c7e221fadbc35e"
+  },
+  "stronger_model_reader_re_attack": {
+    "review": {
+      "agent": "/root/b_f20_review",
+      "verdict": "SOURCE APPROVE"
+    },
+    "path": "tests/helpers/f20_portal_travel.gd",
+    "runtime_pass": false,
+    "criterion_pass": false,
+    "implementation": {
+      "agent": "/root/b_ending_reattack",
+      "owner_authorization": "issue572 comment6039597390",
+      "reasoning": "xhigh",
+      "model": "gpt-6-astra"
+    },
+    "diagnosis_limit": "R2 observed two entries and eventual acknowledgment, not proved concurrency; total-budget expiry/retry and stale dispatch are distinct source risks",
+    "helper_blob": "07f508b0ec912060888d3e69637e77b08ab15e5e",
+    "changes": [
+      "Generation-bound callback checks active navigation invocation before entry",
+      "Invalidate invocation before disconnect; drain entered readers before returning",
+      "Bound Continue by original remaining authored lines and require exact line advancement or original dismissal",
+      "Independent 30s same-character personal acknowledgment and released-input drain",
+      "Actual reader timing/dismissal/progress/receipt diagnostics"
+    ],
+    "source_sha": "ae37e3bed336b79a03fbfd945a41745fbafff389",
+    "preserved": "Original navigation/provider/floor/recovery and frame budgets; no gameplay state writes or receipt bypass"
   }
 }

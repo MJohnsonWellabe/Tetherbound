@@ -1,0 +1,35 @@
+{
+  "script": "tests/run_tests.gd",
+  "reported": {
+    "failed_assertions": 0,
+    "assertions": 578,
+    "workflow_result": "success",
+    "tests": 46
+  },
+  "run_id": 37633420875,
+  "criterion_pass": false,
+  "runtime_prefix": {
+    "scope": "Fresh production controller prefix has an initialized real tree; no world seed override, no earned fixture promotion.",
+    "run_id": 37634207984,
+    "source_sha": "975bb3f4f799a5caaed219ad93af3b6c8d3caa21",
+    "args": "--through-rest --route-ledger"
+  },
+  "args": "--only=test_portal_arrival_travel_reset.gd,test_meadows_earned_route_ledger_segment.gd,test_gate_a_npc_gather_segment_contract.gd,test_f28_training_boundaries.gd",
+  "clean_logic_pass": false,
+  "artifact": {
+    "run_log_sha256": "d9cfb18d72dc17efe3b718e45ca7169829a72f5b631c44e55121cf8743447c45",
+    "sha256": "77aa3b2ba5fb22c7d2f554471328187feceac07a646c78e903bc6d5f59d5027a",
+    "id": 11487637591,
+    "name": "render-lane-b-prefix-affected-37633420875",
+    "bytes": 4529
+  },
+  "error": {
+    "count": 1,
+    "path": "tests/test_portal_arrival_travel_reset.gd:33",
+    "message": "Invalid access to property or key root on null instance",
+    "cause": "Existing unit runner executes during SceneTree._init; Engine main loop not installed, so newly attached-body fixture aborted before its seven assertions."
+  },
+  "kind": "lane_b_prefix_affected_logic_disclosed_error",
+  "source_sha": "975bb3f4f799a5caaed219ad93af3b6c8d3caa21",
+  "fix_request": "Existing runner proof-only initialized mode with unchanged default semantics, and same selected existing test re-entry; no new harness/fixture/test class"
+}
