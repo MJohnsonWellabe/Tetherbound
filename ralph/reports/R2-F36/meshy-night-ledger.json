@@ -66,7 +66,10 @@
       "endpoint": "/openapi/v1/image-to-3d",
       "submitted_utc": "2026-10-07T14:48:28.977935+00:00",
       "task_id": "01a116d6-5229-7597-a54f-3c40896ff029",
-      "status": "submitted_pending_inspection"
+      "status": "rig_BLOCK_two_zero_skin_donor_attempts",
+      "observed_credit_cost": 15,
+      "candidate_enabled": false,
+      "inspection_evidence": "ralph/reports/F36/ripplet-smart-disposition.json"
     }
   ],
   "actual_meshy_submissions": 5,

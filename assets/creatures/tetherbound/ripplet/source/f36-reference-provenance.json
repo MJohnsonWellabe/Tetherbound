@@ -1,6 +1,6 @@
 {
   "subject": "ripplet",
-  "status": "inspected_reference_candidate_pending_OFF",
+  "status": "candidate_BLOCK_unskinned_after_two_donor_attempts_OFF",
   "method": "built_in_imagegen",
   "reference": "res://assets/creatures/tetherbound/ripplet/reference/f36-standing-v1.png",
   "sha256": "f6597a73b55156562f58b8bab8a1f36114d9a4d427ad6a8b2cff3999a0f88987",
@@ -27,5 +27,6 @@
     "texture_resolution": "2k",
     "target_polycount": 15000
   },
-  "credit_cost": 15
+  "credit_cost": 15,
+  "inspection_evidence": "ralph/reports/F36/ripplet-smart-disposition.json"
 }
