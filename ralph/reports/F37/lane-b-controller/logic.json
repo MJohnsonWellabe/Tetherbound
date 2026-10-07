@@ -1,0 +1,18 @@
+{
+  "kind": "hosted_care_ripplet_named_logic_batch",
+  "source_sha": "b409b582f4bf2f6fd6d130b7976aea20ba66426b",
+  "run_id": 37626570493,
+  "script": "tests/run_tests.gd",
+  "args": "--only=test_meadows_earned_team_segment.gd,test_f37_ripplet_traversal.gd",
+  "tests": 31,
+  "assertions": 211,
+  "failed": 0,
+  "artifact": {
+    "id": 11484881030,
+    "name": "render-lane-b-care-swim-units-37626570493",
+    "sha256": "6631d51934ab4dd44e14a9d1d947206c91e6e182146124e3cb7f968dc9b7eb02",
+    "run_log_sha256": "d28ab70b6b5bbb0d13de0f4fc6d3ed13cc9d41fd2e78e08be893d0efff4b78a3"
+  },
+  "scope": "Unchanged production logic/care helper only; does not execute the Ripplet positive fixture (later canonical tier-ID correction) or earned free-bed route",
+  "criterion_pass": false
+}
