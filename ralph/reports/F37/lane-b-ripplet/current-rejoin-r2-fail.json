@@ -1,0 +1,60 @@
+{
+  "criteria": [
+    "F37#0",
+    "F37#1",
+    "F37#4"
+  ],
+  "verdict": "FAIL second actual two-peer attempt; no READY",
+  "run": 37693233900,
+  "source_sha": "78d5ffa6e247e3366f188e74fdf20ee3ffd52533",
+  "artifact_id": 11515200189,
+  "failed_step": 20,
+  "failure": [
+    "#20 peer 0 rider_identity (BEFORE: the host's picture of that rider agrees) -> FAIL; data did not match {\"agree\":true,\"body_visible_in_scene\":true,\"mount_species\":\"ripplet\",\"mount_swim_mode\":2.0,\"seated\":true} -- character character-8f25d6e1: {\"agree\":false,\"bodies\":1,\"body_peer_id\":364413139,\"body_visible_in_scene\":true,\"mount_authority\":364413139,\"mount_owner_peer_id\":364413139,\"mount_saddle_worn\":false,\"mount_species\":\"ripplet\",\"mount_swim_mode\":2,\"mount_swim_owner\":364413139,\"mounts\":1,\"nameplate\":\"Train"
+  ],
+  "fatal": "",
+  "exit": 1,
+  "exit_evidence": "Actual existing PROOF.md states exit1; parent run.log contains no exit marker",
+  "passed_prefix": [
+    "Actual host/join/registry",
+    "Physical mount without Stone/saddle",
+    "All three ordinary approach legs sharing original2400-frame budget",
+    "Actual authored current crossing faster than configured human3.8m/s",
+    "Ordinary deep approach preserving combined original2400-frame allowance",
+    "Mapped Jump Dive and actual1280x720 surface/Dive frames",
+    "Guest own current stable-character mounted Dive identity"
+  ],
+  "actual_cause": {
+    "type": "Existing generic rider_identity oracle unconditionally requires a saddle",
+    "source": "tools/net/proof_steps.gd::_rider_identity agree predicate",
+    "line": 1622,
+    "observation": {
+      "registry_rows": 1,
+      "bodies": 1,
+      "mounts": 1,
+      "stale_bodies": 0,
+      "stale_mounts": 0,
+      "body_visible_in_scene": true,
+      "riding": true,
+      "seated": true,
+      "registry_name": "Trainer",
+      "nameplate": "Trainer",
+      "all_peer_owner_authorities_match": true,
+      "mount_species": "ripplet",
+      "mount_swim_mode": 2,
+      "mount_saddle_worn": false
+    },
+    "contract": "SYSTEMS§8/F37 authorize owned Ripplet surface mount without SwimStone or saddle; existing generic oracle was authored for Water saddle mounts",
+    "production_identity_failure_observed": false
+  },
+  "setup": "Existing explicit pre-admission ownedL30Ripplet/breakthrough fixture plus hostFirstShore placement/summonalignment; no earnedfeast/campaignclaim",
+  "presentation_disposition": "Shipping presentation_enabled returnedOFF; actual surface/Dive frames retained onlyrunartifact, no visualacceptance",
+  "remaining": [
+    "Coordinator re-scope false legacy saddle oracle while retaining existing Water saddle assertions",
+    "Sunken cache/node rewards and hidden optional route are unreached",
+    "Exact final-disconnect save debt/new-peer rejoin are unreached",
+    "Full changed-cut area proof and same independent review",
+    "Scoped code-blind visual judge"
+  ],
+  "stop_rule": "No third unchanged attempt; move to F37#2 human route /F46 naturally due lessons"
+}
