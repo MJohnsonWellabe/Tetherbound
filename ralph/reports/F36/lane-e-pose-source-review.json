@@ -1,0 +1,16 @@
+{
+  "source_sha": "20d463c949",
+  "agent": "/root/review_f36_cap",
+  "verdict": "APPROVE",
+  "scope": "Existing pose capture batch and failure/scale receipts only",
+  "reason": "Unique current species, fresh output, missing clips/PNGs/receipts fail; preview instance only; enabled_species empty; existing standing bounds before candidate poses.",
+  "source_caveat": "Caller must provide exact verified full SHA; tool does not authenticate checkout.",
+  "engine_proof": "pending",
+  "visual_judgment": "pending",
+  "remaining_gates": [
+    "Every species pose contact and code-blind judgment",
+    "Traversal pose real paths",
+    "Fight-scale consistency"
+  ],
+  "criterion_claim": "none"
+}

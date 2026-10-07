@@ -1,0 +1,10 @@
+{
+  "source_sha": "2b43b38ae2a9ba5e5b58a619ca0a1805e8afca8d",
+  "agent": "/root/review_cloud_startup",
+  "verdict": "APPROVE",
+  "scope": "Existing F41 capture candidate staging and disclosure only",
+  "reason": "Both explicit candidate argument and installed runner variant disclose the same overlay; exact incoming bytes restored; 320-frame requirement, production camera and High/Medium preflight retained.",
+  "engine_proof": "pending",
+  "visual_judgment": "pending",
+  "criterion_claim": "none"
+}

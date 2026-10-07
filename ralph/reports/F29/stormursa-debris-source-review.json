@@ -1,0 +1,18 @@
+{
+  "source_sha": "eaba95d99a186ada52ffe5e9feaf43e85d365704",
+  "agent": "/root/judge_stormursa_anatomy",
+  "verdict": "APPROVE",
+  "scope": "Bounded debris-only extension",
+  "default_behavior": "unchanged",
+  "reason": "New mode skips join, transforms, weld, voxel, smooth and decimate; requires separate output; rejects invalid data; verifies exact primary positions, oriented faces and transform after export.",
+  "artifact_hashes": "match invariance receipt",
+  "remaining_gates": [
+    "UVs and texture/palette identity",
+    "Rig and actual deformation",
+    "Grow-only scale",
+    "Native full-bar art judgment"
+  ],
+  "diagnostic_caution": "8979 centroid-based inward-face estimate; primary genus1054",
+  "shipping_enabled": false,
+  "criterion_claim": "none"
+}
