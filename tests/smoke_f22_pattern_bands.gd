@@ -125,11 +125,16 @@ func _trainer_rosters(patterns: Dictionary) -> Dictionary:
 	for row: Dictionary in _read("data/config/water_characters.json").get("trainers", []):
 		if island_band.has(str(row.get("island_id", ""))):
 			add.call(str(island_band[row.island_id]), str(row.id), str(row.get("rank", "")), row.get("team", []))
-	for row: Dictionary in _read("data/config/cloudreach_chapter.json").get("trainer_ladder", []):
-		var team: Array = []
-		for slot: Dictionary in (row.get("team_contract", {}) as Dictionary).get("slots", []):
-			team.append({"species": slot.get("placeholder_species", ""), "level": slot.get("level", 1)})
-		add.call("cloudreach/" + str(row.region_id), str(row.id), str(row.get("rank", "")), team)
+	var cloudreach := preload("res://scripts/combat/cloudreach_encounter_director.gd")
+	var cloudreach_chapter := _read("data/config/cloudreach_chapter.json")
+	var cloudreach_encounters := _read("data/config/cloudreach_encounters.json")
+	# Use the live placement-to-ladder mapping, retaining its per-send-out
+	# behavior_sequence combat profiles instead of rebuilding bare species.
+	for placement: Dictionary in cloudreach_encounters.get("trainers", []):
+		var authored: Dictionary = cloudreach.find_id(cloudreach_chapter.get("trainer_ladder", []), str(placement["id"]))
+		if authored.is_empty(): continue
+		var spec: Dictionary = cloudreach.trainer_spec(authored, placement, cloudreach_encounters)
+		add.call("cloudreach/" + str(spec.region_id), str(spec.id), str(spec.get("chapter_rank", "")), spec.get("team", []))
 	for row: Dictionary in _read("data/config/stormwood_trainers.json").get("trainers", []):
 		var team: Array = []
 		for member: Dictionary in row.get("party", []):
