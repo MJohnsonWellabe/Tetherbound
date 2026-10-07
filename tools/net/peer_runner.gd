@@ -5109,7 +5109,13 @@ func _step_catch_fixture_rng(args: Dictionary) -> Dictionary:
 	var chance_cfg: Dictionary = CATCH_MATH.config().get("chance", {}) as Dictionary
 	var chance_min := float(chance_cfg.get("min", 0.02))
 	var chance_max := float(chance_cfg.get("max", 0.95))
+	var fixture_body := runtime.call("body") as Node3D
+	if not is_instance_valid(fixture_body):
+		return {"verdict": "FAIL", "detail": "catch RNG fixture requires the actual live wild body"}
 	runtime.call("pause_for_catch") # prevents AI from consuming the selected next roll.
+	# Keep the active encounter marker while AI is paused. The director otherwise
+	# resumes an unengaged body before the ordinary orb reaches the host.
+	fixture_body.set("engaged", true)
 	var want_caught := bool(args.get("caught", true))
 	var runtime_rng := runtime.get("_rng") as RandomNumberGenerator
 	if runtime_rng == null:
