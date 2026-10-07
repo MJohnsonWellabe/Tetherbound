@@ -3,7 +3,7 @@
     "F46#0 Home Key component only",
     "F46#1 Home Key lesson gate only"
   ],
-  "verdict": "SCOPED PASS: natural controller Skip, physical Settings Help replay and readable native cards; full criteria OPEN",
+  "verdict": "SCOPED PASS: natural Home Key controller Skip, physical Settings Help replay, durable acknowledgement through actual autosave/title Load, and readable native cards; full F46 criteria OPEN",
   "source_sha": "2dde093a7ab0d507370ef60464221b300108980f",
   "run_id": 37695870707,
   "artifact_id": 11516684021,
@@ -141,13 +141,255 @@
   },
   "setup": "Actual physical new-game opening, natural Grandpa Home Key handover; original starter only at gift; disclosed existing tutorial dry-orb recovery; not earned five-creature campaign",
   "durability": {
-    "verdict": "OPEN",
-    "observation": "Retained disk character save predates lesson acknowledgement and lacks opening:lesson:home_key; this run proves in-memory acknowledgement only. No persistence defect inferred."
+    "verdict": "PASS later scoped proof",
+    "original_run_observation": "37695870707 retained earlier disk save predates acknowledgement; initial run proves memory only. Preserve this limitation for that original run.",
+    "source_sha": "304b6a9371b67edfc1614f4350a84cf69b57f904",
+    "run_id": 37703399804,
+    "artifact_id": 11518548745,
+    "exit": 0,
+    "took_seconds": 178,
+    "script_errors": 0,
+    "engine_errors": 0,
+    "training_warning_entries": 4,
+    "training_warning_types": [
+      "host ACK of accepted training row refused",
+      "host accept of its own accepted training row refused"
+    ],
+    "warning_scope": "Each distinct warning printed twice; no clean training/authority reconciliation claim",
+    "actual": {
+      "after": {
+        "character_id": "character-8ac64e6676b4e84a53cba603bab3476e",
+        "home_key_ack": true,
+        "home_key_count": 1,
+        "home_key_given": true,
+        "inventory": [
+          {
+            "id": "home_key",
+            "n": 1
+          },
+          {},
+          {
+            "id": "orb_basic",
+            "n": 5
+          },
+          {},
+          {
+            "id": "potion_small",
+            "n": 3
+          },
+          {
+            "id": "berries",
+            "n": 5
+          },
+          {
+            "id": "revive",
+            "n": 10
+          },
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {}
+        ],
+        "party": [
+          {
+            "known_moves": [
+              "pebble_toss",
+              "stone_rush",
+              "ultimate_terrapup"
+            ],
+            "level": 3,
+            "loadout_last_edit": {},
+            "loadout_revision": 0,
+            "move_charged": "stone_rush",
+            "move_mastery_receipts": {},
+            "move_mastery_uses": {},
+            "move_quick": "pebble_toss",
+            "move_ultimate": "ultimate_terrapup",
+            "move_utility": "",
+            "nickname": "Bud",
+            "species_id": "terrapup",
+            "uid": "creature-79db2190c547c9d4c816ce0210175e79",
+            "xp": 0
+          },
+          {
+            "known_moves": [
+              "bramble_whip",
+              "warren_charge",
+              "ultimate_ground_current"
+            ],
+            "level": 2,
+            "loadout_last_edit": {},
+            "loadout_revision": 0,
+            "move_charged": "warren_charge",
+            "move_mastery_receipts": {},
+            "move_mastery_uses": {},
+            "move_quick": "bramble_whip",
+            "move_ultimate": "ultimate_ground_current",
+            "move_utility": "",
+            "nickname": "",
+            "species_id": "bramblebun",
+            "uid": "creature-d194c9eca4573266835d67e228147b3d",
+            "xp": 0
+          }
+        ],
+        "party_uids": [
+          "creature-79db2190c547c9d4c816ce0210175e79",
+          "creature-d194c9eca4573266835d67e228147b3d"
+        ],
+        "personal_flags": [
+          "home_key_given",
+          "opening:beat:choose",
+          "opening:beat:encounter",
+          "opening:beat:house",
+          "opening:beat:name",
+          "opening:beat:return_starter",
+          "opening:beat:road",
+          "opening:beat:wake",
+          "opening:beat:walk_out",
+          "opening:lesson:home_key",
+          "opening:starter_granted"
+        ]
+      },
+      "before": {
+        "character_id": "character-8ac64e6676b4e84a53cba603bab3476e",
+        "home_key_ack": true,
+        "home_key_count": 1,
+        "home_key_given": true,
+        "inventory": [
+          {
+            "id": "home_key",
+            "n": 1
+          },
+          {},
+          {
+            "id": "orb_basic",
+            "n": 5
+          },
+          {},
+          {
+            "id": "potion_small",
+            "n": 3
+          },
+          {
+            "id": "berries",
+            "n": 5
+          },
+          {
+            "id": "revive",
+            "n": 10
+          },
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {}
+        ],
+        "party": [
+          {
+            "known_moves": [
+              "pebble_toss",
+              "stone_rush",
+              "ultimate_terrapup"
+            ],
+            "level": 3,
+            "loadout_last_edit": {},
+            "loadout_revision": 0,
+            "move_charged": "stone_rush",
+            "move_mastery_receipts": {},
+            "move_mastery_uses": {},
+            "move_quick": "pebble_toss",
+            "move_ultimate": "ultimate_terrapup",
+            "move_utility": "",
+            "nickname": "Bud",
+            "species_id": "terrapup",
+            "uid": "creature-79db2190c547c9d4c816ce0210175e79",
+            "xp": 0
+          },
+          {
+            "known_moves": [
+              "bramble_whip",
+              "warren_charge",
+              "ultimate_ground_current"
+            ],
+            "level": 2,
+            "loadout_last_edit": {},
+            "loadout_revision": 0,
+            "move_charged": "warren_charge",
+            "move_mastery_receipts": {},
+            "move_mastery_uses": {},
+            "move_quick": "bramble_whip",
+            "move_ultimate": "ultimate_ground_current",
+            "move_utility": "",
+            "nickname": "",
+            "species_id": "bramblebun",
+            "uid": "creature-d194c9eca4573266835d67e228147b3d",
+            "xp": 0
+          }
+        ],
+        "party_uids": [
+          "creature-79db2190c547c9d4c816ce0210175e79",
+          "creature-d194c9eca4573266835d67e228147b3d"
+        ],
+        "personal_flags": [
+          "home_key_given",
+          "opening:beat:choose",
+          "opening:beat:encounter",
+          "opening:beat:house",
+          "opening:beat:name",
+          "opening:beat:return_starter",
+          "opening:beat:road",
+          "opening:beat:wake",
+          "opening:beat:walk_out",
+          "opening:lesson:home_key",
+          "opening:starter_granted"
+        ]
+      },
+      "home_key_card_reopened": false,
+      "memory_cleared_before_load": true,
+      "natural_due_lesson": "",
+      "passed": true,
+      "physical_title_load": true,
+      "ready_frames": 3,
+      "save_slot": 0,
+      "scope": "Home Key acknowledgement survives actual autosave/title Load and is not naturally eligible again; no teacher return, other lessons or full F46 claim",
+      "settle_frames": 300
+    },
+    "review": {
+      "reviewer": "b_f20_review",
+      "verdict": "APPROVE scoped Home Key durability; actual disk character payload independently confirms ACK/CID/twoUIDs/soleKey"
+    },
+    "visual_reuse": "Actual original376958 unchanged lesson presentation four native frames +same blind PASS; offloaded durable run supplies no visual/performance proof"
   },
   "remaining": [
-    "Actual production save/reload retains acknowledgement and prevents natural repetition",
-    "All other authored F46 lessons and every-gate goal witness",
-    "Full release Visual Bars A/B"
+    "Physical return near the teacher and Skip at every other line",
+    "All other authored F46 lessons and every-gate next-goal witness",
+    "Full release Visual Bars A/B",
+    "Training acknowledgement reconciliation is outside this scoped lesson proof"
   ],
   "affected_logic": {
     "run_id": 37701115492,
@@ -165,5 +407,37 @@
       "reviewer": "b_f37_review",
       "verdict": "APPROVE scoped affected logic; no changed-path failure"
     }
+  },
+  "integration": {
+    "base_main": "068b5bb7c9b0926672d50ce846a768f92d4dc4ed",
+    "source_sha": "304b6a9371b67edfc1614f4350a84cf69b57f904",
+    "scope": "F46 Home Key component only, zero full criteria closed",
+    "exact_hunks": [
+      {
+        "path": "tests/smoke_gate_a_opening_segment.gd",
+        "hunk": "Entire304b6a9371 delta: optionalreloadonly; original92lines retained"
+      },
+      {
+        "path": "tests/helpers/gate_a_opening_drive.gd",
+        "hunk": "Only _complete_home_key_lesson optional F46 witness; preserve active A catch-aim hunks"
+      },
+      {
+        "path": "tests/helpers/f20_portal_travel.gd",
+        "hunk": "Only lesson witness options/reader/Help replay and _lesson_controller_input physical tap support; include its optional observe_next_goal read-only method only with existing callers as applicable"
+      },
+      {
+        "path": "tests/helpers/f20_ending_probe.gd",
+        "hunk": "Only capture() lesson-prefix/--capture-lessons guard plus explicit Compatibility offload native frame guard"
+      }
+    ],
+    "exclude": [
+      "Strict journal portal travel corrections; still runtime OPEN",
+      "Bounty/rematch frame guards; F20#3 OPEN",
+      "Earned native prefix protocol/evidence; F49/F19#5 OPEN",
+      "Ripplet candidate/route configs and unrelated B changes"
+    ],
+    "proof_dependencies": "Existing lesson_service/rules/panel, data/config/onboarding_lessons, Settings Help, f19_functional_offload already on main; shipping lesson flag already ON",
+    "flags": "none",
+    "reviewer": "b_f20_review"
   }
 }
