@@ -107,6 +107,35 @@ func test_two_participants_join_the_same_wounded_enemy_without_reset() -> void:
 	assert_eq(state.enemy, enemy)
 	assert_eq(state.phase().id, "tidal_run")
 	assert_eq(state.eligible_characters.size(), 2)
+
+func test_alpha_pending_ledgers_fence_results_and_leave_without_primary_prerequisites() -> void:
+	var alpha := ALPHA_RUNTIME.new()
+	alpha.authority = _opened()
+	alpha.set("_encounter_host", alpha.authority.host)
+	var id: String = alpha.authority.encounter_id
+	assert_false(alpha._alpha_results_pending(id))
+	var proposals: Dictionary = alpha.get("_ordinary_actor_vitals_proposals")
+	proposals["saved-original"] = {"encounter_id":id, "presented":false}
+	assert_true(alpha.ordinary_actor_vitals_pending(id), "the Alpha's retained original fences even without a primary trainer registry")
+	assert_true(alpha._alpha_results_pending(id))
+	var before := alpha.authority.eligible_characters.duplicate(true)
+	assert_eq(alpha._leave_alpha(1, true).get("code"), "pending_vitals")
+	assert_eq(alpha.authority.eligible_characters, before, "a declined leave cannot erase eligibility before settlement")
+	assert_false(alpha.realm_transition_alpha_results_settled())
+	proposals["saved-original"]["presented"] = true
+	assert_false(alpha.ordinary_actor_vitals_pending(id))
+	# Disclosed unit-only ledger rows exercise the existing publication and
+	# mastery fences; they do not claim an accepted runtime action or award.
+	var authority_rows: Dictionary = alpha.authority.host.get("_strike_authority")
+	authority_rows[id] = {1:{"accepted_actions":{"original":{"phase":"body_publication_pending"}}}}
+	assert_true(alpha._alpha_results_pending(id))
+	authority_rows[id][1].accepted_actions.original["phase"] = "resolved"
+	authority_rows[id][1]["move_starts"] = {1:{"mastery_pending":true, "action":1}}
+	assert_true(alpha._alpha_results_pending(id))
+	authority_rows[id][1].move_starts[1]["mastery_pending"] = false
+	assert_false(alpha._alpha_results_pending(id))
+	assert_true(alpha.realm_transition_alpha_results_settled())
+	alpha.free()
 	assert_true(state.engage(42, "outsider", "other", _enemy()).is_empty())
 	assert_eq(state.enemy, enemy)
 	assert_eq(state.eligible_characters.size(), 2)

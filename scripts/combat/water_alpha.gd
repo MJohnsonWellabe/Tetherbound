@@ -47,7 +47,7 @@ func _retire_completed_body() -> void:
 	# _engaged_with cleanup. A durable result must clear its physical body in
 	# the same live realm too, after the local manager finishes its result beat.
 	# Observers and late ledger recipients take the identical completed state.
-	if _local_fight or not is_instance_valid(body):
+	if _local_fight or not is_instance_valid(body) or (authority != null and _alpha_results_pending(authority.encounter_id)):
 		return
 	var game := get_node_or_null("/root/Game")
 	if game == null or not game.world.flags.has(str(rules.get("completion_flag", ""))):
@@ -156,10 +156,6 @@ func presentation_move_actor(launch: Dictionary, deployed: Node3D) -> Dictionary
 	if not is_instance_valid(primary) or primary == self: return {}
 	return primary.call("presentation_move_actor", launch, deployed)
 
-func tether_command_deployment() -> Dictionary:
-	return primary.call("tether_command_deployment") if is_instance_valid(primary) and primary != self else {}
-
-
 func _bind_alpha_actions(rec: Dictionary, peer: int) -> bool:
 	var id: String = str(rec.get("encounter_id", ""))
 	if id.is_empty() or _session == null: return false
@@ -176,6 +172,45 @@ func _bind_alpha_actions(rec: Dictionary, peer: int) -> bool:
 		_shared_host_fight(id).set_meta(&"canonical_wild_context", context.duplicate(true))
 		if _ordinary_actor_binding(id, peer, deployed_body_for(peer)).is_empty(): return false
 	return true
+
+
+## Alpha owns this record, while the primary director owns deployments. Read
+## the existing saved-action ledgers directly, including a disabled gate's
+## retained original; never substitute the primary's trainer-only registry.
+func ordinary_actor_vitals_pending(id: String) -> bool:
+	if authority == null or id != authority.encounter_id: return false
+	if is_inside_tree() and not _is_host(): return _encounter.get("ordinary_actor_vitals_pending") == true
+	for original: Dictionary in _ordinary_actor_vitals_proposals.values():
+		if original.get("encounter_id") == id and original.get("presented") != true: return true
+	return not (_encounter_host.call("pending_actor_vitals", id) as Array).is_empty()
+
+
+func _alpha_results_pending(id: String) -> bool:
+	if ordinary_actor_vitals_pending(id): return true
+	if _encounter_host == null: return false
+	if _encounter_host.call("move_action_publication_pending", id) == true: return true
+	for original: Dictionary in _encounter_host.call("pending_move_mastery"):
+		if original.get("encounter_id") == id: return true
+	return false
+
+
+func _ordinary_deployment_pending(peer: int, next_uid: String) -> bool:
+	if authority == null or not ordinary_actor_vitals_pending(authority.encounter_id): return false
+	var member: Dictionary = authority.record().get("participants", {}).get(peer, {})
+	if member.is_empty() or member.get("actor_bound_uid") == next_uid: return false
+	var refusal := {"ok":false, "pending":false, "kind":"deployment", "peer":peer,
+		"code":"pending_vitals", "reason":"The original health change is still being saved.", "delta":{}}
+	if peer == _local_peer_id(): _deliver_encounter_verdict(refusal)
+	else: _send_realm_rpc(peer, "_rpc_encounter_verdict", [refusal])
+	return true
+
+
+func _ordinary_bind_deployed_peer(peer: int) -> void:
+	if authority == null or not uses_wild_actor_vitals(authority.encounter_id) \
+		or ordinary_actor_vitals_pending(authority.encounter_id): return
+	var rec := authority.record()
+	if rec.get("phase") == "active" and rec.get("participants", {}).has(peer):
+		_ordinary_actor_binding(authority.encounter_id, peer, deployed_body_for(peer))
 
 
 ## Aquaryn keeps its original resolution and body through owner-save retries.
@@ -235,7 +270,7 @@ func host_commit(intent: Dictionary, peer: int, actor: Dictionary) -> Dictionary
 	if kind == "attune":
 		return _host_attune(intent, peer, actor)
 	if kind == "engage":
-		if not authority.encounter_id.is_empty() and _host_fight_disposal_pending(authority.encounter_id):
+		if not authority.encounter_id.is_empty() and _alpha_results_pending(authority.encounter_id):
 			return _refusal(intent, "The previous combat result is still being saved.")
 		if get_node("/root/Game").world.flags.has(str(rules.completion_flag)):
 			return _refusal(intent, "Aquaryn has already been resolved in this world.")
@@ -259,7 +294,7 @@ func host_commit(intent: Dictionary, peer: int, actor: Dictionary) -> Dictionary
 	if kind in ["catch_attempt", "catch_finished", "disengage"] and ordinary_actor_vitals_pending(authority.encounter_id):
 		return _refusal(intent, "The original health change is still being saved.")
 	match kind:
-		"move_start", "strike_intent", "burst_intent", "tether_command":
+		"move_start", "strike_intent", "burst_intent":
 			return _host_commit_encounter(intent, peer)
 		"catch_attempt":
 			return _host_catch(intent, peer)
@@ -332,7 +367,7 @@ func _publish_snapshot() -> void:
 	for members: Dictionary in [rec.get("participants", {}), rec.get("retained_actor_participants", {})]:
 		for member: Dictionary in members.values():
 			member.get("tether_commands", {}).erase("item_pending")
-	if uses_saved_actor_vitals(authority.encounter_id):
+	if uses_wild_actor_vitals(authority.encounter_id) or ordinary_actor_vitals_pending(authority.encounter_id):
 		rec["ordinary_actor_vitals_pending"] = ordinary_actor_vitals_pending(authority.encounter_id)
 	var snapshot := {"sequence": _pose_sequence, "record": rec, "terminal_author": _terminal_author_peer,
 		"position": body.global_position, "rotation": body.rotation, "velocity": body.velocity,
@@ -510,7 +545,7 @@ func _decline_enrollment(rec: Dictionary) -> void:
 	submit_encounter_intent({"kind": "disengage", "encounter_id": str(rec.encounter_id), "enrollment_declined": true})
 
 func _leave_alpha(peer: int, declined: bool = false) -> Dictionary:
-	if ordinary_actor_vitals_pending(authority.encounter_id):
+	if _alpha_results_pending(authority.encounter_id):
 		return {"ok": false, "pending": false, "kind": "disengage", "code": "pending_vitals", "delta": {}}
 	var participant: Dictionary = authority.record().get("participants", {}).get(peer, {})
 	if declined:
@@ -523,7 +558,7 @@ func _leave_alpha(peer: int, declined: bool = false) -> Dictionary:
 ## owns Alpha's pending replies and authority. Only the mover calls settlement.
 func realm_transition_alpha_results_settled() -> bool:
 	return not _engage_pending and not _attune_pending and not _catch_finish_pending \
-		and (authority == null or not _host_fight_disposal_pending(authority.encounter_id))
+		and (authority == null or not _alpha_results_pending(authority.encounter_id))
 
 func realm_transition_alpha_departing(peer: int) -> void:
 	if not is_alpha_authority() or authority == null:
@@ -578,7 +613,7 @@ func _on_alpha_strike() -> void:
 	host_deliver_enemy_hit(authority.encounter_id, int(picked.peer_id), {"damage": damage, "type_mult": type_mult, "move_id": move_id, "lunge": float(cfg.get("lunge", 0))})
 
 func host_deliver_enemy_hit(_id: String, peer: int, payload: Dictionary) -> void:
-	if uses_saved_actor_vitals(_id):
+	if uses_wild_actor_vitals(_id):
 		_stage_ordinary_enemy_hit(_id, peer, payload)
 		return
 	authority.host.cancel_move_start(_id, peer)
@@ -601,7 +636,6 @@ func _physics_process(delta: float) -> void:
 		return
 	if is_alpha_authority():
 		_retry_ordinary_actor_vitals()
-		_retry_tether_items()
 		_prune_absent_participants(delta)
 		if str(authority.record().get("phase", "")) == "catching" and _catch_arbiter.owner_of(authority.encounter_id, Time.get_ticks_msec()) == 0:
 			# A disconnected thrower or expired animation acknowledgement cannot
