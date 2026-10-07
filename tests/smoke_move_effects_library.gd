@@ -85,7 +85,8 @@ func _run() -> void:
 		push_error("Use a fresh output directory; existing evidence preserved"); quit(1); return
 	if DirAccess.make_dir_recursive_absolute(_out) != OK:
 		push_error("Cannot create output"); quit(1); return
-	root.size = Vector2i(1920, 1080)
+	# Honor the engine's requested resolution (hosted default 1280x720).
+	# The actual viewport size is retained in the evidence report below.
 	_arena = Node3D.new()
 	root.add_child(_arena)
 	current_scene = _arena
@@ -458,6 +459,19 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 					_failures.append("%s frame reached after contact %s" % [phase.capitalize(), encounter])
 				if not pre_arrival and int(arrivals[0]) != simultaneous:
 					_failures.append("%s frame taken before arrival %s" % [phase.capitalize(), encounter])
+				if not pre_arrival and bool(row.impact.get("settle_on_ground", false)):
+					var checked := 0
+					for effect: Node3D in effects:
+						if not is_instance_valid(effect): continue
+						var motes := effect.get("_motes") as MultiMeshInstance3D
+						if motes == null: continue
+						var ground: Vector3 = effect.get("_context").get("target_ground")
+						for mote: int in motes.multimesh.instance_count:
+							var bounds := (motes.global_transform * motes.multimesh.get_instance_transform(mote)) * motes.multimesh.mesh.get_aabb()
+							checked += 1
+							if bounds.position.y < ground.y - 0.001:
+								_failures.append("Debris penetrates frozen ground %s %s mote=%d" % [encounter, phase, mote])
+					captured[phase]["grounded_debris_checked"] = checked
 		# A capture also waits for every configured shutter; an aftermath frame
 		# after the effect freed itself honestly records an empty aftermath.
 		if int(arrivals[0]) == simultaneous and BUDGET.used(encounter) == 0 and int(independent_result_frame[0]) >= 0 \

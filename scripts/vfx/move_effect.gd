@@ -624,10 +624,16 @@ func _update_impact(u: float, delta: float) -> void:
 		if tumble > 0.0:
 			_mote_bases[i] = _mote_bases[i].rotated(Vector3(0.7, 0.3, 0.6).normalized(), tumble * delta * (1.0 + float(i % 3) * 0.3))
 		var ground: Vector3 = _context.get("target_ground", _to)
-		var floor_y := ground.y - _contact_position().y + float(profile.get("mote_size", 0.045)) * 0.5
-		if bool(profile.get("settle_on_ground", false)) and _mote_positions[i].y < floor_y:
-			_mote_positions[i].y = floor_y
-			_velocities[i] = Vector3.ZERO
+		var mote_scale := lerpf(1.0, float(profile.get("mote_end_scale", 0.05)), u)
+		var mote_basis := _mote_bases[i].scaled(Vector3.ONE * mote_scale)
+		if bool(profile.get("settle_on_ground", false)):
+			# The mesh carries mastery growth; individual tumble and scale
+			# determine its support point, so boulder chips rest on the ground.
+			var support := Transform3D(mote_basis, Vector3.ZERO) * _motes.multimesh.mesh.get_aabb()
+			var floor_y := ground.y - _contact_position().y - support.position.y
+			if _mote_positions[i].y < floor_y:
+				_mote_positions[i].y = floor_y
+				_velocities[i] = Vector3.ZERO
 		if str(profile.get("mote_shape", "")) == "spark" and _velocities[i].length_squared() > 0.0001:
 			# Sparks stretch along their velocity and shrink as they cool.
 			var along := _velocities[i].normalized()
@@ -637,7 +643,7 @@ func _update_impact(u: float, delta: float) -> void:
 			var thin := lerpf(1.0, float(profile.get("mote_end_scale", 0.2)), u)
 			_motes.multimesh.set_instance_transform(i, Transform3D(spark_basis * Basis.from_scale(Vector3(thin, thin, stretch * thin)), _mote_positions[i]))
 			continue
-		_motes.multimesh.set_instance_transform(i, Transform3D(_mote_bases[i].scaled(Vector3.ONE * lerpf(1.0, float(profile.get("mote_end_scale", 0.05)), u)), _mote_positions[i]))
+		_motes.multimesh.set_instance_transform(i, Transform3D(mote_basis, _mote_positions[i]))
 
 func _set_opacity(material: Material, alpha: float) -> void:
 	if material is ShaderMaterial:
