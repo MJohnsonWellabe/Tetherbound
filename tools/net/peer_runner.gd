@@ -7835,6 +7835,18 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				if edirector != null and cmanager != null and bool(edirector.call("is_encounter_host")) else null
 			var host_decision: Dictionary = runtime.get_meta("catch_decision", {}) as Dictionary \
 				if runtime != null and is_instance_valid(runtime) else {}
+			var source_body: Node = runtime.call("body") if runtime != null and is_instance_valid(runtime) else null
+			var original_traits: Dictionary = source_body.get_meta("ordinary_trait_packet", {}) if source_body != null else {}
+			var live_traits: Dictionary = {}
+			if cparty != null:
+				for member: RefCounted in cparty.call("members"):
+					live_traits[str(member.get("uid"))] = {"traits_initialized": member.get("traits_initialized"),
+						"rolled_traits": member.get("rolled_traits").duplicate(), "taught_traits": member.get("taught_traits").duplicate(true)}
+			var personal: RefCounted = cgame.get("local") if cgame != null else null
+			var disk: Dictionary = {}
+			if personal != null and cgame.get("save_system") != null:
+				var store: RefCounted = cgame.get("save_system").get("_characters")
+				if store != null: disk = store.call("state", str(personal.get("character_id")))
 			return {
 				"available": cmanager != null,
 				"encounter_id": _catch_encounter_id,
@@ -7860,6 +7872,13 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"enemy_body_id": enemy_body.get_instance_id() if enemy_body != null and is_instance_valid(enemy_body) else 0,
 				"enemy_card": WATER_CAPTURE_CODEC.encode(cmanager.get("_enemy") as RefCounted) if cmanager != null else {},
 				"owned_cards": _catch_owned_cards(cparty, pending),
+				"original_trait_packet": original_traits.duplicate(true), "live_owned_traits": live_traits,
+				"character_id": str(personal.get("character_id")) if personal != null else "",
+				"canonical_owned_traits": personal.get("redesign_character").get("creatures", {}).duplicate(true) if personal != null else {},
+				"disk_owned_traits": disk.get("redesign_character", {}).get("creatures", {}).duplicate(true),
+				"transaction_receipts": personal.get("redesign_character").get("transaction_receipts", []).duplicate() if personal != null else [],
+				"disk_transaction_receipts": disk.get("redesign_character", {}).get("transaction_receipts", []).duplicate(),
+				"reward_deliveries": cgame.get("world").get("reward_deliveries").duplicate(true) if cgame != null and cgame.get("world") != null else {},
 			}
 		"storage":
 			# Lane 3.D. Everything the concurrency smoke asserts on, read off

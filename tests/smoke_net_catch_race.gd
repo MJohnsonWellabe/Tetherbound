@@ -466,6 +466,54 @@ func _run() -> void:
 	want(delivered_cards.size() == 1 and _same_capture_identity(canonical_card, delivered_cards[0] as Dictionary)
 		and int((delivered_cards[0] as Dictionary).get("caught_on_day", 0)) >= 1,
 		"guest received the host-confirmed canonical identity and stats; only caught_on_day is stamped at grant")
+	if preload("res://scripts/creatures/traits.gd").runtime_enabled() and delivered_cards.size() == 1:
+		var uid: String = delivered_cards[0].uid
+		want(uid == canonical_card.get("uid"), "ordinary guest catch preserves the exact host-confirmed original UID")
+		var original: Dictionary = host_during_positive.get("original_trait_packet", {})
+		want(preload("res://scripts/save/water_capture_codec.gd").valid_capture_traits(original), "host ordinary catch retains a valid original 0–3 trait packet")
+		var original_offer := JSON.stringify([original.get("captured_from", {}).get("world_namespace", ""),
+			guest_during_positive.get("claim_id", ""), uid]).sha256_text()
+		var token := preload("res://scripts/net/foundation_capture_rules.gd").receipt(original_offer, guest_after_positive.get("character_id", ""))
+		for carrier: String in ["transaction_receipts", "disk_transaction_receipts"]:
+			want(guest_after_positive.get(carrier, []).count(token) == 1, carrier + " holds exactly the original ordinary catch receipt")
+		for field: String in ["traits_initialized", "rolled_traits", "taught_traits"]:
+			want(guest_after_positive.get("live_owned_traits", {}).get(uid, {}).get(field) == original.get(field), "actual guest caught instance retains host " + field)
+		for carrier: String in ["canonical_owned_traits", "disk_owned_traits"]:
+			for field: String in ["traits_initialized", "rolled_traits", "taught_traits", "captured_from"]:
+				want(guest_after_positive.get(carrier, {}).get(uid, {}).get(field) == original.get(field), carrier + " retains original " + field)
+		var accepted := false
+		for row: Variant in host_after_positive.get("reward_deliveries", {}).values():
+			if not row is Dictionary or row.get("kind") != "creature_training" or row.get("status") != "accepted" \
+				or row.get("character_id") != guest_after_positive.get("character_id"): continue
+			var mirror: Dictionary = row.get("after", {}).get("redesign_character", {}).get("creatures", {}).get(uid, {})
+			var matches := true
+			for field: String in ["traits_initialized", "rolled_traits", "taught_traits", "captured_from"]:
+				if mirror.get(field) != original.get(field): matches = false
+			if matches and not mirror.is_empty() and row.get("after", {}).get("redesign_character", {}).get("transaction_receipts", []).count(token) == 1: accepted = true
+		want(accepted, "host accepted owner BOOL-save/ACK row carries the original ordinary catch traits")
+		var stable_id: String = guest_after_positive.get("character_id", "")
+		for change: Dictionary in [{"action": "leave", "args": {}}, {"action": "wipe_character", "args": {}},
+			{"action": "foundations_state", "args": {"mode": "clear_world"}},
+			{"action": "production_join", "args": {"host": "127.0.0.1", "port": port,
+				"returning_route": true, "character": {"character_id": stable_id}}}]:
+			var changed: Dictionary = await step(1, change.action, change.args, 6000)
+			want(changed.get("verdict") == "PASS", "ordinary caught-trait rejoin uses existing " + str(change.action))
+			if changed.get("verdict") != "PASS":
+				quit(await finish())
+				return
+		for peer in 2:
+			var seen_again := await step(peer, "expect_peers", {"count": 2})
+			want(seen_again.get("verdict") == "PASS", "both actual peers admit the same-ID caught-trait rejoin")
+		var restored := await _catch_row(1, "guest original caught traits after disk rejoin")
+		want(restored.get("character_id") == stable_id and restored.get("party_size") == guest_after_positive.get("party_size"),
+			"same-ID disk rejoin retains exactly the original guest party count")
+		for carrier: String in ["transaction_receipts", "disk_transaction_receipts"]:
+			want(restored.get(carrier, []).count(token) == 1, "same-ID rejoin keeps one original receipt in " + carrier)
+		for carrier: String in ["canonical_owned_traits", "disk_owned_traits", "live_owned_traits"]:
+			for field: String in ["traits_initialized", "rolled_traits", "taught_traits"]:
+				want(restored.get(carrier, {}).get(uid, {}).get(field) == original.get(field), "same UID disk rejoin preserves " + carrier + " " + field)
+		for carrier: String in ["canonical_owned_traits", "disk_owned_traits"]:
+			want(restored.get(carrier, {}).get(uid, {}).get("captured_from") == original.get("captured_from"), "same-ID rejoin preserves original wild source in " + carrier)
 
 	print("assertions run: %d" % _asserts)
 	quit(await finish())
