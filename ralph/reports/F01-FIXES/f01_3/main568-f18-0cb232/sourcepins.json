@@ -1,0 +1,225 @@
+{
+  "run_id": 37580310976,
+  "job_id": 112658221037,
+  "artifact_id": 11464393933,
+  "producer_sha": "0cb232d62f6acae9b6e23d129d2e79f0246ba507",
+  "actual_checkout_verified": true,
+  "checkout_original_lines": [
+    "2026-10-07T06:17:30.2215656Z [command]/usr/bin/git log -1 --format=%H",
+    "2026-10-07T06:17:30.2242988Z 0cb232d62f6acae9b6e23d129d2e79f0246ba507"
+  ],
+  "archive_sha256": "bab344be3c4f9d6084ca72534bc0c03ae5460381c110c1897812119ef118a6e2",
+  "archive_bytes": 1103525,
+  "file_ref": "file_00000000bfd481f5aeb5fcf17ab20c62",
+  "archive_retention": "Original complete ZIP retained reusable connector file_ref; proxy read/hash verified once in RAM; no local source/cache/save/copy writes",
+  "consumed_once": true,
+  "script": "tests/smoke_f18_earned_loop.gd",
+  "args": "",
+  "mode": "headless",
+  "resolution": "1280x720",
+  "rendering_method": "gl_compatibility",
+  "timeout_minutes": 30,
+  "native_exit": 0,
+  "elapsed_seconds": 789,
+  "exit_code_file_present": true,
+  "footer": "exit=0 took=789s",
+  "fixtures": false,
+  "failures": [],
+  "input": "parsed harness actions/joypad axes through production UI",
+  "setup": "private save-system directory, preserving developer saves",
+  "receipt_count": 30,
+  "receipt_phases": [
+    "opening",
+    "earned_key_starting_bindings",
+    "protected_drop",
+    "key_binding",
+    "combat_key_refusal",
+    "village_start",
+    "ordinary_walk",
+    "ordinary_walk",
+    "paid_workbench",
+    "ordinary_walk",
+    "deep_touch",
+    "actual_home_key_completion",
+    "cutscene_key_refusal",
+    "settings_home_key_replay",
+    "dialogue_key_refusal",
+    "earned_shop_input_handoff",
+    "shop_key_offer_absent",
+    "earned_tool_bindings",
+    "earned_shop_input_handoff",
+    "shop_key_offer_absent",
+    "earned_shop_input_handoff",
+    "shop_key_offer_absent",
+    "earned_shop_input_handoff",
+    "shop_key_offer_absent",
+    "earned_build_selection",
+    "locked_arch",
+    "ordinary_walk",
+    "station_craft",
+    "save_reload",
+    "portal_return"
+  ],
+  "ordinary_walks": [
+    {
+      "phase": "ordinary_walk",
+      "target": "(24.0, 1.0, -32.0)",
+      "arrived": true,
+      "grounded": true,
+      "original_frame_budget": 3600,
+      "confined_resets": 0,
+      "unstick_count_before": 0,
+      "unstick_count_after": 0
+    },
+    {
+      "phase": "ordinary_walk",
+      "target": "(-6.0, -0.423613, 22.0)",
+      "arrived": true,
+      "grounded": true,
+      "original_frame_budget": 10021,
+      "confined_resets": 0,
+      "unstick_count_before": 0,
+      "unstick_count_after": 0
+    },
+    {
+      "phase": "ordinary_walk",
+      "target": "(344.3, 1.983212, 929.6)",
+      "arrived": true,
+      "grounded": true,
+      "original_frame_budget": 97293,
+      "confined_resets": 0,
+      "unstick_count_before": 0,
+      "unstick_count_after": 0
+    },
+    {
+      "phase": "ordinary_walk",
+      "target": "(-6.0, 1.8, 18.85)",
+      "arrived": true,
+      "grounded": true,
+      "original_frame_budget": 10340,
+      "confined_resets": 0,
+      "unstick_count_before": 0,
+      "unstick_count_after": 0
+    }
+  ],
+  "actual_home_key_completion": [
+    {
+      "passed": true,
+      "arrival_applied": true,
+      "durable": true,
+      "saved": true,
+      "ok": true,
+      "kind": "home_key_finish",
+      "original_process_frame_budget": 7200
+    }
+  ],
+  "script_error_count": 0,
+  "native_error_count": 0,
+  "warnings": [
+    "WARNING: instance_reset_physics_interpolation() is deprecated."
+  ],
+  "setup_disclosures": [
+    "Original parsed harness joypad/actions through production UI; private save-system directory preserves developer saves",
+    "Existing from-title opening selects/names Terrapup, live naturally weakened Bramblebun/no HP or inventory fixture for this F18 helper",
+    "30receipts/four ordinary walks/zero confined resets and unstick increments; original per-walk/process budgets unchanged",
+    "Structural visibility and presentation.json only; headless/Dummy audio cannot establish visual/device/audible playback/NIGHT acceptance"
+  ],
+  "source_authority": "6032148839 exact0cb dispatch",
+  "raw": {
+    "job112658221037.log": {
+      "sha256": "72c3db5aec2bef0b2bfe145b2d7e08b90cb78d5253d71a591fd3006ff3989237",
+      "bytes": 583420
+    },
+    "boot_log.txt": {
+      "sha256": "ebf9fe759beee4fe56e47355eefc38e48097a0173bd0ab61d988254acce5f0b1",
+      "bytes": 2665
+    },
+    "presentation.json": {
+      "sha256": "289e7dbd923c770cab178bacd45c9ab4e9eaaba1f8e8fd79782aa604283b9083",
+      "bytes": 203957
+    },
+    "run.log": {
+      "sha256": "92a0d539ad02cbc28474dfc434a8a4a26835d8ed1e48f8b4e4dc9a56265581e3",
+      "bytes": 260326
+    },
+    "MANIFEST.txt": {
+      "sha256": "3289f332e9a29d24616cd63f7b7cb9eab8956bf60168ae8f2bf1bdd1232d4ccc",
+      "bytes": 748
+    },
+    "exit_code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "godot.log": {
+      "sha256": "65961ca181dc034cf596afc54df7774b34ed52757f4883d6e154bf93f00c49d8",
+      "bytes": 260301
+    }
+  },
+  "archive_entry_inventory": [
+    {
+      "path": "MANIFEST.txt",
+      "bytes": 748,
+      "sha256": "3289f332e9a29d24616cd63f7b7cb9eab8956bf60168ae8f2bf1bdd1232d4ccc"
+    },
+    {
+      "path": "exit_code",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "run.log",
+      "bytes": 260326,
+      "sha256": "92a0d539ad02cbc28474dfc434a8a4a26835d8ed1e48f8b4e4dc9a56265581e3"
+    },
+    {
+      "path": "tree/ralph/reports/HUB/f18/native/earned_727616654/home_key_stream_-9223311602151595967.wav",
+      "bytes": 88244,
+      "sha256": "e489053fd821e1e6232336ce7b8a02aefe236fc28fb21f515551b2dcc91d8c74"
+    },
+    {
+      "path": "tree/ralph/reports/HUB/f18/native/earned_727616654/presentation.json",
+      "bytes": 203957,
+      "sha256": "289e7dbd923c770cab178bacd45c9ab4e9eaaba1f8e8fd79782aa604283b9083"
+    },
+    {
+      "path": "user/godot/app_userdata/Tetherbound/boot_log.txt",
+      "bytes": 2665,
+      "sha256": "ebf9fe759beee4fe56e47355eefc38e48097a0173bd0ab61d988254acce5f0b1"
+    },
+    {
+      "path": "user/godot/app_userdata/Tetherbound/cache/map_meadows.png",
+      "bytes": 916609,
+      "sha256": "42c9d546f84a53f683f33f04a2397af82dd3b57c333570a046e7f536f4a7aafa"
+    },
+    {
+      "path": "user/godot/app_userdata/Tetherbound/cache/map_meadows.png.key",
+      "bytes": 48,
+      "sha256": "e60ff57921a155cb0fa58351e62afa97e9f505aeb762a387442fcea73ec245be"
+    },
+    {
+      "path": "user/godot/app_userdata/Tetherbound/f18_earned_loop_5947721/characters/character-f2cecfa2d1ab41282a3d73e75f31d864/character.json",
+      "bytes": 2786195,
+      "sha256": "b165a12ece9e5b49dac5892daa928e782eda5f0b7a3b3e15e090ae4d4d8d2c73"
+    },
+    {
+      "path": "user/godot/app_userdata/Tetherbound/f18_earned_loop_5947721/slot_0.json",
+      "bytes": 4248931,
+      "sha256": "aedd5cf8e79320641d960e8741693b59385adcaacf1e7e9c7f78113f75cc1576"
+    },
+    {
+      "path": "user/godot/app_userdata/Tetherbound/f18_earned_loop_5947721/worlds/slot-0/world.json",
+      "bytes": 64426,
+      "sha256": "6dc2b98f3c3e4e6027af326e7df37e29ad454f6f61fcb8fc4e52633142de3594"
+    },
+    {
+      "path": "user/godot/app_userdata/Tetherbound/logs/godot.log",
+      "bytes": 260301,
+      "sha256": "65961ca181dc034cf596afc54df7774b34ed52757f4883d6e154bf93f00c49d8"
+    },
+    {
+      "path": "user/godot/app_userdata/Tetherbound/settings.json",
+      "bytes": 117,
+      "sha256": "4cb95d632e1569c625fa7447733261d2b82f37c4fff95b283f05223d6c737791"
+    }
+  ]
+}
