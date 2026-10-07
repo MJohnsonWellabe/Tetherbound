@@ -426,6 +426,7 @@ def main() -> None:
 
     load(model)
     if preserve:
+        sys.path.insert(0, str(pathlib.Path(__file__).parent))
         import inspect_glb
         inspect_glb.drop_import_phantoms()
         meshes = mesh_objects()
