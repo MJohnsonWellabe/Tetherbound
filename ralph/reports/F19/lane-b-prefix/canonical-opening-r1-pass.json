@@ -1,0 +1,91 @@
+{
+  "criterion": "F19#5 / F49#0",
+  "result": "PASS scoped fresh opening/export only",
+  "run": 37677583782,
+  "source_commit": "1861efb8c1d3254b01ed76d3594a336dfc96b51c",
+  "proof": "tools/earned_saves/earned_chain_runner.gd --functional-offload --segment=opening_team",
+  "exit_code": 0,
+  "wall_seconds": 582.749,
+  "journey_id": "1861efb8c1d3254b01ed76d3594a336dfc96b51c:/home/runner/work/Tetherbound/Tetherbound/ralph/reports/F19/earned_piece_canonical_r1",
+  "save_slot": 0,
+  "world_seed": 59015681,
+  "character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
+  "reward_delivery_namespace": "d3374d50ed084f0da03f42a78232f36b",
+  "party": [
+    {
+      "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2",
+      "species": "terrapup",
+      "level": 6,
+      "known_moves": [
+        "pebble_toss",
+        "stone_rush",
+        "ultimate_terrapup",
+        "shove"
+      ],
+      "loadout_revision": 0
+    },
+    {
+      "uid": "creature-83d263c517d32cc6cb7beab6925d80c7",
+      "species": "bramblebun",
+      "level": 5,
+      "known_moves": [
+        "bramble_whip",
+        "warren_charge",
+        "ultimate_ground_current",
+        "snare"
+      ],
+      "loadout_revision": 0
+    },
+    {
+      "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+      "species": "bramblebun",
+      "level": 5,
+      "known_moves": [
+        "bramble_whip",
+        "warren_charge",
+        "ultimate_ground_current",
+        "snare"
+      ],
+      "loadout_revision": 0
+    },
+    {
+      "uid": "creature-afbd0d982b14221393f70c29863586a1",
+      "species": "mudsnout",
+      "level": 5,
+      "known_moves": [
+        "root_nibble",
+        "rootquake",
+        "ultimate_ground_wall",
+        "slow_field"
+      ],
+      "loadout_revision": 0
+    },
+    {
+      "uid": "creature-c576f15db4b7f3ecf487a80de0169177",
+      "species": "bramblebun",
+      "level": 5,
+      "known_moves": [
+        "bramble_whip",
+        "warren_charge",
+        "ultimate_ground_current",
+        "snare"
+      ],
+      "loadout_revision": 0
+    }
+  ],
+  "helpers": [
+    "opening",
+    "road_gate",
+    "village",
+    "team"
+  ],
+  "canonical_move_mirrors_match": true,
+  "review": "b_f49_review SOURCE APPROVE and actual behavior/export component APPROVE/PASS",
+  "scope": "Genuine fresh mapped-controller opening; no world-seed override; same original five retained. New journey with corrected production serialization receipt; earlier original receipts remain untouched. Rasterization offload, no owner/device/visual/audio/campaign timing claim.",
+  "remaining": [
+    "actual child production Load",
+    "camp/tournament and remaining earned pieces",
+    "full chapter chain",
+    "promotion and full criterion gates"
+  ]
+}
