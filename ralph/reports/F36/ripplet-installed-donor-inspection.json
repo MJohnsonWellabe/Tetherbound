@@ -1,0 +1,160 @@
+{
+  "model": "D:\\tetherbound\\codex-e\\assets\\creatures\\tetherbound\\ripplet\\models\\creature_ripplet_lod0.glb",
+  "bounds": {
+    "min": [
+      -0.5905,
+      -1.024,
+      0.0348
+    ],
+    "max": [
+      0.5905,
+      1.0646,
+      1.8897
+    ],
+    "size": [
+      1.181,
+      2.0886,
+      1.8549
+    ],
+    "height_m": 1.8549,
+    "longest_axis_m": 2.0886,
+    "sits_on_origin": false,
+    "centred_on_origin": true
+  },
+  "meshes": [
+    {
+      "name": "mesh_node",
+      "vertices": 16037,
+      "edges": 43948,
+      "faces": 27995,
+      "triangles": 27995,
+      "tris": 27995,
+      "quads": 0,
+      "ngons": 0,
+      "quad_fraction": 0.0,
+      "non_manifold_edges": 3911,
+      "boundary_edges": 3911,
+      "loose_vertices": 0,
+      "duplicate_vertices": 2011,
+      "components": 84,
+      "debris_components": 41,
+      "flipped_normals": 2215,
+      "uv_layers": 1,
+      "stretched_uv_faces": 58,
+      "materials": [
+        "material"
+      ],
+      "shape_keys": 0,
+      "vertex_groups": 14
+    }
+  ],
+  "materials": [
+    {
+      "name": "material",
+      "textures": [
+        "emissive",
+        "base_color",
+        "metallic_roughness",
+        "normal"
+      ],
+      "textured": true
+    }
+  ],
+  "armatures": [
+    {
+      "name": "Armature",
+      "bones": 14,
+      "bone_names": [
+        "root",
+        "pelvis",
+        "spine",
+        "neck",
+        "head",
+        "arm_l",
+        "arm_r",
+        "tail_1",
+        "tail_2",
+        "leg_upper_l",
+        "leg_lower_l",
+        "leg_upper_r",
+        "leg_lower_r",
+        "neutral_bone"
+      ],
+      "roots": [
+        "root",
+        "neutral_bone"
+      ],
+      "skinned_meshes": [
+        "mesh_node"
+      ],
+      "max_depth": 4
+    }
+  ],
+  "animations": [
+    {
+      "name": "attack_Armature",
+      "frames": [
+        1.0,
+        23.0
+      ],
+      "channels": 140
+    },
+    {
+      "name": "faint_Armature",
+      "frames": [
+        1.0,
+        37.0
+      ],
+      "channels": 140
+    },
+    {
+      "name": "hit_Armature",
+      "frames": [
+        1.0,
+        13.0
+      ],
+      "channels": 140
+    },
+    {
+      "name": "idle_Armature",
+      "frames": [
+        1.0,
+        73.0
+      ],
+      "channels": 140
+    },
+    {
+      "name": "run_Armature",
+      "frames": [
+        1.0,
+        19.0
+      ],
+      "channels": 140
+    },
+    {
+      "name": "walk_Armature",
+      "frames": [
+        1.0,
+        33.0
+      ],
+      "channels": 140
+    }
+  ],
+  "totals": {
+    "meshes": 1,
+    "triangles": 27995,
+    "vertices": 16037,
+    "materials": 1,
+    "animations": 6
+  },
+  "problems": [
+    "mesh_node: 3911 non-manifold edges",
+    "mesh_node: 2011 duplicate vertices \u2014 will split under deformation",
+    "mesh_node: 41 microscopic disconnected components",
+    "mesh_node: ~2215 inward-facing faces",
+    "mesh_node: 58 faces with texel density 4.0x off the median",
+    "mesh_node: 0% quads \u2014 generator triangle soup, poor for deformation",
+    "does not stand on the origin (lowest point z=0.0348)",
+    "armature 'Armature' has 2 root bones"
+  ]
+}

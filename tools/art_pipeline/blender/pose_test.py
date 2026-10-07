@@ -58,6 +58,24 @@ POSES = {
     "tailflick": {"tail_1": ("z", 45), "tail_2": ("z", 35)},
 }
 
+# Installed upright creatures use the sitter's arm/leg bone names. Keep the
+# original quadruped stress set unchanged, and refuse a partial sitter pose.
+SITTER_POSES = {
+    "stride": {
+        "arm_l": ("x", -35), "arm_r": ("x", 30),
+        "leg_upper_l": ("x", 30), "leg_upper_r": ("x", -35),
+        "leg_lower_r": ("x", 15),
+    },
+    "look": POSES["look"],
+    "crouch": {
+        "spine": ("x", 18), "neck": ("x", 22), "head": ("x", 15),
+        "arm_l": ("x", 40), "arm_r": ("x", 40),
+        "leg_upper_l": ("x", 35), "leg_upper_r": ("x", 35),
+        "leg_lower_l": ("x", -45), "leg_lower_r": ("x", -45),
+    },
+    "tailflick": POSES["tailflick"],
+}
+
 ANGLES = {"side": 90.0, "three_quarter": 35.0}
 
 
@@ -154,6 +172,13 @@ def main() -> None:
     model = pathlib.Path(args[0]).resolve()
     out_dir = pathlib.Path(option(args, "--out", "shots/pose_test")).resolve()
     pose_filter = option(args, "--pose")
+    profiles = [arg.split("=", 1)[1] for arg in args if arg.startswith("--rig-profile=")]
+    if len(profiles) > 1 or (profiles and profiles[0] not in ("quadruped", "sitter")):
+        raise SystemExit("Use one --rig-profile=quadruped or --rig-profile=sitter")
+    profile = profiles[0] if profiles else "quadruped"
+    poses = SITTER_POSES if profile == "sitter" else POSES
+    if pose_filter and pose_filter not in poses:
+        raise SystemExit("Unknown stress pose")
     out_dir.mkdir(parents=True, exist_ok=True)
 
     bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -164,6 +189,12 @@ def main() -> None:
     if not rigs:
         raise SystemExit(f"{model.name} has no armature — nothing to pose")
     rig = rigs[0]
+    selected_poses = ({pose_filter: poses[pose_filter]} if pose_filter else poses)
+    if profile == "sitter":
+        missing = {name.rstrip("+") for pose in selected_poses.values() for name in pose
+                   if name.rstrip("+") not in rig.pose.bones}
+        if missing:
+            raise SystemExit("Sitter stress pose requires all relevant bones: " + ", ".join(sorted(missing)))
 
     build_stage()
     low, high = world_bounds()
@@ -176,7 +207,6 @@ def main() -> None:
     bpy.context.scene.camera = camera
 
     all_missing: set[str] = set()
-    selected_poses = ({pose_filter: POSES[pose_filter]} if pose_filter else POSES)
     for name, pose in selected_poses.items():
         missing = apply_pose(rig, pose)
         all_missing.update(missing)
@@ -185,7 +215,7 @@ def main() -> None:
 
     if all_missing:
         print(f"  bones not in this rig, skipped: {', '.join(sorted(all_missing))}")
-    print(f"\n{len(selected_poses) * len(ANGLES)} pose renders -> {out_dir}")
+    print(f"\n{len(selected_poses) * len(ANGLES)} {profile} pose renders -> {out_dir}")
     print("  Look for: collapsing shoulders, candy-wrap neck, rump following the")
     print("  tail, belly intersecting the legs in the crouch.")
 
