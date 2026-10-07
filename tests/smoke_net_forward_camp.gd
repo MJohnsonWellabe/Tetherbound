@@ -96,7 +96,8 @@ func _run() -> void:
 	# the new ghost is validated.
 	var moved: Dictionary = await _cstep(1, "camp_place", {"away": 12.0, "presses": 2}, STEP_BUDGET)
 	check(moved.get("verdict") == "PASS" and str((moved.get("messages", [""]) as Array)[0]).contains("Press Place again to pack it up"),
-		"the guest is offered a pack-up and, pressing again, pitches a new camp (%s)" % str(moved.get("detail", "")).left(160))
+		"the guest is offered a pack-up and, pressing again, pitches a new camp (%s)" %
+			(str(moved.get("detail", "")).left(160) if moved.get("verdict") == "PASS" else str(moved.get("detail", ""))))
 	host_view = await _await_records(0, 2)
 	var guest_uids := (host_view.get("records", []) as Array).filter(func(r: Dictionary) -> bool: return r.character_id == guest_id)
 	check(guest_uids.size() == 1 and str(guest_uids[0].uid) != old_guest_uid,

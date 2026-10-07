@@ -21,7 +21,10 @@ var _camp_answers: Array = []
 
 
 func _on_action_completed(op: String, _intent: Dictionary, result: Dictionary) -> void:
-	if op == "camp_build": _camp_answers.append(result.duplicate(true))
+	if op == "camp_build":
+		var observation := result.duplicate(true)
+		observation["observed_at_ms"] = Time.get_ticks_msec()
+		_camp_answers.append(observation)
 
 
 func _execute_step(msg: Dictionary) -> Dictionary:
@@ -129,6 +132,7 @@ func _records(game: Node) -> Dictionary:
 
 
 func _place(game: Node, away: float, presses: int = 1) -> Dictionary:
+	var started_ms := Time.get_ticks_msec()
 	var placer: Node = null
 	for node: Node in get_nodes_in_group("build_placer"):
 		placer = node
@@ -179,6 +183,7 @@ func _place(game: Node, away: float, presses: int = 1) -> Dictionary:
 	var before: Array = (_records(game).records as Array).filter(func(r: Dictionary) -> bool:
 		return r.character_id == str(game.get("local").get("character_id"))).map(func(r: Dictionary) -> String: return r.uid)
 	var messages: Array = []
+	var press_observations: Array = []
 	for press in presses:
 		# Aimed at the spot for every press: the placer re-aims its ghost from
 		# the camera each frame, and a player holds the aim between presses.
@@ -187,6 +192,8 @@ func _place(game: Node, away: float, presses: int = 1) -> Dictionary:
 		game.set("_pending_world_message", "")
 		placer.call("_place", game, "forward_camp")
 		messages.append(str(game.get("_pending_world_message")))
+		press_observations.append({"press": press, "at_ms": Time.get_ticks_msec(),
+			"camp_after_pack": (placer.get("_camp_after_pack") as Dictionary).duplicate(true)})
 		for _frame in 10:
 			await physics_frame
 	var settled := false
@@ -202,6 +209,14 @@ func _place(game: Node, away: float, presses: int = 1) -> Dictionary:
 	var out := _records(game)
 	out.verdict = "PASS" if settled else "FAIL"
 	out.detail = "placed at %s: %s; pending %s; answers %s" % [str(spot), str(out.detail), JSON.stringify(pending), JSON.stringify(_camp_answers)]
+	if not settled:
+		out.detail += " original continuation " + JSON.stringify({"started_ms": started_ms,
+			"finished_ms": Time.get_ticks_msec(), "press_observations": press_observations,
+			"camp_after_pack": (placer.get("_camp_after_pack") as Dictionary).duplicate(true),
+			"placement_available": session.call("forward_camp_placement_available") if session != null else false,
+			"owner_blocked": session.call("_owner_training_mutation_blocked", game.get("local")) if session != null else null,
+			"guard": session.call("_owner_snapshot_block_reason", game.get("local")) if session != null else "unavailable",
+			"final_world_message": game.get("_pending_world_message")})
 	out.spot = [spot.x, spot.y, spot.z]
 	out.messages = messages
 	return out
