@@ -246,6 +246,46 @@ func test_request_codec_preserves_distinct_authenticated_source_kinds_and_exact_
 	var non_clock: Dictionary = clock_source.duplicate(true)
 	non_clock["intent"] = {"elapsed": 100}
 	assert_true(PREP.make_action(non_clock, clock_context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN, "bounty_rotation").is_empty())
+	# Extend this existing codec proof with the real board's unchanged -1
+	# request. Detached inventory/board setup is unit input, not gameplay proof.
+	const BOARD := preload("res://scripts/world/bounty_board.gd")
+	const BAG := preload("res://scripts/world/death_satchel_rules.gd")
+	var board_before: Dictionary = f.before.duplicate(true)
+	board_before.redesign_character.bounties = preload("res://tests/test_bounty_board.gd").new()._issued().redesign_character.bounties.duplicate(true)
+	board_before.redesign_character.bounties.anchor_world = "resource-namespace"
+	var material := BOARD.template("meadows_material_delivery")
+	var bag := BAG.inventory_from(board_before.inventory)
+	assert_true(BAG.give_stack(bag, {"id": material.item, "n": int(material.count)}))
+	board_before.inventory = BAG.slots(bag)
+	var board_cursor := REPLAY.apply(REPLAY.begin(board_before, {}), {"version": 1, "sequence": 1, "op": "condition", "delta": 0.1,
+		"uids": [board_before.party[0].uid]}, {"max_elapsed": 1.0, "max_speed": 20.0, "realm": "meadows", "landmarks": {}}).cursor
+	var claim := {"op": "bounty_claim", "session_epoch": "current-epoch", "world_namespace": "resource-namespace",
+		"character_id": DATA.CHARACTER, "station_key": "halda_bounty_board", "intent": {"instance": "delivery".sha256_text()}, "revision": -1}
+	var claim_bytes := var_to_bytes(claim)
+	var claim_context: Dictionary = preload("res://tests/test_bounty_board.gd").new()._context(board_before, 0, 1, "resource-namespace")
+	var claim_prepared := PREP.make_action(claim, claim_context, board_before, 0, "current-epoch", "resource-slot", board_cursor, DATA.TXN)
+	assert_false(claim_prepared.is_empty())
+	assert_true(PREP.valid_action_host(claim_prepared, board_cursor))
+	assert_true(PREP.owner_plan(board_cursor.state, claim_prepared, {}, {}).ok)
+	assert_false(PREP.owner_plan(board_before, claim_prepared, {}, {}).ok)
+	assert_eq(var_to_bytes(claim), claim_bytes, "checkpoint never rewrites the original sentinel quote")
+	for field: String in ["session_epoch", "world_namespace", "character_id", "station_key", "revision", "intent"]:
+		var forged_claim: Dictionary = claim.duplicate(true)
+		forged_claim[field] = 0 if field == "revision" else ({"instance": "foreign".sha256_text()} if field == "intent" else "foreign")
+		assert_true(PREP.make_action(forged_claim, claim_context, board_before, 0, "current-epoch", "resource-slot", board_cursor, DATA.TXN).is_empty(), field)
+	for field: String in ["character_id", "expected_revision", "source_key", "in_range", "in_combat", "world_namespace", "clock_confirmed"]:
+		var forged_context: Dictionary = claim_context.duplicate(true)
+		forged_context[field] = 1 if field == "expected_revision" else (true if field == "in_combat" else (false if field in ["in_range", "clock_confirmed"] else "foreign"))
+		assert_true(PREP.make_action(claim, forged_context, board_before, 0, "current-epoch", "resource-slot", board_cursor, DATA.TXN).is_empty(), field)
+	var extra_claim: Dictionary = claim.duplicate(true)
+	extra_claim.intent["day"] = 1
+	assert_true(PREP.make_action(extra_claim, claim_context, board_before, 0, "current-epoch", "resource-slot", board_cursor, DATA.TXN).is_empty(), "owner cannot add a clock to the one-field intent")
+	var paid := BOARD.stage(board_cursor.state, 0, "bounty_claim", claim.intent, claim_context)
+	assert_true(paid.ok)
+	assert_true(PREP.make_action(claim, claim_context, paid.state, 0, "current-epoch", "resource-slot", REPLAY.begin(paid.state, {}), DATA.TXN).is_empty(), "paid instance cannot prepare a new claim")
+	var poor: Dictionary = board_before.duplicate(true)
+	poor.inventory = BAG.slots(BAG.inventory_from([]))
+	assert_true(PREP.make_action(claim, claim_context, poor, 0, "current-epoch", "resource-slot", REPLAY.begin(poor, {}), DATA.TXN).is_empty(), "missing materials refuse before any checkpoint")
 
 func test_request_cas_preserves_quote_then_original_altar_stage_advances_once_and_retries() -> void:
 	const TEACHING := preload("res://scripts/creatures/teaching.gd")
