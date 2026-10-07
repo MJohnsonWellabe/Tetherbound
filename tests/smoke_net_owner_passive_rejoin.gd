@@ -395,7 +395,14 @@ func _prove_tag_combo() -> void:
 	check(after.commands.meter == verdict.delta.tether_commands.meter \
 		and host.record.participants.get(str(peer), {}).get("tether_commands", {}) == verdict.delta.tether_commands,
 		"Tag: owner and host consume exactly the parent's command meter state")
-	check(host.seen_impacts.has(str(strikes[1].action_id)), "Tag: joined observer consumes the actual incoming child impact")
+	for index in 2:
+		var strike: Dictionary = strikes[index]
+		var issuer := "command:%s:%s:%d:%s:%s:%d" % [request.encounter_id, _guest_character,
+			int(request.generation), strike.part, strike.attacker_uid, int(strike.generation)]
+		check(host.impact_history.get(issuer, {}).get("seen", {}).has(str(int(request.sequence))) \
+			and after.impact_history.get(issuer, {}).get("seen", {}).has(str(int(request.sequence))),
+			"Tag: owner and joined observer consume the actual %s child impact once" % strike.part)
+	check(after.enemy_hp == verdict.delta.hp, "Tag: the owner consumes the parent absolute HP without another debit")
 	print("TAG actual family observation: ", JSON.stringify({"owner":after,"host":host,"before":host_before}))
 	_ok(await step(1, "op_tag_replay"), "Tag: submit the same original again")
 	var replay: Dictionary = await probe(0, "op_tag_state", args)

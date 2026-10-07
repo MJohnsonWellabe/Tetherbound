@@ -419,6 +419,14 @@ func test_tag_parent_retains_two_frozen_quicks_and_rejects_stale_or_duplicate_ar
 				"deployment_generation":2, "actor_generation":bound.vitals.body_generation, "body_instance_id":202}
 			var written := [{"hp":25.0, "hp_max":30.0, "damage":999.0, "killed":false},
 				{"hp":16.0, "hp_max":30.0, "damage":999.0, "killed":false}]
+			for child_index in 2:
+				var impact: Dictionary = arrival.joint.strikes[child_index].duplicate(true)
+				impact["encounter_id"] = tag_id
+				impact["command_generation"] = 1
+				impact["command_sequence"] = 1
+				impact["damage"] = 5.0 if child_index == 0 else 9.0
+				impact["killed"] = false
+				written[child_index]["impact"] = impact
 			tracked.set_opponent_hp(tag_id, 16.0, 30.0, written[1])
 			var bad := written.duplicate(true)
 			bad[1].hp = 26.0
@@ -446,7 +454,7 @@ func test_tag_parent_retains_two_frozen_quicks_and_rejects_stale_or_duplicate_ar
 			assert_eq(pending.outcomes[1].binding, incoming_binding)
 			assert_eq(pending.outcomes[0].part, "outgoing")
 			assert_eq(pending.outcomes[1].part, "incoming")
-			for verdict_defect: String in ["none", "owner", "parent", "incoming", "generation", "request", "part"]:
+			for verdict_defect: String in ["none", "owner", "parent", "incoming", "generation", "request", "part", "feedback", "terminal", "hp"]:
 				var manager := MANAGER.new()
 				var director := preload("res://scripts/combat/encounter_director.gd").new()
 				var species := preload("res://scripts/creatures/creature_species.gd")
@@ -459,6 +467,12 @@ func test_tag_parent_retains_two_frozen_quicks_and_rejects_stale_or_duplicate_ar
 				manager._ally_body = body
 				manager._encounter_id = tag_id
 				manager._encounter_link = director
+				manager.state = MANAGER.State.ACTIVE
+				var enemy := species.spawn("terrapup")
+				enemy.uid = "wild-a"
+				enemy.hp = 30.0
+				manager._enemy = enemy
+				var energy_before := float(b.energy)
 				manager._tether_command_view = actual_before.duplicate(true)
 				manager._tether_command_view.pending_request = request.duplicate(true)
 				director._deployment_identity[1] = {"character_id":"character-a", "creature_uid":"owned-a", "generation":1}
@@ -476,6 +490,9 @@ func test_tag_parent_retains_two_frozen_quicks_and_rejects_stale_or_duplicate_ar
 					"generation": result.command_generation = 2
 					"request": result.command_request.sequence = 2
 					"part": result.delta.effect.strikes[1].part = "outgoing"
+					"feedback": result.delta.effect.strikes[1].impact.attacker_uid = "foreign-owned"
+					"terminal": result.delta.killed = true
+					"hp": result.delta.hp = 99.0
 				manager.apply_tether_command_verdict(result)
 				assert_eq(manager.active_creature(), b if verdict_defect == "none" else a, verdict_defect)
 				assert_eq(signals[0], 1 if verdict_defect == "none" else 0)
@@ -483,11 +500,14 @@ func test_tag_parent_retains_two_frozen_quicks_and_rejects_stale_or_duplicate_ar
 				if verdict_defect == "none":
 					assert_eq(manager._switch_lockout, 1.5)
 					assert_false(manager._tether_command_view.has("pending_request"))
+					assert_eq(enemy.hp, 16.0, "the owner writes the parent absolute HP once")
+					assert_eq(float(b.energy), energy_before, "drawing Tag children cannot grant another quick's energy")
 					manager.apply_tether_command_verdict(result)
 					assert_eq(signals[0], 1, "exact duplicate cannot switch or consume twice")
 				else:
 					assert_eq(manager._switch_lockout, 0.0)
 					assert_eq(manager._tether_command_view.pending_request, request)
+					assert_eq(enemy.hp, 30.0, "invalid family feedback or terminal metadata cannot write owner HP")
 				manager.free()
 				director.free()
 				body.free()

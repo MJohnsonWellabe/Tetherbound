@@ -3658,6 +3658,7 @@ func _host_tether_tag(request: Dictionary, peer: int, admitted: Dictionary,
 	for index in 2:
 		var move: Dictionary = original.moves[index]
 		var child: Dictionary = arrival.joint.strikes[index]
+		var child_hp_before := float(target.hp)
 		var bonus := float(_encounter_host.call("self_utility_power", id, str(cards[index].creature_uid), now_ms)) \
 			* float((_encounter_host.call("tether_rally", id, peer, now_ms) as Dictionary).damage)
 		var rolled: Dictionary = engine.call("host_roll_damage", cards[index], str(move.move_id),
@@ -3666,6 +3667,21 @@ func _host_tether_tag(request: Dictionary, peer: int, admitted: Dictionary,
 				"source_utility_power": bonus, "travel_seconds": 0.0, "body_generation": generation,
 				"direction": (wild.call("centre") as Vector3) - position})
 		if rolled.is_empty(): return refuse
+		var child_impact := {}
+		if child_hp_before > float(rolled.hp):
+			var child_launch := HIT_FEEDBACK.launch(str(child.action_id), id, str(child.attacker_uid),
+				str(target.uid), str(move.move_id), "quick", position, wild.call("centre"), 0.0,
+				generation, wild.global_position, _host_visual_bounds(wild)).duplicate(true)
+			child_launch["mastery_rank"] = int(move.get("mastery_rank", 1))
+			child_impact = HIT_FEEDBACK.with_launch(rolled.get("impact", {}), child_launch, move.get("vfx", {})).duplicate(true)
+			for key: String in ["parent_action_id", "part", "attacker_uid", "character_id", "generation", "target_uid", "target_generation", "source_kind", "slot", "tag_combo"]:
+				child_impact[key] = child[key]
+			child_impact["encounter_id"] = id
+			child_impact["command_generation"] = int(request.generation)
+			child_impact["command_sequence"] = int(request.sequence)
+			child_impact["killed"] = float(rolled.hp) == 0.0
+		child_impact.make_read_only()
+		rolled["impact"] = child_impact
 		written.append(rolled)
 	_encounter_host.call("set_opponent_hp", id, float(written[1].hp), float(written[1].hp_max), written[1])
 	if peer == _local_peer_id():
@@ -3690,7 +3706,8 @@ func _host_tether_tag(request: Dictionary, peer: int, admitted: Dictionary,
 		else: _capture_wild_victory_source(id, verdict)
 		if not _encounter_host.call("publish_move_action_terminal", id, peer, parent, "done"): return refuse
 		_capture_ordinary_combat_round(id, target)
-	_host_publish_peer_impact(id, peer, verdict.delta.impact)
+	for strike: Dictionary in verdict.delta.effect.strikes:
+		_host_publish_peer_impact(id, peer, strike.get("impact", {}))
 	_host_after_encounter_change(id, peer, 0, verdict.delta.impact)
 	if not _encounter_host.call("acknowledge_move_action_publication", id, peer, parent, verdict): return refuse
 	if verdict.delta.killed == true: _finalize_shared_host_fight(id, "won")

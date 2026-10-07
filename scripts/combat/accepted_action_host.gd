@@ -223,6 +223,7 @@ func record_tether_tag_outcome(id: String, peer: int, parent: String,
 		strike["actual_hp_debit"] = hp - float(rolled.hp)
 		strike["target_hp_after"] = float(rolled.hp)
 		strike["landed"] = float(strike.actual_hp_debit) > 0.0
+		strike["impact"] = rolled.get("impact", {}).duplicate(true)
 		strikes.append(strike)
 		if strike.landed:
 			outcomes.append({"part":strike.part, "binding":original.binding.duplicate(true) if index == 0 else incoming_binding.duplicate(true),

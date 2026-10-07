@@ -486,6 +486,7 @@ func apply_tether_command_verdict(verdict: Dictionary) -> void:
 	if next.get("encounter_id") != _encounter_id or next.get("character_id") != deployment.get("character_id"): return
 	if tag:
 		var commands := preload("res://scripts/combat/tether_commands.gd")
+		if state != State.ACTIVE or _enemy == null or str(_enemy.get("uid")) != str(effect.get("target_uid", "")): return
 		var request: Dictionary = verdict.get("command_request", {})
 		var receipt: Dictionary = next.get("last_receipt", {})
 		var strikes: Array = effect.get("strikes", [])
@@ -514,6 +515,29 @@ func apply_tether_command_verdict(verdict: Dictionary) -> void:
 				or strike.get("target_generation") != effect.get("target_generation") \
 				or strike.get("slot") != "quick" \
 				or strike.get("action_id") != JSON.stringify([parent, part, uid, generation]).sha256_text(): return
+			for key: String in ["target_hp_before", "target_hp_after", "actual_hp_debit"]:
+				var value: Variant = strike.get(key)
+				if not (value is int or value is float) or not is_finite(float(value)) or float(value) < 0.0: return
+			if float(strike.target_hp_after) > float(strike.target_hp_before) \
+				or not is_equal_approx(float(strike.actual_hp_debit), float(strike.target_hp_before) - float(strike.target_hp_after)): return
+			var impact: Dictionary = strike.get("impact", {})
+			if float(strike.actual_hp_debit) == 0.0:
+				if not impact.is_empty(): return
+			else:
+				for key: String in ["action_id", "parent_action_id", "part", "attacker_uid", "character_id", "generation", "target_uid", "target_generation", "source_kind", "slot", "tag_combo"]:
+					if impact.get(key) != strike.get(key): return
+				if impact.get("encounter_id") != _encounter_id or impact.get("command_generation") != request.generation \
+					or impact.get("command_sequence") != request.sequence \
+					or not preload("res://scripts/combat/hit_feedback.gd").admit({}, impact, false): return
+		var delta: Dictionary = verdict.delta
+		for key: String in ["hp", "hp_max", "damage"]:
+			var value: Variant = delta.get(key)
+			if not (value is int or value is float) or not is_finite(float(value)) or float(value) < 0.0: return
+		if float(delta.hp_max) <= 0.0 or float(delta.hp) > float(delta.hp_max) \
+			or delta.hp != strikes[1].target_hp_after or strikes[0].target_hp_after != strikes[1].target_hp_before \
+			or not is_equal_approx(float(delta.damage), float(strikes[0].actual_hp_debit) + float(strikes[1].actual_hp_debit)) \
+			or not delta.get("killed") is bool or delta.killed != (float(delta.hp) == 0.0) \
+			or delta.get("impact", {}) != strikes[1].get("impact", {}): return
 		var index := -1
 		for i in _party.size():
 			if _party[i] != null and str(_party[i].get("uid")) == incoming and _can_take_the_field(_party[i]): index = i
@@ -527,9 +551,26 @@ func apply_tether_command_verdict(verdict: Dictionary) -> void:
 			or deployment.get("generation") != int(request.generation) + 1: return
 		_switch_lockout = maxf(_switch_lockout, float(commands.config().switch_lockout_s))
 		_tether_command_view.erase("pending_request")
+		# The parent already owns both HP writes. Draw each accepted creature
+		# receipt once, without a strike resolver's energy or meter gain.
+		_enemy.hp = clampf(float(delta.hp), 0.0, float(_enemy.max_hp))
+		for strike: Dictionary in strikes:
+			var impact: Dictionary = strike.get("impact", {})
+			if impact.is_empty() or not _admit_host_feedback(_seen_impact_actions, impact): continue
+			if is_instance_valid(_wild):
+				_host_body_hitstop(_wild, impact)
+				_flash_host_impact(_wild.call("centre"), false, VFX.tint_for_type(_moves.type_of(str(impact.move_id))),
+					_wild, float(impact.damage) / maxf(1.0, float(_enemy.max_hp)), impact)
+				if impact.get("killed") == true: _wild.call("play_faint")
+				elif float(_enemy.hp) > 0.0: _play_combat_flinch(_wild, impact.get("direction", Vector3.ZERO))
+				_emit_host_impact(true, impact, _wild)
 	if int(next.get("revision", -1)) >= int(_tether_command_view.get("revision", 0)):
 		_tether_command_view.merge(next.duplicate(true), true)
-	if tag: state_changed.emit()
+	if tag:
+		if verdict.delta.killed == true:
+			_award_victory()
+			_begin_resolve("won")
+		state_changed.emit()
 
 
 ## The owner submitted only this four-field command. A host checkpoint may

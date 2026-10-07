@@ -201,6 +201,9 @@ func _tag_state(args: Dictionary) -> Dictionary:
 		"body_instance":body.get_instance_id() if is_instance_valid(body) else 0, "position":[pos.x,pos.y,pos.z],
 		"commands":manager.tether_command_snapshot(), "record":record, "original":original,
 		"seen_impacts":(manager.get("_seen_impact_actions") as Dictionary).keys(),
+		"impact_history":(manager.get("_seen_impact_actions") as Dictionary).duplicate(true),
+		"enemy_hp":float(manager.enemy().hp) if manager.enemy() != null else -1.0,
+		"combat_state":manager.state,
 		"party":game.party.members().map(func(c: RefCounted) -> String: return str(c.uid))}
 
 

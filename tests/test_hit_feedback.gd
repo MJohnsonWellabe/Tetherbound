@@ -27,6 +27,51 @@ func test_weighted_feedback_is_immutable_and_preserves_host_damage() -> void:
 	assert_eq(light.direction, Vector3.RIGHT)
 	assert_eq(FEEDBACK.weight_for({"slot": "charged"}, "quick"), "heavy", "incoming named moves use their authored weight even through the enemy quick fallback")
 
+func test_canonical_tag_children_keep_independent_bounded_replay_windows() -> void:
+	var history := {}
+	var receipts: Array = []
+	for index in 2:
+		var part := "outgoing" if index == 0 else "incoming"
+		var uid := "owned-a" if index == 0 else "owned-b"
+		var parent := "command:fight:owner:4:7"
+		var receipt := {"action_id":JSON.stringify([parent, part, uid, 4 + index]).sha256_text(),
+			"parent_action_id":parent, "encounter_id":"fight", "character_id":"owner", "attacker_uid":uid,
+			"generation":4 + index, "command_generation":4, "command_sequence":7,
+			"target_uid":"wild", "target_generation":2, "source_kind":"creature", "slot":"quick",
+			"part":part, "tag_combo":true}
+		receipts.append(receipt)
+		assert_true(FEEDBACK.admit(history, receipt, false), "preview validates the accepted hash without consuming")
+		assert_eq(history.size(), index)
+		assert_true(FEEDBACK.admit(history, receipt))
+		assert_false(FEEDBACK.admit(history, receipt))
+	assert_eq(history.size(), 2, "both owned parts have independent issuers")
+	var before := history.duplicate(true)
+	for defect: String in ["parent", "owner", "uid", "part", "generation", "sequence", "target", "source", "slot", "opaque"]:
+		var forged: Dictionary = receipts[0].duplicate(true)
+		match defect:
+			"parent": forged.parent_action_id = "foreign-parent"
+			"owner": forged.character_id = "foreign-owner"
+			"uid": forged.attacker_uid = "foreign-owned"
+			"part": forged.part = "incoming"
+			"generation": forged.generation = 5
+			"sequence": forged.command_sequence = 8
+			"target": forged.target_generation = 0
+			"source": forged.source_kind = "trainer"
+			"slot": forged.slot = "charged"
+			"opaque": forged.tag_combo = false
+		assert_false(FEEDBACK.admit(history, forged), defect)
+	assert_eq(history, before, "every refusal leaves the replay ledgers untouched")
+	for sequence in [9, 8, 9 + int(FEEDBACK.config().receipt_sequence_window)]:
+		var next: Dictionary = receipts[0].duplicate(true)
+		next.command_sequence = sequence
+		next.parent_action_id = "command:fight:owner:4:%d" % sequence
+		next.action_id = JSON.stringify([next.parent_action_id, next.part, next.attacker_uid, next.generation]).sha256_text()
+		assert_true(FEEDBACK.admit(history, next), "unseen out-of-order arrivals retain the existing window")
+	assert_false(FEEDBACK.admit(history, receipts[0]), "evicted old child remains a replay")
+	var full := {}
+	for issuer in int(FEEDBACK.config().receipt_history_limit): full[str(issuer)] = {"newest":1, "seen":{1:true}}
+	assert_false(FEEDBACK.admit(full, receipts[1]), "hashed children retain the same issuer cap")
+
 func test_frozen_launch_rejects_replacement_actors_generation_and_realm() -> void:
 	var launch := FEEDBACK.launch("fight:2:4", "fight", "owned-1", "wild-1", "stone_rush", "charged", Vector3.ZERO, Vector3.RIGHT, 0.2, 7)
 	assert_true(launch.is_read_only())
