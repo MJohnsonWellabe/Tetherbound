@@ -132,7 +132,11 @@ func _run() -> void:
 		return
 	var selectors: Array[String] = []
 	if OS.get_cmdline_user_args().has("--with-vfx-units"):
-		selectors.append("test_move_effects.gd")
+		selectors.append_array(["test_move_effects.gd", "test_combat_vfx.gd",
+			"test_combat_progression.gd", "test_director_join_snapshot.gd",
+			"test_multiplayer_identity_0912.gd", "test_net_boss_snapshot.gd",
+			"test_net_state_hash_scope.gd", "test_world_save_format.gd",
+			"test_net_harness_heartbeat_allowance.gd"])
 	if OS.get_cmdline_user_args().has("--with-combat-units"):
 		selectors.append_array(["test_charger_lunge.gd", "test_cloudreach_route_ledger.gd", "test_combat_aftermath_focus.gd",
 			"test_combat_burst.gd", "test_combat_camera_framing_tunables.gd", "test_combat_camera_shoulder.gd",
@@ -154,8 +158,18 @@ func _run() -> void:
 			"test_stormwood_b_combat_camera_fit.gd", "test_stormwood_dynamo.gd", "test_stormwood_hosted_combat.gd",
 			"test_trainer_ally_lateral_ranks.gd", "test_trainer_rules.gd", "test_tutorial_faint_floor.gd",
 			"test_tutorial_orb_floor.gd", "test_water_realm_transition.gd", "test_water_tidal_guard_combat.gd",
-			"test_world_save_format.gd", "test_world_verb_input_owner_enforcement.gd"])
+			"test_world_save_format.gd", "test_world_verb_input_owner_enforcement.gd",
+			"test_combat_difficulty.gd", "test_creature_attack_telegraph_animation.gd",
+			"test_encounter_combat_override.gd", "test_named_fight_profiles.gd",
+			"test_named_fight_tell_timing.gd", "test_shared_opponent_cue_shape.gd",
+			"test_stormwood_b_named_cues.gd", "test_stormwood_b_named_lunge_lanes.gd",
+			"test_stormwood_named_fight_profiles.gd", "test_water_alpha_face_lock.gd",
+			"test_water_encounter_runtime_data.gd"])
 	if not selectors.is_empty():
+		var unique_selectors: Array[String] = []
+		for selector: String in selectors:
+			if not unique_selectors.has(selector): unique_selectors.append(selector)
+		selectors = unique_selectors
 		var output: Array = []
 		var exit_code := OS.execute(OS.get_executable_path(), PackedStringArray([
 			"--headless", "--path", ProjectSettings.globalize_path("res://"),
@@ -184,11 +198,14 @@ func _run() -> void:
 		await _button(JOY_BUTTON_RIGHT_SHOULDER, false)
 		_check(not bool(_manager.call("ultimate_armed")) and _launches.is_empty() and _impacts.is_empty(),
 			"physical RB tap at zero meter cannot arm or launch an ultimate")
-		var empty_resources: Dictionary = _host.record(_id).participants[1].move_resources.duplicate(true)
+		# Before the first accepted move the resource row legitimately does not
+		# exist. Retain the whole participant, including that absence, so a
+		# refused empty-meter cast cannot initialize or mutate resources either.
+		var empty_participant: Dictionary = _host.record(_id).participants[1].duplicate(true)
 		var empty_commit: Dictionary = _host.move_commit(_id, 1, 99).duplicate(true)
 		var empty_refusal: Dictionary = _director.call("_host_move_start", {"encounter_id": _id, "slot": "ultimate", "action": 99}, 1)
 		_check(empty_refusal.get("code") == "ultimate_not_ready", "host refuses an actual equipped ultimate below full meter")
-		_check(_host.record(_id).participants[1].move_resources == empty_resources
+		_check(_host.record(_id).participants[1] == empty_participant
 			and _host.move_commit(_id, 1, 99) == empty_commit,
 			"below-full ultimate refusal leaves canonical resources and accepted original unchanged")
 		if not _capture_dir.is_empty():
