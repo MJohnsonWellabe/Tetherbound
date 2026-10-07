@@ -4,7 +4,10 @@ extends "res://tests/helpers/net_harness.gd"
 
 ## F16#3: real isolated ENet peers, production split saves and title rejoin.
 ## Every carrier field is a disclosed nondefault storage fixture. Future
-## portal/training/crafting verbs are not earned or claimed by this witness.
+## portal/training/crafting progression is not earned by this witness.
+## F43 additionally uses the existing storage_grant stock and sleep fixtures,
+## real Halda input, owner-save/ACK and same-ID reload. Materials are disclosed
+## stock; this does not claim earned gathering or a campaign route.
 const STATE := preload("res://scripts/data/redesign_state.gd")
 const DATA := preload("res://scripts/data/redesign_data.gd")
 
@@ -47,6 +50,9 @@ func _run() -> void:
 	# The initial admission must see the exact portable fixture. Replacing it
 	# after joining leaves the host's immutable full-owner bounty row stale.
 	if not await _pass(1, "foundations_state", {"mode": "seed", "marker": 2, "personal_only": true}): return
+	for template: Dictionary in preload("res://scripts/world/bounty_board.gd").config().templates:
+		if template.kind == "material_delivery":
+			if not await _pass(1, "storage_grant", {"item": template.item, "n": int(template.count)}): return
 	if not await _pass(1, "foundations_state", {"mode": "personal_roundtrip"}): return
 	if not await _pass(1, "join", {"host": "127.0.0.1", "port": port}): return
 	for peer in 2:
@@ -59,6 +65,74 @@ func _run() -> void:
 	check(not guest_id.is_empty() and guest_id != str(host.get("character_id", "")), "stable host and guest identities differ")
 	check(int(host.get("schema", 0)) == 28 and int(guest.get("schema", 0)) == 28, "current schema 28 on both peers")
 	check(not str(host.get("world_disk_sha256", "")).is_empty() and not str(guest.get("character_disk_sha256", "")).is_empty(), "production durable files exist")
+	var selected: Dictionary = {}
+	var board_before: Dictionary = {}
+	for morning in 12:
+		var board_result := await step(1, "foundations_state", {"mode": "bounty_inspect"})
+		check(board_result.get("verdict") == "PASS", "actual guest personal board inspection is ready")
+		if board_result.get("verdict") != "PASS":
+			quit(await finish())
+			return
+		board_before = board_result.get("data", {})
+		var rows: Array = board_before.get("bounty_view", {}).get("rows", [])
+		check(rows.size() == 3, "real host morning issues exactly three personal notices")
+		for row: Dictionary in rows:
+			if row.get("kind") == "material_delivery" and row.get("paid") != true: selected = row
+		if not selected.is_empty(): break
+		# Use the existing actual sleep-vote fixtures, never a synthetic clock,
+		# row or completion event, to reach another real host-issued morning.
+		var day_before: int = int(await probe(0, "day"))
+		for peer in 2:
+			if not await _pass(peer, "sleep_stand", {}): return
+		for peer in 2:
+			if not await _pass(peer, "sleep_press", {}): return
+		for peer in 2:
+			if not await _pass(peer, "wait", {"frames": 120}): return
+		check(int(await probe(0, "day")) == day_before + 1, "actual two-peer sleep advances one morning")
+		host = await _settled_carrier(0)
+		guest = await _settled_carrier(1)
+	check(not selected.is_empty(), "a real material notice appears within the bounded actual morning route")
+	if selected.is_empty():
+		quit(await finish())
+		return
+	var original_instance: String = selected.instance
+	var prompt: Array = board_before.bounty_prompt
+	if not await _pass(1, "teleport", {"at": [prompt[0], float(prompt[1]) - 0.9, float(prompt[2]) + 0.5]}): return
+	if not await _pass(1, "wait", {"frames": 120}): return
+	host = await _settled_carrier(0)
+	guest = await _settled_carrier(1)
+	var claim := await step(1, "foundations_state", {"mode": "bounty_claim", "instance": original_instance}, 6000)
+	check(claim.get("verdict") == "PASS", "physical Halda claim reaches owner BOOL-save and accepted host ACK")
+	if claim.get("verdict") != "PASS":
+		quit(await finish())
+		return
+	var paid: Dictionary = claim.get("data", {})
+	var expected_inventory := _inventory_counts(guest.get("inventory", []))
+	expected_inventory[selected.item] = int(expected_inventory.get(selected.item, 0)) - int(selected.count)
+	if expected_inventory[selected.item] == 0: expected_inventory.erase(selected.item)
+	for reward: Dictionary in selected.rewards:
+		expected_inventory[reward.id] = int(expected_inventory.get(reward.id, 0)) + int(reward.n)
+	check(_inventory_counts(paid.get("inventory", [])) == expected_inventory, "exact original material debit and personal rewards, no other item delta")
+	check(paid.get("inventory_disk") == paid.get("inventory"), "paid inventory is the exact owner's disk inventory")
+	check(paid.get("character_disk_redesign") == paid.get("character"), "paid personal carrier is saved exactly")
+	var token := "bounty:%s:%s" % [original_instance, guest_id]
+	check(paid.get("character", {}).get("bounty_receipts", []).count(token) == 1 \
+		and paid.get("character", {}).get("transaction_receipts", []).count(token) == 1,
+		"one original personal claim receipt reaches both canonical receipt lists")
+	var accepted := false
+	var authority: Dictionary = await _carrier(0)
+	for row: Variant in authority.get("reward_deliveries", {}).values():
+		if row is Dictionary and row.get("kind") == "creature_training" and row.get("status") == "accepted" \
+			and row.get("character_id") == guest_id and row.get("after", {}).get("redesign_character", {}).get("bounty_receipts", []).count(token) == 1 \
+			and row.get("after", {}).get("inventory") == paid.get("inventory"): accepted = true
+	check(accepted, "host accepted row binds the exact original personal receipt and paid inventory")
+	check(authority.get("character") == host.get("character") and authority.get("inventory") == host.get("inventory"), "guest claim changes no host personal carrier or inventory")
+	var reopen := await step(1, "foundations_state", {"mode": "bounty_inspect"})
+	var paid_notice := false
+	for row: Dictionary in reopen.get("data", {}).get("bounty_view", {}).get("rows", []):
+		if row.get("instance") == original_instance and row.get("paid") == true: paid_notice = true
+	check(paid_notice and reopen.get("data", {}).get("inventory") == paid.get("inventory"), "reopening original paid notice retains one reward with no second debit")
+	guest = await _settled_carrier(1)
 	if not await _pass(1, "foundations_state", {"mode": "forge_world"}): return
 	var host_after_forgery := await _carrier(0)
 	check(host_after_forgery.get("world", {}) == host.get("world", {}), "guest forged world never mutates host live state")
@@ -84,10 +158,19 @@ func _run() -> void:
 	var retained := await _carrier(0)
 	check(restored.get("character_id", "") == guest_id, "actual title rejoin keeps named portable identity")
 	check(restored.get("character", {}) == guest.get("character", {}), "named-ID disk rejoin restores full personal and per-creature payload")
+	check(restored.get("inventory") == guest.get("inventory") and restored.get("inventory_disk") == guest.get("inventory"), "same-ID disk rejoin retains exactly the original bounty payment")
+	check(restored.get("character", {}).get("bounty_receipts", []).count(token) == 1, "same-ID rejoin cannot award the original bounty twice")
 	check(restored.get("world", {}) == host.get("world", {}), "rejoin restores host-authoritative full world payload")
 	check(retained.get("character", {}) == host.get("character", {}), "host personal carrier remains its own (diff %s)" % str(_diff_keys(retained.get("character", {}), host.get("character", {}))))
 	print("F16 full populated two-peer storage witness; fixtures, direct title join callback, production saves/reload/ENet disclosed")
 	quit(await finish())
+
+func _inventory_counts(slots: Array) -> Dictionary:
+	var counts := {}
+	for slot: Variant in slots:
+		if slot is Dictionary and int(slot.get("n", 0)) > 0:
+			counts[str(slot.id)] = int(counts.get(str(slot.id), 0)) + int(slot.n)
+	return counts
 
 func _pass(peer: int, action: String, args: Dictionary, frames: int = 3000) -> bool:
 	var result := await step(peer, action, args, frames)

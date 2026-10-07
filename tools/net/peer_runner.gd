@@ -8682,8 +8682,8 @@ func _step_guardian_pilot(args: Dictionary) -> Dictionary:
 	return {"verdict": "PASS" if won else "FAIL", "data": result,
 		"detail": "input pilot outcome=%s hits=%d frames=%d gap=%.2f" % [str(result.get("outcome", "")), pilot.hits_dealt, int(result.get("frames", 0)), float(result.get("final_gap", -1.0))]}
 
-## F16 storage witness only. Future training/portal/craft transaction verbs are
-## not earned or invoked here; these are declared, valid carrier fixtures.
+## Existing F16 storage carriers and F43 observations. Read-only inspection
+## never completes pending fallback jobs or changes their save/ACK timing.
 func _foundations_payload() -> Dictionary:
 	var game := root.get_node_or_null(^"Game")
 	if game == null: return {}
@@ -8692,8 +8692,11 @@ func _foundations_payload() -> Dictionary:
 	var saver: RefCounted = game.get("save_system")
 	var world_id := str(world.get("world_id"))
 	var character_id := str(local.get("character_id"))
-	var world_path := str((saver.call("worlds") as RefCounted).call("path_for", world_id))
-	var character_path := str((saver.call("characters") as RefCounted).call("path_for", character_id))
+	var world_store := saver.get("_worlds") as RefCounted
+	var character_store := saver.get("_characters") as RefCounted
+	var world_path := str(world_store.call("path_for", world_id)) if world_store != null else ""
+	var character_path := str(character_store.call("path_for", character_id)) if character_store != null else ""
+	var disk: Dictionary = character_store.call("state", character_id) if character_store != null else {}
 	# Compare the complete JSON payload in its persisted numeric domain. Godot
 	# otherwise treats runtime int 20 and parsed JSON float 20.0 as unequal.
 	return {"world": JSON.parse_string(JSON.stringify(world.get("redesign_world"))),
@@ -8705,6 +8708,10 @@ func _foundations_payload() -> Dictionary:
 		# autosaves legitimately rewrite.
 		"world_disk_redesign": _disk_redesign_world(world_path),
 		"character_disk_sha256": FileAccess.get_sha256(character_path) if FileAccess.file_exists(character_path) else "",
+		"inventory": JSON.parse_string(JSON.stringify(local.get("inventory").get("_slots"))),
+		"character_disk_redesign": disk.get("redesign_character", {}).duplicate(true),
+		"inventory_disk": disk.get("inventory", []).duplicate(true),
+		"reward_deliveries": world.get("reward_deliveries").duplicate(true),
 		"schema": FOUNDATIONS_SAVE.VERSION, "host": bool(game.call("is_host"))}
 
 func _disk_redesign_world(path: String) -> Variant:
@@ -8839,6 +8846,67 @@ func _step_foundations_state(args: Dictionary) -> Dictionary:
 		if session != null and bool(session.call("is_active")):
 			return {"verdict": "FAIL", "detail": "memory-loss world fixture requires a disconnected peer"}
 		world.set("redesign_world", FOUNDATIONS_STATE.defaults("world"))
+	elif mode in ["bounty_inspect", "bounty_claim"]:
+		var composition := _session().get_node_or_null(^"FoundationComposition") if _session() != null else null
+		var adapter := composition.get_node_or_null(^"BountyInteraction") if composition != null else null
+		var board_ref: WeakRef = composition.get("_board") if composition != null else null
+		var board: Node3D = board_ref.get_ref() as Node3D if board_ref != null else null
+		if adapter == null or board == null:
+			return {"verdict": "FAIL", "detail": "actual grounded Halda board and adapter are not mounted"}
+		var view: Dictionary = adapter.call("view")
+		var prompt: Node3D = adapter.get("_prompt")
+		if prompt == null or view.get("ready") != true:
+			return {"verdict": "FAIL", "detail": "actual Halda prompt or admitted personal board is not ready", "data": view}
+		if mode == "bounty_inspect":
+			var payload := _foundations_payload()
+			payload.bounty_view = view
+			payload.bounty_prompt = [prompt.global_position.x, prompt.global_position.y, prompt.global_position.z]
+			payload.bounty_board = [board.global_position.x, board.global_position.y, board.global_position.z]
+			return {"verdict": "PASS", "detail": "read actual personal board and saves without settling writers", "data": payload}
+		var instance := str(args.get("instance", ""))
+		var selected: Dictionary = {}
+		for row: Dictionary in view.get("rows", []):
+			if row.get("instance") == instance: selected = row
+		if selected.is_empty() or selected.get("kind") != "material_delivery" or selected.get("paid") == true:
+			return {"verdict": "FAIL", "detail": "original issued unclaimed material notice required"}
+		var panel := adapter.get_node_or_null(^"BountyBoardPanel") as CanvasLayer
+		if panel == null: return {"verdict": "FAIL", "detail": "shipping bounty panel is not mounted"}
+		var arbiter := get_first_node_in_group(&"interaction_arbiter")
+		if arbiter == null or arbiter.call("winning_provider") != prompt:
+			return {"verdict": "FAIL", "detail": "actual Halda bounty prompt must win ordinary physical interaction"}
+		var opened := await _step_press({"action": "interact"})
+		if opened.get("verdict") != "PASS": return opened
+		for frame in 6: await physics_frame
+		if panel.get("_shown") != true or preload("res://scripts/ui/input_owner.gd").current(self) != panel:
+			return {"verdict": "FAIL", "detail": "physical X did not open one input-owning Halda panel"}
+		var button: Button = null
+		for candidate: Button in panel.get("_buttons"):
+			if candidate.get_meta("system_focus_key", "") == instance: button = candidate
+		if button == null or button.disabled:
+			return {"verdict": "FAIL", "detail": "original admitted material notice has no enabled claim control"}
+		var observed := {"result": {}}
+		var observer: Callable = func(result: Dictionary) -> void: observed.result = result.duplicate(true)
+		adapter.connect("action_completed", observer)
+		button.grab_focus()
+		for frame in 2: await physics_frame
+		var pressed := await _step_press({"action": "ui_accept"})
+		if pressed.get("verdict") != "PASS":
+			adapter.disconnect("action_completed", observer)
+			return pressed
+		for frame in 1800:
+			var result: Dictionary = observed.result
+			if result.get("ok") == true and result.get("owner_saved") == true and result.get("durable") == true and result.get("owner_acknowledged") == true: break
+			await physics_frame
+		adapter.disconnect("action_completed", observer)
+		var result: Dictionary = observed.result
+		var expected := "bounty:%s:%s" % [instance, local.get("character_id")]
+		var complete: bool = result.get("ok") == true and result.get("owner_saved") == true and result.get("durable") == true \
+			and result.get("owner_acknowledged") == true and result.get("receipt") == expected
+		var payload := _foundations_payload()
+		payload.bounty_claim = result
+		payload.bounty_original = selected
+		await _step_press({"action": "ui_cancel"})
+		return {"verdict": "PASS" if complete else "FAIL", "detail": "actual physical bounty claim requires original owner BOOL-save and accepted ACK", "data": payload}
 	elif mode != "inspect":
 		return {"verdict": "ERROR", "detail": "unknown F16 witness mode " + mode}
 	var payload := _foundations_payload()
