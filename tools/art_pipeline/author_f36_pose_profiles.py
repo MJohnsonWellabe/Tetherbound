@@ -9,6 +9,7 @@ import json
 import math
 from pathlib import Path
 import struct
+import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / 'data/creatures/f36_pose_candidates.json'
@@ -69,15 +70,26 @@ def rotation(bone, role, phase, winged, biped):
 
 def main():
     species = json.loads((ROOT / 'data/creatures/species.json').read_text())['species']
+    # Recipe-only edits reuse the previously bound rig census in sparse lanes.
+    # Runtime still rejects any installed model whose exact hash has changed.
+    existing = json.loads(OUT.read_text())['species'] if '--profiles-only' in sys.argv else None
     rows = {}
     profiles = {}
     rig_profiles = {}
     for name, definition in species.items():
         path = ROOT / definition['placeholder']['model'].replace('res://', '')
-        raw = path.read_bytes()
-        length = struct.unpack_from('<I', raw, 12)[0]
-        gltf = json.loads(raw[20:20 + length])
-        bones = list(dict.fromkeys(gltf['nodes'][i]['name'] for skin in gltf.get('skins', []) for i in skin['joints']))
+        if existing is not None:
+            prior = existing[name]
+            if prior['model'] != definition['placeholder']['model']:
+                raise ValueError(f'{name}: model path changed; require full rig census')
+            bones = prior['bones']
+            source_hash = prior['source_sha256']
+        else:
+            raw = path.read_bytes()
+            length = struct.unpack_from('<I', raw, 12)[0]
+            gltf = json.loads(raw[20:20 + length])
+            bones = list(dict.fromkeys(gltf['nodes'][i]['name'] for skin in gltf.get('skins', []) for i in skin['joints']))
+            source_hash = hashlib.sha256(raw).hexdigest()
         if not bones:
             raise ValueError(f'{name}: no installed rig')
         winged = 'wing_upper_l' in bones
@@ -85,7 +97,7 @@ def main():
         family = 'winged' if winged else 'biped' if biped else 'quadruped'
         signature = tuple(bones)
         if signature in rig_profiles:
-            rows[name] = {'model': definition['placeholder']['model'], 'source_sha256': hashlib.sha256(raw).hexdigest(),
+            rows[name] = {'model': definition['placeholder']['model'], 'source_sha256': source_hash,
                           'rig_family': family, 'bones': bones, 'profile': rig_profiles[signature]}
             continue
         roles = {}
@@ -100,7 +112,7 @@ def main():
         profile = f'{family}_{len(profiles) + 1}'
         profiles[profile] = roles
         rig_profiles[signature] = profile
-        rows[name] = {'model': definition['placeholder']['model'], 'source_sha256': hashlib.sha256(raw).hexdigest(),
+        rows[name] = {'model': definition['placeholder']['model'], 'source_sha256': source_hash,
                       'rig_family': family, 'bones': bones, 'profile': profile}
     OUT.write_text(json.dumps({'enabled_species': [], 'scope': 'presentation_only_no_save_or_network_payload',
                                'status': 'unjudged_candidate_off', 'species': rows, 'profiles': profiles}, indent=2) + '\n')
