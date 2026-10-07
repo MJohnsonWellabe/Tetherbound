@@ -29,8 +29,11 @@ static func prepare(tree: SceneTree, output_argument: String = "--output=") -> D
 	if RenderingServer.get_current_rendering_method() != required or GRAPHICS.choose(preset) != OK:
 		push_error("Look-dev matrix renderer/preset mismatch or device preference write failed")
 		return {}
-	tree.root.size = Vector2i(1920, 1080)
+	# Owner 2026-10-07: named visual gates use Low at the handheld stress
+	# raster. High/Medium remain native 1080p confirmation/performance cuts.
+	var resolution := Vector2i(1280, 720) if preset == "Low" else Vector2i(1920, 1080)
+	tree.root.size = resolution
 	return {"preset": preset, "source_commit": source,
 		"renderer": RenderingServer.get_current_rendering_method(),
-		"adapter": RenderingServer.get_video_adapter_name(), "resolution": [1920, 1080],
+		"adapter": RenderingServer.get_video_adapter_name(), "resolution": [resolution.x, resolution.y],
 		"graphics_config_sha256": FileAccess.get_file_as_string("res://data/config/art.json").sha256_text()}
