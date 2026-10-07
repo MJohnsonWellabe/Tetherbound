@@ -60,6 +60,7 @@ var _lightning: Node
 var _frames: Array[Dictionary] = []
 var _staged: Array[String] = []
 var _t0 := 0
+var _phase_graphics_capture: Dictionary = {}
 
 
 func _run() -> void:
@@ -89,6 +90,13 @@ func _run() -> void:
 		elif arg.begins_with("--motion-phases="):
 			for part: String in arg.trim_prefix("--motion-phases=").split(",", false):
 				_motion_phases.append(part.strip_edges())
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--preset="):
+			_phase_graphics_capture = preload("res://tools/lookdev_capture_bootstrap.gd").prepare(self, "--out=")
+			if _phase_graphics_capture.is_empty():
+				quit(2)
+				return
+			break
 	if _motion_phases.is_empty():
 		_motion_phases.assign(PHASES)
 	if _strip_phases.is_empty():
@@ -154,7 +162,7 @@ func _log(text: String) -> void:
 
 func _done() -> void:
 	var receipt_path := "%s/frames_%s.json" % [_output_dir, _label]
-	var receipt := JSON.stringify({"label": _label, "frames": _frames,
+	var receipt := JSON.stringify({"label": _label, "frames": _frames, "graphics_capture": _phase_graphics_capture,
 		"failures": _failures}, "\t") + "\n"
 	var file := FileAccess.open(receipt_path, FileAccess.WRITE)
 	if file == null:
@@ -363,6 +371,13 @@ func _capture(frame_id: String, description: String, full_size: bool, extra: Dic
 	var image := await _grab()
 	var width := FRAME_W_FULL if full_size else STRIP_W
 	var height := FRAME_H_FULL if full_size else STRIP_H
+	if full_size and not _phase_graphics_capture.is_empty():
+		var raster: Array = _phase_graphics_capture.resolution
+		width = int(raster[0])
+		height = int(raster[1])
+		if image == null or image.is_empty() or image.get_size() != Vector2i(width, height):
+			_failures.append(frame_id + ": named native raster missing or mismatched")
+			return
 	if not _save(image, "%s/%s.jpg" % [_output_dir, frame_id], width, height):
 		return
 	var record := {
@@ -815,9 +830,14 @@ func _diff_counts(a: Image, b: Image, mask_path: String) -> Dictionary:
 
 ## Tuning pass only (--only=quick): one settled frame per phase.
 func _quick() -> void:
+	var before := _frames.size()
 	for phase: String in PHASES:
 		await _enter_phase(phase, false)
-		await _capture("quick_%s" % phase, "%s, settled (tuning)" % phase.capitalize(), false)
+		await _capture("quick_%s" % phase, "%s, settled (tuning)" % phase.capitalize(), not _phase_graphics_capture.is_empty())
+		if str(_surge.get("phase")) != phase:
+			_failures.append("Quick phase did not settle to " + phase)
+	if _frames.size() - before != PHASES.size():
+		_failures.append("Quick phase capture requires all four images")
 
 
 ## ≥30 s per phase at 2 fps, 640x360, to a scratch directory outside the repo;
