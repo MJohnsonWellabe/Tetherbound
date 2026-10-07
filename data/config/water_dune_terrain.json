@@ -4,9 +4,9 @@
   "_reference": "Inspected NPS Sleeping Bear Dunes photo: https://www.nps.gov/slbe/learn/photosmultimedia/index.htm (pale quartz sand, sparse sage/straw beach grass, dark damp waterline); direction only, no photographic pixels shipped.",
   "sand_colour": "#b9a078",
   "wet_colour": "#827969",
-  "bluff_start_y": 0.14,
-  "bluff_full_y": 0.02,
-  "_comment_bluff": "The supplied dune references show continuous sand on steep crests. Reserve exposed mineral for near-vertical surfaces; the graded shore shoulders and most interior dune faces are sand. Full mineral coverage still retains installed albedo, normals and roughness.",
+  "bluff_start_y": 0.32,
+  "bluff_full_y": 0.16,
+  "_comment_bluff": "The supplied dune references show continuous sand on steep crests. Keep every walkable slope sandy; expose the installed mineral beneath the near-vertical cuts (about71–81degrees) so the Aquaryn basin and Deep Watch walls do not read as stretched sand sheets. Full mineral coverage retains installed albedo, normals and roughness; no baked height, control, collision or route changes.",
   "patch_scale": 0.022,
   "ripple_scale": 16.0,
   "ripple_strength": 0.012,
@@ -17,6 +17,6 @@
   "face_shade_full_y": 0.72,
   "shadow_push_m": 0.05,
   "_comment_shadow": "Gated terrain-only shadow caster offset in metres, limited to 0..0.10 and faded out at Veilfall. Native Gull Rest controlled receiver-01 comparison removed fine self-shadow bands at 0.05 while retaining the trainer contact shadow. Visual terrain/collision and global Sun bias are unchanged. Cross-island/day-night review remains required.",
-  "painted_bluff_start_y": 0.20,
-  "painted_bluff_full_y": 0.04
+  "painted_bluff_start_y": 0.32,
+  "painted_bluff_full_y": 0.16
 }
