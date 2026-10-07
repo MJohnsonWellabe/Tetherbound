@@ -136,6 +136,11 @@ func _run() -> void:
 		check(bool((before[i] as Dictionary).get("can_challenge", false)),
 			"peer %d could challenge Bryn right now" % i)
 
+	# Stage guest travel and passive catch-up before the host is exposed.
+	var walked: Dictionary = await step(1, "teleport", {"near_trainer": TRAINER})
+	check(str(walked.get("verdict", "")) == "PASS",
+		"peer 1 travelled to the fight (%s)" % str(walked.get("detail", "")))
+
 	# --- peer 0 takes the challenge -------------------------------------------
 	var began: Dictionary = await step(0, "trainer_battle", {"trainer": TRAINER})
 	check(str(began.get("verdict", "")) == "PASS",
@@ -154,12 +159,6 @@ func _run() -> void:
 		"stamped with an explicit realm (D97), got '%s'" % str(rec.get("realm", "")))
 
 	# --- peer 1 joins the fight already in progress (§6) -----------------------
-	var where: Array = rec.get("opponent_pos", []) as Array
-	if where.size() == 3:
-		var walked: Dictionary = await step(1, "teleport",
-			{"at": [float(where[0]) + 3.0, float(where[1]), float(where[2]) + 3.0]})
-		check(str(walked.get("verdict", "")) == "PASS",
-			"peer 1 travelled to the fight (%s)" % str(walked.get("detail", "")))
 	var joined_fight: Dictionary = await step(1, "join_encounter", {"encounter_id": encounter_id})
 	check(str(joined_fight.get("verdict", "")) == "PASS",
 		"peer 1 joined the trainer battle already in progress (%s)"
@@ -186,7 +185,7 @@ func _run() -> void:
 		+ "so any defeat flag it ends up holding can only have come from the host")
 
 	# --- and peer 0 fights Bryn's team down ------------------------------------
-	var won: Dictionary = await step(0, "win_trainer_battle", {"self_hp_topups": false}, 6000)
+	var won: Dictionary = await step(0, "win_trainer_battle", {"self_hp_topups": false, "stage_when_ready": true}, 6000)
 	check(str(won.get("verdict", "")) == "PASS",
 		"peer 0 beat Bryn's whole team (%s)" % str(won.get("detail", "")))
 	if str(won.get("verdict", "")) != "PASS":
