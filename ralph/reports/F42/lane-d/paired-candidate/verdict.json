@@ -25,6 +25,7 @@
   "missing_witnesses": ["Completion manifest and clean exit", "Natural idle and realm-cycle images", "Fresh Satchel/Creatures/Quests and relevant state variants", "Controller/focus/scroll and motion", "1280x800 and required outdoor/night/weather/combat context"],
   "fixture": "Production Meadows scene, stocked1-creature party and small satchel, no earned/save proof",
   "followup_source_review": {"commit": "762afab7f2fe65190664f2d323daa71d5d4d45dc", "verdict": "APPROVE", "scope": "Five player note strings and truthful incremental incomplete capture receipts; no binding/action/progression changes. Fresh images required."},
+  "thumbnail_source_review": {"commit": "431e1e8cfe16d22fe125360ee556447109b72107", "reviewer": "/root/f42_visual_review", "verdict": "APPROVE", "scope": "Existing Image alpha bounds and AtlasTexture APIs, bounded padding/height, null/empty fallbacks; original bitmaps, costs, placement, focus and free-build unchanged.", "watchpoint": "Fresh720 free-build off/on initial-focus captures must verify extra thumbnail height and scrolling."},
   "shipping_flags": "none",
   "raw_images": "Run artifact only; both committed contact JPGs retain all22 images"
 }
