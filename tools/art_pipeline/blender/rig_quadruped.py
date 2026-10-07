@@ -64,7 +64,7 @@ def mesh_objects() -> list[bpy.types.Object]:
     return [o for o in bpy.data.objects if o.type == "MESH"]
 
 
-def join_and_normalise() -> bpy.types.Object:
+def join_and_normalise(weld_enabled: bool = True) -> bpy.types.Object:
     """One mesh, standing on z=0, centred, facing -Y (glTF forward in Blender).
 
     Joined because automatic weights bind one object to one armature cleanly,
@@ -83,7 +83,10 @@ def join_and_normalise() -> bpy.types.Object:
     body = bpy.context.view_layer.objects.active
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
 
-    weld(body)
+    # A verified closed preview body may contain close but distinct vertices.
+    # The explicit DCC-only option preserves those; default cleanup is unchanged.
+    if weld_enabled:
+        weld(body)
 
     low, high = bounds(body)
     body.location = Vector((-(low.x + high.x) / 2, -(low.y + high.y) / 2, -low.z))
@@ -333,9 +336,10 @@ def main() -> None:
     model = pathlib.Path(args[0]).resolve()
     out = pathlib.Path(option(args, "--out", model.with_name("rigged.glb"))).resolve()
     report_path = option(args, "--report")
+    skip_weld = "--skip-weld" in args
 
     load(model)
-    body = join_and_normalise()
+    body = join_and_normalise(weld_enabled=not skip_weld)
     legs = find_legs(body)
     rig = build_armature(body, legs)
     skin(body, rig)
@@ -343,6 +347,7 @@ def main() -> None:
 
     report = weight_report(body)
     report["repaired_vertices"] = repaired
+    report["weld_skipped"] = skip_weld
     report["bones"] = [b.name for b in rig.data.bones]
     report["legs_found_at"] = {k: [round(c, 4) for c in v] for k, v in legs.items()}
 

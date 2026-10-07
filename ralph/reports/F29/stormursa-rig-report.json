@@ -1,0 +1,61 @@
+{
+  "per_bone": {
+    "root": 5748,
+    "pelvis": 5727,
+    "spine": 6634,
+    "neck": 5970,
+    "head": 6359,
+    "front_upper_l": 6961,
+    "front_lower_l": 967,
+    "front_upper_r": 7137,
+    "front_lower_r": 1062,
+    "tail_1": 733,
+    "tail_2": 1382,
+    "rear_upper_l": 4658,
+    "rear_lower_l": 937,
+    "rear_upper_r": 4575,
+    "rear_lower_r": 795
+  },
+  "unweighted_vertices": 0,
+  "total_vertices": 11231,
+  "repaired_vertices": 0,
+  "bones": [
+    "root",
+    "pelvis",
+    "spine",
+    "neck",
+    "head",
+    "front_upper_l",
+    "front_lower_l",
+    "front_upper_r",
+    "front_lower_r",
+    "tail_1",
+    "tail_2",
+    "rear_upper_l",
+    "rear_lower_l",
+    "rear_upper_r",
+    "rear_lower_r"
+  ],
+  "legs_found_at": {
+    "front_l": [
+      -0.1736,
+      -0.2117,
+      0.0815
+    ],
+    "front_r": [
+      0.177,
+      -0.2133,
+      0.0832
+    ],
+    "rear_l": [
+      -0.1398,
+      0.3584,
+      0.0878
+    ],
+    "rear_r": [
+      0.1543,
+      0.3715,
+      0.0822
+    ]
+  }
+}

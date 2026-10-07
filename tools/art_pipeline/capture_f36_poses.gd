@@ -11,6 +11,7 @@ var _pose_failures: Array[String] = []
 func _run() -> void:
 	var ids: Array[String] = ["terrapup"]
 	var candidate := false
+	var whole_body := false
 	var out := "res://ralph/reports/R2-F36/frames"
 	var source := ""
 	for arg: String in OS.get_cmdline_user_args():
@@ -18,6 +19,8 @@ func _run() -> void:
 			ids.assign(arg.trim_prefix("--species=").split(",", false))
 		elif arg == "--candidate":
 			candidate = true
+		elif arg == "--whole-body":
+			whole_body = true
 		elif arg.begins_with("--out="):
 			out = arg.trim_prefix("--out=")
 		elif arg.begins_with("--source-commit="):
@@ -50,17 +53,27 @@ func _run() -> void:
 	for frame in BOOT_FRAMES:
 		await physics_frame
 	for id: String in ids:
-		await _capture_species_poses(id, candidate, out, source)
+		await _capture_species_poses(id, candidate, whole_body, out, source)
 	for failure: String in _pose_failures:
 		push_error(failure)
 	quit(0 if _pose_failures.is_empty() else 1)
 
 
-func _capture_species_poses(id: String, candidate: bool, out: String, source: String) -> void:
+func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: String, source: String) -> void:
 	var body := _spawn_creature(id, false, PAIR_CREATURE_POS, 90.0)
 	body.set_physics_process(false)
 	var measured_height := _measured_height(body)
 	var measured_trainer := RENDER_BOUNDS.measure(_trainer).size.y
+	var resting_bounds := RENDER_BOUNDS.measure(body)
+	if whole_body:
+		# One conservative standing-envelope camera per species, shared by both
+		# variants and every sampled pose. Never rescale the creature or change
+		# FOV to fit; this is a full-body diagnostic stage, not gameplay framing.
+		var radius := resting_bounds.size.length() * 0.8 + measured_trainer
+		var target := Vector3(CAM_LOOK.x, measured_height * 0.75, CAM_LOOK.z)
+		var distance := radius / tan(deg_to_rad(FOV * 0.5))
+		_camera.global_position = target + (CAM_POS - CAM_LOOK).normalized() * distance
+		_camera.look_at(target, Vector3.UP)
 	if measured_height <= TRAINER_HEIGHT:
 		_pose_failures.append("%s: rendered height %.3fm does not clear trainer %.2fm" %
 			[id, measured_height, TRAINER_HEIGHT])
@@ -108,6 +121,8 @@ func _capture_species_poses(id: String, candidate: bool, out: String, source: St
 			"source_commit": source, "renderer": RenderingServer.get_current_rendering_method(),
 			"standing_height_m": measured_height, "trainer_reference_height_m": TRAINER_HEIGHT,
 			"trainer_measured_height_m": measured_trainer, "scale_scope": "Installed standing stage; no fight-scale claim",
+			"whole_body_camera": whole_body, "camera_position": [_camera.global_position.x, _camera.global_position.y, _camera.global_position.z],
+			"camera_fov": _camera.fov, "resting_size_m": [resting_bounds.size.x, resting_bounds.size.y, resting_bounds.size.z],
 			"resolution": [root.size.x, root.size.y], "planned_frames": ROLES.size() * PHASES.size(),
 			"frames": receipt}, "\t"))
 		file.flush()

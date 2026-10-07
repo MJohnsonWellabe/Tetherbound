@@ -1,0 +1,22 @@
+{
+  "input": "assets_raw/stormursa/smart-a/pruned.glb",
+  "input_sha256": "44ceb83975f3879bc3bf1f2156d573b933cf3960dd899d0582ae5ca79b687856",
+  "mode": "existing rig_quadruped.py --skip-weld",
+  "vertices": 11486,
+  "bones": 15,
+  "unweighted": 0,
+  "repaired": 0,
+  "triangles": 27184,
+  "non_manifold_edges": 0,
+  "boundary_edges": 0,
+  "duplicates": 0,
+  "debris": 0,
+  "components": 1,
+  "deformation": "bounded DCC PASS",
+  "export_warning": "Mesh mesh is not valid, and may be exported wrongly; four largest influences normalized. Warning retained, not hidden; reimported topology has no counted boundary/nonmanifold/debris defects.",
+  "inward_face_estimate": 8979,
+  "genus_caution": 1054,
+  "additional_meshy_tasks": 0,
+  "shipping_enabled": false,
+  "scope": "No full pose/scale/native art acceptance claim"
+}

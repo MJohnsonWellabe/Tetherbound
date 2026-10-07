@@ -1,0 +1,13 @@
+{
+  "agent": "/root/judge_stormursa_anatomy",
+  "verdict": "PASS",
+  "scope": "Bounded four-pose DCC deformation continuity only",
+  "sheet": "stormursa-rig-no-weld-poses.jpg",
+  "reason": "Distinct tucked forepaws in crouch; continuous shoulders, neck, belly and hips. Separate stride limbs. Look/tailflick retain neutral bear silhouette. No visible tearing, missing limbs, gross joint collapse or unacceptable intersections.",
+  "remaining_gates": [
+    "Ground contact and full gameplay pose set",
+    "Textures/UV identity",
+    "Scale",
+    "Native gameplay full-bar F29 judgment"
+  ]
+}
