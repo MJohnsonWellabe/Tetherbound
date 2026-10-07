@@ -691,7 +691,12 @@ func _attacker_origin(case: Dictionary, move_id: String, z: float) -> Vector3:
 	var stage: Dictionary = _scenarios.get("stage", {})
 	var species := str(case.get("attacker_species", (stage.get("attackers_by_type", {}) as Dictionary).get(
 		str(_moves.get(move_id, {}).get("type", "")), stage.get("attacker_species", "terrapup"))))
-	for key: String in _attackers: (_attackers[key] as Node3D).visible = key == species
+	for key: String in _attackers:
+		var posed := _attackers[key] as Node3D
+		posed.visible = key == species
+		# Production visibility enables physics again. These actors are posed
+		# capture subjects on a decorative floor, so keep them stationary.
+		posed.set_physics_process(false)
 	if not _attackers.has(species):
 		var body := CREATURE.instantiate() as CharacterBody3D
 		body.set_script(CREATURE_BODY)
