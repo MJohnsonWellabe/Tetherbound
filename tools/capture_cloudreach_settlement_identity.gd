@@ -8,11 +8,17 @@ extends "res://tools/capture_cloudreach_frame_matrix.gd"
 ## --preset=Low --low-resolution=1280x720 --source-commit=<SHA>
 ## --output=res://shots/lane-e/<fresh-folder>
 
+func _run() -> void:
+	# Reject selectors before the inherited dispatcher can enter motion mode.
+	for arg: String in OS.get_cmdline_user_args():
+		if arg in ["--motion", "--night"] or arg.begins_with("--only="):
+			push_error("Settlement identity always captures all five stands at day and night; partial selectors are unsupported")
+			quit(2)
+			return
+	await super._run()
+
+
 func _run_matrix() -> void:
-	if _motion or _force_night or not _only.is_empty():
-		push_error("Settlement identity always captures all five stands at day and night; partial selectors are unsupported")
-		quit(2)
-		return
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT))
 	_manifest = FileAccess.open(OUT + "/manifest.txt", FileAccess.WRITE)
 	_manifest_line("# Cloudreach settlement identity: 5 existing stands x day/night; production matrix camera/floor/follower; staged five-owned party and progression")
@@ -37,3 +43,25 @@ func _run_matrix() -> void:
 		_skips.append("Settlement identity requires 10 frames; captured %d" % _frames.size())
 	_write_sheets()
 	_finish(_frames.size())
+
+
+func _finish(written: int) -> void:
+	# Unlike the general matrix's legacy partial mode, this bounded recorder
+	# requires every view in every invocation, including without a preset.
+	_set_render(true)
+	var summary := "settlement identity: %d/10 frames written, %d rows skipped" % [written, _skips.size()]
+	_manifest_line("# " + summary)
+	var receipt_ok := _manifest != null
+	if _manifest != null:
+		_manifest.flush()
+		receipt_ok = _manifest.get_error() == OK
+		_manifest.close()
+	var receipt := FileAccess.get_file_as_string(OUT + "/manifest.txt") if receipt_ok else ""
+	receipt_ok = receipt_ok and receipt.contains("# " + summary)
+	if not _graphics_capture.is_empty():
+		receipt_ok = receipt_ok and receipt.contains("# graphics_capture " + JSON.stringify(_graphics_capture))
+	if not receipt_ok:
+		push_error("settlement identity: final receipt open/write/flush/readback failed")
+	for failure: String in _skips:
+		push_error(failure)
+	quit(0 if written == 10 and _skips.is_empty() and receipt_ok else 1)
