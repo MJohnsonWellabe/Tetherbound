@@ -62,7 +62,7 @@ func run() -> void:
 	# Serialization returns a normalized COPY; it does not admit a live UID.
 	# Keep this pre-admission L30 fixture explicit, including its earlier caps.
 	game.local.redesign_character = game.local.save_data().redesign_character
-	game.local.redesign_character.creatures[creature.uid].breakthroughs = [10,20]
+	game.local.redesign_character.creatures[creature.uid].breakthroughs = [1,2]
 	game.local.redesign_character.creatures[creature.uid].cap_level = 30
 	world = SCENE.instantiate()
 	root.add_child(world)
@@ -100,7 +100,7 @@ func run() -> void:
 	await tap("jump")
 	check(not riding.diving,"level without L30 feast cannot Dive")
 	# Explicit admitted breakthrough fixture. Real feast proof is F28 dependency.
-	game.local.redesign_character.creatures[creature.uid].breakthroughs = [10,20,30]
+	game.local.redesign_character.creatures[creature.uid].breakthroughs = [1,2,3]
 	game.local.redesign_character.creatures[creature.uid].cap_level = 40
 	await tap("jump")
 	await frames(30)
