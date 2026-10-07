@@ -49,6 +49,13 @@ func build() -> void:
 	_bark = _wood.duplicate() as StandardMaterial3D
 	_bark.albedo_color = Color("bca58a")
 	_bark.uv1_scale = Vector3.ONE
+	if _presentation_enabled("ancient_trunk"):
+		var finish: Dictionary = _presentation.get("ancient_trunk", {})
+		_bark.albedo_color = Color(str(finish.get("bark_tint", "#bca58a")))
+		_bark.normal_enabled = true
+		_bark.normal_texture = load("res://assets/environment/stylized_nature/Bark_TwistedTree_Normal.png")
+		_bark.normal_scale = clampf(float(finish.get("normal_depth", 0.65)), 0.0, 1.0)
+		_bark.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
 	_split_bark_shell()
 	_buttress_roots()
 	_living_crown()
@@ -345,7 +352,13 @@ func _bark_visual(id: String,vertices: PackedVector3Array,normals: PackedVector3
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES,arrays)
 	var visual := MeshInstance3D.new()
 	visual.name = id
-	visual.mesh = mesh
+	if _bark.normal_enabled:
+		var surface := SurfaceTool.new()
+		surface.create_from(mesh, 0)
+		surface.generate_tangents()
+		visual.mesh = surface.commit()
+	else:
+		visual.mesh = mesh
 	visual.material_override = _bark
 	add_child(visual)
 
@@ -371,6 +384,8 @@ func _wood_limb(id: String,points: Array[Vector3],radii: Array[float]) -> void:
 
 
 func _buttress_roots() -> void:
+	var visible := _presentation_enabled("visible_roots")
+	var settings: Dictionary = _presentation.get("visible_roots", {})
 	for index in 9:
 		var angle := float(index)*TAU/9+0.1
 		# Keep the southern 10 m approach and eastern Water exit visible/clear.
@@ -378,6 +393,22 @@ func _buttress_roots() -> void:
 			continue
 		var ray := Vector3(cos(angle),0,sin(angle))
 		var bend := Vector3(-ray.z,0,ray.x)*(5.0 if index%2 else -7.0)
+		if visible:
+			# Anchor into the actual outside bark, rather than hiding almost all
+			# of the root inside the much wider candidate trunk. These meshes
+			# add no collision or new floor; the south/east openings stay clear.
+			var reach := clampf(float(settings.get("reach_m", 132.0)), 110.0, 145.0)
+			var anchor := _ancient_trunk_point(angle, 23.0, false) \
+				if _presentation_enabled("ancient_trunk") else _trunk_point(angle, 23.0, false)
+			var shoulder := ray * (Vector2(anchor.x, anchor.z).length() + 12.0) + bend * 0.35
+			var middle_visible := ray * (reach * 0.82) + bend
+			var tip_visible := ray * reach + bend
+			shoulder.y = maxf(_root_ground(shoulder) + 7.0, anchor.y * 0.5)
+			middle_visible.y = _root_ground(middle_visible) + 2.5
+			tip_visible.y = _root_ground(tip_visible) - 1.5
+			_wood_limb("ButtressRoot%d" % index,
+				[anchor - ray * 5.0, shoulder, middle_visible, tip_visible], [15.0, 10.0, 4.8, 0.6])
+			continue
 		var middle := ray*77+bend
 		var tip := ray*91+bend
 		middle.y = _root_ground(middle)+1.5

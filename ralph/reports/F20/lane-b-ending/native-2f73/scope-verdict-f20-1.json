@@ -1,0 +1,75 @@
+{
+  "criterion": "F20#1",
+  "criterion_text": "After the Stormwood finale the player uses the Home Key; Grandpa names the current five, the starter's status, one bond memory and chapter choices; credits roll once per character.",
+  "reviewer": "retained code-blind visual judge",
+  "authority": {
+    "owner_issue": 572,
+    "owner_comment": 6045342186,
+    "scope_rule": "Each criterion is judged literally; full Visual Bars A/B remain separately OPEN. Reuse relevant passing scoped evidence without recapture."
+  },
+  "presentation_scope": "Visible homecoming content and credits readability in the retained present-starter fixture at actual 1280x720 Low. Earned Stormwood progression, Home Key use, personal state selection and exactly-once behavior are assessed separately by retained behavioral evidence.",
+  "scoped_presentation_verdict": "PASS",
+  "evidence_reused": [
+    "ending-contact-1.jpg: frames 000-grandpa-00.png through 007-grandpa-07.png",
+    "ending-contact-2.jpg: frames 008-grandpa-08.png through 012-completed-world.png",
+    "Prior native-resolution inspection of all 13 original frames by this same reviewer"
+  ],
+  "content_findings": [
+    {
+      "required_content": "Current five named",
+      "verdict": "PASS",
+      "frames": ["002-grandpa-02.png", "003-grandpa-03.png", "004-grandpa-04.png", "005-grandpa-05.png", "006-grandpa-06.png", "012-completed-world.png"],
+      "reason": "Grandpa individually names Solo1, Solo2, Solo3, Solo4 and Solo5. The five displayed names agree with the shown TEAM 5/5 HUD. This is a visible-content match, not proof of state-selection correctness across save or peer variants."
+    },
+    {
+      "required_content": "Starter status",
+      "verdict": "PASS",
+      "frames": ["007-grandpa-07.png"],
+      "reason": "Grandpa identifies Solo1 as the companion chosen here and says it is still beside the player. This visibly acknowledges a retained starter. No released-starter variant is shown or certified."
+    },
+    {
+      "required_content": "One bond memory",
+      "verdict": "PASS",
+      "frames": ["008-grandpa-08.png"],
+      "reason": "Grandpa recalls Solo1 discovering one landmark with the player, providing one named shared-experience memory. The singular '1 landmarks' wording is cosmetic copy polish and does not remove the memory or obstruct readability."
+    },
+    {
+      "required_content": "Chapter choices",
+      "verdict": "PASS",
+      "frames": ["009-grandpa-09.png"],
+      "reason": "Grandpa acknowledges allowing Veridian, the Abyssal Guardian, Solmane and Stormheart to choose their own roads. These displayed choices are legible and fit the panel. Accept/refuse selection correctness and other choice combinations require separate behavioral evidence."
+    },
+    {
+      "required_content": "Credits readability",
+      "verdict": "PASS",
+      "frames": ["011-credits.png"],
+      "reason": "Credits headings, the displayed four-chapter order and Continue exploring button are legible at native 720p with no visible clipping. One still does not establish rolling, scrolling, controller operation or once-per-character behavior."
+    }
+  ],
+  "missing_visible_content_in_this_fixture": [],
+  "behavioral_acceptance": {
+    "status": "NOT_ASSESSED_BY_IMAGES",
+    "separate_evidence": "retained b_f20 behavioral review",
+    "limit": "That behavioral evidence was not independently inspected here. No earned Stormwood finale, actual Home Key use, durable personal-state correctness, transaction success or exactly-once credits claim is inferred from these images."
+  },
+  "full_visual_follow_up": {
+    "status": "OPEN",
+    "separate_from_F20_1_scoped_presentation": true,
+    "retained_observations": [
+      "000-010: bare flat furnishings/floor, opaque window panes, stretched wood texture and limited material depth remain separate presentation work.",
+      "000-010: broad bright illumination, granular shading and lost trainer collar highlights remain full-bar follow-up.",
+      "011: futuristic credits lettering remains a style-coherence follow-up despite passing legibility.",
+      "008: singular landmark wording remains cosmetic copy polish."
+    ],
+    "limit": "No full Bar A/B certification is issued. These findings do not block the literal visible-content component under the current owner scope rule."
+  },
+  "excluded_claims": [
+    "Full F20#1 behavioral closure from images alone",
+    "Released-starter acknowledgement variant",
+    "Other personal choice or roster variants",
+    "F20#2 fifth-arch glow, audio or closed-state behavior",
+    "F20#3 completed-world reload or activities",
+    "Earned campaign, physical device or High/Medium proof"
+  ],
+  "method": "Reused the retained native-resolution inspection and contact-sheet review. No recapture, source inspection or implementation narrative. This scope-verdict-f20-1.json is the only written artifact for this review."
+}

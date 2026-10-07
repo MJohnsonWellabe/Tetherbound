@@ -1,0 +1,51 @@
+{
+  "source_sha": "3c536b1ec1a87650de1f317a47085141d4595bd6",
+  "reviewer": "/root/review_cloud_startup",
+  "judge": "/root/blind_listener_f10",
+  "landing": {
+    "exclude": "All other regional/scatter/bake/F40/F36/F29/Fly ancestry",
+    "evidence": "ralph/reports/F41/native-9b-hero only",
+    "already_on_main": [
+      "stormheart_canopy.gdshader",
+      "stormheart_cut_wood.gdshader"
+    ],
+    "whole_files_at_source_sha": [
+      "data/config/stormheart_presentation.json",
+      "scripts/world/stormheart_tree.gd",
+      "tests/test_stormheart_ancient_trunk.gd",
+      "tests/test_stormheart_presentation.gd",
+      "tools/smoke_stormheart_built_detail.gd",
+      "tools/phase2_capture_stormheart_decks.gd"
+    ],
+    "hunks": {
+      "file": "tools/capture_stormwood_surge_phases.gd",
+      "scope": "Only final _done receipt open/flush/exact readback correction at3e40c31f2085f7c42be37cec1638992186c98cbe"
+    }
+  },
+  "flags": [
+    "stormheart_presentation.enabled",
+    "ancient_trunk.enabled",
+    "built_detail.enabled",
+    "branching_crown.enabled",
+    "canopy_atlas.enabled",
+    "core_finish.enabled",
+    "visible_roots.enabled"
+  ],
+  "result": "PASS",
+  "review": "APPROVE",
+  "proofs": {
+    "close": "37682436822, actual shipping ON, 2 frames, verified floors, exit0",
+    "area": "37684338931, existing mounted approach, 4 assertions/0 failures/exit0",
+    "logic": "37681914576, mapped7, 22 tests/505 assertions/0 failures",
+    "distance": "Retained native9b frames; literal-landmark-verdict.json"
+  },
+  "owner_scope_comment": 6045342186,
+  "base_sha": "056563843cd06a49cdc9bb369d66b13788d944c0",
+  "judge_result": "PASS",
+  "limits": [
+    "Literal #4 only; full release Visual bar and other F41 criteria OPEN",
+    "Staged actual world floors and bounded capsule approach; not earned ascent",
+    "No Medium/High/full matrix or motion claim"
+  ],
+  "criterion": "F41#4"
+}

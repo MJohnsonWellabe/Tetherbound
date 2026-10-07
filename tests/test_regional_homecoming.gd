@@ -327,6 +327,19 @@ func test_live_starter_bond_and_choices_are_personal_and_truthful() -> void:
 	assert_true(str(values.chapter_choices).contains("let Veridian"))
 	assert_true(str(values.chapter_choices).contains("welcomed the Abyssal Guardian"))
 	assert_false(str(values.chapter_choices).contains("Solmane"))
+	game.party.rows[1].landmarks_visited_together = 0
+	for memory: Array in [["landmarks_visited_together", "landmark"], ["battles_fought", "battle"],
+		["rest_nights_together", "night"], ["feeds_together", "meal"]]:
+		for count: int in [0, 1, 2]:
+			game.party.rows[1].set(memory[0], count)
+			var text := str(HOMECOMING.substitutions(game).bond_memory)
+			if count == 0:
+				assert_false(text.contains("Shelby"), "zero counter cannot invent a bond memory")
+			else:
+				assert_true(text.contains("Shelby") and text.contains("%d %s" % [count, memory[1] + ("s" if count != 1 else "")]),
+					"memory preserves the actual companion, count and noun: " + text)
+				if count == 1: assert_false(text.contains("1 " + memory[1] + "s"), "one memory uses singular wording")
+		game.party.rows[1].set(memory[0], 0)
 	game.party.rows.remove_at(0)
 	game.party.revision += 1
 	assert_false(str(HOMECOMING.substitutions(game).starter_status).contains("Pip"))

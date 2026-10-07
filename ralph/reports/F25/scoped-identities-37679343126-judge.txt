@@ -1,0 +1,19 @@
+F25#2 — literal visual criterion PASS
+Code-blind judge: f25_scoped_judge, fresh context; inspected only the two JPG contact sheets and original Case A flight/launch PNGs. No source or metadata inspected.
+
+A — Pebble toss: PASS. Original frames show three small airborne stones; two partially overlap during flight.
+B — Rock throw: PASS. One large, irregular boulder is visible in flight.
+C — Fireball: PASS. A burning orange orb trails flame and produces a visible fiery explosion at the target.
+D — Lightning: PASS. A bright jagged bolt descends from above onto the target.
+
+Scope: the literal four identities required by F25#2, under the owner's criterion-scoped visual directive on issue572 (6045342186). The separate release Visual bar remains open.
+Source checkout: 0df83b23c93cb0f289fdbc41022608e85493bc92.
+Named capture: render.yml37679343126; existing tests/smoke_move_effects_library.gd, identities/arena/ranks1,3,5, Compatibility1280x720. Raw PNGs/results/log remain artifact11507653278.
+Judged sequences: small-stones:r1=00; large-stone:r1=02; burning-orb:r1=05; descending-bolt:r1=08. Each retained all five phases, one arrival, zero final particle lease, no expired watchdog. Small stones resolved count3, boulder count1. Projectile-flight checks remained enabled and clear.
+Aggregate run was FAILURE: 11 cases, one extra small-stones:r5 failure ('No usable clear transit interval'). That rank5 case is excluded from this literal rank1 identity verdict, not waived, and keeps F25#5 OPEN. No aggregate engine PASS or mastery proof is claimed.
+Capture limitations: posed production target in a synthetic arena; slowed identity duration and paused texture readback. These frames prove shapes, not combat/damage timing, motion performance, four-creature fighting, co-op or Ally hardware.
+Relevant unchanged VFX logic:37666694206, nine existing files/104tests/2559assertions/0failed plus24library cases/0failure;37660697781,134affected files/1243tests/42039assertions/0failed. No relevant effect production changed after those passing cuts.
+No shipping flag changed; F25#0/#3/#4/#5 remain OPEN.
+
+Independent criterion source review: f25_medium_review APPROVE, frozen combined diff vs origin/main at6b382f9758. Improved stone separation/tumble, burning-orb solidity/trails, debris grounding and bolt readability retain gameplay endpoints, arrival clocks and shipping flags. Disclosed paused readback is confined to synthetic captures.
+Minimal production scope:68d0b5ad8d,d6343736d8,1ca39b37ee; keep existing proof assertions/unit-hook commits f7b465b6cd,911a47247c. Medium world-stage repair4be7d698aa is outside this Compatibility criterion. Do not consolidate the entire lane branch.

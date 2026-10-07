@@ -1,0 +1,28 @@
+{
+  "kind": "code_blind_f20_native_visual",
+  "defects": [
+    "008 singular count reads 1 landmarks; prose overstates one landmark",
+    "000-010/012 flat floor/furnishings, featureless panes, stretched wood and large plain ochre stair",
+    "000-010 trainer bright collar loses detail, granular shading, broad flat illumination lacks reference depth"
+  ],
+  "source_sha": "2f73f756c2d78569fa43f1d27766da1c812c7e75",
+  "reviewed_sheets": 2,
+  "full_bar": "BLOCK",
+  "not_proved": [
+    "Full Bars A/B",
+    "Fifth arch visual/audio",
+    "earned campaign",
+    "F20#3 continuation content"
+  ],
+  "verdict": "BLOCK",
+  "source_inspected": false,
+  "components": {
+    "credits_readability": "PASS frame011",
+    "fifth_arch": "Unwitnessed: no stir/line/audio capture",
+    "personal_five_starter_memory_choices": "PASS frames002-009",
+    "completed_objective": "Frame012 shows opening objective; explicit partial fixture lacks earlier flags, ordinary feed restoration remains specified and tested"
+  },
+  "reviewed_frames": 13,
+  "independent_behavior_review": "APPROVE /root/b_f20_review: actual94/0, saved five, home/fifth key receipts, personal once-only acknowledgements, disk reload and grounded revisit; visual remains open",
+  "judge": "/root/b_night_visual"
+}

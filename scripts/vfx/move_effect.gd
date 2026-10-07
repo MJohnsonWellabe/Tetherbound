@@ -94,6 +94,18 @@ func _ready() -> void:
 		_bodies.append(body)
 		var history: Array[Vector3] = []
 		_histories.append(history)
+		var core_profile: Dictionary = profile.get("solid_core", {})
+		if str(profile.shape) == "burning_core" and not core_profile.is_empty():
+			# The porous flame shell keeps its full size and animated edge. A
+			# depth-writing interior gives it a solid hot body against foliage.
+			var core_colour := Color(str(core_profile.get("colour", _params.colour)))
+			var interior := _mesh_node(GEOMETRY.shape("orb", body_size * clampf(float(core_profile.get("size_scale", 0.66)), 0.01, 0.7), core_profile), core_colour, 1.0, true)
+			var core_material := interior.material_override as StandardMaterial3D
+			core_material.emission_enabled = true
+			core_material.emission = core_colour
+			core_material.emission_energy_multiplier = float(core_profile.get("emission_strength", 0.28))
+			core_material.roughness = float(core_profile.get("roughness", 0.82))
+			interior.reparent(body, false)
 		for layer: Dictionary in profile.get("layers", []):
 			var component := _mesh_node(GEOMETRY.shape(str(layer.get("shape", "orb")), float(_params.size) * float(layer.get("size_scale", 0.5)), layer),
 				Color(str(layer.get("colour", _params.colour))), float(layer.get("opacity", 0.8)))
@@ -107,6 +119,7 @@ func _ready() -> void:
 		if str(profile.shape) == "stone":
 			body.scale = Vector3(_rng.randf_range(0.82, 1.14), _rng.randf_range(0.82, 1.14), _rng.randf_range(0.82, 1.14))
 			body.rotation = Vector3(_rng.randf() * TAU, _rng.randf() * TAU, _rng.randf() * TAU)
+			body.set_meta("initial_rotation", body.rotation)
 	if str(profile.get("motion", "")) == "sky" or (str(profile.get("motion", "")) == "target" and str(profile.get("shape", "")) == "spike"):
 		_marker = _mesh_node(GEOMETRY.shape("sigil", float(_params.size) * float(profile.get("marker_scale", 2.0)), profile), _colour, float(profile.get("marker_opacity", 0.38)))
 		_marker.position = _context.get("target_ground", _to)
@@ -292,6 +305,9 @@ func _update_bodies(t: float) -> void:
 			_:
 				if str((_row.body as Dictionary).get("shape", "")) in ["shard", "cone", "crescent", "ice_crystal"]: body.quaternion = Quaternion(Vector3.UP, direction)
 		if str((_row.body as Dictionary).get("shape", "")) == "vortex": body.rotation.y = t * TAU
+		if str(_row.body.get("shape", "")) == "stone":
+			var initial_rotation: Vector3 = body.get_meta("initial_rotation", Vector3.ZERO)
+			body.quaternion = Quaternion(Vector3(0.7, 0.3, 0.6).normalized(), _elapsed * float(_row.body.get("tumble_radians", 0.0))) * Quaternion.from_euler(initial_rotation)
 		if str(_row.body.get("shape", "")) == "rolling_wave":
 			var planar := Vector3(direction.x, 0.0, direction.z).normalized()
 			if not planar.is_zero_approx(): body.quaternion = Quaternion(Vector3.FORWARD, planar)
@@ -322,9 +338,14 @@ func _projectile_position(t: float, index: int) -> Vector3:
 	var spread_size := float(_params.get("spread", 0.0))
 	if count > 1: spread_size = maxf(spread_size, float(_params.size) * float(_row.body.get("volley_separation_scale", 2.8)))
 	var angle := TAU * float(index) / float(count)
+	# An oblique fan exposes separate stones from both side and rear cameras.
+	# Rotate the existing spread axis; do not enlarge its bound or move either
+	# endpoint. The same path is sampled by each stone's wake.
+	var fan_yaw := deg_to_rad(float(_row.body.get("volley_fan_yaw_degrees", 0.0)))
+	var fan_side := side * cos(fan_yaw) + Vector3.UP.cross(side) * sin(fan_yaw)
 	# volley_vertical_ratio < 1 flattens the volley toward a fan, so a volley
 	# seen from the side does not read as a vertical stack.
-	var position := _from.lerp(_to, t) + (side * cos(angle) + Vector3.UP * sin(angle) * float(_row.body.get("volley_vertical_ratio", 1.0))) * spread_size * sin(t * PI)
+	var position := _from.lerp(_to, t) + (fan_side * cos(angle) + Vector3.UP * sin(angle) * float(_row.body.get("volley_vertical_ratio", 1.0))) * spread_size * sin(t * PI)
 	if count > 1:
 		position += direction * (float(index) - float(count - 1) * 0.5) * float(_row.body.get("volley_stagger_m", 0.25)) * sin(t * PI)
 	position.y += float(_params.get("arc", 0.0)) * sin(t * PI)
@@ -372,10 +393,10 @@ func _update_trail() -> void:
 			var max_length := float(profile.get("max_length_m", 2.4)) * float(_params.trail)
 			while points.size() > 2 and points.front().distance_to(points.back()) > max_length: points.pop_front()
 			var style := str(profile.get("style", "air"))
-			# A small volley has only a few leased trail control points per
-			# stone. Sample its actual frozen visual path across a meaningful
-			# length instead of spending those points on centimetres of wake.
-			if style == "dust" and str(_row.body.get("motion", "")) == "projectile":
+			# Sample the frozen projectile path across the authored wake length.
+			# Mastery splits the existing lease between more bodies/layers;
+			# those control points still describe a full, connected trail.
+			if bool(profile.get("sample_projectile_path", style == "dust")) and str(_row.body.get("motion", "")) == "projectile":
 				var progress := clampf(_elapsed / maxf(_travel, 0.00001), 0.0, 1.0)
 				var span := max_length / maxf(_from.distance_to(_to), 0.001)
 				var start := maxf(0.0, progress - span)
@@ -442,10 +463,11 @@ func _build_impact() -> void:
 			var ground: Vector3 = _context.get("target_ground", _to)
 			part.position.y = ground.y - _contact_position().y + scale_factor * float(layer.get("ground_lift_scale", 0.3))
 	if bool(_row.impact_layer):
-		var secondary := _mesh_node(GEOMETRY.shape(str(profile.get("secondary_shape", "ring")), scale_factor * 1.35, profile), _colour, 0.65)
+		var secondary_opacity := float(profile.get("secondary_opacity", 0.65))
+		var secondary := _mesh_node(GEOMETRY.shape(str(profile.get("secondary_shape", "ring")), scale_factor * 1.35, profile), _colour, secondary_opacity)
 		if str(profile.get("secondary_shape", "")) in ["fire_bloom", "fire_explosion", "soft_dust", "soft_ember", "soft_foam", "flame_tongue", "electrical_splash"]: secondary.material_override = GEOMETRY.authored_material(str(profile.secondary_shape), profile, _colour)
 		if bool(profile.get("thermal_aftermath", false)) and str(profile.get("secondary_shape", "")) == "fire_explosion": secondary.set_meta("thermal_aftermath", true)
-		secondary.set_meta("base_opacity", 0.65)
+		secondary.set_meta("base_opacity", secondary_opacity)
 		secondary.reparent(_impact, false)
 		secondary.position = surface_offset
 		secondary.rotation.x = float(profile.get("secondary_rotation_x", PI * 0.5))
@@ -624,10 +646,16 @@ func _update_impact(u: float, delta: float) -> void:
 		if tumble > 0.0:
 			_mote_bases[i] = _mote_bases[i].rotated(Vector3(0.7, 0.3, 0.6).normalized(), tumble * delta * (1.0 + float(i % 3) * 0.3))
 		var ground: Vector3 = _context.get("target_ground", _to)
-		var floor_y := ground.y - _contact_position().y + float(profile.get("mote_size", 0.045)) * 0.5
-		if bool(profile.get("settle_on_ground", false)) and _mote_positions[i].y < floor_y:
-			_mote_positions[i].y = floor_y
-			_velocities[i] = Vector3.ZERO
+		var mote_scale := lerpf(1.0, float(profile.get("mote_end_scale", 0.05)), u)
+		var mote_basis := _mote_bases[i].scaled(Vector3.ONE * mote_scale)
+		if bool(profile.get("settle_on_ground", false)):
+			# The mesh carries mastery growth; individual tumble and scale
+			# determine its support point, so boulder chips rest on the ground.
+			var support := Transform3D(mote_basis, Vector3.ZERO) * _motes.multimesh.mesh.get_aabb()
+			var floor_y := ground.y - _contact_position().y - support.position.y
+			if _mote_positions[i].y < floor_y:
+				_mote_positions[i].y = floor_y
+				_velocities[i] = Vector3.ZERO
 		if str(profile.get("mote_shape", "")) == "spark" and _velocities[i].length_squared() > 0.0001:
 			# Sparks stretch along their velocity and shrink as they cool.
 			var along := _velocities[i].normalized()
@@ -637,7 +665,7 @@ func _update_impact(u: float, delta: float) -> void:
 			var thin := lerpf(1.0, float(profile.get("mote_end_scale", 0.2)), u)
 			_motes.multimesh.set_instance_transform(i, Transform3D(spark_basis * Basis.from_scale(Vector3(thin, thin, stretch * thin)), _mote_positions[i]))
 			continue
-		_motes.multimesh.set_instance_transform(i, Transform3D(_mote_bases[i].scaled(Vector3.ONE * lerpf(1.0, float(profile.get("mote_end_scale", 0.05)), u)), _mote_positions[i]))
+		_motes.multimesh.set_instance_transform(i, Transform3D(mote_basis, _mote_positions[i]))
 
 func _set_opacity(material: Material, alpha: float) -> void:
 	if material is ShaderMaterial:

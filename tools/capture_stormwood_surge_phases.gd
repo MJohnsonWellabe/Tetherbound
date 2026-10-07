@@ -153,11 +153,19 @@ func _log(text: String) -> void:
 
 
 func _done() -> void:
-	var file := FileAccess.open("%s/frames_%s.json" % [_output_dir, _label], FileAccess.WRITE)
-	if file != null:
-		file.store_string(JSON.stringify({"label": _label, "frames": _frames,
-			"failures": _failures}, "\t") + "\n")
+	var receipt_path := "%s/frames_%s.json" % [_output_dir, _label]
+	var receipt := JSON.stringify({"label": _label, "frames": _frames,
+		"failures": _failures}, "\t") + "\n"
+	var file := FileAccess.open(receipt_path, FileAccess.WRITE)
+	if file == null:
+		_failures.append("final receipt cannot be opened: " + receipt_path)
+	else:
+		file.store_string(receipt)
+		file.flush()
+		var error := file.get_error()
 		file.close()
+		if error != OK or FileAccess.get_file_as_string(receipt_path) != receipt:
+			_failures.append("final receipt write/readback failed: " + receipt_path)
 	for failure: String in _failures:
 		push_error("surge capture: " + failure)
 	_log("DONE %d frames, %d failures" % [_frames.size(), _failures.size()])
