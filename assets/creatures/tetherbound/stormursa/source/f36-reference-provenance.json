@@ -19,5 +19,19 @@
     "01a1169c-70ef-77b1-856a-32d3120cc810"
   ],
   "default_enabled": false,
-  "existing_f29_provenance": "source/provenance.json stays disabled and unearned; this separate receipt does not flip acceptance gates."
+  "existing_f29_provenance": "source/provenance.json stays disabled and unearned; this separate receipt does not flip acceptance gates.",
+  "local_material_transfer": {
+    "scope": "Staged client asset candidate only; no gameplay/durable state or shipping flag change",
+    "resolution": 2048,
+    "fur_hue": 0.69,
+    "fur_saturation_scale": 0.65,
+    "fur_value_scale": 0.95,
+    "shoulder_radius_height": 0.3,
+    "copper_linear_rgba": [
+      0.42,
+      0.19,
+      0.07,
+      1
+    ]
+  }
 }

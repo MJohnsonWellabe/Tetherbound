@@ -38,8 +38,161 @@ def option(args: list[str], name: str, default=None):
     return args[args.index(name) + 1] if name in args else default
 
 
+def bake_to_rig(args: list[str]) -> None:
+    """Project held texture colour onto an unchanged rigged body; no remeshing."""
+    required = ("--out", "--report", "--material-settings")
+    if len(args) < 2 or any(args.count(key) != 1 or args.index(key) + 1 >= len(args)
+                            for key in required):
+        raise SystemExit("Local bake requires rig, texture, fresh out/report and material settings")
+    rig_path, texture_path = (pathlib.Path(value).resolve() for value in args[:2])
+    out, report, settings_path = (pathlib.Path(option(args, key)).resolve() for key in required)
+    inputs = (rig_path, texture_path, settings_path)
+    if len(set(inputs + (out, report))) != 5 or out.exists() or report.exists():
+        raise SystemExit("Local bake paths must be separate, with fresh output and report")
+    hashes = {str(path): hashlib.sha256(path.read_bytes()).hexdigest() for path in inputs}
+    settings = json.loads(settings_path.read_text())["local_material_transfer"]
+    resolution = settings["resolution"]
+    if resolution not in (1024, 2048):
+        raise SystemExit("Local bake resolution must be 1024 or 2048")
+    for key in ("fur_hue", "fur_saturation_scale", "fur_value_scale", "shoulder_radius_height"):
+        if not isinstance(settings[key], (int, float)) or not math.isfinite(settings[key]) or not 0 < settings[key] <= 1:
+            raise SystemExit("Invalid bounded local material setting: " + key)
+    copper = settings["copper_linear_rgba"]
+    if len(copper) != 4 or any(not isinstance(v, (int, float)) or not math.isfinite(v) or not 0 <= v <= 1 for v in copper):
+        raise SystemExit("Invalid local copper colour")
+    bpy.ops.wm.read_factory_settings(use_empty=True)
+    bpy.ops.import_scene.gltf(filepath=str(rig_path))
+    sys.path.insert(0, str(pathlib.Path(__file__).parent))
+    import inspect_glb
+    inspect_glb.drop_import_phantoms()
+    rigs = [obj for obj in bpy.data.objects if obj.type == "ARMATURE"]
+    meshes = [obj for obj in bpy.data.objects if obj.type == "MESH"]
+    if len(rigs) != 1 or len(meshes) != 1 or not meshes[0].vertex_groups:
+        raise SystemExit("Local bake requires one already weighted body and one armature")
+    rig, target = rigs[0], meshes[0]
+    if target.data.materials or target.data.uv_layers:
+        raise SystemExit("Local bake expects the held untextured body; refuses existing UV/material replacement")
+    def signature():
+        return (tuple(tuple(v.co) for v in target.data.vertices),
+                tuple((tuple(p.vertices), p.material_index) for p in target.data.polygons),
+                tuple(tuple((g.group, g.weight) for g in v.groups) for v in target.data.vertices),
+                tuple((b.name, tuple(tuple(row) for row in b.matrix_local)) for b in rig.data.bones),
+                tuple(tuple(row) for row in target.matrix_world),
+                tuple(tuple(row) for row in rig.matrix_world), tuple(bpy.data.actions))
+    preserved = signature()
+    old_pose = rig.data.pose_position
+    rig.data.pose_position = "REST"
+    bpy.context.view_layer.update()
+    before = set(bpy.data.objects)
+    bpy.ops.import_scene.gltf(filepath=str(texture_path))
+    imported = set(bpy.data.objects) - before
+    sources = [obj for obj in imported if obj.type == "MESH"]
+    if len(sources) != 1 or sources[0].vertex_groups or any(obj.type == "ARMATURE" for obj in imported):
+        raise SystemExit("Local bake requires one unskinned held textured source")
+    source = sources[0]
+    def box(obj):
+        points = [obj.matrix_world @ Vector(corner) for corner in obj.bound_box]
+        return Vector([min(p[i] for p in points) for i in range(3)]), Vector([max(p[i] for p in points) for i in range(3)])
+    low, high = box(target)
+    s_low, s_high = box(source)
+    scale = max(high - low) / max(s_high - s_low)
+    source.scale *= scale
+    bpy.context.view_layer.update()
+    s_low, s_high = box(source)
+    source.matrix_world.translation += Vector(((low.x + high.x - s_low.x - s_high.x) / 2,
+                                              (low.y + high.y - s_low.y - s_high.y) / 2, low.z - s_low.z))
+    bpy.context.view_layer.update()
+    height = high.z - low.z
+    centers = []
+    for name in ("front_upper_l", "front_upper_r"):
+        if name not in rig.data.bones:
+            raise SystemExit("Local shoulder colour needs the held rig's front shoulder joints")
+        centers.append(rig.matrix_world @ rig.data.bones[name].head_local + Vector((0, 0, height * .08)))
+    for material in source.data.materials:
+        if not material or not material.use_nodes:
+            raise SystemExit("Held texture source has no node material")
+        nodes, links = material.node_tree.nodes, material.node_tree.links
+        shader = next((n for n in nodes if n.type == "BSDF_PRINCIPLED"), None)
+        if shader is None or not shader.inputs["Base Color"].links:
+            raise SystemExit("Held texture source has no linked albedo")
+        original = shader.inputs["Base Color"].links[0].from_socket
+        def math_node(operation, left, right):
+            node = nodes.new("ShaderNodeMath"); node.operation = operation
+            for slot, value in zip(node.inputs, (left, right)):
+                if isinstance(value, (int, float)): slot.default_value = value
+                else: links.new(value, slot)
+            return node.outputs[0]
+        separate = nodes.new("ShaderNodeSeparateColor"); separate.mode = "HSV"
+        links.new(original, separate.inputs[0])
+        warm = math_node("MULTIPLY", math_node("LESS_THAN", separate.outputs[0], .18),
+                         math_node("GREATER_THAN", separate.outputs[1], .15))
+        warm = math_node("MULTIPLY", warm, math_node("GREATER_THAN", separate.outputs[2], .08))
+        combine = nodes.new("ShaderNodeCombineColor"); combine.mode = "HSV"
+        combine.inputs[0].default_value = settings["fur_hue"]
+        links.new(math_node("MULTIPLY", separate.outputs[1], settings["fur_saturation_scale"]), combine.inputs[1])
+        links.new(math_node("MULTIPLY", separate.outputs[2], settings["fur_value_scale"]), combine.inputs[2])
+        grade = nodes.new("ShaderNodeMixRGB")
+        links.new(warm, grade.inputs[0]); links.new(original, grade.inputs[1]); links.new(combine.outputs[0], grade.inputs[2])
+        position = nodes.new("ShaderNodeNewGeometry").outputs["Position"]
+        masks = []
+        for center in centers:
+            distance = nodes.new("ShaderNodeVectorMath"); distance.operation = "DISTANCE"
+            links.new(position, distance.inputs[0]); distance.inputs[1].default_value = center
+            mask = math_node("SUBTRACT", 1, math_node("DIVIDE", distance.outputs["Value"], height * settings["shoulder_radius_height"]))
+            masks.append(math_node("MAXIMUM", 0, mask))
+        shoulder = math_node("MULTIPLY", warm, math_node("MAXIMUM", *masks))
+        copper_mix = nodes.new("ShaderNodeMixRGB")
+        links.new(shoulder, copper_mix.inputs[0]); links.new(grade.outputs[0], copper_mix.inputs[1])
+        copper_mix.inputs[2].default_value = copper
+        links.new(copper_mix.outputs[0], shader.inputs["Base Color"])
+    bpy.ops.object.select_all(action="DESELECT")
+    target.select_set(True); bpy.context.view_layer.objects.active = target
+    bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.select_all(action="SELECT")
+    bpy.ops.uv.smart_project(island_margin=.015)
+    bpy.ops.object.mode_set(mode="OBJECT")
+    material = bpy.data.materials.new("Stormursa_local_colour"); material.use_nodes = True
+    target.data.materials.append(material)
+    image = bpy.data.images.new("Stormursa_local_albedo", width=resolution, height=resolution, alpha=False)
+    image.colorspace_settings.name = "sRGB"
+    texture = material.node_tree.nodes.new("ShaderNodeTexImage"); texture.image = image
+    material.node_tree.nodes.active = texture
+    shader = next(n for n in material.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
+    material.node_tree.links.new(texture.outputs["Color"], shader.inputs["Base Color"])
+    shader.inputs["Roughness"].default_value = .85
+    source.select_set(True)
+    scene = bpy.context.scene; scene.render.engine = "CYCLES"; scene.cycles.samples = 1
+    bake = scene.render.bake; bake.use_selected_to_active = True
+    bake.use_pass_direct = False; bake.use_pass_indirect = False; bake.use_pass_color = True
+    bake.cage_extrusion = height * .025; bake.max_ray_distance = height * .10; bake.margin = 16
+    bpy.ops.object.bake(type="DIFFUSE")
+    image.pack()
+    for obj in imported: bpy.data.objects.remove(obj, do_unlink=True)
+    rig.data.pose_position = old_pose
+    bpy.context.view_layer.update()
+    if signature() != preserved:
+        raise SystemExit("Local bake altered original vertices/faces/weights/rig/actions/transforms")
+    bpy.ops.object.select_all(action="DESELECT"); target.select_set(True); rig.select_set(True)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    bpy.ops.export_scene.gltf(filepath=str(out), export_format="GLB", use_selection=True,
+                              export_skins=True, export_animations=True, export_yup=True)
+    report.parent.mkdir(parents=True, exist_ok=True)
+    report.write_text(json.dumps({"method": "local_selected_to_active_colour_bake_preserved_rig",
+        "input_sha256": hashes, "output_sha256": hashlib.sha256(out.read_bytes()).hexdigest(),
+        "vertices_before_export": len(target.data.vertices), "triangles_before_export": sum(len(p.vertices)-2 for p in target.data.polygons),
+        "original_geometry_weights_rig_actions_transforms_unchanged_before_export": True,
+        "added_uv_layers": len(target.data.uv_layers), "added_materials": len(target.data.materials),
+        "resolution": resolution, "source_alignment_uniform_scale": scale,
+        "settings": settings, "new_meshy_tasks": 0,
+        "scope": "Staged material only. UV export may split vertices; reimport, blind appearance, clips and native scale/pose proofs remain required"}, indent=2) + "\n")
+    if any(hashlib.sha256(pathlib.Path(path).read_bytes()).hexdigest() != digest for path, digest in hashes.items()):
+        raise SystemExit("Local bake overwrote an input")
+
+
 def main() -> None:
     args = argv_after_double_dash()
+    if "--bake-to-rig" in args:
+        bake_to_rig(args)
+        return
     if len(args) < 2:
         raise SystemExit("usage: ... skin_transfer.py -- <rigged_clean.glb> "
                          "<textured.glb> --out <out.glb>")
