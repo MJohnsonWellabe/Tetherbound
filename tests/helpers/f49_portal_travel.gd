@@ -108,6 +108,25 @@ func enter(arch_id: String, realm: String) -> bool:
 	if view.get("character_open") != true or view.get("has_key") == true:
 		return _fail("F49 actual arch Use did not durably consume exactly the earned key: " + arch_id)
 	if not _recommended_sign(arch_id, prompt, view, "after_unlock"): return false
+	return await _enter_open_arch(arch, prompt, realm, before)
+
+## Disclosed journal/revisit callers may already own this personal unlock.
+## Keep enter()'s fresh earned-key gate intact and share its terminal arrival
+## proof rather than accepting scene readiness after an authority refusal.
+func enter_unlocked(arch_id: String, realm: String) -> bool:
+	if not _bind() or str(game.current_realm) != "meadows":
+		return _fail("Already-open portals require the actual Hall world and input")
+	var arch: Node3D
+	for candidate: Node in tree.get_nodes_in_group("portal_arches"):
+		if candidate.get("arch_id") == arch_id: arch = candidate as Node3D
+	var view: Dictionary = game.call("portal_view", arch_id)
+	if arch == null or view.get("ready") != true or view.get("character_open") != true:
+		return _fail("Already-open Enter requires this character's actual durable unlock: " + arch_id)
+	var prompt := arch.get_node_or_null("Interactable") as Node3D
+	if not _recommended_sign(arch_id, prompt, view, "already_open"): return false
+	return await _enter_open_arch(arch, prompt, realm, _uids())
+
+func _enter_open_arch(arch: Node3D, prompt: Node3D, realm: String, before: Array[String]) -> bool:
 	if not game.has_signal("portal_action_result"):
 		return _fail("F49 missing producer: Game has no authoritative portal result signal")
 	_enter_result = {}
@@ -145,6 +164,7 @@ func enter(arch_id: String, realm: String) -> bool:
 	elif activated:
 		_fail("F49 actual arch Enter did not queue a correlated travel request")
 	game.disconnect("portal_action_result", _portal_result)
+	if passed: print("F18 PORTAL ENTER ARRIVAL " + JSON.stringify(_enter_result))
 	_enter_binding = {}
 	return passed
 

@@ -150,11 +150,8 @@ func order_journals(tree: SceneTree, game: Node) -> bool:
 			"journal route retains its character and actual already-open arch " + arch_id): return false
 		var prompt := arch.get_node_or_null("Interactable") as Node3D
 		if not check(prompt != null, "already-open journal destination has its actual provider"): return false
-		if not await travel.activate(prompt): failures.append_array(travel.failures); return false
-		var arrived := false
-		for frame in 7200:
-			await tree.process_frame
-			if travel._ready_world(realm): arrived = true; break
+		if not await travel.enter_unlocked(arch_id, realm): failures.append_array(travel.failures); return false
+		var arrived: bool = travel._ready_world(realm)
 		if not check(arrived and str(game.local.character_id) == character_id and travel._uids() == original_uids,
 			"ordinary portal Enter reaches the ready journal realm with the same five: " + realm): return false
 		await travel.tap("inventory")
