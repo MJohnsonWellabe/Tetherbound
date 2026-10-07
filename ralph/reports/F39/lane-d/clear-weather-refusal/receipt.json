@@ -1,0 +1,29 @@
+{
+  "criteria": "F39#0–#5 OPEN",
+  "source_sha": "879454fb8e5c4f2550223ea9156897df434edbf5",
+  "run_id": "37650241637",
+  "artifact_id": "11497514743",
+  "renderer": "gl_compatibility",
+  "preset": "Low",
+  "raster": [
+    1280,
+    720
+  ],
+  "exit_code": 124,
+  "planned_frames": 120,
+  "captured_frames": 0,
+  "complete": false,
+  "weather_service_failures": 113,
+  "production_material_overrides_verified": true,
+  "diagnosis": "Production world/camera mounted and both fall/current material overrides verified. Tidewake scene has WorldLook but no WorldWeather. _pin_time rejected the absent service on 113 poses before the 45-minute cap; this is not a startup freeze.",
+  "manifest_sha256": "c1e59bc7d04eb71d0d239df755dd4788520720a3c4ff6269a1a85ebc3cb0a3b9",
+  "log_sha256": "987930cb897aa5ed0b50a36e527fb509f8401f8394c9d0ae24831ffda2cf81c2",
+  "correction_sha": "ab724c81f459d5cb7d8414c4752681fc11ab2bc7",
+  "correction": "Existing capture preflight observes empty production WorldLook weather delta for clear only. Missing rain service still fails before poses; actual clear delta rechecked per frame. No production service or artificial weather inserted.",
+  "remaining_gates": [
+    "Correction independent review and actual capture",
+    "Full >=200-frame re-score with full section4 BarA/B PASS",
+    "Before/after, full approach/detail/weather/fight/motion/landmark matrices",
+    "Current named area smokes and shipping candidate flags"
+  ]
+}
