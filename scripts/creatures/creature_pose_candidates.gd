@@ -122,7 +122,7 @@ static func _posed_lowest_y(model: Node3D, skeleton: Skeleton3D, root_basis: Bas
 			var vertices := arrays[Mesh.ARRAY_VERTEX] as PackedVector3Array
 			var bones: Variant = arrays[Mesh.ARRAY_BONES]
 			var weights: Variant = arrays[Mesh.ARRAY_WEIGHTS]
-			var weighted := not palette.is_empty() and bones is PackedInt32Array \
+			var weighted: bool = not palette.is_empty() and bones is PackedInt32Array \
 				and weights is PackedFloat32Array and not vertices.is_empty() \
 				and bones.size() == weights.size() and bones.size() % vertices.size() == 0
 			var stride := int(bones.size() / vertices.size()) if weighted else 0
