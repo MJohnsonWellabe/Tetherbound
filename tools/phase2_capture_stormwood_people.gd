@@ -8,6 +8,18 @@ const PEOPLE_IDS := ["rodkeeper_hesk","stormreader_tamsin","warden_elect_bryn",
 	"trader_oswin","keeper_ondra","archivist_wen","elder_maud","trader_fenn",
 	"caretaker_lio","ace_trainer_rook","crown_caretaker_neri"]
 const OPENING_IDS := ["warden_elect_bryn","trader_oswin","elder_maud","trader_fenn"]
+var _f41_people_graphics: Dictionary = {}
+
+
+func _run() -> void:
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--preset="):
+			_f41_people_graphics = preload("res://tools/lookdev_capture_bootstrap.gd").prepare(self)
+			if _f41_people_graphics.is_empty():
+				quit(2)
+				return
+			break
+	await super._run()
 
 
 func _load_plan() -> bool:
@@ -64,10 +76,45 @@ func _dialogue_for(row: Dictionary) -> String:
 
 func _begin_manifest() -> void:
 	super._begin_manifest()
+	if not _f41_people_graphics.is_empty():
+		_manifest["graphics_capture"] = _f41_people_graphics
 	_manifest["dialogue_presentation_config"] = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_dialogue_presentation.json"))
 	_manifest["fixture_disclosure"] = "Debug placement at authored NPC posts. Post images hide HUD; dialogue images show only the production dialogue panel. Direct starts include unearned side/state text. The fixture disables chapter arrival processing and disconnects its dialogue-finished progression callback; panel/camera callbacks remain active. Per-row progression snapshots verify no flag changes. Not ordinary interaction or progression proof."
 	_manifest["expected_rows"] = 24
 	_manifest["expected_frames"] = 48
+
+
+func _write_manifest() -> void:
+	_manifest["frames"] = _records
+	_manifest["failures"] = _failures
+	var path := _output_dir + "/manifest.json"
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	if file == null:
+		_failures.append("Stormwood people manifest could not be opened")
+		return
+	var text := JSON.stringify(_manifest, "\t") + "\n"
+	file.store_string(text)
+	file.flush()
+	var written := file.get_error() == OK
+	file.close()
+	if not written or FileAccess.get_file_as_string(path) != text:
+		_failures.append("Stormwood people manifest flush/readback failed")
+
+
+func _finish(_complete: bool) -> void:
+	# Retain the original whole 24-row matrix and two views per actor/state.
+	# A partial capture or unwritten final receipt cannot turn the run green.
+	var complete := _failures.is_empty() and _planned.size() == 24 and _records.size() == 48
+	_manifest["capture_finished_utc"] = Time.get_datetime_string_from_system(true)
+	_manifest["complete"] = complete
+	_manifest["captured_frame_count"] = _records.size()
+	_manifest["planned_frame_count"] = _planned.size()
+	_write_manifest()
+	complete = complete and _failures.is_empty()
+	for failure: String in _failures:
+		push_error("Stormwood people: " + failure)
+	print("STORMWOOD PEOPLE %s: %d/48 frames, %d/24 rows" % ["OK" if complete else "FAILED", _records.size(), _planned.size()])
+	quit(0 if complete else 1)
 
 
 func _prepare_capture_shell() -> bool:
