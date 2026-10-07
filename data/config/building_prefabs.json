@@ -3912,7 +3912,18 @@
             {"size": [0.09, 0.82, 0.04], "at": [0.79, 0.50, -0.08]}
           ]
         },
-        "_why": "Stormwood settlement grounding, 2026-09-09: cottage_a's generic home now uses cottage_interior.gd as well as Mira's bespoke shop. These are the same measured inner faces and doorway dimensions shop_interior.gd already hardcodes for this exact shell; adding the recipe metadata makes the reused generic floor fill the real 4x6m room instead of falling back to cottage_b's 4x4m room. shop_interior.gd retains its measured floor footprint and consumes only the nested shop_counter and shop_light presentation tunables."
+        "shop_floor": {
+          "scope": "world_presentation",
+          "albedo": "res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png",
+          "normal": "res://assets/buildings/quaternius_medieval/T_WoodTrim_Normal.png",
+          "tint": "#c9b49b",
+          "uv_scale": [1.0, 0.27, 1.0],
+          "uv_offset": [0.0, 0.02, 0.0],
+          "roughness": 0.86,
+          "normal_scale": 0.45,
+          "_comment": "Same inspected installed wood band as the farmhouse floor; Mira's floor size, rise, collision and actor support remain unchanged. Generic cottages do not consume this nested shop material."
+        },
+        "_why": "Stormwood settlement grounding, 2026-09-09: cottage_a's generic home now uses cottage_interior.gd as well as Mira's bespoke shop. These are the same measured inner faces and doorway dimensions shop_interior.gd already hardcodes for this exact shell; adding the recipe metadata makes the reused generic floor fill the real 4x6m room instead of falling back to cottage_b's 4x4m room. shop_interior.gd retains its measured floor footprint and consumes only the nested shop_counter, shop_light and shop_floor presentation tunables."
       },
       "retint": {
         "MI_WindowGlass": {

@@ -64,7 +64,7 @@ const CREST_LIGHT_COLOUR := Color("#ffd17a")
 ## counter and lamp presentation tunables. Signature matches `cottage_interior.gd`'s so village.gd can
 ## dispatch either template through the same `interior.call("build", room)`.
 func build(room: Dictionary = {}) -> void:
-	_build_floor()
+	_build_floor(room.get("shop_floor", {}))
 	_build_counter(room.get("shop_counter", {}))
 	_build_shelf()
 	_build_light(room.get("shop_light", {}))
@@ -75,11 +75,12 @@ func build(room: Dictionary = {}) -> void:
 ## A real plank floor above the terrain. Coincident support surfaces produced
 ## repeated floor contacts while turning by the counter. The 2cm rise separates
 ## them within the ordinary step height; NPC placement reads this actual floor.
-func _build_floor() -> void:
+func _build_floor(presentation: Dictionary = {}) -> void:
+	var wood: Material = _counter_material(presentation, "tint") if not presentation.is_empty() else null
 	_floor_shape = _box(
 		Vector3(INNER_HALF_W * 2.0 + 0.6, 0.3, INNER_HALF_D * 2.0 + 0.6),
 		Vector3(0.0, -0.10 + FLOOR_RISE, 0.0),
-		COL_FLOOR
+		COL_FLOOR, true, wood
 	)
 
 
