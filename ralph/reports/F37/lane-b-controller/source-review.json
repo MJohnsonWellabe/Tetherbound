@@ -22,5 +22,21 @@
   "superseded_review": {
     "source_sha": "b409b582f4bf2f6fd6d130b7976aea20ba66426b",
     "reason": "Historical fixture used cap levels as tier IDs. Reviewer and lane missed the invalid tier prefix; corrected before positive runtime, re-reviewed against level_cap/can_dive."
+  },
+  "existing_peer_steps": {
+    "preserved": "Existing render/rejoin scenarios, authority, carrier identity, disk/reconnect and participant assertions",
+    "allocation": "issue572 comment6039104254 exact fixture normalization/tierID/mount/Jump hunks",
+    "runtime_pass": false,
+    "source_sha": "76f0516325ab0c135c8ed3bbcd1fcda803237950",
+    "path": "tools/net/proof_steps_f37.gd",
+    "changes": [
+      "Initialize the existing fixture live UID mirror from normalized save copy",
+      "Canonical sequential tierIDs [1,2] / [1,2,3]",
+      "Use existing proof_steps._tap physical polled controller edges for mount/Jump"
+    ],
+    "review": {
+      "agent": "/root/b_f37_review",
+      "verdict": "SOURCE APPROVE"
+    }
   }
 }

@@ -39,10 +39,44 @@
       "All actual floor/capsule/fresh-contact/saveACK requirements unchanged"
     ],
     "remaining": [
-      "Affected existing portal/HomeKey logic batch37627388649",
-      "One scoped rendered F20 rerun",
+      "Clean affected existing portal reset test after a95405500d",
+      "Hosted rerun37627940505 on f4424f6c4947f2f02aa7381e1a85791995d761c3",
       "Captures/code-blind judgment",
       "Two-peer ending and reload proof"
     ]
+  },
+  "existing_test_fixture_repair": {
+    "change": "Attach the existing body/lifecycle/session double to the live tree before global_position assertions; retain exact nonzero position and missing-body rejection.",
+    "remaining": "Clean affected-file hosted rerun",
+    "evidence": "37627388649:24 tests/308 assertions passed with two disclosed detached-body engine errors before this repair",
+    "source_sha": "a95405500d33b691136adad9e3f6616cfb33a1b2",
+    "path": "tests/test_portal_arrival_travel_reset.gd",
+    "review": {
+      "agent": "/root/b_f20_review",
+      "verdict": "SOURCE APPROVE"
+    }
+  },
+  "credits_endpoint": {
+    "flag": "--through-credits",
+    "paths": [
+      "tests/smoke_f20_ending.gd",
+      "tests/helpers/f20_ending_probe.gd"
+    ],
+    "excluded": "F20#3 continuation content; full default remains strict and unavailable bounty runtime stays off",
+    "review": {
+      "agent": "/root/b_f20_review",
+      "verdict": "SOURCE APPROVE"
+    },
+    "criterion_pass": false,
+    "runtime_pass": false,
+    "preserved": [
+      "Actual Home Key and fifth arch",
+      "Grandpa current five and choices",
+      "Actual credits acknowledgment",
+      "Production save/reset/reload",
+      "Retained character/world/party/receipts",
+      "Once-only natural revisit and grounded movement"
+    ],
+    "source_sha": "7067450f0b0ff0472f0b9e02b8c7e221fadbc35e"
   }
 }
