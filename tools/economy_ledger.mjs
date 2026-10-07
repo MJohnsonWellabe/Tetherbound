@@ -197,11 +197,19 @@ export function sourceReport(root = ROOT) {
   source('scripts/net/session.gd');
   const findings=[];
   if(rematchSource.includes('context.world_namespace + ":" + intent.trainer_id + ":" + intent.tier') &&
-    rematchSource.includes('cooldowns.get(key, {})') && rematchSource.includes('last.get("next_eligible_seconds", 0)'))
-    findings.push({kind:'rematch_world_hop_cooldown_bypass',path:'scripts/repeatables/rematch_rules.gd',
-      source_fact:'cooldown key includes world namespace; absent destination cooldown defaults eligibility time to zero',
-      dependency:'F44/ROOT must supply a portable cycle entitlement/reanchor policy and same-record owner-save ACK; no comparable global clock currently supplied',
-      status:'OPEN: source branch reachable; actual two-world production proof deferred; receipt budget bounds total retained history, not the intended cycle'});
+    rematchSource.includes('cooldowns.get(key, {})') && rematchSource.includes('last.get("next_eligible_seconds", 0)')) {
+    // These are source markers, not an executed two-world payout proof.
+    const foreignClockGuard=rematchSource.includes('foreign_paid_clock = true') &&
+      rematchSource.includes('not foreign_paid_clock and int(context.world_seconds)');
+    findings.push({kind:foreignClockGuard?'rematch_world_hop_clock_unverified':'rematch_world_hop_cooldown_bypass',
+      path:'scripts/repeatables/rematch_rules.gd',
+      source_fact:foreignClockGuard?'existing stage retains foreign paid clocks and forbids a repeat payout from the destination clock':
+        'cooldown key includes world namespace; absent destination cooldown defaults eligibility time to zero',
+      dependency:foreignClockGuard?'F44/F47 actual two-world original outcome, owner-save ACK and return-to-owning-clock proof':
+        'F44/ROOT must supply a portable cycle entitlement/reanchor policy and same-record owner-save ACK; no comparable global clock currently supplied',
+      status:foreignClockGuard?'OPEN: source guard present; source markers alone do not verify production behavior':
+        'OPEN: source branch reachable; actual two-world production proof deferred; receipt budget bounds total retained history, not the intended cycle'});
+  }
   const lastMeadows=curve.regions.at(-1).team.exit;
   if(lastMeadows!==curve.biomes.meadows.team[1]) findings.push({kind:'meadows_exit_target_disagreement',
     path:'data/config/chapter_curve.json',regional_exit:lastMeadows,biome_exit:curve.biomes.meadows.team[1],

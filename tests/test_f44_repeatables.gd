@@ -85,6 +85,25 @@ func test_unique_repeat_and_cooldown_win_are_atomic_and_replay_safe() -> void:
 	assert_true(state_errors.is_empty(), str(state_errors))
 	assert_false(REMATCH.stage(reloaded, 0, _intent("relay_captain", "r1", "encounter_3"),
 		_context("character_a", 1300, "relay_captain", "r1", "encounter_3")).ok)
+	# A destination host cannot discharge the original world's paid clock,
+	# even when its own counter is far beyond that world's deadline.
+	var hopped: Dictionary = JSON.parse_string(JSON.stringify(first.state))
+	for seconds: int in [0, 900000]:
+		var encounter := "foreign_%d" % seconds
+		var foreign := _context("character_a", seconds, "relay_captain", "r1", encounter)
+		foreign.world_namespace = "world_b"
+		foreign.session_id = "session_b"
+		var win := REMATCH.stage(hopped, 0, _intent("relay_captain", "r1", encounter), foreign)
+		assert_true(win.get("ok") == true, str(win))
+		if win.get("ok") != true: continue
+		assert_false(win.reward_paid, "a foreign clock cannot mint the repeat reward")
+		assert_eq(win.state.inventory, hopped.inventory)
+		assert_eq(win.state.redesign_character.rematch_cooldowns, first.state.redesign_character.rematch_cooldowns)
+		hopped = JSON.parse_string(JSON.stringify(win.state))
+	var returned := REMATCH.stage(hopped, 0, _intent("relay_captain", "r1", "owning_clock_due"),
+		_context("character_a", 1300, "relay_captain", "r1", "owning_clock_due"))
+	assert_true(returned.get("ok") == true and returned.get("reward_paid") == true,
+		"returning to the actual owning clock still permits its due cycle")
 
 func test_nonparticipant_loss_wrong_source_and_full_satchel_never_spend_win() -> void:
 	var current := _current()
