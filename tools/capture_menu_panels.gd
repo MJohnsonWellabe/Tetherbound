@@ -50,6 +50,9 @@ func _run() -> void:
 		push_error("autoload did not stand up the menu")
 		quit(1)
 		return
+	if OS.get_cmdline_user_args().has("--actual-bounty-board"):
+		await _capture_actual_bounty(game)
+		return
 
 	# A stocked satchel and a couple of buildables, so the panels shown are not
 	# just empty rows — the critic needs to judge the panel treatment against
@@ -125,6 +128,87 @@ func _run() -> void:
 		quit(1)
 		return
 	quit(0)
+
+
+func _capture_actual_bounty(game: Node) -> void:
+	if DisplayServer.get_name() == "headless":
+		push_error("Actual bounty pixels require a native display")
+		quit(1)
+		return
+	# Visual-only approach pose, never an earned journey or a payment. The
+	# actual first-day board and rows come from the shipping owner/host path;
+	# this branch precedes the legacy inventory/party layout fixtures above.
+	var session: Node = game.get("session")
+	var adapter := session.get_node_or_null(^"FoundationComposition/BountyInteraction") if session != null else null
+	var player: Node3D = game.call("find_player")
+	var prompt: Node3D = adapter.get("_prompt") if adapter != null else null
+	var panel := adapter.get_node_or_null(^"BountyBoardPanel") if adapter != null else null
+	if player == null or prompt == null or panel == null:
+		push_error("Actual mounted Halda prompt/player/panel required")
+		quit(1)
+		return
+	var original_local: RefCounted = game.get("local")
+	var original_world: RefCounted = game.get("world")
+	var epoch: String = session.call("_altar_current_epoch")
+	player.global_position = prompt.global_position + Vector3(0, -0.9, 0.5)
+	player.set("velocity", Vector3.ZERO)
+	for frame in 120: await physics_frame
+	var arbiter := get_first_node_in_group(&"interaction_arbiter")
+	if arbiter == null or arbiter.call("winning_provider") != prompt:
+		push_error("Actual Halda prompt must win physical interaction")
+		quit(1)
+		return
+	var written: Array[String] = []
+	var failures: Array[String] = []
+	for size: Vector2i in [Vector2i(1280, 720), Vector2i(1920, 1080)]:
+		root.size = size
+		root.content_scale_size = Vector2i.ZERO
+		for frame in POSE_FRAMES: await process_frame
+		var press := InputEventAction.new()
+		press.action = "interact"
+		press.pressed = true
+		Input.parse_input_event(press)
+		Input.action_press("interact")
+		for frame in 4: await process_frame
+		Input.action_release("interact")
+		press.pressed = false
+		Input.parse_input_event(press)
+		for frame in POSE_FRAMES: await process_frame
+		var view: Dictionary = adapter.call("view")
+		var owner := preload("res://scripts/ui/input_owner.gd").current(self)
+		var valid: bool = game.get("session") == session and game.get("local") == original_local and game.get("world") == original_world \
+			and session.call("_altar_current_epoch") == epoch and view.get("ready") == true \
+			and view.get("character_id") == original_local.get("character_id") \
+			and view.get("world_namespace") == original_world.get("reward_delivery_namespace") \
+			and (view.get("rows", []) as Array).size() == 3 and panel.get("_shown") == true and owner == panel
+		var row_ids: Array[String] = []
+		for row: Dictionary in view.get("rows", []):
+			var found := false
+			for button: Button in panel.get("_buttons"):
+				if button.get_meta("system_focus_key", "") == row.get("instance"): found = true
+			valid = valid and found
+			row_ids.append(str(row.get("instance", "")))
+		if not valid:
+			failures.append("Actual current-scope three-row board did not open through physical X")
+			break
+		print("ACTUAL_BOUNTY %dx%d character=%s namespace=%s instances=%s focus=%s" % [size.x, size.y,
+			original_local.get("character_id"), original_world.get("reward_delivery_namespace"), row_ids, root.gui_get_focus_owner()])
+		await _shoot("actual_bounty_%dx%d" % [size.x, size.y], written, failures)
+		press.action = "menu_cancel"
+		press.pressed = true
+		Input.parse_input_event(press)
+		Input.action_press("menu_cancel")
+		for frame in 4: await process_frame
+		Input.action_release("menu_cancel")
+		press.pressed = false
+		Input.parse_input_event(press)
+		for frame in 15: await physics_frame
+		if panel.get("_shown") == true or preload("res://scripts/ui/input_owner.gd").current(self) != null:
+			failures.append("One ordinary B must restore world input after actual bounty capture")
+			break
+	print("Actual bounty visual capture: approach pose only; no invented rows, payment, earned-route or performance claim.")
+	for failure: String in failures: push_error(failure)
+	quit(0 if failures.is_empty() and written.size() == 2 else 1)
 
 
 func _shoot(name: String, written: Array[String], failures: Array[String]) -> void:
