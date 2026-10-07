@@ -324,6 +324,28 @@ func _run() -> void:
 		var ultimate := await _tap_move(JOY_BUTTON_Y, "ultimate")
 		_check(not ultimate.is_empty(), "released RB then Y must land the frozen signature")
 		if not ultimate.is_empty():
+			var signature_seconds: float = float((ultimate.move.get("ultimate", {}) as Dictionary).get("presentation_seconds", NAN))
+			var duration_valid: bool = is_finite(signature_seconds) and signature_seconds >= 2.0 and signature_seconds <= 3.0
+			_check(duration_valid, "accepted production signature presentation lasts two to three seconds")
+			var launch_action_id := "%s:%d:%d" % [_id, 1, int(ultimate.action)]
+			var strike_clock: Dictionary = _host.strike_authority_state(_id, 1)
+			var accepted_launch_ms: int = int(strike_clock.get("accepted_at_ms", 0))
+			var arrival_observed_ms: int = Time.get_ticks_msec()
+			var launch_clock_valid: bool = int(strike_clock.get("last_action", 0)) == int(ultimate.action) \
+				and accepted_launch_ms >= int(ultimate.strike_at_ms) and accepted_launch_ms <= arrival_observed_ms
+			_check(launch_clock_valid and str(_launches.back().action_id) == launch_action_id,
+				"control deadline starts at this original's actual accepted strike launch")
+			var presentation_present: bool = false
+			for presentation: Node in get_nodes_in_group("move_effect_presentation"):
+				if presentation is Node3D and not presentation.is_queued_for_deletion() \
+					and (presentation as Node3D).is_visible_in_tree() and presentation.has_method("action_id") \
+					and str(presentation.call("action_id")) == launch_action_id:
+					presentation_present = true
+			_check(presentation_present, "actual accepted ultimate presentation remains mounted at the first post-arrival observation")
+			var control_observation := {"action_id":launch_action_id,"move_id":str(ultimate.move_id),
+				"presentation_seconds":signature_seconds,"accepted_launch_ms":accepted_launch_ms,
+				"arrival_observed_ms":arrival_observed_ms,"presentation_present":presentation_present,
+				"committed_at_arrival_observation":bool(_manager.call("player_is_committed"))}
 			var latest: Dictionary = _impacts.back()
 			_check(float(latest.damage) <= float(_enemy.max_hp) * 0.2 + 0.001, "ultimate respects the named-target HP cap")
 			_check(is_equal_approx(float(_host.move_resource_snapshot(_id, 1, _creature.uid).ultimate_meter), 0.0), "ultimate spends the full per-UID meter once")
@@ -347,6 +369,19 @@ func _run() -> void:
 					"saturated rank-five hit retains its resolved and credited host original")
 				_check(ultimate_event.is_empty() and _host.move_mastery_outcome(_id, 1, int(ultimate.action)).is_empty(),
 					"saturated rank-five hit creates no further mastery award")
+			if duration_valid and launch_clock_valid:
+				# Include elapsed launch/travel/arrival work. No fresh full-duration
+				# allowance after impact, hitstop subtraction or simulated clock.
+				var control_deadline_ms: int = accepted_launch_ms + int(floor(signature_seconds * 1000.0))
+				while bool(_manager.call("player_is_committed")) and Time.get_ticks_msec() < control_deadline_ms:
+					await process_frame
+				var release_observed_ms: int = Time.get_ticks_msec()
+				var released: bool = not bool(_manager.call("player_is_committed"))
+				control_observation.merge({"deadline_ms":control_deadline_ms,"release_observed_ms":release_observed_ms,
+					"elapsed_since_launch_ms":release_observed_ms-accepted_launch_ms,"released":released})
+				_check(released and release_observed_ms <= control_deadline_ms,
+					"actual ultimate commitment releases within its signature duration from accepted launch")
+			print("F35_ULTIMATE_CONTROL " + JSON.stringify(control_observation))
 			await create_timer(2.6).timeout
 	else:
 		var before: Dictionary = _host.record(_id).participants[1].move_resources[_creature.uid].duplicate(true)
