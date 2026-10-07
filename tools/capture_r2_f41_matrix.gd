@@ -11,9 +11,20 @@ const REGIONAL_CONFIGS := ["stormheart_presentation", "stormwood_road_current",
 	"stormwood_ground_finish", "stormwood_glass_field"]
 var _original_configs: Dictionary = {}
 var _candidate_preview := false
+const SEGMENTS := ["storm-day", "storm-night", "released-day", "released-night"]
+var _segment := ""
 
 
 func _run() -> void:
+	# Hosted runs may capture a named quarter. All four quarters are required
+	# for the matrix; a successful quarter never certifies full coverage.
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--segment="):
+			if not _segment.is_empty() or arg.trim_prefix("--segment=") not in SEGMENTS:
+				push_error("F41 needs exactly one known segment, or none for the full matrix")
+				quit(2)
+				return
+			_segment = arg.trim_prefix("--segment=")
 	# The installed runner stages externally and names its variant explicitly.
 	# Re-applying the same overlay is idempotent; restoration returns its exact
 	# incoming bytes for that runner's finally block to restore in turn.
@@ -78,11 +89,15 @@ func _restore_candidate_configs() -> void:
 
 
 func _matrix_pass(aftermath: bool) -> void:
+	if not _segment.is_empty() and aftermath != _segment.begins_with("released-"):
+		return
 	var flags: RefCounted = _game.get("progression")
 	if aftermath:
 		flags.call("set_flag", "stormwood:long_storm_ended", true)
 		_note("authoritative release flag staged for visual aftermath controls")
 	for clock_pin: String in ["day", "night"]:
+		if not _segment.is_empty() and clock_pin != _segment.get_slice("-", 1):
+			continue
 		_pin_clock(clock_pin)
 		for stand: Dictionary in _matrix_stands():
 			var at: Vector2 = stand.at
@@ -118,7 +133,8 @@ func _capture(frame_id: String, description: String, full_size: bool, extra: Dic
 
 func _done() -> void:
 	_restore_candidate_configs()
-	var expected := FULL_STAND_COUNT * 4 * PHASES.size() * 2 * 2
+	var full_expected := FULL_STAND_COUNT * 4 * PHASES.size() * 2 * 2
+	var expected := full_expected if _segment.is_empty() else FULL_STAND_COUNT * 4 * PHASES.size()
 	if _frames.size() != expected:
 		_failures.append("F41 matrix captured %d/%d required native frames" % [_frames.size(), expected])
 	var file := FileAccess.open("%s/frames_%s.json" % [_output_dir, _label], FileAccess.WRITE)
@@ -127,6 +143,8 @@ func _done() -> void:
 	else:
 		file.store_string(JSON.stringify({"graphics_capture": _graphics_capture, "candidate_preview": _candidate_preview,
 			"frames": _frames, "planned_frames": expected, "failures": _failures,
+			"segment": _segment, "required_segments": SEGMENTS, "full_matrix_planned_frames": full_expected,
+			"full_matrix_complete": _segment.is_empty() and _failures.is_empty(),
 			"complete": _failures.is_empty(), "scope": "Staged native visual matrix. All four Surge phases before/after release; day/night pins verify fixed purple grading. Four production-camera headings per stand. No earned progression, audio, performance or Ally claim."}, "\t") + "\n")
 		file.flush()
 		var error := file.get_error()
