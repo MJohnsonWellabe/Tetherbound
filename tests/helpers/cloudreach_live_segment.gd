@@ -16,6 +16,14 @@ class CampaignPilot extends PILOT:
 	var switch_input := false
 	var voluntary_switches := 0
 
+	func _reach(_ally_body: Node3D, _foe_body: Node3D) -> float:
+		var charged := bool(manager.call("charged_ready")) and _charged_is_worth_it()
+		return float(manager.call("combat_move_reach", "charged" if charged else "quick"))
+
+	func _enemy_reach(_ally_body: Node3D, foe_body: Node3D) -> float:
+		var profile: Dictionary = foe_body.call("combat_config")
+		return float(profile["range"])
+
 	func _faces_target(ally_body: Node3D, foe_body: Node3D) -> bool:
 		# Movement turns the creature; retreat can leave its back to the foe even
 		# while both bodies remain in range. Observe the production cone before
@@ -79,9 +87,13 @@ class CampaignPilot extends PILOT:
 			return
 		var toward := foe_body.global_position - ally_body.global_position
 		toward.y = 0.0
+		# Production keeps rendered bodies apart. Take the existing 80% margin
+		# within that reachable gap, not inside the enforced contact separation.
+		var contact := preload("res://scripts/combat/contact_spacing.gd").pair_need(ally_body, foe_body)
+		var attack_distance := contact + (_reach(ally_body, foe_body) - contact) * 0.8
 		var retreat := bool(manager.call("enemy_is_winding_up")) \
 			and toward.length() < _enemy_reach(ally_body, foe_body) + 0.8
-		if retreat or toward.length() > _reach(ally_body, foe_body) * 0.8 \
+		if retreat or toward.length() > attack_distance \
 				or not _faces_target(ally_body, foe_body):
 			_move_toward(-toward if retreat else toward)
 			await tree.physics_frame

@@ -145,7 +145,12 @@ jobs:
           persist-credentials: false
           filter: blob:none
           sparse-checkout-cone-mode: false
-          sparse-checkout: /${{ inputs.reviewed_evidence_path }}
+          # Exact-cut manifests may reference an earlier piece's original log.
+          # The latest source artifact retains its saves, but not that earlier
+          # run's console file. Hydrate only these immutable recorded log copies.
+          sparse-checkout: |
+            /${{ inputs.reviewed_evidence_path }}
+            /ralph/reports/F19/lane-b-prefix/producer-*-original.log
 
       - name: Check the reviewed evidence is an ordinary file
         if: inputs.reviewed_evidence_ref != ''
