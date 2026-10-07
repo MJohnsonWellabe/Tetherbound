@@ -33,6 +33,7 @@ const CONVERSATION := "grandpa_house"
 
 var _failures: Array[String] = []
 var _menu: CanvasLayer = null
+var _capture_output := ""
 
 
 func _init() -> void:
@@ -40,6 +41,15 @@ func _init() -> void:
 
 
 func _run() -> void:
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--capture-output="):
+			_capture_output = argument.trim_prefix("--capture-output=")
+	if not _capture_output.is_empty():
+		if not _capture_output.begins_with("res://shots/") or _capture_output.contains(".."):
+			push_error("Modal captures must stay under res://shots/")
+			quit(1)
+			return
+		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_capture_output))
 	# `_init()` runs before the autoloads are mounted, so asking for `Game` right
 	# away finds nothing and reports it as a missing autoload — a false failure
 	# that would look exactly like project.godot's `[autoload]` block breaking.
@@ -56,6 +66,17 @@ func _run() -> void:
 		print("FAIL: the autoload did not stand up the menu")
 		quit(1)
 		return
+	if not _capture_output.is_empty():
+		# Select the real last-input device with a parsed controller edge;
+		# there is no world actor for this sprint binding to move or affect.
+		var pad_edge := InputEventJoypadButton.new()
+		pad_edge.button_index = JOY_BUTTON_LEFT_STICK
+		pad_edge.pressed = true
+		Input.parse_input_event(pad_edge)
+		await process_frame
+		pad_edge.pressed = false
+		Input.parse_input_event(pad_edge)
+		await process_frame
 
 	await _check_the_shell_opens_with_nothing_in_the_way()
 	await _check_the_shell_refuses_over_the_starter_picker()
@@ -197,6 +218,7 @@ func _check_lessons_own_skip_and_menu_input() -> void:
 				_fail("inventory shortcut stacked over lesson %s" % str(row.id))
 				_menu.call("close")
 			else: _expect_reason("lesson " + str(row.id))
+			if line == 0: await _capture_lesson(str(row.id))
 			var skip_ack_count := acknowledgements.size()
 			await _press("menu_cancel")
 			if lesson.is_open() or _menu.call("is_open") == true or owner.current(self) != null:
@@ -275,6 +297,19 @@ func _check_lesson_service_departures(game: Node) -> void:
 	service.queue_free()
 	for release_frame: int in 4: await process_frame
 	print("lesson service: actual character/realm departures release input without dismissal or lesson receipt")
+
+
+## Optional native frames from this existing smoke's actual configured cards.
+## The default headless proof has no capture waits or output changes.
+func _capture_lesson(id: String) -> void:
+	if _capture_output.is_empty(): return
+	await RenderingServer.frame_post_draw
+	var frame := root.get_texture().get_image()
+	if frame == null or frame.is_empty():
+		_fail("modal capture has no native viewport: " + id)
+		return
+	if frame.save_png(_capture_output.path_join(id + ".png")) != OK:
+		_fail("modal capture could not be written: " + id)
 
 
 ## A refusal the player cannot see is the same broken-looking dead button
