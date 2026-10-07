@@ -38,5 +38,26 @@
     "Catalog UI map-context/bare-menu/heavy-HUD/contrast code-blind PASS",
     "Independent final criterion review"
   ],
-  "flags": "none"
+  "flags": "none",
+  "shared_affected_batch": {
+    "source_commit": "d4fc9a287516949235e141a03f57fdf2664bba2e",
+    "run_id": "37632007173",
+    "artifact_id": "11486423380",
+    "test_files": 112,
+    "tests": 1272,
+    "assertions": 1081297,
+    "failed": 1,
+    "failure": "test_band_content.gd::test_merged_arrays_are_identical_to_the_pre_split_files: restored glow_scale absent from frozen props baseline",
+    "status": "FAILED_THEN_AFFECTED_CORRECTION_PASS",
+    "correction_commit": "6bf651f76dbc0132f4fdd911174bc63caa82cf30",
+    "rerun_source_commit": "3c508e274d1314b209c4259abbf87b21688f5fe2",
+    "rerun_run_id": "37634786930",
+    "rerun_artifact_id": "11487499783",
+    "rerun_proof": "tests/run_tests.gd --only=test_band_content",
+    "rerun_tests": 6,
+    "rerun_assertions": 1476,
+    "rerun_failed": 0,
+    "rerun_log_sha256": "f016072ef65a085321a006902f0718a54612beff308eeda1e52fd57c65a4f981",
+    "scope": "Retain the other111 passing unchanged test files; correction mirrors two historical visual tuning lines in an existing frozen fixture, retaining strict comparator and identity fields."
+  }
 }
