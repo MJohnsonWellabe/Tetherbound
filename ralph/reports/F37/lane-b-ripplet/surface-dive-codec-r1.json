@@ -3,17 +3,20 @@
     "JSON preserves remaining dive debt"
   ],
   "passed_checks": 13,
-  "review": "b_f37_review SOURCE APPROVE",
+  "review": "b_f37_review SOURCE APPROVE and actual14/0 component PASS; existing31/211 logic reused unchanged. Full criteria OPEN.",
   "run": 37675818890,
   "cause": "The smoke used legacy Godot JSON decimal roundtrip despite production saves using exact float64 SaveDocument codec. Actual mount, movement, gating, Dive, buoyancy, surface and stamina checks passed.",
-  "result": "FAIL",
+  "result": "PASS after production-codec correction",
   "change": "Existing smoke now roundtrips production DOCUMENT stringify/parse; exact equality retained. Corrupt/missing decoded debt still fails.",
   "source_commit": "646aeca6c73e003719a6f3b3b47fe4f28147c1f6",
   "remaining": [
-    "changed smoke actual runtime",
-    "ordinary retained-five human routes",
     "two-peer rejoin/render proof",
-    "full criterion visual gate"
+    "ordinary retained-five human routes",
+    "criterion-scoped visual gate"
   ],
-  "scope": "Explicit pre-admission owned Ripplet/L30 breakthrough and deep-water fixture, no earned feast/campaign/device claim. Interact/Jump mapped joypad; surface directional movement still uses action simulation."
+  "scope": "Explicit pre-admission owned Ripplet/L30 breakthrough and deep-water fixture, no earned feast/campaign/device claim. Interact/Jump mapped joypad; surface directional movement still uses action simulation.",
+  "passing_run": 37676948019,
+  "passing_source_commit": "03d14a46e50cc88164e54bf0e827201a4605d9ca",
+  "passing_checks": 14,
+  "passing_exit": 0
 }
