@@ -697,10 +697,43 @@ func _trainer_fight_heartbeat_observation() -> Dictionary:
 
 ## Existing read-only completion signal, not a submitted attack or a verdict
 ## rewrite. Keep one bounded killing row; a missing signal/field stays unknown.
-func _trainer_fight_note_killing_verdict(intent: Dictionary, peer_id: int, verdict: Dictionary) -> void:
+func _trainer_fight_note_killing_verdict(intent: Dictionary, peer_id: int, verdict: Dictionary = {}) -> void:
 	if not bool(_trainer_fight_progress.get("running", false)) or _trainer_fight_observed_encounter_id.is_empty() \
 			or str(intent.get("encounter_id", "")) != _trainer_fight_observed_encounter_id:
 		return
+	if _trainer_fight_progress.get("observe_move_refusals", false) == true:
+		var observed_ms := Time.get_ticks_msec()
+		var action := int(intent.get("action", 0))
+		if verdict.is_empty():
+			_trainer_fight_progress["move_probe_begin"] = {"action": action, "peer": peer_id, "ms": observed_ms}
+			return
+		if verdict.get("ok") != true:
+			var host: RefCounted = _trainer_fight_director.get("_encounter_host")
+			var started: Dictionary = host.call("move_commit", _trainer_fight_observed_encounter_id, peer_id, action) if host != null and action > 0 else {}
+			var authority: Dictionary = host.call("strike_authority_state", _trainer_fight_observed_encounter_id, peer_id) if host != null else {}
+			var body := _trainer_fight_director.call("deployed_body_for", peer_id) as Node3D
+			var binding: Dictionary = _trainer_fight_director.call("_strike_actor_binding", _trainer_fight_observed_encounter_id, peer_id, body) if is_instance_valid(body) else {}
+			var began: Dictionary = _trainer_fight_progress.get("move_probe_begin", {})
+			var began_ms: int = int(began.get("ms", -1)) if began.get("action") == action and began.get("peer") == peer_id else -1
+			var strike_ms := int(started.get("strike_at_ms", -1))
+			# The validation view is private: retain synchronous time bounds and finish-state flags.
+			var rows: Array = (_trainer_fight_progress.get("move_refusals", []) as Array).duplicate(true)
+			rows.append({"scope": "actual_refusal_finish_state_and_validation_time_bounds",
+				"action": action, "peer_id": peer_id, "code": str(verdict.get("code", "")).left(96),
+				"commit_available": not started.is_empty(), "commit_action": started.get("action"),
+				"action_matches_authority": action == authority.get("last_action") if authority.has("last_action") else null,
+				"resolved_at_finish": started.get("resolved"),
+				"binding_equal_at_finish": binding == started["binding"] if not binding.is_empty() and started.has("binding") else null,
+				"move_id_equal_at_finish": intent["move_id"] == started["move_id"] if intent.has("move_id") and started.has("move_id") else null,
+				"slot_equal_at_finish": intent["slot"] == started["slot"] if intent.has("slot") and started.has("slot") else null,
+				"intent_move_equal": intent["move"] == started["move"] if intent.has("move") and started.has("move") else null,
+				"validation_move_equal": null, "validation_now_ms": null,
+				"strike_at_ms": strike_ms if strike_ms >= 0 else null,
+				"validation_now_min_ms": began_ms if began_ms >= 0 else null, "host_now_at_finish_ms": observed_ms,
+				"early_at_validation": (true if observed_ms < strike_ms else (false if began_ms >= strike_ms else null)) if began_ms >= 0 and strike_ms >= 0 else null})
+			if rows.size() > 16:
+				rows.pop_front()
+			_trainer_fight_progress["move_refusals"] = rows
 	var delta: Dictionary = verdict.get("delta", {})
 	if delta.get("killed") != true:
 		return
@@ -841,6 +874,9 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 			if is_instance_valid(_trainer_fight_director) and _trainer_fight_director.is_connected(
 					"host_strike_finished", _trainer_fight_note_killing_verdict):
 				_trainer_fight_director.disconnect("host_strike_finished", _trainer_fight_note_killing_verdict)
+			if is_instance_valid(_trainer_fight_director) and _trainer_fight_director.is_connected(
+					"host_strike_started", _trainer_fight_note_killing_verdict):
+				_trainer_fight_director.disconnect("host_strike_started", _trainer_fight_note_killing_verdict)
 			_trainer_fight_director = null
 			_trainer_fight_manager = null
 			return trainer_result
@@ -4292,12 +4328,16 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 		"swings": swings, "creatures_seen": 0, "not_fighting_checks": 0,
 		"not_fighting_streak": 0, "missing_body_checks": 0, "quick_not_ready_checks": 0,
 		"phase": "wait_physics", "submitted_action_at_start": int(director.get("_encounter_action")),
+		"observe_move_refusals": args.get("observe_move_refusals", false) == true,
 	}
 	if args.get("retain_fixture_actions") == true:
 		_trainer_fight_progress["fixture_actions"] = []
 	if director.has_signal("host_strike_finished") and not director.is_connected(
 			"host_strike_finished", _trainer_fight_note_killing_verdict):
 		director.connect("host_strike_finished", _trainer_fight_note_killing_verdict)
+	if _trainer_fight_progress.observe_move_refusals and director.has_signal("host_strike_started") and not director.is_connected(
+			"host_strike_started", _trainer_fight_note_killing_verdict):
+		director.connect("host_strike_started", _trainer_fight_note_killing_verdict)
 	while (bool(manager.call("is_fighting")) if drives_guest_master else bool(director.call("trainer_battle_active"))) and frames < budget:
 		_trainer_fight_progress["phase"] = "wait_physics"
 		await physics_frame
@@ -4387,6 +4427,12 @@ func _step_win_trainer_battle(args: Dictionary) -> Dictionary:
 			var staged := _stage_trainer_hp_ceiling(director, manager, opponent as Node3D, ceiling)
 			if not bool(staged.get("ok", false)):
 				return {"verdict": "ERROR", "detail": str(staged.get("why", "trainer HP fixture failed"))}
+		# Optional staging preserves committed motion and the original save/ACK fence.
+		if args.get("stage_when_ready", false) == true \
+				and (not bool(manager.call("quick_ready")) \
+					or manager.get("_move_awaiting_host") == true \
+					or director.call("ordinary_actor_vitals_pending", str(manager.call("encounter_id"))) == true):
+			continue
 		var target: Vector3 = (opponent as Node3D).call("centre")
 		var stand := target + Vector3(1.1, 0.0, 0.0)
 		if args.get("retain_fixture_actions") == true:
