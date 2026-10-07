@@ -1,0 +1,27 @@
+{
+  "criterion": "F41#4",
+  "source_sha": "7027f3bf4ef8846a3b0da8a36837240ca76b8516",
+  "owner_scope_comment": 6045342186,
+  "judge": "/root/blind_listener_f10",
+  "verdict": "PASS",
+  "scope": "Literal up-close still identity, combined with retained9b distance/near PASS",
+  "findings": [
+    "Entry deck: immense bark walls flank open vertical split; wooden decks, ramps, banners and lamps establish stronghold inside tree.",
+    "Middle ascent: same split, towering trunk surfaces and ascending platforms preserve identity."
+  ],
+  "release_visual_followups": [
+    "Repeated bark/plank textures",
+    "Detached-looking rail pieces",
+    "Segmented pale core effects"
+  ],
+  "unassessed": [
+    "Earned ascent",
+    "Motion",
+    "Other storm phases up close",
+    "Fight",
+    "Calibrated distances",
+    "Medium/High"
+  ],
+  "production_flag_cut": "3c536b1ec1a87650de1f317a47085141d4595bd6",
+  "flags": "Hero master +six subflags ON in shipping candidate; final affected proof pending"
+}

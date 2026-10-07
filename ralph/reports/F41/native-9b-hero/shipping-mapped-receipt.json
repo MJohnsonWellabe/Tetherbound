@@ -1,0 +1,28 @@
+{
+  "criterion": "F41#4",
+  "source_sha": "3c536b1ec1a87650de1f317a47085141d4595bd6",
+  "run_id": 37681914576,
+  "artifact_id": 11509816300,
+  "result": "PASS",
+  "script": "tests/run_tests.gd",
+  "exit_code": 0,
+  "seconds": 11,
+  "tests": 22,
+  "assertions": 505,
+  "failed": 0,
+  "selector": "rg -l stormheart_presentation.json|stormheart_tree.gd|stormheart_canopy.gdshader|stormheart_cut_wood.gdshader tests -g test_*.gd",
+  "files": [
+    "test_r2_f41_core_finish.gd",
+    "test_stormheart_ancient_trunk.gd",
+    "test_stormheart_branching_crown.gd",
+    "test_stormheart_canopy_atlas.gd",
+    "test_stormheart_presentation.gd",
+    "test_stormheart_wayfinding.gd",
+    "test_water_return_connection.gd"
+  ],
+  "flags": "Hero master and six subflags ON",
+  "limits": [
+    "No visual or earned ascent result from unit tests.",
+    "Corrected shipping capture and existing mounted approach smoke pending."
+  ]
+}

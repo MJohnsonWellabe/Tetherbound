@@ -1,0 +1,17 @@
+{
+  "criterion": "F41#4",
+  "source_sha": "9b0c312a7d870b9e6c77f91be1b16623ed00d5f0",
+  "judge": "/root/blind_listener_f10",
+  "owner_scope_comment": 6045342186,
+  "verdict": "BLOCK",
+  "literal_findings": [
+    "Distant identity PASS: glass_right_day_released_calm shows distinctive colossal split tree and projecting branches distinct from ordinary trees.",
+    "Nearer front identity PASS: stormheart_forward_day_released_calm shows the same split trunk, foliage, roots and platforms; phases preserve identity.",
+    "Up-close UNASSESSED: no player-at-base or comparably close view in the supplied retained set. No calibrated distance inferred."
+  ],
+  "remaining_gate": "Actual up-close production-camera view and retained judge verdict",
+  "release_visual_followups": [
+    "Bark finish, angular branches, foliage and core are separate release Visual bar followups, not identity blockers."
+  ],
+  "shipping_flags": "off"
+}

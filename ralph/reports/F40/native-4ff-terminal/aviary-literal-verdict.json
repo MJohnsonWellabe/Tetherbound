@@ -1,0 +1,28 @@
+{
+  "criterion": "F40#4",
+  "source_sha": "4ffbf07a263a484ffdf044ba18d6fe39f61f01e6",
+  "judge": "/root/blind_listener_f10",
+  "owner_scope_comment": 6045342186,
+  "verdict": "BLOCK",
+  "scope": "Retained native distance stills only",
+  "distance": "PASS: golden cage-like dome, central spire, surrounding towers and fortified base distinguish Sky Aviary without relying on location label.",
+  "up_close": "UNASSESSED: both approach/gameplay views across substantial open foreground, no base/entrance/interior.",
+  "frames": [
+    "cloudreach__summit_final_stronghold__11__summit_eyrie__approach__dawn__clear.png",
+    "cloudreach__summit_final_stronghold__11__summit_eyrie__gameplay__dawn__clear.png"
+  ],
+  "producer": "D:/CodexTemp/tetherbound-proof/native-e-4ffbf07a26",
+  "renderer": "gl_compatibility",
+  "preset": "Low",
+  "resolution": [
+    1280,
+    720
+  ],
+  "clock": "dawn clear",
+  "matrix": "Failed/incomplete 74/384, retained individual stands only",
+  "limits": [
+    "No full F40 matrix/release bar PASS.",
+    "Literal up-close capture remains required.",
+    "No native engine execution by Lane E."
+  ]
+}

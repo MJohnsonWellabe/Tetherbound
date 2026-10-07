@@ -21,6 +21,7 @@ extends Node3D
 ## What DID have to change is which conversation Tam opens — see
 ## `greeting_for()` at the bottom of this file.
 
+const NIGHT_LIGHT := preload("res://scripts/world/villager_night_light.gd")
 const NPC := preload("res://scripts/npc/npc_body.gd")
 const COMBAT_ARENA := preload("res://scripts/combat/combat_arena.gd")
 const CHARACTER_MODEL := preload("res://scripts/characters/character_model.gd")
@@ -56,6 +57,11 @@ var _revision := -1
 var _label := "village_npcs"
 
 
+## F01#3: the config's `night_light_default`, read by `_spawn` for each villager
+## that opts in (`scripts/world/villager_night_light.gd`).
+var _night_light_default: Dictionary = {}
+
+
 func build(player: Node3D, config_path: String = CONFIG_PATH) -> void:
 	_player = player
 	_label = config_path.get_file().get_basename()
@@ -68,6 +74,8 @@ func build(player: Node3D, config_path: String = CONFIG_PATH) -> void:
 		push_error("%s is not valid JSON" % config_path)
 		return
 
+	var night_default: Variant = (parsed as Dictionary).get("night_light_default", {})
+	_night_light_default = night_default if night_default is Dictionary else {}
 	var listed: Variant = (parsed as Dictionary).get("villagers", (parsed as Dictionary).get("people", []))
 	build_specs(player, listed if listed is Array else [])
 
@@ -229,6 +237,7 @@ func _spawn(spec: Dictionary, player: Node3D) -> void:
 		return
 	npc.global_position.y = _interior_support_height(x, z, npc.global_position.y)
 	npc.rotation.y = deg_to_rad(float(spec.get("facing_deg", 0.0)))
+	NIGHT_LIGHT.attach(npc, NIGHT_LIGHT.settings_for(spec, _night_light_default))
 
 	# "Greet <name>", built here rather than stored in the JSON, and never
 	# "Talk to". tests/smoke_opening.gd finds Grandpa via the FIRST enabled

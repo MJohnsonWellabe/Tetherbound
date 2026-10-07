@@ -1,0 +1,16 @@
+{
+  "criterion": "F41#4",
+  "reviewer": "/root/review_cloud_startup",
+  "source_sha": "3e40c31f2085f7c42be37cec1638992186c98cbe",
+  "verdict": "APPROVE",
+  "scope": "Existing verified floor close capture and final receipt error handling",
+  "findings": [
+    "Only hero six-subflag overlay staged, exact source/config hash recorded; shipping flags unchanged.",
+    "Production raised-floor ray/collider identity, actual trainer settling and ordinary CameraRig unchanged.",
+    "Exact original config bytes restored before final receipt.",
+    "Final receipt open/write/flush/readback errors produce failed run."
+  ],
+  "limits": [
+    "Corrected capture pending; no visual or earned route result from source review."
+  ]
+}

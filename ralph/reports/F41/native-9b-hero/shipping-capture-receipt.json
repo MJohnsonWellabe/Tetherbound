@@ -1,0 +1,80 @@
+{
+  "criterion": "F41#4",
+  "source_sha": "3c536b1ec1a87650de1f317a47085141d4595bd6",
+  "run_id": 37682436822,
+  "artifact_id": 11510571420,
+  "script": "tools/phase2_capture_stormheart_decks.gd",
+  "args": "--source-commit=3c536b1ec1a87650de1f317a47085141d4595bd6 --stands=entry_deck,middle_ascent --phases=calm --no-aftermath --out=res://shots/lane-e/f41-shipping-close-3c53 --label=shipping",
+  "result": "PASS",
+  "exit_code": 0,
+  "seconds": 221,
+  "candidate_preview": false,
+  "shipping_flags": "Hero global+six subflags ON",
+  "renderer": "gl_compatibility",
+  "resolution": [
+    1280,
+    720
+  ],
+  "captured_frames": 2,
+  "failures": [],
+  "config_sha256": "38a94d6e8cffbcd639173445b4c3c0ed326df85a164caa82cfce28995484da2b",
+  "floors": [
+    {
+      "id": "entry_deck_calm",
+      "actual_player_local": [
+        0.0,
+        6.00094604492188,
+        -35.0
+      ],
+      "intended_local_floor": [
+        0.0,
+        6.0,
+        -35.0
+      ],
+      "floor_hit": {
+        "collider_path": "StormheartTree/OuterWorks",
+        "normal": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "position": [
+          -100.0,
+          118.059112548828,
+          5435.0
+        ]
+      }
+    },
+    {
+      "id": "middle_ascent_calm",
+      "actual_player_local": [
+        -3.2586669921875,
+        60.7281646728516,
+        25.794921875
+      ],
+      "intended_local_floor": [
+        -3.25866413116455,
+        60.7200012207031,
+        25.7949829101562
+      ],
+      "floor_hit": {
+        "collider_path": "StormheartTree/HollowTrunkAscent",
+        "normal": [
+          0.250040888786316,
+          0.967675566673279,
+          0.0329184532165527
+        ],
+        "position": [
+          -103.258666992188,
+          172.773620605469,
+          5495.794921875
+        ]
+      }
+    }
+  ],
+  "limits": [
+    "Debug staged verified-floor visual fixture; not earned ascent/traversal.",
+    "Literal landmark identity only; release bar stays open."
+  ],
+  "remaining_gate": "Existing mounted approach scene smoke awaiting free hosted slot"
+}
