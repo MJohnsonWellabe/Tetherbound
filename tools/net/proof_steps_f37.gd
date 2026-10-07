@@ -51,6 +51,10 @@ static func step(runner: SceneTree, action: String, args: Dictionary) -> Diction
 	if action == "f37_deep_fixture":
 		if not riding.is_mounted(): return {"verdict":"FAIL","detail":"not mounted"}
 		var started := Engine.get_physics_frames()
+		if args.get("continue_after_crossing", false):
+			if not runner.has_meta("f37_current_started"):
+				return {"verdict":"FAIL","detail":"deep continuation requires its actual preceding current crossing"}
+			started = int(runner.get_meta("f37_current_started"))
 		var crossing := {}
 		if args.get("current_crossing", false):
 			var before: Vector3 = riding.mount_body().global_position
@@ -66,6 +70,9 @@ static func step(runner: SceneTree, action: String, args: Dictionary) -> Diction
 			crossing = {"from":before,"to":after,"current_before":flow,"current_after":world.current_at(after),
 				"physics_seconds":seconds,"measured_m_s":speed,"human_reference_m_s":human}
 			if speed <= human: return {"verdict":"FAIL","detail":"actual mounted crossing did not exceed configured human speed","data":crossing}
+			if args.get("stop_after_crossing", false):
+				runner.set_meta("f37_current_started", started)
+				return {"verdict":"PASS","detail":"ordinary actual current crossing; deep continuation shares the same original movement allowance","data":crossing}
 		var remaining := 2400 - (Engine.get_physics_frames() - started)
 		if remaining <= 0: return {"verdict":"FAIL","detail":"ordinary deep approach exhausted its existing movement budget"}
 		var moved: Dictionary = await runner.call("_step_move_to", {"x":-215.0,"z":166.0,"close_enough":0.8,"budget_frames":remaining})

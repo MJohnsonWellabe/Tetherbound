@@ -66,20 +66,51 @@
       "peer": 1,
       "action": "move_to",
       "args": {
+        "x": -55,
+        "z": 134,
+        "close_enough": 1,
+        "budget_frames": 800
+      },
+      "label": "Ordinary mounted approach leg 1/3; original2400-frame allowance split800+800+800"
+    },
+    {
+      "peer": 1,
+      "action": "move_to",
+      "args": {
+        "x": -108,
+        "z": 106,
+        "close_enough": 1,
+        "budget_frames": 800
+      },
+      "label": "Ordinary mounted approach leg 2/3; original2400-frame allowance split800+800+800"
+    },
+    {
+      "peer": 1,
+      "action": "move_to",
+      "args": {
         "x": -161.911,
         "z": 78.643,
         "close_enough": 1,
-        "budget_frames": 2400
+        "budget_frames": 800
       },
-      "label": "Ordinary mounted approach to the open First Shore–Lantern current"
+      "label": "Ordinary mounted approach leg 3/3; original2400-frame allowance split800+800+800"
     },
     {
       "peer": 1,
       "action": "f37_deep_fixture",
       "args": {
-        "current_crossing": true
+        "current_crossing": true,
+        "stop_after_crossing": true
       },
-      "label": "Measured current crossing and ordinary deep approach near Lantern Cove"
+      "label": "Measured ordinary crossing of the authored current; shared2400-frame allowance begins"
+    },
+    {
+      "peer": 1,
+      "action": "f37_deep_fixture",
+      "args": {
+        "continue_after_crossing": true
+      },
+      "label": "Ordinary deep-water approach with the remainder of the same2400-frame allowance"
     },
     {
       "peer": "all",
