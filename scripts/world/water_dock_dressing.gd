@@ -170,6 +170,11 @@ func add_lantern(site: Node3D, cfg: Dictionary, at: Vector3, yaw: float) -> void
 	site.add_child(light)
 
 
+## Preserve the installed First Shore notice caller's existing entry point.
+func _lantern(site: Node3D, cfg: Dictionary, at: Vector3, yaw: float) -> void:
+	add_lantern(site, cfg, at, yaw)
+
+
 func _ground(world: Node3D, at: Vector2) -> float:
 	var y := float(world.call("ground_height_at", at.x, at.y))
 	return y if is_finite(y) else 0.0
