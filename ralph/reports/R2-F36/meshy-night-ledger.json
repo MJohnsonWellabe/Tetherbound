@@ -64,7 +64,7 @@
       "reference": "assets/creatures/tetherbound/ripplet/reference/f36-standing-v1.png",
       "reference_sha256": "f6597a73b55156562f58b8bab8a1f36114d9a4d427ad6a8b2cff3999a0f88987",
       "endpoint": "/openapi/v1/image-to-3d",
-      "submitted_utc": "2026-10-07T14:48:28.977935+00:00",
+      "submitted_utc": "2026-10-07T09:48:28.977935-05:00",
       "task_id": "01a116d6-5229-7597-a54f-3c40896ff029",
       "status": "installed_donor_numeric_PASS_DCC_deformation_judge_BLOCK_OFF",
       "observed_credit_cost": 15,
@@ -78,12 +78,14 @@
       "reference": "assets/creatures/tetherbound/stormursa/reference/f36-shoulder-component-v1.png",
       "reference_sha256": "7b7d905952d003660d46ec9217f508a1c04c4efcacb78bad1f834e8e004230a4",
       "endpoint": "/openapi/v1/image-to-3d",
-      "submitted_utc": "2026-10-07T17:10:56.497419+00:00",
+      "submitted_utc": "2026-10-07T12:10:56.497419-05:00",
       "task_id": "01a11758-bd56-737c-91e6-2c260913964f",
-      "status": "generated_component_pending_topology_fit_deformation_native_judge",
+      "status": "inspection_BLOCK_whole_identity_material_quality",
       "observed_credit_cost": 15,
       "candidate_enabled": false,
-      "owner_allocation": "issue572#6042684639"
+      "owner_allocation": "issue572#6042684639",
+      "disposition_evidence": "ralph/reports/F29/stormursa-shoulder-composite-b-verdict.json",
+      "disposition": "Bounded rigid deformation continuity PASS; rest fit/whole identity BLOCK after second fit. Native scale/pose acceptance unassessed; remains OFF; no further Meshy POST for this attempt per owner6043670270."
     }
   ],
   "actual_meshy_submissions": 6,
