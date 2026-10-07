@@ -77,7 +77,7 @@ func _run() -> void:
 		push_error("Map evidence flags require map in the requested tab set")
 		quit(1)
 		return
-	if _build_states and not _tabs.is_empty() and "build" not in _tabs:
+	if _build_states and ((_map_cycle and _tabs.is_empty()) or (not _tabs.is_empty() and "build" not in _tabs)):
 		push_error("Build state evidence requires build in the requested tab set")
 		quit(1)
 		return
