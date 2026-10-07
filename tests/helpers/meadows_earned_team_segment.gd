@@ -52,6 +52,9 @@ var _completed := false
 ## PROGRESSION 7 excludes from the earned route.
 var _fought: Array[String] = []
 var _respawn_waits := 0
+## Route state only: each actual home-bed wake must leave by the farmhouse's
+## authored outside marker before pursuing a field wild.
+var _home_bed_departure_pending := false
 
 
 ## Reusable camp care seam: one carried remedy or food, one retained party
@@ -416,6 +419,8 @@ func _engage(target: Node3D, allow_neighbour := false) -> bool:
 					and _player.is_on_floor():
 				_receipt("wild_house_route_point", {"kind": step.kind, "index": departure_index,
 					"player": str(_player.global_position), "floor": _player.is_on_floor(), "approach_frames": _frame})
+				if step.kind == "home_bed_departure":
+					_home_bed_departure_pending = false
 				departure_index += 1
 				_nav.reset()
 			else:
@@ -494,9 +499,25 @@ func _containing_house_departure() -> Dictionary:
 		front = front.normalized()
 		inside = within or offset.dot(front) < 1.0
 	if selected == null:
-		return none
+		if not _home_bed_departure_pending:
+			return none
+		# Grandpa's outdoor bed is not a village_road_houses interior. A
+		# successful wake can leave the capsule on its raised pad; a direct
+		# northward pursuit lost floor at the pad edge in the earned run.
+		# Reuse the live farmhouse's outside marker, then the same roads below.
+		selected = _world.get_node_or_null("GrandpaHouse") as Node3D
+		if selected == null or not selected.has_method("marker") \
+				or selected.get_node_or_null("HomeCreatureBed") == null:
+			return {"ok": false}
+		threshold = selected.call("marker", "outside")
+		if not threshold.is_finite():
+			return {"ok": false}
+	elif _home_bed_departure_pending:
+		return {"ok": false} # A home-bed wake cannot silently become another house's departure.
 	var route: Array = []
-	if inside:
+	if _home_bed_departure_pending:
+		route.append({"kind": "home_bed_departure", "at": Vector2(threshold.x, threshold.z)})
+	elif inside:
 		route.append({"kind": "threshold", "at": Vector2(threshold.x, threshold.z)})
 		route.append({"kind": "outside", "at": Vector2(threshold.x + front.x * 1.8, threshold.z + front.z * 1.8)})
 	var village: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/village.json"))
@@ -525,7 +546,7 @@ func _containing_house_departure() -> Dictionary:
 				return {"ok": false}
 			route.append({"kind": "field_road", "at": Vector2(float(raw[0]), float(raw[1]))})
 	return {"ok": matches == 1, "house": str(selected.get_path()), "points": route,
-		"required_points": 2 if inside else 0}
+		"required_points": 1 if _home_bed_departure_pending else (2 if inside else 0)}
 
 
 func _route_pair_valid(raw: Variant) -> bool:
@@ -1093,6 +1114,7 @@ func _recover_at_home_bed(index: int) -> bool:
 			or inventory_before != _inventory_snapshot() \
 			or paid_bed_before != bool(progression.call("has", "creature_bed_built")):
 		return _fail("Home-bed early wake changed retained inventory/team or supplied a paid/full-rest credit")
+	_home_bed_departure_pending = true
 	_receipt("home_bed_hp_recovery", {"party_index": index, "uid": member.get("uid"),
 		"before_hp": before_hp, "after_hp": member.get("hp"), "max_hp": member.get("max_hp"),
 		"elapsed_wall_seconds": float(Time.get_ticks_msec() - started) / 1000.0,

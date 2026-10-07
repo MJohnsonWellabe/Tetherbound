@@ -1,0 +1,11 @@
+{
+  "review": "APPROVE",
+  "reviewer": "/root/b_f49_review",
+  "team_blob": "9ff49c807734244b1759ba2ab2909aa36d3d563d",
+  "scope": "Helper-local route state after successful guarded actual home-bed wake. Installed Grandpa outside marker and authored roads; clear only within0.8m on actual floor.",
+  "preserved": "Original3600 approach frames, unchanged native floor/query/recovery navigator, interaction and authority checks, retained party/inventory/rest assertions. No durable-state or pose injection.",
+  "static_diff_check": "PASS",
+  "named_affected_test": "test_meadows_earned_team_segment.gd",
+  "runtime_pass": false,
+  "criterion_pass": false
+}

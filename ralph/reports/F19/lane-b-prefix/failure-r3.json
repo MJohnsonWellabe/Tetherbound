@@ -1,0 +1,41 @@
+{
+  "run_id": 37641347655,
+  "source_sha": "47641da5ba2dcff9810675bc469c1950fb6df2f4",
+  "script": "tests/smoke_f19_campaign_functional.gd",
+  "args": "--through-rest --route-ledger",
+  "world_seed_override": false,
+  "observed_world_seed": 721801121,
+  "result": {"reached": "village", "elapsed_seconds": 698.738, "campaign_complete": false, "requested_prefix_passed": false, "counts_as_proof": false},
+  "failure": "Native opening refused: actual production walk lost grounded floor",
+  "positive_actual_recovery": {
+    "uid": "creature-dc1724d68dbd9f5b47f199abb391d2f8",
+    "party_index": 1,
+    "before_hp": 61.5559719925124,
+    "after_hp": 123.943037068367,
+    "max_hp": 123.943037068367,
+    "elapsed_wall_seconds": 60.697,
+    "controller_assignment_and_early_wake": true,
+    "inventory_and_party_unchanged": true,
+    "full_rest_bonus": false,
+    "synthetic_recovery_ticks": false
+  },
+  "departure_failure": {
+    "start": [5.071891, 1.175383, 5.202988],
+    "start_support": "GrandpaHouse/HomeCreatureBed StaticBody",
+    "target": [16.1484870910645, 0.947374641895294, -34.212833404541],
+    "target_body": "Wild_mudsnout_1070_1",
+    "physics_frame": 33502,
+    "lost_floor_at": [5.92520904541016, 1.06818163394928, 2.16592884063721],
+    "on_floor": false,
+    "slide_contacts": [],
+    "floor_snap": 0.400000005960464,
+    "recoveries": 0,
+    "callback_queries": 3
+  },
+  "source_cause": "The departure selector runs for each engagement, but only village_road_houses qualify. Grandpa's outdoor home bed is excluded, so the successful wake was followed by a direct northward pursuit off its raised support. This is not a remembered first-house-departure bug.",
+  "new_approach": "Higher-model TEAM-only correction requires installed Grandpa outside marker and existing authored roads after a guarded actual wake; pending clears only at <=0.8m on actual floor. Native strict floor/query/recovery oracle and approach3600 unchanged.",
+  "rested_guidance_result": "Not exercised; this run failed earlier in team training",
+  "artifact": {"id": 11491984208, "name": "render-lane-b-f19-rested-r3-fullsha-37641347655", "bytes": 7602879, "sha256": "5949266c4ad646a45a3ee4f0e4fab827ef9ee02ffd7a9272769607a106e9223d", "run_log_sha256": "1f7c381f9af3786ed1baa8950d9988f8db082a19c995fb989dbdd14e95fc8c2a"},
+  "criterion_pass": false,
+  "fixture_promotion": false
+}
