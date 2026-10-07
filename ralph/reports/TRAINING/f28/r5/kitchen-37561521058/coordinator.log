@@ -1,0 +1,34 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+F48 route profile SHA256: d92312ef68ac883c6eb50a5ee32ce27161e29c034aab9f460bbbddd811e8a21d
+coordinator: launched peer 0 (host) pid=2272 control_port=34815 home=/home/runner/work/Tetherbound/Tetherbound/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/home-0 log=/home/runner/work/Tetherbound/Tetherbound/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/peer-0.log
+coordinator: launched peer 1 (client) pid=2273 control_port=40037 home=/home/runner/work/Tetherbound/Tetherbound/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/home-1 log=/home/runner/work/Tetherbound/Tetherbound/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/peer-1.log
+coordinator: peer 0 hello: {"enet_port":28881.0,"godot_version":"4.7-stable (official)","main_sha":"1abf24b76074","peer":0.0,"pid":2272.0,"role":"host","type":"hello","user_data_dir":"/home/runner/work/Tetherbound/Tetherbound/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/home-0/godot/app_userdata/Tetherbound"}
+coordinator: peer 1 hello: {"enet_port":28882.0,"godot_version":"4.7-stable (official)","main_sha":"1abf24b76074","peer":1.0,"pid":2273.0,"role":"client","type":"hello","user_data_dir":"/home/runner/work/Tetherbound/Tetherbound/ralph/reports/INTEGRATION/main-green/native-f48-loop/net-run/home-1/godot/app_userdata/Tetherbound"}
+coordinator: all 2 peer(s) said hello
+PASS: #1 peer 0 f48_watch_owner_saves (Arm actual saved-edge observation before production admission; no save or ACK) -> PASS -- Read-only producer actual owner BOOL-save observer
+PASS: #1 peer 1 f48_watch_owner_saves (Arm actual saved-edge observation before production admission; no save or ACK) -> PASS -- Read-only producer actual owner BOOL-save observer
+PASS: #2 peer 0 f48_require_configuration (Pin disclosed effective mechanics configuration before any saved-input admission) -> PASS -- Exact effective test configuration pinned separately; production defaults unchanged
+PASS: #2 peer 1 f48_require_configuration (Pin disclosed effective mechanics configuration before any saved-input admission) -> PASS -- Exact effective test configuration pinned separately; production defaults unchanged
+PASS: #3 peer 0 load_save (DISCLOSED saved-input setup; original guest character only, no borrowed world) -> PASS -- loaded peer-0 (captured directory (split path)) as slot 0; realm 'meadows' booted as 'world'; character 'character-626300bee616b52bfa1d40ab32fb776a'
+PASS: #4 peer 1 load_save (DISCLOSED saved-input setup; original guest character only, no borrowed world) -> PASS -- Restored only authentic portable character through production owner; no world or locator copied
+PASS: #5 peer 0 host -> PASS -- hosting udp/28881 as peer 1
+PASS: #6 peer 1 production_join -> PASS -- title returning entry built 'MeadowsPlayground' first, then JoinDriver joined 127.0.0.1:28881 as peer 1176463999 after 52 frames
+PASS: #7 peer 0 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #7 peer 1 expect_peers -> PASS -- registry reports 2 peer(s) after 0 frames (0.0 s)
+PASS: #8 peer 0 f48_witness -> PASS -- Read actual files without autosave; full immutable witness retained
+PASS: #8 peer 1 f48_witness -> PASS -- Read actual files without autosave; full immutable witness retained
+PASS: #9 peer 0 f48_watch_altar_save (Read-only actual transaction owner BOOL-save edge; no care exclusions or state writes) -> PASS -- Read-only exact host/owner save edges armed before original paid build input
+PASS: #10 peer 0 press (bootstrap_altar: ordinary input) -> PASS -- pressed 'build_open' x1
+PASS: #11 peer 0 wait (bootstrap_altar: ordinary input) -> PASS -- waited 30 physics frames
+PASS: #12 peer 0 f48_button (bootstrap_altar: ordinary input) -> PASS -- pressed 'ui_accept' x1
+PASS: #13 peer 0 wait (bootstrap_altar: ordinary input) -> PASS -- waited 15 physics frames
+PASS: #14 peer 0 f48_build_cell (bootstrap_altar: ordinary input) -> PASS -- pressed 'ui_accept' x1
+PASS: #15 peer 0 wait (bootstrap_altar: ordinary input) -> PASS -- waited 30 physics frames
+PASS: #16 peer 0 press (bootstrap_altar: ordinary input) -> PASS -- pressed 'build_place' x1
+PASS: #17 peer 0 wait (bootstrap_altar: ordinary input) -> PASS -- waited 180 physics frames
+PASS: #18 peer 0 press (bootstrap_altar: ordinary input) -> PASS -- pressed 'build_cancel' x1
+PASS: #19 peer 0 f48_assert_altar_build -> PASS -- Actual paid Altar bootstrap; no earned campaign credit. 
+PASS: #20 peer 1 f48_assert -> PASS -- Exact durable assertions: passed
+FAIL: #21 peer 0 f48_assert_snapshot (Read actual memory/disk carriers before any capture autosave) -> FAIL -- Read-only explicit input source actual_owner_BOOL_edge_full_canonical_after_and_accepted_ACK: memory: complete canonical carrier differs from actual immutable row.after at owner BOOL-save edge; disk: complete canonical carrier differs from actual immutable row.after at owner BOOL-save edge
+FAIL: #21 peer 0 f48_assert_snapshot (Read actual memory/disk carriers before any capture autosave) -> FAIL -- Read-only explicit input source actual_owner_BOOL_edge_full_canonical_after_and_accepted_ACK: memory: complete canonical carrier differs from actual immutable row.after at owner BOOL-save edge; disk: complete canonical carrier differs from actual immutable row.after at owner BOOL-save edge
