@@ -81,6 +81,8 @@ var _saved_visual_config: Dictionary
 var _saved_library_enabled := false
 var _prove_library_arrival := false
 var _arrival_records: Dictionary = {}
+var _captured_library_slots: Dictionary = {}
+var _pending_library_captures := 0
 
 func _init() -> void:
 	_run.call_deferred()
@@ -347,6 +349,7 @@ func _run() -> void:
 				"the upgraded signature commits a real positive HP debit within the unchanged named cap")
 			await create_timer(2.6).timeout
 	_check(MATH.config().get("actor_vitals", {}).get("runtime_enabled") == false, "proof must not activate actor_vitals")
+	while _pending_library_captures > 0: await process_frame
 	_finish()
 
 func _setup() -> void:
@@ -526,6 +529,9 @@ func _on_launch(_on_enemy: bool, launch: Dictionary, presentation: Node3D) -> vo
 						"no actual HUD number precedes visible contact " + action_id)
 				_arrival_records[action_id] = {"move_id": str(launch.move_id),
 					"contact_frame": Engine.get_process_frames(), "hp_at_contact": float(_enemy.hp)}
+				if not _capture_dir.is_empty() and not _captured_library_slots.has(str(launch.slot)):
+					_captured_library_slots[str(launch.slot)] = true
+					_capture_library_contact(action_id)
 			, CONNECT_ONE_SHOT)
 	if launch.slot == "ultimate" and not _capture_dir.is_empty(): _capture_ultimate(launch)
 
@@ -540,6 +546,19 @@ func _on_impact(on_enemy: bool, receipt: Dictionary, _where: Vector3) -> void:
 		_arrival_records[action_id]["hp_after_impact"] = float(_enemy.hp)
 		_check(float(_enemy.hp) < float(_arrival_records[action_id].hp_at_contact),
 			"host applies positive HP debit after contact " + action_id)
+
+func _capture_library_contact(action_id: String) -> void:
+	_pending_library_captures += 1
+	var sequence := _captured_library_slots.size() - 1
+	DirAccess.make_dir_recursive_absolute(_capture_dir)
+	await RenderingServer.frame_post_draw
+	var path := _capture_dir.path_join("library-contact-%02d.png" % sequence)
+	var rendered := root.get_texture().get_image()
+	_check(rendered != null and rendered.save_png(path) == OK, "rendered library contact from the accepted action " + action_id)
+	_captures.append(path)
+	_arrival_records[action_id]["capture"] = path
+	_arrival_records[action_id]["draw_frame"] = Engine.get_process_frames()
+	_pending_library_captures -= 1
 
 func _capture_ultimate(launch: Dictionary) -> void:
 	var capture_directory := _capture_dir.path_join("rank-%d" % int(launch.mastery_rank)) if _prove_mastery_transition else _capture_dir
