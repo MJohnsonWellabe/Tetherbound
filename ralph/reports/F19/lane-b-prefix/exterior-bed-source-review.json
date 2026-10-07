@@ -1,0 +1,23 @@
+{
+  "remaining": "Clean affected logic on pushed commit and fresh earned rested_team prefix runtime remain open.",
+  "base_sha": "4cfd0b14d0",
+  "scope": "Read live solid pad BoxShape3D bounds and capsule clearance; actual actionable provider before center convergence; same exterior Wake stance; pad-clear route then authored Grandpa outside marker.",
+  "reviewer": "/root/b_f49_review",
+  "cause": "Actual center-first bed approach seated trainer atop solid pad; subsequent departure lost grounded floor.",
+  "failure_source": "47641da5ba2dcff9810675bc469c1950fb6df2f4",
+  "kind": "earned_home_bed_exterior_stance_source_review",
+  "criterion_pass": false,
+  "verdict": "SOURCE APPROVE",
+  "affected_tests": [
+    "tests/test_meadows_earned_team_segment.gd"
+  ],
+  "preserved": [
+    "Existing exterior fence clearance default",
+    "Original native navigator and grounded floor/query/refusal guards",
+    "Existing movement and natural healing budgets",
+    "Exact stable party, inventory, paid-bed and rest-credit guards",
+    "No player pose, collider, input result or durable state injection"
+  ],
+  "failure_run": 37641347655,
+  "blob": "80c69eb4269a1142c4850f66f370b4e92f5b33b2"
+}
