@@ -187,13 +187,14 @@ func _observe_material(node: MeshInstance3D, gates: Array, uniforms: Array,
 		for key: String in gates:
 			var actual: Variant = material.get_shader_parameter(key)
 			observed.gates[key] = actual
-			var expected := bool(settings.get("ridges_enabled", false)) if key == "visual_ridges_enabled" else bool(settings.get("enabled", false))
+			var enabled := bool(settings.get("enabled", false))
+			var expected := enabled and bool(settings.get("ridges_enabled", false)) if key == "visual_ridges_enabled" else enabled
 			if actual != expected:
 				observed.matches_requested = false
 		for key: String in uniforms:
 			var actual: Variant = material.get_shader_parameter(key)
 			observed.uniforms[key] = actual
-			if (_candidate or _shipping) and settings.get("shader", {}).has(key):
+			if bool(settings.get("enabled", false)) and settings.get("shader", {}).has(key):
 				if actual == null or not is_equal_approx(float(actual), float(settings.shader[key])):
 					observed.matches_requested = false
 	if not bool(observed.matches_requested):
