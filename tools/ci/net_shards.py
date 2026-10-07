@@ -26,15 +26,15 @@ import sys
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 # Must equal the `shard:` matrix in ci.yml (tests/test_ci_net_shards.py).
-SHARD_COUNT = 9
+SHARD_COUNT = 8
 # Lanes per shard job. Two lanes at once (tools/ci/run_net_lanes.sh) ran at
 # 1.0-1.6x solo time and broke timing-sensitive smokes under the CPU load
 # (PR #573 runs 37636924943, 37642447200: f20_ending's hello budget,
 # f22_forced_break, water_return), so each shard runs ONE lane again.
 LANES_PER_SHARD = 1
-# Measured smoke time per shard: ~18 min, so with ~2 min of checkout and
+# Measured smoke time per shard: ~18.5 min, so with ~2 min of checkout and
 # Godot setup a shard job stays near 20 minutes on the slowest measurements.
-SHARD_SMOKE_BUDGET_SECONDS = 1080
+SHARD_SMOKE_BUDGET_SECONDS = 1110
 
 # Seconds per smoke, measured SOLO: the SLOWEST of the three green full runs
 # 37615388024, 37575215387 and 37563845433 (2026-10-07), from one smoke's

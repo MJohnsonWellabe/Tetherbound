@@ -67,6 +67,17 @@ name: CI
 # unit-test file set still run on every push. What changed is which of them
 # share a checkout.
 
+# CI-SPEED, 2026-10-07 (owner: a full-ci PR run must finish, ci-gate
+# included, in under 30 minutes from push, queue time counted). Measured on
+# PR #571 run 37615388024: 64 jobs, 514 runner-minutes, 31.7 min, most of it
+# queueing for the account's ~20 runners. Now 13 jobs (~250 runner-minutes)
+# after `changes`: 8 net shards, 4 two-lane `verify-suite` jobs
+# (tools/ci/run_suite.py, groups in tools/ci/suites/) and export, each about
+# 20 minutes, so they all start at once. Owner-authorized trims run on the
+# 8-hourly schedule and on workflow_dispatch instead of on a PR: see each
+# `NIGHTLY ONLY` note below, `### nightly` steps in tools/ci/suites/ and
+# NIGHTLY_ONLY in tools/ci/net_shards.py.
+
 on:
   push:
     # `ralph/**` dropped 2026-09-05 (owner: "the Ralph process isn't even
@@ -438,7 +449,7 @@ jobs:
   # -gate-evidence-shard, -gate-evidence-finale (both segments), -gate-b-core
   # and -segment-handoffs. Each is now a GROUP file under tools/ci/suites/
   # holding that job's steps verbatim; tools/ci/run_suite.py plans the groups
-  # longest first onto 5 suites x 2 lanes and runs a suite's two lanes at once,
+  # longest first onto 4 suites x 2 lanes and runs a suite's two lanes at once,
   # each lane in its own XDG_DATA_HOME, RUNNER_TEMP and network namespace
   # (what a separate runner used to give each job). Before: 20 jobs, ~180
   # runner-minutes, ~45 of them checkout/setup, competing for ~17 free runners
@@ -801,7 +812,7 @@ jobs:
   # rule docs/WORKFLOW.md §5 already holds every other smoke to.
   verify-multiplayer-shard:
     runs-on: ubuntu-latest
-    # CI-SPEED (owner, 2026-10-07): nine shard jobs (was 23), planned
+    # CI-SPEED (owner, 2026-10-07): eight shard jobs (was 23), planned
     # longest-processing-time first from MEASURED durations
     # (tools/ci/net_shards.py: the slowest of three green full runs per
     # smoke), each ~18 min of smokes. Eleven duplicate/regional net smokes
@@ -816,7 +827,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        shard: [1, 2, 3, 4, 5, 6, 7, 8]
     timeout-minutes: 30
     needs: changes
     if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-multiplayer-shard|'))

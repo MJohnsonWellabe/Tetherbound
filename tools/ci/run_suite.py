@@ -54,11 +54,11 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 SUITES_DIR = os.path.join(ROOT, "tools", "ci", "suites")
 
 # Must equal the `suite:` matrix in ci.yml (tests/test_ci_suites.py).
-SUITE_COUNT = 5
+SUITE_COUNT = 4
 LANES = 2
 # A lane's measured (solo) seconds; two single-process lanes ran at ~1.0-1.1x
 # their solo time (PR #573 runs 37636924943, 37642447200).
-LANE_BUDGET_SECONDS = 960
+LANE_BUDGET_SECONDS = 1080
 DEFAULT_STEP_TIMEOUT_MINUTES = 30
 
 
