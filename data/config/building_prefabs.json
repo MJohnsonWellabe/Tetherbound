@@ -3905,7 +3905,7 @@
             {"size": [0.09, 0.82, 0.04], "at": [0.79, 0.50, -0.08]}
           ]
         },
-        "_why": "Stormwood settlement grounding, 2026-09-09: cottage_a's generic home now uses cottage_interior.gd as well as Mira's bespoke shop. These are the same measured inner faces and doorway dimensions shop_interior.gd already hardcodes for this exact shell; adding the recipe metadata makes the reused generic floor fill the real 4x6m room instead of falling back to cottage_b's 4x4m room. shop_interior.gd deliberately ignores this argument, so Mira's shipped interior is unchanged."
+        "_why": "Stormwood settlement grounding, 2026-09-09: cottage_a's generic home now uses cottage_interior.gd as well as Mira's bespoke shop. These are the same measured inner faces and doorway dimensions shop_interior.gd already hardcodes for this exact shell; adding the recipe metadata makes the reused generic floor fill the real 4x6m room instead of falling back to cottage_b's 4x4m room. shop_interior.gd retains its measured floor footprint and consumes only the nested shop_counter presentation tunables."
       },
       "retint": {
         "MI_WindowGlass": {
