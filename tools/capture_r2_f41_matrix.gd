@@ -54,7 +54,7 @@ func _stage_candidate_configs() -> bool:
 		match name:
 			"stormheart_presentation":
 				config.enabled = true
-				for part: String in ["ancient_trunk", "built_detail", "branching_crown", "canopy_atlas", "core_finish"]:
+				for part: String in ["ancient_trunk", "built_detail", "branching_crown", "canopy_atlas", "core_finish", "visible_roots"]:
 					config[part].enabled = true
 			"stormwood_road_current": config.finish_candidate.enabled = true
 			"stormwood_ground_finish": config.enabled = true

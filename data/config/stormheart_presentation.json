@@ -20,7 +20,9 @@
     "enabled": false,
     "_comment": "P2-037: articulated outer bark and split crown tips around the unchanged inner clearance. Visual geometry and UVs only; native comparison required.",
     "lobe_depth_m": 8.0,
-    "bark_repeat_m": 4.0
+    "bark_repeat_m": 16.0,
+    "bark_tint": "#c7b697",
+    "normal_depth": 0.65
   },
   "built_detail": {
     "enabled": false,
@@ -50,5 +52,6 @@
     "_comment": "P2-037 candidate: preserve the installed TwistedTree leaf UV/alpha atlas and recolour it in a shader. Native crown review is required; no geometry, scale, placement or collision changes.",
     "leaf_colour": "#75924d",
     "roughness": 0.91
-  }
+  },
+  "visible_roots": {"enabled": false, "scope": "client_presentation", "reach_m": 132.0, "_comment": "Reference-backed visual roots anchor in actual outer bark, keeping south/east openings and every physical floor/collider unchanged. Full native landmark judgment required."}
 }
