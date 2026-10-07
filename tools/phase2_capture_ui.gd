@@ -17,6 +17,7 @@ var _output := ""
 var _seed := 2042
 var _map_cycle := false
 var _map_zoom_samples := false
+var _paired_720 := false
 var _records: Array[Dictionary] = []
 var _failures: Array[String] = []
 
@@ -41,6 +42,8 @@ func _run() -> void:
 			_map_cycle = true
 		elif arg == "--map-zoom-samples":
 			_map_zoom_samples = true
+		elif arg == "--paired-720":
+			_paired_720 = true
 	if not SCENES.has(_biome) or not _output.begins_with("res://ralph/reports/VISUAL/phase2/"):
 		push_error("Use --biome and --output under the Phase 2 evidence directory")
 		quit(1)
@@ -117,6 +120,7 @@ func _run() -> void:
 		"fixture": "Stocked party and satchel in production scene; no save or progression proof",
 		"map_cycle": _map_cycle,
 		"map_zoom_samples": _map_zoom_samples,
+		"paired_720": _paired_720,
 		"frames": _records, "failures": _failures,
 		"complete": _failures.is_empty(),
 	}
@@ -227,14 +231,24 @@ func _stock_fixture(game: Node) -> void:
 
 
 func _shoot(frame_id: String, subject: String, world: Node) -> void:
+	await _shoot_raster(frame_id, subject, world, Vector2i(1920, 1080))
+	if _paired_720:
+		await _shoot_raster(frame_id + "_1280x720", subject, world, Vector2i(1280, 720))
+		root.size = Vector2i(1920, 1080)
+		for frame in 4:
+			await process_frame
+
+
+func _shoot_raster(frame_id: String, subject: String, world: Node, size: Vector2i) -> void:
+	root.size = size
 	for frame in 4:
 		await process_frame
 	print("PHASE2 UI draw wait: ", frame_id)
 	await RenderingServer.frame_post_draw
 	print("PHASE2 UI draw completed: ", frame_id)
 	var image := root.get_texture().get_image()
-	if image == null or image.is_empty() or image.get_width() != 1920 or image.get_height() != 1080:
-		_failures.append("%s: expected 1920x1080 image" % frame_id)
+	if image == null or image.is_empty() or image.get_size() != size:
+		_failures.append("%s: expected %dx%d image" % [frame_id, size.x, size.y])
 		return
 	var path := "%s/%s.jpg" % [_output, frame_id]
 	if image.save_jpg(path, 0.87) != OK:
@@ -242,5 +256,6 @@ func _shoot(frame_id: String, subject: String, world: Node) -> void:
 		return
 	_records.append({"id": frame_id, "subject": subject, "path": path,
 		"scene": str(SCENES[_biome]), "camera": "production CameraRig/Camera3D",
+		"resolution": [image.get_width(), image.get_height()],
 		"ui": true, "player_present": world.get_node_or_null(^"Player") != null})
 	print("PHASE2 UI %s -> %s" % [frame_id, path])
