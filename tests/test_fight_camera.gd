@@ -52,6 +52,25 @@ func test_impossible_and_near_plane_frames_never_report_a_pass() -> void:
 	assert_false(bool(FIT.project_box(body, Transform3D.IDENTITY, 68.0, 16.0/9.0, 0.05).get("valid", false)))
 	assert_almost_eq(FIT.overlap_ratio(Rect2(0,0,2,2), Rect2(1,0,1,2)), 1.0, 0.0001, "overlap denominator is the smaller actor")
 	assert_eq(FIT.overlap_ratio(Rect2(0,0,1,1), Rect2(2,0,1,1)), 0.0)
+	# Native f2e giant/giant64: both projections were invalid, but their empty
+	# fallback rectangles incorrectly became a HUD-clear recovery guard.
+	var manager := preload("res://scripts/combat/combat_manager.gd").new()
+	var context := {"hud_rects":[Rect2(0,0,1,0.1)],"hud_records":[[0,0,1,0.1]],
+		"viewport":Vector2(1280,720),"fov":68.0,"near":0.05,"hud_available":true,
+		"invalid_hud_paths":[],"subjects":[],"sight_subjects":[],"sight_spheres":[],
+		"support":{},"occluders":[],"scenery":[],"overflow":false,"geometry_valid":true}
+	var ally_rect := Rect2(0.2,0.3,0.2,0.4)
+	var foe_rect := Rect2(0.6,0.3,0.2,0.4)
+	var visible: Dictionary = manager._fight_visibility_score(Transform3D.IDENTITY,ally_rect,foe_rect,context)
+	assert_true(bool(visible.hud_clear) and bool(visible.pass),"valid separated projections below the HUD are clear")
+	for invalid: Rect2 in [Rect2(),Rect2(0.2,0.3,-0.2,0.4),
+		Rect2(NAN,0.3,0.2,0.4),Rect2(0.2,0.3,INF,0.4)]:
+		for ally_invalid: bool in [true,false]:
+			var rejected: Dictionary = manager._fight_visibility_score(Transform3D.IDENTITY,
+				invalid if ally_invalid else ally_rect,foe_rect if ally_invalid else invalid,context)
+			assert_false(bool(rejected.hud_clear),"an unavailable actor projection cannot certify HUD clearance")
+			assert_false(bool(rejected.pass),"invalid projected geometry never passes visibility")
+	manager.free()
 
 func test_rig_takeover_clears_midpoint_offset_and_runtime_pitch_is_not_accumulated() -> void:
 	var cfg := FIT.config()

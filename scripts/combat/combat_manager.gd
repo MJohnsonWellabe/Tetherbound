@@ -1740,6 +1740,14 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 	var manual := float(_camera_rig.get("_tracking_manual_left")) > 0.0
 	var yaw := float(_camera_rig.get("yaw"))
 	var pitch := float(_camera_rig.get("pitch"))
+	# Follow and the spring arm may already have shortened this idle frame.
+	# Admission starts at the last drawn lens, never at a new clamped probe.
+	var current: Dictionary = (_fight_camera_solution.get("drawn_pose",{}) as Dictionary).duplicate()
+	var current_yaw: float = float(_fight_camera_solution.get("selected_yaw",yaw))
+	var current_pitch: float = float(_fight_camera_solution.get("selected_pitch",pitch))
+	if current.is_empty():
+		current = {"transform":camera.get_camera_transform(),"pivot":(_camera_rig as Node3D).global_position,
+			"distance":maxf(camera.position.z,0.01)}
 	# Preserve the pair's takeover pitch and subsequent manual look. Automatic
 	# obstruction elevation is relative to that baseline, never compounded.
 	var base_pitch: float = pitch if manual else float(_fight_camera_solution.get("base_pitch",pitch))
@@ -1775,13 +1783,15 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 	_fight_camera_solution = solution
 	_fight_camera_solution["base_pitch"] = base_pitch
 	_fight_camera_solution["destination_pass"] = bool(solution.get("pass",false))
-	# Read the actual eased arm, not its requested distance: the latter snapped
-	# the lens across metres of foreground before the rig could recover it.
-	var current := probe.call((_camera_rig as Node3D).global_position,
-		(_camera_rig as Node3D).global_basis,minf(float(_camera_rig.get("spring_length")),float(local.max_distance_m))) as Dictionary
-	if current.is_empty():
-		_fight_camera_solution["pass"] = false
-		return true
+	# Lens lift can change before this call. Reconstruct the pivot that retains
+	# the drawn lens under today's offsets; every proposed move is still probed.
+	var current_transform: Transform3D = current.transform
+	# Keep this frame's authored impact roll when retaining the drawn lens.
+	# Its position stays fixed; the rolled view is scored before admission.
+	current_transform.basis = Basis.from_euler(Vector3(current_pitch,current_yaw,float(local.roll_radians)))
+	current["transform"] = current_transform
+	current["pivot"] = current_transform.origin-current_transform.basis.z*float(current.distance) \
+		-current_transform.basis.x*camera.h_offset-current_transform.basis.y*camera.v_offset
 	var current_a := FIGHT_CAMERA.project_points(ally_points,current.transform,camera.fov,aspect,camera.near)
 	var current_b := FIGHT_CAMERA.project_points(foe_points,current.transform,camera.fov,aspect,camera.near)
 	var current_framed: bool = bool(current_a.get("in_frame",false)) and bool(current_b.get("in_frame",false))
@@ -1789,11 +1799,13 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 	var current_visibility := _fight_visibility_score(current.transform,current_a.get("rect",Rect2()),current_b.get("rect",Rect2()),visibility_context)
 	var current_clear: bool = current_framed and current_overlap<=float(local.max_actor_overlap) \
 		and bool(current_visibility.get("pass",false))
-	var retain: bool = current_clear and (manual or not bool(solution.get("pass",false)) \
-		or float(current.distance)<=float(solution.distance)+float(local.get("safe_fit_distance_slack_m",0.75)))
+	var manual_settled: bool = absf(wrapf(yaw-current_yaw,-PI,PI))<=0.000001 and absf(pitch-current_pitch)<=0.000001
+	var retain: bool = current_clear and ((manual and manual_settled) or (not manual \
+		and (not bool(solution.get("pass",false)) \
+		or float(current.distance)<=float(solution.distance)+float(local.get("safe_fit_distance_slack_m",0.75)))))
 	var selected: Dictionary = current
-	var selected_yaw: float = yaw
-	var selected_pitch: float = pitch
+	var selected_yaw: float = current_yaw
+	var selected_pitch: float = current_pitch
 	var motion_blocked: bool = false
 	if not retain:
 		# Orbit and elevation obey the existing speed limit; pivot/zoom use the
@@ -1803,16 +1815,33 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 		# A HUD-only failure must not authorize cropping either actor or losing
 		# clear foreground/support. Shorten the same constrained step when its
 		# intermediate orbit crosses a blocked arm; never snap to the endpoint.
-		for step_scale: float in [1.0,0.5,0.25,0.125]:
-			var next_yaw: float = yaw if manual else yaw+clampf(wrapf(deg_to_rad(float(solution.yaw_offset_deg)),-PI,PI),-max_turn,max_turn)*step_scale
-			var next_pitch: float = pitch if manual else move_toward(pitch,float(solution.pitch),max_turn*step_scale)
+		var turn: float = wrapf(yaw+deg_to_rad(float(solution.yaw_offset_deg))-current_yaw,-PI,PI)
+		var other_turn: float = turn-TAU if turn>0.0 else turn+TAU
+		# The shortest orbit can initially increase overlap even when its endpoint
+		# is clear. Try the other route to that same angle and separate orbit from
+		# zoom/pivot recovery. Every route keeps the same speed and admission gates.
+		var routes: Array[Vector2] = [Vector2(turn,1.0)]
+		if not manual:
+			routes.append(Vector2(other_turn,1.0))
+			routes.append(Vector2(turn,0.0))
+			routes.append(Vector2(other_turn,0.0))
+			routes.append(Vector2(0.0,1.0))
+		var admitted: bool = false
+		for attempt: int in routes.size()*4:
+			var route: Vector2 = routes[attempt >> 2]
+			var step_scale: float = [1.0,0.5,0.25,0.125][attempt%4]
+			var next_yaw: float = yaw if manual else current_yaw+clampf(route.x,-max_turn,max_turn)*step_scale
+			var target_pitch: float = pitch if manual else float(solution.pitch)
+			var next_pitch: float = pitch if manual else move_toward(current_pitch,target_pitch,max_turn*step_scale)
 			var next_basis := Basis.from_euler(Vector3(next_pitch,next_yaw,float(local.roll_radians)))
-			var next_pivot: Vector3 = (current.pivot as Vector3).lerp(solution.pivot as Vector3,weight*step_scale)
-			var next_distance: float = lerpf(float(current.distance),float(solution.get("requested_distance",solution.distance)),weight*step_scale)
+			var next_pivot: Vector3 = (current.pivot as Vector3).lerp(solution.pivot as Vector3,weight*step_scale*route.y)
+			var next_distance: float = lerpf(float(current.distance),float(solution.get("requested_distance",solution.distance)),weight*step_scale*route.y)
 			var next := probe.call(next_pivot,next_basis,next_distance) as Dictionary
-			if next.is_empty(): continue
+			if next.is_empty() or not (next.transform as Transform3D).is_finite(): continue
 			var travel: Vector3 = (next.transform as Transform3D).origin-(current.transform as Transform3D).origin
 			var length: float = travel.length()
+			if length<=0.000001 and absf(next_yaw-current_yaw)<=0.000001 \
+				and absf(next_pitch-current_pitch)<=0.000001: continue
 			motion_blocked = length>0.0 and float(_camera_rig.call("_free_distance_behind",
 				(current.transform as Transform3D).origin,travel/length,length))<length
 			if motion_blocked: continue
@@ -1822,16 +1851,21 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 			var next_overlap := FIGHT_CAMERA.overlap_ratio(next_a.get("rect",Rect2()),next_b.get("rect",Rect2()))
 			var preserves_readability: bool = (not current_framed or next_framed) \
 				and next_overlap<=maxf(current_overlap,float(local.max_actor_overlap))
-			if not preserves_readability: continue
+			if not manual and not preserves_readability: continue
 			var next_visibility := _fight_visibility_score(next.transform,next_a.get("rect",Rect2()),next_b.get("rect",Rect2()),visibility_context)
+			if not bool(next_visibility.get("geometry_valid",false)): continue
 			for guard: String in ["geometry_valid","foreground_clear","support_clear","hud_clear","pass"]:
 				if bool(current_visibility.get(guard,false)) and not bool(next_visibility.get(guard,false)):
 					preserves_readability = false
-			if not motion_blocked and preserves_readability:
+			# Manual look may deliberately hide an actor (COMBAT §5). Finite
+			# geometry, collision probes and the full lens sweep still apply.
+			if not motion_blocked and (manual or preserves_readability):
 				selected = next
 				selected_yaw = next_yaw
 				selected_pitch = next_pitch
+				admitted = true
 				break
+		if admitted: motion_blocked = false
 	# The rig's next follow must continue from the pose actually admitted here,
 	# not independently ease toward an endpoint whose intermediate was refused.
 	var offset: Vector3 = selected.pivot-_ally_body.global_position-Vector3.UP*float(_camera_rig.get("_height"))
@@ -1844,6 +1878,11 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 	_fight_camera_solution["selected_pivot"] = selected.pivot
 	_fight_camera_solution["selected_distance"] = selected.distance
 	_fight_camera_solution["selected_transform"] = selected.transform
+	_fight_camera_solution["selected_yaw"] = selected_yaw
+	_fight_camera_solution["selected_pitch"] = selected_pitch
+	var drawn_pose: Dictionary = selected.duplicate()
+	drawn_pose["transform"] = camera.get_camera_transform()
+	_fight_camera_solution["drawn_pose"] = drawn_pose
 	_fight_camera_solution["selected_world_room"] = selected.get("world_room",null)
 	var model_room := float(selected.get("model_room",INF))
 	_fight_camera_solution["selected_model_room"] = model_room if is_finite(model_room) else null
@@ -6356,10 +6395,16 @@ func _fight_visibility_context(camera: Camera3D, cfg: Dictionary) -> Dictionary:
 ## fresh independent pixels still decide whether the actual view is readable.
 func _fight_visibility_score(transform: Transform3D, ally_rect: Rect2, foe_rect: Rect2,
 		context: Dictionary) -> Dictionary:
+	var projections_valid: bool = true
+	for rect: Rect2 in [ally_rect,foe_rect]:
+		if not rect.position.is_finite() or not rect.size.is_finite() or not rect.end.is_finite() \
+			or rect.size.x<=0.0 or rect.size.y<=0.0:
+			projections_valid = false
 	var hud_overlap := 0.0
-	for occupied: Rect2 in context.hud_rects:
-		for subject: Rect2 in [ally_rect,foe_rect]:
-			hud_overlap += subject.intersection(occupied).get_area()
+	if projections_valid:
+		for occupied: Rect2 in context.hud_rects:
+			for subject: Rect2 in [ally_rect,foe_rect]:
+				hud_overlap += subject.intersection(occupied).get_area()
 	var aspect: float = float(context.viewport.x)/maxf(float(context.viewport.y),0.000001)
 	var sight_subjects: Array = context.sight_subjects
 	var support: Dictionary = context.get("support",{})
@@ -6431,7 +6476,7 @@ func _fight_visibility_score(transform: Transform3D, ally_rect: Rect2, foe_rect:
 					if is_support: support_hidden = true
 					else: hidden += 1
 					break
-	var hud_clear: bool = bool(context.hud_available) and hud_overlap==0.0
+	var hud_clear: bool = projections_valid and bool(context.hud_available) and is_finite(hud_overlap) and hud_overlap==0.0
 	var sight_clear: bool = bool(context.geometry_valid) and not bool(context.overflow) and not scenery_overflow and hidden==0
 	var support_clear: bool = support.is_empty() or (bool(context.geometry_valid) \
 		and not bool(context.overflow) and not scenery_overflow \
