@@ -1,0 +1,300 @@
+{
+  "baseline_sha": "fa69cee0b4438023871a1d9dd0f2b7dee47a42d4",
+  "candidate_sha": "23c2157876bfcd347ca1e08122d94e0c7d20cc60",
+  "run_id": 37674746997,
+  "artifact_id": 11506267163,
+  "exit_code": 0,
+  "duration_seconds": 23,
+  "candidate_pngs": 6,
+  "pair_mapping": {
+    "A": "baseline",
+    "B": "candidate"
+  },
+  "comparisons": [
+    {
+      "matched_camera_resolution_height": true,
+      "species": "cloudfang",
+      "candidate": {
+        "camera_fov": 42.0,
+        "camera_position": [
+          -1.14999997615814,
+          3.51455068588257,
+          21.9467811584473
+        ],
+        "candidate": false,
+        "frames": [
+          {
+            "captured": true,
+            "path": "res://shots/lane-e/f36-material-candidate-23c215/cloudfang-standing-000.png",
+            "phase": 0.0,
+            "role": "standing"
+          },
+          {
+            "captured": true,
+            "path": "res://shots/lane-e/f36-material-candidate-23c215/cloudfang-standing-100.png",
+            "phase": 1.0,
+            "role": "standing"
+          }
+        ],
+        "installed_model": true,
+        "material_candidate": true,
+        "planned_frames": 2,
+        "renderer": "gl_compatibility",
+        "resolution": [
+          1280,
+          720
+        ],
+        "resting_size_m": [
+          3.63825011253357,
+          3.85000014305115,
+          6.3704195022583
+        ],
+        "scale_only": true,
+        "scale_scope": "Installed standing stage; no fight-scale claim",
+        "source_commit": "23c2157876bfcd347ca1e08122d94e0c7d20cc60",
+        "species": "cloudfang",
+        "stage_only": true,
+        "standing_height_m": 3.85000014305115,
+        "trainer_measured_height_m": 1.79999995231628,
+        "trainer_reference_height_m": 1.8,
+        "whole_body_camera": true
+      },
+      "baseline": {
+        "camera_fov": 42.0,
+        "camera_position": [
+          -1.14999997615814,
+          3.51455068588257,
+          21.9467811584473
+        ],
+        "candidate": false,
+        "frames": [
+          {
+            "captured": true,
+            "path": "res://shots/lane-e/f36-installed-scale-fa69/cloudfang-standing-000.png",
+            "phase": 0.0,
+            "role": "standing"
+          },
+          {
+            "captured": true,
+            "path": "res://shots/lane-e/f36-installed-scale-fa69/cloudfang-standing-100.png",
+            "phase": 1.0,
+            "role": "standing"
+          }
+        ],
+        "installed_model": true,
+        "planned_frames": 2,
+        "renderer": "gl_compatibility",
+        "resolution": [
+          1280,
+          720
+        ],
+        "resting_size_m": [
+          3.63825011253357,
+          3.85000014305115,
+          6.3704195022583
+        ],
+        "scale_only": true,
+        "scale_scope": "Installed standing stage; no fight-scale claim",
+        "source_commit": "fa69cee0b4438023871a1d9dd0f2b7dee47a42d4",
+        "species": "cloudfang",
+        "stage_only": true,
+        "standing_height_m": 3.85000014305115,
+        "trainer_measured_height_m": 1.79999995231628,
+        "trainer_reference_height_m": 1.8,
+        "whole_body_camera": true
+      }
+    },
+    {
+      "matched_camera_resolution_height": true,
+      "species": "stormbrush",
+      "candidate": {
+        "camera_fov": 42.0,
+        "camera_position": [
+          -1.14999997615814,
+          3.05792188644409,
+          21.7147769927979
+        ],
+        "candidate": false,
+        "frames": [
+          {
+            "captured": true,
+            "path": "res://shots/lane-e/f36-material-candidate-23c215/stormbrush-standing-000.png",
+            "phase": 0.0,
+            "role": "standing"
+          },
+          {
+            "captured": true,
+            "path": "res://shots/lane-e/f36-material-candidate-23c215/stormbrush-standing-100.png",
+            "phase": 1.0,
+            "role": "standing"
+          }
+        ],
+        "installed_model": true,
+        "material_candidate": true,
+        "planned_frames": 2,
+        "renderer": "gl_compatibility",
+        "resolution": [
+          1280,
+          720
+        ],
+        "resting_size_m": [
+          3.07124996185303,
+          3.25,
+          6.84204292297363
+        ],
+        "scale_only": true,
+        "scale_scope": "Installed standing stage; no fight-scale claim",
+        "source_commit": "23c2157876bfcd347ca1e08122d94e0c7d20cc60",
+        "species": "stormbrush",
+        "stage_only": true,
+        "standing_height_m": 3.25,
+        "trainer_measured_height_m": 1.79999995231628,
+        "trainer_reference_height_m": 1.8,
+        "whole_body_camera": true
+      },
+      "baseline": {
+        "camera_fov": 42.0,
+        "camera_position": [
+          -1.14999997615814,
+          3.05792188644409,
+          21.7147769927979
+        ],
+        "candidate": false,
+        "frames": [
+          {
+            "captured": true,
+            "path": "res://shots/lane-e/f36-installed-scale-fa69/stormbrush-standing-000.png",
+            "phase": 0.0,
+            "role": "standing"
+          },
+          {
+            "captured": true,
+            "path": "res://shots/lane-e/f36-installed-scale-fa69/stormbrush-standing-100.png",
+            "phase": 1.0,
+            "role": "standing"
+          }
+        ],
+        "installed_model": true,
+        "planned_frames": 2,
+        "renderer": "gl_compatibility",
+        "resolution": [
+          1280,
+          720
+        ],
+        "resting_size_m": [
+          3.07124996185303,
+          3.25,
+          6.84204292297363
+        ],
+        "scale_only": true,
+        "scale_scope": "Installed standing stage; no fight-scale claim",
+        "source_commit": "fa69cee0b4438023871a1d9dd0f2b7dee47a42d4",
+        "species": "stormbrush",
+        "stage_only": true,
+        "standing_height_m": 3.25,
+        "trainer_measured_height_m": 1.79999995231628,
+        "trainer_reference_height_m": 1.8,
+        "whole_body_camera": true
+      }
+    },
+    {
+      "matched_camera_resolution_height": true,
+      "species": "stormtrail",
+      "candidate": {
+        "camera_fov": 42.0,
+        "camera_position": [
+          -1.14999997615814,
+          2.3653302192688,
+          15.8490695953369
+        ],
+        "candidate": false,
+        "frames": [
+          {
+            "captured": true,
+            "path": "res://shots/lane-e/f36-material-candidate-23c215/stormtrail-standing-000.png",
+            "phase": 0.0,
+            "role": "standing"
+          },
+          {
+            "captured": true,
+            "path": "res://shots/lane-e/f36-material-candidate-23c215/stormtrail-standing-100.png",
+            "phase": 1.0,
+            "role": "standing"
+          }
+        ],
+        "installed_model": true,
+        "material_candidate": true,
+        "planned_frames": 2,
+        "renderer": "gl_compatibility",
+        "resolution": [
+          1280,
+          720
+        ],
+        "resting_size_m": [
+          2.30766296386719,
+          2.54999995231628,
+          4.10852289199829
+        ],
+        "scale_only": true,
+        "scale_scope": "Installed standing stage; no fight-scale claim",
+        "source_commit": "23c2157876bfcd347ca1e08122d94e0c7d20cc60",
+        "species": "stormtrail",
+        "stage_only": true,
+        "standing_height_m": 2.54999995231628,
+        "trainer_measured_height_m": 1.79999995231628,
+        "trainer_reference_height_m": 1.8,
+        "whole_body_camera": true
+      },
+      "baseline": {
+        "camera_fov": 42.0,
+        "camera_position": [
+          -1.14999997615814,
+          2.3653302192688,
+          15.8490695953369
+        ],
+        "candidate": false,
+        "frames": [
+          {
+            "captured": true,
+            "path": "res://shots/lane-e/f36-installed-scale-fa69/stormtrail-standing-000.png",
+            "phase": 0.0,
+            "role": "standing"
+          },
+          {
+            "captured": true,
+            "path": "res://shots/lane-e/f36-installed-scale-fa69/stormtrail-standing-100.png",
+            "phase": 1.0,
+            "role": "standing"
+          }
+        ],
+        "installed_model": true,
+        "planned_frames": 2,
+        "renderer": "gl_compatibility",
+        "resolution": [
+          1280,
+          720
+        ],
+        "resting_size_m": [
+          2.30766296386719,
+          2.54999995231628,
+          4.10852289199829
+        ],
+        "scale_only": true,
+        "scale_scope": "Installed standing stage; no fight-scale claim",
+        "source_commit": "fa69cee0b4438023871a1d9dd0f2b7dee47a42d4",
+        "species": "stormtrail",
+        "stage_only": true,
+        "standing_height_m": 2.54999995231628,
+        "trainer_measured_height_m": 1.79999995231628,
+        "trainer_reference_height_m": 1.8,
+        "whole_body_camera": true
+      }
+    }
+  ],
+  "shipping_flag": "f36_material_finish.enabled=false",
+  "scope": "Three standing stage subjects; no ordinary gameplay, motion or High/Medium claim",
+  "remaining_gates": [
+    "Code-blind paired judgment",
+    "Required real gameplay/lighting evidence before shipping"
+  ]
+}

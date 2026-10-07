@@ -1,0 +1,30 @@
+{
+  "criterion": "F36#2 bounded material candidate",
+  "run_id": 37674746997,
+  "source_sha": "23c2157876bfcd347ca1e08122d94e0c7d20cc60",
+  "reviewer": "/root/judge_stormursa_anatomy",
+  "blind_inputs": "12 matched A/B views and full-resolution front pairs; images only, mapping/source withheld",
+  "results": [
+    {
+      "species": "cloudfang",
+      "reason": "Both retain washed-out chest/foreleg shading; opposite view little visible improvement.",
+      "verdict": "BLOCK",
+      "preference": "none"
+    },
+    {
+      "species": "stormbrush",
+      "reason": "Both retain poorly resolved eyes, dominant cobalt facets and saturated jagged back.",
+      "verdict": "BLOCK",
+      "preference": "none"
+    },
+    {
+      "species": "stormtrail",
+      "reason": "Muzzle, eyes, ear interiors and charcoal shading clearer; dark canine identity, yellow accents, rear silhouette and markings retained.",
+      "verdict": "PASS supplied creature-appearance stills",
+      "preference": "B"
+    }
+  ],
+  "limits": "Motion, gameplay lighting and High/Medium unassessed; broader fight full-bar BLOCK and F36#2 remains open.",
+  "shipping_flag": "f36_material_finish.enabled=false",
+  "disposition": "No further unchanged material capture; keep shipping gate off."
+}
