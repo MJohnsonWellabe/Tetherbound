@@ -60,6 +60,15 @@ func _initialize() -> void:
 			quit(1)
 			return
 		OS.set_environment("TB_NET_OUT_DIR", absolute)
+	if OS.get_cmdline_user_args().has("--with-fight-camera-units"):
+		var unit_output: Array = []
+		var unit_code := OS.execute(OS.get_executable_path(), PackedStringArray([
+			"--headless", "--path", ProjectSettings.globalize_path("res://"), "--audio-driver", "Dummy",
+			"--script", "res://tests/run_tests.gd", "--", "--only=test_fight_camera.gd"]), unit_output, true)
+		for chunk: Variant in unit_output: print(str(chunk))
+		if unit_code != 0:
+			quit(unit_code)
+			return
 	_run()
 
 
