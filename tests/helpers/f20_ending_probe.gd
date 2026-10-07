@@ -627,7 +627,10 @@ func continuation_content(tree: SceneTree, game: Node) -> bool:
 			" world_day=", game.world.day, " bounty_day=", game.world.redesign_world.bounty_day)
 	if not check(view.get("ready") == true and view.get("rows", []).size() == 3,
 		"reloaded character has three active bounties in the live board"): return false
-	if not await capture(tree, "completed-bounties"): return false
+	var board_frame := func() -> bool:
+		return is_instance_valid(panel) and panel.call("is_open") == true \
+			and INPUT_OWNER.current(tree) == panel and adapter.call("view") == view
+	if not await capture(tree, "completed-bounties", board_frame): return false
 	await travel.tap("menu_cancel")
 	if not check(INPUT_OWNER.current(tree) == null, "bounty screen returns ordinary world input"): return false
 	return await admit_endgame_rematch(tree, game, rematches)
@@ -698,5 +701,10 @@ func admit_endgame_rematch(tree: SceneTree, game: Node, rematches: Node) -> bool
 			" enemy_owned=", manager.get("_enemy_owned"), " ally_blocker=", director.call("usable_ally_blocker"),
 			" can_challenge=", director.call("can_challenge", expected), " source_busy=", director.call("rematch_source_busy", source),
 			" pending_world_message=", game.get("_pending_world_message"))
-	return check(admitted,
-		"ordinary input admits the actual canonical endgame rematch at its configured tier; isolated proof quits during fight")
+	if not check(admitted,
+		"ordinary input admits the actual canonical endgame rematch at its configured tier; isolated proof quits during fight"): return false
+	var rematch_frame := func() -> bool:
+		return is_instance_valid(body) and body.is_visible_in_tree() and director.call("trainer_battle_active") == true \
+			and manager.call("is_fighting") == true and director.get("_trainer_node") == source \
+			and director.get("_trainer_spec") == expected and manager.get("_enemy") == enemy and manager.get("_enemy_owned") == true
+	return await capture(tree, "completed-endgame-rematch", rematch_frame)
