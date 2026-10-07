@@ -140,6 +140,10 @@ func _owner_passive_request_matches(source_kind: String, request: Dictionary) ->
 
 func _owner_passive_commit_request(peer: int, source_kind: String, request: Dictionary, context: Dictionary) -> Dictionary:
 	match source_kind:
+		"bounty_rotation":
+			var bounty := get_node_or_null(^"FoundationComposition/BountyHost")
+			return bounty.call("commit_rotation_prepared", peer, request, context) if bounty != null \
+				else {"ok": false, "durable": false, "resolved": true, "terminal_refusal": true, "code": "bounty_source_unavailable"}
 		"tether_item":
 			for director: Node in _foundation_directors_under(_foundation_realm_roots()):
 				var host: RefCounted = director.get("_encounter_host")

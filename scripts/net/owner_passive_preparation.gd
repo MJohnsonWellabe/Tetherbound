@@ -35,8 +35,9 @@ static func make(retained: Dictionary, duty: Dictionary, before: Dictionary, rev
 static func fingerprint(value: Dictionary) -> String:
 	return BASE.fingerprint(value)
 
-## A real authenticated player request is a different source from a retained
-## FoundationEvent. Context is host-derived; packet validation cannot prove it.
+## Typed player requests and the host's bound morning source use this same
+## exact replay carrier. Neither pretends to be a retained FoundationEvent.
+## Context is host-derived; packet validation cannot prove its live source.
 static func make_action(request: Dictionary, host_context: Dictionary, before: Dictionary,
 		revision: int, epoch: String, world_id: String, cursor: Dictionary,
 		preparation_id: String, source_kind: String = "foundation_request") -> Dictionary:
@@ -77,6 +78,7 @@ static func _fields(value: Dictionary, fields: Array) -> bool:
 
 static func _action_request_valid(raw: Dictionary) -> bool:
 	var request: Dictionary = raw.request
+	if raw.source_kind == "bounty_rotation": return _bounty_rotation_valid(raw)
 	if raw.source_kind == "portal_arrival": return _portal_request_valid(raw)
 	if raw.source_kind == "waystone_touch": return _waystone_request_valid(raw)
 	if raw.source_kind == "home_key": return _home_key_request_valid(raw)
@@ -133,6 +135,34 @@ static func _action_request_valid(raw: Dictionary) -> bool:
 				and raw.host_context.get("manual_unit_plan") is Dictionary \
 				and raw.host_context.manual_unit_plan.get("recipe_id") == request.intent.recipe_id
 	return false
+
+## Host clock source, never an owner request/intent or a fabricated reward.
+## BountyHost measures it before freezing and rechecks it at saved reentry.
+static func bounty_rotation_source(context: Dictionary, world_id: String, epoch: String) -> Dictionary:
+	return {"kind": "host_bounty_rotation", "session_epoch": epoch, "world_id": world_id,
+		"world_namespace": context.get("world_namespace"), "character_id": context.get("character_id"),
+		"host_day": context.get("host_day"), "host_unlocks": context.get("host_unlocks", []).duplicate()}
+
+static func bounty_rotation_source_valid(source: Variant, scope: Dictionary) -> bool:
+	if not source is Dictionary or not _fields(source, ["kind", "session_epoch", "world_id", "world_namespace",
+		"character_id", "host_day", "host_unlocks"]) or source.kind != "host_bounty_rotation" \
+		or not E._integer(source.host_day, 1, 2147483646) or not source.host_unlocks is Array: return false
+	for field: String in ["session_epoch", "world_id", "world_namespace", "character_id"]:
+		if not E._opaque_id(source[field]) or source[field] != scope.get(field): return false
+	for unlock: Variant in source.host_unlocks:
+		if not unlock is String or not E._opaque_id(unlock): return false
+	return true
+
+static func _bounty_rotation_valid(raw: Dictionary) -> bool:
+	if not bounty_rotation_source_valid(raw.request, raw): return false
+	var source: Dictionary = raw.request
+	var expected := {"character_id": raw.character_id, "expected_revision": raw.revision,
+		"source_key": "halda_bounty_clock", "in_range": true, "in_combat": false,
+		"world_namespace": raw.world_namespace, "host_day": source.host_day,
+		"host_unlocks": source.host_unlocks.duplicate(), "clock_confirmed": true}
+	return exact(raw.host_context, expected) \
+		and preload("res://scripts/world/bounty_board.gd").stage(raw.after, int(raw.revision),
+			"bounty_rotate", {}, raw.host_context).get("ok") == true
 
 ## This source is a retained consumed permit, not a claim that departure is
 ## already grounded. Session/PortalArrival prove actual ground at final stage.

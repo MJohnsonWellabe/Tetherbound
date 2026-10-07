@@ -228,6 +228,24 @@ func test_request_codec_preserves_distinct_authenticated_source_kinds_and_exact_
 	assert_false(PREP.make_action(request, f.context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN, "altar_traits").is_empty())
 	request.intent.expected_character_revision = 1
 	assert_true(PREP.make_action(request, f.context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN, "altar_traits").is_empty())
+	var clock_context: Dictionary = preload("res://tests/test_bounty_board.gd").new()._context(f.before, 0, 1, "resource-namespace")
+	clock_context.source_key = "halda_bounty_clock"
+	var clock_source := PREP.bounty_rotation_source(clock_context, "resource-slot", "current-epoch")
+	var clock_prepared := PREP.make_action(clock_source, clock_context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN, "bounty_rotation")
+	assert_false(clock_prepared.is_empty())
+	assert_true(PREP.valid_action_host(clock_prepared, f.cursor))
+	assert_false(PREP.valid(clock_prepared, {}), "the clock never fabricates a retained reward")
+	assert_true(PREP.owner_plan(f.cursor.state, clock_prepared, {}, {}).ok)
+	assert_false(PREP.owner_plan(f.before, clock_prepared, {}, {}).ok, "care must be the complete exact replay")
+	assert_true(PREP.make_action(clock_source, clock_context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN).is_empty(),
+		"a host clock descriptor cannot be used as a player request")
+	for field: String in ["session_epoch", "world_id", "world_namespace", "character_id", "host_day", "host_unlocks"]:
+		var foreign: Dictionary = clock_source.duplicate(true)
+		foreign[field] = 2 if field == "host_day" else (["tidewake"] if field == "host_unlocks" else "foreign")
+		assert_true(PREP.make_action(foreign, clock_context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN, "bounty_rotation").is_empty(), field)
+	var non_clock: Dictionary = clock_source.duplicate(true)
+	non_clock["intent"] = {"elapsed": 100}
+	assert_true(PREP.make_action(non_clock, clock_context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN, "bounty_rotation").is_empty())
 
 func test_request_cas_preserves_quote_then_original_altar_stage_advances_once_and_retries() -> void:
 	const TEACHING := preload("res://scripts/creatures/teaching.gd")

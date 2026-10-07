@@ -875,6 +875,43 @@ func action_gate(peer: int, source_kind: String, request: Dictionary, context: D
 		"request": request, "request_hash": HASH.fingerprint(request)})
 	return _deny("owner_passive_checkpoint_pending")
 
+## An automatic morning has no player request. Its real host producer binds
+## day/world/character here and rechecks that source only after the exact
+## recorded care prefix has frozen, replayed and received its owner BOOL ACK.
+func bounty_rotation_gate(peer: int, source: Dictionary, context: Dictionary) -> Dictionary:
+	var session := owner()
+	if session == null or session.call("is_host") != true: return _deny("bounty_host_required")
+	if peer == session.call("local_peer_id"): return {"ok": true}
+	var character: String = session.call("_authority_character", peer)
+	var world: RefCounted = _game().get("world")
+	var scope := {"character_id": character, "session_epoch": session.call("_altar_current_epoch"),
+		"world_id": world.world_id, "world_namespace": world.reward_delivery_namespace}
+	if not PREP.bounty_rotation_source_valid(source, scope): return _deny("bounty_rotation_source_changed")
+	if committing.get("character") == character and committing.get("source_kind") == "bounty_rotation" \
+		and PREP.exact(committing.get("envelope"), source):
+		return {"ok": true} if PREP.exact(committing.event, context) else _terminal("bounty_rotation_source_changed")
+	if not hosts.has(character): return _deny("owner_passive_recording_unavailable")
+	var stream: Dictionary = hosts[character]
+	if stream.peer != peer or stream.get("departed") == true or stream.has("readmit") \
+		or not str(stream.error).is_empty() or stream.epoch != scope.session_epoch \
+		or stream.world_id != scope.world_id or stream.world_namespace != scope.world_namespace:
+		return _deny("owner_passive_busy")
+	var binding := {"character": character, "action": "bounty_rotate", "source_kind": "bounty_rotation",
+		"envelope": source.duplicate(true), "event": context.duplicate(true)}
+	if stream.checkpoint.is_empty():
+		var authority: RefCounted = session.get("_character_authority")
+		if authority.call("creature_training_is_pending", character) == true: return _deny("owner_passive_prior_transaction_pending")
+		var shape := PREP.make_action(source, context, authority.call("state", character),
+			int(authority.call("revision", character)), stream.epoch, stream.world_id, stream.cursor,
+			"0".repeat(32), "bounty_rotation")
+		if shape.is_empty(): return _deny("bounty_rotation_source_changed")
+		stream.checkpoint = {"id": Crypto.new().generate_random_bytes(16).hex_encode(), "binding": binding,
+			"source_kind": "bounty_rotation", "request": source.duplicate(true), "host_context": context.duplicate(true)}
+	elif not PREP.exact(stream.checkpoint.binding, binding): return _deny("owner_passive_original_pending")
+	_send_owner(peer, stream, {"op": "freeze", "id": stream.checkpoint.id, "source_kind": "bounty_rotation",
+		"request": source, "request_hash": HASH.fingerprint(source)})
+	return _deny("owner_passive_checkpoint_pending")
+
 func pending_manual_unit(character: String, ticket: String) -> bool:
 	var checkpoint: Dictionary = hosts.get(character, {}).get("checkpoint", {})
 	return checkpoint.get("source_kind") == "manual_refine" \
@@ -1323,7 +1360,11 @@ func receive_owner(packet: Dictionary) -> void:
 		"freeze":
 			if not HASH._hex(packet.get("id"), 32): return
 			var request_source: bool = packet.get("source_kind") in REQUEST_KINDS
-			if request_source:
+			var clock_source: bool = packet.get("source_kind") == "bounty_rotation"
+			if clock_source:
+				if not PREP.bounty_rotation_source_valid(packet.get("request"), scope) \
+					or HASH.fingerprint(packet.request) != packet.get("request_hash"): return
+			elif request_source:
 				if not packet.get("request") is Dictionary or HASH.fingerprint(packet.request) != packet.get("request_hash") \
 					or owner().call("_owner_passive_request_matches", packet.source_kind, packet.request) != true: return
 			elif packet.has("source_kind") or not HASH._hex(packet.get("duty_hash"), 64): return
@@ -1341,7 +1382,7 @@ func receive_owner(packet: Dictionary) -> void:
 				pending = {"id": packet.id, "scope": scope, "retained_event": packet.get("retained_event"),
 					"duty_hash": packet.get("duty_hash", ""), "sequence": local.sequence, "prefix_hash": local.prefix_hash,
 					"hash": HASH.fingerprint(_projection()), "phase": "frozen"}
-				if request_source:
+				if request_source or clock_source:
 					pending.source_kind = packet.source_kind
 					pending.request_hash = packet.request_hash
 			_retry_owner()
@@ -1352,8 +1393,10 @@ func receive_owner(packet: Dictionary) -> void:
 			var request_source: bool = pending.has("source_kind")
 			if request_source:
 				if not PREP.valid_action(prepared) or prepared.source_kind != pending.source_kind \
-					or prepared.request_hash != pending.request_hash \
-					or owner().call("_owner_passive_request_matches", prepared.source_kind, prepared.request) != true: return
+					or prepared.request_hash != pending.request_hash: return
+				if prepared.source_kind == "bounty_rotation":
+					if not PREP.bounty_rotation_source_valid(prepared.request, scope): return
+				elif owner().call("_owner_passive_request_matches", prepared.source_kind, prepared.request) != true: return
 			elif not PREP.valid(prepared, retained) or prepared.retained_event != pending.retained_event \
 				or prepared.duty_hash != pending.duty_hash: return
 			if prepared.character_id != scope.character_id \
@@ -1392,7 +1435,7 @@ func receive_owner(packet: Dictionary) -> void:
 			if declaration.is_empty(): return
 			_queue_rebase(declaration, previous, old)
 			_flush()
-			if packet.op == "no_effect" and not terminal_source.is_empty():
+			if packet.op == "no_effect" and terminal_source in REQUEST_KINDS:
 				owner().call("_owner_passive_request_terminal", terminal_source, terminal_request, result)
 
 func blocked(player: RefCounted) -> bool:
