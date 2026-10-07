@@ -44,15 +44,29 @@ func test_recast_starts_a_new_sample_without_replacing_or_moving_the_remote_body
 	trainer.net_riding = false
 	proxy.call("_sync_traversal_pose")
 	assert_eq(animator.get("_traversal_role"), "", "dismount clears the viewer pose")
-	proxy.aquatic.enter_water(true, 2.0)
-	proxy.net_aquatic = proxy.aquatic.snapshot()
+	var source := REMOTE_CREATURE.SWIM_STATE.new()
+	source.owner_peer_id = 7
+	source.revision = 100
+	source.enter_water(true, 2.0)
+	proxy.aquatic.owner_peer_id = 7
+	proxy.net_aquatic = source.snapshot()
+	assert_true(proxy.aquatic.apply_remote_snapshot(proxy.net_aquatic, 7), "real owner snapshot validator accepts swim")
 	proxy.call("_sync_traversal_pose")
 	assert_eq(animator.get("_traversal_role"), "swim", "validated aquatic state selects swim")
-	proxy.aquatic.pause_for_combat()
+	source.pause_for_combat()
+	proxy.net_aquatic = source.snapshot()
+	assert_true(proxy.aquatic.apply_remote_snapshot(proxy.net_aquatic, 7), "real owner snapshot validator accepts pause")
 	trainer.net_riding = true
 	proxy.call("_sync_traversal_pose")
 	assert_eq(animator.get("_traversal_role"), "", "combat cannot retain swim or ride presentation")
-	proxy.aquatic.leave_water()
+	proxy.call("setup", "water_aquaryn", false)
+	assert_true(proxy.net_aquatic.is_empty(), "recast clears the old creature's snapshot")
+	source = REMOTE_CREATURE.SWIM_STATE.new()
+	source.owner_peer_id = 7
+	proxy.aquatic.owner_peer_id = 7
+	proxy.net_aquatic = source.snapshot()
+	assert_true(proxy.aquatic.apply_remote_snapshot(proxy.net_aquatic, 7), "fresh LAND revision zero is accepted after recast")
+	assert_false(proxy.aquatic.apply_remote_snapshot(proxy.net_aquatic, 7), "same creature duplicate revision still rejected")
 	trainer.net_riding = false
 	proxy.call("_sync_traversal_pose")
 	assert_eq(animator.get("_traversal_role"), "", "dry land restores ordinary locomotion")

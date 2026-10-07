@@ -184,6 +184,11 @@ func setup(id: String, is_shiny: bool = false) -> void:
 	# A host-authorized switch keeps this node but starts a new creature sample.
 	# Comparing two owned creatures' HP would invent damage or level feedback.
 	_sampled.clear()
+	# Revision validation belongs to the creature being recast, not its reused
+	# proxy node. A new owner's LAND revision zero must not inherit old swim.
+	net_aquatic.clear()
+	aquatic = SWIM_STATE.new()
+	set_traversal_pose("")
 	super.setup(id, is_shiny)
 
 
