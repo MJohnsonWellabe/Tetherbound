@@ -1,0 +1,20 @@
+{
+  "remaining": [
+    "Actual recorder execution",
+    "Corrected collapse/contact visual verdict"
+  ],
+  "source_sha": "d071fd04feb93a54eb332b1cdd85ef301a04caaa",
+  "scope": "Only incremental existing recorder selectors",
+  "criterion": "F36#1",
+  "flags": "All pose species remain OFF",
+  "planned": "18faint-only frames across3starters at0,.25,.5,.6875,.75,1",
+  "reviewer": "/root/review_f36_cap",
+  "findings": [
+    "Typed role/phase arrays and typed lambda avoid Variant inference",
+    "Invalid, duplicate, empty and filename-colliding selectors fail before output creation",
+    "Scale-only standing/end-point coverage cannot be altered",
+    "Omitted selectors preserve five-role/five-phase defaults, models and camera",
+    "Receipts disclose exact selected roles/phases/planned count"
+  ],
+  "verdict": "APPROVE"
+}
