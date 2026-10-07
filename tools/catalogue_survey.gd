@@ -37,6 +37,8 @@ const POPULATE_FRAMES := 45
 const LIGHT_SETTLE_FRAMES := 12
 const POSE_FRAMES := 4
 const TRAINER_CLEARANCE := 0.4
+const FLOOR_SETTLE_FRAMES := 180
+const FLOOR_SETTLE_TIMEOUT_MSEC := 60000
 
 var _biome_id := ""
 var _output_dir := ""
@@ -401,6 +403,20 @@ func _capture_row(row: Dictionary) -> void:
 	if observed_clock.is_empty():
 		_write_manifest()
 		return
+	# First-arrival terrain collision can still be streaming after clock/pose
+	# setup. Observe ordinary movement finish on its real floor; never snap the
+	# body again or report an airborne first-arrival image as settled footing.
+	var floor_deadline := Time.get_ticks_msec() + FLOOR_SETTLE_TIMEOUT_MSEC
+	var grounded_frames := 0
+	for _frame in FLOOR_SETTLE_FRAMES:
+		grounded_frames = grounded_frames + 1 if _player.is_on_floor() else 0
+		if grounded_frames >= 3 or Time.get_ticks_msec() >= floor_deadline:
+			break
+		await physics_frame
+	if grounded_frames < 3:
+		_failures.append("%s: production trainer did not settle on a real floor" % str(row.frame_id))
+		_write_manifest()
+		return
 	for _frame in POSE_FRAMES:
 		await process_frame
 	await RenderingServer.frame_post_draw
@@ -419,6 +435,9 @@ func _capture_row(row: Dictionary) -> void:
 		record["view_heading_xz"] = [forward.x, forward.y]
 		record["terrain_ground_y"] = terrain_ground
 		record["resolved_ground_y"] = resolved_ground
+		record["actual_position_ground_y"] = float(_world.call("ground_height_at", _player.global_position.x, _player.global_position.z))
+		record["production_is_on_floor"] = _player.is_on_floor()
+		record["consecutive_grounded_frames"] = grounded_frames
 		record["camera_rig_transform"] = _transform(_rig.global_transform)
 		record["camera_rig_spring_length"] = _rig.spring_length
 		record["camera_transform"] = _transform(_camera.global_transform)
