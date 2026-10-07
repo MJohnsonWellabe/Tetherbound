@@ -6567,7 +6567,9 @@ func _host_portal_context(peer: int) -> Dictionary:
 	for node: Node in get_tree().get_nodes_in_group("progression_restore"):
 		if world_node.is_ancestor_of(node) and node.has_method("is_fading") and node.call("is_fading") == true: cutscene = true
 	for node: Node in get_tree().get_nodes_in_group("story_modal"):
-		if node.has_method("is_open") and node.call("is_open") == true: dialogue = true
+		if node.has_method("is_open") and node.call("is_open") == true:
+			if node.get_script() == preload("res://scripts/onboarding/lesson_panel.gd"): cutscene = true
+			else: dialogue = true
 	var combat := false
 	var directors := _portal_world_directors(world_node)
 	if directors.is_empty(): return {}

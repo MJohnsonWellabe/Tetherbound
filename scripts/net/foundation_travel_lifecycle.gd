@@ -89,7 +89,9 @@ func local_sample() -> Dictionary:
 			fading = true
 	for node: Node in get_tree().get_nodes_in_group("story_modal"):
 		if node.has_method("is_open") and node.call("is_open") == true:
-			dialogue = true
+			if node.get_script() == preload("res://scripts/onboarding/lesson_panel.gd"): cutscene = true
+			else: dialogue = true
+			# Every other story modal still prevents the Session ACK-only exemption.
 			if node != owner: other_dialogue = true
 	var ending_owner: bool = false
 	if realm == "meadows" and input_owner != null:
