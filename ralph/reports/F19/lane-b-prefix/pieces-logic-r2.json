@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "source_commit": "1d08c3632378ea5bfd11ab48f4edf9cf32318201",
+  "run_id": 37655397115,
+  "artifact_id": 11498471690,
+  "artifact_sha256": "b0b45be965e3e1e77e2abfbe7f46e4f422579027f8a34a24f700b0b36e3b6796",
+  "run_log_sha256": "12f4b0cc9ea96e02177c389aff9560dead9b49087483e4628f02bb943a16ba9c",
+  "script": "tests/run_tests.gd",
+  "args": "--only=test_four_biome_checkpoints.gd,test_human_swim_visual.gd,test_meadows_earned_material_segment.gd",
+  "files": 3,
+  "tests": 19,
+  "assertions": 201,
+  "failed": 0,
+  "script_errors": 0,
+  "engine_errors": 0,
+  "warning_markers": 0,
+  "exit_code": 0,
+  "duration_seconds": 6,
+  "scope": "Existing checkpoint source identity test extension, human swim candidate model guards, unchanged material crossing guard",
+  "review": "SOURCE APPROVE retained F19 and F37 reviewers",
+  "remaining_gates": [
+    "Actual opening piece/save and next production Load",
+    "Human four-body motion capture and code-blind judge",
+    "Full new-order earned checkpoint chain"
+  ]
+}
