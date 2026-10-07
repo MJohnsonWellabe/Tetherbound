@@ -231,9 +231,13 @@ func _run() -> void:
 	result.min_tell_s = tells.min() if not tells.is_empty() else -1.0
 	result.max_tell_s = tells.max() if not tells.is_empty() else -1.0
 	result.observed_tells = observed.size()
+	result.terminal_outcome = str(manager.get("_outcome"))
 	result.min_observed_tell_s = observed.min() if not observed.is_empty() else -1.0
 	result.max_observed_tell_s = observed.max() if not observed.is_empty() else -1.0
 	result.capped = fight_s >= FIGHT_CAP_S
+	if int(result.hits) + int(result.incoming_hits) == 0:
+		_finish(out, result, "fight ended without an observed damage exchange")
+		return
 	_finish(out, result, "")
 
 
