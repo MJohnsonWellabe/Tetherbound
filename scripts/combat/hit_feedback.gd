@@ -77,6 +77,26 @@ static func impulse_for(receipt: Dictionary) -> float:
 
 static func admit(history: Dictionary, receipt: Dictionary, commit: bool = true) -> bool:
 	var action_id := str(receipt.get("action_id", ""))
+	if receipt.get("tag_combo") == true:
+		# Trusted host feedback keeps the accepted child hash. Derive only the
+		# existing bounded sequence ledger key; arbitrary opaque IDs still fail.
+		for key: String in ["encounter_id", "character_id", "attacker_uid", "target_uid"]:
+			if not receipt.get(key) is String or str(receipt[key]).is_empty() or str(receipt[key]).length() > 256: return false
+		for key: String in ["command_generation", "command_sequence", "generation", "target_generation"]:
+			var value: Variant = receipt.get(key)
+			if not (value is int or value is float) or not is_finite(float(value)) \
+				or floor(float(value)) != float(value) or float(value) < 1.0 or float(value) > 2147483647.0: return false
+		var part := str(receipt.get("part", ""))
+		if part not in ["outgoing", "incoming"] or receipt.get("source_kind") != "creature" or receipt.get("slot") != "quick": return false
+		var generation := int(receipt.generation)
+		var command_generation := int(receipt.command_generation)
+		var sequence := int(receipt.command_sequence)
+		if generation != command_generation + (1 if part == "incoming" else 0): return false
+		var parent_prefix := "command:%s:%s:%d" % [receipt.encounter_id, receipt.character_id, command_generation]
+		var parent := "%s:%d" % [parent_prefix, sequence]
+		if receipt.get("parent_action_id") != parent \
+			or action_id != JSON.stringify([parent, part, str(receipt.attacker_uid), generation]).sha256_text(): return false
+		action_id = "%s:%s:%s:%d:%d" % [parent_prefix, part, receipt.attacker_uid, generation, sequence]
 	var split := action_id.rfind(":")
 	if split <= 0: return false
 	var suffix := action_id.substr(split + 1)

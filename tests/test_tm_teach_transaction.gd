@@ -123,16 +123,22 @@ func test_tm_existing_registry_failed_world_write_rolls_back_then_original_json_
 
 class ProducerDouble extends Node:
 	signal homestead_action_completed(action: String, original: Dictionary, result: Dictionary)
+	var action := "tm_teach"
+	var pouch_scope := {"character_id": CHARACTER, "world_namespace": NAMESPACE, "session_epoch": "tm-session"}
 	var original := {"creature_uid": "saved-uid", "tm_id": "tm_burrow_strike", "teach_id": TEACH_ID}
 	var submissions: Array[Dictionary] = []
-	func retained_training_transaction(_actions: Array) -> Dictionary:
-		return {"action": "tm_teach", "intent": original.duplicate(true), "original_revision": 7, "status": "pending"}
+	func retained_training_transaction(actions: Array) -> Dictionary:
+		return {"action": action, "intent": original.duplicate(true), "original_revision": 7, "status": "pending"} if actions.has(action) else {}
 	func personal_tm_scope() -> Dictionary:
 		return {"character_id": CHARACTER, "world_namespace": NAMESPACE, "session_epoch": "tm-session"}
 	func homestead_personal_view() -> Dictionary: return {"registry_revision": 99}
 	func personal_tm_submit(intent: Dictionary, revision: int, scope: Dictionary) -> Dictionary:
 		submissions.append({"intent": intent.duplicate(true), "revision": revision, "scope": scope.duplicate(true)})
 		return {"ok": false, "durable": true, "resolved": false, "code": "awaiting_saved_decision"}
+	func personal_pouch_scope() -> Dictionary: return pouch_scope.duplicate(true)
+	func personal_pouch_available() -> bool: return true
+	func personal_pouch_submit(intent: Dictionary, revision: int, scope: Dictionary) -> Dictionary:
+		return personal_tm_submit(intent, revision, scope)
 
 class GameDouble extends Node:
 	var session: Node

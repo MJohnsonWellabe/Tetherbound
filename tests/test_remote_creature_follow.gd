@@ -21,6 +21,19 @@ const REMOTE_CREATURE := preload("res://scripts/creatures/remote_creature.gd")
 const TOLERANCE := 0.35
 
 
+func test_recast_starts_a_new_sample_without_replacing_or_moving_the_remote_body() -> void:
+	var proxy := REMOTE_CREATURE.new()
+	proxy.position = Vector3(2.0, 1.0, 3.0)
+	proxy.set("_sampled", {"hp": 4.0, "level": 5})
+	var instance_id := proxy.get_instance_id()
+	proxy.call("setup", "ripplet", false)
+	assert_eq(proxy.get_instance_id(), instance_id)
+	assert_eq(proxy.position, Vector3(2.0, 1.0, 3.0))
+	assert_true((proxy.get("_sampled") as Dictionary).is_empty(), "two creatures cannot fabricate a damage/level difference")
+	assert_eq(proxy.get("species_id"), "ripplet")
+	proxy.free()
+
+
 func _lateral(a: Vector3, b: Vector3) -> float:
 	return Vector2(a.x - b.x, a.z - b.z).length()
 

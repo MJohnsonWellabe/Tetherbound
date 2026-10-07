@@ -135,6 +135,53 @@ func test_idle_wind_ticks_each_uid_and_switched_burst_spends_current_creature() 
 	assert_true(_start(3, 2500, "creature_b").ok)
 	assert_almost_eq(host.move_resource_snapshot(id, 1, "creature_b").wind, 61.6, 0.001,
 		"burst and subsequent attack consume the same UID pool")
+	var commands := preload("res://scripts/combat/tether_commands.gd")
+	var previous: Dictionary = commands.config()
+	commands._config = previous.duplicate(true)
+	commands._config.feature_flags.runtime_enabled = true
+	var manager := preload("res://scripts/combat/combat_manager.gd").new()
+	var throw_aim := preload("res://scripts/combat/throw_aim.gd").new()
+	manager._throw = throw_aim
+	var species := preload("res://scripts/creatures/creature_species.gd")
+	var first := species.spawn("terrapup")
+	var second := species.spawn("terrapup")
+	first.energy = 23.0
+	second.energy = 35.0
+	manager._party = [first, second]
+	manager._party_wind = [70.0, 60.0]
+	manager._party_wind_quiet = [0.0, 0.0]
+	manager._party_ultimate = {str(first.uid):20.0, str(second.uid):30.0}
+	manager._quick_cooldown = 0.8
+	manager._charged_cooldown = 1.4
+	manager._player_poise = 7.0
+	manager._player_poise_quiet_left = 3.0
+	manager._player_stagger_critical_ready = true
+	manager._activate_party_member(1)
+	assert_eq(manager._party_wind, [70.0, 60.0], "switch never refills Wind")
+	manager._quick_cooldown = 0.2
+	manager._charged_cooldown = 0.6
+	manager._player_poise = 9.0
+	manager._player_poise_quiet_left = 4.0
+	manager._input_guard = 10.0
+	manager._tick_active(0.25)
+	var wind_after_tick: Array = manager._party_wind.duplicate()
+	manager._activate_party_member(0)
+	assert_almost_eq(manager._quick_cooldown, 0.55, 0.0001)
+	assert_almost_eq(manager._charged_cooldown, 1.15, 0.0001)
+	assert_eq(manager._player_poise, 7.0, "return restores the actual UID's poise")
+	assert_almost_eq(manager._player_poise_quiet_left, 2.75, 0.0001)
+	assert_true(manager._player_stagger_critical_ready)
+	assert_eq(manager._party_wind, wind_after_tick)
+	assert_eq(manager._party_ultimate, {str(first.uid):20.0, str(second.uid):30.0})
+	assert_eq(first.energy, 23.0)
+	assert_eq(second.energy, 35.0)
+	manager._activate_party_member(1)
+	assert_almost_eq(manager._quick_cooldown, 0.0, 0.0001)
+	assert_almost_eq(manager._charged_cooldown, 0.35, 0.0001)
+	assert_eq(manager._player_poise, 9.0)
+	manager.free()
+	throw_aim.free()
+	commands._config = previous
 
 
 func test_f33_charm_gain_frozen_in_the_accepted_action_scales_the_meter_once_and_is_capped() -> void:
@@ -171,3 +218,51 @@ func test_f33_no_charm_keeps_the_ordinary_gain_and_power() -> void:
 	assert_true(_start(1).ok)
 	assert_true(_arrive(1).ok)
 	assert_eq(host.credit_move_hit(id, 1, 1, 10.0).ultimate_meter, 6.0)
+
+
+func test_new_system_hud_never_exposes_unadmitted_or_foreign_uid_resources() -> void:
+	var commands := preload("res://scripts/combat/tether_commands.gd")
+	var previous: Dictionary = commands.config()
+	commands._config = previous.duplicate(true)
+	commands._config.feature_flags.ui_enabled = true
+	var manager := preload("res://scripts/combat/combat_manager.gd").new()
+	manager._moves = preload("res://scripts/creatures/move_db.gd").load_default()
+	var species := preload("res://scripts/creatures/creature_species.gd")
+	var first: RefCounted = species.spawn("terrapup")
+	var second: RefCounted = species.spawn("ripplet")
+	manager._party.assign([first, second])
+	manager._active_index = 0
+	manager._apply_move_resources({"creature_uid":first.uid, "ultimate_meter":36.0, "energy":26.0})
+	var before: Dictionary = manager._party_ultimate.duplicate(true)
+	assert_eq(manager.new_system_combat_snapshot(), {"active":false}, "idle HUD stays hidden")
+	manager.state = manager.State.ACTIVE
+	assert_eq(manager.new_system_combat_snapshot(), {"active":false}, "resources alone cannot impersonate admitted deployment")
+	# Detached production deployment/resource projection, not a played fight.
+	var director := preload("res://scripts/combat/encounter_director.gd").new()
+	director._deployment_identity = {1:{"character_id":"owner_a", "creature_uid":first.uid, "generation":1}}
+	manager._encounter_link = director
+	manager._encounter_id = id
+	manager._tether_command_view = {"encounter_id":id, "character_id":"owner_a", "meter":25.0}
+	manager._initialize_wind()
+	var view: Dictionary = manager.new_system_combat_snapshot()
+	assert_true(view.get("active") == true)
+	assert_eq(view.get("ultimate_meter"), 36.0)
+	assert_false(view.get("ultimate_available", true), "shipping flag-off ultimate is never presented as available")
+	assert_eq(view.get("creature_uid"), first.uid)
+	view.commands.meter = 100.0
+	assert_eq(manager._tether_command_view.meter, 25.0, "returned command view cannot mutate the manager")
+	manager._tether_command_view.encounter_id = "prior-encounter"
+	assert_eq(manager.new_system_combat_snapshot(), {"active":false}, "prior encounter cannot supply a current view")
+	manager._tether_command_view.encounter_id = id
+	manager._active_index = 1
+	assert_eq(manager.new_system_combat_snapshot(), {"active":false}, "switch never exposes the previous creature's acknowledged meter")
+	director._deployment_identity[1].creature_uid = second.uid
+	assert_eq(manager.new_system_combat_snapshot(), {"active":false}, "new UID waits for its own acknowledged pool")
+	assert_eq(manager._party_ultimate, before, "HUD reads never transfer or spend a pool")
+	manager._apply_move_resources({"creature_uid":"foreign-creature", "ultimate_meter":100.0})
+	assert_eq(manager._party_ultimate, before, "foreign UID cannot populate the owner's displayed resources")
+	assert_eq(first.energy, 26.0)
+	assert_eq(second.energy, 0.0)
+	director.free()
+	manager.free()
+	commands._config = previous

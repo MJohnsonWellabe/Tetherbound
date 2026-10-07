@@ -19,7 +19,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not COMMANDS.enabled() or not _read.is_valid() or not _send.is_valid() \
 		or OWNER.current(get_tree()) != null or event.is_echo(): return
 	for id: String in COMMANDS.COMMAND_IDS:
-		var action := str(COMMANDS.config().commands[id].action)
+		var action := COMMANDS.input_action(id)
 		if InputMap.has_action(action) and event.is_action_pressed(action):
 			if request(id): get_viewport().set_input_as_handled()
 			return
@@ -30,9 +30,14 @@ func request(command_id: String) -> bool:
 	if not COMMANDS.enabled() or not _read.is_valid() or not _send.is_valid() \
 		or OWNER.current(get_tree()) != null or not COMMANDS.COMMAND_IDS.has(command_id): return false
 	var snapshot: Variant = _read.call()
+	return _request_snapshot(command_id, snapshot)
+
+func _request_snapshot(command_id: String, snapshot: Variant) -> bool:
+	if not COMMANDS.COMMAND_IDS.has(command_id): return false
 	if not snapshot is Dictionary or snapshot.get("active") != true \
 		or snapshot.get("input_context") != "combat" \
-		or not snapshot.get("encounter_id") is String or not snapshot.get("generation") is int: return false
+		or not snapshot.get("encounter_id") is String or not snapshot.get("generation") is int \
+		or not snapshot.get("unlocked_commands") is Array or not snapshot.unlocked_commands.has(command_id): return false
 	if _encounter_id != snapshot.encounter_id:
 		_encounter_id = snapshot.encounter_id
 		_sequence = int(snapshot.get("last_sequence", 0))
