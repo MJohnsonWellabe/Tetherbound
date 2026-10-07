@@ -1,0 +1,92 @@
+{
+  "criterion_scope": [
+    "F46#0 Home Key lesson presentation only",
+    "F46#1 this Home Key lesson gate presentation only"
+  ],
+  "verdict": "PASS",
+  "authority": "Owner comment 6045342186: literal scoped observations; full release Visual Bars A/B separately OPEN.",
+  "method": "Same retained code-blind judge. Inspected four actual native Low Compatibility 1280x720 PNGs and their composed home-key-contact.jpg. No source, proof logs, implementation narrative or engine execution.",
+  "observations": [
+    {
+      "verdict": "PASS",
+      "component": "Teacher identity",
+      "frames": [
+        "000",
+        "001",
+        "002",
+        "003"
+      ],
+      "evidence": "The speaker heading Grandpa Elias is clear and readable."
+    },
+    {
+      "verdict": "PASS",
+      "component": "Personal key and one-tap operation",
+      "frames": [
+        "000",
+        "002"
+      ],
+      "evidence": "That Home Key is yours; assign it to a quick slot or use it from the Satchel. One tap starts the two-second raise; never need to hold it. All lines are readable without clipping."
+    },
+    {
+      "verdict": "PASS",
+      "component": "Free return destination and refusal/cancel conditions",
+      "frames": [
+        "001",
+        "003"
+      ],
+      "evidence": "The card states Crossing Hall, free, no cooldown; finish a fight or conversation first, leave the water, and land before using it. It also states that the raise can be cancelled. Text remains readable."
+    },
+    {
+      "verdict": "PASS",
+      "component": "Controller Continue and Skip cue presentation",
+      "frames": [
+        "000",
+        "001",
+        "002",
+        "003"
+      ],
+      "evidence": "A Continue · B Skip lesson is visibly readable on every card. These frames establish cue presentation, not input behavior."
+    },
+    {
+      "verdict": "PASS",
+      "component": "Next goal can be stated from the cards",
+      "frames": [
+        "000",
+        "001",
+        "002",
+        "003"
+      ],
+      "evidence": "Next: Catch a second creature, then return to Grandpa. The same goal is clear on the natural and reopened cards."
+    },
+    {
+      "verdict": "PASS",
+      "component": "Reopened card text consistency",
+      "frames": [
+        "002",
+        "003"
+      ],
+      "evidence": "The reopened cards show the same instruction, restriction, next-goal and Continue/Skip content as frames 000/001. Still images do not establish the replay action or persistence."
+    }
+  ],
+  "missing_literal_visual_witnesses": [],
+  "full_visual_bar": {
+    "status": "OPEN",
+    "observation": "A very large creature occupies much of the dialogue background and overlaps the cast. It does not obscure the lesson text in these frames. This scoped readability verdict does not certify broader character staging, art or full Visual Bars A/B."
+  },
+  "not_assessed": [
+    "Functional Continue/Skip, input routing, reopening/replay or durable lesson state.",
+    "Actual Home Key return, personal authority, costs/cooldown, cancellation or refusal behavior.",
+    "Other F46 lessons/gates or whole F46 certification.",
+    "Performance, physical owner device readability, High/Medium or full release art."
+  ],
+  "evidence": {
+    "native_directory": "ralph/reports/F46/lane-b-home-key/37695870707/artifact/tree/shots/f20-ending-2478",
+    "frames": [
+      "000-lesson-home_key-reader--9223364946786474022-generation-1-line-00.png",
+      "001-lesson-home_key-reader--9223364946786474022-generation-1-line-01.png",
+      "002-lesson-home_key-reader--9223364946786474022-generation-1-replay-line-00.png",
+      "003-lesson-home_key-reader--9223364946786474022-generation-1-replay-line-01.png"
+    ],
+    "contact_sheet": "ralph/reports/F46/lane-b-home-key/home-key-contact.jpg"
+  }
+}

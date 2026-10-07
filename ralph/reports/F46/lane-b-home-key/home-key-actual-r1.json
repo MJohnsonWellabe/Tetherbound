@@ -1,0 +1,71 @@
+{
+  "criteria": [
+    "F46#0 Home Key component only",
+    "F46#1 Home Key lesson gate only"
+  ],
+  "verdict": "SCOPED PASS: natural controller Skip, physical Settings Help replay and readable native cards; full criteria OPEN",
+  "source_sha": "2dde093a7ab0d507370ef60464221b300108980f",
+  "run_id": 37695870707,
+  "artifact_id": 11516684021,
+  "exit": 0,
+  "took_seconds": 2607,
+  "script_errors": 0,
+  "engine_errors": 0,
+  "records": [
+    {
+      "focused_title": "Home Key",
+      "heading": "Help · System lessons",
+      "lesson": "home_key",
+      "provider": "/root/Game/GameMenu/Root/Frame/Panel/Body/Content/@VBoxContainer@47/@ScrollContainer@67933/@VBoxContainer@67934/@Button@67936",
+      "tab": "settings"
+    },
+    {
+      "character_id": "character-49107e93eceebc202fb9670b1984078f",
+      "lesson": "home_key",
+      "party_uids": [
+        "creature-ea323891d1f55075676b6925a7a7e1b5"
+      ],
+      "party_uids_after": [
+        "creature-ea323891d1f55075676b6925a7a7e1b5"
+      ],
+      "passed": true,
+      "personal_ack_retained": true,
+      "released": true,
+      "reward_state_unchanged": true,
+      "scope": "One naturally acknowledged lesson reopened through physical Settings Help input; full F46 remains open"
+    }
+  ],
+  "review": {
+    "reviewer": "b_f20_review",
+    "verdict": "APPROVE scoped natural memory acknowledgement and physical Help replay"
+  },
+  "visual": {
+    "reviewer": "b_night_visual",
+    "verdict": "PASS scoped lesson presentation",
+    "contact_sheet": "ralph/reports/F46/lane-b-home-key/home-key-contact.jpg",
+    "record": "ralph/reports/F46/lane-b-home-key/home-key-scope-verdict.json"
+  },
+  "setup": "Actual physical new-game opening, natural Grandpa Home Key handover; original starter only at gift; disclosed existing tutorial dry-orb recovery; not earned five-creature campaign",
+  "durability": {
+    "verdict": "OPEN",
+    "observation": "Retained disk character save predates lesson acknowledgement and lacks opening:lesson:home_key; this run proves in-memory acknowledgement only. No persistence defect inferred."
+  },
+  "remaining": [
+    "Actual production save/reload retains acknowledgement and prevents natural repetition",
+    "All other authored F46 lessons and every-gate goal witness",
+    "Full release Visual Bars A/B"
+  ],
+  "affected_logic": {
+    "run_id": 37701115492,
+    "source_sha": "220ea0bb0217bd263b232e13d9f259514abb9e2d",
+    "tests": 608,
+    "assertions": 917217,
+    "failed": 0,
+    "exit": 0,
+    "took_seconds": 631,
+    "selection": "70 existing files naming changed B source/config plus seven related opening/input/menu/water files",
+    "engine_errors": 28,
+    "script_errors": 0,
+    "error_attribution": "27 unchanged detached harvest fixture messages +1 intentional corrupt-controls JSON negative control"
+  }
+}
