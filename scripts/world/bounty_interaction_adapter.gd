@@ -5,6 +5,7 @@ extends Node
 const BOARD := preload("res://scripts/world/bounty_board.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 signal open_requested(view: Dictionary, adapter: Node)
+signal view_changed(view: Dictionary)
 signal action_completed(result: Dictionary)
 var _submit: Callable
 var _view: Callable

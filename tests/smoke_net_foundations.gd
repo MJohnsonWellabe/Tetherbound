@@ -69,7 +69,7 @@ func _run() -> void:
 	var board_before: Dictionary = {}
 	for morning in 12:
 		var board_result := await step(1, "foundations_state", {"mode": "bounty_inspect"})
-		check(board_result.get("verdict") == "PASS", "actual guest personal board inspection is ready")
+		check(board_result.get("verdict") == "PASS", "actual guest personal board inspection is ready: " + str(board_result.get("detail", "")))
 		if board_result.get("verdict") != "PASS":
 			quit(await finish())
 			return
