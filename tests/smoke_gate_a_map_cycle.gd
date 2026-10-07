@@ -170,7 +170,7 @@ func _check_full_map_controller_ownership_and_recovery() -> void:
 	var bodies: Array = _menu.get("_bodies")
 	var map_tab := bodies[int(_menu.get("_index"))] as Control
 	var map_config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/map.json"))
-	var initial_zoom := clampf(float(map_config.get("initial_zoom", 16.0)), 1.0, 16.0)
+	var initial_zoom := clampf(float(map_config.get("initial_zoom", 32.0)), 1.0, 32.0)
 	if map_tab == null or not is_equal_approx(float(map_tab.get("_zoom")), initial_zoom):
 		_fail("first full map did not open at the configured local scale")
 		return

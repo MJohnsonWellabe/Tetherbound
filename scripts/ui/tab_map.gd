@@ -103,11 +103,11 @@ const PLAYER_PIN_REMOVE_RADIUS_PX := 38.0
 const PLAYER_PIN_CURSOR_RADIUS := 15.0
 const REMOTE_PLAYER_RADIUS := 8.0
 const MIN_ZOOM := 1.0
-const MAX_ZOOM := 16.0
+const MAX_ZOOM := 32.0
 ## Deliberate strategic scales: the 4:1 north/south Meadows corridor needs a
 ## substantial step before a 16:9 panel reads as a local rather than overview
 ## map. Every trigger press should make an unmistakable, useful change.
-const ZOOM_LEVELS := [1.0, 4.0, 8.0, 16.0]
+const ZOOM_LEVELS := [1.0, 4.0, 8.0, 16.0, 32.0]
 const PAN_SPEED_MPS := 1200.0
 
 ## How far the player has to move before a redraw is worth spending — the fog
@@ -180,6 +180,8 @@ var _controls_label: RichTextLabel = null
 
 var _zoom: float = MIN_ZOOM
 var _pan_world: Vector2 = Vector2.ZERO
+var _local_label_margin_zoom: float = MAX_ZOOM
+var _local_label_margin_px: float = 18.0
 
 ## OP21-15: true once the player has moved the right stick while zoomed in.
 ## While false, the view keeps `_pan_world` locked to the player's own world
@@ -252,8 +254,10 @@ func build() -> void:
 	# zoom on every single visit. Clamped against the current ZOOM_LEVELS in
 	# case the saved value came from a build with a different level set.
 	var remembered_zoom := float(state().get("map_last_zoom")) if state() != null else -1.0
+	var map_config: Variant = JSON.parse_string(FileAccess.get_file_as_string(MAP_CONFIG_PATH))
+	_local_label_margin_zoom = float(map_config.get("local_label_margin_zoom", MAX_ZOOM)) if map_config is Dictionary else MAX_ZOOM
+	_local_label_margin_px = clampf(float(map_config.get("local_label_margin_px", 18.0)), 0.0, 64.0) if map_config is Dictionary else 18.0
 	if remembered_zoom < MIN_ZOOM:
-		var map_config: Variant = JSON.parse_string(FileAccess.get_file_as_string(MAP_CONFIG_PATH))
 		remembered_zoom = float(map_config.get("initial_zoom", MAX_ZOOM)) if map_config is Dictionary else MAX_ZOOM
 		if state() != null:
 			state().set("map_last_zoom", clampf(remembered_zoom, MIN_ZOOM, MAX_ZOOM))
@@ -1225,6 +1229,13 @@ func _resolved_region_label_rect(canvas: Control, map_rect: Rect2, region: Dicti
 	const PADDING := 8.0
 
 	var top_left := point + Vector2(-text_size.x * 0.5, -text_size.y * 0.5)
+	if _zoom >= _local_label_margin_zoom:
+		# Only label a discovered region whose actual centre is in this view.
+		# At village scale the large readable name belongs beside the terrain,
+		# rather than across the roads the player opened the map to inspect.
+		if not Rect2(Vector2.ZERO, canvas.size).has_point(point):
+			return Rect2()
+		top_left = Vector2(_local_label_margin_px, _local_label_margin_px)
 	var rect := Rect2(top_left, text_size)
 	var attempts := 0
 	while attempts < 6:

@@ -233,7 +233,7 @@ func _shoot_map_zoom_samples(menu: Node, world: Node) -> void:
 		_failures.append("Map canvas unavailable")
 		return
 	var original_zoom := float(tab.get("_zoom"))
-	for zoom_level: float in [4.0, 8.0, 16.0]:
+	for zoom_level: float in [4.0, 8.0, 16.0, 32.0]:
 		tab.set("_zoom", zoom_level)
 		tab.call("_clamp_pan")
 		canvas.queue_redraw()
