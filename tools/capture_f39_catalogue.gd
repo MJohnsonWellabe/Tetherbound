@@ -239,4 +239,4 @@ func _begin_manifest() -> void:
 	_manifest["f39_heading_offsets_deg"] = [0.0] if _explicit_stands else HEADINGS
 	_manifest["f39_explicit_stands"] = _explicit_stands
 	_manifest["f39_isolated_save_fixture"] = _save_fixture
-	_manifest["f39_limitations"] = "Teleported stands and camera headings; no earned route, close detail, actual fight, device or judge proof. Candidate overrides are process-local material uniforms; production gates remain false."
+	_manifest["f39_limitations"] = "Teleported stands and camera headings; no earned route, close detail, actual fight, device or judge proof. Shipping observation or process-local candidate/baseline override as declared above; no production config gates are changed."
