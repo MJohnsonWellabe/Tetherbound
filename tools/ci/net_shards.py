@@ -26,16 +26,15 @@ import sys
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 # Must equal the `shard:` matrix in ci.yml (tests/test_ci_net_shards.py).
-SHARD_COUNT = 7
-# Each shard job runs LANES_PER_SHARD lanes AT ONCE (tools/ci/run_net_lanes.sh,
-# CI-SPEED 2026-10-07): a 4-vCPU runner fits two two-peer smokes side by side
-# at ~1.3x their solo time (three at once missed the 180 s hello budget).
-LANES_PER_SHARD = 2
-# Solo-measured smoke time per LANE: ~13 min. Two lanes on one runner ran at
-# 1.0-1.6x their solo time on PR #573's first full run (37627797865; overall
-# 1.26x, slower runner types near 1.5x), so with ~2 min of checkout and Godot
-# setup a shard job takes ~16-21 minutes.
-SHARD_SMOKE_BUDGET_SECONDS = 780
+SHARD_COUNT = 9
+# Lanes per shard job. Two lanes at once (tools/ci/run_net_lanes.sh) ran at
+# 1.0-1.6x solo time and broke timing-sensitive smokes under the CPU load
+# (PR #573 runs 37636924943, 37642447200: f20_ending's hello budget,
+# f22_forced_break, water_return), so each shard runs ONE lane again.
+LANES_PER_SHARD = 1
+# Measured smoke time per shard: ~18 min, so with ~2 min of checkout and
+# Godot setup a shard job stays near 20 minutes on the slowest measurements.
+SHARD_SMOKE_BUDGET_SECONDS = 1080
 
 # Seconds per smoke, measured SOLO: the SLOWEST of the three green full runs
 # 37615388024, 37575215387 and 37563845433 (2026-10-07), from one smoke's
@@ -121,7 +120,25 @@ ISOLATED = ()
 # break. f22_forced_break (host-committed charge timing against a tell) failed
 # in a lane on run 37636924943 and passed alone on every earlier full run.
 # Each counts its full time on both lanes of its shard.
-EXCLUSIVE = ("f22_forced_break",)
+EXCLUSIVE = ()
+
+# CI-SPEED (owner, 2026-10-07): run on the 8-hourly scheduled tier and on
+# workflow_dispatch only (`--nightly`), not on a full-ci pull request. Each is
+# a duplicate path or regional content; the PR gate keeps every authority,
+# save, rejoin, reward, catch and shared-boss smoke.
+NIGHTLY_ONLY = {
+    "two_peers_boot": "every net smoke boots two peers, joins and checks the registry",
+    "host_join_leave": "leave/rejoin stays gated by reconnect_keeps_character and host_exit_saves",
+    "cloudreach_riding": "6-min regional ride; riding stays gated by smoke_net_riding and smoke_net_fly",
+    "f20_home_diagnostic": "diagnostic companion of smoke_net_f20_ending, which stays gated",
+    "water_swimming": "Tidewake swim sync; traversal sync stays gated by riding/fly/movement_two_peers",
+    "water_mounted_swimming": "Tidewake mounted swim sync; same coverage as water_swimming",
+    "water_deep_watch_chart": "Tidewake side-chain replication; chain/flag replication stays gated by water_alpha",
+    "water_local_chains": "Tidewake side-chain replication; same mechanism as water_deep_watch_chart",
+    "stormwood_livewire": "Stormwood regional hazard; host authority stays gated by stormwood_realms/hosted_trainers",
+    "stormwood_glass_for_bryn": "Stormwood regional quest; quest replication stays gated by other chain smokes",
+    "stormwood_charged_ground": "Stormwood regional hazard; same coverage as stormwood_livewire",
+}
 # An unmeasured smoke is planned as the slowest measured one until measured.
 # Isolated smokes run alone, so their (possibly lower-bound) times are not a
 # guide for an ordinary smoke.
@@ -203,6 +220,11 @@ def weight(path):
     return MEASURED_SECONDS.get(smoke_name(path), UNMEASURED_SECONDS)
 
 
+def gate_files(files):
+    """The smokes a full-ci pull request runs: all but NIGHTLY_ONLY."""
+    return [p for p in files if smoke_name(p) not in NIGHTLY_ONLY]
+
+
 def solo_plan(files, shard_count=SHARD_COUNT, exclusive=EXCLUSIVE):
     """{shard: [files]}: each EXCLUSIVE smoke on its own shard, from the last."""
     alone = sorted(p for p in files if smoke_name(p) in exclusive)
@@ -273,6 +295,8 @@ def main(argv=None):
     mode = ap.add_mutually_exclusive_group(required=True)
     mode.add_argument("--check", action="store_true")
     mode.add_argument("--shard", type=int)
+    ap.add_argument("--nightly", action="store_true",
+                    help="the scheduled/dispatched tier: also plan the NIGHTLY_ONLY smokes")
     args = ap.parse_args(argv)
     try:
         files, held = discover()
@@ -281,6 +305,12 @@ def main(argv=None):
         print("held (%d) smokes whose required production flag is off" % len(held))
         print("found (%d): %s" % (len(files), " ".join(files)))
         check_roster(files)
+        missing = sorted(set(NIGHTLY_ONLY) - {smoke_name(p) for p in files})
+        if missing:
+            raise PlanError("NIGHTLY_ONLY names smokes that are not discovered: %s" % missing)
+        if not args.nightly:
+            files = gate_files(files)
+            print("nightly-only (%d, not on a pull request): %s" % (len(NIGHTLY_ONLY), " ".join(sorted(NIGHTLY_ONLY))))
         if args.shard is not None and not 1 <= args.shard <= SHARD_COUNT:
             raise PlanError("shard %d is outside 1..%d" % (args.shard, SHARD_COUNT))
         for path in files:

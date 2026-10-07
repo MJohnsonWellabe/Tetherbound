@@ -55,13 +55,29 @@ class RealRepository(unittest.TestCase):
 
     def test_every_discovered_smoke_is_measured_and_every_shard_fits_the_budget(self):
         self.assertEqual([p for p in self.files if N.smoke_name(p) not in N.MEASURED_SECONDS], [])
-        self.assertLessEqual(max(load for _, load in N.plan(self.files)), N.SHARD_SMOKE_BUDGET_SECONDS)
+        # The budget is the PR gate's (test_gate_plan_fits_the_budget); the
+        # 8-hourly tier also runs NIGHTLY_ONLY and has no wall-time target.
+        self.assertLessEqual(max(load for _, load in N.plan(N.gate_files(self.files))), N.SHARD_SMOKE_BUDGET_SECONDS)
 
     def test_isolated_smokes_run_alone(self):
         shards = N.plan(self.files)
         for name in N.ISOLATED:
             group = next(g for g, _ in shards if any(N.smoke_name(p) == name for p in g))
             self.assertEqual([N.smoke_name(p) for p in group], [name])
+
+    def test_nightly_only_smokes_are_discovered_and_kept_off_the_gate(self):
+        names = {N.smoke_name(p) for p in self.files}
+        self.assertLessEqual(set(N.NIGHTLY_ONLY), names)
+        gate = {N.smoke_name(p) for p in N.gate_files(self.files)}
+        self.assertFalse(gate & set(N.NIGHTLY_ONLY))
+        # The owner's keep list (2026-10-07) never moves off the PR gate.
+        for keep in ("shared_boss", "boss_rewards_each_participant", "catch_race", "reconnect_keeps_character",
+                     "host_exit_saves", "split_realms", "client_trainer_rewards", "late_join_modified_world"):
+            self.assertIn(keep, gate)
+
+    def test_gate_plan_fits_the_budget(self):
+        self.assertLessEqual(max(load for _, load in N.plan(N.gate_files(self.files))),
+                             N.SHARD_SMOKE_BUDGET_SECONDS)
 
     def test_exclusive_smokes_run_alone_once(self):
         solo = N.solo_plan(self.files)

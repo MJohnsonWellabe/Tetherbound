@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Run a verify-multiplayer-shard job's net smokes in parallel LANES.
+# Run a verify-multiplayer-shard job's net smokes in LANES (one per shard
+# today: tools/ci/net_shards.py LANES_PER_SHARD explains why).
 #
 #   tools/ci/run_net_lanes.sh "<lane 1 files>" "<lane 2 files>" ...
 #

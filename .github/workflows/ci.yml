@@ -438,7 +438,7 @@ jobs:
   # -gate-evidence-shard, -gate-evidence-finale (both segments), -gate-b-core
   # and -segment-handoffs. Each is now a GROUP file under tools/ci/suites/
   # holding that job's steps verbatim; tools/ci/run_suite.py plans the groups
-  # longest first onto 7 suites x 2 lanes and runs a suite's two lanes at once,
+  # longest first onto 5 suites x 2 lanes and runs a suite's two lanes at once,
   # each lane in its own XDG_DATA_HOME, RUNNER_TEMP and network namespace
   # (what a separate runner used to give each job). Before: 20 jobs, ~180
   # runner-minutes, ~45 of them checkout/setup, competing for ~17 free runners
@@ -801,21 +801,22 @@ jobs:
   # rule docs/WORKFLOW.md §5 already holds every other smoke to.
   verify-multiplayer-shard:
     runs-on: ubuntu-latest
-    # CI-SPEED (owner, 2026-10-07): seven shard jobs, each running TWO lanes of
-    # net smokes at the same time (tools/ci/run_net_lanes.sh), planned
-    # longest-processing-time first onto 14 lanes from MEASURED durations
+    # CI-SPEED (owner, 2026-10-07): nine shard jobs (was 23), planned
+    # longest-processing-time first from MEASURED durations
     # (tools/ci/net_shards.py: the slowest of three green full runs per
-    # smoke). Was 23 one-lane jobs: ~206 runner-minutes of which ~50 were
-    # checkout/setup, and the most queue tickets of any job in a full run.
-    # Every discovered smoke still runs exactly once (the plan check fails
-    # otherwise), with the same RETRIES. Each shard discovers the smokes
-    # itself, so this matrix needs only `changes`. The F48 co-op suites
-    # (owner, 2026-10-03) live on `tb/coop` until F48 itself is built; they
-    # return with it.
+    # smoke), each ~18 min of smokes. Eleven duplicate/regional net smokes
+    # (net_shards.py NIGHTLY_ONLY, each with its reason) run only on the
+    # 8-hourly schedule and on dispatch; every other discovered smoke runs
+    # exactly once (the plan check fails otherwise), with the same RETRIES.
+    # Running two smokes at once per runner was tried and dropped: CPU load
+    # broke timing-sensitive smokes (runs 37636924943, 37642447200). Each
+    # shard discovers the smokes itself, so this matrix needs only `changes`.
+    # The F48 co-op suites (owner, 2026-10-03) live on `tb/coop` until F48
+    # itself is built; they return with it.
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5, 6, 7]
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9]
     timeout-minutes: 30
     needs: changes
     if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-multiplayer-shard|'))
@@ -833,9 +834,16 @@ jobs:
             !/archive/
       - name: Select this shard's net smokes
         id: select
-        run: python3 tools/ci/net_shards.py --shard ${{ matrix.shard }}
+        env:
+          NIGHTLY: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+        run: |
+          if [ "$NIGHTLY" = true ]; then
+            python3 tools/ci/net_shards.py --shard ${{ matrix.shard }} --nightly
+          else
+            python3 tools/ci/net_shards.py --shard ${{ matrix.shard }}
+          fi
       - uses: ./.github/actions/setup-godot
-      - name: Run net smokes (two lanes at once)
+      - name: Run net smokes
         if: ${{ !cancelled() && steps.select.outputs.files != '' }}
         env:
           RETRIES: 1
