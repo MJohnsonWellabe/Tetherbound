@@ -74,10 +74,15 @@ func _run() -> void:
 		push_error("Identity/performance evidence requires a native display"); quit(1); return
 	if OS.get_cmdline_user_args().has("--with-vfx-units"):
 		var output: Array = []
+		var selectors := ["test_move_effects.gd", "test_combat_vfx.gd",
+			"test_combat_progression.gd", "test_director_join_snapshot.gd",
+			"test_multiplayer_identity_0912.gd", "test_net_boss_snapshot.gd",
+			"test_net_state_hash_scope.gd", "test_world_save_format.gd",
+			"test_net_harness_heartbeat_allowance.gd"]
 		var exit_code := OS.execute(OS.get_executable_path(), PackedStringArray([
 			"--headless", "--path", ProjectSettings.globalize_path("res://"),
 			"--audio-driver", "Dummy", "--script", "res://tests/run_tests.gd", "--",
-			"--only=test_move_effects.gd"]), output, true)
+			"--only=" + ",".join(selectors)]), output, true)
 		for chunk: Variant in output: print(str(chunk))
 		if exit_code != 0:
 			push_error("Existing move-effects units failed before capture"); quit(1); return
