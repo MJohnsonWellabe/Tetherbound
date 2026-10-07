@@ -1966,6 +1966,8 @@ func _maybe_begin_release() -> void:
 		# system). No choice to stage — the newcomer just takes the free
 		# holder, said out loud.
 		if bool(party.call("add", pending)):
+			var initialized := preload("res://scripts/creatures/breakthrough.gd").initialize_owned_catch(party, game.get("local").get("redesign_character"), pending)
+			if not initialized.is_empty(): game.get("local").set("redesign_character", initialized)
 			game.set("pending_catch", null)
 			say("%s joins the belt." % str(pending.call("label")))
 		return
@@ -2622,6 +2624,8 @@ func _do_release() -> void:
 			# ceremony will re-enter rather than lose a creature silently.
 			push_error("the freed holder refused %s" % str(pending.call("label")))
 			return
+		var initialized := preload("res://scripts/creatures/breakthrough.gd").initialize_owned_catch(party, game.get("local").get("redesign_character"), pending)
+		if not initialized.is_empty(): game.get("local").set("redesign_character", initialized)
 		_release_land = maxi(int(party.call("size")) - 1, 0)
 	game.set("pending_catch", null)
 
