@@ -152,7 +152,7 @@ func _travel_owner(session: Node, peer: int, envelope: Dictionary, permit: Dicti
 	await get_tree().process_frame
 	if not _same_owner(): _refuse("Your travel session changed."); return
 	var contact_deadline := Time.get_ticks_msec() + response_msec
-	print("[portal-arrival] contact window generation=", body.get("_foundation_ground_contact_generation"),
+	print("[portal-arrival] contact window generation=", body.get("_foundation_ground_contact_generation") if is_instance_valid(body) else -1,
 		" seated_generation=", _pending.contact_generation, " window_msec=", response_msec,
 		" readiness_deadline_passed=", Time.get_ticks_msec() >= readiness_deadline)
 	while _same_owner() and not _grounded_actor(body) and Time.get_ticks_msec() < contact_deadline:
