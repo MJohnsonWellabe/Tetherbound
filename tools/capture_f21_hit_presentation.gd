@@ -63,6 +63,11 @@ func _run() -> void:
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
 	current_scene = _world
+	# Sliced Meadows construction disables the real Player until its final
+	# collision mutation settles. Physics ticks still run during that hold;
+	# they cannot count as an ordinary walk toward the encounter.
+	while not bool(_world.call("shell_build_complete")):
+		await process_frame
 	for i in SETTLE_FRAMES: await physics_frame
 	var director := _world.get_node_or_null(^"EncounterDirector")
 	if director != null and director.call("ally_instance") == null:
