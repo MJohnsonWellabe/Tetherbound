@@ -531,7 +531,7 @@
       "creature_buff": {
         "id": "speed_mushroom",
         "stat": "speed",
-        "scale": 0.15,
+        "scale": 1.15,
         "duration_s": 90.0
       }
     },
@@ -565,7 +565,7 @@
       "creature_buff": {
         "id": "wild_mushroom",
         "stat": "attack",
-        "scale": 0.15,
+        "scale": 1.15,
         "duration_s": 90.0
       }
     },
