@@ -1,0 +1,13 @@
+{
+  "run": 37670759635,
+  "source_commit": "5d4f701c6850962a865856b0f8306a32c7a50374",
+  "proof": "tests/run_tests.gd --only=test_human_swim_visual.gd,test_meadowhart_riding_visual_repair_0912.gd,test_terrain_adaptation.gd,test_trainer_appearance_choice.gd",
+  "result": "PASS",
+  "tests": 25,
+  "assertions": 227,
+  "failures": 0,
+  "exit_code": 0,
+  "review": "b_f37_review SOURCE APPROVE for the three-file repair",
+  "shipping_pose_enabled": false,
+  "scope": "Logic, appearance identity and unchanged pose-context/restoration regressions. Corrected runtime, entry/exit images, all four bodies, ghost-leg diagnosis and visual judgment remain open."
+}
