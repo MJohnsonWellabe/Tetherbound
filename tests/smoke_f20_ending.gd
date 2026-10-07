@@ -29,7 +29,8 @@ func _run() -> void:
 	if not proof.check(game.call("load_game", 0), "production disk reload succeeds after memory reset"): finish(); return
 	change_scene_to_file("res://scenes/world/meadows_playground.tscn")
 	var resumed_result: Variant = await proof.resumed(self, game, before, not _credits_only)
-	proof.check(resumed_result == true, "all reload and completed-world continuation checks reached their final result")
+	proof.check(resumed_result == true, "all credits, reload and once-only revisit checks reached their final result" if _credits_only
+		else "all reload and completed-world continuation checks reached their final result")
 	_completed = resumed_result == true
 	finish()
 
@@ -39,7 +40,7 @@ func finish() -> void:
 	for failure: String in proof.failures: print("F20 FAIL ", failure)
 	print("F20 SOLO: %d checks, %d failures; actual input/UI/authority/disk with disclosed post-finale fixture" % [proof.checks, proof.failures.size()])
 	print("F20 SOLO ENDPOINT " + JSON.stringify({"requested": "credits_and_reload" if _credits_only else "full_continuation",
-		"passed": _completed and proof.failures.is_empty(), "continuation_content_run": not _credits_only,
+		"passed": _completed and proof.failures.is_empty(), "continuation_content_run": proof.continuation_content_entered,
 		"counts_as_f20_3_proof": _completed and proof.failures.is_empty() and not _credits_only,
-		"earned_finale_fixture": false}))
+		"earned_finale": false, "setup": "disclosed post-finale fixture"}))
 	quit(0 if proof.failures.is_empty() else 1)

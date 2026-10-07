@@ -12,6 +12,7 @@ var checks := 0
 var _heard := ""
 var _expected_choices: Array[String] = ["meadows:refused", "water:refused", "cloudreach:refused", "stormwood:refused"]
 var _capture_index := 0
+var continuation_content_entered := false
 
 ## Optional observations on the existing proof; no camera or gameplay writes.
 ## Hosted screenshots stay in the run artifact for independent visual review.
@@ -433,6 +434,7 @@ func resumed(tree: SceneTree, game: Node, before: Dictionary, continuation: bool
 	return await continuation_content(tree, game)
 
 func continuation_content(tree: SceneTree, game: Node) -> bool:
+	continuation_content_entered = true
 	var journal := preload("res://scripts/world/quest_log.gd").new(game)
 	var unfinished := false
 	for entry: Dictionary in journal.call("local_entries", game.progression):
