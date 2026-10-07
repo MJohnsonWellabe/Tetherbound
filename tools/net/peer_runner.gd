@@ -3728,13 +3728,13 @@ func _step_f31_shrine_hang(_args: Dictionary) -> Dictionary:
 	var local: RefCounted = game.get("local")
 	var world: RefCounted = game.get("world")
 	var character: String = local.get("character_id")
-	var namespace: String = world.get("reward_delivery_namespace")
+	var shrine_namespace: String = world.get("reward_delivery_namespace")
 	var world_id: String = world.get("world_id")
 	var epoch: String = session.call("_altar_current_epoch")
 	var live := func() -> bool:
 		return is_instance_valid(game) and root.get_node_or_null(^"Game") == game \
 			and game.get("session") == session and game.get("local") == local and game.get("world") == world \
-			and local.get("character_id") == character and world.get("reward_delivery_namespace") == namespace \
+			and local.get("character_id") == character and world.get("reward_delivery_namespace") == shrine_namespace \
 			and world.get("world_id") == world_id and session.call("_altar_current_epoch") == epoch
 	var before := _foundations_payload()
 	var active_before: String = game.get("realm_hearts").call("active_id")
@@ -3774,7 +3774,7 @@ func _step_f31_shrine_hang(_args: Dictionary) -> Dictionary:
 		if not live.call(): break
 		row = session.call("_owner_training_row")
 		if row.get("action") == "relic_hang" and row.get("intent") == {"biome": "meadows"} \
-			and row.get("character_id") == character and row.get("world_namespace") == namespace \
+			and row.get("character_id") == character and row.get("world_namespace") == shrine_namespace \
 			and row.get("world_id") == world_id and row.get("receipt") == receipt and row.get("status") == "accepted":
 			accepted = session.call("_foundation_decision", int(session.call("local_peer_id")), row)
 			var edge: Dictionary = get_meta("f48_latest_owner_save", {})
