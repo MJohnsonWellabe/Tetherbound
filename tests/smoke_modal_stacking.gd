@@ -60,6 +60,7 @@ func _run() -> void:
 	await _check_the_shell_opens_with_nothing_in_the_way()
 	await _check_the_shell_refuses_over_the_starter_picker()
 	await _check_the_shell_refuses_over_a_conversation()
+	await _check_lessons_own_skip_and_menu_input()
 
 	print("")
 	if _failures.is_empty():
@@ -160,6 +161,74 @@ func _check_the_shell_refuses_over_a_conversation() -> void:
 	for i in 4:
 		await process_frame
 	print("dialogue: shell refused while a conversation was on screen")
+
+
+## Real configured lesson cards; this proves local input/lifecycle only, not
+## earned unlocks, character receipts, persistence or comprehension at a gate.
+func _check_lessons_own_skip_and_menu_input() -> void:
+	var owner := preload("res://scripts/ui/input_owner.gd")
+	var rules := preload("res://scripts/onboarding/lesson_rules.gd")
+	var lesson := preload("res://scripts/onboarding/lesson_panel.gd").new()
+	root.add_child(lesson)
+	var acknowledgements: Array[String] = []
+	lesson.dismissed.connect(func(id: String) -> void: acknowledgements.append(id))
+	for source: Dictionary in rules.config().get("lessons", []):
+		var row := source.duplicate(true)
+		var dialogue: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(str(row.dialogue_path)))
+		var conversation: Dictionary = dialogue.get("conversations", {}).get(str(row.conversation), {})
+		row["speaker"] = conversation.get("speaker", "")
+		row["lines"] = conversation.get("lines", [])
+		if row.lines.is_empty():
+			_fail("lesson %s has no configured exchange" % str(row.id))
+			continue
+		for line: int in row.lines.size():
+			if not lesson.open(row):
+				_fail("lesson %s would not open for skip at line %d" % [str(row.id), line])
+				break
+			for advance_index: int in line: await _press("menu_confirm")
+			if owner.current(self) != lesson: _fail("lesson did not own input")
+			# Direct callers and physical shortcuts must obey the same guard.
+			if _menu.call("open") == true:
+				_fail("menu opened over lesson %s" % str(row.id))
+				_menu.call("close")
+			await _press("inventory")
+			if _menu.call("is_open") == true:
+				_fail("inventory shortcut stacked over lesson %s" % str(row.id))
+				_menu.call("close")
+			else: _expect_reason("lesson " + str(row.id))
+			var skip_ack_count := acknowledgements.size()
+			await _press("menu_cancel")
+			if lesson.is_open() or _menu.call("is_open") == true or owner.current(self) != null:
+				_fail("lesson skip did not restore world input without opening pause")
+			if acknowledgements.size() != skip_ack_count + 1 or acknowledgements.back() != str(row.id):
+				_fail("lesson skip did not acknowledge exactly its own lesson")
+		# Scene/character departure disposes presentation without teaching credit.
+		var departure_ack_count := acknowledgements.size()
+		if lesson.open(row):
+			lesson.close(false)
+			for departure_frame: int in 4: await process_frame
+			if acknowledgements.size() != departure_ack_count: _fail("departing lesson granted acknowledgement")
+	# The Help/interaction edge that opens a card cannot also advance it.
+	var edge_row: Dictionary = rules.config().get("lessons", [])[0].duplicate(true)
+	edge_row["speaker"] = "Grandpa Elias"
+	edge_row["lines"] = ["First", "Second"]
+	Input.action_press("menu_confirm")
+	if lesson.open(edge_row):
+		_send("menu_confirm", true)
+		await process_frame
+		if int(lesson.get("_line")) != 0: _fail("opening confirm edge advanced lesson")
+		Input.action_release("menu_confirm")
+		_send("menu_confirm", false)
+		for edge_frame: int in 4: await process_frame
+		await _press("menu_confirm")
+		if int(lesson.get("_line")) != 1: _fail("fresh confirm did not advance lesson")
+		await _press("menu_cancel")
+	else:
+		_fail("opening-edge lesson would not open")
+		Input.action_release("menu_confirm")
+	lesson.queue_free()
+	for release_frame: int in 4: await process_frame
+	print("lessons: every configured exchange skips at every line; menu refused; departure and opening edge preserved")
 
 
 ## A refusal the player cannot see is the same broken-looking dead button
