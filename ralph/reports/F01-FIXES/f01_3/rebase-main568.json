@@ -1,0 +1,524 @@
+{
+  "base_main": "4bee3bb1b90e288563028bdc53db5aeca98a6e0b",
+  "producer_source": "11634b5cfcbb3abf8c2dc93ad82cd42695f4d9b6",
+  "sole_parent": "4bee3bb1b90e288563028bdc53db5aeca98a6e0b",
+  "product_count": 9,
+  "products": [
+    {
+      "path": "data/config/bands/band1_lower_meadows/harvest.json",
+      "tested_source_blob": "d7deaf71c7f65cb29ee15d73b6fcd21ee4a466a5",
+      "rebased_blob": "d7deaf71c7f65cb29ee15d73b6fcd21ee4a466a5",
+      "byte_identical": true
+    },
+    {
+      "path": "data/config/bands/band1_lower_meadows/props.json",
+      "tested_source_blob": "397e5a291f8c1ecbf40df0ba4968c9f19f5a7356",
+      "rebased_blob": "397e5a291f8c1ecbf40df0ba4968c9f19f5a7356",
+      "byte_identical": true
+    },
+    {
+      "path": "data/config/building_prefabs.json",
+      "tested_source_blob": "ff5e5bc9366df330cfb322964c01e1628b29d84a",
+      "rebased_blob": "ff5e5bc9366df330cfb322964c01e1628b29d84a",
+      "byte_identical": true
+    },
+    {
+      "path": "data/config/essence_nodes.json",
+      "tested_source_blob": "48ff779c51806d6e3420fcdd3dcdd8bef8debe3e",
+      "rebased_blob": "48ff779c51806d6e3420fcdd3dcdd8bef8debe3e",
+      "byte_identical": true
+    },
+    {
+      "path": "data/config/village_npcs.json",
+      "tested_source_blob": "67a75d9dfe7a07d495b578570d0d934420a2dbcc",
+      "rebased_blob": "67a75d9dfe7a07d495b578570d0d934420a2dbcc",
+      "byte_identical": true
+    },
+    {
+      "path": "scripts/world/village_npcs.gd",
+      "tested_source_blob": "ee0f121f81905b70b80933ba5188ac15a29ea35a",
+      "rebased_blob": "ee0f121f81905b70b80933ba5188ac15a29ea35a",
+      "byte_identical": true
+    },
+    {
+      "path": "scripts/world/villager_night_light.gd",
+      "tested_source_blob": "e78767b39e39ff0b02eb293835dd172fae58436f",
+      "rebased_blob": "e78767b39e39ff0b02eb293835dd172fae58436f",
+      "byte_identical": true
+    },
+    {
+      "path": "tests/fixtures/band_split_baseline/props.json",
+      "tested_source_blob": "3a9b6341ca0ba8d936f2d1655b969a9e74db4d1f",
+      "rebased_blob": "3a9b6341ca0ba8d936f2d1655b969a9e74db4d1f",
+      "byte_identical": true
+    },
+    {
+      "path": "tests/helpers/gate_a_npc_gather_segment.gd",
+      "tested_source_blob": "49b2b54ce5b1f64e568c4dc717d8aca624124f4e",
+      "rebased_blob": "49b2b54ce5b1f64e568c4dc717d8aca624124f4e",
+      "byte_identical": true
+    }
+  ],
+  "unchanged_opening_blob": "a47c23c44925ccb81fe689f6235d657c249c078b",
+  "unchanged_night_script_blob": "827b97903fcb394f2610828d211a9f84dd4f6f82",
+  "intervening_main_paths": [
+    {
+      "filename": "data/config/combat.json",
+      "sha": "b8a90b8591eb04113a4fba0e7457a68e696d7aab",
+      "status": "modified"
+    },
+    {
+      "filename": "data/items/items.json",
+      "sha": "6c38ee68d74d1fd29909121c895764fb2cfb0ab8",
+      "status": "modified"
+    },
+    {
+      "filename": "data/schema/character_state.schema.json",
+      "sha": "e1c3abe152805110d90444204772f4702e7b868e",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/combat/accepted_action_host.gd",
+      "sha": "c10a5773e870ea1dad28ec9f20b6012ba52e4db3",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/combat/combat_manager.gd",
+      "sha": "d101be9fbe1a4e8df9898570f1d4e17b61470275",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/combat/encounter_director.gd",
+      "sha": "ecb4e6e5bc9103e6d689ce003c5e11fe4134c1d4",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/combat/hit_feedback.gd",
+      "sha": "70e2e7d19c46c617f01862c99e88a40b6c7794e8",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/combat/tether_commands.gd",
+      "sha": "503f262aef638d77c8c3a41a43682a9b395fca8c",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/creatures/remote_creature.gd",
+      "sha": "745ac3036a68108dcb4ef14c92aa41d1c7a9dc40",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/creatures/wild_creature.gd",
+      "sha": "faf7bd410b02effeb145276acfcb15c91d5148da",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/net/character_authority.gd",
+      "sha": "e69a0e79cdb64ebc6b72f0aaaa47d910408926a3",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/net/character_record_rules.gd",
+      "sha": "678951be0447218e103d07d9719cca45685c23f0",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/net/encounter_host.gd",
+      "sha": "edea28f8556ff979f85e8161f60d62f3d5dd0ffc",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/net/foundation_actions.gd",
+      "sha": "d75e9bdd7eb252a5e07c378269ee5387d864ba1f",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/net/foundation_delivery.gd",
+      "sha": "afcbab461bc6683b78e7cbf59f6fc2c150549aec",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/net/foundation_event.gd",
+      "sha": "18d2fae33ae8f284d86949c1fd9d81e48f66a459",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/net/owner_passive_preparation.gd",
+      "sha": "52126e6b1112042b8187cfda82e8b9172baedaa4",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/net/owner_passive_sync.gd",
+      "sha": "3fae76d0c78018156261152c29f632e95888dc39",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/net/session.gd",
+      "sha": "94f62169448a19cd142e200391136e52a1b82b46",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/ui/combat_hud.gd",
+      "sha": "a0c96bf67c3cf0cc4cde76ca449fe92374a3718b",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/ui/combat_system_overlay.gd",
+      "sha": "88932a5a54bebaa1ce424d6e2a337f188e4a01fe",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/ui/playground_hud.gd",
+      "sha": "6292cb89ad205d8af22781d575a19c459dadb957",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/ui/tether_command_input.gd",
+      "sha": "147c6970078caa1debc92ee16a5d673551b86af6",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/ui/tether_command_meter.gd",
+      "sha": "ca19c5a47205dad2acc39e110249ed2c700140b1",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/vfx/move_effect_library.gd",
+      "sha": "bde3e6dfee630ac6e53046d6821314ee445d6e1d",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/vfx/ultimates/ultimate_library.gd",
+      "sha": "0cf61fbcdd63152188f3246facd2ffb7ced2359e",
+      "status": "modified"
+    },
+    {
+      "filename": "tests/smoke_f23_live_moves.gd",
+      "sha": "b547cf1c1b6ef435fa336a7ec2fe419d92e2d8ce",
+      "status": "modified"
+    },
+    {
+      "filename": "tests/smoke_move_effects_library.gd",
+      "sha": "9f39b2c071066544695a7310a3db347a67ebbd68",
+      "status": "modified"
+    },
+    {
+      "filename": "tests/smoke_net_boss_rewards_each_participant.gd",
+      "sha": "388b0a54a1a2eee8ef6871da60572bcf8021a944",
+      "status": "modified"
+    },
+    {
+      "filename": "tests/smoke_net_owner_passive_rejoin.gd",
+      "sha": "869c28e17c2edcd2a73f36c57003b28c3714803b",
+      "status": "modified"
+    },
+    {
+      "filename": "tests/smoke_net_owner_passive_rejoin_peer.gd",
+      "sha": "7cea31260bf083e9e315de1681efa2dcbac840bf",
+      "status": "modified"
+    },
+    {
+      "filename": "tests/smoke_net_shared_boss.gd",
+      "sha": "fc49f184fd5c53911100db1fbab645d7160811e5",
+      "status": "modified"
+    },
+    {
+      "filename": "tests/test_combat_mastery_delivery.gd",
+      "sha": "3fc045471b79c1d1424706caba658e1323fb0d5d",
+      "status": "modified"
+    },
+    {
+      "filename": "tests/test_director_projectile_deployment_binding.gd",
+      "sha": "e4d64da3acba199428e1dcfe0849ab2ec3926645",
+      "status": "modified"
+    },
+    {
+      "filename": "tests/test_f21_hit_presentation.gd",
+      "sha": "be2fd38f9328807f5abfcdd398acbb8e285a2af7",
+      "status": "modified"
+    },
+    {
+      "filename": "tests/test_f24_host_commands.gd",
+      "sha": "0909668ca5ad321c158ebca614ccc361eb0cbefc",
+      "status": "added"
+    },
+    {
+      "filename": "tests/test_hit_feedback.gd",
+      "sha": "a87651a192f4c3f73b20d4068ff94bdd33d061dd",
+      "status": "modified"
+    },
+    {
+      "filename": "tests/test_move_commit_runtime.gd",
+      "sha": "4246c0ed68c09e7edd4a588bb02c9ec28d31c085",
+      "status": "modified"
+    },
+    {
+      "filename": "tests/test_move_effects.gd",
+      "sha": "7b7f2e6ff88e802910201aa0eda29d3f20625c2b",
+      "status": "modified"
+    },
+    {
+      "filename": "tests/test_remote_creature_follow.gd",
+      "sha": "99322259bf5697c823444c741857d3a44cdeda1a",
+      "status": "modified"
+    },
+    {
+      "filename": "tests/test_tm_teach_transaction.gd",
+      "sha": "9e95913d709d17d4a4d43f87c616083cb40b3561",
+      "status": "modified"
+    },
+    {
+      "filename": "tools/net/peer_runner.gd",
+      "sha": "8db0f1841b46d8d7b03569b3e2ecfc2f25656c4e",
+      "status": "modified"
+    }
+  ],
+  "reuse_authority": [
+    "6030765818",
+    "6031418229"
+  ],
+  "npc_reuse": {
+    "run": 37565582234,
+    "job": 112612411452,
+    "artifact": 11458194934,
+    "native_exit": 0,
+    "tests": 315,
+    "assertions": 8505,
+    "failed": 0,
+    "formation_provenance": "Original274 passing contract; opening unchanged"
+  },
+  "night": {
+    "hosted_run": 37565857429,
+    "hosted_exit": 124,
+    "hosted_elapsed_seconds": 5400,
+    "captures": 40,
+    "visited": 4,
+    "required": 12,
+    "actual_pixels": "1280x720",
+    "requested_resolution": "1920x1080",
+    "verdict": "INCOMPLETE/UNRUN blind review",
+    "next": "SAME11634 PC native only actual fresh quiet guard, then SAME /root/night_readability_judge_round8; no unchanged hosted retry"
+  },
+  "areas": {
+    "cut": "This SOLEparent main5684bee clean commit",
+    "f18": "tests/smoke_f18_earned_loop.gd",
+    "gate_a": "tests/smoke_gate_a_opening_segment.gd",
+    "args": "",
+    "mode": "headless",
+    "rendering_method": "gl_compatibility",
+    "resolution": "1280x720",
+    "timeout_minutes": 30,
+    "status": "Updated existing6026550147 to latest producer before dispatch; original emptyargs/defaultclock/assertions/budgets; coordinator only",
+    "superseded_undispatched_cut": "0739d6756a5b1d609813d68e44df6fc17bcdf905"
+  },
+  "archive": {
+    "artifact": 11460843437,
+    "path": "D:/tetherbound/.artifacts/r3-f01-proof/main565-night-11634/artifact-11460843437.zip",
+    "sha256": "f24d211e9e2d4a8f37e689253959602c5ea0ec0c3d8886618315ebc11b5e6718",
+    "original_capture_dir": "D:/tetherbound/.artifacts/r3-f01-proof/main565-night-11634/captures",
+    "approved_archival_only": "6031418229",
+    "original_once": true,
+    "capture_hashes_verified": 40,
+    "live_source_cache_save_writes": 0
+  },
+  "no_new_harness_or_assertion_budget_changes": true,
+  "night_ready": false,
+  "previous_clean_cut": "0739d6756a5b1d609813d68e44df6fc17bcdf905",
+  "preserved_newly_landed_paths": [
+    {
+      "filename": "data/config/combat.json",
+      "sha": "b8a90b8591eb04113a4fba0e7457a68e696d7aab",
+      "status": "modified"
+    },
+    {
+      "filename": "data/items/items.json",
+      "sha": "6c38ee68d74d1fd29909121c895764fb2cfb0ab8",
+      "status": "modified"
+    },
+    {
+      "filename": "data/schema/character_state.schema.json",
+      "sha": "e1c3abe152805110d90444204772f4702e7b868e",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/combat/accepted_action_host.gd",
+      "sha": "c10a5773e870ea1dad28ec9f20b6012ba52e4db3",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/combat/combat_manager.gd",
+      "sha": "d101be9fbe1a4e8df9898570f1d4e17b61470275",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/combat/encounter_director.gd",
+      "sha": "ecb4e6e5bc9103e6d689ce003c5e11fe4134c1d4",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/combat/hit_feedback.gd",
+      "sha": "70e2e7d19c46c617f01862c99e88a40b6c7794e8",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/combat/tether_commands.gd",
+      "sha": "503f262aef638d77c8c3a41a43682a9b395fca8c",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/creatures/remote_creature.gd",
+      "sha": "745ac3036a68108dcb4ef14c92aa41d1c7a9dc40",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/creatures/wild_creature.gd",
+      "sha": "faf7bd410b02effeb145276acfcb15c91d5148da",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/net/character_authority.gd",
+      "sha": "e69a0e79cdb64ebc6b72f0aaaa47d910408926a3",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/net/character_record_rules.gd",
+      "sha": "678951be0447218e103d07d9719cca45685c23f0",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/net/encounter_host.gd",
+      "sha": "edea28f8556ff979f85e8161f60d62f3d5dd0ffc",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/net/foundation_actions.gd",
+      "sha": "d75e9bdd7eb252a5e07c378269ee5387d864ba1f",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/net/foundation_delivery.gd",
+      "sha": "afcbab461bc6683b78e7cbf59f6fc2c150549aec",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/net/foundation_event.gd",
+      "sha": "18d2fae33ae8f284d86949c1fd9d81e48f66a459",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/net/owner_passive_preparation.gd",
+      "sha": "52126e6b1112042b8187cfda82e8b9172baedaa4",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/net/owner_passive_sync.gd",
+      "sha": "3fae76d0c78018156261152c29f632e95888dc39",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/net/session.gd",
+      "sha": "94f62169448a19cd142e200391136e52a1b82b46",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/ui/combat_hud.gd",
+      "sha": "a0c96bf67c3cf0cc4cde76ca449fe92374a3718b",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/ui/combat_system_overlay.gd",
+      "sha": "88932a5a54bebaa1ce424d6e2a337f188e4a01fe",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/ui/playground_hud.gd",
+      "sha": "6292cb89ad205d8af22781d575a19c459dadb957",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/ui/tether_command_input.gd",
+      "sha": "147c6970078caa1debc92ee16a5d673551b86af6",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/ui/tether_command_meter.gd",
+      "sha": "ca19c5a47205dad2acc39e110249ed2c700140b1",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/vfx/move_effect_library.gd",
+      "sha": "bde3e6dfee630ac6e53046d6821314ee445d6e1d",
+      "status": "modified"
+    },
+    {
+      "filename": "scripts/vfx/ultimates/ultimate_library.gd",
+      "sha": "0cf61fbcdd63152188f3246facd2ffb7ced2359e",
+      "status": "modified"
+    },
+    {
+      "filename": "tests/smoke_f23_live_moves.gd",
+      "sha": "b547cf1c1b6ef435fa336a7ec2fe419d92e2d8ce",
+      "status": "modified"
+    },
+    {
+      "filename": "tests/smoke_move_effects_library.gd",
+      "sha": "9f39b2c071066544695a7310a3db347a67ebbd68",
+      "status": "modified"
+    },
+    {
+      "filename": "tests/smoke_net_owner_passive_rejoin.gd",
+      "sha": "869c28e17c2edcd2a73f36c57003b28c3714803b",
+      "status": "modified"
+    },
+    {
+      "filename": "tests/smoke_net_owner_passive_rejoin_peer.gd",
+      "sha": "7cea31260bf083e9e315de1681efa2dcbac840bf",
+      "status": "modified"
+    },
+    {
+      "filename": "tests/test_combat_mastery_delivery.gd",
+      "sha": "3fc045471b79c1d1424706caba658e1323fb0d5d",
+      "status": "modified"
+    },
+    {
+      "filename": "tests/test_director_projectile_deployment_binding.gd",
+      "sha": "e4d64da3acba199428e1dcfe0849ab2ec3926645",
+      "status": "modified"
+    },
+    {
+      "filename": "tests/test_f24_host_commands.gd",
+      "sha": "0909668ca5ad321c158ebca614ccc361eb0cbefc",
+      "status": "added"
+    },
+    {
+      "filename": "tests/test_hit_feedback.gd",
+      "sha": "a87651a192f4c3f73b20d4068ff94bdd33d061dd",
+      "status": "modified"
+    },
+    {
+      "filename": "tests/test_move_commit_runtime.gd",
+      "sha": "4246c0ed68c09e7edd4a588bb02c9ec28d31c085",
+      "status": "modified"
+    },
+    {
+      "filename": "tests/test_move_effects.gd",
+      "sha": "7b7f2e6ff88e802910201aa0eda29d3f20625c2b",
+      "status": "modified"
+    },
+    {
+      "filename": "tests/test_remote_creature_follow.gd",
+      "sha": "99322259bf5697c823444c741857d3a44cdeda1a",
+      "status": "modified"
+    },
+    {
+      "filename": "tests/test_tm_teach_transaction.gd",
+      "sha": "9e95913d709d17d4a4d43f87c616083cb40b3561",
+      "status": "modified"
+    }
+  ],
+  "rebase_authority": [
+    "6031832360",
+    "6031418229"
+  ],
+  "source_qualification": "All9R3product blobs unchanged11634; original315/274 coverage source-qualified only. New R4 combat/net/UI integration is unproven until fresh same-cut F18/GateA. Original hosted NIGHT incomplete; no borrowed native/visual/area result."
+}
