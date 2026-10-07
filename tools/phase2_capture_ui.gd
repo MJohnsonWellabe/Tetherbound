@@ -207,6 +207,8 @@ func _shoot_settings_sections(menu: Node, world: Node) -> void:
 			continue
 		print("PHASE2 UI settings scroll begin: ", label_and_id.id, " heading=", heading.get_path())
 		scroll.ensure_control_visible(heading)
+		# Show the section below its heading, rather than only its last visible pixel.
+		scroll.scroll_vertical += int(heading.global_position.y - scroll.global_position.y)
 		print("PHASE2 UI settings scroll returned: ", label_and_id.id)
 		for frame in 4:
 			await process_frame
