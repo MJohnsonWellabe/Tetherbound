@@ -115,6 +115,7 @@ jobs:
             !/shots/
             !/assets_raw/
             !/archive/
+            /ralph/reports/R2-F38/capture-definition.json
 
       - name: Check the script exists on that ref
         env:
