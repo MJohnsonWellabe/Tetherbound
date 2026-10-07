@@ -11,6 +11,8 @@ var _player: CharacterBody3D
 var _rig: Node3D
 var _activated: Object
 var _home_result: Dictionary = {}
+var _enter_binding: Dictionary = {}
+var _enter_result: Dictionary = {}
 
 func _init(owner: SceneTree, actual_game: Node) -> void:
 	tree = owner
@@ -46,6 +48,12 @@ func home_key() -> bool:
 
 func _portal_result(result: Dictionary) -> void:
 	if result.get("kind") == "home_key_finish": _home_result = result.duplicate(true)
+	# Game emits only Session-authenticated replies. Bind this observer to the
+	# exact request queued by the actual arch, rather than scene/menu readiness.
+	if result.get("kind") != "portal_enter" or _enter_binding.is_empty(): return
+	for field: String in ["request_id", "character_id", "world_instance_id", "session_epoch"]:
+		if not _enter_binding.has(field) or result.get(field) != _enter_binding[field]: return
+	_enter_result = result.duplicate(true)
 
 func _use_home_key() -> bool:
 	if not _bind(): return false
@@ -100,12 +108,45 @@ func enter(arch_id: String, realm: String) -> bool:
 	if view.get("character_open") != true or view.get("has_key") == true:
 		return _fail("F49 actual arch Use did not durably consume exactly the earned key: " + arch_id)
 	if not _recommended_sign(arch_id, prompt, view, "after_unlock"): return false
-	if not await activate(prompt): return false
-	for frame in 7200:
-		await tree.process_frame
-		if _ready_world(realm):
-			return _uids() == before or _fail("F49 actual portal travel changed the carried party")
-	return _fail("F49 portal Enter never produced the ready " + realm + " scene")
+	if not game.has_signal("portal_action_result"):
+		return _fail("F49 missing producer: Game has no authoritative portal result signal")
+	_enter_result = {}
+	_enter_binding = {"character_id": game.local.character_id,
+		"world_instance_id": game.world.reward_delivery_namespace,
+		"session_epoch": game.session.call("_altar_current_epoch")}
+	# PortalArch's own activated listener queues the request first. Observe
+	# that actual request ID before its deferred authority reply/scene swap.
+	var bind_request := func() -> void: _enter_binding.request_id = str(arch.get("_pending"))
+	prompt.connect("activated", bind_request)
+	game.connect("portal_action_result", _portal_result)
+	var activated := await activate(prompt)
+	if is_instance_valid(prompt) and prompt.is_connected("activated", bind_request):
+		prompt.disconnect("activated", bind_request)
+	var passed := false
+	if activated and not str(_enter_binding.get("request_id", "")).is_empty():
+		for frame in 7200:
+			await tree.process_frame
+			if _enter_result.is_empty(): continue
+			if _enter_result.get("ok") != true:
+				_fail("F49 portal Enter authoritative refusal: " + str(_enter_result.get("reason")))
+				break
+			if _enter_result.get("saved") != true or _enter_result.get("durable") != true \
+					or _enter_result.get("arrived") != true or _enter_result.get("arrival_applied") != true \
+					or str(_enter_result.get("permit_id", "")).is_empty():
+				_fail("F49 portal Enter did not confirm its saved, durable grounded arrival")
+				break
+			if _ready_world(realm):
+				passed = _uids() == before or _fail("F49 actual portal travel changed the carried party")
+				break
+		if not passed and _enter_result.is_empty():
+			_fail("F49 portal Enter never confirmed the saved arrival in " + realm)
+		elif not passed and failures.is_empty():
+			_fail("F49 portal Enter never produced the ready " + realm + " scene")
+	elif activated:
+		_fail("F49 actual arch Enter did not queue a correlated travel request")
+	game.disconnect("portal_action_result", _portal_result)
+	_enter_binding = {}
+	return passed
 
 func _recommended_sign(arch_id: String, prompt: Node3D, view: Dictionary, phase: String) -> bool:
 	var expected: int = {"tidewake": 20, "cloudreach": 31, "stormwood": 42}.get(arch_id, 0)
