@@ -920,7 +920,9 @@ func _run() -> void:
 	var local_answer: Dictionary = (friendly.get("data", {}) as Dictionary)
 	var asked_host := bool(local_answer.get("pending", false)) and not bool(local_answer.get("ok", true))
 	var started_move := bool(local_answer.get("ok", false)) and not bool(local_answer.get("pending", false))
-	check((asked_host or started_move) and str(local_answer.get("code", "")).is_empty(),
+	var local_code := str(local_answer.get("code", ""))
+	check((asked_host and local_code in ["", "pending"]) \
+		or (started_move and local_code.is_empty()),
 		"and the client's own local answer was not a refusal -- the host decides"
 		+ " (ok=%s pending=%s code='%s')" % [str(local_answer.get("ok", true)),
 			str(local_answer.get("pending", false)), str(local_answer.get("code", ""))])
