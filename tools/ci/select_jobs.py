@@ -56,6 +56,7 @@ Renamed files are diffed with --no-renames so the old path is classified too.
 tests/test_ci_select_jobs.py checks sample and real-repository paths.
 """
 import argparse
+import glob
 import os
 import re
 import sys
@@ -117,8 +118,13 @@ WORD = re.compile(r"[A-Za-z0-9_]+")
 CLASS_NAME = re.compile(r"^class_name\s+([A-Za-z_][A-Za-z0-9_]*)", re.M)
 
 
-def ci_jobs(ci_text):
-    """Job ids in ci.yml, with the text of each job's block."""
+SUITES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "suites")
+
+
+def ci_jobs(ci_text, suites_dir=SUITES_DIR):
+    """Job ids in ci.yml, with the text of each job's block. A verify-suite
+    GROUP (tools/ci/suites/*.steps, `### job: <id>`) is that former job's
+    steps, so its text joins (or makes) the block of the job id it names."""
     jobs, name, buf = {}, None, []
     in_jobs = False
     for line in ci_text.splitlines():
@@ -136,6 +142,12 @@ def ci_jobs(ci_text):
             buf.append(line)
     if name:
         jobs[name] = "\n".join(buf)
+    for path in sorted(glob.glob(os.path.join(suites_dir, "*.steps"))):
+        with open(path, encoding="utf-8") as fh:
+            text = fh.read()
+        m = re.search(r"^### job: ([a-z0-9][a-z0-9-]*)\s*$", text, re.M)
+        if m:
+            jobs[m.group(1)] = (jobs.get(m.group(1), "") + "\n" + text).lstrip("\n")
     return jobs
 
 

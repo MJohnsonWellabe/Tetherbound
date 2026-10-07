@@ -26,15 +26,16 @@ import sys
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 
 # Must equal the `shard:` matrix in ci.yml (tests/test_ci_net_shards.py).
-SHARD_COUNT = 8
+SHARD_COUNT = 7
 # Each shard job runs LANES_PER_SHARD lanes AT ONCE (tools/ci/run_net_lanes.sh,
 # CI-SPEED 2026-10-07): a 4-vCPU runner fits two two-peer smokes side by side
-# at ~1.1x their solo time (three at once missed the 180 s hello budget).
+# at ~1.3x their solo time (three at once missed the 180 s hello budget).
 LANES_PER_SHARD = 2
-# Solo-measured smoke time per LANE: ~12 min, so with the ~1.1x of running
-# two lanes together plus ~2 min of checkout and Godot setup a shard job
-# stays near 15 minutes.
-SHARD_SMOKE_BUDGET_SECONDS = 720
+# Solo-measured smoke time per LANE: ~13 min. Two lanes on one runner ran at
+# 1.0-1.6x their solo time on PR #573's first full run (37627797865; overall
+# 1.26x, slower runner types near 1.5x), so with ~2 min of checkout and Godot
+# setup a shard job takes ~16-21 minutes.
+SHARD_SMOKE_BUDGET_SECONDS = 780
 
 # Seconds per smoke, measured SOLO: the SLOWEST of the three green full runs
 # 37615388024, 37575215387 and 37563845433 (2026-10-07), from one smoke's
@@ -42,7 +43,7 @@ SHARD_SMOKE_BUDGET_SECONDS = 720
 # of a shard ends at the upload step).
 # Refresh it from newer full runs when a lane drifts past the budget (the
 # lane runner prints each smoke's seconds; they include the ~1.1x of two
-# lanes sharing a runner, so divide by 1.1 when refreshing from those).
+# lanes sharing a runner, so divide by ~1.3 when refreshing from those).
 MEASURED_SECONDS = {
     "behind_character_joins_ahead_world": 124,
     "boss_rewards_each_participant": 171,

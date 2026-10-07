@@ -1,0 +1,12 @@
+# CI-SPEED suite group (tools/ci/run_suite.py). Steps copied verbatim from
+# the former ci.yml job; each step runs in order in one lane, with the
+# lane's own XDG_DATA_HOME, RUNNER_TEMP and network namespace.
+### job: verify-unit-tests
+### group: 1
+### seconds: 205
+### tier: fast
+### job-timeout-minutes: 12
+
+### step: Run tests
+godot --headless --path . --script tests/run_tests.gd \
+  -- --shard=1/3 --skip=test_veg_corridor.gd,test_scatter_rules.gd,test_harvest.gd

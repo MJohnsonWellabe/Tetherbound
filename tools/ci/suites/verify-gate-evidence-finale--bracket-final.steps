@@ -1,0 +1,31 @@
+# CI-SPEED suite group (tools/ci/run_suite.py). Steps copied verbatim from
+# the former ci.yml job; each step runs in order in one lane, with the
+# lane's own XDG_DATA_HOME, RUNNER_TEMP and network namespace.
+### job: verify-gate-evidence-finale
+### group: bracket-final
+### seconds: 431
+### job-timeout-minutes: 40
+
+### step: Verify tournament_bracket segment bracket-final
+set -euo pipefail
+segment="bracket-final"
+home="${RUNNER_TEMP}/bracket-home"; out="${RUNNER_TEMP}/bracket-out"
+mkdir -p "$home" "$out"
+XDG_DATA_HOME="$home" TB_SEGMENT_OUT="$out" \
+  godot --headless --path . --script tests/smoke_tournament_bracket.gd -- --segment="${segment#bracket-}"
+### step: Verify gate_e_finale
+### env SMOKE: gate_e_finale
+### env RETRIES: 1
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+  if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1

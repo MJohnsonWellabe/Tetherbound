@@ -1,0 +1,24 @@
+# CI-SPEED suite group (tools/ci/run_suite.py). Steps copied verbatim from
+# the former ci.yml job; each step runs in order in one lane, with the
+# lane's own XDG_DATA_HOME, RUNNER_TEMP and network namespace.
+### job: verify-gate-b-core
+### seconds: 352
+### job-timeout-minutes: 20
+
+### step: Verify gate_b_continuous (CORE — opening through tournament readiness)
+### env RETRIES: 2
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_gate_b_continuous.gd attempt ${n}/${RETRIES}"
+  if godot --headless --path . --script tests/smoke_gate_b_continuous.gd; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_gate_b_continuous.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1
+### step: Verify rift gate opens once
+timeout 600s godot --headless --path . --script tests/smoke_rift_gate_opens_once.gd
