@@ -36,6 +36,9 @@ func _run() -> void:
 	await _capture_run()
 	_restore_volume()
 	if _receipt != null:
+		_receipt.flush()
+		if _receipt.get_error() != OK:
+			_failures.append("Warning receipt final flush failed")
 		_receipt.close()
 	for failure: String in _failures:
 		push_error(failure)
@@ -142,6 +145,13 @@ func _capture_run() -> void:
 				await process_frame
 	STRIKE_MOTION.set_reduced_motion(false)
 
+
+func _record_frame(record: Dictionary) -> void:
+	_receipt.store_line(JSON.stringify(record))
+	_receipt.flush()
+	if _receipt.get_error() != OK:
+		_failures.append(str(record.get("file", "unknown")) + ": warning receipt write/flush failed")
+
 func _frame(id: String, target: Vector3, progress: float) -> void:
 	await process_frame
 	await RenderingServer.frame_post_draw
@@ -157,8 +167,7 @@ func _frame(id: String, target: Vector3, progress: float) -> void:
 		"warning_progress":progress,"phase":_surge.get("phase"),"flash":_surge.call("flash_level"),
 		"reduced_motion":STRIKE_MOTION.reduced_motion(), "graphics_capture":_graphics_capture,
 		"candidate_preview":_volume_preview, "surge_config_sha256":FileAccess.get_file_as_string(SURGE_CONFIG).sha256_text()}
-	_receipt.store_line(JSON.stringify(record))
-	_receipt.flush()
+	_record_frame(record)
 	print("STRIKE_FRAME ", JSON.stringify(record))
 
 func _vec(v: Vector3) -> Array:
@@ -216,6 +225,5 @@ func _timed_views() -> void:
 			for i in images.size():
 				if images[i] == null or images[i].is_empty() or images[i].get_size() != _native_resolution or images[i].save_png(_output_dir.path_join(records[i].file)) != OK:
 					_failures.append(str(records[i].file)+": image write/size failed")
-				_receipt.store_line(JSON.stringify(records[i]))
-			_receipt.flush()
+				_record_frame(records[i])
 			print("TIMED_STRIKE ", view.id, " reduced=", reduced, " frames=", images.size(), " impact=", impact)
