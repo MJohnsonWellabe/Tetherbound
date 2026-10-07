@@ -146,6 +146,8 @@ func _run() -> void:
 			"test_combat_realm_owned_begin.gd", "test_combat_send_out_hold.gd", "test_combat_spaced_camera.gd",
 			"test_combat_stagger.gd", "test_combat_tell_swing.gd", "test_combat_vfx.gd",
 			"test_combat_wind.gd", "test_controls.gd", "test_creature_gear.gd",
+			"test_conversation_camera.gd", "test_conversation_camera_aftermath_profile.gd",
+			"test_fight_camera.gd", "test_realm_camera_far_floor.gd",
 			"test_creature_history.gd", "test_director_join_snapshot.gd", "test_director_projectile_deployment_binding.gd",
 			"test_enemy_named_attack.gd", "test_f21_hit_presentation.gd", "test_f23_live_moves.gd",
 			"test_f24_host_commands.gd", "test_foundation_combat_manager_context.gd", "test_foundation_retry_admission.gd",
