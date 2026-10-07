@@ -55,6 +55,24 @@ func _run() -> void:
 		push_error("Use --biome and --output under the Phase 2 evidence directory")
 		quit(1)
 		return
+	var menu_data: Variant = JSON.parse_string(FileAccess.get_file_as_string(MENU_DATA))
+	if not menu_data is Dictionary:
+		push_error("Menu data invalid")
+		quit(1)
+		return
+	var available_tabs: Array[String] = []
+	for definition: Variant in (menu_data as Dictionary).get("tabs", []):
+		if definition is Dictionary:
+			available_tabs.append(str(definition.get("id", "")))
+	for requested: String in _tabs:
+		if requested.is_empty() or requested not in available_tabs:
+			push_error("Requested capture tab is unavailable: " + requested)
+			quit(1)
+			return
+	if (_map_cycle or _map_zoom_samples) and not _tabs.is_empty() and "map" not in _tabs:
+		push_error("Map evidence flags require map in the requested tab set")
+		quit(1)
+		return
 	seed(_seed)
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_output))
 	var game := root.get_node_or_null(^"Game")
@@ -102,11 +120,6 @@ func _run() -> void:
 			_failures.append("Real exploration roster did not reach its natural idle state")
 		else:
 			await _shoot("exploration_hud_idle", "HUD after natural temporary roster expiry", world)
-	var menu_data: Variant = JSON.parse_string(FileAccess.get_file_as_string(MENU_DATA))
-	if not menu_data is Dictionary:
-		push_error("Menu data invalid")
-		quit(1)
-		return
 	for raw_tab: Variant in (menu_data as Dictionary).get("tabs", []):
 		if not raw_tab is Dictionary:
 			continue
