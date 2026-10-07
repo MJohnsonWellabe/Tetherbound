@@ -1,0 +1,21 @@
+# CI-SPEED suite group (tools/ci/run_suite.py). Steps copied verbatim from
+# the former ci.yml job; each step runs in order in one lane, with the
+# lane's own XDG_DATA_HOME, RUNNER_TEMP and network namespace.
+### job: verify-segment-handoffs
+### seconds: 26
+### job-timeout-minutes: 15
+
+### step: Verify midride segment coverage
+set -euo pipefail
+python3 tools/ci/segments/check_coverage.py tools/net/proof_scenarios/f06_cloudreach_midride_rejoin.json \
+  tools/net/proof_scenarios/segments/midride/s0_setup_host.json \
+  tools/net/proof_scenarios/segments/midride/s0_setup_guest.json \
+  tools/net/proof_scenarios/segments/midride/s1_ride_a.json \
+  tools/net/proof_scenarios/segments/midride/s2_ride_b.json \
+  tools/net/proof_scenarios/segments/midride/s3_control.json
+### step: Verify midride checkpoint handoffs
+### env TB_SEGMENT_CHAIN: midride
+godot --headless --path . --script tests/run_tests.gd -- --only=ci_segment_handoffs
+### step: Verify bracket checkpoint handoffs
+### env TB_SEGMENT_CHAIN: bracket
+godot --headless --path . --script tests/run_tests.gd -- --only=ci_segment_handoffs

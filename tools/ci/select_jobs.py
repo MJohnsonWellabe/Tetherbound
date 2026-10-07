@@ -32,7 +32,7 @@ when its reach stays bounded: that realm's jobs (every job that runs a smoke
 carrying the realm in its name, plus REALM_JOBS) and the net group; the jobs
 that run each test/tool on the reach (by file stem, `SMOKE: <name>` or
 `--only=<name>`); the net group for tools/net and net smokes; PRESENTATION_JOBS
-for media. The ALWAYS_JOBS (unit shards, bake freshness, export, handoffs)
+for media. The ALWAYS_JOBS (unit shards, export with the bake checks, handoffs)
 run on every code change regardless.
 
 REACH: a breadth-first walk over the files that name a file. A file is named
@@ -56,6 +56,7 @@ Renamed files are diffed with --no-renames so the old path is classified too.
 tests/test_ci_select_jobs.py checks sample and real-repository paths.
 """
 import argparse
+import glob
 import os
 import re
 import sys
@@ -82,19 +83,17 @@ REALMS = {
 
 # Realm jobs that do not carry a realm smoke's name in their steps.
 REALM_JOBS = {
-    "cloudreach": {"verify-regions-shard", "verify-cloudreach-persistence", "verify-cloudreach-midride-rejoin",
+    "cloudreach": {"verify-regions-shard", "verify-cloudreach-midride-rejoin",
                    "verify-unbroken-chains"},
     "stormwood": {"verify-regions-shard"},
     "tidewake": {"verify-regions-shard", "verify-regions-relay"},
 }
-NET_JOBS = {"discover-net-smokes", "verify-multiplayer-shard", "verify-veridian-offer",
+NET_JOBS = {"verify-multiplayer-shard", "verify-veridian-offer",
             "verify-cloudreach-midride-rejoin", "verify-unbroken-chains"}
 # Character texture binding / material cache and the terrain mipmap probe.
 PRESENTATION_JOBS = {"verify-regions-shard"}
-ALWAYS_JOBS = {"changes", "ci-gate", "verify-bake-freshness", "verify-unit-tests", "export",
-               "verify-segment-handoffs",
-               # Queue-order jobs (ci.yml QUEUE ORDER): ungated, they only sequence tiers.
-               "queue-after-longest", "queue-after-long"}
+ALWAYS_JOBS = {"changes", "ci-gate", "verify-unit-tests", "export",
+               "verify-segment-handoffs"}
 
 # Where the reference scan looks (text only).
 SCAN_ROOTS = ("scripts/", "scenes/", "autoload/", "data/", "tests/", "tools/", "shaders/", "assets/")
@@ -119,8 +118,13 @@ WORD = re.compile(r"[A-Za-z0-9_]+")
 CLASS_NAME = re.compile(r"^class_name\s+([A-Za-z_][A-Za-z0-9_]*)", re.M)
 
 
-def ci_jobs(ci_text):
-    """Job ids in ci.yml, with the text of each job's block."""
+SUITES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "suites")
+
+
+def ci_jobs(ci_text, suites_dir=SUITES_DIR):
+    """Job ids in ci.yml, with the text of each job's block. A verify-suite
+    GROUP (tools/ci/suites/*.steps, `### job: <id>`) is that former job's
+    steps, so its text joins (or makes) the block of the job id it names."""
     jobs, name, buf = {}, None, []
     in_jobs = False
     for line in ci_text.splitlines():
@@ -138,6 +142,12 @@ def ci_jobs(ci_text):
             buf.append(line)
     if name:
         jobs[name] = "\n".join(buf)
+    for path in sorted(glob.glob(os.path.join(suites_dir, "*.steps"))):
+        with open(path, encoding="utf-8") as fh:
+            text = fh.read()
+        m = re.search(r"^### job: ([a-z0-9][a-z0-9-]*)\s*$", text, re.M)
+        if m:
+            jobs[m.group(1)] = (jobs.get(m.group(1), "") + "\n" + text).lstrip("\n")
     return jobs
 
 

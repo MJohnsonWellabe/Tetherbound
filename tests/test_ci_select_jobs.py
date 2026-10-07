@@ -85,7 +85,7 @@ class SelectJobs(unittest.TestCase):
     def test_a_realm_file_used_only_by_its_family_selects_that_realm(self):
         jobs, every, why = pick("scripts/world/cloudreach_bell.gd")
         self.assertFalse(every, why)
-        self.assertTrue({"verify-cloudreach-persistence", "verify-regions-shard",
+        self.assertTrue({"verify-regions-shard",
                          "verify-cloudreach-midride-rejoin", "verify-multiplayer-shard"} <= jobs, why)
         for skipped in ["verify-combat-shard", "verify-gate-b-core", "verify-gate-evidence-shard"]:
             self.assertNotIn(skipped, jobs)
@@ -128,7 +128,7 @@ class SelectJobs(unittest.TestCase):
 
     def test_always_jobs_are_never_removed(self):
         jobs, _every, _why = pick("tests/test_stormwood_arch.gd")
-        self.assertTrue({"verify-unit-tests", "verify-bake-freshness", "export", "verify-segment-handoffs"} <= jobs)
+        self.assertTrue({"verify-unit-tests", "export", "verify-segment-handoffs"} <= jobs)
 
     def test_every_named_job_exists_in_ci_yml(self):
         for name in S.ALWAYS_JOBS | S.NET_JOBS | S.PRESENTATION_JOBS | set().union(*S.REALM_JOBS.values()):
