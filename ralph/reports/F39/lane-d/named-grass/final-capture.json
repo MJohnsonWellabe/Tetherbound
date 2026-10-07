@@ -166,5 +166,51 @@
     "No earned campaign, real fight, night, movement or full Bars A/B claim. No three-consecutive-grounded-frame field in this driver.",
     "Raw nine JPGs and manifest remain hosted artifact; contact composition only. Original before retained without rerun."
   ],
-  "blind_review": "PENDING"
+  "blind_review": {
+    "agent": "/root/f26_presets_review",
+    "verdict": "PASS scoped named-costume readability and clearing-edge regression",
+    "inspected": "All nine pairs and nine final originals",
+    "improvements": [
+      "Edda: previously obscured coat hem/legs now readable",
+      "Corin: previously obstructed legs now readable",
+      "Bex: dense lower-body obstruction removed; costume and legs readable",
+      "Evi: large foreground obstruction removed; coat silhouette and legs now readable"
+    ],
+    "preservation": [
+      "Adair",
+      "Bren",
+      "Daro",
+      "Calder",
+      "Yara"
+    ],
+    "edges": "Irregular tufts and existing ground texture retained, no conspicuous circular boundaries or new visibility regression.",
+    "residuals": [
+      "Evi still has thin blades crossing lower coat/left shin; complete grass-free clearance unproved.",
+      "Retained player boot overlap in Yara, Bex and Edda, separate from named-costume readability."
+    ],
+    "limits": "Day/post stills only; full F39#2, Bars A/B, matrix, HUD and motion remain OPEN."
+  },
+  "area": {
+    "proof": "tests/smoke_water_camps.gd",
+    "run": 37704510566,
+    "artifact": 11518933729,
+    "source_commit": "873a6c8914155f73a9397f47b9affff369b19aa7",
+    "checks": 129,
+    "failed": 3,
+    "exit": 1,
+    "seconds": 148,
+    "failures": [
+      "Actual rest interaction passes exactly one day",
+      "Completed night records production rest progress",
+      "Production load restores the rested day"
+    ],
+    "observation": "Original smoke10s wall wait expires before production rest callback; log prints [rest] rested; day2 AFTER failed assertions. No failure association with grass tuning proved."
+  },
+  "disposition": {
+    "status": "BLOCKED, no READY",
+    "rollback_commit": "5c7e8eab2853d90f3f46dd7dd55153349907b7bb",
+    "rollback": "Entire873 reverted: NPCgateOFF and both Waterlenssettings/existing-test assertions removed.",
+    "diagnostic": "One unchanged-main068 existing Water area dispatched solely to establish baseline; no third candidate; no flake claim.",
+    "full_F39_2": "OPEN"
+  }
 }
