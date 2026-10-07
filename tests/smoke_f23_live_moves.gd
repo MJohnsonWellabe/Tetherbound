@@ -163,6 +163,25 @@ func _run() -> void:
 		_finish()
 		return
 	_check(is_equal_approx(shown_meter.value, 0.0), "mounted actual CombatHUD starts with an empty Ultimate meter")
+	if visual_override:
+		await _button(JOY_BUTTON_RIGHT_SHOULDER, true)
+		await _button(JOY_BUTTON_RIGHT_SHOULDER, false)
+		_check(not bool(_manager.call("ultimate_armed")) and _launches.is_empty() and _impacts.is_empty(),
+			"physical RB tap at zero meter cannot arm or launch an ultimate")
+		var empty_resources: Dictionary = _host.record(_id).participants[1].move_resources.duplicate(true)
+		var empty_commit: Dictionary = _host.move_commit(_id, 1, 99).duplicate(true)
+		var empty_refusal: Dictionary = _director.call("_host_move_start", {"encounter_id": _id, "slot": "ultimate", "action": 99}, 1)
+		_check(empty_refusal.get("code") == "ultimate_not_ready", "host refuses an actual equipped ultimate below full meter")
+		_check(_host.record(_id).participants[1].move_resources == empty_resources
+			and _host.move_commit(_id, 1, 99) == empty_commit,
+			"below-full ultimate refusal leaves canonical resources and accepted original unchanged")
+		if not _capture_dir.is_empty():
+			DirAccess.make_dir_recursive_absolute(_capture_dir)
+			await RenderingServer.frame_post_draw
+			var empty_path := _capture_dir.path_join("ultimate-empty.png")
+			var empty_image := root.get_texture().get_image()
+			_check(empty_image != null and empty_image.save_png(empty_path) == OK, "rendered actual empty-meter CombatHUD capture " + empty_path)
+			_captures.append(empty_path)
 	var prior_ultimate_history: Array = _creature.move_mastery_receipts.get("ultimate_ground_current", []).duplicate()
 	var maximum_mastery := int(MASTERY.config().rank_thresholds[4])
 	var old_world := FileAccess.get_file_as_bytes(_writer.world_store.path_for("resource-slot"))
