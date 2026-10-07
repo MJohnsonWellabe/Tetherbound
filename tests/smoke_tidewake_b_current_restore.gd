@@ -23,7 +23,9 @@ extends SceneTree
 ##     rebuilt Water scene keep the flag, the calm view and the calmer physics.
 ## With `-- --capture=<dir>` and a rendering display, it writes before/after
 ## PNGs from the production CameraRig/Camera3D at a fixed pose (the rig's own
-## follow logic is paused so both frames share one pose and one frozen clock).
+## subtree is disabled, including SpringArm3D's internal physics, so both
+## frames share one asserted pose and one frozen clock). These are disclosed
+## directly posed landscape comparisons, not ordinary camera/traversal proof.
 const WORLD := preload("res://scenes/world/water_archipelago.tscn")
 const RELOAD := preload("res://tests/helpers/water_chain_reload.gd")
 const FLAG := "water_currents_restored"
@@ -149,8 +151,9 @@ func _capture(world: Node3D, tag: String) -> void:
 	if rig == null or camera == null:
 		check(false, "Production CameraRig/Camera3D present for capture")
 		return
-	rig.set_process(false)
-	rig.set_physics_process(false)
+	# Same pause as capture_tidewake_b_current_restore.gd: disabling only the
+	# script's physics callback leaves SpringArm3D's internal child update live.
+	rig.process_mode = Node.PROCESS_MODE_DISABLED
 	if player != null:
 		player.set_process(false)
 		player.set_physics_process(false)
@@ -170,10 +173,18 @@ func _capture(world: Node3D, tag: String) -> void:
 		var ground := maxf(0.0, float(world.ground_height_at(eye.x, eye.z)))
 		camera.global_position = Vector3(eye.x, ground + eye.y, eye.z)
 		camera.look_at(pose.target, Vector3.UP)
+		camera.reset_physics_interpolation()
+		var expected_transform := camera.global_transform
 		await _frames(16)
 		await RenderingServer.frame_post_draw
+		if not check(camera.is_current() and camera.global_transform.is_equal_approx(expected_transform), "Capture retains the exact production camera pose: %s %s" % [str(pose.name), tag]):
+			continue
 		var image := root.get_texture().get_image()
 		var path := "%s/%s_%s.png" % [capture_dir, str(pose.name), tag]
+		print("CURRENT_CAPTURE_POSE " + JSON.stringify({"pose": str(pose.name), "state": tag,
+			"camera_position": [camera.global_position.x, camera.global_position.y, camera.global_position.z],
+			"target": [pose.target.x, pose.target.y, pose.target.z],
+			"fov": camera.fov, "far": camera.far, "resolution": [image.get_width(), image.get_height()]}))
 		check(image.save_png(path) == OK, "Captured " + path)
 
 
