@@ -1,0 +1,31 @@
+{
+  "criterion": "F41#0/#3/#4; OPEN",
+  "agent": "/root/review_cloud_startup",
+  "reviews": [
+    {
+      "reason": "Invalid/empty/duplicate segments fail before staging;80frames per quarter; default320; partial full_matrix_complete=false; exact restore retained",
+      "scope": "Four bounded release/clock segments in installed320-frame matrix",
+      "source_commit": "52f07f05ed2801e6edded7bc09c3e1505ed5d7ca",
+      "verdict": "APPROVE"
+    },
+    {
+      "reason": "Existing roots retained after normalization; requested non-started/zero-frame fights fail; PNGsize/readability fail; five-creature pilot and fixtures unchanged; final failure-based quit after parent returns",
+      "scope": "Named-preset/source/native-PNG/real-fight checks in installed Stormwood fight pilot",
+      "source_commit": "c26dcd69859a7b25c1029108ada6e5e9bceb5429",
+      "verdict": "APPROVE"
+    }
+  ],
+  "native_matrix_run": 37632862387,
+  "native_matrix_checkout": "7266a88f6db5a1a399c7ad9cdb722a64a8395a6e",
+  "native_result": "pending",
+  "visual_result": "pending",
+  "shipping_flags": "unchanged OFF",
+  "remaining_gates": [
+    "Hosted/runtime parsing and exact native captures",
+    "Matched High/Medium before-after judges",
+    "At least200frames and catalogrescore",
+    "Real fight capture",
+    "Full landmark distance/close matrix",
+    "Relevant unit/area-smoke batch"
+  ]
+}
