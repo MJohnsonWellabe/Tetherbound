@@ -121,6 +121,48 @@
     },
     {
       "peer": 1,
+      "action": "rider_self",
+      "expect_data": {
+        "character_id": "$character1",
+        "mounted": true,
+        "mount_species": "ripplet",
+        "swim_mode": 2,
+        "realm": "water"
+      },
+      "label": "Surface capture follows the real current crossing and completed deep-water approach"
+    },
+    {
+      "peer": 1,
+      "action": "f37_status",
+      "expect_data": {
+        "mounted": true,
+        "diving": false,
+        "swim_mode": 2
+      }
+    },
+    {
+      "peer": 1,
+      "action": "screenshot",
+      "args": {
+        "name": "f37_14_deep_surface"
+      },
+      "expect_data": {
+        "captured": true
+      },
+      "label": "Native deep-water surface capture; the original dry admission capture remains separate"
+    },
+    {
+      "peer": 1,
+      "action": "f37_status",
+      "expect_data": {
+        "mounted": true,
+        "diving": false,
+        "swim_mode": 2
+      },
+      "label": "Surface state still holds after the native capture"
+    },
+    {
+      "peer": 1,
       "action": "f37_jump"
     },
     {
@@ -175,6 +217,37 @@
         "body_visible_in_scene": true
       },
       "label": "BEFORE: the host's picture of that rider agrees"
+    },
+    {
+      "peer": 1,
+      "action": "f37_status",
+      "expect_data": {
+        "mounted": true,
+        "diving": true,
+        "swim_mode": 2
+      },
+      "label": "Active Dive after the original settling wait and seated, visible rider identity checks"
+    },
+    {
+      "peer": 1,
+      "action": "screenshot",
+      "args": {
+        "name": "f37_19_active_dive"
+      },
+      "expect_data": {
+        "captured": true
+      },
+      "label": "Native active Dive capture; no capture-only pose, camera or state changes"
+    },
+    {
+      "peer": 1,
+      "action": "f37_status",
+      "expect_data": {
+        "mounted": true,
+        "diving": true,
+        "swim_mode": 2
+      },
+      "label": "Mounted Dive state still holds after the native capture"
     },
     {
       "peer": 1,
