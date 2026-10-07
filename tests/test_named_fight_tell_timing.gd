@@ -310,6 +310,54 @@ func test_the_guardian_earth_fist_is_the_charged_step_of_its_sequence() -> void:
 	body.free()
 
 
+func test_live_guardian_patterns_keep_authored_cadence_geometry_and_armor() -> void:
+	var body := _probe("warrens_guardian", -1)
+	var patterns: Dictionary = preload("res://scripts/combat/combat_math.gd").config().get("patterns", {})
+	body.configure_patterns(patterns, {"pattern_id": "named_warrens_guardian", "role": "WALL",
+		"chapter": "meadows", "sendout_index": 0, "after_south_bridge": false}, Callable())
+	var quick: Dictionary = body._select_attack()
+	var heavy: Dictionary = body._select_attack()
+	body._intent = AI.Intent.TELEGRAPH
+	body._selected_attack = quick
+	assert_false(body.protected_heavy_committed(), "the configured quick stays interruptible")
+	body._selected_attack = heavy
+	assert_true(body.protected_heavy_committed(), "configured Earth Fist retains its committed heavy protection")
+	assert_eq(str(quick.get("move_id", "")), str(body.instance.get("move_quick")))
+	assert_almost_eq(float(quick.telegraph), 0.85)
+	assert_almost_eq(float(quick.recovery), 1.1)
+	assert_almost_eq(float(quick.cone_degrees), 90.0)
+	assert_almost_eq(float(quick.lunge), 3.4)
+	assert_eq(str(heavy.get("move_id", "")), "earth_fist")
+	assert_almost_eq(float(heavy.telegraph), 1.1)
+	assert_almost_eq(float(heavy.recovery), 1.2)
+	var move: Dictionary = preload("res://scripts/creatures/move_db.gd").new().move("earth_fist")
+	assert_almost_eq(float(heavy.cone_degrees), float(move.cone_degrees))
+	assert_almost_eq(float(heavy.lunge), float(move.lunge))
+	assert_true(float(heavy.range) >= float(move.range), "body spacing may extend named reach")
+	assert_almost_eq(float(heavy.armored_front_degrees), 85.0)
+	assert_almost_eq(float(heavy.front_damage_scale), 0.5)
+	assert_eq(str(quick.telegraph_shape), "cone")
+	assert_eq(str(heavy.telegraph_shape), "cone")
+	assert_eq(str(quick.pattern_attack_id), "wall_check")
+	assert_eq(str(heavy.pattern_attack_id), "guardian_earth_fist")
+	assert_eq(str(body._select_attack().get("move_id", "")), str(body.instance.get("move_quick")),
+		"the third configured attack returns to quick")
+	body._pattern_punish = AI.punish_profile(patterns, body._combat_cfg, body._current_pattern_context())
+	var punish: Dictionary = body._select_attack()
+	assert_almost_eq(float(punish.telegraph), 1.0, 0.0001, "observed punish retains its existing full tell")
+	assert_almost_eq(float(punish.recovery), 0.9)
+	assert_eq(str(punish.get("pattern_id", "")), "", "punish stays on its ordinary role profile")
+	var next_heavy: Dictionary = body._select_attack()
+	assert_eq(str(next_heavy.get("move_id", "")), "earth_fist", "punish cannot replace the next named cadence step")
+	assert_eq(str(next_heavy.pattern_attack_id), "guardian_earth_fist", "next named cue matches its actual move")
+	body.configure_patterns(patterns, {"role": "WALL", "chapter": "meadows",
+		"after_south_bridge": false}, Callable())
+	var ordinary: Dictionary = body._select_attack()
+	assert_almost_eq(float(ordinary.telegraph), 1.0, 0.0001, "ordinary role keeps its chapter tell floor")
+	assert_almost_eq(float(ordinary.recovery), 0.9, 0.0001, "ordinary role keeps its chapter recovery")
+	body.free()
+
+
 func test_every_member_of_every_named_meadows_fight_is_pinned() -> void:
 	var pinned := {}
 	for pin: Array in PINS:
