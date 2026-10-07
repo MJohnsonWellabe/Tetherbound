@@ -16,6 +16,7 @@ var _candidate_applied := false
 var _candidate_verified := false
 var _seed := 2042
 var _save_fixture := ""
+var _explicit_stands := false
 
 
 func _run() -> void:
@@ -68,8 +69,10 @@ func _load_plan() -> bool:
 				"biome_id": "water", "destination_index": 0,
 				"position_xz": [float(parts[0]), float(parts[1])],
 				"view_heading_deg": float(parts[2]), "time": time_name,
+				"f39_heading_offset_deg": 0.0,
 				"explicit_visual_stand": true})
 	if not stands.is_empty():
+		_explicit_stands = true
 		_planned = stands
 		return true
 	var expanded: Array[Dictionary] = []
@@ -206,6 +209,7 @@ func _begin_manifest() -> void:
 	_manifest["f39_candidate"] = _candidate
 	_manifest["f39_seed"] = _seed
 	_manifest["f39_weather"] = _weather_name
-	_manifest["f39_heading_offsets_deg"] = HEADINGS
+	_manifest["f39_heading_offsets_deg"] = [0.0] if _explicit_stands else HEADINGS
+	_manifest["f39_explicit_stands"] = _explicit_stands
 	_manifest["f39_isolated_save_fixture"] = _save_fixture
 	_manifest["f39_limitations"] = "Teleported stands and camera headings; no earned route, close detail, actual fight, device or judge proof. Candidate overrides are process-local material uniforms; production gates remain false."
