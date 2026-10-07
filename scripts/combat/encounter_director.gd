@@ -3964,10 +3964,14 @@ func host_pick_struck_participant(encounter_id: String, cfg: Dictionary,
 	if best.is_empty():
 		return {}
 	var struck := int(best.get("peer_id", 0))
-	_encounter_host.call("note_struck", encounter_id, struck)
 	var body: Node3D = deployed_body_for(struck)
 	if uses_saved_actor_vitals(encounter_id) \
 		and _ordinary_actor_binding(encounter_id, struck, body).is_empty(): return {}
+	_encounter_host.call("note_struck", encounter_id, struck)
+	# The private presentation copy must reflect this blow immediately, rather
+	# than exposing an earlier count when the next player action republishes it.
+	if str(_encounter.get("encounter_id", "")) == encounter_id:
+		_encounter["struck_counts"] = (_encounter_host.call("record", encounter_id).get("struck_counts", {}) as Dictionary).duplicate()
 	return {"peer_id": struck, "card": _geared_card(struck, _creature_card_for(struck)), "body": body}
 
 
