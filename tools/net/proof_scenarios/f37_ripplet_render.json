@@ -419,6 +419,16 @@
         "captured": true
       },
       "label": "Installed sunken cache, flower bed and rock presentation candidate"
+    },
+    {
+      "peer": 1,
+      "action": "f37_hidden_route",
+      "expect_data": {
+        "route_id": "lantern_arch_cut",
+        "optional": true,
+        "owned_dive_retained": true
+      },
+      "label": "Ordinary submerged traversal of the authored optional arch cut after real sunken finds"
     }
   ]
 }

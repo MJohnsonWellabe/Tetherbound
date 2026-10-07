@@ -2,6 +2,7 @@ extends RefCounted
 const INPUT := preload("res://tools/net/proof_steps.gd")
 const SUNKEN := preload("res://scripts/world/ripplet_sunken_rules.gd")
 const CLAIM := preload("res://scripts/world/ledger_claim.gd")
+const RIPPLET := preload("res://scripts/player/ripplet_traversal.gd")
 
 ## Explicit F37 fixture/control adapter. It earns no feast or chapter progress.
 static func step(runner: SceneTree, action: String, args: Dictionary) -> Dictionary:
@@ -126,6 +127,28 @@ static func step(runner: SceneTree, action: String, args: Dictionary) -> Diction
 			and heard.flag_commits == 1 and game.world.flags.has(key) and game.inventory.count(item) == before + int(row.count)
 		return {"verdict":"PASS" if duplicate_refused else "FAIL","detail":"physical sunken claim and ordinary ledger duplicate refusal",
 			"data":{"site_id":id,"item":item,"gained":gained,"flag":key,"flag_commits":heard.flag_commits,"duplicate_refused":duplicate_refused,"reason":heard.reason}}
+	if action == "f37_hidden_route":
+		var route := {}
+		for candidate: Dictionary in RIPPLET.config().routes:
+			if candidate.id == "lantern_arch_cut": route = candidate
+		if route.is_empty() or not route.get("optional", false) or not riding.is_mounted() or not riding.diving:
+			return {"verdict":"FAIL","detail":"optional authored route requires a live owned Ripplet dive"}
+		var uid := str(director.ally_instance().uid)
+		var approach: Dictionary = await runner.call("_step_move_to", {"x":float(route.from[0]),"z":float(route.from[2]),"close_enough":0.8,"budget_frames":300})
+		if approach.get("verdict") != "PASS" or not riding.is_mounted() or not riding.diving:
+			return {"verdict":"FAIL","detail":"ordinary submerged route approach failed","data":approach}
+		var from: Vector3 = riding.mount_body().global_position
+		var speed_before: float = riding.ride_speed_now()
+		var started := Engine.get_physics_frames()
+		var crossed: Dictionary = await runner.call("_step_move_to", {"x":float(route.to[0]),"z":float(route.to[2]),"close_enough":0.8,"budget_frames":400})
+		var still_owned: bool = riding.is_mounted() and riding.diving and str(director.ally_instance().uid) == uid
+		var after: Vector3 = riding.mount_body().global_position if riding.is_mounted() else Vector3.INF
+		var seconds := float(Engine.get_physics_frames() - started) / float(Engine.physics_ticks_per_second)
+		var passed: bool = crossed.get("verdict") == "PASS" and still_owned and speed_before > float(RIPPLET.config().surface_speed_m_s) \
+			and Vector2(after.x - from.x, after.z - from.z).length() >= 30.0 and seconds > 0.0
+		return {"verdict":"PASS" if passed else "FAIL","detail":"ordinary mapped submerged traversal of the authored optional Lantern arch cut",
+			"data":{"route_id":route.id,"optional":route.optional,"uid":uid,"from":from,"to":after,"physics_seconds":seconds,
+				"actual_route_speed_m_s":speed_before,"owned_dive_retained":still_owned,"crossing":crossed}}
 	if action == "f37_jump":
 		if not await INPUT._tap(runner, "jump"):
 			return {"verdict":"FAIL","detail":"physical Dive input edge failed"}
