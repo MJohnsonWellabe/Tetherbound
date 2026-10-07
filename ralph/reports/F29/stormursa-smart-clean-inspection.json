@@ -1,0 +1,69 @@
+{
+  "model": "D:\\tetherbound\\codex-e\\assets_raw\\stormursa\\smart-a\\clean.glb",
+  "bounds": {
+    "min": [
+      -0.2774,
+      -0.5002,
+      -0.2932
+    ],
+    "max": [
+      0.2742,
+      0.5006,
+      0.2916
+    ],
+    "size": [
+      0.5516,
+      1.0007,
+      0.5848
+    ],
+    "height_m": 0.5848,
+    "longest_axis_m": 1.0007,
+    "sits_on_origin": false,
+    "centred_on_origin": true
+  },
+  "meshes": [
+    {
+      "name": "mesh_node",
+      "vertices": 12574,
+      "edges": 42000,
+      "faces": 27674,
+      "triangles": 27674,
+      "tris": 27674,
+      "quads": 0,
+      "ngons": 0,
+      "quad_fraction": 0.0,
+      "non_manifold_edges": 978,
+      "boundary_edges": 978,
+      "loose_vertices": 0,
+      "duplicate_vertices": 0,
+      "components": 342,
+      "debris_components": 341,
+      "flipped_normals": 9157,
+      "uv_layers": 0,
+      "stretched_uv_faces": 0,
+      "materials": [],
+      "shape_keys": 0,
+      "vertex_groups": 0
+    }
+  ],
+  "materials": [],
+  "armatures": [],
+  "animations": [],
+  "totals": {
+    "meshes": 1,
+    "triangles": 27674,
+    "vertices": 12574,
+    "materials": 0,
+    "animations": 0
+  },
+  "problems": [
+    "no material carries a texture \u2014 this is the exact defect two blind reviews named on the existing roster (archive/reports/docs-reviews-full/MA-01, MA-02)",
+    "mesh_node: 978 non-manifold edges",
+    "mesh_node: 341 microscopic disconnected components",
+    "mesh_node: ~9157 inward-facing faces",
+    "mesh_node: no UV layer \u2014 cannot be textured",
+    "mesh_node: 0% quads \u2014 generator triangle soup, poor for deformation",
+    "does not stand on the origin (lowest point z=-0.2932)",
+    "no armature and no clips \u2014 nothing here can move"
+  ]
+}

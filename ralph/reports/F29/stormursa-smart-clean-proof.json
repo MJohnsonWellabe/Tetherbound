@@ -1,0 +1,21 @@
+{
+  "input": "assets_raw/stormursa/smart-a/model.glb",
+  "task_id": "01a11671-f9fa-746e-8e29-98fc32496010",
+  "command": "blender --background --python tools/art_pipeline/blender/cleanup_mesh.py -- assets_raw/stormursa/smart-a/model.glb --out assets_raw/stormursa/smart-a/clean.glb --target-tris 28000",
+  "existing_tool_only": true,
+  "additional_meshy_spend": 0,
+  "export_warning": "Mesh mesh is not valid, and may be exported wrongly",
+  "inspection": "stormursa-smart-clean-inspection.json",
+  "reimported_triangles": 27674,
+  "non_manifold_edges": 978,
+  "tiny_components": 341,
+  "result": "BLOCKED: topology cleanup still does not establish a skinning-safe surface",
+  "remaining_gates": [
+    "Skinning-safe topology with retained bear silhouette",
+    "UV/material identity",
+    "Rig/deformation and complete pose set",
+    "Grow-only measured scale",
+    "Native full-bar code-blind judge"
+  ],
+  "shipping_enabled": false
+}
