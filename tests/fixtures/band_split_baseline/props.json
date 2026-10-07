@@ -158,6 +158,8 @@
           "dir": "res://assets/props/quaternius_survival",
           "sink_m": 0.03,
           "glow": "campfire",
+          "glow_scale": 1.25,
+          "_why_f01_3_native": "The camp's own existing fire supplies the night arrival cue and a wider warm pool over the tent and bedroll. Config-only, with no terrain/scatter fingerprint change or new light system.",
           "_why": "F01#3 code-blind judge (visits_night_072): the practice-meadow trainer camp read as 'an open flower meadow' at night -- a pack, crate and barrel carry no light, so nothing in the frame said camp. A one-person firepit, same Bonfire_Fire+ignite()+campfire_glow recipe and 0.3 scale as pond_fisher_camp, 1.5-2.3m from the pack/crate/barrel so the four read as one stop, and ~5.5m off route 2's centreline ([18,-24]->[30,-40]), clear of the painted road. TUNABLE."
         },
         {
