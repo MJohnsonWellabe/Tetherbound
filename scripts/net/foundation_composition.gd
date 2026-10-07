@@ -175,4 +175,6 @@ func bounty_reconcile(pending: Dictionary) -> Dictionary:
 
 func _reply(envelope: Dictionary, result: Dictionary) -> void:
 	if envelope.op == "bounty_view": _cached_view = result.duplicate(true)
-	elif envelope.op in ["bounty_claim", "bounty_reconcile"]: _interaction.call("settled", result)
+	elif envelope.op in ["bounty_claim", "bounty_reconcile"]:
+		_interaction.call("settled", result, {"instance": envelope.intent.get("instance"),
+			"character_id": envelope.character_id, "world_namespace": envelope.world_namespace})
