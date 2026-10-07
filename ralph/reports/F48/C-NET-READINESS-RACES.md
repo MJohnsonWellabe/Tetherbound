@@ -1,6 +1,6 @@
 # Lane C network readiness races
 
-CI-FLAKE remains OPEN. The owner requires each of four original network smokes to pass three consecutive hosted runs on one source SHA, followed by one independent review. No retry, skip, weakened assertion or native PC engine run is authorized.
+CI-FLAKE source, runtime and independent review gates passed. The owner requires each of four original network smokes to pass three consecutive hosted runs on one source SHA, followed by one independent review. No retry, skip, weakened assertion or native PC engine run was used.
 
 Candidate source: `5e9e121a8a83554892d0148bcc0f123383e322e5` correlates refused legacy encounter admission and uses the original fled exit; its existing presentation unit method covers accepted, stale and refused admission. `90a283b1fb0eb4c224ff1e068275e3e8e7c04b34` fences original fixture placement with authentic owner-passive discovery/ACK, waits for actual legacy participant admission, and samples boss reward inventory after the existing journal barrier. Reward amounts, identities, journals, deadlines and original smoke assertions remain unchanged.
 
@@ -26,5 +26,15 @@ All three consecutive revised shared-boss runs passed on the pinned source, incl
 | `smoke_net_boss_rewards_each_participant.gd` 1/3 | `37676663191` | `11506389504` | ALL CHECKS PASSED |
 | `smoke_net_boss_rewards_each_participant.gd` 2/3 | `37677194164` | `11508280130` | ALL CHECKS PASSED |
 | `smoke_net_boss_rewards_each_participant.gd` 3/3 | `37677751063` | `11508870294` | ALL CHECKS PASSED |
+| `smoke_net_shared_wild_fight.gd` 1/3 | `37678298503` | `11509016153` | ALL CHECKS PASSED |
+| `smoke_net_shared_wild_fight.gd` 2/3 | `37678904849` | `11507782594` | ALL CHECKS PASSED |
+| `smoke_net_shared_wild_fight.gd` 3/3 | `37679493350` | `11507998545` | ALL CHECKS PASSED |
+| `smoke_net_veridian_choices.gd` 1/3 | `37680113389` | `11507664376` | ALL CHECKS PASSED |
+| `smoke_net_veridian_choices.gd` 2/3 | `37680833116` | `11508184772` | ALL CHECKS PASSED |
+| `smoke_net_veridian_choices.gd` 3/3 | `37681705188` | `11509168896` | ALL CHECKS PASSED |
 
-The three participant-reward passes retain the original authored 20 coin and one potion per participant, accepted journal sources for both stable characters, exact namespace agreement and no divided payout. Shared-wild and Veridian still require their own three consecutive passes. First shared-wild run `37678298503` is pending. This is not yet CI-FLAKE completion.
+The three participant-reward passes retain the original authored 20 coin and one potion per participant, accepted journal sources for both stable characters, exact namespace agreement and no divided payout. The three shared-wild passes retain real attacks, friendly/replay refusal, independent same-realm fights, withdrawal/rejoin and surviving wounded ambient bodies after the last participant leaves. All three Veridian runs retain original choice, exact party-cap, personal/world receipt, stable rejoin and production save/reload assertions. All twelve requested smoke runs completed successfully on one SHA, with ALL CHECKS PASSED and exit 0. Parent inspection found no FAIL, script or parse-error marker in the twelve logs.
+
+Lane branch merged and pushed current main `056563843cd06a49cdc9bb369d66b13788d944c0` at `168490c5c0356becc423df9d522f6ce65ef606d4`. This upstream merge changes CI workflow/tools/tests only, with no game, net smoke or render-workflow change. The required twelve-smoke sequence remains pinned to the same revised game source `7e05fdc3c3f890bcbff54de9807c873f1589d687`; no unchanged engine proof is rerun because of that CI-only merge.
+
+Retained independent `/root/kitchen_review`: **FINAL APPROVE CI-FLAKE** on the pinned source after independently reading all twelve original logs and retaining the prior combined source approval. No source/runtime gate remains for this repair. The acceptance scope is only `5e9e121a8a83554892d0148bcc0f123383e322e5`, `90a283b1fb0eb4c224ff1e068275e3e8e7c04b34`, `7e05fdc3c3f890bcbff54de9807c873f1589d687` and this evidence. Forge diagnostics, F48#2, invitation/release connectivity, earned campaign and the final actor-vitals flip remain separate.

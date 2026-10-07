@@ -1,6 +1,6 @@
 # Lane C ordinary spawn and original catch traits
 
-This artifact records source review, affected logic and actual spawn evidence for F30#0. The retained independent review below approves this bounded criterion; publication remains sequenced behind the owner's CI-FLAKE priority.
+This artifact records source review, affected logic and actual spawn evidence for F30#0. The retained independent review below approves this bounded criterion.
 
 Source cuts `7c085ce47a4c56be87a1ffb0207405b944917864`, `7858b116060136f62bd87e6ad7e563030033337b` and `d788a7d94221c8149e833ddb00427de074717759` initialize the actual ordinary wild instance at production spawn or first gate activation in Meadows, Cloudreach and Tidewake. The existing trait policy uses the actual owning realm's night/weather and named-alpha classification. Retained Foundation alpha producers keep their original roll path. Existing generation, starter, level and refill rules remain unchanged.
 
