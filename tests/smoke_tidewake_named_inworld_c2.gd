@@ -164,6 +164,12 @@ func _run() -> void:
 		dialogue.advance()
 		await _frames(3)
 	if not (director.trainer_battle_id() == trainer_id and manager.is_fighting()):
+		result.entry = {"requested":trainer_id,"active":director.trainer_battle_id(),
+			"pending":director.trainer_challenge_pending(),"sent":int(director.get("_trainer_battle_sent")),
+			"manager_state":int(manager.get("state")),"dialogue_open":dialogue != null and dialogue.is_open(),
+			"mounted_npc_matches":director.get("_trainer_node") == trainer,
+			"sendout_body_valid":is_instance_valid(director.get("_trainer_body")),
+			"can_challenge":director.can_challenge(spec)}
 		_finish(out, result, "challenge did not start the fight")
 		return
 	var arena: Variant = manager.get("_arena")
