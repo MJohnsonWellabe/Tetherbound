@@ -1,5 +1,7 @@
 # Lane C modal ownership evidence
 
+The coordinator's original native F18 run on `e9c330d365c978f6172982b521296498a33d5970` stopped at the opening combat-key refusal before lesson replay. Its actual reason and no-effect checks passed, but post-tap visibility failed; the artifact `D:/CodexTemp/tetherbound-proof/native-c-e9c330d365` lacks expiry timestamps. Coordinator allocation `6042672467` permits a read-only drawn-frame observation during the unchanged tap. `f6e6a7b66285c3a6bc5ae0ca05f100d66a9d6a7c` adds only that observation in the existing helper: identical text/visibility/cutscene-layer predicate, actual production show/expiry/sample times, no extra frame/draw/timer, and every original post-tap context/no-effect/channel check. Retained `/root/modal_review`: **APPROVE**, source only. The original earned/native gate remains queued; F46#2 READY remains withdrawn.
+
 Preserved `59e74f99afbad83f69bcf4aea891c4494d80bc54` was restored exactly in `a3ddadd9fba4a01700de51c2a811ca497bc2faf7`. Lesson cards join the shared input owner and story-modal guards, consume their opening answer edge, and close departing presentation without teaching credit.
 
 Candidate `c01c51bd9a72d83a82bd0c6f315f5412c5c6f46d` extends the existing modal smoke with actual mounted LessonService character and realm departure handling. Independent reviewer `/root/modal_review`: **APPROVE** after the closing-frame latch correction.
