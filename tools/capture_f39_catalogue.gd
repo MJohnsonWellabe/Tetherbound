@@ -48,6 +48,30 @@ func _load_plan() -> bool:
 	if _biome_id != "water":
 		push_error("F39 capture only owns water")
 		return false
+	# Reuse the explicit stand format from capture_f26_low_stands for bounded
+	# hero-distance views. Production travel/floor/camera/material guards below
+	# still apply; a refused stand never falls back to a nearby successful one.
+	var stands: Array[Dictionary] = []
+	for arg: String in OS.get_cmdline_user_args():
+		if not arg.begins_with("--cand="):
+			continue
+		var parts := arg.trim_prefix("--cand=").split(",")
+		if parts.size() != 3:
+			push_error("F39 stand requires x,z,heading_deg")
+			return false
+		for part: String in parts:
+			if not part.is_valid_float() or not is_finite(float(part)):
+				push_error("F39 stand coordinates/heading must be finite")
+				return false
+		for time_name: String in _times:
+			stands.append({"frame_id": "water__stand_%02d__%s" % [stands.size(), time_name],
+				"biome_id": "water", "destination_index": 0,
+				"position_xz": [float(parts[0]), float(parts[1])],
+				"view_heading_deg": float(parts[2]), "time": time_name,
+				"explicit_visual_stand": true})
+	if not stands.is_empty():
+		_planned = stands
+		return true
 	var expanded: Array[Dictionary] = []
 	for row: Dictionary in _planned:
 		for heading: float in HEADINGS:
