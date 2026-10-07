@@ -1,14 +1,84 @@
 {
-  "kind": "pinned_native_night_cut",
+  "kind": "scoped_native_night_reachability_acceptance",
   "source_sha": "53fa3c2686d34fb145f491c007d1f90fa0ac72ba",
-  "dependencies": ["7a5ac84230e4fa1d680c14015f05cbaa419638b3", "6bf651f76dbc0132f4fdd911174bc63caa82cf30", "4ecc804cea4e8f0f02c7616fa37a1db5b4ffa58a"],
+  "dependencies": [
+    "7a5ac84230e4fa1d680c14015f05cbaa419638b3",
+    "6bf651f76dbc0132f4fdd911174bc63caa82cf30",
+    "4ecc804cea4e8f0f02c7616fa37a1db5b4ffa58a"
+  ],
   "retained_b_input_fix": "975bb3f4f799a5caaed219ad93af3b6c8d3caa21",
   "source_review": "APPROVE /root/b_f49_review; scoped restored production and existing baseline blobs match the exact allocated D/C inputs",
   "script": "tests/capture_village_walk.gd",
   "args": "--time=night --route=visits --from-title --capture-dir=<absolute output>",
   "renderer": "Compatibility",
   "resolution": "1280x720",
-  "execution": "Queued by coordinator issue572 comment6040316365 on separate authorized PC writer; this Lane B invocation runs no native engine.",
-  "criterion_pass": false,
-  "remaining": "Native walk passed12visits/97frames; code-blind night judgment BLOCK. See native-53fa/visual-verdict.json. Scoped logic and branch integration still require verification; no earned-campaign claim."
+  "execution": "Separate coordinator-authorized native PC writer; Lane B runs no native engine.",
+  "criterion_pass": true,
+  "remaining": "Commit/push this final verdict and READY; full release Visualbar and otherF01 criteria remainOPEN.",
+  "criterion": "F01#3",
+  "literal_ask": "Normal-controller NIGHT walk reaches every opening NPC, camp and gate.",
+  "native": {
+    "source_sha": "53fa3c2686d34fb145f491c007d1f90fa0ac72ba",
+    "script": "tests/capture_village_walk.gd",
+    "args": "--time=night --route=visits --from-title --capture-dir=<absolute output>",
+    "renderer": "Compatibility",
+    "resolution": "1280x720",
+    "exit": 0,
+    "targets_reached": 12,
+    "captures": 97,
+    "max_off_road_m": 0,
+    "engine_errors": 0,
+    "disclosure": "Night clock fixed23:00; source play uses mapped controller from actual title, no player reposition/route injection. Twelve targets include the seven opening NPCs, camp, three gates and key."
+  },
+  "logic": {
+    "source_sha": "1fd7426ddcb018a905fe29ddc36d6bb9907cbad6",
+    "run_id": 37688016272,
+    "script": "tests/run_tests.gd",
+    "named_files": 51,
+    "tests": 580,
+    "assertions": 812120,
+    "failed": 0,
+    "exit": 0,
+    "took_seconds": 396,
+    "engine_errors": 28,
+    "script_errors": 0,
+    "error_disposition": "Independent reviewer attributed27 absolute-path errors to unchanged detached harvest fixtures at harvest_node setup/_item_colour/_item_kind; remaining1 is deliberate dialogue unknown-conversation refusal. Placement sampler scatter warnings disclosed. This is not an error-free unit run."
+  },
+  "visual": {
+    "verdict": "PASS",
+    "judge": "same retained code-blind b_night_visual",
+    "artifact": "native-53fa/scope-verdict-f01-3.json",
+    "contact_sheets": [
+      "native-53fa/night-contact-1.jpg",
+      "native-53fa/night-contact-2.jpg",
+      "native-53fa/night-contact-3.jpg",
+      "native-53fa/night-contact-4.jpg"
+    ],
+    "scope": "Readable reached destination stands during actual native night route; old doorway/roof occlusions retained for separate fullVisualbar."
+  },
+  "review": {
+    "reviewer": "/root/b_f49_review",
+    "verdict": "APPROVE",
+    "reason": "Actual normal-controller census+native path and scoped judgePASS; required named logic passes with unchanged detached-fixture/refusal errors disclosed; later house/prefab changes retain route/interaction geometry."
+  },
+  "landing_scope": {
+    "source_commits": [
+      "975bb3f4f799a5caaed219ad93af3b6c8d3caa21",
+      "73bf0c55a3e39ccd51ca2812f2058f148bf3736c",
+      "1eaa02a6ea5a4b12e82df29890909f7fab2cea41",
+      "53fa3c2686d34fb145f491c007d1f90fa0ac72ba"
+    ],
+    "hunks": "Only retained gathering stick release, allocated night-light/camera-clearance/camp-glow hunks, matching existing frozen baseline and allocated Ground essence node route-clearance. Exclude unrelated B F19/F20/F37/F46/F49 ancestry.",
+    "source_paths": [
+      "tests/helpers/gate_a_npc_gather_segment.gd",
+      "data/config/bands/band1_lower_meadows/harvest.json",
+      "data/config/bands/band1_lower_meadows/props.json",
+      "data/config/building_prefabs.json",
+      "data/config/village_npcs.json",
+      "scripts/world/village_npcs.gd",
+      "scripts/world/villager_night_light.gd",
+      "tests/fixtures/band_split_baseline/props.json",
+      "data/config/essence_nodes.json"
+    ]
+  }
 }
