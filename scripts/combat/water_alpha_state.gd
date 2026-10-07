@@ -3,7 +3,8 @@ extends RefCounted
 ## Aquaryn's host simulation state, separate from local combat/camera ownership.
 ## Only the realm authority calls this with host-observed participant identities
 ## and its live enemy instance. Transport intents never contain HP or eligibility.
-const HOST := preload("res://scripts/net/encounter_host.gd")
+const HOST := preload("res://scripts/combat/accepted_action_host.gd")
+const CAPTURE_CODEC := preload("res://scripts/save/water_capture_codec.gd")
 var host := HOST.new()
 var config: Dictionary
 var enemy: RefCounted
@@ -32,7 +33,8 @@ func engage(peer_id: int, character_id: String, creature_uid: String, opponent: 
 		eligible_characters.clear()
 		var opened := host.open(peer_id, "water", "wild", {
 			"species_id": enemy.species_id, "level": enemy.level,
-			"hp": enemy.hp, "hp_max": enemy.max_hp, "owner_npc": ""}, creature_uid, character_id)
+			"hp": enemy.hp, "hp_max": enemy.max_hp, "owner_npc": "",
+			"card": CAPTURE_CODEC.encode(enemy), "body_generation": 1}, creature_uid, character_id)
 		encounter_id = str(opened.encounter_id)
 	else:
 		if enemy != opponent:
@@ -66,7 +68,9 @@ func advance(delta: float) -> bool:
 ## Called after host-validated damage has changed the existing enemy instance.
 ## No amount, HP value, winner or eligibility comes from the attacker's payload.
 func synchronise_damage() -> Dictionary:
-	if enemy == null or not resolution.is_empty() or str(record().get("phase", "")) != "active":
+	# The shared accepted-action resolver may publish its terminal phase before
+	# the persistent service records Aquaryn's existing reward resolution.
+	if enemy == null or not resolution.is_empty() or str(record().get("phase", "")) not in ["active", "done"]:
 		return {}
 	host.set_opponent_hp(encounter_id, enemy.hp, enemy.max_hp)
 	if enemy.hp <= 0.0:
@@ -93,7 +97,7 @@ func finish_catch(peer_id: int, arbiter: RefCounted, now_ms: int) -> Dictionary:
 	return {"outcome": "escaped", "caught": false}
 
 func _resolve(outcome: String, catcher: int) -> Dictionary:
-	host.set_phase(encounter_id, "resolving")
+	if record().get("phase") != "done": host.set_phase(encounter_id, "resolving")
 	resolution = {"alpha_id": str(config.id), "outcome": outcome,
 		"catcher_peer_id": catcher, "species_id": str(config.species_id),
 		"eligible_character_ids": eligible_characters.keys()}

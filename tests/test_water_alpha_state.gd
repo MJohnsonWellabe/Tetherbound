@@ -43,13 +43,51 @@ func test_runtime_transport_stamps_monotonic_strike_actions() -> void:
 	alpha.submit_encounter_intent({"kind": "strike_intent", "slot": "quick", "action": 9})
 	alpha.submit_encounter_intent({"kind": "strike_intent", "slot": "quick"})
 	alpha.submit_encounter_intent({"kind": "catch_attempt"})
+	alpha.submit_encounter_intent({"kind": "move_start", "slot": "utility"})
+	alpha.submit_encounter_intent({"kind": "strike_intent", "slot": "utility", "action": 11})
 	assert_eq(transport.intents[0].action, 1)
 	assert_eq(transport.intents[1].action, 2)
 	assert_eq(transport.intents[2].action, 9)
 	assert_eq(transport.intents[3].action, 10)
 	assert_false(transport.intents[4].has("action"), "Non-strike intents retain their protocol shape")
+	assert_eq(transport.intents[5].action, 11, "Move starts share the actual monotonic action sequence")
+	assert_eq(transport.intents[6].action, 11, "Arrival preserves its original start")
+	assert_true(alpha.supports_host_move_start())
 	alpha.free()
 	transport.free()
+
+func test_accepted_terminal_preserves_alpha_resolution_and_real_opponent_identity() -> void:
+	var state := _opened()
+	assert_eq(state.host.get_script(), preload("res://scripts/combat/accepted_action_host.gd"))
+	assert_eq(state.record().get("opponent", {}).get("card", {}).get("uid", ""), state.enemy.uid)
+	assert_eq(state.record().opponent.body_generation, 1)
+	state.enemy.take_damage(state.enemy.max_hp)
+	state.host.set_phase(state.encounter_id, "done")
+	var original: Dictionary = state.synchronise_damage()
+	assert_eq(original.outcome, "defeated")
+	assert_eq(original.eligible_character_ids, ["character-A", "character-B"])
+	assert_eq(state.record().phase, "done", "Accepted terminal publication remains terminal")
+	assert_eq(state.record().opponent.hp, 0.0)
+	assert_true(state.synchronise_damage().is_empty(), "No second Alpha resolution")
+	assert_eq(state.resolution, original)
+
+func test_persistent_damage_adapter_binds_same_body_without_an_ai_or_arena() -> void:
+	var opponent := preload("res://scripts/creatures/wild_creature.gd").new()
+	opponent.instance = _enemy()
+	var alpha := ALPHA_RUNTIME.new()
+	var resolver := preload("res://scripts/combat/shared_wild_host_fight.gd").new()
+	resolver.bind_persistent_opponent(opponent, alpha, "alpha-actions", 1)
+	assert_eq(resolver.body(), opponent)
+	assert_eq(resolver.get("_wild"), opponent)
+	assert_eq(resolver.get("_enemy"), opponent.instance)
+	assert_eq(resolver.authority_link, alpha)
+	assert_eq(resolver.body_generation, 1)
+	assert_eq(resolver.encounter_id(), "alpha-actions")
+	assert_eq(resolver.get("_arena"), null)
+	assert_false(opponent.strike_ready.is_connected(Callable(resolver, "_on_enemy_strike")))
+	resolver.free()
+	alpha.free()
+	opponent.free()
 
 func test_two_participants_join_the_same_wounded_enemy_without_reset() -> void:
 	var state := ALPHA.new()
@@ -72,6 +110,35 @@ func test_two_participants_join_the_same_wounded_enemy_without_reset() -> void:
 	assert_true(state.engage(42, "outsider", "other", _enemy()).is_empty())
 	assert_eq(state.enemy, enemy)
 	assert_eq(state.eligible_characters.size(), 2)
+
+func test_alpha_pending_ledgers_fence_results_and_leave_without_primary_prerequisites() -> void:
+	var alpha := ALPHA_RUNTIME.new()
+	alpha.authority = _opened()
+	alpha.set("_encounter_host", alpha.authority.host)
+	var id: String = alpha.authority.encounter_id
+	assert_false(alpha._alpha_results_pending(id))
+	var proposals: Dictionary = alpha.get("_ordinary_actor_vitals_proposals")
+	proposals["saved-original"] = {"encounter_id":id, "presented":false}
+	assert_true(alpha.ordinary_actor_vitals_pending(id), "the Alpha's retained original fences even without a primary trainer registry")
+	assert_true(alpha._alpha_results_pending(id))
+	var before := alpha.authority.eligible_characters.duplicate(true)
+	assert_eq(alpha._leave_alpha(1, true).get("code"), "pending_vitals")
+	assert_eq(alpha.authority.eligible_characters, before, "a declined leave cannot erase eligibility before settlement")
+	assert_false(alpha.realm_transition_alpha_results_settled())
+	proposals["saved-original"]["presented"] = true
+	assert_false(alpha.ordinary_actor_vitals_pending(id))
+	# Disclosed unit-only ledger rows exercise the existing publication and
+	# mastery fences; they do not claim an accepted runtime action or award.
+	var authority_rows: Dictionary = alpha.authority.host.get("_strike_authority")
+	authority_rows[id] = {1:{"accepted_actions":{"original":{"phase":"body_publication_pending"}}}}
+	assert_true(alpha._alpha_results_pending(id))
+	authority_rows[id][1].accepted_actions.original["phase"] = "resolved"
+	authority_rows[id][1]["move_starts"] = {1:{"mastery_pending":true, "action":1}}
+	assert_true(alpha._alpha_results_pending(id))
+	authority_rows[id][1].move_starts[1]["mastery_pending"] = false
+	assert_false(alpha._alpha_results_pending(id))
+	assert_true(alpha.realm_transition_alpha_results_settled())
+	alpha.free()
 
 func test_repeated_peer_cannot_add_a_different_character_entitlement() -> void:
 	var state := _opened()

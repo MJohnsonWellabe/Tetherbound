@@ -7,6 +7,7 @@ const CATALOG := preload("res://scripts/creatures/water_species_catalog.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
 var checks := 0
 var failures := 0
+var _owner_reload_complete := false
 
 func _init() -> void:
 	_run.call_deferred()
@@ -23,7 +24,8 @@ func _run() -> void:
 	var game := root.get_node("Game")
 	game.current_realm = "water"
 	game.local.character_id = "alpha-runtime-smoke"
-	game.world.world_id = "alpha-runtime-world"
+	# Match the production autosave slot before any immutable world receipt.
+	game.world.world_id = "slot-%d" % game.autosave_slot()
 	game.save_system = SAVE.new("user://water_alpha_runtime_%d/" % Time.get_ticks_usec())
 	var catalog: Dictionary = CATALOG.merge_catalogue(SPECIES.table())
 	SPECIES.table().merge(catalog.catalogue, true)
@@ -44,7 +46,8 @@ func _run() -> void:
 	var manager: Node = world.get_node("CombatManager")
 	var player: Node3D = world.get_node("Player")
 	check(alpha.ready_for_intents and alpha.body.instance.species_id == "water_aquaryn", "Live Aquaryn uses Water species and authority")
-	check(alpha.body.instance.level == 49, "Authored Alpha level")
+	var alpha_rules: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/water_alpha.json"))
+	check(alpha.body.instance.level == int(alpha_rules.level), "Authored Alpha level")
 	check(not game.local.flags.has("water_swim_stone_earned"), "No fixture grants Stone")
 	player.global_position = alpha.body.global_position + Vector3(7, 0, 0)
 	player.global_position.y = world.ground_height_at(player.position.x, player.position.z)
@@ -68,18 +71,42 @@ func _run() -> void:
 	# Drive normal quick-attack input and face the live target. No damage/HP
 	# injection: the manager windup, host geometry and damage roll must execute.
 	var deadline_fight := Time.get_ticks_msec() + 90000
-	var tick := 0
+	var quick_pressed := false
 	while manager.is_fighting() and Time.get_ticks_msec() < deadline_fight:
 		var deployed: Node3D = director.get("_ally_body")
+		var in_reach := false
+		var stick := Vector3.ZERO
 		if deployed != null:
 			deployed.face_towards(alpha.body.global_position)
-		if tick % 24 == 0:
-			Input.action_press("combat_quick")
-		elif tick % 24 == 2:
+			var toward: Vector3 = alpha.body.centre() - deployed.call("centre")
+			toward.y = 0.0
+			in_reach = toward.length() <= float(manager.combat_move_reach("quick")) * 0.95
+			# Continue through the ordinary movement reader after knockback or
+			# Alpha repositioning; a rooted attack cannot pursue the target.
+			if not in_reach:
+				var camera: Node = manager.get("_camera_rig")
+				var planar := Basis.IDENTITY
+				if camera != null and camera.has_method("planar_basis"):
+					planar = camera.call("planar_basis")
+				stick = planar.inverse() * toward.normalized()
+		for axis: String in ["move_right", "move_left", "move_back", "move_forward"]:
+			var strength := maxf(0.0, {"move_right":stick.x, "move_left":-stick.x,
+				"move_back":stick.z, "move_forward":-stick.z}[axis])
+			if strength > 0.001: Input.action_press(axis, strength)
+			else: Input.action_release(axis)
+		# Use the same readiness readout as the HUD: fixed frame cadence can
+		# land its next edge during recovery and then leave a ready creature
+		# idle. Keep every attack a one-frame tap through ordinary input.
+		if quick_pressed:
 			Input.action_release("combat_quick")
-		tick += 1
+			quick_pressed = false
+		elif in_reach and manager.quick_ready():
+			Input.action_press("combat_quick")
+			quick_pressed = true
 		await physics_frame
 	Input.action_release("combat_quick")
+	for axis: String in ["move_right", "move_left", "move_back", "move_forward"]:
+		Input.action_release(axis)
 	check(not manager.is_fighting(), "Real fight reaches an exit within bounded time")
 	check(str(alpha.authority.resolution.get("outcome", "")) == "defeated", "Normal attack input defeats actual Alpha")
 	check(game.world.flags.has("water_aquaryn_resolved"), "Defeat is journaled as world progression")
@@ -87,6 +114,7 @@ func _run() -> void:
 	print("Alpha runtime evidence: phase=", alpha.authority.phase().id, " ally_hp=", ally.hp, " enemy_hp=", alpha.body.instance.hp)
 	if game.local.flags.has("water_swim_stone_earned"):
 		await _complete_saddle_chain(game, world, director, player, ally)
+		check(_owner_reload_complete, "Earned owner save and reload chain completes without an aborted tail")
 	_finish()
 
 func _complete_saddle_chain(game: Node, world: Node3D, director: Node, player: Node3D, ally: RefCounted) -> void:
@@ -155,6 +183,43 @@ func _complete_saddle_chain(game: Node, world: Node3D, director: Node, player: N
 	check(riding.is_mounted() and riding.mount_body() == director.ally_body() and director.ally_instance() == ally, "Mounted body remains the same owned companion from the Alpha fight")
 	check(game.local.party.members().size() == 1, "The reward chain never adds a hidden creature slot")
 	print("Alpha-to-saddle evidence: dialogue=water_iona_recipe camp=tidal_cradle materials=8reed/6drift/4reef mount=", riding.mount_body().species_id)
+	# Complete the same earned path through the real owner writer and reload.
+	# The earlier combat, dialogue, craft and mount assertions stay intact.
+	check(riding.dismount(), "Normal dismount ends the earned saddle ride before character reload")
+	director.dismiss_active_creature()
+	await _frames(3)
+	var saved := false
+	for attempt in 40:
+		if game.autosave_here():
+			saved = true
+			break
+		await _frames(15)
+	if not check(saved, "Actual Game autosave returns TRUE for the earned owner record"):
+		return
+	var characters: RefCounted = game.save_system.characters()
+	var payload: Dictionary = characters.read(str(game.local.character_id))
+	var flags: Array = payload.get("flags", {}).get("flags", [])
+	check(flags.has("water_swim_stone_earned") and flags.has("water_swim_saddle_recipe_learned"),
+		"Actual owner disk preserves the earned Stone and completed Iona lesson")
+	var saddles := 0
+	for slot: Variant in payload.get("inventory", []):
+		if slot is Dictionary and slot.get("id") == "swim_saddle":
+			saddles += int(slot.get("n", 0))
+	check(saddles == 1 and payload.get("party", []).size() == 1 \
+		and str(payload.party[0].get("uid", "")) == str(ally.uid),
+		"Actual owner disk holds exactly one crafted saddle and the same owned companion UID")
+	var world_instance: int = int(game.world.get_instance_id())
+	var world_id := str(game.world.world_id)
+	if not check(characters.apply(game, str(game.local.character_id)), "Production CharacterSave apply reloads the actual saved owner"):
+		return
+	check(game.local.flags.has("water_swim_stone_earned") and game.local.flags.has("water_swim_saddle_recipe_learned") \
+		and game.inventory.count("swim_saddle") == 1 and game.local.party.members().size() == 1 \
+		and str(game.local.party.at(0).uid) == str(ally.uid),
+		"Owner reload preserves the earned Stone, recipe, single saddle and companion identity")
+	check(game.world.get_instance_id() == world_instance and str(game.world.world_id) == world_id \
+		and game.world.flags.has("water_aquaryn_resolved"),
+		"Owner reload preserves the actual resolved host World")
+	_owner_reload_complete = failures == 0
 
 func _frames(count: int) -> void:
 	for frame in count:
