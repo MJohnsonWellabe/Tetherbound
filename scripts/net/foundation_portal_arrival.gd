@@ -96,8 +96,9 @@ func _travel_owner(session: Node, peer: int, envelope: Dictionary, permit: Dicti
 		# request or client-provided coordinate. Normal transition drains actors.
 		var loaded: bool = await game.call("enter_realm", permit.realm, str(permit.entry_id) if permit.entry_id != "hall_home" else "", true)
 		if not loaded or not _same_owner(): _refuse("The destination could not load."); return
-	var deadline := Time.get_ticks_msec() + int(float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.response_timeout_seconds) * 1000.0)
-	while not str(game.call("pending_entry_for", permit.realm)).is_empty() and Time.get_ticks_msec() < deadline:
+	var response_msec := int(float(preload("res://scripts/data/redesign_data.gd").json("res://data/config/portals.json").arch.response_timeout_seconds) * 1000.0)
+	var readiness_deadline := Time.get_ticks_msec() + response_msec
+	while not str(game.call("pending_entry_for", permit.realm)).is_empty() and Time.get_ticks_msec() < readiness_deadline:
 		await get_tree().physics_frame
 		if not _same_owner(): _refuse("Your travel session changed."); return
 	if not str(game.call("pending_entry_for", permit.realm)).is_empty(): _refuse("The destination has not settled."); return
@@ -142,8 +143,19 @@ func _travel_owner(session: Node, peer: int, envelope: Dictionary, permit: Dicti
 	_pending.radius = radius
 	# A terrain sample is only a proposed landing. The live physics body must
 	# move through its ordinary controller and report actual walkable contact.
+	# The physics-frame signal precedes the controller's move_and_slide. Yield
+	# through the idle boundary as well so the seated body gets its first actual
+	# controller evaluation before its independent contact response window starts.
+	# Cold render work can consume the readiness deadline without any such tick.
 	await get_tree().physics_frame
-	while _same_owner() and not _grounded_actor(body) and Time.get_ticks_msec() < deadline:
+	if not _same_owner(): _refuse("Your travel session changed."); return
+	await get_tree().process_frame
+	if not _same_owner(): _refuse("Your travel session changed."); return
+	var contact_deadline := Time.get_ticks_msec() + response_msec
+	print("[portal-arrival] contact window generation=", body.get("_foundation_ground_contact_generation"),
+		" seated_generation=", _pending.contact_generation, " window_msec=", response_msec,
+		" readiness_deadline_passed=", Time.get_ticks_msec() >= readiness_deadline)
+	while _same_owner() and not _grounded_actor(body) and Time.get_ticks_msec() < contact_deadline:
 		await get_tree().physics_frame
 	if not _same_owner() or not _grounded_actor(body):
 		print("[portal-arrival] not grounded at the deadline: " + _grounded_failure(body))
