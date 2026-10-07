@@ -1,0 +1,44 @@
+{
+  "scope": "ROOT-returned F42 map16 region-label overlap component only; full F42#0 remains OPEN",
+  "source_commit": "d46a507effc9c0b21160aaa388cfb4a865c82eed",
+  "handoff": "572#6045756332",
+  "source_change": "Only tab_map.gd region-label placement: finite obstacle-edge columns and sorted monotone clearance, full font/text/inset/padding. Fog/discovery/state/input untouched.",
+  "independent_review": {
+    "reviewer": "/root/f42_visual_review",
+    "verdict": "APPROVE source only",
+    "pending": "Existing actual map controller-cycle smoke and paired map16/map32 images"
+  },
+  "proof": "tests/run_tests.gd",
+  "run_id": 37679905106,
+  "artifact_id": 11507888686,
+  "result": {
+    "files": 14,
+    "tests": 144,
+    "assertions": 910,
+    "failed": 0,
+    "exit": 0,
+    "seconds": 15
+  },
+  "selected_files": [
+    "test_alpha_pins",
+    "test_cloudreach_atmosphere",
+    "test_cloudreach_no_legendary_offer",
+    "test_f19_order_consumers",
+    "test_map_fog",
+    "test_map_icons",
+    "test_map_legibility",
+    "test_map_player_heading",
+    "test_map_realm_view",
+    "test_map_zoom_persistence",
+    "test_multiplayer_identity_0912",
+    "test_player_map_markers",
+    "test_realm_map_persistence",
+    "test_world_verb_input_owner_enforcement"
+  ],
+  "remaining_criterion_blockers": [
+    "Low zoom terrain context in existing fresh-save captures",
+    "Heavy HUD box presentation"
+  ],
+  "flags": "none",
+  "disposition": "Affected logic passes. No criterion READY or visual/controller claim from source/unit proof alone."
+}
