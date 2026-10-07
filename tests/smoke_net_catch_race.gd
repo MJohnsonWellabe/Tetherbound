@@ -437,15 +437,26 @@ func _run() -> void:
 		"the second guest throw received a fresh claim within the same encounter")
 	# The same 2 x SETTLE_FRAMES window the guest used to get (it ran on through
 	# the host's wait too), polled in short steps so a slow peer cannot outlive
-	# its step deadline and swallow the read below. Stopping when the count
-	# first MOVES does not decide the assertion: a short settle follows so a
-	# duplicate grant just behind the first is still counted.
-	var guest_owned_before := int(guest_before_positive.get("owned", -2))
+	# its step deadline and swallow the read below. Pending catch presentation
+	# contributes to `owned`, so it cannot end the wait for actual ownership.
+	# The original UID and durable receipt must settle; the unchanged short
+	# tail still catches a duplicate just behind that first completed grant.
+	var grant_uid := str(canonical_card.get("uid", ""))
+	var grant_traits: Dictionary = host_during_positive.get("original_trait_packet", {})
+	var grant_offer := JSON.stringify([grant_traits.get("captured_from", {}).get("world_namespace", ""),
+		guest_during_positive.get("claim_id", ""), grant_uid]).sha256_text()
+	var grant_receipt := preload("res://scripts/net/foundation_capture_rules.gd").receipt(
+		grant_offer, str(guest_before_positive.get("character_id", "")))
 	for _grant_poll in range(0, 2 * SETTLE_FRAMES, GRANT_POLL_FRAMES):
 		await step(1, "wait", {"frames": GRANT_POLL_FRAMES})
 		var grant_poll: Variant = await probe(1, "catch")
 		if grant_poll is Dictionary \
-				and int((grant_poll as Dictionary).get("owned", guest_owned_before)) != guest_owned_before:
+				and int((grant_poll as Dictionary).get("party_size", -1)) > int(guest_before_positive.get("party_size", -1)) \
+				and (grant_poll as Dictionary).get("live_owned_traits", {}).has(grant_uid) \
+				and (grant_poll as Dictionary).get("canonical_owned_traits", {}).has(grant_uid) \
+				and (grant_poll as Dictionary).get("disk_owned_traits", {}).has(grant_uid) \
+				and (grant_poll as Dictionary).get("transaction_receipts", []).count(grant_receipt) == 1 \
+				and (grant_poll as Dictionary).get("disk_transaction_receipts", []).count(grant_receipt) == 1:
 			break
 	await step(1, "wait", {"frames": GRANT_POLL_FRAMES * 4})
 	var guest_after_positive := await _catch_row(1, "guest after host finish confirmation")
