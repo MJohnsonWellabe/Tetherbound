@@ -3,6 +3,7 @@
   "revision": "f40-sanctuary-and-route-masses-r1",
   "_disposition": "Unjudged F40 candidate. Enable only after independent matched High/Medium full-bar PASS. Previous skyline/crown FAILs remain evidence; occupied terrace remains off. Preserve the shipping Aviary towers while previewing this candidate. Local presentation only, no save or gameplay flag.",
   "visual": {
+    "weather": {"enabled": true, "scope": "client_presentation", "_comment": "Existing visual weather only; removed from canonical weather group. No durable state/RPC/encounter changes. Shipping timer off until F40 proof; matrix pins visual API."},
     "skyline_profile": {"enabled": true},
     "settlement": {"occupied_terrace": {"enabled": false}}
   },

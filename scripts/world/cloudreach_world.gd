@@ -373,6 +373,30 @@ func _ready() -> void:
 		var atmosphere_delta := fold_atmosphere_into_base(local_look, _visual_config.get("atmosphere", {}))
 		look.set("_config", local_look)
 		look.call("set_weather", atmosphere_delta)
+		# Reuse the established visual weather runtime. Cloudreach's weather
+		# remains presentation-only: it never supplies canonical encounter weather,
+		# durable state or authority messages. Preview enables its episode timer;
+		# ordinary shipping stays clear while F40's presentation gate is open.
+		var weather := preload("res://scripts/world/world_weather.gd").new()
+		weather.name = "WorldWeather"
+		weather.set("look_path", NodePath("../WorldLook"))
+		weather.set("player_path", NodePath("../Player"))
+		add_child(weather)
+		weather.remove_from_group("weather")
+		var presets: Dictionary = (weather.get("_presets") as Dictionary).duplicate(true)
+		var realm_environment: Dictionary = atmosphere_delta.get("environment", {})
+		for weather_name: String in presets:
+			if not presets[weather_name] is Dictionary:
+				continue
+			var environment: Dictionary = presets[weather_name].get("environment", {}).duplicate(true)
+			environment["fog_density_add"] = float(environment.get("fog_density_add", 0.0)) \
+				+ float(realm_environment.get("fog_density_add", 0.0))
+			environment["ambient_energy_mult"] = float(environment.get("ambient_energy_mult", 1.0)) \
+				* float(realm_environment.get("ambient_energy_mult", 1.0))
+			presets[weather_name]["environment"] = environment
+		weather.set("_presets", presets)
+		weather.call("set_weather", "clear")
+		weather.set_process(bool(_visual_config.get("weather", {}).get("enabled", false)))
 	# D97 / lane MP-REALM-REOPEN. A shell builds in fine slices; a real arrival
 	# in a live session uses the coarser crossing slice so its connection keeps
 	# pumping. Solo still resumes every `await` below in the same frame.

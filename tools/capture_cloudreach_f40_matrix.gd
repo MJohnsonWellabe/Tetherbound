@@ -109,6 +109,16 @@ func _finish(complete: bool) -> void:
 	super._finish(complete)
 
 
+func _prepare_capture_shell() -> bool:
+	if not super._prepare_capture_shell():
+		return false
+	if _weather == null or not _weather.has_method("set_weather") or not _weather.has_method("weather"):
+		_failures.append("F40 production visual weather runtime unavailable before matrix")
+		return false
+	_manifest["weather_scope"] = "Production visual weather API, pinned fixture; no canonical encounter weather or earned travel claim"
+	return true
+
+
 func _capture_row(row: Dictionary) -> void:
 	_active_weather = str(row.weather)
 	var count := _records.size()
