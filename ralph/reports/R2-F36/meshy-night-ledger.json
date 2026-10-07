@@ -52,9 +52,10 @@
       "endpoint": "/openapi/v1/image-to-3d",
       "submitted_utc": "2026-10-07T09:22:51.552723-05:00",
       "task_id": "01a116be-dd09-708f-8441-3971076c7c98",
-      "status": "submitted_pending_inspection",
+      "status": "rig_BLOCK_two_zero_skin_attempts",
       "observed_credit_cost": 15,
-      "candidate_enabled": false
+      "candidate_enabled": false,
+      "inspection_evidence": "ralph/reports/F36/terrapup-smart-disposition.json"
     }
   ],
   "actual_meshy_submissions": 4,

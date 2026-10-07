@@ -1,0 +1,31 @@
+{
+  "subject": "terrapup",
+  "criterion": "F36#0 OPEN",
+  "task_id": "01a116be-dd09-708f-8441-3971076c7c98",
+  "reference_sha256": "7d077b8cf53b3539b348d354bebbd6bf539f39136b9b349b7ba263c712ccee50",
+  "generation_status": "SUCCEEDED",
+  "observed_credit_cost": 15,
+  "inspection": "15741 triangles, one mesh/material, UV seams; generic diagnostic is not geometry/rig acceptance",
+  "rig_attempts": [
+    {
+      "method": "existing rig_quadruped default",
+      "vertices": 8227,
+      "unweighted": 8227,
+      "skin_exported": false
+    },
+    {
+      "method": "existing rig_quadruped --skip-weld",
+      "vertices": 14283,
+      "unweighted": 14283,
+      "skin_exported": false
+    }
+  ],
+  "verdict": "BLOCK; both bone heat attempts failed; no usable skin",
+  "candidate_enabled": false,
+  "runtime_integration": "none",
+  "stop_rule": "Two failed attempts; moving to next priority asset; no Meshy retry submitted",
+  "remaining_gates": [
+    "Re-scoped rig strategy",
+    "Deformation/scale/native before-after blind judge"
+  ]
+}

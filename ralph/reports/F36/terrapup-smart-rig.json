@@ -1,0 +1,62 @@
+{
+  "per_bone": {
+    "root": 0,
+    "pelvis": 0,
+    "spine": 0,
+    "neck": 0,
+    "head": 0,
+    "front_upper_l": 0,
+    "front_lower_l": 0,
+    "front_upper_r": 0,
+    "front_lower_r": 0,
+    "tail_1": 0,
+    "tail_2": 0,
+    "rear_upper_l": 0,
+    "rear_lower_l": 0,
+    "rear_upper_r": 0,
+    "rear_lower_r": 0
+  },
+  "unweighted_vertices": 8227,
+  "total_vertices": 8227,
+  "repaired_vertices": 0,
+  "weld_skipped": false,
+  "bones": [
+    "root",
+    "pelvis",
+    "spine",
+    "neck",
+    "head",
+    "front_upper_l",
+    "front_lower_l",
+    "front_upper_r",
+    "front_lower_r",
+    "tail_1",
+    "tail_2",
+    "rear_upper_l",
+    "rear_lower_l",
+    "rear_upper_r",
+    "rear_lower_r"
+  ],
+  "legs_found_at": {
+    "front_l": [
+      -0.255,
+      -0.2251,
+      0.0826
+    ],
+    "front_r": [
+      0.1967,
+      -0.3058,
+      0.0766
+    ],
+    "rear_l": [
+      -0.1791,
+      0.3085,
+      0.0753
+    ],
+    "rear_r": [
+      0.2543,
+      0.2424,
+      0.0757
+    ]
+  }
+}

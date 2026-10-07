@@ -13,19 +13,26 @@
       "scope": "Named-preset/source/native-PNG/real-fight checks in installed Stormwood fight pilot",
       "source_commit": "c26dcd69859a7b25c1029108ada6e5e9bceb5429",
       "verdict": "APPROVE"
+    },
+    {
+      "source_commit": "f8789ac8aa3bcc9d8cddebcd12df0ffaaaef53eb",
+      "scope": "Explicit Low stress resolution while retaining1080 default",
+      "verdict": "APPROVE",
+      "reason": "All presets default1920x1080; empty/invalid/duplicate/cross-preset options fail; SHA/renderer/fresh-output checks unchanged"
     }
   ],
   "native_matrix_run": 37632862387,
   "native_matrix_checkout": "7266a88f6db5a1a399c7ad9cdb722a64a8395a6e",
-  "native_result": "pending",
+  "native_result": "Medium baseline failed on lane and unchanged main; full Low run37637690708 pending",
   "visual_result": "pending",
   "shipping_flags": "unchanged OFF",
   "remaining_gates": [
-    "Hosted/runtime parsing and exact native captures",
-    "Matched High/Medium before-after judges",
-    "At least200frames and catalogrescore",
+    "Full Low native capture and catalog rescore (owner issue6039900185)",
+    "Matched before/after code-blind visual judges",
     "Real fight capture",
     "Full landmark distance/close matrix",
-    "Relevant unit/area-smoke batch"
-  ]
+    "Relevant unit/area-smoke batch; High/Medium PC confirmation deferred"
+  ],
+  "native_low_run": 37637690708,
+  "native_low_checkout": "16bfbb2d0581080517a9b0e3601d9435095e2b68"
 }

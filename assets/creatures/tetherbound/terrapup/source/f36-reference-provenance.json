@@ -1,6 +1,6 @@
 {
   "subject": "terrapup",
-  "status": "inspected_reference_guarded_meshy_candidate_pending_OFF",
+  "status": "candidate_BLOCK_unskinned_after_two_attempts_OFF",
   "method": "built_in_imagegen",
   "reference": "res://assets/creatures/tetherbound/terrapup/reference/f36-standing-v1.png",
   "sha256": "7d077b8cf53b3539b348d354bebbd6bf539f39136b9b349b7ba263c712ccee50",
@@ -27,5 +27,6 @@
     "ai_model": "meshy-t2"
   },
   "credit_cost": 15,
-  "license_workflow": "Existing owner-held Meshy license; guarded attended RD-26 current-roster priority refinement; no purchase"
+  "license_workflow": "Existing owner-held Meshy license; guarded attended RD-26 current-roster priority refinement; no purchase",
+  "inspection_evidence": "ralph/reports/F36/terrapup-smart-disposition.json"
 }

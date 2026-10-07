@@ -1,0 +1,80 @@
+{
+  "model": "D:\\tetherbound\\codex-e\\assets_raw\\terrapup\\f36-smart-a\\model.glb",
+  "bounds": {
+    "min": [
+      -0.3603,
+      -0.5,
+      -0.4329
+    ],
+    "max": [
+      0.3609,
+      0.5,
+      0.4312
+    ],
+    "size": [
+      0.7211,
+      1.0,
+      0.8641
+    ],
+    "height_m": 0.8641,
+    "longest_axis_m": 1.0,
+    "sits_on_origin": false,
+    "centred_on_origin": true
+  },
+  "meshes": [
+    {
+      "name": "Mesh_0",
+      "vertices": 14283,
+      "edges": 28978,
+      "faces": 15741,
+      "triangles": 15741,
+      "tris": 15741,
+      "quads": 0,
+      "ngons": 0,
+      "quad_fraction": 0.0,
+      "non_manifold_edges": 10733,
+      "boundary_edges": 10733,
+      "loose_vertices": 0,
+      "duplicate_vertices": 6056,
+      "components": 1119,
+      "debris_components": 1090,
+      "flipped_normals": 1916,
+      "uv_layers": 1,
+      "stretched_uv_faces": 0,
+      "materials": [
+        "Material_0"
+      ],
+      "shape_keys": 0,
+      "vertex_groups": 0
+    }
+  ],
+  "materials": [
+    {
+      "name": "Material_0",
+      "textures": [
+        "Image_0",
+        "Image_1",
+        "Image_2"
+      ],
+      "textured": true
+    }
+  ],
+  "armatures": [],
+  "animations": [],
+  "totals": {
+    "meshes": 1,
+    "triangles": 15741,
+    "vertices": 14283,
+    "materials": 1,
+    "animations": 0
+  },
+  "problems": [
+    "Mesh_0: 10733 non-manifold edges",
+    "Mesh_0: 6056 duplicate vertices \u2014 will split under deformation",
+    "Mesh_0: 1090 microscopic disconnected components",
+    "Mesh_0: ~1916 inward-facing faces",
+    "Mesh_0: 0% quads \u2014 generator triangle soup, poor for deformation",
+    "does not stand on the origin (lowest point z=-0.4329)",
+    "no armature and no clips \u2014 nothing here can move"
+  ]
+}
