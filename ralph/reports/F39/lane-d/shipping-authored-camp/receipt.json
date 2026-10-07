@@ -2314,12 +2314,32 @@
   ],
   "independent_source_review": {
     "reviewer": "/root/f39_visual_review",
-    "verdict": "APPROVE shipping-driver source; actualcamp proof/final fullcriterion review pending"
+    "verdict": "APPROVE shipping-driver source; actualcamp proof/final fullcriterion review pending",
+    "actual_camp_proof": "Confirmed10complete/floorchecked/shippinggates. Original reviewer identifies full44-row statewitness gaps; F39#0 staysOPEN."
   },
   "visual_rescore": {
     "reviewer": "/root/f26_presets_review",
-    "verdict": "PENDING actualcamp rescoring; no fullbar claim"
+    "verdict": "BarA BLOCK; BarB BLOCK; partial pictured-row rescore only",
+    "reviewed": "All10 originals",
+    "rows": {
+      "P2-008": "Readablepaledunes/shore/islands; repeatedgrassdenselycoveringslopes, weakclustering/variation.",
+      "P2-009": "Usefulcamp/water/islandlayers; night90/180hard-edgedbluepatches and regular glows weakenwaterdepth.",
+      "P2-011": "Camp/restprompt legible, but trainer head/torso penetrates tentcanvas day/night0/45/90/180; bodyfragments atminus45. Nightclothing bleacheswhite. BLOCK.",
+      "P2-004": "Large darkquickslot/shortcutboxes covernearbyNPC/stoneprop atday90/night90. OPEN.",
+      "P2-016": "Distantcreatures insufficientforclosepose/contact/motion rescore; unwitnessed.",
+      "P2-115": "Bed notclearlyinspectable; unwitnessed.",
+      "P2-116": "Tabletop legible at0/45/90/minus45, distinctiveworkbenchcuesweak; OPEN."
+    },
+    "additional": "Opaqueverticalsmoke atnight0/45/minus45. Strengths warm sand, cyan/navywater, coherentcloth/timber/stone, localwarmfirelight. Falls/docks/swim/fight/catch/UI/weather/motion unwitnessed.",
+    "score_scope": "No invented numeric scores; this10frame landscape subset cannot rescore all44Tidewake rows or closeF39#0."
   },
   "scope": "Existing catalogue point corrected on main ac151d4d4c from old steep841.3839,1595.9279 to actualauthored556.092163,1367.178467. No terrain/slope/collision guard changes, no newfixture, no visual override/save/progression proof. Tenactualdifferentheading/daynight images; rawPNGs retained inrunartifact only.",
-  "remaining": "Atleast200 totalrecapture and owningcatalogrescore; allunwitnessed swim/fight/catch/UI states remainexplicitlyunverified. NoREADY."
+  "remaining": "Atleast200 totalrecapture and owningcatalogrescore; allunwitnessed swim/fight/catch/UI states remainexplicitlyunverified. NoREADY.",
+  "next_bounded_source": {
+    "commit": "e2c7f475e25cbcbdc044d9d98e2ed9f19a41a93f",
+    "scope": "AuthoredWater shelterY1.35 only; peak2.66to3.59m, no footprint/anchor/sharedtent/authority/durablechange. Do notmove captures orsolidify shelter tohide bodyintersection.",
+    "reviewer": "/root/f39_visual_review",
+    "source_verdict": "APPROVE",
+    "proof_status": "Named7unitfiles, existing smoke_water_camps and matched10afterviews pending. NoREADY orwholeF39#5claim."
+  }
 }
