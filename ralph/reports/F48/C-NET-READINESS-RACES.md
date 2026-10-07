@@ -14,4 +14,17 @@ First actual shared-boss attempt `37671404750` at that source, artifact `1150419
 
 Retained independent reviewer `/root/kitchen_review`: **SOURCE APPROVE** for the combined production and proof fixes, including the revised frozen prefix. Runtime acceptance remains open pending the four three-pass sequences. The first failure is retained and is not counted as a pass.
 
-Revised-prefix affected logic: hosted `37674108752` at exact `7e05fdc3c3f890bcbff54de9807c873f1589d687`, artifact `11507161071`: **73 tests / 426 assertions / zero failures** in six existing files (`test_combat_progression`, `test_director_join_snapshot`, `test_multiplayer_identity_0912`, `test_net_boss_snapshot`, `test_net_state_hash_scope`, `test_world_save_format`). The earlier 110-file production batch remains relevant for unchanged production hunks. The revised shared-boss first run is `37674659217`; its result is pending, so it is not counted as a pass.
+Revised-prefix affected logic: hosted `37674108752` at exact `7e05fdc3c3f890bcbff54de9807c873f1589d687`, artifact `11507161071`: **73 tests / 426 assertions / zero failures** in six existing files (`test_combat_progression`, `test_director_join_snapshot`, `test_multiplayer_identity_0912`, `test_net_boss_snapshot`, `test_net_state_hash_scope`, `test_world_save_format`). The earlier 110-file production batch remains relevant for unchanged production hunks.
+
+All three consecutive revised shared-boss runs passed on the pinned source, including the unchanged actual guest travel assertion, all five boss rounds, participant outcomes, production reload and final peer state agreement:
+
+| Original smoke | Run | Artifact | Verdict |
+|---|---|---|---|
+| `smoke_net_shared_boss.gd` 1/3 | `37674659217` | `11507366177` | ALL CHECKS PASSED |
+| `smoke_net_shared_boss.gd` 2/3 | `37675256768` | `11505893861` | ALL CHECKS PASSED |
+| `smoke_net_shared_boss.gd` 3/3 | `37675938094` | `11506183990` | ALL CHECKS PASSED |
+| `smoke_net_boss_rewards_each_participant.gd` 1/3 | `37676663191` | `11506389504` | ALL CHECKS PASSED |
+| `smoke_net_boss_rewards_each_participant.gd` 2/3 | `37677194164` | `11508280130` | ALL CHECKS PASSED |
+| `smoke_net_boss_rewards_each_participant.gd` 3/3 | `37677751063` | `11508870294` | ALL CHECKS PASSED |
+
+The three participant-reward passes retain the original authored 20 coin and one potion per participant, accepted journal sources for both stable characters, exact namespace agreement and no divided payout. Shared-wild and Veridian still require their own three consecutive passes. First shared-wild run `37678298503` is pending. This is not yet CI-FLAKE completion.
