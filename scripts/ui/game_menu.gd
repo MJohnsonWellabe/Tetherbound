@@ -161,6 +161,7 @@ func _ready() -> void:
 		_root.theme = theme_resource
 
 	_footer.text = legend(str(_config.get("footer", "")))
+	_footer.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
 	_build_tabs()
 	_root.visible = false
 	_build_refusal_label()

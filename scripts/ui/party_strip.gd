@@ -39,6 +39,9 @@ const UI_TOKENS := preload("res://scripts/ui/ui_tokens.gd")
 const FEED := preload("res://scripts/creatures/progression_feed.gd")
 const MOTION_PREFS := preload("res://scripts/ui/motion_prefs.gd")
 const COMPACT_PIN_CONFIG := "res://data/config/combat_roster_visual.json"
+## Instance presentation only: exploration may list just owned companions.
+## Other mounts, including the combat roster, retain all five rows by default.
+var show_empty_slots := true
 
 const SLOTS := 5
 ## A vacant row keeps its slot number, chip outline and legible alpha (UX: all five slots
@@ -1093,6 +1096,7 @@ func update_from_party(entries: Array, active_index: int, active_out: bool = tru
 	_count_label.text = "TEAM  %d / %d" % [mini(entries.size(), SLOTS), SLOTS]
 	for i in SLOTS:
 		var has_creature: bool = i < entries.size()
+		_rows[i].visible = has_creature or show_empty_slots
 		var entry: Dictionary = entries[i] if has_creature else {}
 		var selected := has_creature and i == active_index
 		_update_row(i, entry, has_creature, selected, selected and active_out)

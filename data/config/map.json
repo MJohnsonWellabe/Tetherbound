@@ -1,6 +1,12 @@
 {
   "_comment": "Map behaviour tunables that are NOT authored places. data/config/map_landmarks.json stays the place table (landmarks, regions, starting reveal); this file holds the rules the map applies to the world it is drawing. ALL TUNABLE.",
 
+  "initial_zoom": 32.0,
+  "local_label_margin_zoom": 32.0,
+  "local_label_margin_px": 18.0,
+  "_comment_local_labels": "At the closest village scale, visible discovered region names sit in the panel margin so they do not cover nearby roads and buildings. This is device-local presentation; it reveals no terrain or destination.",
+  "_comment_initial_zoom": "A first map open shows nearby surveyed terrain around the trainer rather than fitting the 8 km corridor into a narrow strip. LT still reaches the whole-realm overview, and the player's chosen zoom is remembered across tab opens. This changes no fog, discovery, save payload or peer state.",
+
   "_comment_alpha_pin": "CL-W1, owner directive D-0904B-1 plus its same-day amendment A-3: 'Within 300 m an alpha appears on the map, and does not disappear until caught' -- amended to 'caught OR beaten', which is what makes the pin actionable for a player whose five slots are already full. 16 alpha/elder clusters are authored across data/config/bands/*/spawns.json and were, until this landed, entirely unadvertised: the player could walk past every one of them and never know. The pin is placed from the AUTHORED cluster centre, not from a live body -- at 300 m the body is very often not streamed in yet, and a pin that only appears once you can already see the creature advertises nothing.",
 
   "alpha_pin": {
