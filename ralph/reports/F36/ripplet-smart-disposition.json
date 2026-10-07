@@ -18,9 +18,19 @@
       "vertices": 14032,
       "unweighted": 14032,
       "skin_exported": false
+    },
+    {
+      "method": "Preserved target installed sitter donor nearest-face transfer yaw0",
+      "source_commit": "b9b5eeb43aa40e8d3b8e0be7e429338a82af3126",
+      "vertices": 11422,
+      "unweighted": 0,
+      "max_influences": 4,
+      "skin_exported": true,
+      "deformation_judge": "BLOCK",
+      "evidence": "ralph/reports/F36/ripplet-installed-donor-verdict.json"
     }
   ],
-  "verdict": "BLOCK; both bone heat attempts failed, no usable skin; export validity repair did not resolve weighting",
+  "verdict": "OPEN; installed donor transfer weighted every vertex but blind DCC deformation BLOCK; incumbent remains preferred",
   "candidate_enabled": false,
   "runtime_integration": "none",
   "source_review": {
@@ -30,9 +40,9 @@
     "scope": "Existing cleanup separate-output donor option only; default refusal preserved, disposable donor validation; no art acceptance"
   },
   "source_guards": "ralph/reports/F36/ripplet-donor-guards.json",
-  "stop_rule": "Two failed attempts; moving to F40 Low recapture; no generation/retexture/rig service retry",
+  "stop_rule": "Coordinator 6041050835 re-scoped rig strategy; one distinct installed donor transfer attempted; next anatomical correspondence repair, no new generation spend",
   "remaining_gates": [
-    "Re-scoped rig strategy",
-    "Deformation/scale/native before-after blind judge"
+    "Anatomical weight/bind repair and DCC review",
+    "Native scale/poses/gameplay before-after judge"
   ]
 }

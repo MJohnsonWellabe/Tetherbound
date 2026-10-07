@@ -1,0 +1,36 @@
+{
+  "criterion": "F36#0 OPEN",
+  "subject": "ripplet",
+  "source_commit": "b9b5eeb43aa40e8d3b8e0be7e429338a82af3126",
+  "task_id": "01a116d6-5229-7597-a54f-3c40896ff029",
+  "numeric_transfer": "11422 vertices / 0 unweighted / max4 normalized;150 trimmed influences; target data and input hashes preserved",
+  "export_reimport": "15634 triangles /14 bones /6 clips; raw topology diagnostics retained",
+  "comparison_key": {
+    "A": "installed original",
+    "B": "Smart candidate with installed donor skin"
+  },
+  "judge": {
+    "agent": "/root/blind_listener_f10",
+    "code_blind": true,
+    "A": "bounded DCC deformation PASS",
+    "B": "BLOCK",
+    "preference": "A",
+    "defects": [
+      "B F4/F6/F8/F10/F12/F14/F16 white strands or ribbons stretch from muzzle toward hands/feet, obscure face and silhouette",
+      "B F2/F4/F10/F12 neck/chest/belly become sharp triangular sheets, stretched cream surfaces",
+      "B F2/F10 abrupt angular hip and tail-root transitions and cream wedges; sharper crest and thin profile lose chunky appeal"
+    ],
+    "strengths": "A coherent shoulder/neck/tail volume; both retain recognizable Ripplet colors and eyes",
+    "limits": "Sixteen DCC stills only; camera framing uses per-pose extent; no ground contact, animation continuity, native gameplay or full F36 acceptance"
+  },
+  "sitter_pose_source_review": {
+    "agent": "/root/review_f36_cap",
+    "source_commit": "b9b5eeb43aa40e8d3b8e0be7e429338a82af3126",
+    "verdict": "APPROVE",
+    "scope": "Opt-in sitter bone-complete stress set, default quadruped unchanged"
+  },
+  "pose_coverage": "Both variants full4 poses x2 views; no skipped relevant sitter bones",
+  "candidate_enabled": false,
+  "runtime_integration": "none",
+  "next_strategy": "Joint correspondence and anatomical region constraints; no further heat repeat or generation spend"
+}
