@@ -1,0 +1,25 @@
+{
+  "verdict": "BLOCK",
+  "remaining_criteria": "F41 remains OPEN",
+  "source_sha": "9b0c312a7d870b9e6c77f91be1b16623ed00d5f0",
+  "judge": "/root/blind_listener_f10",
+  "unassessed": [
+    "Calibrated400m/100m",
+    "True close detail",
+    "Homecoming",
+    "Motion",
+    "Actual fight"
+  ],
+  "contacts": 13,
+  "frames": 320,
+  "preference": "Candidate preferred over original baseline for tree identity; both BLOCK for finish",
+  "findings": [
+    "Two tall nearly straight slabs; abrupt peg branches and thin angular root wedges",
+    "Repetitive vertical bark stripes over broad flat surfaces; blotchy detached pale foliage",
+    "Sparse shelves do not read as inhabited stronghold; blue core too faint in Building",
+    "Distant split mass reads chiefly as monumental wall; rain/haze flatten internal structure"
+  ],
+  "scope": "Hero near/distant standalone review against full ACCEPTANCE4 bar; unrelated forest defects excluded from hero decision",
+  "criterion": "F41#4",
+  "shipping_flags": "off"
+}

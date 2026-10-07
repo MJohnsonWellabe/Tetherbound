@@ -1,0 +1,16 @@
+{
+  "script": "tools/smoke_stormheart_built_detail.gd",
+  "artifact_id": 11509649178,
+  "result": "PASS",
+  "criterion": "F41#4",
+  "run_id": 37684338931,
+  "source_sha": "3c536b1ec1a87650de1f317a47085141d4595bd6",
+  "limits": [
+    "Debug-positioned bounded area proof, not earned ascent or full Stormwood smoke"
+  ],
+  "assertions": 4,
+  "exit_code": 0,
+  "scope": "Existing actual-tree mounted approach smoke: collision signature preserved against explicit OFF baseline and capsule deck entry clearance",
+  "seconds": 6,
+  "failures": 0
+}
