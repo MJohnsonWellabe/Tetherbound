@@ -840,12 +840,19 @@ jobs:
         env:
           RETRIES: 1
           LANES: ${{ steps.select.outputs.lanes }}
+          SOLO: ${{ steps.select.outputs.solo }}
           NET_OUT_DIR: /tmp/net-ci
           NET_SMOKE_TIMEOUT_SECONDS: 1200
         run: |
           set -uo pipefail
           IFS=';' read -r -a lanes <<< "$LANES"
-          tools/ci/run_net_lanes.sh "${lanes[@]}"
+          status=0
+          tools/ci/run_net_lanes.sh "${lanes[@]}" || status=1
+          # EXCLUSIVE smokes (tools/ci/net_shards.py): alone on the runner.
+          if [ -n "$SOLO" ]; then
+            tools/ci/run_net_lanes.sh "$SOLO" || status=1
+          fi
+          exit "$status"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

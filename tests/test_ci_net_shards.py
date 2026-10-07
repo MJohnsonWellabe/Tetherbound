@@ -34,7 +34,8 @@ class Cover(unittest.TestCase):
             N.check_cover(files("a"), [files("a"), files("z")])
 
     def test_unmeasured_smokes_are_planned_as_the_slowest(self):
-        shards = N.plan(files("never_measured", "fly"), shard_count=2, isolated=(), lanes_per_shard=1)
+        shards = N.plan(files("never_measured", "fly"), shard_count=2, isolated=(), lanes_per_shard=1,
+                        exclusive=())
         self.assertEqual(sorted(load for _, load in shards), [N.MEASURED_SECONDS["fly"], N.UNMEASURED_SECONDS])
 
 
@@ -47,7 +48,8 @@ class RealRepository(unittest.TestCase):
 
     def test_every_discovered_smoke_runs_in_exactly_one_shard(self):
         shards = N.plan(self.files)
-        assigned = [p for group, _ in shards for p in group]
+        assigned = [p for group, _ in shards for p in group] + \
+            [p for group in N.solo_plan(self.files).values() for p in group]
         self.assertEqual(sorted(assigned), sorted(self.files))
         self.assertEqual(len(assigned), len(set(assigned)))
 
@@ -60,6 +62,13 @@ class RealRepository(unittest.TestCase):
         for name in N.ISOLATED:
             group = next(g for g, _ in shards if any(N.smoke_name(p) == name for p in g))
             self.assertEqual([N.smoke_name(p) for p in group], [name])
+
+    def test_exclusive_smokes_run_alone_once(self):
+        solo = N.solo_plan(self.files)
+        alone = [p for group in solo.values() for p in group]
+        self.assertEqual(sorted(N.smoke_name(p) for p in alone), sorted(N.EXCLUSIVE))
+        on_lanes = [p for group, _ in N.plan(self.files) for p in group]
+        self.assertFalse(set(alone) & set(on_lanes))
 
     def test_each_shard_owns_its_own_lanes(self):
         lanes = N.plan(self.files)

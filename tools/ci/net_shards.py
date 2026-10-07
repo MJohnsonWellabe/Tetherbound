@@ -116,6 +116,12 @@ MEASURED_SECONDS = {
 # other smokes down at the job limit; tools/ci/run_net_lanes.sh now ends any
 # single smoke at NET_SMOKE_TIMEOUT_SECONDS, which bounds that on its own.
 ISOLATED = ()
+# Smokes that run ALONE on their shard's runner, after both lanes finish:
+# timing-sensitive two-process checks that a second smoke's CPU load can
+# break. f22_forced_break (host-committed charge timing against a tell) failed
+# in a lane on run 37636924943 and passed alone on every earlier full run.
+# Each counts its full time on both lanes of its shard.
+EXCLUSIVE = ("f22_forced_break",)
 # An unmeasured smoke is planned as the slowest measured one until measured.
 # Isolated smokes run alone, so their (possibly lower-bound) times are not a
 # guide for an ordinary smoke.
@@ -197,11 +203,27 @@ def weight(path):
     return MEASURED_SECONDS.get(smoke_name(path), UNMEASURED_SECONDS)
 
 
-def plan(files, shard_count=SHARD_COUNT, isolated=ISOLATED, lanes_per_shard=LANES_PER_SHARD):
+def solo_plan(files, shard_count=SHARD_COUNT, exclusive=EXCLUSIVE):
+    """{shard: [files]}: each EXCLUSIVE smoke on its own shard, from the last."""
+    alone = sorted(p for p in files if smoke_name(p) in exclusive)
+    if len(alone) != len(exclusive):
+        raise PlanError("exclusive net smokes not discovered: %s"
+                        % sorted(set(exclusive) - {smoke_name(p) for p in alone}))
+    out = {}
+    for i, path in enumerate(alone):
+        out.setdefault(shard_count - (i % shard_count), []).append(path)
+    return out
+
+
+def plan(files, shard_count=SHARD_COUNT, isolated=ISOLATED, lanes_per_shard=LANES_PER_SHARD,
+         exclusive=EXCLUSIVE):
     """[(files, seconds)] per LANE (shard N owns lanes (N-1)*L .. N*L-1): each
     ISOLATED smoke alone on the last lanes, the rest longest first onto the
-    lightest ordinary lane."""
+    lightest ordinary lane. EXCLUSIVE smokes are not on a lane (solo_plan);
+    their time is pre-loaded onto every lane of their shard."""
     lane_count = shard_count * lanes_per_shard
+    solo = solo_plan(files, shard_count, exclusive)
+    solo_files = [p for group in solo.values() for p in group]
     alone = [p for p in files if smoke_name(p) in isolated]
     if len(alone) != len(isolated):
         raise PlanError("isolated net smokes not discovered: %s"
@@ -211,11 +233,16 @@ def plan(files, shard_count=SHARD_COUNT, isolated=ISOLATED, lanes_per_shard=LANE
         raise PlanError("no ordinary lane left beside %d isolated" % len(alone))
     bins = [[] for _ in range(ordinary)] + [[p] for p in sorted(alone)]
     loads = [0] * ordinary + [weight(p) for p in sorted(alone)]
-    for path in sorted((p for p in files if p not in alone), key=lambda p: (-weight(p), p)):
+    for shard, group in solo.items():
+        for lane in range((shard - 1) * lanes_per_shard, shard * lanes_per_shard):
+            if lane < ordinary:
+                loads[lane] += sum(weight(p) for p in group)
+    for path in sorted((p for p in files if p not in alone and p not in solo_files),
+                       key=lambda p: (-weight(p), p)):
         i = min(range(ordinary), key=lambda i: (loads[i], i))
         bins[i].append(path)
         loads[i] += weight(path)
-    check_cover(files, bins)
+    check_cover(files, bins + [group for group in solo.values()])
     for group in bins[ordinary:]:
         if len(group) != 1:
             raise PlanError("%s must be the only smoke on its lane" % group)
@@ -269,14 +296,19 @@ def main(argv=None):
                   "or raise SHARD_COUNT in tools/ci/net_shards.py" % (i, load, SHARD_SMOKE_BUDGET_SECONDS))
         print("plan shard %d/%d lane %d: %d s: %s" % ((i - 1) // LANES_PER_SHARD + 1, SHARD_COUNT,
                                                      (i - 1) % LANES_PER_SHARD + 1, load, " ".join(group)))
+    for shard, group in sorted(solo_plan(files).items()):
+        print("plan shard %d/%d alone after its lanes: %s" % (shard, SHARD_COUNT, " ".join(group)))
     if args.shard is not None:
         mine = shard_lanes(shards, args.shard)
         out = os.environ.get("GITHUB_OUTPUT")
         if out:
             with open(out, "a", encoding="utf-8") as f:
-                f.write("files=%s\n" % " ".join(p for group, _ in mine for p in group))
+                f.write("files=%s\n" % " ".join([p for group, _ in mine for p in group]
+                                                 + solo_plan(files).get(args.shard, [])))
                 # One line per lane, `lanes=` joins them with `;` for the runner.
                 f.write("lanes=%s\n" % ";".join(" ".join(group) for group, _ in mine))
+                # Run alone after the lanes (EXCLUSIVE).
+                f.write("solo=%s\n" % " ".join(solo_plan(files).get(args.shard, [])))
                 f.write("scheduling_weight_seconds=%d\n" % max((load for _, load in mine), default=0))
     return 0
 

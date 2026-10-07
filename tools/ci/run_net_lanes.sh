@@ -13,6 +13,8 @@
 # has its own run id, XDG_DATA_HOME per peer, ENet port stride and
 # OS-reserved control ports (tests/helpers/net_harness.gd).
 #
+# Boot gate: only one smoke's peers boot at a time (see run_lane).
+#
 # Per smoke: its own process session (setsid), swept on every exit path, and
 # a NET_SMOKE_TIMEOUT_SECONDS guard so one hung smoke fails on its own rather
 # than holding its lane until the job limit cancels every other lane too.
@@ -24,6 +26,7 @@ set -uo pipefail
 RETRIES="${RETRIES:-1}"
 SMOKE_TIMEOUT="${NET_SMOKE_TIMEOUT_SECONDS:-1200}"
 OUT="${NET_OUT_DIR:-/tmp/net-ci}"
+BOOT_GATE_SECONDS="${NET_BOOT_GATE_SECONDS:-240}"
 
 for tool in setsid flock timeout; do
 	command -v "$tool" >/dev/null || {
@@ -34,6 +37,7 @@ done
 
 logs="$(mktemp -d)"
 lock="$logs/print.lock"
+boot_lock="$logs/boot.lock"
 results="$logs/results.tsv"
 : > "$results"
 
@@ -62,8 +66,24 @@ run_lane() {
 			log="$logs/lane${lane}-${name}-${n}.log"
 			started=$(date +%s)
 			echo "lane ${lane}: smoke_net_${name}.gd attempt ${n}/${RETRIES} started"
+			# BOOT GATE: one smoke's peers boot at a time. Hold the boot lock
+			# from launch until the coordinator reports every peer's hello (or
+			# the smoke ends, or BOOT_GATE_SECONDS pass), so two lanes never
+			# put four peers through the world boot at once. Run 37636924943:
+			# f20_ending missed the harness's 180 s hello budget when both
+			# lanes' first smokes booted together on a slow runner.
+			exec {boot_fd}>"$boot_lock"
+			flock "$boot_fd"
 			setsid timeout -k 30 "$SMOKE_TIMEOUT" tools/net/run_net_smoke.sh "$name" --out="$OUT" > "$log" 2>&1 &
 			active=$!
+			local gate=0
+			while [ "$gate" -lt "$BOOT_GATE_SECONDS" ] && kill -0 "$active" 2>/dev/null \
+				&& ! grep -q "said hello" "$log" 2>/dev/null; do
+				sleep 1
+				gate=$((gate + 1))
+			done
+			flock -u "$boot_fd"
+			exec {boot_fd}>&-
 			if wait "$active"; then run_status=0; else run_status=$?; fi
 			sweep_group "$active"
 			wait "$active" 2>/dev/null || true
