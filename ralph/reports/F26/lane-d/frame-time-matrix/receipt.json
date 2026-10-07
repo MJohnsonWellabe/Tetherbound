@@ -1,0 +1,641 @@
+{
+  "criterion": "F26#4",
+  "status": "PASS F26#4 only",
+  "proof": "tools/capture_lookdev_route.gd, ROOT-owned native engine batch",
+  "source_commit": "f21fa6b6b28596818a0fccdd3f6406a6863796d4",
+  "complete_cases": 12,
+  "required_cases": 12,
+  "remaining_cases": [],
+  "case_summaries": [
+    {
+      "biome": "meadows",
+      "preset": "Low",
+      "source_commit": "f21fa6b6b28596818a0fccdd3f6406a6863796d4",
+      "complete": true,
+      "failures": [],
+      "renderer": "gl_compatibility",
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "route": {
+        "description": "F17: outside Grandpa farmhouse east door, along the straight main road between eight native-scale homes, through the west entrance to the Crossing Hall nave. All walking uses the existing production navigator and collisions; no route teleports or speedup.",
+        "height_mode": "ground",
+        "source": "res://data/config/village.json road_plan; res://data/config/crossing_hall.json entrance and nave",
+        "start": [
+          9.5,
+          14.0
+        ],
+        "waypoints": [
+          [
+            48.0,
+            14.0
+          ],
+          [
+            91.0,
+            14.0
+          ],
+          [
+            107.0,
+            14.0
+          ]
+        ]
+      },
+      "scope": "Direct production-scene setup and one declared start teleport; timed InputMap/collision route including dialogue/fight holds and possible minimum-frame stationary padding. No speedup, hidden rendering, earned campaign, GPU-only timing or four-creature fight claim. PNG I/O outside timed interval. Stormwood live Surge/weather; others initialize day/clear, then run normal live clock/weather callbacks. Route matrix and owner Ally test remain separate.",
+      "raw_receipt": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-timed\\meadows-low-frames\\route.json",
+      "stdout": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-timed\\meadows-low.stdout.log",
+      "stderr": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-timed\\meadows-low.stderr.log",
+      "process_receipt": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-timed\\meadows-low-receipt.json",
+      "samples": 379,
+      "waypoints_reached": 3,
+      "waypoints_required": 3,
+      "mean_fps": 17.607,
+      "median_wall_ms": 43.318,
+      "p95_wall_ms": 123.868,
+      "p99_wall_ms": 380.727,
+      "mean_process_ms": 152.856,
+      "mean_physics_ms": 4.89,
+      "elapsed_ms": 21552.897
+    },
+    {
+      "biome": "meadows",
+      "preset": "Medium",
+      "source_commit": "f21fa6b6b28596818a0fccdd3f6406a6863796d4",
+      "complete": true,
+      "failures": [],
+      "renderer": "forward_plus",
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "route": {
+        "description": "F17: outside Grandpa farmhouse east door, along the straight main road between eight native-scale homes, through the west entrance to the Crossing Hall nave. All walking uses the existing production navigator and collisions; no route teleports or speedup.",
+        "height_mode": "ground",
+        "source": "res://data/config/village.json road_plan; res://data/config/crossing_hall.json entrance and nave",
+        "start": [
+          9.5,
+          14.0
+        ],
+        "waypoints": [
+          [
+            48.0,
+            14.0
+          ],
+          [
+            91.0,
+            14.0
+          ],
+          [
+            107.0,
+            14.0
+          ]
+        ]
+      },
+      "scope": "Direct production-scene setup and one declared start teleport; timed InputMap/collision route including dialogue/fight holds and possible minimum-frame stationary padding. No speedup, hidden rendering, earned campaign, GPU-only timing or four-creature fight claim. PNG I/O outside timed interval. Stormwood live Surge/weather; others initialize day/clear, then run normal live clock/weather callbacks. Route matrix and owner Ally test remain separate.",
+      "raw_receipt": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-timed\\meadows-medium-frames\\route.json",
+      "stdout": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-timed\\meadows-medium.stdout.log",
+      "stderr": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-timed\\meadows-medium.stderr.log",
+      "process_receipt": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-timed\\meadows-medium-receipt.json",
+      "samples": 501,
+      "waypoints_reached": 3,
+      "waypoints_required": 3,
+      "mean_fps": 26.044,
+      "median_wall_ms": 35.231,
+      "p95_wall_ms": 52.843,
+      "p99_wall_ms": 78.666,
+      "mean_process_ms": 96.701,
+      "mean_physics_ms": 5.115,
+      "elapsed_ms": 19261.297
+    },
+    {
+      "biome": "meadows",
+      "preset": "High",
+      "source_commit": "f21fa6b6b28596818a0fccdd3f6406a6863796d4",
+      "complete": true,
+      "failures": [],
+      "renderer": "forward_plus",
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "route": {
+        "description": "F17: outside Grandpa farmhouse east door, along the straight main road between eight native-scale homes, through the west entrance to the Crossing Hall nave. All walking uses the existing production navigator and collisions; no route teleports or speedup.",
+        "height_mode": "ground",
+        "source": "res://data/config/village.json road_plan; res://data/config/crossing_hall.json entrance and nave",
+        "start": [
+          9.5,
+          14.0
+        ],
+        "waypoints": [
+          [
+            48.0,
+            14.0
+          ],
+          [
+            91.0,
+            14.0
+          ],
+          [
+            107.0,
+            14.0
+          ]
+        ]
+      },
+      "scope": "Direct production-scene setup and one declared start teleport; timed InputMap/collision route including dialogue/fight holds and possible minimum-frame stationary padding. No speedup, hidden rendering, earned campaign, GPU-only timing or four-creature fight claim. PNG I/O outside timed interval. Stormwood live Surge/weather; others initialize day/clear, then run normal live clock/weather callbacks. Route matrix and owner Ally test remain separate.",
+      "raw_receipt": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-timed\\meadows-high-frames\\route.json",
+      "stdout": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-timed\\meadows-high.stdout.log",
+      "stderr": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-timed\\meadows-high.stderr.log",
+      "process_receipt": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-timed\\meadows-high-receipt.json",
+      "samples": 508,
+      "waypoints_reached": 3,
+      "waypoints_required": 3,
+      "mean_fps": 26.477,
+      "median_wall_ms": 34.519,
+      "p95_wall_ms": 54.289,
+      "p99_wall_ms": 74.792,
+      "mean_process_ms": 89.779,
+      "mean_physics_ms": 7.547,
+      "elapsed_ms": 19213.045
+    },
+    {
+      "biome": "water",
+      "preset": "Low",
+      "source_commit": "f21fa6b6b28596818a0fccdd3f6406a6863796d4",
+      "complete": true,
+      "failures": [],
+      "renderer": "gl_compatibility",
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "route": {
+        "description": "First Shore beach to the departure pier approach, from the existing ordinary-camera stands; no open-water crossing or distant Veilfall claim.",
+        "height_mode": "ground",
+        "source": "res://tools/art_pipeline/capture_tidewake_matrix.gd",
+        "start": [
+          12.0,
+          150.0
+        ],
+        "waypoints": [
+          [
+            5.0,
+            174.0
+          ],
+          [
+            22.0,
+            168.0
+          ]
+        ]
+      },
+      "scope": "Direct production-scene setup and one declared start teleport; timed InputMap/collision route including dialogue/fight holds and possible minimum-frame stationary padding. No speedup, hidden rendering, earned campaign, GPU-only timing or four-creature fight claim. PNG I/O outside timed interval. Stormwood live Surge/weather; others initialize day/clear, then run normal live clock/weather callbacks. Route matrix and owner Ally test remain separate.",
+      "raw_receipt": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\water-low-frames\\route.json",
+      "stdout": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\water-low.stdout.log",
+      "stderr": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\water-low.stderr.log",
+      "process_receipt": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\water-low-receipt.json",
+      "samples": 120,
+      "waypoints_reached": 2,
+      "waypoints_required": 2,
+      "mean_fps": 7.791,
+      "median_wall_ms": 106.234,
+      "p95_wall_ms": 169.781,
+      "p99_wall_ms": 1064.673,
+      "mean_process_ms": 133.563,
+      "mean_physics_ms": 15.866,
+      "elapsed_ms": 15401.949
+    },
+    {
+      "biome": "water",
+      "preset": "Medium",
+      "source_commit": "f21fa6b6b28596818a0fccdd3f6406a6863796d4",
+      "complete": true,
+      "failures": [],
+      "renderer": "forward_plus",
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "route": {
+        "description": "First Shore beach to the departure pier approach, from the existing ordinary-camera stands; no open-water crossing or distant Veilfall claim.",
+        "height_mode": "ground",
+        "source": "res://tools/art_pipeline/capture_tidewake_matrix.gd",
+        "start": [
+          12.0,
+          150.0
+        ],
+        "waypoints": [
+          [
+            5.0,
+            174.0
+          ],
+          [
+            22.0,
+            168.0
+          ]
+        ]
+      },
+      "scope": "Direct production-scene setup and one declared start teleport; timed InputMap/collision route including dialogue/fight holds and possible minimum-frame stationary padding. No speedup, hidden rendering, earned campaign, GPU-only timing or four-creature fight claim. PNG I/O outside timed interval. Stormwood live Surge/weather; others initialize day/clear, then run normal live clock/weather callbacks. Route matrix and owner Ally test remain separate.",
+      "raw_receipt": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\water-medium-frames\\route.json",
+      "stdout": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\water-medium.stdout.log",
+      "stderr": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\water-medium.stderr.log",
+      "process_receipt": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\water-medium-receipt.json",
+      "samples": 120,
+      "waypoints_reached": 2,
+      "waypoints_required": 2,
+      "mean_fps": 12.422,
+      "median_wall_ms": 63.649,
+      "p95_wall_ms": 158.012,
+      "p99_wall_ms": 185.741,
+      "mean_process_ms": 72.42,
+      "mean_physics_ms": 16.827,
+      "elapsed_ms": 9660.315
+    },
+    {
+      "biome": "water",
+      "preset": "High",
+      "source_commit": "f21fa6b6b28596818a0fccdd3f6406a6863796d4",
+      "complete": true,
+      "failures": [],
+      "renderer": "forward_plus",
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "route": {
+        "description": "First Shore beach to the departure pier approach, from the existing ordinary-camera stands; no open-water crossing or distant Veilfall claim.",
+        "height_mode": "ground",
+        "source": "res://tools/art_pipeline/capture_tidewake_matrix.gd",
+        "start": [
+          12.0,
+          150.0
+        ],
+        "waypoints": [
+          [
+            5.0,
+            174.0
+          ],
+          [
+            22.0,
+            168.0
+          ]
+        ]
+      },
+      "scope": "Direct production-scene setup and one declared start teleport; timed InputMap/collision route including dialogue/fight holds and possible minimum-frame stationary padding. No speedup, hidden rendering, earned campaign, GPU-only timing or four-creature fight claim. PNG I/O outside timed interval. Stormwood live Surge/weather; others initialize day/clear, then run normal live clock/weather callbacks. Route matrix and owner Ally test remain separate.",
+      "raw_receipt": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\water-high-frames\\route.json",
+      "stdout": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\water-high.stdout.log",
+      "stderr": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\water-high.stderr.log",
+      "process_receipt": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\water-high-receipt.json",
+      "samples": 120,
+      "waypoints_reached": 2,
+      "waypoints_required": 2,
+      "mean_fps": 13.089,
+      "median_wall_ms": 67.246,
+      "p95_wall_ms": 136.939,
+      "p99_wall_ms": 150.005,
+      "mean_process_ms": 143.448,
+      "mean_physics_ms": 15.148,
+      "elapsed_ms": 9168.25
+    },
+    {
+      "biome": "cloudreach",
+      "preset": "Low",
+      "source_commit": "f21fa6b6b28596818a0fccdd3f6406a6863796d4",
+      "complete": true,
+      "failures": [],
+      "renderer": "gl_compatibility",
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "route": {
+        "_budget_scope": "Longest authored leg is about 311 m: over 3600 physics frames at the normal 5 m/s walk even without detours. Allow ordinary walking and collision avoidance, with the unchanged route wall deadline.",
+        "description": "Continuous authored arrival road toward Galefoot. XYZ heights select stacked floors; the production collider remains required.",
+        "height_mode": "authored",
+        "leg_budget_frames": 7200.0,
+        "source": "res://data/config/cloudreach_world.json arrival_gate_road; tools/capture_cloudreach_frame_matrix.gd MOTION_WAYPOINTS",
+        "start": [
+          0.0,
+          105.0,
+          -260.0
+        ],
+        "waypoints": [
+          [
+            -80.0,
+            130.0,
+            40.0
+          ],
+          [
+            -300.0,
+            145.0,
+            200.0
+          ],
+          [
+            -280.0,
+            180.0,
+            490.0
+          ]
+        ]
+      },
+      "scope": "Direct production-scene setup and one declared start teleport; timed InputMap/collision route including dialogue/fight holds and possible minimum-frame stationary padding. No speedup, hidden rendering, earned campaign, GPU-only timing or four-creature fight claim. PNG I/O outside timed interval. Stormwood live Surge/weather; others initialize day/clear, then run normal live clock/weather callbacks. Route matrix and owner Ally test remain separate.",
+      "raw_receipt": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\cloudreach-low-frames\\route.json",
+      "stdout": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\cloudreach-low.stdout.log",
+      "stderr": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\cloudreach-low.stderr.log",
+      "process_receipt": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\cloudreach-low-receipt.json",
+      "samples": 6962,
+      "waypoints_reached": 3,
+      "waypoints_required": 3,
+      "mean_fps": 38.942,
+      "median_wall_ms": 24.569,
+      "p95_wall_ms": 30.502,
+      "p99_wall_ms": 34.751,
+      "mean_process_ms": 38.012,
+      "mean_physics_ms": 4.474,
+      "elapsed_ms": 178801.723
+    },
+    {
+      "biome": "cloudreach",
+      "preset": "Medium",
+      "source_commit": "f21fa6b6b28596818a0fccdd3f6406a6863796d4",
+      "complete": true,
+      "failures": [],
+      "renderer": "forward_plus",
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "route": {
+        "_budget_scope": "Longest authored leg is about 311 m: over 3600 physics frames at the normal 5 m/s walk even without detours. Allow ordinary walking and collision avoidance, with the unchanged route wall deadline.",
+        "description": "Continuous authored arrival road toward Galefoot. XYZ heights select stacked floors; the production collider remains required.",
+        "height_mode": "authored",
+        "leg_budget_frames": 7200.0,
+        "source": "res://data/config/cloudreach_world.json arrival_gate_road; tools/capture_cloudreach_frame_matrix.gd MOTION_WAYPOINTS",
+        "start": [
+          0.0,
+          105.0,
+          -260.0
+        ],
+        "waypoints": [
+          [
+            -80.0,
+            130.0,
+            40.0
+          ],
+          [
+            -300.0,
+            145.0,
+            200.0
+          ],
+          [
+            -280.0,
+            180.0,
+            490.0
+          ]
+        ]
+      },
+      "scope": "Direct production-scene setup and one declared start teleport; timed InputMap/collision route including dialogue/fight holds and possible minimum-frame stationary padding. No speedup, hidden rendering, earned campaign, GPU-only timing or four-creature fight claim. PNG I/O outside timed interval. Stormwood live Surge/weather; others initialize day/clear, then run normal live clock/weather callbacks. Route matrix and owner Ally test remain separate.",
+      "raw_receipt": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\cloudreach-medium-frames\\route.json",
+      "stdout": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\cloudreach-medium.stdout.log",
+      "stderr": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\cloudreach-medium.stderr.log",
+      "process_receipt": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\cloudreach-medium-receipt.json",
+      "samples": 10458,
+      "waypoints_reached": 3,
+      "waypoints_required": 3,
+      "mean_fps": 59.711,
+      "median_wall_ms": 15.595,
+      "p95_wall_ms": 30.464,
+      "p99_wall_ms": 36.184,
+      "mean_process_ms": 31.389,
+      "mean_physics_ms": 9.685,
+      "elapsed_ms": 175151.734
+    },
+    {
+      "biome": "cloudreach",
+      "preset": "High",
+      "source_commit": "f21fa6b6b28596818a0fccdd3f6406a6863796d4",
+      "complete": true,
+      "failures": [],
+      "renderer": "forward_plus",
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "route": {
+        "_budget_scope": "Longest authored leg is about 311 m: over 3600 physics frames at the normal 5 m/s walk even without detours. Allow ordinary walking and collision avoidance, with the unchanged route wall deadline.",
+        "description": "Continuous authored arrival road toward Galefoot. XYZ heights select stacked floors; the production collider remains required.",
+        "height_mode": "authored",
+        "leg_budget_frames": 7200.0,
+        "source": "res://data/config/cloudreach_world.json arrival_gate_road; tools/capture_cloudreach_frame_matrix.gd MOTION_WAYPOINTS",
+        "start": [
+          0.0,
+          105.0,
+          -260.0
+        ],
+        "waypoints": [
+          [
+            -80.0,
+            130.0,
+            40.0
+          ],
+          [
+            -300.0,
+            145.0,
+            200.0
+          ],
+          [
+            -280.0,
+            180.0,
+            490.0
+          ]
+        ]
+      },
+      "scope": "Direct production-scene setup and one declared start teleport; timed InputMap/collision route including dialogue/fight holds and possible minimum-frame stationary padding. No speedup, hidden rendering, earned campaign, GPU-only timing or four-creature fight claim. PNG I/O outside timed interval. Stormwood live Surge/weather; others initialize day/clear, then run normal live clock/weather callbacks. Route matrix and owner Ally test remain separate.",
+      "raw_receipt": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\cloudreach-high-frames\\route.json",
+      "stdout": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\cloudreach-high.stdout.log",
+      "stderr": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\cloudreach-high.stderr.log",
+      "process_receipt": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\cloudreach-high-receipt.json",
+      "samples": 10408,
+      "waypoints_reached": 3,
+      "waypoints_required": 3,
+      "mean_fps": 59.439,
+      "median_wall_ms": 15.854,
+      "p95_wall_ms": 29.925,
+      "p99_wall_ms": 31.4,
+      "mean_process_ms": 28.786,
+      "mean_physics_ms": 7.085,
+      "elapsed_ms": 175117.224
+    },
+    {
+      "biome": "stormwood",
+      "preset": "Low",
+      "source_commit": "f21fa6b6b28596818a0fccdd3f6406a6863796d4",
+      "complete": true,
+      "failures": [],
+      "renderer": "gl_compatibility",
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "route": {
+        "_budget_scope": "Longest authored leg is about 484 m: about 5811 physics frames at the normal 5 m/s walk. Allow ordinary walking and detours; no speedup or teleport correction, with the unchanged route wall deadline.",
+        "description": "Authored Cinder Verge arrival to Ashfoot, with the real Surge state observed and reported; no phase pin or day/night override.",
+        "height_mode": "ground",
+        "leg_budget_frames": 9000.0,
+        "source": "res://data/config/stormwood_world.json ash_road",
+        "start": [
+          -300.0,
+          180.0
+        ],
+        "waypoints": [
+          [
+            -350.0,
+            450.0
+          ],
+          [
+            -650.0,
+            830.0
+          ]
+        ]
+      },
+      "scope": "Direct production-scene setup and one declared start teleport; timed InputMap/collision route including dialogue/fight holds and possible minimum-frame stationary padding. No speedup, hidden rendering, earned campaign, GPU-only timing or four-creature fight claim. PNG I/O outside timed interval. Stormwood live Surge/weather; others initialize day/clear, then run normal live clock/weather callbacks. Route matrix and owner Ally test remain separate.",
+      "raw_receipt": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\stormwood-low-frames\\route.json",
+      "stdout": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\stormwood-low.stdout.log",
+      "stderr": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\stormwood-low.stderr.log",
+      "process_receipt": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\stormwood-low-receipt.json",
+      "samples": 7371,
+      "waypoints_reached": 2,
+      "waypoints_required": 2,
+      "mean_fps": 47.445,
+      "median_wall_ms": 18.124,
+      "p95_wall_ms": 32.892,
+      "p99_wall_ms": 48.052,
+      "mean_process_ms": 51.116,
+      "mean_physics_ms": 3.903,
+      "elapsed_ms": 155377.979
+    },
+    {
+      "biome": "stormwood",
+      "preset": "Medium",
+      "source_commit": "f21fa6b6b28596818a0fccdd3f6406a6863796d4",
+      "complete": true,
+      "failures": [],
+      "renderer": "forward_plus",
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "route": {
+        "_budget_scope": "Longest authored leg is about 484 m: about 5811 physics frames at the normal 5 m/s walk. Allow ordinary walking and detours; no speedup or teleport correction, with the unchanged route wall deadline.",
+        "description": "Authored Cinder Verge arrival to Ashfoot, with the real Surge state observed and reported; no phase pin or day/night override.",
+        "height_mode": "ground",
+        "leg_budget_frames": 9000.0,
+        "source": "res://data/config/stormwood_world.json ash_road",
+        "start": [
+          -300.0,
+          180.0
+        ],
+        "waypoints": [
+          [
+            -350.0,
+            450.0
+          ],
+          [
+            -650.0,
+            830.0
+          ]
+        ]
+      },
+      "scope": "Direct production-scene setup and one declared start teleport; timed InputMap/collision route including dialogue/fight holds and possible minimum-frame stationary padding. No speedup, hidden rendering, earned campaign, GPU-only timing or four-creature fight claim. PNG I/O outside timed interval. Stormwood live Surge/weather; others initialize day/clear, then run normal live clock/weather callbacks. Route matrix and owner Ally test remain separate.",
+      "raw_receipt": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\stormwood-medium-frames\\route.json",
+      "stdout": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\stormwood-medium.stdout.log",
+      "stderr": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\stormwood-medium.stderr.log",
+      "process_receipt": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\stormwood-medium-receipt.json",
+      "samples": 5404,
+      "waypoints_reached": 2,
+      "waypoints_required": 2,
+      "mean_fps": 35.625,
+      "median_wall_ms": 28.259,
+      "p95_wall_ms": 35.686,
+      "p99_wall_ms": 44.732,
+      "mean_process_ms": 39.382,
+      "mean_physics_ms": 6.476,
+      "elapsed_ms": 151709.371
+    },
+    {
+      "biome": "stormwood",
+      "preset": "High",
+      "source_commit": "f21fa6b6b28596818a0fccdd3f6406a6863796d4",
+      "complete": true,
+      "failures": [],
+      "renderer": "forward_plus",
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "route": {
+        "_budget_scope": "Longest authored leg is about 484 m: about 5811 physics frames at the normal 5 m/s walk. Allow ordinary walking and detours; no speedup or teleport correction, with the unchanged route wall deadline.",
+        "description": "Authored Cinder Verge arrival to Ashfoot, with the real Surge state observed and reported; no phase pin or day/night override.",
+        "height_mode": "ground",
+        "leg_budget_frames": 9000.0,
+        "source": "res://data/config/stormwood_world.json ash_road",
+        "start": [
+          -300.0,
+          180.0
+        ],
+        "waypoints": [
+          [
+            -350.0,
+            450.0
+          ],
+          [
+            -650.0,
+            830.0
+          ]
+        ]
+      },
+      "scope": "Direct production-scene setup and one declared start teleport; timed InputMap/collision route including dialogue/fight holds and possible minimum-frame stationary padding. No speedup, hidden rendering, earned campaign, GPU-only timing or four-creature fight claim. PNG I/O outside timed interval. Stormwood live Surge/weather; others initialize day/clear, then run normal live clock/weather callbacks. Route matrix and owner Ally test remain separate.",
+      "raw_receipt": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\stormwood-high-frames\\route.json",
+      "stdout": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\stormwood-high.stdout.log",
+      "stderr": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\stormwood-high.stderr.log",
+      "process_receipt": "D:\\CodexTemp\\tetherbound-proof\\native-d-f21fa6b6b2-f26-remaining-r1\\stormwood-high-receipt.json",
+      "samples": 4483,
+      "waypoints_reached": 2,
+      "waypoints_required": 2,
+      "mean_fps": 29.551,
+      "median_wall_ms": 34.027,
+      "p95_wall_ms": 42.695,
+      "p99_wall_ms": 50.163,
+      "mean_process_ms": 40.94,
+      "mean_physics_ms": 6.471,
+      "elapsed_ms": 151730.945
+    }
+  ],
+  "statistics": "Wall-ms percentile nearest rank; FPS=1000/arithmetic mean wall_ms. Engine process/physics monitors reported separately; no GPU-only or Ally performance claim. Loading and PNG writes outside timed interval.",
+  "input_scope": "Existing scripted Input.action_press movement through production InputMap/navigation/collision. Not physical joypad/controller witness. One declared initial teleport; Meadows declared opening fixture flags.",
+  "interruption": "Original Water Low owner_game interruption is retained separately and excluded; one fresh same-source continuation for remaining9cases. No completed Meadows case repeated.",
+  "independent_review": {
+    "reviewer": "/root/f42_visual_review",
+    "source_verdict": "APPROVE",
+    "actual_completed_cases_reviewed": 12,
+    "final_verdict": "APPROVE",
+    "verdict": "Literal F26#4 met: all12 actual1920x1080 cases, raw wall/process/physics timing arrays, allwaypoints and zero failures, each process exit0. No performance threshold belongs to this row."
+  },
+  "remaining_gates": [
+    "F26#0 material census (separate)",
+    "F26#3 visual matrix (separate)",
+    "Owner AllyF26#5; Low remains default"
+  ],
+  "weather_disposition": "Stormwood samples occurred in live Calm; production weather clock resumed, but these traces do not prove every Surge phase.",
+  "statistics_note": "This receipt recomputes nearest-rank P95/P99 from raw arrays. ROOT route-case-summary.json uses interpolated percentiles; its convenience values differ slightly and are not substituted here.",
+  "landing_scope": "ONLY this evidence directory; route tools/config already present on origin/main. Exclude all unREADY lane ancestry."
+}
