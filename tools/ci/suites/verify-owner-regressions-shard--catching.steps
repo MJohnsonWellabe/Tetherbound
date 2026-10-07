@@ -1,0 +1,25 @@
+# CI-SPEED suite group (tools/ci/run_suite.py). Steps copied verbatim from
+# the former ci.yml job; each step runs in order in one lane, with the
+# lane's own XDG_DATA_HOME, RUNNER_TEMP and network namespace.
+### job: verify-owner-regressions-shard
+### group: catching
+### seconds: 130
+### exclusive
+### job-timeout-minutes: 28
+
+### step: Verify party_count_after_catches
+### env SMOKE: party_count_after_catches
+### env RETRIES: 1
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+  if python3 tools/ci/run_godot_smoke.py godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1

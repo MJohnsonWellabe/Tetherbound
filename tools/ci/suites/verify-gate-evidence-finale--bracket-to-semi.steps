@@ -1,0 +1,15 @@
+# CI-SPEED suite group (tools/ci/run_suite.py). Steps copied verbatim from
+# the former ci.yml job; each step runs in order in one lane, with the
+# lane's own XDG_DATA_HOME, RUNNER_TEMP and network namespace.
+### job: verify-gate-evidence-finale
+### group: bracket-to-semi
+### seconds: 209
+### job-timeout-minutes: 40
+
+### step: Verify tournament_bracket segment bracket-to-semi
+set -euo pipefail
+segment="bracket-to-semi"
+home="${RUNNER_TEMP}/bracket-home"; out="${RUNNER_TEMP}/bracket-out"
+mkdir -p "$home" "$out"
+XDG_DATA_HOME="$home" TB_SEGMENT_OUT="$out" \
+  godot --headless --path . --script tests/smoke_tournament_bracket.gd -- --segment="${segment#bracket-}"

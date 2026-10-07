@@ -1,0 +1,147 @@
+# CI-SPEED suite group (tools/ci/run_suite.py). Steps copied verbatim from
+# the former ci.yml job; each step runs in order in one lane, with the
+# lane's own XDG_DATA_HOME, RUNNER_TEMP and network namespace.
+### job: verify-regions-shard
+### group: world
+### seconds: 515
+### job-timeout-minutes: 35
+
+### step: Verify earned aim cancellation and native entry guard
+### timeout-minutes: 3
+bash tools/ci/verify-earned-aim.sh
+### step: Verify character texture binding and material cache isolation
+### timeout-minutes: 2
+bash tools/ci/verify-character-texture.sh
+### step: Verify actual Game crossing and native scoped receiver lifecycle
+### timeout-minutes: 6
+python3 tools/ci/verify-realm-transition.py
+### step: Verify warrens
+### env SMOKE: warrens
+### env RETRIES: 1
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+  if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1
+### step: Verify relay_station
+### env SMOKE: relay_station
+### env RETRIES: 1
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+  if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1
+### step: Verify continuous Relay ramp and deck walk
+set -euo pipefail
+godot --headless --path . --log-file /tmp/relay-deck-walk.log --script tests/smoke_relay_deck_walk.gd
+if grep -E '^ERROR:|SCRIPT ERROR:' /tmp/relay-deck-walk.log; then
+  echo 'Relay deck walk emitted an engine or script error'
+  exit 1
+fi
+### step: Verify earned material prompt approach
+set -euo pipefail
+export XDG_DATA_HOME="$(mktemp -d)"
+godot --headless --path . --log-file /tmp/material-prompt-priority.log --script tests/smoke_material_prompt_priority.gd
+if grep -E '^(ERROR:|SCRIPT ERROR:)' /tmp/material-prompt-priority.log; then
+  exit 1
+fi
+### step: Verify exact baked tree prompt at trunk contact
+set -euo pipefail
+run_dir="$(mktemp -d)"
+export XDG_DATA_HOME="$run_dir/profile"
+mkdir -p "$XDG_DATA_HOME"
+godot --headless --path . --log-file "$run_dir/engine.log" --script tools/_probe_scatter_tree_prompt_height.gd 2>&1 | tee "$run_dir/console.log"
+test -s "$run_dir/engine.log"
+if grep -E '^(ERROR:|SCRIPT ERROR:)' "$run_dir/"*.log; then
+  exit 1
+fi
+### step: Verify live road coverage observation
+set -euo pipefail
+run_dir="$(mktemp -d)"
+export XDG_DATA_HOME="$run_dir/profile"
+mkdir -p "$XDG_DATA_HOME"
+godot --headless --path . --log-file "$run_dir/engine.log" --script tools/_probe_live_road_coverage_observer.gd 2>&1 | tee "$run_dir/console.log"
+test -s "$run_dir/engine.log"
+if grep -E '^(ERROR:|SCRIPT ERROR:)' "$run_dir/"*.log; then
+  exit 1
+fi
+### step: Verify felled resource destruction
+set -euo pipefail
+export XDG_DATA_HOME="$(mktemp -d)"
+godot --headless --path . --log-file /tmp/felled-material-lifecycle.log --script tools/_probe_felled_material_lifecycle.gd
+if grep -E '^(ERROR:|SCRIPT ERROR:)' /tmp/felled-material-lifecycle.log; then
+  exit 1
+fi
+### step: Verify earned material source selection
+set -euo pipefail
+godot --headless --path . --log-file /tmp/earned-material-selection.log --script tests/smoke_earned_material_selection.gd
+if grep -E '^ERROR:|SCRIPT ERROR:' /tmp/earned-material-selection.log; then
+  echo 'Earned material selection emitted an engine or script error'
+  exit 1
+fi
+### step: Verify cloudreach_arrival_walk
+### env SMOKE: cloudreach_arrival_walk
+### env RETRIES: 1
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+  if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1
+### step: Verify Cloudreach persistence tail
+timeout 180s godot --headless --path . --script tests/smoke_cloudreach_persistence_tail.gd
+### step: Verify wild_streaming
+### env SMOKE: wild_streaming
+### env RETRIES: 1
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+  if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1
+### step: Verify bramblebun_colourway_binding
+### env SMOKE: bramblebun_colourway_binding
+### env RETRIES: 1
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+  if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1
