@@ -15,7 +15,8 @@
   "logic_artifact": 11505304923,
   "logic_proof": "tests/run_tests.gd, single --only selection from28 existing test files naming sequence_director.gd or house-wait keys",
   "logic_result": {"files": 28, "tests": 465, "assertions": 9332, "failed": 0, "exit": 0, "seconds": 13},
-  "runtime_gate": "Existing smoke_crossing_hall_circuit.gd on the same source is in flight; no READY until actual physical circuit and retained review verdict.",
+  "runtime_gate": "PASS37673885907/11507365488: actual director-house binding/open collider, farm-road-nave maxoffroad0 and all8 arches/all8 pedestals on real floor within0.6m; exit0/255s. Original parsed joypad/look, budgets and collisions retained.",
+  "final_review_verdict": "APPROVE: same reviewer read exact pushed two-file diff and both actual pass/fail logs; only68401e9c6b plus regression evidence may land. Headless access/game-code regression only; renderer-specific visual recapture and other criteria remain open.",
   "native_failure_artifact": "D:/CodexTemp/tetherbound-proof/native-d-f21fa6b6b2-hall-fullscreen",
   "native_failure": "Real farm floor, initial path5.8,14 ->8.3,14 ->91,14 ->107,14; stops6.189,14, then sidesteps6.3,13; arc0.5/101.2. Predicted closed gate capsule stop matches6.19. Native frames are partial, not Hall circuit success."
 }
