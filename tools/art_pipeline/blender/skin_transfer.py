@@ -52,6 +52,9 @@ def bake_to_rig(args: list[str]) -> None:
     hashes = {str(path): hashlib.sha256(path.read_bytes()).hexdigest() for path in inputs}
     settings = json.loads(settings_path.read_text())["local_material_transfer"]
     resolution = settings["resolution"]
+    surface_uv = "--surface-uv-transfer" in args
+    if args.count("--surface-uv-transfer") > 1:
+        raise SystemExit("Surface UV mode may be selected once")
     if resolution not in (1024, 2048):
         raise SystemExit("Local bake resolution must be 1024 or 2048")
     for key in ("fur_hue", "fur_saturation_scale", "fur_value_scale", "shoulder_radius_height"):
@@ -90,6 +93,8 @@ def bake_to_rig(args: list[str]) -> None:
     if len(sources) != 1 or sources[0].vertex_groups or any(obj.type == "ARMATURE" for obj in imported):
         raise SystemExit("Local bake requires one unskinned held textured source")
     source = sources[0]
+    if surface_uv and (len(source.data.uv_layers) != 1 or len(source.data.materials) != 1):
+        raise SystemExit("Surface UV transfer requires exactly one held UV layer and material")
     def box(obj):
         points = [obj.matrix_world @ Vector(corner) for corner in obj.bound_box]
         return Vector([min(p[i] for p in points) for i in range(3)]), Vector([max(p[i] for p in points) for i in range(3)])
@@ -147,36 +152,37 @@ def bake_to_rig(args: list[str]) -> None:
         links.new(copper_mix.outputs[0], shader.inputs["Base Color"])
     bpy.ops.object.select_all(action="DESELECT")
     target.select_set(True); bpy.context.view_layer.objects.active = target
-    bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.select_all(action="SELECT")
-    bpy.ops.uv.smart_project(island_margin=.015)
-    bpy.ops.object.mode_set(mode="OBJECT")
-    material = bpy.data.materials.new("Stormursa_local_colour"); material.use_nodes = True
-    target.data.materials.append(material)
-    image = bpy.data.images.new("Stormursa_local_albedo", width=resolution, height=resolution, alpha=False)
-    image.colorspace_settings.name = "sRGB"
-    texture = material.node_tree.nodes.new("ShaderNodeTexImage"); texture.image = image
-    material.node_tree.nodes.active = texture
-    shader = next(n for n in material.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
-    material.node_tree.links.new(texture.outputs["Color"], shader.inputs["Base Color"])
-    shader.inputs["Roughness"].default_value = .85
-    source.select_set(True)
-    scene = bpy.context.scene; scene.render.engine = "CYCLES"; scene.cycles.samples = 1
-    bake = scene.render.bake; bake.use_selected_to_active = True
-    bake.use_pass_direct = False; bake.use_pass_indirect = False; bake.use_pass_color = True
-    bake.cage_extrusion = height * .025; bake.max_ray_distance = height * .10; bake.margin = 16
-    bpy.ops.object.bake(type="DIFFUSE")
-    image.pack()
+    if surface_uv:
+        modifier = target.modifiers.new("held_surface_uv", "DATA_TRANSFER")
+        modifier.object = source
+        modifier.use_loop_data = True
+        modifier.data_types_loops = {"UV"}
+        modifier.loop_mapping = "POLYINTERP_NEAREST"
+        modifier.layers_uv_select_src = "ALL"
+        modifier.use_object_transform = True
+        bpy.ops.object.datalayout_transfer(modifier=modifier.name)
+        bpy.ops.object.modifier_apply(modifier=modifier.name)
+        if len(target.data.uv_layers) != 1:
+            raise SystemExit("Surface UV transfer did not create the held UV layer")
+        target.data.materials.append(source.data.materials[0])
+        bake_surface_colour_image(target, resolution)
+    else:
+        bpy.ops.object.mode_set(mode="EDIT"); bpy.ops.mesh.select_all(action="SELECT")
+        bpy.ops.uv.smart_project(island_margin=.015)
+        bpy.ops.object.mode_set(mode="OBJECT")
+    if not surface_uv:
+        bake_colour_image(target, source, resolution, height)
     for obj in imported: bpy.data.objects.remove(obj, do_unlink=True)
     rig.data.pose_position = old_pose
     bpy.context.view_layer.update()
     if signature() != preserved:
-        raise SystemExit("Local bake altered original vertices/faces/weights/rig/actions/transforms")
+        raise SystemExit("Local material transfer altered original vertices/faces/weights/rig/actions/transforms")
     bpy.ops.object.select_all(action="DESELECT"); target.select_set(True); rig.select_set(True)
     out.parent.mkdir(parents=True, exist_ok=True)
     bpy.ops.export_scene.gltf(filepath=str(out), export_format="GLB", use_selection=True,
                               export_skins=True, export_animations=True, export_yup=True)
     report.parent.mkdir(parents=True, exist_ok=True)
-    report.write_text(json.dumps({"method": "local_selected_to_active_colour_bake_preserved_rig",
+    report.write_text(json.dumps({"method": "local_nearest_surface_uv_preserved_rig" if surface_uv else "local_selected_to_active_colour_bake_preserved_rig",
         "input_sha256": hashes, "output_sha256": hashlib.sha256(out.read_bytes()).hexdigest(),
         "vertices_before_export": len(target.data.vertices), "triangles_before_export": sum(len(p.vertices)-2 for p in target.data.polygons),
         "original_geometry_weights_rig_actions_transforms_unchanged_before_export": True,
@@ -185,7 +191,51 @@ def bake_to_rig(args: list[str]) -> None:
         "settings": settings, "new_meshy_tasks": 0,
         "scope": "Staged material only. UV export may split vertices; reimport, blind appearance, clips and native scale/pose proofs remain required"}, indent=2) + "\n")
     if any(hashlib.sha256(pathlib.Path(path).read_bytes()).hexdigest() != digest for path, digest in hashes.items()):
-        raise SystemExit("Local bake overwrote an input")
+        raise SystemExit("Local material transfer overwrote an input")
+
+
+def bake_colour_image(target, source, resolution, height):
+    """Bake shader colour only; keep the destination image out of its own input."""
+    material = bpy.data.materials.new("Stormursa_local_colour"); material.use_nodes = True
+    target.data.materials.append(material)
+    image = bpy.data.images.new("Stormursa_local_albedo", width=resolution, height=resolution, alpha=False)
+    image.colorspace_settings.name = "sRGB"
+    texture = material.node_tree.nodes.new("ShaderNodeTexImage"); texture.image = image
+    material.node_tree.nodes.active = texture
+    shader = next(n for n in material.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
+    shader.inputs["Roughness"].default_value = .85
+    source.select_set(True)
+    scene = bpy.context.scene; scene.render.engine = "CYCLES"; scene.cycles.samples = 1
+    bake = scene.render.bake; bake.use_selected_to_active = True
+    bake.use_pass_direct = False; bake.use_pass_indirect = False; bake.use_pass_color = True
+    bake.cage_extrusion = height * .025; bake.max_ray_distance = height * .10; bake.margin = 16
+    bpy.ops.object.bake(type="DIFFUSE")
+    image.pack()
+    material.node_tree.links.new(texture.outputs["Color"], shader.inputs["Base Color"])
+
+
+def bake_surface_colour_image(target, resolution):
+    """Bake held nearest-surface UV colour without a directional ray projection."""
+    material = target.data.materials[0]
+    nodes, links = material.node_tree.nodes, material.node_tree.links
+    shader = next(n for n in nodes if n.type == "BSDF_PRINCIPLED")
+    albedo = shader.inputs["Base Color"].links[0].from_socket
+    output = next(n for n in nodes if n.type == "OUTPUT_MATERIAL" and n.is_active_output)
+    emission = nodes.new("ShaderNodeEmission")
+    links.new(albedo, emission.inputs["Color"]); links.new(emission.outputs[0], output.inputs["Surface"])
+    image = bpy.data.images.new("Stormursa_surface_albedo", width=resolution, height=resolution, alpha=False)
+    image.colorspace_settings.name = "sRGB"
+    texture = nodes.new("ShaderNodeTexImage"); texture.image = image; nodes.active = texture
+    scene = bpy.context.scene; scene.render.engine = "CYCLES"; scene.cycles.samples = 1
+    scene.render.bake.use_selected_to_active = False; scene.render.bake.margin = 16
+    bpy.ops.object.bake(type="EMIT")
+    image.pack()
+    final = bpy.data.materials.new("Stormursa_surface_colour"); final.use_nodes = True
+    texture = final.node_tree.nodes.new("ShaderNodeTexImage"); texture.image = image
+    shader = next(n for n in final.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
+    final.node_tree.links.new(texture.outputs["Color"], shader.inputs["Base Color"])
+    shader.inputs["Roughness"].default_value = .85
+    target.data.materials[0] = final
 
 
 def main() -> None:
