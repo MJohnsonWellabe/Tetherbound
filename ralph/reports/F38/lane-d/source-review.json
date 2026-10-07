@@ -26,5 +26,11 @@
     "shorter light reach/night lower-body readability",
     "glazing aperture alignment",
     "full ordinary-camera matrix and blind BarsA/B PASS"
-  ]
+  ],
+  "proof_correction": {
+    "commit": "f21fa6b6b28596818a0fccdd3f6406a6863796d4",
+    "reviewer": "/root/f42_visual_review",
+    "verdict": "APPROVE",
+    "scope": "Existing farm_to_hall X98→8.3 matches authored road start and actual house marker checked by existing smoke. Same21other sites/count528/time/weather/view/support guards; actual image/floor support still pending."
+  }
 }
