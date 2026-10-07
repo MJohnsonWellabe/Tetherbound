@@ -18,6 +18,8 @@ var _seed := 2042
 var _map_cycle := false
 var _map_zoom_samples := false
 var _paired_720 := false
+var _tabs: Array[String] = []
+var _idle_hud := false
 var _records: Array[Dictionary] = []
 var _failures: Array[String] = []
 
@@ -44,6 +46,11 @@ func _run() -> void:
 			_map_zoom_samples = true
 		elif arg == "--paired-720":
 			_paired_720 = true
+		elif arg.begins_with("--tabs="):
+			for id: String in arg.trim_prefix("--tabs=").split(",", false):
+				_tabs.append(id.strip_edges())
+		elif arg == "--idle-hud":
+			_idle_hud = true
 	if not SCENES.has(_biome) or not _output.begins_with("res://ralph/reports/VISUAL/phase2/"):
 		push_error("Use --biome and --output under the Phase 2 evidence directory")
 		quit(1)
@@ -84,6 +91,17 @@ func _run() -> void:
 		quit(1)
 		return
 	await _shoot("exploration_hud", "HUD in exploration", world)
+	if _idle_hud:
+		# Observe the real temporary roster reveal expire; never hide UI for a shot.
+		var hud := world.get_node_or_null(^"PlaygroundHUD")
+		var strip: Control = hud.get("_party_strip") as Control if hud != null else null
+		var idle_deadline := Time.get_ticks_msec() + 300000
+		while strip != null and strip.visible and Time.get_ticks_msec() < idle_deadline:
+			await process_frame
+		if strip == null or strip.visible:
+			_failures.append("Real exploration roster did not reach its natural idle state")
+		else:
+			await _shoot("exploration_hud_idle", "HUD after natural temporary roster expiry", world)
 	var menu_data: Variant = JSON.parse_string(FileAccess.get_file_as_string(MENU_DATA))
 	if not menu_data is Dictionary:
 		push_error("Menu data invalid")
@@ -93,7 +111,9 @@ func _run() -> void:
 		if not raw_tab is Dictionary:
 			continue
 		var tab_id := str((raw_tab as Dictionary).get("id", ""))
-		if _map_cycle and tab_id != "map":
+		if not _tabs.is_empty() and tab_id not in _tabs:
+			continue
+		if _map_cycle and _tabs.is_empty() and tab_id != "map":
 			continue
 		if tab_id.is_empty():
 			continue
@@ -121,6 +141,11 @@ func _run() -> void:
 		"map_cycle": _map_cycle,
 		"map_zoom_samples": _map_zoom_samples,
 		"paired_720": _paired_720,
+		"requested_tabs": _tabs,
+		"natural_idle_hud": _idle_hud,
+		"map_landmarks_sha256": FileAccess.get_sha256("res://data/config/map_landmarks.json"),
+		"input_contexts_sha256": FileAccess.get_sha256("res://data/config/input_contexts.json"),
+		"project_sha256": FileAccess.get_sha256("res://project.godot"),
 		"frames": _records, "failures": _failures,
 		"complete": _failures.is_empty(),
 	}
@@ -211,6 +236,11 @@ func _shoot_settings_sections(menu: Node, world: Node) -> void:
 			continue
 		print("PHASE2 UI settings scroll begin: ", label_and_id.id, " heading=", heading.get_path())
 		scroll.ensure_control_visible(heading)
+		# Minimal visibility can leave only the heading at the bottom. Align the
+		# section start to the viewport so its actual binding rows are captured.
+		for frame in 2:
+			await process_frame
+		scroll.scroll_vertical += int(heading.global_position.y - scroll.global_position.y)
 		print("PHASE2 UI settings scroll returned: ", label_and_id.id)
 		for frame in 4:
 			await process_frame
