@@ -1,0 +1,120 @@
+{
+  "observed": [
+    {
+      "frame_id": "water__stand_02__day",
+      "player_position": [
+        101.472801208496,
+        176.096969604492,
+        4122.900390625
+      ],
+      "camera_position": [
+        96.461296081543,
+        178.928115844727,
+        4122.03076171875
+      ],
+      "on_floor": true,
+      "peak_planar_player_distance_m": 100.00002771238684,
+      "peak_camera_3d_distance_m": 453.41764822931714,
+      "gate_planar_player_distance_m": 333.00292818406695
+    },
+    {
+      "frame_id": "water__stand_03__night",
+      "player_position": [
+        101.472801208496,
+        176.096969604492,
+        4122.900390625
+      ],
+      "camera_position": [
+        96.461296081543,
+        178.928115844727,
+        4122.03076171875
+      ],
+      "on_floor": true,
+      "peak_planar_player_distance_m": 100.00002771238684,
+      "peak_camera_3d_distance_m": 453.41764822931714,
+      "gate_planar_player_distance_m": 333.00292818406695
+    },
+    {
+      "frame_id": "water__stand_04__day",
+      "player_position": [
+        334.0,
+        139.410369873047,
+        3883.0
+      ],
+      "camera_position": [
+        334.0,
+        142.241546630859,
+        3877.91333007812
+      ],
+      "on_floor": true,
+      "peak_planar_player_distance_m": 289.836160614924,
+      "peak_camera_3d_distance_m": 561.158232868782,
+      "gate_planar_player_distance_m": 2.9679597369234814
+    },
+    {
+      "frame_id": "water__stand_05__night",
+      "player_position": [
+        334.0,
+        139.410369873047,
+        3883.0
+      ],
+      "camera_position": [
+        334.0,
+        142.241546630859,
+        3877.91333007812
+      ],
+      "on_floor": true,
+      "peak_planar_player_distance_m": 289.836160614924,
+      "peak_camera_3d_distance_m": 561.158232868782,
+      "gate_planar_player_distance_m": 2.9679597369234814
+    }
+  ],
+  "bar_b": "BLOCK",
+  "remaining_gates": [
+    "400m ordinary traversal/camera witness",
+    "reference-backed landmark identity",
+    "full material/light finish",
+    "fullbars PASS"
+  ],
+  "exit_code": 1,
+  "planned": 6,
+  "source_commit": "58b309119dab4596d43f78d687e120b8d0a473c8",
+  "method": "Image-only all4 originals/contact, supplement to prior20 failed views",
+  "elapsed_seconds": 140,
+  "complete": false,
+  "reviewer": "/root/f26_presets_review",
+  "effective_heading_offsets": [
+    0.0
+  ],
+  "verdict": "100m-XZ trail is green corridor between repetitive enormous cliff walls, no destination identity; night walls lose detail into black. Near entry pale spray/boundaries/day, broad blue-black surface/night; interaction prompt identifies entrance but environment does not communicate it.",
+  "strengths": "Cliff scale, grounded trainer readable",
+  "captured": 4,
+  "artifact_id": "11503535186",
+  "refusals": [
+    {
+      "frame_id": "water__stand_00__day",
+      "requested_xz": [
+        200.0,
+        3740.0
+      ],
+      "ground_height": "0.0",
+      "walkable": false,
+      "combat_running": false
+    },
+    {
+      "frame_id": "water__stand_01__night",
+      "requested_xz": [
+        200.0,
+        3740.0
+      ],
+      "ground_height": "0.0",
+      "walkable": false,
+      "combat_running": false
+    }
+  ],
+  "log_sha256": "E752BEB552E13DBE3C1783228E87F095B24E58542C8F475BC3361FABCD323034",
+  "bar_a": "BLOCK",
+  "run_id": "37664826760",
+  "fixture": "Explicit staged stands; actual travel/floor/camera guards retained, no earned approach or distance400 credit",
+  "criterion": "F39#4 BLOCKED"
+}
