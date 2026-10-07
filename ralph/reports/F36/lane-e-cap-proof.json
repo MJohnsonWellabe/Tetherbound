@@ -1,0 +1,30 @@
+{
+  "criterion": "F36#3",
+  "base": "b3ad69a6ff641d640ec6f7a48ee427c6030867aa",
+  "named_proof": "attended Meshy ledger with task IDs and 30-generation cap",
+  "night": "2026-10-07",
+  "task_ids": [
+    "01a1165e-e5b9-754f-8aaf-ff5f40c68d64"
+  ],
+  "real_submissions": 1,
+  "cap": 30,
+  "ledger": "ralph/reports/R2-F36/meshy-night-ledger.json",
+  "checks": [
+    {
+      "file": "tools/art_pipeline/tests/test_f36_source_contracts.py",
+      "tests": 2,
+      "result": "PASS",
+      "coverage": "grow-only scale; cap refuses task31, reserves before POST, exact task IDs, uncertain submissions retain slot"
+    },
+    {
+      "file": "tools/art_pipeline/test_meshy.py",
+      "tests": 4,
+      "result": "PASS",
+      "coverage": "explicit inspected PNG reference resolver and existing prompt identity guards"
+    }
+  ],
+  "native_engine_run_on_PC": false,
+  "engine_behavior_changed": false,
+  "visual_art_acceptance": "UNPROVEN; all runtime gates remain off",
+  "review": "PENDING"
+}
