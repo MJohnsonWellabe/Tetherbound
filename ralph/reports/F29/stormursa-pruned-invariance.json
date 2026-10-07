@@ -5,6 +5,7 @@
   "primary_vertices": 11486,
   "primary_faces": 27184,
   "primary_exact_positions_and_oriented_faces_unchanged": true,
+  "primary_exact_object_transform_unchanged": true,
   "deleted_debris_vertices": 1088,
   "output_triangles": 27184
 }

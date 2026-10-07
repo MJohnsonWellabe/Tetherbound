@@ -207,7 +207,14 @@ def main() -> None:
         raise SystemExit("--debris-only requires a separate output; preserve the input")
 
     load(model)
-    body = join_all()
+    if debris_only:
+        meshes = [o for o in bpy.data.objects if o.type == "MESH"]
+        if len(meshes) != 1:
+            raise SystemExit("--debris-only requires one already-exported mesh; no join or transform normalization")
+        body = meshes[0]
+        original_transform = tuple(tuple(row) for row in body.matrix_world)
+    else:
+        body = join_all()
 
     # The remesh destroys UVs, so a TEXTURED model in is a textured model
     # ruined. But the guard is on textures, not on UV layers: Meshy's preview
@@ -241,8 +248,12 @@ def main() -> None:
 
     if debris_only:
         load(out)
-        exported_primary = primary_geometry(join_all())
-        if original_primary != exported_primary:
+        exported = [o for o in bpy.data.objects if o.type == "MESH"]
+        if len(exported) != 1:
+            raise SystemExit("--debris-only export changed the mesh count")
+        exported_primary = primary_geometry(exported[0])
+        exported_transform = tuple(tuple(row) for row in exported[0].matrix_world)
+        if original_primary != exported_primary or original_transform != exported_transform:
             raise SystemExit("--debris-only changed primary positions or oriented faces after export")
         report = {
             "mode": "debris_only_no_weld_voxel_smooth_decimation",
@@ -251,6 +262,7 @@ def main() -> None:
             "primary_vertices": len(original_primary[0]),
             "primary_faces": len(original_primary[1]),
             "primary_exact_positions_and_oriented_faces_unchanged": True,
+            "primary_exact_object_transform_unchanged": True,
             "deleted_debris_vertices": debris,
             "output_triangles": after_tris,
         }
