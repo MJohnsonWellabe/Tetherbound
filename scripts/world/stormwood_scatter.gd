@@ -43,7 +43,50 @@ static func seats() -> Array[Dictionary]:
 				continue
 			var z := float(p[1]) if p.size() == 2 else float(p[2])
 			out.append({"kind": kind, "id": str(row.id), "at": Vector2(float(p[0]), z)})
+	_clear_ordinary_trunk_envelopes(out, cfg)
 	return out
+
+
+## Measured installed basal bark (model Y <= 4 m), not crown/leaf bounds.
+## Placement scale and yaw remain exactly the draws made by the old stream.
+static func visible_basal_reach(cfg: Dictionary, layer: String, placement: Dictionary) -> float:
+	var spec: Dictionary = cfg.layers[layer]
+	var physical := float(spec.get("collision_radius", 0.0)) * float(placement.scale)
+	var radii: Dictionary = cfg.get("visible_basal_radius_m", {})
+	return maxf(physical, float(radii.get(str(placement.model), 0.0)) * float(placement.scale))
+
+
+## Preserve giant subjects first, then clear ordinary bark around them and
+## other trunks. This is world-wide planting, with no camera/fixture exclusion.
+## Filtering after generation leaves all original RNG/occupancy claims intact.
+static func _clear_ordinary_trunk_envelopes(out: Dictionary, cfg: Dictionary) -> void:
+	var grid := {}
+	var cell_m := 32.0
+	var gap := float(cfg.get("trunk_surface_gap_m", 0.0))
+	var largest := 0.0
+	for layer: String in ["giant_canopy", "storm_canopy", "crown_canopy", "storm_deadwood"]:
+		var retained: Array = []
+		for placement: Dictionary in out.get(layer, []):
+			var point: Vector3 = placement.position
+			var at := Vector2(point.x, point.z)
+			var reach := visible_basal_reach(cfg, layer, placement)
+			var cell := Vector2i(floori(at.x / cell_m), floori(at.y / cell_m))
+			var span := ceili((reach + largest + gap) / cell_m)
+			var crowded := false
+			if layer != "giant_canopy":
+				for dz in range(-span, span + 1):
+					for dx in range(-span, span + 1):
+						for neighbour: Array in grid.get(cell + Vector2i(dx, dz), []):
+							if at.distance_to(neighbour[0] as Vector2) < reach + float(neighbour[1]) + gap:
+								crowded = true
+			if crowded:
+				continue
+			retained.append(placement)
+			if not grid.has(cell):
+				grid[cell] = []
+			(grid[cell] as Array).append([at, reach])
+			largest = maxf(largest, reach)
+		out[layer] = retained
 
 static func seat_fingerprint_text() -> String:
 	var lines := PackedStringArray()
@@ -315,4 +358,69 @@ static func _add(out: Dictionary,cfg: Dictionary,field: RefCounted,world: Dictio
 	occupied[key]=true
 	var spec: Dictionary = cfg.layers[layer]
 	var models: Array = spec.models
-	out[layer].append({"model":models[rng.randi_range(0,models.size()-1)],"position":Vector3(at.x,h,at.y),"yaw":rng.randf_range(0,TAU),"scale":rng.randf_range(float(spec.scale_min),float(spec.scale_max))})
+	var placement := {"model":models[rng.randi_range(0,models.size()-1)],"position":Vector3(at.x,h,at.y),"yaw":rng.randf_range(0,TAU),"scale":rng.randf_range(float(spec.scale_min),float(spec.scale_max))}
+	# Reject only after ALL old draws and the occupancy claim. Freeing a cell
+	# here would admit a later tree and shift its road's random stream.
+	if is_tree and not _visible_envelope_clear(cfg, world, layer, at, placement):
+		return
+	out[layer].append(placement)
+
+
+static func _visible_envelope_clear(cfg: Dictionary, world: Dictionary, layer: String,
+		at: Vector2, placement: Dictionary) -> bool:
+	var reach := visible_basal_reach(cfg, layer, placement)
+	for structure: Dictionary in cfg.get("structure_footprints", []):
+		if at.distance_to(Vector2(float(structure.at[0]), float(structure.at[1]))) \
+				< float(structure.get("tree_clear_radius_m", 18.0)) + reach:
+			return false
+	for sightline: Dictionary in world.get("landmark_sightlines", []):
+		var a := Vector2(float(sightline.from[0]), float(sightline.from[1]))
+		var b := Vector2(float(sightline.to[0]), float(sightline.to[1]))
+		if Geometry2D.get_closest_point_to_segment(at, a, b).distance_to(at) < float(sightline.clear_radius_m) + reach:
+			return false
+	for landmark: Dictionary in world.landmarks:
+		var p: Array = landmark.position
+		var radius := 36.0 if str(landmark.category) in ["camp", "settlement", "stronghold"] else 13.0
+		if at.distance_to(Vector2(float(p[0]), float(p[2]))) < radius + reach:
+			return false
+	var extra := maxf(0.0, reach - max_collider_reach(cfg))
+	var clearings: Dictionary = cfg.get("encounter_clearings", {})
+	for site: Dictionary in clearings.get("sites", []):
+		if at.distance_to(Vector2(float(site.at[0]), float(site.at[1]))) < float(clearings.collider_clear_radius_m) + extra:
+			return false
+	var seat_cell := Vector2i(floori(at.x / SEAT_CELL_M), floori(at.y / SEAT_CELL_M))
+	var surface: Dictionary = (cfg.get("seat_clearings", {}) as Dictionary).get("collider_surface_m", {})
+	var largest_clear := 0.0
+	for value: Variant in surface.values():
+		largest_clear = maxf(largest_clear, float(value))
+	var span := ceili((reach + largest_clear) / SEAT_CELL_M)
+	var seat_grid: Dictionary = cfg.get("seat_grid", {})
+	for dz in range(-span, span + 1):
+		for dx in range(-span, span + 1):
+			for seat: Array in seat_grid.get(seat_cell + Vector2i(dx, dz), []):
+				if at.distance_to(seat[0] as Vector2) < float(seat[1]) + reach:
+					return false
+	for pocket: Dictionary in cfg.get("pocket_clearings", []):
+		if at.distance_to(Vector2(float(pocket.at[0]), float(pocket.at[1]))) < float(cfg.pocket_clear_radius_m) + extra:
+			return false
+	var approach: Dictionary = cfg.get("pocket_approach", {})
+	if not approach.is_empty():
+		var slope := tan(deg_to_rad(float(approach.half_angle_deg)))
+		for mouth: Dictionary in cfg.get("pocket_mouths", []):
+			var local: Vector2 = at - (mouth.mouth as Vector2)
+			var ahead := local.dot(mouth.forward as Vector2)
+			if ahead >= -reach - 1.0 and ahead <= float(approach.length_m) + reach \
+					and absf(local.cross(mouth.forward as Vector2)) < float(approach.mouth_half_width_m) \
+					+ maxf(ahead, 0.0) * slope + reach * sqrt(1.0 + slope * slope):
+				return false
+	for junction: Dictionary in cfg.get("spur_junctions", []):
+		if at.distance_to(junction.at as Vector2) < float((cfg.spur_junction_clear as Dictionary).get("tree_radius_m", 0.0)) + reach:
+			return false
+	for route: Dictionary in world.routes:
+		var points: Array = route.points
+		for i in range(1, points.size()):
+			var a := Vector2(float(points[i - 1][0]), float(points[i - 1][1]))
+			var b := Vector2(float(points[i][0]), float(points[i][1]))
+			if Geometry2D.get_closest_point_to_segment(at, a, b).distance_to(at) < float(cfg.route_half_width) + reach:
+				return false
+	return true

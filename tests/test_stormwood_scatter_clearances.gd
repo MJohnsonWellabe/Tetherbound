@@ -43,9 +43,9 @@ func test_no_baked_collider_or_ground_cover_crowds_an_authored_seat() -> void:
 	var config := SCATTER.config()
 	var clearings: Dictionary = config.seat_clearings
 	var layers := _placements()
-	# Colliders and ground cover bucketed on a 16 m grid; every clearance is
-	# well under one cell, so a 3 x 3 lookup is exhaustive.
+	# Include measured visible basal bark and widen the lookup for giants.
 	var grid := {}
+	var largest := 0.0
 	for layer: String in layers:
 		var spec: Dictionary = config.layers[layer]
 		var collides := bool(spec.get("collides", false))
@@ -55,7 +55,8 @@ func test_no_baked_collider_or_ground_cover_crowds_an_authored_seat() -> void:
 			var cell := Vector2i(floori(at.x / 16.0), floori(at.y / 16.0))
 			if not grid.has(cell):
 				grid[cell] = []
-			var reach := float(spec.collision_radius) * float(entry.placement.scale) if collides else 0.0
+			var reach := SCATTER.visible_basal_reach(config,layer,entry.placement) if collides else 0.0
+			largest = maxf(largest,reach)
 			(grid[cell] as Array).append([at, collides, reach, layer])
 	var failures := 0
 	for seat: Dictionary in SCATTER.seats():
@@ -63,8 +64,9 @@ func test_no_baked_collider_or_ground_cover_crowds_an_authored_seat() -> void:
 		var cell := Vector2i(floori(at.x / 16.0), floori(at.y / 16.0))
 		var surface := INF
 		var cover := INF
-		for dz in range(-1, 2):
-			for dx in range(-1, 2):
+		var span := ceili((largest + float(clearings.collider_surface_m[seat.kind])) / 16.0)
+		for dz in range(-span, span + 1):
+			for dx in range(-span, span + 1):
 				for row: Array in grid.get(cell + Vector2i(dx, dz), []):
 					var d := at.distance_to(row[0] as Vector2)
 					if bool(row[1]):
@@ -97,7 +99,8 @@ func test_no_baked_tree_stands_in_a_landmark_sightline() -> void:
 			for entry: Dictionary in layers.get(layer, []):
 				var point: Vector3 = entry.placement.position
 				var at := Vector2(point.x, point.z)
-				if Geometry2D.get_closest_point_to_segment(at, a, b).distance_to(at) < float(sightline.clear_radius_m):
+				if Geometry2D.get_closest_point_to_segment(at, a, b).distance_to(at) \
+						< float(sightline.clear_radius_m) + SCATTER.visible_basal_reach(SCATTER.config(),layer,entry.placement):
 					inside += 1
 		assert_eq(inside, 0, "%s: baked trees inside the sightline" % sightline.id)
 	assert_true(ids.has("dynamo_west_to_stormheart"), "dynamo_west_approach keeps the Dynamo tower in view")

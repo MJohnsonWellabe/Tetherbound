@@ -44,7 +44,7 @@ func _nearest_baked_collider(at: Vector2, reach: float) -> float:
 			continue
 		for entry: Dictionary in layers[layer]:
 			var point: Vector3 = entry.placement.position
-			nearest = minf(nearest, at.distance_to(Vector2(point.x, point.z)) - float(spec.collision_radius) * float(entry.placement.scale))
+			nearest = minf(nearest, at.distance_to(Vector2(point.x, point.z)) - SCATTER.visible_basal_reach(config,layer,entry.placement))
 	return nearest
 
 
