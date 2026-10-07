@@ -25,6 +25,7 @@ var resumed_boundary := ""
 var segmented := false
 var meadows_piece_prefix := false
 var compatibility_paths: Array[String] = []
+var observe_next_goal := false
 
 func run(owner: SceneTree) -> void:
 	driver = owner
@@ -32,6 +33,7 @@ func run(owner: SceneTree) -> void:
 	game = driver.root.get_node("Game")
 	# Legacy checkpoint labels embed the old order. Never accept them silently.
 	for arg: String in OS.get_cmdline_user_args():
+		if arg == "--observe-next-goal": observe_next_goal = true
 		if arg.begins_with("--resume-from=") or arg.begins_with("--stop-at=") \
 				or arg.begins_with("--checkpoint-dir=") or arg == "--dry-run-water-fixture" or arg == "--m4-finale":
 			_fail("F49 refuses legacy resume/setup options; use --legacy-order-diagnostic for isolated debugging")
@@ -138,6 +140,7 @@ func run(owner: SceneTree) -> void:
 		if not await disk.reload_boundary(resumed_boundary, travel):
 			_failures(disk.failures)
 			return
+		if observe_next_goal: travel.observe_next_goal(resumed_boundary, "after_import_load")
 		driver.live = {"world": driver.current_scene, "game": game,
 			"player": driver.current_scene.get_node_or_null("Player"),
 			"rig": driver.current_scene.get_node_or_null("CameraRig")}
@@ -161,6 +164,7 @@ func run(owner: SceneTree) -> void:
 			_failures(travel.failures)
 			return
 		visited.append("tidewake")
+		if observe_next_goal: travel.observe_next_goal("tidewake", "after_portal_arrival")
 		driver.live["world"] = driver.current_scene
 		var tidewake_party_uids := _dock_party_uids()
 		if tidewake_party_uids.size() != 5:
@@ -184,6 +188,7 @@ func run(owner: SceneTree) -> void:
 			_failures(travel.failures)
 			return
 		visited.append("cloudreach")
+		if observe_next_goal: travel.observe_next_goal("cloudreach", "after_portal_arrival")
 		if not driver._accepted(await CLOUD.new().run(driver, driver.current_scene, game), "ok"): return
 		if not await _boundary("cloudreach_settled"): return
 	if from < 3:
@@ -191,6 +196,7 @@ func run(owner: SceneTree) -> void:
 			_failures(travel.failures)
 			return
 		visited.append("stormwood")
+		if observe_next_goal: travel.observe_next_goal("stormwood", "after_portal_arrival")
 		for helper: GDScript in [driver.STORMWOOD, driver.CROWN, driver.ROOTGATE, driver.DYNAMO, driver.MARROW]:
 			var segment: RefCounted = driver.STORMWOOD.Segment.new() if helper == driver.STORMWOOD else helper.new()
 			if not driver._accepted(await segment.run(driver, driver.current_scene, game), "passed"): return
@@ -203,6 +209,7 @@ func run(owner: SceneTree) -> void:
 		if not await travel.home_key() or not await travel.hang_relic("stormwood"):
 			_failures(travel.failures)
 			return
+		if observe_next_goal: travel.observe_next_goal("homecoming", "after_home_arrival_and_relic")
 		var grandpa: Node3D
 		for node: Node in driver.current_scene.find_children("*", "", true, false):
 			if node.has_method("interaction_offer") and node.get_parent().name == "Grandpa":
@@ -227,6 +234,7 @@ func run(owner: SceneTree) -> void:
 	if not await disk.reload_completed(travel):
 		_failures(disk.failures)
 		return
+	if observe_next_goal: travel.observe_next_goal("completed_world", "after_completed_reload")
 	driver.reached = "completed_world_continuation"
 	driver.campaign_complete = not segmented
 	if segmented: _segment_result("completed_world", true)
@@ -235,12 +243,15 @@ func run(owner: SceneTree) -> void:
 
 func _boundary(label: String, reload_disk: bool = true) -> bool:
 	driver.reached = label
+	if observe_next_goal: travel.observe_next_goal(label, "before_export")
 	if not disk.export_boundary(label):
 		_failures(disk.failures)
 		return false
+	if observe_next_goal: travel.observe_next_goal(label, "after_export")
 	if reload_disk and not await disk.reload_boundary(label, travel):
 		_failures(disk.failures)
 		return false
+	if observe_next_goal and reload_disk: travel.observe_next_goal(label, "after_boundary_reload")
 	if label == "tidewake_settled" and not _dock_saved():
 		_fail("F49 Tidewake segment lost its saved conclusion on production reload")
 		return false

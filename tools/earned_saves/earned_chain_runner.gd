@@ -78,6 +78,7 @@ var party_before: Array = []
 var disclosures: Array[String] = []
 var legacy_order_diagnostic := false
 var functional_offload := false
+var observe_next_goal := false
 var handoff_from := ""
 var compatibility_paths: Array[String] = []
 var disk: RefCounted
@@ -101,6 +102,10 @@ func _run() -> void:
 			legacy_order_diagnostic = true
 		elif arg == "--functional-offload":
 			functional_offload = true
+		elif arg == "--observe-next-goal":
+			observe_next_goal = true
+		elif arg == "--lesson-controller-witness":
+			pass  # The existing F20 reader consumes this opt-in when a real lesson opens.
 		elif arg.begins_with("--handoff-from="):
 			if not handoff_from.is_empty() or arg == "--handoff-from=":
 				failures.append("Supply one nonempty --handoff-from")
@@ -188,10 +193,14 @@ func _run() -> void:
 	print("EARNED CHAIN segment=%s save_dir=%s seed=%s" % [segment, save_dir, OS.get_environment("TB_WORLD_SEED")])
 	match segment:
 		"opening_team":
+			if observe_next_goal: TRAVEL.new(self, game).observe_next_goal(segment, "before_fresh_title")
 			await _opening_team()
 		_:
 			if await _load_previous():
+				if observe_next_goal: TRAVEL.new(self, game).observe_next_goal(segment, "after_load_before_piece")
 				await _resumed_segment()
+	if observe_next_goal:
+		TRAVEL.new(self, game).observe_next_goal(segment, "after_piece" if failures.is_empty() else "piece_failed")
 	if failures.is_empty() and not legacy_order_diagnostic:
 		var actual_uids: Array[String] = []
 		var distinct := {}
@@ -451,8 +460,12 @@ func _finish() -> void:
 		"helper_receipts": helper_receipts,
 	}
 	if not legacy_order_diagnostic:
+		if observe_next_goal and failures.is_empty() and disk != null:
+			TRAVEL.new(self, game).observe_next_goal(segment, "before_export")
 		if failures.is_empty() and disk != null and not disk.export_boundary(segment, receipt):
 			failures.append_array(disk.failures)
+		if observe_next_goal and failures.is_empty() and disk != null:
+			TRAVEL.new(self, game).observe_next_goal(segment, "after_export")
 		receipt.passed = failures.is_empty()
 		# The immutable handoff owns receipt.json. Failed runs only print their
 		# evidence; they must never create a success-shaped resumable boundary.

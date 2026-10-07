@@ -17,7 +17,7 @@ var continuation_content_entered := false
 ## Optional observations on the existing proof; no camera or gameplay writes.
 ## Hosted screenshots stay in the run artifact for independent visual review.
 func capture(tree: SceneTree, label: String, frame_ready: Callable = Callable()) -> bool:
-	if not OS.get_cmdline_user_args().has("--capture-ending"): return true
+	if not OS.get_cmdline_user_args().has("--capture-ending") and not OS.get_cmdline_user_args().has("--capture-order-ui"): return true
 	if not check(DisplayServer.get_name() != "headless" and RenderingServer.render_loop_enabled,
 		"ending capture requires an actual drawing display"): return false
 	var drawn: Array[bool] = [false]
@@ -50,6 +50,76 @@ func check(value: bool, message: String) -> bool:
 	print("F20 ", "PASS " if value else "FAIL ", message)
 	if not value: failures.append(message)
 	return value
+
+## F19 presentation observations reuse this area's disclosed fixture and real
+## Home Key return. No realm/pose/unlock changes are made after fixture setup.
+func order_ui(tree: SceneTree, game: Node) -> bool:
+	if not check(OS.get_cmdline_user_args().has("--capture-order-ui"), "order UI proof requires its actual frame captures"): return false
+	if not await return_home(tree, game): return false
+	var travel := TRAVEL.new(tree, game)
+	var expected: Array[String] = ["meadows", "water", "cloudreach", "stormwood"]
+	var names: Array[String] = ["The Meadows", "Tidewake", "Cloudreach Cliffs", "The Stormwood"]
+	var map_names: Array[String] = ["Meadows", "Tidewake", "Cloudreach Cliffs", "The Stormwood"]
+	await travel.tap("inventory")
+	var menu: Node = game.call("menu")
+	if not check(menu != null and menu.call("is_open") and INPUT_OWNER.current(tree) == menu,
+		"ordinary inventory input opens the production owned menu"): return false
+	for tab_id: String in ["map", "quest_log"]:
+		for step in 12:
+			if menu.call("current_tab_id") == tab_id: break
+			await travel.tap("menu_tab_right")
+		if not check(menu.call("current_tab_id") == tab_id, "ordinary menu navigation reaches " + tab_id): return false
+		var body: Node = menu.get("_bodies")[int(menu.get("_index"))]
+		if tab_id == "map":
+			var available: Array = body.call("_available_realms")
+			var row := body.get("_realm_row") as Control
+			var labels: Array[String] = []
+			if row != null:
+				for button: Node in row.get_children():
+					if button is Button: labels.append((button as Button).text)
+			if not check(available == expected and row != null and row.is_visible_in_tree() and labels == map_names,
+				"actual available map destinations and visible selector labels follow all four chapters"): return false
+			print("F19 ORDER MAP " + JSON.stringify({"realms":available,"visible_labels":labels,"fixture_unlocks":true}))
+		else:
+			var heading := "Chapter 1 · The Meadows"
+			var visible_heading := false
+			for label: Node in body.find_children("*", "Label", true, false):
+				if (label as Label).is_visible_in_tree() and (label as Label).text == heading: visible_heading = true
+			if not check(body.get("_log").call("chapter_order") == expected and visible_heading,
+				"production journal retains the chapter order and displays the current Meadows chapter heading"): return false
+			print("F19 ORDER JOURNAL " + JSON.stringify({"order":expected,"visible_heading":heading,"other_chapter_headings_captured":false}))
+		if not await capture(tree, "order-" + tab_id): return false
+	await travel.tap("menu_cancel")
+	if not check(not menu.call("is_open") and INPUT_OWNER.current(tree) == null, "menu cancel returns input before signed arch approaches"): return false
+	var ids: Array[String] = ["home", "tidewake", "cloudreach", "stormwood"]
+	var levels: Array[int] = [3, 20, 31, 42]
+	for index in ids.size():
+		var arch: Node3D
+		for candidate: Node in tree.get_nodes_in_group("portal_arches"):
+			if candidate.get("arch_id") == ids[index]: arch = candidate as Node3D
+		if not check(arch != null, "production Hall mounts signed live arch " + ids[index]): return false
+		var prompt := arch.get_node("Interactable") as Node3D
+		var player := tree.current_scene.get_node("Player") as CharacterBody3D
+		var rig := tree.current_scene.get_node("CameraRig") as Node3D
+		var recoveries_before := int(player.get("_unstick_count"))
+		var nav := preload("res://tests/helpers/stick_navigator.gd").new(tree, player, rig, Callable(travel, "_stick"))
+		var approach := arch.get_parent().get_node_or_null("Approach") as Node3D
+		var headings: Array[Vector3] = []
+		if approach != null: headings.append(approach.global_position)
+		var arrived: bool = await nav.walk_to_guided(prompt.global_position, 2400, 1.3, headings)
+		travel.call("_stick", 0.0, 0.0)
+		for frame in 8: await tree.physics_frame
+		var arbiter: Node = tree.current_scene.get_node("InteractionArbiter")
+		var offer: Dictionary = arbiter.call("winner")
+		var text := str(prompt.get("label"))
+		if not check(arrived and player.is_on_floor() and int(player.get("_unstick_count")) == recoveries_before \
+			and INPUT_OWNER.current(tree) == null and arbiter.call("winning_provider") == prompt \
+			and str(offer.get("label", "")) == text and text.contains(names[index]) and text.contains("Recommended Lv %d" % levels[index]),
+			"actual grounded winner shows its chapter name and recommended level: " + ids[index]): return false
+		print("F19 ORDER SIGN " + JSON.stringify({"id":ids[index],"label":text,"recommended_level":levels[index],
+			"grounded":player.is_on_floor(),"unstick_unchanged":true,"entered_or_unlocked":false}))
+		if not await capture(tree, "order-sign-" + ids[index]): return false
+	return check(travel.failures.is_empty(), "order UI observations retain the real navigation and Home Key guards")
 
 func fixture(game: Node, label: String) -> bool:
 	game.call("reset_for_new_game")

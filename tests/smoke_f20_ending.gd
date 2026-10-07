@@ -15,6 +15,17 @@ func _run() -> void:
 	_credits_only = OS.get_cmdline_user_args().has("--through-credits")
 	var game := root.get_node("Game")
 	if not proof.fixture(game, "Solo"): finish(); return
+	if OS.get_cmdline_user_args().has("--order-ui-only"):
+		if change_scene_to_file("res://scenes/world/meadows_playground.tscn") != OK:
+			proof.check(false, "order UI fixture loads the production Meadows scene")
+		else:
+			_completed = await proof.order_ui(self, game)
+		for failure: String in proof.failures: print("F19 ORDER UI FAIL ", failure)
+		print("F19 ORDER UI RESULT " + JSON.stringify({"passed":_completed and proof.failures.is_empty(),
+			"setup":"existing disclosed post-finale fixture with personal portal unlocks",
+			"earned_campaign":false,"ending_criterion_proof":false,"checks":proof.checks,"failures":proof.failures}))
+		quit(0 if _completed and proof.failures.is_empty() else 1)
+		return
 	game.set("current_realm", "stormwood")
 	game.local.set("realm", "stormwood")
 	if change_scene_to_file("res://scenes/world/stormwood.tscn") != OK:
