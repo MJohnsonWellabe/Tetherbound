@@ -67,6 +67,17 @@ name: CI
 # unit-test file set still run on every push. What changed is which of them
 # share a checkout.
 
+# CI-SPEED, 2026-10-07 (owner: a full-ci PR run must finish, ci-gate
+# included, in under 30 minutes from push, queue time counted). Measured on
+# PR #571 run 37615388024: 64 jobs, 514 runner-minutes, 31.7 min, most of it
+# queueing for the account's ~20 runners. Now 13 jobs (~250 runner-minutes)
+# after `changes`: 8 net shards, 4 two-lane `verify-suite` jobs
+# (tools/ci/run_suite.py, groups in tools/ci/suites/) and export, each about
+# 20 minutes, so they all start at once. Owner-authorized trims run on the
+# 8-hourly schedule and on workflow_dispatch instead of on a PR: see each
+# `NIGHTLY ONLY` note below, `### nightly` steps in tools/ci/suites/ and
+# NIGHTLY_ONLY in tools/ci/net_shards.py.
+
 on:
   push:
     # `ralph/**` dropped 2026-09-05 (owner: "the Ralph process isn't even
@@ -186,6 +197,9 @@ jobs:
       # bound selects every job; schedule, dispatch, an empty diff or a missing
       # base select every job; every suite still runs on the 8-hourly tier.
       jobs: ${{ steps.filter.outputs.jobs }}
+      # CI-SPEED: the verify-suite matrix -- the suites that hold a group this
+      # tier and selection run (tools/ci/run_suite.py --list), as a JSON list.
+      suites: ${{ steps.suites.outputs.suites }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -245,6 +259,9 @@ jobs:
 
       - name: Verify the net-shard plan (exact one-time cover, budget, matrix)
         run: python3 tests/test_ci_net_shards.py
+
+      - name: Verify the suite plan (exact one-time cover, matrix, tiers)
+        run: python3 tests/test_ci_suites.py
 
       - name: Decide whether anything but documentation changed
         id: filter
@@ -412,163 +429,44 @@ jobs:
             echo "full=false" >> "$GITHUB_OUTPUT"
           fi
 
-  # A dedicated, fast, unmissable check for exactly one regression class:
-  # `data/scatter/playground` going stale against `vegetation.json` /
-  # `terrain_playground.json` / a band's `vegetation.json` without a re-bake.
-  # `test_playground_bake_is_committed_and_fresh` (below in
-  # `verify-unit-tests`) already asserts this, but that is one file among
-  # ~40 in one shard of four -- the exact shape that let this recur:
-  # `main` @ 852fe366 sat CI-red on this single assertion in
-  # `verify-unit-tests (4)` while every commit after it was documentation-only
-  # and skipped the code jobs entirely, so the workflow badge read green and
-  # nobody opened a shard log to find the one red line. A config edit
-  # (`data/config/vegetation.json` or `data/config/grass_field.json`) landing
-  # without its re-bake reintroduces the ~5-8 minute live-recompute stall
-  # `archive/reports/OWNER-0902-LOAD-TIME.md` root-caused from an owner
-  # playtest complaint, on every single New Game / load.
-  #
-  # This job runs the SAME assertion `scatter_bake.gd::is_fresh()` backs --
-  # no new check, no new fingerprint logic, nothing that can drift from what
-  # `verify-unit-tests` already covers -- but as its own named job, so a
-  # stale bake shows up as one red job in the run summary instead of a line
-  # inside a shard's log, and finishes in about as long as the import cache
-  # takes to restore, not gated behind the other ~40 files in its shard.
-  #
-  # Does NOT catch: a config edit that lands together with a correct re-bake
-  # but describes the wrong intent (this only checks the fingerprint matches,
-  # not that the bake is "good"). `data/terrain/playground` has its own,
-  # separate equivalent check now: folded into this same job (terrain steps below)
-  # (HARNESS-HYGIENE-0903). Does NOT re-bake or auto-commit anything --
-  # failing here means a human or a lane runs `godot --headless --path .
-  # --script scripts/world/bake_playground_scatter.gd` and commits the
-  # result, same as today.
-  # QUEUE ORDER (CI-SEGMENTS, 2026-10-05). A full run is throughput-bound
-  # (~20 runners for ~60 jobs), and GitHub hands out runners in the order jobs
-  # are QUEUED -- jobs queued together go in no fixed order, whatever their
-  # place in this file. So the queue is drained longest-first by `needs`:
-  #   1. needs only `changes`: the ~15-17-min jobs (gate-evidence-shard,
-  #      regions-relay, veg-corridor) and the net shards;
-  #   2. needs queue-after-longest: the 10-14-min jobs;
-  #   3. needs queue-after-long: everything shorter.
-  # These two jobs do nothing and take seconds; they only make each later
-  # tier queue after the one before. Both are in ci-gate's `needs`, so a
-  # failure here (which would skip a whole tier) cannot pass the gate.
-  queue-after-longest:
-    runs-on: ubuntu-latest
-    timeout-minutes: 2
-    needs: changes
-    steps:
-      - run: echo "tier 2 (10-14 min jobs) queues now"
-
-  queue-after-long:
-    runs-on: ubuntu-latest
-    timeout-minutes: 2
-    needs: queue-after-longest
-    steps:
-      - run: echo "tier 3 (shorter jobs) queues now"
-
-  verify-bake-freshness:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs:
-      - changes
-      - queue-after-long
-    if: needs.changes.outputs.code == 'true'
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          filter: blob:none
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /*
-            !/ralph/
-            !/docs/
-            !/shots/
-            !/assets_raw/
-            !/archive/
-      - uses: ./.github/actions/setup-godot
-      - name: Check the playground scatter bake is fresh
-        run: |
-          godot --headless --path . --script tests/run_tests.gd \
-            -- --only=test_scatter_perf_budget.gd::test_playground_bake_is_committed_and_fresh
-      - name: Check the playground terrain bake is fresh
-        run: |
-          godot --headless --path . --script tests/run_tests.gd \
-            -- --only=test_terrain_bake_freshness.gd::test_playground_terrain_bake_is_committed_and_fresh
-      - name: Check initialized shared terrain mipmaps
+      - name: Plan the verify-suite jobs
+        id: suites
+        env:
+          CODE: ${{ steps.filter.outputs.code }}
+          FULL: ${{ steps.tier.outputs.full }}
+          JOBS: ${{ steps.filter.outputs.jobs }}
         run: |
           set -euo pipefail
-          godot --headless --path . --script tools/probe_terrain_texture_mipmaps.gd 2>&1 | tee /tmp/terrain-mipmaps.log
-          if grep -qE 'SCRIPT ERROR|Parse Error|ERROR:' /tmp/terrain-mipmaps.log; then
-            exit 1
-          fi
+          tier=none
+          if [ "$FULL" = true ]; then tier=full; elif [ "$CODE" = true ]; then tier=fast; fi
+          python3 tools/ci/run_suite.py --list --tier "$tier" --jobs "$JOBS"
 
-  # HARNESS-HYGIENE-0903 (terrain steps now folded into verify-bake-freshness
-  # above, 2026-09-26, one runner instead of two). `data/terrain/playground`'s
-  # own equivalent of the scatter check -- the gap the scatter job's own comment names ("anything about
-  # data/terrain/playground, which has no equivalent freshness check at
-  # all"). `terrain_playground.json` was edited (doc-path text in comments)
-  # during the 2026-09-02 repository reset with no re-bake, and nothing on
-  # disk or in CI could have caught it. Same shape as the job above: one
-  # dedicated, fast, named job so a stale terrain bake shows up as one red
-  # line in the run summary instead of buried in a shard's log.
-  #
-  # Does NOT catch a config edit that lands together with a correct re-bake
-  # but describes the wrong intent. Does NOT re-bake or auto-commit anything
-  # -- failing here means a human or a lane runs `godot --headless --path .
-  # --script scripts/world/build_playground_terrain.gd` and commits the
-  # result (region files AND manifest.json).
-  verify-unit-tests:
+  # CI-SPEED (owner, 2026-10-07): ONE matrix job for every single-process
+  # verification job that used to hold its own runner -- the unit-test shards,
+  # verify-harvest, -core-verb-shard, -catching, -gate-a-ui-build-shard,
+  # -combat-shard, -regions-shard (world, stormwood, tidewake),
+  # -regions-relay (meadows), -owner-regressions-shard (catching, controls),
+  # -gate-evidence-shard, -gate-evidence-finale (both segments), -gate-b-core
+  # and -segment-handoffs. Each is now a GROUP file under tools/ci/suites/
+  # holding that job's steps verbatim; tools/ci/run_suite.py plans the groups
+  # longest first onto 4 suites x 2 lanes and runs a suite's two lanes at once,
+  # each lane in its own XDG_DATA_HOME, RUNNER_TEMP and network namespace
+  # (what a separate runner used to give each job). Before: 20 jobs, ~180
+  # runner-minutes, ~45 of them checkout/setup, competing for ~17 free runners
+  # with the net shards (PR #573 run 37627797865). The same steps, retries
+  # and assertions run; the fast tier still runs the unit-test groups.
+  verify-suite:
     runs-on: ubuntu-latest
-    # FOUR shards, 2026-09-01 (down from ten). This shard's file list already
-    # excludes test_veg_corridor.gd, test_scatter_rules.gd and test_harvest.gd
-    # -- the three files whose per-file cost (not distribution) was the reason
-    # this went 2 -> 4 -> 5 -> 6 -> 10 shards through 2026-08-25/26 (see the
-    # git history of this comment for that saga; kept out of this file now to
-    # stop it growing forever, not because it stopped being true). Those three
-    # each have their own dedicated job below with its own generous ceiling.
-    #
-    # With them gone, this shard's remaining cost is small: measured
-    # 2026-09-01 on real run 33451229763, ten shards summed to 1,084s of "Run
-    # tests" time, ~108s/shard average, nowhere near the 12-minute ceiling.
-    # Ten-way splitting was solving a problem that moved to the three
-    # dedicated jobs weeks ago. Four shards keeps real parallelism (so one
-    # slow file cannot silently dominate) with ~2.5x headroom per shard
-    # instead of paying ten checkouts, ten Godot installs and ten import
-    # passes for ~108s of test execution each -- exactly the job-count-vs-
-    # queue-contention trade this whole rework is making (see this file's
-    # header). If a single file is later found to dominate one of these four
-    # shards, the fix is that file's own job on the test_veg_corridor.gd
-    # pattern below, NOT a return to ten shards.
     strategy:
       fail-fast: false
       matrix:
-        # Two shards (2026-09-25): four measured 3m02-4m29 each including ~2m
-        # setup; two keep ~5m of tests per shard under the 12-minute ceiling
-        # and free two runner slots for the split verify jobs.
-        # Three (2026-10-04): shard 2 of two had grown to 10-12 min against
-        # the 12-minute ceiling and was cancelled by it twice (CI 37183813895,
-        # 37187293215) with every test passing; shard 1 took ~6 min.
-        shard: [1, 2, 3]
-    timeout-minutes: 12
-    needs:
-      - changes
-      - queue-after-long
-    if: needs.changes.outputs.code == 'true'
-
+        suite: ${{ fromJSON(needs.changes.outputs.suites || '[]') }}
+    timeout-minutes: 45
+    needs: changes
+    if: needs.changes.outputs.suites != '' && needs.changes.outputs.suites != '[]'
     steps:
       - uses: actions/checkout@v4
         with:
-          # Fetch commits and trees but no blobs, then materialise only the
-          # paths a verification job actually reads. `changes` already proved
-          # blob:none works here. The four excluded trees are 1.20 GB of the
-          # 2.08 GB tracked tip and no job reads any of them: this file's own
-          # no-build filter below already classes ralph/ and docs/ as paths
-          # that do not trigger a build, shots/ and ralph/reports are capture
-          # OUTPUT, and assets_raw/ is listed in .gitignore as material that
-          # should never have been committed. Measured: 2.1 GB -> 895 MB of
-          # working tree, importing clean and passing smoke + unit shard.
           filter: blob:none
           sparse-checkout-cone-mode: false
           sparse-checkout: |
@@ -579,10 +477,11 @@ jobs:
             !/assets_raw/
             !/archive/
 
-      # The named-location ledger test below reads eight small, immutable
-      # acceptance receipts under ralph/reports. Keep the large evidence tree
-      # sparse, but materialise the exact blobs the existing assertions read
-      # from this commit so CI tests the same evidence as a full checkout.
+      # The named-location ledger test (unit shards) reads eight small,
+      # immutable acceptance receipts under ralph/reports. Keep the large
+      # evidence tree sparse, but materialise the exact blobs the existing
+      # assertions read from this commit so CI tests the same evidence as a
+      # full checkout.
       - name: Materialize committed Meadows evidence fixtures
         shell: bash
         run: |
@@ -600,92 +499,28 @@ jobs:
           ralph/reports/MEADOWS-0912/final-warrens-62-desktop-01/manifest.json
           ralph/reports/MEADOWS-0912/final-warrens-62-desktop-01/BLIND_REVIEW.md
           EOF
-
-      - name: Cache Godot editor and export templates
-        id: cache-godot
-        uses: actions/cache@v4
+      - uses: ./.github/actions/setup-godot
+      - name: Run suite ${{ matrix.suite }} (two lanes at once)
+        env:
+          JOBS: ${{ needs.changes.outputs.jobs }}
+          TIER: ${{ needs.changes.outputs.full == 'true' && 'full' || 'fast' }}
+          NIGHTLY: ${{ (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
+          RUN_SUITE_DIR: ${{ runner.temp }}/suite
+        run: |
+          set -uo pipefail
+          nightly=()
+          [ "$NIGHTLY" = true ] && nightly=(--nightly)
+          python3 tools/ci/run_suite.py --suite ${{ matrix.suite }} --tier "$TIER" --jobs "$JOBS" "${nightly[@]}"
+      - name: Retain suite lane receipts and logs
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
+          name: suite-${{ matrix.suite }}-${{ github.run_attempt }}
           path: |
-            ~/godot-bin
-            ~/.local/share/godot/export_templates
-          key: godot-${{ env.GODOT_VERSION }}
-
-      - name: Install Godot
-        if: steps.cache-godot.outputs.cache-hit != 'true'
-        run: |
-          set -euo pipefail
-          BASE="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}"
-          mkdir -p ~/godot-bin
-          curl -sSL -o /tmp/godot.zip "${BASE}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
-          unzip -q /tmp/godot.zip -d /tmp
-          mv "/tmp/Godot_v${GODOT_VERSION}_linux.x86_64" ~/godot-bin/godot
-          chmod +x ~/godot-bin/godot
-
-          curl -sSL -o /tmp/templates.tpz "${BASE}/Godot_v${GODOT_VERSION}_export_templates.tpz"
-          unzip -q /tmp/templates.tpz -d /tmp
-          # Godot looks for the directory named after the version as it reports
-          # it: "4.7.stable", not "4.7-stable".
-          TEMPLATE_DIR=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
-          mkdir -p "$(dirname "$TEMPLATE_DIR")"
-          mv /tmp/templates "$TEMPLATE_DIR"
-
-      - name: Add Godot to PATH
-        run: echo "$HOME/godot-bin" >> "$GITHUB_PATH"
-
-      - name: Cache the import artifacts
-        # .godot/ is the imported form of every texture and scene. Without
-        # this the cold import re-processes the whole asset tree (~a minute)
-        # on every run; with it, only assets the push actually changed are
-        # re-imported. The hash key means an exact match on an unchanged
-        # asset tree, and restore-keys means a near match still starts warm.
-        # Shared across every job in this workflow that needs it — a
-        # concurrent restore from more than one job is safe; a concurrent
-        # save of a key that doesn't exist yet just leaves one winner, which
-        # actions/cache tolerates without failing the step.
-        uses: actions/cache@v4
-        with:
-          path: .godot
-          key: import-${{ env.GODOT_VERSION }}-${{ hashFiles('project.godot', '**/*.import') }}
-          restore-keys: import-${{ env.GODOT_VERSION }}-
-
-      - name: Import project (cold)
-        # The FIRST import on a clean checkout exits non-zero. Terrain3D's
-        # GDExtension registers its classes during that cold scan and Godot
-        # aborts on shutdown afterwards, AFTER the import work has completed.
-        # Verified: the abort happens with the terrain data removed entirely,
-        # and the second pass is clean and instant, so the cache it wrote is
-        # good. Tolerated here rather than hidden — the pass below is the one
-        # that has to be green.
-        run: godot --headless --path . --import || true
-
-      - name: Import project (verify)
-        # The authoritative import check, in one pass rather than two. A
-        # non-zero exit is a real failure on its own (a malformed
-        # project.godot, a crash) -- `pipefail` makes that survive the `tee`.
-        # But Godot's own exit code is not sufficient by itself: a script
-        # that no longer parses or a scene referencing a missing resource
-        # can print SCRIPT ERROR / Parse Error and still exit 0, so the log
-        # text is inspected too. This used to be two full import passes (one
-        # for the exit code, a second identical one purely to capture text
-        # to grep) -- merged 2026-08-15 into the one pass that already has
-        # the output in hand.
-        run: |
-          set -euo pipefail
-          godot --headless --path . --import 2>&1 | tee /tmp/import.log
-          if grep -qiE "SCRIPT ERROR|Parse Error|Failed to load|ERROR: Cannot open" /tmp/import.log; then
-            echo "::error::import produced script or resource errors"
-            exit 1
-          fi
-
-      - name: Run tests
-        # The unit suite itself: several hundred tests, real minutes now, not
-        # the "a few seconds" an earlier version of this comment claimed
-        # (measured 2026-08-15: ~3m25s) — worth its own job now that jobs run
-        # in parallel instead of piggybacking on a smoke-test job "because it's
-        # cheap".
-        run: |
-          godot --headless --path . --script tests/run_tests.gd \
-            -- --shard=${{ matrix.shard }}/3 --skip=test_veg_corridor.gd,test_scatter_rules.gd,test_harvest.gd
+            ${{ runner.temp }}/suite/*/logs
+            ${{ runner.temp }}/suite/*/runner-temp
+          retention-days: 14
+          if-no-files-found: ignore
 
   # test_veg_corridor.gd, alone, in its own job with its own ceiling.
   #
@@ -724,7 +559,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     needs: changes
-    if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-veg-corridor|'))
+    # CI-SPEED (owner, 2026-10-07): NIGHTLY ONLY -- vegetation placement data regression; runs on the 8-hourly schedule and on dispatch, not on a full-ci PR.
+    if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-veg-corridor|'))
 
     steps:
       - uses: actions/checkout@v4
@@ -777,10 +613,9 @@ jobs:
   verify-scatter-rules:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    needs:
-      - changes
-      - queue-after-longest
-    if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-scatter-rules|'))
+    needs: changes
+    # CI-SPEED (owner, 2026-10-07): NIGHTLY ONLY -- vegetation/scatter placement data regression; runs on the 8-hourly schedule and on dispatch, not on a full-ci PR.
+    if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-scatter-rules|'))
 
     steps:
       - uses: actions/checkout@v4
@@ -809,1166 +644,6 @@ jobs:
           godot --headless --path . --script tests/run_tests.gd \
             -- --only=test_scatter_rules.gd
 
-  # THIRD file to outgrow the shards, same cause as the other two: its cost
-  # tracks vegetation density, not test count.
-  #
-  # Measured 2026-08-26 against the 762,058-placement bake: test_harvest.gd is
-  # 22 tests but **684,231 assertions** -- against 977,745 for the whole rest of
-  # the suite. Locally it takes ~10 minutes on its own.
-  #
-  # It killed verify-unit-tests shard 10 twice on ralph/LAND-ALL-2 (run 2528,
-  # both attempts), and the shape is worth recognising because the shard log
-  # does not say "slow": the last line is a passing `test_marking_*` test and
-  # then nothing until `The operation was canceled`, which reads like a hang.
-  #
-  # Deliberately NOT a raised ceiling and NOT more shards. The ceiling was
-  # already raised twice and this file's own note forbids a third. More shards
-  # cannot help either: the marking tests are one indivisible file, and every
-  # extra shard pays the same ~8 minutes of checkout and import before it runs
-  # anything -- on that run, 8 of the 12 minutes were overhead.
-  verify-harvest:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    needs:
-      - changes
-      - queue-after-longest
-    if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-harvest|'))
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          # Fetch commits and trees but no blobs, then materialise only the
-          # paths a verification job actually reads. `changes` already proved
-          # blob:none works here. The four excluded trees are 1.20 GB of the
-          # 2.08 GB tracked tip and no job reads any of them: this file's own
-          # no-build filter below already classes ralph/ and docs/ as paths
-          # that do not trigger a build, shots/ and ralph/reports are capture
-          # OUTPUT, and assets_raw/ is listed in .gitignore as material that
-          # should never have been committed. Measured: 2.1 GB -> 895 MB of
-          # working tree, importing clean and passing smoke + unit shard.
-          filter: blob:none
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /*
-            !/ralph/
-            !/docs/
-            !/shots/
-            !/assets_raw/
-            !/archive/
-      - uses: ./.github/actions/setup-godot
-      # F27 (batch 532): Altar spend and catch-overflow release payout, solo/host
-      # real paths. smoke_f27_wild_defeat_essence joins after the actor_vitals flip.
-      - name: Verify f27_altar_spend
-        if: ${{ !cancelled() }}
-        env: { SMOKE: f27_altar_spend, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify release
-        if: ${{ !cancelled() }}
-        env: { SMOKE: release, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Run the harvest regression checks
-        run: |
-          godot --headless --path . --script tests/run_tests.gd \
-            -- --only=test_harvest.gd
-
-  # BELOW: six jobs that used to each be a `strategy: matrix` fanning one job
-  # PER SMOKE TEST (43 jobs total across the six). Same tests, same retry
-  # counts below, now as sequential STEPS in one job per group instead -- one
-  # checkout and one Godot setup per group instead of one per test. See this
-  # file's header for the measured queueing problem this addresses. Every step
-  # after the first carries `if: ${{ !cancelled() }}` so one test failing does
-  # not skip the rest -- the job's own conclusion is still `failure` if any
-  # step failed, same as `fail-fast: false` gave the old matrix.
-  verify-core-verb-shard:
-    runs-on: ubuntu-latest
-    # Sum of the original seven tests' own run time measured 2026-09-01:
-    # 1,392s (23.2 min), including a flaky-retry run of smoke_traversal.gd
-    # that spent all 3 attempts. ~35 min leaves real margin above that for
-    # checkout/setup plus a worse retry day; smoke_catch_aim_slowdown.gd
-    # added 2026-09-02 is short (one fight, two ~1s measurement windows) and
-    # fits comfortably in that margin.
-    timeout-minutes: 35
-    needs:
-      - changes
-      - queue-after-longest
-    if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-core-verb-shard|'))
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          # Fetch commits and trees but no blobs, then materialise only the
-          # paths a verification job actually reads. `changes` already proved
-          # blob:none works here. The four excluded trees are 1.20 GB of the
-          # 2.08 GB tracked tip and no job reads any of them: this file's own
-          # no-build filter below already classes ralph/ and docs/ as paths
-          # that do not trigger a build, shots/ and ralph/reports are capture
-          # OUTPUT, and assets_raw/ is listed in .gitignore as material that
-          # should never have been committed. Measured: 2.1 GB -> 895 MB of
-          # working tree, importing clean and passing smoke + unit shard.
-          filter: blob:none
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /*
-            !/ralph/
-            !/docs/
-            !/shots/
-            !/assets_raw/
-            !/archive/
-      - uses: ./.github/actions/setup-godot
-      - name: Verify playground
-        if: ${{ !cancelled() }}
-        env: { SMOKE: playground, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify input
-        if: ${{ !cancelled() }}
-        env: { SMOKE: input, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify unstick
-        if: ${{ !cancelled() }}
-        env: { SMOKE: unstick, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify traversal
-        if: ${{ !cancelled() }}
-        env: { SMOKE: traversal, RETRIES: 3 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify audio
-        if: ${{ !cancelled() }}
-        env: { SMOKE: audio, RETRIES: 2 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      # T5-CARE. Cheap (no world build -- it stands up a two-node stand-in
-      # scene, which is all `tab_backpack.gd::_player_node()` reads) and it
-      # guards a defect that shipped under a green suite: berries carry both
-      # `satiety` and `creature_food`, `_read_use()` tests `creature_food`
-      # first, and berries are the only item in the game with a satiety
-      # value -- so the player could not eat from the Satchel at all while
-      # `test_food.gd` passed, because that file calls `eat()` directly.
-      # This one presses the buttons instead. No retries: it touches no
-      # spawning, no pathing and no fight, so a failure here is real.
-      - name: Verify backpack_player_eats
-        if: ${{ !cancelled() }}
-        env: { SMOKE: backpack_player_eats, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-
-  verify-catching:
-    # Split from verify-core-verb-shard (CI wall-clock): identical steps, own runner.
-    runs-on: ubuntu-latest
-    # Sum of the original seven tests' own run time measured 2026-09-01:
-    # 1,392s (23.2 min), including a flaky-retry run of smoke_traversal.gd
-    # that spent all 3 attempts. ~35 min leaves real margin above that for
-    # checkout/setup plus a worse retry day; smoke_catch_aim_slowdown.gd
-    # added 2026-09-02 is short (one fight, two ~1s measurement windows) and
-    # fits comfortably in that margin.
-    timeout-minutes: 35
-    needs:
-      - changes
-      - queue-after-long
-    if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-catching|'))
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          # Fetch commits and trees but no blobs, then materialise only the
-          # paths a verification job actually reads. `changes` already proved
-          # blob:none works here. The four excluded trees are 1.20 GB of the
-          # 2.08 GB tracked tip and no job reads any of them: this file's own
-          # no-build filter below already classes ralph/ and docs/ as paths
-          # that do not trigger a build, shots/ and ralph/reports are capture
-          # OUTPUT, and assets_raw/ is listed in .gitignore as material that
-          # should never have been committed. Measured: 2.1 GB -> 895 MB of
-          # working tree, importing clean and passing smoke + unit shard.
-          filter: blob:none
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /*
-            !/ralph/
-            !/docs/
-            !/shots/
-            !/assets_raw/
-            !/archive/
-      - uses: ./.github/actions/setup-godot
-      - name: Verify catching
-        if: ${{ !cancelled() }}
-        env: { SMOKE: catching, RETRIES: 2 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      # OWNER PLAYTEST 2026-09-02 finding #6: "creatures should move a little
-      # less or in slow motion once you go into catch mode." Proves the target
-      # covers less ground in a fixed window while the aim is open than it
-      # does with the aim closed -- see the test's own header for why a
-      # re-armed CLOSE beat makes the comparison deterministic rather than at
-      # the mercy of whatever beat the AI happened to be in.
-      - name: Verify catch aim slowdown
-        if: ${{ !cancelled() }}
-        env: { SMOKE: catch_aim_slowdown, RETRIES: 2 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      # T1-AUDIO. Boots the real world and asserts on what reached the
-      # mixer: an ambience bed playing, footsteps firing from real movement
-      # with real variant spread, a fought fight producing combat audio, and
-      # two bands sounding different. Two retries because its last section
-      # walks to a wild creature and fights it, which carries the same
-      # spawn/pathing variance `catching` above is already retried for.
-
-  verify-gate-a-ui-build-shard:
-    runs-on: ubuntu-latest
-    # Sum of these ten tests' own run time measured 2026-09-01: 1,259s
-    # (21 min). 30 min leaves margin for checkout/setup plus retries.
-    timeout-minutes: 30
-    needs:
-      - changes
-      - queue-after-longest
-    if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-gate-a-ui-build-shard|'))
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          # Fetch commits and trees but no blobs, then materialise only the
-          # paths a verification job actually reads. `changes` already proved
-          # blob:none works here. The four excluded trees are 1.20 GB of the
-          # 2.08 GB tracked tip and no job reads any of them: this file's own
-          # no-build filter below already classes ralph/ and docs/ as paths
-          # that do not trigger a build, shots/ and ralph/reports are capture
-          # OUTPUT, and assets_raw/ is listed in .gitignore as material that
-          # should never have been committed. Measured: 2.1 GB -> 895 MB of
-          # working tree, importing clean and passing smoke + unit shard.
-          filter: blob:none
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /*
-            !/ralph/
-            !/docs/
-            !/shots/
-            !/assets_raw/
-            !/archive/
-      - uses: ./.github/actions/setup-godot
-      - name: Verify free_build
-        if: ${{ !cancelled() }}
-        env: { SMOKE: free_build, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify f31_station_paid_path
-        if: ${{ !cancelled() }}
-        env: { SMOKE: f31_station_paid_path, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify opening
-        if: ${{ !cancelled() }}
-        env: { SMOKE: opening, RETRIES: 2 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify starter_picker
-        if: ${{ !cancelled() }}
-        env: { SMOKE: starter_picker, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify modal_stacking
-        if: ${{ !cancelled() }}
-        env: { SMOKE: modal_stacking, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify menu
-        if: ${{ !cancelled() }}
-        env: { SMOKE: menu, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify settings
-        if: ${{ !cancelled() }}
-        env: { SMOKE: settings, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      # HIST-036. Mounts the HUD scene only, no world -- seconds, not
-      # minutes. Added because a guard CI never runs is not a guard, and
-      # the three HUD smokes that already exist
-      # (hud_handheld_legibility, prompt_hotbar_dock, exploration_legend)
-      # are in no job in this file, which is its own gap and is recorded
-      # in archive/reports/hist-clusters-log.md rather than fixed here.
-      - name: Verify objective_hint_card
-        if: ${{ !cancelled() }}
-        env: { SMOKE: objective_hint_card, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      # HIST-153. No world scene either -- five panels over a two-node
-      # stand-in for one, seconds.
-      - name: Verify station_panels_hide_world_hud
-        if: ${{ !cancelled() }}
-        env: { SMOKE: station_panels_hide_world_hud, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      # F42. Actual system Controls and physical controller back, no world.
-      - name: Verify f42_system_screen
-        if: ${{ !cancelled() }}
-        run: godot --headless --path . --script tests/smoke_f42_system_screen.gd
-      # HIST-013. Mounts combat_hud.tscn only, no fight and no world.
-      - name: Verify combat_hud_left_column
-        if: ${{ !cancelled() }}
-        env: { SMOKE: combat_hud_left_column, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      # HIST-014. HUD scene plus the dialogue panel over a stand-in world.
-      - name: Verify dialogue_clears_the_world_hud
-        if: ${{ !cancelled() }}
-        env: { SMOKE: dialogue_clears_the_world_hud, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify hud_freed_combat_prompt_lifecycle
-        if: ${{ !cancelled() }}
-        env: { SMOKE: hud_freed_combat_prompt_lifecycle, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-
-  verify-combat-shard:
-    runs-on: ubuntu-latest
-    # Sum of these five tests' own run time measured 2026-09-01: 1,058s
-    # (17.6 min), each with a 2-retry budget. 35 min covers checkout/setup
-    # plus a day where several of the five need a second attempt.
-    timeout-minutes: 35
-    needs:
-      - changes
-      - queue-after-longest
-    if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-combat-shard|'))
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          # Fetch commits and trees but no blobs, then materialise only the
-          # paths a verification job actually reads. `changes` already proved
-          # blob:none works here. The four excluded trees are 1.20 GB of the
-          # 2.08 GB tracked tip and no job reads any of them: this file's own
-          # no-build filter below already classes ralph/ and docs/ as paths
-          # that do not trigger a build, shots/ and ralph/reports are capture
-          # OUTPUT, and assets_raw/ is listed in .gitignore as material that
-          # should never have been committed. Measured: 2.1 GB -> 895 MB of
-          # working tree, importing clean and passing smoke + unit shard.
-          filter: blob:none
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /*
-            !/ralph/
-            !/docs/
-            !/shots/
-            !/assets_raw/
-            !/archive/
-      - uses: ./.github/actions/setup-godot
-      - name: Verify combat
-        if: ${{ !cancelled() }}
-        env: { SMOKE: combat, RETRIES: 2 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify throw preview physical occlusion
-        if: ${{ !cancelled() }}
-        run: |
-          set -euo pipefail
-          export XDG_DATA_HOME="$(mktemp -d)"
-          godot --headless --path . --log-file /tmp/throw-preview-occlusion.log --script tests/smoke_throw_preview_occlusion.gd
-          if grep -E '^(ERROR:|SCRIPT ERROR:)' /tmp/throw-preview-occlusion.log; then
-            exit 1
-          fi
-      - name: Verify earned party controller cycle
-        if: ${{ !cancelled() }}
-        run: |
-          set -euo pipefail
-          export XDG_DATA_HOME="$(mktemp -d)"
-          godot --headless --path . --log-file /tmp/earned-party-cycle.log --script tests/smoke_earned_party_cycle.gd
-          if grep -E '^(ERROR:|SCRIPT ERROR:)' /tmp/earned-party-cycle.log; then
-            exit 1
-          fi
-      - name: Verify same-live Water Alpha retirement
-        if: ${{ !cancelled() }}
-        run: |
-          set -euo pipefail
-          run_dir="$(mktemp -d)"
-          export XDG_DATA_HOME="$run_dir/profile"
-          mkdir -p "$XDG_DATA_HOME"
-          godot --headless --path . --log-file "$run_dir/engine.log" --script tests/smoke_water_alpha_retirement.gd 2>&1 | tee "$run_dir/console.log"
-          test -s "$run_dir/engine.log"
-          if grep -E '^(ERROR:|SCRIPT ERROR:)' "$run_dir/"*.log; then
-            exit 1
-          fi
-      - name: Verify riding
-        if: ${{ !cancelled() }}
-        env: { SMOKE: riding, RETRIES: 2 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify boss
-        if: ${{ !cancelled() }}
-        env: { SMOKE: boss, RETRIES: 2 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify trainer_battle
-        if: ${{ !cancelled() }}
-        env: { SMOKE: trainer_battle, RETRIES: 2 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify aggression
-        if: ${{ !cancelled() }}
-        env: { SMOKE: aggression, RETRIES: 2 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      # Lane MP-F1-F2 / D100. §10's participant scaling reaching a live creature,
-      # and not compounding when it is re-derived. Measured 74s locally, which is
-      # why it fits this shard rather than needing one of its own; RETRIES is 1
-      # deliberately -- it drives no wild creature, rolls nothing and takes no
-      # timing, so a red run here is arithmetic and a retry would only hide it.
-      - name: Verify encounter_scaling
-        if: ${{ !cancelled() }}
-        env: { SMOKE: encounter_scaling, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-
-  verify-regions-shard:
-    runs-on: ubuntu-latest
-    # Independent original checks; the matrix retains an exact one-time cover.
-    strategy:
-      fail-fast: false
-      matrix:
-        group: [world, stormwood, tidewake]
-    # Sum of these six tests' own run time measured 2026-09-01: 1,034s
-    # (17.2 min). 25 min covers checkout/setup with margin.
-    timeout-minutes: 35
-    needs:
-      - changes
-      - queue-after-longest
-    if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-regions-shard|'))
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          # Fetch commits and trees but no blobs, then materialise only the
-          # paths a verification job actually reads. `changes` already proved
-          # blob:none works here. The four excluded trees are 1.20 GB of the
-          # 2.08 GB tracked tip and no job reads any of them: this file's own
-          # no-build filter below already classes ralph/ and docs/ as paths
-          # that do not trigger a build, shots/ and ralph/reports are capture
-          # OUTPUT, and assets_raw/ is listed in .gitignore as material that
-          # should never have been committed. Measured: 2.1 GB -> 895 MB of
-          # working tree, importing clean and passing smoke + unit shard.
-          filter: blob:none
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /*
-            !/ralph/
-            !/docs/
-            !/shots/
-            !/assets_raw/
-            !/archive/
-      - uses: ./.github/actions/setup-godot
-      - name: Verify earned aim cancellation and native entry guard
-        if: ${{ matrix.group == 'world' && (!cancelled()) }}
-        timeout-minutes: 3
-        run: bash tools/ci/verify-earned-aim.sh
-      - name: Verify character texture binding and material cache isolation
-        if: ${{ matrix.group == 'world' && (!cancelled()) }}
-        timeout-minutes: 2
-        run: bash tools/ci/verify-character-texture.sh
-      - name: Verify actual Game crossing and native scoped receiver lifecycle
-        if: ${{ matrix.group == 'world' && (!cancelled()) }}
-        timeout-minutes: 6
-        run: python3 tools/ci/verify-realm-transition.py
-      - name: Retain realm lifecycle first-attempt receipts
-        if: ${{ matrix.group == 'world' && (always() && env.REALM_TRANSITION_RECEIPTS != '') }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: realm-transition-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ env.REALM_TRANSITION_RECEIPTS }}
-          if-no-files-found: error
-      - name: Verify warrens
-        if: ${{ matrix.group == 'world' && (!cancelled()) }}
-        env: { SMOKE: warrens, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify relay_station
-        if: ${{ matrix.group == 'world' && (!cancelled()) }}
-        env: { SMOKE: relay_station, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify continuous Relay ramp and deck walk
-        if: ${{ matrix.group == 'world' && (!cancelled()) }}
-        run: |
-          set -euo pipefail
-          godot --headless --path . --log-file /tmp/relay-deck-walk.log --script tests/smoke_relay_deck_walk.gd
-          if grep -E '^ERROR:|SCRIPT ERROR:' /tmp/relay-deck-walk.log; then
-            echo 'Relay deck walk emitted an engine or script error'
-            exit 1
-          fi
-      - name: Verify Stormheart approach and open ramp entrance
-        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
-        run: |
-          set -euo pipefail
-          export XDG_DATA_HOME="$(mktemp -d)"
-          godot --headless --path . --log-file /tmp/stormheart-earned-mouth.log --script tools/_probe_stormheart_earned_mouth.gd -- --fixed-only
-          if grep -E '^(ERROR:|SCRIPT ERROR:)' /tmp/stormheart-earned-mouth.log; then
-            exit 1
-          fi
-      - name: Verify earned material prompt approach
-        if: ${{ matrix.group == 'world' && (!cancelled()) }}
-        run: |
-          set -euo pipefail
-          export XDG_DATA_HOME="$(mktemp -d)"
-          godot --headless --path . --log-file /tmp/material-prompt-priority.log --script tests/smoke_material_prompt_priority.gd
-          if grep -E '^(ERROR:|SCRIPT ERROR:)' /tmp/material-prompt-priority.log; then
-            exit 1
-          fi
-      - name: Verify exact baked tree prompt at trunk contact
-        if: ${{ matrix.group == 'world' && (!cancelled()) }}
-        run: |
-          set -euo pipefail
-          run_dir="$(mktemp -d)"
-          export XDG_DATA_HOME="$run_dir/profile"
-          mkdir -p "$XDG_DATA_HOME"
-          godot --headless --path . --log-file "$run_dir/engine.log" --script tools/_probe_scatter_tree_prompt_height.gd 2>&1 | tee "$run_dir/console.log"
-          test -s "$run_dir/engine.log"
-          if grep -E '^(ERROR:|SCRIPT ERROR:)' "$run_dir/"*.log; then
-            exit 1
-          fi
-      - name: Verify live road coverage observation
-        if: ${{ matrix.group == 'world' && (!cancelled()) }}
-        run: |
-          set -euo pipefail
-          run_dir="$(mktemp -d)"
-          export XDG_DATA_HOME="$run_dir/profile"
-          mkdir -p "$XDG_DATA_HOME"
-          godot --headless --path . --log-file "$run_dir/engine.log" --script tools/_probe_live_road_coverage_observer.gd 2>&1 | tee "$run_dir/console.log"
-          test -s "$run_dir/engine.log"
-          if grep -E '^(ERROR:|SCRIPT ERROR:)' "$run_dir/"*.log; then
-            exit 1
-          fi
-      - name: Verify felled resource destruction
-        if: ${{ matrix.group == 'world' && (!cancelled()) }}
-        run: |
-          set -euo pipefail
-          export XDG_DATA_HOME="$(mktemp -d)"
-          godot --headless --path . --log-file /tmp/felled-material-lifecycle.log --script tools/_probe_felled_material_lifecycle.gd
-          if grep -E '^(ERROR:|SCRIPT ERROR:)' /tmp/felled-material-lifecycle.log; then
-            exit 1
-          fi
-      - name: Verify earned material source selection
-        if: ${{ matrix.group == 'world' && (!cancelled()) }}
-        run: |
-          set -euo pipefail
-          godot --headless --path . --log-file /tmp/earned-material-selection.log --script tests/smoke_earned_material_selection.gd
-          if grep -E '^ERROR:|SCRIPT ERROR:' /tmp/earned-material-selection.log; then
-            echo 'Earned material selection emitted an engine or script error'
-            exit 1
-          fi
-      - name: Verify earned Stormwood input clocks
-        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
-        run: |
-          set -euo pipefail
-          godot --headless --path . --log-file /tmp/stormwood-engage-clock.log --script tools/probe_stormwood_alpha_admission.gd
-          godot --headless --path . --log-file /tmp/stormwood-fight-clock.log --script tools/probe_stormwood_fight_clock.gd
-          if grep -E '^ERROR:|SCRIPT ERROR:' /tmp/stormwood-engage-clock.log /tmp/stormwood-fight-clock.log; then
-            echo 'Earned Stormwood input controls emitted an engine or script error'
-            exit 1
-          fi
-      # Stage B Wave 0: Cloudreach had no smoke in CI, and main shipped with the
-      # whole realm unbuilt (cloudreach_world.gd's typed preset loop aborted on an
-      # art.json comment key; ralph/reports/MP-0D-SPIKE-HOSTCOST-0905/). This
-      # walks the real arrival route on the production scene, ~8 min.
-      - name: Verify cloudreach_arrival_walk
-        if: ${{ matrix.group == 'world' && (!cancelled()) }}
-        env: { SMOKE: cloudreach_arrival_walk, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      # F08: Cloudreach's completed tail (wind roads, Wings/shrine, Stormwood
-      # key) is written once and survives a disk reload with nothing re-granted.
-      - name: Verify Cloudreach persistence tail
-        if: ${{ matrix.group == 'world' && (!cancelled()) }}
-        run: timeout 180s godot --headless --path . --script tests/smoke_cloudreach_persistence_tail.gd
-      - name: Verify Stormwood constructed arch journey
-        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
-        run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_arches.gd
-      # PERF / co-op heartbeat: a host's Stormwood shell boot keeps every
-      # main-thread gap under 2 s while all 808 wilds spawn with stable names.
-      - name: Verify Stormwood shell spawn slicing
-        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
-        run: timeout 300s godot --headless --path . --script tests/smoke_stormwood_spawn_slicing.gd
-      - name: Verify solo Stormwood hosted rewards
-        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
-        run: |
-          set -euo pipefail
-          timeout 30s godot --headless --path . --log-file /tmp/stormwood-hosted-rewards.log --script tests/smoke_stormwood_hosted_rewards.gd
-          test -s /tmp/stormwood-hosted-rewards.log
-          if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-hosted-rewards.log; then exit 1; fi
-      - name: Verify Stormwood Deepwood Circuit wiring
-        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
-        env: { SMOKE: stormwood_deepwood_circuit_wiring, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify Stormwood finalized death lifecycle
-        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
-        run: |
-          set -euo pipefail
-          timeout 30s godot --headless --path . --log-file /tmp/stormwood-finalized-death.log --script tests/smoke_stormwood_finalized_death.gd
-          test -s /tmp/stormwood-finalized-death.log
-          if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-finalized-death.log; then exit 1; fi
-      - name: Verify Stormwood combat telemetry
-        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
-        env:
-          TETHERBOUND_TELEMETRY_OUTPUT: /tmp/stormwood-combat-telemetry.json
-        run: |
-          set -euo pipefail
-          timeout 30s godot --headless --path . --log-file /tmp/stormwood-combat-telemetry.log --script tests/smoke_stormwood_combat_telemetry.gd
-          test -s /tmp/stormwood-combat-telemetry.log
-          if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-combat-telemetry.log; then exit 1; fi
-      - name: Verify Relay cable socket supports
-        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
-        timeout-minutes: 1
-        run: |
-          set -euo pipefail
-          timeout 30s godot --headless --path . --log-file /tmp/relay-cable-sockets.log --script tools/_probe_relay_cable_socket_geometry.gd
-          test -s /tmp/relay-cable-sockets.log
-          if grep -E 'SCRIPT ERROR|ERROR:' /tmp/relay-cable-sockets.log; then exit 1; fi
-      - name: Verify Stormwood equipped lightning protection
-        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
-        timeout-minutes: 1
-        run: |
-          set -euo pipefail
-          timeout 30s godot --headless --path . --log-file /tmp/stormwood-lightning-equipment.log --script tests/smoke_stormwood_lightning.gd
-          test -s /tmp/stormwood-lightning-equipment.log
-          if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-lightning-equipment.log; then exit 1; fi
-      - name: Verify controller equipment and disk save
-        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
-        timeout-minutes: 1
-        run: |
-          set -euo pipefail
-          timeout 30s godot --headless --path . --log-file /tmp/backpack-equipment.log --script tests/smoke_backpack_equipment.gd
-          test -s /tmp/backpack-equipment.log
-          if grep -E 'SCRIPT ERROR|ERROR:' /tmp/backpack-equipment.log; then exit 1; fi
-      - name: Verify Stormwood lightning warning cleanup
-        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
-        run: |
-          set -euo pipefail
-          timeout 30s godot --headless --path . --log-file /tmp/stormwood-lightning-cleanup.log --script tests/smoke_stormwood_lightning_cleanup.gd
-          test -s /tmp/stormwood-lightning-cleanup.log
-          if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-lightning-cleanup.log; then exit 1; fi
-      - name: Verify Stormwood authoritative opponent teardown
-        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
-        run: |
-          set -euo pipefail
-          timeout 30s godot --headless --path . --log-file /tmp/stormwood-authoritative-teardown.log --script tests/smoke_stormwood_authoritative_teardown.gd
-          test -s /tmp/stormwood-authoritative-teardown.log
-          if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-authoritative-teardown.log; then exit 1; fi
-      - name: Verify Stormwood heartstone interaction
-        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
-        run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_crown_heartstone.gd
-      - name: Verify Stormwood Crown records side chain
-        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
-        run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_crown_records.gd
-      - name: Verify Stormwood per-participant Stormheart offers
-        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
-        run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_stormheart_participants.gd
-      - name: Verify Stormwood Stormheart accept/refuse choice
-        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
-        run: timeout 120s python3 tools/ci/run_godot_smoke.py godot --headless --path . --script tests/smoke_stormwood_stormheart_choice.gd
-      - name: Verify Stormwood Dynamo Break faint recovery
-        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
-        run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_dynamo_break_faint.gd
-      - name: Verify Stormwood ordinary and electric TM pickups
-        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
-        run: timeout 120s godot --headless --path . --script tests/smoke_stormwood_pickup_runtime.gd
-      - name: Verify ordinary Stormwood to Water gate path
-        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
-        run: timeout 240s godot --headless --path . --script tests/smoke_stormwood_water_gate_path.gd
-      - name: Verify Stormwood Surge audio observer
-        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
-        run: timeout 240s godot --headless --path . --script tests/smoke_stormwood_surge_audio.gd
-      - name: Verify Stormwood hosted encounter admission
-        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
-        run: timeout 240s godot --headless --path . --script tests/smoke_stormwood_hosted_admission.gd
-      - name: Verify Stormwood Nysa press
-        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
-        # Let the smoke's existing 900 s watchdog judge its unchanged route.
-        # CI37070627396 won two intervening wild fights (138 + 122 s), then
-        # hit the former 420 s outer cap during the trainer challenge. The
-        # separate diagnostic passed; 60 s also covers startup/exit overhead.
-        run: timeout 960s godot --headless --path . --script tests/smoke_stormwood_nysa_press.gd
-      - name: Verify Tidewake closed-gate tide-race seal
-        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
-        run: timeout 300s godot --headless --path . --script tests/smoke_water_closed_gate_seal.gd
-      - name: Verify Tidewake dismount leaves no mounted state
-        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
-        run: timeout 240s godot --headless --path . --script tests/smoke_water_dismount_state.gd
-      # F12 (ACCEPTANCE 6.1): drowning and the safe shore, the fully drowned
-      # recovery, and a disk reload mid-water (human and mounted) agree.
-      - name: Verify Tidewake drowning and safe shore
-        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
-        run: timeout 240s godot --headless --path . --script tests/smoke_water_swimming.gd
-      - name: Verify Tidewake drowned recovery
-        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
-        run: timeout 120s godot --headless --path . --script tests/smoke_water_player_death.gd
-      - name: Verify Tidewake reload mid-water
-        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
-        run: timeout 120s godot --headless --path . --script tests/smoke_water_reconnect_save.gd
-      - name: Verify Tidewake mounted reload mid-water
-        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
-        run: timeout 120s godot --headless --path . --script tests/smoke_water_mounted_reconnect_save.gd
-      - name: Verify Tidewake combat pause while swimming
-        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
-        run: timeout 240s godot --headless --path . --script tests/smoke_water_combat_pause.gd
-      - name: Verify Tidewake Guardian offer keeps controller focus across a drop
-        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
-        run: timeout 240s godot --headless --path . --script tests/smoke_water_guardian_drop_refocus.gd
-      # F13 (ACCEPTANCE 6.1): the six selected Tidewake local chains, one per
-      # island group, each show lure/action/payoff/acknowledgement in the
-      # production scene, then save through Game.save_game, reset, Game.load_game
-      # into a rebuilt Water world and prove the completion persists (saved
-      # completion, ACCEPTANCE 5). Each measured ~50-55s locally, three in
-      # parallel (2026-09-26); 120s leaves headroom for slower CI runners.
-      - name: Verify Tidewake chain side_water_lantern_return
-        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
-        run: timeout 120s godot --headless --path . --script tests/smoke_water_lantern_return.gd
-      - name: Verify Tidewake chain side_water_gull_research
-        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
-        run: timeout 120s godot --headless --path . --script tests/smoke_water_gull_research.gd
-      - name: Verify Tidewake chain side_water_cradle_care
-        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
-        run: timeout 120s godot --headless --path . --script tests/smoke_water_cradle_care.gd
-      - name: Verify Tidewake chain side_water_garden_records
-        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
-        run: timeout 120s godot --headless --path . --script tests/smoke_water_garden_records.gd
-      - name: Verify Tidewake chain side_water_deep_watch_chart
-        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
-        run: timeout 120s godot --headless --path . --script tests/smoke_water_deep_watch_chart.gd
-      - name: Verify Tidewake chain side_water_lastlight_shelter
-        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
-        run: timeout 120s godot --headless --path . --script tests/smoke_water_lastlight_shelter.gd
-      - name: Verify regional credits survive a disk reload
-        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
-        run: timeout 120s godot --headless --path . --script tests/smoke_regional_credits_reload.gd
-      - name: Verify pending regional ending receipts and reconnect rejection
-        if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
-        run: |
-          set -euo pipefail
-          pending_log="$RUNNER_TEMP/regional-homecoming-pending.log"
-          timeout 120s godot --headless --path . --script tests/smoke_regional_homecoming_pending.gd 2>&1 | tee "$pending_log"
-          if grep -Eq 'SCRIPT ERROR:|^ERROR:|instances were leaked|resources still in use' "$pending_log"; then
-            echo "Regional pending acknowledgement emitted engine or cleanup errors."
-            exit 1
-          fi
-      - name: Verify wild_streaming
-        if: ${{ matrix.group == 'world' && (!cancelled()) }}
-        env: { SMOKE: wild_streaming, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      # GATE-D. smoke_art.gd was in NO ci job at all; docs/WORKFLOW.md §5
-      # requires it and nothing ran it. Kept here, now as its own leg.
-      - name: Verify bramblebun_colourway_binding
-        if: ${{ matrix.group == 'world' && (!cancelled()) }}
-        env: { SMOKE: bramblebun_colourway_binding, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-
   verify-regions-relay:
     # Split from verify-regions-shard (CI wall-clock): identical steps, own runner.
     runs-on: ubuntu-latest
@@ -1976,14 +651,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        group: [meadows, tidewake]
+        # CI-SPEED (owner, 2026-10-07): the tidewake group (three long scripted
+        # walks of the land loops and return shortcuts, ~15 min) runs NIGHTLY
+        # ONLY; Tidewake travel/water stays gated by verify-regions-shard
+        # (tidewake) and the smoke_net_water_* smokes. The meadows group moved
+        # to tools/ci/suites/verify-regions-relay--meadows.steps (verify-suite).
+        group: [tidewake]
     # Measured 2026-09-26 (run 36244390545): 8.4 min job wall before the
     # Tidewake loops steps. Those three are bounded at 1430 s (23.8 min) in
     # total, so the worst case is ~32 min plus runner variance; 45 min keeps
     # margin.
     timeout-minutes: 45
     needs: changes
-    if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-regions-relay|'))
+    if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-regions-relay|'))
     steps:
       - uses: actions/checkout@v4
         with:
@@ -2006,76 +686,6 @@ jobs:
             !/assets_raw/
             !/archive/
       - uses: ./.github/actions/setup-godot
-      - name: Verify relay
-        if: ${{ matrix.group == 'meadows' && (!cancelled()) }}
-        env: { SMOKE: relay, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify stronghold
-        if: ${{ matrix.group == 'meadows' && (!cancelled()) }}
-        env: { SMOKE: stronghold, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify art
-        if: ${{ matrix.group == 'meadows' && (!cancelled()) }}
-        env: { SMOKE: art, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      # F22#0: authored role patterns (pure contract), their production node
-      # mount, and live wild reposition/dodge/punish on real bodies.
-      - name: Verify F22 enemy patterns
-        if: ${{ matrix.group == 'meadows' && (!cancelled()) }}
-        run: |
-          set -euo pipefail
-          timeout 120s godot --headless --path . --script tests/smoke_f22_pattern_contract.gd
-          timeout 120s godot --headless --path . --script tests/smoke_f22_live_pattern_mount.gd
-          timeout 600s godot --headless --path . --fixed-fps 60 --script tests/smoke_f22_wild_reactions.gd
-      # F13 #1 (ACCEPTANCE 6.1): the four land loops and three return
-      # shortcuts walked/swum with real stick input in the production scene,
-      # split by --case so no step runs past ~8 min. Measured on a GitHub
-      # runner (render.yml run 36249272344): ~28 s world build, then reed
-      # 138 s, brine 138 s, salt 151 s, sluice 179 s, shellwatch 61 s, deep
-      # watch 84 s; ramp 112 s since the uphill rework (local container,
-      # ralph/reports/TIDEWAKE/f13_loops_shortcuts/RUN8_shortcuts.txt: 270 s
-      # process wall for the shortcut group; ~285 s estimated on a runner,
-      # so its timeout is 430 s).
-      # Each timeout is 1.5x its group's measured wall.
       - name: Verify Tidewake land loops walked (reed root, brine terrace)
         if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 460s godot --headless --path . --script tests/smoke_water_loops_shortcuts.gd -- --case=reed_root_circuit,brine_terrace_circuit
@@ -2086,593 +696,10 @@ jobs:
         if: ${{ matrix.group == 'tidewake' && (!cancelled()) }}
         run: timeout 430s godot --headless --path . --script tests/smoke_water_loops_shortcuts.gd -- --case=reedhaven_maintenance_ramp,shellwatch_pump_return_channel,deep_watch_current_cut
 
-  verify-owner-regressions-shard:
-    runs-on: ubuntu-latest
-    # Independent original checks; the matrix retains an exact one-time cover.
-    strategy:
-      fail-fast: false
-      matrix:
-        group: [catching, controls]
-    # Sum of these seven tests' own run time measured 2026-09-01: 1,272s
-    # (21.2 min). 28 min covers checkout/setup with margin. title_new_game
-    # (AUDIT-K §K2a) folded back in as an eighth sequential step; its own
-    # run time is short relative to the margin already held here.
-    timeout-minutes: 28
-    needs:
-      - changes
-      - queue-after-longest
-    if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-owner-regressions-shard|'))
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          # Fetch commits and trees but no blobs, then materialise only the
-          # paths a verification job actually reads. `changes` already proved
-          # blob:none works here. The four excluded trees are 1.20 GB of the
-          # 2.08 GB tracked tip and no job reads any of them: this file's own
-          # no-build filter below already classes ralph/ and docs/ as paths
-          # that do not trigger a build, shots/ and ralph/reports are capture
-          # OUTPUT, and assets_raw/ is listed in .gitignore as material that
-          # should never have been committed. Measured: 2.1 GB -> 895 MB of
-          # working tree, importing clean and passing smoke + unit shard.
-          filter: blob:none
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /*
-            !/ralph/
-            !/docs/
-            !/shots/
-            !/assets_raw/
-            !/archive/
-      - uses: ./.github/actions/setup-godot
-      - name: Verify title_load_game
-        if: ${{ matrix.group == 'controls' && (!cancelled()) }}
-        env: { SMOKE: title_load_game, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      # AUDIT-K §K2a. The New Game front door had no CI coverage at all --
-      # only title_load_game was wired here.
-      - name: Verify title_new_game
-        if: ${{ matrix.group == 'controls' && (!cancelled()) }}
-        env: { SMOKE: title_new_game, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      # KNOWN INTERMITTENT (the catch-3 engage defect). retries stays 1 ON
-      # PURPOSE: a retry would green it and hide the cause, which is the same
-      # reason stick_navigator is withheld from it. One leg of its own means
-      # its flake no longer takes the other six regressions down with it.
-      - name: Verify party_count_after_catches
-        if: ${{ matrix.group == 'catching' && (!cancelled()) }}
-        env: { SMOKE: party_count_after_catches, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if python3 tools/ci/run_godot_smoke.py godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify satchel_owns_hotbar
-        if: ${{ matrix.group == 'controls' && (!cancelled()) }}
-        env: { SMOKE: satchel_owns_hotbar, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify build_owns_creature_cycle
-        if: ${{ matrix.group == 'controls' && (!cancelled()) }}
-        env: { SMOKE: build_owns_creature_cycle, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify trainer_battle_camera
-        if: ${{ matrix.group == 'controls' && (!cancelled()) }}
-        env: { SMOKE: trainer_battle_camera, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify arena_contain
-        if: ${{ matrix.group == 'controls' && (!cancelled()) }}
-        env: { SMOKE: arena_contain, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify menu_open_does_not_offer_to_drop
-        if: ${{ matrix.group == 'controls' && (!cancelled()) }}
-        env: { SMOKE: menu_open_does_not_offer_to_drop, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-
-  verify-gate-evidence-shard:
-    runs-on: ubuntu-latest
-    # Sum of these eight tests' own run time measured 2026-09-01: 1,478s
-    # (24.6 min), the longest of the six consolidated groups -- it is now
-    # this workflow's long pole in exchange for 7 fewer jobs than the other
-    # five groups combined would need at one-test-per-job. 35 min covers
-    # checkout/setup margin. The opening segment runs once: a first failure
-    # must remain visible rather than being rescued by a second fresh opening.
-    #
-    # A ninth step, trainer_no_usable_ally, was added south-bridge-fainted-
-    # party (2026-09-01) alongside the eight above. The file existed on
-    # `main` already (archive/reports/FINDING-T2-STRANDING-2026-08-30.md's own regression
-    # proof) but was never wired into any CI job, so it never actually ran
-    # after the day it was written. Its own world stand-up is the same
-    # 300-frame boot smoke_trainer_battle.gd pays in verify-combat-shard
-    # (measured there at well under a minute of the group's own budget), so
-    # 40 min keeps the same retry headroom this job already had without
-    # a fresh full-suite measurement to attribute an exact number to this
-    # step alone.
-    timeout-minutes: 40
-    needs: changes
-    if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-gate-evidence-shard|'))
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          # Fetch commits and trees but no blobs, then materialise only the
-          # paths a verification job actually reads. `changes` already proved
-          # blob:none works here. The four excluded trees are 1.20 GB of the
-          # 2.08 GB tracked tip and no job reads any of them: this file's own
-          # no-build filter below already classes ralph/ and docs/ as paths
-          # that do not trigger a build, shots/ and ralph/reports are capture
-          # OUTPUT, and assets_raw/ is listed in .gitignore as material that
-          # should never have been committed. Measured: 2.1 GB -> 895 MB of
-          # working tree, importing clean and passing smoke + unit shard.
-          filter: blob:none
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /*
-            !/ralph/
-            !/docs/
-            !/shots/
-            !/assets_raw/
-            !/archive/
-      - uses: ./.github/actions/setup-godot
-      - name: Verify post-miss wander aim lifecycle
-        run: |
-          set -o pipefail
-          godot --headless --path . --script tools/probe_gate_a_aim_wander.gd 2>&1 | tee /tmp/aim-wander.log
-          if grep -E 'SCRIPT ERROR|Parse Error|^ERROR:' /tmp/aim-wander.log; then
-            exit 1
-          fi
-      - name: Verify stick navigator slope and obstacle clearance
-        run: |
-          set -o pipefail
-          godot --headless --path . --script tests/smoke_stick_navigator_low_geometry.gd 2>&1 | tee /tmp/stick-navigator.log
-          if grep -E 'SCRIPT ERROR|Parse Error|^ERROR:' /tmp/stick-navigator.log; then
-            exit 1
-          fi
-      - name: Verify gate_a_opening_segment
-        if: ${{ !cancelled() }}
-        env: { SMOKE: gate_a_opening_segment, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify gate_a_build_house
-        if: ${{ !cancelled() }}
-        env: { SMOKE: gate_a_build_house, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify build_two_creature_beds
-        if: ${{ !cancelled() }}
-        env: { SMOKE: build_two_creature_beds, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify gate_a_rest_torch
-        if: ${{ !cancelled() }}
-        env: { SMOKE: gate_a_rest_torch, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      # T5-CADENCE. The authored camps -- trail_camp, ranger_camp,
-      # riverwatch_rest, the Highfield stock camp and the waystop -- are
-      # only rest points because `props.gd` reads a `rest` block and
-      # `rest_point.gd` stands one up. A unit test cannot see the defect
-      # this closes: every prop at those camps was already correct and
-      # there was still no way to use one. So this boots the world, walks
-      # the player to each camp and presses the button.
-      - name: Verify authored_camps
-        if: ${{ !cancelled() }}
-        env: { SMOKE: authored_camps, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      # south-bridge-fainted-party, 2026-09-01. Proves the recovery path a
-      # player actually has when their whole party faints on the road to a
-      # gate: a fainted, deployed ally makes can_challenge() false and opens
-      # the honest "nothing to fight with" line rather than a false
-      # "defeated" one, no fight starts, the trainer is not wrongly recorded
-      # as beaten, and healing the ally (the same fainted -> false, hp ->
-      # max_hp a creature bed's own rest completes, per
-      # archive/reports/FINDING-T2-STRANDING-2026-08-30.md) restores the ordinary challenge
-      # on the very same trainer. This file existed on `main` already but
-      # was never in any CI job, so it never ran after the day it proved the
-      # fix -- this wires it in rather than writing a second test.
-      - name: Verify trainer_no_usable_ally
-        if: ${{ !cancelled() }}
-        env: { SMOKE: trainer_no_usable_ally, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      # T5-CAMPS. Bands 0 and 1 carried zero night-gated spawns, so the
-      # chapter's opening read identically by day and after dark in a game
-      # that ships a real day/night clock. The regression this guards is
-      # the one the region audit measured (gap 7), and it is guarded by a
-      # played path rather than by a config assertion: the test drives the
-      # clock, checks the owls are hidden by day and standing after dark,
-      # and asks the director whether "Engage Duskhush" is actually offered
-      # where the player is standing. A gated creature that is visible but
-      # never engageable is scenery with a schedule.
-      - name: Verify night_ecology
-        if: ${{ !cancelled() }}
-        env: { SMOKE: night_ecology, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-      - name: Verify post_modal_control
-        if: ${{ !cancelled() }}
-        env: { SMOKE: post_modal_control, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-
-  verify-gate-evidence-finale:
-    # Split from verify-gate-evidence-shard (CI wall-clock): identical steps, own runner.
-    runs-on: ubuntu-latest
-    # Sum of these eight tests' own run time measured 2026-09-01: 1,478s
-    # (24.6 min), the longest of the six consolidated groups -- it is now
-    # this workflow's long pole in exchange for 7 fewer jobs than the other
-    # five groups combined would need at one-test-per-job. 35 min covers
-    # checkout/setup margin. The opening segment runs once: a first failure
-    # must remain visible rather than being rescued by a second fresh opening.
-    #
-    # A ninth step, trainer_no_usable_ally, was added south-bridge-fainted-
-    # party (2026-09-01) alongside the eight above. The file existed on
-    # `main` already (archive/reports/FINDING-T2-STRANDING-2026-08-30.md's own regression
-    # proof) but was never wired into any CI job, so it never actually ran
-    # after the day it was written. Its own world stand-up is the same
-    # 300-frame boot smoke_trainer_battle.gd pays in verify-combat-shard
-    # (measured there at well under a minute of the group's own budget), so
-    # 40 min keeps the same retry headroom this job already had without
-    # a fresh full-suite measurement to attribute an exact number to this
-    # step alone.
-    # CI-SEGMENTS (owner 2026-10-04): the bracket and the finale are separate
-    # processes (396 s + 238 s, run 37246987633) and now run on their own legs.
-    # The bracket itself is a continuous chain cut at its natural save point:
-    # bracket-to-semi plays the closed/train/sign-up branches, the lost and
-    # retried quarter-final, the quarter- and semi-final, then saves through
-    # Game.save_game and checks that save against checkpoint
-    # bracket/after_semi (contract + committed digest; stale -> the regen
-    # command). bracket-final loads that committed checkpoint through
-    # Game.load_game, asserts the same contract, and plays the final and the
-    # champion beats. verify-segment-handoffs (chain: bracket) proves the
-    # handoff; verify-unbroken-chains runs the whole bracket in one process on
-    # the scheduled tier. The final segment shares its runner with the finale
-    # (~5 + ~6 min, run 37256861064): under the account's ~20-job cap a third
-    # runner only adds ~2 min of setup.
-    strategy:
-      fail-fast: false
-      matrix:
-        group: [bracket-to-semi, bracket-final]
-    timeout-minutes: 40
-    needs:
-      - changes
-      - queue-after-long
-    if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-gate-evidence-finale|'))
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          # Fetch commits and trees but no blobs, then materialise only the
-          # paths a verification job actually reads. `changes` already proved
-          # blob:none works here. The four excluded trees are 1.20 GB of the
-          # 2.08 GB tracked tip and no job reads any of them: this file's own
-          # no-build filter below already classes ralph/ and docs/ as paths
-          # that do not trigger a build, shots/ and ralph/reports are capture
-          # OUTPUT, and assets_raw/ is listed in .gitignore as material that
-          # should never have been committed. Measured: 2.1 GB -> 895 MB of
-          # working tree, importing clean and passing smoke + unit shard.
-          filter: blob:none
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /*
-            !/ralph/
-            !/docs/
-            !/shots/
-            !/assets_raw/
-            !/archive/
-      - uses: ./.github/actions/setup-godot
-      - name: Verify tournament_bracket segment ${{ matrix.group }}
-        if: ${{ startsWith(matrix.group, 'bracket-') && (!cancelled()) }}
-        run: |
-          set -euo pipefail
-          segment="${{ matrix.group }}"
-          home="${RUNNER_TEMP}/bracket-home"; out="${RUNNER_TEMP}/bracket-out"
-          mkdir -p "$home" "$out"
-          XDG_DATA_HOME="$home" TB_SEGMENT_OUT="$out" \
-            godot --headless --path . --script tests/smoke_tournament_bracket.gd -- --segment="${segment#bracket-}"
-      # GATE-E. The chapter's FINALE, walked continuously in one boot with a
-      # full five: in from the entrance, the three gauntlet fights, the
-      # recovery point, the elite, the shutter, the reveal, the Warden, the
-      # lever, the release ceremony a full belt forces, the region's response,
-      # and the post-victory acknowledgment that ends the objective chain.
-      # smoke_stronghold.gd proves the route and fights nobody; smoke_boss.gd
-      # starts at the Warden with a level-1 starter. The seams between them
-      # were covered by nothing, and driving them end to end found three real
-      # defects on main.
-      - name: Verify gate_e_finale
-        if: ${{ matrix.group == 'bracket-final' && (!cancelled()) }}
-        env: { SMOKE: gate_e_finale, RETRIES: 1 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-
-  # CI-TRUTH-0903. `tests/smoke_gate_b_continuous.gd` used to run in NO CI job
-  # at all -- not even a known-red one -- which is exactly how two of
-  # `gate_b_tail_segment.gd`'s own assertions sat failing against label
-  # strings that had never existed in `data/progression/objectives.json`:
-  # nothing was watching, so nothing noticed (`archive/docs/CURRENT_STATE.md` §4).
-  #
-  # The file's default (no flag) run now stops after tournament readiness --
-  # the opening, the road gate, the village visit for tools and tournament
-  # readiness are the beats that have actually passed reliably. This is
-  # THAT part, gating: a regression in any of the four is caught the same
-  # push it lands on, same as every other required job. The gather route and
-  # the tail (house, beds, nights, the bracket) are NOT run here -- see
-  # `verify-gate-b-full-known-red` below for why and where they still run.
-
-  verify-gate-b-core:
-    runs-on: ubuntu-latest
-    # Measured locally: opening through tournament readiness is a small
-    # fraction of the full ~25-minute continuous run (it stops well short of
-    # the gather route, the file's own single most expensive section). 20
-    # minutes leaves headroom for checkout/setup and a slow CI runner without
-    # inviting the full chain back in by accident.
-    timeout-minutes: 20
-    needs:
-      - changes
-      - queue-after-long
-    if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-gate-b-core|'))
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          # Fetch commits and trees but no blobs, then materialise only the
-          # paths a verification job actually reads. `changes` already proved
-          # blob:none works here. The four excluded trees are 1.20 GB of the
-          # 2.08 GB tracked tip and no job reads any of them: this file's own
-          # no-build filter below already classes ralph/ and docs/ as paths
-          # that do not trigger a build, shots/ and ralph/reports are capture
-          # OUTPUT, and assets_raw/ is listed in .gitignore as material that
-          # should never have been committed. Measured: 2.1 GB -> 895 MB of
-          # working tree, importing clean and passing smoke + unit shard.
-          filter: blob:none
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /*
-            !/ralph/
-            !/docs/
-            !/shots/
-            !/assets_raw/
-            !/archive/
-      - uses: ./.github/actions/setup-godot
-      # RETRIES: 2, not 1. `archive/docs/CURRENT_STATE.md` §3 already tracks a real,
-      # open P1 here: the tutorial catch's clear-shot-to-target search is
-      # unstable across KO/re-engage rounds inside this same opening drive
-      # (verified locally 2026-09-03 -- one of two runs on an unrelated commit
-      # failed with "could not find a spot with a clear line to the
-      # Bramblebun 9 times running", the other passed clean). That is the
-      # opening's own bug to fix, not this job's to hide -- but a single
-      # attempt would make this job flake on a beat nobody touched, which is
-      # exactly the "RETRIES rescuing a deterministic failure" trap this
-      # lane exists to catch when it is 3 attempts on a job that fails
-      # every time. 2 matches `verify-gate-a-ui-build-shard`'s own retry
-      # budget for `smoke_opening.gd`, which plays the identical drive.
-      - name: Verify gate_b_continuous (CORE — opening through tournament readiness)
-        env: { RETRIES: 2 }
-        run: |
-          set -uo pipefail
-          n=0
-          until [ "$n" -ge "$RETRIES" ]; do
-            n=$((n + 1))
-            echo "::group::smoke_gate_b_continuous.gd attempt ${n}/${RETRIES}"
-            if godot --headless --path . --script tests/smoke_gate_b_continuous.gd; then
-              echo "::endgroup::"
-              exit 0
-            fi
-            echo "::endgroup::"
-            echo "smoke_gate_b_continuous.gd failed on attempt ${n}/${RETRIES}"
-          done
-          exit 1
-
   verify-continuous-core-known-red:
     runs-on: ubuntu-latest
     timeout-minutes: 25
-    needs:
-      - changes
-      - queue-after-long
+    needs: changes
     # This is an investigation probe, not a release gate: it is explicitly
     # allowed to fail and currently repeats a costly whole-world opening drive
     # already covered by the two required opening smoke jobs above. Running it
@@ -2744,9 +771,7 @@ jobs:
   verify-gate-b-full-known-red:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    needs:
-      - changes
-      - queue-after-long
+    needs: changes
     # Owner, 2026-10-04: known-red probes run only on the scheduled full
     # tier and on manual dispatch, never on a `full-ci` pull request. They
     # cannot block a merge (continue-on-error), so on a PR they only held two
@@ -2771,16 +796,11 @@ jobs:
           set -euo pipefail
           godot --headless --path . --script tests/smoke_gate_b_continuous.gd -- --gate-b-full-chain
 
-  # Stage B lane 0.E — the named fence
-  # `archive/docs/specs-2026-09-19/STAGE_B_MULTIPLAYER_EXECUTION_PLAN.md` Wave 1 row 1.B refers to.
-  # This job runs nothing new: it is a checkpoint that every job the plan
-  # calls "the existing 46 CI smokes" (the six verify-*-shard jobs) plus
-  # verify-gate-b-core actually ran and passed before a Wave 1 state-seam
-  # change is allowed to call itself green. It exists so Wave 1's own
-  # completion report has one job name to point at rather than enumerating
-  # six shard jobs by hand every time, and so a future job rename or an
-  # accidentally-dropped `needs:` entry is a visible CI failure instead of a
-  # silent gap in the fence.
+  # CI-SPEED (owner, 2026-10-07): the `verify-solo-regression` fence job and
+  # the `discover-net-smokes` record job were removed. Both ran no test (the
+  # fence only re-stated its `needs`, which ci-gate already requires; every
+  # net shard runs the same discovery/plan check itself), yet each was one
+  # more queue ticket, and the fence queued at the very END of the run.
   # Stage B Wave 0 lane 0.F. archive/docs/specs-2026-09-19/MP_NET_HARNESS_CONTRACT.md §10: runs
   # every tests/smoke_net_*.gd whose header declares `# peers: 2` through
   # tools/net/run_net_smoke.sh -- two real, isolated headless Godot processes
@@ -2790,56 +810,24 @@ jobs:
   # (`verify-multiplayer-wide`, not created by this lane) and do not run here.
   # RETRIES: 1 -- a net smoke that only passes on retry is a finding, same
   # rule docs/WORKFLOW.md §5 already holds every other smoke to.
-  # SPLIT 2026-09-06 (owner direction): this used to be verify-multiplayer-shard
-  # itself, run once as a plain job. It was 46 minutes on run 34049435929
-  # because ~29 two-process net smokes ran SEQUENTIALLY in that one job -- the
-  # whole point of splitting it into `discover-net-smokes` (this job, floor and
-  # roster check only, no Godot) plus a `verify-multiplayer-shard` matrix
-  # below is to run those smokes in PARALLEL instead. Same discovery script,
-  # same floor and named roster, moved rather than duplicated: the matrix jobs
-  # below read this job's `files` output and slice it, they do not re-discover.
-  discover-net-smokes:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    needs:
-      - changes
-      - queue-after-long
-    if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|discover-net-smokes|'))
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          filter: blob:none
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /*
-            !/ralph/
-            !/docs/
-            !/shots/
-            !/assets_raw/
-            !/archive/
-      - name: Discover peers:2 net smokes and check the shard plan
-        # Discovery (header + requires-flag holds), the floor, the named
-        # roster and the exact one-time cover all live in
-        # tools/ci/net_shards.py; every verify-multiplayer-shard runs the same
-        # checks, so this job is the plan's readable record in the run.
-        run: python3 tools/ci/net_shards.py --check
-
   verify-multiplayer-shard:
     runs-on: ubuntu-latest
-    # Twenty-one shards: nineteen longest-processing-time first on MEASURED
-    # durations (tools/ci/net_shards.py: the slowest of three green full runs
-    # per smoke), so the longest shard's job stays under ~13 minutes, then
-    # f20_ending and split_realms each alone (a hang cannot take other smokes
-    # down with it). The
-    # original 30-minute job limit stays. Each shard discovers the smokes
-    # itself, so this matrix needs only `changes` and queues in the FIRST
-    # wave rather than behind discover-net-smokes (it used to wait ~6 min for
-    # a runner behind ~30 jobs). The F48 co-op suites (owner, 2026-10-03)
-    # live on `tb/coop` until F48 itself is built; they return with it.
+    # CI-SPEED (owner, 2026-10-07): eight shard jobs (was 23), planned
+    # longest-processing-time first from MEASURED durations
+    # (tools/ci/net_shards.py: the slowest of three green full runs per
+    # smoke), each ~18 min of smokes. Eleven duplicate/regional net smokes
+    # (net_shards.py NIGHTLY_ONLY, each with its reason) run only on the
+    # 8-hourly schedule and on dispatch; every other discovered smoke runs
+    # exactly once (the plan check fails otherwise), with the same RETRIES.
+    # Running two smokes at once per runner was tried and dropped: CPU load
+    # broke timing-sensitive smokes (runs 37636924943, 37642447200). Each
+    # shard discovers the smokes itself, so this matrix needs only `changes`.
+    # The F48 co-op suites (owner, 2026-10-03) live on `tb/coop` until F48
+    # itself is built; they return with it.
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+        shard: [1, 2, 3, 4, 5, 6, 7, 8]
     timeout-minutes: 30
     needs: changes
     if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-multiplayer-shard|'))
@@ -2857,61 +845,32 @@ jobs:
             !/archive/
       - name: Select this shard's net smokes
         id: select
-        run: python3 tools/ci/net_shards.py --shard ${{ matrix.shard }}
+        env:
+          NIGHTLY: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+        run: |
+          if [ "$NIGHTLY" = true ]; then
+            python3 tools/ci/net_shards.py --shard ${{ matrix.shard }} --nightly
+          else
+            python3 tools/ci/net_shards.py --shard ${{ matrix.shard }}
+          fi
       - uses: ./.github/actions/setup-godot
       - name: Run net smokes
         if: ${{ !cancelled() && steps.select.outputs.files != '' }}
         env:
           RETRIES: 1
+          LANES: ${{ steps.select.outputs.lanes }}
+          SOLO: ${{ steps.select.outputs.solo }}
+          NET_OUT_DIR: /tmp/net-ci
+          NET_SMOKE_TIMEOUT_SECONDS: 1200
         run: |
           set -uo pipefail
-          command -v setsid >/dev/null || {
-            echo "::error::setsid is required to contain each net smoke's process tree"
-            exit 1
-          }
-          active_runner_pid=""
-          cleanup_active_group() {
-            local pgid="${active_runner_pid:-}"
-            [ -n "$pgid" ] || return 0
-            # The runner, coordinator and OS.create_process peers all inherit
-            # this dedicated process group. Sweep it on success, failure,
-            # SIGINT/SIGTERM cancellation, and the step's EXIT path.
-            kill -TERM -- "-${pgid}" 2>/dev/null || true
-            for _ in $(seq 1 20); do
-              kill -0 -- "-${pgid}" 2>/dev/null || break
-              sleep 0.1
-            done
-            kill -KILL -- "-${pgid}" 2>/dev/null || true
-            wait "$pgid" 2>/dev/null || true
-            active_runner_pid=""
-          }
-          trap cleanup_active_group EXIT
-          trap 'exit 130' INT TERM HUP
+          IFS=';' read -r -a lanes <<< "$LANES"
           status=0
-          for f in ${{ steps.select.outputs.files }}; do
-            name="$(basename "$f" .gd)"
-            name="${name#smoke_net_}"
-            n=0
-            until [ "$n" -ge "$RETRIES" ]; do
-              n=$((n + 1))
-              echo "::group::smoke_net_${name}.gd attempt ${n}/${RETRIES}"
-              setsid tools/net/run_net_smoke.sh "$name" --out=/tmp/net-ci &
-              active_runner_pid=$!
-              if wait "$active_runner_pid"; then
-                run_status=0
-              else
-                run_status=$?
-              fi
-              cleanup_active_group
-              if [ "$run_status" -eq 0 ]; then
-                echo "::endgroup::"
-                continue 2
-              fi
-              echo "::endgroup::"
-              echo "smoke_net_${name}.gd failed on attempt ${n}/${RETRIES}"
-            done
-            status=1
-          done
+          tools/ci/run_net_lanes.sh "${lanes[@]}" || status=1
+          # EXCLUSIVE smokes (tools/ci/net_shards.py): alone on the runner.
+          if [ -n "$SOLO" ]; then
+            tools/ci/run_net_lanes.sh "$SOLO" || status=1
+          fi
           exit "$status"
       - uses: actions/upload-artifact@v4
         if: always()
@@ -2921,32 +880,6 @@ jobs:
           retention-days: 14
           if-no-files-found: ignore
 
-  verify-solo-regression:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    needs:
-      - changes
-      - verify-core-verb-shard
-      - verify-gate-a-ui-build-shard
-      - verify-combat-shard
-      - verify-regions-shard
-      - verify-owner-regressions-shard
-      - verify-gate-evidence-shard
-      - verify-gate-b-core
-    if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-solo-regression|'))
-    steps:
-      - name: Confirm the solo regression fence held
-        run: |
-          echo "Solo regression fence held. Depended-on jobs, all green:"
-          echo "  - verify-core-verb-shard"
-          echo "  - verify-gate-a-ui-build-shard"
-          echo "  - verify-combat-shard"
-          echo "  - verify-regions-shard"
-          echo "  - verify-owner-regressions-shard"
-          echo "  - verify-gate-evidence-shard"
-          echo "  - verify-gate-b-core"
-          exit 0
-
   # Spec-driven delivery verifies the package before automatic merge. This
   # costs an export on code PRs, but prevents a branch whose source tests pass
   # and whose shipped binary fails from reaching the rolling download.
@@ -2955,9 +888,7 @@ jobs:
     timeout-minutes: 15
     # Export starts with the tests instead of after them; ci-gate still
     # requires every verify job and export == success before a merge.
-    needs:
-      - changes
-      - queue-after-long
+    needs: changes
     if: |
       needs.changes.outputs.code == 'true'
 
@@ -3050,6 +981,27 @@ jobs:
           path: build/windows/
           retention-days: 14
 
+      # Folded in from verify-bake-freshness (CI-SPEED, 2026-10-07); the same
+      # three checks, run whether or not the export steps passed.
+      - name: Check the playground scatter bake is fresh
+        if: ${{ !cancelled() }}
+        run: |
+          godot --headless --path . --script tests/run_tests.gd \
+            -- --only=test_scatter_perf_budget.gd::test_playground_bake_is_committed_and_fresh
+      - name: Check the playground terrain bake is fresh
+        if: ${{ !cancelled() }}
+        run: |
+          godot --headless --path . --script tests/run_tests.gd \
+            -- --only=test_terrain_bake_freshness.gd::test_playground_terrain_bake_is_committed_and_fresh
+      - name: Check initialized shared terrain mipmaps
+        if: ${{ !cancelled() }}
+        run: |
+          set -euo pipefail
+          godot --headless --path . --script tools/probe_terrain_texture_mipmaps.gd 2>&1 | tee /tmp/terrain-mipmaps.log
+          if grep -qE 'SCRIPT ERROR|Parse Error|ERROR:' /tmp/terrain-mipmaps.log; then
+            exit 1
+          fi
+
   # One stable required status for branch protection. A skipped known-red job
   # is an explicit exclusion; an active failure/cancellation or a missing
   # export on a code change cannot become a green merge gate.
@@ -3064,10 +1016,9 @@ jobs:
       matrix:
         group: [space, capacity, recovery]
     timeout-minutes: 50
-    needs:
-      - changes
-      - queue-after-longest
-    if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-veridian-offer|'))
+    needs: changes
+    # CI-SPEED (owner, 2026-10-07): NIGHTLY ONLY -- six solo world boots (~26 runner-min) walking the offer; the per-participant offer stays gated by the five smoke_net_veridian_* smokes. The rift gate smoke moved to verify-gate-b-core.
+    if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-veridian-offer|'))
     steps:
       - uses: actions/checkout@v4
         with:
@@ -3122,37 +1073,10 @@ jobs:
           name: veridian-offer-${{ matrix.group }}-native
           path: /tmp/veridian-offer/*.log.gz
           if-no-files-found: warn
-      - name: Verify rift gate opens once
-        if: ${{ !cancelled() && matrix.group == 'space' }}
-        run: timeout 600s godot --headless --path . --script tests/smoke_rift_gate_opens_once.gd
 
-  verify-cloudreach-persistence:
-    # F08 (ACCEPTANCE 6.1): restored wind roads, Wings/shrine and the Stormwood
-    # key survive a real solo disk reload, each written once across the split
-    # world/character halves. Negative controls (--f08-unsaved / --f08-double)
-    # are run locally and recorded under ralph/reports/CLOUDREACH-LANE/f08-persistence/.
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    needs:
-      - changes
-      - queue-after-long
-    if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-cloudreach-persistence|'))
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          filter: blob:none
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /*
-            !/ralph/
-            !/docs/
-            !/shots/
-            !/assets_raw/
-            !/archive/
-      - uses: ./.github/actions/setup-godot
-      - name: Verify Cloudreach persistence tail
-        run: timeout 600s godot --headless --path . --script tests/smoke_cloudreach_persistence_tail.gd
-
+  # CI-SPEED (owner, 2026-10-07): the standalone verify-cloudreach-persistence
+  # job was removed: verify-regions-shard (world) runs the identical
+  # tests/smoke_cloudreach_persistence_tail.gd on every full run.
   verify-f18-earned-loop:
     # F18#5 (ACCEPTANCE 6.2): the ordinary-input loop with portals on. Fresh
     # opening and earned tools, a paid homestead Workbench, a deep Trail Camp
@@ -3163,7 +1087,8 @@ jobs:
     timeout-minutes: 35
     # A ~15-min job: queued first, on `changes` only (QUEUE ORDER above).
     needs: changes
-    if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-f18-earned-loop|'))
+    # CI-SPEED (owner, 2026-10-07): NIGHTLY ONLY -- a 12.5-min scripted walk; its pieces stay gated by gate-b-core (opening), smoke_net_f18_fixture_teaching, smoke_net_homestead_station_craft and title_load_game.
+    if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-f18-earned-loop|'))
     steps:
       - uses: actions/checkout@v4
         with:
@@ -3216,10 +1141,9 @@ jobs:
         # under the account's ~20 concurrent-job cap.
         segment: [s0_setup_and_control, s1_ride_a, s2_ride_b]
     timeout-minutes: 30
-    needs:
-      - changes
-      - queue-after-longest
-    if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-cloudreach-midride-rejoin|'))
+    needs: changes
+    # CI-SPEED (owner, 2026-10-07): NIGHTLY ONLY -- rejoin stays gated by smoke_net_reconnect_keeps_character, behind_character_joins_ahead_world, realm_owner_disconnect_mid_fight and veridian_relic_key; the segment handoff checks still gate every run.
+    if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-cloudreach-midride-rejoin|'))
     steps:
       - uses: actions/checkout@v4
         with:
@@ -3285,9 +1209,7 @@ jobs:
       matrix:
         chain: [midride, bracket]
     timeout-minutes: 45
-    needs:
-      - changes
-      - queue-after-long
+    needs: changes
     if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-unbroken-chains|'))
     continue-on-error: true
     steps:
@@ -3321,84 +1243,22 @@ jobs:
         if: ${{ matrix.chain == 'bracket' }}
         run: timeout 900s godot --headless --path . --script tests/smoke_tournament_bracket.gd
 
-  # CI-SEGMENTS (owner 2026-10-04): one HANDOFF job per segmented chain. Per
-  # boundary (tests/helpers/ci_segments.gd): the committed checkpoint is at
-  # the current save VERSION, loads through the production SaveGame.load_slot,
-  # meets the next segment's start contract (the same dictionary the producer
-  # segment's end asserts), still matches its manifest digest and was made by
-  # the producer as it is now; deliberately stale copies must fail. Then the
-  # chain's step coverage: every original step runs exactly once, unchanged.
-  verify-segment-handoffs:
-    runs-on: ubuntu-latest
-    # One job for every chain (each check is ~1 s; the job is setup).
-    timeout-minutes: 15
-    needs:
-      - changes
-      - queue-after-long
-    if: needs.changes.outputs.full == 'true'
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          filter: blob:none
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /*
-            !/ralph/
-            !/docs/
-            !/shots/
-            !/assets_raw/
-            !/archive/
-      - name: Verify midride segment coverage
-        run: |
-          set -euo pipefail
-          python3 tools/ci/segments/check_coverage.py tools/net/proof_scenarios/f06_cloudreach_midride_rejoin.json \
-            tools/net/proof_scenarios/segments/midride/s0_setup_host.json \
-            tools/net/proof_scenarios/segments/midride/s0_setup_guest.json \
-            tools/net/proof_scenarios/segments/midride/s1_ride_a.json \
-            tools/net/proof_scenarios/segments/midride/s2_ride_b.json \
-            tools/net/proof_scenarios/segments/midride/s3_control.json
-      - uses: ./.github/actions/setup-godot
-      - name: Verify midride checkpoint handoffs
-        env: { TB_SEGMENT_CHAIN: midride }
-        run: godot --headless --path . --script tests/run_tests.gd -- --only=ci_segment_handoffs
-      - name: Verify bracket checkpoint handoffs
-        if: ${{ !cancelled() }}
-        env: { TB_SEGMENT_CHAIN: bracket }
-        run: godot --headless --path . --script tests/run_tests.gd -- --only=ci_segment_handoffs
-
   ci-gate:
     runs-on: ubuntu-latest
     if: always()
     needs:
       - changes
-      - queue-after-longest
-      - queue-after-long
+      - verify-suite
       - verify-veridian-offer
       - verify-cloudreach-midride-rejoin
-      - verify-segment-handoffs
       - verify-unbroken-chains
-      - verify-cloudreach-persistence
       - verify-f18-earned-loop
-      - verify-bake-freshness
-      - verify-unit-tests
       - verify-veg-corridor
       - verify-scatter-rules
-      - verify-harvest
-      - verify-core-verb-shard
-      - verify-gate-a-ui-build-shard
-      - verify-combat-shard
-      - verify-regions-shard
-      - verify-owner-regressions-shard
-      - verify-gate-evidence-shard
-      - verify-gate-b-core
-      - verify-gate-evidence-finale
-      - verify-catching
       - verify-regions-relay
       - verify-continuous-core-known-red
       - verify-gate-b-full-known-red
-      - discover-net-smokes
       - verify-multiplayer-shard
-      - verify-solo-regression
       - export
     steps:
       - name: Confirm active verification and export
