@@ -15,3 +15,13 @@ MEADOWS_C2C3_HITS warden_aldis terrapup READER neutral_worst=0.416 by={ "foe": "
 MEADOWS_C2C3_VERDICT warden_aldis terrapup FAIL -- reader/masher party cost 0.275/0.432 > 0.55
 MEADOWS_C2C3 ERROR: cannot write /home/runner/work/Tetherbound/Tetherbound/ralph/reports/F33/hosted-a-warden-admission-probe/warden.json
 MEADOWS_C2C3 done: 1 rows, 1 failing rows, 2 runs, 1 errors
+
+Prior/bare comparison — diagnostic PASS only
+Run37672775431 @4f4d668d668b6520ec73a0c3f4c77b7bd911f7ba; exit0,288s.
+Same seed, five retained creatures, Terrapup, Warden roster, L18 and reader/masher policies; bare tier.
+JSON parent creation is exercised and receipt exists; zero write/runtime errors.
+One row PASS: readerwin1/masherwin1; leadfaint reader0/masher1; partywipe0 both.
+Party HP cost: reader0.177674771683873 / masher0.769461363952061.
+Matching Rootiron diagnostic failed the C2 ratio; this comparison is not evidence matching tier passes or previous tier is clearly harder.
+No cohort, remaining bosses, full F23/F24 policy, earned-save or co-op acceptance claimed.
+Independent retained review: APPROVE bounded JSON-parent repair and d2915aab4744 opt-in Tidewake gear steps only, not F33#2 acceptance.
