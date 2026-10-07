@@ -4963,9 +4963,9 @@ func host_ack_creature_training(peer: int, row: Dictionary) -> bool:
 	var pending: bool = _character_authority.call("creature_training_is_pending", character) == true
 	if not pending and (row.get("action") != "tether_item" or not _tether_item_original_pending(row)):
 		# A recovered saved marker is history, not permission to rewrite live HP.
-		return _character_authority.call("acknowledge_creature_training", character, row) == true
+		return _acknowledge_training_and_readmit(character, row)
 	if pending and _character_authority.call("creature_training_pending_matches", character, row) != true: return false
-	if row.get("kind") == "altar_building": return _character_authority.call("acknowledge_creature_training", character, row) == true
+	if row.get("kind") == "altar_building": return _acknowledge_training_and_readmit(character, row)
 	var bundle: Dictionary=_training_actor_baseline_proposals(peer,row)
 	if bundle.get("ok")!=true: return false
 	# Private actor commits have no publishing/reentrant callback. All proposed
@@ -4974,8 +4974,16 @@ func host_ack_creature_training(peer: int, row: Dictionary) -> bool:
 		if proposal.host.call("commit_actor_training_baseline",proposal.stage,row,bundle.admitted,
 			bundle.revision,world.reward_deliveries,world.reward_delivery_namespace,world.world_id)!=true: return false
 	if not _install_host_tether_tonic(peer, row): return false
-	if _character_authority.call("acknowledge_creature_training", character, row) != true: return false
+	if not _acknowledge_training_and_readmit(character, row): return false
 	return _finalize_tether_item_row(row) if row.get("action") == "tether_item" else true
+
+
+func _acknowledge_training_and_readmit(character: String, row: Dictionary) -> bool:
+	if _character_authority.call("acknowledge_creature_training", character, row) != true: return false
+	# A pending bounty/training row may have held this character's first
+	# rejoin declaration. Only its actual accepted owner ACK releases it.
+	if _owner_passive != null: _owner_passive.call("retry_deferred", character)
+	return true
 
 
 func _tether_item_original_pending(row: Dictionary) -> bool:

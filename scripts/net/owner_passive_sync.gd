@@ -254,14 +254,15 @@ func admitted(peer: int, summary: Dictionary) -> void:
 	# whole held record (`adopt`). Anything else is refused with a reason.
 	var core_matches: bool = declared is Dictionary and HASH.fingerprint(declared) == declaration.get("baseline_hash") \
 		and E._equivalent(REPLAY._core(before), REPLAY._core(declared))
-	if not core_matches and not (authority.call("pending_creature_vitals", character) as Dictionary).is_empty():
-		# The owner left with a host vitals row it saved but never ACKed: its
+	if not core_matches and (not (authority.call("pending_creature_vitals", character) as Dictionary).is_empty() \
+		or authority.call("creature_training_is_pending", character) == true):
+		# The owner left with a host vitals/training row it never ACKed: its
 		# settled escrow is ahead of this authority only by that ACK, which the
 		# ledger re-delivers now. Admit once it lands (retry_deferred).
 		deferred[character] = {"peer": peer, "summary": summary.duplicate(true),
 			"world_id": _game().get("world").world_id, "world_namespace": _game().get("world").reward_delivery_namespace,
 			"epoch": session.call("_altar_current_epoch"), "request_id": Crypto.new().generate_random_bytes(16).hex_encode()}
-		print("[owner-passive] admission of %s waits for its in-flight vitals ACK" % character.left(18))
+		print("[owner-passive] admission of %s waits for its in-flight owner ACK" % character.left(18))
 		return
 	deferred.erase(character)
 	if not declared is Dictionary or HASH.fingerprint(declared) != declaration.get("baseline_hash"):
@@ -320,7 +321,8 @@ func retry_deferred(character: String) -> void:
 		or parked.epoch != session.call("_altar_current_epoch") \
 		or parked.world_id != _game().get("world").world_id \
 		or parked.world_namespace != _game().get("world").reward_delivery_namespace \
-		or not (session.get("_character_authority").call("pending_creature_vitals", character) as Dictionary).is_empty(): return
+		or not (session.get("_character_authority").call("pending_creature_vitals", character) as Dictionary).is_empty() \
+		or session.get("_character_authority").call("creature_training_is_pending", character) == true: return
 	_send_owner(int(parked.peer), {"character": character, "world_id": parked.world_id,
 		"world_namespace": parked.world_namespace, "epoch": parked.epoch,
 		"id": parked.summary.owner_passive_stream.id}, {"op": "redeclaration", "request_id": parked.request_id})
@@ -453,7 +455,8 @@ func receive_host(peer: int, packet: Dictionary) -> void:
 			or not summary.get("portable_authority") is Dictionary \
 			or declaration.get("baseline_hash") != HASH.fingerprint(summary.portable_authority): return
 		var authority: RefCounted = owner().get("_character_authority")
-		if not (authority.call("pending_creature_vitals", character) as Dictionary).is_empty(): return
+		if not (authority.call("pending_creature_vitals", character) as Dictionary).is_empty() \
+			or authority.call("creature_training_is_pending", character) == true: return
 		var undo: Dictionary = authority.call("snapshot_record", character)
 		var lists: Dictionary = owner().call("rejoin_payout_lists", summary)
 		var result: Dictionary = owner().call("rejoin_admission_for", character, summary.portable_authority, summary, lists)
@@ -485,7 +488,8 @@ func receive_host(peer: int, packet: Dictionary) -> void:
 		# in-flight vitals are settled (backstop for a lost ACK-side retry).
 		if deferred.get(character, {}).get("peer") == peer:
 			var authority: RefCounted = owner().get("_character_authority")
-			if (authority.call("pending_creature_vitals", character) as Dictionary).is_empty(): retry_deferred(character)
+			if (authority.call("pending_creature_vitals", character) as Dictionary).is_empty() \
+				and authority.call("creature_training_is_pending", character) != true: retry_deferred(character)
 		return
 	var stream: Dictionary = hosts[character]
 	if stream.get("departed") == true:
