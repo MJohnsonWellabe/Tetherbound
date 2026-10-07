@@ -1,0 +1,14 @@
+{
+  "criterion": "F14#2",
+  "source_commit": "1035a4eb7170c082e81440c6d72adebc2f9e9135",
+  "run_id": 37670342009,
+  "artifact_id": 11505217152,
+  "proof": "tests/smoke_tidewake_b_current_restore.gd --capture=res://shots/lane-d/f14-current-restore",
+  "result": {"checks": 87, "failed": 0, "exit": 0, "seconds": 259},
+  "observed_current_speed_m_s": {"before": 1.3, "after": 0.325, "after_reload": 0.325},
+  "observed_calm_scale": {"before": 1.0, "after": 0.5, "after_reload": 0.5},
+  "mechanics": "PASS: real chamber decline confirmation -> production settlement/journal -> save slot0 -> world destruction/reset -> load slot0 -> rebuilt state. Declared freed/dock fixture is not earned progression or participant-offer acceptance evidence.",
+  "visual": "INVALID: four images exist but before/after viewpoints visibly differ. Script callback pauses did not stop SpringArm3D internal child placement. No visual judge PASS or criterion READY.",
+  "fix": "a63c508b3f: reuse whole-subtree PROCESS_MODE_DISABLED from the existing paired-current capture, assert actual camera transform after draw, reset interpolation and record actual poses. Corrected second attempt also observes the existing material-only grouped-foam candidate without shipping it.",
+  "disposition": "Retain state/persistence component and failed measurement honestly; original images remain in the run artifact."
+}
