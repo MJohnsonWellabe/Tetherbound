@@ -108,6 +108,18 @@ func test_capture_checkpoint_binds_original_offer_without_granting_its_creature(
 	var f := _fixture()
 	var capture := _capture_event()
 	assert_false(capture.is_empty())
+	var offer: Dictionary = capture.duties[0].context.duplicate(true)
+	var original_offer := var_to_bytes(offer)
+	var context := offer.duplicate(true)
+	context.merge({"character_id": DATA.CHARACTER, "expected_revision": 0, "in_range": true, "in_combat": false})
+	var kept := preload("res://scripts/net/foundation_capture_rules.gd").stage(f.before,
+		{"offer_id": offer.offer_id, "keep": true, "released_uid": ""}, context)
+	assert_true(kept.get("ok") == true, "original capture stages on the admitted carrier")
+	if kept.get("ok") == true:
+		assert_false(kept.state.party.back().has("energy"), "newcomer uses the durable portable card")
+		assert_true(PREP.exact(kept.state, preload("res://scripts/net/character_record_rules.gd").portable_projection(kept.state)),
+			"capture after carrier agrees with the owner install projection")
+	assert_eq(var_to_bytes(offer), original_offer, "staging never rewrites the original host offer")
 	var prepared := PREP.make(capture, capture.duties[0], f.before, 0, "current-epoch", f.cursor, DATA.TXN)
 	assert_false(prepared.is_empty())
 	assert_true(PREP.valid_host(prepared, capture, f.cursor))

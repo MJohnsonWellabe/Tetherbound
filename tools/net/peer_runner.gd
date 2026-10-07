@@ -5110,6 +5110,14 @@ func _step_catch_fixture_rng(args: Dictionary) -> Dictionary:
 	var chance_min := float(chance_cfg.get("min", 0.02))
 	var chance_max := float(chance_cfg.get("max", 0.95))
 	runtime.call("pause_for_catch") # prevents AI from consuming the selected next roll.
+	# This disclosed RNG fixture precedes the guest's actual catch request.
+	# The director resumes an active fight whose body is disengaged; retain
+	# its engagement marker while physics stays paused so the next roll is
+	# still the one the original host catch arbiter receives.
+	var paused_body := runtime.call("body") as Node3D
+	if paused_body == null or paused_body.is_physics_processing():
+		return {"verdict": "FAIL", "detail": "Actual host catch fixture could not pause its body"}
+	paused_body.set("engaged", true)
 	var want_caught := bool(args.get("caught", true))
 	var runtime_rng := runtime.get("_rng") as RandomNumberGenerator
 	if runtime_rng == null:
