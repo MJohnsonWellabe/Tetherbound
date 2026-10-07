@@ -1,0 +1,21 @@
+{
+  "proof": "existing tests/run_tests.gd:42 mapped Cloudreach/flag/split-save files",
+  "assertions": 29060,
+  "tests": 607,
+  "remaining_gates": [
+    "Actual ordered-ring flight and floor landing",
+    "Untrained guest personal receipt only",
+    "Save/rejoin and once-only eligible non-loaner bond"
+  ],
+  "failed": 0,
+  "exit_code": 0,
+  "criterion_claim": "none",
+  "run_id": 37668630341,
+  "review": {
+    "agent": "/root/review_cloud_startup",
+    "scope": "Source including both legacy world tutorial load corrections",
+    "verdict": "APPROVE"
+  },
+  "source_sha": "1d54556ed3786016b0095ead355d33bc728faf5b",
+  "duration_seconds": 24
+}
