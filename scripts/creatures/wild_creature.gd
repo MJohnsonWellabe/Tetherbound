@@ -582,7 +582,9 @@ func _current_pattern_context() -> Dictionary:
 
 func _pattern_profile() -> Dictionary:
 	if _patterns.is_empty() or instance == null: return {}
-	return AI.select_pattern(_patterns, _combat_cfg, _current_pattern_context(), _pattern_cursor)
+	var named: Dictionary = _patterns.get("named", {}).get(str(_pattern_context.get("pattern_id", "")), {})
+	var cursor := _selected_attack_attempts if bool(named.get("authored_move_cadence", false)) else _pattern_cursor
+	return AI.select_pattern(_patterns, _combat_cfg, _current_pattern_context(), cursor)
 
 
 func _clear_pattern_cue() -> void:
@@ -907,10 +909,18 @@ func _select_attack() -> Dictionary:
 	if not pattern.is_empty():
 		_pattern_cursor += 1
 		_pattern_repeat_left = maxi(0, int(pattern.get("repeat_count", 1)) - 1)
-		var selected := spaced_config_for(pattern, mine, theirs, _contact_need(), _contact_reach_need())
-		if str(selected.get("telegraph_shape", "")) == "lane":
-			selected["lane_half_width_m"] = _lunge_lane_half_width()
-		return selected
+		var named: Dictionary = _patterns.get("named", {}).get(str(pattern.get("pattern_id", "")), {})
+		if not bool(named.get("authored_move_cadence", false)):
+			var selected := spaced_config_for(pattern, mine, theirs, _contact_need(), _contact_reach_need())
+			if str(selected.get("telegraph_shape", "")) == "lane":
+				selected["lane_half_width_m"] = _lunge_lane_half_width()
+			return selected
+		# Keep this named fight's cues/armor while its existing authored cadence
+		# owns timing and the charged move's geometry, before the one spacing pass.
+		for key: String in ["pattern_attack_id", "combat_role", "pattern_id", "telegraph_shape",
+				"safe_escape", "armored_front_degrees", "front_damage_scale"]:
+			if pattern.has(key):
+				profile[key] = pattern[key]
 	_selected_attack_attempts += 1
 	var cadence := maxi(1, int(_combat_cfg.get("charged_every", 1)))
 	if _selected_attack_attempts % cadence != 0:
