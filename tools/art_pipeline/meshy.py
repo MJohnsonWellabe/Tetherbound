@@ -2008,13 +2008,15 @@ HEAD_PROMPTS = {
         "face is hidden behind two solid layers. Strong jaw below the mask, "
         "short spiky swept hair, ears"),
     "grandpa": (
-        "stylised elderly man's HEAD AND NECK ONLY, bust, no body. GAUNT "
-        "hollow-cheeked face, sharp cheekbones, lined and wrinkled, HIGH "
-        "RECEDING HAIRLINE with a bare forehead and only THIN SPARSE WISPY "
-        "grey hair swept back close to the skull, never thick, never a full "
-        "bouffant. Deep eye sockets with eyelids and heavy brows, projecting "
-        "bony nose, kind closed mouth, full grey beard and moustache in "
-        "combed directional strands covering the jaw, round ears"),
+        "the SAME Grandpa from the reference, stylised elderly man's HEAD "
+        "AND SHORT NECK ONLY, no shoulders or body. Preserve his face "
+        "likeness, head proportions, elderly age, kind slightly concerned "
+        "closed mouth, long rounded nose and softly squared jaw. Model deep "
+        "eye sockets, actual eyelids, warm dark eyes and thick grey eyebrows. "
+        "Preserve swept wavy silver hair with the reference's uneven side "
+        "curls and part, round ears, short full grey beard and moustache. "
+        "Clean softened game-sculpt forms with readable cheek and lip "
+        "geometry; no identity redesign or invented ornaments"),
 }
 
 
@@ -2041,7 +2043,8 @@ def cmd_head(args) -> None:
     if args.species not in HEAD_PROMPTS:
         sys.exit(f"no head prompt for '{args.species}'. Known: "
                  f"{', '.join(HEAD_PROMPTS)}.")
-    crop = REFERENCE_ROOT / args.species / "reference" / "head.png"
+    crop = (generation_views(args.species, args.image)["source"] if args.image
+            else REFERENCE_ROOT / args.species / "reference" / "head.png")
     if not crop.exists():
         sys.exit(f"{args.species} has no head crop at {crop}. Add a 'head' entry "
                  f"to tools/art_pipeline/views.json and re-run crop_views.py.")
@@ -2056,7 +2059,7 @@ def cmd_head(args) -> None:
 
     manifest = {"species": args.species, "mode": "head-only", "prompt": prompt,
                 "negative_prompt": negative_for(args.species),
-                "views": {"head": str(crop.relative_to(ROOT))}, "tasks": []}
+                "views": {"head": _manifest_path(crop)}, "tasks": []}
     for index in range(args.candidates):
         result = request("POST", ENDPOINTS["generate"], {
             "mode": "preview",
@@ -2243,6 +2246,8 @@ def main() -> None:
     head.add_argument("--candidates", type=int, default=2)
     head.add_argument("--polycount", type=int, default=30000)
     head.add_argument("--budget", type=int, default=DEFAULT_BUDGET)
+    head.add_argument("--image", default=None,
+                      help="use one inspected head PNG without replacing the installed reference")
     head.add_argument("--yes", action="store_true")
     head.set_defaults(func=cmd_head)
 
