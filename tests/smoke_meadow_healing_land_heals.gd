@@ -102,17 +102,54 @@ func _run() -> void:
 		(healing.call("_world_group_nodes", HEALING.PYLON_HOLDERS_GROUP) as Array).size(),
 		(healing.call("_world_group_nodes", HEALING.CABLE_HOLDERS_GROUP) as Array).size()])
 
+	# CPU preparation must finish BEFORE the flag, without healing anything.
+	var preparation_started := Time.get_ticks_msec()
+	while not bool(healing.get("_prepared_regreen_ready")) and Time.get_ticks_msec() - preparation_started < FADE_TIMEOUT_MS:
+		await process_frame
+	if not bool(healing.get("_prepared_regreen_ready")):
+		_fail("(before) CPU regreen preparation exceeded the existing fade timeout")
+		_finish()
+		return
+	if bool(_game.get("progression").call("has", FLAG)) or bool(healing.call("applied")):
+		_fail("(before) CPU preparation changed the freeing flag or applied the healing")
+	if not (healing.call("regreen_nodes") as Array).is_empty() or not (healing.call("toppled_pylons") as Array).is_empty():
+		_fail("(before) CPU preparation installed regreen meshes or started a pylon fall")
+	if float(healing.call("drain_alpha_now")) < 0.999:
+		_fail("(before) CPU preparation faded the drain")
+	var light_spec: Dictionary = _healing_config().get("tether_lights", {})
+	var lit_path := str(light_spec.get("lit_albedo", ""))
+	var dead_exists := ResourceLoader.exists(str(light_spec.get("dead_albedo", "")))
+	for raw: Material in light_materials:
+		if not _tether_material_is_live(raw as StandardMaterial3D, healing, lit_path, dead_exists):
+			_fail("(before) CPU preparation changed an original live tether material")
 	# --- 1. live: the flag lands ---------------------------------------------
 	_game.get("progression").call("set_flag", FLAG)
-	# PERF (2026-10-05): the freeing used to hold one frame for 11-13 s, most
-	# of it road lookups in the regreen build. The host's guests are waiting
-	# on that frame; keep it bounded.
+	# The original synchronous apply owns this entire freeing frame.
 	var landed := Time.get_ticks_msec()
+	var freeing_started := landed
 	var heal_frame_ms := 0
-	while not bool(healing.call("applied")):
+	while not bool(healing.call("applied")) and Time.get_ticks_msec() - freeing_started < FADE_TIMEOUT_MS:
 		await process_frame
 		heal_frame_ms = maxi(heal_frame_ms, Time.get_ticks_msec() - landed)
 		landed = Time.get_ticks_msec()
+	if not bool(healing.call("applied")):
+		_fail("(live) synchronous healing did not complete within the existing fade timeout")
+		_finish()
+		return
+	if bool(healing.get("_applying")):
+		_fail("(live) apply yielded after the freeing flag")
+	var still_lit := 0
+	for raw: Material in light_materials:
+		var user := world.get_node_or_null(NodePath(str(before_material_users.get(raw, ""))))
+		if user != null and not _retiring_from_world(user, world) \
+				and _tether_material_is_live(raw as StandardMaterial3D, healing, lit_path, dead_exists):
+			still_lit += 1
+	if still_lit != 0:
+		_fail("(live) %d original tether materials still lit on the synchronous freeing frame" % still_lit)
+	var started_pylons: Array = healing.call("toppled_pylons")
+	if started_pylons.is_empty():
+		_fail("(live) no authored pylon fall started on the synchronous freeing frame")
+	print("(live) %d original materials still lit; %d pylon falls already started" % [still_lit, started_pylons.size()])
 	print("(live) longest frame while the freeing landed: %d ms" % heal_frame_ms)
 	if heal_frame_ms > MAX_HEAL_FRAME_MS:
 		_fail("(live) the freeing held one frame for %d ms (limit %d ms)" % [heal_frame_ms, MAX_HEAL_FRAME_MS])
@@ -145,6 +182,7 @@ func _run() -> void:
 			_fail("(live) drain mesh %s still stands after the fade" % str((raw as MeshInstance3D).name))
 	print("(live) the drain lifted: alpha %.3f, %d meshes hidden" % [float(healing.call("drain_alpha_now")), (healing.call("drain_nodes") as Array).size()])
 	_check_end_state(world, healing, "live")
+	await _check_regreen_matches_synchronous(world, healing)
 	var live_poses := _pylon_poses(world, healing)
 	_check_spokes_untouched(world, spokes_before, "live")
 
@@ -243,6 +281,43 @@ func _check_grouped_targets() -> void:
 		for failure: String in (checks.get("failures") as Array):
 			_fail("(groups) %s: %s" % [method, failure])
 	print("(groups) mounted checks executed %d assertions" % int(checks.get("assertion_count")))
+
+
+func _check_regreen_matches_synchronous(world: Node, healing: Node) -> void:
+	# Rebuild only the existing overlay on this same production terrain, with
+	# no frame budget. It remains hidden and never changes progression/save.
+	var reference := HEALING.new()
+	reference.visible = false
+	world.add_child(reference)
+	reference.set("_world", world)
+	reference.set("_config", _healing_config())
+	var quads: int = await reference.call("_regreen_the_scars", true)
+	if quads != int((healing.call("report") as Dictionary).get("regreened", -1)):
+		_fail("(slice) synchronous and live regreen quad counts differ")
+	var actual: Array = healing.call("regreen_nodes")
+	var expected: Array = reference.call("regreen_nodes")
+	var vertices := 0
+	if actual.size() != expected.size():
+		_fail("(slice) synchronous and live regreen group counts differ")
+	else:
+		for i in actual.size():
+			var live_mesh: Mesh = (actual[i] as MeshInstance3D).mesh
+			var snap_mesh: Mesh = (expected[i] as MeshInstance3D).mesh
+			if (actual[i] as Node).name != (expected[i] as Node).name \
+					or live_mesh.get_surface_count() != snap_mesh.get_surface_count():
+				_fail("(slice) regreen group/surface order differs at %d" % i)
+				continue
+			for j in live_mesh.get_surface_count():
+				var live_arrays := live_mesh.surface_get_arrays(j)
+				var snap_arrays := snap_mesh.surface_get_arrays(j)
+				vertices += (live_arrays[Mesh.ARRAY_VERTEX] as PackedVector3Array).size()
+				for channel in Mesh.ARRAY_MAX:
+					if live_arrays[channel] != snap_arrays[channel]:
+						_fail("(slice) regreen mesh %d surface %d channel %d differs" % [i, j, channel])
+	if vertices != 223824:
+		_fail("(slice) regreen has %d vertices, expected unchanged 223824" % vertices)
+	print("(slice) live/synchronous regreen compared %d vertices, all mesh channels" % vertices)
+	reference.free()
 
 
 func _check_end_state(world: Node, healing: Node, tag: String) -> void:

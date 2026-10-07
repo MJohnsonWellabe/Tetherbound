@@ -49,6 +49,7 @@ const CONFIG_PATH := "res://data/config/meadow_healing.json"
 ## `playground_heightfield.drain_factor()` reads, so a local heal and the drain
 ## it undoes are answering the same numbers.
 const TERRAIN_PATH := "res://data/config/terrain_playground.json"
+const BUILD_BUDGET := preload("res://scripts/world/shell_build_budget.gd")
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
@@ -137,6 +138,10 @@ var _config: Dictionary = {}
 var _world: Node3D = null
 var _progression: RefCounted = null
 var _applied: bool = false
+var _applying: bool = false
+var _preparing_regreen := false
+var _prepared_regreen_ready := false
+var _prepared_regreen: Array[Dictionary] = []
 var _flag := "legendary_freed"
 ## Last `progression.revision` this node compared the flag against.
 var _revision: int = -1
@@ -205,6 +210,7 @@ func build(world: Node3D) -> void:
 	# prevent.
 	_flag = flag
 	set_process(true)
+	_prepare_regreen.call_deferred()
 
 
 func _process(_delta: float) -> void:
@@ -221,7 +227,7 @@ func _process(_delta: float) -> void:
 			sync_herd_display()
 		return
 	_revision = revision
-	if not _applied and bool(_progression.call("has", _flag)):
+	if not _applied and not _applying and bool(_progression.call("has", _flag)):
 		apply(false)
 	# F05: re-read on every flag change rather than once. In co-op the answers
 	# arrive one character at a time and in any order, so the display can only
@@ -317,8 +323,9 @@ func _build_herd_display(spec: Dictionary) -> Node3D:
 	return body
 
 
-## Everything, in one call, so a test can drive it without a boss fight.
-## `immediate` skips the fades — the loaded-save case.
+## A loaded save completes synchronously. Live freeing prepares the unchanged
+## overlay across frames before starting the crossfade and its presentation
+## hold timer. `applied()` becomes true only when that preparation is complete.
 func apply(immediate: bool = false) -> Dictionary:
 	if _applied:
 		return _report
@@ -784,6 +791,43 @@ func _withdraw_beaten_patrols() -> int:
 ## scale and tint, shared by every group; its `master_alpha` fades 0 -> 1
 ## over `fade_seconds`, the same seconds the dark skins fade out over, so the
 ## two crossfade.
+## Prepare only CPU mesh arrays while the unfreed world remains unchanged.
+## Publish the cache together; an early flag uses the synchronous builder.
+func _prepare_regreen() -> void:
+	if _applied or _prepared_regreen_ready or _preparing_regreen or not is_inside_tree():
+		return
+	if _progression == null or bool(_progression.call("has", _flag)):
+		return
+	_preparing_regreen = true
+	var block: Dictionary = _config.get("regreen", {})
+	var groups: Dictionary = block.get("groups", {})
+	var prepared: Array[Dictionary] = []
+	if bool(block.get("enabled", true)) and _world != null and _world.has_method("ground_height_at"):
+		var drains: Dictionary = _load_json(TERRAIN_PATH).get("drains", {})
+		var strength := clampf(float(drains.get("strength", 1.0)), 0.0, 1.0)
+		var material: ShaderMaterial = null
+		var budget := BUILD_BUDGET.new()
+		budget.begin(self, true)
+		var names: Array = groups.keys()
+		names.sort()
+		for group_name: Variant in names:
+			if _applied or bool(_progression.call("has", _flag)):
+				_preparing_regreen = false
+				return
+			var discs := regreen_discs(str(group_name))
+			if discs.is_empty():
+				continue
+			var group: Variant = await _regreen_group(str(group_name), discs, block, strength, material, "Regreen", budget)
+			if _applied or bool(_progression.call("has", _flag)):
+				_preparing_regreen = false
+				return
+			if group is Dictionary:
+				prepared.append(group)
+	_prepared_regreen = prepared
+	_prepared_regreen_ready = true
+	_preparing_regreen = false
+
+
 func _regreen_the_scars(immediate: bool) -> int:
 	var block: Dictionary = _config.get("regreen", {})
 	if not bool(block.get("enabled", true)):
@@ -798,29 +842,56 @@ func _regreen_the_scars(immediate: bool) -> int:
 	var drains: Dictionary = _load_json(TERRAIN_PATH).get("drains", {})
 	var global_strength := clampf(float(drains.get("strength", 1.0)), 0.0, 1.0)
 	var material := _regreen_material_for(block)
+	if _prepared_regreen_ready:
+		for group: Dictionary in _prepared_regreen:
+			var mesh := ArrayMesh.new()
+			mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, group["arrays"])
+			mesh.surface_set_material(0, material)
+			var skin := MeshInstance3D.new()
+			skin.name = str(group["name"])
+			skin.top_level = true
+			skin.mesh = mesh
+			skin.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			add_child(skin)
+			skin.global_transform = Transform3D.IDENTITY
+			_regreen_nodes.append(skin)
+			_regreen_quads += int(group["quads"])
+		_prepared_regreen.clear()
+		_regreen_material = material
+		_start_regreen_fade(immediate)
+		return _regreen_quads
 	var group_names: Array = groups.keys()
 	group_names.sort()
 	for group_name: Variant in group_names:
 		var discs := regreen_discs(str(group_name))
 		if discs.is_empty():
 			continue
-		var skin := _regreen_group(str(group_name), discs, block, global_strength, material)
+		var skin: MeshInstance3D = _regreen_group(str(group_name), discs, block, global_strength, material)
 		if skin != null:
 			_regreen_nodes.append(skin)
 	if _regreen_nodes.is_empty():
 		return 0
 	_regreen_material = material
+	_start_regreen_fade(immediate)
+	return _regreen_quads
+
+
+func _start_regreen_fade(immediate: bool) -> void:
+	if _regreen_material == null:
+		return
+	var block: Dictionary = _config.get("regreen", {})
+	var material := _regreen_material
 	var seconds := 0.0 if immediate else float(block.get("fade_seconds", 12.0))
 	if seconds <= 0.0:
 		material.set_shader_parameter("master_alpha", 1.0)
 	else:
 		material.set_shader_parameter("master_alpha", 0.0)
 		create_tween().tween_property(material, "shader_parameter/master_alpha", 1.0, seconds)
-	return _regreen_quads
 
 
 func _regreen_group(group_name: String, discs: Array, block: Dictionary,
-		global_strength: float, material: ShaderMaterial, prefix: String = "Regreen") -> MeshInstance3D:
+		global_strength: float, material: ShaderMaterial, prefix: String = "Regreen",
+		budget: RefCounted = null) -> Variant:
 	var cell := maxf(float(block.get("cell", 3.0)), 1.0)
 	var jitter := maxf(float(block.get("edge_jitter_m", 0.0)), 0.0)
 	var lift := float(block.get("lift", 0.11))
@@ -844,7 +915,15 @@ func _regreen_group(group_name: String, discs: Array, block: Dictionary,
 	var surface := SurfaceTool.new()
 	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var quads := 0
+	var visited := 0
 	for key: Vector2i in regreen_cells(discs, cell):
+		# Keep one SurfaceTool and corner cache for the entire group. Yielding
+		# does not split surfaces or change vertex order, alpha or normals.
+		if budget != null and visited % 256 == 0:
+			await budget.call("breathe")
+			if _applied or bool(_progression.call("has", _flag)):
+				return null
+		visited += 1
 		var quad: Array = []
 		var peak := 0.0
 		for offset: Vector2i in [Vector2i(0, 0), Vector2i(1, 0), Vector2i(1, 1), Vector2i(0, 1)]:
@@ -883,6 +962,8 @@ func _regreen_group(group_name: String, discs: Array, block: Dictionary,
 		return null
 	surface.generate_normals()
 	surface.set_material(material)
+	if budget != null:
+		return {"name": "%s_%s" % [prefix, group_name], "arrays": surface.commit_to_arrays(), "quads": quads}
 	var skin := MeshInstance3D.new()
 	skin.name = "%s_%s" % [prefix, group_name]
 	skin.top_level = true
@@ -1117,7 +1198,7 @@ func _build_the_drain() -> int:
 	var names: Array = groups.keys()
 	names.sort()
 	for group_name: Variant in names:
-		var skin := _regreen_group(str(group_name), groups[group_name] as Array, block, global_strength, material, "Drain")
+		var skin: MeshInstance3D = await _regreen_group(str(group_name), groups[group_name] as Array, block, global_strength, material, "Drain")
 		if skin != null:
 			_drain_nodes.append(skin)
 	_drain_material = material
