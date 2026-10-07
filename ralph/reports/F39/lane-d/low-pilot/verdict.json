@@ -1,0 +1,45 @@
+{
+  "criterion": "F39#0–#5 OPEN",
+  "source_commit": "8262f892a6ff56a267cb46a2065c93513fa2bf45",
+  "run_id": "37636762421",
+  "artifact_id": "11490479192",
+  "script": "tools/catalogue_survey.gd",
+  "preset": "Low",
+  "renderer": "gl_compatibility",
+  "resolution": [
+    1280,
+    720
+  ],
+  "planned_frames": 48,
+  "captured_frames": 46,
+  "complete": false,
+  "exit_code": 1,
+  "failure": "Saddle Camp day/night refused by Game.debug_teleport_to; root cause not established by this pilot",
+  "judge_agent": "/root/f39_visual_review",
+  "judge_mode": "Code-blind images/reference/acceptance only; no source or engine",
+  "inspected": "All3 JPG contact sheets plus7 enlarged originals",
+  "bar_a": "BLOCK",
+  "bar_b": "BLOCK",
+  "defects": [
+    "15 Veilfall Cascade day/night: curtain hides trainer, ground and entrance",
+    "02 Horizon Stones/14 Sluice Channel Bridge/21 Terraces: smooth narrow cone and thin falls lack terraced mountain and architectural hierarchy",
+    "09 Aquaryn Basin/23 Deep Watch Lookout: near-vertical walls repeat stretched beach-sand ripples",
+    "14 Bridge day: creature backs/frills appear buried; motion/contact proof required",
+    "17 Lantern Cove/24 Beach/21 Terraces: regular bright current graphics and foam beads against uniform opaque water",
+    "13 Twin Pumps night: structure silhouettes lack localized warm light"
+  ],
+  "failed_subject_witnesses": [
+    "11 Tide Shrine",
+    "03 Woven Hall",
+    "07 Rescue Jetty",
+    "16 Mountain Crown"
+  ],
+  "limitations": [
+    "Pilot uses08:00 day, not noon",
+    "Missing2 camp frames and full>=200-frame recapture/rescore",
+    "No earned approach, real fight, swim/mount, weather, restoration, chamber, measured400m/100m or>=30s motion proof"
+  ],
+  "shipping_flags": "none",
+  "raw_images": "Run artifact only; committed contact JPGs retain all46 images",
+  "log_sha256": "30a8939759c924d728d6d58f804950fb398657f16b8e2d09891b9fa939064b8b"
+}
