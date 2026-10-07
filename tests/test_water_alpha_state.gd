@@ -121,7 +121,7 @@ func test_alpha_pending_ledgers_fence_results_and_leave_without_primary_prerequi
 	proposals["saved-original"] = {"encounter_id":id, "presented":false}
 	assert_true(alpha.ordinary_actor_vitals_pending(id), "the Alpha's retained original fences even without a primary trainer registry")
 	assert_true(alpha._alpha_results_pending(id))
-	var before := alpha.authority.eligible_characters.duplicate(true)
+	var before: Dictionary = alpha.authority.eligible_characters.duplicate(true)
 	assert_eq(alpha._leave_alpha(1, true).get("code"), "pending_vitals")
 	assert_eq(alpha.authority.eligible_characters, before, "a declined leave cannot erase eligibility before settlement")
 	assert_false(alpha.realm_transition_alpha_results_settled())

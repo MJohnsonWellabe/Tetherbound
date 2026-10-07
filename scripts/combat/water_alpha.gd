@@ -208,7 +208,7 @@ func _ordinary_deployment_pending(peer: int, next_uid: String) -> bool:
 func _ordinary_bind_deployed_peer(peer: int) -> void:
 	if authority == null or not uses_wild_actor_vitals(authority.encounter_id) \
 		or ordinary_actor_vitals_pending(authority.encounter_id): return
-	var rec := authority.record()
+	var rec: Dictionary = authority.record()
 	if rec.get("phase") == "active" and rec.get("participants", {}).has(peer):
 		_ordinary_actor_binding(authority.encounter_id, peer, deployed_body_for(peer))
 
