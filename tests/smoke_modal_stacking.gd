@@ -315,9 +315,13 @@ func _capture_lesson(id: String) -> void:
 ## A refusal the player cannot see is the same broken-looking dead button
 ## `_flash_refusal()` was written to stop, so the hint is part of the pass.
 func _expect_reason(what: String) -> void:
-	var hint: Label = _menu.get_node_or_null(^"RefusalHint") as Label
+	var hint: Label = _menu.get_node_or_null(^"RefusalStatus/RefusalHint") as Label
 	if hint == null:
 		_fail("the shell refused over %s with no RefusalHint node to explain it" % what)
+		return
+	if not hint.get_parent() is CanvasLayer or (hint.get_parent() as CanvasLayer).layer <= 30 \
+		or hint.mouse_filter != Control.MOUSE_FILTER_IGNORE:
+		_fail("the refusal hint must stay above lesson shade without intercepting input")
 		return
 	if not hint.visible or hint.text.is_empty():
 		_fail("the shell refused over %s silently; the button just looks broken" % what)

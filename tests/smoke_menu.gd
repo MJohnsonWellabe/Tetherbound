@@ -194,7 +194,7 @@ func _check_refusal_shows_an_on_screen_reason(world: Node) -> void:
 	if bool(_menu.call("is_open")):
 		_fail("the menu opened mid-fight; `menu_cancel` would open a menu instead of fleeing")
 
-	var hint: Label = _menu.get_node_or_null(^"RefusalHint") as Label
+	var hint: Label = _menu.get_node_or_null(^"RefusalStatus/RefusalHint") as Label
 	if hint == null:
 		_fail("no on-screen reason appeared when the menu refused to open mid-fight")
 	elif not hint.visible or hint.text.is_empty():
