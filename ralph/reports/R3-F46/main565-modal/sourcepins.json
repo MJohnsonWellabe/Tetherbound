@@ -22,5 +22,7 @@
   "direct_unit_filename_matches": 0,
   "unit_inventory": 825,
   "unit_search": "rg -l -F -e lesson_panel.gd -e lesson_service.gd -e smoke_modal_stacking.gd tests -g test_*.gd; exact-source git grep agrees. No config keys changed in F46 cut.",
-  "download_count": 1
+  "download_count": 1,
+  "actual_checkout_verified": true,
+  "job_log_sha256": "280f7cb00c6e9d67ef767b562b33eba9ad5a727547c83655f21218cdf56e4189"
 }
