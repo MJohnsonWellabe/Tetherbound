@@ -2170,7 +2170,7 @@ def cmd_texture(args) -> None:
                    or next(iter(views.values())))
 
     payload = {
-        "model_url": ("data:model/gltf-binary;base64,"
+        "model_url": ("data:application/octet-stream;base64,"
                       + __import__("base64").b64encode(model.read_bytes()).decode()),
         "text_style_prompt": prompt_for(args.species)[:600],
         "image_style_url": data_uri(style_image),

@@ -1,0 +1,15 @@
+{
+  "source_sha": "948fe2c06a7a45dccafe072d6ae5d6aab5626171",
+  "rig_and_pose": {
+    "caution": "Export warnings remain unresolved; no texture/native/full acceptance",
+    "verdict": "APPROVE",
+    "scope": "Explicit skip-weld preserves default rig; calibrated existing phantom removal/turntable stage retains pose angles",
+    "agent": "/root/judge_stormursa_anatomy"
+  },
+  "whole_body_capture": {
+    "verdict": "APPROVE",
+    "scope": "Per-species fixed standing envelope before candidate installation; model scale and FOV unchanged",
+    "remaining_gate": "Fresh matched native cuts must prove deformed poses fit",
+    "agent": "/root/review_f36_cap"
+  }
+}
