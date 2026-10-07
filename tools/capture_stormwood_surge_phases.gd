@@ -2,8 +2,8 @@ extends "res://tools/catalogue_survey.gd"
 
 ## Player-camera evidence for Stormwood Surge phase readability (ACCEPTANCE
 ## §6.1 F10 / S2): Calm, Building, Break and Fading must be nameable from the
-## normal camera without HUD phase text, and the Long Storm aftermath must
-## read as a restored sky.
+## normal camera without HUD phase text. The Long Storm aftermath retains the
+## purple sky and scars, with lighter rain and no lightning (WORLD §5.2).
 ##
 ##   xvfb-run -a -s "-screen 0 1280x720x24" godot --path . \
 ##     --rendering-driver opengl3 --resolution 1280x720 \
