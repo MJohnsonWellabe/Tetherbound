@@ -1,0 +1,142 @@
+{
+	"budgets": {
+		"desync_frames": 240.0,
+		"heartbeat_frames": 60.0,
+		"hello_budget_s": 180.0,
+		"near_tolerance_motion_m": 4.0,
+		"near_tolerance_rest_m": 1.5,
+		"smoke_step_budget_s_2peer": 300.0,
+		"smoke_step_budget_s_wide": 1500.0,
+		"step_budget_frames": 3000.0
+	},
+	"failures": [
+		"the guest holds exactly one new defeat receipt ([])",
+		"exactly one guest defeat receipt is fresh",
+		"the host accepted the guest's exact wild share, retained by its canonical latest row ({  })",
+		"the guest received its type essence (+0)",
+		"the guest's creature gained XP from the host share",
+		"host and guest receipts bind the same defeat event and their distinct participants",
+		"after reload party unchanged ([{ \"level\": 9.0, \"species_id\": \"terrapup\", \"uid\": \"creature-215917cb40ae21b10b8a9fd0a0273403\", \"xp\": 32.0 }])",
+		"after reload items unchanged ({ \"essence_air\": 0.0, \"essence_dark\": 0.0, \"essence_electric\": 0.0, \"essence_fire\": 0.0, \"essence_ground\": 1.0, \"essence_ice\": 0.0, \"essence_psychic\": 0.0, \"essence_water\": 0.0, \"tether_candy\": 0.0 })",
+		"after reload defeat_receipts unchanged ([\"defeat:character-c145ac4e4c66e1398d7bb262758da0cd:7d31f09463622a2cebd01b6b0b31211dc577693cf535620e0a6793136101fc24:e2dc42199e533f9df1e6abdd6f7ec53b46074dd78158009bb0906d3a794884a5\"])"
+	],
+	"fatal": "",
+	"net_conditions": {},
+	"peers": [
+		{
+			"command_timeout_observation": null,
+			"control_port": 56503,
+			"exited": true,
+			"hashes": [
+				949396019,
+				949396019,
+				949396019
+			],
+			"hello": {
+				"enet_port": 30041.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "ba5ce38e33d3",
+				"peer": 0.0,
+				"pid": 17772.0,
+				"role": "host",
+				"type": "hello",
+				"user_data_dir": "D:/tetherbound/.artifacts/r1-f27-flip/net-f27-guest-wild-win-on-seeded-cache-merged-main/home-0/Godot/app_userdata/Tetherbound"
+			},
+			"index": 0,
+			"last_heartbeat": {
+				"context": "world",
+				"frame": 4789.0,
+				"physics_frame": 15900.0,
+				"pos": [
+					-4.63784551620483,
+					-0.627502024173737,
+					64.3155136108398
+				],
+				"session_peers": [
+					1.0,
+					352844136.0
+				],
+				"state_hash": 949396019.0,
+				"t": 414.852,
+				"type": "heartbeat"
+			},
+			"pid": 17772,
+			"role": "host",
+			"unexpected_exit": false
+		},
+		{
+			"command_timeout_observation": null,
+			"control_port": 56504,
+			"exited": true,
+			"hashes": [
+				949396019,
+				949396019,
+				949396019
+			],
+			"hello": {
+				"enet_port": 30042.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "ba5ce38e33d3",
+				"peer": 1.0,
+				"pid": 23312.0,
+				"role": "client",
+				"type": "hello",
+				"user_data_dir": "D:/tetherbound/.artifacts/r1-f27-flip/net-f27-guest-wild-win-on-seeded-cache-merged-main/home-1/Godot/app_userdata/Tetherbound"
+			},
+			"index": 1,
+			"last_heartbeat": {
+				"context": "panel:@CanvasLayer@67285",
+				"frame": 10976.0,
+				"panel_observation": {
+					"focus_path": "",
+					"owner_path": "/root/Game/OnboardingLessons/@CanvasLayer@67285",
+					"owner_script": "res://scripts/onboarding/lesson_panel.gd",
+					"tree_paused": false
+				},
+				"physics_frame": 13040.0,
+				"pos": [
+					-1.40000009536743,
+					4.65094184875488,
+					14.2999992370605
+				],
+				"session_peers": [
+					1.0,
+					352844136.0
+				],
+				"state_hash": 949396019.0,
+				"t": 414.634,
+				"type": "heartbeat"
+			},
+			"pid": 23312,
+			"role": "client",
+			"unexpected_exit": false
+		}
+	],
+	"proxies": [],
+	"run_id": "r1-f27-guest-wild-win-on-20261006T1620Z",
+	"scene": "title",
+	"state_hash_excluded_keys": [
+		"party",
+		"inventory",
+		"hotbar",
+		"satiety",
+		"map",
+		"realm_maps",
+		"alpha_pins",
+		"player_pose",
+		"clock_elapsed_seconds",
+		"current_realm",
+		"pending_realm_entry",
+		"realm_hearts",
+		"version"
+	],
+	"state_hash_hashed_keys": [
+		"flags",
+		"placed_buildings",
+		"farm_plots",
+		"death_satchels",
+		"harvested_vegetation",
+		"felled_vegetation",
+		"day"
+	]
+}

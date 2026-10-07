@@ -1,0 +1,102 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+only test_owner_passive_sync,test_rejoin_admission: 2 of 825 test files
+[owner-passive] resource-owner is behind this world's record; it adopts the held record: /party
+WARNING: [owner-passive] refused rejoined stream for resource-owner: owner_passive_admission_conflict: declaration does not match its stream baseline
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] admitted (res://scripts/net/owner_passive_sync.gd:268)
+         [1] test_a_behind_rejoin_readmits_to_adopt_and_any_other_difference_is_refused (res://tests/test_owner_passive_sync.gd:1552)
+         [2] _init (res://tests/run_tests.gd:120)
+WARNING: [owner-passive] refused rejoined stream for resource-owner: owner_passive_admission_conflict: host_duties_unsettled /party
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] admitted (res://scripts/net/owner_passive_sync.gd:282)
+         [1] test_a_behind_rejoin_readmits_to_adopt_and_any_other_difference_is_refused (res://tests/test_owner_passive_sync.gd:1561)
+         [2] _init (res://tests/run_tests.gd:120)
+  ok    test_owner_passive_sync.gd :: test_a_behind_rejoin_readmits_to_adopt_and_any_other_difference_is_refused
+  ok    test_owner_passive_sync.gd :: test_a_first_discovery_far_from_every_observed_pose_is_refused
+  ok    test_owner_passive_sync.gd :: test_a_first_discovery_from_before_a_teleport_matches_the_hosts_recent_pose
+[owner-passive] re-admitting resource-owner on the host's recovered authority (passive drift only)
+[owner-passive] ignored readmit for another world_namespace
+  ok    test_owner_passive_sync.gd :: test_a_held_readmit_for_a_world_that_is_not_joined_is_dropped
+  ok    test_owner_passive_sync.gd :: test_a_landmark_revealed_without_an_input_never_changes_the_owner_passive_identity
+[owner-passive] re-admitting resource-owner on the host's recovered authority (passive drift only)
+  ok    test_owner_passive_sync.gd :: test_a_pending_payout_the_held_record_holds_forces_a_readmit_that_settles_it
+  ok    test_owner_passive_sync.gd :: test_a_pose_observed_in_another_realm_does_not_count_and_a_realm_change_clears_the_ring
+[owner-passive] re-admitting resource-owner on the host's recovered authority (passive drift only)
+  ok    test_owner_passive_sync.gd :: test_a_rejoin_readmit_after_the_snapshot_applies_at_once
+[owner-passive] re-admitting resource-owner on the host's recovered authority (passive drift only)
+  ok    test_owner_passive_sync.gd :: test_a_rejoin_readmit_before_the_snapshot_waits_for_the_joined_world_scope
+  ok    test_owner_passive_sync.gd :: test_a_settled_owner_row_advances_the_cached_view_revision
+  ok    test_owner_passive_sync.gd :: test_a_window_dropped_before_the_join_snapshot_is_sent_on_the_next_flush
+  ok    test_owner_passive_sync.gd :: test_an_observed_pose_older_than_the_lag_window_does_not_count
+WARNING: [owner-passive] refused rejoined stream for resource-owner: owner_passive_admission_conflict: host_duties_unsettled /party
+     at: push_warning (core/variant/variant_utility.cpp:1033)
+     GDScript backtrace (most recent call first):
+         [0] admitted (res://scripts/net/owner_passive_sync.gd:282)
+         [1] test_an_open_host_duty_at_the_hello_refuses_and_never_adopts (res://tests/test_owner_passive_sync.gd:1619)
+         [2] _init (res://tests/run_tests.gd:120)
+  ok    test_owner_passive_sync.gd :: test_an_open_host_duty_at_the_hello_refuses_and_never_adopts
+  ok    test_owner_passive_sync.gd :: test_an_unreplayed_reward_delivery_holds_the_home_key_request
+  ok    test_owner_passive_sync.gd :: test_capture_choice_checkpoint_keeps_original_and_only_saved_ack_reenters_handler
+[owner-passive] host resource-owner: rebase refused: discoveries differ (t=5447ms)
+[owner-passive] host resource-owner: rebase refused: old stream/sequence/prefix differs (readmit=false) (t=5447ms)
+[owner-passive] host resource-owner: rebase refused: discoveries differ (t=5447ms)
+  ok    test_owner_passive_sync.gd :: test_cloud_portal_navigation_bind_rebases_only_host_proved_discoveries_before_next_portal
+  ok    test_owner_passive_sync.gd :: test_cloud_reentry_without_a_host_proof_keeps_the_identity_whatever_the_map_reveals
+  ok    test_owner_passive_sync.gd :: test_core_change_before_checkpoint_refuses_without_owner_write
+[owner-passive] admission of resource-owner waits for its in-flight vitals ACK
+  ok    test_owner_passive_sync.gd :: test_deferred_rejoin_requires_real_vitals_release_saved_fresh_declaration_and_bound_resend
+  ok    test_owner_passive_sync.gd :: test_failed_bool_save_never_acks_or_installs_and_success_is_exact
+  ok    test_owner_passive_sync.gd :: test_gate_binds_a_remote_boss_relic_duty_with_its_world_namespace
+  ok    test_owner_passive_sync.gd :: test_gate_binds_real_retained_duty_and_reuses_original_checkpoint
+  ok    test_owner_passive_sync.gd :: test_host_accepted_travel_reset_is_exact_single_use_and_grants_no_distance
+  ok    test_owner_passive_sync.gd :: test_host_duplicate_input_is_idempotent_and_conflict_does_not_promote
+  ok    test_owner_passive_sync.gd :: test_host_minted_arrival_reset_tolerates_its_body_view_once_and_grants_no_distance
+  ok    test_owner_passive_sync.gd :: test_host_sequence_gap_and_initial_remote_pose_refused
+  ok    test_owner_passive_sync.gd :: test_legacy_typed_accepted_row_rebases_full_record_and_duplicate_keeps_progress
+[owner-passive] host resource-owner: input 2 waits: no host body for this owner in meadows (t=6424ms)
+  ok    test_owner_passive_sync.gd :: test_missing_remote_body_defers_exact_discovery_without_poisoning_stream
+  ok    test_owner_passive_sync.gd :: test_no_progress_exact_reply_releases_fence_into_retryable_rebase
+  ok    test_owner_passive_sync.gd :: test_owner_sends_each_input_once_and_the_window_again_only_when_acks_stall
+  ok    test_owner_passive_sync.gd :: test_portal_codec_binds_consumed_permit_without_faking_grounded_departure
+  ok    test_owner_passive_sync.gd :: test_portal_known_origin_save_disconnect_preserves_rejoin_baseline_without_arrival
+  ok    test_owner_passive_sync.gd :: test_portal_lost_origin_ack_rejoin_requires_fresh_bool_and_replays_new_care
+  ok    test_owner_passive_sync.gd :: test_portal_origin_checkpoint_reserves_without_promoting_until_actual_ground
+  ok    test_owner_passive_sync.gd :: test_portal_owner_freeze_blocks_new_inputs_and_pose_save_requires_exact_saved_token
+  ok    test_owner_passive_sync.gd :: test_portal_recovery_refuses_changed_hello_and_old_scope_without_discarding_original
+  ok    test_owner_passive_sync.gd :: test_portal_refusal_owner_fence_releases_only_after_exact_no_effect_rebase
+  ok    test_owner_passive_sync.gd :: test_portal_refusal_preserves_saved_care_and_immutable_journal
+  ok    test_owner_passive_sync.gd :: test_portal_repeated_recovery_bool_ack_loss_keeps_only_exact_latest_candidates
+  ok    test_owner_passive_sync.gd :: test_portal_unsaved_origin_rejoin_cancels_original_only_after_fresh_bool
+[owner-passive] ignored inputs_ack for another session_epoch
+  ok    test_owner_passive_sync.gd :: test_recording_reset_and_authenticated_ordered_ack
+  ok    test_owner_passive_sync.gd :: test_rejoin_with_matching_landmarks_still_admits_directly
+[owner-passive] re-admitting resource-owner on the host's recovered authority (passive drift only)
+  ok    test_owner_passive_sync.gd :: test_rejoin_with_unreplayed_landmarks_readmits_on_the_hosts_held_set_and_prefixes_match
+  ok    test_owner_passive_sync.gd :: test_request_host_preserves_original_scope_and_same_revision_on_failed_world_retry
+  ok    test_owner_passive_sync.gd :: test_request_owner_requires_existing_exact_request_and_actual_bool_save
+  ok    test_owner_passive_sync.gd :: test_terminal_request_refusal_rebases_only_the_exact_saved_checkpoint
+  ok    test_owner_passive_sync.gd :: test_the_pose_ring_keeps_only_the_lag_window_and_its_cap
+  ok    test_owner_passive_sync.gd :: test_the_reported_owner_hold_names_an_untouched_groom_resume
+  ok    test_owner_passive_sync.gd :: test_typed_vitals_records_host_journal_epoch_independently_of_transport_and_guest_writer
+  ok    test_owner_passive_sync.gd :: test_typed_vitals_requires_current_transport_scope_and_exact_original_host_journal
+  ok    test_rejoin_admission.gd :: test_a_compacted_windowed_receipt_is_recognised_for_training_recovery
+  ok    test_rejoin_admission.gd :: test_a_declaration_not_behind_is_adopted_with_its_offline_catch
+  ok    test_rejoin_admission.gd :: test_a_missing_absorbed_or_accepted_payout_is_behind
+  ok    test_rejoin_admission.gd :: test_a_missing_personal_flag_is_behind
+  ok    test_rejoin_admission.gd :: test_a_missing_receipt_is_behind_and_the_held_record_wins
+  ok    test_rejoin_admission.gd :: test_a_missing_release_receipt_is_behind
+  ok    test_rejoin_admission.gd :: test_a_windowed_kind_the_declaration_compacted_is_not_behind
+  ok    test_rejoin_admission.gd :: test_an_accepted_legendary_is_kept_because_the_guest_wins
+  ok    test_rejoin_admission.gd :: test_an_open_host_row_is_never_read_as_behind
+  ok    test_rejoin_admission.gd :: test_an_open_host_transaction_never_swaps_the_record
+  ok    test_rejoin_admission.gd :: test_an_owed_payout_counts_as_held_but_is_never_absorbed
+  ok    test_rejoin_admission.gd :: test_an_unconfirmed_fold_stays_required_after_its_row_is_pruned
+  ok    test_rejoin_admission.gd :: test_behind_folds_this_worlds_payouts_whole_and_never_twice
+  ok    test_rejoin_admission.gd :: test_deliver_then_leave_adopts_the_owner_record_and_absorbs_its_payouts_once
+  ok    test_rejoin_admission.gd :: test_home_key_rows_are_never_credited_by_a_fold
+
+65 tests, 796 assertions, 0 failed
+exit=0 took=12s

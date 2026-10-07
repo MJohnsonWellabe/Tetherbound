@@ -1,0 +1,59 @@
+{
+  "status": "Closeout only; no current READY or requested validation.",
+  "preservation": "Raw original job logs are committed verbatim. Original ZIPs were consumed once; returned connector file references remain in the archived chat/tool history. No ZIP redownload or re-extraction during closeout.",
+  "proofs": [
+    {
+      "run": 37580380592,
+      "job": 112658437889,
+      "artifact": 11464672196,
+      "cut": "eac1175d636377922db48d8fc56377caf1c46b26",
+      "sha256": "01a017a06e378573a42f9b85532727aa0b3770b440d099cef829782382efa196",
+      "result": "50 tests, 715 assertions, 0 failed; native/footer0; 9s; three original refusal warnings; no native ERROR/SCRIPT/Parse."
+    },
+    {
+      "run": 37580414237,
+      "job": 112658857195,
+      "artifact": 11464937377,
+      "cut": "eac1175d636377922db48d8fc56377caf1c46b26",
+      "file_id": "file_00000000d6d4822f86106f71174387c8",
+      "sha256": "ac8d7609fe23ed9630bccc732384dba59fe9f8d997ea30ef17ad9f451e8a193a",
+      "result": "40 PASS, native/footer0, 340s. First production rejoin125frames; guest1freshdefeatreceipt/32XP/+1Ground; accepted WORLD snapshot successor distinct from printed pending view. Secondrejoin120frames/realdiskreload unchanged. Fresh native redeclaration traversal not logged; whole unit is branch witness. VSync/interpolation warnings, no native ERROR/SCRIPT/Parse."
+    },
+    {
+      "run": 37580448690,
+      "job": 112658651629,
+      "artifact": 11464618436,
+      "cut": "4315d7244d9366682e40d29eabe4961b7549b413",
+      "file_id": "file_0000000055bc81f5bb27ea4e0ad4db4d",
+      "sha256": "ca2352a2b344d04a1ae44feb217bb346ada39bc2cfb97067e2f7479686ea520f",
+      "result": "102 PASS, native/footer0, 340s. Shipping config OFF but existing process-local tonic/actor-vitals candidate ON fixture. Four host departurechannel2/max0 ERRORs; six deliberate owner-write-blocker directory ERRORs; no SCRIPT/Parse; no clean-runtime or disabled-runtime execution claim."
+    },
+    {
+      "run": 37581131912,
+      "job": 112660827249,
+      "artifact": 11464734487,
+      "cut": "4315d7244d9366682e40d29eabe4961b7549b413",
+      "file_id": "file_000000006a0881f6b5193b095f6ef737",
+      "sha256": "53f6928246648f4d5a8c7e4398b3183e4d1d3268e35978be16a797b3d09cd95c",
+      "result": "48 PASS, native/footer0, 604s. Actualopencredits/drop_link/titlejoin360frames/originalpersonalACK/realreload/allfiveUIDs/bothonce ending receipts. Interpolation warnings only; no native ERROR/SCRIPT/Parse."
+    },
+    {
+      "run": 37571645976,
+      "job": 112631396586,
+      "artifact": 11461736045,
+      "cut": "2f8cd9c0551218284ab58702ab037c0f10fd655e",
+      "file_id": "file_00000000f92081f5836913509667aa2a",
+      "sha256": "30d7e1c9a1ce608444236a92cd14ef060acd77a196e5aa9970d54eccb6140905",
+      "result": "Historical main567 ON40/native0/399s, actual deferred branch traversal. Two host departurechannel2/max0 ERRORs and original save/baseline/journal warnings retained. No new-cut proof borrowing."
+    },
+    {
+      "run": 37571613979,
+      "job": 112631301333,
+      "artifact": 11460649892,
+      "cut": "ce17151e2069824a1063cad384e6448d78fd9c99",
+      "file_id": "file_000000008b6881f5bdd7427dbb680fb6",
+      "sha256": "096144ede448c81bcbdffd93d279d3e128faa9b4a8a3d6f9cd9d85e568b259a3",
+      "result": "Historical main567 OFF32PASS/8distinct canonical FAIL/control native1; no exitfile/footer because shell stopped afterfailure. Two host departurechannel2/max0 ERRORs. Not OFFsmokePASS."
+    }
+  ]
+}

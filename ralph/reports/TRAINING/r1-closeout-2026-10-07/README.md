@@ -1,0 +1,11 @@
+# R1 preservation closeout — 2026-10-07
+
+The human owner stopped product work and requested push/preservation followed by safe chat archival. This is a preservation commit, not a READY request or a main merge. Shipping actor_vitals stays OFF; header MANUAL. Full F27, ordinary trainer/tournament scheduling and runtime flip remain OPEN.
+
+All four accepted main568 owned workflows are terminal at attempt1. Their originals were already consumed once; no new run, rerun, cancellation, ZIP download, or extraction occurred during closeout. Six original full GitHub job logs, actual historical F27 and tournament failure root/peer/NET/exit/summary files, old local patches/unit-failure records, and the original proof manifest are preserved here. Preserve the native/footer distinction and intentional diagnostics in that manifest and the existing nine-line F27 receipts.
+
+Source/commit preservation: before this evidence commit, tb/codex-r1 was488b21432314175c666b66234c94bd05b57a0b8b. GitHub compare confirms local bf0a29370f8c88540db08e9e1ac260ce5089e5db is its ancestor (18 commits ahead/zero behind). The manual D:/tetherbound/codex-r1 checkout is tracked/untracked clean and remains untouched. Clean first-rejoin4315 and ON verificationeac117 remain ancestors/reachable; prior unfinished lane changes and failed cuts remain in history.
+
+Ignored evidence: ALL1955 files/584347592bytes in D:/tetherbound/.artifacts/r1-f27-flip remain unchanged in place OUTSIDE the checkout. local-evidence-inventory.json records every relative path, byte length and modification timestamp. This includes original saves, pixels, and ZIPs; do not delete this directory. The manual checkout's .godot/.tmp caches remain in place too. Chat archival does not remove either directory. There is no attached managed worktree to archive or delete. No R1 recurring automation exists; root/R2 automations were not changed.
+
+The foreign Valheim/Unity processes were not stopped, and no local engine, source, cache, pack, copy, or import writer was started. Evidence publication uses remote Git APIs and read-only local file reads. Existing #525 notice6032465931 is withdrawn from current product intake; all accepted R1 validation is fulfilled and no unaccepted R1 request remains. No new product work may resume from the archived chat without a new human instruction.
