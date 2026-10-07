@@ -5,14 +5,13 @@
 #   tools/ci/run_net_lanes.sh "<lane 1 files>" "<lane 2 files>" ...
 #
 # Each argument is one lane: a space-separated list of tests/smoke_net_*.gd
-# files, run one after another through tools/net/run_net_smoke.sh. Lanes run
-# at the same time (CI-SPEED, owner 2026-10-07): a net smoke spends most of
-# its time with two peer processes booting the world, and a 4-vCPU runner
-# fits two smokes side by side (measured locally: two_peers_boot 169 s alone,
-# 185/188 s for two at once; three at once missed the 180 s hello budget, so
-# the plan uses two). The harness already isolates concurrent runs: each run
-# has its own run id, XDG_DATA_HOME per peer, ENet port stride and
-# OS-reserved control ports (tests/helpers/net_harness.gd).
+# files, run one after another through tools/net/run_net_smoke.sh; several
+# lanes run at the same time. CI passes ONE lane per shard: two lanes on a
+# 4-vCPU runner (measured locally at 169 s alone vs 185/188 s paired for
+# two_peers_boot) ran at 1.0-1.6x on GitHub runners and broke timing-
+# sensitive smokes (PR #573 runs 37636924943, 37642447200). The multi-lane
+# path stays for local batches; the harness isolates concurrent runs (run id,
+# XDG_DATA_HOME per peer, ENet port stride, OS-reserved control ports).
 #
 # Boot gate: only one smoke's peers boot at a time (see run_lane).
 #
