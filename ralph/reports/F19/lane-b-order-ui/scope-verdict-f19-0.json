@@ -1,9 +1,9 @@
 {
   "criterion": "F19#0",
-  "verdict": "BLOCK",
+  "verdict": "PASS",
   "scope": "Literal visual presentation: Meadows -> Tidewake -> Cloudreach -> Stormwood drives map, journal, portal signs and credits.",
   "authority": "Owner issue 572 comment 6045342186: judge each literal criterion; full release Visual Bars A/B remain separately OPEN.",
-  "method": "Same retained code-blind judge. Inspected composed order-contact.jpg, all six native 1280x720 Low Compatibility captures and retained native F20 credits frame 011. No source, implementation narrative, engine execution or new capture.",
+  "method": "Same retained code-blind judge. Newly inspected ONLY three actual native 1280x720 Low Compatibility journal frames, combined with previously reviewed six native map/journal/sign frames and retained F20 credits frame 011. No source, implementation narrative, engine execution or new capture.",
   "components": {
     "map": {
       "verdict": "PASS",
@@ -13,16 +13,15 @@
       "observation": "Readable tabs run left to right Meadows, Tidewake, Cloudreach Cliffs, The Stormwood."
     },
     "journal": {
-      "verdict": "BLOCK",
+      "verdict": "PASS",
       "frames": [
-        "001-order-quest_log.png"
+        "001-order-quest_log.png",
+        "000-order-journal-water.png",
+        "001-order-journal-cloudreach.png",
+        "002-order-journal-stormwood.png"
       ],
-      "observation": "Chapter 1 · The Meadows is readable. This frame does not show the other three chapter headings, so the four-chapter journal sequence is not visually established.",
-      "missing_visual_witnesses": [
-        "Journal Chapter 2 · Tidewake heading.",
-        "Journal Chapter 3 · Cloudreach Cliffs heading.",
-        "Journal Chapter 4 · The Stormwood heading."
-      ]
+      "observation": "The retained frame reads Chapter 1 · The Meadows. New frames read Chapter 2 · Tidewake, Chapter 3 · Cloudreach Cliffs and Chapter 4 · The Stormwood respectively. All four headings are readable at native 1280x720; the small muted chapter text remains legible in these provided captures.",
+      "missing_visual_witnesses": []
     },
     "portal_signs": {
       "verdict": "PASS",
@@ -42,19 +41,20 @@
       "observation": "The Journey lists The Meadows, Tidewake, Cloudreach Cliffs and The Stormwood in that vertical order; text is readable at native 1280x720."
     }
   },
-  "remaining_literal_blocker": "Missing visual journal headings for chapters 2, 3 and 4. No conflicting order is visible in the provided captures.",
+  "remaining_literal_blocker": "None in the provided scoped presentation evidence. The three previously missing journal headings are now witnessed and agree with the retained map, portal labels and credits.",
   "full_visual_bar": {
     "status": "OPEN",
     "observation": "This scoped verdict does not certify full Visual Bars A/B or supersede retained broader art observations."
   },
   "limitations": [
     "Menu and portal stills do not prove earned campaign progression, unlocking, actual portal traversal, controller behavior or persistent state.",
-    "Do not infer the three absent journal headings from the map, portal labels or credits.",
+    "Scope is displayed order and readability only; full release Visual Bars A/B remain separately OPEN.",
     "No High/Medium renderer, physical ROG Ally readability or full-region visual certification."
   ],
   "evidence": {
     "native_capture_directory": "ralph/reports/F19/lane-b-prefix/37685420467/artifact/tree/shots/f20-ending-2473",
     "contact_sheet": "ralph/reports/F19/lane-b-order-ui/order-contact.jpg",
-    "retained_credits": "D:/CodexTemp/tetherbound-proof/native-b-2f73f756c2/ending-frames/011-credits.png"
+    "retained_credits": "D:/CodexTemp/tetherbound-proof/native-b-2f73f756c2/ending-frames/011-credits.png",
+    "additional_journal_capture_directory": "ralph/reports/F19/lane-b-prefix/37689647094/artifact/tree/shots/f20-ending-2512"
   }
 }

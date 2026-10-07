@@ -23,7 +23,8 @@
     "Ordinary inventory and tab inputs expose all four visible map destinations in chapter order",
     "Current Meadows journal heading rendered; all four chapter headings pinned by unchanged named consumer logic",
     "Ordinary grounded approaches expose each actual signed arch winner at recommended levels 3,20,31,42",
-    "Retained native F20 credits frame011 shows the same four-chapter journey order"
+    "Retained native F20 credits frame011 shows the same four-chapter journey order",
+    "Actual Tidewake, Cloudreach and Stormwood destination journal headings rendered in run37689647094"
   ],
   "logic": {
     "reused_run_id": 37624917011,
@@ -41,45 +42,82 @@
     "contact_sheet": "order-contact.jpg",
     "verdict_file": "scope-verdict-f19-0.json",
     "retained_credits": "../../F20/lane-b-ending/native-2f73/ending-contact-2.jpg",
-    "scoped_verdict": "BLOCK_PARTIAL",
+    "scoped_verdict": "PASS",
     "passed": [
       "map",
       "four signed arches",
-      "retained credits"
+      "retained credits",
+      "all four actual journal headings"
     ],
-    "missing": [
-      "Chapter 2 Tidewake journal capture",
-      "Chapter 3 Cloudreach Cliffs journal capture",
-      "Chapter 4 The Stormwood journal capture"
+    "missing": [],
+    "contact_sheets": [
+      "order-contact.jpg",
+      "journals-contact.jpg"
     ]
   },
   "review": {
     "reviewer": "/root/b_f20_review",
     "source_behavior": "APPROVE",
-    "final_criterion": "PENDING_SCOPED_JUDGE"
+    "final_criterion": "BLOCKED_AUTHORITATIVE_ARRIVAL_GUARD",
+    "reason": "Retained reviewer declined final approval because order_journals masks actual arrival refusals; scoped rendered order itself passes."
   },
   "landing_scope": {
     "source_paths": [
       "tests/smoke_f20_ending.gd",
       "tests/helpers/f20_ending_probe.gd"
     ],
-    "hunks": "Only optional order-ui-only endpoint, capture-order-ui capture switch and order_ui routine introduced at af750; exclude F46/F37/F49 unREADY ancestry"
+    "hunks": "ONLY optional F19 order-ui-only/order-journal-only endpoints, capture-order-ui switch, order_ui/order_journals routines at af750ac48324b8f5adf2ca2abf18d83abe8043a4 and351f2f3fbaaa34d25cc901730f8c34183c46480e; exclude co-located F46 lesson/capture hunks and all unrelated/unREADY B ancestry"
   },
   "disclosures": {
     "setup": "Existing post-finale fixture with personal portal unlocks, outcome flags, current party and items",
     "earned_campaign": false,
-    "other_journal_headings_captured": false,
-    "entered_or_unlocked_arches": false
+    "other_journal_headings_captured": true,
+    "entered_or_unlocked_arches": "Previously fixture-unlocked arches entered through actual provider Enter; no unlock/grant after fixture"
   },
   "criterion_pass": false,
   "remaining": [
-    "Actual existing-smoke journal extension through ordinary production portal travel",
-    "Same retained scoped judge on only missing journal frames",
-    "Final independent approval, pushed evidence and READY"
+    "Observe matching authoritative portal_enter terminal success before opening destination menus, preserving original 7200-frame bound and character identity; fail on refusal",
+    "Resolve actual contact failure if it persists with proper terminal guard",
+    "Changed-cut actual proof, same reviewer final approval, commit/push and READY"
   ],
   "separate_open": [
     "F19#5 earned fixtures",
     "F49#0 continuous earned campaign",
     "Full release Visual bar"
-  ]
+  ],
+  "latest_source_sha": "351f2f3fbaaa34d25cc901730f8c34183c46480e",
+  "journal_extension": {
+    "run_id": 37689647094,
+    "source_sha": "351f2f3fbaaa34d25cc901730f8c34183c46480e",
+    "script": "tests/smoke_f20_ending.gd",
+    "args": "--order-journal-only --capture-order-ui",
+    "renderer": "Compatibility",
+    "resolution": "1280x720",
+    "exit": 0,
+    "took_seconds": 1514,
+    "checks": 46,
+    "failures": [],
+    "passed": true,
+    "engine_errors": 0,
+    "script_errors": 0,
+    "observed_headings": [
+      "Chapter 2 · Tidewake",
+      "Chapter 3 · Cloudreach Cliffs",
+      "Chapter 4 · The Stormwood"
+    ],
+    "observations": [
+      "Actual ordinary portal Enter reaches each scene-ready realm with the same stable character and five creature UIDs",
+      "Actual Home Key returns between realms; ordinary inventory tabs expose each destination QuestLog",
+      "Completed native framebuffer capture retains exact heading, realm, menu input owner, character and five UIDs"
+    ],
+    "warnings": [
+      "Authored scenery/cluster placement warnings"
+    ],
+    "production_failures": [
+      "Tidewake: portal-arrival not grounded at deadline: no_new_contact",
+      "Stormwood: portal-arrival not grounded at deadline: no_new_contact"
+    ],
+    "ground_contact_arrival_proven": false,
+    "limitation": "Smoke scene/menu-ready guard admits inventory before authoritative portal terminal result; 46 checks/exit0 do not establish successful durable/grounded arrival. No clean portal-success claim."
+  }
 }
