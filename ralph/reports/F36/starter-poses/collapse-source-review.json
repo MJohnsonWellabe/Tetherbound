@@ -16,5 +16,12 @@
     "Corrected mapped native assertion",
     "Corrected rendered collapse sequence and between-key contact",
     "Other role fixes and full every-species actual path acceptance"
-  ]
+  ],
+  "parser_correction": {
+    "hosted_compile_and_unit": "PASS37685509114",
+    "sha": "d0c70e664b523d92e953f6b89e2e3e0f02106d2e",
+    "scope": "One type annotation, no math/profile/flag change",
+    "review": "APPROVE same reviewer",
+    "cause": "Variant packed-array condition needs explicit bool weighted"
+  }
 }

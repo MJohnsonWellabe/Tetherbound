@@ -1,0 +1,22 @@
+{
+  "criterion": "F36#1",
+  "assertions": 8,
+  "flags": "All pose enabled_species remain empty",
+  "scope": "Corrected posed-skin contact at final collapse key and existing candidate wiring/ordinary OFF/revive restoration",
+  "child_checks": "Existing wrapper requires native child exit0,16 assertions, no failure array, no script/parse/leak markers",
+  "exit_code": 0,
+  "initialized_native_child_assertions": 16,
+  "result": "PASS",
+  "seconds": 8,
+  "run_id": 37685509114,
+  "artifact_id": 11510219839,
+  "script": "tests/run_tests.gd",
+  "source_sha": "d0c70e664b523d92e953f6b89e2e3e0f02106d2e",
+  "remaining": [
+    "Rendered collapse sequence including between-key ground contact",
+    "All remaining species and other role failures"
+  ],
+  "failures": 0,
+  "args": "--only=test_f36_pose_candidates.gd",
+  "tests": 1
+}
