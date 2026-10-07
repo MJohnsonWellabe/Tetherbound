@@ -23,3 +23,10 @@ Prior logic dispatch37649041444 did not run Godot: actions/checkout interpreted
 abbreviated checkout_ref=3eb337acff as a branch/tag pattern and failed. Artifact
 11495533541 is empty; retained hosted job logs identify checkout step3. No unit
 or behavior result comes from that run. Subsequent dispatches use full40 SHAs.
+
+Full40 run37650413878 checked out03de17c4b8dc2f7176e4fc4b5544373d49f9a6f7
+but failed hosted import before tests: Host.valid line554 and
+Manager.physical_utility line3555 could not infer bool through Variant reads.
+Both corrected with explicit bool annotations; semantics unchanged. Artifact
+11495219200 is empty, retained job logs name both parser errors. No unit result
+comes from that run. Corrected affected proof remains required.

@@ -3552,7 +3552,7 @@ func host_roll_damage(card: Dictionary, move_id: String, move_power: float,
 	if not impact_context.is_empty() and _shared_hit_feedback() == null: return {}
 	var frozen: Dictionary = impact_context.get("move", {})
 	var slot := str(frozen.get("slot", "charged" if charged else "quick"))
-	var physical_utility := slot == "utility" and frozen.get("utility", {}).get("kind") in ["push", "quake_ring"]
+	var physical_utility: bool = slot == "utility" and frozen.get("utility", {}).get("kind") in ["push", "quake_ring"]
 	if physical_utility and not _host_landed_target_utility(card, frozen, impact_context, float(_enemy.hp), false):
 		return {}
 	if slot == "utility" and float(frozen.get("base_power", -1.0)) == 0.0:

@@ -551,7 +551,7 @@ func validate_strike(intent: Dictionary, peer_id: int, view: Dictionary, dash_sw
 			or not _self_utility_actor_current(encounter_id, peer_id, started.binding) \
 			or not _self_utility_opponent_current(encounters.get(encounter_id, {}), started.utility_opponent):
 			return _refuse("strike_intent", peer_id, "cancelled_dash", "That dash's original actor is no longer current.")
-		var valid := swept is Dictionary and swept.get("ok") == true \
+		var valid: bool = swept is Dictionary and swept.get("ok") == true \
 			and swept.get("action_id") == started.action_id and swept.get("binding") == started.binding \
 			and swept.get("target_uid") == started.utility_opponent.uid \
 			and swept.get("target_generation") == started.utility_opponent.body_generation \
