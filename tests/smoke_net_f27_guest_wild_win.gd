@@ -26,6 +26,8 @@ const SPECIES := "terrapup"
 const LEVEL := 9
 const SWINGS := 60
 const SETTLE_POLLS := 40
+const WORLD := preload("res://autoload/world_state.gd")
+const ESSENCE := preload("res://scripts/creatures/essence.gd")
 
 var _guest_id := ""
 var _port := 0
@@ -55,7 +57,7 @@ func _run() -> bool:
 	for peer in 2:
 		if not await _pass(peer, "expect_peers", {"count": 2}): return await _end()
 	for peer in 2:
-		if not await _pass(peer, "deploy_creature", {}): return await _end()
+		if not await _pass(peer, "deploy_creature", {"owned": true}): return await _end()
 	var guest_before := await _guest()
 	var host_before := await _host_self()
 	if not await _pass(0, "engage_wild", {}): return await _end()
@@ -104,11 +106,22 @@ func _run() -> bool:
 	# Settlement: actor vitals, the host's own row and the guest's retained share.
 	var guest_after := await _guest()
 	var view := await _host_view()
+	var world_snapshot: Dictionary = await probe(0, "world_snapshot")
+	var world_namespace := str(world_snapshot.get("reward_delivery_namespace", ""))
+	var world_id := str(world_snapshot.get("world_id", ""))
+	var delivery_id := ESSENCE.training_delivery_id(world_namespace, _guest_id)
+	var row: Dictionary = (world_snapshot.get("reward_deliveries", {}) as Dictionary).get(delivery_id, {})
 	for _poll in SETTLE_POLLS:
-		if (view.get("row", {}) as Dictionary).get("status") == "accepted" and (guest_after.defeat_receipts as Array).size() == 1: break
+		if row.get("status") == "accepted" and row.get("version") == 3 and row.get("character_id") == _guest_id \
+				and (guest_after.defeat_receipts as Array).size() == 1 and WORLD.training_row_valid(row, world_namespace, world_id):
+			var observed_receipt := str(guest_after.defeat_receipts[0])
+			if row.receipt == observed_receipt or (row.before.redesign_character.transaction_receipts.count(observed_receipt) == 1 \
+					and row.after.redesign_character.transaction_receipts.count(observed_receipt) == 1): break
 		await step(0, "wait", {"frames": 60})
 		guest_after = await _guest()
 		view = await _host_view()
+		world_snapshot = await probe(0, "world_snapshot")
+		row = (world_snapshot.get("reward_deliveries", {}) as Dictionary).get(delivery_id, {})
 	if (guest_after.defeat_receipts as Array).is_empty():
 		await _projection_diff()
 		print("wild runtime: %s" % str((await step(0, "f27_wild_runtime", {})).get("data", {})))
@@ -116,8 +129,26 @@ func _run() -> bool:
 			print("passive peer %d: %s" % [peer, str((await step(peer, "f27_passive_state", {"character_id": _guest_id})).get("data", {}))])
 	check((guest_after.defeat_receipts as Array).size() == (guest_before.defeat_receipts as Array).size() + 1,
 		"the guest holds exactly one new defeat receipt (%s)" % str(guest_after.defeat_receipts))
-	check((view.get("row", {}) as Dictionary).get("action") == "wild_defeat_share" and (view.get("row", {}) as Dictionary).get("status") == "accepted",
-		"the host's row for the guest is its accepted wild_defeat share (%s)" % str(view.get("row")))
+	var new_guest_receipts: Array = []
+	for receipt: Variant in guest_after.defeat_receipts:
+		if not (guest_before.defeat_receipts as Array).has(receipt): new_guest_receipts.append(receipt)
+	check(new_guest_receipts.size() == 1, "exactly one guest defeat receipt is fresh")
+	var guest_receipt := str(new_guest_receipts[0]) if new_guest_receipts.size() == 1 else ""
+	var valid_row: bool = not world_namespace.is_empty() and not world_id.is_empty() and WORLD.training_row_valid(row, world_namespace, world_id) \
+		and row.get("character_id") == _guest_id and row.get("delivery_id") == delivery_id \
+		and row.get("kind") == "creature_training" and row.get("version") == 3 and row.get("status") == "accepted"
+	var accepted_share := false
+	if valid_row and not guest_receipt.is_empty():
+		var before_receipts: Array = row.before.redesign_character.transaction_receipts
+		var after_receipts: Array = row.after.redesign_character.transaction_receipts
+		if row.action == "wild_defeat_share":
+			accepted_share = row.receipt == guest_receipt and row.intent.get("encounter_id") == encounter_id \
+				and before_receipts.count(guest_receipt) == 0 and after_receipts.count(guest_receipt) == 1
+		else:
+			# The single latest row may be a later canonical action. Its frozen
+			# baseline must already hold this exact newly earned defeat receipt.
+			accepted_share = before_receipts.count(guest_receipt) == 1 and after_receipts.count(guest_receipt) == 1
+	check(accepted_share, "the host accepted the guest's exact wild share, retained by its canonical latest row (%s)" % str(view.get("row")))
 	var essence_gain := 0
 	for item: String in guest_after.items:
 		if item.begins_with("essence_"): essence_gain += int(guest_after.items[item]) - int(guest_before.items.get(item, 0))
@@ -133,6 +164,20 @@ func _run() -> bool:
 	var host_after := await _host_self()
 	check((host_after.defeat_receipts as Array).size() == (host_before.defeat_receipts as Array).size() + 1,
 		"the host participant holds exactly one new defeat receipt (%s)" % str(host_after.defeat_receipts))
+	var new_host_receipts: Array = []
+	for receipt: Variant in host_after.defeat_receipts:
+		if not (host_before.defeat_receipts as Array).has(receipt): new_host_receipts.append(receipt)
+	check(new_host_receipts.size() == 1, "exactly one host defeat receipt is fresh")
+	var host_receipt := str(new_host_receipts[0]) if new_host_receipts.size() == 1 else ""
+	var guest_prefix := "defeat:" + _guest_id + ":"
+	var host_prefix := "defeat:" + str(host_after.get("character_id", "")) + ":"
+	var guest_parts := guest_receipt.trim_prefix(guest_prefix).split(":")
+	var host_parts := host_receipt.trim_prefix(host_prefix).split(":")
+	check(guest_receipt.begins_with(guest_prefix) and host_receipt.begins_with(host_prefix) \
+		and guest_parts.size() == 2 and host_parts.size() == 2 \
+		and not guest_parts[0].is_empty() and not guest_parts[1].is_empty() and not host_parts[1].is_empty() \
+		and guest_parts[0] == host_parts[0] and guest_parts[1] != host_parts[1],
+		"host and guest receipts bind the same defeat event and their distinct participants")
 	var host_essence := 0
 	for item: String in host_after.items:
 		if item.begins_with("essence_"): host_essence += int(host_after.items[item]) - int(host_before.items.get(item, 0))

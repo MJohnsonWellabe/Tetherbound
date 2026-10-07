@@ -256,7 +256,9 @@ func admitted(peer: int, summary: Dictionary) -> void:
 		# The owner left with a host vitals row it saved but never ACKed: its
 		# settled escrow is ahead of this authority only by that ACK, which the
 		# ledger re-delivers now. Admit once it lands (retry_deferred).
-		deferred[character] = {"peer": peer, "summary": summary.duplicate(true)}
+		deferred[character] = {"peer": peer, "summary": summary.duplicate(true),
+			"world_id": _game().get("world").world_id, "world_namespace": _game().get("world").reward_delivery_namespace,
+			"epoch": session.call("_altar_current_epoch"), "request_id": Crypto.new().generate_random_bytes(16).hex_encode()}
 		print("[owner-passive] admission of %s waits for its in-flight vitals ACK" % character.left(18))
 		return
 	deferred.erase(character)
@@ -306,12 +308,20 @@ func peer_departed(peer: int) -> void:
 		if int(refused[character].get("peer", 0)) == peer: refused.erase(character)
 
 
-## Host: re-run a rejoin admission parked behind in-flight vitals.
+## Host: only a fresh saved owner declaration can replace the parked hello.
 func retry_deferred(character: String) -> void:
 	var parked: Dictionary = deferred.get(character, {})
 	if parked.is_empty(): return
-	deferred.erase(character)
-	admitted(int(parked.peer), parked.summary)
+	var session := owner()
+	if session == null or session.call("is_host") != true \
+		or session.call("_authority_character", int(parked.peer)) != character \
+		or parked.epoch != session.call("_altar_current_epoch") \
+		or parked.world_id != _game().get("world").world_id \
+		or parked.world_namespace != _game().get("world").reward_delivery_namespace \
+		or not (session.get("_character_authority").call("pending_creature_vitals", character) as Dictionary).is_empty(): return
+	_send_owner(int(parked.peer), {"character": character, "world_id": parked.world_id,
+		"world_namespace": parked.world_namespace, "epoch": parked.epoch,
+		"id": parked.summary.owner_passive_stream.id}, {"op": "redeclaration", "request_id": parked.request_id})
 
 
 func _drop_host(character: String) -> void:
@@ -419,6 +429,49 @@ func _host_scope(peer: int, packet: Dictionary) -> bool:
 func receive_host(peer: int, packet: Dictionary) -> void:
 	if not _host_scope(peer, packet): return
 	var character: String = packet.character_id
+	if packet.get("op") == "redeclare":
+		var stream: Dictionary = hosts.get(character, {})
+		if refused.get(character, {}).get("peer") == peer and PREP.exact(refused.get(character, {}).get("redeclaration"), packet):
+			_send_refusal(peer, character)
+			return
+		if stream.get("peer") == peer and PREP.exact(stream.get("redeclaration"), packet):
+			_send_owner(peer, stream, stream.readmit if stream.has("readmit") else {"op": "inputs_ack", "sequence": stream.cursor.sequence})
+			return # A lost reply never reruns the authority mutation.
+		var parked: Dictionary = deferred.get(character, {})
+		var summary: Variant = packet.get("summary")
+		if parked.is_empty() or parked.get("peer") != peer or parked.get("epoch") != packet.session_epoch \
+			or parked.get("world_id") != packet.world_id or parked.get("world_namespace") != packet.world_namespace \
+			or packet.get("stream_id") != parked.summary.owner_passive_stream.id \
+			or packet.get("request_id") != parked.get("request_id") or not summary is Dictionary \
+			or summary.get("character_id") != character or not summary.get("owner_passive_stream") is Dictionary: return
+		var declaration: Dictionary = summary.owner_passive_stream
+		if not HASH._hex(declaration.get("id"), 32) or declaration.get("id") == packet.stream_id \
+			or not summary.get("portable_authority") is Dictionary \
+			or declaration.get("baseline_hash") != HASH.fingerprint(summary.portable_authority): return
+		var authority: RefCounted = owner().get("_character_authority")
+		if not (authority.call("pending_creature_vitals", character) as Dictionary).is_empty(): return
+		var undo: Dictionary = authority.call("snapshot_record", character)
+		var lists: Dictionary = owner().call("rejoin_payout_lists", summary)
+		var result: Dictionary = owner().call("rejoin_admission_for", character, summary.portable_authority, summary, lists)
+		if result.get("ok") == true:
+			if authority.call("seed_personal_flags", character, summary.get("personal_flags", {"flags": []})) != true \
+				or authority.call("seed_discovered_landmarks", character, summary.get("discovered_landmarks", {})) != true:
+				result = {"ok": false, "code": "invalid_character"}
+		if result.get("ok") != true:
+			authority.call("restore_record", character, undo)
+			refused[character] = {"id": declaration.id, "peer": peer, "redeclaration": packet.duplicate(true),
+				"reason": "owner_passive_admission_conflict: " + str(result.get("code", "invalid_character"))}
+			deferred.erase(character)
+			_send_refusal(peer, character)
+			return
+		owner().call("credit_rejoin_gathers", character, result.get("applied", []))
+		owner().call("_groom_service").call("admitted", character, authority.call("discovered_landmarks", character))
+		admitted(peer, summary)
+		if hosts.get(character, {}).get("id") == declaration.id:
+			deferred.erase(character)
+			hosts[character].redeclaration = packet.duplicate(true)
+			if not hosts[character].has("readmit"): _send_owner(peer, hosts[character], {"op": "inputs_ack", "sequence": 0})
+		return
 	if packet.get("op") == "rebase":
 		_rebase_host(peer, packet)
 		return
@@ -1143,6 +1196,29 @@ func receive_owner(packet: Dictionary) -> void:
 		while not old_inputs.is_empty() and int(old_inputs[0].sequence) <= int(packet.sequence): old_inputs.pop_front()
 		return
 	match packet.get("op"):
+		"redeclaration":
+			if not HASH._hex(packet.get("request_id"), 32) or owner().call("snapshot_ready") != true \
+				or not pending.is_empty() or not local.rebase.is_empty() or not str(local.error).is_empty() \
+				or local.get("hello_pending") != true: return
+			var original_stream: String = local.id
+			var game := _game()
+			var saved_data: Dictionary = game.get("local").call("save_data")
+			var discoveries := _discoveries()
+			if not _save_owner_now() or _scope() != scope or local.get("id") != original_stream \
+				or not PREP.exact(saved_data, game.get("local").call("save_data")): return
+			var summary := {"character_id": local.character, "portable_authority": RECORD.portable_projection(saved_data),
+				"personal_flags": saved_data.get("flags", {"flags": []}), "discovered_landmarks": discoveries,
+				"settled_deliveries": [], "owed_deliveries": []}
+			for key: Variant in saved_data.get("satchel_escrow", {}):
+				var row: Variant = saved_data.satchel_escrow[key]
+				if row is Dictionary and row.get("kind") == "reward_delivery":
+					if row.get("status") == "settled": summary.settled_deliveries.append(str(key))
+					elif row.get("status") == "grant_due": summary.owed_deliveries.append(str(key))
+			summary.owner_passive_stream = arm_owner(summary.portable_authority, discoveries)
+			if summary.owner_passive_stream.is_empty(): return
+			pending = {"phase": "redeclaration", "scope": scope, "id": packet.request_id, "original_stream": original_stream,
+				"message": {"op": "redeclare", "request_id": packet.request_id, "summary": summary.duplicate(true)}}
+			_flush()
 		"portal_recover":
 			var original: Variant = packet.get("original")
 			var baseline: Variant = packet.get("baseline")
@@ -1204,7 +1280,10 @@ func receive_owner(packet: Dictionary) -> void:
 			local.rebase = {}
 			local.admission_pending = false
 		"readmit":
+			var admission: Dictionary = pending.duplicate(true) if pending.get("phase") == "redeclaration" else {}
+			if not admission.is_empty(): pending.clear()
 			_readmit_owner(packet)
+			if not admission.is_empty() and local.get("readmitted_hash") != packet.get("baseline_hash"): pending = admission
 		"admission_refused":
 			var reason := str(packet.get("reason", "owner_passive_admission_conflict"))
 			if local.get("admission_refused") == reason: return
@@ -1216,6 +1295,7 @@ func receive_owner(packet: Dictionary) -> void:
 				game.call("push_world_message", "This world's record of your companions differs from yours. Their care and Altar actions are paused until you rejoin.")
 		"inputs_ack":
 			if not packet.get("sequence") is int or packet.sequence < local.acked or packet.sequence > local.sequence: return
+			if pending.get("phase") == "redeclaration": pending.clear()
 			local.admission_pending = false
 			local.hello_pending = false
 			if packet.sequence > int(local.acked): local.ack_progress_ms = Time.get_ticks_msec()
@@ -1593,6 +1673,9 @@ func _load_keeping_instances(player: RefCounted, party: RefCounted, data: Dictio
 
 func _flush() -> void:
 	if local.is_empty() or not str(local.error).is_empty(): return
+	if pending.get("phase") == "redeclaration":
+		if pending.scope == _scope(): _send_host(pending.message, str(pending.original_stream))
+		return # Saved declaration stays byte-for-byte frozen until admission.
 	if not local.rebase.is_empty():
 		var old_inputs: Array = local.rebase.get("old_inputs", [])
 		if not old_inputs.is_empty():
