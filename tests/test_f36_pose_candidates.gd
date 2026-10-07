@@ -21,7 +21,7 @@ func test_candidate_library_and_ordinary_body_on_initialized_scene_tree() -> voi
 			var parsed: Variant = JSON.parse_string(line.trim_prefix("F36_POSE_RESULT="))
 			if parsed is Dictionary: result = parsed
 	assert_eq(code, 0, log_text)
-	assert_eq(result.get("assertions"), 16.0, log_text)
+	assert_eq(result.get("assertions"), 43.0, log_text)
 	assert_eq(result.get("failures"), [], log_text)
 	for marker: String in ["SCRIPT ERROR", "ERROR:", "Parse Error", "resources still in use", "instances were leaked"]:
 		assert_false(log_text.contains(marker), log_text)
@@ -69,6 +69,31 @@ func _case_preview_library_preserves_installed_clips_and_revive_pivot() -> void:
 	assert_eq(str(player.current_animation), "idle", "dismount/state clear returns to installed idle")
 	assert_true(pivot.transform.is_equal_approx(before), "ordinary idle clears candidate pivot deformation")
 	stage.free()
+	# Original whole-skin floor check remains. An appendage touching the floor
+	# is insufficient: test the authored starters' anatomical flank as well.
+	for species: String in ["terrapup", "ripplet", "galewisp"]:
+		var tucked := SCENE.instantiate() as Node3D
+		tucked.set_script(BODY)
+		tucked.set_meta("f36_pose_preview", true)
+		loop.root.add_child(tucked)
+		tucked.call("setup", species, false)
+		tucked.set_physics_process(false)
+		var tucked_player := tucked.find_children("*", "AnimationPlayer", true, false)[0] as AnimationPlayer
+		var tucked_pivot: Node3D = tucked.call("model_pivot")
+		var tucked_skeleton := tucked_pivot.find_children("*", "Skeleton3D", true, false)[0] as Skeleton3D
+		tucked.call("play_faint")
+		for phase: float in [0.75, 0.875, 1.0]:
+			tucked_player.seek(1.2 * phase, true)
+			tucked_skeleton.force_update_all_bone_transforms()
+			var contact: Dictionary = POSES._posed_floor_contact(tucked_pivot, tucked_skeleton, tucked_pivot.basis)
+			var floor_y := float(contact.all_min_y) + tucked_pivot.position.y
+			var torso_y := float(contact.torso_min_y) + tucked_pivot.position.y
+			print("F36_TUCK_CONTACT=" + JSON.stringify({"species": species, "phase": phase,
+				"all_min_y_m": floor_y, "torso_min_y_m": torso_y, "torso_vertices": contact.torso_vertices}))
+			assert_almost_eq(floor_y, 0.0, 0.015, species + " complete geometry touches floor without clipping")
+			assert_true(int(contact.torso_vertices) > 0 and is_finite(torso_y), species + " anatomical torso samples exist")
+			assert_true(torso_y >= -0.015 and torso_y <= 0.04, species + " torso/flank contacts floor, not only a projecting appendage")
+		tucked.free()
 
 
 func _case_ordinary_body_keeps_candidates_off() -> void:

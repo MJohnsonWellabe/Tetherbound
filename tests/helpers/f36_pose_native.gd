@@ -9,4 +9,4 @@ func _run() -> void:
 	test._case_ordinary_body_keeps_candidates_off()
 	await process_frame
 	print("F36_POSE_RESULT=" + JSON.stringify({"assertions": test.assertion_count, "failures": test.failures}))
-	quit(0 if test.failures.is_empty() and test.assertion_count == 16 else 1)
+	quit(0 if test.failures.is_empty() and test.assertion_count == 43 else 1)
