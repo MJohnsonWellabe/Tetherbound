@@ -7,6 +7,7 @@ const ROLES := ["hit", "faint", "swim", "fly_grip", "ride"]
 const PHASES := [0.0, 0.25, 0.5, 0.75, 1.0]
 var _pose_failures: Array[String] = []
 var _scale_only := false
+var _material_candidate := false
 
 
 func _run() -> void:
@@ -28,6 +29,8 @@ func _run() -> void:
 			whole_body = true
 		elif arg == "--all":
 			all_roster = true
+		elif arg == "--material-candidate":
+			_material_candidate = true
 		elif arg.begins_with("--out="):
 			out = arg.trim_prefix("--out=")
 		elif arg.begins_with("--source-commit="):
@@ -35,6 +38,9 @@ func _run() -> void:
 	if all_roster:
 		ids.assign(SPECIES.table().keys())
 		ids.sort()
+	if _material_candidate:
+		var finish_config: Dictionary = preload("res://scripts/creatures/creature_visual.gd").config()
+		(finish_config["f36_material_finish"] as Dictionary)["enabled"] = true
 	if _scale_only and candidate:
 		push_error("Installed scale audit cannot preview pose candidates")
 		quit(1)
@@ -142,6 +148,7 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 		_pose_failures.append("%s: receipt could not be opened" % id)
 	else:
 		file.store_string(JSON.stringify({"species": id, "candidate": candidate, "stage_only": true,
+			"material_candidate": _material_candidate,
 			"scale_only": _scale_only, "installed_model": bool(body.call("has_model")),
 			"source_commit": source, "renderer": RenderingServer.get_current_rendering_method(),
 			"standing_height_m": measured_height, "trainer_reference_height_m": TRAINER_HEIGHT,

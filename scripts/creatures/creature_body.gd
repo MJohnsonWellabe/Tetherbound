@@ -985,8 +985,9 @@ func _apply_field_separation() -> void:
 func _apply_field_brightness() -> void:
 	if not _has_model:
 		return
-	var strength := clampf(
-		float(SPECIES.placeholder(species_id).get("field_emission", 0.0)), 0.0, FIELD_EMISSION_MAX)
+	var finish := VISUAL.material_finish(species_id)
+	var strength := clampf(float(finish.get("field_emission",
+		SPECIES.placeholder(species_id).get("field_emission", 0.0))), 0.0, FIELD_EMISSION_MAX)
 	var degreen := clampf(
 		float(SPECIES.placeholder(species_id).get("field_degreen", 0.0)), 0.0, FIELD_DEGREEN_MAX)
 	if strength <= 0.0:
@@ -1453,6 +1454,8 @@ static func _swapped_material(source: BaseMaterial3D, species: String, suffix: S
 		# turns a saturated mid-brown map into a pale peach animal and flattens
 		# the value contrast a face needs. Tunable in creatures_visual.json.
 		copy.emission_energy_multiplier *= VISUAL.emission_scale()
+		copy.emission_energy_multiplier *= clampf(
+			float(VISUAL.material_finish(species).get("emission_gain", 1.0)), 0.0, 1.0)
 		copy.emission_energy_multiplier *= float(ASPECT_EMISSION_BOOST.get(suffix, 1.0))
 	_shiny_swap_materials[key] = copy
 	return copy

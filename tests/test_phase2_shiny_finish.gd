@@ -18,6 +18,17 @@ func after_each() -> void:
 
 
 func test_gate_defaults_off_without_affecting_existing_colourways() -> void:
+	VISUAL._config = {"f36_material_finish": {"enabled": false,
+		"species": {"cloudfang": {"emission_gain": 0.3}, "stormtrail": {"field_emission": 2.2}}}}
+	assert_true(VISUAL.material_finish("cloudfang").is_empty(), "shipping off keeps original material energy")
+	assert_true(VISUAL.material_finish("stormtrail").is_empty(), "shipping off keeps original dark coat")
+	VISUAL._config.f36_material_finish.enabled = true
+	assert_eq(VISUAL.material_finish("cloudfang"), {"emission_gain": 0.3})
+	assert_eq(VISUAL.material_finish("stormtrail"), {"field_emission": 2.2})
+	assert_true(VISUAL.material_finish("terrapup").is_empty(), "a judged subject cannot retint another creature")
+	assert_true(VISUAL.material_finish("water_cloudfang").is_empty(), "no implicit aliases or wider rollout")
+	VISUAL._config = {"f36_material_finish": {"enabled": true, "species": []}}
+	assert_true(VISUAL.material_finish("cloudfang").is_empty(), "malformed presentation data preserves original materials")
 	VISUAL._config = {"shiny_chance": 0.0078}
 	for species: String in VISUAL.PHASE2_SHINY_SPECIES:
 		assert_false(VISUAL.shiny_colourway_allowed(species), species)

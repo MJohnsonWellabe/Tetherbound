@@ -71,6 +71,18 @@ static func emission_scale() -> float:
 	return float(config().get("emission_scale", 1.0))
 
 
+## Flag-off F36 material adjustments retain the installed geometry and textures.
+static func material_finish(species_id: String) -> Dictionary:
+	var block: Variant = config().get("f36_material_finish", {})
+	if not block is Dictionary or not bool(block.get("enabled", false)):
+		return {}
+	var rows: Variant = block.get("species", {})
+	if not rows is Dictionary:
+		return {}
+	var row: Variant = rows.get(species_id, {})
+	return row if row is Dictionary else {}
+
+
 ## CREATURE-LEGIBILITY-0903. The ground-contact shadow block -- see this key's
 ## own `_comment_contact_shadow` in the config file for why it exists and why
 ## it applies to every creature rather than opting in per species.
