@@ -1,0 +1,46 @@
+{
+  "criterion": "F19#5/F49#0 earned rested-team prefix",
+  "status": "FAIL",
+  "source_commit": "f815d73cbbc538d64feaef88af23c2b380e194a1",
+  "run_id": 37651310924,
+  "artifact_id": 11497059181,
+  "artifact_sha256": "f6722973f12ea3867713f0ba7e5dc19c303b95319952c7755f13fb6c34afd890",
+  "run_log_sha256": "bd2cbc8d3b8b3e9ab04fce018029e7edeb74d5cfd9fc795243b206d834c63508",
+  "script": "tests/smoke_f19_campaign_functional.gd",
+  "args": "--through-rest --route-ledger",
+  "renderer": "Compatibility 1280x720",
+  "seed_override": false,
+  "result": {
+    "campaign_complete": false,
+    "checkpoints": [],
+    "counts_as_proof": false,
+    "cumulative_elapsed_seconds": 890.862,
+    "dry_run": false,
+    "elapsed_seconds": 890.862,
+    "failures": [
+      "ordinary material walk stopped short of wood at (26.08352, 5.534839, 183.3271)",
+      "6 live wood supplies in a row refused during earned campsite gathering, the last at (26.08352, 5.534839, 183.3271). Last reason: ordinary material walk stopped short of wood at (26.08352, 5.534839, 183.3271)"
+    ],
+    "local_chains": [],
+    "reached": "earned_team",
+    "requested_prefix_passed": false,
+    "resume": {},
+    "resumed_from": "",
+    "scratch": "user://f49_campaign_2483_46156"
+  },
+  "observed": {
+    "wood": "13/30, six consecutive live supply approaches refused near (24,166)",
+    "checkpoint": "No resumable earned checkpoint emitted",
+    "home_bed_recovery": "Not invoked on this actual run",
+    "original_five_team": "Earned team completed; levels 6/5/5/5/5",
+    "collision_cause": "Not proven by this run; material legs lack contact observations",
+    "authored_house_departure": "Actual floor and route-point receipts"
+  },
+  "review": "Retained source review approved f815 before dispatch; new material failure unaccepted",
+  "remaining_gates": [
+    "Earned rested-team production checkpoint and Load",
+    "Complete new-order checkpoint set",
+    "Independent actual handoff verification",
+    "Required route and visual criteria"
+  ]
+}
