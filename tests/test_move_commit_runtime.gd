@@ -46,6 +46,35 @@ func test_start_spends_once_and_impact_cannot_run_early_or_repeat() -> void:
 	assert_false(_arrive(1, 1301).ok)
 	assert_eq(host.move_resource_snapshot(id, 1, "creature_a").wind, 88.0)
 
+
+func test_accepted_manager_windup_waits_for_real_time_despite_physics_catchup() -> void:
+	var manager := preload("res://scripts/combat/combat_manager.gd").new()
+	var frozen := _move()
+	frozen["accepted_action"] = 1
+	var received_ms := Time.get_ticks_msec()
+	manager.call("_begin_move_presentation", frozen)
+	var deadline := int(manager.get("_accepted_strike_not_before_ms"))
+	assert_true(deadline >= received_ms + 300, "the frozen duration is a local real-time floor")
+	assert_eq(manager.get("_pending_move"), frozen, "timing does not rewrite the accepted profile")
+	manager.call("_tick_action", 10.0)
+	assert_eq(int(manager.get("_action")), 1, "accelerated physics leaves the accepted move in WINDUP")
+	while Time.get_ticks_msec() < deadline:
+		OS.delay_msec(1)
+	manager.call("_tick_action", 0.0)
+	assert_eq(int(manager.get("_action")), 2, "the original strike boundary proceeds after the floor")
+	assert_almost_eq(float(manager.get("_action_timer")), float(frozen.recovery), 0.0001,
+		"the full original recovery follows the strike")
+	manager.call("_tick_action", 0.0)
+	assert_eq(int(manager.get("_action")), 2, "no duplicate strike at the elapsed deadline")
+	manager.call("_tick_action", float(frozen.recovery))
+	assert_eq(int(manager.get("_action")), 0)
+	frozen.erase("accepted_action")
+	manager.call("_begin_move_presentation", frozen)
+	assert_eq(int(manager.get("_accepted_strike_not_before_ms")), 0, "offline actions reset the fence")
+	manager.call("_tick_action", 10.0)
+	assert_eq(int(manager.get("_action")), 2, "offline wind-up retains delta timing")
+	manager.free()
+
 func test_meters_require_positive_debit_and_credit_one_actual_action_once() -> void:
 	assert_true(_start(1).ok)
 	assert_true(host.credit_move_hit(id, 1, 1, 10.0).is_empty())

@@ -1,4 +1,4 @@
-Verdict: READY for PERF item 3's declared frame/equality/native visual bar under #5256022595813; scatter remains unsliced and is not an extra gate.
+Verdict: RETURNED by6029873244: clean278ff10acd #566 capacity job112600218952 failed both original refusal-range assertions; changed offer-order candidate is UNVALIDATED, not READY.
 Product: d5d692934fbca93dde191f7d8974a3148d486498 + cue-order fix fe861cd7e190b129af04544628f7476be684aaf0; corrected smoke/capture producer17436eb251b3b41ade32246e61e77cbf230a0a04.
 Existing healing smoke exit0: longest freeing frame1854ms < unchanged4500ms; first preparation yield0 original tether materials lit/29 pylon falls started; intermediate alpha reached1.0.
 All223824 ordered vertices/all mesh channels matched synchronous construction on the same real terrain;37304quads/1388plants/29pylons, real save/reload/herd/material/cable and19 mounted-group assertions passed; original bars/checks retained.
@@ -7,4 +7,4 @@ Fresh code-blind judge EQUIVALENT after inspecting66 originals: shutdown/fall/du
 ONE final independent source/test review APPROVE at17436eb251: readiness/idempotence/mesh order, immediate saved-load, station consumption and existing peer wait preserved; authority/network unchanged. Verdict independent-review.txt.
 Raw proof: healing/heal-cue-order-smoke-first/{stdout,stderr,native}.log/source.txt/exit.txt and healing/heal-cue-order-visual-first/{stdout,stderr,native}.log/source.txt/exit.txt/frames/*.png; homes remain local.
 Inherited interpolation warning and F05 Works-vantage fall retained; no SCRIPT/Parse/ERROR/leak. Headless1854ms is one frame-bar run; staged flags/party/HUD/fixed12 visuals do not claim Medium/High, FPS, earned/live co-op or exact population.
-Original1663ms proof, first native blind BLOCK and both incomplete profilers remain preserved; measured cue-order defect corrected. Profilers stopped per6022595813; no callee CPU or matched performance ratio claimed.
+Original1663ms/cue-order1854ms/equality/66-frame blind verdict and17436 final review remain source-qualified. Candidate waits at freed/join during live preparation; existing offer smoke now rejects that interleaving. Capacity+space, affected units and same final review pending; original failure in healing/veridian-offer-capacity-566-failed-first/capacity.log.gz.
