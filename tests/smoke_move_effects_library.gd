@@ -71,6 +71,15 @@ func _run() -> void:
 		push_error("Unknown effect batch"); quit(1); return
 	if _batch in ["identities", "mastery", "profile", "ultimates"] and DisplayServer.get_name() == "headless":
 		push_error("Identity/performance evidence requires a native display"); quit(1); return
+	if OS.get_cmdline_user_args().has("--with-vfx-units"):
+		var output: Array = []
+		var exit_code := OS.execute(OS.get_executable_path(), PackedStringArray([
+			"--headless", "--path", ProjectSettings.globalize_path("res://"),
+			"--audio-driver", "Dummy", "--script", "res://tests/run_tests.gd", "--",
+			"--only=test_move_effects.gd"]), output, true)
+		for chunk: Variant in output: print(str(chunk))
+		if exit_code != 0:
+			push_error("Existing move-effects units failed before capture"); quit(1); return
 	_scenarios = JSON.parse_string(FileAccess.get_file_as_string("res://assets/vfx/proof_scenarios.json"))
 	if not _identity.is_empty():
 		var known_identity := false
