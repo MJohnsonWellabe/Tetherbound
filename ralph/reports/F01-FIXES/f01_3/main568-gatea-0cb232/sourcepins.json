@@ -1,0 +1,125 @@
+{
+  "run_id": 37580346026,
+  "job_id": 112658329967,
+  "artifact_id": 11463978698,
+  "producer_sha": "0cb232d62f6acae9b6e23d129d2e79f0246ba507",
+  "actual_checkout_verified": true,
+  "checkout_original_lines": [
+    "2026-10-07T06:19:58.3000093Z [command]/usr/bin/git log -1 --format=%H",
+    "2026-10-07T06:19:58.3025956Z 0cb232d62f6acae9b6e23d129d2e79f0246ba507"
+  ],
+  "archive_sha256": "a13a5a061c592c115bc55cd4fb84a99f74eef5daebafc238d5d68a52866a7d71",
+  "archive_bytes": 935817,
+  "file_ref": "file_00000000192c81f5a01f74114084c8bd",
+  "archive_retention": "Original complete ZIP retained reusable GitHub connector file_ref; proxy read/hash verified once in RAM, no local source/cache/save/copy writes",
+  "consumed_once": true,
+  "script": "tests/smoke_gate_a_opening_segment.gd",
+  "args": "",
+  "mode": "headless",
+  "resolution": "1280x720",
+  "rendering_method": "gl_compatibility",
+  "timeout_minutes": 30,
+  "native_exit": 0,
+  "elapsed_seconds": 106,
+  "exit_code_file_present": true,
+  "footer": "exit=0 took=106s",
+  "pass_line": "gate A opening segment: OK - title through natural catch passed continuously with parsed controller input",
+  "script_errors": 0,
+  "native_errors": 0,
+  "warnings": [
+    "WARNING: instance_reset_physics_interpolation() is deprecated."
+  ],
+  "observed": [
+    "GATE A OPENING +93.39s — Bramblebun naturally weakened to 25/105 HP",
+    "GATE A OPENING +93.39s — satchel drained to 1 orb(s) so the empty case is on the real path",
+    "GATE A OPENING +94.61s — running dry restocked the tutorial satchel to 5 orb(s)",
+    "GATE A OPENING +99.74s — physical landed throw caught Bramblebun on launch 1 (1 strike(s), 0 miss(es))",
+    "GATE A OPENING +101.39s — catch complete; exploration resumed with two-creature party",
+    "GATE A OPENING — Bramblebun naturally weakened to 25/105 HP",
+    "GATE A OPENING — satchel drained to 1 orb(s) so the empty case is on the real path",
+    "GATE A OPENING — running dry restocked the tutorial satchel to 5 orb(s)",
+    "GATE A OPENING — physical landed throw caught Bramblebun on launch 1 (1 strike(s), 0 miss(es))",
+    "GATE A OPENING — catch complete; exploration resumed with two-creature party",
+    "gate A opening segment: OK — title through natural catch passed continuously with parsed controller input"
+  ],
+  "setup_disclosures": [
+    "Existing parsed controller input/title/new-character configured trainer-name prefill and isolated harness save path",
+    "Original helper drains satchel to1orb to exercise running-dry/restock; no replacement inventory fixture or changed script",
+    "Opening segment only: EMPTYargs; --gate-a-continuous-core absent",
+    "Headless: no visual/device/NIGHT or continuous campsite/tournament acceptance"
+  ],
+  "source_authority": "6032148839 exact0cb dispatch/6031832360 current-main cut",
+  "raw": {
+    "godot.log": {
+      "sha256": "f9a927c5b45621d6e51653bb4bd864165e258e5d85f015fc26ced1ff0ceca132",
+      "bytes": 10401
+    },
+    "boot_log.txt": {
+      "sha256": "c6a9a0557ca2d7e81297964372ac7f5ebf77dc7c3d62204a3f02db5b952df8de",
+      "bytes": 2658
+    },
+    "job112658329967.log": {
+      "sha256": "f5de6bbff7f0bd254029dd54f65d040006ea9e8e00dd14f46b4333f9fdf5a8cf",
+      "bytes": 477071
+    },
+    "run.log": {
+      "sha256": "e0fefd23f09607c1a71a7a8c02584e3e775b8f8ad2917689d74bffb8679b616d",
+      "bytes": 10426
+    },
+    "MANIFEST.txt": {
+      "sha256": "d6d05cd1b5f589ae211a4e7646d2e09221b08ba31a11d193c1f788decaa30eb7",
+      "bytes": 443
+    },
+    "exit_code": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    }
+  },
+  "archive_entry_inventory": [
+    {
+      "path": "exit_code",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "run.log",
+      "bytes": 10426,
+      "sha256": "e0fefd23f09607c1a71a7a8c02584e3e775b8f8ad2917689d74bffb8679b616d"
+    },
+    {
+      "path": "user/godot/app_userdata/Tetherbound/boot_log.txt",
+      "bytes": 2658,
+      "sha256": "c6a9a0557ca2d7e81297964372ac7f5ebf77dc7c3d62204a3f02db5b952df8de"
+    },
+    {
+      "path": "MANIFEST.txt",
+      "bytes": 443,
+      "sha256": "d6d05cd1b5f589ae211a4e7646d2e09221b08ba31a11d193c1f788decaa30eb7"
+    },
+    {
+      "path": "user/godot/app_userdata/Tetherbound/cache/map_meadows.png",
+      "bytes": 916609,
+      "sha256": "42c9d546f84a53f683f33f04a2397af82dd3b57c333570a046e7f536f4a7aafa"
+    },
+    {
+      "path": "user/godot/app_userdata/Tetherbound/cache/map_meadows.png.key",
+      "bytes": 48,
+      "sha256": "e60ff57921a155cb0fa58351e62afa97e9f505aeb762a387442fcea73ec245be"
+    },
+    {
+      "path": "user/godot/app_userdata/Tetherbound/characters/redesign-v28/character-19f295365dcca4cb03412a38f219053a/character.json",
+      "bytes": 2778529,
+      "sha256": "7f6e351d72f5dbe5c0afb94e411454a67c71290f68c1e66135ae3779b77220d0"
+    },
+    {
+      "path": "user/godot/app_userdata/Tetherbound/logs/godot.log",
+      "bytes": 10401,
+      "sha256": "f9a927c5b45621d6e51653bb4bd864165e258e5d85f015fc26ced1ff0ceca132"
+    },
+    {
+      "path": "user/godot/app_userdata/Tetherbound/worlds/redesign-v28/slot-0/world.json",
+      "bytes": 14001,
+      "sha256": "05f609c6c7d64c514c564af439f19734df05a0a66759f587ed282e32ed326e8a"
+    }
+  ]
+}
