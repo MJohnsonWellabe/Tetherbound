@@ -296,7 +296,7 @@ for (let index = 0; index < boundaries.length; index++) {
   const chapterIndex = chapterBoundaries.indexOf(boundary);
   const meadowPiece = meadowsPrefix && chapterIndex < 0;
   assert.equal(receipt.kind, meadowPiece ? 'earned_meadows_piece' : 'f49_ordinary_input_handoff');
-  if (meadowsPrefix) assert.equal(receipt.save_slot, 1, 'Combined lineage retains its actual production slot');
+  if (meadowsPrefix) assert.equal(receipt.save_slot, 0, 'Combined lineage explicitly retains its actual autosave slot');
   assert.equal(receipt.boundary, boundary);
   assert.match(receipt.commit, /^[0-9a-f]{40}$/);
   sourceCommit ||= receipt.commit;
@@ -371,7 +371,7 @@ for (let index = 0; index < boundaries.length; index++) {
   const worlds = files.filter(file => file.endsWith(`${path.sep}world.json`)).map(file => parseSaveDocument(fs.readFileSync(file, 'utf8')));
   let world;
   if (meadowsPrefix) {
-    const flat = parseSaveDocument(fs.readFileSync(path.join(saves, 'slot_1.json'), 'utf8'));
+    const flat = parseSaveDocument(fs.readFileSync(path.join(saves, 'slot_0.json'), 'utf8'));
     assert.equal(flat.version, 28, 'Actual production Load slot must use the current schema');
     assert.equal(flat.current_realm, receipt.realm);
     assert.equal(character.realm, receipt.realm, 'Observed realm must match the saved portable character');
@@ -380,7 +380,7 @@ for (let index = 0; index < boundaries.length; index++) {
     for (const id of Object.values(flat.split_locator)) assert.match(id, /^[A-Za-z0-9_-]+$/, 'Safe production split ID required');
     assert.deepEqual(parseSaveDocument(fs.readFileSync(path.join(saves, 'characters', flat.split_locator.character_id, 'character.json'), 'utf8')), character);
     const selected = worlds.filter(saved => saved.world_id === flat.split_locator.world_id);
-    assert.equal(selected.length, 1, 'Exactly one actual slot-1 world must match the receipt');
+    assert.equal(selected.length, 1, 'Exactly one actual autosave world must match the receipt');
     world = selected[0];
     assert.deepEqual(parseSaveDocument(fs.readFileSync(path.join(saves, 'worlds', flat.split_locator.world_id, 'world.json'), 'utf8')), world);
     // Production autosave and manual slots may coexist. Retain and hash them

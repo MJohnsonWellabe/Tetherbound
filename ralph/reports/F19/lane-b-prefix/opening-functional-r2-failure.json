@@ -1,0 +1,45 @@
+{
+  "wall_seconds": 645.115,
+  "repeated_wilds": [],
+  "training_losses": 0,
+  "requested_conflicting_slot": 1,
+  "helper_rows": 4,
+  "artifact_id": 11501187521,
+  "training_wins": 11,
+  "next_action": "Reviewed protocol correction retains slot0 and original transaction namespace; fresh positive export and next actual Autosave Load required",
+  "durable_autosave_levels": [
+    4,
+    3,
+    4,
+    3,
+    3
+  ],
+  "exported_checkpoint": false,
+  "helpers_passed": [
+    "opening",
+    "village",
+    "team"
+  ],
+  "scope": "Actual fresh ordinary-input gameplay helpers passed; production slot export failed. Existing autosave predates completed TEAM and cannot be relabelled or promoted.",
+  "live_party_levels": [
+    5,
+    5,
+    5,
+    5,
+    5
+  ],
+  "production_refusal": "target slot conflicts with retained world transactions",
+  "failure": "F49 production save refused at opening_team",
+  "artifact_sha256": "31ad61259d9e747c169d11b2a0ffd3cf782c7209a1a3d9913328879619c9f474",
+  "seed_override": "",
+  "status": "FAIL",
+  "source_commit": "d5cd796a1c352ce3bd11b4ead1f2e1c92e48ed2d",
+  "run_id": 37660887848,
+  "production_source": "scripts/save/save_game.gd:475",
+  "promotable": false,
+  "args": "--functional-offload --segment=opening_team --save-dir=res://ralph/reports/F19/earned_piece_d5_r1/opening_team/save --receipt=res://ralph/reports/F19/earned_piece_d5_r1/opening_team/receipt.json",
+  "script": "tools/earned_saves/earned_chain_runner.gd",
+  "existing_world_id": "slot-0",
+  "saved_world_seed": 1120442369,
+  "actual_existing_slot": 0
+}

@@ -12,7 +12,7 @@ const BOUNDARIES := ["meadows_settled", "tidewake_settled", "cloudreach_settled"
 const REALMS := ["meadows", "water", "cloudreach", "stormwood", "meadows"]
 const MEADOWS_PIECES := ["opening_team", "camp_tournament", "bridge", "warrens", "relay", "hall"]
 const MEADOWS_REALMS := ["meadows", "meadows", "meadows", "meadows", "meadows", "meadows"]
-const MEADOWS_SLOT := 1
+const MEADOWS_SLOT := 0
 var tree: SceneTree
 var game: Node
 var base: String
@@ -40,7 +40,7 @@ func _init(owner: SceneTree, actual_game: Node, destination: String,
 		realms = ordered_realms.duplicate()
 		if save_slot != MEADOWS_SLOT or not ((boundaries == MEADOWS_PIECES and realms == MEADOWS_REALMS) \
 			or (boundaries == MEADOWS_PIECES + BOUNDARIES and realms == MEADOWS_REALMS + REALMS)):
-			_fail("Custom handoffs must preserve the six Meadows pieces, optionally followed by the authored chapters, in slot 1")
+			_fail("Custom handoffs must preserve the six Meadows pieces, optionally followed by the authored chapters, in autosave slot 0")
 	if boundaries.size() != realms.size() or (not piece_prefix and not ordered_realms.is_empty()):
 		_fail("Handoff boundary and realm orders must match")
 	var seen := {}
@@ -120,7 +120,7 @@ func export_boundary(label: String, piece_proof: Dictionary = {}) -> bool:
 		receipt.save_slot = save_slot
 		receipt.piece_proof = piece_proof.duplicate(true)
 		receipt.earned_claim = "one ordinary-input Meadows piece; production Load joins its complete earned prefix; hashes do not prove play"
-	elif save_slot != 0:
+	elif piece_prefix or save_slot != 0:
 		receipt.save_slot = save_slot
 		if piece_prefix:
 			receipt.earned_claim = "ordinary-input chapter continuing the complete earned Meadows-piece prefix through production Load; hashes do not prove play"
@@ -198,7 +198,7 @@ func import_prefix(source_boundary: String) -> String:
 			state.get("world_id"), state.get("reward_delivery_namespace"), state.get("world_seed"), uids]
 		if step == 0: identity = current_identity
 		if receipt.get("kind") != ("earned_meadows_piece" if meadow_piece else "f49_ordinary_input_handoff") \
-			or receipt.get("boundary") != boundary or receipt.get("save_slot", 0) != save_slot \
+			or receipt.get("boundary") != boundary or receipt.get("save_slot", -1 if piece_prefix else 0) != save_slot \
 			or receipt.get("commit") != commit or str(receipt.get("journey_id", "")).is_empty() \
 			or receipt.get("realm") != realms[step] or state.get("realm") != realms[step] \
 			or str(state.get("character_id", "")).is_empty() or str(state.get("world_id", "")).is_empty() \
@@ -316,7 +316,7 @@ func reload_boundary(label: String, travel: RefCounted, completed: bool = false)
 	if not failures.is_empty(): return false
 	if not snapshots.has(label): return _fail("F49 has no earned " + label + " handoff")
 	var receipt: Dictionary = snapshots[label]
-	if receipt.get("save_slot", 0) != save_slot: return _fail("F49 handoff save slot changed before Load")
+	if receipt.get("save_slot", -1 if piece_prefix else 0) != save_slot: return _fail("F49 handoff save slot changed before Load")
 	var source := base.path_join(label + "/save")
 	if _hash_tree(source) != receipt.files_sha256: return _fail("F49 completed-world handoff digest changed")
 	var destination := base + "_reload_" + label

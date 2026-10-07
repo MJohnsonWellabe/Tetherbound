@@ -8,9 +8,9 @@ extends SceneTree
 ##   (`tests/smoke_four_biome_continuous.gd`) composes, cut at save boundaries.
 ##   Every segment either starts a FRESH game through the production title
 ##   (segment `opening_team`) or loads the previous segment's save through the
-##   production title's Load list (slot 1, the pause-menu "Slot 2" save), runs
-##   one or more earned helpers read-only, and on success writes slot 1 through
-##   `Game.save_game()` -- the same call the menu Save tab makes. No teleport,
+##   production title's Autosave entry (slot 0), runs one or more earned helpers
+##   read-only, and on success writes that same slot through `Game.save_game()`.
+##   This retains the actual fresh world's transaction ownership. No teleport,
 ##   flag/inventory/party write, HP pin or debug skip is made by this file.
 ##
 ## SEGMENTS (in order)
@@ -60,7 +60,7 @@ const TRAVEL := preload("res://tests/helpers/f20_portal_travel.gd")
 const ORDER := preload("res://scripts/data/biome_order.gd")
 const WARDEN_ACCEPT_PATH := "res://tools/earned_saves/warden_accept.gd"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
-const CHAIN_SLOT := HANDOFF.MEADOWS_SLOT
+const CHAIN_SLOT := 1  # Historical copied-save slot; legacy-order diagnostics only.
 const SEGMENTS := ["opening_team", "camp_tournament", "bridge", "warrens", "relay", "hall", "warden", "kell_rift"]
 const MEADOWS_PIECES := HANDOFF.MEADOWS_PIECES
 const MEADOWS_REALMS := HANDOFF.MEADOWS_REALMS
@@ -160,7 +160,7 @@ func _run() -> void:
 		if not failures.is_empty():
 			_finish()
 			return
-		disk = HANDOFF.new(self, game, output_root, MEADOWS_PIECES, MEADOWS_REALMS, CHAIN_SLOT)
+		disk = HANDOFF.new(self, game, output_root, MEADOWS_PIECES, MEADOWS_REALMS, HANDOFF.MEADOWS_SLOT)
 		disk.source_commit = source_commit
 		game.set("save_system", SAVE.new(working))
 	# Reuse the existing hosted mechanics mode. It keeps the real display,
