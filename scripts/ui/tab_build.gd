@@ -23,6 +23,7 @@ extends "res://scripts/ui/menu_tab.gd"
 
 const BUILD_MENU := preload("res://scripts/ui/build_menu.gd")
 const BUILDABLES_PATH := "res://data/items/buildables.json"
+const MENU_PATH := "res://data/config/menu.json"
 
 ## D16's free-build banner survives the launcher rewrite: the rule is that
 ## free build says so out loud on the Build tab the whole time it is on, and
@@ -31,11 +32,14 @@ const FREE_NOTE_COLOUR := Color(0.851, 0.702, 0.251)
 
 var _open_button: Button = null
 var _free_note: Label = null
+var _preview_settings: Dictionary = {}
 
 
 func build() -> void:
 	for child in get_children():
 		child.queue_free()
+	var menu_data: Variant = JSON.parse_string(FileAccess.get_file_as_string(MENU_PATH))
+	_preview_settings = menu_data.get("build_preview", {}) if menu_data is Dictionary else {}
 
 	var panel := VBoxContainer.new()
 	panel.add_theme_constant_override("separation", 16)
@@ -102,12 +106,24 @@ func _build_preview(entry: Dictionary) -> Control:
 	column.custom_minimum_size = Vector2(320, 0)
 	column.add_theme_constant_override("separation", UITokens.GAP)
 	var image := TextureRect.new()
-	image.custom_minimum_size = Vector2(0, 86)
+	image.custom_minimum_size = Vector2(0, clampf(float(_preview_settings.get("thumbnail_height", 86)), 86.0, 240.0))
 	image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	var path := str(entry.get("thumbnail", ""))
 	if ResourceLoader.exists(path):
-		image.texture = load(path)
+		var texture := load(path) as Texture2D
+		image.texture = texture
+		# Fit the existing rendered object; keep the original PNG and alpha.
+		var source := texture.get_image() if texture != null else null
+		if source != null and not source.is_empty():
+			var used: Rect2i = source.get_used_rect()
+			if used.has_area():
+				var fitted := AtlasTexture.new()
+				fitted.atlas = texture
+				var padding := clampi(int(_preview_settings.get("alpha_padding", 0)), 0, 16)
+				fitted.region = Rect2(used.grow(padding).intersection(Rect2i(Vector2i.ZERO, source.get_size())))
+				fitted.filter_clip = true
+				image.texture = fitted
 	column.add_child(image)
 	var name_label := Label.new()
 	name_label.text = str(entry.get("name", ""))
