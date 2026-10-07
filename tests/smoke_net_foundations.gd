@@ -24,6 +24,18 @@ func _run() -> void:
 	check(host_hello.get("user_data_dir", "") != guest_hello.get("user_data_dir", ""), "two distinct isolated peer homes")
 	var port := int(host_hello.get("enet_port", 0))
 	if not await _pass(0, "host", {"port": port}): return
+	# The first board must be issued from the pristine shipping world, before
+	# the storage fixture replaces the rollover counter with a nondefault six.
+	# This is a real host/owner journal path, not a fabricated board carrier.
+	var first_morning := await _settled_carrier(0)
+	var first_board: Dictionary = first_morning.get("character", {}).get("bounties", {})
+	check(first_morning.get("world", {}).get("bounty_day") == 0, "fresh-world bounty counter is still zero; no day advanced")
+	check(first_board.get("anchor_day") == 1 and first_board.get("cycle") == 1 \
+		and (first_board.get("slots", []) as Array).size() == 3,
+		"pristine admission issues exactly three first-day personal bounties through the live adapter")
+	if first_board.get("cycle") != 1 or (first_board.get("slots", []) as Array).size() != 3:
+		quit(await finish())
+		return
 	if not await _pass(0, "foundations_state", {"mode": "seed", "marker": 1}): return
 	if not await _pass(0, "foundations_state", {"mode": "roundtrip"}): return
 	# The host's live runtimes act on the seeded world at once (the Halda board
