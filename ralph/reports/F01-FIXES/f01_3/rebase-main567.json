@@ -1,0 +1,139 @@
+{
+  "base_main": "54c122712f57725b7d205aad69eb2facc66457b6",
+  "producer_source": "11634b5cfcbb3abf8c2dc93ad82cd42695f4d9b6",
+  "sole_parent": "54c122712f57725b7d205aad69eb2facc66457b6",
+  "product_count": 9,
+  "products": [
+    {
+      "path": "data/config/bands/band1_lower_meadows/harvest.json",
+      "tested_source_blob": "d7deaf71c7f65cb29ee15d73b6fcd21ee4a466a5",
+      "rebased_blob": "d7deaf71c7f65cb29ee15d73b6fcd21ee4a466a5",
+      "byte_identical": true
+    },
+    {
+      "path": "data/config/bands/band1_lower_meadows/props.json",
+      "tested_source_blob": "397e5a291f8c1ecbf40df0ba4968c9f19f5a7356",
+      "rebased_blob": "397e5a291f8c1ecbf40df0ba4968c9f19f5a7356",
+      "byte_identical": true
+    },
+    {
+      "path": "data/config/building_prefabs.json",
+      "tested_source_blob": "ff5e5bc9366df330cfb322964c01e1628b29d84a",
+      "rebased_blob": "ff5e5bc9366df330cfb322964c01e1628b29d84a",
+      "byte_identical": true
+    },
+    {
+      "path": "data/config/essence_nodes.json",
+      "tested_source_blob": "48ff779c51806d6e3420fcdd3dcdd8bef8debe3e",
+      "rebased_blob": "48ff779c51806d6e3420fcdd3dcdd8bef8debe3e",
+      "byte_identical": true
+    },
+    {
+      "path": "data/config/village_npcs.json",
+      "tested_source_blob": "67a75d9dfe7a07d495b578570d0d934420a2dbcc",
+      "rebased_blob": "67a75d9dfe7a07d495b578570d0d934420a2dbcc",
+      "byte_identical": true
+    },
+    {
+      "path": "scripts/world/village_npcs.gd",
+      "tested_source_blob": "ee0f121f81905b70b80933ba5188ac15a29ea35a",
+      "rebased_blob": "ee0f121f81905b70b80933ba5188ac15a29ea35a",
+      "byte_identical": true
+    },
+    {
+      "path": "scripts/world/villager_night_light.gd",
+      "tested_source_blob": "e78767b39e39ff0b02eb293835dd172fae58436f",
+      "rebased_blob": "e78767b39e39ff0b02eb293835dd172fae58436f",
+      "byte_identical": true
+    },
+    {
+      "path": "tests/fixtures/band_split_baseline/props.json",
+      "tested_source_blob": "3a9b6341ca0ba8d936f2d1655b969a9e74db4d1f",
+      "rebased_blob": "3a9b6341ca0ba8d936f2d1655b969a9e74db4d1f",
+      "byte_identical": true
+    },
+    {
+      "path": "tests/helpers/gate_a_npc_gather_segment.gd",
+      "tested_source_blob": "49b2b54ce5b1f64e568c4dc717d8aca624124f4e",
+      "rebased_blob": "49b2b54ce5b1f64e568c4dc717d8aca624124f4e",
+      "byte_identical": true
+    }
+  ],
+  "unchanged_opening_blob": "a47c23c44925ccb81fe689f6235d657c249c078b",
+  "unchanged_night_script_blob": "827b97903fcb394f2610828d211a9f84dd4f6f82",
+  "intervening_main_paths": [
+    {
+      "filename": "scripts/combat/combat_manager.gd",
+      "sha": "835b7f998081876df0e1b2344c40cdad63e86173"
+    },
+    {
+      "filename": "tests/smoke_net_boss_rewards_each_participant.gd",
+      "sha": "388b0a54a1a2eee8ef6871da60572bcf8021a944"
+    },
+    {
+      "filename": "tests/smoke_net_shared_boss.gd",
+      "sha": "fc49f184fd5c53911100db1fbab645d7160811e5"
+    },
+    {
+      "filename": "tests/test_f21_hit_presentation.gd",
+      "sha": "be2fd38f9328807f5abfcdd398acbb8e285a2af7"
+    },
+    {
+      "filename": "tests/test_move_commit_runtime.gd",
+      "sha": "f167c0793e242ddc88bc6782e94e388e1e06d2d8"
+    },
+    {
+      "filename": "tools/net/peer_runner.gd",
+      "sha": "8db0f1841b46d8d7b03569b3e2ecfc2f25656c4e"
+    }
+  ],
+  "reuse_authority": [
+    "6030765818",
+    "6031418229"
+  ],
+  "npc_reuse": {
+    "run": 37565582234,
+    "job": 112612411452,
+    "artifact": 11458194934,
+    "native_exit": 0,
+    "tests": 315,
+    "assertions": 8505,
+    "failed": 0,
+    "formation_provenance": "Original274 passing contract; opening unchanged"
+  },
+  "night": {
+    "hosted_run": 37565857429,
+    "hosted_exit": 124,
+    "hosted_elapsed_seconds": 5400,
+    "captures": 40,
+    "visited": 4,
+    "required": 12,
+    "actual_pixels": "1280x720",
+    "requested_resolution": "1920x1080",
+    "verdict": "INCOMPLETE/UNRUN blind review",
+    "next": "SAME11634 PC native when fresh guard quiet, then SAME existing blind judge per6031418229"
+  },
+  "areas": {
+    "cut": "This sole-parent54c clean commit",
+    "f18": "tests/smoke_f18_earned_loop.gd",
+    "gate_a": "tests/smoke_gate_a_opening_segment.gd",
+    "args": "",
+    "mode": "headless",
+    "rendering_method": "gl_compatibility",
+    "resolution": "1280x720",
+    "timeout_minutes": 30,
+    "status": "Requested before NIGHT acceptance under6031418229; coordinator dispatch only"
+  },
+  "archive": {
+    "artifact": 11460843437,
+    "path": "D:/tetherbound/.artifacts/r3-f01-proof/main565-night-11634/artifact-11460843437.zip",
+    "sha256": "f24d211e9e2d4a8f37e689253959602c5ea0ec0c3d8886618315ebc11b5e6718",
+    "original_capture_dir": "D:/tetherbound/.artifacts/r3-f01-proof/main565-night-11634/captures",
+    "approved_archival_only": "6031418229",
+    "original_once": true,
+    "capture_hashes_verified": 40,
+    "live_source_cache_save_writes": 0
+  },
+  "no_new_harness_or_assertion_budget_changes": true,
+  "night_ready": false
+}
