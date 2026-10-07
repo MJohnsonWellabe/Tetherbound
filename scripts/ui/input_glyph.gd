@@ -38,6 +38,9 @@ const GLYPHS := {
 	## button at all any more, which is why their gamepad halves are gone.
 	"interact": {"keyboard": "keyboard_e.png", "gamepad": "xbox_button_x.png"},
 	"confirm": {"keyboard": "keyboard_return.png", "gamepad": "xbox_button_a.png"},
+	# Jump is also combat's tap Dodge. The installed subset has no Space
+	# keycap; icon() names the real keyboard binding through its fallback.
+	"jump": {"gamepad": "xbox_button_a.png"},
 	"cancel": {"keyboard": "keyboard_escape.png", "gamepad": "xbox_button_b.png"},
 	# Dialogue consent reads the real action id directly. Keep its presentation
 	# on the same Escape/B art as the generic cancel glyph.
