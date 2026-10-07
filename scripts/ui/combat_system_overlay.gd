@@ -45,14 +45,24 @@ func _ready() -> void:
 	add_child(left)
 	_commands = COMMAND_METER.new()
 	left.add_child(_commands)
+	var move_width: float = float(cfg.get("move_width", 420))
+	var inset: float = float(cfg.get("inset", 56))
 	_moves = VBoxContainer.new()
+	_moves.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_moves.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
-	_moves.position = Vector2(-float(cfg.get("move_width", 420)) - float(cfg.get("inset", 56)), -float(cfg.get("move_bottom", 380)))
-	_moves.custom_minimum_size.x = float(cfg.get("move_width", 420))
+	_moves.offset_left = -move_width-inset
+	_moves.offset_right = -inset
+	_moves.offset_top = -float(cfg.get("move_bottom", 380))
+	_moves.offset_bottom = -inset
+	_moves.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	_moves.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	_moves.custom_minimum_size.x = move_width
 	add_child(_moves)
 	var ultimate := HBoxContainer.new()
+	ultimate.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_moves.add_child(ultimate)
 	_ring = UltimateRing.new()
+	_ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_ring.custom_minimum_size = Vector2(80, 80)
 	ultimate.add_child(_ring)
 	var rb := Label.new()
@@ -63,18 +73,34 @@ func _ready() -> void:
 	rb.add_theme_font_size_override("font_size", TOKENS.FONT_HEADING)
 	_ring.add_child(rb)
 	_meter_caption = _label(ultimate, "Ultimate")
-	var grid := GridContainer.new()
-	grid.columns = 2
-	grid.add_theme_constant_override("h_separation", 12)
-	grid.add_theme_constant_override("v_separation", 8)
-	_moves.add_child(grid)
-	# Y above X/B; A is explicit dodge rather than a hidden fourth attack.
+	var diamond := VBoxContainer.new()
+	diamond.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	diamond.add_theme_constant_override("separation", 8)
+	_moves.add_child(diamond)
+	var top := CenterContainer.new()
+	top.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	diamond.add_child(top)
+	var middle := HBoxContainer.new()
+	middle.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	middle.add_theme_constant_override("separation", 12)
+	diamond.add_child(middle)
+	var bottom := CenterContainer.new()
+	bottom.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	diamond.add_child(bottom)
+	var rows: Dictionary = {"charged":top,"quick":middle,"utility":middle,"dodge":bottom}
+	# Same readable cell width in a face-button diamond: Y top, X left,
+	# B right, A bottom. Containers grow for wrapped names and state text;
+	# the bottom anchor keeps that growth above the configured safe inset.
 	for slot: String in ["charged", "quick", "utility", "dodge"]:
 		var cell := VBoxContainer.new()
-		cell.custom_minimum_size.x = float(cfg.get("move_width", 420)) * 0.5 - 6
-		grid.add_child(cell)
+		cell.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		cell.custom_minimum_size.x = move_width * 0.5 - 6
+		cell.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		(rows[slot] as Container).add_child(cell)
 		var title := _label(cell, "")
+		title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		var cooldown := ProgressBar.new()
+		cooldown.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		cooldown.show_percentage = false
 		cooldown.custom_minimum_size.y = 8
 		cell.add_child(cooldown)
