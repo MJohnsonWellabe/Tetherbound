@@ -61,6 +61,9 @@ func test_ultimate_requires_real_landed_meter_spends_once_and_freezes_growth() -
 	var enabled_visuals := saved_visual_config.duplicate(true)
 	enabled_visuals.enabled = true # Disclosed mechanics fixture; no visual acceptance.
 	ULTIMATES._config = enabled_visuals
+	for signature_id: String in enabled_visuals.visuals:
+		assert_true(MANAGER.live_move_supported("ultimate", signature_id), "authored signature mounted: " + signature_id)
+	assert_false(MANAGER.live_move_supported("ultimate", "ultimate_unknown"))
 	assert_eq(_new_start("ultimate", 1, 1000, [1, 2]).code, "ultimate_not_ready")
 	# Build the actual host meter with seventeen separately accepted landed hits.
 	for action: int in range(1, 18):
@@ -86,6 +89,8 @@ func test_disabled_ultimate_presentation_refuses_before_any_resource_mutation() 
 	disabled_visuals.enabled = false
 	ULTIMATES._config = disabled_visuals
 	assert_false(MANAGER.live_move_supported("ultimate", "ultimate_ground_current"))
+	for signature_id: String in saved_visual_config.visuals:
+		assert_false(MANAGER.live_move_supported("ultimate", signature_id), "disabled signature refuses: " + signature_id)
 	var before: Dictionary = host.record(id).duplicate(true)
 	assert_eq(_new_start("ultimate", 1, 1000).code, "move_not_mounted")
 	assert_eq(host.record(id), before)

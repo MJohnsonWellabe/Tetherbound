@@ -3863,7 +3863,9 @@ static func host_move_profile(moves: RefCounted, block: String, move_id: String,
 ## before authorization, spending, or presentation until their own path exists.
 static func live_move_supported(slot: String, move_id: String) -> bool:
 	if slot in ["quick", "charged"]: return true
-	if slot == "ultimate" and not preload("res://scripts/vfx/ultimates/ultimate_library.gd").available(move_id): return false
+	# Every authored signature uses the same accepted-action host consumer.
+	# The presentation catalogue remains the flag and unknown-ID gate.
+	if slot == "ultimate": return preload("res://scripts/vfx/ultimates/ultimate_library.gd").available(move_id)
 	return (MATH.config().get("move_commit", {}).get("live_moves", []) as Array).has(move_id)
 
 
