@@ -70,8 +70,9 @@ func _load_plan() -> bool:
 						float(origin[1]) + forward.y * offset]
 					var yaw := atan2(forward.x, forward.y)
 					row.view_heading_deg = rad_to_deg(yaw + (PI if view == "reverse" else 0.0))
-					# A look bearing is not a walkable route bearing. Three narrow
-					# authored thresholds rejected the generic backwards offset.
+					# A look bearing is not a walkable route bearing. Narrow
+					# authored thresholds rejected the generic backwards offset;
+					# Skyroad's old catalogue stand also missed its flat crown.
 					# Use disclosed route/pad stands for both sides of a matched
 					# pair; travel, on-floor and obstruction checks still apply.
 					var authored: Dictionary = _capture_config.get("authored_stands", {}).get(
@@ -120,7 +121,7 @@ func _begin_manifest() -> void:
 	_manifest["required_segments"] = _capture_config.times
 	_manifest["full_matrix_planned_frames"] = _full_planned_frames
 	_manifest["candidate_config_sha256"] = FileAccess.get_file_as_string(CANDIDATE_PATH).sha256_text()
-	_manifest["fixture_disclosure"] = "Direct chapter mount, upper-route flags, catalogue teleports with default 12m/3m offsets except three explicitly declared existing route/threshold approach stands in capture_plan.authored_stands; pinned production dawn/day/golden/night and clear/rain. Both sides of a comparison must use the same stand plan. Production CameraRig; no earned route, fight, Ally or visual PASS claim. Obstructed or unsupported stands still fail."
+	_manifest["fixture_disclosure"] = "Direct chapter mount, upper-route flags, catalogue teleports with default 12m/3m offsets except explicitly declared existing route/threshold stands for four destinations in capture_plan.authored_stands (all Skyroad views use its flat crown); pinned production dawn/day/golden/night and clear/rain. Both sides of a comparison must use the same stand plan. Production CameraRig; no earned route, fight, Ally or visual PASS claim. Obstructed or unsupported stands still fail."
 
 
 func _finish(complete: bool) -> void:
