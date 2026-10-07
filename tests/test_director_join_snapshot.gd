@@ -575,6 +575,68 @@ func _case_native_trainer_hp_fixture_survives_projectile_snapshot(warden_boss: b
 	assert_eq(host_manager.state, NATIVE_COMBAT.State.RESOLVING)
 	assert_eq(guest_manager.state, NATIVE_COMBAT.State.RESOLVING)
 	assert_true(exits.is_empty(), "the original faint pause still precedes round exit")
+	# Reuse this initialized native fixture to exercise the saved-actor picker.
+	# The separate existing Host and explicit trainer scope prove the binding
+	# guard only; this subcase has no disk writer or shared-wild proof.
+	var picker_host := preload("res://scripts/combat/accepted_action_host.gd").new(1)
+	var picker_record: Dictionary = picker_host.open(1, "meadows", "trainer",
+		{"hp": 200.0, "hp_max": 200.0, "species_id": "bramblebun",
+		 "owner_npc": str(trainer_spec.id)}, striker.uid, owners[1])
+	var picker_id := str(picker_record.encounter_id)
+	var saved_scopes: Dictionary = (_native_host.get("_ordinary_combat_reward_owners") as Dictionary).duplicate(true)
+	var picker_scope := preload("res://scripts/net/combat_round_reward.gd").scope(
+		host_root.get("world").get("reward_delivery_namespace"),
+		(_native_host.get("_session") as SessionStub)._altar_current_epoch(),
+		"meadows", str(trainer_spec.id), picker_id)
+	picker_record["ordinary_combat_reward_owner"] = picker_scope.duplicate(true)
+	_native_host.set("_encounter_host", picker_host)
+	_native_host.get("_ordinary_combat_reward_owners")[picker_id] = picker_scope
+	assert_true(_native_host.uses_saved_actor_vitals(picker_id), "the probe must reach the saved binding guard")
+	assert_false(_native_host._ordinary_actor_binding(picker_id, 1, ally).is_empty(),
+		"the actual admitted owner and current deployed body bind before the refusal probe")
+	picker_host.note_struck(picker_id, 1)
+	var picker_count := picker_host.struck_count(picker_id, 1)
+	var saved_presentation: Dictionary = _native_host.encounter_record()
+	_native_host.set("_encounter", picker_record.duplicate(true))
+	var picker_presentation_before := _native_host.encounter_record().duplicate(true)
+	var held_picker_counts: Dictionary = _native_host.encounter_record().get("struck_counts", {})
+	var picker_before := picker_record.duplicate(true)
+	var owner_hp_before := float(striker.hp)
+	var saved_deployment: Dictionary = (_native_host.get("_deployment_identity")[1] as Dictionary).duplicate(true)
+	_native_host.get("_deployment_identity")[1]["creature_uid"] = "stale-picker-deployment"
+	var enemy_move := {"range": 3.0, "cone_degrees": 360.0}
+	var refused_pick := _native_host.host_pick_struck_participant(picker_id, enemy_move, foe.centre(), Vector3.BACK)
+	assert_true(refused_pick.is_empty(), "an in-range body with stale deployment identity cannot be selected")
+	assert_eq(picker_host.struck_count(picker_id, 1), picker_count, "a refused binding cannot count as an opponent blow")
+	assert_eq(picker_record, picker_before, "refusal preserves canonical HP, resource rows and action state")
+	assert_eq(_native_host.encounter_record(), picker_presentation_before, "a refused binding preserves the detached presentation too")
+	assert_almost_eq(float(striker.hp), owner_hp_before)
+	_native_host.get("_deployment_identity")[1] = saved_deployment
+	var accepted_pick := _native_host.host_pick_struck_participant(picker_id, enemy_move, foe.centre(), Vector3.BACK)
+	assert_eq(int(accepted_pick.get("peer_id", 0)), 1, "restored admitted identity selects the same real body")
+	assert_eq(accepted_pick.get("body"), ally)
+	assert_eq(picker_host.struck_count(picker_id, 1), picker_count + 1, "an accepted selection still counts once before delivery")
+	assert_almost_eq(float(striker.hp), owner_hp_before, 0.001, "selection itself never writes owner HP")
+	assert_eq(int(_native_host.encounter_record().get("struck_counts", {}).get(1, 0)), picker_count + 1,
+		"the detached presentation reflects the canonical blow before another action publishes")
+	assert_eq(int(held_picker_counts.get(1, 0)), picker_count, "count projection does not restore a canonical dictionary alias")
+	# The failed native wild openers use the OFF legacy route. Exercise the
+	# same real body without saved ownership, retaining all HP/save fences.
+	_native_host.get("_ordinary_combat_reward_owners").erase(picker_id)
+	picker_record.erase("ordinary_combat_reward_owner")
+	assert_false(_native_host.uses_saved_actor_vitals(picker_id), "this selection reaches the legacy route used with actor-vitals OFF")
+	var held_legacy_counts: Dictionary = _native_host.encounter_record().get("struck_counts", {})
+	var legacy_pick := _native_host.host_pick_struck_participant(picker_id, enemy_move, foe.centre(), Vector3.BACK)
+	assert_eq(int(legacy_pick.get("peer_id", 0)), 1)
+	assert_eq(picker_host.struck_count(picker_id, 1), picker_count + 2, "the legacy selection still counts exactly once")
+	assert_eq(int(_native_host.encounter_record().get("struck_counts", {}).get(1, 0)), picker_count + 2,
+		"the legacy count is visible immediately without a player action or full publication")
+	assert_eq(int(held_legacy_counts.get(1, 0)), picker_count + 1, "the legacy projection remains detached")
+	assert_almost_eq(float(striker.hp), owner_hp_before, 0.001, "count projection never changes owner HP")
+	_native_host.set("_encounter", saved_presentation)
+	_native_host.set("_encounter_host", arbiter)
+	_native_host.set("_ordinary_combat_reward_owners", saved_scopes)
+
 	_native_hp_fixture_observation = {"kind": kind, "owner_npc": trainer_spec.get("id", ""),
 		"tracked_runtime": NATIVE_COMBAT.MATH.config().get("actor_vitals", {}).get("runtime_enabled"),
 		"record_created_by_production_opener": true, "full_hp": hp_full, "hp_after_control": hp_after_control,
