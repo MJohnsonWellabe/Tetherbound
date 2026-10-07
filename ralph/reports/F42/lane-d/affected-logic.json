@@ -1,0 +1,42 @@
+{
+  "criterion": "F42#0",
+  "criterion_verdict": "OPEN",
+  "source_commit": "d32536837b4c3cf0203e6001ad8d2f658bf2785c",
+  "recovered_source": "87dadfdcfd9ba4cfc340f71136e18b69c7f8cbaf",
+  "recovery_commit": "720357821d728014790160318d7f0c0c785aca4d",
+  "proof": "tests/run_tests.gd --only=test_audio_cues.gd,test_candy_progression_safety.gd,test_controls.gd,test_f19_order_consumers.gd,test_f28_training_boundaries.gd,test_food.gd,test_inventory.gd,test_look_prefs.gd,test_map_realm_view.gd,test_map_zoom_persistence.gd,test_motion_prefs.gd,test_moves.gd,test_owner_passive_game_hooks.gd,test_text_prefs.gd,test_tm_teach_transaction.gd,test_world_verb_input_owner_enforcement.gd",
+  "run_id": "37623848679",
+  "artifact_id": "11483257795",
+  "run_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37623848679",
+  "test_files": [
+    "test_audio_cues.gd",
+    "test_candy_progression_safety.gd",
+    "test_controls.gd",
+    "test_f19_order_consumers.gd",
+    "test_f28_training_boundaries.gd",
+    "test_food.gd",
+    "test_inventory.gd",
+    "test_look_prefs.gd",
+    "test_map_realm_view.gd",
+    "test_map_zoom_persistence.gd",
+    "test_motion_prefs.gd",
+    "test_moves.gd",
+    "test_owner_passive_game_hooks.gd",
+    "test_text_prefs.gd",
+    "test_tm_teach_transaction.gd",
+    "test_world_verb_input_owner_enforcement.gd"
+  ],
+  "tests": 179,
+  "assertions": 2478,
+  "failed": 0,
+  "exit_code": 0,
+  "elapsed_seconds": 36,
+  "log_sha256": "2034889a86d389b147c69c773d7e664b7043f5ff62de729e333e84ffb6542ed1",
+  "remaining_gates": [
+    "Existing area smoke for actual changed UI path",
+    "Current 1920x1080 and 1280x720 captures",
+    "Catalog UI map-context/bare-menu/heavy-HUD/contrast code-blind PASS",
+    "Independent final criterion review"
+  ],
+  "flags": "none"
+}
