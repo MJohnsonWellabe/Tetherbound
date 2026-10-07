@@ -1,0 +1,58 @@
+{
+  "criterion": "F26#0/#3/#4 Meadows",
+  "verdict": "BLOCKED",
+  "attempt_count": 2,
+  "runtime": "Godot 4.7 Forward+ llvmpipe LLVM20.1.2 hosted X11",
+  "first": {
+    "log_sha256": "47b2d68f17a903c68d4985b0ba239b41fe5ad04916d209e614c6f57e369171eb",
+    "script": "tools/capture_renderer_material_census.gd",
+    "scope": "Old Meadows Warden Hall catalogue target, not new Crossing Hall",
+    "artifact_id": "11481198739",
+    "frames": 0,
+    "source_commit": "d7b884851356d9cb2ce5b2d40a49d35d6c2adece",
+    "run_id": "37620474229"
+  },
+  "confirmation": {
+    "log_sha256": "dbe4642b57ded22ba00f53f17f2616618423f9b8a5373128cc76af42432fb349",
+    "run_id": "37622258425",
+    "route": {
+      "description": "F17: outside Grandpa farmhouse east door, along the straight main road between eight native-scale homes, through the west entrance to the Crossing Hall nave. All walking uses the existing production navigator and collisions; no route teleports or speedup.",
+      "height_mode": "ground",
+      "source": "res://data/config/village.json road_plan; res://data/config/crossing_hall.json entrance and nave",
+      "start": [
+        9.5,
+        14.0
+      ],
+      "waypoints": [
+        [
+          48.0,
+          14.0
+        ],
+        [
+          91.0,
+          14.0
+        ],
+        [
+          107.0,
+          14.0
+        ]
+      ]
+    },
+    "complete": false,
+    "script": "tools/capture_lookdev_route_stills.gd",
+    "frames": 0,
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "manifest_sha256": "6ea1a046c5986b7b625bc99f9c674beefa9fbdfe6eaee3e27c92cdfaa467b2e4",
+    "scope": "Unchanged main confirming run, correct current Crossing Hall route",
+    "source_commit": "b3ad69a6ff641d640ec6f7a48ee427c6030867aa",
+    "artifact_id": "11482706754"
+  },
+  "diagnosis": "Native signal11 after complete:terrain_node on first Forward+ terrain render. Both drivers mount on main-thread deferred entry; no project propagate_notification caller. The /root caller-thread warning also occurs in Godot native crash handlers and does not establish a scene-thread mutation. Native backtrace contains unresolved module addresses; exact native fault remains undetermined.",
+  "stop_rule": "No third Meadows Forward+ terrain attempt. No native engine execution on this PC.",
+  "remaining": [
+    "Mounted-world material proof",
+    "High/Medium visual matrices and code-blind judge",
+    "Low/Medium/High frame-time routes"
+  ],
+  "coordination": "https://github.com/MJohnsonWellabe/Tetherbound/issues/572#issuecomment-6038184343"
+}
