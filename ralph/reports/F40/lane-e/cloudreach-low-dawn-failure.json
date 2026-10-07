@@ -1,0 +1,16 @@
+{
+  "run_id": 37644635108,
+  "artifact_id": 11495092334,
+  "source_commit": "348abfaebb1eb5083f830f7bcea1ebc03ff1798e",
+  "preset": "Low",
+  "raster": [
+    1280,
+    720
+  ],
+  "artifact_sha256": "b49b8504afa9cc584484fa799e28a81daa30488624b659e43b968a5c5262fe27",
+  "frames": 0,
+  "last_progress": "CATALOGUE BOOT cloudreach attached t=103443",
+  "result": "FAIL hosted wall timeout; no frame/waypoint proof",
+  "next": "Stronger diagnosis of post-attach shell/frame await; no same-path rerun",
+  "acceptance": "F40 and F08 remain OPEN"
+}
