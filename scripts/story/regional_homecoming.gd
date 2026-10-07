@@ -254,7 +254,10 @@ static func bond_memory(party: Object, prose: Dictionary = {}) -> String:
 					continue
 				var count: Variant = member.get(str(raw.get("counter", "")))
 				if (count is int or count is float) and int(count) > 0:
-					return str(raw.get("line", "%s has shared %d moments with you.")) % [_name(member), int(count)]
+					var line := str(raw.get("line", "%s has shared %d moments with you."))
+					if count == 1:
+						line = str(raw.get("line_singular", "%s has shared %d moment with you."))
+					return line % [_name(member), int(count)]
 	return str(prose.get("memory_empty", "There is room here to make more memories together."))
 
 

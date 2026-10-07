@@ -1,0 +1,23 @@
+{
+  "artifact_id": 11510994245,
+  "script": "tests/smoke_cloudreach_aviary.gd",
+  "result": "PASS",
+  "exit_code": 0,
+  "source_sha": "6aa24ab2df1525761df3e0d95b946221a8364282",
+  "run_id": 37687487760,
+  "limits": [
+    "Fixture clearance only; world-floor close capture is separate",
+    "No earned world traversal"
+  ],
+  "metrics": {
+    "drum_height_m": 9,
+    "apex_height_m": 36,
+    "colliders": 20,
+    "oculus_height_m": 35.32,
+    "oculus_radius_m": 6
+  },
+  "seconds": 4,
+  "criterion": "F40#4",
+  "scope": "Existing standalone Aviary fixture shape-cast route clearance and open oculus",
+  "assertion_count": "Not logged; no invented count"
+}

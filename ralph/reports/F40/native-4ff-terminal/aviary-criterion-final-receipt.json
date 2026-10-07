@@ -1,0 +1,44 @@
+{
+  "base_sha": "26540050262ca9351a60be50632d60c8ee61f09e",
+  "source_sha": "6aa24ab2df1525761df3e0d95b946221a8364282",
+  "result": "PASS",
+  "reviewer": "/root/review_cloud_startup",
+  "criterion": "F40#4",
+  "landing": {
+    "reused_unit_receipt": "ralph/reports/F40/lane-e/weather-mapped-unit.json",
+    "evidence_files": [
+      "aviary-area-receipt.json",
+      "aviary-close-capture-receipt.json",
+      "aviary-close-contact.jpg",
+      "aviary-close-source-review.json",
+      "aviary-distance-contact.jpg",
+      "aviary-final-literal-verdict.json",
+      "aviary-literal-verdict.json",
+      "dawn-retained-receipt.json",
+      "aviary-criterion-final-receipt.json"
+    ],
+    "exclude": "All F40 weather/world/terrain changes, F41/F36/F29/Fly and other unREADY ancestry",
+    "whole_files_at_source_sha": [
+      "tools/capture_cloudreach_frame_matrix.gd",
+      "tools/lookdev_capture_bootstrap.gd"
+    ]
+  },
+  "proofs": {
+    "area": "37687487760 existing standalone capsule fixture PASS/exit0",
+    "logic": "Reuse unchanged installed-runtime 37653322093@4ff,164tests4298assertions; ralph/reports/F40/lane-e/weather-mapped-unit.json",
+    "distance": "Retained native4ff two valid individual views, contact and PNG hashes in final literal verdict",
+    "changed_tool_unit_selector": "No existing unit file names either changed recorder/bootstrap file; actual capture preflight+receipt executed",
+    "close": "37685900569 one production-rig entrance frame, real floor, 0 skips, exit0"
+  },
+  "limits": [
+    "Literal landmark #4 only; full release Visual bar and other F40 rows remain OPEN",
+    "Retained distant views from failed/incomplete74/384 matrix; no matrix completeness claim",
+    "Staged five-owned-party visual fixture and standalone capsule smoke; no earned route",
+    "No motion, Medium/High or owner device evidence"
+  ],
+  "flags": "None; installed Aviary unchanged and existing unrelated candidates remain OFF",
+  "review": "APPROVE",
+  "judge_result": "PASS",
+  "owner_scope_comment": 6045342186,
+  "judge": "/root/blind_listener_f10"
+}

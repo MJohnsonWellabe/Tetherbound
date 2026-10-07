@@ -1,0 +1,34 @@
+{
+  "release_visual_followups": [
+    "Repetitive stone surfaces",
+    "Abrupt structural joins",
+    "Disconnected-looking pieces inside dome"
+  ],
+  "distance_frames": [
+    {
+      "file": "cloudreach__summit_final_stronghold__11__summit_eyrie__approach__dawn__clear.png",
+      "sha256": "0C55BB6B2C7D2DE63F64996EB287C7546EAFE658BFB1F270549BD347A5407133"
+    },
+    {
+      "file": "cloudreach__summit_final_stronghold__11__summit_eyrie__gameplay__dawn__clear.png",
+      "sha256": "20830088F0274730E43D5B848A64C04AAA9B3E27F894F70C6C853EEBB0A2998D"
+    }
+  ],
+  "limits": [
+    "No earned route, motion, Medium/High or full matrix acceptance",
+    "Distance evidence from valid individual views in incomplete74/384 matrix; overall matrix failed and remains open"
+  ],
+  "findings": [
+    "Golden cage dome, stone towers and arched entrance read as same Sky Aviary landmark",
+    "Nearby large bird reinforces aviary identity"
+  ],
+  "judge": "/root/blind_listener_f10",
+  "owner_scope_comment": 6045342186,
+  "criterion": "F40#4",
+  "scope": "Literal landmark identity at distance and up close",
+  "close_run_id": 37685900569,
+  "shipping": "Installed Aviary unchanged; no shipping flag flip",
+  "distance_source_sha": "4ffbf07a263a484ffdf044ba18d6fe39f61f01e6",
+  "source_sha": "6aa24ab2df1525761df3e0d95b946221a8364282",
+  "verdict": "PASS"
+}

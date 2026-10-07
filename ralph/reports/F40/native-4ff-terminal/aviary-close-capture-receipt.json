@@ -1,0 +1,39 @@
+{
+  "trainer_feet": [
+    100.0,
+    1160.15,
+    5395.0
+  ],
+  "script": "tools/capture_cloudreach_frame_matrix.gd",
+  "seconds": 555,
+  "run_id": 37685900569,
+  "result": "PASS",
+  "scope": "Existing row29 collision-bearing SummitArenaApproach, real player and production CameraRig",
+  "rows_skipped": 0,
+  "resolution": [
+    1280,
+    720
+  ],
+  "frames": 1,
+  "companion": "Native follower; gap6.45m",
+  "args": "--only=29 --preset=Low --low-resolution=1280x720 --source-commit=6aa24ab2df1525761df3e0d95b946221a8364282 --output=res://shots/lane-e/f40-aviary-close-6aa2",
+  "criterion": "F40#4",
+  "fixture": "Five owned seeded companions +disclosed bootstrap progression preset, staged stand; no earned progression",
+  "pitch_degrees": 3.0,
+  "exit_code": 0,
+  "source_sha": "6aa24ab2df1525761df3e0d95b946221a8364282",
+  "limits": [
+    "Single Low entrance still only",
+    "Not full biome matrix/HighMedium/device/motion/earned traversal"
+  ],
+  "artifact_id": 11511093410,
+  "trainer_screen": "50%,60%",
+  "shipping": "Installed Aviary unchanged; no global candidate overlay or flag flip",
+  "camera": [
+    100.0,
+    1161.63,
+    5400.2
+  ],
+  "renderer": "gl_compatibility",
+  "adapter": "llvmpipe LLVM20.1.2"
+}

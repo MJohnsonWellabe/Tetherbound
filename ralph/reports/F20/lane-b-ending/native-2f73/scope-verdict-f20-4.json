@@ -1,0 +1,62 @@
+{
+  "criterion": "F20#4",
+  "criterion_text": "Two peers each get their own homecoming acknowledgement and credits exactly once through disconnect/reload.",
+  "reviewer": "retained code-blind visual judge",
+  "authority": {
+    "owner_issue": 572,
+    "owner_comment": 6045342186,
+    "scope_rule": "Judge each criterion literally. Full Visual Bars A/B remain separately OPEN. Reuse relevant passing scoped evidence without recapture."
+  },
+  "presentation_scope": "Visible personal homecoming acknowledgement and credits legibility only, using retained actual 1280x720 Low captures. Peer identity, exactly-once behavior and disconnect/reload transactions are assessed separately by retained b_f20 behavioral evidence, not by these images.",
+  "scoped_presentation_verdict": "PASS",
+  "evidence_reused": [
+    "ending-contact-1.jpg: frames 000-grandpa-00.png through 007-grandpa-07.png",
+    "ending-contact-2.jpg: frames 008-grandpa-08.png through 012-completed-world.png",
+    "Prior native-resolution inspection of all 13 original frames by this same reviewer"
+  ],
+  "findings": [
+    {
+      "component": "Personal acknowledgement legibility",
+      "verdict": "PASS",
+      "frames": ["002-grandpa-02.png", "003-grandpa-03.png", "004-grandpa-04.png", "005-grandpa-05.png", "006-grandpa-06.png", "007-grandpa-07.png", "008-grandpa-08.png", "009-grandpa-09.png"],
+      "reason": "Displayed companion names, starter acknowledgement, shared-memory text and chapter choices are readable, fit the dialogue panel and are not clipped or concealed. Portrait, speaker name and Continue prompt remain distinguishable at native 720p. This proves the shown acknowledgement presentation, not the two-peer identity or receipt logic."
+    },
+    {
+      "component": "Credits legibility",
+      "verdict": "PASS",
+      "frames": ["011-credits.png"],
+      "reason": "Credits headings, displayed chapter order and Continue exploring button remain readable with adequate contrast and no visible text clipping. A still does not establish controller operation, scrolling or exactly-once credits behavior."
+    },
+    {
+      "component": "Dialogue controls",
+      "verdict": "PASS",
+      "frames": ["000-grandpa-00.png", "009-grandpa-09.png", "010-grandpa-10.png"],
+      "reason": "The longer dialogue fits its panel; Continue and Close labels and their button glyphs are readable."
+    }
+  ],
+  "scoped_blockers": [],
+  "behavioral_acceptance": {
+    "status": "NOT_ASSESSED_BY_IMAGES",
+    "separate_evidence": "retained b_f20 behavioral review",
+    "limit": "This reviewer did not independently inspect that behavioral evidence here. No two-peer identity, exactly-once, disconnect, reconnect, reload or transaction-success claim is inferred from JPGs."
+  },
+  "full_visual_follow_up": {
+    "status": "OPEN",
+    "separate_from_F20_4_scoped_presentation": true,
+    "retained_observations": [
+      "000-010: bare flat furnishings/floor, opaque featureless window panes, stretched wood texture and limited material depth need separate presentation work.",
+      "000-010: broad bright illumination, granular surface shading and lost trainer collar highlights remain full-bar follow-up.",
+      "011: futuristic credits lettering remains a style-coherence follow-up against the nature/village references, despite passing legibility.",
+      "008: '1 landmarks' is a retained copy-polish defect; the acknowledgement text is still legible."
+    ],
+    "limit": "No full Bar A/B certification is issued. These retained room/material/tone findings do not block the literal F20#4 legibility component under the owner's current scope rule."
+  },
+  "excluded_claims": [
+    "Full F20#4 behavioral closure from images alone",
+    "F20#2 fifth-arch glow, sound or closed-state behavior",
+    "F20#3 safe completed-world reload or activity availability",
+    "Earned campaign or physical device proof",
+    "High/Medium or full regional visual certification"
+  ],
+  "method": "Reused retained images and prior native-resolution judgment; re-inspected both complete contact sheets. No recapture, game-source inspection or implementation narrative. This new JSON is the only written artifact."
+}
