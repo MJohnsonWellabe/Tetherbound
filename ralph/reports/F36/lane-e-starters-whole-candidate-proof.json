@@ -1,0 +1,30 @@
+{
+  "criterion": "F36#1,F36#2 bounded starter diagnostics; OPEN",
+  "commit": "948fe2c06a7a45dccafe072d6ae5d6aab5626171",
+  "run_id": 37630787255,
+  "artifact_id": 11486720503,
+  "script": "tools/art_pipeline/capture_f36_poses.gd",
+  "renderer": "gl_compatibility",
+  "resolution": [
+    1280,
+    720
+  ],
+  "candidate": true,
+  "whole_body_camera": true,
+  "result": "PASS capture completeness only; 75/75",
+  "native_seconds": 74,
+  "standing_height_m": {
+    "ripplet": 3.5999999046,
+    "terrapup": 3.8499999046,
+    "galewisp": 3.2499997616
+  },
+  "trainer_measured_height_m": 1.7999999523,
+  "source_commit_verified": "Job checkout log plus per-species source_commit receipt",
+  "remaining_gates": [
+    "Code-blind matched baseline comparison pending",
+    "Every species required, only 3 captured",
+    "Pose label-free readability/contact pending",
+    "Ordinary traversal and fight-scale evidence absent",
+    "No shipping flags changed"
+  ]
+}
