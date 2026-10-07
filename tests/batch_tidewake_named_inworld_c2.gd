@@ -19,6 +19,29 @@ func _init() -> void:
 
 
 func _run() -> void:
+	# Optional affected logic precedes the same original world fight; a failed
+	# unit child must stop this proof rather than produce a collector success.
+	if OS.get_cmdline_user_args().has("--with-reward-owner-units"):
+		var selectors := PackedStringArray([
+			"test_actor_vitals_authority.gd", "test_altar_essence_quote_bridge.gd", "test_autosave_fallback.gd",
+			"test_cloudreach_no_legendary_offer.gd", "test_f18_arrival_lifecycle.gd", "test_f19_boss_delivery.gd",
+			"test_f19_participant_delivery.gd", "test_f24_host_commands.gd", "test_forward_camp.gd",
+			"test_foundation_combat_manager_context.gd", "test_foundation_resource_save.gd", "test_foundation_retry_admission.gd",
+			"test_guest_idle_combat_authority.gd", "test_multiplayer_identity_0912.gd", "test_ordinary_actor_vitals_recovery.gd",
+			"test_original_starter_guest_commit.gd", "test_owner_passive_sync.gd", "test_portal_director_lookup.gd",
+			"test_portal_request_expiry.gd", "test_prepared_training_owner_identity.gd", "test_rematch_solo_admission.gd",
+			"test_session_physical_timeout.gd", "test_session_reconnect_reservation.gd", "test_session_snapshot.gd",
+			"test_session_transport.gd", "test_starter_install.gd", "test_station_reach_origin.gd", "test_steam_lobby.gd",
+			"test_stormwood_realm_transition.gd", "test_tm_teach_transaction.gd", "test_training_guard_lifetime.gd",
+			"test_water_encounter_runtime_data.gd"])
+		var unit_output: Array = []
+		var unit_code := OS.execute(OS.get_executable_path(), PackedStringArray([
+			"--headless", "--path", ProjectSettings.globalize_path("res://"), "--audio-driver", "Dummy",
+			"--script", "res://tests/run_tests.gd", "--", "--only=" + ",".join(selectors)]), unit_output, true)
+		for chunk: Variant in unit_output: print(str(chunk))
+		if unit_code != 0:
+			quit(unit_code)
+			return
 	var trainer := "water_trainer_nerissa"
 	var starter := "ripplet"
 	var policy := "READER"
