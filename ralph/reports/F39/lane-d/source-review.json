@@ -51,6 +51,14 @@
     {
       "commit": "ea9e8202097859b468f1f118188043219cf9567a",
       "scope": "Actual waterfall near fade1.5–8m; distant density, opacity bounds, gates, collision and progression unchanged. Same F39 reviewer APPROVE; actual near day/night and distant capture pending."
+    },
+    {
+      "commit": "fef9a280ca1f17892af2e413e9df5b016af8ee77",
+      "scope": "Existing F39 proof supports finite explicit stands with all production travel/floor/camera/material/weather checks; approved only with b0d04301 metadata correction."
+    },
+    {
+      "commit": "b0d04301ea8c2fcfb2bc776264ea9a2a1ae5b9e8",
+      "scope": "Explicit stand rows and receipt use effective heading offset0; plain catalogue retains all five headings. Same F39 source reviewer APPROVE."
     }
   ],
   "existing_candidate_consumers": "APPROVE: capture override changes allowlisted local falls/current shader uniforms only. Physical inputs and restoration flags unchanged; production candidate flags OFF.",

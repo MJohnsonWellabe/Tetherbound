@@ -10,7 +10,7 @@
   "assertions": 1909,
   "mode": "hosted headless",
   "failures": 0,
-  "actual_checkout": "3962628494",
+  "actual_checkout": "39626284941a1bfbb356488796c739d689685c7a",
   "selected_files": 12,
   "checkout_sha": "39626284941a1bfbb356488796c739d689685c7a",
   "elapsed_seconds": 21,
