@@ -188,6 +188,7 @@ func _tag_state(args: Dictionary) -> Dictionary:
 	var id := str(request.get("encounter_id", manager.encounter_id()))
 	var original := {}
 	var snare := {}
+	var rally := {}
 	var record: Dictionary = director.get("_encounter")
 	if session.is_host():
 		var host: RefCounted = director.get("_encounter_host")
@@ -209,7 +210,16 @@ func _tag_state(args: Dictionary) -> Dictionary:
 				"status":wild.get_meta(&"tether_snare", {}).duplicate(true) if is_instance_valid(wild) else {},
 				"catch_bonuses":bonuses,
 				"last_receipt":record.get("participants", {}).get(peer, {}).get("tether_commands", {}).get("last_receipt", {}).duplicate(true)}
-		if not request.is_empty() and args.get("snare") != true:
+		if args.get("rally") == true:
+			var now_ms := Time.get_ticks_msec()
+			var modifiers := {}
+			for participant: int in record.get("participants", {}):
+				var character := str(record.participants[participant].get("character_id", ""))
+				modifiers[character] = host.call("tether_rally", id, participant, now_ms)
+			rally = {"observed_ms":now_ms, "modifiers":modifiers,
+				"binding":director.call("_strike_actor_binding", id, peer, body),
+				"last_receipt":record.get("participants", {}).get(peer, {}).get("tether_commands", {}).get("last_receipt", {}).duplicate(true)}
+		if not request.is_empty() and args.get("snare") != true and args.get("rally") != true:
 			var parent := "command:%s:%s:%d:%d" % [id, str(args.get("character_id", game.local.character_id)),
 				int(request.generation), int(request.sequence)]
 			original = host.move_action_original(id, peer, parent)
@@ -224,6 +234,7 @@ func _tag_state(args: Dictionary) -> Dictionary:
 		"combat_state":manager.state,
 		"party":game.party.members().map(func(c: RefCounted) -> String: return str(c.uid))}
 	if args.get("snare") == true: out["snare"] = snare
+	if args.get("rally") == true: out["rally"] = rally
 	return out
 
 
@@ -280,7 +291,7 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 			var manager: Node = _combat_manager()
 			var command := str(args.get("command_id", "item_throw"))
 			var cost := float(preload("res://scripts/combat/tether_commands.gd").config().commands.get(command, {}).get("cost", INF))
-			if command not in ["item_throw", "snare"] or not is_finite(cost):
+			if command not in ["item_throw", "snare", "rally"] or not is_finite(cost):
 				return {"verdict":"FAIL", "detail":"unknown authored command cost"}
 			for hit in 8:
 				var snapshot: Dictionary = manager.tether_command_snapshot()
@@ -332,6 +343,28 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 						"before":before, "after":_tag_state({"request":request})}}
 			return {"verdict":"FAIL", "detail":"Snare lacked an accepted receipt within the existing short step budget",
 				"data":{"request":request, "state":_tag_state({"request":request}), "refusal":manager.get("last_encounter_refusal")}}
+		"op_tonic_rally":
+			var manager: Node = _combat_manager()
+			if not manager.is_fighting() or manager.enemy() == null or float(manager.enemy().hp) <= 0.0:
+				return {"verdict":"FAIL", "detail":"Rally requires the same living actual wild encounter"}
+			var input: Node = null
+			for child: Node in manager.get_children():
+				if child.get_script() == preload("res://scripts/ui/tether_command_input.gd"): input = child
+			var before: Dictionary = manager.tether_command_snapshot()
+			if input == null or not input.request("rally"):
+				return {"verdict":"FAIL", "detail":"production TetherCommandInput refused Rally request"}
+			# Observe the production input's submitted identity; Rally retains its
+			# participant receipt, not an Item pending request or Tag journal.
+			var request := preload("res://scripts/combat/tether_commands.gd").intent(str(input.get("_encounter_id")),
+				int(before.get("generation", 0)), int(input.get("_sequence")), "rally")
+			for frame in 90:
+				await physics_frame
+				var receipt: Dictionary = manager.tether_command_snapshot().get("last_receipt", {})
+				if receipt.get("command_id") == "rally" and receipt.get("sequence") == request.sequence:
+					return {"verdict":"PASS", "detail":"actual Rally command acknowledged", "data":{"request":request,
+						"before":before, "after":_tag_state({"request":request, "rally":true})}}
+			return {"verdict":"FAIL", "detail":"Rally lacked an accepted receipt within the existing short step budget",
+				"data":{"request":request, "state":_tag_state({"request":request, "rally":true}), "refusal":manager.get("last_encounter_refusal")}}
 		"op_tonic_clear":
 			# Existing proximity fixture: stop exposing this owned actor to a
 			# new enemy hit while the original Item's writer refusal is tested.
