@@ -1,0 +1,19 @@
+{
+  "scope": "F17 farmhouse doorway startup regression and current F17#2 physical circuit; no visual umbrella closure",
+  "source_commit": "68401e9c6b7dd14d77a4c3b77feff43c5ffbec3d",
+  "run_id": 37673885907,
+  "artifact_id": 11507365488,
+  "proof": "tests/smoke_crossing_hall_circuit.gd",
+  "mode": "Hosted headless actual production world/collision/InputMap",
+  "result": {"exit": 0, "seconds": 255},
+  "opening_binding": {"actual_director_house_matches": true, "actual_door_gate_disabled": true},
+  "physical_path": "Actual farmhouse floor -> east door -> straight Main Street -> Crossing Hall nave -> all8 arches -> Shrine Room doorway approaches -> all8 pedestals",
+  "nave_arrival": {"position": [106.566, 0.91083, 14.14593], "maximum_offroad_m": 0.0},
+  "arch_distances_m": {"meadows": 0.537, "tidewake": 0.588, "cloudreach": 0.598, "stormwood": 0.556, "biome5": 0.589, "biome6": 0.598, "biome7": 0.525, "biome8": 0.547},
+  "pedestal_distances_m": {"meadows": 0.519, "tidewake": 0.568, "cloudreach": 0.592, "stormwood": 0.584, "biome5": 0.540, "biome6": 0.544, "biome7": 0.567, "biome8": 0.592},
+  "all_approaches_on_floor": true,
+  "structure": "One signed Home arch, three signed live-capable arches, four signed sealed arches, eight signed installed pedestal models. Node/material presence is structural, not pixel acceptance.",
+  "fixture_disclosure": "Existing declared post-opening flags/starter and one initial farmhouse-floor placement. All subsequent movement/turns use parsed real joypad bindings, original player/camera/collision and budgets. No mid-route placement, speedup, collision removal, skipped/disabled check or invented progression.",
+  "remaining_gates": ["Native Medium/High visual recapture on repaired source", "F17#6/F38 full-bar judge", "Separate co-op/device/earned-path criteria"],
+  "landing_scope": "Only68401e9c6b and these regression evidence files; exclude older unREADY presentation, UI and weather source."
+}

@@ -1,0 +1,85 @@
+{
+  "criteria": "F39#0\u2013#5 OPEN",
+  "reviewer": "/root/f39_visual_review",
+  "mode": "Scoped independent source review; no engine or visual acceptance claim",
+  "verdict": "APPROVE",
+  "approved_sources": [
+    {
+      "commit": "10440c5df169d4267922b42e34b2263b226fe663",
+      "scope": "Existing waterfall ground feather, presentation only"
+    },
+    {
+      "commit": "ac151d4d4c23664cb0f4e383da4e116d4e239800",
+      "scope": "Saddle Camp catalogue point corrected to actual built camp; original teleport guards and all destinations retained"
+    },
+    {
+      "commit": "f3365da2d45974ccbe184e3fdff87b1516792592",
+      "scope": "Bounded observation of three consecutive real-floor samples before capture; no second snap"
+    },
+    {
+      "commit": "858a2428f92bd7f92fa1fcc90df35a394746bdd2",
+      "scope": "Final off-floor rejection before image/record; excludes this commit's Meadows counter changes"
+    },
+    {
+      "commit": "2f67b0e3b0e6109d1250d77aaf7d3b50ee543da3",
+      "scope": "Both steep-cut bluff masks; walkable slopes retain sand"
+    },
+    {
+      "commit": "85d144aab38b9350780c4b55714ce7e12419b44d",
+      "scope": "Installed dock lantern reuse on Twin Pumps; approval requires aea62c9d compatibility correction"
+    },
+    {
+      "commit": "aea62c9d0e1434fd0fca17704f03752783d8583e",
+      "scope": "Preserves First Shore notice's existing lantern entry point"
+    },
+    {
+      "commit": "13ef5bb92fef102fd32e0a65168bd55afa098479",
+      "scope": "Actual matched material paths/counts/gates/scalars; missing/mismatched materials prevent capture"
+    },
+    {
+      "commit": "879454fb8e5c4f2550223ea9156897df434edbf5",
+      "scope": "Eight exact tracked ledger proof inputs; both hosted launch branches retain actual nonzero exit result and unchanged strict final gate. No assertion changed."
+    },
+    {
+      "commit": "ab724c81f459d5cb7d8414c4752681fc11ab2bc7",
+      "scope": "Clear-only production WorldLook empty-delta observation when Tidewake has no WorldWeather; rain rejected before poses, actual delta rechecked per frame. Same reviewer APPROVE; no weather injection or bad-weather credit."
+    },
+    {
+      "commit": "263ccc505ff1707dbf6b17b20878a7b30a7f43c0",
+      "scope": "Visual curtain retains original top/XZ/width and extends below minimum of same64 actual ground samples; shader supports camera-local near fade disabled by default. Same F39 reviewer APPROVE with ea9e820 config; resized UV needs matched image validation."
+    },
+    {
+      "commit": "ea9e8202097859b468f1f118188043219cf9567a",
+      "scope": "Actual waterfall near fade1.5\u20138m; distant density, opacity bounds, gates, collision and progression unchanged. Same F39 reviewer APPROVE; actual near day/night and distant capture pending."
+    },
+    {
+      "commit": "fef9a280ca1f17892af2e413e9df5b016af8ee77",
+      "scope": "Existing F39 proof supports finite explicit stands with all production travel/floor/camera/material/weather checks; approved only with b0d04301 metadata correction."
+    },
+    {
+      "commit": "b0d04301ea8c2fcfb2bc776264ea9a2a1ae5b9e8",
+      "scope": "Explicit stand rows and receipt use effective heading offset0; plain catalogue retains all five headings. Same F39 source reviewer APPROVE."
+    },
+    {
+      "commit": "6f1561767f9a81c0a83bcb59d34061b0c73d8d51",
+      "scope": "Root604396 approved existing presentation-weather reuse; synchronous nonsim install, remove gameplay weather group, processingOFF/emptyepisodeorder, clear restores oldemptydelta; no durable/authority state. APPROVE only with706 guard correction."
+    },
+    {
+      "commit": "706e3542c98c7b17be6e514f82ec3e474c58c5c1",
+      "scope": "Same source reviewer APPROVE: marker value true, group exclusion and emptyepisodeorder required preflight and perpose; all rain images explicitly presentation fixtures, not canonical/co-op weather proof."
+    }
+  ],
+  "existing_candidate_consumers": "APPROVE: capture override changes allowlisted local falls/current shader uniforms only. Physical inputs and restoration flags unchanged; production candidate flags OFF.",
+  "validation": "Affected village/water production logic has passing54-file coverage on75864a6c across37647732624 (53files pass; sparse ledger inputs caused one failure) and37649172962 (exact failed ledger2tests28assertions PASS). See F38/lane-d/affected-logic.json. Corrected full240 Low capture, before/after code-blind BarsA/B PASS, area smoke, motion and full matrix remain required.",
+  "baseline_visual_verdict": "Low pilot Bars A/B BLOCK; baseline is not READY",
+  "shipping_flags": "none flipped",
+  "criterion_scoped_final": {
+    "criterion": "F39#4",
+    "reviewer": "/root/f39_visual_review",
+    "verdict": "APPROVE",
+    "owner_directive": "572#6045342186",
+    "landing_scope": "263ccc50 curtain script/shader; ea9e8202 waterfall config plus prerequisite10440c5d ground_feather2to8 config hunk ONLY; exclude104 F42 evidence. Approved explicit-stand/floor/receipt guards may accompany existing capture-tool paths. Exclude weather install/UI/pumps/bluffs/other flags.",
+    "proofs": "37677560955 distance6/6,37662801275 near20,37662277200 logic148/1909/0,37671873221 area97/0",
+    "excluded": "Other source/flags, full matrix/weather/earned/co-op/full bars"
+  }
+}

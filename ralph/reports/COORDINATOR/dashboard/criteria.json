@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-10-07T18:12:51.750247+00:00",
- "main_sha": "cef976bc4 (PR #574)",
+ "generated_at": "2026-10-07T20:29:51.915631+00:00",
+ "main_sha": "056563843 (PR #573)",
  "batch4_sha": "next batch assembling",
  "rows": [
   {
@@ -954,10 +954,10 @@
     },
     {
      "text": "Water/current network visibly changes and persists",
-     "status": "failing",
-     "evidence": "tb/reproof-captures: ralph/reports/INTEGRATION/reproof/captures/F14-2/VERDICT.md",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-d a1841c9b23 (READY #572 6045620904, 2:50 PM CT 10-07): current restoration 97/0 run 37671873221, shipping 6 tests run 37677055489, judge PASS; review APPROVE",
      "gap": "Re-run smoke_tidewake_b_current_restore; redo randomized A/B capture plus code-blind judge Folds into F39#3.",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
+     "note": "Landed: Evidenced on tb/codex-d a1841c9b23 (READY #572 6045620904, 2:50 PM CT 10-07): current restoration 97/0 run 37671873221, shipping 6 tests run 37677055489, judge PASS; review APPROVE",
      "audit_index": 2
     },
     {
@@ -2159,9 +2159,9 @@
     {
      "text": "Trainer gear mitigates the trainer's actual hazards (falls, storm static, cold heights, drowning and currents, hazard terrain), each covered by a test.",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-c a17fc30697 (READY #572 6043610113, 12:50 PM CT 10-07): smoke_f33_trainer_hazards 37657224536 34/0, swim hazards 37658359564 8/0, two-peer charged ground 37659401754; review APPROVE",
+     "evidence": "PR #576 (consolidation 3) merged 2026-10-07 1:25 PM CT: lane C trainer hazard smoke (physical falls, Skyglass mitigation), head run 37665179203 PASS (a17fc30697)",
      "gap": "Build the missing producers. Add one unit or engine test each for cold heights, drowning/currents and hazard terrain with gear on and off.",
-     "note": "Landed: Evidenced on tb/codex-c a17fc30697 (READY #572 6043610113, 12:50 PM CT 10-07): smoke_f33_trainer_hazards 37657224536 34/0, swim hazards 37658359564 8/0, two-peer charged ground 37659401754; review APPROVE",
+     "note": "Landed: PR #576 (consolidation 3) merged 2026-10-07 1:25 PM CT: lane C trainer hazard smoke (physical falls, Skyglass mitigation), head run 37665179203 PASS (a17fc30697)",
      "audit_index": 3
     },
     {
@@ -2248,10 +2248,10 @@
    "criteria": [
     {
      "text": "16–20 shared type×role ultimates exist and every non-unique species maps to one (test).",
-     "status": "not_started",
-     "evidence": "data-native-e2cc-independent-judgment.json @e2cc4192 (probe, 19 shared, 69 species)",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-a 084d210fa7 (READY #572 6044279863, 1:30 PM CT 10-07): 9 named files, 104 tests, 2559 assertions PASS run 37666694206; data mapping, review APPROVE; cherry-pick 1405013475 only",
      "gap": "Commit the DATA-NATIVE-01 mapping probe as a test_*.gd unit test over moves.json/learnsets.json/ultimates.json.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. The mapping data has not changed since e2cc and the probe passed. But the criterion requires a test, and no checked-in CI test asserts the mapping.",
+     "note": "Landed: Evidenced on tb/codex-a 084d210fa7 (READY #572 6044279863, 1:30 PM CT 10-07): 9 named files, 104 tests, 2559 assertions PASS run 37666694206; data mapping, review APPROVE; cherry-pick 1405013475 only",
      "audit_index": 0
     },
     {
@@ -2321,10 +2321,10 @@
     },
     {
      "text": "Every creature meets the scale rule against the 1.80 m trainer and fight scale is consistent (P2-017, P2-062).",
-     "status": "not_started",
-     "evidence": "tests/test_creature_scale_ladder.gd (height rule, CI unit)",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-e 5298debcde (READY #572 6045690543, 2:54 PM CT 10-07): 69 subjects standing run 37669449150, 6 named fights run 37670661208, judge PASS scale/hierarchy; review APPROVE",
      "gap": "Capture the fight-scale matrix (trainer plus creatures in real fights) and run a code-blind judge. Keep the scale-ladder test.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. The unit test checks configured heights above 1.80 m. Fight-scale consistency (P2-017/P2-062) has no capture or judge.",
+     "note": "Landed: Evidenced on tb/codex-e 5298debcde (READY #572 6045690543, 2:54 PM CT 10-07): 69 subjects standing run 37669449150, 6 named fights run 37670661208, judge PASS scale/hierarchy; review APPROVE",
      "audit_index": 2
     },
     {
@@ -2443,10 +2443,10 @@
     },
     {
      "text": "The hero landmark (the village road and Crossing Hall) reads at distance and up close.",
-     "status": "failing",
-     "evidence": "tb/reproof-captures: ralph/reports/INTEGRATION/reproof/captures/F38-4/VERDICT.md",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-d 3fe87137ea (READY #572 6045557615, 2:46 PM CT 10-07): road-to-Hall landmark 8/8 day-night run 37667014067, judge PASS (criterion-scoped); review APPROVE",
      "gap": "Recapture distance and close-up Hall/road frames on High and Medium, day and night, and run a fresh code-blind judge.",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
+     "note": "Landed: Evidenced on tb/codex-d 3fe87137ea (READY #572 6045557615, 2:46 PM CT 10-07): road-to-Hall landmark 8/8 day-night run 37667014067, judge PASS (criterion-scoped); review APPROVE",
      "audit_index": 4
     },
     {
@@ -2508,10 +2508,10 @@
     },
     {
      "text": "The hero landmark (Veilfall) reads at distance and up close.",
-     "status": "partial",
-     "evidence": "ralph/reports/TIDEWAKE/phase1/f13_5/VERDICTS.md@8d7e3ddf",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-d 5c7908ded3 (READY #572 6045866946, 3:05 PM CT 10-07): Veilfall distance 6/6 run 37677560955, near 20 run 37662801275, judge PASS; review APPROVE",
      "gap": "Decide the Veilfall flags. Recapture distance and close-up frames on High and Medium and run a fresh code-blind judge.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. water_veilfall*.gd and water_world.gd changed afterwards. The falls and silhouette flags are off. The old verdict used the T2 bar, not the new one.",
+     "note": "Landed: Evidenced on tb/codex-d 5c7908ded3 (READY #572 6045866946, 3:05 PM CT 10-07): Veilfall distance 6/6 run 37677560955, near 20 run 37662801275, judge PASS; review APPROVE",
      "audit_index": 4
     },
     {
