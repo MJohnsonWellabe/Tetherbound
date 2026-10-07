@@ -1,0 +1,180 @@
+{
+  "model": "D:\\tetherbound\\codex-e\\assets_raw\\stormursa\\shoulder-composite-a\\model.glb",
+  "bounds": {
+    "min": [
+      -0.2731,
+      -0.5004,
+      0.0
+    ],
+    "max": [
+      0.2731,
+      0.5004,
+      0.5848
+    ],
+    "size": [
+      0.5462,
+      1.0007,
+      0.5848
+    ],
+    "height_m": 0.5848,
+    "longest_axis_m": 1.0007,
+    "sits_on_origin": true,
+    "centred_on_origin": true
+  },
+  "meshes": [
+    {
+      "name": "mesh_node",
+      "vertices": 28964,
+      "edges": 53968,
+      "faces": 27184,
+      "triangles": 27184,
+      "tris": 27184,
+      "quads": 0,
+      "ngons": 0,
+      "quad_fraction": 0.0,
+      "non_manifold_edges": 26384,
+      "boundary_edges": 26384,
+      "loose_vertices": 0,
+      "duplicate_vertices": 17478,
+      "components": 3028,
+      "debris_components": 3028,
+      "flipped_normals": 8967,
+      "uv_layers": 1,
+      "stretched_uv_faces": 6308,
+      "materials": [
+        "Stormursa_registered_surface_pbr"
+      ],
+      "shape_keys": 0,
+      "vertex_groups": 15
+    },
+    {
+      "name": "StormursaCopperShoulderL",
+      "vertices": 1588,
+      "edges": 2818,
+      "faces": 1400,
+      "triangles": 1400,
+      "tris": 1400,
+      "quads": 0,
+      "ngons": 0,
+      "quad_fraction": 0.0,
+      "non_manifold_edges": 1436,
+      "boundary_edges": 1436,
+      "loose_vertices": 0,
+      "duplicate_vertices": 886,
+      "components": 170,
+      "debris_components": 72,
+      "flipped_normals": 109,
+      "uv_layers": 1,
+      "stretched_uv_faces": 21,
+      "materials": [
+        "Material_0"
+      ],
+      "shape_keys": 0,
+      "vertex_groups": 15
+    },
+    {
+      "name": "StormursaCopperShoulderR",
+      "vertices": 1588,
+      "edges": 2818,
+      "faces": 1400,
+      "triangles": 1400,
+      "tris": 1400,
+      "quads": 0,
+      "ngons": 0,
+      "quad_fraction": 0.0,
+      "non_manifold_edges": 1436,
+      "boundary_edges": 1436,
+      "loose_vertices": 0,
+      "duplicate_vertices": 886,
+      "components": 170,
+      "debris_components": 72,
+      "flipped_normals": 109,
+      "uv_layers": 1,
+      "stretched_uv_faces": 21,
+      "materials": [
+        "Material_0"
+      ],
+      "shape_keys": 0,
+      "vertex_groups": 15
+    }
+  ],
+  "materials": [
+    {
+      "name": "Material_0",
+      "textures": [
+        "Image_0",
+        "Image_1.001",
+        "Image_2.001"
+      ],
+      "textured": true
+    },
+    {
+      "name": "Stormursa_registered_surface_pbr",
+      "textures": [
+        "Stormursa_surface_albedo",
+        "Image_1",
+        "Image_2"
+      ],
+      "textured": true
+    }
+  ],
+  "armatures": [
+    {
+      "name": "Armature",
+      "bones": 15,
+      "bone_names": [
+        "root",
+        "pelvis",
+        "spine",
+        "neck",
+        "head",
+        "front_upper_l",
+        "front_lower_l",
+        "front_upper_r",
+        "front_lower_r",
+        "tail_1",
+        "tail_2",
+        "rear_upper_l",
+        "rear_lower_l",
+        "rear_upper_r",
+        "rear_lower_r"
+      ],
+      "roots": [
+        "root"
+      ],
+      "skinned_meshes": [
+        "mesh_node",
+        "StormursaCopperShoulderL",
+        "StormursaCopperShoulderR"
+      ],
+      "max_depth": 4
+    }
+  ],
+  "animations": [],
+  "totals": {
+    "meshes": 3,
+    "triangles": 29984,
+    "vertices": 32140,
+    "materials": 2,
+    "animations": 0
+  },
+  "problems": [
+    "mesh_node: 26384 non-manifold edges",
+    "mesh_node: 17478 duplicate vertices \u2014 will split under deformation",
+    "mesh_node: 3028 microscopic disconnected components",
+    "mesh_node: ~8967 inward-facing faces",
+    "mesh_node: 6308 faces with texel density 4.0x off the median",
+    "mesh_node: 0% quads \u2014 generator triangle soup, poor for deformation",
+    "StormursaCopperShoulderL: 1436 non-manifold edges",
+    "StormursaCopperShoulderL: 886 duplicate vertices \u2014 will split under deformation",
+    "StormursaCopperShoulderL: 72 microscopic disconnected components",
+    "StormursaCopperShoulderL: ~109 inward-facing faces",
+    "StormursaCopperShoulderL: 21 faces with texel density 4.0x off the median",
+    "StormursaCopperShoulderR: 1436 non-manifold edges",
+    "StormursaCopperShoulderR: 886 duplicate vertices \u2014 will split under deformation",
+    "StormursaCopperShoulderR: 72 microscopic disconnected components",
+    "StormursaCopperShoulderR: ~109 inward-facing faces",
+    "StormursaCopperShoulderR: 21 faces with texel density 4.0x off the median",
+    "rigged but no animation clips"
+  ]
+}

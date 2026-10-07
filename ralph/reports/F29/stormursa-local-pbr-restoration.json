@@ -1,0 +1,16 @@
+{
+  "mode": "registered_pbr_restoration",
+  "input_sha256": {
+    "D:\\tetherbound\\codex-e\\assets_raw\\stormursa\\local-surface-a\\model.glb": "d3c58b909909c35cd4a97803513cf4062b8d8d1883a62afb5d6d69e5482dd21b",
+    "D:\\tetherbound\\codex-e\\assets_raw\\stormursa\\textured-a\\model.glb": "15433a7a0249fa3ee0070200b0d6f22d3894b2f12ca8b61fcb6d2817b0d85060"
+  },
+  "output_sha256": "09d5aa5bf6e5c61afc5ea30f68295df3fdc228f6395f7111f416b938f371380f",
+  "original_geometry_uv_weights_rig_actions_transforms_unchanged_before_export": true,
+  "held_baked_albedo_preserved": true,
+  "restored_channels": [
+    "Normal",
+    "Metallic",
+    "Roughness"
+  ],
+  "scope": "Material restoration only; no new geometry or native visual PASS"
+}

@@ -122,9 +122,11 @@ def attach_components(args: list[str]) -> None:
     names = set()
     for spec in parts:
         name, bone_name = spec.get("name"), spec.get("anchor_bone")
+        skin_bone = spec.get("rigid_skin_bone", "")
         offset, angles, ratio = spec.get("offset_height"), spec.get("rotation_deg"), spec.get("height_ratio")
         if not isinstance(name, str) or not name or name in names or name in bpy.data.objects \
-                or bone_name not in rig.data.bones or not isinstance(ratio, (int, float)) \
+                or bone_name not in rig.data.bones or not isinstance(skin_bone, str) \
+                or (skin_bone and skin_bone not in rig.data.bones) or not isinstance(ratio, (int, float)) \
                 or not math.isfinite(ratio) or not .1 <= ratio <= .5 \
                 or not isinstance(spec.get("mirror_world_x"), bool) \
                 or any(not isinstance(values, list) or len(values) != 3
@@ -149,12 +151,19 @@ def attach_components(args: list[str]) -> None:
             bm.to_mesh(part.data); bm.free()
         bpy.ops.object.select_all(action="DESELECT")
         part.select_set(True); bpy.context.view_layer.objects.active = part
-        transfer = part.modifiers.new("OriginalBodyWeights", "DATA_TRANSFER")
-        transfer.object = body; transfer.use_vert_data = True
-        transfer.data_types_verts = {"VGROUP_WEIGHTS"}; transfer.vert_mapping = "POLYINTERP_NEAREST"
-        transfer.layers_vgroup_select_src = "ALL"; transfer.use_object_transform = True
-        bpy.ops.object.datalayout_transfer(modifier=transfer.name)
-        bpy.ops.object.modifier_apply(modifier=transfer.name)
+        if skin_bone:
+            # A rigid ridge must not interpolate between neck and shoulder:
+            # the glass insets tore in the actual look-pose review. Bind only
+            # this addition to the existing mantle bone; body weights stay put.
+            group = part.vertex_groups.new(name=skin_bone)
+            group.add(list(range(len(part.data.vertices))), 1.0, "REPLACE")
+        else:
+            transfer = part.modifiers.new("OriginalBodyWeights", "DATA_TRANSFER")
+            transfer.object = body; transfer.use_vert_data = True
+            transfer.data_types_verts = {"VGROUP_WEIGHTS"}; transfer.vert_mapping = "POLYINTERP_NEAREST"
+            transfer.layers_vgroup_select_src = "ALL"; transfer.use_object_transform = True
+            bpy.ops.object.datalayout_transfer(modifier=transfer.name)
+            bpy.ops.object.modifier_apply(modifier=transfer.name)
         for vertex in part.data.vertices:
             weights = sorted(((g.group, g.weight) for g in vertex.groups if g.weight > 0
                               and part.vertex_groups[g.group].name in rig.data.bones),
@@ -169,7 +178,8 @@ def attach_components(args: list[str]) -> None:
         armature = part.modifiers.new("OriginalArmature", "ARMATURE"); armature.object = rig
         part.parent = rig; part.matrix_world = Matrix.Identity(4)
         additions.append(part)
-        receipts.append({"name": name, "anchor_bone": bone_name, "transform": [list(row) for row in transform],
+        receipts.append({"name": name, "anchor_bone": bone_name, "rigid_skin_bone": skin_bone,
+                         "transform": [list(row) for row in transform],
                          "triangles": component_triangles, "max_influences": max(len(v.groups) for v in part.data.vertices),
                          "weights_normalized": all(abs(sum(g.weight for g in v.groups) - 1) <= 1e-5 for v in part.data.vertices)})
     for obj in imported:

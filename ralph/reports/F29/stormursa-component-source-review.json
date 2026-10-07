@@ -1,0 +1,8 @@
+{
+  "agent": "/root/review_f36_cap",
+  "source_commit": "4b7c9f0b35ae3c69ec79f0d134747d3f24593fb4",
+  "verdict": "APPROVE",
+  "scope": "bounded source only",
+  "reason": "Body/UV/weights/rig/action guards, addition-only decimation under30000, mirrored winding, atmost4 normalized weights, selective export, original-albedo PBR restoration, fresh outputs/input hashes coherent",
+  "remaining": "Reimport/fit/intersections/deformation/native/blind appearance"
+}

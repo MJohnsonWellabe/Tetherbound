@@ -1,0 +1,82 @@
+{
+  "mode": "preserved_body_component_attachment",
+  "input_sha256": {
+    "D:\\tetherbound\\codex-e\\assets_raw\\stormursa\\local-pbr-a\\model.glb": "09d5aa5bf6e5c61afc5ea30f68295df3fdc228f6395f7111f416b938f371380f",
+    "D:\\tetherbound\\codex-e\\assets_raw\\stormursa\\shoulder-a\\model.glb": "b378f4643855c9b9e5b594b37a5c021b92047939fc0163e25f308ce0612cef85",
+    "D:\\tetherbound\\codex-e\\assets\\creatures\\tetherbound\\stormursa\\source\\f36-reference-provenance.json": "14d03849b3af19a13087a5fea9a7fdd3345d77a6ee8fcd6e8dfeb82d5d7d680d"
+  },
+  "output_sha256": "27f08faec08dd7774929adb2a5d5e94e90d54adb65fc3727726ab477cbdebeb5",
+  "body_triangles": 27184,
+  "addition_triangles": 2800,
+  "total_triangles": 29984,
+  "original_body_positions_faces_uvs_weights_rig_actions_transforms_unchanged_before_export": true,
+  "components": [
+    {
+      "name": "StormursaCopperShoulderL",
+      "anchor_bone": "front_upper_l",
+      "transform": [
+        [
+          -9.600784167673737e-09,
+          0.2196403443813324,
+          0.0,
+          -0.21759982407093048
+        ],
+        [
+          -0.2196403443813324,
+          -9.600784167673737e-09,
+          0.0,
+          -0.19689418375492096
+        ],
+        [
+          0.0,
+          0.0,
+          0.2196403443813324,
+          0.46178025007247925
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "triangles": 1400,
+      "max_influences": 4,
+      "weights_normalized": true
+    },
+    {
+      "name": "StormursaCopperShoulderR",
+      "anchor_bone": "front_upper_r",
+      "transform": [
+        [
+          9.600784167673737e-09,
+          -0.2196403443813324,
+          0.0,
+          0.22119952738285065
+        ],
+        [
+          -0.2196403443813324,
+          -9.600784167673737e-09,
+          0.0,
+          -0.19817115366458893
+        ],
+        [
+          0.0,
+          0.0,
+          0.2196403443813324,
+          0.461780309677124
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "triangles": 1400,
+      "max_influences": 4,
+      "weights_normalized": true
+    }
+  ],
+  "scope": "DCC guards only; reimport/fit/intersections/deformation/native judgment still required"
+}

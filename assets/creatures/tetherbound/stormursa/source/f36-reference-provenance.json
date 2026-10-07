@@ -73,33 +73,35 @@
         "name": "StormursaCopperShoulderL",
         "anchor_bone": "front_upper_l",
         "offset_height": [
-          -0.075,
-          0.025,
-          0.24
+          -0.035,
+          0.1,
+          0.25
         ],
         "rotation_deg": [
           0,
-          0,
+          -60,
           -90
         ],
-        "height_ratio": 0.32,
-        "mirror_world_x": false
+        "height_ratio": 0.4,
+        "mirror_world_x": false,
+        "rigid_skin_bone": "spine"
       },
       {
         "name": "StormursaCopperShoulderR",
         "anchor_bone": "front_upper_r",
         "offset_height": [
-          0.075,
-          0.025,
-          0.24
+          0.035,
+          0.1,
+          0.25
         ],
         "rotation_deg": [
           0,
-          0,
+          -60,
           -90
         ],
-        "height_ratio": 0.32,
-        "mirror_world_x": true
+        "height_ratio": 0.4,
+        "mirror_world_x": true,
+        "rigid_skin_bone": "spine"
       }
     ]
   }
