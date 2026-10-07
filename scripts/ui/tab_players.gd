@@ -64,7 +64,14 @@ func build() -> void:
 
 	_list = VBoxContainer.new()
 	_list.add_theme_constant_override("separation", 10)
-	add_child(_list)
+	_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var roster_scroll := ScrollContainer.new()
+	roster_scroll.custom_minimum_size = Vector2(0, 96)
+	roster_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	roster_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	roster_scroll.follow_focus = true
+	roster_scroll.add_child(_list)
+	add_child(roster_scroll)
 
 	for row: Variant in _peer_rows():
 		_add_row(row as Dictionary)
