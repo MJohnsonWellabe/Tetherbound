@@ -1,6 +1,6 @@
 {
   "criterion": "F14#2",
-  "status": "PASS_AFFECTED_LOGIC_PENDING",
+  "status": "PASS",
   "source_commit": "a63c508b3f3e173e8a0635542cea6ca0b0cbaadd",
   "run_id": 37671873221,
   "artifact_id": 11505218741,
@@ -44,7 +44,7 @@
     "Motion for coherent flow/speed/foam behavior",
     "Ordinary shore/swimming context"
   ],
-  "disposition": "Literal criterion visual change + production restoration persistence PASS; bounded source APPROVE. Shipping tuple promoted; affected named unit on promoted commit pending. Overall BarA/B follow-up stays OPEN; no earned/motion/co-op claim.",
+  "disposition": "READY F14#2: literal visible restoration change PASS, real production settlement/save-reload97/0 PASS, independent source APPROVE, shipped material tuple affected logic6/120/0 PASS. Release overall art bar/ordinary motion/co-op/earned-path remain separate OPEN gates.",
   "historical_full_bar_status": "BLOCKED",
   "owner_scoped_directive": "572#6045342186: literal restoration criterion only; overall art finish is separately tracked",
   "scoped_rejudgment": {
@@ -56,5 +56,18 @@
     "reviewer": "/root/f39_visual_review",
     "verdict": "APPROVE",
     "scope": "enabled=true/ridges_enabled=false only plus existing f216/a63 smoke extensions; checked actual97/0 proof and material allowlist"
+  },
+  "shipping_commit": "267d8f4fd1f46954dc79dd9ecfc91ed6ea3b9b16",
+  "affected_logic": {
+    "run_id": 37677055489,
+    "artifact_id": 11506434668,
+    "proof": "tests/run_tests.gd --only=test_water_current_flow_states",
+    "source_commit": "267d8f4fd1f46954dc79dd9ecfc91ed6ea3b9b16",
+    "files": 1,
+    "tests": 6,
+    "assertions": 120,
+    "failed": 0,
+    "exit": 0,
+    "seconds": 4
   }
 }
