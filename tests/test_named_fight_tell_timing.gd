@@ -317,6 +317,11 @@ func test_live_guardian_patterns_keep_authored_cadence_geometry_and_armor() -> v
 		"chapter": "meadows", "sendout_index": 0, "after_south_bridge": false}, Callable())
 	var quick: Dictionary = body._select_attack()
 	var heavy: Dictionary = body._select_attack()
+	body._intent = AI.Intent.TELEGRAPH
+	body._selected_attack = quick
+	assert_false(body.protected_heavy_committed(), "the configured quick stays interruptible")
+	body._selected_attack = heavy
+	assert_true(body.protected_heavy_committed(), "configured Earth Fist retains its committed heavy protection")
 	assert_eq(str(quick.get("move_id", "")), str(body.instance.get("move_quick")))
 	assert_almost_eq(float(quick.telegraph), 0.85)
 	assert_almost_eq(float(quick.recovery), 1.1)

@@ -918,7 +918,7 @@ func _select_attack() -> Dictionary:
 		# Keep this named fight's cues/armor while its existing authored cadence
 		# owns timing and the charged move's geometry, before the one spacing pass.
 		for key: String in ["pattern_attack_id", "combat_role", "pattern_id", "telegraph_shape",
-				"safe_escape", "armored_front_degrees", "front_damage_scale"]:
+				"safe_escape", "armored_front_degrees", "front_damage_scale", "heavy"]:
 			if pattern.has(key):
 				profile[key] = pattern[key]
 	_selected_attack_attempts += 1
