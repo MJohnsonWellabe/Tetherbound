@@ -20,6 +20,7 @@ var _map_zoom_samples := false
 var _paired_720 := false
 var _tabs: Array[String] = []
 var _idle_hud := false
+var _build_states := false
 var _records: Array[Dictionary] = []
 var _failures: Array[String] = []
 var _stage := "boot"
@@ -52,6 +53,8 @@ func _run() -> void:
 				_tabs.append(id.strip_edges())
 		elif arg == "--idle-hud":
 			_idle_hud = true
+		elif arg == "--build-states":
+			_build_states = true
 	if not SCENES.has(_biome) or not _output.begins_with("res://ralph/reports/VISUAL/phase2/"):
 		push_error("Use --biome and --output under the Phase 2 evidence directory")
 		quit(1)
@@ -72,6 +75,10 @@ func _run() -> void:
 			return
 	if (_map_cycle or _map_zoom_samples) and not _tabs.is_empty() and "map" not in _tabs:
 		push_error("Map evidence flags require map in the requested tab set")
+		quit(1)
+		return
+	if _build_states and not _tabs.is_empty() and "build" not in _tabs:
+		push_error("Build state evidence requires build in the requested tab set")
 		quit(1)
 		return
 	seed(_seed)
@@ -146,6 +153,8 @@ func _run() -> void:
 			await _shoot_map_zoom_samples(menu, world)
 		if tab_id == "settings":
 			await _shoot_settings_sections(menu, world)
+		if tab_id == "build" and _build_states:
+			await _shoot_build_states(menu, world, game)
 	_stage = "closing_menu"
 	_write_manifest(false)
 	menu.call("close")
@@ -169,6 +178,7 @@ func _write_manifest(complete: bool) -> void:
 		"paired_720": _paired_720,
 		"requested_tabs": _tabs,
 		"natural_idle_hud": _idle_hud,
+		"build_preference_states": _build_states,
 		"map_landmarks_sha256": FileAccess.get_sha256("res://data/config/map_landmarks.json"),
 		"input_contexts_sha256": FileAccess.get_sha256("res://data/config/input_contexts.json"),
 		"project_sha256": FileAccess.get_sha256("res://project.godot"),
@@ -188,6 +198,56 @@ func _write_manifest(complete: bool) -> void:
 	if error != OK:
 		_failures.append("UI capture manifest could not be flushed")
 		push_error(_failures.back())
+
+
+## Exercise the existing preference button and real Build banner, without
+## inventing stock, unlocking recipes or claiming controller navigation.
+func _shoot_build_states(menu: Node, world: Node, game: Node) -> void:
+	var original := bool(game.get("free_build"))
+	for enabled: bool in [false, true]:
+		if not await _choose_free_build(menu, game, enabled):
+			break
+		menu.call("close")
+		if not bool(menu.call("open", "build")):
+			_failures.append("Could not reopen Build for preference state")
+			break
+		for frame in 6:
+			await process_frame
+		var bodies: Array = menu.get("_bodies")
+		var index := int(menu.get("_index"))
+		var tab: Node = bodies[index] if index >= 0 and index < bodies.size() else null
+		var banner: Label = tab.get("_free_note") as Label if tab != null else null
+		if banner == null or banner.visible != enabled or bool(game.get("free_build")) != enabled:
+			_failures.append("Build preference state and real banner disagree")
+			break
+		await _shoot("menu_build_free_%s" % ("on" if enabled else "off"),
+			"Real Build banner; Settings button activation, free build %s" % ("on" if enabled else "off"), world)
+	if not await _choose_free_build(menu, game, original):
+		_failures.append("Could not restore original free-build preference")
+	menu.call("close")
+
+
+func _choose_free_build(menu: Node, game: Node, enabled: bool) -> bool:
+	if bool(game.get("free_build")) == enabled:
+		return true
+	menu.call("close")
+	if not bool(menu.call("open", "settings")):
+		_failures.append("Could not open Settings for Build state capture")
+		return false
+	for frame in 6:
+		await process_frame
+	var bodies: Array = menu.get("_bodies")
+	var index := int(menu.get("_index"))
+	var tab: Node = bodies[index] if index >= 0 and index < bodies.size() else null
+	var button: Button = tab.get("_free_build_button") as Button if tab != null else null
+	if button == null or button.disabled:
+		_failures.append("Existing Free build preference button unavailable")
+		return false
+	button.pressed.emit()
+	if bool(game.get("free_build")) != enabled:
+		_failures.append("Existing Free build button did not select requested state")
+		return false
+	return true
 
 
 func _shoot_map_cycle(menu: Node, world: Node) -> void:
