@@ -1,0 +1,1111 @@
+[
+  {
+    "artifact": "native-west_dry_approach.jpg",
+    "tile": 0,
+    "source_png": "0000_west_dry_approach.png",
+    "capture_id": "west_dry_approach",
+    "crossing": 0,
+    "elapsed_ms": 90500,
+    "moving_simulation_seconds": 0.0,
+    "physics_frame": 56,
+    "process_frame": 6,
+    "crop": null
+  },
+  {
+    "artifact": "native-surface_mid.jpg",
+    "tile": 0,
+    "source_png": "0033_surface_mid.png",
+    "capture_id": "surface_mid",
+    "crossing": 1,
+    "elapsed_ms": 245509,
+    "moving_simulation_seconds": 3.78333333333332,
+    "physics_frame": 552,
+    "process_frame": 68,
+    "crop": null
+  },
+  {
+    "artifact": "native-surface_mid-return.jpg",
+    "tile": 0,
+    "source_png": "0175_surface_mid.png",
+    "capture_id": "surface_mid",
+    "crossing": 2,
+    "elapsed_ms": 709458,
+    "moving_simulation_seconds": 21.6000000000001,
+    "physics_frame": 2168,
+    "process_frame": 270,
+    "crop": null
+  },
+  {
+    "artifact": "native-west_dry_exit.jpg",
+    "tile": 0,
+    "source_png": "0244_west_dry_exit.png",
+    "capture_id": "west_dry_exit",
+    "crossing": 2,
+    "elapsed_ms": 1042164,
+    "moving_simulation_seconds": 35.7833333333326,
+    "physics_frame": 3280,
+    "process_frame": 409,
+    "crop": null
+  },
+  {
+    "artifact": "native-entry_after.jpg",
+    "tile": 0,
+    "source_png": "0002_human_entry_after.png",
+    "capture_id": "human_entry_after",
+    "crossing": 1,
+    "elapsed_ms": 174535,
+    "moving_simulation_seconds": 0.0,
+    "physics_frame": 320,
+    "process_frame": 39,
+    "crop": null
+  },
+  {
+    "artifact": "native-exit_before.jpg",
+    "tile": 0,
+    "source_png": "0141_human_exit_before.png",
+    "capture_id": "human_exit_before",
+    "crossing": 1,
+    "elapsed_ms": 483292,
+    "moving_simulation_seconds": 17.8666666666669,
+    "physics_frame": 1408,
+    "process_frame": 175,
+    "crop": null
+  },
+  {
+    "artifact": "native-exit_after.jpg",
+    "tile": 0,
+    "source_png": "0142_human_exit_after.png",
+    "capture_id": "human_exit_after",
+    "crossing": 1,
+    "elapsed_ms": 486077,
+    "moving_simulation_seconds": 17.9166666666669,
+    "physics_frame": 1416,
+    "process_frame": 176,
+    "crop": null
+  },
+  {
+    "artifact": "transition-1.jpg",
+    "tile": 0,
+    "source_png": "0000_west_dry_approach.png",
+    "capture_id": "west_dry_approach",
+    "crossing": 0,
+    "elapsed_ms": 90500,
+    "moving_simulation_seconds": 0.0,
+    "physics_frame": 56,
+    "process_frame": 6,
+    "crop": null
+  },
+  {
+    "artifact": "transition-1.jpg",
+    "tile": 1,
+    "source_png": "0001_human_entry_before.png",
+    "capture_id": "human_entry_before",
+    "crossing": 1,
+    "elapsed_ms": 172344,
+    "moving_simulation_seconds": 0.0,
+    "physics_frame": 312,
+    "process_frame": 38,
+    "crop": null
+  },
+  {
+    "artifact": "transition-1.jpg",
+    "tile": 2,
+    "source_png": "0002_human_entry_after.png",
+    "capture_id": "human_entry_after",
+    "crossing": 1,
+    "elapsed_ms": 174535,
+    "moving_simulation_seconds": 0.0,
+    "physics_frame": 320,
+    "process_frame": 39,
+    "crop": null
+  },
+  {
+    "artifact": "transition-1.jpg",
+    "tile": 3,
+    "source_png": "0010_surface_west.png",
+    "capture_id": "surface_west",
+    "crossing": 1,
+    "elapsed_ms": 190934,
+    "moving_simulation_seconds": 0.783333333333334,
+    "physics_frame": 368,
+    "process_frame": 45,
+    "crop": null
+  },
+  {
+    "artifact": "transition-2.jpg",
+    "tile": 0,
+    "source_png": "0033_surface_mid.png",
+    "capture_id": "surface_mid",
+    "crossing": 1,
+    "elapsed_ms": 245509,
+    "moving_simulation_seconds": 3.78333333333332,
+    "physics_frame": 552,
+    "process_frame": 68,
+    "crop": null
+  },
+  {
+    "artifact": "transition-2.jpg",
+    "tile": 1,
+    "source_png": "0057_surface_far.png",
+    "capture_id": "surface_far",
+    "crossing": 1,
+    "elapsed_ms": 297733,
+    "moving_simulation_seconds": 6.84999999999998,
+    "physics_frame": 736,
+    "process_frame": 91,
+    "crop": null
+  },
+  {
+    "artifact": "transition-2.jpg",
+    "tile": 2,
+    "source_png": "0141_human_exit_before.png",
+    "capture_id": "human_exit_before",
+    "crossing": 1,
+    "elapsed_ms": 483292,
+    "moving_simulation_seconds": 17.8666666666669,
+    "physics_frame": 1408,
+    "process_frame": 175,
+    "crop": null
+  },
+  {
+    "artifact": "transition-2.jpg",
+    "tile": 3,
+    "source_png": "0142_human_exit_after.png",
+    "capture_id": "human_exit_after",
+    "crossing": 1,
+    "elapsed_ms": 486077,
+    "moving_simulation_seconds": 17.9166666666669,
+    "physics_frame": 1416,
+    "process_frame": 176,
+    "crop": null
+  },
+  {
+    "artifact": "transition-3.jpg",
+    "tile": 0,
+    "source_png": "0143_east_dry_exit.png",
+    "capture_id": "east_dry_exit",
+    "crossing": 1,
+    "elapsed_ms": 564954,
+    "moving_simulation_seconds": 17.9166666666669,
+    "physics_frame": 1664,
+    "process_frame": 207,
+    "crop": null
+  },
+  {
+    "artifact": "transition-3.jpg",
+    "tile": 1,
+    "source_png": "0145_human_entry_before.png",
+    "capture_id": "human_entry_before",
+    "crossing": 2,
+    "elapsed_ms": 632908,
+    "moving_simulation_seconds": 17.9166666666669,
+    "physics_frame": 1928,
+    "process_frame": 240,
+    "crop": null
+  },
+  {
+    "artifact": "transition-3.jpg",
+    "tile": 2,
+    "source_png": "0146_human_entry_after.png",
+    "capture_id": "human_entry_after",
+    "crossing": 2,
+    "elapsed_ms": 635034,
+    "moving_simulation_seconds": 17.9166666666669,
+    "physics_frame": 1936,
+    "process_frame": 241,
+    "crop": null
+  },
+  {
+    "artifact": "transition-3.jpg",
+    "tile": 3,
+    "source_png": "0152_surface_east.png",
+    "capture_id": "surface_east",
+    "crossing": 2,
+    "elapsed_ms": 650551,
+    "moving_simulation_seconds": 18.5833333333336,
+    "physics_frame": 1984,
+    "process_frame": 247,
+    "crop": null
+  },
+  {
+    "artifact": "transition-4.jpg",
+    "tile": 0,
+    "source_png": "0175_surface_mid.png",
+    "capture_id": "surface_mid",
+    "crossing": 2,
+    "elapsed_ms": 709458,
+    "moving_simulation_seconds": 21.6000000000001,
+    "physics_frame": 2168,
+    "process_frame": 270,
+    "crop": null
+  },
+  {
+    "artifact": "transition-4.jpg",
+    "tile": 1,
+    "source_png": "0199_surface_far.png",
+    "capture_id": "surface_far",
+    "crossing": 2,
+    "elapsed_ms": 768293,
+    "moving_simulation_seconds": 24.6666666666665,
+    "physics_frame": 2352,
+    "process_frame": 293,
+    "crop": null
+  },
+  {
+    "artifact": "transition-4.jpg",
+    "tile": 2,
+    "source_png": "0242_human_exit_before.png",
+    "capture_id": "human_exit_before",
+    "crossing": 2,
+    "elapsed_ms": 959397,
+    "moving_simulation_seconds": 35.6666666666659,
+    "physics_frame": 3016,
+    "process_frame": 376,
+    "crop": null
+  },
+  {
+    "artifact": "transition-4.jpg",
+    "tile": 3,
+    "source_png": "0243_human_exit_after.png",
+    "capture_id": "human_exit_after",
+    "crossing": 2,
+    "elapsed_ms": 961773,
+    "moving_simulation_seconds": 35.7833333333326,
+    "physics_frame": 3024,
+    "process_frame": 377,
+    "crop": null
+  },
+  {
+    "artifact": "motion-detail-1.jpg",
+    "tile": 0,
+    "source_png": "0004_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 177712,
+    "moving_simulation_seconds": 0.116666666666667,
+    "physics_frame": 328,
+    "process_frame": 40,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-1.jpg",
+    "tile": 1,
+    "source_png": "0012_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 198816,
+    "moving_simulation_seconds": 1.11666666666667,
+    "physics_frame": 392,
+    "process_frame": 48,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-1.jpg",
+    "tile": 2,
+    "source_png": "0019_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 214967,
+    "moving_simulation_seconds": 2.05,
+    "physics_frame": 448,
+    "process_frame": 55,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-1.jpg",
+    "tile": 3,
+    "source_png": "0026_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 231289,
+    "moving_simulation_seconds": 2.98333333333333,
+    "physics_frame": 504,
+    "process_frame": 62,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-1.jpg",
+    "tile": 4,
+    "source_png": "0034_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 247795,
+    "moving_simulation_seconds": 3.91666666666666,
+    "physics_frame": 560,
+    "process_frame": 69,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-1.jpg",
+    "tile": 5,
+    "source_png": "0041_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 263796,
+    "moving_simulation_seconds": 4.84999999999999,
+    "physics_frame": 616,
+    "process_frame": 76,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-1.jpg",
+    "tile": 6,
+    "source_png": "0048_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 279550,
+    "moving_simulation_seconds": 5.78333333333332,
+    "physics_frame": 672,
+    "process_frame": 83,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-1.jpg",
+    "tile": 7,
+    "source_png": "0055_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 295178,
+    "moving_simulation_seconds": 6.71666666666665,
+    "physics_frame": 728,
+    "process_frame": 90,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-1.jpg",
+    "tile": 8,
+    "source_png": "0063_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 311138,
+    "moving_simulation_seconds": 7.64999999999998,
+    "physics_frame": 784,
+    "process_frame": 97,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-1.jpg",
+    "tile": 9,
+    "source_png": "0070_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 326727,
+    "moving_simulation_seconds": 8.58333333333334,
+    "physics_frame": 840,
+    "process_frame": 104,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-1.jpg",
+    "tile": 10,
+    "source_png": "0077_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 342153,
+    "moving_simulation_seconds": 9.51666666666672,
+    "physics_frame": 896,
+    "process_frame": 111,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-1.jpg",
+    "tile": 11,
+    "source_png": "0084_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 357752,
+    "moving_simulation_seconds": 10.4500000000001,
+    "physics_frame": 952,
+    "process_frame": 118,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-1.jpg",
+    "tile": 12,
+    "source_png": "0091_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 373365,
+    "moving_simulation_seconds": 11.3833333333335,
+    "physics_frame": 1008,
+    "process_frame": 125,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-1.jpg",
+    "tile": 13,
+    "source_png": "0098_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 389216,
+    "moving_simulation_seconds": 12.3166666666669,
+    "physics_frame": 1064,
+    "process_frame": 132,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-1.jpg",
+    "tile": 14,
+    "source_png": "0105_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 404882,
+    "moving_simulation_seconds": 13.2500000000002,
+    "physics_frame": 1120,
+    "process_frame": 139,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-1.jpg",
+    "tile": 15,
+    "source_png": "0112_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 419152,
+    "moving_simulation_seconds": 14.1833333333336,
+    "physics_frame": 1176,
+    "process_frame": 146,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-2.jpg",
+    "tile": 0,
+    "source_png": "0119_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 433048,
+    "moving_simulation_seconds": 15.116666666667,
+    "physics_frame": 1232,
+    "process_frame": 153,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-2.jpg",
+    "tile": 1,
+    "source_png": "0126_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 446902,
+    "moving_simulation_seconds": 16.0500000000004,
+    "physics_frame": 1288,
+    "process_frame": 160,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-2.jpg",
+    "tile": 2,
+    "source_png": "0134_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 466684,
+    "moving_simulation_seconds": 17.066666666667,
+    "physics_frame": 1360,
+    "process_frame": 169,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-2.jpg",
+    "tile": 3,
+    "source_png": "0147_motion.png",
+    "capture_id": "motion",
+    "crossing": 2,
+    "elapsed_ms": 637846,
+    "moving_simulation_seconds": 18.0500000000003,
+    "physics_frame": 1944,
+    "process_frame": 242,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-2.jpg",
+    "tile": 4,
+    "source_png": "0155_motion.png",
+    "capture_id": "motion",
+    "crossing": 2,
+    "elapsed_ms": 661878,
+    "moving_simulation_seconds": 19.0666666666669,
+    "physics_frame": 2016,
+    "process_frame": 251,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-2.jpg",
+    "tile": 5,
+    "source_png": "0162_motion.png",
+    "capture_id": "motion",
+    "crossing": 2,
+    "elapsed_ms": 679451,
+    "moving_simulation_seconds": 20.0000000000001,
+    "physics_frame": 2072,
+    "process_frame": 258,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-2.jpg",
+    "tile": 6,
+    "source_png": "0169_motion.png",
+    "capture_id": "motion",
+    "crossing": 2,
+    "elapsed_ms": 696933,
+    "moving_simulation_seconds": 20.9333333333334,
+    "physics_frame": 2128,
+    "process_frame": 265,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-2.jpg",
+    "tile": 7,
+    "source_png": "0177_motion.png",
+    "capture_id": "motion",
+    "crossing": 2,
+    "elapsed_ms": 714318,
+    "moving_simulation_seconds": 21.8666666666667,
+    "physics_frame": 2184,
+    "process_frame": 272,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-2.jpg",
+    "tile": 8,
+    "source_png": "0184_motion.png",
+    "capture_id": "motion",
+    "crossing": 2,
+    "elapsed_ms": 731636,
+    "moving_simulation_seconds": 22.8,
+    "physics_frame": 2240,
+    "process_frame": 279,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-2.jpg",
+    "tile": 9,
+    "source_png": "0191_motion.png",
+    "capture_id": "motion",
+    "crossing": 2,
+    "elapsed_ms": 749901,
+    "moving_simulation_seconds": 23.7333333333333,
+    "physics_frame": 2296,
+    "process_frame": 286,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-2.jpg",
+    "tile": 10,
+    "source_png": "0198_motion.png",
+    "capture_id": "motion",
+    "crossing": 2,
+    "elapsed_ms": 767946,
+    "moving_simulation_seconds": 24.6666666666665,
+    "physics_frame": 2352,
+    "process_frame": 293,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-2.jpg",
+    "tile": 11,
+    "source_png": "0206_motion.png",
+    "capture_id": "motion",
+    "crossing": 2,
+    "elapsed_ms": 785940,
+    "moving_simulation_seconds": 25.5999999999998,
+    "physics_frame": 2408,
+    "process_frame": 300,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-2.jpg",
+    "tile": 12,
+    "source_png": "0213_motion.png",
+    "capture_id": "motion",
+    "crossing": 2,
+    "elapsed_ms": 803406,
+    "moving_simulation_seconds": 26.5333333333331,
+    "physics_frame": 2464,
+    "process_frame": 307,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-2.jpg",
+    "tile": 13,
+    "source_png": "0220_motion.png",
+    "capture_id": "motion",
+    "crossing": 2,
+    "elapsed_ms": 820631,
+    "moving_simulation_seconds": 27.4666666666664,
+    "physics_frame": 2520,
+    "process_frame": 314,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-2.jpg",
+    "tile": 14,
+    "source_png": "0227_motion.png",
+    "capture_id": "motion",
+    "crossing": 2,
+    "elapsed_ms": 837886,
+    "moving_simulation_seconds": 28.3999999999997,
+    "physics_frame": 2576,
+    "process_frame": 321,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-2.jpg",
+    "tile": 15,
+    "source_png": "0234_motion.png",
+    "capture_id": "motion",
+    "crossing": 2,
+    "elapsed_ms": 855103,
+    "moving_simulation_seconds": 29.3333333333329,
+    "physics_frame": 2632,
+    "process_frame": 328,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-detail-3.jpg",
+    "tile": 0,
+    "source_png": "0240_motion.png",
+    "capture_id": "motion",
+    "crossing": 2,
+    "elapsed_ms": 869756,
+    "moving_simulation_seconds": 30.1333333333329,
+    "physics_frame": 2680,
+    "process_frame": 334,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-cycle.jpg",
+    "tile": 0,
+    "source_png": "0029_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 238235,
+    "moving_simulation_seconds": 3.38333333333333,
+    "physics_frame": 528,
+    "process_frame": 65,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-cycle.jpg",
+    "tile": 1,
+    "source_png": "0030_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 240558,
+    "moving_simulation_seconds": 3.51666666666666,
+    "physics_frame": 536,
+    "process_frame": 66,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-cycle.jpg",
+    "tile": 2,
+    "source_png": "0031_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 242865,
+    "moving_simulation_seconds": 3.64999999999999,
+    "physics_frame": 544,
+    "process_frame": 67,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-cycle.jpg",
+    "tile": 3,
+    "source_png": "0032_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 245167,
+    "moving_simulation_seconds": 3.78333333333332,
+    "physics_frame": 552,
+    "process_frame": 68,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-cycle.jpg",
+    "tile": 4,
+    "source_png": "0034_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 247795,
+    "moving_simulation_seconds": 3.91666666666666,
+    "physics_frame": 560,
+    "process_frame": 69,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-cycle.jpg",
+    "tile": 5,
+    "source_png": "0035_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 250090,
+    "moving_simulation_seconds": 4.04999999999999,
+    "physics_frame": 568,
+    "process_frame": 70,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-cycle.jpg",
+    "tile": 6,
+    "source_png": "0036_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 252386,
+    "moving_simulation_seconds": 4.18333333333332,
+    "physics_frame": 576,
+    "process_frame": 71,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-cycle.jpg",
+    "tile": 7,
+    "source_png": "0037_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 254679,
+    "moving_simulation_seconds": 4.31666666666666,
+    "physics_frame": 584,
+    "process_frame": 72,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-cycle.jpg",
+    "tile": 8,
+    "source_png": "0038_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 256967,
+    "moving_simulation_seconds": 4.44999999999999,
+    "physics_frame": 592,
+    "process_frame": 73,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-cycle.jpg",
+    "tile": 9,
+    "source_png": "0039_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 259251,
+    "moving_simulation_seconds": 4.58333333333332,
+    "physics_frame": 600,
+    "process_frame": 74,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-cycle.jpg",
+    "tile": 10,
+    "source_png": "0040_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 261525,
+    "moving_simulation_seconds": 4.71666666666666,
+    "physics_frame": 608,
+    "process_frame": 75,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-cycle.jpg",
+    "tile": 11,
+    "source_png": "0041_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 263796,
+    "moving_simulation_seconds": 4.84999999999999,
+    "physics_frame": 616,
+    "process_frame": 76,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-cycle.jpg",
+    "tile": 12,
+    "source_png": "0042_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 266064,
+    "moving_simulation_seconds": 4.98333333333332,
+    "physics_frame": 624,
+    "process_frame": 77,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-cycle.jpg",
+    "tile": 13,
+    "source_png": "0043_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 268320,
+    "moving_simulation_seconds": 5.11666666666665,
+    "physics_frame": 632,
+    "process_frame": 78,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-cycle.jpg",
+    "tile": 14,
+    "source_png": "0044_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 270562,
+    "moving_simulation_seconds": 5.24999999999999,
+    "physics_frame": 640,
+    "process_frame": 79,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  },
+  {
+    "artifact": "motion-cycle.jpg",
+    "tile": 15,
+    "source_png": "0045_motion.png",
+    "capture_id": "motion",
+    "crossing": 1,
+    "elapsed_ms": 272810,
+    "moving_simulation_seconds": 5.38333333333332,
+    "physics_frame": 648,
+    "process_frame": 80,
+    "crop": [
+      420,
+      280,
+      440,
+      300
+    ]
+  }
+]

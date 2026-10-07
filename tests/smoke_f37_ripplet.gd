@@ -6,6 +6,7 @@ extends SceneTree
 const SCENE := preload("res://scenes/world/water_archipelago.tscn")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
+const DOCUMENT := preload("res://scripts/save/save_document.gd")
 var world: Node3D
 var game: Node
 var failures: Array[String] = []
@@ -109,8 +110,8 @@ func run() -> void:
 	var aquatic: Dictionary = swimming.save_data()
 	check(aquatic.mount.creature_uid == creature.uid,"save binds stable UID")
 	check(aquatic.mount.dive.remaining_s < 20.0,"save captures spent dive timer")
-	var clean: Dictionary = preload("res://scripts/save/water_traversal_save.gd").sanitise(JSON.parse_string(JSON.stringify(aquatic)))
-	check(clean.mount.dive.remaining_s == aquatic.mount.dive.remaining_s,"JSON preserves remaining dive debt")
+	var clean: Dictionary = preload("res://scripts/save/water_traversal_save.gd").sanitise(DOCUMENT.parse(DOCUMENT.stringify(aquatic)))
+	check(clean.get("mount", {}).get("dive", {}).get("remaining_s") == aquatic.mount.dive.remaining_s,"production save codec preserves exact remaining dive debt")
 	await tap("jump")
 	await frames(30)
 	check(not riding.diving and body.global_position.y > -1.0,"tap surfaces without held input")
