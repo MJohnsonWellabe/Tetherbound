@@ -1161,6 +1161,10 @@
     "glow_tint": "#ffdfb8",
     "rim": 1.0,
     "_comment_guardian_signature_execution": "The historic G-2 note above describes one generic swing with Earth Fist geometry. The guardian now alternates its actual quick and charged slots, starting quick. Only Earth Fist receives its named range/cone/lunge; quick uses the ordinary enemy geometry with WALL timing/power. The heavy tell lasts1.1s, commits its heading halfway through, and leaves1.2s recovery. No new player resource, move definition or damage-scale change.",
+    "combat_camera": {
+      "_comment": "F04 guardian den framing candidate after both bodies were cropped in the constrained 46-degree hosted captures. Use the existing per-opponent profile with a 70-degree lens; the enabled fight solver still owns measured body fitting, world/model clearance and manual look. Camera-only candidate; hosted pixels must establish readability.",
+      "profile": {"fov": 70.0}
+    },
     "combat": {
       "power": 12.0,
       "telegraph": 0.85,
