@@ -24,7 +24,9 @@ Order of operations, and why:
      heat — at the cost of destroying UVs, which these preview meshes do not
      have yet. Texturing happens AFTER cleanup (Meshy retexture re-unwraps),
      so nothing of value is lost. Do NOT run this on an already-textured
-     model.
+     model. A separate-output --skin-donor instead discards materials on a
+     temporary weight donor only; skin_transfer.py keeps the textured original
+     surface. The donor is never a replacement art asset.
   4. Smooth-corrective pass: voxel remesh leaves a faint lego-surface; one
      gentle smooth restores the sculpt read without melting edges.
   5. Decimate to the triangle target, shade smooth, normalise transforms.
@@ -203,6 +205,10 @@ def main() -> None:
     # walls). Decimation alone preserves the topology it is given.
     skip_voxel = "--skip-voxel" in args
     debris_only = "--debris-only" in args
+    skin_donor = "--skin-donor" in args
+    if skin_donor and (model == out or debris_only or skip_voxel):
+        raise SystemExit("--skin-donor requires a separate voxel-remeshed output; "
+                         "never overwrite the textured original or combine modes")
     if debris_only and model == out:
         raise SystemExit("--debris-only requires a separate output; preserve the input")
 
@@ -225,9 +231,15 @@ def main() -> None:
         node.type == "TEX_IMAGE" and node.image
         for material in bpy.data.materials if material.use_nodes
         for node in material.node_tree.nodes)
-    if textured:
+    if textured and not skin_donor:
         raise SystemExit(f"{model.name} carries image textures — refusing to "
                          f"voxel-remesh a textured model. Run cleanup before texturing.")
+    if skin_donor:
+        # This process-local copy only supplies weights. The original textured
+        # file remains the skin_transfer target, preserving its UVs/materials.
+        body.data.materials.clear()
+        print("SKIN DONOR ONLY: materials discarded on temporary output; "
+              "textured original preserved; never ship this donor")
 
     before_tris = sum(len(p.vertices) - 2 for p in body.data.polygons)
     original_primary = primary_geometry(body) if debris_only else None
@@ -239,6 +251,14 @@ def main() -> None:
         bpy.ops.object.shade_smooth()
     elif body.data.validate(verbose=True):
         raise SystemExit("--debris-only still contains invalid mesh data; refusing export")
+    if skin_donor:
+        # Remesh/decimation can leave duplicate or degenerate faces. Repair
+        # only this disposable donor before exporting it for bone heat.
+        repaired = body.data.validate(verbose=True, clean_customdata=False)
+        body.data.update()
+        if body.data.validate(clean_customdata=False):
+            raise SystemExit("--skin-donor remains invalid after validation; refusing export")
+        print(f"SKIN DONOR validation repaired={repaired}")
 
     after_tris = sum(len(p.vertices) - 2 for p in body.data.polygons)
     out.parent.mkdir(parents=True, exist_ok=True)
