@@ -1,0 +1,30 @@
+{
+  "verdict": "COMPATIBLE",
+  "reviewer": "b_f49_review",
+  "producer_commit": "d46e2c369628a90fc4fb65b30b4da331ca1ddbc3",
+  "consumer_commit": "90a79d711555932d0fd3319ea7c437a59c7d1349",
+  "producer_run": 37668038368,
+  "imported_boundary": "opening_team",
+  "reason": "Save/Game/schema, original party and population mechanics unchanged. Reviewed differences affect proof dispatch/protocol and disabled swim presentation.",
+  "named_logic": [
+    {
+      "run": 37669512161,
+      "tests": 28,
+      "assertions": 171,
+      "failures": 0
+    },
+    {
+      "run": 37670759635,
+      "tests": 25,
+      "assertions": 227,
+      "failures": 0
+    }
+  ],
+  "workflow_review": "SOURCE APPROVE: separate exact-ref F19 JSON evidence checkout preserves gameplay HEAD, producer artifacts and permissions",
+  "remaining": [
+    "actual cross-cut production Load",
+    "successor export",
+    "positive promotion",
+    "full criterion gates"
+  ]
+}
