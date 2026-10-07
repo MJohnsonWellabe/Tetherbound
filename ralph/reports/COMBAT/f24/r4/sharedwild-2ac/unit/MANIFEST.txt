@@ -1,0 +1,8 @@
+MANIFEST.txt
+exit_code
+run.log
+user/godot/app_userdata/Tetherbound/boot_log.txt
+user/godot/app_userdata/Tetherbound/director-guest-trainer-regression-child.log
+user/godot/app_userdata/Tetherbound/director-hp-fixture-regression-child.log
+user/godot/app_userdata/Tetherbound/director-transport-regression-child.log
+user/godot/app_userdata/Tetherbound/logs/godot.log

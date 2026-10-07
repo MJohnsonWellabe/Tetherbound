@@ -1,0 +1,12 @@
+=== launch 2026-10-07T10:16:09 (Godot 4.7-stable (official)) ===
+[2026-10-07T10:16:09] Game autoload: _ready start (first autoload, before any world scene)
+[2026-10-07T10:16:10] Game autoload: _ready done, menu mounted
+=== launch 2026-10-07T10:16:20 (Godot 4.7-stable (official)) ===
+[2026-10-07T10:16:20] Game autoload: _ready start (first autoload, before any world scene)
+[2026-10-07T10:16:20] Game autoload: _ready done, menu mounted
+=== launch 2026-10-07T10:16:26 (Godot 4.7-stable (official)) ===
+[2026-10-07T10:16:26] Game autoload: _ready start (first autoload, before any world scene)
+[2026-10-07T10:16:26] Game autoload: _ready done, menu mounted
+=== launch 2026-10-07T10:16:37 (Godot 4.7-stable (official)) ===
+[2026-10-07T10:16:37] Game autoload: _ready start (first autoload, before any world scene)
+[2026-10-07T10:16:38] Game autoload: _ready done, menu mounted

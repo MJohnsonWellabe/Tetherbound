@@ -1,0 +1,5 @@
+Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org
+
+[encounter] strike_intent refused: move_start_required (That attack has no current committed start.)
+[encounter] strike_intent refused: unknown_encounter (That fight is over.)
+DIRECTOR_GUEST_TRAINER_RESULT={"assertions":104,"completed":true,"failures":[],"observation":{"author":616332369,"enemy_fainted":true,"enemy_hp":0.0,"guest_id":616332369,"guest_round_awards":1,"guest_state":2,"host_exits":["won"],"host_round_awards":1,"host_state":2,"host_state_after_pause":0,"queued":1,"record_phase":"done","send_delay":1.6,"tracked_runtime":false}}

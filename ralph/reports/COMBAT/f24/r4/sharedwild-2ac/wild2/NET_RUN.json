@@ -1,0 +1,134 @@
+{
+	"budgets": {
+		"desync_frames": 240.0,
+		"heartbeat_frames": 60.0,
+		"hello_budget_s": 180.0,
+		"near_tolerance_motion_m": 4.0,
+		"near_tolerance_rest_m": 1.5,
+		"smoke_step_budget_s_2peer": 300.0,
+		"smoke_step_budget_s_wide": 1500.0,
+		"step_budget_frames": 3000.0
+	},
+	"failures": [
+		"the host recorded no opponent blow during the friendly-action window (5 -> 6)"
+	],
+	"fatal": "",
+	"net_conditions": {},
+	"peers": [
+		{
+			"command_timeout_observation": null,
+			"control_port": 43097,
+			"exited": true,
+			"hashes": [
+				949396019,
+				949396019,
+				949396019
+			],
+			"hello": {
+				"enet_port": 29821.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "2ac901cb1a62",
+				"peer": 0.0,
+				"pid": 2244.0,
+				"role": "host",
+				"type": "hello",
+				"user_data_dir": "/tmp/net-run-local-4649197/home-0/godot/app_userdata/Tetherbound"
+			},
+			"index": 0,
+			"last_heartbeat": {
+				"context": "combat",
+				"frame": 831.0,
+				"physics_frame": 1740.0,
+				"pos": [
+					-2.90679311752319,
+					-1.46534478664398,
+					72.347526550293
+				],
+				"session_peers": [
+					1.0,
+					228369622.0
+				],
+				"state_hash": 949396019.0,
+				"t": 95.765,
+				"type": "heartbeat"
+			},
+			"pid": 2244,
+			"role": "host",
+			"unexpected_exit": false
+		},
+		{
+			"command_timeout_observation": null,
+			"control_port": 37297,
+			"exited": true,
+			"hashes": [
+				949396019,
+				949396019,
+				949396019
+			],
+			"hello": {
+				"enet_port": 29822.0,
+				"godot_version": "4.7-stable (official)",
+				"main_sha": "2ac901cb1a62",
+				"peer": 1.0,
+				"pid": 2245.0,
+				"role": "client",
+				"type": "hello",
+				"user_data_dir": "/tmp/net-run-local-4649197/home-1/godot/app_userdata/Tetherbound"
+			},
+			"index": 1,
+			"last_heartbeat": {
+				"context": "panel:Session",
+				"frame": 1376.0,
+				"panel_observation": {
+					"focus_path": "",
+					"owner_path": "/root/Game/Session",
+					"owner_script": "res://scripts/net/session.gd",
+					"tree_paused": false
+				},
+				"physics_frame": 2040.0,
+				"pos": [
+					-14.5697727203369,
+					-1.05614364147186,
+					64.7611618041992
+				],
+				"session_peers": [
+					1.0,
+					228369622.0
+				],
+				"state_hash": 949396019.0,
+				"t": 96.456,
+				"type": "heartbeat"
+			},
+			"pid": 2245,
+			"role": "client",
+			"unexpected_exit": false
+		}
+	],
+	"proxies": [],
+	"run_id": "local-4649197",
+	"scene": "world",
+	"state_hash_excluded_keys": [
+		"party",
+		"inventory",
+		"hotbar",
+		"satiety",
+		"map",
+		"realm_maps",
+		"alpha_pins",
+		"player_pose",
+		"clock_elapsed_seconds",
+		"current_realm",
+		"pending_realm_entry",
+		"realm_hearts",
+		"version"
+	],
+	"state_hash_hashed_keys": [
+		"flags",
+		"placed_buildings",
+		"farm_plots",
+		"death_satchels",
+		"harvested_vegetation",
+		"felled_vegetation",
+		"day"
+	]
+}
