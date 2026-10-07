@@ -134,15 +134,27 @@ func _run() -> void:
 	if OS.get_cmdline_user_args().has("--with-vfx-units"):
 		selectors.append("test_move_effects.gd")
 	if OS.get_cmdline_user_args().has("--with-combat-units"):
-		selectors.append_array(["test_combat_hud_handheld_floors.gd", "test_combat_wind.gd",
-			"test_f23_live_moves.gd", "test_f24_host_commands.gd", "test_harness_max_hp.gd",
-			"test_hud_presentation_lifecycle.gd", "test_hud_widgets.gd", "test_level_up_announcement.gd",
-			"test_motion_prefs.gd", "test_move_commit_runtime.gd", "test_world_verb_input_owner_enforcement.gd",
-			"test_net_harness_heartbeat_allowance.gd", "test_combat_progression.gd",
-			"test_director_join_snapshot.gd", "test_multiplayer_identity_0912.gd",
-			"test_net_boss_snapshot.gd", "test_net_state_hash_scope.gd", "test_world_save_format.gd",
-			"test_input_device.gd", "test_input_glyph_rebinding.gd", "test_input_glyph_verbs.gd",
-			"test_prompt_arbiter.gd", "test_stormwood_dynamo.gd"])
+		selectors.append_array(["test_charger_lunge.gd", "test_cloudreach_route_ledger.gd", "test_combat_aftermath_focus.gd",
+			"test_combat_burst.gd", "test_combat_camera_framing_tunables.gd", "test_combat_camera_shoulder.gd",
+			"test_combat_camera_top_band.gd", "test_combat_contact_spacing.gd", "test_combat_feedback.gd",
+			"test_combat_flee_buffer.gd", "test_combat_hud_handheld_floors.gd", "test_combat_progression.gd",
+			"test_combat_realm_owned_begin.gd", "test_combat_send_out_hold.gd", "test_combat_spaced_camera.gd",
+			"test_combat_stagger.gd", "test_combat_tell_swing.gd", "test_combat_vfx.gd",
+			"test_combat_wind.gd", "test_controls.gd", "test_creature_gear.gd",
+			"test_creature_history.gd", "test_director_join_snapshot.gd", "test_director_projectile_deployment_binding.gd",
+			"test_enemy_named_attack.gd", "test_f21_hit_presentation.gd", "test_f23_live_moves.gd",
+			"test_f24_host_commands.gd", "test_foundation_combat_manager_context.gd", "test_foundation_retry_admission.gd",
+			"test_harness_max_hp.gd", "test_hosted_combat_staging.gd", "test_hud_presentation_lifecycle.gd",
+			"test_hud_widgets.gd", "test_input_device.gd", "test_input_glyph_rebinding.gd",
+			"test_input_glyph_verbs.gd", "test_level_up_announcement.gd", "test_livewire_cooldowns.gd",
+			"test_motion_prefs.gd", "test_move_commit_runtime.gd", "test_multiplayer_identity_0912.gd",
+			"test_named_tell_text.gd", "test_net_boss_snapshot.gd", "test_net_harness_heartbeat_allowance.gd",
+			"test_net_state_hash_scope.gd", "test_orb_passes_your_own_creature.gd", "test_prompt_arbiter.gd",
+			"test_scale_sensitive_gameplay.gd", "test_shared_opponent_presentation.gd", "test_shiny.gd",
+			"test_stormwood_b_combat_camera_fit.gd", "test_stormwood_dynamo.gd", "test_stormwood_hosted_combat.gd",
+			"test_trainer_ally_lateral_ranks.gd", "test_trainer_rules.gd", "test_tutorial_faint_floor.gd",
+			"test_tutorial_orb_floor.gd", "test_water_realm_transition.gd", "test_water_tidal_guard_combat.gd",
+			"test_world_save_format.gd", "test_world_verb_input_owner_enforcement.gd"])
 	if not selectors.is_empty():
 		var output: Array = []
 		var exit_code := OS.execute(OS.get_executable_path(), PackedStringArray([

@@ -348,6 +348,13 @@
     "_comment": "The visual event of a blow landing. ALL tunable presentation; nothing here touches damage, reach or timing.",
     "_comment_measured": "The blind critic counted bright warm pixels at the instant of contact: 10 in `combat/05-quick-attack-lands`, 295 in `combat/06`, and 24,623 in `palworld-01` \u2014 roughly ten thousand times the visual energy for the same beat. Its reading was that the only difference between the frame before a hit and the frame of the hit was that the health bar got shorter. Turn `enabled` off to get that back.",
     "enabled": true,
+    "authored_contact": {
+      "_scope": "Device-local class flash accent only when the matching F25/F35 presentation has visibly arrived; no gameplay or receipt timing changes.",
+      "radius_scale": 0.35,
+      "duration_scale": 0.7,
+      "strength_scale": 1.0,
+      "spike_softness": 0.85
+    },
     "_comment_round5": "MEADOWS-VISUAL-PASS round 5: at 0.85m/strength 1.0 the burst rendered (isolated probe) as a pale ring about 60 pixels across at fight distance, and two blind rounds found no impact effect on either hit. `strength` scales the radius, so the burst grows a little (about 1.2m quick, 1.8m charged, well short of the 5m ground-decal read) and impact_flash.gd now holds its opacity through the beat instead of halving it in the first quarter.",
     "quick": {
       "colour": "#ffe19a",

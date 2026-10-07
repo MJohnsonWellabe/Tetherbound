@@ -4791,18 +4791,37 @@ func _flash_host_impact(where: Vector3, charged: bool, tint: Variant = null, str
 	var feedback := _shared_hit_feedback() if not impact.is_empty() else null
 	if feedback != null: style = feedback.call("flash_style", impact)
 	if style.has("colour"): colour = colour.lerp(Color(str(style.colour)), 0.6)
+	# An arrived library object already supplies the main contact silhouette.
+	# Keep the class-coloured flash as a small accent instead of covering it;
+	# missing, cancelled and legacy presentations retain the full fallback.
+	var authored: Dictionary = cfg.get("authored_contact", {}) if _has_authored_contact(impact) else {}
 	FLASH.burst(
 		host,
 		where,
 		colour,
-		float(spec.get("radius", 1.5)) * float(style.get("radius_scale", 1.0)),
-		float(spec.get("duration", 0.34)) * float(style.get("duration_scale", 1.0)),
-		float(spec.get("strength", 1.0)) * float(style.get("strength_scale", 1.0)),
-		# N14: the attack path reads the same opt-in key from `combat.json`'s own
-		# `impact.quick` / `impact.charged`. Neither sets it today, so every blow
-		# in the game draws exactly the spike it always has.
-		float(spec.get("spike_softness", 0.0))
+		float(spec.get("radius", 1.5)) * float(style.get("radius_scale", 1.0)) * float(authored.get("radius_scale", 1.0)),
+		float(spec.get("duration", 0.34)) * float(style.get("duration_scale", 1.0)) * float(authored.get("duration_scale", 1.0)),
+		float(spec.get("strength", 1.0)) * float(style.get("strength_scale", 1.0)) * float(authored.get("strength_scale", 1.0)),
+		float(authored.get("spike_softness", spec.get("spike_softness", 0.0)))
 	)
+
+
+func _has_authored_contact(impact: Dictionary) -> bool:
+	var action := str(impact.get("action_id", ""))
+	if action.is_empty() or not is_inside_tree(): return false
+	for node: Node in get_tree().get_nodes_in_group("move_effect_presentation"):
+		if not is_instance_valid(node) or node.is_queued_for_deletion() or not node is Node3D: continue
+		var script := node.get_script() as Script
+		if script == null: continue
+		var arrived_key := ""
+		match script.resource_path:
+			"res://scripts/vfx/move_effect.gd": arrived_key = "_arrived"
+			"res://scripts/vfx/ultimates/ultimate_effect.gd": arrived_key = "_did_arrive"
+			_: continue
+		if not (node as Node3D).is_visible_in_tree() or node.get(arrived_key) != true: continue
+		if str(node.call("action_id")) == action and str(node.call("encounter_id")) == _encounter_id:
+			return true
+	return false
 
 
 func _nudge_camera_on_landing(charged: bool) -> void:
