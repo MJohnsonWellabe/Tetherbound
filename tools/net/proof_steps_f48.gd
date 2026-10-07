@@ -1531,7 +1531,7 @@ static func _check_boss(now: Dictionary, errors: Array[String]) -> void:
 		if _counts(state).get("tidewake_portal_key", 0) != 1: errors.append(scope + ": participant must own exactly one Tidewake key")
 		if state.get("redesign_character", {}).get("relics_held", []).count("meadows") != 1:
 			errors.append(scope + ": participant lacks personal Meadows relic")
-		var receipt := "defeat:boss_warden_aldis:" + str(now.character_id)
+		var receipt := "defeat:boss_warden_aldis_%s:%s" % [str(now.world_namespace).sha256_text(), str(now.character_id)]
 		if state.get("redesign_character", {}).get("transaction_receipts", []).count(receipt) != 1:
 			errors.append(scope + ": missing exactly one protected personal boss receipt")
 
@@ -1628,7 +1628,7 @@ static func _check_host_journal(now: Dictionary, participants: Array, encounter:
 		for character: String in participants:
 			var id := "creature_training:" + JSON.stringify([now.world_namespace, character]).sha256_text()
 			var row: Variant = deliveries.get(id)
-			var receipt := "defeat:boss_warden_aldis:" + character
+			var receipt := "defeat:boss_warden_aldis_%s:%s" % [str(now.world_namespace).sha256_text(), character]
 			# This carrier is overwritten by each later accepted action. Its full
 			# portable after-state must preserve the original protected boss receipt.
 			if not row is Dictionary or RECORD_RULES.training_version(row) not in [1, 2, 3] or row.get("kind") != "creature_training" or row.get("delivery_id") != id \
