@@ -200,7 +200,20 @@ func _emit_patch_tier(parent: Node3D, label: String, mesh: ArrayMesh,
 
 
 func _breathe(build_budget: RefCounted) -> void:
-	if build_budget != null and build_budget.has_method("breathe"):
+	if build_budget == null:
+		return
+	if build_budget.has_method("take_breathe_frames"):
+		# Match CloudreachWorld's Node-owned suspension. Deep builds can lose
+		# their continuation when the signal await lives in a RefCounted.
+		var frames := int(build_budget.call("take_breathe_frames"))
+		for i in frames:
+			if bool(build_budget.call("needs_render_release")):
+				await RenderingServer.frame_post_draw
+			else:
+				await get_tree().physics_frame
+		if frames > 0:
+			build_budget.call("finish_release", frames)
+	elif build_budget.has_method("breathe"):
 		await build_budget.call("breathe")
 
 
