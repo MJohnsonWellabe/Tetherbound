@@ -12,3 +12,9 @@ Reviewed commit: a423358ec53e3780213269c08915764c3e1923cb.
 Reviewer: /root/f25_arrival_review.
 No blocking syntax, immutable-row mutation, ordering or cleanup issue. Observer connects before deferred/timed arrival; contact checks precede HP debit; impact requires matching action contact; HUD verification reads actual number receipt.
 Coverage: Snare and quick; charged requires --prove-slot-inputs; ultimates excluded. Mounted geometry is not rendered visibility. Hosted execution and visual acceptance are required; no criterion certified.
+
+F25#3 capture follow-up independent review: APPROVE
+Reviewed commit: e8a64bf578a020cebbe6ff0bfd25800246b7d803.
+Reviewer: /root/f25_arrival_review.
+Capture requests originate from actual arrival, retain the corresponding action ID, assign filenames before awaiting draw and drain before normal cleanup; image-save failure is explicit.
+A PNG is the first draw after arrival and may include subsequent HP debit/HUD number. Temporal order rests on the signal/HP assertions, not the PNG alone. Hosted execution and visual verdict remain pending.
