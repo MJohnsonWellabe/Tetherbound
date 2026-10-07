@@ -67,7 +67,7 @@ class RealRepository(unittest.TestCase):
         self.assertEqual([int(x) for x in matrix.split(",")], list(range(1, N.SHARD_COUNT + 1)))
 
     def test_shards_do_not_wait_for_discovery(self):
-        block = CI[CI.index("  verify-multiplayer-shard:\n"):CI.index("  verify-solo-regression:\n")]
+        block = CI[CI.index("  verify-multiplayer-shard:\n"):CI.index("  export:\n")]
         header = [l for l in block.split("    steps:")[0].splitlines() if not l.strip().startswith("#")]
         self.assertIn("    needs: changes", header)
         self.assertNotIn("discover-net-smokes", "\n".join(header))

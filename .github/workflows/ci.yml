@@ -442,37 +442,10 @@ jobs:
   # failing here means a human or a lane runs `godot --headless --path .
   # --script scripts/world/bake_playground_scatter.gd` and commits the
   # result, same as today.
-  # QUEUE ORDER (CI-SEGMENTS, 2026-10-05). A full run is throughput-bound
-  # (~20 runners for ~60 jobs), and GitHub hands out runners in the order jobs
-  # are QUEUED -- jobs queued together go in no fixed order, whatever their
-  # place in this file. So the queue is drained longest-first by `needs`:
-  #   1. needs only `changes`: the ~15-17-min jobs (gate-evidence-shard,
-  #      regions-relay, veg-corridor) and the net shards;
-  #   2. needs queue-after-longest: the 10-14-min jobs;
-  #   3. needs queue-after-long: everything shorter.
-  # These two jobs do nothing and take seconds; they only make each later
-  # tier queue after the one before. Both are in ci-gate's `needs`, so a
-  # failure here (which would skip a whole tier) cannot pass the gate.
-  queue-after-longest:
-    runs-on: ubuntu-latest
-    timeout-minutes: 2
-    needs: changes
-    steps:
-      - run: echo "tier 2 (10-14 min jobs) queues now"
-
-  queue-after-long:
-    runs-on: ubuntu-latest
-    timeout-minutes: 2
-    needs: queue-after-longest
-    steps:
-      - run: echo "tier 3 (shorter jobs) queues now"
-
   verify-bake-freshness:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    needs:
-      - changes
-      - queue-after-long
+    needs: changes
     if: needs.changes.outputs.code == 'true'
 
     steps:
@@ -552,9 +525,7 @@ jobs:
         # 37187293215) with every test passing; shard 1 took ~6 min.
         shard: [1, 2, 3]
     timeout-minutes: 12
-    needs:
-      - changes
-      - queue-after-long
+    needs: changes
     if: needs.changes.outputs.code == 'true'
 
     steps:
@@ -777,9 +748,7 @@ jobs:
   verify-scatter-rules:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    needs:
-      - changes
-      - queue-after-longest
+    needs: changes
     if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-scatter-rules|'))
 
     steps:
@@ -829,9 +798,7 @@ jobs:
   verify-harvest:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    needs:
-      - changes
-      - queue-after-longest
+    needs: changes
     if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-harvest|'))
 
     steps:
@@ -914,9 +881,7 @@ jobs:
     # added 2026-09-02 is short (one fight, two ~1s measurement windows) and
     # fits comfortably in that margin.
     timeout-minutes: 35
-    needs:
-      - changes
-      - queue-after-longest
+    needs: changes
     if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-core-verb-shard|'))
     steps:
       - uses: actions/checkout@v4
@@ -1062,9 +1027,7 @@ jobs:
     # added 2026-09-02 is short (one fight, two ~1s measurement windows) and
     # fits comfortably in that margin.
     timeout-minutes: 35
-    needs:
-      - changes
-      - queue-after-long
+    needs: changes
     if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-catching|'))
     steps:
       - uses: actions/checkout@v4
@@ -1140,9 +1103,7 @@ jobs:
     # Sum of these ten tests' own run time measured 2026-09-01: 1,259s
     # (21 min). 30 min leaves margin for checkout/setup plus retries.
     timeout-minutes: 30
-    needs:
-      - changes
-      - queue-after-longest
+    needs: changes
     if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-gate-a-ui-build-shard|'))
     steps:
       - uses: actions/checkout@v4
@@ -1391,9 +1352,7 @@ jobs:
     # (17.6 min), each with a 2-retry budget. 35 min covers checkout/setup
     # plus a day where several of the five need a second attempt.
     timeout-minutes: 35
-    needs:
-      - changes
-      - queue-after-longest
+    needs: changes
     if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-combat-shard|'))
     steps:
       - uses: actions/checkout@v4
@@ -1565,9 +1524,7 @@ jobs:
     # Sum of these six tests' own run time measured 2026-09-01: 1,034s
     # (17.2 min). 25 min covers checkout/setup with margin.
     timeout-minutes: 35
-    needs:
-      - changes
-      - queue-after-longest
+    needs: changes
     if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-regions-shard|'))
     steps:
       - uses: actions/checkout@v4
@@ -2098,9 +2055,7 @@ jobs:
     # (AUDIT-K §K2a) folded back in as an eighth sequential step; its own
     # run time is short relative to the margin already held here.
     timeout-minutes: 28
-    needs:
-      - changes
-      - queue-after-longest
+    needs: changes
     if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-owner-regressions-shard|'))
     steps:
       - uses: actions/checkout@v4
@@ -2528,9 +2483,7 @@ jobs:
       matrix:
         group: [bracket-to-semi, bracket-final]
     timeout-minutes: 40
-    needs:
-      - changes
-      - queue-after-long
+    needs: changes
     if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-gate-evidence-finale|'))
     steps:
       - uses: actions/checkout@v4
@@ -2612,9 +2565,7 @@ jobs:
     # minutes leaves headroom for checkout/setup and a slow CI runner without
     # inviting the full chain back in by accident.
     timeout-minutes: 20
-    needs:
-      - changes
-      - queue-after-long
+    needs: changes
     if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-gate-b-core|'))
     steps:
       - uses: actions/checkout@v4
@@ -2670,9 +2621,7 @@ jobs:
   verify-continuous-core-known-red:
     runs-on: ubuntu-latest
     timeout-minutes: 25
-    needs:
-      - changes
-      - queue-after-long
+    needs: changes
     # This is an investigation probe, not a release gate: it is explicitly
     # allowed to fail and currently repeats a costly whole-world opening drive
     # already covered by the two required opening smoke jobs above. Running it
@@ -2744,9 +2693,7 @@ jobs:
   verify-gate-b-full-known-red:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    needs:
-      - changes
-      - queue-after-long
+    needs: changes
     # Owner, 2026-10-04: known-red probes run only on the scheduled full
     # tier and on manual dispatch, never on a `full-ci` pull request. They
     # cannot block a merge (continue-on-error), so on a PR they only held two
@@ -2771,16 +2718,11 @@ jobs:
           set -euo pipefail
           godot --headless --path . --script tests/smoke_gate_b_continuous.gd -- --gate-b-full-chain
 
-  # Stage B lane 0.E — the named fence
-  # `archive/docs/specs-2026-09-19/STAGE_B_MULTIPLAYER_EXECUTION_PLAN.md` Wave 1 row 1.B refers to.
-  # This job runs nothing new: it is a checkpoint that every job the plan
-  # calls "the existing 46 CI smokes" (the six verify-*-shard jobs) plus
-  # verify-gate-b-core actually ran and passed before a Wave 1 state-seam
-  # change is allowed to call itself green. It exists so Wave 1's own
-  # completion report has one job name to point at rather than enumerating
-  # six shard jobs by hand every time, and so a future job rename or an
-  # accidentally-dropped `needs:` entry is a visible CI failure instead of a
-  # silent gap in the fence.
+  # CI-SPEED (owner, 2026-10-07): the `verify-solo-regression` fence job and
+  # the `discover-net-smokes` record job were removed. Both ran no test (the
+  # fence only re-stated its `needs`, which ci-gate already requires; every
+  # net shard runs the same discovery/plan check itself), yet each was one
+  # more queue ticket, and the fence queued at the very END of the run.
   # Stage B Wave 0 lane 0.F. archive/docs/specs-2026-09-19/MP_NET_HARNESS_CONTRACT.md §10: runs
   # every tests/smoke_net_*.gd whose header declares `# peers: 2` through
   # tools/net/run_net_smoke.sh -- two real, isolated headless Godot processes
@@ -2790,40 +2732,6 @@ jobs:
   # (`verify-multiplayer-wide`, not created by this lane) and do not run here.
   # RETRIES: 1 -- a net smoke that only passes on retry is a finding, same
   # rule docs/WORKFLOW.md §5 already holds every other smoke to.
-  # SPLIT 2026-09-06 (owner direction): this used to be verify-multiplayer-shard
-  # itself, run once as a plain job. It was 46 minutes on run 34049435929
-  # because ~29 two-process net smokes ran SEQUENTIALLY in that one job -- the
-  # whole point of splitting it into `discover-net-smokes` (this job, floor and
-  # roster check only, no Godot) plus a `verify-multiplayer-shard` matrix
-  # below is to run those smokes in PARALLEL instead. Same discovery script,
-  # same floor and named roster, moved rather than duplicated: the matrix jobs
-  # below read this job's `files` output and slice it, they do not re-discover.
-  discover-net-smokes:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    needs:
-      - changes
-      - queue-after-long
-    if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|discover-net-smokes|'))
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          filter: blob:none
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /*
-            !/ralph/
-            !/docs/
-            !/shots/
-            !/assets_raw/
-            !/archive/
-      - name: Discover peers:2 net smokes and check the shard plan
-        # Discovery (header + requires-flag holds), the floor, the named
-        # roster and the exact one-time cover all live in
-        # tools/ci/net_shards.py; every verify-multiplayer-shard runs the same
-        # checks, so this job is the plan's readable record in the run.
-        run: python3 tools/ci/net_shards.py --check
-
   verify-multiplayer-shard:
     runs-on: ubuntu-latest
     # Twenty-one shards: nineteen longest-processing-time first on MEASURED
@@ -2921,32 +2829,6 @@ jobs:
           retention-days: 14
           if-no-files-found: ignore
 
-  verify-solo-regression:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    needs:
-      - changes
-      - verify-core-verb-shard
-      - verify-gate-a-ui-build-shard
-      - verify-combat-shard
-      - verify-regions-shard
-      - verify-owner-regressions-shard
-      - verify-gate-evidence-shard
-      - verify-gate-b-core
-    if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-solo-regression|'))
-    steps:
-      - name: Confirm the solo regression fence held
-        run: |
-          echo "Solo regression fence held. Depended-on jobs, all green:"
-          echo "  - verify-core-verb-shard"
-          echo "  - verify-gate-a-ui-build-shard"
-          echo "  - verify-combat-shard"
-          echo "  - verify-regions-shard"
-          echo "  - verify-owner-regressions-shard"
-          echo "  - verify-gate-evidence-shard"
-          echo "  - verify-gate-b-core"
-          exit 0
-
   # Spec-driven delivery verifies the package before automatic merge. This
   # costs an export on code PRs, but prevents a branch whose source tests pass
   # and whose shipped binary fails from reaching the rolling download.
@@ -2955,9 +2837,7 @@ jobs:
     timeout-minutes: 15
     # Export starts with the tests instead of after them; ci-gate still
     # requires every verify job and export == success before a merge.
-    needs:
-      - changes
-      - queue-after-long
+    needs: changes
     if: |
       needs.changes.outputs.code == 'true'
 
@@ -3064,9 +2944,7 @@ jobs:
       matrix:
         group: [space, capacity, recovery]
     timeout-minutes: 50
-    needs:
-      - changes
-      - queue-after-longest
+    needs: changes
     if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-veridian-offer|'))
     steps:
       - uses: actions/checkout@v4
@@ -3133,9 +3011,7 @@ jobs:
     # are run locally and recorded under ralph/reports/CLOUDREACH-LANE/f08-persistence/.
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    needs:
-      - changes
-      - queue-after-long
+    needs: changes
     if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-cloudreach-persistence|'))
     steps:
       - uses: actions/checkout@v4
@@ -3216,9 +3092,7 @@ jobs:
         # under the account's ~20 concurrent-job cap.
         segment: [s0_setup_and_control, s1_ride_a, s2_ride_b]
     timeout-minutes: 30
-    needs:
-      - changes
-      - queue-after-longest
+    needs: changes
     if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-cloudreach-midride-rejoin|'))
     steps:
       - uses: actions/checkout@v4
@@ -3285,9 +3159,7 @@ jobs:
       matrix:
         chain: [midride, bracket]
     timeout-minutes: 45
-    needs:
-      - changes
-      - queue-after-long
+    needs: changes
     if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-unbroken-chains|'))
     continue-on-error: true
     steps:
@@ -3332,9 +3204,7 @@ jobs:
     runs-on: ubuntu-latest
     # One job for every chain (each check is ~1 s; the job is setup).
     timeout-minutes: 15
-    needs:
-      - changes
-      - queue-after-long
+    needs: changes
     if: needs.changes.outputs.full == 'true'
     steps:
       - uses: actions/checkout@v4
@@ -3371,8 +3241,6 @@ jobs:
     if: always()
     needs:
       - changes
-      - queue-after-longest
-      - queue-after-long
       - verify-veridian-offer
       - verify-cloudreach-midride-rejoin
       - verify-segment-handoffs
@@ -3396,9 +3264,7 @@ jobs:
       - verify-regions-relay
       - verify-continuous-core-known-red
       - verify-gate-b-full-known-red
-      - discover-net-smokes
       - verify-multiplayer-shard
-      - verify-solo-regression
       - export
     steps:
       - name: Confirm active verification and export

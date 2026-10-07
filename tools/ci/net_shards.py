@@ -2,12 +2,12 @@
 """Discover the `# peers: 2` net smokes and plan them onto the
 verify-multiplayer-shard matrix (.github/workflows/ci.yml).
 
-    net_shards.py --check              discover-net-smokes: roster, floor, plan
+    net_shards.py --check              roster, floor and plan (the `changes` job)
     net_shards.py --shard N            one shard: the same checks, then this
                                        shard's files to $GITHUB_OUTPUT
 
 Every shard runs the discovery itself, so the shards need only `changes` and
-queue with the first wave of jobs instead of behind discover-net-smokes.
+queue with the first wave of jobs.
 Discovery reads only the checkout, so every shard computes the same plan.
 
 The plan is longest-processing-time first over MEASURED_SECONDS. It fails if

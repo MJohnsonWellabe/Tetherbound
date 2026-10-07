@@ -87,14 +87,12 @@ REALM_JOBS = {
     "stormwood": {"verify-regions-shard"},
     "tidewake": {"verify-regions-shard", "verify-regions-relay"},
 }
-NET_JOBS = {"discover-net-smokes", "verify-multiplayer-shard", "verify-veridian-offer",
+NET_JOBS = {"verify-multiplayer-shard", "verify-veridian-offer",
             "verify-cloudreach-midride-rejoin", "verify-unbroken-chains"}
 # Character texture binding / material cache and the terrain mipmap probe.
 PRESENTATION_JOBS = {"verify-regions-shard"}
 ALWAYS_JOBS = {"changes", "ci-gate", "verify-bake-freshness", "verify-unit-tests", "export",
-               "verify-segment-handoffs",
-               # Queue-order jobs (ci.yml QUEUE ORDER): ungated, they only sequence tiers.
-               "queue-after-longest", "queue-after-long"}
+               "verify-segment-handoffs"}
 
 # Where the reference scan looks (text only).
 SCAN_ROOTS = ("scripts/", "scenes/", "autoload/", "data/", "tests/", "tools/", "shaders/", "assets/")
