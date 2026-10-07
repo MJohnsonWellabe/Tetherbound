@@ -69,6 +69,24 @@ static func initialize_caught(personal: Dictionary, card: Dictionary) -> Diction
 	record.evolution_choices = {}
 	return next
 
+## Only the live ordinary catch admission calls this, after Party.add made
+## the actual instance one of at most five owned creatures. It initializes
+## that new creature's local mirror, never a loaded/rejoined row or the host's
+## admitted record. An ordinary guest newcomer remains unpaid if unadmitted.
+static func initialize_owned_catch(party: RefCounted, personal: Dictionary, creature: RefCounted) -> Dictionary:
+	if party == null or creature == null: return {}
+	var members: Array = party.call("members")
+	if members.size() > 5 or not members.has(creature): return {}
+	var uid := str(creature.get("uid"))
+	if personal.get("creatures", {}).has(uid): return personal.duplicate(true)
+	var entries: Array = load("res://scripts/save/save_game.gd").new().call("_party_to_array", party)
+	for card: Dictionary in entries:
+		if card.get("uid") != uid: continue
+		var candidate := initialize_caught(TEACHING.character_loadout_mirror([card], personal), card)
+		if candidate.is_empty() or not TEACHING.party_loadout_errors([card], candidate, true).is_empty(): return {}
+		return candidate
+	return {}
+
 ## Union unlocks without replacing any equipped slot, ancestor knowledge or
 ## mastery history. The result stays in the same candidate as the cap/choice.
 static func refresh_feast_moves(party: Array, personal: Dictionary) -> Dictionary:

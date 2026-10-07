@@ -7566,6 +7566,14 @@ func _resolve_catch(kept: RefCounted) -> void:
 		if not bool(party.call("add", kept)):
 			push_error("the caught %s never reached the party" % str(kept.get("species_id")))
 		else:
+			# Serialization creates a detached loadout mirror; the live XP cap
+			# reads the actual owner. Admit this new catch there immediately too.
+			var player: RefCounted = game.get("local")
+			var personal: Dictionary = preload("res://scripts/creatures/breakthrough.gd").initialize_owned_catch(party, player.get("redesign_character"), kept)
+			if personal.is_empty():
+				push_error("the caught creature's live breakthrough mirror was refused")
+			else:
+				player.set("redesign_character", personal)
 			_award_catching_skill(kept)
 		return
 
