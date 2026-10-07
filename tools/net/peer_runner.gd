@@ -2666,10 +2666,11 @@ func _step_engage_wild(args: Dictionary) -> Dictionary:
 ## Callers share one original catch-up allowance across both observations.
 func _await_owner_passive_caught_up(budget_frames: int = 600,
 		require_new_discovery: bool = false, binding: Dictionary = {}) -> Dictionary:
+	var phase := "post-placement" if require_new_discovery else "pre-placement"
 	var game := root.get_node_or_null(^"Game")
 	var session: Node = game.get("session") as Node if game != null else null
 	if game == null or session == null:
-		return {"verdict": "FAIL", "detail": "placement has no original Game/Session"}
+		return {"verdict": "FAIL", "detail": "placement has no original Game/Session", "data": {"phase": phase}}
 	if binding.is_empty():
 		binding.merge({"game": game, "session": session, "scene": current_scene,
 			"player": _probe.call("player"), "owner": game.get("local"), "world": game.get("world"),
@@ -2686,15 +2687,16 @@ func _await_owner_passive_caught_up(budget_frames: int = 600,
 			and session.call("_altar_current_epoch") == binding.epoch and session.call("is_host") == binding.host \
 			and session.call("is_active") == binding.active
 	if not source_live.call():
-		return {"verdict": "FAIL", "detail": "original placement owner/world/session/player changed"}
+		return {"verdict": "FAIL", "detail": "original placement owner/world/session/player changed", "data": {"phase": phase}}
 	if binding.host == true or binding.active != true:
 		return {"verdict": "PASS", "detail": "placement has no remote owner stream"}
 	var passive: RefCounted = session.get("_owner_passive") as RefCounted
 	if passive == null:
-		return {"verdict": "FAIL", "detail": "admitted guest has no owner-passive service"}
-	var observed := {"stream": "", "sequence": -1, "position": Vector3.INF}
+		return {"verdict": "FAIL", "detail": "admitted guest has no owner-passive service", "data": {"phase": phase}}
+	var observed := {"stream": "", "sequence": -1, "prefix_sequence": -1, "position": Vector3.INF, "via": ""}
 	# Game emits this observation immediately before recording its one discovery
-	# input (after the condition input). No recorder/timer/ACK is driven here.
+	# input (after the condition input). Freeze the first eligible prefix, not a
+	# moving target of later care ticks. No recorder/timer/ACK is driven here.
 	var discovery_observer: Callable = func(tick: Dictionary) -> void:
 		if not source_live.call() or session.get("_owner_passive") != passive \
 			or tick.get("operation") != "discovery" or tick.get("character_id") != binding.character \
@@ -2702,49 +2704,81 @@ func _await_owner_passive_caught_up(budget_frames: int = 600,
 			or tick.get("realm") != binding.realm or passive.call("recording_active") != true: return
 		var stream: Dictionary = passive.get("local")
 		var at: Array = tick.get("to", [])
-		if at.size() != 3 or str(stream.get("id", "")).is_empty(): return
+		if at.size() != 3 or str(stream.get("id", "")).is_empty() or observed.stream == stream.id: return
+		var position := Vector3(float(at[0]), float(at[1]), float(at[2]))
+		if not preload("res://scripts/net/owner_passive_sync.gd")._endpoint_matches(binding.player.global_position, position): return
+		if require_new_discovery and stream.id == binding.get("placement_stream") \
+			and int(stream.sequence) + 1 <= int(binding.get("placement_sequence", -1)): return
 		observed.stream = stream.id
 		observed.sequence = int(stream.sequence) + 1
-		observed.position = Vector3(float(at[0]), float(at[1]), float(at[2]))
+		observed.prefix_sequence = observed.sequence
+		observed.position = position
+		observed.via = "discovery_signal"
 	game.connect("party_passive_tick", discovery_observer)
 	var reason := "original discovery prefix was not acknowledged within the existing placement allowance"
 	var ready := false
-	var observation: Dictionary = {}
+	var observation: Dictionary = {"phase": phase}
 	for frame in maxi(0, budget_frames) + 1:
 		if not source_live.call() or session.get("_owner_passive") != passive:
 			reason = "original placement owner/world/session/player/passive service changed"
 			break
 		var stream: Dictionary = passive.get("local")
 		# Retain the actual recorded input too, including for an empty party whose
-		# discovery has no per-creature observation signal.
+		# discovery has no per-creature observation signal. A changed stream must
+		# supply its own discovery; the old stream's ACK cannot satisfy this one.
 		for input: Dictionary in stream.get("inputs", []):
+			if observed.stream == stream.get("id"): break
 			if input.get("op") == "discovery" and input.get("realm") == binding.realm \
 				and (not require_new_discovery or stream.id != binding.get("placement_stream") \
 					or int(input.sequence) > int(binding.get("placement_sequence", -1))):
+				var position := Vector3(float(input.to[0]), float(input.to[1]), float(input.to[2]))
+				if not preload("res://scripts/net/owner_passive_sync.gd")._endpoint_matches(binding.player.global_position, position): continue
 				observed.stream = stream.id
 				observed.sequence = input.sequence
-				observed.position = Vector3(float(input.to[0]), float(input.to[1]), float(input.to[2]))
-		observation = {"character_id": binding.character, "session_epoch": binding.epoch,
+				observed.prefix_sequence = maxi(int(stream.sequence), int(input.sequence))
+				observed.position = position
+				observed.via = "recorded_discovery_input"
+		var admitted: bool = not stream.is_empty() and stream.get("character") == binding.character \
+			and session.call("snapshot_ready") == true and stream.get("hello_pending") == false \
+			and stream.get("admission_pending") == false and (stream.get("rebase", {}) as Dictionary).is_empty() \
+			and (passive.get("pending") as Dictionary).is_empty()
+		var discovered: bool = game.get("_travel_pos_valid") == true \
+			and preload("res://scripts/net/owner_passive_sync.gd")._endpoint_matches(binding.player.global_position, game.get("_travel_pos"))
+		# arm_owner resets travel_valid. Game sets it only in the synchronous
+		# discovery path that appends its input, so an already observed pose can
+		# bind the current prefix before placement even after its input was ACKed.
+		if not require_new_discovery and admitted and discovered and int(stream.get("sequence", 0)) > 0 \
+			and observed.stream != stream.get("id"):
+			observed.stream = stream.id
+			observed.sequence = int(stream.sequence)
+			observed.prefix_sequence = int(stream.sequence)
+			observed.position = game.get("_travel_pos")
+			observed.via = "current_travel_baseline"
+		var prefix_acked: bool = observed.stream == stream.get("id") and int(observed.sequence) > 0 \
+			and int(stream.get("acked", -1)) >= int(observed.prefix_sequence) \
+			and int(stream.get("sequence", -1)) >= int(observed.prefix_sequence)
+		discovered = discovered and observed.stream == stream.get("id") \
+			and preload("res://scripts/net/owner_passive_sync.gd")._endpoint_matches(binding.player.global_position, observed.position)
+		if require_new_discovery:
+			discovered = discovered and (observed.stream != binding.get("placement_stream") \
+				or int(observed.sequence) > int(binding.get("placement_sequence", -1)))
+		observation = {"phase": phase, "frame": frame, "budget_frames": budget_frames,
+			"character_id": binding.character, "session_epoch": binding.epoch,
 			"stream_id": stream.get("id"), "sequence": stream.get("sequence"), "acked": stream.get("acked"),
 			"admission_pending": stream.get("admission_pending"), "hello_pending": stream.get("hello_pending"),
 			"error": stream.get("error"), "pending": passive.get("pending").duplicate(true),
 			"observed_discovery_sequence": observed.sequence, "observed_discovery_stream": observed.stream,
+			"observed_via": observed.via,
+			"required_prefix_sequence": observed.prefix_sequence, "prefix_acked": prefix_acked,
+			"admitted": admitted, "discovered": discovered, "remaining_inputs": (stream.get("inputs", []) as Array).size(),
+			"observed_position": observed.position, "player_position": binding.player.global_position,
 			"travel_position": game.get("_travel_pos"), "travel_valid": game.get("_travel_pos_valid")}
 		if not str(stream.get("error", "")).is_empty():
 			reason = "owner-passive placement refused: " + str(stream.error)
 			break
-		var discovered: bool = game.get("_travel_pos_valid") == true \
-			and preload("res://scripts/net/owner_passive_sync.gd")._endpoint_matches(binding.player.global_position, game.get("_travel_pos"))
-		if require_new_discovery:
-			discovered = discovered and observed.stream == stream.get("id") and int(observed.sequence) > 0 \
-				and (observed.stream != binding.get("placement_stream") or int(observed.sequence) > int(binding.get("placement_sequence", -1))) \
-				and int(stream.get("acked", -1)) >= int(observed.sequence) \
-				and preload("res://scripts/net/owner_passive_sync.gd")._endpoint_matches(binding.player.global_position, observed.position)
-		if not stream.is_empty() and stream.get("character") == binding.character and session.call("snapshot_ready") == true \
-			and stream.get("hello_pending") == false and stream.get("admission_pending") == false \
-			and (stream.get("rebase", {}) as Dictionary).is_empty() and (passive.get("pending") as Dictionary).is_empty() \
-			and (stream.get("inputs", []) as Array).is_empty() and int(stream.get("acked", -1)) == int(stream.get("sequence", -2)) \
-			and discovered:
+		# Later care remains queued for its ordinary replay. The placement needs
+		# this exact discovery prefix ACK, not an idle producer with no new input.
+		if admitted and discovered and prefix_acked:
 			binding.placement_sequence = int(stream.sequence)
 			binding.placement_stream = str(stream.id)
 			ready = true
