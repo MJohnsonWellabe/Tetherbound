@@ -1,0 +1,46 @@
+{
+  "criterion": "F37 scoped Ripplet surface/Dive observations",
+  "verdict": "BLOCK",
+  "scope": "Only recognizable owned Ripplet as the rider's surface swimmer (F37#0 observation) and readable active Dive/submersion (F37#1 observation). No whole-criterion certification.",
+  "authority": "Owner comment 6045342186: literal scoped ask; full release Visual Bars A/B separately OPEN.",
+  "method": "Same retained code-blind judge. Inspected only the two provided actual native 1280x720 Low Compatibility PNG frames. No source, implementation narrative, engine execution or new capture.",
+  "observations": {
+    "surface": {
+      "verdict": "BLOCK",
+      "frame": "f37_06_surface.png",
+      "passes": [
+        "Ripplet's teal body, pale muzzle/chest, large tail and pink head fins are recognizable; TEAM 1/5 names Ripplet at Lv 30.",
+        "Trainer is visibly mounted and the X Dismount prompt is readable.",
+        "The tutorial text naming Ripplet's swimming and tap-Jump Dive/surface ability is readable."
+      ],
+      "missing": "Visible surface-swimming witness: Ripplet appears upright on dry-looking sand with a ground shadow, and there is no visible water contact, waterline or swimming pose establishing that it is currently the rider's surface swimmer.",
+      "bounds": "Ownership and capability text are displayed UI assertions; durable ownership and actual swimming behavior cannot be verified from this still."
+    },
+    "dive": {
+      "verdict": "BLOCK",
+      "frame": "f37_10_dive.png",
+      "passes": [
+        "Ripplet remains recognizable and the trainer is visible behind it.",
+        "The underside of a water surface spans overhead, providing a visual cue that the camera/scene is submerged.",
+        "Displayed prompts and main-story text are readable."
+      ],
+      "missing": "Readable active mounted Dive witness: Ripplet is upright on a rock; the prompt says Put Ripplet away, and no Dive/submerged state label or Dismount prompt is visible. The underwater camera cue alone does not establish active rider Dive.",
+      "bounds": "Submerged scene appearance is visible, but mounted active Dive and its transition are ambiguous in this frame. No cause is inferred."
+    }
+  },
+  "remaining_missing_visual_witnesses": [
+    "An actual in-water mounted surface-swimming view with clear water contact/waterline and Ripplet/rider identity.",
+    "An active mounted Dive view whose rider state and submersion are visually unambiguous."
+  ],
+  "full_visual_bar": {
+    "status": "OPEN",
+    "observation": "No full release Visual Bars A/B certification or wider art gate is applied to these scoped observations."
+  },
+  "not_assessed": [
+    "All required human swimming routes / F37#2.",
+    "Optional targets, caches, rejoin or F37#4 claims.",
+    "Functional ownership, multiplayer authority, input, transitions, swimming motion or earned progression.",
+    "High/Medium renderer, device readability or whole F37#0/#1 criteria."
+  ],
+  "evidence_directory": "ralph/reports/F37/lane-b-ripplet/37693233900/artifact/tree/ralph/reports/F37/lane-b-ripplet/current-rejoin-r2/peer-1"
+}
