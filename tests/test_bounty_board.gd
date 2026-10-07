@@ -147,6 +147,52 @@ func test_alpha_rematch_candy_and_trait_seed_paths_with_stale_event_refusal() ->
 		assert_false(BOARD.stage(tomorrow.state, 1, "bounty_event", {}, context).ok, "old encounter cannot complete new instances")
 
 func test_existing_journal_replays_exactly_and_registry_rolls_back_failed_world_write() -> void:
+	# Existing interaction consumer retains its actual original claim while
+	# the typed pre-payment checkpoint is pending; no second submit is made.
+	var interaction := preload("res://scripts/world/bounty_interaction_adapter.gd").new()
+	var issued := _issued()
+	var submits: Array[Dictionary] = []
+	var reconciles: Array[Dictionary] = []
+	var emitted: Array[Dictionary] = []
+	interaction.action_completed.connect(func(verdict: Dictionary) -> void: emitted.append(verdict.duplicate(true)))
+	var pending_result := {"ok": false, "durable": false, "resolved": false, "code": "owner_passive_checkpoint_pending"}
+	assert_true(interaction.bind_actions(func(intent: Dictionary) -> Dictionary:
+		submits.append(intent.duplicate(true)); return pending_result.duplicate(true), func() -> Dictionary:
+		var view := BOARD.view(issued.redesign_character, issued.character_id)
+		view.world_namespace = "world-f43-a"; return view, func(original: Dictionary) -> Dictionary:
+		reconciles.append(original.duplicate(true)); return pending_result.duplicate(true)))
+	var instance := "delivery".sha256_text()
+	assert_eq(interaction.claim(instance).code, "owner_passive_checkpoint_pending")
+	var frozen := var_to_bytes(interaction.get("_pending"))
+	assert_false((interaction.get("_pending") as Dictionary).is_empty())
+	assert_eq(interaction.claim(instance).code, "board_busy_or_unavailable")
+	assert_eq(submits, [{"instance": instance}])
+	interaction.reconcile()
+	assert_eq(reconciles, [{"instance": instance, "character_id": issued.character_id, "world_namespace": "world-f43-a"}])
+	assert_eq(var_to_bytes(interaction.get("_pending")), frozen)
+	var settled := {"ok": true, "durable": true, "resolved": true, "owner_saved": true,
+		"owner_acknowledged": false, "receipt": "bounty:%s:%s" % [instance, issued.character_id]}
+	interaction.settled(settled)
+	assert_eq(var_to_bytes(interaction.get("_pending")), frozen, "BOOL alone does not release the original claim")
+	settled.owner_acknowledged = true
+	interaction.settled(settled)
+	assert_true((interaction.get("_pending") as Dictionary).is_empty())
+	interaction.claim(instance)
+	var refusal := {"ok": false, "durable": false, "resolved": true, "terminal_refusal": true, "code": "owner_passive_source_changed"}
+	var original_claim: Dictionary = interaction.get("_pending").duplicate(true)
+	var foreign_claim: Dictionary = original_claim.duplicate(true)
+	foreign_claim.instance = "foreign".sha256_text()
+	interaction.settled(refusal, foreign_claim)
+	assert_false((interaction.get("_pending") as Dictionary).is_empty(), "late foreign refusal cannot release this original")
+	assert_false(emitted[-1].get("terminal", false), "foreign refusal is not normalized into a terminal panel verdict")
+	interaction.settled(refusal, original_claim)
+	assert_true((interaction.get("_pending") as Dictionary).is_empty(), "exact no-effect leaves no stuck pending consumer")
+	assert_true(emitted[-1].get("terminal") == true, "bound no-effect also clears the existing panel's waiting state")
+	assert_false(emitted[-1].durable)
+	assert_false(emitted[-1].get("owner_saved", false))
+	assert_false(emitted[-1].get("owner_acknowledged", false))
+	assert_false(refusal.has("terminal"), "presentation normalization never mutates the original verdict")
+	interaction.free()
 	var current := _record()
 	assert_true(RECORD.errors(current, current.character_id).is_empty())
 	var context := _context(current)
