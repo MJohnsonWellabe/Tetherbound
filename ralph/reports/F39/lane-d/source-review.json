@@ -43,6 +43,14 @@
     {
       "commit": "ab724c81f459d5cb7d8414c4752681fc11ab2bc7",
       "scope": "Clear-only production WorldLook empty-delta observation when Tidewake has no WorldWeather; rain rejected before poses, actual delta rechecked per frame. Same reviewer APPROVE; no weather injection or bad-weather credit."
+    },
+    {
+      "commit": "263ccc505ff1707dbf6b17b20878a7b30a7f43c0",
+      "scope": "Visual curtain retains original top/XZ/width and extends below minimum of same64 actual ground samples; shader supports camera-local near fade disabled by default. Same F39 reviewer APPROVE with ea9e820 config; resized UV needs matched image validation."
+    },
+    {
+      "commit": "ea9e8202097859b468f1f118188043219cf9567a",
+      "scope": "Actual waterfall near fade1.5–8m; distant density, opacity bounds, gates, collision and progression unchanged. Same F39 reviewer APPROVE; actual near day/night and distant capture pending."
     }
   ],
   "existing_candidate_consumers": "APPROVE: capture override changes allowlisted local falls/current shader uniforms only. Physical inputs and restoration flags unchanged; production candidate flags OFF.",
