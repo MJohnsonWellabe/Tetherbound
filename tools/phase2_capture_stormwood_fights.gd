@@ -86,8 +86,9 @@ func _save(tag: String) -> void:
 		return
 	var path := _out.path_join("%s-%s.png" % [_id, tag])
 	var image := Image.new()
-	if image.load(path) != OK or image.get_size() != Vector2i(1920, 1080):
-		_capture_failures.append("%s: native 1920x1080 PNG missing or unreadable" % path)
+	var raster: Array = _graphics_capture.resolution
+	if image.load(path) != OK or image.get_size() != Vector2i(int(raster[0]), int(raster[1])):
+		_capture_failures.append("%s: declared native preset raster PNG missing or unreadable" % path)
 		return
 	_native_frames.append({"path": path, "size": [image.get_width(), image.get_height()],
 		"named_id": _id, "tag": tag, "fighting": bool(_manager.call("is_fighting"))})
