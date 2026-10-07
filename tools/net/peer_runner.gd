@@ -8853,7 +8853,47 @@ func _step_foundations_state(args: Dictionary) -> Dictionary:
 		var board: Node3D = board_ref.get_ref() as Node3D if board_ref != null else null
 		if adapter == null or board == null:
 			return {"verdict": "FAIL", "detail": "actual grounded Halda board and adapter are not mounted"}
-		var view: Dictionary = adapter.call("view")
+		var view: Dictionary
+		if mode == "bounty_inspect":
+			if not adapter.has_signal("view_changed"):
+				return {"verdict": "FAIL", "detail": "actual Halda adapter has no authenticated view reply signal"}
+			var inspection_session: Node = _session()
+			var inspection_character: String = local.get("character_id")
+			var inspection_namespace: String = world.get("reward_delivery_namespace")
+			var inspection_world_id: String = world.get("world_id")
+			var inspection_epoch: String = inspection_session.call("_altar_current_epoch")
+			var inspection_host: bool = inspection_session.call("is_host")
+			var inspection_live: Callable = func() -> bool:
+				return is_instance_valid(game) and root.get_node_or_null(^"Game") == game \
+					and is_instance_valid(inspection_session) and game.get("session") == inspection_session and _session() == inspection_session \
+					and game.get("local") == local and game.get("world") == world and local.get("character_id") == inspection_character \
+					and world.get("reward_delivery_namespace") == inspection_namespace and world.get("world_id") == inspection_world_id \
+					and inspection_session.call("_altar_current_epoch") == inspection_epoch and inspection_session.call("is_host") == inspection_host \
+					and is_instance_valid(composition) and inspection_session.get_node_or_null(^"FoundationComposition") == composition \
+					and is_instance_valid(adapter) and composition.get_node_or_null(^"BountyInteraction") == adapter \
+					and is_instance_valid(board) and composition.get("_board") is WeakRef and composition.get("_board").get_ref() == board
+			var observed_view := {"received": false, "view": {}}
+			var view_observer: Callable = func(snapshot: Dictionary) -> void:
+				if not inspection_live.call() or snapshot.get("character_id") != inspection_character \
+					or snapshot.get("world_namespace") != inspection_namespace: return
+				observed_view.received = true
+				observed_view.view = snapshot.duplicate(true)
+			adapter.connect("view_changed", view_observer)
+			view = adapter.call("view") # One original request; no polling admission or settlement.
+			if not inspection_host:
+				for frame in NET_STEP_BUDGET_FRAMES:
+					if observed_view.received or not inspection_live.call(): break
+					await physics_frame
+					if not inspection_live.call(): break
+				view = observed_view.view
+			if is_instance_valid(adapter) and adapter.is_connected("view_changed", view_observer):
+				adapter.disconnect("view_changed", view_observer)
+			if not inspection_live.call():
+				return {"verdict": "FAIL", "detail": "original Halda inspection owner/world/session/adapter changed", "data": view}
+			if not inspection_host and not observed_view.received:
+				return {"verdict": "FAIL", "detail": "original authenticated Halda view reply did not arrive within the existing step budget", "data": view}
+		else:
+			view = adapter.call("view")
 		var prompt: Node3D = adapter.get("_prompt")
 		if prompt == null or view.get("ready") != true:
 			return {"verdict": "FAIL", "detail": "actual Halda prompt or admitted personal board is not ready", "data": view}

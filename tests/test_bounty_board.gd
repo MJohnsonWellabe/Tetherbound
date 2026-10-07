@@ -193,6 +193,66 @@ func test_existing_journal_replays_exactly_and_registry_rolls_back_failed_world_
 	assert_false(emitted[-1].get("owner_acknowledged", false))
 	assert_false(refusal.has("terminal"), "presentation normalization never mutates the original verdict")
 	interaction.free()
+	# Reuse the existing detached Session fixture for its actual envelope,
+	# request correlation and reply receiver. No ENet or panel render claim.
+	var view_game := preload("res://tests/test_altar_essence_quote_bridge.gd").FixtureGame.new()
+	view_game.local = preload("res://autoload/player_state.gd").new()
+	view_game.local.character_id = issued.character_id
+	view_game.world = preload("res://autoload/world_state.gd").new()
+	view_game.world.world_id = "slot-f43"
+	view_game.world.reward_delivery_namespace = "world-f43-a"
+	var view_session := preload("res://tests/test_altar_essence_quote_bridge.gd").FixtureSession.new()
+	view_session.fixture = view_game
+	view_session.fixture_host = false
+	view_game.session = view_session
+	view_game.add_child(view_session)
+	var composition := preload("res://scripts/net/foundation_composition.gd").new()
+	view_session.add_child(composition)
+	var view_adapter := preload("res://scripts/world/bounty_interaction_adapter.gd").new()
+	composition.add_child(view_adapter)
+	composition.set("_interaction", view_adapter)
+	view_session.foundation_reply_received.connect(composition._reply)
+	var received_views: Array[Dictionary] = []
+	view_adapter.view_changed.connect(func(snapshot: Dictionary) -> void: received_views.append(snapshot.duplicate(true)))
+	assert_eq(composition.personal_view(), {}, "cold guest view sends once and awaits an authentic reply")
+	assert_eq(view_session.get("_foundation_requests").size(), 1)
+	var envelope: Dictionary = view_session.get("_foundation_requests").values()[0].duplicate(true)
+	var board_view := BOARD.view(issued.redesign_character, issued.character_id)
+	board_view.world_namespace = "world-f43-a"
+	var uncorrelated := envelope.duplicate(true)
+	uncorrelated.station_key = "foreign-board"
+	view_session.call("_rpc_foundation_reply", uncorrelated, board_view)
+	assert_true(received_views.is_empty(), "unsolicited reply never publishes board rows")
+	for field: String in ["character_id", "world_namespace", "session_epoch"]:
+		var foreign := envelope.duplicate(true)
+		foreign[field] = "foreign"
+		view_session.call("_rpc_foundation_reply", foreign, board_view)
+		assert_true(received_views.is_empty(), "Session refuses foreign " + field)
+	for field: String in ["character_id", "world_namespace"]:
+		var foreign := board_view.duplicate(true)
+		foreign[field] = "foreign"
+		view_session.call("_rpc_foundation_reply", envelope, foreign)
+		assert_true(received_views.is_empty(), "correlation cannot mislabel another owner's rows: " + field)
+	view_session.call("_rpc_foundation_reply", envelope, board_view)
+	assert_eq(received_views, [board_view], "one authentic asynchronous reply publishes the supplied snapshot")
+	assert_eq(composition.get("_cached_view"), board_view)
+	assert_eq(composition.get("_cached_view_scope"), view_session.call("_foundation_view_scope", envelope))
+	received_views[0].rows.clear()
+	assert_eq(composition.get("_cached_view"), board_view, "view observer cannot mutate the retained cache")
+	view_session.epoch = "b".repeat(32)
+	assert_eq(composition.personal_view(), {}, "same world and character in a new epoch starts cold")
+	view_session.call("_rpc_foundation_reply", envelope, board_view)
+	assert_eq(received_views.size(), 1, "old epoch cannot republish its cache")
+	var current_envelope: Dictionary = view_session.get("_foundation_requests").values()[0].duplicate(true)
+	view_session.call("_rpc_foundation_reply", current_envelope, board_view)
+	assert_eq(received_views.size(), 2)
+	view_game.world.reward_delivery_namespace = "world-f43-b"
+	assert_eq(composition.personal_view(), {}, "changing host world clears the guest board")
+	view_game.local.character_id = "character-f43-b"
+	assert_eq(composition.personal_view(), {}, "changing owner keeps the guest board cold")
+	view_session.call("_rpc_foundation_reply", current_envelope, board_view)
+	assert_eq(received_views.size(), 2, "prior owner and host cannot republish their rows")
+	view_game.free()
 	var current := _record()
 	assert_true(RECORD.errors(current, current.character_id).is_empty())
 	var context := _context(current)
