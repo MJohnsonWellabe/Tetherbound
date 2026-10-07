@@ -1040,14 +1040,24 @@ func _apply_player_ops(delta: Dictionary) -> void:
 			"item_grant":
 				var inv: Variant = (local as RefCounted).get("inventory")
 				if inv != null:
-					(inv as RefCounted).call("add", str(op.get("item", "")),
+					var remaining: int = (inv as RefCounted).call("add", str(op.get("item", "")),
 						int(op.get("count", 1)))
+					if remaining > 0 and not OS.get_environment("TB_NET_RUN_ID").is_empty():
+						var session: Node = game.get("session") as Node
+						print("[ledger] original item_grant unapplied: ", JSON.stringify({"op": op,
+							"remaining": remaining, "guard": session.call("_owner_snapshot_block_reason", local)
+								if session != null and session.has_method("_owner_snapshot_block_reason") else "unavailable"}))
 				PROGRESSION_FEED.announce_catalyst_pickup(str(op.get("item", "")))
 			"item_take":
 				var satchel: Variant = (local as RefCounted).get("inventory")
 				if satchel != null:
-					(satchel as RefCounted).call("remove", str(op.get("item", "")),
+					var removed: bool = (satchel as RefCounted).call("remove", str(op.get("item", "")),
 						int(op.get("count", 1)))
+					if not removed and not OS.get_environment("TB_NET_RUN_ID").is_empty():
+						var session: Node = game.get("session") as Node
+						print("[ledger] original item_take unapplied: ", JSON.stringify({"op": op,
+							"removed": removed, "guard": session.call("_owner_snapshot_block_reason", local)
+								if session != null and session.has_method("_owner_snapshot_block_reason") else "unavailable"}))
 
 
 func _character_writes_ready() -> bool:
