@@ -40,6 +40,32 @@ func test_trial_requires_ordered_air_crossings_and_real_floor_landing_volume() -
 	assert_true(RULES.in_landing(Vector3(5,100,0), landing))
 	assert_false(RULES.in_landing(Vector3(5,40,0), landing), "same XZ on lower floor is not arrival")
 	assert_false(RULES.in_landing(Vector3(30,100,0), landing))
+	# A valid landing's pending ticket is personal, even in an unlocked world.
+	var runtime := RUNTIME.new()
+	var receipt := RUNTIME.TRIAL_TUTORIAL_FLAG
+	var own := {"scope": "player", "op": "flag", "id": receipt, "value": true, "peers": [17]}
+	runtime._pending_interactions[receipt] = {"kind": "trial", "peer": 17, "bond": false}
+	for patch: Dictionary in [{"scope": "world"}, {"op": "inventory"},
+		{"id": "fly_traversal_unlocked"}, {"value": false}, {"value": 1},
+		{"peers": [1]}, {"peers": []}]:
+		var wrong: Dictionary = own.duplicate(true)
+		wrong.merge(patch, true)
+		runtime._on_delta_applied({"ops": [wrong]})
+		assert_true(runtime._pending_interactions.has(receipt), "foreign/malformed grant cannot settle trial: %s" % patch)
+	var missing: Dictionary = own.duplicate(true)
+	missing.erase("value")
+	runtime._on_delta_applied({"ops": [missing]})
+	assert_true(runtime._pending_interactions.has(receipt), "missing value cannot imply completion")
+	missing = own.duplicate(true)
+	missing.erase("peers")
+	runtime._on_delta_applied({"ops": [missing]})
+	assert_true(runtime._pending_interactions.has(receipt), "broadcast default cannot pay this lesson")
+	assert_false(RUNTIME._sets_trial_receipt({"ops": [own]}, receipt, 0))
+	runtime._on_delta_applied({"ops": [own]})
+	assert_true(runtime._pending_interactions.is_empty(), "only the requester's committed lesson consumes its ticket")
+	runtime._on_delta_applied({"ops": [own]})
+	assert_true(runtime._pending_interactions.is_empty(), "replay cannot settle a consumed ticket twice")
+	runtime.free()
 
 
 func test_sora_rejects_missing_vanes_and_only_conversation_can_report_courier_delivery() -> void:

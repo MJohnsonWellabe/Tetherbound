@@ -46,9 +46,9 @@ const COMPANION_FALL := preload("res://scripts/world/cloudreach_companion_fall.g
 ## is the realm the RECORD belongs to. Never `Game.current_realm`.
 const REALM_ID := "cloudreach"
 
-## The world flag the flight trial commits. Named here because `_on_delta_applied`
+## The personal receipt the flight trial commits. Named here because `_on_delta_applied`
 ## has to recognise it without re-reading the interaction that started the trial.
-const TRIAL_UNLOCK_FLAG := "fly_traversal_unlocked"
+const TRIAL_TUTORIAL_FLAG := "fly_tutorial_completed"
 const DATA_PATH := "res://data/config/cloudreach_physical_runtime.json"
 const CHAPTER_PATH := "res://data/config/cloudreach_chapter.json"
 const NPC_PATH := "res://data/config/cloudreach_npc_runtime.json"
@@ -387,9 +387,12 @@ func _on_delta_applied(delta: Dictionary) -> void:
 	if _pending_interactions.is_empty():
 		return
 	for completion: String in _pending_interactions.keys().duplicate():
-		if not LEDGER_CLAIM.sets_world_flag(delta, completion):
-			continue
 		var ticket: Dictionary = _pending_interactions[completion]
+		if str(ticket.get("kind", "")) == "trial":
+			if not _sets_trial_receipt(delta, completion, int(ticket.get("peer", 0))):
+				continue
+		elif not LEDGER_CLAIM.sets_world_flag(delta, completion):
+			continue
 		_pending_interactions.erase(completion)
 		match str(ticket.get("kind", "interaction")):
 			"landing":
@@ -409,10 +412,23 @@ func _on_delta_applied(delta: Dictionary) -> void:
 				_settle_interaction(str(ticket["id"]), ticket["spec"] as Dictionary)
 
 
-## Submit one Cloudreach flag as an intent and hand back `world_ledger.gd`'s
-## verdict shape, always. The kind follows D99's scope table -- a world fact is
-## `set_world_flag`, a personal receipt (`cloudreach_payout:`) is
-## `grant_player_flag` addressed to whoever asked.
+## Only an explicit personal grant to the original requester settles this trial.
+## Empty recipients, another player's lesson and the shared unlock cannot pay it.
+static func _sets_trial_receipt(delta: Dictionary, completion: String, peer: int) -> bool:
+	if peer <= 0 or completion != TRIAL_TUTORIAL_FLAG:
+		return false
+	for op: Dictionary in delta.get("ops", []):
+		if str(op.get("scope", "")) != "player" or str(op.get("op", "")) != "flag" \
+			or str(op.get("id", "")) != completion \
+			or typeof(op.get("value")) != TYPE_BOOL or op.get("value") != true:
+			continue
+		var peers: Variant = op.get("peers", [])
+		if peers is Array and peers.has(peer):
+			return true
+	return false
+
+
+## Submit one Cloudreach flag through its declared world or personal scope.
 func _write_flag(flag: String) -> Dictionary:
 	var transport := LEDGER_CLAIM.transport(self)
 	if transport == null:
@@ -452,19 +468,21 @@ func _on_landed(at: Vector3, _species_id: String) -> void:
 		var trial: Dictionary = config["trial"]
 		var landing := {"position": trial["landing_position"], "radius_m": trial["landing_radius_m"], "height_tolerance_m": trial["landing_height_tolerance_m"]}
 		if trial_gate_index == trial["gates"].size() and trial_flight_seconds >= float(trial["minimum_flight_seconds"]) and RULES.in_landing(at, landing):
+			var tutorial_was_completed := bool(_flags.call("has", TRIAL_TUTORIAL_FLAG))
+			var requesting_peer := multiplayer.get_unique_id()
 			var result := _emit("flight_trial_completed")
-			if result.get("changed", false):
+			var tutorial_committed := not tutorial_was_completed \
+				and bool(_flags.call("has", TRIAL_TUTORIAL_FLAG))
+			if tutorial_committed:
 				_credit_fly_route_bond()
-			elif bool(result.get("pending", false)):
-				# A client: the unlock is with the host. Credit nothing and
-				# promise nothing; `_on_delta_applied` says the line and pays
-				# the bond when `fly_traversal_unlocked` actually commits.
-				_pending_interactions[TRIAL_UNLOCK_FLAG] = {
-					"kind": "trial", "bond": _fly_bond_eligible(),
+			elif not tutorial_was_completed and bool(result.get("pending", false)):
+				# A shared unlock never settles a personal lesson or pays its bond.
+				_pending_interactions[TRIAL_TUTORIAL_FLAG] = {
+					"kind": "trial", "bond": _fly_bond_eligible(), "peer": requesting_peer,
 				}
 			_cancel_trial("" if bool(result.get("pending", false))
 				else ("Fly unlocked. Follow the rising currents to the Sky Shrine."
-					if result.get("changed", false) else "Trial complete; return to Maela."))
+					if tutorial_committed else "Trial complete; return to Maela."))
 		else:
 			_cancel_trial("Land after all three wind gates. Return to the launch marker to retry.")
 	for spec: Dictionary in config.get("landing_objectives", []):

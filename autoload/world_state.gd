@@ -394,6 +394,9 @@ func load_data(data: Dictionary) -> void:
 		flags = PROGRESSION_STATE.new()
 	var raw_flags: Variant = data.get("flags", {})
 	flags.call("load_data", raw_flags if typeof(raw_flags) == TYPE_DICTIONARY else {})
+	# Older builds wrote this unclassified personal lesson into shared world data.
+	# It cannot identify a trained character; retain the shared route unlock.
+	flags.call("set_flag", "fly_tutorial_completed", false)
 	_migrate_resource_cycles()
 	revision += 1
 

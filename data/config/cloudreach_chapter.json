@@ -150,7 +150,16 @@
           "how": "Pilot the active fly-capable creature through the aerie's wind gates.",
           "region_id": "windscar_ravine",
           "requires_flags": ["cloudreach_act_i_complete"],
-          "grants_flags": ["fly_tutorial_completed"],
+          "completion_event": "flight_trial_completed"
+        },
+        {
+          "id": "cloudreach_complete_fly_tutorial",
+          "flag_id": "fly_tutorial_completed",
+          "scope": "player",
+          "label": "Learn the Windscar flight route.",
+          "how": "Pilot your fly-capable creature through the wind gates and land on the trial perch.",
+          "region_id": "windscar_ravine",
+          "requires_flags": ["cloudreach_act_i_complete"],
           "completion_event": "flight_trial_completed"
         },
         {

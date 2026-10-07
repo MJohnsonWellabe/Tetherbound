@@ -305,6 +305,11 @@ func test_apply_restores_a_character_onto_a_player_state() -> void:
 
 
 func test_portable_character_disk_round_trip_preserves_five_uids_selection_and_flags() -> void:
+	var old_world := {"flags": {"flags": ["fly_traversal_unlocked", "fly_tutorial_completed"]}}
+	var untrained := CHARACTER_SAVE.merge(old_world, {"flags": {"flags": []}}, SAVE_GAME.VERSION)
+	assert_eq(untrained["progression"]["flags"], ["fly_traversal_unlocked"], "split-slot load cannot convert a shared lesson into personal training")
+	var trained := CHARACTER_SAVE.merge(old_world, {"flags": {"flags": ["fly_tutorial_completed"]}}, SAVE_GAME.VERSION)
+	assert_eq(trained["progression"]["flags"], ["fly_traversal_unlocked", "fly_tutorial_completed"], "a genuine saved personal lesson survives exactly once")
 	var written := FIXTURE.game(db, false)
 	written.local.character_id = "tournament-owner"
 	for i in 5:
