@@ -1,0 +1,46 @@
+{
+  "kind": "fresh_earned_rested_prefix_failure",
+  "run_id": 37634207984,
+  "source_sha": "975bb3f4f799a5caaed219ad93af3b6c8d3caa21",
+  "script": "tests/smoke_f19_campaign_functional.gd",
+  "args": "--through-rest --route-ledger",
+  "mode": "render",
+  "renderer": "gl_compatibility",
+  "resolution": "1280x720",
+  "world_seed_override": false,
+  "result": {"reached": "paid_camp", "elapsed_seconds": 783.77, "requested_prefix_passed": false, "campaign_complete": false, "counts_as_proof": false},
+  "failure": "Earned rest could not reach Halda's tournament picker",
+  "positive_observations": {
+    "owned_creatures": 5,
+    "live_admitted_caps": [10, 10, 10, 10, 10],
+    "levels": [6, 5, 5, 5, 5],
+    "training_wins": 11,
+    "training_losses": 0,
+    "repeated_wilds": 0,
+    "materials_paid": {"wood": 30, "fiber": 34, "stone": 8},
+    "ordinary_paid_structures": ["tent", "bedroll", "creature_bed", "creature_bed", "creature_bed"],
+    "remaining_materials": {"wood": 1, "fiber": 1, "stone": 0},
+    "last_visible_hud_goal": "Rest your three entrants at camp.",
+    "hud_observation_counts_as_comprehension_proof": false
+  },
+  "failed_walk": {
+    "player": [82.62217, -0.970859, -13.70955],
+    "target": [88.5, 1.962, 46.5],
+    "remaining_metres": 60.4957733154297,
+    "can_walk": true,
+    "nav_confined_resets": 0,
+    "last_slide_collider": "/root/MeadowsPlayground/Terrain",
+    "last_slide_normal": [-0.073108, 0.98171, -0.175783]
+  },
+  "cause_limit": "Config geometry confirms the direct camp-to-Halda chord crosses the concave village fence twice. A fence contact at the final logged player position is not established; nearby target colliders are not the player's collision proof.",
+  "new_approach": "Owner-authorized higher-model re-attack guides both directions on authored roads through the existing single-budget navigator; source APPROVE and actual rest checks/traversal remain separate gates.",
+  "artifact": {
+    "id": 11489592009,
+    "name": "render-lane-b-f19-rested-r2-37634207984",
+    "bytes": 10478876,
+    "sha256": "42c0784ea318c2e20cc14708859169b0f68cb21a5728b96d6531a705ed97712a",
+    "run_log_sha256": "94524067dc055ba17f3da34671045d8e1e2d0e540d487fedac80a37a6a245210"
+  },
+  "fixture_promotion": false,
+  "criterion_pass": false
+}
