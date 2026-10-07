@@ -1,0 +1,127 @@
+{
+  "criterion": "F39#4",
+  "status": "PASS",
+  "source_commit": "a1841c9b236b72392063215ac33d1cdff96ad056",
+  "run_id": 37677560955,
+  "artifact_id": 11508411125,
+  "proof": "tools/capture_f39_catalogue.gd --biome=water --preset=Low --times=day,night --cand=718.763,3198.245,-28.848 --cand=440.077,3494.021,-20.3875 --cand=408.689,3691.1,-24.9332",
+  "result": {
+    "exit": 0,
+    "seconds": 316,
+    "frames": 6,
+    "complete": true,
+    "failures": []
+  },
+  "authored_locations": [
+    "water_world.json anchors sluice_isle_to_veilfall_departure",
+    "water_world.json rest_shoals sluice_isle_to_veilfall_rest_04",
+    "water_world.json rest_shoals sluice_isle_to_veilfall_rest_06"
+  ],
+  "actual_positions": [
+    {
+      "frame": "water__stand_00__day",
+      "player_position": [
+        718.763000488281,
+        1.93083691596985,
+        3198.2451171875
+      ],
+      "on_floor": true,
+      "consecutive_grounded_frames": 3,
+      "spring_length_m": 5.19999980926514,
+      "mountain_centre_planar_distance_m": 1075.182
+    },
+    {
+      "frame": "water__stand_01__night",
+      "player_position": [
+        718.763000488281,
+        1.93083691596985,
+        3198.2451171875
+      ],
+      "on_floor": true,
+      "consecutive_grounded_frames": 3,
+      "spring_length_m": 5.19999980926514,
+      "mountain_centre_planar_distance_m": 1075.182
+    },
+    {
+      "frame": "water__stand_02__day",
+      "player_position": [
+        440.076995849609,
+        1.4996954202652,
+        3494.02099609375
+      ],
+      "on_floor": true,
+      "consecutive_grounded_frames": 3,
+      "spring_length_m": 5.19999980926514,
+      "mountain_centre_planar_distance_m": 689.149
+    },
+    {
+      "frame": "water__stand_03__night",
+      "player_position": [
+        440.076995849609,
+        1.4996954202652,
+        3494.02099609375
+      ],
+      "on_floor": true,
+      "consecutive_grounded_frames": 3,
+      "spring_length_m": 5.19999980926514,
+      "mountain_centre_planar_distance_m": 689.149
+    },
+    {
+      "frame": "water__stand_04__day",
+      "player_position": [
+        408.688995361328,
+        1.50094413757324,
+        3691.10009765625
+      ],
+      "on_floor": true,
+      "consecutive_grounded_frames": 3,
+      "spring_length_m": 5.19999980926514,
+      "mountain_centre_planar_distance_m": 495.038
+    },
+    {
+      "frame": "water__stand_05__night",
+      "player_position": [
+        408.688995361328,
+        1.50094211101532,
+        3691.10009765625
+      ],
+      "on_floor": true,
+      "consecutive_grounded_frames": 3,
+      "spring_length_m": 5.19999980926514,
+      "mountain_centre_planar_distance_m": 495.038
+    }
+  ],
+  "visual_review": {
+    "reviewer": "/root/f26_presets_review",
+    "mode": "Code-blind all6 original distance images plus retained near20 from37662801275; literal criterion under owner572#6045342186",
+    "verdict": "PASS",
+    "reason": "Dominant mountain mass and multiple descending falls recognizable across water, day/night, distinct from intervening shoreline; retained near20 establish same setting up close. Summit cropping does not prevent recognition."
+  },
+  "independent_source_review": {
+    "reviewer": "/root/f39_visual_review",
+    "verdict": "APPROVE",
+    "checked": "Actual6/6 complete/exit0/failures[]/allfloortrue consecutive3/materialverificationtrue; original reviewed curtain changes/retained affected proofs",
+    "landing_scope": "263ccc50 curtain script/shader; ea9e8202 waterfall config plus prerequisite10440c5d ground_feather2to8 config hunk ONLY; exclude104 F42 evidence. Approved explicit-stand/floor/receipt guards may accompany existing capture-tool paths. Exclude weather install/UI/pumps/bluffs/other flags."
+  },
+  "logic_reuse": {
+    "run_id": 37662277200,
+    "proof": "tests/run_tests.gd existing12 affected files",
+    "tests": 148,
+    "assertions": 1909,
+    "failed": 0,
+    "exit": 0,
+    "source_scope": "Unchanged curtain/current/Veilfall logic paths"
+  },
+  "area_reuse": {
+    "run_id": 37671873221,
+    "proof": "tests/smoke_tidewake_b_current_restore.gd",
+    "checks": 97,
+    "failed": 0,
+    "exit": 0,
+    "limits": "Disclosed prerequisite fixtures; real Guardian decline/settlement/save-reset-load/rebuilt production world; not earned route/co-op/fight participant offers."
+  },
+  "fixture_disclosure": "Ordinary production SpringArm/Camera3D, frozen day/night, explicit debug travel to existing authored anchors, actual floor guards retained. Stills not earned traversal, motion, weather, complete matrix or device performance. Raw PNGs retained in hosted run artifact only.",
+  "material_override_disclosure": "Existing F39 comparison driver explicitly applies candidate=false: fall far-core/current groups/ridges false locally. Production F14 groups=true/ridges=false remains separate and is not reverted. Retained near20 used comparison candidate; far-core only affects distant falls. Reviewer requires no falls flag promotion for this scoped landmark proof.",
+  "flags_flipped": "none",
+  "release_followups": "Prior spray boundaries/material/atmosphere concerns remain on release Visual bar, not literal landmark blocker. F39otherrows/F26HighMedium/200frame/rescore/earned/co-op remain OPEN."
+}

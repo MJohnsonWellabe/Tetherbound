@@ -9,6 +9,8 @@ uniform float opacity_max = 0.70;
 uniform float flow_speed = 0.32;
 uniform float edge_feather = 0.08;
 uniform float ground_feather_m = 2.0;
+uniform float near_clear_m = 0.0;
+uniform float near_full_m = 0.0;
 uniform float albedo_min = 0.40;
 uniform float albedo_max = 0.68;
 uniform sampler2D ground_heights : filter_linear, repeat_disable;
@@ -44,8 +46,13 @@ void fragment() {
 	float across = clamp((world_position.x - ground_span.x) / max(ground_span.y - ground_span.x, 0.001), 0.0, 1.0);
 	float ground_y = texture(ground_heights, vec2((across * 63.0 + 0.5) / 64.0, 0.5)).r;
 	float contact = smoothstep(0.0, max(ground_feather_m, 0.001), world_position.y - ground_y);
+	// Local spray must not become an opaque sheet across the nearby trainer.
+	// Distant/upper falling water keeps its authored density; no geometry,
+	// collision or entry interaction depends on this camera-local fade.
+	float near_fade = near_full_m > near_clear_m
+		? smoothstep(near_clear_m, near_full_m, length(world_position - CAMERA_POSITION_WORLD)) : 1.0;
 	ALBEDO = water_colour.rgb * mix(albedo_min, albedo_max, stream);
 	ROUGHNESS = 0.38;
 	SPECULAR = 0.35;
-	ALPHA = mix(opacity_min, opacity_max, stream) * edge * contact;
+	ALPHA = mix(opacity_min, opacity_max, stream) * edge * contact * near_fade;
 }
