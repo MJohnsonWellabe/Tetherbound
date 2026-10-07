@@ -16,18 +16,25 @@ var continuation_content_entered := false
 
 ## Optional observations on the existing proof; no camera or gameplay writes.
 ## Hosted screenshots stay in the run artifact for independent visual review.
-func capture(tree: SceneTree, label: String) -> bool:
+func capture(tree: SceneTree, label: String, frame_ready: Callable = Callable()) -> bool:
 	if not OS.get_cmdline_user_args().has("--capture-ending"): return true
 	if not check(DisplayServer.get_name() != "headless" and RenderingServer.render_loop_enabled,
 		"ending capture requires an actual drawing display"): return false
 	var drawn: Array[bool] = [false]
-	var observer := func() -> void: drawn[0] = true
-	RenderingServer.frame_post_draw.connect(observer)
+	var frame_image: Array[Image] = []
 	var deadline := Time.get_ticks_msec() + 30000
+	var observer := func() -> void:
+		if drawn[0] or Time.get_ticks_msec() >= deadline: return
+		if frame_ready.is_valid() and frame_ready.call() != true: return
+		drawn[0] = true
+		# Retain this completed draw, including transient effects that could
+		# finish before the awaiting reader resumes on the next idle edge.
+		frame_image.append(tree.root.get_texture().get_image())
+	RenderingServer.frame_post_draw.connect(observer)
 	while not drawn[0] and Time.get_ticks_msec() < deadline: await tree.process_frame
 	RenderingServer.frame_post_draw.disconnect(observer)
 	if not check(drawn[0], "ending capture observes a completed frame within 30 seconds"): return false
-	var image := tree.root.get_texture().get_image()
+	var image: Image = frame_image[0]
 	var directory := "res://shots/f20-ending-%d" % OS.get_process_id()
 	var path := directory.path_join("%03d-%s.png" % [_capture_index, label])
 	_capture_index += 1
@@ -230,7 +237,8 @@ func open_credits(tree: SceneTree, game: Node) -> bool:
 		# memory to override a newly earned one. No counter is set here.
 		var landmarks := int(first_companion.get("landmarks_visited_together"))
 		var battles := int(first_companion.get("battles_fought"))
-		var memory_fact := "%d landmarks" % landmarks if landmarks > 0 else "%d battles" % battles
+		var memory_fact := "%d %s" % [landmarks, "landmark" if landmarks == 1 else "landmarks"] if landmarks > 0 \
+			else "%d %s" % [battles, "battle" if battles == 1 else "battles"]
 		if not check(battles >= 4 and str(prose.get("starter_status", "")).contains(HOME.party_names(game.party)[0]) \
 			and str(prose.get("bond_memory", "")).contains(HOME.party_names(game.party)[0]) \
 			and str(prose.get("bond_memory", "")).contains(memory_fact),
@@ -345,7 +353,7 @@ func fifth(tree: SceneTree, game: Node, travel: RefCounted = null) -> bool:
 	journal.call("set_realm", "meadows")
 	var quests_before: Array = journal.call("main_entries", game.progression).duplicate(true)
 	var tracked_before: String = journal.call("tracked_text", game.progression)
-	var moment := {"results": 0, "presented": false}
+	var moment := {"results": 0, "presented": false, "capture_started": false, "capture_done": false, "captured": false}
 	# The actual arch subscribes in _ready, before this observer. Its durable
 	# result creates the transient source; observe it on that real edge.
 	var result_observer := func(result: Dictionary) -> void:
@@ -357,6 +365,18 @@ func fifth(tree: SceneTree, game: Node, travel: RefCounted = null) -> bool:
 		moment.presented = arch.get("_stir_seen") == true and is_instance_valid(light) \
 			and light.light_energy > float(arch.get("_stir_settings").resting_energy) \
 			and is_instance_valid(sound) and sound.playing and sound.stream != null and sound.bus == "SFX"
+		if moment.results == 1 and moment.presented and OS.get_cmdline_user_args().has("--capture-ending"):
+			moment.capture_started = true
+			var visible_stir := func() -> bool:
+				if not is_instance_valid(arch) or not is_instance_valid(light) or tree.current_scene == null: return false
+				var hud: Node = tree.current_scene.get_node_or_null("PlaygroundHUD")
+				var label: Label = hud.get("_hotbar_message") if hud != null else null
+				return light.is_visible_in_tree() and light.light_energy > float(arch.get("_stir_settings").resting_energy) \
+					and label != null and label.is_visible_in_tree() and label.text == "It stirred, but it is not ready yet."
+			# Arm at the durable result, while activation is still releasing X.
+			# The observed HUD line and bright light must coexist in the draw.
+			moment.captured = await capture(tree, "fifth-arch-stir", visible_stir)
+			moment.capture_done = true
 	game.connect("portal_action_result", result_observer)
 	var messages: Array[String] = []
 	var observer := func() -> void:
@@ -371,6 +391,7 @@ func fifth(tree: SceneTree, game: Node, travel: RefCounted = null) -> bool:
 	if not activated:
 		tree.process_frame.disconnect(observer)
 		game.disconnect("portal_action_result", result_observer)
+		while moment.capture_started and not moment.capture_done: await tree.process_frame
 		failures.append_array(travel.failures); return false
 	var stir_deadline := Time.get_ticks_msec() + 30000 # wall-clock: slow runners exceed 1 s/frame
 	while Time.get_ticks_msec() < stir_deadline:
@@ -379,11 +400,14 @@ func fifth(tree: SceneTree, game: Node, travel: RefCounted = null) -> bool:
 	for frame in 8: await tree.process_frame
 	tree.process_frame.disconnect(observer)
 	game.disconnect("portal_action_result", result_observer)
+	while moment.capture_started and not moment.capture_done: await tree.process_frame
 	var view: Dictionary = game.call("portal_view", "biome5")
 	if not check(view.get("character_stirred") == true and view.get("open") == false \
 		and game.local.inventory.call("count", "fifth_portal_key") == 0, "one real key consumed; fifth arch stays sealed"): return false
 	if not check(moment.results == 1 and moment.presented, "one actual durable result creates bright glow and a playing diegetic SFX source"): return false
 	if not check(messages.has("It stirred, but it is not ready yet."), "actual key use emits the single not-ready line"): return false
+	if OS.get_cmdline_user_args().has("--capture-ending") and not check(moment.capture_done and moment.captured,
+		"fifth stir frame captured while the actual light is bright and the not-ready line is visible"): return false
 	if not check(journal.call("main_entries", game.progression) == quests_before \
 		and journal.call("tracked_text", game.progression) == tracked_before,
 		"fifth-key use adds no main quest or sequel objective"): return false

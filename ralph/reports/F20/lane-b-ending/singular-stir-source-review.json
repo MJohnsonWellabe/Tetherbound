@@ -1,0 +1,38 @@
+{
+  "verdict": "APPROVE",
+  "criterion_pass": false,
+  "files": [
+    {
+      "blob": "8b6fe57c89168d3581d4ec7ac62cf344e90edc75",
+      "path": "data/config/regional_credits.json"
+    },
+    {
+      "blob": "1e094b6d463b4e2543ac3abf7df42f74c057b067",
+      "path": "scripts/story/regional_homecoming.gd"
+    },
+    {
+      "blob": "88b13b1044365d2f032bb08f343be7fc0421832b",
+      "path": "tests/helpers/f20_ending_probe.gd"
+    },
+    {
+      "blob": "9e0e3da00d27af4e105a4453b5fa80f5fbcb63cb",
+      "path": "tests/test_regional_homecoming.gd"
+    }
+  ],
+  "kind": "f20_singular_memory_and_actual_stir_capture_source_review",
+  "reviewer": "/root/b_f20_review",
+  "remaining": [
+    "Affected named logic on pushed cut",
+    "Fifth stir runtime/capture/audio provenance",
+    "Full visual bar judge PASS"
+  ],
+  "preserved": [
+    "Original five identity, character scope, authority and receipts",
+    "No key/durable state grants",
+    "Actual key debit, sealed arch, playing SFX, no quest and repeat refusal",
+    "Capture-disabled behavior",
+    "No camera/input/clock writes"
+  ],
+  "base_sha": "e071e72aa6484ec844a19ecfa48f2c8fc538d6be",
+  "scope": "Config-backed singular memory only at count1; existing test0/1/2 per counter. Existing capture opt-in observes actual durable stir+completed draw+visible exact line and bright light; unchanged30sbound."
+}
