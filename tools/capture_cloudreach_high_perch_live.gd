@@ -79,6 +79,7 @@ var _time_name := "day"
 ## Grounded first presses repeated before a departure launch (evidence).
 var _departure_jump_presses := 0
 var _departure_launches: Array[Dictionary] = []
+var _departure_only := false
 
 
 func _init() -> void:
@@ -89,6 +90,12 @@ func _run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--output="):
 			OUT = arg.trim_prefix("--output=").strip_edges().trim_suffix("/")
+		elif arg.begins_with("--only="):
+			if arg != "--only=day-departure":
+				push_error("High perch live supports only --only=day-departure or the default full matrix")
+				quit(2)
+				return
+			_departure_only = true
 	if DisplayServer.get_name() == "headless":
 		print("high perch live: needs a rendering display (xvfb-run, opengl3)")
 		quit(1)
@@ -103,7 +110,8 @@ func _run() -> void:
 	if not await _boot():
 		_finish()
 		return
-	for time_name: String in ["day", "night"]:
+	var capture_times: Array[String] = ["day"] if _departure_only else ["day", "night"]
+	for time_name: String in capture_times:
 		_time_name = time_name
 		_pin_hour(float(HOURS[time_name]))
 		if not await _arrival():
@@ -370,6 +378,10 @@ func _capture(label: String, subject: Vector3) -> void:
 	if bool(_fly.call("last_flight_used_mentor_loaner")):
 		_fail("owned-carrier camera proof cannot use a mentor loaner")
 		return
+	# Targeted supplement still flies the complete continuous daytime route;
+	# keep its landing/launch checks, capture only the missing departure view.
+	if _departure_only and label != "departure-lookback":
+		return
 	_hide_overlays()
 	_set_render(true)
 	for i in RENDERED_FRAMES:
@@ -432,11 +444,13 @@ func _finish() -> void:
 	_release_all()
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT))
 	LANE.contact_sheet(_frames, OUT + "/_sheet.png", 3, 640)
-	var expected := 12
+	var expected := 1 if _departure_only else 12
 	var manifest := {"schema_version": 1, "tool": "tools/capture_cloudreach_high_perch_live.gd",
 		"scene": "res://scenes/world/cloudreach_cliffs.tscn", "named_location": "The High Perches",
 		"camera": "production CameraRig, processing on throughout; yaw written as the right stick; no evidence camera",
 		"graphics_capture": _graphics_capture,
+		"coverage": "day-departure supplement; remaining 11 judged views retained from37689206699" if _departure_only else "full day/night matrix",
+		"expected_frames": expected,
 		"fixture_disclosure": "reset_for_new_game; realm cloudreach; scene instantiated directly; Act I-II flags incl. fly_traversal_unlocked (frame matrix BOOT_FLAGS); five-owned matrix party, Galecrest active and summoned, no loaner; trainer teleported to the arrival start in the air once per time of day, then Jump launches the glide; yaw written each physics frame as the stick; pitch -32 deg for the rim-out frame only; clock pinned; HUD hidden for each frame. Visual fixture, not earned unlock/trial/bond/save evidence.",
 		"records": _records, "failures": _failures, "departure_repeated_ground_presses": _departure_jump_presses,
 		"departure_launches": _departure_launches, "complete": _failures.is_empty() and _records.size() == expected,
