@@ -64,7 +64,7 @@ extends "res://tests/helpers/net_harness.gd"
 ## out; a second guest throw in that same released encounter is pinned to catch.
 ##
 ## **Handover:** each peer owns exactly its deployed starter (`deploy_creature`
-## with `owned: true`, as the opening owns it; actor_vitals refuses an unowned
+## with `owned: true` before host/join admission, as the opening owns it; actor_vitals refuses an unowned
 ## fighter). The successful guest catch must raise that peer's count by one.
 ## This does not exercise a full belt or its release ceremony.
 ##
@@ -137,6 +137,13 @@ func _run() -> void:
 		quit(await finish())
 		return
 
+	# The original disclosed starter must exist before the admission snapshot.
+	# PARTY_SEAM.add is local setup, not permission to add a new admitted UID.
+	for i in 2:
+		var deployed: Dictionary = await step(i, "deploy_creature", {"owned": true})
+		want(str(deployed.get("verdict", "")) == "PASS",
+			"setup: peer %d deployed its own creature (%s)" % [i, str(deployed.get("detail", ""))])
+
 	var hosted: Dictionary = await step(0, "host", {})
 	want(str(hosted.get("verdict", "")) == "PASS",
 		"peer 0 hosted a world (%s)" % str(hosted.get("detail", "")))
@@ -151,15 +158,6 @@ func _run() -> void:
 			"peer %d's registry holds both players (%s)" % [i, str(seen.get("detail", ""))])
 
 	# --- setup: one fight, two participants -----------------------------------
-	# Granted explicitly. See the header on why this block is loud about being
-	# setup rather than the thing under test.
-	for i in 2:
-		# Owned, as the opening owns its starter: with combat.json actor_vitals
-		# on, a wild fight refuses an unowned fighter. Counts stay relative.
-		var deployed: Dictionary = await step(i, "deploy_creature", {"owned": true})
-		want(str(deployed.get("verdict", "")) == "PASS",
-			"setup: peer %d deployed its own creature (%s)" % [i, str(deployed.get("detail", ""))])
-
 	var engaged: Dictionary = await step(0, "engage_wild", {})
 	want(str(engaged.get("verdict", "")) == "PASS",
 		"setup: peer 0 engaged a wild creature (%s)" % str(engaged.get("detail", "")))
@@ -186,7 +184,8 @@ func _run() -> void:
 	var travelled: Dictionary = await step(1, "teleport",
 		{"at": [where.x + THROW_STANDOFF_M, where.y + 1.0, where.z]})
 	want(str(travelled.get("verdict", "")) == "PASS",
-		"setup: peer 1 travelled to the fight (%s)" % str(travelled.get("detail", "")))
+		"setup: peer 1 travelled to the fight (%s)%s" % [str(travelled.get("detail", "")),
+			"" if travelled.get("verdict") == "PASS" else " " + str(travelled.get("data", {}))])
 	var joined_fight: Dictionary = await step(1, "join_encounter", {"encounter_id": encounter_id})
 	want(str(joined_fight.get("verdict", "")) == "PASS",
 		"setup: peer 1 joined the fight already in progress (%s)" % str(joined_fight.get("detail", "")))
