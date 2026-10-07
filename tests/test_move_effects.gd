@@ -12,6 +12,9 @@ func test_shared_ultimate_catalogue_covers_every_live_species_type_and_role() ->
 	var species: Dictionary = preload("res://scripts/creatures/creature_species.gd").table()
 	var learnsets: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/moves/learnsets.json")).species
 	var visuals: Dictionary = ULTIMATES.config().get("visuals", {})
+	var unique_species: Array[String] = ["terrapup", "ripplet", "galewisp", "veridian",
+		"abyssal_guardian", "solmane", "fulgocobra", "tuskroot", "ashtusk", "cannonback", "stormcapra", "stormursa"]
+	var fallback: Dictionary = ULTIMATES.config().get("unused_pair_visual_fallbacks", {})
 	var shared: Array[String] = []
 	var pairs: Dictionary = {}
 	for id: String in moves.move_ids():
@@ -39,15 +42,23 @@ func test_shared_ultimate_catalogue_covers_every_live_species_type_and_role() ->
 		assert_eq(moves.slot(ultimate), "ultimate", id + " maps to a registered ultimate")
 		var move: Dictionary = moves.move(ultimate)
 		assert_true(move.get("ultimate", {}).get("unique") is bool, id + " declares shared or unique")
+		var board_id: String = preload("res://scripts/creatures/water_species_catalog.gd").board_id(id)
+		var canonical := id if board_id.is_empty() else board_id
+		assert_eq(move.get("ultimate", {}).get("unique"), unique_species.has(canonical),
+			id + " uses only its authored shared/unique classification")
 		if move.get("ultimate", {}).get("unique") != false: continue
 		assert_true(shared.has(ultimate), id + " belongs to the shared catalogue")
 		assert_eq(move.get("type"), species[id].get("type"), id + " uses its primary type")
 		assert_eq(visuals.get(ultimate, {}).get("role"), row.get("role_family"), id + " uses its authored role")
 		var pair := str(species[id].get("type", "")) + ":" + str(row.get("role_family", ""))
 		assert_eq(pairs.get(pair), ultimate, id + " has an exact type×role mapping")
-	for pair: String in ULTIMATES.config().get("unused_pair_visual_fallbacks", {}):
+	for type: String in JSON.parse_string(FileAccess.get_file_as_string("res://data/config/type_chart.json")).types:
+		for role: String in ["WALL", "CHARGER", "DIVER", "CURRENT"]:
+			var pair := type + ":" + role
+			assert_true(pairs.has(pair) or fallback.has(pair), pair + " has a shared row or unused-pair fallback")
+	for pair: String in fallback:
 		assert_false(pairs.has(pair), pair + " fallback is only for an unused pair")
-		assert_true(shared.has(ULTIMATES.config().unused_pair_visual_fallbacks[pair]), pair + " falls back to a shared row")
+		assert_true(shared.has(fallback[pair]), pair + " falls back to a shared row")
 
 func test_every_move_resolves_and_all_24_bodies_impacts_trails_and_cues_exist() -> void:
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/moves/moves.json"))
