@@ -59,6 +59,11 @@ func _run() -> void:
 func _capture_species_poses(id: String, candidate: bool, out: String, source: String) -> void:
 	var body := _spawn_creature(id, false, PAIR_CREATURE_POS, 90.0)
 	body.set_physics_process(false)
+	var measured_height := _measured_height(body)
+	var measured_trainer := RENDER_BOUNDS.measure(_trainer).size.y
+	if measured_height <= TRAINER_HEIGHT:
+		_pose_failures.append("%s: rendered height %.3fm does not clear trainer %.2fm" %
+			[id, measured_height, TRAINER_HEIGHT])
 	if candidate:
 		body.set_meta("f36_pose_preview", true)
 		body.call("_build_placeholder")
@@ -101,6 +106,8 @@ func _capture_species_poses(id: String, candidate: bool, out: String, source: St
 	else:
 		file.store_string(JSON.stringify({"species": id, "candidate": candidate, "stage_only": true,
 			"source_commit": source, "renderer": RenderingServer.get_current_rendering_method(),
+			"standing_height_m": measured_height, "trainer_reference_height_m": TRAINER_HEIGHT,
+			"trainer_measured_height_m": measured_trainer, "scale_scope": "Installed standing stage; no fight-scale claim",
 			"resolution": [root.size.x, root.size.y], "planned_frames": ROLES.size() * PHASES.size(),
 			"frames": receipt}, "\t"))
 		file.flush()
