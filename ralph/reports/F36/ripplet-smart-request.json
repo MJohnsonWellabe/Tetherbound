@@ -1,0 +1,19 @@
+{
+  "subject": "ripplet",
+  "reference": "assets/creatures/tetherbound/ripplet/reference/f36-standing-v1.png",
+  "reference_sha256": "f6597a73b55156562f58b8bab8a1f36114d9a4d427ad6a8b2cff3999a0f88987",
+  "settings": {
+    "model_type": "smart-topology",
+    "ai_model": "meshy-t2",
+    "should_texture": true,
+    "enable_pbr": true,
+    "texture_resolution": "2k",
+    "target_polycount": 15000
+  },
+  "expected_credit_cost": 15,
+  "balance_before": 13385,
+  "candidate_enabled": false,
+  "planned_rig_approach": "Existing cleanup donor -> rig_sitter -> skin_transfer; original textured surface preserved",
+  "task_id": "01a116d6-5229-7597-a54f-3c40896ff029",
+  "balance_after_submission": 13370
+}

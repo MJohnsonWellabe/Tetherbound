@@ -56,8 +56,19 @@
       "observed_credit_cost": 15,
       "candidate_enabled": false,
       "inspection_evidence": "ralph/reports/F36/terrapup-smart-disposition.json"
+    },
+    {
+      "reservation_id": "e3e14081-efde-4a11-bdd7-bf195cc68567",
+      "night": "2026-10-07",
+      "subject": "ripplet",
+      "reference": "assets/creatures/tetherbound/ripplet/reference/f36-standing-v1.png",
+      "reference_sha256": "f6597a73b55156562f58b8bab8a1f36114d9a4d427ad6a8b2cff3999a0f88987",
+      "endpoint": "/openapi/v1/image-to-3d",
+      "submitted_utc": "2026-10-07T14:48:28.977935+00:00",
+      "task_id": "01a116d6-5229-7597-a54f-3c40896ff029",
+      "status": "submitted_pending_inspection"
     }
   ],
-  "actual_meshy_submissions": 4,
+  "actual_meshy_submissions": 5,
   "note": "Lane E is the attended generation owner. Every POST uses f36_meshy_guard.py. Current real task IDs and reference hashes are recorded below; mocked cap tests use a temporary ledger and create no Meshy tasks. Generation or a successful cap check does not certify art."
 }

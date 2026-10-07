@@ -1,0 +1,31 @@
+{
+  "subject": "ripplet",
+  "status": "inspected_reference_candidate_pending_OFF",
+  "method": "built_in_imagegen",
+  "reference": "res://assets/creatures/tetherbound/ripplet/reference/f36-standing-v1.png",
+  "sha256": "f6597a73b55156562f58b8bab8a1f36114d9a4d427ad6a8b2cff3999a0f88987",
+  "identity_reference": "res://assets/creatures/tetherbound/ripplet/reference/three_quarter.png",
+  "identity_reference_sha256": "1e8a0b3b76da7b03dfd2035d67cf6af2101d81844b24100527fb817636a27e6d",
+  "prompt": "Use case: original stylized creature concept reference for Tetherbound's authorized F36 current-roster refinement. Image 1 is the established Ripplet identity reference. Create ONE full-body three-quarter studio view of this same character, preserving its upright aquatic otter/cat body, rounded head, huge dark blue eyes, cream eye surrounds/muzzle/chest/belly, broad black nose, fine short whiskers, cyan ears with pink inner fan accents, cyan fin tail with pale curved striations, droplet forehead and chest marks, chunky webbed feet with dark small claws. Preserve its appealing chunky proportions and color blocks. Neutral balanced standing pose with both feet fully grounded and separately visible, both arms slightly apart from the torso with readable elbow and wrist joints, hands relaxed and open, tail distinct from both legs and inside the frame. No seated or swimming pose. Soft tactile sculpted fur rather than individual noisy hairs; fin accents smooth and integrated into the natural body, clear face and eye area, no added anatomy. Plain light grey background and even neutral soft studio lighting; whole body inside frame. No person, ruler, text, props, clothes, mechanical armor, floating pieces, droplets, haze, Team Tether red, extra limb or character. This is the existing large creature, not an evolution or a smaller animal. Keep the same character identity.",
+  "inspection": {
+    "identity": "Cyan upright otter/cat face, cream chest/muzzle/eye surrounds, blue eyes, pink/cyan ear fins, droplet forehead/chest, broad cyan fin tail, dark claws preserved",
+    "riggability": "Both separate feet grounded; arms slightly apart with elbow/wrist silhouettes; tail visibly distinct from legs; no body fusion visible in reference",
+    "limits": "One studio image does not prove reverse anatomy, topology, skin weights, scale or gameplay appeal"
+  },
+  "installed_height_reference_m": 3.5999999046,
+  "native_scale_reference_run": 37630787255,
+  "default_enabled": false,
+  "meshy_task_ids": [
+    "01a116d6-5229-7597-a54f-3c40896ff029"
+  ],
+  "license_workflow": "Existing owner-held Meshy license; attended RD-26 priority refinement; no purchase",
+  "meshy_settings": {
+    "model_type": "smart-topology",
+    "ai_model": "meshy-t2",
+    "should_texture": true,
+    "enable_pbr": true,
+    "texture_resolution": "2k",
+    "target_polycount": 15000
+  },
+  "credit_cost": 15
+}
