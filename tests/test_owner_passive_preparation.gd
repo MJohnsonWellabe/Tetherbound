@@ -157,6 +157,82 @@ func test_capture_checkpoint_binds_original_offer_without_granting_its_creature(
 	var unsupported := capture.duplicate(true)
 	unsupported.duties[0].action = "wild_capture"
 	assert_true(PREP.make(unsupported, unsupported.duties[0], f.before, 0, "current-epoch", f.cursor, DATA.TXN).is_empty())
+	# The original capture stays visible until its ACK, but replacing the
+	# accepted journal with a later pending Altar must not present it again.
+	# Reuse the existing detached Session seam; these are real row/ledger
+	# transitions, not a disk-save or physical input proof.
+	const RECORD := preload("res://scripts/net/character_record_rules.gd")
+	const ACTIONS := preload("res://scripts/net/foundation_actions.gd")
+	const DELIVERY := preload("res://scripts/net/foundation_delivery.gd")
+	const TEACHING := preload("res://scripts/creatures/teaching.gd")
+	const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+	var game := preload("res://autoload/game_state.gd").new()
+	game.local = GROOM.new()._player()
+	game.world = DATA.new()._world()
+	game.world.reward_deliveries[capture.delivery_id] = capture.duplicate(true)
+	var cfg := E.config()
+	game.local.inventory.add(str(cfg.tether_candy_item), int(cfg.tether_candy_cost))
+	var session := preload("res://tests/test_foundation_resource_save.gd").FixtureSession.new()
+	session.fixture = game
+	game.add_child(session)
+	var composition := Node.new()
+	session.add_child(composition)
+	var adapter := preload("res://scripts/net/foundation_capture.gd").new()
+	composition.add_child(adapter)
+	context.foundation_runtime_authorized = true
+	var choice := {"offer_id": offer.offer_id, "keep": true, "released_uid": ""}
+	var proposal := ACTIONS.stage(RECORD.portable_projection(game.local.save_data()), 0, "wild_capture", choice, context, RECORD.errors)
+	assert_true(proposal.get("ok") == true, str(proposal))
+	proposal.character_revision = 1
+	var row := DELIVERY.make_record(game.world.world_id, game.world.reward_delivery_namespace, "current-epoch", proposal, null, RECORD.errors)
+	assert_false(row.is_empty())
+	if row.is_empty():
+		game.free()
+		return
+	var ledger := preload("res://scripts/net/world_ledger.gd").new(game.world)
+	assert_true(ledger.commit_creature_training_delivery(row, 1).ok)
+	assert_eq(adapter._offer(), offer, "the original unsaved capture remains offered")
+	game.local.load_data(row.after)
+	assert_eq(adapter._offer(), offer, "owner receipt alone never substitutes for original host ACK")
+	assert_true(ledger.accept_creature_training_delivery(row.delivery_id, DATA.CHARACTER, int(row.journal_revision), row.receipt, 1).ok)
+	row = game.world.reward_deliveries[row.delivery_id].duplicate(true)
+	assert_true(adapter._offer().is_empty(), "the accepted original decision is hidden")
+	var initial := RECORD.portable_projection(game.local.save_data())
+	var spend := {"spend_id": "capture-later-altar", "creature_uid": initial.party[0].uid,
+		"expected_level": initial.party[0].level, "payment_item": str(cfg.tether_candy_item), "expected_character_revision": 1}
+	var altar := E.stage_core_spend(initial, DATA.CHARACTER, 1, spend, cfg,
+		PROGRESSION.config(), TEACHING.available_moves, TEACHING.character_loadout_mirror)
+	assert_true(altar.get("ok") == true, str(altar))
+	altar.merge({"character_id": DATA.CHARACTER, "character_revision": 2, "action": "altar_spend",
+		"action_id": spend.spend_id, "intent": spend})
+	var later := E.next_training_delivery(game.world.world_id, game.world.reward_delivery_namespace, "current-epoch", altar,
+		row, cfg, PROGRESSION.config(), TEACHING.available_moves, TEACHING.character_loadout_mirror)
+	assert_false(later.is_empty())
+	if later.is_empty():
+		game.free()
+		return
+	assert_true(ledger.commit_creature_training_delivery(later, 1).ok)
+	var frozen_journal := var_to_bytes(game.world.reward_deliveries)
+	var frozen_owner := var_to_bytes(game.local.save_data())
+	assert_true(adapter._offer().is_empty(), "a later pending Altar cannot resurrect an accepted catch")
+	assert_eq(adapter._offer(offer.offer_id, true), offer, "original reconciliation still reads the retained offer")
+	assert_eq(var_to_bytes(game.world.reward_deliveries), frozen_journal, "presentation never edits the journal")
+	assert_eq(var_to_bytes(game.local.save_data()), frozen_owner, "presentation never grants or changes the owner")
+	game.local.redesign_character.transaction_receipts.erase(row.receipt)
+	assert_eq(adapter._offer(), offer, "the live owner's exact original receipt is required")
+	game.local.redesign_character.transaction_receipts.append(row.receipt)
+	for field: String in ["before", "after", "character_id", "world_id", "world_namespace", "journal_revision"]:
+		var changed: Dictionary = later.duplicate(true)
+		if field in ["before", "after"]: changed[field].redesign_character.transaction_receipts.erase(row.receipt)
+		elif field == "journal_revision": changed[field] = 1
+		else: changed[field] = "foreign"
+		game.world.reward_deliveries[later.delivery_id] = changed
+		assert_eq(adapter._offer(), offer, "changed/foreign pending history cannot hide the catch: " + field)
+	game.world.reward_deliveries[later.delivery_id] = later.duplicate(true)
+	assert_true(ledger.accept_creature_training_delivery(later.delivery_id, DATA.CHARACTER, int(later.journal_revision), later.receipt, 1).ok)
+	assert_true(adapter._offer().is_empty(), "ordinary later ACK preserves original accepted suppression")
+	assert_eq(var_to_bytes(capture.duties[0].context), original_offer)
+	game.free()
 
 func _action_fixture() -> Dictionary:
 	var player: RefCounted = GROOM.new()._player()
