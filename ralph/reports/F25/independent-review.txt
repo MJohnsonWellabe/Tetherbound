@@ -1,0 +1,14 @@
+F25#2 independent static review: APPROVE
+Reviewed commits: 68d0b5ad8d2397d9e884655d785b0064e4c658a3 and f7b465b6cd4b3a5b1c0eb64384a3adf65cd2f0ed.
+Reviewer: /root/f25_review; current combined tip a423358ec53e3780213269c08915764c3e1923cb.
+Ground support correctly uses transformed mesh bounds with mastery growth, per-mote scale and tumble. No arrival, lifetime, lease or particle-count change.
+Existing capture now honors requested resolution and fails if contact/impact inspect zero debris; empty aftermath is permitted.
+Required unrun logic selector: --only=test_move_effects.gd.
+Required unrun runtime: stone identities ranks 1/3/5, nonzero contact/impact debris checks, zero failures and released leases.
+Required unrun visual: current captures, full-bar code-blind verdict and Low readability; no criterion certified.
+
+F25#3 independent static review: APPROVE
+Reviewed commit: a423358ec53e3780213269c08915764c3e1923cb.
+Reviewer: /root/f25_arrival_review.
+No blocking syntax, immutable-row mutation, ordering or cleanup issue. Observer connects before deferred/timed arrival; contact checks precede HP debit; impact requires matching action contact; HUD verification reads actual number receipt.
+Coverage: Snare and quick; charged requires --prove-slot-inputs; ultimates excluded. Mounted geometry is not rendered visibility. Hosted execution and visual acceptance are required; no criterion certified.
