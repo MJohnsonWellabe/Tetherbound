@@ -1,0 +1,127 @@
+# CI-SPEED suite group (tools/ci/run_suite.py). Steps copied verbatim from
+# the former ci.yml job; each step runs in order in one lane, with the
+# lane's own XDG_DATA_HOME, RUNNER_TEMP and network namespace.
+### job: verify-combat-shard
+### seconds: 631
+### job-timeout-minutes: 35
+
+### step: Verify combat
+### env SMOKE: combat
+### env RETRIES: 2
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+  if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1
+### step: Verify throw preview physical occlusion
+set -euo pipefail
+export XDG_DATA_HOME="$(mktemp -d)"
+godot --headless --path . --log-file /tmp/throw-preview-occlusion.log --script tests/smoke_throw_preview_occlusion.gd
+if grep -E '^(ERROR:|SCRIPT ERROR:)' /tmp/throw-preview-occlusion.log; then
+  exit 1
+fi
+### step: Verify earned party controller cycle
+set -euo pipefail
+export XDG_DATA_HOME="$(mktemp -d)"
+godot --headless --path . --log-file /tmp/earned-party-cycle.log --script tests/smoke_earned_party_cycle.gd
+if grep -E '^(ERROR:|SCRIPT ERROR:)' /tmp/earned-party-cycle.log; then
+  exit 1
+fi
+### step: Verify same-live Water Alpha retirement
+set -euo pipefail
+run_dir="$(mktemp -d)"
+export XDG_DATA_HOME="$run_dir/profile"
+mkdir -p "$XDG_DATA_HOME"
+godot --headless --path . --log-file "$run_dir/engine.log" --script tests/smoke_water_alpha_retirement.gd 2>&1 | tee "$run_dir/console.log"
+test -s "$run_dir/engine.log"
+if grep -E '^(ERROR:|SCRIPT ERROR:)' "$run_dir/"*.log; then
+  exit 1
+fi
+### step: Verify riding
+### env SMOKE: riding
+### env RETRIES: 2
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+  if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1
+### step: Verify boss
+### env SMOKE: boss
+### env RETRIES: 2
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+  if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1
+### step: Verify trainer_battle
+### env SMOKE: trainer_battle
+### env RETRIES: 2
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+  if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1
+### step: Verify aggression
+### env SMOKE: aggression
+### env RETRIES: 2
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+  if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1
+### step: Verify encounter_scaling
+### env SMOKE: encounter_scaling
+### env RETRIES: 1
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+  if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1

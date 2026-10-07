@@ -1,0 +1,120 @@
+# CI-SPEED suite group (tools/ci/run_suite.py). Steps copied verbatim from
+# the former ci.yml job; each step runs in order in one lane, with the
+# lane's own XDG_DATA_HOME, RUNNER_TEMP and network namespace.
+### job: verify-owner-regressions-shard
+### group: controls
+### seconds: 440
+### job-timeout-minutes: 28
+
+### step: Verify title_load_game
+### env SMOKE: title_load_game
+### env RETRIES: 1
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+  if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1
+### step: Verify title_new_game
+### env SMOKE: title_new_game
+### env RETRIES: 1
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+  if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1
+### step: Verify satchel_owns_hotbar
+### env SMOKE: satchel_owns_hotbar
+### env RETRIES: 1
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+  if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1
+### step: Verify build_owns_creature_cycle
+### env SMOKE: build_owns_creature_cycle
+### env RETRIES: 1
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+  if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1
+### step: Verify trainer_battle_camera
+### env SMOKE: trainer_battle_camera
+### env RETRIES: 1
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+  if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1
+### step: Verify arena_contain
+### env SMOKE: arena_contain
+### env RETRIES: 1
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+  if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1
+### step: Verify menu_open_does_not_offer_to_drop
+### env SMOKE: menu_open_does_not_offer_to_drop
+### env RETRIES: 1
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+  if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1

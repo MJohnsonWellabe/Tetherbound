@@ -1,0 +1,147 @@
+# CI-SPEED suite group (tools/ci/run_suite.py). Steps copied verbatim from
+# the former ci.yml job; each step runs in order in one lane, with the
+# lane's own XDG_DATA_HOME, RUNNER_TEMP and network namespace.
+### job: verify-gate-evidence-shard
+### seconds: 578
+### job-timeout-minutes: 40
+
+### step: Verify post-miss wander aim lifecycle
+set -o pipefail
+godot --headless --path . --script tools/probe_gate_a_aim_wander.gd 2>&1 | tee /tmp/aim-wander.log
+if grep -E 'SCRIPT ERROR|Parse Error|^ERROR:' /tmp/aim-wander.log; then
+  exit 1
+fi
+### step: Verify stick navigator slope and obstacle clearance
+set -o pipefail
+godot --headless --path . --script tests/smoke_stick_navigator_low_geometry.gd 2>&1 | tee /tmp/stick-navigator.log
+if grep -E 'SCRIPT ERROR|Parse Error|^ERROR:' /tmp/stick-navigator.log; then
+  exit 1
+fi
+### step: Verify gate_a_opening_segment
+### env SMOKE: gate_a_opening_segment
+### env RETRIES: 1
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+  if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1
+### step: Verify gate_a_build_house
+### env SMOKE: gate_a_build_house
+### env RETRIES: 1
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+  if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1
+### step: Verify build_two_creature_beds
+### env SMOKE: build_two_creature_beds
+### env RETRIES: 1
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+  if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1
+### step: Verify gate_a_rest_torch
+### env SMOKE: gate_a_rest_torch
+### env RETRIES: 1
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+  if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1
+### step: Verify authored_camps
+### env SMOKE: authored_camps
+### env RETRIES: 1
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+  if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1
+### step: Verify trainer_no_usable_ally
+### env SMOKE: trainer_no_usable_ally
+### env RETRIES: 1
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+  if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1
+### step: Verify night_ecology
+### env SMOKE: night_ecology
+### env RETRIES: 1
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+  if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1
+### step: Verify post_modal_control
+### env SMOKE: post_modal_control
+### env RETRIES: 1
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+  if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1
