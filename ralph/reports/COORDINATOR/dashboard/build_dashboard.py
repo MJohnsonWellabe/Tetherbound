@@ -39,7 +39,7 @@ def pct(row):
     c = row.get("criteria", [])
     if not c:
         return int(row.get("pct", 0))
-    w = {"met": 1.0, "partial": 0.5, "in_progress": 0.25}
+    w = {"met": 1.0}  # owner 2026-10-06: fill is met criteria only
     return round(100 * sum(w.get(norm(x.get("status")), 0) for x in c) / len(c))
 
 
@@ -54,7 +54,7 @@ accepted = sum(1 for r in crit["rows"] if r.get("criteria") and all(norm(x.get("
 
 
 def bar(p):
-    return f'<span class="meter" role="img" aria-label="{p}% of criteria evidenced"><span style="width:{p}%"></span></span>'
+    return f'<span class="meter" role="img" aria-label="{p}% of criteria met"><span style="width:{p}%"></span></span>'
 
 
 def pill(s):
@@ -113,7 +113,7 @@ CARD_FEEDERS = {"M1": ["F01"], "M2": ["F02"], "M3": ["F03", "F04"], "M4": ["F05"
 
 def card_pct(card):
     feeders = [x for f in CARD_FEEDERS.get(card["id"], []) for x in rows.get(f, {}).get("criteria", [])]
-    w = {"met": 1.0, "partial": 0.5, "in_progress": 0.25}
+    w = {"met": 1.0}  # met only
     fp = sum(w.get(norm(x.get("status")), 0) for x in feeders) / max(1, len(feeders))
     met = sum(1 for x in feeders if norm(x.get("status")) == "met")
     run = 1.0 if card.get("integrated_run") else 0.0
@@ -228,7 +228,7 @@ if _plan_path.exists():
     n_sprints = int(plan["sprints"])
     now = _dt.datetime.now(_dt.timezone.utc)
     now_pos = (now - p_start).total_seconds() / 3600.0 / p_hours
-    W = {"met": 1.0, "blocked": 1.0, "partial": 0.5, "in_progress": 0.25}
+    W = {"met": 1.0}  # owner 2026-10-06: fill is met criteria only
 
     def _items(f):
         # Pseudo-features: the 13 chapter exit cards and the release-wide
@@ -293,7 +293,7 @@ if _plan_path.exists():
             counts_t[st] = counts_t.get(st, 0) + 1
             left, width = 100 * s0 / n_sprints, 100 * (e0 - s0) / n_sprints
             tip = (f'{b["label"]}: {fmt(at(s0))} to {fmt(at(e0))} {at(s0).tzname()}. '
-                   f'{done}/{n} criteria done, {actual:.0f}% weighted (expected now {expected:.0f}%). {TRACK[st]}.')
+                   f'{done}/{n} criteria done or owner-blocked, {actual:.0f}% met (expected now {expected:.0f}%). {TRACK[st]}.')
             bars.append(
                 f'<div class="gbar t-{st}" style="left:{left:.3f}%;width:{width:.3f}%" title="{E(tip)}">'
                 f'<span class="gfill" style="width:{actual:.0f}%"></span>'
@@ -321,7 +321,7 @@ if _plan_path.exists():
     <p class="meta">Baseline set {E(plan.get("baseline_set", ""))} · sprint = {p_hours:.0f} h, back to back from {fmt(p_start)} {at(0).tzname()} ·
       now in <b>sprint {cur} of {n_sprints}</b> · planned finish {fmt(finish)} {finish.tzname()} · {E(tsum)}</p>
     <p class="note">Each bar is a feature a lane takes to done (every criterion met or blocked on the owner). The darker fill is the share of that bar's
-      criteria evidenced now. Status compares it with a straight-line expectation from the bar's frozen starting progress: within 15 points is on track.
+      criteria met now (partial, in-progress and blocked add nothing). Status compares it with a straight-line expectation from the bar's frozen starting progress: within 15 points is on track.
       Past its end and not done is late.</p>
     <div class="gscroll"><div class="gantt">
       <div class="glane ghead"><div class="gname"></div><div class="gtrack">{heads}{now_html}</div></div>

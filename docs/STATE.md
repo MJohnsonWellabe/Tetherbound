@@ -4,13 +4,13 @@ Read first; update in place, under 25KB. No dated status/goal/handoff documents.
 
 ## 0. Current integration (coordinator: Claude)
 
-**Main:** PRs #532–#544 landed 2026-10-04/05 (F22 trainers and staging, F17 bed/relic/Hall, F27 essence and leveling, F30#1, F31, F33, F34, perf host stalls, CI segmentation). PRs need the `full-ci` label: a PR without it skips every engine job and auto-merges on a docs-only green.
+**Main (2026-10-07 closeout):** batches #553–#570 landed; 127 criteria met (board: `ralph/reports/COORDINATOR/dashboard/`, rebaselined plan, finish Thu 15 Oct). The owner archived every Codex lane on 10-07 and all other branches were consolidated. Each unlanded branch tip stays reachable from main through a tree-unchanged preservation merge that names the branch and SHA (`git log --merges --grep='Preserve branch'`). Unlanded work is not in the game; revive it by diffing its tip against main. PRs need the `full-ci` label: without it every engine job is skipped and the PR auto-merges on a docs-only green.
 
 **F18 portal runtime is ON** (`multiplayer.json session.redesign_portal_runtime_enabled=true`): station-craft co-op green (render 37401490374); post-rejoin relic/Home Key owner stalls fixed. Follow-up: hung-relic reload loss (F18 lane, next PR).
 
 **Criterion audit (2026-10-04, against the consolidated code):** prior evidence counts only where its code is unchanged. 271 live criteria; 10 superseded rows dropped with citations. Tables: `ralph/reports/INTEGRATION/criterion-audit/`. Board (hourly): `ralph/reports/COORDINATOR/dashboard/`.
 
-**Lanes (owner restructure 2026-10-04):** Claude feature lanes `tb/f17`, `tb/f18`, `tb/f22`, `tb/f27` (one feature to done, then the next in plan.json order), plus `tb/perf` (frame rate) and `tb/ci-segments` (segmented CI). Codex: `tb/lookdev` (GPU render service and F26), `tb/creature-art`, `tb/visual-*`. Batches land through `tb/integration` with full CI.
+**Lanes:** none active. The Claude lanes (F17, F18, F22, F27, perf, CI segments) and the Codex lanes (root, R1–R5) are archived. Open unlanded work, preserved but not proven: R3 F01#3 night walk `0cb232d62f` (needs a native NIGHT run and the judge); root PERF3 `f89c7aff47` (Veridian offer still failing); R5 Kitchen `c072fb3e65` (guest catch failing) and F42#0 catalogue `87dadfdcfd`; R2 F04 guardian camera `4550071f9e`; R1 F27 runtime flip (canonical OFF still fails, `tb/codex-r1`); R4 F23/F24 remainder and Alpha work (`tb/codex-r4`).
 
 **F25:** owner 2026-10-04 rejected cartoon hit markers. The shared `hit_spark` is OFF and each move's impact carries contact. The library stays OFF and F25 is open (`ralph/reports/VFX/f25/PROOF.md`).
 

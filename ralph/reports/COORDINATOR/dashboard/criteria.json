@@ -1,7 +1,7 @@
 {
- "generated_at": "2026-10-05T01:16:58.453032+00:00",
- "main_sha": "946bb39e5 (PR #530 head)",
- "batch4_sha": "648643576 (PR #531, CI running)",
+ "generated_at": "2026-10-07T05:46:46.023267+00:00",
+ "main_sha": "4bee3bb1b (PR #568)",
+ "batch4_sha": "next batch assembling",
  "rows": [
   {
    "id": "F01",
@@ -51,26 +51,26 @@
     },
     {
      "text": "All three starters separately complete naming, practice fight/catch, three-bed readiness, three played tournament rounds",
-     "status": "failing",
-     "evidence": "tb/reproof-retest: ralph/reports/INTEGRATION/reproof/retest/F01-4.md",
+     "status": "met",
+     "evidence": "Re-proof on main 9a5a4365 (tb/reproof-f01 f5e2b5cb, f01-current/row4-5/VERDICT.md): full chain PASS for all three starters",
      "gap": "Re-run smoke_gate_b_continuous.gd --gate-b-full-chain --starter= for terrapup, ripplet and galewisp. Folds into F17#4.",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-retest.",
+     "note": "Landed: Re-proof on main 9a5a4365 (tb/reproof-f01 f5e2b5cb, f01-current/row4-5/VERDICT.md): full chain PASS for all three starters",
      "audit_index": 4
     },
     {
      "text": "Opening/tournament state survives save/reload",
-     "status": "failing",
-     "evidence": "tb/reproof-retest: ralph/reports/INTEGRATION/reproof/retest/F01-5.md",
+     "status": "met",
+     "evidence": "Re-proof on main 9a5a4365 (tb/reproof-f01 f5e2b5cb, f01-current/row4-5/VERDICT.md): in-chain reloads PASS on v28 for all three starters",
      "gap": "Same three full-chain starter runs; confirm each in-chain reload passes on the v28 save. Folds into F17#4.",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-retest.",
+     "note": "Landed: Re-proof on main 9a5a4365 (tb/reproof-f01 f5e2b5cb, f01-current/row4-5/VERDICT.md): in-chain reloads PASS on v28 for all three starters",
      "audit_index": 5
     },
     {
      "text": "Opening/tournament state survives two-peer join",
-     "status": "failing",
-     "evidence": "tb/reproof-retest: ralph/reports/INTEGRATION/reproof/retest/F01-6.md",
+     "status": "met",
+     "evidence": "PR #553 (6a) + #555 (6b) merged 2026-10-06: two-peer opening and tournament state (host-first starter, gifts, per-battle trainer round number)",
      "gap": "Re-run smoke_net_shared_boss --tournament and the two-peer opening join; add the join/reload layout check. Folds into F17#5.",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-retest.",
+     "note": "Landed: PR #553 (6a) + #555 (6b) merged 2026-10-06: two-peer opening and tournament state (host-first starter, gifts, per-battle trainer round number)",
      "audit_index": 6
     }
    ]
@@ -171,10 +171,10 @@
    "criteria": [
     {
      "text": "At least six activities show a visible lure",
-     "status": "partial",
-     "evidence": "MEADOWS-PAYOFFS/six-activities/earned/LURE-JUDGE-earned-f.md; walks @122a8efb/8fc88f20/36d88a84/14e917a3",
+     "status": "met",
+     "evidence": "PR #565 (batch 5c) merged 2026-10-06 6:34 PM CT: R5 research log + system screens + readability, R4 forward camp + F23#1 receipt, R3 F03#0 lures, R2 shared_boss staging fix",
      "gap": "Re-capture the six lure walks; redo the code-blind lure judge. Folds into F38.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. Visual and walk evidence. Since 2026-09-28 the village, band1 props/vegetation and lighting/VFX changed.",
+     "note": "Landed: PR #565 (batch 5c) merged 2026-10-06 6:34 PM CT: R5 research log + system screens + readability, R4 forward camp + F23#1 receipt, R3 F03#0 lures, R2 shared_boss staging fix",
      "audit_index": 0
     },
     {
@@ -1183,50 +1183,50 @@
    "criteria": [
     {
      "text": "Grandpa gives the Home Key during the opening; it sits in the backpack and cannot be dropped, sold, traded or lost in a death satchel.",
-     "status": "in_progress",
-     "evidence": "test_opening_home_key.gd, test_home_key_protection.gd (unit)",
+     "status": "met",
+     "evidence": "PR #545 (9:59 PM CT 10-05): portals on; F18 closeout RECEIPT + station_craft render 37401490374",
      "gap": "Finish F18, set the flag true and run an opening gift/protection engine witness.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. The gift is gated by portal_runtime_ready (sequence_director.gd:617). multiplayer.json session.redesign_portal_runtime_enabled=false.",
+     "note": "Landed: PR #545 (9:59 PM CT 10-05): portals on; F18 closeout RECEIPT + station_craft render 37401490374",
      "audit_index": 0
     },
     {
      "text": "Using the Home Key is one tap: a ~2 s raise-and-glow animation, then arrival at the home arch; it is refused with a stated reason in combat, dialogue, cutscene, while swimming and mid-flight; free with no cooldown.",
-     "status": "in_progress",
-     "evidence": "test_home_key_action/_channels/_clock.gd; smoke_f18_home_key_refusal_input.gd (not CI)",
+     "status": "met",
+     "evidence": "PR #545 (9:59 PM CT 10-05): portals on; F18 closeout RECEIPT + station_craft render 37401490374",
      "gap": "Enable portals; run smoke_f18_home_key_refusal_input.gd plus a raise/arrival capture; add both to CI.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. session.gd:5604 returns \"The Home Key is not ready yet.\" while redesign_portal_runtime_enabled=false.",
+     "note": "Landed: PR #545 (9:59 PM CT 10-05): portals on; F18 closeout RECEIPT + station_craft render 37401490374",
      "audit_index": 1
     },
     {
      "text": "Portal keys are real inventory items; using one at its arch unlocks that portal permanently; locked arches refuse with a readable reason; retired physical crossings no longer lead between biomes (test proves portals are the only realm path).",
-     "status": "in_progress",
-     "evidence": "test_portal_admission_mode.gd, test_crossing_hall_portal_mount.gd",
+     "status": "met",
+     "evidence": "PR #545 (9:59 PM CT 10-05): portals on; F18 closeout RECEIPT + station_craft render 37401490374",
      "gap": "Enable portals; prove the key debit/unlock and run a portals-only route scan in an engine smoke.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. With the flag false, legacy_physical_crossings()=true. Realm gates and rift/water gates still carry inter-biome travel.",
+     "note": "Landed: PR #545 (9:59 PM CT 10-05): portals on; F18 closeout RECEIPT + station_craft render 37401490374",
      "audit_index": 2
     },
     {
      "text": "Each live biome has 3–5 waystones activated by touch; a portal sends the player to their last activated waystone in that biome (entry point if none); activation persists through reload.",
-     "status": "in_progress",
-     "evidence": "test_f18_waystones.gd; smoke_f18_waystone_mounts.gd (not CI)",
+     "status": "met",
+     "evidence": "PR #545 (9:59 PM CT 10-05): portals on; F18 closeout RECEIPT + station_craft render 37401490374",
      "gap": "Enable portals; run the touch/reload/return engine smoke. Settle owner decision #11.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. waystone_mounts.gd:12 skips mounting while the portal flag is false. Owner decision #11 (Meadows waystone return) is still open.",
+     "note": "Landed: PR #545 (9:59 PM CT 10-05): portals on; F18 closeout RECEIPT + station_craft render 37401490374",
      "audit_index": 3
     },
     {
      "text": "Co-op: every player has their own Home Key and it moves only that player; a portal opens for the whole session when the host world or that character has unlocked it; a guest's own unlock follows their character to another host.",
-     "status": "in_progress",
-     "evidence": "smoke_net_f18_travel.gd (peers 3), smoke_net_f18_fixture_teaching.gd (held by requires-flag)",
+     "status": "met",
+     "evidence": "PR #545 (9:59 PM CT 10-05): portals on; F18 closeout RECEIPT + station_craft render 37401490374",
      "gap": "Enable portals; run the two-peer and cross-host key smokes on the gate.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. Net smokes are held off the gate because session.redesign_portal_runtime_enabled=false.",
+     "note": "Landed: PR #545 (9:59 PM CT 10-05): portals on; F18 closeout RECEIPT + station_craft render 37401490374",
      "audit_index": 4
     },
     {
      "text": "Ordinary-input loop witness: deep in a biome → Home Key → use a homestead station → portal back to the waystone, with a save/reload between steps.",
-     "status": "in_progress",
-     "evidence": "smoke_f18_earned_loop.gd (not CI); STATE: earned R9 Home Key FAIL",
+     "status": "met",
+     "evidence": "PR #555 (batch 2b) merged 2026-10-06 9:38 AM CT: earned loop with portals on, f20 guest ACK, veridian arrival (renders 4/4 each)",
      "gap": "Enable portals; run the earned loop witness with save/reload between steps.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. The loop needs the Home Key and portals, both off while the portal flag is false.",
+     "note": "Landed: PR #555 (batch 2b) merged 2026-10-06 9:38 AM CT: earned loop with portals on, f20 guest ACK, veridian arrival (renders 4/4 each)",
      "audit_index": 5
     }
    ]
@@ -1435,10 +1435,10 @@
    "criteria": [
     {
      "text": "Each combat role has at least two data-driven attack patterns with readable telegraphs; wild creatures reposition, dodge and punish rather than stand and trade.",
-     "status": "not_started",
-     "evidence": "smoke_f22_pattern_contract.gd, smoke_f22_live_pattern_mount.gd (not CI, no recorded pass)",
+     "status": "met",
+     "evidence": "PR #532: smoke_f22_wild_reactions + contract/mount smokes (COMBAT/f22/proof/f22_0_*)",
      "gap": "Add both smokes to CI. Build an engine smoke observing reposition/dodge/punish.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. patterns.runtime_enabled=true, but no gated test or witness. The smokes check pattern IDs, not observed repositioning.",
+     "note": "Landed: PR #532: smoke_f22_wild_reactions + contract/mount smokes (COMBAT/f22/proof/f22_0_*)",
      "audit_index": 0
     },
     {
@@ -1459,10 +1459,10 @@
     },
     {
      "text": "A code-blind judge names the role of five different creatures from fight footage alone.",
-     "status": "not_started",
-     "evidence": "none",
+     "status": "met",
+     "evidence": "PR #532: code-blind role identification 5/5 (COMBAT/f22/proof/f22_3_roles/)",
      "gap": "Capture fight footage for five roles; get a code-blind role-naming judge.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No role-identification footage or judge.",
+     "note": "Landed: PR #532: code-blind role identification 5/5 (COMBAT/f22/proof/f22_3_roles/)",
      "audit_index": 3
     },
     {
@@ -1500,10 +1500,10 @@
     },
     {
      "text": "Every species has a learnset unlocking moves at levels and breakthroughs; TMs still work under the primary-type rule.",
-     "status": "not_started",
-     "evidence": "test_moves.gd, test_tm_teach_transaction.gd (TM only); test_breakthrough_saved_move_history.gd",
+     "status": "met",
+     "evidence": "PR #565 (batch 5c) merged 2026-10-06 6:34 PM CT: R5 research log + system screens + readability, R4 forward camp + F23#1 receipt, R3 F03#0 lures, R2 shared_boss staging fix",
      "gap": "Unit test over learnsets.json for all species and tiers; engine smoke of a TM use.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No test validates every species learnset (teaching.learnset_errors is untested). TM production use was unproven in the map.",
+     "note": "Landed: PR #565 (batch 5c) merged 2026-10-06 6:34 PM CT: R5 research log + system screens + readability, R4 forward camp + F23#1 receipt, R3 F03#0 lures, R2 shared_boss staging fix",
      "audit_index": 1
     },
     {
@@ -1516,18 +1516,18 @@
     },
     {
      "text": "Loadouts change at the Altar or a forward camp and persist through save/reload and two-peer rejoin.",
-     "status": "not_started",
-     "evidence": "session.gd open_creature_loadouts/host_commit_creature_loadout (source only)",
+     "status": "met",
+     "evidence": "PR #565 (batch 5c) merged 2026-10-06 6:34 PM CT: R5 research log + system screens + readability, R4 forward camp + F23#1 receipt, R3 F03#0 lures, R2 shared_boss staging fix",
      "gap": "Engine smoke for the Altar/camp edit plus reload, and a peers:2 net smoke for rejoin persistence.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No test exercises a loadout edit, save/reload or two-peer rejoin.",
+     "note": "Landed: PR #565 (batch 5c) merged 2026-10-06 6:34 PM CT: R5 research log + system screens + readability, R4 forward camp + F23#1 receipt, R3 F03#0 lures, R2 shared_boss staging fix",
      "audit_index": 3
     },
     {
      "text": "Move mastery ranks 1–5 rise with use; each rank raises damage and upgrades the move's effect tier; mastery persists.",
-     "status": "not_started",
-     "evidence": "test_combat_mastery_delivery.gd (use retention only); move_mastery.json",
+     "status": "met",
+     "evidence": "PR #568 (batch 7) merged 2026-10-07 12:45 AM CT: R4 F23#4 mastery growth by earned rank, R4 F24#1/F24#2 Tether commands and tag-switch combo",
      "gap": "Unit test of rank thresholds and damage; engine smoke of rank growth across save/reload.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No test of the threshold progression to rank 5, damage_per_rank or effect tier.",
+     "note": "Landed: PR #568 (batch 7) merged 2026-10-07 12:45 AM CT: R4 F23#4 mastery growth by earned rank, R4 F24#1/F24#2 Tether commands and tag-switch combo",
      "audit_index": 4
     },
     {
@@ -1565,18 +1565,18 @@
     },
     {
      "text": "The trainer never deals damage: a test proves every damage event is creature-attributed.",
-     "status": "not_started",
-     "evidence": "none",
+     "status": "met",
+     "evidence": "PR #568 (batch 7) merged 2026-10-07 12:45 AM CT: R4 F23#4 mastery growth by earned rank, R4 F24#1/F24#2 Tether commands and tag-switch combo",
      "gap": "Unit test scanning damage events and receipts for a creature attacker, including the command paths.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No test asserts that every damage event is creature-attributed.",
+     "note": "Landed: PR #568 (batch 7) merged 2026-10-07 12:45 AM CT: R4 F23#4 mastery growth by earned rank, R4 F24#1/F24#2 Tether commands and tag-switch combo",
      "audit_index": 1
     },
     {
      "text": "Switching within the combo window after a hit triggers a joint attack from both creatures.",
-     "status": "in_progress",
-     "evidence": "tether_commands.gd stage_joint_attack",
+     "status": "met",
+     "evidence": "PR #568 (batch 7) merged 2026-10-07 12:45 AM CT: R4 F23#4 mastery growth by earned rank, R4 F24#1/F24#2 Tether commands and tag-switch combo",
      "gap": "Enable it; add a unit test for the combo window and an engine smoke of the two-body joint strike.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. Tag combo is off: tether_commands.json runtime_enabled=false.",
+     "note": "Landed: PR #568 (batch 7) merged 2026-10-07 12:45 AM CT: R4 F23#4 mastery growth by earned rank, R4 F24#1/F24#2 Tether commands and tag-switch combo",
      "audit_index": 2
     },
     {
@@ -1752,10 +1752,10 @@
    "criteria": [
     {
      "text": "Eight type essences (ground, water, air, electric, fire, dark, ice, psychic) and Tether Candy exist as stackable items.",
-     "status": "not_started",
-     "evidence": "ralph/reports/TRAINING/f27/review-items-cut-5ca22f.txt@5ca22f623 (static)",
+     "status": "met",
+     "evidence": "PR #536 (main f84a2771): ralph/reports/TRAINING/f27/proof/README.md — test_f27_essence_rules eight essences 999 + candy 99",
      "gap": "Add a unit test: ItemDB has all eight essence_* items at stack 999 and tether_candy at stack 99.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. The static witness still matches (items.json essences stack 999, candy 99, unchanged). No CI test asserts the item stack values.",
+     "note": "Landed: PR #536 (main f84a2771): ralph/reports/TRAINING/f27/proof/README.md — test_f27_essence_rules eight essences 999 + candy 99",
      "audit_index": 0
     },
     {
@@ -1776,26 +1776,26 @@
     },
     {
      "text": "At the Altar the player spends essence to raise a chosen creature's level up to its cap; dual types may use either essence; starters level through their type.",
-     "status": "not_started",
-     "evidence": "partial: test_altar_essence_quote_bridge, test_owner_passive_sync (candy), test_training_ui_restart_retry",
+     "status": "met",
+     "evidence": "PR #536 (main f84a2771): ralph/reports/TRAINING/f27/proof/README.md — smoke-altar-spend.txt controller Altar L3→L4 one receipt; guest spend net-no-dup case A",
      "gap": "Unit tests for the dual-type, starter and cap rules, plus an engine smoke of a paid Altar level-up on the controller path.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. Quote and payment are tested with doubles. No test of dual-type either-essence, starter type spend or a cap refusal. No ordinary Altar path witness.",
+     "note": "Landed: PR #536 (main f84a2771): ralph/reports/TRAINING/f27/proof/README.md — smoke-altar-spend.txt controller Altar L3→L4 one receipt; guest spend net-no-dup case A",
      "audit_index": 3
     },
     {
      "text": "Release payouts and essence spends cannot duplicate through reconnect or reload (two-peer test).",
-     "status": "not_started",
-     "evidence": "units only: test_altar_building_recovery, test_altar_traits_transport, test_training_ui_restart_retry",
+     "status": "met",
+     "evidence": "PR #536 (main f84a2771): ralph/reports/TRAINING/f27/proof/README.md — net-no-dup-all-post531.txt A/B/C exactly once; net-guest-release-post531.txt 52/52",
      "gap": "Add a peers:2 net smoke: guest release and spend with disconnect/reload at each cut, asserting no double grant or debit.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. Single-process replay guards are tested. No smoke_net_* covers essence release or spend duplication.",
+     "note": "Landed: PR #536 (main f84a2771): ralph/reports/TRAINING/f27/proof/README.md — net-no-dup-all-post531.txt A/B/C exactly once; net-guest-release-post531.txt 52/52",
      "audit_index": 4
     },
     {
      "text": "A route ledger shows the ordinary path reaches each biome's entry level without mandatory repeat grinding, and optional grinding speeds it measurably.",
-     "status": "not_started",
-     "evidence": "none (tests/test_economy_ledger.mjs not in CI)",
+     "status": "met",
+     "evidence": "PR #536 (main f84a2771): ralph/reports/TRAINING/f27/proof/README.md — route-ledger/report.md; test_f27_route_ledger.mjs 7/7",
      "gap": "Build the route ledger script and report per biome entry level, ordinary path vs. optional grind.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. The evidence map says no ordinary or grind ledger has been produced.",
+     "note": "Landed: PR #536 (main f84a2771): ralph/reports/TRAINING/f27/proof/README.md — route-ledger/report.md; test_f27_route_ledger.mjs 7/7",
      "audit_index": 5
     }
    ]
@@ -1817,10 +1817,10 @@
    "criteria": [
     {
      "text": "Caps at 10, 20, 30, 40 and 50 (ceiling 60 this pass; data holds up to 100); a capped creature stops gaining levels and shows 'breakthrough needed'.",
-     "status": "not_started",
-     "evidence": "partial: test_f37_ripplet_traversal::test_actual_f28_caps_survive_json_for_every_valid_completed_prefix; test_combat_round_reward (level ≤ cap)",
+     "status": "met",
+     "evidence": "PR #555 (batch 2b) merged 2026-10-06 9:38 AM CT: earned loop with portals on, f20 guest ACK, veridian arrival (renders 4/4 each)",
      "gap": "Unit test for the capped readout text, plus an engine smoke where a capped creature gains no level and shows the message.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. Cap math and the level clamp are tested. No test of the \"breakthrough needed\" readout or of capped XP stopping on the ordinary path.",
+     "note": "Landed: PR #555 (batch 2b) merged 2026-10-06 9:38 AM CT: earned loop with portals on, f20 guest ACK, veridian arrival (renders 4/4 each)",
      "audit_index": 0
     },
     {
@@ -1857,10 +1857,10 @@
     },
     {
      "text": "A ledger proves every feast ingredient is reachable in or before its biome.",
-     "status": "not_started",
-     "evidence": "none",
+     "status": "met",
+     "evidence": "PR #555 (batch 2b) merged 2026-10-06 9:38 AM CT: earned loop with portals on, f20 guest ACK, veridian arrival (renders 4/4 each)",
      "gap": "Ledger script over feasts.json, harvest/essence node sites and crops per biome order.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No ingredient reachability ledger exists.",
+     "note": "Landed: PR #555 (batch 2b) merged 2026-10-06 9:38 AM CT: earned loop with portals on, f20 guest ACK, veridian arrival (renders 4/4 each)",
      "audit_index": 5
     }
    ]
@@ -1882,26 +1882,26 @@
    "criteria": [
     {
      "text": "Four lines: Mudsnout → Tuskroot or Ashtusk at L20 (heartstone/sunstone as feast ingredient), Mosshell → Cannonback at L30, Craghorn → Stormcapra at L40, Staticub → the new Stormwood storm bear at L50.",
-     "status": "in_progress",
-     "evidence": "data/config/evolution_lines.json; test_schema_redesign (domain validates)",
+     "status": "met",
+     "evidence": "PR #555 (batch 2b) merged 2026-10-06 9:38 AM CT: earned loop with portals on, f20 guest ACK, veridian arrival (renders 4/4 each)",
      "gap": "Needs F29#3's bear plus provenance gates, then enable the Stormursa line and add a per-line unit test.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. evolution_lines.json `staticub_stormursa.enabled=false`, and `storm_bear_ready()` is false with no Meshy model. The other three lines are enabled.",
+     "note": "Landed: PR #555 (batch 2b) merged 2026-10-06 9:38 AM CT: earned loop with portals on, f20 guest ACK, veridian arrival (renders 4/4 each)",
      "audit_index": 0
     },
     {
      "text": "The breakthrough offers evolve or stay; staying is permanent for that tier.",
-     "status": "not_started",
-     "evidence": "none (evolution.gd prepare_feast_choice untested for stay)",
+     "status": "met",
+     "evidence": "PR #555 (batch 2b) merged 2026-10-06 9:38 AM CT: earned loop with portals on, f20 guest ACK, veridian arrival (renders 4/4 each)",
      "gap": "Unit test of the stay-permanent rule plus an engine smoke of the feast choice UI.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No test of the evolve/stay choice or of stay permanence. The legacy level/bond evolve() path still exists, and whether players can reach it is unknown.",
+     "note": "Landed: PR #555 (batch 2b) merged 2026-10-06 9:38 AM CT: earned loop with portals on, f20 guest ACK, veridian arrival (renders 4/4 each)",
      "audit_index": 1
     },
     {
      "text": "Evolution preserves uid, nickname, level, bond history, IVs, traits and mastery.",
-     "status": "not_started",
-     "evidence": "partial: tests/test_evolution.gd::test_evolve_changes_species_and_stats_but_preserves_what_the_player_earned (legacy evolve)",
+     "status": "met",
+     "evidence": "PR #555 (batch 2b) merged 2026-10-06 9:38 AM CT: earned loop with portals on, f20 guest ACK, veridian arrival (renders 4/4 each)",
      "gap": "Unit test on the prepare_feast_choice/feed path asserting every listed identity field, plus a save/reload.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. The legacy path is tested for nickname, level, bond, IV and trait_primary. uid, F30 traits, mastery and the feast-choice path are not asserted.",
+     "note": "Landed: PR #555 (batch 2b) merged 2026-10-06 9:38 AM CT: earned loop with portals on, f20 guest ACK, veridian arrival (renders 4/4 each)",
      "audit_index": 2
     },
     {
@@ -1914,10 +1914,10 @@
     },
     {
      "text": "Cannonback and Stormcapra remain wild where they already appear; Tuskroot, Ashtusk and the storm bear are not wild.",
-     "status": "not_started",
-     "evidence": "none (static pass only in the 582b2f13 map)",
+     "status": "met",
+     "evidence": "PR #555 (batch 2b) merged 2026-10-06 9:38 AM CT: earned loop with portals on, f20 guest ACK, veridian arrival (renders 4/4 each)",
      "gap": "Unit test over all wild spawn tables: Cannonback and Stormcapra present, Tuskroot, Ashtusk and Stormursa absent.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No test scans the spawn tables for evolved species.",
+     "note": "Landed: PR #555 (batch 2b) merged 2026-10-06 9:38 AM CT: earned loop with portals on, f20 guest ACK, veridian arrival (renders 4/4 each)",
      "audit_index": 4
     }
    ]
@@ -1947,10 +1947,10 @@
     },
     {
      "text": "Traits show on the catch readout and creature inspect screens.",
-     "status": "not_started",
-     "evidence": "partial: tests/test_trait_ui.gd (legacy data/traits description)",
+     "status": "met",
+     "evidence": "PR #536 (main f84a2771): catch banner and Team inspect list F30 traits via Traits.rows",
      "gap": "Engine smoke plus capture: a caught creature's rolled traits appear on the readout and inspect screens.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No test of F30 rolled traits on the catch readout or inspect screen. creature_training_readout.gd is untested.",
+     "note": "Landed: PR #536 (main f84a2771): catch banner and Team inspect list F30 traits via Traits.rows",
      "audit_index": 1
     },
     {
@@ -1996,18 +1996,18 @@
    "criteria": [
     {
      "text": "Workbench, Forge, Kitchen, Altar, Den and Farm plots (plus chests) can be built on the homestead plot.",
-     "status": "not_started",
-     "evidence": "partial: tests/smoke_f31_station_paid_path.gd (CI, Forge only); test_item_db_station_catalogue.gd",
+     "status": "met",
+     "evidence": "PR #542: smoke_f31_station_paid_path, six stations via real ghost+Place (HUB/f17/F31-RECEIPT.md)",
      "gap": "Extend smoke_f31_station_paid_path to place all six stations and a chest on the home plot.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. Only the Forge is built on the real path. The catalogue test checks forge, den, kitchen and greenhouse definitions only.",
+     "note": "Landed: PR #542: smoke_f31_station_paid_path, six stations via real ghost+Place (HUB/f17/F31-RECEIPT.md)",
      "audit_index": 0
     },
     {
      "text": "Forge, Kitchen, Altar and Den each take exactly one attachment per biome (4 live, 8 slots) built from biome materials; recipe tier requires the attachment.",
-     "status": "not_started",
-     "evidence": "partial: smoke_f31_station_paid_path (Forge Meadows attachment → tier 1); test_schema_redesign::test_eight_slots_have_exactly_four_live_and_four_sealed; test_homestead_building_delivery",
+     "status": "met",
+     "evidence": "PR #542: test_station_attachment_gates + paid smoke (Forge slot 1, tier 1, dismantle refund) (HUB/f17/F31-RECEIPT.md)",
      "gap": "Unit test: tiered recipe refused without the attachment. Smoke: one attachment per station.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. Slot schema and one attachment are proven. No test that a recipe's tier requires the attachment, and no test for Kitchen, Altar or Den.",
+     "note": "Landed: PR #542: test_station_attachment_gates + paid smoke (Forge slot 1, tier 1, dismantle refund) (HUB/f17/F31-RECEIPT.md)",
      "audit_index": 1
     },
     {
@@ -2020,34 +2020,34 @@
     },
     {
      "text": "Each station shows a single 'next upgrade' target; no tech tree screen is required to understand progress.",
-     "status": "not_started",
-     "evidence": "none",
+     "status": "met",
+     "evidence": "PR #542: station gate tests, single next-upgrade target (HUB/f17/F31-RECEIPT.md)",
      "gap": "Unit test of the next-upgrade selection plus a controller UI capture per station.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No test references StationNextUpgrade or a next-upgrade readout.",
+     "note": "Landed: PR #542: station gate tests, single next-upgrade target (HUB/f17/F31-RECEIPT.md)",
      "audit_index": 3
     },
     {
      "text": "No automation: crops, smelting and cooking need the player's interaction (test).",
-     "status": "not_started",
-     "evidence": "partial: test_foundation_forge_units (manual refine ticket)",
+     "status": "met",
+     "evidence": "PR #542: test_homestead_no_automation 4/16 (HUB/f17/F31-RECEIPT.md)",
      "gap": "Unit test that no crop, smelt or cook progresses without a present tap. Engine smoke walks away mid-channel.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. The Forge's manual refine is unit-tested. There is no crop or cooking no-automation test and no offline or away test.",
+     "note": "Landed: PR #542: test_homestead_no_automation 4/16 (HUB/f17/F31-RECEIPT.md)",
      "audit_index": 4
     },
     {
      "text": "Co-op: buildings are world-owned; tiers and recipes are personal; a guest uses the host's stations at the host's tier and keeps what they craft.",
-     "status": "not_started",
-     "evidence": "none (smoke_net_shared_building covers generic pieces only)",
+     "status": "met",
+     "evidence": "PR #542: smoke_net_homestead_station_craft 2 peers, renders 37285031027/37289152116 (HUB/f17/f31-5-craft-2peer-r9)",
      "gap": "Peers:2 net smoke: guest crafts at the host station at host tier, keeps output, and personal progress is unchanged.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No two-peer station craft or tier test.",
+     "note": "Landed: PR #542: smoke_net_homestead_station_craft 2 peers, renders 37285031027/37289152116 (HUB/f17/f31-5-craft-2peer-r9)",
      "audit_index": 5
     },
     {
      "text": "Stations read as distinct objects at the normal camera (code-blind judge).",
-     "status": "not_started",
-     "evidence": "none",
+     "status": "met",
+     "evidence": "PR #542: code-blind judge r14 PASS (HUB/f17/f31-stations-r14/judge.md)",
      "gap": "Capture all six stations at the normal camera, then a code-blind judge.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No capture or judge of the stations exists.",
+     "note": "Landed: PR #542: code-blind judge r14 PASS (HUB/f17/f31-stations-r14/judge.md)",
      "audit_index": 6
     }
    ]
@@ -2142,10 +2142,10 @@
     },
     {
      "text": "Equipped gear shows on the creature as a trim or glow accent.",
-     "status": "in_progress",
-     "evidence": "gear.json feature_flags.visual_enabled=false; creature_gear_accent.gd(.gdshader)@b4e4897d5",
+     "status": "met",
+     "evidence": "PR #544 (7:43 PM CT 10-05): gear accent, code-blind PASS",
      "gap": "Connect the deployed-body accent mount and turn on visual_enabled. Then capture per-tier creatures at the normal camera and run a code-blind judge.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. The accent shader and subscriber exist, but the visual flag is off. The deployed-body mount is unconnected (F33 REPORT).",
+     "note": "Landed: PR #544 (7:43 PM CT 10-05): gear accent, code-blind PASS",
      "audit_index": 1
     },
     {
@@ -2191,10 +2191,10 @@
    "criteria": [
     {
      "text": "A forward-camp kit crafted at the Workbench places on valid ground in any biome with a bed, portable cookpot and field workbench.",
-     "status": "not_started",
-     "evidence": "tests/test_forward_camp.gd::test_one_camp_per_stable_character_per_biome (policy only); test_recipes.gd (kit recipe)",
+     "status": "met",
+     "evidence": "PR #544: forward camps place in all 4 realms (smoke_forward_camp 21/23/21/21); sea and shallows refuse",
      "gap": "Write the engine placement smoke the work order names, for each of the four biomes: valid/invalid ground and three pieces present. Optionally add a capture_forward_camp.gd frame plus a judge.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. Unit tests cover placement policy and the recipe. Nothing proves actual valid-ground placement or that the three pieces spawn in each biome.",
+     "note": "Landed: PR #544: forward camps place in all 4 realms (smoke_forward_camp 21/23/21/21); sea and shallows refuse",
      "audit_index": 0
     },
     {
@@ -2207,10 +2207,10 @@
     },
     {
      "text": "Resting recovers the team and saves; loadouts can be changed there.",
-     "status": "not_started",
-     "evidence": "none (R2-F34/source-audit.json lists F34-rest-loadout-save as pending)",
+     "status": "met",
+     "evidence": "PR #544: rest recovers and saves; loadouts open at a camp",
      "gap": "Add an engine smoke: injured team at camp → sleep → recovery and save → loadout edit → reload, with identities intact.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No test covers camp rest recovery, autosave, or the loadout edit path at a forward camp.",
+     "note": "Landed: PR #544: rest recovers and saves; loadouts open at a camp",
      "audit_index": 2
     },
     {
@@ -2223,10 +2223,10 @@
     },
     {
      "text": "Placement is host-authoritative and persists through reload and rejoin.",
-     "status": "not_started",
-     "evidence": "test_forward_camp.gd commit/replay/owner unit cases only",
+     "status": "met",
+     "evidence": "PR #544: smoke_net_forward_camp, host and guest place, host reload, guest rejoin: ALL CHECKS PASSED",
      "gap": "Add a `# peers: 2` net smoke: simultaneous place, replay, forged fields, then host save, reload and guest rejoin; expect one record and one debit.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No two-peer placement, reload or rejoin proof. The host save carrier for character_id/txn_id is still pending (R2-F34).",
+     "note": "Landed: PR #544: smoke_net_forward_camp, host and guest place, host reload, guest rejoin: ALL CHECKS PASSED",
      "audit_index": 4
     }
    ]
@@ -2679,10 +2679,10 @@
     },
     {
      "text": "Altar (levels, essence, loadout, traits, mastery), station, gear, research log and bounty screens exist, are controller-first and registered with input_owner.",
-     "status": "not_started",
-     "evidence": "tests/smoke_f42_system_screen.gd@b4e4897d5 (not in ci.yml)",
+     "status": "met",
+     "evidence": "PR #565 (batch 5c) merged 2026-10-06 6:34 PM CT: R5 research log + system screens + readability, R4 forward camp + F23#1 receipt, R3 F03#0 lures, R2 shared_boss staging fix",
      "gap": "Add a per-screen open/B-close/input_owner smoke for all five screens and wire it into ci.yml.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. Screens exist. The only smoke tests the base modal and is not wired into CI. No per-screen proof.",
+     "note": "Landed: PR #565 (batch 5c) merged 2026-10-06 6:34 PM CT: R5 research log + system screens + readability, R4 forward camp + F23#1 receipt, R3 F03#0 lures, R2 shared_boss staging fix",
      "audit_index": 1
     },
     {
@@ -2695,10 +2695,10 @@
     },
     {
      "text": "Every new screen passes a 1920×1080 and 1280×800 readability capture.",
-     "status": "not_started",
-     "evidence": "none",
+     "status": "met",
+     "evidence": "PR #565 (batch 5c) merged 2026-10-06 6:34 PM CT: R5 research log + system screens + readability, R4 forward camp + F23#1 receipt, R3 F03#0 lures, R2 shared_boss staging fix",
      "gap": "Capture all five screens at both resolutions, then a code-blind readability judge.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No captures.",
+     "note": "Landed: PR #565 (batch 5c) merged 2026-10-06 6:34 PM CT: R5 research log + system screens + readability, R4 forward camp + F23#1 receipt, R3 F03#0 lures, R2 shared_boss staging fix",
      "audit_index": 3
     }
    ]
@@ -2834,10 +2834,10 @@
     },
     {
      "text": "The journal screen shows tasks and progress; released and never-kept creatures count.",
-     "status": "not_started",
-     "evidence": "scripts/ui/research_log_panel.gd; unit test covers released/never-owned data only",
+     "status": "met",
+     "evidence": "PR #565 (batch 5c) merged 2026-10-06 6:34 PM CT: R5 research log + system screens + readability, R4 forward camp + F23#1 receipt, R3 F03#0 lures, R2 shared_boss staging fix",
      "gap": "Engine smoke that opens the research tab with released/never-kept species, plus a readability capture.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No engine test or capture of the journal screen. smoke_bounty_journal is a fixture and not in CI.",
+     "note": "Landed: PR #565 (batch 5c) merged 2026-10-06 6:34 PM CT: R5 research log + system screens + readability, R4 forward camp + F23#1 receipt, R3 F03#0 lures, R2 shared_boss staging fix",
      "audit_index": 2
     },
     {
