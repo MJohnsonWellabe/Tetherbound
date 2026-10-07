@@ -58,6 +58,15 @@ func _run() -> void:
 	if _player == null or _rig == null or house == null or halls.size() != 1 or terrain == null:
 		_finish_failure("missing real player/camera/house/Hall/Terrain")
 		return
+	var sequence := _world.get_node_or_null(^"SequenceDirector")
+	var door_gate := house.get("_door_gate_shape") as CollisionShape3D
+	print("F17 opening binding: director_house_matches=%s beat=%s gate_disabled=%s" % [
+		sequence != null and sequence.get("_house") == house,
+		str(sequence.get("_beat")) if sequence != null else "missing",
+		door_gate != null and door_gate.disabled])
+	if sequence == null or sequence.get("_house") != house or door_gate == null or not door_gate.disabled:
+		_finish_failure("actual post-opening director did not bind/open the mounted farmhouse door")
+		return
 	var terrain_data: Object = terrain.get("data")
 	if terrain_data == null or int(terrain_data.call("get_region_count")) != 64:
 		_finish_failure("production Terrain3D did not load all 64 mixed-generation regions")
