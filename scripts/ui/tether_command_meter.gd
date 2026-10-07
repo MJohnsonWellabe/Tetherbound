@@ -74,7 +74,8 @@ func present(snapshot: Dictionary, using_pad: bool) -> void:
 		if id == "tag_combo" and float(snapshot.get("combo_remaining_s", 0)) > 0:
 			suffix = " %.1fs" % float(snapshot.combo_remaining_s)
 		if id == "snare" and snapshot.get("wild_target") != true: suffix = " —"
-		var button_name := GLYPH.pad_button_name_for_verb(str(row.action)) if using_pad else GLYPH.key_name_for_action(str(row.action))
+		var action := COMMANDS.input_action(id)
+		var button_name := GLYPH.pad_button_name_for_action(action) if using_pad else GLYPH.key_name_for_action(action)
 		label.text = "%s %s%s %d" % [button_name, str(row.label), suffix, int(row.cost)]
 		var available := meter >= float(row.cost) and (snapshot.get("unlocked_commands", []) as Array).has(id)
 		if id == "tag_combo": available = available and float(snapshot.get("combo_remaining_s", 0)) > 0
