@@ -23,7 +23,9 @@ const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 const SETTLE_FRAMES := 300
 const MAX_ATTEMPTS := 25
 const TEST_DIR := "user://party_count_smoke_saves/"
-const TEST_SLOT := 2
+## The booted world and its retained receipts already belong to slot-0.
+## TEST_DIR isolates the files; the round trip must preserve that identity.
+const TEST_SLOT := 0
 ## Real spawns.json respawn delay plus headroom, the same budget
 ## `smoke_catching.gd::_a_fainted_creature_cannot_be_caught` waits.
 const RESPAWN_FRAME_BUDGET := 4500
