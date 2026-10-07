@@ -53,7 +53,7 @@
   "frames": [
     {
       "actual_position_ground_y": 6.23875951766968,
-      "band_display_name": "Island 5 \u00e2\u20ac\u201d Tidal Cradle",
+      "band_display_name": "Island 5 â€” Tidal Cradle",
       "band_id": "tidal_cradle",
       "biome_display_name": "Tidewake",
       "biome_id": "water",
@@ -90,7 +90,7 @@
       "camera_transform": {
         "basis_x": [
           -0.941633582115173,
-          -6.4498401286528e-08,
+          -6.4498401286528E-08,
           -0.336639702320099
         ],
         "basis_y": [
@@ -279,7 +279,7 @@
     },
     {
       "actual_position_ground_y": 6.23875951766968,
-      "band_display_name": "Island 5 \u00e2\u20ac\u201d Tidal Cradle",
+      "band_display_name": "Island 5 â€” Tidal Cradle",
       "band_id": "tidal_cradle",
       "biome_display_name": "Tidewake",
       "biome_id": "water",
@@ -316,7 +316,7 @@
       "camera_transform": {
         "basis_x": [
           -0.903876721858978,
-          6.15578926499438e-07,
+          6.15578926499438E-07,
           0.427793145179749
         ],
         "basis_y": [
@@ -505,7 +505,7 @@
     },
     {
       "actual_position_ground_y": 6.23875951766968,
-      "band_display_name": "Island 5 \u00e2\u20ac\u201d Tidal Cradle",
+      "band_display_name": "Island 5 â€” Tidal Cradle",
       "band_id": "tidal_cradle",
       "biome_display_name": "Tidewake",
       "biome_id": "water",
@@ -542,7 +542,7 @@
       "camera_transform": {
         "basis_x": [
           -0.427793145179749,
-          6.4363848650828e-07,
+          6.4363848650828E-07,
           -0.903876721858978
         ],
         "basis_y": [
@@ -731,7 +731,7 @@
     },
     {
       "actual_position_ground_y": 6.23875951766968,
-      "band_display_name": "Island 5 \u00e2\u20ac\u201d Tidal Cradle",
+      "band_display_name": "Island 5 â€” Tidal Cradle",
       "band_id": "tidal_cradle",
       "biome_display_name": "Tidewake",
       "biome_id": "water",
@@ -768,7 +768,7 @@
       "camera_transform": {
         "basis_x": [
           0.336641699075699,
-          6.64763149416103e-07,
+          6.64763149416103E-07,
           -0.941632866859436
         ],
         "basis_y": [
@@ -957,7 +957,7 @@
     },
     {
       "actual_position_ground_y": 6.23875951766968,
-      "band_display_name": "Island 5 \u00e2\u20ac\u201d Tidal Cradle",
+      "band_display_name": "Island 5 â€” Tidal Cradle",
       "band_id": "tidal_cradle",
       "biome_display_name": "Tidewake",
       "biome_id": "water",
@@ -994,7 +994,7 @@
       "camera_transform": {
         "basis_x": [
           0.941632628440857,
-          5.30694535427756e-07,
+          5.30694535427756E-07,
           0.336642146110535
         ],
         "basis_y": [
@@ -1183,7 +1183,7 @@
     },
     {
       "actual_position_ground_y": 6.23875951766968,
-      "band_display_name": "Island 5 \u00e2\u20ac\u201d Tidal Cradle",
+      "band_display_name": "Island 5 â€” Tidal Cradle",
       "band_id": "tidal_cradle",
       "biome_display_name": "Tidewake",
       "biome_id": "water",
@@ -1220,7 +1220,7 @@
       "camera_transform": {
         "basis_x": [
           -0.941632628440857,
-          5.21962363109196e-07,
+          5.21962363109196E-07,
           -0.336642354726791
         ],
         "basis_y": [
@@ -1409,7 +1409,7 @@
     },
     {
       "actual_position_ground_y": 6.23875951766968,
-      "band_display_name": "Island 5 \u00e2\u20ac\u201d Tidal Cradle",
+      "band_display_name": "Island 5 â€” Tidal Cradle",
       "band_id": "tidal_cradle",
       "biome_display_name": "Tidewake",
       "biome_id": "water",
@@ -1446,7 +1446,7 @@
       "camera_transform": {
         "basis_x": [
           -0.903876900672913,
-          5.23054040968418e-07,
+          5.23054040968418E-07,
           0.427792608737946
         ],
         "basis_y": [
@@ -1635,7 +1635,7 @@
     },
     {
       "actual_position_ground_y": 6.23875951766968,
-      "band_display_name": "Island 5 \u00e2\u20ac\u201d Tidal Cradle",
+      "band_display_name": "Island 5 â€” Tidal Cradle",
       "band_id": "tidal_cradle",
       "biome_display_name": "Tidewake",
       "biome_id": "water",
@@ -1672,7 +1672,7 @@
       "camera_transform": {
         "basis_x": [
           -0.427792638540268,
-          5.29250200997922e-07,
+          5.29250200997922E-07,
           -0.903876900672913
         ],
         "basis_y": [
@@ -1861,7 +1861,7 @@
     },
     {
       "actual_position_ground_y": 6.23875951766968,
-      "band_display_name": "Island 5 \u00e2\u20ac\u201d Tidal Cradle",
+      "band_display_name": "Island 5 â€” Tidal Cradle",
       "band_id": "tidal_cradle",
       "biome_display_name": "Tidewake",
       "biome_id": "water",
@@ -1898,7 +1898,7 @@
       "camera_transform": {
         "basis_x": [
           0.336642384529114,
-          5.29250144154503e-07,
+          5.29250144154503E-07,
           -0.941632568836212
         ],
         "basis_y": [
@@ -2087,7 +2087,7 @@
     },
     {
       "actual_position_ground_y": 6.23875951766968,
-      "band_display_name": "Island 5 \u00e2\u20ac\u201d Tidal Cradle",
+      "band_display_name": "Island 5 â€” Tidal Cradle",
       "band_id": "tidal_cradle",
       "biome_display_name": "Tidewake",
       "biome_id": "water",
@@ -2124,7 +2124,7 @@
       "camera_transform": {
         "basis_x": [
           0.941632568836212,
-          5.29250144154503e-07,
+          5.29250144154503E-07,
           0.336642384529114
         ],
         "basis_y": [
@@ -2331,7 +2331,8 @@
       "P2-116": "Tabletop legible at0/45/90/minus45, distinctiveworkbenchcuesweak; OPEN."
     },
     "additional": "Opaqueverticalsmoke atnight0/45/minus45. Strengths warm sand, cyan/navywater, coherentcloth/timber/stone, localwarmfirelight. Falls/docks/swim/fight/catch/UI/weather/motion unwitnessed.",
-    "score_scope": "No invented numeric scores; this10frame landscape subset cannot rescore all44Tidewake rows or closeF39#0."
+    "score_scope": "No invented numeric scores; this10frame landscape subset cannot rescore all44Tidewake rows or closeF39#0.",
+    "catalog_mapping_limit": "P2-011 owns named route destination identity (halls, arches, terraces), not trainer/tent penetration. Preserve the judge observation as an additional F39 clipping-matrix defect only; the shelter fix cannot close P2-011 or the full F39#5 matrix."
   },
   "scope": "Existing catalogue point corrected on main ac151d4d4c from old steep841.3839,1595.9279 to actualauthored556.092163,1367.178467. No terrain/slope/collision guard changes, no newfixture, no visual override/save/progression proof. Tenactualdifferentheading/daynight images; rawPNGs retained inrunartifact only.",
   "remaining": "Atleast200 totalrecapture and owningcatalogrescore; allunwitnessed swim/fight/catch/UI states remainexplicitlyunverified. NoREADY.",
