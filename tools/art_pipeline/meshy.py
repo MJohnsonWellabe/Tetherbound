@@ -373,6 +373,16 @@ def negative_for(species: str) -> str:
 ## authoritative over anything an image generator wrote onto a sheet, so the
 ## words that drive generation come from there rather than from reading a PNG.
 SPECIES_PROMPTS = {
+    # RD-28 / F29#3: the inspected F36 reference defines Staticub's adult form.
+    "stormursa": (
+        "Stormursa, Staticub grown into a massive quadruped Stormwood storm bear. "
+        "Preserve the reference's rounded ears, blue eyes, broad muzzle, short tail, "
+        "four separate articulated legs and broad planted paws. Muted slate-violet "
+        "fur, copper horn-like shoulder ridges, small translucent glass accents "
+        "and restrained white-violet lightning seams. Balanced neutral standing "
+        "pose, clear face and leg separations, clean connected deforming surface. "
+        "No floating sparks, haze, fused legs or decorative shells."
+    ),
     # Round 2 wording. The round-1 prompt said "oversized digging forepaws" and
     # "short tail with a stone tip" once each, and the blind critique of the
     # three round-1 meshes found exactly those two features missing: the best

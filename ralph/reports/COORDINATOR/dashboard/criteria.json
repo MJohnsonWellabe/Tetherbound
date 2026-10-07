@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-10-07T05:46:46.023267+00:00",
- "main_sha": "4bee3bb1b (PR #568)",
+ "generated_at": "2026-10-07T14:04:32.800517+00:00",
+ "main_sha": "b3ad69a6f (PR #571)",
  "batch4_sha": "next batch assembling",
  "rows": [
   {
@@ -1695,10 +1695,10 @@
     },
     {
      "text": "Low/Medium/High presets control volumetric fog, SSAO, SSIL, glow, shadow quality and draw distance; the setting persists.",
-     "status": "partial",
-     "evidence": "ralph/reports/VISUAL/lookdev/recheck-presets.md@8090a70ce; tests/smoke_graphics_settings.gd (not in CI)",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-d 1ac70327dc (READY #572 6038294610, 7:51 AM CT 10-07): smoke_graphics_settings 78 checks PASS run 37623256097; review APPROVE; not yet on main",
      "gap": "Re-run smoke_graphics_settings.gd -- --graphics-proof and the per-preset GPU range check. Consider wiring it into CI.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. tab_settings.gd (+103 lines), world_look.gd, art.json and project.godot changed since. The preset smoke is not CI-wired.",
+     "note": "Landed: Evidenced on tb/codex-d 1ac70327dc (READY #572 6038294610, 7:51 AM CT 10-07): smoke_graphics_settings 78 checks PASS run 37623256097; review APPROVE; not yet on main",
      "audit_index": 1
     },
     {
@@ -2329,10 +2329,10 @@
     },
     {
      "text": "The nightly Meshy cap (30 generations) is respected and logged with task ids.",
-     "status": "not_started",
-     "evidence": "tools/art_pipeline/f36_meshy_guard.py; meshy-night-ledger.json tasks=[]@b4e4897d5",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-e 2da1b79491 (READY #572 6038117986, 7:41 AM CT 10-07): Meshy ledger within the 30/night cap; review APPROVE; not yet on main",
      "gap": "Codex Meshy: run the batch through f36_meshy_guard.py and commit a ledger with the real task IDs.",
-     "note": "Relabelled 2026-10-04: agent work (Codex/lane), not waiting on the owner.",
+     "note": "Landed: Evidenced on tb/codex-e 2da1b79491 (READY #572 6038117986, 7:41 AM CT 10-07): Meshy ledger within the 30/night cap; review APPROVE; not yet on main",
      "audit_index": 3
     }
    ]
