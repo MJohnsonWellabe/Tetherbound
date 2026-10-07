@@ -1,0 +1,106 @@
+{
+  "model": "D:\\tetherbound\\codex-e\\assets_raw\\stormursa\\local-colour-a\\model.glb",
+  "bounds": {
+    "min": [
+      -0.2731,
+      -0.5004,
+      0.0
+    ],
+    "max": [
+      0.2731,
+      0.5004,
+      0.5848
+    ],
+    "size": [
+      0.5462,
+      1.0007,
+      0.5848
+    ],
+    "height_m": 0.5848,
+    "longest_axis_m": 1.0007,
+    "sits_on_origin": true,
+    "centred_on_origin": true
+  },
+  "meshes": [
+    {
+      "name": "mesh_node",
+      "vertices": 31739,
+      "edges": 56155,
+      "faces": 27184,
+      "triangles": 27184,
+      "tris": 27184,
+      "quads": 0,
+      "ngons": 0,
+      "quad_fraction": 0.0,
+      "non_manifold_edges": 30758,
+      "boundary_edges": 30758,
+      "loose_vertices": 0,
+      "duplicate_vertices": 20253,
+      "components": 4199,
+      "debris_components": 4183,
+      "flipped_normals": 8973,
+      "uv_layers": 1,
+      "stretched_uv_faces": 0,
+      "materials": [
+        "Stormursa_local_colour"
+      ],
+      "shape_keys": 0,
+      "vertex_groups": 15
+    }
+  ],
+  "materials": [
+    {
+      "name": "Stormursa_local_colour",
+      "textures": [
+        "Stormursa_local_albedo"
+      ],
+      "textured": true
+    }
+  ],
+  "armatures": [
+    {
+      "name": "Armature",
+      "bones": 15,
+      "bone_names": [
+        "root",
+        "pelvis",
+        "spine",
+        "neck",
+        "head",
+        "front_upper_l",
+        "front_lower_l",
+        "front_upper_r",
+        "front_lower_r",
+        "tail_1",
+        "tail_2",
+        "rear_upper_l",
+        "rear_lower_l",
+        "rear_upper_r",
+        "rear_lower_r"
+      ],
+      "roots": [
+        "root"
+      ],
+      "skinned_meshes": [
+        "mesh_node"
+      ],
+      "max_depth": 4
+    }
+  ],
+  "animations": [],
+  "totals": {
+    "meshes": 1,
+    "triangles": 27184,
+    "vertices": 31739,
+    "materials": 1,
+    "animations": 0
+  },
+  "problems": [
+    "mesh_node: 30758 non-manifold edges",
+    "mesh_node: 20253 duplicate vertices \u2014 will split under deformation",
+    "mesh_node: 4183 microscopic disconnected components",
+    "mesh_node: ~8973 inward-facing faces",
+    "mesh_node: 0% quads \u2014 generator triangle soup, poor for deformation",
+    "rigged but no animation clips"
+  ]
+}

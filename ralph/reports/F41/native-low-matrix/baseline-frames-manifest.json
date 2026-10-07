@@ -1,0 +1,1609 @@
+{
+  "preset": "Low",
+  "count": 320,
+  "renderer": "gl_compatibility",
+  "source": "348abfaebb1eb5083f830f7bcea1ebc03ff1798e",
+  "native_resolution": "1280x720",
+  "frames": [
+    {
+      "bytes": 150410,
+      "name": "forest_forward_day_released_break.jpg",
+      "sha256": "E7F9DEB8ADE45D82A69A6AC492E30DAC40AE89F1523CBBA40CA08964449DE699"
+    },
+    {
+      "bytes": 188038,
+      "name": "forest_forward_day_released_building.jpg",
+      "sha256": "24EFEDA277420678B19F1AF0D902A7DB11806F2F13891963F3FB7CA3DC86FDC2"
+    },
+    {
+      "bytes": 187951,
+      "name": "forest_forward_day_released_calm.jpg",
+      "sha256": "A53EAF5175E70498BE4127644FCB8923CA91B7EF4FBA580AF33C8F7387E07319"
+    },
+    {
+      "bytes": 188111,
+      "name": "forest_forward_day_released_fading.jpg",
+      "sha256": "19163B3D7EAD06F0F854770E467F1ADFF179C6CF50603BF912DBFAAECCAC2A61"
+    },
+    {
+      "bytes": 117411,
+      "name": "forest_forward_day_storm_break.jpg",
+      "sha256": "F6E3A9EAAE55488C756B9027A6F8230AABD9F47E451ADDCC3BF8457EA81686F8"
+    },
+    {
+      "bytes": 156040,
+      "name": "forest_forward_day_storm_building.jpg",
+      "sha256": "89B31897DCF65E55A289E62A74898FBC271E0D7FF4C9690850ED666A4FA9701B"
+    },
+    {
+      "bytes": 159960,
+      "name": "forest_forward_day_storm_calm.jpg",
+      "sha256": "66378CF61ABD9D054B0A2D9ABACACDEC77E9CBC417C31B3752AC0F1F5F8D50C8"
+    },
+    {
+      "bytes": 163693,
+      "name": "forest_forward_day_storm_fading.jpg",
+      "sha256": "3EB149A2FBCD5B3434CC4DD9250D77C2D392246B0DFF5467CF13A20F12BBC1DE"
+    },
+    {
+      "bytes": 151005,
+      "name": "forest_forward_night_released_break.jpg",
+      "sha256": "354110E1356AC2117CC0D1631EF60E1ED6FA28A040CCFAC4C14963A242EFBE17"
+    },
+    {
+      "bytes": 189495,
+      "name": "forest_forward_night_released_building.jpg",
+      "sha256": "7D2213BB66A50DA660C04F85FB0AD45C40149D746D1BF4B41052387594EE1FFF"
+    },
+    {
+      "bytes": 189168,
+      "name": "forest_forward_night_released_calm.jpg",
+      "sha256": "B59E2A0F14053A02FCF0B83D057C8FEE8378C0C45659E28038D1F73562673109"
+    },
+    {
+      "bytes": 188689,
+      "name": "forest_forward_night_released_fading.jpg",
+      "sha256": "C22923267F409C9C17F9C43C2E4964988286ED051312849250754C7E82A321E6"
+    },
+    {
+      "bytes": 119955,
+      "name": "forest_forward_night_storm_break.jpg",
+      "sha256": "3FCC29E22374DE09197C84BE30415DD46F7A7E2EA0BB07427DB81D120CB40D37"
+    },
+    {
+      "bytes": 155663,
+      "name": "forest_forward_night_storm_building.jpg",
+      "sha256": "FF99890B7546681BAB43FA32AAB4BACA0A51FC7B2921F7EBC513C1706A83C9BE"
+    },
+    {
+      "bytes": 159411,
+      "name": "forest_forward_night_storm_calm.jpg",
+      "sha256": "FAA71E5C92F64FB98AA7A4997A8C2F239A8D3BB8C209714CC8D855C7EFB86B6C"
+    },
+    {
+      "bytes": 160224,
+      "name": "forest_forward_night_storm_fading.jpg",
+      "sha256": "F7813FB89BAE25F771C4CB8DBEB8B21D11DAFE3BA7433CB6A5E5DC94F572B497"
+    },
+    {
+      "bytes": 149319,
+      "name": "forest_left_day_released_break.jpg",
+      "sha256": "E0A49A0FFF4DFADD22598C45581067CEE9109B92DDCEE36A53EA2FC11690F2B2"
+    },
+    {
+      "bytes": 188048,
+      "name": "forest_left_day_released_building.jpg",
+      "sha256": "36D9500D5000B151ABFB20E74E0984992438A6550A723F9A1AE148E73E88C951"
+    },
+    {
+      "bytes": 187973,
+      "name": "forest_left_day_released_calm.jpg",
+      "sha256": "F6B7B6A9DAAF79A0BD3EA64D3278D5B935920E37046C87632681FE2F305F6B57"
+    },
+    {
+      "bytes": 188246,
+      "name": "forest_left_day_released_fading.jpg",
+      "sha256": "DEEBCE8436E9F8BDF8DD5F42CB74FEF076B6E1A4BDB6A185A65057CBE3494B0D"
+    },
+    {
+      "bytes": 118042,
+      "name": "forest_left_day_storm_break.jpg",
+      "sha256": "235371DD9AC3F6E1850B41E3D4D03F63859D27F474DAFE1015CF93D84030E7D2"
+    },
+    {
+      "bytes": 156056,
+      "name": "forest_left_day_storm_building.jpg",
+      "sha256": "E5852C67E9A3DDB222790C2072F170C5954CE3683B23946D4C6AF4D3FB9F5784"
+    },
+    {
+      "bytes": 157423,
+      "name": "forest_left_day_storm_calm.jpg",
+      "sha256": "382B4EF8C0A3682989711BF0F31E865B9C84BAC772957CC8F5F101F17391BE4A"
+    },
+    {
+      "bytes": 158731,
+      "name": "forest_left_day_storm_fading.jpg",
+      "sha256": "1035F4FEAF47EA4277DC6709037FF57401873DF63A6970A583EAD3D177056B8E"
+    },
+    {
+      "bytes": 149063,
+      "name": "forest_left_night_released_break.jpg",
+      "sha256": "611401D38A2FCFEB30F0ADCC126D8A614FC98C21F4732F674BE40CA396AF98B4"
+    },
+    {
+      "bytes": 187948,
+      "name": "forest_left_night_released_building.jpg",
+      "sha256": "5C1ABF37178110EEF9174D7AB72AD4A5124ACAFBED7C2F099055E826F3B28D31"
+    },
+    {
+      "bytes": 187718,
+      "name": "forest_left_night_released_calm.jpg",
+      "sha256": "34ABB50CB87A0708DA3B5AFA6480B05D24E9A910AA9C6D3C82CDC1300F92AC87"
+    },
+    {
+      "bytes": 188013,
+      "name": "forest_left_night_released_fading.jpg",
+      "sha256": "BCC0434551F8C0DCDE8B2BAF124C49A747CB95E76202013C5C41B51687289E52"
+    },
+    {
+      "bytes": 119886,
+      "name": "forest_left_night_storm_break.jpg",
+      "sha256": "FA16FD4DFCD24CCD30510832D5D881322C8FAD191C4F09C6CA70FE8D32879E40"
+    },
+    {
+      "bytes": 155243,
+      "name": "forest_left_night_storm_building.jpg",
+      "sha256": "E2B9CD116F7FC6E365BCBA19A1B5026F0028154C984A2112B72C20A6AEC54C5C"
+    },
+    {
+      "bytes": 157098,
+      "name": "forest_left_night_storm_calm.jpg",
+      "sha256": "71084086368E4C11C585525BC774A43F220590B861B453F67747E53AD8F9F323"
+    },
+    {
+      "bytes": 157412,
+      "name": "forest_left_night_storm_fading.jpg",
+      "sha256": "84ABA46DCEA9B1D1881858D8758B976B04B83DB9E2F5235E84231616D7E32AC5"
+    },
+    {
+      "bytes": 147369,
+      "name": "forest_reverse_day_released_break.jpg",
+      "sha256": "7BD8D09386B86596240D49A00DB03A9F2A8C5CDE423028674DFA6E82E5D63348"
+    },
+    {
+      "bytes": 178845,
+      "name": "forest_reverse_day_released_building.jpg",
+      "sha256": "FBA54FA33FF82E7C62BFA951F369A3FF5EAF615E01971A581372F229A7BC47D0"
+    },
+    {
+      "bytes": 178592,
+      "name": "forest_reverse_day_released_calm.jpg",
+      "sha256": "D6053CD765D5F7408A19A951571E88DD8BE49D06B43F0C7454FCA999B98AE431"
+    },
+    {
+      "bytes": 178376,
+      "name": "forest_reverse_day_released_fading.jpg",
+      "sha256": "F961CD52F3951074E959E3B1BDEB776A979B327A87C6E20D3E9A3C21501B5E0F"
+    },
+    {
+      "bytes": 115678,
+      "name": "forest_reverse_day_storm_break.jpg",
+      "sha256": "5975568F82E2BFB98EA705BB152D3B76F087887372B7DDB5EAD5CF67D0B4F7A6"
+    },
+    {
+      "bytes": 149106,
+      "name": "forest_reverse_day_storm_building.jpg",
+      "sha256": "072A5E4E43EA7FC577C1A4ABD787F78E67C16CB679CBA3A7DAA7E7D27C4C7CA6"
+    },
+    {
+      "bytes": 147868,
+      "name": "forest_reverse_day_storm_calm.jpg",
+      "sha256": "B641D9D60224529EEB3A830E5718E43910F312EB1C71C57E52A78E59644360CF"
+    },
+    {
+      "bytes": 150422,
+      "name": "forest_reverse_day_storm_fading.jpg",
+      "sha256": "1FCE89C06B1D4B87ED78EF85737C4A70DB8CDEF824E60793DDC39C264AAE22AA"
+    },
+    {
+      "bytes": 147573,
+      "name": "forest_reverse_night_released_break.jpg",
+      "sha256": "7444715569F75CD3692DDF9717EF5C2F14D8095A8E8DAE793D5D3B19FA982551"
+    },
+    {
+      "bytes": 178006,
+      "name": "forest_reverse_night_released_building.jpg",
+      "sha256": "474EEDA9B3F39F148A1E5627FF1942473D3679CE6831B8EFEA3996018B730A71"
+    },
+    {
+      "bytes": 178067,
+      "name": "forest_reverse_night_released_calm.jpg",
+      "sha256": "906DC5627B602E5096600317C730A6215F456650D3C177B94AB6672322256BB4"
+    },
+    {
+      "bytes": 177863,
+      "name": "forest_reverse_night_released_fading.jpg",
+      "sha256": "E9941FE3290D1D27422BD2C81936E0CBAE31482DA9431742754BC4EE8064E42A"
+    },
+    {
+      "bytes": 114479,
+      "name": "forest_reverse_night_storm_break.jpg",
+      "sha256": "B5383A943D6BE019A8D398B77A69E6E72F00A3F4339427D04467D412DD85D94C"
+    },
+    {
+      "bytes": 149090,
+      "name": "forest_reverse_night_storm_building.jpg",
+      "sha256": "CD835FEFF07919A008D04E83C2975E0E701861A9B277DF9CD636B613F6F27210"
+    },
+    {
+      "bytes": 149241,
+      "name": "forest_reverse_night_storm_calm.jpg",
+      "sha256": "19A022B574EB18721599CA3F7822AF6B82CB12D0D96FD0B6790FF9816905FCCA"
+    },
+    {
+      "bytes": 151628,
+      "name": "forest_reverse_night_storm_fading.jpg",
+      "sha256": "A62AD9870423261186B6E5653C5031C522DC3D0E90EFE0B10C93A1A56B45A50A"
+    },
+    {
+      "bytes": 128956,
+      "name": "forest_right_day_released_break.jpg",
+      "sha256": "67E6ABC2B1C83A5F57523D21A884AAE67DA97D4EC2AD5CC5D270324072145999"
+    },
+    {
+      "bytes": 154828,
+      "name": "forest_right_day_released_building.jpg",
+      "sha256": "37C62BDC04C073CC1319FC9A619975C12E4D2E1F0E20077B2367F0EA0F48953F"
+    },
+    {
+      "bytes": 154684,
+      "name": "forest_right_day_released_calm.jpg",
+      "sha256": "42300BC679E1644A20F681840FD1E810C1D1ED1D9790115D70D62CF4322816EC"
+    },
+    {
+      "bytes": 154854,
+      "name": "forest_right_day_released_fading.jpg",
+      "sha256": "BD1C15B24A969D0D4FB69B0976EEB84135A6617C4DA73CBB1AD79B0429A034B2"
+    },
+    {
+      "bytes": 98826,
+      "name": "forest_right_day_storm_break.jpg",
+      "sha256": "A328CB714CBE61119C9C992A4D14B12F2A606260C15418C872FC0A9994EE2146"
+    },
+    {
+      "bytes": 129136,
+      "name": "forest_right_day_storm_building.jpg",
+      "sha256": "DBACBD47E3433189150E7E5697F2AA01E4880A83F71D0A83C7DDF8587A494CBC"
+    },
+    {
+      "bytes": 131514,
+      "name": "forest_right_day_storm_calm.jpg",
+      "sha256": "908DD0D79022B67A9C0764DCDE20CF9E31DB727C6CC7384D6275C937960333F9"
+    },
+    {
+      "bytes": 132319,
+      "name": "forest_right_day_storm_fading.jpg",
+      "sha256": "315E2DCDCE184050A4D849CD8EFA861731B95EF3CF5301DD7B49B7C76DF7272A"
+    },
+    {
+      "bytes": 129177,
+      "name": "forest_right_night_released_break.jpg",
+      "sha256": "CFE0B0E4392909AA28C1BBB0127135BDE28C62A243A9544C12682A7EFDA6C89C"
+    },
+    {
+      "bytes": 155102,
+      "name": "forest_right_night_released_building.jpg",
+      "sha256": "298254980F24ECFA5D05E58E14D4354BBCD1135AEA807D25D482A98FBCECA3BE"
+    },
+    {
+      "bytes": 154507,
+      "name": "forest_right_night_released_calm.jpg",
+      "sha256": "9AE5504594D990CCECB9B0883CF7BF770CE6B9142A8E519865AB1CEAC2478E95"
+    },
+    {
+      "bytes": 155152,
+      "name": "forest_right_night_released_fading.jpg",
+      "sha256": "FCCA31E37575521E65F3E3CF1ACE9CCB80965D00C814558B4D9627B2E3614604"
+    },
+    {
+      "bytes": 99903,
+      "name": "forest_right_night_storm_break.jpg",
+      "sha256": "821435C5A1E71F27D7511F348A3752D5309B2334704555F587EE1248BCBC3137"
+    },
+    {
+      "bytes": 132238,
+      "name": "forest_right_night_storm_building.jpg",
+      "sha256": "239B2F6B73DD7953DBD1CAB33F53EBD413B5DDC3AFC2246BCF7469D62B18A93C"
+    },
+    {
+      "bytes": 132336,
+      "name": "forest_right_night_storm_calm.jpg",
+      "sha256": "D8854A940F02F83E7FB441FF7B4D115688C4C3D81790C8A49817709F13561854"
+    },
+    {
+      "bytes": 133296,
+      "name": "forest_right_night_storm_fading.jpg",
+      "sha256": "DCBC89AFC9D267D57A5B431997B9BD4676DE00DCEF83D48331BD0832A2FC3466"
+    },
+    {
+      "bytes": 121016,
+      "name": "giant_forward_day_released_break.jpg",
+      "sha256": "2141FC20ACFDDE3CE2BCFDECCF0C019ACDAFEFED783074561AB224102464CD21"
+    },
+    {
+      "bytes": 148132,
+      "name": "giant_forward_day_released_building.jpg",
+      "sha256": "0045323DB935668660288BF57279787489AA687B1D5B021CF69ED0AF4F5F197C"
+    },
+    {
+      "bytes": 147959,
+      "name": "giant_forward_day_released_calm.jpg",
+      "sha256": "F51AD87CB038AAAD100CEF2DD67893823D696D0E4C5E5197D4C905EF7A449AA3"
+    },
+    {
+      "bytes": 148400,
+      "name": "giant_forward_day_released_fading.jpg",
+      "sha256": "8AB2FA170AE33F5FD3E8F9790AEEED79012AA3B615A84D86620419B557F3865E"
+    },
+    {
+      "bytes": 91678,
+      "name": "giant_forward_day_storm_break.jpg",
+      "sha256": "363A90FB7C9087AE7C41DEA12733E76CEA2EAA97BF0136CB92AC1EAE0D7F9AB9"
+    },
+    {
+      "bytes": 121119,
+      "name": "giant_forward_day_storm_building.jpg",
+      "sha256": "6FC797BB64CAE6097CECB8997B2B2EE962DF8F741EBDF01F10529283EABB4C1C"
+    },
+    {
+      "bytes": 124634,
+      "name": "giant_forward_day_storm_calm.jpg",
+      "sha256": "24C3010CDDC92555F18A74D6CF7FCFC5621A66208E29AD38A275907A2D3A2617"
+    },
+    {
+      "bytes": 124489,
+      "name": "giant_forward_day_storm_fading.jpg",
+      "sha256": "4A9D6AAC3E6E189CF12F0AA2DE2F17E72C6481EE61CE04878E70D3AC1B370E07"
+    },
+    {
+      "bytes": 120346,
+      "name": "giant_forward_night_released_break.jpg",
+      "sha256": "E38784661CA02368093B904A6FB2576F7CA80FCC152CAF1F3F079B8CA9B27676"
+    },
+    {
+      "bytes": 148440,
+      "name": "giant_forward_night_released_building.jpg",
+      "sha256": "F06B6C0F9C9A0227671AA512D1AACCFCBD56403C11AE58258125E0F8AC8BA4B5"
+    },
+    {
+      "bytes": 148626,
+      "name": "giant_forward_night_released_calm.jpg",
+      "sha256": "9A9F611003672705F1D8C12365A05FE33D0561FEA0E75B9F75DC786622988C19"
+    },
+    {
+      "bytes": 148347,
+      "name": "giant_forward_night_released_fading.jpg",
+      "sha256": "00AD6F5D6FC4A2C540D58C84F4523C8CA30B40F6C48CFFED2CD8D2F7E01E0F4C"
+    },
+    {
+      "bytes": 93198,
+      "name": "giant_forward_night_storm_break.jpg",
+      "sha256": "0C0AE9B70C3A7B6FEC9BD15BEC87458C47A9B8D8E6DFA6C04224615836ACB131"
+    },
+    {
+      "bytes": 121628,
+      "name": "giant_forward_night_storm_building.jpg",
+      "sha256": "9384960D5ECC2875821E505FED67150E9642C47F77B59053A44BF862B241A4C9"
+    },
+    {
+      "bytes": 124740,
+      "name": "giant_forward_night_storm_calm.jpg",
+      "sha256": "6780196FD717A1FFF0D9C4F4E39E0A0066CCF85FB13D6FB4AFBC5604C728F87E"
+    },
+    {
+      "bytes": 125555,
+      "name": "giant_forward_night_storm_fading.jpg",
+      "sha256": "60455BB93CD79462C5DFD5F00A28A242292FBB806B95415A1D08262434181612"
+    },
+    {
+      "bytes": 66148,
+      "name": "giant_left_day_released_break.jpg",
+      "sha256": "29B4EBEBDDAABD112B978E5666735CDEF192E774C8662EF64BB821517179C7A9"
+    },
+    {
+      "bytes": 75119,
+      "name": "giant_left_day_released_building.jpg",
+      "sha256": "6C5CF7A6054A457A9A4DD268F8124CC892E2CBDC7EE66E2F1F3511261E8820B5"
+    },
+    {
+      "bytes": 74257,
+      "name": "giant_left_day_released_calm.jpg",
+      "sha256": "A176982BDE9CC07E7196AFFDB0A5DB6193C67BD0F74A73930D63434DA81A3C4C"
+    },
+    {
+      "bytes": 75154,
+      "name": "giant_left_day_released_fading.jpg",
+      "sha256": "2BA0EB4536A779F766F8AB4CEBFCAC84932DDD8847450AC35298F2996E2599EF"
+    },
+    {
+      "bytes": 47879,
+      "name": "giant_left_day_storm_break.jpg",
+      "sha256": "18DF955D3292C1DAA2C9B36A80E647EEA0A4897DF9F5988774439473429BA1EF"
+    },
+    {
+      "bytes": 58335,
+      "name": "giant_left_day_storm_building.jpg",
+      "sha256": "9384341CFA0F61E83CA695DD27C26C32836B79DC39F6EA1DBD6AE94DFB5851F9"
+    },
+    {
+      "bytes": 60902,
+      "name": "giant_left_day_storm_calm.jpg",
+      "sha256": "86D60C02D92DDFB32C2417892DE97DC2D77493BF122EEA4A4AC7A766213FDB18"
+    },
+    {
+      "bytes": 62948,
+      "name": "giant_left_day_storm_fading.jpg",
+      "sha256": "A1FD11D79CE1968AFC3CE6FE7AAD4DF0B94C03199D66F2D948642E5132544AD3"
+    },
+    {
+      "bytes": 65828,
+      "name": "giant_left_night_released_break.jpg",
+      "sha256": "66BC5BA995623A197683FDFB20F9113E1D58F9FFC4339D30D65A18A62C747FD1"
+    },
+    {
+      "bytes": 75228,
+      "name": "giant_left_night_released_building.jpg",
+      "sha256": "DE74F58F7F9E2FAA6D2299D51D1787A092B79757553B68F9872CCA53A1CDD462"
+    },
+    {
+      "bytes": 74862,
+      "name": "giant_left_night_released_calm.jpg",
+      "sha256": "90B414D59B685C8C490C84F7966D0A86AA533D3DECB707EB0F620BA0970800BF"
+    },
+    {
+      "bytes": 74763,
+      "name": "giant_left_night_released_fading.jpg",
+      "sha256": "05C45820F689120DEBC97DA238F95E6089497E851582E064655EC72D603D7FD1"
+    },
+    {
+      "bytes": 47996,
+      "name": "giant_left_night_storm_break.jpg",
+      "sha256": "652CAE5E1B1362752453B28B413D578F6D6845B546154CD5930073914FDC8913"
+    },
+    {
+      "bytes": 57965,
+      "name": "giant_left_night_storm_building.jpg",
+      "sha256": "7685A23F62F29A6F2CDBEA9DADF8506ABD0B2947551A6CA8616AEBDE996CA380"
+    },
+    {
+      "bytes": 60428,
+      "name": "giant_left_night_storm_calm.jpg",
+      "sha256": "D6630E1A02095AFBEA1520ABC0A2720A9E451703237601B06AD59D89AECB4D0C"
+    },
+    {
+      "bytes": 61580,
+      "name": "giant_left_night_storm_fading.jpg",
+      "sha256": "DC633CDBAE6D42101D9DBB273C0A462778998E0DDDF15B3AD88154C1121BA664"
+    },
+    {
+      "bytes": 96427,
+      "name": "giant_reverse_day_released_break.jpg",
+      "sha256": "CEED73FDEBB4FB3E534F4E7AA606B315A8810BA0EAA2A089C2BD3B0D4AC8F2BA"
+    },
+    {
+      "bytes": 110076,
+      "name": "giant_reverse_day_released_building.jpg",
+      "sha256": "7E35C630590DA7600A82443247C4BFB2E6A9C24648F1813E6BAF442B2A5F89F2"
+    },
+    {
+      "bytes": 109731,
+      "name": "giant_reverse_day_released_calm.jpg",
+      "sha256": "DBCD209321A22928D013CB1F9C8BE8DFB81CFD8F3707D614EECFA471E8A1A130"
+    },
+    {
+      "bytes": 110059,
+      "name": "giant_reverse_day_released_fading.jpg",
+      "sha256": "12A8735FEFF9E844DBF344BAB0D2844EFCF719AB0F6C2ED6A67FE44CE7522D83"
+    },
+    {
+      "bytes": 66326,
+      "name": "giant_reverse_day_storm_break.jpg",
+      "sha256": "B331D594E15AE71A541A458CB24D40020EE9A744A2DDDCB7DE6A0F0B74944D76"
+    },
+    {
+      "bytes": 87967,
+      "name": "giant_reverse_day_storm_building.jpg",
+      "sha256": "6A994DF79C25ED3750B0DFF31A1CEF915D9DB88F0900F59A5EB463A6B7AE605A"
+    },
+    {
+      "bytes": 88718,
+      "name": "giant_reverse_day_storm_calm.jpg",
+      "sha256": "CB132B619B6D0147E560E93BB9A9ADE99D381F9D38416D4AAAFFCC5FCA649007"
+    },
+    {
+      "bytes": 90313,
+      "name": "giant_reverse_day_storm_fading.jpg",
+      "sha256": "949CDD2259524FB5EEAC5AF327D7630544D5D1A8E793D2A199314CB38CBB9FB8"
+    },
+    {
+      "bytes": 96676,
+      "name": "giant_reverse_night_released_break.jpg",
+      "sha256": "09C13E586F2D4E7BB36E7598576975EABD32CCEEFDEE1F32282E8EDAF581628F"
+    },
+    {
+      "bytes": 110639,
+      "name": "giant_reverse_night_released_building.jpg",
+      "sha256": "85952F2C0724AF3770918D917FC5F9CEF0AD2711E5156F08A04B298C4A67BF8F"
+    },
+    {
+      "bytes": 109801,
+      "name": "giant_reverse_night_released_calm.jpg",
+      "sha256": "CAB2DE17A7BC7162F9CEED05758C3B379C0DDFD278BA48458DFCE833938F64BB"
+    },
+    {
+      "bytes": 110105,
+      "name": "giant_reverse_night_released_fading.jpg",
+      "sha256": "0E1B7ED9DD154F1A984BEF8977378DF8FFF8F4FCA55291217A2954307E067943"
+    },
+    {
+      "bytes": 67343,
+      "name": "giant_reverse_night_storm_break.jpg",
+      "sha256": "1EEBAEBE1C8823E74CBB19D92C051012CB2AC5BA6220CA783399CD6EF534AFEA"
+    },
+    {
+      "bytes": 86383,
+      "name": "giant_reverse_night_storm_building.jpg",
+      "sha256": "BD086F7543775A98B4FC3850E54341FEFCC4994350B90574D81F8177BF3DDB97"
+    },
+    {
+      "bytes": 88972,
+      "name": "giant_reverse_night_storm_calm.jpg",
+      "sha256": "C397C4CA30F0935538B4E3498639A882DD00C8E5F09FFD2B769F2E49DCF7E626"
+    },
+    {
+      "bytes": 91909,
+      "name": "giant_reverse_night_storm_fading.jpg",
+      "sha256": "E5E1E94E4BB1CC6C63891DA21612960F303A19F736DBFD87F4B2C494CEED52FF"
+    },
+    {
+      "bytes": 111457,
+      "name": "giant_right_day_released_break.jpg",
+      "sha256": "80621B75588EFEC117AC2D7DFA2DDF20E2AD43F8024EEE8B597749FDDE787A3C"
+    },
+    {
+      "bytes": 142206,
+      "name": "giant_right_day_released_building.jpg",
+      "sha256": "5368D0C0C4F938A68B8500ABAF4F26BB340E208D450C5CC88D5AD72C02DE1387"
+    },
+    {
+      "bytes": 142772,
+      "name": "giant_right_day_released_calm.jpg",
+      "sha256": "B600AB448B87E8888278ECC9A20C163508DFA038EB17E2F9BFBA5AB0B8C87FDE"
+    },
+    {
+      "bytes": 140965,
+      "name": "giant_right_day_released_fading.jpg",
+      "sha256": "53D0E43B465B6E86A72D28C29C6FD12A82AB94E2BFA28C7F887153BB0FF26D49"
+    },
+    {
+      "bytes": 85502,
+      "name": "giant_right_day_storm_break.jpg",
+      "sha256": "6238B4FE109CC4C81B11CFB9CA26D02D26134DC38E7BA51BDADF97D7D14EFB9D"
+    },
+    {
+      "bytes": 113188,
+      "name": "giant_right_day_storm_building.jpg",
+      "sha256": "82D41A364B6C830106147EE2422A6E147A98F8078173CBF3FC6F594B8A0A31F3"
+    },
+    {
+      "bytes": 120221,
+      "name": "giant_right_day_storm_calm.jpg",
+      "sha256": "F8722266BD91A7CA297BAC19E71935018DCB4CDF53347AF5685DFEA09491AB5B"
+    },
+    {
+      "bytes": 119800,
+      "name": "giant_right_day_storm_fading.jpg",
+      "sha256": "21154BC37FCD8BF24D0E72EEEED4F2F2523497CB28717F1F0695E97343C9F7A3"
+    },
+    {
+      "bytes": 111884,
+      "name": "giant_right_night_released_break.jpg",
+      "sha256": "A240520FCFEF5A4A114810CB72C9190B9290A1D0D893FDDD69BAAD1A673A5A01"
+    },
+    {
+      "bytes": 140611,
+      "name": "giant_right_night_released_building.jpg",
+      "sha256": "86C9A3AAE09521F0BDC101AE9095D6ACD3377B2278339005A9F83414358FF551"
+    },
+    {
+      "bytes": 140653,
+      "name": "giant_right_night_released_calm.jpg",
+      "sha256": "43A90BC7A1D853AE6C37CDDE9DDA2995E3504778A31C299EF26E16A769E24924"
+    },
+    {
+      "bytes": 142769,
+      "name": "giant_right_night_released_fading.jpg",
+      "sha256": "06CC39839398B1138661B5DAC242C229BC32100B11B36C7A2E8C0AD8780AA22B"
+    },
+    {
+      "bytes": 84612,
+      "name": "giant_right_night_storm_break.jpg",
+      "sha256": "E0718A52C6F39B336D6E25CCAEDD4CD86052DB7F14EE355967FA7911D18AEC01"
+    },
+    {
+      "bytes": 115216,
+      "name": "giant_right_night_storm_building.jpg",
+      "sha256": "7533232742CF890C8B3A79E9ED0C9C7479471993EC5305B37C1D85CD3D1E4CF4"
+    },
+    {
+      "bytes": 121235,
+      "name": "giant_right_night_storm_calm.jpg",
+      "sha256": "897EF8A36C656EEFF02DDAC0C92C0F970B2CA3F13429E49D01CB1274D014A618"
+    },
+    {
+      "bytes": 116794,
+      "name": "giant_right_night_storm_fading.jpg",
+      "sha256": "2B21C45D14CC4EC1EE244EF9F5C9010B0CC4B0793E5ED6098B2EEB4FF3595B20"
+    },
+    {
+      "bytes": 277586,
+      "name": "glass_forward_day_released_break.jpg",
+      "sha256": "D9E27B4EA74B1384D0D77DEE17B24B29317D2425F83F45926E3F04FEA6B29617"
+    },
+    {
+      "bytes": 281195,
+      "name": "glass_forward_day_released_building.jpg",
+      "sha256": "CEBEE1C7E28C6EF5BA14376EBC1B22281018D691F63B4FC68A84A3EADAA9430D"
+    },
+    {
+      "bytes": 280593,
+      "name": "glass_forward_day_released_calm.jpg",
+      "sha256": "72C7B77DF729ADB83ACFD3D7110FFB9E008F04CD81E8363275D3E8B07E4DB106"
+    },
+    {
+      "bytes": 280796,
+      "name": "glass_forward_day_released_fading.jpg",
+      "sha256": "632EC3DD6FB468E435592FBD69F026816A86A8E73753C211E833BD5EB0BEC6A4"
+    },
+    {
+      "bytes": 205067,
+      "name": "glass_forward_day_storm_break.jpg",
+      "sha256": "9BECB305B3C8C56639FAC44BCB606D2F65E14FE37FC817C5E3A0C789E01706B7"
+    },
+    {
+      "bytes": 222517,
+      "name": "glass_forward_day_storm_building.jpg",
+      "sha256": "DFDA6A80BD71AA6105F312826B2204D1A53DDCA4C843C5175AD174A6AF12AC20"
+    },
+    {
+      "bytes": 239017,
+      "name": "glass_forward_day_storm_calm.jpg",
+      "sha256": "6A80F9B114EA2AA11638AA21F493D310D1C7A6B4F92381B7EECC0B383F6BD1E0"
+    },
+    {
+      "bytes": 242762,
+      "name": "glass_forward_day_storm_fading.jpg",
+      "sha256": "EA263DDFBEF953436374E1C450FD021F44ED1AD4D39D82E09F113E5DE56ACE48"
+    },
+    {
+      "bytes": 277967,
+      "name": "glass_forward_night_released_break.jpg",
+      "sha256": "3AF543CA935AF20A71E8F68AEBDAC6754711FFA75E90505C3E5383E25BA88D81"
+    },
+    {
+      "bytes": 280716,
+      "name": "glass_forward_night_released_building.jpg",
+      "sha256": "1D3D4B119F3572913133CCD5D81970582AAFFF9EFE31DCB6563980AFD0DBA1EE"
+    },
+    {
+      "bytes": 280804,
+      "name": "glass_forward_night_released_calm.jpg",
+      "sha256": "9932223918EF611A63D5EF35BBEAFCFC635727751A42CCE9312336CFA324F81C"
+    },
+    {
+      "bytes": 281122,
+      "name": "glass_forward_night_released_fading.jpg",
+      "sha256": "9819451F9F3D73368D756B3D7FEFD8575E6FCA5D683F1CC81DFEBA6D6AD968E5"
+    },
+    {
+      "bytes": 202591,
+      "name": "glass_forward_night_storm_break.jpg",
+      "sha256": "0EC8F45ED17DCF32036884AAD2DE3803599E0BECDF1E130C8BAE6BE0F76A072B"
+    },
+    {
+      "bytes": 221914,
+      "name": "glass_forward_night_storm_building.jpg",
+      "sha256": "2C46A138ADACDC91B43B103C93884D7E8D5FC47F4A8705A1E2F88F3E396C9994"
+    },
+    {
+      "bytes": 238581,
+      "name": "glass_forward_night_storm_calm.jpg",
+      "sha256": "50992492C0612AB74FEE1B6800FA3CEEB99BC15CDB74FE4B7CD74EF9405FF5DD"
+    },
+    {
+      "bytes": 241839,
+      "name": "glass_forward_night_storm_fading.jpg",
+      "sha256": "8AA8008834B61638221104964ED553B2D53D29E8BFA8C5534523FB9B840AC026"
+    },
+    {
+      "bytes": 249817,
+      "name": "glass_left_day_released_break.jpg",
+      "sha256": "947CE70A541D6D4B796A7288342106F382689B01ACE0BD8B423C5A1E35667C93"
+    },
+    {
+      "bytes": 253570,
+      "name": "glass_left_day_released_building.jpg",
+      "sha256": "90C02D6720173FBCF274C88B8A54688039033DE25C8AE7500BA3AF04D5D95DEF"
+    },
+    {
+      "bytes": 253599,
+      "name": "glass_left_day_released_calm.jpg",
+      "sha256": "800826D0B6C460AE84CB40881D7E8A44DC8919EE246258C529727E3AF4C82D2C"
+    },
+    {
+      "bytes": 254142,
+      "name": "glass_left_day_released_fading.jpg",
+      "sha256": "C30089766927E47339C1A07825C1CBB9CAD5D9A2DA2F7A770FD93AC0E038896C"
+    },
+    {
+      "bytes": 195195,
+      "name": "glass_left_day_storm_break.jpg",
+      "sha256": "CED9F255882561634FE4F6CDF4DC33FE0B50B5B539CC0E1AF759BA3262A6964B"
+    },
+    {
+      "bytes": 208534,
+      "name": "glass_left_day_storm_building.jpg",
+      "sha256": "D3C73DE88F57C3615466E456304F029D5D212552801A0FDFC1D8CB7D86A2BC50"
+    },
+    {
+      "bytes": 219463,
+      "name": "glass_left_day_storm_calm.jpg",
+      "sha256": "2B19293F0FE00BDAE1ECB57865D28DC3B3FCB4381624F833D9594478D0F4438D"
+    },
+    {
+      "bytes": 226881,
+      "name": "glass_left_day_storm_fading.jpg",
+      "sha256": "35981F6098FA83FF983EC8CC9A7A3579F27A47739A7DC55B7AC4DE2DF4C19DEA"
+    },
+    {
+      "bytes": 250404,
+      "name": "glass_left_night_released_break.jpg",
+      "sha256": "DB6754535E7A3F7EA31812F3AFE3BBE97402C3B42374E3F93BB5FE7BFAA1ED05"
+    },
+    {
+      "bytes": 255434,
+      "name": "glass_left_night_released_building.jpg",
+      "sha256": "9CA2F339D7F90ACAB67512D3F9EA9AEA6B0843BF2269F016270DFA8D241A661D"
+    },
+    {
+      "bytes": 254851,
+      "name": "glass_left_night_released_calm.jpg",
+      "sha256": "E29AA6F40831BF2045E9D5BA2138C6B5D643382EA81409104159226524D647DF"
+    },
+    {
+      "bytes": 254186,
+      "name": "glass_left_night_released_fading.jpg",
+      "sha256": "0012006C4CC1CBE34BC295CD4331FD4D49412F7B0363AAAE0391D370CCC126DE"
+    },
+    {
+      "bytes": 194542,
+      "name": "glass_left_night_storm_break.jpg",
+      "sha256": "271EE2AE295113CA95EC97DAB5EF2837AC09E9819A249F55D8DB9F65B61547D0"
+    },
+    {
+      "bytes": 209871,
+      "name": "glass_left_night_storm_building.jpg",
+      "sha256": "16EB9A34A7EE4ED2DF474703B82FF11AE898AD0317D92F84888A773D003788D1"
+    },
+    {
+      "bytes": 219872,
+      "name": "glass_left_night_storm_calm.jpg",
+      "sha256": "BC9DA80481C040E7BA141C9D37B6252E66B91269405C7A27A84D8D002A83E54D"
+    },
+    {
+      "bytes": 226564,
+      "name": "glass_left_night_storm_fading.jpg",
+      "sha256": "C23EE82FBF54EECD1574F0A7B013FD2BDFCDA83A4C1DF6910DAE27D7C766115B"
+    },
+    {
+      "bytes": 263597,
+      "name": "glass_reverse_day_released_break.jpg",
+      "sha256": "38F3466F8002FAAAECBE33C7A7B99352456427790BA55DA75D52630763C08227"
+    },
+    {
+      "bytes": 275569,
+      "name": "glass_reverse_day_released_building.jpg",
+      "sha256": "E90023B3D2E0653AAB1A582C5E8427049C396AC98F67CDA9F4A1AE3EBFF91938"
+    },
+    {
+      "bytes": 274115,
+      "name": "glass_reverse_day_released_calm.jpg",
+      "sha256": "AD1B260EA55BA22A3844CE4A8541F1D53CD3ECD41AFA7176EE9953F156F2FD2D"
+    },
+    {
+      "bytes": 275351,
+      "name": "glass_reverse_day_released_fading.jpg",
+      "sha256": "B5C666330BB11C211FF8607B3064CF91A8EC176792736FEBBC2941D3941F1C9D"
+    },
+    {
+      "bytes": 202356,
+      "name": "glass_reverse_day_storm_break.jpg",
+      "sha256": "1A0C5701B01B402E78332EA8EE61962FB9660E5A6FC264344F9AACDEB29AA3C9"
+    },
+    {
+      "bytes": 225598,
+      "name": "glass_reverse_day_storm_building.jpg",
+      "sha256": "CA8A85D79C1C35C6E102E6A54ACB203778A49A97928C5F0075878ACD25568A32"
+    },
+    {
+      "bytes": 238026,
+      "name": "glass_reverse_day_storm_calm.jpg",
+      "sha256": "2BD6E4C9C174E38F09599CBC6441F52483E71C4AECCF6D359CB4B6078BB31025"
+    },
+    {
+      "bytes": 239968,
+      "name": "glass_reverse_day_storm_fading.jpg",
+      "sha256": "F5AE0C9CD4622CC46EB9E6089539ABAB2155B283C30B021182D693D641E55C4E"
+    },
+    {
+      "bytes": 262068,
+      "name": "glass_reverse_night_released_break.jpg",
+      "sha256": "DAA6732544087951A342FEF3A31D4917DDA83B8032AC40D1436217588DDD1A1B"
+    },
+    {
+      "bytes": 275501,
+      "name": "glass_reverse_night_released_building.jpg",
+      "sha256": "A4B2C6F59171AC466E6AEC06556A532DE3C54574B560B21974AFF4E74390E635"
+    },
+    {
+      "bytes": 276508,
+      "name": "glass_reverse_night_released_calm.jpg",
+      "sha256": "88C620659BC6828D3B4A9A79856CC1DCEE8F8FEA4A4FB5B9FC41509292EF77E9"
+    },
+    {
+      "bytes": 274913,
+      "name": "glass_reverse_night_released_fading.jpg",
+      "sha256": "1FE7AF0131D4BBC6D62316428176A6A32F46B7A7DFDA57D290F4F02CBAC8EEB0"
+    },
+    {
+      "bytes": 203877,
+      "name": "glass_reverse_night_storm_break.jpg",
+      "sha256": "48B909A0E4C79641E6866E495E2A7E9E3CADF57820359AF72D83E0B705AD7D32"
+    },
+    {
+      "bytes": 226237,
+      "name": "glass_reverse_night_storm_building.jpg",
+      "sha256": "0ADECB97F29E3242A3F7D5E77D859C6453C3EB7C8144FCC7D638F3FB6DCC8CFD"
+    },
+    {
+      "bytes": 238138,
+      "name": "glass_reverse_night_storm_calm.jpg",
+      "sha256": "F7E1E498C4E4CB3EA697E404244D3136A382F4545A6E466852C85BAA6A365A95"
+    },
+    {
+      "bytes": 243718,
+      "name": "glass_reverse_night_storm_fading.jpg",
+      "sha256": "A89BFD95AE1643871C6466C918127BBC9EBDEA8CF7F8FFE9DFDA401C05925C4E"
+    },
+    {
+      "bytes": 270996,
+      "name": "glass_right_day_released_break.jpg",
+      "sha256": "747B640FB17A84B5199F573224FB6BDD0E3F4ED32AEC2E863130DCB410616CEB"
+    },
+    {
+      "bytes": 280412,
+      "name": "glass_right_day_released_building.jpg",
+      "sha256": "4C16C0C9803BA05B7042BEBA7D01D84D4258E5F1823627AE3B681443AD9DDB7D"
+    },
+    {
+      "bytes": 280259,
+      "name": "glass_right_day_released_calm.jpg",
+      "sha256": "5012234F711C2E0BD12D2AB9192A338BB9696209E36911239E8A351FE62CFA37"
+    },
+    {
+      "bytes": 280750,
+      "name": "glass_right_day_released_fading.jpg",
+      "sha256": "3CE796469B858CA6474FDDCA5B05A9E15C50A099B0C761D24ED27119F1040943"
+    },
+    {
+      "bytes": 200791,
+      "name": "glass_right_day_storm_break.jpg",
+      "sha256": "266C1EE30D58DB4AF32FCEA59EBC55846BCE0B1650A11BDAC4DE2E529EDFF812"
+    },
+    {
+      "bytes": 225414,
+      "name": "glass_right_day_storm_building.jpg",
+      "sha256": "5F450D9158354B20FF9440DF4C472493FA2FEEDB5B4DAA32861E68D1798F20BE"
+    },
+    {
+      "bytes": 239757,
+      "name": "glass_right_day_storm_calm.jpg",
+      "sha256": "5FBA8BD1957AD0ECE799F47EAE5EE4EB0C01FC4B18C7D9321415FFEB0A730D32"
+    },
+    {
+      "bytes": 239155,
+      "name": "glass_right_day_storm_fading.jpg",
+      "sha256": "791EA77AAB43F30CB374DD07163322C64EE0EDBBE3C096A229AF0E270E8347FD"
+    },
+    {
+      "bytes": 270846,
+      "name": "glass_right_night_released_break.jpg",
+      "sha256": "DA9405AF254313296DAFFAEFA8288233705681A429A11058B193EA32A8AAAC05"
+    },
+    {
+      "bytes": 280933,
+      "name": "glass_right_night_released_building.jpg",
+      "sha256": "2979928ED30FD7644879D28ECCC26C7D55528CF899E1CCAAAF39C4933B949795"
+    },
+    {
+      "bytes": 280643,
+      "name": "glass_right_night_released_calm.jpg",
+      "sha256": "DE534BFB408FEB0B9FBCFB0538FECEF036DBCB8C99F5F81D3C7E8682E4EEB74C"
+    },
+    {
+      "bytes": 280968,
+      "name": "glass_right_night_released_fading.jpg",
+      "sha256": "098946B32AF229ACA695EAB9DBB11BDEE74D6B71D38D77B2A37F6FB15A9C4A46"
+    },
+    {
+      "bytes": 198907,
+      "name": "glass_right_night_storm_break.jpg",
+      "sha256": "47F3B721D1C79EE13A16A2149536574EBC2502DADC8D7B14F717710277511BBB"
+    },
+    {
+      "bytes": 225254,
+      "name": "glass_right_night_storm_building.jpg",
+      "sha256": "6CE06A1879B0F2F714F564FE9239BC96E958352DFDEBB79A621BF0950365F07F"
+    },
+    {
+      "bytes": 238936,
+      "name": "glass_right_night_storm_calm.jpg",
+      "sha256": "81C0FD4D765E203FAC9919D66947229F44666C3FE182AF8A10168326CEFD7787"
+    },
+    {
+      "bytes": 242454,
+      "name": "glass_right_night_storm_fading.jpg",
+      "sha256": "39AA333D5195CC7C35F36D127F5EAFF555E6AECB0C34635E8624FFF34738A54A"
+    },
+    {
+      "bytes": 239469,
+      "name": "rod_line_forward_day_released_break.jpg",
+      "sha256": "DD40560EB74936313AD43C2C230FC52C6F4ED66C7AC03E23B0FEF469D6C4A2AC"
+    },
+    {
+      "bytes": 241436,
+      "name": "rod_line_forward_day_released_building.jpg",
+      "sha256": "254759BB0F03A8BB5A89366C1D895E3010E5A1130CEBC233F853A2ABD03FFAC0"
+    },
+    {
+      "bytes": 240955,
+      "name": "rod_line_forward_day_released_calm.jpg",
+      "sha256": "453F36C32C0ACF4B2D8A1C472B5765C29FAA4B4E3123C0161CD00D395F481879"
+    },
+    {
+      "bytes": 240807,
+      "name": "rod_line_forward_day_released_fading.jpg",
+      "sha256": "E0B054F657F53A35FEA30B69DD977748300839F49EAC2B26373215230C0199D0"
+    },
+    {
+      "bytes": 188205,
+      "name": "rod_line_forward_day_storm_break.jpg",
+      "sha256": "DC7C446EAD98E2728B86A8D78D973DAB143FBD0B811DFA2CDCD15C6284946977"
+    },
+    {
+      "bytes": 192298,
+      "name": "rod_line_forward_day_storm_building.jpg",
+      "sha256": "9965C684B1C5D4C10F48BB5C9C9F48D10C9E5F7CFD41393323FE51B6680E4ACF"
+    },
+    {
+      "bytes": 207957,
+      "name": "rod_line_forward_day_storm_calm.jpg",
+      "sha256": "E236E67FCDFB51A9344F24DDA78F03BCB8E495C8DE5D6DFB1927217B6E88E288"
+    },
+    {
+      "bytes": 214651,
+      "name": "rod_line_forward_day_storm_fading.jpg",
+      "sha256": "F585E5389EC8BAC24D3689C5AABC36E8D0ED23153451A2B9AE353676E3BD3401"
+    },
+    {
+      "bytes": 239889,
+      "name": "rod_line_forward_night_released_break.jpg",
+      "sha256": "9D7B19E0EC7C82DADE934316962B48368B4EDC540CE4E7F2B4065E30EEBAFCD8"
+    },
+    {
+      "bytes": 241129,
+      "name": "rod_line_forward_night_released_building.jpg",
+      "sha256": "D005DDA856CA30177415E738D6BB9E95E62A9C27B0259B2F6B889A8D00ADF6C8"
+    },
+    {
+      "bytes": 240475,
+      "name": "rod_line_forward_night_released_calm.jpg",
+      "sha256": "DEE801956A4DF3244CDE66F1EB4139AE9F777040FBF7E14C0D39E55CBCE3FEF5"
+    },
+    {
+      "bytes": 241283,
+      "name": "rod_line_forward_night_released_fading.jpg",
+      "sha256": "2BB960D7F428D7E38B8CD8AEB6C7DA9C0236964655AA8D10135CDADAC5253FCA"
+    },
+    {
+      "bytes": 189365,
+      "name": "rod_line_forward_night_storm_break.jpg",
+      "sha256": "2CB8D6D601A0CE4E4F10FDCFDD17F0DC0AF01A70698DC960390BF1019B2FAA1B"
+    },
+    {
+      "bytes": 194162,
+      "name": "rod_line_forward_night_storm_building.jpg",
+      "sha256": "7BB9DFF5EC46B32E2D66C8A5E578A322DC95D7211006AB6325EB32B20DB07F43"
+    },
+    {
+      "bytes": 207592,
+      "name": "rod_line_forward_night_storm_calm.jpg",
+      "sha256": "06BCF955B06B1F4E95BFA81DAC2885F7A37A755BFB067011AE5571C4CF3CE5D4"
+    },
+    {
+      "bytes": 210572,
+      "name": "rod_line_forward_night_storm_fading.jpg",
+      "sha256": "44C70827FE809B8B17049BB8D92CBA316D43A196011447A44BB2804172D64E64"
+    },
+    {
+      "bytes": 233587,
+      "name": "rod_line_left_day_released_break.jpg",
+      "sha256": "2219BAF2EB7C2FD4CD00D8C49CD228DA600F59A87C25938C65F0AAED4BFAD451"
+    },
+    {
+      "bytes": 233159,
+      "name": "rod_line_left_day_released_building.jpg",
+      "sha256": "01B68CE4667CE75B3C00737C940BEDD88380383C44DE4DC193820199952D851F"
+    },
+    {
+      "bytes": 233591,
+      "name": "rod_line_left_day_released_calm.jpg",
+      "sha256": "536DE62F6399CEE704B64D394EBB111EA69CDA7BF1F2CB8915D6C2EC6741884C"
+    },
+    {
+      "bytes": 233573,
+      "name": "rod_line_left_day_released_fading.jpg",
+      "sha256": "D72374AE2DF7C50A0A4367B1675B19BA0AA9B6C14E3180F45E08FC24B265EE22"
+    },
+    {
+      "bytes": 185709,
+      "name": "rod_line_left_day_storm_break.jpg",
+      "sha256": "F306FF7F498A58ECC2467BC9486533EDA6EB66E223D6D7978961735CF821A94E"
+    },
+    {
+      "bytes": 186493,
+      "name": "rod_line_left_day_storm_building.jpg",
+      "sha256": "7D67D8168B44A467B35E04779B0E76A24D228EE704C487BB5931F9525DE8CE31"
+    },
+    {
+      "bytes": 198271,
+      "name": "rod_line_left_day_storm_calm.jpg",
+      "sha256": "11C0C6D3BED33615F4DD2FB90BEB5B0C63A1B6862F592C1EAB16B4E83F7462FE"
+    },
+    {
+      "bytes": 199599,
+      "name": "rod_line_left_day_storm_fading.jpg",
+      "sha256": "DB4D96746AD0D12DA0B880BF8B76CF189E48C1F4D74FE70FC6E0051B321DCC1B"
+    },
+    {
+      "bytes": 233706,
+      "name": "rod_line_left_night_released_break.jpg",
+      "sha256": "CE1D5CE14B894CEA988B1B180E99457A95F0D6E9EDC6B0D41E51F92AA0C9D03A"
+    },
+    {
+      "bytes": 233226,
+      "name": "rod_line_left_night_released_building.jpg",
+      "sha256": "DBDBAB4EEA718DA2D95C97B17C1C75201966072278740E0C970EFFBAD141836F"
+    },
+    {
+      "bytes": 233384,
+      "name": "rod_line_left_night_released_calm.jpg",
+      "sha256": "EA276E36A83BA4B0AEAD4C3AFAF9501177580B79375A8D02F4D55BA2C6490D2C"
+    },
+    {
+      "bytes": 233988,
+      "name": "rod_line_left_night_released_fading.jpg",
+      "sha256": "8DBCC9D219859D951E33976C393FBE1C965A4984DE81ECC066948F0716959357"
+    },
+    {
+      "bytes": 186697,
+      "name": "rod_line_left_night_storm_break.jpg",
+      "sha256": "90B06B253D1F5EE361FA04143D221BB367C9FB1F555FDC325FB4098B5E8DE5A9"
+    },
+    {
+      "bytes": 186065,
+      "name": "rod_line_left_night_storm_building.jpg",
+      "sha256": "8B75671D6997E377BDC0EBC65F3859A9265DA7E3A0AA14BA631CDAE370DF36AB"
+    },
+    {
+      "bytes": 196658,
+      "name": "rod_line_left_night_storm_calm.jpg",
+      "sha256": "C309E4E97663700C988B5171B832B14FBEE0FFBDE1E310874810490DA0736078"
+    },
+    {
+      "bytes": 203279,
+      "name": "rod_line_left_night_storm_fading.jpg",
+      "sha256": "5C5A15D21292063C0E9F79CBDA7531A1D486935543E3E36AAA445D3AA8C5EE12"
+    },
+    {
+      "bytes": 224113,
+      "name": "rod_line_reverse_day_released_break.jpg",
+      "sha256": "8041FAADC6F706E064E7C3251B81D84721C4BABD6EAEA09A4460298CBB61412A"
+    },
+    {
+      "bytes": 227014,
+      "name": "rod_line_reverse_day_released_building.jpg",
+      "sha256": "B9E495D9B979D3FC0E9A682BE38D41D14714E6B4348A337BB56A7BD3157FFCD1"
+    },
+    {
+      "bytes": 227092,
+      "name": "rod_line_reverse_day_released_calm.jpg",
+      "sha256": "95DE3EC116122F1BC6CFD958A29F0B37D9AE34855FBA58ADAF4B9367A45813EF"
+    },
+    {
+      "bytes": 227319,
+      "name": "rod_line_reverse_day_released_fading.jpg",
+      "sha256": "23C8EB042EF83759376E1E89F83BBDA2AE72BCBF40359CE00729C792A903BA29"
+    },
+    {
+      "bytes": 188749,
+      "name": "rod_line_reverse_day_storm_break.jpg",
+      "sha256": "BE92F6D84D89E9E19D96322EEB98885A3DF6BAF8DF8281861DD3A1457820E57C"
+    },
+    {
+      "bytes": 185201,
+      "name": "rod_line_reverse_day_storm_building.jpg",
+      "sha256": "CD536BE0144AB65ACA4E5B77D4D40984AF08E6BF8B975B57C5F93F2F62B6C637"
+    },
+    {
+      "bytes": 192411,
+      "name": "rod_line_reverse_day_storm_calm.jpg",
+      "sha256": "858CB2AA955B894D156A8CC3B8080AB382917BA0D37F8A22167644414A6A0F5D"
+    },
+    {
+      "bytes": 203348,
+      "name": "rod_line_reverse_day_storm_fading.jpg",
+      "sha256": "4CA3BC4E12166D121A27D7658D887C426CD2CFDA82257BBD927E01AC8E7E3B8E"
+    },
+    {
+      "bytes": 225064,
+      "name": "rod_line_reverse_night_released_break.jpg",
+      "sha256": "23D5F7637087F1DBD9FF8003D706BA9D5825A3F90F010514B2265B4754329B51"
+    },
+    {
+      "bytes": 228206,
+      "name": "rod_line_reverse_night_released_building.jpg",
+      "sha256": "9F0258AAD3E1C339F7AAAC19C0A7CFC493CF02ECD66440CE62D00AACCD01FAEB"
+    },
+    {
+      "bytes": 227370,
+      "name": "rod_line_reverse_night_released_calm.jpg",
+      "sha256": "236ACC6BF7E51759A7FC065B6973A38711332DE9FA49BF1465EED8A7AB57754E"
+    },
+    {
+      "bytes": 227434,
+      "name": "rod_line_reverse_night_released_fading.jpg",
+      "sha256": "F8DF4EC473CEA6E14BA30C1B1C5758272EE8EC8A88AF92AF5786EA8CE1232831"
+    },
+    {
+      "bytes": 188051,
+      "name": "rod_line_reverse_night_storm_break.jpg",
+      "sha256": "C0E6E19704FC4A605AD7331D7BFAE0B5B254D449E91ED83D919DB55D5A5822A5"
+    },
+    {
+      "bytes": 186153,
+      "name": "rod_line_reverse_night_storm_building.jpg",
+      "sha256": "F3C578926485359866F36CA5A2B537FCCE07784699295F9B1298C90268F75B0A"
+    },
+    {
+      "bytes": 193351,
+      "name": "rod_line_reverse_night_storm_calm.jpg",
+      "sha256": "30C76F67413FA35EB343EEA7028EE5FB7111E7AB661F3F9AA97CADB220D215D1"
+    },
+    {
+      "bytes": 204122,
+      "name": "rod_line_reverse_night_storm_fading.jpg",
+      "sha256": "9935277C166E33F47C8E684402BD256CA8DE9C7D8CB01CA295C8E656F3202627"
+    },
+    {
+      "bytes": 213556,
+      "name": "rod_line_right_day_released_break.jpg",
+      "sha256": "1C82466231A5C468A3349417DE5B2BE30485524FD2A4717DF522BCCCA323EA6F"
+    },
+    {
+      "bytes": 216066,
+      "name": "rod_line_right_day_released_building.jpg",
+      "sha256": "2604871CB253558D3F4FD70A4DCAAB91683D60C4E25FD925B8434742FFE98D21"
+    },
+    {
+      "bytes": 216098,
+      "name": "rod_line_right_day_released_calm.jpg",
+      "sha256": "3628EBB65CB9923F2F2F738ADAA3FFC1070657438CDFA779A46B3A672A73667C"
+    },
+    {
+      "bytes": 216399,
+      "name": "rod_line_right_day_released_fading.jpg",
+      "sha256": "B31BE5ABE5897D6725E6C1DDBA915A99BD05DA4053BAA2615C1EEBF632866632"
+    },
+    {
+      "bytes": 171279,
+      "name": "rod_line_right_day_storm_break.jpg",
+      "sha256": "25B4EF5416C95ECF54779DE3019209AB2D25E896E2DEA474BD585968EDD1D273"
+    },
+    {
+      "bytes": 176281,
+      "name": "rod_line_right_day_storm_building.jpg",
+      "sha256": "0FCA00B548598911B7F1C31A59C2D5E7EDD526E0BDF52DC894440FF447D519AD"
+    },
+    {
+      "bytes": 184886,
+      "name": "rod_line_right_day_storm_calm.jpg",
+      "sha256": "AE5EDB0BB872F2FC9E5B7E6452161851AFA3B19A760C7D1A67074943267845A5"
+    },
+    {
+      "bytes": 183832,
+      "name": "rod_line_right_day_storm_fading.jpg",
+      "sha256": "72DAFAD72F4F1E394ADDD34B7BB4B51F10D5369EEC3FE1FF088A5351E3E6C13D"
+    },
+    {
+      "bytes": 213216,
+      "name": "rod_line_right_night_released_break.jpg",
+      "sha256": "80AD93853335A0E3381564F8D7C266F5A8C56364BCC71B40770402C9A436C7B4"
+    },
+    {
+      "bytes": 216074,
+      "name": "rod_line_right_night_released_building.jpg",
+      "sha256": "464ED9C043845C908B84732867C15338CAB661889907CE5EFB72FD5BC21937DA"
+    },
+    {
+      "bytes": 215919,
+      "name": "rod_line_right_night_released_calm.jpg",
+      "sha256": "6DB576C44EC773E2442B454B27552D8AA2F16F6944D7D9356DB8AB055C6B9A3F"
+    },
+    {
+      "bytes": 215660,
+      "name": "rod_line_right_night_released_fading.jpg",
+      "sha256": "CBA5D203562D26134B756D5458CAC9B010FF3FE97F445CA8E37D710C805088D8"
+    },
+    {
+      "bytes": 173501,
+      "name": "rod_line_right_night_storm_break.jpg",
+      "sha256": "2353D2E466A1B177CDA1B55830F0EF17D3E46F71C53FAFEDA59D00C58A438439"
+    },
+    {
+      "bytes": 175970,
+      "name": "rod_line_right_night_storm_building.jpg",
+      "sha256": "6BE57322844AFF53DD37CD1CC9C940B1C678C8FB2ADB5B785A02AB6AD793954F"
+    },
+    {
+      "bytes": 184504,
+      "name": "rod_line_right_night_storm_calm.jpg",
+      "sha256": "CDB5BBFA3B48A328735729FCDC1AE93F9E89112B83D0192FF8F8CDA7E27A0B02"
+    },
+    {
+      "bytes": 183919,
+      "name": "rod_line_right_night_storm_fading.jpg",
+      "sha256": "F69C97BDD561E0432CAB0C45E5C52D54010EF1FC8CBA840F38CD9944D4CBB8A1"
+    },
+    {
+      "bytes": 274543,
+      "name": "stormheart_forward_day_released_break.jpg",
+      "sha256": "1AC7672404B26DCA0A765680A1C5BC60692568CDAF43DC4897E32FAE9894B655"
+    },
+    {
+      "bytes": 273703,
+      "name": "stormheart_forward_day_released_building.jpg",
+      "sha256": "3E8F49CC7C47A6F7E93602FED37F46DE840AD66DE9A3147347995C19CE0BB909"
+    },
+    {
+      "bytes": 272747,
+      "name": "stormheart_forward_day_released_calm.jpg",
+      "sha256": "8DB779FFCC9B9C28E07C78AA2F02DF074F46F6187A360FD849FE68CCD8B36461"
+    },
+    {
+      "bytes": 273699,
+      "name": "stormheart_forward_day_released_fading.jpg",
+      "sha256": "8F8C618B6574461D09ACD8DE210F62AE47897195951DC486F7277D8ED96ECAB8"
+    },
+    {
+      "bytes": 209898,
+      "name": "stormheart_forward_day_storm_break.jpg",
+      "sha256": "252AF63D1769AEF236EB91459EC3F4641CCDC4D133E78B4E597F2AD428385257"
+    },
+    {
+      "bytes": 219224,
+      "name": "stormheart_forward_day_storm_building.jpg",
+      "sha256": "4E6BBF1C5E1F1CD0AB126F7636BFA2EB30F22DFB20D5A2BA9B11FD3940E0D297"
+    },
+    {
+      "bytes": 232121,
+      "name": "stormheart_forward_day_storm_calm.jpg",
+      "sha256": "899A12ADEAF9C5DA6F251DC5CA5A0B9B3B87D33132031C1B2D8ACFC8BE6BB7C9"
+    },
+    {
+      "bytes": 237655,
+      "name": "stormheart_forward_day_storm_fading.jpg",
+      "sha256": "11A87E6DC1510103E540CC8705336CF35239B953ADE45DD828149B302FAA400D"
+    },
+    {
+      "bytes": 275819,
+      "name": "stormheart_forward_night_released_break.jpg",
+      "sha256": "E616DA84E77DF0F0B8ED2B6CEA4DCF7BEFC86B96ECBB5E95A55F2D2F251BD4E1"
+    },
+    {
+      "bytes": 273465,
+      "name": "stormheart_forward_night_released_building.jpg",
+      "sha256": "E430A252C587045F71D1ECC37A216DBCEC01D4390F305123DE9DE05EE1E5B81F"
+    },
+    {
+      "bytes": 273671,
+      "name": "stormheart_forward_night_released_calm.jpg",
+      "sha256": "FBD4E54F078C3988AE3F5DE340B1D6BE7F22C585D9CF17F6AF6E17D270945D42"
+    },
+    {
+      "bytes": 272525,
+      "name": "stormheart_forward_night_released_fading.jpg",
+      "sha256": "5FF387A85F5220681C8D2F3CC3EAA0D8A990A87E6447F48DB4EFF0D3DBB7DE63"
+    },
+    {
+      "bytes": 206587,
+      "name": "stormheart_forward_night_storm_break.jpg",
+      "sha256": "3F447D69F74C1B2C206F0FF4343DEFBFE7F27B4912E558B7AC9A21EB2F72743D"
+    },
+    {
+      "bytes": 219608,
+      "name": "stormheart_forward_night_storm_building.jpg",
+      "sha256": "93DF65A636598532569FEA3532F450B8D5CAAEF8D28EC38A8499F0099382D9B6"
+    },
+    {
+      "bytes": 232664,
+      "name": "stormheart_forward_night_storm_calm.jpg",
+      "sha256": "AF955FD7CBB8681E7EB60A8E786D256398E85EE235081124553E174D5A181CA0"
+    },
+    {
+      "bytes": 240367,
+      "name": "stormheart_forward_night_storm_fading.jpg",
+      "sha256": "A69B29325A0978F1F964C368C4268AB51126367C2C5F6FD1005C0B964F518E19"
+    },
+    {
+      "bytes": 264806,
+      "name": "stormheart_left_day_released_break.jpg",
+      "sha256": "8680B2914F205A06308A98CB4976848109E9FCA72355F1B32EEEBEADBD845A64"
+    },
+    {
+      "bytes": 261082,
+      "name": "stormheart_left_day_released_building.jpg",
+      "sha256": "D83C4B84EE0464C213A9A16D6A7D89A2BB4E986066E2666C0D7C0BFAA0E38979"
+    },
+    {
+      "bytes": 261356,
+      "name": "stormheart_left_day_released_calm.jpg",
+      "sha256": "6D6BA839F3C3659417A0D752E677333D65D0A96933014E86CB86CB4E0BBB0094"
+    },
+    {
+      "bytes": 258303,
+      "name": "stormheart_left_day_released_fading.jpg",
+      "sha256": "D64639865EC238A35DB29939169C2288F28AF6597FA33A0E0906D94A09F0D009"
+    },
+    {
+      "bytes": 209743,
+      "name": "stormheart_left_day_storm_break.jpg",
+      "sha256": "88E035233C6CE5C00926CB3B6B8AB4B9D57BD2D93FA73C0766CB49295C538A30"
+    },
+    {
+      "bytes": 204263,
+      "name": "stormheart_left_day_storm_building.jpg",
+      "sha256": "22A53357FC8D628FA9111515AC1EFC4584670E4AF11AE48DB6B8B5BB2CB22AC4"
+    },
+    {
+      "bytes": 220567,
+      "name": "stormheart_left_day_storm_calm.jpg",
+      "sha256": "8216E6595713E2A03191FE1E976ADE85FA162BA51F323D2F2A571649075F3605"
+    },
+    {
+      "bytes": 199646,
+      "name": "stormheart_left_day_storm_fading.jpg",
+      "sha256": "4ECA8C3F77AC552E6B3ED2FB32186A0719F4C7B531161E8884280D511413E1D8"
+    },
+    {
+      "bytes": 262894,
+      "name": "stormheart_left_night_released_break.jpg",
+      "sha256": "A04118994D682131690E646CAD5DC28F449BE8586F67114066E464643810FE75"
+    },
+    {
+      "bytes": 260301,
+      "name": "stormheart_left_night_released_building.jpg",
+      "sha256": "D380642CB2B3B66AF61766272578CC630D0494A78DD4C74AED7F2F257F397C35"
+    },
+    {
+      "bytes": 260594,
+      "name": "stormheart_left_night_released_calm.jpg",
+      "sha256": "0700FBFFB1E01994D58CD609203F8859BF24324B308EC9E27C6D1E5DDC06F800"
+    },
+    {
+      "bytes": 260987,
+      "name": "stormheart_left_night_released_fading.jpg",
+      "sha256": "2F6B8E61283F32E39A3D632FAB77DFD0FDE0AC3858C83CE27322953B9D68981E"
+    },
+    {
+      "bytes": 210133,
+      "name": "stormheart_left_night_storm_break.jpg",
+      "sha256": "10271794EDD77448F8DACB0F4B81C7445D99B2424F8EF292D6B07C05DA5818B0"
+    },
+    {
+      "bytes": 208305,
+      "name": "stormheart_left_night_storm_building.jpg",
+      "sha256": "5B9B26500386BFEBD5BAB19954B90CD7F0C3F19602C66FC2C909E844B61DD14A"
+    },
+    {
+      "bytes": 221015,
+      "name": "stormheart_left_night_storm_calm.jpg",
+      "sha256": "BB70D9ACDE85FF20CB06C10819E60F15EB7DB8C846052BCC29998A67E63C98CF"
+    },
+    {
+      "bytes": 222172,
+      "name": "stormheart_left_night_storm_fading.jpg",
+      "sha256": "F14F76AC9CA87BA9D2A2EBE740D03AE1AA8C09E0AE673EAD808ADA9D31705F93"
+    },
+    {
+      "bytes": 206052,
+      "name": "stormheart_reverse_day_released_break.jpg",
+      "sha256": "3AF5AFAF40373F6D9490DB3403C9C524FD340E37DEF1DAC68FC27435A2E9CF42"
+    },
+    {
+      "bytes": 207593,
+      "name": "stormheart_reverse_day_released_building.jpg",
+      "sha256": "77822FB291D1AB9A2220DB30A58C8D03EB525713D2887940F8298F5AB1B39EFB"
+    },
+    {
+      "bytes": 207171,
+      "name": "stormheart_reverse_day_released_calm.jpg",
+      "sha256": "0E29164359F6DA96C61D720B2AB45E081CCE193FF794C6333A77C3050B37DC63"
+    },
+    {
+      "bytes": 207354,
+      "name": "stormheart_reverse_day_released_fading.jpg",
+      "sha256": "81266F3AE82AB9EE26BF56E72156FC3FFC6156F0F3F4AF7DBCC91E97916A674E"
+    },
+    {
+      "bytes": 179506,
+      "name": "stormheart_reverse_day_storm_break.jpg",
+      "sha256": "353938B3A6DCABE28051EC9ED2B8ADF0CD0FFFB46735BBD6F47B75670353A00A"
+    },
+    {
+      "bytes": 175683,
+      "name": "stormheart_reverse_day_storm_building.jpg",
+      "sha256": "D30A4ED62B74749F22009F478BBE9C159EAF771936A71327AD67382A87B232C8"
+    },
+    {
+      "bytes": 176860,
+      "name": "stormheart_reverse_day_storm_calm.jpg",
+      "sha256": "A28331BF638F32DC7DA675A865F9AC523D8F45127F44C96FDE06B8CEF46C1E02"
+    },
+    {
+      "bytes": 190008,
+      "name": "stormheart_reverse_day_storm_fading.jpg",
+      "sha256": "66C41D7618174AEF77DA1DA4E71E4661C51A1FE101566452FE7DF2F6FAA7E5F9"
+    },
+    {
+      "bytes": 205797,
+      "name": "stormheart_reverse_night_released_break.jpg",
+      "sha256": "74F36BBEF046223AEF0B15D940C157AF48E6A367DF872AF1DBF62241AAAAB9FB"
+    },
+    {
+      "bytes": 206860,
+      "name": "stormheart_reverse_night_released_building.jpg",
+      "sha256": "F692DC6E8E0AD58144CCCE92605A9CAB45015049B2E060E972833D0A72029BEB"
+    },
+    {
+      "bytes": 206704,
+      "name": "stormheart_reverse_night_released_calm.jpg",
+      "sha256": "9FE16EF130272CB4663C06AD4F9ADF3D47E80208D2A4F18076F2EFCF9FDB8A29"
+    },
+    {
+      "bytes": 207180,
+      "name": "stormheart_reverse_night_released_fading.jpg",
+      "sha256": "6C13734D1A5AA75E5020709AB71B9B85DA64419E82263A413EF9FF252E01499D"
+    },
+    {
+      "bytes": 180831,
+      "name": "stormheart_reverse_night_storm_break.jpg",
+      "sha256": "C0E6D3D7FA9C43A30EB378D9DDF218E6E65F29574E23FBF5A25F2376D6D0AEE4"
+    },
+    {
+      "bytes": 171933,
+      "name": "stormheart_reverse_night_storm_building.jpg",
+      "sha256": "E48F4951047BDE9E19B726716A464DD9D2BFD6F83D03E73A376173F8F547CC48"
+    },
+    {
+      "bytes": 176423,
+      "name": "stormheart_reverse_night_storm_calm.jpg",
+      "sha256": "01A04A58730BF933181CDB00856FF60B01128DAB00698BF512887A4B4F0E361B"
+    },
+    {
+      "bytes": 180756,
+      "name": "stormheart_reverse_night_storm_fading.jpg",
+      "sha256": "F11BECBAD04D942011D9999171BA42494A273999885F9E6FB7781915A601AA21"
+    },
+    {
+      "bytes": 225347,
+      "name": "stormheart_right_day_released_break.jpg",
+      "sha256": "E5B0A79FE765629944D0ADC80755F3B8FF7EF7FF73F2D712A2E6EA0C7F91077F"
+    },
+    {
+      "bytes": 226128,
+      "name": "stormheart_right_day_released_building.jpg",
+      "sha256": "5603BF9C6536F113A197DCA84C123E680BB75837B7F6DEB112CCE6518C471E84"
+    },
+    {
+      "bytes": 226327,
+      "name": "stormheart_right_day_released_calm.jpg",
+      "sha256": "52D3A846A2EB90782153AECA7BB7FC8E9450E4BABDF8DA174CCEC9854C1BFDF6"
+    },
+    {
+      "bytes": 225900,
+      "name": "stormheart_right_day_released_fading.jpg",
+      "sha256": "5133FC286E8461E3DFB6AC6795B339FA272F929EBF8996940A42FFEB7ACA8AE7"
+    },
+    {
+      "bytes": 188783,
+      "name": "stormheart_right_day_storm_break.jpg",
+      "sha256": "264C6F16FE199F505CC5C744CC00105492FC6B155C3FFF9A019FF9622304BF5D"
+    },
+    {
+      "bytes": 188328,
+      "name": "stormheart_right_day_storm_building.jpg",
+      "sha256": "032F3D367BF59E456DBA27C7021F1EFED3E8D5A8B5E0BD35149629B238232C98"
+    },
+    {
+      "bytes": 191369,
+      "name": "stormheart_right_day_storm_calm.jpg",
+      "sha256": "7FF4C7B1DFC4A0250B8CC83F99C6B86B77855C3B39175B7C79C5CA443251CA0C"
+    },
+    {
+      "bytes": 202597,
+      "name": "stormheart_right_day_storm_fading.jpg",
+      "sha256": "7686BB43B5F69347958FDC8E64BABEC0576BB930B9A9C6F83267598323E3D367"
+    },
+    {
+      "bytes": 225114,
+      "name": "stormheart_right_night_released_break.jpg",
+      "sha256": "712B5E9278D7524273162D4E440CF335DFB8C210FF2902247604AD6DA018C2F9"
+    },
+    {
+      "bytes": 225277,
+      "name": "stormheart_right_night_released_building.jpg",
+      "sha256": "7E4018753409603AFEC516C8AC33C0FC232A239D13575E489EEB8EAA89194834"
+    },
+    {
+      "bytes": 224973,
+      "name": "stormheart_right_night_released_calm.jpg",
+      "sha256": "20198732A164155FEBF780626E98C320312801A50CBFCF018F8910FFF098E99E"
+    },
+    {
+      "bytes": 225813,
+      "name": "stormheart_right_night_released_fading.jpg",
+      "sha256": "CB2DCEAD6E289B393956FF0696B63F6F16EDEDC7DB284517EABD85FF87EF805C"
+    },
+    {
+      "bytes": 188267,
+      "name": "stormheart_right_night_storm_break.jpg",
+      "sha256": "EDA3ED816B66C4083A470901991F7C0AC91F456F54F3BA30C70C6C83A277E850"
+    },
+    {
+      "bytes": 184338,
+      "name": "stormheart_right_night_storm_building.jpg",
+      "sha256": "FD2ABACEAF8A3C9C6A7F7A7E5A032300DC69145C317CB2FEF38F564436B022EA"
+    },
+    {
+      "bytes": 190638,
+      "name": "stormheart_right_night_storm_calm.jpg",
+      "sha256": "F1359D48EC5791F9B96D1FD6B07D02D08BCD5770D51DC74D0A1441D385461E80"
+    },
+    {
+      "bytes": 197837,
+      "name": "stormheart_right_night_storm_fading.jpg",
+      "sha256": "AAC74241C577B10B8EC38F9C2DBDD4C70FB5E4A1C99B594A2CA8DC731809D81A"
+    }
+  ]
+}
