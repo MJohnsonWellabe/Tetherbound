@@ -71,6 +71,20 @@ func _run() -> void:
 		push_error("Unknown effect batch"); quit(1); return
 	if _batch in ["identities", "mastery", "profile", "ultimates"] and DisplayServer.get_name() == "headless":
 		push_error("Identity/performance evidence requires a native display"); quit(1); return
+	if OS.get_cmdline_user_args().has("--with-vfx-units"):
+		var output: Array = []
+		var selectors := ["test_move_effects.gd", "test_combat_vfx.gd", "test_f23_live_moves.gd",
+			"test_combat_progression.gd", "test_director_join_snapshot.gd",
+			"test_multiplayer_identity_0912.gd", "test_net_boss_snapshot.gd",
+			"test_net_state_hash_scope.gd", "test_world_save_format.gd",
+			"test_net_harness_heartbeat_allowance.gd"]
+		var exit_code := OS.execute(OS.get_executable_path(), PackedStringArray([
+			"--headless", "--path", ProjectSettings.globalize_path("res://"),
+			"--audio-driver", "Dummy", "--script", "res://tests/run_tests.gd", "--",
+			"--only=" + ",".join(selectors)]), output, true)
+		for chunk: Variant in output: print(str(chunk))
+		if exit_code != 0:
+			push_error("Existing move-effects units failed before capture"); quit(1); return
 	_scenarios = JSON.parse_string(FileAccess.get_file_as_string("res://assets/vfx/proof_scenarios.json"))
 	if not _identity.is_empty():
 		var known_identity := false
@@ -85,7 +99,8 @@ func _run() -> void:
 		push_error("Use a fresh output directory; existing evidence preserved"); quit(1); return
 	if DirAccess.make_dir_recursive_absolute(_out) != OK:
 		push_error("Cannot create output"); quit(1); return
-	root.size = Vector2i(1920, 1080)
+	# Honor the engine's requested resolution (hosted default 1280x720).
+	# The actual viewport size is retained in the evidence report below.
 	_arena = Node3D.new()
 	root.add_child(_arena)
 	current_scene = _arena
@@ -182,24 +197,48 @@ func _run() -> void:
 	else:
 		if _batch == "clock":
 			await _exercise({"id": "legacy-clock", "archetype": "stone_throw", "move_id": "pebble_toss", "legacy": true}, 1, 1, false)
+		var selected_ultimates: Array[String] = []
 		for archetype: String in LIBRARY.config().archetypes:
 			if not _archetype_filter.is_empty() and archetype not in _archetype_filter: continue
 			var case := {"id": archetype, "archetype": archetype}
 			var chosen := ""
 			var count := 0
+			var previous_chosen := ""
+			var previous_count := 0
 			for id: String in _moves:
 				var spec: Dictionary = _moves[id].get("vfx", {})
 				if str(spec.get("archetype", "")) != archetype: continue
 				var row := LIBRARY.resolve(spec, 5)
+				if int(row.parameters.count) > previous_count:
+					previous_count = int(row.parameters.count)
+					previous_chosen = id
+				# move_projectile.launch routes ultimate slots before inspecting
+				# vfx.archetype. Their fallback rows are not generic projectiles.
+				if str(_moves[id].get("slot", "")) == "ultimate": continue
 				if int(row.parameters.count) > count:
 					count = int(row.parameters.count)
 					chosen = id
 			if not chosen.is_empty(): case["move_id"] = chosen
+			if not previous_chosen.is_empty() and str(_moves[previous_chosen].get("slot", "")) == "ultimate":
+				selected_ultimates.append(previous_chosen)
 			if _batch == "mastery":
 				for rank in range(1, 6):
 					if _rank_filter.is_empty() or rank in _rank_filter: await _exercise(case, rank, 1, true)
 			else:
 				await _exercise(case, 5 if _batch == "profile" else 1, 4 if _batch == "profile" else 1, false)
+		if _batch == "mastery" and not selected_ultimates.is_empty():
+			# Retain the formerly selected signatures through their actual
+			# production adapter, at every requested rank and configured growth.
+			# Run last: ultimate auto-framing must not move the generic camera.
+			ULTIMATES.config()
+			ULTIMATES._config["enabled"] = true
+			var cfg: Dictionary = _scenarios.ultimate_capture
+			var breakthroughs: Array = cfg.breakthroughs if _breakthrough_filter.is_empty() else _breakthrough_filter
+			for move_id: String in selected_ultimates:
+				for rank in range(1, 6):
+					if not _rank_filter.is_empty() and rank not in _rank_filter: continue
+					for breakthrough: int in breakthroughs:
+						await _exercise_ultimate(move_id, breakthrough, cfg, rank)
 	var report := {"scope": "production_effect_nodes_synthetic_arena", "batch": _batch,
 		"renderer": RenderingServer.get_current_rendering_method(), "resolution": [root.size.x, root.size.y],
 		"display": DisplayServer.get_name(), "adapter": RenderingServer.get_video_adapter_name(),
@@ -434,6 +473,11 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 				var ready := bool(phase_ready.get(phase, false))
 				var pre_arrival := phase == "flight" or float(_scenarios.capture_phases[phase]) < 1.0
 				if not ready: continue
+				# Keep this observed simulation state through GPU readback. On a
+				# slow renderer, awaiting the next draw otherwise advances another
+				# frame and can turn a pre-contact shutter into a contact frame.
+				# Both presentation and independent timers use process_always=false.
+				paused = true
 				await RenderingServer.frame_post_draw
 				# Neutral filenames keep archetype and rank out of blind-judge
 				# inputs; the private results record retains the mapping.
@@ -442,6 +486,7 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 				if root.get_texture().get_image().save_png(path) != OK: _failures.append("Capture failed " + path)
 				var captured_elapsed := float(Time.get_ticks_usec() - started) / 1000000.0
 				captured[phase] = {"wall_seconds": captured_elapsed, "arrivals": arrivals[0],
+					"simulation_paused_for_readback": true,
 					"nominal_travel_fraction": float(transit.fraction) if phase == "flight" else _scenarios.capture_phases[phase]}
 				if phase == "flight" and bool(transit.get("clear_transit_required", false)):
 					var clear := true
@@ -458,6 +503,22 @@ func _exercise(case: Dictionary, rank: int, simultaneous: int, capture: bool) ->
 					_failures.append("%s frame reached after contact %s" % [phase.capitalize(), encounter])
 				if not pre_arrival and int(arrivals[0]) != simultaneous:
 					_failures.append("%s frame taken before arrival %s" % [phase.capitalize(), encounter])
+				if not pre_arrival and bool(row.impact.get("settle_on_ground", false)):
+					var checked := 0
+					for effect: Node3D in effects:
+						if not is_instance_valid(effect): continue
+						var motes := effect.get("_motes") as MultiMeshInstance3D
+						if motes == null: continue
+						var ground: Vector3 = effect.get("_context").get("target_ground")
+						for mote: int in motes.multimesh.instance_count:
+							var bounds := (motes.global_transform * motes.multimesh.get_instance_transform(mote)) * motes.multimesh.mesh.get_aabb()
+							checked += 1
+							if bounds.position.y < ground.y - 0.001:
+								_failures.append("Debris penetrates frozen ground %s %s mote=%d" % [encounter, phase, mote])
+					captured[phase]["grounded_debris_checked"] = checked
+					if phase in ["contact", "impact"] and checked == 0:
+						_failures.append("No ground-bound debris inspected %s %s" % [encounter, phase])
+				paused = false
 		# A capture also waits for every configured shutter; an aftermath frame
 		# after the effect freed itself honestly records an empty aftermath.
 		if int(arrivals[0]) == simultaneous and BUDGET.used(encounter) == 0 and int(independent_result_frame[0]) >= 0 \
@@ -513,23 +574,47 @@ func _transit_shutter(row: Dictionary, from: Vector3, to: Vector3, target_bounds
 		extent += Vector3(float(offset[0]), float(offset[1]), float(offset[2])).length()
 		radius = maxf(radius, float(row.parameters.size) * extent)
 	var body_radius := radius + float((_scenarios.transit_shutter as Dictionary).clearance_m)
-	var spread := maxf(0.0, float(row.parameters.get("spread", 0.0)))
+	var spread := absf(float(row.parameters.get("spread", 0.0)))
 	if int(row.parameters.count) > 1:
 		spread = maxf(spread, float(row.parameters.size) * float(profile.get("volley_separation_scale", 2.8)))
-		spread += float(int(row.parameters.count) - 1) * 0.5 * float(profile.get("volley_stagger_m", 0.25))
+	spread *= maxf(1.0, absf(float(profile.get("volley_vertical_ratio", 1.0))))
+	if int(row.parameters.count) > 1:
+		spread += float(int(row.parameters.count) - 1) * 0.5 * absf(float(profile.get("volley_stagger_m", 0.25)))
+	spread += absf(float(row.parameters.get("arc", 0.0)))
 	radius += spread
 	var cfg: Dictionary = _scenarios.transit_shutter
 	radius += float(cfg.clearance_m)
-	var expanded := target_bounds.grow(radius)
-	if expanded.has_point(from): return {"error": "No independently clear transit origin"}
-	var entry: Variant = expanded.intersects_segment(from, to)
-	if not entry is Vector3: return {"error": "Transit does not intersect measured target envelope"}
-	var fraction := from.distance_to(entry as Vector3) / maxf(0.001, from.distance_to(to))
-	var shutter := minf(float(cfg.maximum_fraction), fraction * float(cfg.before_entry_scale))
-	if shutter < float(cfg.minimum_fraction): return {"error": "No usable clear transit interval"}
+	# Volley offsets begin at zero and grow with sin(t*PI). A full-lifetime
+	# spread at launch falsely removes the rank-five volley's clear interval.
+	# Bound ALL offsets over [0, shutter], then find a shutter before the
+	# intersection of that conservative envelope. The separate actual-body
+	# clearance assertion at texture readback remains unchanged.
+	var minimum := float(cfg.minimum_fraction)
+	var lower := minimum
+	var upper := float(cfg.maximum_fraction)
+	var shutter := minimum
+	var fraction := 0.0
+	var interval_radius := body_radius
+	for iteration in 25:
+		var candidate := minimum if iteration == 0 else (lower + upper) * 0.5
+		var peak_spread := spread * sin(minf(candidate, 0.5) * PI)
+		var expanded := target_bounds.grow(body_radius + peak_spread)
+		var entry: Variant = expanded.intersects_segment(from, to)
+		var clear := not expanded.has_point(from) and entry is Vector3
+		var entry_fraction := from.distance_to(entry as Vector3) / maxf(0.001, from.distance_to(to)) if clear else 0.0
+		clear = clear and candidate <= entry_fraction * float(cfg.before_entry_scale)
+		if iteration == 0 and not clear: return {"error": "No usable clear transit interval"}
+		if clear:
+			lower = candidate
+			shutter = candidate
+			fraction = entry_fraction
+			interval_radius = body_radius + peak_spread
+		else:
+			upper = candidate
 	return {"fraction": shutter, "clear_transit_required": true, "envelope_radius_m": radius,
 		"body_envelope_radius_m": body_radius,
-		"entry_fraction": fraction, "method": str(cfg.method), "revision": "r6-separate-body-and-group-envelopes"}
+		"interval_envelope_radius_m": interval_radius,
+		"entry_fraction": fraction, "method": str(cfg.method), "revision": "r8-sine-bounded-volley-interval"}
 
 func _percentile(samples: Array[float], fraction: float) -> float:
 	if samples.is_empty(): return 0.0
@@ -592,7 +677,12 @@ func _attacker_origin(case: Dictionary, move_id: String, z: float) -> Vector3:
 	var stage: Dictionary = _scenarios.get("stage", {})
 	var species := str(case.get("attacker_species", (stage.get("attackers_by_type", {}) as Dictionary).get(
 		str(_moves.get(move_id, {}).get("type", "")), stage.get("attacker_species", "terrapup"))))
-	for key: String in _attackers: (_attackers[key] as Node3D).visible = key == species
+	for key: String in _attackers:
+		var posed := _attackers[key] as Node3D
+		posed.visible = key == species
+		# Production visibility enables physics again. These actors are posed
+		# capture subjects on a decorative floor, so keep them stationary.
+		posed.set_physics_process(false)
 	if not _attackers.has(species):
 		var body := CREATURE.instantiate() as CharacterBody3D
 		body.set_script(CREATURE_BODY)

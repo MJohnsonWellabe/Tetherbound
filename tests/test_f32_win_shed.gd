@@ -57,10 +57,10 @@ func _roll(event: Dictionary) -> float:
 	return float(("0x" + digest.substr(0, 8)).hex_to_int()) / 4294967296.0
 
 
-func _find(record: Dictionary, hit: bool) -> Dictionary:
+func _find(record: Dictionary, hit: bool, species: String = "galecrest", realm: String = "cloudreach") -> Dictionary:
 	var chance := float(SHED.read().wild_win_chance)
 	for i in 400:
-		var event := _event(record, "wild_defeat:shed-%d" % i, "cloudreach")
+		var event := _event(record, "wild_defeat:shed-%d" % i, realm, species)
 		if (_roll(event) < chance) == hit: return event
 	return {}
 
@@ -74,22 +74,31 @@ func _count(record: Dictionary, item: String) -> int:
 
 
 func test_configured_cloudreach_galecrest_win_sheds_skyplume_once() -> void:
-	var before := _admitted(_player())
-	var event := _find(before, true)
-	assert_false(event.is_empty(), "some host identity rolls under the configured chance")
-	var staged := _stage(before, event)
-	assert_true(staged.get("ok") == true and staged.get("duplicate") == false, str(staged))
-	assert_eq(staged.shed_outputs, {"skyplume": 1})
-	assert_eq(_count(staged.state, "skyplume"), _count(before, "skyplume") + 1)
-	assert_eq(_count(staged.state, "essence_air"), _count(before, "essence_air") + 1, "victory essence is still paid")
-	# Retry/recompute from the same admitted record reproduces it exactly.
-	var retried := _stage(before, event)
-	assert_eq(retried.shed_outputs, staged.shed_outputs)
-	assert_true(E._equivalent(retried.state, staged.state), "deterministic host roll, no reroll on retry")
-	# Replay against the committed record (reload/reconnect) pays nothing again.
-	var replay := _stage(staged.state, event, 3)
-	assert_true(replay.get("ok") == true and replay.get("duplicate") == true, str(replay))
-	assert_false(replay.has("state"))
+	for profile: Dictionary in [
+		{"species": "galecrest", "realm": "cloudreach", "item": "skyplume", "essence": "essence_air"},
+		{"species": "sparkit", "realm": "stormwood", "item": "sparkfur", "essence": "essence_electric"},
+		{"species": "staticub", "realm": "stormwood", "item": "sparkfur", "essence": "essence_electric"},
+	]:
+		var before := _admitted(_player())
+		var event := _find(before, true, profile.species, profile.realm)
+		assert_false(event.is_empty(), profile.species + ": some host identity rolls under the configured chance")
+		var expected_shed: Dictionary = {}
+		expected_shed[profile.item] = 1
+		assert_eq(event.shed, expected_shed, profile.species + ": configured output frozen in the host event")
+		var staged := _stage(before, event)
+		assert_true(staged.get("ok") == true and staged.get("duplicate") == false, str(staged))
+		assert_eq(staged.shed_outputs, expected_shed)
+		assert_eq(_count(staged.state, profile.item), _count(before, profile.item) + 1)
+		# Level 5 earns the configured base 1, before the level-10 bonus.
+		assert_eq(_count(staged.state, profile.essence), _count(before, profile.essence) + 1, profile.species + ": victory essence is still paid")
+		# Retry/recompute from the same admitted record reproduces it exactly.
+		var retried := _stage(before, event)
+		assert_eq(retried.shed_outputs, staged.shed_outputs)
+		assert_true(E._equivalent(retried.state, staged.state), "deterministic host roll, no reroll on retry")
+		# Replay against the committed record (reload/reconnect) pays nothing again.
+		var replay := _stage(staged.state, event, 3)
+		assert_true(replay.get("ok") == true and replay.get("duplicate") == true, str(replay))
+		assert_false(replay.has("state"))
 
 
 func test_misses_wrong_realms_and_unlisted_species_shed_nothing() -> void:

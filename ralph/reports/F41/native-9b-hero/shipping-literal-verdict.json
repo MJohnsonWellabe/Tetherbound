@@ -1,0 +1,24 @@
+{
+  "judge": "/root/blind_listener_f10",
+  "run_id": 37682436822,
+  "source_sha": "3c536b1ec1a87650de1f317a47085141d4595bd6",
+  "owner_scope_comment": 6045342186,
+  "release_visual_followups": [
+    "Repetitive bark/plank textures",
+    "Detached-looking railing pieces",
+    "Segmented pale core effects"
+  ],
+  "unassessed": [
+    "Earned ascent",
+    "Motion",
+    "Medium/High quality",
+    "Full biome matrix"
+  ],
+  "findings": [
+    "Recognizable immense split/hollow trunk and built stronghold",
+    "Towering bark walls, open central cleft, ascending wooden decks, banners and lamps"
+  ],
+  "scope": "Literal landmark identity: retained native distance plus actual shipping close views",
+  "verdict": "PASS",
+  "criterion": "F41#4"
+}

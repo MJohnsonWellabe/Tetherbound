@@ -12,7 +12,8 @@ func _init() -> void:
 
 func _run() -> void:
 	var checks := CHECKS.new()
-	var baseline := checks.TREE.new()
+	var baseline := checks.CandidateTree.new()
+	baseline.presentation_enabled = false
 	var candidate := checks.CandidateTree.new()
 	for tree: Node3D in [baseline,candidate]:
 		root.add_child(tree)
