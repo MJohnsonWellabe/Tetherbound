@@ -1616,13 +1616,20 @@ static func _rider_identity(tree: SceneTree, args: Dictionary) -> Dictionary:
 		"mount_swim_mode": int(aquatic.get("mode", -1)),
 		"mount_swim_owner": int(aquatic.get("owner_peer_id", 0)),
 	}
-	var agree: bool = pid > 0 and matching_rows.size() == 1 and bodies.size() == 1 and mounts.size() == 1 \
-		and stale_bodies == 0 and stale_mounts == 0 and data.body_peer_id == pid \
-		and data.mount_owner_peer_id == pid and data.mount_authority == pid and data.mount_swim_owner == pid \
-		and str(data.nameplate) == row_name and bool(data.riding) and bool(data.mount_saddle_worn)
+	var agree := _rider_identity_agrees(data)
 	data["agree"] = agree
 	return {"verdict": "PASS" if agree else "FAIL",
 		"detail": "character %s: %s" % [cid.left(18), JSON.stringify(data)], "data": data}
+
+
+static func _rider_identity_agrees(data: Dictionary) -> bool:
+	var pid := int(data.peer_id)
+	# SYSTEMS RD-32: owned Ripplet needs no swim saddle; other mounts still do.
+	return pid > 0 and data.registry_rows == 1 and data.bodies == 1 and data.mounts == 1 \
+		and data.stale_bodies == 0 and data.stale_mounts == 0 and data.body_peer_id == pid \
+		and data.mount_owner_peer_id == pid and data.mount_authority == pid and data.mount_swim_owner == pid \
+		and str(data.nameplate) == str(data.registry_display_name) and bool(data.riding) \
+		and (bool(data.mount_saddle_worn) or str(data.mount_species) == "ripplet")
 
 
 ## The rider's own side of the same question: who this peer is and what it is
