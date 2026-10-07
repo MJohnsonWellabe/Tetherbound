@@ -283,6 +283,15 @@ func _check_full_map_controller_ownership_and_recovery() -> void:
 	await _press_action("party_cycle")
 	if int(_party.call("active_index")) != active_before:
 		_fail("party cycling leaked through while the full map owned input")
+	# LB is also the menu's previous-tab verb. Its party-owner check above
+	# legitimately left the map; restore it through the physical Map shortcut
+	# before asking RT to select a remembered map scale.
+	await _press_action("map")
+	if not bool(_menu.call("is_open")) or str(_menu.call("current_tab_id")) != "map":
+		_fail("physical Map shortcut could not return from the previous menu tab")
+		return
+	var current_bodies: Array = _menu.get("_bodies")
+	map_tab = current_bodies[int(_menu.get("_index"))] as Control
 	await _pulse_motion_action("map_zoom_in")
 	var remembered_zoom := float(map_tab.get("_zoom"))
 	if remembered_zoom <= 1.0:
