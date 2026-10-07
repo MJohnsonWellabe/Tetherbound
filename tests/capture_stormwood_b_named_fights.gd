@@ -70,6 +70,7 @@ var _hidden: Array[Node3D] = []
 var _log: Array[String] = []
 var _scale_audit := false
 var _scale_failures: Array[String] = []
+var _saved_combat_frames := 0
 
 # Game-time clock: physics frames seen since the fight began.
 var _phys := 0
@@ -109,6 +110,10 @@ func _run() -> void:
 			_interval = float(arg.trim_prefix("--interval="))
 		elif arg == "--scale-audit":
 			_scale_audit = true
+	if _scale_audit and (_ids.is_empty() or _seconds <= 0.0):
+		push_error("scale audit needs named fights and a positive combat duration")
+		quit(1)
+		return
 	if _out.is_empty() or DisplayServer.get_name() == "headless":
 		push_error("needs --out= and a rendering display")
 		quit(1)
@@ -161,6 +166,8 @@ func _run() -> void:
 		summary.append(row)
 		if _scale_audit and not bool(row.get("started", false)):
 			_scale_failures.append("%s: real named fight never started" % id)
+		elif _scale_audit and int(row.get("saved_combat_frames", 0)) <= 0:
+			_scale_failures.append("%s: no actual combat-loop frame was saved" % id)
 		_note("SUMMARY %s" % JSON.stringify(row))
 	var file := FileAccess.open(_out.path_join("capture_log.json"), FileAccess.WRITE)
 	if file != null:
@@ -204,6 +211,9 @@ func _save(tag: String) -> void:
 	if image == null or image.is_empty() or image.save_png(path) != OK:
 		if _scale_audit:
 			_scale_failures.append("%s: required frame not saved" % path)
+	elif _scale_audit and tag not in ["00-before", "99-after"] \
+		and bool(_manager.call("is_fighting")):
+		_saved_combat_frames += 1
 	var enemy := _manager.call("enemy_body") as Node3D if bool(_manager.call("is_fighting")) else null
 	var ally := _director.call("ally_body") as Node3D
 	var cam := _rig.get_node_or_null(^"Camera3D") as Camera3D
@@ -319,6 +329,7 @@ func _ground_at(xz: Vector2, hint_y: float) -> Variant:
 func _capture(id: String) -> Dictionary:
 	var row := {"id": id, "started": false, "tells": [], "hits": [], "frames": 0, "note": ""}
 	_tell_index = 0
+	_saved_combat_frames = 0
 	_tells.clear()
 	_hits.clear()
 	_pending.clear()
@@ -507,6 +518,7 @@ func _capture(id: String) -> Dictionary:
 	row.tells = _tells.duplicate(true)
 	row.hits = _hits.duplicate()
 	row.frames = frame_i
+	row["saved_combat_frames"] = _saved_combat_frames
 	row["ended_at_s"] = snappedf(_t(), 0.01)
 	row["fighting_at_end"] = bool(_manager.call("is_fighting"))
 	if is_instance_valid(enemy):
