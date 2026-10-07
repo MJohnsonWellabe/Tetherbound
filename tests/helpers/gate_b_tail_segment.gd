@@ -1253,7 +1253,8 @@ func _forward() -> Vector3:
 ## step-clear fan-out below only cares whether the interact line freed up, and
 ## a short step that did that is a success, not a failure to record.
 func _walk_to(target: Vector3, purpose: String, close_enough: float = MOVE_EPSILON,
-		report_failure: bool = true, fail_on_miss: bool = true) -> bool:
+		report_failure: bool = true, fail_on_miss: bool = true,
+		headings: Array[Vector3] = []) -> bool:
 	if _nav == null:
 		_nav = NAVIGATOR.new(_tree, _player, _rig, Callable(self, "_move"))
 	# From the leg's own length, not a flat number. `data/config/movement.json`
@@ -1268,7 +1269,8 @@ func _walk_to(target: Vector3, purpose: String, close_enough: float = MOVE_EPSIL
 	var start_pose := _player.global_position
 	print("EARNED WALK START phase=camp_tail purpose=", purpose, " target=", target,
 		" tolerance=", close_enough, " budget=", budget, " frame=", started, " player=", start_pose)
-	var arrived: bool = await _nav.walk_to(target, budget, close_enough)
+	var arrived: bool = await _nav.walk_to_guided(target, budget, close_enough, headings) \
+		if not headings.is_empty() else await _nav.walk_to(target, budget, close_enough)
 	_release_move()
 	await _settle(3)
 	print("EARNED WALK END phase=camp_tail purpose=", purpose, " target=", target,
