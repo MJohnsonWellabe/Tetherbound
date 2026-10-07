@@ -1,0 +1,20 @@
+BLOCK
+
+Independent code-blind judge: /root/stormursa_reference_review.
+Reviewed all eight h-images and twelve paired sequence frames: f00, f01, f02, f03, f05, f07, f11, f13, f15, f19, f23, f24.
+
+The filename-matched freeing sequence is visibly delayed in B:
+- f01-t01.00 / f02-t02.00: A's crystals and cables are dark; B's remain cyan.
+- f07-t04.00: A's pylons are tilted and spanning cables gone; B's pylons remain upright with dark cables attached.
+- f11-t05.00 / f13-t05.50: A's central pylon is well into its fall; B's is near upright.
+- f15-t06.00 / f19-t07.00: A reaches the horizontal position and shows impact dust; B remains earlier in the fall.
+- f23-t08.00: A is settled; B is still falling.
+- f24-t12.00: Both reach visually matching fallen positions. This supports delay rather than permanent pylon loss; B's impact-dust equivalence remains unproved because the supplied sequence jumps from t08 to t12.
+
+The four healed-land outcomes broadly match: h01 quarry regreening, darkened fixture and fallen pylons; h02 approach regreening and fallen near/Hall pylons; h03 works ground/vegetation restoration; h04 highfield green ground, flowers and the returning antlered herd. No clear static lighting/material loss appeared in those views.
+
+Matching caveats: ordinary creatures differ between groups already in h03-a and h04-a, preventing whole-population equivalence. Shared visible issues remain, including h02's upright small pylon/dark foreground cable and abrupt distant green boundary, and h03's large pale triangular plane. HUD, trees and frame edges obscure some effects.
+
+The timing mismatch blocks component equivalence on the supplied filename alignment. Pixels cannot establish its cause or validate the capture clock. No source, logs or mapping consulted; no earned, co-op, FPS or whole-criterion acceptance.
+
+Mapping disclosed only after the verdict: A = current-main fixture with pre-slice meadow_healing.gd at 080d7afb47d89763e0b03af53d1b22b7ad7b432a; B = regreen-sliced d5d692934fbca93dde191f7d8974a3148d486498 on the same current-main fixture. A producer6116c8b799; B producer62fbbf872b. Both original33-frame groups are retained unedited. Both had the Works-vantage fall/recovery and interpolation deprecation; light report counts138/137 differ, cause unproved.

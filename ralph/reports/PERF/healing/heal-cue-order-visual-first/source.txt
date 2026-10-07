@@ -1,0 +1,5 @@
+source=17436eb251b3b41ade32246e61e77cbf230a0a04
+product=fe861cd7e190b129af04544628f7476be684aaf0
+tool=tools/capture_f05_heal.gd unchanged; paired baseline6116/pre-slice080d7
+Compatibility/fullscreen1920x1080/fixed-fps12/unprofiled
+Existing flags/party/camera/hidden transient HUD; appearance only, not CPU/earned/co-op/deviceFPS

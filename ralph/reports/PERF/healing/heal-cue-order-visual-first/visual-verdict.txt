@@ -1,0 +1,7 @@
+EQUIVALENT within supplied fixture/sampled views — fresh /root/perf3_land_cue_judge.
+Inspected all66 original C/D PNGs using view_image, without source/logs/mapping/engines/edits/transforms.
+h01-quarry,h02-approach,h03-works,h04-highfield before/after: matching healed ground, vegetation/flowers, static materials/shadows, fallen large pylons and visible herd.
+All f00–f24 inspected: f00→f01 cyan cable/crystal shutdown; f02/f03 initial lean; f03–f05 cable disappearance; f06–f15 fall positions match.
+f14-t05.75 left dust, f16-t06.25 central dust, f17-t06.50 right-edge dust visible in both; f18–f23 comparable fade; f24-t12.00 settled geometry matches.
+Dust shapes differ f14–f22; ordinary white creature/canine/distant animal positions/poses vary. HUD/frame edges obscure parts. No exact pixel/population/clock/inter-sample/earned/co-op/FPS/whole-product claim.
+Mapping revealed ONLY AFTER final verdict: C=heal-visual-synchronous-baseline-first (producer6116/pre-slice080d7); D=heal-cue-order-visual-first (producer17436/productfe861).
