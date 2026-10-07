@@ -1,4 +1,5 @@
 extends RefCounted
+const INPUT := preload("res://tools/net/proof_steps.gd")
 
 ## Explicit F37 fixture/control adapter. It earns no feast or chapter progress.
 static func step(runner: SceneTree, action: String, args: Dictionary) -> Dictionary:
@@ -14,8 +15,8 @@ static func step(runner: SceneTree, action: String, args: Dictionary) -> Diction
 		creature.level = 30
 		creature.recompute_stats_from_base(preload("res://scripts/creatures/progression.gd").config())
 		game.party.add(creature)
-		game.local.save_data()
-		game.local.redesign_character.creatures[creature.uid].breakthroughs = [10,20,30] if args.get("breakthrough",false) else [10,20]
+		game.local.redesign_character = game.local.save_data().redesign_character
+		game.local.redesign_character.creatures[creature.uid].breakthroughs = [1,2,3] if args.get("breakthrough",false) else [1,2]
 		game.local.redesign_character.creatures[creature.uid].cap_level = 40 if args.get("breakthrough",false) else 30
 		return {"verdict":"PASS","detail":"SETUP owned L30 Ripplet and explicit breakthrough fixture before admission","data":{"uid":creature.uid}}
 	if action == "f37_mount":
@@ -24,7 +25,8 @@ static func step(runner: SceneTree, action: String, args: Dictionary) -> Diction
 		var player: Node3D = world.local_rig()
 		player.global_position = director.ally_body().global_position + Vector3(2,0,0)
 		for frame in 2: await runner.physics_frame
-		riding.interaction_activate()
+		if not await INPUT._tap(runner, "interact"):
+			return {"verdict":"FAIL","detail":"physical mount input edge failed"}
 		for frame in 120:
 			await runner.physics_frame
 			if riding.is_mounted(): return {"verdict":"PASS","detail":"ordinary mount prompt authorized"}
@@ -36,9 +38,8 @@ static func step(runner: SceneTree, action: String, args: Dictionary) -> Diction
 		for frame in 30: await runner.physics_frame
 		return {"verdict":"PASS","detail":"SETUP deep pose near optional cache"}
 	if action == "f37_jump":
-		Input.action_press("jump")
-		await runner.physics_frame
-		Input.action_release("jump")
+		if not await INPUT._tap(runner, "jump"):
+			return {"verdict":"FAIL","detail":"physical Dive input edge failed"}
 		for frame in 45: await runner.physics_frame
 		return {"verdict":"PASS","detail":"ordinary Jump tap"}
 	if action == "f37_status":
