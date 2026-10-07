@@ -64,5 +64,43 @@
     "observed_credit_cost": 15,
     "owner_allocation": "https://github.com/MJohnsonWellabe/Tetherbound/issues/572#issuecomment-6042684639",
     "default_enabled": false
+  },
+  "component_attachments": {
+    "addition_triangle_budget": 2816,
+    "total_triangle_budget": 30000,
+    "parts": [
+      {
+        "name": "StormursaCopperShoulderL",
+        "anchor_bone": "front_upper_l",
+        "offset_height": [
+          -0.075,
+          0.025,
+          0.24
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          -90
+        ],
+        "height_ratio": 0.32,
+        "mirror_world_x": false
+      },
+      {
+        "name": "StormursaCopperShoulderR",
+        "anchor_bone": "front_upper_r",
+        "offset_height": [
+          0.075,
+          0.025,
+          0.24
+        ],
+        "rotation_deg": [
+          0,
+          0,
+          -90
+        ],
+        "height_ratio": 0.32,
+        "mirror_world_x": true
+      }
+    ]
   }
 }
