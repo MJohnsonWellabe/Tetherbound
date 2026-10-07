@@ -1,0 +1,108 @@
+# CI-SPEED suite group (tools/ci/run_suite.py). Steps copied verbatim from
+# the former ci.yml job; each step runs in order in one lane, with the
+# lane's own XDG_DATA_HOME, RUNNER_TEMP and network namespace.
+### job: verify-regions-shard
+### group: stormwood
+### seconds: 540
+### job-timeout-minutes: 35
+
+### step: Verify Stormheart approach and open ramp entrance
+set -euo pipefail
+export XDG_DATA_HOME="$(mktemp -d)"
+godot --headless --path . --log-file /tmp/stormheart-earned-mouth.log --script tools/_probe_stormheart_earned_mouth.gd -- --fixed-only
+if grep -E '^(ERROR:|SCRIPT ERROR:)' /tmp/stormheart-earned-mouth.log; then
+  exit 1
+fi
+### step: Verify earned Stormwood input clocks
+set -euo pipefail
+godot --headless --path . --log-file /tmp/stormwood-engage-clock.log --script tools/probe_stormwood_alpha_admission.gd
+godot --headless --path . --log-file /tmp/stormwood-fight-clock.log --script tools/probe_stormwood_fight_clock.gd
+if grep -E '^ERROR:|SCRIPT ERROR:' /tmp/stormwood-engage-clock.log /tmp/stormwood-fight-clock.log; then
+  echo 'Earned Stormwood input controls emitted an engine or script error'
+  exit 1
+fi
+### step: Verify Stormwood constructed arch journey
+timeout 120s godot --headless --path . --script tests/smoke_stormwood_arches.gd
+### step: Verify Stormwood shell spawn slicing
+timeout 300s godot --headless --path . --script tests/smoke_stormwood_spawn_slicing.gd
+### step: Verify solo Stormwood hosted rewards
+set -euo pipefail
+timeout 30s godot --headless --path . --log-file /tmp/stormwood-hosted-rewards.log --script tests/smoke_stormwood_hosted_rewards.gd
+test -s /tmp/stormwood-hosted-rewards.log
+if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-hosted-rewards.log; then exit 1; fi
+### step: Verify Stormwood Deepwood Circuit wiring
+### env SMOKE: stormwood_deepwood_circuit_wiring
+### env RETRIES: 1
+set -uo pipefail
+n=0
+until [ "$n" -ge "$RETRIES" ]; do
+  n=$((n + 1))
+  echo "::group::smoke_${SMOKE}.gd attempt ${n}/${RETRIES}"
+  if godot --headless --path . --script "tests/smoke_${SMOKE}.gd"; then
+    echo "::endgroup::"
+    exit 0
+  fi
+  echo "::endgroup::"
+  echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
+done
+exit 1
+### step: Verify Stormwood finalized death lifecycle
+set -euo pipefail
+timeout 30s godot --headless --path . --log-file /tmp/stormwood-finalized-death.log --script tests/smoke_stormwood_finalized_death.gd
+test -s /tmp/stormwood-finalized-death.log
+if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-finalized-death.log; then exit 1; fi
+### step: Verify Stormwood combat telemetry
+### env TETHERBOUND_TELEMETRY_OUTPUT: /tmp/stormwood-combat-telemetry.json
+set -euo pipefail
+timeout 30s godot --headless --path . --log-file /tmp/stormwood-combat-telemetry.log --script tests/smoke_stormwood_combat_telemetry.gd
+test -s /tmp/stormwood-combat-telemetry.log
+if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-combat-telemetry.log; then exit 1; fi
+### step: Verify Relay cable socket supports
+### timeout-minutes: 1
+set -euo pipefail
+timeout 30s godot --headless --path . --log-file /tmp/relay-cable-sockets.log --script tools/_probe_relay_cable_socket_geometry.gd
+test -s /tmp/relay-cable-sockets.log
+if grep -E 'SCRIPT ERROR|ERROR:' /tmp/relay-cable-sockets.log; then exit 1; fi
+### step: Verify Stormwood equipped lightning protection
+### timeout-minutes: 1
+set -euo pipefail
+timeout 30s godot --headless --path . --log-file /tmp/stormwood-lightning-equipment.log --script tests/smoke_stormwood_lightning.gd
+test -s /tmp/stormwood-lightning-equipment.log
+if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-lightning-equipment.log; then exit 1; fi
+### step: Verify controller equipment and disk save
+### timeout-minutes: 1
+set -euo pipefail
+timeout 30s godot --headless --path . --log-file /tmp/backpack-equipment.log --script tests/smoke_backpack_equipment.gd
+test -s /tmp/backpack-equipment.log
+if grep -E 'SCRIPT ERROR|ERROR:' /tmp/backpack-equipment.log; then exit 1; fi
+### step: Verify Stormwood lightning warning cleanup
+set -euo pipefail
+timeout 30s godot --headless --path . --log-file /tmp/stormwood-lightning-cleanup.log --script tests/smoke_stormwood_lightning_cleanup.gd
+test -s /tmp/stormwood-lightning-cleanup.log
+if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-lightning-cleanup.log; then exit 1; fi
+### step: Verify Stormwood authoritative opponent teardown
+set -euo pipefail
+timeout 30s godot --headless --path . --log-file /tmp/stormwood-authoritative-teardown.log --script tests/smoke_stormwood_authoritative_teardown.gd
+test -s /tmp/stormwood-authoritative-teardown.log
+if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-authoritative-teardown.log; then exit 1; fi
+### step: Verify Stormwood heartstone interaction
+timeout 120s godot --headless --path . --script tests/smoke_stormwood_crown_heartstone.gd
+### step: Verify Stormwood Crown records side chain
+timeout 120s godot --headless --path . --script tests/smoke_stormwood_crown_records.gd
+### step: Verify Stormwood per-participant Stormheart offers
+timeout 120s godot --headless --path . --script tests/smoke_stormwood_stormheart_participants.gd
+### step: Verify Stormwood Stormheart accept/refuse choice
+timeout 120s python3 tools/ci/run_godot_smoke.py godot --headless --path . --script tests/smoke_stormwood_stormheart_choice.gd
+### step: Verify Stormwood Dynamo Break faint recovery
+timeout 120s godot --headless --path . --script tests/smoke_stormwood_dynamo_break_faint.gd
+### step: Verify Stormwood ordinary and electric TM pickups
+timeout 120s godot --headless --path . --script tests/smoke_stormwood_pickup_runtime.gd
+### step: Verify ordinary Stormwood to Water gate path
+timeout 240s godot --headless --path . --script tests/smoke_stormwood_water_gate_path.gd
+### step: Verify Stormwood Surge audio observer
+### nightly
+timeout 240s godot --headless --path . --script tests/smoke_stormwood_surge_audio.gd
+### step: Verify Stormwood hosted encounter admission
+timeout 240s godot --headless --path . --script tests/smoke_stormwood_hosted_admission.gd
+### step: Verify Stormwood Nysa press
+timeout 960s godot --headless --path . --script tests/smoke_stormwood_nysa_press.gd
