@@ -176,7 +176,7 @@ func _run() -> void:
 	result.arena_radius = snappedf(float((arena as Node).get("radius")), 0.01) if arena is Node else -1.0
 	var pilot := WorldPilot.new()
 	pilot.rig = world.get_node("CameraRig")
-	pilot._tally = {"hits": 0, "incoming_hits": 0, "misses": 0, "max_hit_frac": 0.0, "events": [],
+	pilot._tally = {"hits": 0, "incoming_hits": 0, "misses": 0, "max_hit_frac": 0.0, "neutral_worst_frac": 0.0, "events": [],
 		"player_windup_cancellations": 0, "charged_interrupts": 0, "stagger_events": 0,
 		"burst_uses": 0, "charged_uses": 0, "quick_uses": 0}
 	pilot._entry_maxima = entry_max
@@ -232,6 +232,15 @@ func _run() -> void:
 	result.max_tell_s = tells.max() if not tells.is_empty() else -1.0
 	result.observed_tells = observed.size()
 	result.terminal_outcome = str(manager.get("_outcome"))
+	# Preserve the actual retained terminal result when a completed creature
+	# round cannot advance; these observations do not settle or replay it.
+	var rounds: Dictionary = director.get("_ordinary_combat_rounds")
+	var terminal: Dictionary = rounds.get(str((director.get("_encounter") as Dictionary).get("encounter_id", "")), {})
+	result.terminal = {"manager_state": int(manager.get("state")), "trainer_active": director.trainer_battle_active(),
+		"round": int(terminal.get("round", 0)), "round_resolved": terminal.get("resolved", false),
+		"completion_resolved": terminal.get("completion_resolved", false),
+		"resolution_result": (terminal.get("last_resolution_result", {}) as Dictionary).duplicate(true),
+		"round_exit_pending": not (director.get("_ordinary_combat_round_exit") as Dictionary).is_empty()}
 	result.min_observed_tell_s = observed.min() if not observed.is_empty() else -1.0
 	result.max_observed_tell_s = observed.max() if not observed.is_empty() else -1.0
 	result.capped = fight_s >= FIGHT_CAP_S
