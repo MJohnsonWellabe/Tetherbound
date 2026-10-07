@@ -1,0 +1,32 @@
+{
+  "independent_behavior_verdict": "APPROVE F20#4 behavior",
+  "artifact": {
+    "name": "render-lane-b-f20-two-peer-r1-37646472875",
+    "id": 11494499910,
+    "sha256": "7a8ac24d87bd43d6f709cd55929aa15f63f6afa5bce48f80bdd824f4f0993956"
+  },
+  "exit_code": 0,
+  "fixture_scope": "Disclosed post-finale setup; controller Skip; not earned campaign",
+  "elapsed_seconds": 671,
+  "remaining": "Full visual acceptance and current-cut affected logic; later singular-copy/stir-capture changes are outside this measured cut.",
+  "peer_engine_script_errors": 0,
+  "source_sha": "f5b62276ece3875255004bb1bf400e954cfd2749",
+  "actual": [
+    "Both personal Home Key returns and fifth-key uses",
+    "Both actual Grandpa acknowledgements and credits",
+    "Guest disconnect during open credits, wipe and production title rejoin retains original character/five without completing interrupted credits",
+    "Each peer actual disk reload and normal repeat revisit",
+    "Exactly one homecoming_seen and regional_credits_seen receipt per stable character",
+    "Guest completion does not overwrite host, host reload preserves guest completion"
+  ],
+  "script": "tests/smoke_net_f20_ending.gd",
+  "visual_verdict": "BLOCK retained F20 native fullbar judge",
+  "peer_leak_markers": 0,
+  "kind": "existing_f20_two_peer_behavior",
+  "run_log_sha256": "8506ec3bc66d5696aac29da63181fc2534d40c3c135efe939599d2de3bb75f3b",
+  "reviewer": "/root/b_f20_review",
+  "parent_pass_lines": 48,
+  "all_checks_passed": true,
+  "run_id": 37646472875,
+  "criterion_pass": false
+}
