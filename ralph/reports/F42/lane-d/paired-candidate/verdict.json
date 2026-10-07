@@ -81,5 +81,16 @@
     "verdict": "APPROVE",
     "scope": "Real Save callback writes first empty manual slot, refuses overwrite, verifies actual saved party size and annotates both rasters. Existing disclosed stock; no earned/reload proof.",
     "runtime": "pending"
+  },
+  "players_cards_source_review": {
+    "commits": [
+      "5b8a90325c13382a737794727973434bdfa88d60",
+      "d46b5ebbf14bf8863a21849eeca808f0ab2722f7"
+    ],
+    "reviewer": "/root/f42_visual_review",
+    "verdict": "APPROVE",
+    "scope": "Installed portraits from actual registry appearance_id; separate real Game.local identity when inactive, no synthetic peer/count. Native bounded vertical roster scroll follows existing Remove focus, preserving Invite/Retry/status/callbacks.",
+    "first_verdict": "5b8a alone BLOCK:4 portrait rows could push footer beyond bounded content. Corrected d46b preserves portraits inside focus-following scroll.",
+    "remaining": "Existing Steam tests and actual four-peer1080/720 scroll/focus/footer images pending."
   }
 }
