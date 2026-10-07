@@ -246,11 +246,11 @@ func apply_admitted_dash(move: Dictionary, original: Dictionary, target: Node3D)
 		supported = sample
 	var collision: KinematicCollision3D = move_and_collide(supported - start) if not supported.is_equal_approx(start) else null
 	if not is_inside_tree() or is_queued_for_deletion() or not is_instance_valid(target) or not target.is_inside_tree(): return {}
-	var safe := is_instance_valid(arena) and arena.call("_crossed_a_surface", self, start) != true \
+	var safe: bool = is_instance_valid(arena) and arena.call("_crossed_a_surface", self, start) != true \
 		and arena.call("contains", global_position) == true and global_position.distance_to(start) <= requested + 0.001
 	if not safe: global_position = start
 	var gap := Vector2(global_position.x - target.global_position.x, global_position.z - target.global_position.z).length()
-	var hit := safe and collision != null and collision.get_collider() == target \
+	var hit: bool = safe and collision != null and collision.get_collider() == target \
 		and gap <= body_radius() + float(target.call("body_radius")) + safe_margin * 2.0
 	var receipt := {"ok": true, "action_id": str(original.action_id), "binding": binding.duplicate(true),
 		"target_uid": str(original.target_uid), "target_generation": int(original.target_generation),

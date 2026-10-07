@@ -32,3 +32,12 @@ Both corrected with explicit bool annotations; semantics unchanged. Artifact
 comes from that run. Corrected affected proof remains required.
 Independent reviewer /root/f25_arrival_review APPROVE both explicit bool
 declarations: expressions and behavior unchanged; import confirmation pending.
+
+Run37651501144 on016dc1de3e3a619828f0bc202489ead62169143c completed FAILURE:
+runtime lazy-script parse errors Director.is_dash3248, Follower.safe249/hit253
+caused cascading missing-class/method calls; the run timed out before a final
+unit summary. Artifact11497813205 retains run.log. Partial printed ok rows do
+not constitute PASS. These three declarations are now explicitly bool;
+same independent reviewer APPROVE, expressions unchanged. Next proof forces
+these classes through four existing named files before repeating full mapped
+logic or the actual opening. No test is skipped/disabled or assertion weakened.

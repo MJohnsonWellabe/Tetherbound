@@ -3245,7 +3245,7 @@ func _host_strike(intent: Dictionary, peer_id: int) -> Dictionary:
 		_publish_host_attack_launch(encounter_id, peer_id, self_launch)
 		_host_after_encounter_change(encounter_id, peer_id)
 		return self_verdict
-	var is_dash := utility.get("kind") == "dash_strike"
+	var is_dash: bool = utility.get("kind") == "dash_strike"
 	var dash_sweep := Callable()
 	if is_dash:
 		var target_instance := wild.get("instance") as RefCounted
