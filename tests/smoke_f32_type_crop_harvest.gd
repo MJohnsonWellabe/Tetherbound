@@ -278,7 +278,36 @@ func _wait_settled(count: int, action: String) -> bool:
 
 
 func _on_settled(op: String, id: String, action: String, verdict: Dictionary) -> void:
-	if op == "farm" and id == PLOT_ID: _settled.append({"action_id": action, "verdict": verdict.duplicate(true)})
+	if op != "farm" or id != PLOT_ID: return
+	_settled.append({"action_id": action, "verdict": verdict.duplicate(true)})
+	if verdict.get("terminal_refusal") != true: return
+	# Read only AFTER this actual attempt was refused. Admission/view/context
+	# getters and save-store getters can settle writes; none belong here.
+	var session: Node = _game.get("session")
+	var authority: RefCounted = session.get("_character_authority")
+	var original: Array[Dictionary] = []
+	for envelope: Dictionary in (session.get("_foundation_requests") as Dictionary).values():
+		if envelope.get("op") == "resource" and envelope.get("intent", {}).get("request", {}).get("action_id") == action:
+			original.append(envelope.duplicate(true))
+	var source: Node3D = _resources.call("_source", "meadows", PLOT_ID)
+	var input: Node = preload("res://scripts/ui/input_owner.gd").current(self)
+	var lifecycle := session.get_node_or_null(^"FoundationComposition/TravelLifecycle")
+	var character: String = _game.get("local").character_id
+	var diagnostic := {"original_envelopes": original, "character_id": character,
+		"authority_revision": authority.call("revision", character),
+		"authority_state": authority.call("state", character),
+		"training_pending": (authority.get("_training_pending") as Dictionary).get(character, {}).duplicate(true),
+		"research_preparation": (authority.get("_research_preparations") as Dictionary).get(character, {}).duplicate(true),
+		"world_day": _game.get("world").day, "realm": _game.get("current_realm"),
+		"player_position": [_player.global_position.x, _player.global_position.y, _player.global_position.z],
+		"source_position": [source.global_position.x, source.global_position.y, source.global_position.z] if source != null else [],
+		"distance_m": _player.global_position.distance_to(source.global_position) if source != null else -1.0,
+		"world_owns_player": _world.is_ancestor_of(_player),
+		"world_owns_source": source != null and _world.is_ancestor_of(source),
+		"input_owner": str(input.get_path()) if input != null else "",
+		"lifecycle": lifecycle.call("local_sample") if lifecycle != null else {}}
+	_report.terminal_failure = diagnostic
+	print("F32 CROP refused original source: ", JSON.stringify(diagnostic))
 
 
 func _plot(world: Dictionary) -> Dictionary:
