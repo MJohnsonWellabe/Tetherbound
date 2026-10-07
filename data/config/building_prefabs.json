@@ -4783,6 +4783,17 @@
       ]
     },
     "farmhouse_shell": {
+      "interior_floor_material": {
+        "scope": "world_presentation",
+        "albedo": "res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png",
+        "normal": "res://assets/buildings/quaternius_medieval/T_WoodTrim_Normal.png",
+        "tint": "#c9b49b",
+        "uv_scale": [1.0, 0.27, 1.0],
+        "uv_offset": [0.0, 0.02, 0.0],
+        "roughness": 0.86,
+        "normal_scale": 0.45,
+        "_comment": "Installed family wood atlas, inspected top longitudinal-grain band only. Existing ground/loft/stair/ceiling boxes and collision stay unchanged; no full-atlas or triplanar sampling of plaster/end-grain. Actual ordinary-camera recapture pending."
+      },
       "interior_lighting": {
         "scope": "world_presentation",
         "room_colour": "#ffd8a5",

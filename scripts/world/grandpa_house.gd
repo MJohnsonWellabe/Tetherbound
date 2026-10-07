@@ -46,6 +46,7 @@ const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 const REST_POINT := preload("res://scripts/world/rest_point.gd")
 const VILLAGE_CONFIG := "res://data/config/village.json"
 var _house_lighting: Dictionary = {}
+var _floor_presentation: Dictionary = {}
 
 const FURNITURE_DIR := "res://assets/props/quaternius_furniture"
 ## Quaternius furniture is authored at roughly 2x real scale (a 4.26m bed).
@@ -131,7 +132,8 @@ const COL_FLOOR := Color("#7a5a35")
 
 ## The old reskin table is gone with the primitive shell it painted — walls,
 ## roof and windows are real kit modules now, and the few primitives left
-## (floors, stairs, the loft beam and rail) stay FLAT colour. T_WoodTrim is
+## (the loft beam and rail) stay flat colour. The floor recipe crops a wood
+## band instead of sampling the full T_WoodTrim atlas. T_WoodTrim is
 ## a trim ATLAS: across the 4.2m loft beam it sampled its pale plaster
 ## patches and rendered the beam as a blue-grey band in the interior frame,
 ## the same defect class as the round-2 circus-stripe floor.
@@ -375,6 +377,8 @@ func _build_kit_shell() -> void:
 	var recipe: Dictionary = prefabs.call("recipe", "farmhouse_shell")
 	var lighting: Variant = recipe.get("interior_lighting", {})
 	_house_lighting = lighting if lighting is Dictionary else {}
+	var floor_settings: Variant = recipe.get("interior_floor_material", {})
+	_floor_presentation = floor_settings if floor_settings is Dictionary else {}
 	# building_prefabs.gd caches an un-parented Node3D template tree per
 	# prefab name; without a real SceneTree parent it leaks RenderingServer
 	# resources at engine shutdown (see building_prefabs.gd's own header on
@@ -414,6 +418,24 @@ func _material(colour: Color) -> StandardMaterial3D:
 			m.albedo_color = colour
 	else:
 		m.albedo_color = colour
+	if colour == COL_FLOOR and not _floor_presentation.is_empty():
+		var albedo_path := str(_floor_presentation.get("albedo", ""))
+		if ResourceLoader.exists(albedo_path):
+			m.albedo_texture = load(albedo_path) as Texture2D
+			m.albedo_color = Color(str(_floor_presentation.get("tint", "#ffffff")))
+			# Crop the inspected top wood band on every existing box face;
+			# triplanar repetition would sample the atlas's plaster/end-grain.
+			m.uv1_triplanar = false
+			for key: String in ["uv_scale", "uv_offset"]:
+				var values: Array = _floor_presentation.get(key, [])
+				if values.size() == 3:
+					m.set("uv1_" + key.trim_prefix("uv_"), Vector3(float(values[0]), float(values[1]), float(values[2])))
+			m.roughness = clampf(float(_floor_presentation.get("roughness", 0.9)), 0.2, 1.0)
+			var normal_path := str(_floor_presentation.get("normal", ""))
+			if ResourceLoader.exists(normal_path):
+				m.normal_enabled = true
+				m.normal_texture = load(normal_path) as Texture2D
+				m.normal_scale = clampf(float(_floor_presentation.get("normal_scale", 0.45)), 0.0, 2.0)
 	_materials[colour] = m
 	return m
 
