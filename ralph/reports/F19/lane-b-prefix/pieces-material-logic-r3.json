@@ -1,0 +1,27 @@
+{
+  "artifact_id": 11501626738,
+  "script_errors": 0,
+  "review": "SOURCE APPROVE retained F19 reviewer",
+  "source_commit": "d5cd796a1c352ce3bd11b4ead1f2e1c92e48ed2d",
+  "assertions": 86,
+  "script": "tests/run_tests.gd",
+  "failed": 0,
+  "artifact_sha256": "479cfbcab204d03e0c178e6c635205c9ffb347517c54636149caa4b21580ee9a",
+  "status": "PASS",
+  "remaining_gates": [
+    "Existing smoke_earned_material_selection.gd actual live authored/scatter/refusal/height eligibility assertions",
+    "Actual earned opening export and next production Load",
+    "Actual physical authored-node harvest and paid camp/tournament",
+    "All new-order earned chapter checkpoint boundaries and strict promotion"
+  ],
+  "scope": "Existing checkpoint source identity/legacy diagnostic logic and unchanged crossing eligibility guard; live authored-first selection check is a separate existing smoke",
+  "duration_seconds": 7,
+  "engine_errors": 0,
+  "run_id": 37661673021,
+  "run_log_sha256": "9356eeb478817c021160adbea912a39bc847f5008668d244edb35113188a7220",
+  "files": 2,
+  "args": "--only=test_four_biome_checkpoints.gd,test_meadows_earned_material_segment.gd",
+  "tests": 12,
+  "warning_markers": 0,
+  "exit_code": 0
+}
