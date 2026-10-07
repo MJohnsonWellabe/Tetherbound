@@ -46,6 +46,7 @@ const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const RENDER_BOUNDS := preload("res://scripts/characters/render_bounds.gd")
 const TEST_SAVE_DIR := "user://f10_2_named_footage"
 const ALL_IDS := ["hollows_alpha", "capacitor_alpha", "crown_guardian",
 	"old_rodfolk_hall_guardian", "blackwater_elder", "glass_field_alpha"]
@@ -67,6 +68,8 @@ var _id := ""
 var _named: Node3D
 var _hidden: Array[Node3D] = []
 var _log: Array[String] = []
+var _scale_audit := false
+var _scale_failures: Array[String] = []
 
 # Game-time clock: physics frames seen since the fight began.
 var _phys := 0
@@ -104,6 +107,8 @@ func _run() -> void:
 			_seconds = float(arg.trim_prefix("--seconds="))
 		elif arg.begins_with("--interval="):
 			_interval = float(arg.trim_prefix("--interval="))
+		elif arg == "--scale-audit":
+			_scale_audit = true
 	if _out.is_empty() or DisplayServer.get_name() == "headless":
 		push_error("needs --out= and a rendering display")
 		quit(1)
@@ -154,13 +159,23 @@ func _run() -> void:
 		_id = id
 		var row := await _capture(id)
 		summary.append(row)
+		if _scale_audit and not bool(row.get("started", false)):
+			_scale_failures.append("%s: real named fight never started" % id)
 		_note("SUMMARY %s" % JSON.stringify(row))
 	var file := FileAccess.open(_out.path_join("capture_log.json"), FileAccess.WRITE)
 	if file != null:
-		file.store_string(JSON.stringify({"summary": summary, "log": _log}, "\t"))
+		file.store_string(JSON.stringify({"summary": summary, "log": _log,
+			"scale_audit": _scale_audit, "scale_failures": _scale_failures}, "\t"))
+		file.flush()
+		if _scale_audit and file.get_error() != OK:
+			_scale_failures.append("scale receipt could not be flushed")
 		file.close()
+	elif _scale_audit:
+		_scale_failures.append("scale receipt could not be opened")
 	_note("done in %d ms" % (Time.get_ticks_msec() - t0))
-	quit(0)
+	for failure: String in _scale_failures:
+		push_error(failure)
+	quit(0 if _scale_failures.is_empty() else 1)
 
 
 func _pin_calm() -> void:
@@ -185,7 +200,10 @@ func _named_body(id: String) -> Node3D:
 func _save(tag: String) -> void:
 	await RenderingServer.frame_post_draw
 	var path := _out.path_join("%s-%s.png" % [_id, tag])
-	root.get_texture().get_image().save_png(path)
+	var image := root.get_texture().get_image()
+	if image == null or image.is_empty() or image.save_png(path) != OK:
+		if _scale_audit:
+			_scale_failures.append("%s: required frame not saved" % path)
 	var enemy := _manager.call("enemy_body") as Node3D if bool(_manager.call("is_fighting")) else null
 	var ally := _director.call("ally_body") as Node3D
 	var cam := _rig.get_node_or_null(^"Camera3D") as Camera3D
@@ -314,6 +332,7 @@ func _capture(id: String) -> Dictionary:
 		_note("NO BODY for %s" % id)
 		return row
 	var at := _named.global_position
+	var travel_scale := _scale_record(_named) if _scale_audit else {}
 	# Hide other wilds near it (disclosed fixture).
 	for body in _hidden:
 		if is_instance_valid(body):
@@ -408,6 +427,26 @@ func _capture(id: String) -> Dictionary:
 	row.started = true
 	row["engaged_by"] = engaged_by
 	row["enemy_is_named"] = enemy == _named
+	if _scale_audit:
+		var fight_scale := _scale_record(enemy)
+		row["travel_scale"] = travel_scale
+		row["fight_scale"] = fight_scale
+		row["ally_fight_scale"] = _scale_record(_director.call("ally_body") as Node3D)
+		if travel_scale.is_empty() or fight_scale.is_empty() or enemy != _named:
+			_scale_failures.append("%s: missing real travel/fight body measurement" % id)
+		else:
+			for key: String in ["instance_id", "species"]:
+				if travel_scale[key] != fight_scale[key]:
+					_scale_failures.append("%s: travel/fight %s changed" % [id, key])
+			for key: String in ["height_m", "radius_m", "render_height_m"]:
+				if not is_equal_approx(float(travel_scale[key]), float(fight_scale[key])):
+					_scale_failures.append("%s: travel/fight %s changed" % [id, key])
+			for axis in 3:
+				if not is_equal_approx(float(travel_scale["root_scale"][axis]), float(fight_scale["root_scale"][axis])):
+					_scale_failures.append("%s: travel/fight root scale changed" % id)
+		if float(fight_scale.get("render_height_m", 0.0)) <= 1.80 \
+			or float((row["ally_fight_scale"] as Dictionary).get("render_height_m", 0.0)) <= 1.80:
+			_scale_failures.append("%s: a real fighter is not taller than the trainer" % id)
 	_note("%s fight live (%s) enemy=%s named=%s" % [id, engaged_by, str(enemy), str(enemy == _named)])
 	enemy.connect("telegraph_started", _on_telegraph)
 	var on_lunge := func(_h: Vector3, _d: float) -> void: _on_strike_begin("lunge_started")
@@ -485,3 +524,19 @@ func _capture(id: String) -> Dictionary:
 	for i in 60:
 		await physics_frame
 	return row
+
+
+## Read the actual installed bodies before engagement and after ordinary combat entry.
+## These are geometry receipts, not an earned route or camera-quality claim.
+func _scale_record(body: Node3D) -> Dictionary:
+	if not is_instance_valid(body) or not body.has_method("model_pivot"):
+		return {}
+	var pivot := body.call("model_pivot") as Node3D
+	if pivot == null or not bool(body.call("has_model")):
+		return {}
+	var rendered := RENDER_BOUNDS.measure(pivot)
+	var root_scale := body.global_transform.basis.get_scale()
+	return {"instance_id": body.get_instance_id(), "species": str(body.get("species_id")),
+		"height_m": float(body.call("body_height")), "radius_m": float(body.call("body_radius")),
+		"render_height_m": rendered.size.y * root_scale.y,
+		"root_scale": [root_scale.x, root_scale.y, root_scale.z]}
