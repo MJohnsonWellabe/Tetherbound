@@ -855,7 +855,7 @@ func _run() -> void:
 		if at_teammate.length() < 0.05:
 			continue
 		friendly = await step(1, "strike",
-			{"facing": [at_teammate.x, 0.0, at_teammate.z], "slot": "quick",
+			{"target": [host_creature_at.x, host_creature_at.y, host_creature_at.z], "slot": "quick",
 			 "settle": STRIKE_SETTLE})
 		var post: Dictionary = await _boss(0)
 		struck_after = _struck(post, host_peer_id)
