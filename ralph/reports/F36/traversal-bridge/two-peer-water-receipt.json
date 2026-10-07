@@ -1,0 +1,24 @@
+{
+  "criterion": "F36#1",
+  "scope": "Existing two-peer real mounted-water smoke",
+  "source_sha": "5298debcde5ea65d52f8e4a24afbddef0f1d7407",
+  "run_id": 37679787766,
+  "artifact_id": 11508778645,
+  "script": "tests/smoke_net_water_mounted_swimming.gd",
+  "result": "PASS",
+  "exit_code": 0,
+  "seconds": 85,
+  "peers": 2,
+  "actual_input_displacement_m": 35.884572327137,
+  "checks": [
+    "Actual mounted input crosses >30m with spent nonzero owned-creature swim resource and preserved human stamina/combat energy.",
+    "Host receives matching validated mount/trainer MOUNTED state and client authority identity.",
+    "Transformed mount seat, seated rider and installed saddle retained on remote host.",
+    "Exhaustion/drowning, deepwater dismount, HUMAN swim and nearby remount use real production transitions; remount does not refill resource."
+  ],
+  "limits": [
+    "Fixture supplies owned Aquaryn and saddle; no earned crafting/Alpha proof.",
+    "Headless behavior only; no audible/pose matrix/save/reconnect visual acceptance."
+  ],
+  "shipping_flags": "All F36 pose species remain off"
+}
