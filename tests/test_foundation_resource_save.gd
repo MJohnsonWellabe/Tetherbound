@@ -107,12 +107,30 @@ func test_resource_world_bool_failure_rolls_back_then_owner_disk_retry_never_pay
 	assert_eq(game.local.inventory.count("essence_ground"), 3)
 	assert_eq(FileAccess.get_file_as_bytes(owner_path), old_owner)
 	assert_true(session.owns_input(), "unsaved owner retains the existing mutation fence")
+	# Existing resource adapter: no first quote while the preceding real
+	# transaction owns input. Reuse this test's failed writer and pending row.
+	var composition := Node.new()
+	session.add_child(composition)
+	var resources := preload("res://scripts/net/foundation_resources.gd").new()
+	composition.add_child(resources)
+	var unquoted := {"operation": "node", "source_id": "essence_meadows_ground_01",
+		"key": "resource:meadows:essence_meadows_ground_01", "intent": fixture._intent(), "revision": -1,
+		"world": weakref(game.world), "epoch": "resource-epoch", "character_id": DATA.CHARACTER}
+	resources.set("_pending", {DATA.TXN: unquoted})
+	var original_unquoted := var_to_bytes(unquoted)
+	var original_request_count: int = session.get("_foundation_requests").size()
+	resources.call("_send_pending", DATA.TXN)
+	assert_eq(var_to_bytes(unquoted), original_unquoted, "unsaved prior owner keeps the new resource request unquoted")
+	assert_eq(session.get("_foundation_requests").size(), original_request_count)
 	writer.refuse_owner = false
 	var retry := OWNER.apply_owner(game, row)
 	assert_true(retry.get("ok") == true and retry.get("saved") == true and retry.get("duplicate") == true, str(retry))
 	assert_eq(game.local.inventory.count("essence_ground"), 3)
 	assert_true(E._equivalent(RECORD.portable_projection(writer.character_store.call("read", DATA.CHARACTER)), row.after))
 	assert_true(session.owns_input(), "disk save alone does not forge the host ACK")
+	resources.call("_send_pending", DATA.TXN)
+	assert_eq(var_to_bytes(unquoted), original_unquoted, "actual disk save still waits for the prior host ACK before quoting")
+	assert_eq(session.get("_foundation_requests").size(), original_request_count)
 	assert_false(rpc.ledger.commit_creature_training_delivery(row, 1).ok)
 	_close(game, rpc, directory)
 

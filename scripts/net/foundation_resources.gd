@@ -116,6 +116,18 @@ func _send_pending(id: String) -> void:
 		_finish(id, _refusal("owner_changed", "Gathering stopped when the world changed."))
 		return
 	if int(pending.revision) < 0:
+		# A prior morning/station write can finish during finish_fallback.
+		# Settle it BEFORE the first quote, then wait on the existing owner
+		# mutation fence. An already quoted original is never rewritten.
+		var game: Node = owner.call("_game")
+		var saver: RefCounted = game.get("save_system") if game != null else null
+		if saver == null: return
+		saver.call("finish_fallback")
+		if pending.world.get_ref() != _world() or pending.epoch != owner.call("_altar_current_epoch") \
+			or pending.character_id != owner.call("_local_character_id"):
+			_finish(id, _refusal("owner_changed", "Gathering stopped when the world changed."))
+			return
+		if saver.call("fallback_busy") == true or owner.call("_owner_training_mutation_blocked", game.get("local")) == true: return
 		var view: Dictionary = owner.call("homestead_personal_view")
 		if view.get("character_id") != pending.character_id or not view.has("registry_revision"): return
 		pending.revision = int(view.registry_revision)
