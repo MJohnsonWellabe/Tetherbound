@@ -1752,6 +1752,7 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 	# Preserve the pair's takeover pitch and subsequent manual look. Automatic
 	# obstruction elevation is relative to that baseline, never compounded.
 	var base_pitch: float = pitch if manual else float(_fight_camera_solution.get("base_pitch",pitch))
+	var recovery_direction: float = 0.0 if manual else signf(float(_fight_camera_solution.get("recovery_orbit_direction",0.0)))
 	var local := fight.duplicate()
 	var existing_max := float(cfg.get("distance",6.0)) + maxf(0.0,float((cfg.get("framing",{}) as Dictionary).get("max_extra_distance",0.0)))
 	local["max_distance_m"] = minf(float(fight.get("max_distance_m",48.0)),existing_max)
@@ -1800,6 +1801,7 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 	var current_visibility := _fight_visibility_score(current.transform,current_a.get("rect",Rect2()),current_b.get("rect",Rect2()),visibility_context)
 	var current_clear: bool = current_framed and current_overlap<=float(local.max_actor_overlap) \
 		and bool(current_visibility.get("pass",false))
+	if current_clear: recovery_direction = 0.0
 	var manual_settled: bool = absf(wrapf(yaw-current_yaw,-PI,PI))<=0.000001 and absf(pitch-current_pitch)<=0.000001
 	var retain: bool = current_clear and ((manual and manual_settled) or (not manual \
 		and (not bool(solution.get("pass",false)) \
@@ -1827,6 +1829,14 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 			routes.append(Vector2(turn,0.0))
 			routes.append(Vector2(other_turn,0.0))
 			routes.append(Vector2(0.0,1.0))
+			# An admitted opposite-side escape must not reverse next frame merely
+			# because the shortest route is tried first again. Prefer both variants
+			# of the last admitted direction toward today's scored destination.
+			if recovery_direction!=0.0 and absf(turn)>0.000001:
+				var preferred_turn: float = turn if signf(turn)==recovery_direction else other_turn
+				var fallback_turn: float = other_turn if signf(turn)==recovery_direction else turn
+				routes = [Vector2(preferred_turn,1.0),Vector2(preferred_turn,0.0),
+					Vector2(fallback_turn,1.0),Vector2(fallback_turn,0.0),Vector2(0.0,1.0)]
 		var admitted: bool = false
 		for attempt: int in routes.size()*4:
 			var route: Vector2 = routes[attempt >> 2]
@@ -1898,6 +1908,11 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 	_fight_camera_solution["pass"] = bool(_fight_camera_solution.actual_framed) \
 		and float(_fight_camera_solution.actual_overlap)<=float(local.max_actor_overlap) \
 		and bool((_fight_camera_solution.actual_visibility as Dictionary).get("pass",false))
+	if manual or bool(_fight_camera_solution["pass"]):
+		recovery_direction = 0.0
+	elif absf(selected_yaw-current_yaw)>0.000001:
+		recovery_direction = signf(selected_yaw-current_yaw)
+	_fight_camera_solution["recovery_orbit_direction"] = recovery_direction
 	_fight_camera_solution["clock"] = "final_idle_after_physics_follow_and_roll"
 	return true
 
