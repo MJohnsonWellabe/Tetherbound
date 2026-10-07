@@ -7,6 +7,7 @@ extends "res://tests/smoke_four_biome_continuous.gd"
 const GRAPHICS := preload("res://scripts/ui/graphics_prefs.gd")
 const COMBAT := preload("res://scripts/combat/combat_manager.gd")
 const MOVE_LIBRARY := preload("res://scripts/vfx/move_effect_library.gd")
+const COMBAT_MATH := preload("res://scripts/combat/combat_math.gd")
 var _fight_output := ""
 var _fight_source := ""
 var _fight_preset := ""
@@ -28,6 +29,8 @@ class FightObserver extends Node:
 	# Optional, process-local presentation preview. No gameplay or saved config
 	# changes; the default observer and its inherited input driver stay intact.
 	var prove_library_arrival := false
+	var prove_canonical_wild := false
+	var _saved_actor_vitals: Dictionary = {}
 	var arrival_records: Dictionary = {}
 	var arrival_errors: Array[String] = []
 	var uncorrelated_impacts: Array[Dictionary] = []
@@ -42,6 +45,12 @@ class FightObserver extends Node:
 
 	func begin_preview() -> void:
 		if not prove_library_arrival: return
+		if prove_canonical_wild:
+			# The original canonical owner decides admission. This opt-in only
+			# selects its existing gate before the inherited fresh opening runs.
+			_saved_actor_vitals = (COMBAT_MATH.config().get("actor_vitals", {}) as Dictionary).duplicate(true)
+			COMBAT_MATH.config()["actor_vitals"] = _saved_actor_vitals.duplicate(true)
+			COMBAT_MATH.config()["actor_vitals"]["runtime_enabled"] = true
 		_saved_enabled_present = MOVE_LIBRARY.config().has("enabled")
 		_saved_enabled = bool(MOVE_LIBRARY.config().get("enabled", false))
 		MOVE_LIBRARY.config()["enabled"] = true
@@ -51,6 +60,8 @@ class FightObserver extends Node:
 		_closed = true
 		_disconnect_manager()
 		if _preview_active:
+			if prove_canonical_wild:
+				COMBAT_MATH.config()["actor_vitals"] = _saved_actor_vitals
 			if _saved_enabled_present: MOVE_LIBRARY.config()["enabled"] = _saved_enabled
 			else: MOVE_LIBRARY.config().erase("enabled")
 			_preview_active = false
@@ -187,6 +198,15 @@ class FightObserver extends Node:
 		var director: Node = world.get_node_or_null("EncounterDirector")
 		if not is_instance_valid(director) or director.is_queued_for_deletion() \
 				or director.get_instance_id() != int(row.director_instance_id): return false
+		if prove_canonical_wild and director.call("uses_wild_actor_vitals", str(row.encounter_id)) != true:
+			return false
+		if prove_canonical_wild:
+			var runtime: Node = director.call("_shared_host_fight", str(row.encounter_id))
+			if director.call("_owns_canonical_wild", str(row.encounter_id)) != true \
+					or not is_instance_valid(runtime) or runtime.get_instance_id() != int(row.canonical_runtime_instance_id) \
+					or runtime.call("body") != body or body.get("instance") != target \
+					or int(runtime.get("body_generation")) != int(row.canonical_body_generation) \
+					or runtime.get_meta(&"canonical_wild_context", {}) != row.canonical_context: return false
 		var actor_body := director.call("ally_body") as Node3D
 		if not is_instance_valid(actor_body) or not actor_body.is_inside_tree() or actor_body.is_queued_for_deletion() \
 				or actor_body.get_instance_id() != int(row.actor_body_instance_id) or _manager.get("_ally_body") != actor_body: return false
@@ -249,6 +269,18 @@ class FightObserver extends Node:
 			"admitted_launch": launch.duplicate(true), "birth_actor_binding": birth.duplicate(true),
 			"pre_arrival_checks": [], "errors": [], "visual_verdict": "unjudged"}
 		arrival_records[action_id] = row
+		if prove_canonical_wild:
+			var runtime: Node = director.call("_shared_host_fight", str(row.encounter_id)) if is_instance_valid(director) else null
+			row["canonical_runtime_instance_id"] = runtime.get_instance_id() if is_instance_valid(runtime) else 0
+			row["canonical_body_generation"] = int(runtime.get("body_generation")) if is_instance_valid(runtime) else -1
+			row["canonical_context"] = runtime.get_meta(&"canonical_wild_context", {}).duplicate(true) if is_instance_valid(runtime) else {}
+			row["canonical_wild_owner_valid_at_launch"] = is_instance_valid(director) \
+				and director.call("uses_wild_actor_vitals", str(row.encounter_id)) == true \
+				and director.call("_owns_canonical_wild", str(row.encounter_id)) == true \
+				and is_instance_valid(runtime) and is_instance_valid(body) \
+				and runtime.call("body") == body and body.get("instance") == target
+			if row.canonical_wild_owner_valid_at_launch != true:
+				_arrival_error(action_id, "original canonical wild owner is not mounted for this launch")
 		if row.encounter_id.is_empty() or row.target_uid.is_empty() or row.attacker_uid.is_empty() \
 				or not _identity_matches(row):
 			_arrival_error(action_id, "launch does not identify the current admitted encounter, actor and target")
@@ -421,6 +453,10 @@ class FightObserver extends Node:
 
 func _run() -> void:
 	var arguments := OS.get_cmdline_user_args()
+	if arguments.has("--prove-canonical-wild") and not arguments.has("--prove-library-arrival"):
+		failures.append("canonical wild proof requires the strict library arrival observer")
+		super._finish(false)
+		return
 	for argument: String in arguments:
 		if argument == "--legacy-order-diagnostic" or argument.begins_with("--resume") \
 				or argument.begins_with("--dry") or argument.begins_with("--stop-at"):
@@ -452,6 +488,7 @@ func _run() -> void:
 	_observer.preset = _fight_preset
 	_observer.expected_resolution = requested_resolution
 	_observer.prove_library_arrival = arguments.has("--prove-library-arrival")
+	_observer.prove_canonical_wild = arguments.has("--prove-canonical-wild")
 	_observer.retain_sample = _write_fight_manifest.bind(false, false)
 	_observer.process_mode = Node.PROCESS_MODE_ALWAYS
 	root.add_child(_observer)
@@ -496,7 +533,9 @@ func _write_fight_manifest(complete: bool, prefix_passed: bool) -> bool:
 		"failures": failures, "scope": ("actual fresh title/starter/catch presentation and >=30s native motion" if complete
 			else "incomplete native earned-opening observation; opening/catch completion and >=30s motion remain unproved")
 			+ "; no full M1, visual bar, multiplayer or device claim",
-		"shortcuts": ["inherited ordinary-input fresh opening driver", "observational JPEG95 frames at actual timestamps", "motion may include ordinary post-catch aftermath", "no added gameplay inputs or gameplay state mutations by observer",
+		"canonical_wild_process_opt_in": _observer.prove_canonical_wild,
+		"shortcuts": ["inherited ordinary-input fresh opening driver", "observational JPEG95 frames at actual timestamps", "motion may include ordinary post-catch aftermath", "no added gameplay inputs, target replacement, HP edits or admission bypass by observer",
+			"optional --prove-canonical-wild selects only cached actor_vitals before original fresh spawn/admission and restores the gate at close; source config bytes and shipping flags unchanged",
 			"optional --prove-library-arrival previews library in this process; event-triggered native PNGs retain first draw after contact, not an assumed exact periodic frame"]}, "\t") + "\n")
 	file.flush()
 	var write_error := file.get_error()

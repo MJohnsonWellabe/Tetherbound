@@ -1,0 +1,24 @@
+Production canonical opening opt-in source review
+Base: 03de17c4b8dc2f7176e4fc4b5544373d49f9a6f7
+File: tools/capture_f17_opening_fight.gd (existing ordinary fresh opening capture).
+Allocation: issue572 comments6041849995/6041940148.
+
+Optional --prove-canonical-wild requires --prove-library-arrival. Before the
+inherited fresh title/spawn/admission driver, it selects actor_vitals only in
+the cached combat configuration, restoring the original dictionary on close or
+exit. Source bytes and shipping flags are unchanged. C's original canonical
+owner, context, prepared writes and actor admission retain their own guards.
+No alternate target/party, HP mutation, fixture or new gameplay input is added.
+
+Independent reviewer: /root/f25_arrival_review
+Initial verdict REQUEST_CHANGES: a selected gate alone does not establish actual
+canonical ownership. Corrected launch rows retain original runtime instance,
+generation and context, requiring uses_wild_actor_vitals, _owns_canonical_wild,
+runtime body equality and exact observed creature equality. Later identity
+checks retain those same lifetime fences.
+Final verdict APPROVE: a legacy fallback cannot produce passing canonical proof;
+gate timing/restoration sound, static diff check passed. No engine ran locally.
+
+Open: C prerequisite/source confirmation and actual hosted fresh opening proof.
+The strict zero-launch/no-prearrival-HP/no-prearrival-number observer remains
+unchanged. Failed prior run37644899549 is retained; no acceptance or flag flip.
