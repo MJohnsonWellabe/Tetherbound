@@ -1,0 +1,33 @@
+{
+  "original_proof_source": "2870b3f4cdf283cf4a5b73699dcdae936540d967",
+  "repair": "Only Nessa position restored62/7 and authored facing180; invalid relocation rationale removed; night_light unchanged. No other product difference from original proof.",
+  "changed_path": "data/config/village_npcs.json",
+  "search_terms": [
+    "village_npcs.json",
+    "Nessa"
+  ],
+  "search": "rg -l -F across tests/test_*.gd, exact-source git grep agrees; all selected test files unchanged by repair",
+  "files": [
+    "tests/test_dialogue_give_delivery.gd",
+    "tests/test_dialogue_portraits.gd",
+    "tests/test_dialogue_runner.gd",
+    "tests/test_inn_interior_visual_identity.gd",
+    "tests/test_meadows_route_prompt_0912.gd",
+    "tests/test_meadows_south_trail_pulls_0912.gd",
+    "tests/test_objective_beacons_match_npcs.gd",
+    "tests/test_opening_beats.gd",
+    "tests/test_progression_state.gd",
+    "tests/test_tournament_ground_presentation.gd",
+    "tests/test_tournament.gd",
+    "tests/test_trainers_data.gd",
+    "tests/test_village_boundary.gd",
+    "tests/test_village_main_street.gd",
+    "tests/test_village_street_0912.gd",
+    "tests/test_villager_male_painted_hair.gd"
+  ],
+  "whole_file_count": 16,
+  "args": "--only=test_dialogue_give_delivery.gd,test_dialogue_portraits.gd,test_dialogue_runner.gd,test_inn_interior_visual_identity.gd,test_meadows_route_prompt_0912.gd,test_meadows_south_trail_pulls_0912.gd,test_objective_beacons_match_npcs.gd,test_opening_beats.gd,test_progression_state.gd,test_tournament_ground_presentation.gd,test_tournament.gd,test_trainers_data.gd,test_village_boundary.gd,test_village_main_street.gd,test_village_street_0912.gd,test_villager_male_painted_hair.gd",
+  "status": "UNRUN",
+  "reuse": "Original passing coverage for unchanged relevant code/data stays pinned to37561211274. NPC configuration/Nessa consumers are rerun after this single-record restoration; no method filtering or test skip.",
+  "guard": "Prepared through GitHub Git API. No local source/engine/import/pack/cache writer while Valheim is live."
+}

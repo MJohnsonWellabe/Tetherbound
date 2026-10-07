@@ -1,0 +1,423 @@
+{
+  "producer_sha": "11634b5cfcbb3abf8c2dc93ad82cd42695f4d9b6",
+  "actual_checkout_verified": true,
+  "checkout_original_lines": [
+    "2026-10-07T03:16:27.0873804Z [command]/usr/bin/git log -1 --format=%H",
+    "2026-10-07T03:16:27.0904696Z 11634b5cfcbb3abf8c2dc93ad82cd42695f4d9b6"
+  ],
+  "main_at_consumption": "54c122712f57725b7d205aad69eb2facc66457b6",
+  "run_id": 37565857429,
+  "job_id": 112613291302,
+  "artifact_id": 11460843437,
+  "artifact_name": "render-r3-f01-main565-night-11634b5cfc-37565857429",
+  "archive_sha256": "f24d211e9e2d4a8f37e689253959602c5ea0ec0c3d8886618315ebc11b5e6718",
+  "archive_bytes": 54095061,
+  "consumed_once": true,
+  "archive_retention": "Original complete ZIP saved/verified under private .artifacts after archival-only approval6031418229; original once/no second download",
+  "native_exit": 124,
+  "native_elapsed_seconds": 5400,
+  "exit_code_file_present": false,
+  "exit_provenance": "Original job Run step Process completed with exit code124; bash-e prevented footer/exit_code",
+  "script": "tests/capture_village_walk.gd",
+  "args": "--time=night --route=visits --from-title --capture-dir=/home/runner/work/Tetherbound/Tetherbound/ralph/reports/F01-FIXES/f01_3/main565-night-11634",
+  "requested_resolution": "1920x1080",
+  "actual_capture_resolution": "1280x720",
+  "mode": "render",
+  "rendering_method": "gl_compatibility",
+  "timeout_minutes": 90,
+  "runtime_header": [
+    "Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org",
+    "WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.",
+    "     at: set_use_vsync (platform/linuxbsd/x11/gl_manager_x11.cpp:372)",
+    "OpenGL API 4.5 (Core Profile) Mesa 25.2.8-0ubuntu0.24.04.2 - Compatibility - Using Device: Mesa - llvmpipe (LLVM 20.1.2, 256 bits)",
+    "",
+    "GATE A OPENING +0.85s — title interactive",
+    "GATE A OPENING +1.03s — answered the character-choice step"
+  ],
+  "walk_capture_count": 40,
+  "archive_png_count": 41,
+  "extra_png": "user/godot/app_userdata/Tetherbound/cache/map_meadows.png",
+  "required_visits": 12,
+  "observed_visit_lines": [
+    "[village-walk] VISIT Grandpa kind=grandpa dist_m=1.37 prompt=\"Talk to Grandpa\"",
+    "[village-walk] VISIT Tam kind=villager dist_m=0.98 prompt=\"Greet Tam\"",
+    "[village-walk] VISIT Mira kind=villager dist_m=1.99 prompt=\"Greet Mira\"",
+    "[village-walk] VISIT Bram kind=villager dist_m=1.80 prompt=\"Greet Bram\""
+  ],
+  "walk_terminal_pass": false,
+  "walk_terminal_fail": false,
+  "script_error_count": 0,
+  "native_error_count": 0,
+  "warnings": [
+    "WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.",
+    "WARNING: instance_reset_physics_interpolation() is deprecated."
+  ],
+  "last_capture_line": [
+    "[village-walk] CAPTURE 040 label=\"travel\" pos=(57.92,0.90,11.82) heading_deg=8.7 image=visits_night_040_travel.png"
+  ],
+  "no_off_road_final_measurement": true,
+  "visual_review": "UNRUN/incomplete route; same existing judge only after qualifying complete proof",
+  "hosted_platform_confound": "Hosted Mesa/render path differs from historical local GTX1060 captures; timeout is observed, source defect versus throughput cause unisolated",
+  "setup_disclosures": [
+    "Existing from-title physical joypad opening and harness movement/look/interact",
+    "Companion put away by existing script",
+    "Existing frozen night clock/clear weather/photo mode, ordinary camera via look stick",
+    "No new harness/fixture/pilot/capture/measurement script, no original assertion or budget changes"
+  ],
+  "raw": {
+    "job112613291302.log": {
+      "bytes": 469876,
+      "sha256": "940245b44f7133bb9dd0d46122a74c34bb70bb99b17ebaccb7d9ad5853f76887"
+    },
+    "run.log": {
+      "bytes": 14278,
+      "sha256": "f7de5e662f01baf5f7addfcec7a8552a927ed658ca274914ea43ff88858459e5"
+    },
+    "boot_log.txt": {
+      "bytes": 2668,
+      "sha256": "0b19fd44ac16ad2d2292543c4f77e1b12c787106e9c4ce635548f6a8fb5d9941"
+    },
+    "godot.log": {
+      "bytes": 14268,
+      "sha256": "c7894afb754462464bd9d85fd9e4f532f0677c5dd27a7534a9c0eb7df1a8f081"
+    },
+    "MANIFEST.txt": {
+      "bytes": 3780,
+      "sha256": "8415cb18d9086d7a00d992291b2c6141d4e77156c98e32d657fdd32ef7a03bc7"
+    }
+  },
+  "archive_entry_inventory": [
+    {
+      "path": "MANIFEST.txt",
+      "bytes": 3780,
+      "sha256": "8415cb18d9086d7a00d992291b2c6141d4e77156c98e32d657fdd32ef7a03bc7"
+    },
+    {
+      "path": "run.log",
+      "bytes": 14278,
+      "sha256": "f7de5e662f01baf5f7addfcec7a8552a927ed658ca274914ea43ff88858459e5"
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_001_start-after-opening.png",
+      "bytes": 1496118,
+      "sha256": "10bcf0470b1643a8e144835f78a13a37005bb239fc500c137a93a7bcb8cae190",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_002_travel.png",
+      "bytes": 1102330,
+      "sha256": "813abc39f05fcb4d895be1c88925488b8c6d1d7473145b20b88a0f59b6ce76f2",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_003_end.png",
+      "bytes": 1102810,
+      "sha256": "209b67330504baa80a5310d80750dbc3b2ffea98fa81644ccdd17722ba7d1a97",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_004_reached-grandpa.png",
+      "bytes": 1159869,
+      "sha256": "0749407794c10b1d7337bd7371817fabbe1a930f5e2ce6005b843b53d6c29bf7",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_005_travel.png",
+      "bytes": 1523437,
+      "sha256": "cc177bceff9cf9a63c0edbae2db38d54a32521c7dba88f7ac15b037d566abf1e",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_006_travel.png",
+      "bytes": 1431076,
+      "sha256": "1f09f3763523d34c29b8a9f6abab40759a6a0be06918e3d2fe4427bace7d3459",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_007_travel.png",
+      "bytes": 1368589,
+      "sha256": "d68673dc10d9c57dbff3a92e9c2d23734c9da6071141d385a1eed34c27011245",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_008_travel.png",
+      "bytes": 1407731,
+      "sha256": "57b1d621fe70e96a70eefbfb691eeb2982f74bbaf3af74ca2140bfe5f0463583",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_009_travel.png",
+      "bytes": 1394936,
+      "sha256": "b181532e8155fba522d6fe668c971062727504757e3e6667a1147d00225dc9ed",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_010_travel.png",
+      "bytes": 1263585,
+      "sha256": "82e34825b703e4c4866f9ecad012af1b9a08fa37ca56cc19d8d50bcab4cfa496",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_011_travel.png",
+      "bytes": 1527368,
+      "sha256": "4f0e7b32d755ac19add7ce8ce6d4b421b810270956d00b0dfc1d03f69d9b2da2",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_012_travel.png",
+      "bytes": 1483041,
+      "sha256": "0e35e9d08a321d0fceafe877751ce9b8f0e476a017792cfebc0562bf68c28077",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_013_end.png",
+      "bytes": 1440413,
+      "sha256": "fc142b3a76c4698c90b8759d540fe52b280046edb9ad2f4c5b49a186649529af",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_014_reached-tam.png",
+      "bytes": 1334655,
+      "sha256": "89fc7a2c0c5ae83b0b41682512954888e56de448e94b7ec6f90eb30fddf1c5d6",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_015_travel.png",
+      "bytes": 1441015,
+      "sha256": "b006ae7a765c0159a2ca11e8997d67d717f1a5ca289c4e3902ed84aeb9aa9b06",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_016_travel.png",
+      "bytes": 1438482,
+      "sha256": "c35b66124eb6e2d8c628e9ac2c3c9f6fc725ca613c7b8da6e4497f1026b13b7c",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_018_travel.png",
+      "bytes": 1441379,
+      "sha256": "037a551b5551b131a0eb6fcc83696df242ef9ceba58749d71181fd3836e49029",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_017_travel.png",
+      "bytes": 1481968,
+      "sha256": "3ad1b368a3a686093c1a1c98e08a73ad76df545f72917dfae5ac19cbf4dd6583",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_020_travel.png",
+      "bytes": 1459026,
+      "sha256": "20cb3981d43d590ca27015e155fc447ad44383a1a734759587974c6b193a3bf8",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_019_travel.png",
+      "bytes": 1317068,
+      "sha256": "9d74f94a2af99faced843f0f3c1f768497a79aaa7b201b634cb37d0f0062a088",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_021_travel.png",
+      "bytes": 1413094,
+      "sha256": "fdf8d6be5c112968b4bd69697c6393c856ad27f1bed04b1b464504570ec1d87f",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_022_travel.png",
+      "bytes": 1188219,
+      "sha256": "81ae257495035df1197f213421da42643c2149139bbe352005305221c04439df",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_023_travel.png",
+      "bytes": 1596041,
+      "sha256": "81d2b6475f15621f5215c24181f27138fb9ad7419ae30b9a8113fb01254ca37d",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_024_travel.png",
+      "bytes": 1617572,
+      "sha256": "fc1bfc34723bbe6fddc48a080f5f89f7aef67e6bb2d19525691724e35b55d019",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_025_end.png",
+      "bytes": 1374076,
+      "sha256": "d03c94411d96e9bb999246efb418d3b78089922c1a20112f69321e8e49a5cea2",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_026_reached-mira.png",
+      "bytes": 1373977,
+      "sha256": "71156b64b86171f4169d7511815465f3f2a9e69ed9c403b92ca3e6697f2b771d",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_027_travel.png",
+      "bytes": 1326475,
+      "sha256": "78249125c09fa920d7ca36914575d5f4b88920c143849d9ef090ce2137312940",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_028_travel.png",
+      "bytes": 1353690,
+      "sha256": "9d4b47d45471808ae98d599e8872f5dcc210f6bb44e467f362f729fef88ba859",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_029_travel.png",
+      "bytes": 1424138,
+      "sha256": "a9c16fe872b4a73b519ae8e4be3fe6949f8881f9db00ddf2ee2f0d17414662da",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_030_travel.png",
+      "bytes": 1494627,
+      "sha256": "e8cf5b2a38b046105900a642747015e10940d0de8b74fcb07c2aafafca158d54",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_031_travel.png",
+      "bytes": 1229584,
+      "sha256": "81c7095bdf558af5151dacaab9e1a3eff96584e769d53820fe573d82d0978afa",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_032_travel.png",
+      "bytes": 1328502,
+      "sha256": "000b9c582b7054c96fde663c8fb496b43e80f9694e85cc7872647c35b55fe48f",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_033_travel.png",
+      "bytes": 1224831,
+      "sha256": "fc87f6ef02b5aec8245f94dccc4678a327d6989fb8d8e845850a495595bf1d46",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_034_travel.png",
+      "bytes": 711299,
+      "sha256": "86337076ebd290bdc9b9fe4bd0ce56b958a31bef62c500a01e8a5e96e990761c",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_035_end.png",
+      "bytes": 881942,
+      "sha256": "e575317ef551c7c0339d96eed9f12f18b101e32ca78c9e762f5fb98a209ad1a8",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_036_reached-bram.png",
+      "bytes": 901831,
+      "sha256": "112556d88340ad53845f3bc0e3bf78338f00f9309528750ed1e98681127671c7",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_037_travel.png",
+      "bytes": 942661,
+      "sha256": "61eb459b10929c3f043fba20dd9c17f2a0bef131714c025be7d1badfc6be9d43",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_038_travel.png",
+      "bytes": 1302794,
+      "sha256": "325ea92fa86d794cc7366e99bc9bc4befe0b9b320331e05d02d01d6e9afd82a7",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_039_travel.png",
+      "bytes": 1373398,
+      "sha256": "5d3dba2f7dcc28820b2a0887ad424098154c2bbccd6060616b8b9bc803b07bea",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "tree/ralph/reports/F01-FIXES/f01_3/main565-night-11634/visits_night_040_travel.png",
+      "bytes": 1457688,
+      "sha256": "243bdbe1d7e8cde311bb20c3991c075ae4b0601833e721dd8963c3969203e486",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "user/godot/app_userdata/Tetherbound/boot_log.txt",
+      "bytes": 2668,
+      "sha256": "0b19fd44ac16ad2d2292543c4f77e1b12c787106e9c4ce635548f6a8fb5d9941"
+    },
+    {
+      "path": "user/godot/app_userdata/Tetherbound/cache/map_meadows.png",
+      "bytes": 916609,
+      "sha256": "42c9d546f84a53f683f33f04a2397af82dd3b57c333570a046e7f536f4a7aafa",
+      "width": 512,
+      "height": 2048
+    },
+    {
+      "path": "user/godot/app_userdata/Tetherbound/cache/map_meadows.png.key",
+      "bytes": 48,
+      "sha256": "e60ff57921a155cb0fa58351e62afa97e9f505aeb762a387442fcea73ec245be"
+    },
+    {
+      "path": "user/godot/app_userdata/Tetherbound/characters/redesign-v28/character-cc200262b103dcbcbb1145dffbce2f4e/character.json",
+      "bytes": 2778529,
+      "sha256": "c5a42355e1ca7b669074f94f26bfbfe916b68b373bbf0c41661fb46eefc54f38"
+    },
+    {
+      "path": "user/godot/app_userdata/Tetherbound/logs/godot.log",
+      "bytes": 14268,
+      "sha256": "c7894afb754462464bd9d85fd9e4f532f0677c5dd27a7534a9c0eb7df1a8f081"
+    },
+    {
+      "path": "user/godot/app_userdata/Tetherbound/worlds/redesign-v28/slot-0/world.json",
+      "bytes": 14000,
+      "sha256": "711150229f81118a5a6b8d8f68d72ab5239ff1c3c35e4dc4294ad4220356341c"
+    }
+  ],
+  "archived_original": {
+    "artifact": 11460843437,
+    "path": "D:/tetherbound/.artifacts/r3-f01-proof/main565-night-11634/artifact-11460843437.zip",
+    "sha256": "f24d211e9e2d4a8f37e689253959602c5ea0ec0c3d8886618315ebc11b5e6718",
+    "original_capture_dir": "D:/tetherbound/.artifacts/r3-f01-proof/main565-night-11634/captures",
+    "approved_archival_only": "6031418229",
+    "original_once": true,
+    "capture_hashes_verified": 40,
+    "live_source_cache_save_writes": 0
+  }
+}
