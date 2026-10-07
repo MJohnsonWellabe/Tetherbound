@@ -1,0 +1,19 @@
+{
+  "task_id": "01a11671-f9fa-746e-8e29-98fc32496010",
+  "endpoint": "/openapi/v1/image-to-3d",
+  "settings": {
+    "model_type": "smart-topology",
+    "ai_model": "meshy-t2",
+    "target_polycount": 15000,
+    "should_texture": false,
+    "target_formats": [
+      "glb"
+    ]
+  },
+  "reference_sha256": "ea0a0d7a0716f9fc599a91769a560afda60418c6615330064abd2e8caf841f33",
+  "balance_before": 13415,
+  "balance_after": 13410,
+  "observed_charge": 5,
+  "authorization": "issue572 coordinator Smart Topology rescope; one candidate; budget5 existing credits; no texture/rig spend",
+  "default_enabled": false
+}
