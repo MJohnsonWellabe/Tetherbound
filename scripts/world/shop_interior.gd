@@ -60,12 +60,12 @@ const CREST_AT := Vector3(DOOR_X, 2.68, 3.39)
 const CREST_LIGHT_COLOUR := Color("#ffd17a")
 
 
-## `_room` unused: this interior is Mira-specific and keeps its own hardcoded
-## footprint. Signature matches `cottage_interior.gd`'s so village.gd can
+## This interior keeps its measured footprint; the prefab room supplies only
+## counter presentation tunables. Signature matches `cottage_interior.gd`'s so village.gd can
 ## dispatch either template through the same `interior.call("build", room)`.
-func build(_room: Dictionary = {}) -> void:
+func build(room: Dictionary = {}) -> void:
 	_build_floor()
-	_build_counter()
+	_build_counter(room.get("shop_counter", {}))
 	_build_shelf()
 	_build_light()
 	_build_trade_crest()
@@ -113,13 +113,42 @@ func floor_top_world_at(x: float, z: float) -> float:
 ## The counter Mira stands behind. Left of the door lane, so walking in never
 ## walks into it, and low enough (1.0m) to read as a shop counter rather than a
 ## wall across the room.
-func _build_counter() -> void:
-	_box(Vector3(2.5, 1.0, 0.5), Vector3(-0.35, 0.5, -0.35), COL_COUNTER)
+func _build_counter(presentation: Dictionary = {}) -> void:
+	var wood := _counter_material(presentation, "tint")
+	_box(Vector3(2.5, 1.0, 0.5), Vector3(-0.35, 0.5, -0.35), COL_COUNTER, true, wood)
+	# Installed village timber and physical joinery replace the featureless
+	# slab. These attached details have no collider or interaction of their own.
+	var trim := _counter_material(presentation, "trim_tint")
+	for raw: Variant in presentation.get("joinery", []):
+		if not raw is Dictionary:
+			continue
+		var size: Array = raw.get("size", [])
+		var at: Array = raw.get("at", [])
+		if size.size() != 3 or at.size() != 3:
+			continue
+		_box(Vector3(float(size[0]), float(size[1]), float(size[2])),
+			Vector3(float(at[0]), float(at[1]), float(at[2])), COL_COUNTER, false, trim)
 	# Two crates of stock on the customer side, against the west wall, clear of
 	# the door lane. Flat colour, same as the counter: this is joinery, not a
 	# prop pass.
 	_box(Vector3(0.5, 0.5, 0.5), Vector3(-1.3, 0.25, 1.5), COL_SHELF)
 	_box(Vector3(0.45, 0.45, 0.45), Vector3(-1.3, 0.72, 1.5), COL_SHELF)
+
+
+func _counter_material(presentation: Dictionary, tint_key: String) -> StandardMaterial3D:
+	var material := _material(Color(str(presentation.get(tint_key, COL_COUNTER.to_html()))))
+	if presentation.has("albedo"):
+		material.albedo_texture = load(str(presentation.albedo)) as Texture2D
+	if presentation.has("normal"):
+		material.normal_enabled = true
+		material.normal_texture = load(str(presentation.normal)) as Texture2D
+		material.normal_scale = float(presentation.get("normal_scale", 1.0))
+	for key: String in ["uv_scale", "uv_offset"]:
+		var values: Array = presentation.get(key, [])
+		if values.size() == 3:
+			material.set("uv1_" + key.trim_prefix("uv_"), Vector3(float(values[0]), float(values[1]), float(values[2])))
+	material.roughness = float(presentation.get("roughness", 0.9))
+	return material
 
 
 ## A shelf board on the back wall behind her, so the room has a back to it from
@@ -227,12 +256,12 @@ func _build_crest_light() -> void:
 	add_child(light)
 
 
-func _box(size: Vector3, at: Vector3, colour: Color, solid := true) -> CollisionShape3D:
+func _box(size: Vector3, at: Vector3, colour: Color, solid := true, material: Material = null) -> CollisionShape3D:
 	var mesh := MeshInstance3D.new()
 	var box := BoxMesh.new()
 	box.size = size
 	mesh.mesh = box
-	mesh.material_override = _material(colour)
+	mesh.material_override = material if material != null else _material(colour)
 	mesh.position = at
 	add_child(mesh)
 	if solid:

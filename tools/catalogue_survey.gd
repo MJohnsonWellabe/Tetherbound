@@ -420,6 +420,10 @@ func _capture_row(row: Dictionary) -> void:
 	for _frame in POSE_FRAMES:
 		await process_frame
 	await RenderingServer.frame_post_draw
+	if not _player.is_on_floor():
+		_failures.append("%s: production trainer left its real floor before capture" % str(row.frame_id))
+		_write_manifest()
+		return
 	var image := root.get_texture().get_image()
 	var path := "%s/%s.png" % [_output_dir, str(row.frame_id)]
 	if image == null or image.is_empty() or image.get_width() != root.size.x or image.get_height() != root.size.y:

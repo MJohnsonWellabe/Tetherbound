@@ -3887,6 +3887,24 @@
         "inner_half_d": 2.69,
         "door_x": 1.0,
         "door_w": 1.6,
+        "shop_counter": {
+          "_scope": "Deterministic world presentation only; shop_interior consumes this, generic cottage interiors ignore it. Existing counter and crate collision footprints remain unchanged.",
+          "albedo": "res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png",
+          "normal": "res://assets/buildings/quaternius_medieval/T_WoodTrim_Normal.png",
+          "uv_scale": [1.0, 0.27, 1.0],
+          "uv_offset": [0.0, 0.02, 0.0],
+          "tint": "#d0b18c",
+          "trim_tint": "#9a7654",
+          "roughness": 0.82,
+          "normal_scale": 0.55,
+          "joinery": [
+            {"size": [2.5, 0.08, 0.5], "at": [-0.35, 0.96, -0.35]},
+            {"size": [2.5, 0.10, 0.04], "at": [-0.35, 0.09, -0.08]},
+            {"size": [0.09, 0.82, 0.04], "at": [-1.49, 0.50, -0.08]},
+            {"size": [0.09, 0.82, 0.04], "at": [-0.35, 0.50, -0.08]},
+            {"size": [0.09, 0.82, 0.04], "at": [0.79, 0.50, -0.08]}
+          ]
+        },
         "_why": "Stormwood settlement grounding, 2026-09-09: cottage_a's generic home now uses cottage_interior.gd as well as Mira's bespoke shop. These are the same measured inner faces and doorway dimensions shop_interior.gd already hardcodes for this exact shell; adding the recipe metadata makes the reused generic floor fill the real 4x6m room instead of falling back to cottage_b's 4x4m room. shop_interior.gd deliberately ignores this argument, so Mira's shipped interior is unchanged."
       },
       "retint": {
