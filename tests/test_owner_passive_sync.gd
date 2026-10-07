@@ -51,6 +51,7 @@ class GameFixture extends Node:
 class Discoveries extends RefCounted:
 	var value := {}
 	func admission_landmarks() -> Dictionary: return value.duplicate(true)
+	func admitted(_character: String, discoveries: Dictionary) -> void: value = discoveries.duplicate(true)
 
 class Session extends Node:
 	var game: Node
@@ -88,6 +89,16 @@ class Session extends Node:
 	var snapshot_applied := true
 	func handshake_snapshot_applied() -> bool: return snapshot_applied
 	func _authority_character(peer: int) -> String: return game.local.character_id if peer == owner_peer else "host"
+	# The real CharacterAuthority policy; this transport double does not claim
+	# production Session hello validation or a disk BOOL.
+	func rejoin_payout_lists(summary: Dictionary) -> Dictionary:
+		return {"valid": true, "settled": summary.get("settled_deliveries", []), "owed": summary.get("owed_deliveries", [])}
+	func rejoin_admission_for(character: String, portable: Dictionary, summary: Dictionary, lists: Dictionary) -> Dictionary:
+		var result: Dictionary = _character_authority.call("rejoin_admission", character, portable, game.world.reward_deliveries,
+			summary.get("personal_flags", {"flags": []}).get("flags", []), lists.settled, lists.owed)
+		last_rejoin_admission[character] = str(result.get("code", ""))
+		return result
+	func credit_rejoin_gathers(_character: String, _ids: Array) -> void: pass
 	func _owner_passive_send_host(packet: Dictionary) -> void: messages.append(packet.duplicate(true))
 	func _owner_passive_send_peer(_peer: int, packet: Dictionary) -> void: messages.append(packet.duplicate(true))
 	func _owner_passive_request_matches(kind: String, request: Dictionary) -> bool:
@@ -1611,6 +1622,82 @@ func test_an_open_host_duty_at_the_hello_refuses_and_never_adopts() -> void:
 	assert_true(str(service.refused[character].reason).contains("host_duties_unsettled"), "naming why: %s" % str(service.refused[character].reason))
 	assert_true(session.messages.filter(func(m: Dictionary) -> bool: return m.get("op") == "readmit").is_empty(), "no adoption")
 	assert_eq((session._character_authority.call("state", character) as Dictionary).party.size(), before.party.size(), "the held record is untouched")
+
+
+func test_deferred_rejoin_requires_real_vitals_release_saved_fresh_declaration_and_bound_resend() -> void:
+	var character: String = before.character_id
+	var card: Dictionary = before.party[0]
+	var receipt := {"receipt_id": "deferred-hit", "encounter_id": "deferred-encounter", "creature_uid": card.uid,
+		"body_generation": 1, "vitals_revision": 1}
+	var authority: RefCounted = session._character_authority
+	var stage: Dictionary = authority.call("stage_creature_vitals", character, card.uid, 0,
+		float(card.hp), bool(card.fainted), float(card.hp) - 1.0, false, receipt)
+	assert_true(stage.get("ok") == true)
+	assert_true(authority.call("finish_creature_vitals", stage, true))
+	var original_stream: String = service.local.id
+	session.host = true
+	session.last_rejoin_admission[character] = "host_duties_unsettled"
+	service.admitted(2, {"character_id": character, "portable_authority": before, "personal_flags": {"flags": []},
+		"discovered_landmarks": {}, "owner_passive_stream": {"id": original_stream, "baseline_hash": service.local.base_hash}})
+	assert_true(service.deferred.has(character))
+	session.messages.clear()
+	service.retry_deferred(character)
+	assert_true(session.messages.is_empty(), "no fresh request before the real pending vitals release")
+	assert_true(authority.call("acknowledge_creature_vitals", character, card.uid, int(stage.revision), receipt))
+	service.retry_deferred(character)
+	assert_eq(session.messages.size(), 1)
+	var request: Dictionary = session.messages.back().duplicate(true)
+	assert_eq(request.op, "redeclaration")
+	assert_eq(request.stream_id, original_stream)
+	assert_true(service.deferred.has(character), "the stale hello has not been reused")
+	session.host = false
+	session.snapshot_is_ready = false
+	service.receive_owner(request)
+	assert_eq(game.save_system.writes, 0, "no save or declaration before the snapshot")
+	session.snapshot_is_ready = true
+	service.receive_owner(request)
+	assert_eq(game.save_system.writes, 1)
+	assert_true(service.pending.is_empty(), "a failed BOOL leaves the old stream intact")
+	assert_eq(service.local.id, original_stream)
+	game.local.data.party[0].hp = float(card.hp) - 1.0
+	var caught: Dictionary = game.local.data.party[0].duplicate(true)
+	caught.uid = "creature-e1b2c3d4e5f60718293a4b5c6d7e8f90"
+	game.local.data.party.append(caught)
+	game.save_system.accepted = true
+	service.receive_owner(request)
+	assert_eq(game.save_system.writes, 2)
+	assert_eq(service.pending.get("phase"), "redeclaration")
+	assert_ne(service.local.id, original_stream)
+	var fresh: Dictionary = session.messages.back().duplicate(true)
+	assert_eq(fresh.op, "redeclare")
+	assert_eq(fresh.stream_id, original_stream, "the saved new baseline is bound to the original stream")
+	assert_eq(fresh.summary.portable_authority.party.size(), 2, "the fresh saved declaration includes the owner change")
+	var frozen := var_to_bytes(fresh)
+	service.record_input(_input())
+	assert_true(service.local.inputs.is_empty(), "recording waits for the saved baseline's admission")
+	service._flush()
+	assert_eq(var_to_bytes(session.messages.back()), frozen, "resend never rebuilds the declaration")
+	session.host = true
+	var revision: int = authority.call("revision", character)
+	for field: String in ["world_id", "world_namespace", "session_epoch", "stream_id", "request_id"]:
+		var foreign := fresh.duplicate(true)
+		foreign[field] = "foreign"
+		service.receive_host(2, foreign)
+		assert_eq(authority.call("revision", character), revision, "foreign " + field + " cannot readmit")
+	service.receive_host(3, fresh)
+	assert_eq(authority.call("revision", character), revision, "another peer cannot consume the saved declaration")
+	service.receive_host(2, fresh)
+	assert_eq(session.last_rejoin_admission.get(character), "readmitted_portable", "fresh policy replaces the stale hello decision")
+	assert_eq(authority.call("state", character).party.size(), 2, "guest wins unless behind")
+	assert_false(service.deferred.has(character))
+	assert_eq(service.hosts[character].id, service.local.id)
+	assert_eq(authority.call("revision", character), revision + 1)
+	service.receive_host(2, fresh)
+	assert_eq(authority.call("revision", character), revision + 1, "lost reply replay does not repeat authority mutation")
+	session.host = false
+	service.receive_owner(session.messages.back())
+	assert_true(service.pending.is_empty())
+	assert_true(service.delivery_ready(), "the first rejoin can receive its original rewards")
 
 
 func test_a_landmark_revealed_without_an_input_never_changes_the_owner_passive_identity() -> void:
