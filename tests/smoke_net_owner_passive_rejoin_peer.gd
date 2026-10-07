@@ -187,16 +187,34 @@ func _tag_state(args: Dictionary) -> Dictionary:
 	var body: Node3D = director.deployed_body_for(peer)
 	var id := str(request.get("encounter_id", manager.encounter_id()))
 	var original := {}
+	var snare := {}
 	var record: Dictionary = director.get("_encounter")
 	if session.is_host():
 		var host: RefCounted = director.get("_encounter_host")
 		record = host.record(id)
-		if not request.is_empty():
+		if args.get("snare") == true:
+			var wild: Node3D = director.get("_engaged_with")
+			var target: RefCounted = wild.get("instance") if is_instance_valid(wild) else null
+			var current: bool = target != null and record.get("phase") == "active" \
+				and str(target.uid) == record.get("opponent", {}).get("card", {}).get("uid") \
+				and int(wild.get_meta(&"tether_body_generation", 0)) == int(record.get("opponent", {}).get("body_generation", -1))
+			var bonuses := {}
+			if current:
+				for participant: int in record.get("participants", {}):
+					var character := str(record.participants[participant].get("character_id", ""))
+					bonuses[character] = float(director.call("_host_command_catch_bonus", id, participant, wild, record))
+			snare = {"observed_ms":Time.get_ticks_msec(), "target_current":current, "target_uid":str(target.uid) if target != null else "",
+				"target_generation":int(wild.get_meta(&"tether_body_generation", 0)) if is_instance_valid(wild) else 0,
+				"movement_multiplier":float(wild.call("utility_movement_multiplier")) if current else 1.0,
+				"status":wild.get_meta(&"tether_snare", {}).duplicate(true) if is_instance_valid(wild) else {},
+				"catch_bonuses":bonuses,
+				"last_receipt":record.get("participants", {}).get(peer, {}).get("tether_commands", {}).get("last_receipt", {}).duplicate(true)}
+		if not request.is_empty() and args.get("snare") != true:
 			var parent := "command:%s:%s:%d:%d" % [id, str(args.get("character_id", game.local.character_id)),
 				int(request.generation), int(request.sequence)]
 			original = host.move_action_original(id, peer, parent)
 	var pos := body.global_position if is_instance_valid(body) else Vector3.ZERO
-	return {"peer":session.local_peer_id(), "character_id":str(game.local.character_id),
+	var out := {"peer":session.local_peer_id(), "character_id":str(game.local.character_id),
 		"encounter_id":str(manager.encounter_id()), "deployment":director.tether_command_deployment(),
 		"body_instance":body.get_instance_id() if is_instance_valid(body) else 0, "position":[pos.x,pos.y,pos.z],
 		"commands":manager.tether_command_snapshot(), "record":record, "original":original,
@@ -205,6 +223,8 @@ func _tag_state(args: Dictionary) -> Dictionary:
 		"enemy_hp":float(manager.enemy().hp) if manager.enemy() != null else -1.0,
 		"combat_state":manager.state,
 		"party":game.party.members().map(func(c: RefCounted) -> String: return str(c.uid))}
+	if args.get("snare") == true: out["snare"] = snare
+	return out
 
 
 func _tonic_step(action: String, args: Dictionary) -> Dictionary:
@@ -258,9 +278,13 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 		"op_tonic_hits":
 			var director: Node = _encounter_director()
 			var manager: Node = _combat_manager()
+			var command := str(args.get("command_id", "item_throw"))
+			var cost := float(preload("res://scripts/combat/tether_commands.gd").config().commands.get(command, {}).get("cost", INF))
+			if command not in ["item_throw", "snare"] or not is_finite(cost):
+				return {"verdict":"FAIL", "detail":"unknown authored command cost"}
 			for hit in 8:
 				var snapshot: Dictionary = manager.tether_command_snapshot()
-				if float(snapshot.get("meter", 0.0)) >= 25.0: break
+				if float(snapshot.get("meter", 0.0)) >= cost: break
 				if not manager.is_fighting(): return {"verdict":"FAIL", "detail":"fight ended before actual hits filled the command meter"}
 				var target: Node3D = director.get("_shared_opponent_proxy")
 				if target == null: target = director.get("_legacy_mirror")
@@ -271,8 +295,8 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 				for frame in 15: await physics_frame
 				var strike: Dictionary = await _step_strike({"facing":[0,0,-1], "settle":90})
 				if strike.get("verdict") != "PASS": return strike
-			if float(manager.tether_command_snapshot().get("meter", 0.0)) < 25.0:
-				return {"verdict":"FAIL", "detail":"accepted hits did not earn Item meter"}
+			if float(manager.tether_command_snapshot().get("meter", 0.0)) < cost:
+				return {"verdict":"FAIL", "detail":"eight accepted quick attempts did not earn %s meter (%s required)" % [command, cost]}
 			var hud: Node = director.get_parent().get_node_or_null("CombatHUD")
 			var view: Dictionary = manager.new_system_combat_snapshot()
 			var active: RefCounted = manager.active_creature()
@@ -286,6 +310,28 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 			var expected_fraction := clampf(float(view.ultimate_meter) / float(view.ultimate_maximum), 0.0, 1.0)
 			if not overlay.visible or ring == null or not is_equal_approx(float(ring.get("fraction")), expected_fraction):
 				return {"verdict":"FAIL", "detail":"actual HUD did not display its acknowledged current-UID ultimate meter"}
+		"op_tonic_snare":
+			var manager: Node = _combat_manager()
+			if not manager.is_fighting() or manager.enemy() == null or float(manager.enemy().hp) <= 0.0:
+				return {"verdict":"FAIL", "detail":"Snare requires the same living actual wild target"}
+			var input: Node = null
+			for child: Node in manager.get_children():
+				if child.get_script() == preload("res://scripts/ui/tether_command_input.gd"): input = child
+			var before: Dictionary = manager.tether_command_snapshot()
+			if input == null or not input.request("snare"):
+				return {"verdict":"FAIL", "detail":"production TetherCommandInput refused Snare request"}
+			# Observe the exact four values the production input just submitted.
+			# Snare has no Item pending_request or Tag action-original journal.
+			var request := preload("res://scripts/combat/tether_commands.gd").intent(str(input.get("_encounter_id")),
+				int(before.get("generation", 0)), int(input.get("_sequence")), "snare")
+			for frame in 90:
+				await physics_frame
+				var receipt: Dictionary = manager.tether_command_snapshot().get("last_receipt", {})
+				if receipt.get("command_id") == "snare" and receipt.get("sequence") == request.sequence:
+					return {"verdict":"PASS", "detail":"actual Snare command acknowledged", "data":{"request":request,
+						"before":before, "after":_tag_state({"request":request})}}
+			return {"verdict":"FAIL", "detail":"Snare lacked an accepted receipt within the existing short step budget",
+				"data":{"request":request, "state":_tag_state({"request":request}), "refusal":manager.get("last_encounter_refusal")}}
 		"op_tonic_clear":
 			# Existing proximity fixture: stop exposing this owned actor to a
 			# new enemy hit while the original Item's writer refusal is tested.

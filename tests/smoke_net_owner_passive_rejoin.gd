@@ -342,6 +342,75 @@ func _run() -> void:
 	if OS.get_cmdline_user_args().has("--prove-tag-combo"):
 		await _prove_tag_combo()
 
+	if OS.get_cmdline_user_args().has("--prove-tether-snare"):
+		# Reuse the admitted party and ordinary wild/proximity path. No catch
+		# roll, status refresh, HP grant or command-meter grant is performed.
+		for attempt in 1:
+			if not _ok(await step(0, "deploy_creature"), "Snare: host deploys its same admitted companion"): break
+			if not _ok(await step(0, "op_tonic_target"), "Snare: host normally engages an actual live wild"): break
+			var encounter: Dictionary = await probe(0, "encounter")
+			if not _ok(await step(1, "teleport", {"at":encounter.get("opponent_pos", [])}), "Snare: existing proximity setup reaches the host fight"): break
+			if not _ok(await step(1, "deploy_creature"), "Snare: guest deploys its same admitted companion"): break
+			if not _ok(await step(1, "join_encounter", {"encounter_id":str(encounter.get("id", ""))}), "Snare: guest joins the exact host encounter"): break
+			var owner: Dictionary = await probe(1, "op_tag_state", {"request":{}})
+			var peer := int(owner.peer)
+			check(float(owner.commands.get("meter", -1.0)) == 0.0, "Snare: fresh admitted encounter starts with zero command meter")
+			if not _ok(await step(1, "op_tonic_hits", {"command_id":"snare"}), "Snare: ordinary quick hits earn the authored cost within eight attempts"): break
+			var args := {"peer":peer, "character_id":_guest_character, "request":{}, "snare":true}
+			var before: Dictionary = await probe(0, "op_tag_state", args)
+			var cost := float(preload("res://scripts/combat/tether_commands.gd").config().commands.snare.cost)
+			var commands_before: Dictionary = before.record.get("participants", {}).get(str(peer), {}).get("tether_commands", {})
+			check(float(commands_before.get("meter", -1.0)) >= cost and before.record.get("phase") == "active" \
+				and before.record.get("kind") == "wild" and float(before.record.get("opponent", {}).get("hp", 0.0)) > 0.0,
+				"Snare: trusted host has earned meter and the same living admitted wild before the request")
+			var cast: Dictionary = await step(1, "op_tonic_snare")
+			print("SNARE actual request observation: ", JSON.stringify(cast))
+			if not _ok(cast, "Snare: production TetherCommandInput request receives its accepted host receipt"): break
+			var request: Dictionary = cast.data.request
+			args.request = request
+			var host: Dictionary = await probe(0, "op_tag_state", args)
+			var observed: Dictionary = host.snare
+			var receipt: Dictionary = observed.get("last_receipt", {})
+			var status: Dictionary = host.record.get("opponent", {}).get("tether_snare", {})
+			var commands_after: Dictionary = host.record.get("participants", {}).get(str(peer), {}).get("tether_commands", {})
+			var parent := "command:%s:%s:%d:%d" % [request.encounter_id, _guest_character, int(request.generation), int(request.sequence)]
+			check(receipt.get("command_committed") == true and receipt.get("command_id") == "snare" \
+				and receipt.get("action_id") == parent and receipt.get("encounter_id") == request.encounter_id \
+				and receipt.get("character_id") == _guest_character and receipt.get("attacker_uid") == owner.deployment.creature_uid \
+				and receipt.get("generation") == request.generation and receipt.get("sequence") == request.sequence,
+				"Snare: host retains the exact commander's accepted original receipt and deployment")
+			check(request.generation == owner.deployment.generation and request.encounter_id == before.encounter_id \
+				and host.body_instance == before.body_instance and cast.data.after.party == owner.party,
+				"Snare: request preserves the admitted encounter, companion and body")
+			check(float(commands_before.get("meter", -1.0)) - float(commands_after.get("meter", -1.0)) == cost \
+				and cast.data.before.get("meter") == commands_before.get("meter") \
+				and cast.data.after.commands.get("meter") == commands_after.get("meter"),
+				"Snare: owner and trusted host observe exactly one authored command-meter debit")
+			check(host.record.get("phase") == "active" and float(host.record.opponent.get("hp", 0.0)) > 0.0 \
+				and host.record.opponent.get("card", {}).get("uid") == before.record.opponent.get("card", {}).get("uid") \
+				and host.record.opponent.get("body_generation") == before.record.opponent.get("body_generation") \
+				and host.record.opponent.get("hp") == before.record.opponent.get("hp") \
+				and cast.data.after.enemy_hp == host.record.opponent.get("hp"),
+				"Snare: the same living target loses no HP from the command")
+			check(observed.get("target_current") == true and status.get("kind") == "snare" and status.get("character_id") == _guest_character \
+				and status.get("target_uid") == host.record.opponent.get("card", {}).get("uid") \
+				and status.get("target_generation") == host.record.opponent.get("body_generation") \
+				and observed.get("target_uid") == status.get("target_uid") \
+				and observed.get("target_generation") == status.get("target_generation") \
+				and observed.get("status") == status and int(status.get("until_ms", 0)) > int(observed.get("observed_ms", 0)) \
+				and float(observed.get("movement_multiplier", 1.0)) > 0.0 and float(observed.get("movement_multiplier", 1.0)) < 1.0,
+				"Snare: unexpired admitted target status reaches the actual wild movement consumer")
+			check(float(observed.get("catch_bonuses", {}).get(_guest_character, 0.0)) > 0.0 \
+				and status.get("catch_grants", {}).has(_guest_character),
+				"Snare: actual host catch reader increases only the commander's stable-character chance")
+			check(observed.get("catch_bonuses", {}).size() == 2, "Snare: host catch reader observes both actual participants")
+			for character: String in observed.get("catch_bonuses", {}):
+				if character == _guest_character: continue
+				check(float(observed.catch_bonuses[character]) == 0.0 and not status.get("catch_grants", {}).has(character),
+					"Snare: participant without its own grant receives no catch bonus")
+			print("SNARE actual host observation: ", JSON.stringify({"request":request, "before":before, "host":host}))
+			for i in [1, 0]: _ok(await step(i, "press", {"action":"combat_run"}), "Snare: peer %d normally leaves the proof fight" % i)
+
 	# 5. Negative control: an invalid record is refused, never adopted.
 	if not _ok(await step(1, "leave"), "invalid: guest leaves"):
 		quit(await finish())
