@@ -1,0 +1,69 @@
+{
+  "kind": "requested_historical_night_cut_presence",
+  "requested_cut": "0cb232d62f6acae9b6e23d129d2e79f0246ba507",
+  "current_main": "b3ad69a6ff641d640ec6f7a48ee427c6030867aa",
+  "ancestry_present": true,
+  "product_blobs": [
+    {
+      "path": "data/config/bands/band1_lower_meadows/harvest.json",
+      "requested_blob": "d7deaf71c7f65cb29ee15d73b6fcd21ee4a466a5",
+      "current_main_blob": "0895949dea80dcc030121a2872132f8574087c8d",
+      "byte_identical": false
+    },
+    {
+      "path": "data/config/bands/band1_lower_meadows/props.json",
+      "requested_blob": "397e5a291f8c1ecbf40df0ba4968c9f19f5a7356",
+      "current_main_blob": "e22abcefc439b75d97e26796df0363b9583543a6",
+      "byte_identical": false
+    },
+    {
+      "path": "data/config/building_prefabs.json",
+      "requested_blob": "ff5e5bc9366df330cfb322964c01e1628b29d84a",
+      "current_main_blob": "359296ce4bffdeefc48e2dfa509f02c15bb46811",
+      "byte_identical": false
+    },
+    {
+      "path": "data/config/essence_nodes.json",
+      "requested_blob": "48ff779c51806d6e3420fcdd3dcdd8bef8debe3e",
+      "current_main_blob": "b4529789a1eecc87acbad72c7ee69c3090c52d44",
+      "byte_identical": false
+    },
+    {
+      "path": "data/config/village_npcs.json",
+      "requested_blob": "67a75d9dfe7a07d495b578570d0d934420a2dbcc",
+      "current_main_blob": "706bc0cb079b41e3df3870903b8963597e5e89cf",
+      "byte_identical": false
+    },
+    {
+      "path": "scripts/world/village_npcs.gd",
+      "requested_blob": "ee0f121f81905b70b80933ba5188ac15a29ea35a",
+      "current_main_blob": "0ca97294189a0ef80ff5eabb0ce56bdbf1a063a7",
+      "byte_identical": false
+    },
+    {
+      "path": "scripts/world/villager_night_light.gd",
+      "requested_blob": "e78767b39e39ff0b02eb293835dd172fae58436f",
+      "current_main_blob": null,
+      "byte_identical": false
+    },
+    {
+      "path": "tests/fixtures/band_split_baseline/props.json",
+      "requested_blob": "3a9b6341ca0ba8d936f2d1655b969a9e74db4d1f",
+      "current_main_blob": "fff066caeac8de71174895401fbc8852200f6da5",
+      "byte_identical": false
+    },
+    {
+      "path": "tests/helpers/gate_a_npc_gather_segment.gd",
+      "requested_blob": "49b2b54ce5b1f64e568c4dc717d8aca624124f4e",
+      "current_main_blob": "1501fceb76f88bed333fbe0fe42afe7736dfb813",
+      "byte_identical": false
+    }
+  ],
+  "script": "tests/capture_village_walk.gd",
+  "args": "--time=night --route=visits --from-title --capture-dir=<absolute ralph/reports/F01 output>",
+  "renderer": "gl_compatibility",
+  "resolution": "1280x720",
+  "native_run_executed": false,
+  "claim": "No F01#3 acceptance; ancestry does not restore changed/deleted product blobs",
+  "routing": "issue572 comment6038926857; source restoration needs D/C hot-file ownership, native slot separately queued by coordinator"
+}
