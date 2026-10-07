@@ -110,6 +110,15 @@ func _run() -> void:
 	if not game.save_system.save(game, SAVE.AUTOSAVE_SLOT):
 		_finish(out, result, "isolated fixture save refused")
 		return
+	# Fresh retained duties route through the actual session registry before
+	# owner staging. Lazy character admission alone cannot establish that peer.
+	if not game.session.host():
+		_finish(out, result, "actual host session refused")
+		return
+	var registry: RefCounted = game.session.get("_registry")
+	if registry == null or int(registry.call("peer_for_character", game.local.character_id)) != game.session.local_peer_id():
+		_finish(out, result, "actual host registry did not register the fixture character")
+		return
 	var admitted: Dictionary = game.session.admitted_character_state(game.session.local_peer_id())
 	var admitted_party: Array = admitted.get("party", [])
 	if admitted.get("character_id") != game.local.character_id or admitted_party.size() != party.size():
