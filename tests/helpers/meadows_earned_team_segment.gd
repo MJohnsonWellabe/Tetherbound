@@ -1438,6 +1438,13 @@ func _focus() -> Control:
 
 
 func _tap(action: String, target: Node3D = null) -> bool:
+	var binding: InputEvent = null
+	for candidate: InputEvent in InputMap.action_get_events(action):
+		if candidate is InputEventJoypadButton or candidate is InputEventJoypadMotion:
+			binding = candidate
+			break
+	if binding == null:
+		return _fail("The earned team action has no physical controller binding: " + action)
 	if target != null:
 		if action != "interact" or _tree == null or _player == null or _director == null or _arbiter == null \
 				or not is_instance_valid(target) or not bool(target.call("is_alive")):
@@ -1453,16 +1460,21 @@ func _tap(action: String, target: Node3D = null) -> bool:
 			return false
 		# No yield between the actual body check and ordinary input dispatch.
 		_receipt("wild_interact", _approach_snapshot(target))
-	var event := InputEventAction.new()
-	event.action = action
-	event.pressed = true
+	var event: InputEvent = binding.duplicate()
+	event.device = 0
+	if event is InputEventJoypadButton:
+		(event as InputEventJoypadButton).pressed = true
+	else:
+		(event as InputEventJoypadMotion).axis_value = (binding as InputEventJoypadMotion).axis_value
 	Input.parse_input_event(event)
 	if target != null: Input.flush_buffered_events()
 	for _frame in 3:
 		await _tree.physics_frame
-	event = InputEventAction.new()
-	event.action = action
-	event.pressed = false
+	event = event.duplicate()
+	if event is InputEventJoypadButton:
+		(event as InputEventJoypadButton).pressed = false
+	else:
+		(event as InputEventJoypadMotion).axis_value = 0.0
 	Input.parse_input_event(event)
 	if target != null: Input.flush_buffered_events()
 	for _frame in 5:

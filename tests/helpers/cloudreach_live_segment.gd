@@ -32,18 +32,43 @@ class CampaignPilot extends PILOT:
 	func _move_toward(direction: Vector3) -> void:
 		direction.y = 0.0
 		var local := (rig.call("planar_basis") as Basis).inverse() * direction.normalized()
-		for action: String in ["move_left", "move_right", "move_forward", "move_back"]:
-			var strength := 0.0
-			match action:
-				"move_left": strength = maxf(-local.x, 0.0)
-				"move_right": strength = maxf(local.x, 0.0)
-				"move_forward": strength = maxf(-local.z, 0.0)
-				"move_back": strength = maxf(local.z, 0.0)
-			var event := InputEventAction.new()
-			event.action = action
-			event.pressed = strength > 0.0
-			event.strength = strength
+		for action: String in ["move_right", "move_back"]:
+			var binding: InputEventJoypadMotion = null
+			for configured: InputEvent in InputMap.action_get_events(action):
+				if configured is InputEventJoypadMotion:
+					binding = configured as InputEventJoypadMotion
+					break
+			if binding == null:
+				push_error("Campaign movement has no physical controller axis: " + action)
+				return
+			var event := binding.duplicate() as InputEventJoypadMotion
+			event.device = 0
+			event.axis_value = (local.x if action == "move_right" else local.z) * signf(binding.axis_value)
 			Input.parse_input_event(event)
+
+	func press(action: String) -> void:
+		var binding: InputEvent = null
+		for configured: InputEvent in InputMap.action_get_events(action):
+			if configured is InputEventJoypadButton or configured is InputEventJoypadMotion:
+				binding = configured
+				break
+		if binding == null:
+			push_error("Campaign combat has no physical controller binding: " + action)
+			return
+		var event: InputEvent = binding.duplicate()
+		event.device = 0
+		if event is InputEventJoypadButton:
+			(event as InputEventJoypadButton).pressed = true
+		Input.parse_input_event(event)
+		await tree.physics_frame
+		await tree.physics_frame
+		event = event.duplicate()
+		if event is InputEventJoypadButton:
+			(event as InputEventJoypadButton).pressed = false
+		else:
+			(event as InputEventJoypadMotion).axis_value = 0.0
+		Input.parse_input_event(event)
+		await tree.physics_frame
 
 	func _act(ally_body: Node3D, foe_body: Node3D) -> void:
 		if switch_input and _should_switch():
@@ -335,10 +360,27 @@ func _vec(raw: Array) -> Vector3:
 func _input(action: String, strength: float) -> void:
 	if is_equal_approx(float(input_values.get(action, -1)), strength) and is_equal_approx(Input.get_action_strength(action), strength): return
 	input_values[action] = strength
-	var event := InputEventAction.new()
-	event.action = action
-	event.pressed = strength > 0
-	event.strength = strength
+	var binding: InputEvent = null
+	for configured: InputEvent in InputMap.action_get_events(action):
+		if configured is InputEventJoypadButton or configured is InputEventJoypadMotion:
+			binding = configured
+			break
+	if binding == null:
+		_fail("The campaign action has no physical controller binding: " + action)
+		return
+	var event: InputEvent = binding.duplicate()
+	event.device = 0
+	if event is InputEventJoypadButton:
+		(event as InputEventJoypadButton).pressed = strength > 0.0
+	elif action in ["move_left", "move_right", "move_forward", "move_back"]:
+		var positive := "move_right" if action in ["move_left", "move_right"] else "move_back"
+		var negative := "move_left" if positive == "move_right" else "move_forward"
+		var axis_sign := signf((binding as InputEventJoypadMotion).axis_value)
+		if action == negative: axis_sign = -axis_sign
+		(event as InputEventJoypadMotion).axis_value = (
+			float(input_values.get(positive, 0.0)) - float(input_values.get(negative, 0.0))) * axis_sign
+	else:
+		(event as InputEventJoypadMotion).axis_value = (binding as InputEventJoypadMotion).axis_value * strength
 	Input.parse_input_event(event)
 
 ## F07#3: from the summit bivouac (threshold terrace, outside the stronghold's
