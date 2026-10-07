@@ -49,6 +49,7 @@ const CONFIG_PATH := "res://data/config/meadow_healing.json"
 ## `playground_heightfield.drain_factor()` reads, so a local heal and the drain
 ## it undoes are answering the same numbers.
 const TERRAIN_PATH := "res://data/config/terrain_playground.json"
+const BUILD_BUDGET := preload("res://scripts/world/shell_build_budget.gd")
 const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 const CREATURE_SCENE := preload("res://scenes/creatures/creature.tscn")
 const CREATURE_BODY := preload("res://scripts/creatures/creature_body.gd")
@@ -137,6 +138,7 @@ var _config: Dictionary = {}
 var _world: Node3D = null
 var _progression: RefCounted = null
 var _applied: bool = false
+var _applying: bool = false
 var _flag := "legendary_freed"
 ## Last `progression.revision` this node compared the flag against.
 var _revision: int = -1
@@ -221,7 +223,7 @@ func _process(_delta: float) -> void:
 			sync_herd_display()
 		return
 	_revision = revision
-	if not _applied and bool(_progression.call("has", _flag)):
+	if not _applied and not _applying and bool(_progression.call("has", _flag)):
 		apply(false)
 	# F05: re-read on every flag change rather than once. In co-op the answers
 	# arrive one character at a time and in any order, so the display can only
@@ -317,23 +319,43 @@ func _build_herd_display(spec: Dictionary) -> Node3D:
 	return body
 
 
-## Everything, in one call, so a test can drive it without a boss fight.
-## `immediate` skips the fades — the loaded-save case.
+## A loaded save completes synchronously. Live freeing prepares the unchanged
+## overlay across frames before starting the crossfade and its presentation
+## hold timer. `applied()` becomes true only when that preparation is complete.
 func apply(immediate: bool = false) -> Dictionary:
-	if _applied:
+	if _applied or _applying:
 		return _report
+	_applying = true
+	var prepared_regreen := -1
+	var killed_lights := -1
+	var toppled_pylons := -1
+	if not immediate and is_inside_tree():
+		# The machine dies when the flag lands. Its lights and authored fall
+		# cannot wait for the overlay's CPU preparation to finish across frames.
+		# Keep the original light-before-fall order and retain each result once.
+		killed_lights = _kill_the_tether_lights()
+		toppled_pylons = _topple_the_pylons(false)
+		# Reuse the world's existing CPU budget; the shell mode selects its
+		# fine slice without enabling network content staging on this node.
+		var budget := BUILD_BUDGET.new()
+		budget.begin(self, true)
+		if float(_config.get("presentation_hold_seconds", 14.0)) > 0.0:
+			add_to_group(&"presentation_hold")
+		prepared_regreen = await _regreen_the_scars(false, budget, false)
 	_applied = true
 	if not immediate:
 		_hold_the_presentation()
+	if prepared_regreen >= 0:
+		_start_regreen_fade(immediate)
 	_report = {
 		"regrown": _heal_the_scatter(),
 		"dead_ground_faded": _fade_the_drain_skins(immediate),
-		"regreened": _regreen_the_scars(immediate),
-		"lights_killed": _kill_the_tether_lights(),
+		"regreened": prepared_regreen if prepared_regreen >= 0 else await _regreen_the_scars(immediate),
+		"lights_killed": killed_lights if killed_lights >= 0 else _kill_the_tether_lights(),
 		"drain_lifted": _lift_the_drain(immediate),
 		"field_greened": _green_the_field(immediate),
 		# After the lights: what falls is already dead.
-		"pylons_toppled": _topple_the_pylons(immediate),
+		"pylons_toppled": toppled_pylons if toppled_pylons >= 0 else _topple_the_pylons(immediate),
 		"herd_returned": _return_the_herd(),
 		"bloomed": _bloom_the_healed_ground(immediate),
 		"barriers_opened": _open_the_barriers(),
@@ -341,6 +363,7 @@ func apply(immediate: bool = false) -> Dictionary:
 	}
 	_report["cables_hidden"] = _cables_hidden
 	_report["pylons_left_standing"] = _left_standing
+	_applying = false
 	print("[meadow] the tether let go: %d plants back, %d regreen quads, %d tether lights out, %d pylons down (%d left standing, %d cable pieces gone), %d of the herd back, %d barriers open, %d beaten patrols withdrawn"
 		% [_report["regrown"], _report["regreened"], _report["lights_killed"],
 			_report["pylons_toppled"], _left_standing, _report["cables_hidden"], _report["herd_returned"],
@@ -784,7 +807,7 @@ func _withdraw_beaten_patrols() -> int:
 ## scale and tint, shared by every group; its `master_alpha` fades 0 -> 1
 ## over `fade_seconds`, the same seconds the dark skins fade out over, so the
 ## two crossfade.
-func _regreen_the_scars(immediate: bool) -> int:
+func _regreen_the_scars(immediate: bool, budget: RefCounted = null, start_fade: bool = true) -> int:
 	var block: Dictionary = _config.get("regreen", {})
 	if not bool(block.get("enabled", true)):
 		return 0
@@ -804,23 +827,33 @@ func _regreen_the_scars(immediate: bool) -> int:
 		var discs := regreen_discs(str(group_name))
 		if discs.is_empty():
 			continue
-		var skin := _regreen_group(str(group_name), discs, block, global_strength, material)
+		var skin := await _regreen_group(str(group_name), discs, block, global_strength, material, "Regreen", budget)
 		if skin != null:
 			_regreen_nodes.append(skin)
 	if _regreen_nodes.is_empty():
 		return 0
 	_regreen_material = material
+	if start_fade:
+		_start_regreen_fade(immediate)
+	return _regreen_quads
+
+
+func _start_regreen_fade(immediate: bool) -> void:
+	if _regreen_material == null:
+		return
+	var block: Dictionary = _config.get("regreen", {})
+	var material := _regreen_material
 	var seconds := 0.0 if immediate else float(block.get("fade_seconds", 12.0))
 	if seconds <= 0.0:
 		material.set_shader_parameter("master_alpha", 1.0)
 	else:
 		material.set_shader_parameter("master_alpha", 0.0)
 		create_tween().tween_property(material, "shader_parameter/master_alpha", 1.0, seconds)
-	return _regreen_quads
 
 
 func _regreen_group(group_name: String, discs: Array, block: Dictionary,
-		global_strength: float, material: ShaderMaterial, prefix: String = "Regreen") -> MeshInstance3D:
+		global_strength: float, material: ShaderMaterial, prefix: String = "Regreen",
+		budget: RefCounted = null) -> MeshInstance3D:
 	var cell := maxf(float(block.get("cell", 3.0)), 1.0)
 	var jitter := maxf(float(block.get("edge_jitter_m", 0.0)), 0.0)
 	var lift := float(block.get("lift", 0.11))
@@ -844,7 +877,13 @@ func _regreen_group(group_name: String, discs: Array, block: Dictionary,
 	var surface := SurfaceTool.new()
 	surface.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var quads := 0
+	var visited := 0
 	for key: Vector2i in regreen_cells(discs, cell):
+		# Keep one SurfaceTool and corner cache for the entire group. Yielding
+		# does not split surfaces or change vertex order, alpha or normals.
+		if budget != null and visited % 256 == 0:
+			await budget.call("breathe")
+		visited += 1
 		var quad: Array = []
 		var peak := 0.0
 		for offset: Vector2i in [Vector2i(0, 0), Vector2i(1, 0), Vector2i(1, 1), Vector2i(0, 1)]:
@@ -1117,7 +1156,7 @@ func _build_the_drain() -> int:
 	var names: Array = groups.keys()
 	names.sort()
 	for group_name: Variant in names:
-		var skin := _regreen_group(str(group_name), groups[group_name] as Array, block, global_strength, material, "Drain")
+		var skin := await _regreen_group(str(group_name), groups[group_name] as Array, block, global_strength, material, "Drain")
 		if skin != null:
 			_drain_nodes.append(skin)
 	_drain_material = material

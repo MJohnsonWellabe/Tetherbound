@@ -1,0 +1,10 @@
+Verdict: READY for PERF item 3's declared frame/equality/native visual bar under #5256022595813; scatter remains unsliced and is not an extra gate.
+Product: d5d692934fbca93dde191f7d8974a3148d486498 + cue-order fix fe861cd7e190b129af04544628f7476be684aaf0; corrected smoke/capture producer17436eb251b3b41ade32246e61e77cbf230a0a04.
+Existing healing smoke exit0: longest freeing frame1854ms < unchanged4500ms; first preparation yield0 original tether materials lit/29 pylon falls started; intermediate alpha reached1.0.
+All223824 ordered vertices/all mesh channels matched synchronous construction on the same real terrain;37304quads/1388plants/29pylons, real save/reload/herd/material/cable and19 mounted-group assertions passed; original bars/checks retained.
+Matched existing unprofiled F05 captures: corrected33 + synchronous baseline33 original1920x1080 GTX1060/OpenGL/fixed12 frames, four land vantages and25 cue frames; both exit0 and138lights/29pylons/7herd.
+Fresh code-blind judge EQUIVALENT after inspecting66 originals: shutdown/fall/dust samples and final land match; dust shapes/ordinary animal poses vary. Verdict visual-verdict.txt; mapping revealed only after verdict (C baseline,D corrected).
+ONE final independent source/test review APPROVE at17436eb251: readiness/idempotence/mesh order, immediate saved-load, station consumption and existing peer wait preserved; authority/network unchanged. Verdict independent-review.txt.
+Raw proof: healing/heal-cue-order-smoke-first/{stdout,stderr,native}.log/source.txt/exit.txt and healing/heal-cue-order-visual-first/{stdout,stderr,native}.log/source.txt/exit.txt/frames/*.png; homes remain local.
+Inherited interpolation warning and F05 Works-vantage fall retained; no SCRIPT/Parse/ERROR/leak. Headless1854ms is one frame-bar run; staged flags/party/HUD/fixed12 visuals do not claim Medium/High, FPS, earned/live co-op or exact population.
+Original1663ms proof, first native blind BLOCK and both incomplete profilers remain preserved; measured cue-order defect corrected. Profilers stopped per6022595813; no callee CPU or matched performance ratio claimed.
