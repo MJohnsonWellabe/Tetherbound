@@ -133,7 +133,8 @@ static func _posed_floor_contact(model: Node3D, skeleton: Skeleton3D, root_basis
 					if bone >= 0 and bone < skeleton.get_bone_count() else Transform3D.IDENTITY)
 				rest_palette.append(skeleton.get_bone_global_rest(bone) * skin.get_bind_pose(bind_index)
 					if bone >= 0 and bone < skeleton.get_bone_count() else Transform3D.IDENTITY)
-				core_binds.append(bone >= 0 and skeleton.get_bone_name(bone) in ["pelvis", "spine", "neck"])
+				core_binds.append(bone >= 0 and bone < skeleton.get_bone_count()
+					and skeleton.get_bone_name(bone) in ["pelvis", "spine", "neck"])
 		var skin_pose := root_pose * BOUNDS._chain(skeleton, model)
 		var plain_pose := root_pose * BOUNDS._render_transform(mesh, model)
 		for surface in mesh.mesh.get_surface_count():
