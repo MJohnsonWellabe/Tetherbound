@@ -211,24 +211,48 @@ func _run() -> void:
 	else:
 		if _batch == "clock":
 			await _exercise({"id": "legacy-clock", "archetype": "stone_throw", "move_id": "pebble_toss", "legacy": true}, 1, 1, false)
+		var selected_ultimates: Array[String] = []
 		for archetype: String in LIBRARY.config().archetypes:
 			if not _archetype_filter.is_empty() and archetype not in _archetype_filter: continue
 			var case := {"id": archetype, "archetype": archetype}
 			var chosen := ""
 			var count := 0
+			var previous_chosen := ""
+			var previous_count := 0
 			for id: String in _moves:
 				var spec: Dictionary = _moves[id].get("vfx", {})
 				if str(spec.get("archetype", "")) != archetype: continue
 				var row := LIBRARY.resolve(spec, 5)
+				if int(row.parameters.count) > previous_count:
+					previous_count = int(row.parameters.count)
+					previous_chosen = id
+				# move_projectile.launch routes ultimate slots before inspecting
+				# vfx.archetype. Their fallback rows are not generic projectiles.
+				if str(_moves[id].get("slot", "")) == "ultimate": continue
 				if int(row.parameters.count) > count:
 					count = int(row.parameters.count)
 					chosen = id
 			if not chosen.is_empty(): case["move_id"] = chosen
+			if not previous_chosen.is_empty() and str(_moves[previous_chosen].get("slot", "")) == "ultimate":
+				selected_ultimates.append(previous_chosen)
 			if _batch == "mastery":
 				for rank in range(1, 6):
 					if _rank_filter.is_empty() or rank in _rank_filter: await _exercise(case, rank, 1, true)
 			else:
 				await _exercise(case, 5 if _batch == "profile" else 1, 4 if _batch == "profile" else 1, false)
+		if _batch == "mastery" and not selected_ultimates.is_empty():
+			# Retain the formerly selected signatures through their actual
+			# production adapter, at every requested rank and configured growth.
+			# Run last: ultimate auto-framing must not move the generic camera.
+			ULTIMATES.config()
+			ULTIMATES._config["enabled"] = true
+			var cfg: Dictionary = _scenarios.ultimate_capture
+			var breakthroughs: Array = cfg.breakthroughs if _breakthrough_filter.is_empty() else _breakthrough_filter
+			for move_id: String in selected_ultimates:
+				for rank in range(1, 6):
+					if not _rank_filter.is_empty() and rank not in _rank_filter: continue
+					for breakthrough: int in breakthroughs:
+						await _exercise_ultimate(move_id, breakthrough, cfg, rank)
 	var report := {"scope": "production_effect_nodes_synthetic_arena", "batch": _batch,
 		"renderer": RenderingServer.get_current_rendering_method(), "resolution": [root.size.x, root.size.y],
 		"display": DisplayServer.get_name(), "adapter": RenderingServer.get_video_adapter_name(),
