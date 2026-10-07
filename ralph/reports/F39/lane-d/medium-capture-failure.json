@@ -1,0 +1,30 @@
+{
+  "criterion_scope": ["F39#0", "F39#4"],
+  "status": "OPEN_CAPTURE_BLOCKED",
+  "source_commit": "91fd18c99726be8e2a29d6a9e1eb8de16a0e59ef",
+  "run_id": 37629922163,
+  "artifact_id": 11484984942,
+  "script": "tools/capture_f39_catalogue.gd",
+  "preset": "Medium",
+  "renderer": "forward_plus",
+  "resolution": [1920, 1080],
+  "planned_frames": 240,
+  "captured_frames": 0,
+  "complete": false,
+  "engine": "Godot4.7 official5b4e0cb0f",
+  "adapter": "llvmpipe LLVM20.1.2,256bits",
+  "failure": "Native signal11/exit134 after Water vegetation and32748-tuft ground-cover binding; /root propagate_notification caller-thread warning and unresolved native stack. Exact native cause undetermined.",
+  "dispatch_errors": {
+    "cancelled_run": 37628294009,
+    "invalid_subset_run": 37629082729,
+    "invalid_subset_artifact": 11485852545,
+    "cause": "Incorrect comma/compact then hyphen substring filters. Tool uses repeatable underscore-separated catalogue identity substrings. Selection yielded no frames before production-world mount."
+  },
+  "remaining_gates": [
+    "Successful named capture route/matrix",
+    "Full-frame catalogue rescore",
+    "Code-blind full-bar High/Medium verdict",
+    "Area smoke and independent final review"
+  ],
+  "next": "Allocated F42 UI changes and F01 restoration; no unchanged repeated Tidewake Forward+ capture without re-scope."
+}

@@ -1,0 +1,15 @@
+{
+  "scope": "Five-file map initialization/Build/Players presentation candidate only",
+  "source_commit": "d4fc9a287516949235e141a03f57fdf2664bba2e",
+  "watchpoints": [
+    "Actual opening Build focus/scroll with free build off/on at720",
+    "Four-player card and long status text",
+    "All four catalogue visual rows and area smoke"
+  ],
+  "checked": "Owning UX/ART_DIRECTION, exact diff and unchanged map navigation, placement ownership and session/invite/remove plumbing",
+  "durable_state": "No durable map/fog, save payload or peer data modified. Zoom sentinel is session UI state.",
+  "verdict": "APPROVE",
+  "agent": "/root/f42_visual_review",
+  "criterion_status": "OPEN",
+  "tests": "Reviewer did not run tests; selected112-file logic run37632007173 separately pending."
+}
