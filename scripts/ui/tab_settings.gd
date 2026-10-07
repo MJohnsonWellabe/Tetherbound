@@ -56,7 +56,7 @@ const RESET_WIDTH := 150
 const COLOUR_DEFAULT := Color(0.87, 0.89, 0.84)
 const COLOUR_CHANGED := Color(0.851, 0.702, 0.251)
 const COLOUR_CLASH := Color(0.85, 0.55, 0.25)
-const COLOUR_QUIET := Color(0.55, 0.57, 0.52)
+const COLOUR_QUIET := UITokens.TEXT_SECONDARY
 
 var _config: Dictionary = {}
 var _rows: Array = []
@@ -186,7 +186,21 @@ func build() -> void:
 				push_warning("settings section '%s' has no builder" % section.get("id", "?"))
 	for section in deferred:
 		_build_gameplay(list, section, settings.get("gameplay", {}) as Dictionary)
+	_apply_readability_floors(self)
 	poll()
+
+
+## Keep essential settings text at the existing UX floors on the 720p raster.
+## Preserve larger authored text, callbacks, controller graph and row owners.
+func _apply_readability_floors(node: Node) -> void:
+	if node is Label:
+		var label := node as Label
+		label.add_theme_font_size_override("font_size", maxi(UITokens.FONT_READ, label.get_theme_font_size("font_size")))
+	elif node is Button:
+		var button := node as Button
+		button.add_theme_font_size_override("font_size", maxi(UITokens.FONT_PROMPT, button.get_theme_font_size("font_size")))
+	for child: Node in node.get_children():
+		_apply_readability_floors(child)
 
 
 # --- the Gameplay section ---------------------------------------------------
@@ -206,7 +220,7 @@ func build() -> void:
 
 func _build_gameplay(list: VBoxContainer, section: Dictionary, gameplay: Dictionary) -> void:
 	var heading := Label.new()
-	heading.add_theme_font_size_override("font_size", 30)
+	heading.add_theme_font_size_override("font_size", UITokens.FONT_SECTION)
 	heading.text = str(section.get("label", "Gameplay"))
 	list.add_child(heading)
 
@@ -331,7 +345,7 @@ func _build_debug_teleport_section() -> Control:
 	section.add_theme_constant_override("separation", 6)
 
 	var heading := Label.new()
-	heading.add_theme_font_size_override("font_size", 24)
+	heading.add_theme_font_size_override("font_size", UITokens.FONT_SECTION)
 	heading.add_theme_color_override("font_color", COLOUR_CHANGED)
 	heading.text = "\n%s destinations" % _debug_teleport_label
 	section.add_child(heading)
@@ -551,7 +565,7 @@ func _build_audio(list: VBoxContainer, section: Dictionary, audio: Dictionary) -
 	_volume_reset_button = null
 
 	var heading := Label.new()
-	heading.add_theme_font_size_override("font_size", 30)
+	heading.add_theme_font_size_override("font_size", UITokens.FONT_SECTION)
 	heading.text = str(section.get("label", "Audio"))
 	list.add_child(heading)
 
@@ -667,7 +681,7 @@ func _save_volumes() -> void:
 
 func _build_controls(list: VBoxContainer, section: Dictionary, controls: Dictionary) -> void:
 	var heading := Label.new()
-	heading.add_theme_font_size_override("font_size", 30)
+	heading.add_theme_font_size_override("font_size", UITokens.FONT_SECTION)
 	heading.text = str(section.get("label", "Controls"))
 	list.add_child(heading)
 
@@ -721,7 +735,7 @@ func _column_header() -> Control:
 
 func _build_group(list: VBoxContainer, group: Dictionary, labels: Dictionary) -> void:
 	var heading := Label.new()
-	heading.add_theme_font_size_override("font_size", 24)
+	heading.add_theme_font_size_override("font_size", UITokens.FONT_SECTION)
 	heading.add_theme_color_override("font_color", COLOUR_CHANGED)
 	heading.text = "\n%s" % str(group.get("name", ""))
 	list.add_child(heading)
@@ -1326,7 +1340,7 @@ var _aim_assist_names: Dictionary = {100: "Full", 50: "Reduced", 0: "Off"}
 ## importantly, what it does not: it never changes the fight's timing.
 func _build_accessibility(list: VBoxContainer, section: Dictionary, access: Dictionary) -> void:
 	var heading := Label.new()
-	heading.add_theme_font_size_override("font_size", 30)
+	heading.add_theme_font_size_override("font_size", UITokens.FONT_SECTION)
 	heading.text = str(section.get("label", "Accessibility"))
 	list.add_child(heading)
 
