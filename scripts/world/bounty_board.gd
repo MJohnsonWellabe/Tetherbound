@@ -9,6 +9,14 @@ const RULES := preload("res://scripts/world/death_satchel_rules.gd")
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const ACTIONS := ["bounty_rotate", "bounty_event", "bounty_claim"]
 
+## The saved counter counts completed morning rollovers, starting at zero.
+## Rotation uses a one-based day: fresh admission is day one, each actual
+## Game.advance_day increments it once. This never advances the host clock.
+static func host_day(world_state: Dictionary) -> int:
+	var rollovers: Variant = world_state.get("bounty_day")
+	if not ESSENCE._integer(rollovers, 0, 2147483645): return -1
+	return int(rollovers) + 1
+
 ## Parsed and validated once per file revision (the host poll reads it every
 ## second per peer); callers get their own deep copy.
 static var _cache: Dictionary = {}

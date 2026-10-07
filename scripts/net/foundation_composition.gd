@@ -140,7 +140,7 @@ func bounty_context(peer: int) -> Dictionary:
 	return {"character_id": character, "expected_revision": registry.call("revision", character),
 		"source_key": preload("res://scripts/world/bounty_board.gd").config().board_key,
 		"in_range": nearby, "in_combat": session.call("_altar_peer_in_combat", peer),
-		"world_namespace": world.reward_delivery_namespace, "host_day": world.redesign_world.bounty_day,
+		"world_namespace": world.reward_delivery_namespace, "host_day": preload("res://scripts/world/bounty_board.gd").host_day(world.redesign_world),
 		"host_unlocks": world.redesign_world.portal_unlocks.duplicate(), "clock_confirmed": world.day >= 1}
 
 func accepted_bounty_event(peer: int, token: String) -> Dictionary:
