@@ -384,11 +384,23 @@ func _engage(target: Node3D, allow_neighbour := false) -> bool:
 				and bool(offer.get("actionable", false)) \
 				and _director.call("_engageable") == target:
 			_stick(0, 0)
+			Input.flush_buffered_events()
+			# Pad motion is accumulated. Let ordinary ground friction finish
+			# braking before the press tick recomputes the nearest living wild.
+			# Each settling tick consumes this existing approach-loop budget.
+			if not _player.is_on_floor():
+				return _fail("The selected wild's stopped approach lost grounded floor")
+			if not Vector2(_player.velocity.x, _player.velocity.z).is_zero_approx():
+				await _tree.physics_frame
+				continue
 			if departure_index < departure_points.size():
 				_receipt("wild_departure_early_engage", {"completed_points": departure_index,
 					"planned_points": departure_points.size(), "target": str(target.name)})
-			_receipt("wild_interact", _approach_snapshot(target))
-			await _tap("interact")
+			if not await _tap("interact", target):
+				# No press was sent. Revisit the live offer and ordinary approach
+				# next tick; never replace the chosen catch with its pack neighbour.
+				await _tree.physics_frame
+				continue
 			for _settle in 120:
 				if _fighting():
 					return _verify_engagement(target, allow_neighbour)
@@ -1425,19 +1437,37 @@ func _focus() -> Control:
 	return _tree.root.get_viewport().gui_get_focus_owner()
 
 
-func _tap(action: String) -> void:
+func _tap(action: String, target: Node3D = null) -> bool:
+	if target != null:
+		if action != "interact" or _tree == null or _player == null or _director == null or _arbiter == null \
+				or not is_instance_valid(target) or not bool(target.call("is_alive")):
+			return false
+		Input.flush_buffered_events()
+		var offer: Dictionary = _arbiter.call("winner")
+		if INPUT_OWNER.current(_tree) != null or not bool(_arbiter.call("enabled")) \
+				or _arbiter.call("winning_provider") != _director or not bool(offer.get("actionable", false)) \
+				or not _player.is_on_floor() \
+				or Input.get_vector("move_left", "move_right", "move_forward", "move_back") != Vector2.ZERO \
+				or not Vector2(_player.velocity.x, _player.velocity.z).is_zero_approx() \
+				or _director.call("_engageable") != target:
+			return false
+		# No yield between the actual body check and ordinary input dispatch.
+		_receipt("wild_interact", _approach_snapshot(target))
 	var event := InputEventAction.new()
 	event.action = action
 	event.pressed = true
 	Input.parse_input_event(event)
+	if target != null: Input.flush_buffered_events()
 	for _frame in 3:
 		await _tree.physics_frame
 	event = InputEventAction.new()
 	event.action = action
 	event.pressed = false
 	Input.parse_input_event(event)
+	if target != null: Input.flush_buffered_events()
 	for _frame in 5:
 		await _tree.physics_frame
+	return true
 
 
 func _stick(x: float, z: float) -> void:
