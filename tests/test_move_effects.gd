@@ -4,6 +4,62 @@ const LIBRARY := preload("res://scripts/vfx/move_effect_library.gd")
 const BUDGET := preload("res://scripts/vfx/move_effect_budget.gd")
 const ULTIMATES := preload("res://scripts/vfx/ultimates/ultimate_library.gd")
 
+## F35#0: keep the previously passing catalogue probe in the existing suite.
+## This checks production defaults and authored mappings, without enabling
+## presentation, granting progress, or claiming the separate live-ultimate rows.
+func test_shared_ultimate_catalogue_covers_every_live_species_type_and_role() -> void:
+	var moves: RefCounted = preload("res://scripts/creatures/move_db.gd").load_default()
+	var species: Dictionary = preload("res://scripts/creatures/creature_species.gd").table()
+	var learnsets: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/moves/learnsets.json")).species
+	var visuals: Dictionary = ULTIMATES.config().get("visuals", {})
+	var unique_species: Array[String] = ["terrapup", "ripplet", "galewisp", "veridian",
+		"abyssal_guardian", "solmane", "fulgocobra", "tuskroot", "ashtusk", "cannonback", "stormcapra", "stormursa"]
+	var fallback: Dictionary = ULTIMATES.config().get("unused_pair_visual_fallbacks", {})
+	var shared: Array[String] = []
+	var pairs: Dictionary = {}
+	for id: String in moves.move_ids():
+		var move: Dictionary = moves.move(id)
+		if move.get("slot") != "ultimate" or move.get("ultimate", {}).get("unique") != false: continue
+		shared.append(id)
+		var visual: Dictionary = visuals.get(id, {})
+		assert_false(visual.is_empty(), id + " has an authored signature body")
+		assert_eq(visual.get("unique"), false, id + " is shared in both catalogues")
+		assert_eq(visual.get("type"), move.get("type"), id + " retains its primary type")
+		assert_true(visual.get("role") in ["WALL", "CHARGER", "DIVER", "CURRENT"], id + " has a species role")
+		var pair := str(visual.get("type", "")) + ":" + str(visual.get("role", ""))
+		assert_false(pairs.has(pair), pair + " has one shared signature")
+		pairs[pair] = id
+	assert_true(shared.size() >= 16 and shared.size() <= 20, "16–20 shared type×role signatures")
+	assert_false(species.is_empty(), "the production catalogue includes live base and Water species")
+	for id: String in species:
+		var row: Dictionary = learnsets.get(id, {})
+		assert_false(row.is_empty(), id + " has a learnset")
+		var creature: RefCounted = preload("res://scripts/creatures/creature_species.gd").spawn(id)
+		assert_true(creature != null, id + " actually spawns")
+		if creature == null: continue
+		var ultimate := str(creature.get("move_ultimate"))
+		assert_eq(ultimate, str(row.get("ultimate", "")), id + " equips its authored signature")
+		assert_eq(moves.slot(ultimate), "ultimate", id + " maps to a registered ultimate")
+		var move: Dictionary = moves.move(ultimate)
+		assert_true(move.get("ultimate", {}).get("unique") is bool, id + " declares shared or unique")
+		var board_id: String = preload("res://scripts/creatures/water_species_catalog.gd").board_id(id)
+		var canonical := id if board_id.is_empty() else board_id
+		assert_eq(move.get("ultimate", {}).get("unique"), unique_species.has(canonical),
+			id + " uses only its authored shared/unique classification")
+		if move.get("ultimate", {}).get("unique") != false: continue
+		assert_true(shared.has(ultimate), id + " belongs to the shared catalogue")
+		assert_eq(move.get("type"), species[id].get("type"), id + " uses its primary type")
+		assert_eq(visuals.get(ultimate, {}).get("role"), row.get("role_family"), id + " uses its authored role")
+		var pair := str(species[id].get("type", "")) + ":" + str(row.get("role_family", ""))
+		assert_eq(pairs.get(pair), ultimate, id + " has an exact type×role mapping")
+	for type: String in JSON.parse_string(FileAccess.get_file_as_string("res://data/config/type_chart.json")).types:
+		for role: String in ["WALL", "CHARGER", "DIVER", "CURRENT"]:
+			var pair := type + ":" + role
+			assert_true(pairs.has(pair) or fallback.has(pair), pair + " has a shared row or unused-pair fallback")
+	for pair: String in fallback:
+		assert_false(pairs.has(pair), pair + " fallback is only for an unused pair")
+		assert_true(shared.has(fallback[pair]), pair + " falls back to a shared row")
+
 func test_every_move_resolves_and_all_24_bodies_impacts_trails_and_cues_exist() -> void:
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/moves/moves.json"))
 	var archetypes: Dictionary = LIBRARY.config().get("archetypes", {})

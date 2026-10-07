@@ -1,0 +1,69 @@
+{
+  "criterion": "F38#4",
+  "status": "PASS",
+  "source_commit": "db14ac5cbeb86332c9c61c6b7d4caf9a0046c32b",
+  "run_id": 37667014067,
+  "artifact_id": 11503793227,
+  "proof": "tools/capture_lookdev_route_stills.gd",
+  "args": "--biome=meadows --preset=Low --low-resolution=1280x720 --source-commit=db14ac5cbeb86332c9c61c6b7d4caf9a0046c32b --times=day,night --output=res://shots/lane-d/f38-road-hall-landmark",
+  "capture_result": {
+    "exit": 0,
+    "seconds": 832,
+    "frames": 8,
+    "planned": 8,
+    "complete": true,
+    "failures": []
+  },
+  "rendering": "Compatibility, llvmpipe, 1280x720, Low",
+  "camera": "Production CameraRig/Camera3D; ordinary spring arm/FOV; grounded debug-travel stills, not a physical walk",
+  "fixture_disclosure": "The existing route wrapper seeds its declared Meadows opening flags and selected trainer fixture, uses production debug travel, and freezes day/night. This corrects the inherited generic manifest's misleading no-progress-injection wording. No earned-path, encounter, save, performance, or full-matrix claim.",
+  "reviewer": "/root/f26_presets_review",
+  "review_mode": "Code-blind image-only, all eight original frames; no source/change narrative",
+  "bar_a": "BLOCK",
+  "bar_b": "BLOCK",
+  "distance_wayfinding": "PASS for pictured wayfinding only: route00/01 day/night frame the tallest central tower, contrasting stone and warm entrance as the road destination",
+  "near_full_bar": "BLOCK",
+  "per_frame_defects": {
+    "route00_day_night": [
+      "Broad mottled dirt dominates",
+      "Repeated roofs and abrupt verge transitions",
+      "Night hair/scarf conspicuously bright"
+    ],
+    "route01_day_night": [
+      "Blurry yellow/brown ground carpet",
+      "Weak depth separation at night"
+    ],
+    "route02_day_night": [
+      "Doorway reads as flat pale/ochre fill without inviting depth",
+      "Night trainer clothing and hair bleached"
+    ],
+    "route03_day_night": [
+      "Large empty floor and repeated surfaces",
+      "Flat blue portal panels and repeated floating labels",
+      "Night far wall and upper nave disappear into darkness"
+    ]
+  },
+  "missing_witnesses": [
+    "Reverse linking Hall and road",
+    "Near exterior retaining roofline/mass",
+    "Short ordinary-camera motion"
+  ],
+  "disposition": "READY F38#4 only under owner scoped judgment. Other F38 rows/F17#6/release Visual bar, device, earned and co-op gates remain OPEN. Existing cosmetic observations retained as release follow-up.",
+  "historical_full_bar_status": "BLOCKED",
+  "owner_scoped_directive": "572#6045342186 (2026-10-07 14:30 CT): literal criterion only; release Visual bar separately open",
+  "scoped_rejudgment": {
+    "reviewer": "/root/f26_presets_review",
+    "verdict": "PASS",
+    "reason": "Routes00/01 show the road leading clearly to the distinctive tallest Hall, day/night. Routes02/03 establish the entrance and recognizable interior up close."
+  },
+  "independent_source_review": {
+    "reviewer": "/root/f42_visual_review",
+    "verdict": "APPROVE",
+    "scope": "Seven named F38 production commits plus f21fa6b6b2/1035a4eb71 proof corrections and matching evidence only"
+  },
+  "area_proof": {
+    "run_id": 37673885907,
+    "source_commit": "68401e9c6b7dd14d77a4c3b77feff43c5ffbec3d",
+    "result": "PASS: actual farmhouse exit, road, nave, all8 arches/all8 pedestals"
+  }
+}

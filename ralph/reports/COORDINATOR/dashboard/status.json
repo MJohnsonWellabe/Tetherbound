@@ -1,10 +1,11 @@
 {
- "updated": "2026-10-04T23:23Z",
+ "updated": "2026-10-07T20:40Z",
  "headline": [
-  "Main green with #529 (re-proof fixes, co-op/Stormwood/Cloudreach gathering, Cloudreach cloud sea) and #530 (F32 #0–#3/#5, F17 #2/#3/#5, F01#2). Met 66 → 82.",
-  "F18 portals (critical path) in progress: co-op waystone and Home Key arrival bugs fixed; Warden now points at Tidewake; legacy tests rewritten. Portal flag still OFF pending proofs.",
-  "Found and being fixed: the shipping Low preset clipped every realm's world at 320 m (fixed on tb/lookdev-low, next batch); the hammer quick-bar equip blocks the M1/earned chain (F17 lane, top priority).",
-  "v27 proof save rebuilt on v28 (spec-driven builder); about 15 two-peer re-proofs are re-running. The earned-run training losses were a harness gap (care basket skipped); the potion margin is zero, so a balance write-up is coming."
+  "3:40 PM CT Wed 07 Oct: 135 criteria met, 130 on main and 5 evidenced on lane branches, all in consolidation 4 (CI running).",
+  "Pace picked up after the 1 PM rule reset and the 2:30 PM criterion-only visual judging: 6 READYs in the last 2 hours against 1 in the 2 before.",
+  "Consolidation 4: A F35#0, D F38#4, F14#2, F39#4 and the F17#2 doorway regression fix, E F36#2.",
+  "CI speed: #573 merged at 1:54 PM CT, so full CI takes about 22 minutes. Lane C is root-causing the flaky co-op smokes.",
+  "Bounced: F46#2 still fails smoke_f18_earned_loop's Home portal walk; it is with lane C."
  ],
  "batches": [
   {
@@ -360,58 +361,122 @@
    "sha": "33afd91f",
    "state": "Merged",
    "contents": "#435 Cards M1; Codex #432/#433/#434 (Phase 2d rules, Meadows crafting P2-095/P2-096)"
+  },
+  {
+   "name": "Re-proof and F32 (PRs #529, #530)",
+   "sha": "",
+   "state": "Merged 10-04",
+   "contents": "Re-proof fixes, gathering, cloud sea; F32 #0–#3/#5, F17 #2/#3/#5, F01#2. Met 66 → 82."
+  },
+  {
+   "name": "Waves 1–2 landings (PRs #532–#547)",
+   "sha": "",
+   "state": "Merged 10-05 to 10-06",
+   "contents": "F22, F27, F30#1, F31, F33, F34, F18 portals, perf, rejoin."
+  },
+  {
+   "name": "Batch 1 (PR #553)",
+   "sha": "",
+   "state": "Merged 10-06 8:24 AM CT",
+   "contents": "Net fixes, F01#6a."
+  },
+  {
+   "name": "Batch 2b (PR #555)",
+   "sha": "",
+   "state": "Merged 10-06 9:38 AM CT",
+   "contents": "F18#5 earned loop; F18 6/6, F01#6. Met 112."
+  },
+  {
+   "name": "Batch 3c (PR #558)",
+   "sha": "",
+   "state": "Merged 10-06 12:23 PM CT",
+   "contents": "F28#0/#5, F29#0/#1/#2/#4. Met 118."
+  },
+  {
+   "name": "Batch 5c (PR #565)",
+   "sha": "",
+   "state": "Merged 10-06 6:34 PM CT",
+   "contents": "F45#2, F42#1/#3, F23#1/#3, F03#0, shared_boss fix. Met 124."
+  },
+  {
+   "name": "Batch 6b (PR #567)",
+   "sha": "",
+   "state": "Merged 10-06 10:23 PM CT",
+   "contents": "Timing fix and contact guard."
+  },
+  {
+   "name": "Batch 7 (PR #568)",
+   "sha": "",
+   "state": "Merged 10-07 12:45 AM CT",
+   "contents": "F23#4, F24#1, F24#2. Met 127."
+  },
+  {
+   "name": "Consolidated (PR #571)",
+   "sha": "",
+   "state": "Merged 10-07 7:21 AM CT",
+   "contents": "All branches consolidated; lane history preserved. Codex sprint lanes A–E start."
+  },
+  {
+   "name": "Consolidation 1 (PR #574)",
+   "sha": "",
+   "state": "Merged 10-07 9:54 AM CT",
+   "contents": "F36#3 Meshy cap ledger, F26#1 graphics presets. Met 129."
+  },
+  {
+   "name": "Consolidation 2 (PR #575)",
+   "sha": "",
+   "state": "Closed 10-07",
+   "contents": "F46#2 broke smoke_f18_earned_loop; bounced to lane C."
+  },
+  {
+   "name": "Consolidation 3 (PR #576)",
+   "sha": "",
+   "state": "Merged 10-07 1:25 PM CT",
+   "contents": "F33#3 trainer hazard proof. Met 130."
+  },
+  {
+   "name": "CI speed (PR #573)",
+   "sha": "",
+   "state": "Merged 10-07 1:54 PM CT",
+   "contents": "Full CI about 32 → 22 minutes, 13 jobs; low-risk long checks moved to the 8-hourly run."
+  },
+  {
+   "name": "Consolidation 4",
+   "sha": "",
+   "state": "CI running",
+   "contents": "F35#0, F38#4, F14#2, F39#4, F36#2 and the F17#2 doorway fix."
   }
  ],
  "lanes": [
   {
-   "lane": "tb/f17 (Claude)",
-   "now": "#2/#3/#5 landed. Top priority: hammer hotbar equip (blocks F17#4, F02, F01#4/#5). Then #0/#1/#6.",
-   "next": "Re-prove the stale criteria on current code, then build the missing proof. F18 portals follow immediately."
+   "lane": "tb/codex-a (Codex A: combat, moves, commands)",
+   "now": "F35#0 in consolidation 4. F21#4 parked (settling budget); F33#2 Warden diagnostic running.",
+   "next": "F21#4 Low size matrix."
   },
   {
-   "lane": "tb/f21 (Claude)",
-   "now": "F21#4 judge PASS (in-container). F21#5 A/B after-hit sequences done; Medium frame time is on Codex GPU.",
-   "next": "Fix camera occluders (trainer, foreground creatures), then the size matrix plus judge. F22 to F24 follow."
+   "lane": "tb/codex-b (Codex B: earned route, story, ending)",
+   "now": "F49#0 earned route run (folds 8 older route rows): opening team piece failing on stick-zero velocity and save slot 0.",
+   "next": "Keep going on F49#0 (exempt from the 2-hour park rule)."
   },
   {
-   "lane": "tb/lookdev (Codex)",
-   "now": "F26#2 MET. Ally Medium harness and owner checklist ready. GPU captures paused (owner gaming); queued: F21 native matrix, F21#5 frame time, Cloudreach visual FAILs.",
-   "next": "GPU-only: Forward+ Medium/High census and matrices, all frame times, F21 live matrix and Medium frame time, Ally package, Stormursa Meshy."
+   "lane": "tb/codex-c (Codex C: power, homestead, economy, co-op)",
+   "now": "Owner priority: root-cause the flaky co-op smokes. F46#2 Home portal walk still failing. F28#2–#4, F43 and F48#2 parked.",
+   "next": "Flaky smoke fixes, then F46#2 re-READY."
   },
   {
-   "lane": "tb/f27 (Claude)",
-   "now": "Two-peer essence no-dup smoke and essence node witness added; applying F32 shed wiring.",
-   "next": "Real-path and two-peer proofs; route ledger. F28 and F30 follow."
+   "lane": "tb/codex-d (Codex D: Meadows, village, Tidewake visuals)",
+   "now": "F38#4, F14#2, F39#4 and the F17#2 doorway fix in consolidation 4.",
+   "next": "Next smallest D criterion."
   },
   {
-   "lane": "tb/reproof-fixes (Claude)",
-   "now": "All four done (in #529). Now F01#6 tournament guest strikes and F04#4 Warden reach.",
-   "next": "Each fix gets its own commit plus evidence; integrated in the next batch."
+   "lane": "tb/codex-e (Codex E: Cloudreach, Stormwood, art, audio)",
+   "now": "F36#2 in consolidation 4.",
+   "next": "Personal Fly fix; next smallest E criterion."
   },
   {
-   "lane": "tb/visual-cloudreach (Claude)",
-   "now": "Grey void fixed (far-plane vista floor). Next: high-perch occlusion, companion in lens, cliffs, Sky Aviary.",
-   "next": "Root-cause the cloud-sea void first, then scene-level fixes and re-judge."
-  },
-  {
-   "lane": "tb/lookdev-low (Claude)",
-   "now": "F26#0 Low half PASS (58/58 frames, zero errors), Low persists. Far-plane floor in every realm (320 m bug). Mirrored labels and Veilfall fog fixed. Re-judge pending.",
-   "next": "Receipts beside Codex's Forward+ census in the same schema."
-  },
-  {
-   "lane": "tb/f22 (Claude)",
-   "now": "Enemy patterns and reader/masher: in progress.",
-   "next": "Coordinate pilot with the earned session; named fights with the fix lane."
-  },
-  {
-   "lane": "tb/fixture-regen (Claude)",
-   "now": "Done and archived: v28 proof save + spec builder + guard test; 3 proofs pass.",
-   "next": "Unblocks F09#4, F10#1, F11#1–#3, F15#0 and others."
-  },
-  {
-   "lane": "tb/f18 (Claude)",
-   "now": "Co-op waystone touch, co-op arrival slots, home-arch config, Warden→Tidewake, legacy tests rewritten; units green with flag ON.",
-   "next": "Net travel smoke, the earned-loop gather conflict check, then the flag flip."
+   "lane": "tb/ci-speed (Claude)",
+   "now": "PR #573 merged 1:54 PM CT.",
+   "next": "Done; lane closed."
   }
  ],
  "decisions": [
@@ -435,17 +500,14 @@
   "Final step (owner, 2026-09-27): one checkpointed four-chapter earned run (new game through Tidewake on one save, smoke_four_biome_continuous) after all 13 chapter cards pass; it retires chapter-boundary fixture debt. Harness-input debt needs a short human play pass per chapter."
  ],
  "owner_needs": [
-  "F26#5: run the Forward+ Ally test once the Medium test build is ready.",
-  "Codex Meshy lane: F29#3 storm bear (RD-28) and F36 priority models, under the RD-26 cap.",
-  "F47 and F49: owner play pass and 15-25 h route measurement once Waves 1-2 land.",
-  "Stormwood S2: Stormwood audio decision (CH-Stormwood).",
-  "Internet co-op: Steam AppID, partner access and test accounts."
+  "F26#5: Forward+ test on the ROG Ally once the Medium build is ready.",
+  "F10#5: audio listening pass.",
+  "F47 and F49: owner play pass and 15–25 h route measurement after the route lands."
  ],
  "four_chapter_run": null,
  "wip": [
-  "Shared-boss friendly-fire staging root-caused as test geometry (the striker was placed into the Warden Arena's +Z wall). Fix ready; it lands on tb/integration after #525.",
-  "Three F18/F20 net smokes are held off the gate (`# requires-flag`) until F18 switches on portals; they rejoin automatically.",
-  "F48 co-op suites are parked in history at d3946db173f309f8b7a1cf96ff965fe47bcb9302 (former tb/coop) until F48 is built."
+  "Consolidation every 2 hours (next 3:10 PM CT): only work named in a READY reaches main.",
+  "F46#2 bounce: lesson modal classified as cutscene (e9c330d365) did not fix the Home-portal walk in smoke_f18_earned_loop."
  ],
  "last_lane_refresh": "2026-10-04T15:55:27.285131+00:00",
  "lane_activity": [],
