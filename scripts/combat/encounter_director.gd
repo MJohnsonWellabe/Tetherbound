@@ -2414,6 +2414,17 @@ func tether_command_deployment() -> Dictionary:
 ## Presentation capability follows the same scoped saved consumer as ingress.
 ## The host still validates the current body, admitted inventory and saved ACK.
 func tether_item_command_available(id: String) -> bool:
+	return _tether_command_actor_current(id)
+
+
+func tether_tag_command_available(id: String) -> bool:
+	return _tether_command_actor_current(id) \
+		and _manager.has_method("can_switch") and _manager.call("can_switch") == true \
+		and _manager.has_method("_next_switchable_index") and int(_manager.call("_next_switchable_index", 1)) >= 0
+
+
+func _tether_command_actor_current(id: String) -> bool:
+	if not is_instance_valid(_session): return false
 	var commands := preload("res://scripts/combat/tether_commands.gd")
 	if id.is_empty() or id != _local_bound_encounter_id() or not commands.enabled() \
 		or not commands.enabled("network_enabled") or not uses_saved_actor_vitals(id): return false

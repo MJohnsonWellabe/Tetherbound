@@ -60,11 +60,43 @@ func _initialize() -> void:
 			quit(1)
 			return
 		OS.set_environment("TB_NET_OUT_DIR", absolute)
-	if OS.get_cmdline_user_args().has("--with-fight-camera-units"):
+	if OS.get_cmdline_user_args().has("--with-fight-camera-units") or OS.get_cmdline_user_args().has("--with-tag-units"):
+		var selectors := PackedStringArray()
+		if OS.get_cmdline_user_args().has("--with-tag-units"):
+			# Existing files naming either changed production combat script.
+			selectors = PackedStringArray([
+				"test_actor_vitals_authority.gd", "test_alpha_pins.gd", "test_characterize_flag_keys.gd",
+				"test_charger_lunge.gd", "test_client_trainer_victory.gd", "test_combat_aftermath_focus.gd",
+				"test_combat_burst.gd", "test_combat_camera_framing_tunables.gd", "test_combat_camera_shoulder.gd",
+				"test_combat_camera_top_band.gd", "test_combat_contact_spacing.gd", "test_combat_feedback.gd",
+				"test_combat_flee_buffer.gd", "test_combat_mastery_delivery.gd", "test_combat_progression.gd",
+				"test_combat_realm_owned_begin.gd", "test_combat_send_out_hold.gd", "test_combat_spaced_camera.gd",
+				"test_combat_stagger.gd", "test_combat_tell_swing.gd", "test_combat_vfx.gd",
+				"test_combat_wind.gd", "test_creature_gear.gd", "test_creature_history.gd",
+				"test_director_card_best_survivability.gd", "test_director_join_snapshot.gd", "test_director_legacy_mirror.gd",
+				"test_director_projectile_deployment_binding.gd", "test_enemy_named_attack.gd", "test_engage_offer_surface_distance.gd",
+				"test_f21_hit_presentation.gd", "test_f23_live_moves.gd", "test_f24_host_commands.gd",
+				"test_fight_camera.gd", "test_foundation_combat_manager_context.gd", "test_foundation_retry_admission.gd",
+				"test_guest_idle_combat_authority.gd", "test_guest_master_admission.gd", "test_harness_max_hp.gd",
+				"test_hit_feedback.gd", "test_hosted_combat_staging.gd", "test_livewire_cooldowns.gd",
+				"test_move_commit_runtime.gd", "test_named_tell_text.gd", "test_named_trainer_wild_clear.gd",
+				"test_net_boss_snapshot.gd", "test_net_strike_transaction.gd", "test_orb_passes_your_own_creature.gd",
+				"test_portal_director_lookup.gd", "test_practice_engage_priority.gd", "test_process_exit_settlement.gd",
+				"test_rematch_solo_admission.gd", "test_remote_rematch_runtime.gd", "test_scale_sensitive_gameplay.gd",
+				"test_shared_boss_authored_pipeline.gd", "test_shared_opponent_cue_shape.gd", "test_shared_opponent_presentation.gd",
+				"test_shared_wild_host_fight.gd", "test_shiny.gd", "test_stormwood_b_combat_camera_fit.gd",
+				"test_stormwood_hosted_combat.gd", "test_stormwood_realm_transition.gd", "test_tournament_network_selection.gd",
+				"test_trainer_aftermath_lifetime.gd", "test_trainer_aftermath.gd", "test_trainer_ally_lateral_ranks.gd",
+				"test_trainer_rules.gd", "test_trainers_data.gd", "test_tutorial_faint_floor.gd",
+				"test_water_encounter_runtime_data.gd", "test_water_guardian_solo_win.gd", "test_water_realm_transition.gd",
+				"test_water_tidal_guard_combat.gd", "test_wild_alphas.gd", "test_wild_cluster_body_spacing.gd",
+				"test_wild_once.gd", "test_world_verb_input_owner_enforcement.gd"])
+		if OS.get_cmdline_user_args().has("--with-fight-camera-units") and not selectors.has("test_fight_camera.gd"):
+			selectors.append("test_fight_camera.gd")
 		var unit_output: Array = []
 		var unit_code := OS.execute(OS.get_executable_path(), PackedStringArray([
 			"--headless", "--path", ProjectSettings.globalize_path("res://"), "--audio-driver", "Dummy",
-			"--script", "res://tests/run_tests.gd", "--", "--only=test_fight_camera.gd"]), unit_output, true)
+			"--script", "res://tests/run_tests.gd", "--", "--only=" + ",".join(selectors)]), unit_output, true)
 		for chunk: Variant in unit_output: print(str(chunk))
 		if unit_code != 0:
 			quit(unit_code)

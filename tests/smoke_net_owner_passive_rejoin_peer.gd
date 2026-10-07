@@ -139,6 +139,10 @@ func _tag_step(action: String) -> Dictionary:
 		for frame in 90: await physics_frame
 		return {"verdict":"PASS", "detail":"submitted the same original Tag request again"}
 	if action != "op_tag_combo": return {"verdict":"ERROR", "detail":"unknown Tag step"}
+	var input: Node = null
+	for child: Node in manager.get_children():
+		if child.get_script() == preload("res://scripts/ui/tether_command_input.gd"): input = child
+	if input == null: return {"verdict":"FAIL", "detail":"actual mounted TetherCommandInput is missing for Tag"}
 	var before := _tag_state({})
 	var incoming_index := int(manager.call("_next_switchable_index", 1))
 	if incoming_index < 0: return {"verdict":"FAIL", "detail":"no actual healthy next owned companion"}
@@ -161,11 +165,10 @@ func _tag_step(action: String) -> Dictionary:
 			if float(snapshot.get("meter", 0.0)) <= meter: continue
 			if float(snapshot.meter) < 40.0: break
 			if manager.call("can_switch") != true: continue
-			var deployment: Dictionary = director.tether_command_deployment()
-			_tag_request = preload("res://scripts/combat/tether_commands.gd").intent(str(manager.encounter_id()),
-				int(deployment.generation), int(snapshot.get("last_sequence", 0)) + 1, "tag_combo")
-			var submitted: bool = manager.submit_tether_command(_tag_request)
-			if not submitted: return {"verdict":"FAIL", "detail":"actual Tag submission refused"}
+			if not input.request("tag_combo"):
+				return {"verdict":"FAIL", "detail":"production TetherCommandInput refused Tag request"}
+			_tag_request = preload("res://scripts/combat/tether_commands.gd").intent(str(input.get("_encounter_id")),
+				int(snapshot.get("generation", 0)), int(input.get("_sequence")), "tag_combo")
 			for settle in 180:
 				await physics_frame
 				if manager.active_creature() == incoming:
