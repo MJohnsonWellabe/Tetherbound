@@ -41,5 +41,13 @@
   "reviewer": "/root/f26_presets_review",
   "next": "F38#4 village/Hall; F39#3 separate authorized presentation-weather work",
   "planned_frames": 20,
-  "elapsed_seconds": 688
+  "elapsed_seconds": 688,
+  "scoped_rejudgment": {
+    "owner_directive": "572#6045342186",
+    "reviewer": "/root/f26_presets_review",
+    "criterion": "F39#4",
+    "verdict": "BLOCK",
+    "reason": "Submitted distance views show an enclosed cliff corridor obscuring Veilfall recognizable overall landmark. Near set cannot supply missing distance read.",
+    "cosmetic_full_bar_notes": "Retained prior full-bar notes are separate release follow-up, not the cause of this scoped BLOCK."
+  }
 }
