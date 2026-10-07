@@ -39,12 +39,16 @@ var _detail: Label = null
 var _list: VBoxContainer = null
 var _invite_button: Button = null
 var _restore_invite_focus := false
+var _local_name: Label = null
+var _local_portrait: TextureRect = null
 
 
 func build() -> void:
 	for child in get_children():
 		child.queue_free()
 	_rows.clear()
+	_local_name = null
+	_local_portrait = null
 
 	var header := Label.new()
 	header.text = "Your expedition"
@@ -64,6 +68,8 @@ func build() -> void:
 
 	for row: Variant in _peer_rows():
 		_add_row(row as Dictionary)
+	if not _session_active():
+		_add_local_card()
 
 	_invite_button = null
 	if _steam_host_requested() and not _session_active():
@@ -97,6 +103,7 @@ func build() -> void:
 func _add_row(peer: Dictionary) -> void:
 	var line := HBoxContainer.new()
 	line.add_theme_constant_override("separation", 16)
+	line.add_child(_portrait(str(peer.get("appearance_id", "trainer"))))
 
 	var who := Label.new()
 	who.custom_minimum_size = Vector2(460, 0)
@@ -120,6 +127,56 @@ func _add_row(peer: Dictionary) -> void:
 
 	_list.add_child(_panel(line, 12))
 	_rows.append({"peer_id": peer_id, "label": who, "kick": kick})
+
+
+## An inactive transport has no admitted peer rows. Show the actual local
+## trainer separately; this card never invents a Session registry member.
+func _add_local_card() -> void:
+	var game := state()
+	var local: Variant = game.get("local") if game != null else null
+	if local == null:
+		return
+	var line := HBoxContainer.new()
+	line.add_theme_constant_override("separation", 16)
+	_local_portrait = _portrait(str(local.get("chosen_character")))
+	line.add_child(_local_portrait)
+	_local_name = Label.new()
+	_local_name.add_theme_font_size_override("font_size", UITokens.FONT_READ)
+	_local_name.add_theme_color_override("font_color", UITokens.TEXT_PRIMARY)
+	_local_name.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_local_name.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	line.add_child(_local_name)
+	_list.add_child(_panel(line, 12))
+	_update_local_card(local)
+
+
+func _update_local_card(local: Object) -> void:
+	if _local_name == null or local == null:
+		return
+	var display_name := str(local.get("display_name")).strip_edges()
+	_local_name.text = "%s · You\nYour trainer on this device" % (display_name if not display_name.is_empty() else "Trainer")
+	_set_portrait(_local_portrait, str(local.get("chosen_character")))
+
+
+func _portrait(appearance: String) -> TextureRect:
+	var portrait := TextureRect.new()
+	portrait.custom_minimum_size = Vector2(72, 72)
+	portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_set_portrait(portrait, appearance)
+	return portrait
+
+
+func _set_portrait(portrait: TextureRect, appearance: String) -> void:
+	if portrait == null:
+		return
+	var supported := appearance if appearance in ["trainer", "kael", "sera", "lyra"] else "trainer"
+	if str(portrait.get_meta(&"appearance", "")) == supported:
+		return
+	portrait.set_meta(&"appearance", supported)
+	var path := "res://assets/ui/portraits/%s.png" % supported
+	portrait.texture = load(path) as Texture2D if ResourceLoader.exists(path) else null
 
 
 func first_focus() -> Control:
@@ -156,6 +213,10 @@ func poll() -> void:
 		return
 	var session := _session()
 	if session == null or not bool(session.call("is_active")):
+		var game := state()
+		var local: Variant = game.get("local") if game != null else null
+		if local is Object:
+			_update_local_card(local)
 		if _steam_host_requested():
 			_summary.text = "1/4 players. The friends lobby is not open yet."
 			_detail.text = _steam_status("Steam is preparing the friends-only lobby.")
