@@ -8,7 +8,7 @@ func _init() -> void:
 	var options: Dictionary = {}
 	for argument: String in OS.get_cmdline_user_args():
 		var pair: PackedStringArray = argument.split("=", true, 1)
-		if pair.size() != 2 or pair[1].is_empty() or options.has(pair[0]) or pair[0] not in ["--producer", "--loop-output", "--loop-profile", "--loop-profile-sha256", "--behind-guest-peer"]:
+		if pair.size() != 2 or pair[1].is_empty() or options.has(pair[0]) or pair[0] not in ["--producer", "--loop-output", "--loop-profile", "--loop-profile-sha256", "--behind-guest-peer", "--diagnostic-trace"]:
 			push_error("Unknown actual-input producer argument: " + argument)
 			quit(1)
 			return
@@ -18,6 +18,16 @@ func _init() -> void:
 		push_error("Unknown actual-input producer: " + producer)
 		quit(1)
 		return
+	if options.has("--diagnostic-trace"):
+		if options["--diagnostic-trace"] != "1":
+			push_error("Actual-input diagnostic trace requires --diagnostic-trace=1")
+			quit(1)
+			return
+		# The existing Python adapter inherits and records both trace flags.
+		# This diagnostic invocation keeps the original profile and deadlines.
+		OS.set_environment("TB_PEER_PHASE_TRACE", "1")
+		OS.set_environment("TB_BACKGROUND_WORK_TRACE", "1")
+		print("F48 diagnostic trace enabled: diagnostic only, no acceptance credit.")
 	var python := OS.get_environment("TB_F48_PROCESS_PYTHON")
 	if python.is_empty(): python = "python" if OS.get_name() == "Windows" else "python3"
 	var output: Array = []
