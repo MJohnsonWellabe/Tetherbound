@@ -1784,9 +1784,11 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 		return true
 	var current_a := FIGHT_CAMERA.project_points(ally_points,current.transform,camera.fov,aspect,camera.near)
 	var current_b := FIGHT_CAMERA.project_points(foe_points,current.transform,camera.fov,aspect,camera.near)
-	var current_clear: bool = bool(current_a.get("in_frame",false)) and bool(current_b.get("in_frame",false)) \
-		and FIGHT_CAMERA.overlap_ratio(current_a.get("rect",Rect2()),current_b.get("rect",Rect2()))<=float(local.max_actor_overlap) \
-		and bool((_fight_visibility_score(current.transform,current_a.get("rect",Rect2()),current_b.get("rect",Rect2()),visibility_context)).get("pass",false))
+	var current_framed: bool = bool(current_a.get("in_frame",false)) and bool(current_b.get("in_frame",false))
+	var current_overlap := FIGHT_CAMERA.overlap_ratio(current_a.get("rect",Rect2()),current_b.get("rect",Rect2()))
+	var current_visibility := _fight_visibility_score(current.transform,current_a.get("rect",Rect2()),current_b.get("rect",Rect2()),visibility_context)
+	var current_clear: bool = current_framed and current_overlap<=float(local.max_actor_overlap) \
+		and bool(current_visibility.get("pass",false))
 	var retain: bool = current_clear and (manual or not bool(solution.get("pass",false)) \
 		or float(current.distance)<=float(solution.distance)+float(local.get("safe_fit_distance_slack_m",0.75)))
 	var selected: Dictionary = current
@@ -1798,29 +1800,43 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 		# existing lag. Probe the intermediate pose, then sweep the lens movement
 		# itself so a legal destination cannot cut through a tree or room wall.
 		var max_turn: float = deg_to_rad(maxf(0.0,float(fight.get("orbit_speed_deg_s",180.0))))*maxf(delta,0.0)
-		var next_yaw: float = yaw if manual else yaw+clampf(wrapf(deg_to_rad(float(solution.yaw_offset_deg)),-PI,PI),-max_turn,max_turn)
-		var next_pitch: float = pitch if manual else move_toward(pitch,float(solution.pitch),max_turn)
-		var next_basis := Basis.from_euler(Vector3(next_pitch,next_yaw,float(local.roll_radians)))
-		var next_pivot: Vector3 = (current.pivot as Vector3).lerp(solution.pivot as Vector3,weight)
-		var next_distance: float = lerpf(float(current.distance),float(solution.get("requested_distance",solution.distance)),weight)
-		var next := probe.call(next_pivot,next_basis,next_distance) as Dictionary
-		if not next.is_empty():
+		# A HUD-only failure must not authorize cropping either actor or losing
+		# clear foreground/support. Shorten the same constrained step when its
+		# intermediate orbit crosses a blocked arm; never snap to the endpoint.
+		for step_scale: float in [1.0,0.5,0.25,0.125]:
+			var next_yaw: float = yaw if manual else yaw+clampf(wrapf(deg_to_rad(float(solution.yaw_offset_deg)),-PI,PI),-max_turn,max_turn)*step_scale
+			var next_pitch: float = pitch if manual else move_toward(pitch,float(solution.pitch),max_turn*step_scale)
+			var next_basis := Basis.from_euler(Vector3(next_pitch,next_yaw,float(local.roll_radians)))
+			var next_pivot: Vector3 = (current.pivot as Vector3).lerp(solution.pivot as Vector3,weight*step_scale)
+			var next_distance: float = lerpf(float(current.distance),float(solution.get("requested_distance",solution.distance)),weight*step_scale)
+			var next := probe.call(next_pivot,next_basis,next_distance) as Dictionary
+			if next.is_empty(): continue
 			var travel: Vector3 = (next.transform as Transform3D).origin-(current.transform as Transform3D).origin
 			var length: float = travel.length()
 			motion_blocked = length>0.0 and float(_camera_rig.call("_free_distance_behind",
 				(current.transform as Transform3D).origin,travel/length,length))<length
+			if motion_blocked: continue
 			var next_a := FIGHT_CAMERA.project_points(ally_points,next.transform,camera.fov,aspect,camera.near)
 			var next_b := FIGHT_CAMERA.project_points(foe_points,next.transform,camera.fov,aspect,camera.near)
-			var next_clear: bool = bool(next_a.get("in_frame",false)) and bool(next_b.get("in_frame",false)) \
-				and FIGHT_CAMERA.overlap_ratio(next_a.get("rect",Rect2()),next_b.get("rect",Rect2()))<=float(local.max_actor_overlap) \
-				and bool((_fight_visibility_score(next.transform,next_a.get("rect",Rect2()),next_b.get("rect",Rect2()),visibility_context)).get("pass",false))
-			if not motion_blocked and (not current_clear or next_clear):
+			var next_framed: bool = bool(next_a.get("in_frame",false)) and bool(next_b.get("in_frame",false))
+			var next_overlap := FIGHT_CAMERA.overlap_ratio(next_a.get("rect",Rect2()),next_b.get("rect",Rect2()))
+			var preserves_readability: bool = (not current_framed or next_framed) \
+				and next_overlap<=maxf(current_overlap,float(local.max_actor_overlap))
+			if not preserves_readability: continue
+			var next_visibility := _fight_visibility_score(next.transform,next_a.get("rect",Rect2()),next_b.get("rect",Rect2()),visibility_context)
+			for guard: String in ["geometry_valid","foreground_clear","support_clear","hud_clear","pass"]:
+				if bool(current_visibility.get(guard,false)) and not bool(next_visibility.get(guard,false)):
+					preserves_readability = false
+			if not motion_blocked and preserves_readability:
 				selected = next
 				selected_yaw = next_yaw
 				selected_pitch = next_pitch
-	var offset: Vector3 = solution.pivot-_ally_body.global_position-Vector3.UP*float(_camera_rig.get("_height"))
+				break
+	# The rig's next follow must continue from the pose actually admitted here,
+	# not independently ease toward an endpoint whose intermediate was refused.
+	var offset: Vector3 = selected.pivot-_ally_body.global_position-Vector3.UP*float(_camera_rig.get("_height"))
 	_camera_rig.call("set_framing_pivot_offset",offset)
-	_camera_rig.set("_distance",float(solution.get("requested_distance",solution.distance)))
+	_camera_rig.set("_distance",float(selected.distance))
 	_camera_rig.set("_shoulder",0.0)
 	_camera_rig.set("pitch",selected_pitch)
 	_camera_rig.call("apply_fight_camera_pose",selected,selected_yaw)
@@ -6198,6 +6214,17 @@ func _fight_visibility_context(camera: Camera3D, cfg: Dictionary) -> Dictionary:
 			support = {}
 	else:
 		support = {}
+	# These spheres depend only on this freshly measured context, not on the
+	# candidate lens or each nearby scenery envelope.
+	var sight_subjects: Array = subjects.duplicate()
+	if not support.is_empty(): sight_subjects.append(support)
+	var sight_spheres: Array[Dictionary] = []
+	for subject: Dictionary in sight_subjects:
+		var world_box: AABB = (subject.pose as Transform3D) * (subject.box as AABB)
+		sight_spheres.append({"centre":world_box.get_center(),"radius":world_box.size.length()*0.5})
+	var occupied_records: Array = []
+	for rect: Rect2 in rectangles:
+		occupied_records.append([rect.position.x,rect.position.y,rect.size.x,rect.size.y])
 	# These are concrete opaque render meshes, not collision cylinders or a
 	# scene-wide bounding box. Cache the static Props inventory per encounter;
 	# transforms, visibility and material opacity are read again on each use.
@@ -6316,7 +6343,9 @@ func _fight_visibility_context(camera: Camera3D, cfg: Dictionary) -> Dictionary:
 							geometry_valid = false
 							continue
 						if bool(record.get("in_range",false)): scenery.append(record)
-	return {"hud_rects":rectangles,"occluders":occluders,"subjects":subjects,"support":support,
+	return {"hud_rects":rectangles,"hud_records":occupied_records,
+		"occluders":occluders,"subjects":subjects,"support":support,
+		"sight_subjects":sight_subjects,"sight_spheres":sight_spheres,
 		"scenery":scenery,"occluder_limit":cap,
 		"overflow":overflow,"hud_available":hud!=null and hud_valid,"geometry_valid":geometry_valid,
 		"invalid_hud_paths":invalid_hud,"viewport":extent,"fov":camera.fov,"near":camera.near}
@@ -6332,12 +6361,11 @@ func _fight_visibility_score(transform: Transform3D, ally_rect: Rect2, foe_rect:
 		for subject: Rect2 in [ally_rect,foe_rect]:
 			hud_overlap += subject.intersection(occupied).get_area()
 	var aspect: float = float(context.viewport.x)/maxf(float(context.viewport.y),0.000001)
-	var sight_subjects: Array = context.subjects.duplicate()
+	var sight_subjects: Array = context.sight_subjects
 	var support: Dictionary = context.get("support",{})
 	var support_in_frame: bool = true
 	var support_hud_overlap: float = 0.0
 	if not support.is_empty():
-		sight_subjects.append(support)
 		var projected: Dictionary = FIGHT_CAMERA.project_points(support.points,transform,
 			float(context.fov),aspect,float(context.near))
 		support_in_frame = bool(projected.get("valid",false)) and bool(projected.get("in_frame",false))
@@ -6347,6 +6375,10 @@ func _fight_visibility_score(transform: Transform3D, ally_rect: Rect2, foe_rect:
 	var relevant: Array = context.occluders.duplicate()
 	var scenery_overflow: bool = false
 	var scenery_count: int = 0
+	var sight_axes: Array[Dictionary] = []
+	for sphere: Dictionary in context.sight_spheres:
+		var axis: Vector3 = (sphere.centre as Vector3)-transform.origin
+		sight_axes.append({"axis":axis,"length_squared":maxf(axis.length_squared(),0.000001),"radius":sphere.radius})
 	# A sightline to any subject point lies inside this conservative capsule.
 	# Reject scenery wholly outside it before the exact projected-envelope
 	# check; a radius/candidate cap must not count irrelevant distant rocks.
@@ -6358,12 +6390,11 @@ func _fight_visibility_score(transform: Transform3D, ally_rect: Rect2, foe_rect:
 		if lens_distance+scenery_radius<range_begin \
 			or (range_end>0.0 and lens_distance-scenery_radius>range_end): continue
 		var may_occlude: bool = false
-		for subject: Dictionary in sight_subjects:
-			var world_box: AABB = (subject.pose as Transform3D) * (subject.box as AABB)
-			var axis: Vector3 = world_box.get_center()-transform.origin
-			var offset: Vector3 = (scenery.centre as Vector3)-transform.origin
-			var fraction: float = clampf(offset.dot(axis)/maxf(axis.length_squared(),0.000001),0.0,1.0)
-			var combined_radius: float = world_box.size.length()*0.5+scenery_radius
+		var offset: Vector3 = (scenery.centre as Vector3)-transform.origin
+		for sight_axis: Dictionary in sight_axes:
+			var axis: Vector3 = sight_axis.axis
+			var fraction: float = clampf(offset.dot(axis)/float(sight_axis.length_squared),0.0,1.0)
+			var combined_radius: float = float(sight_axis.radius)+scenery_radius
 			if (offset-axis*fraction).length_squared()<=combined_radius*combined_radius:
 				may_occlude = true
 				break
@@ -6376,17 +6407,27 @@ func _fight_visibility_score(transform: Transform3D, ally_rect: Rect2, foe_rect:
 	var hidden: int = 0
 	var support_hidden: bool = false
 	if not bool(context.overflow) and not scenery_overflow and bool(context.geometry_valid):
+		# Indices refer only to this score's immutable foreground inventory.
+		# Project lazily, retaining every validation and exact intersection while
+		# avoiding repeated hulls for the same occluder against both fighters.
+		var foreground: Array = relevant+context.subjects
+		var foreground_projections: Dictionary = {}
 		for subject: Dictionary in sight_subjects:
-			var foreground: Array = relevant
 			var is_support: bool = not support.is_empty() and int(subject.get("body_id",0))==int(support.body_id)
+			var subject_projection: Dictionary = FIGHT_CAMERA.project_bounds(transform,subject,
+				float(context.fov),aspect,float(context.near))
 			# The trainer can be hidden by either fighter. Their own mutual
 			# overlap remains the solver's existing two-body constraint.
-			if is_support: foreground = relevant+context.subjects
-			for occluder: Dictionary in foreground:
+			var foreground_count: int = foreground.size() if is_support else relevant.size()
+			for index: int in foreground_count:
+				var occluder: Dictionary = foreground[index]
 				if int(subject.get("body_id",0))!=0 \
 					and int(subject.get("body_id",0))==int(occluder.get("body_id",0)): continue
-				if FIGHT_CAMERA.bounds_occlude(transform,subject,occluder,float(context.fov),
-					aspect,float(context.near)):
+				if not foreground_projections.has(index):
+					foreground_projections[index] = FIGHT_CAMERA.project_bounds(transform,occluder,
+						float(context.fov),aspect,float(context.near),true)
+				if FIGHT_CAMERA.projected_bounds_occlude(transform,subject_projection,
+					foreground_projections[index],float(context.fov),aspect):
 					if is_support: support_hidden = true
 					else: hidden += 1
 					break
@@ -6395,13 +6436,10 @@ func _fight_visibility_score(transform: Transform3D, ally_rect: Rect2, foe_rect:
 	var support_clear: bool = support.is_empty() or (bool(context.geometry_valid) \
 		and not bool(context.overflow) and not scenery_overflow \
 		and support_in_frame and support_hud_overlap==0.0 and not support_hidden)
-	var occupied_records: Array = []
-	for rect: Rect2 in context.hud_rects:
-		occupied_records.append([rect.position.x,rect.position.y,rect.size.x,rect.size.y])
 	return {"pass":hud_clear and sight_clear and support_clear,"hud_clear":hud_clear,
 		"hud_overlap":hud_overlap,"foreground_clear":sight_clear,
 		"hidden_head_torso_points":hidden,"occluder_overflow":bool(context.overflow),
-		"hud_rectangle_count":context.hud_rects.size(),"hud_rectangles":occupied_records,
+		"hud_rectangle_count":context.hud_rects.size(),"hud_rectangles":context.hud_records,
 		"hud_available":bool(context.hud_available),"invalid_hud_paths":context.invalid_hud_paths,
 		"occluder_count":context.occluders.size(),"geometry_valid":bool(context.geometry_valid),
 		"scenery_candidate_count":(context.get("scenery",[]) as Array).size(),

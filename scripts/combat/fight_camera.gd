@@ -308,54 +308,69 @@ static func _bounds_hull(points: PackedVector3Array, lens: Transform3D,
 ## actual world-space rays through their shared projected polygon.
 static func bounds_occlude(lens: Transform3D, actor: Dictionary, other: Dictionary,
 		fov: float, aspect: float, near_plane: float) -> bool:
-	for envelope: Dictionary in [actor, other]:
-		if not envelope.get("points") is PackedVector3Array or envelope.points.size()!=8 \
-			or not envelope.get("box") is AABB or not envelope.get("pose") is Transform3D \
-			or not envelope.get("inverse") is Transform3D: return true
-		var bounds: AABB = envelope.box
-		if not bounds.position.is_finite() or not bounds.size.is_finite() \
-			or bounds.size.x<=0.0 or bounds.size.y<=0.0 or bounds.size.z<=0.0: return true
-		for point: Vector3 in envelope.points:
-			if not point.is_finite(): return true
-		for transform: Transform3D in [envelope.pose, envelope.inverse]:
-			var determinant := transform.basis.determinant()
-			if not transform.origin.is_finite() or not transform.basis.x.is_finite() \
-				or not transform.basis.y.is_finite() or not transform.basis.z.is_finite() \
-				or not is_finite(determinant) or absf(determinant)<=0.000001: return true
+	return projected_bounds_occlude(lens,
+		project_bounds(lens,actor,fov,aspect,near_plane),
+		project_bounds(lens,other,fov,aspect,near_plane,true),fov,aspect)
+
+## A fresh candidate-local projection. Reuse this validated result only for
+## this lens and these measured envelopes; nothing survives the score call.
+static func project_bounds(lens: Transform3D, envelope: Dictionary,
+		fov: float, aspect: float, near_plane: float, clip_near: bool = false) -> Dictionary:
+	if not envelope.get("points") is PackedVector3Array or envelope.points.size()!=8 \
+		or not envelope.get("box") is AABB or not envelope.get("pose") is Transform3D \
+		or not envelope.get("inverse") is Transform3D: return {"valid":false}
+	var bounds: AABB = envelope.box
+	if not bounds.position.is_finite() or not bounds.size.is_finite() \
+		or bounds.size.x<=0.0 or bounds.size.y<=0.0 or bounds.size.z<=0.0: return {"valid":false}
+	for point: Vector3 in envelope.points:
+		if not point.is_finite(): return {"valid":false}
+	for transform: Transform3D in [envelope.pose, envelope.inverse]:
+		var determinant := transform.basis.determinant()
+		if not transform.origin.is_finite() or not transform.basis.x.is_finite() \
+			or not transform.basis.y.is_finite() or not transform.basis.z.is_finite() \
+			or not is_finite(determinant) or absf(determinant)<=0.000001: return {"valid":false}
 	if not is_finite(fov) or not is_finite(aspect) or not is_finite(near_plane) \
 		or fov<=0.0 or fov>=179.0 or aspect<=0.0 or near_plane<0.0 \
 		or not lens.origin.is_finite() or not lens.basis.x.is_finite() \
 		or not lens.basis.y.is_finite() or not lens.basis.z.is_finite() \
-		or not is_finite(lens.basis.determinant()) or absf(lens.basis.determinant())<=0.000001: return true
-	var actor_hull: PackedVector2Array = _bounds_hull(actor.points,lens,fov,aspect,near_plane)
-	var other_hull: PackedVector2Array = _bounds_hull(other.points,lens,fov,aspect,near_plane,true)
+		or not is_finite(lens.basis.determinant()) or absf(lens.basis.determinant())<=0.000001: return {"valid":false}
+	var hull: PackedVector2Array = _bounds_hull(envelope.points,lens,fov,aspect,near_plane,clip_near)
 	# Only a validated envelope wholly behind the clipping plane is harmless.
 	# A collapsed/nonfinite projection in front is unavailable, never clear.
 	var lens_inverse := lens.affine_inverse()
-	var other_in_front := false
-	for point: Vector3 in other.points:
+	var in_front := false
+	var reach: float = 1.0
+	for point: Vector3 in envelope.points:
 		var local: Vector3 = lens_inverse*point
-		if not local.is_finite(): return true
-		if -local.z>maxf(near_plane,0.000001): other_in_front = true
-	for hull_index: int in 2:
-		var hull: PackedVector2Array = actor_hull if hull_index==0 else other_hull
-		if hull.size()<3:
-			if hull_index==1 and not other_in_front: continue
-			return true
+		if not local.is_finite(): return {"valid":false}
+		if -local.z>maxf(near_plane,0.000001): in_front = true
+		if not clip_near: reach=maxf(reach,lens.origin.distance_to(point)*2.0)
+	if hull.size()<3:
+		if not clip_near or in_front: return {"valid":false}
+	else:
 		var twice_area := 0.0
 		for index: int in hull.size():
-			if not hull[index].is_finite(): return true
+			if not hull[index].is_finite(): return {"valid":false}
 			twice_area += hull[index].cross(hull[(index+1)%hull.size()])
-		if not is_finite(twice_area) or twice_area==0.0: return true
-	if not other_in_front: return false
-	var intersections: Array[PackedVector2Array] = Geometry2D.intersect_polygons(actor_hull,other_hull)
+		if not is_finite(twice_area) or twice_area==0.0: return {"valid":false}
+	return {"valid":true,"in_front":in_front,"hull":hull,"envelope":envelope,"reach":reach}
+
+static func projected_bounds_occlude(lens: Transform3D, actor_projection: Dictionary,
+		other_projection: Dictionary, fov: float, aspect: float) -> bool:
+	if not bool(actor_projection.get("valid",false)) or not bool(other_projection.get("valid",false)): return true
+	if not bool(other_projection.in_front): return false
+	var actor: Dictionary = actor_projection.envelope
+	var other: Dictionary = other_projection.envelope
+	var intersections: Array[PackedVector2Array] = Geometry2D.intersect_polygons(actor_projection.hull,other_projection.hull)
 	var tangent: float = tan(deg_to_rad(fov)*0.5)
-	var reach: float = 1.0
-	for point: Vector3 in actor.points: reach=maxf(reach,lens.origin.distance_to(point)*2.0)
+	var reach: float = float(actor_projection.reach)
 	var actor_inverse: Transform3D = actor.inverse
 	var other_inverse: Transform3D = other.inverse
 	var actor_box: AABB = actor.box
 	var other_box: AABB = other.box
+	var actor_start: Vector3 = actor_inverse*lens.origin
+	var other_start: Vector3 = other_inverse*lens.origin
+	var starts_inside_other: bool = other_box.has_point(other_start)
 	for polygon: PackedVector2Array in intersections:
 		if polygon.size()<3: continue
 		var centre := Vector2.ZERO
@@ -366,11 +381,11 @@ static func bounds_occlude(lens: Transform3D, actor: Dictionary, other: Dictiona
 		for point: Vector2 in samples:
 			var ray: Vector3 = lens.basis*Vector3((point.x*2.0-1.0)*tangent*aspect,
 				(1.0-point.y*2.0)*tangent,-1.0).normalized()
-			var hit: Variant = actor_box.intersects_segment(actor_inverse*lens.origin,actor_inverse*(lens.origin+ray*reach))
+			var hit: Variant = actor_box.intersects_segment(actor_start,actor_inverse*(lens.origin+ray*reach))
 			if not hit is Vector3: continue
 			var actor_entry: Vector3 = (actor.pose as Transform3D)*(hit as Vector3)
-			if other_box.has_point(other_inverse*lens.origin): return true
-			var cover: Variant = other_box.intersects_segment(other_inverse*lens.origin,other_inverse*actor_entry)
+			if starts_inside_other: return true
+			var cover: Variant = other_box.intersects_segment(other_start,other_inverse*actor_entry)
 			if cover is Vector3:
 				var other_entry: Vector3 = (other.pose as Transform3D)*(cover as Vector3)
 				if lens.origin.distance_squared_to(other_entry)<lens.origin.distance_squared_to(actor_entry): return true
