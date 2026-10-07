@@ -110,6 +110,25 @@ func test_capture_checkpoint_binds_original_offer_without_granting_its_creature(
 	assert_false(capture.is_empty())
 	var offer: Dictionary = capture.duties[0].context.duplicate(true)
 	var original_offer := var_to_bytes(offer)
+	var capture_rules := preload("res://scripts/net/foundation_capture_rules.gd")
+	var original_catch: Dictionary = offer.creature.duplicate(true)
+	original_catch.traits_initialized = true
+	original_catch.rolled_traits = offer.capture_traits.rolled_traits.duplicate()
+	original_catch.taught_traits = offer.capture_traits.taught_traits.duplicate(true)
+	original_catch.captured_from = offer.capture_traits.captured_from.duplicate(true)
+	assert_true(capture_rules.original_offer_matches(offer, original_catch, "resource-namespace", "original-epoch", "meadows", DATA.CHARACTER))
+	for wrong: Array in [["wrong-world", "original-epoch", "meadows", DATA.CHARACTER],
+		["resource-namespace", "wrong-epoch", "meadows", DATA.CHARACTER],
+		["resource-namespace", "original-epoch", "water", DATA.CHARACTER],
+		["resource-namespace", "original-epoch", "meadows", "another-character"]]:
+		assert_false(capture_rules.original_offer_matches(offer, original_catch, wrong[0], wrong[1], wrong[2], wrong[3]), "ordinary offer cannot change its frozen owner/world/epoch/realm")
+	var altered_catch := original_catch.duplicate(true)
+	altered_catch.hp = float(altered_catch.hp) - 1.0
+	assert_false(capture_rules.original_offer_matches(offer, altered_catch, "resource-namespace", "original-epoch", "meadows", DATA.CHARACTER), "ordinary offer retains every original caught-card field")
+	altered_catch = original_catch.duplicate(true)
+	altered_catch.captured_from.spawn_generation += 1
+	assert_false(capture_rules.original_offer_matches(offer, altered_catch, "resource-namespace", "original-epoch", "meadows", DATA.CHARACTER), "ordinary offer retains its original spawn generation")
+	assert_eq(var_to_bytes(offer), original_offer, "offer binding validation never rewrites the original")
 	var context := offer.duplicate(true)
 	context.merge({"character_id": DATA.CHARACTER, "expected_revision": 0, "in_range": true, "in_combat": false})
 	var kept := preload("res://scripts/net/foundation_capture_rules.gd").stage(f.before,

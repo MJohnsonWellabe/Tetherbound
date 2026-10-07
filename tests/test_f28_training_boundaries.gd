@@ -264,6 +264,8 @@ func test_fresh_starter_saved_mirror_allows_rest_xp_without_inventing_missing_hi
 	# rather than waiting for a detached save_data projection to exist.
 	var caught: RefCounted = SPECIES.spawn("bramblebun")
 	caught.set_level(3, cfg)
+	caught.set("traits_initialized", true)
+	caught.set("rolled_traits", ["sturdy", "swift"])
 	var before_catch: Dictionary = player.redesign_character.duplicate(true)
 	assert_true(player.party.add(caught))
 	var rules := preload("res://scripts/creatures/breakthrough.gd")
@@ -272,6 +274,9 @@ func test_fresh_starter_saved_mirror_allows_rest_xp_without_inventing_missing_hi
 	if initialized.is_empty(): return
 	assert_eq(initialized.creatures[creature.uid], before_catch.creatures[creature.uid], "another creature's history is never inferred or reset")
 	assert_eq(initialized.transaction_receipts, before_catch.transaction_receipts, "local catch initialization grants no training reward receipt")
+	assert_eq(initialized.creatures[caught.uid].rolled_traits, ["sturdy", "swift"], "the actual newly owned spawn roll is retained in its one durable UID mirror")
+	assert_true(initialized.creatures[caught.uid].traits_initialized)
+	assert_eq(caught.get("rolled_traits"), ["sturdy", "swift"], "catch projection never rerolls the instance")
 	player.redesign_character = initialized
 	assert_eq(caught.call("_admitted_level_cap", cfg, initialized), 10)
 	REST.rest(caught, cfg, initialized)

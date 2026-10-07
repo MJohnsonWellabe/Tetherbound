@@ -478,14 +478,18 @@ func _freeze_bounty_instances(encounter_id: String, peer: int) -> void:
 		if slot.get("complete") != true: instances.append(str(slot.instance))
 	participant.foundation_bounty_instances = instances
 
-func _retain_research(encounter_id: String, peer: int, kind: String, species: String, serial: String, move_id: String = "", night: Variant = null, capture_card: Dictionary = {}) -> bool:
+func _retain_research(encounter_id: String, peer: int, kind: String, species: String, serial: String, move_id: String = "", night: Variant = null, capture_card: Dictionary = {}, capture_offer: Dictionary = {}) -> bool:
 	if _session == null or not _is_host(): return true
 	var source := {"encounter_id": encounter_id, "peer": peer, "kind": kind, "species": species,
 		"source_id": JSON.stringify([_encounter_realm(), encounter_id, peer, kind, serial]).sha256_text(), "move_id": move_id, "night": night}
 	source.record = _encounter_host.call("record", encounter_id).duplicate(true)
 	source.world_namespace = _session.call("_game").get("world").reward_delivery_namespace
 	source.session_id = _session.call("_altar_current_epoch")
-	if kind == "catch": source.capture_card = capture_card.duplicate(true)
+	if kind == "catch":
+		source.capture_card = capture_card.duplicate(true)
+		if not capture_offer.is_empty():
+			source.capture_offer = capture_offer.duplicate(true)
+			source.source_id = capture_offer.source_key
 	var retained := retained_research_source(source.source_id)
 	if not retained.is_empty(): source = retained
 	else: _foundation_pending_sources.append(source)
@@ -1346,6 +1350,7 @@ func _spawn_authored_creatures(entries: Array, repeat_packet: Dictionary = {}) -
 					wild.queue_free()
 					continue
 				if not member_packet.is_empty(): wild.visible = true
+			_initialize_wild_traits(wild, n == 0 and (not alpha_block.is_empty() or not once_alpha.is_empty()))
 			wild.call("configure", wild_cfg)
 			wild.set("home", wild.global_position)
 			# An aggressive creature asks; this node decides. Keeping the decision
@@ -1750,6 +1755,43 @@ func _set_fixed_level(wild: Node3D, species: String, level: int) -> void:
 ## `populate()` above (that happened before this roll), so it is told
 ## directly via `set_shiny`, which re-tints the model already standing in
 ## the world rather than rebuilding it.
+## Host-only F30 roll, after legacy draws and named level/alpha setup. The
+## transient generation belongs to this uncaught body lifetime, not a save or
+## reward receipt. Existing retained alpha packets are already initialized.
+func _initialize_wild_traits(wild: Node3D, alpha: bool = false) -> void:
+	if _session == null or _session.call("is_host") != true: return
+	var game := get_node_or_null(^"/root/Game")
+	var creature: RefCounted = wild.get("instance")
+	if game == null or game.get("world") == null or creature == null or bool(creature.get("traits_initialized")): return
+	# Resident simulation shells deliberately remove presentation clocks. Use
+	# the same carried-world clock/default-day semantics as WorldLook, never
+	# another resident realm's first group member or weather override.
+	var look := get_parent().get_node_or_null(^"WorldLook")
+	var weather_node := get_parent().get_node_or_null(^"WorldWeather")
+	var night := false
+	if look != null and look.has_method("is_dark"):
+		night = bool(look.call("is_dark"))
+	else:
+		var art: Dictionary = preload("res://scripts/data/redesign_data.gd").json("res://data/config/art.json")
+		var cycle := preload("res://scripts/world/day_cycle.gd").new(art)
+		var carried := float(game.get("world").get("clock_elapsed_seconds"))
+		var hour: float = cycle.hour_at(carried) if carried >= 0.0 else float(art.get("times", {}).get("day", {}).get("hour", 12.0))
+		night = cycle.is_dark(hour)
+	var unusual_weather: bool = weather_node != null and weather_node.has_method("weather") and str(weather_node.call("weather")) != "clear"
+	if look != null and look.get("_weather") is Dictionary:
+		unusual_weather = unusual_weather or preload("res://scripts/net/foundation_alphas.gd").unusual_weather(look.get("_weather"))
+	var generation := int(wild.get_meta("ordinary_trait_generation", 0)) + 1
+	var packet := preload("res://scripts/creatures/trait_spawn_hooks.gd").initialize_host_instance(creature, {
+		"world_namespace": str(game.get("world").get("reward_delivery_namespace")),
+		"spawn_id": str(wild.name), "spawn_generation": generation,
+		"alpha": alpha, "night": night, "weather": unusual_weather})
+	if packet.is_empty(): return
+	wild.set_meta("ordinary_trait_generation", generation)
+	wild.set_meta("ordinary_trait_alpha", alpha)
+	wild.set_meta("ordinary_trait_packet", packet)
+	wild.set_meta("ordinary_trait_world", weakref(game.get("world")))
+	wild.set_meta("ordinary_trait_uid", str(creature.get("uid")))
+
 func _roll_wild_level(wild: Node3D, species: String, rng: RandomNumberGenerator, centre_z: float) -> void:
 	var cfg: Dictionary = CHAPTER_CURVE.progression_config_at(
 		centre_z, PROGRESSION.config(), CHAPTER_CURVE.config())
@@ -3843,6 +3885,19 @@ func _host_catch_finished(intent: Dictionary, peer_id: int) -> Dictionary:
 				return {"ok": false, "pending": true, "code": "capture_traits_unavailable", "encounter_id": encounter_id, "claim_id": claim_id}
 			for field: String in ["traits_initialized", "rolled_traits", "taught_traits", "captured_from"]:
 				capture_traits[field] = prepared[field]
+		elif alpha_body.has_meta("ordinary_trait_packet"):
+			var game := get_node("/root/Game")
+			var world_ref: WeakRef = alpha_body.get_meta("ordinary_trait_world", null)
+			var identity := {"world_namespace": game.world.reward_delivery_namespace,
+				"spawn_id": str(alpha_body.name), "spawn_generation": alpha_body.get_meta("ordinary_trait_generation", 0)}
+			var retained: Dictionary = alpha_body.get_meta("ordinary_trait_packet", {})
+			var prepared := preload("res://scripts/creatures/trait_spawn_hooks.gd").prepare_catch(identity, retained, creature_card)
+			if world_ref == null or world_ref.get_ref() != game.world or not get_parent().is_ancestor_of(alpha_body) \
+				or alpha_body.get_meta("ordinary_trait_uid", "") != creature_card.get("uid") \
+				or prepared.is_empty() or not WATER_CAPTURE_CODEC.valid_capture_traits(retained):
+				return {"ok": false, "pending": true, "code": "capture_traits_unavailable", "encounter_id": encounter_id, "claim_id": claim_id}
+			for field: String in ["traits_initialized", "rolled_traits", "taught_traits", "captured_from"]:
+				capture_traits[field] = prepared[field]
 		var capture_offer: Dictionary = {}
 		if not capture_traits.is_empty():
 			var game := get_node("/root/Game")
@@ -3863,7 +3918,12 @@ func _host_catch_finished(intent: Dictionary, peer_id: int) -> Dictionary:
 		var source_body: Node3D = runtime.call("body")
 		var source_instance: RefCounted = source_body.get("instance")
 		capture_source.rolled_traits = source_instance.get("rolled_traits").duplicate()
-		if not _retain_research(encounter_id, peer_id, "catch", str(creature_card.get("species_id", "")), claim_id, "", runtime.get_meta("foundation_catch_night", null), capture_source):
+		var ordinary_offer := capture_offer if not alpha_body.has_meta("foundation_alpha_packet") else {}
+		if not ordinary_offer.is_empty():
+			capture_source.traits_initialized = source_instance.get("traits_initialized")
+			capture_source.taught_traits = source_instance.get("taught_traits").duplicate(true)
+			capture_source.captured_from = ordinary_offer.capture_traits.captured_from.duplicate(true)
+		if not _retain_research(encounter_id, peer_id, "catch", str(creature_card.get("species_id", "")), claim_id, "", runtime.get_meta("foundation_catch_night", null), capture_source, ordinary_offer):
 			return {"ok": false, "pending": true, "code": "capture_event_write_pending", "encounter_id": encounter_id, "claim_id": claim_id}
 	_catch_arbiter.call("release", encounter_id, peer_id)
 	if caught:
@@ -6069,6 +6129,7 @@ func _tick_respawn(delta: float) -> void:
 			continue
 		_respawn_timers.erase(wild)
 		if is_instance_valid(wild):
+			_initialize_wild_traits(wild, bool(wild.get_meta("ordinary_trait_alpha", false)))
 			wild.call("revive_at_home")
 			# `revive_at_home()` unconditionally turns physics_process back ON
 			# (it predates streaming and is right to, on its own terms — a

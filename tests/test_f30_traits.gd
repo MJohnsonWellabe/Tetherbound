@@ -105,6 +105,18 @@ func test_slots_use_breakthroughs_and_persistence_identity() -> void:
 	assert_true(caught.rolled_traits == roll.rolled_traits)
 	assert_true(SPAWN.prepare_catch({"world_namespace":"world-a","spawn_id":"alpha-1","spawn_generation":10},restored,{}).is_empty())
 	assert_true(SPAWN.prepare_catch({"world_namespace":"world-b","spawn_id":"alpha-1","spawn_generation":9},restored,{}).is_empty())
+	var fresh: RefCounted = preload("res://scripts/creatures/creature_species.gd").spawn("bramblebun")
+	var identity := {"world_namespace":"world-a","spawn_id":"ordinary-1","spawn_generation":1,
+		"alpha":false,"night":false,"weather":false}
+	var packet := SPAWN.initialize_host_instance(fresh, identity)
+	assert_false(packet.is_empty(), "actual fresh instance consumes the host-spawn helper")
+	assert_eq(fresh.get("rolled_traits"), packet.get("rolled_traits"))
+	assert_true(fresh.get("traits_initialized"))
+	assert_almost_eq(float(fresh.call("hp_fraction")), 1.0, 0.00001, "fresh trait max-HP effects preserve a full-health spawn")
+	var retained: Array = fresh.get("rolled_traits").duplicate()
+	identity.spawn_generation = 2
+	assert_true(SPAWN.initialize_host_instance(fresh, identity).is_empty(), "streaming/retry cannot reroll an initialized individual")
+	assert_eq(fresh.get("rolled_traits"), retained)
 
 func test_bond_secondary_and_iv_no_double_count() -> void:
 	var creature := _one("sturdy")

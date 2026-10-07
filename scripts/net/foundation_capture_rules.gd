@@ -22,6 +22,19 @@ static func offer_valid(context: Dictionary) -> bool:
 	var card: RefCounted = codec().call("decode", context.get("creature"), context.capture_traits)
 	return card != null and context.capture_traits.captured_from.world_namespace == context.world_namespace
 
+## Ordinary host catches freeze this offer alongside their original accepted
+## catch source. The codec omits trait fields from the card; the exact packet
+## and card must still match that source, never a caller's proposed reward.
+static func original_offer_matches(offer: Dictionary, captured: Dictionary, namespace_id: String,
+		epoch: String, realm: String, character: String) -> bool:
+	if not offer_valid(offer) or offer.world_namespace != namespace_id or offer.session_id != epoch \
+		or offer.realm != realm or offer.participants != [character]: return false
+	var original := captured.duplicate(true)
+	for field: String in ["traits_initialized", "rolled_traits", "taught_traits", "captured_from"]:
+		if captured.get(field) != offer.capture_traits[field]: return false
+		original.erase(field)
+	return offer.creature == original
+
 static func stage(current: Dictionary, intent: Dictionary, context: Dictionary) -> Dictionary:
 	if intent.size() != 3 or not intent.get("offer_id") is String or not intent.get("keep") is bool \
 		or not intent.get("released_uid") is String: return ESSENCE._refuse("invalid_capture_choice")

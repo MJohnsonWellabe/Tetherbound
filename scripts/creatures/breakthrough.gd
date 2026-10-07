@@ -84,6 +84,11 @@ static func initialize_owned_catch(party: RefCounted, personal: Dictionary, crea
 		if card.get("uid") != uid: continue
 		var candidate := initialize_caught(TEACHING.character_loadout_mirror([card], personal), card)
 		if candidate.is_empty() or not TEACHING.party_loadout_errors([card], candidate, true).is_empty(): return {}
+		if bool(creature.get("traits_initialized")):
+			var traits := {"traits_initialized": true, "rolled_traits": creature.get("rolled_traits"),
+				"taught_traits": creature.get("taught_traits")}
+			if not preload("res://scripts/creatures/traits.gd").trait_state_errors(traits).is_empty(): return {}
+			for field: String in traits: candidate.creatures[uid][field] = traits[field].duplicate(true) if traits[field] is Array or traits[field] is Dictionary else traits[field]
 		return candidate
 	return {}
 
