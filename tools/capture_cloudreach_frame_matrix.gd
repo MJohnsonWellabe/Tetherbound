@@ -88,6 +88,7 @@ const SCENE := preload("res://scenes/world/cloudreach_cliffs.tscn")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const SAVE := preload("res://scripts/save/save_game.gd")
 const LANE := preload("res://tools/capture_cloudreach_lane_common.gd")
+const LOOKDEV := preload("res://tools/lookdev_capture_bootstrap.gd")
 const DEFAULT_OUT := "res://ralph/reports/CLOUDREACH-LANE/captures/frame_matrix"
 ## `--output=<res:// dir>` renders a round into its own folder (F08#4 rounds).
 var OUT := DEFAULT_OUT
@@ -329,6 +330,7 @@ var _force_night := false
 ## earned five carry no flier, so F08#4 settlement rows also render with one.
 var _active_species := "galecrest"
 var _flag_state := ""
+var _graphics_capture: Dictionary = {}
 
 
 func _init() -> void:
@@ -353,6 +355,16 @@ func _parse_args() -> void:
 
 func _run() -> void:
 	_parse_args()
+	# Named-preset proofs reuse the existing production preference preflight.
+	# Legacy captures keep their existing invocation; F40 passes preset, exact
+	# source SHA and a fresh output folder explicitly.
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--preset="):
+			_graphics_capture = LOOKDEV.prepare(self)
+			if _graphics_capture.is_empty():
+				quit(2)
+				return
+			break
 	if DisplayServer.get_name() == "headless":
 		print("frame matrix: headless has no renderer; run under xvfb-run with --rendering-driver opengl3")
 		quit(1)
@@ -463,6 +475,8 @@ func _run_matrix() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT))
 	_manifest = FileAccess.open(OUT + "/manifest.txt", FileAccess.WRITE)
 	_manifest_line("# Cloudreach frame matrix -- tools/capture_cloudreach_frame_matrix.gd (production CameraRig; fixture in the tool header)")
+	if not _graphics_capture.is_empty():
+		_manifest_line("# graphics_capture " + JSON.stringify(_graphics_capture))
 	_manifest_line("# name | row | trainer feet | yaw/pitch deg | target | hour | stand (candidate) | camera | trainer on screen | companion | flags")
 	for row: Dictionary in ROWS:
 		if not _only.is_empty() and not _only.has(int(row["n"])):
@@ -771,7 +785,7 @@ func _finish(written: int) -> void:
 	_manifest_line("# " + summary)
 	if _manifest != null:
 		_manifest.close()
-	quit(0 if written > 0 else 1)
+	quit(0 if written > 0 and (_graphics_capture.is_empty() or _skips.is_empty()) else 1)
 
 
 ## --- motion witness -------------------------------------------------------------------
@@ -783,6 +797,8 @@ func _run_motion() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path((OUT + "/motion")))
 	_manifest = FileAccess.open((OUT + "/motion") + "/manifest.txt", FileAccess.WRITE)
 	_manifest_line("# Cloudreach 30 s motion witness -- arrival_gate_road, real move input, production CameraRig")
+	if not _graphics_capture.is_empty():
+		_manifest_line("# graphics_capture " + JSON.stringify(_graphics_capture))
 	_pin_hour(DAY_HOUR)
 	var seat: Dictionary = await _seat(MOTION_START)
 	if not bool(seat.get("ok", false)):
