@@ -1396,6 +1396,24 @@ func _complete_home_key_lesson() -> bool:
 	if panel == null or not panel.call("is_open") or panel.get("_row").get("id") != "home_key":
 		_fail("Home Key grant did not present its authored controller lesson")
 		return false
+	# Optional F46 observations share the existing reader only after this
+	# actual Home Key grant has naturally opened its own authored card.
+	var lesson_args := OS.get_cmdline_user_args()
+	if lesson_args.has("--lesson-controller-witness") or lesson_args.has("--capture-lessons"):
+		# This reader indirectly imports the opening helper through its care
+		# adapter. Resolve it only now, after the opening script is loaded.
+		var reader_script := load("res://tests/helpers/f20_portal_travel.gd") as GDScript
+		if reader_script == null:
+			_fail("Home Key lesson witness reader failed to load")
+			return false
+		var travel: RefCounted = reader_script.new(_tree, _game)
+		var witnessed: bool = await travel._with_navigation_lessons(func() -> bool: return true)
+		if not witnessed or panel.call("owns_input") or not local.get("flags").call("has", flag):
+			for failure: String in travel.failures: _fail(failure)
+			_fail("Home Key lesson witness did not acknowledge and release controller input")
+			return false
+		_checkpoint("Home Key lesson completed its actual optional controller/capture witness")
+		return true
 	var observed: Array[String] = []
 	for line: int in 20:
 		if not panel.call("is_open"): break
