@@ -1,0 +1,97 @@
+{
+  "run": 37676294026,
+  "source_commit": "1149b9118cc8425986736f17c5c9375a0f842cc8",
+  "result": "FAIL",
+  "boundary": "opening_team",
+  "observed_frame": 2,
+  "differences": [
+    {
+      "actual": [
+        "bramble_whip",
+        "warren_charge",
+        "ultimate_ground_current",
+        "snare"
+      ],
+      "actual_type": 28,
+      "expected": [
+        "bramble_whip",
+        "warren_charge",
+        "ultimate_ground_current"
+      ],
+      "expected_type": 28,
+      "path": "/redesign_character/creatures/creature-10ca34d836274c7337c7042c2ac2b957/known_moves"
+    },
+    {
+      "actual": [
+        "bramble_whip",
+        "warren_charge",
+        "ultimate_ground_current",
+        "snare"
+      ],
+      "actual_type": 28,
+      "expected": [
+        "bramble_whip",
+        "warren_charge",
+        "ultimate_ground_current"
+      ],
+      "expected_type": 28,
+      "path": "/redesign_character/creatures/creature-156e48c973fe0d962df5bbf0fdc6999a/known_moves"
+    },
+    {
+      "actual": [
+        "pebble_toss",
+        "stone_rush",
+        "ultimate_terrapup",
+        "shove"
+      ],
+      "actual_type": 28,
+      "expected": [
+        "pebble_toss",
+        "stone_rush",
+        "ultimate_terrapup"
+      ],
+      "expected_type": 28,
+      "path": "/redesign_character/creatures/creature-2a0c19c42281dcb5e77335758db95ba3/known_moves"
+    },
+    {
+      "actual": [
+        "root_nibble",
+        "rootquake",
+        "ultimate_ground_wall",
+        "slow_field"
+      ],
+      "actual_type": 28,
+      "expected": [
+        "root_nibble",
+        "rootquake",
+        "ultimate_ground_wall"
+      ],
+      "expected_type": 28,
+      "path": "/redesign_character/creatures/creature-a5361a821b454b539d04d1c91302388d/known_moves"
+    },
+    {
+      "actual": [
+        "bramble_whip",
+        "warren_charge",
+        "ultimate_ground_current",
+        "snare"
+      ],
+      "actual_type": 28,
+      "expected": [
+        "bramble_whip",
+        "warren_charge",
+        "ultimate_ground_current"
+      ],
+      "expected_type": 28,
+      "path": "/redesign_character/creatures/creature-cf9e6a7b3bd1a60ecb37d21b25723afc/known_moves"
+    }
+  ],
+  "cause": "Receipt observed live stale redesign known_moves cache; production save mirrored already-learned party options into its detached redesign carrier, which Load correctly restored.",
+  "change": "Fresh receipts use production detached serialization contract and compare raw learned/equipped/mastery/revision carriers explicitly. No production saves, gameplay or old receipts changed.",
+  "review": "b_f49_review actual diagnostic cause consistent; fresh-state correction SOURCE APPROVE",
+  "remaining": [
+    "genuine corrected fresh opening export",
+    "successful child production Load",
+    "earned route and all criterion gates"
+  ]
+}

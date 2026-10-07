@@ -9,6 +9,7 @@ const HOME := preload("res://scripts/story/regional_homecoming.gd")
 const COMMITS := preload("res://tests/helpers/four_biome_checkpoints.gd")
 const SPAWNS := preload("res://scripts/combat/spawn_tables.gd")
 const STATE_DIFF := preload("res://scripts/net/owner_passive_sync.gd")
+const TEACHING := preload("res://scripts/creatures/teaching.gd")
 const BOUNDARIES := ["meadows_settled", "tidewake_settled", "cloudreach_settled", "stormwood_settled", "completed_world"]
 const REALMS := ["meadows", "water", "cloudreach", "stormwood", "meadows"]
 const MEADOWS_PIECES := ["opening_team", "camp_tournament", "bridge", "warrens", "relay", "hall"]
@@ -453,11 +454,23 @@ func _hash_tree(path: String, prefix: String = "") -> Dictionary:
 	return out
 
 func _state() -> Dictionary:
+	# Observe the same detached serialization boundary as the production save.
+	# The live party owns move knowledge; the redesign record is its saved mirror.
+	var serialized: Array = SAVE.new()._party_to_array(game.party)
+	var redesign: Dictionary = game.local.get("redesign_character").duplicate(true)
+	if TEACHING.party_loadout_errors(serialized, redesign).is_empty():
+		redesign = TEACHING.character_loadout_mirror(serialized, redesign)
 	var party := []
-	for member: RefCounted in game.party.members():
-		party.append({"uid": str(member.get("uid")), "species": str(member.get("species_id")),
-			"nickname": str(member.get("nickname")), "level": int(member.get("level")), "xp": int(member.get("xp")),
-			"hp": snappedf(float(member.get("hp")), 0.1), "fainted": bool(member.get("fainted"))})
+	for member: Dictionary in serialized:
+		var observed := {"uid": member.uid, "species": member.species_id,
+			"nickname": member.nickname, "level": member.level, "xp": member.xp,
+			"hp": snappedf(float(member.hp), 0.1), "fainted": member.fainted}
+		# Retain the raw carriers too: projection must not hide lost knowledge,
+		# equipped moves, mastery uses/receipts, or the edit revision and identity.
+		for field: String in ["known_moves", "move_quick", "move_charged", "move_utility", "move_ultimate",
+			"move_mastery_uses", "move_mastery_receipts", "loadout_revision", "loadout_last_edit"]:
+			if member.has(field): observed[field] = member[field]
+		party.append(observed)
 	var flags: Array = game.progression.call("all_set").duplicate()
 	flags.sort()
 	var inventory := {}
@@ -468,7 +481,7 @@ func _state() -> Dictionary:
 	return {"party": party, "flags": flags, "inventory": inventory,
 		"world_id": str(game.world.world_id), "reward_delivery_namespace": str(game.world.reward_delivery_namespace),
 		"world_seed": int(game.get("world_seed")),
-		"redesign_character": game.local.get("redesign_character").duplicate(true),
+		"redesign_character": redesign,
 		"realm": str(game.current_realm), "character_id": HOME.character_id(game),
 		"ending": {"outcome_id": context.get("outcome_id"), "home_return_receipt": context.get("home_return_receipt"),
 			"homecoming_seen": context.get("homecoming_seen"), "regional_credits_seen": context.get("regional_credits_seen"),
