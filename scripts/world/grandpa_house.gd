@@ -45,6 +45,7 @@ const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
 const GRASS_FIELD := preload("res://scripts/world/grass_field.gd")
 const REST_POINT := preload("res://scripts/world/rest_point.gd")
 const VILLAGE_CONFIG := "res://data/config/village.json"
+var _house_lighting: Dictionary = {}
 
 const FURNITURE_DIR := "res://assets/props/quaternius_furniture"
 ## Quaternius furniture is authored at roughly 2x real scale (a 4.26m bed).
@@ -371,6 +372,9 @@ func _build_kit_shell() -> void:
 	if not prefabs.call("load_recipes"):
 		push_error("no building recipes; the farmhouse has no shell")
 		return
+	var recipe: Dictionary = prefabs.call("recipe", "farmhouse_shell")
+	var lighting: Variant = recipe.get("interior_lighting", {})
+	_house_lighting = lighting if lighting is Dictionary else {}
 	# building_prefabs.gd caches an un-parented Node3D template tree per
 	# prefab name; without a real SceneTree parent it leaks RenderingServer
 	# resources at engine shutdown (see building_prefabs.gd's own header on
@@ -826,9 +830,9 @@ func _build_lights() -> void:
 	for at: Vector3 in [Vector3(0, 2.6, 0), Vector3(-2.5, FLOOR_H + 2.0, -1.0)]:
 		var light := OmniLight3D.new()
 		light.position = at
-		light.light_color = Color(1.0, 0.88, 0.7)
-		light.light_energy = 2.4
-		light.omni_range = 9.0
+		light.light_color = Color(str(_house_lighting.room_colour)) if _house_lighting.has("room_colour") else Color(1.0, 0.88, 0.7)
+		light.light_energy = clampf(float(_house_lighting.get("room_energy", 2.4)), 0.1, 5.0)
+		light.omni_range = clampf(float(_house_lighting.get("room_range_m", 9.0)), 2.0, 12.0)
 		light.shadow_enabled = true
 		add_child(light)
 
@@ -850,9 +854,9 @@ func _build_lights() -> void:
 	var stair_head := OmniLight3D.new()
 	stair_head.position = Vector3(-INNER_W * 0.5 + LOFT_W + 0.6, FLOOR_H + 0.8,
 		-INNER_D * 0.5 + 0.6)
-	stair_head.light_color = Color(1.0, 0.88, 0.7)
-	stair_head.light_energy = 2.0
-	stair_head.omni_range = 4.5
+	stair_head.light_color = Color(str(_house_lighting.room_colour)) if _house_lighting.has("room_colour") else Color(1.0, 0.88, 0.7)
+	stair_head.light_energy = clampf(float(_house_lighting.get("stair_energy", 2.0)), 0.1, 5.0)
+	stair_head.omni_range = clampf(float(_house_lighting.get("stair_range_m", 4.5)), 2.0, 12.0)
 	# Shadows stay on, as on the other two: unshadowed it would spill straight
 	# through the north wall onto the village square.
 	stair_head.shadow_enabled = true

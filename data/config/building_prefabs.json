@@ -4783,6 +4783,15 @@
       ]
     },
     "farmhouse_shell": {
+      "interior_lighting": {
+        "scope": "world_presentation",
+        "room_colour": "#ffd8a5",
+        "room_energy": 1.65,
+        "room_range_m": 6.0,
+        "stair_energy": 2.0,
+        "stair_range_m": 4.5,
+        "_comment": "Shorter warm room pools preserve timber depth and avoid bleaching the whole opening interior. The separate stair-head cue retains its energy/range. Placement, shadows and all opening/traversal state are unchanged."
+      },
       "_why": "EV6 follow-up: Grandpa's house rebuilt from the SAME kit modules as the rest of the settlement, replacing the reskinned primitive shell a blind critic still read as 'an asset from a different pack' (smooth stucco, pinstripe quoining, punched windows, shallow flat-tile roof). Two-storey: uneven-brick ground course, plaster/timber-grid upper course, kit lattice windows, the family's one round-tile roof, brick gable fronts -- the big sibling that bridges cottage_b (stone) and cottage_a (plaster/timber). Footprint 6m (x) by 10m (z), front = +z where the door is; grandpa_house.gd rotates the instance so the front gable faces the village square, and keeps interior floors, loft, stairs, furniture, markers and ALL collision itself -- this recipe deliberately authors no colliders because the house's door gate and enterable interior need collision the placer's AABB fallback would get wrong.",
       "modules": [
         {
