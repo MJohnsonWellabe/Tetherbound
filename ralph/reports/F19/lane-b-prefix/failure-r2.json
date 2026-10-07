@@ -18,7 +18,7 @@
     "training_losses": 0,
     "repeated_wilds": 0,
     "materials_paid": {"wood": 30, "fiber": 34, "stone": 8},
-    "ordinary_paid_structures": ["tent", "bedroll", "creature_bed", "creature_bed", "creature_bed"],
+    "ordinary_paid_structures": ["tent", "campfire", "bedroll", "creature_bed", "creature_bed", "creature_bed"],
     "remaining_materials": {"wood": 1, "fiber": 1, "stone": 0},
     "last_visible_hud_goal": "Rest your three entrants at camp.",
     "hud_observation_counts_as_comprehension_proof": false
