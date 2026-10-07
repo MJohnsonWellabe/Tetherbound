@@ -516,9 +516,9 @@ func _loop() -> bool:
 	# Reverse precisely the authored HomeArrival/door/MainStreet/Workbench
 	# route this same run already walked. The helper keeps its original total
 	# distance*65 budget and every floor/provider/actionable/input guard.
-	var headings: Array[Vector3] = [_workbench_stance, road[0], hall.to_global(door + Vector3(0, 0, -2.4)),
+	var home_return_headings: Array[Vector3] = [_workbench_stance, road[0], hall.to_global(door + Vector3(0, 0, -2.4)),
 		hall.to_global(door), hall.call("home_arrival")]
-	var entered: bool = await travel.activate(arch.get_node(^"Interactable"), headings)
+	var entered: bool = await travel.activate(arch.get_node(^"Interactable"), home_return_headings)
 	receipts.append(travel.last_approach.duplicate(true))
 	if not entered:
 		return _fail("actual home portal input: " + str(travel.failures))
