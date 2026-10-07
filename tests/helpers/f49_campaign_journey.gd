@@ -24,6 +24,7 @@ var stop_boundary := ""
 var resumed_boundary := ""
 var segmented := false
 var meadows_piece_prefix := false
+var compatibility_paths: Array[String] = []
 
 func run(owner: SceneTree) -> void:
 	driver = owner
@@ -43,6 +44,15 @@ func run(owner: SceneTree) -> void:
 			segmented = true
 		if arg == "--meadows-piece-prefix":
 			meadows_piece_prefix = true
+		if arg.begins_with("--compatibility-manifests="):
+			if not compatibility_paths.is_empty() or arg == "--compatibility-manifests=":
+				_fail("F49 accepts one nonempty explicit compatibility manifest list")
+				return
+			for path: String in arg.trim_prefix("--compatibility-manifests=").split(","):
+				if path.strip_edges().is_empty():
+					_fail("F49 compatibility manifest paths must be nonempty")
+					return
+				compatibility_paths.append(path)
 		if arg.begins_with("--through-boundary="):
 			if not stop_boundary.is_empty() or arg == "--through-boundary=":
 				_fail("F49 accepts one nonempty segment stop")
@@ -55,6 +65,9 @@ func run(owner: SceneTree) -> void:
 				_fail("--world-seed must be an integer")
 				return
 			OS.set_environment("TB_WORLD_SEED", seed)
+	if not compatibility_paths.is_empty() and resume_source.is_empty():
+		_fail("F49 reviewed cut compatibility requires an actual imported prefix")
+		return
 	if meadows_piece_prefix:
 		if resume_source.is_empty():
 			_fail("--meadows-piece-prefix requires an actual --handoff-from earned Hall or chapter prefix")
@@ -109,6 +122,9 @@ func run(owner: SceneTree) -> void:
 			HANDOFF.MEADOWS_PIECES + HANDOFF.BOUNDARIES, HANDOFF.MEADOWS_REALMS + HANDOFF.REALMS, HANDOFF.MEADOWS_SLOT)
 	else:
 		disk = HANDOFF.new(driver, game, driver.scratch + "_handoffs")
+	if not disk.configure_compatibility(compatibility_paths):
+		_failures(disk.failures)
+		return
 	var from := -1
 	if not resume_source.is_empty():
 		resumed_boundary = disk.import_prefix(resume_source)

@@ -25,6 +25,138 @@ var boundaries: Array = BOUNDARIES.duplicate()
 var realms: Array = REALMS.duplicate()
 var save_slot := 0
 var piece_prefix := false
+var compatibility_manifests: Dictionary = {}
+var compatibility_files: Dictionary = {}
+var compatibility_transition: Dictionary = {}
+
+## Evidence only. Each immutable manifest authorizes one exact imported cut;
+## supplying these never changes a save, receipt, schema or gameplay predicate.
+func configure_compatibility(paths: Array[String]) -> bool:
+	for path: String in paths:
+		var absolute := ProjectSettings.globalize_path(path).simplify_path()
+		var digest := FileAccess.get_sha256(absolute)
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(absolute))
+		if not parsed is Dictionary or not _hex(digest, 64) or compatibility_manifests.has(digest):
+			return _fail("F49 compatibility requires distinct readable immutable manifests")
+		var manifest: Dictionary = parsed
+		if manifest.get("kind") != "f49_reviewed_cross_cut" or manifest.get("version") != 1 \
+			or not _hex(manifest.get("consumer_commit"), 40) or not _hex(manifest.get("producer_commit"), 40) \
+			or manifest.consumer_commit == manifest.producer_commit or not manifest.get("prefix") is Array \
+			or manifest.prefix.is_empty() or not manifest.prefix[-1] is Dictionary \
+			or manifest.get("imported_boundary") != manifest.prefix[-1].get("boundary") \
+			or manifest.producer_commit != manifest.prefix[-1].get("producer_commit"):
+			return _fail("F49 compatibility has malformed exact cut bindings")
+		var review: Variant = manifest.get("review")
+		if not review is Dictionary or review.get("verdict") != "compatible" \
+			or not review.get("reviewer") is String or review.reviewer.strip_edges().is_empty() \
+			or not review.get("record_url") is String or review.record_url.strip_edges().is_empty():
+			return _fail("F49 compatibility requires an inline exact-cut reviewer verdict")
+		for binding: Variant in manifest.prefix:
+			if not binding is Dictionary or not binding.get("boundary") is String or binding.boundary.strip_edges().is_empty() \
+				or not binding.get("log_path") is String or binding.log_path.strip_edges().is_empty() \
+				or not _hex(binding.get("producer_commit"), 40) \
+				or not _hex(binding.get("receipt_sha256"), 64) or not _hex(binding.get("log_sha256"), 64) \
+				or not _hex(binding.get("artifact_sha256"), 64) or not binding.get("files_sha256") is Dictionary \
+				or binding.files_sha256.is_empty() or not _decimal(binding.get("run_id")) or not _decimal(binding.get("artifact_id")):
+				return _fail("F49 compatibility requires actual producer run/artifact/log/receipt/save bindings")
+			for hash: Variant in binding.files_sha256.values():
+				if not _hex(hash, 64): return _fail("F49 compatibility has an invalid save digest")
+			if not _hex(binding.get("save_tree_sha256"), 64) or binding.save_tree_sha256 != _tree_digest(binding.files_sha256):
+				return _fail("F49 compatibility complete save-tree digest changed or is missing")
+			var log_path := _evidence_path(absolute, binding.log_path)
+			if FileAccess.get_sha256(log_path) != binding.log_sha256:
+				return _fail("F49 compatibility producer log digest changed or is missing")
+			var matches := 0
+			for line: String in FileAccess.get_file_as_string(log_path).split("\n"):
+				if line.begins_with("ERROR:") or line.begins_with("SCRIPT ERROR:"):
+					return _fail("F49 compatibility cannot credit an engine-error producer")
+				if not line.begins_with("F49 DISK HANDOFF "): continue
+				var row: Variant = JSON.parse_string(line.trim_prefix("F49 DISK HANDOFF "))
+				if not row is Dictionary: return _fail("F49 compatibility has a malformed producer handoff")
+				if row.get("boundary") == binding.boundary:
+					if row.get("commit") != binding.producer_commit or row.get("files_sha256") != binding.files_sha256:
+						return _fail("F49 compatibility producer log does not bind the actual saved cut")
+					matches += 1
+			if matches != 1: return _fail("F49 compatibility needs one actual producer handoff in its log")
+		compatibility_manifests[digest] = manifest
+		compatibility_files[digest] = absolute
+	return true
+
+static func _hex(value: Variant, length: int) -> bool:
+	if not value is String: return false
+	var expression := RegEx.new()
+	expression.compile("^[0-9a-f]{%d}$" % length)
+	return expression.search(value) != null
+
+static func _decimal(value: Variant) -> bool:
+	if not value is String: return false
+	var expression := RegEx.new()
+	expression.compile("^[1-9][0-9]*$")
+	return expression.search(value) != null
+
+## Canonical digest of the complete path-to-byte-hash map, independent of JSON
+## spacing or key order. Paths containing separators in this format are refused.
+static func _tree_digest(files: Dictionary) -> String:
+	var keys := files.keys()
+	keys.sort()
+	var lines := ""
+	for key: Variant in keys:
+		if not key is String or key.contains("\t") or key.contains("\n") or key.contains("\r"): return ""
+		lines += key + "\t" + str(files[key]) + "\n"
+	return lines.sha256_text()
+
+static func _evidence_path(manifest_path: String, path: String) -> String:
+	return path if path.is_absolute_path() else manifest_path.get_base_dir().path_join(path).simplify_path()
+
+func _reviewed_cut(root: String, prefix: Array, consumer: String, required_digest: String = "") -> String:
+	if prefix.is_empty(): return ""
+	var last: Dictionary = prefix[-1]
+	var last_receipt: Variant = DOCUMENT.parse(FileAccess.get_file_as_string(root.path_join(str(last.boundary) + "/receipt.json")))
+	if not last_receipt is Dictionary: return ""
+	for digest: String in compatibility_manifests:
+		if not required_digest.is_empty() and digest != required_digest: continue
+		var manifest: Dictionary = compatibility_manifests[digest]
+		if FileAccess.get_sha256(compatibility_files[digest]) != digest \
+			or manifest.consumer_commit != consumer or manifest.producer_commit != last_receipt.get("commit") \
+			or manifest.imported_boundary != last.boundary or manifest.prefix.size() != prefix.size(): continue
+		var valid := true
+		for index in prefix.size():
+			var original: Variant = DOCUMENT.parse(FileAccess.get_file_as_string(root.path_join(str(prefix[index].boundary) + "/receipt.json")))
+			var binding: Dictionary = manifest.prefix[index]
+			if not original is Dictionary or binding.boundary != prefix[index].boundary \
+				or binding.receipt_sha256 != prefix[index].receipt_sha256 or binding.producer_commit != original.get("commit") \
+				or binding.files_sha256 != original.get("files_sha256") \
+				or FileAccess.get_sha256(root.path_join(str(binding.boundary) + "/receipt.json")) != binding.receipt_sha256 \
+				or _hash_tree(root.path_join(str(binding.boundary) + "/save")) != binding.files_sha256:
+				valid = false
+		if valid: return digest
+	return ""
+
+func _recheck_compatibility() -> bool:
+	var paths: Array[String] = []
+	for digest: String in compatibility_files:
+		if FileAccess.get_sha256(compatibility_files[digest]) != digest:
+			return _fail("F49 compatibility manifest changed after validation")
+		paths.append(compatibility_files[digest])
+	compatibility_manifests.clear()
+	compatibility_files.clear()
+	if not configure_compatibility(paths): return false
+	for index in history.size():
+		var row: Dictionary = history[index]
+		var original: Variant = DOCUMENT.parse(FileAccess.get_file_as_string(base.path_join(str(row.boundary) + "/receipt.json")))
+		if not original is Dictionary or FileAccess.get_sha256(base.path_join(str(row.boundary) + "/receipt.json")) != row.receipt_sha256 \
+			or _hash_tree(base.path_join(str(row.boundary) + "/save")) != original.get("files_sha256"):
+			return _fail("F49 retained prefix bytes changed before reviewed continuation")
+		if index == 0: continue
+		var previous: Dictionary = snapshots[history[index - 1].boundary]
+		if previous.commit != original.commit:
+			var transition: Variant = original.get("compatibility_transition")
+			if not transition is Dictionary or not _hex(transition.get("manifest_sha256"), 64) \
+				or transition.get("consumer_commit") != original.commit or transition.get("producer_commit") != previous.commit \
+				or transition.get("imported_boundary") != history[index - 1].boundary \
+				or _reviewed_cut(base, history.slice(0, index), str(original.commit), transition.manifest_sha256).is_empty():
+				return _fail("F49 retained cut no longer matches its reviewed prefix")
+	return true
 
 func _init(owner: SceneTree, actual_game: Node, destination: String,
 		ordered_boundaries: Array = [], ordered_realms: Array = [], slot: int = 0) -> void:
@@ -61,6 +193,9 @@ func export_boundary(label: String, piece_proof: Dictionary = {}) -> bool:
 	sha.compile("^[0-9a-f]{40}$")
 	if sha.search(commit) == null: return _fail("F49 handoff requires an exact clean source commit (TB_COMMIT_SHA for exported builds)")
 	if not source_commit.is_empty() and source_commit != commit: return _fail("F49 source identity changed between handoffs")
+	if not _recheck_compatibility(): return false
+	if not compatibility_transition.is_empty() and _reviewed_cut(base, history, commit, compatibility_transition.manifest_sha256).is_empty():
+		return _fail("F49 reviewed imported cut changed before export")
 	source_commit = commit
 	if boundaries.find(label) != history.size(): return _fail("F49 handoffs must be earned in declared order")
 	var meadow_piece := piece_prefix and MEADOWS_PIECES.has(label)
@@ -74,7 +209,7 @@ func export_boundary(label: String, piece_proof: Dictionary = {}) -> bool:
 	if not bool(game.call("save_game", save_slot)): return _fail("F49 production save refused at " + label)
 	if not bool(game.save_system.call("finish_fallback")):
 		return _fail("F49 production save fallback did not finish at " + label)
-	if piece_prefix:
+	if piece_prefix or not compatibility_manifests.is_empty():
 		# The original opening remains the identity anchor after Hall. Never
 		# reset its journey/history when a later chapter gains its own receipt.
 		# Check after the production save resolves its slot locator, before copy.
@@ -91,14 +226,14 @@ func export_boundary(label: String, piece_proof: Dictionary = {}) -> bool:
 		for field: String in ["character_id", "world_id", "reward_delivery_namespace"]:
 			if str(current.get(field, "")).is_empty(): return _fail("Meadows-rooted handoff has no stable " + field)
 		if not history.is_empty():
-			if not snapshots.has(MEADOWS_PIECES[0]): return _fail("Meadows-rooted handoff lost its original opening receipt")
-			var original: Dictionary = snapshots[MEADOWS_PIECES[0]].state
+			if not snapshots.has(boundaries[0]): return _fail("Reviewed handoff lost its original identity receipt")
+			var original: Dictionary = snapshots[boundaries[0]].state
 			var original_uids: Array = []
 			for member: Dictionary in original.party: original_uids.append(str(member.uid))
 			if uids != original_uids: return _fail("Meadows-rooted chapter replaced or reordered the original five")
 			for field: String in ["character_id", "world_id", "reward_delivery_namespace", "world_seed"]:
 				if current.get(field) != original.get(field): return _fail("Meadows-rooted chapter changed its original " + field)
-			if snapshots[MEADOWS_PIECES[0]].journey_id != journey_id:
+			if snapshots[boundaries[0]].journey_id != journey_id:
 				return _fail("Meadows-rooted chapter changed its original journey identity")
 	# SaveSystem._dir is the actual installed scratch root, never a guessed
 	# slot file. Include portable characters/worlds/locator and all other files.
@@ -115,6 +250,7 @@ func export_boundary(label: String, piece_proof: Dictionary = {}) -> bool:
 		"journey_id": journey_id, "predecessors": history.duplicate(true),
 		"population_provenance": population_provenance(),
 		"files_sha256": hashes, "state": _state(), "earned_claim": "continuous caller only; hashes do not prove play"}
+	if not compatibility_transition.is_empty(): receipt.compatibility_transition = compatibility_transition.duplicate(true)
 	if meadow_piece:
 		receipt.kind = "earned_meadows_piece"
 		receipt.save_slot = save_slot
@@ -124,6 +260,8 @@ func export_boundary(label: String, piece_proof: Dictionary = {}) -> bool:
 		receipt.save_slot = save_slot
 		if piece_prefix:
 			receipt.earned_claim = "ordinary-input chapter continuing the complete earned Meadows-piece prefix through production Load; hashes do not prove play"
+	if not piece_prefix and not compatibility_manifests.is_empty():
+		receipt.earned_claim = "ordinary-input chapter continuing its complete reviewed earned prefix through production Load; hashes do not prove play"
 	var output := FileAccess.open(destination.path_join("receipt.json"), FileAccess.WRITE)
 	if output == null: return _fail("F49 immutable receipt write failed")
 	# Receipt comparisons must retain the same exact numbers as the copied save.
@@ -134,13 +272,15 @@ func export_boundary(label: String, piece_proof: Dictionary = {}) -> bool:
 	output.store_string(encoded)
 	output.close()
 	snapshots[label] = receipt
+	compatibility_transition.clear()
 	history.append({"boundary": label, "receipt_sha256": FileAccess.get_sha256(destination.path_join("receipt.json"))})
 	print("F49 DISK HANDOFF " + JSON.stringify({"path": destination, "boundary": label, "commit": source_commit,
 		"files_sha256": hashes, "population_provenance": receipt.population_provenance}))
 	return true
 
 ## Validate the entire prefix before copying or installing a writable save.
-## Exact source identity is conservative: a changed cut needs a fresh chain.
+## Default source identity is strict. Explicit reviewed manifests authorize only
+## the exact transition and preserve every original receipt and predecessor hash.
 func import_prefix(source_boundary: String) -> String:
 	if not failures.is_empty(): return ""
 	if OS.has_environment(SPAWNS.SEED_ENV_VAR):
@@ -166,6 +306,7 @@ func import_prefix(source_boundary: String) -> String:
 	if not source_commit.is_empty() and source_commit != commit:
 		_fail("F49 source identity changed before importing the earned prefix")
 		return ""
+	if not _recheck_compatibility(): return ""
 	var identity: Array = []
 	var retained: Dictionary = {}
 	var chain: Array = []
@@ -189,28 +330,42 @@ func import_prefix(source_boundary: String) -> String:
 		var uids: Array = []
 		var distinct_uids := {}
 		for member: Variant in state.party:
-			if not member is Dictionary or str(member.get("uid", "")).is_empty():
+			if not member is Dictionary or not member.get("uid") is String or member.uid.is_empty():
 				_fail("F49 resume receipt has no stable party identity at " + boundary)
 				return ""
 			uids.append(member.uid)
 			distinct_uids[member.uid] = true
-		var current_identity := [receipt.get("commit"), receipt.get("journey_id"), state.get("character_id"),
+		var current_identity := [receipt.get("journey_id"), state.get("character_id"),
 			state.get("world_id"), state.get("reward_delivery_namespace"), state.get("world_seed"), uids]
 		if step == 0: identity = current_identity
 		if receipt.get("kind") != ("earned_meadows_piece" if meadow_piece else "f49_ordinary_input_handoff") \
 			or receipt.get("boundary") != boundary or receipt.get("save_slot", -1 if piece_prefix else 0) != save_slot \
-			or receipt.get("commit") != commit or str(receipt.get("journey_id", "")).is_empty() \
+			or not _hex(receipt.get("commit"), 40) or (compatibility_manifests.is_empty() and receipt.get("commit") != commit) \
+			or not receipt.get("journey_id") is String or receipt.journey_id.is_empty() \
 			or receipt.get("realm") != realms[step] or state.get("realm") != realms[step] \
-			or str(state.get("character_id", "")).is_empty() or str(state.get("world_id", "")).is_empty() \
-			or str(state.get("reward_delivery_namespace", "")).is_empty() or current_identity != identity \
+			or not state.get("character_id") is String or state.character_id.is_empty() \
+			or not state.get("world_id") is String or state.world_id.is_empty() \
+			or not state.get("reward_delivery_namespace") is String or state.reward_delivery_namespace.is_empty() \
+			or current_identity != identity \
 			or receipt.get("predecessors") != chain or state.get("party", []).is_empty() or state.get("party", []).size() > 5 \
 			or receipt.get("files_sha256", {}).is_empty() \
 			or _hash_tree(directory.path_join("save")) != receipt.get("files_sha256"):
 			_fail("F49 resume rejected mismatched source, identity, order, lineage or save hashes at " + boundary)
 			return ""
-		if piece_prefix:
+		var transition: Variant = receipt.get("compatibility_transition", {})
+		var changed_cut: bool = step > 0 and retained[boundaries[step - 1]].commit != receipt.commit
+		if changed_cut or not transition is Dictionary or not transition.is_empty():
+			if not changed_cut or not transition is Dictionary \
+				or transition.get("consumer_commit") != receipt.commit \
+				or transition.get("producer_commit") != retained[boundaries[step - 1]].commit \
+				or transition.get("imported_boundary") != boundaries[step - 1] \
+				or not _hex(transition.get("manifest_sha256"), 64) \
+				or _reviewed_cut(source_root, chain, str(receipt.commit), str(transition.manifest_sha256)).is_empty():
+				_fail("F49 prefix cut transition lacks its exact reviewed manifest")
+				return ""
+		if piece_prefix or not compatibility_manifests.is_empty():
 			if uids.size() != 5 or distinct_uids.size() != 5:
-				_fail("Meadows-rooted prefix requires the original five distinct UIDs through every chapter")
+				_fail("Reviewed or Meadows-rooted prefix requires the original five distinct UIDs through every chapter")
 				return ""
 		if meadow_piece:
 			var proof: Variant = receipt.get("piece_proof")
@@ -221,7 +376,8 @@ func import_prefix(source_boundary: String) -> String:
 		var population: Dictionary = receipt.get("population_provenance", {})
 		if population.get("saved_world_seed") != state.get("world_seed") \
 			or population.get("effective_encounter_seed") != state.get("world_seed") \
-			or population.get("has_environment_override") != false:
+			or population.get("has_environment_override") != false \
+			or (not compatibility_manifests.is_empty() and population.get("environment_override") != ""):
 			_fail("F49 segmented prefix requires its original reproducible population without seed overrides")
 			return ""
 		# Read through the same slot/locator/split validators as production Load.
@@ -243,6 +399,13 @@ func import_prefix(source_boundary: String) -> String:
 			return ""
 		retained[boundary] = receipt
 		chain.append({"boundary": boundary, "receipt_sha256": receipt_hash})
+	if retained[label].commit != commit:
+		var digest := _reviewed_cut(source_root, chain, commit)
+		if digest.is_empty():
+			_fail("F49 imported producer cut has no exact reviewed consumer binding")
+			return ""
+		compatibility_transition = {"manifest_sha256": digest, "imported_boundary": label,
+			"producer_commit": retained[label].commit, "consumer_commit": commit}
 	for step in index + 1:
 		var boundary: String = boundaries[step]
 		if not tree.copy_tree(source_root.path_join(boundary), base.path_join(boundary)):
@@ -260,9 +423,10 @@ func import_prefix(source_boundary: String) -> String:
 	snapshots = retained
 	history = chain
 	source_commit = commit
-	journey_id = str(identity[1])
+	journey_id = str(identity[0])
 	print("F49 SEGMENT INPUT " + JSON.stringify({"path": source, "boundary": label,
-		"commit": commit, "journey_id": journey_id, "predecessors": history}))
+		"commit": commit, "journey_id": journey_id, "predecessors": history,
+		"compatibility_transition": compatibility_transition}))
 	return label
 
 func population_provenance() -> Dictionary:
@@ -314,8 +478,17 @@ func reload_completed(travel: RefCounted) -> bool:
 
 func reload_boundary(label: String, travel: RefCounted, completed: bool = false) -> bool:
 	if not failures.is_empty(): return false
+	if source_commit.is_empty() or COMMITS.commit_sha() != source_commit:
+		return _fail("F49 clean consumer source changed before installing the actual prefix")
+	if not _recheck_compatibility(): return false
 	if not snapshots.has(label): return _fail("F49 has no earned " + label + " handoff")
 	var receipt: Dictionary = snapshots[label]
+	if receipt.commit != source_commit and (compatibility_transition.get("imported_boundary") != label \
+		or compatibility_transition.get("producer_commit") != receipt.commit \
+		or compatibility_transition.get("consumer_commit") != source_commit \
+		or not _hex(compatibility_transition.get("manifest_sha256"), 64) \
+		or _reviewed_cut(base, history, source_commit, compatibility_transition.manifest_sha256).is_empty()):
+		return _fail("F49 actual Load no longer binds its reviewed producer and consumer cuts")
 	if receipt.get("save_slot", -1 if piece_prefix else 0) != save_slot: return _fail("F49 handoff save slot changed before Load")
 	var source := base.path_join(label + "/save")
 	if _hash_tree(source) != receipt.files_sha256: return _fail("F49 completed-world handoff digest changed")

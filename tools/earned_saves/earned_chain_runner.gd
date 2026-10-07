@@ -79,6 +79,7 @@ var disclosures: Array[String] = []
 var legacy_order_diagnostic := false
 var functional_offload := false
 var handoff_from := ""
+var compatibility_paths: Array[String] = []
 var disk: RefCounted
 var retained_uids: Array[String] = []
 
@@ -104,6 +105,13 @@ func _run() -> void:
 			if not handoff_from.is_empty() or arg == "--handoff-from=":
 				failures.append("Supply one nonempty --handoff-from")
 			handoff_from = arg.trim_prefix("--handoff-from=")
+		elif arg.begins_with("--compatibility-manifests="):
+			if not compatibility_paths.is_empty() or arg == "--compatibility-manifests=":
+				failures.append("Supply one nonempty explicit compatibility manifest list")
+			for path: String in arg.trim_prefix("--compatibility-manifests=").split(","):
+				if path.strip_edges().is_empty():
+					failures.append("Compatibility manifest paths must be nonempty")
+				compatibility_paths.append(path)
 		else:
 			failures.append("Unknown earned-piece option: " + arg)
 	if not SEGMENTS.has(segment) or save_dir.is_empty() or receipt_path.is_empty():
@@ -115,6 +123,10 @@ func _run() -> void:
 		return
 	if legacy_order_diagnostic and not handoff_from.is_empty():
 		failures.append("Legacy diagnostics cannot import new-order piece provenance")
+		_finish()
+		return
+	if not compatibility_paths.is_empty() and (legacy_order_diagnostic or handoff_from.is_empty()):
+		failures.append("Reviewed cut compatibility requires an actual new-order imported prefix")
 		_finish()
 		return
 	if legacy_order_diagnostic and functional_offload:
@@ -162,6 +174,10 @@ func _run() -> void:
 			return
 		disk = HANDOFF.new(self, game, output_root, MEADOWS_PIECES, MEADOWS_REALMS, HANDOFF.MEADOWS_SLOT)
 		disk.source_commit = source_commit
+		if not disk.configure_compatibility(compatibility_paths):
+			failures.append_array(disk.failures)
+			_finish()
+			return
 		game.set("save_system", SAVE.new(working))
 	# Reuse the existing hosted mechanics mode. It keeps the real display,
 	# physics, input and saves; disabled rasterization never supplies visual proof.

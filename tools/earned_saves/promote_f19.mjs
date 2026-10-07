@@ -4,6 +4,72 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import {execFileSync} from 'node:child_process';
 import {parseSaveDocument} from './save_document.mjs';
+import {fileURLToPath} from 'node:url';
+
+const evidenceHash = file => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+const hex = (value, length) => typeof value === 'string' && new RegExp(`^[0-9a-f]{${length}}$`).test(value);
+const object = value => value !== null && typeof value === 'object' && !Array.isArray(value);
+export function saveTreeDigest(files) {
+  assert.ok(object(files) && Object.keys(files).every(key => !/[\t\r\n]/.test(key)), 'Ambiguous compatibility save-tree paths');
+  return crypto.createHash('sha256').update(Object.keys(files).sort().map(key => `${key}\t${files[key]}\n`).join('')).digest('hex');
+}
+
+// Plain immutable evidence documents, never a save migration or authorization
+// inferred from an arbitrary token. One inline reviewer attests the exact
+// bindings below; the manifest digest retains that verdict without another gate.
+export function readCompatibilityManifest(file) {
+  const digest = evidenceHash(file);
+  const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+  assert.ok(object(data) && data.kind === 'f49_reviewed_cross_cut' && data.version === 1 &&
+    hex(data.consumer_commit, 40) && hex(data.producer_commit, 40) && data.consumer_commit !== data.producer_commit &&
+    Array.isArray(data.prefix) && data.prefix.length > 0 && object(data.prefix.at(-1)) &&
+    data.imported_boundary === data.prefix.at(-1).boundary && data.producer_commit === data.prefix.at(-1).producer_commit,
+  'Malformed exact compatibility cut bindings');
+  const review = data.review;
+  assert.ok(object(review) && review.verdict === 'compatible' &&
+    typeof review.reviewer === 'string' && review.reviewer.trim().length > 0 && typeof review.record_url === 'string' &&
+    review.record_url.trim().length > 0, 'Missing inline exact-cut compatibility reviewer verdict');
+  for (const binding of data.prefix) {
+    assert.ok(object(binding) && typeof binding.boundary === 'string' && binding.boundary.trim().length > 0 && hex(binding.producer_commit, 40) &&
+      hex(binding.receipt_sha256, 64) && hex(binding.log_sha256, 64) && hex(binding.artifact_sha256, 64) &&
+      typeof binding.run_id === 'string' && /^[1-9][0-9]*$/.test(binding.run_id) &&
+      typeof binding.artifact_id === 'string' && /^[1-9][0-9]*$/.test(binding.artifact_id) &&
+      typeof binding.log_path === 'string' && binding.log_path.trim().length > 0 && object(binding.files_sha256) &&
+      Object.keys(binding.files_sha256).length > 0 && Object.values(binding.files_sha256).every(hash => hex(hash, 64)),
+    'Missing actual producer run/artifact/log/receipt/save bindings');
+    assert.ok(hex(binding.save_tree_sha256, 64) && binding.save_tree_sha256 === saveTreeDigest(binding.files_sha256),
+      'Missing or changed complete compatibility save-tree digest');
+    const logFile = path.resolve(path.dirname(file), binding.log_path);
+    assert.equal(evidenceHash(logFile), binding.log_sha256, 'Compatibility producer log digest changed');
+    const text = fs.readFileSync(logFile, 'utf8');
+    assert.ok(!/(?:SCRIPT ERROR:|^ERROR:)/m.test(text), 'Engine errors invalidate compatibility producer');
+    const handoffs = text.split(/\r?\n/).filter(line => line.startsWith('F49 DISK HANDOFF '))
+      .map(line => JSON.parse(line.slice('F49 DISK HANDOFF '.length)));
+    assert.ok(handoffs.every(object), 'Malformed compatibility producer handoff');
+    const rows = handoffs.filter(row => row.boundary === binding.boundary);
+    assert.equal(rows.length, 1, 'One actual compatibility producer handoff required');
+    assert.equal(rows[0].commit, binding.producer_commit, 'Compatibility log producer cut changed');
+    assert.deepEqual(rows[0].files_sha256, binding.files_sha256, 'Compatibility log save-tree binding changed');
+  }
+  return {file, digest, data};
+}
+
+export function reviewedCompatibilityCut(manifests, prefix, consumer, importedBoundary, requiredDigest) {
+  assert.ok(prefix.length > 0, 'Compatibility requires the complete actual prefix');
+  const candidates = manifests.filter(({file, digest, data}) => evidenceHash(file) === digest && (!requiredDigest || digest === requiredDigest) &&
+    data.consumer_commit === consumer && data.producer_commit === prefix.at(-1).receipt.commit &&
+    data.imported_boundary === importedBoundary && data.prefix.length === prefix.length);
+  for (const candidate of candidates) {
+    // A parsed manifest cannot cache away later changes to its original logs.
+    assert.equal(readCompatibilityManifest(candidate.file).digest, candidate.digest, 'Compatibility manifest changed');
+    const valid = candidate.data.prefix.every((binding, index) => binding.boundary === prefix[index].receipt.boundary &&
+      binding.producer_commit === prefix[index].receipt.commit && binding.receipt_sha256 === prefix[index].receiptHash &&
+      binding.log_sha256 === prefix[index].log_sha256 &&
+      JSON.stringify(Object.entries(binding.files_sha256).sort()) === JSON.stringify(Object.entries(prefix[index].receipt.files_sha256).sort()));
+    if (valid) return candidate;
+  }
+  assert.fail('Missing exact reviewed compatibility producer/receipt/consumer binding');
+}
 
 // Promote byte-identical production handoffs only after the continuous fresh
 // campaign has completed. No save payload is edited, migrated or synthesized.
@@ -13,16 +79,22 @@ import {parseSaveDocument} from './save_document.mjs';
 // Explicit --meadows-piece-prefix additionally requires the six original
 // --meadows-piece-logs, followed by the ordered chapter --segment-logs.
 // node tools/earned_saves/promote_f19.mjs <campaign.log> <handoffs directory> [--relocated-from-ci]
-const [logFile, handoffDirectory, ...options] = process.argv.slice(2);
+export function runPromotion(args = process.argv.slice(2)) {
+const [logFile, handoffDirectory, ...options] = args;
 const relocation = options.includes('--relocated-from-ci') ? '--relocated-from-ci' : undefined;
 const segmentOption = options.find(option => option.startsWith('--segment-logs='));
 const meadowsPrefix = options.includes('--meadows-piece-prefix');
 const pieceOption = options.find(option => option.startsWith('--meadows-piece-logs='));
+const compatibilityOption = options.find(option => option.startsWith('--compatibility-manifests='));
+const compatibilityPaths = compatibilityOption ? compatibilityOption.slice('--compatibility-manifests='.length).split(',') : [];
+assert.ok(!compatibilityOption || (compatibilityPaths.every(file => file.trim().length > 0) && segmentOption), 'Compatibility requires explicit manifests and actual segmented witnesses');
+const compatibility = compatibilityPaths.map(readCompatibilityManifest);
+assert.equal(new Set(compatibility.map(row => row.digest)).size, compatibility.length, 'Duplicate compatibility manifest');
 const pieceLogs = pieceOption ? pieceOption.slice('--meadows-piece-logs='.length).split(',') : [];
 const segmentLogs = segmentOption && !(meadowsPrefix && segmentOption === '--segment-logs=')
   ? segmentOption.slice('--segment-logs='.length).split(',') : [];
 assert.ok(options.every(option => option === '--relocated-from-ci' || option === segmentOption ||
-  option === '--meadows-piece-prefix' || option === pieceOption), 'Unknown promotion option');
+  option === '--meadows-piece-prefix' || option === pieceOption || option === compatibilityOption), 'Unknown promotion option');
 assert.equal(new Set(options).size, options.length, 'Duplicate promotion option');
 assert.ok(!pieceOption || meadowsPrefix, 'Meadows piece logs require explicit --meadows-piece-prefix');
 assert.ok(!meadowsPrefix || segmentOption, 'Combined promotion requires explicit ordered --segment-logs (empty only when the final log contains every chapter)');
@@ -187,7 +259,8 @@ if (segmentOption) {
         assert.match(receipt.commit, /^[0-9a-f]{40}$/);
         assert.ok(typeof receipt.journey_id === 'string' && receipt.journey_id.length > 0);
         campaignIdentity ||= [receipt.commit, receipt.journey_id];
-        assert.deepEqual([receipt.commit, receipt.journey_id], campaignIdentity);
+        if (compatibility.length) assert.equal(receipt.journey_id, campaignIdentity[1]);
+        else assert.deepEqual([receipt.commit, receipt.journey_id], campaignIdentity);
         assert.equal(produced.commit, receipt.commit);
         const chain = meadowsPieces.slice(0, pieceWitnesses.length).map(boundary => ({boundary,
           receipt_sha256: sha256(path.join(sourceRoot, boundary, 'receipt.json'))}));
@@ -195,7 +268,10 @@ if (segmentOption) {
         if (previous) {
           const input = one('F49 SEGMENT INPUT ');
           assert.equal(input.boundary, previous);
-          assert.deepEqual([input.commit, input.journey_id], campaignIdentity);
+          assert.equal(input.commit, receipt.commit, 'Actual piece consumer cut must match its produced receipt');
+          assert.equal(input.journey_id, campaignIdentity[1]);
+          if (!compatibility.length) assert.deepEqual([input.commit, input.journey_id], campaignIdentity);
+          assert.deepEqual(input.compatibility_transition || {}, receipt.compatibility_transition || {}, 'Actual piece Load must bind its reviewed transition');
           assert.deepEqual(input.predecessors, chain, 'Piece production Load must bind the complete original prefix');
           assert.equal(path.posix.basename(proof.handoff_from.replaceAll('\\', '/').replace(/\/$/, '')), previous);
           const inputPath = input.path.replaceAll('\\', '/');
@@ -237,7 +313,8 @@ if (segmentOption) {
     assert.match(segment.commit, /^[0-9a-f]{40}$/);
     assert.ok(segment.journey_id);
     campaignIdentity ||= [segment.commit, segment.journey_id];
-    assert.deepEqual([segment.commit, segment.journey_id], campaignIdentity);
+    if (compatibility.length) assert.equal(segment.journey_id, campaignIdentity[1]);
+    else assert.deepEqual([segment.commit, segment.journey_id], campaignIdentity);
     const through = boundaries.indexOf(segment.through_boundary);
     const from = boundaries.indexOf(previous);
     assert.ok(through > from, 'Every segment advances in new chapter order');
@@ -250,7 +327,11 @@ if (segmentOption) {
     if (previous) {
       const input = one('F49 SEGMENT INPUT ');
       assert.equal(input.boundary, previous);
-      assert.deepEqual([input.commit, input.journey_id], campaignIdentity);
+      assert.equal(input.commit, segment.commit, 'Actual chapter consumer cut must match its produced receipts');
+      assert.equal(input.journey_id, campaignIdentity[1]);
+      if (!compatibility.length) assert.deepEqual([input.commit, input.journey_id], campaignIdentity);
+      const firstReceipt = parseSaveDocument(fs.readFileSync(path.join(sourceRoot, boundaries[from + 1], 'receipt.json'), 'utf8'));
+      assert.deepEqual(input.compatibility_transition || {}, firstReceipt.compatibility_transition || {}, 'Actual chapter Load must bind its reviewed transition');
       assert.deepEqual(input.predecessors, chain.slice(0, from + 1), 'Original segment input must bind every preceding receipt');
       if (meadowsPrefix) {
         assert.equal(final.resume.journey_id, campaignIdentity[1]);
@@ -276,7 +357,7 @@ if (segmentOption) {
       assert.equal(configured.ordinary_controller_physics_saves, true);
     }
     emitted.push(...produced);
-    segmentWitnesses.push({log_sha256: sha256(file), ...segment});
+    segmentWitnesses.push({...segment, log_sha256: sha256(file)});
     previous = segment.through_boundary;
   }
   assert.equal(previous, 'completed_world', 'The chain must finish its actual completed-world continuation');
@@ -286,6 +367,16 @@ let sourceCommit = '';
 let emittedRoot = '';
 let retainedIdentity;
 let savedWorldSeed;
+const walk = (dir, files = []) => {
+  for (const item of fs.readdirSync(dir, {withFileTypes: true})) {
+    assert.ok(!item.isSymbolicLink(), 'Symlinks cannot redirect earned save bytes');
+    const name = path.join(dir, item.name);
+    if (item.isDirectory()) walk(name, files);
+    else if (item.isFile()) files.push(name);
+    else assert.fail('Unknown handoff entry');
+  }
+  return files;
+};
 const candidates = [];
 for (let index = 0; index < boundaries.length; index++) {
   const boundary = boundaries[index];
@@ -293,6 +384,7 @@ for (let index = 0; index < boundaries.length; index++) {
   const receiptFile = path.join(directory, 'receipt.json');
   const receiptHash = sha256(receiptFile);
   const receipt = parseSaveDocument(fs.readFileSync(receiptFile, 'utf8'));
+  let witnessLogHash;
   const chapterIndex = chapterBoundaries.indexOf(boundary);
   const meadowPiece = meadowsPrefix && chapterIndex < 0;
   assert.equal(receipt.kind, meadowPiece ? 'earned_meadows_piece' : 'f49_ordinary_input_handoff');
@@ -300,9 +392,23 @@ for (let index = 0; index < boundaries.length; index++) {
   assert.equal(receipt.boundary, boundary);
   assert.match(receipt.commit, /^[0-9a-f]{40}$/);
   sourceCommit ||= receipt.commit;
-  assert.equal(receipt.commit, sourceCommit);
-  assert.equal(emitted[index].commit, sourceCommit);
-  if (segmentOption) assert.equal(sourceCommit, segmentWitnesses[0].commit, 'Original segment logs must name the actual saved receipt source');
+  if (!compatibility.length) assert.equal(receipt.commit, sourceCommit);
+  assert.equal(emitted[index].commit, receipt.commit);
+  if (segmentOption) {
+    const producer = meadowPiece ? pieceWitnesses[index] : segmentWitnesses.find(segment =>
+      chapterBoundaries.indexOf(boundary) > chapterBoundaries.indexOf(segment.from_boundary) &&
+      chapterBoundaries.indexOf(boundary) <= chapterBoundaries.indexOf(segment.through_boundary));
+    assert.equal(receipt.commit, producer?.commit, 'Original witness must name this actual saved producer cut');
+    witnessLogHash = producer.log_sha256;
+  }
+  const transition = receipt.compatibility_transition;
+  const changedCut = index > 0 && candidates.at(-1).receipt.commit !== receipt.commit;
+  if (changedCut || transition !== undefined) {
+    assert.ok(changedCut && object(transition) && hex(transition.manifest_sha256, 64) &&
+      transition.consumer_commit === receipt.commit && transition.producer_commit === candidates.at(-1).receipt.commit &&
+      transition.imported_boundary === boundaries[index - 1], 'Missing exact receipt compatibility transition');
+    reviewedCompatibilityCut(compatibility, candidates, receipt.commit, boundaries[index - 1], transition.manifest_sha256);
+  }
   const originalPath = emitted[index].path.replaceAll('\\', '/');
   assert.ok(path.posix.isAbsolute(originalPath) || /^[A-Za-z]:\//.test(originalPath), 'Absolute original runner path required');
   assert.equal(path.posix.normalize(originalPath), originalPath, 'Original paths must be canonical');
@@ -315,24 +421,14 @@ for (let index = 0; index < boundaries.length; index++) {
   assert.ok(receipt.state.party.length > 0 && receipt.state.party.length <= 5);
   assert.ok(receipt.state.character_id);
   assert.equal(receipt.state.realm, receipt.realm);
-  const files = [];
-  const walk = dir => {
-    for (const item of fs.readdirSync(dir, {withFileTypes: true})) {
-      assert.ok(!item.isSymbolicLink(), 'Symlinks cannot redirect earned save bytes');
-      const name = path.join(dir, item.name);
-      if (item.isDirectory()) walk(name);
-      else if (item.isFile()) files.push(name);
-      else assert.fail('Unknown handoff entry');
-    }
-  };
   const saves = path.join(directory, 'save');
-  walk(saves);
+  const files = walk(saves);
   const hashes = Object.fromEntries(files.map(file => [path.relative(saves, file).replaceAll('\\', '/'), sha256(file)]));
   assert.deepEqual(hashes, receipt.files_sha256, 'Exact production bytes must match the immutable receipt');
   assert.ok(files.some(file => file.endsWith(`${path.sep}character.json`)));
   assert.ok(files.some(file => file.endsWith(`${path.sep}world.json`)));
   for (const file of files.filter(file => file.endsWith(`${path.sep}character.json`) || file.endsWith(`${path.sep}world.json`) ||
-    (meadowsPrefix && /^slot_[0-4]\.json$/.test(path.basename(file))))) {
+    ((meadowsPrefix || compatibility.length) && /^slot_[0-4]\.json$/.test(path.basename(file))))) {
     const envelope = parseSaveDocument(fs.readFileSync(file, 'utf8'));
     assert.equal(envelope.version, 28, `Current split schema required: ${file}`);
   }
@@ -370,7 +466,7 @@ for (let index = 0; index < boundaries.length; index++) {
   assert.deepEqual(inventory, receipt.state.inventory, 'Observed inventory must be in the actual saved character');
   const worlds = files.filter(file => file.endsWith(`${path.sep}world.json`)).map(file => parseSaveDocument(fs.readFileSync(file, 'utf8')));
   let world;
-  if (meadowsPrefix) {
+  if (meadowsPrefix || compatibility.length) {
     const flat = parseSaveDocument(fs.readFileSync(path.join(saves, 'slot_0.json'), 'utf8'));
     assert.equal(flat.version, 28, 'Actual production Load slot must use the current schema');
     assert.equal(flat.current_realm, receipt.realm);
@@ -394,6 +490,12 @@ for (let index = 0; index < boundaries.length; index++) {
     world = worlds[0];
   }
   if (segmentOption) {
+    if (compatibility.length) {
+      assert.equal(character.party.length, 5, 'Reviewed cross-cut prefix requires the original five');
+      const uids = character.party.map(member => member.uid);
+      assert.equal(new Set(uids).size, 5, 'Reviewed cross-cut prefix requires five distinct UIDs');
+      assert.ok(uids.every(uid => typeof uid === 'string' && uid.length > 0));
+    }
     const identity = [character.character_id, world.world_id, world.reward_delivery_namespace, character.party.map(member => member.uid)];
     retainedIdentity ||= identity;
     assert.deepEqual(identity, retainedIdentity, 'Segments retain the original character, world and five');
@@ -413,7 +515,7 @@ for (let index = 0; index < boundaries.length; index++) {
     'Encounter override differs from saved population; ordinary reload cannot reproduce played population');
   assert.equal(typeof population.has_environment_override, 'boolean');
   assert.equal(typeof population.environment_override, 'string');
-  if (meadowsPrefix) assert.equal(population.has_environment_override, false, 'Meadows-rooted proof refuses encounter overrides');
+  if (meadowsPrefix || compatibility.length) assert.equal(population.has_environment_override, false, 'Reviewed or Meadows-rooted proof refuses encounter overrides');
   if (population.has_environment_override) {
     assert.match(population.environment_override.trim(), /^[+-]?\d+$/, 'Numeric encounter override required');
     assert.equal(Number(population.environment_override.trim()), world.world_seed, 'Override must match saved population');
@@ -443,10 +545,12 @@ for (let index = 0; index < boundaries.length; index++) {
     held.transaction_receipts.includes(`defeat:boss_${boss}_${namespaceHash}:${receipt.state.character_id}`), 'Boss receipt must name the actual saved host world');
   const destination = path.join(targetRoot, boundary);
   assert.ok(!fs.existsSync(destination), `Never overwrite an existing earned fixture: ${destination}`);
-  candidates.push({boundary, directory, destination, receipt, receiptHash});
+  candidates.push({boundary, directory, destination, receipt, receiptHash, log_sha256: witnessLogHash});
 }
 // The evidence source must be committed and available for replay/review.
-execFileSync('git', ['cat-file', '-e', `${sourceCommit}^{commit}`], {stdio: 'pipe'});
+for (const commit of new Set(candidates.map(candidate => candidate.receipt.commit))) {
+  execFileSync('git', ['cat-file', '-e', `${commit}^{commit}`], {stdio: 'pipe'});
+}
 const provenance = {kind: 'f19_earned_boundary_promotion', source_commit: sourceCommit,
   command: `Godot 4.7 ${/^OpenGL.*(?:API|Renderer)/m.test(log) ? '' : '--headless '}--script tests/${offload ? 'smoke_f19_campaign_functional' : 'smoke_four_biome_continuous'}.gd`,
   functional_offload: offload,
@@ -468,6 +572,30 @@ if (meadowsPrefix) {
     }
   }
 }
+const recheckReviewedOriginals = () => {
+  const rechecked = compatibilityPaths.map(readCompatibilityManifest);
+  assert.deepEqual(rechecked.map(row => row.digest), compatibility.map(row => row.digest), 'Compatibility manifests changed during promotion');
+  assert.equal(sha256(logFile), provenance.source_log_sha256, 'Original final witness changed during promotion');
+  const witnessFiles = [...pieceLogs, ...segmentLogs, logFile];
+  for (const [index, witness] of [...pieceWitnesses, ...segmentWitnesses].entries()) {
+    assert.equal(sha256(witnessFiles[index]), witness.log_sha256, 'Original witness log changed during reviewed promotion');
+  }
+  for (let index = 0; index < candidates.length; index++) {
+    const transition = candidates[index].receipt.compatibility_transition;
+    if (transition) reviewedCompatibilityCut(rechecked, candidates.slice(0, index), candidates[index].receipt.commit,
+      boundaries[index - 1], transition.manifest_sha256);
+    assert.equal(sha256(path.join(candidates[index].directory, 'receipt.json')), candidates[index].receiptHash);
+    const saves = path.join(candidates[index].directory, 'save');
+    const hashes = Object.fromEntries(walk(saves).map(file => [path.relative(saves, file).replaceAll('\\', '/'), sha256(file)]));
+    assert.deepEqual(hashes, candidates[index].receipt.files_sha256, 'Reviewed complete production tree changed during promotion');
+  }
+};
+if (compatibility.length) {
+  recheckReviewedOriginals();
+  provenance.source_commits = candidates.map(({boundary, receipt}) => ({boundary, commit: receipt.commit}));
+  provenance.compatibility_manifests = compatibility.map(({digest, data}) => ({...data, sha256: digest}));
+  provenance.scope += '; explicitly reviewed source cuts, never uninterrupted single-cut capture';
+}
 for (const candidate of candidates) {
   fs.mkdirSync(path.dirname(candidate.destination), {recursive: true});
   fs.cpSync(candidate.directory, candidate.destination, {recursive: true, errorOnExist: true, force: false});
@@ -475,7 +603,16 @@ for (const candidate of candidates) {
   for (const [file, hash] of Object.entries(candidate.receipt.files_sha256)) {
     assert.equal(sha256(path.join(candidate.destination, 'save', file)), hash, 'Promoted bytes must remain exact');
   }
-  if (meadowsPrefix) assert.equal(sha256(path.join(candidate.destination, 'receipt.json')), candidate.receiptHash,
+  if (meadowsPrefix || compatibility.length) assert.equal(sha256(path.join(candidate.destination, 'receipt.json')), candidate.receiptHash,
     'Promotion must preserve each original receipt without relabelling');
+  if (compatibility.length) {
+    const saves = path.join(candidate.destination, 'save');
+    assert.deepEqual(Object.fromEntries(walk(saves).map(file => [path.relative(saves, file).replaceAll('\\', '/'), sha256(file)])),
+      candidate.receipt.files_sha256, 'Reviewed promoted tree must contain exactly its original saved bytes');
+  }
 }
+if (compatibility.length) recheckReviewedOriginals();
 console.log(JSON.stringify({proof: 'F19-earned-save-promotion', source_commit: sourceCommit, boundaries, result: 'PASS'}));
+}
+
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) runPromotion();

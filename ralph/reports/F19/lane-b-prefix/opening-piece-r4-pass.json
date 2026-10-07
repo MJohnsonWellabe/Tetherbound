@@ -1,0 +1,76 @@
+{
+  "run": 37668038368,
+  "source_commit": "d46e2c369628a90fc4fb65b30b4da331ca1ddbc3",
+  "proof": "tools/earned_saves/earned_chain_runner.gd --functional-offload --segment=opening_team",
+  "result": "PASS",
+  "exit_code": 0,
+  "slot": 0,
+  "kind": "earned_meadows_piece",
+  "boundary": "opening_team",
+  "journey_id": "d46e2c369628a90fc4fb65b30b4da331ca1ddbc3:/home/runner/work/Tetherbound/Tetherbound/ralph/reports/F19/earned_piece_slot0_r4",
+  "wall_seconds": 896.718,
+  "original_ordered_party": [
+    {
+      "uid": "creature-1bc4b749702b34a4007e341718a60a2b",
+      "species": "terrapup",
+      "level": 5
+    },
+    {
+      "uid": "creature-e82b73375cba57e7328cd726f4aa7543",
+      "species": "bramblebun",
+      "level": 5
+    },
+    {
+      "uid": "creature-07524581d2b6c7e62e6f0c0635e0a284",
+      "species": "mudsnout",
+      "level": 5
+    },
+    {
+      "uid": "creature-9c4a884966f868de304b40afbda04d0b",
+      "species": "bramblebun",
+      "level": 6
+    },
+    {
+      "uid": "creature-d47d82b32a3133c4fa32bf1b84bcade7",
+      "species": "bramblebun",
+      "level": 5
+    }
+  ],
+  "world_seed": 1557231693,
+  "character_id": "character-a052effd65d5db94fa2b070f35f1ed5d",
+  "world_id": "slot-0",
+  "reward_delivery_namespace": "b294acaa9ec629f83b8faa14c4a04b41",
+  "helpers": [
+    {
+      "segment": "opening",
+      "passed": true
+    },
+    {
+      "segment": "road_gate",
+      "passed": true
+    },
+    {
+      "segment": "village",
+      "passed": true
+    },
+    {
+      "segment": "team",
+      "passed": true
+    }
+  ],
+  "production_files": [
+    "characters/character-a052effd65d5db94fa2b070f35f1ed5d/character.json",
+    "slot_0.json",
+    "worlds/slot-0/world.json"
+  ],
+  "review": "b_f49_review ordinary-input component PASS",
+  "scope": "Actual fresh opening/village/team play and slot0 export. Rasterization offload, action-event team taps/combat: no controller-only/device/visual/audio acceptance.",
+  "remaining": [
+    "successor actual production Load",
+    "five remaining Meadows pieces",
+    "four new-order chapter boundaries and completed world",
+    "physical-binding fresh witness",
+    "positive promotion",
+    "full criterion gates"
+  ]
+}
