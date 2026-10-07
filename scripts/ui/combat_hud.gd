@@ -319,7 +319,7 @@ func _ready() -> void:
 	_ultimate_readout.fit_content = true
 	_ultimate_readout.scroll_active = false
 	_ultimate_readout.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_ultimate_readout.add_theme_font_size_override("normal_font_size", 22)
+	_ultimate_readout.add_theme_font_size_override("normal_font_size", UITokens.FONT_PROMPT)
 	$Root/AllyPanel/AllyVBox.add_child(_ultimate_readout)
 	_ultimate_meter = ProgressBar.new()
 	_ultimate_meter.custom_minimum_size.y = 8.0
@@ -947,10 +947,10 @@ func _draw_ally() -> void:
 	var ultimate: float = float(_manager.call("ultimate_fraction"))
 	_ultimate_meter.value = ultimate * 100.0
 	var signature := _move_name(str(creature.get("move_ultimate")), "Ultimate")
-	var arm := INPUT_GLYPH.icon("combat_ultimate_arm", 22, VERB_READY if ultimate >= 1.0 else VERB_DIMMED)
-	var instruction := "release → move" if ultimate >= 1.0 else "%d%%" % roundi(ultimate * 100.0)
+	var arm := INPUT_GLYPH.icon("combat_ultimate_arm", CELL_GLYPH_PX, VERB_READY if ultimate >= 1.0 else VERB_DIMMED)
+	var instruction := "Tap, then a move" if ultimate >= 1.0 else "[font_size=%d]%d%%[/font_size]" % [UITokens.FONT_NUMBER, roundi(ultimate * 100.0)]
 	if bool(_manager.call("ultimate_armed")): instruction = "tap a move"
-	_ultimate_readout.text = "%s %s · %s" % [arm, signature, instruction]
+	_ultimate_readout.text = "%s\n%s %s" % [signature, arm, instruction]
 
 	# Once, not constantly: a bar that pulses every frame it happens to be full
 	# stops meaning anything. Only the RISING edge (not-full -> full) fires it.

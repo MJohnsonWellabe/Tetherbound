@@ -238,7 +238,7 @@ func _run() -> void:
 	await process_frame
 	_check(shown_meter.is_visible_in_tree() and is_equal_approx(shown_meter.value, 100.0),
 		"mounted actual CombatHUD shows the full landed-hit Ultimate meter")
-	_check(shown_readout.is_visible_in_tree() and shown_readout.get_parsed_text().contains("release → move"),
+	_check(shown_readout.is_visible_in_tree() and shown_readout.get_parsed_text().contains("Tap, then a move"),
 		"mounted actual CombatHUD displays the full-meter ready instruction")
 	if not _capture_dir.is_empty():
 		DirAccess.make_dir_recursive_absolute(_capture_dir)
