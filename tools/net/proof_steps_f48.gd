@@ -48,7 +48,7 @@ static func step(tree: SceneTree, action: String, args: Dictionary) -> Dictionar
 				data["owner_before_difference"] = _json_difference(data.owner_training_row.get("before"), data.owner_projection)
 				data["owner_after_difference"] = _json_difference(data.owner_training_row.get("after"), data.owner_projection)
 			if captured.get("verdict") == "PASS" and args.get("role") == "guest":
-				var presentation: Dictionary = await _finish_capture_presentation(tree)
+				var presentation: Dictionary = await _finish_capture_presentation(tree, int(data.get("capture_started_physics_frame", -1)))
 				data["presentation_exit"] = presentation.get("data", {})
 				captured["data"] = data
 				if presentation.get("verdict") != "PASS":
@@ -848,13 +848,16 @@ static func _capture_pending_diagnostic(game: Node) -> Dictionary:
 		data[field.trim_prefix("_")] = observation
 	return data
 
-static func _finish_capture_presentation(tree: SceneTree) -> Dictionary:
+static func _finish_capture_presentation(tree: SceneTree, capture_started_frame: int) -> Dictionary:
 	# An accepted free-slot catch leaves the real Creatures menu open. Finish
 	# that presentation with ordinary input only after all catch work settled.
 	var game := tree.root.get_node_or_null(^"Game")
 	var captures := game.get_node_or_null(^"Session/FoundationComposition/Captures") if game != null else null
 	var before := _capture_input_state(tree)
-	var data := {"before": before, "ordinary_cancel": false}
+	var data := {"before": before, "ordinary_cancel": false,
+		"capture_started_physics_frame": capture_started_frame, "capture_budget_frames": 600, "modal_release_frames": 15}
+	if capture_started_frame < 0:
+		return _result(false, "Original catch observation timeline is unavailable", data)
 	if game == null or game.session == null or captures == null \
 		or captures.get_script() != preload("res://scripts/net/foundation_capture.gd") \
 		or game.pending_catch != null or not before.capture_active.is_empty() or before.capture_requests != 0 \
@@ -872,20 +875,38 @@ static func _finish_capture_presentation(tree: SceneTree) -> Dictionary:
 	var epoch := str(session.call("_altar_current_epoch"))
 	var local: RefCounted = game.local
 	var world: RefCounted = game.world
+	var character: String = local.character_id
+	var namespace_id: String = world.reward_delivery_namespace
+	data["close_started_physics_frame"] = Engine.get_physics_frames()
 	var pressed: Dictionary = await tree.call("_step_press", {"action": "menu_cancel"})
 	data["ordinary_cancel"] = true
 	data["press"] = pressed.duplicate(true)
-	if pressed.get("verdict") != "PASS": return _result(false, "Ordinary settled-catch menu close input failed", data)
-	for _frame: int in 15: await tree.physics_frame # Existing modal release wait; no deadline extension.
-	var after := _capture_input_state(tree)
-	data["after"] = after
-	var released: bool = is_instance_valid(game) and is_instance_valid(session) and is_instance_valid(captures) and is_instance_valid(owner) \
-		and tree.root.get_node_or_null(^"Game") == game and game.session == session and game.local == local and game.world == world \
-		and session.call("_altar_current_epoch") == epoch \
-		and game.get_node_or_null(^"Session/FoundationComposition/Captures") == captures \
-		and INPUT_OWNER.current(tree) == null and after.context == "world" and owner.call("is_open") == false \
-		and game.pending_catch == null and after.capture_active.is_empty() and after.capture_requests == 0 \
-		and session.call("_owner_training_mutation_blocked", game.local) != true
+	if pressed.get("verdict") != "PASS":
+		data["pending_diagnostic"] = _capture_pending_diagnostic(game)
+		return _result(false, "Ordinary settled-catch menu close input failed", data)
+	var modal_frames_left := 15 # The original allowance, distinct from the catch's 600 frames.
+	var released := false
+	while true:
+		# This binding check follows the press await and every frame await.
+		# A fresh owner/session/world cannot satisfy the original catch's close.
+		var source_live: bool = is_instance_valid(game) and is_instance_valid(session) and is_instance_valid(captures) and is_instance_valid(owner) \
+			and tree.root.get_node_or_null(^"Game") == game and game.session == session and game.local == local and game.world == world \
+			and session.call("_altar_current_epoch") == epoch and local.character_id == character and world.reward_delivery_namespace == namespace_id \
+			and game.get_node_or_null(^"Session/FoundationComposition/Captures") == captures
+		if not source_live: break
+		if modal_frames_left == 0:
+			if Engine.get_physics_frames() - capture_started_frame - 15 > 600: break
+			var after := _capture_input_state(tree)
+			data["after"] = after
+			released = INPUT_OWNER.current(tree) == null and after.context == "world" and owner.call("is_open") == false \
+				and game.pending_catch == null and after.capture_active.is_empty() and after.capture_requests == 0 \
+				and session.call("_owner_training_mutation_blocked", game.local) != true
+			if released or Engine.get_physics_frames() - capture_started_frame - 15 >= 600: break
+		else:
+			modal_frames_left -= 1
+		await tree.physics_frame
+	data["observed_physics_frame"] = Engine.get_physics_frames()
+	if not released: data["pending_diagnostic"] = _capture_pending_diagnostic(game)
 	return _result(released, "Ordinary settled-catch menu close must restore actual world input before onward interaction", data)
 
 

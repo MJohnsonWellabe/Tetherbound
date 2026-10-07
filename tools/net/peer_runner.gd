@@ -5199,58 +5199,88 @@ func _step_f48_fixture_capture(args: Dictionary) -> Dictionary:
 	var accepted_observer: Callable = _f48_capture_accepted_source.bind(capture_source)
 	writer.connect("transaction_boundary", save_observer)
 	writer.connect("delta_applied", accepted_observer)
+	var capture_started_frame: int = Engine.get_physics_frames()
+	var original_owner: RefCounted = game.get("local")
+	var original_namespace: String = game.get("world").get("reward_delivery_namespace")
+	var captures: Node = session.get_node_or_null(^"FoundationComposition/Captures")
 	var thrown: Dictionary = _step_catch_throw({"target": actual, "orb_id": "orb_basic"})
 	if thrown.get("verdict") != "PASS":
 		writer.disconnect("transaction_boundary", save_observer)
 		writer.disconnect("delta_applied", accepted_observer)
 		_fixture_capture_pose(fixture, player)
 		thrown["data"] = fixture; return thrown
-	for _frame: int in 600: await physics_frame
+	var after: Dictionary = {}
+	var row: Dictionary = {}
+	var valid := false
+	var source_live := true
+	# The original 600 physical frames start at the actual throw. Observe the
+	# same BOOL/ACK and canonical catch predicate now, so ordinary menu close
+	# can precede the separately journaled Research duty. No new request here.
+	while true:
+		# Also runs immediately after every awaited frame; never carry an old
+		# owner's success into a replaced scene, body, Session or world.
+		source_live = is_instance_valid(game) and game.get("local") == original_owner \
+			and _f48_capture_source_live(capture_source) and is_instance_valid(director) \
+			and _encounter_director() == director and is_instance_valid(player) and game.call("find_player") == player \
+			and game.get("world").get("reward_delivery_namespace") == original_namespace \
+			and is_instance_valid(captures) and session.get_node_or_null(^"FoundationComposition/Captures") == captures
+		if not source_live: break
+		if capture_source.accepted.is_empty() and Engine.get_physics_frames() - capture_started_frame < 600:
+			await physics_frame
+			continue
+		after = game.get("local").call("save_data")
+		row = capture_source.accepted
+		fixture["owner_projection"] = preload("res://scripts/net/character_record_rules.gd").portable_projection(after)
+		var added: Array = []
+		for uid: Variant in after.get("redesign_character", {}).get("creatures", {}):
+			if not before.get("redesign_character", {}).get("creatures", {}).has(uid): added.append(uid)
+		valid = added.size() == 1 and after.get("party", []).size() == before.get("party", []).size() + 1
+		if valid:
+			var provenance: Dictionary = after.redesign_character.creatures[added[0]].get("captured_from", {})
+			var reply: Dictionary = director.get("_shared_catch_finish_reply")
+			# The director exposes the normalized local finish reply, after its
+			# authority-only verdict matched the pending encounter and claim.
+			var capture_uid := str(added[0])
+			var capture_offer := JSON.stringify([game.get("world").get("reward_delivery_namespace"),
+				str(reply.get("claim_id", "")), capture_uid]).sha256_text()
+			var owned_capture := false
+			for creature: Dictionary in after.get("party", []):
+				if creature.get("uid") == capture_uid: owned_capture = true
+			valid = provenance.get("kind") == "wild" and provenance.get("spawn_id") == site \
+				and provenance.get("spawn_generation") == 1 \
+				and provenance.get("world_namespace") == game.get("world").get("reward_delivery_namespace") \
+				and reply.get("ok") == true and reply.get("caught") == true \
+				and reply.get("kind") == "catch_finished" and reply.get("pending") == false \
+				and reply.get("creature", {}).get("uid") == capture_uid and owned_capture \
+				and reply.get("encounter_id") == announcement.encounter_id and not str(reply.get("claim_id", "")).is_empty() \
+				and row.get("action") == "wild_capture" and row.get("status") == "accepted" \
+				and row.get("character_id") == after.get("character_id") \
+				and row.get("source_key") == "capture:" + capture_offer \
+				and not str(row.get("receipt", "")).is_empty() \
+				and fixture.owner_projection.redesign_character.transaction_receipts.has(row.receipt)
+		if valid and captures.get_script() == preload("res://scripts/net/foundation_capture.gd") \
+			and game.get("pending_catch") == null and str(captures.get("_active")).is_empty() \
+			and captures.get("_requests").is_empty() and session.call("_owner_training_mutation_blocked", original_owner) != true: break
+		if Engine.get_physics_frames() - capture_started_frame >= 600: break
+		await physics_frame
 	if is_instance_valid(writer):
 		writer.disconnect("transaction_boundary", save_observer)
 		writer.disconnect("delta_applied", accepted_observer)
+	fixture["capture_started_physics_frame"] = capture_started_frame
+	fixture["capture_observed_physics_frame"] = Engine.get_physics_frames()
+	if not source_live:
+		return {"verdict": "FAIL", "detail": "Original catch source changed during its existing observation budget", "data": fixture}
 	_fixture_capture_pose(fixture, player)
-	var after: Dictionary = game.get("local").call("save_data")
 	fixture["owner_before"] = before
 	fixture["owner_after"] = after
 	fixture["finish_reply"] = director.get("_shared_catch_finish_reply")
-	var row: Dictionary = capture_source.accepted
 	fixture["latest_owner_training_row"] = session.call("_owner_training_row") if is_instance_valid(session) else {}
 	fixture["capture_saved_edge"] = {"path":capture_source.edge.get("path"), "sha256":capture_source.edge.get("sha256"),
 		"row":capture_source.edge.get("row"), "accepted_delta":capture_source.get("accepted_delta",{})}
 	fixture["owner_training_row"] = row
-	fixture["owner_projection"] = preload("res://scripts/net/character_record_rules.gd").portable_projection(after)
 	if not row.is_empty() and row.get("version") in [2, 3]:
 		fixture["owner_plan"] = preload("res://scripts/net/character_action_delivery.gd").owner_plan(
 			fixture.owner_projection, row, preload("res://scripts/net/character_record_rules.gd").errors)
-	var added: Array = []
-	for uid: Variant in after.get("redesign_character", {}).get("creatures", {}):
-		if not before.get("redesign_character", {}).get("creatures", {}).has(uid): added.append(uid)
-	var valid: bool = added.size() == 1 and after.get("party", []).size() == before.get("party", []).size() + 1
-	if valid:
-		var provenance: Dictionary = after.redesign_character.creatures[added[0]].get("captured_from", {})
-		var reply: Dictionary = director.get("_shared_catch_finish_reply")
-		fixture["finish_reply"] = reply
-		# The director exposes the normalized local finish reply, after its
-		# authority-only verdict matched the pending encounter and claim.
-		var capture_uid := str(added[0])
-		var capture_offer := JSON.stringify([game.get("world").get("reward_delivery_namespace"),
-			str(reply.get("claim_id", "")), capture_uid]).sha256_text()
-		var owned_capture := false
-		for creature: Dictionary in after.get("party", []):
-			if creature.get("uid") == capture_uid: owned_capture = true
-		valid = provenance.get("kind") == "wild" and provenance.get("spawn_id") == site \
-			and provenance.get("spawn_generation") == 1 \
-			and provenance.get("world_namespace") == game.get("world").get("reward_delivery_namespace") \
-			and reply.get("ok") == true and reply.get("caught") == true \
-			and reply.get("kind") == "catch_finished" and reply.get("pending") == false \
-			and reply.get("creature", {}).get("uid") == capture_uid and owned_capture \
-			and reply.get("encounter_id") == announcement.encounter_id and not str(reply.get("claim_id", "")).is_empty() \
-			and row.get("action") == "wild_capture" and row.get("status") == "accepted" \
-			and row.get("character_id") == after.get("character_id") \
-			and row.get("source_key") == "capture:" + capture_offer \
-			and not str(row.get("receipt", "")).is_empty() \
-			and fixture.owner_projection.redesign_character.transaction_receipts.has(row.receipt)
 	if not valid: fixture["owner_passive_diagnostic"] = _f48_owner_passive_diagnostic()
 	return {"verdict": "PASS" if valid else "FAIL", "detail": "Actual shared Alpha catch created one source companion with its accepted original receipt and normalized finish reply." if valid else "Actual shared Alpha catch must create exactly one durable source companion; no offered/provenance grant. Owner plan: " + str(fixture.get("owner_plan", {}).get("code", "unavailable")), "data": fixture}
 
