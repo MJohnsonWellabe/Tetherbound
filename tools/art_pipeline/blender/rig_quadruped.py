@@ -294,8 +294,8 @@ def skin_anatomical(body: bpy.types.Object, rig: bpy.types.Object, legs: dict) -
         # Object alignment is reversible; local positions, UVs and faces stay intact.
         point = body.matrix_world @ vertex.co
         seam = tuple(round(c, 6) for c in vertex.co)
+        region = min(legs, key=lambda name: (point.x - legs[name].x) ** 2 + (point.y - legs[name].y) ** 2)
         if seam not in seam_weights:
-            region = min(legs, key=lambda name: (point.x - legs[name].x) ** 2 + (point.y - legs[name].y) ** 2)
             prefix, side = region.split("_")
             upper, lower = f"{prefix}_upper_{side}", f"{prefix}_lower_{side}"
             distance_xy = math.hypot(point.x - legs[region].x, point.y - legs[region].y)
@@ -439,7 +439,9 @@ def main() -> None:
                     tuple(body.data.materials))
         before_geometry = signature()
         low, high = bounds(body)
-        body.location += Vector((-(low.x + high.x) / 2, -(low.y + high.y) / 2, -low.z))
+        alignment = body.matrix_world.copy()
+        alignment.translation += Vector((-(low.x + high.x) / 2, -(low.y + high.y) / 2, -low.z))
+        body.matrix_world = alignment
         bpy.context.view_layer.update()
     else:
         body = join_and_normalise(weld_enabled=not skip_weld)
@@ -471,6 +473,9 @@ def main() -> None:
                               export_skins=True, export_animations=True)
 
     if report_path:
+        if preserve:
+            report["output_sha256"] = hashlib.sha256(out.read_bytes()).hexdigest()
+            report_file.parent.mkdir(parents=True, exist_ok=True)
         pathlib.Path(report_path).write_text(json.dumps(report, indent=2))
     if preserve:
         if hashlib.sha256(model.read_bytes()).hexdigest() != source_hash:
