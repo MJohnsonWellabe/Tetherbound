@@ -2,6 +2,7 @@ extends "res://tests/test_case.gd"
 
 const LIBRARY := preload("res://scripts/vfx/move_effect_library.gd")
 const BUDGET := preload("res://scripts/vfx/move_effect_budget.gd")
+const ULTIMATES := preload("res://scripts/vfx/ultimates/ultimate_library.gd")
 
 func test_every_move_resolves_and_all_24_bodies_impacts_trails_and_cues_exist() -> void:
 	var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/moves/moves.json"))
@@ -149,3 +150,50 @@ func test_ultimate_overrides_resolve_to_staged_presentations() -> void:
 	var ball := LIBRARY.resolve({"archetype": "bubble_volley", "presentation_variant": "water_ball"}, 3)
 	assert_eq(str(ball.body.get("surface_material", "")), "water_stream", "water ball uses the flowing-water surface")
 	assert_true(LIBRARY.resolve({"archetype": "bubble_volley", "presentation_variant": "missing"}, 1).is_empty(), "unknown variants refuse")
+
+func test_actual_ultimate_override_preserves_earned_rank_and_independent_breakthrough_growth() -> void:
+	var tree := Engine.get_main_loop() as SceneTree
+	assert_true(tree != null, "the existing runner provides the initialized presentation tree")
+	if tree == null: return
+	var parent := Node3D.new()
+	tree.root.add_child(parent)
+	var previous_config := ULTIMATES._config
+	ULTIMATES._config = ULTIMATES.config().duplicate(true)
+	ULTIMATES._config["enabled"] = true
+	var moves: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/moves/moves.json")).moves
+	for move_id: String in ["ultimate_terrapup", "ultimate_ripplet"]:
+		var visual := LIBRARY.ultimate_override(move_id)
+		for count in [0, 2, 5]:
+			var previous_size := 0.0
+			for rank in range(1, 6):
+				var id := "%s:b%d:r%d" % [move_id, count, rank]
+				var binding := {"character_id":"rank-owner", "creature_uid":"rank-owned",
+					"encounter_id":id, "generation":1, "action":1}
+				var spec := {"slot":"ultimate", "move_id":move_id, "action_id":id + ":1",
+					"actor_binding":binding, "mastery_rank":rank, "breakthrough_count":count,
+					"ultimate":moves[move_id].ultimate.duplicate(true)}
+				var context := {"current_actor":binding, "travel_seconds":0.25,
+					"recipient_character_id":"rank-owner", "source_ground":Vector3.ZERO, "target_ground":Vector3.RIGHT * 4.0}
+				var effect := ULTIMATES.launch(parent, Vector3.UP, Vector3.RIGHT * 4.0 + Vector3.UP, spec, context)
+				assert_true(effect != null, id + " launches the actual authored override")
+				if effect == null: continue
+				var row: Dictionary = effect.get("_row")
+				var frozen: Dictionary = effect.get("_context")
+				var base := LIBRARY.resolve(visual, rank)
+				var growth: Dictionary = ULTIMATES.resolve(move_id, count).growth
+				assert_eq(row.mastery_rank, rank, id + " keeps the earned effect tier")
+				assert_eq(frozen.mastery_rank, rank)
+				assert_eq(frozen.breakthrough_count, count)
+				assert_true(frozen.breakthrough_growth.is_read_only(), "only immutable growth values reach the effect")
+				assert_almost_eq(float(row.parameters.size), float(base.parameters.size) * float(growth.size_scale))
+				assert_true(float(row.parameters.size) > previous_size, "each earned rank visibly grows at fixed breakthroughs")
+				previous_size = float(row.parameters.size)
+				assert_eq(row.budget, base.budget, "growth cannot enlarge the allocation budget")
+				assert_eq(row.arrival, base.arrival)
+				assert_almost_eq(float(effect.get("_travel")), 0.25, 0.00001)
+				var expected_count := 1 if int(visual.count) == 1 else mini(int(base.parameters.count) + int(growth.count_add), int(LIBRARY.config().max_body_count))
+				assert_eq(int(row.parameters.count), expected_count, "single waves stay single; volleys retain the existing cap")
+				assert_between(float(row.impact.accent_count), 4.0, 18.0)
+				effect.free()
+	ULTIMATES._config = previous_config
+	parent.free()
