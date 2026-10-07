@@ -1,0 +1,178 @@
+{
+  "scope": "P2-057 nine named NPC/trainer post pairs; full F39#2 OPEN",
+  "before": {
+    "source": "b7cdd2dc803e89c1148c20108afc58c184af4b64",
+    "run": 37700101593,
+    "artifact": 11517423176,
+    "frames": 9,
+    "exit": 0,
+    "seconds": 306,
+    "gate": false
+  },
+  "after": {
+    "source": "6898cccb1ae61d9cca42ae12d395622d46cd31f6",
+    "run": 37701019533,
+    "artifact": 11516934891,
+    "frames": 9,
+    "exit": 0,
+    "gate": true,
+    "seconds": 403
+  },
+  "complete": true,
+  "failures": [],
+  "resolution": [
+    1280,
+    720
+  ],
+  "renderer": "gl_compatibility",
+  "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+  "comparisons": [
+    {
+      "id": "water_adair",
+      "same_stand": true,
+      "same_target": true,
+      "same_heading": true,
+      "before_stand": [
+        412.0,
+        674.0
+      ],
+      "after_stand": [
+        412.0,
+        674.0
+      ],
+      "before_camera_distance": 5.76743459701538,
+      "after_camera_distance": 5.76743459701538
+    },
+    {
+      "id": "water_bren",
+      "same_stand": true,
+      "same_target": true,
+      "same_heading": true,
+      "before_stand": [
+        330.0,
+        1134.0
+      ],
+      "after_stand": [
+        330.0,
+        1134.0
+      ],
+      "before_camera_distance": 5.76748704910278,
+      "after_camera_distance": 5.76748704910278
+    },
+    {
+      "id": "water_edda",
+      "same_stand": true,
+      "same_target": true,
+      "same_heading": true,
+      "before_stand": [
+        160.0,
+        2335.0
+      ],
+      "after_stand": [
+        160.0,
+        2335.0
+      ],
+      "before_camera_distance": 5.76748180389404,
+      "after_camera_distance": 5.76748180389404
+    },
+    {
+      "id": "water_corin",
+      "same_stand": true,
+      "same_target": true,
+      "same_heading": true,
+      "before_stand": [
+        142.0,
+        2324.0
+      ],
+      "after_stand": [
+        142.0,
+        2324.0
+      ],
+      "before_camera_distance": 5.76750993728638,
+      "after_camera_distance": 5.76750993728638
+    },
+    {
+      "id": "water_trainer_daro",
+      "same_stand": true,
+      "same_target": true,
+      "same_heading": true,
+      "before_stand": [
+        19.0,
+        422.0
+      ],
+      "after_stand": [
+        19.0,
+        422.0
+      ],
+      "before_camera_distance": 5.76740312576294,
+      "after_camera_distance": 5.76740312576294
+    },
+    {
+      "id": "water_trainer_yara",
+      "same_stand": true,
+      "same_target": true,
+      "same_heading": true,
+      "before_stand": [
+        1207.0,
+        2202.0
+      ],
+      "after_stand": [
+        1207.0,
+        2202.0
+      ],
+      "before_camera_distance": 5.76749753952026,
+      "after_camera_distance": 5.76749753952026
+    },
+    {
+      "id": "water_trainer_bex",
+      "same_stand": true,
+      "same_target": true,
+      "same_heading": true,
+      "before_stand": [
+        672.0,
+        2807.0
+      ],
+      "after_stand": [
+        672.0,
+        2807.0
+      ],
+      "before_camera_distance": 5.76748323440552,
+      "after_camera_distance": 5.76748323440552
+    },
+    {
+      "id": "water_trainer_calder",
+      "same_stand": true,
+      "same_target": true,
+      "same_heading": true,
+      "before_stand": [
+        744.0,
+        3178.0
+      ],
+      "after_stand": [
+        744.0,
+        3178.0
+      ],
+      "before_camera_distance": 5.76749753952026,
+      "after_camera_distance": 5.76749753952026
+    },
+    {
+      "id": "water_trainer_evi",
+      "same_stand": true,
+      "same_target": true,
+      "same_heading": true,
+      "before_stand": [
+        207.0,
+        4112.0
+      ],
+      "after_stand": [
+        207.0,
+        4112.0
+      ],
+      "before_camera_distance": 5.76747512817383,
+      "after_camera_distance": 5.76747512817383
+    }
+  ],
+  "disclosure": "Existing character-plan day/post views; teleport and stand selection with HUD suppression, no campaign/combat proof. Raw JPEG originals remain in artifacts. Branch merged main068 before after-capture; only grass flag changes intended for named bodies. No full biome matrix or release-bar claim.",
+  "judge": "PENDING original blind reviewer",
+  "area": "PENDING existing Water smoke on same flag-on cut"
+}
