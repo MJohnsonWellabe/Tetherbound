@@ -88,6 +88,7 @@ func test_no_baked_collider_or_ground_cover_crowds_an_authored_seat() -> void:
 
 func test_no_baked_tree_stands_in_a_landmark_sightline() -> void:
 	var world: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_world.json"))
+	var cfg := SCATTER.config()
 	var layers := _placements()
 	var ids: Array[String] = []
 	for sightline: Dictionary in world.landmark_sightlines:
@@ -104,6 +105,45 @@ func test_no_baked_tree_stands_in_a_landmark_sightline() -> void:
 					inside += 1
 		assert_eq(inside, 0, "%s: baked trees inside the sightline" % sightline.id)
 	assert_true(ids.has("dynamo_west_to_stormheart"), "dynamo_west_approach keeps the Dynamo tower in view")
+	var road_intrusions := 0
+	var all_trunks: Array = []
+	var grid := {}
+	var largest := 0.0
+	var half_width := float((JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_stormwood.json")) as Dictionary).route_half_width)
+	for layer: String in TREE_LAYERS:
+		for entry: Dictionary in layers.get(layer, []):
+			var point: Vector3 = entry.placement.position
+			var at := Vector2(point.x,point.z)
+			var reach := SCATTER.visible_basal_reach(cfg,layer,entry.placement)
+			for route: Dictionary in world.routes:
+				var points: Array = route.points
+				for index in range(1,points.size()):
+					var a := Vector2(float(points[index-1][0]),float(points[index-1][1]))
+					var b := Vector2(float(points[index][0]),float(points[index][1]))
+					if Geometry2D.get_closest_point_to_segment(at,a,b).distance_to(at)<half_width+reach:
+						road_intrusions += 1
+			var row := [at,reach,layer]
+			all_trunks.append(row)
+			var cell := Vector2i(floori(at.x/32.0),floori(at.y/32.0))
+			if not grid.has(cell):
+				grid[cell] = []
+			(grid[cell] as Array).append(row)
+			largest = maxf(largest,reach)
+	assert_eq(road_intrusions,0,"actual visible basal bark stays outside EVERY production road corridor")
+	var trunk_overlaps := 0
+	for row: Array in all_trunks:
+		if str(row[2])=="giant_canopy":
+			continue # Giant subjects retained; giant/giant overlap is disclosed.
+		var at: Vector2 = row[0]
+		var cell := Vector2i(floori(at.x/32.0),floori(at.y/32.0))
+		var span := ceili((float(row[1])+largest+float(cfg.trunk_surface_gap_m))/32.0)
+		for dz in range(-span,span+1):
+			for dx in range(-span,span+1):
+				for other: Array in grid.get(cell+Vector2i(dx,dz),[]):
+					var distance := at.distance_to(other[0] as Vector2)
+					if distance>0.0001 and distance<float(row[1])+float(other[1])+float(cfg.trunk_surface_gap_m):
+						trunk_overlaps += 1
+	assert_eq(trunk_overlaps,0,"ordinary trunks keep measured bark gap to all giant/ordinary trunks world-wide")
 
 
 func test_each_pocket_mouth_approach_cone_is_clear() -> void:
