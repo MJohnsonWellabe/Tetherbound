@@ -1,0 +1,45 @@
+{
+  "strengths": [
+    "Distinct day/night",
+    "trainer silhouette outside veil",
+    "waterfall scale",
+    "maritime palette and island silhouettes"
+  ],
+  "shipping_flags": "none",
+  "limitations": [
+    "20 staged clear stills only",
+    "No rain/motion/fight/earned/200+matrix",
+    "400m/100m separate live and not judged"
+  ],
+  "resolution": [
+    1280,
+    720
+  ],
+  "exit_code": 0,
+  "run_id": "37662801275",
+  "matched_defect_verdict": "No visible correction judged; no material preference over prior day set",
+  "artifact_id": "11501759312",
+  "material_override_verified": true,
+  "source_commit": "39626284941a1bfbb356488796c739d689685c7a",
+  "near_landmark": "BLOCK",
+  "complete": true,
+  "captured_frames": 20,
+  "method": "Image-only all20 originals/two contacts vs matched10day prior originals and Veilfall references; no source change brief",
+  "manifest_sha256": "72B5A6C44BF3CDB75B1D893E983C24A82B2B50B3FE6C85A4F76C9362F80DE63C",
+  "defects": [
+    "DayCascade90 broad veil washes trainer/creature/ledge with conspicuous lower boundary",
+    "NightCascade90/45 bright geometric boundaries and ghosted bodies",
+    "NightCascade0/minus45 cliffs near-black with little material separation",
+    "Day0/45/minus45 repetitive cliff texture and pale spray hide destination/stronghold identity",
+    "Crown both times generic mottled green knoll/repeated grass/flat sea horizon;90 creature cropped by story HUD"
+  ],
+  "weather": "clear actual production empty delta",
+  "bar_a": "BLOCK",
+  "renderer": "gl_compatibility",
+  "criterion": "F39#4 OPEN/BLOCKED; F39 umbrella OPEN",
+  "bar_b": "BLOCK",
+  "reviewer": "/root/f26_presets_review",
+  "next": "F38#4 village/Hall; F39#3 separate authorized presentation-weather work",
+  "planned_frames": 20,
+  "elapsed_seconds": 688
+}
