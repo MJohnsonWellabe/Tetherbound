@@ -1,0 +1,19 @@
+{
+  "subject": "terrapup",
+  "status": "drafted_inspected_reference_candidate_OFF",
+  "method": "built_in_imagegen",
+  "reference": "res://assets/creatures/tetherbound/terrapup/reference/f36-standing-v1.png",
+  "sha256": "7d077b8cf53b3539b348d354bebbd6bf539f39136b9b349b7ba263c712ccee50",
+  "identity_reference": "res://assets/creatures/tetherbound/terrapup/reference/three_quarter.png",
+  "prompt": "Use case: original stylized creature concept reference for Tetherbound's authorized F36 creature refinement. Image 1 is the established Terrapup identity reference, not an edit target. Generate ONE full-body three-quarter studio view of exactly this same Terrapup in a balanced neutral standing quadruped pose suitable for a skeletal rig. Preserve its rounded brown puppy face, cream central forehead stripe and eyebrows, cream muzzle and chest, large teal-blue eyes, small upright rounded ears, broad nose, chunky paws with natural gold-brown claws, broad moss-green and gray stone shell/back plates, short stony tail. Preserve the installed character's proportions and appealing chunky silhouette; no new species or evolution. All four legs and paws should be separately visible, with modest natural spacing and clear joints, the belly separated from the ground, forelegs separate from torso and hindlegs; mouth closed, no crouch or seated pose. Face and eye area unobstructed. Stylized tactile fur masses and designed readable stone/cream/brown/moss colour blocks, moderate surface detail rather than hair noise. Plain neutral light grey background, even soft studio lighting, whole body and tail inside frame, all paws grounded, no person, ruler, text, props, clothing, mechanical armour, floating rocks, haze, sparks or Team Tether red. Produce a coherent riggable natural body; no fused limbs or exaggerated body redesign. The resulting reference is for an already larger-than-trainer creature; no shrinking design.",
+  "inspection": {
+    "identity": "Brown puppy face, cream forehead/muzzle/chest, teal eyes, rounded upright ears, mossy stone back/paw accents and stony short tail preserved",
+    "riggability": "Neutral standing body, four distinct grounded paws; far hind leg partly occluded by torso",
+    "disposition": "Eligible for one attended guarded Smart Topology textured candidate in authorized F36 priority batch; inspect before integration; no shipping flag flip",
+    "limits": "One studio view does not prove reverse anatomy, topology, scale, rig/pose contact or gameplay appeal"
+  },
+  "installed_height_reference_m": 3.8499999046,
+  "native_scale_reference_run": 37630787255,
+  "meshy_task_ids": [],
+  "default_enabled": false
+}
