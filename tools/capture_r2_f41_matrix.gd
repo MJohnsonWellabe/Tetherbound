@@ -8,7 +8,7 @@ extends "res://tools/capture_lookdev_stormwood.gd"
 ## --f41-candidate stages the same local config overlays as the installed
 ## capture runner, only in this capture process. Shipping flags stay off.
 const REGIONAL_CONFIGS := ["stormheart_presentation", "stormwood_road_current",
-	"stormwood_ground_finish", "stormwood_glass_field"]
+	"stormwood_ground_finish", "stormwood_glass_field", "stormwood_surge"]
 var _original_configs: Dictionary = {}
 var _candidate_preview := false
 const SEGMENTS := ["storm-day", "storm-night", "released-day", "released-night"]
@@ -59,6 +59,7 @@ func _stage_candidate_configs() -> bool:
 			"stormwood_road_current": config.finish_candidate.enabled = true
 			"stormwood_ground_finish": config.enabled = true
 			"stormwood_glass_field": config.scorched_scars = true
+			"stormwood_surge": config.presentation.telegraph.leader_volume_candidate.enabled = true
 		var file := FileAccess.open(path, FileAccess.WRITE)
 		if file == null:
 			_failures.append("F41 candidate config cannot be staged: %s" % path)

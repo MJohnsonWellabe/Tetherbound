@@ -573,6 +573,9 @@ uniform float ramp_start = 0.75;
 uniform float fill_alpha = 0.14;
 uniform float charged_fill_alpha = 0.34;
 uniform float final_fill_alpha = 0.5;
+uniform float volume_candidate = 0.0;
+uniform float leader_arc_height = 0.55;
+uniform float leader_opacity_floor = 0.35;
 varying float r;
 varying vec2 ground_xz;
 void vertex() {
@@ -589,6 +592,9 @@ void vertex() {
 	// instead of floating (or cutting in) at rim height on steep ground.
 	float radial = len / rim_radius;
 	VERTEX.y = centre_height + (rim_h - centre_height) * radial + lift;
+	// Candidate leaders rise out of the ground between their anchored
+	// endpoints. Only the lightning strokes remain visible on this surface.
+	VERTEX.y += volume_candidate * sin(clamp(radial, 0.0, 1.0) * 3.14159265) * leader_arc_height;
 	vec4 view = MODELVIEW_MATRIX * vec4(VERTEX, 1.0);
 	float dist = length(view.xyz);
 	// Only the rim and glow are pulled toward the camera (about grass
@@ -656,6 +662,13 @@ void fragment() {
 	float a_edge = outer * dash_solid * 0.10;
 	float a_fill = inside * (fill_alpha + charged * (charged_fill_alpha - fill_alpha)
 		+ urgency * (final_fill_alpha - charged_fill_alpha) * (1.0 - strike));
+	// F41#5: the candidate communicates charge with raised lightning, not
+	// a bright disc or circular rim. Whole leaders remain legible from the
+	// warning's first frame; the existing inward heads still give its timing.
+	a_rim *= 1.0 - volume_candidate;
+	a_edge *= 1.0 - volume_candidate;
+	a_fill *= 1.0 - volume_candidate;
+	leaders += volume_candidate * leader * leader_opacity_floor;
 	float white_hot = urgency * (1.0 - strike);
 	vec3 hot = mix(mix(rim_colour, vec3(1.0, 0.9, 1.0), white_hot), vec3(0.92, 0.72, 1.0), strike);
 	vec3 fill_colour = mix(rim_colour * 0.55, vec3(1.0, 0.75, 1.0), white_hot);
@@ -739,6 +752,7 @@ func _telegraph_unit_mesh() -> ArrayMesh:
 
 func _telegraph_material() -> ShaderMaterial:
 	var cfg := _telegraph_config()
+	var volume: Dictionary = cfg.get("leader_volume_candidate", {})
 	if _telegraph_shader == null:
 		_telegraph_shader = Shader.new()
 		_telegraph_shader.code = TELEGRAPH_SHADER
@@ -759,6 +773,9 @@ func _telegraph_material() -> ShaderMaterial:
 	material.set_shader_parameter("fill_alpha", float(cfg.get("fill_alpha", 0.14)))
 	material.set_shader_parameter("charged_fill_alpha", float(cfg.get("charged_fill_alpha", 0.34)))
 	material.set_shader_parameter("final_fill_alpha", float(cfg.get("final_fill_alpha", 0.5)))
+	material.set_shader_parameter("volume_candidate", 1.0 if bool(volume.get("enabled", false)) else 0.0)
+	material.set_shader_parameter("leader_arc_height", clampf(float(volume.get("arc_height_m", 0.55)), 0.0, 2.0))
+	material.set_shader_parameter("leader_opacity_floor", clampf(float(volume.get("opacity_floor", 0.35)), 0.0, 1.0))
 	material.set_shader_parameter("pulse_hz_start", float(cfg.get("pulse_hz_start", 2.0)))
 	material.set_shader_parameter("pulse_hz_end", float(cfg.get("pulse_hz_end", 7.0)))
 	material.set_shader_parameter("telegraph_seconds", float(rules.config.strike.telegraph_seconds))
