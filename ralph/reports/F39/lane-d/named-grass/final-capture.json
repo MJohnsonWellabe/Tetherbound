@@ -1,0 +1,170 @@
+{
+  "scope": "P2-057 nine named-character post pairs, second/final candidate; full F39#2 OPEN",
+  "source_commit": "873a6c8914155f73a9397f47b9affff369b19aa7",
+  "run": 37703649582,
+  "artifact": 11518729282,
+  "before_run": 37700101593,
+  "before_artifact": 11517423176,
+  "complete": true,
+  "failures": [],
+  "frames": 9,
+  "exit": 0,
+  "seconds": 330,
+  "resolution": [
+    1280,
+    720
+  ],
+  "renderer": "gl_compatibility",
+  "comparisons": [
+    {
+      "id": "water_adair",
+      "same_stand": true,
+      "same_target": true,
+      "same_heading": true,
+      "before_stand": [
+        412.0,
+        674.0
+      ],
+      "after_stand": [
+        412.0,
+        674.0
+      ],
+      "camera_distance": 5.76743459701538,
+      "on_floor": true
+    },
+    {
+      "id": "water_bren",
+      "same_stand": true,
+      "same_target": true,
+      "same_heading": true,
+      "before_stand": [
+        330.0,
+        1134.0
+      ],
+      "after_stand": [
+        330.0,
+        1134.0
+      ],
+      "camera_distance": 5.76748704910278,
+      "on_floor": true
+    },
+    {
+      "id": "water_edda",
+      "same_stand": true,
+      "same_target": true,
+      "same_heading": true,
+      "before_stand": [
+        160.0,
+        2335.0
+      ],
+      "after_stand": [
+        160.0,
+        2335.0
+      ],
+      "camera_distance": 5.76748180389404,
+      "on_floor": true
+    },
+    {
+      "id": "water_corin",
+      "same_stand": true,
+      "same_target": true,
+      "same_heading": true,
+      "before_stand": [
+        142.0,
+        2324.0
+      ],
+      "after_stand": [
+        142.0,
+        2324.0
+      ],
+      "camera_distance": 5.76750993728638,
+      "on_floor": true
+    },
+    {
+      "id": "water_trainer_daro",
+      "same_stand": true,
+      "same_target": true,
+      "same_heading": true,
+      "before_stand": [
+        19.0,
+        422.0
+      ],
+      "after_stand": [
+        19.0,
+        422.0
+      ],
+      "camera_distance": 5.76740312576294,
+      "on_floor": true
+    },
+    {
+      "id": "water_trainer_yara",
+      "same_stand": true,
+      "same_target": true,
+      "same_heading": true,
+      "before_stand": [
+        1207.0,
+        2202.0
+      ],
+      "after_stand": [
+        1207.0,
+        2202.0
+      ],
+      "camera_distance": 5.76749753952026,
+      "on_floor": true
+    },
+    {
+      "id": "water_trainer_bex",
+      "same_stand": true,
+      "same_target": true,
+      "same_heading": true,
+      "before_stand": [
+        672.0,
+        2807.0
+      ],
+      "after_stand": [
+        672.0,
+        2807.0
+      ],
+      "camera_distance": 5.76748323440552,
+      "on_floor": true
+    },
+    {
+      "id": "water_trainer_calder",
+      "same_stand": true,
+      "same_target": true,
+      "same_heading": true,
+      "before_stand": [
+        744.0,
+        3178.0
+      ],
+      "after_stand": [
+        744.0,
+        3178.0
+      ],
+      "camera_distance": 5.76749753952026,
+      "on_floor": true
+    },
+    {
+      "id": "water_trainer_evi",
+      "same_stand": true,
+      "same_target": true,
+      "same_heading": true,
+      "before_stand": [
+        207.0,
+        4112.0
+      ],
+      "after_stand": [
+        207.0,
+        4112.0
+      ],
+      "camera_distance": 5.76747512817383,
+      "on_floor": true
+    }
+  ],
+  "disclosures": [
+    "Existing tools/phase2_capture_characters.gd with exact nine catalog subsets. Teleported stand selection; HUD suppressed; day/post stills only.",
+    "No earned campaign, real fight, night, movement or full Bars A/B claim. No three-consecutive-grounded-frame field in this driver.",
+    "Raw nine JPGs and manifest remain hosted artifact; contact composition only. Original before retained without rerun."
+  ],
+  "blind_review": "PENDING"
+}
