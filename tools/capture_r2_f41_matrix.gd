@@ -14,7 +14,11 @@ var _candidate_preview := false
 
 
 func _run() -> void:
-	_candidate_preview = OS.get_cmdline_user_args().has("--f41-candidate")
+	# The installed runner stages externally and names its variant explicitly.
+	# Re-applying the same overlay is idempotent; restoration returns its exact
+	# incoming bytes for that runner's finally block to restore in turn.
+	_candidate_preview = OS.get_cmdline_user_args().has("--f41-candidate") \
+		or OS.get_cmdline_user_args().has("--label=candidate")
 	if _candidate_preview and not _stage_candidate_configs():
 		_restore_candidate_configs()
 		for failure: String in _failures:
