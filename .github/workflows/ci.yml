@@ -442,56 +442,9 @@ jobs:
   # failing here means a human or a lane runs `godot --headless --path .
   # --script scripts/world/bake_playground_scatter.gd` and commits the
   # result, same as today.
-  verify-bake-freshness:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs: changes
-    if: needs.changes.outputs.code == 'true'
-
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          filter: blob:none
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /*
-            !/ralph/
-            !/docs/
-            !/shots/
-            !/assets_raw/
-            !/archive/
-      - uses: ./.github/actions/setup-godot
-      - name: Check the playground scatter bake is fresh
-        run: |
-          godot --headless --path . --script tests/run_tests.gd \
-            -- --only=test_scatter_perf_budget.gd::test_playground_bake_is_committed_and_fresh
-      - name: Check the playground terrain bake is fresh
-        run: |
-          godot --headless --path . --script tests/run_tests.gd \
-            -- --only=test_terrain_bake_freshness.gd::test_playground_terrain_bake_is_committed_and_fresh
-      - name: Check initialized shared terrain mipmaps
-        run: |
-          set -euo pipefail
-          godot --headless --path . --script tools/probe_terrain_texture_mipmaps.gd 2>&1 | tee /tmp/terrain-mipmaps.log
-          if grep -qE 'SCRIPT ERROR|Parse Error|ERROR:' /tmp/terrain-mipmaps.log; then
-            exit 1
-          fi
-
-  # HARNESS-HYGIENE-0903 (terrain steps now folded into verify-bake-freshness
-  # above, 2026-09-26, one runner instead of two). `data/terrain/playground`'s
-  # own equivalent of the scatter check -- the gap the scatter job's own comment names ("anything about
-  # data/terrain/playground, which has no equivalent freshness check at
-  # all"). `terrain_playground.json` was edited (doc-path text in comments)
-  # during the 2026-09-02 repository reset with no re-bake, and nothing on
-  # disk or in CI could have caught it. Same shape as the job above: one
-  # dedicated, fast, named job so a stale terrain bake shows up as one red
-  # line in the run summary instead of buried in a shard's log.
-  #
-  # Does NOT catch a config edit that lands together with a correct re-bake
-  # but describes the wrong intent. Does NOT re-bake or auto-commit anything
-  # -- failing here means a human or a lane runs `godot --headless --path .
-  # --script scripts/world/build_playground_terrain.gd` and commits the
-  # result (region files AND manifest.json).
+  # CI-SPEED (owner, 2026-10-07): verify-bake-freshness (three ~6 s checks
+  # behind a ~2 min checkout and Godot setup) now runs as the last steps of
+  # the `export` job, which already imports the same tree on every code change.
   verify-unit-tests:
     runs-on: ubuntu-latest
     # FOUR shards, 2026-09-01 (down from ten). This shard's file list already
@@ -695,7 +648,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     needs: changes
-    if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-veg-corridor|'))
+    # CI-SPEED (owner, 2026-10-07): NIGHTLY ONLY -- vegetation placement data regression; runs on the 8-hourly schedule and on dispatch, not on a full-ci PR.
+    if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-veg-corridor|'))
 
     steps:
       - uses: actions/checkout@v4
@@ -749,7 +703,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     needs: changes
-    if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-scatter-rules|'))
+    # CI-SPEED (owner, 2026-10-07): NIGHTLY ONLY -- vegetation/scatter placement data regression; runs on the 8-hourly schedule and on dispatch, not on a full-ci PR.
+    if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-scatter-rules|'))
 
     steps:
       - uses: actions/checkout@v4
@@ -973,8 +928,9 @@ jobs:
             echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
           done
           exit 1
+      # CI-SPEED: NIGHTLY ONLY (presentation: cues reach the mixer).
       - name: Verify audio
-        if: ${{ !cancelled() }}
+        if: ${{ !cancelled() && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
         env: { SMOKE: audio, RETRIES: 2 }
         run: |
           set -uo pipefail
@@ -1813,8 +1769,9 @@ jobs:
       - name: Verify ordinary Stormwood to Water gate path
         if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
         run: timeout 240s godot --headless --path . --script tests/smoke_stormwood_water_gate_path.gd
+      # CI-SPEED: NIGHTLY ONLY (presentation: Surge audio cue wiring).
       - name: Verify Stormwood Surge audio observer
-        if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
+        if: ${{ matrix.group == 'stormwood' && (!cancelled()) && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
         run: timeout 240s godot --headless --path . --script tests/smoke_stormwood_surge_audio.gd
       - name: Verify Stormwood hosted encounter admission
         if: ${{ matrix.group == 'stormwood' && (!cancelled()) }}
@@ -1933,7 +1890,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        group: [meadows, tidewake]
+        # CI-SPEED (owner, 2026-10-07): the tidewake group (three long scripted
+        # walks of the land loops and return shortcuts, ~15 min) runs NIGHTLY
+        # ONLY; Tidewake travel/water stays gated by verify-regions-shard
+        # (tidewake) and the smoke_net_water_* smokes.
+        group: ${{ fromJSON((github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && '["meadows", "tidewake"]' || '["meadows"]') }}
     # Measured 2026-09-26 (run 36244390545): 8.4 min job wall before the
     # Tidewake loops steps. Those three are bounded at 1430 s (23.8 min) in
     # total, so the worst case is ~32 min plus runner variance; 45 min keeps
@@ -1997,8 +1958,9 @@ jobs:
             echo "smoke_${SMOKE}.gd failed on attempt ${n}/${RETRIES}"
           done
           exit 1
+      # CI-SPEED: NIGHTLY ONLY (presentation: art loads at its size).
       - name: Verify art
-        if: ${{ matrix.group == 'meadows' && (!cancelled()) }}
+        if: ${{ matrix.group == 'meadows' && (!cancelled()) && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') }}
         env: { SMOKE: art, RETRIES: 1 }
         run: |
           set -uo pipefail
@@ -2617,6 +2579,10 @@ jobs:
             echo "smoke_gate_b_continuous.gd failed on attempt ${n}/${RETRIES}"
           done
           exit 1
+      # Moved here from verify-veridian-offer (now nightly) by CI-SPEED.
+      - name: Verify rift gate opens once
+        if: ${{ !cancelled() }}
+        run: timeout 600s godot --headless --path . --script tests/smoke_rift_gate_opens_once.gd
 
   verify-continuous-core-known-red:
     runs-on: ubuntu-latest
@@ -2930,6 +2896,27 @@ jobs:
           path: build/windows/
           retention-days: 14
 
+      # Folded in from verify-bake-freshness (CI-SPEED, 2026-10-07); the same
+      # three checks, run whether or not the export steps passed.
+      - name: Check the playground scatter bake is fresh
+        if: ${{ !cancelled() }}
+        run: |
+          godot --headless --path . --script tests/run_tests.gd \
+            -- --only=test_scatter_perf_budget.gd::test_playground_bake_is_committed_and_fresh
+      - name: Check the playground terrain bake is fresh
+        if: ${{ !cancelled() }}
+        run: |
+          godot --headless --path . --script tests/run_tests.gd \
+            -- --only=test_terrain_bake_freshness.gd::test_playground_terrain_bake_is_committed_and_fresh
+      - name: Check initialized shared terrain mipmaps
+        if: ${{ !cancelled() }}
+        run: |
+          set -euo pipefail
+          godot --headless --path . --script tools/probe_terrain_texture_mipmaps.gd 2>&1 | tee /tmp/terrain-mipmaps.log
+          if grep -qE 'SCRIPT ERROR|Parse Error|ERROR:' /tmp/terrain-mipmaps.log; then
+            exit 1
+          fi
+
   # One stable required status for branch protection. A skipped known-red job
   # is an explicit exclusion; an active failure/cancellation or a missing
   # export on a code change cannot become a green merge gate.
@@ -2945,7 +2932,8 @@ jobs:
         group: [space, capacity, recovery]
     timeout-minutes: 50
     needs: changes
-    if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-veridian-offer|'))
+    # CI-SPEED (owner, 2026-10-07): NIGHTLY ONLY -- six solo world boots (~26 runner-min) walking the offer; the per-participant offer stays gated by the five smoke_net_veridian_* smokes. The rift gate smoke moved to verify-gate-b-core.
+    if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-veridian-offer|'))
     steps:
       - uses: actions/checkout@v4
         with:
@@ -3000,35 +2988,10 @@ jobs:
           name: veridian-offer-${{ matrix.group }}-native
           path: /tmp/veridian-offer/*.log.gz
           if-no-files-found: warn
-      - name: Verify rift gate opens once
-        if: ${{ !cancelled() && matrix.group == 'space' }}
-        run: timeout 600s godot --headless --path . --script tests/smoke_rift_gate_opens_once.gd
 
-  verify-cloudreach-persistence:
-    # F08 (ACCEPTANCE 6.1): restored wind roads, Wings/shrine and the Stormwood
-    # key survive a real solo disk reload, each written once across the split
-    # world/character halves. Negative controls (--f08-unsaved / --f08-double)
-    # are run locally and recorded under ralph/reports/CLOUDREACH-LANE/f08-persistence/.
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    needs: changes
-    if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-cloudreach-persistence|'))
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          filter: blob:none
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /*
-            !/ralph/
-            !/docs/
-            !/shots/
-            !/assets_raw/
-            !/archive/
-      - uses: ./.github/actions/setup-godot
-      - name: Verify Cloudreach persistence tail
-        run: timeout 600s godot --headless --path . --script tests/smoke_cloudreach_persistence_tail.gd
-
+  # CI-SPEED (owner, 2026-10-07): the standalone verify-cloudreach-persistence
+  # job was removed: verify-regions-shard (world) runs the identical
+  # tests/smoke_cloudreach_persistence_tail.gd on every full run.
   verify-f18-earned-loop:
     # F18#5 (ACCEPTANCE 6.2): the ordinary-input loop with portals on. Fresh
     # opening and earned tools, a paid homestead Workbench, a deep Trail Camp
@@ -3039,7 +3002,8 @@ jobs:
     timeout-minutes: 35
     # A ~15-min job: queued first, on `changes` only (QUEUE ORDER above).
     needs: changes
-    if: needs.changes.outputs.full == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-f18-earned-loop|'))
+    # CI-SPEED (owner, 2026-10-07): NIGHTLY ONLY -- a 12.5-min scripted walk; its pieces stay gated by gate-b-core (opening), smoke_net_f18_fixture_teaching, smoke_net_homestead_station_craft and title_load_game.
+    if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-f18-earned-loop|'))
     steps:
       - uses: actions/checkout@v4
         with:
@@ -3093,7 +3057,8 @@ jobs:
         segment: [s0_setup_and_control, s1_ride_a, s2_ride_b]
     timeout-minutes: 30
     needs: changes
-    if: needs.changes.outputs.full == 'true' && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-cloudreach-midride-rejoin|'))
+    # CI-SPEED (owner, 2026-10-07): NIGHTLY ONLY -- rejoin stays gated by smoke_net_reconnect_keeps_character, behind_character_joins_ahead_world, realm_owner_disconnect_mid_fight and veridian_relic_key; the segment handoff checks still gate every run.
+    if: needs.changes.outputs.full == 'true' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && needs.changes.outputs.net == 'true' && (contains(needs.changes.outputs.jobs, '|ALL|') || contains(needs.changes.outputs.jobs, '|verify-cloudreach-midride-rejoin|'))
     steps:
       - uses: actions/checkout@v4
         with:
@@ -3245,9 +3210,7 @@ jobs:
       - verify-cloudreach-midride-rejoin
       - verify-segment-handoffs
       - verify-unbroken-chains
-      - verify-cloudreach-persistence
       - verify-f18-earned-loop
-      - verify-bake-freshness
       - verify-unit-tests
       - verify-veg-corridor
       - verify-scatter-rules

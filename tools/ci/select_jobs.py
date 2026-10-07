@@ -32,7 +32,7 @@ when its reach stays bounded: that realm's jobs (every job that runs a smoke
 carrying the realm in its name, plus REALM_JOBS) and the net group; the jobs
 that run each test/tool on the reach (by file stem, `SMOKE: <name>` or
 `--only=<name>`); the net group for tools/net and net smokes; PRESENTATION_JOBS
-for media. The ALWAYS_JOBS (unit shards, bake freshness, export, handoffs)
+for media. The ALWAYS_JOBS (unit shards, export with the bake checks, handoffs)
 run on every code change regardless.
 
 REACH: a breadth-first walk over the files that name a file. A file is named
@@ -82,7 +82,7 @@ REALMS = {
 
 # Realm jobs that do not carry a realm smoke's name in their steps.
 REALM_JOBS = {
-    "cloudreach": {"verify-regions-shard", "verify-cloudreach-persistence", "verify-cloudreach-midride-rejoin",
+    "cloudreach": {"verify-regions-shard", "verify-cloudreach-midride-rejoin",
                    "verify-unbroken-chains"},
     "stormwood": {"verify-regions-shard"},
     "tidewake": {"verify-regions-shard", "verify-regions-relay"},
@@ -91,7 +91,7 @@ NET_JOBS = {"verify-multiplayer-shard", "verify-veridian-offer",
             "verify-cloudreach-midride-rejoin", "verify-unbroken-chains"}
 # Character texture binding / material cache and the terrain mipmap probe.
 PRESENTATION_JOBS = {"verify-regions-shard"}
-ALWAYS_JOBS = {"changes", "ci-gate", "verify-bake-freshness", "verify-unit-tests", "export",
+ALWAYS_JOBS = {"changes", "ci-gate", "verify-unit-tests", "export",
                "verify-segment-handoffs"}
 
 # Where the reference scan looks (text only).
