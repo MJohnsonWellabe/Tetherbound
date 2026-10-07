@@ -741,14 +741,16 @@ func _run_ultimates() -> void:
 	for move_id: String in ids:
 		if not _ultimate_filter.is_empty() and move_id not in _ultimate_filter: continue
 		if not _moves.has(move_id): _failures.append("Ultimate visual without move " + move_id); continue
-		for count: int in counts: await _exercise_ultimate(move_id, int(count), cfg)
+		for count: int in counts:
+			var ranks: Array = [1] if _rank_filter.is_empty() else _rank_filter
+			for rank: int in ranks: await _exercise_ultimate(move_id, int(count), cfg, rank)
 
-func _exercise_ultimate(move_id: String, count: int, cfg: Dictionary) -> void:
+func _exercise_ultimate(move_id: String, count: int, cfg: Dictionary, rank: int = 1) -> void:
 	var move: Dictionary = _moves[move_id]
 	var signature: Dictionary = move.get("ultimate", {})
 	var duration := float(signature.get("presentation_seconds", 2.4))
 	var travel := minf(float(cfg.travel_seconds), duration * 0.5)
-	var encounter := "%s:b%d" % [move_id, count]
+	var encounter := "%s:b%d:r%d" % [move_id, count, rank]
 	var species := move_id.trim_prefix("ultimate_")
 	var case := {"id": move_id}
 	if bool(signature.get("unique", false)):
@@ -761,13 +763,18 @@ func _exercise_ultimate(move_id: String, count: int, cfg: Dictionary) -> void:
 	var binding := {"character_id": "f35-proof", "creature_uid": "f35-proof-attacker",
 		"encounter_id": encounter, "generation": 1, "action": 1}
 	var spec := {"slot": "ultimate", "move_id": move_id, "action_id": encounter + ":1",
-		"actor_binding": binding, "mastery_rank": 1, "breakthrough_count": count,
+		"actor_binding": binding, "mastery_rank": rank, "breakthrough_count": count,
 		"ultimate": signature.duplicate(true), "vfx": move.get("vfx", {}).duplicate(true)}
 	var context := {"current_actor": binding, "travel_seconds": travel,
 		"recipient_character_id": "f35-proof", "source_ground": _ground_point(_arena.to_local(from).x, 0.0),
 		"target_ground": _ground_point(_target_x, 0.0)}
 	var effect: Node3D = ULTIMATES.launch(_arena, from, to, spec, context)
 	if effect == null: _failures.append("Ultimate launch refused " + encounter); return
+	if not LIBRARY.ultimate_override(move_id).is_empty():
+		var actual_row: Dictionary = effect.get("_row")
+		var actual_frozen: Dictionary = effect.get("_context")
+		if actual_row.get("mastery_rank") != rank or actual_frozen.get("mastery_rank") != rank:
+			_failures.append("Ultimate override replaced earned mastery " + encounter)
 	if _current_attacker != null and _current_attacker.has_method("play_attack"): _current_attacker.call("play_attack")
 	var arrivals := [0]
 	var away := (to - from).normalized()
@@ -795,7 +802,7 @@ func _exercise_ultimate(move_id: String, count: int, cfg: Dictionary) -> void:
 			captured[phase] = {"wall_seconds": float(Time.get_ticks_usec() - started) / 1000000.0, "arrivals": arrivals[0]}
 	if captured.size() != shutters.size(): _failures.append("Incomplete ultimate frames " + encounter)
 	if int(arrivals[0]) != 1: _failures.append("Ultimate arrival count %d %s" % [arrivals[0], encounter])
-	_records.append({"id": move_id, "breakthrough_count": count, "presentation_seconds": duration,
+	_records.append({"id": move_id, "mastery_rank": rank, "breakthrough_count": count, "presentation_seconds": duration,
 		"travel_seconds": travel, "unique": bool(signature.get("unique", false)), "attacker": case,
 		"captures": captured, "arrivals": arrivals[0]})
 	if is_instance_valid(effect): effect.call("cancel_presentation")

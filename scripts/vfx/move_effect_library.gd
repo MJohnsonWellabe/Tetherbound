@@ -117,6 +117,19 @@ static func launch_presentation(parent: Node, from: Vector3, to: Vector3, visual
 	if not from.is_finite() or not to.is_finite(): return null
 	var row := resolve(visual, int(frozen.get("mastery_rank", 1)))
 	if row.is_empty(): return null
+	var growth: Dictionary = frozen.get("breakthrough_growth", {})
+	if not growth.is_empty():
+		# The accepted rank already selected the mastery tier. Authored
+		# breakthrough detail uses the same body/accent clamps and leases.
+		var params: Dictionary = row.parameters
+		params["size"] = maxf(0.01, float(params.size) * float(growth.get("size_scale", 1.0)))
+		var base_count := int(visual.get("count", config().archetypes[row.archetype].parameters.get("count", 1)))
+		if base_count > 1:
+			params["count"] = clampi(int(params.count) + int(growth.get("count_add", 0)), 1, int(config().get("max_body_count", 12)))
+		row.impact["accent_count"] = clampi(int(round(float(row.impact.get("accent_count", 4)) * float(growth.get("accent_scale", 1.0)))), 4, 18)
+		if int(growth.get("secondary_layers", 0)) > 0:
+			row["secondary_trail"] = true
+			row["impact_layer"] = true
 	var effect := EFFECT.new()
 	effect.configure(from, to, row, frozen_copy(frozen), float(frozen.get("travel_seconds", 0.0)), config())
 	parent.add_child(effect)
