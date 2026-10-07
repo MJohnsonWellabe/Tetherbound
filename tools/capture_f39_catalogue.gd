@@ -13,6 +13,7 @@ const HEADINGS := [0.0, -45.0, 45.0, 90.0, 180.0]
 var _candidate := false
 var _weather_name := "clear"
 var _candidate_applied := false
+var _candidate_verified := false
 var _seed := 2042
 var _save_fixture := ""
 
@@ -81,12 +82,57 @@ func _capture_row(row: Dictionary) -> void:
 		var flow_settings: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(FLOW.VISUAL_CONFIG))
 		flow_settings["enabled"] = _candidate
 		flow_settings["ridges_enabled"] = _candidate
+		var observations: Array[Dictionary] = []
+		var falls_count := 0
+		var flow_count := 0
 		for found: Node in _world.find_children("*", "MeshInstance3D", true, false):
 			if found.name == "VeilfallFallColumns":
 				FALLS.apply_visual_settings((found as MeshInstance3D).material_override as ShaderMaterial, fall_settings)
+				falls_count += 1
+				observations.append(_observe_material(found as MeshInstance3D,
+					["visual_far_core_enabled"], FALLS.VISUAL_UNIFORMS, fall_settings))
 			elif found.get_script() == FLOW:
 				found.call("apply_visual_settings", flow_settings)
+				flow_count += 1
+				observations.append(_observe_material(found as MeshInstance3D,
+					["visual_groups_enabled", "visual_ridges_enabled"], FLOW.VISUAL_UNIFORMS, flow_settings))
+		_manifest["f39_material_observations"] = observations
+		_manifest["f39_matched_falls_nodes"] = falls_count
+		_manifest["f39_matched_flow_nodes"] = flow_count
+		if falls_count == 0 or flow_count == 0:
+			_failures.append("F39 production falls/current materials were not both found")
+		_candidate_verified = not observations.is_empty()
+		for observed: Dictionary in observations:
+			_candidate_verified = _candidate_verified and bool(observed.get("matches_requested", false))
+		_candidate_verified = _candidate_verified and falls_count > 0 and flow_count > 0
+		_manifest["f39_material_override_verified"] = _candidate_verified
+	if not _candidate_verified:
+		_write_manifest()
+		return
 	await super._capture_row(row)
+
+
+func _observe_material(node: MeshInstance3D, gates: Array, uniforms: Array,
+		settings: Dictionary) -> Dictionary:
+	var observed := {"node": str(node.get_path()), "gates": {}, "uniforms": {}, "matches_requested": true}
+	var material := node.material_override as ShaderMaterial
+	if material == null:
+		observed.matches_requested = false
+	else:
+		for key: String in gates:
+			var actual: Variant = material.get_shader_parameter(key)
+			observed.gates[key] = actual
+			if actual != _candidate:
+				observed.matches_requested = false
+		for key: String in uniforms:
+			var actual: Variant = material.get_shader_parameter(key)
+			observed.uniforms[key] = actual
+			if _candidate and settings.get("shader", {}).has(key):
+				if actual == null or not is_equal_approx(float(actual), float(settings.shader[key])):
+					observed.matches_requested = false
+	if not bool(observed.matches_requested):
+		_failures.append("F39 visual material override did not match request: %s" % str(node.get_path()))
+	return observed
 
 
 func _pin_time(time_name: String) -> Dictionary:
