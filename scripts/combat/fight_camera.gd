@@ -340,6 +340,8 @@ static func project_bounds(lens: Transform3D, envelope: Dictionary,
 	var lens_inverse := lens.affine_inverse()
 	var in_front := false
 	var reach: float = 1.0
+	var hull_lo := Vector2(INF,INF)
+	var hull_hi := Vector2(-INF,-INF)
 	for point: Vector3 in envelope.points:
 		var local: Vector3 = lens_inverse*point
 		if not local.is_finite(): return {"valid":false}
@@ -351,14 +353,31 @@ static func project_bounds(lens: Transform3D, envelope: Dictionary,
 		var twice_area := 0.0
 		for index: int in hull.size():
 			if not hull[index].is_finite(): return {"valid":false}
+			hull_lo = hull_lo.min(hull[index])
+			hull_hi = hull_hi.max(hull[index])
 			twice_area += hull[index].cross(hull[(index+1)%hull.size()])
 		if not is_finite(twice_area) or twice_area==0.0: return {"valid":false}
-	return {"valid":true,"in_front":in_front,"hull":hull,"envelope":envelope,"reach":reach}
+	var projection := {"valid":true,"in_front":in_front,"hull":hull,"envelope":envelope,"reach":reach}
+	if hull_lo.is_finite() and hull_hi.is_finite() and hull_hi.x>hull_lo.x and hull_hi.y>hull_lo.y:
+		# Keep exact extrema; reconstructing an end from position + size can
+		# round a touching edge into a false strict gap.
+		projection["hull_bounds"] = PackedVector2Array([hull_lo,hull_hi])
+	return projection
 
 static func projected_bounds_occlude(lens: Transform3D, actor_projection: Dictionary,
 		other_projection: Dictionary, fov: float, aspect: float) -> bool:
 	if not bool(actor_projection.get("valid",false)) or not bool(other_projection.get("valid",false)): return true
 	if not bool(other_projection.in_front): return false
+	# Candidate-local validated hull bounds can prove separation without polygon
+	# clipping. Touching edges and unavailable bounds retain the exact path.
+	if actor_projection.get("hull_bounds") is PackedVector2Array and other_projection.get("hull_bounds") is PackedVector2Array:
+		var a: PackedVector2Array = actor_projection.hull_bounds
+		var b: PackedVector2Array = other_projection.hull_bounds
+		if a.size()==2 and b.size()==2 and a[0].is_finite() and a[1].is_finite() \
+			and b[0].is_finite() and b[1].is_finite() \
+			and a[1].x>a[0].x and a[1].y>a[0].y and b[1].x>b[0].x and b[1].y>b[0].y \
+			and (a[1].x<b[0].x or b[1].x<a[0].x or a[1].y<b[0].y or b[1].y<a[0].y):
+			return false
 	var actor: Dictionary = actor_projection.envelope
 	var other: Dictionary = other_projection.envelope
 	var intersections: Array[PackedVector2Array] = Geometry2D.intersect_polygons(actor_projection.hull,other_projection.hull)

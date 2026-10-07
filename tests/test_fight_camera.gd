@@ -183,6 +183,25 @@ func test_foreground_envelopes_cover_feet_but_bodies_behind_do_not_occlude() -> 
 	var cover_pose := Transform3D(Basis.IDENTITY,Vector3(0,0,-4))
 	var cover := {"box":cover_box,"pose":cover_pose,"inverse":cover_pose.affine_inverse(),"points":FIT.box_points(cover_box,cover_pose)}
 	assert_true(FIT.bounds_occlude(Transform3D.IDENTITY,actor,cover,68.0,16.0/9.0,0.05),"foreground lower body must count even with clear head and torso")
+	var actor_projection := FIT.project_bounds(Transform3D.IDENTITY,actor,68.0,16.0/9.0,0.05)
+	for case: Dictionary in [
+		{"name":"disjoint","origin":Vector3(10,0,-4),"occludes":false},
+		{"name":"touch","origin":Vector3(0,-0.6,-4),"occludes":false},
+		{"name":"overlap","origin":Vector3(0,0,-4),"occludes":true},
+		{"name":"behind","origin":Vector3(0,0,-12),"occludes":false}]:
+		var case_pose := Transform3D(Basis.IDENTITY,case.origin)
+		var envelope := {"box":cover_box,"pose":case_pose,"inverse":case_pose.affine_inverse(),"points":FIT.box_points(cover_box,case_pose)}
+		var projected := FIT.project_bounds(Transform3D.IDENTITY,envelope,68.0,16.0/9.0,0.05,true)
+		assert_true(projected.has("hull_bounds"),"valid front hull retains candidate-local bounds")
+		if case.name=="touch":
+			assert_eq(projected.hull_bounds[0].y,actor_projection.hull_bounds[1].y,"touch case shares the projected edge")
+		assert_eq(FIT.projected_bounds_occlude(Transform3D.IDENTITY,actor_projection,projected,68.0,16.0/9.0),case.occludes,case.name+" preserves exact visibility")
+		projected.erase("hull_bounds")
+		assert_eq(FIT.projected_bounds_occlude(Transform3D.IDENTITY,actor_projection,projected,68.0,16.0/9.0),case.occludes,case.name+" missing bounds uses exact fallback")
+		projected["hull_bounds"] = PackedVector2Array([Vector2(INF,0),Vector2.ONE])
+		assert_eq(FIT.projected_bounds_occlude(Transform3D.IDENTITY,actor_projection,projected,68.0,16.0/9.0),case.occludes,case.name+" nonfinite bounds uses exact fallback")
+		projected["valid"] = false
+		assert_true(FIT.projected_bounds_occlude(Transform3D.IDENTITY,actor_projection,projected,68.0,16.0/9.0),"invalid projection fails closed before any broad-phase rejection")
 	cover_pose.origin.z=-12.0
 	cover={"box":cover_box,"pose":cover_pose,"inverse":cover_pose.affine_inverse(),"points":FIT.box_points(cover_box,cover_pose)}
 	assert_false(FIT.bounds_occlude(Transform3D.IDENTITY,actor,cover,68.0,16.0/9.0,0.05),"a projected overlap behind the actor is not foreground cover")
