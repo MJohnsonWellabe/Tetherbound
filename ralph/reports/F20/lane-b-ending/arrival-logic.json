@@ -1,0 +1,33 @@
+{
+  "kind": "hosted_portal_home_key_named_logic_batch",
+  "source_sha": "a46418be462c4fec42b137b03fa3a0c73831d5a9",
+  "run_id": 37627388649,
+  "script": "tests/run_tests.gd",
+  "args": "--only=test_f18_arrival_lifecycle.gd,test_f18_arrival_slots.gd,test_f18_cast_rounding.gd,test_foundation_travel_protocol.gd,test_portal_arrival_travel_reset.gd,test_home_key_clock.gd",
+  "tests": 24,
+  "assertions": 308,
+  "failed": 0,
+  "engine_errors": [
+    {
+      "count": 2,
+      "file": "tests/test_portal_arrival_travel_reset.gd",
+      "reason": "Existing detached body global_position query returned zero transform"
+    }
+  ],
+  "artifact": {
+    "id": 11485130990,
+    "name": "render-lane-b-arrival-lifecycle-units-37627388649",
+    "sha256": "be51255762d4ea65f8682529273623caeafbceefc17137c021a8170a905a0c5c",
+    "run_log_sha256": "e5f9aa5342e78be9a5ae20768dffeaa96d8eec6daa39ac200c1fdd4ba4ec6fe5"
+  },
+  "fixture_repair": {
+    "source_sha": "a95405500d33b691136adad9e3f6616cfb33a1b2",
+    "review": {
+      "agent": "/root/b_f20_review",
+      "verdict": "SOURCE APPROVE"
+    },
+    "changes": "Existing fixture attached to actual tree; exact nonzero live body anchor asserted",
+    "clean_hosted_rerun": "pending"
+  },
+  "criterion_pass": false
+}
