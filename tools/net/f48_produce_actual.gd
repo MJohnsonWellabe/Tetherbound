@@ -8,7 +8,7 @@ func _init() -> void:
 	var options: Dictionary = {}
 	for argument: String in OS.get_cmdline_user_args():
 		var pair: PackedStringArray = argument.split("=", true, 1)
-		if pair.size() != 2 or pair[1].is_empty() or options.has(pair[0]) or pair[0] not in ["--producer", "--loop-output", "--loop-profile", "--loop-profile-sha256", "--behind-guest-peer", "--diagnostic-trace"]:
+		if pair.size() != 2 or pair[1].is_empty() or options.has(pair[0]) or pair[0] not in ["--producer", "--loop-output", "--loop-profile", "--loop-profile-sha256", "--behind-guest-peer", "--diagnostic-trace", "--players-capture"]:
 			push_error("Unknown actual-input producer argument: " + argument)
 			quit(1)
 			return
@@ -18,6 +18,25 @@ func _init() -> void:
 		push_error("Unknown actual-input producer: " + producer)
 		quit(1)
 		return
+	if options.has("--players-capture"):
+		if producer != "boss_four" or options["--players-capture"] != "1":
+			push_error("Players capture requires --producer=boss_four --players-capture=1")
+			quit(1)
+			return
+		var resolution := OS.get_environment("TB_NET_PROOF_RESOLUTION")
+		if resolution.is_empty() and DisplayServer.get_name() != "headless":
+			# render.yml already selects this native window's raster. Forward
+			# it through the existing peer-render environment, not a new profile.
+			var window_size := DisplayServer.window_get_size()
+			resolution = "%dx%d" % [window_size.x, window_size.y]
+		if resolution not in ["1280x720", "1920x1080"]:
+			push_error("Players capture requires the existing render resolution 1280x720 or 1920x1080")
+			quit(1)
+			return
+		OS.set_environment("TB_NET_PROOF_RENDER", "1")
+		OS.set_environment("TB_NET_PROOF_RESOLUTION", resolution)
+		OS.set_environment("TB_F48_CAPTURE_PLAYERS", "1")
+		print("F48 Players capture enabled: four original native ENet peers at " + resolution + "; visual evidence requires review, no earned campaign credit.")
 	if options.has("--diagnostic-trace"):
 		if options["--diagnostic-trace"] != "1":
 			push_error("Actual-input diagnostic trace requires --diagnostic-trace=1")

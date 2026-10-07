@@ -7789,7 +7789,7 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			var sess := _session()
 			if sess == null:
 				return {"available": false}
-			return {
+			var snapshot := {
 				"available": true,
 				"active": bool(sess.call("is_active")),
 				"mode": str(sess.call("mode")),
@@ -7811,6 +7811,92 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				# having to remember what it handed out.
 				"enet_port": _enet_port,
 			}
+			if args.get("players_capture") == true:
+				# Read the production tab and the very Session it reads. This
+				# neither opens/selects a tab nor creates or refreshes any row.
+				var players_game := root.get_node_or_null(^"Game")
+				var players_menu: Node = players_game.call("menu") if players_game != null else null
+				var players_tab: Control = null
+				var tab_index := -1
+				if players_menu != null and players_menu.get_script() == preload("res://scripts/ui/game_menu.gd") \
+					and players_menu.call("is_open") == true and players_menu.call("current_tab_id") == "players":
+					var bodies: Array = players_menu.get("_bodies")
+					tab_index = int(players_menu.get("_index"))
+					if tab_index >= 0 and tab_index < bodies.size(): players_tab = bodies[tab_index] as Control
+				var bound: bool = players_tab != null and players_tab.get_script() == preload("res://scripts/ui/tab_players.gd") \
+					and players_tab.is_visible_in_tree() and players_tab.get("menu") == players_menu \
+					and players_game.get("session") == sess and players_tab.call("_session") == sess \
+					and _probe.call("input_owner_node") == players_menu and _probe.call("input_context") == "menu_players"
+				var by_peer: Dictionary = {}
+				var characters: Dictionary = {}
+				var identities_ok: bool = snapshot.active and snapshot.snapshot_ready and snapshot.peer_count == 4 \
+					and sess.call("transport_kind") == "enet" and snapshot.rows.size() == 4
+				for member: Dictionary in snapshot.rows:
+					var peer_id := int(member.get("peer_id", 0))
+					var character := str(member.get("character_id", ""))
+					identities_ok = identities_ok and peer_id > 0 and not character.is_empty() \
+						and not by_peer.has(peer_id) and not characters.has(character)
+					by_peer[peer_id] = member
+					characters[character] = true
+				var expected_characters: Variant = args.get("characters", [])
+				identities_ok = identities_ok and expected_characters is Array and expected_characters.size() == 4
+				var expected_seen: Dictionary = {}
+				if expected_characters is Array:
+					for character: Variant in expected_characters:
+						identities_ok = identities_ok and character is String and characters.has(character) and not expected_seen.has(character)
+						expected_seen[character] = true
+				var local: Variant = players_game.get("local") if players_game != null else null
+				identities_ok = identities_ok and local != null \
+					and by_peer.get(snapshot.peer_id, {}).get("character_id") == local.get("character_id")
+				var focus: Control = root.gui_get_focus_owner()
+				var list: VBoxContainer = players_tab.get("_list") as VBoxContainer if bound else null
+				var scroll: ScrollContainer = list.get_parent() as ScrollContainer if list != null else null
+				var footer: Label = players_menu.get("_footer") as Label if bound else null
+				var visible_rows: Array = []
+				var row_ids: Dictionary = {}
+				var guest_buttons: Array[Button] = []
+				var rows_ok := bound and scroll != null
+				if bound:
+					for displayed: Dictionary in players_tab.get("_rows"):
+						var peer_id := int(displayed.get("peer_id", 0))
+						var member: Dictionary = by_peer.get(peer_id, {})
+						var label: Label = displayed.get("label") as Label
+						var kick: Button = displayed.get("kick") as Button
+						var who_name := str(member.get("display_name", ""))
+						if who_name.is_empty(): who_name = "Trainer"
+						var label_matches: bool = label != null and label.is_visible_in_tree() \
+							and label.text.begins_with(who_name + " — " + str(member.get("realm", "meadows")))
+						var needs_kick: bool = snapshot.is_host and peer_id != 1
+						rows_ok = rows_ok and not member.is_empty() and not row_ids.has(peer_id) and label_matches \
+							and ((kick != null and kick.is_visible_in_tree() and not kick.disabled) if needs_kick else kick == null)
+						row_ids[peer_id] = true
+						if kick != null: guest_buttons.append(kick)
+						var label_rect: Rect2 = label.get_global_rect() if label != null else Rect2()
+						visible_rows.append({"peer_id": peer_id, "character_id": member.get("character_id", ""),
+							"label": label.text if label != null else "", "label_matches": label_matches,
+							"label_rect": str(label_rect), "fully_in_scroll": scroll != null and scroll.get_global_rect().encloses(label_rect),
+							"remove_available": kick != null, "focused": focus == kick if kick != null else false})
+				var footer_ready: bool = footer != null and footer.is_visible_in_tree() and not footer.text.is_empty()
+				var focus_ready: bool = bound and focus != null and focus.is_visible_in_tree() and players_menu.is_ancestor_of(focus)
+				var focus_in_scroll: bool = focus_ready and scroll != null and scroll.get_global_rect().encloses(focus.get_global_rect())
+				var initial_focus: bool = focus == guest_buttons[0] if snapshot.is_host and guest_buttons.size() == 3 \
+					else bound and not snapshot.is_host and focus == players_menu.get("_tab_buttons")[tab_index]
+				var window_size := DisplayServer.window_get_size()
+				var resolution := "%dx%d" % [window_size.x, window_size.y]
+				var native_raster: bool = DisplayServer.get_name() != "headless" and resolution in ["1280x720", "1920x1080"] \
+					and resolution == OS.get_environment("TB_NET_PROOF_RESOLUTION")
+				snapshot["players_capture"] = {"ready": identities_ok and rows_ok and row_ids.size() == 4 \
+					and guest_buttons.size() == (3 if snapshot.is_host else 0) and footer_ready and focus_ready \
+					and (focus_in_scroll if snapshot.is_host else true) and native_raster,
+					"bound_to_current_session": bound, "original_characters": identities_ok,
+					"session_instance_id": sess.get_instance_id(), "epoch": sess.call("_altar_current_epoch"),
+					"rows": visible_rows, "initial_focus": initial_focus,
+					"last_guest_focus": guest_buttons.size() == 3 and focus == guest_buttons.back(),
+					"focus_path": str(focus.get_path()) if focus != null else "", "focus_in_scroll": focus_in_scroll, "resolution": resolution,
+					"scroll_vertical": scroll.scroll_vertical if scroll != null else -1,
+					"scroll_rect": str(scroll.get_global_rect()) if scroll != null else "",
+					"footer": footer.text if footer != null else "", "footer_visible": footer_ready}
+			return snapshot
 		"local_pause":
 			# Acceptance item 16 / D102. Everything the "a menu does not freeze
 			# other players" smoke reads, off this process's own live objects.
