@@ -1,0 +1,54 @@
+{
+  "criterion": "F37#4",
+  "whole_criterion_proven": false,
+  "source": "aafe6101567b7d95f2de9da0fd754bddc23ae511",
+  "run": 37768075780,
+  "artifact": 11546117694,
+  "result": "PASS functional; whole criterion REJECT pending actual Low rejoin frames",
+  "logical_steps": 38,
+  "peer_invocations": 43,
+  "unexpected_failures": [],
+  "permitted_teardown": "Original step21 leave returns FAIL after deliberately dropped link; expected any, never promoted or suppressed",
+  "exit_code": 0,
+  "wall_seconds": 132,
+  "character_id": "character-b099f9fa780f53d3f2b68ebf41c20fb7",
+  "owned_uid": "creature-9ed0d05ece4c3652434c2dd71aa117c9",
+  "retained_dive_remaining_s": 14.9833333333335,
+  "restored_peer_id": 696186538,
+  "actual_components": [
+    "Production character save while mounted and diving",
+    "Final disconnect-written debt retained before live-memory wipe",
+    "Real production returning TitleJoin restores same character under new peerID",
+    "Same owned UID, exactly one body/mount, host and guest agree, no stale body/mount",
+    "Surface restoration retains exact saved debt; physical Jump resumes positive bounded saved allowance"
+  ],
+  "artifact_sha256": "416a5e25abcc8a24e9bed0b61c4eddc707bd9d2fd7d1c88c4f2f3eacb59397af",
+  "log_sha256": "5da5e548f7c7f0055756a9fd760a4e3bbf39c59efa565ffc142b0cd1a28250d6",
+  "proof_sha256": "42c42134c5bebe65c6611af63f842e32a0369f966c79c44c49916d7dca4bf4c8",
+  "engine_script_errors": 0,
+  "original_review": {
+    "reviewer": "b_f37_review",
+    "verdict": "BEHAVIOR APPROVE",
+    "whole": "REJECT pending actual Low post-rejoin restored ride/resumed Dive frames and original blind reviewer"
+  },
+  "source_bridge": {
+    "reviewed_target": "5b8f9f341d",
+    "verdict": "No affected-source bridge blocker found",
+    "affected_paths": [
+      "scripts/player/swim_controller.gd",
+      "scripts/world/water_riding_controller.gd",
+      "scripts/combat/water_encounter_director.gd",
+      "scripts/net/session.gd",
+      "scripts/net/ledger_rpc.gd",
+      "autoload/party.gd",
+      "autoload/player_state.gd",
+      "tools/net/proof_steps_f37.gd",
+      "tools/net/proof_scenarios/f37_ripplet_rejoin.json",
+      "data/config/water_swimming.json"
+    ],
+    "capture_only_followup": "d82281a3cb adds two existing on-demand captures after original savedUID/debt PASS;23c9df9cbe enforces and reports actualLowCompatibility; review pending; no hosted repetition"
+  },
+  "previous_failure": "0b166ae534 actual step36FAIL remains retained; this success establishes no cause for old failure",
+  "disclosed_fixture": "Original ownedL30Ripplet and breakthroughs before host admission plus water placements; no earnedfeast/campaign/device/visual acceptance",
+  "remaining_gate": "ROOT-scheduledD/E nativeLow frames only, original b_night_visual judge, whole F37#4 original APPROVE; reuse this passing mechanics packet"
+}
