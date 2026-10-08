@@ -1,5 +1,9 @@
 # Lane C network readiness races
 
+## Exact bag-slot preservation while an owner decision is pending
+
+`54db5a5c47` adds six lines before the backpack held-stack `move_slot`: use the existing Session owner mutation fence, preserving the held stack for retry when blocked. Pure selection and putting the stack back/cancelling remain available. No projection, oracle, deadline, receipt or flag changes. Ownership hunk posted before edit at issue572 comment6056815822. The existing backpack native case now checks exact full portable bytes during a real held travel-pack move; no new test function/class/fixture/harness. Same original reviewer **SOURCE APPROVE**. Changed-source existing `test_owner_passive_game_hooks.gd` proof is queued/running after corrected equipment run37756326386; the full F48#1 interruption/rejoin matrix remains open.
+
 # Current integration disposition: OPEN
 
 **Conditional integration hold closed:** corrected-wrapper run `37747617223` on `c6562709b52a2f0e2ce9c4158b9fc8d071333077`, artifact `11537142164`, ZIP SHA256 `5bc053e3d17860a2b61207b4ec6bcd483b50b6c653a2787c603679c59d16b80d`, passed existing camp and foundations, each with normal peer exits, empty fatal/failures and per-smoke exit0; whole exit0/296s. No peer SCRIPT/Parse/ERROR markers. Same original reviewer **APPROVE — original conditional integration review closed**, retaining all prior source and relevant passing proofs. F31#2 qualifies for whole-row READY using its retained Shrine verdict and complete paired-caller scope. Previously READY F43#0–3, F46#2 and F48#2 are not recounted. This closes the camp dependency; the historical failures below remain failures, and Kitchen/F27/final actor-vitals and broader co-op gates remain separate.
