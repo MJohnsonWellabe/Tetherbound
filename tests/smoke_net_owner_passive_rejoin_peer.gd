@@ -139,33 +139,82 @@ func _tag_step(action: String) -> Dictionary:
 		for frame in 90: await physics_frame
 		return {"verdict":"PASS", "detail":"submitted the same original Tag request again"}
 	if action != "op_tag_combo": return {"verdict":"ERROR", "detail":"unknown Tag step"}
+	var input: Node = null
+	for child: Node in manager.get_children():
+		if child.get_script() == preload("res://scripts/ui/tether_command_input.gd"): input = child
+	if input == null: return {"verdict":"FAIL", "detail":"actual mounted TetherCommandInput is missing for Tag"}
 	var before := _tag_state({})
 	var incoming_index := int(manager.call("_next_switchable_index", 1))
 	if incoming_index < 0: return {"verdict":"FAIL", "detail":"no actual healthy next owned companion"}
 	var incoming: RefCounted = (manager.get("_party") as Array)[incoming_index]
+	var attempts: Array[Dictionary] = []
 	for hit in 8:
 		var target: Node3D = director.get("_shared_opponent_proxy")
 		if target == null: target = director.get("_legacy_mirror")
 		var body: Node3D = director.ally_body()
 		if target == null or body == null or not manager.is_fighting():
-			return {"verdict":"FAIL", "detail":"actual Tag target or body lost before earned meter"}
+			return {"verdict":"FAIL", "detail":"actual Tag target or body lost before earned meter", "data":{"attempts":attempts}}
 		body.global_position = target.global_position + Vector3(0, 0, 3.0)
 		body.face_towards(target.global_position)
 		for frame in 15: await physics_frame
 		var meter := float(manager.tether_command_snapshot().get("meter", 0.0))
+		var observation: Dictionary = {"attempt":hit + 1, "meter_before":meter,
+			"foe_hp_before":float(manager.enemy().hp) if manager.enemy() != null else -1.0}
+		attempts.append(observation)
 		var strike: Dictionary = await _step_strike({"facing":[0,0,-1], "settle":1})
-		if strike.get("verdict") != "PASS": return strike
+		var strike_data: Dictionary = strike.get("data", {})
+		observation["strike"] = {"verdict":str(strike.get("verdict", "")), "ok":strike_data.get("ok"),
+			"code":str(strike_data.get("code", "")), "submitted_action":strike_data.get("submitted_action")}
+		observation["meter_after"] = float(manager.tether_command_snapshot().get("meter", 0.0))
+		observation["foe_hp_after"] = float(manager.enemy().hp) if manager.enemy() != null else -1.0
+		observation["refusal"] = (manager.get("last_encounter_refusal") as Dictionary).duplicate(true)
+		# These are local post-input observations, not a claim about a remote host's queues.
+		var id: String = str(before.get("encounter_id", ""))
+		var host: RefCounted = director.get("_encounter_host")
+		var host_local: bool = director.call("_is_host") == true and host != null
+		var pending: Dictionary = {"observed_ms":Time.get_ticks_msec(), "host_local":host_local,
+			"vitals_pending":director.call("ordinary_actor_vitals_pending", id), "proposals":[], "actors":[]}
+		for original: Dictionary in (director.get("_ordinary_actor_vitals_proposals") as Dictionary).values():
+			if original.get("encounter_id") != id: continue
+			var proposal: Dictionary = original.get("proposal", {})
+			pending.proposals.append({"action_id":str(proposal.get("action_id", "")),
+				"committed":original.get("committed"), "presented":original.get("presented"),
+				"receipt_id":str(proposal.get("settlement_receipt", {}).get("receipt_id", ""))})
+		var record: Dictionary = host.call("record", id) if host_local else director.get("_encounter")
+		var members: Array = record.get("participants", {}).values()
+		members.append_array(record.get("retained_actor_participants", {}).values())
+		for member: Dictionary in members:
+			for uid: String in member.get("actor_vitals", {}):
+				var actor: Dictionary = member.actor_vitals[uid]
+				pending.actors.append({"creature_uid":uid, "revision":actor.get("revision"),
+					"settled_revision":actor.get("settled_revision")})
+		if host_local:
+			pending["tether_items"] = []
+			for item: Dictionary in host.call("pending_tether_items", id):
+				pending.tether_items.append({"peer_id":item.get("peer_id"), "presented":item.get("presented"),
+					"sequence":item.get("intent", {}).get("request", {}).get("sequence")})
+			pending["actor_vitals"] = []
+			for actor: Dictionary in host.call("pending_actor_vitals", id):
+				pending.actor_vitals.append({"creature_uid":actor.get("creature_uid"),
+					"revision":actor.get("revision"), "settled_revision":actor.get("settled_revision")})
+		observation["pending_after_input"] = pending
+		if strike.get("verdict") != "PASS":
+			strike_data["attempts"] = attempts
+			strike["data"] = strike_data
+			return strike
 		for frame in 180:
 			await physics_frame
 			var snapshot: Dictionary = manager.tether_command_snapshot()
+			observation["meter_after"] = float(snapshot.get("meter", 0.0))
+			observation["foe_hp_after"] = float(manager.enemy().hp) if manager.enemy() != null else -1.0
+			observation["refusal"] = (manager.get("last_encounter_refusal") as Dictionary).duplicate(true)
 			if float(snapshot.get("meter", 0.0)) <= meter: continue
 			if float(snapshot.meter) < 40.0: break
 			if manager.call("can_switch") != true: continue
-			var deployment: Dictionary = director.tether_command_deployment()
-			_tag_request = preload("res://scripts/combat/tether_commands.gd").intent(str(manager.encounter_id()),
-				int(deployment.generation), int(snapshot.get("last_sequence", 0)) + 1, "tag_combo")
-			var submitted: bool = manager.submit_tether_command(_tag_request)
-			if not submitted: return {"verdict":"FAIL", "detail":"actual Tag submission refused"}
+			if not input.request("tag_combo"):
+				return {"verdict":"FAIL", "detail":"production TetherCommandInput refused Tag request", "data":{"attempts":attempts}}
+			_tag_request = preload("res://scripts/combat/tether_commands.gd").intent(str(input.get("_encounter_id")),
+				int(snapshot.get("generation", 0)), int(input.get("_sequence")), "tag_combo")
 			for settle in 180:
 				await physics_frame
 				if manager.active_creature() == incoming:
@@ -173,8 +222,8 @@ func _tag_step(action: String) -> Dictionary:
 						"data":{"before":before, "after":_tag_state({}), "request":_tag_request,
 							"incoming_uid":str(incoming.uid)}}
 			return {"verdict":"FAIL", "detail":"Tag did not switch after actual fresh hit",
-				"data":{"request":_tag_request, "state":_tag_state({}), "refusal":manager.get("last_encounter_refusal")}}
-	return {"verdict":"FAIL", "detail":"eight actual quick attempts did not earn a usable Tag window"}
+				"data":{"request":_tag_request, "state":_tag_state({}), "refusal":manager.get("last_encounter_refusal"), "attempts":attempts}}
+	return {"verdict":"FAIL", "detail":"eight actual quick attempts did not earn a usable Tag window", "data":{"attempts":attempts}}
 
 
 func _tag_state(args: Dictionary) -> Dictionary:

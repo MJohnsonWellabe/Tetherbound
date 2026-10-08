@@ -1,0 +1,81 @@
+{
+  "scope": "F42#0 sampled owned-companion roster and idle-vitals text presentation components; not full row",
+  "base_main": "347e490987e3cf8aaa46f5ba42ac6d3fb6eaab8d",
+  "components": {
+    "roster": {
+      "source_commit": "7c3e31186fbcc79f795e9386bc12e8981eb22eae",
+      "production": "hud.json exploration_roster group; party_strip.gd instance show_empty_slots defaulttrue and row visibility only; playground_hud.gd one field, mount assignment and guarded config read/set only",
+      "behavior": "Exploration hides unowned rows; TEAMn/5, owned entries and order unchanged. Combat's independent default instance retains five rows. No timer, reveal, input, party, inventory or state changes.",
+      "blind_verdict": "PASS four empty rows removed; TEAM1/5 and real Terrapup portrait/name/bond0/5/Lv1/statusbar readable and unclipped in both current rasters."
+    },
+    "vitals": {
+      "source_commit": "8262f892a6ff56a267cb46a2065c93513fa2bf45",
+      "production": "ONLY hud.json exploration_vitals group and playground_hud.gd idle-alpha field, guarded/clamped config read and two idle-fade target substitutions; EXCLUDE that commit's capture-tool changes",
+      "behavior": "Healthy idle alpha0.85, legacy FADE_ALPHA fallback and clamp[FADE_ALPHA,1]. Injury, hunger and sprint relevant-state targets remain1. No layout, combat or satiety mechanics change.",
+      "blind_verdict": "PASS HP100/100, FOOD and100% readable and unclipped at1080/720."
+    }
+  },
+  "captures": {
+    "baseline": {
+      "source_commit": "54e159028d0a5bb15cba95e567cfa9a30efc005e",
+      "run": 37624343486,
+      "artifact": 11484283995,
+      "complete": true,
+      "all_frames": 12,
+      "failures": [],
+      "exit": 0,
+      "seconds": 1284,
+      "scoped_frame": "exploration_hud.jpg at1920x1080; no baseline720 claim"
+    },
+    "after": {
+      "source_commit": "3e7341704793ea678e3a9726f2deeca7303b7e23",
+      "run": 37710438732,
+      "artifact": 11522175841,
+      "complete": true,
+      "stage": "finished",
+      "all_frames": 4,
+      "component_frames": 2,
+      "failures": [],
+      "exit": 0,
+      "seconds": 408,
+      "raster_pairs": ["1920x1080", "1280x720"],
+      "excluded": "Two incidental Players frames; Quick Items is separatelyREADY and not this component's production scope."
+    }
+  },
+  "logic": {
+    "run": 37709794024,
+    "artifact": 11520978748,
+    "source_commit": "a54c87c3bb0f88badfa3411dae4f12995e1f8201",
+    "proof": "Ten-file bounded batch includes nine existing HUD source/config-referencing files plus test_menu_data",
+    "tests": 197,
+    "assertions": 3231,
+    "failed": 0,
+    "exit": 0,
+    "seconds": 4
+  },
+  "area": {
+    "run": 37680516233,
+    "artifact": 11507629839,
+    "proof": "tests/smoke_gate_a_map_cycle.gd",
+    "result": "PASS retained actual menu/controller shell/input-ownership paths104s",
+    "applicability": "Original source reviewer confirms unchanged noninteractive presentation ownership/navigation/actions; no additional operation smoke required."
+  },
+  "blind_review": {
+    "agent": "/root/f26_presets_review",
+    "verdict": "PASS each sampled component independently",
+    "inspected": "All three actual originals; baseline1080 and current1080/720"
+  },
+  "independent_review": {
+    "agent": "/root/f42_visual_review",
+    "verdict": "APPROVE each sampled component READY",
+    "intake": "Exact source/area applicability and actual completed baseline/current capture logs/manifests, actual197-test batch and original blind PASS retained. No further checks requested."
+  },
+  "integration": {
+    "adopt": "ONLY the exact production hunks specified for these two components and this evidence directory",
+    "exclude": "Capture-tool changes, QuickItems9c5663, map, allotherHUD/otherunREADY ancestry",
+    "scope_registry": "device_local_presentation; no durable state, transactions or schema change",
+    "flags": "none"
+  },
+  "limits": "Full-five/long-name layouts, natural expiry, combat/outdoor/night, physical operations, otherHUD, fullP2-004/fullF42#0 and releaseBars remain OPEN.",
+  "disposition": "READY two sampled components only;0 new full criteria."
+}

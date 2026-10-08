@@ -1,0 +1,78 @@
+{
+  "scope": "F42#0 heavy HUD boxes: exploration Quick Items backplate opacity only",
+  "source_commit": "9c5663ad7beebf0a96ca9287b5f980dcbdca2f5c",
+  "base_main": "068b5bb7c9b0926672d50ce846a768f92d4dc4ed",
+  "production": [
+    "data/config/hud.json exploration_hotbar group only",
+    "scripts/ui/playground_hud.gd two alpha fields, two local StyleBox alpha assignments and two config reads only"
+  ],
+  "review": {
+    "agent": "/root/f42_visual_review",
+    "verdict": "SOURCE APPROVE",
+    "findings": [
+      "Existing UITokens helpers return fresh StyleBoxes; shared theme colours are not mutated.",
+      "Existing hud_config_number enforces positive finite values; missing or invalid values retain legacy opacity, and valid values are clamped to 0.02–1.0.",
+      "The five slot dimensions, glyphs, icons, counts, text outlines, timers and input callbacks remain unchanged.",
+      "New alpha fields and reads can be transplanted independently onto main; other lane-only HUD alterations are not dependencies."
+    ]
+  },
+  "scope_registry": "device_local_presentation; no durable state, transaction, schema or authority changes",
+  "flags": "none",
+  "excluded": [
+    "Old unREADY exploration_roster, vitals and party_strip changes",
+    "Objective backing opacity and combat HUD",
+    "Map context, other HUD plates, full F42#0 and release visual bar"
+  ],
+  "logic": {
+    "run": 37709794024,
+    "artifact": 11520978748,
+    "source_commit": "a54c87c3bb0f88badfa3411dae4f12995e1f8201",
+    "proof": "tests/run_tests.gd; nine existing HUD-referencing files plus test_menu_data in one bounded batch",
+    "tests": 197,
+    "assertions": 3231,
+    "failed": 0,
+    "exit": 0,
+    "seconds": 4
+  },
+  "area_reuse": {
+    "run": 37680516233,
+    "artifact": 11507629839,
+    "proof": "tests/smoke_gate_a_map_cycle.gd",
+    "result": "PASS actual retained menu/controller shell/input-ownership paths104s",
+    "review": "Original f42 reviewer confirmed applicability after reading exact opacity-only delta and actual197-test log: geometry/input paths unchanged; no additional operation smoke required.",
+    "limits": "Does not establish physical Quick Items operation, the visual result or full HUD/F42."
+  },
+  "capture": {
+    "source_commit": "3e7341704793ea678e3a9726f2deeca7303b7e23",
+    "run": 37710438732,
+    "artifact": 11522175841,
+    "script": "tools/phase2_capture_ui.gd",
+    "args": "--biome=meadows --paired-720 --tabs=players --output=res://ralph/reports/VISUAL/phase2/lane-d/f42-hotbar-paired",
+    "renderer": "gl_compatibility",
+    "complete": true,
+    "stage": "finished",
+    "failures": [],
+    "exit": 0,
+    "seconds": 408,
+    "all_frames": 4,
+    "component_frames": 2,
+    "raster_pairs": ["1920x1080", "1280x720"],
+    "excluded": "Two incidental Players frames",
+    "baseline": "Retained37705761923/art11519434870@6cb4a73444139fb44da5c1c7b4edf49106f38cfe exploration HUD pair; same fixture/layout, comparison scoped to Quick Items fills."
+  },
+  "blind_review": {
+    "agent": "/root/f26_presets_review",
+    "verdict": "PASS sampled Quick Items fill/readability",
+    "inspected": "All four before/after originals at1080/720",
+    "findings": "Continuous heavy backing removed; floor/stair detail visible through slots. Five key labels, two distinct item icons and both x3 counts readable and unclipped.",
+    "residual": "Icons have softer contrast but remain recognizable on the pictured indoor backgrounds.",
+    "limits": "Outdoor/night/combat backgrounds, physical Quick Items operation, navigation, other HUD, fullP2-004/fullF42#0 and release Bars remain OPEN."
+  },
+  "independent_review": {
+    "agent": "/root/f42_visual_review",
+    "verdict": "APPROVE scoped component READY",
+    "actual_intake": "Exact source scope, actual finished manifest/exit/log, both after rasters, retained197-test result and applicable unchanged shell area inspected; original blind before/after PASS retained.",
+    "integration": "Only9c5663 exploration_hotbar subtree, two fallback fields, two guarded/clamped config reads and two fresh StyleBox alpha assignments. Main dependencies present; every older roster/vitals/text/party_strip and other ancestry hunk excluded."
+  },
+  "disposition": "READY sampled Quick Items opacity component only; fullP2-004/fullF42#0 OPEN,0 new full criteria."
+}
