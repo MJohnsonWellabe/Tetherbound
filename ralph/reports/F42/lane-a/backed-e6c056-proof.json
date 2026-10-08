@@ -1,0 +1,36 @@
+{
+  "criteria": ["F42#2", "F23#5 HUD candidate"],
+  "status": "OPEN",
+  "production_commit": "e6c056c693c21ed35f8ba7d71307d56a60f7e02d",
+  "change": "Coordinator-released existing token panel backing for commands/moves and separated Aim/Switch/Flee scene offsets. Input, resource, caption, refresh and shipping flags unchanged.",
+  "review": {
+    "agent": "original f25_medium_review",
+    "verdict": "APPROVE bounded presentation source",
+    "qualification": "Actual spacing/contrast require changed capture and blind review. Full F42/F23 remain OPEN with shipping flags OFF."
+  },
+  "logic": {
+    "run_id": 37733858460,
+    "artifact_id": 11530997625,
+    "script": "tests/run_tests.gd",
+    "args": "--only=test_combat_hud_handheld_floors.gd,test_f21_hit_presentation.gd",
+    "files": 2,
+    "tests": 10,
+    "assertions": 84,
+    "failed": 0,
+    "exit": 0,
+    "result": "PASS"
+  },
+  "capture": {
+    "run_id": 37734251300,
+    "script": "tests/smoke_net_owner_passive_rejoin.gd",
+    "args": "--prove-tag-combo --capture-combat-hud --preset=Low --low-resolution=1280x720 --source-commit=e6c056c693c21ed35f8ba7d71307d56a60f7e02d --out=ralph/reports/F24/hosted-a-hud-backed-e6c056",
+    "result": "PENDING",
+    "guards": "Original actions/budgets/guards unchanged; no broad unit replay."
+  },
+  "previous_failure": "low720-37730488849-proof.json and low720-earned-37730488849-contact.jpg retain original blind BLOCK and normal wild interaction failure before Tag.",
+  "remaining_gates": [
+    "Actual changed HUD witness and original blind verdict.",
+    "Accepted-Tag resource acknowledgement reapplication still unexecuted in prior failed run.",
+    "Supported shipping activation disposition; no whole criterion READY or flag flip from narrow source review."
+  ]
+}
