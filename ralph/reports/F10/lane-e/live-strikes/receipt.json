@@ -1,0 +1,148 @@
+{
+  "criterion": "F10#3",
+  "status": "OPEN named lightning logic and Surge traversal behavior pending",
+  "source_commit": "7f68e3b2b1e9dee7479d87ec5446a50683a3ee30",
+  "run": 37708662448,
+  "artifact": 11521726235,
+  "exit_code": 0,
+  "seconds": 877,
+  "frames": 20,
+  "unique_frames": 20,
+  "failures": [],
+  "graphics": {
+    "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "Low",
+    "renderer": "gl_compatibility",
+    "resolution": [
+      1280,
+      720
+    ],
+    "source_commit": "7f68e3b2b1e9dee7479d87ec5446a50683a3ee30"
+  },
+  "proof": "Actual production host scheduled strikes, production Player/CameraRig, staged exposed stand/Break entry, healing between legs; no forced strike timers or injected warnings",
+  "legs": [
+    {
+      "strike_id": 1,
+      "files": [
+        "live_clearing_normal_warning_0.png",
+        "live_clearing_normal_warning_1.png",
+        "live_clearing_normal_warning_2.png",
+        "live_clearing_normal_impact.png",
+        "live_clearing_normal_decay.png"
+      ],
+      "reduced_motion": false,
+      "radius_m": 3.0,
+      "warning_to_impact_game_seconds": 1.32185433333333,
+      "warning_sample_progress": [
+        0.115643613040447,
+        0.550696492195129,
+        1.0
+      ]
+    },
+    {
+      "strike_id": 2,
+      "files": [
+        "live_clearing_reduced_warning_0.png",
+        "live_clearing_reduced_warning_1.png",
+        "live_clearing_reduced_warning_2.png",
+        "live_clearing_reduced_impact.png",
+        "live_clearing_reduced_decay.png"
+      ],
+      "reduced_motion": true,
+      "radius_m": 3.0,
+      "warning_to_impact_game_seconds": 1.32950533333333,
+      "warning_sample_progress": [
+        0.115046657621861,
+        0.559185802936554,
+        0.999294400215149
+      ]
+    },
+    {
+      "strike_id": 3,
+      "files": [
+        "live_clearing_reverse_normal_warning_0.png",
+        "live_clearing_reverse_normal_warning_1.png",
+        "live_clearing_reverse_normal_warning_2.png",
+        "live_clearing_reverse_normal_impact.png",
+        "live_clearing_reverse_normal_decay.png"
+      ],
+      "reduced_motion": false,
+      "radius_m": 3.0,
+      "warning_to_impact_game_seconds": 1.3201863333333401,
+      "warning_sample_progress": [
+        0.112255275249481,
+        0.54864776134491,
+        0.99616801738739
+      ]
+    },
+    {
+      "strike_id": 4,
+      "files": [
+        "live_clearing_reverse_reduced_warning_0.png",
+        "live_clearing_reverse_reduced_warning_1.png",
+        "live_clearing_reverse_reduced_warning_2.png",
+        "live_clearing_reverse_reduced_impact.png",
+        "live_clearing_reverse_reduced_decay.png"
+      ],
+      "reduced_motion": true,
+      "radius_m": 3.0,
+      "warning_to_impact_game_seconds": 1.3339100000000004,
+      "warning_sample_progress": [
+        0.11458332836628,
+        0.556971371173859,
+        0.999679446220398
+      ]
+    }
+  ],
+  "samples": "Three warning thresholds, impact, decay. Warning progress approximately .11/.55/1.00, not exact 0/.5/.9 poses.",
+  "blind_judge": {
+    "agent": "blind_listener_f10",
+    "result": "PASS A/B/C/D",
+    "reason": "Visible perimeter and branching marks announce area; localized ground pulse and descending lightning distinguish impact; cue disappears at recovery; avatar remains identifiable. Near fern partly obscures A/B but visible arcs retain warning readability. C/D clearer through grass.",
+    "limits": "Stills do not establish flash frequency, motion comfort, escape timing or visible reduced-motion difference; reviewer could not identify withheld assignment."
+  },
+  "independent_review": {
+    "agent": "review_cloud_startup",
+    "source": "APPROVE 7f68",
+    "artifact_completeness": "APPROVE strict20 PNG/readback/actual native Low/radius3",
+    "criterion": "OPEN named logic/behavior remaining"
+  },
+  "retained_phase_proof": {
+    "run": 37699857855,
+    "artifact": 11517028768,
+    "source": "7f8b6062d22a51fb88ac7455e42b527fc4e13548",
+    "frames": 4,
+    "judge": "PASS all four phases correctly named; phase-readability/receipt.json"
+  },
+  "history": [
+    {
+      "run": 37705982850,
+      "artifact": 11519439592,
+      "result": "FAIL10/20; old verge sheltered, exposed clearing10 retained only"
+    },
+    {
+      "run": 37707529154,
+      "artifact": 11520795856,
+      "result": "Canceled during world boot after source dictionary-key defect; no strike acceptance evidence"
+    },
+    {
+      "run": 37707945611,
+      "artifact": 11520422780,
+      "result": "PreflightFAIL0frames wrong --output argument, no actual-host attempt"
+    }
+  ],
+  "authorization": "issue572#6049684392 one actual-host confirming run with --out on same reviewed7f68, unchanged guards/budgets",
+  "remaining_gates": [
+    "tests/smoke_stormwood_lightning.gd 16cases57assertions",
+    "tests/smoke_stormwood_b_surge_phase_traversal.gd actual production traversal",
+    "Original reviewer final criterion approval"
+  ],
+  "limits": [
+    "Low/Compatibility1280x720 hosted llvmpipe, no Ally hardware",
+    "Full release High/Medium bar and motion/photosensitivity comfort remain open",
+    "Audio witness remains unavailable; no hearing claim"
+  ],
+  "flags": "none",
+  "landing": "Existing capture_stormwood_strikes.gd live-only headings correction at7f68 and contacts/receipt; exclude DRY visualization claims, unrelated Stormwood ground-profile/world/art ancestry"
+}

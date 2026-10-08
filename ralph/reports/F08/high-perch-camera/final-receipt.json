@@ -1,6 +1,6 @@
 {
   "criterion": "F08#2",
-  "status": "OPEN affected roost views and changed-world mapped logic pending",
+  "status": "OPEN affected roost day/night views pending; mapped logic and area PASS",
   "source_capture": "7f8b6062d22a51fb88ac7455e42b527fc4e13548",
   "scope": "Literal high-perch camera still matrix, owner re-scope issue572#6048639441",
   "proofs": {
@@ -43,6 +43,17 @@
       "shaft_gap_m": 0.893,
       "visual_height_m": 0.311,
       "guards": "Otherfloor/clearance/shaft/step/assetguards report no failures; no count assertion weakened."
+    },
+    "changed_world_mapped_logic": {
+      "run": 37710378184,
+      "artifact": 11521492926,
+      "source": "9e65a0d6ba0d5fb790af372f68512782d8e82957",
+      "selector": "19 existing test files naming res://scripts/world/cloudreach_world.gd",
+      "tests": 128,
+      "assertions": 1077,
+      "failed": 0,
+      "exit": 0,
+      "seconds": 26
     }
   },
   "judge": {
@@ -53,7 +64,7 @@
   "review": {
     "agent": "review_cloud_startup",
     "source": "APPROVE ff341 repair and7f live recorder; final correctedarea pending",
-    "final": "OPEN pending affected visual and mapped logic; original camera still PASS retained"
+    "final": "OPEN affected visual; changed-world mapped logic and production roost area PASS"
   },
   "limits": [
     "Direct staged scene/progression/clock and five-owned Galecrest, not earned unlock/trial/bond/save evidence",
