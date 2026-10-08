@@ -1071,6 +1071,62 @@ func _step_equipment_equip_from_satchel(args: Dictionary) -> Dictionary:
 		return {"verdict": "ERROR", "detail": "missing live satchel or PlayerState.equipment"}
 	var item := str(args.get("item", ""))
 	var before := int(satchel.call("count", item))
+	if args.get("journaled") == true:
+		# Existing stock/focus fixtures only. The wear press uses the actual
+		# Satchel and its original host journal, owner BOOL write and ACK.
+		var session := _session()
+		var definition: Dictionary = game.get("items").call("definition", item)
+		var slot := str(definition.get("armor_slot", ""))
+		if session == null or not session.call("is_active") or before != 1 \
+				or not equipment.call("is_slot", slot):
+			return {"verdict": "FAIL", "detail": "journaled wear requires one admitted carried armor item"}
+		var expected := str(equipment.call("equipped_in", slot))
+		var observed := {"original": {}, "result": {}}
+		var observer := func(action: String, original: Dictionary, result: Dictionary) -> void:
+			if action == "trainer_equip" and original.get("slot") == slot \
+					and original.get("item_id") == item and original.get("expected_item") == expected:
+				if observed.original.is_empty(): observed.original = original.duplicate(true)
+				if original == observed.original: observed.result = result.duplicate(true)
+		session.connect("homestead_action_completed", observer)
+		var menu: Node = game.call("menu")
+		menu.call("open", "backpack")
+		for frame in 8: await process_frame
+		var body: Node = null
+		for candidate: Node in menu.get("_bodies"):
+			if candidate.get_script() == preload("res://scripts/ui/tab_backpack.gd"): body = candidate
+		var carried_slot := int(satchel.call("find_slot", item))
+		if body == null or carried_slot < 0:
+			session.disconnect("homestead_action_completed", observer)
+			menu.call("close")
+			return {"verdict": "FAIL", "detail": "actual carried Satchel row unavailable"}
+		(body.get("_buttons") as Array)[carried_slot].grab_focus()
+		await process_frame
+		var pressed := await _step_press({"action": "interact"})
+		for frame in 600:
+			if observed.result.get("ok") == true and observed.result.get("owner_saved") == true \
+					and observed.result.get("durable") == true and observed.result.get("owner_acknowledged") == true: break
+			await physics_frame
+		session.disconnect("homestead_action_completed", observer)
+		menu.call("close")
+		var result: Dictionary = observed.result
+		var original: Dictionary = observed.original
+		var character := str(local.get("character_id"))
+		var disk: Dictionary = game.get("save_system").get("_characters").call("state", character)
+		var receipt := "craft:%s:%s" % [character,
+			("trainer_equip:" + character + ":" + str(original.get("equip_id", ""))).sha256_text().substr(0, 32)]
+		var tier := int(equipment.call("command_pouch_tier"))
+		var passed: bool = pressed.get("verdict") == "PASS" and original.size() == 4 \
+			and result.get("ok") == true and result.get("durable") == true \
+			and result.get("owner_saved") == true and result.get("owner_acknowledged") == true \
+			and result.get("receipt") == receipt and equipment.call("equipped_in", slot) == item \
+			and int(satchel.call("count", item)) == 0 and disk.get("equipment", {}).get(slot) == item \
+			and disk.get("redesign_character", {}).get("pouch_tier") == tier \
+			and (disk.get("redesign_character", {}).get("transaction_receipts", []) as Array).count(receipt) == 1
+		return {"verdict": "PASS" if passed else "FAIL", "detail": "actual Satchel wear/save/ACK",
+			"data": {"character_id": character, "item": item, "tier": tier,
+				"original": original, "result": result, "receipt": receipt,
+				"equipment": equipment.call("save_data"), "disk_equipment": disk.get("equipment", {}),
+				"disk_pouch_tier": disk.get("redesign_character", {}).get("pouch_tier")}}
 	var equipped := bool(equipment.call("equip_from_inventory", item, satchel))
 	var after := int(satchel.call("count", item))
 	var worn: Dictionary = equipment.call("save_data") as Dictionary
@@ -4908,6 +4964,7 @@ func _character_view(game: Node, args: Dictionary) -> Dictionary:
 		"party_size": party_rows.size(),
 		"satchel": _probe.call("inventory_snapshot"),
 		"equipment": (equipment as RefCounted).call("save_data") if equipment != null else {},
+		"pouch_tier": (local as RefCounted).get("redesign_character").get("pouch_tier", 0),
 		"player_flags": flags_set,
 		"display_name": str((local as RefCounted).get("display_name")),
 		"satiety": float((local as RefCounted).get("satiety")),
@@ -4954,6 +5011,7 @@ func _character_file_view(state: Dictionary, args: Dictionary) -> Dictionary:
 		"party_size": party_rows.size(),
 		"satchel": satchel,
 		"equipment": (state.get("equipment", {}) as Dictionary).duplicate(true),
+		"pouch_tier": state.get("redesign_character", {}).get("pouch_tier", 0),
 		"player_flags": flags_set,
 		"display_name": str(state.get("display_name", "")),
 		"satiety": float(state.get("satiety", -1.0)),
