@@ -21,12 +21,15 @@ const BUDGET_FRAMES := 900
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 
 var _game: Node = null
+var _altar_lesson_reader: RefCounted = null
 
 
 func _run() -> void:
 	var masters_witness := OS.get_cmdline_user_args().has("--lesson-masters-witness")
-	if OS.get_cmdline_user_args().has("--lesson-reload-witness") and not masters_witness:
-		_fail("This Altar smoke's reload endpoint requires its actual Masters witness")
+	if OS.get_cmdline_user_args().has("--lesson-reload-witness") \
+			and (not OS.get_cmdline_user_args().has("--lesson-controller-witness") \
+			or not OS.get_cmdline_user_args().has("--lesson-replay-witness")):
+		_fail("Lesson reload requires the actual controller and Help replay witnesses")
 		_report()
 		return
 	if masters_witness and (not OS.get_cmdline_user_args().has("--lesson-controller-witness") \
@@ -109,6 +112,16 @@ func _run() -> void:
 	if _failures.is_empty():
 		print("F27_ALTAR_SPEND: PASS controller-path Altar level-up L%d->L%d for %d Water Essence" % [level_before, level_before + 1, cost])
 		if masters_witness: await _witness_masters_lesson(creature, panel)
+		elif OS.get_cmdline_user_args().has("--lesson-reload-witness"):
+			if _altar_lesson_reader == null:
+				_fail("Altar reload has no naturally observed lesson reader")
+			else:
+				_altar_lesson_reader.set("_lesson_controller_input", true)
+				await _altar_lesson_reader.tap("menu_cancel")
+				_altar_lesson_reader.set("_lesson_controller_input", false)
+				if panel.call("is_open"):
+					_fail("Altar reload could not release the actual paid station panel")
+				else: await _reload_observed_lesson(_altar_lesson_reader, "altar")
 	_report()
 
 
@@ -176,42 +189,45 @@ func _witness_masters_lesson(creature: RefCounted, panel: Node) -> bool:
 		_fail("Naturally unlocked Tam Masters lesson lacks controller Skip, Help replay or retained identity")
 		return false
 	if OS.get_cmdline_user_args().has("--lesson-reload-witness"):
-		return await _reload_masters_lesson(reader)
+		return await _reload_observed_lesson(reader, "masters")
 	print("F46 MASTERS LESSON: PASS actual paid first cap, grounded Tam walk, mapped Skip and Settings Help; original essence fixture disclosed; disk reload/whole F46 open")
 	return true
 
 
 ## Extend the same paid-unlock endpoint with production autosave/title Load.
 ## A saved ACK must already exist before autosave; saving cannot mint the proof.
-func _reload_masters_lesson(reader: RefCounted) -> bool:
+func _reload_observed_lesson(reader: RefCounted, lesson_id: String) -> bool:
 	var before := _masters_retained_state()
 	var cid := str(before.character_id)
-	if not reader._saved_lesson_ack("masters", cid, before.party_uids).get("passed", false) \
+	if lesson_id not in ["altar", "masters"] or reader.get("_lesson_replay_row").get("id", "") != lesson_id:
+		_fail("Lesson reload requires its actual observed Altar or Masters card")
+		return false
+	if not reader._saved_lesson_ack(lesson_id, cid, before.party_uids).get("passed", false) \
 			or INPUT_OWNER.current(self) != null or paused:
-		_fail("Masters reload needs its actual saved acknowledgement and free unpaused world")
+		_fail(lesson_id + " reload needs its actual saved acknowledgement and free unpaused world")
 		return false
 	var slot := int(_game.call("autosave_slot"))
 	if not _game.call("save_game", slot) or _masters_retained_state() != before:
-		_fail("Masters autosave refused or changed its retained rewards and identity")
+		_fail(lesson_id + " autosave refused or changed its retained rewards and identity")
 		return false
 	if change_scene_to_file("res://scenes/ui/title_screen.tscn") != OK:
-		_fail("Masters reload could not open production title")
+		_fail(lesson_id + " reload could not open production title")
 		return false
 	for frame: int in 10: await process_frame
 	var title := current_scene
 	if title == null or title.scene_file_path != "res://scenes/ui/title_screen.tscn":
-		_fail("Masters reload did not reach production title")
+		_fail(lesson_id + " reload did not reach production title")
 		return false
 	_game.call("reset_for_new_game")
-	if _game.party.size() != 0 or _game.local.flags.call("has", "opening:lesson:masters"):
-		_fail("Masters reload did not clear the outgoing in-memory party and acknowledgement")
+	if _game.party.size() != 0 or _game.local.flags.call("has", "opening:lesson:" + lesson_id):
+		_fail(lesson_id + " reload did not clear the outgoing in-memory party and acknowledgement")
 		return false
 	var reopened: Array[bool] = [false]
 	var watch := func() -> void:
 		var service := _game.get_node_or_null("OnboardingLessons")
 		var panel: Node = service.get("_panel") if service != null else null
 		if is_instance_valid(panel) and panel.call("is_open") and service.get("_replaying") == false \
-				and panel.get("_row").get("id", "") == "masters": reopened[0] = true
+				and panel.get("_row").get("id", "") == lesson_id: reopened[0] = true
 	process_frame.connect(watch)
 	reader.set("_lesson_controller_input", true)
 	var load_button := title.get("_load_button") as Button
@@ -248,16 +264,16 @@ func _reload_masters_lesson(reader: RefCounted) -> bool:
 		and bool(_player.call("locomotion_enabled")) and reader._ready_world("meadows") \
 		and service != null and service.get("_identity") == cid and (service.get("_pending") as Dictionary).is_empty() \
 		and not Input.is_action_pressed("ui_down") and not Input.is_action_pressed("ui_accept")
-	print("F46 MASTERS RELOAD " + JSON.stringify({"passed":retained,"save_slot":slot,"ready_frames":ready_frames,
+	print("F46 " + lesson_id.to_upper() + " RELOAD " + JSON.stringify({"passed":retained,"save_slot":slot,"ready_frames":ready_frames,
 		"memory_cleared":true,"physical_title_load":selected,"settle_frames":300,"reopened":reopened[0],
-		"before":before,"after":after,"scope":"Paid-unlock fixture's Masters ACK actual title Load; whole F46 remains open"}))
+		"before":before,"after":after,"scope":"Paid-unlock fixture's " + lesson_id + " ACK actual title Load; whole F46 remains open"}))
 	if not retained:
-		_fail("Masters actual disk Load lost retained state, reopened the card or failed free grounded input")
+		_fail(lesson_id + " actual disk Load lost retained state, reopened the card or failed free grounded input")
 		return false
-	if not await reader.replay_observed_lesson("masters"):
+	if not await reader.replay_observed_lesson(lesson_id):
 		for failure: String in reader.failures: _fail(failure)
 		return false
-	print("F46 MASTERS LESSON: PASS paid first cap, controller Skip/Help, durable ACK, actual title Load without reopen and Help again; original fixture disclosed; whole F46 open")
+	print("F46 " + lesson_id.to_upper() + " LESSON: PASS paid spend, controller Skip/Help, durable ACK, actual title Load without reopen and Help again; original fixture disclosed; whole F46 open")
 	return true
 
 
@@ -308,6 +324,7 @@ func _witness_altar_lesson() -> bool:
 	if not passed or panel.call("owns_input") or not _game.local.flags.call("has", rules.PREFIX + "altar"):
 		_fail("Altar lesson did not retain its personal acknowledgement and release input")
 		return false
+	_altar_lesson_reader = reader
 	print("F46 ALTAR LESSON: PASS actual Altar lesson from disclosed essence fixture; mapped Skip; Help replay=%s; disk reload/whole F46 open" % str(options.replay))
 	return true
 
