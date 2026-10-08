@@ -1261,7 +1261,9 @@ func _walk_to_home_bed(driver: RefCounted, prompt: Node3D, stance: Dictionary) -
 		var reserve := float(stance.clearance)
 		var southeast := Vector2(excluded.end.x + reserve, excluded.position.y - reserve)
 		var northeast := Vector2(excluded.end.x + reserve, excluded.end.y + reserve)
-		pad_route = exterior_path(from, southeast, polygon, 0.0)
+		# Apply that reserve to the initial detour too: zero left its earlier
+		# corners only 0.2m out and allowed the actual controller into the pad.
+		pad_route = exterior_path(from, southeast, polygon, reserve)
 		if not pad_route.is_empty():
 			pad_route.append(northeast)
 			pad_route.append(Vector2(target.x, target.z))
