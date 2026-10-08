@@ -92,5 +92,101 @@
     ],
     "scope": "Existing capture_f39_catalogue.gd shipping observation mode only. No production override; expectedgates match enabled AND ridges, configuredscalars verified onlyenabled; receiptaccurate. Old comparisonmodes preserved.",
     "remaining": "Actualshippingcamp proof37685616751; >=200 recapture andcatalogrescore F39#0 stillOPEN. No READY."
+  },
+  "owner_rescoped_root_walk_weathering": {
+    "criterion": "F39#2 OPEN",
+    "production_commit": "94aabada76bae83651b59e422eef2894d7774ec5",
+    "observer_commit": "17709a796cda8e0df1c7f292c144497fc5c8c95a",
+    "reviewer": "/root/f39_visual_review",
+    "verdict": "SOURCE APPROVE",
+    "observed_defect": "P2-008 repeated tall near-vertical Root Walk bank surfaces in shipping first3-island60-frame review; silhouette remains outside this material fix.",
+    "change": "Existing optional weathering uses normal-weighted XY/XZ/ZY noise instead of XZ-only vertical columns. Installed material assets and all height/control/collision/dune/Veilfall exclusion settings retained.",
+    "shipping_enabled": false,
+    "opt_in": "--shore-weathering-candidate",
+    "observer": "Existing F39 catalogue capture requires active Terrain3D shader override, installed slope-noise helper, and actual coast_weathering_enabled matching config/opt-in; original count/floor/body/camera/shipping material guards retained.",
+    "remaining": [
+      "Independent texture verdict",
+      "Whole F39#2 per-biome required bars/catalogue/matrix; flag remains OFF"
+    ],
+    "affected_existing_unit": {
+      "source": "17709a796cda8e0df1c7f292c144497fc5c8c95a",
+      "run": 37755591340,
+      "artifact": 11540176509,
+      "proof": "tests/run_tests.gd --only=test_water_surface_material --shore-weathering-candidate",
+      "tests": 4,
+      "assertions": 27,
+      "failed": 0,
+      "exit": 0,
+      "seconds": 7,
+      "warning": "Terrain3D material anchors unavailable in detached headless terrain factory; no installed/coastal shader compilation proof from this unit.",
+      "limits": "Existing surface contracts and terrain background factory assertions only; actual active helper/gate/compilation remains capture gate."
+    },
+    "paired_capture": {
+      "source": "17709a796cda8e0df1c7f292c144497fc5c8c95a",
+      "baseline_run": 37756113216,
+      "baseline_artifact": 11540287973,
+      "candidate_run": 37758008294,
+      "candidate_artifact": 11541596585,
+      "complete": true,
+      "frames_each": 10,
+      "failures_each": [],
+      "exit_each": 0,
+      "native_raster": [
+        1280,
+        720
+      ],
+      "renderer": "gl_compatibility",
+      "actual_baseline": {
+        "actual_enabled": false,
+        "candidate": false,
+        "expected_enabled": false,
+        "override_active": true,
+        "scope": "Device-local terrain material only; all other shipping gates retained",
+        "slope_noise_installed": true
+      },
+      "actual_candidate": {
+        "actual_enabled": true,
+        "candidate": true,
+        "expected_enabled": true,
+        "override_active": true,
+        "scope": "Device-local terrain material only; all other shipping gates retained",
+        "slope_noise_installed": true
+      },
+      "pose_keys_compared": [
+        "player_position",
+        "camera_position",
+        "camera_transform",
+        "camera_rig_transform",
+        "view_heading_deg",
+        "position_xz",
+        "production_is_on_floor",
+        "consecutive_grounded_frames",
+        "time"
+      ],
+      "pose_differences": [],
+      "contact": "root-walk-weathering-contact.jpg",
+      "limits": "Staged fixed Root Walk day/night poses; no earned path, device, biome matrix, berm silhouette or whole F39#2 closure."
+    },
+    "runtime_review": {
+      "reviewer": "/root/f39_visual_review",
+      "verdict": "Scoped SOURCE + runtime APPROVE",
+      "reason": "All10pairs actual mounted OFF/ON gate, active override/helper, matching body/camera/headings and grounded contacts. Other shipping gates match; no shader errors. Unit detached warning retained."
+    },
+    "first_texture_judge": {
+      "reviewer": "/root/f26_presets_review",
+      "verdict": "BLOCK",
+      "inspected_originals": 20,
+      "texture": "No meaningful reduction in repeated bank ripples; broad left bank -45day/night and bothbanks180day remainuniform. Slopes45/90 stillplain; nightverydark.",
+      "no_regression": "PASS pictured trainer,bank,water,HUD readability; no newclipping/discontinuity",
+      "bars": "A/B BLOCK",
+      "disposition": "Shipping OFF. Second/final candidate addresses final dune layer overwriting earlier bank treatment; no whole F39#2/READY."
+    },
+    "second_source": {
+      "commit": "1c2f15e9dce535ed20695808e0bb0b01d2987f1b",
+      "reviewer": "/root/f39_visual_review",
+      "verdict": "SOURCE APPROVE",
+      "change": "Final dune layer now uses weathered_bank mask for patch replacement, photographic ripple attenuation using existing rock_detail and macrovalue. Flatground texture, OFF path and geometry retained.",
+      "required": "Affected unit/candidate capture and original blind judge; firstBLOCK retained. Stop after secondfailedtextureattempt."
+    }
   }
 }

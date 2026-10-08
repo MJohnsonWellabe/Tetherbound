@@ -58,5 +58,33 @@
       "actual_area": "37673885907 farmdoor/road/nave/all16 arch-pedestal approaches PASS"
     },
     "excluded": "Other branch source, F17#6, otherF38 rows, release Visual bar, device/earned/co-op gates"
+  },
+  "farmhouse_window_glow_candidate": {
+    "criterion": "F38#3 OPEN",
+    "source": "1b0eb2c0c1a66362536ad5de13b47c2b677c8d13",
+    "observed_defect": "Flat white panes in original furniture-lift judge; this is a separate window emission fix. Furniture wood lift remains0, final furniture BLOCK retained.",
+    "change": "Clone only attached farmhouse KitShell MI_WindowGlass active materials; candidate .20 instead of authored .85 emission. Other material fields/textures, geometry, lights, collision and durable state unchanged.",
+    "shipping_enabled": false,
+    "opt_in": "--farmhouse-window-glow-candidate",
+    "reviewer": "/root/f42_visual_review",
+    "source_review": "APPROVE production and existing actual-binding observer",
+    "logic": {
+      "run": 37759692551,
+      "artifact": 11541094397,
+      "proof": "tests/run_tests.gd --only=test_loft_bed_reachable,test_grandpas_village_visual_identity,test_stat_draught_models --farmhouse-window-glow-candidate",
+      "tests": 13,
+      "assertions": 156,
+      "failed": 0,
+      "exit": 0,
+      "seconds": 5,
+      "diagnostics": "Existing off-tree CreatureBed absolute get_node errors retained; no clean-log claim."
+    },
+    "capture": {
+      "run": 37760013081,
+      "source": "1b0eb2c0c1a66362536ad5de13b47c2b677c8d13",
+      "status": "pending",
+      "scope": "4Lowfarmhouse detail day/night clear/rain; actual MI_WindowGlass energy/binding guard. Reuse relevant unchanged baseline37732351160; pose comparison pending."
+    },
+    "remaining": "Actual pixels/runtime and original blind window/night review; exterior night if interior insufficient. WholeF38 matrix M/H and fullbars remainOPEN; noREADY."
   }
 }
