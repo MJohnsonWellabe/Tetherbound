@@ -60,6 +60,12 @@ func _initialize() -> void:
 			quit(1)
 			return
 		OS.set_environment("TB_NET_OUT_DIR", absolute)
+	if OS.get_cmdline_user_args().has("--capture-combat-hud") \
+		and (DisplayServer.get_name() == "headless" or OS.get_environment("GITHUB_ACTIONS") != "true" \
+			or not OS.get_cmdline_user_args().has("--prove-tag-combo") or OS.get_environment("TB_NET_OUT_DIR").is_empty()):
+		push_error("Combat HUD capture requires a native hosted parent, --prove-tag-combo and TB_NET_OUT_DIR")
+		quit(1)
+		return
 	if OS.get_cmdline_user_args().has("--with-fight-camera-units") or OS.get_cmdline_user_args().has("--with-tag-units"):
 		var selectors := PackedStringArray()
 		if OS.get_cmdline_user_args().has("--with-tag-units"):
@@ -112,6 +118,14 @@ func _spawn_peer(i: int, role: String, control_port: int, enet_port: int, scene:
 		"--role=%s" % role, "--peer=%d" % i,
 		"--control-port=%d" % control_port, "--enet-port=%d" % enet_port,
 		"--scene=%s" % scene, "TB_NET_RUN_ID=%s" % _run_id]
+	if i == 1 and OS.get_cmdline_user_args().has("--capture-combat-hud"):
+		args = ["--path", ProjectSettings.globalize_path("res://"),
+			"--rendering-method", RenderingServer.get_current_rendering_method(), "--audio-driver", "Dummy",
+			"--resolution", "%dx%d" % [root.size.x, root.size.y]] + args.slice(3)
+		args.append_array(["--capture-combat-hud", "--hud-output=" + OS.get_environment("TB_NET_OUT_DIR").path_join("combat-hud")])
+		for arg: String in OS.get_cmdline_user_args():
+			if arg.begins_with("--preset=") or arg.begins_with("--source-commit=") or arg.begins_with("--low-resolution="):
+				args.append(arg)
 	for extra in extra_args:
 		args.append(str(extra))
 	OS.set_environment("XDG_DATA_HOME", home)
@@ -605,6 +619,8 @@ func _prove_tag_combo() -> void:
 			"Tag: owner and joined observer consume the actual %s child impact once" % strike.part)
 	check(after.enemy_hp == verdict.delta.hp, "Tag: the owner consumes the parent absolute HP without another debit")
 	print("TAG actual family observation: ", JSON.stringify({"owner":after,"host":host,"before":host_before}))
+	if OS.get_cmdline_user_args().has("--capture-combat-hud"):
+		_ok(await step(1, "op_tonic_hud_capture", {"name":"after-tag"}), "HUD: actual incoming creature after accepted Tag")
 	_ok(await step(1, "op_tag_replay"), "Tag: submit the same original again")
 	var replay: Dictionary = await probe(0, "op_tag_state", args)
 	check(replay.original.get("admission", {}) == original.get("admission", {}) \
@@ -637,6 +653,8 @@ func _tonic_item_original() -> bool:
 	if not _ok(await step(1, "join_encounter", {"encounter_id":id}), "tonic: guest joins the host's exact record"): return false
 	var before_mastery: Dictionary = (await _state(1)).get("mastery", {}).get("live", {})
 	if not _ok(await step(1, "op_tonic_hits"), "tonic: normal accepted quick hits earn Item meter"): return false
+	if OS.get_cmdline_user_args().has("--capture-combat-hud"):
+		_ok(await step(1, "op_tonic_hud_capture", {"name":"earned-command"}), "HUD: actual earned command and creature meters before Item")
 	var retained: Array = (await _state(0)).get("mastery", {}).get("retained", {}).get(_guest_character, [])
 	var seen := {}
 	for event: Dictionary in retained:

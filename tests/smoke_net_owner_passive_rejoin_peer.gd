@@ -30,6 +30,7 @@ var _tonic_request: Dictionary = {}
 var _tonic_blocker: Callable
 var _tonic_refusal_armed := false
 var _tag_request: Dictionary = {}
+var _hud_capture_metadata: Dictionary = {}
 
 
 func _execute_step(msg: Dictionary) -> Dictionary:
@@ -292,6 +293,17 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 	var session: Node = game.get_node(^"Session")
 	match action:
 		"op_tonic_candidate":
+			if OS.get_cmdline_user_args().has("--capture-combat-hud"):
+				if _peer_index != 1 or DisplayServer.get_name() == "headless":
+					return {"verdict":"FAIL", "detail":"HUD capture requires the native guest1"}
+				var inherited_size := root.size
+				_hud_capture_metadata = preload("res://tools/lookdev_capture_bootstrap.gd").prepare(self, "--hud-output=")
+				if _hud_capture_metadata.is_empty() or root.size != inherited_size:
+					return {"verdict":"FAIL", "detail":"HUD bootstrap refused the preset/source/output or changed the parent resolution"}
+				for arg: String in OS.get_cmdline_user_args():
+					if arg.begins_with("--hud-output="): _hud_capture_metadata["output"] = arg.trim_prefix("--hud-output=")
+				if DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(str(_hud_capture_metadata.get("output", "")))) != OK:
+					return {"verdict":"FAIL", "detail":"HUD output directory could not be created"}
 			# Disclosed process-local candidate gates, before actual world boot.
 			# No shipped flag, authored item, HP, meter or timer is modified.
 			var commands: Script = preload("res://scripts/combat/tether_commands.gd")
@@ -301,6 +313,46 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 			var math: Script = preload("res://scripts/combat/combat_math.gd")
 			math._config = math.config().duplicate(true)
 			math._config.actor_vitals.runtime_enabled = true
+		"op_tonic_hud_capture":
+			var name := str(args.get("name", ""))
+			if args.size() != 1 or name not in ["earned-command", "after-tag"] \
+				or not OS.get_cmdline_user_args().has("--capture-combat-hud") or _hud_capture_metadata.is_empty() \
+				or _peer_index != 1 or DisplayServer.get_name() == "headless":
+				return {"verdict":"FAIL", "detail":"HUD capture requires an allowed witness name and prepared native guest1"}
+			await process_frame
+			await RenderingServer.frame_post_draw
+			var manager: Node = _combat_manager()
+			var director: Node = _encounter_director()
+			var hud: Node = director.get_parent().get_node_or_null("CombatHUD") if director != null else null
+			var view: Dictionary = manager.new_system_combat_snapshot() if manager != null else {}
+			var active: RefCounted = manager.active_creature() if manager != null else null
+			var overlay: Control = hud.get("_system_overlay") if hud != null else null
+			var ring: Control = overlay.get("_ring") if is_instance_valid(overlay) else null
+			if active == null or not game.party.members().has(active) or view.get("active") != true \
+				or view.get("creature_uid") != str(active.get("uid")) or not is_instance_valid(overlay) \
+				or not overlay.is_visible_in_tree() or overlay.get("_uid") != view.creature_uid \
+				or not is_instance_valid(ring) or not ring.is_visible_in_tree() \
+				or float(view.get("ultimate_maximum", 0.0)) <= 0.0 \
+				or view.get("commands", {}).get("meter") != manager.tether_command_snapshot().get("meter"):
+				return {"verdict":"FAIL", "detail":"HUD capture has no visible current-owned-UID authoritative overlay", "data":view}
+			var fraction := clampf(float(view.ultimate_meter) / float(view.ultimate_maximum), 0.0, 1.0)
+			if not is_equal_approx(float(ring.get("fraction")), fraction):
+				return {"verdict":"FAIL", "detail":"HUD ring differs from actual meter"}
+			var shot: Dictionary = await PROOF_STEPS.run(self, "screenshot", {"name":"hud-" + name})
+			if shot.get("verdict") != "PASS" or shot.get("data", {}).get("captured") != true: return {"verdict":"FAIL", "detail":"HUD screenshot was not captured", "data":shot}
+			var graphics := preload("res://scripts/ui/graphics_prefs.gd")
+			var receipt := _hud_capture_metadata.merged({"name":name, "snapshot":view,
+				"frame":Engine.get_process_frames(), "physics_frame":Engine.get_physics_frames(),
+				"viewport":[root.size.x, root.size.y], "renderer":RenderingServer.get_current_rendering_method(),
+				"preset":graphics.selected(), "graphics":graphics.values(), "ring_fraction":float(ring.get("fraction")),
+				"png":str(shot.data.path)}, true)
+			var path := ProjectSettings.globalize_path(str(_hud_capture_metadata.output)).path_join(name + ".json")
+			var file := FileAccess.open(path, FileAccess.WRITE)
+			if file == null: return {"verdict":"FAIL", "detail":"HUD receipt could not open: " + path}
+			file.store_string(JSON.stringify(receipt, "\t"))
+			file.flush()
+			if file.get_error() != OK: return {"verdict":"FAIL", "detail":"HUD receipt write failed: " + path}
+			return {"verdict":"PASS", "detail":"captured actual combat HUD", "data":receipt}
 		"op_tonic_supply":
 			# The existing smoke already seeds a portable party before admission.
 			game.inventory.add("attack_tonic", 2)
