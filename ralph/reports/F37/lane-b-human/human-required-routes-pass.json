@@ -1,0 +1,252 @@
+{
+  "criterion": "F37#2",
+  "verdict": "PASS whole criterion under owner6051787387 literal scope",
+  "source_sha": "b73cba5a45b5b3d8f236193737df86c5b982725c",
+  "script": "tests/smoke_water_swimming.gd",
+  "native_args": "--rest-route=<route_id> --every-hop --original-five --capture-water-route",
+  "mode": "Native coordinator-run Low/gl_compatibility1280x720 continuous drawing; B ran no native engine",
+  "native_packet": "D:/CodexTemp/tetherbound-proof/native-b-b73cba5a45-f37-human5-continuous",
+  "root_delivery_comment": 6054020064,
+  "native_summary": {
+    "source": "b73cba5a45b5b3d8f236193737df86c5b982725c",
+    "exit_codes": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "script_parse_errors": 0,
+    "stop_reason": "",
+    "renderer": "gl_compatibility",
+    "continuous_drawing": true,
+    "resolution": [
+      1280,
+      720
+    ],
+    "routes": 5,
+    "hops": 21,
+    "assertions": 1063,
+    "frames": 42,
+    "minimum_stamina_pct": 30.23,
+    "health": 100,
+    "source_clean": true,
+    "hash_preserved": true,
+    "scope": "five missing authored human routes; original-five/no owned swimmer, per-hop dry placement and pinned level0 fixtures; not earned/co-op/whole continuous campaign"
+  },
+  "native_routes": [
+    {
+      "source_sha": "b73cba5a45b5b3d8f236193737df86c5b982725c",
+      "route_id": "brine_steps_to_shellwatch_sheltered",
+      "hops": 2,
+      "assertions": 124,
+      "minimum_stamina_pct": 81.85,
+      "health": 100,
+      "captures": 4,
+      "process_receipt": {
+        "exit_code": 0,
+        "pid": 6660,
+        "finished_utc": "2026-10-08T06:18:56.1840085Z",
+        "source": "b73cba5a45b5b3d8f236193737df86c5b982725c",
+        "stop_reason": "",
+        "started_utc": "2026-10-08T06:16:27.5958471Z"
+      },
+      "contact": "native-route1-contact.jpg",
+      "log_path": "D:/CodexTemp/tetherbound-proof/native-b-b73cba5a45-f37-human5-continuous/route1.stdout.log"
+    },
+    {
+      "source_sha": "b73cba5a45b5b3d8f236193737df86c5b982725c",
+      "route_id": "shellwatch_to_tidal_cradle_sheltered",
+      "hops": 2,
+      "assertions": 124,
+      "minimum_stamina_pct": 72.98,
+      "health": 100,
+      "captures": 4,
+      "process_receipt": {
+        "exit_code": 0,
+        "pid": 22552,
+        "finished_utc": "2026-10-08T06:21:35.1137046Z",
+        "source": "b73cba5a45b5b3d8f236193737df86c5b982725c",
+        "stop_reason": "",
+        "started_utc": "2026-10-08T06:18:56.1883000Z"
+      },
+      "contact": "native-route2-contact.jpg",
+      "log_path": "D:/CodexTemp/tetherbound-proof/native-b-b73cba5a45-f37-human5-continuous/route2.stdout.log"
+    },
+    {
+      "source_sha": "b73cba5a45b5b3d8f236193737df86c5b982725c",
+      "route_id": "tidal_cradle_to_salt_crown_sheltered",
+      "hops": 5,
+      "assertions": 245,
+      "minimum_stamina_pct": 38.45,
+      "health": 100,
+      "captures": 10,
+      "process_receipt": {
+        "exit_code": 0,
+        "pid": 21976,
+        "finished_utc": "2026-10-08T06:25:56.9089487Z",
+        "source": "b73cba5a45b5b3d8f236193737df86c5b982725c",
+        "stop_reason": "",
+        "started_utc": "2026-10-08T06:21:35.1240141Z"
+      },
+      "contact": "native-route3-contact.jpg",
+      "log_path": "D:/CodexTemp/tetherbound-proof/native-b-b73cba5a45-f37-human5-continuous/route3.stdout.log"
+    },
+    {
+      "source_sha": "b73cba5a45b5b3d8f236193737df86c5b982725c",
+      "route_id": "salt_crown_to_sluice_isle_sheltered",
+      "hops": 5,
+      "assertions": 245,
+      "minimum_stamina_pct": 44,
+      "health": 100,
+      "captures": 10,
+      "process_receipt": {
+        "exit_code": 0,
+        "pid": 23764,
+        "finished_utc": "2026-10-08T06:30:04.2908398Z",
+        "source": "b73cba5a45b5b3d8f236193737df86c5b982725c",
+        "stop_reason": "",
+        "started_utc": "2026-10-08T06:25:56.9191790Z"
+      },
+      "contact": "native-route4-contact.jpg",
+      "log_path": "D:/CodexTemp/tetherbound-proof/native-b-b73cba5a45-f37-human5-continuous/route4.stdout.log"
+    },
+    {
+      "source_sha": "b73cba5a45b5b3d8f236193737df86c5b982725c",
+      "route_id": "sluice_isle_to_veilfall_sheltered",
+      "hops": 7,
+      "assertions": 325,
+      "minimum_stamina_pct": 30.23,
+      "health": 100,
+      "captures": 14,
+      "process_receipt": {
+        "exit_code": 0,
+        "pid": 1128,
+        "finished_utc": "2026-10-08T06:35:39.1254823Z",
+        "source": "b73cba5a45b5b3d8f236193737df86c5b982725c",
+        "stop_reason": "",
+        "started_utc": "2026-10-08T06:30:04.3039980Z"
+      },
+      "contact": "native-route5-contact.jpg",
+      "log_path": "D:/CodexTemp/tetherbound-proof/native-b-b73cba5a45-f37-human5-continuous/route5.stdout.log"
+    }
+  ],
+  "retained_routes": [
+    {
+      "route_id": "first_shore_to_reedhaven_sheltered",
+      "source_sha": "7f9b0a115c4f3ebbea4eb32dfd2345c2d1cb969e",
+      "run_id": 37703956997,
+      "artifact_id": 11518819820,
+      "hops": 1,
+      "assertions": 85,
+      "exit": 0,
+      "minimum_stamina_pct": 31.26,
+      "health": 100,
+      "contact": "first-shore-contact.jpg",
+      "evidence": "first-shore-actual-r1.json"
+    },
+    {
+      "route_id": "reedhaven_to_brine_steps_sheltered",
+      "source_sha": "eb96e8f11370b43894685af923125ed1343d0786",
+      "run_id": 37705701376,
+      "artifact_id": 11519866622,
+      "hops": 2,
+      "assertions": 124,
+      "exit": 0,
+      "minimum_stamina_pct": [
+        75.87,
+        75.69
+      ],
+      "health": 100,
+      "contact": "reedhaven-contact.jpg",
+      "evidence": "reedhaven-actual-r1.json"
+    }
+  ],
+  "combined": {
+    "required_routes": 7,
+    "hops": 24,
+    "assertions": 1272,
+    "zero_exits": 7,
+    "minimum_stamina_pct": 30.23,
+    "required_reserve_pct": 20,
+    "baseline_human_stamina": 100,
+    "skill_level": 0,
+    "efficiency": 1,
+    "commanded_steering_ratio": 1.155,
+    "health": 100
+  },
+  "fixture": {
+    "earned_route": false,
+    "original_five_granted": [
+      [
+        "terrapup",
+        44
+      ],
+      [
+        "bramblebun",
+        43
+      ],
+      [
+        "mudsnout",
+        42
+      ],
+      [
+        "pipwing",
+        42
+      ],
+      [
+        "trailpup",
+        41
+      ]
+    ],
+    "seeded_realm_and_departure_flags": true,
+    "one_dry_start_placement_per_hop": true,
+    "swimming_xp_pinned_zero": true,
+    "dry_regeneration": "natural",
+    "input": "existing InputEventAction; actual HUMAN then LAND",
+    "camera_hud_geometry": "unchanged",
+    "owned_compatible_swimmer": false,
+    "mount_body_present": false
+  },
+  "verified": {
+    "original_guard_budgets": "1200s route and30s guarded capture unchanged; optional functional-offload omitted after preserved first-draw failure",
+    "source_clean_tree": "5ecbba00b13113082885a2f032b6d787444d4f2a",
+    "copied_capture_sidecar_hashes": 84,
+    "true_native_resolution": "1280x720 all42",
+    "per_route_identity": "same character/body/ordered originalfiveUIDs for each isolated route; no continuous-save claim",
+    "all42_sidecars": "HP100/stamina100/skill0/efficiency1/UID identity/no swimmer/no mount/no mountbody/1280x720 verified"
+  },
+  "logic": {
+    "verdict": "n/a",
+    "reason": "Closure changes only evidence and read-only observations in existing smoke. No production/config change; no unit file names smoke_water_swimming.gd. Original reviewer confirmed; unrelated stroke/restore unit batches are not claimed."
+  },
+  "independent_review": {
+    "reviewer": "b_f37_review, original criterion reviewer",
+    "verdict": "APPROVE whole SOURCE/BEHAVIOR",
+    "scope": "Independently verified seven mandatory sheltered crossings, actual logs/process receipts/sidecars, threshold/steering/HP/identity/mount absence/real current and dry-state guards; original first2 approvals reused"
+  },
+  "visual": {
+    "judge": "b_night_visual, original code-blind judge",
+    "verdict": "PASS whole literal visual evidence set",
+    "verdict_file": "human-required-routes-literal-verdict.json",
+    "sheets": 7,
+    "composition": "Existing build_cloudreach_contact_sheet.ps1 preserves complete unretouched frames; native five sheets show every captured hop"
+  },
+  "preserved_failures": [
+    "37708373493 original route2 guarded frame failure",
+    "37732048053 and37732861531 original hosted first-draw deadline failures",
+    "37733507581 and37734807788 observation-only hosted failures",
+    "native-b-b73cba5a45-f37-human5 optional-offload first-route exit1/no frames",
+    "comparison-verdict-r1.json stricter whole-art/stroke BLOCK remains retained"
+  ],
+  "shipping_flags": "none flipped for F37#2; unrelated presentation ON/OFF flags unchanged",
+  "not_claimed": [
+    "Earned campaign or gate fights",
+    "Co-op",
+    "One continuous save across routes",
+    "F37#4",
+    "Continuous visual swim-stroke or entry/exit interpolation",
+    "Full Visual Bars A/B",
+    "Owner device or performance"
+  ]
+}

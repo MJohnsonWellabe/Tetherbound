@@ -11,6 +11,8 @@ const PARTY_SEAM := preload("res://scripts/story/party_seam.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
 const PLAYER_SKILLS := ["running", "catching", "riding", "swimming", "flying"]
+const SWIM_STATE := preload("res://scripts/player/swim_state.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 ## `--original-five` fixture for ACCEPTANCE F12 ("with the original five and no
 ## owned swimmer"). The docs never name species, so the five are the typical
 ## retained party the project's own data already declares:
@@ -42,6 +44,14 @@ var route_max_stamina_gain_per_frame := 0.0
 ## earned levels only reduce drain). The minimum efficiency seen is asserted.
 var pin_swim_level_zero := false
 var pinned_minimum_efficiency := 1.0
+## Optional evidence only: retain the current native draw without steering,
+## hiding HUD, resizing, pausing, or changing the existing route fixture.
+var capture_water_route := false
+var water_route_offload := false
+var _water_capture_observer: Callable
+var _water_capture_party_uids: Array[String] = []
+var _water_capture_identity := ""
+var _water_capture_body_id := 0
 
 
 func _init() -> void:
@@ -49,6 +59,24 @@ func _init() -> void:
 
 
 func _run() -> void:
+	capture_water_route = OS.get_cmdline_user_args().has("--capture-water-route")
+	if capture_water_route:
+		if not _expect(_every_hop_argument() and _original_five_argument() and not _rest_route_argument().is_empty(),
+			"--capture-water-route requires --rest-route=<id> --every-hop --original-five"):
+			return
+		if not _expect(DisplayServer.get_name() != "headless" and RenderingServer.render_loop_enabled,
+			"--capture-water-route requires an actual drawing display; a headless/non-rendering offload cannot capture"):
+			return
+	# Explicit hosted route offload keeps all real movement, input and hop
+	# assertions. Each requested frame below still enables and guards a real
+	# completed native draw; no performance/continuous-motion claim follows.
+	water_route_offload = OS.get_cmdline_user_args().has("--functional-offload")
+	if water_route_offload:
+		if not _expect(capture_water_route, "water offload requires the explicit original-five route captures"):
+			return
+		if not _expect(preload("res://tests/helpers/f19_functional_offload.gd").configure("water_original_five_routes"),
+			"water offload requires the real Compatibility display"):
+			return
 	var watchdog := 1200.0 if _every_hop_argument() else 180.0
 	create_timer(watchdog).timeout.connect(func() -> void:
 		if not finished:
@@ -319,6 +347,18 @@ func _run_every_hop(game: Node, config: Dictionary, route_id: String) -> void:
 		party_species = _grant_original_five(game)
 		if party_species.is_empty():
 			return
+	if capture_water_route:
+		_water_capture_identity = str(game.local.character_id)
+		_water_capture_body_id = player.get_instance_id()
+		for member: RefCounted in game.party.call("members"):
+			var uid := str(member.uid)
+			if not _expect(not uid.is_empty() and not _water_capture_party_uids.has(uid),
+				"route capture needs five distinct actual party UIDs"):
+				return
+			_water_capture_party_uids.append(uid)
+		if not _expect(not _water_capture_identity.is_empty() and _water_capture_party_uids.size() == 5,
+			"route capture needs the actual trainer identity and original five"):
+			return
 	var party: RefCounted = game.party
 	var party_size := int(party.call("size")) if party != null else 0
 	var riding := world.get_node_or_null("RidingController")
@@ -388,8 +428,18 @@ func _run_every_hop(game: Node, config: Dictionary, route_id: String) -> void:
 			"%s: command zigzag is not ~15 percent steering deviation: %.3f" % [label, commanded_ratio]):
 			return
 		var hop_msec := Time.get_ticks_msec()
+		var capture_receipt := {"complete": false}
+		var capture_context := {"route_id": route_id, "hop": hop + 1, "from_anchor": stops[hop],
+			"to_anchor": stops[hop + 1], "hop_started_ms": hop_msec, "path_m": hop_length,
+			"commanded_steering_ratio": commanded_ratio, "start_snap_m": snap_m,
+			"required_departure_flag": departure_flag}
 		pin_swim_level_zero = true
 		for target: Vector3 in commanded:
+			if capture_water_route and target == commanded[3] and not capture_receipt.has("started"):
+				# Arm in the middle portion of the existing eight-leg zigzag. The
+				# coroutine observes drawing concurrently; it never stalls movement.
+				capture_receipt["started"] = true
+				_capture_water_frame(game, capture_context, "midwater", finish, capture_receipt)
 			if not await _move_to(target, 0.8, 900):
 				return
 		pin_swim_level_zero = false
@@ -423,6 +473,11 @@ func _run_every_hop(game: Node, config: Dictionary, route_id: String) -> void:
 			return
 		if original_five and not _original_five_still_unmounted(game, party_species, label + " (arrival)"):
 			return
+		if capture_water_route:
+			if not _expect(bool(capture_receipt.complete), label + ": no completed actual midwater frame before arrival"):
+				return
+			if not await _capture_water_frame(game, capture_context, "dry-arrival", finish, {}):
+				return
 	var stamina_before_regen: float = vitals.stamina
 	await _frames(60)
 	var stamina_after_regen: float = vitals.stamina
@@ -594,6 +649,8 @@ func _move_to(target: Vector3, tolerance: float, frame_limit: int) -> bool:
 	var previous := player.global_position
 	var previous_stamina := float(player.get("vitals").stamina)
 	for _frame in frame_limit:
+		if capture_water_route and finished:
+			return false
 		var offset := target - player.global_position
 		offset.y = 0.0
 		if offset.length() <= tolerance:
@@ -603,6 +660,8 @@ func _move_to(target: Vector3, tolerance: float, frame_limit: int) -> bool:
 		camera.set("yaw", atan2(-offset.x, -offset.z))
 		_action(true)
 		await physics_frame
+		if capture_water_route and finished:
+			return false
 		if swimming.is_swimming():
 			var moved := player.global_position - previous
 			moved.y = 0.0
@@ -666,6 +725,167 @@ func _every_hop_argument() -> bool:
 	return OS.get_cmdline_user_args().has("--every-hop")
 
 
+## Exactly one PNG and its read-only state sidecar per requested phase/hop.
+## Midwater runs concurrently with _move_to; dry arrival awaits a completed
+## draw only after the original hop assertions. No draw/identity fallback.
+func _capture_water_frame(game: Node, context: Dictionary, phase: String, finish: Vector3, receipt: Dictionary) -> bool:
+	if _water_capture_observer.is_valid():
+		return _fail("route capture overlapped another pending frame")
+	if water_route_offload:
+		RenderingServer.render_loop_enabled = true
+	var retained: Array[Image] = []
+	var record: Dictionary = {}
+	var last_blocked_ray: Dictionary = {}
+	var observation: Dictionary = {"draw_callbacks": 0, "stage": "no_completed_draw"}
+	var deadline := Time.get_ticks_msec() + 30000
+	_water_capture_observer = func() -> void:
+		observation["draw_callbacks"] = int(observation.draw_callbacks) + 1
+		if finished or not retained.is_empty() or Time.get_ticks_msec() >= deadline:
+			observation["terminal_gate"] = "deadline_or_finished"
+			return
+		observation["stage"] = "display_scene_input"
+		if DisplayServer.get_name() == "headless" or not RenderingServer.render_loop_enabled \
+			or paused or not bool(world.call("shell_build_complete")) or not player.is_node_ready() \
+			or not bool(player.call("locomotion_enabled")) or INPUT_OWNER.current(self) != null:
+			return
+		var view := root.get_camera_3d()
+		var model := player.get_node_or_null("Model") as Node3D
+		observation["stage"] = "camera_model_skeleton"
+		if view == null or not view.is_current() or not camera.is_ancestor_of(view) \
+			or model == null or not model.is_visible_in_tree() \
+			or model.call("skeleton") == null:
+			return
+		var state: Dictionary = swimming.snapshot()
+		observation.merge({"stage": "swim_readiness", "mode": int(state.mode),
+			"floor": player.is_on_floor(), "forward": Input.is_action_pressed("move_forward"),
+			"actual_swim_m": observed_swim_distance, "player": str(player.global_position)}, true)
+		var ready := int(state.mode) == SWIM_STATE.Mode.HUMAN and not player.is_on_floor() \
+			and Input.is_action_pressed("move_forward") and observed_swim_distance > 1.0
+		if phase == "dry-arrival":
+			ready = int(state.mode) == SWIM_STATE.Mode.LAND and player.is_on_floor() \
+				and float(world.call("water_depth_at", player.global_position)) <= 0.0 \
+				and bool(state.has_safe_landing) and not Input.is_action_pressed("move_forward") \
+				and Vector2(player.global_position.x - finish.x, player.global_position.z - finish.z).length() <= 1.0 \
+				and Vector2(swimming.state.safe_landing.x - finish.x, swimming.state.safe_landing.z - finish.z).length() < 0.1
+		if not ready:
+			return
+		# The original route may pass beneath a pier. Observe its next clear
+		# native frame without moving the camera/body or stalling the walk.
+		# Ray tests use the installed live skeleton, not a visual proxy.
+		if phase == "midwater":
+			var rig := model.call("skeleton") as Skeleton3D
+			for bone_name: String in ["Hips", "Spine02"]:
+				observation.merge({"stage": "bone_visibility", "bone": bone_name}, true)
+				var bone := rig.find_bone(bone_name)
+				if bone < 0: return
+				var point := rig.to_global(rig.get_bone_global_pose(bone).origin)
+				if view.is_position_behind(point): return
+				var ray := PhysicsRayQueryParameters3D.create(view.global_position, point,
+					player.collision_mask, [player.get_rid()])
+				var blocked := player.get_world_3d().direct_space_state.intersect_ray(ray)
+				if not blocked.is_empty():
+					var collider: Variant = blocked.get("collider")
+					last_blocked_ray.merge({"bone": bone_name, "frame": Engine.get_physics_frames(),
+						"player": str(player.global_position), "camera": str(view.global_position),
+						"bone_position": str(point), "hit_position": str(blocked.get("position")),
+						"collider": str(collider.get_path()) if collider is Node else str(collider)}, true)
+					return
+		var snapshot := _water_capture_snapshot(game)
+		observation["stage"] = "owner_identity"
+		if snapshot.character_id != _water_capture_identity or snapshot.player_instance_id != _water_capture_body_id \
+			or snapshot.party_uids != _water_capture_party_uids or snapshot.mounted or snapshot.mount_body_present \
+			or snapshot.mounted_swim_body_present or snapshot.owns_compatible_swim_mount:
+			return
+		record.merge(context, true)
+		record.merge(snapshot, true)
+		record["phase"] = phase
+		record["hop_elapsed_ms"] = int(record.ticks_ms) - int(context.hop_started_ms)
+		record["departure_flag_present"] = str(context.required_departure_flag).is_empty() \
+			or bool(game.world.flags.has(str(context.required_departure_flag)))
+		record["camera"] = str(view.get_path())
+		record["model_path"] = str((model.call("config") as Dictionary).get("model", ""))
+		retained.append(root.get_texture().get_image())
+	RenderingServer.frame_post_draw.connect(_water_capture_observer)
+	while retained.is_empty() and not finished and Time.get_ticks_msec() < deadline:
+		await process_frame
+	_stop_water_capture()
+	if finished:
+		return false
+	if retained.is_empty():
+		print("WATER CAPTURE LAST STAGE " + JSON.stringify(observation))
+	if retained.is_empty() and not last_blocked_ray.is_empty():
+		print("WATER CAPTURE LAST BLOCKED RAY " + JSON.stringify(last_blocked_ray))
+	if not _expect(not retained.is_empty(), "route capture %s hop %d %s needs a ready actual frame within 30 seconds" % [context.route_id, context.hop, phase]):
+		return false
+	var picture: Image = retained[0]
+	var directory := "res://shots/water-route-%s-%d" % [str(context.route_id).validate_filename(), OS.get_process_id()]
+	var stem := "%02d-%s" % [context.hop, phase]
+	var path := directory.path_join(stem + ".png")
+	if not _expect(DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(directory)) == OK \
+		and picture != null and not picture.is_empty() and picture.save_png(path) == OK,
+		"route capture saved native framebuffer: " + path):
+		return false
+	record["file"] = path
+	record["width"] = picture.get_width()
+	record["height"] = picture.get_height()
+	record["fixture"] = {"earned_route": false, "realm_and_departure_flag_seeded": true,
+		"one_dry_start_position_write_per_hop": true, "swimming_xp_pinned_zero": true,
+		"original_five_granted": ORIGINAL_FIVE, "dry_recovery": "natural regeneration",
+		"input": "existing InputEventAction", "camera_and_hud": "unchanged",
+		"continuous_drawing": not water_route_offload, "guarded_native_frames": true}
+	var file := FileAccess.open(directory.path_join(stem + ".json"), FileAccess.WRITE)
+	if not _expect(file != null, "route capture state sidecar opened: " + stem):
+		return false
+	file.store_string(JSON.stringify(record, "\t"))
+	file.flush()
+	var saved := file.get_error() == OK
+	file.close()
+	if not _expect(saved, "route capture state sidecar saved: " + stem):
+		return false
+	receipt["complete"] = true
+	print("WATER ROUTE CAPTURE " + JSON.stringify(record))
+	return true
+
+
+func _water_capture_snapshot(game: Node) -> Dictionary:
+	var vitals: RefCounted = player.get("vitals")
+	var riding := world.get_node("RidingController")
+	var mounted_swim := world.get_node("MountedSwimming")
+	var active_body: Variant = mounted_swim.get("body")
+	var flow: Vector3 = world.call("current_at", player.global_position)
+	var members: Array[Dictionary] = []
+	var uids: Array[String] = []
+	var owns_swimmer := false
+	for member: RefCounted in game.party.call("members"):
+		uids.append(str(member.uid))
+		members.append({"uid": str(member.uid), "species": str(member.species_id), "level": int(member.level)})
+		owns_swimmer = owns_swimmer or _is_compatible_swim_mount(str(member.species_id))
+	return {"ticks_ms": Time.get_ticks_msec(), "physics_frame": Engine.get_physics_frames(),
+		"process_frame": Engine.get_process_frames(), "character_id": str(game.local.character_id),
+		"player_instance_id": player.get_instance_id(), "player_path": str(player.get_path()),
+		"position": [player.global_position.x, player.global_position.y, player.global_position.z],
+		"velocity": [player.velocity.x, player.velocity.y, player.velocity.z],
+		"stamina": float(vitals.stamina), "max_stamina": float(vitals.max_stamina), "health": float(vitals.health),
+		"minimum_hop_stamina": route_minimum_stamina, "actual_swim_m": observed_swim_distance,
+		"swimming": swimming.snapshot(), "swimming_level": int(game.local.skills.level("swimming")),
+		"swimming_efficiency": float(game.local.skills.efficiency("swimming")), "on_floor": player.is_on_floor(),
+		"water_depth_m": float(world.call("water_depth_at", player.global_position)), "current": [flow.x, flow.y, flow.z],
+		"currents_restored": bool(game.world.flags.has("water_currents_restored")),
+		"mounted": bool(riding.call("is_mounted")), "mount_body_present": riding.call("mount_body") != null,
+		"mounted_swim_body_present": active_body != null and is_instance_valid(active_body),
+		"party": members, "party_uids": uids, "owns_compatible_swim_mount": owns_swimmer,
+		"requested_input": str(Input.get_vector("move_left", "move_right", "move_forward", "move_back")),
+		"display": DisplayServer.get_name(), "render_loop_enabled": RenderingServer.render_loop_enabled}
+
+
+func _stop_water_capture() -> void:
+	if _water_capture_observer.is_valid() and RenderingServer.frame_post_draw.is_connected(_water_capture_observer):
+		RenderingServer.frame_post_draw.disconnect(_water_capture_observer)
+	_water_capture_observer = Callable()
+	if water_route_offload:
+		RenderingServer.render_loop_enabled = false
+
+
 func _vector(raw: Array) -> Vector3:
 	return Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
 
@@ -681,6 +901,7 @@ func _expect(condition: bool, message: String) -> bool:
 
 
 func _fail(message: String) -> bool:
+	_stop_water_capture()
 	_action(false)
 	finished = true
 	push_error("WATER SWIMMING: " + message)
