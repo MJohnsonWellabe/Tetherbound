@@ -71,5 +71,10 @@
   "scope": "Eight native originals, four day/night clear/rain interior detail pairs from existing producer/plan. No full matrix/bar/High/Medium/device/performance/earned/whole claim.",
   "writer": "ROOT only, native GPU serialized fresh frozen/imported writer, no hosted GPU",
   "before": "Proposed same-source baseline. No stale failed scalar/before reuse requested.",
-  "source": "925fae787c431264ba74cb8b4d0ebafdc4a3bfaa"
+  "source": "925fae787c431264ba74cb8b4d0ebafdc4a3bfaa",
+  "required_existing_plan": {
+    "requirement": "Existing tracked plan must be present byte-identical in ROOT frozen checkout before import/capture. Sparse hydration of this exact existing source dependency allowed, no new plan or changed row/stands.",
+    "path": "ralph/reports/R2-F38/capture-definition.json",
+    "git_blob": "c41279e1303c3cee5619dc06dc53ee61646cea8c"
+  }
 }
