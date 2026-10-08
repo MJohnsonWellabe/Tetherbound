@@ -2053,5 +2053,198 @@
       "Live loss step untouched and not promoted; all prior source/unit/command/native38 victory approvals, ratings and failed52cd/forced-end/raster witnesses preserved."
     ],
     "activity": "No engine, native/hosted dispatch, GPU, source edit, loss inspection, GitHub/status/raw-thread access or judge contact."
+  },
+  "b852_level42_loss_context_original_runtime_review": {
+    "reviewer": "original review_cloud_startup 01a11679-fc2c-7873-bccd-423c1e04476d",
+    "capture_provenance_verdict": "APPROVE",
+    "desired_natural_loss_context_verdict": "REQUEST_CHANGES",
+    "classification": "CAP_REACHED_WHILE_FIGHTING; NO NATURAL PARTY DEFEAT",
+    "scope": "Only completed original level42 b852 single-Hollows step; no bark/victory image re-review or visual rescoring.",
+    "source_commit": "b8523462de914850025fbc7ed085903be68a0c36",
+    "packet_root": "D:\\CodexTemp\\tetherbound-proof\\native-e-b8523462de-bark-loss-r1",
+    "canonical_frames": "D:\\CodexTemp\\tetherbound-proof\\native-e-b8523462de-bark-loss-r1\\frames\\hollows-loss",
+    "provenance": {
+      "actual_start": {
+        "stop_on_owner_game": true,
+        "pid": 60320,
+        "args": [
+          "--path",
+          "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+          "--rendering-method",
+          "gl_compatibility",
+          "--resolution",
+          "1920x1080",
+          "--fixed-fps",
+          "20",
+          "--script",
+          "res://tools/phase2_capture_stormwood_fights.gd",
+          "--",
+          "--preset=Low",
+          "--low-resolution=1920x1080",
+          "--source-commit=b8523462de914850025fbc7ed085903be68a0c36",
+          "--out=res://.tmp/stormwood-phase2/f41-hollows-loss-b852",
+          "--ids=hollows_alpha",
+          "--seed=2042",
+          "--party-level=42",
+          "--seconds=120",
+          "--interval=10.0"
+        ],
+        "started_utc": "2026-10-08T15:06:48.7062173Z",
+        "source": "b8523462de914850025fbc7ed085903be68a0c36"
+      },
+      "terminal_receipt": {
+        "source": "b8523462de914850025fbc7ed085903be68a0c36",
+        "finished_utc": "2026-10-08T15:14:39.3718991Z",
+        "pid": 60320,
+        "started_utc": "2026-10-08T15:06:48.7062173Z",
+        "stop_reason": "",
+        "exit_code": 0
+      },
+      "source_binding": "Same exact accepted b852 source/import reference; persisted start, terminal receipt and graphics metadata agree.",
+      "hash_manifest_entries": 69,
+      "hash_manifest_mismatches": 0,
+      "files": {
+        "loss-terminal-summary.json": {
+          "bytes": 845,
+          "sha256": "4bb730a3573a0953757c2ff8ff99bb73679fe5cb41b2993a5fa21f217dee8478"
+        },
+        "hollows-loss-start.json": {
+          "bytes": 755,
+          "sha256": "cdd49eeadf7a20ebde7033ca2acf4a6d46e98b930c243cc9f6b1c1fff72e7711"
+        },
+        "hollows-loss-receipt.json": {
+          "bytes": 221,
+          "sha256": "70097a69a751bfcdf0fdff8278f12b74a4e0b23e2b0e0ca98e844a1790513008"
+        },
+        "hollows-loss.stdout.log": {
+          "bytes": 21874,
+          "sha256": "2b2f7d7b6d4870c991707f5c84653fc7c1cba3635c277b30c5de0b636c991b1c"
+        },
+        "hollows-loss.stderr.log": {
+          "bytes": 2927,
+          "sha256": "ad03d4712411022a465ae9265a3301f2d5b046ace532b7a8c5e8cca4aa1e9637"
+        },
+        "proof-hashes.json": {
+          "bytes": 12627,
+          "sha256": "e07caccf93053a4f6afa37e7987ca5d0eb126295a8a14eb2640bf9e71644bebc"
+        },
+        "frames/hollows-loss/lookdev_fight.json": {
+          "bytes": 8839,
+          "sha256": "2a297c81ddebec65157db758cd8f50df25f9cd3edef6ffc429cbbf3412d292ee"
+        },
+        "frames/hollows-loss/capture_log.json": {
+          "bytes": 28386,
+          "sha256": "6faa9437e6488f8d91415f3eb4d9a2204aa6e560957d55c2fc4be7fe72bf030e"
+        }
+      },
+      "archive_limit": "Canonical archive bytes/recorded hashes verified. Historical worktree output no longer exists for a fresh direct original/archive byte comparison; no such comparison claimed for loss."
+    },
+    "capture": {
+      "engine": "Godot v4.7.stable.official.5b4e0cb0f",
+      "actual_driver_stdout": "OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB",
+      "graphics_capture": {
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+        "preset": "Low",
+        "renderer": "gl_compatibility",
+        "resolution": [
+          1920,
+          1080
+        ],
+        "source_commit": "b8523462de914850025fbc7ed085903be68a0c36"
+      },
+      "unique_pngs": 38,
+      "unique_sha256": 38,
+      "actual_png_headers": [
+        1920,
+        1080
+      ],
+      "unique_record_paths": 38,
+      "active_records": 36,
+      "record_log_match": true,
+      "complete": true,
+      "failures": [],
+      "exit_code": 0,
+      "stop_reason": "",
+      "script_or_engine_errors": 0,
+      "warnings": 6
+    },
+    "actual_fight": {
+      "started": true,
+      "engaged_by": "Engage press",
+      "enemy_is_named": true,
+      "initial_quick_reach_m": 6.4075665,
+      "ally_hits": 66,
+      "enemy_hits": 0,
+      "enemy_misses": 38,
+      "ended_at_s": 120.02,
+      "precleanup_fighting_at_end": true,
+      "100_aftermath_present": false,
+      "99_after_time_s": 120.57,
+      "99_after_fighting": false,
+      "cleanup_disposition": "Precleanup row is still fighting at120.02. The retained producer then requests its original fled resolve; 99-after at120.57 is cleanup aftermath, not a natural defeat. Existing3d88 guard correctly omits100-aftermath."
+    },
+    "remaining_contexts": [
+      "P2-110 natural loss/out-of-fight context is absent and remains UNASSESSED.",
+      "No enemy hit/contact, dodge/spacing root cause or forced ending is inferred from0enemyhits/38misses.",
+      "Successful saved-image capture is not the requested loss proof, earned campaign, balance/device claim or whole criterion PASS."
+    ],
+    "preservation": "Earlier bark runtimeAPP/appearanceBLOCK, native38 victoryAPP/P2-111FAIL36,43of44 scores,52cd zero-image crash and forced-ending/raster-failed witnesses preserved unchanged.",
+    "activity": "No engine, dispatch, code/config edit, loss visual rating or judge contact."
+  },
+  "15ca_idle_after_engage_original_source_command_review": {
+    "reviewer": "original review_cloud_startup 01a11679-fc2c-7873-bccd-423c1e04476d",
+    "verdict": "APPROVE",
+    "scope": "Exact two-file17-add/2-delete idle input policy and additional single-Hollows command only; accepted bark tangent/range/aftermath/runtime proofs not repeated.",
+    "source_commit": "15ca32a5ac20dd54d5bf9b8024677e4457723ca7",
+    "reviewed_blobs": {
+      "tests/capture_stormwood_b_named_fights.gd": "b8d22e35c143c0cc9fbf31a7facd260d5eb986bf",
+      "tools/phase2_capture_stormwood_fights.gd": "e19b014bc07f1cad3f83dc49d2f8fe34bf28527c"
+    },
+    "findings": [
+      "Default policy remains pilot and the existing pilot branch is unchanged. Parent defaults idle=false; child accepts only pilot or idle-after-engage and rejects idle unless existing party-level42 is selected.",
+      "Existing actual Engage admission/tap and same named production body binding occur before policy selection in the fight loop. Existing tap releases its button; idle uses _stick(Vector3.ZERO), which releases all four movement axes.",
+      "Idle bypasses the attacking/evasion branch, without pressing combat_quick. Existing delayed quick release and terminal release remain; fresh-process fixture has no earlier pilot quick press.",
+      "Enemy AI, host damage/faints/state progression, tell callbacks, periodic/tell images and physical awaits continue unchanged. HP/stats/body/collision/clock/party/seed/cap/tell/time/failure semantics are not mutated by this diff.",
+      "Log and named receipt disclose input_policy and explicitly state idle is not a forced outcome. Existing source/preset/fresh output/started/nonempty/native image/fail-exit checks and precleanup3d88 aftermath guard are unchanged."
+    ],
+    "command": {
+      "executable": "Godot",
+      "argv": [
+        "--path",
+        "<fresh pinned15ca worktree>",
+        "--rendering-method",
+        "gl_compatibility",
+        "--resolution",
+        "1920x1080",
+        "--fixed-fps",
+        "20",
+        "--script",
+        "res://tools/phase2_capture_stormwood_fights.gd",
+        "--",
+        "--preset=Low",
+        "--low-resolution=1920x1080",
+        "--source-commit=15ca32a5ac20dd54d5bf9b8024677e4457723ca7",
+        "--out=res://.tmp/stormwood-phase2/f41-hollows-idle-loss-15ca",
+        "--ids=hollows_alpha",
+        "--seed=2042",
+        "--party-level=42",
+        "--input-policy=idle-after-engage",
+        "--seconds=120",
+        "--interval=10.0"
+      ]
+    },
+    "runtime_status": "PENDING",
+    "required_runtime_proof": [
+      "Actual pinned clean source/import/driver/raster/source metadata, started real Engage and persisted image/record/failure/terminal receipts.",
+      "Observe enemy hit/contact/damage and genuine progression; idle supplies no guaranteed contact, hits or outcome.",
+      "Loss classification requires actual precleanup natural stopped state plus authoritative outcome or explicit visible defeat acknowledgment. Natural victory or active cap cannot masquerade as loss.",
+      "Active-at-cap forbids100-aftermath; forced fled cleanup is never natural defeat. No manual result, zero-HP or stats/authority rewrite is part of this command."
+    ],
+    "limits": [
+      "Disclosed five directly created creatures, original level42, stand/neighbour suppression, Calm pin, healing, seed and fixedfps20 remain fixtures, not earned campaign/balance/device proof.",
+      "P2-110 and wholeF41#0 remain open pending genuine missing loss context and original independent acceptance; no new score from source approval."
+    ],
+    "activity": "Read-only source/argument inspection plus original report append; no engine/test/dispatch/GPU/source edit or judge contact."
   }
 }
