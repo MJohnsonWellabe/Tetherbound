@@ -490,13 +490,31 @@ func revisit_completed(tree: SceneTree, game: Node) -> bool:
 	if not await travel.activate(prompt): failures.append_array(travel.failures); return false
 	if not check(panel.call("is_open") and panel.call("runner").call("conversation_id") == HOME.REPEAT_ID,
 		"ordinary Grandpa input selects the repeat conversation after credits"): return false
-	var deadline := Time.get_ticks_msec() + 30000
-	while panel.call("is_open") and Time.get_ticks_msec() < deadline: await travel.tap("interact")
+	var completed: Array[String] = []
+	var completion_observer := func(id: String) -> void: completed.append(id)
+	panel.connect("completed", completion_observer)
+	# Match the first homecoming reader: a released controller edge can take
+	# more than 30 seconds to draw here. Bound input by the actual authored
+	# lines plus the panel's opening guard, then check the unchanged outcome.
+	var line_count := int(panel.call("runner").call("_line_count"))
+	var presses := 0
+	while panel.call("is_open") and presses < line_count + 2:
+		if panel.call("runner").call("conversation_id") != HOME.REPEAT_ID \
+				or INPUT_OWNER.current(tree) != panel: break
+		await travel.tap("interact")
+		presses += 1
+	panel.disconnect("completed", completion_observer)
 	for frame in 8: await tree.process_frame
 	var credits_open := false
 	for node: Node in tree.get_nodes_in_group("story_modal"):
 		if node.get_script() == load("res://scripts/ui/regional_credits.gd") and node.call("is_open"): credits_open = true
-	return check(not panel.call("is_open") and not credits_open and INPUT_OWNER.current(tree) == null \
+	print("F20 REPEAT " + JSON.stringify({"authored_lines": line_count, "actual_presses": presses,
+		"completed": completed, "panel_open": panel.call("is_open"), "credits_open": credits_open,
+		"input_released": not Input.is_action_pressed("interact"),
+		"world_input": INPUT_OWNER.current(tree) == null,
+		"receipts_unchanged": game.local.redesign_character.transaction_receipts == receipts}))
+	return check(completed == [HOME.REPEAT_ID] and not Input.is_action_pressed("interact") \
+		and not panel.call("is_open") and not credits_open and INPUT_OWNER.current(tree) == null \
 		and game.local.redesign_character.transaction_receipts == receipts,
 		"natural repeat returns world input without credits or another personal receipt")
 
