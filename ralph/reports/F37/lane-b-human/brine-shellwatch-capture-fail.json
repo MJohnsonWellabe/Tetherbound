@@ -1,0 +1,16 @@
+{
+  "criterion": "F37#2",
+  "verdict": "FAIL; whole criterion remains OPEN",
+  "source_sha": "9003dcff633c1ced921ad94f6d267dd59f42ee8f",
+  "run_id": 37732048053,
+  "artifact_id": 11530078183,
+  "script": "tests/smoke_water_swimming.gd",
+  "args": "--rest-route=brine_steps_to_shellwatch_sheltered --every-hop --original-five --capture-water-route --functional-offload",
+  "renderer": "gl_compatibility",
+  "resolution": "1280x720",
+  "actual_failure": "route capture brine_steps_to_shellwatch_sheltered hop 1 midwater needs a ready actual frame within 30 seconds",
+  "exit_observation": "GitHub Run step exited1; original Bash errexit stopped before exit_code marker/summary. No invented engine exit or duration.",
+  "scope": "First hop capture observation failed; no complete route or stamina PASS. No frame, guard, timer, route, movement or fixture changed.",
+  "retained": "Raw run.log, user save and job logs remain in artifact11530078183 and the untracked run directory",
+  "next": "Different required existing Shellwatch-to-Tidal-Cradle route; all seven mandatory routes and whole independent review still required"
+}

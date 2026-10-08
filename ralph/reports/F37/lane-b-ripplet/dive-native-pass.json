@@ -1,0 +1,23 @@
+{
+  "criterion": "F37#1",
+  "verdict": "PASS; stronger supplemental actual native capture after whole READY6053033296",
+  "source_sha": "9003dcff633c1ced921ad94f6d267dd59f42ee8f",
+  "packet": "D:/CodexTemp/tetherbound-proof/native-b-9003dcff63-f37-dive-r1",
+  "script": "tests/smoke_f37_ripplet.gd",
+  "args": "--through-dive --capture-dive --functional-offload",
+  "supervisor": {"pid": 20192, "started_utc": "2026-10-08T05:21:23.1920558Z", "finished_utc": "2026-10-08T05:23:36.6627961Z", "exit_code": 0, "stop_reason": ""},
+  "source_clean": true,
+  "f37_pass_checks": 14,
+  "capture_pass_checks": 3,
+  "engine_script_parse_errors": 0,
+  "warning": "Existing interpolation deprecation retained",
+  "renderer": "gl_compatibility",
+  "actual_frame_resolution": "1920x1080; fullscreen capture differs from1280x720 launch argument",
+  "fixture": "Existing owned L30/breakthrough and deep-water fixture; not earned feast or campaign",
+  "observed": {"owned_uid": "creature-86b9a420cc67f423bfc4a95c6b863b0f", "cache_grant": 3, "node_grant": 4, "cache_node_duplicate_refused": true, "owned_optional_route_completed": true, "physics_seconds": 4.28333333333333, "route_speed_m_s": 8.0},
+  "visual": {"contact": "dive-native-contact.jpg", "method": "Existing contact tool; three complete unretouched frames: earlier two Low captures plus new native frame", "judge": "b_night_visual, original code-blind judge", "verdict": "PASS scoped readability/composition", "exact_verdict": "F1 retains readable Ripplet is diving. Tap Jump to surface; all three tiles show recognizable Ripplet beneath the water surface. F3 corroborates submerged appearance only.", "content_completion_pixels_claimed": false},
+  "independent_review": {"agent": "b_f37_review, original criterion reviewer", "verdict": "APPROVE whole F37#1 remains; native packet independently verified"},
+  "retained": "dive-content-pass.json hosted exit-zero mechanics and earlier literal Dive cue witness remain valid; failed hosted37730715117 capture remains FAIL",
+  "not_claimed": ["Earned feast or campaign", "F37#4", "Rejoin", "Device or performance", "Full Visual Bars A/B", "Content completion from image alone"],
+  "source_scope": "Only already-reviewed F37#1 source through0a; intervening3fb restore observation additions are separate/unclaimed"
+}
