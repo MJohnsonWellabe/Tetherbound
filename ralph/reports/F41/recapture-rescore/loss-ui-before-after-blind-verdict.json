@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "item_id": "P2-110",
+  "subject": "Visible loss-result clarity and pictured party readiness consistency",
+  "scope": "Pixel-only before/after review of the four expressly supplied full native 1920x1080 loss-result stills.",
+  "reviewer": {
+    "name": "Hypatia",
+    "role": "retained original independent code-blind visual judge",
+    "agent_id": "01a11667-4631-72b2-8fed-294999b8c043"
+  },
+  "before": {
+    "verdict": "BLOCK",
+    "visible_context": "Both views explicitly state 'Your creature is out of the fight' over the scene and 'Sparkit is out of the fight' near the bottom. These pixels support an out-of-fight presentation assessment.",
+    "reason": "The large orange message is readable but floats directly over the scene without a separate loss-result panel. Sparkit's highlighted roster row still has a full-looking green bar, matching the ready-looking bars of the other four creatures. That row conflicts with the explicit Sparkit out-of-fight text. TEAM 5/5 itself is not treated as a readiness count.",
+    "evidence": [
+      "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-99-after.png",
+      "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-100-aftermath.png"
+    ]
+  },
+  "after": {
+    "verdict": "PASS",
+    "visible_context": "Both views show a distinct orange-bordered dark card headed 'Fight lost', with 'Your creature is out of the fight'. The lower message names Sparkit as out of the fight.",
+    "reason": "The named loss result is contained in a clear panel, separate from the party list, quest card and exploration controls. Sparkit's row is visibly dimmed, carries a prominent orange KO badge and has an empty-looking grey bar. This differentiates its unavailable state from the four green-bar rows and removes the pictured full-green Sparkit contradiction. TEAM 5/5 remains visible without overriding the explicit individual KO state.",
+    "bounded_positive_findings": [
+      "Readable, explicitly named loss acknowledgment in both supplied after views.",
+      "Non-colour KO label and dimmed/empty-bar treatment consistently identify Sparkit as unavailable.",
+      "Other roster entries remain individually distinguishable; no assumption that they also fell is made."
+    ],
+    "evidence": [
+      "D:/CodexTemp/tetherbound-proof/native-e-09b2982b74-loss-ui-r1/frames/loss-ui/hollows_alpha-99-after.png",
+      "D:/CodexTemp/tetherbound-proof/native-e-09b2982b74-loss-ui-r1/frames/loss-ui/hollows_alpha-100-aftermath.png"
+    ]
+  },
+  "current_rating": {
+    "severity": 1,
+    "exposure": 3,
+    "importance": 4,
+    "impact": 12,
+    "verdict": "PASS",
+    "coverage": "BOUNDED_CURRENT_TWO_VISIBLE_LOSS_RESULT_VIEWS",
+    "severity_reason": "The named loss/readiness contradiction is not observed in the supplied after views. Severity 1 is the requested 1–5 scale minimum, not an assertion of a remaining observed defect.",
+    "exposure_reason": "This is an episodic end-of-fight result presentation rather than a continuously displayed fight cue. The rating is a qualitative exposure estimate, not measured campaign frequency.",
+    "importance_reason": "Players need to distinguish a lost fight and an unavailable companion from ready roster entries; result and availability comprehension are important.",
+    "independence": "Assigned from these four expressly inspected full rasters and the previously inspected written UI/readability bar. No prior numeric values or other-row rating was read or transplanted."
+  },
+  "evidence": {
+    "full_before_rasters_inspected": [
+      "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-99-after.png",
+      "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-100-aftermath.png"
+    ],
+    "full_after_rasters_inspected": [
+      "D:/CodexTemp/tetherbound-proof/native-e-09b2982b74-loss-ui-r1/frames/loss-ui/hollows_alpha-99-after.png",
+      "D:/CodexTemp/tetherbound-proof/native-e-09b2982b74-loss-ui-r1/frames/loss-ui/hollows_alpha-100-aftermath.png"
+    ],
+    "missing_paths": [],
+    "optional_after_context_used": false,
+    "reference_basis": "Previously inspected approved Stormwood boards and written ART_DIRECTION/UI/readability bar."
+  },
+  "limits": [
+    "The images support visible result wording, panel separation and roster-state consistency only. They do not establish natural cause, runtime outcome classification, damage/death correctness or an earned defeat.",
+    "No continuous fall animation, result timing, duration, dismissal, input behavior or recovery transition is assessed.",
+    "TEAM 5/5 may describe owned roster count; it is not treated as proof that all five are ready. The specific Sparkit row and KO treatment are the relevant visible cues.",
+    "The trainer's separate 100/100 heart display is not mistaken for Sparkit's creature health.",
+    "No other-party wipe, co-op eligibility, saved state, device readability, other resolutions, broad layout quality, full visual bar, READY or whole-criterion acceptance follows from this bounded PASS.",
+    "Before and after world framing differs; this is a visible UI/readiness comparison, not an exact world-pixel match or a cause assessment."
+  ],
+  "preservation": "Only this new artifact is written. Historical loss verdict, catalogue, all other rows, previous witnesses, assemblies and whole-criterion evidence remain untouched."
+}

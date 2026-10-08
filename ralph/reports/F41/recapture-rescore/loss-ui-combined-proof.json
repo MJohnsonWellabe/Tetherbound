@@ -28,7 +28,7 @@
       "HUD has no player; isolated fixture"
     ],
     "script": "tests/smoke_hud_presentation_lifecycle.gd",
-    "original_artifact_verdict": "PENDING",
+    "original_artifact_verdict": "APPROVE sameoriginal09b_corrected_loss_font_lifecycle_original_artifact_review; exactcheckout/ZIP/hash/100checks/7s/exit0",
     "limits": "Logged Control canvas1920x1080 despite legacy--720p selector; actual title/detail size assertions test scaling floor, no native720/physicaldevice/pixel proof"
   },
   "superseded_pre_floor": {
@@ -53,7 +53,7 @@
     "run": 37814682262,
     "test_blob": "c8746a4600cf6e4947763024e5a4f91188f5ca2b"
   },
-  "new_native_blind": "ROOT native-e-09b2982b74-loss-ui-r1 LIVE; original runtime/blind pending, no duplicate engine",
+  "new_native_blind": "OriginalruntimeAPPROVE + originalP2-110 beforeBLOCK→afterPASS12; originalCURRENTwholeF41#0SOURCEAPPROVE+blindcompletenessPASSat09b",
   "whole_F41_2_complete": false,
   "original_combined_source_command": {
     "source_verdict": "APPROVE",
@@ -62,5 +62,36 @@
     "original_report": "lane-e-capture-source-review.json/09b_combined_loss_HUD_original_source_command_review",
     "tracked_loss_result": true,
     "out": "res://.tmp/stormwood-phase2/f41-hollows-loss-ui-09b298"
-  }
+  },
+  "native_packet": {
+    "path": "D:/CodexTemp/tetherbound-proof/native-e-09b2982b74-loss-ui-r1",
+    "source": "09b2982b74bcca66f930c45a1110bc7bb6c87393",
+    "frames": 32,
+    "producer_frames": 29,
+    "hashes": 49,
+    "raster": "1920x1080PNG",
+    "enemy_hits": 13,
+    "enemy_misses": 1,
+    "ally_hits": 0,
+    "natural_ending_seconds": 43.92,
+    "cap_seconds": 120,
+    "fighting_at_end": false,
+    "strict_aftermath": true,
+    "errors": 0,
+    "warning_count": 6,
+    "runtime_verdict": "APPROVE",
+    "outcome": "Naturalactivecreaturedefeat, notfivepartywipe",
+    "warnings": "Retained inoriginal source report; no blanket clean-log claim"
+  },
+  "blind_p2_110": {
+    "artifact": "loss-ui-before-after-blind-verdict.json",
+    "before": "BLOCK",
+    "after": "PASS",
+    "severity": 1,
+    "exposure": 3,
+    "importance": 4,
+    "impact": 12,
+    "scope": "Boundedcurrenttwofullaftermathstills; physicaldevice/motion/otherresolutionnotcertified"
+  },
+  "accepted_current_whole_binding": "lane-e-capture-source-review.json/09b_whole_f41_0_original_final_loss_binding_review and whole-criterion-blind-completeness.json/final-current-loss-binding-completeness; no new criterion orF41#1–5credit"
 }
