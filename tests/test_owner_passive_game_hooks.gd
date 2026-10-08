@@ -279,6 +279,7 @@ func _native_case_backpack_target_guard_precedes_any_care_or_item_write() -> voi
 	var party_count: int = game.party.size()
 	var swap := preload("res://scripts/ui/swap_panel.gd").new()
 	swap.game = game
+	swap.set("_trade", trade)
 	swap.set("_trader_id", "oskar")
 	var authored_offer := preload("res://scripts/trade/creature_trade.gd").offer_for_day(swap.call("_config"), "oskar", 0)
 	assert_false(authored_offer.is_empty(), "swap keeps the authored trader and offer period")
