@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-10-08T06:24:02.637757+00:00",
- "main_sha": "a46d70ce3 (PR #583)",
+ "generated_at": "2026-10-08T08:15:29.640676+00:00",
+ "main_sha": "d93567001 (PR #584)",
  "batch4_sha": "next batch assembling",
  "rows": [
   {
@@ -708,9 +708,9 @@
     {
      "text": "Forest, rod line and restored-sky views pass visual matrix / Bars A/B",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-e cd09de0814 (READY #572, 11:25 PM CT 10-07): changed 8/8 run 37725671536, logic 54/0, area 105/0, judge PASS whole Low matrix; review APPROVE",
+     "evidence": "PR #584 (consolidation 9) merged 2026-10-08 2:06 AM CT: from tb/codex-e cd09de0814 (READY #572, 11:25 PM CT 10-07): changed 8/8 run 37725671536, logic 54/0, area 105/0, judge PASS whole Low matrix; review APPROVE",
      "gap": "Re-capture Deepwood, rod line and aftermath matrix; code-blind judge against the new §4 bar Folds into F41#3, F41#4.",
-     "note": "Landed: Evidenced on tb/codex-e cd09de0814 (READY #572, 11:25 PM CT 10-07): changed 8/8 run 37725671536, logic 54/0, area 105/0, judge PASS whole Low matrix; review APPROVE",
+     "note": "Landed: PR #584 (consolidation 9) merged 2026-10-08 2:06 AM CT: from tb/codex-e cd09de0814 (READY #572, 11:25 PM CT 10-07): changed 8/8 run 37725671536, logic 54/0, area 105/0, judge PASS whole Low matrix; review APPROVE",
      "audit_index": 4
     },
     {
@@ -2355,25 +2355,25 @@
     {
      "text": "An owned Ripplet can be ridden as a surface swimmer from Tidewake's opening, faster than human swimming and able to cross currents.",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-b c65d068470 (READY #572, 11:34 PM CT 10-07): run 37727411588 15+3 checks, owned dry-to-dry currents, judge PASS; review APPROVE",
+     "evidence": "PR #584 (consolidation 9) merged 2026-10-08 2:06 AM CT: from tb/codex-b c65d068470 (READY #572, 11:34 PM CT 10-07): run 37727411588 15+3 checks, owned dry-to-dry currents, judge PASS; review APPROVE",
      "gap": "Wire and run smoke_f37_ripplet.gd in CI. Add an ordinary-input witness from the Tidewake opening comparing speed and current crossing against a human swimmer.",
-     "note": "Landed: Evidenced on tb/codex-b c65d068470 (READY #572, 11:34 PM CT 10-07): run 37727411588 15+3 checks, owned dry-to-dry currents, judge PASS; review APPROVE",
+     "note": "Landed: PR #584 (consolidation 9) merged 2026-10-08 2:06 AM CT: from tb/codex-b c65d068470 (READY #572, 11:34 PM CT 10-07): run 37727411588 15+3 checks, owned dry-to-dry currents, judge PASS; review APPROVE",
      "audit_index": 0
     },
     {
      "text": "At the L30 breakthrough Ripplet gains Dive, reaching sunken caches, nodes and hidden optional routes.",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-b fe2642cab5 (READY #572, 12:29 AM CT 10-08): run 37731553596 13 checks, logic 77 run 37729891287, judge PASS Dive; review APPROVE",
+     "evidence": "PR #584 (consolidation 9) merged 2026-10-08 2:06 AM CT: from tb/codex-b fe2642cab5 (READY #572, 12:29 AM CT 10-08): run 37731553596 13 checks, logic 77 run 37729891287, judge PASS Dive; review APPROVE",
      "gap": "Add an engine smoke for diving to each sunken site and route corridor after the actual feast. A pre-breakthrough attempt must be refused.",
-     "note": "Landed: Evidenced on tb/codex-b fe2642cab5 (READY #572, 12:29 AM CT 10-08): run 37731553596 13 checks, logic 77 run 37729891287, judge PASS Dive; review APPROVE",
+     "note": "Landed: PR #584 (consolidation 9) merged 2026-10-08 2:06 AM CT: from tb/codex-b fe2642cab5 (READY #572, 12:29 AM CT 10-08): run 37731553596 13 checks, logic 77 run 37729891287, judge PASS Dive; review APPROVE",
      "audit_index": 1
     },
     {
      "text": "Every required water route stays human-swimmable without Ripplet.",
-     "status": "partial",
-     "evidence": "ralph/reports/TIDEWAKE/b/f12_0_walked_hops/PROOF.md@d6c7025b3",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-b 20cd7626f4 (READY #572, 1:44 AM CT 10-08): smoke_water_swimming all 7 routes/24 hops/1272 assertions, native continuous run; review APPROVE",
      "gap": "Rerun smoke_water_swimming.gd with the --original-five every-hop mode at b4e4897d5. Consider wiring that mode into CI.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. water_world.json, water_world.gd, swim_controller.gd and movement.json have changed since. CI runs smoke_water_swimming without the every-hop or original-five modes.",
+     "note": "Landed: Evidenced on tb/codex-b 20cd7626f4 (READY #572, 1:44 AM CT 10-08): smoke_water_swimming all 7 routes/24 hops/1272 assertions, native continuous run; review APPROVE",
      "audit_index": 2
     },
     {
