@@ -1018,14 +1018,20 @@ func _train_first_breakthrough() -> bool:
 	if not await _altar_focus(panel, "payment:tether_candy", "ui_down", pilot): return false
 	var service: Node = panel.get("_service")
 	var scope: Dictionary = session.call("personal_tm_scope")
-	var observed := {"completed": [], "error": ""}
+	var observed := {"completed": [], "submitted": {}, "error": ""}
 	var completed := func(id: String, reply: Dictionary) -> void:
 		var row: Dictionary = session.call("_owner_training_row")
 		var intent: Dictionary = row.get("intent", {})
 		if row.get("action") != "altar_spend" or intent.get("spend_id") != id \
 				or intent.get("creature_uid") != uid or intent.get("payment_item") != "tether_candy" \
 				or int(intent.get("expected_level", -1)) != int(chosen.level) \
-				or int(intent.get("expected_character_revision", -1)) != int(quote.expected_character_revision): return
+				or service.call("_intent_valid", intent) != true: return
+		# The host refreshes passive-care revision before freezing its first
+		# submission. Observe that real intent; never reuse the displayed quote.
+		if observed.submitted.is_empty(): observed.submitted = intent.duplicate(true)
+		elif intent != observed.submitted:
+			observed.error = "Altar completion changed its original submitted intent"
+			return
 		if session.call("personal_tm_scope") != scope:
 			observed.error = "Altar payment changed its actual character/session scope"
 		elif reply.get("resolved") == true and reply.get("ok") != true:
@@ -1047,7 +1053,7 @@ func _train_first_breakthrough() -> bool:
 	var claim: Dictionary = observed.completed[0]
 	var spend_id := str(claim.intent.get("spend_id", ""))
 	var receipt := "essence_spend:%s:%s:%s:%d:tether_candy:1:%d" % [str(before.character_id), spend_id,
-		uid, int(chosen.level), int(quote.expected_character_revision)]
+		uid, int(chosen.level), int(observed.submitted.expected_character_revision)]
 	var after: Dictionary = session.call("homestead_personal_view")
 	personal = after.get("redesign_character", {})
 	if spend_id.length() != 32 or not spend_id.is_valid_hex_number(false) or claim.result.get("receipt") != receipt \
