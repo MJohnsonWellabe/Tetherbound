@@ -5,6 +5,11 @@ extends "res://tests/helpers/combat_depth_pilot.gd"
 ## and past action state. Flat collider fixture does not prove world C3/co-op.
 const TYPE_GRAPH := preload("res://scripts/combat/type_chart.gd")
 const MOVE_DB := preload("res://scripts/creatures/move_db.gd")
+const LIVE_FIXTURE := preload("res://tests/smoke_f23_live_moves.gd")
+const OWNER_SAVE := preload("res://tests/test_foundation_resource_save.gd")
+const OWNER_DATA := preload("res://tests/test_foundation_resources.gd")
+const OWNER_RECORD := preload("res://scripts/net/character_record_rules.gd")
+const OWNER_DIRECTOR := preload("res://scripts/combat/encounter_director.gd")
 var context: Dictionary = {}
 var _prepared_body := 0
 var _combo_hooked_manager := 0
@@ -16,10 +21,163 @@ var _escape_dir := Vector3.ZERO
 var _last_shape: Array = []
 var _fields: Array[Dictionary] = []
 var _pending_field: Dictionary = {}
+var _owner_tree: SceneTree
+var _owner_game: Node
+var _owner_session: Node
+var _owner_writer: RefCounted
+var _owner_director: Node
+var _saved_game: Node
+var _saved_scene: Node
+var _owner_error := ""
+var _owner_binding: Dictionary = {}
+var _owner_launches := 0
+var _owner_impacts := 0
+
+
+## Opt-in admission witness on the existing flat fixture. The first supported
+## source is the actual single-creature Meadows trainer; other sources refuse.
+## No global gates, combat state or live resources are manufactured here.
+func fight(tree: SceneTree, party: Array[RefCounted], foes: Array,
+		owned: bool, seed_value: int, policy: String) -> Dictionary:
+	if context.get("canonical_owner") != true:
+		return await super.fight(tree, party, foes, owned, seed_value, policy)
+	_owner_tree = tree
+	_saved_scene = tree.current_scene
+	var spec: Dictionary = context.get("trainer_spec", {})
+	if not owned or context.get("chapter") != "meadows" or party.size() != 5 \
+		or foes.size() != 1 or spec.get("team", []).size() != 1 \
+		or preload("res://scripts/world/trainer_npc.gd").trainer(str(spec.get("id", ""))) != spec:
+		return {"won":false, "fixture_error":"canonical floor-owner witness requires five owned cards and one authored Meadows trainer opponent"}
+	if not _prepare_owner(party):
+		_release_owner()
+		return {"won":false, "fixture_error":_owner_error}
+	var result: Dictionary = await super.fight(tree, party, foes, owned, seed_value, policy)
+	result["canonical_owner"] = not _owner_binding.is_empty() and _owner_error.is_empty()
+	result["owner_binding"] = _owner_binding.duplicate(true)
+	result["accepted_launches"] = _owner_launches
+	result["accepted_impacts"] = _owner_impacts
+	var disk: Dictionary = _owner_writer.get("character_store").call("read", OWNER_DATA.CHARACTER)
+	result["owner_disk_party_count"] = disk.get("party", []).size()
+	var saved_uses := 0
+	for card: Dictionary in disk.get("party", []):
+		for receipts: Variant in card.get("move_mastery_receipts", {}).values():
+			if receipts is Array: saved_uses += receipts.size()
+	result["saved_move_receipts"] = saved_uses
+	if not _owner_error.is_empty(): result["fixture_error"] = _owner_error
+	_release_owner()
+	return result
+
+
+func _prepare_owner(party: Array[RefCounted]) -> bool:
+	var fixture := OWNER_DATA.new()
+	_owner_game = LIVE_FIXTURE.FixtureGame.new()
+	_owner_game.name = "Game"
+	var local: RefCounted = fixture._player()
+	local.party.clear()
+	for creature: RefCounted in party:
+		if local.party.add(creature) != true:
+			_owner_error = "canonical five-card party admission refused"
+			return false
+	_owner_game.set("local", local)
+	_owner_game.set("world", fixture._world())
+	_saved_game = _owner_tree.root.get_node_or_null(^"Game")
+	if _saved_game != null: _owner_tree.root.remove_child(_saved_game)
+	_owner_tree.root.add_child(_owner_game)
+	_owner_session = LIVE_FIXTURE.FixtureSession.new()
+	_owner_session.name = "Session"
+	_owner_session.set("fixture", _owner_game)
+	_owner_game.set("session", _owner_session)
+	var authority := preload("res://scripts/net/character_authority.gd").new()
+	_owner_session.set("_character_authority", authority)
+	_owner_tree.root.add_child(_owner_session)
+	var directory := "user://f22_owner_%s/" % Crypto.new().generate_random_bytes(12).hex_encode()
+	_owner_writer = OWNER_SAVE.BoolWriter.new()
+	_owner_writer.set("world_store", preload("res://scripts/save/world_save.gd").new(directory.path_join("worlds")))
+	_owner_writer.set("character_store", preload("res://scripts/save/character_save.gd").new(directory.path_join("characters")))
+	_owner_game.set("save_system", _owner_writer)
+	var rpc := LIVE_FIXTURE.FixtureRpc.new()
+	rpc.name = "LedgerRpc"
+	rpc.fixture = _owner_game
+	rpc.ledger = preload("res://scripts/net/world_ledger.gd").new(_owner_game.get("world"))
+	_owner_session.add_child(rpc)
+	var before := OWNER_RECORD.portable_projection(local.save_data())
+	if not authority.bind_world("resource-namespace") \
+		or authority.seed_admitted_character(before, OWNER_DATA.CHARACTER).get("ok") != true \
+		or _owner_writer.call("save_world_prepared", _owner_game, "resource-slot") != true \
+		or _owner_writer.call("save_character_prepared", _owner_game, OWNER_DATA.CHARACTER) != true:
+		_owner_error = "real authority or initial BOOL disk writes refused"
+		return false
+	return true
+
+
+func _mount_owner() -> bool:
+	var world := _manager.get_parent()
+	_owner_tree.current_scene = world
+	_owner_director = Node.new()
+	_owner_director.name = "EncounterDirector"
+	world.add_child(_owner_director)
+	_owner_director.set_script(OWNER_DIRECTOR)
+	_owner_director.call("_enter_tree") # Same installed source-index entry as the existing live-moves fixture.
+	_owner_director.set_process(false)
+	_owner_director.set_physics_process(false)
+	_owner_director.set("_session", _owner_session)
+	_owner_director.set("_manager", _manager)
+	_owner_director.set("_player", _manager.get("_player"))
+	_owner_director.set("_ally", _manager.active_creature())
+	_owner_director.set("_ally_body", _ally)
+	_owner_director.set("_engaged_with", _wild)
+	_owner_director.set("_trainer_body", _wild)
+	_owner_director.set("_trainer_spec", context.trainer_spec.duplicate(true))
+	_owner_director.call("_note_deployment_identity", 1, OWNER_DATA.CHARACTER, str(_manager.active_creature().uid))
+	_owner_director.call("_ensure_encounter_arbiters")
+	var host: RefCounted = _owner_director.get("_encounter_host")
+	var enemy: RefCounted = _wild.get("instance")
+	var target: Vector3 = _wild.call("centre")
+	var opponent := {"species_id":str(enemy.species_id), "creature_uid":str(enemy.uid),
+		"hp":enemy.hp, "hp_max":enemy.max_hp, "position":[target.x,target.y,target.z],
+		"owner_npc":str(context.trainer_spec.id), "round":1, "body_generation":1,
+		"card":preload("res://scripts/save/water_capture_codec.gd").encode(enemy)}
+	var record: Dictionary = host.open(1, "meadows", "trainer", opponent,
+		str(_manager.active_creature().uid), OWNER_DATA.CHARACTER)
+	var id := str(record.get("encounter_id", ""))
+	_owner_director.set("_encounter", record)
+	_manager.bind_encounter(_owner_director, id, "trainer")
+	if id.is_empty() or _owner_director.call("_install_ordinary_combat_reward_owner", id) != true \
+		or _owner_director.call("uses_durable_trainer_rewards", id) != true:
+		_owner_error = "real authored trainer owner installer refused"
+		return false
+	_owner_binding = _owner_director.call("_ordinary_actor_binding", id, 1, _ally)
+	if _owner_binding.is_empty():
+		_owner_error = "real current owned actor/body binding refused"
+		return false
+	_manager.bind_encounter(_owner_director, id, "trainer")
+	_manager.creature_switched.connect(_owner_director._on_combat_creature_switched)
+	_manager.attack_launched.connect(func(on_enemy: bool, launch: Dictionary, _presentation: Node3D) -> void:
+		var original: Dictionary = host.move_commit(id, 1)
+		if on_enemy and not original.is_empty() and original.get("slot") == launch.get("slot"): _owner_launches += 1)
+	_manager.impact_confirmed.connect(func(on_enemy: bool, receipt: Dictionary, _where: Vector3) -> void:
+		if on_enemy and float(receipt.get("damage", 0.0)) > 0.0 and str(receipt.get("action_id", "")).begins_with(id + ":1:"):
+			_owner_impacts += 1)
+	print("F22_CANONICAL_OWNER " + JSON.stringify({"binding":_owner_binding, "encounter_id":id,
+		"trainer_id":context.trainer_spec.id, "party_count":_owner_session.call("admitted_character_state", 1).get("party", []).size(),
+		"actor_vitals":MATH.config().actor_vitals, "acceptance":false}))
+	return true
+
+
+func _release_owner() -> void:
+	if is_instance_valid(_owner_session): _owner_session.free()
+	if is_instance_valid(_owner_game): _owner_game.free()
+	if is_instance_valid(_saved_game) and not _saved_game.is_inside_tree(): _owner_tree.root.add_child(_saved_game)
+	if is_instance_valid(_saved_scene): _owner_tree.current_scene = _saved_scene
 
 
 
 func _act(policy: String) -> void:
+	if context.get("canonical_owner") == true and not is_instance_valid(_owner_director):
+		if not _mount_owner():
+			_tally["fixture_error"] = _owner_error
+			_manager.call("_begin_resolve", "fled")
+			return
 	if policy == "SWITCH_READER":
 		var commands := preload("res://scripts/combat/tether_commands.gd")
 		var snapshot: Dictionary = _manager.tether_command_snapshot()
