@@ -1,0 +1,7 @@
+Original /root/f42_visual_review 01a1168a-2a2e-7243-aa7d-e655171c70fa, turn01a11cd4-cd0b-7f90-abe3-a9c81ff5003f
+
+**A — RUNTIME APPROVE:** pane-detail packet pinned to `620cf7c561593b7e8aa82ad6530799a60ad8ccf6`.
+
+Verified all 24 checksum entries, both PNG headers—1280×720 and 1920×1080—and completed 1/1 manifests with empty failures. Both processes exited 0 with empty stop reasons. Body/camera transforms match the approved ece194 OFF views; both report three grounded frames. Clean-source/index receipts and the archived generated sidecar are retained. Each capture retains one interpolation warning.
+
+This establishes the bounded Low night exterior packet only. No mounted texture/operator/alpha measurement, visual PASS, performance, traversal, earned or whole-criterion credit. Old scalar-ON and stopped-ON evidence remain excluded.

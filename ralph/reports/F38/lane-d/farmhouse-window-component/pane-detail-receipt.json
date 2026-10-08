@@ -26,8 +26,51 @@
     "independent_artifact_verdict": "APPROVE same original f42 Scope2 at353; exact ZIP/log/digest/checkout verified",
     "reuse_verdict": "APPROVE same original f42 Scope3 for unchanged routes/collision at620; no repeat walk needed for one material-property assignment. Not correctedMULTIPLY runtime or mounted-texture/pixel credit."
   },
-  "native": "Original f42 COMMAND+glass-only BEFORE-REUSE APPROVE, exacttwoLow720/1080 proposals; original-pane-detail-command-review.txt. ROOT-only dispatch queue next; actualheaders/poses/native/pixels/originalf26 still pending.",
+  "native": {
+    "terminal_exit_codes": [
+      0,
+      0
+    ],
+    "limits": "No mounted texture/operator/alpha measurement, performance, traversal, earned, HUD or whole credit.",
+    "pngs": 2,
+    "pairing": "image-headers-and-pairing.json",
+    "failures": [],
+    "writer": "ROOT serialized native",
+    "warnings": 2,
+    "actual_rasters": [
+      [
+        1280,
+        720
+      ],
+      [
+        1920,
+        1080
+      ]
+    ],
+    "body_camera_match_approved_off": true,
+    "runtime_verdict": "APPROVE SAME original f42, original-pane-detail-native-runtime-verdict.txt",
+    "captures": 2,
+    "source": "620cf7c561593b7e8aa82ad6530799a60ad8ccf6",
+    "source_index_clean": true,
+    "hashes_verified": 24,
+    "generated_import_sidecar_archived": true,
+    "complete_manifests": true,
+    "errors": 0,
+    "packet": "D:/CodexTemp/tetherbound-proof/native-d-620cf7c561-pane-detail-low-r1"
+  },
   "reuse": "Original f42 approves retained eligible eceOFF720/OFF1080 only for glass comparison, after actualnewheaders/posesmatch. OtherWorld/HUD changes disclosed; no broaderHUD/campaign/sole-change-attribution or scalarON/stoppedONbaseline reuse.",
   "authority": "No authority, durable state, transaction, save, input, geometry, lighting or renderer change",
-  "whole_criterion_complete": false
+  "whole_criterion_complete": false,
+  "blind": {
+    "original_route_logs_preserved": [
+      "original-pane-detail-runtime-furniture-source-and-blind-route.log",
+      "original-pane-detail-blind-confirming-route.log"
+    ],
+    "id": "01a11660-2f3e-7e20-9136-0101e419c9e7",
+    "reviewer": "/root/f26_presets_review",
+    "attempts": "First four-image route returned no verdict after os10053 retries; original parent stopped. One confirming 720-pair route also no final; prior120s bound interrupted original child and parent returned terminal0 before ROOT later stop guidance. No1080 confirming pair routed.",
+    "original_parent_final": "original-pane-detail-blind-confirming-review.txt",
+    "disposition": "Unchanged window review parked; source flagOFF, no replacement judge/native retry/new tools. Actual original child notLoaded after confirming router terminal, no live handle to re-poll.",
+    "verdict": "PENDING, no visual PASS/BLOCK"
+  }
 }
