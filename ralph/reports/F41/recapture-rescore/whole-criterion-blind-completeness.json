@@ -215,5 +215,159 @@
     "D:/tetherbound/codex-e/ralph/reports/F41/recapture-rescore/reward-route-blind-verdict.json",
     "D:/tetherbound/codex-e/ralph/reports/F41/recapture-rescore/natural-loss-blind-verdict.json"
   ],
-  "preservation": "Only this new completeness evidence artifact is written. No original rating, witness, source, live catalogue, status or dashboard is changed."
+  "preservation": "Only this new completeness evidence artifact is written. No original rating, witness, source, live catalogue, status or dashboard is changed.",
+  "addenda": [
+    {
+      "addendum_id": "current-three-fight-applicability",
+      "reviewer": {
+        "name": "Hypatia",
+        "role": "retained original independent code-blind judge",
+        "agent_id": "01a11667-4631-72b2-8fed-294999b8c043"
+      },
+      "scope": "Updated assembly completeness/current-three applicability only. No visual re-rating, new pixels, source review or modification of original scores/witnesses.",
+      "verdict": "PASS",
+      "reason": "The previously independently inspected 240-frame Low/Compatibility biome recapture still exceeds the literal 200-frame minimum. The updated assembly contains the same 44 catalogue IDs exactly once with supported per-row rescores. P2-092/P2-093/P2-063 now reproduce this judge's fresh current Hollows records, including all evidence links and scope limits; the remaining 41 entries retain their own recorded numeric scores, evidence and limits. Partial pictured-aspect assessments remain explicitly partial. Criterion (0) requires recapture and rescoring, not defect removal or exhaustive acceptance of all unpictured contexts.",
+      "verification": {
+        "row_count": 44,
+        "unique_ids": 44,
+        "duplicate_ids": [],
+        "missing_original_ids": [],
+        "extra_ids": [],
+        "numeric_range": "PASS: all severity/exposure/importance are integers 1–5",
+        "impact_products": "PASS: all 44 impacts equal severity × exposure × importance",
+        "composition": {
+          "catalog-rescore.json": 36,
+          "current-pattern-fight-rescore.json": 3,
+          "native-context-rescore.json": 3,
+          "natural-loss-blind-verdict.json": 1,
+          "reward-route-blind-verdict.json": 1
+        },
+        "score_mismatch_ids": [],
+        "evidence_or_limits_mismatch_ids": [],
+        "current_three_exact_agreement": {
+          "item_ids": [
+            "P2-092",
+            "P2-093",
+            "P2-063"
+          ],
+          "numeric_scores": true,
+          "evidence_links": true,
+          "original_assessment_matches_own_coverage": true,
+          "verdicts": true,
+          "limits": true,
+          "previously_inspected_current_full_rasters": 24,
+          "all_row_evidence_in_own_inspected_set": true
+        },
+        "other_41_agreement": "Numeric fields, evidence and limits match their retained original judge records.",
+        "classification_aliases": [
+          {
+            "item_id": "P2-110",
+            "finding": "Assembly BLOCK preserves the original artifact's overall BLOCK; its inner numeric rating is labeled FAIL. Both describe the same failed current loss presentation, without score promotion."
+          },
+          {
+            "item_id": "P2-110",
+            "finding": "Assembly BOUNDED abbreviates BOUNDED_CURRENT_VISIBLE_OUT_OF_FIGHT_RESULT; exact evidence and limits remain present."
+          },
+          {
+            "item_id": "P2-111",
+            "finding": "Assembly BOUNDED abbreviates BOUNDED_TWO_VISIBLE_VICTORY_RECEIPT_VIEWS; exact evidence and limits remain present."
+          }
+        ],
+        "wholly_unassessed_numeric_rows": 0,
+        "explicit_partial_row_count": 17,
+        "explicit_partial_ids": [
+          "P2-042",
+          "P2-016",
+          "P2-037",
+          "P2-002",
+          "P2-017",
+          "P2-033",
+          "P2-038",
+          "P2-007",
+          "P2-055",
+          "P2-063",
+          "P2-095",
+          "P2-031",
+          "P2-041",
+          "P2-069",
+          "P2-056",
+          "P2-043",
+          "P2-119"
+        ],
+        "retained_recapture": {
+          "verdict": "PASS",
+          "retained_frames": 240,
+          "minimum": 200,
+          "original_independent_contact_pages": 15,
+          "original_contact_cells": 240,
+          "raster": "1920x1080",
+          "preset": "Low",
+          "renderer": "Compatibility",
+          "basis": "Original capture/inspection record in catalog-rescore.json and reused own witnesses; no new raw-frame count/provenance audit.",
+          "source_verification_claim": false
+        }
+      },
+      "current_applicability": {
+        "finding": "PASS for the disclosed evidence-supported rescore scopes, not complete row-quality acceptance or a uniform current-shipping claim.",
+        "current_three": [
+          {
+            "item_id": "P2-092",
+            "severity": 3,
+            "exposure": 4,
+            "importance": 4,
+            "impact": 48,
+            "verdict": "FAIL",
+            "bounded_verdict": "BLOCK",
+            "scope": "Named actor spacing in the pictured current Hollows tell/strike/impact/recovery stills only."
+          },
+          {
+            "item_id": "P2-093",
+            "severity": 3,
+            "exposure": 4,
+            "importance": 4,
+            "impact": 48,
+            "verdict": "FAIL",
+            "bounded_verdict": "BLOCK",
+            "scope": "Visible danger/opening cues of the four pictured Hollows sequences; temporal readability unassessed."
+          },
+          {
+            "item_id": "P2-063",
+            "severity": 3,
+            "exposure": 4,
+            "importance": 4,
+            "impact": 48,
+            "verdict": "FAIL",
+            "bounded_verdict": "BLOCK",
+            "scope": "PARTIAL shared row: pictured Hollows ground tells/contact graphics only. Other attacks/regions, continuous motion, hit-stop, knockback trajectory, audio and impact timing remain unassessed."
+          }
+        ],
+        "primary_basis": "The 36 primary severity findings remain original judged findings; exposure/importance remain disclosed priority estimates rather than newly measured campaign frequency.",
+        "retained_context_basis": "Only P2-070/P2-088/P2-083 remain assembled from the retained six-row context artifact; the earlier P2-092/P2-093/P2-063 records remain preserved as historical witnesses, not the current assembly entries.",
+        "other_limits": "All original primary, retained-context, reward and loss bounds remain unchanged. Retained people actor/text and applicable legacy UI subscopes do not certify changed backgrounds, full inventories or unpictured interactions."
+      },
+      "remaining_gaps": {
+        "criterion0_missing_whole_row_ids": [],
+        "partial_and_unpictured_contexts": "All previous completeness artifact limits remain in force, with the current P2-063 pictured-Hollows partial scope explicitly retained. This PASS does not fill unpictured binding rows, other destinations/attacks/regions, whole roster, motion, multiplayer, hardware or High/Medium contexts.",
+        "full_row_visual_closure": false
+      },
+      "quality_dispositions_preserved": {
+        "current_three": "All three current visual FAIL/BLOCK findings at impact 48 remain failed.",
+        "P2_110": "BLOCK/FAIL impact 36 remains failed.",
+        "bark": "BLOCK remains outside this numerical completeness judgment.",
+        "other_failures_partials": "Every original FAIL/BLOCK/PARTIAL and previous witness is preserved."
+      },
+      "separate_gates": "No full visual-bar acceptance or F41#1–#5 PASS follows from this literal F41#0 recapture/rescore completeness addendum.",
+      "evidence_records_compared": [
+        "D:/tetherbound/codex-e/ralph/reports/F41/recapture-rescore/whole-criterion-score-packet.json",
+        "D:/tetherbound/codex-e/ralph/reports/F41/recapture-rescore/whole-criterion-blind-completeness.json",
+        "D:/tetherbound/codex-e/ralph/reports/F41/recapture-rescore/current-pattern-fight-rescore.json",
+        "D:/tetherbound/codex-e/ralph/reports/F41/recapture-rescore/catalog-rescore.json",
+        "D:/tetherbound/codex-e/ralph/reports/F41/recapture-rescore/native-context-rescore.json",
+        "D:/tetherbound/codex-e/ralph/reports/F41/recapture-rescore/reward-route-blind-verdict.json",
+        "D:/tetherbound/codex-e/ralph/reports/F41/recapture-rescore/natural-loss-blind-verdict.json"
+      ],
+      "source_review_read": false,
+      "new_pixel_inspection": false
+    }
+  ]
 }

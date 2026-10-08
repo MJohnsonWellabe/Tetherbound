@@ -24,7 +24,7 @@
     "current_pattern_fight": 3
   },
   "score_assembly_checks": "44unique IDs, all original-recorded1..5scores, exact products; no score invented or previous failure promoted. Original primary exposure/importance preserved estimates explicitly disclosed.",
-  "whole_criterion_verdict": "PENDING ORIGINAL INDEPENDENT APPROVE AND ORIGINAL BLIND COMPLETENESS PASS",
+  "whole_criterion_verdict": "PASS literalF41#0: original independent whole APPROVE + original blind whole completeness PASS; F41#1..#5 and fullbar remain OPEN",
   "full_visual_bar": {
     "A": "BLOCK on supplied environmental presentation",
     "B": "BLOCK on supplied environmental presentation",
@@ -861,5 +861,13 @@
     "exposure_importance": "Original primary artifact preserves input priority estimates; do not claim fresh independent exposure/importance for these36",
     "criterion_applicability": "Requires original whole review judgment, not assembly assumption"
   },
-  "affected_applicability_resolution": "Same original judge independently re-scored only current253 P2-092/P2-093/P2-063 from all24 existing tell rasters; all3visualFAIL/BLOCK48 retained. Previous context scores preserved in original artifact, not currentassembly."
+  "affected_applicability_resolution": "Same original judge independently re-scored only current253 P2-092/P2-093/P2-063 from all24 existing tell rasters; all3visualFAIL/BLOCK48 retained. Previous context scores preserved in original artifact, not currentassembly.",
+  "original_whole_reviews": {
+    "source_report": "ralph/reports/F41/lane-e-capture-source-review.json/whole_f41_0_253574_original_affected_resolution_final_review",
+    "source_verdict": "APPROVE",
+    "blind_report": "whole-criterion-blind-completeness.json/addenda/current-three-fight-applicability",
+    "blind_verdict": "PASS",
+    "accepted_gameplay_source": "2535740dbd107c7b93bfc9e3a80aa2d0bd19929b",
+    "scope": "Literal recapture and rowrescore completeness only;17partialscopes/allvisualFAIL/BLOCKpreserved"
+  }
 }

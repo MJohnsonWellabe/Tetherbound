@@ -3230,5 +3230,78 @@
     ],
     "preservation": "All previous APPs,partial scores,36+6+1+current110 assembly, original bark appearanceBLOCK, old111FAIL36,52cd0-imagecrash, original1061rasterFAIL, forced-fled/capped/no-outcome witnesses,21tests132assertionAPP withfive detached-fixtureERRORs, and accepted source/unit/runtime/79proof are unchanged. A BLOCK row is compatible with rescore completion; it is the identified source applicability gap, not the presence of defects, that prevents current wholeAPP.",
     "activity": "Only exact criterion/assembly/numeric artifacts, retained original report summaries and bounded Git identity/path comparisons read; only this original report appended. No new pixel/art judgment, engine/GPU/test/dispatch,source edit,helpers/fixtures/agents,GitHub/status/STATE/dashboard/handoff/raw-thread or judge contact."
+  },
+  "whole_f41_0_253574_original_affected_resolution_final_review": {
+    "reviewer": "original review_cloud_startup01a11679-fc2c-7873-bccd-423c1e04476d",
+    "verdict": "APPROVE",
+    "scope": "Whole literal F41#0 independent disposition after resolving only previously identified current-applicability gap P2-092/P2-093/P2-063. All previously accepted whole pieces reused without re-audit.",
+    "source_commit": "2535740dbd107c7b93bfc9e3a80aa2d0bd19929b",
+    "source_tree": "0cf1cae1d09ac5b774244762dcaa21a05a6abd73",
+    "criterion": "docs/ACCEPTANCE.md F41(0): After F26 look-dev, the biome is re-captured (≥200 frames) and its catalog rows re-scored against the new bar.",
+    "gap_status": "RESOLVED. Current253 independent fight assessments replace the earlier8732 score sources for all three affected rows; previous whole REQUEST_CHANGES remains unchanged as history.",
+    "replacement_verification": {
+      "artifact": "ralph/reports/F41/recapture-rescore/current-pattern-fight-rescore.json",
+      "sha256": "d9f5748a0427e920d33b567d111dece84edbf0ce87d5ec8f7de0ab6f9ded1d8d",
+      "original_judge_id": "01a11667-4631-72b2-8fed-294999b8c043",
+      "independence": "Original retained judge explicitly assigns current pixel scores against previously inspected Stormwood boards and written ART_DIRECTION bar without source or prior numeric-rating reads.",
+      "source_binding": "Inspection declares all24 distinct PNG paths from previously verified canonical native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss, exactly4 tells x6 start/mid/late/strike/impact/recovery stages. No missing paths. Exact253 clean source/native provenance reused from accepted original runtime entry; no headers/hashes/pixels re-audited.",
+      "rows": [
+        {
+          "item_id": "P2-092",
+          "severity": 3,
+          "exposure": 4,
+          "importance": 4,
+          "impact": 48,
+          "verdict": "FAIL",
+          "bounded_verdict": "BLOCK"
+        },
+        {
+          "item_id": "P2-093",
+          "severity": 3,
+          "exposure": 4,
+          "importance": 4,
+          "impact": 48,
+          "verdict": "FAIL",
+          "bounded_verdict": "BLOCK"
+        },
+        {
+          "item_id": "P2-063",
+          "severity": 3,
+          "exposure": 4,
+          "importance": 4,
+          "impact": 48,
+          "verdict": "FAIL",
+          "bounded_verdict": "BLOCK"
+        }
+      ],
+      "assembly_match": "Every affected severity/exposure/importance/impact/verdict/evidence/limits exactly matches its fresh source row; original_assessment exactly matches coverage and original_artifact names the fresh artifact.",
+      "P2_063_limit": "Explicit PARTIAL ROW: only pictured Hollows ground tells and contact/hit effects, not all attacks/regions/audio/hit-stop/motion/continuity. Numeric assessment of supplied subject is real; this is not whole effect-family coverage or closure."
+    },
+    "whole_assembly": {
+      "artifact": "ralph/reports/F41/recapture-rescore/whole-criterion-score-packet.json",
+      "sha256": "7e53ae104b9e4c7a19fff665d3b2ec53a4b008e9c1226fa6f545ad6cd0597bc7",
+      "rows": 44,
+      "unique_ids": 44,
+      "composition": {
+        "primary_retained": 36,
+        "retained_contexts": 3,
+        "current_pattern_fight": 3,
+        "current_reward": 1,
+        "current_natural_loss": 1
+      },
+      "unchanged_other_41": "Original-source numeric values/products/subjects/evidence/limits match for all41 unaffected entries. All44 ID values exactly equal original catalogue ID set. All scores are1..5 and all products exact. No row dropped or repeated.",
+      "primary_basis": "36 primary severity assessments retained; exposure/importance remain explicitly disclosed original priority estimates rather than invented fresh independent or measured campaign frequency.",
+      "recapture_reuse": "Original verified post-F26 shipping240 unique frames/IDs/SHA at1a6987a584e7db911e3299506c3cb0a406e0b3eb, Low/Compatibility/native1920, satisfies literal≥200. Earlier whole recapture/source approvals reused; no new scenery or passing-batch audit.",
+      "current_applicability": "Prior original current253 source applicability retained; affected role/travel fight subjects now directly assessed from current253 rather than carried forward. Current111 reward card and110 natural active-creature loss scores retained with actual-source/runtime support. Tangent close runtime plus appearanceBLOCK and all other bounded subject/fixture limitations preserved.",
+      "interpretation": "All44 rows now have supported numeric reassessments against new bar with explicit partial/bounded coverage. Defects and visual FAIL/BLOCK may remain after a valid rescore; criterion(0) does not demand their correction or all other visual criteria."
+    },
+    "remaining_literal_criterion_gaps": [],
+    "limits": [
+      "This is only whole literal F41(0) recapture/rescore approval, not a component art-quality READY, full F41 acceptance or criteria(1)-(5) approval.",
+      "All partial subject coverage and temporal/unseen aspects remain disclosed. No assertion of High/Medium/full320/full visual bar, sustained weather, audio/motion, controller device, earned progression, save/co-op, reward transaction or performance.",
+      "Original partial/stopped/capped/forced-fled/raster failed witnesses,52cd0-frame crash,bark appearanceBLOCK,old111FAIL36,selected headless detached-fixtureERRORs and all original source/unit/runtime approvals are preserved.",
+      "No new pixels,source/math/corpus/engine/test/GPU/dispatch/implementation/status/GitHub/raw-thread/judge contact or new helper/fixture/agent activity; only numeric affected artifact checks and this original report append."
+    ],
+    "preservation": "Every prior report entry is unchanged, including historical whole_f41_0_253574_original_independent_review REQUEST_CHANGES."
   }
 }
