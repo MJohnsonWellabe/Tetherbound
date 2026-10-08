@@ -50,6 +50,7 @@ class WorldPilot:
 			_observation_scope = scope
 			_prepared_body = 0
 			_tell_seen_frame = -1
+			_opening_seen_frame = -1
 			_escape_dir = Vector3.ZERO
 			_last_shape.clear()
 			_fields.clear()

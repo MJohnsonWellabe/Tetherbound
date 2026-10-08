@@ -9,6 +9,7 @@ var context: Dictionary = {}
 var _prepared_body := 0
 var _combo_hooked_manager := 0
 var _tell_seen_frame := -1
+var _opening_seen_frame := -1
 const INTERRUPT_MARGIN_S := 0.15
 var _moves: RefCounted = MOVE_DB.new()
 var _escape_dir := Vector3.ZERO
@@ -30,6 +31,7 @@ func _act(policy: String) -> void:
 	if is_instance_valid(_wild) and _prepared_body != _wild.get_instance_id():
 		_prepared_body = _wild.get_instance_id()
 		_tell_seen_frame = -1
+		_opening_seen_frame = -1
 		var patterns: Dictionary = MATH.config().get("patterns", {})
 		if patterns.get("runtime_enabled") != true or not _wild.has_method("configure_patterns"):
 			_tally["fixture_error"] = "actual F22 pattern consumer is disabled or absent"
@@ -74,6 +76,11 @@ func _read(_policy: String) -> void:
 		_tell_seen_frame = -1
 	elif _tell_seen_frame < 0:
 		_tell_seen_frame = _frames
+	var opening: bool = _manager.enemy_is_staggered() or int(_wild.intent()) == AI.Intent.RECOVER
+	if not opening:
+		_opening_seen_frame = -1
+	elif _opening_seen_frame < 0:
+		_opening_seen_frame = _frames
 	if _manager.player_is_committed() or float(_manager.get("_hitstop_left")) > 0.0:
 		return
 	var delta := _wild.global_position - _ally.global_position
@@ -140,8 +147,10 @@ func _read(_policy: String) -> void:
 			_press("jump")
 			_tally.burst_uses += 1
 		return
-	var opening: bool = _manager.enemy_is_staggered() or int(_wild.intent()) == AI.Intent.RECOVER
 	if opening:
+		# Read the opening before committing; released field/fan evasion above still wins.
+		if float(_frames - _opening_seen_frame) / Engine.physics_ticks_per_second < observed:
+			return
 		var charged: Dictionary = _manager.call("_move_profile", "player_charged", str(_manager.active_creature().move_charged))
 		var window := float(_wild.get("_beat_left"))
 		if distance > reach - 0.25:
