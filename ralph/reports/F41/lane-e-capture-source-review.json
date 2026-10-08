@@ -3399,5 +3399,302 @@
     },
     "preservation": "All original report entries and final253 wholeAPP, failed receipts,partial coverage/priority-estimate basis,appearanceBLOCK/visualFAIL,legacy limits and pre-merge source witnesses are unchanged. Merged final handoff staysPENDING until minimum changed proof/current map applicability are supported.",
     "activity": "Bounded localGit parents/relative3-filediffs/necessary exactsourceidentities and affected UI-row metadata only; only original report append. No engine/GPU/test/dispatch/implementation/source edit,GitHub/STATE/dashboard/handoff/rawthreads,blind pixels/judge contact,newhelpers/fixtures/agents."
+  },
+  "28572_ui_merge_original_native_runtime_review": {
+    "reviewer": "original review_cloud_startup01a11679-fc2c-7873-bccd-423c1e04476d",
+    "runtime_verdict": "APPROVE",
+    "scope": "Only completed required focused merged285 UI capture: exactsource/terminal/logs/raster/record/archive provenance and source cleanup. No art judgment or merged whole acceptance.",
+    "source_commit": "28572ae0c9085de60db33f58b6407588c2d7f681",
+    "source_tree": "dea81a8dab871d1bef257a85d672256d49118a81",
+    "packet_root": "D:\\CodexTemp\\tetherbound-proof\\native-e-28572ae0c9-ui-merge-r1",
+    "canonical_frames": "D:\\CodexTemp\\tetherbound-proof\\native-e-28572ae0c9-ui-merge-r1\\frames",
+    "provenance": {
+      "source": "Queued source, actualcheckout log, import/start/receipt, bootstrap metadata and after-import/after-output-archive source receipts agree on exact285. Local pinned Git tree independently matches head/index tree dea81a8.",
+      "import_receipt": {
+        "started_utc": "2026-10-08T17:24:34.3831413Z",
+        "source": "28572ae0c9085de60db33f58b6407588c2d7f681",
+        "stop_reason": "",
+        "finished_utc": "2026-10-08T17:25:25.5572466Z",
+        "exit_code": 0,
+        "pid": 53956
+      },
+      "actual_start": {
+        "source": "28572ae0c9085de60db33f58b6407588c2d7f681",
+        "stop_on_owner_game": true,
+        "args": [
+          "--path",
+          "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+          "--rendering-method",
+          "gl_compatibility",
+          "--resolution",
+          "1920x1080",
+          "--fullscreen",
+          "--fixed-fps",
+          "20",
+          "--script",
+          "res://tools/phase2_capture_ui.gd",
+          "--",
+          "--biome=stormwood",
+          "--tabs=backpack,map",
+          "--paired-720",
+          "--preset=Low",
+          "--low-resolution=1920x1080",
+          "--source-commit=28572ae0c9085de60db33f58b6407588c2d7f681",
+          "--output=res://ralph/reports/VISUAL/phase2/stormwood/ui-merge-28572",
+          "--seed=2042"
+        ],
+        "started_utc": "2026-10-08T17:25:47.9574890Z",
+        "pid": 49464
+      },
+      "terminal_receipt": {
+        "finished_utc": "2026-10-08T17:28:31.6601447Z",
+        "stop_reason": "",
+        "pid": 49464,
+        "source": "28572ae0c9085de60db33f58b6407588c2d7f681",
+        "started_utc": "2026-10-08T17:25:47.9574890Z",
+        "exit_code": 0
+      },
+      "duration_seconds": 163.7026557,
+      "hash_manifest_entries": 23,
+      "hash_manifest_mismatches": 0,
+      "files": {
+        "terminal-summary.json": {
+          "bytes": 577,
+          "sha256": "7dab5ec0a3c0f5cac7de8179f565d6ad68e71a380155ef4c131271f8ea4e7551"
+        },
+        "sha256-manifest.json": {
+          "bytes": 3498,
+          "sha256": "aad435c77eb4ca97679c74a9c203484f09df8158fd5e6df43ab5465e735c73e2"
+        },
+        "queued-source.json": {
+          "bytes": 166,
+          "sha256": "61b473a4debb1a650d7ec3787f32b708aa40267694d257c7c31b4cc9e6bcc385"
+        },
+        "checkout.log": {
+          "bytes": 183,
+          "sha256": "ae5885d1d2d31fd44f241e0cada84a5b71a673f194e8f00af998099facc4f3f9"
+        },
+        "import-start.json": {
+          "bytes": 299,
+          "sha256": "d7481c58426cb5795bd22a3be2c2b1f9e77a24ffa247852180041b498492d406"
+        },
+        "import-receipt.json": {
+          "bytes": 221,
+          "sha256": "b5859169a60c0be28e64a6f8d79d1953d351df116d4f197ac1b70192dd2270bf"
+        },
+        "import.stdout.log": {
+          "bytes": 10094,
+          "sha256": "4171ac217bb20e9d18fc468bbfe69ef17f33334d72adb131ef882fa76f24eb97"
+        },
+        "import.stderr.log": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "ui-merge-start.json": {
+          "bytes": 750,
+          "sha256": "9fdce610f067f82e3f8367cf2b75e4e8fb3ff5c0c5649e56ae149b7ed207f816"
+        },
+        "ui-merge-receipt.json": {
+          "bytes": 221,
+          "sha256": "00f95a39b3cf4c78e2b756b856f9059d42d1786b3fbd5d14665cd639ddf14e67"
+        },
+        "ui-merge.stdout.log": {
+          "bytes": 3702,
+          "sha256": "5bb4e545a5c0c862d628ae127f14cc16cd055917072ac127dfcc36a5dbcf5a13"
+        },
+        "ui-merge.stderr.log": {
+          "bytes": 2912,
+          "sha256": "f0409974106dec2e20598b390e21f406839dcb20e7a6c20c3d0df4de1697fd77"
+        },
+        "source-after-import.json": {
+          "bytes": 199,
+          "sha256": "c2ad0f8dabf97f294ee6ef67511bb03a0eee5491e4caf8324ce7f1b42a537ff5"
+        },
+        "source-after-capture.json": {
+          "bytes": 168,
+          "sha256": "ee8ab86b358fb3f3379bf709e815b14dcff9e9aec8e355bdfd2f6b3c9aa1dbdf"
+        },
+        "source-after-output-archive.json": {
+          "bytes": 231,
+          "sha256": "fa966228559fe33c3f8339dfe514c77efe55eb4db01243cae6acc53d72e695e3"
+        },
+        "original-path-map.json": {
+          "bytes": 1428,
+          "sha256": "c1d705143369b9198427e34f0d111e1e4e678d9099c6f8a20ceb3a1ab8b77d8c"
+        },
+        "image-headers.json": {
+          "bytes": 711,
+          "sha256": "5beca94846f6d28e88957c87210462d4d7883f9c2a9ff500da10f131f303ca0d"
+        },
+        "frames/manifest.json": {
+          "bytes": 3478,
+          "sha256": "1f4b2bf49b301245876ec7c040edd185d653e0664db38a9edddab448e854f5c2"
+        }
+      },
+      "command_binding": "Exact previously approved selected Stormwood tabs=backpack,map,paired720,Low1920,full285SHA,freshPhase2output,seed2042,fullscreen,fixedfps20 recipe; no idle/build/save/map-cycle additions."
+    },
+    "capture": {
+      "engine": "Godot4.7.stable.official.5b4e0cb0f",
+      "actual_driver_stdout": "OpenGL API3.3.0 NVIDIA560.94 - Compatibility - NVIDIA GeForce GTX1060 3GB",
+      "graphics_capture": {
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+        "preset": "Low",
+        "renderer": "gl_compatibility",
+        "resolution": [
+          1920,
+          1080
+        ],
+        "source_commit": "28572ae0c9085de60db33f58b6407588c2d7f681"
+      },
+      "display_server": "Windows",
+      "complete": true,
+      "stage": "finished",
+      "failures": [],
+      "unique_saved_JPEGs": 6,
+      "unique_ids": 6,
+      "unique_record_paths": 6,
+      "unique_image_sha256": 6,
+      "frames": [
+        {
+          "camera": "production CameraRig/Camera3D",
+          "elapsed_ms": 151813,
+          "id": "exploration_hud",
+          "path": "res://ralph/reports/VISUAL/phase2/stormwood/ui-merge-28572/exploration_hud.jpg",
+          "player_present": true,
+          "resolution": [
+            1920,
+            1080
+          ],
+          "scene": "res://scenes/world/stormwood.tscn",
+          "subject": "HUD in exploration",
+          "ui": true,
+          "archived": "D:\\CodexTemp\\tetherbound-proof\\native-e-28572ae0c9-ui-merge-r1\\frames\\exploration_hud.jpg",
+          "sha256": "cc48a255da92d1a4c602ae2627a70fd3e6ab2806767e619bec5791d05db578c8"
+        },
+        {
+          "camera": "production CameraRig/Camera3D",
+          "elapsed_ms": 152084,
+          "id": "exploration_hud_1280x720",
+          "path": "res://ralph/reports/VISUAL/phase2/stormwood/ui-merge-28572/exploration_hud_1280x720.jpg",
+          "player_present": true,
+          "resolution": [
+            1280,
+            720
+          ],
+          "scene": "res://scenes/world/stormwood.tscn",
+          "subject": "HUD in exploration",
+          "ui": true,
+          "archived": "D:\\CodexTemp\\tetherbound-proof\\native-e-28572ae0c9-ui-merge-r1\\frames\\exploration_hud_1280x720.jpg",
+          "sha256": "413bfa1121c5d8bf430739b321dcee523d61e1379b650f7dfde2c472aca0dccc"
+        },
+        {
+          "camera": "production CameraRig/Camera3D",
+          "elapsed_ms": 153529,
+          "id": "menu_backpack",
+          "path": "res://ralph/reports/VISUAL/phase2/stormwood/ui-merge-28572/menu_backpack.jpg",
+          "player_present": true,
+          "resolution": [
+            1920,
+            1080
+          ],
+          "scene": "res://scenes/world/stormwood.tscn",
+          "subject": "Menu backpack",
+          "ui": true,
+          "archived": "D:\\CodexTemp\\tetherbound-proof\\native-e-28572ae0c9-ui-merge-r1\\frames\\menu_backpack.jpg",
+          "sha256": "bfc9168aafabff8055f9f3e3fdde8aded0279c2f8b4d7b89e2dd695ab40bd84a"
+        },
+        {
+          "camera": "production CameraRig/Camera3D",
+          "elapsed_ms": 153746,
+          "id": "menu_backpack_1280x720",
+          "path": "res://ralph/reports/VISUAL/phase2/stormwood/ui-merge-28572/menu_backpack_1280x720.jpg",
+          "player_present": true,
+          "resolution": [
+            1280,
+            720
+          ],
+          "scene": "res://scenes/world/stormwood.tscn",
+          "subject": "Menu backpack",
+          "ui": true,
+          "archived": "D:\\CodexTemp\\tetherbound-proof\\native-e-28572ae0c9-ui-merge-r1\\frames\\menu_backpack_1280x720.jpg",
+          "sha256": "cac6aa13692a17e8cafd9efe41c5b353f38a1afd4c3f9d1ab1eade9c525bfee6"
+        },
+        {
+          "camera": "production CameraRig/Camera3D",
+          "elapsed_ms": 158343,
+          "id": "menu_map",
+          "path": "res://ralph/reports/VISUAL/phase2/stormwood/ui-merge-28572/menu_map.jpg",
+          "player_present": true,
+          "resolution": [
+            1920,
+            1080
+          ],
+          "scene": "res://scenes/world/stormwood.tscn",
+          "subject": "Menu map",
+          "ui": true,
+          "archived": "D:\\CodexTemp\\tetherbound-proof\\native-e-28572ae0c9-ui-merge-r1\\frames\\menu_map.jpg",
+          "sha256": "546e4f67a57cac563c3306eff3aa10a440e287ee42d85d96e4071ab126f92286"
+        },
+        {
+          "camera": "production CameraRig/Camera3D",
+          "elapsed_ms": 159197,
+          "id": "menu_map_1280x720",
+          "path": "res://ralph/reports/VISUAL/phase2/stormwood/ui-merge-28572/menu_map_1280x720.jpg",
+          "player_present": true,
+          "resolution": [
+            1280,
+            720
+          ],
+          "scene": "res://scenes/world/stormwood.tscn",
+          "subject": "Menu map",
+          "ui": true,
+          "archived": "D:\\CodexTemp\\tetherbound-proof\\native-e-28572ae0c9-ui-merge-r1\\frames\\menu_map_1280x720.jpg",
+          "sha256": "d9ecfb3ebc245567927d51dddfbc734645580d6bbefd6e7ac6c2ed0b05c74f38"
+        }
+      ],
+      "actual_raster_verification": "Allsix originalJPEGs decoded using Windows System.Drawing Bitmap to32bpp raster. Three primary files actual1920x1080; paired files actual1280x720; dimensions match per-frame records and packet header list. No conversion or image edit performed.",
+      "primary_restoration": "Chronological saved pairs alternate1080/720 for exploration,Backpack,Map. Both subsequent primary headers independently1080 after prior720; final producer viewport resolution1920x1080 supports last pair restoration. This exercises the combined declared-primary restore path rather than inferring correctness from source alone.",
+      "stdout_record_match": "Allsix IDs/path save lines appear chronologically in actualstdout and exactproducer records; archived basenames correspond to original res://paths. Finalmanifestcompletetrue,stagefinished,no failures and actualterminalexit0/stopreasonempty.",
+      "diagnostics": {
+        "engine_script_errors": 0,
+        "import_errors": 0,
+        "warnings": 6,
+        "warning_scope": "One deprecated interpolation, two shared TwistedTree retint warnings and three wild-cluster body-spacing fit warnings. All retained; no warning-free claim."
+      }
+    },
+    "archive_and_cleanup": {
+      "after_capture": {
+        "source": "28572ae0c9085de60db33f58b6407588c2d7f681",
+        "index_dirty": [],
+        "dirty": [
+          "?? ralph/reports/VISUAL/phase2/stormwood/ui-merge-28572/"
+        ]
+      },
+      "after_output_archive": {
+        "output_only_archive": true,
+        "dirty": [],
+        "index_tree": "dea81a8dab871d1bef257a85d672256d49118a81",
+        "source": "28572ae0c9085de60db33f58b6407588c2d7f681",
+        "head_tree": "dea81a8dab871d1bef257a85d672256d49118a81"
+      },
+      "pathmap_sha256": "c1d705143369b9198427e34f0d111e1e4e678d9099c6f8a20ceb3a1ab8b77d8c",
+      "matching_map_files": 7,
+      "basis": "Initial after-capture receipt intentionally has only untracked producer output directory and index_dirty[]. It is not represented as wholly clean at that moment. Original-path-map preserves unmodified producer archive hashes for6JPEGs+manifest, all equal actual archived bytes/hashmanifest. Output-only archive afterterminal removes that untracked directory; after-archive receipt has dirty[]/matching pinned head-index trees.",
+      "original_path_present_at_review": false,
+      "comparison_limit": "Original producer directory has been removed by output-only cleanup. No claim of an independent live-original byte comparison after removal; actual archival bytes, original-path-map hashes and preserved pre/postcleanup receipts form the retained provenance. Original receipt and original manifest paths are not rewritten or relabeled."
+    },
+    "evidence_reuse": {
+      "minimum_changed_check": "Previously requested focused combined UI native proof is now genuinely complete; no headless parse/import-alone promotion, extra capture, old scenery/combat/test run or proof restart.",
+      "unchanged": "Previously accepted exact merged source identities and historical240/44/source/runtime/whole witnesses reused with their scopes. Actualimport has no scriptparse error and selectedUI executes both primary/paired combined branches.",
+      "remaining_gate": "New current P2-002 independent score/applicability and assembly binding still pending. This entry does not approve wholeF41#0 at285, change any numeric score or infer visualPASS from capture success."
+    },
+    "limits": [
+      "Stocked party/satchel and production scene,daylight pin/ordinary menu fixture; no earned journey,save,actual equipment transaction,controller navigation,physicaldevice readability or performance proof.",
+      "Producer camera/player metadata are retained; no new floor/collision/real-earned-path proof or observer body/transform readback claimed.",
+      "Selectedtabs only; idle/build/save states and legacy defaults remain main source/evidence reuse, not newly executed state proofs.",
+      "All old scores,APP/BLOCK/FAILs,fixtures,priorityestimates,source-after-capture untracked output and archive receipts preserved. Fullvisualbar/criteria(1)-(5) remain separate."
+    ],
+    "activity": "Completedpacket/log/hash/rasterdecode/localtreeidentity only; original report appended. No engine/test/GPU/dispatch/source edit/implementation/newhelper-fixture-agent/GitHub/STATE/dashboard/handoff/rawthread/pixeljudgment/judgecontact."
   }
 }

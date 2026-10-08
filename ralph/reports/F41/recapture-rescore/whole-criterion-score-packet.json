@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "criterion": "F41#0",
-  "source_commit": "2535740dbd107c7b93bfc9e3a80aa2d0bd19929b",
+  "source_commit": "28572ae0c9085de60db33f58b6407588c2d7f681",
   "scope": "Assembly of original reviewer-recorded per-row scores with original evidence and rating bases preserved; not a fresh broad rescore or full visual bar",
   "recapture": {
     "unique_ids": 240,
@@ -19,12 +19,13 @@
     "natural_loss": 1,
     "context_supplement": 3,
     "current_reward": 1,
-    "primary_retained": 36,
+    "primary_retained": 35,
     "original_reviewer_recorded_numeric_rows": 44,
-    "current_pattern_fight": 3
+    "current_pattern_fight": 3,
+    "current_map": 1
   },
   "score_assembly_checks": "44unique IDs, all original-recorded1..5scores, exact products; no score invented or previous failure promoted. Original primary exposure/importance preserved estimates explicitly disclosed.",
-  "whole_criterion_verdict": "PASS literalF41#0: original independent whole APPROVE + original blind whole completeness PASS; F41#1..#5 and fullbar remain OPEN",
+  "whole_criterion_verdict": "Merged-current whole F41#0 PENDING original runtime artifact approval and original finalwhole/currentmap binding; historical253 milestone retained",
   "full_visual_bar": {
     "A": "BLOCK on supplied environmental presentation",
     "B": "BLOCK on supplied environmental presentation",
@@ -138,17 +139,24 @@
     {
       "item_id": "P2-002",
       "subject": "map",
-      "original_artifact": "catalog-rescore.json",
-      "original_assessment": "PARTIAL",
+      "original_artifact": "current-map-28572-rescore.json",
+      "original_assessment": "PARTIAL: two full-size Stormwood map screenshots at 0% surveyed and displayed 32x local view. Only this visible map state is assessed.",
       "severity": 4,
       "exposure": 4,
       "importance": 5,
       "impact": 80,
-      "verdict": "PARTIAL",
+      "verdict": "FAIL",
       "evidence": [
-        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_map.jpg"
+        "D:/CodexTemp/tetherbound-proof/native-e-28572ae0c9-ui-merge-r1/frames/menu_map.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-28572ae0c9-ui-merge-r1/frames/menu_map_1280x720.jpg"
       ],
-      "limits": "One 0%-surveyed map state only. Explored terrain, populated destination lists, zoom/pan and other regions are unassessed."
+      "limits": [
+        "Both screenshots explicitly show Surveyed: 0%. They do not expose explored terrain or a populated destination context. This score does not prove that terrain/road rendering is absent behind unrevealed areas or that the same defect persists after surveying.",
+        "No inference about intended fog-of-war policy, hidden map data, rendering cause, navigation correctness, zoom/pan behavior, interaction, continuous motion or controller usability.",
+        "The displayed 32x local view label is reported from the image; no world-distance or map-scale calibration is inferred.",
+        "No co-op, other regions, other survey percentages, physical device readability, whole visual bar or full P2-002 closure is certified.",
+        "Only the terrain/road-context subject is assessed; surrounding world appearance and other menu/catalogue rows are out of scope."
+      ]
     },
     {
       "item_id": "P2-017",
@@ -858,7 +866,7 @@
   "primary_score_basis": {
     "source": "catalog-rescore.json/scoring",
     "severity": "Original judge assessed severity",
-    "exposure_importance": "Original primary artifact preserves input priority estimates; do not claim fresh independent exposure/importance for these36",
+    "exposure_importance": "Original primary artifact preserves input priority estimates; do not claim fresh independent exposure/importance for these35 retained rows",
     "criterion_applicability": "Requires original whole review judgment, not assembly assumption"
   },
   "affected_applicability_resolution": "Same original judge independently re-scored only current253 P2-092/P2-093/P2-063 from all24 existing tell rasters; all3visualFAIL/BLOCK48 retained. Previous context scores preserved in original artifact, not currentassembly.",
@@ -869,5 +877,6 @@
     "blind_verdict": "PASS",
     "accepted_gameplay_source": "2535740dbd107c7b93bfc9e3a80aa2d0bd19929b",
     "scope": "Literal recapture and rowrescore completeness only;17partialscopes/allvisualFAIL/BLOCKpreserved"
-  }
+  },
+  "main_integration_map_resolution": "Original samejudge P2-002 currentmap independently4/4/5=80FAIL, scoped two32xunsurveyedmaps at1080/720; historicalrow preserved in originalprimary artifact, not currentassembly"
 }
