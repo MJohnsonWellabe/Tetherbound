@@ -1,0 +1,30 @@
+{
+  "kind": "f49_generated_input_affected_flag_scope_check_and_bed_source_review",
+  "owner_policy": "https://github.com/MJohnsonWellabe/Tetherbound/issues/572#issuecomment-6060136810",
+  "existing_check": {
+    "run_id": 37787522220,
+    "source": "9d01be3af7695f87dbfeb7d5060ee89f74e8ce2f",
+    "script": "tests/run_tests.gd",
+    "args": "--only=test_flag_scopes.gd",
+    "tests": 12,
+    "assertions": 334,
+    "failed": 0,
+    "exit_code": 0,
+    "engine_errors": 0,
+    "artifact_id": 11554857652,
+    "artifact_sha256": "eb7f403d65efdd843d3ea5c2e49fb526332cb013d5c0a54cfbac47882addc495",
+    "log": "ci-flag-scopes-37787522220.log.gz",
+    "log_sha256": "3ed343c58f2ca4be479f486946bab6981bbcc6eab1cb281a3d9570350becc32c"
+  },
+  "original_source_review": {
+    "reviewer": "b_f49_review",
+    "thread_id": "01a1165d-ecfb-79d3-9355-1224723cdb53",
+    "source": "6187f94a7ac5ce7ffc4a255050c3184ef7dfadda",
+    "verdict": "SOURCE APPROVE",
+    "summary": "Original F49 reviewer: **SOURCE APPROVE** `6187f94a7ac5ce7ffc4a255050c3184ef7dfadda`.\n\nOne-frame NAV requests are separated by actual friction stops within the existing budget. Floor, exclusion, provider, departure and three-frame prompt-settle guards remain intact; default Home paths are unchanged.\n\nChanged-source preparation/Relay runtime remains open. No repair PASS or criterion claim. Router stopped read-only."
+  },
+  "whole_criterion_closed": false,
+  "blind_visual_proof": false,
+  "continuous_fresh_save": false,
+  "disclosure": "Flag check verifies scoped authored grants including fly_tutorial_completed. Source approval verifies unchanged guards and physical remote-bed input correction, not runtime success. Neither result proves the generated segments or earned continuous campaign."
+}
