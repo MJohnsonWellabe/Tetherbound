@@ -2878,6 +2878,53 @@ func _step_place_creature(args: Dictionary) -> Dictionary:
 		return {"verdict": "ERROR", "detail": "place_creature needs args.at = [x, y, z]"}
 	var target := Vector3(float(at[0]), float(at[1]), float(at[2]))
 	var node: Node3D = body
+	var manager := _combat_manager()
+	var sess := _session()
+	var walked := false
+	var walk_uid := ""
+	var walk_id := ""
+	var walk_epoch := ""
+	var walk_deadline := -1
+	# Host-owned combat movement cannot consume a guest-local fixture teleport.
+	# Reach the SAME fixture target through the existing physical-stick walker;
+	# admission, host integration, arena collision and correction stay live.
+	if sess != null and bool(sess.call("is_active")) and not bool(sess.call("is_host")) and manager != null \
+		and bool(manager.call("is_fighting")) and director.call("_combat_motion_transport_enabled") == true:
+		_drive_left(0.0, 0.0)
+		var rig := _probe.call("camera_rig") as Node3D
+		var creature: RefCounted = manager.call("active_creature")
+		if rig == null or creature == null or not target.is_finite():
+			return {"verdict":"FAIL", "detail":"guest combat placement lacks its live body/camera/target"}
+		var expected_uid := str(creature.get("uid"))
+		var expected_id := str(manager.call("encounter_id"))
+		walk_uid = expected_uid
+		walk_id = expected_id
+		walk_epoch = str(sess.call("_altar_current_epoch"))
+		var multiplayer_config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/multiplayer.json"))
+		var budgets: Dictionary = multiplayer_config.get("test_budgets", {})
+		var settle := maxi(0, int(args.get("settle", 60)))
+		var travel_budget := maxi(0, int(budgets.get("step_budget_frames", 3000)) - settle)
+		var first_frame := Engine.get_physics_frames()
+		walk_deadline = first_frame + int(budgets.get("step_budget_frames", 3000))
+		var nav := NAVIGATOR.new(self, node, rig, Callable(self, "_drive_left"))
+		var tolerance := minf(0.25, float(budgets.get("near_tolerance_rest_m", 1.5)))
+		while Engine.get_physics_frames() - first_frame < travel_budget:
+			creature = manager.call("active_creature")
+			if not is_instance_valid(node) or director.call("ally_body") != node \
+				or not bool(manager.call("is_fighting")) or str(manager.call("encounter_id")) != expected_id \
+				or not bool(sess.call("is_active")) or str(sess.call("_altar_current_epoch")) != walk_epoch \
+				or creature == null or str(creature.get("uid")) != expected_uid:
+				_drive_left(0.0, 0.0)
+				return {"verdict":"FAIL", "detail":"guest combat placement lost its original binding"}
+			if Vector2(node.global_position.x - target.x, node.global_position.z - target.z).length() <= tolerance:
+				walked = true
+				break
+			if nav.can_walk(): nav.step(target)
+			else: _drive_left(0.0, 0.0)
+			await physics_frame
+		_drive_left(0.0, 0.0)
+		if not walked:
+			return {"verdict":"FAIL", "detail":"physical guest combat input did not reach the original fixture target"}
 	# `place_on_ground` asks the world for the height rather than raycasting
 	# (D09), which is what stops the body from being dropped a metre or two into
 	# the air over sloping ground and then SLIDING while it settles -- measured
@@ -2891,7 +2938,9 @@ func _step_place_creature(args: Dictionary) -> Dictionary:
 	# under the Warden Arena is metres away from the floor the fight is standing
 	# on, and both creatures were placed 6-8 m above the boss (finding F2).
 	# OFF by default, so every caller written before this line is unchanged.
-	if bool(args.get("exact", false)):
+	if walked:
+		pass # Actual physics owns Y; never force the proof's requested height.
+	elif bool(args.get("exact", false)):
 		node.global_position = target
 	elif node.has_method("place_on_ground"):
 		node.call("place_on_ground", target)
@@ -2906,6 +2955,15 @@ func _step_place_creature(args: Dictionary) -> Dictionary:
 	# dropped over.
 	for i in maxi(0, int(args.get("settle", 60))):
 		await physics_frame
+		if walked:
+			var current: RefCounted = manager.call("active_creature")
+			if not is_instance_valid(node) or director.call("ally_body") != node \
+				or not bool(manager.call("is_fighting")) or str(manager.call("encounter_id")) != walk_id \
+				or not bool(sess.call("is_active")) or str(sess.call("_altar_current_epoch")) != walk_epoch \
+				or current == null or str(current.get("uid")) != walk_uid \
+				or Engine.get_physics_frames() > walk_deadline:
+				_drive_left(0.0, 0.0)
+				return {"verdict":"FAIL", "detail":"guest combat placement lost its binding or exceeded the original step budget"}
 	return {"verdict": "PASS", "detail": "creature stands at (%.2f, %.2f, %.2f)"
 		% [node.global_position.x, node.global_position.y, node.global_position.z]}
 
