@@ -3,7 +3,7 @@
     "F23#2",
     "F23#5"
   ],
-  "status": "WHOLE F23#2 APPROVE/MET by original independent reviewer; F23#5 remains OPEN.",
+  "status": "PARKED OPEN F23#2; historical WHOLE approval returned by integration, repaired UID verified but remaining movement proof fails",
   "source_components": [
     {
       "commit": "fd26fd34ed0d29967e7b839b90aca33420e1261a",
@@ -578,9 +578,9 @@
     "unit_log_sha256": "85a58851977a900aefab0173129ed2856fd811109ff7b4898823ca1983e55517",
     "checkout_verification": "Job113342662829 git log -1 confirmse641620c7918a91e3e3ce4ee8b2d501907d75a69"
   },
-  "current_shipping_flags": "At e641620c79 move_commit runtime stays ON and live_moves admits all ten authored utilities plus retained Ground Current. actor_vitals runtime stays OFF; Heal only in converted saved-health self scope, generic unsupported Heal refuses before spend/action, guest Dash transport still refuses. Command/ultimate presentation flags unchanged.",
+  "current_shipping_flags": "Existingproductionflags unchanged by UIDfix/observation/physicalinputproofrescope. F23#2 acceptance returnedOPEN; no repaired WHOLE claim.",
   "criteria_status": {
-    "F23#2": "RETURNED OPEN; integration quick move admission regression",
+    "F23#2": "PARKED OPEN; no repaired WHOLE acceptance",
     "F23#5": "OPEN"
   },
   "whole_f23_2_review": {
@@ -665,7 +665,8 @@
       "failed": 0,
       "exit": 0,
       "seconds": 7,
-      "log_sha256": "9a42cee043149e5448fc931b44b6b896af23c81e52cde8018ca778be5e9d0499"
+      "log_sha256": "9a42cee043149e5448fc931b44b6b896af23c81e52cde8018ca778be5e9d0499",
+      "checkout_verification": "job113395645514 git log -1 confirmsf6efdb6a0e50f9e38b79cd35a55a6abab8bc8a20"
     },
     "wild_runtime": {
       "run_id": 37801794084,
@@ -673,13 +674,15 @@
       "result": "FAIL 7failures nofatal",
       "log_sha256": "ed4b60f1be6c0ccb473c797859967ad78aa19654c749a2095fffbfb6cfb78b6b",
       "observation": "participantUID now matchesadmitted/body/binding; actor_currentTRUE, target/scopevalid; invalid_actor_move absent",
-      "limits": "No accepted save or boundary; remaining guesthit/friendlygeometry/window failures retained"
+      "limits": "No accepted save or boundary; remaining guesthit/friendlygeometry/window failures retained",
+      "checkout_verification": "job113395615863 git log -1 confirmsf6efdb6a0e50f9e38b79cd35a55a6abab8bc8a20"
     },
     "boss_runtime": {
       "run_id": 37801798698,
       "artifact_id": 11560699195,
       "result": "FAIL 3friendly/window failures nofatal; originalguesthit checks pass",
-      "log_sha256": "317e51c03ae6cf241911489963b59e6a2a57fc5c2f0358040501fbbf545dea42"
+      "log_sha256": "317e51c03ae6cf241911489963b59e6a2a57fc5c2f0358040501fbbf545dea42",
+      "checkout_verification": "job113395632402 git log -1 confirmsf6efdb6a0e50f9e38b79cd35a55a6abab8bc8a20"
     },
     "original_runtime_review": {
       "reviewer": "original /root/f25_medium_review",
@@ -688,5 +691,42 @@
       "remaining_scope": "Existing placement proofs need explicit adaptation to production input; no evidence physical-input movement is broken"
     }
   },
-  "proof_rescope_evaluation": "Originalreviewer evaluating reuse of existing NAVIGATOR/_drive_left physicalstick for SAME at coordinates under existingstepbudget, no fallbackteleport/guard/fixtureloosening. No newdispatch."
+  "proof_rescope_evaluation": "Direction/SOURCE APPROVE preserved as history; actualchangedwild FAIL8, originalreviewerPARK; no bossrun/no newdispatch until distinctsupportedcode.",
+  "physical_input_proof_rescope": {
+    "source_commit": "e8e2aab3f88f2776fabd828448f3369ce0d89333",
+    "source_verdict": "SOURCE APPROVE same original /root/f25_medium_review",
+    "changed_path": "tools/net/peer_runner.gd _step_place_creature only",
+    "scope": "Active networkguestcombat with mountedmotion; actualownedbody/camera sharedNAVIGATOR.step/_drive_left InputEventJoypadMotion. Same atx/z/face/settle, originalSWINGS/assertions/negativecontrols unchanged",
+    "guards": "bodyUID/encounter/sessionepoch throughout; axesrelease; travel+settle original3000physicsframes; unreachable/lostbinding FAIL; no fallbackteleport/forcedY. Otherplacementpaths unchanged",
+    "unit_reuse": "Shipping source unchanged from f6; previous13tests122assertions reused",
+    "run_id": 37804800865,
+    "status": "FAIL retained, PARK originalreviewer; boss notdispatched",
+    "artifact_id": 11563161588,
+    "failures": 8,
+    "fatal": "",
+    "log_sha256": "2329c5db43a46cfb878cdc57040da29db82e0c7267d02080324ee71c32bb0543",
+    "observed": "Admission/actor_current/motion/target valid; hoststrikeorigins remaininitialguestposition; friendlyseparation9.713060m; placementtimeout with recent911msheartbeat",
+    "timeout": {
+      "action": "place_creature",
+      "id": "s91",
+      "phase": "timeout_before_finish",
+      "coordinator_deadline_ms": 158601,
+      "coordinator_observed_ms": 158608,
+      "heartbeat_physics_frame": 4500,
+      "heartbeat_receive_age_ms": 911
+    },
+    "independent_verdict": {
+      "reviewer": "original /root/f25_medium_review",
+      "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+      "verdict": "PARK; no distinct shipping correction supported yet",
+      "missing_decisive_operands": [
+        "guest projection/current scope",
+        "host motion context valid/walking/paused",
+        "received direction/sequence/ACK",
+        "host correction sequence"
+      ],
+      "limits": "Cannot distinguish scope rejection/input delivery/correction handling; no guard/positiontrust/tolerance/budgetchange justified. Nounchangedrerun."
+    },
+    "accepted_boundary": "none; failed saves never promoted"
+  }
 }
