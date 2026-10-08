@@ -1,0 +1,47 @@
+{
+  "reviewer": "review_cloud_startup",
+  "verdict": "APPROVE",
+  "scope": "Bounded Fly knee source and four selected existing regression files only; no visual or whole F36#1 approval.",
+  "source_commit": "7717b92f44314324262398205d1bb5b10f5b700a",
+  "production_paths": [
+    "data/config/fly_traversal.json",
+    "scripts/player/trainer_model.gd"
+  ],
+  "source_findings": [
+    "New thigh_forward and shin_backward values accept finite numeric types, clamp to 0..1 and fall back to 0.35 and 0.55.",
+    "Both nonzero leg aim vectors use the existing installed-rig bone helper; missing bones retain its existing no-op behavior.",
+    "Only Fly leg-bone presentation changes. Existing arm aims, carrier, collision, inputs, save and authority paths are unchanged."
+  ],
+  "units": {
+    "run_id": 37738792397,
+    "job_id": 113184415661,
+    "artifact_id": 11533465969,
+    "checkout_verified_from_hosted_job_log": true,
+    "files": [
+      "tests/test_human_swim_visual.gd",
+      "tests/test_meadowhart_riding_visual_repair_0912.gd",
+      "tests/test_terrain_adaptation.gd",
+      "tests/test_trainer_appearance_choice.gd"
+    ],
+    "tests": 25,
+    "assertions": 227,
+    "failures": 0,
+    "exit_code": 0,
+    "duration_seconds": 6,
+    "run_log": ".tmp/e-fly-knee-logic-7717-expanded/run.log",
+    "run_log_sha256": "1b8350b746d7746c0ba0f7c835903d7719f529d5a8e4eecfcc7f2eeaef8803cc",
+    "run_log_hash_verified": true,
+    "error_or_script_error_in_run_log": false,
+    "coverage_limit": "Relevant existing trainer presentation regressions; no selected case directly proves the new Fly knee pose or malformed hang_pose inputs in engine."
+  },
+  "production_and_selected_tests_byte_unchanged_through": "5348eed558e3c35cf36fb3fa32a9ceba1bc3831e",
+  "pending": [
+    "Changed Fly capture and original code-blind comparison",
+    "Whole F36#1 pose matrix and acceptance"
+  ],
+  "excluded_claims": [
+    "Earned traversal or campaign reachability",
+    "Closed-grip or whole Fly mechanics proof",
+    "Co-op, motion comfort or whole species visual acceptance"
+  ]
+}

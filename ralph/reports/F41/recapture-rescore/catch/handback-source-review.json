@@ -1,0 +1,22 @@
+{
+  "reviewer": "review_cloud_startup",
+  "verdict": "APPROVE",
+  "base_commit": "5348eed558e3c35cf36fb3fa32a9ceba1bc3831e",
+  "path": "tools/phase2_capture_catch.gd",
+  "scope": "Existing opt-in breakout-handback-only diagnostic and working-tree read-only model/rig-target receipt extension only.",
+  "original_opt_in_verdict": "APPROVE",
+  "retained_findings": [
+    "Successful catches emit no mislabeled breakout frame; failure must produce both unpaused views and two observations or exit nonzero.",
+    "Failure odds are restored before finishing; the default twelve-frame path is unchanged.",
+    "Shutters retain the existing five-physics-frame beat and two-process-frame capture waits, with thirty-five physics frames between views. Use recorded frame numbers rather than claiming exact elapsed timing.",
+    "Added model transforms and the existing Node3D rig target are read-only; no production pose, camera or mechanics mutation is introduced."
+  ],
+  "corrected_finding": "Refreshed working diff includes guarded ally_model_visible and wild_model_visible using the captured Model nodes' is_visible_in_tree(), separately from existing body-root visibility.",
+  "required_corrections": [],
+  "proof_status": "PENDING changed diagnostic capture; source review is not camera-compositor or visual acceptance.",
+  "excluded_claims": [
+    "Earned catch or co-op proof",
+    "Success sequence or whole twelve-frame capture",
+    "Continuous motion or whole F41 criterion acceptance"
+  ]
+}

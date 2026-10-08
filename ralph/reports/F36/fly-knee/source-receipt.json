@@ -11,8 +11,17 @@
     "run_id": 37738792397,
     "script": "tests/run_tests.gd",
     "args": "--only=test_human_swim_visual.gd,test_meadowhart_riding_visual_repair_0912.gd,test_terrain_adaptation.gd,test_trainer_appearance_choice.gd",
-    "status": "QUEUED"
+    "status": "PASS",
+    "artifact_id": 11533465969,
+    "tests": 25,
+    "assertions": 227,
+    "failures": 0,
+    "exit_code": 0,
+    "duration_seconds": 6,
+    "run_log_sha256": "1b8350b746d7746c0ba0f7c835903d7719f529d5a8e4eecfcc7f2eeaef8803cc",
+    "raw_packet": ".tmp/e-fly-knee-logic-7717-expanded"
   },
   "visual": "PENDING changed existing Fly pose proof + original code-blind comparison",
-  "whole_criterion": "F36#1 OPEN; no closed-grip/earned/full species pose matrix claim"
+  "whole_criterion": "F36#1 OPEN; no closed-grip/earned/full species pose matrix claim",
+  "production_unchanged_through": "5348eed558"
 }

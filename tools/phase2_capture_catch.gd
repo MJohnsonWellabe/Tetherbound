@@ -576,6 +576,9 @@ func _capture(name: String) -> void:
 	if _breakout_handback_only:
 		var camera := root.get_camera_3d()
 		var model := _player.get_node_or_null(^"Model") as Node3D
+		var ally_model := _ally.get_node_or_null(^"Model") as Node3D if is_instance_valid(_ally) else null
+		var wild_model := _wild.get_node_or_null(^"Model") as Node3D if is_instance_valid(_wild) else null
+		var camera_target := _rig.get("_target") as Node3D
 		_handback_observations.append({"id": name, "paused": paused,
 			"physics_frame": Engine.get_physics_frames(),
 			"fighting": bool(_manager.call("is_fighting")),
@@ -583,9 +586,17 @@ func _capture(name: String) -> void:
 			"player_transform": str(_player.global_transform),
 			"model_transform": str(model.global_transform) if model != null else "unavailable",
 			"ally_transform": str(_ally.global_transform) if is_instance_valid(_ally) else "unavailable",
+			"ally_model_transform": str(ally_model.global_transform) if ally_model != null else "unavailable",
+			"ally_model_visible": ally_model.is_visible_in_tree() if ally_model != null else false,
 			"ally_visible": _ally.is_visible_in_tree() if is_instance_valid(_ally) else false,
+			"wild_transform": str(_wild.global_transform) if is_instance_valid(_wild) else "unavailable",
+			"wild_model_transform": str(wild_model.global_transform) if wild_model != null else "unavailable",
+			"wild_model_visible": wild_model.is_visible_in_tree() if wild_model != null else false,
+			"wild_visible": _wild.is_visible_in_tree() if is_instance_valid(_wild) else false,
 			"camera_path": str(camera.get_path()) if camera != null else "unavailable",
 			"camera_transform": str(camera.global_transform) if camera != null else "unavailable",
+			"camera_target_path": str(camera_target.get_path()) if is_instance_valid(camera_target) else "unavailable",
+			"camera_target_transform": str(camera_target.global_transform) if is_instance_valid(camera_target) else "unavailable",
 			"rig_transform": str(_rig.global_transform),
 			"rig_has_current_camera": camera == _rig.get_node_or_null(^"Camera3D")})
 	print("  %-26s -> %s  (+%.1fs)" % [name, path, (Time.get_ticks_msec() - _start_ms) / 1000.0])
