@@ -534,6 +534,13 @@ func _commit_here(intent: Dictionary, peer_id: int) -> Dictionary:
 		if _can_rpc() and _is_multi_peer():
 			rpc("_rpc_delta", delta)
 	_gather_after_commit(delta)
+	if inventory_move and peer_id == _local_peer_id():
+		var solo_session: Node = _game().get("session")
+		if solo_session != null and solo_session.has_method("is_active") and solo_session.call("is_active") == false \
+				and solo_session.has_method("_retry_foundation_events"):
+			# The world already retained this original. Solo can try its normal
+			# save/ACK path now; a held decision keeps the existing retry alive.
+			solo_session.call("_retry_foundation_events")
 	return verdict
 
 
