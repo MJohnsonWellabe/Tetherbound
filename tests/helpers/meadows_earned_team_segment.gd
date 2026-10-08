@@ -1123,7 +1123,7 @@ func _recover_at_home_bed(index: int, authored_bed: Node3D = null) -> bool:
 	driver._bed = bed
 	driver._resolve_move_bindings()
 	var prompt := bed.get_node_or_null("Interactable") as Node3D
-	var stance := _home_bed_stance(bed, prompt)
+	var stance := _home_bed_stance(bed, prompt, authored_bed != null)
 	if stance.is_empty() or not driver.failures.is_empty() \
 			or not await _walk_to_home_bed(driver, prompt, stance):
 		return _fail("Controller home-bed assignment failed: " + str(driver.failures))
@@ -1179,7 +1179,7 @@ func _recover_at_home_bed(index: int, authored_bed: Node3D = null) -> bool:
 ## Read the actual solid pad and trainer capsule, never the visible rim or a
 ## guessed mesh size. The closest exterior face supplies a heading only;
 ## the live arbiter and grounded controller still decide whether it is usable.
-func _home_bed_stance(bed: Node3D, prompt: Node3D) -> Dictionary:
+func _home_bed_stance(bed: Node3D, prompt: Node3D, remote_north: bool = false) -> Dictionary:
 	var capsule := _player.get_node_or_null("Collision") as CollisionShape3D
 	if prompt == null or capsule == null or not capsule.shape is CapsuleShape3D:
 		return {}
@@ -1214,12 +1214,28 @@ func _home_bed_stance(bed: Node3D, prompt: Node3D) -> Dictionary:
 		if heading.distance_to(at) < nearest:
 			nearest = heading.distance_to(at)
 			stance = heading
+	if remote_north:
+		# Riverwatch's nearest west face is occupied by its actual barrel.
+		# Plan inside the prompt sphere on the uncluttered north side. Live
+		# floor, provider and exterior checks still decide whether it is usable.
+		var excluded := footprint.grow(clearance)
+		var vertical := at.y - bed.global_position.y
+		var radius := float(prompt.get("radius"))
+		var horizontal_squared := radius * radius - vertical * vertical
+		if horizontal_squared <= 0.0:
+			return {}
+		var northern_limit := at.z + sqrt(horizontal_squared)
+		if northern_limit <= excluded.end.y \
+				or at.x <= excluded.position.x or at.x >= excluded.end.x:
+			return {}
+		stance = Vector3(at.x, bed.global_position.y, (excluded.end.y + northern_limit) * 0.5)
 	if not stance.is_finite():
 		return {}
 	var polygon := PackedVector2Array([footprint.position,
 		Vector2(footprint.end.x, footprint.position.y), footprint.end,
 		Vector2(footprint.position.x, footprint.end.y)])
-	return {"at": stance, "bounds": bounds, "footprint": footprint, "polygon": polygon, "clearance": clearance}
+	return {"at": stance, "bounds": bounds, "footprint": footprint, "polygon": polygon,
+		"clearance": clearance, "remote_north": remote_north}
 
 
 func _walk_to_home_bed(driver: RefCounted, prompt: Node3D, stance: Dictionary) -> bool:
@@ -1233,7 +1249,22 @@ func _walk_to_home_bed(driver: RefCounted, prompt: Node3D, stance: Dictionary) -
 	var footprint: Rect2 = stance.footprint
 	var from: Vector2 = Vector2(_player.global_position.x, _player.global_position.z) if points.is_empty() else points.back()
 	var target: Vector3 = stance.at
-	var pad_route := exterior_path(from, Vector2(target.x, target.z), stance.polygon, float(stance.clearance))
+	var pad_route: Array[Vector2]
+	if bool(stance.get("remote_north", false)):
+		var excluded := footprint.grow(float(stance.clearance))
+		var polygon := PackedVector2Array([excluded.position,
+			Vector2(excluded.end.x, excluded.position.y), excluded.end,
+			Vector2(excluded.position.x, excluded.end.y)])
+		# Match exterior_path's existing corner reserve; take the clear east
+		# side instead of steering toward the barrel beside the west face.
+		var southeast := Vector2(excluded.end.x + 0.2, excluded.position.y - 0.2)
+		var northeast := Vector2(excluded.end.x + 0.2, excluded.end.y + 0.2)
+		pad_route = exterior_path(from, southeast, polygon, 0.0)
+		if not pad_route.is_empty():
+			pad_route.append(northeast)
+			pad_route.append(Vector2(target.x, target.z))
+	else:
+		pad_route = exterior_path(from, Vector2(target.x, target.z), stance.polygon, float(stance.clearance))
 	if pad_route.is_empty():
 		return _fail("The installed bed has no exterior capsule approach")
 	points.append_array(pad_route)
@@ -1247,8 +1278,17 @@ func _walk_to_home_bed(driver: RefCounted, prompt: Node3D, stance: Dictionary) -
 		var here := Vector2(_player.global_position.x, _player.global_position.z)
 		if _nav.refused() or not _player.is_on_floor() or _tree.paused or _fighting() \
 				or INPUT_OWNER.current(_tree) != null or footprint.grow(float(stance.clearance)).has_point(here):
+			# Preserve the individual refusal facts before stopping the actual
+			# stick. A blank navigator reason does not establish a floor failure.
+			var facts := {"nav_refused": _nav.refused(), "nav_reason": _nav.refusal_reason(),
+				"on_floor": _player.is_on_floor(), "paused": _tree.paused, "fighting": _fighting(),
+				"input_owner": str(INPUT_OWNER.current(_tree)),
+				"inside_bed_exclusion": footprint.grow(float(stance.clearance)).has_point(here),
+				"player": str(_player.global_position), "target": str(target),
+				"solid_bounds": str(stance.bounds), "clearance": stance.clearance,
+				"waypoint": waypoint, "frame": frame, "budget": budget}
 			_nav.reset()
-			return _fail("Installed-bed approach lost grounded exterior world input: " + _nav.refusal_reason())
+			return _fail("Installed-bed approach lost grounded exterior world input: " + str(facts))
 		if waypoint < (boundary.points as Array).size() and not str(boundary.gate).is_empty() \
 				and not _open_boundary_gate(str(boundary.gate)):
 			_nav.reset()
