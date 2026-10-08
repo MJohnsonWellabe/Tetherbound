@@ -220,14 +220,23 @@ func _native_case_backpack_target_guard_precedes_any_care_or_item_write() -> voi
 	tab.set("_focused", tool_slot)
 	packed = var_to_bytes(RECORD.portable_projection(game.local.save_data()))
 	owner_session.blocked = true
+	# Poll Use on fresh physics-frame edges, as the actual menu does.
+	# Keep the input/mode guards observable rather than bypassing them.
+	await (Engine.get_main_loop() as SceneTree).physics_frame
+	assert_true(tab.visible)
+	assert_true(menu.is_open())
+	assert_eq([tab.get("_targeting"), tab.get("_confirming"), tab.get("_held")], [-1, -1, -1])
 	Input.action_press("interact")
+	assert_true(Input.is_action_just_pressed("interact"), "blocked repair receives the original Use edge")
 	tab.call("_read_use")
 	Input.action_release("interact")
 	assert_eq(var_to_bytes(RECORD.portable_projection(game.local.save_data())), packed,
 		"pending owner decision preserves original tool wear when Use requests repair")
 	assert_eq(menu.messages.back(), "Saving your last action. Try again in a moment.")
 	owner_session.blocked = false
+	await (Engine.get_main_loop() as SceneTree).physics_frame
 	Input.action_press("interact")
+	assert_true(Input.is_action_just_pressed("interact"), "ordinary repair receives a separate Use edge")
 	tab.call("_read_use")
 	Input.action_release("interact")
 	assert_eq(game.inventory.durability_at(tool_slot), game.inventory.max_durability_at(tool_slot),
@@ -270,6 +279,10 @@ func _native_case_backpack_target_guard_precedes_any_care_or_item_write() -> voi
 	var party_count: int = game.party.size()
 	var swap := preload("res://scripts/ui/swap_panel.gd").new()
 	swap.game = game
+	swap.set("_trader_id", "oskar")
+	var authored_offer := preload("res://scripts/trade/creature_trade.gd").offer_for_day(swap.call("_config"), "oskar", 0)
+	assert_false(authored_offer.is_empty(), "swap keeps the authored trader and offer period")
+	swap.set("_offer", authored_offer)
 	swap.set("_offer_creature", incoming)
 	swap.set("_pending_index", giving_index)
 	packed = var_to_bytes(RECORD.portable_projection(game.local.save_data()))

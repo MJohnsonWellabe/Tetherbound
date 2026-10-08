@@ -39,7 +39,7 @@ func _run_native() -> void:
 	var test: RefCounted = load(args[0]).new()
 	if test.has_method("_native_setup"): test.call("_native_setup")
 	if not test.has_method("_native_setup") or test.get("_native_ready") == true:
-		test.call(args[1])
+		await test.call(args[1])
 	if test.has_method("_native_cleanup"): test.call("_native_cleanup")
 	# Completion is set at the end of the actual case. An aborted method cannot
 	# become a nominal pass just because control returned to this harness.
