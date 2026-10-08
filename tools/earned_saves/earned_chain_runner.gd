@@ -19,6 +19,7 @@ extends SceneTree
 ##                    live nodes the rest helper needs, so these share a process)
 ##   bridge           South Bridge grunt + crossing
 ##   warrens          Quarry / Burrow Warrens cleared and exited
+##   relay_prepared   optional: real Riverwatch recovery and safe join, before Captain
 ##   relay            Tether relay disabled, Mill crossed
 ##   hall             three Sigils, Hall gauntlet, Warden arena boundary
 ##   warden           Warden, Veridian offer ACCEPTED (see warden_accept.gd),
@@ -61,7 +62,7 @@ const ORDER := preload("res://scripts/data/biome_order.gd")
 const WARDEN_ACCEPT_PATH := "res://tools/earned_saves/warden_accept.gd"
 const TITLE_SCENE := "res://scenes/ui/title_screen.tscn"
 const CHAIN_SLOT := 1  # Historical copied-save slot; legacy-order diagnostics only.
-const SEGMENTS := ["opening_team", "camp_tournament", "bridge", "warrens", "relay", "hall", "warden", "kell_rift"]
+const SEGMENTS := ["opening_team", "camp_tournament", "bridge", "warrens", "relay_prepared", "relay", "hall", "warden", "kell_rift"]
 const MEADOWS_PIECES := HANDOFF.MEADOWS_PIECES
 const MEADOWS_REALMS := HANDOFF.MEADOWS_REALMS
 const LOAD_SETTLE_FRAMES := 300
@@ -83,6 +84,7 @@ var handoff_from := ""
 var compatibility_paths: Array[String] = []
 var disk: RefCounted
 var retained_uids: Array[String] = []
+var relay_preparation: RefCounted
 
 
 func _init() -> void:
@@ -136,6 +138,10 @@ func _run() -> void:
 		failures.append("Legacy diagnostics cannot import new-order piece provenance")
 		_finish()
 		return
+	if legacy_order_diagnostic and segment == "relay_prepared":
+		failures.append("Relay preparation is only an earned new-order piece")
+		_finish()
+		return
 	if not compatibility_paths.is_empty() and (legacy_order_diagnostic or handoff_from.is_empty()):
 		failures.append("Reviewed cut compatibility requires an actual new-order imported prefix")
 		_finish()
@@ -154,7 +160,7 @@ func _run() -> void:
 		disclosures.append("Legacy-order diagnostic only: copied input saves and historical wrappers do not prove the new-order retained-five campaign")
 		game.set("save_system", SAVE.new(save_dir))
 	else:
-		if not MEADOWS_PIECES.has(segment) or OS.has_environment("TB_WORLD_SEED"):
+		if not HANDOFF.MEADOWS_PREPARED_PIECES.has(segment) or OS.has_environment("TB_WORLD_SEED"):
 			failures.append("New-order pieces stop at Hall and retain the actual saved population; old Warden/Rift routes require --legacy-order-diagnostic")
 			_finish()
 			return
@@ -183,7 +189,9 @@ func _run() -> void:
 		if not failures.is_empty():
 			_finish()
 			return
-		disk = HANDOFF.new(self, game, output_root, MEADOWS_PIECES, MEADOWS_REALMS, HANDOFF.MEADOWS_SLOT)
+		var pieces: Array = HANDOFF.MEADOWS_PREPARED_PIECES if segment == "relay_prepared" else MEADOWS_PIECES
+		var realms: Array = HANDOFF.MEADOWS_PREPARED_REALMS if segment == "relay_prepared" else MEADOWS_REALMS
+		disk = HANDOFF.new(self, game, output_root, pieces, realms, HANDOFF.MEADOWS_SLOT)
 		disk.source_commit = source_commit
 		if not disk.configure_compatibility(compatibility_paths):
 			failures.append_array(disk.failures)
@@ -252,7 +260,9 @@ func _opening_team() -> void:
 
 func _load_previous() -> bool:
 	if not legacy_order_diagnostic:
-		var previous: String = MEADOWS_PIECES[MEADOWS_PIECES.find(segment) - 1]
+		var imported := ProjectSettings.globalize_path(handoff_from).simplify_path().trim_suffix("/").get_file()
+		var previous: String = "warrens" if segment == "relay_prepared" else MEADOWS_PIECES[MEADOWS_PIECES.find(segment) - 1]
+		if segment == "relay" and imported == "relay_prepared": previous = "relay_prepared"
 		if ProjectSettings.globalize_path(handoff_from).simplify_path().trim_suffix("/").get_file() != previous:
 			failures.append("Piece must load its immediate predecessor: " + previous)
 			return false
@@ -349,9 +359,18 @@ func _resumed_segment() -> void:
 		"warrens":
 			var helper: GDScript = load("res://tools/earned_saves/warrens_route.gd") if legacy_order_diagnostic else WARRENS
 			_take(await helper.new().run(self, world, game), "passed", "warrens")
+		"relay_prepared":
+			var helper := RELAY.new()
+			relay_preparation = helper
+			helper.preparation_only = true
+			_take(await helper.run(self, world, game), "passed", "relay_prepared")
 		"relay":
 			var helper: GDScript = load("res://tools/earned_saves/relay_route.gd") if legacy_order_diagnostic else RELAY
-			_take(await helper.new().run(self, world, game), "passed", "relay")
+			var continuation = helper.new()
+			if not legacy_order_diagnostic and disk.history[-1].boundary == "relay_prepared":
+				continuation.resume_prepared = true
+				continuation.prepared_character = disk.snapshots.relay_prepared.state.redesign_character.duplicate(true)
+			_take(await continuation.run(self, world, game), "passed", "relay")
 		"hall":
 			var helper: GDScript = load("res://tools/earned_saves/hall_route.gd") if legacy_order_diagnostic else HALL
 			_take(await helper.new().run(self, world, game), "passed", "hall")
@@ -472,6 +491,9 @@ func _finish() -> void:
 	if not legacy_order_diagnostic:
 		if observe_next_goal and failures.is_empty() and disk != null:
 			TRAVEL.new(self, game).observe_next_goal(segment, "before_export")
+		if segment == "relay_prepared" and failures.is_empty() \
+				and (relay_preparation == null or not relay_preparation.preparation_ready()):
+			failures.append("Relay preparation no longer satisfies its actual safe-join recovery guard before save")
 		if failures.is_empty() and disk != null and not disk.export_boundary(segment, receipt):
 			failures.append_array(disk.failures)
 		if observe_next_goal and failures.is_empty() and disk != null:

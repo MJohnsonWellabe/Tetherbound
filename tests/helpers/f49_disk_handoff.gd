@@ -14,6 +14,8 @@ const BOUNDARIES := ["meadows_settled", "tidewake_settled", "cloudreach_settled"
 const REALMS := ["meadows", "water", "cloudreach", "stormwood", "meadows"]
 const MEADOWS_PIECES := ["opening_team", "camp_tournament", "bridge", "warrens", "relay", "hall"]
 const MEADOWS_REALMS := ["meadows", "meadows", "meadows", "meadows", "meadows", "meadows"]
+const MEADOWS_PREPARED_PIECES := ["opening_team", "camp_tournament", "bridge", "warrens", "relay_prepared", "relay", "hall"]
+const MEADOWS_PREPARED_REALMS := ["meadows", "meadows", "meadows", "meadows", "meadows", "meadows", "meadows"]
 const MEADOWS_SLOT := 0
 var tree: SceneTree
 var game: Node
@@ -230,8 +232,10 @@ func _init(owner: SceneTree, actual_game: Node, destination: String,
 		boundaries = ordered_boundaries.duplicate()
 		realms = ordered_realms.duplicate()
 		if save_slot != MEADOWS_SLOT or not ((boundaries == MEADOWS_PIECES and realms == MEADOWS_REALMS) \
-			or (boundaries == MEADOWS_PIECES + BOUNDARIES and realms == MEADOWS_REALMS + REALMS)):
-			_fail("Custom handoffs must preserve the six Meadows pieces, optionally followed by the authored chapters, in autosave slot 0")
+			or (boundaries == MEADOWS_PIECES + BOUNDARIES and realms == MEADOWS_REALMS + REALMS) \
+			or (boundaries == MEADOWS_PREPARED_PIECES and realms == MEADOWS_PREPARED_REALMS) \
+			or (boundaries == MEADOWS_PREPARED_PIECES + BOUNDARIES and realms == MEADOWS_PREPARED_REALMS + REALMS)):
+			_fail("Custom handoffs must preserve the Meadows pieces with only the optional pre-Captain preparation cut, then authored chapters, in autosave slot 0")
 	if boundaries.size() != realms.size() or (not piece_prefix and not ordered_realms.is_empty()):
 		_fail("Handoff boundary and realm orders must match")
 	var seen := {}
@@ -257,10 +261,12 @@ func export_boundary(label: String, piece_proof: Dictionary = {}) -> bool:
 		return _fail("F49 reviewed imported cut changed before export")
 	source_commit = commit
 	if boundaries.find(label) != history.size(): return _fail("F49 handoffs must be earned in declared order")
-	var meadow_piece := piece_prefix and MEADOWS_PIECES.has(label)
+	var meadow_piece := piece_prefix and MEADOWS_PREPARED_PIECES.has(label)
 	if meadow_piece and (piece_proof.get("passed") != true or piece_proof.get("segment") != label \
 		or piece_proof.get("mode") != "new_order_meadows_piece"):
 		return _fail("Meadows piece needs its actual passed helper proof and authored realm")
+	if label == "relay_prepared" and not _relay_preparation_proof(piece_proof):
+		return _fail("Relay preparation requires its completed real Riverwatch recovery and safe-join receipts")
 	if journey_id.is_empty(): journey_id = source_commit + ":" + base
 	var destination := base.path_join(label)
 	if DirAccess.dir_exists_absolute(destination) or FileAccess.file_exists(destination):
@@ -347,6 +353,18 @@ func import_prefix(source_boundary: String) -> String:
 		return ""
 	var source := ProjectSettings.globalize_path(source_boundary).simplify_path().trim_suffix("/")
 	var label := source.get_file()
+	# Detect only the explicit optional cut in the requested receipt's lineage.
+	# The unchanged strict loop below still validates every ordered receipt,
+	# original identity and byte hash; presence alone never accepts a boundary.
+	if piece_prefix and not boundaries.has("relay_prepared"):
+		var terminal: Variant = DOCUMENT.parse(FileAccess.get_file_as_string(source.path_join("receipt.json")))
+		var prepared := label == "relay_prepared"
+		if terminal is Dictionary and terminal.get("predecessors") is Array:
+			for predecessor: Variant in terminal.predecessors:
+				if predecessor is Dictionary and predecessor.get("boundary") == "relay_prepared": prepared = true
+		if prepared:
+			boundaries.insert(4, "relay_prepared")
+			realms.insert(4, "meadows")
 	var index := boundaries.find(label)
 	if index < 0 or label == "completed_world":
 		_fail("F49 resume requires an unfinished new-order chapter boundary")
@@ -371,7 +389,7 @@ func import_prefix(source_boundary: String) -> String:
 	var chain: Array = []
 	for step in index + 1:
 		var boundary: String = boundaries[step]
-		var meadow_piece := piece_prefix and MEADOWS_PIECES.has(boundary)
+		var meadow_piece := piece_prefix and MEADOWS_PREPARED_PIECES.has(boundary)
 		var directory := source_root.path_join(boundary)
 		var receipt_hash := FileAccess.get_sha256(directory.path_join("receipt.json"))
 		var parsed: Variant = DOCUMENT.parse(FileAccess.get_file_as_string(directory.path_join("receipt.json")))
@@ -432,6 +450,9 @@ func import_prefix(source_boundary: String) -> String:
 				or proof.get("mode") != "new_order_meadows_piece":
 				_fail("Meadows prefix requires passed pieces and the original five distinct UIDs")
 				return ""
+			if boundary == "relay_prepared" and not _relay_preparation_proof(proof):
+				_fail("Relay preparation prefix lacks its actual recovery and safe-join witness")
+				return ""
 		var population: Dictionary = receipt.get("population_provenance", {})
 		if population.get("saved_world_seed") != state.get("world_seed") \
 			or population.get("effective_encounter_seed") != state.get("world_seed") \
@@ -487,6 +508,21 @@ func import_prefix(source_boundary: String) -> String:
 		"commit": commit, "journey_id": journey_id, "predecessors": history,
 		"compatibility_transition": compatibility_transition}))
 	return label
+
+func _relay_preparation_proof(proof: Dictionary) -> bool:
+	var recovery := false
+	var joined := false
+	for helper: Variant in proof.get("helper_receipts", []):
+		if not helper is Dictionary or helper.get("segment") != "relay_prepared" or helper.get("passed") != true: continue
+		for beat: Variant in helper.get("receipts", []):
+			if not beat is Dictionary: continue
+			if beat.get("beat") == "pre_relay_riverwatch_recovery" \
+					and beat.get("inventory_unchanged") == true and beat.get("xp_caps_unchanged") == true:
+				recovery = true
+			if recovery and beat.get("beat") == "relay_prepared" and beat.get("safe_join") == true:
+				joined = true
+	return recovery and joined
+
 
 func population_provenance() -> Dictionary:
 	# The capture override belongs to the encounter director, not save data.

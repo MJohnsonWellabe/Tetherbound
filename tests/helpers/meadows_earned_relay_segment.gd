@@ -10,6 +10,11 @@ const TRAINER_FRAMES := 9000  # Existing earned bridge/tournament round deadline
 const GEAR := "mill_bridge_gear"
 ## A player reading a victory line before pressing on (same pace as the Hall helper).
 const VICTORY_READ_FRAMES := 120
+## Optional saved cut; ordinary full Relay callers retain the existing route.
+var preparation_only := false
+var resume_prepared := false
+var prepared_character: Dictionary = {}
+var _preparation_caps: Dictionary = {}
 var _relay: Node3D
 var _mill: Node3D
 var _trainers: Node3D
@@ -104,19 +109,39 @@ func _travel() -> bool:
 	var outside: Vector2 = _relay.call("world_of", gate[0])
 	var approach := approach_path(terrain, Vector2(_player.global_position.x, _player.global_position.z), outside)
 	var relay_road := trail_points(terrain, "loops", "relay_approach_loop")
-	if approach.is_empty() or not await _prepare():
-		return _fail("The current Warrens-to-Relay trail or actual care is unavailable")
-	var recovered := false
-	for point: Vector2 in approach:
-		if not await _around("overlook_bypass", OVERLOOK_KNOT, OVERLOOK_CLEAR_M, OVERLOOK_BYPASS, _v2p(), point) \
-				or not await _walk_ground(point):
-			return false
-		if not relay_road.is_empty() and point == relay_road[0]:
-			if recovered or not await _recover_at_riverwatch(point):
+	if resume_prepared:
+		if preparation_only or prepared_character.is_empty() or relay_road.is_empty():
+			return _fail("Prepared Relay continuation requires its imported character and authored join")
+		for member: RefCounted in _game.get("party").call("members"):
+			var id := str(member.get("uid"))
+			_preparation_caps[id] = ESSENCE.creature_cap(prepared_character, id)
+		if not _preparation_join_ready(relay_road[0]): return false
+		_receipt("relay_preparation_loaded", {"join": relay_road[0], "party": _party_hp()})
+		# Continue the identical authored suffix after the saved recovery join.
+		for index in range(1, nearest_index(relay_road, outside) + 1):
+			var point := relay_road[index]
+			if not await _around("overlook_bypass", OVERLOOK_KNOT, OVERLOOK_CLEAR_M, OVERLOOK_BYPASS, _v2p(), point) \
+					or not await _walk_ground(point):
 				return false
-			recovered = true
-	if not recovered:
-		return _fail("The earned Relay approach missed its authored recovery junction")
+	else:
+		if approach.is_empty() or not await _prepare():
+			return _fail("The current Warrens-to-Relay trail or actual care is unavailable")
+		var recovered := false
+		for point: Vector2 in approach:
+			if not await _around("overlook_bypass", OVERLOOK_KNOT, OVERLOOK_CLEAR_M, OVERLOOK_BYPASS, _v2p(), point) \
+					or not await _walk_ground(point):
+				return false
+			if not relay_road.is_empty() and point == relay_road[0]:
+				if recovered or not await _recover_at_riverwatch(point):
+					return false
+				recovered = true
+				if preparation_only:
+					if not _preparation_join_ready(point): return false
+					_receipt("relay_prepared", {"join": point, "player": _player.global_position,
+						"party": _party_hp(), "caps": _preparation_caps.duplicate(), "safe_join": true})
+					return true
+		if not recovered:
+			return _fail("The earned Relay approach missed its authored recovery junction")
 	for point: Vector2 in gate:
 		if not await _walk_ground(_relay.call("world_of", point), 0.6):
 			return false
@@ -185,6 +210,32 @@ func _travel() -> bool:
 			or _tree.current_scene != _world or str(_game.get("current_realm")) != "meadows" or _fighting():
 		return _fail("The same earned five did not physically complete the Mill crossing")
 	_receipt("mill_crossing_restored", {"gear_before": 1, "gear_after": _count(GEAR), "depth": depth, "party_ids": _party_ids()})
+	return true
+
+
+func preparation_ready() -> bool:
+	var road := trail_points(_read(TERRAIN), "loops", "relay_approach_loop")
+	return not road.is_empty() and _preparation_join_ready(road[0])
+
+
+func _preparation_join_ready(join: Vector2) -> bool:
+	var camp := _world.find_child("riverwatch_rest_Rest", true, false) as Node3D
+	var bed := camp.get_node_or_null("CampCreatureBed") as Node3D if camp != null else null
+	if _tree.current_scene != _world or str(_game.get("current_realm")) != "meadows" \
+			or _tree.paused or not _player.is_on_floor() or _v2p().distance_to(join) > 1.5 \
+			or _fighting() or INPUT_OWNER.current(_tree) != null \
+			or bed == null or int(bed.call("build_index")) != -13 or int(bed.call("occupant_index")) >= 0 \
+			or not retained_five(_initial_ids, _party_ids()) or _preparation_caps.size() != 5 \
+			or _count(GEAR) != 0 or bool(_relay.call("is_disabled")) or bool(_mill.call("is_open")):
+		return _fail("Prepared Relay requires its actual safe join, empty bed and unchanged retained-five world input")
+	for flag: String in ["relay_captain_defeated", "captive_rescued", "relay_disabled", "mill_crossing_restored"]:
+		if _has(flag): return _fail("Prepared Relay already contains a Captain/Mill departure fact: " + flag)
+	for member: RefCounted in _game.get("party").call("members"):
+		var id := str(member.get("uid"))
+		if bool(member.get("resting")) or bool(member.get("fainted")) \
+				or float(member.get("hp")) < float(member.get("max_hp")) - 0.01 \
+				or _preparation_caps.get(id, -1) != ESSENCE.creature_cap(_game.get("local").get("redesign_character"), id):
+			return _fail("Prepared Relay must retain all five awake at full HP with their exact recovery caps")
 	return true
 
 
@@ -307,6 +358,7 @@ func _recover_at_riverwatch(join: Vector2) -> bool:
 		"clock_before": clock_before, "clock_after": clock_after,
 		"overnight_rest": false, "full_rest_bonus": false})
 	_nav.reset()
+	_preparation_caps = caps_before.duplicate()
 	return await _walk_ground(join)
 
 
