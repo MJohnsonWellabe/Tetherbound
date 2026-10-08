@@ -3,7 +3,7 @@
     "F23#2",
     "F23#5"
   ],
-  "status": "OPEN; bounded admission repairs and logic witnesses only",
+  "status": "OPEN F23#2/#5; canonical mounted Heal and changed-source Dash physical-contact PASS; whole criterion review pending",
   "source_components": [
     {
       "commit": "fd26fd34ed0d29967e7b839b90aca33420e1261a",
@@ -154,7 +154,7 @@
   "shipping_flags": "actor_vitals.runtime_enabled, Tether command shipping flags, move_library.enabled and ultimate presentation remain OFF. Individual existing utility consumer IDs were added to move_commit.live_moves.",
   "remaining_gates": [
     "Named mounted gameplay proof for newly admitted utility consumers; logic bodies are not played-world evidence.",
-    "Ten live utilities and two equipable per role are not claimed; Heal Pulse and Dash Strike remain unmounted.",
+    "Ten shipping live utilities and two equipable per role remain unclaimed. Mounted Heal26check and Dash19check proofs now pass; process-local preview overrides do not close shipping admission.",
     "Catalogue gate consistency is not proof of every signature's mounted combat or ultimate release timing.",
     "No fresh HUD capture needed: existing literal F42 seven-inch HUD blind PASS and10tests84assertions retained unchanged; coupled shipping/command behavior remains open."
   ],
@@ -317,5 +317,45 @@
       "verified": "26checks0errors exit0, exact world/epoch/Game/Session, original committed/presented receipt and saved owner settlement,12%maxHP Heal,24Wind, unchanged foe, save-refusal preservation and gate restoration",
       "limits": "Static disclosed fixture only; autonomous combat, campaign, co-op, shipping and whole F23#2 remain open."
     }
+  },
+  "mounted_dash_contact_repair": {
+    "commit": "f1b093c5f7123783d56bb9c2fc4963d0fbbd90d2",
+    "production_change": "Retained safe move_and_collide receipt must name exact target; remove only approximate centre-gap rejection that contradicted actual target shape contact. Nearby endpoints and other colliders still miss; original floor/arena/6m/binding/host one-hit guards retained.",
+    "authorization": "Original independent cause/direction APPROVE and current persistent-lane task; distinct supported production code after old parked attempts, no unchanged rerun.",
+    "notice_comment": 6060612762,
+    "source_review": {
+      "reviewer": "/root/f25_medium_review",
+      "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+      "verdict": "SOURCE APPROVE",
+      "commit": "f1b093c5f7123783d56bb9c2fc4963d0fbbd90d2"
+    },
+    "proof": {
+      "run_id": 37782554101,
+      "artifact_id": 11553140677,
+      "script": "tests/smoke_f23_live_moves.gd",
+      "args": "--prove-utility=dash_strike",
+      "mode": "hosted headless",
+      "checkout_commit": "f1b093c5f7123783d56bb9c2fc4963d0fbbd90d2",
+      "checkout_verified": "render job113329040553 checkout and git log -1; workflow head fda4aa is dispatch main, not source candidate",
+      "result": "PASS",
+      "checks": 19,
+      "failed_checks": 0,
+      "exit": 0,
+      "log_sha256": "b6c06862b104dc665d9983a054de203697b70e9f9a04a616f392c662c634565e",
+      "collider_instance_id": 342003550466,
+      "target_body_instance_id": 342003550466,
+      "hit": true,
+      "requested_advance_metres": 6.0,
+      "applied_advance_metres": 1.9453125,
+      "contact": "(1.33375, 1.38375, -0.0)",
+      "wind_before": 99.5,
+      "wind_after_start": 75.5,
+      "foe_hp_before": 600.0,
+      "foe_hp_after": 593.956072106877,
+      "launches": 1,
+      "impacts": 1,
+      "limits": "Disclosed flat stage/static600HP wild and process-local preview; not canonical-wild, campaign, co-op, shipping, device or visual acceptance. Existing utility logic and mounted Heal proofs reused."
+    },
+    "runtime_review": "Pending same original reviewer; no component READY or whole closure claimed"
   }
 }
