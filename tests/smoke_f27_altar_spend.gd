@@ -276,7 +276,8 @@ func _masters_retained_state() -> Dictionary:
 	var flags: Array = _game.local.flags.call("all_set").duplicate()
 	flags.sort()
 	return {"character_id":str(_game.local.character_id),"party_uids":uids,"party":members,
-		"inventory":inventory,"personal_flags":flags}.duplicate(true)
+		"inventory":inventory,"personal_flags":flags,
+		"transaction_receipts":_game.local.redesign_character.get("transaction_receipts", [])}.duplicate(true)
 
 
 ## Optional F46 witness reuses the original essence fixture and actual
