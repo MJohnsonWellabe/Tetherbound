@@ -1250,6 +1250,8 @@ func _walk_to_home_bed(driver: RefCounted, prompt: Node3D, stance: Dictionary) -
 	var from: Vector2 = Vector2(_player.global_position.x, _player.global_position.z) if points.is_empty() else points.back()
 	var target: Vector3 = stance.at
 	var pad_route: Array[Vector2]
+	var reserve := float(stance.clearance)
+	var reserve_inputs := {}
 	if _arbiter.call("winning_provider") == prompt \
 			and bool((_arbiter.call("winner") as Dictionary).get("actionable", false)):
 		# A return from the actual bed panel may already offer this exterior
@@ -1260,14 +1262,28 @@ func _walk_to_home_bed(driver: RefCounted, prompt: Node3D, stance: Dictionary) -
 		var polygon := PackedVector2Array([excluded.position,
 			Vector2(excluded.end.x, excluded.position.y), excluded.end,
 			Vector2(excluded.position.x, excluded.end.y)])
-		# Give the controller one capsule clearance around each remote corner;
-		# the narrow 0.2m hint let the actual approach enter the exclusion box.
-		# The unchanged per-frame exterior guard still decides whether it works.
-		var reserve := float(stance.clearance)
+		# Planning must leave room for the same acceleration-bounded turning
+		# horizon used by NAV's ordinary production heading, beyond the capsule.
+		# The original capsule exclusion remains the actual per-frame guard.
+		var vitals: RefCounted = _player.get("vitals")
+		if vitals == null or not vitals.has_method("move_speed_scale") or not _player.velocity.is_finite():
+			return _fail("Remote bed planning lacks the actual finite production ground-speed state")
+		reserve_inputs = {"walk": float(_player.get("_walk_speed")), "sprint": float(_player.get("_sprint_speed")),
+			"scale": float(vitals.call("move_speed_scale")),
+			"momentum": Vector2(_player.velocity.x, _player.velocity.z).length(),
+			"ceiling": float(_player.get("_max_speed")), "delta": _player.get_physics_process_delta_time(),
+			"acceleration": float(_player.get("_ground_accel"))}
+		var avoidance: float = NAV.ordinary_avoidance_reach(reserve_inputs.walk, reserve_inputs.sprint,
+			reserve_inputs.scale, reserve_inputs.momentum, reserve_inputs.ceiling, reserve_inputs.delta,
+			reserve_inputs.acceleration, NAV.MAX_EDGE)
+		reserve += avoidance
+		if not is_finite(avoidance) or avoidance <= 0.0 or avoidance > NAV.MAX_EDGE \
+				or not is_finite(reserve) or reserve <= 0.0 or reserve > NAV.MAX_EDGE:
+			return _fail("Remote bed planning has no finite bounded turning reserve: " + str({
+				"inputs": reserve_inputs, "avoidance": avoidance, "reserve": reserve, "from": from}))
 		var southeast := Vector2(excluded.end.x + reserve, excluded.position.y - reserve)
 		var northeast := Vector2(excluded.end.x + reserve, excluded.end.y + reserve)
-		# Apply that reserve to the initial detour too: zero left its earlier
-		# corners only 0.2m out and allowed the actual controller into the pad.
+		# Apply the same bounded reserve to the initial detour and both corners.
 		pad_route = exterior_path(from, southeast, polygon, reserve)
 		if not pad_route.is_empty():
 			pad_route.append(northeast)
@@ -1282,6 +1298,14 @@ func _walk_to_home_bed(driver: RefCounted, prompt: Node3D, stance: Dictionary) -
 	var budget := maxi(BED_INPUT.MOVE_FRAME_LIMIT,
 		240 + int(_player.global_position.distance_to(prompt.global_position) * 60.0))
 	var waypoint := 0
+	# Failure-only reads before reset clears the navigator's actual request.
+	var route_operands := func(current_waypoint: int) -> Dictionary:
+		return {"planned_points": points.duplicate(), "plan_from": from,
+			"current_waypoint": points[current_waypoint] if current_waypoint < points.size() else null,
+			"nav_request": str(_nav.get("_request")), "nav_route": _nav.get("_route").duplicate(),
+			"observed_choice": _nav.get("_observed_choice"),
+			"heading": str(_nav.get("_production_heading_vector")), "live_velocity": str(_player.velocity),
+			"planning_reserve": reserve, "reserve_inputs": reserve_inputs}
 	_nav.reset()
 	for frame in budget:
 		var here := Vector2(_player.global_position.x, _player.global_position.z)
@@ -1296,12 +1320,14 @@ func _walk_to_home_bed(driver: RefCounted, prompt: Node3D, stance: Dictionary) -
 				"player": str(_player.global_position), "target": str(target),
 				"solid_bounds": str(stance.bounds), "clearance": stance.clearance,
 				"waypoint": waypoint, "frame": frame, "budget": budget}
+			facts.merge(route_operands.call(waypoint))
 			_nav.reset()
 			return _fail("Installed-bed approach lost grounded exterior world input: " + str(facts))
 		if waypoint < (boundary.points as Array).size() and not str(boundary.gate).is_empty() \
 				and not _open_boundary_gate(str(boundary.gate)):
+			var facts: Dictionary = route_operands.call(waypoint)
 			_nav.reset()
-			return _fail("The actual village gate closed during the installed-bed approach")
+			return _fail("The actual village gate closed during the installed-bed approach: " + str(facts))
 		# An offered bed is usable before reaching any geometric centre. Stop
 		# the actual stick here, and keep this same exterior stance for Wake.
 		if waypoint >= (boundary.points as Array).size() and not _nav.departure_pending(target) \
@@ -1314,7 +1340,8 @@ func _walk_to_home_bed(driver: RefCounted, prompt: Node3D, stance: Dictionary) -
 					or INPUT_OWNER.current(_tree) != null or footprint.grow(float(stance.clearance)).has_point(here) \
 					or _arbiter.call("winning_provider") != prompt \
 					or not bool((_arbiter.call("winner") as Dictionary).get("actionable", false)):
-				return _fail("The installed-bed prompt did not remain usable from the grounded exterior stance")
+				return _fail("The installed-bed prompt did not remain usable from the grounded exterior stance: "
+					+ str(route_operands.call(waypoint)))
 			stance["at"] = _player.global_position
 			_receipt("home_bed_exterior_prompt", {"player": str(_player.global_position),
 				"solid_bounds": str(stance.bounds), "capsule_clearance": stance.clearance,
@@ -1329,8 +1356,10 @@ func _walk_to_home_bed(driver: RefCounted, prompt: Node3D, stance: Dictionary) -
 			else:
 				_nav.step(Vector3(next.x, _player.global_position.y, next.y))
 		await _tree.physics_frame
+	var exhausted: Dictionary = route_operands.call(waypoint)
+	exhausted["budget"] = budget
 	_nav.reset()
-	return _fail("The installed-bed exterior approach exhausted its original movement budget")
+	return _fail("The installed-bed exterior approach exhausted its original movement budget: " + str(exhausted))
 
 
 func _inventory_snapshot() -> Array[Dictionary]:
