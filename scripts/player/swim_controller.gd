@@ -55,6 +55,8 @@ func save_data() -> Dictionary:
 
 func restore_save_data(raw: Dictionary) -> bool:
 	var clean := SAVE.sanitise(raw)
+	print("F37 AQUATIC RESTORE " + JSON.stringify({"accepted": not clean.is_empty(),
+		"payload_mount": raw.has("mount"), "clean_mount": clean.has("mount")}))
 	if clean.is_empty():
 		return false
 	# Slot loads can reuse the current world. Detach the old carrier before
@@ -76,7 +78,10 @@ func restore_save_data(raw: Dictionary) -> bool:
 		var ground: float = _world.ground_height_at(at.x, at.z)
 		if is_finite(ground) and ground >= float(_config.safe_landing.minimum_height_m):
 			state.reach_land(Vector3(at.x, ground, at.z))
+	var had_mount := clean.has("mount")
 	_refuse_closed_seal_placement(clean)
+	print("F37 AQUATIC PLACEMENT " + JSON.stringify({"mount_before_seal": had_mount,
+		"mount_after_seal": clean.has("mount"), "dead": vitals.is_dead()}))
 	if _world.water_depth_at(_player.global_position) >= float(_config.human.entry_depth_m):
 		state.enter_water(false, _world.field.water_level())
 		_player.global_position.y = state.surface_y + float(_config.human.surface_body_offset_m)
@@ -123,6 +128,8 @@ func _restore_mount() -> void:
 	var mount_save: Dictionary = _pending_mount.mount.duplicate(true)
 	if director != null:
 		restored = await director.restore_swim_mount(_pending_mount.mount)
+	print("F37 MOUNT RECONSTRUCTION " + JSON.stringify({"director_present": director != null,
+		"restored": restored, "uid": mount_save.get("creature_uid", "")}))
 	_pending_mount.clear()
 	if restored and _world.water_depth_at(_player.global_position) >= float(_config.human.entry_depth_m):
 		state.enter_water(true, _world.field.water_level())

@@ -1,0 +1,19 @@
+{
+  "criterion": "F37#4",
+  "verdict": "FAIL; whole criterion OPEN",
+  "source_sha": "1bff2bbadb1845fc79b9bd21794c8cb115453159",
+  "run_id": 37733973217,
+  "artifact_id": 11530844340,
+  "script": "tests/smoke_net_proof_two_peer.gd",
+  "args": "--scenario=res://tools/net/proof_scenarios/f37_ripplet_rejoin.json --proof-out=res://ralph/reports/F37/lane-b-ripplet/restore-observation-r1",
+  "mode": "headless; TB_NET_PROOF_RENDER unset; mechanics observation only",
+  "actual_pass": ["Owned mount and mapped Dive", "Before host/guest carrier identity agrees", "Actual character disk save while diving", "Spent saved UID/debt retained", "Actual transport drop and live character wipe", "Production title returning Join into same host world with same stable character/new peer"],
+  "actual_fail": ["Original1800poll restore predicate: riding.local.mounted false", "Subsequent original rider identity: mounted false, no mount species, swim_mode1"],
+  "identity": {"character_id": "character-de61b65ee41a2b7f1a21f82b6f144893", "original_peer": 358947231, "returning_peer": 1836775994, "saved_uid": "creature-507e8b25ce8a703a052db89157e0f8b1", "saved_dive_remaining_s": 15.1333333333335},
+  "terminal_guest": {"pending_mount": {}, "ally_body": "none", "ally_visible": false, "saved_uid_index": 0, "active_index": 0, "party_mutation_blocked": false, "riding_allowed": true, "tack": true, "ripplet_requesting": false, "authority_answers": {}},
+  "terminal_host": "No retained mount answer for the returning peer",
+  "independent_review": {"agent": "b_f37_review, original reviewer", "verdict": "Actual FAIL independently verified. No host denial or specific early branch established. Title join clears live pose before scene construction and RejoinPose applies retained candidate after snapshot, ruling out pre-admission restoration on this route."},
+  "guards": "Original1800poll restore check remains failed despite continue_on_fail allowing two read-only observations; original rider identity remains failed; no budget, predicate, retry or state clearing changed",
+  "not_claimed": ["Host denial", "Pre-admission cause", "Energy eligibility", "Successful restore/rejoin", "Earned feast/campaign", "Visual/device"],
+  "next": "Capture actual existing aquatic acceptance/seal/health and pre-spawn refusal branch before a production repair"
+}

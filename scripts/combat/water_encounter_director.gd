@@ -136,18 +136,23 @@ func restore_swim_mount(saved: Dictionary) -> bool:
 	var creature: RefCounted = party.at(index) if party != null and index >= 0 else null
 	if creature == null or str(creature.species_id) != str(saved.species_id) \
 			or creature.fainted or creature.resting:
+		print("F37 RESTORE REFUSAL owned_record_or_fainted_or_resting index=" + str(index))
 		return false
 	var definition: Dictionary = preload("res://scripts/creatures/creature_species.gd").definition(str(creature.species_id))
 	if not bool(definition.get("swim_mount", {}).get("compatible", false)):
+		print("F37 RESTORE REFUSAL incompatible_species")
 		return false
 	var riding: Node = get_parent().get_node("RidingController")
 	if not riding._has_tack(str(creature.species_id)):
+		print("F37 RESTORE REFUSAL tack")
 		return false
 	if riding.is_mounted():
 		riding.dismount()
 	if is_instance_valid(_ally_body) and not dismiss_active_creature():
+		print("F37 RESTORE REFUSAL dismiss_active")
 		return false
 	if not party.set_active(index):
+		print("F37 RESTORE REFUSAL set_active")
 		return false
 	var raw: Array = saved.position
 	_restoring_surface_position = Vector3(float(raw[0]), float(raw[1]), float(raw[2]))
@@ -157,6 +162,7 @@ func restore_swim_mount(saved: Dictionary) -> bool:
 	var spawned := await _spawn_ally_body(creature)
 	_restoring_surface_position = Vector3.INF
 	if not spawned:
+		print("F37 RESTORE REFUSAL spawn_ally")
 		return false
 	# No frame advances between revealing the body and attaching its rider.
 	_player.global_position = _ally_body.global_position + Vector3.UP
@@ -165,7 +171,9 @@ func restore_swim_mount(saved: Dictionary) -> bool:
 	if not mounted and str(creature.species_id) == "ripplet":
 		for attempt in 120:
 			await get_tree().physics_frame
-			if not is_instance_valid(_ally_body): return false
+			if not is_instance_valid(_ally_body):
+				print("F37 RESTORE REFUSAL retired_ally")
+				return false
 			if riding.is_mounted(): return true
 	return mounted
 
