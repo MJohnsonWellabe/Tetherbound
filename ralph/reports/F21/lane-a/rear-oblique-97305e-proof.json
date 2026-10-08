@@ -446,7 +446,29 @@
         "pid": 8608,
         "source": "c759ab8e263944d622267ef91d4049bd2580d979",
         "finished_utc": "2026-10-08T07:44:47.87483Z"
-      }
+      },
+      "retained_original_failures": [
+        "FAIL: live matrix small/small failed strict rendered framing/live motion/quick evidence; input travel=3.73163628578186",
+        "FAIL: live matrix small/normal failed strict rendered framing/live motion/quick evidence; input travel=3.21935963630676",
+        "FAIL: live matrix small/giant failed strict rendered framing/live motion/quick evidence; input travel=2.74092292785645",
+        "FAIL: live matrix normal/small failed strict rendered framing/live motion/quick evidence; input travel=3.67875695228577",
+        "FAIL: live matrix normal/normal failed strict rendered framing/live motion/quick evidence; input travel=3.84170389175415",
+        "FAIL: live matrix normal/giant failed strict rendered framing/live motion/quick evidence; input travel=4.02565717697144",
+        "FAIL: live matrix giant/small failed strict rendered framing/live motion/quick evidence; input travel=2.58818650245667",
+        "FAIL: live matrix giant/normal failed strict rendered framing/live motion/quick evidence; input travel=2.4925525188446",
+        "FAIL: live matrix giant/giant failed strict rendered framing/live motion/quick evidence; input travel=2.82465243339539",
+        "FAIL: the 9m requested frame crops a /root/MeadowsPlayground/Wild_bramblebun_0_2 render corner at (28.00987, 754.7871) outside [P: (96.0, 54.0), S: (1728.0, 972.0)]",
+        "FAIL: the 9m requested frame crops a /root/MeadowsPlayground/Wild_bramblebun_0_2 render corner at (-73.70785, 732.7769) outside [P: (96.0, 54.0), S: (1728.0, 972.0)]",
+        "FAIL: the 9m requested frame crops a /root/MeadowsPlayground/Wild_bramblebun_0_2 render corner at (42.4898, 426.7187) outside [P: (96.0, 54.0), S: (1728.0, 972.0)]",
+        "FAIL: the 9m requested frame crops a /root/MeadowsPlayground/Wild_bramblebun_0_2 render corner at (-60.18745, 456.879) outside [P: (96.0, 54.0), S: (1728.0, 972.0)]",
+        "FAIL: the 9m requested frame crops a /root/MeadowsPlayground/Wild_bramblebun_0_2 render corner at (-421.1436, 786.1235) outside [P: (96.0, 54.0), S: (1728.0, 972.0)]",
+        "FAIL: the 9m requested frame crops a /root/MeadowsPlayground/Wild_bramblebun_0_2 render corner at (-456.3858, 754.0958) outside [P: (96.0, 54.0), S: (1728.0, 972.0)]",
+        "FAIL: the 9m requested frame crops a /root/MeadowsPlayground/Wild_bramblebun_0_2 render corner at (-394.8831, 384.037) outside [P: (96.0, 54.0), S: (1728.0, 972.0)]",
+        "FAIL: the 9m requested frame crops a /root/MeadowsPlayground/Wild_bramblebun_0_2 render corner at (-434.4891, 427.6636) outside [P: (96.0, 54.0), S: (1728.0, 972.0)]",
+        "FAIL: neutral combat camera did not keep the opponent framed at 95 degrees for 10 frames within 193 (screen=(-396.8218, 532.6393) viewport=(1920.0, 1080.0), final streak 0)"
+      ],
+      "source_clean": true,
+      "script_errors_observed": 0
     },
     "visual": "PENDING original code-blind review"
   }
