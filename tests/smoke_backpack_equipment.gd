@@ -34,6 +34,9 @@ func _run() -> void:
 	_check(str(body.get("_detail_hint").text).contains("Equip"), "carried armor advertises Equip")
 	await _pad("interact")
 	var gear: RefCounted = game.get("player_equipment")
+	for i in 600:
+		if str(gear.call("equipped_in", "upper_body")) == "insulated_vest" and (body.get("_equipment_intent") as Dictionary).is_empty(): break
+		await process_frame
 	_check(str(gear.call("equipped_in", "upper_body")) == "insulated_vest", "controller Use equips vest")
 	_check(int(inventory.call("count", "insulated_vest")) == 0, "worn vest left carried inventory")
 	var saver: RefCounted = load("res://scripts/save/save_game.gd").new("user://equipment_controller_saves/")
@@ -59,6 +62,9 @@ func _run() -> void:
 	await process_frame
 	_check(str(body.get("_detail_hint").text).contains("Unequip"), "worn slot advertises Unequip")
 	await _pad("menu_confirm")
+	for i in 600:
+		if str(gear.call("equipped_in", "upper_body")) == "" and (body.get("_equipment_intent") as Dictionary).is_empty(): break
+		await process_frame
 	_check(str(gear.call("equipped_in", "upper_body")) == "", "controller Confirm unequips")
 	_check(int(inventory.call("count", "insulated_vest")) == 1, "unequip returned one vest")
 	menu.call("close")

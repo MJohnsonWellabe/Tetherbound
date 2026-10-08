@@ -394,8 +394,32 @@ func _check_crafted_command_tiers() -> void:
 		completed.append({"item": item, "recipe": recipe_id, "before": before, "after": after, "result": reply.result})
 		panel.call("close")
 		for i in 10: await physics_frame
-	if equipment.call("equip_from_inventory", "stormglass_command_pouch", inventory) != true:
-		_fail("crafted Stormglass pouch could not be equipped from the actual satchel")
+	# Use the actual Backpack Equip verb; local-only mutation cannot update
+	# admitted equipment and is deliberately refused by its refresh guard.
+	var menu: Node = _game.call("menu")
+	menu.call("open", "backpack")
+	for i in 10: await process_frame
+	var backpack: Node
+	for i in (menu.get("_tabs") as Array).size():
+		if menu.get("_tabs")[i].get("id") == "backpack": backpack = menu.get("_bodies")[i]
+	var equip_reply := {"result": {}}
+	var on_equip := func(op: String, _intent: Dictionary, result: Dictionary) -> void:
+		if op == "trainer_equip": equip_reply.result = result.duplicate(true)
+	if backpack == null:
+		_fail("actual Backpack did not open for crafted pouch Equip")
+		return
+	_game.get("session").connect("homestead_action_completed", on_equip)
+	backpack.get("_buttons")[int(inventory.call("find_slot", "stormglass_command_pouch"))].grab_focus()
+	await process_frame
+	await _press("interact")
+	for i in 600:
+		if equip_reply.result.get("settled") == true or equip_reply.result.get("terminal_refusal") == true: break
+		await process_frame
+	_game.get("session").disconnect("homestead_action_completed", on_equip)
+	menu.call("close")
+	if equip_reply.result.get("settled") != true or equipment.call("equipped_in", "backpack") != "stormglass_command_pouch" \
+		or int(inventory.call("count", "stormglass_command_pouch")) != 0:
+		_fail("actual Backpack Equip did not settle crafted Stormglass: " + str(equip_reply.result))
 		return
 	var director: Node = _world.get_node("EncounterDirector")
 	var manager: Node = _world.get_node("CombatManager")
@@ -430,6 +454,7 @@ func _check_crafted_command_tiers() -> void:
 	if manager.call("is_fighting") != true or pool.get("tier") != 4 or snapshot.get("tier") != 4:
 		_fail("real command admission did not consume the crafted/equipped tier: " + str(snapshot))
 	print("F24_CRAFTED_COMMAND_TIERS " + JSON.stringify({"crafted": completed, "equipment": equipment.call("save_data"),
+		"equip_result": equip_reply.result,
 		"canonical_ready": canonical.get("ready"), "encounter_kind": record.get("kind"), "pool": pool, "snapshot": snapshot,
 		"tier_profile": preload("res://scripts/combat/tether_commands.gd").tier_profile(4), "fixtures": "regional relic receipts and pre-admission starter; funded costs; harness relocation/auto-engage; process-local gates"}))
 
