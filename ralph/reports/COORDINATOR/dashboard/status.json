@@ -1,11 +1,12 @@
 {
- "updated": "2026-10-07T22:25Z",
+ "updated": "2026-10-08T00:35Z",
  "headline": [
-  "5:50 PM CT Wed 07 Oct: 149 criteria met, 135 on main and 14 evidenced in consolidation 5b (CI running).",
-  "Pace: 16 READYs (19 new criteria) between 3:10 and 5:10 PM CT, against 6 the two hours before and 1 before that. Lanes are now above the 5-per-hour target.",
-  "Consolidation 5 (#578) went red on co-op smokes: lane C's flaky-smoke fix and F43 landed without lane C runner and owner-passive commits they depend on. Rebuilt as 5b without them; both bounced to lane C. F30#0 also bounced.",
-  "Landed today: #571, #574, #576, #573 (CI about 22 minutes), #577 (F35#0, F38#4, F14#2, F39#4, F36#2).",
-  "F46#2 is still with lane C (Home portal walk in smoke_f18_earned_loop)."
+  "7:35 PM CT Wed 07 Oct: 150 criteria met, 148 on main and 2 evidenced in consolidation 6 (F30#0, F08#3), plus code pieces of F39#5, F46#0 and F42#0.",
+  "Pace dropped 5:10–7:10 PM CT: 3 new criteria (F08#3, F30#0, F31#2) against 19 the window before. F31#2 bounced (peer_runner fence that broke #578).",
+  "Landed in 5b: A F25#2, #3, #5, F35#2, #4; B F20#1, #4, F19#0, F01#3; C F32#4; D F26#4; E F41#4, F40#4.",
+  "Bounced to lane C: flaky co-op smoke fix and F43#0–#3 (they broke co-op smokes on #578 without unREADY runner/owner-passive commits), F30#0 (needs unREADY F28 code), F48#2 (boss_four proof red on main).",
+  "Main's 8-hourly earned-loop red is intermittent (passes on current main, fails on older main); lane A is fixing the catch-aim convergence.",
+  "Guardrails on trial until 8:05 PM CT; they are withdrawn if criteria pace drops."
  ],
  "batches": [
   {
@@ -453,10 +454,16 @@
    "contents": "Red: lane C CI-FLAKE and F43 broke co-op smokes; rebuilt as 5b."
   },
   {
-   "name": "Consolidation 5b",
+   "name": "Consolidation 5b (PR #579)",
+   "sha": "",
+   "state": "Merged 10-07 6:07 PM CT",
+   "contents": "13 criteria; F48#2 proof red afterwards and reopened. Met 148."
+  },
+  {
+   "name": "Consolidation 6",
    "sha": "",
    "state": "CI running",
-   "contents": "14 criteria (lanes A, B, C F32#4/F48#2, D, E)."
+   "contents": "F30#0, F08#3 and the F39#5, F46#0, F42#0 code pieces."
   }
  ],
  "lanes": [

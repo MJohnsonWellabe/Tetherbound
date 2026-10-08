@@ -928,9 +928,10 @@ func foundation_research_source(director: Node, encounter_id: String, peer: int,
 		or director.get_script() == null or not FOUNDATION_DIRECTORS.has(director.get_script().resource_path): return {"ok": false}
 	var research_enabled: bool = preload("res://scripts/creatures/research_log.gd").config().get("runtime_enabled") == true
 	var bounty_enabled: bool = preload("res://scripts/world/bounty_board.gd").config().get("runtime_enabled") == true
-	if not research_enabled and not (bounty_enabled and kind == "catch"): return {"ok": true, "durable": true, "disabled": true}
 	var host: RefCounted = director.get("_encounter_host")
 	var original: Dictionary = director.call("retained_research_source", source_id)
+	if not research_enabled and not (bounty_enabled and kind == "catch") and original.get("capture_offer", {}).is_empty():
+		return {"ok": true, "durable": true, "disabled": true}
 	if original.get("world_namespace") != _game().get("world").reward_delivery_namespace or original.get("session_id") != _altar_current_epoch() \
 		or original.get("encounter_id") != encounter_id or original.get("peer") != peer or original.get("kind") != kind \
 		or original.get("species") != species or original.get("move_id") != move_id or original.get("night") != night: return {"ok": false}
@@ -947,6 +948,11 @@ func foundation_research_source(director: Node, encounter_id: String, peer: int,
 		context.wild = true
 		context.night = night
 	var duties: Array = []
+	if kind == "catch" and not original.get("capture_offer", {}).is_empty():
+		var offer: Dictionary = original.capture_offer
+		if not preload("res://scripts/net/foundation_capture_rules.gd").original_offer_matches(offer,
+			original.get("capture_card", {}), original.world_namespace, original.session_id, str(record.get("realm", "")), character): return {"ok": false}
+		duties.append({"character_id": character, "action": "capture_offer", "intent": {}, "context": offer.duplicate(true)})
 	if research_enabled: duties.append({"character_id": character, "action": "research_event", "intent": {}, "context": context})
 	if bounty_enabled and kind == "catch":
 		var captured: Dictionary = original.get("capture_card", {})

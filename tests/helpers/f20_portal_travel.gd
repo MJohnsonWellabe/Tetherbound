@@ -9,6 +9,45 @@ var _lesson_active := false
 var _lesson_generation := 0
 var before_interact: Callable
 var trace_input := false
+var _lesson_controller_input := false
+var _lesson_capture_probe: RefCounted
+var _lesson_replay_row: Dictionary = {}
+var _lesson_replay_identity: Dictionary = {}
+
+static func lesson_witness_options() -> Dictionary:
+	var options := {"controller": false, "capture": false, "replay": false, "skip_line": 0, "failures": []}
+	var seen := {}
+	for arg: String in OS.get_cmdline_user_args():
+		var key := ""
+		if arg.begins_with("--lesson-controller-witness"):
+			key = "controller"
+			if arg != "--lesson-controller-witness": options.failures.append("Use --lesson-controller-witness without a value")
+			options.controller = true
+		elif arg.begins_with("--lesson-replay-witness"):
+			key = "replay"
+			if arg != "--lesson-replay-witness": options.failures.append("Use --lesson-replay-witness without a value")
+			options.replay = true
+		elif arg.begins_with("--capture-lessons"):
+			key = "capture"
+			if arg != "--capture-lessons": options.failures.append("Use --capture-lessons without a value")
+			options.capture = true
+		elif arg.begins_with("--lesson-skip-line"):
+			key = "skip_line"
+			var value := arg.trim_prefix("--lesson-skip-line=")
+			if not arg.begins_with("--lesson-skip-line=") or not value.is_valid_int() \
+				or int(value) < 0 or str(int(value)) != value:
+				options.failures.append("--lesson-skip-line requires one nonnegative zero-based integer")
+			else:
+				options.skip_line = int(value)
+		if not key.is_empty():
+			if seen.has(key): options.failures.append("Duplicate lesson option: " + key)
+			seen[key] = true
+	if seen.has("skip_line") and not options.controller:
+		options.failures.append("--lesson-skip-line requires --lesson-controller-witness")
+	if options.capture and OS.get_cmdline_user_args().has("--functional-offload") \
+		and (DisplayServer.get_name() == "headless" or RenderingServer.get_current_rendering_method() != "gl_compatibility"):
+		options.failures.append("Offloaded --capture-lessons requires a real Compatibility display and a guarded native draw")
+	return options
 
 func _portal_result(result: Dictionary) -> void:
 	super._portal_result(result)
@@ -27,7 +66,13 @@ func activate(prompt: Node3D) -> bool:
 
 func _with_navigation_lessons(navigate: Callable) -> bool:
 	if _lesson_active or _lesson_busy: return _fail("F20 navigation re-entered its active lesson reader")
+	var options := lesson_witness_options()
+	if not options.failures.is_empty():
+		failures.append_array(options.failures)
+		return false
 	var failures_before := failures.size()
+	_lesson_replay_row = {}
+	_lesson_replay_identity = {}
 	_lesson_generation += 1
 	_lesson_active = true
 	var reader := _continue_navigation_lesson.bind(_lesson_generation)
@@ -51,6 +96,120 @@ func _with_navigation_lessons(navigate: Callable) -> bool:
 	# An entered reader still owns its press/release and personal receipt.
 	while _lesson_busy: await tree.process_frame
 	return passed and failures.size() == failures_before
+
+## Explicit free-world boundary: a portal activation may still own a picker.
+## Its caller must finish that modal before requesting this optional witness.
+func replay_observed_lesson() -> bool:
+	var options := lesson_witness_options()
+	if not options.failures.is_empty():
+		failures.append_array(options.failures)
+		return false
+	if _lesson_active or _lesson_busy or not failures.is_empty():
+		return _fail("F46 Help replay requires the completed natural reader")
+	if _lesson_replay_identity.get("character_id", "") != str(game.local.character_id) \
+		or _lesson_replay_identity.get("party_uids", []) != _uids():
+		return _fail("F46 Help replay lost the natural lesson's original character or ordered party")
+	var failures_before := failures.size()
+	if options.replay and not _lesson_replay_row.is_empty():
+		# The natural reader has finished. No background reader is connected
+		# while controller input traverses Settings and its real Help buttons.
+		var row := _lesson_replay_row.duplicate(true)
+		var reward_state := func() -> Dictionary:
+			var stacks: Array = []
+			for slot: int in int(game.inventory.call("slot_count")):
+				stacks.append(game.inventory.call("stack_at", slot))
+			var members: Array = []
+			for member: RefCounted in game.party.members():
+				var card := {}
+				for field: String in ["uid", "level", "xp", "known_moves", "move_quick", "move_charged",
+					"move_utility", "move_ultimate", "move_mastery_uses", "move_mastery_receipts", "loadout_revision"]:
+					card[field] = member.get(field)
+				members.append(card)
+			return {"character_id": str(game.local.character_id), "party_uids": _uids(),
+				"inventory": stacks, "party_progression": members,
+				"personal_flags": game.local.flags.call("save_data"), "world_flags": game.world.flags.call("save_data"),
+				"redesign_character": game.local.get("redesign_character")}.duplicate(true)
+		var before: Dictionary = reward_state.call()
+		_lesson_controller_input = true
+		var opened := await _open_lesson_replay(row, str(before.character_id), before.party_uids)
+		_lesson_controller_input = false
+		if opened:
+			_lesson_active = true
+			await _continue_navigation_lesson(_lesson_generation, row)
+			_lesson_active = false
+		var unchanged: bool = reward_state.call() == before
+		var released := true
+		for action: String in ["inventory", "menu_tab_left", "ui_down", "menu_confirm", "menu_cancel", "ui_accept"]:
+			released = released and not Input.is_action_pressed(action)
+		var replay_passed: bool = opened and failures.size() == failures_before and unchanged and released \
+			and INPUT_OWNER.current(tree) == null and not tree.paused
+		print("F46 LESSON REPLAY WITNESS " + JSON.stringify({"lesson": row.id,
+			"character_id": before.character_id, "party_uids": before.party_uids, "party_uids_after": _uids(),
+			"personal_ack_retained": game.local.flags.call("has", "opening:lesson:" + str(row.id)),
+			"reward_state_unchanged": unchanged, "released": released, "passed": replay_passed,
+			"scope": "One naturally acknowledged lesson reopened through physical Settings Help input; full F46 remains open"}))
+		if not replay_passed: _fail("F46 Settings Help replay changed rewards/identity or did not release its actual reader")
+	else:
+		return _fail("F46 Help replay requires --lesson-replay-witness and an observed natural lesson")
+	return failures.size() == failures_before
+
+func _open_lesson_replay(row: Dictionary, character_id: String, party_uids: Array) -> bool:
+	var retained := func() -> bool:
+		return str(game.local.character_id) == character_id and _uids() == party_uids \
+			and game.local.flags.call("has", "opening:lesson:" + str(row.id)) == true
+	if INPUT_OWNER.current(tree) != null or tree.paused \
+		or not retained.call():
+		return _fail("F46 replay requires free world input and this character's actual natural acknowledgement")
+	var service := game.get_node_or_null(^"OnboardingLessons")
+	if service == null or service.get("_identity") != str(game.local.character_id):
+		return _fail("F46 replay lacks the original character's lesson service")
+	await tap("inventory")
+	var menu: Node = game.call("menu")
+	if menu == null or menu.call("is_open") != true or INPUT_OWNER.current(tree) != menu or not retained.call():
+		return _fail("F46 controller inventory did not open the actual owned menu")
+	for tab: int in (menu.get("_tabs") as Array).size():
+		if menu.call("current_tab_id") == "settings": break
+		if INPUT_OWNER.current(tree) != menu or not retained.call(): return _fail("F46 Settings navigation lost its character or input owner")
+		await tap("menu_tab_left")
+	if menu.call("current_tab_id") != "settings" or INPUT_OWNER.current(tree) != menu:
+		return _fail("F46 controller tabs did not reach actual Settings")
+	var body: Node = (menu.get("_bodies") as Array)[int(menu.get("_index"))]
+	if body == null or body.get_script() == null or body.get_script().resource_path != "res://scripts/ui/tab_settings.gd":
+		return _fail("F46 actual Settings body is missing")
+	var buttons: Array = body.get("_lesson_buttons")
+	var target: Button = null
+	for candidate: Variant in buttons:
+		if candidate is Button and (candidate as Button).text == str(row.get("title", "")):
+			if target != null: return _fail("F46 Settings has ambiguous lesson titles")
+			target = candidate as Button
+	if target == null or target.disabled or not target.is_visible_in_tree():
+		return _fail("F46 Settings Help does not offer the naturally acknowledged lesson")
+	var help_visible := false
+	for child: Node in target.get_parent().get_children():
+		if child is Label and (child as Label).is_visible_in_tree() and (child as Label).text == "Help · System lessons":
+			help_visible = true
+	if not help_visible: return _fail("F46 Settings Help heading is not visible")
+	for step: int in buttons.size():
+		if INPUT_OWNER.current(tree) != menu or not retained.call(): return _fail("F46 Help navigation lost its character or input owner")
+		var focused := tree.root.get_viewport().gui_get_focus_owner()
+		if focused == target: break
+		if not buttons.has(focused): return _fail("F46 controller focus left the actual Help lesson buttons")
+		await tap("ui_down")
+	if tree.root.get_viewport().gui_get_focus_owner() != target or INPUT_OWNER.current(tree) != menu or not retained.call():
+		return _fail("F46 controller focus did not reach the exact Help lesson")
+	print("F46 LESSON REPLAY HELP " + JSON.stringify({"lesson": row.id, "tab": menu.call("current_tab_id"),
+		"heading": "Help · System lessons", "focused_title": target.text, "provider": str(target.get_path())}))
+	await tap("menu_confirm")
+	# Same bounded panel-appearance allowance as the opening's natural card.
+	for frame: int in 180:
+		if not retained.call(): return _fail("F46 Help activation changed its acknowledged character or ordered party")
+		var owner := INPUT_OWNER.current(tree)
+		if owner != null and owner.get_script() == LESSON_PANEL and owner.call("is_open"):
+			return (menu.call("is_open") == false and service.get("_panel") == owner \
+				and service.get("_replaying") == true and owner.get("_row") == row and owner.get("_line") == 0) \
+				or _fail("F46 Settings opened a different lesson or a natural card instead of replay")
+		await tree.process_frame
+	return _fail("F46 physical Help activation did not open its actual replay card")
 
 ## Full two-peer proof separates the physical walk from the authored reader.
 ## This command never presses X; activate() still proves the original input.
@@ -163,12 +322,16 @@ func _activate_endgame_rematch(prompt: Node3D) -> bool:
 			" fighting=", manager.call("is_fighting") if manager != null else false)
 	return _activated == prompt or _fail("F20 rematch X did not record its expected provider activation")
 
-func _continue_navigation_lesson(generation: int) -> void:
+func _continue_navigation_lesson(generation: int, replay_row: Dictionary = {}) -> void:
 	if not _lesson_active or generation != _lesson_generation or _lesson_busy: return
 	var owner := INPUT_OWNER.current(tree)
 	if owner == null or owner.get_script() != LESSON_PANEL or not owner.call("is_open"): return
+	var options := lesson_witness_options()
+	if not options.failures.is_empty():
+		failures.append_array(options.failures)
+		return
 	_lesson_busy = true
-	var row: Dictionary = owner.get("_row")
+	var row: Dictionary = (owner.get("_row") as Dictionary).duplicate(true)
 	var id := str(row.get("id", ""))
 	var character_id := str(game.local.character_id)
 	var began := Time.get_ticks_msec()
@@ -176,10 +339,45 @@ func _continue_navigation_lesson(generation: int) -> void:
 	var start_line := int(owner.get("_line"))
 	var presses := 0
 	var input_ok := not id.is_empty() and start_line >= 0 and start_line < line_count
+	var replaying := not replay_row.is_empty()
+	var controller_witness: bool = options.controller and not replaying
+	var capture_lessons: bool = options.capture
+	var observing: bool = controller_witness or capture_lessons or options.replay or replaying
+	var skip_line: int = options.skip_line
+	if controller_witness and (skip_line < start_line or skip_line >= line_count):
+		_fail("Requested lesson skip line %d is outside actual %s lines %d..%d" % [skip_line, id, start_line, line_count - 1])
+		_lesson_busy = false
+		return
+	if capture_lessons and _lesson_capture_probe == null:
+		# Runtime load only: the existing probe preloads this travel helper.
+		var capture_script := load("res://tests/helpers/f20_ending_probe.gd") as GDScript
+		if capture_script == null:
+			_fail("Existing F20 completed-frame capture could not load")
+			_lesson_busy = false
+			return
+		_lesson_capture_probe = capture_script.new()
+	var action := "menu_confirm"
+	var skip_presses := 0
+	var observed_lines: Array[Dictionary] = []
+	var witness := {}
+	var service := game.get_node_or_null(^"OnboardingLessons")
+	if observing:
+		var label := owner.get("_text") as Label
+		witness = {"lesson": id, "character_id": character_id, "party_uids": _uids(),
+			"conversation": row.get("conversation", ""), "speaker": row.get("speaker", ""),
+			"line": start_line, "authored_lines": line_count,
+			"text": label.text if label != null else "", "goal": row.get("goal", ""),
+			"visible": label != null and label.is_visible_in_tree(),
+			"ack_before": game.local.flags.call("has", "opening:lesson:" + id)}
+		input_ok = input_ok and witness.visible and witness.ack_before == replaying \
+			and service != null and service.get("_panel") == owner and service.get("_replaying") == replaying \
+			and (not replaying or row == replay_row)
+		if input_ok:
+			input_ok = label.text == str(row.lines[start_line]) + "\n\nNext: " + str(row.get("goal", ""))
 	var dismissed: Array[String] = []
 	var dismissal_observer := func(lesson_id: String) -> void: dismissed.append(lesson_id)
 	owner.connect("dismissed", dismissal_observer)
-	print("F20 LESSON actual ordinary Continue id=", id, " reader=", get_instance_id(),
+	print("F20 LESSON actual ordinary ", "Skip" if controller_witness else "Continue", " id=", id, " reader=", get_instance_id(),
 		" generation=", generation, " ticks_ms=", began, " start_line=", start_line)
 	# Each normal edge spans both clocks. Slow drawing can exhaust 30 seconds
 	# during one edge, so bound input by the actual remaining authored lines;
@@ -191,12 +389,45 @@ func _continue_navigation_lesson(generation: int) -> void:
 			input_ok = false
 			break
 		var before_line := int(owner.get("_line"))
+		if observing:
+			if before_line != start_line + presses or before_line < 0 or before_line >= line_count:
+				input_ok = false
+				break
+			var expected_text := str(row.lines[before_line]) + "\n\nNext: " + str(row.get("goal", ""))
+			var line_matches := func() -> bool:
+				if not is_instance_valid(owner) or not is_instance_valid(service) or INPUT_OWNER.current(tree) != owner \
+					or service.get("_panel") != owner or service.get("_replaying") != replaying \
+					or not owner.call("is_open") or owner.get("_row") != row or owner.get("_line") != before_line \
+					or str(game.local.character_id) != character_id or _uids() != witness.party_uids:
+					return false
+				var label := owner.get("_text") as Label
+				return is_instance_valid(label) and label.is_visible_in_tree() and label.text == expected_text
+			input_ok = line_matches.call() == true
+			if not input_ok: break
+			var capture_label := "lesson-%s-reader-%d-generation-%d-%sline-%02d" % [id, get_instance_id(), generation, "replay-" if replaying else "", before_line]
+			if capture_lessons:
+				if not await _lesson_capture_probe.capture(tree, capture_label, line_matches):
+					failures.append_array(_lesson_capture_probe.failures)
+					input_ok = false
+					break
+				input_ok = line_matches.call() == true
+				if not input_ok: break
+			observed_lines.append({"line": before_line, "text": owner.get("_text").text,
+				"capture_label": capture_label if capture_lessons else "", "captured": capture_lessons})
 		print("F20 LESSON rendered ", owner.get("_text").text)
-		await tap("menu_confirm")
+		action = "menu_cancel" if controller_witness and before_line == skip_line else "menu_confirm"
+		_lesson_controller_input = controller_witness or options.replay or replaying
+		await tap(action)
+		_lesson_controller_input = false
 		presses += 1
-		input_ok = dismissed == [id] or (is_instance_valid(owner) and owner.call("is_open") \
+		if action == "menu_cancel": skip_presses += 1
+		input_ok = (dismissed == [id] and (not controller_witness or action == "menu_cancel")) \
+			or (action == "menu_confirm" and is_instance_valid(owner) and owner.call("is_open") \
 			and str(owner.get("_row").get("id", "")) == id and int(owner.get("_line")) == before_line + 1)
-	var released := not Input.is_action_pressed("menu_confirm")
+		if observing:
+			input_ok = input_ok and not Input.is_action_pressed(action) and _uids() == witness.party_uids \
+				and str(game.local.character_id) == character_id
+	var released := not Input.is_action_pressed(action)
 	if is_instance_valid(owner): owner.disconnect("dismissed", dismissal_observer)
 	var receipt_began := Time.get_ticks_msec()
 	var deadline := receipt_began + 30000
@@ -209,6 +440,20 @@ func _continue_navigation_lesson(generation: int) -> void:
 		and str(owner.get("_row").get("id", "")) == id
 	var completed := input_ok and released and is_instance_valid(owner) and not original_open \
 		and dismissed == [id] and acknowledged
+	if observing:
+		completed = completed and _uids() == witness.party_uids \
+			and str(game.local.character_id) == character_id \
+			and not Input.is_action_pressed("menu_cancel") and not Input.is_action_pressed("menu_confirm") and not Input.is_action_pressed("ui_accept")
+		if controller_witness:
+			completed = completed and skip_presses == 1 and presses == skip_line - start_line + 1
+		witness.merge({"action": action, "presses": presses, "skip_presses": skip_presses,
+			"requested_skip_line": skip_line if controller_witness else null, "observed_lines": observed_lines,
+			"controller_input": controller_witness or options.replay or replaying, "replay": replaying, "dismissed": dismissed,
+			"ack_after": acknowledged, "released": released, "original_open": original_open,
+			"party_uids_after": _uids(), "passed": completed,
+			"render_loop_enabled": RenderingServer.render_loop_enabled,
+			"scope": "Observed lesson lines only; Settings replay is reported separately and full F46 remains unproven"})
+		print(("F46 LESSON CONTROLLER WITNESS " if controller_witness else "F46 LESSON OBSERVATION ") + JSON.stringify(witness))
 	print("F20 LESSON result id=", id, " reader=", get_instance_id(), " generation=", generation,
 		" completed=", completed, " elapsed_ms=", Time.get_ticks_msec() - began,
 		" receipt_ms=", Time.get_ticks_msec() - receipt_began, " authored_lines=", line_count,
@@ -216,9 +461,12 @@ func _continue_navigation_lesson(generation: int) -> void:
 		" released=", released, " dismissed=", dismissed, " original_open=", original_open,
 		" personal_ack=", acknowledged)
 	if not completed:
-		_fail("F20 ordinary lesson Continue did not complete this character's actual " + id)
+		_fail("F20 ordinary lesson " + ("Skip" if controller_witness else "Continue") + " did not complete this character's actual " + id)
 	else:
 		print("F20 LESSON actual personal acknowledgement id=", id)
+		if options.replay and not replaying and _lesson_replay_row.is_empty():
+			_lesson_replay_row = row.duplicate(true)
+			_lesson_replay_identity = {"character_id": character_id, "party_uids": witness.party_uids.duplicate()}
 	_lesson_busy = false
 
 func _activate_world(prompt: Node3D) -> bool:
@@ -329,13 +577,30 @@ func tap(action: String) -> void:
 		if prepared is bool and not prepared:
 			_fail("F20 ordinary camera preparation failed before interaction")
 			return
+	var pad: InputEventJoypadButton = null
+	if _lesson_controller_input:
+		for binding: InputEvent in InputMap.action_get_events(action):
+			if binding is InputEventJoypadButton:
+				pad = binding.duplicate() as InputEventJoypadButton
+				break
+		if pad == null:
+			_fail("F46 lesson action has no actual joypad button binding: " + action)
+			return
 	for pressed: bool in [true, false]:
 		if trace_input: _trace_clock(action, pressed, "before input")
-		var event := InputEventAction.new()
-		event.action = action
-		event.pressed = pressed
-		event.strength = 1.0 if pressed else 0.0
-		Input.parse_input_event(event)
+		if pad != null:
+			var event := pad.duplicate() as InputEventJoypadButton
+			event.device = 0
+			event.pressed = pressed
+			Input.parse_input_event(event)
+			print("F46 LESSON INPUT " + JSON.stringify({"action": action, "button_index": event.button_index,
+				"device": event.device, "pressed": pressed}))
+		else:
+			var event := InputEventAction.new()
+			event.action = action
+			event.pressed = pressed
+			event.strength = 1.0 if pressed else 0.0
+			Input.parse_input_event(event)
 		for frame in 2:
 			if trace_input: _trace_clock(action, pressed, "before physics %d" % frame)
 			await tree.physics_frame

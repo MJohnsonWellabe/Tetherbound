@@ -260,6 +260,35 @@ func test_fresh_starter_saved_mirror_allows_rest_xp_without_inventing_missing_hi
 	REST.rest(creature, cfg, player.redesign_character)
 	assert_eq(creature.level, 11)
 	assert_eq(creature.xp, 0, "an above-cap fixture is healed without inventing breakthrough history")
+	# A newly caught live instance must gain its mirror at the actual add,
+	# rather than waiting for a detached save_data projection to exist.
+	var caught: RefCounted = SPECIES.spawn("bramblebun")
+	caught.set_level(3, cfg)
+	caught.set("traits_initialized", true)
+	caught.set("rolled_traits", ["sturdy", "swift"])
+	caught.set_meta("ordinary_trait_packet", {"traits_initialized": true, "rolled_traits": ["sturdy", "swift"], "taught_traits": {},
+		"captured_from": {"kind": "wild", "world_namespace": "f28-owned-catch", "spawn_id": "ordinary", "spawn_generation": 1}})
+	var before_catch: Dictionary = player.redesign_character.duplicate(true)
+	assert_true(player.party.add(caught))
+	var rules := preload("res://scripts/creatures/breakthrough.gd")
+	var initialized := rules.initialize_owned_catch(player.party, before_catch, caught)
+	assert_false(initialized.is_empty())
+	if initialized.is_empty(): return
+	assert_eq(initialized.creatures[creature.uid], before_catch.creatures[creature.uid], "another creature's history is never inferred or reset")
+	assert_eq(initialized.transaction_receipts, before_catch.transaction_receipts, "local catch initialization grants no training reward receipt")
+	assert_eq(initialized.creatures[caught.uid].rolled_traits, ["sturdy", "swift"], "the actual newly owned spawn roll is retained in its one durable UID mirror")
+	assert_true(initialized.creatures[caught.uid].traits_initialized)
+	assert_eq(initialized.creatures[caught.uid].captured_from, caught.get_meta("ordinary_trait_packet").captured_from, "actual original catch provenance reaches only its newly owned UID")
+	assert_eq(caught.get("rolled_traits"), ["sturdy", "swift"], "catch projection never rerolls the instance")
+	player.redesign_character = initialized
+	assert_eq(caught.call("_admitted_level_cap", cfg, initialized), 10)
+	REST.rest(caught, cfg, initialized)
+	assert_eq(caught.xp, P.rest_xp(cfg), "newly owned catch can earn XP before a save serialization")
+	initialized.creatures[caught.uid].breakthroughs = [1]
+	initialized.creatures[caught.uid].cap_level = 20
+	assert_eq(rules.initialize_owned_catch(player.party, initialized, caught), initialized, "repeat admission preserves existing breakthroughs")
+	var unowned: RefCounted = SPECIES.spawn("terrapup")
+	assert_true(rules.initialize_owned_catch(player.party, initialized, unowned).is_empty(), "no mirror for an unowned newcomer")
 
 
 func test_personal_rest_heals_but_cannot_bank_xp_or_cross_locked_cap() -> void:
