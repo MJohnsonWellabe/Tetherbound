@@ -75,7 +75,10 @@ func _capture(id: String) -> Dictionary:
 	var row: Dictionary = await super._capture(id)
 	if _named_preset and (not bool(row.get("started", false)) or int(row.get("frames", 0)) == 0):
 		_capture_failures.append("%s: requested real fight did not start/capture" % id)
-	if bool(row.get("started", false)) and not bool(_manager.call("is_fighting")):
+	# The base pilot records this before its forced "fled" cleanup. A stopped
+	# manager after that cleanup does not establish a natural fight ending.
+	if bool(row.get("started", false)) and row.get("fighting_at_end") == false \
+			and not bool(_manager.call("is_fighting")):
 		await _save("100-aftermath")
 	return row
 
