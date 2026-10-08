@@ -8,7 +8,7 @@ extends CharacterBody3D
 ## earlier version faked motion by offsetting a mesh, which was fine for a fight
 ## in which nobody moved and is wrong now.
 ##
-## Everything above this — the combat manager, the AI, the encounter director —
+## Everything above this â€” the combat manager, the AI, the encounter director â€”
 ## talks to `request_move`, `add_impulse`, `face_towards` and `place_on_ground`,
 ## and never touches `velocity`. That is what lets the player's creature and the wild
 ## one share one movement implementation while being driven by a stick and by a
@@ -151,7 +151,7 @@ const TIER_RIM_STRENGTH := {
 ## down.
 ##
 ## Generous on purpose. At 12m up, a spawn point on a hill started the ray
-## *inside* the terrain — a downward ray from underground never exits, so the
+## *inside* the terrain â€” a downward ray from underground never exits, so the
 ## placement failed silently and the creature was never spawned at all. The
 ## playground's relief is about 72m, so the start has to clear the tallest thing
 ## that can be above a point the caller thought was ground level.
@@ -161,7 +161,7 @@ const GROUND_PROBE_DOWN := 300.0
 ## How much wider than its collider a creature's art may be.
 ##
 ## Above 1 because a quadruped's body legitimately overhangs the capsule that
-## represents it — a fox is longer than it is wide and the collider is a
+## represents it â€” a fox is longer than it is wide and the collider is a
 ## cylinder. Far above 1 and creatures visibly interpenetrate before their
 ## colliders touch, which reads as attacks landing at the wrong distance.
 const FOOTPRINT_ALLOWANCE := 2.4
@@ -184,7 +184,7 @@ const DEFAULT_REST_ROLL_DEG := 90.0
 ## OF27 placeholder tint: a deliberately garish magenta-shift multiply,
 ## applied to both albedo AND emission (see `_shared_variant_material`'s own
 ## comment for why emission has to be included). This is not the shiny
-## LOOK — OF28 owns that, per-species, in real palette data — it exists only
+## LOOK â€” OF28 owns that, per-species, in real palette data â€” it exists only
 ## to prove the roll -> save -> tint pipeline actually changes what renders.
 ## Values above 1.0 on purpose: multiplying a mid-value albedo by ~1 leaves it
 ## nearly unchanged, and "nearly unchanged" is exactly the kind of tint that
@@ -196,7 +196,7 @@ var display_name: String = ""
 
 ## OF27: "make a version that is a 'shiny' like Pokemon go... nothing
 ## different than just the colors" (owner report). Set through `setup()`/
-## `set_shiny()`, never rolled here — this node draws whatever it is told,
+## `set_shiny()`, never rolled here â€” this node draws whatever it is told,
 ## the same way it never decides its own species.
 var shiny: bool = false
 
@@ -293,7 +293,7 @@ var _impulse_damping: float = 9.0
 ## combat, which is why the wild creature can wander freely before it is engaged.
 var arena: Node = null
 
-## COMBAT §5 contact spacing (`contact_spacing.gd`). The body across the fight
+## COMBAT Â§5 contact spacing (`contact_spacing.gd`). The body across the fight
 ## from this one, and whether this body yields (`ally`) or holds (`foe`). Set
 ## and cleared by whoever binds the fight; null outside combat.
 var contact_partner: Node3D = null
@@ -395,7 +395,7 @@ func _ready() -> void:
 		_build_placeholder()
 
 
-## A hidden creature is switched off entirely — no physics, no collider.
+## A hidden creature is switched off entirely â€” no physics, no collider.
 ##
 ## The player's creature exists in the world the whole time and is only hidden
 ## outside combat, so that deploying it is not a hitch in the one frame that
@@ -428,7 +428,7 @@ func _load_config() -> void:
 ## taught about OF27 yet keeps building the ordinary, untinted body it always
 ## has. A wild spawn is the one caller that does not know its own shiny
 ## status yet at `setup()` time (the roll happens after `populate()` calls
-## this) — see `set_shiny()` below for how that one re-tints after the fact.
+## this) â€” see `set_shiny()` below for how that one re-tints after the fact.
 func setup(id: String, is_shiny: bool = false) -> void:
 	species_id = id
 	shiny = is_shiny
@@ -437,12 +437,12 @@ func setup(id: String, is_shiny: bool = false) -> void:
 		_build_placeholder()
 
 
-## Change shiny status on a body that may already be built, and re-tint it —
+## Change shiny status on a body that may already be built, and re-tint it â€”
 ## the wild-spawn path: `encounter_director._roll_wild_level` rolls the
 ## outcome from the seeded per-spawn stream AFTER `populate()` has already
 ## called `setup()` and built this body (the shiny draw has to be the
 ## stream's LAST draw, so every earlier draw stays byte-for-byte what it was
-## before OF27 — see that function's own comment). A no-op if the status has
+## before OF27 â€” see that function's own comment). A no-op if the status has
 ## not actually changed, so a caller that calls this defensively every frame
 ## cannot re-tint (and re-cache) a material it already tinted.
 func set_shiny(value: bool) -> void:
@@ -537,8 +537,8 @@ func _build_placeholder() -> void:
 	#
 	# Gameplay size is `height` and `radius`, and those drive the capsule, the
 	# hit cone's reach, and the catch accuracy bonus through `body_radius()`.
-	# Art is then scaled to fit that. The other way round — letting a model's
-	# bounding box set the collider — means importing a new creature silently
+	# Art is then scaled to fit that. The other way round â€” letting a model's
+	# bounding box set the collider â€” means importing a new creature silently
 	# retunes combat, and a fight that changes because an artist exported at a
 	# different scale is not a fight anybody can tune.
 	var shape := CapsuleShape3D.new()
@@ -614,7 +614,7 @@ func meadowhart_bare_body_present() -> bool:
 
 ## Free a piece of art this body dressed, without the engine error every
 ## headless world boot used to open with (CL-G7,
-## `docs/GATE2_GATE3_CLOSURE_PLAN.md` §2.B):
+## `docs/GATE2_GATE3_CLOSURE_PLAN.md` Â§2.B):
 ##
 ##   ERROR: Parameter "material" is null.
 ##      at: material_get_instance_shader_parameters
@@ -691,7 +691,7 @@ func _fit(art: Node3D, extra_scale: float) -> void:
 	# But the clamp must never shrink a creature QUIETLY, and it used to.
 	#
 	# A long quadruped fitted to its height overruns a footprint allowance
-	# written for compact creatures, so it was scaled back down — and rendered
+	# written for compact creatures, so it was scaled back down â€” and rendered
 	# visibly shorter than the height its own collider claims, while a stubby
 	# creature beside it got its full declared size. That is the exact "art and
 	# gameplay disagree" failure this function exists to prevent, and it hid
@@ -729,7 +729,7 @@ func _fit(art: Node3D, extra_scale: float) -> void:
 ## Triceratops 528 metres tall), and a local node chain never sees a SKIN's
 ## scale (a 180-metre trainer that every AABB test swore was 1.80m). The
 ## creature models are authored with skin and armature both at 1.0, so for
-## them this is the same number the old chain produced — the guard is against
+## them this is the same number the old chain produced â€” the guard is against
 ## the next asset that is not.
 func _bounds(node: Node3D) -> AABB:
 	return RENDER_BOUNDS.measure(node)
@@ -753,7 +753,7 @@ func _build_capsule(look: Dictionary) -> void:
 	_body.visible = true
 
 	# A smaller sphere forward and high, so the capsule has a front. Without it
-	# there is no reading which way a creature is facing — and in a fight where
+	# there is no reading which way a creature is facing â€” and in a fight where
 	# attacks are aimed, facing is the information the player needs most.
 	var snout := SphereMesh.new()
 	snout.radius = _radius * 0.55
@@ -770,19 +770,19 @@ func _build_capsule(look: Dictionary) -> void:
 ## --- variant tinting (OF27) --------------------------------------------------
 ##
 ## Modelled directly on `scripts/characters/character_model.gd`'s
-## `_apply_palette`/`_palette_node`/`_shared_variant_material` — same
+## `_apply_palette`/`_palette_node`/`_shared_variant_material` â€” same
 ## dict-of-material-name-to-colour contract, same recursive walk, same shared-
 ## material cache, same emission fix. Kept as a second implementation rather
 ## than a shared one because the two operate on different shapes (that file
 ## takes hex strings through `art.json`; this one takes `Color`s directly,
-## since OF27 has no palette data file yet to hold hex strings in — see
+## since OF27 has no palette data file yet to hold hex strings in â€” see
 ## `_shiny_palette()`) and because creature_body.gd already has no dependency
 ## on scripts/characters/, which this would otherwise create.
 
 ## Re-applies (or applies for the first time) whatever tint `shiny` implies.
 ## Called after every model/capsule build, and from `set_shiny()` when shiny
 ## status changes on a body that already exists. Does nothing when not shiny
-## — OF27 never needs to UN-tint a body, because nothing ever un-shinies a
+## â€” OF27 never needs to UN-tint a body, because nothing ever un-shinies a
 ## creature once rolled, so there is no "restore the original material" path
 ## to maintain.
 func _refresh_shiny_tint() -> void:
@@ -816,11 +816,11 @@ func _refresh_shiny_tint() -> void:
 		_apply_alpha_presence()
 		return
 	## OF28 (owner directive, quoted in docs/CURRENT_STATE.md): a colourway is a
-	## REPAINT, never a tint — "if our newt is blue, I want red. not blue
+	## REPAINT, never a tint â€” "if our newt is blue, I want red. not blue
 	## with a red shade over it." tools/repaint_creature_textures.py writes
 	## two sets of siblings from data/creatures/shiny_colourways.json:
 	## `*_vivid.png` (the ORDINARY creature, repainted off the shipped
-	## naturalistic mud toward the mystical palette — "more mystical like in
+	## naturalistic mud toward the mystical palette â€” "more mystical like in
 	## palworld") and `*_shiny.png` (the rare variant). Both swap albedo AND
 	## emission, because the emission channel carries the same painted image
 	## on these assets and swapping albedo alone would be invisible (the NP2
@@ -912,7 +912,7 @@ func _apply_aspect_vfx() -> void:
 	_aspect_vfx = ASPECT_VFX.attach(self, aspect_variant, _radius, _height)
 
 
-## OWNER DIRECTIVE 2026-08-28 §2b: "creatures need to stand out in the grass.
+## OWNER DIRECTIVE 2026-08-28 Â§2b: "creatures need to stand out in the grass.
 ## some are now too small to see or they're the color of the grass."
 ##
 ## The other half of that directive from `_build_placeholder`'s `height`, and
@@ -1082,7 +1082,7 @@ func _night_floor_material(source: BaseMaterial3D) -> BaseMaterial3D:
 	return floored
 
 
-## G3-CREATURE-COLOUR-0904 (docs/CURRENT_STATE.md §3, reopening CREATURE-LEGIBILITY-
+## G3-CREATURE-COLOUR-0904 (docs/CURRENT_STATE.md Â§3, reopening CREATURE-LEGIBILITY-
 ## 0903/Gate 2.4). Two separate defects were closing over the same code path.
 ##
 ## (1) NIGHT: `field_emission`/`field_degreen` were a plain multiply applied once
@@ -1345,7 +1345,7 @@ func _rim_light_node(node: Node, strength: float, tag: String) -> void:
 ## Walks the model's surfaces looking for materials whose albedo texture has
 ## a `_<suffix>` sibling on disk; swaps albedo+emission to the repainted pair
 ## on a cached duplicate material. Returns true if at least one surface
-## swapped — a shiny caller falls back to the placeholder tint otherwise.
+## swapped â€” a shiny caller falls back to the placeholder tint otherwise.
 ##
 ## `texture_species` names whose texture folder the sibling files live in,
 ## for the T1-CREATURE-ART aspect-variant case where that is NOT this body's
@@ -1406,7 +1406,7 @@ func _swap_node_textures(node: Node) -> bool:
 
 
 ## One swapped Material per source material, shared by every body of the same
-## species — same cache discipline as `_shared_variant_material` below.
+## species â€” same cache discipline as `_shared_variant_material` below.
 static var _shiny_swap_materials: Dictionary = {}
 
 
@@ -1439,7 +1439,7 @@ static func _swapped_material(source: BaseMaterial3D, species: String, suffix: S
 	var shiny_albedo := _texture_for(source.albedo_texture, species, suffix, "base_color")
 	if shiny_albedo == null:
 		return null
-	var key := "%d:%s" % [source.get_instance_id(), suffix]
+	var key := "%d:%s:%s" % [source.get_instance_id(), species, suffix]
 	if _shiny_swap_materials.has(key):
 		return _shiny_swap_materials[key]
 	var copy := source.duplicate() as BaseMaterial3D
@@ -1461,7 +1461,7 @@ static func _swapped_material(source: BaseMaterial3D, species: String, suffix: S
 	return copy
 
 
-## `<texture path minus .png>_<suffix>.png`, or null when no repaint exists —
+## `<texture path minus .png>_<suffix>.png`, or null when no repaint exists â€”
 ## the naming contract tools/repaint_creature_textures.py writes. A texture
 ## embedded inside a .glb has no usable resource_path; those species'
 ## repaints live at the tool's extracted-texture path instead, keyed by
@@ -1498,9 +1498,9 @@ static func _texture_for(tex: Texture2D, species: String, suffix: String, kind: 
 
 ## OF27's placeholder answer to "what colour is a shiny": one magenta-shift
 ## wildcard, applied to every surface with no more specific entry. OF28 owns
-## the real answer — per-species base AND shiny palettes read from data
+## the real answer â€” per-species base AND shiny palettes read from data
 ## (spec: OF27 is "nothing different than just the colors" made to WORK;
-## OF28 is choosing what the colors actually are) — and is expected to
+## OF28 is choosing what the colors actually are) â€” and is expected to
 ## replace this function's body with a data read, not to touch
 ## `_apply_variant_tint` itself.
 func _shiny_palette() -> Dictionary:
@@ -1510,7 +1510,7 @@ func _shiny_palette() -> Dictionary:
 ## The tint hook. `colours` maps a mesh surface's material `resource_name`
 ## (or `"*"` as the wildcard every other name falls back to) to a `Color`
 ## multiplier, applied to both the real model (when one loaded) and the
-## capsule fallback (when it did not) — a creature whose model failed to load
+## capsule fallback (when it did not) â€” a creature whose model failed to load
 ## should not also silently lose its shiny tint, the one thing a player
 ## catching it would actually notice.
 func _apply_variant_tint(colours: Dictionary) -> void:
@@ -1541,7 +1541,7 @@ func _tint_node(node: Node, colours: Dictionary) -> void:
 
 
 ## The capsule fallback sets `material_override` directly (`_build_capsule`
-## above), which takes rendering priority over any per-surface override —
+## above), which takes rendering priority over any per-surface override â€”
 ## `_tint_node`'s `set_surface_override_material` calls would compile, cache
 ## a material, and change nothing on screen. Handled as its own small path
 ## instead of folding into `_tint_node` so that mismatch cannot silently
@@ -1559,7 +1559,7 @@ func _tint_capsule(colours: Dictionary) -> void:
 
 
 ## One Material per (species, material-or-part name, colour) tuple, shared by
-## every body of the same species asking for the same tint — the same "mints
+## every body of the same species asking for the same tint â€” the same "mints
 ## a material per variant" mistake `character_model.gd`'s own cache comment
 ## warns against, avoided the same way.
 ##
@@ -1567,7 +1567,7 @@ func _tint_capsule(colours: Dictionary) -> void:
 ## authority (OF27's own brief): these creature assets ship
 ## `emission_enabled = true` with the SAME painted texture set as both
 ## `albedo_texture` and `emission_texture`, at a full white `emission`
-## multiplier — a self-lit "painted" look, not a shading bug. Emission is
+## multiplier â€” a self-lit "painted" look, not a shading bug. Emission is
 ## additive and reads independently of lighting, so it swamps any
 ## `albedo_color` change completely; an albedo-only tint here would compile,
 ## pass a material-only unit test, and still be invisible in a render.
@@ -1678,7 +1678,7 @@ func body_radius() -> float:
 
 
 ## How far this body's rendered footprint reaches toward `world_point`, on the
-## horizontal plane, never less than the collider. COMBAT §5's "directional
+## horizontal plane, never less than the collider. COMBAT Â§5's "directional
 ## rendered half-extent": a long body met head-on reaches further than broadside.
 func contact_extent_towards(world_point: Vector3) -> float:
 	if _render_half_extents.x <= 0.0 or _render_half_extents.y <= 0.0:
@@ -1704,7 +1704,7 @@ func set_contact_partner(partner: Node3D, role: StringName = &"") -> void:
 	_contact_deficit_age_s = 0.0
 
 
-## COMBAT §5: after this step's own movement, stand clear of the fight partner's
+## COMBAT Â§5: after this step's own movement, stand clear of the fight partner's
 ## rendered body (see `contact_spacing.gd` for the rule and why it is safe for
 ## hit/avoidance and co-op). Swept, so terrain stops it; the arena hold that
 ## follows still owns the ring.
@@ -2004,7 +2004,7 @@ func play_combat_flinch(away: Vector3 = Vector3.ZERO) -> void:
 ## Hitstop freezes locomotion and animation on this creature only. The manager
 ## remains alive to release it and never pauses the SceneTree.
 ##
-## Reduced motion (COMBAT hitstop contract, UX §8) keeps the locomotion freeze
+## Reduced motion (COMBAT hitstop contract, UX Â§8) keeps the locomotion freeze
 ## and the manager's clock pause, so timing and positions are unchanged, and
 ## skips only the visual freeze: the animation and flinch keep playing.
 func set_combat_hitstop(active: bool) -> void:
@@ -2604,7 +2604,7 @@ func set_traversal_pose(role: String) -> void:
 ##
 ## Being caught happens TO the body, so the body owns the two animations: being
 ## drawn into the orb, and bursting back out of it. Both animate the VISUAL
-## children only (`Model`, and the capsule fallback's `Body`/`Head`) — the
+## children only (`Model`, and the capsule fallback's `Body`/`Head`) â€” the
 ## gameplay node, its collider and its transform stay untouched, because a
 ## scaled CharacterBody3D is a physics problem and the fight still owns this
 ## node's position. Physics-clock tweens, for the same reason impact_flash.gd
@@ -2624,7 +2624,7 @@ func _visual_children() -> Array[Node3D]:
 
 
 ## Drawn into the orb: shrink toward the strike point, then hide. Replaces the
-## old presentation, which was `visible = false` on the strike frame — the
+## old presentation, which was `visible = false` on the strike frame â€” the
 ## creature POPPED out of existence, and the one moment the whole mechanic
 ## builds to had no body. Ends by hiding the node (which also disables physics
 ## and the collider, via `_on_visibility_changed`) and restoring the visual
@@ -2718,13 +2718,13 @@ static func yaw_in_parent(direction: Vector3, parent_basis: Basis) -> float:
 ##
 ## The ray used to be the whole implementation, and it was wrong. Downward rays
 ## against Terrain3D's heightmap collision miss roughly a quarter of the time at
-## points where the ground is definitely present — a shape query at the same
+## points where the ground is definitely present â€” a shape query at the same
 ## spot collides and the character walks over it happily, because `move_and_slide`
 ## uses shape casts and only rays lie. A wild creature placed by ray simply never
 ## spawned: no error, no body, no encounter.
 ##
-## The fallback stays for anything the terrain does not know about — a rock, a
-## structure, whatever M8 builds — where a ray is the only answer available.
+## The fallback stays for anything the terrain does not know about â€” a rock, a
+## structure, whatever M8 builds â€” where a ray is the only answer available.
 func place_on_ground(target: Vector3) -> bool:
 	if not is_inside_tree():
 		return false
