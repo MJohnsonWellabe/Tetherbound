@@ -432,7 +432,10 @@ func _capture_row(row: Dictionary) -> void:
 				_reject_stand(row, at, offset, lateral, "travel", "debug travel failed", {}, rejected)
 				continue
 			for _frame in ARRIVE_FRAMES:
-				await physics_frame
+				if bool(row.get("arrival_on_process_frame", false)):
+					await process_frame
+				else:
+					await physics_frame
 			terrain_ground = float(_world.call("ground_height_at", at.x, at.y))
 			if not is_finite(terrain_ground):
 				_reject_stand(row, at, offset, lateral, "ground", "non-finite terrain height", {}, rejected)

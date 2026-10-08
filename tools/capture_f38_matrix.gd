@@ -8,6 +8,7 @@ const GRAPHICS := preload("res://scripts/ui/graphics_prefs.gd")
 var _f38_weather := "clear"
 var _f38_preset := "High"
 var _f38_source := ""
+var _f38_views_supplied := false
 
 
 func _run() -> void:
@@ -26,6 +27,8 @@ func _parse_args() -> bool:
 			if _f38_source.is_empty():
 				push_error("F38 source commit cannot be empty when supplied")
 				return false
+		elif arg.begins_with("--views="):
+			_f38_views_supplied = true
 	if not _f38_source.is_empty():
 		var source_pattern := RegEx.new()
 		source_pattern.compile("^[0-9a-f]{40}$")
@@ -61,6 +64,9 @@ func _load_plan() -> bool:
 		for time_name: String in _times:
 			for weather_name: String in parsed.weather:
 				for view: Dictionary in parsed.views:
+					var selector := "close" if str(view.id) == "detail" else str(view.id)
+					if _f38_views_supplied and selector not in _views:
+						continue
 					var heading := float(site.heading_deg) + float(view.heading_offset_deg)
 					_planned.append({
 						"frame_id": "%s__%s__%s__%s" % [site.id, time_name, weather_name, view.id],
@@ -71,6 +77,7 @@ func _load_plan() -> bool:
 						"view_heading_deg": heading, "time": time_name, "view": view.id,
 						"weather": weather_name, "stand_offsets_m": [float(view.offset_m)],
 						"stand_laterals_m": [0.0], "preset": _f38_preset,
+						"arrival_on_process_frame": true,
 					})
 	return not _planned.is_empty()
 
@@ -82,6 +89,8 @@ func _begin_manifest() -> void:
 	var presentation: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/meadows_catalog_presentation.json"))
 	_manifest["shipping_presentation_enabled"] = bool(presentation.get("enabled", false)) if presentation is Dictionary else false
 	_manifest["preset"] = GRAPHICS.selected()
+	_manifest["f38_arrival_clock"] = "20 process_frame ticks; other capture defaults remain20 physics_frame"
+	_manifest["f38_explicit_view_filter"] = _views.duplicate() if _f38_views_supplied else []
 	_manifest["renderer"] = RenderingServer.get_current_rendering_method()
 	_manifest["candidate"] = OS.get_cmdline_user_args().has("--f38-candidate")
 	_manifest["fixture_limit"] = "Debug travel with strict fixed stands; real fight and earned F17 walk are separate required proofs. Rejected stands are missing evidence."
