@@ -31,18 +31,61 @@ export function readCompatibilityManifest(file) {
     review.record_url.trim().length > 0, 'Missing inline exact-cut compatibility reviewer verdict');
   for (const binding of data.prefix) {
     assert.ok(object(binding) && typeof binding.boundary === 'string' && binding.boundary.trim().length > 0 && hex(binding.producer_commit, 40) &&
-      hex(binding.receipt_sha256, 64) && hex(binding.log_sha256, 64) && hex(binding.artifact_sha256, 64) &&
-      typeof binding.run_id === 'string' && /^[1-9][0-9]*$/.test(binding.run_id) &&
-      typeof binding.artifact_id === 'string' && /^[1-9][0-9]*$/.test(binding.artifact_id) &&
+      hex(binding.receipt_sha256, 64) && hex(binding.log_sha256, 64) &&
       typeof binding.log_path === 'string' && binding.log_path.trim().length > 0 && object(binding.files_sha256) &&
       Object.keys(binding.files_sha256).length > 0 && Object.values(binding.files_sha256).every(hash => hex(hash, 64)),
     'Missing actual producer run/artifact/log/receipt/save bindings');
+    const producerKind = binding.producer_kind || 'github_actions';
+    if (producerKind === 'native_process') {
+      const native = binding.native_process_receipt;
+      assert.ok(!['run_id', 'artifact_id', 'artifact_sha256'].some(key => Object.hasOwn(binding, key)) &&
+        object(native) && typeof native.path === 'string' && native.path.trim().length > 0 &&
+        typeof native.stderr_path === 'string' && native.stderr_path.trim().length > 0 &&
+        hex(native.sha256, 64) && hex(native.stderr_sha256, 64),
+      'Native compatibility requires disjoint supervisor receipt and stderr bindings');
+      const processFile = path.resolve(path.dirname(file), native.path);
+      const stderrFile = path.resolve(path.dirname(file), native.stderr_path);
+      assert.equal(evidenceHash(processFile), native.sha256, 'Native supervisor receipt digest changed');
+      assert.equal(evidenceHash(stderrFile), native.stderr_sha256, 'Native stderr digest changed');
+      const processReceipt = JSON.parse(fs.readFileSync(processFile, 'utf8'));
+      assert.ok(object(processReceipt) && processReceipt.source === binding.producer_commit &&
+        processReceipt.exit_code === 0 && processReceipt.stop_reason === '' &&
+        Number.isSafeInteger(processReceipt.pid) && processReceipt.pid > 0,
+      'Native producer must finish successfully on its bound source');
+      const times = ['started_utc', 'finished_utc'].map(field => {
+        const stamp = processReceipt[field];
+        assert.equal(typeof stamp, 'string', 'Native supervisor requires UTC timestamps');
+        const match = stamp.match(/^([0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])T(?:[01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9])(?:\.([0-9]{1,9}))?Z$/);
+        assert.ok(match, 'Native supervisor timestamp must be strict UTC');
+        const epoch = Date.parse(match[1] + 'Z');
+        assert.ok(Number.isFinite(epoch) && new Date(epoch).toISOString().slice(0, 19) === match[1],
+          'Native supervisor timestamp must be a valid calendar date');
+        return BigInt(epoch / 1000) * 1000000000n + BigInt((match[2] || '').padEnd(9, '0'));
+      });
+      assert.ok(times[1] > times[0], 'Native supervisor finish must follow its start');
+      assert.ok(!/^(?:ERROR:|SCRIPT ERROR:|SCRIPTERROR:)/m.test(fs.readFileSync(stderrFile, 'utf8')),
+        'Engine errors invalidate native stderr');
+    } else {
+      assert.ok(producerKind === 'github_actions' && !Object.hasOwn(binding, 'native_process_receipt') &&
+        hex(binding.artifact_sha256, 64) && typeof binding.run_id === 'string' && /^[1-9][0-9]*$/.test(binding.run_id) &&
+        typeof binding.artifact_id === 'string' && /^[1-9][0-9]*$/.test(binding.artifact_id),
+      'Missing actual producer run/artifact/log/receipt/save bindings');
+    }
     assert.ok(hex(binding.save_tree_sha256, 64) && binding.save_tree_sha256 === saveTreeDigest(binding.files_sha256),
       'Missing or changed complete compatibility save-tree digest');
     const logFile = path.resolve(path.dirname(file), binding.log_path);
     assert.equal(evidenceHash(logFile), binding.log_sha256, 'Compatibility producer log digest changed');
     const text = fs.readFileSync(logFile, 'utf8');
     assert.ok(!/(?:SCRIPT ERROR:|^ERROR:)/m.test(text), 'Engine errors invalidate compatibility producer');
+    if (producerKind === 'native_process') {
+      assert.ok(!/^SCRIPTERROR:/m.test(text), 'Engine errors invalidate native stdout');
+      const results = text.split(/\r?\n/).filter(line => line.startsWith('EARNED CHAIN RESULT '))
+        .map(line => JSON.parse(line.slice('EARNED CHAIN RESULT '.length)));
+      assert.equal(results.length, 1, 'Exactly one actual native earned-chain result required');
+      assert.ok(object(results[0]) && results[0].segment === binding.boundary && results[0].passed === true,
+        'Native earned-chain result must pass its bound boundary');
+      assert.deepEqual(results[0].failures, [], 'Native earned-chain result must have no failures');
+    }
     const handoffs = text.split(/\r?\n/).filter(line => line.startsWith('F49 DISK HANDOFF '))
       .map(line => JSON.parse(line.slice('F49 DISK HANDOFF '.length)));
     assert.ok(handoffs.every(object), 'Malformed compatibility producer handoff');
