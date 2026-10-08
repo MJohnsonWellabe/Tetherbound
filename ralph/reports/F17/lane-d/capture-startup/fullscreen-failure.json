@@ -1,0 +1,40 @@
+{
+  "scope": "Actual fullscreen F17 attempt failed; no acceptance or visual PASS",
+  "source": "dd2d557630658cfff43c1c0773fdc349bcc40fca",
+  "producer": "ROOT native slot only; LaneD ran no engine",
+  "receipt": {
+    "stop_reason": "",
+    "pid": 19360,
+    "exit_code": 1,
+    "finished_utc": "2026-10-08T02:27:14.7271603Z",
+    "source": "dd2d557630658cfff43c1c0773fdc349bcc40fca",
+    "started_utc": "2026-10-08T02:22:24.5683803Z"
+  },
+  "invocation": [
+    "--path",
+    "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+    "--rendering-method",
+    "forward_plus",
+    "--fullscreen",
+    "--resolution",
+    "1920x1080",
+    "--script",
+    "tools/capture_f17_visual.gd",
+    "--",
+    "--preset=Medium",
+    "--paired-high",
+    "--source-commit=dd2d557630658cfff43c1c0773fdc349bcc40fca",
+    "--output=D:/CodexTemp/tetherbound-proof/native-d-dd2d557630-f17-fullscreen/frames"
+  ],
+  "native_resolution": [
+    1920,
+    1080
+  ],
+  "renderer": "forward_plus",
+  "complete": false,
+  "failure": "ordinary body/camera pose changed between paired time/weather/preset views",
+  "saved_views": 0,
+  "actual_progress": "Strict native startup passed; inherited physical walk began; first capture matrix comparison failed before any saved view",
+  "unretained": "Which existing body/yaw/camera translation/rotation operand failed; no sole cause inferred",
+  "next": "Original reviewer inspects source-supported same-budget idle camera stabilization; no unchanged replay/removed guard"
+}
