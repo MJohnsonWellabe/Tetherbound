@@ -250,9 +250,11 @@ func apply_admitted_dash(move: Dictionary, original: Dictionary, target: Node3D)
 		and arena.call("contains", global_position) == true and global_position.distance_to(start) <= requested + 0.001
 	if not safe: global_position = start
 	var gap := Vector2(global_position.x - target.global_position.x, global_position.z - target.global_position.z).length()
+	var collider: Object = collision.get_collider() if collision != null else null
 	var hit: bool = safe and collision != null and collision.get_collider() == target \
 		and gap <= body_radius() + float(target.call("body_radius")) + safe_margin * 2.0
 	var receipt := {"ok": true, "action_id": str(original.action_id), "binding": binding.duplicate(true),
+		"collider_instance_id": collider.get_instance_id() if is_instance_valid(collider) else 0,
 		"target_uid": str(original.target_uid), "target_generation": int(original.target_generation),
 		"target_body_instance_id": int(original.target_body_instance_id),
 		"requested_advance_metres": requested, "applied_advance_metres": start.distance_to(global_position),

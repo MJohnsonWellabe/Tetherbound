@@ -209,6 +209,7 @@ func _run() -> void:
 		await _wait_ready()
 		await _button(JOY_BUTTON_B, true)
 		await _button(JOY_BUTTON_B, false)
+		var wind_after_start: float = _manager.wind_value()
 		if _prove_utility == "heal_pulse":
 			_director.call("_retry_ordinary_actor_vitals")
 			_check(is_equal_approx(_creature.hp, hp_before) and is_equal_approx(_enemy.hp, foe_before),
@@ -227,8 +228,11 @@ func _run() -> void:
 		print("F23_UTILITY_OPERANDS " + JSON.stringify({"utility": _prove_utility, "accepted": accepted,
 			"proposals": proposals, "hp_before": hp_before, "hp_after": _creature.hp,
 			"foe_before": foe_before, "foe_after": _enemy.hp, "wind_before": wind_before,
-			"wind_after": _manager.wind_value(), "world_deliveries": _game.world.reward_deliveries}))
-		_check(_manager.wind_value() < wind_before, "mounted utility spends Wind")
+			"wind_after": _manager.wind_value(), "wind_after_start": wind_after_start,
+			"attacker_radius": _ally.call("body_radius"), "target_radius": _wild.call("body_radius"),
+			"attacker_safe_margin": _ally.get("safe_margin"), "target_safe_margin": _wild.get("safe_margin"),
+			"world_deliveries": _game.world.reward_deliveries}))
+		_check((_manager.wind_value() if _prove_utility == "heal_pulse" else wind_after_start) < wind_before, "mounted utility spends Wind")
 		if _prove_utility == "heal_pulse":
 			_check(_creature.hp > hp_before and _creature.hp <= _creature.max_hp, "saved mounted Heal increases only owned living HP")
 			_check(is_equal_approx(_enemy.hp, foe_before) and _impacts.is_empty(), "Heal has no hostile damage impact")
