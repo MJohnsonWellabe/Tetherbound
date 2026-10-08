@@ -167,5 +167,76 @@
       "Original blind visual verdict, still pending and not contacted."
     ],
     "limits": "Source/command/reuse applicability only. No engine/test/import/GPU/dispatch or pixels inspected. Failed 58bd artifact is preserved; no corrected runtime pass, visual improvement, P2-025/F40 criterion or whole-matrix acceptance is claimed."
+  },
+  "typed_fixture_3639815_and_affected_artifacts": {
+    "reviewed_at_utc": "2026-10-08T18:47:24.691941+00:00",
+    "source_commit": "36398150662fac450a4d0ac240cb07d9f4e700a6",
+    "base_commit": "6c9fefc20ed3392d3be5a55c16e00e7541420a13",
+    "source_test_delta_verdict": "APPROVE",
+    "affected_artifact_verdict": "APPROVE",
+    "findings": [],
+    "test_blob": "3707733c4bd987a7dcaade96cc2694709589e373",
+    "unchanged_production_world_blob": "b65107ac24413912ab6c7796faa5132d9a618694",
+    "verified_delta": [
+      "Only the existing Observatory test file changes among code paths: reflective cover.set(_exclusions,[exclusion]) becomes direct cover._exclusions = [exclusion], followed by a size==1 assertion. This uses the same statically typed assignment idiom as the passing selected existing grounded-route test.",
+      "The supplied-centre assertion, all five immediately inside/outside radius pairs, cross-stratum assertion and cleanup remain intact. No original Observatory test, assertion, runner, exclusion algorithm, config, production geometry or native capture guard is changed.",
+      "The added size guard detects missing sampler binding instead of allowing the outside/other-stratum negatives to appear meaningful with an empty exclusion list."
+    ],
+    "failed_6c_artifact": {
+      "verdict": "FAILED_PROOF",
+      "run_id": 37825396278,
+      "artifact_id": 11571391329,
+      "job_id": 113476838157,
+      "source_commit": "6c9fefc20ed3392d3be5a55c16e00e7541420a13",
+      "run_log": ".tmp/e-observatory-6c-37825396278/expanded/run.log",
+      "run_log_sha256": "64bf843b4a91b74c202a5c9c6a758c264f31db274c1d35e42566abdd8cddab21",
+      "job_log": ".tmp/e-observatory-6c-37825396278/job.log",
+      "job_log_sha256": "b435ee686c9b3cc6bc9b866e236e7a50a71b702b0339f7ecbb6830fe8220fb44",
+      "checkout_verified": true,
+      "selected_test_methods": 6,
+      "assertions": 105,
+      "failed_test_methods": 1,
+      "actual_failures": "All five inside-perimeter assertions in the new paving method report expected true, got false. No SCRIPT ERROR appears in this raw run log.",
+      "job_terminal_exit_code": 1,
+      "job_terminal_line": 5020,
+      "artifact_limit": "No expanded exit_code exists for this failed packet; exit 1 is independently supported by actual job terminal output. Failed assertion totals are supported by raw run.log, not a green workflow label.",
+      "preservation": "Prior failed 58bd null-main-loop/leak packet remains unchanged in the earlier report entry. The previous 6c source/command approval was applicability only and does not promote this failed runtime."
+    },
+    "passing_363_artifact": {
+      "verdict": "APPROVE",
+      "run_id": 37825912444,
+      "artifact_id": 11571237511,
+      "job_id": 113478622820,
+      "source_commit": "36398150662fac450a4d0ac240cb07d9f4e700a6",
+      "run_log": ".tmp/e-observatory-typed-37825912444/expanded/run.log",
+      "run_log_sha256": "15e63fff271653ff507fb350635a60bc5fcae5587d37eea3334b4bd51d48d2cc",
+      "job_log": ".tmp/e-observatory-typed-37825912444/job.log",
+      "job_log_sha256": "c403fb63472461da95224763a7de512f000b9723e4085fe684204e5e3e00ab7e",
+      "exit_code_path": ".tmp/e-observatory-typed-37825912444/expanded/exit_code",
+      "engine": "Godot 4.7.stable.official.5b4e0cb0f",
+      "checkout_verified": true,
+      "checkout_binding_lines": [
+        256,
+        273,
+        276
+      ],
+      "selector": "--only=test_cloudreach_old_wind_observatory_presentation.gd,test_cloudreach_grass_roles.gd::test_grounded_route_exclusions_use_corrected_height_without_crossing_strata",
+      "selected_files": 2,
+      "test_methods": 6,
+      "assertions": 106,
+      "failed": 0,
+      "exit_code": 0,
+      "elapsed_seconds": 7,
+      "raw_run_errors_or_warnings": [],
+      "verification": "Job argv and actual checkout/rev-parse bind the exact source; raw run.log hash matches the supplied frozen hash. Expanded exit_code is 0 and actual job terminal/producer output agrees. The new paving method reports ok with no script abort; its unchanged unconditional five-direction loop and the additional typed-size guard therefore execute within the 106-assertion result. All five other selected methods also report ok. No engine/script errors or warnings occur in the actual raw run or corresponding job output (workflow grep-command text is not a diagnostic)."
+    },
+    "proof_scope": "Headless descriptor construction, supplied-centre preservation, typed sampler binding, five inside/outside perimeter checks and height-aware other-stratum behavior, plus unchanged existing Observatory identity/geometry/config/sighting tests and selected grounded-route regression. No actual production landmark registration/cover build, rendered paving or native pose is proved by this fixture.",
+    "native_applicability": "Production is unchanged from 6c; prior approved 58bd native semantic applicability remains. No completed native baseline/candidate pair or native PASS is claimed.",
+    "reported_native_queue_state_not_audited_here": "ROOT reports baseline 58e STOPPED by OWNER_GAME at 18:42 with exit 1, candidate not launched; ROOT alone will queue fresh unique outputs. This bounded review does not inspect/promote that native packet.",
+    "remaining_gates": [
+      "ROOT-owned complete actual baseline/candidate native evidence with registration/pose/raster/source provenance.",
+      "Original blind visual verdict; blind remains idle, no contact by reviewer."
+    ],
+    "limits": "Only the test delta and supplied frozen affected artifacts were inspected; no engine/tests/import/GPU/dispatch performed. No native/art/whole criterion approval, no added review loop or broader passing suite required by this verdict. All prior approvals and failed receipts are preserved."
   }
 }
