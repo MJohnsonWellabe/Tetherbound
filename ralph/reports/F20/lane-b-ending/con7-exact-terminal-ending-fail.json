@@ -1,0 +1,55 @@
+{
+  "feature": "F20",
+  "criteria": ["F20#1", "F20#4"],
+  "disposition": "FAIL; parked after two changed attempts; no new READY",
+  "source_sha": "5c84fd86f4b53f9467145fff86a36c9f99e0edba",
+  "run_id": 37723819940,
+  "artifact_id": 11526818581,
+  "script": "tests/smoke_net_f20_ending.gd",
+  "renderer": "Compatibility",
+  "resolution": "1280x720",
+  "workflow_conclusion": "failure",
+  "run_step_started_utc": "2026-10-08T03:42:08Z",
+  "run_step_completed_utc": "2026-10-08T03:50:42Z",
+  "exit_code_marker": "not uploaded; existing workflow exits failed Run step before marker",
+  "setup": "Existing disclosed post-finale fixture in two real isolated ENet processes; not an earned campaign",
+  "packet": "37723819940/artifact/tree/ralph/reports/F20/ending-runtime/net-run-local-11114517",
+  "actual": {
+    "net_run_fatal": "",
+    "net_run_failure": "peer 1 f20_talk: natural Grandpa completion receives durable personal acknowledgement",
+    "host": {
+      "character_id": "character-a6dcd941e511999aebbefc02cfa68fe4",
+      "homecoming_saved_decision_observed": true,
+      "credits_opened_and_skip_saved_once": true,
+      "ordinary_repeat_passed": true
+    },
+    "guest": {
+      "character_id": "character-029ae9be4ad9abacf0af4dd2aed4a429",
+      "authored_lines_and_actual_presses": 11,
+      "dialogue_completed": "regional_homecoming_5",
+      "presentation_ended": "deadline passed=true journalled=false; moved=[]",
+      "credits_requested": false,
+      "terminal_input_owner": "/root/Game/Session",
+      "observed_ack_decision": {},
+      "terminal_host_disk_row_status": "accepted",
+      "terminal_host_disk_character_revision": 3,
+      "terminal_host_disk_journal_revision": 2,
+      "terminal_guest_disk_homecoming_receipt_count": 1
+    },
+    "peer_log_engine_and_script_error_gate": "PASS",
+    "new_ledger_refusal_diagnostic": "none"
+  },
+  "independent_review": {
+    "agent": "b_f20_review",
+    "source": "APPROVE; exact terminal acknowledgement oracle and original deadlines retained",
+    "actual": "FAIL confirmed; saved acceptance occurred by terminal disk, after presentation had stopped observing its original journal"
+  },
+  "cause_limit": "The presentation gave up before observing its original journal. Why arrival/observation was late is not established. Do not claim final host row pending, unpaid transaction, guided-travel regression, flake, or a passing ending.",
+  "previous_changed_attempt": {
+    "run_id": 37722882380,
+    "source_sha": "e1c7b1187b1043d5144d0687d4cc80969bb54c96",
+    "artifact_id": 11526483479,
+    "failure": "Parse error on inferred acknowledged type before travel; corrected to explicit bool in 5c84"
+  },
+  "remaining": ["Coordinator re-scope for supported late-observation repair", "Actual two-peer homecoming and credits through disconnect/reload", "Separate water-return bounce remains parked"]
+}
