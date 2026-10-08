@@ -96,6 +96,15 @@ func _run() -> void:
 	_strip.call("update_from_party", PARTY, 0)
 	_strip.call("set_pinned", true)
 	_strip.call("show_strip")
+	# Populate the existing ultimate row with the real starter move name and
+	# ready instruction; an empty dynamic label cannot witness its wrapping.
+	var ultimate := _hud.get("_ultimate_readout") as RichTextLabel
+	ultimate.text = "%s %s · release → move" % [
+		preload("res://scripts/ui/input_glyph.gd").icon("combat_ultimate_arm",
+			_hud.get_script().get_script_constant_map()["CELL_GLYPH_PX"], Color.WHITE, "gamepad"),
+		_hud.call("_move_name", "ultimate_terrapup", "Ultimate")]
+	if ultimate.get_theme_font_size("normal_font_size") < preload("res://scripts/ui/ui_tokens.gd").FONT_PROMPT:
+		_failures.append("ultimate instruction is below the existing handheld prompt floor")
 	for i in SETTLE:
 		await process_frame
 	_strip.call("set_rest_position", _hud.call("_party_strip_position"))
