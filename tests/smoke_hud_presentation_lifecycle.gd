@@ -144,6 +144,7 @@ func _run()->void:
 	_check(hud._hotbar_panel.visible,"Exploration restores hotbar")
 	_check(combat._outcome.text.is_empty(),"Exploration does not revive stale result")
 	await _full_party_moment_layout()
+	await _named_wild_reward_layout()
 	await _progression_reset_and_modal_lifecycle(member)
 	print("HUD LIFECYCLE %s: %d checks"%["PASS" if failures.is_empty() else "FAIL",checks])
 	world.queue_free()
@@ -157,6 +158,40 @@ func _run()->void:
 			cue.stream = null
 	await create_timer(0.15).timeout
 	quit(0 if failures.is_empty() else 1)
+
+
+## The production named-wild acknowledgement uses the same passive reward
+## lane as trainer payouts, while utility refusals stay beside their controls.
+func _named_wild_reward_layout() -> void:
+	hud.set_world_presentation_mode("exploration")
+	FEED.clear()
+	hud._update_moment_banner()
+	hud._hotbar_message.hide()
+	var parsed: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
+		"res://data/config/stormwood_encounters.json"))
+	var acknowledgement := ""
+	for encounter: Dictionary in parsed.get("named_encounters", []):
+		if str(encounter.get("id", "")) == "hollows_alpha":
+			acknowledgement = str(encounter.get("completion_reward", {}).get("acknowledgement", ""))
+	_check(not acknowledgement.is_empty(), "Named victory uses the actual authored Hollows acknowledgement")
+	if acknowledgement.is_empty():
+		return
+	var candy_before: int = game.inventory.count("great_candy")
+	game.push_world_message(acknowledgement)
+	hud._update_world_message()
+	hud._update_moment_banner()
+	hud._apply_presentation_priority()
+	await _frames(10)
+	_check(hud.moment_banner_visible(), "Named victory reaches the existing progression presenter")
+	_check(hud.moment_banner_text().contains(acknowledgement), "Named receipt preserves authority's exact acknowledgement")
+	_check(not hud._hotbar_message.visible, "Named receipt leaves the quick-binding message strip")
+	_check(not hud.moment_banner_rect().intersects(hud._hotbar_panel.get_global_rect()), "Named receipt clears the actual quick bindings")
+	_check(not hud.moment_banner_rect().intersects(hud._party_strip.get_global_rect()), "Named receipt clears the five-creature roster")
+	_check(game.inventory.count("great_candy") == candy_before, "Presenting a named acknowledgement grants no items")
+	await _capture("after-named-wild-reward")
+	game.push_world_message("No torch in the satchel.")
+	hud._update_world_message()
+	_check(hud._hotbar_message.visible and hud._hotbar_message.text == "No torch in the satchel.", "Utility refusal retains the existing hotbar route")
 
 
 func _full_party_moment_layout() -> void:
