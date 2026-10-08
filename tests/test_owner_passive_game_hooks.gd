@@ -1,7 +1,8 @@
 extends "res://tests/test_case.gd"
 
 ## Actual Game/MapState/Backpack methods in an initialized native child.
-## Session recording and maintenance are disclosed doubles; no transport proof.
+## Session recording, maintenance and equipment settlement are disclosed doubles;
+## the equipment proposal uses the production planner, not a transport/save proof.
 const NATIVE := preload("res://tests/helpers/passive_native_case.gd")
 const GAME_FIXTURE := preload("res://tests/test_canonical_guest_passive_fence.gd")
 const PLAYER_FIXTURE := preload("res://tests/test_den_groom_saved_transaction.gd")
@@ -11,6 +12,10 @@ const REPLAY := preload("res://scripts/net/owner_passive_replay.gd")
 const FEED := preload("res://scripts/creatures/progression_feed.gd")
 
 class RecordingSession extends Node:
+	signal homestead_action_completed(action: String, original: Dictionary, result: Dictionary)
+	var game: Node
+	var equipment_revision := 0
+	var equipment_requests := 0
 	var blocked := false
 	var active := true
 	var canonical := false
@@ -20,6 +25,25 @@ class RecordingSession extends Node:
 	func canonical_guest_passive() -> bool: return canonical
 	func owner_passive_recording_active() -> bool: return active
 	func record_owner_passive_input(packet: Dictionary) -> void: packets.append(packet.duplicate(true))
+	func homestead_personal_view() -> Dictionary: return {"registry_revision": equipment_revision}
+	func personal_equipment_scope() -> Dictionary: return {"character_id": str(game.local.character_id)}
+	func retained_training_transaction(_actions: Array) -> Dictionary: return {"status": "none"}
+	func personal_equipment_submit(intent: Dictionary, revision: int, scope: Dictionary) -> Dictionary:
+		equipment_requests += 1
+		if blocked or revision != equipment_revision or scope != personal_equipment_scope():
+			return {"ok": false, "terminal_refusal": true, "reason": "fixture equipment scope changed"}
+		var before: Dictionary = RECORD.portable_projection(game.local.save_data())
+		var proposed: Dictionary = preload("res://scripts/net/foundation_actions.gd")._trainer_equip(before, intent,
+			{"station_kind": "personal_equipment", "owns_character": true,
+			"source_key": "personal_equipment:" + str(before.character_id)})
+		if proposed.get("ok") != true: return proposed
+		game.player_equipment.load_data(proposed.state.equipment)
+		game.inventory = preload("res://scripts/world/death_satchel_rules.gd").inventory_from(proposed.state.inventory)
+		game.local.redesign_character.transaction_receipts = proposed.state.redesign_character.transaction_receipts.duplicate()
+		equipment_revision += 1
+		# Disclosed simulated settlement only; the real controller smoke owns
+		# journal/owner-save proof. A blocked consumer must never call this.
+		return {"ok": true, "settled": true, "durable": true, "owner_saved": true, "owner_acknowledged": true}
 
 class MenuFixture extends Node:
 	var game: Node
@@ -42,6 +66,7 @@ func _native_setup() -> void:
 	game.actor = Node3D.new()
 	(Engine.get_main_loop() as SceneTree).root.add_child(game.actor)
 	owner_session = RecordingSession.new()
+	owner_session.game = game
 	game.session = owner_session
 	game.quest_log = GAME_FIXTURE.QuestFixture.new()
 	var map := MAP.new()
@@ -188,6 +213,7 @@ func _native_case_backpack_target_guard_precedes_any_care_or_item_write() -> voi
 	tab.call("_equip", "travel_pack")
 	assert_eq(var_to_bytes(RECORD.portable_projection(game.local.save_data())), packed,
 		"pending owner decision preserves both the selected bag piece and equipment")
+	assert_eq(owner_session.equipment_requests, 0, "blocked Equip never reaches the canonical producer")
 	assert_eq(menu.messages.size(), 4)
 	owner_session.blocked = false
 	tab.call("_equip", "travel_pack")
@@ -198,6 +224,7 @@ func _native_case_backpack_target_guard_precedes_any_care_or_item_write() -> voi
 	tab.call("_unequip", "backpack")
 	assert_eq(var_to_bytes(RECORD.portable_projection(game.local.save_data())), worn,
 		"pending owner decision preserves the worn piece and every bag slot")
+	assert_eq(owner_session.equipment_requests, 1, "blocked Unequip never reaches the canonical producer")
 	assert_eq(menu.messages.size(), 6)
 	owner_session.blocked = false
 	tab.call("_unequip", "backpack")
