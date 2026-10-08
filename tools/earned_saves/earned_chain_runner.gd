@@ -774,6 +774,12 @@ func _generated_chapter() -> void:
 		"--disable-render-loop","--audio-driver","Dummy","--resolution","1280x720",
 		"--script","res://tests/smoke_f19_campaign_functional.gd","--","--generated-fixture",
 		"--meadows-piece-prefix","--handoff-from=" + handoff_from,"--through-boundary=" + str(CHAPTER_SEGMENTS[segment])]
+	# The parent validated these existing reader options; the chapter runs in
+	# a child process, whose ordinary lesson reader needs the same request.
+	for arg: String in OS.get_cmdline_user_args():
+		if arg in ["--lesson-controller-witness", "--lesson-replay-witness", "--capture-lessons"] \
+				or arg.begins_with("--lesson-skip-line"):
+			command.append(arg)
 	var exit := OS.execute(OS.get_executable_path(), command, output, true)
 	for text: String in output: print(text)
 	print("GENERATED CHAPTER PROCESS " + JSON.stringify({"segment":segment,"input_mode":"generated_fixture",
