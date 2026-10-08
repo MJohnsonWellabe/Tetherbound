@@ -596,7 +596,14 @@
         "data/config/water_roster.json": 2
       },
       "status": "source_audited_visual_proof_pending",
-      "candidate_enabled": false
+      "candidate_enabled": false,
+      "f36_confirmation": {
+        "receipt": "ralph/reports/F36/installed-confirmations/tuskroot-receipt.json",
+        "judge": "/root/blind_listener_f10",
+        "verdict": "BLOCK",
+        "identity": "PASS",
+        "scope": "Installed unchanged standing/studio only, notconfirmed; unseenposes/motion/habitat/fullF36 OPEN"
+      }
     },
     {
       "id": "ashtusk",
@@ -658,7 +665,14 @@
         "data/config/water_world.json": 2
       },
       "status": "source_audited_visual_proof_pending",
-      "candidate_enabled": false
+      "candidate_enabled": false,
+      "f36_confirmation": {
+        "receipt": "ralph/reports/F36/installed-confirmations/cannonback-receipt.json",
+        "judge": "/root/blind_listener_f10",
+        "verdict": "BLOCK",
+        "identity": "PASS",
+        "scope": "Installed unchanged standing/studio only, notconfirmed; unseenposes/motion/habitat/fullF36 OPEN"
+      }
     },
     {
       "id": "stormcapra",
