@@ -1,0 +1,83 @@
+{
+  "scope": "Two original blind observed residual left-rock foliage gaps; bounded config-only support opt-in plus existing smoke assertions",
+  "prior_capture_source": "b471e4e2d50fde3bd71512a448fcc7ea8cb5e927",
+  "prior_run": 37758546860,
+  "prior_blind_verdict": "mesh-root/blind-pq-verdict.json all-visible Q BLOCK",
+  "mapped_nodes": [
+    {
+      "path": "AuthoredRouteDetails/ArrivalStoneGarden/Bush02",
+      "declared_mesh_height_m": 1.75,
+      "approx_reverse_screen_xy": [
+        473.3353579066701,
+        339.6811721655811
+      ]
+    },
+    {
+      "path": "AuthoredRouteDetails/ArrivalStoneGarden/Flowers03",
+      "declared_mesh_height_m": 0.8,
+      "approx_reverse_screen_xy": [
+        529.3119043946903,
+        343.78898510867435
+      ]
+    }
+  ],
+  "projection_method": "Production anchor + normalized forward/right * authored offset; approximate vertical centre uses anchor Y + half declared height; actual saved production camera basis/origin, vertical70deg FOV1280x720. Approximate identity mapping only, not an actual surface/contact probe.",
+  "flower_asset_sha256": "1fed797eb20bf1ea37599c66eb8a32d678f99e91bbbb0c3443f001ca33b0b350",
+  "flower_nodes": [
+    {
+      "mesh": 0,
+      "name": "Bush_Common_Flowers"
+    }
+  ],
+  "flower_bounds": [
+    {
+      "min": [
+        -0.9234761595726013,
+        -0.234694704413414,
+        -0.9743891954421997
+      ],
+      "max": [
+        0.9913685917854309,
+        1.3470909595489502,
+        0.9907516837120056
+      ]
+    },
+    {
+      "min": [
+        -0.7453983426094055,
+        0.2586841881275177,
+        -0.9251851439476013
+      ],
+      "max": [
+        0.9718135595321655,
+        1.328537940979004,
+        0.98771071434021
+      ]
+    }
+  ],
+  "flower_material_alpha": [
+    {
+      "name": "Leaves_NormalTree",
+      "alpha_mode": "MASK",
+      "alpha_cutoff": 0.20000000298023224
+    },
+    {
+      "name": "Flowers",
+      "alpha_mode": "MASK",
+      "alpha_cutoff": 0.20000000298023224
+    }
+  ],
+  "asset_fact": "Identity importer node; leaf primitive has exact Bush_Common AABB; additional flower primitive lies above native zero. Native importer origin is not asserted to be a botanical root.",
+  "change": "Only these two config items add existing grounding mesh_root; no blind burial-number tuning; same previously verified floor-support code.",
+  "preserved": [
+    "model scale",
+    "authored XZ and yaw",
+    "assets and materials",
+    "paths",
+    "collision",
+    "flags",
+    "world placement algorithm"
+  ],
+  "reuse": "Existing b471 161 tests/4288 assertions covers identical world placement source; new physical3root area and changed visual required.",
+  "proof_state": "pending original source review, actual affected area and matched original blind frames; no F40 closure"
+}

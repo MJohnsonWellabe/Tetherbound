@@ -393,8 +393,8 @@
         "items": [
           {"asset": "rock", "offset": [-7.8, 1.0], "height_m": 2.6, "yaw_deg": 74.0, "bury_m": 0.4},
           {"asset": "rock_low", "offset": [-5.5, -1.0], "height_m": 1.1, "yaw_deg": 8.0, "bury_m": 0.2},
-          {"asset": "bush", "offset": [-6.0, 3.0], "height_m": 1.75, "yaw_deg": 83.0},
-          {"asset": "flowers", "offset": [-4.8, 1.0], "height_m": 0.8, "yaw_deg": 14.0},
+          {"asset": "bush", "offset": [-6.0, 3.0], "height_m": 1.75, "yaw_deg": 83.0, "grounding": "mesh_root"},
+          {"asset": "flowers", "offset": [-4.8, 1.0], "height_m": 0.8, "yaw_deg": 14.0, "grounding": "mesh_root"},
           {"asset": "bush", "offset": [6.4, 11.0], "height_m": 1.4, "yaw_deg": 30.0, "grounding": "mesh_root"}
         ]
       },

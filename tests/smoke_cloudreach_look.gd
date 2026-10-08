@@ -119,33 +119,36 @@ func _run() -> void:
 	print("  route verges: %d routes, %d supported stations, %d plants, %d stones, %d committed instances" % [
 		int(look.call("route_verge_route_count")), verge_stations, verge_plants, verge_stones, committed_instances])
 
-	# F40: inspect the real shrub root against a short physical-floor probe,
+	# F40: inspect the real shrub roots against a short physical-floor probe,
 	# independently of the registered road height and transparent-card AABB.
-	var arrival_shrub := world.get_node_or_null("AuthoredRouteDetails/ArrivalStoneGarden/Bush04") as Node3D
-	_expect(arrival_shrub != null, "arrival shrub has no supported production placement", failures)
-	var model: Node3D = null
-	if arrival_shrub != null:
-		_expect(arrival_shrub.get_child_count() == 1,
-			"arrival shrub must contain exactly one imported model", failures)
-		if arrival_shrub.get_child_count() == 1:
-			model = arrival_shrub.get_child(0) as Node3D
-		_expect(model != null, "arrival shrub imported model is not Node3D", failures)
-	if model != null:
-		var root_at := model.global_position
-		var query := PhysicsRayQueryParameters3D.create(root_at + Vector3.UP * 0.75,
-			root_at - Vector3.UP * 2.0, 1)
-		var hit := model.get_world_3d().direct_space_state.intersect_ray(query)
-		_expect(not hit.is_empty(), "arrival shrub root has no physical floor", failures)
-		if not hit.is_empty():
-			_expect(absf(root_at.y - hit.position.y) < 0.005,
-				"arrival shrub native root does not meet its physical floor", failures)
-			var bounds_tool := preload("res://scripts/world/building_prefabs.gd").new()
-			var bounds: AABB = bounds_tool.combined_aabb(model)
-			_expect(absf(bounds.size.y * model.scale.y - 1.4) < 0.0001,
-				"arrival shrub's 1.4m mesh size changed", failures)
-			var legacy_at := Vector3(arrival_shrub.global_position.x, 108.75, arrival_shrub.global_position.z)
-			print("  arrival shrub root: physical=%s native=%s registered=%s mesh_height=%s" % [
-				hit.position.y, root_at.y, world.call("_route_detail_ground", legacy_at), bounds.size.y * model.scale.y])
+	for shrub: Dictionary in [{"node": "Bush04", "height_m": 1.4},
+			{"node": "Bush02", "height_m": 1.75}, {"node": "Flowers03", "height_m": 0.8}]:
+		var label := str(shrub.node)
+		var arrival_shrub := world.get_node_or_null("AuthoredRouteDetails/ArrivalStoneGarden/" + label) as Node3D
+		_expect(arrival_shrub != null, label + " has no supported production placement", failures)
+		var model: Node3D = null
+		if arrival_shrub != null:
+			_expect(arrival_shrub.get_child_count() == 1,
+				label + " must contain exactly one imported model", failures)
+			if arrival_shrub.get_child_count() == 1:
+				model = arrival_shrub.get_child(0) as Node3D
+			_expect(model != null, label + " imported model is not Node3D", failures)
+		if model != null:
+			var root_at := model.global_position
+			var query := PhysicsRayQueryParameters3D.create(root_at + Vector3.UP * 0.75,
+				root_at - Vector3.UP * 2.0, 1)
+			var hit := model.get_world_3d().direct_space_state.intersect_ray(query)
+			_expect(not hit.is_empty(), label + " root has no physical floor", failures)
+			if not hit.is_empty():
+				_expect(absf(root_at.y - hit.position.y) < 0.005,
+					label + " native root does not meet its physical floor", failures)
+				var bounds_tool := preload("res://scripts/world/building_prefabs.gd").new()
+				var bounds: AABB = bounds_tool.combined_aabb(model)
+				_expect(absf(bounds.size.y * model.scale.y - float(shrub.height_m)) < 0.0001,
+					label + " declared mesh size changed", failures)
+				var legacy_at := Vector3(arrival_shrub.global_position.x, 108.75, arrival_shrub.global_position.z)
+				print("  arrival shrub %s root: physical=%s native=%s registered=%s mesh_height=%s" % [
+					label, hit.position.y, root_at.y, world.call("_route_detail_ground", legacy_at), bounds.size.y * model.scale.y])
 
 	if failures.is_empty():
 		var grid: Dictionary = look.call("cover_fill_grid")

@@ -401,6 +401,22 @@
       "run_log_sha256": "baf3b0483badb8801e1a42a5d6b897c010eda57ea6ee2347475d808bb5d399b5",
       "limits": "No segment/full-matrix, >=200-frame, High/Medium, performance or F40 criterion PASS. Exact camera/player positions do not imply identical live creature poses or simulation time. Original blind visual disposition remains pending; reviewer did not contact the judge or alter mapping."
     },
+    "residual_cluster_candidate": {
+      "source_verdict": "APPROVE bounded reuse of the existing opt-in native-origin support placement",
+      "review_base_commit": "aad3b8241a8b282925424aaafdcfc46624e4d7d9",
+      "reviewed_worktree_blobs": {
+        "data/config/cloudreach_visual.json": "a25e56b91f6dbda0a594ec511d772058c50eed24",
+        "tests/smoke_cloudreach_look.gd": "af26ae02972765effe80de217a9cb0ed39ee0687"
+      },
+      "scope": "ArrivalStoneGarden items2 Bush02 and3 Flowers03 add grounding=mesh_root. Original Bush04 remains enabled. No world algorithm, size, XZ, yaw, asset, collision, durable state or flag changes.",
+      "asset_source_facts": "Installed flowers asset is Bush_Common_Flowers.gltf with one identity-transform mesh node and two MASK primitives. The lower leaf primitive shares Bush_Common Y bounds; flower geometry sits above it. Native zero remains an importer anchor, not a biological-root assertion.",
+      "existing_smoke_extension": "Same existing method iterates Bush04 at1.4m, Bush02 at1.75m and Flowers03 at0.8m. Each requires an existing Node3D prop, exactly one imported Node3D child, a short physical floor ray, root difference below0.005m and declared mesh size within0.0001m. Missing/malformed models fail; previous assertions remain.",
+      "logic_reuse": "b471 selected24files161tests4288assertions evidence applies to unchanged placement algorithm and source. Its isolated TestMesa outside-tree diagnostic remains disclosed; do not relabel the old batch clean. The changed opt-in items require actual three-root production area and changed matched visual proof.",
+      "camera_subject_mapping_limit": "Parent projection associates the residual reverse-view cluster with these two authored props; source position and asset facts justify a bounded candidate, not an independently proven pixel identity or causal visual repair.",
+      "required_proofs": "Changed-source existing area must execute all three root/size checks; matched affected images and original blind verdict remain pending. No repeated unchanged unit batch required.",
+      "whole_F40_5": "OPEN/BLOCK",
+      "findings": []
+    },
     "final_component_disposition": {
       "verdict": "APPROVE retaining the bounded mesh-root arrival-shrub support fix",
       "original_blind_receipt": "ralph/reports/F40/arrival-shrub/mesh-root/blind-pq-verdict.json",
