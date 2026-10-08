@@ -5,6 +5,8 @@ extends "res://tools/net/peer_runner.gd"
 ## fixtures. Producer trees are digested on the peer (SHA-256 of the full
 ## structural record) so the control channel carries a compact row.
 var _hall_pin: Dictionary = {}
+const HALL_BOUNTY := preload("res://scripts/world/bounty_board.gd")
+const HALL_WORLD := preload("res://autoload/world_state.gd")
 
 func _execute_step(msg: Dictionary) -> Dictionary:
 	var action := str(msg.get("action", ""))
@@ -142,6 +144,10 @@ func _hall_capture(args: Dictionary) -> Dictionary:
 	while Time.get_ticks_msec() < deadline:
 		await physics_frame
 		var guard := _hall_guard()
+		if not _hall_initial_morning_ready(guard):
+			stable = 0
+			prior = {}
+			continue
 		stable = stable + 1 if not guard.is_empty() and guard == prior else 0
 		prior = guard
 		if stable >= 30:
@@ -155,6 +161,31 @@ func _hall_capture(args: Dictionary) -> Dictionary:
 			data["peer_runtime_path"] = get_script().resource_path
 			return {"verdict": "PASS", "detail": "30 independently stable admitted frames; captured real scene producers", "data": data}
 	return {"verdict": "FAIL", "detail": "admitted identity/receiver/map/display readiness did not stabilize in 20 s"}
+
+func _hall_initial_morning_ready(pin: Dictionary) -> bool:
+	if pin.is_empty(): return false
+	if HALL_BOUNTY.config().get("runtime_enabled") != true: return true
+	var world: RefCounted = root.get_node("Game").get("world")
+	var namespace_id := str(world.get("reward_delivery_namespace"))
+	var day := HALL_BOUNTY.host_day(world.get("redesign_world"))
+	for identity: Dictionary in pin.registry_rows:
+		var character := str(identity.get("character_id", ""))
+		var row := HALL_WORLD.training_owner_row(world.get("reward_deliveries"), namespace_id,
+			str(world.get("world_id")), character)
+		if character.is_empty() or row.get("status") != "accepted": return false
+		# A later valid accepted decision may carry the saved morning forward.
+		# Authenticate that portable prefix, rather than demand the latest action.
+		var personal: Dictionary = (row.get("after", {}) as Dictionary).get("redesign_character", {})
+		var board: Dictionary = personal.get("bounties", {})
+		if not HALL_BOUNTY.board_errors(board).is_empty() \
+				or board.get("anchor_world") != namespace_id or board.get("anchor_day") != day:
+			return false
+		var has_clock_receipt := false
+		for receipt: String in personal.get("transaction_receipts", []):
+			if receipt.begins_with("bounty:clock_") and receipt.ends_with(":" + character):
+				has_clock_receipt = true
+		if not has_clock_receipt: return false
+	return true
 
 func _hall_producers() -> Dictionary:
 	var villages: Array[Node] = []
