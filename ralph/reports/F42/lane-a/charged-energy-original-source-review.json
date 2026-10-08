@@ -8,5 +8,22 @@
   "proof_reason": "Existing capture checks visible charged bar against current owned resource and loaded cost, after UID guard; synchronous native draws preserve observation",
   "runtime_verdict": "PENDING",
   "visual_verdict": "PENDING",
-  "whole_criterion": "OPEN"
+  "whole_criterion": "OPEN",
+  "layout_sha": "ea75d7c0aae75ebc4b0b0cc1bc18b6926c358b54",
+  "duplicate_ultimate_sha": "6da6c3d9d901227ab0e1d68fc6a4f8c1ebf00626",
+  "duplicate_capture_guard_sha": "bc5b349e625d334d265ac20bb88dace0eb0813fb",
+  "additional_original_reviews": [
+    "APPROVE: full-rect offsets fit actual viewport; capture requires positive enclosed region bounds.",
+    "APPROVE: legacy ultimate controls restored each fighting frame and hidden only on accepted current-UID overlay refresh.",
+    "APPROVE: existing capture rejects either duplicate visible legacy control; actual visibility receipt; actions/budgets unchanged."
+  ],
+  "retained_logic": {
+    "failed": 0,
+    "qualification": "Predates four legacy visibility lines; latest-source runtime and visual remain pending. Broad77 PASS retained, not repeated.",
+    "assertions": 452,
+    "checkout_sha": "ea75d7c0aae75ebc4b0b0cc1bc18b6926c358b54",
+    "files": 8,
+    "tests": 81,
+    "run_id": 37719067951
+  }
 }
