@@ -1,0 +1,81 @@
+{
+  "source": "16beb4239fb2f71f4e257e21f9738bbf5928d744",
+  "run": 37744396901,
+  "artifact": 11536389692,
+  "exit_code": 124,
+  "elapsed_s": 2700,
+  "renderer": "gl_compatibility",
+  "native_resolution": [
+    1280,
+    720
+  ],
+  "presets": [
+    "Low"
+  ],
+  "complete": false,
+  "hall_stills_finished": false,
+  "manifest_failure": "",
+  "produced_frames": 4,
+  "expected_frames": 12,
+  "frames": [
+    {
+      "file": "0000-inside-Hall-nave-day-clear-low.png",
+      "native_size": [
+        1280,
+        720
+      ],
+      "sha256": "d4e435d3253c94245701710d5b0e289ae1321a7a8934f0b53c00f9eff478d361"
+    },
+    {
+      "file": "0001-inside-Hall-nave-night-clear-low.png",
+      "native_size": [
+        1280,
+        720
+      ],
+      "sha256": "771f234c3dec112eca278adbf88b79b722dac4bc5eec766cd7cf41006c4d4da7"
+    },
+    {
+      "file": "0002-inside-Hall-nave-day-rain-low.png",
+      "native_size": [
+        1280,
+        720
+      ],
+      "sha256": "90d17192afd4efe8926cfb82316c3beb57d2b0c010cd5a5277b1b257f2f7ec20"
+    },
+    {
+      "file": "0003-inside-Hall-nave-night-rain-low.png",
+      "native_size": [
+        1280,
+        720
+      ],
+      "sha256": "eaf6f68b29c97eae4b3ba65767edc934fbc95d6400b5f6fa2fd36349ea55d7a4"
+    }
+  ],
+  "completed_scope": "Physical farmhouse door to Main Street to Hall nave arrived; maximum_offroad=0.000. Four stationary nave day/night clear/rain images only.",
+  "missing_scope": [
+    "all eight arch approaches",
+    "all eight pedestal approaches",
+    "ordinary companion recall",
+    "companion clearance views",
+    "pedestal views",
+    "Medium/High capture",
+    "motion capture",
+    "earned route/device/co-op proof"
+  ],
+  "shortcuts": [
+    "inherited post-opening flags and starter",
+    "one inherited initial farmhouse placement",
+    "injected physical joypad bindings including ordinary companion recall",
+    "production frozen day/night and selected clear/rain weather; weather scheduler held only for stationary capture",
+    "separately marked farmhouse-light-off diagnostic restores all original light energies; excluded from acceptance"
+  ],
+  "warnings": [
+    "Unsupported graphics-driver VSync request",
+    "instance_reset_physics_interpolation() deprecation warning during terrain build"
+  ],
+  "disposition": "Second hosted attempt timed out at 2700s before the companion stage. Stop after two failed attempts; no third unchanged hosted run. No whole-criterion or live indoor-clearance claim.",
+  "stationary_frame_guards": {
+    "all_four_on_floor": true,
+    "all_four_same_body_and_camera_pose": true
+  }
+}

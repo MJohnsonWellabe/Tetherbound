@@ -1,0 +1,10 @@
+{
+  "source": "16beb4239fb2f71f4e257e21f9738bbf5928d744",
+  "run": 37743658809,
+  "artifact": 11534827020,
+  "exit_code": 1,
+  "elapsed_s": 11,
+  "frames": 0,
+  "cause": "Command omitted existing --expected-resolution=1280x720; native/root 1280x720 disagreed with default expected 1920x1080. Preflight correctly refused before world mount.",
+  "disposition": "Second command adds the exact existing 720 argument and a fresh output path; no source, guard or fixture change. No engine, room behavior or pixel claim from first attempt."
+}
