@@ -149,7 +149,9 @@ func _build_creature_bed(raw: Variant) -> void:
 		return
 	_bed = CREATURE_BED.new()
 	_bed.name = "CampCreatureBed"
-	_bed.position = Vector3(x, ground, z)
+	# Authored bed coordinates are world metres, while this rest root is
+	# already translated to the camp. Convert once before parenting the bed.
+	_bed.position = to_local(Vector3(x, ground, z))
 	_bed.rotation.y = deg_to_rad(float(spec.get("yaw_deg", 0.0)))
 	add_child(_bed)
 	_bed.call("build_real", false)
