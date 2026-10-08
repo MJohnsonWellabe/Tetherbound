@@ -149,7 +149,23 @@ func _native_case_backpack_target_guard_precedes_any_care_or_item_write() -> voi
 	game.items = preload("res://autoload/item_db.gd").new()
 	assert_eq(game.inventory.add("travel_pack", 1), 0)
 	assert_eq(game.inventory.add("berries", 4), 0)
+	assert_eq(game.inventory.add("potion_small", 1), 0)
+	var patient: RefCounted = game.party.at(0)
+	patient.hp = float(patient.max_hp) - 10.0
+	assert_true(game.assign_hotbar(0, "potion_small"))
 	var packed := var_to_bytes(RECORD.portable_projection(game.local.save_data()))
+	# Use the real field-consumption handler in the existing native case;
+	# this detached Label receives its toast, not a visual/layout witness.
+	var hud := preload("res://scripts/ui/playground_hud.gd").new()
+	var message := Label.new()
+	hud.add_child(message)
+	hud.set("_game", game)
+	hud.set("_party", game.party)
+	hud.set("_hotbar_message", message)
+	hud.call("_use_hotbar_slot", 0)
+	assert_eq(var_to_bytes(RECORD.portable_projection(game.local.save_data())), packed,
+		"pending owner decision preserves both the quick-bar item and creature health")
+	assert_eq(message.text, "Saving your last action. Try again in a moment.")
 	var held_slot := -1
 	var berry_slot := -1
 	for index: int in game.inventory.slot_count():
@@ -193,6 +209,10 @@ func _native_case_backpack_target_guard_precedes_any_care_or_item_write() -> voi
 	for index: int in game.inventory.slot_count():
 		if game.inventory.stack_at(index).get("id") == "berries": berry_stacks += 1
 	assert_eq(berry_stacks, 2, "ordinary split makes exactly two stacks")
+	hud.call("_use_hotbar_slot", 0)
+	assert_eq(patient.hp, patient.max_hp, "ordinary quick-bar healing still works after settlement")
+	assert_eq(game.inventory.count("potion_small"), 0, "ordinary quick-bar healing spends exactly the original dose")
+	hud.free()
 	tab.free()
 	menu.free()
 	_native_completed = true
