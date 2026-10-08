@@ -1,0 +1,219 @@
+{
+  "schema_version": 1,
+  "reviewer": {
+    "name": "blind_listener_f10",
+    "id": "01a11667-4631-72b2-8fed-294999b8c043",
+    "role": "retained original independent code-blind visual judge"
+  },
+  "criterion": "F41#0",
+  "criterion_source": "D:/tetherbound/codex-e/docs/ACCEPTANCE.md:180",
+  "literal_requirement": "After F26 look-dev, the biome is re-captured (≥200 frames) and its catalog rows re-scored against the new bar.",
+  "scope": "Independent completeness judgment of the supplied score assembly against the original judge's own evidence records. No new per-row rating, broad pixel re-audit, source verification or full art-quality acceptance.",
+  "verdict": "PASS",
+  "reason": "The retained post-F26 240-frame Low/Compatibility recapture was already inspected by this original judge. It exceeds the literal 200-frame minimum. The supplied assembly represents all 44 catalogue IDs exactly once, with numeric severity/exposure/importance in 1–5 and correct products, and matches the original judge-recorded values for 36 primary rows, six current context rows, current P2-111 and current P2-110. Each row has an evidence-supported new-bar assessment; no remaining wholly unassessed row or invented score is used to fill the set. Seventeen entries explicitly remain partial assessments of pictured aspects. Criterion (0) requires recapture and row rescoring, not defect removal or exhaustive full-matrix acceptance; those limitations therefore remain visible rather than being promoted to full-row art acceptance.",
+  "checks": {
+    "recapture": {
+      "verdict": "PASS",
+      "retained_frames": 240,
+      "minimum": 200,
+      "original_independent_contact_pages": 15,
+      "original_contact_cells": 240,
+      "raster": "1920x1080",
+      "preset": "Low",
+      "renderer": "Compatibility",
+      "basis": "Original capture/inspection record in catalog-rescore.json and reused own witnesses; no new raw-frame count/provenance audit.",
+      "source_verification_claim": false
+    },
+    "row_set": {
+      "verdict": "PASS",
+      "rows": 44,
+      "unique_ids": 44,
+      "duplicate_ids": [],
+      "missing_ids": [],
+      "item_ids": [
+        "P2-001",
+        "P2-002",
+        "P2-004",
+        "P2-007",
+        "P2-015",
+        "P2-016",
+        "P2-017",
+        "P2-018",
+        "P2-030",
+        "P2-031",
+        "P2-032",
+        "P2-033",
+        "P2-037",
+        "P2-038",
+        "P2-039",
+        "P2-040",
+        "P2-041",
+        "P2-042",
+        "P2-043",
+        "P2-044",
+        "P2-045",
+        "P2-046",
+        "P2-047",
+        "P2-055",
+        "P2-056",
+        "P2-060",
+        "P2-061",
+        "P2-063",
+        "P2-069",
+        "P2-070",
+        "P2-081",
+        "P2-082",
+        "P2-083",
+        "P2-084",
+        "P2-088",
+        "P2-092",
+        "P2-093",
+        "P2-094",
+        "P2-095",
+        "P2-096",
+        "P2-110",
+        "P2-111",
+        "P2-113",
+        "P2-119"
+      ]
+    },
+    "numeric_range": {
+      "verdict": "PASS",
+      "scale": "integer 1–5",
+      "invalid_rows": []
+    },
+    "impact_products": {
+      "verdict": "PASS",
+      "formula": "severity × exposure × importance",
+      "invalid_rows": []
+    },
+    "original_record_agreement": {
+      "verdict": "PASS",
+      "mismatched_score_ids": [],
+      "composition": {
+        "catalog-rescore.json": 36,
+        "native-context-rescore.json": 6,
+        "reward-route-blind-verdict.json": 1,
+        "natural-loss-blind-verdict.json": 1
+      }
+    },
+    "supported_row_count": 44,
+    "wholly_unassessed_row_count": 0,
+    "explicit_partial_row_count": 17,
+    "explicit_partial_ids": [
+      "P2-042",
+      "P2-016",
+      "P2-037",
+      "P2-002",
+      "P2-017",
+      "P2-033",
+      "P2-038",
+      "P2-007",
+      "P2-055",
+      "P2-063",
+      "P2-095",
+      "P2-031",
+      "P2-041",
+      "P2-069",
+      "P2-056",
+      "P2-043",
+      "P2-119"
+    ]
+  },
+  "current_applicability": {
+    "finding": "PASS for the disclosed row-rescore scopes, not a uniform current-shipping or full-context claim.",
+    "rules": [
+      "Primary severity findings apply only to the subjects/states actually inspected; original primary exposure/importance are preserved priority estimates, not newly measured campaign frequency.",
+      "Retained people evidence applies to actor silhouettes, portrait identity and dialogue text. It does not certify changed world-background separation or occlusion; current P2-083 uses the separate newer context evidence.",
+      "P2-095 uses only the applicable retained common name/material/detail UI pixels and fresh short-row corroboration. Old world, station availability and full inventory behavior are excluded.",
+      "The six context rows use their own neutral current-context witnesses. P2-110 uses its current visible out-of-fight presentation; P2-111 uses its current receipt-layout witnesses.",
+      "Historical invalid fight/pose/UI evidence and prior conservative priority floors are not counted as replacement current numeric assessments."
+    ],
+    "scope_limits_preserved": true,
+    "source_implementation_review_performed": false,
+    "source_reviewer_verdict_read_or_copied": false
+  },
+  "remaining_context_limits": {
+    "criterion0_missing_whole_row_ids": [],
+    "not_resolved_by_this_pass": [
+      {
+        "ids": [
+          "P2-031"
+        ],
+        "context": "Quick-item binding rows below the captured heading, full settings scroll and interaction remain unexposed; the recorded score rates the visible control-instruction/literal-label scan hierarchy."
+      },
+      {
+        "ids": [
+          "P2-033",
+          "P2-047"
+        ],
+        "context": "Missing potion_small and unexposed gated items/technique-family comparisons remain excluded. Visible candy/Static Snap item-class findings do not certify the complete pickup family."
+      },
+      {
+        "ids": [
+          "P2-038"
+        ],
+        "context": "Other named destinations and unobstructed Heartstone detail remain unexposed; the scored Heartstone presentation remains bounded."
+      },
+      {
+        "ids": [
+          "P2-055",
+          "P2-056"
+        ],
+        "context": "Unpictured officers, the Tidewake portion of the shared row and current forest-background separation remain unexposed; retained actor differentiation alone is rescored."
+      },
+      {
+        "ids": [
+          "P2-015",
+          "P2-016",
+          "P2-017",
+          "P2-018",
+          "P2-030",
+          "P2-044"
+        ],
+        "context": "Selected species/state stills do not certify the whole roster, calibrated physical heights or continuous deformation/motion."
+      },
+      {
+        "ids": [
+          "P2-037",
+          "P2-041",
+          "P2-042",
+          "P2-043",
+          "P2-069",
+          "P2-119"
+        ],
+        "context": "Landmark detail/distance subsets, phase motion/cadence, base-contact detail and Fly transition/grip continuity remain subject to original recorded limits."
+      }
+    ],
+    "interpretation": "These are retained bounds on the genuine per-row rescores, not newly fabricated complete-context claims. A numeric row assessment does not close its defect or certify every unpictured instance."
+  },
+  "quality_dispositions_preserved": {
+    "P2_110": {
+      "verdict": "BLOCK",
+      "severity": 3,
+      "exposure": 3,
+      "importance": 4,
+      "impact": 36
+    },
+    "P2_111": {
+      "bounded_current_verdict": "PASS",
+      "severity": 1,
+      "exposure": 3,
+      "importance": 4,
+      "impact": 12,
+      "previous_failed_witness_preserved": true
+    },
+    "bark_close": "BLOCK preserved; outside this numerical catalogue-completeness check.",
+    "other_failures_and_partials": "All original FAIL/BLOCK/PARTIAL dispositions and their witnesses remain unchanged.",
+    "full_visual_bar": "Not accepted by this completeness PASS."
+  },
+  "separate_gates": "F41#1/#2 fixes, F41#3 High/Medium matrix, F41#4 hero identity and F41#5 placeholder/floating/clipping criteria are separate. This result gives no PASS to them, no hardware/earned/co-op acceptance and no commercial-release claim.",
+  "evidence_records_read": [
+    "D:/tetherbound/codex-e/ralph/reports/F41/recapture-rescore/whole-criterion-score-packet.json",
+    "D:/tetherbound/codex-e/ralph/reports/F41/recapture-rescore/catalog-rescore.json",
+    "D:/tetherbound/codex-e/ralph/reports/F41/recapture-rescore/native-context-rescore.json",
+    "D:/tetherbound/codex-e/ralph/reports/F41/recapture-rescore/reward-route-blind-verdict.json",
+    "D:/tetherbound/codex-e/ralph/reports/F41/recapture-rescore/natural-loss-blind-verdict.json"
+  ],
+  "preservation": "Only this new completeness evidence artifact is written. No original rating, witness, source, live catalogue, status or dashboard is changed."
+}

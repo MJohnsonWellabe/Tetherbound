@@ -3151,5 +3151,84 @@
     "output_name_binding": "Actual freshoutput res://.tmp/stormwood-phase2/f41-hollows-pattern-loss-beed matches the previously reviewed rename; source remains253,not filenamebeed. All behavioral args and original guards retained.",
     "preservation": "Earlier21tests132assert0failed bounded assertionAPP withfive detached-fixtureERRORs preserved; all source/commands,beed runtimeAPP/P2-111PASS12,barkBLOCK,52cdcrash,pilot/idlefailedcontexts,ratings and oldreceipts unchanged. WholeF41 open pending original acceptance.",
     "activity": "No engine/test/GPU/dispatch,implementation/source edit,helpers/fixtures,newagents,status/GitHub/raw-thread or judge contact."
+  },
+  "whole_f41_0_253574_original_independent_review": {
+    "reviewer": "original review_cloud_startup01a11679-fc2c-7873-bccd-423c1e04476d",
+    "verdict": "REQUEST_CHANGES",
+    "criterion_status": "OPEN",
+    "scope": "Literal whole F41 criterion(0), original capture/source witnesses reused; numeric assembly and applicability at exact253574 only. No new visual judgment, corpus re-audit or execution.",
+    "source_commit": "2535740dbd107c7b93bfc9e3a80aa2d0bd19929b",
+    "source_tree": "0cf1cae1d09ac5b774244762dcaa21a05a6abd73",
+    "criterion": {
+      "path": "docs/ACCEPTANCE.md",
+      "line": 180,
+      "text": "After F26 look-dev, the biome is re-captured (≥200 frames) and its catalog rows re-scored against the new bar.",
+      "separation": "Criteria(1)-(5), High/Medium/full visual bar, fixing all rows, earned play, save/co-op, audio/motion and hardware/performance are not conditions invented for this literal review."
+    },
+    "recapture": {
+      "disposition": "APPROVE retained literal recapture witness",
+      "source_commit": "1a6987a584e7db911e3299506c3cb0a406e0b3eb",
+      "frames": 240,
+      "distinct_frame_ids": 240,
+      "distinct_image_sha256": 240,
+      "shipping": true,
+      "preset": "Low",
+      "renderer": "gl_compatibility",
+      "raster": [
+        1920,
+        1080
+      ],
+      "packet": "D:/CodexTemp/tetherbound-proof/native-e-1a6987a584-f41-shipping240",
+      "basis": "Reuse original verified completed shipping3x80 receipt and source review; post-F26 recapture requirement met. No promotion to full320 or current identical whole-world image source. No hashes/raw frame audit repeated."
+    },
+    "assembly": {
+      "ids": 44,
+      "unique_ids": 44,
+      "owning_ids_match": "Exact set equals all44 original catalogue item_id values; no extra, missing or duplicate IDs. Subjects and original defects checked through original row ownership records.",
+      "components": {
+        "primary_retained": 36,
+        "new_contexts": 6,
+        "current_reward": 1,
+        "current_natural_loss": 1
+      },
+      "score_checks": "Every severity/exposure/importance integer in1..5 and every impact exact product. All36 primary and6 context values/subjects/evidence match original source rows; P2-1111x3x4=12 andP2-1103x3x4=36 match their independent current_rating objects. P2-110 top-level BLOCK versus rating FAIL is preserved disposition, not a fabricated PASS.",
+      "independence": "Original retained code-blind judge recorded numeric severities against written bar and reference boards; primary exposure/importance explicitly preserve priority estimates, not measured campaign frequency. Partial subject coverage, score floors and original failures remain explicit.",
+      "artifact_sha256": {
+        "whole-criterion-score-packet.json": "2bb27cf066e9c1d7770d8bc54fcf2f5586db2898a57b365a06ba155e8d7ba63b",
+        "catalog-rescore.json": "784c5ebcd8f0eb4ed685a087dbb2eb40b59eeebac85b0cd412c6a63b607dbee6",
+        "native-context-rescore.json": "f0f1b1c42652ffa8f8cfe39e68fc724c357881a9e0ecd00e87799ad5f244052c",
+        "reward-route-blind-verdict.json": "878d9a30106792425bf50e292d7e0f631eaecb3bd35c02e071b97f621339bc98",
+        "natural-loss-blind-verdict.json": "2aedc2638087aecda2239840e382cfc372f860fb16b0e325524a73b65823a2f5",
+        "native-receipt.json": "f0521a190a5f69582c929f4f83193e725d89b04d09b1780673c455ed4f1dedf6"
+      }
+    },
+    "current_applicability": {
+      "accepted_pieces": "Previously approved253 director source/native loss, beed reward-route/current111, b852 tangent source/unit/two-bark native evidence and appearanceBLOCK, 8732 people/Glass/creature/UI/context provenance, and original240/subset applicability are reused without another hunk/pixel/test audit.",
+      "source_binding": {
+        "8732_director_blob": "1161b206eb68741b3e1c6aad961d5a9220cb12a8",
+        "253_director_blob": "05bbf0917b1151a461de6a11bc9fb39fdc9adc63",
+        "wild_creature_blob_unchanged": "faf7bd410b02effeb145276acfcb15c91d5148da",
+        "creature_body_blob_unchanged": "86291c35781e7385ffd8ea2da4fe883aa3c83aef",
+        "stormwood_encounters_blob_unchanged": "f7339fff9b221706e87bb0fc473a8f80f7f28a63",
+        "reward_HUD_current_blob": "6a65e5aa929f20ccfe6e7fc28ef010afab67d552",
+        "bark_current_blob": "a869d059a5c66e2be6f85e2c9d01f57bd991c1bf"
+      },
+      "bounded_unchanged_domains": "8732..253 exact blobs unchanged for stormwood_world, stormwood_ground_finish, stormwood_road_current/config, stormwood_arch_runtime/config; shared wild/body and named encounter config unchanged. Current reward route has separately accepted exact branch and actual changed-card111 score; later tangent has actual close evidence and appearanceBLOCK, not assumed identical lighting. No general claim that all realm behaviors/pixels are unchanged."
+    },
+    "findings": [
+      {
+        "rows": [
+          "P2-092",
+          "P2-093",
+          "P2-063"
+        ],
+        "issue": "Current253 applicability is not established for retained8732 combat subject scores.",
+        "evidence": "Assembly uses8732 B chronological actor-spacing/tell/impact/recovery samples for092 and093 and B plus an A Mosshock hit for063. Approved253 director restores named authored role and per-attack travel before action, materially changing the selected/moving attack path these Hollows samples depict. Shared renderer/body/cue code equality does not establish unchanged actor spacing or danger/opening/tell sequence when patterns/context change.",
+        "current_packet_limit": "253 native damage/outcome evidence is valid, but natural-loss-blind-verdict explicitly limits itself to current result presentation and makes no other-row rating. Neither the six-row context verdict nor assembly contains an explicit carry-forward rationale covering the new role/travel change. Existing headless assertions are not a visual rescore.",
+        "required_resolution": "Provide bounded independent current reassessment of the affected three subjects, or a specific supported applicability determination covering the role/travel delta for each retained score. Existing current terminal evidence may be usable; no new engine/scenery/fullmatrix/test run is required by this finding. Do not invent fresh numeric values or copy a current P2-110 grade into other rows."
+      }
+    ],
+    "preservation": "All previous APPs,partial scores,36+6+1+current110 assembly, original bark appearanceBLOCK, old111FAIL36,52cd0-imagecrash, original1061rasterFAIL, forced-fled/capped/no-outcome witnesses,21tests132assertionAPP withfive detached-fixtureERRORs, and accepted source/unit/runtime/79proof are unchanged. A BLOCK row is compatible with rescore completion; it is the identified source applicability gap, not the presence of defects, that prevents current wholeAPP.",
+    "activity": "Only exact criterion/assembly/numeric artifacts, retained original report summaries and bounded Git identity/path comparisons read; only this original report appended. No new pixel/art judgment, engine/GPU/test/dispatch,source edit,helpers/fixtures/agents,GitHub/status/STATE/dashboard/handoff/raw-thread or judge contact."
   }
 }
