@@ -1,7 +1,7 @@
 {
   "criterion": "F23#1",
   "criterion_text": "Every species has a learnset unlocking moves at levels and breakthroughs; TMs still work under the primary-type rule.",
-  "status": "OPEN pending original independent whole review",
+  "status": "WHOLE F23#1 APPROVE / MET",
   "source_commit": "ce798428af3ad29831e0dfae97a41a8b46acff9a",
   "source_review": {
     "reviewer": "/root/f25_medium_review",
@@ -35,5 +35,14 @@
     ]
   },
   "fixtures": "Detached authored eligibility and actual Foundation/owner/Backpack service controls; two owned Terrapups/carried disc and one owned Ripplet for primary-type refusal. No new native or ENet TM claim. Existing passing role/controller/utility/Heal/command evidence reused.",
-  "limits": "Literal learning/primary-type unit proof, not earned campaign leveling or new unrestricted co-op/device/visual acceptance. Source additionally contains f28a93236e wording-only unavailable-Heal messages, unchanged refusal codes/guards/resources."
+  "limits": "Literal learning/primary-type unit proof, not earned campaign leveling or new unrestricted co-op/device/visual acceptance. Source additionally contains f28a93236e wording-only unavailable-Heal messages, unchanged refusal codes/guards/resources.",
+  "whole_review": {
+    "reviewer": "/root/f25_medium_review",
+    "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+    "candidate_commit": "401adcf17575b41e536b747a2985f3c141d79112",
+    "verdict": "WHOLE F23#1 APPROVE / MET",
+    "verified": "Named12tests3000assertionsPASS covers catalogue learnsets, level/breakthrough eligibility and primary-type TM transactions including refusal/save/ACK controls",
+    "blind_requirement": "No separate criterion-specific blind proof named",
+    "limits": "No new campaign/device/visual/unrestrictedco-op claims"
+  }
 }

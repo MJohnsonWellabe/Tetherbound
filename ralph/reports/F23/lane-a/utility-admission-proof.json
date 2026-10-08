@@ -591,5 +591,12 @@
     "verified": "Ten shipping utility IDs; actual two-peer role43checksPASS all eight saved edit receipts and matchingrevision2cards; affected18tests469assertionsPASS; retained Heal/Dash/controller evidence applicable",
     "blind_requirement": "No additional criterion-specific blind proof named",
     "limits": "Literal F23#2 with disclosed fixtures. Heal requires saved-health scope, Dash transport local-only. No F23#5/unrestrictedco-op/campaign/device/visual acceptance."
+  },
+  "wording_only_followup": {
+    "commit": "f28a93236e",
+    "reviewer": "original /root/f25_medium_review",
+    "verdict": "APPROVE",
+    "change": "Unavailable-Heal feedback uses plain player language; refusalcodes/guards/resources unchanged",
+    "whole_disposition": "Original WHOLE F23#2 approval remains applicable without rerun"
   }
 }
