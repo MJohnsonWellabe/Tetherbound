@@ -1,0 +1,59 @@
+{
+  "criterion": "F20#2",
+  "result": "BehaviorPASS and literalvisualPASS; audibilityUNPROVED, no wholecriterionREADY",
+  "source_commit": "15d08e339880b75bb74151424712e95f27c8d755",
+  "proof": "tests/smoke_f20_arch_presentation.gd",
+  "packet": "D:/CodexTemp/tetherbound-proof/native-b-15d08e3398-f20-fifth-presentation",
+  "supervisor": {
+    "source": "15d08e339880b75bb74151424712e95f27c8d755",
+    "pid": 11560,
+    "exit_code": 0,
+    "stop_reason": "",
+    "finished_utc": "2026-10-08T01:13:22.9054987Z",
+    "started_utc": "2026-10-08T01:06:24.9057873Z"
+  },
+  "platform": "Owner native Windows frozen project; Godot4.7 Compatibility1280x720, WASAPI actualSFX bus",
+  "checks": 20,
+  "failed": 0,
+  "scope": "Existing disclosed postfinale fixture withonefifthkey; ordinaryinput/provider/groundedcamera then production personaldebit/receipt/presentation; not anearnedStormwoodfinale",
+  "runtime": [
+    "Grounded exactactionable fiftharch provider and ordinaryframingPASS",
+    "Actualkey consumed; personalstir saved; actualarch remainsclosed",
+    "Exactlyone durablestirresult withglow and playingSFX",
+    "Exactnotready line; no newquest or trackedobjective",
+    "Repeatuse refuses; no replay cue onrestoredstir"
+  ],
+  "native_files": {
+    "png": "D:/CodexTemp/tetherbound-proof/native-b-15d08e3398-f20-fifth-presentation/fifth-presentation-home/AppData/Roaming/Godot/app_userdata/Tetherbound/f20-fifth-stir.png",
+    "png_bytes": 1481947,
+    "wav": "D:/CodexTemp/tetherbound-proof/native-b-15d08e3398-f20-fifth-presentation/fifth-presentation-home/AppData/Roaming/Godot/app_userdata/Tetherbound/f20-fifth-sfx.wav",
+    "wav_bytes": 593964
+  },
+  "capture": {
+    "first_result_frame_ms": 1306,
+    "mixed_sfx_interval_ms": 3094,
+    "contact": "fifth-arch-native-contact.jpg",
+    "processing": "Original native PNG converted to JPG only, no retouch; originalPNG/WAV remain in nativepacket"
+  },
+  "independent_review": {
+    "agent": "b_f20_review",
+    "source": "APPROVE",
+    "behavior": "APPROVE actual20checks/exit0; auditory/visual gates separate"
+  },
+  "blind_judge": {
+    "agent": "b_night_visual",
+    "visual": "PASS scoped: visible lavender/white glow, readable It stirred, but it is not ready yet, Sealed face and noentrycue or fiftharchquest/sequelprompt",
+    "audio": "UNPROVED: actual originalWAV delivery returned audio content omitted because you do not support audio input; listener cannotjudgehum",
+    "overall": "BLOCK overall for audibility; stilldoesnotprovecontinuedclosure/transition; real behaviorchecks coverclosure"
+  },
+  "errors": {
+    "engine": 0,
+    "script": 0,
+    "warnings": "Physicsinterpolationdeprecation retained"
+  },
+  "flags": "none",
+  "remaining": [
+    "Actual audiblelowhum verdict from originaljudge withworkingaudioinput; no inference fromnonemptyfile, sourceplayingstate orwaveform",
+    "FullVisualBarsA/B and allintegratedcampaign/device/audio-system gates remainOPEN"
+  ]
+}
