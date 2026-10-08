@@ -119,14 +119,15 @@
       "endpoint": "/openapi/v1/retexture",
       "submitted_utc": "2026-10-07T23:32:55.829907+00:00",
       "task_id": "01a118b6-747c-74f1-9546-87893540dfbc",
-      "status": "SUCCEEDED_textured_head_identity_PASS_bodyfit_native_gates_OPEN_OFF",
+      "status": "SUCCEEDED_head_identity_PASS_bodyfit_judge_BLOCK_OFF",
       "credits": {
         "before": 13335,
         "after": 13325,
         "observed_cost": 10
       },
       "candidate_enabled": false,
-      "inspection_evidence": "ralph/reports/F36/grandpa-face/preview-inspection.json"
+      "inspection_evidence": "ralph/reports/F36/grandpa-face/preview-inspection.json",
+      "disposition": "Two local body-fit candidates failed collar/proportion acceptance; parked OFF. No installed model/config change, native scale/pose/gameplay unassessed."
     }
   ],
   "actual_meshy_submissions": 8,
