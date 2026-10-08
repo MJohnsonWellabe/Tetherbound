@@ -3,7 +3,7 @@
     "F23#2",
     "F23#5"
   ],
-  "status": "OPEN pending same-original whole F23#2 recheck; changed guards18/469 and four-role actual camp43check PASS. F23#5 remains OPEN.",
+  "status": "WHOLE F23#2 APPROVE/MET by original independent reviewer; F23#5 remains OPEN.",
   "source_components": [
     {
       "commit": "fd26fd34ed0d29967e7b839b90aca33420e1261a",
@@ -153,10 +153,8 @@
   },
   "shipping_flags": "actor_vitals.runtime_enabled, Tether command shipping flags, move_library.enabled and ultimate presentation remain OFF. Individual existing utility consumer IDs were added to move_commit.live_moves.",
   "remaining_gates": [
-    "Named mounted gameplay proof for newly admitted utility consumers; logic bodies are not played-world evidence.",
-    "Ten named shipping utilities and two distinct actual equipped utilities per role now have source/guard/unit/mounted/loadout evidence; original WHOLE F23#2 verdict pending. Converted Heal/local-only Dash restrictions remain disclosed.",
-    "Catalogue gate consistency is not proof of every signature's mounted combat or ultimate release timing.",
-    "No fresh HUD capture needed: existing literal F42 seven-inch HUD blind PASS and10tests84assertions retained unchanged; coupled shipping/command behavior remains open."
+    "F23#5 remains open: catalogue consistency is not proof of every signature mounted combat or release timing.",
+    "Retained F42 seven-inch HUD blind PASS and10tests84assertions remain applicable; F23#5 coupled shipping/meter behavior not claimed."
   ],
   "mounted_heal_proof": {
     "run_id": 37763319762,
@@ -559,7 +557,8 @@
     },
     "fixtures": "four pre-admission level15 creatures and two camp kits; production cap, known moves, camp placement, panel, host and owner save guards retained",
     "limits": "Actual equip/host/save/ACK only; no guest Dash combat availability, unconverted wild Heal, controller mapping or skipped camp reload/rejoin claim",
-    "runtime_review": "Pending same original reviewer whole assessment"
+    "runtime_review": "APPROVE/MET as part of same original independent WHOLE F23#2 verdict",
+    "checkout_verification": "Job113339447898 git log -1 confirms4b01488f1cc330db0a3e4768eae8bcffd8f21e7f"
   },
   "guarded_shipping_admission": {
     "source_commit": "e641620c7918a91e3e3ce4ee8b2d501907d75a69",
@@ -576,7 +575,21 @@
     "unit_failed": 0,
     "unit_exit": 0,
     "unit_seconds": 7,
-    "unit_log_sha256": "85a58851977a900aefab0173129ed2856fd811109ff7b4898823ca1983e55517"
+    "unit_log_sha256": "85a58851977a900aefab0173129ed2856fd811109ff7b4898823ca1983e55517",
+    "checkout_verification": "Job113342662829 git log -1 confirmse641620c7918a91e3e3ce4ee8b2d501907d75a69"
   },
-  "current_shipping_flags": "At e641620c79 move_commit runtime stays ON and live_moves admits all ten authored utilities plus retained Ground Current. actor_vitals runtime stays OFF; Heal only in converted saved-health self scope, generic unsupported Heal refuses before spend/action, guest Dash transport still refuses. Command/ultimate presentation flags unchanged."
+  "current_shipping_flags": "At e641620c79 move_commit runtime stays ON and live_moves admits all ten authored utilities plus retained Ground Current. actor_vitals runtime stays OFF; Heal only in converted saved-health self scope, generic unsupported Heal refuses before spend/action, guest Dash transport still refuses. Command/ultimate presentation flags unchanged.",
+  "criteria_status": {
+    "F23#2": "APPROVE/MET",
+    "F23#5": "OPEN"
+  },
+  "whole_f23_2_review": {
+    "reviewer": "/root/f25_medium_review",
+    "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+    "candidate_commit": "6cdb0e58d74fb624c2693408cbda7b1ed5f990ac",
+    "verdict": "WHOLE F23#2 APPROVE / MET",
+    "verified": "Ten shipping utility IDs; actual two-peer role43checksPASS all eight saved edit receipts and matchingrevision2cards; affected18tests469assertionsPASS; retained Heal/Dash/controller evidence applicable",
+    "blind_requirement": "No additional criterion-specific blind proof named",
+    "limits": "Literal F23#2 with disclosed fixtures. Heal requires saved-health scope, Dash transport local-only. No F23#5/unrestrictedco-op/campaign/device/visual acceptance."
+  }
 }
