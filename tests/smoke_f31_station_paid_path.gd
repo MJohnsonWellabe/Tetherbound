@@ -399,6 +399,11 @@ func _check_crafted_command_tiers() -> void:
 		return
 	var director: Node = _world.get_node("EncounterDirector")
 	var manager: Node = _world.get_node("CombatManager")
+	# Owning a creature is distinct from recalling its grounded body. Use the
+	# same production recall seam exercised by smoke_creature_control.
+	if director.call("ally_instance") == null and not await director.call("summon_active_creature"):
+		_fail("actual owned creature recall was refused before command admission")
+		return
 	var wild: Node3D = director.call("aggressive_creature")
 	if wild == null:
 		_fail("no authored wild body for crafted-pouch gameplay admission")
@@ -406,6 +411,10 @@ func _check_crafted_command_tiers() -> void:
 	_player.global_position = wild.global_position + Vector3(3.0, 0.0, 3.0)
 	for i in 30: await physics_frame
 	var canonical: Dictionary = director.call("_canonical_wild_start_state", wild)
+	print("F24_COMMAND_ADMISSION " + JSON.stringify({"canonical": canonical,
+		"context": _game.get("session").call("_host_wild_training_context"),
+		"owned_uid": str(director.call("ally_instance").get("uid")),
+		"body_ready": director.get("_ally_ready_body") != null}))
 	if canonical.get("ready") != true:
 		_fail("crafted gear's canonical actor preflight refused: " + str(canonical))
 		return
