@@ -218,5 +218,28 @@
     "bacon": "OVERALL FAIL: Meadows pedestal walk failed before Tidewake, grounded/free input, targetofferempty, EncounterDirector winning, activationnull; no establishedcause or acceptedhandoff.",
     "bounded_summary": "D:/CodexTemp/tetherbound-lanes-full-access/b-original-tide-key-lessons-terminal-r4.txt"
   },
-  "disposition": "Reuse scoped passing Skip/Help pieces. Preserve overall provider FAIL; no unchanged provider retry, failed-save input, native/blind/durability or whole criterion claim. Saved-ACK option800 remains pending original source review and affected proof."
+  "disposition": "Reuse scoped passing Skip/Help pieces. Preserve overall provider FAIL; no unchanged provider retry, failed-save input, native/blind/durability or whole criterion claim. Saved-ACK option800 remains pending original source review and affected proof.",
+  "saved_ack_extension": {
+    "source": "800bfffce1f718a68da27004970db50ba31c8540",
+    "scope": "Runner accepts and forwards existing --lesson-reload-witness; existing reader requires controller plus Help and validates saved ACK within unchanged30second deadline. No newreader/flag/guard/profile/statechange.",
+    "source_review": {
+      "reviewer": "Original b_f49_review Bacon",
+      "verdict": "SOURCE APPROVE"
+    },
+    "eligibility_review": {
+      "reviewer": "Original b_f20_review Hubble",
+      "verdict": "ELIGIBILITY APPROVE",
+      "bounded_summary": "D:/CodexTemp/tetherbound-lanes-full-access/b-original-tide-saved-ack-source-r5.txt"
+    },
+    "run": {
+      "id": 37819420632,
+      "source": "800bfffce1f718a68da27004970db50ba31c8540",
+      "state_at_capture": "LIVE",
+      "input_mode": "generated_fixture",
+      "prior_earned_play": false,
+      "continuous_fresh_save": false,
+      "scope": "New savedACK coverage only; R4 Skip/Help approval reused. Physical TitleLoad/blind/wholeF46 remainseparate, laterproviderguard unchanged, nofailedsaveinput orhandoff."
+    },
+    "original_terminal_review_required": true
+  }
 }
