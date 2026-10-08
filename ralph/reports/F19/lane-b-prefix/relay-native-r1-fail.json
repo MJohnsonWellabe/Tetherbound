@@ -1,0 +1,93 @@
+{
+  "criterion": "F19#5/F49#0 Relay component only",
+  "verdict": "FAIL firstattempt; no earned export or Relayhandoff",
+  "packet": "D:/CodexTemp/tetherbound-proof/native-b-776b287a12-earned-relay",
+  "supervisor": {
+    "stop_reason": "",
+    "exit_code": 1,
+    "source": "776b287a12656c43a829dad98405b3cabfaaac15",
+    "finished_utc": "2026-10-08T00:59:15.4802618Z",
+    "started_utc": "2026-10-08T00:43:40.5450701Z",
+    "pid": 24824
+  },
+  "result": {
+    "failures": [
+      "relay: Captain victory lacks exact admitted opponents, landed kills, configured items/XP or retained-five receipts"
+    ],
+    "flags_gained": 1,
+    "location": {
+      "player": [
+        350.381195068359,
+        4.81711578369141,
+        3765.65942382813
+      ],
+      "realm": "meadows",
+      "scene": "MeadowsPlayground"
+    },
+    "party": [
+      {
+        "hp": 0,
+        "level": 10,
+        "nickname": "Bud",
+        "species": "terrapup",
+        "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2"
+      },
+      {
+        "hp": 77,
+        "level": 10,
+        "nickname": "",
+        "species": "bramblebun",
+        "uid": "creature-83d263c517d32cc6cb7beab6925d80c7"
+      },
+      {
+        "hp": 0,
+        "level": 10,
+        "nickname": "",
+        "species": "bramblebun",
+        "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17"
+      },
+      {
+        "hp": 0,
+        "level": 8,
+        "nickname": "",
+        "species": "mudsnout",
+        "uid": "creature-afbd0d982b14221393f70c29863586a1"
+      },
+      {
+        "hp": 0,
+        "level": 8,
+        "nickname": "",
+        "species": "bramblebun",
+        "uid": "creature-c576f15db4b7f3ecf487a80de0169177"
+      }
+    ],
+    "passed": false,
+    "segment": "relay",
+    "wall_seconds": 914.269
+  },
+  "actual_findings": [
+    "Production prior Warrens Load passed with originalCID+5",
+    "Two ordinary wild victories observed",
+    "Captain defeat flag gained",
+    "Same original five retained; levels10/10/10/8/8, one survivor",
+    "Compound Captain receipt rejected; exact failing operand was not emitted"
+  ],
+  "review": {
+    "reviewer": "b_f49_review",
+    "verdict": "FAIL confirmed; minimal failure-only operand snapshot justified; sole rejecting condition remains unknown"
+  },
+  "source_findings": {
+    "reviewer": "b_prefix_reattack",
+    "scope": "Read-only trace of exact776cut",
+    "finding": "Helper expects rawXP and uncapped deltas; ordinary host-owned round rewards use configured hybridXP and admitted caps, with unscaled authored completionbonus",
+    "limitation": "Source mismatch is established, but not proved the sole terminal failing operand"
+  },
+  "next": "Preserve all existing predicate comparisons and deadline; expose actual failure-only operands and repair stale oracle only against actual policy/caps; no unchanged retry or partialresume",
+  "flags": "none",
+  "remaining": [
+    "Actual coherent repaired RelayPASS",
+    "Original independent actualreview",
+    "Strict completeexport+manifest+nextproductionLoad",
+    "FullF19#5/F49"
+  ]
+}
