@@ -638,7 +638,10 @@ func _inputs_host(peer: int, stream: Dictionary, packet: Dictionary) -> void:
 	# and on every exit, so the cursor never holds an unvalidated state.
 	var batch := {"working": {}, "tonic_ticks": []}
 	var completed := _inputs_host_batch(peer, stream, packet, batch)
-	if not _settle_working(stream, batch) or not completed or not str(stream.error).is_empty(): return
+	if not _settle_working(stream, batch) or not completed or not str(stream.error).is_empty():
+		if not str(stream.error).is_empty():
+			_note_host(stream, "input replay stopped at %d: %s" % [int(stream.cursor.sequence), str(stream.error)])
+		return
 	_send_owner(peer, stream, {"op": "inputs_ack", "sequence": stream.cursor.sequence})
 	if stream.checkpoint.get("recovery") == true and not stream.checkpoint.has("frozen"):
 		_recovery_freeze(peer, stream)
