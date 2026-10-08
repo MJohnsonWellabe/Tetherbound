@@ -149,6 +149,23 @@ func _capture_row(row: Dictionary) -> void:
 			fall_settings["enabled"] = _candidate
 			flow_settings["enabled"] = _candidate
 			flow_settings["ridges_enabled"] = _candidate
+		# Record the actual mounted terrain gate, not merely the authored flag.
+		var coast_settings: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
+			"res://data/config/water_shore_presentation.json"))
+		var shore_candidate := "--shore-weathering-candidate" in OS.get_cmdline_user_args()
+		var terrain: Object = _world.get("terrain")
+		var terrain_material: Object = terrain.get("material") if terrain != null else null
+		var coast_shader: Shader = terrain_material.call("get_shader_override") if terrain_material != null else null
+		var coast_enabled: Variant = terrain_material.call("get_shader_param", "coast_weathering_enabled") if terrain_material != null else null
+		var expected_coast := bool(coast_settings.get("enabled", false)) or shore_candidate
+		var slope_noise_installed := coast_shader != null and coast_shader.code.contains("float coast_surface_noise(")
+		_manifest["f39_shore_weathering"] = {"candidate": shore_candidate,
+			"expected_enabled": expected_coast, "actual_enabled": coast_enabled,
+			"slope_noise_installed": slope_noise_installed,
+			"scope": "Device-local terrain material only; all other shipping gates retained"}
+		if not slope_noise_installed or coast_enabled == null or bool(coast_enabled) != expected_coast:
+			_failures.append("F39 mounted shore weathering differs from requested gate/source")
+			return
 		var observations: Array[Dictionary] = []
 		var falls_count := 0
 		var flow_count := 0
