@@ -3,7 +3,7 @@
     "F23#2",
     "F23#5"
   ],
-  "status": "OPEN F23#2/#5; original independent APPROVE for mounted canonical Heal and changed-source mounted Dash. Whole F23#2 remains OPEN on guarded shipping admission and real role/loadout proof.",
+  "status": "OPEN pending same-original whole F23#2 recheck; changed guards18/469 and four-role actual camp43check PASS. F23#5 remains OPEN.",
   "source_components": [
     {
       "commit": "fd26fd34ed0d29967e7b839b90aca33420e1261a",
@@ -154,7 +154,7 @@
   "shipping_flags": "actor_vitals.runtime_enabled, Tether command shipping flags, move_library.enabled and ultimate presentation remain OFF. Individual existing utility consumer IDs were added to move_commit.live_moves.",
   "remaining_gates": [
     "Named mounted gameplay proof for newly admitted utility consumers; logic bodies are not played-world evidence.",
-    "Ten shipping live utilities and two equipable per role remain unclaimed. Mounted Heal26check and Dash19check proofs now pass; process-local preview overrides do not close shipping admission.",
+    "Ten named shipping utilities and two distinct actual equipped utilities per role now have source/guard/unit/mounted/loadout evidence; original WHOLE F23#2 verdict pending. Converted Heal/local-only Dash restrictions remain disclosed.",
     "Catalogue gate consistency is not proof of every signature's mounted combat or ultimate release timing.",
     "No fresh HUD capture needed: existing literal F42 seven-inch HUD blind PASS and10tests84assertions retained unchanged; coupled shipping/command behavior remains open."
   ],
@@ -372,5 +372,211 @@
       "blind_requirement": "No additional F23#2-specific blind judge named",
       "disposition": "Reuse passing Dash/Heal/utility logic. Preserve coupled runtime/actor-vitals guards and flags; no component READY or whole closure."
     }
-  }
+  },
+  "role_loadout_proof": {
+    "criterion": "F23#2",
+    "source_commit": "4b01488f1cc330db0a3e4768eae8bcffd8f21e7f",
+    "source_review": "SOURCE APPROVE original /root/f25_medium_review",
+    "run_id": 37785611801,
+    "artifact_id": 11553749408,
+    "script": "tests/smoke_net_forward_camp.gd",
+    "args": "--prove-role-utilities",
+    "mode": "hosted headless two actual ENet processes",
+    "result": "PASS",
+    "checks": 43,
+    "failed_checks": 0,
+    "exit": 0,
+    "seconds": 209,
+    "log_sha256": "f9df3607a3dea828dd7ca7802def313d16613e41d5ecfa37f57aaeedb5117599",
+    "net_run_sha256": "c936b03b0e827b34fc169a767186d24f7e16146d93820d187bd2b020a382cee0",
+    "character_file_sha256": "83517a7378cd733f90cd2203871a9a4d01772c1d3f5d4cc7431f86710182fa2f",
+    "retained_disk_verification": "Four owned creatures, each final saved card exactly matches original revision2 receipt; all eight craft:<character>:loadout_<edit_id> receipts retained in character file",
+    "role_receipts": {
+      "CHARGER": {
+        "choices": [
+          "hearten",
+          "dash_strike"
+        ],
+        "receipts": [
+          {
+            "loadout_last_edit": {
+              "charged": "undertow",
+              "creature_uid": "creature-5cd68269c7da80877128fd24ce654d20",
+              "edit_id": "e0c0715a6f48422c8fe66202172df17b",
+              "expected_revision": 0.0,
+              "quick": "ripple_jab",
+              "utility": "hearten"
+            },
+            "loadout_revision": 1.0,
+            "move_charged": "undertow",
+            "move_quick": "ripple_jab",
+            "move_ultimate": "ultimate_ripplet",
+            "move_utility": "hearten",
+            "uid": "creature-5cd68269c7da80877128fd24ce654d20"
+          },
+          {
+            "loadout_last_edit": {
+              "charged": "undertow",
+              "creature_uid": "creature-5cd68269c7da80877128fd24ce654d20",
+              "edit_id": "9a1f7b01c300871cd09f7d8ab18840d1",
+              "expected_revision": 1.0,
+              "quick": "ripple_jab",
+              "utility": "dash_strike"
+            },
+            "loadout_revision": 2.0,
+            "move_charged": "undertow",
+            "move_quick": "ripple_jab",
+            "move_ultimate": "ultimate_ripplet",
+            "move_utility": "dash_strike",
+            "uid": "creature-5cd68269c7da80877128fd24ce654d20"
+          }
+        ],
+        "species": "ripplet"
+      },
+      "CURRENT": {
+        "choices": [
+          "bramble_trap",
+          "snare"
+        ],
+        "receipts": [
+          {
+            "loadout_last_edit": {
+              "charged": "warren_charge",
+              "creature_uid": "creature-8f4829ec5c711e05cdac7f62e2d6bac6",
+              "edit_id": "4354d34d0d7e0d6794b9a62723309e5c",
+              "expected_revision": 0.0,
+              "quick": "bramble_whip",
+              "utility": "bramble_trap"
+            },
+            "loadout_revision": 1.0,
+            "move_charged": "warren_charge",
+            "move_quick": "bramble_whip",
+            "move_ultimate": "ultimate_ground_current",
+            "move_utility": "bramble_trap",
+            "uid": "creature-8f4829ec5c711e05cdac7f62e2d6bac6"
+          },
+          {
+            "loadout_last_edit": {
+              "charged": "warren_charge",
+              "creature_uid": "creature-8f4829ec5c711e05cdac7f62e2d6bac6",
+              "edit_id": "01ba84da6a68d0966ab98aec687172e6",
+              "expected_revision": 1.0,
+              "quick": "bramble_whip",
+              "utility": "snare"
+            },
+            "loadout_revision": 2.0,
+            "move_charged": "warren_charge",
+            "move_quick": "bramble_whip",
+            "move_ultimate": "ultimate_ground_current",
+            "move_utility": "snare",
+            "uid": "creature-8f4829ec5c711e05cdac7f62e2d6bac6"
+          }
+        ],
+        "species": "bramblebun"
+      },
+      "DIVER": {
+        "choices": [
+          "heal_pulse",
+          "veil"
+        ],
+        "receipts": [
+          {
+            "loadout_last_edit": {
+              "charged": "sky_rend",
+              "creature_uid": "creature-fd79c6f709737209b1908ff67649ba9a",
+              "edit_id": "416db19b1479c468ccfa5cd891322c95",
+              "expected_revision": 0.0,
+              "quick": "gale_peck",
+              "utility": "heal_pulse"
+            },
+            "loadout_revision": 1.0,
+            "move_charged": "sky_rend",
+            "move_quick": "gale_peck",
+            "move_ultimate": "ultimate_galewisp",
+            "move_utility": "heal_pulse",
+            "uid": "creature-fd79c6f709737209b1908ff67649ba9a"
+          },
+          {
+            "loadout_last_edit": {
+              "charged": "sky_rend",
+              "creature_uid": "creature-fd79c6f709737209b1908ff67649ba9a",
+              "edit_id": "151e5552113983f1fbb1c89160c4d8f1",
+              "expected_revision": 1.0,
+              "quick": "gale_peck",
+              "utility": "veil"
+            },
+            "loadout_revision": 2.0,
+            "move_charged": "sky_rend",
+            "move_quick": "gale_peck",
+            "move_ultimate": "ultimate_galewisp",
+            "move_utility": "veil",
+            "uid": "creature-fd79c6f709737209b1908ff67649ba9a"
+          }
+        ],
+        "species": "galewisp"
+      },
+      "WALL": {
+        "choices": [
+          "quake_ring",
+          "shove"
+        ],
+        "receipts": [
+          {
+            "loadout_last_edit": {
+              "charged": "stone_rush",
+              "creature_uid": "creature-8d5cac06f3fd1ec7d6360247234c34f7",
+              "edit_id": "7095b09cf42eb23443ca76b17bde8407",
+              "expected_revision": 0.0,
+              "quick": "pebble_toss",
+              "utility": "quake_ring"
+            },
+            "loadout_revision": 1.0,
+            "move_charged": "stone_rush",
+            "move_quick": "pebble_toss",
+            "move_ultimate": "ultimate_terrapup",
+            "move_utility": "quake_ring",
+            "uid": "creature-8d5cac06f3fd1ec7d6360247234c34f7"
+          },
+          {
+            "loadout_last_edit": {
+              "charged": "stone_rush",
+              "creature_uid": "creature-8d5cac06f3fd1ec7d6360247234c34f7",
+              "edit_id": "e12b7c92d6119e369c9557adb637050d",
+              "expected_revision": 1.0,
+              "quick": "pebble_toss",
+              "utility": "shove"
+            },
+            "loadout_revision": 2.0,
+            "move_charged": "stone_rush",
+            "move_quick": "pebble_toss",
+            "move_ultimate": "ultimate_terrapup",
+            "move_utility": "shove",
+            "uid": "creature-8d5cac06f3fd1ec7d6360247234c34f7"
+          }
+        ],
+        "species": "terrapup"
+      }
+    },
+    "fixtures": "four pre-admission level15 creatures and two camp kits; production cap, known moves, camp placement, panel, host and owner save guards retained",
+    "limits": "Actual equip/host/save/ACK only; no guest Dash combat availability, unconverted wild Heal, controller mapping or skipped camp reload/rejoin claim",
+    "runtime_review": "Pending same original reviewer whole assessment"
+  },
+  "guarded_shipping_admission": {
+    "source_commit": "e641620c7918a91e3e3ce4ee8b2d501907d75a69",
+    "source_review": "SOURCE APPROVE original /root/f25_medium_review",
+    "change": "Existing live_moves admits ten utilities. Director permits only saved self Heal; unsupported Heal returns heal_scope_unavailable before generic mutation; generic Host independently refuses Heal before resource/action mutation. Authored-Heal/no-spend/low-Wind existing case retained.",
+    "guards": "actor_vitals runtime OFF; saved stage/commit/ownerACK unchanged; guest Dash transport refusal and physical collision/safety/binding/one-hit guards unchanged",
+    "affected_proof": "Existing test_f23_live_moves.gd sufficient per original reviewer; prior Heal74/1310, affected27/515, canonical26, Dash19 and controller proofs reused",
+    "unit_run_id": 37786545300,
+    "result": "PASS affected18tests469assertions",
+    "limits": "Heal availability remains scoped to converted saved-health fights; Dash transport remains local-only. No general combat/device/visual/co-op acceptance.",
+    "unit_artifact_id": 11554268153,
+    "unit_tests": 18,
+    "unit_assertions": 469,
+    "unit_failed": 0,
+    "unit_exit": 0,
+    "unit_seconds": 7,
+    "unit_log_sha256": "85a58851977a900aefab0173129ed2856fd811109ff7b4898823ca1983e55517"
+  },
+  "current_shipping_flags": "At e641620c79 move_commit runtime stays ON and live_moves admits all ten authored utilities plus retained Ground Current. actor_vitals runtime stays OFF; Heal only in converted saved-health self scope, generic unsupported Heal refuses before spend/action, guest Dash transport still refuses. Command/ultimate presentation flags unchanged."
 }
