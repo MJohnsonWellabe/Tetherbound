@@ -1,0 +1,20 @@
+{
+  "reviewer": "/root/f26_presets_review",
+  "run_id": 37696142482,
+  "source_commit": "b7cdd2dc803e89c1148c20108afc58c184af4b64",
+  "frames_inspected": 10,
+  "shelter": {
+    "verdict": "BLOCK",
+    "attempt": 2,
+    "cause": "Day and night heading180 retain a small blue/white sleeve fragment through the closed left canvas panel beside the entrance, distinct from the arm and boots legitimately visible inside the opening.",
+    "other_views": "Closed-panel views at0/45/90/minus45 now conceal the previous fragments. Supports appear grounded; no separate new night readability regression.",
+    "disposition": "Parked after two failed visual attempts; no criterion closure or landing authorization."
+  },
+  "signal_plume_camp": {
+    "verdict": "PASS",
+    "reason": "Day/night0/45/minus45: broad pale wall removed; faint translucent haze leaves fire readable without added night wash.",
+    "remaining_gate": "Arrival-lure visibility remains unjudged; motion is not evidenced by these stills."
+  },
+  "full_bars_A_B": "OPEN",
+  "F39_5": "OPEN"
+}
