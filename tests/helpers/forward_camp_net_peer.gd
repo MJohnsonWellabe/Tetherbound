@@ -90,10 +90,9 @@ func _edit_loadout(game: Node, args: Dictionary = {}) -> Dictionary:
 		panel.call("close")
 		return {"verdict": "FAIL", "detail": "utility must actually change", "card": before.card}
 	panel.call("_choose_slot", "utility")
+	panel.call("_equip", move) # Exactly one press; quote completion must continue it.
 	for frame: int in 600:
-		if panel.get("_pending_edit") == "" and int(_loadout_view(game, "", uid).card.get("loadout_revision", -1)) == int(before.card.get("loadout_revision", -1)):
-			panel.call("_equip", move)
-		elif frame % 30 == 0: panel.call("_reconcile_loadout")
+		if frame % 30 == 0: panel.call("_reconcile_loadout")
 		await physics_frame
 		var current := _loadout_view(game, "", uid)
 		if current.card.get("move_utility") == move and not current.card.get("loadout_last_edit", {}).is_empty() and int(current.card.get("loadout_revision", -1)) == int(before.card.get("loadout_revision", -1)) + 1 and panel.get("_pending_edit") == "":

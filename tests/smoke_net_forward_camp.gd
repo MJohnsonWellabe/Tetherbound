@@ -35,6 +35,7 @@ func _initialize() -> void:
 
 func _run() -> void:
 	var prove_roles := OS.get_cmdline_user_args().has("--prove-role-utilities")
+	var prove_persistence := OS.get_cmdline_user_args().has("--prove-loadout-persistence")
 	if not await launch(2, "world"):
 		quit(await finish())
 		return
@@ -100,26 +101,28 @@ func _run() -> void:
 		await step(1, "wait", {"frames": 30})
 	check(settled.get("pending") == false, "the guest's camp request settles (no pending original left)")
 
-	# --- the guest moves its camp (HOMESTEAD §8 pack-up offer) ------------------
-	var old_guest_uid := ""
-	for row: Dictionary in guest_view.get("records", []):
-		if row.character_id == guest_id: old_guest_uid = str(row.uid)
-	# Searched from beside the old camp (terrain collision streams around the
-	# player); 12 m clears the old camp's footprint, which still stands while
-	# the new ghost is validated.
-	var moved: Dictionary = await _cstep(1, "camp_place", {"away": 12.0, "presses": 2}, STEP_BUDGET)
-	check(moved.get("verdict") == "PASS" and str((moved.get("messages", [""]) as Array)[0]).contains("Press Place again to pack it up"),
-		"the guest is offered a pack-up and, pressing again, pitches a new camp (%s)" % str(moved.get("detail", "")).left(160))
-	host_view = await _await_records(0, 2)
-	var guest_uids := (host_view.get("records", []) as Array).filter(func(r: Dictionary) -> bool: return r.character_id == guest_id)
-	check(guest_uids.size() == 1 and str(guest_uids[0].uid) != old_guest_uid,
-		"the host holds exactly one guest camp, the new one (%s)" % str(host_view.get("detail", "")))
-	check(await _await_kits(1, 1) == 1, "the old camp's kit was refunded and one spent on the new camp (one left)")
+	# F23#3 keeps the original camp; relocation belongs to F34#4.
+	if not prove_persistence:
+		# --- the guest moves its camp (HOMESTEAD §8 pack-up offer) ------------------
+		var old_guest_uid := ""
+		for row: Dictionary in guest_view.get("records", []):
+			if row.character_id == guest_id: old_guest_uid = str(row.uid)
+		# Searched from beside the old camp (terrain collision streams around the
+		# player); 12 m clears the old camp's footprint, which still stands while
+		# the new ghost is validated.
+		var moved: Dictionary = await _cstep(1, "camp_place", {"away": 12.0, "presses": 2}, STEP_BUDGET)
+		check(moved.get("verdict") == "PASS" and str((moved.get("messages", [""]) as Array)[0]).contains("Press Place again to pack it up"),
+			"the guest is offered a pack-up and, pressing again, pitches a new camp (%s)" % str(moved.get("detail", "")).left(160))
+		host_view = await _await_records(0, 2)
+		var guest_uids := (host_view.get("records", []) as Array).filter(func(r: Dictionary) -> bool: return r.character_id == guest_id)
+		check(guest_uids.size() == 1 and str(guest_uids[0].uid) != old_guest_uid,
+			"the host holds exactly one guest camp, the new one (%s)" % str(host_view.get("detail", "")))
+		check(await _await_kits(1, 1) == 1, "the old camp's kit was refunded and one spent on the new camp (one left)")
 
 	# F23: existing party_grant's level parameter unlocks the authored L15
 	# utility; same guest/camp, production panel equip -> journal -> owner ACK.
 	var edit := await _cstep(1, "camp_loadout_edit", {}, STEP_BUDGET)
-	check(edit.get("verdict") == "PASS", "guest equips Quake Ring at its camp (%s)" % str(edit.get("detail", "")))
+	check(edit.get("verdict") == "PASS", "one guest Equip press saves Quake Ring at its camp (%s)" % str(edit.get("detail", "")))
 	var expected: Dictionary = edit.get("card", {})
 	check(expected.get("move_utility") == "quake_ring" and int(expected.get("loadout_revision", 0)) == 1 and not expected.get("loadout_last_edit", {}).is_empty(),
 		"camp equip changes the guest utility and saves its original revision")
