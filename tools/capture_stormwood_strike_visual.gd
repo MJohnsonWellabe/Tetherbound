@@ -137,8 +137,11 @@ func _capture_run() -> void:
 		STRIKE_MOTION.set_reduced_motion(false)
 		return
 	for place: Dictionary in [
-		{"id":"clearing", "at":Vector2(-610,755)},
-		{"id":"verge", "at":Vector2(-598,753)}]:
+		{"id":"clearing", "at":Vector2(-610,755), "look_z":10.0},
+		# The old verge seat is sheltered by production canopy. Use the
+		# verified exposed clearing from the opposite ordinary-camera heading;
+		# retain two actual host strikes per heading, all samples and guards.
+		{"id":"clearing_reverse", "at":Vector2(-610,755), "look_z":-10.0}]:
 		var xz: Vector2 = place.at
 		var target := Vector3(xz.x, float(_world.call("ground_height_at",xz.x,xz.y)) + 0.08, xz.y)
 		await _stand(xz - Vector2(0,10), target, -12.0)
@@ -224,7 +227,7 @@ func _live_strike_views() -> void:
 			_lightning.set_process(false)
 			var xz: Vector2 = place.at
 			var ground := float(_world.call("ground_height_at", xz.x, xz.y))
-			await _stand(xz, Vector3(xz.x, ground, xz.y + 10.0), -12.0)
+			await _stand(xz, Vector3(xz.x, ground, xz.y + float(place.look_z)), -12.0)
 			await _enter_phase("break", false)
 			STRIKE_MOTION.set_reduced_motion(reduced)
 			_heal()
