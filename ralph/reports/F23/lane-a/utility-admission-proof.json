@@ -727,6 +727,7 @@
       ],
       "limits": "Cannot distinguish scope rejection/input delivery/correction handling; no guard/positiontrust/tolerance/budgetchange justified. Nounchangedrerun."
     },
-    "accepted_boundary": "none; failed saves never promoted"
+    "accepted_boundary": "none; failed saves never promoted",
+    "checkout_verification": "job113406158698 git log -1 confirmse8e2aab3f88f2776fabd828448f3369ce0d89333"
   }
 }
