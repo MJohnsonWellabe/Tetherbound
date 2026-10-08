@@ -339,6 +339,11 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 			var fraction := clampf(float(view.ultimate_meter) / float(view.ultimate_maximum), 0.0, 1.0)
 			if not is_equal_approx(float(ring.get("fraction")), fraction):
 				return {"verdict":"FAIL", "detail":"HUD ring differs from actual meter"}
+			var legacy_readout: Control = hud.get("_ultimate_readout")
+			var legacy_meter: Control = hud.get("_ultimate_meter")
+			if not is_instance_valid(legacy_readout) or not is_instance_valid(legacy_meter) \
+				or legacy_readout.is_visible_in_tree() or legacy_meter.is_visible_in_tree():
+				return {"verdict":"FAIL", "detail":"Acknowledged combat overlay still shows duplicate legacy ultimate"}
 			var moves: RefCounted = hud.get("_moves")
 			var charged_id := str(active.get("move_charged"))
 			var cells: Dictionary = overlay.get("_cells")
@@ -366,6 +371,7 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 				"continuous_render_loop":false, "charged_energy":energy, "charged_cost":charged_cost,
 				"charged_gate_value":energy_gate.value, "charged_gate_maximum":energy_gate.max_value,
 				"region_rects":region_rects,
+				"legacy_ultimate_visible":legacy_readout.is_visible_in_tree() or legacy_meter.is_visible_in_tree(),
 				"frame":Engine.get_process_frames(), "physics_frame":Engine.get_physics_frames(),
 				"viewport":[root.size.x, root.size.y], "renderer":RenderingServer.get_current_rendering_method(),
 				"preset":graphics.selected(), "graphics":graphics.values(), "ring_fraction":float(ring.get("fraction")),
