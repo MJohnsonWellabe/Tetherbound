@@ -4,7 +4,7 @@
   "scope": "Peer-local canonical party-vitals presentation on all presets; existing five-member cache only",
   "production_change": "Retire obsolete candidate gate explicitly. Always snapshot canonical HP fraction, fainted and resting in the cache key; preserve reveal/cycle behavior and unchanged-value caching. Missing and legacy-false config cannot restore stale rows.",
   "authority": "No HP/faint mutation, combat, enemy role, inventory, save, input, layout or transaction change",
-  "source_review": "APPROVE same original f42_visual_review; F17/lane-d/portal-depth/original-native-and-vitals-source-review.txt Scope2. Selected proofs and native pixels are separately pending.",
+  "source_review": "APPROVE same original f42 Scope2; F17/lane-d/portal-depth/original-native-and-vitals-source-review.txt. Selected affected artifacts separately APPROVE; no changed native pixels or whole claim.",
   "party_vitals_proof": {
     "script": "tests/run_tests.gd",
     "args": "--only=test_hud_party_vitals.gd",
@@ -18,7 +18,7 @@
     "warning_count": 0,
     "log_sha256": "1fb8b6752b78eba614c1dede333e14935045ced22b0f6f1e5ffe7221539a79fa",
     "checkout_excerpt": "checkout-excerpt.txt",
-    "independent_proof_review": "PENDING same original f42",
+    "independent_proof_review": "APPROVE same original f42; original-affected-proof-review.txt, exact8fc logs verified against ZIP and SHA256",
     "fixtures": "Existing isolated real Party/Creature instances and StripProbe; direct canonical damage/heal/resting mutations. No earned-save, actual-combat or visual claim. Existing default/legacy-false regression replaces obsolete stale-row expectation; other guards retained."
   },
   "lifecycle_proof": {
@@ -36,7 +36,7 @@
     "warning": "HUD has no player; isolated fixture disclosed",
     "log_sha256": "ab16b97a2a911d86230f5c2b4268fa49cbebe5f96377c21b3d4113d60818eaf5",
     "checkout_excerpt": "lifecycle-checkout-excerpt.txt",
-    "independent_proof_review": "PENDING same original f42",
+    "independent_proof_review": "APPROVE same original f42; original-affected-proof-review.txt, exact8fc logs verified against ZIP and SHA256",
     "fixtures": "Retained five-member isolated cap50/tiers1..4 shippingSaveData late-game fixture and every original attribution/reset/modal/no-duplicate guard. LoggedControlcanvas1920x1080 despite legacy --720p selector; headless no pixel proof."
   },
   "production_only_patch": {
