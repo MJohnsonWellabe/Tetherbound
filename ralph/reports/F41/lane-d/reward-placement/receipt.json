@@ -1,0 +1,38 @@
+{
+  "production_source": "de50c185391edaa053c97d5fa746ee1e8afc2664",
+  "fixture_correction_source": "e0494616323ed2964125b352569ea19534dd74d7",
+  "trigger": "E b852 Hollows aftermath original blind P2-111 impact36: named victory acknowledgement grouped with quick bindings",
+  "scope": "Peer-local routing of exact authored named-wild acknowledgement into existing passive reward_summary card; unknown utility messages retain hotbar route",
+  "authority": "Received acknowledgement text unchanged; no award, authority, inventory, save or input-owner mutation",
+  "flags": "Existing victory_hierarchy_visual remains OFF; no new flag",
+  "original_source_review": "original-source-review.txt: SOURCE APPROVE for de50",
+  "affected_proof": "tests/smoke_hud_presentation_lifecycle.gd --720p",
+  "failed_proof": {
+    "source": "de50c185391edaa053c97d5fa746ee1e8afc2664",
+    "run": 37797219797,
+    "artifact": 11558648509,
+    "job": 113379715326,
+    "result": "FAIL:78checks/29failedassertions, including earlier XP/level attribution and later reset/modal. New named-receipt/bounds/no-grant/utility assertions passed. Workflow failure retained.",
+    "log_sha256": "bce5aaf8343ce549977379f1e65345915ca4dd58aee4f3884e1b0931f23002a1"
+  },
+  "fixture_correction": "Existing five-party isolated late-game layout fixture now projects shipping save_data creature mirrors, explicitly declares cap50 with breakthrough tiers1,2,3,4, and validates character schema. All original Lv40->41/XP/modal/reset assertions and production cap guards retained. No earned save or victory claim.",
+  "corrected_proof": {
+    "status": "PASS; original independent source plus selected affected proof APPROVE",
+    "duration_seconds": 6,
+    "script_error_count": 0,
+    "artifact": 11559664505,
+    "warning": "HUD has no player; isolated fixture disclosed",
+    "run": 37799566986,
+    "checkout_excerpt": "checkout-excerpt.txt",
+    "log_sha256": "4322e1513ff957b195adf89ae79585b4039801c6e155cebae2fb497d698721d6",
+    "source": "e0494616323ed2964125b352569ea19534dd74d7",
+    "job": 113387868413,
+    "checks": 79,
+    "warning_count": 1,
+    "exit_code": 0
+  },
+  "limitations": "Actual changed-source Hollows aftermath needs ROOT/E scheduled native proof and the original independent blind reviewer. Isolated lifecycle checks do not prove natural combat victory, controller hardware, reward solvency or whole F41/F42 acceptance.",
+  "whole_criterion_complete": false,
+  "original_fixture_source_review": "original-cap-fixture-review.txt: SOURCE APPROVE",
+  "original_affected_proof_review": "original-affected-proof-review.txt: APPROVE"
+}

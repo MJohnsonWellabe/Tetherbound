@@ -1,0 +1,7 @@
+> **SOURCE APPROVE** for e0494616323ed2964125b352569ea19534dd74d7.
+>
+> The12-line test-only addition uses the shipping serialization mirror for all five owned UIDs, then explicitly supplies cap50 and completed tiers1–4 for the isolated late-game fixture. These values satisfy the live cap/schema rules and allow the existing Lv40→41 checks through the unchanged owned-creature admission guard.
+>
+> No assertions are removed and no production guard changes. This supplies fixture state; it proves no earned breakthroughs or saved progression.
+>
+> Retain failed run37797219797. The new lifecycle execution remains pending; no runtime, pixel or whole-criterion approval.

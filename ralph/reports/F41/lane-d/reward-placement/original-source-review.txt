@@ -1,0 +1,7 @@
+> **SOURCE APPROVE** for de50c185391edaa053c97d5fa746ee1e8afc2664 versus4ccfd06a73.
+>
+> The cached lookup matches authored named-wild acknowledgements exactly and passes the received text unchanged to the existing per-player `reward_summary` presenter. Authority delivery, payout, inventory, saves and input ownership remain untouched. Unknown messages retain the hotbar route; `victory_hierarchy` remains false.
+>
+> The lifecycle extension checks the actual Hollows acknowledgement, presenter bounds, unchanged Candy count and utility fallback without removing existing assertions. It is an isolated presentation fixture, not victory gameplay proof.
+>
+> Hosted720p execution and changed-source aftermath pixels remain pending. No runtime, visual or whole-criterion approval.

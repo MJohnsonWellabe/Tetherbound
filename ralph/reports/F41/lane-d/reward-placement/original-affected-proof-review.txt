@@ -1,0 +1,5 @@
+> **APPROVE source plus selected affected proof at e0494616323ed2964125b352569ea19534dd74d7.**
+>
+> Verified the preserved checkout excerpt, expected log hash and actual exit0 artifact. Run37799566986 reports **HUD LIFECYCLE PASS:79 checks**,6s, zero script errors, with the disclosed isolated-fixture “HUD has no player” warning. All original assertions and production cap guards remain; failed run37797219797 is retained.
+>
+> Production de50 routing approval remains valid. The cap correction is test-only. Native changed-source victory aftermath and original blind pixel judgment remain required; no earned, hardware or whole-F41/F42 approval.
