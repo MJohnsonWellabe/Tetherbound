@@ -497,6 +497,7 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 					"foe_hp_before":float(manager.enemy().hp) if manager.enemy() != null else -1.0,
 					"refusal_before":(manager.get("last_encounter_refusal") as Dictionary).duplicate(true)}
 				attempts.append(observation)
+				print("TONIC_PRE_STRIKE " + JSON.stringify(observation))
 				var strike: Dictionary = await _step_strike({"facing":[0,0,-1], "settle":90})
 				var strike_data: Dictionary = strike.get("data", {})
 				observation["strike"] = {"verdict":str(strike.get("verdict", "")), "reported_ok":strike_data.get("ok"),
