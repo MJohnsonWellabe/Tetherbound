@@ -415,7 +415,7 @@ func open_credits(tree: SceneTree, game: Node) -> bool:
 	var deadline := Time.get_ticks_msec() + 30000
 	var ack_intent := HOME.acknowledgement_intent(expected, HOME.SEEN_FLAG)
 	var ack_decision: Dictionary = {}
-	var acknowledged := not first and HOME.context(game).get("homecoming_seen") == true
+	var acknowledged: bool = not first and HOME.context(game).get("homecoming_seen") == true
 	while not panel.call("is_open") and not acknowledged and Time.get_ticks_msec() < deadline:
 		# Owner apply installs the receipt before its host settlement. Observe
 		# the original intent's accepted saved decision, not that early flag.
