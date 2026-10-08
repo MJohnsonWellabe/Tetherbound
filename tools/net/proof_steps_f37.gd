@@ -43,12 +43,18 @@ static func step(runner: SceneTree, action: String, args: Dictionary) -> Diction
 		var player: Node3D = world.local_rig()
 		player.global_position = director.ally_body().global_position + Vector3(2,0,0)
 		for frame in 2: await runner.physics_frame
+		# Peek at the already selected provider; querying interaction_offer() here
+		# could start the missing-tack teaching timer. Emit only on failure.
+		var before_tap := _mount_observation(runner, world, director, riding)
 		if not await INPUT._tap(runner, "interact"):
-			return {"verdict":"FAIL","detail":"physical mount input edge failed"}
+			return {"verdict":"FAIL","detail":"physical mount input edge failed",
+				"data":{"before_tap":before_tap,"terminal":_mount_observation(runner, world, director, riding)}}
 		for frame in 120:
 			await runner.physics_frame
 			if riding.is_mounted(): return {"verdict":"PASS","detail":"ordinary mount prompt authorized"}
-		return {"verdict":"FAIL","detail":"host did not authorize mount"}
+		var observation := {"before_tap":before_tap,"terminal":_mount_observation(runner, world, director, riding)}
+		print("F37 MOUNT REFUSAL " + JSON.stringify(observation))
+		return {"verdict":"FAIL","detail":"host did not authorize mount","data":observation}
 	if action == "f37_deep_fixture":
 		if not riding.is_mounted(): return {"verdict":"FAIL","detail":"not mounted"}
 		var started := Engine.get_physics_frames()
@@ -258,3 +264,42 @@ static func step(runner: SceneTree, action: String, args: Dictionary) -> Diction
 					"state":args.require_saved_dive,"preset":preset,"renderer":renderer,"observed":data}))
 		return {"verdict":"PASS","data":data}
 	return {"verdict":"ERROR","detail":"unknown F37 action"}
+
+## Read-only local operands, never a replacement authority verdict. A client's
+## empty local answer cache says nothing about whether the host received input.
+static func _mount_observation(runner: SceneTree, world: Node, director: Node, riding: Node) -> Dictionary:
+	var game := runner.root.get_node("Game")
+	var player: Node3D = world.local_rig()
+	var body: Node3D = director.ally_body()
+	var instance: RefCounted = director.ally_instance()
+	var arbiter: Node = riding.get("_arbiter")
+	var provider: Object = arbiter.winning_provider() if arbiter != null else null
+	var service: Node = world.get_node("RippletWaterService")
+	var peer: int = game.session.local_peer_id()
+	var answers := {}
+	for token: String in service.get("_answered"):
+		if token.begins_with(str(peer) + ":"):
+			answers[token] = service.get("_answered")[token].duplicate(true)
+	var mountable: Node3D = riding._mountable_body()
+	var owner := INPUT_OWNER.current(runner)
+	var data := {"peer":peer,"character_id":str(game.local.character_id),
+		"uid":str(instance.uid) if instance != null else "", "mounted":riding.is_mounted(),
+		"player_position":str(player.global_position), "body_valid":is_instance_valid(body),
+		"body_path":str(body.get_path()) if is_instance_valid(body) else "none",
+		"body_visible":is_instance_valid(body) and body.is_visible_in_tree(),
+		"mountable_path":str(mountable.get_path()) if is_instance_valid(mountable) else "none",
+		"riding_allowed":riding._riding_allowed(), "tack":riding._has_tack("ripplet"),
+		"input_owner":str(owner.get_path()) if is_instance_valid(owner) else "none",
+		"arbiter_enabled":arbiter != null and arbiter.enabled(),
+		"selected_offer":arbiter.winner().duplicate(true) if arbiter != null else {},
+		"selected_provider":str(provider.get_path()) if provider is Node else str(provider),
+		"ripplet_requesting":riding.get("_ripplet_requesting"),
+		"actual_pending_requests":service.get("_pending").duplicate(true),
+		"local_service_is_host":game.is_host(),"actual_local_service_answers":answers,
+		"pending_world_message":str(game.get("_pending_world_message"))}
+	if is_instance_valid(body):
+		data.body_position = str(body.global_position)
+		data.center_distance = player.global_position.distance_to(body.global_position)
+		data.surface_distance = riding._mount_surface_distance(player.global_position, body)
+		data.mount_reach = riding.mount_reach_for(body)
+	return data
