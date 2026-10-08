@@ -286,7 +286,20 @@
     "change": "Compare existing admissible intermediates by nonnegative visibility penalty, stable route-order ties; zero penalty/manual early exit. Existing guard, speed and at-most20 budget preserved.",
     "review_agent": "original f25_arrival_review",
     "review": "APPROVE bounded source",
-    "logic": "PENDING affected test_fight_camera.gd",
+    "logic": {
+      "run_id": 37743291715,
+      "artifact_id": 11535175715,
+      "source_commit": "625408728a2efa954c3705133c986884c782af5a",
+      "file": "tests/test_fight_camera.gd",
+      "tests": 7,
+      "assertions": 185,
+      "failed": 0,
+      "exit": 0,
+      "seconds": 5,
+      "result": "PASS",
+      "camera_manager_blob": "802c25165cdbed9f31c5dd77c05798036d9fbe58",
+      "same_reviewed_source_at625": true
+    },
     "behavior": "PENDING ROOT native original nine-pair matrix",
     "visual": "PENDING original code-blind review"
   }
