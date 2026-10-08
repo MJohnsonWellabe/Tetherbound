@@ -94,6 +94,7 @@ var _prove_utility := ""
 var _saved_live_moves: Array = []
 var _prove_canonical_wild := false
 var _saved_actor_vitals: Dictionary = {}
+var _saved_autoload_game: Node
 
 func _init() -> void:
 	_run.call_deferred()
@@ -564,6 +565,11 @@ func _run() -> void:
 
 func _setup() -> void:
 	_directory = "user://f23_live_%s/" % Crypto.new().generate_random_bytes(12).hex_encode()
+	if _prove_canonical_wild:
+		# Canonical admission resolves /root/Game. Keep the original autoload
+		# intact off-tree while this disclosed production-node fixture owns that path.
+		_saved_autoload_game = root.get_node_or_null(^"Game")
+		if _saved_autoload_game != null: root.remove_child(_saved_autoload_game)
 	_world = Node3D.new()
 	_world.name = "F23LiveStage"
 	root.add_child(_world)
@@ -988,5 +994,6 @@ func _finish() -> void:
 	if is_instance_valid(_world): _world.free()
 	if is_instance_valid(_session): _session.free()
 	if is_instance_valid(_game): _game.free()
+	if is_instance_valid(_saved_autoload_game): root.add_child(_saved_autoload_game)
 	if not _directory.is_empty(): preload("res://tests/helpers/split_save_fixture.gd").wipe(_directory)
 	quit(0 if _errors.is_empty() else 1)
