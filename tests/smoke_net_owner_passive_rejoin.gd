@@ -428,8 +428,8 @@ func _run() -> void:
 			var peer := int(owner.peer)
 			var before: Dictionary = await probe(0, "op_tag_state", {"peer":peer, "shove":true})
 			if not _ok(await step(1, "op_tag_shove"), "Shove: guest physically taps B through production utility input"): break
-			var after: Dictionary = await probe(0, "op_tag_state", {"peer":peer, "shove":true})
-			var receipts: Dictionary = after.get("shove", {}).get("receipts", {})
+			var shove_after: Dictionary = await probe(0, "op_tag_state", {"peer":peer, "shove":true})
+			var receipts: Dictionary = shove_after.get("shove", {}).get("receipts", {})
 			var fresh: Array[Dictionary] = []
 			for action: String in receipts:
 				if not (before.get("shove", {}).get("receipts", {}) as Dictionary).has(action): fresh.append(receipts[action])
@@ -440,17 +440,17 @@ func _run() -> void:
 				check(receipt.get("move_id") == "shove" and receipt.get("kind") == "push" \
 					and receipt.get("source_uid") == owner.deployment.get("creature_uid") \
 					and receipt.get("target_uid") == before.shove.target_uid \
-					and receipt.get("target_uid") == after.shove.target_uid \
-					and before.shove.encounter_id == after.shove.encounter_id \
+					and receipt.get("target_uid") == shove_after.shove.target_uid \
+					and before.shove.encounter_id == shove_after.shove.encounter_id \
 					and receipt.get("encounter_id") == before.shove.encounter_id \
-					and int(before.shove.generation) > 0 and before.shove.generation == after.shove.generation \
+					and int(before.shove.generation) > 0 and before.shove.generation == shove_after.shove.generation \
 					and receipt.get("generation") == before.shove.generation,
 					"Shove: original receipt binds the guest's creature and same wild target")
 				check(is_equal_approx(float(receipt.get("requested_push_metres", -1.0)), float(moves.move("shove").utility.push_metres)) \
 					and float(receipt.get("applied_push_metres", -1.0)) > 0.0 \
 					and float(receipt.get("applied_push_metres", INF)) <= float(receipt.get("requested_push_metres", -1.0)) + 0.001,
 					"Shove: actual swept displacement is positive and bounded by authored distance")
-			print("SHOVE actual host observation: ", JSON.stringify({"before":before, "after":after}))
+			print("SHOVE actual host observation: ", JSON.stringify({"before":before, "after":shove_after}))
 
 	if OS.get_cmdline_user_args().has("--prove-tether-snare"):
 		# Reuse the admitted party and ordinary wild/proximity path. No catch
