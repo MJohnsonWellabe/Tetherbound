@@ -47,9 +47,6 @@ func _act(policy: String) -> void:
 		current["sendout_index"] = int(_tally.get("f22_sendouts", 0))
 		_tally["f22_sendouts"] = int(current.sendout_index) + 1
 		_wild.call("configure_patterns", patterns, current, _visible_observation)
-	if policy == "MASHER":
-		super._act("MASHER")
-		return
 	if policy == "SWITCH_READER" and _manager.can_switch():
 		_switch_for_matchup()
 	_read(policy)
@@ -91,8 +88,33 @@ func _read(_policy: String) -> void:
 	var reserve: float = _manager.wind_cost("burst") + _manager.wind_cost("quick")
 	var observed := float(MATH.config().get("patterns", {}).get("reactions", {}).get("observation_s", 0.25))
 	var seen := float(_frames - _tell_seen_frame) / Engine.physics_ticks_per_second if telling else 0.0
-	_note_fields(telling)
-	if telling and seen >= observed and _manager.charged_ready() \
+	var masher := _policy == "MASHER"
+	var waiting := bool(_manager.get("_ultimate_waiting_release"))
+	var armed: bool = _manager.ultimate_armed()
+	var latched := waiting or armed
+	if not masher: _note_fields(telling)
+	var ultimate_creature: RefCounted = _manager.active_creature()
+	if ultimate_creature != null and not waiting and not bool(_manager.get("_ultimate_face_release")) \
+		and not bool(_manager.get("_move_awaiting_host")) and _manager.ultimate_fraction() >= 1.0 \
+		and _manager.combat_input_available() and _manager.call("_uses_host_move_start") == true:
+		var ultimate_id := str(ultimate_creature.get("move_ultimate"))
+		var ultimate_row: Dictionary = _moves.move(ultimate_id)
+		if ultimate_row.get("slot") == "ultimate" and ultimate_creature.get("known_moves").has(ultimate_id) \
+			and MANAGER.live_move_supported("ultimate", ultimate_id) \
+			and _manager.wind_value() >= float(ultimate_row.get("wind_cost", INF)):
+			var profile: Dictionary = _manager.call("_with_reach_for_the_bodies", _manager.call("_move_profile", "player_ultimate", ultimate_id))
+			var read_opening: bool = not telling and opening \
+				and float(_frames - _opening_seen_frame) / Engine.physics_ticks_per_second >= observed
+			var fits: bool = read_opening and float(_wild.get("_beat_left")) > float(profile.get("windup", INF)) + (0.0 if armed else 2.0 / Engine.physics_ticks_per_second) \
+				and MATH.move_connects(profile, _ally.call("centre"), _ally.call("facing"), _wild.call("centre")) \
+				and _field_exit() == Vector3.ZERO and _manager.wind_value() >= float(ultimate_row.get("wind_cost", INF)) + _manager.wind_cost("burst")
+			if masher or fits:
+				_press("combat_quick" if armed else "combat_ultimate_arm")
+				return
+	if masher:
+		if not latched: super._act("MASHER")
+		return
+	if not latched and telling and seen >= observed and _manager.charged_ready() \
 			and not bool(_wild.call("protected_heavy_committed") if _wild.has_method("protected_heavy_committed") else false) \
 			and distance < _manager.combat_move_reach("charged") - 0.15 \
 			and _manager.wind_value() >= _manager.wind_cost("charged"):
@@ -129,7 +151,7 @@ func _read(_policy: String) -> void:
 			return
 		# Outside the shown shape: strike if a quick lands first, else hold,
 		# never spending the burst the next exit may need.
-		if distance <= reach - 0.25 and _manager.quick_ready() \
+		if not latched and distance <= reach - 0.25 and _manager.quick_ready() \
 				and _manager.wind_value() >= reserve:
 			_press("combat_quick")
 		return
@@ -147,6 +169,7 @@ func _read(_policy: String) -> void:
 			_press("jump")
 			_tally.burst_uses += 1
 		return
+	if latched: return
 	if opening:
 		# Read the opening before committing; released field/fan evasion above still wins.
 		if float(_frames - _opening_seen_frame) / Engine.physics_ticks_per_second < observed:

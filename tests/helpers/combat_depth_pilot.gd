@@ -170,8 +170,10 @@ func _neutral_worst_frac(creature: RefCounted) -> float:
 func _on_hit(on_enemy: bool, damage: float) -> void:
 	if on_enemy:
 		_tally.hits += 1
+		var pending: Dictionary = _manager.get("_pending_move")
+		var slot := str(pending.get("slot", "quick" if bool(pending.get("is_quick", true)) else "charged"))
 		if _enemy_windup_before_tick and _wild.is_staggered() \
-				and not bool((_manager.get("_pending_move") as Dictionary).get("is_quick", true)):
+				and slot == "charged":
 			_tally.charged_interrupts += 1
 	else:
 		_tally.incoming_hits += 1
@@ -212,8 +214,10 @@ func _on_hit(on_enemy: bool, damage: float) -> void:
 func _on_state_changed() -> void:
 	var action := int(_manager.get("_action"))
 	if action == MANAGER.Action.WINDUP and _last_action != MANAGER.Action.WINDUP:
-		var quick := bool((_manager.get("_pending_move") as Dictionary).get("is_quick", true))
-		_tally["quick_uses" if quick else "charged_uses"] += 1
+		var pending: Dictionary = _manager.get("_pending_move")
+		var slot := str(pending.get("slot", "quick" if bool(pending.get("is_quick", true)) else "charged"))
+		if slot in ["quick", "charged", "utility", "ultimate"]:
+			_tally[slot + "_uses"] = int(_tally.get(slot + "_uses", 0)) + 1
 	_last_action = action
 
 
