@@ -17,10 +17,11 @@
   "counts": {
     "rows": 44,
     "natural_loss": 1,
-    "context_supplement": 6,
+    "context_supplement": 3,
     "current_reward": 1,
     "primary_retained": 36,
-    "original_reviewer_recorded_numeric_rows": 44
+    "original_reviewer_recorded_numeric_rows": 44,
+    "current_pattern_fight": 3
   },
   "score_assembly_checks": "44unique IDs, all original-recorded1..5scores, exact products; no score invented or previous failure promoted. Original primary exposure/importance preserved estimates explicitly disclosed.",
   "whole_criterion_verdict": "PENDING ORIGINAL INDEPENDENT APPROVE AND ORIGINAL BLIND COMPLETENESS PASS",
@@ -109,22 +110,29 @@
     {
       "item_id": "P2-092",
       "subject": "named wild fight actor spacing",
-      "original_artifact": "native-context-rescore.json",
-      "original_assessment": "BOUNDED",
-      "severity": 1,
+      "original_artifact": "current-pattern-fight-rescore.json",
+      "original_assessment": "SUPPORTED, bounded to named actor spacing in all 24 supplied Hollows tell/strike/impact/recovery stills.",
+      "severity": 3,
       "exposure": 4,
       "importance": 4,
-      "impact": 16,
-      "verdict": "PASS",
+      "impact": 48,
+      "verdict": "FAIL",
       "evidence": [
-        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-a-start.jpg",
-        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-e-impact.jpg",
-        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-f-recovery.jpg",
-        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-i17.jpg"
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell1-a-start.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell1-e-impact.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell1-f-recovery.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell2-e-impact.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell2-f-recovery.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell3-a-start.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell3-e-impact.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell3-f-recovery.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell4-f-recovery.png"
       ],
       "limits": [
-        "Still samples cannot establish collision clearance or all spacing during continuous motion, other party formations or four-player combat.",
-        "Severity 1 is the requested scale minimum; it does not assert a residual observed spacing defect."
+        "Chronological stills support visible silhouettes, cue co-presence and sampled effect appearance; they do not establish continuous motion, timing, warning duration, performance or collision geometry.",
+        "One pictured Hollows fight context only; no earned encounter, multiplayer or region-wide acceptance claim.",
+        "Independent current pixel assessment; previous numeric ratings were not read or transferred. Other row scores, witnesses and whole-criterion verdict are untouched.",
+        "Projected masking is visible; these images do not prove physical mesh interpenetration. No unseen alternative camera heading or other named fight is graded."
       ]
     },
     {
@@ -199,22 +207,30 @@
     {
       "item_id": "P2-093",
       "subject": "named wild danger and opening cues",
-      "original_artifact": "native-context-rescore.json",
-      "original_assessment": "BOUNDED",
+      "original_artifact": "current-pattern-fight-rescore.json",
+      "original_assessment": "SUPPORTED for the visible danger/opening distinction of four Hollows tell sequences; temporal readability is unassessed.",
       "severity": 3,
       "exposure": 4,
       "importance": 4,
       "impact": 48,
       "verdict": "FAIL",
       "evidence": [
-        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-a-start.jpg",
-        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-e-impact.jpg",
-        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-f-recovery.jpg",
-        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-i17.jpg"
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell1-a-start.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell1-e-impact.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell1-f-recovery.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell2-e-impact.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell2-f-recovery.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell3-e-impact.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell3-f-recovery.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell4-c-late.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell4-d-strike.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell4-e-impact.png"
       ],
       "limits": [
-        "Chronological stills support coexistence and sampled disappearance only; they do not prove cue duration, input windows or continuous timing.",
-        "No implementation or purpose of the residual glyph is inferred."
+        "Chronological stills support visible silhouettes, cue co-presence and sampled effect appearance; they do not establish continuous motion, timing, warning duration, performance or collision geometry.",
+        "One pictured Hollows fight context only; no earned encounter, multiplayer or region-wide acceptance claim.",
+        "Independent current pixel assessment; previous numeric ratings were not read or transferred. Other row scores, witnesses and whole-criterion verdict are untouched.",
+        "No inference about the actual safe area, scheduler state, strike radius, mechanical vulnerability or numerical warning duration. The gold/cyan HUD text remains readable in the supplied views."
       ]
     },
     {
@@ -325,21 +341,31 @@
     {
       "item_id": "P2-063",
       "subject": "shared fight tell and hit effects",
-      "original_artifact": "native-context-rescore.json",
-      "original_assessment": "PARTIAL",
+      "original_artifact": "current-pattern-fight-rescore.json",
+      "original_assessment": "PARTIAL ROW: current visible Hollows ground tells and sampled contact/hit graphics only, using all 24 supplied rasters. Other attacks, regions and motion/impact aspects are unassessed.",
       "severity": 3,
-      "exposure": 5,
+      "exposure": 4,
       "importance": 4,
-      "impact": 60,
+      "impact": 48,
       "verdict": "FAIL",
       "evidence": [
-        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-a-start.jpg",
-        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-e-impact.jpg",
-        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/A_blackwater_elder-i03.jpg"
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell1-b-mid.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell1-e-impact.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell2-b-mid.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell2-e-impact.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell2-f-recovery.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell3-b-mid.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell3-e-impact.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell4-c-late.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell4-d-strike.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell4-e-impact.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell4-f-recovery.png"
       ],
       "limits": [
-        "Supported for inspected Voltarach tells and one Mosshock hit graphic, not every move/effect archetype or every encounter.",
-        "Hitstop, knockback weight, animation timing, sound and continuous response cannot be rated from these stills."
+        "Chronological stills support visible silhouettes, cue co-presence and sampled effect appearance; they do not establish continuous motion, timing, warning duration, performance or collision geometry.",
+        "One pictured Hollows fight context only; no earned encounter, multiplayer or region-wide acceptance claim.",
+        "Independent current pixel assessment; previous numeric ratings were not read or transferred. Other row scores, witnesses and whole-criterion verdict are untouched.",
+        "No score for unseen attacks, other regions, audio, hit-stop, knockback trajectory, impact timing or animation continuity. Tell3's visible miss cue is not treated as proof of a missing hit effect. This is not a complete P2-063 coverage or closure claim."
       ]
     },
     {
@@ -834,5 +860,6 @@
     "severity": "Original judge assessed severity",
     "exposure_importance": "Original primary artifact preserves input priority estimates; do not claim fresh independent exposure/importance for these36",
     "criterion_applicability": "Requires original whole review judgment, not assembly assumption"
-  }
+  },
+  "affected_applicability_resolution": "Same original judge independently re-scored only current253 P2-092/P2-093/P2-063 from all24 existing tell rasters; all3visualFAIL/BLOCK48 retained. Previous context scores preserved in original artifact, not currentassembly."
 }
