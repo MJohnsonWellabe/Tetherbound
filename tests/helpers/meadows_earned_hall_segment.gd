@@ -143,6 +143,8 @@ func _travel() -> bool:
 	var road := departure_spine(_read(TERRAIN))
 	if road.is_empty() or not await _prepare():
 		return _fail("The current on-foot departure spine or earned care is unavailable")
+	if not await _earn_master_t1():
+		return false
 	var previous := 0
 	for id: String in CAPTAIN_IDS:
 		var body := _trainers.call("body_for", id) as Node3D
@@ -241,6 +243,223 @@ func _travel() -> bool:
 	_receipt("warden_arena_entered", {"party_ids": _party_ids(), "trainers": _observed_trainers.duplicate(),
 		"player": _player.global_position, "marker": _hold.call("marker", "warden_arena"), "travel": "on_foot"})
 	return true
+
+
+## The L10 quest is earned through Orin's actual chooser, solo duel and chest.
+## This does not lift a cap: the Kitchen and chosen Altar spend follow it.
+func _earn_master_t1() -> bool:
+	var session: Node = _game.get("session")
+	var service: Node = session.call("homestead_breakthrough_service") if session != null else null
+	if service == null or not bool(session.call("is_host")):
+		return _fail("Earned Master preparation requires the actual solo-host producer")
+	var retained: Dictionary = service.call("retained_site", _world, "master_t1")
+	if retained.get("status") != "owned":
+		return _fail("The installed, producer-owned Orin site is unavailable")
+	var site: Node3D = retained.site
+	var definition: Dictionary = site.get("_definition")
+	var master_prompt := site.get_node_or_null("Master/Interactable") as Node3D
+	var chest := site.get_node_or_null("RecipeChest")
+	var chest_prompt: Node3D
+	if chest != null:
+		for child: Node in chest.get_children():
+			if child.get_script() == preload("res://scripts/world/interactable.gd"):
+				if chest_prompt != null:
+					return _fail("Orin's chest has ambiguous interaction providers")
+				chest_prompt = child as Node3D
+	if master_prompt == null or chest_prompt == null or definition.get("id") != "master_t1" \
+			or int(definition.get("participants", 0)) != 1:
+		return _fail("The authored one-creature Master or chest provider is missing")
+	var terrain := _read(TERRAIN)
+	var crossing := mill_config(terrain)
+	var channel: Dictionary = crossing.get("channel", {})
+	var bank := float(channel.get("half_width", 0.0)) + float(channel.get("rim", 0.0)) + 3.0
+	var band2 := trail_points(terrain, "bands", "band2_stone_and_root")
+	var band3 := trail_points(terrain, "bands", "band3_the_river_lock")
+	var relay := trail_points(terrain, "loops", "relay_approach_loop")
+	var rim := trail_points(terrain, "loops", "quarry_rim_overlook")
+	if channel.is_empty() or band2.is_empty() or band3.is_empty() or relay.is_empty() \
+			or rim.is_empty() or not bool(_mill.call("is_open")):
+		return _fail("The already-paid Mill and authored return roads are unavailable")
+	var departure := _v2p()
+	var route: Array[Vector2] = [_mill.call("far_point", bank), _mill.call("near_point", bank)]
+	var river := mill_path(terrain, relay[0])
+	if river.is_empty():
+		return _fail("The Relay approach loop cannot be retraced")
+	river.reverse()
+	route.append_array(river)
+	for index in range(nearest_index(band3, relay[0]) - 1, -1, -1):
+		route.append(band3[index])
+	var quarry_join := nearest_index(band2, rim[-1])
+	var master_join := nearest_index(rim, Vector2(site.global_position.x, site.global_position.z))
+	if quarry_join < 0 or master_join < 0:
+		return _fail("The authored quarry rim has no Master junction")
+	for index in range(band2.size() - 2, quarry_join - 1, -1):
+		route.append(band2[index])
+	for index in range(rim.size() - 2, master_join - 1, -1):
+		route.append(rim[index])
+	for point: Vector2 in route:
+		if not await _around("overlook_bypass", OVERLOOK_KNOT, OVERLOOK_CLEAR_M,
+				OVERLOOK_BYPASS, _v2p(), point) or not await _walk_ground(point):
+			return false
+	if not await _prepare_for_trainer() or not await _approach_prompt(master_prompt):
+		return false
+	var view: Dictionary = service.call("view")
+	var cid := str(_game.get("local").get("character_id"))
+	var cards: Array = view.get("party", [])
+	var personal: Dictionary = view.get("redesign_character", {})
+	var win_receipt := "master_recipe:master_t1:%s:win" % cid
+	var chest_receipt := "master_recipe:master_t1:%s" % cid
+	if view.get("character_id") != cid or cards.size() != 5 or not retained_five(_initial_ids, _party_ids()) \
+			or personal.get("master_wins", []).has("master_t1") or personal.get("feast_recipes", []).has("feast_t1") \
+			or personal.get("transaction_receipts", []).has(win_receipt) \
+			or personal.get("transaction_receipts", []).has(chest_receipt):
+		return _fail("Master preparation lacks five retained creatures or starts after its personal reward")
+	var chosen := -1
+	var uids: Array[String] = []
+	var caps := {}
+	for index in cards.size():
+		var card: Dictionary = cards[index]
+		var card_uid := str(card.get("uid", ""))
+		if card_uid.is_empty() or uids.has(card_uid):
+			return _fail("The Master chooser has an ambiguous creature identity")
+		uids.append(card_uid)
+		caps[card_uid] = ESSENCE.creature_cap(personal, card_uid)
+		if bool(card.get("fainted", true)) or bool(card.get("resting", false)) or float(card.get("hp", 0.0)) <= 0.0:
+			continue
+		if chosen < 0 or int(card.level) > int(cards[chosen].level) \
+				or (int(card.level) == int(cards[chosen].level) and float(card.hp) > float(cards[chosen].hp)):
+			chosen = index
+	if chosen < 0:
+		return _fail("No conscious owned creature is available for Orin")
+	var uid := uids[chosen]
+	var pilot := LIVE.CampaignPilot.new(_tree, _combat, _director, _rig)
+	pilot.use_switching = false
+	pilot.switch_input = false
+	var scope: Dictionary = session.call("personal_tm_scope")
+	var observed := {"error": ""}
+	var completed := func(action: String, original: Dictionary, result: Dictionary) -> void:
+		if action not in ["master_win", "master_chest"] or original.get("master_id") != "master_t1":
+			return
+		if session.call("personal_tm_scope") != scope:
+			observed.error = "Master reward changed character/session scope"
+		elif result.get("terminal_refusal") == true:
+			observed.error = str(result.get("reason", result.get("code", "Master reward refused")))
+		elif result.get("ok") == true and result.get("resolved") == true and result.get("settled") == true \
+				and result.get("durable") == true and result.get("saved") == true \
+				and result.get("owner_saved") == true and result.get("owner_acknowledged") == true:
+			observed[action] = {"original": original.duplicate(true), "result": result.duplicate(true)}
+	session.connect("homestead_action_completed", completed)
+	var finish := func(reason: String) -> bool:
+		pilot._move_toward(Vector3.ZERO)
+		if session.is_connected("homestead_action_completed", completed):
+			session.disconnect("homestead_action_completed", completed)
+		return true if reason.is_empty() else _fail(reason)
+	_activated_id = 0
+	await pilot.press("interact")
+	await _tree.process_frame
+	var chooser: Node
+	for frame in 90:
+		chooser = service.get("_panel")
+		if _activated_id == master_prompt.get_instance_id() and is_instance_valid(chooser) and chooser.call("is_open") == true:
+			break
+		await _tree.physics_frame
+	if not is_instance_valid(chooser) or chooser.call("is_open") != true or chooser.get("_mode") != "duel" \
+			or chooser.get("_master") != "master_t1" or chooser.get("_source") != site or INPUT_OWNER.current(_tree) != chooser:
+		return finish.call("Physical Master interaction did not open the exact duel chooser")
+	var buttons: Array[Button] = []
+	for child: Node in chooser.get("_list").get_children():
+		if child is Button:
+			buttons.append(child)
+	if buttons.size() != cards.size() + 1:
+		return finish.call("The Master chooser does not contain five party rows and Back")
+	for index in cards.size():
+		var label := "%s · Lv %d" % [str(cards[index].get("nickname", cards[index].species_id)), int(cards[index].level)]
+		if buttons[index].text != label:
+			return finish.call("The Master chooser order no longer matches its canonical party view")
+	if buttons[chosen].disabled:
+		return finish.call("The chosen owned creature is disabled in the actual chooser")
+	for step in buttons.size() * 2:
+		if chooser.get_viewport().gui_get_focus_owner() == buttons[chosen]:
+			break
+		await pilot.press("ui_down")
+		await _tree.process_frame
+	if chooser.get_viewport().gui_get_focus_owner() != buttons[chosen]:
+		return finish.call("Physical d-pad input could not select the intended creature")
+	var started := Engine.get_physics_frames()
+	await pilot.press("ui_accept")
+	var binding := {}
+	var foe: RefCounted
+	for frame in 90:
+		if _fighting() and str(_director.call("trainer_battle_id")) == "master_t1":
+			binding = (_director.get("_master_duel") as Dictionary).duplicate(true)
+			foe = _combat.call("enemy")
+			break
+		await _tree.physics_frame
+	if binding.get("character_id") != cid or binding.get("creature_uid") != uid or binding.get("master_id") != "master_t1" \
+			or str(binding.get("encounter_id", "")).is_empty() or not binding.get("participants") is Dictionary \
+			or binding.participants.size() != 1 or foe == null or str(foe.get("species_id")) != str(definition.species_id) \
+			or int(foe.get("level")) != int(definition.cap_level):
+		return finish.call("Master admission lacks the chosen UID, one participant and configured opponent")
+	var encounter := str(binding.encounter_id)
+	while captain_within_deadline(Engine.get_physics_frames() - started):
+		if not str(observed.error).is_empty():
+			return finish.call(str(observed.error))
+		if _fighting():
+			var combat_party: Array = _combat.get("_party")
+			var active: RefCounted = _combat.call("active_creature")
+			if _combat.call("enemy") != foe or str(_combat.call("encounter_id")) != encounter \
+					or combat_party.size() != 1 or combat_party[0] != active or str(active.get("uid")) != uid:
+				return finish.call("The Master fight changed opponent, encounter or sole chosen creature")
+			await pilot._act(_director.call("ally_body"), _combat.call("enemy_body"))
+			pilot._move_toward(Vector3.ZERO)
+		elif not bool(_director.call("trainer_battle_active")) and observed.has("master_win"):
+			break
+		else:
+			await _tree.physics_frame
+	pilot._move_toward(Vector3.ZERO)
+	if not captain_within_deadline(Engine.get_physics_frames() - started) or _fighting() \
+			or bool(_director.call("trainer_battle_active")) or _combat.call("outcome") != "won" \
+			or float(foe.get("hp")) > 0.0 or _fight_hits <= 0 or not observed.has("master_win"):
+		return finish.call("The actual one-creature Master fight lacks victory and saved personal ACK")
+	var win: Dictionary = observed.master_win
+	if win.original != {"master_id": "master_t1", "creature_uid": uid, "encounter_id": encounter} \
+			or win.result.get("receipt") != win_receipt:
+		return finish.call("The durable Master win does not bind this exact duel")
+	if not await _approach_prompt(chest_prompt):
+		return finish.call("The earned recipe chest could not be approached")
+	var candy_before := _count("tether_candy")
+	_activated_id = 0
+	started = Engine.get_physics_frames()
+	await pilot.press("interact")
+	while captain_within_deadline(Engine.get_physics_frames() - started) \
+			and not observed.has("master_chest") and str(observed.error).is_empty():
+		await _tree.physics_frame
+	if not str(observed.error).is_empty():
+		return finish.call(str(observed.error))
+	if _activated_id != chest_prompt.get_instance_id() or not observed.has("master_chest"):
+		return finish.call("Physical chest interaction lacks its durable personal completion")
+	var claim: Dictionary = observed.master_chest
+	personal = _game.get("local").get("redesign_character")
+	if claim.original != {"master_id": "master_t1"} or claim.result.get("receipt") != chest_receipt \
+			or personal.get("master_wins", []).count("master_t1") != 1 or personal.get("feast_recipes", []).count("feast_t1") != 1 \
+			or personal.get("transaction_receipts", []).count(win_receipt) != 1 \
+			or personal.get("transaction_receipts", []).count(chest_receipt) != 1 \
+			or _count("tether_candy") != candy_before + int(definition.candy) or not retained_five(_initial_ids, _party_ids()):
+		return finish.call("The chest lacks exactly one learned feast, configured Candy and retained five")
+	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
+		var actual_uid := str(member.get("uid"))
+		if not caps.has(actual_uid) or ESSENCE.creature_cap(personal, actual_uid) != caps[actual_uid]:
+			return finish.call("Winning or opening the chest changed an owned creature's cap")
+	_receipt("master_t1_earned", {"character_id": cid, "chosen_uid": uid, "encounter_id": encounter,
+		"win": win, "chest": claim, "candy_before": candy_before, "candy_after": _count("tether_candy"),
+		"party_uids": uids, "caps_unchanged": true})
+	finish.call("")
+	route.reverse()
+	for point: Vector2 in route:
+		if not await _around("overlook_bypass", OVERLOOK_KNOT, OVERLOOK_CLEAR_M,
+				OVERLOOK_BYPASS, _v2p(), point) or not await _walk_ground(point):
+			return false
+	return await _walk_ground(departure, 0.6)
 
 
 func _walk_marker(id: String, budget: int) -> bool:
