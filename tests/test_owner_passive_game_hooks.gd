@@ -236,6 +236,7 @@ func _native_case_backpack_target_guard_precedes_any_care_or_item_write() -> voi
 	var trade := preload("res://scripts/trade/trade_db.gd").new()
 	var coin: String = trade.currency_id()
 	var price: int = trade.buy_price("mira", "potion_small")
+	var original_coins: int = game.inventory.count(coin)
 	assert_eq(game.inventory.add(coin, price * 2), 0)
 	var shop := preload("res://scripts/ui/shop_panel.gd").new()
 	shop.game = game
@@ -254,31 +255,36 @@ func _native_case_backpack_target_guard_precedes_any_care_or_item_write() -> voi
 	owner_session.blocked = false
 	assert_eq(shop.buy_one("potion_small"), "")
 	assert_eq(game.inventory.count("potion_small"), 1, "ordinary purchase gives exactly one dose")
-	assert_eq(game.inventory.count(coin), price, "ordinary purchase keeps the configured price")
+	assert_eq(game.inventory.count(coin), original_coins + price, "ordinary purchase keeps the configured price")
 	assert_eq(shop.sell_one("berries"), "")
 	assert_eq(game.inventory.count("berries"), 3, "ordinary sale takes exactly one berry")
-	assert_eq(game.inventory.count(coin), price + trade.sell_price("mira", "berries"),
+	assert_eq(game.inventory.count(coin), original_coins + price + trade.sell_price("mira", "berries"),
 		"ordinary sale pays exactly the configured price")
 	shop.free()
 	var species := preload("res://scripts/creatures/creature_species.gd")
 	var giving: RefCounted = species.spawn("paddlenewt")
 	var incoming: RefCounted = species.spawn("bramblebun")
+	var giving_index: int = game.party.size()
+	var starter: RefCounted = game.party.at(1)
 	assert_true(game.party.add(giving))
+	var party_count: int = game.party.size()
 	var swap := preload("res://scripts/ui/swap_panel.gd").new()
 	swap.game = game
 	swap.set("_offer_creature", incoming)
-	swap.set("_pending_index", 1)
+	swap.set("_pending_index", giving_index)
 	packed = var_to_bytes(RECORD.portable_projection(game.local.save_data()))
 	owner_session.blocked = true
 	assert_eq(swap.confirm_swap(), "owner_save_pending")
 	assert_eq(var_to_bytes(RECORD.portable_projection(game.local.save_data())), packed,
 		"pending owner decision cannot replace an owned creature UID through an NPC swap")
-	assert_eq(swap.get("_pending_index"), 1, "blocked swap keeps the exact selected creature retryable")
+	assert_eq(swap.get("_pending_index"), giving_index, "blocked swap keeps the exact selected creature retryable")
 	assert_eq(swap.get("_offer_creature"), incoming, "blocked swap keeps the original offer")
 	owner_session.blocked = false
 	assert_eq(swap.confirm_swap(), "")
-	assert_eq(game.party.size(), 2, "ordinary swap remains one-for-one below the five cap")
-	assert_eq(game.party.at(1), incoming, "ordinary retry takes only the original NPC offer")
+	assert_eq(game.party.size(), party_count, "ordinary swap preserves the original party count below the five cap")
+	assert_eq(game.party.at(giving_index), incoming, "ordinary retry takes only the original NPC offer")
+	assert_eq(game.party.at(1), starter, "original player-exclusive starter is retained")
+	assert_false(game.party.members().has(giving), "only the selected wild creature leaves")
 	assert_eq(swap.get("_pending_index"), -1)
 	assert_eq(swap.get("_offer_creature"), null)
 	swap.free()
