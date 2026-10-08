@@ -1,0 +1,48 @@
+{
+  "scope": "F38#0 existing shipping landscape matrix receipts only; full row OPEN",
+  "source": "7b66e678e30d88af0a35c4717a7c1ac80345759c",
+  "extension": {
+    "file": "tools/capture_f38_matrix.gd",
+    "preserved": "No preset flag override beyond existing process-local requested graphics preset; stands/grounding/obstruction/camera/times/weather/budgets unchanged",
+    "change": "Await initialized native raster before inherited manifest; optional exact source SHA validates when supplied including empty refusal; record authored meadows presentation enabled flag",
+    "lines_added": 21
+  },
+  "independent_review": {
+    "agent": "/root/f42_visual_review",
+    "verdict": "SOURCE APPROVE",
+    "proof_limit": "Actual capture must exercise startup/parser/receipt; inherited stand tests do not test new metadata parsing; no new unit required",
+    "resolved_request": "Empty supplied source SHA now rejected; omitted optional argument retained"
+  },
+  "planned_runtime": {
+    "resolution": [
+      1280,
+      720
+    ],
+    "preset": "Low",
+    "weather": [
+      "clear",
+      "rain"
+    ],
+    "renderer": "gl_compatibility",
+    "script": "tools/capture_f38_matrix.gd",
+    "subset": [
+      "farm_to_hall",
+      "village_road",
+      "hall_front"
+    ],
+    "planned_frames": 48,
+    "source_commit": "7b66e678e30d88af0a35c4717a7c1ac80345759c",
+    "views": [
+      "approach",
+      "gameplay",
+      "reverse",
+      "detail"
+    ],
+    "times": [
+      "day",
+      "night"
+    ]
+  },
+  "flags": "none; shipping meadows_catalog_presentation remains false",
+  "limits": "Debug travel/clock/weather fixture; no earned/controller route or fight evidence. Runtime is pending; fewer than200frames and not complete46rowrescore/fullHighMedium/fullBars."
+}
