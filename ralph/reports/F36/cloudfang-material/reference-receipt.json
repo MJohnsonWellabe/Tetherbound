@@ -1,0 +1,41 @@
+{
+  "subject": "cloudfang",
+  "criterion": "F36#0 priority11",
+  "scope": "Existing current-roster material refinement only; installed model unchanged; candidate OFF",
+  "reference_generator": "image_gen.imagegen",
+  "generation_output": "exec-2f2e30e2-5054-4756-a7ee-eeae5b9028c9.png",
+  "prompt": "Create one reference image for a scoped material refinement of the SAME installed Cloudfang character pictured in both references, a Tetherbound creature. Preserve this exact large white-and-pale-blue wolf: powerful long-legged quadruped proportions, sturdy large clawed paws, long bushy wolf tail, triangular pointed ears with dark inner edges, black nose, piercing pale blue eyes, thick layered pointed tufts of fur with a much longer ruff around neck and shoulders. Preserve the recognizable face, silhouette and white/blue patch placement from these images. Show one complete full-body front three-quarter view including all four paws and the entire tail, centered with generous margin; neutral diffuse studio lighting on a plain pale warm-grey background, no text, labels, frames, scenery or props. The refinement is coherent soft matte fur with white-to-ivory large value blocks, pale cloud-blue outer shoulder/back/ruff and tail-tip accent tufts, clear blue eyes and dark nose/mouth separation, readable sculpted fur under gentle side lighting. Fur must read as fur, not shiny metal, ceramic, armor plates, emissive or reflective plastic. Keep this an identity-preserving visual materials reference, not a redesign or new species. No clothing or equipment. Do not shrink the head, ruff, paws or overall creature; established silhouette must remain. Game character reference art with appealing chunky forms and painterly natural fur shading, faithful to provided reference identity.",
+  "transparent_background": false,
+  "reference_input_paths": [
+    "assets/creatures/tetherbound/cloudfang/reference/front.png",
+    "assets/creatures/tetherbound/cloudfang/reference/side.png"
+  ],
+  "sha256": {
+    "assets/creatures/tetherbound/cloudfang/reference/front.png": "4775b71b3e56874746027e613ae711cd330ddf2ab2452022e371bd66d10014f0",
+    "assets/creatures/tetherbound/cloudfang/reference/side.png": "e640b30f77f7187f40a052027c4bf426be5f17980de0bbd5a59a3e8a6e476087",
+    "assets/creatures/tetherbound/cloudfang/models/creature_cloudfang_lod0.glb": "b1eccad461c2474020b9bbe4bebe535b621c63baa571aa6b9a3fcfd05ac64727",
+    "assets/creatures/tetherbound/cloudfang/reference/f36-material-v1.png": "5a794f81c140013af93be661d6b14300e9988037427494d6aba0e900c3e4461b"
+  },
+  "inspection": "Agent visually inspected all references and draft: complete four-paw wolf/tail, established white/pale-blue layered ruff, blueeyes/darknose/ear edges and proportions; no roster/identity expansion.",
+  "native_before": "37669449150@fa69, Cloudfangstanding2views,3.850000143m versus1.799999952trainer; main577F36#2 met. Materials glare remains visible; not fullasset/pose acceptance.",
+  "meshy": {
+    "task": "01a118de-4b9d-76e6-86be-22e68d544429",
+    "endpoint": "/openapi/v1/retexture",
+    "resolution": "2k",
+    "enable_pbr": true,
+    "enable_original_uv": false,
+    "input": "installed fullbody GLB, existing creature prompt plus inspected reference image",
+    "before_balance": 13325,
+    "status": "SUCCEEDED",
+    "night_cap": 30,
+    "night_submissions": 9,
+    "after_balance": 13315,
+    "observed_credit_cost": 10
+  },
+  "remaining": [
+    "material identity beforeafter judge",
+    "reimport geometry/rig preservation and scale",
+    "native gameplay/poses"
+  ],
+  "shipping": "No model/config binding changed"
+}

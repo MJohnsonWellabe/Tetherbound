@@ -1,8 +1,8 @@
 {
   "criterion": "F36#3",
   "named_proof": "Attended Meshy ledger with task IDs and 30-generation cap",
-  "source_sha": "7027f3bf4ef8846a3b0da8a36837240ca76b8516",
-  "ledger_last_source": "53b8a3345f179f6bad8c1323b28550f4ce7210b2",
+  "source_sha": "c7063c97a9194b461c39a5809b3796744ade3964",
+  "ledger_last_source": "c7063c97a9194b461c39a5809b3796744ade3964",
   "ledger": "ralph/reports/R2-F36/meshy-night-ledger.json",
   "night": "2026-10-07",
   "task_ids": [
@@ -11,13 +11,18 @@
     "01a1169c-70ef-77b1-856a-32d3120cc810",
     "01a116be-dd09-708f-8441-3971076c7c98",
     "01a116d6-5229-7597-a54f-3c40896ff029",
-    "01a11758-bd56-737c-91e6-2c260913964f"
+    "01a11758-bd56-737c-91e6-2c260913964f",
+    "01a118ab-c9e1-7121-b488-52473510552c",
+    "01a118b6-747c-74f1-9546-87893540dfbc",
+    "01a118de-4b9d-76e6-86be-22e68d544429",
+    "01a118fa-7050-7797-9dee-a4870e3437f5",
+    "01a11940-9171-7258-8fd9-f0638f5ba380"
   ],
-  "real_submissions": 6,
+  "real_submissions": 11,
   "cap": 30,
-  "unique_task_ids": 6,
-  "unique_reservation_ids": 6,
-  "reference_hashes": "All six independently match actual reference asset SHA-256",
+  "unique_task_ids": 11,
+  "unique_reservation_ids": 11,
+  "reference_hashes": "All eleven actual files match recorded SHA-256",
   "all_candidate_enabled": false,
   "guard_git_blob": "836a9fdcfb41313338385960ef1713e420e2bdee",
   "retained_proof": "ralph/reports/F36/lane-e-cap-proof.json",
@@ -34,22 +39,19 @@
     }
   ],
   "review": {
-    "verdict": "APPROVE",
-    "agent": "/root/review_f36_cap",
-    "findings": "Six unique task/reservation IDs, night/cap count consistent, each reference hash independently matched; guard and both existing test files identical to prior approved c82425807e036371b9d49ffd41425a5f04cdafcf.",
-    "source_sha": "7027f3bf4ef8846a3b0da8a36837240ca76b8516"
+    "agent": "review_f36_cap",
+    "verdict": "APPROVE accounting maintenance; final current receipt snapshot at532c9713 verified eleven-task sourcec7063c97, historical six-task review intact",
+    "source_sha": "c7063c97a9194b461c39a5809b3796744ade3964",
+    "receipt_source_sha": "532c9713dec4b8d635259f12e17ef9c5611dd2ed"
   },
   "visual_judge": "n/a accounting literal criterion",
   "engine_behavior": "unchanged; n/a",
   "limits": [
-    "F36#0 asset batch and F29 Stormursa art remain OPEN.",
-    "Retained one-task proof remains historical; this receipt covers current six-task ledger.",
-    "No new generation, credentials, purchase or runtime integration."
+    "Whole F36#0/poses and F29 Stormursa OPEN; every candidate binding remains OFF",
+    "Task11 uses existing license/credits; no purchases; no art acceptance from cap accounting"
   ],
   "landing_scope": [
-    "Current six-task ledger exact file at53b8a3345f179f6bad8c1323b28550f4ce7210b2; lastcandidate remainsOFF after identityBLOCK.",
-    "This accounting receipt only. Existing cap guard/tests and earlier cap proof already on main.",
-    "Exclude all unREADY F29/world/material/traversal ancestors."
+    "Current eleven-task ledger/receipt/reference/provenance only; candidate asset preview remains unREADY"
   ],
   "maintenance_review": {
     "scope": "Sixth-task disposition matches retained B BLOCK; count6/30/IDs/reference hashes/credits/allOFF unchanged; same UTC instants after timestamp normalization",
@@ -58,5 +60,6 @@
     "sha": "53b8a3345f179f6bad8c1323b28550f4ce7210b2",
     "reviewer": "/root/review_f36_cap",
     "new_criteria_closed": 0
-  }
+  },
+  "maintenance_scope": "Current eleven attended submissions at committed c7063c97; no new guard/test/runtime binding or art-acceptance claim"
 }
