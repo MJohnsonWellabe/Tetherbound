@@ -1255,10 +1255,12 @@ func _walk_to_home_bed(driver: RefCounted, prompt: Node3D, stance: Dictionary) -
 		var polygon := PackedVector2Array([excluded.position,
 			Vector2(excluded.end.x, excluded.position.y), excluded.end,
 			Vector2(excluded.position.x, excluded.end.y)])
-		# Match exterior_path's existing corner reserve; take the clear east
-		# side instead of steering toward the barrel beside the west face.
-		var southeast := Vector2(excluded.end.x + 0.2, excluded.position.y - 0.2)
-		var northeast := Vector2(excluded.end.x + 0.2, excluded.end.y + 0.2)
+		# Give the controller one capsule clearance around each remote corner;
+		# the narrow 0.2m hint let the actual approach enter the exclusion box.
+		# The unchanged per-frame exterior guard still decides whether it works.
+		var reserve := float(stance.clearance)
+		var southeast := Vector2(excluded.end.x + reserve, excluded.position.y - reserve)
+		var northeast := Vector2(excluded.end.x + reserve, excluded.end.y + reserve)
 		pad_route = exterior_path(from, southeast, polygon, 0.0)
 		if not pad_route.is_empty():
 			pad_route.append(northeast)
