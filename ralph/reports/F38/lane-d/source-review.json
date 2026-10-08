@@ -82,8 +82,37 @@
     "capture": {
       "run": 37760013081,
       "source": "1b0eb2c0c1a66362536ad5de13b47c2b677c8d13",
-      "status": "pending",
-      "scope": "4Lowfarmhouse detail day/night clear/rain; actual MI_WindowGlass energy/binding guard. Reuse relevant unchanged baseline37732351160; pose comparison pending."
+      "status": "complete",
+      "scope": "4Lowfarmhouse detail day/night clear/rain; actual MI_WindowGlass energy/binding guard. Reuse relevant unchanged baseline37732351160; pose comparison pending.",
+      "artifact": 11542699850,
+      "frames": 4,
+      "failures": [],
+      "exit": 0,
+      "seconds": 1729,
+      "actual_window_glow": {
+        "actual_energies": [
+          0.200000002980232,
+          0.200000002980232,
+          0.200000002980232,
+          0.200000002980232,
+          0.200000002980232,
+          0.200000002980232,
+          0.200000002980232,
+          0.200000002980232,
+          0.200000002980232
+        ],
+        "candidate": true,
+        "expected_energy": 0.2
+      },
+      "native_raster": [
+        1280,
+        720
+      ],
+      "paired_baseline_run": 37732351160,
+      "paired_baseline_source": "32e57b52189e73dfd782784eb08c4f823cc984f4",
+      "pose_differences": [],
+      "contact": "farmhouse-floor-component/window-glow-comparison.jpg",
+      "reuse": "OFF window recipe .85 and furniture lift0 unchanged; original source disclosed. Other scene materials/source differ outside this viewed farmhouse scope; no whole-build equivalence."
     },
     "remaining": "Actual pixels/runtime and original blind window/night review; exterior night if interior insufficient. WholeF38 matrix M/H and fullbars remainOPEN; noREADY."
   }
