@@ -254,6 +254,12 @@ func _run() -> void:
 		else:
 			_check(accepted.get("slot") == "utility" and accepted.get("move_id") == _prove_utility,
 				"physical B freezes the legally equipped Dash on the real host")
+			var sweep: Dictionary = accepted.get("dash_resolution", {}).get("receipt", {})
+			_check(sweep.get("hit") == true and sweep.get("action_id") == accepted.get("action_id")
+				and sweep.get("binding") == accepted.get("binding") and sweep.get("target_uid") == str(_enemy.uid)
+				and sweep.get("target_generation") == accepted.get("utility_opponent", {}).get("body_generation")
+				and sweep.get("target_body_instance_id") == _wild.get_instance_id(),
+				"Dash sweep receipt binds the accepted action, attacker and actual opponent body")
 			_check(_impacts.size() == 1 and _enemy.hp < foe_before, "Dash lands one hostile HP debit")
 			_check(_ally.global_position.distance_to(position_before) > 0.0 and _ally.global_position.distance_to(position_before) <= 6.001,
 				"Dash sweeps a supported advance within six metres")
@@ -647,7 +653,13 @@ func _setup() -> void:
 	var opponent := {"species_id": str(_enemy.species_id),
 		"creature_uid": _enemy.uid, "hp": _enemy.hp, "hp_max": _enemy.max_hp,
 		"position": [target.x, target.y, target.z]}
-	if not trainer.is_empty(): opponent["owner_npc"] = trainer.id
+	if not trainer.is_empty():
+		opponent["owner_npc"] = trainer.id
+	if _prove_utility == "dash_strike":
+		# The one static opponent body is generation one. Carry its actual card,
+		# as the production trainer send-out does, so Dash freezes this UID.
+		opponent["card"] = preload("res://scripts/save/water_capture_codec.gd").encode(_enemy)
+		opponent["body_generation"] = 1
 	var rec: Dictionary = _host.open(1, "meadows", "trainer", opponent, str(_creature.uid), DATA.CHARACTER)
 	_id = rec.encounter_id
 	_director.set("_encounter", rec)
