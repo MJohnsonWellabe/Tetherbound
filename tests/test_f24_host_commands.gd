@@ -125,9 +125,11 @@ func test_snare_canonical_status_has_one_shared_slow_and_own_catch_grant() -> vo
 
 func test_equipped_authored_pouches_bind_each_upgrade_on_the_same_participant() -> void:
 	var ids := ["", "rootiron_command_pouch", "tidesteel_command_pouch", "skyglass_command_pouch", "stormglass_command_pouch"]
+	var opponent: Dictionary = host.record(id).opponent.duplicate(true)
+	var items: Dictionary = preload("res://scripts/world/death_satchel_rules.gd").db().get("_items")
 	for tier: int in 5:
 		var authority := HOST.new(1)
-		var record: Dictionary = authority.open(1, "meadows", "wild", {"hp": 100.0, "hp_max": 100.0}, "creature_a", "owner_a")
+		var record: Dictionary = authority.open(1, "meadows", "wild", opponent.duplicate(true), "creature_a", "owner_a")
 		var admitted := _admitted()
 		admitted.equipment.backpack = ids[tier]
 		authority.bind_tether_commands(record.encounter_id, 1, admitted)
@@ -135,6 +137,23 @@ func test_equipped_authored_pouches_bind_each_upgrade_on_the_same_participant() 
 		var profile := COMMANDS.tier_profile(tier)
 		assert_true(float(profile.meter_rate) >= 1.0)
 		assert_true(int(profile.pouch_size) >= 1 and int(profile.pouch_size) <= 3)
+		assert_true(COMMANDS.stage_pouch_assignment([], int(profile.pouch_size) - 1, "potion_small", tier, items, true).get("ok") == true, "last equipped-tier pouch slot is usable")
+		assert_false(COMMANDS.stage_pouch_assignment([], int(profile.pouch_size), "potion_small", tier, items, true).get("ok") == true, "next pouch slot stays unavailable")
+		host = authority
+		id = str(record.encounter_id)
+		assert_true(_start(1).ok)
+		assert_true(_arrive(1, 1300).ok)
+		host.credit_move_hit(id, 1, 1, 2.0, "opponent", 200.0, 1, 100.0)
+		assert_eq(_command_pool().meter, 8.0 * float(profile.meter_rate), "actual accepted quick credits the equipped tier once")
+		host.credit_move_hit(id, 1, 1, 2.0, "opponent", 200.0, 1, 100.0)
+		assert_eq(_command_pool().meter, 8.0 * float(profile.meter_rate), "tier bonus cannot replay")
+		_command_pool().meter = 100.0 # Same disclosed unit meter setup as the existing Snare case.
+		var snare: Dictionary = host.commit_tether_command(COMMANDS.intent(id, 1, 1, "snare"), 1, _command_view(), 2000)
+		assert_true(snare.get("ok") == true, str(snare))
+		var status: Dictionary = host.record(id).opponent.get("tether_snare", {})
+		var modifiers := COMMANDS.snare_modifiers(status, "opponent", 1, "owner_a", 2001)
+		assert_eq(modifiers.movement, profile.movement_multiplier, "actual saved Snare consumer uses the admitted tier")
+		assert_eq(modifiers.catch_bonus, profile.catch_bonus)
 
 func test_rally_can_commit_on_current_owned_deployment_before_its_first_move() -> void:
 	host.bind_tether_commands(id, 1, _admitted())
