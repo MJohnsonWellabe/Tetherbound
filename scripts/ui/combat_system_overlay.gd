@@ -88,6 +88,7 @@ func _ready() -> void:
 	rb.add_theme_font_size_override("font_size", TOKENS.FONT_HEADING)
 	_ring.add_child(rb)
 	_meter_caption = _label(ultimate, "Ultimate")
+	_meter_caption.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var diamond := VBoxContainer.new()
 	diamond.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	diamond.add_theme_constant_override("separation", 8)
