@@ -103,6 +103,10 @@ func _capture_row(row: Dictionary) -> void:
 		_write_manifest()
 		return
 	var requested: Dictionary = house.get("_floor_presentation")
+	var furniture_surfaces := 0
+	for node: Node in house.find_children("*", "Node3D", true, false):
+		furniture_surfaces += int(node.get_meta("farmhouse_furniture_dielectric_surfaces", 0))
+	_manifest["f38_furniture_dielectric_surfaces"] = furniture_surfaces
 	var tiled_bindings := 0
 	var seam_bindings := 0
 	for node: Node in house.find_children("*", "MeshInstance3D", true, false):

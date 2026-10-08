@@ -39,6 +39,7 @@ extends Node3D
 ## camera uses.
 
 const PREFABS := preload("res://scripts/world/building_prefabs.gd")
+const IMPORTED_MATERIALS := preload("res://scripts/world/imported_materials.gd")
 const INTERACTABLE := preload("res://scripts/world/interactable.gd")
 const NIGHT_REST := preload("res://scripts/world/night_rest.gd")
 const CREATURE_BED := preload("res://scripts/build/creature_bed.gd")
@@ -753,6 +754,13 @@ func _furnish(model: String, at: Vector3, yaw_degrees: float, scale_factor := FU
 	else:
 		push_warning("house furniture missing: %s" % obj_path)
 		return
+	# Peer-local installed Furniture OBJ wood/cloth only, on all presets.
+	# Godot's OBJ importer maps MTL Ks to metalness; preserve authored Kd and
+	# roughness through the existing per-instance dielectric correction.
+	# Survival/Fantasy materials, geometry, bounds and blockers are untouched.
+	if dir == FURNITURE_DIR:
+		var corrected := IMPORTED_MATERIALS.make_dielectric(node)
+		node.set_meta("farmhouse_furniture_dielectric_surfaces", corrected)
 	node.position = at
 	node.rotation.y = deg_to_rad(yaw_degrees)
 	node.scale = Vector3.ONE * scale_factor
