@@ -1,0 +1,38 @@
+{
+  "scope": "F42#0 Build launcher and Save rows presentation component only",
+  "source_commit": "6f648c6c1a21674dc14b1740d06eb3d2176bc130",
+  "run": 37707975989,
+  "artifact": 11521551022,
+  "script": "tools/phase2_capture_ui.gd",
+  "args": "--biome=meadows --paired-720 --tabs=build,save --build-states --save-state --output=res://ralph/reports/VISUAL/phase2/lane-d/f42-build-save-paired",
+  "renderer": "gl_compatibility",
+  "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+  "raster_pairs": ["1920x1080", "1280x720"],
+  "actual_result": {
+    "complete": true,
+    "stage": "finished",
+    "failures": [],
+    "exit": 0,
+    "seconds": 1098,
+    "all_frames": 12,
+    "component_frames": 10
+  },
+  "build_state_witness": "Existing Settings button pressed signal selects off/on; capture verifies real Game preference and Build banner visibility, then restores original preference.",
+  "save_state_witness": {
+    "operation": "Existing Save button writes first empty manual slot; refuses overwrite and verifies saved party_size against actual captured party.",
+    "zero_based_slot": 1,
+    "day": 1,
+    "party_size": 1,
+    "realm": "meadows",
+    "legacy": false,
+    "summary_load_result_ok": true,
+    "limits": "Slot summary is not a reload witness. Stocked visual party/satchel, not earned progress. Manifest's generic fixture description predates opt-in Save; actual annotated populated frames record the write."
+  },
+  "source_review": {
+    "agent": "/root/f42_visual_review",
+    "verdict": "SOURCE APPROVE",
+    "scope": "tab_build.gd, tab_save.gd and menu.json build_preview only relative to main068b5bb; native bounded Build scroll, first focus and callbacks unchanged; Save retains all five rows/callbacks/polling/focus policy."
+  },
+  "excluded": "Two incidental HUD frames; all Players/Settings/map/HUD/other unREADY ancestry; placement, physical Save/Load controller flow, scrolling, reload, earned campaign, co-op, device and release Bars.",
+  "disposition": "Capture complete; blind review, named logic and existing Build area proof pending. Full F42#0 remains OPEN."
+}
