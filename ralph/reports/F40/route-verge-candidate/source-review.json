@@ -290,6 +290,38 @@
     },
     "proof_status": "APPROVE exact source restoration and historical bounded proof validity. Original blind X/Y BLOCK and whole capture timeout FAIL retained; numerical candidate PARKED, whole F40#5/full F40 OPEN."
   },
+  "stormward_overlook_capture_source": {
+    "source_verdict": "APPROVE corrected threshold stand, bounded repair selector and existing smoke extension",
+    "review_base_commit": "129368ca773ab409702a3f01cb78898959015d38",
+    "reviewed_worktree_blobs": {
+      "data/config/cloudreach_f40_visual.json": "0521bde4a400a4af3e1d4254b8289c94dd398cd3",
+      "tools/capture_cloudreach_f40_matrix.gd": "a31126604c6643e7e4368b859f5727ad9347a6a9",
+      "tests/smoke_cloudreach_look.gd": "d6d565cbd30bc5188ff8060abfc95405faa44660"
+    },
+    "finding": "capture.authored_stands contains stormward_overlook twice: obsolete(-426.6,5628)/16.699 proposal and new(-424.395539,5634.615617)/15.945396 threshold. Remove the obsolete first entry so capture and manifest declare one unambiguous stand.",
+    "finding_status": "CLOSED: corrected config0521bde4 parses with zero duplicate keys and exactly one Stormward authored approach at(-424.395539,5634.615617)/15.945396. Original finding is retained as historical; no remaining required correction.",
+    "historical_review_blobs": {"config": "385bda1afa986394da24d568913c1d0def2d709f", "capture": "cbe9b6e5acc4f70fa4a3d4db5317eff37a8e01da", "smoke": "d6d565cbd30bc5188ff8060abfc95405faa44660"},
+    "selector_review": {
+      "verdict": "APPROVE bounded --stormward-approach-only source",
+      "duplicate_selector_rejected_before_bootstrap": true,
+      "full_plan_minimum200_and_full384_generation_precede_filter": true,
+      "existing_segment_quarter_guard_precedes_repair_filter": true,
+      "required_rows": "Current fixed four clocks and two weather states require8 approach rows without a segment or2 rows with one declared segment. Filtering generated rows by Stormward slug and approach retains every requested combination; count and nonempty guards fail missing coverage.",
+      "receipt": "Repair boolean, explicit selected frame IDs, capture scope, full planned count and required clocks are recorded. full_matrix_complete additionally requires repair selector false; repair success cannot certify a full matrix.",
+      "preservation": "Default full/quarter selection, existing authored-stand schema/finite guards, fixtures, flags, camera, source/preset/raster, weather, travel, floor, drawn-crown and parent failure behavior remain unchanged. Only the named selector and fixture-disclosure count removal are added."
+    },
+    "verified_source_facts": [
+      "Installed waterward_overlook landmark displayed as Stormward is at(-420,1110,5650), with registered rect half-span17m. Existing summit_overlook_loop includes adjacent(-420,1110,5650) and(-520,1080,5300) endpoints and is bidirectional.",
+      "New position is within0.000001m of sixteen metres back from the endpoint along the incoming route. Heading15.945396 matches atan2(100,350). Its localXZ(-4.395539,-15.384383) is inside the17m rectangle.",
+      "The new position is on existing OverlookWalkableCrown local(-8,-2.4,-28) tozero, width32m: projected station0.450558, perpendicular distance below0.000001m, estimated crownY1108.68134. A ray around1110 plus/minus3m can reach this existing support.",
+      "Original capture text count removal is retained; the corrected combined capture adds only the reviewed opt-in approach repair selector and explicit receipt scope. Existing general planner and source/runtime guards remain unchanged.",
+      "Existing smoke method adds registered-ground availability and physical support within3m plus the retained drawn-crown clearance requirement. Existing original and three-root assertions remain; no new fixture, function, class or production world change."
+    ],
+    "owning_constraints": "WORLD retains Stormward as a view rather than an earned inter-biome route. ART_DIRECTION requires ordinary production-camera matched stands, route/ledge readability and honest missing-frame limits. The stand is explicitly a threshold approach; no earned crossing or visual acceptance claim.",
+    "limits": "Source/math review only. No engine, dispatch, GitHub, status/thread reads or blind pixel judgment. Actual debug travel, floor/camera and changed-stand native visuals remain required; earlier94of96 packet does not validate the changed stand.",
+    "required_correction_count": 0,
+    "runtime_and_visual_status": "PENDING changed-source existing area and ROOT-exclusive actual changed-stand native captures/original blind pixels. Source approval only; no fullF40 claim."
+  },
   "mesh_root_candidate": {
     "combined_source_verdict": "APPROVE",
     "production_source_verdict": "APPROVE bounded opt-in native-origin grounding candidate",

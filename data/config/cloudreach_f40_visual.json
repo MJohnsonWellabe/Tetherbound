@@ -74,7 +74,8 @@
         "reverse": {"position_xz": [355.0, 1927.0], "view_heading_deg": 158.96, "basis": "Same supported gameplay stand, reversed production-camera bearing; no independent convenient reverse placement."},
         "detail": {"position_xz": [353.0, 1931.0], "view_heading_deg": -18.435, "basis": "Existing flat crown, 5.83m from ledge centre (350,1936), approaching the gateway on the same south threshold. Original generic detail offset was outside its flat crown."}
       },
-      "windscar_flight_aerie": {"approach": {"position_xz": [362.11, 3267.59], "view_heading_deg": 115.04, "basis": "Existing windscar_floor_loop incoming ground segment from (120,520,3380) to (373,610,3262.5357), twelve metres back along its centreline, facing the launch compass at (400,610,3250). Generic backwards look-bearing offset left this narrow ground route."}}
+      "windscar_flight_aerie": {"approach": {"position_xz": [362.11, 3267.59], "view_heading_deg": 115.04, "basis": "Existing windscar_floor_loop incoming ground segment from (120,520,3380) to (373,610,3262.5357), twelve metres back along its centreline, facing the launch compass at (400,610,3250). Generic backwards look-bearing offset left this narrow ground route."}},
+      "stormward_overlook": {"approach": {"position_xz": [-424.395539, 5634.615617], "view_heading_deg": 15.945396, "basis": "Existing summit_overlook_loop incoming centreline from (-520,1080,5300) to (-420,1110,5650), sixteen metres before its endpoint, on the aligned 32m-wide OverlookWalkableCrown and inside the landmark's registered 17m half-span. This is a threshold approach facing along the route. Native6413 dawn refused the generic twelve-metre look-bearing offset at (-416.745658,5622.065737), outside both the registered threshold and incoming road ribbon. Travel, floor and drawn-crown guards remain unchanged."}}
     },
     "weather_settle_frames": 24,
     "minimum_frames": 200

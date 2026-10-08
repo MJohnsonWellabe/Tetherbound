@@ -150,6 +150,25 @@ func _run() -> void:
 				print("  arrival shrub %s root: physical=%s native=%s registered=%s mesh_height=%s" % [
 					label, hit.position.y, root_at.y, world.call("_route_detail_ground", legacy_at), bounds.size.y * model.scale.y])
 
+	# F40's refused Overlook approach must use the existing incoming crown,
+	# with both registered travel height and actual collision support. This
+	# inspects the unchanged production world without bypassing a travel guard.
+	var capture: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
+		"res://data/config/cloudreach_f40_visual.json")).capture
+	var approach: Dictionary = capture.authored_stands.stormward_overlook.approach
+	var approach_at := Vector3(float(approach.position_xz[0]), 1110.0, float(approach.position_xz[1]))
+	var approach_ground := float(world.call("ground_height_at", approach_at.x, approach_at.z))
+	_expect(not is_nan(approach_ground), "Overlook approach has no registered travel ground", failures)
+	var approach_hit := (world as Node3D).get_world_3d().direct_space_state.intersect_ray(
+		PhysicsRayQueryParameters3D.create(approach_at + Vector3.UP * 3.0,
+			approach_at - Vector3.UP * 3.0, 1))
+	_expect(not approach_hit.is_empty(), "Overlook approach has no physical floor within 3m", failures)
+	if not approach_hit.is_empty():
+		_expect(not is_nan(approach_ground) and approach_ground - float(approach_hit.position.y) <= 3.0,
+			"Overlook approach physical floor is below the drawn crown", failures)
+		print("  Overlook approach: xz=%s registered=%s physical=%s" % [
+			Vector2(approach_at.x, approach_at.z), approach_ground, approach_hit.position.y])
+
 	if failures.is_empty():
 		var grid: Dictionary = look.call("cover_fill_grid")
 		print("  turf fill: %d turf surfaces, %d triangles, %d m2 of turf; %d plantable, %d tufts at density x%.2f, %d ms" % [

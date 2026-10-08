@@ -9,11 +9,18 @@ var _capture_config: Dictionary = {}
 var _active_weather := "clear"
 var _segment := ""
 var _full_planned_frames := 0
+var _stormward_approach_only := false
 
 
 func _run() -> void:
 	_capture_config = JSON.parse_string(FileAccess.get_file_as_string(CANDIDATE_PATH)).get("capture", {})
 	for arg: String in OS.get_cmdline_user_args():
+		if arg == "--stormward-approach-only":
+			if _stormward_approach_only:
+				push_error("F40 accepts one Stormward approach repair selector")
+				quit(2)
+				return
+			_stormward_approach_only = true
 		if arg.begins_with("--segment="):
 			if not _segment.is_empty() or arg.trim_prefix("--segment=") not in ["dawn", "day", "golden", "night"]:
 				push_error("F40 requires one known clock segment, or none for the full matrix")
@@ -109,6 +116,16 @@ func _load_plan() -> bool:
 			_failures.append("F40 segment does not contain a complete clock quarter")
 			return false
 		_planned = selected
+	if _stormward_approach_only:
+		var repair_rows: Array[Dictionary] = []
+		for row: Dictionary in _planned:
+			if _slug(str(row.destination_display_name)) == "stormward_overlook" and str(row.view) == "approach":
+				repair_rows.append(row)
+		var required_rows: int = _capture_config.weather.size() * (1 if not _segment.is_empty() else _capture_config.times.size())
+		if repair_rows.is_empty() or repair_rows.size() != required_rows:
+			_failures.append("F40 Stormward repair lacks every requested clock/weather approach")
+			return false
+		_planned = repair_rows
 	return true
 
 
@@ -118,14 +135,17 @@ func _begin_manifest() -> void:
 	_manifest["candidate_preview"] = OS.get_cmdline_user_args().has("--f40-candidate")
 	_manifest["capture_plan"] = _capture_config
 	_manifest["segment"] = _segment
+	_manifest["stormward_approach_only"] = _stormward_approach_only
+	_manifest["selected_frame_ids"] = _planned.map(func(row: Dictionary) -> String: return str(row.frame_id))
+	_manifest["capture_scope"] = "Stormward approach repair only; no full-matrix claim" if _stormward_approach_only else "Original full matrix or declared clock quarter"
 	_manifest["required_segments"] = _capture_config.times
 	_manifest["full_matrix_planned_frames"] = _full_planned_frames
 	_manifest["candidate_config_sha256"] = FileAccess.get_file_as_string(CANDIDATE_PATH).sha256_text()
-	_manifest["fixture_disclosure"] = "Direct chapter mount, upper-route flags, catalogue teleports with default 12m/3m offsets except explicitly declared existing route/threshold stands for four destinations in capture_plan.authored_stands (all Skyroad views use its flat crown); pinned production dawn/day/golden/night and clear/rain. Both sides of a comparison must use the same stand plan. Production CameraRig; no earned route, fight, Ally or visual PASS claim. Obstructed or unsupported stands still fail."
+	_manifest["fixture_disclosure"] = "Direct chapter mount, upper-route flags, catalogue teleports with default 12m/3m offsets except explicitly declared existing route/threshold stands in capture_plan.authored_stands (all Skyroad views use its flat crown); pinned production dawn/day/golden/night and clear/rain. Both sides of a comparison must use the same stand plan. Production CameraRig; no earned route, fight, Ally or visual PASS claim. Obstructed or unsupported stands still fail."
 
 
 func _finish(complete: bool) -> void:
-	_manifest["full_matrix_complete"] = _segment.is_empty() and complete and _failures.is_empty() \
+	_manifest["full_matrix_complete"] = _segment.is_empty() and not _stormward_approach_only and complete and _failures.is_empty() \
 		and _records.size() == _full_planned_frames
 	super._finish(complete)
 
