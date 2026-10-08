@@ -1358,22 +1358,30 @@ func receive_owner(packet: Dictionary) -> void:
 			local.acked = packet.sequence
 			while not local.inputs.is_empty() and int(local.inputs[0].sequence) <= int(local.acked): local.inputs.pop_front()
 		"freeze":
-			if not HASH._hex(packet.get("id"), 32): return
+			if not HASH._hex(packet.get("id"), 32):
+				_note_ignored("freeze: invalid checkpoint id")
+				return
 			var request_source: bool = packet.get("source_kind") in REQUEST_KINDS
 			var clock_source: bool = packet.get("source_kind") == "bounty_rotation"
 			if clock_source:
 				if not PREP.bounty_rotation_source_valid(packet.get("request"), scope) \
 					or HASH.fingerprint(packet.request) != packet.get("request_hash"): return
 			elif request_source:
-				if not packet.get("request") is Dictionary or HASH.fingerprint(packet.request) != packet.get("request_hash") \
-					or owner().call("_owner_passive_request_matches", packet.source_kind, packet.request) != true: return
+				if not packet.get("request") is Dictionary or HASH.fingerprint(packet.request) != packet.get("request_hash"):
+					_note_ignored("freeze %s: original %s request shape/hash refused" % [str(packet.id).left(8), str(packet.source_kind)])
+					return
+				if owner().call("_owner_passive_request_matches", packet.source_kind, packet.request) != true:
+					_note_ignored("freeze %s: original %s owner request mismatch" % [str(packet.id).left(8), str(packet.source_kind)])
+					return
 			elif packet.has("source_kind") or not HASH._hex(packet.get("duty_hash"), 64): return
 			if not pending.is_empty() and pending.id != packet.id:
 				_note_ignored("freeze %s while %s is pending" % [str(packet.id).left(8), str(pending.id).left(8)])
 				return
 			if pending.is_empty():
 				var saver: RefCounted = _game().get("save_system")
-				if saver == null: return
+				if saver == null:
+					_note_ignored("freeze %s: owner save system unavailable" % str(packet.id).left(8))
+					return
 				saver.call("finish_fallback") # Complete reentrant save callbacks before freezing any owner state.
 				if saver.call("fallback_busy") == true or _scope() != scope or local.is_empty() or local.id != packet.stream_id:
 					_note_ignored("freeze %s: fallback_busy=%s scope_changed=%s stream=%s" % [str(packet.id).left(8),
