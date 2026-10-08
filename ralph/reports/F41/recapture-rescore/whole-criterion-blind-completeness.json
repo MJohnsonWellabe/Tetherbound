@@ -368,6 +368,128 @@
       ],
       "source_review_read": false,
       "new_pixel_inspection": false
+    },
+    {
+      "addendum_id": "final-merged-current-map-applicability",
+      "reviewer": {
+        "name": "Hypatia",
+        "role": "retained original independent code-blind judge",
+        "agent_id": "01a11667-4631-72b2-8fed-294999b8c043"
+      },
+      "scope": "Final updated assembly completeness/current-map applicability only; no visual rerating, new pixels, source review or original-witness replacement.",
+      "verdict": "PASS",
+      "reason": "The previously inspected retained 240-frame Low/Compatibility recapture meets the literal minimum of 200. The final assembled set contains all 44 original catalogue IDs exactly once and retains evidence-supported rescores. Its P2-002 entry exactly reproduces this judge's fresh current-map record, including both full-raster references, numerical values, FAIL classification and 0%-surveyed partial scope. The other 43 assembled records match their own retained numerical values, evidence and limits. Seventeen assessments remain explicitly partial; their limits are not hidden or promoted to full-context art acceptance. Literal criterion (0) requires recapture and catalogue rescoring rather than defect removal, so those disclosed bounds do not create a missing whole-row rescore.",
+      "verification": {
+        "rows": 44,
+        "unique_ids": 44,
+        "duplicate_ids": [],
+        "missing_original_ids": [],
+        "extra_ids": [],
+        "numeric_range": "PASS: all severity/exposure/importance are integers 1–5",
+        "impact_products": "PASS: all impacts equal severity × exposure × importance",
+        "composition": {
+          "catalog-rescore.json": 35,
+          "current-pattern-fight-rescore.json": 3,
+          "current-map-28572-rescore.json": 1,
+          "native-context-rescore.json": 3,
+          "natural-loss-blind-verdict.json": 1,
+          "reward-route-blind-verdict.json": 1
+        },
+        "numeric_or_evidence_or_limits_mismatches": [],
+        "other_43": "Recorded numerical fields, evidence and limits match the retained original judge records; no newly substituted ratings or witnesses.",
+        "classification_aliases": [
+          {
+            "id": "P2-110",
+            "field": "original_assessment",
+            "own": "BOUNDED_CURRENT_VISIBLE_OUT_OF_FIGHT_RESULT",
+            "assembly": "BOUNDED"
+          },
+          {
+            "id": "P2-111",
+            "field": "original_assessment",
+            "own": "BOUNDED_TWO_VISIBLE_VICTORY_RECEIPT_VIEWS",
+            "assembly": "BOUNDED"
+          }
+        ],
+        "map_exact_agreement": {
+          "item_id": "P2-002",
+          "severity": 4,
+          "exposure": 4,
+          "importance": 5,
+          "impact": 80,
+          "verdict": "FAIL",
+          "bounded_verdict": "BLOCK",
+          "numeric_fields": true,
+          "evidence_links": true,
+          "coverage": true,
+          "limits": true,
+          "both_evidence_links_match_own_inspected_full_rasters": true
+        },
+        "explicit_partial_row_count": 17,
+        "explicit_partial_ids": [
+          "P2-042",
+          "P2-016",
+          "P2-037",
+          "P2-002",
+          "P2-017",
+          "P2-033",
+          "P2-038",
+          "P2-007",
+          "P2-055",
+          "P2-063",
+          "P2-095",
+          "P2-031",
+          "P2-041",
+          "P2-069",
+          "P2-056",
+          "P2-043",
+          "P2-119"
+        ],
+        "wholly_unassessed_numeric_rows": 0,
+        "recapture": {
+          "retained_frames": 240,
+          "minimum": 200,
+          "basis": "Reused original independent Low/Compatibility recapture inspection and prior completeness record; no new count/provenance or source audit."
+        }
+      },
+      "current_applicability": {
+        "finding": "PASS for the disclosed current per-row rescore scopes. No uniform-current full-game, complete-context or visual-bar claim.",
+        "map": "Only the supplied Stormwood 0%-surveyed, 32x-local-view state at 1920x1080 and 1280x720 is rated. A position marker is readable but pictured terrain/roads are not. The score does not establish absent terrain behind unrevealed areas, intended fog-of-war policy, explored-map quality or navigation behavior.",
+        "map_evidence": [
+          "D:/CodexTemp/tetherbound-proof/native-e-28572ae0c9-ui-merge-r1/frames/menu_map.jpg",
+          "D:/CodexTemp/tetherbound-proof/native-e-28572ae0c9-ui-merge-r1/frames/menu_map_1280x720.jpg"
+        ],
+        "current_fight": "The previous addendum's current P2-092/P2-093/P2-063 scopes and FAIL/BLOCK findings remain unchanged; P2-063 remains a partial pictured Hollows tell/hit assessment.",
+        "primary_basis": "For the 35 retained primary rows, original assessed severity is preserved; exposure/importance remain disclosed input priority estimates rather than fresh independent measurements of campaign exposure.",
+        "other_retained_basis": "The three retained context records and current reward/loss records retain their original scope and limits. Original people, legacy-UI and other partial evidence bounds remain intact."
+      },
+      "remaining_gaps": {
+        "criterion0_missing_whole_row_ids": [],
+        "unpictured_map_context": "Explored/surveyed map terrain, roads, destination relationships, zoom/pan, navigation, interaction and other regions remain unassessed.",
+        "other_contexts": "All prior completeness/addendum partial limits remain in force, including unpictured binding rows, destinations, species/states, attacks/regions, motion, hardware, co-op and High/Medium contexts.",
+        "interpretation": "These gaps limit visual/context acceptance; no unexposed context has received an invented current rating or been represented as tested."
+      },
+      "quality_dispositions_preserved": {
+        "map": "P2-002 current FAIL/BLOCK impact80 remains failed.",
+        "fight": "P2-092/P2-093/P2-063 current FAIL/BLOCK impact48 each remain failed; P2-063 remains partial.",
+        "loss": "P2-110 BLOCK/FAIL impact36 remains failed.",
+        "bark": "BLOCK preserved and outside this numeric completeness check.",
+        "other_failures_partials": "All original visual FAIL/BLOCK/PARTIAL dispositions, old witnesses and prior completeness PASS history remain preserved."
+      },
+      "separate_gates": "No full visual-bar or F41#1–#5 acceptance, no defect-removal, earned-play, device/performance or full-matrix claim.",
+      "evidence_records_compared": [
+        "D:/tetherbound/codex-e/ralph/reports/F41/recapture-rescore/whole-criterion-score-packet.json",
+        "D:/tetherbound/codex-e/ralph/reports/F41/recapture-rescore/whole-criterion-blind-completeness.json",
+        "D:/tetherbound/codex-e/ralph/reports/F41/recapture-rescore/current-map-28572-rescore.json",
+        "D:/tetherbound/codex-e/ralph/reports/F41/recapture-rescore/current-pattern-fight-rescore.json",
+        "D:/tetherbound/codex-e/ralph/reports/F41/recapture-rescore/catalog-rescore.json",
+        "D:/tetherbound/codex-e/ralph/reports/F41/recapture-rescore/native-context-rescore.json",
+        "D:/tetherbound/codex-e/ralph/reports/F41/recapture-rescore/natural-loss-blind-verdict.json",
+        "D:/tetherbound/codex-e/ralph/reports/F41/recapture-rescore/reward-route-blind-verdict.json"
+      ],
+      "source_verdict_read": false,
+      "new_pixel_inspection": false,
+      "preservation": "Only this addendum is appended to the original blind completeness evidence file. No assembly, score, source, status, witness or other artifact is modified."
     }
   ]
 }

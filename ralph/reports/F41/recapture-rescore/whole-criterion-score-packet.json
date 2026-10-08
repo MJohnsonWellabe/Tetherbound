@@ -25,7 +25,7 @@
     "current_map": 1
   },
   "score_assembly_checks": "44unique IDs, all original-recorded1..5scores, exact products; no score invented or previous failure promoted. Original primary exposure/importance preserved estimates explicitly disclosed.",
-  "whole_criterion_verdict": "Merged-current whole F41#0 PENDING original runtime artifact approval and original finalwhole/currentmap binding; historical253 milestone retained",
+  "whole_criterion_verdict": "PASS literalWHOLEF41#0 at merged28572 plus evidence-only commits: original whole SOURCEAPPROVE + original blind currentMap completenessPASS; no remainingliteralgap; F41#1..#5/fullbarOPEN",
   "full_visual_bar": {
     "A": "BLOCK on supplied environmental presentation",
     "B": "BLOCK on supplied environmental presentation",
@@ -871,12 +871,22 @@
   },
   "affected_applicability_resolution": "Same original judge independently re-scored only current253 P2-092/P2-093/P2-063 from all24 existing tell rasters; all3visualFAIL/BLOCK48 retained. Previous context scores preserved in original artifact, not currentassembly.",
   "original_whole_reviews": {
+    "source_report": "ralph/reports/F41/lane-e-capture-source-review.json/28572_whole_f41_0_original_final_map_binding_review",
+    "source_verdict": "APPROVE",
+    "blind_report": "whole-criterion-blind-completeness.json/addenda/final-merged-current-map-applicability",
+    "blind_verdict": "PASS",
+    "accepted_gameplay_source": "28572ae0c9085de60db33f58b6407588c2d7f681",
+    "main_ancestor": "c7127e7dda9bc32cd1930d1672b90abb7ff9758c",
+    "required_affected_ui_runtime": "APPROVE: sixJPEGs/23hashes,1080+720pairs/restoration,terminal0/noerrors,originalproducerarchivehistory preserved",
+    "scope": "Literal recapture/currentrowrescorecompleteness only;17partialscopes/allFAILBLOCKpreserved"
+  },
+  "main_integration_map_resolution": "Original samejudge P2-002 currentmap independently4/4/5=80FAIL, scoped two32xunsurveyedmaps at1080/720; historicalrow preserved in originalprimary artifact, not currentassembly",
+  "historical_original_whole_reviews": {
     "source_report": "ralph/reports/F41/lane-e-capture-source-review.json/whole_f41_0_253574_original_affected_resolution_final_review",
     "source_verdict": "APPROVE",
     "blind_report": "whole-criterion-blind-completeness.json/addenda/current-three-fight-applicability",
     "blind_verdict": "PASS",
     "accepted_gameplay_source": "2535740dbd107c7b93bfc9e3a80aa2d0bd19929b",
     "scope": "Literal recapture and rowrescore completeness only;17partialscopes/allvisualFAIL/BLOCKpreserved"
-  },
-  "main_integration_map_resolution": "Original samejudge P2-002 currentmap independently4/4/5=80FAIL, scoped two32xunsurveyedmaps at1080/720; historicalrow preserved in originalprimary artifact, not currentassembly"
+  }
 }

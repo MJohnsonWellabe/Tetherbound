@@ -3696,5 +3696,68 @@
       "All old scores,APP/BLOCK/FAILs,fixtures,priorityestimates,source-after-capture untracked output and archive receipts preserved. Fullvisualbar/criteria(1)-(5) remain separate."
     ],
     "activity": "Completedpacket/log/hash/rasterdecode/localtreeidentity only; original report appended. No engine/test/GPU/dispatch/source edit/implementation/newhelper-fixture-agent/GitHub/STATE/dashboard/handoff/rawthread/pixeljudgment/judgecontact."
+  },
+  "28572_whole_f41_0_original_final_map_binding_review": {
+    "reviewer": "original review_cloud_startup01a11679-fc2c-7873-bccd-423c1e04476d",
+    "verdict": "APPROVE",
+    "scope": "Final merged-current whole literal F41(0) after only P2-002 current-map score binding; source integration and required UI runtime accepted pieces reused, not re-audited.",
+    "gameplay_source_commit": "28572ae0c9085de60db33f58b6407588c2d7f681",
+    "source_tree": "dea81a8dab871d1bef257a85d672256d49118a81",
+    "criterion": "docs/ACCEPTANCE.md F41(0): After F26 look-dev, the biome is re-captured (≥200 frames) and its catalog rows re-scored against the new bar.",
+    "affected_binding": {
+      "item_id": "P2-002",
+      "artifact": "ralph/reports/F41/recapture-rescore/current-map-28572-rescore.json",
+      "sha256": "2624a36eeead9b0513231eec66ba4a1eef6fcd1139ef4763302506a5a9998330",
+      "original_judge_id": "01a11667-4631-72b2-8fed-294999b8c043",
+      "severity": 4,
+      "exposure": 4,
+      "importance": 5,
+      "impact": 80,
+      "verdict": "FAIL",
+      "bounded_verdict": "BLOCK",
+      "independence": "Same original independent judge assessed current two map rasters against previously inspected Stormwood boards/written bar without source or prior numeric-score reads. Exposure explicitly qualitative estimate, not measured frequency.",
+      "assembly_match": "Exact severity/exposure/importance/impact/verdict/evidence/limits match the single fresh source record; original_assessment equals its coverage and artifact points to that record. Assembly subject map remains original catalogue row identity for the same terrain/road-context defect.",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-28572ae0c9-ui-merge-r1/frames/menu_map.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-28572ae0c9-ui-merge-r1/frames/menu_map_1280x720.jpg"
+      ],
+      "provenance_binding": "Both exact canonical paths are among previously independently verified six completed285 originalJPEG pairs; source/bootstrap/driver/native1920and1280 dimensions/hashes/archive cleanup alreadyAPP. No pixel/record/hash/runtime/source audit repeated.",
+      "partial_limits": "Current pictured32x maps explicitly0%surveyed. Score only visible terrain/road context. Explored/populated destinations,pan/zoom/controller/navigation behavior,fog policy/cause,otherregions and physicaldevice readability remain unassessed; no full P2-002 closure."
+    },
+    "whole_assembly": {
+      "artifact": "ralph/reports/F41/recapture-rescore/whole-criterion-score-packet.json",
+      "sha256": "28a1b44312dd4882d5cd6bc9655003a439ae38bdb2855f9b6d8a1bd767a08cb2",
+      "source_commit": "28572ae0c9085de60db33f58b6407588c2d7f681",
+      "rows": 44,
+      "unique_ids": 44,
+      "composition": {
+        "primary_retained": 35,
+        "retained_contexts": 3,
+        "current_pattern_fight": 3,
+        "current_map": 1,
+        "current_reward": 1,
+        "current_natural_loss": 1
+      },
+      "changed_set": "Exact JSON row comparison against prior whole-approved E assembly committed at e68066640d764c15b1519de299359a6aaad1d226: ONLY P2-002 changes; other43 entries equal in full. Old and new44 ID sets exactlyequal. Prior source/evidence applicability checks for those43 reused.",
+      "range_and_products": "All44severity/exposure/importance integers1..5 and impacts exactproducts; new map4x4x5=80. No missing,duplicate or manufactured numeric row.",
+      "priority_basis": "35 primary rows explicitly retain original priority-estimate exposure/importance; do not call these fresh independent measured exposure/importance. Currentmap estimates separately assigned and disclosed.",
+      "partial_scopes": 17,
+      "partial_basis": "15 retained primary assessments markedPARTIAL plus currentpictured-HollowsP2-063 and currentunsurveyedP2-002. All limits and FAIL/BLOCK dispositions preserved; current093/092visualfail48,loss110BLOCK36,reward111PASS12 and barkappearanceBLOCK remain distinct.",
+      "recapture": "Previously approved post-F26 shipping240 unique frames/IDs/hashes at1a source exceeds≥200. Literal recapture milestone retained with source/GPU/fixture limitations; no promotion to full320/HighMedium/earned/devicetest."
+    },
+    "required_minimum_checks": {
+      "integration_source": "APPROVE retained28572_main_merge_original_bounded_integration_review; exact approved E world/material/director/HUD/body and source dependencies retained; acceptedmain UI changes identified explicitly.",
+      "focused_UI": "APPROVE retained28572_ui_merge_original_native_runtime_review; completed exact285 sixJPEGpairs,23matchingpacket hashes, primary1920andpaired1280 rasterrestore,actualexit0/completefailures[],no engine/script errors,sixwarnings,originaluntrackedoutputandarchivecleanuphistories preserved.",
+      "current_map_applicability": "RESOLVED by fresh originaljudge P2-002 artifact bound above. No remaining named minimum proof from original integration review is pending."
+    },
+    "remaining_literal_F41_0_gaps": [],
+    "whole_interpretation": "All binding literal recapture/rescore requirements supported at merged285. Partial/bounded numeric assessments count as disclosed rescoring of visible subjects, not assessment/closure of unseen subcontexts. DefectFAIL/BLOCK does not negate a genuine rescore. This approval does not invent art fixes or turn the whole release visual bar green.",
+    "limits": [
+      "Only whole literal F41(0). Criteria(1)-(5),fullvisualbar,fixingall44,High/Medium/weather/motion/audio,sustainedplay,controller/hardware/performance,earnedprogression/save/co-op/transactions remain outside approval.",
+      "Prior253 wholeAPP and originalblindPASS remain historical; prior wholeREQUEST_CHANGES/integrationPENDING and originalfailure packets remain unchanged, with this entry recording their now-resolved specific requirements.",
+      "All independentvisualBLOCKs,17partialscopes,priorityestimates,stagefixtures/guards,52cdcrash,forcedending/rasterFAILs,bark appearanceBLOCK and detached-fixtureheadlessERRORs preserved.",
+      "No new pixels,engine/GPU/test/dispatch/sourceimplementation/fullaudit/helpers/fixtures/agents/GitHub/status/STATE/dashboard/handoff/rawthreads/judgecontact; only newnumeric-record/affectedassembly verification and original report append."
+    ],
+    "preservation": "Every previous source-report entry unchanged. Assembly/status files not edited. Any separate original blind whole addendum is outside this source-review action."
   }
 }
