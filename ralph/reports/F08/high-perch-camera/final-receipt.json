@@ -1,6 +1,6 @@
 {
   "criterion": "F08#2",
-  "status": "OPEN affected night views pending; mapped logic, area and affected day PASS",
+  "status": "PASS bounded literal F08#2 under owner re-scope; all required proofs and same original reviews complete",
   "source_capture": "7f8b6062d22a51fb88ac7455e42b527fc4e13548",
   "scope": "Literal high-perch camera still matrix, owner re-scope issue572#6048639441",
   "proofs": {
@@ -71,17 +71,35 @@
       "camera": "Production CameraRig, actual trainer/follower, authored stands and floor guards",
       "judge": "Same blind reviewer PASS both; clear landing, grounded low roost, no definite penetration/clipping, visible height/drop",
       "limits": "Vista nearby creatures overlap visually; full finish/motion OPEN"
+    },
+    "affected_night": {
+      "run": 37711968693,
+      "artifact": 11523125113,
+      "source": "2abca4fe4c9759cc20be39bbb1f42eebd87b94cb",
+      "exit": 0,
+      "seconds": 397,
+      "frames": 2,
+      "skips": 0,
+      "rows": [
+        19,
+        20
+      ],
+      "graphics": "Low/Compatibility1280x720",
+      "camera": "Production CameraRig, actual trainer/follower, authored stands and floor guards",
+      "judge": "Same blind reviewer PASS both: needles/central lane/trainer/markings/companion readable, roost low/grounded on visible base, access clear; no definite penetration or clipping",
+      "limits": "Dark timber and left creature overlap retained; limited cliff-face views, full finish/motion/interaction OPEN"
     }
   },
   "judge": {
     "agent": "blind_listener_f10",
-    "result": "PASS",
-    "reason": "Missing day departure: airborne trainer/Galecrest, crown/cliff/drop clearly framed; no obstructive crowding/near-clipping. Combinedwithretained11 closesstill-viewcoverage."
+    "result": "PASS retained12 camera + affected2day/2night",
+    "reason": "Changed roost retains clear landing lane, low grounded placement and normal-camera trainer/creature readability in both light conditions; no definite penetration/camera clipping. Retained full height/drop camera matrix unchanged."
   },
   "review": {
     "agent": "review_cloud_startup",
-    "source": "APPROVE ff341 repair and7f live recorder; final correctedarea pending",
-    "final": "OPEN affected night; all prior bounded gates PASS"
+    "source": "APPROVE live recorder7f8b, probeff341, third production roostf9f04",
+    "final": "APPROVE bounded literal F08#2; original review_cloud_startup independently verified12view coverage,3/3/6 actualarea with0colliders/.311m,128tests1077assert,2day+2night strictcapture and samejudgePASS",
+    "landing": "Minimal files/hunk listed below, exclude WorldWeather/Fly/pickup/art ancestry"
   },
   "limits": [
     "Direct staged scene/progression/clock and five-owned Galecrest, not earned unlock/trial/bond/save evidence",
@@ -95,7 +113,7 @@
     ],
     "dependencies": "Matrix/bootstrap already landedmain#579",
     "exclude": "All Fly/world/pickup/art/unREADY ancestry",
-    "world_hunk": "scripts/world/cloudreach_world.gd: third ground_roosts entry/comment ONLY from f9f04d3af0; exclude WorldWeather block and all unrelated source"
+    "world_hunk": "ONLY third ground_roosts entry and its comment fromf9f04d3af0e1d2088820486a2b7e7bfa84b495bb: installed real rack/log/two sockets atlocal(-9,12),yaw80; exclude24line WorldWeather block and all unrelated source"
   },
   "flags": "none",
   "rescoped_roost": {
@@ -116,5 +134,7 @@
     "maximum_visual_height_m": 0.311,
     "failures": [],
     "scope": "Actual production builder against existing registered-crown fixture; no full-world gameplay/visual claim"
-  }
+  },
+  "main_merged": "347e490987e3cf8aaa46f5ba42ac6d3fb6eaab8d",
+  "merge_commit": "239d61c816a9f839483c29d43825b1f684ab2977"
 }
