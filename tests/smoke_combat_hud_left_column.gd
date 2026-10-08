@@ -146,6 +146,22 @@ func _check_ultimate_projection_replaces_fallback() -> void:
 	_hud.call("_refresh_system_overlay", "hud-local")
 	if not overlay.visible or readout.visible or meter.visible:
 		_failures.append("accepted projection must show one ultimate meter, without its legacy duplicate")
+	var glyph := preload("res://scripts/ui/input_glyph.gd")
+	var ring := overlay.get("_ring") as Control
+	var caption := overlay.get("_meter_caption") as Label
+	for using_pad: bool in [false, true]:
+		overlay.call("refresh", "hud-local", using_pad)
+		var button := glyph.pad_button_name_for_action("combat_ultimate_arm") if using_pad else glyph.key_name_for_action("combat_ultimate_arm")
+		if (ring.get_child(0) as Label).text != button or not caption.text.ends_with("Ready · Tap " + button):
+			_failures.append("ultimate ring and ready instruction must use the selected device binding")
+	# Disclosed acknowledged display-glyph fixture; the overlay must repeat
+	# these validated slot labels instead of inventing fixed face buttons.
+	model.snapshot.slots.quick.glyph = "Q"
+	model.snapshot.slots.charged.glyph = "E"
+	model.snapshot.slots.utility.glyph = "F"
+	model.snapshot["ultimate_armed"] = true
+	if not overlay.call("refresh", "hud-local", false) or not caption.text.ends_with("Choose Q / E / F"):
+		_failures.append("armed instruction must use the acknowledged move-slot glyphs")
 	_hud.call("_refresh_system_overlay", "switched-local")
 	if overlay.visible or not readout.visible or not meter.visible:
 		_failures.append("stale creature projection must restore the ultimate fallback")
