@@ -257,7 +257,7 @@
   },
   "capture": {
     "result": "actual earned HUD captured",
-    "judge": "pending original code-blind reviewer",
+    "judge": "PASS original f25_visual_judge: distinct readable meters/bindings, clear panel backing/separation, Stone Rush clear of aim strip; large Trainer label local clutter only. Static Low720 computer profile, not unseen states/Ally/whole behavior.",
     "command_meter": 32,
     "contact_sheet": "ralph/reports/F42/lane-a/backed-920187-contact.jpg",
     "preset": "Low",
@@ -270,7 +270,7 @@
   },
   "remaining_gates": [
     "Later op_tag_combo timed out at unchanged300s step deadline; C authority/vitals interpretation required before supported repair.",
-    "Original visual verdict and shipping flag activation qualification remain required; no whole READY.",
+    "Whole behavior and shipping flag activation qualification remain required; static original blind HUD judgment PASS does not close full criterion.",
     "No native engine, broad unit replay, new harness/fixture or unchanged third run."
   ]
 }
