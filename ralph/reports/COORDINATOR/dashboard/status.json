@@ -1,11 +1,9 @@
 {
- "updated": "2026-10-08T11:00Z",
+ "updated": "2026-10-08T18:50Z",
  "headline": [
-  "6:00 AM CT Thu 08 Oct: 158 criteria met on main; F42#0 in consolidation 11b (159 when it merges).",
-  "Consolidation 11 (PR #586) failed two Stormwood/Tidewake save and ledger smokes in lane C's co-op repair set; 11b carries only D F42#0, and C F31#2 with its set goes back to lane C.",
-  "3:10–5:10 AM CT: 2 whole criteria (C F31#2, D F42#0) and 41 QUESTION posts; lane B had five full earned-run FAILs on the local GPU machine; D and E were blocked waiting for it.",
-  "Owner 5:36 AM CT: earned proofs run as parallel segments on hosted runners. Owner 5:37 AM CT: D and E get local GPU priority; every Codex session resets to a fresh context.",
-  "Since then: E's Cloudreach F40 High capture is running on the local GPU; A's mounted Heal proof passed (Dash still blocked)."
+  "1:28 PM CT Thu 08 Oct: 161 criteria met on main; consolidation 15 carries 4 more (C F28#1, E F41#0, B F02#0/#1): 165 when it merges.",
+  "11:10 AM–1:10 PM CT: 3 whole READYs (C F28#1, E F41#0, A F23#3 re-proof of an already-met criterion) plus B's held F02#0/#1 under the segment-proof ruling.",
+  "Lanes are moving to their section 17 clusters: C started F28#2 (Masters), D Hall portal depth and F42#2, B route segments."
  ],
  "batches": [
   {
@@ -502,36 +500,60 @@
   },
   {
    "name": "Consolidation 11b",
+   "sha": "ec9a73d7",
+   "state": "Merged 6:22 AM CT",
+   "contents": "F42#0 map/UI (lane D)"
+  },
+  {
+   "name": "Consolidation 12",
    "sha": "pending",
    "state": "In CI",
-   "contents": "F42#0 map/UI (lane D)"
+   "contents": "F22#2 switching value (lane A, evidence; dependency F24#2 already on main)"
+  },
+  {
+   "name": "Consolidation 13",
+   "sha": "f3668748",
+   "state": "Red: F23#2 move gate breaks shared_boss/shared_wild; replaced by 13b",
+   "contents": "F24#4 crafted command tiers and F23#2 ten guarded utility moves (lane A, with the utility-consumer chain); F23#1 evidence"
+  },
+  {
+   "name": "Consolidation 13b",
+   "sha": "pending",
+   "state": "In CI",
+   "contents": "F24#4 crafted command tiers (lane A)"
+  },
+  {
+   "name": "Consolidation 15",
+   "sha": "pending",
+   "state": "In CI",
+   "contents": "F28#1 Masters placed and signposted (C), F41#0 Stormwood recapture/rescore (E), F02#0/#1 South Bridge and Warrens earned segments (B)"
   }
  ],
  "lanes": [
   {
    "lane": "tb/codex-a (Codex A: combat, moves, commands)",
-   "now": "Mounted Heal proof PASS (run 37763319762); F23#2 Dash blocked after two attempts on a 2 cm contact gap.",
-   "next": "Close F23#2 or park it; next smallest A criterion after the reset."
+   "now": "F23#3 re-proof (already met, held); F23#2 parked.",
+   "next": "Named-fight C2/C3 cluster."
   },
   {
    "lane": "tb/codex-b (Codex B: earned route, story, ending)",
-   "now": "Earned Relay preparation failed again at 5:25 AM CT (fifth full run); switching to parallel hosted segments.",
-   "next": "F49#0 segments in parallel; F02#0/#1 source to land."
+   "now": "F02#0/#1 in consolidation 15; Homecoming segment failed initial load.",
+   "next": "READY passed segments with every route criterion they cover."
   },
   {
    "lane": "tb/codex-c (Codex C: power, homestead, economy, co-op)",
-   "now": "F31#2 with the co-op repair set failed Stormwood water gate and Tidewake swimming save smokes in PR #586; bounced.",
-   "next": "Fix the retained-transaction save conflict and Waterward ledger op, then re-READY the whole set."
+   "now": "F28#1 in consolidation 15; F28#2 challenger UI approved.",
+   "next": "Masters cluster F28#2–#4."
   },
   {
    "lane": "tb/codex-d (Codex D: Meadows, village, Tidewake visuals)",
-   "now": "F42#0 in PR #586; F38#3 farmhouse window glass fix waiting for the local GPU.",
-   "next": "F26#3/F17#6 Hall and F38#3 captures on the local GPU (priority)."
+   "now": "F42#2 HUD Low capture: blind judge BLOCK (small RB, [jump], roster speck); fixes pushed.",
+   "next": "F42#2 re-capture and judge."
   },
   {
    "lane": "tb/codex-e (Codex E: Cloudreach, Stormwood, art, audio)",
-   "now": "F40 Cloudreach High capture running on the local GPU now.",
-   "next": "F40#0 judge, then F41 views on the local GPU."
+   "now": "F41#0 in consolidation 15.",
+   "next": "F40 Cloudreach matrix cluster."
   },
   {
    "lane": "tb/ci-speed (Claude)",

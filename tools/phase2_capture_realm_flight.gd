@@ -18,6 +18,7 @@ const STANDS := {
 var _biome := ""
 var _output := ""
 var _seed := 2042
+var _graphics_capture: Dictionary = {}
 var _records: Array[Dictionary] = []
 var _failures: Array[String] = []
 var _world: Node3D
@@ -45,6 +46,13 @@ func _action(name: String, pressed: bool) -> void:
 
 func _run() -> void:
 	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--preset="):
+			_graphics_capture = preload("res://tools/lookdev_capture_bootstrap.gd").prepare(self)
+			if _graphics_capture.is_empty():
+				quit(1)
+				return
+			break
+	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--biome="):
 			_biome = arg.trim_prefix("--biome=")
 		elif arg.begins_with("--output="):
@@ -55,8 +63,11 @@ func _run() -> void:
 		quit(1)
 		return
 	seed(_seed)
-	root.size = Vector2i(1920, 1080)
-	root.content_scale_size = Vector2i(1920, 1080)
+	if _graphics_capture.is_empty():
+		root.size = Vector2i(1920, 1080)
+		root.content_scale_size = Vector2i(1920, 1080)
+	else:
+		root.content_scale_size = root.size
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_output))
 	var game := root.get_node("Game")
 	game.reset_for_new_game()
@@ -153,10 +164,18 @@ func _attempt(xz: Vector2) -> bool:
 func _save(id: String) -> void:
 	await RenderingServer.frame_post_draw
 	var file := "%s/%02d-%s.png" % [_output, _records.size() + 1, id]
-	if root.get_texture().get_image().save_png(file) == OK:
+	var image := root.get_texture().get_image()
+	if not _graphics_capture.is_empty():
+		var expected: Array = _graphics_capture.resolution
+		if image == null or image.is_empty() or image.get_size() != Vector2i(int(expected[0]), int(expected[1])):
+			_failures.append("%s: declared graphics raster mismatch" % id)
+			return
+	if image.save_png(file) == OK:
 		_records.append({"id": id, "file": file, "state": str(_fly.get("state")),
 			"time": "day", "position": str(_player.global_position)})
 		_write_manifest(false)
+	elif not _graphics_capture.is_empty():
+		_failures.append("%s: viewport save failed" % id)
 
 
 func _write_manifest(complete: bool) -> void:
@@ -168,6 +187,8 @@ func _write_manifest(complete: bool) -> void:
 		"repro_args": ["--biome=%s" % _biome, "--seed=%d" % _seed],
 		"output_option": "--output", "frames": _records,
 		"failures": _failures, "complete": complete}
+	if not _graphics_capture.is_empty():
+		manifest["graphics_capture"] = _graphics_capture
 	var stream := FileAccess.open(_output + "/manifest.json", FileAccess.WRITE)
 	if stream != null:
 		stream.store_string(JSON.stringify(manifest, "\t") + "\n")
@@ -176,6 +197,8 @@ func _write_manifest(complete: bool) -> void:
 
 func _finish() -> void:
 	var complete := _records.size() >= 3 and _records.any(func(frame: Dictionary) -> bool: return frame.id == "glide")
+	if not _graphics_capture.is_empty():
+		complete = complete and _failures.is_empty()
 	_write_manifest(complete)
 	print("PHASE2 %s FLIGHT frames=%d failures=%s" % [_biome, _records.size(), str(_failures)])
 	quit(0 if complete else 1)

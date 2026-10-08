@@ -1,6 +1,7 @@
 {
   "_comment": "Water Phase 0 authored composition contract. DATA ONLY: no playable terrain, gates, nodes, flows or performance proof. Source BUILD_WATER_ARCHIPELAGO_TO_COMPLETION section3 and owner directive/boards. Metres, realm-local XYZ. Starting numbers tunable; derived lengths are calculated from listed polylines.",
   "rest_shoals": [
+    {"id":"reedhaven_to_gull_rest_rest_01","anchor_id":"reedhaven_to_gull_rest_rest_01","route_id":"reedhaven_to_gull_rest_sheltered","parent_island_id":"reedhaven","center_xz_m":[-53.718,692.479],"shore_radius_m":20.0,"peak_height_m":1.5,"coast_beach_width_m":19.0,"coast_inner_height_m":1.5,"peak_power":1.65,"landing_sectors":[]},
     {"id":"reedhaven_to_brine_steps_rest_01","anchor_id":"reedhaven_to_brine_steps_rest_01","route_id":"reedhaven_to_brine_steps_sheltered","parent_island_id":"reedhaven","center_xz_m":[199.773,558.749],"shore_radius_m":20.0,"peak_height_m":1.5,"coast_beach_width_m":19.0,"coast_inner_height_m":1.5,"peak_power":1.65,"landing_sectors":[]},
     {"id":"brine_steps_to_shellwatch_rest_01","anchor_id":"brine_steps_to_shellwatch_rest_01","route_id":"brine_steps_to_shellwatch_sheltered","parent_island_id":"brine_steps","center_xz_m":[359.359,887.687],"shore_radius_m":20.0,"peak_height_m":1.5,"coast_beach_width_m":19.0,"coast_inner_height_m":1.5,"peak_power":1.65,"landing_sectors":[]},
     {"id":"shellwatch_to_tidal_cradle_rest_01","anchor_id":"shellwatch_to_tidal_cradle_rest_01","route_id":"shellwatch_to_tidal_cradle_sheltered","parent_island_id":"shellwatch","center_xz_m":[476.613,1308.223],"shore_radius_m":20.0,"peak_height_m":1.5,"coast_beach_width_m":19.0,"coast_inner_height_m":1.5,"peak_power":1.65,"landing_sectors":[]},
@@ -526,6 +527,7 @@
       "swim_marker_depth_m": 2.250364
     }
 ,
+    {"id":"reedhaven_to_gull_rest_rest_01","island_id":"reedhaven","parent_island_id":"reedhaven","kind":"rest_shoal","route_id":"reedhaven_to_gull_rest_sheltered","safe_position":[-53.718,1.5,692.479],"safe_radius_m":6.0,"approach_width_m":8.0,"scatter_clear_radius_m":12.0,"grounding":"terrain_required","shore_position":[-47.987,0.0,673.317]},
     {"id":"reedhaven_to_brine_steps_rest_01","island_id":"reedhaven","parent_island_id":"reedhaven","kind":"rest_shoal","route_id":"reedhaven_to_brine_steps_sheltered","safe_position":[199.773,1.5,558.749],"safe_radius_m":6.0,"approach_width_m":8.0,"scatter_clear_radius_m":12.0,"grounding":"terrain_required","shore_position":[184.711,0.0,545.590]},
     {"id":"brine_steps_to_shellwatch_rest_01","island_id":"brine_steps","parent_island_id":"brine_steps","kind":"rest_shoal","route_id":"brine_steps_to_shellwatch_sheltered","safe_position":[359.359,1.5,887.687],"safe_radius_m":6.0,"approach_width_m":8.0,"scatter_clear_radius_m":12.0,"grounding":"terrain_required","shore_position":[368.051,0.0,869.675]},
     {"id":"shellwatch_to_tidal_cradle_rest_01","island_id":"shellwatch","parent_island_id":"shellwatch","kind":"rest_shoal","route_id":"shellwatch_to_tidal_cradle_sheltered","safe_position":[476.613,1.5,1308.223],"safe_radius_m":6.0,"approach_width_m":8.0,"scatter_clear_radius_m":12.0,"grounding":"terrain_required","shore_position":[466.816,0.0,1290.787]},
@@ -4385,6 +4387,7 @@
       "from_anchor": "reedhaven_to_gull_rest_departure",
       "from_island": "reedhaven",
       "id": "reedhaven_to_gull_rest_sheltered",
+      "rest_anchor_ids": ["reedhaven_to_gull_rest_rest_01"],
       "intended_traversal": "prepared_human_or_swim_mount",
       "interception_roles": [
         "shallows_wild_off_safe_line"

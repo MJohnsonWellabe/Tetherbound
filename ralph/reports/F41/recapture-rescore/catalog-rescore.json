@@ -1,0 +1,1399 @@
+{
+  "schema_version": 1,
+  "criterion": "F41#0",
+  "reviewer": "same retained original code-blind visual judge",
+  "scope": "Post-F26 Low/Compatibility recapture and catalogue rescore; no full visual acceptance",
+  "capture": {
+    "root": "D:/CodexTemp/tetherbound-proof/native-e-1a6987a584-f41-shipping240/frames",
+    "raster": "1920x1080",
+    "segments": [
+      "storm-day",
+      "storm-night",
+      "released-day"
+    ],
+    "contact_sheets_independently_inspected": 15,
+    "contact_cells_inspected": 240,
+    "layout": "5 stands x 4 headings x 4 phase labels x 3 segments",
+    "staged": true,
+    "limits": [
+      "No motion or earned play",
+      "Clock day/night samples do not establish a Stormwood day/night cycle",
+      "Released sky correctly remains purple",
+      "Source identity and recapture provenance supplied by parent, not inferred from pixels"
+    ]
+  },
+  "references_inspected": [
+    "docs/ACCEPTANCE.md section 4",
+    "docs/design/ART_DIRECTION.md written Stormwood bar",
+    "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png",
+    "docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png",
+    "docs/reference/boards-2026-09-06/stormwood-creature-roster-board.png"
+  ],
+  "scoring": {
+    "range": "1-5",
+    "impact_formula": "severity * exposure * importance",
+    "floor_note": "1 is the requested scale minimum. For original defects not observed, reason explicitly states that; it is not an invented defect or a closure decision.",
+    "exposure_importance": "Preserved input priority estimates; staged stills cannot empirically measure campaign frequency."
+  },
+  "counts": {
+    "rows": 44,
+    "supported_assessments": 36,
+    "fresh_shipping_assessments": 5,
+    "retained_applicable_assessments": 6,
+    "current_unassessed": 8,
+    "fresh_creature_assessments": 6,
+    "fresh_ui_assessments": 6,
+    "fresh_build_assessments": 2,
+    "fresh_inventory_assessments": 4,
+    "fresh_crown_assessments": 1,
+    "fresh_catch_assessments": 3,
+    "fresh_fly_assessments": 2,
+    "fresh_locations_assessments": 1
+  },
+  "criterion_status": {
+    "recapture_minimum_200": "PASS bounded capture count/coverage",
+    "all_rows_fresh_numeric_rescore": "PENDING",
+    "whole_F41_0": "OPEN pending applicable targeted evidence for unassessed rows",
+    "honest_catalogue_dispositions_complete": true
+  },
+  "full_bar": {
+    "A": "BLOCK on supplied environmental presentation",
+    "B": "BLOCK on supplied environmental presentation",
+    "largest_gaps": [
+      "Repeated ground carpet and weak soil/moss/rock transitions",
+      "Stormheart bark/branch/crown/core finish below authored reference",
+      "Rigid glass slab/white strip and smooth cyan cone integration"
+    ]
+  },
+  "retained_evidence_limits": [
+    "People48 reused only for installed actor silhouettes, portrait apparent-person match and text; current world occlusion invalidated",
+    "Installed standing controls reused only for size",
+    "Historical fight contacts inspected but current actor/cue/UI applicability invalidated; no current score assigned",
+    "No current numeric carryover counted as an assessed rescore"
+  ],
+  "rows": [
+    {
+      "item_id": "P2-042",
+      "subject": "Surge phase presentation",
+      "original_defect": "Calm Building and Fading weather stills remain difficult to distinguish while Break reads mainly through darker lighting and heavier rain",
+      "assessment": "PARTIAL",
+      "severity": 2,
+      "exposure": 5,
+      "importance": 5,
+      "impact": 50,
+      "score_basis": "shipping240",
+      "reason": "Calm light rain, greener Building, lightning/heavier-rain Break, and Fading mist/afterglow are visibly differentiated. Full atmospheric/material finish still falls below the written bar; motion and flash rhythm are unassessed.",
+      "evidence": [
+        "forest_forward_day_storm_calm",
+        "forest_forward_day_storm_building",
+        "forest_forward_day_storm_break",
+        "forest_left_day_storm_fading",
+        "rod_line_reverse_night_storm_break"
+      ],
+      "coverage_gap": "Motion, flash cadence, wind response, sound and continuous safe-radius readability.",
+      "lane_owner": "E",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 4,
+        "exposure": 5,
+        "importance": 5,
+        "impact": 100
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-015",
+      "subject": "creature collapse and rest",
+      "original_defect": "Several fainted bodies remain upright or float above the grass and some resting poses do not settle onto the ground",
+      "assessment": "ASSESSED",
+      "severity": 5,
+      "exposure": 4,
+      "importance": 5,
+      "impact": 100,
+      "score_basis": "fresh_current_creatures98_d627_staged_stills",
+      "reason": "The original collapse/rest defect is still visible. Tanglevolt/fainted remains a four-legged upright wolf with the torso off the ground; Stormraven/fainted remains upright on its feet. Fulgocobra/resting is a large rolled, open-mouthed body held above the grass rather than a relaxed grounded coil. Some other resting silhouettes change substantially, but that positive change does not resolve these sampled failures.",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-creatures98-r2/frames/stormwood__tanglevolt__fainted.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-creatures98-r2/frames/stormwood__stormraven__fainted.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-creatures98-r2/frames/stormwood__fulgocobra__resting.jpg",
+        "creatures/voltarach.jpg resting/fainted"
+      ],
+      "coverage_gap": "One supplied snapshot per state for 14 species only. Grass obscures some exact floor contacts; no continuous fall, settlement or rest animation is assessed.",
+      "lane_owner": "E",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 5,
+        "exposure": 4,
+        "importance": 5,
+        "impact": 100
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-016",
+      "subject": "creature hurt and movement poses",
+      "original_defect": "Hurt and moving frames often retain the idle silhouette so the state is difficult to read without a filename",
+      "assessment": "PARTIAL",
+      "severity": 4,
+      "exposure": 5,
+      "importance": 5,
+      "impact": 100,
+      "score_basis": "fresh_current_creatures98_d627_staged_stills",
+      "reason": "The supplied moving snapshots retain essentially the idle silhouette across the 14 sheets, including Craghorn, Sparkit, Tanglevolt and Voltarach. Hurt changes are commonly limited to a small head/torso dip, so the state is weak without its label. Several attacking snapshots lower or turn the head and read more distinctly. This is a still-image readability defect, not proof that continuous locomotion or hurt animation is absent.",
+      "evidence": [
+        "creatures/craghorn.jpg idle/moving/hurt",
+        "creatures/sparkit.jpg idle/moving/hurt",
+        "creatures/tanglevolt.jpg idle/moving/hurt",
+        "creatures/voltarach.jpg idle/moving/attacking/hurt"
+      ],
+      "coverage_gap": "No chronological locomotion/hurt sequence, recovery timing or actual fight exposure. Only these selected snapshots are assessed.",
+      "lane_owner": "E",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 4,
+        "exposure": 5,
+        "importance": 5,
+        "impact": 100
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-037",
+      "subject": "Stormheart finale",
+      "original_defect": "The Stormheart finale reads as a dark cylindrical ring with a hole rather than a giant living tree with a branching crown and visible core",
+      "assessment": "PARTIAL",
+      "severity": 4,
+      "exposure": 4,
+      "importance": 5,
+      "impact": 80,
+      "score_basis": "shipping240",
+      "reason": "Split immense tree and internal platforms are recognizable. Uniform vertical bark, blunt branch stubs, sparse crown and weak core lighting miss the reference's living-wood/stronghold finish.",
+      "evidence": [
+        "stormheart_forward_day_storm_calm",
+        "stormheart_forward_day_released_calm",
+        "stormheart_forward_night_storm_break"
+      ],
+      "coverage_gap": "Current calibrated distance, entrance/core detail and motion are not supplied by this five-stand heading fixture.",
+      "lane_owner": "E",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 5,
+        "exposure": 4,
+        "importance": 5,
+        "impact": 100
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-092",
+      "subject": "named wild fight actor spacing",
+      "original_defect": "Voltarach and Sparkit crowd into the same space so the boss legs mask or intersect the ally and sometimes the trainer",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": 5,
+      "importance": 5,
+      "impact": null,
+      "score_basis": "none_current",
+      "reason": "Subject not exposed by applicable current evidence; no fresh numeric severity assessment is possible.",
+      "evidence": [],
+      "coverage_gap": "Current actual Voltarach/Sparkit/trainer combat spacing; historical fight actor/cue applicability invalidated.",
+      "lane_owner": "A",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 4,
+        "exposure": 5,
+        "importance": 5,
+        "impact": 100
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-002",
+      "subject": "map",
+      "original_defect": "The map canvas shows headings and markers without visible terrain or road context for the displayed destinations",
+      "assessment": "PARTIAL",
+      "severity": 4,
+      "exposure": 4,
+      "importance": 5,
+      "impact": 80,
+      "score_basis": "fresh_current_ui12_d627_staged_pixels",
+      "reason": "The displayed Stormwood map still presents large headings, Cinder Verge and a marker against an empty dark canvas/central black strip, without readable terrain contours, roads or relationships between destinations. Surveyed 0% and no destinations are explicitly shown, so I cannot claim that all explored/populated map states fail. The visible discovered-region context remains insufficient in this captured state.",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_map.jpg"
+      ],
+      "coverage_gap": "One 0%-surveyed map state only. Explored terrain, populated destination lists, zoom/pan and other regions are unassessed.",
+      "lane_owner": "D",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 4,
+        "exposure": 4,
+        "importance": 5,
+        "impact": 80
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-017",
+      "subject": "normal creature scale",
+      "original_defect": "Several normal creatures read visibly shorter than the trainer in the shared near-framed scale view",
+      "assessment": "PARTIAL",
+      "severity": 4,
+      "exposure": 4,
+      "importance": 5,
+      "impact": 80,
+      "score_basis": "fresh_current_creatures98_d627_staged_stills",
+      "reason": "Current normal-camera Sparkit reads markedly smaller/shorter than the adjacent trainer; Stormtrail also has a smaller on-screen standing extent. Many larger subjects, including Fulgocobra, Voltarach and Staticub, clearly read large, so this is not a roster-wide negative. The current world framing exposes an apparent scale-readability concern that the older normalized controls did not show. Perspective and unequal floor positions prevent an exact physical-height conclusion or a claim that geometry changed.",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-creatures98-r2/frames/stormwood__sparkit__idle.jpg",
+        "creatures/stormtrail.jpg idle",
+        "creatures/voltarach.jpg idle",
+        "creatures/staticub.jpg idle"
+      ],
+      "coverage_gap": "Partial apparent-scale rescore for these 14 species. Exact 1.80m-relative physical height needs equal-depth whole-body comparisons; no inferred meters, shrink operation, whole-roster or combat continuity.",
+      "lane_owner": "E",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 4,
+        "exposure": 4,
+        "importance": 5,
+        "impact": 80
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-030",
+      "subject": "shiny creature finish",
+      "original_defect": "Several shiny variants become near-uniform hot magenta and lose their ordinary species material and pattern identity",
+      "assessment": "ASSESSED",
+      "severity": 4,
+      "exposure": 5,
+      "importance": 4,
+      "impact": 80,
+      "score_basis": "fresh_current_creatures98_d627_staged_stills",
+      "reason": "Most supplied shiny views replace the ordinary material separation with near-uniform intensely saturated magenta. Voltwig loses its olive/cream blocks; Craghorn and Pebbik lose ordinary pale/dark separation; Voltarach's brown plates become pink. Faces/eyes remain recognizable in several subjects and the palette is conspicuously different, but material and pattern identity are weakened. Sparkit and Stormtrail are exceptions with their ordinary palette largely retained.",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-creatures98-r2/frames/stormwood__voltwig__shiny_idle.jpg",
+        "creatures/craghorn.jpg idle/shiny_idle",
+        "creatures/pebbik.jpg idle/shiny_idle",
+        "creatures/voltarach.jpg idle/shiny_idle"
+      ],
+      "coverage_gap": "Only one shiny standing view per species and these 14 subjects; no shiny motion, multiple lighting conditions or all-roster finish assessment.",
+      "lane_owner": "E",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 4,
+        "exposure": 5,
+        "importance": 4,
+        "impact": 80
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-033",
+      "subject": "ground pickup identity",
+      "original_defect": "Many unrelated ground pickups share small glowing plants, orbs or generic crates, so their item identity is difficult to read at normal camera distance",
+      "assessment": "PARTIAL",
+      "severity": 2,
+      "exposure": 5,
+      "importance": 4,
+      "impact": 40,
+      "score_basis": "fresh_current_inventory29_762a_visible_subset",
+      "reason": "On the actually visible subset, the wrapped green candies read as candy and differ clearly from the Static Snap sphere; Static Snap itself remains an ambiguous orb rather than a recognizable technique object. This is a bounded severity for visible item-class ambiguity only. The original broad many-unrelated-pickups pattern cannot be rejudged across the unexposed gated item rows. Empty terrain under an item label is not scored as an absent or generic pickup.",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__good_candy.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__great_candy.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__rare_candy.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__tm_static_snap.jpg"
+      ],
+      "coverage_gap": "Missing potion_small frame; 16 labeled gated item rows do not establish actual item exposure. Rootgate Release Key, Dynamo Core Key and Spark of Stormwood are disclosed event grants, deliberately not loose props, and excluded. No current complete pickup-family or earned acquisition proof.",
+      "lane_owner": "C",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 4,
+        "exposure": 5,
+        "importance": 4,
+        "impact": 80
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-093",
+      "subject": "named wild danger and opening cues",
+      "original_defect": "The bright magenta danger slab remains visible through impact while the HUD announces an opening, giving simultaneous danger and punish signals",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": 4,
+      "importance": 5,
+      "impact": null,
+      "score_basis": "none_current",
+      "reason": "Subject not exposed by applicable current evidence; no fresh numeric severity assessment is possible.",
+      "evidence": [],
+      "coverage_gap": "Current chronological warning/impact/opening sequence; historical cue/UI images are not applicable.",
+      "lane_owner": "A",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 4,
+        "exposure": 4,
+        "importance": 5,
+        "impact": 80
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-038",
+      "subject": "named destination identities",
+      "original_defect": "Several named destinations read as similar grass and trees without a distinct subject in the captured close views",
+      "assessment": "PARTIAL",
+      "severity": 4,
+      "exposure": 5,
+      "importance": 4,
+      "impact": 80,
+      "score_basis": "fresh_current_locations3_f547_partial",
+      "reason": "The supplied views do not establish a distinctive readable Heartstone subject. The hollow-crown approach is an open meadow with trees and nearby creatures; a small roofed wooden prop is distant. The landmark approach shows that roofed prop more clearly but no uniquely identifiable Heartstone focal subject or distinct destination composition. The intended close view is almost entirely occluded by a pink/purple creature body, with trainer and destination unavailable. Labels establish intended subjects, not their visibility.",
+      "evidence": [
+        "D:/tetherbound/codex-e/.tmp/e-f41-locations-f547-expanded/tree/shots/lane-e/f41-targeted-locations-f547/stormwood__hollow_crown__08__the_crown_heartstone__day__approach.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-locations-f547-expanded/tree/shots/lane-e/f41-targeted-locations-f547/stormwood__hollow_crown__08__the_crown_heartstone__day__close.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-locations-f547-expanded/tree/shots/lane-e/f41-targeted-locations-f547/stormwood__landmark__crown_heartstone__day__approach.jpg"
+      ],
+      "coverage_gap": "Other named destination identities and an unobstructed Heartstone near/detail view remain unexposed.",
+      "lane_owner": "E",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 4,
+        "exposure": 5,
+        "importance": 4,
+        "impact": 80
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-039",
+      "subject": "forest ground and distance layers",
+      "original_defect": "Uniform grass and flower carpet across broad flat land weakens the deep wet ancient forest silhouette and distance layers",
+      "assessment": "ASSESSED",
+      "severity": 4,
+      "exposure": 5,
+      "importance": 4,
+      "impact": 80,
+      "score_basis": "shipping240",
+      "reason": "Ground cover is varied relative to sparse older views and forest depth remains legible. Broad repeated grass/flower carpet, blurred ground transitions and weak shrub/sapling structure still miss the deep wet forest bar.",
+      "evidence": [
+        "forest_forward_day_storm_break",
+        "forest_reverse_day_released_calm",
+        "giant_reverse_day_released_calm"
+      ],
+      "coverage_gap": "Continuous route cohesion and vegetation motion.",
+      "lane_owner": "E",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 4,
+        "exposure": 5,
+        "importance": 4,
+        "impact": 80
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-081",
+      "subject": "named trainer dialogue identity",
+      "original_defect": "Every captured named trainer conversation repeats the same generic line and shows no portrait",
+      "assessment": "ASSESSED_BOUNDED",
+      "severity": 1,
+      "exposure": 4,
+      "importance": 4,
+      "impact": 16,
+      "score_basis": "retained_people48_portrait_text",
+      "reason": "Original generic-line/no-portrait defect is not observed: named portraits and character-specific lines are present. Severity 1 is the requested 1–5 scale floor, not evidence of that original defect.",
+      "evidence": [
+        "people-matrix/contact-0.jpg F1 Rook/F3 Wen/F7 Lio",
+        "people-matrix/contact-2.jpg F5 Tamsin"
+      ],
+      "coverage_gap": "Uncaptured conversations and earned interaction paths.",
+      "lane_owner": "D",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 4,
+        "exposure": 4,
+        "importance": 4,
+        "impact": 64
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-001",
+      "subject": "menu shell",
+      "original_defect": "The full-screen charcoal menu with thin teal borders has little visual hierarchy or scenic connection to the illustrated world",
+      "assessment": "ASSESSED",
+      "severity": 3,
+      "exposure": 5,
+      "importance": 4,
+      "impact": 60,
+      "score_basis": "fresh_current_ui12_d627_staged_pixels",
+      "reason": "The shell remains a nearly full-screen charcoal/teal rectangle with restrained flat panels and little illustrated world identity. It does have visible hierarchy: large page headings, consistently marked active tabs, selected-card borders, item art and a full creature preview. The rainy scene is faintly visible through it. The remaining issue is generic visual presentation rather than absent navigation hierarchy or unreadable text.",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_backpack.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_creatures.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_skills.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_save.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_settings.jpg"
+      ],
+      "coverage_gap": "Only these captured open-menu states; no interaction, focus transitions, full content populations, device-screen or accessibility proof.",
+      "lane_owner": "D",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 3,
+        "exposure": 5,
+        "importance": 4,
+        "impact": 60
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-007",
+      "subject": "secondary menu panels",
+      "original_defect": "The Quests Build and Players panels leave most of their area empty around a few plain text lines or a single button",
+      "assessment": "PARTIAL",
+      "severity": 2,
+      "exposure": 5,
+      "importance": 4,
+      "impact": 40,
+      "score_basis": "fresh_current_ui12_d627_staged_pixels",
+      "reason": "Build now has three illustrated cards, legible descriptions/costs and a clearly separated action, so the original almost-empty Build presentation is not observed. Quests has named sections and a main objective; Players has a matching trainer portrait and status, although its large central empty area and the flat text-card treatment remain visually sparse. These low-content states do not prove missing quest or multiplayer content.",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_build.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_quest_log.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_players.jpg"
+      ],
+      "coverage_gap": "One early quest state and solo Players state with a displayed network-port error. Populated/co-op variants, invitations or functional behavior are not assessed.",
+      "lane_owner": "D",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 3,
+        "exposure": 5,
+        "importance": 4,
+        "impact": 60
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-055",
+      "subject": "named character silhouettes",
+      "original_defect": "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes",
+      "assessment": "PARTIAL",
+      "severity": 4,
+      "exposure": 5,
+      "importance": 4,
+      "impact": 80,
+      "score_basis": "retained_people48_actor_only",
+      "reason": "Distinct named roles repeat installed face/body/outfit silhouettes: Lio/Neri, Maud/Hesk/Bryn and Fenn/Oswin. Reused actor evidence is applicable; current terrain/occlusion is not inferred.",
+      "evidence": [
+        "people-matrix/contact-0.jpg F7 Lio",
+        "people-matrix/contact-1.jpg F1 Neri/F3 Maud",
+        "people-matrix/contact-2.jpg F3 Hesk/F7 Fenn",
+        "people-matrix/contact-3.jpg F5 Oswin",
+        "people-matrix/contact-4.jpg F3 Bryn"
+      ],
+      "coverage_gap": "Unpictured officers and Tidewake portion of shared row.",
+      "lane_owner": "E",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 3,
+        "exposure": 5,
+        "importance": 4,
+        "impact": 60
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-063",
+      "subject": "shared fight tell and hit effects",
+      "original_defect": "Tells and openings rely heavily on text while flat magenta floor marks and bright impact effects obscure creature poses and give weak hit-response silhouettes",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": 5,
+      "importance": 4,
+      "impact": null,
+      "score_basis": "none_current",
+      "reason": "Subject not exposed by applicable current evidence; no fresh numeric severity assessment is possible.",
+      "evidence": [],
+      "coverage_gap": "Current tells, hit reactions, impacts and openings; historical cues/UI are not applicable.",
+      "lane_owner": "A",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 3,
+        "exposure": 5,
+        "importance": 4,
+        "impact": 60
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-095",
+      "subject": "craft recipe text",
+      "original_defect": "Long recipe names and material preview lines are clipped in the crafting list",
+      "assessment": "PARTIAL",
+      "severity": 1,
+      "exposure": 4,
+      "importance": 4,
+      "impact": 16,
+      "score_basis": "retained_ui14_P2_095_common_text_applicability_only",
+      "reason": "Retained UI-only A cells show complete wrapped Ironwood Haft (Axe)/(Pickaxe) list labels and requirements in all three 1080 realm pairs. Four retained 720 stress pairs show complete Cliffglass Bracing (pickaxe), Riding Saddle, Reinforce Axe and Island Cloudberry Preserve rows with their material quantities, rather than the ambiguous/truncated B labels. I prefer A for the original text defect, consistent with the supplied original accepted verdict. The source reviewer's independent applicability finding authorizes reuse of the unchanged common legacy/nonstation name/material/detail rendering only. Severity 1 is the conservative floor for the original defect not observed in these applicable retained UI cells, not full current station acceptance.",
+      "evidence": [
+        "D:/tetherbound/codex-e/ralph/reports/VISUAL/phase2/meadows/fixes/P2-095/accepted-ui-comparison/_sheet1080.png: A cells meadows-1080, cloudreach-1080, stormwood-1080",
+        "D:/tetherbound/codex-e/ralph/reports/VISUAL/phase2/meadows/fixes/P2-095/accepted-ui-comparison/_sheet720.png: A cells cloudreach_pickaxe_bracing, saddle, reinforce_axe, water_trail_preserve",
+        "D:/tetherbound/codex-e/ralph/reports/VISUAL/phase2/meadows/fixes/P2-095/accepted-ui-comparison/blind-verdict.md",
+        "D:/tetherbound/codex-e/ralph/reports/VISUAL/phase2/meadows/fixes/P2-095/accepted-ui-comparison/evidence-receipt.json",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-build4-r2/frames/stormwood__system__crafting.jpg"
+      ],
+      "coverage_gap": "Retained contact-sheet UI inspection only; the 14 original rasters are not locally available and were not re-inspected. Old world/lighting, availability, station mode, full current station inventory, scrolling and craft transactions are excluded. Fresh short-row positives corroborate only basic text wrapping.",
+      "lane_owner": "C",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 3,
+        "exposure": 4,
+        "importance": 4,
+        "impact": 48
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-046",
+      "subject": "harvest resource identity",
+      "original_defect": "Several harvest nodes look like ordinary stone mushrooms trees or foliage without a readable cue for their named Stormwood material",
+      "assessment": "ASSESSED",
+      "severity": 3,
+      "exposure": 4,
+      "importance": 4,
+      "impact": 48,
+      "score_basis": "fresh_current_inventory29_762a_visible_subset",
+      "reason": "All six harvest-family views expose readable broad object classes, but named Stormwood-material cues remain weak. Conductor Vine reads as an ordinary dark rounded shrub; Glowmoss as pale-purple mushrooms rather than moss; Stormglass and Stormglass Crown as very similar opaque gray-brown stone blocks; Thunderwood as an ordinary dark tree trunk. Voltcap's orange mushroom form and golden glow are a positive pickup cue. The other materials are not visually identifiable by their names from these pictures alone.",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__conductor_vine.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__glowmoss.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__stormglass.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__stormglass_crown.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__voltcap.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__thunderwood.jpg"
+      ],
+      "coverage_gap": "One view per family only, no harvesting/depletion response, tools, material yields, night variants or learned world familiarity.",
+      "lane_owner": "C",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 3,
+        "exposure": 4,
+        "importance": 4,
+        "impact": 48
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-060",
+      "subject": "catch effect finish",
+      "original_defect": "The catch sequence uses a dominant saturated magenta ground ring and flat bright orb that lose depth beside the creatures, with little visible change between rest and shake frames",
+      "assessment": "ASSESSED",
+      "severity": 3,
+      "exposure": 4,
+      "importance": 4,
+      "impact": 48,
+      "score_basis": "fresh_current_catch12_f547",
+      "reason": "The resting orb has a large simple gold surface and black equator band; a grass blade crosses its lower face. The shake still adds a clearly distinct spiky radial layer, so the original little-change defect is not reproduced in these two stills. The sphere and radial layer retain a flat graphic finish beside the creatures. Thin magenta outlines are visible in some aim views, but their source cannot be assigned from pixels; they do not dominate the resting/shake views.",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-catch-r2/frames/04-orb-resting.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-catch-r2/frames/05-orb-shakes.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-catch-r2/frames/catch_high.png"
+      ],
+      "coverage_gap": "Still samples expose finish and rest/shake appearance, not continuous shaking, timing or effect depth in motion.",
+      "lane_owner": "D",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 3,
+        "exposure": 4,
+        "importance": 4,
+        "impact": 48
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-082",
+      "subject": "named character portrait identity",
+      "original_defect": "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations",
+      "assessment": "ASSESSED_BOUNDED",
+      "severity": 1,
+      "exposure": 3,
+      "importance": 4,
+      "impact": 12,
+      "score_basis": "retained_people48_portrait_actor",
+      "reason": "Portrait apparent persons match the visible world speakers in these retained views. Original mismatch is not observed; repeated identities across different named people belong to P2-055. Severity 1 is the scale floor.",
+      "evidence": [
+        "people-matrix/contact-0.jpg F1 Rook/F3 Wen",
+        "people-matrix/contact-1.jpg F3 Maud",
+        "people-matrix/contact-2.jpg F1 Ondra/F7 Fenn"
+      ],
+      "coverage_gap": "Unpictured speakers and uncaptured dialogue states.",
+      "lane_owner": "D",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 4,
+        "exposure": 3,
+        "importance": 4,
+        "impact": 48
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-070",
+      "subject": "Glass Sink landmark",
+      "original_defect": "The named Glass Sink appears as an abrupt unmarked terrain edge over a uniform checker-textured void; the sink shape and glass material do not read from reachable rim viewpoints",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": 3,
+      "importance": 4,
+      "impact": null,
+      "score_basis": "none_current",
+      "reason": "Subject not exposed by applicable current evidence; no fresh numeric severity assessment is possible.",
+      "evidence": [],
+      "coverage_gap": "Current reachable Glass Sink rim/approach/detail; Glass Field is a different subject.",
+      "lane_owner": "E",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 4,
+        "exposure": 3,
+        "importance": 4,
+        "impact": 48
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-004",
+      "subject": "exploration HUD",
+      "original_defect": "The many dark boxed HUD panels and outlined text occupy a large share of the exploration view",
+      "assessment": "ASSESSED",
+      "severity": 2,
+      "exposure": 5,
+      "importance": 3,
+      "impact": 30,
+      "score_basis": "fresh_current_ui12_d627_staged_pixels",
+      "reason": "The exploration HUD is readable and leaves the trainer/forward route clear, but the large story box, boxed team card, food/health panels, lower-right shortcut strip and pickup prompt still occupy substantial peripheral space. Quick item icons themselves are unboxed. The captured single-creature state is less crowded than a full team or active fight, which remains unassessed.",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/exploration_hud.jpg"
+      ],
+      "coverage_gap": "Single exploration/pickup state and one owned creature; no full five-creature combat HUD, motion or device-scale assessment.",
+      "lane_owner": "D",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 3,
+        "exposure": 5,
+        "importance": 3,
+        "impact": 45
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-040",
+      "subject": "charged road surface",
+      "original_defect": "Thick gold lightning stripes dominate long stretches of road as a repeated flat pattern",
+      "assessment": "ASSESSED",
+      "severity": 1,
+      "exposure": 5,
+      "importance": 3,
+      "impact": 15,
+      "score_basis": "shipping240",
+      "reason": "Gravel and grassy edges define a grounded distinct route. Thin localized gold traces in Break no longer dominate the road as broad repeated stripes. Exposed road texture remains uniform/soft.",
+      "evidence": [
+        "rod_line_forward_day_storm_calm",
+        "rod_line_reverse_night_storm_break",
+        "rod_line_forward_day_released_calm"
+      ],
+      "coverage_gap": "Wet-surface response and continuous travel.",
+      "lane_owner": "E",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 3,
+        "exposure": 5,
+        "importance": 3,
+        "impact": 45
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-045",
+      "subject": "candy pickup tiers",
+      "original_defect": "Good Great and Rare Candy use nearly the same green wrapped form and scale at normal camera distance",
+      "assessment": "ASSESSED",
+      "severity": 3,
+      "exposure": 3,
+      "importance": 4,
+      "impact": 36,
+      "score_basis": "fresh_current_inventory29_762a_visible_subset",
+      "reason": "Good, Great and Rare Candy all use the same green round wrapped form and very similar apparent extent. Green, pale-purple and gold halos supply a positive tier cue at full raster, but the item's body/pattern/silhouette itself does not differentiate the tiers. Without labels, the visible halo variation is a weaker hierarchy than distinct designed wrappers or color blocks.",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__good_candy.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__great_candy.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__rare_candy.jpg"
+      ],
+      "coverage_gap": "Three actual visible props at their own stands, not identical lighting/depth calibration. No numerical scale equality, moving pickup, device-size readability or item-use behavior is inferred.",
+      "lane_owner": "C",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 3,
+        "exposure": 3,
+        "importance": 4,
+        "impact": 36
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-088",
+      "subject": "fight team roster contrast",
+      "original_defect": "The left team roster fades to pale low-contrast text against terrain during active combat",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": 4,
+      "importance": 3,
+      "impact": null,
+      "score_basis": "none_current",
+      "reason": "Subject not exposed by applicable current evidence; no fresh numeric severity assessment is possible.",
+      "evidence": [],
+      "coverage_gap": "Current active-combat roster over representative backgrounds; historical UI is not applicable.",
+      "lane_owner": "A",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 3,
+        "exposure": 4,
+        "importance": 3,
+        "impact": 36
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-018",
+      "subject": "shiny palette distinction",
+      "original_defect": "Some shiny variants have no reliably readable colour-block difference from their normal form at the device view",
+      "assessment": "ASSESSED",
+      "severity": 3,
+      "exposure": 3,
+      "importance": 4,
+      "impact": 36,
+      "score_basis": "fresh_current_creatures98_d627_staged_stills",
+      "reason": "Sparkit idle and shiny_idle retain the same gold/black/cream face and coat blocks at full raster. Stormtrail also retains its ordinary dark coat/yellow accents in the supplied pair. Conversely, the other 12 sheets show conspicuous magenta/purple/red shifts, so reliable shiny distinction is a specific remaining defect rather than a blanket failure.",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-creatures98-r2/frames/stormwood__sparkit__idle.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-creatures98-r2/frames/stormwood__sparkit__shiny_idle.jpg",
+        "creatures/stormtrail.jpg idle/shiny_idle",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-creatures98-r2/frames/stormwood__stormtrail__shiny_idle.jpg"
+      ],
+      "coverage_gap": "Low/Compatibility 1920x1080 supplied views only; no Ally-sized/device proof or lighting-invariant palette distinction.",
+      "lane_owner": "E",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 3,
+        "exposure": 3,
+        "importance": 4,
+        "impact": 36
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-031",
+      "subject": "settings and binding instructions",
+      "original_defect": "Dense gray-on-navy control instructions and literal key labels make settings and quick binding text hard to scan",
+      "assessment": "PARTIAL",
+      "severity": 3,
+      "exposure": 4,
+      "importance": 3,
+      "impact": 36,
+      "score_basis": "fresh_current_ui12_d627_staged_pixels",
+      "reason": "The controls help remains a dense six-line gray paragraph on navy, combining camera shake, sensitivity, aim assistance, dialogue size/background and inversion in one block. Binding rows use literal labels and their button columns shift horizontally with description length, weakening scan consistency. Most text is legible at the supplied full raster; this is scan hierarchy, not a claim that all text is unreadable. The supplied quick_bindings frame ends at the Quick items heading and shows no quick-item binding rows.",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/settings_controls.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/quick_bindings.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_settings.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_map.jpg"
+      ],
+      "coverage_gap": "Quick-item binding rows below the heading are unexposed. Full settings scroll, actual rebinding, device-size reading and input behavior are unassessed.",
+      "lane_owner": "D",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 3,
+        "exposure": 4,
+        "importance": 3,
+        "impact": 36
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-044",
+      "subject": "electric creature finish",
+      "original_defect": "Fulgocobra and Stormraven lack clear charged material contrast at normal creature-view distance",
+      "assessment": "ASSESSED",
+      "severity": 3,
+      "exposure": 3,
+      "importance": 4,
+      "impact": 36,
+      "score_basis": "fresh_current_creatures98_d627_staged_stills",
+      "reason": "Fulgocobra's ordinary hood/coils read as coarse irregular brown/black patches, with cream belly/mouth separation but little readable fine charged veining. Stormraven reads almost uniformly blue, making its eye, face and localized electric markings weak against its own feathers. Tanglevolt and Voltarach have more readable pale-face/blue-eye or lightning accents in the same packet. The named electric-finish defect remains visible.",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-creatures98-r2/frames/stormwood__fulgocobra__idle.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-creatures98-r2/frames/stormwood__stormraven__fainted.jpg",
+        "creatures/stormraven.jpg idle",
+        "creatures/tanglevolt.jpg idle",
+        "creatures/voltarach.jpg idle"
+      ],
+      "coverage_gap": "Ordinary staged views at this lighting/camera only; no activated move VFX, animated charge response, night habitat or full electric roster assessment.",
+      "lane_owner": "E",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 3,
+        "exposure": 3,
+        "importance": 4,
+        "impact": 36
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-083",
+      "subject": "dialogue foreground obstruction",
+      "original_defect": "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": 3,
+      "importance": 4,
+      "impact": null,
+      "score_basis": "none_current",
+      "reason": "Subject not exposed by applicable current evidence; no fresh numeric severity assessment is possible.",
+      "evidence": [],
+      "coverage_gap": "Current dialogue camera with foreground companions/overhead structures; old people-world occlusion is not applicable.",
+      "lane_owner": "D",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 3,
+        "exposure": 3,
+        "importance": 4,
+        "impact": 36
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-032",
+      "subject": "map active region",
+      "original_defect": "The current region map heading is shown while the Meadows region tab appears more active than the displayed biome tab",
+      "assessment": "ASSESSED",
+      "severity": 1,
+      "exposure": 3,
+      "importance": 3,
+      "impact": 9,
+      "score_basis": "fresh_current_ui12_d627_staged_pixels",
+      "reason": "The original active-region mismatch is not observed. The Stormwood heading agrees with the teal-outlined The Stormwood region button; Meadows is less emphasized. Severity 1 is the established conservative floor for an original defect not observed in the supplied state, not a fixed/closed disposition.",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_map.jpg"
+      ],
+      "coverage_gap": "One active-region state only; switching regions and focus/selection behavior are unassessed.",
+      "lane_owner": "D",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 3,
+        "exposure": 3,
+        "importance": 3,
+        "impact": 27
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-061",
+      "subject": "catch result hierarchy",
+      "original_defect": "Catch breakout and success text compete with persistent creature cards, actions and nearby same-species bodies, making the captured individual and outcome focus hard to distinguish",
+      "assessment": "ASSESSED",
+      "severity": 2,
+      "exposure": 3,
+      "importance": 3,
+      "impact": 18,
+      "score_basis": "fresh_current_catch12_f547",
+      "reason": "The cyan caught text and trait are readable in 08-caught-verdict; 09-caught-banner gives the owned individual a nearby trainer and Put Voltwig away prompt without the combat cards. At the earlier verdict endpoint, the enemy Voltwig card, ally card and combat actions persist and compete with the caught message. Breakout text is legible, but the world subject is obscured in that view; the camera failure is recorded separately under P2-113.",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-catch-r2/frames/06-breakout.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-catch-r2/frames/08-caught-verdict.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-catch-r2/frames/09-caught-banner.png"
+      ],
+      "coverage_gap": "Staged success/breakout endpoint presentation only; no earned capture, save, probability or co-op outcome behavior assessment.",
+      "lane_owner": "D",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 3,
+        "exposure": 3,
+        "importance": 3,
+        "impact": 27
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-041",
+      "subject": "Crown Arch",
+      "original_defect": "The Crown Arch appears as a small square blue frame on an exposed square slab with grass clipping through it",
+      "assessment": "PARTIAL",
+      "severity": 2,
+      "exposure": 3,
+      "importance": 3,
+      "impact": 18,
+      "score_basis": "fresh_matched_crown4_A_after87bed",
+      "reason": "Blind preference A: neutral gray textured masonry replaces the flat blue appearance, and the close platform is clear of B's grass penetration. Frame-to-slab contact reads seated in the supplied close view, and the frontal view reads as a crenellated masonry arch. A passes the bounded material/grass correction. The broad exposed rectangular slab, small rectangular outer silhouette and narrow dark edge-on approach remain visible limitations; this does not close the full landmark/release row.",
+      "evidence": [
+        "D:/tetherbound/codex-e/ralph/reports/F41/crown-masonry/pair-0.jpg",
+        "D:/tetherbound/codex-e/ralph/reports/F41/crown-masonry/pair-1.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-crown-blind/A/stormwood__landmark__crown_arch__day__close.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-crown-blind/A/stormwood__hollow_crown__07__the_crown_arch__day__close.jpg"
+      ],
+      "coverage_gap": "Four static views at Low/Compatibility 1280x720 only; no motion, earned approach, night/other phases, revised silhouette/slab integration or full release-art acceptance.",
+      "lane_owner": "E",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 3,
+        "exposure": 3,
+        "importance": 3,
+        "impact": 27
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-069",
+      "subject": "flight and landing pose read",
+      "original_defect": "Flight retains a similar spread-wing silhouette in air and the grounded return shows no bird or perch pose so the descent-to-rest change reads as a cut",
+      "assessment": "PARTIAL",
+      "severity": 3,
+      "exposure": 4,
+      "importance": 4,
+      "impact": 48,
+      "score_basis": "fresh_current_fly3_f547",
+      "reason": "Launch and glide show nearly the same upright bird with spread wings above the suspended trainer, with modest wing-angle differences. The grounded endpoint contains the trainer but no Galecrest, so it supplies no visible bird landing, tucked-wing or perch pose. These stills support the pose-presentation gap; they do not establish a hard cut or absent animation between endpoints.",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-fly/frames/01-launch.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-fly/frames/02-glide.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-fly/frames/03-landed.png"
+      ],
+      "coverage_gap": "Only three art-pose stills from the successful second stand. Landing bird pose, descent and continuous motion remain unexposed. Elevated/in-memory fixture is not campaign reachability, earned traversal or a whole Fly proof; failed first stand is not visually assessed.",
+      "lane_owner": "E",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 3,
+        "exposure": 4,
+        "importance": 4,
+        "impact": 48
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-094",
+      "subject": "placed wall visual",
+      "original_defect": "A placed wall reads as a featureless cream rectangle with only a thin wood strip at its top",
+      "assessment": "ASSESSED",
+      "severity": 3,
+      "exposure": 3,
+      "importance": 3,
+      "impact": 27,
+      "score_basis": "fresh_current_build4_762a_staged_pixels",
+      "reason": "The supplied wall still reads as a plain cream rectangular panel capped by a narrow wooden strip. A subtle plaster mottling is visible, but no supporting frame, base or construction detail gives it much built-wall character beside the world assets. This preserves the original visual concern; no placement validity or assembly behavior is inferred.",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-build4-r2/frames/stormwood__system__building.jpg"
+      ],
+      "coverage_gap": "One standalone panel, one side/angle and lighting state only; no completed shelter, back/edge inspection or placement/ground-contact behavior.",
+      "lane_owner": "C",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 3,
+        "exposure": 3,
+        "importance": 3,
+        "impact": 27
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-096",
+      "subject": "craft action hint contrast",
+      "original_defect": "Craft and leave button hints are faint gray on the dark translucent craft panel",
+      "assessment": "ASSESSED",
+      "severity": 1,
+      "exposure": 4,
+      "importance": 3,
+      "impact": 12,
+      "score_basis": "fresh_current_build4_762a_staged_pixels",
+      "reason": "Craft: A / Enter and Leave: B / Esc are legible gray-white text against the dark panel at full raster. The original faint-hint defect is not observed in this supplied state. The craft hint is lower prominence than ingredients but remains readily identifiable. Severity 1 is the conservative positive floor, not closure.",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-build4-r2/frames/stormwood__system__crafting.jpg"
+      ],
+      "coverage_gap": "One zero-ingredient selected-Axe frame only; enabled/disabled/focused hint variants, controller/device view and crafting behavior are unassessed.",
+      "lane_owner": "C",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 2,
+        "exposure": 4,
+        "importance": 3,
+        "impact": 24
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-056",
+      "subject": "uniformed character readability",
+      "original_defect": "Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance",
+      "assessment": "PARTIAL",
+      "severity": 3,
+      "exposure": 4,
+      "importance": 3,
+      "impact": 36,
+      "score_basis": "retained_people48_actor_only",
+      "reason": "Rook and Bryn have dark outfit regions with weak individual/rank markers. Outfit/role differentiation remains deficient; current forest separation cannot be certified from the retained world views.",
+      "evidence": [
+        "people-matrix/contact-0.jpg F1 Rook",
+        "people-matrix/contact-4.jpg F3 Bryn"
+      ],
+      "coverage_gap": "Unpictured officers; current world background separation at normal distance.",
+      "lane_owner": "E",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 2,
+        "exposure": 4,
+        "importance": 3,
+        "impact": 24
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-043",
+      "subject": "Glass Field spike bases",
+      "original_defect": "Blue glass spikes rise from a flat dark base with grass passing through it and a rigid white segment crossing the cluster",
+      "assessment": "PARTIAL",
+      "severity": 3,
+      "exposure": 2,
+      "importance": 3,
+      "impact": 18,
+      "score_basis": "shipping240",
+      "reason": "Forward Glass Field views still visibly contain a rigid white segment and straight dark slab beneath smooth cyan cones. Vegetation softens surrounding ground but does not convincingly integrate that geometry.",
+      "evidence": [
+        "glass_forward_day_storm_calm",
+        "glass_forward_day_released_calm"
+      ],
+      "coverage_gap": "Near base detail and slope/contact motion; actual penetration cannot be established from these distant views.",
+      "lane_owner": "E",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 3,
+        "exposure": 2,
+        "importance": 3,
+        "impact": 18
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-084",
+      "subject": "named character dialogue reuse",
+      "original_defect": "Distinct named Stormwood characters use identical dialogue lines",
+      "assessment": "ASSESSED_BOUNDED",
+      "severity": 1,
+      "exposure": 3,
+      "importance": 3,
+      "impact": 9,
+      "score_basis": "retained_people48_text",
+      "reason": "Distinct named people and progress states have different visible lines. Original identical-line defect is not observed in the supplied 24 dialogue states; severity 1 is the scale floor.",
+      "evidence": [
+        "people-matrix/contact-0.jpg F7 Lio",
+        "people-matrix/contact-1.jpg F1 Neri/F3-F6 Maud",
+        "people-matrix/contact-3.jpg F5-F8 Oswin",
+        "people-matrix/contact-5.jpg F2/F4/F6 Bryn"
+      ],
+      "coverage_gap": "Uncaptured dialogue and replay/earned progression.",
+      "lane_owner": "D",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 2,
+        "exposure": 3,
+        "importance": 3,
+        "impact": 18
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-047",
+      "subject": "Static Snap technique pickup",
+      "original_defect": "The Static Snap technique pickup reads as a generic blue centered capture orb rather than a technique item",
+      "assessment": "ASSESSED",
+      "severity": 2,
+      "exposure": 2,
+      "importance": 3,
+      "impact": 12,
+      "score_basis": "fresh_current_inventory29_762a_visible_subset",
+      "reason": "The actual visible Static Snap pickup remains a segmented sphere with a bright blue center and pale glow. Its broad silhouette reads as an orb, with no visible technique-scroll/token distinction or specific Static Snap motif. Surface detail is readable at full raster, but does not resolve the original item-class ambiguity.",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__tm_static_snap.jpg"
+      ],
+      "coverage_gap": "One ordinary-distance static view. Other technique rows are gated/unexposed and cannot establish a current technique-family comparison; no learned cue, pickup animation or acquisition behavior.",
+      "lane_owner": "C",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 2,
+        "exposure": 2,
+        "importance": 3,
+        "impact": 12
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-110",
+      "subject": "Hollows fight loss result clarity",
+      "original_defect": "After the creature falls a large out-of-fight message appears over the exploration HUD while TEAM 5/5 and green party bars still look ready and no distinct loss result is shown",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": 2,
+      "importance": 4,
+      "impact": null,
+      "score_basis": "none_current",
+      "reason": "Subject not exposed by applicable current evidence; no fresh numeric severity assessment is possible.",
+      "evidence": [],
+      "coverage_gap": "Current actual Hollows loss and out-of-fight result states.",
+      "lane_owner": "A",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 4,
+        "exposure": 2,
+        "importance": 4,
+        "impact": 32
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-111",
+      "subject": "Hollows victory reward tiles",
+      "original_defect": "The Hollows victory acknowledgement visually groups with the persistent quickbar so its item tile and four empty binding glyphs can be mistaken for earned rewards",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": 2,
+      "importance": 3,
+      "impact": null,
+      "score_basis": "none_current",
+      "reason": "Subject not exposed by applicable current evidence; no fresh numeric severity assessment is possible.",
+      "evidence": [],
+      "coverage_gap": "Current Hollows victory acknowledgement/reward/quickbar view.",
+      "lane_owner": "A",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 3,
+        "exposure": 2,
+        "importance": 3,
+        "impact": 18
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-113",
+      "subject": "catch camera distance",
+      "original_defect": "Catch framing crowds the trainer and both creatures during aim then jumps close enough at strike and breakout to crop bodies and lose the orb path",
+      "assessment": "ASSESSED",
+      "severity": 5,
+      "exposure": 4,
+      "importance": 4,
+      "impact": 80,
+      "score_basis": "fresh_current_catch12_f547",
+      "reason": "06-breakout is almost completely covered by a dark surface: trainer, target and terrain are unavailable while HUD and a small central effect remain. 01-aiming-full-health crowds the trainer between a huge cropped ally and target; 02-orb-in-flight and 03-strike crop the target, ally and trainer and lose useful orb-path context. The more open weakened aim and final caught banner are positive endpoints but do not offset the severe breakout obstruction.",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-catch-r2/frames/01-aiming-full-health.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-catch-r2/frames/02-orb-in-flight.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-catch-r2/frames/03-strike.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-catch-r2/frames/06-breakout.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-catch-r2/frames/07-aiming-weakened.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-catch-r2/frames/09-caught-banner.png"
+      ],
+      "coverage_gap": "Framing in supplied staged still contexts only; no continuous camera jump, source of obstructing surface, route coverage or multiplayer inference.",
+      "lane_owner": "A",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 4,
+        "exposure": 4,
+        "importance": 4,
+        "impact": 64
+      },
+      "prior_floor_counts_as_rescore": false
+    },
+    {
+      "item_id": "P2-119",
+      "subject": "Fly carrier grip pose",
+      "original_defect": "The trainer hangs rigidly upright beneath Galecrest with raised straight arms and dangling legs, so the bird reads as perched on the hands rather than carrying a person",
+      "assessment": "PARTIAL",
+      "severity": 4,
+      "exposure": 4,
+      "importance": 4,
+      "impact": 64,
+      "score_basis": "fresh_current_fly3_f547",
+      "reason": "In launch and glide, the trainer hangs upright with straight dangling legs and raised arms, with hands near Galecrest's outward talons. The bird's upright torso and the static-looking suspended trainer read as a bird perched near raised hands rather than a convincing carrying grip. Both faces and the whole supplied aerial silhouettes are visible; no obvious body penetration is established in these two views.",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-fly/frames/01-launch.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-fly/frames/02-glide.png"
+      ],
+      "coverage_gap": "Two supplied aerial art-pose endpoints only; grip continuity, launch/descent transitions, animation and camera behavior in earned play are unexposed.",
+      "lane_owner": "E",
+      "release_disposition": "OPEN",
+      "prior_priority_floor": {
+        "severity": 4,
+        "exposure": 4,
+        "importance": 4,
+        "impact": 64
+      },
+      "prior_floor_counts_as_rescore": false
+    }
+  ],
+  "supplemental_captures": [
+    {
+      "id": "current_creatures98_d627",
+      "root": "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-creatures98-r2/frames/",
+      "raster": "1920x1080",
+      "renderer": "Low/Compatibility NVIDIA as supplied",
+      "contact_sheets_inspected": 14,
+      "contact_cells_inspected": 98,
+      "subjects": [
+        "craghorn",
+        "fulgocobra",
+        "glimmermoth",
+        "mosshock",
+        "pebbik",
+        "sparkit",
+        "staticub",
+        "stormbrush",
+        "stormraven",
+        "stormtrail",
+        "tanglevolt",
+        "thundertunnel",
+        "voltarach",
+        "voltwig"
+      ],
+      "states": [
+        "idle",
+        "moving",
+        "attacking",
+        "hurt",
+        "resting",
+        "fainted",
+        "shiny_idle"
+      ],
+      "full_raster_checks": [
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-creatures98-r2/frames/stormwood__sparkit__idle.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-creatures98-r2/frames/stormwood__sparkit__shiny_idle.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-creatures98-r2/frames/stormwood__stormtrail__shiny_idle.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-creatures98-r2/frames/stormwood__fulgocobra__idle.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-creatures98-r2/frames/stormwood__fulgocobra__resting.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-creatures98-r2/frames/stormwood__tanglevolt__fainted.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-creatures98-r2/frames/stormwood__stormraven__fainted.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-creatures98-r2/frames/stormwood__voltwig__shiny_idle.jpg"
+      ],
+      "limits": "Direct staged single snapshots, no earned combat/travel, continuous motion or full F36 acceptance."
+    },
+    {
+      "id": "current_ui12_d627",
+      "root": "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/",
+      "raster": "1920x1080",
+      "renderer": "Low/Compatibility as supplied",
+      "contact_sheets_inspected": 3,
+      "contact_cells_inspected": 12,
+      "full_raster_checks": [
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/exploration_hud.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_backpack.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_creatures.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_map.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_skills.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_quest_log.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_build.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_players.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_save.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/menu_settings.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/settings_controls.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-d6272161ff-f41-ui/frames/quick_bindings.jpg"
+      ],
+      "limits": "Staged static interface states only. No motion, earned inventory/progression, functioning networking, save/load/rebinding behavior or device-screen proof. Quick items binding rows are below the captured heading."
+    },
+    {
+      "id": "current_build4_762a",
+      "root": "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-build4-r2/frames/",
+      "raster": "1920x1080",
+      "renderer": "Low/Compatibility as supplied",
+      "contact_sheets_inspected": 1,
+      "contact_cells_inspected": 4,
+      "full_raster_checks": [
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-build4-r2/frames/stormwood__system__camp.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-build4-r2/frames/stormwood__system__bed.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-build4-r2/frames/stormwood__system__building.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-build4-r2/frames/stormwood__system__crafting.jpg"
+      ],
+      "limits": "Visual fixtures only; no cost, placement, sleep, recipe, transaction or save behavior. Short recipe text only, no original long-name clipping exposure."
+    },
+    {
+      "id": "current_inventory29_762a",
+      "root": "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/",
+      "raster": "1920x1080",
+      "renderer": "Low/Compatibility as supplied",
+      "contact_sheets_inspected": 4,
+      "contact_cells_inspected": 29,
+      "full_raster_checks": [
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__tm_static_snap.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__potion_large.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__revive.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__good_candy.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__great_candy.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__pickup__rare_candy.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__conductor_vine.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__glowmoss.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__stormglass.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__voltcap.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__stormglass_crown.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-762a25019d-f41-inventory30/frames/stormwood__inventory__harvest__thunderwood.jpg"
+      ],
+      "survey_status": "FAIL 29/30; missing potion_small excluded",
+      "applicability": "Score visible candies, ungated Static Snap and six harvest families only. 16 gated item labels may show empty terrain and are not item exposure. Three story rewards are event grants, not loose pickups.",
+      "limits": "Staged snapshots, no earned pickup/harvest, unlock, inventory mutation or event-grant behavioral proof. potion_large/revive full rasters were inspected for visibility but not used to invent pickup-defect observations."
+    },
+    {
+      "id": "retained_P2_095_ui14",
+      "root": "D:/tetherbound/codex-e/ralph/reports/VISUAL/phase2/meadows/fixes/P2-095/accepted-ui-comparison/",
+      "contact_sheets_inspected": 2,
+      "contact_cells_inspected": 14,
+      "original_rasters_reinspected": 0,
+      "scope": "Common legacy/nonstation name/material/detail text rendering only, reused under supplied independent applicability audit. A cells accepted; historical B cells illustrate original clipping.",
+      "limits": "No old world/lighting, availability/station mode/full current inventory or behavioral reuse; original raw rasters unavailable locally."
+    },
+    {
+      "id": "current_crown4_A_after87bed",
+      "contact_sheets_inspected": 2,
+      "matched_pairs_inspected": 4,
+      "full_rasters_inspected": 8,
+      "raster": "1280x720",
+      "mapping": "A after@87bed, B before@d627; disclosed by parent after blind judgment",
+      "verdict_artifact": "ralph/reports/F41/crown-masonry/blind-verdict.json",
+      "limits": "Bounded P2-041 material/grass fix only. Broad slab and silhouette remain follow-ups."
+    },
+    {
+      "id": "current_catch12_f547",
+      "root": "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-catch-r2/frames/",
+      "contact_sheets_inspected": 2,
+      "full_rasters_inspected": 12,
+      "raster": "1920x1080",
+      "scope": "Actual Low/Compatibility staged catch aim/throw/strike/absorb/rest/shake/breakout/result views.",
+      "limits": "No earned capture/co-op, continuous motion, save or probability proof; severe visible breakout obstruction retained."
+    },
+    {
+      "id": "current_fly3_f547",
+      "root": "D:/CodexTemp/tetherbound-proof/native-e-f5474bf1ac-f41-fly/frames/",
+      "contact_sheets_inspected": 1,
+      "full_rasters_inspected": 3,
+      "raster": "1920x1080",
+      "scope": "Three launch/glide/grounded art-pose stills from successful second stand.",
+      "limits": "Whole tool failed first stand; fixture elevates 60m with in-memory Galecrest/unlock/sealed state. No campaign reachability, earned traversal, continuous motion, bird landing or full Fly acceptance."
+    },
+    {
+      "id": "current_locations3_f547_partial",
+      "root": "D:/tetherbound/codex-e/.tmp/e-f41-locations-f547-expanded/tree/shots/lane-e/f41-targeted-locations-f547/",
+      "contact_sheets_inspected": 1,
+      "full_rasters_inspected": 3,
+      "raster": "1280x720",
+      "complete": false,
+      "exit": 124,
+      "verdict_artifact": "ralph/reports/F41/recapture-rescore/locations/blind-verdict.json",
+      "scope": "Crown Heartstone destination only; P2-038 partial numeric rescore.",
+      "limits": "No Glass Sink pixels: both stands refused. Other named destinations, unobstructed Heartstone detail and earned route unexposed; capture remains failed/incomplete."
+    }
+  ]
+}

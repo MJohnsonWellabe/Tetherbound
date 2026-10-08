@@ -228,6 +228,52 @@ func test_request_codec_preserves_distinct_authenticated_source_kinds_and_exact_
 	assert_false(PREP.make_action(request, f.context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN, "altar_traits").is_empty())
 	request.intent.expected_character_revision = 1
 	assert_true(PREP.make_action(request, f.context, f.before, 0, "current-epoch", "resource-slot", f.cursor, DATA.TXN, "altar_traits").is_empty())
+	# Actual Backpack equipment enters through this authenticated guest
+	# checkpoint before the ordinary full-character journal may stage it.
+	var rules := preload("res://scripts/world/death_satchel_rules.gd")
+	var equip_before: Dictionary = f.before.duplicate(true)
+	var bag: RefCounted = rules.inventory_from(equip_before.inventory)
+	bag.call("add", "stormglass_command_pouch", 1)
+	equip_before.inventory = rules.slots(bag)
+	var equip_cursor := REPLAY.begin(equip_before, {})
+	var equip_applied := REPLAY.apply(equip_cursor, {"version": 1, "sequence": 1, "op": "condition", "delta": 0.1,
+		"uids": [equip_before.party[0].uid]}, {"max_elapsed": 1.0, "max_speed": 20.0, "realm": "meadows", "landmarks": {}})
+	assert_true(equip_applied.ok)
+	equip_cursor = equip_applied.cursor
+	var equip_request: Dictionary = f.request.duplicate(true)
+	equip_request.op = "trainer_equip"
+	equip_request.revision = 0
+	equip_request.station_key = "personal_equipment:" + DATA.CHARACTER
+	equip_request.intent = {"equip_id": DATA.TXN, "slot": "backpack", "item_id": "stormglass_command_pouch", "expected_item": ""}
+	var equip_context := {"character_id": DATA.CHARACTER, "expected_revision": 0, "source_key": equip_request.station_key,
+		"station_kind": "personal_equipment", "owns_character": true, "in_range": true, "in_combat": false, "foundation_runtime_authorized": true}
+	var equip_prepared := PREP.make_action(equip_request, equip_context, equip_before, 0, "current-epoch", "resource-slot", equip_cursor, DATA.TXN)
+	assert_false(equip_prepared.is_empty(), "guest gear request reaches the original owner checkpoint")
+	assert_true(PREP.valid_action_host(equip_prepared, equip_cursor))
+	assert_true(PREP.owner_plan(equip_cursor.state, equip_prepared, {}, {}).ok)
+	assert_eq(equip_prepared.after.equipment, equip_before.equipment, "checkpoint itself cannot equip or consume")
+	assert_eq(equip_prepared.after.inventory, equip_before.inventory)
+	for defect: String in ["foreign_owner", "epoch", "slot_cas", "invented_tier", "combat", "source"]:
+		var forged: Dictionary = equip_request.duplicate(true)
+		var view := equip_context.duplicate(true)
+		match defect:
+			"foreign_owner": forged.character_id = "other-owner"
+			"epoch": forged.session_epoch = "other-epoch"
+			"slot_cas": forged.intent.expected_item = "rootiron_command_pouch"
+			"invented_tier": forged.intent.tier = 4
+			"combat": view.in_combat = true
+			"source": forged.station_key = "personal_equipment:other-owner"
+		assert_true(PREP.make_action(forged, view, equip_before, 0, "current-epoch", "resource-slot", equip_cursor, DATA.TXN).is_empty(), defect)
+	var equip_authority := AUTH.new()
+	assert_true(equip_authority.bind_world("resource-namespace"))
+	assert_true(equip_authority.seed_admitted_character(equip_before, DATA.CHARACTER).ok)
+	assert_true(equip_authority.reserve_owner_passive_checkpoint(DATA.CHARACTER, equip_prepared, {}, equip_cursor))
+	assert_true(equip_authority.commit_owner_passive_checkpoint(DATA.CHARACTER, equip_prepared.hash))
+	var equip_stage: Dictionary = equip_authority.stage_character_action(DATA.CHARACTER, 0, "trainer_equip", equip_request.intent, equip_context)
+	assert_true(equip_stage.ok, str(equip_stage))
+	assert_eq(equip_stage.state.equipment.backpack, "stormglass_command_pouch")
+	assert_true(equip_authority.finish_creature_training(equip_stage, false))
+	assert_eq(equip_authority.state(DATA.CHARACTER).equipment, equip_before.equipment)
 
 func test_request_cas_preserves_quote_then_original_altar_stage_advances_once_and_retries() -> void:
 	const TEACHING := preload("res://scripts/creatures/teaching.gd")

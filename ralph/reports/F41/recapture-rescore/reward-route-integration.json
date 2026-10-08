@@ -1,0 +1,22 @@
+{
+  "production_origin": "de50c185391edaa053c97d5fa746ee1e8afc2664",
+  "foundation": "15ca32a5ac20dd54d5bf9b8024677e4457723ca7",
+  "path": "scripts/ui/playground_hud.gd",
+  "before_blob": "7f9e3bb2192fa3ec30d7277f417d6670e11cb495",
+  "after_blob": "6a65e5aa929f20ccfe6e7fc28ef010afab67d552",
+  "scope": "Only exact D production diff: cached exact authored named-wild acknowledgement routing into existing peer-local passive reward_summary; authority text unchanged, grants nothing, unknown messages retain hotbar",
+  "original_D_receipt_commit": "c3beed2945",
+  "passing_proof_source": "e0494616323ed2964125b352569ea19534dd74d7",
+  "reused_affected_proof_run": 37799566986,
+  "reused_affected_proof_artifact": 11559664505,
+  "checks": 79,
+  "exit_code": 0,
+  "script_errors": 0,
+  "warning": "HUD has no player: disclosed isolated fixture",
+  "passing_log_sha256": "4322e1513ff957b195adf89ae79585b4039801c6e155cebae2fb497d698721d6",
+  "retained_failed_D_run": 37797219797,
+  "dependencies": "E matches D progression_feed, hud_presentation_policy, redesign_state, stormwood_encounters and victory_hierarchy configs; exact production HUD blob",
+  "disclosed_difference": "E hud.json lacks D unrelated creature_portrait_frames crop map; other HUD tuning unchanged. No D portrait config or test fixtures imported.",
+  "flags": "Existing victory_hierarchy_visual remains OFF; no new flag",
+  "limits": "Combined-source original review and actual affected native victory pixels still required. No actual victory/whole criterion claim from isolated lifecycle proof."
+}

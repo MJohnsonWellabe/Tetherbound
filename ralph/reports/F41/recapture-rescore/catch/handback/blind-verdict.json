@@ -1,0 +1,29 @@
+{
+  "reviewer": "same retained original code-blind visual judge",
+  "scope": "Two supplied unpaused catch-breakout handback stills: visibility and occlusion only",
+  "contact": "ralph/reports/F41/recapture-rescore/catch/handback/contact-0.jpg",
+  "raw_root": ".tmp/e-catch-handback-7ee-expanded/tree/ralph/reports/VISUAL/phase2/stormwood/lane-e-catch-handback-7ee/",
+  "full_rasters_inspected": [
+    "breakout-handback-live.png",
+    "breakout-handback-settled.png"
+  ],
+  "raster": "1280x720",
+  "verdict": "BLOCK",
+  "per_frame": [
+    {
+      "frame": "breakout-handback-live.png",
+      "verdict": "BLOCK",
+      "finding": "A dark surface covers almost the entire world view. Trainer, ally Terrapup, target Voltwig, terrain and escape/route context are not visually distinguishable. HUD and failure text are legible; a dim central radial effect remains visible."
+    },
+    {
+      "frame": "breakout-handback-settled.png",
+      "verdict": "BLOCK",
+      "finding": "Almost the entire world view remains covered by the dark surface, with no readable trainer/creature bodies or terrain. The central radial effect has disappeared while enemy/ally HUD and failure text persist. The orange HEAVY get-clear prompt appears, but its threat source and safe direction are unavailable in the world view."
+    }
+  ],
+  "reason": "Both the immediate and settled handback samples retain severe world-view occlusion. They do not establish a readable return to ordinary creature/trainer combat framing.",
+  "limits": "Pixels only: no source/cause/material identity of blocking surface, continuous timing, whole catch sequence, mechanics, earned capture or route/co-op claim. Parent-reported unpaused/current target status does not establish visible world actors.",
+  "previous_twelve_frame_verdict_preserved": true,
+  "catalogue_updated": false,
+  "full_catch_or_release_closure": false
+}
