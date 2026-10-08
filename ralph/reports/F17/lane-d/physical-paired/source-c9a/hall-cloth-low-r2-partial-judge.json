@@ -1,0 +1,30 @@
+{
+  "reviewer": "/root/f26_presets_review",
+  "code_blind": true,
+  "source": "16beb4239fb2f71f4e257e21f9738bbf5928d744",
+  "run": 37744396901,
+  "artifact": 11536389692,
+  "inspected": "All four native Low1280x720 originals and contact sheet; after-only",
+  "cloth_attachment_palette_readability": "PASS SCOPED",
+  "low_essential_readability": "PASS SCOPED",
+  "bar_a": "BLOCK",
+  "bar_b": "BLOCK",
+  "frame_findings": {
+    "0000-inside-Hall-nave-day-clear-low.png": "Both cyan banners read against stone; tops meet horizontal timber without visible floating gap or penetration.",
+    "0001-inside-Hall-nave-night-clear-low.png": "Attachment and silhouette readable; cloth shifts strongly toward saturated blue. Far wall loses detail to near-black shadow.",
+    "0002-inside-Hall-nave-day-rain-low.png": "Cyan banners read against stone and attachment timber.",
+    "0003-inside-Hall-nave-night-rain-low.png": "Pale cyan cloth distinguishes against darker wall; scene substantially brighter than night clear."
+  },
+  "remaining_defects": [
+    "Uniform horizontal cloth striping and stiff rectangular surfaces",
+    "Right-side world labels obscured by story panel",
+    "Empty floor, repeated stone, plain portal panels and weak focal composition",
+    "Night-clear far-wall falloff and night-rain brightness inconsistency"
+  ],
+  "limits": [
+    "No improvement attribution from after-only stills",
+    "No Medium/High result, motion, pedestal or companion clearance",
+    "No whole F17/F38 completion"
+  ],
+  "disposition": "Both Hall candidate shipping flags remain off. Two hosted failures retained; no third unchanged run."
+}
