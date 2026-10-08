@@ -104,6 +104,8 @@ func _run() -> void:
 			functional_offload = true
 		elif arg == "--observe-next-goal":
 			observe_next_goal = true
+		elif arg == "--capture-next-goal":
+			pass  # Read-only guarded HUD capture after successful existing piece.
 		elif arg in ["--lesson-controller-witness", "--lesson-replay-witness", "--capture-lessons"] or arg.begins_with("--lesson-skip-line"):
 			pass  # Validated below; only the existing reader can witness an actual lesson.
 		elif arg.begins_with("--handoff-from="):
@@ -120,6 +122,8 @@ func _run() -> void:
 		else:
 			failures.append("Unknown earned-piece option: " + arg)
 	var lesson_options := TRAVEL.lesson_witness_options()
+	if OS.get_cmdline_user_args().has("--capture-next-goal") and not observe_next_goal:
+		failures.append("Next-goal frames require the existing --observe-next-goal snapshots")
 	failures.append_array(lesson_options.failures)
 	if not SEGMENTS.has(segment) or save_dir.is_empty() or receipt_path.is_empty():
 		failures.append("usage: --segment=<%s> --save-dir=<dir> --receipt=<json>" % "|".join(SEGMENTS))
@@ -203,6 +207,10 @@ func _run() -> void:
 				await _resumed_segment()
 	if observe_next_goal:
 		TRAVEL.new(self, game).observe_next_goal(segment, "after_piece" if failures.is_empty() else "piece_failed")
+		if failures.is_empty():
+			var goal_reader := TRAVEL.new(self, game)
+			if not await goal_reader.capture_next_goal(segment, "after_piece"):
+				failures.append_array(goal_reader.failures)
 	if failures.is_empty() and not legacy_order_diagnostic:
 		var actual_uids: Array[String] = []
 		var distinct := {}

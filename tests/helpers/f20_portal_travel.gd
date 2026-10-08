@@ -670,6 +670,31 @@ func observe_next_goal(gate: String, phase: String) -> Dictionary:
 	print("F46 NEXT GOAL OBSERVATION " + JSON.stringify(observation))
 	return observation
 
+## Opt-in F46#1 proof frame, not a comprehension verdict. Keep the real HUD
+## and same identity/goal through the existing completed-frame capture.
+func capture_next_goal(gate: String, phase: String) -> bool:
+	if not OS.get_cmdline_user_args().has("--capture-next-goal"): return true
+	var observed := observe_next_goal(gate, phase)
+	if observed.visible_text_matches != true or not str(observed.input_owner).is_empty() or tree.paused:
+		return _fail("F46 next-goal capture requires the actual visible matching HUD and free input")
+	var scene := tree.current_scene
+	var label := scene.get_node("PlaygroundHUD").get("_objective_text_label") as Label
+	var stable := func() -> bool:
+		return tree.current_scene == scene and is_instance_valid(label) and label.is_visible_in_tree() \
+			and str(game.local.character_id) == observed.character_id and _uids() == observed.party_uids \
+			and label.text == observed.hud_text and str(game.get("objective_text")) == observed.game_text \
+			and INPUT_OWNER.current(tree) == null and not tree.paused
+	var probe_script := load("res://tests/helpers/f20_ending_probe.gd") as GDScript
+	if probe_script == null: return _fail("F46 next-goal capture lacks the existing completed-frame probe")
+	var probe: RefCounted = probe_script.new()
+	var passed: bool = await probe.capture(tree, "next-goal-" + gate + "-" + phase, stable)
+	if not passed or not stable.call(): return _fail("F46 next-goal frame lost its original HUD, goal or character")
+	print("F46 NEXT GOAL CAPTURE " + JSON.stringify({"gate":gate,"phase":phase,
+		"character_id":observed.character_id,"party_uids":observed.party_uids,
+		"actual_hud_text":observed.hud_text,"completed_frame":true,
+		"agent_next_goal_verdict":"pending; capture does not claim comprehension or whole F46"}))
+	return true
+
 func _trace_clock(action: String, pressed: bool, phase: String) -> void:
 	var input_owner := INPUT_OWNER.current(tree)
 	var dialogue: Node = tree.current_scene.get_node_or_null("DialoguePanel") if tree.current_scene != null else null
