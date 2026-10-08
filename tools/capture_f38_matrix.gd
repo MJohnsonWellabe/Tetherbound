@@ -128,9 +128,11 @@ func _capture_row(row: Dictionary) -> void:
 					window_alphas.append(material.albedo_color.a)
 					window_transparency.append(material.transparency)
 	_manifest["f38_window_glow"] = {"candidate": window_candidate, "expected_energy": expected_window_energy, "actual_energies": window_energies, "expected_alpha": expected_window_alpha, "actual_alphas": window_alphas, "transparency_modes": window_transparency}
+	# Godot4.7 imports the authored glTF alphaModeBLEND as depth-prepass
+	# alpha. Keep this strict guard bound to that canonical imported mode.
 	if window_energies.is_empty() or window_energies.any(func(value: float) -> bool: return not is_equal_approx(value, expected_window_energy)) \
 		or window_alphas.any(func(value: float) -> bool: return not is_equal_approx(value, expected_window_alpha)) \
-		or window_transparency.any(func(value: int) -> bool: return value != BaseMaterial3D.TRANSPARENCY_ALPHA):
+		or window_transparency.any(func(value: int) -> bool: return value != BaseMaterial3D.TRANSPARENCY_ALPHA_DEPTH_PRE_PASS):
 		_failures.append("F38 actual farmhouse window emission/alpha/transparency differs from authored setting")
 		_write_manifest()
 		return
