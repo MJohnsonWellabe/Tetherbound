@@ -13,6 +13,7 @@ var _lesson_controller_input := false
 var _lesson_capture_probe: RefCounted
 var _lesson_replay_row: Dictionary = {}
 var _lesson_replay_identity: Dictionary = {}
+var _lesson_replay_rows: Dictionary = {}
 
 static func lesson_witness_options() -> Dictionary:
 	var options := {"controller": false, "capture": false, "replay": false, "skip_line": 0, "failures": []}
@@ -73,6 +74,7 @@ func _with_navigation_lessons(navigate: Callable) -> bool:
 	var failures_before := failures.size()
 	_lesson_replay_row = {}
 	_lesson_replay_identity = {}
+	_lesson_replay_rows = {}
 	_lesson_generation += 1
 	_lesson_active = true
 	var reader := _continue_navigation_lesson.bind(_lesson_generation)
@@ -99,21 +101,27 @@ func _with_navigation_lessons(navigate: Callable) -> bool:
 
 ## Explicit free-world boundary: a portal activation may still own a picker.
 ## Its caller must finish that modal before requesting this optional witness.
-func replay_observed_lesson() -> bool:
+func replay_observed_lesson(lesson_id: String = "") -> bool:
 	var options := lesson_witness_options()
 	if not options.failures.is_empty():
 		failures.append_array(options.failures)
 		return false
 	if _lesson_active or _lesson_busy or not failures.is_empty():
 		return _fail("F46 Help replay requires the completed natural reader")
-	if _lesson_replay_identity.get("character_id", "") != str(game.local.character_id) \
-		or _lesson_replay_identity.get("party_uids", []) != _uids():
+	var replay_row: Dictionary = _lesson_replay_row
+	var replay_identity: Dictionary = _lesson_replay_identity
+	if not lesson_id.is_empty():
+		var observed: Dictionary = _lesson_replay_rows.get(lesson_id, {})
+		replay_row = observed.get("row", {})
+		replay_identity = observed.get("identity", {})
+	if replay_identity.get("character_id", "") != str(game.local.character_id) \
+		or replay_identity.get("party_uids", []) != _uids():
 		return _fail("F46 Help replay lost the natural lesson's original character or ordered party")
 	var failures_before := failures.size()
-	if options.replay and not _lesson_replay_row.is_empty():
+	if options.replay and not replay_row.is_empty():
 		# The natural reader has finished. No background reader is connected
 		# while controller input traverses Settings and its real Help buttons.
-		var row := _lesson_replay_row.duplicate(true)
+		var row := replay_row.duplicate(true)
 		var reward_state := func() -> Dictionary:
 			var stacks: Array = []
 			for slot: int in int(game.inventory.call("slot_count")):
@@ -467,6 +475,9 @@ func _continue_navigation_lesson(generation: int, replay_row: Dictionary = {}) -
 		if options.replay and not replaying and _lesson_replay_row.is_empty():
 			_lesson_replay_row = row.duplicate(true)
 			_lesson_replay_identity = {"character_id": character_id, "party_uids": witness.party_uids.duplicate()}
+		if options.replay and not replaying and not _lesson_replay_rows.has(id):
+			_lesson_replay_rows[id] = {"row":row.duplicate(true),
+				"identity":{"character_id":character_id,"party_uids":witness.party_uids.duplicate()}}
 	_lesson_busy = false
 
 func _activate_world(prompt: Node3D, approach_headings: Array[Vector3] = []) -> bool:

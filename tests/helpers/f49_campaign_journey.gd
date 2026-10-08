@@ -160,7 +160,11 @@ func run(owner: SceneTree) -> void:
 		if not driver._accepted(await WARDEN.new().run_finale(driver, driver.current_scene, game), "passed"): return
 		if not await _boundary("meadows_settled"): return
 	if from < 1:
-		if not await travel.home_key() or not await travel.hang_relic("meadows") or not await travel.enter("tidewake", "water"):
+		if not await travel.home_key():
+			_failures(travel.failures)
+			return
+		if OS.get_cmdline_user_args().has("--lesson-replay-witness") and not await _first_key_lessons(): return
+		if not await travel.hang_relic("meadows") or not await travel.enter("tidewake", "water"):
 			_failures(travel.failures)
 			return
 		visited.append("tidewake")
@@ -240,6 +244,54 @@ func run(owner: SceneTree) -> void:
 	if segmented: _segment_result("completed_world", true)
 	print("F49 JOURNEY " + JSON.stringify({"order": visited, "shortcuts": ["agent emits ordinary actions", "declines pending legendaries to retain the earned five", "production saves copied to immutable handoffs", "credits skipped by controller after their actual opening", "inherited helpers retain their original simulation clocks; wall time is not owner/device timing"], "legacy_cards": {"M2": "same-route ledger/reloads; two-loss/four-character proof queued separately", "M3": "fight/optional activity/visual proof remains separate", "T2": "same-route six chains; island/fight/art/four-character proof remains separate", "S2": "storm/fight/activity/visual proof remains separate"}, "owner_play": "pending", "ally_hardware": "pending", "published_download": "pending"}))
 	driver._finish(true)
+
+## Optional F46 witness begins only after the earned Warden's actual key and
+## relic and completed Home Key. Installed Tam teaches both due cards; the
+## existing reader retains each card before replaying it through Settings.
+func _first_key_lessons() -> bool:
+	var rules := preload("res://scripts/onboarding/lesson_rules.gd")
+	var options := TRAVEL.lesson_witness_options()
+	if not options.failures.is_empty() or not options.controller or not travel._bind():
+		_fail("First key lessons require the existing controller/replay options and free world input")
+		return false
+	var teacher := driver.current_scene.find_child("Tam", true, false) as Node3D
+	var cid := str(game.local.character_id)
+	var retained: Array[String] = travel._uids()
+	for id: String in ["portals", "shrines"]:
+		if not rules.available(id, game.local) or game.local.flags.call("has", rules.PREFIX + id):
+			_fail("Earned first key/relic must naturally unlock its still-unacknowledged " + id + " lesson")
+			return false
+	if teacher == null:
+		_fail("Earned first key return lacks installed Tam")
+		return false
+	var player := game.call("find_player") as CharacterBody3D
+	var rig := driver.current_scene.get_node_or_null("CameraRig") as Node3D
+	var nav := travel.NAV.new(driver, player, rig, Callable(travel, "_stick"))
+	var recoveries_before := int(player.get("_unstick_count"))
+	var approach := func() -> bool:
+		var budget := maxi(1200, int(player.global_position.distance_to(teacher.global_position) * 65.0))
+		var arrived: bool = await nav.walk_to(teacher.global_position, budget, 3.5)
+		travel.call("_stick", 0.0, 0.0)
+		for frame: int in 180:
+			if game.local.flags.call("has", rules.PREFIX + "portals") \
+					and game.local.flags.call("has", rules.PREFIX + "shrines"): break
+			await driver.physics_frame
+		return arrived and player.is_on_floor() and int(player.get("_unstick_count")) == recoveries_before \
+			and player.global_position.distance_to(teacher.global_position) <= 5.0
+	if not await travel._with_navigation_lessons(approach):
+		_failures(travel.failures)
+		return false
+	for id: String in ["portals", "shrines"]:
+		if not await travel.replay_observed_lesson(id):
+			_failures(travel.failures)
+			return false
+	if str(game.local.character_id) != cid or travel._uids() != retained or not travel._ready_world("meadows"):
+		_fail("First key lesson Skip/Help replay changed the earned character, five or free ready world")
+		return false
+	print("F46 FIRST KEY LESSONS " + JSON.stringify({"character_id":cid,"party_uids":retained,
+		"lessons":["portals","shrines"],"earned_warden_key_and_relic":true,
+		"physical_skip_and_help":true,"whole_f46_proven":false}))
+	return true
 
 func _boundary(label: String, reload_disk: bool = true) -> bool:
 	driver.reached = label
