@@ -12,6 +12,8 @@ const SHORE_UNIFORMS := """
 uniform float shore_foam_breakup_m = 4.0;
 uniform float shore_foam_breakup_scale = 0.025;
 uniform float shore_foam_strength = 0.68;
+uniform float shore_foam_patch_start = 0.35;
+uniform float shore_foam_patch_full = 0.65;
 """
 const SHORE_BREAKUP := """
 	// Deform only the foam's noise coordinates. Physical depth, waterline,
@@ -59,7 +61,10 @@ static func apply(source: ShaderMaterial, supplied: Dictionary = {}) -> ShaderMa
 	var shore_breakup := float(settings.get("shore_foam_breakup_m", 4.0))
 	var shore_scale := float(settings.get("shore_foam_breakup_scale", 0.025))
 	var shore_strength := float(settings.get("shore_foam_strength", 0.68))
-	if shore_enabled and (not is_finite(shore_breakup) or not is_finite(shore_scale) or not is_finite(shore_strength)):
+	var patch_start := float(settings.get("shore_foam_patch_start", 0.35))
+	var patch_full := float(settings.get("shore_foam_patch_full", 0.65))
+	if shore_enabled and (not is_finite(shore_breakup) or not is_finite(shore_scale) or not is_finite(shore_strength) \
+			or not is_finite(patch_start) or not is_finite(patch_full) or patch_start < 0.0 or patch_full > 1.0 or patch_start >= patch_full):
 		push_error("Water shore foam candidate: finite presentation settings required")
 		shore_enabled = false
 	if shore_enabled:
@@ -70,7 +75,7 @@ static func apply(source: ShaderMaterial, supplied: Dictionary = {}) -> ShaderMa
 			shader.code = shader.code.replace("void fragment() {", SHORE_UNIFORMS + "\nvoid fragment() {") \
 				.replace(FOAM_FIRST_ANCHOR, SHORE_BREAKUP + "\n\tfloat n1 = texture(foam_noise, shore_foam_uv * foam_scale") \
 				.replace(FOAM_SECOND_ANCHOR, "float n2 = texture(foam_noise, shore_foam_uv * foam_scale") \
-				.replace(FOAM_COLOUR_ANCHOR, "foam *= shore_foam_strength;\n\t" + FOAM_COLOUR_ANCHOR)
+				.replace(FOAM_COLOUR_ANCHOR, "float shore_patch = smoothstep(shore_foam_patch_start, shore_foam_patch_full, dot(shore_warp, vec2(0.65, 0.35)));\n\tfoam *= shore_foam_strength * shore_patch;\n\t" + FOAM_COLOUR_ANCHOR)
 	var result := source.duplicate() as ShaderMaterial
 	result.shader = shader
 	result.set_shader_parameter("offshore_colour", Color(str(settings.get("deep_colour", "#194856"))))
@@ -83,4 +88,6 @@ static func apply(source: ShaderMaterial, supplied: Dictionary = {}) -> ShaderMa
 		result.set_shader_parameter("shore_foam_breakup_m", maxf(0.0, shore_breakup))
 		result.set_shader_parameter("shore_foam_breakup_scale", maxf(0.0001, shore_scale))
 		result.set_shader_parameter("shore_foam_strength", clampf(shore_strength, 0.15, 1.0))
+		result.set_shader_parameter("shore_foam_patch_start", patch_start)
+		result.set_shader_parameter("shore_foam_patch_full", patch_full)
 	return result

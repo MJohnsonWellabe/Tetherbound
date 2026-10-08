@@ -175,7 +175,7 @@ func _capture_row(row: Dictionary) -> void:
 		if surface == null:
 			_failures.append("F39 production WaterSurface material was not found")
 		else:
-			var shore_uniforms := ["shore_foam_breakup_m", "shore_foam_breakup_scale", "shore_foam_strength"]
+			var shore_uniforms := ["shore_foam_breakup_m", "shore_foam_breakup_scale", "shore_foam_strength", "shore_foam_patch_start", "shore_foam_patch_full"]
 			var expected := {"enabled": shore_enabled, "shader": {}}
 			for key: String in shore_uniforms:
 				expected.shader[key] = shore_settings.get(key)
@@ -183,7 +183,8 @@ func _capture_row(row: Dictionary) -> void:
 			var surface_material := surface.material_override as ShaderMaterial
 			var installed := surface_material != null and surface_material.shader != null \
 				and surface_material.shader.code.contains("vec2 shore_foam_uv =") \
-				and surface_material.shader.code.contains("foam *= shore_foam_strength;")
+				and surface_material.shader.code.contains("float shore_patch = smoothstep(shore_foam_patch_start, shore_foam_patch_full,") \
+				and surface_material.shader.code.contains("foam *= shore_foam_strength * shore_patch;")
 			shore_observed.gates["shore_foam_installed"] = installed
 			if installed != shore_enabled:
 				shore_observed.matches_requested = false
