@@ -526,7 +526,8 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 				var snapshot: Dictionary = manager.tether_command_snapshot()
 				if float(snapshot.get("meter", 0.0)) >= cost: break
 				if not manager.is_fighting(): return {"verdict":"FAIL", "detail":"fight ended before actual hits filled the command meter"}
-				var target: Node3D = director.get("_shared_opponent_proxy")
+				# The host owns the actual engaged wild; guests use its mirrors.
+				var target: Node3D = director.get("_engaged_with") if session.is_host() else director.get("_shared_opponent_proxy")
 				if target == null: target = director.get("_legacy_mirror")
 				var body: Node3D = director.ally_body()
 				if target == null or body == null: return {"verdict":"FAIL", "detail":"actual combat body missing"}
