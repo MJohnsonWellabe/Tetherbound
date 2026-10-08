@@ -244,10 +244,14 @@ func activate(prompt: Node3D, approach_headings: Array[Vector3] = []) -> bool:
 	# Original navigator retains capsule probes, confined watchdog and support
 	# tests. No floor snap, shape waiver, target relocation or budget relaxation.
 	var arrived := false
+	# Shrine stands are only three metres apart. A generic 2.5m arrival
+	# can offer this relic while a neighbour still owns Interact. Walk closer
+	# with the same navigator and budget; exact ownership remains required.
+	var close_enough := 1.0 if prompt.get_parent().is_in_group("crossing_hall_pedestals") else 2.5
 	if approach_headings.is_empty():
-		arrived = await nav.walk_to(prompt.global_position, budget, 2.5)
+		arrived = await nav.walk_to(prompt.global_position, budget, close_enough)
 	else:
-		arrived = await nav.walk_to_guided(prompt.global_position, budget, 2.5, approach_headings)
+		arrived = await nav.walk_to_guided(prompt.global_position, budget, close_enough, approach_headings)
 	last_approach = {"phase": "portal_approach", "provider": str(prompt.get_path()), "start": str(start),
 		"target": str(prompt.global_position), "end": str(_player.global_position), "arrived": arrived,
 		"grounded": _player.is_on_floor(), "can_walk": nav.can_walk(), "original_frame_budget": budget,
