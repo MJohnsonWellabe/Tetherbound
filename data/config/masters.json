@@ -9,6 +9,13 @@
     100
   ],
   "duel_policy": "sequential_one_challenger",
+  "sign_presentation": {
+    "font_size": 96,
+    "pixel_size_m": 0.006,
+    "width_px": 720,
+    "outline_size": 12,
+    "text_offset_m": [0, 3.3, 0.15]
+  },
   "masters": [
     {
       "id": "master_t1",
@@ -29,7 +36,7 @@
         1780
       ],
       "sign_position": [
-        404,
+        412,
         0,
         1745
       ],
