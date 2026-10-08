@@ -50,4 +50,27 @@
     "Required original blind 7-inch PASS against the whole criterion"
   ],
   "landing": "No criterion READY or acceptance count change. Pushed lane implementation only. F42#0 in PR586 and passing bank texture evidence were not repeated."
+  ,"prompt_floor_followup": {
+    "source_commit": "e2653e9bf34ec4c46add2828feb1c6b956ee03ae",
+    "baseline": "8e610ddeb667a2b3ff0fa499313a705b339f0d53",
+    "supported_defect": "Legacy ultimate instruction authored22 logical px, below existing UX8 prompt floor at720. It now uses UITokens.FONT_PROMPT30 and existing CELL_GLYPH_PX40.",
+    "scope": "Device-local presentation; no flag, authority, state, transaction, input or glyph binding changes.",
+    "existing_proof": "tests/smoke_combat_hud_left_column.gd",
+    "proof_delta": "Populate the actual Mountain Home name, existing gamepad glyph and ready instruction before measuring the real layout; assert the actual fallback font floor. All original layout and duplicate/fallback guards retained.",
+    "rerun_reason": "Changed font/glyph height and populated wrapping affect panel height and roster clearance. Only the affected existing layout proof reran; no unchanged broad batch.",
+    "run": 37769481673,
+    "artifact": 11547253661,
+    "engine": "Godot 4.7.stable.official.5b4e0cb0f",
+    "mode": "hosted headless1920x1080",
+    "exit": 0,
+    "seconds": 6,
+    "result": "PASS",
+    "log_sha256": "501f129a57e543b68c2dd62e587e9e243807626a91b962c9ace977a3126dac8b",
+    "observed": "Actual populated panel438px tall, five-row roster311px,27px clearance, all child containment/duplicate/fallback guards PASS; no warnings/errors in actual log.",
+    "original_source_review": "prompt-floor-source-review.txt: SOURCE APPROVE",
+    "original_proof_review": "prompt-floor-proof-review.txt: APPROVE scoped source and affected proof",
+    "original_reviewer": "/root/f42_visual_review (same preserved child/parent as above)",
+    "limits": "Staged snapshot layout, not live combat or720pixels. WholeF42#2 stays OPEN; original native7inch blindPASS still required.",
+    "f42_0_update": "Root6058798568 confirms PR587 merged main ec9a73d7e0cbd2a507a68b543b30e2ba8ce91fd7. F42#0 not repeated; prior PR586 closed/unmerged."
+  }
 }

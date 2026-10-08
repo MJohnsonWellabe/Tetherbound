@@ -1,0 +1,5 @@
+> APPROVE scoped source and affected proof at `e2653e9bf34ec4c46add2828feb1c6b956ee03ae`.
+>
+> Run `37769481673` passed Godot 4.7 headless at 1920×1080, exit 0 in 6 seconds. The populated fallback meets the font floor; its 438px-tall panel retains 27px roster clearance, five-row fit, child containment, and duplicate/fallback guards. No warnings or errors appear in the log.
+>
+> This remains a staged snapshot layout proof. Live combat, 720p captures, and the required 7-inch blind PASS remain unavailable. Whole F42#2 stays **OPEN; no visual PASS or READY**.

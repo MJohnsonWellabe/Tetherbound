@@ -1,0 +1,5 @@
+> SOURCE APPROVE exact `8e610ddeb6..e2653e9bf34ec4c46add2828feb1c6b956ee03ae`.
+>
+> The fallback now uses the existing 30px prompt font and 40px glyph. The smoke populates the real “Mountain Home” name and ready instruction before layout settles, asserts the font floor, and retains duplicate/fallback guards.
+>
+> Larger content may increase panel height and affect five-row roster clearance, especially at 720p. The changed layout proof, live 1080/720 combat captures, and required 7-inch blind PASS remain pending. Logical font sizes alone do not establish readability. Whole F42#2 remains OPEN.
