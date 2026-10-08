@@ -44,5 +44,6 @@
     "verified": "Named12tests3000assertionsPASS covers catalogue learnsets, level/breakthrough eligibility and primary-type TM transactions including refusal/save/ACK controls",
     "blind_requirement": "No separate criterion-specific blind proof named",
     "limits": "No new campaign/device/visual/unrestrictedco-op claims"
-  }
+  },
+  "count_disposition": "Approved re-proof of already-MET main criterion per CONSOLIDATED13/6062061649; not a new closure, excluded from hourly new-criterion count."
 }
