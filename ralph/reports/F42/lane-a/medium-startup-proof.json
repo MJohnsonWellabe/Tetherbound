@@ -1,0 +1,32 @@
+{
+  "criterion": "F42#2",
+  "status": "OPEN",
+  "checkout_sha": "7561b7924e4bc42ec1a9c2e4caaaeea8415cd25f",
+  "run_id": 37714339495,
+  "artifact_id": 11523422557,
+  "named_proof": "tests/smoke_net_owner_passive_rejoin.gd --prove-tag-combo --capture-combat-hud --with-combat-hud-units --preset=Medium",
+  "device_profile": "Hosted computer capture, Forward+ Medium 1920x1080, no Ally hardware",
+  "logic": {
+    "failed": 0,
+    "assertions": 452,
+    "tests": 81,
+    "files": 8
+  },
+  "native_result": "FAIL: guest1 exited during Meadows terrain boot before a HUD frame",
+  "observed_error": "/root: caller thread cannot call propagate_notification(); signal 11",
+  "peer_log_sha256": "fbd5863f7f00939fef1e8c911a530bc3ac7260f421f5a7e04a15ece281ceaf79",
+  "parent_log_sha256": "64839b634a717a89490a2675b357ca941950b7ef16198daf29b906cbfaf3307e",
+  "capture_count": 0,
+  "visual_judge": "unavailable: no capture",
+  "qualification": [
+    "Unit PASS establishes selected logic only, not engine startup or device readability",
+    "No diagnosis of an infrastructure flake or a sole source cause is established by this crash",
+    "No native engine ran on the owner PC"
+  ],
+  "remaining_gates": [
+    "Passing actual Medium HUD capture",
+    "Low compatibility native1080 and stress720 captures on final HUD source",
+    "Original source/runtime review and code-blind 7-inch device-profile PASS"
+  ],
+  "next": "Low1080 existing mounted proof 37715050820 on049b with13affectedfiles; Medium remainsopen"
+}
