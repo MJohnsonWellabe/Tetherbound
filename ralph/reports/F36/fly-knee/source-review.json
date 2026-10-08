@@ -1,6 +1,7 @@
 {
   "reviewer": "review_cloud_startup",
   "verdict": "APPROVE",
+  "current_disposition": "APPROVE exact pre-candidate source restoration; failed knee experiment PARKED, not accepted or READY.",
   "scope": "Bounded Fly knee source and four selected existing regression files only; no visual or whole F36#1 approval.",
   "source_commit": "7717b92f44314324262398205d1bb5b10f5b700a",
   "production_paths": [
@@ -76,11 +77,43 @@
     "shin_backward": {"old": 0.55, "new": 1.0},
     "findings": "Both finite values are accepted clamp endpoints. Opposing sagittal directions remain nonzero and normalize through the unchanged installed-rig helper. No arm/wrist, carrier, input, collision, save or authority change.",
     "unit_reuse": "Original four selected files' 25 tests/227 assertions remain relevant unchanged-helper regressions, not direct proof of the stronger knee pose. Helper and selected tests are byte-unchanged from7717 through this base.",
-    "proof_status": "PENDING changed three-view capture and original blind judgment",
+    "proof_status": "Changed three-view capture completion/provenance APPROVE; original blind judgment PENDING",
     "stop_condition": "Final numeric attempt; park and disable leg candidate if visually BLOCK. No third attempt authorized by this review."
   },
+  "final_numeric_capture_proof": {
+    "verdict": "APPROVE bounded ART-path completion and provenance only",
+    "source_commit": "6d9577ded92a89459a46e902e7278fb733a331c6",
+    "run_id": 37741320879,
+    "job_id": 113192454877,
+    "artifact_id": 11533879635,
+    "checkout_verified_from_hosted_job_log": true,
+    "exit_code": 0,
+    "duration_seconds": 368,
+    "complete": true,
+    "failures": [],
+    "unique_frames": 3,
+    "actual_png_headers": [1280, 720],
+    "all_frame_manifest_and_run_log_hashes_match_receipt": true,
+    "error_or_script_error_in_run_log": false,
+    "comparable_to_first_capture": "Actual frame positions and states, Low preset, gl_compatibility renderer, llvmpipe adapter, resolution and graphics-config hash all match retained5348. Recorder and trainer helper are byte-unchanged.",
+    "limits": "Existing sixty-meter elevated carrier/unlock/canopy fixture; pose snapshots only. Launch already glide, landed a grounded endpoint, no landing transition, earned, continuous-motion or co-op proof. No visual improvement judged in this review.",
+    "receipt": "ralph/reports/F36/fly-knee/final/capture-receipt.json",
+    "raw_packet": ".tmp/e-fly-knee-final-6d-expanded"
+  },
+  "final_visual_and_restoration": {
+    "blind_receipt": "ralph/reports/F36/fly-knee/final/blind-verdict.json",
+    "mapping": {"A": "6d9577ded92a89459a46e902e7278fb733a331c6, 1.0/1.0", "B": "5348eed558e3c35cf36fb3fa32a9ceba1bc3831e, 0.35/0.55"},
+    "A": "BLOCK",
+    "B": "BLOCK",
+    "reason": "Original judge found no convincing knee tuck or carrying-grip improvement; a small projected leg-extent difference does not meet the requested visual result.",
+    "restoration_verdict": "APPROVE",
+    "restoration_review_base": "2b7ea1e4273f769fe5e637321dc88e7941d6b3d6",
+    "restored_reference": "547c60f2cf78f9bfe30e7d4370250aa7aa75d837",
+    "verified_empty_diff_to_reference": ["scripts/player/trainer_model.gd", "data/config/fly_traversal.json"],
+    "restoration_scope": "Exactly nine candidate source lines and two config keys removed; existing arms/wrists and gameplay unchanged. No new flag or third capture introduced.",
+    "disposition": "PARKED; whole F36#1 and Fly grip readability OPEN. Prior source/regression/capture-completion approvals are historical evidence only."
+  },
   "pending": [
-    "Second numeric attempt capture and original code-blind pose comparison",
     "Whole F36#1 pose matrix and acceptance"
   ],
   "excluded_claims": [

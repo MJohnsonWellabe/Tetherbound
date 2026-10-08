@@ -688,19 +688,10 @@ func _apply_fly_hang() -> void:
 		return
 	# Aim each arm chain toward the creature's grip points. Bone rest axes are
 	# read from the actual installed rig, not assumed to be Mixamo or KayKit.
-	var raw_thigh: Variant = _fly_pose.get("thigh_forward", 0.35)
-	var raw_shin: Variant = _fly_pose.get("shin_backward", 0.55)
-	var thigh := clampf(float(raw_thigh), 0.0, 1.0) \
-		if typeof(raw_thigh) in [TYPE_INT, TYPE_FLOAT] and is_finite(float(raw_thigh)) else 0.35
-	var shin := clampf(float(raw_shin), 0.0, 1.0) \
-		if typeof(raw_shin) in [TYPE_INT, TYPE_FLOAT] and is_finite(float(raw_shin)) else 0.55
 	for side: String in ["Left", "Right"]:
 		var side_sign := 1.0 if side == "Left" else -1.0
 		_aim_hang_bone(rig, side + "Arm", side + "ForeArm", Vector3(side_sign * float(_fly_pose.get("upper_lateral", 0.8)), 1.0, 0.08))
 		_aim_hang_bone(rig, side + "ForeArm", side + "Hand", Vector3(side_sign * float(_fly_pose.get("forearm_lateral", 0.65)), 1.0, 0.0))
-		# Bend the installed legs under the carried body without moving its wrists.
-		_aim_hang_bone(rig, side + "UpLeg", side + "Leg", Vector3(side_sign * 0.08, -1.0, thigh))
-		_aim_hang_bone(rig, side + "Leg", side + "Foot", Vector3(side_sign * 0.08, -1.0, -shin))
 
 
 func _aim_hang_bone(rig: Skeleton3D, bone_name: String, child_name: String, direction: Vector3) -> void:
