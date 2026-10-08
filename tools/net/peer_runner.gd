@@ -326,6 +326,9 @@ var _catch_refusals: Array = []
 ## `caught_by_other` -- §8 step 4, the message every OTHER participant gets when
 ## somebody's catch lands.
 var _catch_caught_by_other: Array = []
+## Bounded observations of actual typed-capture replies; never submits an intent.
+var _catch_foundation_replies: Array = []
+var _catch_foundation_observer: Callable
 
 
 func _initialize() -> void:
@@ -8222,6 +8225,34 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				for member: Variant in ((cparty as RefCounted).call("members") as Array):
 					species.append(str((member as RefCounted).get("species_id")))
 			var pending: Variant = cgame.get("pending_catch") if cgame != null else null
+			var capture_session: Node = cgame.get("session") as Node if cgame != null else null
+			var capture_service: Node = capture_session.get_node_or_null(^"FoundationComposition/Captures") if capture_session != null else null
+			if capture_session != null:
+				if not _catch_foundation_observer.is_valid():
+					_catch_foundation_observer = func(envelope: Dictionary, result: Dictionary) -> void:
+						if envelope.get("op") not in ["wild_capture", "wild_capture_quote"]: return
+						_catch_foundation_replies.append({"op": envelope.get("op"),
+							"offer_id": envelope.get("intent", {}).get("offer_id"), "revision": envelope.get("revision"),
+							"code": result.get("code"), "ok": result.get("ok"), "resolved": result.get("resolved"),
+							"terminal_refusal": result.get("terminal_refusal"), "pending": result.get("pending"),
+							"owner_acknowledged": result.get("owner_acknowledged"), "at_ms": Time.get_ticks_msec()})
+						if _catch_foundation_replies.size() > 8: _catch_foundation_replies.pop_front()
+				if not capture_session.is_connected("foundation_reply_received", _catch_foundation_observer):
+					capture_session.connect("foundation_reply_received", _catch_foundation_observer)
+			var capture_requests: Array = []
+			if capture_session != null:
+				for request: Dictionary in (capture_session.get("_foundation_requests") as Dictionary).values():
+					if request.get("op") not in ["wild_capture", "wild_capture_quote"]: continue
+					capture_requests.append({"op": request.get("op"), "revision": request.get("revision"),
+						"offer_id": request.get("intent", {}).get("offer_id")})
+					if capture_requests.size() == 4: break
+			var capture_tabs: Array = []
+			for tab: Node in root.find_children("*", "Control", true, false):
+				if tab.get_script() == null or tab.get_script().resource_path != "res://scripts/ui/tab_creatures.gd": continue
+				capture_tabs.append({"bound": tab.get("_release_service") == capture_service and capture_service != null,
+					"enabled": tab.get("_release_authority_enabled"), "stage": tab.get("_release_stage"),
+					"request_id": tab.get("_release_request_id")})
+				if capture_tabs.size() == 4: break
 			var runtime: Variant = edirector.call("_shared_host_fight", str(cmanager.call("encounter_id"))) \
 				if edirector != null and cmanager != null and bool(edirector.call("is_encounter_host")) else null
 			var host_decision: Dictionary = runtime.get_meta("catch_decision", {}) as Dictionary \
@@ -8255,6 +8286,17 @@ func _execute_probe(msg: Dictionary) -> Variant:
 				"party_size": species.size(),
 				"party_full": cparty != null and bool((cparty as RefCounted).call("is_full")),
 				"pending": str((pending as RefCounted).get("species_id")) if pending != null else "",
+				"capture_observation": {"service_mounted": capture_service != null,
+					"active_offer": capture_service.get("_active") if capture_service != null else null,
+					"release_request_ids": (capture_service.get("_requests") as Dictionary).keys().slice(0, 4) if capture_service != null else null,
+					"pending_uid": pending.get("uid") if pending != null else null,
+					"pending_offer": pending.get_meta("foundation_capture_offer") if pending != null and pending.has_meta("foundation_capture_offer") else null,
+					"pending_typed_traits": pending.has_meta("foundation_capture_traits") if pending != null else null,
+					"cached_registry_revision": (capture_session.get("_foundation_personal_cache") as Dictionary).get("registry_revision") if capture_session != null else null,
+					"manager_fighting": cmanager.call("is_fighting") if cmanager != null else null,
+					"owner_blocked": capture_session.call("_owner_training_mutation_blocked", cgame.get("local")) if capture_session != null else null,
+					"guard": capture_session.call("_owner_snapshot_block_reason", cgame.get("local")) if capture_session != null else null,
+					"requests": capture_requests, "replies": _catch_foundation_replies.duplicate(true), "tabs": capture_tabs},
 				"owned": species.size() + (1 if pending != null else 0),
 				"host_caught": host_decision.get("caught", null),
 				"claim_id": str(cmanager.get("_catch_claim_id")) if cmanager != null else "",
