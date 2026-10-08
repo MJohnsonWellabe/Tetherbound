@@ -850,9 +850,9 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"place_stand_in":
 			out = await _step_place_stand_in(args)
 		"party_grant":
-			out = _step_party_grant(args)
+			out = await _step_party_grant(args)
 		"tournament_setup":
-			out = _step_tournament_setup(args)
+			out = await _step_tournament_setup(args)
 		"save_reload_here":
 			out = await _step_save_reload_here(args)
 		"foundations_state":
@@ -4980,6 +4980,32 @@ func _character_file_view(state: Dictionary, args: Dictionary) -> Dictionary:
 ## is the thing being called, so a sixth is refused here exactly as it is
 ## refused everywhere else, and the refusal is reported.
 func _step_party_grant(args: Dictionary) -> Dictionary:
+	var game := root.get_node_or_null(^"Game")
+	var party: RefCounted = game.get("party") if game != null else null
+	var local: RefCounted = game.get("local") if game != null else null
+	var world: RefCounted = game.get("world") if game != null else null
+	var session: Node = game.get("session") if game != null else null
+	if party == null or local == null or world == null or session == null:
+		return {"verdict": "ERROR", "detail": "party grant has no bound owner/world/session"}
+	# Like save_character_here, wait for this owner's actual saved admission.
+	# Never bypass the guard or move the disclosed fixture to another scope.
+	var scope := [local.get("character_id"), world.get("world_id"),
+		world.get("reward_delivery_namespace"), session.call("_altar_current_epoch")]
+	var waited := 0
+	while true:
+		if game.get("party") != party or game.get("local") != local or game.get("world") != world \
+				or game.get("session") != session or not is_instance_valid(session) \
+				or scope != [local.get("character_id"), world.get("world_id"),
+					world.get("reward_delivery_namespace"), session.call("_altar_current_epoch")]:
+			return {"verdict": "FAIL", "detail": "party grant owner/world/session/epoch changed while waiting"}
+		if party.call("owner_mutation_blocked") == false:
+			break
+		if waited >= SAVE_FENCE_WAIT_FRAMES:
+			return {"verdict": "FAIL", "detail": "party grant owner admission did not settle",
+				"data": {"party_size": party.call("size"), "waited": waited,
+					"fence": session.call("_owner_snapshot_block_reason", local)}}
+		await process_frame
+		waited += 1
 	var species := str(args.get("species", "bramblebun"))
 	var creature: RefCounted = SPECIES_DATA.spawn(species)
 	if creature == null:
@@ -4990,15 +5016,13 @@ func _step_party_grant(args: Dictionary) -> Dictionary:
 	creature.call("set_level", level, cfg)
 	if not bool(PARTY_SEAM.add(creature, str(args.get("nickname", "")))):
 		return {"verdict": "FAIL",
-			"detail": "party_seam.add('%s') refused -- the party is full (five, and there is no sixth slot)"
-				% species}
-	var game := root.get_node_or_null(^"Game")
-	var party: Variant = game.get("party") if game != null else null
+			"detail": "party_seam.add('%s') refused" % species,
+			"data": {"party_size": party.call("size"), "waited": waited,
+				"fence": session.call("_owner_snapshot_block_reason", local)}}
 	var size := int((party as RefCounted).call("size")) if party != null else -1
 	# A creature above the starting cap carries the breakthroughs its level
 	# implies, exactly as a caught one does (foundation_capture_rules.gd).
 	# Without them a level-18 grant sits above cap 10 and earns no round XP.
-	var local: Variant = game.get("local") if game != null else null
 	if local != null:
 		var saved: Dictionary = (local as RefCounted).call("save_data")
 		var personal: Dictionary = TEACHING.character_loadout_mirror(saved.get("party", []), (local as RefCounted).get("redesign_character"))
@@ -8885,7 +8909,7 @@ func _step_tournament_setup(_args: Dictionary) -> Dictionary:
 	var ordinary := ["terrapup", "bramblebun", "trailpup", "mudsnout", "meadowhart"]
 	var add_index := 0
 	while int(party.call("size")) < 5 and add_index < ordinary.size():
-		var granted := _step_party_grant({"species": ordinary[add_index], "level": TOURNAMENT.required_level()})
+		var granted: Dictionary = await _step_party_grant({"species": ordinary[add_index], "level": TOURNAMENT.required_level()})
 		if str(granted.get("verdict", "")) != "PASS":
 			return granted
 		add_index += 1
