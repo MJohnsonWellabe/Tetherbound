@@ -44,7 +44,13 @@
       "commit": "43958f19dd0b5004dbea83f1d7382af46216ac05",
       "verdict": "SOURCE APPROVE",
       "scope": "Existing paid Masters endpoint extended through savedACK-before-autosave, live-memory reset, mapped production TitleLoad, natural reopen observer, same original7200ready/300settle, declared retained state and actual Help again; default unchanged",
-      "behavior": "Queued after live F20 ending and affected named unit; original ad70 Masters PASS retained separately, no wholeF46 claim"
+      "behavior": "Extended by1c846 paid-receipt guard; live actual37758894767. Prior ad70 Masters component PASS remains separate."
+    },
+    {
+      "commit": "1c846db631ed690ffb80d5665aaa7547fc7854c4",
+      "verdict": "SOURCE APPROVE",
+      "scope": "Masters production Title Load retains paid transaction receipts as well as stable character/ordered party/levels/XP/moves/inventory/personal ACK; physical Help after actual reload",
+      "behavior": "Live37758894767; actual durability remains OPEN"
     }
   ],
   "logic": {
@@ -72,5 +78,18 @@
     "Actual earned Homestead, Portals and Shrines controller Skip/Help",
     "Named personal ACK persistence proofs and whole F46#0 verdict",
     "Actual gate HUD frames and independent new-player next-goal answers for F46#1"
-  ]
+  ],
+  "logic_hall": {
+    "source": "e284bcfc2fd58b2b029f7b2e128f8395b3cf9448",
+    "run": 37758503362,
+    "artifact": 11541137922,
+    "file": "test_meadows_earned_hall_segment.gd",
+    "tests": 8,
+    "assertions": 72,
+    "failed": 0,
+    "exit_code": 0,
+    "wall_seconds": 6,
+    "engine_script_diagnostics": 0,
+    "review": "Original scoped LOGIC PASS; three helper FAIL lines are expected negative controls; actual Hall lessons and Load OPEN"
+  }
 }

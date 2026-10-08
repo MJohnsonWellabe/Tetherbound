@@ -1,0 +1,18 @@
+{
+  "criterion": "F19#5/F49#0",
+  "whole_criterion_proven": false,
+  "source_commit": "5e8af4058c25f1fbe770f5f09717905c3abfc221",
+  "original_reviewer": "b_f49_review",
+  "source_review": "APPROVE",
+  "command": "node tests/test_f19_earned_promotion.mjs",
+  "exit_code": 0,
+  "actual_terminal": {
+    "test": "F19-earned-promotion-negative-controls",
+    "checks": 68,
+    "result": "PASS",
+    "scope": "fabricated rejection controls only; no earned saves were generated"
+  },
+  "logic_review": "PASS",
+  "frozen_preparation_consumer": "e284bcfc2fd58b2b029f7b2e128f8395b3cf9448",
+  "remaining_gate": "Actual complete prepared-chain promotion; preparation export and Load never inferred from source or rejection controls"
+}
