@@ -1,8 +1,8 @@
 {
   "criterion": "F36#3",
   "named_proof": "Attended Meshy ledger with task IDs and 30-generation cap",
-  "source_sha": "7027f3bf4ef8846a3b0da8a36837240ca76b8516",
-  "ledger_last_source": "53b8a3345f179f6bad8c1323b28550f4ce7210b2",
+  "source_sha": "a7ce4c115f0666b91464b2fdd04256dc343626fc",
+  "ledger_last_source": "a7ce4c115f0666b91464b2fdd04256dc343626fc",
   "ledger": "ralph/reports/R2-F36/meshy-night-ledger.json",
   "night": "2026-10-07",
   "task_ids": [
@@ -11,13 +11,17 @@
     "01a1169c-70ef-77b1-856a-32d3120cc810",
     "01a116be-dd09-708f-8441-3971076c7c98",
     "01a116d6-5229-7597-a54f-3c40896ff029",
-    "01a11758-bd56-737c-91e6-2c260913964f"
+    "01a11758-bd56-737c-91e6-2c260913964f",
+    "01a118ab-c9e1-7121-b488-52473510552c",
+    "01a118b6-747c-74f1-9546-87893540dfbc",
+    "01a118de-4b9d-76e6-86be-22e68d544429",
+    "01a118fa-7050-7797-9dee-a4870e3437f5"
   ],
-  "real_submissions": 6,
+  "real_submissions": 10,
   "cap": 30,
-  "unique_task_ids": 6,
-  "unique_reservation_ids": 6,
-  "reference_hashes": "All six independently match actual reference asset SHA-256",
+  "unique_task_ids": 10,
+  "unique_reservation_ids": 10,
+  "reference_hashes": "All ten independently match actual reference asset SHA-256",
   "all_candidate_enabled": false,
   "guard_git_blob": "836a9fdcfb41313338385960ef1713e420e2bdee",
   "retained_proof": "ralph/reports/F36/lane-e-cap-proof.json",
@@ -34,10 +38,10 @@
     }
   ],
   "review": {
-    "verdict": "APPROVE",
+    "verdict": "APPROVE source/provenance/accounting only",
     "agent": "/root/review_f36_cap",
-    "findings": "Six unique task/reservation IDs, night/cap count consistent, each reference hash independently matched; guard and both existing test files identical to prior approved c82425807e036371b9d49ffd41425a5f04cdafcf.",
-    "source_sha": "7027f3bf4ef8846a3b0da8a36837240ca76b8516"
+    "findings": "Original review_f36_cap approves ten unique tasks/reservations within30, candidate/reference/installed/vivid hashes and task10 cost; native asset scale/poses/material/gameplay remain open.",
+    "source_sha": "a7ce4c115f0666b91464b2fdd04256dc343626fc"
   },
   "visual_judge": "n/a accounting literal criterion",
   "engine_behavior": "unchanged; n/a",
@@ -58,5 +62,6 @@
     "sha": "53b8a3345f179f6bad8c1323b28550f4ce7210b2",
     "reviewer": "/root/review_f36_cap",
     "new_criteria_closed": 0
-  }
+  },
+  "maintenance_scope": "Already-met cap criterion maintenance, zero newly closed criteria; ten attended submissions, all candidate bindings OFF."
 }
