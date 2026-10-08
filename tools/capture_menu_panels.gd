@@ -253,6 +253,14 @@ func _capture_actual_master_sites() -> void:
 		{"biome": "cloudreach", "scene": "res://scenes/world/cloudreach_cliffs.tscn", "ids": ["master_t4"]},
 		{"biome": "stormwood", "scene": "res://scenes/world/stormwood.tscn", "ids": ["master_t5"]}]
 	for entry: Dictionary in cases:
+		# A named subset needs only scenes containing a requested site.
+		var selected_case := false
+		for id: String in entry.ids:
+			if id in capture_ids:
+				selected_case = true
+				break
+		if not selected_case:
+			continue
 		# Existing regional capture convention: bind the displayed realm so
 		# ordinary occupied-world mounting observes the matching live scene.
 		# This is capture setup, not a portal crossing or a permanent unlock.
