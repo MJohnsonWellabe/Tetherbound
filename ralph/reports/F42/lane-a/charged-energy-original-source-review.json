@@ -15,7 +15,9 @@
   "additional_original_reviews": [
     "APPROVE: full-rect offsets fit actual viewport; capture requires positive enclosed region bounds.",
     "APPROVE: legacy ultimate controls restored each fighting frame and hidden only on accepted current-UID overlay refresh.",
-    "APPROVE: existing capture rejects either duplicate visible legacy control; actual visibility receipt; actions/budgets unchanged."
+    "APPROVE: existing capture rejects either duplicate visible legacy control; actual visibility receipt; actions/budgets unchanged.",
+    "APPROVE: utility cell displays loaded authored wind cost; matching snapshot and native capture read the same current-owned move cost; spending/readiness unchanged.",
+    "APPROVE: successful native capture guest1 world boot draws once inside unchanged existing boot budget; elapsed preserved in result.data/detail; later HUD guards/actions/budgets unchanged. Startup remains an unproved hypothesis."
   ],
   "retained_logic": {
     "failed": 0,
@@ -25,5 +27,9 @@
     "files": 8,
     "tests": 81,
     "run_id": 37719067951
-  }
+  },
+  "utility_wind_sha": "65641063b12ad8ed746c1baa671b77204cd7c6cc",
+  "native_boot_warmup_sha": "bf675385735f91cb203b41e2d6092330052ada51",
+  "integrated_main_sha": "49654a6fc65c12e69787b92eca6f063bacdc15b7",
+  "merge_sha": "3d76ea05c1adfc0a052f3df712b62ccf01ed5062"
 }
