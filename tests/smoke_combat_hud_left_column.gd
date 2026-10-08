@@ -99,9 +99,21 @@ func _run() -> void:
 	# Populate the existing ultimate row with the real starter move name and
 	# ready instruction; an empty dynamic label cannot witness its wrapping.
 	var ultimate := _hud.get("_ultimate_readout") as RichTextLabel
+	var pad_arm := str(_hud.call("_combat_binding_text", "combat_ultimate_arm", "gamepad"))
+	var pad_dodge := str(_hud.call("_combat_binding_text", "jump", "gamepad"))
+	if pad_arm != "RB" or pad_dodge != "A":
+		_failures.append("default controller ultimate/Dodge instructions must name RB/A, not raw action tokens")
+	if str(_hud.call("_combat_binding_text", "jump", "keyboard")) != "Space":
+		_failures.append("keyboard Dodge must name its actual Space binding")
+	var dodge := _hud.get("_cell_switch_content") as RichTextLabel
+	_hud.call("_draw_dodge_cell", false, "gamepad")
+	if dodge.get_parsed_text() != "A\nDodge":
+		_failures.append("unavailable controller Dodge must render its actual A instruction")
+	_hud.call("_draw_dodge_cell", true, "keyboard")
+	if dodge.get_parsed_text() != "Space\nDodge" or dodge.get_theme_font_size("normal_font_size") < preload("res://scripts/ui/ui_tokens.gd").FONT_PROMPT:
+		_failures.append("ready keyboard Dodge must render Space at the handheld prompt floor")
 	ultimate.text = "%s %s · release → move" % [
-		preload("res://scripts/ui/input_glyph.gd").icon("combat_ultimate_arm",
-			_hud.get_script().get_script_constant_map()["CELL_GLYPH_PX"], Color.WHITE, "gamepad"),
+		pad_arm,
 		_hud.call("_move_name", "ultimate_terrapup", "Ultimate")]
 	if ultimate.get_theme_font_size("normal_font_size") < preload("res://scripts/ui/ui_tokens.gd").FONT_PROMPT:
 		_failures.append("ultimate instruction is below the existing handheld prompt floor")

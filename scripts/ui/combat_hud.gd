@@ -314,6 +314,7 @@ func _ready() -> void:
 	_orbs_panel.add_theme_stylebox_override("panel", UITokens.slot_box(false))
 	for cell in [_cell_quick, _cell_charged, _cell_throw, _cell_switch]:
 		(cell as PanelContainer).add_theme_stylebox_override("panel", UITokens.slot_box(false))
+	_cell_switch_content.add_theme_font_size_override("normal_font_size", UITokens.FONT_PROMPT)
 	_ultimate_readout = RichTextLabel.new()
 	_ultimate_readout.bbcode_enabled = true
 	_ultimate_readout.fit_content = true
@@ -957,7 +958,9 @@ func _draw_ally() -> void:
 	var ultimate: float = float(_manager.call("ultimate_fraction"))
 	_ultimate_meter.value = ultimate * 100.0
 	var signature := _move_name(str(creature.get("move_ultimate")), "Ultimate")
-	var arm := INPUT_GLYPH.icon("combat_ultimate_arm", CELL_GLYPH_PX, VERB_READY if ultimate >= 1.0 else VERB_DIMMED)
+	# The padded RB art remained miniature inside a 40px box in the original
+	# Low handheld pair. Render the live binding at the readout's prompt font.
+	var arm := "[noparse]%s[/noparse]" % _combat_binding_text("combat_ultimate_arm")
 	var instruction := "release → move" if ultimate >= 1.0 else "%d%%" % roundi(ultimate * 100.0)
 	if bool(_manager.call("ultimate_armed")): instruction = "tap a move"
 	_ultimate_readout.text = "%s %s · %s" % [arm, signature, instruction]
@@ -1076,8 +1079,9 @@ func _draw_grid() -> void:
 	_draw_cells(orbs)
 
 
-func _combat_binding_text(action: String) -> String:
-	return INPUT_GLYPH.pad_button_name_for_action(action) if INPUT_GLYPH.using_gamepad() else INPUT_GLYPH.key_name_for_action(action)
+func _combat_binding_text(action: String, device_override: String = "") -> String:
+	var pad := device_override == "gamepad" or (device_override.is_empty() and INPUT_GLYPH.using_gamepad())
+	return INPUT_GLYPH.pad_button_name_for_action(action) if pad else INPUT_GLYPH.key_name_for_action(action)
 
 
 func _draw_cells(_orbs_count: int) -> void:
@@ -1098,8 +1102,14 @@ func _draw_cells(_orbs_count: int) -> void:
 	_cell_throw_content.text = "[center]%s\n%s[/center]" % [INPUT_GLYPH.icon("combat_utility", CELL_GLYPH_PX), utility_name]
 	_cell_throw.modulate = CELL_READY if utility_ready else CELL_DIMMED
 	var burst_ready: bool = not bool(_manager.call("player_is_committed")) and float(_manager.call("wind_value")) >= float(_manager.call("wind_cost", "burst"))
-	_cell_switch_content.text = "[center]%s\nDodge[/center]" % INPUT_GLYPH.icon("jump", CELL_GLYPH_PX)
-	_cell_switch.modulate = CELL_READY if burst_ready else CELL_DIMMED
+	_draw_dodge_cell(burst_ready)
+
+
+func _draw_dodge_cell(ready: bool, device_override: String = "") -> void:
+	# Jump owns the production Dodge binding; it has no authored glyph entry.
+	# Name its actual button/key rather than exposing the fallback [jump] token.
+	_cell_switch_content.text = "[center][noparse]%s[/noparse]\nDodge[/center]" % _combat_binding_text("jump", device_override)
+	_cell_switch.modulate = CELL_READY if ready else CELL_DIMMED
 
 
 func _move_name(move_id: String, fallback: String) -> String:
