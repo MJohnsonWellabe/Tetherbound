@@ -167,7 +167,7 @@
   },
   "remaining_gates": [
     "All nine exceeded unchanged30s case budget before complete observation:48..120physics samples; only normal/giant produced one PNG. Actual changed live clearance remains unproved.",
-    "GPU-capable capture slot required for unchanged full live matrix; no third unchanged rerun, wider budget, or weakened guard.",
+    "Measured draw throughput is insufficient; this receipt has no CPU/GPU timing split and does not isolate GPU as the cause. No third unchanged rerun, wider budget, or weakened guard.",
     "Full original code-blind size-matrix PASS absent; no whole criterion READY."
   ]
 }
