@@ -1,0 +1,95 @@
+{
+  "criterion": "F02#2/F19#5/F49 Relay component only",
+  "verdict": "FAIL prepared approach attempt; supported changed source required",
+  "packet": "D:/CodexTemp/tetherbound-proof/native-b-7576a1a03e-earned-relay-prepared-r1",
+  "supervisor": {
+    "stop_reason": "",
+    "started_utc": "2026-10-08T02:03:14.7489541Z",
+    "source": "7576a1a03e88995b5cc0368b82b684ef48359f6c",
+    "finished_utc": "2026-10-08T02:13:30.2973181Z",
+    "exit_code": 1,
+    "pid": 19016
+  },
+  "result": {
+    "failures": [
+      "relay: Riverwatch controller recovery failed: [\"Installed-bed approach lost grounded exterior world input: \", \"Controller home-bed assignment failed: []\"]"
+    ],
+    "flags_gained": 0,
+    "location": {
+      "player": [
+        209.837356567383,
+        -4.69875192642212,
+        3699.34765625
+      ],
+      "realm": "meadows",
+      "scene": "MeadowsPlayground"
+    },
+    "party": [
+      {
+        "hp": 42,
+        "level": 10,
+        "nickname": "Bud",
+        "species": "terrapup",
+        "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2"
+      },
+      {
+        "hp": 27,
+        "level": 10,
+        "nickname": "",
+        "species": "bramblebun",
+        "uid": "creature-83d263c517d32cc6cb7beab6925d80c7"
+      },
+      {
+        "hp": 44,
+        "level": 9,
+        "nickname": "",
+        "species": "bramblebun",
+        "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17"
+      },
+      {
+        "hp": 32,
+        "level": 8,
+        "nickname": "",
+        "species": "mudsnout",
+        "uid": "creature-afbd0d982b14221393f70c29863586a1"
+      },
+      {
+        "hp": 84,
+        "level": 8,
+        "nickname": "",
+        "species": "bramblebun",
+        "uid": "creature-c576f15db4b7f3ecf487a80de0169177"
+      }
+    ],
+    "passed": false,
+    "segment": "relay",
+    "wall_seconds": 596.065
+  },
+  "measured": {
+    "bed_placement_binding": "passed preflight, approach reached",
+    "bed_assignment": "not reached",
+    "recovery": "not reached",
+    "captain": "not admitted",
+    "sole_approach_predicate": "unproved; compound guard and blank reset refusal reason",
+    "accepted_handoff": false,
+    "failed_exports": "byte-preserved by root under failed-exports",
+    "operator_stop": false
+  },
+  "review": {
+    "agent": "b_f49_review, original criterion reviewer",
+    "verdict": "FAIL actual",
+    "scope": "Original five retained; no recovery PASS, Relay export or accepted handoff. F02#2/F19#5/F49 remain OPEN."
+  },
+  "master_source_check": {
+    "sha": "0c3672b003283352ef5aff04707235f5ea47b512",
+    "run": 37716311590,
+    "artifact": 11523573487,
+    "test": "tests/test_meadows_earned_hall_segment.gd",
+    "tests": 8,
+    "assertions": 72,
+    "failed": 0,
+    "exit_code": 0,
+    "seconds": 7,
+    "actual_master_behavior": "unproved"
+  }
+}
