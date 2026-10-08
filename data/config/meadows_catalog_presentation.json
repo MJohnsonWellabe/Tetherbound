@@ -163,7 +163,7 @@
       "yaw_deg": 180,
       "scale": 1.6,
       "grounded": false,
-      "retint": {"MI_Banner": "#9db9b2"}
+      "retint": {"MI_Banner": {"color": "#9db9b2", "profile": "dimensional_cloth"}}
     },
     {
       "id": "nave_endwall_banner_east",
@@ -173,7 +173,7 @@
       "yaw_deg": 180,
       "scale": 1.6,
       "grounded": false,
-      "retint": {"MI_Banner": "#9db9b2"}
+      "retint": {"MI_Banner": {"color": "#9db9b2", "profile": "dimensional_cloth"}}
     },
     {
       "id": "shop_bench",

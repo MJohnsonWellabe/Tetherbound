@@ -1,0 +1,9 @@
+{
+  "reviewer": "/root/f42_visual_review",
+  "verdict": "APPROVE SOURCE ONLY",
+  "change": "twohall_endwall MI_Banner retints to existing color#9db9b2/profiledimensional_cloth",
+  "flags": "globalenabledfalse/hall_endwall_enabledfalse; independentprocessoptin",
+  "finding": "ExactMI_Banner filter/sourceatlasvalue andmeasuredclothbounds cachedShaderMaterial; poles/mesh/topology/roottransforms/collider/state/sourceassets untouched; explicitbluegreenoverrideshistoricaloxblooddefault. FitsART_DIRECTIONnonTeamTether.",
+  "inherited_profile": "Render-timevertexZrelief/foldnormals/roughness.94/emission_floor.035, not verbatimoriginalnormal/ORM shading; no ALPHAwrite butexactglTFmaterialoriginallydefaultOPAQUE. Conservativeworldrelief<=.09328m atscale1.6, clothZ14.80672..14.99328 beforewallZ15.",
+  "limitations": "Attachment/shadow/colorappearance needsactualsecondpixels; firstc9doesnotprovecorrection; no READY/fullBarclaim"
+}

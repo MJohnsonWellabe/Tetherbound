@@ -1,0 +1,15 @@
+{
+  "reviewer": "/root/f42_visual_review",
+  "verdict": "APPROVE",
+  "source": "9f1eddb9b87034b1c2abc1583e2746d033a4f41c",
+  "run": 37738708792,
+  "artifact": 11532972227,
+  "files": 3,
+  "tests": 13,
+  "assertions": 156,
+  "failed": 0,
+  "exit_code": 0,
+  "elapsed_s": 7,
+  "finding": "Existing loft before_each builds actual house(null,null) off-tree, exercising furniture construction and real collider/marker versus capsule/step checks. Village identity/imported-loader neighboring contracts pass. No parse/lift blocker.",
+  "limits": "Not .18brightness/runtime shading/pixels/live stairs; retained repeated detached CreatureBed absolute-node lookup errors, no clean-log claim."
+}

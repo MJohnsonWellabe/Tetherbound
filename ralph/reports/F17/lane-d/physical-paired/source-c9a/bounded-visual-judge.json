@@ -1,0 +1,50 @@
+{
+  "judge": "/root/f26_presets_review",
+  "source": "c9a780852bd1a0fbb1855a12fab2fe21495ad60e",
+  "inputs": {
+    "after": 24,
+    "before": 24,
+    "extra_low": 4
+  },
+  "pose_disclosure": "Before/after physical poses slightly different; exact attribution limited. All originals inspected.",
+  "scoped": {
+    "meadows_pedestal_labels": {
+      "verdict": "PASS",
+      "evidence": "After0008–0015 The Meadows/Tidewake/Sealed clearboards all8; before0380–0387boardocclusion."
+    },
+    "remaining_labels": {
+      "verdict": "BLOCK",
+      "evidence": "After0016/0017labelfragmentoncompanionchest; othercompanionframesSealedoverbody. Nave0000–0007rightlabelsobscuredstorypanel."
+    },
+    "rain_shelter": {
+      "verdict": "PASS pictured stills only",
+      "evidence": "After0004–0007,0012–0015,0020–0023 nointeriorstreaks; before0136–0139visiblestreaks underroof. Lowroute03day/night nointeriorstreaks."
+    },
+    "trainer_companion_separation": {
+      "verdict": "PASS pictured poses only",
+      "evidence": "After0016–0023trainer separatelyvisible, no visibletrainerpenetration."
+    },
+    "companion_prop_clearance": {
+      "verdict": "BLOCK",
+      "evidence": "After0016–0023centralpedestal projectsacrossbelly/foreleg; stills do notdemonstrate resolvedclearance."
+    },
+    "arch_endwall_scene": {
+      "verdict": "BLOCK",
+      "evidence": "0000–0007jambthickness/twobanners improvestructure but portalsplainpanels; repeatedcobbles/sparsenave; nightclear0002/0003losesfarwall/bannerdetail."
+    },
+    "low_readability": {
+      "verdict": "PASS scoped",
+      "evidence": "All4trainer/route/buildings orHallfloor/arches identifiable, essentialHUDreadable; Hallrightlabelsobscured."
+    }
+  },
+  "bars": {
+    "A": "BLOCK",
+    "B": "BLOCK",
+    "presets": [
+      "Medium",
+      "High"
+    ],
+    "finding": "Appealing Terrapupface/markings/scale andcoherenttimber/plaster/stone; sparseHall/repetition/propOverlap/unevennightillumination fallshort."
+  },
+  "limitations": "No motion/fullmatrix/wholeF17/F38. Lowroute00street-facingvisible-rainview, not unobstructedfarmhouseinteriorshelter or generaloutdoorweatherproof."
+}
