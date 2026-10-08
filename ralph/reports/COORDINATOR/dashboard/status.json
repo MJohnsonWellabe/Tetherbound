@@ -1,12 +1,11 @@
 {
- "updated": "2026-10-08T00:35Z",
+ "updated": "2026-10-08T02:25Z",
  "headline": [
-  "7:35 PM CT Wed 07 Oct: 150 criteria met, 148 on main and 2 evidenced in consolidation 6 (F30#0, F08#3), plus code pieces of F39#5, F46#0 and F42#0.",
-  "Pace dropped 5:10–7:10 PM CT: 3 new criteria (F08#3, F30#0, F31#2) against 19 the window before. F31#2 bounced (peer_runner fence that broke #578).",
-  "Landed in 5b: A F25#2, #3, #5, F35#2, #4; B F20#1, #4, F19#0, F01#3; C F32#4; D F26#4; E F41#4, F40#4.",
-  "Bounced to lane C: flaky co-op smoke fix and F43#0–#3 (they broke co-op smokes on #578 without unREADY runner/owner-passive commits), F30#0 (needs unREADY F28 code), F48#2 (boss_four proof red on main).",
-  "Main's 8-hourly earned-loop red is intermittent (passes on current main, fails on older main); lane A is fixing the catch-aim convergence.",
-  "Guardrails on trial until 8:05 PM CT; they are withdrawn if criteria pace drops."
+  "9:25 PM CT Wed 07 Oct: 153 criteria met, 150 on main and 3 evidenced in consolidation 7 (F26#0, F20#2, F10#3).",
+  "Consolidation 7 also lands F42#0 Settings/Build/Save/QuickItems/roster pieces, F24#2 and F20#1/#4 repairs, F08#2 (already met) and the F26#1 receipt.",
+  "Held: F02#0/#1 (evidence only; the source it proves is not on main) and F48#2 (CI-FLAKE peer_runner fence, which still fails catch_race and forward_camp).",
+  "Guardrails withdrawn at 8:10 PM CT; pace back to 6 full criteria in the 7:10–9:10 PM window.",
+  "Main's 8-hourly earned-loop red is intermittent; lane A owns the catch-aim fix."
  ],
  "batches": [
   {
@@ -460,10 +459,16 @@
    "contents": "13 criteria; F48#2 proof red afterwards and reopened. Met 148."
   },
   {
-   "name": "Consolidation 6",
+   "name": "Consolidation 6 (PR #580)",
+   "sha": "",
+   "state": "Merged 10-07 8:06 PM CT",
+   "contents": "F30#0, F08#3 and the F39#5, F46#0, F42#0 code pieces. Met 150."
+  },
+  {
+   "name": "Consolidation 7",
    "sha": "",
    "state": "CI running",
-   "contents": "F30#0, F08#3 and the F39#5, F46#0, F42#0 code pieces."
+   "contents": "F26#0, F20#2, F10#3 plus F42#0 pieces, F24#2 and F20 repairs, F08#2, F26#1 receipt."
   }
  ],
  "lanes": [

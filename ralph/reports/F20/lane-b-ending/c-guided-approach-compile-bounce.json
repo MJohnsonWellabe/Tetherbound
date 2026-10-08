@@ -1,0 +1,74 @@
+{
+  "criterion": "Integration bounce; F20#1/#4 current C cut blocked until corrected actual proof",
+  "original_run": 37704809944,
+  "original_source": "20f21f896c1473c6c607c19a741498159c48b76b",
+  "artifact": 11519182107,
+  "first_actual_error": "Could not resolve external class member activate at tests/helpers/f20_ending_probe.gd:152 on both peers",
+  "cause": "C f49_portal_travel.activate(prompt:Node3D,approach_headings:Array[Vector3]=[]) introduced cbb86afe343013686ea6aec093b2b8fb95ae9310; derived f20_portal_travel still overrode activate(prompt:Node3D). Base/derived signatures incompatible.",
+  "cascade": "F20 peer script fails compilation; new() invalid; fixture and return_home nil. No Grandpa/credits path reached.",
+  "main_scope": "Main068b base still single argument; original C20f21 branch carried optional headings. Earlier unchanged-main ending PASS retained; it does not exercise this changed C API.",
+  "repair": "015e049fe9478622b52b709a80bf2058a0a8259a",
+  "review": {
+    "reviewer": "b_f20_review",
+    "verdict": "FINAL scoped repair APPROVE",
+    "notes": "Optional-heading forward through activate→bound _activate_world→super.activate preserves default movement, budgets and strict arrival guards. No new preload cycle found.",
+    "runtime": "Same original b_f20_review read retained parent+both peer logs/NET_RUN and actual unit packet; APPROVE exact015e two-file repair delta only."
+  },
+  "integration": {
+    "C": "Only four f20_portal_travel signature/bind/super line edits from015e; existing C base optional headings/last_approach already present; do not apply whole B files.",
+    "main": "Matching f49 base optional-heading/last_approach delta plus four derived edits; retain all unrelated main and lane hunks. Exact2file015e delta only.",
+    "excluded": "UnREADY F46 captures/reader and strict arrival/journal/bounty ancestry; no whole branch landing"
+  },
+  "runtime": {
+    "run": 37706850881,
+    "source": "7f326043d32441400f7d3a5f0ffe3beef81f05b3",
+    "artifact": 11520980605,
+    "script": "tests/smoke_net_f20_ending.gd",
+    "parent_pass": 48,
+    "parent_fail": 0,
+    "exit": 0,
+    "elapsed_s": 870,
+    "fatal": "",
+    "failures": [],
+    "parent_engine_errors": 0,
+    "parent_script_errors": 0,
+    "peer_engine_errors": [
+      0,
+      0
+    ],
+    "peer_script_errors": [
+      0,
+      0
+    ],
+    "warnings": "Parent unsupported V-Sync; one physics-interpolation deprecation warning per peer.",
+    "findings": [
+      "Both separate stable characters retain their five ordered creature UIDs through personal Home Key use, Grandpa current-team acknowledgements and credits.",
+      "Guest credit-open disconnect/wipe and real production title returning Join restore the same character and five UIDs without overwriting host completion.",
+      "Both disk reload/revisits preserve exactly one personal homecoming_seen and regional_credits_seen receipt and do not replay completed credits."
+    ],
+    "fixture": "Original disclosed post-finale fixture; production UI/controller Skip, ENet and real disk. No earned campaign/fifth audible/newvisual claim."
+  },
+  "flags": "none",
+  "original_raw": "Original artifact11519182107 raw peer logs and parent run.log retained unchanged",
+  "logic": {
+    "run": 37706566366,
+    "source": "7f326043d32441400f7d3a5f0ffe3beef81f05b3",
+    "artifact": 11519732553,
+    "file": "tests/test_f18_arrival_lifecycle.gd",
+    "tests": 6,
+    "assertions": 172,
+    "failed": 0,
+    "exit": 0,
+    "elapsed_s": 6,
+    "engine_errors": 0,
+    "script_errors": 0
+  },
+  "visual": {
+    "verdict": "Original scoped ending PASS reused unchanged",
+    "source": "2f73f756c2d78569fa43f1d27766da1c812c7e75",
+    "frames": 13,
+    "reviewer": "b_night_visual",
+    "scope": "Visible acknowledgement/credits only; repair alters no UI/art/presentation. Full release Visual Bars remain OPEN."
+  },
+  "disposition": "READY repair ONLY; zero new criteria. C a8b four-line repair installed but C current-production combined ending gate remains pending; no C combined PASS claim."
+}
