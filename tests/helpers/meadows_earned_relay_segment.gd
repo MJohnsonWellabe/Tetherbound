@@ -248,6 +248,20 @@ func _fight_captain() -> bool:
 			or not retained_five(_initial_ids, _party_ids()) or _count(GEAR) != 0 \
 			or not exact_item_reward(before_items, _captain_stock(), reward) \
 			or not exact_captain_xp(before_xp, _xp_snapshot(), _expected_xp):
+		# Preserve the exact gate, but expose the rejecting operand on failure.
+		# A Captain flag alone is never an earned Relay handoff.
+		_receipt("captain_verification_failed", {
+			"elapsed_frames": Engine.get_physics_frames() - _captain_start,
+			"within_deadline": captain_within_deadline(Engine.get_physics_frames() - _captain_start),
+			"fighting": _fighting(), "prior_failures": _failures.duplicate(),
+			"required_rounds": team_size, "rounds": _captain_rounds, "wins": _captain_wins,
+			"kills": _captain_kills.size(), "hits": _captain_hits,
+			"defeat_flag": _has("relay_captain_defeated"),
+			"retained_five": retained_five(_initial_ids, _party_ids()), "gear": _count(GEAR),
+			"items_match": exact_item_reward(before_items, _captain_stock(), reward),
+			"items_before": before_items, "items_after": _captain_stock(), "configured_reward": reward,
+			"xp_match": exact_captain_xp(before_xp, _xp_snapshot(), _expected_xp),
+			"xp_before": before_xp, "xp_after": _xp_snapshot(), "expected_xp": _expected_xp.duplicate()})
 		return _fail("Captain victory lacks exact admitted opponents, landed kills, configured items/XP or retained-five receipts")
 	_receipt("relay_captain_defeated", {"rounds": _captain_rounds, "wins": _captain_wins, "hits": _captain_hits,
 		"items_before": before_items, "items_after": _captain_stock(), "xp_before": before_xp,
