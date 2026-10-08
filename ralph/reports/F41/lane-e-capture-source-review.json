@@ -1692,5 +1692,56 @@
       "Whole F41 criterion, full matrix/full visual bar, High/Medium and earned mechanics remain open."
     ],
     "activity": "No engine, test execution, dispatch, source/config edits, GPU runs or judge contact by reviewer."
+  },
+  "b852_hollows_level42_120s_command_original_review": {
+    "reviewer": "original review_cloud_startup 01a11679-fc2c-7873-bccd-423c1e04476d",
+    "verdict": "APPROVE",
+    "scope": "Exact additional original level-42 single-Hollows command applicability only; no new runtime inspection or source/guard re-audit.",
+    "source_commit": "b8523462de914850025fbc7ed085903be68a0c36",
+    "producer_blobs": {
+      "tools/phase2_capture_stormwood_fights.gd": "a73c0897f0efb42517f1d5f0750da2db36bafbd0",
+      "tests/capture_stormwood_b_named_fights.gd": "5984c6d905161cf05ec19d779816919930e3e1c0"
+    },
+    "command": {
+      "executable": "Godot",
+      "argv": [
+        "--path",
+        "<fresh pinned b852 worktree>",
+        "--rendering-method",
+        "gl_compatibility",
+        "--resolution",
+        "1920x1080",
+        "--fixed-fps",
+        "20",
+        "--script",
+        "res://tools/phase2_capture_stormwood_fights.gd",
+        "--",
+        "--preset=Low",
+        "--low-resolution=1920x1080",
+        "--source-commit=b8523462de914850025fbc7ed085903be68a0c36",
+        "--out=res://.tmp/stormwood-phase2/f41-hollows-loss-b852",
+        "--ids=hollows_alpha",
+        "--seed=2042",
+        "--party-level=42",
+        "--seconds=120",
+        "--interval=10.0"
+      ]
+    },
+    "argument_findings": [
+      "Child parser explicitly permits party-level 42 as the original fixture; seed 2042 and fresh output are accepted by the existing named-preset/bootstrap path.",
+      "Parent accepts the existing Hollows selector and duration/interval knobs; 120 seconds and 10-second periodic interval do not replace the original first four tell moments or ordinary production input pilot.",
+      "No code/config changes: existing five-party, production body/camera/Engage, Calm/placement/neighbour suppression/healing disclosures and named started/nonempty/image/fail-exit guards are retained by the same previously approved source.",
+      "Previously approved full production reach and precleanup aftermath guard remain unchanged; no review or runtime credit is duplicated."
+    ],
+    "scheduling_condition": "ROOT-exclusive scheduling only after the new level-80 native startup/contact context is actually confirmed; no reviewer execution or queue action.",
+    "runtime_status": "PENDING; command approval is not a native capture PASS or loss proof.",
+    "outcome_limits": [
+      "party-level 42 and the output name do not establish a loss. Only a stopped precleanup row plus authoritative actual outcome/results can establish natural defeat.",
+      "Natural victory cannot be recategorized as loss. Active at the cap forbids 100-aftermath; forced fled cleanup is not a natural win/loss.",
+      "The command preserves the original in-memory party-level fixture and healing; no forced resolve, zero-health outcome fixture or campaign/balance/device proof is authorized or inferred.",
+      "P2-110 loss/out-of-fight and P2-111 victory/reward tiles remain UNASSESSED pending genuine actual contexts."
+    ],
+    "preservation": "All prior b852 source/unit/two-deck approvals, ratings, failed52cd and forced-ending/raster witnesses preserved without reinspection.",
+    "activity": "No engine, dispatch, GPU, runtime inspection, source edit or judge contact."
   }
 }
