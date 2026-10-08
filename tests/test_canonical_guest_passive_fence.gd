@@ -27,12 +27,13 @@ class MapFixture extends RefCounted:
 
 class QuestFixture extends RefCounted:
 	var updates := 0
+	var lesson_signature := ""
 	func set_realm(_realm: String) -> bool: return false
 	func tracked_text(_progression: RefCounted) -> String:
 		updates += 1
-		return "current objective"
-	func tracked_hint(_progression: RefCounted) -> String: return "current hint"
-	func lesson_goal_signature() -> String: return ""
+		return "current objective" + lesson_signature
+	func tracked_hint(_progression: RefCounted) -> String: return "current hint" + lesson_signature
+	func lesson_goal_signature() -> String: return lesson_signature
 
 class GameFixture extends "res://autoload/game_state.gd":
 	var actor: Node3D
@@ -105,6 +106,26 @@ func _native_case_canonical_guest_preserves_care_and_bond_but_runs_other_process
 	assert_eq(observations[0].buffs_before.size(), 1)
 	assert_true(observations[0].buffs_after.is_empty())
 	assert_eq(observations[0].before.nourishment, observations[0].after.nourishment)
+	# A canonical guest still receives live guidance when its flag revision
+	# stays fixed. A posed line must survive both lesson and device changes.
+	var revision := int(game.progression.get("revision"))
+	var updates := quests.updates
+	quests.lesson_signature = " next"
+	game._process(0.0)
+	assert_eq(int(game.progression.get("revision")), revision)
+	assert_eq(game.objective_text, "current objective next")
+	assert_eq(game.objective_hint, "current hint next")
+	assert_eq(quests.updates, updates + 1)
+	game.objective_text = "posed objective"
+	game.objective_hint = ""
+	game._objective_is_posed = true
+	quests.lesson_signature = " later"
+	game._last_input_was_gamepad = not game._last_input_was_gamepad
+	game._process(0.0)
+	assert_eq(game.objective_text, "posed objective")
+	assert_eq(game.objective_hint, "")
+	assert_eq(quests.updates, updates + 1)
+	assert_true(game._objective_is_posed)
 
 	_native_completed = true
 
@@ -158,7 +179,7 @@ func _native_case_existing_transaction_fence_still_blocks_all_mutation() -> void
 	_native_completed = true
 
 func test_canonical_guest_preserves_care_and_bond_but_runs_other_process_work() -> void:
-	NATIVE_CASE.run_case(self, "res://tests/test_canonical_guest_passive_fence.gd", "_native_case_canonical_guest_preserves_care_and_bond_but_runs_other_process_work", 19)
+	NATIVE_CASE.run_case(self, "res://tests/test_canonical_guest_passive_fence.gd", "_native_case_canonical_guest_preserves_care_and_bond_but_runs_other_process_work", 27)
 
 func test_absent_or_false_capability_keeps_local_clocks_and_bond() -> void:
 	NATIVE_CASE.run_case(self, "res://tests/test_canonical_guest_passive_fence.gd", "_native_case_absent_or_false_capability_keeps_local_clocks_and_bond", 9)
