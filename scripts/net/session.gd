@@ -1124,6 +1124,9 @@ func _retry_foundation_events() -> void:
 			var handoff := preload("res://scripts/net/encounter_rewards.gd").chapter_hand_off(str(duty.intent.trainer_id), str(duty.context.realm))
 			if not preload("res://scripts/net/encounter_rewards.gd").chapter_delivery_ready(handoff, world.flags.all_set()): continue
 		var peer := int(_registry.call("peer_for_character", duty.character_id))
+		# Solo has no network registry row; route only the current owner's duty.
+		if peer < 1 and not is_active() and duty.character_id == _authority_character(local_peer_id()):
+			peer = local_peer_id()
 		if peer < 1 or handled.has(duty.character_id): continue
 		if combat_held.has(duty.character_id) and duty.action not in ["combat_round_reward", "wild_defeat_share"]: continue
 		# F27: a guest's wild-win share settles its fight HP first; that fight's
