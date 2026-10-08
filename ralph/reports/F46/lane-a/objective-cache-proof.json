@@ -1,0 +1,24 @@
+{
+  "criterion": "F46#1",
+  "status": "OPEN; bounded objective cache repair",
+  "source_commit": "b252ab9c1195a99bd74c620c1de5bfd6a7a4944d",
+  "fixture_interface_commit": "a82bc7776cf04d9fda4a8b10d92adffdd8d12b74",
+  "review": "APPROVE original f25_medium_review source and scoped logic; one missing existing fixture method fixed",
+  "proof": {
+    "run_id": 37758784393,
+    "artifact_id": 11541417625,
+    "source_commit": "a82bc7776cf04d9fda4a8b10d92adffdd8d12b74",
+    "named_files": [
+      "tests/test_canonical_guest_passive_fence.gd:4",
+      "tests/test_quest_log.gd:46",
+      "tests/test_gateb_objective_chain.gd:4",
+      "tests/test_input_device.gd:9"
+    ],
+    "shared_batch": "5 files74tests1310assert0failed exit0/32s; includes unrelated affected Heal11",
+    "log_sha256": "c89ae57d5bbf6e47c044e3fa9cad90f02667c239beaf6c101168083b04740c50"
+  },
+  "behavior_scope": "Existing Game process canonical cases passed; actual lesson-only and posed branch extension pending targeted existing case. Actual B earned HUD/journal agreement and six-card witnesses remain open.",
+  "capture": "No duplicate HUD capture; actual B witness required",
+  "flags": "none",
+  "disclosed_error": "Shared actor test existing out-of-tree get_node ERROR, already present before cache change."
+}
