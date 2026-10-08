@@ -16,6 +16,8 @@ class SessionDouble extends Node:
 	var calls: Array[String] = []
 	var revision := -1
 	var sent_revision := -2
+	var hang_result: Dictionary = {}
+	var inline_result: Dictionary = {}
 	func is_host() -> bool: return host
 	func portal_runtime_ready() -> bool: return runtime
 	func homestead_personal_view() -> Dictionary:
@@ -27,6 +29,9 @@ class SessionDouble extends Node:
 	func request_relic_hang(biome: String) -> Dictionary:
 		calls.append("hang:" + biome)
 		sent_revision = revision
+		if not inline_result.is_empty():
+			homestead_action_completed.emit("relic_hang", {"biome": biome}, inline_result.duplicate(true))
+		if not hang_result.is_empty(): return hang_result.duplicate(true)
 		if host:
 			return {"ok": false, "code": "personal_relic_required", "resolved": true}
 		return {"ok": false, "resolved": false, "code": "awaiting_saved_decision"}
@@ -76,6 +81,43 @@ func test_host_sends_directly_and_surfaces_refusal() -> void:
 	hall.call("hang_relic", "meadows", game)
 	assert_eq(session.calls, ["hang:meadows"] as Array[String])
 	assert_eq(game.messages, ["You have no relic for this shrine yet."] as Array[String])
+	assert_false(session.is_connected("homestead_action_completed", Callable(hall, "_relic_reply")), "synchronous refusal disconnects")
+	session.hang_result = {"ok": false, "resolved": false, "code": "awaiting_saved_decision"}
+	hall.call("hang_relic", "meadows", game)
+	assert_eq(session.calls, ["hang:meadows", "hang:meadows"] as Array[String], "host still sends directly without a guest view refresh")
+	assert_eq(hall.get("_relic_pending"), "meadows")
+	assert_true(session.is_connected("homestead_action_completed", Callable(hall, "_relic_reply")), "host waits for its actual saved decision")
+	hall.call("hang_relic", "meadows", game)
+	assert_eq(session.calls.size(), 2, "an in-flight hang cannot submit again")
+	session.homestead_action_completed.emit("relic_hang", {"biome": "water"}, {"ok": true})
+	session.homestead_action_completed.emit("relic_power", {"biome": "meadows"}, {"ok": true})
+	session.homestead_action_completed.emit("relic_hang", {"biome": "meadows"}, {"ok": false, "resolved": false, "code": "owner_passive_checkpoint_pending"})
+	assert_eq(hall.get("_relic_pending"), "meadows", "foreign and checkpoint replies cannot finish the original")
+	assert_eq(game.messages.size(), 1)
+	assert_true(session.is_connected("homestead_action_completed", Callable(hall, "_relic_reply")))
+	session.homestead_action_completed.emit("relic_hang", {"biome": "meadows"}, {"ok": false, "resolved": true, "code": "personal_relic_required"})
+	assert_eq(game.messages.size(), 2, "asynchronous host refusal is surfaced once")
+	assert_eq(hall.get("_relic_pending"), "")
+	assert_false(session.is_connected("homestead_action_completed", Callable(hall, "_relic_reply")))
+	hall.call("hang_relic", "meadows", game)
+	var saved := {"ok": true, "resolved": true, "durable": true, "owner_saved": true, "owner_acknowledged": true}
+	session.homestead_action_completed.emit("relic_hang", {"biome": "meadows"}, saved)
+	assert_eq(hall.get("_relic_pending"), "", "saved host success releases the original")
+	assert_false(session.is_connected("homestead_action_completed", Callable(hall, "_relic_reply")))
+	assert_eq(game.messages.size(), 2)
+	# The detached hall does not render a power panel. A contradictory immediate
+	# return detects re-processing after the inline final callback without UI.
+	session.inline_result = saved
+	session.hang_result = {"ok": false, "resolved": true, "code": "personal_relic_required"}
+	hall.call("hang_relic", "meadows", game)
+	assert_eq(game.messages.size(), 2, "inline final success is not replaced by the returned verdict")
+	assert_eq(hall.get("_relic_pending"), "")
+	assert_false(session.is_connected("homestead_action_completed", Callable(hall, "_relic_reply")))
+	session.inline_result = session.hang_result.duplicate(true)
+	hall.call("hang_relic", "meadows", game)
+	assert_eq(game.messages.size(), 3, "inline final refusal and immediate return present only once")
+	assert_eq(hall.get("_relic_pending"), "")
+	assert_false(session.is_connected("homestead_action_completed", Callable(hall, "_relic_reply")))
 	hall.free()
 	game.free()
 	session.free()

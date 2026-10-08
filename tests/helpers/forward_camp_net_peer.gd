@@ -30,7 +30,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		return await super._execute_step(msg)
 	# The runner forwards only verdict/detail/data: every other key rides in data.
 	var raw: Dictionary = await _camp_dispatch(action, msg.get("args", {}))
-	var data: Dictionary = {}
+	var data: Dictionary = raw.get("data", {}).duplicate(true)
 	for key: Variant in raw:
 		if not str(key) in ["verdict", "detail", "data"]: data[key] = raw[key]
 	return {"verdict": raw.get("verdict", "ERROR"), "detail": raw.get("detail", ""), "data": data}
@@ -169,10 +169,29 @@ func _place(game: Node, away: float, presses: int = 1) -> Dictionary:
 	if spot == Vector3.INF:
 		return {"verdict": "FAIL", "detail": "no valid camp ground (placement available %s, %d kit(s))" % [
 			str(session.call("forward_camp_placement_available")), int(game.get("local").get("inventory").call("count", KIT))]}
-	# The runner's own teleport (teleport_body + owner-passive catch-up), so the
-	# host's view of this trainer follows it.
+	# Short guest relocations must be walked: the discovery replay correctly
+	# checks their speed. Walk and both prefix fences share the existing 600
+	# frames; longer moves retain the runner's disclosed teleport/catch-up.
 	var stood := spot + Vector3(0.0, 0.5, 3.0)
-	await _step_teleport({"at": [stood.x, stood.y, stood.z], "settle": 30})
+	var stood_result: Dictionary
+	if session != null and session.call("is_host") == false \
+			and player.global_position.distance_to(stood) <= 30.0:
+		var began := Engine.get_physics_frames()
+		var binding: Dictionary = {}
+		stood_result = await _await_owner_passive_caught_up(600, false, binding)
+		if stood_result.get("verdict") != "PASS": return stood_result
+		stood_result = await _step_move_to({"x": stood.x, "z": stood.z,
+			"close_enough": 0.8,
+			"budget_frames": maxi(0, 600 - int(Engine.get_physics_frames() - began))})
+		if stood_result.get("verdict") != "PASS": return stood_result
+		if Engine.get_physics_frames() - began > 600:
+			return {"verdict": "FAIL", "detail": "short camp approach exceeded the original 600-frame allowance"}
+		stood_result = await _await_owner_passive_caught_up(
+			maxi(0, 600 - int(Engine.get_physics_frames() - began)), true, binding)
+	else:
+		stood_result = await _step_teleport({"at": [stood.x, stood.y, stood.z], "settle": 30})
+	if stood_result.get("verdict") != "PASS":
+		return stood_result
 	game.set("pending_build", "forward_camp")
 	for _frame in 30:
 		await physics_frame

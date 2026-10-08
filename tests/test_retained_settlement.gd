@@ -106,6 +106,11 @@ func test_only_high_frequency_kinds_settle_or_retire() -> void:
 		{"character_id": "c", "action": "research_event", "intent": {}, "context": {}}]}
 	var result: Array = SETTLE.after_accept({}, mixed, {"character_id": "c", "action": "combat_mastery"})
 	assert_false(bool(result[1]), "an event carrying a non-windowed duty never retires")
+	var inventory := {"delivery_id": "foundation_event:inventory", "duties": [
+		{"character_id": "c", "action": "ledger_inventory", "intent": {}, "context": {}}]}
+	var saved := SETTLE.after_accept({}, inventory, {"character_id": "c", "action": "ledger_inventory"})
+	assert_eq(saved, [["c|ledger_inventory"], false], "saved owner duty settles but original ledger txn never retires")
+	assert_true(SETTLE.duty_settled({SETTLE.FIELD: {inventory.delivery_id: saved[0]}}, inventory.delivery_id, inventory.duties[0]))
 
 
 func test_a_v28_world_without_the_marker_validates() -> void:

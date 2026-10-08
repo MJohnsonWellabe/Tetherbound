@@ -64,7 +64,7 @@ extends "res://tests/helpers/net_harness.gd"
 ## out; a second guest throw in that same released encounter is pinned to catch.
 ##
 ## **Handover:** each peer owns exactly its deployed starter (`deploy_creature`
-## with `owned: true`, as the opening owns it; actor_vitals refuses an unowned
+## with `owned: true` before host/join admission, as the opening owns it; actor_vitals refuses an unowned
 ## fighter). The successful guest catch must raise that peer's count by one.
 ## This does not exercise a full belt or its release ceremony.
 ##
@@ -137,6 +137,13 @@ func _run() -> void:
 		quit(await finish())
 		return
 
+	# The original disclosed starter must exist before the admission snapshot.
+	# PARTY_SEAM.add is local setup, not permission to add a new admitted UID.
+	for i in 2:
+		var deployed: Dictionary = await step(i, "deploy_creature", {"owned": true})
+		want(str(deployed.get("verdict", "")) == "PASS",
+			"setup: peer %d deployed its own creature (%s)" % [i, str(deployed.get("detail", ""))])
+
 	var hosted: Dictionary = await step(0, "host", {})
 	want(str(hosted.get("verdict", "")) == "PASS",
 		"peer 0 hosted a world (%s)" % str(hosted.get("detail", "")))
@@ -151,15 +158,6 @@ func _run() -> void:
 			"peer %d's registry holds both players (%s)" % [i, str(seen.get("detail", ""))])
 
 	# --- setup: one fight, two participants -----------------------------------
-	# Granted explicitly. See the header on why this block is loud about being
-	# setup rather than the thing under test.
-	for i in 2:
-		# Owned, as the opening owns its starter: with combat.json actor_vitals
-		# on, a wild fight refuses an unowned fighter. Counts stay relative.
-		var deployed: Dictionary = await step(i, "deploy_creature", {"owned": true})
-		want(str(deployed.get("verdict", "")) == "PASS",
-			"setup: peer %d deployed its own creature (%s)" % [i, str(deployed.get("detail", ""))])
-
 	var engaged: Dictionary = await step(0, "engage_wild", {})
 	want(str(engaged.get("verdict", "")) == "PASS",
 		"setup: peer 0 engaged a wild creature (%s)" % str(engaged.get("detail", "")))
@@ -186,7 +184,8 @@ func _run() -> void:
 	var travelled: Dictionary = await step(1, "teleport",
 		{"at": [where.x + THROW_STANDOFF_M, where.y + 1.0, where.z]})
 	want(str(travelled.get("verdict", "")) == "PASS",
-		"setup: peer 1 travelled to the fight (%s)" % str(travelled.get("detail", "")))
+		"setup: peer 1 travelled to the fight (%s)%s" % [str(travelled.get("detail", "")),
+			"" if travelled.get("verdict") == "PASS" else " " + str(travelled.get("data", {}))])
 	var joined_fight: Dictionary = await step(1, "join_encounter", {"encounter_id": encounter_id})
 	want(str(joined_fight.get("verdict", "")) == "PASS",
 		"setup: peer 1 joined the fight already in progress (%s)" % str(joined_fight.get("detail", "")))
@@ -438,15 +437,38 @@ func _run() -> void:
 		"the second guest throw received a fresh claim within the same encounter")
 	# The same 2 x SETTLE_FRAMES window the guest used to get (it ran on through
 	# the host's wait too), polled in short steps so a slow peer cannot outlive
-	# its step deadline and swallow the read below. Stopping when the count
-	# first MOVES does not decide the assertion: a short settle follows so a
-	# duplicate grant just behind the first is still counted.
-	var guest_owned_before := int(guest_before_positive.get("owned", -2))
+	# its step deadline and swallow the read below. Pending catch presentation
+	# contributes to `owned`, so it cannot end the wait for actual ownership.
+	# The original UID and durable receipt must settle; the unchanged short
+	# tail still catches a duplicate just behind that first completed grant.
+	var grant_uid := str(canonical_card.get("uid", ""))
+	var grant_traits: Dictionary = host_during_positive.get("original_trait_packet", {})
+	var grant_offer := JSON.stringify([grant_traits.get("captured_from", {}).get("world_namespace", ""),
+		guest_during_positive.get("claim_id", ""), grant_uid]).sha256_text()
+	var grant_receipt := preload("res://scripts/net/foundation_capture_rules.gd").receipt(
+		grant_offer, str(guest_before_positive.get("character_id", "")))
 	for _grant_poll in range(0, 2 * SETTLE_FRAMES, GRANT_POLL_FRAMES):
 		await step(1, "wait", {"frames": GRANT_POLL_FRAMES})
 		var grant_poll: Variant = await probe(1, "catch")
+		var grant_host_accepted := false
+		if grant_poll is Dictionary:
+			for raw: Variant in grant_poll.get("reward_deliveries", {}).values():
+				if not raw is Dictionary or raw.get("kind") != "creature_training" or raw.get("status") != "accepted" \
+					or raw.get("character_id") != guest_before_positive.get("character_id"): continue
+				var mirror: Dictionary = raw.get("after", {}).get("redesign_character", {}).get("creatures", {}).get(grant_uid, {})
+				var matches := not mirror.is_empty()
+				for field: String in ["traits_initialized", "rolled_traits", "taught_traits", "captured_from"]:
+					if mirror.get(field) != grant_traits.get(field): matches = false
+				if matches and raw.get("after", {}).get("redesign_character", {}).get("transaction_receipts", []).count(grant_receipt) == 1:
+					grant_host_accepted = true
 		if grant_poll is Dictionary \
-				and int((grant_poll as Dictionary).get("owned", guest_owned_before)) != guest_owned_before:
+				and grant_host_accepted \
+				and int((grant_poll as Dictionary).get("party_size", -1)) > int(guest_before_positive.get("party_size", -1)) \
+				and (grant_poll as Dictionary).get("live_owned_traits", {}).has(grant_uid) \
+				and (grant_poll as Dictionary).get("canonical_owned_traits", {}).has(grant_uid) \
+				and (grant_poll as Dictionary).get("disk_owned_traits", {}).has(grant_uid) \
+				and (grant_poll as Dictionary).get("transaction_receipts", []).count(grant_receipt) == 1 \
+				and (grant_poll as Dictionary).get("disk_transaction_receipts", []).count(grant_receipt) == 1:
 			break
 	await step(1, "wait", {"frames": GRANT_POLL_FRAMES * 4})
 	var guest_after_positive := await _catch_row(1, "guest after host finish confirmation")
@@ -466,6 +488,54 @@ func _run() -> void:
 	want(delivered_cards.size() == 1 and _same_capture_identity(canonical_card, delivered_cards[0] as Dictionary)
 		and int((delivered_cards[0] as Dictionary).get("caught_on_day", 0)) >= 1,
 		"guest received the host-confirmed canonical identity and stats; only caught_on_day is stamped at grant")
+	if preload("res://scripts/creatures/traits.gd").runtime_enabled() and delivered_cards.size() == 1:
+		var uid: String = delivered_cards[0].uid
+		want(uid == canonical_card.get("uid"), "ordinary guest catch preserves the exact host-confirmed original UID")
+		var original: Dictionary = host_during_positive.get("original_trait_packet", {})
+		want(preload("res://scripts/save/water_capture_codec.gd").valid_capture_traits(original), "host ordinary catch retains a valid original 0–3 trait packet")
+		var original_offer := JSON.stringify([original.get("captured_from", {}).get("world_namespace", ""),
+			guest_during_positive.get("claim_id", ""), uid]).sha256_text()
+		var token := preload("res://scripts/net/foundation_capture_rules.gd").receipt(original_offer, guest_after_positive.get("character_id", ""))
+		for carrier: String in ["transaction_receipts", "disk_transaction_receipts"]:
+			want(guest_after_positive.get(carrier, []).count(token) == 1, carrier + " holds exactly the original ordinary catch receipt")
+		for field: String in ["traits_initialized", "rolled_traits", "taught_traits"]:
+			want(guest_after_positive.get("live_owned_traits", {}).get(uid, {}).get(field) == original.get(field), "actual guest caught instance retains host " + field)
+		for carrier: String in ["canonical_owned_traits", "disk_owned_traits"]:
+			for field: String in ["traits_initialized", "rolled_traits", "taught_traits", "captured_from"]:
+				want(guest_after_positive.get(carrier, {}).get(uid, {}).get(field) == original.get(field), carrier + " retains original " + field)
+		var accepted := false
+		for row: Variant in host_after_positive.get("reward_deliveries", {}).values():
+			if not row is Dictionary or row.get("kind") != "creature_training" or row.get("status") != "accepted" \
+				or row.get("character_id") != guest_after_positive.get("character_id"): continue
+			var mirror: Dictionary = row.get("after", {}).get("redesign_character", {}).get("creatures", {}).get(uid, {})
+			var matches := true
+			for field: String in ["traits_initialized", "rolled_traits", "taught_traits", "captured_from"]:
+				if mirror.get(field) != original.get(field): matches = false
+			if matches and not mirror.is_empty() and row.get("after", {}).get("redesign_character", {}).get("transaction_receipts", []).count(token) == 1: accepted = true
+		want(accepted, "host accepted owner BOOL-save/ACK row carries the original ordinary catch traits")
+		var stable_id: String = guest_after_positive.get("character_id", "")
+		for change: Dictionary in [{"action": "leave", "args": {}}, {"action": "wipe_character", "args": {}},
+			{"action": "foundations_state", "args": {"mode": "clear_world"}},
+			{"action": "production_join", "args": {"host": "127.0.0.1", "port": port,
+				"returning_route": true, "character": {"character_id": stable_id}}}]:
+			var changed: Dictionary = await step(1, change.action, change.args, 6000)
+			want(changed.get("verdict") == "PASS", "ordinary caught-trait rejoin uses existing " + str(change.action))
+			if changed.get("verdict") != "PASS":
+				quit(await finish())
+				return
+		for peer in 2:
+			var seen_again := await step(peer, "expect_peers", {"count": 2})
+			want(seen_again.get("verdict") == "PASS", "both actual peers admit the same-ID caught-trait rejoin")
+		var restored := await _catch_row(1, "guest original caught traits after disk rejoin")
+		want(restored.get("character_id") == stable_id and restored.get("party_size") == guest_after_positive.get("party_size"),
+			"same-ID disk rejoin retains exactly the original guest party count")
+		for carrier: String in ["transaction_receipts", "disk_transaction_receipts"]:
+			want(restored.get(carrier, []).count(token) == 1, "same-ID rejoin keeps one original receipt in " + carrier)
+		for carrier: String in ["canonical_owned_traits", "disk_owned_traits", "live_owned_traits"]:
+			for field: String in ["traits_initialized", "rolled_traits", "taught_traits"]:
+				want(restored.get(carrier, {}).get(uid, {}).get(field) == original.get(field), "same UID disk rejoin preserves " + carrier + " " + field)
+		for carrier: String in ["canonical_owned_traits", "disk_owned_traits"]:
+			want(restored.get(carrier, {}).get(uid, {}).get("captured_from") == original.get("captured_from"), "same-ID rejoin preserves original wild source in " + carrier)
 
 	print("assertions run: %d" % _asserts)
 	quit(await finish())

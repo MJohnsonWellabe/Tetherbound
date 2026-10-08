@@ -1,0 +1,50 @@
+{
+  "source_commit": "f427628192e20818282fb38187cd965bf14e3417",
+  "scope": "Meadows opening HUD, map4/8/16/32, solo inactive Players. Stocked visual fixture, no earned progression/save/peer proof.",
+  "complete": true,
+  "manifest_sha256": "037E86C4BF0B2DB6AA1F9CC17C1FC220D6B3C6BB433F829567D52F3B00BCC49D",
+  "frames": 14,
+  "exit_code": 0,
+  "strengths": "Readable headings/tabs/instructions at both resolutions, no visible menu text overflow",
+  "reviewer": "/root/f26_presets_review",
+  "resolutions": [
+    "1920x1080",
+    "1280x720"
+  ],
+  "artifact_id": "11500534312",
+  "bar_a": "BLOCK",
+  "elapsed_ms": 931821,
+  "run_id": "37659408179",
+  "criterion": "F42#0 OPEN",
+  "method": "Image-only all14 originals/contact and3baseline comparisons; no D source brief",
+  "bar_b": "BLOCK",
+  "rows": {
+    "P2_002": "BLOCK: default32 terrain/road context improved, but blur, collocated markers and16x overlapping village label;4x/8x minimal terrain context. Unexplored black itself is not defect.",
+    "P2_004": "BLOCK: four empty team rows removed, but five-slot container takes right third with dark empty padding; story/minimap/team/vitals remain heavy boxed hierarchy. Opening room does not witness ordinary walking/idle.",
+    "P2_007_Players": "BLOCK: portrait/session hierarchy legible, huge dead middle and full-width strips; long network-port failure footer has no visible next action. Solo/inactive only."
+  },
+  "remaining_gates": [
+    "four-peer Players",
+    "ordinary walking/idle",
+    "other biomes",
+    "Build off/on",
+    "filled Save and other bare panels",
+    "full catalog code-blind PASS",
+    "existing area smoke after map32"
+  ],
+  "shipping_flags": "none",
+  "owner_scoped_directive": "572#6045342186: literal catalog UI asks only; release art/four-peer witnesses are separate",
+  "scoped_rejudgment": {
+    "reviewer": "/root/f26_presets_review",
+    "verdict": "BLOCK",
+    "map_context": "Default32 useful roads/terrain;4 effectively markers on black,8 tiny context,16 label/central-marker overlap. Own map-context ask remains open.",
+    "bare_menus": "PASS pictured Map/Players headings/content/instructions/identity/status; solo empty space is not itself blocker.",
+    "heavy_hud_boxes": "BLOCK substantial dark five-slot container, five separate dark tiles/padding plus boxed story/team/vitals.",
+    "low_contrast_text": "PASS pictured labels/instructions at1920x1080 and1280x720.",
+    "excluded_causes": [
+      "General world art/commercial polish",
+      "Four-peer witness not named byF42#0"
+    ]
+  },
+  "disposition": "F42#0 remains BLOCK on literal map-context and heavy-HUD asks. Retain original images/source approvals. No new capture, production edit, flag flip or READY."
+}

@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-10-08T08:15:29.640676+00:00",
- "main_sha": "d93567001 (PR #584)",
+ "generated_at": "2026-10-08T10:39:27.424192+00:00",
+ "main_sha": "c93bbe441 (PR #585)",
  "batch4_sha": "next batch assembling",
  "rows": [
   {
@@ -2012,10 +2012,10 @@
     },
     {
      "text": "Meadows (tier 1) attachments are available from the start; hanging a biome's relic in the Shrine Room unlocks the next tier's attachment recipes (Meadows relic → Tidewake tier, and so on; Stormwood's relic → reserved tier 5); the player then carries one chosen relic power.",
-     "status": "in_progress",
-     "evidence": "Evidenced on tb/codex-c 971615a6c1 (READY #572 6048907058, 6:26 PM CT 10-07): earned Shrine hang/power run 37699612835, 6 tests run 37699273278; review APPROVE",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-c 83eabf598d (READY #572, 3:39 AM CT 10-08): Shrine 37699612835 + camp/foundations 37747617223; review APPROVE. In consolidation 11 with the complete C co-op repair set.",
      "gap": "Unit and engine smoke: hang each relic → next-biome attachment recipes once; one relic power; save/rejoin.",
-     "note": "READY 6048907058 bounced at consolidation 6 (10-07 7:30 PM CT): its peer_runner placement fence is the code that broke smoke_net_catch_race on #578, and lane C's follow-up fixes (3205439a8, 7d22e88bc, 20f21f896) are outside the scope.",
+     "note": "Landed: Evidenced on tb/codex-c 83eabf598d (READY #572, 3:39 AM CT 10-08): Shrine 37699612835 + camp/foundations 37747617223; review APPROVE. In consolidation 11 with the complete C co-op repair set.",
      "audit_index": 2
     },
     {
@@ -2371,9 +2371,9 @@
     {
      "text": "Every required water route stays human-swimmable without Ripplet.",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-b 20cd7626f4 (READY #572, 1:44 AM CT 10-08): smoke_water_swimming all 7 routes/24 hops/1272 assertions, native continuous run; review APPROVE",
+     "evidence": "PR #585 (consolidation 10) merged 2026-10-08 3:41 AM CT: from tb/codex-b 20cd7626f4 (READY #572, 1:44 AM CT 10-08): smoke_water_swimming all 7 routes/24 hops/1272 assertions, native continuous run; review APPROVE",
      "gap": "Rerun smoke_water_swimming.gd with the --original-five every-hop mode at b4e4897d5. Consider wiring that mode into CI.",
-     "note": "Landed: Evidenced on tb/codex-b 20cd7626f4 (READY #572, 1:44 AM CT 10-08): smoke_water_swimming all 7 routes/24 hops/1272 assertions, native continuous run; review APPROVE",
+     "note": "Landed: PR #585 (consolidation 10) merged 2026-10-08 3:41 AM CT: from tb/codex-b 20cd7626f4 (READY #572, 1:44 AM CT 10-08): smoke_water_swimming all 7 routes/24 hops/1272 assertions, native continuous run; review APPROVE",
      "audit_index": 2
     },
     {
@@ -2671,10 +2671,10 @@
    "criteria": [
     {
      "text": "Catalog UI rows (map without terrain context, bare menus, heavy HUD boxes, low-contrast text) are fixed with code-blind PASS.",
-     "status": "not_started",
-     "evidence": "ralph/reports/R2-F42/proof-manifest.json@b4e4897d5 (engine_runs 0)",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-d f440344302 (READY #572, 4:35 AM CT 10-08): 14 files/144 tests/910 assertions, controller 37752399076, paired 1080/720 capture 37752962313, blind judge PASS whole literal UI ask; review APPROVE. In consolidation 11.",
      "gap": "Capture each catalog UI row before and after, then a code-blind judge.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. Source candidate only. No captures or judge.",
+     "note": "Landed: Evidenced on tb/codex-d f440344302 (READY #572, 4:35 AM CT 10-08): 14 files/144 tests/910 assertions, controller 37752399076, paired 1080/720 capture 37752962313, blind judge PASS whole literal UI ask; review APPROVE. In consolidation 11.",
      "audit_index": 0
     },
     {
@@ -2720,34 +2720,34 @@
    "criteria": [
     {
      "text": "Three bounties refresh each in-game morning, drawn only from unlocked biomes.",
-     "status": "in_progress",
-     "evidence": "Evidenced on tb/codex-c ee5f7ebc7c (READY #572 6047852423, 5:10 PM CT 10-07): 70 rows run 37693142773, 81 tests run 37692770470; review APPROVE",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-c (READY #572 consolidation-8 set 6050895786/6051026992; held until the complete C repair set, re-READY 83eabf598d): proof 37693142773 + logic 37692770470; review APPROVE. In consolidation 11.",
      "gap": "Fix the pending-row rejoin block (smoke_net_foundations production_join), add an engine witness, then set runtime_enabled true.",
-     "note": "READY 6047852423 bounced from consolidation 5 (#578, 10-07 5:45 PM CT): landed without unREADY lane C peer_runner/owner-passive commits, it broke smoke_net_trade, forward_camp, catch_race, meadows_identity_fresh_join and party_count_after_catches.",
+     "note": "Landed: Evidenced on tb/codex-c (READY #572 consolidation-8 set 6050895786/6051026992; held until the complete C repair set, re-READY 83eabf598d): proof 37693142773 + logic 37692770470; review APPROVE. In consolidation 11.",
      "audit_index": 0
     },
     {
      "text": "Bounty kinds: catch with a trait, defeat an alpha, deliver materials, win a rematch.",
-     "status": "in_progress",
-     "evidence": "Evidenced on tb/codex-c ee5f7ebc7c (READY #572 6047852423, 5:10 PM CT 10-07): 70 rows run 37693142773, 81 tests run 37692770470; review APPROVE",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-c (READY #572 consolidation-8 set 6050895786/6051026992; held until the complete C repair set, re-READY 83eabf598d): proof 37693142773 + logic 37692770470; review APPROVE. In consolidation 11.",
      "gap": "Enable after F43#0. Witness each kind in an engine run.",
-     "note": "READY 6047852423 bounced from consolidation 5 (#578, 10-07 5:45 PM CT): landed without unREADY lane C peer_runner/owner-passive commits, it broke smoke_net_trade, forward_camp, catch_race, meadows_identity_fresh_join and party_count_after_catches.",
+     "note": "Landed: Evidenced on tb/codex-c (READY #572 consolidation-8 set 6050895786/6051026992; held until the complete C repair set, re-READY 83eabf598d): proof 37693142773 + logic 37692770470; review APPROVE. In consolidation 11.",
      "audit_index": 1
     },
     {
      "text": "Rewards (essence, Tether Candy, materials, occasional Trait Seed) pay once per bounty instance and cannot duplicate through reconnect.",
-     "status": "in_progress",
-     "evidence": "Evidenced on tb/codex-c ee5f7ebc7c (READY #572 6047852423, 5:10 PM CT 10-07): 70 rows run 37693142773, 81 tests run 37692770470; review APPROVE",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-c (READY #572 consolidation-8 set 6050895786/6051026992; held until the complete C repair set, re-READY 83eabf598d): proof 37693142773 + logic 37692770470; review APPROVE. In consolidation 11.",
      "gap": "Build a two-peer reconnect-at-claim net smoke (peers:2), then enable.",
-     "note": "READY 6047852423 bounced from consolidation 5 (#578, 10-07 5:45 PM CT): landed without unREADY lane C peer_runner/owner-passive commits, it broke smoke_net_trade, forward_camp, catch_race, meadows_identity_fresh_join and party_count_after_catches.",
+     "note": "Landed: Evidenced on tb/codex-c (READY #572 consolidation-8 set 6050895786/6051026992; held until the complete C repair set, re-READY 83eabf598d): proof 37693142773 + logic 37692770470; review APPROVE. In consolidation 11.",
      "audit_index": 2
     },
     {
      "text": "Bounties are personal in co-op and survive save/reload.",
-     "status": "in_progress",
-     "evidence": "Evidenced on tb/codex-c ee5f7ebc7c (READY #572 6047852423, 5:10 PM CT 10-07): 70 rows run 37693142773, 81 tests run 37692770470; review APPROVE",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-c (READY #572 consolidation-8 set 6050895786/6051026992; held until the complete C repair set, re-READY 83eabf598d): proof 37693142773 + logic 37692770470; review APPROVE. In consolidation 11.",
      "gap": "Two-peer save/reload smoke with separate boards, then enable.",
-     "note": "READY 6047852423 bounced from consolidation 5 (#578, 10-07 5:45 PM CT): landed without unREADY lane C peer_runner/owner-passive commits, it broke smoke_net_trade, forward_camp, catch_race, meadows_identity_fresh_join and party_count_after_catches.",
+     "note": "Landed: Evidenced on tb/codex-c (READY #572 consolidation-8 set 6050895786/6051026992; held until the complete C repair set, re-READY 83eabf598d): proof 37693142773 + logic 37692770470; review APPROVE. In consolidation 11.",
      "audit_index": 3
     }
    ]
@@ -2981,10 +2981,10 @@
     },
     {
      "text": "A four-peer session completes one biome boss with every participant receiving their own key and relic.",
-     "status": "in_progress",
-     "evidence": "Evidenced on tb/codex-c 9c20f818d2 (READY #572 6050391956, 8:38 PM CT 10-07): boss_four 79 rows run 37687259638, 40 tests run 37686961386; review APPROVE",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-c (READY #572 consolidation-8 set; held until the CI-FLAKE fence landed whole, re-READY 83eabf598d): four-peer boss proof 37687259638; review APPROVE. In consolidation 11.",
      "gap": "Build a four-peer boss/key/relic smoke and run it in multiplayer-wide with a recorded pass.",
-     "note": "READY 6050391956 held at consolidation 7 (10-07 9:25 PM CT): scope is the CI-FLAKE peer_runner fence (90a283b1fb + 7e05fdc3c3), which changes shared teleport/explore_at/trainer_battle/join_encounter steps used by 23 smokes; catch_race and forward_camp still fail under it. Land together with the CI-FLAKE repair set.",
+     "note": "Landed: Evidenced on tb/codex-c (READY #572 consolidation-8 set; held until the CI-FLAKE fence landed whole, re-READY 83eabf598d): four-peer boss proof 37687259638; review APPROVE. In consolidation 11.",
      "audit_index": 2
     },
     {

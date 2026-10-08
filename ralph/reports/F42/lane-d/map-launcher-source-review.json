@@ -1,0 +1,32 @@
+{
+  "scope": "Five-file map initialization/Build/Players presentation candidate only",
+  "source_commit": "d4fc9a287516949235e141a03f57fdf2664bba2e",
+  "watchpoints": [
+    "Actual opening Build focus/scroll with free build off/on at720",
+    "Four-player card and long status text",
+    "All four catalogue visual rows and area smoke"
+  ],
+  "checked": "Owning UX/ART_DIRECTION, exact diff and unchanged map navigation, placement ownership and session/invite/remove plumbing",
+  "durable_state": "No durable map/fog, save payload or peer data modified. Zoom sentinel is session UI state.",
+  "verdict": "APPROVE",
+  "agent": "/root/f42_visual_review",
+  "criterion_status": "OPEN",
+  "tests": "Reviewer did not run tests; selected112-file logic run37632007173 separately pending.",
+  "idle_vitals_capture_review": {
+    "production_source": "8262f892a6ff56a267cb46a2065c93513fa2bf45",
+    "capture_guard_commit": "424715c4bf75ddf0575f5b88c50910b49980f035",
+    "verdict": "APPROVE",
+    "agent": "/root/f42_visual_review",
+    "checked": "Config scope and finite clamp; relevant states1.0; bounded natural roster expiry without forced hiding; settings section start; requested tab validation and Map evidence selector guard",
+    "runtime_proof": "PENDING",
+    "visual_verdict": "PENDING"
+  },
+  "settings_readability_review": {
+    "source_commit": "5c76bdf5c37b3a1b87bf8f80c5d80bfeb7b57276",
+    "agent": "/root/f42_visual_review",
+    "verdict": "APPROVE",
+    "checked": "Font floors preserve larger sizes; section and secondary text tokens; unchanged F26 graphics child lifecycle, callbacks, rebinding/reset, focus and persistence",
+    "watchpoint": "Actual paired binding-cell/action-label clipping at raised fonts",
+    "actual_visual": "PENDING"
+  }
+}

@@ -67,6 +67,11 @@ func test_a_fully_paid_attachment_reads_ready() -> void:
 	var view := _describe("forge", 0, [], stock, "forge_meadows")
 	assert_true(bool(view.get("requirements_satisfied")))
 	assert_eq(view.get("missing_requirement"), "")
+	for station: String in ["forge", "kitchen", "altar", "den"]:
+		var starting := _describe(station, 0, [], stock, station + "_meadows")
+		assert_true(starting.get("requirements_satisfied") == true,
+			"Meadows attachment needs no personal relic/blueprint: " + station)
+		assert_eq(starting.get("missing_requirement"), "", "no starting blueprint gate: " + station)
 
 
 func test_after_stormwood_only_the_reserved_slot_remains() -> void:

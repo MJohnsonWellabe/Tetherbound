@@ -12,12 +12,16 @@ const PROGRESSION := ["master_win", "boss_relic", "combat_round_reward", "wild_d
 static func ordered(deliveries: Dictionary, namespace_id: String, world_id: String) -> Array[Dictionary]:
 	var progression: Array[Dictionary] = []
 	var ordinary: Array[Dictionary] = []
+	var inventory: Array[Dictionary] = []
 	var accepted := {} # Canonical row checks cached only for this scan.
 	var absent := {}
 	for raw: Variant in deliveries.values():
 		if not EVENT.valid(raw, namespace_id, world_id): continue
 		for duty: Dictionary in raw.duties:
 			var work := {"event": raw, "duty": duty}
+			if duty.action == "ledger_inventory":
+				inventory.append(work)
+				continue
 			if duty.action in PROGRESSION:
 				if not accepted.has(duty.character_id):
 					var latest: Variant = deliveries.get(ESSENCE.training_delivery_id(namespace_id, duty.character_id))
@@ -28,5 +32,10 @@ static func ordered(deliveries: Dictionary, namespace_id: String, world_id: Stri
 					progression.append(work)
 					continue
 			ordinary.append(work)
-	progression.append_array(ordinary)
-	return progression
+	# Save dictionaries may load in key order. Original transfer/drop sequence
+	# orders their owner halves even when several are waiting behind one BOOL.
+	inventory.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return int(a.duty.intent.source_sequence) < int(b.duty.intent.source_sequence))
+	inventory.append_array(progression)
+	inventory.append_array(ordinary)
+	return inventory

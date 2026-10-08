@@ -924,6 +924,14 @@ func _release_contact_spacing() -> void:
 		_wild.call("set_contact_partner", null)
 
 
+## Unwind only the legacy join whose host refused admission.
+func refuse_pending_encounter_join(encounter_id: String) -> bool:
+	if encounter_id.is_empty() or encounter_id != _encounter_id or state != State.ACTIVE:
+		return false
+	_begin_resolve("fled")
+	return true
+
+
 ## End only the presentation fight whose realm-owned body is being withdrawn.
 ## The ordinary wild/trainer paths cannot reach this guard.
 func end_shared_opponent_presentation(body: Node3D) -> bool:

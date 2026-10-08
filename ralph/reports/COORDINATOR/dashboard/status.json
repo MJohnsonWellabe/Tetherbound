@@ -1,12 +1,10 @@
 {
- "updated": "2026-10-08T08:30Z",
+ "updated": "2026-10-08T11:05Z",
  "headline": [
-  "3:30 AM CT Thu 08 Oct: 158 criteria met, 157 on main and F37#2 in consolidation 10.",
-  "1:10–3:10 AM CT: 1 whole criterion (B F37#2); coordinator PACE shows 0 from all lanes; 25 QUESTION posts (file reservations and review relays).",
-  "11:10 PM–1:10 AM CT: 3 whole criteria (E F10#4, B F37#0, F37#1); lanes A, C, D none since 9:10 PM; 13 QUESTIONs despite the rule.",
-  "Restored the 3:10–5:10 PM process at 10:50 PM CT: no QUESTIONs, READY = one whole criterion, criterion-only visuals, smallest closable first, park after 2 hours.",
-  "Held: F43#0–#3 with the CI-FLAKE fence and shared-fence repairs (forward_camp still open; catch and party-count test fixes and 5e9e121a8 outside the scope), F48#2, F31#2, F02#0/#1.",
-  "9:10–11:10 PM CT: lanes A, B, D and E posted no whole-criterion READYs; lane C re-READYed F46#2 and F43."
+  "6:05 AM CT Thu 08 Oct: 158 criteria met on main, 7 more in consolidation 11 (165 when it merges).",
+  "Consolidation 11: D F42#0 (map and UI defects) and C F31#2 with the complete lane C co-op repair set, which also lands the held F43#0–#3 and F48#2.",
+  "3:10–5:10 AM CT: 2 whole criteria (C F31#2, D F42#0); 41 QUESTION posts; lane B had four native earned-run FAILs; D and E blocked waiting for the GPU machine.",
+  "Owner 5:40 AM CT: earned proofs run as parallel segments on hosted runners. Owner 5:50 AM CT: D and E get native GPU priority; every Codex session resets to a fresh context."
  ],
  "batches": [
   {
@@ -494,33 +492,39 @@
    "sha": "",
    "state": "CI running",
    "contents": "F37#2 human-swimmable water routes (test and evidence)."
+  },
+  {
+   "name": "Consolidation 11",
+   "sha": "pending",
+   "state": "In CI",
+   "contents": "F42#0 map/UI (lane D); F31#2 + complete C co-op repair set with F43#0–#3 and F48#2 (lane C)"
   }
  ],
  "lanes": [
   {
    "lane": "tb/codex-a (Codex A: combat, moves, commands)",
-   "now": "F25#2, #3, #5 and F35#2, #4 READY.",
-   "next": "F25#0/#4, F35#1/#3, F21#4."
+   "now": "F23#2 Heal and F24#0/#5 re-scoped; no whole READY since 9 PM.",
+   "next": "Smallest closable A criterion after the context reset."
   },
   {
    "lane": "tb/codex-b (Codex B: earned route, story, ending)",
-   "now": "F20#1, #4, F01#3 and F19#0 READY; F49#0 route run continuing.",
-   "next": "F49#0."
+   "now": "Earned Relay native runs failed 4 times (3–5 AM); moving to parallel hosted segments.",
+   "next": "F49#0 segments in parallel; F02#0/#1 source to land."
   },
   {
    "lane": "tb/codex-c (Codex C: power, homestead, economy, co-op)",
-   "now": "Flaky co-op smoke fixes (12/12 runs PASS), F30#0, F32#4, F48#2, F43#0–#3 READY.",
-   "next": "F46#2, F28#2–#4."
+   "now": "F31#2 READY with the complete co-op repair set (consolidation 11).",
+   "next": "Backpack owner-fence fixes; F27#1, F28#1."
   },
   {
    "lane": "tb/codex-d (Codex D: Meadows, village, Tidewake visuals)",
-   "now": "F26#4 frame-time matrix READY.",
-   "next": "Next smallest D criterion."
+   "now": "F42#0 READY (consolidation 11).",
+   "next": "F26#3/F17#6 Hall captures on the native GPU (priority)."
   },
   {
    "lane": "tb/codex-e (Codex E: Cloudreach, Stormwood, art, audio)",
-   "now": "F41#4 and F40#4 READY; Meshy ledger snapshot.",
-   "next": "Next smallest E criterion."
+   "now": "F40#0 shrub candidate parked; waiting for the native GPU.",
+   "next": "F40 Cloudreach dawn/night and F41 views on the native GPU (priority)."
   },
   {
    "lane": "tb/ci-speed (Claude)",
