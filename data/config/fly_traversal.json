@@ -19,7 +19,7 @@
   "collision_radius_m": 0.7,
   "camera_distance": 7.5,
   "camera_height": 2.0,
-  "hang_pose": {"upper_lateral": 0.8, "forearm_lateral": 0.65},
+  "hang_pose": {"upper_lateral": 0.8, "forearm_lateral": 0.65, "thigh_forward": 0.35, "shin_backward": 0.55},
   "mentor_loaner": {
     "species_id": "galecrest",
     "realm_id": "cloudreach",
