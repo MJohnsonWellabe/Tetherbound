@@ -17,5 +17,25 @@
     "tests/test_cloudreach_route_verges.gd",
     "tests/smoke_cloudreach_look.gd"
   ],
-  "proof_status": "Source only; no native engine execution, visual acceptance or full F40 criterion claim."
+  "affected_unit_proof": {
+    "verdict": "APPROVE bounded route-verge logic proof",
+    "source_commit": "2b7ea1e4273f769fe5e637321dc88e7941d6b3d6",
+    "run_id": 37742309246,
+    "job_id": 113195615971,
+    "artifact_id": 11534735399,
+    "checkout_verified_from_job_log": true,
+    "selector": "tests/test_cloudreach_route_verges.gd",
+    "tests": 3,
+    "assertions": 60,
+    "failures": 0,
+    "exit_code": 0,
+    "duration_seconds": 5,
+    "error_or_script_error_in_run_log": false,
+    "run_log": ".tmp/e-cloud-verges-logic-2b7/expanded/run.log",
+    "run_log_sha256": "5002ed7fa8e17568aa8586484d265b598515eb5c2a3e138dd8757c340bf0903c",
+    "job_log": ".tmp/e-cloud-verges-logic-2b7/job.log",
+    "config_builder_and_selected_test_match_reviewed_worktree": true,
+    "coverage": "Deterministic bounded station plan, all grounded routes and Fly exclusion, center-clearance invariant, collision/gameplay-state source checks. Not full visual-envelope or production-area proof."
+  },
+  "proof_status": "Source and selected hosted logic APPROVE; area and changed matched visual proof pending. No local engine execution, performance acceptance or full F40 criterion claim."
 }
