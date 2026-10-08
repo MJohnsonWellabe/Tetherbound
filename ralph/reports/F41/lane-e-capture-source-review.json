@@ -1356,5 +1356,219 @@
     "limitations": "Actual invocation is legacy--fullscreen, not the approved named-bootstrap proposal. Compatibility matches the Low renderer route, but no named Low/source graphics receipt is fabricated. Clean source/driver/raster are externally bound by terminal/source/start/raw proof. Retain original1061 raster FAIL and absent win/loss outcomes; whole F41#0 remains open.",
     "scope": "Only four new fullscreen GlassSink image/record pairs and four private neutral copies; original360 A/B/P witnesses reused unchanged",
     "retained_original_dispositions": "Original four1920x1061 Glass images still FAIL requested1080. All historical level80/42 fights remain no observed win/loss. Named bootstrap proposal remains source approval only; actual corrected G used legacy fullscreen. Whole F41#0 OPEN."
+  },
+  "hollows_contact_52cd_r1_original_runtime_review": {
+    "agent": "/root/review_cloud_startup",
+    "verdict": "REQUEST_CHANGES: affected runtime proof FAILED before fight; retained source approval unchanged",
+    "source_commit": "52cd1f8bde68aa9653aa5f00c0a6ba3f940c4078",
+    "tree": "b068f60c511eb5c82fda285de528b2b36f055763",
+    "canonical_packet_path": "D:\\CodexTemp\\tetherbound-proof\\native-e-52cd1f8bde-f41-hollows-contact-r1",
+    "receipt": {
+      "pid": 21644,
+      "source": "52cd1f8bde68aa9653aa5f00c0a6ba3f940c4078",
+      "started_utc": "2026-10-08T13:40:42.7515814Z",
+      "stop_reason": "",
+      "finished_utc": "2026-10-08T13:43:02.4761516Z",
+      "exit_code": -1073741795
+    },
+    "actual_engine_args": [
+      "--path",
+      "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+      "--rendering-method",
+      "gl_compatibility",
+      "--resolution",
+      "1920x1080",
+      "--fixed-fps",
+      "20",
+      "--script",
+      "res://tools/phase2_capture_stormwood_fights.gd",
+      "--",
+      "--preset=Low",
+      "--low-resolution=1920x1080",
+      "--source-commit=52cd1f8bde68aa9653aa5f00c0a6ba3f940c4078",
+      "--out=res://.tmp/stormwood-phase2/f41-hollows-contact-52cd",
+      "--ids=hollows_alpha",
+      "--seed=2042",
+      "--party-level=80",
+      "--seconds=120",
+      "--interval=10.0"
+    ],
+    "approved_arguments_match": true,
+    "source_after_import": {
+      "head_tree": "b068f60c511eb5c82fda285de528b2b36f055763",
+      "source": "52cd1f8bde68aa9653aa5f00c0a6ba3f940c4078",
+      "dirty": [],
+      "index_tree": "b068f60c511eb5c82fda285de528b2b36f055763"
+    },
+    "source_after_capture_present": false,
+    "import_receipt": {
+      "pid": 12760,
+      "finished_utc": "2026-10-08T13:40:16.9693609Z",
+      "exit_code": 0,
+      "stop_reason": "",
+      "source": "52cd1f8bde68aa9653aa5f00c0a6ba3f940c4078",
+      "started_utc": "2026-10-08T13:39:19.8407446Z"
+    },
+    "actual_stdout_header": [
+      "Godot Engine v4.7.stable.official.5b4e0cb0f - https://godotengine.org",
+      "OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB",
+      "",
+      "F10_2 capture seed=2042 party_level=80; original loss fixture=42, win fixture=80"
+    ],
+    "output_directory": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\stormwood-phase2\\f41-hollows-contact-52cd",
+    "output_directory_exists": true,
+    "persisted_output_files": [],
+    "saved_image_record_pairs": 0,
+    "capture_log_present": false,
+    "named_receipt_present": false,
+    "actual_initial_quick_reach_m": null,
+    "requested_fight_started": null,
+    "actual_body_input_contact_or_ally_hits": null,
+    "observed_win_loss_or_natural_end": null,
+    "aftermath3d88_endpoint_runtime": "UNVERIFIED: fight never reached; no100-aftermath image",
+    "comparison_to_old_08_threshold": "NOT AVAILABLE: no actual initial reach/separation/contact witness in this failed attempt",
+    "error_lines": [
+      "ERROR: Parameter \"mem\" is null.",
+      "ERROR: Out of memory"
+    ],
+    "warnings": 3,
+    "script_error_count": 0,
+    "last_stdout_lines": [
+      "[grass_field] cover tier litter   6008 instances over 3 lattice layers (count 15000)",
+      "[grass_field] 4 cover tier(s) up",
+      "[grass_field] far cover: 1 sheet, 71200 tris, 46225 verts, 6m cell, 40-640m reach",
+      "[grass_field] bound: 62140 tufts, radius 72m, region_size 256, vertex_spacing 2.0, 1024 region slots",
+      "[grass_field] stone tier: rid_valid=true height_map=RID(9942849290357) region_map=1024 entries"
+    ],
+    "stderr_tail": [
+      "[47] 7ffc6f75cc90 (ntdll.dll+4cc90) - no debug info in PE/COFF executable",
+      "[48] -1 (main+-7ff63c930001) - no debug info in PE/COFF executable",
+      "-- END OF C++ BACKTRACE --",
+      "================================================================",
+      "GDScript backtrace (most recent call first):",
+      "    [0] _bark_visual (res://scripts/world/stormheart_tree.gd:357)",
+      "    [1] _ancient_bark_shell (res://scripts/world/stormheart_tree.gd:292)",
+      "    [2] _split_bark_shell (res://scripts/world/stormheart_tree.gd:230)",
+      "    [3] build (res://scripts/world/stormheart_tree.gd:59)",
+      "    [4] _build_landmark_masses (res://scripts/world/stormwood_world.gd:371)",
+      "    [5] _ready (res://scripts/world/stormwood_world.gd:123)",
+      "-- END OF GDSCRIPT BACKTRACE --",
+      "================================================================"
+    ],
+    "provenance": {
+      "queued-source.json": {
+        "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-52cd1f8bde-f41-hollows-contact-r1\\queued-source.json",
+        "bytes": 166,
+        "sha256": "a01adaf51043931b9560d18e6477e42c2bf05cb1875aefff5c0135c6801015a2"
+      },
+      "checkout.log": {
+        "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-52cd1f8bde-f41-hollows-contact-r1\\checkout.log",
+        "bytes": 185,
+        "sha256": "dfc662f8fc4507cca66931b02a07419fcdc52c5baaf59f6f17017db7783d5bc8"
+      },
+      "source-after-import.json": {
+        "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-52cd1f8bde-f41-hollows-contact-r1\\source-after-import.json",
+        "bytes": 199,
+        "sha256": "2e3c70ee6da34b10b2ec3780a147791cdb0ce222632f8b46d09e90b40cc59af7"
+      },
+      "import-start.json": {
+        "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-52cd1f8bde-f41-hollows-contact-r1\\import-start.json",
+        "bytes": 299,
+        "sha256": "ee1e4bd491036d11780e1ac4c3e6628a65a884e566aea09fa7edbb31176fae5e"
+      },
+      "import-receipt.json": {
+        "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-52cd1f8bde-f41-hollows-contact-r1\\import-receipt.json",
+        "bytes": 221,
+        "sha256": "427705b9bfd1ec091c750d92311c2ed68e906a3196b6be21500ea1f720b5a597"
+      },
+      "import.stdout.log": {
+        "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-52cd1f8bde-f41-hollows-contact-r1\\import.stdout.log",
+        "bytes": 12691,
+        "sha256": "5a0dd7d1fc70201d318bfc116ea41e97bfae8a635bb94099f13f20952f120020"
+      },
+      "import.stderr.log": {
+        "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-52cd1f8bde-f41-hollows-contact-r1\\import.stderr.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "hollows-contact-start.json": {
+        "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-52cd1f8bde-f41-hollows-contact-r1\\hollows-contact-start.json",
+        "bytes": 758,
+        "sha256": "f2482a7871a8b21dd44210e48e4afe4e67d425432dc7fc376049d0581a44fda1"
+      },
+      "hollows-contact-receipt.json": {
+        "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-52cd1f8bde-f41-hollows-contact-r1\\hollows-contact-receipt.json",
+        "bytes": 231,
+        "sha256": "f8ec1b90fdc95ec11333ac052f82e5a5b8e07ca8d86dbc8900c309620fbc3cf0"
+      },
+      "hollows-contact.stdout.log": {
+        "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-52cd1f8bde-f41-hollows-contact-r1\\hollows-contact.stdout.log",
+        "bytes": 2356,
+        "sha256": "b95bd63277aac711192e88d419bb74d328c7f6b95220aaaf17f5bdf71e94652f"
+      },
+      "hollows-contact.stderr.log": {
+        "path": "D:\\CodexTemp\\tetherbound-proof\\native-e-52cd1f8bde-f41-hollows-contact-r1\\hollows-contact.stderr.log",
+        "bytes": 6758,
+        "sha256": "b6bf1f1d77aeeb250a1db58d572405677814e743034ff5ef4555906b57323b21"
+      }
+    },
+    "limits": "Terminal process failure with empty stop reason, not ownerGame yield. Allocation errors/realloc_static backtrace in Stormheart bark construction are observed diagnostics; no root-cause attribution or unrelated production fix inferred. Import exit0/source cleanliness/Compatibility driver do not establish capturePASS or actual saved1080 raster. No new outcome state, raw image or real-input/fight/end guard witness exists. Existing source52cd/3d88 and all prior runtime/source/scenery/score/failed ending/raster dispositions preserved. P2-110/P2-111 remain UNASSESSED; wholeF41#0 OPEN. No source re-audit, engine launch, observer/test/helper additions, old corpus checks, judge contact or pixel judgment."
+  },
+  "b852_bark_tangent_original_source_review": {
+    "agent": "/root/review_cloud_startup",
+    "verdict": "APPROVE source/command only",
+    "source_commit": "b8523462de914850025fbc7ed085903be68a0c36",
+    "scope": "Only normal-enabled bark tangent construction and existing ancient-trunk method assertions; affected single-fight command applicability",
+    "reviewed_blobs": {
+      "scripts/world/stormheart_tree.gd": "a869d059a5c66e2be6f85e2c9d01f57bd991c1bf",
+      "tests/test_stormheart_ancient_trunk.gd": "a773efb7de3e32db48ca058ac89a20b9ed744c77"
+    },
+    "source_diff": "Two files only. Intermediate ArrayMesh->SurfaceTool.create_from->generate_tangents->second commit replaced by a direct tangent stream and one ArrayMesh surface. No positions/normals/UV/material/renderer/config/flags/collider/route/gameplay/authority/durable-state edits.",
+    "math_review": {
+      "uv_gradient": "For det=duA*dvB-duB*dvA, dP/dU=(edgeA*dvB-edgeB*dvA)/det and dP/dV=(edgeB*duA-edgeA*duB)/det are the correct inverse UV-gradient solution. Both triangle edges are reconstructed by those derivatives when det is nondegenerate.",
+      "frame": "Each authored normal is normalized locally for the calculation; tangent is Gram–Schmidt projected dP/dU onto its perpendicular plane, then normalized. The original normal stream is not rewritten. W=-1 when dot(cross(N,T),dP/dV)<0, otherwise+1, consistently selecting UV bitangent orientation for nondegenerate gradients.",
+      "fallback": "Collapsed/near-zero UV determinant leaves zero gradients. A tiny projected tangent selects projected UP for abs(normal.y)<0.9, otherwise RIGHT. For current finite unit nonzero authored normals these axes cannot be parallel; projected lengths are bounded away from zero before normalization. Degenerate UVs have no unique UV handedness, so fallback W=+1 is a stable frame, not equivalence to an authored UV derivative.",
+      "input_scope": "Current private callers append unindexed triangle groups with one finite authored normal and UV per position; tests exercise generated ancient inner/outer skins and split lips. The helper assumes those existing aligned streams/nonzero normals, not arbitrary malformed meshes.",
+      "godot_buffer_contract": "PackedFloat32Array contains exactly4 values per vertex: unit tangent xyz and binormal sign±1.",
+      "primary_api_reference": "https://docs.godotengine.org/en/stable/tutorials/3d/procedural_geometry/arraymesh.html"
+    },
+    "memory_review": "One final16-byte/vertex packed tangent stream with constant per-triangle scratch replaces native SurfaceTool staging and intermediate/recommitted mesh copies. Main ancient skins generate39000 vertices per side, giving624000 tangent bytes per side before backend storage; all triangles, vertex arrays and final GPU mesh allocations remain. This reduces the implicated scratch/copy path, but source does not prove total memory sufficiency, startup success or the underlying crash cause. No GPU/driver, degenerate-mesh or pilot root-cause attribution.",
+    "material_scope": "Existing normal_enabled gate remains; normaltexture/normal_depth/roughness/tint/filter and all original geometry remain. The shared private bark builder also serves existing root/limb surfaces when the same bark normal map is enabled. No normal/material/renderer disable or triangle/count reduction.",
+    "existing_test_review": "Existing finite/winding/upper-floor-clearance method now enables the normal path and asserts4×vertex tangent count, finite unit tangent, perpendicularity and exact±1 sign. Previous finite vertices/normals, winding0 and full upper-floor radius>=45.8 assertions retained. Integrated every-physical-shape signature comparison, explicit OFF baseline, roots/noCollision, detail/noCollision, nested master flags and support endpoints remain unchanged. No new test method/class/fixture/harness; hosted stormheart_ancient_trunk result is PENDING, not PASS.",
+    "retained_capture_sources": {
+      "tests/capture_stormwood_b_named_fights.gd": "5984c6d905161cf05ec19d779816919930e3e1c0",
+      "tools/phase2_capture_stormwood_fights.gd": "a73c0897f0efb42517f1d5f0750da2db36bafbd0"
+    },
+    "argv": [
+      "Godot",
+      "--path",
+      "<fresh pinned worktree>",
+      "--rendering-method",
+      "gl_compatibility",
+      "--resolution",
+      "1920x1080",
+      "--fixed-fps",
+      "20",
+      "--script",
+      "res://tools/phase2_capture_stormwood_fights.gd",
+      "--",
+      "--preset=Low",
+      "--low-resolution=1920x1080",
+      "--source-commit=b8523462de914850025fbc7ed085903be68a0c36",
+      "--out=res://.tmp/stormwood-phase2/f41-hollows-contact-b852",
+      "--ids=hollows_alpha",
+      "--seed=2042",
+      "--party-level=80",
+      "--seconds=120",
+      "--interval=10.0"
+    ],
+    "command_applicability": "Exact existing fresh Stormwood output root, named Low/Compatibility/native1080/full-SHA bootstrap and valid positive duration/periodic knobs. Previously approved52cd range pilot and3d88 pre-cleanup aftermath gate retained by exact blobs, without repeat review. Five-party/level fixture, actual production body/camera/input, stand/Calm/healing, requested-started/nonempty/PNG and fail-exit paths unchanged.",
+    "required_proof_limits": [
+      "Selected existing headless stormheart_ancient_trunk artifact must establish actual tangent/count/finite/frame and retained geometry assertions; dispatch is not PASS. Reviewer performed no engine execution.",
+      "Affected new native fight must establish startup, actual initial reach/contact/ally hits and authoritative pre-cleanup natural outcome. Level80/120s do not imply victory. Active capped row cannot supply100-aftermath; forced-fled99-after remains no outcome.",
+      "Direct per-triangle derivatives are not guaranteed to equal MikkTSpace shared-vertex tangent smoothing. Use a bounded existing close Stormheart entry_deck/middle_ascent presentation capture to check normal-map lighting direction and triangle/split-lip seams, including a visible root/branch junction if present. Earlier bark images do not verify the changed tangent basis; no fullmatrix or old geometry witness rerun requested.",
+      "Initial52cd crash remains terminalFAIL0 images and its diagnostics preserved. No confirmed memory fix or unavailable runtime/art PASS.",
+      "All prior code/source/runtime/scenery/score witnesses and original failed raster/outcome dispositions remain unchanged; whole F41#0 and relevant release visual gates stay OPEN."
+    ]
   }
 }
