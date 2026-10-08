@@ -9,9 +9,18 @@
     100
   ],
   "duel_policy": "sequential_one_challenger",
+  "sign_presentation": {
+    "font_size": 96,
+    "pixel_size_m": 0.006,
+    "width_px": 720,
+    "outline_size": 12,
+    "text_offset_m": [0, 3.3, 0.15]
+  },
   "masters": [
     {
       "id": "master_t1",
+      "sign_text_offset_m": [0, 4.6, 0.15],
+      "sign_width_px": 1280,
       "tier": 1,
       "cap_level": 10,
       "next_cap": 20,
@@ -29,7 +38,7 @@
         1780
       ],
       "sign_position": [
-        404,
+        417.5,
         0,
         1745
       ],
@@ -158,7 +167,7 @@
       "sign_position": [
         -72,
         0,
-        882
+        883.5
       ],
       "author_reference": "gull_rest",
       "access": "human_swim",
@@ -202,6 +211,7 @@
     },
     {
       "id": "master_t4",
+      "sign_text_offset_m": [0, 3.9, 0.15],
       "tier": 4,
       "cap_level": 40,
       "next_cap": 50,
@@ -219,7 +229,7 @@
         2700
       ],
       "sign_position": [
-        900,
+        897.5,
         1020,
         2700
       ],

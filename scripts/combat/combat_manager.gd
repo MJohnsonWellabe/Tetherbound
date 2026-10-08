@@ -1007,13 +1007,14 @@ func _open_arena() -> void:
 	var centre := _midpoint(cfg)
 	_arena_centre = centre
 	var bound := _arena_bounds(centre)
-	if bound > 0.0:
+	if bound >= 0.0:
 		cfg["radius"] = minf(float(cfg.get("radius", 11.0)), bound)
 	_arena.call("configure", centre, cfg)
 
 
 ## The most radius the room around `centre` can afford, or -1.0 if no room
-## claims it.
+## claims it. Zero means a claimed floor with no room for these fighters;
+## it must not fall back to the unconstrained outdoor radius.
 ##
 ## This is a SPATIAL search over the world root's own children, not an
 ## ancestry walk. An `_ground_height()`-style walk up from the player (or from
@@ -1037,11 +1038,19 @@ func _arena_bounds(centre: Vector3) -> float:
 	var host: Node = _player.get_parent() if _player != null else get_parent()
 	if host == null:
 		return -1.0
+	var footprint := 0.0
+	for fighter: Variant in [_ally_body, _wild]:
+		if fighter != null and is_instance_valid(fighter) and fighter.has_method("body_radius"):
+			footprint = maxf(footprint, float(fighter.call("body_radius")))
 	for child in host.get_children():
-		if child == _arena or not (child is Node) or not child.has_method("combat_arena_bounds_at"):
+		if child == _arena or not (child is Node):
 			continue
-		var bound := float(child.call("combat_arena_bounds_at", centre.x, centre.z))
-		if bound > 0.0:
+		var bound := -1.0
+		if child.has_method("combat_arena_bounds_for_fighters_at"):
+			bound = float(child.call("combat_arena_bounds_for_fighters_at", centre.x, centre.z, footprint))
+		elif child.has_method("combat_arena_bounds_at"):
+			bound = float(child.call("combat_arena_bounds_at", centre.x, centre.z))
+		if bound >= 0.0:
 			return bound
 	return -1.0
 
@@ -1131,7 +1140,7 @@ func _open_separation(cfg: Dictionary) -> float:
 ## turn the formation into that floor instead of crushing it.
 func _staging_axis(want: float) -> Vector3:
 	var forward := _forward_axis()
-	if want <= 0.0 or _arena_bounds(_player.global_position) <= 0.0:
+	if want <= 0.0 or _arena_bounds(_player.global_position) < 0.0:
 		return forward
 	var forward_reach := _staging_reach(_player.global_position, forward, want)
 	var reverse_reach := _staging_reach(_player.global_position, -forward, want)
@@ -1169,7 +1178,7 @@ func _staging_axis(want: float) -> Vector3:
 ## fight started outdoors, or in a passage between two chambers, walks none of
 ## this and is byte-for-byte the fight it was.
 func _staging_reach(from: Vector3, forward: Vector3, want: float) -> float:
-	if want <= 0.0 or _arena_bounds(from) <= 0.0:
+	if want <= 0.0 or _arena_bounds(from) < 0.0:
 		return want
 	var reach := want
 	while reach > CONTAIN_STEP_M:

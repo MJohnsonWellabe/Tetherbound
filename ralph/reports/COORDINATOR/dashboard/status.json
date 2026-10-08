@@ -1,11 +1,9 @@
 {
- "updated": "2026-10-08T06:35Z",
+ "updated": "2026-10-08T18:50Z",
  "headline": [
-  "1:35 AM CT Thu 08 Oct: 157 criteria met, 154 on main and 3 in consolidation 9 (F10#4, F37#0, F37#1).",
-  "11:10 PM–1:10 AM CT: 3 whole criteria (E F10#4, B F37#0, F37#1); lanes A, C, D none since 9:10 PM; 13 QUESTIONs despite the rule.",
-  "Restored the 3:10–5:10 PM process at 10:50 PM CT: no QUESTIONs, READY = one whole criterion, criterion-only visuals, smallest closable first, park after 2 hours.",
-  "Held: F43#0–#3 with the CI-FLAKE fence and shared-fence repairs (forward_camp still open; catch and party-count test fixes and 5e9e121a8 outside the scope), F48#2, F31#2, F02#0/#1.",
-  "9:10–11:10 PM CT: lanes A, B, D and E posted no whole-criterion READYs; lane C re-READYed F46#2 and F43."
+  "1:28 PM CT Thu 08 Oct: 161 criteria met on main; consolidation 15 carries 4 more (C F28#1, E F41#0, B F02#0/#1): 165 when it merges.",
+  "11:10 AM–1:10 PM CT: 3 whole READYs (C F28#1, E F41#0, A F23#3 re-proof of an already-met criterion) plus B's held F02#0/#1 under the segment-proof ruling.",
+  "Lanes are moving to their section 17 clusters: C started F28#2 (Masters), D Hall portal depth and F42#2, B route segments."
  ],
  "batches": [
   {
@@ -483,37 +481,79 @@
    "contents": "F46#2 modal ownership and the Meshy ledger snapshot. Met 154."
   },
   {
-   "name": "Consolidation 9",
+   "name": "Consolidation 9 (PR #584)",
+   "sha": "",
+   "state": "Merged 10-08 2:06 AM CT",
+   "contents": "F10#4 Stormwood ground/road finish, F37#0 Ripplet currents, F37#1 Ripplet Dive. Met 157."
+  },
+  {
+   "name": "Consolidation 10",
    "sha": "",
    "state": "CI running",
-   "contents": "F10#4 Stormwood ground/road finish, F37#0 Ripplet currents, F37#1 Ripplet Dive."
+   "contents": "F37#2 human-swimmable water routes (test and evidence)."
+  },
+  {
+   "name": "Consolidation 11",
+   "sha": "b60f53b5",
+   "state": "Red: Stormwood/Tidewake save-ledger smokes (lane C set); replaced by 11b",
+   "contents": "F42#0 map/UI (lane D); F31#2 + complete C co-op repair set with F43#0–#3 and F48#2 (lane C)"
+  },
+  {
+   "name": "Consolidation 11b",
+   "sha": "ec9a73d7",
+   "state": "Merged 6:22 AM CT",
+   "contents": "F42#0 map/UI (lane D)"
+  },
+  {
+   "name": "Consolidation 12",
+   "sha": "pending",
+   "state": "In CI",
+   "contents": "F22#2 switching value (lane A, evidence; dependency F24#2 already on main)"
+  },
+  {
+   "name": "Consolidation 13",
+   "sha": "f3668748",
+   "state": "Red: F23#2 move gate breaks shared_boss/shared_wild; replaced by 13b",
+   "contents": "F24#4 crafted command tiers and F23#2 ten guarded utility moves (lane A, with the utility-consumer chain); F23#1 evidence"
+  },
+  {
+   "name": "Consolidation 13b",
+   "sha": "pending",
+   "state": "In CI",
+   "contents": "F24#4 crafted command tiers (lane A)"
+  },
+  {
+   "name": "Consolidation 15",
+   "sha": "pending",
+   "state": "In CI",
+   "contents": "F28#1 Masters placed and signposted (C), F41#0 Stormwood recapture/rescore (E), F02#0/#1 South Bridge and Warrens earned segments (B)"
   }
  ],
  "lanes": [
   {
    "lane": "tb/codex-a (Codex A: combat, moves, commands)",
-   "now": "F25#2, #3, #5 and F35#2, #4 READY.",
-   "next": "F25#0/#4, F35#1/#3, F21#4."
+   "now": "F23#3 re-proof (already met, held); F23#2 parked.",
+   "next": "Named-fight C2/C3 cluster."
   },
   {
    "lane": "tb/codex-b (Codex B: earned route, story, ending)",
-   "now": "F20#1, #4, F01#3 and F19#0 READY; F49#0 route run continuing.",
-   "next": "F49#0."
+   "now": "F02#0/#1 in consolidation 15; Homecoming segment failed initial load.",
+   "next": "READY passed segments with every route criterion they cover."
   },
   {
    "lane": "tb/codex-c (Codex C: power, homestead, economy, co-op)",
-   "now": "Flaky co-op smoke fixes (12/12 runs PASS), F30#0, F32#4, F48#2, F43#0–#3 READY.",
-   "next": "F46#2, F28#2–#4."
+   "now": "F28#1 in consolidation 15; F28#2 challenger UI approved.",
+   "next": "Masters cluster F28#2–#4."
   },
   {
    "lane": "tb/codex-d (Codex D: Meadows, village, Tidewake visuals)",
-   "now": "F26#4 frame-time matrix READY.",
-   "next": "Next smallest D criterion."
+   "now": "F42#2 HUD Low capture: blind judge BLOCK (small RB, [jump], roster speck); fixes pushed.",
+   "next": "F42#2 re-capture and judge."
   },
   {
    "lane": "tb/codex-e (Codex E: Cloudreach, Stormwood, art, audio)",
-   "now": "F41#4 and F40#4 READY; Meshy ledger snapshot.",
-   "next": "Next smallest E criterion."
+   "now": "F41#0 in consolidation 15.",
+   "next": "F40 Cloudreach matrix cluster."
   },
   {
    "lane": "tb/ci-speed (Claude)",

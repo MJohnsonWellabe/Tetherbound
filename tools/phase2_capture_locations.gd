@@ -71,6 +71,7 @@ var _failures: Array[String] = []
 var _planned: Array[Dictionary] = []
 var _all_destinations: Array[Dictionary] = []
 var _manifest: Dictionary = {}
+var _location_graphics: Dictionary = {}
 
 
 func _init() -> void:
@@ -78,6 +79,13 @@ func _init() -> void:
 
 
 func _run() -> void:
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--preset="):
+			_location_graphics = preload("res://tools/lookdev_capture_bootstrap.gd").prepare(self)
+			if _location_graphics.is_empty():
+				quit(1)
+				return
+			break
 	if DisplayServer.get_name() == "headless":
 		push_error("catalogue survey requires a rendering display; never use --headless")
 		quit(1)
@@ -319,6 +327,8 @@ func _begin_manifest() -> void:
 		"failures": _failures,
 		"complete": false,
 	}
+	if not _location_graphics.is_empty():
+		_manifest["graphics_capture"] = _location_graphics
 
 
 func _mount_production_world() -> bool:
@@ -497,6 +507,12 @@ func _capture_row(row: Dictionary) -> void:
 		return
 	var image := root.get_texture().get_image()
 	var path := "%s/%s.jpg" % [_output_dir, str(row.frame_id)]
+	if not _location_graphics.is_empty():
+		var expected: Array = _location_graphics.resolution
+		if image == null or image.is_empty() or image.get_size() != Vector2i(int(expected[0]), int(expected[1])):
+			_failures.append("%s: declared graphics raster mismatch" % str(row.frame_id))
+			_write_manifest()
+			return
 	if image == null or image.is_empty() or image.get_width() != root.size.x or image.get_height() != root.size.y:
 		_failures.append("%s: viewport image is empty or wrong-sized" % str(row.frame_id))
 	elif image.save_jpg(path, 0.87) != OK:

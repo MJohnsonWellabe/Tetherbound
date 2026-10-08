@@ -13,6 +13,18 @@ const OPEN_STANDS := {
 }
 
 var _craft_panel: CanvasLayer
+var _build_graphics: Dictionary = {}
+
+
+func _run() -> void:
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--preset="):
+			_build_graphics = preload("res://tools/lookdev_capture_bootstrap.gd").prepare(self)
+			if _build_graphics.is_empty():
+				quit(1)
+				return
+			break
+	await super._run()
 
 func _load_plan() -> bool:
 	_planned = [{"frame_id": "%s__system__build_suite" % _biome_id}]
@@ -21,7 +33,9 @@ func _load_plan() -> bool:
 
 func _begin_manifest() -> void:
 	super._begin_manifest()
-	_manifest["fixture_disclosure"] = "Visual-only production-scene fixture: player debug-travels to an open authored spot; BuildPlacer creates real tent, campfire, bedroll, floor, wall and workbench nodes near the player; CraftPanel opened directly. No placement cost, interaction, sleep, recipe result or saved state proof."
+	if not _build_graphics.is_empty():
+		_manifest["graphics_capture"] = _build_graphics
+	_manifest["fixture_disclosure"] = "Visual-only production-scene fixture: player debug-travels to an open authored spot; BuildPlacer creates real tent, campfire, bedroll, floor and wall nodes near the player; CraftPanel opened directly beside a campfire. Home-only Workbench is not staged outside its homestead. No placement cost, interaction, sleep, recipe result or saved state proof."
 
 
 func _finish(_complete: bool) -> void:
@@ -95,7 +109,8 @@ func _capture_row(_row: Dictionary) -> void:
 	await _shoot("building", "building", "placed floor and wall visual fixture")
 	_clear(active)
 	await _settle()
-	_place(placer, game, "workbench", anchor, active)
+	if _place(placer, game, "campfire", anchor, active) == null:
+		return
 	await _settle()
 	placer.call("_open_craft_panel")
 	_craft_panel = placer.get("_craft_panel") as CanvasLayer
@@ -115,7 +130,7 @@ func _capture_row(_row: Dictionary) -> void:
 		_manifest["craft_readable_preview"] = readable_rows
 		_manifest["craft_hints_preview"] = readable_hints
 	await _settle()
-	await _shoot("crafting", "crafting", "workbench and production CraftPanel directly opened")
+	await _shoot("crafting", "crafting", "campfire and production CraftPanel directly opened")
 	_write_manifest()
 
 
@@ -154,6 +169,11 @@ func _shoot(state: String, system: String, note: String) -> void:
 	var frame_id := "%s__system__%s" % [_biome_id, state]
 	var path := "%s/%s.jpg" % [_output_dir, frame_id]
 	var image := root.get_texture().get_image()
+	if not _build_graphics.is_empty():
+		var expected: Array = _build_graphics.resolution
+		if image == null or image.is_empty() or image.get_size() != Vector2i(int(expected[0]), int(expected[1])):
+			_failures.append("%s: declared graphics raster mismatch" % frame_id)
+			return
 	if image == null or image.is_empty() or image.save_jpg(path, 0.87) != OK:
 		_failures.append("%s: viewport save failed" % frame_id)
 		return

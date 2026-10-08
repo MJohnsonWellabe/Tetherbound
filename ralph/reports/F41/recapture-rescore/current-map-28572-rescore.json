@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "scope": "Current P2-002 map terrain/road-context readability in the two supplied full native rasters only.",
+  "reviewer": {
+    "name": "Hypatia",
+    "role": "retained original independent code-blind visual judge",
+    "agent_id": "01a11667-4631-72b2-8fed-294999b8c043"
+  },
+  "inspection": {
+    "full_rasters_inspected": [
+      "D:/CodexTemp/tetherbound-proof/native-e-28572ae0c9-ui-merge-r1/frames/menu_map.jpg",
+      "D:/CodexTemp/tetherbound-proof/native-e-28572ae0c9-ui-merge-r1/frames/menu_map_1280x720.jpg"
+    ],
+    "missing_paths": [],
+    "resolutions": [
+      "1920x1080",
+      "1280x720"
+    ],
+    "reference_basis": "Previously inspected approved Stormwood boards and written ART_DIRECTION readability/UI bar.",
+    "source_or_prior_numeric_ratings_read": false
+  },
+  "rows": [
+    {
+      "item_id": "P2-002",
+      "subject": "Map terrain and road-context readability",
+      "severity": 4,
+      "exposure": 4,
+      "importance": 5,
+      "impact": 80,
+      "verdict": "FAIL",
+      "bounded_verdict": "BLOCK",
+      "coverage": "PARTIAL: two full-size Stormwood map screenshots at 0% surveyed and displayed 32x local view. Only this visible map state is assessed.",
+      "reason": "In both rasters the map canvas is almost entirely black, with a small, uniform muted-green patch around a readable cyan/white position marker. The patch supplies no distinguishable terrain forms, roads, junctions, landmark relationship or route direction. The menu title, region selection and position marker are legible, but those do not provide the requested terrain/road context. Severity 4 reflects a major navigation-context deficit in this pictured state. Exposure 4 is a qualitative priority estimate for a repeatedly consulted map, not measured campaign frequency; importance 5 reflects the role of spatial/route context in navigation. These values were independently assigned from these two pixels-only views, without prior numeric-score transfer.",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-28572ae0c9-ui-merge-r1/frames/menu_map.jpg",
+        "D:/CodexTemp/tetherbound-proof/native-e-28572ae0c9-ui-merge-r1/frames/menu_map_1280x720.jpg"
+      ],
+      "limits": [
+        "Both screenshots explicitly show Surveyed: 0%. They do not expose explored terrain or a populated destination context. This score does not prove that terrain/road rendering is absent behind unrevealed areas or that the same defect persists after surveying.",
+        "No inference about intended fog-of-war policy, hidden map data, rendering cause, navigation correctness, zoom/pan behavior, interaction, continuous motion or controller usability.",
+        "The displayed 32x local view label is reported from the image; no world-distance or map-scale calibration is inferred.",
+        "No co-op, other regions, other survey percentages, physical device readability, whole visual bar or full P2-002 closure is certified.",
+        "Only the terrain/road-context subject is assessed; surrounding world appearance and other menu/catalogue rows are out of scope."
+      ],
+      "reviewer": {
+        "name": "Hypatia",
+        "role": "retained original independent code-blind visual judge",
+        "agent_id": "01a11667-4631-72b2-8fed-294999b8c043"
+      }
+    }
+  ],
+  "overall_bounded_disposition": "BLOCK",
+  "remaining_context_needed": "An actually pictured explored/surveyed map state with visible terrain, roads and destination relationships is required to assess those currently unexposed aspects.",
+  "preservation": "Only this new evidence artifact is written. Other 43 ratings, current fight records, loss/bark findings, historical whole verdicts and assembly/status files remain unchanged."
+}

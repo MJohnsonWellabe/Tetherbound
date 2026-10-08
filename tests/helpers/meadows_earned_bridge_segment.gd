@@ -31,6 +31,9 @@ var _completed := false
 var _guardian_active := false
 var _guardian_hits := 0
 var _guardian_wins := 0
+var _guardian_hits_taken := 0
+var _guardian_damage_dealt := 0.0
+var _guardian_damage_taken := 0.0
 var _dialogue_finished := ""
 
 
@@ -115,11 +118,32 @@ func _travel_and_cross(route: Array[Vector2], crossing: Dictionary) -> bool:
 			or not admitted_guardian(_director):
 		return _fail("Gate dialogue did not admit the exact South Bridge guardian: " + _dialogue_finished)
 	_guardian_active = true
-	_receipt("guardian_admitted", {"trainer": GUARDIAN, "depth": depth_before})
-	var start := Engine.get_physics_frames()
 	var pilot := LIVE.CampaignPilot.new(_tree, _combat, _director, _rig)
 	pilot.use_switching = false
 	pilot.switch_input = true
+	var start_positions := {"player": _player.global_position}
+	for entry: Array in [["ally", _director.call("ally_body")], ["foe", _combat.call("enemy_body")]]:
+		if is_instance_valid(entry[1]) and entry[1] is Node3D:
+			start_positions[str(entry[0])] = (entry[1] as Node3D).global_position
+	var admitted_ally := _director.call("ally_body") as Node3D
+	var admitted_foe := _combat.call("enemy_body") as Node3D
+	var admitted_range := {}
+	if is_instance_valid(admitted_ally) and is_instance_valid(admitted_foe):
+		var spacing := preload("res://scripts/combat/contact_spacing.gd")
+		var delta := admitted_foe.global_position - admitted_ally.global_position
+		var contact := spacing.pair_need(admitted_ally, admitted_foe)
+		var reach := pilot._reach(admitted_ally, admitted_foe)
+		admitted_range = {"gap_m": delta.length(), "horizontal_gap_m": Vector2(delta.x, delta.z).length(),
+			"height_delta_m": delta.y, "pilot_attack_threshold_m": contact + (reach - contact) * 0.8,
+			"capsule_only_attack_threshold_m": pilot._spaced(float(pilot._config().get("player_quick", {}).get("range", 2.6)), admitted_ally, admitted_foe) * 0.8,
+			"pilot_enemy_reach_m": pilot._enemy_reach(admitted_ally, admitted_foe),
+			"production_quick_reach_m": _combat.call("combat_move_reach", "quick"),
+			"production_charged_reach_m": _combat.call("combat_move_reach", "charged"),
+			"contact_need_m": contact, "contact_reach_need_m": spacing.pair_reach_need(admitted_ally, admitted_foe)}
+	_receipt("guardian_admitted", {"trainer": GUARDIAN, "depth": depth_before,
+		"positions": start_positions, "range": admitted_range})
+	var start := Engine.get_physics_frames()
+	var started_ms := Time.get_ticks_msec()
 	while bool(_director.call("trainer_battle_active")) \
 			and Engine.get_physics_frames() - start < BATTLE_FRAMES:
 		if not admitted_guardian(_director):
@@ -144,7 +168,65 @@ func _travel_and_cross(route: Array[Vector2], crossing: Dictionary) -> bool:
 		return _fail("The earned party lost the actual bridge guardian fight")
 	if not within_guardian_deadline(Engine.get_physics_frames() - start) or bool(_director.call("trainer_battle_active")) \
 			or not battle_receipt(_guardian_wins, _guardian_hits,
-			TRAINERS.team_of(spec).size(), _has("defeated_south_bridge_grunt")):
+				TRAINERS.team_of(spec).size(), _has("defeated_south_bridge_grunt")):
+		# Failure-only observation of the actual bodies and input decisions. Do
+		# not move them, query new floor probes or change the deadline to diagnose.
+		var ally := _director.call("ally_body") as Node3D
+		var foe := _combat.call("enemy_body") as Node3D
+		var bodies := {}
+		for entry: Array in [["player", _player], ["ally", ally], ["foe", foe]]:
+			var body := entry[1] as Node3D
+			if not is_instance_valid(body):
+				bodies[str(entry[0])] = {"present": false}
+				continue
+			var observed := {"present": true, "path": str(body.get_path()), "position": body.global_position,
+				"radius": body.call("body_radius") if body.has_method("body_radius") else null,
+				"facing": body.call("facing") if body.has_method("facing") else null}
+			if body is CharacterBody3D:
+				var capsule := body as CharacterBody3D
+				var contacts: Array[Dictionary] = []
+				for index in mini(capsule.get_slide_collision_count(), 8):
+					var collision := capsule.get_slide_collision(index)
+					var collider := collision.get_collider() as Node
+					contacts.append({"collider": str(collider.get_path()) if is_instance_valid(collider) else "",
+						"normal": collision.get_normal(), "position": collision.get_position()})
+				observed.merge({"on_floor": capsule.is_on_floor(), "on_wall": capsule.is_on_wall(),
+					"velocity": capsule.velocity, "floor_normal": capsule.get_floor_normal() if capsule.is_on_floor() else null,
+					"floor_snap_length": capsule.floor_snap_length, "slide_count": capsule.get_slide_collision_count(),
+					"contacts": contacts})
+			var creature: RefCounted = _combat.call("active_creature") if entry[0] == "ally" \
+				else (foe.get("instance") if entry[0] == "foe" else null)
+			if creature != null:
+				observed.merge({"uid": creature.get("uid"), "species": creature.get("species_id"),
+					"level": creature.get("level"), "hp": creature.get("hp"), "max_hp": creature.get("max_hp")})
+			bodies[str(entry[0])] = observed
+		var range_observation := {}
+		if is_instance_valid(ally) and is_instance_valid(foe):
+			var delta := foe.global_position - ally.global_position
+			var spacing := preload("res://scripts/combat/contact_spacing.gd")
+			var contact := spacing.pair_need(ally, foe)
+			range_observation = {"gap_m": delta.length(), "horizontal_gap_m": Vector2(delta.x, delta.z).length(),
+				"height_delta_m": delta.y, "pilot_attack_threshold_m": contact + (pilot._reach(ally, foe) - contact) * 0.8,
+				"capsule_only_attack_threshold_m": pilot._spaced(float(pilot._config().get("player_quick", {}).get("range", 2.6)), ally, foe) * 0.8,
+				"pilot_enemy_reach_m": pilot._enemy_reach(ally, foe),
+				"faces_target": pilot._faces_target(ally, foe) if _combat.call("active_creature") != null else null,
+				"production_quick_reach_m": _combat.call("combat_move_reach", "quick"),
+				"production_charged_reach_m": _combat.call("combat_move_reach", "charged"),
+				"contact_need_m": contact, "contact_reach_need_m": spacing.pair_reach_need(ally, foe)}
+		var owner := INPUT_OWNER.current(_tree)
+		_receipt("guardian_failure", {"elapsed_frames": Engine.get_physics_frames() - start, "budget_frames": BATTLE_FRAMES,
+			"wall_seconds": (Time.get_ticks_msec() - started_ms) / 1000.0, "start_positions": start_positions,
+			"bodies": bodies, "range": range_observation, "trainer_id": _director.call("trainer_battle_id"),
+			"trainer_active": _director.call("trainer_battle_active"), "trainer_queue_remaining": (_director.get("_trainer_queue") as Array).size(),
+			"trainer_sent": _director.get("_trainer_battle_sent"), "expected_wins": TRAINERS.team_of(spec).size(),
+			"wins": _guardian_wins, "hits_dealt": _guardian_hits, "hits_taken": _guardian_hits_taken,
+			"damage_dealt": _guardian_damage_dealt, "damage_taken": _guardian_damage_taken,
+			"quick_inputs": pilot.quick_thrown, "charged_inputs": pilot.charged_thrown, "switches": pilot.voluntary_switches,
+			"fighting": _combat.call("is_fighting"), "combat_state": _combat.get("state"), "outcome": _combat.call("outcome"),
+			"quick_ready": _combat.call("quick_ready"), "charged_ready": _combat.call("charged_ready"),
+			"player_committed": _combat.call("player_is_committed"), "enemy_winding_up": _combat.call("enemy_is_winding_up"),
+			"defeated": _has("defeated_south_bridge_grunt"), "input_owner": str(owner.get_path()) if owner != null else "",
+			"paused": _tree.paused, "party_ids_unchanged": _initial_ids == _party_ids()})
 		return _fail("Guardian did not yield the exact real team victories, hits and durable defeat")
 	# The nearby victory may auto-open through the same real key spend. If the
 	# fight ended farther away, walk back and use the still-live gate prompt.
@@ -385,9 +467,14 @@ static func _unique_ids(ids: Array[int]) -> bool:
 	return true
 
 
-func _on_hit(on_enemy: bool, _amount: float) -> void:
-	if _guardian_active and on_enemy:
-		_guardian_hits += 1
+func _on_hit(on_enemy: bool, amount: float) -> void:
+	if _guardian_active:
+		if on_enemy:
+			_guardian_hits += 1
+			_guardian_damage_dealt += amount
+		else:
+			_guardian_hits_taken += 1
+			_guardian_damage_taken += amount
 
 
 func _on_exit(outcome: String) -> void:

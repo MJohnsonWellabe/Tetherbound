@@ -11,6 +11,7 @@ extends "res://scripts/world/gated_crossing.gd"
 
 const TETHER_SIGIL := preload("res://scripts/world/tether_sigil.gd")
 const TRAINER_NPCS := preload("res://scripts/world/trainer_npc.gd")
+const COMBAT_MATH := preload("res://scripts/combat/combat_math.gd")
 
 ## OP-0905-13, owner playtest 2026-09-05: "At the bridge you can't open it and
 ## it doesn't tell you to go challenge the guy. When you try the bridge it
@@ -200,6 +201,31 @@ func _on_unlocked() -> void:
 func _on_locked() -> void:
 	_jar()
 	_challenge_the_guardian()
+
+
+## The guardian's approach is beside an authored eleven-metre-deep trench.
+## Grounding a send-out does not make the default fight ring safe: its far
+## edge can still cross the bank and strand a fighter below its opponent.
+## Use the manager's existing contained formation/ring path on either bank.
+## The deck and trench never count as an outdoor arena, and this local query
+## cannot claim the rest of the Meadows or another building's floor.
+func combat_arena_bounds_for_fighters_at(x: float, z: float, footprint: float) -> float:
+	if _centre == Vector2.INF or _across.is_zero_approx():
+		return -1.0
+	var cfg: Dictionary = COMBAT_MATH.config().get("arena", {})
+	var local_reach := AUTO_OPEN_RANGE + float(cfg.get("radius", 11.0)) \
+		+ float(cfg.get("deploy_offset", 2.6)) + float(cfg.get("separation", 5.0))
+	var offset := Vector2(x, z) - _centre
+	if offset.length() > local_reach:
+		return -1.0
+	var carve: Dictionary = _crossing.get("carve", {})
+	var rim := float(carve.get("half_width", 3.6)) + float(carve.get("rim", 3.4))
+	var bank_clearance := absf(offset.dot(_across)) - rim
+	if bank_clearance <= 0.0:
+		return -1.0
+	# Zero still claims this bank, so staging can turn away from its lip,
+	# but the ring must never be enlarged beyond the actual footprint room.
+	return maxf(0.0, bank_clearance - maxf(0.0, footprint))
 
 
 func _challenge_the_guardian() -> void:

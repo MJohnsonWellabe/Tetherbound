@@ -337,9 +337,19 @@ func build() -> void:
 
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 28)
+	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	add_child(row)
-	_content_row = row
+	# Keep tall inventory content inside the shell's allocated body, leaving
+	# its controller legend and bottom safe area visible. All existing slot,
+	# equipment and detail controls retain their callbacks and focus graph.
+	var row_scroll := ScrollContainer.new()
+	row_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	row_scroll.follow_focus = true
+	row_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	add_child(row_scroll)
+	row_scroll.add_child(row)
+	_content_row = row_scroll
 
 	# Three columns, spec §7: grid ~35%, preview ~30%, detail ~35%. `_panel()`
 	# copies size_flags_horizontal from its content but not stretch ratio (a

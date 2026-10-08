@@ -279,6 +279,9 @@ func test_engagement_checks_the_admitted_body_after_the_input_frame() -> void:
 	var combat := Admission.new()
 	var segment := SEGMENT.new()
 	segment._combat = combat
+	var interact_before := Input.is_action_pressed("interact")
+	assert_false(await segment._tap("interact", selected), "an exact-target press needs its actual live input context")
+	assert_eq(Input.is_action_pressed("interact"), interact_before, "a refused dispatch must not press Interact")
 	combat.admitted = selected
 	assert_true(segment._verify_engagement(selected))
 	# The input had a valid Bramblebun offer; a subsequent admission must still
@@ -286,6 +289,7 @@ func test_engagement_checks_the_admitted_body_after_the_input_frame() -> void:
 	combat.admitted = nearby
 	assert_false(segment._verify_engagement(selected))
 	assert_true(str(segment.result().failures).contains("Mudsnout"))
+	assert_eq(segment._fought, ["Bramblebun"] as Array[String], "a different admitted body receives no selected-catch credit")
 	combat.admitted = selected
 	combat.fighting = false
 	assert_false(segment._verify_engagement(selected))

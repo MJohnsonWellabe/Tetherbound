@@ -46,6 +46,7 @@ var _only := ""
 var _poses: PackedStringArray = []
 var _live_transitions := false
 var _paired_transitions := false
+var _graphics_capture: Dictionary = {}
 var _world: Node3D
 var _player: CharacterBody3D
 var _rig: SpringArm3D
@@ -59,6 +60,13 @@ func _init() -> void:
 
 
 func _run() -> void:
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--preset="):
+			_graphics_capture = preload("res://tools/lookdev_capture_bootstrap.gd").prepare(self)
+			if _graphics_capture.is_empty():
+				quit(1)
+				return
+			break
 	if DisplayServer.get_name() == "headless":
 		push_error("Phase 2 creature capture needs a rendering display")
 		quit(1)
@@ -185,6 +193,8 @@ func _run() -> void:
 		"live_transitions": _live_transitions,
 		"paired_transitions": _paired_transitions,
 		"frames": _records, "failures": _failures, "complete": _failures.is_empty()}
+	if not _graphics_capture.is_empty():
+		manifest["graphics_capture"] = _graphics_capture
 	var file := FileAccess.open("%s/manifest.json" % _output, FileAccess.WRITE)
 	file.store_string(JSON.stringify(manifest, "\t") + "\n")
 	file.close()

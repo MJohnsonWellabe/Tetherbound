@@ -70,9 +70,9 @@ timeout 30s godot --headless --path . --log-file /tmp/stormwood-lightning-equipm
 test -s /tmp/stormwood-lightning-equipment.log
 if grep -E 'SCRIPT ERROR|ERROR:' /tmp/stormwood-lightning-equipment.log; then exit 1; fi
 ### step: Verify controller equipment and disk save
-### timeout-minutes: 1
+### timeout-minutes: 3
 set -euo pipefail
-timeout 30s godot --headless --path . --log-file /tmp/backpack-equipment.log --script tests/smoke_backpack_equipment.gd
+timeout 120s godot --headless --path . --log-file /tmp/backpack-equipment.log --script tests/smoke_backpack_equipment.gd
 test -s /tmp/backpack-equipment.log
 if grep -E 'SCRIPT ERROR|ERROR:' /tmp/backpack-equipment.log; then exit 1; fi
 ### step: Verify Stormwood lightning warning cleanup

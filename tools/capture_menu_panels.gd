@@ -27,6 +27,9 @@ func _init() -> void:
 
 func _run() -> void:
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(OUT_DIR))
+	if OS.get_cmdline_user_args().has("--actual-master-sites"):
+		await _capture_actual_master_sites()
+		return
 
 	var packed: PackedScene = load(SCENE)
 	if packed == null:
@@ -125,6 +128,215 @@ func _run() -> void:
 		quit(1)
 		return
 	quit(0)
+
+
+## F28#1 placement-only opt-in. Actual mounted sites/signs in the four shipping
+## scenes, with disclosed capture-realm selection and trainer/camera poses.
+## No party, stock, recipe, win, clock, save or configuration grants; no
+## earned travel, duel or access proof.
+func _capture_actual_master_sites() -> void:
+	# SceneTree._init runs before the actual Game autoload is mounted.
+	await process_frame
+	if DisplayServer.get_name() == "headless":
+		push_error("Master placement capture requires the existing render mode")
+		quit(1)
+		return
+	var written: Array[String] = []
+	var failures: Array[String] = []
+	var observed: Array[Dictionary] = []
+	var capture_ids: Array[String] = ["master_t1", "master_t2", "master_t3", "master_t4", "master_t5"]
+	var measure_clearance := false
+	for argument: String in OS.get_cmdline_user_args():
+		if not argument.begins_with("--master-sites="): continue
+		if measure_clearance or argument not in ["--master-sites=master_t1,master_t3,master_t4", "--master-sites=master_t1,master_t4"]:
+			push_error("Master subset must be one retained blocked-sign set, once")
+			quit(1)
+			return
+		capture_ids.assign(["master_t1", "master_t4"] if argument == "--master-sites=master_t1,master_t4" else ["master_t1", "master_t3", "master_t4"])
+		measure_clearance = true
+	var game := root.get_node_or_null(^"Game")
+	if game == null or game.get("local") == null:
+		push_error("Actual capture owner is missing")
+		quit(1)
+		return
+	var original_realm := str(game.get("current_realm"))
+	var cases := [
+		{"biome": "meadows", "scene": SCENE, "ids": ["master_t1", "master_t2"]},
+		{"biome": "tidewake", "scene": "res://scenes/world/water_archipelago.tscn", "ids": ["master_t3"]},
+		{"biome": "cloudreach", "scene": "res://scenes/world/cloudreach_cliffs.tscn", "ids": ["master_t4"]},
+		{"biome": "stormwood", "scene": "res://scenes/world/stormwood.tscn", "ids": ["master_t5"]}]
+	var expected_observed := 0
+	for entry: Dictionary in cases:
+		# A named subset needs only scenes containing a requested site.
+		var selected_case := false
+		for id: String in entry.ids:
+			if id in capture_ids:
+				selected_case = true
+				break
+		if not selected_case:
+			continue
+		expected_observed += entry.ids.size()
+		# Existing regional capture convention: bind the displayed realm so
+		# ordinary occupied-world mounting observes the matching live scene.
+		# This is capture setup, not a portal crossing or a permanent unlock.
+		game.set("current_realm", preload("res://scripts/data/biome_order.gd").runtime_id(str(entry.biome)))
+		var packed := load(str(entry.scene)) as PackedScene
+		if packed == null:
+			failures.append("Missing actual scene: " + str(entry.scene))
+			break
+		var world := packed.instantiate() as Node3D
+		root.add_child(world)
+		current_scene = world
+		for frame in SETTLE_FRAMES: await physics_frame
+		var player := world.get_node_or_null(^"Player") as CharacterBody3D
+		var camera := root.get_camera_3d()
+		if player == null or camera == null:
+			failures.append("Actual trainer/camera missing: " + str(entry.biome))
+			break
+		# Retain the shipping camera object; stop only its automatic positioning
+		# while this capture tool supplies its disclosed composition.
+		camera.get_parent().set_process(false)
+		camera.get_parent().set_physics_process(false)
+		# SpringArm3D internally rewrites direct children's transforms even
+		# with its script stopped. Retain the shipping lens outside that arm
+		# while the existing capture tool supplies its disclosed composition.
+		camera.reparent(world)
+		for id: String in entry.ids:
+			var matches: Array[Node3D] = []
+			for node: Node in get_nodes_in_group("foundation_master_sites"):
+				if node is Node3D and world.is_ancestor_of(node) and node.get("master_id") == id: matches.append(node as Node3D)
+			if matches.size() != 1 or matches[0].get("_mounted") != true:
+				failures.append("One actual mounted Master required: " + id)
+				break
+			var site: Node3D = matches[0]
+			var definition: Dictionary = site.get("_definition")
+			var expected: Array = definition.get("position", [])
+			var sign_at: Array = definition.get("sign_position", []).duplicate()
+			var npc := site.get_node_or_null(^"Master") as Node3D
+			if definition.get("biome") != entry.biome or expected.size() != 3 or sign_at.size() != 3 \
+				or npc == null or not npc.is_visible_in_tree() \
+				or Vector2(site.global_position.x, site.global_position.z).distance_to(Vector2(float(expected[0]), float(expected[2]))) > 0.05:
+				failures.append("Actual Master placement/cast disagrees with its authored identity: " + id)
+				break
+			# Cloudreach dresses its sign at the configured court edge. Match the
+			# same loaded presentation offset without changing its authored source.
+			if entry.biome == "cloudreach":
+				var visual: Dictionary = world.get("_visual_config")
+				var offset: Variant = visual.get("master_signpost_offsets", {}).get(str(definition.get("author_reference", "")))
+				if offset is Array and offset.size() >= 2:
+					if typeof(offset[0]) not in [TYPE_FLOAT, TYPE_INT] or typeof(offset[1]) not in [TYPE_FLOAT, TYPE_INT] \
+							or not is_finite(float(offset[0])) or not is_finite(float(offset[1])):
+						failures.append("Invalid loaded Master sign presentation offset: " + id)
+						break
+					sign_at[0] = float(sign_at[0]) + float(offset[0])
+					sign_at[2] = float(sign_at[2]) + float(offset[1])
+			var signs: Array[Node3D] = []
+			for child: Node in world.get_children():
+				var candidate := child as Node3D
+				if candidate == null or Vector2(candidate.global_position.x, candidate.global_position.z).distance_to(Vector2(float(sign_at[0]), float(sign_at[2]))) >= 0.05: continue
+				var candidate_texts: Array[String] = []
+				for part: Node in candidate.get_children():
+					var label := part as Label3D
+					if label != null: candidate_texts.append(label.text)
+				if candidate_texts == [str(definition.sign_text) + "\nFollow the side path →"]: signs.append(candidate)
+			if signs.size() != 1:
+				failures.append("One actual authored sign required: " + id)
+				break
+			var sign: Node3D = signs[0]
+			var texts: Array[String] = []
+			for child: Node in sign.get_children():
+				var label := child as Label3D
+				if label != null: texts.append(label.text)
+			if texts != [str(definition.sign_text) + "\nFollow the side path →"]:
+				failures.append("Actual sign text missing/ambiguous: " + id)
+				break
+			var player_before := player.global_position
+			var captures: Array[String] = []
+			var clearance: Array[Dictionary] = []
+			if capture_ids.has(id):
+				player.global_position = sign.global_position + Vector3(0, 1, 5)
+				player.velocity = Vector3.ZERO
+				camera.global_position = sign.global_position + Vector3(0, 4, 11)
+				camera.look_at(sign.global_position + Vector3(0, 2.5, 0), Vector3.UP)
+				for frame in POSE_FRAMES: await physics_frame
+				await _shoot(id + "_sign", written, failures)
+				if measure_clearance:
+					# Read the geometry already in this captured scene. No raycast,
+					# generated debug mesh, collider or visibility change is needed.
+					var geometry: Array[Node] = world.find_children("*", "MeshInstance3D", true, false)
+					geometry.append_array(world.find_children("*", "MultiMeshInstance3D", true, false))
+					geometry.append_array(world.find_children("*", "CollisionShape3D", true, false))
+					for node: Node in geometry:
+						var spatial := node as Node3D
+						var local_box := AABB()
+						var kind := "mesh"
+						var transforms: Array[Transform3D] = [spatial.global_transform]
+						if node is MeshInstance3D:
+							var mesh := node as MeshInstance3D
+							if mesh.mesh == null or not mesh.is_visible_in_tree(): continue
+							local_box = mesh.get_aabb()
+						elif node is MultiMeshInstance3D:
+							var mesh := node as MultiMeshInstance3D
+							if mesh.multimesh == null or mesh.multimesh.mesh == null or not mesh.is_visible_in_tree(): continue
+							if mesh.multimesh.transform_format != MultiMesh.TRANSFORM_3D: continue
+							local_box = mesh.multimesh.mesh.get_aabb()
+							kind = "multimesh_instance"
+							transforms.clear()
+							var count := mesh.multimesh.instance_count
+							if mesh.multimesh.visible_instance_count >= 0: count = mini(count, mesh.multimesh.visible_instance_count)
+							for index in count: transforms.append(spatial.global_transform * mesh.multimesh.get_instance_transform(index))
+						else:
+							var collider := node as CollisionShape3D
+							var shape: Shape3D = collider.shape
+							if shape == null or collider.disabled: continue
+							kind = shape.get_class()
+							var half := Vector3.ZERO
+							var points := PackedVector3Array()
+							if shape is BoxShape3D: half = (shape as BoxShape3D).size * 0.5
+							elif shape is SphereShape3D: half = Vector3.ONE * (shape as SphereShape3D).radius
+							elif shape is CapsuleShape3D:
+								half = Vector3((shape as CapsuleShape3D).radius, (shape as CapsuleShape3D).height * 0.5, (shape as CapsuleShape3D).radius)
+							elif shape is CylinderShape3D:
+								half = Vector3((shape as CylinderShape3D).radius, (shape as CylinderShape3D).height * 0.5, (shape as CylinderShape3D).radius)
+							elif shape is ConvexPolygonShape3D: points = (shape as ConvexPolygonShape3D).points
+							elif shape is ConcavePolygonShape3D: points = (shape as ConcavePolygonShape3D).get_faces()
+							else: continue # Unbounded/heightfield shapes are not text occluder bounds.
+							if not points.is_empty():
+								local_box = AABB(points[0], Vector3.ZERO)
+								for point: Vector3 in points: local_box = local_box.expand(point)
+							else: local_box = AABB(-half, half * 2.0)
+						for index in transforms.size():
+							var box: AABB = transforms[index] * local_box
+							var nearest := Vector2(clampf(sign.global_position.x, box.position.x, box.end.x),
+								clampf(sign.global_position.z, box.position.z, box.end.z))
+							var distance := nearest.distance_to(Vector2(sign.global_position.x, sign.global_position.z))
+							if distance > 16.0 or box.end.y < sign.global_position.y + 0.5 or box.position.y > sign.global_position.y + 10.0: continue
+							clearance.append({"path": str(world.get_path_to(node)), "kind": kind, "instance": index if kind == "multimesh_instance" else -1,
+								"position": [box.position.x, box.position.y, box.position.z], "size": [box.size.x, box.size.y, box.size.z],
+								"distance_m": distance, "centre_distance_m": box.get_center().distance_to(sign.global_position)})
+					clearance.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+						return a.centre_distance_m < b.centre_distance_m if is_equal_approx(a.distance_m, b.distance_m) else a.distance_m < b.distance_m)
+					if clearance.size() > 32: clearance.resize(32)
+				player.global_position = site.global_position + Vector3(0, 1, 8)
+				player.velocity = Vector3.ZERO
+				var centre := (site.global_position + sign.global_position) * 0.5
+				camera.global_position = centre + Vector3(0, 28, 55)
+				camera.look_at(centre + Vector3(0, 1.5, 0), Vector3.UP)
+				for frame in POSE_FRAMES: await physics_frame
+				await _shoot(id + "_context", written, failures)
+				captures = [id + "_sign", id + "_context"]
+			observed.append({"id": id, "biome": entry.biome, "cap_level": definition.cap_level, "access": definition.access,
+				"site_position": [site.global_position.x, site.global_position.y, site.global_position.z],
+				"sign_position": [sign.global_position.x, sign.global_position.y, sign.global_position.z], "text": texts,
+				"player_before": [player_before.x, player_before.y, player_before.z], "captures": captures, "nearby_geometry": clearance})
+		if not failures.is_empty(): break
+		world.queue_free()
+		for frame in POSE_FRAMES: await physics_frame
+	print("MASTER PLACEMENT OBSERVED ", JSON.stringify(observed))
+	game.set("current_realm", original_realm)
+	print("Master placement capture: capture-realm selection and trainer/camera pose only; no earned route, access, duel, recipe or reward claim.")
+	for failure: String in failures: push_error(failure)
+	quit(0 if failures.is_empty() and observed.size() == expected_observed and written.size() == capture_ids.size() * 2 else 1)
 
 
 func _shoot(name: String, written: Array[String], failures: Array[String]) -> void:
