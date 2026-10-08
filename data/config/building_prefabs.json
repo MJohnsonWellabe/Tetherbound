@@ -4796,6 +4796,9 @@
     "farmhouse_shell": {
       "interior_floor_material": {
         "scope": "world_presentation",
+        "_tile_scope": "Meadows farmhouse floor/loft/stair/ceiling faces only; peer-local presentation in all presets, no durable state/authority/transaction/save change. Candidate requires actual matched capture and judge.",
+        "tile_cropped_band": true,
+        "tile_scale": [0.32, 0.32, 1.2],
         "albedo": "res://assets/buildings/quaternius_medieval/T_WoodTrim_BaseColor.png",
         "normal": "res://assets/buildings/quaternius_medieval/T_WoodTrim_Normal.png",
         "tint": "#c9b49b",
@@ -4803,7 +4806,7 @@
         "uv_offset": [0.0, 0.02, 0.0],
         "roughness": 0.86,
         "normal_scale": 0.45,
-        "_comment": "Installed family wood atlas, inspected top longitudinal-grain band only. Existing ground/loft/stair/ceiling boxes and collision stay unchanged; no full-atlas or triplanar sampling of plaster/end-grain. Actual ordinary-camera recapture pending."
+        "_comment": "Installed family wood atlas, inspected top longitudinal-grain band only. Candidate extracts that same albedo/normal band into runtime textures, generates mips and tiles in world space; full atlas plaster/end-grain remains excluded. Existing ground/loft/stair/ceiling boxes, collision, tint, roughness and normal strength unchanged. Actual matched ordinary-camera recapture pending."
       },
       "interior_lighting": {
         "scope": "world_presentation",
