@@ -1743,5 +1743,158 @@
     ],
     "preservation": "All prior b852 source/unit/two-deck approvals, ratings, failed52cd and forced-ending/raster witnesses preserved without reinspection.",
     "activity": "No engine, dispatch, GPU, runtime inspection, source edit or judge contact."
+  },
+  "b852_hollows_contact_r1_original_runtime_review": {
+    "reviewer": "original review_cloud_startup 01a11679-fc2c-7873-bccd-423c1e04476d",
+    "verdict": "APPROVE",
+    "scope": "Only new completed b852 single-Hollows native packet, persisted pairs, neutral provenance and supported runtime outcome; no whole criterion or art-bar approval.",
+    "source_commit": "b8523462de914850025fbc7ed085903be68a0c36",
+    "source_tree": "e7702116f3fea89a21ea641e110ff48a655805a8",
+    "packet_root": "D:\\CodexTemp\\tetherbound-proof\\native-e-b8523462de-f41-hollows-contact-r1",
+    "canonical_frames": "D:\\CodexTemp\\tetherbound-proof\\native-e-b8523462de-f41-hollows-contact-r1\\frames\\hollows-contact",
+    "provenance": {
+      "source_after_import": "Exact b852 source; head_tree=index_tree=local pinned commit tree; dirty list empty. Checkout log agrees.",
+      "import_exit_code": 0,
+      "capture_exit_code": 0,
+      "capture_stop_reason": "",
+      "started_utc": "2026-10-08T14:19:00.7977158Z",
+      "finished_utc": "2026-10-08T14:26:16.4150328Z",
+      "command_match": "Persisted start args match the approved b852 level80/seed2042/Hollows/120-second/10-second command.",
+      "source_locations": {
+        "original": "D:\\CodexTemp\\tetherbound-native\\d-e2d54b40aa\\.tmp\\stormwood-phase2\\f41-hollows-contact-b852",
+        "archived": "D:\\CodexTemp\\tetherbound-proof\\native-e-b8523462de-f41-hollows-contact-r1\\frames\\hollows-contact"
+      },
+      "hash_manifest_entries": 61,
+      "hash_manifest_check": "Every one of 61 listed files exists with exact recorded byte count and SHA256.",
+      "files": {
+        "terminal-summary.json": {
+          "bytes": 1314,
+          "sha256": "9fb01edb0db444bc5b8d93a5b0c5c38a1ca85bb6c21df703a3537a18b8218dc8"
+        },
+        "proof-hashes.json": {
+          "bytes": 11258,
+          "sha256": "1202318c44d4542430e308d5c62cc10ea355b0aae09f844f2247b6bfc324bd74"
+        },
+        "source-after-import.json": {
+          "bytes": 199,
+          "sha256": "d8b41a2144da27e9d53ef95c9211c1e1777420a21d831b711da6ac6aba3b577f"
+        },
+        "hollows-contact-start.json": {
+          "bytes": 758,
+          "sha256": "75d0cdfbdbb6fc49426f31ba5967bd4cb55e75d656b5382bfe3ccafc4dfeca4b"
+        },
+        "hollows-contact-receipt.json": {
+          "bytes": 221,
+          "sha256": "68f06f6fae19811397f4a30eafb8819e24fff758e45b654c765e850f3af05757"
+        },
+        "hollows-contact.stdout.log": {
+          "bytes": 19379,
+          "sha256": "712d59328c09ad0008f7d6003bca8d5cd284f89cb1f1fe6b9903578e9f29beb0"
+        },
+        "hollows-contact.stderr.log": {
+          "bytes": 2927,
+          "sha256": "ad03d4712411022a465ae9265a3301f2d5b046ace532b7a8c5e8cca4aa1e9637"
+        },
+        "import-receipt.json": {
+          "bytes": 221,
+          "sha256": "cb47e66276722a7b28e08182cb8e1d6975b4746ed4f4b5b6a584848b9c80dd6b"
+        },
+        "frames/hollows-contact/capture_log.json": {
+          "bytes": 24406,
+          "sha256": "2ab13762efc0b5f390f526859ae12209a240625c9b378146cfc13ca7a5e491f8"
+        },
+        "frames/hollows-contact/lookdev_fight.json": {
+          "bytes": 8974,
+          "sha256": "954c346d8ac9c7c9464000abe52b36fc2e4bf798acba2f91abcc151b5bfcf895"
+        },
+        "frames/hollows-contact/hollows_alpha-99-after.png": {
+          "bytes": 3499943,
+          "sha256": "aa19545ef9d6ea40551dc5fb74c76a5579a795bb5372db5fbc06c3be21d452f7"
+        },
+        "frames/hollows-contact/hollows_alpha-100-aftermath.png": {
+          "bytes": 3501636,
+          "sha256": "247cd5c077d4ad34ef1c800a8f71ff1af1ce2dd74da2889eb6a487336f25112e"
+        }
+      }
+    },
+    "renderer": {
+      "engine": "Godot v4.7.stable.official.5b4e0cb0f",
+      "actual_stdout": "OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB",
+      "declared_and_recorded": {
+        "adapter": "NVIDIA GeForce GTX 1060 3GB",
+        "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+        "preset": "Low",
+        "renderer": "gl_compatibility",
+        "resolution": [
+          1920,
+          1080
+        ],
+        "source_commit": "b8523462de914850025fbc7ed085903be68a0c36"
+      },
+      "image_headers": [
+        1920,
+        1080
+      ],
+      "unique_pngs": 38,
+      "unique_image_sha256": 38,
+      "unique_record_paths": 38,
+      "active_records": 35,
+      "complete": true,
+      "failures": [],
+      "pair_verification": "All PNG names equal the record path basenames and frame log names; every record size and PNG header is 1920x1080, named_id=hollows_alpha, and recorded fighting state agrees with the frame log.",
+      "diagnostics": {
+        "script_errors": 0,
+        "errors": 0,
+        "warnings": 6,
+        "warnings_retained": [
+          "Deprecated instance_reset_physics_interpolation.",
+          "TwistedTree_2 and TwistedTree_4 present in two retint layers.",
+          "Three wild-cluster body-spacing fit warnings."
+        ]
+      }
+    },
+    "actual_path": {
+      "started": true,
+      "engaged_by": "Engage press",
+      "enemy_is_named": true,
+      "initial_quick_reach_m": 6.4075665,
+      "ally_hits": 56,
+      "enemy_hits": 0,
+      "enemy_misses": 31,
+      "ended_at_s": 100.92,
+      "requested_cap_s": 120,
+      "precleanup_fighting_at_end": false,
+      "strict_aftermath_present": true,
+      "frame_times": {
+        "99-after": 100.92,
+        "100-aftermath": 101.92
+      },
+      "body_contact_limit": "Ordinary production pilot and damage callbacks establish successful attacks at production reach. Nearby frame separation is about 5.88m around the first hit; no exact same-instant collider contact/touch measurement is recorded. Old 0.8*current initial reach is 5.1260532m; this arithmetic does not prove an old-run obstruction or diagnose the historical cases.",
+      "count_semantics": "summary.frames=35 counts active periodic/tell frames; actual complete receipt and files contain 38 including before, after and aftermath. saved_combat_frames=0 is the separate disabled scale-audit counter; scale_audit=false, scale_failures=[]."
+    },
+    "outcome": {
+      "classification": "NATURAL_VICTORY_ACKNOWLEDGMENT_SUPPORTED",
+      "natural_stop": "Actual precleanup row stopped at100.92 before120; no active-cap/forced-fled ending used as victory evidence.",
+      "recorded_outcome_label": false,
+      "evidence": "Both raw 99-after and100-aftermath show “The wild creature is beaten.” and “The Hollows Alpha yields the glowmoss lanes. Great Candy for each trainer who stood in the fight.” Inspection was solely to classify runtime/UI state, without visual-bar judgment.",
+      "limits": [
+        "No loss context is present; P2-110 remains unassessed.",
+        "Victory acknowledgment context for P2-111 is present, but no distinct reward tiles, accepted delivery transaction, persistence/reconnect/co-op receipt or earned campaign boundary is proven.",
+        "Archived world flags payload is empty; no durable victory/save claim is based on that snapshot.",
+        "Outcome context availability does not assign a catalogue severity or independent art score."
+      ]
+    },
+    "neutral_provenance": {
+      "pairs": 38,
+      "byte_identical": true,
+      "map_sha256": "487938149693816b3301392f4f01c8d3bb704fd2b0968c2d2ef39afe7b179d87",
+      "limits": "Private mapping inspected only by source reviewer; no mapping disclosure or judge contact. Neutral content not visually rated."
+    },
+    "limits": [
+      "Level80 five-party/direct creation/debug stand/neighbour suppression/Calm pin/healing/fixedfps20 fixtures remain disclosed; no campaign, balance, performance, device or full-six-fight claim.",
+      "Startup succeeds in this one actual b852 run; no general memory-fix/root-cause conclusion or erasure of the failed52cd zero-image witness.",
+      "Bark close-view proof and wholeF41 acceptance remain pending; prior source/unit/command approvals,36+6scores,forced-ending and raster-failure witnesses preserved."
+    ],
+    "activity": "No engine, native/hosted dispatch, source/config edit, GPU run, GitHub/status/raw-thread read or judge contact by reviewer."
   }
 }
