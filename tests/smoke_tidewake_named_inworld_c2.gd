@@ -5,7 +5,7 @@ extends SceneTree
 ## scene, the trainer's installed body (Nerissa's in the Heart Chamber), the
 ## production summon and challenge prompt, the production CombatManager and
 ## hosted trainer roster. The shared READER/MASHER policy
-## (tests/helpers/combat_depth_pilot.gd) presses the real input actions, with
+## (tests/helpers/f22_pattern_pilot.gd) presses the real input actions, with
 ## movement mapped through the production CameraRig as a player's stick is.
 ##
 ## One process = one fight (a fresh world each time, so no defeat flag, failure
@@ -19,7 +19,7 @@ extends SceneTree
 ## granted (the original five at --party-level, starter leading), the player
 ## is placed in front of the trainer, and Nerissa's two upstream pump flags are
 ## set so the Heart Chamber stands. No HP, damage, victory or roster injection.
-const PILOT := preload("res://tests/helpers/combat_depth_pilot.gd")
+const PILOT := preload("res://tests/helpers/f22_pattern_pilot.gd")
 const GEAR := preload("res://tests/helpers/f33_gear_fixture.gd")
 const SPECIES := preload("res://scripts/creatures/creature_species.gd")
 const PROGRESSION := preload("res://scripts/creatures/progression.gd")
@@ -31,17 +31,56 @@ const FIGHT_CAP_S := 900.0
 
 ## The shared pilot, driven against production nodes instead of its fixture.
 class WorldPilot:
-	extends "res://tests/helpers/combat_depth_pilot.gd"
+	extends "res://tests/helpers/f22_pattern_pilot.gd"
 	var rig: Node
+	var _observation_scope: Array = []
 
-	func bind(manager: Node, ally: CharacterBody3D, wild: CharacterBody3D) -> void:
+	func bind(manager: Node, ally: CharacterBody3D, wild: CharacterBody3D) -> bool:
 		_manager = manager
 		_ally = ally
 		_wild = wild
+		var enemy: RefCounted = wild.get("instance") if is_instance_valid(wild) else null
+		var arena: Node = manager.arena() if is_instance_valid(manager) else null
+		var active: bool = is_instance_valid(manager) and manager.state == MANAGER.State.ACTIVE
+		var scope: Array = []
+		if active and is_instance_valid(ally) and is_instance_valid(wild) and enemy != null and is_instance_valid(arena):
+			scope = [manager.get_instance_id(), str(manager.encounter_id()), arena.get_instance_id(),
+				wild.get_instance_id(), enemy.get_instance_id(), str(enemy.get("uid"))]
+		if scope != _observation_scope:
+			_observation_scope = scope
+			_prepared_body = 0
+			_tell_seen_frame = -1
+			_escape_dir = Vector3.ZERO
+			_last_shape.clear()
+			_fields.clear()
+			_pending_field.clear()
+		if not active: return true # Send-out gaps supply no combat observation.
+		if scope.is_empty():
+			_tally["fixture_error"] = "active world pilot lost its actual bodies, opponent or arena"
+			return false
+		var patterns: Variant = wild.get("_patterns")
+		var current: Variant = wild.get("_pattern_context")
+		var observer: Variant = wild.get("_pattern_observer")
+		var director: Node = manager.get("_encounter_link")
+		if not patterns is Dictionary or patterns.get("runtime_enabled") != true \
+			or not current is Dictionary or current.get("species_id") != enemy.get("species_id") \
+			or current.get("trainer_owned") != wild.get("trainer_owned") \
+			or current.get("move_quick") != enemy.get("move_quick") or current.get("move_charged") != enemy.get("move_charged") \
+			or not current.get("pattern_id") is String or not current.get("sendout_index") is int \
+			or not observer is Callable or not observer.is_valid() or not is_instance_valid(director) \
+			or observer != Callable(director, "_f22_visible_observation").bind(wild):
+			_tally["fixture_error"] = "world pilot requires the current Director's live pattern context and bound observer"
+			return false
+		# Adopt the Director's existing setup. The inherited fixture initializer
+		# must never reset live patterns, cues, cursors or the host observer.
+		context = current.duplicate(true)
+		_prepared_body = wild.get_instance_id()
+		return true
 
 	func step(policy: String) -> void:
 		_release_attack()
 		_release_move()
+		if not is_instance_valid(_manager) or _manager.state != MANAGER.State.ACTIVE: return
 		if _wild == null or not is_instance_valid(_wild) or _ally == null or not is_instance_valid(_ally):
 			return
 		_enemy_windup_before_tick = _wild.is_winding_up()
@@ -214,7 +253,11 @@ func _run() -> void:
 				if tell_began[0] >= 0:
 					observed.append(snappedf((Engine.get_physics_frames() - tell_began[0]) / 60.0, 0.01))
 				tell_began[0] = -1)
-		pilot.bind(manager, ally, enemy)
+		if not pilot.bind(manager, ally, enemy):
+			pilot._release_attack()
+			pilot._release_move()
+			_finish(out, result, str(pilot._tally.get("fixture_error", "world pilot binding refused")))
+			return
 		if manager.is_fighting():
 			pilot.step(policy)
 		await physics_frame
