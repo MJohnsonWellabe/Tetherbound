@@ -50,6 +50,9 @@ func _foundation_reply(envelope: Dictionary, result: Dictionary) -> void:
 	_action_completed("master_duel", envelope.intent, refused)
 
 func _action_completed(action: String, original: Dictionary, result: Dictionary) -> void:
+	if action == "master_chest":
+		_foundation_reply({"op": action}, result)
+		return
 	if is_instance_valid(_panel):
 		_panel.call("accept_completion", action, original, result)
 
@@ -181,6 +184,8 @@ func _chest(site: Node3D) -> void:
 	var verdict := submit("master_chest", {"master_id": str(site.get("master_id"))}, site)
 	if verdict.get("resolved") == false and verdict.get("code") == "awaiting_saved_decision":
 		_message("Opening recipe chest · waiting for confirmation.")
+	elif verdict.get("ok") == true:
+		_foundation_reply({"op": "master_chest"}, verdict)
 	else:
 		_message(str(verdict.get("reason", verdict.get("code", ""))))
 
