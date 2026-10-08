@@ -24,6 +24,7 @@ var _aftermath_on := true
 var _hud := false
 var _pad := false
 var _custom: Array[String] = []
+var _ground_readability := false
 
 
 func _run() -> void:
@@ -51,6 +52,8 @@ func _run() -> void:
 			_aftermath_on = false
 		elif arg == "--hud":
 			_hud = true
+		elif arg == "--ground-readability":
+			_ground_readability = true
 		elif arg == "--pad":
 			# F10#6 device profile: the ROG Ally is a controller device, so
 			# glyphs follow a pad as the last input device (Game's own
@@ -62,6 +65,15 @@ func _run() -> void:
 				_custom.append(spec)
 	if _phases_only.is_empty():
 		_phases_only.assign(["calm", "break"])
+	if _ground_readability:
+		if _stands_only != ["forest", "giant"] or _phases_only != PHASES or _aftermath_on:
+			push_error("Ground readability needs forest,giant, all four phases and no aftermath (eight affected views)")
+			quit(2)
+			return
+		_phase_graphics_capture = preload("res://tools/lookdev_capture_bootstrap.gd").prepare(self, "--out=")
+		if _phase_graphics_capture.is_empty():
+			quit(1)
+			return
 	_coarse()
 	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_output_dir))
 	if not await _mount_production_world() or not _prepare_capture_shell():
@@ -145,6 +157,11 @@ func _matrix_pass(aftermath: bool) -> void:
 ## Native viewport size (1920x1080 on the documented command) instead of the
 ## parent's 1280x720, and the HUD state recorded as it really was.
 func _capture(frame_id: String, description: String, full_size: bool, extra: Dictionary = {}) -> void:
+	var ground: Dictionary = {}
+	if _ground_readability:
+		ground = _ground_material_receipt(frame_id)
+		if ground.is_empty():
+			return
 	var image := await _grab()
 	if image == null or image.is_empty():
 		_failures.append("%s: empty viewport image" % frame_id)
@@ -163,7 +180,50 @@ func _capture(frame_id: String, description: String, full_size: bool, extra: Dic
 		"region": _region(), "surge_phase": str(_surge.get("phase")), "surge_elapsed": _surge_elapsed(),
 		"long_storm_ended": bool(_game.get("progression").call("has", "stormwood:long_storm_ended")),
 		"presentation": _presentation_state(), "staged": _staged.duplicate(),
+		"ground_materials": ground,
 	}.merged(extra, true))
+	if _ground_readability and [image.get_width(), image.get_height()] != _phase_graphics_capture.resolution:
+		_failures.append(frame_id + ": raster differs from declared native preset")
+
+
+func _ground_material_receipt(frame_id: String) -> Dictionary:
+	var path := "res://data/config/stormwood_ground_finish.json"
+	var config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(path))
+	var candidate: Dictionary = config.get("terrain_materials", {})
+	var terrain: Node3D = _world.get("_terrain")
+	if terrain == null or not terrain.is_inside_tree() or _camera != root.get_camera_3d() \
+			or not bool(candidate.get("enabled", false)) or bool(config.get("enabled", true)):
+		_failures.append(frame_id + ": candidate terrain materials missing or failed cover profile enabled")
+		return {}
+	var assets: Object = terrain.get("assets")
+	var actual: Array[Dictionary] = []
+	for index: int in int(assets.call("get_texture_count")):
+		var texture: Object = assets.call("get_texture", index)
+		var name: String = texture.get("name")
+		var expected: Dictionary = candidate.textures.get(name, {})
+		if expected.is_empty() or not is_equal_approx(float(texture.get("uv_scale")), float(expected.uv_scale)) \
+				or not is_equal_approx(float(texture.get("normal_depth")), float(expected.normal_depth)) \
+				or (texture.get("albedo_color") as Color).to_html(false) != Color(str(expected.tint)).to_html(false):
+			_failures.append(frame_id + ": production terrain slot does not match override " + name)
+			return {}
+		var albedo: Texture2D = texture.get("albedo_texture")
+		actual.append({"name": name, "uv_scale": texture.get("uv_scale"), "normal_depth": texture.get("normal_depth"),
+			"tint": (texture.get("albedo_color") as Color).to_html(false), "albedo": albedo.resource_path})
+	if actual.size() != candidate.textures.size():
+		_failures.append(frame_id + ": production terrain slot count differs from overrides")
+		return {}
+	return {"config_sha256": FileAccess.get_file_as_string(path).sha256_text(), "slots": actual,
+		"terrain_bound": terrain.is_inside_tree(), "camera_is_rendering": _camera == root.get_camera_3d(), "cover_enabled": false}
+
+
+func _done() -> void:
+	if _ground_readability:
+		var ids: Dictionary = {}
+		for frame: Dictionary in _frames:
+			ids[frame.id] = true
+		if _frames.size() != 8 or ids.size() != 8:
+			_failures.append("Ground readability captured %d/%d unique views; eight required" % [_frames.size(), ids.size()])
+	super._done()
 
 
 ## Break's decorative sky lightning fires every 0.55-1.3 s; a still taken at a

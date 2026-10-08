@@ -387,6 +387,9 @@ func _model(parent: Node3D,path: String,at: Vector3,scale_factor: float,yaw: flo
 
 func _apply_ground_materials(budget: RefCounted) -> void:
 	var source: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
+	var finish: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_ground_finish.json"))
+	var ground: Dictionary = finish.get("terrain_materials", {})
+	var overrides: Dictionary = ground.get("textures", {}) if bool(ground.get("enabled", false)) else {}
 	var assets: Object = ClassDB.instantiate("Terrain3DAssets")
 	var i := 0
 	for entry: Dictionary in source.textures:
@@ -395,9 +398,10 @@ func _apply_ground_materials(budget: RefCounted) -> void:
 		texture.set("name",str(entry.name))
 		texture.set("albedo_texture",load(str(entry.albedo)))
 		texture.set("normal_texture",load(str(entry.normal)))
-		texture.set("normal_depth",0.25)
-		texture.set("uv_scale",float(entry.get("uv_scale",0.1)))
-		texture.set("albedo_color",Color("63887b") if i==0 else Color("737080"))
+		var surface: Dictionary = overrides.get(str(entry.name), {})
+		texture.set("normal_depth",float(surface.get("normal_depth",0.25)))
+		texture.set("uv_scale",float(surface.get("uv_scale",entry.get("uv_scale",0.1))))
+		texture.set("albedo_color",Color(str(surface.tint)) if surface.has("tint") else (Color("63887b") if i==0 else Color("737080")))
 		assets.call("set_texture",i,texture)
 		i += 1
 		_build_note("texture %d"%i)

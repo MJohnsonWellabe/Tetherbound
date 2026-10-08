@@ -1,22 +1,33 @@
 {
   "enabled": false,
   "scope": "client_presentation",
-  "leaf_original_alpha": {"enabled": false, "scope": "client_presentation", "tint": "#8eaa91", "brightness": 1.35, "contrast": 0.9, "_comment": "Keep installed Leaves_TwistedTree_C original UV alpha; neutralize original crimsonRGB and green-tint using existing cached Image.adjust_bsc. No normal-tree atlas substitution. Full native/blind foliage gates still open."},
+  "leaf_original_alpha": {
+    "enabled": false,
+    "scope": "client_presentation",
+    "tint": "#8eaa91",
+    "brightness": 1.35,
+    "contrast": 0.9,
+    "_comment": "Keep installed Leaves_TwistedTree_C original UV alpha; neutralize original crimsonRGB and green-tint using existing cached Image.adjust_bsc. No normal-tree atlas substitution. Full native/blind foliage gates still open."
+  },
   "_comment": "F41/P2-039 realm-local profile through existing grass_field.configure_profile. Short dark ground cover, low clustered shrubs and wet litter on grass/soil/damp/forest_floor add understory layers without admitting path or rock. Uses the existing generated grass/shrub/litter families and retains the grass ring count; disables flower tiers and tunes cover size/density. No scatter bake, terrain, collision, authority or save edits. Candidate requires native before/after visual proof before landing; revert enabled on failure.",
   "grass": {
-    "height_near": 0.10,
+    "height_near": 0.1,
     "height_far": 0.18,
     "tint_base": "#25392c",
     "tint_tip": "#496344",
     "density_gain": 0.42,
     "clump_contrast": 0.95,
     "clump_scale": 0.028,
-    "ground_blend": 0.80,
+    "ground_blend": 0.8,
     "translucency": 0.04
   },
   "tiers": {
-    "flowers": {"enabled": false},
-    "flowers_gold": {"enabled": false},
+    "flowers": {
+      "enabled": false
+    },
+    "flowers_gold": {
+      "enabled": false
+    },
     "bushes": {
       "enabled": true,
       "item_size": 0.52,
@@ -29,12 +40,17 @@
       "tint_tip": "#57765b",
       "tint_wood": "#454337",
       "ground_blend": 0.45,
-      "contact_darken": 0.30,
-      "ground": ["grass", "soil", "damp", "forest_floor"]
+      "contact_darken": 0.3,
+      "ground": [
+        "grass",
+        "soil",
+        "damp",
+        "forest_floor"
+      ]
     },
     "litter": {
       "enabled": true,
-      "item_size": 0.40,
+      "item_size": 0.4,
       "sink": 0.025,
       "density_gain": 0.75,
       "drift_scale": 0.045,
@@ -43,7 +59,49 @@
       "tint_base": "#353e30",
       "tint_tip": "#58624a",
       "ground_blend": 0.55,
-      "ground": ["grass", "soil", "damp", "forest_floor"]
+      "ground": [
+        "grass",
+        "soil",
+        "damp",
+        "forest_floor"
+      ]
+    }
+  },
+  "terrain_materials": {
+    "enabled": true,
+    "scope": "client_presentation",
+    "_comment": "F41 ground clarity candidate: reuse installed stylised terrain albedo/normal slots and unchanged terrain/control maps. Distinct earth/moss/path tints, about2m tiling and per-surface normal relief replace the old common dim purple multiplier. Failed ground-cover profile above stays OFF. Native actualbinding/before-after judge required; turn this block OFF if it fails.",
+    "textures": {
+      "grass": {
+        "uv_scale": 0.5,
+        "normal_depth": 0.34,
+        "tint": "#99a77f"
+      },
+      "soil": {
+        "uv_scale": 0.45,
+        "normal_depth": 0.22,
+        "tint": "#b4b497"
+      },
+      "rock": {
+        "uv_scale": 0.24,
+        "normal_depth": 0.55,
+        "tint": "#aaaab3"
+      },
+      "path": {
+        "uv_scale": 0.5,
+        "normal_depth": 0.25,
+        "tint": "#bfb49c"
+      },
+      "damp": {
+        "uv_scale": 0.5,
+        "normal_depth": 0.18,
+        "tint": "#a6aaa0"
+      },
+      "forest_floor": {
+        "uv_scale": 0.5,
+        "normal_depth": 0.3,
+        "tint": "#b1b4a2"
+      }
     }
   }
 }
