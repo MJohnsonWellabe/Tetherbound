@@ -470,6 +470,13 @@
       "source_clean": true,
       "script_errors_observed": 0
     },
-    "visual": "PENDING original code-blind review"
+    "visual": "PENDING original code-blind review",
+    "rollback": {
+      "commit": "87084ddee2e22f2cc3b679c85c1928760967d7d8",
+      "review": "original f25_arrival_review APPROVE bounded rollback",
+      "reason": "Changed native source added neutral95-degree failure absent from prior97305 native result; both had8crop failures. Reduced visibility counts do not justify retaining the candidate.",
+      "scope": "Only4285540+c759 transition ranking hunk reversed. Pushed commits/evidence, observer, Windows launcher, prior camera guards/config/tests preserved.",
+      "no_third_run": true
+    }
   }
 }
