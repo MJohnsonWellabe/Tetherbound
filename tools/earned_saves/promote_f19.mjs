@@ -35,7 +35,7 @@ export function readCompatibilityManifest(file) {
       typeof binding.log_path === 'string' && binding.log_path.trim().length > 0 && object(binding.files_sha256) &&
       Object.keys(binding.files_sha256).length > 0 && Object.values(binding.files_sha256).every(hash => hex(hash, 64)),
     'Missing actual producer run/artifact/log/receipt/save bindings');
-    const producerKind = binding.producer_kind || 'github_actions';
+    const producerKind = Object.hasOwn(binding, 'producer_kind') ? binding.producer_kind : 'github_actions';
     if (producerKind === 'native_process') {
       const native = binding.native_process_receipt;
       assert.ok(!['run_id', 'artifact_id', 'artifact_sha256'].some(key => Object.hasOwn(binding, key)) &&
