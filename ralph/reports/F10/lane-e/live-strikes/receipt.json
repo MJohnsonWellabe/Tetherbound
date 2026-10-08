@@ -1,6 +1,6 @@
 {
   "criterion": "F10#3",
-  "status": "OPEN named lightning logic and Surge traversal behavior pending",
+  "status": "OPEN existing Surge traversal behavior pending; named logic and native visual PASS",
   "source_commit": "7f68e3b2b1e9dee7479d87ec5446a50683a3ee30",
   "run": 37708662448,
   "artifact": 11521726235,
@@ -134,7 +134,6 @@
   ],
   "authorization": "issue572#6049684392 one actual-host confirming run with --out on same reviewed7f68, unchanged guards/budgets",
   "remaining_gates": [
-    "tests/smoke_stormwood_lightning.gd 16cases57assertions",
     "tests/smoke_stormwood_b_surge_phase_traversal.gd actual production traversal",
     "Original reviewer final criterion approval"
   ],
@@ -144,5 +143,18 @@
     "Audio witness remains unavailable; no hearing claim"
   ],
   "flags": "none",
-  "landing": "Existing capture_stormwood_strikes.gd live-only headings correction at7f68 and contacts/receipt; exclude DRY visualization claims, unrelated Stormwood ground-profile/world/art ancestry"
+  "landing": "Existing capture_stormwood_strikes.gd live-only headings correction at7f68 and contacts/receipt; exclude DRY visualization claims, unrelated Stormwood ground-profile/world/art ancestry",
+  "named_logic": {
+    "script": "tests/smoke_stormwood_lightning.gd",
+    "run": 37712875890,
+    "artifact": 11523225313,
+    "source": "c8df340d87564a7a7f6e4f77f848b170630879a3",
+    "cases": 16,
+    "assertions": 54,
+    "failures": 0,
+    "exit_code": 0,
+    "seconds": 4,
+    "scope": "Actual minimal host/remote/gear/duplicate/charged-ground fixture, not full forest/two-peer behavior",
+    "count_correction": "Earlier queued description57 was a counting error; unchanged per-case expected counts sum54 and actual54 executed."
+  }
 }
