@@ -88,5 +88,37 @@
       "frames": 12,
       "disposition": "ExecutionPASS, scopedpixelBLOCK at16terraincoverage;32PASS. No third boundedattempt."
     }
-  ]
+  ],
+  "owner_rescoped_map_margin_candidate": {
+    "source_commit": "52ba285172618c3c1ebc9bf51829bc099ded5116",
+    "production_commit": "412106619b",
+    "main_merged": "c93bbe441e27d2373951133f24f50ae98267b8a1",
+    "criterion": "F42#0 OPEN",
+    "observed_defect": "Reviewed 16x region labels covered revealed terrain/road at both rasters despite marker separation.",
+    "change": "Existing region-name margin placement begins at16x behind false device-local presentation flag and opt-in CLI. Existing32x layout, fonts, marker solver, fog/discovery/input/zoom/durable state unchanged.",
+    "candidate_enabled": false,
+    "original_source_review": "/root/f42_visual_review SOURCE APPROVE",
+    "affected_existing_units": {
+      "run": 37752032128,
+      "artifact": 11537489935,
+      "tests": 144,
+      "assertions": 910,
+      "failed": 0,
+      "exit": 0,
+      "seconds": 16,
+      "opt_in": "--map-label-margin-candidate"
+    },
+    "remaining": [
+      "Paired1080/720 mapzoom captures and original blind judge",
+      "Full literal catalog UI verdict; no whole READY or flag flip yet"
+    ],
+    "existing_controller_smoke": {
+      "run": 37752399076,
+      "artifact": 11538119884,
+      "proof": "tests/smoke_gate_a_map_cycle.gd --map-label-margin-candidate",
+      "exit": 0,
+      "seconds": 87,
+      "result": "Actual pad5-creature cycling/resting skip, movement-up minimap/trainer heading, repeated map open/close, RT/LT zoom, right-stick pan/clamp and world recovery PASS; honest world-edge499.3m clamp retained."
+    }
+  }
 }
