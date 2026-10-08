@@ -58,6 +58,7 @@ var _ally: Node3D = null
 var _written: Array[String] = []
 var _failures: Array[String] = []
 var _start_ms: int = 0
+var _graphics_capture: Dictionary = {}
 
 var _struck_flag := [false]
 var _shook_flag := [false]
@@ -69,6 +70,13 @@ func _init() -> void:
 
 
 func _run() -> void:
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--preset="):
+			_graphics_capture = preload("res://tools/lookdev_capture_bootstrap.gd").prepare(self)
+			if _graphics_capture.is_empty():
+				quit(1)
+				return
+			break
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--output="):
 			_out_dir = arg.trim_prefix("--output=")
@@ -536,6 +544,11 @@ func _capture(name: String) -> void:
 	if image == null:
 		_failures.append("%s: viewport returned no image" % name)
 		return
+	if not _graphics_capture.is_empty():
+		var expected: Array = _graphics_capture.resolution
+		if image.is_empty() or image.get_size() != Vector2i(int(expected[0]), int(expected[1])):
+			_failures.append("%s: declared graphics raster mismatch" % name)
+			return
 	var path := "%s/%s.png" % [_out_dir, name]
 	if image.save_png(path) != OK:
 		_failures.append("%s: save_png failed" % name)
@@ -565,6 +578,8 @@ func _finish() -> void:
 		"adapter": RenderingServer.get_video_adapter_name(),
 		"resolution": [root.size.x, root.size.y], "frames": records,
 		"failures": _failures, "complete": _failures.is_empty()}
+	if not _graphics_capture.is_empty():
+		manifest["graphics_capture"] = _graphics_capture
 	var manifest_file := FileAccess.open("%s/manifest.json" % _out_dir, FileAccess.WRITE)
 	manifest_file.store_string(JSON.stringify(manifest, "\t") + "\n")
 	manifest_file.close()
@@ -574,4 +589,3 @@ func _finish() -> void:
 		quit(1)
 		return
 	quit(0)
-
