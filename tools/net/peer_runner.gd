@@ -3193,6 +3193,47 @@ func _f25_drawing_load(node: Node) -> Dictionary:
 	return load
 
 
+## Detached live observation, never a refusal-time receipt or an admission retry.
+## Do not bind an actor or freeze a move here: both can change the tested state.
+func _live_move_admission_observation(director: Node, rec: Dictionary, peer: int) -> Dictionary:
+	var session := _session()
+	if session == null or not bool(session.call("is_host")) or peer <= 0: return {}
+	var id := str(rec.get("encounter_id", ""))
+	var host: Variant = director.get("_encounter_host")
+	var body: Node3D = director.call("deployed_body_for", peer)
+	var card: Dictionary = director.call("_creature_card_for", peer)
+	var uid := str(card.get("creature_uid", ""))
+	var admitted: Dictionary = session.call("admitted_character_state", peer)
+	var owned: Dictionary = {}
+	var matches := 0
+	for row: Dictionary in admitted.get("party", []):
+		if row.get("uid") == uid:
+			owned = row.duplicate(true)
+			matches += 1
+	var binding: Dictionary = director.call("_strike_actor_binding", id, peer, body)
+	var participant: Dictionary = rec.get("participants", {}).get(peer, {})
+	var opponent: Dictionary = rec.get("opponent", {})
+	var deployed: Dictionary = director.get("_deployment_identity").get(peer, {})
+	return {"claim":"live observation after failed guest-strike checkpoint, not refusal-time state",
+		"at_ms":Time.get_ticks_msec(), "encounter_id":id, "peer_id":peer,
+		"phase":rec.get("phase"), "realm":rec.get("realm"),
+		"current_realm":director.call("_encounter_realm"), "epoch":session.call("_altar_current_epoch"),
+		"participant":{"character_id":participant.get("character_id"), "creature_uid":participant.get("creature_uid"),
+			"actor_generation":participant.get("actor_generation"), "actor_bound_uid":participant.get("actor_bound_uid"),
+			"actor_vitals":participant.get("actor_vitals", {}).get(uid, {}).duplicate(true)},
+		"admitted_character_id":admitted.get("character_id"), "owned_matches":matches,
+		"owned":owned, "host_card":card.duplicate(true), "deployment":deployed.duplicate(true),
+		"breakthroughs":admitted.get("redesign_character", {}).get("creatures", {}).get(uid, {}).get("breakthroughs"),
+		"body":{"valid":is_instance_valid(body), "id":body.get_instance_id() if is_instance_valid(body) else 0,
+			"uid":str(body.get_meta(&"creature_uid", "")) if is_instance_valid(body) else "",
+			"owner_character_id":str(body.get("owner_character_id")) if is_instance_valid(body) else "",
+			"authority":body.get_multiplayer_authority() if is_instance_valid(body) else 0},
+		"binding":binding.duplicate(true), "motion_scope":director.call("_combat_motion_scope", id, peer, binding),
+		"actor_current":host.call("_self_utility_actor_current", id, peer, binding) if host != null else false,
+		"enemy_target_current":director.call("host_enemy_target_current", id, peer, uid),
+		"opponent":{"uid":opponent.get("card", {}).get("uid"), "body_generation":opponent.get("body_generation")}}
+
+
 func _step_strike(args: Dictionary) -> Dictionary:
 	var director := _encounter_director()
 	var manager := _combat_manager()
@@ -7362,6 +7403,9 @@ func _execute_probe(msg: Dictionary) -> Variant:
 			out["host_strike_receipts"] = receipt_rows
 			out["host_strike_transaction"] = (_strike_transaction.get("receipt") as Dictionary).duplicate(true) \
 				if _strike_transaction != null else {}
+			var admission_peer := int((msg.get("args", {}) as Dictionary).get("admission_peer_id", 0))
+			if admission_peer > 0:
+				out["admission_observation"] = _live_move_admission_observation(edirector, rec, admission_peer)
 			if mine != null:
 				out["my_creature_hp"] = float((mine as RefCounted).get("hp"))
 				out["my_creature_max_hp"] = float((mine as RefCounted).get("max_hp"))

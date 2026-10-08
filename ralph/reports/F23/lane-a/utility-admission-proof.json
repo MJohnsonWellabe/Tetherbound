@@ -580,7 +580,7 @@
   },
   "current_shipping_flags": "At e641620c79 move_commit runtime stays ON and live_moves admits all ten authored utilities plus retained Ground Current. actor_vitals runtime stays OFF; Heal only in converted saved-health self scope, generic unsupported Heal refuses before spend/action, guest Dash transport still refuses. Command/ultimate presentation flags unchanged.",
   "criteria_status": {
-    "F23#2": "APPROVE/MET",
+    "F23#2": "RETURNED OPEN; integration quick move admission regression",
     "F23#5": "OPEN"
   },
   "whole_f23_2_review": {
@@ -598,5 +598,12 @@
     "verdict": "APPROVE",
     "change": "Unavailable-Heal feedback uses plain player language; refusalcodes/guards/resources unchanged",
     "whole_disposition": "Original WHOLE F23#2 approval remains applicable without rerun"
+  },
+  "returned_integration": {
+    "reported_by": "ROOT urgent routing 2026-10-08",
+    "candidate": "Consolidation13 f3668748 PR589 CLOSED UNMERGED",
+    "proof": "verify-multiplayer-shard(3) shared_boss and shared_wild_fight fail; same original smokes PASS mainfda4",
+    "observed": "peer1 quick move_start invalid_actor_move; enemy HP unchanged and friendly_target checks unreachable",
+    "current_disposition": "Original approval/earlier passing pieces retained as history; whole acceptance returned. Inspect bounded shipping admission with SAME original reviewer; no unsupported cause or unchanged rerun."
   }
 }
