@@ -3,6 +3,18 @@
   "relight_cost": 3,
   "player_pair_limit": 3,
   "recipe_flag": "stormwood:arch_recipe_known",
+  "crown_presentation": {
+    "enabled": true,
+    "scope": "client_presentation",
+    "_disposition": "F41/P2-041 flag-on candidate, not accepted art. Existing Crown frame and 9m physical footing unchanged; per-instance installed rock material and decorative foliage clearance only. Leave OFF if native matched judge fails.",
+    "albedo_texture": "res://assets/environment/terrain/stylised/rock_scree_Color.png",
+    "normal_texture": "res://assets/environment/terrain/stylised/rock_scree_NormalGL.png",
+    "albedo": "#8c9287",
+    "roughness": 0.88,
+    "normal_depth": 0.4,
+    "texture_repeat_m": 2.0,
+    "ground_clear_radius_m": 6.6
+  },
   "arches": [
     {"id":"a_ashfoot","pair":"a","name":"Ashfoot Arch","at":[-350,500],"yaw_deg":0},
     {"id":"a_pools","pair":"a","name":"Lantern Pools South Arch","at":[-350,1440],"yaw_deg":180},

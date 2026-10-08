@@ -123,6 +123,8 @@ func _build(spec: Dictionary) -> void:
 	piece.name = "ArchPresentation"
 	arch.add_child(piece)
 	piece.build_display()
+	if str(spec.id) == "e_crown":
+		_apply_crown_presentation(footing, slab, piece)
 	row["piece"] = piece
 	var prompt := INTERACTABLE.new()
 	prompt.name = "Relight"
@@ -132,6 +134,36 @@ func _build(spec: Dictionary) -> void:
 	prompt.activated.connect(_relight.bind(str(spec.id)))
 	row["prompt"] = prompt
 	_mount_passage(arch, str(spec.id))
+
+func _apply_crown_presentation(footing: Node3D, slab: MeshInstance3D, piece: Node3D) -> void:
+	var finish: Dictionary = RULES.config().get("crown_presentation", {})
+	if not bool(finish.get("enabled", false)):
+		return
+	var frame := piece.get_node_or_null("StormglassFrame") as MeshInstance3D
+	if frame == null:
+		return
+	var source := frame.get_surface_override_material(0) as StandardMaterial3D
+	if source == null:
+		return
+	var masonry := source.duplicate() as StandardMaterial3D
+	masonry.albedo_color = Color(str(finish.get("albedo", "#8c9287")))
+	masonry.albedo_texture = load(str(finish.get("albedo_texture", ""))) as Texture2D
+	masonry.normal_texture = load(str(finish.get("normal_texture", ""))) as Texture2D
+	masonry.normal_enabled = masonry.normal_texture != null
+	masonry.normal_scale = float(finish.get("normal_depth", 0.4))
+	masonry.metallic = 0.0
+	masonry.roughness = float(finish.get("roughness", 0.88))
+	# Installed OBJ UVs select material swatches. World triplanar projection
+	# gives that unchanged frame and footing the same physical stone grain.
+	masonry.uv1_triplanar = true
+	masonry.uv1_world_triplanar = true
+	masonry.uv1_scale = Vector3.ONE / maxf(0.1, float(finish.get("texture_repeat_m", 2.0)))
+	frame.set_surface_override_material(0, masonry)
+	slab.material_override = masonry
+	# The existing ground-cover field consumes live authored clearances for
+	# every decorative tier; collision and baked vegetation remain untouched.
+	footing.set_meta("grass_clear_radius", float(finish.get("ground_clear_radius_m", 6.6)))
+	footing.add_to_group("grass_clear")
 
 func _mount_passage(arch: Node3D, id: String) -> void:
 	var passage := Area3D.new()
