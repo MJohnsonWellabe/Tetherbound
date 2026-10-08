@@ -1,5 +1,9 @@
 # Lane C catch admission and V1 owner-edge evidence
 
+L10 sign correction `dc86f3356f085557f354ce2ecf4971910cf99f8c`: original blind frame `37765810844` shows the trainer's head obscuring “th” in the final wrapped instruction. Only L10 receives `sign_width_px=1280`; the existing production sign builder reads this per-entry width with the original720 fallback. Font96, pixel scale0.006, height4.6, wording, site/sign positions, actor geometry and original capture/camera remain unchanged. The other four retain width720. Same original `modal_review`: **SOURCE APPROVE**. JSON parse and diff checks pass. Fresh pixels remain required; no visual PASS or whole F28#1 closure.
+
+Exact affected packet is recorded in pre-edit NOTICE `6060606189`: full approved SHA above, existing `tools/capture_menu_panels.gd --actual-master-sites --master-sites=master_t1,master_t4`, native Compatibility1280×720, original25-minute cap, exclusively ROOT-scheduled D/E. C dispatches no GPU. Resume the same original `modal_visual` (`01a116a1-bc7f-75c3-a04f-f9d3332b6fce`) for code-blind new pixels only after execution; retained t2/t3/t5/L40 passes stay retained. This proves neither Human GullRest nor the exact Fly landing; those whole-criterion gates remain open. Actor-vitals flags, STATE/dashboard and saves are unchanged.
+
 ## Master chest reply presentation
 
 `809b66c6adb6c0a6ddc861b1b963700b11313a1c` corrects the guest chest feedback path in the existing BreakthroughService. The immediate unresolved request now shows a readable confirmation wait. Session's existing validated `master_chest` reply announces a saved recipe only when `ok`, `resolved`, `durable`, `owner_saved` and `owner_acknowledged` are all strictly true; only a resolved, terminal, nondurable refusal displays its reason. Pending/durable refusals do not announce failure or success. No win, request, receipt, retry, save/ACK, admission, range or flag changes. Same original reviewer **SOURCE APPROVE**.
