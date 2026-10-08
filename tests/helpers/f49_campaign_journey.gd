@@ -27,6 +27,7 @@ var meadows_piece_prefix := false
 var compatibility_paths: Array[String] = []
 var observe_next_goal := false
 var observe_lesson_reload := false
+var generated_fixture_input := false
 
 func run(owner: SceneTree) -> void:
 	driver = owner
@@ -34,6 +35,7 @@ func run(owner: SceneTree) -> void:
 	game = driver.root.get_node("Game")
 	# Legacy checkpoint labels embed the old order. Never accept them silently.
 	for arg: String in OS.get_cmdline_user_args():
+		if arg == "--generated-fixture": generated_fixture_input = true
 		if arg == "--observe-next-goal": observe_next_goal = true
 		if arg.begins_with("--lesson-reload-witness"):
 			if arg != "--lesson-reload-witness" or observe_lesson_reload:
@@ -83,6 +85,9 @@ func run(owner: SceneTree) -> void:
 			return
 	if not compatibility_paths.is_empty() and resume_source.is_empty():
 		_fail("F49 reviewed cut compatibility requires an actual imported prefix")
+		return
+	if generated_fixture_input and (resume_source.is_empty() or not meadows_piece_prefix or not compatibility_paths.is_empty()):
+		_fail("Generated F49 chapter input requires an explicit portable fixture source and Meadows constructor")
 		return
 	if meadows_piece_prefix:
 		if resume_source.is_empty():
@@ -143,7 +148,7 @@ func run(owner: SceneTree) -> void:
 		return
 	var from := -1
 	if not resume_source.is_empty():
-		resumed_boundary = disk.import_prefix(resume_source)
+		resumed_boundary = disk.import_prefix(resume_source, "generated_fixture" if generated_fixture_input else "earned")
 		if resumed_boundary.is_empty():
 			_failures(disk.failures)
 			return
@@ -166,6 +171,11 @@ func run(owner: SceneTree) -> void:
 			driver.resume_info.source_kind = "f49_complete_meadows_piece_and_chapter_prefix"
 			driver.resume_info.meadows_pieces = (HANDOFF.MEADOWS_PREPARED_PIECES \
 				if disk.boundaries.has("relay_prepared") else HANDOFF.MEADOWS_PIECES).duplicate()
+		if generated_fixture_input:
+			driver.resume_info.source_kind = "generated_fixture"
+			driver.resume_info.generated_origin = disk.generated_origin.duplicate(true)
+			driver.resume_info.prior_earned_play = false
+			driver.resume_info.continuous_fresh_save = false
 		for index in from + 1: visited.append(["meadows", "tidewake", "cloudreach", "stormwood"][index])
 	if from < 0:
 		# A resumed Hall was earned, saved and loaded with its complete prefix.
@@ -369,7 +379,9 @@ func _boundary(label: String, reload_disk: bool = true) -> bool:
 	return true
 
 func _segment_result(label: String, completed: bool) -> void:
-	print("F49 SEGMENT RESULT " + JSON.stringify({"kind": "f49_earned_segment",
+	print("F49 SEGMENT RESULT " + JSON.stringify({"kind": "f49_generated_fixture_segment" if generated_fixture_input else "f49_earned_segment",
+		"input_mode":"generated_fixture" if generated_fixture_input else "earned",
+		"generated_origin":disk.generated_origin,"prior_earned_play":false if generated_fixture_input else null,
 		"journey_id": disk.journey_id, "commit": disk.source_commit,
 		"from_boundary": resumed_boundary, "through_boundary": label,
 		"predecessors": disk.history, "visited": visited,
