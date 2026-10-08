@@ -1,6 +1,6 @@
 {
   "criterion": "F10#3",
-  "status": "OPEN existing Surge traversal behavior pending; named logic and native visual PASS",
+  "status": "PASS bounded literal F10#3; full release presentation/motion/audio/earned route remain open",
   "source_commit": "7f68e3b2b1e9dee7479d87ec5446a50683a3ee30",
   "run": 37708662448,
   "artifact": 11521726235,
@@ -106,7 +106,7 @@
     "agent": "review_cloud_startup",
     "source": "APPROVE 7f68",
     "artifact_completeness": "APPROVE strict20 PNG/readback/actual native Low/radius3",
-    "criterion": "OPEN named logic/behavior remaining"
+    "criterion": "APPROVE original review_cloud_startup: actual area86/0, retained logic54/0, native20 plus4phase PASS; bounded named gates complete"
   },
   "retained_phase_proof": {
     "run": 37699857855,
@@ -133,10 +133,7 @@
     }
   ],
   "authorization": "issue572#6049684392 one actual-host confirming run with --out on same reviewed7f68, unchanged guards/budgets",
-  "remaining_gates": [
-    "tests/smoke_stormwood_b_surge_phase_traversal.gd actual production traversal",
-    "Original reviewer final criterion approval"
-  ],
+  "remaining_gates": [],
   "limits": [
     "Low/Compatibility1280x720 hosted llvmpipe, no Ally hardware",
     "Full release High/Medium bar and motion/photosensitivity comfort remain open",
@@ -156,5 +153,30 @@
     "seconds": 4,
     "scope": "Actual minimal host/remote/gear/duplicate/charged-ground fixture, not full forest/two-peer behavior",
     "count_correction": "Earlier queued description57 was a counting error; unchanged per-case expected counts sum54 and actual54 executed."
+  },
+  "area_behavior": {
+    "script": "tests/smoke_stormwood_b_surge_phase_traversal.gd",
+    "run": 37713175276,
+    "artifact": 11522492101,
+    "source": "03a9ffeae5e80b449e637058210d19b8785832a2",
+    "exit_code": 0,
+    "seconds": 156,
+    "assertions": 86,
+    "failures": 0,
+    "road_legs_m": [
+      457,
+      464,
+      468,
+      459
+    ],
+    "break_warnings": 8,
+    "break_impacts": 7,
+    "impact_delay_game_seconds": [
+      1.217,
+      1.233
+    ],
+    "safe_zone_controls": "Still Grove/Rodline Post each 30 attempts, zero warnings; exposed control 30/30; rod 6m zero warnings;11.9m sheltered/12.1m exposed",
+    "disclosures": "Existing phase held during each walking leg; forced interval attempts only radius/safe-zone controls; healing after impacts. Unchanged timeouts, guards and route budgets.",
+    "warnings": "Existing wild-cluster body-spacing warnings retained; no engine ERROR in downloaded run.log"
   }
 }

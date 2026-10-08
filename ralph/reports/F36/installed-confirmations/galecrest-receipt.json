@@ -191,11 +191,10 @@
     "finding": "PASS DCC/native/world identity/material; slate wings, cream breast, gold bands, raptor face and talons distinct. Harsher native feather detail, day breast washout and world eye detail too small retained; no regeneration required."
   },
   "provenance": "ART_DIRECTION current inventory: owner-directed rebuiltGalecrest Meshy01a0e4a9-3cfa-7210-b6d6-70f332337328, existing license, maina2e8d65db, canonical saved imagegen reference/prompt. No regeneration per #8;29,048 triangles/sixclips unchanged.",
-  "review": "OPEN original cap/source review of confirmation evidence",
+  "review": "APPROVE original review_f36_cap at 5bd2c4a225cb64621b961358f432696564500acd: current hashes, unchanged native applicability, scoped metadata/provenance; full F36#0 remains open",
   "limits": [
     "Historical topology warnings unchanged; no clean-manifold claim",
-    "Unseen supported poses/deformation/continuousmotion/Fly/world gameplay/fullF36 acceptance OPEN",
-    "Voltarach historical56k triangle budget unchanged; new regenerated candidate budget is not applied to a nonexistent regeneration"
+    "Unseen supported poses/deformation/continuousmotion/Fly/world gameplay/fullF36 acceptance OPEN"
   ],
   "flags": "none",
   "night_submissions": "Unchanged10/30; confirmation consumes no generation slot",
