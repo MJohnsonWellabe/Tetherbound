@@ -1,13 +1,13 @@
 extends RefCounted
 
 ## Scheduling only: retain references to the host's immutable event/duty.
-## A completed progression reward precedes ordinary hit history only after
+## Completed progression and research precede ordinary hit history only after
 ## the latest canonical decision is accepted. Pending or unknown decisions
 ## keep their original order so receipt/owner ACK recovery remains first.
 const EVENT := preload("res://scripts/net/foundation_event.gd")
 const WORLD := preload("res://autoload/world_state.gd")
 const ESSENCE := preload("res://scripts/creatures/essence.gd")
-const PROGRESSION := ["master_win", "boss_relic", "combat_round_reward", "wild_defeat_share"]
+const PROGRESSION := ["master_win", "boss_relic", "combat_round_reward", "wild_defeat_share", "research_event"]
 
 static func ordered(deliveries: Dictionary, namespace_id: String, world_id: String) -> Array[Dictionary]:
 	var progression: Array[Dictionary] = []
