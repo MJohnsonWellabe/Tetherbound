@@ -1,0 +1,149 @@
+{
+  "criterion": "F36#0 asset validation component BLOCK; F36#1 pose acceptance OPEN",
+  "subject": "tanglevolt",
+  "run": 37714741492,
+  "artifact": 11523393000,
+  "source_commit": "3ae56ff58efcd95e19708be30ede7461207fe447",
+  "exit_code": 0,
+  "seconds": 39,
+  "planned_frames": 10,
+  "actual_frames": 10,
+  "coverage": "Existing installed mapped hit/faint clips, all five phases each; no pose recipes",
+  "native_receipt": {
+    "asset_active_albedos": [
+      {
+        "expected_path": "res://assets/creatures/tetherbound/tanglevolt_f36_material_v1/models/tanglevolt_f36_material_v1_extracted_base_color_vivid.png",
+        "imported_mipmaps": true,
+        "node": "Mesh_0",
+        "path": "res://assets/creatures/tetherbound/tanglevolt_f36_material_v1/models/tanglevolt_f36_material_v1_extracted_base_color_vivid.png",
+        "source_sha256": "7c119e75f220e0dfd5b48dcaae9ffd03fd6ce3ac44157516bc3bd791af439310",
+        "surface": 0
+      }
+    ],
+    "asset_candidate": true,
+    "asset_path": "res://assets/creatures/tetherbound/tanglevolt/models/creature_tanglevolt_f36_material_v1.glb",
+    "asset_sha256": "a93c890be8c21f1457af60aaf6a529d39204414b35bcb43d8adf03f246c5d37f",
+    "camera_fov": 42.0,
+    "camera_position": [
+      -1.14999997615814,
+      3.22124052047729,
+      23.4934234619141
+    ],
+    "candidate": false,
+    "frames": [
+      {
+        "captured": true,
+        "path": "res://shots/lane-e/f36-material-hit-faint-3ae5/tanglevolt-hit-000.png",
+        "phase": 0.0,
+        "role": "hit"
+      },
+      {
+        "captured": true,
+        "path": "res://shots/lane-e/f36-material-hit-faint-3ae5/tanglevolt-hit-025.png",
+        "phase": 0.25,
+        "role": "hit"
+      },
+      {
+        "captured": true,
+        "path": "res://shots/lane-e/f36-material-hit-faint-3ae5/tanglevolt-hit-050.png",
+        "phase": 0.5,
+        "role": "hit"
+      },
+      {
+        "captured": true,
+        "path": "res://shots/lane-e/f36-material-hit-faint-3ae5/tanglevolt-hit-075.png",
+        "phase": 0.75,
+        "role": "hit"
+      },
+      {
+        "captured": true,
+        "path": "res://shots/lane-e/f36-material-hit-faint-3ae5/tanglevolt-hit-100.png",
+        "phase": 1.0,
+        "role": "hit"
+      },
+      {
+        "captured": true,
+        "path": "res://shots/lane-e/f36-material-hit-faint-3ae5/tanglevolt-faint-000.png",
+        "phase": 0.0,
+        "role": "faint"
+      },
+      {
+        "captured": true,
+        "path": "res://shots/lane-e/f36-material-hit-faint-3ae5/tanglevolt-faint-025.png",
+        "phase": 0.25,
+        "role": "faint"
+      },
+      {
+        "captured": true,
+        "path": "res://shots/lane-e/f36-material-hit-faint-3ae5/tanglevolt-faint-050.png",
+        "phase": 0.5,
+        "role": "faint"
+      },
+      {
+        "captured": true,
+        "path": "res://shots/lane-e/f36-material-hit-faint-3ae5/tanglevolt-faint-075.png",
+        "phase": 0.75,
+        "role": "faint"
+      },
+      {
+        "captured": true,
+        "path": "res://shots/lane-e/f36-material-hit-faint-3ae5/tanglevolt-faint-100.png",
+        "phase": 1.0,
+        "role": "faint"
+      }
+    ],
+    "installed_model": false,
+    "installed_reference_height_m": 3.40000033378601,
+    "material_candidate": false,
+    "planned_frames": 10,
+    "renderer": "gl_compatibility",
+    "resolution": [
+      1280,
+      720
+    ],
+    "resting_size_m": [
+      3.21300005912781,
+      3.40000009536743,
+      7.71845817565918
+    ],
+    "scale_only": false,
+    "scale_scope": "Explicit asset preview standing stage; no fight-scale claim",
+    "selected_phases": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "selected_roles": [
+      "hit",
+      "faint"
+    ],
+    "source_commit": "3ae56ff58efcd95e19708be30ede7461207fe447",
+    "species": "tanglevolt",
+    "stage_only": true,
+    "standing_height_m": 3.40000009536743,
+    "trainer_measured_height_m": 1.79999995231628,
+    "trainer_reference_height_m": 1.8,
+    "whole_body_camera": true
+  },
+  "judge": {
+    "agent": "blind_listener_f10",
+    "result": "BLOCK hurt/faint/ground contact; material continuity acceptable",
+    "findings": [
+      "Faint B1-B5 remains upright; B3/B5 do not read as grounded collapse",
+      "Hit A1-A5 slight silhouette changes do not clearly read as hurt",
+      "A2/A3 near forepaw appears buried in floor",
+      "No obvious tearing; identity/material continuity retained"
+    ],
+    "inspection": "All20 supplied contact frames; native-sized A2/A3/B3/B5 for both species"
+  },
+  "disposition": "Leave candidate shipping binding OFF; no retry without concrete cause and scoped correction",
+  "limits": [
+    "Still samples, no continuous motion/habitat proof",
+    "Do not infer original clip baseline quality from candidate frames",
+    "Whole F36#0 priority batch and F36#1 remain open"
+  ],
+  "contact": "ralph/reports/F36/tanglevolt-material/native-poses-contact.jpg",
+  "review": "OPEN original art review of failed candidate evidence"
+}
