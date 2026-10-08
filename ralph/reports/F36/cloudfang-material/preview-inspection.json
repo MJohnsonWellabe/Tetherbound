@@ -1,0 +1,204 @@
+{
+  "task": "01a118de-4b9d-76e6-86be-22e68d544429",
+  "night_submissions": 9,
+  "cap": 30,
+  "mesh_triangles": 29999,
+  "raw_triangles": 63341,
+  "installed_triangles": 63357,
+  "animations": [
+    "attack",
+    "faint",
+    "hit",
+    "idle",
+    "run",
+    "walk"
+  ],
+  "skin_transfer": {
+    "mode": "preserved_target_skin_transfer",
+    "input_sha256": {
+      "D:\\tetherbound\\codex-e\\assets\\creatures\\tetherbound\\cloudfang\\models\\creature_cloudfang_lod0.glb": "b1eccad461c2474020b9bbe4bebe535b621c63baa571aa6b9a3fcfd05ac64727",
+      "D:\\tetherbound\\codex-e\\assets_raw\\cloudfang\\f36-material-v1\\model-decimated.glb": "981f51208800809723ac86f6620dc888d5c32e74ffe75c67de6309d16523ba21"
+    },
+    "output_sha256": "b6c5f6e2ae03fc521dd4a6f0612142b825369b43ed140cc03f452b4e192fa57d",
+    "target_geometry_uv_material_bindings_unchanged_before_export": true,
+    "donor_rig_world_transform_unchanged": true,
+    "transfer_rest_pose": true,
+    "parent_world_transform_preserved": true,
+    "alignment_yaw_deg": 0.0,
+    "alignment_uniform_scale": 0.9410681021952031,
+    "alignment_mode": "bounding_box",
+    "vertices": 22654,
+    "unweighted_vertices": 0,
+    "max_influences": 4,
+    "trimmed_influences": 107,
+    "weights_normalized": true,
+    "scope": "Pre-export data and source guards only; export reimport/deformation/native scale/judge still required"
+  },
+  "reimport": {
+    "model": "D:\\tetherbound\\codex-e\\assets_raw\\cloudfang\\f36-material-v1\\model-rigged.glb",
+    "bounds": {
+      "min": [
+        -0.2563,
+        -0.9549,
+        -0.1774
+      ],
+      "max": [
+        0.2563,
+        0.9409,
+        0.9454
+      ],
+      "size": [
+        0.5125,
+        1.8958,
+        1.1228
+      ],
+      "height_m": 1.1228,
+      "longest_axis_m": 1.8958,
+      "sits_on_origin": false,
+      "centred_on_origin": true
+    },
+    "meshes": [
+      {
+        "name": "Mesh_0.001",
+        "vertices": 22654,
+        "edges": 52164,
+        "faces": 29999,
+        "triangles": 29999,
+        "tris": 29999,
+        "quads": 0,
+        "ngons": 0,
+        "quad_fraction": 0.0,
+        "non_manifold_edges": 14331,
+        "boundary_edges": 14331,
+        "loose_vertices": 0,
+        "duplicate_vertices": 4453,
+        "components": 489,
+        "debris_components": 442,
+        "flipped_normals": 2773,
+        "uv_layers": 1,
+        "stretched_uv_faces": 851,
+        "materials": [
+          "Material_0.001"
+        ],
+        "shape_keys": 0,
+        "vertex_groups": 15
+      }
+    ],
+    "materials": [
+      {
+        "name": "Material_0.001",
+        "textures": [
+          "Image_0",
+          "Image_1",
+          "Image_2"
+        ],
+        "textured": true
+      }
+    ],
+    "armatures": [
+      {
+        "name": "Armature",
+        "bones": 15,
+        "bone_names": [
+          "root",
+          "pelvis",
+          "spine",
+          "neck",
+          "head",
+          "front_upper_l",
+          "front_lower_l",
+          "front_upper_r",
+          "front_lower_r",
+          "tail_1",
+          "tail_2",
+          "rear_upper_l",
+          "rear_lower_l",
+          "rear_upper_r",
+          "rear_lower_r"
+        ],
+        "roots": [
+          "root"
+        ],
+        "skinned_meshes": [
+          "Mesh_0.001"
+        ],
+        "max_depth": 4
+      }
+    ],
+    "animations": [
+      {
+        "name": "attack_Armature",
+        "frames": [
+          1.0,
+          23.0
+        ],
+        "channels": 150
+      },
+      {
+        "name": "faint_Armature",
+        "frames": [
+          1.0,
+          37.0
+        ],
+        "channels": 150
+      },
+      {
+        "name": "hit_Armature",
+        "frames": [
+          1.0,
+          13.0
+        ],
+        "channels": 150
+      },
+      {
+        "name": "idle_Armature",
+        "frames": [
+          1.0,
+          73.0
+        ],
+        "channels": 150
+      },
+      {
+        "name": "run_Armature",
+        "frames": [
+          1.0,
+          19.0
+        ],
+        "channels": 150
+      },
+      {
+        "name": "walk_Armature",
+        "frames": [
+          1.0,
+          33.0
+        ],
+        "channels": 150
+      }
+    ],
+    "totals": {
+      "meshes": 1,
+      "triangles": 29999,
+      "vertices": 22654,
+      "materials": 1,
+      "animations": 6
+    },
+    "problems": [
+      "Mesh_0.001: 14331 non-manifold edges",
+      "Mesh_0.001: 4453 duplicate vertices \u2014 will split under deformation",
+      "Mesh_0.001: 442 microscopic disconnected components",
+      "Mesh_0.001: ~2773 inward-facing faces",
+      "Mesh_0.001: 851 faces with texel density 4.0x off the median",
+      "Mesh_0.001: 0% quads \u2014 generator triangle soup, poor for deformation",
+      "does not stand on the origin (lowest point z=-0.1774)"
+    ]
+  },
+  "preparation": "Existing cleanup_mesh.decimate_to budget reduction preserves UV/material slots; no voxel/weld. Existing skin_transfer --preserve-target-geometry fits normalized Meshy output to original rig units. No gameplay/camera scale claim.",
+  "warnings": "Reimport retains open boundaries, duplicate vertices and small components; no clean-manifold claim.",
+  "blind_verdict": {
+    "identity": "A PASS, B PASS",
+    "material": "A BLOCK, B PASS; B closer to established white/pale-blue wolf",
+    "deformation": "A PASS, B PASS for idle1 and attack10 only; no continuity/other poses claim",
+    "notes": "Both stockier than reference; recognizable Cloudfang. Fur conceals some joint junctions."
+  },
+  "shipping": "Installed model unchanged; candidate asset preview is explicit capture-only. Native/colourway/gameplay gates OPEN."
+}

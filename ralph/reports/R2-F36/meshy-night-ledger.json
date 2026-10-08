@@ -138,7 +138,14 @@
       "endpoint": "/openapi/v1/retexture",
       "submitted_utc": "2026-10-08T00:16:27.726911+00:00",
       "task_id": "01a118de-4b9d-76e6-86be-22e68d544429",
-      "status": "submitted_pending_inspection"
+      "status": "SUCCEEDED_DCC_material_identity_deformation_PASS_native_pending_OFF",
+      "credits": {
+        "before": 13325,
+        "after": 13315,
+        "observed_cost": 10
+      },
+      "candidate_enabled": false,
+      "inspection_evidence": "ralph/reports/F36/cloudfang-material/preview-inspection.json"
     }
   ],
   "actual_meshy_submissions": 9,

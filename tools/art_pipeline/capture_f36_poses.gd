@@ -8,6 +8,8 @@ const PHASES := [0.0, 0.25, 0.5, 0.75, 1.0]
 var _pose_failures: Array[String] = []
 var _scale_only := false
 var _material_candidate := false
+## Explicit asset preview only; shipping species/model bindings stay unchanged.
+var _asset_candidate := false
 var _selected_roles: Array[String] = []
 var _selected_phases: Array[float] = []
 
@@ -33,6 +35,8 @@ func _run() -> void:
 			all_roster = true
 		elif arg == "--material-candidate":
 			_material_candidate = true
+		elif arg == "--asset-candidate":
+			_asset_candidate = true
 		elif arg.begins_with("--roles="):
 			var values := arg.trim_prefix("--roles=").split(",", true)
 			for value: String in values:
@@ -68,6 +72,10 @@ func _run() -> void:
 		(finish_config["f36_material_finish"] as Dictionary)["enabled"] = true
 	if _scale_only and candidate:
 		push_error("Installed scale audit cannot preview pose candidates")
+		quit(1)
+		return
+	if _asset_candidate and candidate:
+		push_error("Asset preview preserves installed clips; cannot combine pose recipes")
 		quit(1)
 		return
 	var seen := {}
@@ -107,9 +115,34 @@ func _run() -> void:
 func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: String, source: String) -> void:
 	var body := _spawn_creature(id, false, PAIR_CREATURE_POS, 90.0)
 	body.set_physics_process(false)
-	var measured_height := _measured_height(body)
+	var installed_height := _measured_height(body)
 	var measured_trainer := RENDER_BOUNDS.measure(_trainer).size.y
+	var asset_path := ""
+	var asset_hash := ""
+	if _asset_candidate:
+		var config: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/creatures/f36_pose_candidates.json"))
+		var row: Dictionary = config.get("species", {}).get(id, {}).get("asset_candidate", {}) if config is Dictionary else {}
+		asset_path = str(row.get("model", ""))
+		asset_hash = str(row.get("source_sha256", ""))
+		if asset_path.is_empty() or asset_hash.length() != 64 or FileAccess.get_sha256(asset_path) != asset_hash:
+			_pose_failures.append("%s: asset preview path/hash absent or stale" % id)
+			body.queue_free()
+			await process_frame
+			return
+		var preview_look := SPECIES.placeholder(id).duplicate(true)
+		preview_look["model"] = asset_path
+		if not bool(body.call("_build_model", preview_look)):
+			_pose_failures.append("%s: asset preview model failed to install" % id)
+			body.queue_free()
+			await process_frame
+			return
+	if candidate:
+		body.set_meta("f36_pose_preview", true)
+		body.call("_build_placeholder")
+	var measured_height := _measured_height(body)
 	var resting_bounds := RENDER_BOUNDS.measure(body)
+	if _asset_candidate and measured_height < installed_height - 0.02:
+		_pose_failures.append("%s: asset preview shrinks installed height %.3f to %.3f" % [id, installed_height, measured_height])
 	if whole_body:
 		# One conservative standing-envelope camera per species, shared by both
 		# variants and every sampled pose. Never rescale the creature or change
@@ -126,9 +159,6 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 		_pose_failures.append("%s: installed model missing; capsule cannot establish visual scale" % id)
 	if _scale_only and absf(measured_trainer - TRAINER_HEIGHT) > 0.02:
 		_pose_failures.append("%s: trainer ruler renders %.3fm rather than %.2fm" % [id, measured_trainer, TRAINER_HEIGHT])
-	if candidate:
-		body.set_meta("f36_pose_preview", true)
-		body.call("_build_placeholder")
 	if candidate and not bool(body.get_meta("f36_pose_candidate_installed", false)):
 		_pose_failures.append("%s: F36 candidate did not install" % id)
 		body.queue_free()
@@ -178,10 +208,12 @@ func _capture_species_poses(id: String, candidate: bool, whole_body: bool, out: 
 	else:
 		file.store_string(JSON.stringify({"species": id, "candidate": candidate, "stage_only": true,
 			"material_candidate": _material_candidate,
-			"scale_only": _scale_only, "installed_model": bool(body.call("has_model")),
+			"asset_candidate": _asset_candidate, "asset_path": asset_path, "asset_sha256": asset_hash,
+			"installed_reference_height_m": installed_height,
+			"scale_only": _scale_only, "installed_model": bool(body.call("has_model")) and not _asset_candidate,
 			"source_commit": source, "renderer": RenderingServer.get_current_rendering_method(),
 			"standing_height_m": measured_height, "trainer_reference_height_m": TRAINER_HEIGHT,
-			"trainer_measured_height_m": measured_trainer, "scale_scope": "Installed standing stage; no fight-scale claim",
+			"trainer_measured_height_m": measured_trainer, "scale_scope": "Explicit asset preview standing stage; no fight-scale claim" if _asset_candidate else "Installed standing stage; no fight-scale claim",
 			"whole_body_camera": whole_body, "camera_position": [_camera.global_position.x, _camera.global_position.y, _camera.global_position.z],
 			"camera_fov": _camera.fov, "resting_size_m": [resting_bounds.size.x, resting_bounds.size.y, resting_bounds.size.z],
 			"resolution": [root.size.x, root.size.y], "planned_frames": roles.size() * phases.size(),

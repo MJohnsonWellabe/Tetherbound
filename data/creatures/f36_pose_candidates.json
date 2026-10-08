@@ -1263,7 +1263,13 @@
         "rear_upper_r",
         "rear_lower_r"
       ],
-      "profile": "quadruped_1"
+      "profile": "quadruped_1",
+      "asset_candidate": {
+        "model": "res://assets/creatures/tetherbound/cloudfang/models/creature_cloudfang_f36_material_v1.glb",
+        "source_sha256": "b6c5f6e2ae03fc521dd4a6f0612142b825369b43ed140cc03f452b4e192fa57d",
+        "scope": "capture_only_client_presentation",
+        "status": "DCC_material_identity_deformation_PASS_native_pending_OFF"
+      }
     },
     "cliffspike": {
       "model": "res://assets/creatures/tetherbound/cliffspike/models/creature_cliffspike_lod0.glb",

@@ -26,9 +26,11 @@
     "enable_original_uv": false,
     "input": "installed fullbody GLB, existing creature prompt plus inspected reference image",
     "before_balance": 13325,
-    "status": "submitted_pending_inspection",
+    "status": "SUCCEEDED",
     "night_cap": 30,
-    "night_submissions": 9
+    "night_submissions": 9,
+    "after_balance": 13315,
+    "observed_credit_cost": 10
   },
   "remaining": [
     "material identity beforeafter judge",
