@@ -1250,7 +1250,12 @@ func _walk_to_home_bed(driver: RefCounted, prompt: Node3D, stance: Dictionary) -
 	var from: Vector2 = Vector2(_player.global_position.x, _player.global_position.z) if points.is_empty() else points.back()
 	var target: Vector3 = stance.at
 	var pad_route: Array[Vector2]
-	if bool(stance.get("remote_north", false)):
+	if _arbiter.call("winning_provider") == prompt \
+			and bool((_arbiter.call("winner") as Dictionary).get("actionable", false)):
+		# A return from the actual bed panel may already offer this exterior
+		# prompt. The unchanged frame/settle guards validate it before use.
+		pad_route = [from]
+	elif bool(stance.get("remote_north", false)):
 		var excluded := footprint.grow(float(stance.clearance))
 		var polygon := PackedVector2Array([excluded.position,
 			Vector2(excluded.end.x, excluded.position.y), excluded.end,
