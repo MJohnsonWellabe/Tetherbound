@@ -1,12 +1,11 @@
 {
- "updated": "2026-10-08T08:30Z",
+ "updated": "2026-10-08T11:00Z",
  "headline": [
-  "3:30 AM CT Thu 08 Oct: 158 criteria met, 157 on main and F37#2 in consolidation 10.",
-  "1:10–3:10 AM CT: 1 whole criterion (B F37#2); coordinator PACE shows 0 from all lanes; 25 QUESTION posts (file reservations and review relays).",
-  "11:10 PM–1:10 AM CT: 3 whole criteria (E F10#4, B F37#0, F37#1); lanes A, C, D none since 9:10 PM; 13 QUESTIONs despite the rule.",
-  "Restored the 3:10–5:10 PM process at 10:50 PM CT: no QUESTIONs, READY = one whole criterion, criterion-only visuals, smallest closable first, park after 2 hours.",
-  "Held: F43#0–#3 with the CI-FLAKE fence and shared-fence repairs (forward_camp still open; catch and party-count test fixes and 5e9e121a8 outside the scope), F48#2, F31#2, F02#0/#1.",
-  "9:10–11:10 PM CT: lanes A, B, D and E posted no whole-criterion READYs; lane C re-READYed F46#2 and F43."
+  "6:00 AM CT Thu 08 Oct: 158 criteria met on main; F42#0 in consolidation 11b (159 when it merges).",
+  "Consolidation 11 (PR #586) failed two Stormwood/Tidewake save and ledger smokes in lane C's co-op repair set; 11b carries only D F42#0, and C F31#2 with its set goes back to lane C.",
+  "3:10–5:10 AM CT: 2 whole criteria (C F31#2, D F42#0) and 41 QUESTION posts; lane B had five full earned-run FAILs on the local GPU machine; D and E were blocked waiting for it.",
+  "Owner 5:36 AM CT: earned proofs run as parallel segments on hosted runners. Owner 5:37 AM CT: D and E get local GPU priority; every Codex session resets to a fresh context.",
+  "Since then: E's Cloudreach F40 High capture is running on the local GPU; A's mounted Heal proof passed (Dash still blocked)."
  ],
  "batches": [
   {
@@ -494,33 +493,45 @@
    "sha": "",
    "state": "CI running",
    "contents": "F37#2 human-swimmable water routes (test and evidence)."
+  },
+  {
+   "name": "Consolidation 11",
+   "sha": "b60f53b5",
+   "state": "Red: Stormwood/Tidewake save-ledger smokes (lane C set); replaced by 11b",
+   "contents": "F42#0 map/UI (lane D); F31#2 + complete C co-op repair set with F43#0–#3 and F48#2 (lane C)"
+  },
+  {
+   "name": "Consolidation 11b",
+   "sha": "pending",
+   "state": "In CI",
+   "contents": "F42#0 map/UI (lane D)"
   }
  ],
  "lanes": [
   {
    "lane": "tb/codex-a (Codex A: combat, moves, commands)",
-   "now": "F25#2, #3, #5 and F35#2, #4 READY.",
-   "next": "F25#0/#4, F35#1/#3, F21#4."
+   "now": "Mounted Heal proof PASS (run 37763319762); F23#2 Dash blocked after two attempts on a 2 cm contact gap.",
+   "next": "Close F23#2 or park it; next smallest A criterion after the reset."
   },
   {
    "lane": "tb/codex-b (Codex B: earned route, story, ending)",
-   "now": "F20#1, #4, F01#3 and F19#0 READY; F49#0 route run continuing.",
-   "next": "F49#0."
+   "now": "Earned Relay preparation failed again at 5:25 AM CT (fifth full run); switching to parallel hosted segments.",
+   "next": "F49#0 segments in parallel; F02#0/#1 source to land."
   },
   {
    "lane": "tb/codex-c (Codex C: power, homestead, economy, co-op)",
-   "now": "Flaky co-op smoke fixes (12/12 runs PASS), F30#0, F32#4, F48#2, F43#0–#3 READY.",
-   "next": "F46#2, F28#2–#4."
+   "now": "F31#2 with the co-op repair set failed Stormwood water gate and Tidewake swimming save smokes in PR #586; bounced.",
+   "next": "Fix the retained-transaction save conflict and Waterward ledger op, then re-READY the whole set."
   },
   {
    "lane": "tb/codex-d (Codex D: Meadows, village, Tidewake visuals)",
-   "now": "F26#4 frame-time matrix READY.",
-   "next": "Next smallest D criterion."
+   "now": "F42#0 in PR #586; F38#3 farmhouse window glass fix waiting for the local GPU.",
+   "next": "F26#3/F17#6 Hall and F38#3 captures on the local GPU (priority)."
   },
   {
    "lane": "tb/codex-e (Codex E: Cloudreach, Stormwood, art, audio)",
-   "now": "F41#4 and F40#4 READY; Meshy ledger snapshot.",
-   "next": "Next smallest E criterion."
+   "now": "F40 Cloudreach High capture running on the local GPU now.",
+   "next": "F40#0 judge, then F41 views on the local GPU."
   },
   {
    "lane": "tb/ci-speed (Claude)",
