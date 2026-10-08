@@ -747,6 +747,19 @@ func _capture_water_frame(game: Node, context: Dictionary, phase: String, finish
 				and Vector2(swimming.state.safe_landing.x - finish.x, swimming.state.safe_landing.z - finish.z).length() < 0.1
 		if not ready:
 			return
+		# The original route may pass beneath a pier. Observe its next clear
+		# native frame without moving the camera/body or stalling the walk.
+		# Ray tests use the installed live skeleton, not a visual proxy.
+		if phase == "midwater":
+			var rig := model.call("skeleton") as Skeleton3D
+			for bone_name: String in ["Hips", "Spine02"]:
+				var bone := rig.find_bone(bone_name)
+				if bone < 0: return
+				var point := rig.to_global(rig.get_bone_global_pose(bone).origin)
+				if view.is_position_behind(point): return
+				var ray := PhysicsRayQueryParameters3D.create(view.global_position, point,
+					player.collision_mask, [player.get_rid()])
+				if not player.get_world_3d().direct_space_state.intersect_ray(ray).is_empty(): return
 		var snapshot := _water_capture_snapshot(game)
 		if snapshot.character_id != _water_capture_identity or snapshot.player_instance_id != _water_capture_body_id \
 			or snapshot.party_uids != _water_capture_party_uids or snapshot.mounted or snapshot.mount_body_present \

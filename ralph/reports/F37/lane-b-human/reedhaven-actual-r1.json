@@ -1,0 +1,81 @@
+{
+  "criterion": "F37#2 route2 component; full criterion OPEN",
+  "source_sha": "eb96e8f11370b43894685af923125ed1343d0786",
+  "run_id": 37705701376,
+  "artifact_id": 11519866622,
+  "route": "reedhaven_to_brine_steps_sheltered",
+  "hops": 2,
+  "actual_exit": 0,
+  "elapsed_s": 416,
+  "assertions": 124,
+  "failed": 0,
+  "engine_errors": 0,
+  "script_errors": 0,
+  "minimum_stamina_pct": [
+    75.87,
+    75.69
+  ],
+  "actual_swim_m": [
+    31.52,
+    31.773
+  ],
+  "commanded_ratio_vs_path": 1.155,
+  "health": 100,
+  "character_id": "character-cbef9af51af73c046b4f4309558a333f",
+  "ordered_uids": [
+    "creature-f054c0f8d3b31ee13d390c79534d7cb6",
+    "creature-05a1c9ba7708517962301f07b9ff9cf0",
+    "creature-280d00e6916ab4154d2929248026b6d3",
+    "creature-dac30cb89ac261ef08bc8712d32dc3c2",
+    "creature-6369995b959ffa5c1bf43343dc1c7b42"
+  ],
+  "all_four_same_identity": true,
+  "fixture": {
+    "camera_and_hud": "unchanged",
+    "dry_recovery": "natural regeneration",
+    "earned_route": false,
+    "input": "existing InputEventAction",
+    "one_dry_start_position_write_per_hop": true,
+    "original_five_granted": [
+      {
+        "level": 44,
+        "species": "terrapup"
+      },
+      {
+        "level": 43,
+        "species": "bramblebun"
+      },
+      {
+        "level": 42,
+        "species": "mudsnout"
+      },
+      {
+        "level": 42,
+        "species": "pipwing"
+      },
+      {
+        "level": 41,
+        "species": "trailpup"
+      }
+    ],
+    "realm_and_departure_flag_seeded": true,
+    "swimming_xp_pinned_zero": true
+  },
+  "warnings": "V-Sync/deprecation only; zero engine/script errors",
+  "review": {
+    "reviewer": "b_f37_review",
+    "verdict": "APPROVE scoped actual route behavior"
+  },
+  "visual": {
+    "reviewer": "b_night_visual",
+    "verdict": "BLOCK endpoint set",
+    "blocked_frame": "01-midwater.png",
+    "reason": "Pier deck hides trainer below head/shoulders; immersion/body clearance unassessable. Occlusion or intersection cause not established by still.",
+    "other_frames": "02-midwater and both dry arrivals scoped PASS recognizable trainer/readable shore and HUD",
+    "open": "Continuous motion/transitions, visible named destinations, controller cues, remaining five routes, full Visual Bars A/B"
+  },
+  "follow_up": "Read-only installed live-bone camera ray guard source APPROVE; unchanged route/default camera/input/budgets; changed capture runtime pending, originalBLOCK retained",
+  "contact": "reedhaven-contact.jpg",
+  "raw": "Original4PNG/JSON only artifact11519866622",
+  "flags": "none; Ripplet presentation OFF"
+}

@@ -18,7 +18,20 @@
     "main": "Matching f49 base optional-heading/last_approach delta plus four derived edits; retain all unrelated main and lane hunks. Exact2file015e delta only.",
     "excluded": "UnREADY F46 captures/reader and strict arrival/journal/bounty ancestry; no whole branch landing"
   },
-  "runtime": "Pending named affected logic and same original two-peer ending smoke on repaired cut; no READY",
+  "runtime": "Same original two-peer ending smoke dispatched on7f326; actual result/independent review pending, no READY",
   "flags": "none",
-  "original_raw": "Original artifact11519182107 raw peer logs and parent run.log retained unchanged"
+  "original_raw": "Original artifact11519182107 raw peer logs and parent run.log retained unchanged",
+  "logic": {
+    "run": 37706566366,
+    "source": "7f326043d32441400f7d3a5f0ffe3beef81f05b3",
+    "artifact": 11519732553,
+    "file": "tests/test_f18_arrival_lifecycle.gd",
+    "tests": 6,
+    "assertions": 172,
+    "failed": 0,
+    "exit": 0,
+    "elapsed_s": 6,
+    "engine_errors": 0,
+    "script_errors": 0
+  }
 }
