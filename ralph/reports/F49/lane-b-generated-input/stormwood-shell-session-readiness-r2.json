@@ -32,13 +32,41 @@
   "runtime": {
     "run_id": 37813227735,
     "source": "4476d37ac865f8033c8d4b70fdbe8fd8d8501587",
-    "label": "b-generated-homecoming-ready-r2",
-    "status_at_capture": "LIVE",
-    "segment": "homecoming",
-    "input_mode": "generated_fixture",
-    "continuous_fresh_save": false,
-    "prior_earned_play": false,
-    "scope": "Existing earned_chain_runner and authored generated boundary template; no failed-save input or fresh/native/visual acceptance. Terminal proof and original behavioral review required."
+    "artifact_id": 11566927651,
+    "artifact_sha256": "1e268088283a2083486d6837a76b0d07d9990508c5c111cc5f40dc18acd19b70",
+    "log": "ci-generated-homecoming-readiness-37813227735.log.gz",
+    "log_sha256": "7a5733cc21dd0d755c1eb4c37f2ac06e416e4c3169a39a21fd3a249c6222a0cc",
+    "verdict": "Original b_f49_review Bacon BEHAVIOR FAIL",
+    "actual_packets": {
+      "FRESH CAMPAIGN RESULT": {
+        "campaign_complete": false,
+        "checkpoints": [],
+        "counts_as_proof": false,
+        "cumulative_elapsed_seconds": 856.977,
+        "dry_run": false,
+        "elapsed_seconds": 856.977,
+        "failures": [
+          "F49 completed-world production Load did not become ready"
+        ],
+        "local_chains": [],
+        "reached": "title",
+        "requested_prefix_passed": false,
+        "resume": {},
+        "resumed_from": "",
+        "scratch": "user://f49_campaign_2686_11139"
+      },
+      "GENERATED CHAPTER PROCESS": {
+        "continuous_fresh_save": false,
+        "exit_code": 1,
+        "input_mode": "generated_fixture",
+        "prior_earned_play": false,
+        "segment": "homecoming",
+        "source": "4476d37ac865f8033c8d4b70fdbe8fd8d8501587"
+      }
+    },
+    "script_errors": [],
+    "bounded_summary": "D:/CodexTemp/tetherbound-lanes-full-access/b-original-homecoming-ready-terminal-r2.txt",
+    "cause_limit": "Initial Stormwood Load timed out before Home Key. Rejecting shell-readiness operand unobserved; prior refusal correction not proved. No accepted boundary, failed-save reuse, return/hanging/Grandpa/credits/completed-world Load claim."
   },
   "invariants": "Original build/lifetime/Load equality, durable HomeKey/hanging/ending transactions, ordered five and generated-origin disclosures retained. No failed saves are inputs; no native or visual claim.",
   "whole_criterion_closed": false,
@@ -48,5 +76,6 @@
     "source": "4476d37ac865f8033c8d4b70fdbe8fd8d8501587",
     "summary": "Exact live mounted director Session binding required; lifetime checks and typing sound. No circular wait, population-completion gate, state write or Load/input bypass. Prior refusal sole cause unproved.",
     "bounded_summary": "D:/CodexTemp/tetherbound-lanes-full-access/b-original-stormwood-ready-source-r2.txt"
-  }
+  },
+  "disposition": "Parked; exact pre4476 Stormwood world source restored at5266fe4fcb. Candidate and terminal evidence retained. Separate validated lesson option forwarding remains pending original review."
 }
