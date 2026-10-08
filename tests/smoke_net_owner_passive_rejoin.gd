@@ -140,6 +140,20 @@ func _spawn_peer(i: int, role: String, control_port: int, enet_port: int, scene:
 	OS.set_environment("XDG_DATA_HOME", home)
 	OS.set_environment("TB_NET_RUN_ID", _run_id)
 	OS.set_environment("TB_WORLD_SEED", "0")
+	if OS.has_feature("windows"):
+		var roaming := home.path_join("AppData/Roaming")
+		var local := home.path_join("AppData/Local")
+		for directory: String in [roaming, local]:
+			if DirAccess.make_dir_recursive_absolute(directory) != OK:
+				push_error("Cannot create peer profile directory: " + directory)
+				return -1
+		OS.set_environment("APPDATA", roaming)
+		OS.set_environment("LOCALAPPDATA", local)
+		OS.set_environment("USERPROFILE", home)
+		var separator := args.find("--")
+		args.insert(separator, "--log-file")
+		args.insert(separator + 1, log_path)
+		return OS.create_process(exe, args)
 	var parts: Array[String] = [_shq(exe)]
 	for a in args:
 		parts.append(_shq(str(a)))
