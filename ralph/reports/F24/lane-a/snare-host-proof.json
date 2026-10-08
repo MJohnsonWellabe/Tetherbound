@@ -91,6 +91,25 @@
     "commit": "7457d4aae3bcd545597efe503535773f8c4e6b56",
     "original_source_review": "SOURCE APPROVE /root/f25_medium_review",
     "required_affected_proof": "tests/run_tests.gd --only=test_f24_host_commands.gd",
-    "disposition": "New ingress/input/binding capability guard only; runtime/network/UI flags OFF, rollout all. Actual shipping activation withheld because legacy runtime gate failed. Durable continuations and command math unchanged."
+    "disposition": "New ingress/input/binding capability guard only; runtime/network/UI flags OFF, rollout all. Actual shipping activation withheld because legacy runtime gate failed. Durable continuations and command math unchanged.",
+    "affected_proof": {
+      "run_id": 37823441904,
+      "artifact_id": 11570327538,
+      "job_id": 113470084005,
+      "checkout_commit": "7457d4aae3bcd545597efe503535773f8c4e6b56",
+      "script": "tests/run_tests.gd",
+      "args": "--only=test_f24_host_commands.gd",
+      "tests": 35,
+      "assertions": 1571,
+      "failed": 0,
+      "exit": 0,
+      "log_sha256": "bb70c1bf6628fb939a4a37ee932d31d07f6e7919989a0ad27b88c95f2502490a",
+      "original_review": "ARTIFACT APPROVE /root/f25_medium_review; affected logic proof satisfied, mounted runtime/activation unproved"
+    }
+  },
+  "park_review": {
+    "candidate_commit": "9be505de78fc3fa2681b9953b2963c40233fe410",
+    "reviewer": "/root/f25_medium_review",
+    "verdict": "Artifact/disposition APPROVE; F24#3 PARKED OPEN, flags OFF; no unchanged retry or budget extension; no corrections found"
   }
 }
