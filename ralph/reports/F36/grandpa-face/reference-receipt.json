@@ -1,0 +1,50 @@
+{
+  "reference_sha256": "1ea6457203a80eba92299113297d06711636819c879910fe4481a9b80e793997",
+  "shipping": "installed asset unchanged; candidate OFF",
+  "subject": "grandpa",
+  "output_id": "exec-ba032b1f-637d-4bef-8636-6c86d03acb2a",
+  "inspection": "PASS reference: same elderly warm face, swept grey curls, thick brows, long rounded nose, short full beard and kind concerned expression. Single head crop preserves original identity; no wardrobe/body change.",
+  "status": "inspected_reference_only_NOT_ACCEPTED_ASSET",
+  "remaining_gates": [
+    "Meshy candidate inspection",
+    "installed-body head graft/rig",
+    "1.80m trainer relative scale",
+    "native poses",
+    "code-blind gameplay-distance before/after",
+    "integrated provenance"
+  ],
+  "source_review": "review_f36_cap APPROVE bounded CLI/prompt source; four existing Meshy tests PASS",
+  "generation_id": "01a1165c-0a9f-7790-b465-9467a010ef37",
+  "inputs": [
+    {
+      "path": "assets/creatures/tetherbound/grandpa/reference/head.png",
+      "sha256": "e11f385d97095fd8a4583b479f2c95b3016861d9eef7904de27f0fbf54f3103b"
+    },
+    {
+      "path": "assets/creatures/tetherbound/grandpa/reference/front.png",
+      "sha256": "d1495889815b13f18910bd11b588f61260317674b096ab9ba9bb103e2b2adb62"
+    },
+    {
+      "path": "assets/ui/portraits/grandpa.png",
+      "sha256": "db806b81510a9b04498ac08dd2a01cfd70bfd7863444b6d34c3656f56fdb0706"
+    }
+  ],
+  "criterion": "F36#0",
+  "reference": "assets/characters/grandpa/reference/f36-face-v1.png",
+  "transparent_background": false,
+  "tool": "image_gen.imagegen",
+  "prompt": "Create one identity-preserving production sculpture reference for the SAME installed Grandpa character in these two Tetherbound reference images. Image 1 defines his head identity; image 2 defines clothing and proportions. Crop: a single centered three-quarter head and short neck, facing nearly forward, with the complete hair silhouette and ears visible, no shoulders or scarf, isolated on plain pale grey. Refine only anatomical definition and clean sculpted surface quality for image-to-3D head generation: readable deep-set warm dark eyes with modeled lids, grey eyebrows, kind slightly concerned elderly expression, same long rounded nose, same softly squared jaw and short full grey beard and moustache; swept wavy silver hair with the same uneven side curls and part. Preserve perceived ethnicity, elderly age, head width/height, forehead, face likeness, ear placement, hair length and all recognizable features from the references. Art style: stylized premium creature-expedition game character sculpt, warm natural skin, coherent softened forms, crisp actual facial geometry rather than painted lines, restrained roughness, clean rounded clumps of hair and beard. Neutral even studio illumination showing eye sockets, cheeks and lips, no dramatic shadows. No new character redesign, no ornaments, no red accents, no text, no labels, no extra views, no pedestal, no photoreal pores, no heroic younger face. Intended as a faithful face refinement of the existing Grandpa, not a replacement identity.",
+  "meshy_task_id": "01a118ab-c9e1-7121-b488-52473510552c",
+  "meshy_submission": {
+    "polycount": 30000,
+    "cap": 30,
+    "estimated_existing_credit_cost": 20,
+    "balance_before": 13355,
+    "status": "submitted_pending_inspection",
+    "night": "2026-10-07",
+    "mode": "preview",
+    "candidates": 1,
+    "running_count": 7,
+    "endpoint": "/openapi/v1/multi-image-to-3d"
+  }
+}

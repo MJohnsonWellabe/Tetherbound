@@ -1,7 +1,7 @@
 {
   "subject": "stormursa",
   "working_name": "Stormursa",
-  "status": "drafted_inspected_reference_only_not_runtime_art_PASS",
+  "status": "local_material_attempts_BLOCK_reference_shoulder_forms_unresolved_OFF",
   "method": "built_in_imagegen",
   "prompt": "Use case: stylized-concept. Asset type: original Tetherbound Stormursa image-to-3D reference. Input image 1 is an established identity reference for Staticub, not an edit target. Generate ONE clean full-body three-quarter studio view of Staticub grown into an adult Stormwood storm bear. Preserve the rounded bear ears, blue eyes, broad muzzle and lightning-fur family resemblance of the reference. Broad shoulders, massive forepaws, short tail, natural bear anatomy, four separate visibly articulated legs and paws with grounded weight; balanced neutral standing posture, mouth closed, face clearly visible. F29 settled direction: muted slate-violet fur, warm copper colored horn-like shoulder ridges, restrained small translucent glass accents, fine white-violet lightning seams in fur with no floating sparks or haze. Read as a 4.10-meter withers-height adult compared with Staticub 3.25m, without adding a scale ruler or person. Tactile stylized fur masses, original high-quality creature adventure design. Plain neutral light gray background, even studio lighting, whole body and all four paws fully inside frame, no props, no clothing, no mechanical armor, no text, no logos, no Team Tether red. Produce a riggable coherent single body, avoid fused limbs, avoid floating decoration, do not copy comparison-game characters.",
   "reference": "res://assets/creatures/tetherbound/stormursa/reference/f36-three-quarter-v1.png",
@@ -11,11 +11,98 @@
     "family_resemblance": "Rounded ears, blue eyes, broad muzzle, four separate paws, brown/slate-violet fur and lightning seams preserved. Adult shoulder and forepaw mass increased.",
     "palette": "Copper shoulder ridges and small glass seams match F29 brief; visible fur retains source brown family resemblance.",
     "limitations": "Studio single view does not prove 4.10m size, closed topology, rig contact, reverse anatomy or gameplay appeal. Strong copper shoulder masses and fine fur detail need native readability review.",
-    "disposition": "Inspected image-to-3D reference; one guarded preview submitted. Rig, scale, full pose set and native art acceptance remain open."
+    "disposition": "Inspected original reference reused for three guarded tasks. Debris-only anatomy and local no-weld rig/deformation subgates passed. Task3 textured appearance BLOCK: scattered copper patches, unclear shoulder forms/lightning seams and muddy fur. No further texture/rig-service retry; default disabled; F29#3 native full-bar/scale/pose gates OPEN."
   },
   "meshy_task_ids": [
-    "01a1165e-e5b9-754f-8aaf-ff5f40c68d64"
+    "01a1165e-e5b9-754f-8aaf-ff5f40c68d64",
+    "01a11671-f9fa-746e-8e29-98fc32496010",
+    "01a1169c-70ef-77b1-856a-32d3120cc810",
+    "01a11758-bd56-737c-91e6-2c260913964f"
   ],
   "default_enabled": false,
-  "existing_f29_provenance": "source/provenance.json stays disabled and unearned; this separate receipt does not flip acceptance gates."
+  "existing_f29_provenance": "source/provenance.json stays disabled and unearned; this separate receipt does not flip acceptance gates.",
+  "local_material_transfer": {
+    "scope": "Staged client asset candidate only; no gameplay/durable state or shipping flag change",
+    "resolution": 2048,
+    "fur_hue": 0.69,
+    "fur_saturation_scale": 0.65,
+    "fur_value_scale": 0.95,
+    "shoulder_radius_height": 0.3,
+    "copper_linear_rgba": [
+      0.42,
+      0.19,
+      0.07,
+      1
+    ]
+  },
+  "local_material_attempts": [
+    {
+      "method": "selected_to_active_colour_projection",
+      "evidence": "ralph/reports/F29/stormursa-local-colour-verdict.json",
+      "sha256": "b11be009fed5da436a1a16a7043a62296397f182b9b9769c6405eaa823bce99d",
+      "result": "BLOCK"
+    },
+    {
+      "method": "nearest_surface_UV_colour",
+      "evidence": "ralph/reports/F29/stormursa-local-surface-verdict.json",
+      "sha256": "d3c58b909909c35cd4a97803513cf4062b8d8d1883a62afb5d6d69e5482dd21b",
+      "result": "BLOCK"
+    }
+  ],
+  "shoulder_component": {
+    "reference": "res://assets/creatures/tetherbound/stormursa/reference/f36-shoulder-component-v1.png",
+    "reference_sha256": "7b7d905952d003660d46ec9217f508a1c04c4efcacb78bad1f834e8e004230a4",
+    "method": "built_in_imagegen_derivative_of_existing_identity_reference",
+    "identity_reference_unchanged": "res://assets/creatures/tetherbound/stormursa/reference/f36-three-quarter-v1.png",
+    "prompt": "Isolated left shoulder component, three connected overlapping raised natural copper horn ridges with jagged swept-back points, genuine thickness, concave shoulder-fitting underside, small violet-white inset faceted glass; established Stormursa shoulder identity only, no bear body or mechanical armour. Even neutral studio lighting, plain grey background, whole component visible. Pair must fit2816total additions under30000composite triangles.",
+    "inspection": "Connected organic copper ridge silhouette, thickness, recessed faceted glass and concave underside observed. This reference does not prove generated topology, composite fit, skin deformation or native acceptance.",
+    "task_id": "01a11758-bd56-737c-91e6-2c260913964f",
+    "model_type": "smart-topology",
+    "ai_model": "meshy-t2",
+    "requested_faces": 1400,
+    "enable_pbr": true,
+    "observed_credit_cost": 15,
+    "owner_allocation": "https://github.com/MJohnsonWellabe/Tetherbound/issues/572#issuecomment-6042684639",
+    "default_enabled": false
+  },
+  "component_attachments": {
+    "addition_triangle_budget": 2816,
+    "total_triangle_budget": 30000,
+    "parts": [
+      {
+        "name": "StormursaCopperShoulderL",
+        "anchor_bone": "front_upper_l",
+        "offset_height": [
+          -0.035,
+          0.1,
+          0.25
+        ],
+        "rotation_deg": [
+          0,
+          -60,
+          -90
+        ],
+        "height_ratio": 0.4,
+        "mirror_world_x": false,
+        "rigid_skin_bone": "spine"
+      },
+      {
+        "name": "StormursaCopperShoulderR",
+        "anchor_bone": "front_upper_r",
+        "offset_height": [
+          0.035,
+          0.1,
+          0.25
+        ],
+        "rotation_deg": [
+          0,
+          -60,
+          -90
+        ],
+        "height_ratio": 0.4,
+        "mirror_world_x": true,
+        "rigid_skin_bone": "spine"
+      }
+    ]
+  }
 }

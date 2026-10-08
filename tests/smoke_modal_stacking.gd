@@ -33,6 +33,7 @@ const CONVERSATION := "grandpa_house"
 
 var _failures: Array[String] = []
 var _menu: CanvasLayer = null
+var _capture_output := ""
 
 
 func _init() -> void:
@@ -40,6 +41,15 @@ func _init() -> void:
 
 
 func _run() -> void:
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--capture-output="):
+			_capture_output = argument.trim_prefix("--capture-output=")
+	if not _capture_output.is_empty():
+		if not _capture_output.begins_with("res://shots/") or _capture_output.contains(".."):
+			push_error("Modal captures must stay under res://shots/")
+			quit(1)
+			return
+		DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_capture_output))
 	# `_init()` runs before the autoloads are mounted, so asking for `Game` right
 	# away finds nothing and reports it as a missing autoload — a false failure
 	# that would look exactly like project.godot's `[autoload]` block breaking.
@@ -56,10 +66,23 @@ func _run() -> void:
 		print("FAIL: the autoload did not stand up the menu")
 		quit(1)
 		return
+	if not _capture_output.is_empty():
+		# Select the real last-input device with a parsed controller edge;
+		# there is no world actor for this sprint binding to move or affect.
+		var pad_edge := InputEventJoypadButton.new()
+		pad_edge.button_index = JOY_BUTTON_LEFT_STICK
+		pad_edge.pressed = true
+		Input.parse_input_event(pad_edge)
+		await process_frame
+		pad_edge.pressed = false
+		Input.parse_input_event(pad_edge)
+		await process_frame
 
 	await _check_the_shell_opens_with_nothing_in_the_way()
 	await _check_the_shell_refuses_over_the_starter_picker()
 	await _check_the_shell_refuses_over_a_conversation()
+	await _check_lessons_own_skip_and_menu_input()
+	await _check_lesson_service_departures(game)
 
 	print("")
 	if _failures.is_empty():
@@ -162,12 +185,143 @@ func _check_the_shell_refuses_over_a_conversation() -> void:
 	print("dialogue: shell refused while a conversation was on screen")
 
 
+## Real configured lesson cards; this proves local input/lifecycle only, not
+## earned unlocks, character receipts, persistence or comprehension at a gate.
+func _check_lessons_own_skip_and_menu_input() -> void:
+	var owner := preload("res://scripts/ui/input_owner.gd")
+	var rules := preload("res://scripts/onboarding/lesson_rules.gd")
+	var lesson := preload("res://scripts/onboarding/lesson_panel.gd").new()
+	root.add_child(lesson)
+	var acknowledgements: Array[String] = []
+	lesson.dismissed.connect(func(id: String) -> void: acknowledgements.append(id))
+	for source: Dictionary in rules.config().get("lessons", []):
+		var row := source.duplicate(true)
+		var dialogue: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(str(row.dialogue_path)))
+		var conversation: Dictionary = dialogue.get("conversations", {}).get(str(row.conversation), {})
+		row["speaker"] = conversation.get("speaker", "")
+		row["lines"] = conversation.get("lines", [])
+		if row.lines.is_empty():
+			_fail("lesson %s has no configured exchange" % str(row.id))
+			continue
+		for line: int in row.lines.size():
+			if not lesson.open(row):
+				_fail("lesson %s would not open for skip at line %d" % [str(row.id), line])
+				break
+			for advance_index: int in line: await _press("menu_confirm")
+			if owner.current(self) != lesson: _fail("lesson did not own input")
+			# Direct callers and physical shortcuts must obey the same guard.
+			if _menu.call("open") == true:
+				_fail("menu opened over lesson %s" % str(row.id))
+				_menu.call("close")
+			await _press("inventory")
+			if _menu.call("is_open") == true:
+				_fail("inventory shortcut stacked over lesson %s" % str(row.id))
+				_menu.call("close")
+			else: _expect_reason("lesson " + str(row.id))
+			if line == 0: await _capture_lesson(str(row.id))
+			var skip_ack_count := acknowledgements.size()
+			await _press("menu_cancel")
+			if lesson.is_open() or _menu.call("is_open") == true or owner.current(self) != null:
+				_fail("lesson skip did not restore world input without opening pause")
+			if acknowledgements.size() != skip_ack_count + 1 or acknowledgements.back() != str(row.id):
+				_fail("lesson skip did not acknowledge exactly its own lesson")
+		# Scene/character departure disposes presentation without teaching credit.
+		var departure_ack_count := acknowledgements.size()
+		if lesson.open(row):
+			lesson.close(false)
+			for departure_frame: int in 4: await process_frame
+			if acknowledgements.size() != departure_ack_count: _fail("departing lesson granted acknowledgement")
+	# The Help/interaction edge that opens a card cannot also advance it.
+	var edge_row: Dictionary = rules.config().get("lessons", [])[0].duplicate(true)
+	edge_row["speaker"] = "Grandpa Elias"
+	edge_row["lines"] = ["First", "Second"]
+	Input.action_press("menu_confirm")
+	if lesson.open(edge_row):
+		_send("menu_confirm", true)
+		await process_frame
+		if int(lesson.get("_line")) != 0: _fail("opening confirm edge advanced lesson")
+		Input.action_release("menu_confirm")
+		_send("menu_confirm", false)
+		for edge_frame: int in 4: await process_frame
+		await _press("menu_confirm")
+		if int(lesson.get("_line")) != 1: _fail("fresh confirm did not advance lesson")
+		await _press("menu_cancel")
+	else:
+		_fail("opening-edge lesson would not open")
+		Input.action_release("menu_confirm")
+	lesson.queue_free()
+	for release_frame: int in 4: await process_frame
+	print("lessons: every configured exchange skips at every line; menu refused; departure and opening edge preserved")
+
+
+## Exercise the actual mounted service's departure handling, not just panel
+## close(false). Identity/realm changes are disclosed lifecycle inputs in this
+## isolated smoke; no unlocks or earned progression are claimed or granted.
+func _check_lesson_service_departures(game: Node) -> void:
+	var rules := preload("res://scripts/onboarding/lesson_rules.gd")
+	var owner := preload("res://scripts/ui/input_owner.gd")
+	var service := preload("res://scripts/onboarding/lesson_service.gd").attach(game)
+	service.set_process(false)
+	var panel: CanvasLayer = service.get("_panel")
+	var player: RefCounted = game.get("local")
+	var identity: String = str(player.get("character_id"))
+	var realm: String = str(game.get("current_realm"))
+	var flags: Array = player.get("flags").call("all_set").duplicate()
+	var acknowledgements: Array[String] = []
+	var observe := func(id: String) -> void: acknowledgements.append(id)
+	panel.connect("dismissed", observe)
+	service.call("_process", 0.0)
+	var row: Dictionary = rules.config().get("lessons", [])[0].duplicate(true)
+	var dialogue: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(str(row.dialogue_path)))
+	var conversation: Dictionary = dialogue.get("conversations", {}).get(str(row.conversation), {})
+	row["speaker"] = conversation.get("speaker", "")
+	row["lines"] = conversation.get("lines", [])
+	for departure: String in ["character", "realm"]:
+		if not panel.call("open", row):
+			_fail("mounted lesson service would not open for " + departure + " departure")
+			continue
+		if owner.current(self) != panel: _fail("mounted lesson service did not own input")
+		if departure == "character": player.set("character_id", identity + "-departed")
+		else: game.set("current_realm", "water" if realm != "water" else "meadows")
+		service.call("_process", 0.0)
+		for departure_frame: int in 4: await process_frame
+		if panel.call("is_open") == true or owner.current(self) != null:
+			_fail("service " + departure + " departure did not release the lesson/world input")
+		if not acknowledgements.is_empty() or not (service.get("_pending") as Dictionary).is_empty() \
+				or player.get("flags").call("all_set") != flags:
+			_fail("service " + departure + " departure acknowledged a lesson for either identity")
+		player.set("character_id", identity)
+		game.set("current_realm", realm)
+		service.call("_process", 0.0)
+	panel.disconnect("dismissed", observe)
+	service.queue_free()
+	for release_frame: int in 4: await process_frame
+	print("lesson service: actual character/realm departures release input without dismissal or lesson receipt")
+
+
+## Optional native frames from this existing smoke's actual configured cards.
+## The default headless proof has no capture waits or output changes.
+func _capture_lesson(id: String) -> void:
+	if _capture_output.is_empty(): return
+	await RenderingServer.frame_post_draw
+	var frame := root.get_texture().get_image()
+	if frame == null or frame.is_empty():
+		_fail("modal capture has no native viewport: " + id)
+		return
+	if frame.save_png(_capture_output.path_join(id + ".png")) != OK:
+		_fail("modal capture could not be written: " + id)
+
+
 ## A refusal the player cannot see is the same broken-looking dead button
 ## `_flash_refusal()` was written to stop, so the hint is part of the pass.
 func _expect_reason(what: String) -> void:
-	var hint: Label = _menu.get_node_or_null(^"RefusalHint") as Label
+	var hint: Label = _menu.get_node_or_null(^"RefusalStatus/RefusalHint") as Label
 	if hint == null:
 		_fail("the shell refused over %s with no RefusalHint node to explain it" % what)
+		return
+	if not hint.get_parent() is CanvasLayer or (hint.get_parent() as CanvasLayer).layer <= 30 \
+		or hint.mouse_filter != Control.MOUSE_FILTER_IGNORE:
+		_fail("the refusal hint must stay above lesson shade without intercepting input")
 		return
 	if not hint.visible or hint.text.is_empty():
 		_fail("the shell refused over %s silently; the button just looks broken" % what)
