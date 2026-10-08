@@ -66,7 +66,8 @@ func _initialize() -> void:
 		push_error("Combat HUD capture requires a native hosted parent, --prove-tag-combo and TB_NET_OUT_DIR")
 		quit(1)
 		return
-	if OS.get_cmdline_user_args().has("--with-fight-camera-units") or OS.get_cmdline_user_args().has("--with-tag-units"):
+	if OS.get_cmdline_user_args().has("--with-fight-camera-units") or OS.get_cmdline_user_args().has("--with-tag-units") \
+		or OS.get_cmdline_user_args().has("--with-combat-hud-units"):
 		var selectors := PackedStringArray()
 		if OS.get_cmdline_user_args().has("--with-tag-units"):
 			# Existing files naming either changed production combat script.
@@ -99,6 +100,12 @@ func _initialize() -> void:
 				"test_wild_once.gd", "test_world_verb_input_owner_enforcement.gd"])
 		if OS.get_cmdline_user_args().has("--with-fight-camera-units") and not selectors.has("test_fight_camera.gd"):
 			selectors.append("test_fight_camera.gd")
+		if OS.get_cmdline_user_args().has("--with-combat-hud-units"):
+			# Existing files naming the changed combat_hud.gd producer.
+			for file: String in ["test_combat_hud_handheld_floors.gd", "test_combat_wind.gd", "test_harness_max_hp.gd",
+				"test_hud_presentation_lifecycle.gd", "test_hud_widgets.gd", "test_level_up_announcement.gd",
+				"test_motion_prefs.gd", "test_world_verb_input_owner_enforcement.gd"]:
+				if not selectors.has(file): selectors.append(file)
 		var unit_output: Array = []
 		var unit_code := OS.execute(OS.get_executable_path(), PackedStringArray([
 			"--headless", "--path", ProjectSettings.globalize_path("res://"), "--audio-driver", "Dummy",

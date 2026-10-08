@@ -595,7 +595,7 @@ func _process(delta: float) -> void:
 	if is_instance_valid(_system_overlay):
 		_system_overlay.hide()
 		var active: RefCounted = _manager.call("active_creature") if _manager.has_method("active_creature") else null
-		if active != null and _system_overlay.call("refresh", str(active.get("uid")), not Input.get_connected_joypads().is_empty()) == true:
+		if active != null and _system_overlay.call("refresh", str(active.get("uid")), INPUT_GLYPH.using_gamepad()) == true:
 			_grid_panel.hide()
 			if _tether_meter != null: _tether_meter.hide()
 	_update_capture_reticle()
