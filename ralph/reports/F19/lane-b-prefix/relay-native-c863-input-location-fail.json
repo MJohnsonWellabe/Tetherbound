@@ -1,0 +1,74 @@
+{
+  "criterion": "F49#0/F19#5",
+  "whole_criterion_proven": false,
+  "packet": "D:/CodexTemp/tetherbound-proof/native-b-c863d9d7a3-earned-relay-pre-r1/",
+  "process": {
+    "exit_code": 1,
+    "pid": 4460,
+    "source": "c863d9d7a3568212a2880f3750d5614e3efeb415",
+    "finished_utc": "2026-10-08T07:19:29.5452009Z",
+    "stop_reason": "",
+    "started_utc": "2026-10-08T07:19:14.2162395Z"
+  },
+  "source_after_import": {
+    "index_tree": "2c61d0a64653a63406289ef3bde8a3e6a034dbd2",
+    "head_tree": "2c61d0a64653a63406289ef3bde8a3e6a034dbd2",
+    "dirty": [],
+    "source": "c863d9d7a3568212a2880f3750d5614e3efeb415"
+  },
+  "proof": {
+    "disclosures": [],
+    "failures": [
+      "F49 compatibility producer log digest changed or is missing"
+    ],
+    "flags_gained": [],
+    "flags_total": 0,
+    "free_build": false,
+    "functional_offload": true,
+    "game_clock_seconds": -1,
+    "game_day": 1,
+    "handoff_from": "D:/CodexTemp/tetherbound-proof/native-b-ad95e0dd6f-earned-warrens-r2/earned-pieces/earned_piece_native_warrens_r2/warrens",
+    "helper_receipts": [],
+    "inventory": {},
+    "key_items": {},
+    "location": {
+      "player": [],
+      "realm": "meadows",
+      "scene": ""
+    },
+    "mode": "new_order_meadows_piece",
+    "party_after": [],
+    "party_before": [],
+    "passed": false,
+    "saved_world_seed": 1476355544,
+    "segment": "relay",
+    "wall_seconds": 0.838,
+    "world_seed_env": ""
+  },
+  "strict_load_attempted": false,
+  "movement_attempted": false,
+  "accepted_handoff": false,
+  "prefix_mutated": false,
+  "phase": "configure immutable compatibility manifests before importing the prefix",
+  "cause": "Original1861-to-55d59-manifest relocated into external inputs, changing relative producer-log resolution",
+  "missing_paths": [
+    "D:/CodexTemp/tetherbound-proof/native-b-c863d9d7a3-earned-relay-pre-r1/inputs/producer-37677583782-original.log",
+    "D:/producer-source/run.log"
+  ],
+  "correct_original_manifest_location": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/.tmp/reviewed-evidence/ralph/reports/F19/lane-b-prefix/1861-to-55d59-manifest.json",
+  "original_logs_exist_at_expected_location": true,
+  "manifest_bytes_change_required": false,
+  "prefix_hashes_recomputed": false,
+  "source_change_required": false,
+  "disposition": {
+    "agent": "b_f49_review",
+    "verdict": "APPROVE infrastructure diagnosis and ONE confirming rerun",
+    "scope": "Unchanged first manifest at its original location, other absolute-path manifests unchanged, fresh absent output; no gameplay or strictLoad PASS"
+  },
+  "issue_comment": 6054717967,
+  "remaining_gates": [
+    "Actual strictLoad compatibility",
+    "Earned ordinary Relay movement and original pre collision evidence",
+    "Later earned Hall and new-order chapter boundaries"
+  ]
+}
