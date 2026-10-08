@@ -1,0 +1,42 @@
+{
+  "criterion": "F20#3",
+  "whole_criterion_proven": false,
+  "source": "505d7e0729028b69cfd3a0a9a8e5c6463cd46dc2",
+  "run": 37771506596,
+  "status": "LIVE; no runtime verdict",
+  "script": "tests/smoke_f20_ending.gd",
+  "args": "--functional-offload",
+  "renderer": "gl_compatibility",
+  "resolution": "1280x720",
+  "fixture": "Original disclosed post-finale party/world fixture, actual Home Key/Grandpa/credits/production Title Load; no earned finale claim",
+  "eligibility": {
+    "reviewer": "b_f20_review, original reviewer",
+    "verdict": "ELIGIBILITY APPROVE one full affected endpoint",
+    "basis": "Original3c79 continuation stopped at Grandpa before content. Supported doorway fix and credits/reload56/0 retained; unrun full continuation guards remain unchanged.",
+    "original_review": "D:/CodexTemp/tetherbound-lanes-full-access/b-original-f20-full-eligibility.txt"
+  },
+  "affected_scope": [
+    "safe completed-world reload",
+    "unfinished local activities",
+    "actual three-row bounty board through ordinary input",
+    "actual endgame rematch admission"
+  ],
+  "reused_piece": {
+    "run": 37765529319,
+    "source": "1208ec90564fe2929d83e3c22d56002fe73b69a4",
+    "checks": 56,
+    "failures": 0,
+    "review": "Original FUNCTIONAL BEHAVIOR APPROVE; no duplicate credits-only run"
+  },
+  "remaining": [
+    "actual full endpoint terminal result and original independent behavior verdict",
+    "WORLD2.8 alpha respawn availability and research completion",
+    "required blind completed-world/bounty/rematch presentation verdict; native exclusively ROOT scheduled D/E"
+  ],
+  "unchanged": [
+    "All original guards and waits",
+    "Shipping runtime flags",
+    "Disclosure and fixture",
+    "No new harness, capture retry or boundary promotion"
+  ]
+}
