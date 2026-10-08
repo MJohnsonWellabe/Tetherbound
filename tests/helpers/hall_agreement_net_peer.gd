@@ -180,11 +180,9 @@ func _hall_initial_morning_ready(pin: Dictionary) -> bool:
 		if not HALL_BOUNTY.board_errors(board).is_empty() \
 				or board.get("anchor_world") != namespace_id or board.get("anchor_day") != day:
 			return false
-		var has_clock_receipt := false
-		for receipt: String in personal.get("transaction_receipts", []):
-			if receipt.begins_with("bounty:clock_") and receipt.ends_with(":" + character):
-				has_clock_receipt = true
-		if not has_clock_receipt: return false
+		var clock_receipt := "bounty:clock_%s:%s" % [
+			JSON.stringify([namespace_id, day, board.cycle]).sha256_text(), character]
+		if not (personal.get("transaction_receipts", []) as Array).has(clock_receipt): return false
 	return true
 
 func _hall_producers() -> Dictionary:
