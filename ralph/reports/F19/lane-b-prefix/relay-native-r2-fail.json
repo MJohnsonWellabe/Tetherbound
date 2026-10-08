@@ -1,0 +1,91 @@
+{
+  "criterion": "F02#2/F19#5/F49 Relay component only",
+  "verdict": "FAIL second gameplay attempt; parked",
+  "packet": "D:/CodexTemp/tetherbound-proof/native-b-3f4eb490d8-earned-relay-r2",
+  "supervisor": {
+    "exit_code": 1,
+    "source": "3f4eb490d808fbb83c836d5533de7b35d0458771",
+    "finished_utc": "2026-10-08T01:29:39.1864664Z",
+    "stop_reason": "",
+    "pid": 22336,
+    "started_utc": "2026-10-08T01:14:40.8805233Z"
+  },
+  "result": {
+    "failures": [
+      "relay: The actual captain encounter ended without victory: lost",
+      "relay: Captain victory lacks exact admitted opponents, landed kills, configured items/XP or retained-five receipts"
+    ],
+    "flags_gained": 0,
+    "location": {
+      "player": [
+        350.6220703125,
+        4.73702335357666,
+        3765.62280273438
+      ],
+      "realm": "meadows",
+      "scene": "MeadowsPlayground"
+    },
+    "party": [
+      {
+        "hp": 0,
+        "level": 10,
+        "nickname": "Bud",
+        "species": "terrapup",
+        "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2"
+      },
+      {
+        "hp": 0,
+        "level": 10,
+        "nickname": "",
+        "species": "bramblebun",
+        "uid": "creature-83d263c517d32cc6cb7beab6925d80c7"
+      },
+      {
+        "hp": 0,
+        "level": 10,
+        "nickname": "",
+        "species": "bramblebun",
+        "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17"
+      },
+      {
+        "hp": 0,
+        "level": 8,
+        "nickname": "",
+        "species": "mudsnout",
+        "uid": "creature-afbd0d982b14221393f70c29863586a1"
+      },
+      {
+        "hp": 0,
+        "level": 8,
+        "nickname": "",
+        "species": "bramblebun",
+        "uid": "creature-c576f15db4b7f3ecf487a80de0169177"
+      }
+    ],
+    "passed": false,
+    "segment": "relay",
+    "wall_seconds": 877.914
+  },
+  "review": {
+    "reviewer": "b_f49_review",
+    "verdict": "FAIL confirmed: actual Captain loss/all five fainted; exact XP matches, deadline valid; no Relay export"
+  },
+  "actual_findings": [
+    "Actual original Warrens Load retained original five",
+    "Captain encounter lost: four rounds and three wins/kills of five configured foes",
+    "All five fainted; original UIDs retained",
+    "Exact XP comparison passes against configured hybrid policy and admitted caps",
+    "4790 frames is within unchanged 9000-frame deadline",
+    "No Relay handoff exported or promoted"
+  ],
+  "stop_rule": "Two failed gameplay attempts; no third unchanged retry or failed-state resume",
+  "next": "Supported ordinary earned preparation or established existing pilot-policy repair; completed Warrens remains boundary",
+  "flags": "none",
+  "remaining": [
+    "Actual prepared Relay PASS",
+    "Original independent actual review",
+    "Strict complete export and successor production Load",
+    "F19#5/F49 complete new-order journey"
+  ],
+  "terminal_snapshot_raw": "EARNED RELAY — { \"elapsed_frames\": 4790, \"within_deadline\": true, \"fighting\": false, \"prior_failures\": [\"The actual captain encounter ended without victory: lost\"], \"required_rounds\": 5, \"rounds\": 4, \"wins\": 3, \"kills\": 3, \"hits\": 60, \"defeat_flag\": false, \"retained_five\": true, \"gear\": 0, \"items_match\": false, \"items_before\": { \"coin\": 200, \"orb_greater\": 2, \"revive\": 9 }, \"items_after\": { \"coin\": 200, \"orb_greater\": 2, \"revive\": 9 }, \"configured_reward\": { \"coins\": 60.0, \"items\": [{ \"id\": \"orb_greater\", \"count\": 3.0 }, { \"id\": \"revive\", \"count\": 1.0 }], \"flags\": [], \"xp_bonus\": 120.0 }, \"xp_match\": true, \"xp_before\": { -9223371634923009722: 2344, -9223371634654574237: 2344, -9223371634386138780: 2290, -9223371634117703323: 1434, -9223371633849267866: 1528 }, \"xp_after\": { -9223371634923009722: 2344, -9223371634654574237: 2344, -9223371634386138780: 2344, -9223371634117703323: 1839, -9223371633849267866: 1528 }, \"expected_xp\": { -9223371634923009722: 0, -9223371634654574237: 0, -9223371634386138780: 54, -9223371634117703323: 405, -9223371633849267866: 0 }, \"xp_identity\": { -9223371634923009722: { \"uid\": \"creature-cf906fd5504c229a431c3b3202c3c2e2\", \"cap\": 10 }, -9223371634654574237: { \"uid\": \"creature-83d263c517d32cc6cb7beab6925d80c7\", \"cap\": 10 }, -9223371634386138780: { \"uid\": \"creature-db1124dc0450464a2bf16ac0f7b6ef17\", \"cap\": 10 }, -9223371634117703323: { \"uid\": \"creature-afbd0d982b14221393f70c29863586a1\", \"cap\": 10 }, -9223371633849267866: { \"uid\": \"creature-c576f15db4b7f3ecf487a80de0169177\", \"cap\": 10 } }, \"xp_cap_room\": { -9223371634923009722: 0, -9223371634654574237: 0, -9223371634386138780: 54, -9223371634117703323: 910, -9223371633849267866: 816 }, \"beat\": \"captain_verification_failed\" }"
+}
