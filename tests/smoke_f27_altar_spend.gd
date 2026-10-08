@@ -142,13 +142,15 @@ func _witness_masters_lesson(creature: RefCounted, panel: Node) -> bool:
 			return false
 		print("F46 MASTERS PAID UNLOCK " + JSON.stringify({"character_id":cid,"uid":uid,
 			"from_level":before,"to_level":int(creature.level),"cost":cost,"receipts":receipts}))
-	await _ui("menu_cancel")
+	var reader: RefCounted = preload("res://tests/helpers/f20_portal_travel.gd").new(self, _game)
+	reader.set("_lesson_controller_input", true)
+	await reader.tap("menu_cancel")
+	reader.set("_lesson_controller_input", false)
 	var teacher := _world.find_child("Tam", true, false) as Node3D
 	if teacher == null or panel.call("is_open") or INPUT_OWNER.current(self) != null \
 			or not rules.available("masters", local):
 		_fail("The real first cap did not unlock Masters with free input and installed Tam")
 		return false
-	var reader: RefCounted = preload("res://tests/helpers/f20_portal_travel.gd").new(self, _game)
 	var nav := preload("res://tests/helpers/stick_navigator.gd").new(self, _player, _rig, Callable(reader, "_stick"))
 	var recoveries_before := int(_player.get("_unstick_count"))
 	var approach := func() -> bool:
