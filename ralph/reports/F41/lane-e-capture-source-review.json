@@ -2246,5 +2246,147 @@
       "P2-110 and wholeF41#0 remain open pending genuine missing loss context and original independent acceptance; no new score from source approval."
     ],
     "activity": "Read-only source/argument inspection plus original report append; no engine/test/dispatch/GPU/source edit or judge contact."
+  },
+  "beed_named_reward_route_original_integration_review": {
+    "reviewer": "original review_cloud_startup01a11679-fc2c-7873-bccd-423c1e04476d",
+    "source_verdict": "APPROVE",
+    "command_verdict": "APPROVE",
+    "proof_reuse_verdict": "APPROVE for retained selected lifecycle proof scope",
+    "source_commit": "beedcbfd3a57853d1629c41623d64a8f56b4169e",
+    "scope": "Only exact D named-reward HUD production integration on accepted b852+15ca foundation, dependency/proof reuse and one affected native command. No live idle packet read or previous bark/victory pixel re-review.",
+    "integration": {
+      "production_origin": "de50c185391edaa053c97d5fa746ee1e8afc2664",
+      "E_HUD_before": "7f9e3bb2192fa3ec30d7277f417d6670e11cb495",
+      "D_parent_HUD_before": "7f9e3bb2192fa3ec30d7277f417d6670e11cb495",
+      "E_HUD_after": "6a65e5aa929f20ccfe6e7fc28ef010afab67d552",
+      "D_production_HUD_after": "6a65e5aa929f20ccfe6e7fc28ef010afab67d552",
+      "actual_production_diff": "Exact33-line HUD diff,28add5delete; only new production path relative accepted15ca is scripts/ui/playground_hud.gd. Other new paths are evidence; no D test fixtures, portrait config or unrelated production imported.",
+      "findings": [
+        "Cached parser accepts only Dictionary named_encounters arrays/reward Dictionaries and exact nonempty acknowledgement strings; invalid/missing data conservatively retains generic route.",
+        "Authority-delivered text remains untouched; exact authored named acknowledgement is passed as reward_summary receipt to the existing peer-local passive progression moment presenter.",
+        "progression_feed reward_summary only appends presentation event; reward branch grants no inventory/XP/authority/save and touches no input owner. Level/bond side effects are unrelated unchanged branches.",
+        "Unknown utility messages retain hotbar. Existing victory_hierarchy_visual enabled=false; no new flags."
+      ],
+      "dependencies": {
+        "scripts/ui/playground_hud.gd": {
+          "E": "6a65e5aa929f20ccfe6e7fc28ef010afab67d552",
+          "D": "6a65e5aa929f20ccfe6e7fc28ef010afab67d552"
+        },
+        "scripts/creatures/progression_feed.gd": {
+          "E": "d1eb0013176a428bbdb7c7e8445f6628a7d1e14a",
+          "D": "d1eb0013176a428bbdb7c7e8445f6628a7d1e14a"
+        },
+        "scripts/ui/hud_presentation_policy.gd": {
+          "E": "2937e85fd39e83d3c9dabba45a048223b4a1ea10",
+          "D": "2937e85fd39e83d3c9dabba45a048223b4a1ea10"
+        },
+        "scripts/data/redesign_state.gd": {
+          "E": "da1544cc91d0585c25864c3e444a7123073944a7",
+          "D": "da1544cc91d0585c25864c3e444a7123073944a7"
+        },
+        "data/config/stormwood_encounters.json": {
+          "E": "f7339fff9b221706e87bb0fc473a8f80f7f28a63",
+          "D": "f7339fff9b221706e87bb0fc473a8f80f7f28a63"
+        },
+        "data/config/victory_hierarchy_visual.json": {
+          "E": "8abeebd40f29a7471d18f52defac298c57cef47e",
+          "D": "8abeebd40f29a7471d18f52defac298c57cef47e"
+        },
+        "data/config/hud.json": {
+          "E": "8a1a3ef585e311996e15fbdc35530d03f821b526",
+          "D": "f68ffeee0d34467b283256937a52c54d7c6a4249"
+        }
+      },
+      "hud_config_difference": "Only creature_portrait_frames crop-map absent in E; removing that key from parsed D hud.json yields exact E JSON. This changes portrait content/framing, not the acknowledgement matcher or reward-summary payload/policy. E fixed portrait slot uses expand-ignore-size; no reward-card layout tuning differs. No concealment of E portrait difference or pixel proof reuse."
+    },
+    "accepted_D_proof_reuse": {
+      "receipt_commit": "c3beed2945ec89ea577ec45e066b6db1117a6361",
+      "Git_evidence": {
+        "ralph/reports/F41/lane-d/reward-placement/receipt.json": {
+          "git_blob": "db6d7458e2cfde966098338b563a7eb5c4a2fa57",
+          "sha256": "bad921ea0aefa4022b35cbfde7822b9bdf52ae709fbd17486cf8839150b05e6b",
+          "bytes": 2619
+        },
+        "ralph/reports/F41/lane-d/reward-placement/original-source-review.txt": {
+          "git_blob": "d7acaa694a56483a4a2bf0124f881fb73fdfb3a2",
+          "sha256": "741f4e4e20f52c048f60dba2a52b8f4da69be4fe69c29ee327a4eeb703a0bb98",
+          "bytes": 775
+        },
+        "ralph/reports/F41/lane-d/reward-placement/original-cap-fixture-review.txt": {
+          "git_blob": "c56b553ea1d9b2bfb0c5f8210151b9bfe1b2113f",
+          "sha256": "6d32974dcd7bb752f141d73fcb72697d08876b7aefb70d3ac04ee03d388d287b",
+          "bytes": 671
+        },
+        "ralph/reports/F41/lane-d/reward-placement/original-affected-proof-review.txt": {
+          "git_blob": "f69f0de75630f48999c926350bcd43b218d7ff94",
+          "sha256": "8882519fdc88aa1ce16f218e059a20acf92d84ef35e2a60ede199ed6ab7bc70e",
+          "bytes": 649
+        },
+        "ralph/reports/F41/lane-d/reward-placement/checkout-excerpt.txt": {
+          "git_blob": "3aa863f8eb3fa6f59b9aad7c6efa5a9708b05a58",
+          "sha256": "38f9946da60c8728605ee784dc6aa60b9eb02b3702376e6b7a601687ce66a1ae",
+          "bytes": 140
+        }
+      },
+      "basis": "Original accepted D source/cap-fixture/affected-proof reviews and exact checkout excerpt are read directly from Git objects, not E integration self-report. No passing79 batch rerun or new raw-artifact claim.",
+      "production_source": "de50c185391edaa053c97d5fa746ee1e8afc2664",
+      "corrected_fixture_source": "e0494616323ed2964125b352569ea19534dd74d7",
+      "run": 37799566986,
+      "artifact": 11559664505,
+      "job": 113387868413,
+      "checks": 79,
+      "exit_code": 0,
+      "duration_seconds": 6,
+      "script_errors": 0,
+      "warnings": 1,
+      "warning": "HUD has no player; isolated fixture",
+      "accepted_log_sha256": "4322e1513ff957b195adf89ae79585b4039801c6e155cebae2fb497d698721d6",
+      "actual_relevant_cases": "Existing named-world-message fixture uses authored Hollows acknowledgement, unchanged exact text, passive presenter visibility/bounds against quick bindings+five-party, no extra GreatCandy, generic utility fallback.",
+      "fixture_scope": "Existing corrected isolated five-party late-game fixture mirrors shipping save_data, explicitly cap50/breakthroughs1..4, validates schema; original assertions and production cap admission remain. Fixture is not earned progression/save proof. No fixture import into E.",
+      "failed_run_preserved": {
+        "run": 37797219797,
+        "source": "de50c185391edaa053c97d5fa746ee1e8afc2664",
+        "failed_assertions": 29
+      },
+      "limits": "Reuse supports reward routing/lifecycle contracts and unaffected related dependencies. Does not approve E portraits, natural combat outcome, actual native card/timing, controller device or whole F41/F42. No exact missing affected logic check identified for this identical reward branch."
+    },
+    "command": {
+      "executable": "Godot",
+      "argv": [
+        "--path",
+        "<fresh pinnedbeed worktree>",
+        "--rendering-method",
+        "gl_compatibility",
+        "--resolution",
+        "1920x1080",
+        "--fixed-fps",
+        "20",
+        "--script",
+        "res://tools/phase2_capture_stormwood_fights.gd",
+        "--",
+        "--preset=Low",
+        "--low-resolution=1920x1080",
+        "--source-commit=beedcbfd3a57853d1629c41623d64a8f56b4169e",
+        "--out=res://.tmp/stormwood-phase2/f41-hollows-reward-route-beed",
+        "--ids=hollows_alpha",
+        "--seed=2042",
+        "--party-level=80",
+        "--input-policy=pilot",
+        "--seconds=120",
+        "--interval=10.0"
+      ],
+      "foundation": "Fight producer/pilot and bark/range/config paths have empty diff15ca..beed. Existing b852 source/range/math/native startup proof and15ca policy applicability reused without new audit.",
+      "guards": "Ordinary production Engage/body/input/camera/tell path, named source/preset/fresh-output/native-raster/started/nonempty/save/fail-exit guards and3d88 precleanup100-aftermath guard unchanged.",
+      "purpose": "One affected native named-Hollows acknowledgment placement, not unchanged-victory/full-matrix repeat.",
+      "runtime_status": "PENDING",
+      "required_evidence": [
+        "Actual clean pinned source/import/renderer/raster, real start/attack callbacks/natural stop and complete persisted pairs+terminal.",
+        "Natural outcome must be observed before forced cleanup; level80/pilot/cap cannot establish a future win.",
+        "Actual changed acknowledgment card must be shown at captured time; if absent, UI/timing proof remains pending rather than fabricated.",
+        "Original independent changed pixel review remains necessary; no visual approval from lifecycle reuse."
+      ]
+    },
+    "preservation": "All prior source/unit/command/native38victoryAPP,P2-111FAIL36baseline,bark2runtimeAPP/appearanceBLOCK,failed42pilotno100,15caidleSOURCEAPP,36+6+1ratings43of44 and52cd/forcedending/raster witnesses preserved. Whole F41 remains open43of44.",
+    "activity": "No engine, tests, dispatch, GPU, source edit, live packet inspection, new fixtures/helpers, GitHub/status/raw-thread access or judge contact."
   }
 }
