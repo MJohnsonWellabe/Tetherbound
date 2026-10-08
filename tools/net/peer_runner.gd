@@ -4947,6 +4947,7 @@ func _character_view(game: Node, args: Dictionary) -> Dictionary:
 	if local == null:
 		return {}
 	var party_rows: Array = []
+	var creature_gear := {}
 	var party: Variant = (local as RefCounted).get("party")
 	if party != null:
 		for i in int((party as RefCounted).call("size")):
@@ -4954,6 +4955,9 @@ func _character_view(game: Node, args: Dictionary) -> Dictionary:
 			if member != null:
 				party_rows.append("%s@%d" % [str((member as RefCounted).get("species_id")),
 					int((member as RefCounted).get("level"))])
+				var uid := str((member as RefCounted).get("uid"))
+				var row: Dictionary = (local as RefCounted).get("redesign_character").get("creatures", {}).get(uid, {})
+				if row.has("gear"): creature_gear[uid] = row.gear.duplicate(true)
 	var flags_set: Dictionary = {}
 	var flags: Variant = (local as RefCounted).get("flags")
 	var equipment: Variant = (local as RefCounted).get("equipment")
@@ -4965,6 +4969,7 @@ func _character_view(game: Node, args: Dictionary) -> Dictionary:
 		"satchel": _probe.call("inventory_snapshot"),
 		"equipment": (equipment as RefCounted).call("save_data") if equipment != null else {},
 		"pouch_tier": (local as RefCounted).get("redesign_character").get("pouch_tier", 0),
+		"creature_gear": creature_gear,
 		"player_flags": flags_set,
 		"display_name": str((local as RefCounted).get("display_name")),
 		"satiety": float((local as RefCounted).get("satiety")),
@@ -4983,11 +4988,15 @@ func _character_view(game: Node, args: Dictionary) -> Dictionary:
 ## direction that looks like the feature being broken.
 func _character_file_view(state: Dictionary, args: Dictionary) -> Dictionary:
 	var party_rows: Array = []
+	var creature_gear := {}
 	for raw: Variant in (state.get("party", []) as Array):
 		if typeof(raw) != TYPE_DICTIONARY:
 			continue
 		var row := raw as Dictionary
 		party_rows.append("%s@%d" % [str(row.get("species_id", "")), int(row.get("level", 0))])
+		var uid := str(row.get("uid", ""))
+		var personal: Dictionary = state.get("redesign_character", {}).get("creatures", {}).get(uid, {})
+		if personal.has("gear"): creature_gear[uid] = personal.gear.duplicate(true)
 	var satchel: Dictionary = {}
 	for raw: Variant in (state.get("inventory", []) as Array):
 		if typeof(raw) != TYPE_DICTIONARY:
@@ -5012,6 +5021,7 @@ func _character_file_view(state: Dictionary, args: Dictionary) -> Dictionary:
 		"satchel": satchel,
 		"equipment": (state.get("equipment", {}) as Dictionary).duplicate(true),
 		"pouch_tier": state.get("redesign_character", {}).get("pouch_tier", 0),
+		"creature_gear": creature_gear,
 		"player_flags": flags_set,
 		"display_name": str(state.get("display_name", "")),
 		"satiety": float(state.get("satiety", -1.0)),
@@ -5045,6 +5055,11 @@ func _step_party_grant(args: Dictionary) -> Dictionary:
 	var session: Node = game.get("session") if game != null else null
 	if party == null or local == null or world == null or session == null:
 		return {"verdict": "ERROR", "detail": "party grant has no bound owner/world/session"}
+	if args.has("gear"):
+		var gear_rules := preload("res://scripts/creatures/creature_gear.gd")
+		if session.call("is_active") == true or not args.gear is Dictionary \
+				or not gear_rules.slots_errors(args.gear, gear_rules.config()).is_empty():
+			return {"verdict": "FAIL", "detail": "disclosed gear stock requires valid slots before session admission"}
 	# Like save_character_here, wait for this owner's actual saved admission.
 	# Never bypass the guard or move the disclosed fixture to another scope.
 	var scope := [local.get("character_id"), world.get("world_id"),
@@ -5071,6 +5086,8 @@ func _step_party_grant(args: Dictionary) -> Dictionary:
 	var cfg: Dictionary = NET_PROGRESSION.config()
 	var level := int(args.get("level",
 		int((cfg.get("level", {}) as Dictionary).get("starter_level", 3))))
+	if args.has("gear") and level > int(BREAKTHROUGH.masters().get("ceiling", 60)):
+		return {"verdict": "FAIL", "detail": "disclosed gear stock requires a canonical level within this pass"}
 	creature.call("set_level", level, cfg)
 	if not bool(PARTY_SEAM.add(creature, str(args.get("nickname", "")))):
 		return {"verdict": "FAIL",
@@ -5092,6 +5109,11 @@ func _step_party_grant(args: Dictionary) -> Dictionary:
 					personal = BREAKTHROUGH.initialize_caught(personal, card)
 			if personal.is_empty():
 				return {"verdict": "FAIL", "detail": "could not record breakthroughs for a level-%d '%s'" % [level, species]}
+			if args.has("gear"):
+				var granted_uid := str(creature.get("uid"))
+				if not personal.get("creatures", {}).get(granted_uid) is Dictionary:
+					return {"verdict": "FAIL", "detail": "disclosed gear stock has no actual owned UID row"}
+				personal.creatures[granted_uid]["gear"] = args.gear.duplicate(true)
 			(local as RefCounted).set("redesign_character", personal)
 	if not PARTY_SEAM.has_game_state():
 		return {"verdict": "FAIL",
