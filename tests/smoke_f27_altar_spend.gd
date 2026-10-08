@@ -10,6 +10,8 @@ extends "res://tests/smoke_combat.gd"
 ##
 ## Disclosed fixtures, none of which is the transaction under test:
 ##   - the starter is owned the way the opening owns it (party.add);
+##     reload witnesses also declare its canonical starter-granted fact before
+##     paid actions, as production opening restore does for an owned party;
 ##   - Altar materials and Water Essence are granted to the inventory before
 ##     any transaction starts (no earned-route claim);
 ##   - the build ghost is positioned on the first valid home-plot pose found
@@ -55,6 +57,11 @@ func _run() -> void:
 	var party: RefCounted = _game.get("party")
 	var director := _world.get_node(^"EncounterDirector")
 	if party.size() == 0: party.call("add", director.call("ally_instance"))
+	if OS.get_cmdline_user_args().has("--lesson-reload-witness"):
+		# This disclosed starter fixture must already carry the fact that
+		# production SequenceDirector restores from any nonempty owned party.
+		# Exact reload equality remains required, including every paid receipt.
+		_game.local.flags.call("set_flag", "opening:starter_granted", true)
 	_player = _world.get_node_or_null(^"Player") as CharacterBody3D
 	_rig = _world.get_node_or_null(^"CameraRig") as Node3D
 	var inventory: RefCounted = _game.get("inventory")
