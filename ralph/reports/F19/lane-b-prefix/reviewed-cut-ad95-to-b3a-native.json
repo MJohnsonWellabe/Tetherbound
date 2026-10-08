@@ -35,7 +35,7 @@
   },
   "manifest": "ad95-to-b3a-native-manifest.json",
   "binding_scope": "Four original completed prefix rows copied value-identical; no old disk/log/save hashes reread or recomputed. First two compatibility manifests retained. Both failed Relay attempts excluded from rows/state.",
-  "validation_scope": "Original b_f49_review SOURCE APPROVE +producerad95→consumerb3a COMPATIBLE. Existing REST placement2tests46assert@12f39 and unchanged hybrid/cap Relay+Hall14tests141assert@3f4 retained for their scope. Changed north-approach units37718108316@b3a pending; actual strict Load/north approach/recovery/Captain/Relay export remain OPEN.",
+  "validation_scope": "Original b_f49_review SOURCE APPROVE +producerad95→consumerb3a COMPATIBLE. Changed north-approach existing TEAM/Relay units37718108316@b3a/art11525065681 PASS28tests201assert0fail/exit0/5s/no engine or Script errors. Existing REST placement2tests46assert@12f39 and unchanged hybrid/cap Relay+Hall14tests141assert@3f4 retained for their scope. Actual strict Load/north approach/recovery/Captain/Relay export remain OPEN.",
   "retry": "Fresh prepared north approach from original completed Warrens only; previous failed Relay attempts excluded. No partial resume, gifts, actor or pose injection.",
   "criterion_scope": "FullF19#5/F49 and unfinishedRelay/allfuturefolds OPEN; F02#0/#1 separately approved/READY.",
   "affected_logic": {
@@ -75,9 +75,16 @@
     },
     "north_approach": {
       "run_id": 37718108316,
+      "artifact_id": 11525065681,
       "source": "b3a456f94014f43505ced45e459fc549fc96bdeb",
-      "status": "pending",
-      "proof": "tests/run_tests.gd --only=test_meadows_earned_team_segment.gd,test_meadows_earned_relay_segment.gd"
+      "proof": "tests/run_tests.gd --only=test_meadows_earned_team_segment.gd,test_meadows_earned_relay_segment.gd",
+      "tests": 28,
+      "assertions": 201,
+      "failed": 0,
+      "exit_code": 0,
+      "seconds": 5,
+      "engine_errors": 0,
+      "script_errors": 0
     }
   }
 }
