@@ -1,0 +1,67 @@
+{
+  "reviewer": "same retained original code-blind visual judge",
+  "scope": "F40#5 literal visible placeholder/material/floating/clipping defects in this four-view Cloudreach arrival subset only",
+  "inputs": {
+    "raw_root": ".tmp/e-cloud-shrub-neutral/",
+    "full_rasters_inspected": [
+      "X/view-1.jpg",
+      "X/view-2.jpg",
+      "X/view-3.jpg",
+      "X/view-4.jpg",
+      "Y/view-1.jpg",
+      "Y/view-2.jpg",
+      "Y/view-3.jpg",
+      "Y/view-4.jpg"
+    ],
+    "raster": "1280x720",
+    "setup": "Parent-disclosed matched actual player/camera positions/headings, Low/Compatibility clear-day.",
+    "mapping_withheld": true,
+    "source_config_receipts_inspected": false,
+    "references_inspected": [
+      "docs/reference/boards-2026-09-06/cloudreach-cliffs-creature-roster-board.png",
+      "docs/reference/boards-2026-09-06/cloudreach-sky-aviary-stronghold-board.png"
+    ]
+  },
+  "preference": "Y for reduced shrub hovering/contact gap",
+  "visible_improvement": "PARTIAL: Y lowers the isolated approach shrub and reduces the right reverse shrub's visible ground gap. This is a supported local contact improvement, not a complete removal of floating in the supplied subset.",
+  "visible_subset_status": {
+    "X": "BLOCK",
+    "Y": "BLOCK"
+  },
+  "per_view": [
+    {
+      "frames": [
+        "X/view-1.jpg",
+        "Y/view-1.jpg"
+      ],
+      "finding": "X's isolated left shrub has a conspicuous gap between foliage base and grass/shadow. Y places it visibly lower, nearer the surface and its shadow. Route/trainer remain readable with no added path blockage. Nearby rock/tree/flower materials remain recognizable; no flat magenta ring/slab is visible."
+    },
+    {
+      "frames": [
+        "X/view-2.jpg",
+        "Y/view-2.jpg"
+      ],
+      "finding": "No clear new placeholder or gross trainer clipping defect appears in the gameplay framing. Dirt route remains distinct and unobstructed. Distant creature pose differs, so it cannot establish a foliage/contact change or complete creature-ground validation."
+    },
+    {
+      "frames": [
+        "X/view-3.jpg",
+        "Y/view-3.jpg"
+      ],
+      "finding": "The isolated right shrub visibly hovers in X. Y lowers it and reduces the gap, but a visible grass strip remains between its lower foliage and separated ground shadow, so contact still reads suspended rather than convincingly planted. This residual blocks a no-floating claim for the subset. Rocks, tree and dirt route remain readable; no new occlusion introduced."
+    },
+    {
+      "frames": [
+        "X/view-4.jpg",
+        "Y/view-4.jpg"
+      ],
+      "finding": "Detail framing keeps the trainer, path and gateway visible. No obvious magenta ring/slab or untextured placeholder surface is observed. The distant creature remains too small and in differing poses to certify all body-ground joins or motion."
+    }
+  ],
+  "introduced_defects": "No new visible route obstruction, gross trainer clipping or placeholder-material defect is established in Y versus X in these supplied stills.",
+  "broader_art_bar": "Broad sparse foreground terrain/landscape layering remains a separate open art concern and is not used as the literal F40#5 blocker here.",
+  "limits": "Four fixed clear-day views at one supplied location only. Small foliage-base and distant creature detail is limited at this raster; no night/weather/other-route/full matrix, continuous motion, collision, earned traversal or full F40#5 acceptance claim. Whole matrix unavailable.",
+  "catalogue_updated": false,
+  "whole_criterion_claim": false,
+  "release_closure": false
+}

@@ -1,0 +1,172 @@
+{
+  "scope": "Four matched Low clear-day views; one shrub candidate; whole F40 OPEN",
+  "source_commit": "628ace1b6d01a0e586e977f10a7d5b10bb79d9a8",
+  "before_source_commit": "cd09de0814e5e0ee33263cb0ed6ac94f8846702d",
+  "run_id": 37752078414,
+  "job_id": 113227496381,
+  "artifact_id": 11539457341,
+  "script": "tools/capture_cloudreach_f40_matrix.gd",
+  "full_plan": 384,
+  "segment_plan": 96,
+  "captured_frames": 4,
+  "complete": false,
+  "failures": [],
+  "exit_code": 124,
+  "exit_provenance": [
+    "2026-10-08T09:09:15.7006027Z ##[error]Process completed with exit code 124."
+  ],
+  "timeout_minutes": 20,
+  "graphics": {
+    "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "Low",
+    "renderer": "gl_compatibility",
+    "resolution": [
+      1280,
+      720
+    ],
+    "source_commit": "628ace1b6d01a0e586e977f10a7d5b10bb79d9a8"
+  },
+  "matching_graphics_config": true,
+  "manifest_sha256": "c14ed10921f3d050678337820c9103bf6b5ec8b301da1a735bfe5513f4fbac1a",
+  "run_log_sha256": "8f2a8e3905bd389892cb8f54f1b3e2354e363c93a7bb59353aa873ee48eed5ef",
+  "job_log_sha256": "1feab90688c8199b49758f830cf4f727232d912597f42b2d064842e77db61383",
+  "error_lines": [],
+  "warning_count": 3,
+  "frame_pairs": [
+    {
+      "frame_id": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__clear",
+      "before_png_sha256": "a17158cab9ac1b13746fc91bf351eb6f74e603cd285a5efd10569a7fd89ca3c0",
+      "after_png_sha256": "49f0fd9879964c079a2d645fe300b9ae477f1105e95ff064e8a097447dd61af3",
+      "raster": [
+        1280,
+        720
+      ],
+      "camera_position_max_delta_m": 0.0,
+      "player_position_max_delta_m": 0.0,
+      "same_heading": true,
+      "before_on_floor": true,
+      "after_on_floor": true,
+      "before_clock": {
+        "elapsed_seconds": 200.118461333333,
+        "hour": 8.00473845333333,
+        "requested": "day",
+        "time_of_day": "day",
+        "weather": "clear"
+      },
+      "after_clock": {
+        "elapsed_seconds": 200.118009,
+        "hour": 8.00472036,
+        "requested": "day",
+        "time_of_day": "day",
+        "weather": "clear"
+      }
+    },
+    {
+      "frame_id": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__clear",
+      "before_png_sha256": "09ea49be8a94ee681f21b8ec9534a3dd088788780f5b6e2da8357adee3efd676",
+      "after_png_sha256": "1c169e8cff749390809b39666d763cb274856983e786cda789cf9c0bcebff851",
+      "raster": [
+        1280,
+        720
+      ],
+      "camera_position_max_delta_m": 0.0,
+      "player_position_max_delta_m": 0.0,
+      "same_heading": true,
+      "before_on_floor": true,
+      "after_on_floor": true,
+      "before_clock": {
+        "elapsed_seconds": 200.143016333333,
+        "hour": 8.00572065333333,
+        "requested": "day",
+        "time_of_day": "day",
+        "weather": "clear"
+      },
+      "after_clock": {
+        "elapsed_seconds": 200.133333333333,
+        "hour": 8.00533333333333,
+        "requested": "day",
+        "time_of_day": "day",
+        "weather": "clear"
+      }
+    },
+    {
+      "frame_id": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__clear",
+      "before_png_sha256": "1b552472db693de4a6dfacb7c5778258addade4cd0cf565ebfb2f939287c410b",
+      "after_png_sha256": "7357964dd57587c6885da08f1fe7132dc570909ad0d0c68832a160a6b61f8754",
+      "raster": [
+        1280,
+        720
+      ],
+      "camera_position_max_delta_m": 0.0,
+      "player_position_max_delta_m": 0.0,
+      "same_heading": true,
+      "before_on_floor": true,
+      "after_on_floor": true,
+      "before_clock": {
+        "elapsed_seconds": 200.12,
+        "hour": 8.0048,
+        "requested": "day",
+        "time_of_day": "day",
+        "weather": "clear"
+      },
+      "after_clock": {
+        "elapsed_seconds": 200.133333333333,
+        "hour": 8.00533333333333,
+        "requested": "day",
+        "time_of_day": "day",
+        "weather": "clear"
+      }
+    },
+    {
+      "frame_id": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__clear",
+      "before_png_sha256": "8c78e60e25828ced3b28e9fa6d3a59ed212086466756741080421e059ae18486",
+      "after_png_sha256": "51e1cbb5a7c069a5ec33f86a013bcfd5c17c8ef9f1f6d7d63d9603a46851ed24",
+      "raster": [
+        1280,
+        720
+      ],
+      "camera_position_max_delta_m": 0.0,
+      "player_position_max_delta_m": 0.0,
+      "same_heading": true,
+      "before_on_floor": true,
+      "after_on_floor": true,
+      "before_clock": {
+        "elapsed_seconds": 200.132333333333,
+        "hour": 8.00529333333333,
+        "requested": "day",
+        "time_of_day": "day",
+        "weather": "clear"
+      },
+      "after_clock": {
+        "elapsed_seconds": 200.136193666667,
+        "hour": 8.00544774666667,
+        "requested": "day",
+        "time_of_day": "day",
+        "weather": "clear"
+      }
+    }
+  ],
+  "judge": "Original code-blind judge X BLOCK / Y BLOCK; Y partial contact improvement, residual floating gap in reverse.",
+  "limits": [
+    "Direct staged mount/teleports, not earned play or fight",
+    "No whole quarter/matrix, >=200, High/Medium, device or performance acceptance",
+    "Live distant creature animation/position varies between retained and changed shutters; matching camera/stand/config is not pixel-identical scene timing. Static-prop comparison only."
+  ],
+  "warning_lines": [
+    "WARNING: Could not set V-Sync mode, as changing V-Sync mode is not supported by the graphics driver.",
+    "WARNING: Cloudreach wild site road_visibility_broken_causeway_main_03 resolves (-519.8509, 328.26, 1261.645) from its authored (-575.0, 325.0, 1238.0); left out (fail closed)",
+    "WARNING: Cloudreach wild site road_visibility_windscar_floor_loop_15 resolves (392.5963, 610.06, 3250.736) from its authored (445.0, 610.0, 3335.0); left out (fail closed)"
+  ],
+  "neutral_mapping": {
+    "X": "baseline cd09de0814e5e0ee33263cb0ed6ac94f8846702d",
+    "Y": "candidate628ace1b6d01a0e586e977f10a7d5b10bb79d9a8",
+    "withheld_before_final_verdict": true
+  },
+  "candidate_disposition": "Restored original per-item fallback by removing candidate bury_m0.3; config byte-identical6413 baseline. Candidate parked; no new flag or whole criterion claim.",
+  "remaining_gates": [
+    "WholeF40#5 full matrix and removal of all applicable floating/clipping/material defects",
+    "F40#0>=200 native frames and catalogue rescore",
+    "Other full F40/F41 High/Medium/catalogue gates remain open"
+  ]
+}

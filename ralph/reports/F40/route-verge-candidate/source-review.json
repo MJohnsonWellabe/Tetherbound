@@ -242,7 +242,53 @@
       "job_log": ".tmp/e-arrival-shrub-area-628a/job.log",
       "coverage_limit": "Existing world construction/dressing/route placement checks; no direct measurement of this authored shrub's mesh contact or visual improvement."
     },
-    "proof_status": "Selected48tests/3330assertions passed with disclosed unchanged-source test diagnostic; production area passed clean. Changed Low capture/visual verdict pending; no visual, whole F40#5 or full F40 acceptance."
+    "changed_capture_subset": {
+      "verdict": "APPROVE bounded validity/provenance of four matched saved views only",
+      "source_commit": "628ace1b6d01a0e586e977f10a7d5b10bb79d9a8",
+      "run_id": 37752078414,
+      "job_id": 113227496381,
+      "artifact_id": 11539457341,
+      "checkout_verified_from_job_log": true,
+      "exit_code": 124,
+      "timeout_minutes": 20,
+      "complete": false,
+      "failures": [],
+      "saved_frames": 4,
+      "segment_plan": 96,
+      "full_plan": 384,
+      "views": ["approach", "gameplay", "reverse", "detail"],
+      "time_weather": "day clear",
+      "actual_png_headers": [1280, 720],
+      "preset": "Low",
+      "renderer": "gl_compatibility",
+      "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+      "all_pair_image_manifest_run_log_and_job_log_hashes_match_receipt": true,
+      "production_camera_identity_matches": true,
+      "all_four_on_floor": true,
+      "baseline_source": "cd09de0814e5e0ee33263cb0ed6ac94f8846702d",
+      "baseline_run_id": 37728782830,
+      "matching": "Frame IDs, player/camera positions, camera transforms, requested XZ and headings match retained baseline exactly. Low1280 Mesa graphics/config hash identical except source SHA. Small observed-clock differences remain within pinned day/clear.",
+      "error_or_script_error_in_run_log": false,
+      "warnings": "Three warning lines: unsupported V-Sync and two authored wild sites omitted fail-closed; not three wild-site warnings.",
+      "receipt": "ralph/reports/F40/arrival-shrub/capture-receipt.json",
+      "raw_packet": ".tmp/e-arrival-shrub-capture-628a/expanded/tree/shots/lane-e/arrival-shrub-changed-628a",
+      "limits": "Whole capture FAIL by timeout,4of96 incomplete. No whole quarter/matrix, rain/night, earned, continuous-motion, full F40 or device-performance claim.",
+      "visual_verdict": "Original blind final X and Y both BLOCK, Y local improvement PARTIAL with residual suspended shrub in reverse. No source/mapping supplied to judge by this reviewer."
+    },
+    "final_visual_and_restoration": {
+      "blind_receipt": "ralph/reports/F40/arrival-shrub/blind-verdict.json",
+      "mapping": {"X": "before cd09 baseline", "Y": "628ace1b6d01a0e586e977f10a7d5b10bb79d9a8, bury_m0.3 candidate"},
+      "X": "BLOCK",
+      "Y": "BLOCK",
+      "improvement": "PARTIAL local contact improvement in Y, but reverse still shows suspended shrub/ground gap; no no-floating subset acceptance.",
+      "restoration_verdict": "APPROVE",
+      "restoration_review_base": "86863a3d8695bab7bdbc2d4cfa64d59dc3937cb7",
+      "reference": "6413c847af85c1614d7d14fd2258f23516fb39e3",
+      "verified_empty_git_diff_to_reference": "data/config/cloudreach_visual.json",
+      "restoration_scope": "Remove only added bury_m0.3 key; existing fallback0.04 resumes. No new flag, asset, geometry or gameplay change.",
+      "disposition": "Numerical candidate PARKED; source/unit/area/image-validity approvals retained as historical evidence, not visual acceptance. Whole F40#5/full F40 OPEN. No unchanged baseline proof rerun."
+    },
+    "proof_status": "APPROVE exact source restoration and historical bounded proof validity. Original blind X/Y BLOCK and whole capture timeout FAIL retained; numerical candidate PARKED, whole F40#5/full F40 OPEN."
   },
-  "proof_status": "APPROVE failed verge restoration/historical proof validity and separate shrub source candidate. New shrub affected proofs/visual pending; earlier visual BLOCK/timeout FAIL retained. Full F40 OPEN; no local engine execution or performance acceptance."
+  "proof_status": "APPROVE failed verge and shrub restorations/historical bounded proof validity. Both numerical candidates PARKED with original visual BLOCKs and capture timeout FAILs retained. Whole F40#5/full F40 OPEN; no local engine execution or performance acceptance."
 }
