@@ -1,6 +1,6 @@
 {
   "criterion": "F20#2",
-  "result": "BehaviorPASS and literalvisualPASS; audibilityUNPROVED, no wholecriterionREADY",
+  "result": "PASS literal F20#2; separate perceptual audio-quality gates remain OPEN",
   "source_commit": "15d08e339880b75bb74151424712e95f27c8d755",
   "proof": "tests/smoke_f20_arch_presentation.gd",
   "packet": "D:/CodexTemp/tetherbound-proof/native-b-15d08e3398-f20-fifth-presentation",
@@ -38,13 +38,16 @@
   "independent_review": {
     "agent": "b_f20_review",
     "source": "APPROVE",
-    "behavior": "APPROVE actual20checks/exit0; auditory/visual gates separate"
+    "behavior": "APPROVE actual20checks/exit0; auditory/visual gates separate",
+    "criterion": "APPROVE literalF20#2: actual production playback plus non-silent recordedSFX and scopedvisualPASS satisfy its named evidence; no additionalnative rerun",
+    "requirement_routing": "ACCEPTANCE F20#2 requires no blindlistening judgment. AUDIO4.5 identifiesdiegeticcue; AUDIO12 finalmix/quality/identity listening remains separateOPEN."
   },
   "blind_judge": {
     "agent": "b_night_visual",
     "visual": "PASS scoped: visible lavender/white glow, readable It stirred, but it is not ready yet, Sealed face and noentrycue or fiftharchquest/sequelprompt",
     "audio": "UNPROVED: actual originalWAV delivery returned audio content omitted because you do not support audio input; listener cannotjudgehum",
-    "overall": "BLOCK overall for audibility; stilldoesnotprovecontinuedclosure/transition; real behaviorchecks coverclosure"
+    "overall": "PASS literalcriterion visual; unsupported perceptual audio request is outside F20#2 named proof, per original independent reviewer",
+    "overall_prior_request": "BLOCK overall for audibility; stilldoesnotprovecontinuedclosure/transition; real behaviorchecks coverclosure"
   },
   "errors": {
     "engine": 0,
@@ -53,7 +56,16 @@
   },
   "flags": "none",
   "remaining": [
-    "Actual audiblelowhum verdict from originaljudge withworkingaudioinput; no inference fromnonemptyfile, sourceplayingstate orwaveform",
-    "FullVisualBarsA/B and allintegratedcampaign/device/audio-system gates remainOPEN"
-  ]
+    "Perceptual audiblelowhum/listening unassessed; no heardhum or AUDIO-bar completion claim",
+    "FullVisualBarsA/B and integratedcampaign/device/audio-system gates remainOPEN"
+  ],
+  "native_sound_measurement": {
+    "scope": "Read-only actual recordedSFX PCM; proves non-silent signal, not a listener claim",
+    "format": "PCM16 stereo48000Hz",
+    "duration_s": 3.0933333333333333,
+    "nonzero_samples": 237785,
+    "peak_dbfs": -37.016159188071846,
+    "rms_dbfs": -43.984200288029385,
+    "claim": "Sound emitted and recorded; perceptual audibility unassessed"
+  }
 }
