@@ -166,8 +166,10 @@
     }
   },
   "remaining_gates": [
-    "Changed transition source affected logic and actual nine-pair proof; native baseline214/216 visibility failures supports repair but does not evidence candidate.",
-    "Code-blind whole size-matrix PASS and performance remain open; no shipping flag or READY."
+    "Native changed matrix all9FAIL despite 214→190 visibility-failure reduction; same-route camera repair parked, no unchanged or speculative next run.",
+    "ROOT terminal camera receipt and all original retained controls still pending.",
+    "Minimum exact-host Tag settlement fact is the next gameplay path; no source-supported production settlement bug yet.",
+    "No original code-blind size-matrix PASS; no whole F21#4 READY."
   ],
   "native_baseline": {
     "source_commit": "97305ea96f9b38bac3520cc9321ae217c6a7d751",
@@ -300,7 +302,145 @@
       "camera_manager_blob": "802c25165cdbed9f31c5dd77c05798036d9fbe58",
       "same_reviewed_source_at625": true
     },
-    "behavior": "PENDING ROOT native original nine-pair matrix",
+    "behavior": {
+      "source_commit": "c759ab8e263944d622267ef91d4049bd2580d979",
+      "raw_location": "D:/CodexTemp/tetherbound-proof/native-a-c759ab8e26-f21-camera9-r2",
+      "matrix_sha256": "74a637552e34cfc7d182eb6c877378082d858703eacb50e8e8f33dbd7cf70393",
+      "result": "FAIL all nine case visual gates; engine terminal pending",
+      "actual_draws": 216,
+      "visibility_failures": 190,
+      "framing_failures": 0,
+      "cases": [
+        {
+          "pair": "small/small",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "visibility_failures": 23,
+          "framing_failures": 0,
+          "destination_passes": 17,
+          "hidden_points_max": 1.0,
+          "pictures": 6,
+          "elapsed_ms": 25624,
+          "quick_action_observed": true,
+          "input_travel_m": 3.73163628578186
+        },
+        {
+          "pair": "small/normal",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "visibility_failures": 24,
+          "framing_failures": 0,
+          "destination_passes": 9,
+          "hidden_points_max": 2.0,
+          "pictures": 6,
+          "elapsed_ms": 24650,
+          "quick_action_observed": true,
+          "input_travel_m": 3.21935963630676
+        },
+        {
+          "pair": "small/giant",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "visibility_failures": 24,
+          "framing_failures": 0,
+          "destination_passes": 13,
+          "hidden_points_max": 1.0,
+          "pictures": 6,
+          "elapsed_ms": 21858,
+          "quick_action_observed": true,
+          "input_travel_m": 2.74092292785645
+        },
+        {
+          "pair": "normal/small",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "visibility_failures": 24,
+          "framing_failures": 0,
+          "destination_passes": 12,
+          "hidden_points_max": 2.0,
+          "pictures": 6,
+          "elapsed_ms": 26826,
+          "quick_action_observed": true,
+          "input_travel_m": 3.67875695228577
+        },
+        {
+          "pair": "normal/normal",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "visibility_failures": 15,
+          "framing_failures": 0,
+          "destination_passes": 10,
+          "hidden_points_max": 2.0,
+          "pictures": 6,
+          "elapsed_ms": 23393,
+          "quick_action_observed": true,
+          "input_travel_m": 3.84170389175415
+        },
+        {
+          "pair": "normal/giant",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "visibility_failures": 18,
+          "framing_failures": 0,
+          "destination_passes": 9,
+          "hidden_points_max": 2.0,
+          "pictures": 6,
+          "elapsed_ms": 23563,
+          "quick_action_observed": true,
+          "input_travel_m": 4.02565717697144
+        },
+        {
+          "pair": "giant/small",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "visibility_failures": 24,
+          "framing_failures": 0,
+          "destination_passes": 12,
+          "hidden_points_max": 2.0,
+          "pictures": 6,
+          "elapsed_ms": 23876,
+          "quick_action_observed": true,
+          "input_travel_m": 2.58818650245667
+        },
+        {
+          "pair": "giant/normal",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "visibility_failures": 23,
+          "framing_failures": 0,
+          "destination_passes": 7,
+          "hidden_points_max": 2.0,
+          "pictures": 6,
+          "elapsed_ms": 23760,
+          "quick_action_observed": true,
+          "input_travel_m": 2.4925525188446
+        },
+        {
+          "pair": "giant/giant",
+          "pass": false,
+          "physics_samples": 300,
+          "scored_draws": 24,
+          "visibility_failures": 15,
+          "framing_failures": 0,
+          "destination_passes": 11,
+          "hidden_points_max": 2.0,
+          "pictures": 6,
+          "elapsed_ms": 23949,
+          "quick_action_observed": true,
+          "input_travel_m": 2.82465243339539
+        }
+      ],
+      "baseline_visibility_failures": 214,
+      "qualification": "Partial measured improvement only. Unchanged case budgets all met; no full camera criterion, hardware FPS or visual PASS."
+    },
     "visual": "PENDING original code-blind review"
   }
 }
