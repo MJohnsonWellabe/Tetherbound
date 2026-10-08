@@ -41,16 +41,7 @@ func local_camera_rig() -> Node3D:
 	return get_node_or_null("CameraRig")
 
 func shell_build_complete() -> bool:
-	if not _ready_complete or not is_inside_tree():
-		return false
-	# The mounted Director yields before binding Session. A finished shell
-	# alone must not release Load/travel into that unfinished authority seam.
-	var director := get_node_or_null("EncounterDirector")
-	var game := get_node_or_null(^"/root/Game")
-	var session: Node = game.get("session") if game != null else null
-	return is_instance_valid(director) and not director.is_queued_for_deletion() \
-		and is_instance_valid(session) and not session.is_queued_for_deletion() \
-		and director.get("_session") == session
+	return _ready_complete
 
 func config_data() -> Dictionary:
 	return _config.duplicate(true)
