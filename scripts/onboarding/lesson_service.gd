@@ -11,6 +11,7 @@ var _panel: CanvasLayer
 var _identity := ""
 var _realm := ""
 var _pending: Dictionary = {}
+var _receipt_generation := 0
 var _retry_at := 0
 var _replay := ""
 var _replaying := false
@@ -44,6 +45,7 @@ func _process(_delta: float) -> void:
 		# Closing a departing character's card must never acknowledge it for
 		# the new character. The dismissal callback checks this binding too.
 		_pending.clear()
+		_receipt_generation += 1
 		_replay = ""
 		if _panel.call("is_open"): _panel.call("close", false)
 		_identity = identity
@@ -108,6 +110,7 @@ func _dismissed(id: String) -> void:
 	var player := _player()
 	if player == null or str(player.get("character_id")) != _identity or _replaying: return
 	_pending[RULES.PREFIX + id] = true
+	_receipt_generation += 1
 	_retry_at = 0
 	_flush_receipts()
 
@@ -130,10 +133,13 @@ func _flush_receipts() -> void:
 		# until this admitted character's existing writer succeeds. A busy
 		# fallback or failed write retries; neither can erase the receipt.
 		var saver: RefCounted = game.get("save_system")
+		var identity := _identity
+		var generation := _receipt_generation
 		if saver != null and not _identity.is_empty() \
-				and saver.call("save_character_prepared", game, _identity) == true \
-				and _player() == player and str(player.get("character_id")) == _identity \
-				and game.get("save_system") == saver:
+				and saver.call("save_character_prepared", game, identity) == true \
+				and _player() == player and str(player.get("character_id")) == identity \
+				and _identity == identity and _receipt_generation == generation \
+				and game.get("save_system") == saver and game.get("session") == session:
 			for flag: String in acknowledged: _pending.erase(flag)
 	var ledger: Node = game.get("ledger")
 	if ledger == null: return
@@ -151,5 +157,6 @@ func _arrival_result(result: Dictionary) -> void:
 	var player := _player()
 	if player == null or str(player.get("character_id")) != _identity or not RULES.available("home_key", player): return
 	_pending[RULES.PREFIX + "trigger:home_return"] = true
+	_receipt_generation += 1
 	_retry_at = 0
 	_flush_receipts()
