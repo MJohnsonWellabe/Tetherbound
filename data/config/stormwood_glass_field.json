@@ -28,5 +28,16 @@
   "tether_standards": [
     {"id":"west_warning", "at":[-21.0,101.0], "height_m":8.0, "yaw_deg":28.0},
     {"id":"east_warning", "at":[21.0,126.0], "height_m":8.0, "yaw_deg":-24.0}
-  ]
+  ],
+  "grounded_legacy_bases": {
+    "enabled": true,
+    "scope": "client_presentation",
+    "clear_radius_fraction": 0.82,
+    "fissure_width_m": 0.08,
+    "fissure_sections": 8,
+    "fissure_curve_m": 0.2,
+    "fissure_lift_m": 0.05,
+    "fissure_emission": 0.42,
+    "_comment": "P2-043 candidate: retain installed tall shard count/geometry, cluster seats and restrained night lights. Reuse terrain-following faded scar patch and grass_clear hook; replace floating rigid glow cylinders by thin terrain-sampled curved fissures. No collision/route/encounter/durable changes. Native paired base/grass proof and blind judge required; keep OFF on failure."
+  }
 }
