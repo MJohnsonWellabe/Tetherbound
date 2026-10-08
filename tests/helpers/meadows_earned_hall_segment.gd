@@ -572,6 +572,8 @@ func _gather_first_feast_stock(band2: Array[Vector2], rim: Array[Vector2],
 		"stations_built": false, "feast_cooked": false, "cap_lifted": false})
 	if not await _place_first_home_stations():
 		return false
+	if not await _cook_first_ground_feast():
+		return false
 	# Return by the existing earned roads, including the already-open Bridge;
 	# the Home Key never poses the trainer back at the Master or Mill.
 	var first := trail_points(_read(TERRAIN), "bands", "band1_lower_meadows")
@@ -771,6 +773,110 @@ func _refine_first_rootiron() -> bool:
 		"elapsed_frames": Engine.get_physics_frames() - started, "budget_frames": 900,
 		"controller_tap_start": true, "canonical_saved_callbacks": true, "caps_unchanged": true})
 	return true
+
+
+func _cook_first_ground_feast() -> bool:
+	var session: Node = _game.get("session")
+	var service: Node = session.call("homestead_breakthrough_service")
+	var kitchen: Node3D
+	for node: Node in _tree.get_nodes_in_group(&"placed_building"):
+		if str(node.get_meta("building_id", "")) == "kitchen" and _world.is_ancestor_of(node):
+			if kitchen != null: return _fail("The earned Kitchen is ambiguous")
+			kitchen = node as Node3D
+	var prompt := kitchen.get_node_or_null(^"StationInteractable") as Node3D if kitchen != null else null
+	var recipe: Dictionary = BREAKTHROUGH.feasts().get("recipes", {}).get("feast_t1_ground", {})
+	if service == null or prompt == null or recipe.is_empty() or _count("feast_t1_ground") != 0 \
+			or not str(service.get("_panel").get("_pending_action")).is_empty():
+		return _fail("First feast cooking requires the actual learned Kitchen and no pending craft or prior feast")
+	var before := {}
+	for item: String in recipe.get("cost", {}): before[item] = _count(item)
+	var scope: Dictionary = session.call("personal_tm_scope")
+	var personal: Dictionary = _game.get("local").get("redesign_character")
+	var caps := {}
+	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
+		caps[str(member.get("uid"))] = ESSENCE.creature_cap(personal, str(member.get("uid")))
+	if not await _approach_prompt(prompt): return false
+	var pilot := LIVE.CampaignPilot.new(_tree, _combat, _director, _rig)
+	_activated_id = 0
+	await pilot.press("interact")
+	var craft: Node
+	for frame in 90:
+		var owner := INPUT_OWNER.current(_tree)
+		if owner != null and owner.get_script() == preload("res://scripts/ui/craft_panel.gd"):
+			craft = owner
+			break
+		await _tree.physics_frame
+	if craft == null or craft.get("_station") != kitchen or _activated_id != prompt.get_instance_id():
+		return _fail("Physical Kitchen interaction did not open its actual station panel")
+	if not await _station_focus(craft, "Cook learned Ascension Feasts", pilot): return false
+	await pilot.press("ui_accept")
+	var chooser: Node = service.get("_panel")
+	for frame in 90:
+		if is_instance_valid(chooser) and chooser.call("is_open") and chooser.get("_mode") == "cook": break
+		await _tree.physics_frame
+		chooser = service.get("_panel")
+	if not is_instance_valid(chooser) or chooser.call("is_open") != true or INPUT_OWNER.current(_tree) != chooser \
+			or chooser.get("_mode") != "cook" or chooser.get("_source") != kitchen or chooser.get("_service") != service:
+		return _fail("The Kitchen handoff did not open its bound learned-feast chooser")
+	var label := str(recipe.name) + " · " + str(recipe.cost)
+	if not await _breakthrough_focus(chooser, label, pilot): return false
+	var observed := {"completed": [], "error": ""}
+	var completed := func(action: String, original: Dictionary, reply: Dictionary) -> void:
+		if action != "feast_cook" or original.get("recipe_id") != "feast_t1_ground": return
+		if session.call("personal_tm_scope") != scope:
+			observed.error = "The feast changed its actual character/session scope"
+		elif reply.get("terminal_refusal") == true:
+			observed.error = str(reply.get("reason", reply.get("code", "Feast refused")))
+		elif reply.get("ok") == true and reply.get("resolved") == true and reply.get("settled") == true \
+				and reply.get("durable") == true and reply.get("saved") == true \
+				and reply.get("owner_saved") == true and reply.get("owner_acknowledged") == true:
+			observed.completed.append({"original": original.duplicate(true), "result": reply.duplicate(true)})
+	session.connect("homestead_action_completed", completed)
+	var started := Engine.get_physics_frames()
+	await pilot.press("ui_accept")
+	# Same bounded personal completion wait used by this segment's Master chest.
+	while captain_within_deadline(Engine.get_physics_frames() - started) \
+			and observed.completed.is_empty() and str(observed.error).is_empty():
+		await _tree.physics_frame
+	session.disconnect("homestead_action_completed", completed)
+	if not str(observed.error).is_empty() or observed.completed.size() != 1:
+		return _fail("The physical feast tap lacks one saved canonical completion: " + str(observed))
+	var claim: Dictionary = observed.completed[0]
+	var id := str(claim.original.get("craft_id", ""))
+	var receipt := "craft:%s:%s" % [str(_game.get("local").get("character_id")), id]
+	personal = _game.get("local").get("redesign_character")
+	if id.length() != 32 or not id.is_valid_hex_number(false) or claim.result.get("receipt") != receipt \
+			or personal.get("transaction_receipts", []).count(receipt) != 1 \
+			or _count("feast_t1_ground") != int(recipe.get("output", {}).get("feast_t1_ground", 0)) \
+			or not retained_five(_initial_ids, _party_ids()) or chooser.call("is_open") != true \
+			or not str(chooser.get("_pending_action")).is_empty():
+		return _fail("The cooked feast lacks its exact item, once-only receipt and settled real chooser")
+	for item: String in before:
+		if _count(item) != int(before[item]) - int(recipe.cost[item]):
+			return _fail("Feast cooking did not debit its exact gathered " + item)
+	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
+		if ESSENCE.creature_cap(personal, str(member.get("uid"))) != caps.get(str(member.get("uid")), -1):
+			return _fail("Cooking itself lifted an original creature's cap")
+	_receipt("first_ground_feast_cooked", {"source": str(kitchen.get_path()), "completion": claim,
+		"inventory_before": before, "feast_count": _count("feast_t1_ground"), "caps_unchanged": true,
+		"controller_recipe_tap": true, "elapsed_frames": Engine.get_physics_frames() - started})
+	await pilot.press("menu_cancel")
+	return true if not chooser.call("is_open") and INPUT_OWNER.current(_tree) == null \
+		else _fail("The settled Kitchen chooser did not return ordinary world input")
+
+
+func _breakthrough_focus(panel: Node, label: String, pilot: RefCounted) -> bool:
+	var buttons: Array[Button] = []
+	for child: Node in panel.get("_list").get_children():
+		if child is Button: buttons.append(child)
+	for step in buttons.size() * 2:
+		if panel.call("is_open") != true or INPUT_OWNER.current(_tree) != panel:
+			return _fail("Learned-feast focus lost the real chooser owner")
+		var focus: Control = panel.get_viewport().gui_get_focus_owner()
+		if focus is Button and buttons.has(focus) and focus.text == label:
+			return true if not focus.disabled else _fail("The actual learned-feast row is disabled")
+		await pilot.press("ui_down")
+	return _fail("Physical d-pad input did not reach the learned-feast row: " + label)
 
 
 func _station_focus(panel: Node, key: String, pilot: RefCounted) -> bool:
