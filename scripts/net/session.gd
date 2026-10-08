@@ -620,6 +620,7 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 	var context: Dictionary = {}
 	if envelope.op == "tm_teach": context = _personal_tm_context(peer, envelope.station_key)
 	elif envelope.op == "tether_pouch": context = _personal_pouch_context(peer, envelope.station_key)
+	elif envelope.op == "trainer_equip": context = _personal_equipment_context(peer, envelope.station_key)
 	elif envelope.op == "resource":
 		var resources := get_node_or_null(^"FoundationComposition/Resources")
 		if resources != null: context = resources.call("host_context", peer, envelope.station_key, envelope.intent)
@@ -716,7 +717,7 @@ func _foundation_journal_refusal(action: String, journal: Dictionary) -> Diction
 	# The actual prepared BOOL writer rolls back the hidden host stage. Keep
 	# the TM's original request for its next attempt, rather than minting a new
 	# teach ID. Malformed/foreign/semantic refusals retain their terminal meaning.
-	if action in ["tm_teach", "resource", "groom", "tether_pouch"] and code in ["training_journal_failed", "world_not_prepared", "world_save_failed"]:
+	if action in ["tm_teach", "resource", "groom", "tether_pouch", "trainer_equip"] and code in ["training_journal_failed", "world_not_prepared", "world_save_failed"]:
 		return {"ok": false, "resolved": false, "durable": false, "terminal_refusal": false, "code": code, "reason": code}
 	return _foundation_refusal(code)
 
@@ -2143,6 +2144,25 @@ func personal_pouch_available() -> bool:
 func personal_pouch_submit(original: Dictionary, revision: int, scope: Dictionary) -> Dictionary:
 	if scope.is_empty() or not ESSENCE._equivalent(scope, personal_pouch_scope()): return _foundation_refusal("pouch_owner_context_changed")
 	return _foundation_send("tether_pouch", "personal_pouch:" + _local_character_id(), original, revision)
+
+## Backpack equipment is a typed character decision. Local-save refresh and
+## encounter-frozen gear remain unchanged; only this original saved swap can
+## update the admitted equipment/inventory together.
+func _personal_equipment_context(peer: int, key: String) -> Dictionary:
+	var character := _authority_character(peer)
+	if character.is_empty() or key != "personal_equipment:" + character or _altar_peer_in_combat(peer): return {}
+	return {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
+		"source_key": key, "station_kind": "personal_equipment", "in_range": true, "in_combat": false, "owns_character": true}
+
+func personal_equipment_scope() -> Dictionary:
+	var envelope := _altar_envelope("trainer_equip", "personal_equipment:" + _local_character_id())
+	if envelope.is_empty(): return {}
+	return {"character_id": envelope.character_id, "world_namespace": envelope.world_namespace, "session_epoch": envelope.session_epoch}
+
+func personal_equipment_submit(original: Dictionary, revision: int, scope: Dictionary) -> Dictionary:
+	if scope.is_empty() or not ESSENCE._equivalent(scope, personal_equipment_scope()): return _foundation_refusal("equipment_owner_context_changed")
+	return _foundation_send("trainer_equip", "personal_equipment:" + _local_character_id(), original, revision)
+
 func personal_candy_submit(original: Dictionary, revision: int, scope: Dictionary) -> Dictionary:
 	if scope.is_empty() or not ESSENCE._equivalent(scope, personal_tm_scope()): return _foundation_refusal("candy_owner_context_changed")
 	return _foundation_send("candy_feed", "personal_candy_feed", original, revision)
