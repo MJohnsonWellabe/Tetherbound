@@ -344,10 +344,13 @@ func _run() -> void:
 					and str(presentation.call("action_id")) == launch_action_id:
 					presentation_present = true
 			_check(presentation_present, "actual accepted ultimate presentation remains mounted at the first post-arrival observation")
+			var presentation_clock: Dictionary = (_manager.get("_pending_move") as Dictionary).get("ultimate_presentation_clock", {})
 			var control_observation := {"action_id":launch_action_id,"move_id":str(ultimate.move_id),
 				"presentation_seconds":signature_seconds,"accepted_launch_ms":accepted_launch_ms,
 				"arrival_observed_ms":arrival_observed_ms,"presentation_present":presentation_present,
-				"committed_at_arrival_observation":bool(_manager.call("player_is_committed"))}
+				"committed_at_arrival_observation":bool(_manager.call("player_is_committed")),
+				"local_presentation_clock":{"started_ms":presentation_clock.get("started_ms"),
+					"deadline_ms":presentation_clock.get("deadline_ms"),"local_body_id":presentation_clock.get("local_body_id")}}
 			var latest: Dictionary = _impacts.back()
 			_check(float(latest.damage) <= float(_enemy.max_hp) * 0.2 + 0.001, "ultimate respects the named-target HP cap")
 			_check(is_equal_approx(float(_host.move_resource_snapshot(_id, 1, _creature.uid).ultimate_meter), 0.0), "ultimate spends the full per-UID meter once")

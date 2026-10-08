@@ -3692,6 +3692,10 @@ func present_host_attack_launch(launch: Dictionary, striker: Node3D = null, on_e
 		if move.get("slot") == "ultimate":
 			var session := get_node_or_null(^"/root/Session")
 			context["recipient_character_id"] = str(session.call("_local_character_id")) if session != null and session.has_method("_local_character_id") else str(move.get("actor_binding", {}).get("character_id", ""))
+	# Effect construction can load meshes/materials synchronously. Include that
+	# work in this accepted launch's local presentation duration, rather than
+	# adding a fresh full duration after the constructor returns.
+	var presentation_started_ms: int = Time.get_ticks_msec()
 	var presentation: Node3D = PROJECTILE.launch(parent,
 		launch.get("from", striker.global_position), launch.get("to", target_body.global_position),
 		move, context)
@@ -3710,7 +3714,7 @@ func present_host_attack_launch(launch: Dictionary, striker: Node3D = null, on_e
 			and preload("res://scripts/vfx/move_presentation_contract.gd").same_actor(binding, context.get("current_actor", {})):
 			# Device-local, transient presentation state only: never serialized or
 			# sent to authority. Guests use their own validated local launch clock.
-			var started_ms: int = Time.get_ticks_msec()
+			var started_ms: int = presentation_started_ms
 			_pending_move["ultimate_presentation_clock"] = {"launch":launch.duplicate(true),
 				"local_body_id":_ally_body.get_instance_id(),"started_ms":started_ms,
 				"deadline_ms":started_ms + floori(duration * 1000.0)}
