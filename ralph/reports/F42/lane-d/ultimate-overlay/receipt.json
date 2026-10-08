@@ -72,5 +72,26 @@
     "original_reviewer": "/root/f42_visual_review (same preserved child/parent as above)",
     "limits": "Staged snapshot layout, not live combat or720pixels. WholeF42#2 stays OPEN; original native7inch blindPASS still required.",
     "f42_0_update": "Root6058798568 confirms PR587 merged main ec9a73d7e0cbd2a507a68b543b30e2ba8ce91fd7. F42#0 not repeated; prior PR586 closed/unmerged."
+  },
+  "binding_text_followup": {
+    "source_commit": "f253d194165f88cab1241439e321b5b6b091f0ef",
+    "baseline": "5c8d7d0028cfb7fa3bcc2e8190601812cb2766cd",
+    "supported_defect": "Ultimate overlay hard-coded RB and X/Y/B despite receiving a device choice and validated slot glyphs.",
+    "change": "Use existing InputGlyph keyboard/pad binding helpers for the arm label and ready caption; use the validated quick/charged/utility glyphs for the armed caption.",
+    "scope": "Device-local display only. Producer/admission, input bindings, flags, authority and durable state unchanged.",
+    "proof": "Existing tests/smoke_combat_hud_left_column.gd; all original guards retained plus keyboard/pad captions and disclosed Q/E/F acknowledged display-glyph fixture.",
+    "run": 37772293975,
+    "artifact": 11548707577,
+    "engine": "Godot 4.7.stable.official.5b4e0cb0f",
+    "mode": "hosted headless1920x1080",
+    "exit": 0,
+    "seconds": 6,
+    "result": "PASS",
+    "log_sha256": "53706862bcc8d4503ec11034e1aefebe2e0c5390c978e5004a30fde63b4815eb",
+    "review": "binding-proof-review.txt: original /root/f42_visual_review APPROVE scoped code and proof",
+    "limits": "Snapshot display behavior, not live remapping/combat, dynamic-label wrapping, paired live rasters or7inch blindPASS. Whole F42#2 remains OPEN.",
+    "queued_low_packet": "https://github.com/MJohnsonWellabe/Tetherbound/issues/572#issuecomment-6059080068",
+    "queued_source": "5c8d7d0028cfb7fa3bcc2e8190601812cb2766cd",
+    "capture_scope": "Existing actual named-fight tool in Low1080/720. Canonical command UI/runtime is OFF, so the unchanged fallback can be inspected but no whole/new-overlay/command-meter PASS is inferred. Standalone layout fixture cannot supply the missing world/HUD composite."
   }
 }

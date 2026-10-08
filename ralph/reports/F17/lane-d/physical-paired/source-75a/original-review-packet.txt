@@ -1,0 +1,29 @@
+Original `/root/f42_visual_review` — runtime:
+
+> APPROVE bounded runtime packet at `75a797142066f1ba93c5eecedb954fe5cda81eb4`.
+>
+> - Windows Godot 4.7 / NVIDIA Forward+, Medium+High, exit 0 in about 628 seconds. Checkout, import-source and terminal receipts retain the same clean SHA.
+> - Verified 24 unique PNGs and matching supplied hashes; all decode at native 1920×1080. Three labels each have eight time/weather/preset combinations. Body/camera positions match within each label; maximum camera-basis component difference is approximately `5.96e-8`.
+> - Actual door binding/open gate and farmhouse→road→nave passed with zero off-road deviation. All eight arches and eight pedestals were reached on-floor within 0.594m. Source retains conditional ordinary recall and healthy active-member/same-body guards through all eight companion stills; individual recall input events are not logged.
+> - Endwall banners, arch-depth and farmhouse-window candidates are **OFF** in this packet. It records rendering features/lights, not active material bindings; it provides no acceptance credit for those candidates.
+>
+> Retain the interpolation deprecation and **seven leaked Texture RIDs**—this is not a clean-log claim.
+>
+> `complete=false` correctly declares bounded partial capture; `hall_stills_finished=true`, failure empty. No Low, motion, earned opening, device, combat, co-op, companion-clearance or whole-criterion approval. Blind pixel judgment remains separate.
+
+Original `/root/f26_presets_review` — blind pixels:
+
+> **Scoped Hall visual verdict: BLOCK on both Medium and High. Bar A: BLOCK. Bar B: BLOCK.**
+>
+> Inspected all 24 originals: twelve Medium/High pairs covering nave, Meadows pedestal and companion views, day/night and clear/rain. Neither preset clears the pictured defects.
+>
+> - **Architecture and materials — BLOCK:** nave frames `0000–0007` show a broad empty floor, undressed end wall and thin wooden arches containing flat blue/black panels. Repeated stone texture dominates without enough architectural depth or focal interest for the reference-backed world-appeal bar.
+> - **Lighting and atmosphere — BLOCK:** `0002/0003` lose much of the far wall and upper nave in near-black blue. Foreground illumination remains readable, but the transition lacks convincing depth and balanced practical light. Day/rain views retain broad, fairly uniform illumination; the pictured haze/window light does not establish the requested commercial atmosphere.
+> - **Companion composition and labels — BLOCK:** `0016–0023` place a pedestal across the creature’s lower chest/belly silhouette, while a partially obscured “Sealed” label leaves an isolated text fragment on its chest. These pixels establish objectionable overlap, not confirmed mesh penetration. Nave right-side labels also disappear behind the story panel.
+> - **Pedestal presentation — mixed:** `0008–0015` have readable biome labels and interaction text, but the repeated lectern-like objects and plain surroundings provide weak shrine identity. “Hang your The Meadows relic” is visibly unpolished wording.
+>
+> Strengths worth preserving: Terrapup’s expressive eyes, face markings and large silhouette remain appealing and readable; trainer, floor and essential HUD text remain legible. The installed stone/timber family is coherent. No rain streaks are visible inside the pictured rain-labeled interiors.
+>
+> The largest remaining work is architectural depth/focal dressing, balanced nave night lighting, and companion/pedestal/label separation.
+>
+> **F17#6, F26#3 and F38#3 remain unproven and cannot receive PASS from this packet.** It omits village/farm-door approach, the complete arch/shrine and biome matrices, real fights and required motion. There are no Low images or device/performance evidence here; I make no claims about them. Device testing remains its separate gate.
