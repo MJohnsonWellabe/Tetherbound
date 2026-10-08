@@ -616,14 +616,14 @@ func _retain_ledger_inventory(intent: Dictionary, delta: Dictionary, source: Str
 			if duty.action != "ledger_inventory" or duty.character_id != character: continue
 			if current.redesign_character.transaction_receipts.has(actions.ledger_inventory_receipt(duty.intent, duty.context, character)): continue
 			if preload("res://scripts/net/retained_settlement.gd").duty_settled(world.redesign_world, work.event.delivery_id, duty): continue
-			var prior: Dictionary = actions.call("_ledger_inventory", current, duty.intent, duty.context)
+			var prior: Dictionary = actions._ledger_inventory(current, duty.intent, duty.context)
 			if prior.get("ok") != true: return {"ok": false}
 			current = prior.state
 		var context := {"source_key": source, "world_namespace": world.reward_delivery_namespace,
 			"session_id": epoch, "participants": participants.duplicate(), "ledger_confirmed": true,
 			"ledger_kind": str(intent.kind), "realm": str(intent.get("realm", "")), "original_ops": grouped[character].duplicate(true)}
 		var original := {"transaction_id": source.trim_prefix("ledger_inventory:"), "source_sequence": sequence, "ops": grouped[character].duplicate(true)}
-		var plan: Dictionary = actions.call("_ledger_inventory", current, original, context)
+		var plan: Dictionary = actions._ledger_inventory(current, original, context)
 		if plan.get("ok") != true: return {"ok": false, "reason": "The original inventory move was refused: " + str(plan.get("code", ""))}
 		duties.append({"character_id": character, "action": "ledger_inventory", "intent": original, "context": context})
 	var row := preload("res://scripts/net/foundation_event.gd").make(world, epoch, source, duties)
