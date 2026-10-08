@@ -188,7 +188,33 @@
       "change": "Final dune layer now uses weathered_bank mask for patch replacement, photographic ripple attenuation using existing rock_detail and macrovalue. Flatground texture, OFF path and geometry retained.",
       "required": "Affected unit/candidate capture and original blind judge; firstBLOCK retained. Stop after secondfailedtextureattempt.",
       "proof_reuse": "Originalreviewer approved17709a existing4/27 unit and OFFbaseline10: onlycandidate GLSL addition changes; factory/unit/config/capture unchanged, OFFoutput operations gated. Exact1c mountedONcapture required, not whole-build equivalence.",
-      "candidate_run": 37763616872
+      "candidate_run": 37763616872,
+      "capture": {
+        "run": 37763616872,
+        "artifact": 11543886392,
+        "source": "1c2f15e9dce535ed20695808e0bb0b01d2987f1b",
+        "baseline_source": "17709a796cda8e0df1c7f292c144497fc5c8c95a",
+        "frames": 10,
+        "complete": true,
+        "failures": [],
+        "exit": 0,
+        "seconds": 362,
+        "native_raster": [
+          1280,
+          720
+        ],
+        "actual_gate": {
+          "actual_enabled": true,
+          "candidate": true,
+          "expected_enabled": true,
+          "override_active": true,
+          "scope": "Device-local terrain material only; all other shipping gates retained",
+          "slope_noise_installed": true
+        },
+        "pose_differences": [],
+        "contact": "root-walk-weathering-final-contact.jpg",
+        "limits": "Candidateonlyoutputchanges guard-gated; OFFbaseline reused per originalreviewer, not same-source or whole-build equality. StagedRootWalkday/night only."
+      }
     }
   }
 }
