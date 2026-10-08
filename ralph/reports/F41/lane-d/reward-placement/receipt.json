@@ -46,7 +46,7 @@
     "review_report_commit": "c1a627e6e1d45303f6286de4484c6ea65ac28a9f",
     "verified_E_D_HUD_blob": "6a65e5aa929f20ccfe6e7fc28ef010afab67d552",
     "portrait_difference": "Only creature_portrait_frames crop-map absent in E; removing that key from parsed D hud.json yields exact E JSON. This changes portrait content/framing, not the acknowledgement matcher or reward-summary payload/policy. E fixed portrait slot uses expand-ignore-size; no reward-card layout tuning differs. No concealment of E portrait difference or pixel proof reuse.",
-    "runtime_status": "ROOT queued; not yet a native result",
+    "runtime_status": "ROOT packet completed; original E runtime review pending",
     "source_verdict": "APPROVE",
     "reviewer": "original review_cloud_startup01a11679-fc2c-7873-bccd-423c1e04476d",
     "baseline": "native-e-b8523462de-f41-hollows-contact-r1 actual original victory; fiveLv80/seed2042/Calm/healing/fixedfps20/120cap, strict precleanup100 guard; later Lv42 run never treated as victory",
@@ -78,6 +78,32 @@
     ],
     "review_report": "ralph/reports/F41/lane-e-capture-source-review.json",
     "source": "beedcbfd3a57853d1629c41623d64a8f56b4169e",
-    "visual_status": "Same original E blind changed-aftermath verdict required; no D blind substitution"
+    "visual_status": "Changed acknowledgement pixels available; original E blind review pending; no duplicate reviewer"
+  },
+  "actual_native_packet": {
+    "root_terminal_record": "terminal-summary.json",
+    "producer_frames": 34,
+    "persisted_pngs": 37,
+    "fixtures": "Five Lv80/debugstand/Calm/healing/fixed20/pilot/seed2042/120cap; no earned/performance/Ally/actual natural LOSS claim",
+    "root_packet": "D:/CodexTemp/tetherbound-proof/native-e-beedcbfd3a-reward-route-r1",
+    "original_blind_status": "PENDING",
+    "source": "beedcbfd3a57853d1629c41623d64a8f56b4169e",
+    "whole_criterion_complete": false,
+    "ally_hits": 55,
+    "original_runtime_status": "PENDING",
+    "script_errors": 0,
+    "enemy_hits": 0,
+    "proof_reuse": "Original D79checks and successful oldb852 context retained; no reruns",
+    "observed_pixels": "Separate upper-right Victory rewards card with exact Hollows/Great Candy acknowledgement; central beaten text retained. Observation supplies no independent blind bar PASS.",
+    "aftermath_sha256": "4d9fcc6fd03d346c3f6096361d8028b422d25f38570a3e8e32c7f1e03447dc5e",
+    "aftermath": "frames/reward-route/hollows_alpha-100-aftermath.png",
+    "D_verification": "Read exact start/terminal/clean-source/archive mapping; verified this one PNG against original manifest and inspected pixels. Complete packet runtime and changed blind verdict remain with E originals; no duplicate review/capture.",
+    "manifest_entries": 54,
+    "actual_raster": [
+      1920,
+      1080
+    ],
+    "natural_stop_seconds": 99.97,
+    "exit_code": 0
   }
 }
