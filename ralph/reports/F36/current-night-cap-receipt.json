@@ -1,8 +1,8 @@
 {
   "criterion": "F36#3",
   "named_proof": "Attended Meshy ledger with task IDs and 30-generation cap",
-  "source_sha": "a7ce4c115f0666b91464b2fdd04256dc343626fc",
-  "ledger_last_source": "Pending commit of attended task11, parent0732106d",
+  "source_sha": "c7063c97a9194b461c39a5809b3796744ade3964",
+  "ledger_last_source": "c7063c97a9194b461c39a5809b3796744ade3964",
   "ledger": "ralph/reports/R2-F36/meshy-night-ledger.json",
   "night": "2026-10-07",
   "task_ids": [
@@ -40,7 +40,8 @@
   ],
   "review": {
     "agent": "review_f36_cap",
-    "verdict": "OPEN task11 maintenance review; earlier guard/accounting APPROVE retained"
+    "verdict": "APPROVE underlying eleven-task accounting/source/PBR/provenance at c7063c97; current snapshot fields corrected, final receipt review pending",
+    "source_sha": "c7063c97a9194b461c39a5809b3796744ade3964"
   },
   "visual_judge": "n/a accounting literal criterion",
   "engine_behavior": "unchanged; n/a",
@@ -59,5 +60,5 @@
     "reviewer": "/root/review_f36_cap",
     "new_criteria_closed": 0
   },
-  "maintenance_scope": "Already-met cap criterion maintenance, zero newly closed criteria; ten attended submissions, all candidate bindings OFF."
+  "maintenance_scope": "Current eleven attended submissions at committed c7063c97; no new guard/test/runtime binding or art-acceptance claim"
 }
