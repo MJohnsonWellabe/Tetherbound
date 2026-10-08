@@ -608,6 +608,47 @@ func tap(action: String) -> void:
 			await tree.process_frame
 			if trace_input: _trace_clock(action, pressed, "after process %d" % frame)
 
+## Read-only snapshots, not a forced UI refresh or a full F46 acceptance result.
+## Offload can expose Control state but cannot supply rendered readability proof.
+func observe_next_goal(gate: String, phase: String) -> Dictionary:
+	var scene := tree.current_scene
+	var hud := scene.get_node_or_null(^"PlaygroundHUD") if scene != null else null
+	var label := hud.get("_objective_text_label") as Label if hud != null else null
+	var block := hud.get("_objective_block") as Control if hud != null else null
+	var hint := hud.get("_objective_hint_label") as Label if hud != null else null
+	var log: RefCounted = game.get("quest_log")
+	var progression: RefCounted = game.get("progression")
+	var tracked := str(log.call("tracked_text", progression)) if log != null and progression != null else ""
+	var text := str(game.get("objective_text"))
+	var owner := INPUT_OWNER.current(tree)
+	var service := game.get_node_or_null(^"OnboardingLessons")
+	var panel: Node = service.get("_panel") if service != null else null
+	var lesson := {}
+	if is_instance_valid(panel):
+		var row: Dictionary = panel.get("_row")
+		var id := str(row.get("id", ""))
+		var lesson_text := panel.get("_text") as Label
+		lesson = {"id": id, "open": panel.call("is_open"), "owns_input": panel.call("owns_input"),
+			"line": panel.get("_line"), "text": lesson_text.text if is_instance_valid(lesson_text) else "",
+			"visible": is_instance_valid(lesson_text) and lesson_text.is_visible_in_tree(),
+			"personal_ack": not id.is_empty() and game.local.flags.call("has", "opening:lesson:" + id) == true}
+	var visible := label != null and block != null and label.is_visible_in_tree() and block.is_visible_in_tree()
+	var observation := {"kind": "next_goal_snapshot", "gate": gate, "phase": phase,
+		"realm": str(game.get("current_realm")), "scene": str(scene.get_path()) if scene != null else "",
+		"character_id": str(game.local.character_id), "party_uids": _uids(),
+		"process_frame": Engine.get_process_frames(), "physics_frame": Engine.get_physics_frames(),
+		"input_owner": str(owner.get_path()) if owner != null else "", "paused": tree.paused,
+		"tracked_id": str(log.call("tracked_id", progression)) if log != null and progression != null else "",
+		"quest_text": tracked, "game_text": text, "hud_text": label.text if label != null else "",
+		"hud_visible": visible, "objective_is_posed": game.get("_objective_is_posed"),
+		"visible_text_matches": visible and not text.strip_edges().is_empty() and label.text == text and text == tracked,
+		"game_hint": str(game.get("objective_hint")),
+		"hint_text": hint.text if hint != null else "", "hint_visible": hint != null and hint.is_visible_in_tree(),
+		"lesson": lesson, "render_loop_enabled": RenderingServer.render_loop_enabled,
+		"scope": "Partial UI/state observation only; no readability, comprehension, replay or full F46 claim"}
+	print("F46 NEXT GOAL OBSERVATION " + JSON.stringify(observation))
+	return observation
+
 func _trace_clock(action: String, pressed: bool, phase: String) -> void:
 	var input_owner := INPUT_OWNER.current(tree)
 	var dialogue: Node = tree.current_scene.get_node_or_null("DialoguePanel") if tree.current_scene != null else null

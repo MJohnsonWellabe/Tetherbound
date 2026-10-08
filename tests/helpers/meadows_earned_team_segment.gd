@@ -9,6 +9,9 @@ const CLOUDREACH := preload("res://tests/helpers/cloudreach_live_segment.gd")
 const NAV := preload("res://tests/helpers/opening_geometry_navigator.gd")
 const TOURNAMENT := preload("res://scripts/world/tournament.gd")
 const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
+const BED_INPUT := preload("res://tests/helpers/gate_b_tail_segment.gd")
+const PROGRESSION := preload("res://scripts/creatures/progression.gd")
+const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const MAX_TRAINING_FIGHTS := 40
 const APPROACH_FRAMES := 3600
 const SATCHEL_COLUMNS := 6
@@ -49,6 +52,9 @@ var _completed := false
 ## PROGRESSION 7 excludes from the earned route.
 var _fought: Array[String] = []
 var _respawn_waits := 0
+## Route state only: each actual home-bed wake must leave by the farmhouse's
+## authored outside marker before pursuing a field wild.
+var _home_bed_departure_pending := false
 
 
 ## Reusable camp care seam: one carried remedy or food, one retained party
@@ -378,11 +384,23 @@ func _engage(target: Node3D, allow_neighbour := false) -> bool:
 				and bool(offer.get("actionable", false)) \
 				and _director.call("_engageable") == target:
 			_stick(0, 0)
+			Input.flush_buffered_events()
+			# Pad motion is accumulated. Let ordinary ground friction finish
+			# braking before the press tick recomputes the nearest living wild.
+			# Each settling tick consumes this existing approach-loop budget.
+			if not _player.is_on_floor():
+				return _fail("The selected wild's stopped approach lost grounded floor")
+			if not Vector2(_player.velocity.x, _player.velocity.z).is_zero_approx():
+				await _tree.physics_frame
+				continue
 			if departure_index < departure_points.size():
 				_receipt("wild_departure_early_engage", {"completed_points": departure_index,
 					"planned_points": departure_points.size(), "target": str(target.name)})
-			_receipt("wild_interact", _approach_snapshot(target))
-			await _tap("interact")
+			if not await _tap("interact", target):
+				# No press was sent. Revisit the live offer and ordinary approach
+				# next tick; never replace the chosen catch with its pack neighbour.
+				await _tree.physics_frame
+				continue
 			for _settle in 120:
 				if _fighting():
 					return _verify_engagement(target, allow_neighbour)
@@ -408,11 +426,13 @@ func _engage(target: Node3D, allow_neighbour := false) -> bool:
 		if departure_index < departure_points.size():
 			var step: Dictionary = departure_points[departure_index]
 			var at: Vector2 = step.at
-			var radius := 0.25 if step.kind == "threshold" else 0.8
+			var radius := 0.15 if step.kind == "home_bed_clearance" else (0.25 if step.kind == "threshold" else 0.8)
 			if Vector2(_player.global_position.x, _player.global_position.z).distance_to(at) <= radius \
 					and _player.is_on_floor():
 				_receipt("wild_house_route_point", {"kind": step.kind, "index": departure_index,
 					"player": str(_player.global_position), "floor": _player.is_on_floor(), "approach_frames": _frame})
+				if step.kind == "home_bed_departure":
+					_home_bed_departure_pending = false
 				departure_index += 1
 				_nav.reset()
 			else:
@@ -491,11 +511,42 @@ func _containing_house_departure() -> Dictionary:
 		front = front.normalized()
 		inside = within or offset.dot(front) < 1.0
 	if selected == null:
-		return none
+		if not _home_bed_departure_pending:
+			return none
+		# Grandpa's outdoor bed is not a village_road_houses interior. The
+		# bed approach keeps the capsule outside its raised pad. Leave that
+		# stance toward the live farmhouse's outside marker, then the roads
+		# below, instead of cutting north through the pad toward a wild.
+		selected = _world.get_node_or_null("GrandpaHouse") as Node3D
+		if selected == null or not selected.has_method("marker") \
+				or selected.get_node_or_null("HomeCreatureBed") == null:
+			return {"ok": false}
+		threshold = selected.call("marker", "outside")
+		if not threshold.is_finite():
+			return {"ok": false}
+	elif _home_bed_departure_pending:
+		return {"ok": false} # A home-bed wake cannot silently become another house's departure.
 	var route: Array = []
-	if inside:
+	var required_points := 0
+	if _home_bed_departure_pending:
+		var bed := selected.get_node_or_null("HomeCreatureBed") as Node3D
+		if bed == null:
+			return {"ok": false}
+		var stance := _home_bed_stance(bed, bed.get_node_or_null("Interactable") as Node3D)
+		if stance.is_empty():
+			return {"ok": false}
+		var pad_exit := exterior_path(Vector2(_player.global_position.x, _player.global_position.z),
+			Vector2(threshold.x, threshold.z), stance.polygon, float(stance.clearance))
+		if pad_exit.is_empty():
+			return {"ok": false}
+		for index in pad_exit.size():
+			route.append({"kind": "home_bed_departure" if index == pad_exit.size() - 1 else "home_bed_clearance",
+				"at": pad_exit[index]})
+		required_points = route.size()
+	elif inside:
 		route.append({"kind": "threshold", "at": Vector2(threshold.x, threshold.z)})
 		route.append({"kind": "outside", "at": Vector2(threshold.x + front.x * 1.8, threshold.z + front.z * 1.8)})
+		required_points = route.size()
 	var village: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/village.json"))
 	var terrain: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
 	if not village is Dictionary or not village.get("road_plan") is Dictionary \
@@ -522,7 +573,7 @@ func _containing_house_departure() -> Dictionary:
 				return {"ok": false}
 			route.append({"kind": "field_road", "at": Vector2(float(raw[0]), float(raw[1]))})
 	return {"ok": matches == 1, "house": str(selected.get_path()), "points": route,
-		"required_points": 2 if inside else 0}
+		"required_points": required_points}
 
 
 func _route_pair_valid(raw: Variant) -> bool:
@@ -683,9 +734,9 @@ const EXTERIOR_CLEARANCE := 3.0
 
 
 static func exterior_path(from: Vector2, target: Vector2,
-		polygon: PackedVector2Array) -> Array[Vector2]:
+		polygon: PackedVector2Array, clearance: float = EXTERIOR_CLEARANCE) -> Array[Vector2]:
 	var nodes: Array[Vector2] = [from, target]
-	for contour: PackedVector2Array in Geometry2D.offset_polygon(polygon, 3.2, Geometry2D.JOIN_MITER):
+	for contour: PackedVector2Array in Geometry2D.offset_polygon(polygon, clearance + 0.2, Geometry2D.JOIN_MITER):
 		for point: Vector2 in contour:
 			if not Geometry2D.is_point_in_polygon(point, polygon):
 				nodes.append(point)
@@ -712,7 +763,7 @@ static func exterior_path(from: Vector2, target: Vector2,
 			return result
 		visited[current] = true
 		for next in nodes.size():
-			if visited[next] or not exterior_edge_clear(nodes[current], nodes[next], polygon):
+			if visited[next] or not exterior_edge_clear(nodes[current], nodes[next], polygon, clearance):
 				continue
 			var candidate := distance[current] + nodes[current].distance_to(nodes[next])
 			if candidate < distance[next]:
@@ -786,7 +837,7 @@ static func interior_edge_clear(from: Vector2, target: Vector2, polygon: PackedV
 
 
 static func exterior_edge_clear(from: Vector2, target: Vector2,
-		polygon: PackedVector2Array) -> bool:
+		polygon: PackedVector2Array, clearance: float = EXTERIOR_CLEARANCE) -> bool:
 	if Geometry2D.is_point_in_polygon(from, polygon) or Geometry2D.is_point_in_polygon(target, polygon) \
 			or crosses_boundary(from, target, polygon):
 		return false
@@ -794,10 +845,10 @@ static func exterior_edge_clear(from: Vector2, target: Vector2,
 		var a := polygon[index]
 		var b := polygon[(index + 1) % polygon.size()]
 		for point: Vector2 in [from, target]:
-			if point.distance_to(Geometry2D.get_closest_point_to_segment(point, a, b)) < EXTERIOR_CLEARANCE:
+			if point.distance_to(Geometry2D.get_closest_point_to_segment(point, a, b)) < clearance:
 				return false
 		for point: Vector2 in [a, b]:
-			if point.distance_to(Geometry2D.get_closest_point_to_segment(point, from, target)) < EXTERIOR_CLEARANCE:
+			if point.distance_to(Geometry2D.get_closest_point_to_segment(point, from, target)) < clearance:
 				return false
 	return true
 
@@ -998,8 +1049,12 @@ func _prepare_pilot(training: bool) -> bool:
 	# miss ordinary party XP and cannot silently count as a healthy training team.
 	for index in int(_party().call("size")):
 		var member: RefCounted = _party().call("at", index)
-		if bool(member.get("fainted")) and not await _use_remedy("revive", index):
-			return false
+		if bool(member.get("fainted")):
+			if int((_game.get("inventory") as RefCounted).call("count", "revive")) > 0:
+				if not await _use_remedy("revive", index):
+					return false
+			elif not await _recover_at_home_bed(index):
+				return false
 	var potion_stock := int((_game.get("inventory") as RefCounted).call("count", "potion_small"))
 	# Prefer an under-level pilot while carried care can make that choice safe.
 	# Once it cannot, health alone selects the strongest usable member; shared
@@ -1021,6 +1076,8 @@ func _prepare_pilot(training: bool) -> bool:
 			_receipt("care_depleted_pilot", {"creature_id": active.get_instance_id(),
 				"hp": active.get("hp"), "max_hp": active.get("max_hp"),
 				"level": active.get("level")})
+			if not await _recover_at_home_bed(best):
+				return false
 			break
 		if not await _use_remedy("potion_small", best):
 			return false
@@ -1035,6 +1092,196 @@ func _prepare_pilot(training: bool) -> bool:
 	if int(_party().call("active_index")) == best:
 		return true
 	return _fail("Party-cycle input did not select the available training creature")
+
+
+## Grandpa's installed bed is available before a paid camp. Use the existing
+## controller bed driver, let production recovery tick, then press Wake early.
+## This provides HP only; it never supplies the tournament's full-rest bonus.
+func _recover_at_home_bed(index: int) -> bool:
+	var bed := _world.find_child("HomeCreatureBed", true, false) as Node3D
+	if bed == null or int(bed.call("build_index")) > -10 or int(bed.call("occupant_index")) >= 0:
+		return _fail("Depleted carried care needs Grandpa's available installed bed")
+	var member: RefCounted = _party().call("at", index)
+	var retained := _party_ids()
+	var inventory_before := _inventory_snapshot()
+	var progression: RefCounted = _game.get("progression")
+	var paid_bed_before := bool(progression.call("has", "creature_bed_built"))
+	var before_hp := float(member.get("hp"))
+	var driver := BED_INPUT.new()
+	driver._tree = _tree
+	driver._world = _world
+	driver._game = _game
+	driver._player = _player
+	driver._rig = _rig
+	driver._party = _party()
+	driver._arbiter = _arbiter
+	driver._bed = bed
+	driver._resolve_move_bindings()
+	var prompt := bed.get_node_or_null("Interactable") as Node3D
+	var stance := _home_bed_stance(bed, prompt)
+	if stance.is_empty() or not driver.failures.is_empty() \
+			or not await _walk_to_home_bed(driver, prompt, stance):
+		return _fail("Controller home-bed assignment failed: " + str(driver.failures))
+	# Reuse the controller panel actions without the generic bed driver's
+	# centre-first walk: its 1.4 m target lies on this installed bed's pad.
+	await driver._tap(&"interact")
+	var panel: Node = await driver._wait_for_panel("creature_bed_panel.gd")
+	if panel == null or not await driver._focus_the_row_for(panel, index):
+		return _fail("Controller could not select its creature for the installed bed")
+	await driver._tap(&"ui_accept")
+	await driver._settle(6)
+	if not bool(member.get("resting")) or int(bed.call("occupant_index")) != index:
+		await driver._tap(&"menu_cancel")
+		return _fail("Controller home-bed assignment did not rest the selected creature")
+	await driver._tap(&"menu_cancel")
+	await driver._settle(8)
+	if _tree.paused:
+		return _fail("Controller home-bed assignment left the world paused")
+	var started := Time.get_ticks_msec()
+	var heal_seconds := PROGRESSION.creature_bed_full_heal_seconds(PROGRESSION.config())
+	var deadline := started + int((heal_seconds * 5.0 + 30.0) * 1000.0)
+	while float(member.get("hp")) < float(member.get("max_hp")) - 0.01:
+		if Time.get_ticks_msec() >= deadline or _tree.paused or _fighting() \
+				or not bool(member.get("resting")) or INPUT_OWNER.current(_tree) != null:
+			return _fail("Production home-bed recovery stopped before full HP")
+		await _tree.process_frame
+	if not await _walk_to_home_bed(driver, prompt, stance):
+		return _fail("Controller could not return to the installed bed: " + str(driver.failures))
+	await driver._tap(&"interact")
+	panel = await driver._wait_for_panel("creature_bed_panel.gd")
+	if panel == null or not await driver._focus_the_row_for(panel, index):
+		return _fail("Controller could not select its sleeping creature to wake")
+	await driver._tap(&"ui_accept")
+	await driver._tap(&"menu_cancel")
+	if _tree.paused or bool(member.get("resting")) or bool(member.get("fainted")) \
+			or bool(member.get("rested")) or _party_ids() != retained \
+			or inventory_before != _inventory_snapshot() \
+			or paid_bed_before != bool(progression.call("has", "creature_bed_built")):
+		return _fail("Home-bed early wake changed retained inventory/team or supplied a paid/full-rest credit")
+	_home_bed_departure_pending = true
+	_receipt("home_bed_hp_recovery", {"party_index": index, "uid": member.get("uid"),
+		"before_hp": before_hp, "after_hp": member.get("hp"), "max_hp": member.get("max_hp"),
+		"elapsed_wall_seconds": float(Time.get_ticks_msec() - started) / 1000.0,
+		"authored_full_heal_seconds": heal_seconds, "bed_index": bed.call("build_index"),
+		"controller_assignment_and_early_wake": true, "full_rest_bonus": false,
+		"synthetic_recovery_ticks": false, "party_ids_unchanged": true, "inventory_unchanged": true})
+	return true
+
+
+## Read the actual solid pad and trainer capsule, never the visible rim or a
+## guessed mesh size. The closest exterior face supplies a heading only;
+## the live arbiter and grounded controller still decide whether it is usable.
+func _home_bed_stance(bed: Node3D, prompt: Node3D) -> Dictionary:
+	var capsule := _player.get_node_or_null("Collision") as CollisionShape3D
+	if prompt == null or capsule == null or not capsule.shape is CapsuleShape3D:
+		return {}
+	var bounds := AABB()
+	var found := false
+	for leaf: CollisionShape3D in bed.find_children("*", "CollisionShape3D", true, false):
+		var body := leaf.get_parent() as PhysicsBody3D
+		if leaf.disabled or body == null or (body.collision_layer & _player.collision_mask) == 0:
+			continue
+		if not leaf.shape is BoxShape3D:
+			return {}
+		var box := leaf.shape as BoxShape3D
+		var live: AABB = leaf.global_transform * AABB(-box.size * 0.5, box.size)
+		bounds = bounds.merge(live) if found else live
+		found = true
+	if not found or not bounds.position.is_finite() or not bounds.size.is_finite() \
+			or bounds.size.x <= 0.0 or bounds.size.z <= 0.0:
+		return {}
+	var footprint := Rect2(Vector2(bounds.position.x, bounds.position.z), Vector2(bounds.size.x, bounds.size.z))
+	var clearance := float(capsule.shape.radius) + _player.safe_margin + 0.1
+	var outer := footprint.grow(clearance + 0.25)
+	var at := prompt.global_position
+	var candidates: Array[Vector2] = [
+		Vector2(outer.position.x, clampf(at.z, footprint.position.y, footprint.end.y)),
+		Vector2(outer.end.x, clampf(at.z, footprint.position.y, footprint.end.y)),
+		Vector2(clampf(at.x, footprint.position.x, footprint.end.x), outer.position.y),
+		Vector2(clampf(at.x, footprint.position.x, footprint.end.x), outer.end.y)]
+	var stance := Vector3.INF
+	var nearest := float(prompt.get("radius"))
+	for candidate: Vector2 in candidates:
+		var heading := Vector3(candidate.x, bed.global_position.y, candidate.y)
+		if heading.distance_to(at) < nearest:
+			nearest = heading.distance_to(at)
+			stance = heading
+	if not stance.is_finite():
+		return {}
+	var polygon := PackedVector2Array([footprint.position,
+		Vector2(footprint.end.x, footprint.position.y), footprint.end,
+		Vector2(footprint.position.x, footprint.end.y)])
+	return {"at": stance, "bounds": bounds, "footprint": footprint, "polygon": polygon, "clearance": clearance}
+
+
+func _walk_to_home_bed(driver: RefCounted, prompt: Node3D, stance: Dictionary) -> bool:
+	if not await driver._stow_piece() or not await driver._stow_hammer():
+		return false
+	var boundary := _boundary_approach(prompt)
+	if bool(boundary.required) and (boundary.points as Array).is_empty():
+		return _fail("The installed bed needs an actual open village gate route")
+	var points: Array[Vector2] = []
+	points.assign(boundary.points)
+	var footprint: Rect2 = stance.footprint
+	var from: Vector2 = Vector2(_player.global_position.x, _player.global_position.z) if points.is_empty() else points.back()
+	var target: Vector3 = stance.at
+	var pad_route := exterior_path(from, Vector2(target.x, target.z), stance.polygon, float(stance.clearance))
+	if pad_route.is_empty():
+		return _fail("The installed bed has no exterior capsule approach")
+	points.append_array(pad_route)
+	# Share the original bed driver's one distance-based budget across gate,
+	# pad detour and prompt acquisition; no new allowance per waypoint.
+	var budget := maxi(BED_INPUT.MOVE_FRAME_LIMIT,
+		240 + int(_player.global_position.distance_to(prompt.global_position) * 60.0))
+	var waypoint := 0
+	_nav.reset()
+	for frame in budget:
+		var here := Vector2(_player.global_position.x, _player.global_position.z)
+		if _nav.refused() or not _player.is_on_floor() or _tree.paused or _fighting() \
+				or INPUT_OWNER.current(_tree) != null or footprint.grow(float(stance.clearance)).has_point(here):
+			_nav.reset()
+			return _fail("Installed-bed approach lost grounded exterior world input: " + _nav.refusal_reason())
+		if waypoint < (boundary.points as Array).size() and not str(boundary.gate).is_empty() \
+				and not _open_boundary_gate(str(boundary.gate)):
+			_nav.reset()
+			return _fail("The actual village gate closed during the installed-bed approach")
+		# An offered bed is usable before reaching any geometric centre. Stop
+		# the actual stick here, and keep this same exterior stance for Wake.
+		if waypoint >= (boundary.points as Array).size() and not _nav.departure_pending(target) \
+				and _arbiter.call("winning_provider") == prompt \
+				and bool((_arbiter.call("winner") as Dictionary).get("actionable", false)):
+			_nav.reset()
+			await driver._settle(3)
+			here = Vector2(_player.global_position.x, _player.global_position.z)
+			if _nav.refused() or not _player.is_on_floor() or _tree.paused or _fighting() \
+					or INPUT_OWNER.current(_tree) != null or footprint.grow(float(stance.clearance)).has_point(here) \
+					or _arbiter.call("winning_provider") != prompt \
+					or not bool((_arbiter.call("winner") as Dictionary).get("actionable", false)):
+				return _fail("The installed-bed prompt did not remain usable from the grounded exterior stance")
+			stance["at"] = _player.global_position
+			_receipt("home_bed_exterior_prompt", {"player": str(_player.global_position),
+				"solid_bounds": str(stance.bounds), "capsule_clearance": stance.clearance,
+				"provider": str(prompt.get_path()), "floor": _player.is_on_floor(),
+				"approach_frames": frame, "budget": budget})
+			return true
+		if waypoint < points.size():
+			var next: Vector2 = points[waypoint]
+			if here.distance_to(next) <= 0.15:
+				waypoint += 1
+				_nav.reset()
+			else:
+				_nav.step(Vector3(next.x, _player.global_position.y, next.y))
+		await _tree.physics_frame
+	_nav.reset()
+	return _fail("The installed-bed exterior approach exhausted its original movement budget")
+
+
+func _inventory_snapshot() -> Array[Dictionary]:
+	var inventory: RefCounted = _game.get("inventory")
+	var slots: Array[Dictionary] = []
+	for slot in int(inventory.call("slot_count")):
+		slots.append(inventory.call("stack_at", slot))
+	return slots
 
 
 ## Pure selection seam for the live pilot policy. The caller owns revival and
@@ -1190,19 +1437,49 @@ func _focus() -> Control:
 	return _tree.root.get_viewport().gui_get_focus_owner()
 
 
-func _tap(action: String) -> void:
-	var event := InputEventAction.new()
-	event.action = action
-	event.pressed = true
+func _tap(action: String, target: Node3D = null) -> bool:
+	var binding: InputEvent = null
+	for candidate: InputEvent in InputMap.action_get_events(action):
+		if candidate is InputEventJoypadButton or candidate is InputEventJoypadMotion:
+			binding = candidate
+			break
+	if binding == null:
+		return _fail("The earned team action has no physical controller binding: " + action)
+	if target != null:
+		if action != "interact" or _tree == null or _player == null or _director == null or _arbiter == null \
+				or not is_instance_valid(target) or not bool(target.call("is_alive")):
+			return false
+		Input.flush_buffered_events()
+		var offer: Dictionary = _arbiter.call("winner")
+		if INPUT_OWNER.current(_tree) != null or not bool(_arbiter.call("enabled")) \
+				or _arbiter.call("winning_provider") != _director or not bool(offer.get("actionable", false)) \
+				or not _player.is_on_floor() \
+				or Input.get_vector("move_left", "move_right", "move_forward", "move_back") != Vector2.ZERO \
+				or not Vector2(_player.velocity.x, _player.velocity.z).is_zero_approx() \
+				or _director.call("_engageable") != target:
+			return false
+		# No yield between the actual body check and ordinary input dispatch.
+		_receipt("wild_interact", _approach_snapshot(target))
+	var event: InputEvent = binding.duplicate()
+	event.device = 0
+	if event is InputEventJoypadButton:
+		(event as InputEventJoypadButton).pressed = true
+	else:
+		(event as InputEventJoypadMotion).axis_value = (binding as InputEventJoypadMotion).axis_value
 	Input.parse_input_event(event)
+	if target != null: Input.flush_buffered_events()
 	for _frame in 3:
 		await _tree.physics_frame
-	event = InputEventAction.new()
-	event.action = action
-	event.pressed = false
+	event = event.duplicate()
+	if event is InputEventJoypadButton:
+		(event as InputEventJoypadButton).pressed = false
+	else:
+		(event as InputEventJoypadMotion).axis_value = 0.0
 	Input.parse_input_event(event)
+	if target != null: Input.flush_buffered_events()
 	for _frame in 5:
 		await _tree.physics_frame
+	return true
 
 
 func _stick(x: float, z: float) -> void:
@@ -1227,9 +1504,12 @@ func _party_ids() -> Array[int]:
 
 func _party_snapshot() -> Array[Dictionary]:
 	var rows: Array[Dictionary] = []
+	var local: RefCounted = _game.get("local")
+	var personal: Dictionary = local.get("redesign_character") if local != null else {}
 	for index in int(_party().call("size")):
 		var member: RefCounted = _party().call("at", index)
 		rows.append({"id": member.get_instance_id(), "species": member.get("species_id"),
+			"uid": member.get("uid"), "live_admitted_cap": ESSENCE.creature_cap(personal, str(member.get("uid"))),
 			"level": member.get("level"), "xp": member.get("xp"), "hp": member.get("hp")})
 	return rows
 

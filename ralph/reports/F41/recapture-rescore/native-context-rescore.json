@@ -1,0 +1,231 @@
+{
+  "schema_version": 1,
+  "review_type": "original code-blind bounded Stormwood context catalogue rescore",
+  "reviewer": {
+    "name": "blind_listener_f10",
+    "id": "01a11667-4631-72b2-8fed-294999b8c043",
+    "role": "retained original independent code-blind visual judge"
+  },
+  "disposition": "BOUNDED_RESCORE_COMPLETE_SIX_SUPPORTED_ROWS_TWO_UNASSESSED",
+  "scope": "New A/B/P/G context pixels only. Low Compatibility still-image judgments of the six requested supported rows; independent ratings against approved Stormwood boards and written ART_DIRECTION domain bar. No original 36 scores or 44-row catalogue changes.",
+  "scales": {
+    "severity": "1–5; 1 is the required minimum for a bounded PASS with original defect not observed",
+    "exposure": "1–5, independently rated recurrence/visibility of this subject in its pictured gameplay context",
+    "importance": "1–5, independently rated consequence for readable player-facing presentation",
+    "impact": "severity × exposure × importance"
+  },
+  "supported_row_count": 6,
+  "rows": [
+    {
+      "item_id": "P2-092",
+      "subject": "named wild fight actor spacing",
+      "severity": 1,
+      "exposure": 4,
+      "importance": 4,
+      "impact": 16,
+      "verdict": "PASS",
+      "coverage": "BOUNDED",
+      "reason": "Voltarach, Sparkit and trainer have separate readable silhouettes in the sampled Hollows warning, opening and recovery views. Boss legs do not swallow Sparkit's body or the trainer in these full rasters; original crowding/intersection defect is not observed in this inspected subset.",
+      "evidence": [
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-a-start.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-e-impact.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-f-recovery.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-i17.jpg"
+      ],
+      "limits": [
+        "Still samples cannot establish collision clearance or all spacing during continuous motion, other party formations or four-player combat.",
+        "Severity 1 is the requested scale minimum; it does not assert a residual observed spacing defect."
+      ],
+      "reviewer": "01a11667-4631-72b2-8fed-294999b8c043",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-093",
+      "subject": "named wild danger and opening cues",
+      "severity": 3,
+      "exposure": 4,
+      "importance": 4,
+      "impact": 48,
+      "verdict": "FAIL",
+      "coverage": "BOUNDED",
+      "reason": "The broad magenta warning wedge disappears at the sampled impact, but a bright magenta warning-shaped glyph/sector remains beneath Voltarach while the HUD says 'it's open — hit it'. It is absent in the recovery sample. The localized residual still creates conflicting warning/opening semantics; this is smaller than the broad pre-impact hazard and does not obscure Sparkit's whole silhouette.",
+      "evidence": [
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-a-start.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-e-impact.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-f-recovery.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-i17.jpg"
+      ],
+      "limits": [
+        "Chronological stills support coexistence and sampled disappearance only; they do not prove cue duration, input windows or continuous timing.",
+        "No implementation or purpose of the residual glyph is inferred."
+      ],
+      "reviewer": "01a11667-4631-72b2-8fed-294999b8c043",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-063",
+      "subject": "shared fight tell and hit effects",
+      "severity": 3,
+      "exposure": 5,
+      "importance": 4,
+      "impact": 60,
+      "verdict": "FAIL",
+      "coverage": "PARTIAL",
+      "reason": "The warning uses a flat saturated magenta wedge/ring with a central glyph, while opening is communicated prominently through HUD text. In the Mosshock hit sample a large pale-yellow faceted circular graphic covers central upper-body detail, reducing the readable hit silhouette. The supplied stills retain visible creature bodies, but the effects do not meet the written object-first, weighted hit-feedback bar.",
+      "evidence": [
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-a-start.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-e-impact.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/A_blackwater_elder-i03.jpg"
+      ],
+      "limits": [
+        "Supported for inspected Voltarach tells and one Mosshock hit graphic, not every move/effect archetype or every encounter.",
+        "Hitstop, knockback weight, animation timing, sound and continuous response cannot be rated from these stills."
+      ],
+      "reviewer": "01a11667-4631-72b2-8fed-294999b8c043",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-088",
+      "subject": "fight team roster contrast",
+      "severity": 4,
+      "exposure": 5,
+      "importance": 4,
+      "impact": 80,
+      "verdict": "FAIL",
+      "coverage": "BOUNDED",
+      "reason": "In the Hollows start, impact and recovery full rasters the five-row roster above the active card is extremely transparent: terrain and grass overpower its header, icons and bars. The active Sparkit card remains readable. The Mosshock hit view has a substantially clearer roster, so the observed defect is context-dependent rather than uniformly present.",
+      "evidence": [
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-a-start.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-e-impact.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-f-recovery.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/A_blackwater_elder-i03.jpg"
+      ],
+      "limits": [
+        "No physical 7-inch display test or measured contrast ratio is claimed.",
+        "These are pictured combat backgrounds; all background/preset combinations are not exposed."
+      ],
+      "reviewer": "01a11667-4631-72b2-8fed-294999b8c043",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-083",
+      "subject": "dialogue foreground obstruction",
+      "severity": 1,
+      "exposure": 4,
+      "importance": 4,
+      "impact": 16,
+      "verdict": "PASS",
+      "coverage": "BOUNDED",
+      "reason": "Ondra's face and upper body remain clearly visible even with a very large foreground Sparkit at the left edge. Fenn remains visible beside a large trunk and shrubs. The inspected people contact views similarly keep named speakers visible above the dialogue panel; the original foreground-companion/overhead obstruction is not observed in these staged conversation views.",
+      "evidence": [
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/P_stormwood__inventory__character__keeper_ondra__dialogue.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/P_stormwood__inventory__character__trader_fenn__dialogue.jpg"
+      ],
+      "limits": [
+        "The dialogue panel intentionally covers the lower body; this is distinct from a creature or overhead object hiding the speaker.",
+        "No earned interaction, moving companion configurations or universal dialogue-camera coverage is claimed.",
+        "Severity 1 is the requested scale minimum; it does not assert a residual observed obstruction defect."
+      ],
+      "reviewer": "01a11667-4631-72b2-8fed-294999b8c043",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-070",
+      "subject": "Glass Sink landmark",
+      "severity": 4,
+      "exposure": 4,
+      "importance": 4,
+      "impact": 64,
+      "verdict": "FAIL",
+      "coverage": "BOUNDED",
+      "reason": "All four supplied approach/close views show a grassy rim abruptly ending above a very broad gray, repetitively gridded lower surface. A height drop is visible, but no distinct localized sink form or recognizable glass/crystalline material establishes the named landmark. The near views retain the same unmarked grass-to-void transition rather than revealing authored rim/detail identity.",
+      "evidence": [
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/G_stormwood__landmark__glass_sink__day__approach.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/G_stormwood__landmark__glass_sink__day__close.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/G_stormwood__landmark__glass_sink__golden__approach.jpg",
+        "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/G_stormwood__landmark__glass_sink__golden__close.jpg"
+      ],
+      "limits": [
+        "All four G full rasters were inspected; these two headings and their day/golden labels are not a complete rim, route or phase matrix.",
+        "Day/golden labels do not establish a Stormwood day/night cycle; both pictured views retain the purple storm sky.",
+        "The still images establish visible landmark-shape/material failure only; no reachability, collision, depth measurement or traversal mechanism is inferred."
+      ],
+      "reviewer": "01a11667-4631-72b2-8fed-294999b8c043",
+      "release_disposition": "OPEN"
+    }
+  ],
+  "withheld_rows": [
+    {
+      "item_id": "P2-110",
+      "subject": "Hollows fight loss result clarity",
+      "verdict": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Actual natural Hollows defeat and ensuing loss/out-of-fight result. Requested fixture levels/names are not outcomes; disclosed forced-cleanup A/B 99-after and 100-aftermath views are excluded."
+    },
+    {
+      "item_id": "P2-111",
+      "subject": "Hollows victory reward tiles",
+      "verdict": "UNASSESSED",
+      "severity": null,
+      "exposure": null,
+      "importance": null,
+      "impact": null,
+      "missing_context": "Actual natural Hollows victory acknowledgement, reward tiles and persistent quickbar together. Requested fixture levels/names are not outcomes; disclosed forced-cleanup A/B 99-after and 100-aftermath views are excluded."
+    }
+  ],
+  "contacts_used_for_scoring": [
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/A_contact_01.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/A_contact_02.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/A_contact_03.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/A_contact_06.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/A_contact_12.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/A_contact_27.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_contact_01.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_contact_02.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_contact_03.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_contact_04.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_contact_05.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_contact_06.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/P_contact_01.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/P_contact_02.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/P_contact_03.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/P_contact_04.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/P_contact_05.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/P_contact_06.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/G_contact_01.jpg"
+  ],
+  "full_rasters_inspected": [
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-a-start.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-e-impact.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-tell1-f-recovery.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/B_hollows_alpha-i17.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/A_blackwater_elder-i03.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/P_stormwood__inventory__character__keeper_ondra__dialogue.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/P_stormwood__inventory__character__trader_fenn__dialogue.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/G_stormwood__landmark__glass_sink__day__approach.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/G_stormwood__landmark__glass_sink__day__close.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/G_stormwood__landmark__glass_sink__golden__approach.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-contexts-anonymous/G_stormwood__landmark__glass_sink__golden__close.jpg"
+  ],
+  "reference_images": [
+    "D:/tetherbound/codex-e/docs/reference/boards-2026-09-06/stormwood-creature-roster-board.png",
+    "D:/tetherbound/codex-e/docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-a.png",
+    "D:/tetherbound/codex-e/docs/reference/boards-2026-09-06/stormwood-stormheart-tree-stronghold-board-b.png"
+  ],
+  "written_bar": "docs/design/ART_DIRECTION.md: domain bar, 4.1/4.2, 5.2/5.3, 6 and 9.1; Low readability judged, no High/Medium certification",
+  "limitations": [
+    "Targeted A/B contacts, all six B contacts, all six P contacts, the G contact, relevant A/B/P full rasters and all four G full rasters were inspected; no full A267/B45/P48 raster audit is claimed.",
+    "Still samples cannot prove continuous motion, cue duration, earned fights/dialogue, actual outcomes, multiplayer or target-hardware presentation.",
+    "Unrelated scenery/art defects are not used to score these narrowly named defects; row PASS does not certify the whole domain/full release art bar.",
+    "All release dispositions remain OPEN. Original 36 scores, original witnesses and original 44-row rescore are preserved."
+  ],
+  "full_F41_0": "OPEN — this six-row supplemental rescore does not establish all 44 gates; P2-110 and P2-111 actual natural outcome contexts remain missing and receive no numeric score.",
+  "full_visual_bar": "OPEN",
+  "partial_supported_rows": [
+    "P2-063"
+  ],
+  "unassessed_row_count": 2
+}

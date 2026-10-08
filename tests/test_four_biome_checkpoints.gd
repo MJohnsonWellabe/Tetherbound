@@ -206,3 +206,18 @@ func test_commit_sha_prefers_env_then_git() -> void:
 	var sha := CP.commit_sha()
 	assert_false(sha.is_empty())
 	assert_ne(sha, "unknown", "git or the .git HEAD file names the commit")
+	var output: Array = []
+	if OS.execute("git", ["-C", ProjectSettings.globalize_path("res://"), "rev-parse", "HEAD"], output, true) == 0 \
+			and not output.is_empty():
+		var head := str(output[0]).strip_edges()
+		var had_environment := OS.has_environment("TB_COMMIT_SHA")
+		var original_environment := OS.get_environment("TB_COMMIT_SHA")
+		OS.set_environment("TB_COMMIT_SHA", "mismatched-source-label")
+		assert_eq(CP.commit_sha(), head + "-environment-mismatch", "an environment label cannot relabel a checkout")
+		OS.set_environment("TB_COMMIT_SHA", head)
+		var matched := CP.commit_sha()
+		assert_true(matched == head or matched == head + "-dirty", "matching metadata does not bypass the dirty-tree check")
+		if had_environment:
+			OS.set_environment("TB_COMMIT_SHA", original_environment)
+		else:
+			OS.unset_environment("TB_COMMIT_SHA")

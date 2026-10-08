@@ -21,6 +21,58 @@ const FEED_MARGIN := 15.0
 
 
 class BedInput extends TAIL:
+	func _walk_to(target: Vector3, purpose: String, close_enough: float = MOVE_EPSILON,
+			report_failure: bool = true, fail_on_miss: bool = true,
+			headings: Array[Vector3] = []) -> bool:
+		var from := Vector2(_player.global_position.x, _player.global_position.z)
+		var to := Vector2(target.x, target.z)
+		var boundary: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(CARE.BOUNDARY_CONFIG))
+		var polygon := PackedVector2Array()
+		for raw: Array in (boundary.get("outline", {}) as Dictionary).get("points", []):
+			polygon.append(Vector2(float(raw[0]), float(raw[1])))
+		# The camp and Halda sit inside opposite sides of RoadGate's concave
+		# corner. Their direct chord cuts the jamb, then the local navigator
+		# follows the outside fence. Follow the authored roads both ways;
+		# all headings spend super's original single-leg budget and watchdog.
+		if headings.is_empty() and Geometry2D.is_point_in_polygon(from, polygon) \
+				and Geometry2D.is_point_in_polygon(to, polygon) \
+				and CARE.crosses_boundary(from, to, polygon):
+			var terrain: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
+			var paths: Dictionary = terrain.get("paths", {})
+			var road: Array[Vector2] = []
+			for entry: Dictionary in paths.get("routes", []):
+				if str(entry.get("label", "")) == "Practice Meadow":
+					for raw: Array in entry.get("points", []):
+						road.push_front(Vector2(float(raw[0]), float(raw[1])))
+			var practice_count := road.size()
+			for entry: Dictionary in paths.get("approaches", []):
+				if str(entry.get("id", "")) == "village_tournament_lawn":
+					for raw: Array in entry.get("points", []):
+						road.append(Vector2(float(raw[0]), float(raw[1])))
+			if practice_count < 2 or road.size() <= practice_count or road.size() > 32:
+				_fail("Earned rest needs the authored Practice Meadow and tournament roads")
+				return false
+			var first := 0
+			var last := 0
+			for index in road.size():
+				if from.distance_squared_to(road[index]) < from.distance_squared_to(road[first]):
+					first = index
+				if to.distance_squared_to(road[index]) < to.distance_squared_to(road[last]):
+					last = index
+			var direction := 1 if last >= first else -1
+			var previous := from
+			for index in range(first, last + direction, direction):
+				if CARE.crosses_boundary(previous, road[index], polygon):
+					_fail("Earned rest's authored road approach crosses the village fence")
+					return false
+				headings.append(Vector3(road[index].x, _player.global_position.y, road[index].y))
+				previous = road[index]
+			if CARE.crosses_boundary(previous, to, polygon):
+				_fail("Earned rest's final road approach crosses the village fence")
+				return false
+			print("EARNED REST ROAD purpose=", purpose, " headings=", headings)
+		return await super._walk_to(target, purpose, close_enough, report_failure, fail_on_miss, headings)
+
 	func _sleep_the_team_into_condition() -> bool:
 		_fail("The earned rest segment owns its observed sleep and Satchel flow")
 		return false

@@ -1,0 +1,50 @@
+{
+  "source_commit": "f5474bf1ac2ff9504457ea10cd1576ed4ff587e2",
+  "run_id": 37734868307,
+  "artifact_id": 11532740540,
+  "job_id": 113172009603,
+  "script": "tools/phase2_capture_locations.gd",
+  "exit_code": 124,
+  "timeout_minutes": 25,
+  "complete": false,
+  "valid_frames": [
+    {
+      "file": "stormwood__hollow_crown__08__the_crown_heartstone__day__approach.jpg",
+      "sha256": "8e892050f5f351ba4d4f2e84fdbdfa9a70ce7ff629c71aa8a64226259682df59",
+      "resolution": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "stormwood__hollow_crown__08__the_crown_heartstone__day__close.jpg",
+      "sha256": "c63b31c45b6ed54bfdb9368a5e3ea6e869b3423b0cdbbb63ad8eb720f67c9a14",
+      "resolution": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "stormwood__landmark__crown_heartstone__day__approach.jpg",
+      "sha256": "530c1d6e6518a92d25faba0241a45f774a4c2ef2498fee324c91e9491e0b9703",
+      "resolution": [
+        1280,
+        720
+      ]
+    }
+  ],
+  "manifest_sha256": "002406cca6135bbd3df80f753690d3f5d4a69ad09eabaa13bf014fd05c11707b",
+  "failures": [
+    "stormwood__landmark__glass_sink__day__approach: no supported production-camera stand among 15 candidates",
+    "stormwood__landmark__glass_sink__day__close: no supported production-camera stand among 9 candidates"
+  ],
+  "scope": "Three current Heartstone art views only. No GlassSink view; no whole capture PASS, route/earned/multiplayer or whole criterion claim.",
+  "preset": "Low",
+  "renderer": "gl_compatibility",
+  "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+  "fixture": "Production scene and ordinary gameplay HUD. Real player body selected through Game.local.chosen_character and moved through Game.debug_teleport_to at every Settings catalogue coordinate. Audit-only day/night clock freeze. No gameplay/progress/save injection; not campaign proof.",
+  "raw_packet": ".tmp\\e-f41-locations-f547-expanded\\tree\\shots\\lane-e\\f41-targeted-locations-f547",
+  "job_log": ".tmp/e-f41-locations-f547-job.log",
+  "review": "APPROVE only valid three-frame art subset, same original review_cloud_startup; exact checkout/actual124/guards/hashes verified",
+  "judge": "PARTIAL/BLOCK P2-038 severity4 impact80; P2-070 UNASSESSED"
+}

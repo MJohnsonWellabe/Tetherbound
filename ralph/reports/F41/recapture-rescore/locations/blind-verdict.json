@@ -1,0 +1,48 @@
+{
+  "reviewer": "same retained original code-blind visual judge",
+  "scope": "Current location3 supplemental catalogue assessment only; P2-038 pictured Crown Heartstone destination, P2-070 unavailable",
+  "contact": "ralph/reports/F41/recapture-rescore/locations/contact-0.jpg",
+  "full_rasters_inspected": [
+    "D:/tetherbound/codex-e/.tmp/e-f41-locations-f547-expanded/tree/shots/lane-e/f41-targeted-locations-f547/stormwood__hollow_crown__08__the_crown_heartstone__day__approach.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-locations-f547-expanded/tree/shots/lane-e/f41-targeted-locations-f547/stormwood__hollow_crown__08__the_crown_heartstone__day__close.jpg",
+    "D:/tetherbound/codex-e/.tmp/e-f41-locations-f547-expanded/tree/shots/lane-e/f41-targeted-locations-f547/stormwood__landmark__crown_heartstone__day__approach.jpg"
+  ],
+  "raster": "1280x720",
+  "capture_status": {
+    "complete": false,
+    "exit": 124,
+    "source": "parent-provided status; no source implementation inspection",
+    "glass_sink": "Both proposed stands refused; no supplied pixels"
+  },
+  "rows": [
+    {
+      "item_id": "P2-038",
+      "assessment": "PARTIAL",
+      "severity": 4,
+      "exposure": 5,
+      "importance": 4,
+      "impact": 80,
+      "visible_bounded_verdict": "BLOCK",
+      "reason": "The supplied views do not establish a distinctive readable Heartstone subject. The hollow-crown approach is an open meadow with trees and nearby creatures; a small roofed wooden prop is distant. The landmark approach shows that roofed prop more clearly but no uniquely identifiable Heartstone focal subject or distinct destination composition. The intended close view is almost entirely occluded by a pink/purple creature body, with trainer and destination unavailable. Labels establish intended subjects, not their visibility.",
+      "evidence": [
+        "stormwood__hollow_crown__08__the_crown_heartstone__day__approach.jpg",
+        "stormwood__hollow_crown__08__the_crown_heartstone__day__close.jpg",
+        "stormwood__landmark__crown_heartstone__day__approach.jpg"
+      ],
+      "coverage_gap": "Other named destination identities and an unobstructed Heartstone near/detail view remain unexposed.",
+      "release_disposition": "OPEN"
+    },
+    {
+      "item_id": "P2-070",
+      "assessment": "UNASSESSED",
+      "severity": null,
+      "exposure": 3,
+      "importance": 4,
+      "impact": null,
+      "reason": "Glass Sink is not exposed in any of the three supplied images. Both proposed stands refused according to supplied capture status.",
+      "coverage_gap": "Current reachable Glass Sink rim/approach/detail images.",
+      "release_disposition": "OPEN"
+    }
+  ],
+  "limits": "Failed/incomplete staged location capture; no route, earned arrival, full catalogue, full region matrix, motion or release acceptance claim."
+}

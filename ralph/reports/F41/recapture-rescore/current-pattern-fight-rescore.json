@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "scope": "Current bounded pixel-only reassessment of P2-092, P2-093 and the pictured Hollows tell/hit aspect of P2-063",
+  "reviewer": {
+    "name": "Hypatia",
+    "role": "retained original code-blind visual judge",
+    "agent_id": "01a11667-4631-72b2-8fed-294999b8c043"
+  },
+  "reference_basis": "Previously inspected approved Stormwood boards and written ART_DIRECTION bar; no source implementation or prior numeric-rating reads.",
+  "inspection": {
+    "full_rasters_inspected": [
+      "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell1-a-start.png",
+      "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell1-b-mid.png",
+      "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell1-c-late.png",
+      "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell1-d-strike.png",
+      "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell1-e-impact.png",
+      "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell1-f-recovery.png",
+      "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell2-a-start.png",
+      "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell2-b-mid.png",
+      "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell2-c-late.png",
+      "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell2-d-strike.png",
+      "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell2-e-impact.png",
+      "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell2-f-recovery.png",
+      "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell3-a-start.png",
+      "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell3-b-mid.png",
+      "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell3-c-late.png",
+      "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell3-d-strike.png",
+      "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell3-e-impact.png",
+      "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell3-f-recovery.png",
+      "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell4-a-start.png",
+      "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell4-b-mid.png",
+      "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell4-c-late.png",
+      "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell4-d-strike.png",
+      "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell4-e-impact.png",
+      "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell4-f-recovery.png"
+    ],
+    "missing_paths": [],
+    "optional_context_frames_used": [],
+    "format": "Native 1920x1080 supplied PNG stills"
+  },
+  "rows": [
+    {
+      "item_id": "P2-092",
+      "severity": 3,
+      "exposure": 4,
+      "importance": 4,
+      "impact": 48,
+      "verdict": "FAIL",
+      "bounded_verdict": "BLOCK",
+      "coverage": "SUPPORTED, bounded to named actor spacing in all 24 supplied Hollows tell/strike/impact/recovery stills.",
+      "reason": "Sparkit and Voltarach are distinguishable during most wind-up views, but the projected silhouettes crowd at contact. In tell1 impact Sparkit's head/forebody is largely masked by the spider's face/front legs; tell1 recovery retains partial merging. The tell2 impact burst and spider front legs mask the ally and part of the trainer. Across tell3 the trainer is reduced largely to a small head/shoulder glimpse behind the spider's front leg. Tell2 recovery and tell4 recovery provide clearer animal separation, so the defect is intermittent rather than universal. Severity 3 reflects repeated loss of actor identification in important contact views; exposure 4 and importance 4 are bounded qualitative ratings for this fight presentation, not measured campaign frequency.",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell1-a-start.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell1-e-impact.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell1-f-recovery.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell2-e-impact.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell2-f-recovery.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell3-a-start.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell3-e-impact.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell3-f-recovery.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell4-f-recovery.png"
+      ],
+      "limits": [
+        "Chronological stills support visible silhouettes, cue co-presence and sampled effect appearance; they do not establish continuous motion, timing, warning duration, performance or collision geometry.",
+        "One pictured Hollows fight context only; no earned encounter, multiplayer or region-wide acceptance claim.",
+        "Independent current pixel assessment; previous numeric ratings were not read or transferred. Other row scores, witnesses and whole-criterion verdict are untouched.",
+        "Projected masking is visible; these images do not prove physical mesh interpenetration. No unseen alternative camera heading or other named fight is graded."
+      ],
+      "reviewer": {
+        "name": "Hypatia",
+        "role": "retained original code-blind visual judge",
+        "agent_id": "01a11667-4631-72b2-8fed-294999b8c043"
+      }
+    },
+    {
+      "item_id": "P2-093",
+      "severity": 3,
+      "exposure": 4,
+      "importance": 4,
+      "impact": 48,
+      "verdict": "FAIL",
+      "bounded_verdict": "BLOCK",
+      "coverage": "SUPPORTED for the visible danger/opening distinction of four Hollows tell sequences; temporal readability is unassessed.",
+      "reason": "Gold charge/heavy/incoming text and a bright ground lane or sector make the impending danger visible during wind-up. However, tell1, tell2 and tell3 e-impact show a remaining magenta rectangular lane beneath the actors while cyan 'it's open — hit it' text announces an opening. The co-present area warning and punish cue give contradictory visual emphasis in these exact frames. Their f-recovery views clear the lane. Tell4 is a positive counterexample: its sector disappears by d-strike as the opening cue appears, and the following views retain that distinction. Severity 3 reflects the repeated mixed danger/opening presentation in three sequences; exposure 4 and importance 4 apply only to this pictured fight context.",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell1-a-start.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell1-e-impact.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell1-f-recovery.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell2-e-impact.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell2-f-recovery.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell3-e-impact.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell3-f-recovery.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell4-c-late.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell4-d-strike.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell4-e-impact.png"
+      ],
+      "limits": [
+        "Chronological stills support visible silhouettes, cue co-presence and sampled effect appearance; they do not establish continuous motion, timing, warning duration, performance or collision geometry.",
+        "One pictured Hollows fight context only; no earned encounter, multiplayer or region-wide acceptance claim.",
+        "Independent current pixel assessment; previous numeric ratings were not read or transferred. Other row scores, witnesses and whole-criterion verdict are untouched.",
+        "No inference about the actual safe area, scheduler state, strike radius, mechanical vulnerability or numerical warning duration. The gold/cyan HUD text remains readable in the supplied views."
+      ],
+      "reviewer": {
+        "name": "Hypatia",
+        "role": "retained original code-blind visual judge",
+        "agent_id": "01a11667-4631-72b2-8fed-294999b8c043"
+      }
+    },
+    {
+      "item_id": "P2-063",
+      "severity": 3,
+      "exposure": 4,
+      "importance": 4,
+      "impact": 48,
+      "verdict": "FAIL",
+      "bounded_verdict": "BLOCK",
+      "coverage": "PARTIAL ROW: current visible Hollows ground tells and sampled contact/hit graphics only, using all 24 supplied rasters. Other attacks, regions and motion/impact aspects are unassessed.",
+      "reason": "The rectangles and sector are visible against the ground, and the gold danger/cyan opening text supplies clear written meaning. The visible effects nevertheless read as flat magenta geometric overlays with limited attack-specific appearance: the two heavy wind-ups use the same lane vocabulary, while the charge distinction depends substantially on text. At tell2 e-impact a large yellow circular burst covers the contact and ally/front-leg detail. Tell4 e-impact wraps the ally's forebody/head in a faceted translucent yellow flare that reduces face and limb readability. These are visible local effects rather than evidence of absent feedback altogether: small contact graphics/numbers, a lower spider recovery posture, and clearer recovery silhouettes are present. Severity 3 reflects conspicuous effect finish and contact masking in this bounded sample; exposure 4 and importance 4 are qualitative for the pictured repeated fight cues.",
+      "evidence": [
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell1-b-mid.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell1-e-impact.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell2-b-mid.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell2-e-impact.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell2-f-recovery.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell3-b-mid.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell3-e-impact.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell4-c-late.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell4-d-strike.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell4-e-impact.png",
+        "D:/CodexTemp/tetherbound-proof/native-e-2535740dbd-pattern-loss-r1/frames/pattern-loss/hollows_alpha-tell4-f-recovery.png"
+      ],
+      "limits": [
+        "Chronological stills support visible silhouettes, cue co-presence and sampled effect appearance; they do not establish continuous motion, timing, warning duration, performance or collision geometry.",
+        "One pictured Hollows fight context only; no earned encounter, multiplayer or region-wide acceptance claim.",
+        "Independent current pixel assessment; previous numeric ratings were not read or transferred. Other row scores, witnesses and whole-criterion verdict are untouched.",
+        "No score for unseen attacks, other regions, audio, hit-stop, knockback trajectory, impact timing or animation continuity. Tell3's visible miss cue is not treated as proof of a missing hit effect. This is not a complete P2-063 coverage or closure claim."
+      ],
+      "reviewer": {
+        "name": "Hypatia",
+        "role": "retained original code-blind visual judge",
+        "agent_id": "01a11667-4631-72b2-8fed-294999b8c043"
+      }
+    }
+  ],
+  "overall_bounded_disposition": "BLOCK",
+  "whole_criterion_claim": false,
+  "preservation": "No other scores, witnesses, completeness verdicts or artifacts modified."
+}
