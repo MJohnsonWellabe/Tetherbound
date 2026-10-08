@@ -309,7 +309,27 @@
     "all_three_asset_fact_hashes_match_installed_files": true,
     "asset_facts_limit": "Alpha subdivision sample is an approximate source analysis, not a filtered/mipped native silhouette or botanical-root proof.",
     "existing_unit_mapping": "Twenty-four existing test_*.gd files match cloudreach_world.gd or cloudreach_visual.json; no new test method/class/fixture proposed.",
-    "proof_status": "Combined source APPROVE after smoke guard correction; affected selected logic, production area and changed visual proof pending. No native causal delta, biological-root or whole F40#5/full F40 acceptance claim."
+    "affected_unit_proof": {
+      "disposition": "All selected assertions passed with the retained isolated outside-tree ERROR; not a clean-log unit PASS.",
+      "source_commit": "b471e4e2d50fde3bd71512a448fcc7ea8cb5e927",
+      "run_id": 37757338042,
+      "job_id": 113245033666,
+      "artifact_id": 11541180961,
+      "checkout_verified_from_job_log": true,
+      "selected_files": 24,
+      "tests": 161,
+      "assertions": 4288,
+      "failures": 0,
+      "exit_code": 0,
+      "duration_seconds": 28,
+      "run_log": ".tmp/e-shrub-mesh-root-logic-b471/expanded/run.log",
+      "run_log_sha256": "80c095d9e001e27b6d3c9b94c5842a66b6412b784302ab72a816a6229256f65d",
+      "job_log": ".tmp/e-shrub-mesh-root-logic-b471/job.log",
+      "actual_error": "get_global_transform !is_inside_tree() at unchanged _mesa, now line5571, in test_cliff_walls_face_outward line25.",
+      "diagnostic_analysis": "Same unmounted TestMesa case and _mesa global-position read verified on628a. Candidate only changes authored-route detail grounding, shifting this unchanged read by twenty lines. Test and _mesa logic are unchanged; no SCRIPT ERROR or other error found in this run log.",
+      "limits": "Selected regressions do not replace production async ray-support/contact execution or visual judgment. Actual isolated-test ERROR remains disclosed."
+    },
+    "proof_status": "Combined source APPROVE and selected161tests/4288assertions passed with retained isolated diagnostic. Production area/contact and changed visual proof pending; no biological-root or whole F40#5/full F40 acceptance claim."
   },
   "proof_status": "Prior numerical candidates PARKED; new mesh-root combined source APPROVE. Affected runtime/visual proofs pending; whole F40#5/full F40 OPEN. No local engine execution or performance acceptance."
 }
