@@ -711,7 +711,7 @@ func _setup() -> void:
 		_id = rec.encounter_id
 		_director.set("_encounter", rec)
 		_manager.call("bind_encounter", _director, _id, "trainer")
-	if not _prove_utility.is_empty() and not _prove_canonical_wild:
+	if (not _prove_utility.is_empty() or _prove_mastery_transition) and not _prove_canonical_wild:
 		_check(_director.call("_install_ordinary_combat_reward_owner", _id) == true, "real authored trainer owner installer admits the mounted fixture")
 		_check(_director.call("uses_durable_trainer_rewards", _id) == true, "mounted utility uses the real durable trainer owner")
 	_manager.connect("attack_launched", _on_launch)
