@@ -111,7 +111,7 @@ if (meadowsPrefix && fs.existsSync(path.join(sourceRoot, 'relay_prepared', 'rece
 }
 if (meadowsPrefix) {
   assert.ok(meadowsPieces.every(boundary => fs.existsSync(path.join(sourceRoot, boundary, 'receipt.json'))),
-    'Complete Meadows prefix required; chapter receipts cannot replace original pieces');
+    `Complete ${meadowsPieces.length === 6 ? 'six' : 'seven'}-piece Meadows prefix required; chapter receipts cannot replace original pieces`);
   assert.ok(pieceLogs.length === meadowsPieces.length && pieceLogs.every(Boolean), 'Provide every ordered original Meadows piece log');
 }
 const targetRoot = path.join(root, 'tests/fixtures/earned_saves/redesign');
