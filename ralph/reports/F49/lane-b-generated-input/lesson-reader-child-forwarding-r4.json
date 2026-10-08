@@ -30,7 +30,7 @@
     "id": 37817588085,
     "source": "731c169e7c1daa84541bc15d0484bef8039373c5",
     "label": "b-generated-tide-key-lessons-r4",
-    "state_at_capture": "LIVE",
+    "state_at_capture": "terminal FAIL",
     "segment": "tidewake",
     "input_boundary": "meadows_settled",
     "input_mode": "generated_fixture",
@@ -40,8 +40,183 @@
     "help_replay_witness": true,
     "skip_line": 0,
     "native_visual_claim": false,
-    "failed_save_input": false
+    "failed_save_input": false,
+    "artifact_id": 11568665943,
+    "artifact_sha256": "598dd88b4f8c9f9720327fcc51dba8f8719d9fa289c5ba8cdb0f735b6ca14f30",
+    "log": "ci-generated-tide-key-lessons-37817588085.log.gz",
+    "log_sha256": "71b6ec93f2c9500b39d5c07f0b36ba6659726afd34ca8161642ad7086f61e9ba",
+    "actual_lesson_witnesses": [
+      {
+        "tag": "F46 LESSON CONTROLLER WITNESS",
+        "lesson": "portals",
+        "passed": true,
+        "character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
+        "party_uids": [
+          "creature-cf906fd5504c229a431c3b3202c3c2e2",
+          "creature-83d263c517d32cc6cb7beab6925d80c7",
+          "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+          "creature-afbd0d982b14221393f70c29863586a1",
+          "creature-c576f15db4b7f3ecf487a80de0169177"
+        ],
+        "ordered_five_unchanged": true,
+        "released": true,
+        "actual_action": "menu_cancel",
+        "actual_skip_presses": 1,
+        "ack_before": false,
+        "ack_after": true,
+        "saved_character_ack": {},
+        "personal_ack_retained": null,
+        "reward_state_unchanged": null,
+        "render_loop_enabled": false
+      },
+      {
+        "tag": "F46 LESSON CONTROLLER WITNESS",
+        "lesson": "shrines",
+        "passed": true,
+        "character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
+        "party_uids": [
+          "creature-cf906fd5504c229a431c3b3202c3c2e2",
+          "creature-83d263c517d32cc6cb7beab6925d80c7",
+          "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+          "creature-afbd0d982b14221393f70c29863586a1",
+          "creature-c576f15db4b7f3ecf487a80de0169177"
+        ],
+        "ordered_five_unchanged": true,
+        "released": true,
+        "actual_action": "menu_cancel",
+        "actual_skip_presses": 1,
+        "ack_before": false,
+        "ack_after": true,
+        "saved_character_ack": {},
+        "personal_ack_retained": null,
+        "reward_state_unchanged": null,
+        "render_loop_enabled": false
+      },
+      {
+        "tag": "F46 LESSON REPLAY WITNESS",
+        "lesson": "portals",
+        "passed": true,
+        "character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
+        "party_uids": [
+          "creature-cf906fd5504c229a431c3b3202c3c2e2",
+          "creature-83d263c517d32cc6cb7beab6925d80c7",
+          "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+          "creature-afbd0d982b14221393f70c29863586a1",
+          "creature-c576f15db4b7f3ecf487a80de0169177"
+        ],
+        "ordered_five_unchanged": true,
+        "released": true,
+        "actual_action": null,
+        "actual_skip_presses": null,
+        "ack_before": null,
+        "ack_after": null,
+        "saved_character_ack": null,
+        "personal_ack_retained": true,
+        "reward_state_unchanged": true,
+        "render_loop_enabled": null
+      },
+      {
+        "tag": "F46 LESSON REPLAY WITNESS",
+        "lesson": "shrines",
+        "passed": true,
+        "character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
+        "party_uids": [
+          "creature-cf906fd5504c229a431c3b3202c3c2e2",
+          "creature-83d263c517d32cc6cb7beab6925d80c7",
+          "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+          "creature-afbd0d982b14221393f70c29863586a1",
+          "creature-c576f15db4b7f3ecf487a80de0169177"
+        ],
+        "ordered_five_unchanged": true,
+        "released": true,
+        "actual_action": null,
+        "actual_skip_presses": null,
+        "ack_before": null,
+        "ack_after": null,
+        "saved_character_ack": null,
+        "personal_ack_retained": true,
+        "reward_state_unchanged": true,
+        "render_loop_enabled": null
+      }
+    ],
+    "actual_packets": {
+      "F46 FIRST KEY LESSONS": {
+        "character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
+        "earned_warden_key_and_relic": false,
+        "input_mode": "generated_fixture",
+        "lessons": [
+          "portals",
+          "shrines"
+        ],
+        "party_uids": [
+          "creature-cf906fd5504c229a431c3b3202c3c2e2",
+          "creature-83d263c517d32cc6cb7beab6925d80c7",
+          "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+          "creature-afbd0d982b14221393f70c29863586a1",
+          "creature-c576f15db4b7f3ecf487a80de0169177"
+        ],
+        "physical_skip_and_help": true,
+        "whole_f46_proven": false
+      },
+      "FRESH CAMPAIGN RESULT": {
+        "campaign_complete": false,
+        "checkpoints": [],
+        "counts_as_proof": false,
+        "cumulative_elapsed_seconds": 150.949,
+        "dry_run": false,
+        "elapsed_seconds": 150.949,
+        "failures": [
+          "F49 ordinary capsule walk failed to /root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@59827/Pedestal_meadows/@Node3D@59846"
+        ],
+        "local_chains": [],
+        "reached": "meadows_settled",
+        "requested_prefix_passed": false,
+        "resume": {
+          "boundary": "meadows_settled",
+          "continuous_fresh_save": false,
+          "generated_origin": {
+            "boundary": "meadows_settled",
+            "provenance": {
+              "continuous_fresh_save": false,
+              "generator": "tools/earned_saves/earned_chain_runner.gd:b25e1ed1eb820ff4c5cb58bcc7ccd1b8dcd3b6acf95bb6b876feaef273261f60:tidewake",
+              "owner_policy": "#5726060136810",
+              "prior_earned_play": false
+            }
+          },
+          "journey_id": "731c169e7c1daa84541bc15d0484bef8039373c5:/home/runner/work/Tetherbound/Tetherbound/ralph/reports/F49/generated-tide-key-lessons-r4_generated_input",
+          "meadows_pieces": [
+            "opening_team",
+            "camp_tournament",
+            "bridge",
+            "warrens",
+            "relay",
+            "hall"
+          ],
+          "prior_earned_play": false,
+          "source": "/home/runner/work/Tetherbound/Tetherbound/ralph/reports/F49/generated-tide-key-lessons-r4_generated_input/meadows_settled",
+          "source_kind": "generated_fixture"
+        },
+        "resumed_from": "meadows_settled",
+        "scratch": "user://f49_campaign_2387_11438"
+      },
+      "GENERATED CHAPTER PROCESS": {
+        "continuous_fresh_save": false,
+        "exit_code": 1,
+        "input_mode": "generated_fixture",
+        "prior_earned_play": false,
+        "segment": "tidewake",
+        "source": "731c169e7c1daa84541bc15d0484bef8039373c5"
+      }
+    },
+    "script_errors": 0,
+    "x11_no_grab_errors": 8
   },
   "whole_criterion_closed": false,
-  "terminal_original_review_required": true
+  "terminal_original_review_required": true,
+  "terminal_original_review": {
+    "hubble": "SCOPED BEHAVIOR APPROVE: actual mapped Skip, personal ACK and Settings Help replay for Portals/Shrines; CID/orderedfive and teacher/floor/recovery guards retained. SavedACK/blind/wholeF46 remain open.",
+    "bacon": "OVERALL FAIL: Meadows pedestal walk failed before Tidewake, grounded/free input, targetofferempty, EncounterDirector winning, activationnull; no establishedcause or acceptedhandoff.",
+    "bounded_summary": "D:/CodexTemp/tetherbound-lanes-full-access/b-original-tide-key-lessons-terminal-r4.txt"
+  },
+  "disposition": "Reuse scoped passing Skip/Help pieces. Preserve overall provider FAIL; no unchanged provider retry, failed-save input, native/blind/durability or whole criterion claim. Saved-ACK option800 remains pending original source review and affected proof."
 }
