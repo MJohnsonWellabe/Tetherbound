@@ -243,5 +243,14 @@ static func step(runner: SceneTree, action: String, args: Dictionary) -> Diction
 				or (args.require_saved_dive == "resumed" and not data.resumed_dive_within_saved):
 				print("F37 SAVED DIVE REFUSAL " + JSON.stringify(data))
 				return {"verdict":"FAIL","detail":"returning dive allowance changed or refreshed","data":data}
+			# Required rejoin frames use the existing on-demand screenshot helper
+			# only after the original saved-UID/debt predicate succeeds. Headless
+			# mechanics keep their original data and cannot claim visual evidence.
+			if args.has("screenshot") and DisplayServer.get_name() != "headless":
+				var shot: Dictionary = await INPUT.run(runner, "screenshot", {"name":str(args.screenshot)})
+				if shot.get("verdict") != "PASS": return shot
+				data.screenshot = shot.get("data", {})
+				print("F37 SAVED DIVE FRAME " + JSON.stringify({"character_id":str(game.local.character_id),
+					"state":args.require_saved_dive,"observed":data}))
 		return {"verdict":"PASS","data":data}
 	return {"verdict":"ERROR","detail":"unknown F37 action"}

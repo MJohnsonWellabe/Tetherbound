@@ -325,7 +325,8 @@
       },
       "label": "Reconnect seats surface, with remaining dive debt on saved owned mount",
       "args": {
-        "require_saved_dive": "surface"
+        "require_saved_dive": "surface",
+        "screenshot": "f37-rejoin-restored-surface"
       }
     },
     {
@@ -341,7 +342,8 @@
       },
       "label": "A fresh tap resumes the saved bounded dive budget",
       "args": {
-        "require_saved_dive": "resumed"
+        "require_saved_dive": "resumed",
+        "screenshot": "f37-rejoin-resumed-dive"
       },
       "continue_on_fail": true,
       "_comment": "Original resumed Dive/debt predicate remains counted FAIL. Continue only for read-only terminal request/host-answer observations; no retry, wait or action."
