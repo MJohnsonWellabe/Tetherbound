@@ -115,7 +115,7 @@ func _run() -> void:
 			observe_next_goal = true
 		elif arg == "--capture-next-goal":
 			pass  # Read-only guarded HUD capture after successful existing piece.
-		elif arg in ["--lesson-controller-witness", "--lesson-replay-witness", "--capture-lessons"] or arg.begins_with("--lesson-skip-line"):
+		elif arg in ["--lesson-controller-witness", "--lesson-replay-witness", "--lesson-reload-witness", "--capture-lessons"] or arg.begins_with("--lesson-skip-line"):
 			pass  # Validated below; only the existing reader can witness an actual lesson.
 		elif arg.begins_with("--handoff-from="):
 			if not handoff_from.is_empty() or arg == "--handoff-from=":
@@ -777,7 +777,7 @@ func _generated_chapter() -> void:
 	# The parent validated these existing reader options; the chapter runs in
 	# a child process, whose ordinary lesson reader needs the same request.
 	for arg: String in OS.get_cmdline_user_args():
-		if arg in ["--lesson-controller-witness", "--lesson-replay-witness", "--capture-lessons"] \
+		if arg in ["--lesson-controller-witness", "--lesson-replay-witness", "--lesson-reload-witness", "--capture-lessons"] \
 				or arg.begins_with("--lesson-skip-line"):
 			command.append(arg)
 	var exit := OS.execute(OS.get_executable_path(), command, output, true)
