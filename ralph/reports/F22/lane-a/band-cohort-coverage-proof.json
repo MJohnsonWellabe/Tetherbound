@@ -1,0 +1,27 @@
+{
+  "criterion": "F22#1",
+  "criterion_text": "Across 12+ seeds per biome band, a reader pilot beats a masher pilot (reader win >=0.9; masher loses the lead creature materially more often).",
+  "status": "OPEN; coverage guard proof only, no whole criterion or gameplay acceptance claim",
+  "source_commit": "f0f77c4c2c8c09e9cfdf84faf30cc163519670ee",
+  "change": "Ordinary trainer floor sweep requires unique executed expected band x three-starter cohorts; missing trainer roster gaps, duplicates and foreign rows cannot count as coverage. Named/F33 gear and wild modes retain existing path. Existing min12 seeds/stat thresholds and acceptance=false/full-policy admission guard retained.",
+  "original_source_review": {
+    "reviewer": "/root/f25_medium_review",
+    "thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+    "verdict": "SOURCE APPROVE",
+    "required_proof": "tests/run_tests.gd --only=test_enemy_pattern_telegraph.gd"
+  },
+  "proof": {
+    "run_id": 37825441865,
+    "artifact_id": 11571540657,
+    "job_id": 113476986090,
+    "checkout_commit": "f0f77c4c2c8c09e9cfdf84faf30cc163519670ee",
+    "tests": 4,
+    "assertions": 7573,
+    "failed": 0,
+    "exit": 0,
+    "log_sha256": "1d38deb2f7d292e362f426940949a00f3c478d4353f395b4e6b695117df6da2b",
+    "log_path": "ralph/reports/F25/downloads/a-f22-band-cohort-guards-37825441865/raw/run.log",
+    "coverage": "Existing telegraph regressions and new incomplete/missing/duplicate/foreign band cohort regression. No fights, accepted saves or native/GPU/visual claim."
+  },
+  "remaining": "Real admitted fights, full COMBAT7 policy, all required bands x three starters x >=12 paired seeds and win/loss/cost thresholds; no entire criterion closure from this test. Existing prototype full-policy admission guard remains."
+}
