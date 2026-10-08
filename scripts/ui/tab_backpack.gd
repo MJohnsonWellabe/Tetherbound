@@ -1793,6 +1793,12 @@ func _drop(id: String, n: int, db: RefCounted) -> void:
 		var reason := str(verdict.get("reason", ""))
 		say(reason if not reason.is_empty() else "That could not be dropped.")
 		return
+	var owner_session: Node = game.get("session") as Node
+	if verdict.get("pending") == true or (owner_session != null \
+		and owner_session.has_method("_owner_training_mutation_blocked") \
+		and owner_session.call("_owner_training_mutation_blocked", game.get("local")) == true):
+		say("Drop submitted. Waiting for your Satchel to save.")
+		return
 	var what := str(db.call("item_name", id)) if db != null else id
 	if n > 1:
 		say("Dropped %d %s." % [n, what])
