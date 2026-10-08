@@ -3,7 +3,7 @@
   "whole_criterion_proven": false,
   "source": "505d7e0729028b69cfd3a0a9a8e5c6463cd46dc2",
   "run": 37771506596,
-  "status": "LIVE; no runtime verdict",
+  "status": "PASS functional only; original BEHAVIOR APPROVE; whole criterion OPEN",
   "script": "tests/smoke_f20_ending.gd",
   "args": "--functional-offload",
   "renderer": "gl_compatibility",
@@ -29,14 +29,42 @@
     "review": "Original FUNCTIONAL BEHAVIOR APPROVE; no duplicate credits-only run"
   },
   "remaining": [
-    "actual full endpoint terminal result and original independent behavior verdict",
     "WORLD2.8 alpha respawn availability and research completion",
-    "required blind completed-world/bounty/rematch presentation verdict; native exclusively ROOT scheduled D/E"
+    "Required blind completed-world/bounty/rematch presentation verdict; native exclusively ROOT scheduled D/E",
+    "Original final WHOLE F20#3 verdict"
   ],
   "unchanged": [
     "All original guards and waits",
     "Shipping runtime flags",
     "Disclosure and fixture",
     "No new harness, capture retry or boundary promotion"
-  ]
+  ],
+  "artifact": 11547889318,
+  "checks": 67,
+  "failures": 0,
+  "exit_code": 0,
+  "engine_script_errors": 0,
+  "run_seconds": 482,
+  "log_sha256": "952334125ac46eceef6159b6fdbf0488af8a66cc9dbf827e01c2396979229857",
+  "artifact_sha256": "70a94352ef062fe435b62f5f939c318b4df4e05241b4e0c32aecbd5c27d9df6c",
+  "warnings": [
+    "V-Sync unsupported by hosted driver",
+    "Deprecated instance_reset_physics_interpolation",
+    "Two installed TwistedTree duplicate canopy retint memberships",
+    "Three wild-cluster deterministic best-fit spacing warnings"
+  ],
+  "actual_endpoint": {
+    "requested": "full_continuation",
+    "passed": true,
+    "continuation_content_run": true,
+    "counts_as_f20_3_proof": true,
+    "earned_finale": false,
+    "whole_criterion_approval": false
+  },
+  "behavior_review": {
+    "reviewer": "b_f20_review, original reviewer",
+    "verdict": "BEHAVIOR APPROVE",
+    "original_review": "D:/CodexTemp/tetherbound-lanes-full-access/b-original-f20-full-verdict.txt",
+    "scope": "Actual67/0 and named owned-companion rematch admission, no victory/rewards; whole F20#3 open"
+  }
 }
