@@ -17,7 +17,27 @@
     "The existing smoke exercises pool_size plus one ordinary one-shots, checks Calm stream identity and playback, checks phase/release frees and active replacement beds, and checks stopped/queued release-bed teardown. Existing timing, watchdog and event checks remain present; a missing Fading bed explicitly fails."
   ],
   "named_existing_logic_selector": "tests/test_stormwood_audio_assets.gd",
-  "required_runtime_proof": "Changed-source existing smoke_stormwood_surge_audio and named audio asset check remain pending. No local engine was run by the reviewer.",
+  "affected_asset_logic_proof": {
+    "verdict": "APPROVE bounded named asset and telegraph logic evidence",
+    "source_commit": "325a472400408ebf3c609512b9f8bed0deacb676",
+    "approved_source_blobs_match_commit": true,
+    "run_id": 37761240816,
+    "job_id": 113257901727,
+    "artifact_id": 11542018460,
+    "checkout_and_full_revparse_verified_from_job_log": true,
+    "selector": "test_stormwood_audio_assets.gd",
+    "tests": 2,
+    "assertions": 48,
+    "failed": 0,
+    "exit_code": 0,
+    "duration_seconds": 4,
+    "error_or_script_error_in_run_log": false,
+    "receipt_hashes_match_actual_logs": true,
+    "run_log_sha256": "1e56164e504a6840aed889dc2e62b70276995c57fb226dbd8b3b1aa0b08c87e9",
+    "job_log_sha256": "eebc7563079423e72037cb968cd0e24600d1daafc019ae557fafa05ad0b550dc",
+    "limits": "Proves declared audio assets load, imported loop modes match cue policy and warning length matches configured telegraph. Does not execute observer bed continuity or establish listener perception."
+  },
+  "required_runtime_proof": "Changed-source existing smoke_stormwood_surge_audio run37761627887 remains live/pending. Named audio asset check now verified. No local engine was run by the reviewer.",
   "limits": [
     "Source approval does not prove audible phase identity, mix, seamless loops, warning perception, fatigue, co-op listening or hardware behavior.",
     "No full F10#5 acceptance claim; listening evidence remains unavailable."

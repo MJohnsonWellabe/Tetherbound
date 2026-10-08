@@ -1,0 +1,19 @@
+{
+  "scope": "Existing named audio asset logic on changed continuous-bed source; no audible/full F10#5 acceptance",
+  "source_commit": "325a472400408ebf3c609512b9f8bed0deacb676",
+  "run_id": 37761240816,
+  "job_id": 113257901727,
+  "artifact_id": 11542018460,
+  "script": "tests/run_tests.gd",
+  "args": "--only=test_stormwood_audio_assets.gd",
+  "tests": 2,
+  "assertions": 48,
+  "failed": 0,
+  "exit_code": 0,
+  "duration_seconds": 4,
+  "error_lines": [],
+  "run_log_sha256": "1e56164e504a6840aed889dc2e62b70276995c57fb226dbd8b3b1aa0b08c87e9",
+  "job_log_sha256": "eebc7563079423e72037cb968cd0e24600d1daafc019ae557fafa05ad0b550dc",
+  "area": "37761627887 live",
+  "listening": "unavailable; no perceptual claim"
+}
