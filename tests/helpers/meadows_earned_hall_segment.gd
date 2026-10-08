@@ -1190,6 +1190,38 @@ func _fight_named(body: Node3D, id: String) -> bool:
 			or not retained_five(_initial_ids, _party_ids()) \
 			or not exact_item_reward(before_items, _captain_stock(), _captain_spec.get("reward", {})) \
 			or not exact_captain_xp(before_xp, _xp_snapshot(), _expected_xp):
+		# Failure-only observations; press attempts are not landed-hit evidence.
+		var party_rows: Array[Dictionary] = []
+		var party: RefCounted = _game.get("party")
+		var party_size := int(party.call("size")) if is_instance_valid(party) else -1
+		if is_instance_valid(party):
+			for index in mini(party_size, 5):
+				var member: RefCounted = party.call("at", index)
+				if is_instance_valid(member):
+					party_rows.append({"uid": member.get("uid"), "species": member.get("species_id"),
+						"level": member.get("level"), "hp": member.get("hp"),
+						"max_hp": member.get("max_hp"), "fainted": member.get("fainted")})
+		var enemy_row: Dictionary = {}
+		if is_instance_valid(_fight_enemy):
+			enemy_row = {"instance_id": _fight_enemy.get_instance_id(), "species": _fight_enemy.get("species_id"),
+				"level": _fight_enemy.get("level"), "hp": _fight_enemy.get("hp"),
+				"max_hp": _fight_enemy.get("max_hp"), "fainted": _fight_enemy.get("fainted")}
+		_receipt("trainer_verification_failed", {"id": id,
+			"elapsed_frames": Engine.get_physics_frames() - _captain_start,
+			"within_deadline": captain_within_deadline(Engine.get_physics_frames() - _captain_start),
+			"fighting": _fighting(), "outcome": _combat.call("outcome"), "combat_state": _combat.get("state"),
+			"prior_failures": _failures.duplicate(), "required_rounds": team_size,
+			"rounds": _captain_rounds, "wins": _captain_wins, "hits": _captain_hits,
+			"round_hits": _fight_hits, "kills": _captain_kills.size(), "kill_instance_ids": _captain_kills.keys(),
+			"quick_press_attempts": pilot.quick_thrown, "charged_press_attempts": pilot.charged_thrown,
+			"voluntary_switches": pilot.voluntary_switches, "party_available": is_instance_valid(party), "party_size": party_size,
+			"party": party_rows, "last_admitted_enemy": enemy_row,
+			"manager_retains_last_enemy": _combat.call("enemy") == _fight_enemy,
+			"defeat_flag": _has(flag), "retained_five": retained_five(_initial_ids, _party_ids()),
+			"items_match": exact_item_reward(before_items, _captain_stock(), _captain_spec.get("reward", {})),
+			"items_before": before_items, "items_after": _captain_stock(), "configured_reward": _captain_spec.get("reward", {}),
+			"xp_match": exact_captain_xp(before_xp, _xp_snapshot(), _expected_xp),
+			"xp_before": before_xp, "xp_after": _xp_snapshot(), "expected_xp": _expected_xp.duplicate()})
 		return _fail("Required trainer lacks exact admitted opponents, killing hits, configured rewards/XP and retained-five receipts: " + id)
 	_observed_trainers.append(id)
 	_receipt("trainer_defeated", {"id": id, "rounds": _captain_rounds, "wins": _captain_wins, "hits": _captain_hits,
