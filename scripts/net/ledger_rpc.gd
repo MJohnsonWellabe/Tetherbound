@@ -1411,7 +1411,9 @@ func _process_creature_training(row: Dictionary) -> void:
 		_note_training_stall("owner apply %s%s" % [str(outcome.get("code", outcome.get("reason", "unsaved"))), stall_detail])
 		return
 	_observe_training_boundary(row, "after_owner_write_before_ack")
-	if not ESSENCE._equivalent(world.reward_deliveries.get(row.delivery_id), row): return
+	if not ESSENCE._equivalent(world.reward_deliveries.get(row.delivery_id), row):
+		_note_training_stall("owner row changed after its BOOL-save, before ACK")
+		return
 	if bool(game.call("is_host")):
 		if not _accept_creature_training(row.delivery_id, int(row.journal_revision), row.receipt, _local_peer_id()):
 			_note_training_stall("host accept after its own owner write refused")
@@ -1425,7 +1427,9 @@ func _rpc_creature_training_ack(epoch: String, id: String, revision: int, receip
 	var game := _game()
 	if game == null or not bool(game.call("is_host")): return
 	var session: Node = game.get("session")
-	if session == null or epoch != session.call("_altar_current_epoch"): return
+	if session == null or epoch != session.call("_altar_current_epoch"):
+		_note_training_stall("owner ACK arrived outside the current session epoch")
+		return
 	_accept_creature_training(id, revision, receipt, multiplayer.get_remote_sender_id())
 
 
@@ -1435,8 +1439,15 @@ func _accept_creature_training(id: String, revision: int, receipt: String, peer:
 	var character := _registered_character(peer)
 	var world: RefCounted = game.get("world")
 	var row: Variant = world.reward_deliveries.get(id)
-	if character.is_empty() or not WORLD_STATE.training_row_valid(row, world.reward_delivery_namespace, world.world_id) \
-			or row.character_id != character or row.receipt != receipt or int(row.journal_revision) != revision: return false
+	if character.is_empty():
+		_note_training_stall("owner ACK arrived without a registered character")
+		return false
+	if not WORLD_STATE.training_row_valid(row, world.reward_delivery_namespace, world.world_id):
+		_note_training_stall("owner ACK arrived without a valid current training row")
+		return false
+	if row.character_id != character or row.receipt != receipt or int(row.journal_revision) != revision:
+		_note_training_stall("owner ACK arrived with a different character, receipt or journal revision")
+		return false
 	var session: Node = game.get("session")
 	if row.status == "accepted":
 		if session == null or session.call("host_ack_creature_training", peer, row) != true:
@@ -1451,7 +1462,9 @@ func _accept_creature_training(id: String, revision: int, receipt: String, peer:
 		session.call("_deliver_training_decision", peer, row)
 		return true
 	var saver: RefCounted = game.get("save_system")
-	if saver == null or saver.call("fallback_busy") == true: return false
+	if saver == null or saver.call("fallback_busy") == true:
+		_note_training_stall("owner ACK cannot settle while the world saver is absent or fallback busy")
+		return false
 	if session == null or session.call("training_actor_baseline_ready",peer,row)!=true:
 		_note_training_stall("actor baseline not ready")
 		return false
@@ -1459,11 +1472,14 @@ func _accept_creature_training(id: String, revision: int, receipt: String, peer:
 	var before_revision := int(world.get("revision"))
 	var before_seq := int(ledger.get("seq"))
 	var verdict: Dictionary = ledger.call("accept_creature_training_delivery", id, character, revision, receipt, peer)
-	if verdict.get("ok") != true: return false
+	if verdict.get("ok") != true:
+		_note_training_stall("owner ACK ledger acceptance refused: " + str(verdict.get("code", verdict.get("reason", ""))))
+		return false
 	if saver.call("save_world_prepared", game, world.world_id) != true:
 		world.call("load_data", before)
 		world.set("revision", before_revision)
 		ledger.set("seq", before_seq)
+		_note_training_stall("owner ACK world BOOL-save refused; original pending row restored")
 		return false
 	var accepted: Dictionary = world.reward_deliveries[id].duplicate(true)
 	# Keep publication identity in the existing transient delivery queue if
@@ -1471,7 +1487,9 @@ func _accept_creature_training(id: String, revision: int, receipt: String, peer:
 	_training_publications[id] = {"peer": peer, "row": accepted.duplicate(true), "delta": verdict.delta.duplicate(true)}
 	# Only the saved accepted row unlocks authority. A lost result is recoverable
 	# from this same row, never from a boolean the client claimed in an intent.
-	if session == null or session.call("host_ack_creature_training", peer, accepted) != true: return false
+	if session == null or session.call("host_ack_creature_training", peer, accepted) != true:
+		_note_training_stall("owner ACK accepted world row, but authority handoff refused")
+		return false
 	_publish_training_acceptance(peer, accepted)
 	session.call("_deliver_training_decision", peer, accepted)
 	return true
