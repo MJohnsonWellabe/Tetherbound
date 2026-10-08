@@ -148,6 +148,18 @@ func _tag_step(action: String) -> Dictionary:
 	if action == "op_tag_target": return await _tonic_step("op_tonic_target", {})
 	if manager == null or director == null or not manager.is_fighting():
 		return {"verdict":"FAIL", "detail":"Tag requires the actual live fight"}
+	if action == "op_tag_shove":
+		# The same existing proximity setup, followed by the actual utility tap.
+		var target: Node3D = director.get("_shared_opponent_proxy")
+		if target == null: target = director.get("_legacy_mirror")
+		var body: Node3D = director.ally_body()
+		if target == null or body == null: return {"verdict":"FAIL", "detail":"actual Shove body missing"}
+		body.global_position = target.global_position + Vector3(0, 0, 3.0)
+		body.face_towards(target.global_position)
+		for frame in 15: await physics_frame
+		var pressed: Dictionary = await _step_press({"action":"combat_utility"})
+		for frame in 90: await physics_frame
+		return pressed
 	if action == "op_tag_replay":
 		if _tag_request.is_empty() or not manager.submit_tether_command(_tag_request):
 			return {"verdict":"FAIL", "detail":"same Tag request could not be submitted"}
@@ -335,6 +347,13 @@ func _tag_state(args: Dictionary) -> Dictionary:
 	if args.get("snare") == true: out["snare"] = snare
 	if args.get("rally") == true: out["rally"] = rally
 	if session.is_host(): out["host_settlement_snapshot"] = settlement
+	if session.is_host() and args.get("shove") == true:
+		var wild: Node3D = director.get("_engaged_with")
+		var target: RefCounted = wild.get("instance") if is_instance_valid(wild) else null
+		out["shove"] = {"target_uid":str(target.get("uid")) if target != null else "", "encounter_id":id,
+			"generation":int(wild.get_meta(&"tether_body_generation", 0)) if is_instance_valid(wild) else 0,
+			"receipts":(wild.get("_landed_utility_state") as Dictionary).get("receipts", {}).duplicate(true) \
+				if is_instance_valid(wild) else {}}
 	return out
 
 

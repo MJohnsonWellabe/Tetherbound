@@ -415,6 +415,42 @@ func _run() -> void:
 
 	if OS.get_cmdline_user_args().has("--prove-tag-combo"):
 		await _prove_tag_combo()
+	if OS.get_cmdline_user_args().has("--prove-shove"):
+		# Existing admitted owner and ordinary wild fight; no loadout/HP grants.
+		for attempt in 1:
+			if not _ok(await step(0, "deploy_creature"), "Shove: host deploys its actual owned companion"): break
+			if not _ok(await step(0, "op_tag_target"), "Shove: host engages an actual ordinary wild"): break
+			var encounter: Dictionary = await probe(0, "encounter")
+			if not _ok(await step(1, "teleport", {"at":encounter.get("opponent_pos", [])}), "Shove: existing proximity setup reaches host fight"): break
+			if not _ok(await step(1, "deploy_creature"), "Shove: guest deploys its admitted companion"): break
+			if not _ok(await step(1, "join_encounter", {"encounter_id":str(encounter.get("id", ""))}), "Shove: guest joins exact host fight"): break
+			var owner: Dictionary = await probe(1, "op_tag_state")
+			var peer := int(owner.peer)
+			var before: Dictionary = await probe(0, "op_tag_state", {"peer":peer, "shove":true})
+			if not _ok(await step(1, "op_tag_shove"), "Shove: guest physically taps B through production utility input"): break
+			var after: Dictionary = await probe(0, "op_tag_state", {"peer":peer, "shove":true})
+			var receipts: Dictionary = after.get("shove", {}).get("receipts", {})
+			var fresh: Array[Dictionary] = []
+			for action: String in receipts:
+				if not (before.get("shove", {}).get("receipts", {}) as Dictionary).has(action): fresh.append(receipts[action])
+			check(fresh.size() == 1, "Shove: host retains exactly one fresh landed utility receipt")
+			if fresh.size() == 1:
+				var receipt: Dictionary = fresh[0]
+				var moves := preload("res://scripts/creatures/move_db.gd").load_default()
+				check(receipt.get("move_id") == "shove" and receipt.get("kind") == "push" \
+					and receipt.get("source_uid") == owner.deployment.get("creature_uid") \
+					and receipt.get("target_uid") == before.shove.target_uid \
+					and receipt.get("target_uid") == after.shove.target_uid \
+					and before.shove.encounter_id == after.shove.encounter_id \
+					and receipt.get("encounter_id") == before.shove.encounter_id \
+					and int(before.shove.generation) > 0 and before.shove.generation == after.shove.generation \
+					and receipt.get("generation") == before.shove.generation,
+					"Shove: original receipt binds the guest's creature and same wild target")
+				check(is_equal_approx(float(receipt.get("requested_push_metres", -1.0)), float(moves.move("shove").utility.push_metres)) \
+					and float(receipt.get("applied_push_metres", -1.0)) > 0.0 \
+					and float(receipt.get("applied_push_metres", INF)) <= float(receipt.get("requested_push_metres", -1.0)) + 0.001,
+					"Shove: actual swept displacement is positive and bounded by authored distance")
+			print("SHOVE actual host observation: ", JSON.stringify({"before":before, "after":after}))
 
 	if OS.get_cmdline_user_args().has("--prove-tether-snare"):
 		# Reuse the admitted party and ordinary wild/proximity path. No catch
