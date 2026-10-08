@@ -27,11 +27,15 @@ class MapFixture extends RefCounted:
 
 class QuestFixture extends RefCounted:
 	var updates := 0
+	var signature := ""
+	var text := "current objective"
+	var hint := "current hint"
 	func set_realm(_realm: String) -> bool: return false
+	func lesson_goal_signature() -> String: return signature
 	func tracked_text(_progression: RefCounted) -> String:
 		updates += 1
-		return "current objective"
-	func tracked_hint(_progression: RefCounted) -> String: return "current hint"
+		return text
+	func tracked_hint(_progression: RefCounted) -> String: return hint
 
 class GameFixture extends "res://autoload/game_state.gd":
 	var actor: Node3D
@@ -167,3 +171,45 @@ func test_canonical_interval_does_not_accumulate_resume_distance_or_landmarks() 
 
 func test_existing_transaction_fence_still_blocks_all_mutation() -> void:
 	NATIVE_CASE.run_case(self, "res://tests/test_canonical_guest_passive_fence.gd", "_native_case_existing_transaction_fence_still_blocks_all_mutation", 6)
+
+func _native_case_personal_guidance_updates_without_progression_revision() -> void:
+	game._process(0.0)
+	var revision := int(game.progression.get("revision"))
+	assert_eq(game.objective_text, "current objective")
+	quests.signature = "personal-relic"
+	quests.text = "Hang your relic in the Shrine Room."
+	quests.hint = "Use the matching pedestal."
+	game._process(0.0)
+	assert_eq(int(game.progression.get("revision")), revision)
+	assert_eq(game.objective_text, quests.text)
+	assert_eq(game.objective_hint, quests.hint)
+	assert_false(game._objective_is_posed)
+	var updates := quests.updates
+	game._process(0.0)
+	assert_eq(quests.updates, updates, "unchanged personal guidance does not rebuild the line")
+	_native_completed = true
+
+func _native_case_device_flip_preserves_pose_until_personal_guidance_changes() -> void:
+	game._process(0.0)
+	game.objective_text = "posed objective"
+	game.objective_hint = "posed hint"
+	game._objective_is_posed = true
+	game._last_input_was_gamepad = not game._last_input_was_gamepad
+	game._process(0.0)
+	assert_eq(game.objective_text, "posed objective")
+	assert_eq(game.objective_hint, "posed hint")
+	assert_true(game._objective_is_posed)
+	quests.signature = "personal-key"
+	quests.text = "Use your key at its signed arch."
+	quests.hint = "Go to the Crossing Hall."
+	game._process(0.0)
+	assert_eq(game.objective_text, quests.text)
+	assert_eq(game.objective_hint, quests.hint)
+	assert_false(game._objective_is_posed)
+	_native_completed = true
+
+func test_personal_guidance_updates_without_progression_revision() -> void:
+	NATIVE_CASE.run_case(self, "res://tests/test_canonical_guest_passive_fence.gd", "_native_case_personal_guidance_updates_without_progression_revision", 6)
+
+func test_device_flip_preserves_pose_until_personal_guidance_changes() -> void:
+	NATIVE_CASE.run_case(self, "res://tests/test_canonical_guest_passive_fence.gd", "_native_case_device_flip_preserves_pose_until_personal_guidance_changes", 6)
