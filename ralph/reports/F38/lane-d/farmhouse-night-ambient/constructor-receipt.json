@@ -19,5 +19,5 @@
   "source": "535fe80dee242ecec6814ed6e078038635a414c1",
   "actual": "F17 actual farmhouse door -> straight Main Street -> Hall nave PASS, maximum_offroad0.000",
   "args": "--farmhouse-night-ambient-candidate",
-  "original_artifact": "PENDING"
+  "original_artifact": "APPROVE SAME original f42, ../farmhouse-reference-wood/original-canonical-guard-artifact-reuse-command-verdict.txt"
 }
