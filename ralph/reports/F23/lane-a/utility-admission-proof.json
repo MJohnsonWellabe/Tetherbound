@@ -157,5 +157,30 @@
     "Ten live utilities and two equipable per role are not claimed; Heal Pulse and Dash Strike remain unmounted.",
     "Catalogue gate consistency is not proof of every signature's mounted combat or ultimate release timing.",
     "No fresh HUD capture needed: existing literal F42 seven-inch HUD blind PASS and10tests84assertions retained unchanged; coupled shipping/command behavior remains open."
-  ]
+  ],
+  "mounted_heal_proof": {
+    "run_id": 37763319762,
+    "artifact_id": 11543770337,
+    "commit": "2323b2eb407bf5f4019fd6bfb6aed95d178242eb",
+    "file": "tests/smoke_f23_live_moves.gd",
+    "args": "--prove-utility=heal_pulse",
+    "mode": "headless",
+    "checks": 22,
+    "errors": 0,
+    "exit": 0,
+    "hp_before": 96.6,
+    "hp_after": 119.784,
+    "maximum_hp": 193.2,
+    "foe_hp_before": 600,
+    "foe_hp_after": 600,
+    "wind_before": 79.6,
+    "wind_after": 55.6,
+    "launches": 0,
+    "impacts": 0,
+    "save_refusal": "Both disk originals and owned/enemy HP preserved on refused world save; real retained proposal retries",
+    "receipt": "Unique committed/presented Heal proposal, actual UID/body generation, exact accepted world row and settled owner marker",
+    "review": "APPROVE original f25_medium_review bounded mounted Heal",
+    "log_sha256": "b96112fd991c2f076d2a51383b4b14345018a495a7ca889d555b38d3ad13cb03",
+    "limits": "Disclosed production-node fixture; process-local mounting only. No campaign/co-op/shipping/whole F23 claim."
+  }
 }
