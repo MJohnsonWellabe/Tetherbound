@@ -6,6 +6,7 @@ extends "res://tests/smoke_combat.gd"
 ##
 ##   godot --headless --path . --script tests/smoke_f27_wild_defeat_essence.gd
 ##   godot --headless --path . --script tests/smoke_f27_wild_defeat_essence.gd -- --actor-vitals-override
+##   ... -- --actor-vitals-override --research-source
 ##
 ## The canonical wild-victory transaction runs only while combat.json
 ## `actor_vitals.runtime_enabled` is true. With the shipped value false this
@@ -130,7 +131,88 @@ func _run() -> void:
 			hybrid, PROGRESSION.raw_xp_award_for(foe_level, PROGRESSION.config())])
 	if _failures.is_empty():
 		print("F27_WILD_DEFEAT_ESSENCE: PASS real wild fight paid %s and reduced XP via the host transaction" % str(gained))
+		if OS.get_cmdline_user_args().has("--research-source"):
+			await _research_source(game, local, session, foe_species)
 	_report()
+
+
+## Optional source segment: the original fight earns sight progress. The
+## claim uses the public production Session service, not GUI input. No task,
+## event, payout or receipt is injected; this is not an F45 UI witness.
+func _research_source(game: Node, local: RefCounted, session: Node, species: String) -> void:
+	var research := preload("res://scripts/creatures/research_log.gd")
+	var definition: Dictionary = research.config().get("species", {}).get(species, {})
+	var view: Dictionary = research.view(local.redesign_character, str(local.character_id), str(definition.get("biome", "")))
+	var task: Dictionary = {}
+	for row: Dictionary in view.get("species", []):
+		if row.get("species_id") != species: continue
+		if row.get("seen") != true: break
+		for candidate: Dictionary in row.get("tasks", []):
+			if candidate.get("id") == "sight": task = candidate
+	if view.get("ready") != true or task.get("claimable") != true \
+		or int(task.get("progress", 0)) < int(task.get("required", 1)):
+		_fail("original wild encounter did not earn a claimable sight task for " + species)
+		return
+	var expected := {}
+	for stack: Dictionary in task.get("rewards", []): expected[str(stack.id)] = int(stack.n)
+	if expected.is_empty():
+		_fail("original sight task has no configured typed essence payout")
+		return
+	var before := _essence_counts(local)
+	var intent := {"species_id": species, "task_id": "sight"}
+	var receipt := "research:%s:sight:%s" % [species, str(local.character_id)]
+	print("DISCLOSED research source: public Session claim of naturally earned %s sight task" % species)
+	var result: Dictionary = session.call("request_research_claim", intent)
+	if result.get("ok") != true:
+		_fail("original research claim refused: " + str(result.get("code", "")))
+		return
+	for i in SETTLE_AFTER_VICTORY: await physics_frame
+	var after := _essence_counts(local)
+	var character_disk: Dictionary = preload("res://scripts/save/character_save.gd").new().read(str(local.character_id))
+	if character_disk.get("character_id") != str(local.character_id):
+		_fail("research claim canonical disk lost the original character identity")
+		return
+	var live_world: RefCounted = game.get("world")
+	var reader := preload("res://scripts/save/world_save.gd").new("user://worlds/redesign-v28/")
+	var world_disk: Dictionary = reader.read(str(live_world.get("world_id")))
+	var row: Dictionary = world_disk.get("reward_deliveries", {}).get(ESSENCE.training_delivery_id(str(live_world.get("reward_delivery_namespace")), str(local.character_id)), {})
+	if not preload("res://autoload/world_state.gd").training_row_valid(row, str(live_world.get("reward_delivery_namespace")), str(live_world.get("world_id"))) \
+		or row.get("status") != "accepted" or row.get("action") != "research_claim" \
+		or row.get("character_id") != str(local.character_id) or row.get("intent") != intent \
+		or row.get("source_key") != "research_journal" or row.get("receipt") != receipt:
+		_fail("original research claim lacks a matching valid accepted host journal")
+		return
+	for carrier: Dictionary in [local.redesign_character, character_disk.get("redesign_character", {}), row.get("after", {}).get("redesign_character", {})]:
+		for field: String in ["research_receipts", "transaction_receipts"]:
+			if (carrier.get(field, []) as Array).count(receipt) != 1:
+				_fail("original research receipt is not exactly once in " + field)
+	for item: String in after:
+		if int(after[item]) - int(before[item]) != int(expected.get(item, 0)):
+			_fail("research typed essence delta differs for " + item)
+		var saved := 0
+		for slot: Variant in character_disk.get("inventory", []):
+			if slot is Dictionary and slot.get("id") == item: saved += int(slot.n)
+		if saved != int(after[item]): _fail("research essence disk differs for " + item)
+	# A second ordinary public request must retain the original accepted row.
+	session.call("request_research_claim", intent)
+	for i in SETTLE_AFTER_VICTORY: await physics_frame
+	var replay_disk: Dictionary = preload("res://scripts/save/character_save.gd").new().read(str(local.character_id))
+	if replay_disk.get("character_id") != str(local.character_id):
+		_fail("replayed research claim disk lost the original character identity")
+	var replay_world: Dictionary = reader.read(str(live_world.get("world_id")))
+	var replay_row: Dictionary = replay_world.get("reward_deliveries", {}).get(str(row.delivery_id), {})
+	if _essence_counts(local) != after or replay_row != row:
+		_fail("replayed research claim changed essence or its original accepted journal")
+	for carrier: Dictionary in [local.redesign_character, replay_disk.get("redesign_character", {})]:
+		for field: String in ["research_receipts", "transaction_receipts"]:
+			if (carrier.get(field, []) as Array).count(receipt) != 1:
+				_fail("replayed research receipt duplicated in " + field)
+	for item: String in after:
+		var saved := 0
+		for slot: Variant in replay_disk.get("inventory", []):
+			if slot is Dictionary and slot.get("id") == item: saved += int(slot.n)
+		if saved != int(after[item]): _fail("replayed research essence disk changed for " + item)
+	if _failures.is_empty(): print("F27_RESEARCH_ESSENCE: PASS original %s payout %s saved and accepted once; replay unchanged" % [receipt, str(expected)])
 
 
 func _essence_counts(local: RefCounted) -> Dictionary:
