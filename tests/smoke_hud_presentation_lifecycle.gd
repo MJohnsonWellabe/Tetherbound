@@ -155,6 +155,7 @@ func _run()->void:
 	combat.set_world_presentation_mode("exploration")
 	_check(hud._hotbar_panel.visible,"Exploration restores hotbar")
 	_check(combat._outcome.text.is_empty(),"Exploration does not revive stale result")
+	await _loss_result_lifecycle()
 	await _full_party_moment_layout()
 	await _named_wild_reward_layout()
 	await _progression_reset_and_modal_lifecycle(member)
@@ -174,6 +175,48 @@ func _run()->void:
 
 ## The production named-wild acknowledgement uses the same passive reward
 ## lane as trainer payouts, while utility refusals stay beside their controls.
+func _loss_result_lifecycle() -> void:
+	# Existing isolated UI lifecycle fixture only. Direct handler calls below
+	# test presentation ownership, never claim a natural defeat or emit captures.
+	var hp_before: Array = []
+	for member: RefCounted in game.party.members():
+		hp_before.append([member.hp, member.fainted])
+	combat._apply_loss_result_config({"enabled": false})
+	combat._on_exited("lost")
+	_check(not combat._loss_result.visible and combat._outcome.visible, "Default loss keeps original banner while candidate is OFF")
+	_check(is_equal_approx(combat._outcome_left, 2.5), "Default loss retains original hold")
+	combat._apply_loss_result_config({"enabled": true})
+	combat._on_exited("lost")
+	await _frames(2)
+	_check(combat._loss_result.visible and not combat._outcome.visible, "Loss candidate has one distinct passive result owner")
+	_check(combat._loss_result_detail.text == "Your creature is out of the fight.", "Loss detail retains original factual verdict")
+	_check(combat._loss_result.mouse_filter == Control.MOUSE_FILTER_IGNORE, "Passive result does not consume input")
+	_check(combat._outcome_left == 4.5, "Candidate reads bounded configured hold")
+	var bounds: Rect2 = combat._loss_result.get_global_rect()
+	_check(Rect2(Vector2.ZERO, root.get_visible_rect().size).encloses(bounds), "Actual loss card fits existing viewport")
+	_check(not bounds.intersects(hud._party_strip.get_global_rect()), "Loss card separates from permanent party rows")
+	_check(not bounds.intersects(hud._hotbar_panel.get_global_rect()), "Loss card separates from exploration quick bindings")
+	combat._forget_the_last_verdict()
+	_check(not combat._loss_result.visible and combat._outcome.text.is_empty() and combat._outcome_left == 0.0, "New fight clears loss card and its fallback without stale verdict")
+	combat._on_exited("lost")
+	combat._on_exited("fled")
+	_check(not combat._loss_result.visible and combat._outcome.text == "You backed off." and combat._outcome_left == 2.5, "Flee retains its original banner and duration")
+	combat._on_exited("lost")
+	combat._tick_outcome(4.6)
+	combat._tick_outcome(0.0)
+	_check(not combat._loss_result.visible and combat._loss_result_detail.text.is_empty() and combat._outcome.text.is_empty(), "Expired result clears both presentation surfaces")
+	combat._on_exited("lost")
+	combat.set_world_presentation_mode("relays")
+	_check(not combat._loss_result.visible and combat._outcome_left == 0.0, "Relays still relinquish all loss presentation")
+	combat._on_exited("lost")
+	_check(not combat._loss_result.visible and combat._outcome.text.is_empty(), "Relay-owned loss cannot leak into exploration result")
+	combat.set_world_presentation_mode("exploration")
+	combat._apply_loss_result_config({"enabled": false})
+	for i: int in game.party.members().size():
+		var member: RefCounted = game.party.at(i)
+		_check([member.hp, member.fainted] == hp_before[i], "Presentation cannot alter creature HP or faint state")
+
+
 func _named_wild_reward_layout() -> void:
 	hud.set_world_presentation_mode("exploration")
 	FEED.clear()
