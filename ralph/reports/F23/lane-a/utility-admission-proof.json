@@ -275,7 +275,7 @@
       "disposition": "Cancelled while queued after supported root-path correction; no engine proof claimed"
     },
     "root_path_repair": "7e90465558; canonical selector temporarily detaches untouched original autoload and mounts disclosed fixture at /root/Game, restores original at cleanup",
-    "status": "Original source APPROVE; corrected hosted behavior pending. No whole criterion, shipping or visual claim.",
+    "status": "Original source and runtime APPROVE; canonical-wild mounted26check PASS. F23#2 remains open (Dash parked and no shipping flip).",
     "root_path_review": {
       "reviewer": "/root/f25_medium_review",
       "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
@@ -285,8 +285,37 @@
     },
     "corrected_proof": {
       "run_id": 37767627297,
+      "artifact_id": 11547335639,
       "commit": "7e904655582999f7284ac74e966b693995058de2",
-      "status": "queued; actual canonical Heal runtime open"
+      "status": "PASS",
+      "checks": 26,
+      "failed_checks": 0,
+      "script_or_parse_errors": 0,
+      "exit": 0,
+      "seconds": 5,
+      "canonical_preflight": "enabled and ready through actual mounted Game/Session/actor and original resource-epoch/world context",
+      "hp_before": 96.6,
+      "hp_after": 119.784,
+      "foe_hp_before": 600.0,
+      "foe_hp_after": 600.0,
+      "wind_before": 79.6,
+      "wind_after": 55.6,
+      "retained_proposals": 1,
+      "launches": 0,
+      "impacts": 0,
+      "log_sha256": "d8d98ce0919876b2347a0566646046162f26a4c8200837baa60ef22f7f3ea2e3",
+      "save_refusal": "Initial world-save FALSE preserves owned/foe HP and both original disk records; retained exact proposal retries into world accepted and owner settled receipt",
+      "flags": "Existing process-local actor_vitals preview restored OFF; shipping Heal/actor_vitals gates unchanged",
+      "limits": "Fresh-boot disclosed production-node simulation, pre-admission injury, flat stage, static600HP wild. No campaign, co-op, device, visual or whole-F23 claim."
+    },
+    "runtime_review": {
+      "reviewer": "/root/f25_medium_review",
+      "original_thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+      "verdict": "APPROVE bounded mounted canonical-wild Heal",
+      "commit": "7e904655582999f7284ac74e966b693995058de2",
+      "run_id": 37767627297,
+      "verified": "26checks0errors exit0, exact world/epoch/Game/Session, original committed/presented receipt and saved owner settlement,12%maxHP Heal,24Wind, unchanged foe, save-refusal preservation and gate restoration",
+      "limits": "Static disclosed fixture only; autonomous combat, campaign, co-op, shipping and whole F23#2 remain open."
     }
   }
 }
