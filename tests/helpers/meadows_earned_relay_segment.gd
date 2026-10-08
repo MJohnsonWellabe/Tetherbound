@@ -217,6 +217,7 @@ func _recover_at_riverwatch(join: Vector2) -> bool:
 	for member: RefCounted in party.call("members"):
 		caps_before[str(member.get("uid"))] = ESSENCE.creature_cap(personal, str(member.get("uid")))
 	var day_before := int(_game.get("day"))
+	var clock_before := float(_game.get("clock_elapsed_seconds"))
 	var recovered_indices: Array[int] = []
 	for index in int(party.call("size")):
 		var member: RefCounted = party.call("at", index)
@@ -233,6 +234,19 @@ func _recover_at_riverwatch(join: Vector2) -> bool:
 	if not retained_five(_initial_ids, _party_ids()) or inventory_before != care._inventory_snapshot() \
 			or xp_before != _xp_snapshot() or int(_game.get("day")) != day_before \
 			or int(bed.call("occupant_index")) >= 0 or _fighting() or INPUT_OWNER.current(_tree) != null:
+		# Retain the exact failing boundary, not a guessed cause from the
+		# compound label. All original refusal predicates stay unchanged.
+		_receipt("riverwatch_recovery_guard_refusal", {"identity_unchanged":retained_five(_initial_ids, _party_ids()),
+			"party_before":_initial_ids.duplicate(),"party_after":_party_ids(),
+			"inventory_unchanged":inventory_before == care._inventory_snapshot(),
+			"inventory_before":inventory_before,"inventory_after":care._inventory_snapshot(),
+			"xp_unchanged":xp_before == _xp_snapshot(),"xp_before":xp_before,"xp_after":_xp_snapshot(),
+			"day_unchanged":int(_game.get("day")) == day_before,
+			"day_before":day_before,"day_after":int(_game.get("day")),
+			"clock_before":clock_before,"clock_after":float(_game.get("clock_elapsed_seconds")),
+			"bed_occupant":int(bed.call("occupant_index")),"fighting":_fighting(),
+			"input_owner":str(INPUT_OWNER.current(_tree)),"recovered_indices":recovered_indices,
+			"care_receipts":care.result().receipts,"scope":"Read-only operands; original compound guard still FAIL"})
 		return _fail("Riverwatch HP-only recovery changed earned identity, inventory, XP, day or ordinary input")
 	_receipt("pre_relay_riverwatch_recovery", {"party": _party_hp(), "recovered_indices": recovered_indices,
 		"care_receipts": care.result().receipts, "bed": str(bed.global_position), "join": join,
