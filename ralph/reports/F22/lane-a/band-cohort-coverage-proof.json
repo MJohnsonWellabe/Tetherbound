@@ -1,7 +1,7 @@
 {
   "criterion": "F22#1",
   "criterion_text": "Across 12+ seeds per biome band, a reader pilot beats a masher pilot (reader win >=0.9; masher loses the lead creature materially more often).",
-  "status": "OPEN; coverage guard proof only, no whole criterion or gameplay acceptance claim",
+  "status": "F22#1 admission scope PARKED OPEN; no whole criterion credit, unchanged retry prohibited",
   "source_commit": "f0f77c4c2c8c09e9cfdf84faf30cc163519670ee",
   "change": "Ordinary trainer floor sweep requires unique executed expected band x three-starter cohorts; missing trainer roster gaps, duplicates and foreign rows cannot count as coverage. Named/F33 gear and wild modes retain existing path. Existing min12 seeds/stat thresholds and acceptance=false/full-policy admission guard retained.",
   "original_source_review": {
@@ -73,5 +73,39 @@
     "support": "Old base creates basic creature_body.gd; Director.ordinary_combat_vitals_ready calls deployed_body_for(peer), which scans deployed_creature group and owner_peer_id. Bare body lacks both. Production follower _ready joins deployed group and actual producer sets owner_peer_id. Necessary producer mismatch identified from exact construction/guard code; no unobserved sole refusal cause claimed.",
     "change": "Base synchronous body factory keeps exact old default construction; opt-in overrides with actual Follower and peer1 before _ready/Manager.begin, no manual group faking. Real current deployed-body lookup must equal the actual body before existing installer. No live resource/time/state/flag or production guard changes.",
     "disposition": "Distinct supported source correction; same original scope review before one changed existing named proof. Failed files preserved, no unchanged retry."
+  },
+  "follower_owner_proof": {
+    "checkout_commit": "692ee53ff509235935fdb46fe15b7b6d3c537445",
+    "original_source_review": "SOURCE / PROOF-SCOPE APPROVE /root/f25_medium_review",
+    "run_id": 37830017264,
+    "artifact_id": 11572709055,
+    "job_id": 113492633444,
+    "log_sha256": "804d342b06156b0a109aea4eebe95ce82cd72a265aca6d7cc00ed2005691f428",
+    "log_path": "ralph/reports/F25/downloads/a-f22-follower-canonical-owner-37830017264/raw/run.log",
+    "result": "FAIL saved move receipt check; real owned-body admission and positive impacts reached, fight stalled",
+    "canonical_owner": true,
+    "accepted_launches": 9,
+    "accepted_impacts": 9,
+    "owner_disk_party_count": 5,
+    "saved_move_receipts": 0,
+    "stalled": true,
+    "won": false,
+    "faints": 3,
+    "physics_frames": 14431,
+    "runtime_actor_vitals_flag": false,
+    "scope": "Disclosed fresh five-card fixture, authored trainer_mira, unchanged existing reader/time/guard inputs. No durable move settlement, successful ending, accepted boundary, all-band cohort or full COMBAT7 credit. Raw failed files retained."
+  },
+  "original_failure_disposition": {
+    "reviewer": "/root/f25_medium_review",
+    "thread_id": "01a1168b-648a-7c33-8810-ae98609b293b",
+    "verdict": "ARTIFACT / DISPOSITION APPROVE",
+    "disposition": "F22#1 admission scope PARKED OPEN; no unchanged retry",
+    "required_supported_operand": "One hit exact action/mastery original, settlement status and matching world/owner-save decision before teardown; zero receipts alone identifies no cause."
+  },
+  "main_integration": {
+    "main_commit": "7c7d25873cec69c1720b1964af9fd4b94151bee5",
+    "merge_commit": "d9351e30bc11d6aaa1c78421c58a2a442f4091e9",
+    "method": "merge, no rebase",
+    "original_verdict": "Merge does not invalidate these bounded observations; unchanged guard evidence remains reusable."
   }
 }
