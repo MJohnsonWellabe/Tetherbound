@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "reviewer": {
+    "name": "blind_listener_f10",
+    "id": "01a11667-4631-72b2-8fed-294999b8c043",
+    "role": "retained original independent code-blind visual judge"
+  },
+  "scope": "Two supplied interior Stormheart bark/lighting stills only, assessed against previously inspected approved Stormwood boards and written ART_DIRECTION material/readability bar.",
+  "verdict": "BLOCK",
+  "reason": "Bark grooves are readable, and no conspicuous isolated triangular lighting discontinuity is evident in these two views. However, the shown interior wall surfaces read as long, highly repetitive vertical corrugations with little irregular bark breakup; the near-vertical opening lips read as thin, straight sheet-like edges without a clearly differentiated broken/exposed wood face. These visible surface/edge qualities do not yet meet the bounded natural-tree material and shape appearance bar. This is not a finding about unseen exterior root/branch joins.",
+  "frames": [
+    {
+      "frame": "D:/tetherbound/codex-e/.tmp/e-b852-bark-anonymous/B01.jpg",
+      "verdict": "BLOCK",
+      "actually_covered": [
+        "Broad inner wall faces to the left and right of the central purple-sky slit.",
+        "Distant near-vertical lips of that slit.",
+        "Interior bark behind and beneath elevated timber walkways; lower wall/platform visual interfaces."
+      ],
+      "observations": [
+        "Dark gray-violet longitudinal bark grooves remain distinguishable on the inner walls.",
+        "The right wall is lighter than the broad left wall; broad value gradients are visible without an obvious isolated triangle-shaped brightness jump.",
+        "Long, regular groove bands dominate the wall surfaces, giving a corrugated-sheet impression rather than the irregular living-wood/broken-bark detail of the approved tree boards.",
+        "The sky opening has comparatively straight, abrupt thin-looking lips; clearly exposed wood thickness/detail is not established here."
+      ],
+      "lighting_direction": "Visible relative light/dark values are not obviously contradictory in this single still; physical light direction or normal correctness is not proven.",
+      "triangle_or_texture_discontinuity": "No conspicuous isolated triangular shading patch or hard diagonal texture jump identified at this viewing scale. Repetitive/elongated-looking surface treatment remains a visible finish issue."
+    },
+    {
+      "frame": "D:/tetherbound/codex-e/.tmp/e-b852-bark-anonymous/B02.jpg",
+      "verdict": "BLOCK",
+      "actually_covered": [
+        "Nearer left interior bark face above the ascending timber deck.",
+        "Right interior wall face behind rails, banner and dark blue plate-like object.",
+        "Two vertical lips of the sky opening and interior wall/deck interfaces."
+      ],
+      "observations": [
+        "Groove structure is clearest on the upper-left wall; the right wall is darker but retains vertical bark bands.",
+        "No conspicuous isolated triangle-shaped face-lighting discontinuity is apparent.",
+        "Surface breakup remains dominated by extended, closely repeated vertical ridges with limited variation in the visible bark field.",
+        "The opening lips remain near-vertical, thin and abrupt rather than showing a convincing irregular fractured wood face."
+      ],
+      "lighting_direction": "Broad shading variation and trainer/deck shadow are visible, but the lighting source/direction cannot be independently calibrated from these stills.",
+      "triangle_or_texture_discontinuity": "No definite hard triangular seam identified. The dark right-wall region and near opening edges do not demonstrate all junction continuity."
+    }
+  ],
+  "readability_subfinding": "PASS for basic bark recognition in the supplied inner-wall views; BLOCK for the bounded overall bark/split-edge appearance.",
+  "unseen_contexts": [
+    "Exterior lower trunk/root transitions and root-to-ground contact.",
+    "Exterior branch-to-trunk junctions and branch undersides.",
+    "A true oblique close-up exposing split-lip thickness and fracture material.",
+    "Upper crown, exterior hero silhouette, distant tree identity, all phases and other camera headings.",
+    "Motion-dependent shimmer, texture transitions, lighting changes and High/Medium presentation."
+  ],
+  "evidence": {
+    "contact": "D:/tetherbound/codex-e/.tmp/e-b852-bark-anonymous/contact.jpg",
+    "full_rasters_inspected": [
+      "D:/tetherbound/codex-e/.tmp/e-b852-bark-anonymous/B01.jpg",
+      "D:/tetherbound/codex-e/.tmp/e-b852-bark-anonymous/B02.jpg"
+    ],
+    "references": "Previously inspected Stormwood stronghold boards A/B and creature-roster board; written ART_DIRECTION domain material/readability bar and Stormwood look bar."
+  },
+  "limits": [
+    "Coverage is determined by visible pixels, not a requested camera name. These are interior wall/lip views and do not certify exterior root or branch junctions.",
+    "No exact texture scale, UV layout, triangulation, lighting-normal implementation or source cause is inferred.",
+    "No before/after improvement claim is possible from this two-image packet.",
+    "No full hero identity-distance, full matrix, High/Medium, runtime outcome, whole F41 or full release acceptance claim."
+  ],
+  "preservation": "Prior original witnesses, catalogue scores, context/outcome ratings and artifacts remain unchanged. Only this new bounded evidence artifact is written."
+}

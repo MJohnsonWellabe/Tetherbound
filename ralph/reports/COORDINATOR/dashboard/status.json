@@ -1,10 +1,9 @@
 {
- "updated": "2026-10-08T14:50Z",
+ "updated": "2026-10-08T18:50Z",
  "headline": [
-  "9:44 AM CT Thu 08 Oct: 160 criteria met on main; A F24#4 in consolidation 13b (161 when it merges). F23#2 dropped: its host move gate refuses co-op pilots' moves in shared_boss and shared_wild_fight.",
-  "7:10–9:10 AM CT: 3 whole READYs, all from lane A (F24#4, F23#2, F23#1 re-proof); B, C, D and E closed none.",
-  "Owner 7:44 AM CT: earned segments may start from generated boundary saves. Lane B now runs all 8 post-Warrens segments in parallel on hosted runners.",
-  "Lane C: 5 of the 9 failing tests from PR #586 now pass. D: F42#2 HUD blind judge BLOCK, fixes pushed. E: native GPU work on Cloudreach F40/F41."
+  "1:28 PM CT Thu 08 Oct: 161 criteria met on main; consolidation 15 carries 4 more (C F28#1, E F41#0, B F02#0/#1): 165 when it merges.",
+  "11:10 AM–1:10 PM CT: 3 whole READYs (C F28#1, E F41#0, A F23#3 re-proof of an already-met criterion) plus B's held F02#0/#1 under the segment-proof ruling.",
+  "Lanes are moving to their section 17 clusters: C started F28#2 (Masters), D Hall portal depth and F42#2, B route segments."
  ],
  "batches": [
   {
@@ -522,23 +521,29 @@
    "sha": "pending",
    "state": "In CI",
    "contents": "F24#4 crafted command tiers (lane A)"
+  },
+  {
+   "name": "Consolidation 15",
+   "sha": "pending",
+   "state": "In CI",
+   "contents": "F28#1 Masters placed and signposted (C), F41#0 Stormwood recapture/rescore (E), F02#0/#1 South Bridge and Warrens earned segments (B)"
   }
  ],
  "lanes": [
   {
    "lane": "tb/codex-a (Codex A: combat, moves, commands)",
-   "now": "F24#4 in 13b; F23#2 bounced: host catalogue gate refuses test pilots' moves (invalid_actor_move) in shared_boss and shared_wild_fight.",
-   "next": "Fix F23#2 move admission for co-op pilots, rerun the co-op combat smokes, re-READY."
+   "now": "F23#3 re-proof (already met, held); F23#2 parked.",
+   "next": "Named-fight C2/C3 cluster."
   },
   {
    "lane": "tb/codex-b (Codex B: earned route, story, ending)",
-   "now": "All 8 post-Warrens segments running in parallel; Relay segment now grounded and still, failing on its route check.",
-   "next": "Segment results, then F49#0 and F20#1/#3."
+   "now": "F02#0/#1 in consolidation 15; Homecoming segment failed initial load.",
+   "next": "READY passed segments with every route criterion they cover."
   },
   {
    "lane": "tb/codex-c (Codex C: power, homestead, economy, co-op)",
-   "now": "5 of 9 failing tests from PR #586 now pass (title, menu, Waterward, swim, swim-stone late join).",
-   "next": "Remaining 4, then re-READY the whole co-op set."
+   "now": "F28#1 in consolidation 15; F28#2 challenger UI approved.",
+   "next": "Masters cluster F28#2–#4."
   },
   {
    "lane": "tb/codex-d (Codex D: Meadows, village, Tidewake visuals)",
@@ -547,8 +552,8 @@
   },
   {
    "lane": "tb/codex-e (Codex E: Cloudreach, Stormwood, art, audio)",
-   "now": "Named-pilot reach fix; Cloudreach F40/F41 packets on the local GPU.",
-   "next": "F40#0 whole matrix judge."
+   "now": "F41#0 in consolidation 15.",
+   "next": "F40 Cloudreach matrix cluster."
   },
   {
    "lane": "tb/ci-speed (Claude)",

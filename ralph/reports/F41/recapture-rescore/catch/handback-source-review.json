@@ -1,0 +1,51 @@
+{
+  "reviewer": "review_cloud_startup",
+  "verdict": "APPROVE",
+  "base_commit": "5348eed558e3c35cf36fb3fa32a9ceba1bc3831e",
+  "path": "tools/phase2_capture_catch.gd",
+  "scope": "Existing opt-in breakout-handback-only diagnostic and working-tree read-only model/rig-target receipt extension only.",
+  "original_opt_in_verdict": "APPROVE",
+  "retained_findings": [
+    "Successful catches emit no mislabeled breakout frame; failure must produce both unpaused views and two observations or exit nonzero.",
+    "Failure odds are restored before finishing; the default twelve-frame path is unchanged.",
+    "Shutters retain the existing five-physics-frame beat and two-process-frame capture waits, with thirty-five physics frames between views. Use recorded frame numbers rather than claiming exact elapsed timing.",
+    "Added model transforms and the existing Node3D rig target are read-only; no production pose, camera or mechanics mutation is introduced."
+  ],
+  "corrected_finding": "Refreshed working diff includes guarded ally_model_visible and wild_model_visible using the captured Model nodes' is_visible_in_tree(), separately from existing body-root visibility.",
+  "required_corrections": [],
+  "proof_status": "APPROVE bounded diagnostic completion/provenance and recorded observations only; visual defect remains unresolved.",
+  "diagnostic_proof": {
+    "source_commit": "7ee966a7fc7e2c957a177b4e33fce83821227028",
+    "run_id": 37740424746,
+    "job_id": 113189619028,
+    "artifact_id": 11533284875,
+    "checkout_verified_from_hosted_job_log": true,
+    "exit_code": 0,
+    "duration_seconds": 333,
+    "complete": true,
+    "failures": [],
+    "unique_frames_and_observations": 2,
+    "actual_png_headers": [1280, 720],
+    "all_frame_manifest_and_run_log_hashes_match_receipt": true,
+    "observations_match_raw_manifest": true,
+    "error_or_script_error_in_run_log": false,
+    "paused_at_both_shutters": false,
+    "physics_frames": [584, 632],
+    "resolved_success_at_both_shutters": false,
+    "current_camera": "/root/Stormwood/CameraRig/Camera3D",
+    "camera_target": "/root/Stormwood/AllyCreature",
+    "rig_has_current_camera_at_both_shutters": true,
+    "ally_and_wild_body_and_model_visibility_flags_at_both_shutters": true,
+    "pixel_observation": "Both inspected images retain a nearly black textured world field while HUD text remains readable; bodies and environment cannot be visually assessed in these shutters.",
+    "bounded_conclusion": "The obstruction occurs in unpaused shutters on this supplied current fixture, so pausing the shutter alone does not explain this reproduced failure. Model visibility flags are scene-state facts, not evidence that their pixels reach the screen.",
+    "causal_limit": "No identification of the dark surface, faulty geometry, lighting, compositor or ordinary-game cause is established. No production fix proposed from these observations.",
+    "fixture": "Existing full-health fight, in-memory failure odds and supplied orbs; two unpaused failure-handback stills only. Forty-eight recorded physics frames elapsed including renderer waits, not a thirty-five-frame exact shutter interval.",
+    "receipt": "ralph/reports/F41/recapture-rescore/catch/handback/capture-receipt.json",
+    "raw_packet": ".tmp/e-catch-handback-7ee-expanded"
+  },
+  "excluded_claims": [
+    "Earned catch or co-op proof",
+    "Success sequence or whole twelve-frame capture",
+    "Continuous motion or whole F41 criterion acceptance"
+  ]
+}

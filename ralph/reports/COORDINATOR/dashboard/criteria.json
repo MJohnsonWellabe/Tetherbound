@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-10-08T14:44:16.568976+00:00",
- "main_sha": "fda4aa178 (PR #588)",
+ "generated_at": "2026-10-08T18:28:58.645927+00:00",
+ "main_sha": "c7127e7dd (PR #590)",
  "batch4_sha": "next batch assembling",
  "rows": [
   {
@@ -91,18 +91,18 @@
    "criteria": [
     {
      "text": "Fresh ordinary save reaches and crosses the South Bridge with no teleport/state injection",
-     "status": "in_progress",
-     "evidence": "Evidenced on tb/codex-b 15d08e3398 (READY #572 6049950428, 7:57 PM CT 10-07): earned chain opening/camp/bridge/Warrens terminal PASS, 476 bridge tests; review APPROVE",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-b 15d08e3398 (READY #572 6047, 10-07; re-requested 12:39 PM CT 10-08): earned segment runs opening 37677583782, camp 37679254472, native Bridge 55d59 and Warrens ad95 PASS (South Bridge), bridge logic 37694616002 476 tests; owner segment-proof ruling; original b_f49_review APPROVE. In consolidation 15.",
      "gap": "Re-run smoke_four_biome_continuous.gd --through-bridge from a fresh v28 save, TB_WORLD_SEED=15. Folds into F49.",
-     "note": "READY 6049950428 held at consolidation 7 (10-07 9:20 PM CT): evidence-only, but the source it proves is not on main (55d59dd5d4 South Bridge arena bounds, ba556ac7d session training-ACK, ad95e0dd6 disk handoff, 1861efb8c1 runner). Lane B to READY that source.",
+     "note": "Landed: Evidenced on tb/codex-b 15d08e3398 (READY #572 6047, 10-07; re-requested 12:39 PM CT 10-08): earned segment runs opening 37677583782, camp 37679254472, native Bridge 55d59 and Warrens ad95 PASS (South Bridge), bridge logic 37694616002 476 tests; owner segment-proof ruling; original b_f49_review APPROVE. In consolidation 15.",
      "audit_index": 0
     },
     {
      "text": "Continues through Quarry/Warrens on the same fresh save",
-     "status": "in_progress",
-     "evidence": "Evidenced on tb/codex-b 15d08e3398 (READY #572 6049950428, 7:57 PM CT 10-07): earned chain opening/camp/bridge/Warrens terminal PASS, 476 bridge tests; review APPROVE",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-b 15d08e3398 (READY #572 6047, 10-07; re-requested 12:39 PM CT 10-08): earned segment runs opening 37677583782, camp 37679254472, native Bridge 55d59 and Warrens ad95 PASS (Quarry/Warrens), bridge logic 37694616002 476 tests; owner segment-proof ruling; original b_f49_review APPROVE. In consolidation 15.",
      "gap": "Re-run smoke_four_biome_continuous.gd --through-warrens --reload-at-transitions. Folds into F49.",
-     "note": "READY 6049950428 held at consolidation 7 (10-07 9:20 PM CT): evidence-only, but the source it proves is not on main (55d59dd5d4 South Bridge arena bounds, ba556ac7d session training-ACK, ad95e0dd6 disk handoff, 1861efb8c1 runner). Lane B to READY that source.",
+     "note": "Landed: Evidenced on tb/codex-b 15d08e3398 (READY #572 6047, 10-07; re-requested 12:39 PM CT 10-08): earned segment runs opening 37677583782, camp 37679254472, native Bridge 55d59 and Warrens ad95 PASS (Quarry/Warrens), bridge logic 37694616002 476 tests; owner segment-proof ruling; original b_f49_review APPROVE. In consolidation 15.",
      "audit_index": 1
     },
     {
@@ -1590,9 +1590,9 @@
     {
      "text": "Workbench trainer-gear tiers upgrade commands (meter rate, pouch size, snare strength).",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-a 1496cb6430 (READY #572, 7:28 AM CT 10-08): crafted-tier engine 37775449228 PASS (four paid Workbench crafts, live tier 4), Backpack controller/disk/Unequip 37775445623 PASS 26 checks, affected unit 37776228174 34 tests/1568 assertions; original f23_audit WHOLE APPROVE. In consolidation 13.",
+     "evidence": "PR #590 (consolidation 13b) merged 2026-10-08 10:16 AM CT: from tb/codex-a 1496cb6430 (READY #572, 7:28 AM CT 10-08): crafted-tier engine 37775449228 PASS, Backpack controller/disk/Unequip 37775445623 PASS 26 checks, affected unit 37776228174 34 tests/1568 assertions; original f23_audit WHOLE APPROVE; equipment smoke step given 120 s world-load timeout",
      "gap": "Enable it; add a unit test of tier effects and a crafted-tier engine witness.",
-     "note": "Landed: Evidenced on tb/codex-a 1496cb6430 (READY #572, 7:28 AM CT 10-08): crafted-tier engine 37775449228 PASS (four paid Workbench crafts, live tier 4), Backpack controller/disk/Unequip 37775445623 PASS 26 checks, affected unit 37776228174 34 tests/1568 assertions; original f23_audit WHOLE APPROVE. In consolidation 13.",
+     "note": "Landed: PR #590 (consolidation 13b) merged 2026-10-08 10:16 AM CT: from tb/codex-a 1496cb6430 (READY #572, 7:28 AM CT 10-08): crafted-tier engine 37775449228 PASS, Backpack controller/disk/Unequip 37775445623 PASS 26 checks, affected unit 37776228174 34 tests/1568 assertions; original f23_audit WHOLE APPROVE; equipment smoke step given 120 s world-load timeout",
      "audit_index": 4
     },
     {
@@ -1825,10 +1825,10 @@
     },
     {
      "text": "Five Masters are placed off-path and signposted: L10 mid-Meadows, L20 upper Meadows before the Warden's stronghold, L30 an outer Tidewake island, L40 a Cloudreach high perch (Fly), L50 deep Stormwood.",
-     "status": "not_started",
-     "evidence": "data/config/masters.json, scenes/masters/master_t1–5.tscn (no test)",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-c e4d6401b52 (READY #572, 11:28 AM CT 10-08): native Gull Rest five-creature swim (145 assertions, both legs), run 37806614540, Master4 Fly witness; judge PASS all five signs; original whole APPROVE. In consolidation 15.",
      "gap": "Placement test plus controller reachability smoke for each Master site.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. Placement data and scenes exist. No test of off-path placement, signposts or reachability (Fly perch).",
+     "note": "Landed: Evidenced on tb/codex-c e4d6401b52 (READY #572, 11:28 AM CT 10-08): native Gull Rest five-creature swim (145 assertions, both legs), run 37806614540, Master4 Fly witness; judge PASS all five signs; original whole APPROVE. In consolidation 15.",
      "audit_index": 1
     },
     {
@@ -2606,10 +2606,10 @@
    "criteria": [
     {
      "text": "After F26 look-dev, the biome is re-captured (≥200 frames) and its catalog rows re-scored against the new bar.",
-     "status": "not_started",
-     "evidence": "ralph/reports/R2-F41/implementation-review.json@b4e4897d5",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-e acaaba91d5 (READY #572, 12:11 PM CT 10-08): 240 native Stormwood frames recaptured, 44 catalogue rows rescored; blind completeness PASS; original whole APPROVE. In consolidation 15.",
      "gap": "After F26, capture ≥200 Stormwood frames (High/Medium), then a code-blind re-score of catalog rows.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. No captures run (\"every acceptance criterion remains open\"). F26 look-dev is not done.",
+     "note": "Landed: Evidenced on tb/codex-e acaaba91d5 (READY #572, 12:11 PM CT 10-08): 240 native Stormwood frames recaptured, 44 catalogue rows rescored; blind completeness PASS; original whole APPROVE. In consolidation 15.",
      "audit_index": 0
     },
     {
