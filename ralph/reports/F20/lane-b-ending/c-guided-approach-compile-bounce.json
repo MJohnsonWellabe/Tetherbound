@@ -1,0 +1,24 @@
+{
+  "criterion": "Integration bounce; F20#1/#4 current C cut blocked until corrected actual proof",
+  "original_run": 37704809944,
+  "original_source": "20f21f896c1473c6c607c19a741498159c48b76b",
+  "artifact": 11519182107,
+  "first_actual_error": "Could not resolve external class member activate at tests/helpers/f20_ending_probe.gd:152 on both peers",
+  "cause": "C f49_portal_travel.activate(prompt:Node3D,approach_headings:Array[Vector3]=[]) introduced cbb86afe343013686ea6aec093b2b8fb95ae9310; derived f20_portal_travel still overrode activate(prompt:Node3D). Base/derived signatures incompatible.",
+  "cascade": "F20 peer script fails compilation; new() invalid; fixture and return_home nil. No Grandpa/credits path reached.",
+  "main_scope": "Main068b base still single argument; original C20f21 branch carried optional headings. Earlier unchanged-main ending PASS retained; it does not exercise this changed C API.",
+  "repair": "015e049fe9478622b52b709a80bf2058a0a8259a",
+  "review": {
+    "reviewer": "b_f20_review",
+    "verdict": "SOURCE APPROVE",
+    "notes": "Optional-heading forward through activate→bound _activate_world→super.activate preserves default movement, budgets and strict arrival guards. No new preload cycle found."
+  },
+  "integration": {
+    "C": "Only four f20_portal_travel signature/bind/super line edits from015e; existing C base optional headings/last_approach already present; do not apply whole B files.",
+    "main": "Matching f49 base optional-heading/last_approach delta plus four derived edits; retain all unrelated main and lane hunks. Exact2file015e delta only.",
+    "excluded": "UnREADY F46 captures/reader and strict arrival/journal/bounty ancestry; no whole branch landing"
+  },
+  "runtime": "Pending named affected logic and same original two-peer ending smoke on repaired cut; no READY",
+  "flags": "none",
+  "original_raw": "Original artifact11519182107 raw peer logs and parent run.log retained unchanged"
+}
