@@ -50,12 +50,13 @@ func present_charged_energy(expected_uid: String, energy: float, required: float
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	visible = false
 	var cfg: Dictionary = SCREEN.config().get("combat", {})
 	var left := VBoxContainer.new()
 	left.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	left.position = Vector2(float(cfg.get("inset", 56)), -float(cfg.get("command_bottom", 500)))
+	left.offset_left = float(cfg.get("inset", 56))
+	left.offset_top = -float(cfg.get("command_bottom", 500))
 	add_child(left)
 	_commands = COMMAND_METER.new()
 	left.add_child(_commands)

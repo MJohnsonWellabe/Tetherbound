@@ -350,12 +350,22 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 			if not energy_gate.is_visible_in_tree() or not is_equal_approx(energy_gate.max_value, charged_cost) \
 				or not is_equal_approx(energy_gate.value, clampf(energy, 0.0, charged_cost)):
 				return {"verdict":"FAIL", "detail":"Charged energy gate differs from current owned creature resource"}
+			var viewport_rect := Rect2(Vector2.ZERO, Vector2(root.size))
+			var hud_regions := {"ultimate":ring, "commands":overlay.get("_commands"), "moves":overlay.get("_moves")}
+			var region_rects := {}
+			for region: String in hud_regions:
+				var control: Control = hud_regions[region]
+				var rect := control.get_global_rect()
+				region_rects[region] = [rect.position.x, rect.position.y, rect.size.x, rect.size.y]
+				if not control.is_visible_in_tree() or not rect.has_area() or not viewport_rect.encloses(rect):
+					return {"verdict":"FAIL", "detail":"HUD region is empty or outside viewport: " + region, "data":region_rects}
 			var shot: Dictionary = await PROOF_STEPS.run(self, "screenshot", {"name":"hud-" + name})
 			if shot.get("verdict") != "PASS" or shot.get("data", {}).get("captured") != true: return {"verdict":"FAIL", "detail":"HUD screenshot was not captured", "data":shot}
 			var graphics := preload("res://scripts/ui/graphics_prefs.gd")
 			var receipt := _hud_capture_metadata.merged({"name":name, "snapshot":view,
 				"continuous_render_loop":false, "charged_energy":energy, "charged_cost":charged_cost,
 				"charged_gate_value":energy_gate.value, "charged_gate_maximum":energy_gate.max_value,
+				"region_rects":region_rects,
 				"frame":Engine.get_process_frames(), "physics_frame":Engine.get_physics_frames(),
 				"viewport":[root.size.x, root.size.y], "renderer":RenderingServer.get_current_rendering_method(),
 				"preset":graphics.selected(), "graphics":graphics.values(), "ring_fraction":float(ring.get("fraction")),
