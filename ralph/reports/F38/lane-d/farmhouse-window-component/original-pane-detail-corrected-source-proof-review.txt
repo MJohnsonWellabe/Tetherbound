@@ -1,0 +1,7 @@
+> **Scope 1 — SOURCE APPROVE:** `620cf7c561593b7e8aa82ad6530799a60ad8ccf6`. The sole added line sets candidate emission to MULTIPLY, closing the 353 defect while retaining emission colour/energy and the previously reviewed boundaries.
+>
+> **Scope 2 — ARTIFACT APPROVE:** frozen 353 run `37821504439`. Checkout identifies exact 353; ZIP and extracted log match SHA256 `2838fc8323bc2296e447f0c0f269441ad0c7876a444fc1469072b96d272df5d1`. Actual walk passed, exit 0/112s, maximum off-road distance 0, zero script errors and one retained interpolation warning.
+>
+> **Scope 3 — REUSE APPROVE:** that constructor/path evidence applies to unchanged routes and collision at 620. No repeat walk is needed for the one material-property assignment.
+>
+> This does **not** establish runtime MULTIPLY behavior, mounted textures, native appearance, performance or whole-criterion acceptance. Corrected-source native/pixel proof remains separate and pending.

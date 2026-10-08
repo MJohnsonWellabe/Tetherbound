@@ -5,7 +5,7 @@
   "production_change": "Static128px neutral albedo/emission modulation and shallow mip-renormalized normal ripples on the inspected untextured MI_WindowGlass; two shared runtime textures per farmhouse. Preserve installed mesh/mullions/material identity/RGB/alpha/emission energy/transparency/roughness/lights/collision; mapped panes excluded. No painted interior or interior-depth claim.",
   "scope": "Farmhouse-only peer-local world presentation on all presets",
   "flag": "window_pane_detail_enabled=false; --farmhouse-window-pane-detail-candidate; --farmhouse-window-pane-detail-baseline wins. Old scalar flag remains separate/OFF.",
-  "source_review": "First353 REQUEST_CHANGES: default ADD emission texture would add white. pane-detail-source-rejected-353.txt retained. Supported620 one-line EMISSION_OP_MULTIPLY correction; original corrected source/reuse review pending.",
+  "source_review": "APPROVE same original f42 corrected620; original-pane-detail-corrected-source-proof-review.txt Scope1. First353 ADD rejection retained.",
   "affected_constructor_proof": {
     "source": "353806ee1b502e5e723f162d3fc8148e5df0bb9a",
     "script": "tests/smoke_village_hall_redesign.gd",
@@ -22,9 +22,11 @@
     "log_sha256": "2838fc8323bc2296e447f0c0f269441ad0c7876a444fc1469072b96d272df5d1",
     "checkout_excerpt": "pane-detail-checkout-excerpt.txt",
     "fixtures": "Inherited post-opening flags/starter/start placement/parsed joypad and camera route, original terrain64/offroad/collision/floor/distance/timeout guards unchanged. No earned-save or new fixture/harness/testclass/observer.",
-    "limits": "Uncorrected353 constructor/path only; no mounted-texture, corrected multiply rendering, pixel, performance or whole-criterion evidence. Original independent scope/reuse verdict pending."
+    "limits": "Uncorrected353 constructor/path only; no mounted-texture, corrected multiply rendering, pixel, performance or whole-criterion evidence. Original independent scope/reuse verdict pending.",
+    "independent_artifact_verdict": "APPROVE same original f42 Scope2 at353; exact ZIP/log/digest/checkout verified",
+    "reuse_verdict": "APPROVE same original f42 Scope3 for unchanged routes/collision at620; no repeat walk needed for one material-property assignment. Not correctedMULTIPLY runtime or mounted-texture/pixel credit."
   },
-  "native": "PENDING original exact corrected source/command plus ROOT-only bounded Low pixel comparison and same original f26; no GPU/hosted GPU run by D",
+  "native": "Exact two Low720/1080 process-candidate ON commands proposed in pane-detail-proposed-native-command.json; original before-reuse/command gate pending, then ROOT only and same original f26.",
   "reuse": "Existing original ece four-view Low controls and appearance-preservation PASS retained; before reuse requires source/pose binding. No unchanged full Hall matrix, old scalar or furniture retry.",
   "authority": "No authority, durable state, transaction, save, input, geometry, lighting or renderer change",
   "whole_criterion_complete": false
