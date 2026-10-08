@@ -1,0 +1,199 @@
+{
+  "criterion": "F36#0 asset component; whole25-30 batch OPEN",
+  "subject": "aeriex",
+  "priority": 12,
+  "mode": "Installed confirmation, no generation/model/material/config binding change",
+  "model": "assets/creatures/tetherbound/aeriex/models/creature_aeriex_lod0.glb",
+  "sha256": "53f7371fe14784e7ba5d87353197013b163046d3e4036a3df0023efdad59943d",
+  "reference_sha256": {
+    "assets\\creatures\\tetherbound\\aeriex\\reference\\front.png": "db9fb03cbab0232d84116622339ca4c8142b4681a75c411ae8d47fbdfccc1d00",
+    "assets\\creatures\\tetherbound\\aeriex\\reference\\side.png": "17511fce680845f9b91ce9e1aaf78059a85a88f381d50822d114c748f595fe1f"
+  },
+  "native_proof": {
+    "run": 37669449150,
+    "source": "fa69cee0b4438023871a1d9dd0f2b7dee47a42d4",
+    "frames": [
+      "res://shots/lane-e/f36-installed-scale-fa69/aeriex-standing-000.png",
+      "res://shots/lane-e/f36-installed-scale-fa69/aeriex-standing-100.png"
+    ],
+    "standing_height_m": 4.0,
+    "trainer_height_m": 1.79999995231628,
+    "renderer": "gl_compatibility",
+    "resolution": [
+      1280,
+      720
+    ],
+    "scope": "Retained actual installed standing stage, not deformation/motion/gameplay"
+  },
+  "DCC": "Existing inspect_glb/turntable, raw diagnostic axis units not world scale",
+  "raw_inspection": {
+    "model": "D:\\tetherbound\\codex-e\\assets\\creatures\\tetherbound\\aeriex\\models\\creature_aeriex_lod0.glb",
+    "bounds": {
+      "min": [
+        -0.4538,
+        -0.9521,
+        -0.0
+      ],
+      "max": [
+        0.4538,
+        0.9491,
+        1.2194
+      ],
+      "size": [
+        0.9075,
+        1.9012,
+        1.2194
+      ],
+      "height_m": 1.2194,
+      "longest_axis_m": 1.9012,
+      "sits_on_origin": true,
+      "centred_on_origin": true
+    },
+    "meshes": [
+      {
+        "name": "Mesh_0",
+        "vertices": 52202,
+        "edges": 119541,
+        "faces": 68865,
+        "triangles": 68865,
+        "tris": 68865,
+        "quads": 0,
+        "ngons": 0,
+        "quad_fraction": 0.0,
+        "non_manifold_edges": 32487,
+        "boundary_edges": 32487,
+        "loose_vertices": 0,
+        "duplicate_vertices": 17294,
+        "components": 1609,
+        "debris_components": 1585,
+        "flipped_normals": 16310,
+        "uv_layers": 1,
+        "stretched_uv_faces": 293,
+        "materials": [
+          "Material_0"
+        ],
+        "shape_keys": 0,
+        "vertex_groups": 15
+      }
+    ],
+    "materials": [
+      {
+        "name": "Material_0",
+        "textures": [
+          "Image_0"
+        ],
+        "textured": true
+      }
+    ],
+    "armatures": [
+      {
+        "name": "Armature",
+        "bones": 15,
+        "bone_names": [
+          "root",
+          "pelvis",
+          "spine",
+          "neck",
+          "head",
+          "front_upper_l",
+          "front_lower_l",
+          "front_upper_r",
+          "front_lower_r",
+          "tail_1",
+          "tail_2",
+          "rear_upper_l",
+          "rear_lower_l",
+          "rear_upper_r",
+          "rear_lower_r"
+        ],
+        "roots": [
+          "root"
+        ],
+        "skinned_meshes": [
+          "Mesh_0"
+        ],
+        "max_depth": 4
+      }
+    ],
+    "animations": [
+      {
+        "name": "attack_Armature",
+        "frames": [
+          1.0,
+          23.0
+        ],
+        "channels": 150
+      },
+      {
+        "name": "faint_Armature",
+        "frames": [
+          1.0,
+          37.0
+        ],
+        "channels": 150
+      },
+      {
+        "name": "hit_Armature",
+        "frames": [
+          1.0,
+          13.0
+        ],
+        "channels": 150
+      },
+      {
+        "name": "idle_Armature",
+        "frames": [
+          1.0,
+          73.0
+        ],
+        "channels": 150
+      },
+      {
+        "name": "run_Armature",
+        "frames": [
+          1.0,
+          19.0
+        ],
+        "channels": 150
+      },
+      {
+        "name": "walk_Armature",
+        "frames": [
+          1.0,
+          33.0
+        ],
+        "channels": 150
+      }
+    ],
+    "totals": {
+      "meshes": 1,
+      "triangles": 68865,
+      "vertices": 52202,
+      "materials": 1,
+      "animations": 6
+    },
+    "problems": [
+      "68,865 triangles, over the 30,000 budget \u2014 needs a decimate or retopology pass",
+      "Mesh_0: 32487 non-manifold edges",
+      "Mesh_0: 17294 duplicate vertices \u2014 will split under deformation",
+      "Mesh_0: 1585 microscopic disconnected components",
+      "Mesh_0: ~16310 inward-facing faces",
+      "Mesh_0: 293 faces with texel density 4.0x off the median",
+      "Mesh_0: 0% quads \u2014 generator triangle soup, poor for deformation"
+    ]
+  },
+  "judge": {
+    "agent": "blind_listener_f10",
+    "result": "PASS bounded identity/material",
+    "finding": "DCC/native retain long cream body, bird face/dark eyes, orange beak, cyan crest, flowing blue/orange feather silhouette; coherent materials, no conspicuous fragments/seams/clipping. Coarser blade-like feathers, flatter native cream detail and fine-eye distance limit retained."
+  },
+  "provenance": "Existing accepted installed source/reference inventory; independently verified current model SHA matches source audit and unchanged native model. No new purchase/Meshy POST. Original generation task not newly asserted.",
+  "review": "OPEN original bounded cap/source review",
+  "limits": [
+    "Historical 68,865-triangle asset/topology warnings unchanged; no clean-manifold claim or regenerated candidate",
+    "Unseen supported poses/deformation/continuous motion/Fly/world gameplay/full F36 acceptance OPEN"
+  ],
+  "flags": "none",
+  "night_submissions": "Unchanged10/30; confirmation consumes no generation slot",
+  "contact": "ralph/reports/F36/installed-confirmations/aeriex-contact.jpg"
+}

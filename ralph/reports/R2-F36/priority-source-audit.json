@@ -456,7 +456,13 @@
         "data/config/redesign_level_curve.json": 4
       },
       "status": "source_audited_visual_proof_pending",
-      "candidate_enabled": false
+      "candidate_enabled": false,
+      "identity_material_confirmation": {
+        "receipt": "ralph/reports/F36/installed-confirmations/aeriex-receipt.json",
+        "judge": "PASS bounded installed DCC/native identity/material",
+        "source_review": "OPEN",
+        "generation": "none"
+      }
     },
     {
       "id": "tanglevolt",
@@ -666,7 +672,13 @@
         "data/config/redesign_level_curve.json": 1
       },
       "status": "source_audited_visual_proof_pending",
-      "candidate_enabled": false
+      "candidate_enabled": false,
+      "identity_material_confirmation": {
+        "receipt": "ralph/reports/F36/installed-confirmations/stormcapra-receipt.json",
+        "judge": "Identity PASS/material BLOCK installed baseline",
+        "source_review": "OPEN",
+        "generation": "none"
+      }
     },
     {
       "id": "staticub",
