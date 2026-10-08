@@ -253,7 +253,7 @@ func test_resource_world_bool_failure_rolls_back_then_owner_disk_retry_never_pay
 	# stores for the original drop obligation. No extra stock or fixture class.
 	assert_true(session.host_ack_creature_training(1, board_row))
 	session.call("_bind_training_container_guards")
-	var original_hoe := game.local.inventory.count("hoe")
+	var original_hoe: int = game.local.inventory.count("hoe")
 	assert_true(original_hoe > 0)
 	var drop := {"kind": "drop_item", "realm": "meadows", "txn_id": DATA.TXN + "-drop",
 		"item": "hoe", "count": original_hoe, "position": Vector3.ZERO}
@@ -304,12 +304,12 @@ func test_resource_world_bool_failure_rolls_back_then_owner_disk_retry_never_pay
 	context.in_combat = false
 	context.foundation_runtime_authorized = true
 	context.retained_event = retained.delivery_id
-	var token: Dictionary = authority.stage_character_action(DATA.CHARACTER, context.expected_revision, duty.action, duty.intent, context)
-	assert_true(token.ok, str(token))
-	var prepared_drop: Dictionary = authority.staged_creature_training(token)
+	var drop_token: Dictionary = authority.stage_character_action(DATA.CHARACTER, context.expected_revision, duty.action, duty.intent, context)
+	assert_true(drop_token.ok, str(drop_token))
+	var prepared_drop: Dictionary = authority.staged_creature_training(drop_token)
 	var drop_journal: Dictionary = rpc.journal_creature_training_prepared(1, DATA.CHARACTER, prepared_drop)
 	assert_true(drop_journal.ok)
-	assert_true(authority.finish_creature_training(token, true))
+	assert_true(authority.finish_creature_training(drop_token, true))
 	var drop_row: Dictionary = game.world.reward_deliveries[drop_journal.delivery_id]
 	writer.refuse_owner = true
 	assert_eq(OWNER.apply_owner(game, drop_row).get("code"), "owner_action_save_failed")
