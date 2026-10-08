@@ -156,6 +156,8 @@ func _run() -> void:
 		_finish()
 		return
 	var selectors: Array[String] = []
+	if OS.get_cmdline_user_args().has("--with-ultimate-units"):
+		selectors.append_array(["test_f23_live_moves.gd", "test_input_context_collisions.gd", "test_move_effects.gd"])
 	if OS.get_cmdline_user_args().has("--with-vfx-units"):
 		selectors.append_array(["test_move_effects.gd", "test_combat_vfx.gd",
 			"test_combat_progression.gd", "test_director_join_snapshot.gd",
