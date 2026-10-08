@@ -1896,5 +1896,162 @@
       "Bark close-view proof and wholeF41 acceptance remain pending; prior source/unit/command approvals,36+6scores,forced-ending and raster-failure witnesses preserved."
     ],
     "activity": "No engine, native/hosted dispatch, source/config edit, GPU run, GitHub/status/raw-thread read or judge contact by reviewer."
+  },
+  "b852_two_deck_bark_original_runtime_review": {
+    "reviewer": "original review_cloud_startup 01a11679-fc2c-7873-bccd-423c1e04476d",
+    "verdict": "APPROVE",
+    "scope": "Only completed b852 two-deck bark step; no live loss files, whole batch or previous accepted witness re-audit.",
+    "source_commit": "b8523462de914850025fbc7ed085903be68a0c36",
+    "source_tree": "e7702116f3fea89a21ea641e110ff48a655805a8",
+    "packet_root": "D:\\CodexTemp\\tetherbound-proof\\native-e-b8523462de-bark-loss-r1",
+    "canonical_frames": "D:\\CodexTemp\\tetherbound-proof\\native-e-b8523462de-bark-loss-r1\\frames\\bark-close",
+    "provenance": {
+      "source": "queued-source.json exact b852/tree/dirty[] agrees with start+receipt and the accepted original source-after-import head/index tree; bark terminal summary records same source clean tree.",
+      "import": "Reused actual successful b852 import receipt from native-e-b8523462de-f41-hollows-contact-r1; no new import proof is claimed.",
+      "preflight_correction": {
+        "reused_import_receipt": "D:/CodexTemp/tetherbound-proof/native-e-b8523462de-f41-hollows-contact-r1/import-receipt.json",
+        "reason": "Preflight used new proof folder for reused import receipt; corrected to actual previous same-source receipt",
+        "engine_started": false,
+        "source": "b8523462de914850025fbc7ed085903be68a0c36"
+      },
+      "preflight_limit": "Retained receipt-reference path correction states engine_started=false before correction; this is not an extra engine attempt or GPU rerun.",
+      "command": "Persisted actual bark args match previously approved deck command, with fresh output path, fullscreen1080, fixedfps20, two stands, Calm and no-aftermath; no named preset or candidate flag.",
+      "files": {
+        "bark-terminal-summary.json": {
+          "bytes": 2092,
+          "sha256": "c7ee90858ff333cc60bebf2f20976b89739d31dc408f4cc7bcf6f8354375726a"
+        },
+        "bark-close-start.json": {
+          "bytes": 718,
+          "sha256": "eff26233d6e112fd47635d654e79ebde49a965512ea5feebb207e2051064fc89"
+        },
+        "bark-close-receipt.json": {
+          "bytes": 221,
+          "sha256": "06bfc25007fb66e1821a415a33128a4e87b62322d2c59629063e709fc26c3e1b"
+        },
+        "bark-close.stdout.log": {
+          "bytes": 2908,
+          "sha256": "46882b263fd1322a4e68291d8b21270cf98d0d79180ca8e3b1aa5b01b54311ec"
+        },
+        "bark-close.stderr.log": {
+          "bytes": 3065,
+          "sha256": "7e382f8a9de7132ed2eff8a954db48d943d37ca0f4f9bd4daff11c1cf699ff77"
+        },
+        "original-command-scope.json": {
+          "bytes": 1351,
+          "sha256": "dffa88f53199f7f5856c5c3c0a81d0298ad99f5eb3bcb0965ccd5432dc3a25e6"
+        },
+        "preflight-reference-correction.json": {
+          "bytes": 339,
+          "sha256": "0a7814cdcd56813469e2135ffed23ef1b5774868dc3ba9d29acee4090a821aae"
+        },
+        "queued-source.json": {
+          "bytes": 291,
+          "sha256": "fb0fef7c488e71bc51aad39553eb7098cf66c26f2344d1ccf878e32e965dcea4"
+        },
+        "frames/bark-close/frames_b852_bark_close.json": {
+          "bytes": 4982,
+          "sha256": "fc67ae4649ee9b09feded6db57992b60ff68cc29cb86a3491f5bffbad6eca61d"
+        },
+        "frames/bark-close/entry_deck_calm.jpg": {
+          "bytes": 301155,
+          "sha256": "44fb2f60d834f363b5c146303f201513fafefd457aeb6669f592fd92dd429dca"
+        },
+        "frames/bark-close/middle_ascent_calm.jpg": {
+          "bytes": 274089,
+          "sha256": "5cab5bc0d21240d657fe3042e21297886a46afabf77a1f6fac4cc6543ebebe36"
+        }
+      },
+      "original_archive_match": "All three archived JPEG/receipt files match stated hashes/bytes and still-present originals byte-for-byte.",
+      "reused_import_receipt_sha256": "cb47e66276722a7b28e08182cb8e1d6975b4746ed4f4b5b6a584848b9c80dd6b"
+    },
+    "actual_result": {
+      "exit_code": 0,
+      "stop_reason": "",
+      "started_utc": "2026-10-08T15:03:43.6945299Z",
+      "finished_utc": "2026-10-08T15:06:48.5921737Z",
+      "stdout_terminal": "DONE 2 frames, 0 failures",
+      "engine": "Godot v4.7.stable.official.5b4e0cb0f",
+      "actual_driver_stdout": "OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce GTX 1060 3GB",
+      "record_renderer": "opengl3",
+      "actual_jpeg_headers": [
+        1920,
+        1080
+      ],
+      "unique_images": 2,
+      "frame_ids": [
+        "entry_deck_calm",
+        "middle_ascent_calm"
+      ],
+      "failures": [],
+      "graphics_capture": {},
+      "diagnostics": {
+        "script_or_engine_errors": 0,
+        "warnings": 6,
+        "limits": "Deprecated interpolation, two shared-retint model warnings and three wild cluster fit warnings retained; no clean-warning claim."
+      }
+    },
+    "floor_camera_bindings": [
+      {
+        "id": "entry_deck_calm",
+        "collider_path": "StormheartTree/OuterWorks",
+        "floor_normal_y": 1.0,
+        "intended_floor_y_delta_m": 0.0009460449218803291,
+        "player_physical_hit_y_delta_m": 0.0009460449220028977,
+        "camera": "player camera (production CameraRig/Camera3D)",
+        "camera_pos": [
+          -100.000007629395,
+          118.376571655273,
+          5430.00146484375
+        ],
+        "player": [
+          -100.0,
+          118.06005859375,
+          5435.0
+        ],
+        "surge_phase": "calm",
+        "candidate_preview": false,
+        "hud": false,
+        "config_sha256": "38a94d6e8cffbcd639173445b4c3c0ed326df85a164caa82cfce28995484da2b"
+      },
+      {
+        "id": "middle_ascent_calm",
+        "collider_path": "StormheartTree/HollowTrunkAscent",
+        "floor_normal_y": 0.967675566673279,
+        "intended_floor_y_delta_m": 0.008163452148501449,
+        "player_physical_hit_y_delta_m": 0.013656616210994343,
+        "camera": "player camera (production CameraRig/Camera3D)",
+        "camera_pos": [
+          -103.71248626709,
+          173.898818969727,
+          5499.38720703125
+        ],
+        "player": [
+          -103.258666992188,
+          172.78727722168,
+          5495.794921875
+        ],
+        "surge_phase": "calm",
+        "candidate_preview": false,
+        "hud": false,
+        "config_sha256": "38a94d6e8cffbcd639173445b4c3c0ed326df85a164caa82cfce28995484da2b"
+      }
+    ],
+    "config_binding": "Both frames hash the shipping Stormheart config as38a94d6e8cffbcd639173445b4c3c0ed326df85a164caa82cfce28995484da2b; independently matches exact b852 Git bytes. candidate_preview=false and actual args contain no candidate flag: no candidate overlay claimed.",
+    "neutral_provenance": {
+      "two_byte_identical_copies": true,
+      "map_sha256": "75307c1837e7a1beff7dec1cada2129a6dbab11dd2e17dc8484f9c987ecfcab7",
+      "contact_sha256": "2be3b0ffc55f4a1e3f2cd3fa519375e40f5dc68b0bfd333aeaaa32f24f97348c",
+      "contact_role": "Derivative contact sheet only; native evidence is the two individual canonical JPEGs.",
+      "privacy": "Private mapping not disclosed to judge; no judge contact or pixel rating."
+    },
+    "limits": [
+      "Legacy deck mode has empty graphics_capture/no named preset/bootstrap/source pin/freshness/raster receipt; actual source, clean index, import, renderer, raster and terminal provenance are externally verified. No named Low receipt invented.",
+      "Existing debug physical placement uses exact OuterWorks/HollowTrunkAscent colliders and original floor tolerances; actual intended-height deltas0.000946m/0.008163m pass. No earned ascent/traversal proof.",
+      "Calm/day clock pin, presentation settling, between-leg healing and hidden HUD fixtures retained. This is no outcome, mechanics, balance or performance proof.",
+      "Two interior bark views do not establish full root/branch-junction coverage, tangent visual quality, full hero identity or full release visual bar; original visual judgment remains required.",
+      "Live loss step untouched and not promoted; all prior source/unit/command/native38 victory approvals, ratings and failed52cd/forced-end/raster witnesses preserved."
+    ],
+    "activity": "No engine, native/hosted dispatch, GPU, source edit, loss inspection, GitHub/status/raw-thread access or judge contact."
   }
 }
