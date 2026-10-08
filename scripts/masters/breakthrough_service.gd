@@ -35,6 +35,14 @@ func bind_actions(submit_action: Callable, personal_view: Callable) -> bool:
 ## Session already fenced this reply to the exact sent envelope. Admission
 ## failure has no saved reward; it releases the chooser for another attempt.
 func _foundation_reply(envelope: Dictionary, result: Dictionary) -> void:
+	if envelope.get("op") == "master_chest":
+		if result.get("ok") == true and result.get("resolved") == true and result.get("durable") == true \
+				and result.get("owner_saved") == true and result.get("owner_acknowledged") == true:
+			_message("Ascension Feast recipe learned and saved.")
+		elif result.get("ok") == false and result.get("resolved") == true \
+				and result.get("terminal_refusal") == true and result.get("durable") == false:
+			_message(str(result.get("reason", result.get("code", "Recipe chest could not open."))))
+		return
 	if envelope.get("op") != "master_duel" or not envelope.get("intent") is Dictionary \
 			or result.get("ok") != false or result.get("code") == "awaiting_saved_decision": return
 	var refused := result.duplicate(true)
@@ -171,7 +179,10 @@ func _challenge(site: Node3D) -> void:
 
 func _chest(site: Node3D) -> void:
 	var verdict := submit("master_chest", {"master_id": str(site.get("master_id"))}, site)
-	_message(str(verdict.get("reason", verdict.get("code", ""))))
+	if verdict.get("resolved") == false and verdict.get("code") == "awaiting_saved_decision":
+		_message("Opening recipe chest · waiting for confirmation.")
+	else:
+		_message(str(verdict.get("reason", verdict.get("code", ""))))
 
 func open_kitchen(station: Node3D) -> void:
 	_open("cook", station, "")
