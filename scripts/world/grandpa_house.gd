@@ -440,7 +440,7 @@ func _material(colour: Color) -> StandardMaterial3D:
 				var values: Array = _floor_presentation.get("tile_scale", [])
 				var tile_scale := Vector3(float(values[0]), float(values[1]), float(values[2])) if values.size() == 3 else Vector3.ZERO
 				var albedo := _floor_band_texture(m.albedo_texture, m.uv1_scale, m.uv1_offset)
-				var normal := _floor_band_texture(m.normal_texture, m.uv1_scale, m.uv1_offset)
+				var normal := _floor_band_texture(m.normal_texture, m.uv1_scale, m.uv1_offset, true)
 				if tile_scale.is_finite() and tile_scale.x > 0.0 and tile_scale.y > 0.0 and tile_scale.z > 0.0 \
 						and albedo != null and normal != null:
 					m.albedo_texture = albedo
@@ -456,7 +456,7 @@ func _material(colour: Color) -> StandardMaterial3D:
 	return m
 
 
-func _floor_band_texture(texture: Texture2D, band_scale: Vector3, band_offset: Vector3) -> Texture2D:
+func _floor_band_texture(texture: Texture2D, band_scale: Vector3, band_offset: Vector3, renormalize := false) -> Texture2D:
 	if texture == null or not band_scale.is_finite() or not band_offset.is_finite():
 		return null
 	var image := texture.get_image()
@@ -468,7 +468,7 @@ func _floor_band_texture(texture: Texture2D, band_scale: Vector3, band_offset: V
 	if region.size.x <= 0 or region.size.y <= 0 or not Rect2i(Vector2i.ZERO, size).encloses(region):
 		return null
 	var band := image.get_region(region)
-	if band.generate_mipmaps() != OK:
+	if band.generate_mipmaps(renormalize) != OK:
 		return null
 	return ImageTexture.create_from_image(band)
 
