@@ -148,23 +148,30 @@ func _native_case_backpack_target_guard_precedes_any_care_or_item_write() -> voi
 	tab.set("_targeting", -1)
 	game.items = preload("res://autoload/item_db.gd").new()
 	assert_eq(game.inventory.add("travel_pack", 1), 0)
+	assert_eq(game.inventory.add("berries", 4), 0)
 	var packed := var_to_bytes(RECORD.portable_projection(game.local.save_data()))
 	var held_slot := -1
+	var berry_slot := -1
 	for index: int in game.inventory.slot_count():
 		if game.inventory.stack_at(index).get("id") == "travel_pack":
 			held_slot = index
-			break
+		if game.inventory.stack_at(index).get("id") == "berries": berry_slot = index
 	assert_true(held_slot >= 0)
+	assert_true(berry_slot >= 0)
 	tab.set("_held", held_slot)
 	tab.call("_on_slot", (held_slot + 1) % game.inventory.slot_count())
 	assert_eq(var_to_bytes(RECORD.portable_projection(game.local.save_data())), packed,
 		"pending owner decision preserves exact bag slots during a held-stack move")
 	assert_eq(tab.get("_held"), held_slot, "blocked move remains retryable")
 	tab.set("_held", -1)
+	tab.set("_focused", berry_slot)
+	tab.call("_split")
+	assert_eq(var_to_bytes(RECORD.portable_projection(game.local.save_data())), packed,
+		"pending owner decision preserves every slot during a stack split")
 	tab.call("_equip", "travel_pack")
 	assert_eq(var_to_bytes(RECORD.portable_projection(game.local.save_data())), packed,
 		"pending owner decision preserves both the selected bag piece and equipment")
-	assert_eq(menu.messages.size(), 3)
+	assert_eq(menu.messages.size(), 4)
 	owner_session.blocked = false
 	tab.call("_equip", "travel_pack")
 	assert_eq(game.player_equipment.equipped_in("backpack"), "travel_pack", "ordinary wear still works")
@@ -174,11 +181,18 @@ func _native_case_backpack_target_guard_precedes_any_care_or_item_write() -> voi
 	tab.call("_unequip", "backpack")
 	assert_eq(var_to_bytes(RECORD.portable_projection(game.local.save_data())), worn,
 		"pending owner decision preserves the worn piece and every bag slot")
-	assert_eq(menu.messages.size(), 5)
+	assert_eq(menu.messages.size(), 6)
 	owner_session.blocked = false
 	tab.call("_unequip", "backpack")
 	assert_eq(game.player_equipment.equipped_in("backpack"), "")
 	assert_eq(game.inventory.count("travel_pack"), 1, "ordinary removal returns exactly the original piece")
+	tab.call("_split")
+	assert_eq(game.inventory.count("berries"), 4, "ordinary split conserves the original quantity")
+	assert_eq(game.inventory.stack_at(berry_slot).get("n"), 2, "ordinary split leaves the original half")
+	var berry_stacks := 0
+	for index: int in game.inventory.slot_count():
+		if game.inventory.stack_at(index).get("id") == "berries": berry_stacks += 1
+	assert_eq(berry_stacks, 2, "ordinary split makes exactly two stacks")
 	tab.free()
 	menu.free()
 	_native_completed = true

@@ -1950,7 +1950,15 @@ func _read_split() -> void:
 		return
 	if not Input.is_action_just_pressed(SPLIT_ACTION):
 		return
+	_split()
 
+func _split() -> void:
+	var owner_game := state()
+	var owner_session: Node = owner_game.get("session") as Node if owner_game != null else null
+	if owner_session != null and owner_session.has_method("_owner_training_mutation_blocked") \
+		and owner_session.call("_owner_training_mutation_blocked", owner_game.get("local")) == true:
+		say("Saving your last action. Try again in a moment.")
+		return
 	var inventory: RefCounted = _inventory()
 	var db: RefCounted = _items()
 	var stack: Dictionary = inventory.call("stack_at", _focused)
