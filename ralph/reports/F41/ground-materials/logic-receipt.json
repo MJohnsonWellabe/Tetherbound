@@ -1,0 +1,47 @@
+{
+  "criterion": "F41 ground material/lighting component; whole F41#0/#1/#2/#3/#5 OPEN",
+  "source_commit": "9ca22f008e41a173f081afe7fd8d6c332d3365d8",
+  "status": "LOGIC_PASS_VISUAL_AND_BEHAVIOR_PENDING",
+  "logic": {
+    "run_id": 37720437149,
+    "artifact_id": 11526105788,
+    "actual_exit_code": 0,
+    "tests": 54,
+    "assertions": 762,
+    "failed": 0,
+    "files": [
+      "test_stormwood_surge_presentation.gd",
+      "test_stormwood_restored_sky.gd",
+      "test_night_shadow_contract.gd"
+    ],
+    "log_sha256": "e2162dd78f8477ee89f5d564f666b7c21b327b23dc951eeb1a9ad54acb643f6d"
+  },
+  "first_batch": {
+    "source_commit": "f54a94f8301a9788be111e1a898554ae2e98be0c",
+    "run_id": 37719284544,
+    "artifact_id": 11524578896,
+    "tests": 134,
+    "assertions": 11119,
+    "failed": 1,
+    "failing_case": "test_stormwood_surge_presentation::test_phases_are_mutually_distinct_and_break_has_the_darkest_ground",
+    "cause": "Initial Break .24/.56 equalled/exceeded Building .24/.52.",
+    "correction": "Break .22/.50; tests unchanged. Other14 named file results retained only for unchanged relevant paths.",
+    "log_sha256": "bc437ff6ad1063428c32bee1574abb19d18b7fc0c911687b60606032ab22ccf1"
+  },
+  "review": {
+    "reviewer": "/root/review_cloud_startup",
+    "verdict": "APPROVE source and mapped test selection; no missing existing named unit file found",
+    "limits": "Actual six-slot terrain binding remains a native recorder gate, not proved by unit results."
+  },
+  "flags": {
+    "failed_ground_cover_profile": "OFF",
+    "leaf_original_alpha": "OFF",
+    "terrain_materials": "ON candidate, client_presentation"
+  },
+  "remaining": [
+    "Coordinator native eight forest/giant views on all four actual phases with source/terrain/material binding guards",
+    "Code-blind matched before/after judgment",
+    "Existing Stormwood Surge phase traversal smoke37721100541 in flight",
+    "Full High/Medium matrix, catalog, real fight and complete Bar remain OPEN"
+  ]
+}
