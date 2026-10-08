@@ -1,0 +1,52 @@
+{
+  "scope": "Changed production area contact/scale of three authored arrival plants; no visual/fullF40 claim",
+  "source_commit": "60668240c4cf047a2f5ff1dc4c4ad1bdf6908c16",
+  "run_id": 37762472726,
+  "job_id": 113261990618,
+  "artifact_id": 11542668685,
+  "script": "tests/smoke_cloudreach_look.gd",
+  "exit_code": 0,
+  "duration_seconds": 139,
+  "roots": [
+    {
+      "node": "Bush04",
+      "physical_native_y_m": 109.31201171875,
+      "legacy_registered_y_m": 109.660917663574,
+      "mesh_height_m": 1.39999995427971
+    },
+    {
+      "node": "Bush02",
+      "physical_native_y_m": 108.642860412598,
+      "legacy_registered_y_m": 109.016371154785,
+      "mesh_height_m": 1.75000001356096
+    },
+    {
+      "node": "Flowers03",
+      "physical_native_y_m": 108.473838806152,
+      "legacy_registered_y_m": 108.855368041992,
+      "mesh_height_m": 0.79999998734294
+    }
+  ],
+  "root_contact_tolerance_m": 0.005,
+  "height_tolerance_m": 0.0001,
+  "route_verges": {
+    "routes": 13,
+    "stations": 156,
+    "plants": 1240,
+    "stones": 311,
+    "instances": 1551
+  },
+  "cover_fill": 491064,
+  "all_original_checks": "CLOUDREACH LOOK OK",
+  "error_lines": [],
+  "warnings": [],
+  "notice": "Existing descriptive climax fallback retained",
+  "run_log_sha256": "67e513c8c1ad71bc28b52d4c3b5eb333e2af12580ea0d01fb7d03945e23e9aed",
+  "job_log_sha256": "d2eb9e2ce336d6074a5b56c23f0e7e3e9cfcfabf8ef76144872132494f4f0f97",
+  "logic_reuse": "b471 unchanged placement algorithm 161/4288/0, originalreviewAPP with retained isolatedcliff diagnostic",
+  "limitations": [
+    "Native imported origins and declared scale verified, no biological root/pixel contact claim.",
+    "Legacy registered lookup uses placement centre, actual root probe uses nativeorigin after existing XZcentering; not same-XZbefore/after geometry comparison.",
+    "Matched visual pending; wholeF40 OPEN."
+  ]
+}
