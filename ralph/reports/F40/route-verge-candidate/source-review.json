@@ -329,7 +329,36 @@
       "diagnostic_analysis": "Same unmounted TestMesa case and _mesa global-position read verified on628a. Candidate only changes authored-route detail grounding, shifting this unchanged read by twenty lines. Test and _mesa logic are unchanged; no SCRIPT ERROR or other error found in this run log.",
       "limits": "Selected regressions do not replace production async ray-support/contact execution or visual judgment. Actual isolated-test ERROR remains disclosed."
     },
-    "proof_status": "Combined source APPROVE and selected161tests/4288assertions passed with retained isolated diagnostic. Production area/contact and changed visual proof pending; no biological-root or whole F40#5/full F40 acceptance claim."
+    "production_area_contact_proof": {
+      "verdict": "APPROVE bounded clean production area and importer-origin floor contact proof",
+      "source_commit": "b471e4e2d50fde3bd71512a448fcc7ea8cb5e927",
+      "run_id": 37757870639,
+      "job_id": 113246793055,
+      "artifact_id": 11540763624,
+      "checkout_verified_from_job_log": true,
+      "exit_code": 0,
+      "duration_seconds": 101,
+      "original_look_and_new_model_contact_size_assertions_passed": true,
+      "physical_floor_y": 109.31201171875,
+      "native_model_origin_y": 109.31201171875,
+      "legacy_registered_lookup_y": 109.660917663574,
+      "registered_minus_physical_m": 0.348905944824,
+      "actual_mesh_height_m": 1.39999995427971,
+      "contact_tolerance_m": 0.005,
+      "mesh_height_tolerance_m": 0.0001,
+      "planned_routes": 13,
+      "supported_stations": 156,
+      "plants": 1240,
+      "stones": 311,
+      "committed_instances": 1551,
+      "error_or_script_error_in_run_log": false,
+      "fixture_notice": "Existing missing CloudreachNoStronghold climax fallback retained.",
+      "run_log": ".tmp/e-shrub-mesh-root-area-b471/expanded/run.log",
+      "run_log_sha256": "59efc15057737ac11dab24cbcac6846f29993c9beb5bb9560abb107952d0699b",
+      "job_log": ".tmp/e-shrub-mesh-root-area-b471/job.log",
+      "interpretation_limit": "Actual native-origin contact and a legacy registered-height versus local-floor mismatch are measured. Legacy lookup uses placement XZ while physical probe uses centered native-origin XZ. This does not measure the old rendered foliage bottom, prove a biological root, or establish removal of visual suspension in every view."
+    },
+    "proof_status": "Combined source APPROVE; selected161tests/4288assertions passed with isolated diagnostic; clean area verifies native-origin contact and unchanged mesh size. Changed visual proof pending; no whole F40#5/full F40 acceptance."
   },
   "proof_status": "Prior numerical candidates PARKED; new mesh-root combined source APPROVE. Affected runtime/visual proofs pending; whole F40#5/full F40 OPEN. No local engine execution or performance acceptance."
 }
