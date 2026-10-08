@@ -218,6 +218,8 @@ var _f22_host_breaks := 0
 var _f22_host_hits := 0
 ## The last live snapshot the pin saw, reported if the fight later vanishes.
 var _f22_last_seen := {}
+## Optional F25 observer job; transient, single-use, never a capture verdict until collected.
+var _f25_capture_job: Dictionary = {}
 ## Refusal history for the `encounter` probe (see `_encounter_refusal_history`).
 var _refusal_history: Array = []
 var _refusal_seen := {}
@@ -833,7 +835,12 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		"strike":
 			out = await _step_strike(args)
 		"f25_fight_capture":
-			out = await _step_f25_fight_capture(args)
+			if args.has("lifecycle"):
+				out = await _step_f25_fight_capture_lifecycle(args)
+			elif not _f25_capture_job.is_empty():
+				out = {"verdict": "ERROR", "detail": "Collect the retained F25 capture before another observer"}
+			else:
+				out = await _step_f25_fight_capture(args)
 		"f22_pin_tell":
 			out = _step_f22_pin_tell(args)
 		"f22_enemy_staggers":
@@ -3001,6 +3008,58 @@ func _strike_transaction_snapshot() -> Dictionary:
 		"opponent_hp": float((rec.get("opponent", {}) as Dictionary).get("hp", -1.0)),
 		"struck_count": int((rec.get("struck_counts", {}) as Dictionary).get(victim, 0)),
 		"host_now_ms": Time.get_ticks_msec()}
+
+
+## START acknowledges scheduling only. The original observer owns every capture
+## guard and verdict; ordinary host input steps can run before COLLECT awaits it.
+func _step_f25_fight_capture_lifecycle(args: Dictionary) -> Dictionary:
+	var lifecycle := str(args.get("lifecycle", ""))
+	var output := str(args.get("out", ""))
+	if lifecycle == "collect":
+		if _f25_capture_job.is_empty() or output != str(_f25_capture_job.get("out", "")):
+			return {"verdict": "ERROR", "detail": "No retained F25 capture for this exact output"}
+		for key: Variant in args:
+			if key not in ["lifecycle", "out"]:
+				return {"verdict": "ERROR", "detail": "Collect cannot replace the original capture arguments"}
+		while not bool(_f25_capture_job.get("done", false)):
+			await process_frame
+		var result: Dictionary = _f25_capture_job.result.duplicate(true)
+		_f25_capture_job = {}
+		return result
+	if lifecycle != "start" or not _f25_capture_job.is_empty():
+		return {"verdict": "ERROR", "detail": "F25 capture requires start/collect and only one retained job"}
+	var graphics := preload("res://scripts/ui/graphics_prefs.gd")
+	var library := preload("res://scripts/vfx/move_effect_library.gd")
+	var director := _encounter_director()
+	var manager := _combat_manager()
+	var frame_budget_ms := float(args.get("frame_budget_ms", 0.0))
+	var sample_frames := int(args.get("sample_frames", 120))
+	if _peer_index != 0 or DisplayServer.get_name() == "headless" \
+		or RenderingServer.get_current_rendering_method() != "forward_plus" or graphics.selected() != "Medium" \
+		or not bool(library.config().get("enabled", false)) or director == null or manager == null \
+		or not output.begins_with("ralph/reports/F25/") or ".." in output \
+		or not is_finite(frame_budget_ms) or frame_budget_ms <= 0.0 or sample_frames < 30 or sample_frames > 600:
+		return {"verdict": "ERROR", "detail": "Actual Medium host, library opt-in, fresh F25 output and named frame budget required"}
+	if DirAccess.dir_exists_absolute(output):
+		return {"verdict": "ERROR", "detail": "Fresh capture output required; prior evidence preserved"}
+	var id := str(manager.call("encounter_id"))
+	if director.get("_encounter_host") == null or id.is_empty():
+		return {"verdict": "FAIL", "detail": "No live host encounter"}
+	var observer_args := args.duplicate(true)
+	observer_args.erase("lifecycle")
+	_f25_capture_job = {"out": output, "encounter_id": id, "args": observer_args, "done": false, "result": {}}
+	_run_f25_capture_job.call_deferred(_f25_capture_job)
+	return {"verdict": "PASS", "detail": "START accepted only; collect is required for the actual capture verdict",
+		"data": {"status": "START", "capture_complete": false, "out": output, "encounter_id": id}}
+
+
+func _run_f25_capture_job(job: Dictionary) -> void:
+	var manager := _combat_manager()
+	if manager == null or str(manager.call("encounter_id")) != str(job.encounter_id):
+		job.result = {"verdict": "FAIL", "detail": "F25 encounter changed before the scheduled observer began"}
+	else:
+		job.result = await _step_f25_fight_capture(job.args)
+	job.done = true
 
 
 ## Existing peer vocabulary: observe a live host while the coordinator races
