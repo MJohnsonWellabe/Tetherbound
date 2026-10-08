@@ -17,6 +17,7 @@ var _output := ""
 var _seed := 2042
 var _map_cycle := false
 var _map_zoom_samples := false
+var _graphics_capture: Dictionary = {}
 var _records: Array[Dictionary] = []
 var _failures: Array[String] = []
 
@@ -26,6 +27,13 @@ func _init() -> void:
 
 
 func _run() -> void:
+	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--preset="):
+			_graphics_capture = preload("res://tools/lookdev_capture_bootstrap.gd").prepare(self)
+			if _graphics_capture.is_empty():
+				quit(1)
+				return
+			break
 	if DisplayServer.get_name() == "headless":
 		push_error("Phase 2 UI capture requires a rendering display")
 		quit(1)
@@ -120,6 +128,8 @@ func _run() -> void:
 		"frames": _records, "failures": _failures,
 		"complete": _failures.is_empty(),
 	}
+	if not _graphics_capture.is_empty():
+		manifest["graphics_capture"] = _graphics_capture
 	var file := FileAccess.open("%s/manifest.json" % _output, FileAccess.WRITE)
 	file.store_string(JSON.stringify(manifest, "\t") + "\n")
 	file.close()
@@ -226,8 +236,9 @@ func _shoot(frame_id: String, subject: String, world: Node) -> void:
 		await process_frame
 	await RenderingServer.frame_post_draw
 	var image := root.get_texture().get_image()
-	if image == null or image.is_empty() or image.get_width() != 1920 or image.get_height() != 1080:
-		_failures.append("%s: expected 1920x1080 image" % frame_id)
+	var expected: Array = _graphics_capture.get("resolution", [1920, 1080])
+	if image == null or image.is_empty() or image.get_width() != int(expected[0]) or image.get_height() != int(expected[1]):
+		_failures.append("%s: expected %dx%d image" % [frame_id, int(expected[0]), int(expected[1])])
 		return
 	var path := "%s/%s.jpg" % [_output, frame_id]
 	if image.save_jpg(path, 0.87) != OK:
