@@ -136,8 +136,8 @@ var _outcome_left: float = 0.0
 var _loss_result_candidate := false
 var _loss_result_seconds := 4.5
 var _loss_result_max_width := 536.0
-var _loss_result_title_size := 32
-var _loss_result_detail_size := 24
+var _loss_result_title_size := UITokens.FONT_SECTION
+var _loss_result_detail_size := UITokens.FONT_READ
 var _loss_result: PanelContainer = null
 var _loss_result_detail: Label = null
 var _xp_left: float = 0.0
@@ -1778,8 +1778,8 @@ func _apply_loss_result_config(config: Dictionary) -> void:
 		and "--loss-result-baseline" not in args
 	_loss_result_seconds = _loss_result_number(config, "seconds", 4.5, 2.5, 8.0)
 	_loss_result_max_width = _loss_result_number(config, "max_width_px", 536.0, 320.0, 640.0)
-	_loss_result_title_size = int(_loss_result_number(config, "title_px", 32.0, 26.0, 40.0))
-	_loss_result_detail_size = int(_loss_result_number(config, "detail_px", 24.0, 20.0, 28.0))
+	_loss_result_title_size = int(_loss_result_number(config, "title_px", float(UITokens.FONT_SECTION), float(UITokens.FONT_SECTION), 40.0))
+	_loss_result_detail_size = int(_loss_result_number(config, "detail_px", float(UITokens.FONT_READ), float(UITokens.FONT_READ), 28.0))
 
 
 func _build_loss_result() -> void:
@@ -1793,6 +1793,7 @@ func _build_loss_result() -> void:
 	rows.add_theme_constant_override("separation", 8)
 	_loss_result.add_child(rows)
 	var title := Label.new()
+	title.name = "LossResultTitle"
 	title.text = "Fight lost"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.mouse_filter = Control.MOUSE_FILTER_IGNORE

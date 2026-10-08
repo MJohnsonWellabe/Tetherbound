@@ -190,6 +190,9 @@ func _loss_result_lifecycle() -> void:
 	await _frames(2)
 	_check(combat._loss_result.visible and not combat._outcome.visible, "Loss candidate has one distinct passive result owner")
 	_check(combat._loss_result_detail.text == "Your creature is out of the fight.", "Loss detail retains original factual verdict")
+	var title := combat._loss_result.find_child("LossResultTitle", true, false) as Label
+	_check(title != null and title.get_theme_font_size("font_size") * (1280.0 / 1920.0) >= 24.0, "Actual loss title meets existing 720p heading floor")
+	_check(combat._loss_result_detail.get_theme_font_size("font_size") * (1280.0 / 1920.0) >= 18.0, "Actual loss detail meets existing 720p body floor")
 	_check(combat._loss_result.mouse_filter == Control.MOUSE_FILTER_IGNORE, "Passive result does not consume input")
 	_check(combat._outcome_left == 4.5, "Candidate reads bounded configured hold")
 	var bounds: Rect2 = combat._loss_result.get_global_rect()
