@@ -1,0 +1,30 @@
+{
+  "criterion": "F37#4",
+  "verdict": "FAIL; whole criterion OPEN",
+  "source_sha": "0b166ae53454547b8eff8ef2846536c161c9ffed",
+  "run_id": 37737239437,
+  "artifact_id": 11532412674,
+  "script": "tests/smoke_net_proof_two_peer.gd",
+  "scenario": "tools/net/proof_scenarios/f37_ripplet_rejoin.json",
+  "mode": "headless; no visual acceptance",
+  "identity": {
+    "character_id": "character-d8ae97895df67c1417451f547c726044",
+    "owned_uid": "creature-13bc5eee5d2f7c4135429c903450868b",
+    "departing_peer": 2033907168,
+    "returning_peer": 1639955506,
+    "saved_remaining_s": 14.8500000000002
+  },
+  "observed_passes": [
+    "Original mounted/Dive, host picture, actual disk character save, disconnect-written debt and live-memory wipe",
+    "Real Title returning Join, same character/new peer, reconstruction=true, restored ride at original zero polls",
+    "Host retained mount answer ok=true for returning peer and same owned UID",
+    "Original host/guest mount identity and replication, one body/mount, no stale bodies/mounts",
+    "Surface restoration with exact saved14.8500000000002 debt",
+    "Existing mapped Jump step supplied released physical edges and original45-frame allowance"
+  ],
+  "sole_counted_failure": "Original step36 resumed Dive/debt guard. Failure label is generic; returned data was not retained. Neither timer refund nor Dive denial is established.",
+  "review": "Original b_f37_review independently verified restore-fix runtime scope. Whole criterion remains FAIL; minimum next observation is existing failure data and retained host answers/pending state.",
+  "preserved": "Original predicates/1800 restore polls/45 post-Jump frames, owned eligibility, host authority, exact debt, fixtures and all shipping flags. No retry, new fixture or visual claim.",
+  "exit_note": "Workflow terminal failure; Bash Run step exits on original failure before an exit marker. No fabricated engine duration/exit code.",
+  "logic": "37736824292 on same0b source:58tests/3176assertions/0failed/exit0,14seconds"
+}

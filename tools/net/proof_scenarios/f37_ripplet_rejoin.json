@@ -342,7 +342,26 @@
       "label": "A fresh tap resumes the saved bounded dive budget",
       "args": {
         "require_saved_dive": "resumed"
-      }
+      },
+      "continue_on_fail": true,
+      "_comment": "Original resumed Dive/debt predicate remains counted FAIL. Continue only for read-only terminal request/host-answer observations; no retry, wait or action."
+    },
+    {
+      "peer": 0,
+      "action": "f37_status",
+      "args": {
+        "observe_restore": true,
+        "restore_peer": "$peer1"
+      },
+      "label": "Observe host retained action answers after the original resumed-Dive guard; no request or retry"
+    },
+    {
+      "peer": 1,
+      "action": "f37_status",
+      "args": {
+        "observe_restore": true
+      },
+      "label": "Observe guest pending request and actual eligibility after original resumed-Dive guard; no request or retry"
     }
   ]
 }

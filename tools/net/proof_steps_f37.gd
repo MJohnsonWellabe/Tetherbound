@@ -3,6 +3,7 @@ const INPUT := preload("res://tools/net/proof_steps.gd")
 const SUNKEN := preload("res://scripts/world/ripplet_sunken_rules.gd")
 const CLAIM := preload("res://scripts/world/ledger_claim.gd")
 const RIPPLET := preload("res://scripts/player/ripplet_traversal.gd")
+const INPUT_OWNER := preload("res://scripts/ui/input_owner.gd")
 
 ## Explicit F37 fixture/control adapter. It earns no feast or chapter progress.
 static func step(runner: SceneTree, action: String, args: Dictionary) -> Dictionary:
@@ -215,7 +216,9 @@ static func step(runner: SceneTree, action: String, args: Dictionary) -> Diction
 				"ally_body":str(body.get_path()) if is_instance_valid(body) else "none",
 				"ally_visible":is_instance_valid(body) and body.is_visible_in_tree(),
 				"riding_allowed":riding._riding_allowed(), "tack":riding._has_tack("ripplet"),
-				"ripplet_requesting":riding.get("_ripplet_requesting"), "actual_authority_answers":answers}
+				"ripplet_requesting":riding.get("_ripplet_requesting"), "actual_authority_answers":answers,
+				"actual_pending_requests":service.get("_pending").duplicate(true),
+				"input_owner":str(INPUT_OWNER.current(runner)), "can_dive":RIPPLET.can_dive(RIPPLET.local_record(game), str(data.uid))}
 			print("F37 RESTORE OBSERVATION " + JSON.stringify(data.restore_observation))
 		if args.get("remember_saved_dive", false):
 			var saved: Dictionary = game.save_system.characters().read(str(game.local.character_id))
@@ -238,6 +241,7 @@ static func step(runner: SceneTree, action: String, args: Dictionary) -> Diction
 				and riding.dive_remaining_s > 0.0 and riding.dive_remaining_s <= float(saved.remaining_s)
 			if (args.require_saved_dive == "surface" and not data.saved_dive_matches) \
 				or (args.require_saved_dive == "resumed" and not data.resumed_dive_within_saved):
+				print("F37 SAVED DIVE REFUSAL " + JSON.stringify(data))
 				return {"verdict":"FAIL","detail":"returning dive allowance changed or refreshed","data":data}
 		return {"verdict":"PASS","data":data}
 	return {"verdict":"ERROR","detail":"unknown F37 action"}
