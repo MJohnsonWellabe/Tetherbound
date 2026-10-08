@@ -227,7 +227,10 @@ func _run() -> void:
 			and not bool(game.call("world_flags").call("has", "realm_gate_water_unlocked")),
 		"shipped config: the retired Waterward gate consumed the key or opened the gate")
 	_expect(int(transport.get("ledger").get("seq")) == sequence_before and published.is_empty(),
-		"shipped config: the retired Waterward gate committed or published a ledger operation")
+		"shipped config: the retired Waterward gate committed or published a ledger operation: "
+		+ JSON.stringify({"sequence_before": sequence_before,
+			"sequence_after": int(transport.get("ledger").get("seq")),
+			"published_count": published.size(), "published": published}))
 	# Restore the fallback fixture for the legacy path below. The retired branch
 	# of RealmGate._refresh switched the gate's revision watcher off; switch it
 	# back exactly as _ready() leaves it in a legacy-crossing world.
