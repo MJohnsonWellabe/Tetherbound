@@ -1,0 +1,13 @@
+{
+  "kind": "generated_fixture_template",
+  "owner_policy": "#5726060136810",
+  "template_source": "ad95e0dd6fe490cfb6f2d1bf6f09ae93d18b9cfe",
+  "template_boundary": "warrens",
+  "prior_earned_play_claim_for_generated_input": false,
+  "continuous_fresh_save": false,
+  "files_sha256": {
+    "slot_0.json": "97f1bbfb4251a3830df5417125a5011b5777693a27bddf863ef7276fa0d735f3",
+    "characters/character-cb1b88c682cd3219e5c3d8d63558473d/character.json": "d7259cbbefc935d1aa316be50a0e9974110f7468c4e590d74a90a8725711ca7e",
+    "worlds/slot-0/world.json": "1dac34b937a8efde47994d85b0d2e15b4639932891e51a28ecd2c536981936e3"
+  }
+}
