@@ -24,13 +24,150 @@
     "script": "tests/smoke_combat_camera.gd",
     "args": "--matrix-dir=ralph/reports/F21/hosted-a-rear-oblique-97305e --matrix-live --matrix-preset=Low --source-commit=97305ea96f9b38bac3520cc9321ae217c6a7d751",
     "renderer": "gl_compatibility",
-    "resolution": [1920, 1080],
-    "result": "PENDING",
-    "guards": "All original case30s and global900s budgets, physical actions and score guards unchanged."
+    "resolution": [
+      1920,
+      1080
+    ],
+    "result": "FAIL",
+    "guards": "All original case30s and global900s budgets, physical actions and score guards unchanged.",
+    "artifact_id": 11531105693,
+    "actual": {
+      "source_commit": "97305ea96f9b38bac3520cc9321ae217c6a7d751",
+      "renderer": "gl_compatibility",
+      "preset": "Low",
+      "resolution": [
+        1920,
+        1080
+      ],
+      "case_wall_budget_ms": 30000,
+      "all_nine_complete": true,
+      "cases": [
+        {
+          "pair": "small/small",
+          "pass": false,
+          "elapsed_ms": 30493,
+          "physics_samples": 48,
+          "render_samples": 7,
+          "scored_render_count": 0,
+          "pictures": 0,
+          "quick_action_observed": false,
+          "input_travel_m": 0.0
+        },
+        {
+          "pair": "small/normal",
+          "pass": false,
+          "elapsed_ms": 32993,
+          "physics_samples": 72,
+          "render_samples": 9,
+          "scored_render_count": 0,
+          "pictures": 0,
+          "quick_action_observed": false,
+          "input_travel_m": 0.0
+        },
+        {
+          "pair": "small/giant",
+          "pass": false,
+          "elapsed_ms": 30178,
+          "physics_samples": 48,
+          "render_samples": 6,
+          "scored_render_count": 0,
+          "pictures": 0,
+          "quick_action_observed": false,
+          "input_travel_m": 0.0
+        },
+        {
+          "pair": "normal/small",
+          "pass": false,
+          "elapsed_ms": 30396,
+          "physics_samples": 64,
+          "render_samples": 8,
+          "scored_render_count": 0,
+          "pictures": 0,
+          "quick_action_observed": false,
+          "input_travel_m": 0.0
+        },
+        {
+          "pair": "normal/normal",
+          "pass": false,
+          "elapsed_ms": 31834,
+          "physics_samples": 64,
+          "render_samples": 8,
+          "scored_render_count": 0,
+          "pictures": 0,
+          "quick_action_observed": false,
+          "input_travel_m": 0.0
+        },
+        {
+          "pair": "normal/giant",
+          "pass": false,
+          "elapsed_ms": 32283,
+          "physics_samples": 120,
+          "render_samples": 15,
+          "scored_render_count": 1,
+          "pictures": 1,
+          "quick_action_observed": false,
+          "input_travel_m": 0.0
+        },
+        {
+          "pair": "giant/small",
+          "pass": false,
+          "elapsed_ms": 32970,
+          "physics_samples": 80,
+          "render_samples": 10,
+          "scored_render_count": 0,
+          "pictures": 0,
+          "quick_action_observed": false,
+          "input_travel_m": 0.0
+        },
+        {
+          "pair": "giant/normal",
+          "pass": false,
+          "elapsed_ms": 30248,
+          "physics_samples": 72,
+          "render_samples": 9,
+          "scored_render_count": 0,
+          "pictures": 0,
+          "quick_action_observed": false,
+          "input_travel_m": 0.0
+        },
+        {
+          "pair": "giant/giant",
+          "pass": false,
+          "elapsed_ms": 32616,
+          "physics_samples": 72,
+          "render_samples": 9,
+          "scored_render_count": 0,
+          "pictures": 0,
+          "quick_action_observed": false,
+          "input_travel_m": 0.0
+        }
+      ],
+      "failures": [
+        "live matrix small/small ended or exceeded its 30s budget at physics boundary 48",
+        "live matrix small/small failed strict rendered framing/live motion/quick evidence; input travel=0.0",
+        "live matrix small/normal ended or exceeded its 30s budget at physics boundary 72",
+        "live matrix small/normal failed strict rendered framing/live motion/quick evidence; input travel=0.0",
+        "live matrix small/giant ended or exceeded its 30s budget at physics boundary 48",
+        "live matrix small/giant failed strict rendered framing/live motion/quick evidence; input travel=0.0",
+        "live matrix normal/small ended or exceeded its 30s budget at physics boundary 64",
+        "live matrix normal/small failed strict rendered framing/live motion/quick evidence; input travel=0.0",
+        "live matrix normal/normal ended or exceeded its 30s budget at physics boundary 64",
+        "live matrix normal/normal failed strict rendered framing/live motion/quick evidence; input travel=0.0",
+        "live matrix normal/giant ended or exceeded its 30s budget at physics boundary 120",
+        "live matrix normal/giant failed strict rendered framing/live motion/quick evidence; input travel=0.0",
+        "live matrix giant/small ended or exceeded its 30s budget at physics boundary 80",
+        "live matrix giant/small failed strict rendered framing/live motion/quick evidence; input travel=0.0",
+        "live matrix giant/normal ended or exceeded its 30s budget at physics boundary 72",
+        "live matrix giant/normal failed strict rendered framing/live motion/quick evidence; input travel=0.0",
+        "live matrix giant/giant ended or exceeded its 30s budget at physics boundary 72",
+        "live matrix giant/giant failed strict rendered framing/live motion/quick evidence; input travel=0.0"
+      ],
+      "matrix_sha256": "7702292d2f146069242f47ca06d273e4cc18a240c016283c73261fc05897aa71"
+    }
   },
   "remaining_gates": [
-    "Actual all-nine live behavior and frames.",
-    "Original code-blind size-matrix PASS.",
-    "No whole criterion READY until all required evidence exists."
+    "All nine exceeded unchanged30s case budget before complete observation:48..120physics samples; only normal/giant produced one PNG. Actual changed live clearance remains unproved.",
+    "GPU-capable capture slot required for unchanged full live matrix; no third unchanged rerun, wider budget, or weakened guard.",
+    "Full original code-blind size-matrix PASS absent; no whole criterion READY."
   ]
 }
