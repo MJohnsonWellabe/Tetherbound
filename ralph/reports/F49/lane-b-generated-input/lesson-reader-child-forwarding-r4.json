@@ -218,7 +218,7 @@
     "bacon": "OVERALL FAIL: Meadows pedestal walk failed before Tidewake, grounded/free input, targetofferempty, EncounterDirector winning, activationnull; no establishedcause or acceptedhandoff.",
     "bounded_summary": "D:/CodexTemp/tetherbound-lanes-full-access/b-original-tide-key-lessons-terminal-r4.txt"
   },
-  "disposition": "Reuse scoped passing Skip/Help pieces. Preserve overall provider FAIL; no unchanged provider retry, failed-save input, native/blind/durability or whole criterion claim. Saved-ACK option800 remains pending original source review and affected proof.",
+  "disposition": "Reuse original R4 Skip/Help and R5 saved-ACK coverage plus newly original-approved physical Title Load and Help again. Preserve full chapter FAIL before pedestal Interact; Terrain contact paths alone do not establish cause. Park unchanged route; no failed-save input, accepted output, generated ancestry promotion, blind verdict or whole criterion closure. Native/blind proof remains ROOT-scheduled D/E.",
   "saved_ack_extension": {
     "source": "800bfffce1f718a68da27004970db50ba31c8540",
     "scope": "Runner accepts and forwards existing --lesson-reload-witness; existing reader requires controller plus Help and validates saved ACK within unchanged30second deadline. No newreader/flag/guard/profile/statechange.",
@@ -424,5 +424,158 @@
       "bounded_summary": "D:/CodexTemp/tetherbound-lanes-full-access/b-original-tide-key-ack-terminal-r5.txt"
     },
     "disposition": "Reuse R4 SkipHelp and R5 savedACK approvals. No unchanged repeats, failedsave input, acceptedhandoff, native/blind/physicalTitleLoad or wholecriterionclaim."
+  },
+  "title_load_witness_r6": {
+    "source": "fb4e006aa2d0510c2182b5c2e5685599161f45fe",
+    "source_scope": [
+      "tests/helpers/f49_campaign_journey.gd::_first_key_lessons",
+      "tests/helpers/f49_portal_travel.gd::activate failure receipt"
+    ],
+    "source_review": {
+      "original_reviewers": [
+        "b_f49_review",
+        "b_f20_review"
+      ],
+      "verdict": "SOURCE and COMMAND ELIGIBILITY APPROVE",
+      "summary": "Both originals **SOURCE and COMMAND ELIGIBILITY APPROVE** `fb4e006aa2d0510c2182b5c2e5685599161f45fe`.\n\nThe 11-line failure receipt safely reads collider/scene data; movement, timing, guards and hard refusal remain unchanged. Dispatch JSON pins the approved combined Tidewake Title Load command to this SHA.\n\nEligible for **one combined affected proof**, with no separate diagnostic retry. Runtime, navigation cause and whole-criterion outcomes remain unproved.\n\nRouter stopped read-only.",
+      "bounded_summary": "D:/CodexTemp/tetherbound-lanes-full-access/b-original-tide-title-load-final-source-r6.txt",
+      "original_thread_ids": [
+        "01a1165d-ecfb-79d3-9355-1224723cdb53",
+        "01a11667-9d3a-7a00-99c2-5d28ca7fc000"
+      ]
+    },
+    "runtime": {
+      "run_id": 37825792473,
+      "artifact_id": 11572535241,
+      "artifact_sha256": "d59d1b4ab7a93dc0638e5c526dc6d4444774155dce6d3e31acaa091c64bdc6aa",
+      "run_url": "https://github.com/MJohnsonWellabe/Tetherbound/actions/runs/37825792473",
+      "command": "--segment=tidewake --generated-fixture --functional-offload --lesson-controller-witness --lesson-replay-witness --lesson-reload-witness --lesson-skip-line=0 --save-dir=res://ralph/reports/F49/generated-tide-title-load-r6/tidewake/save --receipt=res://ralph/reports/F49/generated-tide-title-load-r6/tidewake/receipt.json",
+      "title_load": {
+        "accepted_world_handoff": false,
+        "input_mode": "generated_fixture",
+        "memory_cleared": true,
+        "passed": true,
+        "physical_title_load": true,
+        "ready_frames": 3,
+        "reopened": [],
+        "save_slot": 0,
+        "settle_frames": 300,
+        "title_transition": "existing test-controlled scene transition; no controller return-to-title gameplay proof",
+        "whole_f46_proven": false
+      },
+      "care_load": {
+        "error": "",
+        "events": 1760
+      },
+      "care_help": {
+        "error": "",
+        "events": 1880
+      },
+      "approach": {
+        "arrived": false,
+        "can_walk": true,
+        "confined_resets": 2,
+        "current_scene": "/root/MeadowsPlayground",
+        "end": "(97.94077, 0.90083, 5.4188)",
+        "grounded": true,
+        "headings": [],
+        "original_frame_budget": 4904,
+        "phase": "portal_approach",
+        "provider": "/root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@129467/Pedestal_meadows/@Node3D@129486",
+        "start": "(28.55124, 0.900941, 19.78197)",
+        "target": "(102.5, 1.0, 4.8)",
+        "terminal_slide_colliders": [
+          "/root/MeadowsPlayground/Terrain",
+          "/root/MeadowsPlayground/Terrain"
+        ],
+        "unstick_count_after": 0,
+        "unstick_count_before": 0
+      },
+      "terminal": {
+        "campaign_complete": false,
+        "checkpoints": [],
+        "counts_as_proof": false,
+        "cumulative_elapsed_seconds": 226.534,
+        "dry_run": false,
+        "elapsed_seconds": 226.534,
+        "failures": [
+          "F49 ordinary capsule walk failed to /root/MeadowsPlayground/Village/crossing_hall_shell_12/@Node3D@129467/Pedestal_meadows/@Node3D@129486"
+        ],
+        "local_chains": [],
+        "reached": "meadows_settled",
+        "requested_prefix_passed": false,
+        "resume": {
+          "boundary": "meadows_settled",
+          "continuous_fresh_save": false,
+          "generated_origin": {
+            "boundary": "meadows_settled",
+            "provenance": {
+              "continuous_fresh_save": false,
+              "generator": "tools/earned_saves/earned_chain_runner.gd:b25e1ed1eb820ff4c5cb58bcc7ccd1b8dcd3b6acf95bb6b876feaef273261f60:tidewake",
+              "owner_policy": "#5726060136810",
+              "prior_earned_play": false
+            }
+          },
+          "journey_id": "fb4e006aa2d0510c2182b5c2e5685599161f45fe:/home/runner/work/Tetherbound/Tetherbound/ralph/reports/F49/generated-tide-title-load-r6_generated_input",
+          "meadows_pieces": [
+            "opening_team",
+            "camp_tournament",
+            "bridge",
+            "warrens",
+            "relay",
+            "hall"
+          ],
+          "prior_earned_play": false,
+          "source": "/home/runner/work/Tetherbound/Tetherbound/ralph/reports/F49/generated-tide-title-load-r6_generated_input/meadows_settled",
+          "source_kind": "generated_fixture"
+        },
+        "resumed_from": "meadows_settled",
+        "scratch": "user://f49_campaign_2708_10819"
+      },
+      "process": {
+        "continuous_fresh_save": false,
+        "exit_code": 1,
+        "input_mode": "generated_fixture",
+        "prior_earned_play": false,
+        "segment": "tidewake",
+        "source": "fb4e006aa2d0510c2182b5c2e5685599161f45fe"
+      },
+      "no_grab": 13,
+      "script_errors": 0,
+      "log": "ci-generated-tide-title-load-37825792473.log.gz",
+      "log_sha256": "b0deb7c458f3ef3c423d93b58ee8a9be2b3afa2f900e8f3fc1eec03964338903"
+    },
+    "character_id": "character-cb1b88c682cd3219e5c3d8d63558473d",
+    "party_uids": [
+      "creature-cf906fd5504c229a431c3b3202c3c2e2",
+      "creature-83d263c517d32cc6cb7beab6925d80c7",
+      "creature-db1124dc0450464a2bf16ac0f7b6ef17",
+      "creature-afbd0d982b14221393f70c29863586a1",
+      "creature-c576f15db4b7f3ecf487a80de0169177"
+    ],
+    "original_terminal_review": {
+      "scoped_physical_title_load": "SCOPED BEHAVIOR APPROVE",
+      "reviewer": "b_f20_review",
+      "thread_id": "01a11667-9d3a-7a00-99c2-5d28ca7fc000",
+      "overall_chapter": "OVERALL FAIL",
+      "overall_reviewer": "b_f49_review",
+      "overall_thread_id": "01a1165d-ecfb-79d3-9355-1224723cdb53",
+      "bounded_summary": "D:/CodexTemp/tetherbound-lanes-full-access/b-original-tide-title-load-terminal-r6.txt",
+      "summary": "- **Hubble \u00e2\u20ac\u201d SCOPED BEHAVIOR APPROVE:** `37825792473` at `fb4e006aa2d0510c2182b5c2e5685599161f45fe`. Physical Autosave-0 Load after memory clear passed: 3 ready frames, 300 settle, no reopen, exact CID/ordered five/ACKs/durable state. Passive replay passed 1,760 events at Load and 1,880 after both Help replays; recovery guards passed.\n- **Bacon \u00e2\u20ac\u201d OVERALL FAIL:** exit 1 before pedestal Interact. Original walk budget exhausted; two Terrain paths do not establish cause. No accepted output.\n\nArtifact `11572535241`; verified SHA256:\n`d59d1b4ab7a93dc0638e5c526dc6d4444774155dce6d3e31acaa091c64bdc6aa`.\n\nZero script errors; 13 `NO GRAB` errors disclosed. Generated fixture and test-controlled Title transition retained. No blind, whole F46 or READY approval. Router stopped read-only."
+    },
+    "whole_criterion_closed": false,
+    "blind_visual_proof": false,
+    "continuous_fresh_save": false,
+    "accepted_world_handoff": false,
+    "disposition": "Reuse original R4 Skip/Help and R5 saved-ACK coverage plus newly original-approved physical Title Load and Help again. Preserve full chapter FAIL before pedestal Interact; Terrain contact paths alone do not establish cause. Park unchanged route; no failed-save input, accepted output, generated ancestry promotion, blind verdict or whole criterion closure. Native/blind proof remains ROOT-scheduled D/E.",
+    "source_corrections": {
+      "blocked_source": "6bc129952bc2d7d35de67b365233816b8091c076",
+      "original_blockers": [
+        "Elapsed care cannot compare unchanged through unpaused frames",
+        "Loaded actor recovery counter must be guarded after Load and Help"
+      ],
+      "supported_correction": "9a5bef20c1319b206ba74b99ae05dd9a363970ab",
+      "summary": "Both originals **SOURCE APPROVE** `9a5bef20c1319b206ba74b99ae05dd9a363970ab` and approve the supplied command\u00e2\u20ac\u2122s **eligibility**.\n\nActual production ticks must match saved-card continuity and independent replay. Durable state, receipts, flags, inventory and ordered five remain exact. Loaded-actor recovery checks now cover settling and Help again.\n\nScope is new physical Title Load coverage only. Runtime remains unproved; retain any later pedestal failure. No accepted export, blind verdict or whole F46 approval.\n\nRouter stopped read-only."
+    }
   }
 }
