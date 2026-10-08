@@ -1,0 +1,11 @@
+Hall blind review parked: **pending, no verdict**.
+
+Original `/root/f42_visual_review` verdict:
+
+> **SOURCE APPROVE** for85c23181564643cdf38b47951375cd7e6e2af62f versus3ab417: only the live prompt wording changes. Canonical names, sealed explanation, callbacks, admission, transactions, models, routes and flags remain unchanged.
+>
+> The actual run-log hash matches. Run37788081219 records exit0/114s, real house/open-gate binding, farmhouse→road→Hall PASS and maximum_offroad0, with zero script errors and one retained interpolation-deprecation warning. Fixtures and headless limits remain disclosed; unchanged8+8/recall evidence is reusable.
+>
+> **REQUEST_CHANGES to exact-checkout evidence only:** the supplied local packet contains no preserved job log confirming checkout85c. `receipt.json.actual_checkout_confirmed=true` is a summary, not independent verification. Supply that existing checkout excerpt; no engine rerun is needed.
+>
+> No prompt-pixel or whole-criterion approval.
