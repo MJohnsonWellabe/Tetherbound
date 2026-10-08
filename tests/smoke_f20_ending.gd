@@ -13,6 +13,18 @@ func _init() -> void:
 func _run() -> void:
 	await process_frame
 	_credits_only = OS.get_cmdline_user_args().has("--through-credits")
+	if OS.get_cmdline_user_args().has("--functional-offload"):
+		if OS.get_cmdline_user_args().has("--capture-ending") or OS.get_cmdline_user_args().has("--capture-order-ui"):
+			proof.check(false, "ending and order captures require their original continuous drawing path")
+			finish()
+			return
+		if not preload("res://tests/helpers/f19_functional_offload.gd").configure("ending_fixture_driver"):
+			proof.check(false, "ending functional offload requires the existing real Compatibility backend")
+			finish()
+			return
+		print("F20 FUNCTIONAL FIXTURE " + JSON.stringify({"continuous_drawing": false,
+			"setup": "existing disclosed post-finale fixture", "earned_finale": false,
+			"scope": "Ordinary existing input, physics, authority and production disk; no ending visual/audio/motion/performance acceptance"}))
 	var game := root.get_node("Game")
 	if not proof.fixture(game, "Solo"): finish(); return
 	var order_ui_only := OS.get_cmdline_user_args().has("--order-ui-only")
