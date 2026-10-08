@@ -56,7 +56,7 @@
     "bar_a": "BLOCK",
     "bar_b": "BLOCK",
     "finding": "Fern/mushroom clusters improve P2-039 variety relative to retained uniform tuft carpet, but blurred brown/green ground, repeated sparse cyan sprigs, weak shrub/sapling layer and flat canopy masses remain. forest_break loses trainer lower-body/route separation; glass_calm has tall cyan cones on white/black straight base (P2-043 OPEN); rod_line retains thick flat gold road traces (P2-040 OPEN). Stormheart identity retained; full finish P2-037 OPEN.",
-    "full_verdict": "Final detailed verdict pending; no closure claimed"
+    "full_verdict": "Final received; all25 contact views plus6 fullrasters/all3boards inspected. BarA/B BLOCK. P2-039 improvedvariety stillOPEN; P2-043/P2-040/P2-037 blockers unchanged. UI largeopaque bindingpanels/weakclock contrast BLOCK; human/creatureassetquality/water UNASSESSED."
   },
   "disposition": "Revert profile enabled to false after failure; leaf_original_alpha remains false. No repeat200-frame run.",
   "retained_logic": {

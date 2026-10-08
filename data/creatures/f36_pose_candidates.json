@@ -977,7 +977,21 @@
         "rear_upper_r",
         "rear_lower_r"
       ],
-      "profile": "quadruped_1"
+      "profile": "quadruped_1",
+      "asset_candidate": {
+        "model": "res://assets/creatures/tetherbound/fulgocobra/models/creature_fulgocobra_lod0.glb",
+        "source_sha256": "10b96104ec7c6ab2711d8f87e230aad58544b27af60581c12ca1b35092c5a13e",
+        "colourway_source_species": "fulgocobra_f36_source_finish_v1",
+        "colourway_finish": {
+          "despeckle": 0,
+          "posterize": 0,
+          "feature_percentile": 0,
+          "sat_ceiling": 0.58,
+          "output_size": 2048
+        },
+        "scope": "capture_preview_only",
+        "status": "OFF source-preserving material preview; installed GLB/UV/six clips and production binding unchanged"
+      }
     },
     "stormraven": {
       "model": "res://assets/creatures/tetherbound/stormraven/models/creature_stormraven_lod0.glb",

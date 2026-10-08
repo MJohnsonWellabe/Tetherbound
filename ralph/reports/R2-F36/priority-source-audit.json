@@ -345,7 +345,15 @@
         "data/config/water_roster.json": 1
       },
       "status": "source_audited_visual_proof_pending",
-      "candidate_enabled": false
+      "candidate_enabled": false,
+      "f36_confirmation": {
+        "receipt": "ralph/reports/F36/installed-confirmations/mirejaw-receipt.json",
+        "judge": "/root/blind_listener_f10",
+        "verdict": "BLOCK",
+        "identity": "UNASSESSED",
+        "material": "BLOCK",
+        "scope": "Retained installed standing/studio only; unchanged model/production binding; asset not confirmed"
+      }
     },
     {
       "id": "riverdrake",
@@ -384,7 +392,15 @@
         "data/config/water_world.json": 2
       },
       "status": "source_audited_visual_proof_pending",
-      "candidate_enabled": false
+      "candidate_enabled": false,
+      "f36_confirmation": {
+        "receipt": "ralph/reports/F36/installed-confirmations/riverdrake-receipt.json",
+        "judge": "/root/blind_listener_f10",
+        "identity": "PASS",
+        "material": "PASS",
+        "readability": "PASS",
+        "scope": "Installed unchanged standing/studio only; unseenposes/motion/habitat/fullF36 OPEN"
+      }
     },
     {
       "id": "cloudfang",
@@ -534,7 +550,15 @@
         "data/config/stormwood_encounters.json": 1
       },
       "status": "source_audited_visual_proof_pending",
-      "candidate_enabled": false
+      "candidate_enabled": false,
+      "f36_confirmation": {
+        "receipt": "ralph/reports/F36/installed-confirmations/fulgocobra-receipt.json",
+        "judge": "/root/blind_listener_f10",
+        "verdict": "BLOCK",
+        "identity": "PASS",
+        "material": "BLOCK",
+        "scope": "Retained installed standing/studio only; unchanged model/production binding; asset not confirmed"
+      }
     },
     {
       "id": "tuskroot",
