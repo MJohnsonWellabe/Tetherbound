@@ -1,0 +1,19 @@
+{
+  "reviewer": "/root/f26_presets_review",
+  "source_commit": "b6cd4439e8961fedece5f96dd2f074de9caba235",
+  "run": 37721769902,
+  "artifact": 11525608727,
+  "inspected": "ALL10before+ALL10after nativePNG and ALL4temporalJPEG",
+  "component_verdict": "BLOCK",
+  "bar_a": "BLOCK",
+  "bar_b": "BLOCK",
+  "findings": [
+    "Someaftersegments thinner (day90) and continuous readable boundaries, but luminous dotted foreground ribbon night180 remains conspicuous.",
+    "Day/night0 and45 stronglyoutline circularsandbars; natural texturephase limits attribution of small local differences.",
+    "Repetitive sand/sparse dunes/material transitions, broadlyflatwater, intense narrowwhite nightreflection patch, palegraynightcreature and largequestpanel remain."
+  ],
+  "temporal_scope": "Changingfoamflecks at0,3.790,7.574,11.372s; no gross wholeband disappearance/flash atsampled times; no smoothmotion or unsampled flicker proof",
+  "source_runtime_review": "/root/f39_visual_review APPROVE conditionalon scopedpixelPASS; conditionfailed",
+  "criterion_done": false,
+  "next_attempt": "ONE changedpatchmask candidate fb5bd00c3e9121973ddfa63e2739ab121f589190; newactualproofrequired; P2-009/fullF39 OPEN"
+}
