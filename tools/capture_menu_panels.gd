@@ -231,6 +231,16 @@ func _capture_actual_master_sites() -> void:
 	var written: Array[String] = []
 	var failures: Array[String] = []
 	var observed: Array[Dictionary] = []
+	var capture_ids: Array[String] = ["master_t1", "master_t2", "master_t3", "master_t4", "master_t5"]
+	var measure_clearance := false
+	for argument: String in OS.get_cmdline_user_args():
+		if not argument.begins_with("--master-sites="): continue
+		if measure_clearance or argument != "--master-sites=master_t1,master_t3,master_t4":
+			push_error("Master subset must be the three retained blocked signs, once")
+			quit(1)
+			return
+		capture_ids = ["master_t1", "master_t3", "master_t4"]
+		measure_clearance = true
 	var game := root.get_node_or_null(^"Game")
 	if game == null or game.get("local") == null:
 		push_error("Actual capture owner is missing")
@@ -318,23 +328,84 @@ func _capture_actual_master_sites() -> void:
 				failures.append("Actual sign text missing/ambiguous: " + id)
 				break
 			var player_before := player.global_position
-			player.global_position = sign.global_position + Vector3(0, 1, 5)
-			player.velocity = Vector3.ZERO
-			camera.global_position = sign.global_position + Vector3(0, 4, 11)
-			camera.look_at(sign.global_position + Vector3(0, 2.5, 0), Vector3.UP)
-			for frame in POSE_FRAMES: await physics_frame
-			await _shoot(id + "_sign", written, failures)
-			player.global_position = site.global_position + Vector3(0, 1, 8)
-			player.velocity = Vector3.ZERO
-			var centre := (site.global_position + sign.global_position) * 0.5
-			camera.global_position = centre + Vector3(0, 28, 55)
-			camera.look_at(centre + Vector3(0, 1.5, 0), Vector3.UP)
-			for frame in POSE_FRAMES: await physics_frame
-			await _shoot(id + "_context", written, failures)
+			var captures: Array[String] = []
+			var clearance: Array[Dictionary] = []
+			if capture_ids.has(id):
+				player.global_position = sign.global_position + Vector3(0, 1, 5)
+				player.velocity = Vector3.ZERO
+				camera.global_position = sign.global_position + Vector3(0, 4, 11)
+				camera.look_at(sign.global_position + Vector3(0, 2.5, 0), Vector3.UP)
+				for frame in POSE_FRAMES: await physics_frame
+				await _shoot(id + "_sign", written, failures)
+				if measure_clearance:
+					# Read the geometry already in this captured scene. No raycast,
+					# generated debug mesh, collider or visibility change is needed.
+					var geometry: Array[Node] = world.find_children("*", "MeshInstance3D", true, false)
+					geometry.append_array(world.find_children("*", "MultiMeshInstance3D", true, false))
+					geometry.append_array(world.find_children("*", "CollisionShape3D", true, false))
+					for node: Node in geometry:
+						var spatial := node as Node3D
+						var local_box := AABB()
+						var kind := "mesh"
+						var transforms: Array[Transform3D] = [spatial.global_transform]
+						if node is MeshInstance3D:
+							var mesh := node as MeshInstance3D
+							if mesh.mesh == null or not mesh.is_visible_in_tree(): continue
+							local_box = mesh.get_aabb()
+						elif node is MultiMeshInstance3D:
+							var mesh := node as MultiMeshInstance3D
+							if mesh.multimesh == null or mesh.multimesh.mesh == null or not mesh.is_visible_in_tree(): continue
+							if mesh.multimesh.transform_format != MultiMesh.TRANSFORM_3D: continue
+							local_box = mesh.multimesh.mesh.get_aabb()
+							kind = "multimesh_instance"
+							transforms.clear()
+							var count := mesh.multimesh.instance_count
+							if mesh.multimesh.visible_instance_count >= 0: count = mini(count, mesh.multimesh.visible_instance_count)
+							for index in count: transforms.append(spatial.global_transform * mesh.multimesh.get_instance_transform(index))
+						else:
+							var collider := node as CollisionShape3D
+							var shape: Shape3D = collider.shape
+							if shape == null or collider.disabled: continue
+							kind = shape.get_class()
+							var half := Vector3.ZERO
+							var points := PackedVector3Array()
+							if shape is BoxShape3D: half = (shape as BoxShape3D).size * 0.5
+							elif shape is SphereShape3D: half = Vector3.ONE * (shape as SphereShape3D).radius
+							elif shape is CapsuleShape3D:
+								half = Vector3((shape as CapsuleShape3D).radius, (shape as CapsuleShape3D).height * 0.5, (shape as CapsuleShape3D).radius)
+							elif shape is CylinderShape3D:
+								half = Vector3((shape as CylinderShape3D).radius, (shape as CylinderShape3D).height * 0.5, (shape as CylinderShape3D).radius)
+							elif shape is ConvexPolygonShape3D: points = (shape as ConvexPolygonShape3D).points
+							elif shape is ConcavePolygonShape3D: points = (shape as ConcavePolygonShape3D).get_faces()
+							else: continue # Unbounded/heightfield shapes are not text occluder bounds.
+							if not points.is_empty():
+								local_box = AABB(points[0], Vector3.ZERO)
+								for point: Vector3 in points: local_box = local_box.expand(point)
+							else: local_box = AABB(-half, half * 2.0)
+						for index in transforms.size():
+							var box: AABB = transforms[index] * local_box
+							var nearest := Vector2(clampf(sign.global_position.x, box.position.x, box.end.x),
+								clampf(sign.global_position.z, box.position.z, box.end.z))
+							var distance := nearest.distance_to(Vector2(sign.global_position.x, sign.global_position.z))
+							if distance > 16.0 or box.end.y < sign.global_position.y + 0.5 or box.position.y > sign.global_position.y + 10.0: continue
+							clearance.append({"path": str(world.get_path_to(node)), "kind": kind, "instance": index if kind == "multimesh_instance" else -1,
+								"position": [box.position.x, box.position.y, box.position.z], "size": [box.size.x, box.size.y, box.size.z],
+								"distance_m": distance, "centre_distance_m": box.get_center().distance_to(sign.global_position)})
+					clearance.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+						return a.centre_distance_m < b.centre_distance_m if is_equal_approx(a.distance_m, b.distance_m) else a.distance_m < b.distance_m)
+					if clearance.size() > 32: clearance.resize(32)
+				player.global_position = site.global_position + Vector3(0, 1, 8)
+				player.velocity = Vector3.ZERO
+				var centre := (site.global_position + sign.global_position) * 0.5
+				camera.global_position = centre + Vector3(0, 28, 55)
+				camera.look_at(centre + Vector3(0, 1.5, 0), Vector3.UP)
+				for frame in POSE_FRAMES: await physics_frame
+				await _shoot(id + "_context", written, failures)
+				captures = [id + "_sign", id + "_context"]
 			observed.append({"id": id, "biome": entry.biome, "cap_level": definition.cap_level, "access": definition.access,
 				"site_position": [site.global_position.x, site.global_position.y, site.global_position.z],
 				"sign_position": [sign.global_position.x, sign.global_position.y, sign.global_position.z], "text": texts,
-				"player_before": [player_before.x, player_before.y, player_before.z], "captures": [id + "_sign", id + "_context"]})
+				"player_before": [player_before.x, player_before.y, player_before.z], "captures": captures, "nearby_geometry": clearance})
 		if not failures.is_empty(): break
 		world.queue_free()
 		for frame in POSE_FRAMES: await physics_frame
@@ -342,7 +413,7 @@ func _capture_actual_master_sites() -> void:
 	game.set("current_realm", original_realm)
 	print("Master placement capture: capture-realm selection and trainer/camera pose only; no earned route, access, duel, recipe or reward claim.")
 	for failure: String in failures: push_error(failure)
-	quit(0 if failures.is_empty() and observed.size() == 5 and written.size() == 10 else 1)
+	quit(0 if failures.is_empty() and observed.size() == 5 and written.size() == capture_ids.size() * 2 else 1)
 
 
 func _shoot(name: String, written: Array[String], failures: Array[String]) -> void:
