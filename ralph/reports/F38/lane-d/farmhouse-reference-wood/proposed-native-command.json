@@ -1,0 +1,75 @@
+{
+  "guards": "Existing fixed stands/production body-camera grounding/obstruction/time/weather/renderer/source manifest/window alpha-energy-transparency/floor tiling/seams/material metadata guards unchanged. No internal or wrapper budget proposal; ROOT schedules and supplies its existing operational wrapper. Explicit disclosed debug travel, post-opening partial fixture, process-local Low setting; no accepted-boundary/campaign claim. Existing producer does not measure reference wood texture bindings; pixel/actual mounted texture credit cannot come from metadata.",
+  "commands": [
+    {
+      "argv": [
+        "--path",
+        "<ROOT fresh frozen writer pinned925fae787c431264ba74cb8b4d0ebafdc4a3bfaa>",
+        "--rendering-method",
+        "gl_compatibility",
+        "--windowed",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "tools/capture_f38_matrix.gd",
+        "--",
+        "--seed=2042",
+        "--f38-preset=Low",
+        "--f38-baseline",
+        "--subset=farm_to_hall",
+        "--views=close",
+        "--times=day,night",
+        "--source-commit=925fae787c431264ba74cb8b4d0ebafdc4a3bfaa",
+        "--output=D:/CodexTemp/tetherbound-proof/native-d-925fae787c-reference-wood-low-r1/frames/baseline",
+        "--farmhouse-furniture-reference-baseline"
+      ],
+      "label": "reference-wood-baseline",
+      "expected": {
+        "old_lift": 0,
+        "pane_detail": false,
+        "old_window_scalar": false,
+        "frames": 4,
+        "raster": "1280x720",
+        "shipping_flag": false
+      }
+    },
+    {
+      "argv": [
+        "--path",
+        "<ROOT fresh frozen writer pinned925fae787c431264ba74cb8b4d0ebafdc4a3bfaa>",
+        "--rendering-method",
+        "gl_compatibility",
+        "--windowed",
+        "--resolution",
+        "1280x720",
+        "--script",
+        "tools/capture_f38_matrix.gd",
+        "--",
+        "--seed=2042",
+        "--f38-preset=Low",
+        "--f38-baseline",
+        "--subset=farm_to_hall",
+        "--views=close",
+        "--times=day,night",
+        "--source-commit=925fae787c431264ba74cb8b4d0ebafdc4a3bfaa",
+        "--output=D:/CodexTemp/tetherbound-proof/native-d-925fae787c-reference-wood-low-r1/frames/candidate",
+        "--farmhouse-furniture-reference-candidate"
+      ],
+      "label": "reference-wood-candidate",
+      "expected": {
+        "old_lift": 0,
+        "pane_detail": false,
+        "old_window_scalar": false,
+        "frames": 4,
+        "raster": "1280x720",
+        "shipping_flag": false
+      }
+    }
+  ],
+  "packet": "D:/CodexTemp/tetherbound-proof/native-d-925fae787c-reference-wood-low-r1",
+  "gate": "PENDING same original source, selected affected headless constructor, exact command review; queue only after approval. Shipping OFF.",
+  "scope": "Eight native originals, four day/night clear/rain interior detail pairs from existing producer/plan. No full matrix/bar/High/Medium/device/performance/earned/whole claim.",
+  "writer": "ROOT only, native GPU serialized fresh frozen/imported writer, no hosted GPU",
+  "before": "Proposed same-source baseline. No stale failed scalar/before reuse requested.",
+  "source": "925fae787c431264ba74cb8b4d0ebafdc4a3bfaa"
+}

@@ -1,0 +1,24 @@
+{
+  "actual": "F17 actual farmhouse door -> straight Main Street -> Hall nave PASS; maximum_offroad0.000",
+  "script_errors": 0,
+  "run": 37826494240,
+  "exit_code": 0,
+  "script": "tests/smoke_village_hall_redesign.gd",
+  "mode": "headless",
+  "guards": "Original named post-opening flags/starter, one initial farmhouse floor placement, parsed joypad/camera inputs, bounded walk budget/obstruction/floor/route checks retained. Hosted headless constructor/actual door route only.",
+  "native_proposal": "proposed-native-command.json",
+  "log_sha256": "ae8e68bdd4c72b1a513363e44c9984c992cb1ceb9ee3415622de4f9b2da28853",
+  "elapsed_s": 112,
+  "source_review": "original-source-and-pane-runtime-review.txt",
+  "checkout": "checkout-excerpt.txt",
+  "fixture": "Authored post-opening/partial fixture, no earned tutorial/save acceptance.",
+  "job": 113480601242,
+  "warnings": [
+    "instance_reset_physics_interpolation deprecated"
+  ],
+  "source": "925fae787c431264ba74cb8b4d0ebafdc4a3bfaa",
+  "artifact": 11571886480,
+  "args": "--farmhouse-furniture-reference-candidate",
+  "limits": "No mounted wood texture/pixel/native/High/Medium/device/performance/full bar/whole claim; shipping OFF, old lift0.0. Original source APPROVE retained, affected artifact and exact native commands pending original review.",
+  "raw": "run37826494240/artifact.zip and extracted/run.log preserved"
+}

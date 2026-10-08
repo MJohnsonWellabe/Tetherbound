@@ -1,0 +1,13 @@
+Original /root/f42_visual_review 01a1168a-2a2e-7243-aa7d-e655171c70fa, turn 01a11cd4-cd0b-7f90-abe3-a9c81ff5003f
+
+**A — RUNTIME APPROVE:** pane-detail packet pinned to `620cf7c561593b7e8aa82ad6530799a60ad8ccf6`.
+
+Verified all 24 checksum entries, both PNG headers—1280×720 and 1920×1080—and completed 1/1 manifests with empty failures. Both processes exited 0 with empty stop reasons. Body/camera transforms match the approved ece194 OFF views; both report three grounded frames. Clean-source/index receipts and the archived generated sidecar are retained. Each capture retains one interpolation warning.
+
+This establishes the bounded Low night exterior packet only. No mounted texture/operator/alpha measurement, visual PASS, performance, traversal, earned or whole-criterion credit. Old scalar-ON and stopped-ON evidence remain excluded.
+
+**B — SOURCE APPROVE:** `925fae787c431264ba74cb8b4d0ebafdc4a3bfaa`.
+
+The candidate restricts changes to Furniture-pack Table/Table2/Chair/Stool and unmapped Wood/DarkWood roles. Atlas crops stay within the inspected longitudinal wood bands; mipmaps, normal renormalization, finite vectors and positive mapping scales are handled. Per-instance copies preserve alpha, dielectric response and roughness; geometry/AABB/blockers remain unchanged. Cushions, mapped materials and Survival/Fantasy props are excluded.
+
+Shipping remains OFF, baseline wins, and lift stays 0. Constructor/native proofs and pixels remain pending for B.
