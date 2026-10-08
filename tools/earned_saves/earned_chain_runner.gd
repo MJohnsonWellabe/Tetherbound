@@ -89,7 +89,7 @@ func _run() -> void:
 			if world_seed_seen:
 				failures.append("world seed argument must be supplied once")
 			world_seed_seen = true
-			world_seed_arg = arg.get_slice("=", 1)
+			world_seed_arg = arg.trim_prefix("--world-seed=")
 	if not SEGMENTS.has(segment) or save_dir.is_empty() or receipt_path.is_empty():
 		failures.append("usage: --segment=<%s> --save-dir=<dir> --receipt=<json>" % "|".join(SEGMENTS))
 		_finish()
