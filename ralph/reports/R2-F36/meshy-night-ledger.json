@@ -146,8 +146,19 @@
       },
       "candidate_enabled": false,
       "inspection_evidence": "ralph/reports/F36/cloudfang-material/preview-inspection.json"
+    },
+    {
+      "reservation_id": "5f53ed7f-a5f0-4b65-9573-a5ee2e601cbf",
+      "night": "2026-10-07",
+      "subject": "tanglevolt",
+      "reference": "assets/creatures/tetherbound/tanglevolt/reference/f36-material-v1.png",
+      "reference_sha256": "d424b5a1aa443eca2a85d6ae2c6deed0fcfa49187a74d4cd4e6500271488b52c",
+      "endpoint": "/openapi/v1/retexture",
+      "submitted_utc": "2026-10-08T00:47:12.248225+00:00",
+      "task_id": "01a118fa-7050-7797-9dee-a4870e3437f5",
+      "status": "submitted_pending_inspection"
     }
   ],
-  "actual_meshy_submissions": 9,
+  "actual_meshy_submissions": 10,
   "note": "Lane E is the attended generation owner. Every POST uses f36_meshy_guard.py. Current real task IDs and reference hashes are recorded below; mocked cap tests use a temporary ledger and create no Meshy tasks. Generation or a successful cap check does not certify art."
 }
