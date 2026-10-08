@@ -276,7 +276,7 @@ func _run() -> void:
 			_check(_ally.global_position.distance_to(position_before) > 0.0 and _ally.global_position.distance_to(position_before) <= 6.001,
 				"Dash sweeps a supported advance within six metres")
 		await _wait_ready()
-		_check(MATH.config().get("actor_vitals", {}).get("runtime_enabled") == false, "mounted utilities preserve actor_vitals gate")
+		_check(MATH.config().get("actor_vitals", {}).get("runtime_enabled") == _prove_canonical_wild, "mounted utilities preserve the selected process-local actor_vitals gate")
 		_finish()
 		return
 	var shown_meter: ProgressBar = _hud.get("_ultimate_meter")
@@ -675,6 +675,14 @@ func _setup() -> void:
 		opponent["body_generation"] = 1
 	if _prove_canonical_wild:
 		var canonical: Dictionary = _director.call("_canonical_wild_start_state", _wild)
+		print("F23_CANONICAL_ADMISSION " + JSON.stringify({"canonical": canonical,
+			"actor_vitals": MATH.config().actor_vitals,
+			"adapter_exists": ResourceLoader.exists(DIRECTOR.WILD_VICTORY_ADAPTER_PATH),
+			"mounted_game_matches": _director.get_node_or_null(^"/root/Game") == _game,
+			"mounted_session_matches": _game.session == _session,
+			"context": _session.call("_host_wild_training_context"),
+			"admitted": _session.call("admitted_character_state", 1),
+			"uid": str(_creature.uid), "body_instance_id": _ally.get_instance_id()}))
 		_check(canonical.get("enabled") == true and canonical.get("ready") == true, "real canonical wild preflight admits the owned living actor")
 		_director.call("_open_encounter_if_networked", _wild, false)
 		var rec: Dictionary = _director.get("_encounter")
@@ -964,6 +972,8 @@ func _finish() -> void:
 	MOVE_LIBRARY.config()["enabled"] = _saved_library_enabled
 	MATH.config().move_commit.live_moves = _saved_live_moves
 	if not _saved_actor_vitals.is_empty(): MATH.config().actor_vitals = _saved_actor_vitals
+	if _prove_canonical_wild:
+		_check(MATH.config().get("actor_vitals", {}).get("runtime_enabled") == false, "canonical wild proof restores the original shipping-OFF actor_vitals gate")
 	for button: JoyButton in [JOY_BUTTON_X, JOY_BUTTON_Y, JOY_BUTTON_B, JOY_BUTTON_A, JOY_BUTTON_RIGHT_SHOULDER]:
 		var event := InputEventJoypadButton.new()
 		event.button_index = button
