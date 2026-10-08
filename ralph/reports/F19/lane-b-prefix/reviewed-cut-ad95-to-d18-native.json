@@ -15,7 +15,16 @@
     "verdict": "COMPATIBLE",
     "scope": "Compared originalad95→exactd18; sincec863 production lesson/modal presentation/ackhandling, no savecodec/schema/identity/reward/Loadoracle edits; realm/identity transitions close lessons without ACK"
   },
-  "affected_logic": "Existing test_meadows_earned_team_segment.gd queued; no new tests/fixtures",
+  "affected_logic": {
+    "run_id": 37745030835,
+    "artifact_id": 11535541571,
+    "tests": 22,
+    "assertions": 132,
+    "failed": 0,
+    "exit_code": 0,
+    "review": "Original b_f49_review scoped APPROVE",
+    "evidence": "remote-bed-corner-affected-unit-pass.json"
+  },
   "actual_prior_run": {
     "packet": "D:/CodexTemp/tetherbound-proof/native-b-c863d9d7a3-earned-relay-pre-r2",
     "source": "c863d9d7a3568212a2880f3750d5614e3efeb415",
@@ -24,7 +33,6 @@
     "cause_limits": "Final43frames unsampled; no frozenheading/camera/missedarrival causeclaim"
   },
   "remaining_gates": [
-    "Changed-source affected unit",
     "Actual d18 strictLoad/physical bedapproach/assignment/recovery",
     "Relay earned completion, Hall and full new-order boundary chain",
     "Whole F19#5/F49 verdict and READY"
