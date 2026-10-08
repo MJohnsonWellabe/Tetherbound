@@ -1332,11 +1332,11 @@ func _walk_to_home_bed(driver: RefCounted, prompt: Node3D, stance: Dictionary) -
 		# Finish the last pulse's physical release even if it reached the final
 		# heading. Reaching a waypoint cannot bypass the friction-stop phase.
 		if bool(stance.get("remote_north", false)) and waypoint >= points.size() - 1 and precision_braking:
-			_nav.reset()
-			# reset queues physical releases; the no-request native tick
-			# returns before its drive-frame flush. Deliver this release now
-			# so the ordinary controller can apply its ground friction.
-			Input.flush_buffered_events()
+			# Release physical input without discarding this provisional route:
+			# resetting every pulse would spend a new lifetime plan each time.
+			# The existing release flushes zero-stick input; each next request
+			# still performs the navigator's native pre/post movement checks.
+			_nav.call("_production_stop_input")
 			if Vector2(_player.velocity.x, _player.velocity.z).length() > 0.001:
 				await _tree.physics_frame
 				continue
