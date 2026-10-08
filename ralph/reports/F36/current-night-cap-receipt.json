@@ -40,8 +40,9 @@
   ],
   "review": {
     "agent": "review_f36_cap",
-    "verdict": "APPROVE underlying eleven-task accounting/source/PBR/provenance at c7063c97; current snapshot fields corrected, final receipt review pending",
-    "source_sha": "c7063c97a9194b461c39a5809b3796744ade3964"
+    "verdict": "APPROVE accounting maintenance; final current receipt snapshot at532c9713 verified eleven-task sourcec7063c97, historical six-task review intact",
+    "source_sha": "c7063c97a9194b461c39a5809b3796744ade3964",
+    "receipt_source_sha": "532c9713dec4b8d635259f12e17ef9c5611dd2ed"
   },
   "visual_judge": "n/a accounting literal criterion",
   "engine_behavior": "unchanged; n/a",
