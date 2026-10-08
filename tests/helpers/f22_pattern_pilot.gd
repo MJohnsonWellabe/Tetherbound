@@ -151,8 +151,23 @@ func _read(_policy: String) -> void:
 		# Read the opening before committing; released field/fan evasion above still wins.
 		if float(_frames - _opening_seen_frame) / Engine.physics_ticks_per_second < observed:
 			return
-		var charged: Dictionary = _manager.call("_move_profile", "player_charged", str(_manager.active_creature().move_charged))
 		var window := float(_wild.get("_beat_left"))
+		if _manager.utility_ready() and not bool(_manager.get("_move_awaiting_host")):
+			var active: RefCounted = _manager.active_creature()
+			var utility_id := str(active.get("move_utility"))
+			var row: Dictionary = _moves.move(utility_id)
+			var effect: Dictionary = row.get("utility", {})
+			var utility: Dictionary = _manager.call("_with_reach_for_the_bodies", _manager.call("_move_profile", "player_utility", utility_id))
+			var heal: bool = effect.get("kind") == "heal" and effect.get("scope") == "self" \
+				and float(active.call("hp_fraction")) <= 1.0 - float(effect.get("max_hp_fraction", 1.0))
+			var root_setup: bool = effect.get("kind") == "root" and effect.get("scope") == "target" \
+				and MATH.move_connects(utility, _ally.call("centre"), _ally.call("facing"), _wild.call("centre"))
+			if row.get("slot") == "utility" and active.get("known_moves").has(utility_id) and (heal or root_setup) \
+				and window >= float(utility.get("windup", INF)) + float(utility.get("recovery", INF)) \
+				and _manager.wind_value() >= float(row.get("wind_cost", INF)) + _manager.wind_cost("burst"):
+				_press("combat_utility")
+				return
+		var charged: Dictionary = _manager.call("_move_profile", "player_charged", str(_manager.active_creature().move_charged))
 		if distance > reach - 0.25:
 			_walk(_around_fields(toward))
 			return

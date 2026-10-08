@@ -160,7 +160,13 @@ func _run() -> void:
 		"pass": passed, "errors": errors, "dodges": dodges, "punishes": punishes, "roles": rows,
 		"reader_observation_s": observed, "reader_opening_responses": reader_opening_responses}
 	if not _json.is_empty():
+		var directory_error := DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(_json).get_base_dir())
 		var out := FileAccess.open(_json, FileAccess.WRITE)
-		if out != null: out.store_string(JSON.stringify(receipt, "\t"))
+		if directory_error != OK or out == null:
+			errors.append("wild-reaction receipt could not be written")
+			passed = false
+			receipt.pass = false
+		else:
+			out.store_string(JSON.stringify(receipt, "\t"))
 	print("F22_WILD_REACTIONS " + JSON.stringify(receipt))
 	quit(0 if passed else 1)
