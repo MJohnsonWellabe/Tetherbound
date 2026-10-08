@@ -1,0 +1,92 @@
+{
+  "reviewer": "original /root/review_cloud_startup (01a11679-fc2c-7873-bccd-423c1e04476d)",
+  "reviewed_at_utc": "2026-10-08T19:14:54.665058+00:00",
+  "source_commit": "eb72c4bfe67b4bee305c551df6c9fe46427f62b5",
+  "base_commit": "a024267020bed440da3dbc47eac3512f7f5e519b",
+  "scope": "P2-025 pictured Observatory court stone-joint/material detail candidate; night one-view comparison only",
+  "source_verdict": "APPROVE",
+  "headless_command_verdict": "APPROVE",
+  "exact_capture_commands_verdict": "APPROVE",
+  "findings": [],
+  "changed_blobs": {
+    "shaders/cloudreach_arena_paving.gdshader": "78a708541dd147caa170c940fdb83d9006ca02dd",
+    "scripts/world/cloudreach_old_wind_observatory_presentation.gd": "c9e6536cf3f2f557a8b4be6f3d2e9e45a5c152ad",
+    "data/config/cloudreach_old_wind_observatory_visual.json": "9823e53d92b9342f0c0446b1f6bba7dd99a477b4",
+    "tests/test_cloudreach_old_wind_observatory_presentation.gd": "b03c63191d278e669d9292acf8a9731c2809c6d8"
+  },
+  "verified_source_facts": [
+    "The exact base-to-candidate change set contains only the four specified files; inspected files have no worktree delta from the pinned candidate. No source/command/proof re-audit of the previously accepted paving exclusion is performed.",
+    "Shader layout_radius defaults to 36.0. For existing Summit materials, which do not override it, layout_r = r * (36 / 36) = r. The previous ring, perimeter and service-arc expressions therefore retain their original layout. Summit material source, texture/tint/origin setup and joint_outer_radius assignment are unchanged. The physical-r joint_outer_radius guard and joint-width expression are unchanged; original guard test remains intact.",
+    "The shader changes only three radial layout terms. World-space albedo grain at world_at.xz*0.72, soil grain at *0.42, wear/activity coordinates, physical radius masking, ALBEDO/roughness and render mode are retained. At the Observatory radius 15, normalized layout places the former 25 m ring at 10.4167 m and the 25..33 perimeter at 10.4167..13.75 m. The physical outer joint fade is 14..15 m. Whether these narrow visible joints read well is a native visual question.",
+    "Only ObservatoryDialCourt material is replaced when enabled. Its existing 15 m by 0.11 m cylinder, placement at local Y=0.055, geometry, role metadata, rings and every other material/prop remain unchanged; _add_cylinder_to directly applies the selected material_override. No normal/displacement/collision/terrain/route/world-height/gameplay/authority/durable-state change is introduced.",
+    "The factory uses the same existing Summit shader and installed T_UnevenBrick_BaseColor/dirt_path_Color paths. Their Git blobs are unchanged from the base (fd30c5496aa1c44fa6f22ed3281e7412091bc17f and b326bdfd2b1863d9610ecf2ec994a19cc0845e8a). These large asset files are absent in this local checkout; reference identity is verified from Git and existing Summit routing, not claimed as local texture/import validation. Hosted/native hydrated imports are required.",
+    "The material origin comes from the authored Observatory landmark_position (430,920,4500), matching the previously verified production landmark. Both layout and outer-joint radii use the existing dial_radius_m=15. Tint is the scoped config value #b4ae9e. Production material cost is the existing two-texture shader on one court, with no mesh/count expansion.",
+    "Tracked dial_paving.enabled is false with peer_local_observatory_presentation_all_presets scope. _dial_paving_enabled checks --observatory-paving-baseline first, then candidate-or-config; the baseline always wins even with candidate and enabled config. Simulation-only presentation returns before construction as previously. Process flags do not mutate tracked config or durable flags.",
+    "The added existing-file method has ten assertions covering tracked OFF, scope, default OFF, candidate ON, baseline priority against enabled config, both radius values, authored origin and two Texture2D references. It tests the actual enable helper and material factory. All prior test methods/assertions are retained. Texture-type checks alone do not prove texture content/path identity, actual rendered material routing or GPU compilation; those source references were independently inspected here and native rendering remains pending.",
+    "Existing run_tests selectors resolve the full Observatory file (six methods including the added method) and the one Summit paving guard method. No new fixtures/classes/harnesses are introduced. Source syntax/type/resource routing has no concrete defect identified; this is independent source approval, not an engine parse/test result."
+  ],
+  "commands": {
+    "headless_argv": [
+      "Godot",
+      "--headless",
+      "--path",
+      "<fresh worktree pinned to eb72c4bfe67b4bee305c551df6c9fe46427f62b5>",
+      "--script",
+      "res://tests/run_tests.gd",
+      "--",
+      "--only=test_cloudreach_old_wind_observatory_presentation.gd,test_cloudreach_summit_paving.gd"
+    ],
+    "baseline_native_argv": [
+      "Godot",
+      "--path",
+      "<fresh clean worktree pinned to eb72c4bfe67b4bee305c551df6c9fe46427f62b5>",
+      "--rendering-method",
+      "gl_compatibility",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "res://tools/capture_cloudreach_frame_matrix.gd",
+      "--",
+      "--only=24",
+      "--night",
+      "--preset=Low",
+      "--low-resolution=1920x1080",
+      "--source-commit=eb72c4bfe67b4bee305c551df6c9fe46427f62b5",
+      "--output=res://.tmp/f40-observatory-paving-baseline-eb",
+      "--observatory-paving-baseline"
+    ],
+    "candidate_native_argv": [
+      "Godot",
+      "--path",
+      "<fresh clean worktree pinned to eb72c4bfe67b4bee305c551df6c9fe46427f62b5>",
+      "--rendering-method",
+      "gl_compatibility",
+      "--resolution",
+      "1920x1080",
+      "--script",
+      "res://tools/capture_cloudreach_frame_matrix.gd",
+      "--",
+      "--only=24",
+      "--night",
+      "--preset=Low",
+      "--low-resolution=1920x1080",
+      "--source-commit=eb72c4bfe67b4bee305c551df6c9fe46427f62b5",
+      "--output=res://.tmp/f40-observatory-paving-candidate-eb",
+      "--observatory-paving-candidate"
+    ],
+    "native_applicability": "Both exact commands use the same source, tracked material flag OFF, original row24/night/Low1920 gl_compatibility recipe and fresh distinct outputs. capture_cloudreach_frame_matrix leaves the extra process flags untouched while Observatory presentation reads them from OS.get_cmdline_user_args. The bootstrap also tolerates these extra flags. Candidate invocation has no baseline flag. No postpin mutation or config staging is required.",
+    "unchanged_native_dependency_blobs": {
+      "tools/capture_cloudreach_frame_matrix.gd": "221b0fe18cee1eb655044926bee409022c3dd200",
+      "tools/lookdev_capture_bootstrap.gd": "8c1859c4094c5bce3030080831810a67cf0a06c1"
+    },
+    "guard_reuse": "Previously accepted production camera, supported stand/physics/trainer framing, actual root-image save, no-skip named invocation and final open/flush/readback guards are unchanged. Prior native approval is reused as command applicability only; neither new command has been executed by this reviewer."
+  },
+  "pending_gates": [
+    "Exact selected hosted headless terminal artifact and full assertions with assessed engine/script diagnostics; no unit result is claimed here.",
+    "ROOT-owned actual native GPU shader compilation and complete baseline/candidate row24 captures: exact clean pin/import/argv (including mutually exclusive process flags), original image/record bytes and hashes, decoded 1920x1080 headers, Low renderer/driver metadata, zero skips/final manifest and terminal receipts.",
+    "Verify matched actual stand/player/camera/yaw/pitch/hour and graphics settings; weather is neither pinned nor recorded by the existing producer, so sole-change attribution is not established.",
+    "Same original blind visual verdict on the completed night pair. No contact or activation by reviewer."
+  ],
+  "retained_context": "Original exposed-court improvement/footprint source, typed 106-assertion proof and native pair remain historical accepted bounded evidence. The original residual is broad dark interior with limited stone-joint/material detail; perimeter rooting remains UNASSESSED and is not changed by this material candidate.",
+  "limits": "Source and command approval only. No engine/GPU/import/test/dispatch performed, no pixels judged, no asset acquisition. No whole P2-025/F40/full bar/preset matrix/weather/campaign/co-op/earned/controller/save/performance claim or approval. This OFF candidate must remain unaccepted until required native/original blind proof; visual failure does not authorize a shipping enable."
+}
