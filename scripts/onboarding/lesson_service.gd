@@ -2,7 +2,7 @@ extends Node
 
 ## Mounted once by the ordinary objective beacon. No reward, level, travel,
 ## inventory or save-writer ownership. Personal acknowledgements use the
-## existing ledger flag operation and normal character save lifecycle.
+## existing ledger flag operation and character-only save writer.
 const RULES := preload("res://scripts/onboarding/lesson_rules.gd")
 const PANEL := preload("res://scripts/onboarding/lesson_panel.gd")
 const OWNER := preload("res://scripts/ui/input_owner.gd")
@@ -114,13 +114,31 @@ func _dismissed(id: String) -> void:
 func _flush_receipts() -> void:
 	var player := _player()
 	if player == null or str(player.get("character_id")) != _identity: return
-	for flag: String in _pending.keys():
-		if player.get("flags").call("has", flag) == true: _pending.erase(flag)
 	if _pending.is_empty() or Time.get_ticks_msec() < _retry_at: return
 	_retry_at = Time.get_ticks_msec() + 3000
-	var ledger: Node = get_parent().get("ledger")
+	var game := get_parent()
+	var session: Node = game.get("session")
+	if session == null or session.call("snapshot_ready") != true: return
+	# Teardown can read as solo again while still holding a foreign snapshot.
+	if game.call("is_host") == true and game.call("world_save_owned") != true: return
+	if session.call("mode") == "client" and session.call("handshake_snapshot_applied") != true: return
+	var acknowledged: Array[String] = []
+	for flag: String in _pending.keys():
+		if player.get("flags").call("has", flag) == true: acknowledged.append(flag)
+	if not acknowledged.is_empty():
+		# A live ledger flag is not a durable lesson receipt. Keep it pending
+		# until this admitted character's existing writer succeeds. A busy
+		# fallback or failed write retries; neither can erase the receipt.
+		var saver: RefCounted = game.get("save_system")
+		if saver != null and not _identity.is_empty() \
+				and saver.call("save_character_prepared", game, _identity) == true \
+				and _player() == player and str(player.get("character_id")) == _identity \
+				and game.get("save_system") == saver:
+			for flag: String in acknowledged: _pending.erase(flag)
+	var ledger: Node = game.get("ledger")
 	if ledger == null: return
 	for flag: String in _pending.keys():
+		if player.get("flags").call("has", flag) == true: continue
 		# Omit peers: the authenticated submitter is the sole recipient.
 		ledger.call("submit", {"kind": "grant_player_flag", "realm": "meadows", "id": flag})
 
