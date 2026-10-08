@@ -118,7 +118,8 @@
         "legendary_freed",
         "legendary_settled",
         "realm_key_cloudreach",
-        "realm_heart_meadows_earned"
+        "realm_heart_meadows_earned",
+        "legendary_resolution:refused:character-cb1b88c682cd3219e5c3d8d63558473d"
       ],
       "personal_flags": [
         "legendary_refused"
@@ -195,7 +196,8 @@
         "defeated_water_trainer_irva",
         "water_shellwatch_residents_freed",
         "water_shellwatch_pump_disabled",
-        "water_dock_shellwatch_residents_freed_and_pump_disabled"
+        "water_dock_shellwatch_residents_freed_and_pump_disabled",
+        "legendary_resolution:refused:character-cb1b88c682cd3219e5c3d8d63558473d"
       ],
       "personal_flags": [
         "legendary_refused",
@@ -310,7 +312,13 @@
         "defeated_water_trainer_irva",
         "water_shellwatch_residents_freed",
         "water_shellwatch_pump_disabled",
-        "water_dock_shellwatch_residents_freed_and_pump_disabled"
+        "water_dock_shellwatch_residents_freed_and_pump_disabled",
+        "fly_tutorial_completed",
+        "cloudreach_shrine_vane_west_aligned",
+        "cloudreach_shrine_vane_east_aligned",
+        "cloudreach_shrine_vane_crown_aligned",
+        "storm_anchor_summit_feed_disabled",
+        "legendary_resolution:refused:character-cb1b88c682cd3219e5c3d8d63558473d"
       ],
       "personal_flags": [
         "legendary_refused",
@@ -435,7 +443,13 @@
         "defeated_water_trainer_irva",
         "water_shellwatch_residents_freed",
         "water_shellwatch_pump_disabled",
-        "water_dock_shellwatch_residents_freed_and_pump_disabled"
+        "water_dock_shellwatch_residents_freed_and_pump_disabled",
+        "fly_tutorial_completed",
+        "cloudreach_shrine_vane_west_aligned",
+        "cloudreach_shrine_vane_east_aligned",
+        "cloudreach_shrine_vane_crown_aligned",
+        "storm_anchor_summit_feed_disabled",
+        "legendary_resolution:refused:character-cb1b88c682cd3219e5c3d8d63558473d"
       ],
       "personal_flags": [
         "legendary_refused",
