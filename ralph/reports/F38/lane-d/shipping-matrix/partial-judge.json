@@ -1,0 +1,25 @@
+{
+  "reviewer": "/root/f26_presets_review",
+  "scope": "ALL14 native retained frames only; incomplete48frame plan",
+  "verdict": "BLOCK",
+  "bar_a": "BLOCK",
+  "bar_b": "BLOCK",
+  "findings": [
+    "Orangegrain long smeared bands on floors, ceilings and stairs; furniture almost black in all8 farmhouse gameplay/detail views.",
+    "Night bleaches trainer while stair walls, furniture and NPC detail disappear; rainnight appears daybright.",
+    "Broad translucent cyan ribbon overlays cottage doorway, windows and roof in all4 reverse views.",
+    "Road repeats as a broad carpet with weak grass transitions/tuft clustering; distant mountains flat and angular.",
+    "Uniform bright window panes and sparse furniture strips; large overhead beam crowds detail view."
+  ],
+  "strengths": [
+    "Both road approaches guide toward Hall tower.",
+    "Timber/plaster/stone/tile family coherent; daytime trainer/NPC identities readable.",
+    "Clear-night warm windows and blue exterior communicate home."
+  ],
+  "remaining_gates": [
+    "Full48frame matrix, Hall close/interior, real fight and motion",
+    "High/Medium full ACCEPTANCE4 bar",
+    "Actual second filtered floor-arrival proof"
+  ],
+  "criterion_done": false
+}

@@ -1,0 +1,365 @@
+{
+  "source_commit": "7b66e678e30d88af0a35c4717a7c1ac80345759c",
+  "resolution": [
+    1280,
+    720
+  ],
+  "renderer": "gl_compatibility",
+  "preset": "Low",
+  "candidate": false,
+  "shipping_presentation_enabled": false,
+  "complete": false,
+  "planned_frame_count": 48,
+  "captured_frame_count": 14,
+  "failures": [
+    "farm_to_hall__day__clear__approach: no supported production-camera stand among 1 candidates",
+    "farm_to_hall__day__rain__approach: no supported production-camera stand among 1 candidates",
+    "farm_to_hall__night__clear__approach: no supported production-camera stand among 1 candidates",
+    "farm_to_hall__night__rain__approach: no supported production-camera stand among 1 candidates",
+    "village_road__day__clear__gameplay: no supported production-camera stand among 1 candidates",
+    "village_road__day__clear__reverse: no supported production-camera stand among 1 candidates",
+    "village_road__day__clear__detail: no supported production-camera stand among 1 candidates",
+    "village_road__day__rain__gameplay: no supported production-camera stand among 1 candidates",
+    "village_road__day__rain__reverse: no supported production-camera stand among 1 candidates"
+  ],
+  "run": 37715594093,
+  "artifact": 11525448157,
+  "exit_code": 124,
+  "wall_seconds": 3600,
+  "actual_saved_frames": 14,
+  "completed_frame_ids": [
+    "farm_to_hall__day__clear__gameplay",
+    "farm_to_hall__day__clear__reverse",
+    "farm_to_hall__day__clear__detail",
+    "farm_to_hall__day__rain__gameplay",
+    "farm_to_hall__day__rain__reverse",
+    "farm_to_hall__day__rain__detail",
+    "farm_to_hall__night__clear__gameplay",
+    "farm_to_hall__night__clear__reverse",
+    "farm_to_hall__night__clear__detail",
+    "farm_to_hall__night__rain__gameplay",
+    "farm_to_hall__night__rain__reverse",
+    "farm_to_hall__night__rain__detail",
+    "village_road__day__clear__approach",
+    "village_road__day__rain__approach"
+  ],
+  "invalid_stands": [
+    {
+      "attempts": [
+        {
+          "camera_position": [
+            -23.6175289154053,
+            6.57894563674927,
+            17.6957626342773
+          ],
+          "frame_id": "farm_to_hall__day__clear__approach",
+          "ground_y": 3.18136835098267,
+          "lateral_m": 0.0,
+          "offset_m": 32.0,
+          "player_position": [
+            -23.7000007629395,
+            3.37689590454102,
+            14.0
+          ],
+          "reason": "no physical floor supports the resolved land stand",
+          "stage": "preflight",
+          "stand_xz": [
+            -23.7000007629395,
+            14.0
+          ],
+          "surface_state": {
+            "dead": false,
+            "floor_normal_y": 0.0,
+            "on_floor": false
+          },
+          "swimming": false,
+          "water_surface_y": null
+        }
+      ],
+      "frame_id": "farm_to_hall__day__clear__approach",
+      "reason": "all bounded stand candidates rejected"
+    },
+    {
+      "attempts": [
+        {
+          "camera_position": [
+            -25.6375408172607,
+            6.41167879104614,
+            14.0
+          ],
+          "frame_id": "farm_to_hall__day__rain__approach",
+          "ground_y": 3.18136835098267,
+          "lateral_m": 0.0,
+          "offset_m": 32.0,
+          "player_position": [
+            -23.7000007629395,
+            3.5596182346344,
+            14.0
+          ],
+          "reason": "no physical floor supports the resolved land stand",
+          "stage": "preflight",
+          "stand_xz": [
+            -23.7000007629395,
+            14.0
+          ],
+          "surface_state": {
+            "dead": false,
+            "floor_normal_y": 0.0,
+            "on_floor": false
+          },
+          "swimming": false,
+          "water_surface_y": null
+        }
+      ],
+      "frame_id": "farm_to_hall__day__rain__approach",
+      "reason": "all bounded stand candidates rejected"
+    },
+    {
+      "attempts": [
+        {
+          "camera_position": [
+            -25.6414642333984,
+            6.43932247161865,
+            14.0
+          ],
+          "frame_id": "farm_to_hall__night__clear__approach",
+          "ground_y": 3.18136835098267,
+          "lateral_m": 0.0,
+          "offset_m": 32.0,
+          "player_position": [
+            -23.7000007629395,
+            3.5596182346344,
+            14.0
+          ],
+          "reason": "no physical floor supports the resolved land stand",
+          "stage": "preflight",
+          "stand_xz": [
+            -23.7000007629395,
+            14.0
+          ],
+          "surface_state": {
+            "dead": false,
+            "floor_normal_y": 0.0,
+            "on_floor": false
+          },
+          "swimming": false,
+          "water_surface_y": null
+        }
+      ],
+      "frame_id": "farm_to_hall__night__clear__approach",
+      "reason": "all bounded stand candidates rejected"
+    },
+    {
+      "attempts": [
+        {
+          "camera_position": [
+            -25.6463813781738,
+            6.37074089050293,
+            14.0
+          ],
+          "frame_id": "farm_to_hall__night__rain__approach",
+          "ground_y": 3.18136835098267,
+          "lateral_m": 0.0,
+          "offset_m": 32.0,
+          "player_position": [
+            -23.7000007629395,
+            3.5596182346344,
+            14.0
+          ],
+          "reason": "no physical floor supports the resolved land stand",
+          "stage": "preflight",
+          "stand_xz": [
+            -23.7000007629395,
+            14.0
+          ],
+          "surface_state": {
+            "dead": false,
+            "floor_normal_y": 0.0,
+            "on_floor": false
+          },
+          "swimming": false,
+          "water_surface_y": null
+        }
+      ],
+      "frame_id": "farm_to_hall__night__rain__approach",
+      "reason": "all bounded stand candidates rejected"
+    },
+    {
+      "attempts": [
+        {
+          "camera_position": [
+            49.2773780822754,
+            4.71636199951172,
+            14.0
+          ],
+          "frame_id": "village_road__day__clear__gameplay",
+          "ground_y": 0.899999976158142,
+          "lateral_m": 0.0,
+          "offset_m": 8.0,
+          "player_position": [
+            55.0,
+            1.27825021743774,
+            14.0
+          ],
+          "reason": "no physical floor supports the resolved land stand",
+          "stage": "preflight",
+          "stand_xz": [
+            55.0,
+            14.0
+          ],
+          "surface_state": {
+            "dead": false,
+            "floor_normal_y": 0.0,
+            "on_floor": false
+          },
+          "swimming": false,
+          "water_surface_y": null
+        }
+      ],
+      "frame_id": "village_road__day__clear__gameplay",
+      "reason": "all bounded stand candidates rejected"
+    },
+    {
+      "attempts": [
+        {
+          "camera_position": [
+            65.5027923583984,
+            4.98052597045898,
+            14.0
+          ],
+          "frame_id": "village_road__day__clear__reverse",
+          "ground_y": 0.899999976158142,
+          "lateral_m": 0.0,
+          "offset_m": 8.0,
+          "player_position": [
+            71.0,
+            0.903055787086487,
+            14.0
+          ],
+          "reason": "no physical floor supports the resolved land stand",
+          "stage": "preflight",
+          "stand_xz": [
+            71.0,
+            14.0
+          ],
+          "surface_state": {
+            "dead": false,
+            "floor_normal_y": 0.0,
+            "on_floor": false
+          },
+          "swimming": false,
+          "water_surface_y": null
+        }
+      ],
+      "frame_id": "village_road__day__clear__reverse",
+      "reason": "all bounded stand candidates rejected"
+    },
+    {
+      "attempts": [
+        {
+          "camera_position": [
+            54.945068359375,
+            4.44885730743408,
+            14.0
+          ],
+          "frame_id": "village_road__day__clear__detail",
+          "ground_y": 0.899999976158142,
+          "lateral_m": 0.0,
+          "offset_m": 3.0,
+          "player_position": [
+            60.0,
+            0.903055787086487,
+            14.0
+          ],
+          "reason": "no physical floor supports the resolved land stand",
+          "stage": "preflight",
+          "stand_xz": [
+            60.0,
+            14.0
+          ],
+          "surface_state": {
+            "dead": false,
+            "floor_normal_y": 0.0,
+            "on_floor": false
+          },
+          "swimming": false,
+          "water_surface_y": null
+        }
+      ],
+      "frame_id": "village_road__day__clear__detail",
+      "reason": "all bounded stand candidates rejected"
+    },
+    {
+      "attempts": [
+        {
+          "camera_position": [
+            49.2315330505371,
+            4.72071361541748,
+            14.0
+          ],
+          "frame_id": "village_road__day__rain__gameplay",
+          "ground_y": 0.899999976158142,
+          "lateral_m": 0.0,
+          "offset_m": 8.0,
+          "player_position": [
+            55.0,
+            1.27825021743774,
+            14.0
+          ],
+          "reason": "no physical floor supports the resolved land stand",
+          "stage": "preflight",
+          "stand_xz": [
+            55.0,
+            14.0
+          ],
+          "surface_state": {
+            "dead": false,
+            "floor_normal_y": 0.0,
+            "on_floor": false
+          },
+          "swimming": false,
+          "water_surface_y": null
+        }
+      ],
+      "frame_id": "village_road__day__rain__gameplay",
+      "reason": "all bounded stand candidates rejected"
+    },
+    {
+      "attempts": [
+        {
+          "camera_position": [
+            65.5147094726562,
+            4.97849178314209,
+            14.0
+          ],
+          "frame_id": "village_road__day__rain__reverse",
+          "ground_y": 0.899999976158142,
+          "lateral_m": 0.0,
+          "offset_m": 8.0,
+          "player_position": [
+            71.0,
+            0.903055787086487,
+            14.0
+          ],
+          "reason": "no physical floor supports the resolved land stand",
+          "stage": "preflight",
+          "stand_xz": [
+            71.0,
+            14.0
+          ],
+          "surface_state": {
+            "dead": false,
+            "floor_normal_y": 0.0,
+            "on_floor": false
+          },
+          "swimming": false,
+          "water_surface_y": null
+        }
+      ],
+      "frame_id": "village_road__day__rain__reverse",
+      "reason": "all bounded stand candidates rejected"
+    }
+  ],
+  "scope": "Incomplete capture, no criterion PASS; 14 retained native stills and9 actual rejected stands; run timed out mid-plan",
+  "raw_images": "Original artifact only; JPG contact committed"
+}
