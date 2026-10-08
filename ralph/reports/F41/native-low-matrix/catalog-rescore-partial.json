@@ -1,13 +1,13 @@
 {
-  "scored_rows": 7,
+  "scored_rows": 12,
   "result": "OPEN",
   "scope": "Full release bar per owning ART9.1, separate from literalF41#4 identity PASS",
   "judge": "/root/blind_listener_f10",
-  "unassessed_rows": 37,
+  "unassessed_rows": 32,
   "recapture": "COMPLETE: retained shippingbaseline348abfaebb320frames, candidate94ed320frames and9b320supplementalhero",
   "rule": "Unassessed rows retain prior priority floor only, not claimed as rescored; no central catalogue edit",
   "review": "REQUEST_CHANGES for closure; numeric rescore incomplete",
-  "next": "Targeted applicable post-F26 captures for37 incompletely assessed rows, including hurt coverage of P2-016; no repeat200-frame scenery run",
+  "next": "Remaining32incompletely assessed rows, including P2-056 uniformed officers and P2-016 unobscured hurt. Reuse12completed boundedscores; no repeat200-frame scenery run.",
   "rows": [
     {
       "item_id": "P2-042",
@@ -181,17 +181,17 @@
     },
     {
       "item_id": "P2-081",
-      "status": "BLOCKED",
+      "status": "NO_OBSERVED_DEFECT",
       "prior_priority_floor": 64,
       "owner_lane": "D",
       "importance": 4,
       "prior_status": "open",
       "subject": "named trainer dialogue identity",
-      "finding": "UNASSESSED: targeted current biome capture missing for named trainer dialogue identity; no inferred score/improvement",
+      "finding": "Actual37701429452 Low720/48frames: All captured dialogue has portraits; Rook circuit, Tamsin ground warning, Ondra Stormglass advice differ. Bounded staged set; earned entry/moving actors/uncaptured weather unassessed.",
       "exposure": 4,
       "original_defect": "Every captured named trainer conversation repeats the same generic line and shows no portrait",
-      "severity_new": null,
-      "impact_new": null
+      "severity_new": 0,
+      "impact_new": 0
     },
     {
       "item_id": "P2-001",
@@ -223,17 +223,17 @@
     },
     {
       "item_id": "P2-055",
-      "status": "BLOCKED",
+      "status": "OPEN",
       "prior_priority_floor": 60,
       "owner_lane": "E",
       "importance": 4,
       "prior_status": "candidate_off",
       "subject": "named character silhouettes",
-      "finding": "UNASSESSED: targeted current biome capture missing for named character silhouettes; no inferred score/improvement",
+      "finding": "Actual37701429452 Low720/48frames: Lio/Neri repeat face/hair/body/outfit; Maud/Hesk/Bryn repeat elderly silhouette, Fenn/Oswin repeat hooded bearded appearance. Bounded staged set; earned entry/moving actors/uncaptured weather unassessed.",
       "exposure": 5,
       "original_defect": "Many distinct named roles in Tidewake and Stormwood repeat the same face body and outfit silhouettes",
-      "severity_new": null,
-      "impact_new": null
+      "severity_new": 4,
+      "impact_new": 80
     },
     {
       "item_id": "P2-063",
@@ -293,17 +293,17 @@
     },
     {
       "item_id": "P2-082",
-      "status": "BLOCKED",
+      "status": "NO_OBSERVED_DEFECT",
       "prior_priority_floor": 48,
       "owner_lane": "D",
       "importance": 4,
       "prior_status": "open",
       "subject": "named character portrait identity",
-      "finding": "UNASSESSED: targeted current biome capture missing for named character portrait identity; no inferred score/improvement",
+      "finding": "Actual37701429452 Low720/48frames: Native checks Lio/Neri/Ondra/Bryn apparent hair/face/clothing match world speakers; reuse belongs to055. Bounded staged set; earned entry/moving actors/uncaptured weather unassessed.",
       "exposure": 3,
       "original_defect": "Portraits depict a different apparent person from the named world speaker in multiple Stormwood conversations",
-      "severity_new": null,
-      "impact_new": null
+      "severity_new": 0,
+      "impact_new": 0
     },
     {
       "item_id": "P2-070",
@@ -419,17 +419,17 @@
     },
     {
       "item_id": "P2-083",
-      "status": "BLOCKED",
+      "status": "NO_OBSERVED_DEFECT",
       "prior_priority_floor": 36,
       "owner_lane": "D",
       "importance": 4,
       "prior_status": "needs_capture",
       "subject": "dialogue foreground obstruction",
-      "finding": "UNASSESSED: targeted current biome capture missing for dialogue foreground obstruction; no inferred score/improvement",
+      "finding": "Actual37701429452 Low720/48frames: Speakers remain visible; Ondra foreground creature stays left without masking speaker; no overhead obstruction. Bounded staged set; earned entry/moving actors/uncaptured weather unassessed.",
       "exposure": 3,
       "original_defect": "Large foreground creatures or overhead geometry hide the named speaker in several dialogue frames",
-      "severity_new": null,
-      "impact_new": null
+      "severity_new": 0,
+      "impact_new": 0
     },
     {
       "item_id": "P2-032",
@@ -523,11 +523,13 @@
       "importance": 3,
       "prior_status": "open",
       "subject": "uniformed character readability",
-      "finding": "UNASSESSED: targeted current biome capture missing for uniformed character readability; no inferred score/improvement",
+      "finding": "PARTIAL actual37701429452: Rook/Bryn dark clothing loses internal detail against rainy terrain; rank/outfit markers weak, heads detectable. Additional uniformed officer coverage missing; complete rescore OPEN.",
       "exposure": 4,
       "original_defect": "Dark uniformed officers and trainers blend into the purple rainy forest and lack legible rank or individual markers at normal camera distance",
       "severity_new": null,
-      "impact_new": null
+      "impact_new": null,
+      "partial_severity_new": 3,
+      "partial_impact_new": 36
     },
     {
       "item_id": "P2-043",
@@ -545,17 +547,17 @@
     },
     {
       "item_id": "P2-084",
-      "status": "BLOCKED",
+      "status": "NO_OBSERVED_DEFECT",
       "prior_priority_floor": 18,
       "owner_lane": "D",
       "importance": 3,
       "prior_status": "open",
       "subject": "named character dialogue reuse",
-      "finding": "UNASSESSED: targeted current biome capture missing for named character dialogue reuse; no inferred score/improvement",
+      "finding": "Actual37701429452 Low720/48frames: No identical cross-character lines in24captured states; repeated-looking Lio/Neri and Fenn/Oswin have different text, Maud/Bryn state lines differ. Bounded staged set; earned entry/moving actors/uncaptured weather unassessed.",
       "exposure": 3,
       "original_defect": "Distinct named Stormwood characters use identical dialogue lines",
-      "severity_new": null,
-      "impact_new": null
+      "severity_new": 0,
+      "impact_new": 0
     },
     {
       "item_id": "P2-047",

@@ -492,6 +492,9 @@ def main() -> None:
     out = pathlib.Path(option(args, "--out", textured_path.with_name("rigged_textured.glb"))).resolve()
     preserve = "--preserve-target-geometry" in args
     yaw = float(option(args, "--alignment-yaw-deg", "0"))
+    identity_alignment = "--identity-alignment" in args
+    if identity_alignment and (not preserve or yaw != 0.0):
+        raise SystemExit("Identity alignment requires preserved target geometry and zero yaw")
     report_value = option(args, "--report")
     report_path = pathlib.Path(report_value).resolve() if report_value else None
     if preserve and (out in (donor_path, textured_path) or out.exists() or not report_path
@@ -584,18 +587,19 @@ def main() -> None:
         return low, high
     d_low, d_high = box(donor)
     t_low, t_high = box(target)
-    scale = max(d_high - d_low) / max(max(t_high - t_low), 1e-9)
+    scale = 1.0 if identity_alignment else max(d_high - d_low) / max(max(t_high - t_low), 1e-9)
     target.scale = target.scale * scale if preserve else Vector((scale,) * 3)
     if preserve:
         bpy.context.view_layer.update()
     else:
         bpy.ops.object.transform_apply(scale=True)
     t_low, t_high = box(target)
-    target.location += Vector((
-        (d_low.x + d_high.x) / 2 - (t_low.x + t_high.x) / 2,
-        (d_low.y + d_high.y) / 2 - (t_low.y + t_high.y) / 2,
-        d_low.z - t_low.z,
-    ))
+    if not identity_alignment:
+        target.location += Vector((
+            (d_low.x + d_high.x) / 2 - (t_low.x + t_high.x) / 2,
+            (d_low.y + d_high.y) / 2 - (t_low.y + t_high.y) / 2,
+            d_low.z - t_low.z,
+        ))
     if preserve:
         bpy.context.view_layer.update()
     else:
@@ -669,7 +673,8 @@ def main() -> None:
             "target_geometry_uv_material_bindings_unchanged_before_export": True,
             "donor_rig_world_transform_unchanged": True, "transfer_rest_pose": True,
             "parent_world_transform_preserved": True, "alignment_yaw_deg": yaw,
-            "alignment_uniform_scale": scale, "vertices": len(target.data.vertices),
+            "alignment_uniform_scale": scale, "alignment_mode": "identity" if identity_alignment else "bounding_box",
+            "vertices": len(target.data.vertices),
             "unweighted_vertices": unweighted, "max_influences": max(len(v.groups) for v in target.data.vertices),
             "trimmed_influences": trimmed, "weights_normalized": True,
             "scope": "Pre-export data and source guards only; export reimport/deformation/native scale/judge still required"

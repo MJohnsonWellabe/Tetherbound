@@ -3,6 +3,8 @@
     blender --background --python tools/art_pipeline/blender/graft_head.py \
             -- <body.glb> --head <bust.glb> --out <grafted.glb> \
             [--head-fraction 0.20] [--head-yaw 0] [--overlap 0.35] [--drop 0.0]
+            [--unskinned-target] [--preserve-body-height] [--head-target-tris N]
+            [--body-head-group NAME]
 
 ## Why this exists
 
@@ -81,10 +83,14 @@ def option(args: list[str], name: str, default=None):
     return args[args.index(name) + 1] if name in args else default
 
 
-def load_joined(path: pathlib.Path, name: str) -> bpy.types.Object:
+def load_joined(path: pathlib.Path, name: str, unskinned: bool = False,
+                preserve_groups: bool = False) -> bpy.types.Object:
     """Import one GLB and return it as a single object, transforms applied."""
     before = set(bpy.data.objects)
     bpy.ops.import_scene.gltf(filepath=str(path))
+    sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+    import inspect_glb
+    inspect_glb.drop_import_phantoms()
     fresh = [o for o in set(bpy.data.objects) - before if o.type == "MESH"]
     if not fresh:
         raise SystemExit(f"no mesh in {path}")
@@ -96,11 +102,22 @@ def load_joined(path: pathlib.Path, name: str) -> bpy.types.Object:
         bpy.ops.object.join()
     obj = bpy.context.view_layer.objects.active
     obj.name = name
+    if unskinned:
+        # A process-local target for the existing preserved skin-transfer
+        # mode. Keep the held body file/rig/clips untouched as its donor.
+        transform = obj.matrix_world.copy()
+        obj.parent = None
+        obj.matrix_world = transform
+        for modifier in list(obj.modifiers):
+            if modifier.type == "ARMATURE":
+                obj.modifiers.remove(modifier)
+        if not preserve_groups:
+            obj.vertex_groups.clear()
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
     return obj
 
 
-def delete_where(obj, doomed) -> None:
+def delete_where(obj, doomed, indices=()) -> None:
     """Delete the vertices of `obj` whose coordinate satisfies `doomed`.
 
     Done through bmesh rather than `bpy.ops.mesh.delete`, because the operator
@@ -113,7 +130,8 @@ def delete_where(obj, doomed) -> None:
     mesh = bmesh.new()
     mesh.from_mesh(obj.data)
     mesh.verts.ensure_lookup_table()
-    victims = [vertex for vertex in mesh.verts if doomed(vertex.co)]
+    victims = [vertex for vertex in mesh.verts
+               if doomed(vertex.co) or vertex.index in indices]
     if victims:
         bmesh.ops.delete(mesh, geom=victims, context="VERTS")
     mesh.to_mesh(obj.data)
@@ -170,16 +188,47 @@ def main() -> None:
     overlap = float(option(args, "--overlap", OVERLAP))
     drop = float(option(args, "--drop", 0.0))
     yaw = math.radians(float(option(args, "--head-yaw", 0.0)))
+    unskinned = "--unskinned-target" in args
+    preserve_height = "--preserve-body-height" in args
+    head_target = int(option(args, "--head-target-tris", "0"))
+    head_group = option(args, "--body-head-group")
+    if head_group is not None and (not unskinned or not head_group.strip()):
+        raise SystemExit("Body head group requires an installed unskinned target and a nonempty group name")
+    if head_target < 0:
+        raise SystemExit("Head triangle target cannot be negative")
+    if unskinned and (out in (body_path, bust_path) or out.exists()):
+        raise SystemExit("Installed-body target requires a fresh output separate from both inputs")
+    if preserve_height and (not unskinned or "--head-fraction" in args):
+        raise SystemExit("Preserved body height requires unskinned target and derives its own head fraction")
+    if preserve_height and (not math.isfinite(drop) or drop != 0.0):
+        raise SystemExit("Preserved body height requires finite zero head drop")
 
     bpy.ops.wm.read_factory_settings(use_empty=True)
-    body = load_joined(body_path, "body")
+    body = load_joined(body_path, "body", unskinned, head_group is not None)
     bust = load_joined(bust_path, "bust")
+    old_head_vertices = set()
+    if head_group is not None:
+        group = body.vertex_groups.get(head_group)
+        if group is None:
+            raise SystemExit(f"Installed body has no head group {head_group}")
+        old_head_vertices = {v.index for v in body.data.vertices
+                             if any(w.group == group.index and w.weight >= 0.5
+                                    for w in v.groups)}
+        if not old_head_vertices:
+            raise SystemExit("Installed head group contains no majority-weighted vertices")
+        # The original rig identifies beard/hair below the geometric neck
+        # plane. Remove those original head vertices along with the plane
+        # cut; do not remesh or select the installed scarf/body by height.
+        body.vertex_groups.clear()
+        print(f"  original head group {head_group}: {len(old_head_vertices)} vertices")
 
     body_points = coordinates(body)
     body_low, body_high = body_points[:, 2].min(), body_points[:, 2].max()
     body_height = body_high - body_low
     neck_z = find_neck(body_points, BODY_NECK_BAND)
     old_head = body_high - neck_z
+    if preserve_height:
+        fraction = old_head / body_height
     print(f"  body: height {body_height:.3f}, neck at "
           f"{(neck_z - body_low) / body_height:.3f} of height, "
           f"old head {old_head / body_height:.3f} of height")
@@ -236,9 +285,22 @@ def main() -> None:
         raise SystemExit("head cut left almost nothing; check --overlap")
     delete_where(bust, lambda co: co.z <= cut_z)
     print(f"  bust trimmed to {len(bust.data.vertices)} verts above the cut")
+    if head_target:
+        # Head-only UV-preserving decimation; the installed body is never
+        # remeshed. Keep the textured head's material slots and UV channels.
+        materials = tuple(bust.data.materials)
+        uv_names = tuple(layer.name for layer in bust.data.uv_layers)
+        import cleanup_mesh
+        cleanup_mesh.decimate_to(bust, head_target)
+        if tuple(bust.data.materials) != materials or tuple(layer.name for layer in bust.data.uv_layers) != uv_names:
+            raise SystemExit("Head decimation changed material bindings or UV channels")
+        head_tris = sum(len(p.vertices) - 2 for p in bust.data.polygons)
+        if head_tris > head_target:
+            raise SystemExit(f"Head decimation exceeded target: {head_tris} > {head_target}")
+        print(f"  head-only decimation: {head_tris} triangles; materials/UV channels retained")
 
     # Now take the body's own head off, leaving the stump the new one sits in.
-    delete_where(body, lambda co: co.z > neck_z)
+    delete_where(body, lambda co: co.z > neck_z, old_head_vertices)
     print(f"  body head removed, {len(body.data.vertices)} verts remain")
 
     bpy.ops.object.select_all(action="DESELECT")

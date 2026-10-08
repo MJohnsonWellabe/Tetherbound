@@ -3,11 +3,10 @@
   "raw_triangles": 54566,
   "task_id": "01a118ab-c9e1-7121-b488-52473510552c",
   "source_commit": "f9a61caa525617aa4fa8266811c63ea6027124f5",
-  "status": "PARTIAL OFF pretexture",
+  "status": "PARTIAL OFF textured head identity PASS, body-fit/native gates OPEN",
   "source_review": "review_f36_cap APPROVE optional head-only texture prompt; legacy default unchanged",
   "remaining_gates": [
-    "matching frontal textured identity",
-    "existing body and rig fit",
+    "collar/body fit code-blind PASS",
     "native scale/poses",
     "code-blind gameplay-distance beforeafter"
   ],
@@ -22,5 +21,25 @@
   },
   "shipping": "installed body/model unchanged",
   "preparation": "existing cleanup_mesh.py --skip-voxel --target-tris18000; source raw unchanged",
-  "subject": "grandpa"
+  "subject": "grandpa",
+  "textured_task": {
+    "id": "01a118b6-747c-74f1-9546-87893540dfbc",
+    "status": "SUCCEEDED",
+    "observed_credit_cost": 10,
+    "sha256": "dea53c0273e37d87de38959077fa4de74757135b43c40ba37f33640483816e5e",
+    "triangles": 17988,
+    "materials": 1
+  },
+  "textured_head_judge": {
+    "agent": "blind_listener_f10",
+    "verdict": "PASS",
+    "scope": "DCC front/three-quarter head identity only",
+    "reason": "Warm materials and pupils restore kind concerned Grandpa expression; established grey curls/brows/nose/beard preserved; minor straighter brows/narrower eyes not blocking."
+  },
+  "body_fit": {
+    "first": "Generic neck plane left old beard projecting under replacement; rejected.",
+    "correction": "Original Head majority weights removed along with legacy plane cut, preserving original rig/body unit scale; same body-fit judge pending.",
+    "candidate_enabled": false,
+    "source_review": "review_f36_cap APPROVE existing graft/identity-skin modes and optional head-group removal; source only"
+  }
 }
