@@ -278,13 +278,25 @@ func _capture_actual_master_sites() -> void:
 			var site: Node3D = matches[0]
 			var definition: Dictionary = site.get("_definition")
 			var expected: Array = definition.get("position", [])
-			var sign_at: Array = definition.get("sign_position", [])
+			var sign_at: Array = definition.get("sign_position", []).duplicate()
 			var npc := site.get_node_or_null(^"Master") as Node3D
 			if definition.get("biome") != entry.biome or expected.size() != 3 or sign_at.size() != 3 \
 				or npc == null or not npc.is_visible_in_tree() \
 				or Vector2(site.global_position.x, site.global_position.z).distance_to(Vector2(float(expected[0]), float(expected[2]))) > 0.05:
 				failures.append("Actual Master placement/cast disagrees with its authored identity: " + id)
 				break
+			# Cloudreach dresses its sign at the configured court edge. Match the
+			# same loaded presentation offset without changing its authored source.
+			if entry.biome == "cloudreach":
+				var visual: Dictionary = world.get("_visual_config")
+				var offset: Variant = visual.get("master_signpost_offsets", {}).get(str(definition.get("author_reference", "")))
+				if offset is Array and offset.size() >= 2:
+					if typeof(offset[0]) not in [TYPE_FLOAT, TYPE_INT] or typeof(offset[1]) not in [TYPE_FLOAT, TYPE_INT] \
+							or not is_finite(float(offset[0])) or not is_finite(float(offset[1])):
+						failures.append("Invalid loaded Master sign presentation offset: " + id)
+						break
+					sign_at[0] = float(sign_at[0]) + float(offset[0])
+					sign_at[2] = float(sign_at[2]) + float(offset[1])
 			var signs: Array[Node3D] = []
 			for child: Node in world.get_children():
 				var candidate := child as Node3D
