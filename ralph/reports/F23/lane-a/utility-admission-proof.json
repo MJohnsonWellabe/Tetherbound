@@ -182,5 +182,36 @@
     "review": "APPROVE original f25_medium_review bounded mounted Heal",
     "log_sha256": "b96112fd991c2f076d2a51383b4b14345018a495a7ca889d555b38d3ad13cb03",
     "limits": "Disclosed production-node fixture; process-local mounting only. No campaign/co-op/shipping/whole F23 claim."
+  },
+  "mounted_dash_first_attempt": {
+    "run_id": 37763710239,
+    "artifact_id": 11543198984,
+    "commit": "47c758d450701a41d77effb0ad502066a0d37255",
+    "file": "tests/smoke_f23_live_moves.gd",
+    "args": "--prove-utility=dash_strike",
+    "checks": 18,
+    "failed_checks": 3,
+    "result": "FAIL",
+    "sweep_phase": "resolved",
+    "advance_metres": 1.9453125,
+    "hit": false,
+    "host_binding": "Accepted action, UID, positive generation and live target instance retained",
+    "foe_hp_before": 600,
+    "foe_hp_after": 600,
+    "launches": 1,
+    "impacts": 0,
+    "cause": "Collision collider/radii are absent from original receipt. Final Wind regenerated during five-second wait, so that Wind assertion does not establish failure to spend.",
+    "log_sha256": "c21a44023829f2ee0a6b6014a39d5b0e470d99a4918d26fa2c516c16bec7d490",
+    "next": "One original-approved changed observer a5b1db08bfdc7a3160ed90d1f8f978d6cd3c7bf0 retains collider/radii/margins and immediate post-tap Wind; gameplay guards unchanged."
+  },
+  "canonical_wild_heal_routing": {
+    "commit": "114972e8d4fe36969cfa95903be4247936db4034",
+    "change": "Director stages Heal for existing saved actor vitals ownership; Manager retains durable trainer or exact epoch/world-bound wild ownership and all settlement guards",
+    "review": "APPROVE original f25_medium_review source",
+    "minimum_affected_selectors": [
+      "test_f23_live_moves.gd",
+      "test_f27_guest_wild_share.gd"
+    ],
+    "status": "Affected selectors queued behind single A hosted observer. Mounted canonical wild and shipping admission remain unproved."
   }
 }
