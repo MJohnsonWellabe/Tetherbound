@@ -222,11 +222,11 @@ func _native_case_backpack_target_guard_precedes_any_care_or_item_write() -> voi
 	owner_session.blocked = true
 	# Poll Use on fresh physics-frame edges, as the actual menu does.
 	# Keep the input/mode guards observable rather than bypassing them.
-	await (Engine.get_main_loop() as SceneTree).physics_frame
 	assert_true(tab.visible)
 	assert_true(menu.is_open())
 	assert_eq([tab.get("_targeting"), tab.get("_confirming"), tab.get("_held")], [-1, -1, -1])
 	Input.action_press("interact")
+	await (Engine.get_main_loop() as SceneTree).physics_frame
 	assert_true(Input.is_action_just_pressed("interact"), "blocked repair receives the original Use edge")
 	tab.call("_read_use")
 	Input.action_release("interact")
@@ -234,8 +234,8 @@ func _native_case_backpack_target_guard_precedes_any_care_or_item_write() -> voi
 		"pending owner decision preserves original tool wear when Use requests repair")
 	assert_eq(menu.messages.back(), "Saving your last action. Try again in a moment.")
 	owner_session.blocked = false
-	await (Engine.get_main_loop() as SceneTree).physics_frame
 	Input.action_press("interact")
+	await (Engine.get_main_loop() as SceneTree).physics_frame
 	assert_true(Input.is_action_just_pressed("interact"), "ordinary repair receives a separate Use edge")
 	tab.call("_read_use")
 	Input.action_release("interact")
