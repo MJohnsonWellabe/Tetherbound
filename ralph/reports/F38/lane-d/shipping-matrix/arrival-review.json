@@ -1,0 +1,17 @@
+{
+  "scope": "F38 existing arrival clock/view-filter proof extension only; full row OPEN",
+  "source": "b6cd4439e8961fedece5f96dd2f074de9caba235",
+  "files": [
+    "tools/phase2_capture_locations.gd",
+    "tools/capture_f38_matrix.gd"
+  ],
+  "diff": "13 additions/1 deletion",
+  "independent_review": {
+    "agent": "/root/f42_visual_review",
+    "verdict": "SOURCE APPROVE",
+    "reason": "Base arrival optional row defaults false preserving20physics ticks elsewhere; F38 same20 process ticks; inherited explicit approach/close filter mapsclose to authored detail and onlyfilterswhensupplied",
+    "preserved": "Stands/rays/height/slope/capsule/settled/draw checks, later waits, preset/weather/times/budgets unchanged"
+  },
+  "cause_limit": "Actual9 previous preflight failures were empty floor rays. Idle synchronization is source-supported hypothesis; no collision-ready status existed in packet.",
+  "next": "Existing test_catalogue_capture_stand then filtered rejected farm approach site/time only; actual runtime needed, no unchanged48 replay/new fixture/observer/harness"
+}

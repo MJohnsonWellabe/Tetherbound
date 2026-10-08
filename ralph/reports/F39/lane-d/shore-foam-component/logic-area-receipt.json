@@ -1,0 +1,35 @@
+{
+  "scope": "Water shore-foam component named logic and existing area only; visual/runtime shader evidence pending",
+  "source": "a5d36c54ce6c2428db615ee72b14629ca7144e68",
+  "logic": {
+    "run": 37720766418,
+    "artifact": 11525936031,
+    "script": "tests/run_tests.gd",
+    "selectors": [
+      "test_water_offshore_material",
+      "test_water_surface_material",
+      "test_f17_capture_presets"
+    ],
+    "files": 3,
+    "tests": 7,
+    "assertions": 46,
+    "failed": 0,
+    "exit_code": 0,
+    "seconds": 6,
+    "limits": "Water material guards/shape and unchanged F17 preset branches; tests do not exercise active new shore uniform branch or actual frame pixels. One isolated factory warning Terrain3D material anchors unavailable retained."
+  },
+  "area": {
+    "run": 37721160433,
+    "artifact": 11525832872,
+    "script": "tests/smoke_water_swimming.gd",
+    "mode": "headless",
+    "assertions": 22,
+    "exit_code": 0,
+    "seconds": 76,
+    "actual_lesson_swim_m": 60.142,
+    "final_health": 91.2,
+    "limits": "Existing production scene/body/input swim smoke; disclosed safe-landing, exhaustion and combat-pause fixtures. No earned journey/full F37, co-op, rest or shader-pixel claim"
+  },
+  "reuse": "Later b6cd change touches F38 leaf and independent phase2 locations only; Water production/capture catalogue and named files unchanged from a5d",
+  "remaining": "Ten matched shipping Low720 stills plus actual night sequence, code-blind pixel review and final original source reviewer verdict; P2-009/F39 OPEN"
+}
