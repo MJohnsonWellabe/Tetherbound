@@ -217,7 +217,30 @@ func _recover_at_riverwatch(join: Vector2) -> bool:
 	for member: RefCounted in party.call("members"):
 		caps_before[str(member.get("uid"))] = ESSENCE.creature_cap(personal, str(member.get("uid")))
 	var day_before := int(_game.get("day"))
-	var clock_before := float(_game.get("clock_elapsed_seconds"))
+	var carried_clock_before := float(_game.get("clock_elapsed_seconds"))
+	# Observe the actual scene clock, whose elapsed and roll counters receive
+	# the same _process delta; a carried save value is not the running clock.
+	var look := _world.get_node_or_null("WorldLook")
+	var cycle: RefCounted = look.get("_cycle") as RefCounted if look != null else null
+	var clock_binding_before: bool = _tree.current_scene == _world \
+		and _tree.root.get_node_or_null("Game") == _game and look != null \
+		and look.get_parent() == _world and look.get_script() == preload("res://scripts/world/world_look.gd") \
+		and look.is_in_group("day_cycle") and cycle != null \
+		and cycle.get_script() == preload("res://scripts/world/day_cycle.gd")
+	var clock_live_before: bool = clock_binding_before and look.is_processing() \
+		and look.process_mode == Node.PROCESS_MODE_ALWAYS and look.get("_clock_frozen") == false
+	var elapsed_before: float = float(look.get("_elapsed_seconds")) if clock_binding_before else NAN
+	var accum_before: float = float(look.get("_auto_day_accum")) if clock_binding_before else NAN
+	var length_before: float = float(cycle.get("day_length_seconds")) if clock_binding_before else NAN
+	var clock_values_before: bool = is_finite(elapsed_before) and elapsed_before >= 0.0 \
+		and is_finite(accum_before) and is_finite(length_before) and length_before > 0.0 \
+		and accum_before >= 0.0 and accum_before < length_before
+	var clock_before := {"day": day_before, "elapsed": elapsed_before,
+		"accumulator": accum_before, "day_length": length_before}
+	if not clock_live_before or not clock_values_before:
+		_receipt("riverwatch_recovery_guard_refusal", {"clock_binding": clock_binding_before,
+			"clock_live": clock_live_before, "clock_values": clock_values_before, "clock_before": clock_before})
+		return _fail("Riverwatch recovery requires its actual live, finite WorldLook clock")
 	var recovered_indices: Array[int] = []
 	for index in int(party.call("size")):
 		var member: RefCounted = party.call("at", index)
@@ -226,31 +249,62 @@ func _recover_at_riverwatch(join: Vector2) -> bool:
 		if not await care._recover_at_home_bed(index, bed):
 			return _fail("Riverwatch controller recovery failed: " + str(care.result().failures))
 		recovered_indices.append(index)
+	var awake_full_hp: bool = true
+	var caps_unchanged: bool = true
 	for member: RefCounted in party.call("members"):
-		if bool(member.get("resting")) or bool(member.get("fainted")) \
-				or float(member.get("hp")) < float(member.get("max_hp")) - 0.01 \
-				or caps_before[str(member.get("uid"))] != ESSENCE.creature_cap(_game.get("local").get("redesign_character"), str(member.get("uid"))):
-			return _fail("Riverwatch recovery did not leave the same capped five awake at full HP")
-	if not retained_five(_initial_ids, _party_ids()) or inventory_before != care._inventory_snapshot() \
-			or xp_before != _xp_snapshot() or int(_game.get("day")) != day_before \
-			or int(bed.call("occupant_index")) >= 0 or _fighting() or INPUT_OWNER.current(_tree) != null:
+		awake_full_hp = awake_full_hp and not bool(member.get("resting")) and not bool(member.get("fainted")) \
+			and float(member.get("hp")) >= float(member.get("max_hp")) - 0.01
+		caps_unchanged = caps_unchanged and caps_before.get(str(member.get("uid")), -1) \
+			== ESSENCE.creature_cap(_game.get("local").get("redesign_character"), str(member.get("uid")))
+	var clock_binding_after: bool = is_instance_valid(look) and _tree.current_scene == _world \
+		and _tree.root.get_node_or_null("Game") == _game and _world.get_node_or_null("WorldLook") == look \
+		and look.get_parent() == _world and look.get_script() == preload("res://scripts/world/world_look.gd") \
+		and look.is_in_group("day_cycle") and look.get("_cycle") == cycle \
+		and cycle.get_script() == preload("res://scripts/world/day_cycle.gd")
+	var clock_live_after: bool = clock_binding_after and look.is_processing() \
+		and look.process_mode == Node.PROCESS_MODE_ALWAYS and look.get("_clock_frozen") == false
+	var elapsed_after: float = float(look.get("_elapsed_seconds")) if clock_binding_after else NAN
+	var accum_after: float = float(look.get("_auto_day_accum")) if clock_binding_after else NAN
+	var length_after: float = float(cycle.get("day_length_seconds")) if clock_binding_after else NAN
+	var elapsed_delta := elapsed_after - elapsed_before
+	var clock_values_after: bool = is_finite(elapsed_after) and is_finite(accum_after) \
+		and is_finite(length_after) and length_after == length_before and is_finite(elapsed_delta) \
+		and accum_after >= 0.0 and accum_after < length_before and elapsed_delta >= 0.0 \
+		and (recovered_indices.is_empty() or elapsed_delta > 0.0)
+	var natural_rolls: int = int(floor((accum_before + elapsed_delta) / length_before)) if clock_values_after else -1
+	var expected_accum: float = fposmod(accum_before + elapsed_delta, length_before) if clock_values_after else NAN
+	var day_after := int(_game.get("day"))
+	var day_accounted: bool = clock_values_after and day_after == day_before + natural_rolls
+	var accumulator_accounted: bool = clock_values_after and absf(accum_after - expected_accum) <= 0.000001
+	var clock_after := {"day": day_after, "elapsed": elapsed_after,
+		"accumulator": accum_after, "day_length": length_after}
+	var checks := {"identity_unchanged": retained_five(_initial_ids, _party_ids()),
+		"inventory_unchanged": inventory_before == care._inventory_snapshot(), "xp_unchanged": xp_before == _xp_snapshot(),
+		"caps_unchanged": caps_unchanged, "awake_full_hp": awake_full_hp,
+		"bed_empty": int(bed.call("occupant_index")) < 0, "not_fighting": not _fighting(),
+		"ordinary_input": INPUT_OWNER.current(_tree) == null, "clock_binding": clock_binding_after,
+		"clock_live": clock_live_after, "clock_values": clock_values_after,
+		"day_accounted": day_accounted, "accumulator_accounted": accumulator_accounted}
+	if checks.values().has(false):
 		# Retain the exact failing boundary, not a guessed cause from the
-		# compound label. All original refusal predicates stay unchanged.
+		# compound label. Only naturally accounted day rolls are permitted.
 		_receipt("riverwatch_recovery_guard_refusal", {"identity_unchanged":retained_five(_initial_ids, _party_ids()),
 			"party_before":_initial_ids.duplicate(),"party_after":_party_ids(),
 			"inventory_unchanged":inventory_before == care._inventory_snapshot(),
 			"inventory_before":inventory_before,"inventory_after":care._inventory_snapshot(),
 			"xp_unchanged":xp_before == _xp_snapshot(),"xp_before":xp_before,"xp_after":_xp_snapshot(),
-			"day_unchanged":int(_game.get("day")) == day_before,
-			"day_before":day_before,"day_after":int(_game.get("day")),
-			"clock_before":clock_before,"clock_after":float(_game.get("clock_elapsed_seconds")),
+			"checks":checks,"day_accounted":day_accounted,"natural_day_rolls":natural_rolls,
+			"day_before":day_before,"day_after":day_after,
+			"clock_before":clock_before,"clock_after":clock_after,"expected_accumulator":expected_accum,
+			"carried_clock_before":carried_clock_before,"carried_clock_after":float(_game.get("clock_elapsed_seconds")),
 			"bed_occupant":int(bed.call("occupant_index")),"fighting":_fighting(),
 			"input_owner":str(INPUT_OWNER.current(_tree)),"recovered_indices":recovered_indices,
-			"care_receipts":care.result().receipts,"scope":"Read-only operands; original compound guard still FAIL"})
-		return _fail("Riverwatch HP-only recovery changed earned identity, inventory, XP, day or ordinary input")
+			"care_receipts":care.result().receipts,"scope":"Read-only operands; HP-only and natural-clock guard FAIL"})
+		return _fail("Riverwatch HP-only recovery violated retained state, ordinary input or its accounted natural clock")
 	_receipt("pre_relay_riverwatch_recovery", {"party": _party_hp(), "recovered_indices": recovered_indices,
 		"care_receipts": care.result().receipts, "bed": str(bed.global_position), "join": join,
-		"inventory_unchanged": true, "xp_caps_unchanged": true, "day_unchanged": true,
+		"inventory_unchanged": true, "xp_caps_unchanged": true, "natural_day_rolls": natural_rolls,
+		"clock_before": clock_before, "clock_after": clock_after,
 		"overnight_rest": false, "full_rest_bonus": false})
 	_nav.reset()
 	return await _walk_ground(join)
