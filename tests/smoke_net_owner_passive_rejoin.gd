@@ -104,7 +104,8 @@ func _initialize() -> void:
 			# Existing files naming the changed combat_hud.gd producer.
 			for file: String in ["test_combat_hud_handheld_floors.gd", "test_combat_wind.gd", "test_harness_max_hp.gd",
 				"test_hud_presentation_lifecycle.gd", "test_hud_widgets.gd", "test_level_up_announcement.gd",
-				"test_motion_prefs.gd", "test_world_verb_input_owner_enforcement.gd"]:
+				"test_motion_prefs.gd", "test_world_verb_input_owner_enforcement.gd", "test_input_device.gd",
+				"test_input_glyph_rebinding.gd", "test_input_glyph_verbs.gd", "test_prompt_arbiter.gd", "test_stormwood_dynamo.gd"]:
 				if not selectors.has(file): selectors.append(file)
 		var unit_output: Array = []
 		var unit_code := OS.execute(OS.get_executable_path(), PackedStringArray([

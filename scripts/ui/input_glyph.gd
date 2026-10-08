@@ -339,6 +339,8 @@ static func key_name_for_action(action: String) -> String:
 	if not InputMap.has_action(action):
 		return action
 	for event in InputMap.action_get_events(action):
+		if event is InputEventMouseButton:
+			return event.as_text()
 		var key := event as InputEventKey
 		if key != null:
 			# Godot 4.7 marks a physical binding as "Q - Physical", not the

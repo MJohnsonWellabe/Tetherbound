@@ -8,6 +8,7 @@ extends Control
 const TOKENS := preload("res://scripts/ui/ui_tokens.gd")
 const COMMAND_METER := preload("res://scripts/ui/tether_command_meter.gd")
 const SCREEN := preload("res://scripts/ui/system_screen.gd")
+const GLYPH := preload("res://scripts/ui/input_glyph.gd")
 var _read := Callable()
 var _commands: Control
 var _moves: VBoxContainer
@@ -15,6 +16,7 @@ var _ring: Control
 var _cells: Dictionary = {}
 var _uid := ""
 var _meter_caption: Label
+var _ultimate_button: Label
 
 class UltimateRing extends Control:
 	var fraction := 0.0
@@ -66,7 +68,7 @@ func _ready() -> void:
 	_ring.custom_minimum_size = Vector2(80, 80)
 	ultimate.add_child(_ring)
 	var rb := Label.new()
-	rb.text = "RB"
+	_ultimate_button = rb
 	rb.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	rb.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	rb.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -136,9 +138,11 @@ func refresh(expected_uid: String, using_pad: bool) -> bool:
 	_ring.set("armed", raw.get("ultimate_armed") == true)
 	_ring.set("arm_fraction", clampf(float(raw.get("arm_fraction", 0)), 0, 1))
 	_ring.queue_redraw()
+	var arm_button := GLYPH.pad_button_name_for_action("combat_ultimate_arm") if using_pad else GLYPH.key_name_for_action("combat_ultimate_arm")
+	_ultimate_button.text = arm_button
 	_meter_caption.text = "Ultimate · %d%%\n%s" % [int(clampf(meter / maximum, 0, 1) * 100),
 		"Ultimate unavailable" if raw.get("ultimate_available", true) != true else \
-		"Choose X / Y / B" if raw.get("ultimate_armed") == true else "Ready · Tap RB" if meter >= maximum else "Build with landed hits"]
+		"Choose %s / %s / %s" % [raw.slots.quick.glyph, raw.slots.charged.glyph, raw.slots.utility.glyph] if raw.get("ultimate_armed") == true else "Ready · Tap %s" % arm_button if meter >= maximum else "Build with landed hits"]
 	_commands.call("present", raw.commands, using_pad)
 	for slot: String in _cells:
 		var row: Dictionary = raw.slots[slot]
