@@ -122,7 +122,15 @@ func _read(_policy: String) -> void:
 				_press("combat_quick" if armed else "combat_ultimate_arm")
 				return
 	if masher:
-		if not latched: super._act("MASHER")
+		if not latched:
+			# COMBAT §7: spend an available utility without reading the foe.
+			if _manager.utility_ready() and not bool(_manager.get("_move_awaiting_host")):
+				var creature: RefCounted = _manager.active_creature()
+				var move_id := str(creature.get("move_utility"))
+				if _moves.move(move_id).get("slot") == "utility" and creature.get("known_moves").has(move_id):
+					_press("combat_utility")
+					return
+			super._act("MASHER")
 		return
 	if not latched and telling and seen >= observed and _manager.charged_ready() \
 			and not bool(_wild.call("protected_heavy_committed") if _wild.has_method("protected_heavy_committed") else false) \
