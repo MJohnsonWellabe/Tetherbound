@@ -88,5 +88,61 @@
     "Same original blind visual verdict on the completed night pair. No contact or activation by reviewer."
   ],
   "retained_context": "Original exposed-court improvement/footprint source, typed 106-assertion proof and native pair remain historical accepted bounded evidence. The original residual is broad dark interior with limited stone-joint/material detail; perimeter rooting remains UNASSESSED and is not changed by this material candidate.",
-  "limits": "Source and command approval only. No engine/GPU/import/test/dispatch performed, no pixels judged, no asset acquisition. No whole P2-025/F40/full bar/preset matrix/weather/campaign/co-op/earned/controller/save/performance claim or approval. This OFF candidate must remain unaccepted until required native/original blind proof; visual failure does not authorize a shipping enable."
+  "limits": "Source and command approval only. No engine/GPU/import/test/dispatch performed, no pixels judged, no asset acquisition. No whole P2-025/F40/full bar/preset matrix/weather/campaign/co-op/earned/controller/save/performance claim or approval. This OFF candidate must remain unaccepted until required native/original blind proof; visual failure does not authorize a shipping enable.",
+  "affected_headless_artifact_37830144263": {
+    "reviewed_at_utc": "2026-10-08T19:18:07.334866+00:00",
+    "affected_proof_verdict": "APPROVE",
+    "run_id": 37830144263,
+    "artifact_id": 11572594396,
+    "job_id": 113493078434,
+    "source_commit": "eb72c4bfe67b4bee305c551df6c9fe46427f62b5",
+    "selector": "--only=test_cloudreach_old_wind_observatory_presentation.gd,test_cloudreach_summit_paving.gd",
+    "run_log": ".tmp\\e-observatory-stone-eb-37830144263\\expanded\\run.log",
+    "run_log_sha256": "c30ad7ecf2accca009dbc53cc21bd3cc7b4e352ed7e3f400c7912620eac8983a",
+    "job_log": ".tmp\\e-observatory-stone-eb-37830144263\\job.log",
+    "job_log_sha256": "1a0e7d4c344a48ad453c2d16c6112b1d6e4af46b8cd2e5fe1123bdf89ed5451f",
+    "exit_code_path": ".tmp\\e-observatory-stone-eb-37830144263\\expanded\\exit_code",
+    "actual_checkout_verified": true,
+    "actual_checkout_lines": [
+      272,
+      275
+    ],
+    "engine": "Godot 4.7.stable.official.5b4e0cb0f",
+    "test_files": 2,
+    "test_methods": 7,
+    "assertions": 112,
+    "failed": 0,
+    "exit_code": 0,
+    "elapsed_seconds": 7,
+    "engine_script_errors": 0,
+    "warnings": 0,
+    "completed_methods": [
+      "test_cloudreach_old_wind_observatory_presentation.gd :: test_observatory_config_stays_inside_the_existing_crown",
+      "test_cloudreach_old_wind_observatory_presentation.gd :: test_observatory_dial_paving_candidate_is_scoped_and_keeps_baseline_priority",
+      "test_cloudreach_old_wind_observatory_presentation.gd :: test_observatory_identity_preserves_route_survey_lift_and_pickup_contracts",
+      "test_cloudreach_old_wind_observatory_presentation.gd :: test_observatory_paving_excludes_cover_only_on_its_own_court",
+      "test_cloudreach_old_wind_observatory_presentation.gd :: test_observatory_visual_build_has_a_complete_collisionless_hierarchy",
+      "test_cloudreach_old_wind_observatory_presentation.gd :: test_sighting_tubes_rest_on_mounts_that_stand_on_the_plinth",
+      "test_cloudreach_summit_paving.gd :: test_radial_joints_stop_at_the_arena_deck"
+    ],
+    "source_blob_binding": {
+      "shaders/cloudreach_arena_paving.gdshader": "78a708541dd147caa170c940fdb83d9006ca02dd",
+      "scripts/world/cloudreach_old_wind_observatory_presentation.gd": "c9e6536cf3f2f557a8b4be6f3d2e9e45a5c152ad",
+      "data/config/cloudreach_old_wind_observatory_visual.json": "9823e53d92b9342f0c0446b1f6bba7dd99a477b4",
+      "tests/test_cloudreach_old_wind_observatory_presentation.gd": "b03c63191d278e669d9292acf8a9731c2809c6d8",
+      "tests/test_cloudreach_summit_paving.gd": "bc2649d1703f47bbfe9d02f6348d3559a8487c5a"
+    },
+    "independent_verification": [
+      "Actual job checkout/rev-parse binds the exact eb72 pin; actual invocation matches the two-file selector, and the raw log hash matches the supplied frozen value. Expanded exit_code and actual job terminal agree with raw 0/7s footer.",
+      "Actual raw run and job diagnostic output have no SCRIPT ERROR, ERROR or warnings; workflow grep-command text is not a runtime diagnostic. All seven methods explicitly report ok, with 112 assertions and no failures; no method abort or skipped method is present.",
+      "The new candidate method reaches its ten unconditional assertions: tracked OFF, presentation scope, default OFF, candidate enabled, baseline priority over candidate/config, actual material factory layout/outer radius, authored origin and two installed Texture2D resource bindings. The original Summit outer-joint-radius uniform/mask/material-bound source test explicitly reports ok.",
+      "All original Observatory methods, including typed cover footprint, collisionless hierarchy, crown bounds, identity contracts and instrument contact, explicitly complete. This is the affected selected artifact; earlier accepted 106-assertion/grass/native witnesses were not re-audited."
+    ],
+    "headless_shader_limit": "Headless proof supports script/resource loading, material parameters and shader uniform/source guard inspection only. It does not establish native GPU fragment compilation, rendering, stone-joint visibility or visual quality; Texture2D type checks do not independently inspect texture pixels.",
+    "remaining_gates": [
+      "ROOT-owned actual exact-argv matched native baseline/candidate row24/night Low1080 shader-rendering packets and terminal provenance.",
+      "Original blind visual verdict on completed native pair."
+    ],
+    "limits": "No engine/GPU/import/test/dispatch by reviewer. New native pair remains unstarted in this review, tracked material flag OFF; no blind activation or issue fetch. Prior source/command verdicts preserved. No whole P2-025/F40/fullbar/preset matrix/earned/controller/co-op/save/device/performance acceptance."
+  }
 }
