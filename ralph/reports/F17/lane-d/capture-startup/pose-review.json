@@ -1,0 +1,16 @@
+{
+  "scope": "F17#6 existing paired capture stabilization only; actual capture/visual judgment pending",
+  "source": "a998274d83acc267b9e6523f28783bb0be3b4b9e",
+  "file": "tools/capture_f17_visual.gd::_capture_matrix",
+  "independent_review": {
+    "agent": "/root/f42_visual_review",
+    "verdict": "SOURCE APPROVE",
+    "diff": "Exact24line delta versus cb7ac5c619",
+    "reason": "Same20 ticks now follow idle camera clock; body/yaw reference retained across first120weather+12preset; camera baseline latched once before first view and retained for all later pairs; original .005m/.001rad limits preserved",
+    "preserved": "No extra waits, snap/freeze, product camera, travel, circuit, weather-processing restoration or preset branches changed"
+  },
+  "actual_failure": "dd2 fullscreen native actual1920Forward+/exit1/no operator stop/zero views; failed operand was unretained, so camera scheduling is supported repair hypothesis, not proved sole cause",
+  "logic": "Retained37715360775/art11523616701 test_f17_capture_presets1test7assert0fail/exit0 applies unchanged selection branches only; does not prove async path",
+  "runtime": "ONE changed actual capture pending ROOT native queue; LaneD executes no engine",
+  "limits": "F17#6 OPEN; no visual/earned/device/real-fight/co-op claim"
+}
