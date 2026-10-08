@@ -10,15 +10,44 @@
   "repair": "015e049fe9478622b52b709a80bf2058a0a8259a",
   "review": {
     "reviewer": "b_f20_review",
-    "verdict": "SOURCE APPROVE",
-    "notes": "Optional-heading forward through activate→bound _activate_world→super.activate preserves default movement, budgets and strict arrival guards. No new preload cycle found."
+    "verdict": "FINAL scoped repair APPROVE",
+    "notes": "Optional-heading forward through activate→bound _activate_world→super.activate preserves default movement, budgets and strict arrival guards. No new preload cycle found.",
+    "runtime": "Same original b_f20_review read retained parent+both peer logs/NET_RUN and actual unit packet; APPROVE exact015e two-file repair delta only."
   },
   "integration": {
     "C": "Only four f20_portal_travel signature/bind/super line edits from015e; existing C base optional headings/last_approach already present; do not apply whole B files.",
     "main": "Matching f49 base optional-heading/last_approach delta plus four derived edits; retain all unrelated main and lane hunks. Exact2file015e delta only.",
     "excluded": "UnREADY F46 captures/reader and strict arrival/journal/bounty ancestry; no whole branch landing"
   },
-  "runtime": "Same original two-peer ending smoke dispatched on7f326; actual result/independent review pending, no READY",
+  "runtime": {
+    "run": 37706850881,
+    "source": "7f326043d32441400f7d3a5f0ffe3beef81f05b3",
+    "artifact": 11520980605,
+    "script": "tests/smoke_net_f20_ending.gd",
+    "parent_pass": 48,
+    "parent_fail": 0,
+    "exit": 0,
+    "elapsed_s": 870,
+    "fatal": "",
+    "failures": [],
+    "parent_engine_errors": 0,
+    "parent_script_errors": 0,
+    "peer_engine_errors": [
+      0,
+      0
+    ],
+    "peer_script_errors": [
+      0,
+      0
+    ],
+    "warnings": "Parent unsupported V-Sync; one physics-interpolation deprecation warning per peer.",
+    "findings": [
+      "Both separate stable characters retain their five ordered creature UIDs through personal Home Key use, Grandpa current-team acknowledgements and credits.",
+      "Guest credit-open disconnect/wipe and real production title returning Join restore the same character and five UIDs without overwriting host completion.",
+      "Both disk reload/revisits preserve exactly one personal homecoming_seen and regional_credits_seen receipt and do not replay completed credits."
+    ],
+    "fixture": "Original disclosed post-finale fixture; production UI/controller Skip, ENet and real disk. No earned campaign/fifth audible/newvisual claim."
+  },
   "flags": "none",
   "original_raw": "Original artifact11519182107 raw peer logs and parent run.log retained unchanged",
   "logic": {
@@ -33,5 +62,13 @@
     "elapsed_s": 6,
     "engine_errors": 0,
     "script_errors": 0
-  }
+  },
+  "visual": {
+    "verdict": "Original scoped ending PASS reused unchanged",
+    "source": "2f73f756c2d78569fa43f1d27766da1c812c7e75",
+    "frames": 13,
+    "reviewer": "b_night_visual",
+    "scope": "Visible acknowledgement/credits only; repair alters no UI/art/presentation. Full release Visual Bars remain OPEN."
+  },
+  "disposition": "READY repair ONLY; zero new criteria. C a8b four-line repair installed but C current-production combined ending gate remains pending; no C combined PASS claim."
 }
