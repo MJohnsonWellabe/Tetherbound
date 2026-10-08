@@ -1,0 +1,55 @@
+{
+  "criterion": "F22#2",
+  "criterion_text": "Switching has measurable value: tag-switch combos and type matchups let a switching reader beat a non-switching reader.",
+  "verdict": "APPROVE / MET under explicit owner dependency rule",
+  "authority": {
+    "source": "docs/STATE.md:41",
+    "owner_ruling": "2026-10-05 F22#2 switching value is proven when F24 tag-switch combo lands; F22 closes without it.",
+    "precedence": "Settled owner acceptance rule; no new product or scope decision."
+  },
+  "accepted_dependency": {
+    "criterion": "F24#2",
+    "pr": 568,
+    "url": "https://github.com/MJohnsonWellabe/Tetherbound/pull/568",
+    "merged_at": "2026-10-07T05:45:20Z",
+    "merge_commit": "4bee3bb1b90e288563028bdc53db5aeca98a6e0b",
+    "source_cut": "ea0a22a274",
+    "ancestor_of_reviewed_lane_head": "3f056a4ecd60ffd88667d5db82445c247449b410",
+    "ancestor_command_exit": 0,
+    "original_acceptance": "Original /root/f23_audit whole APPROVE F24#1 and F24#2, accepted in PR568",
+    "reused_proofs": [
+      {
+        "run_id": 37571192608,
+        "proof": "smoke_net_owner_passive_rejoin --prove-tag-combo",
+        "result": "Accepted PASS; both peers see and save one two-creature combo, reload/rejoin covered"
+      },
+      {
+        "run_ids": [
+          37570833940,
+          37570862698,
+          37570892218,
+          37571003084
+        ],
+        "proof": "233 affected files,4shards",
+        "tests": 2307,
+        "failed": 0,
+        "result": "Accepted PASS"
+      },
+      {
+        "proof": "PR568 full-ci gate",
+        "result": "Accepted green in merged PR"
+      }
+    ]
+  },
+  "independent_verdict": {
+    "reviewer": "/root/f23_audit",
+    "original_thread_id": "01a10f41-743d-75d1-8867-bbd0b7df7abf",
+    "resumed_not_replaced": true,
+    "verdict": "APPROVE / MET \u2014 F22#2",
+    "reviewed_lane_head": "3f056a4ecd60ffd88667d5db82445c247449b410",
+    "verified": "PR568 ancestor and accepted F24 Tag-combo proof satisfy explicit owner dependency rule",
+    "blind_judge": "No additional blind judge required for F22#2; F22#3 separately requires one."
+  },
+  "checks": "Reuse accepted dependency proofs under RD-36/RD-37; no repeated passing batch or new engine run. Source behavior and shipping flags unchanged by this evidence.",
+  "limits": "This closes only F22#2 by its settled owner dependency rule. F22#1/#3/#4, other command/utility criteria and shipping gates retain their own proofs."
+}
