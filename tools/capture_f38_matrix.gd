@@ -7,6 +7,13 @@ const F38_PLAN := "res://ralph/reports/R2-F38/capture-definition.json"
 const GRAPHICS := preload("res://scripts/ui/graphics_prefs.gd")
 var _f38_weather := "clear"
 var _f38_preset := "High"
+var _f38_source := ""
+
+
+func _run() -> void:
+	# Retain the initialized native raster in the inherited manifest.
+	await process_frame
+	await super._run()
 
 
 func _parse_args() -> bool:
@@ -14,6 +21,17 @@ func _parse_args() -> bool:
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--f38-preset="):
 			_f38_preset = arg.trim_prefix("--f38-preset=")
+		elif arg.begins_with("--source-commit="):
+			_f38_source = arg.trim_prefix("--source-commit=")
+			if _f38_source.is_empty():
+				push_error("F38 source commit cannot be empty when supplied")
+				return false
+	if not _f38_source.is_empty():
+		var source_pattern := RegEx.new()
+		source_pattern.compile("^[0-9a-f]{40}$")
+		if source_pattern.search(_f38_source) == null:
+			push_error("F38 source commit must be an exact SHA when supplied")
+			return false
 	if not ["Low", "Medium", "High"].has(_f38_preset):
 		push_error("F38 preset must be Low, Medium or High")
 		return false
@@ -60,6 +78,9 @@ func _load_plan() -> bool:
 func _begin_manifest() -> void:
 	super._begin_manifest()
 	_manifest["f38_definition"] = F38_PLAN
+	_manifest["source_commit"] = _f38_source
+	var presentation: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/meadows_catalog_presentation.json"))
+	_manifest["shipping_presentation_enabled"] = bool(presentation.get("enabled", false)) if presentation is Dictionary else false
 	_manifest["preset"] = GRAPHICS.selected()
 	_manifest["renderer"] = RenderingServer.get_current_rendering_method()
 	_manifest["candidate"] = OS.get_cmdline_user_args().has("--f38-candidate")
