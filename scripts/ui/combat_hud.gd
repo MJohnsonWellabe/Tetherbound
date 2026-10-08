@@ -596,6 +596,10 @@ func _process(delta: float) -> void:
 		_system_overlay.hide()
 		var active: RefCounted = _manager.call("active_creature") if _manager.has_method("active_creature") else null
 		if active != null and _system_overlay.call("refresh", str(active.get("uid")), INPUT_GLYPH.using_gamepad()) == true:
+			var charged_id := str(active.get("move_charged"))
+			if _moves != null and _moves.has(charged_id):
+				_system_overlay.call("present_charged_energy", str(active.get("uid")), float(active.get("energy")),
+					float(_moves.move(charged_id).get("energy_cost", 100.0)))
 			_grid_panel.hide()
 			if _tether_meter != null: _tether_meter.hide()
 	_update_capture_reticle()

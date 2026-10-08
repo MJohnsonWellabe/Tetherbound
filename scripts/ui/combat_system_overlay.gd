@@ -36,6 +36,18 @@ func configure(read_local_snapshot: Callable) -> bool:
 	_read = read_local_snapshot
 	return true
 
+## Same local resource already drawn by CombatHUD's ally energy bar. The
+## acknowledged overlay UID must match before replacing the charged fill.
+func present_charged_energy(expected_uid: String, energy: float, required: float) -> bool:
+	if not visible or expected_uid != _uid or expected_uid.is_empty() \
+		or not is_finite(energy) or not is_finite(required) or required <= 0.0:
+		return false
+	var gate: ProgressBar = _cells.charged.cooldown
+	gate.visible = true
+	gate.max_value = required
+	gate.value = clampf(energy, 0.0, required)
+	return true
+
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_anchors_preset(Control.PRESET_FULL_RECT)
