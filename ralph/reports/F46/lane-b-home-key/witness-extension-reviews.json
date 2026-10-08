@@ -44,19 +44,25 @@
       "commit": "43958f19dd0b5004dbea83f1d7382af46216ac05",
       "verdict": "SOURCE APPROVE",
       "scope": "Existing paid Masters endpoint extended through savedACK-before-autosave, live-memory reset, mapped production TitleLoad, natural reopen observer, same original7200ready/300settle, declared retained state and actual Help again; default unchanged",
-      "behavior": "Extended by1c846 paid-receipt guard; live actual37758894767. Prior ad70 Masters component PASS remains separate."
+      "behavior": "Actual37758894767/art11543215251 FAIL: saved Masters ACK absent, live ACK true/mapped Skip passed. TitleLoad/Help not reached; masters-title-load-r1.json retains exact failure."
     },
     {
       "commit": "1c846db631ed690ffb80d5665aaa7547fc7854c4",
       "verdict": "SOURCE APPROVE",
       "scope": "Masters production Title Load retains paid transaction receipts as well as stable character/ordered party/levels/XP/moves/inventory/personal ACK; physical Help after actual reload",
-      "behavior": "Live37758894767; actual durability remains OPEN"
+      "behavior": "Actual37758894767/art11543215251 FAIL: saved Masters ACK absent, live ACK true/mapped Skip passed. TitleLoad/Help not reached; masters-title-load-r1.json retains exact failure."
     },
     {
       "commit": "af08628b4bb0ea4d441a9747c7243fd8fd1de836",
       "verdict": "SOURCE APPROVE",
       "scope": "Existing naturally observed Altar card +original paid one-level spend use the same production TitleLoad endpoint; actual observed-ID, saved-ACK prerequisite, deep paid-receipt tuple, reset/reopen/free-grounded-input and Help-again guards retained",
-      "behavior": "OPEN; queued behind actual Masters TitleLoad37758894767, no repeat of unchanged prior Altar component claimed"
+      "behavior": "Actual Altar TitleLoad remains OPEN; prior component not repeated. Masters durable prerequisite failed before Load."
+    },
+    {
+      "commit": "87731b693c",
+      "verdict": "SOURCE APPROVE",
+      "scope": "Read-only saved flags/last_played/validated bank result diagnostics; original deadlines, ACK/CID/orderedUID predicates and production writes unchanged",
+      "behavior": "Diagnostic only; not rerun and no durability PASS"
     }
   ],
   "logic": {

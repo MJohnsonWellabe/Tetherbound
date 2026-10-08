@@ -1,0 +1,33 @@
+{
+  "criterion": "F46#0",
+  "source": "1c846db631ed690ffb80d5665aaa7547fc7854c4",
+  "run": 37758894767,
+  "artifact": 11543215251,
+  "status": "FAIL",
+  "script": "tests/smoke_f27_altar_spend.gd",
+  "args": "--lesson-masters-witness --lesson-controller-witness --lesson-replay-witness --lesson-skip-line=1 --capture-lessons --lesson-reload-witness",
+  "character_id": "character-bb9c70eec214756a781c79f0fb1436e4",
+  "party_uids": [
+    "creature-fd401158940329d06d12a60754d17fde"
+  ],
+  "paid_levels": "3->10",
+  "water_essence": "120->29",
+  "mapped_input": [
+    "A continues actual line0",
+    "B skips actual line1"
+  ],
+  "live_ack": true,
+  "saved_ack": false,
+  "saved_flags": [
+    "opening:beat:wake",
+    "opening:beat:house",
+    "opening:lesson:altar"
+  ],
+  "saved_last_played": "2026-10-08T10:02:17",
+  "receipt_elapsed_ms": 32269,
+  "engine_script_errors": 0,
+  "cause": "Actual controller completion succeeded; validated production character-bank still lacked masters ACK after original30s receipt deadline. Existing bank.read unwraps save codec correctly. Title Load and Help were not reached.",
+  "retained_scope": "Prior ad70 paid Masters Skip/Help remains separate PASS; this durability extension FAIL does not invalidate or broaden that component.",
+  "next": "Read-only existing witness adds actual saved flags/last_played/validated bank load result without writes or guard/deadline changes. Persistence root cause remains OPEN; no unchanged rerun.",
+  "review": "Original b_f20_review SOURCE APPROVE diagnostic extension; runtime FAIL retained; whole F46 OPEN"
+}
