@@ -394,6 +394,7 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 			var cost := float(preload("res://scripts/combat/tether_commands.gd").config().commands.get(command, {}).get("cost", INF))
 			if command not in ["item_throw", "snare", "rally"] or not is_finite(cost):
 				return {"verdict":"FAIL", "detail":"unknown authored command cost"}
+			var attempts: Array[Dictionary] = []
 			for hit in 8:
 				var snapshot: Dictionary = manager.tether_command_snapshot()
 				if float(snapshot.get("meter", 0.0)) >= cost: break
@@ -405,10 +406,59 @@ func _tonic_step(action: String, args: Dictionary) -> Dictionary:
 				body.global_position = target.global_position + Vector3(0, 0, 3.0)
 				body.face_towards(target.global_position)
 				for frame in 15: await physics_frame
+				# Observe immediately before the existing strike step. Its unchanged
+				# readiness wait may precede physical injection; this is not a host queue.
+				var id := str(manager.encounter_id())
+				var host: RefCounted = director.get("_encounter_host")
+				var host_local: bool = director.call("_is_host") == true and host != null
+				var pending: Dictionary = {"observed_ms":Time.get_ticks_msec(), "phase":"before_strike_step",
+					"host_local":host_local, "host_queues_available":host_local,
+					"vitals_pending_local":director.call("ordinary_actor_vitals_pending", id),
+					"quick_ready":manager.quick_ready(), "input_available":manager.combat_input_available(),
+					"move_awaiting_host":manager.get("_move_awaiting_host"), "proposals":[], "actors":[]}
+				for original: Dictionary in (director.get("_ordinary_actor_vitals_proposals") as Dictionary).values():
+					if original.get("encounter_id") != id: continue
+					var proposal: Dictionary = original.get("proposal", {})
+					pending.proposals.append({"action_id":str(proposal.get("action_id", "")),
+						"committed":original.get("committed"), "presented":original.get("presented"),
+						"receipt_id":str(proposal.get("settlement_receipt", {}).get("receipt_id", ""))})
+				var record: Dictionary = host.call("record", id) if host_local else director.get("_encounter")
+				pending["actors_scope"] = "host_record" if host_local else "received_record"
+				var participants: Array = record.get("participants", {}).values()
+				participants.append_array(record.get("retained_actor_participants", {}).values())
+				for participant: Dictionary in participants:
+					for uid: String in participant.get("actor_vitals", {}):
+						var actor: Dictionary = participant.actor_vitals[uid]
+						pending.actors.append({"creature_uid":uid, "revision":actor.get("revision"),
+							"settled_revision":actor.get("settled_revision")})
+				if host_local:
+					pending["host_actor_vitals"] = []
+					for actor: Dictionary in host.call("pending_actor_vitals", id):
+						pending.host_actor_vitals.append({"creature_uid":actor.get("creature_uid"),
+							"revision":actor.get("revision"), "settled_revision":actor.get("settled_revision")})
+				else:
+					pending["host_actor_vitals"] = "unavailable: remote host"
+				var observation: Dictionary = {"attempt":hit + 1, "pending_before_input":pending,
+					"meter_before":float(manager.tether_command_snapshot().get("meter", 0.0)),
+					"foe_hp_before":float(manager.enemy().hp) if manager.enemy() != null else -1.0,
+					"refusal_before":(manager.get("last_encounter_refusal") as Dictionary).duplicate(true)}
+				attempts.append(observation)
 				var strike: Dictionary = await _step_strike({"facing":[0,0,-1], "settle":90})
-				if strike.get("verdict") != "PASS": return strike
+				var strike_data: Dictionary = strike.get("data", {})
+				observation["strike"] = {"verdict":str(strike.get("verdict", "")), "reported_ok":strike_data.get("ok"),
+					"code":str(strike_data.get("code", "")), "submitted_action":strike_data.get("submitted_action")}
+				observation["meter_after"] = float(manager.tether_command_snapshot().get("meter", 0.0))
+				observation["foe_hp_after"] = float(manager.enemy().hp) if manager.enemy() != null else -1.0
+				observation["refusal_after"] = (manager.get("last_encounter_refusal") as Dictionary).duplicate(true)
+				observation["refusal_unchanged"] = observation.refusal_after == observation.refusal_before
+				if strike.get("verdict") != "PASS":
+					strike_data["attempts"] = attempts
+					strike["data"] = strike_data
+					return strike
 			if float(manager.tether_command_snapshot().get("meter", 0.0)) < cost:
-				return {"verdict":"FAIL", "detail":"eight accepted quick attempts did not earn %s meter (%s required)" % [command, cost]}
+				print("COMMAND precast observation: ", JSON.stringify({"command":command, "cost":cost, "attempts":attempts}))
+				return {"verdict":"FAIL", "detail":"eight accepted quick attempts did not earn %s meter (%s required)" % [command, cost],
+					"data":{"command":command, "cost":cost, "attempts":attempts}}
 			var hud: Node = director.get_parent().get_node_or_null("CombatHUD")
 			var view: Dictionary = manager.new_system_combat_snapshot()
 			var active: RefCounted = manager.active_creature()
