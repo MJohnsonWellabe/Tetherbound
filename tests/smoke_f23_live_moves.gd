@@ -25,6 +25,8 @@ const HUD := preload("res://scenes/combat/combat_hud.tscn")
 const ULTIMATES := preload("res://scripts/vfx/ultimates/ultimate_library.gd")
 const MATH := preload("res://scripts/combat/combat_math.gd")
 const MOVE_LIBRARY := preload("res://scripts/vfx/move_effect_library.gd")
+const TEACHING := preload("res://scripts/creatures/teaching.gd")
+const TRAINERS := preload("res://scripts/world/trainer_npc.gd")
 
 class FixtureGame extends SAVE.FixtureGame:
 	var party: RefCounted:
@@ -83,6 +85,11 @@ var _prove_library_arrival := false
 var _arrival_records: Dictionary = {}
 var _captured_library_slots: Dictionary = {}
 var _pending_library_captures := 0
+var _prove_utility := ""
+var _saved_live_moves: Array = []
+var _prove_canonical_wild := false
+var _saved_actor_vitals: Dictionary = {}
+var _saved_autoload_game: Node
 
 func _init() -> void:
 	_run.call_deferred()
@@ -106,6 +113,7 @@ func _run() -> void:
 	if _prove_library_arrival: MOVE_LIBRARY.config()["enabled"] = true
 	_prove_mastery_transition = OS.get_cmdline_user_args().has("--prove-mastery-transition")
 	for arg: String in OS.get_cmdline_user_args():
+		if arg.begins_with("--prove-utility="): _prove_utility = arg.trim_prefix("--prove-utility=")
 		if arg.begins_with("--capture-dir="): _capture_dir = arg.trim_prefix("--capture-dir=")
 		if arg.begins_with("--ultimate-prior-uses="):
 			var prior := arg.trim_prefix("--ultimate-prior-uses=")
@@ -122,6 +130,16 @@ func _run() -> void:
 		candidate.enabled = true
 		ULTIMATES._config = candidate
 	_check(MATH.config().get("actor_vitals", {}).get("runtime_enabled") == false, "actor_vitals gate must remain off")
+	_prove_canonical_wild = OS.get_cmdline_user_args().has("--prove-canonical-wild")
+	_check(not _prove_canonical_wild or _prove_utility == "heal_pulse", "canonical wild selector requires the bounded Heal proof")
+	_saved_actor_vitals = MATH.config().actor_vitals.duplicate(true)
+	if _prove_canonical_wild:
+		MATH.config().actor_vitals = _saved_actor_vitals.duplicate(true)
+		MATH.config().actor_vitals.runtime_enabled = true # Existing process-local simulation path; shipping remains unchanged.
+	_check(_prove_utility.is_empty() or _prove_utility in ["heal_pulse", "dash_strike"], "bounded authored utility selector")
+	_saved_live_moves = MATH.config().move_commit.live_moves.duplicate()
+	if not _prove_utility.is_empty() and not MATH.config().move_commit.live_moves.has(_prove_utility):
+		MATH.config().move_commit.live_moves.append(_prove_utility) # Process-local candidate; shipping remains unchanged.
 	_check(_capture_dir.is_empty() or DisplayServer.get_name() != "headless", "render capture requires an actual display")
 	if not _errors.is_empty():
 		_finish()
@@ -132,6 +150,81 @@ func _run() -> void:
 		_finish()
 		return
 	await process_frame
+	if not _prove_utility.is_empty():
+		var hp_before: float = _creature.hp
+		var foe_before: float = _enemy.hp
+		var wind_before: float = _manager.wind_value()
+		var position_before: Vector3 = _ally.global_position
+		var old_world := FileAccess.get_file_as_bytes(_writer.world_store.path_for("resource-slot"))
+		var old_owner := FileAccess.get_file_as_bytes(_writer.character_store.path_for(DATA.CHARACTER))
+		if _prove_utility == "heal_pulse": _writer.refuse_world = true
+		await _wait_ready()
+		await _button(JOY_BUTTON_B, true)
+		await _button(JOY_BUTTON_B, false)
+		var wind_after_start: float = _manager.wind_value()
+		if _prove_utility == "heal_pulse":
+			_director.call("_retry_ordinary_actor_vitals")
+			_check(is_equal_approx(_creature.hp, hp_before) and is_equal_approx(_enemy.hp, foe_before),
+				"refused Heal world save publishes no HP change")
+			_check(FileAccess.get_file_as_bytes(_writer.world_store.path_for("resource-slot")) == old_world
+				and FileAccess.get_file_as_bytes(_writer.character_store.path_for(DATA.CHARACTER)) == old_owner,
+				"refused Heal save preserves both original disk records")
+			_writer.refuse_world = false
+		var until := Time.get_ticks_msec() + 5000
+		while Time.get_ticks_msec() < until:
+			_director.call("_retry_ordinary_actor_vitals")
+			if (_prove_utility == "heal_pulse" and _creature.hp > hp_before) or (_prove_utility == "dash_strike" and not _impacts.is_empty()): break
+			await process_frame
+		var accepted: Dictionary = _host.move_commit(_id, 1)
+		var proposals: Dictionary = _director.get("_ordinary_actor_vitals_proposals")
+		print("F23_UTILITY_OPERANDS " + JSON.stringify({"utility": _prove_utility, "accepted": accepted,
+			"proposals": proposals, "hp_before": hp_before, "hp_after": _creature.hp,
+			"foe_before": foe_before, "foe_after": _enemy.hp, "wind_before": wind_before,
+			"wind_after": _manager.wind_value(), "wind_after_start": wind_after_start,
+			"attacker_radius": _ally.call("body_radius"), "target_radius": _wild.call("body_radius"),
+			"attacker_safe_margin": _ally.get("safe_margin"), "target_safe_margin": _wild.get("safe_margin"),
+			"world_deliveries": _game.world.reward_deliveries}))
+		_check((_manager.wind_value() if _prove_utility == "heal_pulse" else wind_after_start) < wind_before, "mounted utility spends Wind")
+		if _prove_utility == "heal_pulse":
+			_check(_creature.hp > hp_before and _creature.hp <= _creature.max_hp, "saved mounted Heal increases only owned living HP")
+			_check(is_equal_approx(_enemy.hp, foe_before) and _impacts.is_empty(), "Heal has no hostile damage impact")
+			_check(proposals.size() == 1 and proposals.values()[0].get("presented") == true and proposals.values()[0].get("committed") == true,
+				"real Heal original completes saved owner settlement and presentation")
+			if proposals.size() == 1:
+				var original: Dictionary = proposals.values()[0]
+				var proposal: Dictionary = original.proposal
+				var receipt: Dictionary = proposal.settlement_receipt
+				var bundle: Dictionary = original.heal_bundle
+				var delivery_id: String = preload("res://scripts/net/actor_vitals_delivery.gd").delivery_id("resource-namespace", DATA.CHARACTER, str(_creature.uid))
+				var row: Dictionary = _game.world.reward_deliveries.get(delivery_id, {})
+				var marker: Dictionary = _game.local.satchel_escrow.get(delivery_id, {})
+				_check(bundle.get("move_id") == _prove_utility and bundle.get("peer_id") == 1 and bundle.get("encounter_id") == _id
+					and bundle.get("vitals_proposal") == proposal and original.get("heal_verdict", {}).get("ok") == true,
+					"physical B retains the exact accepted typed Heal original")
+				_check(proposal.get("creature_uid") == str(_creature.uid) and proposal.get("body_generation") == original.binding.actor_generation
+					and original.binding.body_instance_id == _ally.get_instance_id() and receipt.get("encounter_id") == _id,
+					"Heal receipt binds the actual canonical owned actor and body generation")
+				_check(row.get("status") == "accepted" and marker.get("status") == "settled"
+					and row.get("receipt") == receipt and marker.get("receipt") == receipt,
+					"exact Heal receipt is accepted in world and settled on owner")
+		else:
+			_check(accepted.get("slot") == "utility" and accepted.get("move_id") == _prove_utility,
+				"physical B freezes the legally equipped Dash on the real host")
+			var sweep: Dictionary = accepted.get("dash_resolution", {}).get("receipt", {})
+			_check(sweep.get("hit") == true and sweep.get("action_id") == accepted.get("action_id")
+				and sweep.get("binding") == accepted.get("binding") and sweep.get("target_uid") == str(_enemy.uid)
+				and sweep.get("target_generation") == accepted.get("utility_opponent", {}).get("body_generation")
+				and sweep.get("target_body_instance_id") == _wild.get_instance_id()
+				and sweep.get("collider_instance_id") == _wild.get_instance_id()
+				and sweep.get("contact") is Vector3 and (sweep.contact as Vector3).is_finite(),
+				"Dash sweep receipt binds the accepted action, attacker and actual opponent body")
+			_check(_impacts.size() == 1 and _enemy.hp < foe_before, "Dash lands one hostile HP debit")
+			_check(_ally.global_position.distance_to(position_before) > 0.0 and _ally.global_position.distance_to(position_before) <= 6.001,
+				"Dash sweeps a supported advance within six metres")
+		await _wait_ready()
+		_check(MATH.config().get("actor_vitals", {}).get("runtime_enabled") == _prove_canonical_wild, "mounted utilities preserve the selected process-local actor_vitals gate")
+		_finish()
+		return
 	var shown_meter: ProgressBar = _hud.get("_ultimate_meter")
 	var shown_readout: RichTextLabel = _hud.get("_ultimate_readout")
 	_check(shown_meter != null and shown_readout != null, "mounted actual CombatHUD creates its Ultimate controls")
@@ -354,6 +447,11 @@ func _run() -> void:
 
 func _setup() -> void:
 	_directory = "user://f23_live_%s/" % Crypto.new().generate_random_bytes(12).hex_encode()
+	if _prove_canonical_wild:
+		# Canonical admission resolves /root/Game. Keep the original autoload
+		# intact off-tree while this disclosed production-node fixture owns that path.
+		_saved_autoload_game = root.get_node_or_null(^"Game")
+		if _saved_autoload_game != null: root.remove_child(_saved_autoload_game)
 	_world = Node3D.new()
 	_world.name = "F23LiveStage"
 	root.add_child(_world)
@@ -363,16 +461,28 @@ func _setup() -> void:
 	_game.name = "Game"
 	_game.local = fixture._player()
 	_game.local.party.clear()
-	_creature = SPECIES.spawn("bramblebun")
-	_creature.set_level(5, PROGRESSION.config())
-	_seed_prior_mastery("snare", 75)
-	_seed_prior_mastery("ultimate_ground_current", _ultimate_prior_uses)
+	var species := "galewisp" if _prove_utility == "heal_pulse" else ("ripplet" if _prove_utility == "dash_strike" else "bramblebun")
+	_creature = SPECIES.spawn(species)
+	_creature.set_level(15 if _prove_utility == "heal_pulse" else 5, PROGRESSION.config())
+	if _prove_utility.is_empty():
+		_seed_prior_mastery("snare", 75)
+		_seed_prior_mastery("ultimate_ground_current", _ultimate_prior_uses)
+	else:
+		TEACHING.refresh_known_moves(_creature)
+		_check(_creature.known_moves.has(_prove_utility), "utility is learned from the authored species level")
+		_creature.move_utility = _prove_utility
+		if _prove_utility == "heal_pulse": _creature.hp = _creature.max_hp * 0.5 # Disclosed pre-admission injury; never edit live HP.
 	_game.local.party.add(_creature)
+	if not _prove_utility.is_empty():
+		var saved: Dictionary = _game.local.save_data().party[0]
+		_check(TEACHING.stage_saved_loadout(saved, TEACHING.allowed_saved_moves(saved, {}), preload("res://scripts/creatures/move_db.gd").new()).get("ok") == true,
+			"selected fixture loadout passes real saved-loadout validation")
 	_game.world = fixture._world()
 	root.add_child(_game)
 	_session = FixtureSession.new()
 	_session.name = "Session"
 	_session.fixture = _game
+	if _prove_canonical_wild: _session.set("_altar_epoch", "resource-epoch") # Same epoch used by the inherited fixture's real save transactions.
 	_game.session = _session
 	_authority = AUTHORITY.new()
 	_session.set("_character_authority", _authority)
@@ -392,14 +502,15 @@ func _setup() -> void:
 	_check(admission.get("ok") == true, "canonical Bramblebun admission: " + str(admission))
 	_check(_writer.save_world_prepared(_game, "resource-slot"), "initial world disk write")
 	_check(_writer.save_character_prepared(_game, DATA.CHARACTER), "initial owner disk write")
-	_ally = _body(FOLLOWER, "bramblebun", Vector3(-2.0, 0, 0))
+	_ally = _body(FOLLOWER, species, Vector3(-2.0, 0, 0))
 	_ally.set("owner_peer_id", 1)
-	_wild = _body(WILD, "staticub", Vector3(2.0, 0, 0))
-	_enemy = SPECIES.spawn("staticub")
+	var trainer: Dictionary = TRAINERS.trainer("practice_trainer") if not _prove_utility.is_empty() and not _prove_canonical_wild else {}
+	_enemy = TRAINERS.creature_for(trainer.team[0]) if not trainer.is_empty() else SPECIES.spawn("staticub")
+	_wild = _body(WILD, str(_enemy.species_id), Vector3(2.0, 0, 0))
 	_enemy.max_hp = 600.0 # Disclosed long-lived named target; no in-flight HP edits.
 	_enemy.hp = 600.0
 	_wild.set("instance", _enemy)
-	_wild.set("trainer_owned", true)
+	_wild.set("trainer_owned", not _prove_canonical_wild)
 	_wild.call("set_engaged", true, _ally)
 	_wild.set("_intent", preload("res://scripts/combat/combat_ai.gd").Intent.TELEGRAPH)
 	_wild.set("_selected_attack", {"heavy": true, "telegraph": 1.1})
@@ -434,19 +545,56 @@ func _setup() -> void:
 	_director.set("_ally", _creature)
 	_director.set("_ally_body", _ally)
 	_director.set("_engaged_with", _wild)
+	if not trainer.is_empty():
+		_director.set("_trainer_spec", trainer)
 	_director.call("_note_deployment_identity", 1, DATA.CHARACTER, str(_creature.uid))
 	_director.call("_ensure_encounter_arbiters")
 	_host = _director.get("_encounter_host")
 	var target: Vector3 = _wild.call("centre")
-	var rec: Dictionary = _host.open(1, "meadows", "trainer", {"species_id": "staticub",
+	var opponent := {"species_id": str(_enemy.species_id),
 		"creature_uid": _enemy.uid, "hp": _enemy.hp, "hp_max": _enemy.max_hp,
-		"position": [target.x, target.y, target.z]}, str(_creature.uid), DATA.CHARACTER)
-	_id = rec.encounter_id
-	_director.set("_encounter", rec)
-	_manager.call("bind_encounter", _director, _id, "trainer")
+		"position": [target.x, target.y, target.z]}
+	if not trainer.is_empty():
+		opponent["owner_npc"] = trainer.id
+	if _prove_utility == "dash_strike":
+		# The one static opponent body is generation one. Carry its actual card,
+		# as the production trainer send-out does, so Dash freezes this UID.
+		opponent["card"] = preload("res://scripts/save/water_capture_codec.gd").encode(_enemy)
+		opponent["body_generation"] = 1
+	if _prove_canonical_wild:
+		var canonical: Dictionary = _director.call("_canonical_wild_start_state", _wild)
+		print("F23_CANONICAL_ADMISSION " + JSON.stringify({"canonical": canonical,
+			"actor_vitals": MATH.config().actor_vitals,
+			"adapter_exists": ResourceLoader.exists(DIRECTOR.WILD_VICTORY_ADAPTER_PATH),
+			"mounted_game_matches": _director.get_node_or_null(^"/root/Game") == _game,
+			"mounted_session_matches": _game.session == _session,
+			"context": _session.call("_host_wild_training_context"),
+			"admitted": _session.call("admitted_character_state", 1),
+			"uid": str(_creature.uid), "body_instance_id": _ally.get_instance_id()}))
+		_check(canonical.get("enabled") == true and canonical.get("ready") == true, "real canonical wild preflight admits the owned living actor")
+		_director.call("_open_encounter_if_networked", _wild, false)
+		var rec: Dictionary = _director.get("_encounter")
+		_id = str(rec.get("encounter_id", ""))
+		_check(not _id.is_empty() and rec.get("kind") == "wild" and rec.get("opponent", {}).get("owner_npc") == "", "production wild opener creates a wild encounter without trainer ownership")
+		_check(_director.call("uses_wild_actor_vitals", _id) == true and _director.call("uses_durable_trainer_rewards", _id) == false, "mounted wild Heal uses only the actual wild saved-vitals owner")
+		var runtime: Node = _director.call("_shared_host_fight", _id)
+		_check(runtime != null and runtime.call("body") == _wild and runtime.get_meta(&"canonical_wild_context", {}) == canonical.get("context"), "actual shared wild simulation retains its original epoch/world context")
+		if runtime != null: runtime.set_physics_process(false) # Existing static-opponent fixture; no autonomous damage during the save-refusal witness.
+	else:
+		var rec: Dictionary = _host.open(1, "meadows", "trainer", opponent, str(_creature.uid), DATA.CHARACTER)
+		_id = rec.encounter_id
+		_director.set("_encounter", rec)
+		_manager.call("bind_encounter", _director, _id, "trainer")
+	if not _prove_utility.is_empty() and not _prove_canonical_wild:
+		_check(_director.call("_install_ordinary_combat_reward_owner", _id) == true, "real authored trainer owner installer admits the mounted fixture")
+		_check(_director.call("uses_durable_trainer_rewards", _id) == true, "mounted utility uses the real durable trainer owner")
 	_manager.connect("attack_launched", _on_launch)
 	_manager.connect("impact_confirmed", _on_impact)
 	_capture_stage()
+	if _prove_utility == "dash_strike":
+		_manager.call("_open_arena")
+		_ally.set("arena", _manager.get("_arena"))
+		_ally.call("set_following", false)
 	_hud = HUD.instantiate()
 	_hud.set("manager_path", NodePath("../CombatManager"))
 	_hud.set("director_path", NodePath("../EncounterDirector"))
@@ -647,6 +795,15 @@ func _capture_stage() -> void:
 	material.roughness = 1.0
 	floor.material_override = material
 	_world.add_child(floor)
+	if _prove_utility == "dash_strike":
+		var support := StaticBody3D.new()
+		var collision := CollisionShape3D.new()
+		var box := BoxShape3D.new()
+		box.size = Vector3(35, 0.2, 35)
+		collision.shape = box
+		collision.position.y = -0.1
+		support.add_child(collision)
+		_world.add_child(support)
 	var light := DirectionalLight3D.new()
 	light.rotation_degrees = Vector3(-55, -25, 0)
 	light.light_energy = 1.8
@@ -701,6 +858,10 @@ func _apply_saved_mastery(event: Dictionary, move_id: String, initial: int) -> v
 func _finish() -> void:
 	ULTIMATES._config = _saved_visual_config
 	MOVE_LIBRARY.config()["enabled"] = _saved_library_enabled
+	MATH.config().move_commit.live_moves = _saved_live_moves
+	if not _saved_actor_vitals.is_empty(): MATH.config().actor_vitals = _saved_actor_vitals
+	if _prove_canonical_wild:
+		_check(MATH.config().get("actor_vitals", {}).get("runtime_enabled") == false, "canonical wild proof restores the original shipping-OFF actor_vitals gate")
 	for button: JoyButton in [JOY_BUTTON_X, JOY_BUTTON_Y, JOY_BUTTON_B, JOY_BUTTON_A, JOY_BUTTON_RIGHT_SHOULDER]:
 		var event := InputEventJoypadButton.new()
 		event.button_index = button
@@ -710,9 +871,11 @@ func _finish() -> void:
 		"launches": _launches.size(), "impacts": _impacts.size(), "captures": _captures,
 		"visual_gate_override": OS.get_cmdline_user_args().has("--enable-ultimate-visual"),
 		"library_arrival_override": _prove_library_arrival, "arrival_records": _arrival_records,
+		"canonical_wild_override": _prove_canonical_wild,
 		"claim": "focused fixture; no campaign, co-op, device or visual acceptance"}))
 	if is_instance_valid(_world): _world.free()
 	if is_instance_valid(_session): _session.free()
 	if is_instance_valid(_game): _game.free()
+	if is_instance_valid(_saved_autoload_game): root.add_child(_saved_autoload_game)
 	if not _directory.is_empty(): preload("res://tests/helpers/split_save_fixture.gd").wipe(_directory)
 	quit(0 if _errors.is_empty() else 1)

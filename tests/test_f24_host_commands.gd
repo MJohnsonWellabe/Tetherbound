@@ -125,9 +125,11 @@ func test_snare_canonical_status_has_one_shared_slow_and_own_catch_grant() -> vo
 
 func test_equipped_authored_pouches_bind_each_upgrade_on_the_same_participant() -> void:
 	var ids := ["", "rootiron_command_pouch", "tidesteel_command_pouch", "skyglass_command_pouch", "stormglass_command_pouch"]
+	var opponent: Dictionary = host.record(id).opponent.duplicate(true)
+	var items: Dictionary = preload("res://scripts/world/death_satchel_rules.gd").db().get("_items")
 	for tier: int in 5:
 		var authority := HOST.new(1)
-		var record: Dictionary = authority.open(1, "meadows", "wild", {"hp": 100.0, "hp_max": 100.0}, "creature_a", "owner_a")
+		var record: Dictionary = authority.open(1, "meadows", "wild", opponent.duplicate(true), "creature_a", "owner_a")
 		var admitted := _admitted()
 		admitted.equipment.backpack = ids[tier]
 		authority.bind_tether_commands(record.encounter_id, 1, admitted)
@@ -135,6 +137,29 @@ func test_equipped_authored_pouches_bind_each_upgrade_on_the_same_participant() 
 		var profile := COMMANDS.tier_profile(tier)
 		assert_true(float(profile.meter_rate) >= 1.0)
 		assert_true(int(profile.pouch_size) >= 1 and int(profile.pouch_size) <= 3)
+		assert_true(COMMANDS.stage_pouch_assignment([], int(profile.pouch_size) - 1, "potion_small", tier, items, true).get("ok") == true, "last equipped-tier pouch slot is usable")
+		assert_false(COMMANDS.stage_pouch_assignment([], int(profile.pouch_size), "potion_small", tier, items, true).get("ok") == true, "next pouch slot stays unavailable")
+		host = authority
+		id = str(record.encounter_id)
+		# Meter credit requires the production frozen actor binding, as in the
+		# existing single-tier meter proof; the generic _start helper omits it.
+		var frozen := MASTERY.freeze_action(MASTERY.owned_record(_owned()), "quick",
+			{"character_id": "owner_a", "creature_uid": "creature_a", "encounter_id": id, "generation": 1, "action": 1}, [], MOVES.load_default())
+		assert_true(frozen.ok)
+		var move := MANAGER.host_move_profile(MOVES.load_default(), "player_quick", "pebble_toss", 0.5, 0.5, 1.0, 0.0, frozen.move)
+		assert_true(host.authorize_move_start({"encounter_id": id, "action": 1, "slot": "quick"}, 1, _owned(), _binding(), move, WIND, 1000).ok)
+		assert_true(_arrive(1, 1300).ok)
+		host.credit_move_hit(id, 1, 1, 2.0, "opponent", 200.0, 1, 100.0)
+		assert_eq(_command_pool().meter, 8.0 * float(profile.meter_rate), "actual accepted quick credits the equipped tier once")
+		host.credit_move_hit(id, 1, 1, 2.0, "opponent", 200.0, 1, 100.0)
+		assert_eq(_command_pool().meter, 8.0 * float(profile.meter_rate), "tier bonus cannot replay")
+		_command_pool().meter = 100.0 # Same disclosed unit meter setup as the existing Snare case.
+		var snare: Dictionary = host.commit_tether_command(COMMANDS.intent(id, 1, 1, "snare"), 1, _command_view(), 2000)
+		assert_true(snare.get("ok") == true, str(snare))
+		var status: Dictionary = host.record(id).opponent.get("tether_snare", {})
+		var modifiers := COMMANDS.snare_modifiers(status, "opponent", 1, "owner_a", 2001)
+		assert_eq(modifiers.movement, profile.movement_multiplier, "actual saved Snare consumer uses the admitted tier")
+		assert_eq(modifiers.catch_bonus, profile.catch_bonus)
 
 func test_rally_can_commit_on_current_owned_deployment_before_its_first_move() -> void:
 	host.bind_tether_commands(id, 1, _admitted())
@@ -466,6 +491,79 @@ func test_pouch_assignment_uses_original_character_journal_and_owner_save_withou
 	var forged_saved := before.duplicate(true)
 	forged_saved.redesign_character.tether_pouch = ["orb_basic"]
 	assert_false(record.errors(forged_saved, "owner_a").is_empty())
+	# The actual Backpack's typed equipment swap shares this same journal,
+	# prepared-save rollback, owner-plan and reconnect ACK protocol.
+	var rules := preload("res://scripts/world/death_satchel_rules.gd")
+	var equip_before := before.duplicate(true)
+	var bag: RefCounted = rules.inventory_from(equip_before.inventory)
+	bag.call("add", "stormglass_command_pouch", 1)
+	equip_before.inventory = rules.slots(bag)
+	equip_before.equipment.backpack = "rootiron_command_pouch"
+	var equip_context := context.duplicate(true)
+	equip_context.source_key = "personal_equipment:owner_a"
+	equip_context.station_kind = "personal_equipment"
+	var equip_intent := {"equip_id": "equip-original", "slot": "backpack", "item_id": "stormglass_command_pouch", "expected_item": "rootiron_command_pouch"}
+	var equip_authority := authority_type.new()
+	assert_true(equip_authority.bind_world("pouch-world"))
+	assert_true(equip_authority.seed_admitted_character(equip_before, "owner_a").ok)
+	var equip_token: Dictionary = equip_authority.stage_character_action("owner_a", 0, "trainer_equip", equip_intent, equip_context)
+	assert_true(equip_token.ok, str(equip_token))
+	if not equip_token.ok: return
+	assert_eq(equip_token.state.equipment.backpack, "stormglass_command_pouch")
+	assert_eq(rules.inventory_from(equip_token.state.inventory).count("stormglass_command_pouch"), 0)
+	assert_eq(rules.inventory_from(equip_token.state.inventory).count("rootiron_command_pouch"), 1)
+	assert_eq(equip_token.state.party, equip_before.party)
+	assert_true(equip_authority.finish_creature_training(equip_token, false))
+	assert_eq(equip_authority.state("owner_a"), equip_before, "failed world save rolls back both worn gear and carried swap")
+	equip_token = equip_authority.stage_character_action("owner_a", 0, "trainer_equip", equip_intent, equip_context)
+	var equip_row: Dictionary = delivery.make_record("pouch-slot", "pouch-world", "pouch-session", equip_token, null, record.errors)
+	assert_false(equip_row.is_empty())
+	if equip_row.is_empty(): return
+	equip_row = codec.parse(codec.stringify(equip_row))
+	assert_true(delivery.valid(equip_row, record.errors, "owner_a", "pouch-world", "pouch-slot"))
+	var equip_rejoined := authority_type.new()
+	assert_true(equip_rejoined.bind_world("pouch-world"))
+	assert_true(equip_rejoined.seed_admitted_character(equip_before, "owner_a").ok)
+	assert_true(equip_rejoined.recover_durable_training("owner_a", {equip_row.delivery_id: equip_row}).ok)
+	assert_false(equip_rejoined.acknowledge_creature_training("owner_a", equip_row), "pending equip cannot ACK before original owner save")
+	var equip_owner := delivery.owner_plan(equip_before, equip_row, record.errors)
+	assert_true(equip_owner.ok and equip_owner.get("requires_owner_save") == true)
+	assert_true(delivery.owner_plan(equip_owner.state, equip_row, record.errors).duplicate)
+	equip_row.status = "accepted"
+	assert_true(equip_rejoined.acknowledge_creature_training("owner_a", equip_row))
+	assert_eq(equip_rejoined.state("owner_a").equipment.backpack, "stormglass_command_pouch")
+	assert_false(equip_rejoined.stage_character_action("owner_a", 0, "trainer_equip", equip_intent, equip_context).ok)
+	# A later untyped local snapshot still cannot change admitted gear.
+	var untyped: Dictionary = equip_owner.state.duplicate(true)
+	untyped.equipment.backpack = "tidesteel_command_pouch"
+	assert_true(equip_rejoined.refresh_host_local(untyped, "owner_a").ok)
+	assert_eq(equip_rejoined.state("owner_a").equipment.backpack, "stormglass_command_pouch")
+	for defect: String in ["combat", "foreign_owner", "source", "expected", "slot", "missing", "extra", "authorization"]:
+		var forged := equip_intent.duplicate(true)
+		var view := equip_context.duplicate(true)
+		match defect:
+			"combat": view.in_combat = true
+			"foreign_owner": view.character_id = "owner_b"
+			"source": view.source_key = "personal_equipment:owner_b"
+			"expected": forged.expected_item = ""
+			"slot": forged.slot = "helmet"
+			"missing": forged.item_id = "tidesteel_command_pouch"
+			"extra": forged.tier = 4
+			"authorization": view.foundation_runtime_authorized = false
+		assert_false(actions.stage(equip_before, 0, "trainer_equip", forged, view, record.errors).ok, defect)
+	var full := equip_before.duplicate(true)
+	var full_bag: RefCounted = rules.inventory_from([])
+	for index in full_bag.slot_count(): full_bag.set_slot(index, {"id": "wood", "n": 1})
+	full.inventory = rules.slots(full_bag)
+	var remove_intent := {"equip_id": "remove-original", "slot": "backpack", "item_id": "", "expected_item": "rootiron_command_pouch"}
+	assert_false(actions.stage(full, 0, "trainer_equip", remove_intent, equip_context, record.errors).ok, "full bag refuses returning worn piece")
+	full_bag.remove("wood", 1)
+	full.inventory = rules.slots(full_bag)
+	var removed := actions.stage(full, 0, "trainer_equip", remove_intent, equip_context, record.errors)
+	assert_true(removed.ok, str(removed))
+	if removed.ok:
+		assert_eq(removed.state.equipment.backpack, "")
+		assert_eq(rules.inventory_from(removed.state.inventory).count("rootiron_command_pouch"), 1)
 
 
 func test_retained_item_ack_preserves_active_body_and_settles_same_v3_decision_once() -> void:

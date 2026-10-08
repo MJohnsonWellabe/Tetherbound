@@ -1,10 +1,10 @@
 {
- "updated": "2026-10-08T12:20Z",
+ "updated": "2026-10-08T14:45Z",
  "headline": [
-  "7:12 AM CT Thu 08 Oct: 159 criteria met on main; A F22#2 in consolidation 12 (160 when it merges).",
-  "5:10–7:10 AM CT: 2 whole criteria READY (D F42#0, merged in #587; A F22#2). C's F31#2 co-op set bounced with 9 failing tests.",
-  "Since the 5:53 AM CT Codex reset: no QUESTION posts. D and E hold the local GPU: E Cloudreach dawn/night 94/96 then Stormward 8/8, F41 context packet running; D Hall 24 stills and F42#2 fallback 1080/720 done.",
-  "Lane A parked F24#4 after two crafted-tier failures and switched to a separate approach; C is fixing the stuck save transaction."
+  "9:26 AM CT Thu 08 Oct: 160 criteria met on main; A F24#4 and F23#2 in consolidation 13 (162 when it merges). A also re-proved F23#1 (already met).",
+  "7:10–9:10 AM CT: 3 whole READYs, all from lane A (F24#4, F23#2, F23#1 re-proof); B, C, D and E closed none.",
+  "Owner 7:44 AM CT: earned segments may start from generated boundary saves. Lane B now runs all 8 post-Warrens segments in parallel on hosted runners.",
+  "Lane C: 5 of the 9 failing tests from PR #586 now pass. D: F42#2 HUD blind judge BLOCK, fixes pushed. E: native GPU work on Cloudreach F40/F41."
  ],
  "batches": [
   {
@@ -510,33 +510,39 @@
    "sha": "pending",
    "state": "In CI",
    "contents": "F22#2 switching value (lane A, evidence; dependency F24#2 already on main)"
+  },
+  {
+   "name": "Consolidation 13",
+   "sha": "pending",
+   "state": "In CI",
+   "contents": "F24#4 crafted command tiers and F23#2 ten guarded utility moves (lane A, with the utility-consumer chain); F23#1 evidence"
   }
  ],
  "lanes": [
   {
    "lane": "tb/codex-a (Codex A: combat, moves, commands)",
-   "now": "F22#2 READY; F24#4 crafted-tier witness parked after two failures, new typed trainer_equip path.",
-   "next": "F24#4 via typed trainer_equip; F23#2 Dash parked."
+   "now": "F24#4, F23#2 and an F23#1 re-proof READY (consolidation 13).",
+   "next": "Next bounded command co-op criterion; Dash fix landed in F23#2."
   },
   {
    "lane": "tb/codex-b (Codex B: earned route, story, ending)",
-   "now": "Ending and Masters runs retained; earned segments on hosted runners.",
-   "next": "F49#0 segments in parallel; F20#1."
+   "now": "All 8 post-Warrens earned segments running in parallel from generated saves.",
+   "next": "Segment results, then F49#0 and F20#1/#3."
   },
   {
    "lane": "tb/codex-c (Codex C: power, homestead, economy, co-op)",
-   "now": "Fixing the F31#2 set: full smoke_menu now passes; Waterward ledger diagnostic still failing.",
-   "next": "Clear the 9 failing tests, re-READY the whole set."
+   "now": "5 of 9 failing tests from PR #586 now pass (title, menu, Waterward, swim, swim-stone late join).",
+   "next": "Remaining 4, then re-READY the whole co-op set."
   },
   {
    "lane": "tb/codex-d (Codex D: Meadows, village, Tidewake visuals)",
-   "now": "Hall 24 native stills judged BLOCK on Medium; F42#2 fallback 1080/720 captured (44+44 frames).",
-   "next": "F42#2 judge and READY."
+   "now": "F42#2 HUD Low capture: blind judge BLOCK (small RB, [jump], roster speck); fixes pushed.",
+   "next": "F42#2 re-capture and judge."
   },
   {
    "lane": "tb/codex-e (Codex E: Cloudreach, Stormwood, art, audio)",
-   "now": "Stormward approach fixed (8/8 views); F41 context packet on the local GPU.",
-   "next": "F40#0 whole matrix and judge; F41 views."
+   "now": "Named-pilot reach fix; Cloudreach F40/F41 packets on the local GPU.",
+   "next": "F40#0 whole matrix judge."
   },
   {
    "lane": "tb/ci-speed (Claude)",

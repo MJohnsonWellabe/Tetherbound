@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-10-08T12:12:21.240100+00:00",
- "main_sha": "ec9a73d7e (PR #587)",
+ "generated_at": "2026-10-08T14:26:28.992113+00:00",
+ "main_sha": "fda4aa178 (PR #588)",
  "batch4_sha": "next batch assembling",
  "rows": [
   {
@@ -1452,9 +1452,9 @@
     {
      "text": "Switching has measurable value: tag-switch combos and type matchups let a switching reader beat a non-switching reader.",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-a 0ed7c6629d (READY #572, 6:17 AM CT 10-08): owner rule STATE.md:41 (switching value proven when F24 tag-switch combo lands); F24#2 landed in PR #568, two-peer Tag-combo run 37571192608 PASS; original f23_audit APPROVE. In consolidation 12.",
+     "evidence": "PR #588 (consolidation 12) merged 2026-10-08 7:13 AM CT: from tb/codex-a 0ed7c6629d (READY #572, 6:17 AM CT 10-08): owner rule STATE.md:41, F24#2 tag-switch combo from PR #568 (run 37571192608 PASS); original f23_audit APPROVE",
      "gap": "Turn on F24 tag combo, then add a switching-reader pilot comparison to the band smoke.",
-     "note": "Landed: Evidenced on tb/codex-a 0ed7c6629d (READY #572, 6:17 AM CT 10-08): owner rule STATE.md:41 (switching value proven when F24 tag-switch combo lands); F24#2 landed in PR #568, two-peer Tag-combo run 37571192608 PASS; original f23_audit APPROVE. In consolidation 12.",
+     "note": "Landed: PR #588 (consolidation 12) merged 2026-10-08 7:13 AM CT: from tb/codex-a 0ed7c6629d (READY #572, 6:17 AM CT 10-08): owner rule STATE.md:41, F24#2 tag-switch combo from PR #568 (run 37571192608 PASS); original f23_audit APPROVE",
      "audit_index": 2
     },
     {
@@ -1508,10 +1508,10 @@
     },
     {
      "text": "At least ten utility moves exist (dash-strike, heal pulse, trap and others) and every role can equip at least two.",
-     "status": "in_progress",
-     "evidence": "data/moves/moves.json (10 utility); test_actor_vitals_authority.gd",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-a 94c757b678 (READY #572, 9:01 AM CT 10-08): ten guarded shipping utilities; two-peer camp role proof 37785611801 PASS 43 checks, affected guard 37786545300 18 tests/469 assertions; original f25_medium_review WHOLE APPROVE. In consolidation 13.",
      "gap": "Enable the utilities; add a per-role equip unit test.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. The data has 10 utilities, but only snare is live (move_commit.live_moves). No test covers per-role equip.",
+     "note": "Landed: Evidenced on tb/codex-a 94c757b678 (READY #572, 9:01 AM CT 10-08): ten guarded shipping utilities; two-peer camp role proof 37785611801 PASS 43 checks, affected guard 37786545300 18 tests/469 assertions; original f25_medium_review WHOLE APPROVE. In consolidation 13.",
      "audit_index": 2
     },
     {
@@ -1589,10 +1589,10 @@
     },
     {
      "text": "Workbench trainer-gear tiers upgrade commands (meter rate, pouch size, snare strength).",
-     "status": "in_progress",
-     "evidence": "tether_commands.json tiers; player_equipment.gd; tether_pouch_row.gd",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-a 1496cb6430 (READY #572, 7:28 AM CT 10-08): crafted-tier engine 37775449228 PASS (four paid Workbench crafts, live tier 4), Backpack controller/disk/Unequip 37775445623 PASS 26 checks, affected unit 37776228174 34 tests/1568 assertions; original f23_audit WHOLE APPROVE. In consolidation 13.",
      "gap": "Enable it; add a unit test of tier effects and a crafted-tier engine witness.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. The command runtime is off (runtime_enabled=false). No test exists.",
+     "note": "Landed: Evidenced on tb/codex-a 1496cb6430 (READY #572, 7:28 AM CT 10-08): crafted-tier engine 37775449228 PASS (four paid Workbench crafts, live tier 4), Backpack controller/disk/Unequip 37775445623 PASS 26 checks, affected unit 37776228174 34 tests/1568 assertions; original f23_audit WHOLE APPROVE. In consolidation 13.",
      "audit_index": 4
     },
     {

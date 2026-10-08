@@ -49,7 +49,7 @@ func _camp_dispatch(action: String, args: Dictionary) -> Dictionary:
 		"camp_place":
 			return await _place(game, float(args.get("away", 20.0)), int(args.get("presses", 1)))
 		"camp_loadout_edit":
-			return await _edit_loadout(game)
+			return await _edit_loadout(game, args)
 		"camp_loadout_view":
 			return _loadout_view(game, str(args.get("character_id", "")), str(args.get("uid", "")))
 	return {"verdict": "ERROR", "detail": "unknown action " + action}
@@ -57,7 +57,7 @@ func _camp_dispatch(action: String, args: Dictionary) -> Dictionary:
 
 ## F23: same camp and granted creature; press the production panel's equip
 ## callback. No direct mutation of moves or admitted character state.
-func _edit_loadout(game: Node) -> Dictionary:
+func _edit_loadout(game: Node, args: Dictionary = {}) -> Dictionary:
 	var camp: Node3D = null
 	var camp_uid := ""
 	for row: Dictionary in game.get("placed_buildings"):
@@ -75,19 +75,28 @@ func _edit_loadout(game: Node) -> Dictionary:
 	for node: Node in game.get_children():
 		if node.get_script() == LOADOUT_PANEL: panel = node
 	if panel == null or panel.get("_shown") != true: return {"verdict": "FAIL", "detail": "camp loadout panel did not open"}
+	if args.has("species"):
+		var selected_uid := ""
+		for member: RefCounted in game.get("party").call("members"):
+			if member.get("species_id") == args.species: selected_uid = str(member.get("uid"))
+		if selected_uid.is_empty():
+			panel.call("close")
+			return {"verdict": "FAIL", "detail": "role representative not owned"}
+		panel.call("_select_owned", selected_uid)
 	var uid: String = panel.get("_uid")
+	var move := str(args.get("move", "quake_ring"))
 	var before := _loadout_view(game, "", uid)
-	if before.card.get("move_utility") == "quake_ring":
+	if before.card.get("move_utility") == move:
 		panel.call("close")
 		return {"verdict": "FAIL", "detail": "utility must actually change", "card": before.card}
 	panel.call("_choose_slot", "utility")
 	for frame: int in 600:
 		if panel.get("_pending_edit") == "" and int(_loadout_view(game, "", uid).card.get("loadout_revision", -1)) == int(before.card.get("loadout_revision", -1)):
-			panel.call("_equip", "quake_ring")
+			panel.call("_equip", move)
 		elif frame % 30 == 0: panel.call("_reconcile_loadout")
 		await physics_frame
 		var current := _loadout_view(game, "", uid)
-		if current.card.get("move_utility") == "quake_ring" and not current.card.get("loadout_last_edit", {}).is_empty() and int(current.card.get("loadout_revision", -1)) == int(before.card.get("loadout_revision", -1)) + 1 and panel.get("_pending_edit") == "":
+		if current.card.get("move_utility") == move and not current.card.get("loadout_last_edit", {}).is_empty() and int(current.card.get("loadout_revision", -1)) == int(before.card.get("loadout_revision", -1)) + 1 and panel.get("_pending_edit") == "":
 			panel.call("close")
 			return current
 	return {"verdict": "FAIL", "detail": "loadout original did not settle", "card": _loadout_view(game, "", uid).card}
