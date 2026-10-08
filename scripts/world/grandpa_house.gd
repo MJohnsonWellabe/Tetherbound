@@ -138,7 +138,8 @@ const COL_FLOOR := Color("#7a5a35")
 
 ## The old reskin table is gone with the primitive shell it painted — walls,
 ## roof and windows are real kit modules now, and the few primitives left
-## (the loft beam and rail) stay flat colour. The floor recipe crops a wood
+## (the loft beam and rail) default to flat colour; the timber-reference
+## candidate can opt into the inspected dark wood band. The floor crops a wood
 ## band instead of sampling the full T_WoodTrim atlas. T_WoodTrim is
 ## a trim ATLAS: across the 4.2m loft beam it sampled its pale plaster
 ## patches and rendered the beam as a blue-grey band in the interior frame,
@@ -564,8 +565,42 @@ func _material(colour: Color) -> StandardMaterial3D:
 							push_warning("Farmhouse board seams unavailable; cropped wood retained")
 				else:
 					push_warning("Farmhouse cropped-band tiling unavailable; original material retained")
+	if colour == COL_TIMBER:
+		_apply_interior_timber_reference_candidate(m)
 	_materials[colour] = m
 	return m
+
+
+func _apply_interior_timber_reference_candidate(material: StandardMaterial3D) -> void:
+	var args := OS.get_cmdline_user_args()
+	var raw: Variant = _house_lighting.get("interior_timber_reference", {})
+	if not raw is Dictionary or "--farmhouse-timber-reference-baseline" in args:
+		return
+	var config := raw as Dictionary
+	if config.get("enabled", false) != true and "--farmhouse-timber-reference-candidate" not in args:
+		return
+	var scale := _furniture_reference_vector(config, "local_scale", Vector3.ZERO)
+	var strength: Variant = config.get("normal_strength", 0.35)
+	if scale.x <= 0.0 or scale.y <= 0.0 or scale.z <= 0.0 \
+		or typeof(strength) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(strength)):
+		return
+	var wood_config: Variant = _house_lighting.get("furniture_reference_wood", {})
+	if not wood_config is Dictionary:
+		return
+	var textures := _furniture_reference_wood_textures(wood_config)
+	if not textures.has("DarkWood"):
+		return
+	var maps: Dictionary = textures.DarkWood
+	material.albedo_color = Color(1.0, 1.0, 1.0, material.albedo_color.a)
+	material.albedo_texture = maps.albedo
+	material.normal_enabled = true
+	material.normal_texture = maps.normal
+	material.normal_scale = clampf(float(strength), 0.0, 1.0)
+	material.uv1_triplanar = true
+	# Keep grain attached to a raked rail when the authored box rotates.
+	material.uv1_world_triplanar = false
+	material.uv1_scale = scale
+	material.uv1_offset = Vector3.ZERO
 
 
 func _floor_band_texture(texture: Texture2D, band_scale: Vector3, band_offset: Vector3, renormalize := false) -> Texture2D:

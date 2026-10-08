@@ -4814,6 +4814,13 @@
       "interior_lighting": {
         "scope": "world_presentation",
         "furniture_wood_lift": 0.0,
+        "interior_timber_reference": {
+          "scope": "farmhouse_COL_TIMBER_loft_beam_and_rails_peer_local_world_presentation_all_presets",
+          "enabled": false,
+          "local_scale": [1.2, 1.2, 1.2],
+          "normal_strength": 0.35,
+          "_comment": "Actual f009 native baseline exposes flat black near loft beam at night. Reuse inspected installed dark longitudinal wood band from furniture_reference_wood and its existing per-house cropped/mip-renormalized cache; no numeric lift/new mesh/texture file/tool/testclass/observer/harness. COL_TIMBER is used only by interior loft beam/rail/raked stair rail/newels/balusters. House-local newly authored material, preserve alpha/roughness/dielectric and geometry/collision/clearances; floor/furniture/KitShell/windows/exterior marker/creature bed/lights unchanged. Local triplanar mapping rotates with raked rails. Process-only --farmhouse-timber-reference-candidate; baseline wins. Shipping OFF pending original source/affected existing proof/ROOT native runtime and blind verdict."
+        },
         "night_ambient_shape": {
           "scope": "farmhouse_interior_opaque_surfaces_peer_local_world_presentation_all_presets",
           "enabled": false,
