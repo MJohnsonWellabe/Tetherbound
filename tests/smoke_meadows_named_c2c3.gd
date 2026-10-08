@@ -91,6 +91,7 @@ var _json := ""
 ## upgrade) in the real Game.local record before each fight; "" = no gear.
 var _gear_tier: String = GEAR.from_args().tier
 var _gear_upgrade: int = GEAR.from_args().upgrade
+var _compare_previous_gear := OS.get_cmdline_user_args().has("--compare-previous-gear")
 
 
 func _init() -> void:
@@ -145,17 +146,37 @@ func _selected(id: String) -> bool:
 
 func _run() -> void:
 	var errors: Array[String] = []
+	var previous_tiers := {"rootiron":"", "tidesteel":"rootiron", "skyglass":"tidesteel", "stormglass":"skyglass"}
+	var gear_tiers: Array[String] = [_gear_tier]
+	if _compare_previous_gear:
+		if not previous_tiers.has(_gear_tier):
+			push_error("--compare-previous-gear requires --gear-tier=rootiron|tidesteel|skyglass|stormglass")
+			quit(1)
+			return
+		gear_tiers.append(str(previous_tiers[_gear_tier]))
 	var cases := _cases(errors)
+	if _compare_previous_gear:
+		var paired_cases: Array[Dictionary] = []
+		for tier: String in gear_tiers:
+			for entry: Dictionary in cases:
+				var paired := entry.duplicate(true)
+				paired["gear_tier"] = tier
+				paired_cases.append(paired)
+		cases = paired_cases
 	var rows: Array[Dictionary] = []
 	var runs: Array[Dictionary] = []
 	var failures := 0
 	for entry in cases:
 		if not _selected(str(entry.id)): continue
+		var run_tier := str(entry.get("gear_tier", _gear_tier))
+		var gear_label := GEAR.label(run_tier, _gear_upgrade)
+		if _compare_previous_gear: print("MEADOWS_C2C3_GEAR %s %s" % [entry.id, gear_label])
 		var party_level := _party_level_override if _party_level_override > 0 else _entry_level(str(entry.band))
 		for starter: String in STARTERS:
 			if not _starter_only.is_empty() and starter != _starter_only: continue
 			var row := {"case": entry.id, "kind": entry.kind, "band": entry.band,
 				"starter": starter, "party_level": party_level, "pilots": {}}
+			if _compare_previous_gear: row["gear"] = gear_label
 			for policy in ["MASHER", "READER"]:
 				var s := {"wins": 0, "lead_cost": [], "party_cost": [], "seconds": [],
 					"lead_faints": 0, "party_wipes": 0, "max_hit": 0.0, "max_hit_by": {},
@@ -178,12 +199,12 @@ func _run() -> void:
 							continue
 						foes.append(foe)
 					if party.size() != 5 or foes.size() != entry.foes.size(): break
-					GEAR.equip(self, party, _gear_tier, _gear_upgrade)
+					GEAR.equip(self, party, run_tier, _gear_upgrade)
 					var pilot := PILOT.new()
 					pilot.context = {"chapter": "meadows", "band": entry.band,
 						"after_south_bridge": entry.kind == "top", "pattern_id": "named_" + str(entry.id)}
-					var result: Dictionary = await pilot.fight(self, party, foes, bool(entry.owned),
-						hash("meadows/%s/%s/%d" % [entry.id, starter, seed_index]),
+					var paired_seed := hash("meadows/%s/%s/%d" % [entry.id, starter, seed_index])
+					var result: Dictionary = await pilot.fight(self, party, foes, bool(entry.owned), paired_seed,
 						# COMBAT §7's reader switches on a real mismatch (coordinator ruling
 						# 2026-10-05: the acceptance pilot); rows stay labelled READER.
 						"SWITCH_READER" if policy == "READER" else policy)
@@ -199,6 +220,9 @@ func _run() -> void:
 					result["case"] = entry.id
 					result["starter"] = starter
 					result["policy"] = policy
+					if _compare_previous_gear:
+						result["gear"] = gear_label
+						result["seed_index"] = seed_index
 					runs.append(result)
 					s.wins += int(result.won)
 					s.lead_cost.append(float(result.lead_lost_frac))
@@ -250,7 +274,15 @@ func _run() -> void:
 				"" if bool(verdict.pass) else " -- " + "; ".join(verdict.reasons)])
 			rows.append(row)
 	if rows.is_empty(): errors.append("no cases matched: %s" % _selection)
-	failures += _chapter_verdict(rows)
+	if _compare_previous_gear:
+		for tier: String in gear_tiers:
+			var tier_rows: Array[Dictionary] = []
+			for row: Dictionary in rows:
+				if row.gear == GEAR.label(tier, _gear_upgrade): tier_rows.append(row)
+			print("MEADOWS_C2C3_CHAPTER_GEAR %s" % GEAR.label(tier, _gear_upgrade))
+			failures += _chapter_verdict(tier_rows)
+	else:
+		failures += _chapter_verdict(rows)
 	if not _json.is_empty():
 		var output_parent: String = _json.get_base_dir()
 		if not output_parent.is_empty():
@@ -346,4 +378,3 @@ static func _max(values: Array) -> float:
 	var best := 0.0
 	for v in values: best = maxf(best, float(v))
 	return best
-
