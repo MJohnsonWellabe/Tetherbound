@@ -5,6 +5,28 @@ extends "res://tests/test_case.gd"
 ## rebuild whose inputs are unchanged; the mesh it draws is unchanged.
 
 const TELEGRAPH := preload("res://scripts/combat/enemy_pattern_telegraph.gd")
+const BAND_PROOF := preload("res://tests/smoke_f22_pattern_bands.gd")
+
+
+func test_floor_band_coverage_requires_executed_unique_cohorts_for_every_starter() -> void:
+	var cases := [{"id":"band1_lower_meadows"}, {"id":"band2_stone_and_root"}]
+	var rows: Array[Dictionary] = []
+	for entry: Dictionary in cases:
+		for starter: String in BAND_PROOF.STARTERS:
+			rows.append({"band":entry.id, "starter":starter})
+	assert_true(BAND_PROOF.floor_band_cohorts_complete(cases, rows, [], ""))
+	assert_false(BAND_PROOF.floor_band_cohorts_complete(cases, rows, [], "band1_lower_meadows"), "a selected diagnostic is not the complete sweep")
+	var missing := rows.slice(0, 3)
+	assert_false(BAND_PROOF.floor_band_cohorts_complete(cases, missing, ["band2_stone_and_root"], ""), "reported gaps cannot count as completed cohorts")
+	var duplicate := rows.duplicate(true)
+	duplicate[5] = duplicate[0].duplicate(true)
+	assert_false(BAND_PROOF.floor_band_cohorts_complete(cases, duplicate, [], ""), "correct row count cannot hide a missing starter cohort")
+	for foreign: Dictionary in [{"band":"unknown_band", "starter":"galewisp"}, {"band":"band2_stone_and_root", "starter":"unknown_starter"}]:
+		var changed := rows.duplicate(true)
+		changed[5] = foreign
+		assert_false(BAND_PROOF.floor_band_cohorts_complete(cases, changed, [], ""))
+	assert_false(BAND_PROOF.floor_band_cohorts_complete([], [], [], ""))
+	assert_false(BAND_PROOF.floor_band_cohorts_complete([cases[0], cases[0]], rows, [], ""))
 
 
 class CountingBody extends Node3D:

@@ -293,6 +293,8 @@ func _run() -> void:
 			"fixed": fixed_total, "switched": switched_total}
 	passed = passed and switch_passed
 	var coverage := _selection.is_empty() and rows.size() + gaps.size() * STARTERS.size() == cases.size() * STARTERS.size()
+	if _trainers and _named.is_empty():
+		coverage = floor_band_cohorts_complete(cases, rows, gaps, _selection)
 	var receipt := {"kind": "actual flat-fixture C2; world/C3/authority proofs separate",
 		"pass": passed and coverage, "coverage": coverage, "seeds_per_band": _seeds,
 		"mode": "trainers" if _trainers else "wilds", "gear": GEAR.label(str(_gear.tier), int(_gear.upgrade)), "data_gaps": gaps,
@@ -311,6 +313,26 @@ func _run() -> void:
 		else: output.store_string(JSON.stringify(receipt, "\t"))
 	print("F22_PATTERN_BANDS " + JSON.stringify(receipt))
 	quit(0 if passed and coverage else 1)
+
+
+## F22#1 requires real cohorts for every band and every starter. A missing
+## authored roster is a disclosed data gap, never an executed cohort. Keep
+## named-fight/gear and wild diagnostic modes on their existing coverage path.
+static func floor_band_cohorts_complete(cases: Array, rows: Array, gaps: Array, selection: String) -> bool:
+	if not selection.is_empty() or not gaps.is_empty() or cases.is_empty(): return false
+	var required := {}
+	for entry: Variant in cases:
+		if not entry is Dictionary or not entry.get("id") is String or str(entry.id).is_empty(): return false
+		for starter: String in STARTERS:
+			var key := str(entry.id) + ":" + starter
+			if required.has(key): return false
+			required[key] = true
+	for row: Variant in rows:
+		if not row is Dictionary or not row.get("band") is String or not row.get("starter") is String: return false
+		var key := str(row.band) + ":" + str(row.starter)
+		if not required.has(key): return false # Duplicate/foreign rows cannot replace a missing cohort.
+		required.erase(key)
+	return required.is_empty()
 
 
 func _score(runs: Array) -> Dictionary:
