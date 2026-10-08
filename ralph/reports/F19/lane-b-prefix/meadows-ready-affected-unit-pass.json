@@ -84,5 +84,25 @@
     "agent": "b_f49_review",
     "verdict": "SOURCE APPROVE readiness timer; actual Load remained open at review"
   },
-  "native_disposition": "First native attempt refused missing relative producer log before import. Corrected manifest location confirming run now live; no source/save/oracle change."
+  "native_disposition": "First native attempt refused missing relative producer log before import. Corrected manifest location confirming run now live; no source/save/oracle change.",
+  "independent_logic_review": {
+    "agent": "b_f49_review",
+    "verdict": "APPROVE scoped logic",
+    "engine_errors": {
+      "count": 27,
+      "origin": "Detached test_harvest.gd nodes not added to SceneTree",
+      "backtrace_counts": {
+        "_item_colour": 11,
+        "_item_kind": 8,
+        "setup": 8
+      },
+      "readiness_timer_stack_present": false,
+      "script_errors_present": false
+    },
+    "warnings": {
+      "scatter_placement": 33,
+      "item_cache_fallback": 5
+    },
+    "scope": "Passing affected unit batch with retained diagnostics, not clean runtime or whole F49 proof"
+  }
 }
