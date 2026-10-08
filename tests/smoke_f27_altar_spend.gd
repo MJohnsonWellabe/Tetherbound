@@ -24,6 +24,12 @@ var _game: Node = null
 
 
 func _run() -> void:
+	var masters_witness := OS.get_cmdline_user_args().has("--lesson-masters-witness")
+	if masters_witness and (not OS.get_cmdline_user_args().has("--lesson-controller-witness") \
+			or not OS.get_cmdline_user_args().has("--lesson-replay-witness")):
+		_fail("Masters witness requires the existing controller and Help replay options")
+		_report()
+		return
 	_world = (load(SCENE) as PackedScene).instantiate()
 	root.add_child(_world)
 	current_scene = _world
@@ -39,7 +45,7 @@ func _run() -> void:
 	var inventory: RefCounted = _game.get("inventory")
 	for need: Dictionary in WORLD.altar_recipe(): inventory.call("add", str(need.id), int(need.n))
 	inventory.call("add", "essence_water", ESSENCE_GRANT)
-	if OS.get_cmdline_user_args().has("--lesson-controller-witness"):
+	if OS.get_cmdline_user_args().has("--lesson-controller-witness") and not masters_witness:
 		if not await _witness_altar_lesson():
 			_report()
 			return
@@ -98,7 +104,73 @@ func _run() -> void:
 	# The same panel must not let a second press mint a second level from one quote.
 	if _failures.is_empty():
 		print("F27_ALTAR_SPEND: PASS controller-path Altar level-up L%d->L%d for %d Water Essence" % [level_before, level_before + 1, cost])
+		if masters_witness: await _witness_masters_lesson(creature, panel)
 	_report()
+
+
+## Continue the original paid panel to its first cap using only the fixture's
+## remaining essence. No extra stock, levels, teacher poses or lesson receipts.
+## The default one-spend proof and the separate Altar witness stay unchanged.
+func _witness_masters_lesson(creature: RefCounted, panel: Node) -> bool:
+	var rules := preload("res://scripts/onboarding/lesson_rules.gd")
+	var local: RefCounted = _game.local
+	var uid := str(creature.uid)
+	var cid := str(local.character_id)
+	var retained: Array = _game.party.members().duplicate()
+	var mirror: Dictionary = local.redesign_character.creatures.get(uid, {})
+	var cap := preload("res://scripts/creatures/breakthrough.gd").level_cap(mirror.get("breakthroughs", []))
+	if cap != 10 or int(creature.level) >= cap or rules.available("masters", local) \
+			or local.flags.call("has", rules.PREFIX + "masters"):
+		_fail("Masters witness must start below its first unacknowledged real L10 cap")
+		return false
+	for before: int in range(int(creature.level), cap):
+		var cost := ESSENCE.level_cost(before, ESSENCE.config(), PROGRESSION.config())
+		var stock := int(_game.inventory.count("essence_water"))
+		var receipts_before: int = local.redesign_character.transaction_receipts.size()
+		if cost < 1 or stock < cost or not await _pay_with("Water Essence", panel):
+			_fail("The unchanged essence fixture cannot pay the next actual Master-unlock level")
+			return false
+		for frame: int in BUDGET_FRAMES:
+			if int(creature.level) == before + 1 and _accepted_training_row(local): break
+			await physics_frame
+		var receipts: Array = local.redesign_character.transaction_receipts.slice(receipts_before)
+		if int(creature.level) != before + 1 or not _accepted_training_row(local) \
+				or stock - int(_game.inventory.count("essence_water")) != cost \
+				or receipts.filter(func(r: String) -> bool: return r.begins_with("essence_spend:")).size() != 1 \
+				or str(local.character_id) != cid or str(creature.uid) != uid or _game.party.members() != retained:
+			_fail("Master unlock did not retain one paid saved level, exact debit, character and owned party")
+			return false
+		print("F46 MASTERS PAID UNLOCK " + JSON.stringify({"character_id":cid,"uid":uid,
+			"from_level":before,"to_level":int(creature.level),"cost":cost,"receipts":receipts}))
+	await _ui("menu_cancel")
+	var teacher := _world.find_child("Tam", true, false) as Node3D
+	if teacher == null or panel.call("is_open") or INPUT_OWNER.current(self) != null \
+			or not rules.available("masters", local):
+		_fail("The real first cap did not unlock Masters with free input and installed Tam")
+		return false
+	var reader: RefCounted = preload("res://tests/helpers/f20_portal_travel.gd").new(self, _game)
+	var nav := preload("res://tests/helpers/stick_navigator.gd").new(self, _player, _rig, Callable(reader, "_stick"))
+	var recoveries_before := int(_player.get("_unstick_count"))
+	var approach := func() -> bool:
+		var arrived: bool = await nav.walk_to(teacher.global_position, 2400, 3.5)
+		reader.call("_stick", 0.0, 0.0)
+		for frame: int in 180:
+			if local.flags.call("has", rules.PREFIX + "masters"): break
+			await physics_frame
+		return arrived and _player.is_on_floor() and int(_player.get("_unstick_count")) == recoveries_before \
+			and _player.global_position.distance_to(teacher.global_position) <= 5.0
+	var passed: bool = await reader._with_navigation_lessons(approach)
+	if passed and reader.get("_lesson_replay_row").get("id", "") == "masters":
+		passed = await reader.replay_observed_lesson()
+	else:
+		passed = false
+	for failure: String in reader.failures: _fail(failure)
+	if not passed or not local.flags.call("has", rules.PREFIX + "masters") \
+			or INPUT_OWNER.current(self) != null or str(local.character_id) != cid or _game.party.members() != retained:
+		_fail("Naturally unlocked Tam Masters lesson lacks controller Skip, Help replay or retained identity")
+		return false
+	print("F46 MASTERS LESSON: PASS actual paid first cap, grounded Tam walk, mapped Skip and Settings Help; original essence fixture disclosed; disk reload/whole F46 open")
+	return true
 
 
 ## Optional F46 witness reuses the original essence fixture and actual
