@@ -1,0 +1,110 @@
+{
+  "criterion": "F02#2/F19#5/F49 Relay component only",
+  "verdict": "FAIL second prepared approach; parked",
+  "packet": "D:/CodexTemp/tetherbound-proof/native-b-b3a456f940-earned-relay-north-r1",
+  "supervisor": {
+    "stop_reason": "",
+    "started_utc": "2026-10-08T02:36:40.9470827Z",
+    "source": "b3a456f94014f43505ced45e459fc549fc96bdeb",
+    "pid": 25592,
+    "exit_code": 1,
+    "finished_utc": "2026-10-08T02:46:34.1406879Z"
+  },
+  "result": {
+    "failures": [
+      "relay: Riverwatch controller recovery failed: [\"Installed-bed approach lost grounded exterior world input: { \\\"nav_refused\\\": true, \\\"nav_reason\\\": \\\"deep actual overlap: zero-motion recovery exceeds unchanged skin\\\", \\\"on_floor\\\": true, \\\"paused\\\": false, \\\"fighting\\\": false, \\\"input_owner\\\": \\\"<null>\\\", \\\"inside_bed_exclusion\\\": false, \\\"player\\\": \\\"(220.759, -4.706658, 3686.769)\\\", \\\"target\\\": \\\"(211.7656, -4.512304, 3704.043)\\\", \\\"solid_bounds\\\": \\\"[P: (210.3223, -4.532207, 3699.155), S: (4.164429, 0.294345, 4.304688)]\\\", \\\"clearance\\\": 0.50100000600796, \\\"waypoint\\\": 0, \\\"frame\\\": 236, \\\"budget\\\": 3600 }\", \"Controller home-bed assignment failed: []\"]"
+    ],
+    "flags_gained": 0,
+    "location": {
+      "player": [
+        220.758987426758,
+        -4.70665836334229,
+        3686.76879882813
+      ],
+      "realm": "meadows",
+      "scene": "MeadowsPlayground"
+    },
+    "party": [
+      {
+        "hp": 40,
+        "level": 9,
+        "nickname": "Bud",
+        "species": "terrapup",
+        "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2"
+      },
+      {
+        "hp": 26,
+        "level": 9,
+        "nickname": "",
+        "species": "bramblebun",
+        "uid": "creature-83d263c517d32cc6cb7beab6925d80c7"
+      },
+      {
+        "hp": 44,
+        "level": 9,
+        "nickname": "",
+        "species": "bramblebun",
+        "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17"
+      },
+      {
+        "hp": 31,
+        "level": 7,
+        "nickname": "",
+        "species": "mudsnout",
+        "uid": "creature-afbd0d982b14221393f70c29863586a1"
+      },
+      {
+        "hp": 109,
+        "level": 7,
+        "nickname": "",
+        "species": "bramblebun",
+        "uid": "creature-c576f15db4b7f3ecf487a80de0169177"
+      }
+    ],
+    "passed": false,
+    "segment": "relay",
+    "wall_seconds": 571.993
+  },
+  "guard": {
+    "nav_refused": true,
+    "nav_reason": "deep actual overlap: zero-motion recovery exceeds unchanged skin",
+    "on_floor": true,
+    "paused": false,
+    "fighting": false,
+    "input_owner": null,
+    "inside_bed_exclusion": false,
+    "player": [
+      220.758987426758,
+      -4.70665836334229,
+      3686.76879882813
+    ],
+    "target": "(211.7656, -4.512304, 3704.043)",
+    "waypoint": 0,
+    "frame": 236,
+    "budget": 3600
+  },
+  "scope": {
+    "bed_assignment": "not reached",
+    "recovery": "not reached",
+    "captain": "not admitted",
+    "accepted_handoff": false,
+    "original_five_retained": true,
+    "overlap_collider_or_sole_physical_cause": "not established by compound refusal; original bounded motion evidence retained",
+    "next": "Master/homestead source steps; coordinator re-scope needed for prepared approach"
+  },
+  "review": {
+    "agent": "b_f49_review, original criterion reviewer",
+    "verdict": "FAIL actual; park after two failed prepared approaches"
+  },
+  "affected_logic": {
+    "run": 37718108316,
+    "artifact": 11525065681,
+    "source": "b3a456f94014f43505ced45e459fc549fc96bdeb",
+    "tests": 28,
+    "assertions": 201,
+    "failed": 0,
+    "exit_code": 0,
+    "seconds": 5,
+    "does_not_establish_actual_recovery": true
+  }
+}
