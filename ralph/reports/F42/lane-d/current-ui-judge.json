@@ -1,0 +1,31 @@
+{
+  "capture_complete": true,
+  "resolution": [
+    1920,
+    1080
+  ],
+  "run_id": 37624343486,
+  "artifact_id": 11484283995,
+  "status": "OPEN",
+  "renderer": "gl_compatibility",
+  "source_commit": "54e159028d0a5bb15cba95e567cfa9a30efc005e",
+  "actual_frames": 12,
+  "judge": {
+    "map": "Flat dark field, narrow black strip, floating labels; no visible terrain/routes/recognizable landmarks.",
+    "low_contrast": "Exploration HP, food, bond/story dim; secondary creature stats and controls explanation subdued.",
+    "verdict": "BLOCK",
+    "heavy_hud": "Four empty team bars, large opaque story panel and oversized quickbar consume substantial world view.",
+    "agent": "/root/f42_visual_review",
+    "code_blind": true,
+    "bare_menus": "Build huge empty panel with one button; Players mostly empty error; Save plain repeated rows."
+  },
+  "remaining_gates": [
+    "Fix all four catalogue UI rows",
+    "1280x720 readability",
+    "Area smoke",
+    "Code-blind PASS",
+    "Independent final source review"
+  ],
+  "criterion": "F42#0",
+  "scope": "Stocked party/satchel in actual production scene. No survey reveal injection. Map cycle and zoom samples false; no motion/controller interaction claim."
+}

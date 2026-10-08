@@ -1,6 +1,6 @@
 {
- "generated_at": "2026-10-08T02:47:28.618891+00:00",
- "main_sha": "347e49098 (PR #580)",
+ "generated_at": "2026-10-08T14:44:16.568976+00:00",
+ "main_sha": "fda4aa178 (PR #588)",
  "batch4_sha": "next batch assembling",
  "rows": [
   {
@@ -700,17 +700,17 @@
     {
      "text": "Readable lightning (1.2 s/3 m) and phase cues without HUD",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-e 3ae56ff58e (READY #572 6050449581, 8:43 PM CT 10-07): logic 54/0 run 37712875890, area 86/0, native 20/20, judge PASS four phases; review APPROVE",
+     "evidence": "PR #582 (consolidation 7b) merged 2026-10-07 10:09 PM CT: from tb/codex-e 3ae56ff58e (READY #572 6050449581, 8:43 PM CT 10-07): logic 54/0 run 37712875890, area 86/0, native 20/20, judge PASS four phases; review APPROVE",
      "gap": "Redo phase/strike capture plus code-blind judge (incl. reduced motion, photosensitivity) Folds into F41#3, F25#2.",
-     "note": "Landed: Evidenced on tb/codex-e 3ae56ff58e (READY #572 6050449581, 8:43 PM CT 10-07): logic 54/0 run 37712875890, area 86/0, native 20/20, judge PASS four phases; review APPROVE",
+     "note": "Landed: PR #582 (consolidation 7b) merged 2026-10-07 10:09 PM CT: from tb/codex-e 3ae56ff58e (READY #572 6050449581, 8:43 PM CT 10-07): logic 54/0 run 37712875890, area 86/0, native 20/20, judge PASS four phases; review APPROVE",
      "audit_index": 3
     },
     {
      "text": "Forest, rod line and restored-sky views pass visual matrix / Bars A/B",
-     "status": "failing",
-     "evidence": "tb/reproof-captures: ralph/reports/INTEGRATION/reproof/captures/F10-4/VERDICT.md",
+     "status": "met",
+     "evidence": "PR #584 (consolidation 9) merged 2026-10-08 2:06 AM CT: from tb/codex-e cd09de0814 (READY #572, 11:25 PM CT 10-07): changed 8/8 run 37725671536, logic 54/0, area 105/0, judge PASS whole Low matrix; review APPROVE",
      "gap": "Re-capture Deepwood, rod line and aftermath matrix; code-blind judge against the new §4 bar Folds into F41#3, F41#4.",
-     "note": "Re-proof 2026-10-04: FAIL on tb/reproof-captures.",
+     "note": "Landed: PR #584 (consolidation 9) merged 2026-10-08 2:06 AM CT: from tb/codex-e cd09de0814 (READY #572, 11:25 PM CT 10-07): changed 8/8 run 37725671536, logic 54/0, area 105/0, judge PASS whole Low matrix; review APPROVE",
      "audit_index": 4
     },
     {
@@ -1330,9 +1330,9 @@
     {
      "text": "Using the fifth key at the fifth arch makes it stir (glow, sound, one line: not ready yet) but not open; no quest, cliffhanger or sequel prompt.",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-b 2ed0f57cbd (READY #572 6050270747, 8:26 PM CT 10-07): smoke_f20_arch_presentation 20/0 native, judge PASS; review APPROVE",
+     "evidence": "PR #582 (consolidation 7b) merged 2026-10-07 10:09 PM CT: from tb/codex-b 2ed0f57cbd (READY #572 6050270747, 8:26 PM CT 10-07): smoke_f20_arch_presentation 20/0 native, judge PASS; review APPROVE",
      "gap": "Enable portals; re-run smoke_f20_arch_presentation.gd with the audio verifier and a capture judge.",
-     "note": "Landed: Evidenced on tb/codex-b 2ed0f57cbd (READY #572 6050270747, 8:26 PM CT 10-07): smoke_f20_arch_presentation 20/0 native, judge PASS; review APPROVE",
+     "note": "Landed: PR #582 (consolidation 7b) merged 2026-10-07 10:09 PM CT: from tb/codex-b 2ed0f57cbd (READY #572 6050270747, 8:26 PM CT 10-07): smoke_f20_arch_presentation 20/0 native, judge PASS; review APPROVE",
      "audit_index": 2
     },
     {
@@ -1451,10 +1451,10 @@
     },
     {
      "text": "Switching has measurable value: tag-switch combos and type matchups let a switching reader beat a non-switching reader.",
-     "status": "in_progress",
-     "evidence": "scripts/combat/tether_commands.gd tag_combo",
+     "status": "met",
+     "evidence": "PR #588 (consolidation 12) merged 2026-10-08 7:13 AM CT: from tb/codex-a 0ed7c6629d (READY #572, 6:17 AM CT 10-08): owner rule STATE.md:41, F24#2 tag-switch combo from PR #568 (run 37571192608 PASS); original f23_audit APPROVE",
      "gap": "Turn on F24 tag combo, then add a switching-reader pilot comparison to the band smoke.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. The tag-switch combo ships off: tether_commands.json feature_flags.runtime_enabled=false. No switching-vs-non-switching measurement exists.",
+     "note": "Landed: PR #588 (consolidation 12) merged 2026-10-08 7:13 AM CT: from tb/codex-a 0ed7c6629d (READY #572, 6:17 AM CT 10-08): owner rule STATE.md:41, F24#2 tag-switch combo from PR #568 (run 37571192608 PASS); original f23_audit APPROVE",
      "audit_index": 2
     },
     {
@@ -1589,10 +1589,10 @@
     },
     {
      "text": "Workbench trainer-gear tiers upgrade commands (meter rate, pouch size, snare strength).",
-     "status": "in_progress",
-     "evidence": "tether_commands.json tiers; player_equipment.gd; tether_pouch_row.gd",
+     "status": "met",
+     "evidence": "Evidenced on tb/codex-a 1496cb6430 (READY #572, 7:28 AM CT 10-08): crafted-tier engine 37775449228 PASS (four paid Workbench crafts, live tier 4), Backpack controller/disk/Unequip 37775445623 PASS 26 checks, affected unit 37776228174 34 tests/1568 assertions; original f23_audit WHOLE APPROVE. In consolidation 13.",
      "gap": "Enable it; add a unit test of tier effects and a crafted-tier engine witness.",
-     "note": "Audit 2026-10-04 on b4e4897d5: OFF. The command runtime is off (runtime_enabled=false). No test exists.",
+     "note": "Landed: Evidenced on tb/codex-a 1496cb6430 (READY #572, 7:28 AM CT 10-08): crafted-tier engine 37775449228 PASS (four paid Workbench crafts, live tier 4), Backpack controller/disk/Unequip 37775445623 PASS 26 checks, affected unit 37776228174 34 tests/1568 assertions; original f23_audit WHOLE APPROVE. In consolidation 13.",
      "audit_index": 4
     },
     {
@@ -1688,9 +1688,9 @@
     {
      "text": "A Forward+ path renders the village, Hall and all four biomes with no missing materials; Compatibility remains selectable as the Low preset.",
      "status": "met",
-     "evidence": "Evidenced on tb/codex-d 5c55b0a75d (READY #572 6050216513, 8:21 PM CT 10-07): native Forward+ census Meadows/Water/Cloudreach/Crossing PASS, judge PASS literal materials; review APPROVE",
+     "evidence": "PR #582 (consolidation 7b) merged 2026-10-07 10:09 PM CT: from tb/codex-d 5c55b0a75d (READY #572 6050216513, 8:21 PM CT 10-07): native Forward+ census Meadows/Water/Cloudreach/Crossing PASS, judge PASS literal materials; review APPROVE",
      "gap": "Re-run the Forward+ material census for the village, Hall and four biomes, plus the Compatibility Low route, at b4e4897d5.",
-     "note": "Landed: Evidenced on tb/codex-d 5c55b0a75d (READY #572 6050216513, 8:21 PM CT 10-07): native Forward+ census Meadows/Water/Cloudreach/Crossing PASS, judge PASS literal materials; review APPROVE",
+     "note": "Landed: PR #582 (consolidation 7b) merged 2026-10-07 10:09 PM CT: from tb/codex-d 5c55b0a75d (READY #572 6050216513, 8:21 PM CT 10-07): native Forward+ census Meadows/Water/Cloudreach/Crossing PASS, judge PASS literal materials; review APPROVE",
      "audit_index": 0
     },
     {
@@ -2354,26 +2354,26 @@
    "criteria": [
     {
      "text": "An owned Ripplet can be ridden as a surface swimmer from Tidewake's opening, faster than human swimming and able to cross currents.",
-     "status": "not_started",
-     "evidence": "ripplet_traversal.json (6.0 vs 3.8 m/s); tests/smoke_f37_ripplet.gd (not in CI, unrun)",
+     "status": "met",
+     "evidence": "PR #584 (consolidation 9) merged 2026-10-08 2:06 AM CT: from tb/codex-b c65d068470 (READY #572, 11:34 PM CT 10-07): run 37727411588 15+3 checks, owned dry-to-dry currents, judge PASS; review APPROVE",
      "gap": "Wire and run smoke_f37_ripplet.gd in CI. Add an ordinary-input witness from the Tidewake opening comparing speed and current crossing against a human swimmer.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. Mechanics are live, but no CI test checks the speed, the current crossing, or the mount at the opening.",
+     "note": "Landed: PR #584 (consolidation 9) merged 2026-10-08 2:06 AM CT: from tb/codex-b c65d068470 (READY #572, 11:34 PM CT 10-07): run 37727411588 15+3 checks, owned dry-to-dry currents, judge PASS; review APPROVE",
      "audit_index": 0
     },
     {
      "text": "At the L30 breakthrough Ripplet gains Dive, reaching sunken caches, nodes and hidden optional routes.",
-     "status": "not_started",
-     "evidence": "test_f37_ripplet_traversal.gd (gate, cache/node claims; CI unit)",
+     "status": "met",
+     "evidence": "PR #584 (consolidation 9) merged 2026-10-08 2:06 AM CT: from tb/codex-b fe2642cab5 (READY #572, 12:29 AM CT 10-08): run 37731553596 13 checks, logic 77 run 37729891287, judge PASS Dive; review APPROVE",
      "gap": "Add an engine smoke for diving to each sunken site and route corridor after the actual feast. A pre-breakthrough attempt must be refused.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. The unit tests cover the L30 gate and cache/node claims. Physically reaching sites and optional dive routes is not tested.",
+     "note": "Landed: PR #584 (consolidation 9) merged 2026-10-08 2:06 AM CT: from tb/codex-b fe2642cab5 (READY #572, 12:29 AM CT 10-08): run 37731553596 13 checks, logic 77 run 37729891287, judge PASS Dive; review APPROVE",
      "audit_index": 1
     },
     {
      "text": "Every required water route stays human-swimmable without Ripplet.",
-     "status": "partial",
-     "evidence": "ralph/reports/TIDEWAKE/b/f12_0_walked_hops/PROOF.md@d6c7025b3",
+     "status": "met",
+     "evidence": "PR #585 (consolidation 10) merged 2026-10-08 3:41 AM CT: from tb/codex-b 20cd7626f4 (READY #572, 1:44 AM CT 10-08): smoke_water_swimming all 7 routes/24 hops/1272 assertions, native continuous run; review APPROVE",
      "gap": "Rerun smoke_water_swimming.gd with the --original-five every-hop mode at b4e4897d5. Consider wiring that mode into CI.",
-     "note": "Audit 2026-10-04 on b4e4897d5: STALE. water_world.json, water_world.gd, swim_controller.gd and movement.json have changed since. CI runs smoke_water_swimming without the every-hop or original-five modes.",
+     "note": "Landed: PR #585 (consolidation 10) merged 2026-10-08 3:41 AM CT: from tb/codex-b 20cd7626f4 (READY #572, 1:44 AM CT 10-08): smoke_water_swimming all 7 routes/24 hops/1272 assertions, native continuous run; review APPROVE",
      "audit_index": 2
     },
     {
@@ -2671,10 +2671,10 @@
    "criteria": [
     {
      "text": "Catalog UI rows (map without terrain context, bare menus, heavy HUD boxes, low-contrast text) are fixed with code-blind PASS.",
-     "status": "not_started",
-     "evidence": "ralph/reports/R2-F42/proof-manifest.json@b4e4897d5 (engine_runs 0)",
+     "status": "met",
+     "evidence": "PR #587 (consolidation 11b) merged 2026-10-08 6:22 AM CT: from tb/codex-d f440344302 (READY #572, 4:35 AM CT 10-08): 14 files/144 tests/910 assertions, controller 37752399076, paired 1080/720 capture 37752962313, blind judge PASS whole literal UI ask; review APPROVE",
      "gap": "Capture each catalog UI row before and after, then a code-blind judge.",
-     "note": "Audit 2026-10-04 on b4e4897d5: MISSING. Source candidate only. No captures or judge.",
+     "note": "Landed: PR #587 (consolidation 11b) merged 2026-10-08 6:22 AM CT: from tb/codex-d f440344302 (READY #572, 4:35 AM CT 10-08): 14 files/144 tests/910 assertions, controller 37752399076, paired 1080/720 capture 37752962313, blind judge PASS whole literal UI ask; review APPROVE",
      "audit_index": 0
     },
     {
@@ -2883,10 +2883,10 @@
     },
     {
      "text": "No stacked modals; every prompt uses input_owner.",
-     "status": "in_progress",
-     "evidence": "Evidenced on tb/codex-c 5249eae72d (READY #572 6040343126, 9:40 AM CT 10-07): modal smoke 37636734289 plus 65 affected tests PASS, blinded judge PASS; review APPROVE",
+     "status": "met",
+     "evidence": "PR #583 (consolidation 8) merged 2026-10-07 11:48 PM CT: from tb/codex-c 7b71cc7dbe (READY #572 6050871000, 9:21 PM CT 10-07): 8 lesson exchanges PASS run 37636734289, 65 tests run 37637398666, judge PASS; review APPROVE",
      "gap": "Add a lesson-panel case to smoke_modal_stacking (Altar/Masters lesson during combat/dialogue/menu).",
-     "note": "Bounced 10-07 11:20 AM CT: consolidation #575 failed smoke_f18_earned_loop (Settings Replay lesson cutscene); back with lane C. Prior lane evidence tb/codex-c 5249eae72d.",
+     "note": "Landed: PR #583 (consolidation 8) merged 2026-10-07 11:48 PM CT: from tb/codex-c 7b71cc7dbe (READY #572 6050871000, 9:21 PM CT 10-07): 8 lesson exchanges PASS run 37636734289, 65 tests run 37637398666, judge PASS; review APPROVE",
      "audit_index": 2
     }
    ]

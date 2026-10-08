@@ -1,0 +1,31 @@
+{
+  "criterion": "F42#0",
+  "criterion_status": "OPEN",
+  "source_commit": "fe10b3ac2140f28ccff5441ac384f990facff23b",
+  "run_id": "37636012806",
+  "artifact_id": "11489312289",
+  "proof": "tests/smoke_gate_a_map_cycle.gd",
+  "mode": "headless",
+  "renderer": "gl_compatibility",
+  "verdict": "PASS",
+  "elapsed_seconds": 80,
+  "exit_code": 0,
+  "physical_paths": [
+    "Five-creature LB cycle, wrap and resting skip",
+    "Resolved travel-up minimap",
+    "Independent actual-camera orbit with visible trainer heading",
+    "Initial configured local map and player follow",
+    "LT whole-world overview and RT visible terrain scaling",
+    "Right-stick pan and clamp",
+    "LB world-input ownership",
+    "Physical Map reselect, chosen RT zoom retained across close/reopen",
+    "Physical Map/Back close/recovery"
+  ],
+  "log_sha256": "9ea355c49cc6d8cbddf8dd55fb969a3b94e7a0970df86713841cd8af0df9b896",
+  "review": "APPROVE source-only /root/f42_visual_review",
+  "remaining_gates": [
+    "Later vitals change affected checks",
+    "Current paired UI captures",
+    "All four catalogue UI rows code-blind PASS"
+  ]
+}

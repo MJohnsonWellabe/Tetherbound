@@ -1,0 +1,185 @@
+{
+  "scope": "ROOT-returned F42 map16 region-label overlap component only; full F42#0 remains OPEN",
+  "source_commit": "d46a507effc9c0b21160aaa388cfb4a865c82eed",
+  "handoff": "572#6045756332",
+  "source_change": "Only tab_map.gd region-label placement: finite obstacle-edge columns and sorted monotone clearance, full font/text/inset/padding. Fog/discovery/state/input untouched.",
+  "independent_review": {
+    "reviewer": "/root/f42_visual_review",
+    "verdict": "APPROVE source with actuallogic/controller/captureproof; pixelacceptance remainsBLOCK",
+    "pending": null,
+    "final": "Original reviewer read actual12framemanifest/exit and exact31/-25hunk. No source issues; no override of16pixelBLOCK."
+  },
+  "proof": "tests/run_tests.gd",
+  "run_id": 37679905106,
+  "artifact_id": 11507888686,
+  "result": {
+    "files": 14,
+    "tests": 144,
+    "assertions": 910,
+    "failed": 0,
+    "exit": 0,
+    "seconds": 15
+  },
+  "selected_files": [
+    "test_alpha_pins",
+    "test_cloudreach_atmosphere",
+    "test_cloudreach_no_legendary_offer",
+    "test_f19_order_consumers",
+    "test_map_fog",
+    "test_map_icons",
+    "test_map_legibility",
+    "test_map_player_heading",
+    "test_map_realm_view",
+    "test_map_zoom_persistence",
+    "test_multiplayer_identity_0912",
+    "test_player_map_markers",
+    "test_realm_map_persistence",
+    "test_world_verb_input_owner_enforcement"
+  ],
+  "remaining_criterion_blockers": [
+    "Low zoom terrain context in existing fresh-save captures",
+    "Heavy HUD box presentation"
+  ],
+  "flags": "none",
+  "disposition": "BLOCKED visual component; no READY. Unit/controller and32pixelsPASS,16mapcontextfails. Preserve source onlanebranch unREADY; coordinator mayrescope. Next:F39#0 correctedauthoredcamp shippingcapture.",
+  "area_proof": {
+    "run_id": 37680516233,
+    "artifact_id": 11507629839,
+    "source_commit": "d46a507effc9c0b21160aaa388cfb4a865c82eed",
+    "proof": "tests/smoke_gate_a_map_cycle.gd",
+    "exit": 0,
+    "seconds": 104,
+    "result": "PASS: physical LB cycles all five and skips resting; resolved travel drives minimap; real camera orbit independent; Map/Back repeated open/close, RT/LT zoom, right-stick pan/clamp, world recovery. Honest world-edge clamp499.3m reported.",
+    "fixture": "Existing five-creature seeded party; sixth refusal checked. Existing headless area smoke, not an earned journey or pixel proof."
+  },
+  "visual_proof": {
+    "source_commit": "d46a507effc9c0b21160aaa388cfb4a865c82eed",
+    "run_id": 37682719528,
+    "artifact_id": 11510458948,
+    "proof": "tools/phase2_capture_ui.gd --tabs=map --paired-720 --map-zoom-samples",
+    "complete": true,
+    "frames": 12,
+    "failures": [],
+    "exit": 0,
+    "seconds": 1109,
+    "resolutions": [
+      "1920x1080",
+      "1280x720"
+    ],
+    "fixture": "Stocked existing party/satchel, actual production Meadows scene; direct zoom view-state only, original fog/discoveries, no earned journey/peer/save proof.",
+    "reviewer": "/root/f26_presets_review",
+    "verdict": "BLOCK",
+    "map16": "Bothrasters names legible/unclipped/clearcentralicons but cover lowerpartofrevealedterrain/road.",
+    "map32": "PASS bothrasters; labelinupperleftblackmargin clearterrain/icons/edges."
+  },
+  "capture_attempts": [
+    {
+      "run_id": 37681271001,
+      "artifact_id": 11509435628,
+      "exit": 1,
+      "seconds": 7,
+      "frames": 0,
+      "cause": "D supplied shots path; existing tool requires res://ralph/reports/VISUAL/phase2/. Preflight refused beforeworldboot; guard retained."
+    },
+    {
+      "run_id": 37682719528,
+      "artifact_id": 11510458948,
+      "exit": 0,
+      "frames": 12,
+      "disposition": "ExecutionPASS, scopedpixelBLOCK at16terraincoverage;32PASS. No third boundedattempt."
+    }
+  ],
+  "owner_rescoped_map_margin_candidate": {
+    "source_commit": "52ba285172618c3c1ebc9bf51829bc099ded5116",
+    "production_commit": "412106619b29698cb4d02c727cdea867eccc2dec",
+    "main_merged": "c93bbe441e27d2373951133f24f50ae98267b8a1",
+    "criterion": "F42#0 OPEN",
+    "observed_defect": "Reviewed 16x region labels covered revealed terrain/road at both rasters despite marker separation.",
+    "change": "Existing region-name margin placement begins at16x behind false device-local presentation flag and opt-in CLI. Existing32x layout, fonts, marker solver, fog/discovery/input/zoom/durable state unchanged.",
+    "candidate_enabled": false,
+    "original_source_review": "/root/f42_visual_review SOURCE APPROVE",
+    "affected_existing_units": {
+      "run": 37752032128,
+      "artifact": 11537489935,
+      "tests": 144,
+      "assertions": 910,
+      "failed": 0,
+      "exit": 0,
+      "seconds": 16,
+      "opt_in": "--map-label-margin-candidate"
+    },
+    "remaining": [
+      "Push final commit and READY on572"
+    ],
+    "existing_controller_smoke": {
+      "run": 37752399076,
+      "artifact": 11538119884,
+      "proof": "tests/smoke_gate_a_map_cycle.gd --map-label-margin-candidate",
+      "exit": 0,
+      "seconds": 87,
+      "result": "Actual pad5-creature cycling/resting skip, movement-up minimap/trainer heading, repeated map open/close, RT/LT zoom, right-stick pan/clamp and world recovery PASS; honest world-edge499.3m clamp retained.",
+      "warnings": [
+        "instance_reset_physics_interpolation() deprecation during terrain build"
+      ]
+    },
+    "paired_capture": {
+      "source_commit": "52ba285172618c3c1ebc9bf51829bc099ded5116",
+      "run": 37752962313,
+      "artifact": 11540175801,
+      "proof": "tools/phase2_capture_ui.gd --biome=meadows --tabs=map --paired-720 --map-zoom-samples --map-label-margin-candidate",
+      "exit": 0,
+      "seconds": 1134,
+      "complete": true,
+      "frames": 12,
+      "failures": [],
+      "manifest_sha256": "e45eaea3e50910bee48f585feaa720f8e145f2bac500dc77be0564d81c5706e5",
+      "native_sizes": [
+        [
+          1280,
+          720
+        ],
+        [
+          1920,
+          1080
+        ]
+      ],
+      "fixture": "Stocked party and satchel in production scene; no save or progression proof",
+      "limits": "Stocked/staged existing visual fixture, direct supported zoom view state; original fog/discoveries. Producer records production camera identity but not matrices; before/after same scenario and rasters, not exact pose claim. No earned, device, co-op or High/Medium world-bar claim.",
+      "shipping_candidate_enabled": false,
+      "warnings": [
+        "Unsupported graphics-driver VSync request",
+        "instance_reset_physics_interpolation() deprecation during terrain build"
+      ]
+    },
+    "independent_runtime_review": {
+      "reviewer": "/root/f42_visual_review",
+      "verdict": "APPROVE BOUNDED RUNTIME AND RELEVANT SOURCE REUSE",
+      "verified": "Actual14-file144/910/0 unit log, controller smoke exit0/87s, complete12-frame paired capture exit0/1134s; independently decoded six1080p/six720p originals, warnings retained.",
+      "source_reuse": "Scoped52ba to17709a UI/map/menu/hud/capture/smoke diff empty; no broader ancestry audit.",
+      "limits": "Manifest carries no embedded source/CLI or camera matrices; pinned dispatch metadata recorded separately. Stocked fixture/direct zoom, incidental HUD rather than natural idle, no save/co-op/device/fullworldbar claim.",
+      "whole_criterion": "OPEN pending original blind verdict and remaining literal gates"
+    },
+    "blind_visual_review": {
+      "reviewer": "/root/f26_presets_review",
+      "code_blind": true,
+      "verdict": "APPROVE WHOLE F42#0 LITERAL VISUAL ASK",
+      "inspected": "All12 new native originals and4 retained16/32 originals",
+      "zoom16": "PASS both rasters: full region name in upper-left margin clear of discovered terrain, roads and central markers; previous road-covering defect resolved.",
+      "default32": "PASS both rasters: useful road forks, village and terrain visible; labels unclipped and separated from markers.",
+      "zoom4_8": "PASS labels/margins/marker separation; limited terrain context at wider scales, especially4x, is nonblocking with useful default16/32 views.",
+      "exploration_hud": "PASS both rasters: compact roster, HP/Food, story instructions and five quick slots legible without clipping or renewed heavy-box defect.",
+      "whole_literal_scope": "No remaining visual gate among map context, bare menus, heavy HUD boxes and low-contrast text, combined with unchanged retained Settings/Build/Save/QuickItems/roster/vitals PASS verdicts.",
+      "notes": "Coarse terrain imagery and crowded central markers at4x nonblocking for literal ask. No exact-pose attribution, general release Bars, other F42 criteria or unpictured-state credit."
+    },
+    "shipping_flag": "map.local_label_margin_candidate_enabled=true; same effective16x threshold as passing CLI-active proofs",
+    "final_independent_review": {
+      "reviewer": "/root/f42_visual_review",
+      "verdict": "APPROVE WHOLE F42#0 LITERAL CRITERION AND SHIPPING FLAG",
+      "spec": "ACCEPTANCE F42#0 four named UI defect families and UX\u00a77 revealed village/roads; map placement-only/device-local/non-authoritative.",
+      "flag_equivalence": "Config true and passing CLI true enter the same OR branch, read finite16, clamp same bounds and assign identical cached threshold; no additional batch needed.",
+      "accepted_proofs": "Actual14-file144tests910assert0 at52ba; controller37752399076 exit0/87s; paired12-native-frame37752962313 exit0/1134s; original f26 whole literal visual APPROVE with retained unchanged Players/Settings/BuildSave/QuickItems/roster/vitals verdicts and applicable menu/Build/HUD proofs.",
+      "main_currency": "c93bbe441e27d2373951133f24f50ae98267b8a1 ancestor; relevant UI/map/observer/smoke unchanged52ba to177 apart from reviewed flag/comment.",
+      "limits": "No unrelated ancestry adoption, otherF42criteria/generalreleaseBars/SaveLoad/device/co-op/earned/unpictured-state/Hall/Tideweathering approval."
+    }
+  }
+}

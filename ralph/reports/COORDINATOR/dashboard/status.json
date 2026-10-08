@@ -1,11 +1,10 @@
 {
- "updated": "2026-10-08T02:25Z",
+ "updated": "2026-10-08T14:50Z",
  "headline": [
-  "9:25 PM CT Wed 07 Oct: 153 criteria met, 150 on main and 3 evidenced in consolidation 7 (F26#0, F20#2, F10#3).",
-  "Consolidation 7b also lands F42#0 Settings/Build/Save/QuickItems/roster pieces, the F24#2 repair, F08#2 (already met) and the F26#1 receipt. The F20#1/#4 guided-approach repair was dropped: it broke smoke_net_f20_ending and smoke_net_water_return on #581.",
-  "Held: F02#0/#1 (evidence only; the source it proves is not on main) and F48#2 (CI-FLAKE peer_runner fence, which still fails catch_race and forward_camp).",
-  "Guardrails withdrawn at 8:10 PM CT; pace back to 6 full criteria in the 7:10–9:10 PM window.",
-  "Main's 8-hourly earned-loop red is intermittent; lane A owns the catch-aim fix."
+  "9:44 AM CT Thu 08 Oct: 160 criteria met on main; A F24#4 in consolidation 13b (161 when it merges). F23#2 dropped: its host move gate refuses co-op pilots' moves in shared_boss and shared_wild_fight.",
+  "7:10–9:10 AM CT: 3 whole READYs, all from lane A (F24#4, F23#2, F23#1 re-proof); B, C, D and E closed none.",
+  "Owner 7:44 AM CT: earned segments may start from generated boundary saves. Lane B now runs all 8 post-Warrens segments in parallel on hosted runners.",
+  "Lane C: 5 of the 9 failing tests from PR #586 now pass. D: F42#2 HUD blind judge BLOCK, fixes pushed. E: native GPU work on Cloudreach F40/F41."
  ],
  "batches": [
   {
@@ -475,33 +474,81 @@
    "sha": "",
    "state": "CI running",
    "contents": "F26#0, F20#2, F10#3 plus F42#0 pieces, F24#2 repair, F08#2, F26#1 receipt."
+  },
+  {
+   "name": "Consolidation 8 (PR #583)",
+   "sha": "",
+   "state": "Merged 10-07 11:48 PM CT",
+   "contents": "F46#2 modal ownership and the Meshy ledger snapshot. Met 154."
+  },
+  {
+   "name": "Consolidation 9 (PR #584)",
+   "sha": "",
+   "state": "Merged 10-08 2:06 AM CT",
+   "contents": "F10#4 Stormwood ground/road finish, F37#0 Ripplet currents, F37#1 Ripplet Dive. Met 157."
+  },
+  {
+   "name": "Consolidation 10",
+   "sha": "",
+   "state": "CI running",
+   "contents": "F37#2 human-swimmable water routes (test and evidence)."
+  },
+  {
+   "name": "Consolidation 11",
+   "sha": "b60f53b5",
+   "state": "Red: Stormwood/Tidewake save-ledger smokes (lane C set); replaced by 11b",
+   "contents": "F42#0 map/UI (lane D); F31#2 + complete C co-op repair set with F43#0–#3 and F48#2 (lane C)"
+  },
+  {
+   "name": "Consolidation 11b",
+   "sha": "ec9a73d7",
+   "state": "Merged 6:22 AM CT",
+   "contents": "F42#0 map/UI (lane D)"
+  },
+  {
+   "name": "Consolidation 12",
+   "sha": "pending",
+   "state": "In CI",
+   "contents": "F22#2 switching value (lane A, evidence; dependency F24#2 already on main)"
+  },
+  {
+   "name": "Consolidation 13",
+   "sha": "f3668748",
+   "state": "Red: F23#2 move gate breaks shared_boss/shared_wild; replaced by 13b",
+   "contents": "F24#4 crafted command tiers and F23#2 ten guarded utility moves (lane A, with the utility-consumer chain); F23#1 evidence"
+  },
+  {
+   "name": "Consolidation 13b",
+   "sha": "pending",
+   "state": "In CI",
+   "contents": "F24#4 crafted command tiers (lane A)"
   }
  ],
  "lanes": [
   {
    "lane": "tb/codex-a (Codex A: combat, moves, commands)",
-   "now": "F25#2, #3, #5 and F35#2, #4 READY.",
-   "next": "F25#0/#4, F35#1/#3, F21#4."
+   "now": "F24#4 in 13b; F23#2 bounced: host catalogue gate refuses test pilots' moves (invalid_actor_move) in shared_boss and shared_wild_fight.",
+   "next": "Fix F23#2 move admission for co-op pilots, rerun the co-op combat smokes, re-READY."
   },
   {
    "lane": "tb/codex-b (Codex B: earned route, story, ending)",
-   "now": "F20#1, #4, F01#3 and F19#0 READY; F49#0 route run continuing.",
-   "next": "F49#0."
+   "now": "All 8 post-Warrens segments running in parallel; Relay segment now grounded and still, failing on its route check.",
+   "next": "Segment results, then F49#0 and F20#1/#3."
   },
   {
    "lane": "tb/codex-c (Codex C: power, homestead, economy, co-op)",
-   "now": "Flaky co-op smoke fixes (12/12 runs PASS), F30#0, F32#4, F48#2, F43#0–#3 READY.",
-   "next": "F46#2, F28#2–#4."
+   "now": "5 of 9 failing tests from PR #586 now pass (title, menu, Waterward, swim, swim-stone late join).",
+   "next": "Remaining 4, then re-READY the whole co-op set."
   },
   {
    "lane": "tb/codex-d (Codex D: Meadows, village, Tidewake visuals)",
-   "now": "F26#4 frame-time matrix READY.",
-   "next": "Next smallest D criterion."
+   "now": "F42#2 HUD Low capture: blind judge BLOCK (small RB, [jump], roster speck); fixes pushed.",
+   "next": "F42#2 re-capture and judge."
   },
   {
    "lane": "tb/codex-e (Codex E: Cloudreach, Stormwood, art, audio)",
-   "now": "F41#4 and F40#4 READY; Meshy ledger snapshot.",
-   "next": "Next smallest E criterion."
+   "now": "Named-pilot reach fix; Cloudreach F40/F41 packets on the local GPU.",
+   "next": "F40#0 whole matrix judge."
   },
   {
    "lane": "tb/ci-speed (Claude)",

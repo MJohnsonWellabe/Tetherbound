@@ -8,7 +8,7 @@ const ESSENCE := preload("res://scripts/creatures/essence.gd")
 const STATION := preload("res://scripts/build/station_actions.gd")
 const GEAR := preload("res://scripts/creatures/creature_gear.gd")
 const TEACHING := preload("res://scripts/creatures/teaching.gd")
-const ACTIONS := ["station_craft", "den", "groom", "gear", "loadout", "camp_rest", "camp_build", "relic_hang", "relic_power", "boss_relic", "portal_arrival", "regional_ack", "dock_conclusion", "wild_capture", "tm_teach", "resource", "combat_mastery", "waystone_touch", "combat_round_reward", "home_key_owe", "home_key_deliver", "wild_defeat_share", "tether_pouch", "tether_item", "starter_choice"]
+const ACTIONS := ["station_craft", "den", "groom", "gear", "loadout", "camp_rest", "camp_build", "relic_hang", "relic_power", "boss_relic", "portal_arrival", "regional_ack", "dock_conclusion", "wild_capture", "tm_teach", "resource", "combat_mastery", "waystone_touch", "combat_round_reward", "home_key_owe", "home_key_deliver", "wild_defeat_share", "tether_pouch", "tether_item", "starter_choice", "trainer_equip"]
 
 static func deny(code: String) -> Dictionary:
 	return {"ok": false, "code": code, "durable": false, "resolved": false}
@@ -55,6 +55,7 @@ static func stage(current: Dictionary, revision: int, action: String,
 			preload("res://scripts/world/death_satchel_rules.gd").db(), GEAR.config())
 		"loadout": proposal = _loadout(current, intent, context)
 		"tether_pouch": proposal = _tether_pouch(current, intent, context)
+		"trainer_equip": proposal = _trainer_equip(current, intent, context)
 		"tether_item": proposal = _tether_item(current, intent, context)
 		"camp_rest": proposal = preload("res://scripts/build/forward_camp_actions.gd").stage_team_bed(current, revision, intent, context, true)
 		"camp_build": proposal = camp_plan(current, revision, intent, context)
@@ -67,6 +68,40 @@ static func stage(current: Dictionary, revision: int, action: String,
 		"before": current.duplicate(true), "state": proposal.state.duplicate(true),
 		"receipt": proposal.receipt, "intent": intent.duplicate(true), "host_context": context.duplicate(true),
 		"expected_character_revision": revision, "source_key": context.source_key, "durable": false, "resolved": false}
+
+
+## Backpack swaps use the same original full-character journal. Items and
+## displaced-piece capacity come from the admitted bag; no candidate packet.
+static func _trainer_equip(current: Dictionary, intent: Dictionary, context: Dictionary) -> Dictionary:
+	if context.get("station_kind") != "personal_equipment" or context.get("owns_character") != true \
+		or context.get("source_key") != "personal_equipment:" + str(current.character_id) \
+		or intent.size() != 4 or not ESSENCE._component(intent.get("equip_id")) \
+		or not intent.get("slot") is String or not intent.get("item_id") is String \
+		or not intent.get("expected_item") is String: return deny("equipment_invalid")
+	var equipment := preload("res://scripts/player/player_equipment.gd").new()
+	equipment.configure(preload("res://scripts/world/death_satchel_rules.gd").db())
+	equipment.load_data(current.equipment)
+	if not equipment.is_slot(intent.slot) or equipment.equipped_in(intent.slot) != intent.expected_item:
+		return deny("equipment_changed")
+	var rules := preload("res://scripts/world/death_satchel_rules.gd")
+	var bag: RefCounted = rules.inventory_from(current.inventory)
+	var changed := false
+	if intent.item_id.is_empty():
+		changed = equipment.unequip_to_inventory(intent.slot, bag)
+	else:
+		var definition: Dictionary = rules.db().definition(intent.item_id)
+		if definition.get("armor_slot") != intent.slot: return deny("equipment_invalid")
+		changed = equipment.equip_from_inventory(intent.item_id, bag)
+	if not changed: return deny("equipment_unavailable")
+	var receipt := "craft:%s:%s" % [current.character_id,
+		("trainer_equip:" + str(current.character_id) + ":" + str(intent.equip_id)).sha256_text().substr(0, 32)]
+	if current.redesign_character.transaction_receipts.has(receipt): return deny("duplicate")
+	var next := current.duplicate(true)
+	next.equipment = equipment.save_data()
+	next.inventory = rules.slots(bag)
+	next.redesign_character.transaction_receipts = RECEIPT_WINDOWS.compact(next.redesign_character.transaction_receipts, "station_craft", str(current.character_id))
+	next.redesign_character.transaction_receipts.append(receipt)
+	return {"ok": true, "state": next, "receipt": receipt}
 
 
 ## Personal ordered bindings share the original character transaction. A
