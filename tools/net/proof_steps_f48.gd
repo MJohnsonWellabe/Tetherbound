@@ -1939,7 +1939,8 @@ static func _button(tree: SceneTree, args: Dictionary) -> Dictionary:
 		var service: Node = chooser.get("_service")
 		if not is_instance_valid(source) or source.get_script() != preload("res://scripts/masters/master_site.gd") \
 				or source.get("_mounted") != true or source.get("master_id") != chooser.get("_master") \
-				or not is_instance_valid(service):
+				or not is_instance_valid(service) or service.get_script() != preload("res://scripts/masters/breakthrough_service.gd") \
+				or service.get("_panel") != chooser or source.get_meta("breakthrough_service", null) != service:
 			return _result(false, "Master UID input requires its actual mounted site and service")
 		var view: Dictionary = service.call("view")
 		var owned := 0
