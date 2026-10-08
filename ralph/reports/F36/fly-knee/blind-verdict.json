@@ -1,0 +1,59 @@
+{
+  "reviewer": "same retained original code-blind F36/Fly visual judge",
+  "scope": "Visible carried-body pose readability and gross interpenetration only; prior P2-119 issue",
+  "inputs": {
+    "contacts": [
+      "ralph/reports/F36/fly-knee/comparison-A.jpg",
+      "ralph/reports/F36/fly-knee/comparison-B.jpg"
+    ],
+    "full_rasters_inspected": [
+      "A/view-1.jpg",
+      "A/view-2.jpg",
+      "A/view-3.jpg",
+      "B/view-1.jpg",
+      "B/view-2.jpg",
+      "B/view-3.jpg"
+    ],
+    "raw_root": ".tmp/e-fly-knee-blind/",
+    "mapping_withheld": true,
+    "source_or_receipts_inspected": false
+  },
+  "comparison_limits": "Different land stands 16m apart and different capture adapters/native1920-normalized versus native1280; six supplied rasters are1280x720. Pose-read comparison only, not exact pixel matching.",
+  "preference": "NONE for airborne carried-body improvement; A has the clearer supplied grounded endpoint",
+  "bounded_verdict": {
+    "A": "BLOCK",
+    "B": "BLOCK"
+  },
+  "reason": "No convincing visible improvement to the prior P2-119 rigid hanging/grip issue is established. In both sets' views1 and2, the trainer torso remains upright, legs hang nearly straight and the arms are raised beside the head; hands lie near Galecrest's outward talons. The bird retains an upright torso above the trainer, so the relation still reads like a bird perched near raised hands instead of a convincing supported carrying grip. No clear knee tuck or substantial carried-body silhouette change is discernible between A and B in these frontal views.",
+  "frame_specific": [
+    {
+      "frames": [
+        "A/view-1.jpg",
+        "A/view-2.jpg"
+      ],
+      "finding": "Whole bird and trainer are visible, with separated wing silhouette and readable faces. Rigid upright trainer/dangling legs and raised-hands/talon relation remain. No obvious gross aerial body interpenetration or frame-edge cropping is established; small hand contact is too limited to certify detailed grip geometry."
+    },
+    {
+      "frames": [
+        "B/view-1.jpg",
+        "B/view-2.jpg"
+      ],
+      "finding": "The same carried-body and grip readability problem remains. Whole aerial bodies fit the frame; no persuasive knee-pose improvement is visible. Background placement differs and cannot be treated as a pose/material change."
+    },
+    {
+      "frames": [
+        "A/view-3.jpg"
+      ],
+      "finding": "Whole grounded trainer is readable in the grass; Galecrest is absent. Supplies a grounded endpoint only, with no bird landing/perch pose or transition."
+    },
+    {
+      "frames": [
+        "B/view-3.jpg"
+      ],
+      "finding": "Trainer boots overlap/sit above another person's hat/head in projection, obscuring normal ground contact and compromising the grounded endpoint. Galecrest is absent. This view does not establish a landing transition."
+    }
+  ],
+  "limits": "Two glide snapshots plus one grounded endpoint per set only. Staged carrier/unlock/canopy override: no earned travel, campaign reachability, continuous motion, landing transition, co-op, full F36#1, full matrix or release acceptance claim. Absence of gross penetration in the aerial stills is not full deformation validation.",
+  "catalogue_updated": false,
+  "release_closure": false
+}

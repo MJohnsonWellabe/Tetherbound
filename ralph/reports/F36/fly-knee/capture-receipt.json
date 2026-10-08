@@ -1,0 +1,37 @@
+{
+  "source_commit": "5348eed558e3c35cf36fb3fa32a9ceba1bc3831e",
+  "production_commit": "7717b92f44314324262398205d1bb5b10f5b700a",
+  "run_id": 37739489516,
+  "artifact_id": 11532979578,
+  "script": "tools/phase2_capture_realm_flight.gd",
+  "exit_code": 0,
+  "duration_seconds": 358,
+  "complete": true,
+  "failures": [],
+  "frame_count": 3,
+  "preset": "Low",
+  "renderer": "gl_compatibility",
+  "resolution": [
+    1280,
+    720
+  ],
+  "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+  "fixture": "In-memory Fly unlock and one Galecrest carrier; actual Jump, glide and descend input at realm stands. Meadows adds 60 m fixture height above a grounded safe anchor for clearance/airtime. Stormwood also lifts its sealed canopy flag in memory and adds 60 m fixture height, so those frames show possible carrier art rather than reachable campaign traversal. No campaign progression proof",
+  "raw_packet": ".tmp\\e-fly-knee-5348-expanded\\tree\\ralph\\reports\\VISUAL\\phase2\\stormwood\\lane-e-fly-knee-5348",
+  "frame_hashes": {
+    "01-launch.png": "315ca09a10764ec959052400f6f0ef2e1859e8ea0ecd2bb2698b978b0ee66488",
+    "02-glide.png": "aa33b97e3c1c2438cdfd7b71eb4c3441cb6536c61c77b37d84b0c59095830e21",
+    "03-landed.png": "7fa03aed24291487c0816538cf1a2d1b360602c6de10f790b44d92ef6066eb62"
+  },
+  "manifest_sha256": "739e2c5931f3b5ce55784f2c26ed1f931f0e93cbd47a31a39148fb276f131ec7",
+  "run_log_sha256": "3880b606a758a0a874606188b1a4e81b2ebf3918da8f87e2d7df653767c04106",
+  "blinded_mapping": {
+    "A": "retained f547 native baseline",
+    "B": "changed 5348 hosted"
+  },
+  "comparability": "Pose-read comparison only: baseline1920 Nvidia at(-304,240), changed1280 Mesa at(-320,240); same existing script/yaw/Fly fixture, normalized1280 JPG display. Not pixel-matched stands/adapters/raster or continuous motion. Launch label already glide; landed grounded endpoint, no landing transition.",
+  "warnings": "Three distinct wild-cluster spacing warnings (1365603512,1365603540,43985556); renderer/deprecation and shared-model warnings retained in raw log. No ERROR/ScriptError lines.",
+  "whole_criterion": "F36#1 OPEN: all-species supported pose matrix and fly grip readability still required.",
+  "job_id": 113186640767,
+  "blind_verdict": "Both A and B BLOCK: no discernible knee tuck or substantial carried-body change; raised-hands grip remains. Baseline grounded endpoint preferred; changed endpoint overlaps NPC head. First numeric candidate failed; wholeF36#1 OPEN."
+}

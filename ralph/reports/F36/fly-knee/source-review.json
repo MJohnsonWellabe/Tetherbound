@@ -35,8 +35,52 @@
     "coverage_limit": "Relevant existing trainer presentation regressions; no selected case directly proves the new Fly knee pose or malformed hang_pose inputs in engine."
   },
   "production_and_selected_tests_byte_unchanged_through": "5348eed558e3c35cf36fb3fa32a9ceba1bc3831e",
+  "changed_capture_proof": {
+    "verdict": "APPROVE bounded ART-path completion and provenance only",
+    "source_commit": "5348eed558e3c35cf36fb3fa32a9ceba1bc3831e",
+    "production_commit": "7717b92f44314324262398205d1bb5b10f5b700a",
+    "run_id": 37739489516,
+    "job_id": 113186640767,
+    "artifact_id": 11532979578,
+    "checkout_verified_from_hosted_job_log": true,
+    "exit_code": 0,
+    "duration_seconds": 358,
+    "complete": true,
+    "failures": [],
+    "unique_frames": 3,
+    "actual_png_headers": [1280, 720],
+    "preset": "Low",
+    "renderer": "gl_compatibility",
+    "adapter": "llvmpipe (LLVM 20.1.2, 256 bits)",
+    "all_frame_manifest_and_run_log_hashes_match_receipt": true,
+    "error_or_script_error_in_run_log": false,
+    "distinct_spacing_warnings_in_run_log": 3,
+    "warnings": "V-Sync unsupported, deprecated interpolation, two shared-model retint warnings and three wild-cluster spacing warnings retained.",
+    "fixture": "Existing in-memory Galecrest carrier, Fly unlock, canopy flag override and sixty-meter elevation; actual production Jump, glide and descend input. Not reachable campaign proof.",
+    "frame_limits": "Launch label is already glide; landed is a grounded endpoint, not the landing transition.",
+    "comparison_limits": "Changed stand (-320,240), Low1280 Mesa versus retained baseline stand (-304,240), Low1920 NVIDIA. Pose-read comparison only, not pixel-matched environment or continuous motion.",
+    "receipt": "ralph/reports/F36/fly-knee/capture-receipt.json",
+    "raw_packet": ".tmp/e-fly-knee-5348-expanded"
+  },
+  "first_visual_disposition": {
+    "receipt": "ralph/reports/F36/fly-knee/blind-verdict.json",
+    "baseline": "BLOCK",
+    "first_candidate": "BLOCK",
+    "reason": "Original blind judge found no discernible knee tuck or convincing carrying/grip improvement. Source and capture-completion approvals do not supersede this failure."
+  },
+  "second_numeric_attempt": {
+    "source_verdict": "APPROVE bounded numeric tuning only",
+    "base_commit": "7ee966a7fc7e2c957a177b4e33fce83821227028",
+    "path": "data/config/fly_traversal.json",
+    "thigh_forward": {"old": 0.35, "new": 1.0},
+    "shin_backward": {"old": 0.55, "new": 1.0},
+    "findings": "Both finite values are accepted clamp endpoints. Opposing sagittal directions remain nonzero and normalize through the unchanged installed-rig helper. No arm/wrist, carrier, input, collision, save or authority change.",
+    "unit_reuse": "Original four selected files' 25 tests/227 assertions remain relevant unchanged-helper regressions, not direct proof of the stronger knee pose. Helper and selected tests are byte-unchanged from7717 through this base.",
+    "proof_status": "PENDING changed three-view capture and original blind judgment",
+    "stop_condition": "Final numeric attempt; park and disable leg candidate if visually BLOCK. No third attempt authorized by this review."
+  },
   "pending": [
-    "Changed Fly capture and original code-blind comparison",
+    "Second numeric attempt capture and original code-blind pose comparison",
     "Whole F36#1 pose matrix and acceptance"
   ],
   "excluded_claims": [
