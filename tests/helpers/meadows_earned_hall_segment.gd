@@ -9,6 +9,7 @@ const HOME_TRAVEL := preload("res://tests/helpers/f20_portal_travel.gd")
 const BREAKTHROUGH := preload("res://scripts/creatures/breakthrough.gd")
 const CAMP_INPUT := preload("res://tests/helpers/meadows_earned_camp_segment.gd")
 const BUILD_INPUT := preload("res://tests/helpers/gate_a_build_segment.gd")
+const HOME_STATIONS := preload("res://scripts/build/station_rules.gd")
 const CAPTAIN_IDS := ["captain_riverwatch", "captain_field", "captain_ridge"]
 const SIGILS := ["field_sigil", "ridge_sigil", "river_sigil"]
 const HALL_FLAGS := ["defeated_stronghold_patrol", "defeated_stronghold_courtyard", "defeated_stronghold_elite"]
@@ -571,8 +572,6 @@ func _gather_first_feast_stock(band2: Array[Vector2], rim: Array[Vector2],
 		"stations_built": false, "feast_cooked": false, "cap_lifted": false})
 	if not await _place_first_home_stations():
 		return false
-	if not await _refine_first_rootiron():
-		return false
 	# Return by the existing earned roads, including the already-open Bridge;
 	# the Home Key never poses the trainer back at the Master or Mill.
 	var first := trail_points(_read(TERRAIN), "bands", "band1_lower_meadows")
@@ -623,9 +622,22 @@ func _place_first_home_stations() -> bool:
 	# These are requested anchors on the existing farmhouse pad. Only a real
 	# green ghost and paid producer record may establish that they are usable.
 	var plans: Array[Dictionary] = [{"id": "forge", "at": Vector2(-6, 12)},
-		{"id": "kitchen", "at": Vector2(-6, 20)}, {"id": "altar", "at": Vector2(-6, 8)}]
+		{"id": "kitchen", "at": Vector2(-6, 20)}, {"id": "altar", "at": Vector2(-6, 8)},
+		{"id": "kitchen_meadows", "at": Vector2.ZERO}]
 	for plan: Dictionary in plans:
 		var id := str(plan.id)
+		var parent_uid := ""
+		if id == "kitchen_meadows":
+			if not await _refine_first_rootiron(): return false
+			var parent: Dictionary = {}
+			for row: Dictionary in _game.get("placed_buildings"):
+				if row.get("id") == "kitchen" and row.get("removed", false) != true:
+					if not parent.is_empty(): return _fail("The actual Kitchen rack parent is ambiguous")
+					parent = row.duplicate(true)
+			parent_uid = str(parent.get("uid", ""))
+			if parent_uid.is_empty(): return _fail("The paid Kitchen has no canonical parent UID")
+			var socket := HOME_STATIONS.socket(HOME_STATIONS.config(), parent, 1)
+			plan.at = Vector2(socket.x, socket.z)
 		var before: Array = _game.get("placed_buildings")
 		for record: Dictionary in before:
 			if record.get("id") == id:
@@ -660,11 +672,16 @@ func _place_first_home_stations() -> bool:
 				or absf(float(record.get("yaw_deg", INF))) > 0.01 \
 				or not retained_five(_initial_ids, _party_ids()):
 			return _fail("The paid station lacks its real node, stable UID, requested yaw or original five")
+		if id == "kitchen_meadows":
+			var tier := HOME_STATIONS.effective_tier(HOME_STATIONS.config(), records, parent_uid)
+			if record.get("parent_uid") != parent_uid or int(record.get("slot", 0)) != 1 \
+					or tier.get("ok") != true or int(tier.get("effective_tier", 0)) != 1:
+				return _fail("The paid Kitchen rack lacks its actual parent, slot and derived tier")
 		if not await camp._stow_piece() or not await camp._stow_hammer():
 			return _fail("The station controller did not return ordinary world input")
 		_receipt("first_home_station_paid", {"id": id, "record": record.duplicate(true),
 			"actual_node": str(actual.get_path()), "exact_cost": cost,
-			"controller_ghost_and_place": true, "free_build": false})
+			"parent_uid": parent_uid, "controller_ghost_and_place": true, "free_build": false})
 	return true
 
 
