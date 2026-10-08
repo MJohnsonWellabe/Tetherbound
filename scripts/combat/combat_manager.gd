@@ -1854,6 +1854,7 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 				routes = [Vector2(preferred_turn,1.0),Vector2(preferred_turn,0.0),
 					Vector2(fallback_turn,1.0),Vector2(fallback_turn,0.0),Vector2(0.0,1.0)]
 		var admitted: bool = false
+		var selected_visibility_penalty: float = INF
 		for attempt: int in routes.size()*4:
 			var route: Vector2 = routes[attempt >> 2]
 			var step_scale: float = [1.0,0.5,0.25,0.125][attempt%4]
@@ -1887,11 +1888,17 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 			# Manual look may deliberately hide an actor (COMBAT §5). Finite
 			# geometry, collision probes and the full lens sweep still apply.
 			if not motion_blocked and (manual or preserves_readability):
+				# A legal intermediate can still hide more of the fighters than
+				# another legal route. Compare the same bounded candidate set;
+				# preserve route order for ties and every independent guard above.
+				var visibility_penalty: float = float(next_visibility.get("penalty",INF))
+				if not manual and visibility_penalty>=selected_visibility_penalty: continue
 				selected = next
 				selected_yaw = next_yaw
 				selected_pitch = next_pitch
+				selected_visibility_penalty = visibility_penalty
 				admitted = true
-				break
+				if manual: break
 		if admitted: motion_blocked = false
 	# The rig's next follow must continue from the pose actually admitted here,
 	# not independently ease toward an endpoint whose intermediate was refused.
