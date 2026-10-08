@@ -13,6 +13,10 @@ const FLAGS: Array[String] = ["realm_key_cloudreach", "cloudreach_upper_route_un
 
 
 func _run() -> void:
+	# Diagnostic runtime scope only: retain real input/physics and the original
+	# disclosed fixture while omitting rasterization on hosted functional runs.
+	if "--functional-offload" in OS.get_cmdline_user_args():
+		RenderingServer.set_render_loop_enabled(false)
 	var spots: Array[Vector2] = []
 	for arg: String in OS.get_cmdline_user_args():
 		if arg.begins_with("--spots="):

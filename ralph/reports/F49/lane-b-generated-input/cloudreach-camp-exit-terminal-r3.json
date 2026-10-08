@@ -1,0 +1,448 @@
+{
+  "kind": "generated_cloudreach_terminal_camp_exit_failure",
+  "run_id": 37790337092,
+  "source": "288e76f333b76867e6b2c40b219d0e6c797ab2fb",
+  "artifact_id": 11558763420,
+  "artifact_sha256": "51add19febddb5b87d881b51287f06adadf96893533641c5b606a2caddb5a572",
+  "workflow_conclusion": "failure",
+  "actual_child_exit": 1,
+  "log": "ci-generated-cloudreach-camp-37790337092.log.gz",
+  "log_sha256": "1d982695db937b9db40a53f500c6188c80ceef7f4c3127d0bd74248562e32240",
+  "bounded_actual_camp_packets": [
+    {
+      "kind": "assertion",
+      "label": "Ordinary camp input passed one night at summit_bivouac",
+      "position": "(132.3303, 1160.031, 5342.85)",
+      "simulated_seconds": 2701.55,
+      "stage": "rest_summit_bivouac",
+      "wall_seconds": 2712.803585
+    },
+    {
+      "kind": "assertion",
+      "label": "Physically bedded party member recovered overnight at summit_bivouac",
+      "position": "(132.3303, 1160.031, 5342.85)",
+      "simulated_seconds": 2701.55,
+      "stage": "rest_summit_bivouac",
+      "wall_seconds": 2712.803614
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(132.3303, 1160.031, 5342.85)",
+      "kind": "travel_start",
+      "position": "(132.3303, 1160.031, 5342.85)",
+      "simulated_seconds": 2701.55,
+      "stage": "rest_summit_bivouac",
+      "target": "(136.1344, 1159.8, 5344.096)",
+      "wall_seconds": 2712.803661
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(136.1879, 1160.275, 5344.136)",
+      "simulated_seconds": 2703.93,
+      "stage": "rest_summit_bivouac",
+      "target": "(136.1344, 1159.8, 5344.096)",
+      "wall_seconds": 2715.131329
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(136.1879, 1160.275, 5344.136)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/summit_bivouac/CampCreatureBed/Interactable",
+      "prompt_position": "(136.1344, 1160.6, 5345.296)",
+      "root_distance": 1.13841080665588,
+      "root_position": "(135.5, 1160.0, 5345.0)",
+      "senn_defeated": true,
+      "simulated_seconds": 2703.98,
+      "stage": "rest_summit_bivouac",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 2715.178843
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/summit_bivouac/CampCreatureBed/Interactable",
+      "position": "(136.1879, 1160.275, 5344.136)",
+      "simulated_seconds": 2704.18,
+      "stage": "rest_summit_bivouac",
+      "wall_seconds": 2715.374822
+    },
+    {
+      "kind": "assertion",
+      "label": "Controller input assigned party member 3 to summit_bivouac creature bed",
+      "position": "(136.1879, 1160.275, 5344.136)",
+      "simulated_seconds": 2705.12,
+      "stage": "rest_summit_bivouac",
+      "wall_seconds": 2716.305609
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(136.1879, 1160.275, 5344.136)",
+      "kind": "travel_start",
+      "position": "(136.1879, 1160.275, 5344.136)",
+      "simulated_seconds": 2705.47,
+      "stage": "rest_summit_bivouac",
+      "target": "(132.0, 1159.8, 5342.8)",
+      "wall_seconds": 2716.677779
+    },
+    {
+      "kind": "travel_arrived",
+      "position": "(132.6088, 1160.031, 5342.865)",
+      "simulated_seconds": 2706.7,
+      "stage": "rest_summit_bivouac",
+      "target": "(132.0, 1159.8, 5342.8)",
+      "wall_seconds": 2717.92298
+    },
+    {
+      "input_vector": "(0.0, 0.0)",
+      "kind": "interaction_context",
+      "locomotion_enabled": true,
+      "manager_state": 0,
+      "on_floor": true,
+      "position": "(132.6088, 1160.031, 5342.865)",
+      "prompt": "/root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/summit_bivouac/Interactable",
+      "prompt_position": "(132.0, 1160.6, 5342.0)",
+      "root_distance": 1.05800342559814,
+      "root_position": "(132.0, 1160.0, 5342.0)",
+      "senn_defeated": true,
+      "simulated_seconds": 2706.78,
+      "stage": "rest_summit_bivouac",
+      "velocity": "(0.0, 0.0, 0.0)",
+      "wall_seconds": 2717.99855
+    },
+    {
+      "kind": "assertion",
+      "label": "Real input activated expected offer /root/CloudreachCliffs/CloudreachChapter/PhysicalRuntime/summit_bivouac/Interactable",
+      "position": "(132.6088, 1160.031, 5342.865)",
+      "simulated_seconds": 2706.98,
+      "stage": "rest_summit_bivouac",
+      "wall_seconds": 2718.176919
+    },
+    {
+      "camp": "summit_bivouac",
+      "day_after": 22,
+      "day_before": 21,
+      "kind": "camp_creature_recovery",
+      "party_index": 3,
+      "position": "(132.6088, 1160.031, 5342.865)",
+      "simulated_seconds": 2709.32,
+      "species_id": "mudsnout",
+      "stage": "rest_summit_bivouac",
+      "team_after": [
+        {
+          "hp": 343.2,
+          "label": "Bud",
+          "level": 32,
+          "species_id": "terrapup",
+          "xp": 423
+        },
+        {
+          "hp": 279.871374025345,
+          "label": "Bramblebun",
+          "level": 31,
+          "species_id": "bramblebun",
+          "xp": 1201
+        },
+        {
+          "hp": 274.05590746212,
+          "label": "Bramblebun",
+          "level": 32,
+          "species_id": "bramblebun",
+          "xp": 171
+        },
+        {
+          "hp": 297.775971775055,
+          "label": "Mudsnout",
+          "level": 32,
+          "species_id": "mudsnout",
+          "xp": 2122
+        },
+        {
+          "hp": 286.434583414555,
+          "label": "Bramblebun",
+          "level": 32,
+          "species_id": "bramblebun",
+          "xp": 1755
+        }
+      ],
+      "team_before": [
+        {
+          "hp": 343.2,
+          "label": "Bud",
+          "level": 32,
+          "species_id": "terrapup",
+          "xp": 423
+        },
+        {
+          "hp": 279.871374025345,
+          "label": "Bramblebun",
+          "level": 31,
+          "species_id": "bramblebun",
+          "xp": 1201
+        },
+        {
+          "hp": 274.05590746212,
+          "label": "Bramblebun",
+          "level": 32,
+          "species_id": "bramblebun",
+          "xp": 171
+        },
+        {
+          "hp": 8.47580219895666,
+          "label": "Mudsnout",
+          "level": 32,
+          "species_id": "mudsnout",
+          "xp": 2117
+        },
+        {
+          "hp": 286.434583414555,
+          "label": "Bramblebun",
+          "level": 32,
+          "species_id": "bramblebun",
+          "xp": 1755
+        }
+      ],
+      "wall_seconds": 2720.849286
+    },
+    {
+      "kind": "assertion",
+      "label": "Ordinary camp input passed one night at summit_bivouac",
+      "position": "(132.6088, 1160.031, 5342.865)",
+      "simulated_seconds": 2709.32,
+      "stage": "rest_summit_bivouac",
+      "wall_seconds": 2720.84946
+    },
+    {
+      "kind": "assertion",
+      "label": "Physically bedded party member recovered overnight at summit_bivouac",
+      "position": "(132.6088, 1160.031, 5342.865)",
+      "simulated_seconds": 2709.32,
+      "stage": "rest_summit_bivouac",
+      "wall_seconds": 2720.849502
+    },
+    {
+      "kind": "assertion",
+      "label": "Camp-bed input recovered every injured party member at summit_bivouac",
+      "position": "(132.6088, 1160.031, 5342.865)",
+      "simulated_seconds": 2709.32,
+      "stage": "rest_summit_bivouac",
+      "wall_seconds": 2720.849567
+    },
+    {
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(132.6088, 1160.031, 5342.865)",
+      "kind": "travel_start",
+      "position": "(132.6088, 1160.031, 5342.865)",
+      "simulated_seconds": 2709.32,
+      "stage": "rest_summit_bivouac",
+      "target": "(132.0, 1160.0, 5330.0)",
+      "wall_seconds": 2720.849626
+    },
+    {
+      "auto_run": false,
+      "body_path": "/root/CloudreachCliffs/Player",
+      "body_position": "(130.0925, 1152.74, 5327.991)",
+      "camera_basis": "[X: (-0.285075, 0.0, -0.958505), Y: (0.0, 1.0, 0.0), Z: (0.958505, 0.0, -0.285075)]",
+      "can_process": true,
+      "carried": false,
+      "collisions": [
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(-0.714578, 0.402245, -0.572343)"
+        },
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(0.090306, 0.882388, -0.461776)"
+        },
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(0.090283, 0.882388, -0.461781)"
+        },
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(0.090306, 0.882388, -0.461776)"
+        },
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(0.090283, 0.882388, -0.461781)"
+        },
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(0.090306, 0.882388, -0.461776)"
+        }
+      ],
+      "deflect_dir": "(-0.951693, 0.0, -0.307051)",
+      "deflect_left": -0.0166666666666666,
+      "dialogue_open": false,
+      "finale_phase": "dormant",
+      "floor_normal": "(0.090306, 0.882388, -0.461776)",
+      "hazard": {
+        "arc": "(0.0, 0.0, 0.0)",
+        "arc_stage": "idle",
+        "sheltered": false,
+        "wind": "(0.0, 0.0, 0.0)",
+        "wind_stage": "idle"
+      },
+      "input_owner": "",
+      "input_vector": "(-0.891358, 0.4533)",
+      "kind": "collision_block",
+      "last_motion": "(0.000031, -0.000011, 0.0)",
+      "locomotion_enabled": true,
+      "manager_fighting": false,
+      "manager_state": 0,
+      "move_speed_scale": 1.0,
+      "physics_hz": 60,
+      "physics_processing": true,
+      "position": "(130.0925, 1152.74, 5327.991)",
+      "process_mode": 0,
+      "recent_wall_contacts": [
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(-0.714578, 0.402245, -0.572343)",
+          "position": "(130.0906, 1152.744, 5327.995)"
+        },
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(-0.714578, 0.402245, -0.572343)",
+          "position": "(130.0926, 1152.74, 5327.991)"
+        },
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(-0.714578, 0.402245, -0.572343)",
+          "position": "(130.0926, 1152.74, 5327.991)"
+        },
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(-0.714578, 0.402245, -0.572343)",
+          "position": "(130.0926, 1152.74, 5327.991)"
+        },
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(-0.714578, 0.402245, -0.572343)",
+          "position": "(130.0924, 1152.74, 5327.991)"
+        },
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(-0.714578, 0.402245, -0.572343)",
+          "position": "(130.0925, 1152.74, 5327.991)"
+        },
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(-0.714578, 0.402245, -0.572343)",
+          "position": "(130.0924, 1152.74, 5327.991)"
+        },
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(-0.714578, 0.402245, -0.572343)",
+          "position": "(130.0925, 1152.74, 5327.991)"
+        },
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(-0.714578, 0.402245, -0.572343)",
+          "position": "(130.0924, 1152.74, 5327.991)"
+        },
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(-0.714578, 0.402245, -0.572343)",
+          "position": "(130.0925, 1152.74, 5327.991)"
+        },
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(-0.714578, 0.402245, -0.572343)",
+          "position": "(130.0924, 1152.74, 5327.991)"
+        },
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(-0.714578, 0.402245, -0.572343)",
+          "position": "(130.0925, 1152.74, 5327.991)"
+        },
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(-0.714578, 0.402245, -0.572343)",
+          "position": "(130.0924, 1152.74, 5327.991)"
+        },
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(-0.714578, 0.402245, -0.572343)",
+          "position": "(130.0925, 1152.74, 5327.991)"
+        },
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(-0.714578, 0.402245, -0.572343)",
+          "position": "(130.0924, 1152.74, 5327.991)"
+        },
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(-0.714578, 0.402245, -0.572343)",
+          "position": "(130.0925, 1152.74, 5327.991)"
+        },
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(-0.714578, 0.402245, -0.572343)",
+          "position": "(130.0924, 1152.74, 5327.991)"
+        },
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(-0.714578, 0.402245, -0.572343)",
+          "position": "(130.0925, 1152.74, 5327.991)"
+        },
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(-0.714578, 0.402245, -0.572343)",
+          "position": "(130.0924, 1152.74, 5327.991)"
+        },
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(-0.714578, 0.402245, -0.572343)",
+          "position": "(130.0925, 1152.74, 5327.991)"
+        },
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(-0.714578, 0.402245, -0.572343)",
+          "position": "(130.0924, 1152.74, 5327.991)"
+        },
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(-0.714578, 0.402245, -0.572343)",
+          "position": "(130.0925, 1152.74, 5327.991)"
+        },
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(-0.714578, 0.402245, -0.572343)",
+          "position": "(130.0924, 1152.74, 5327.991)"
+        },
+        {
+          "body": "/root/CloudreachCliffs/CliffRegions/SummitFinalStronghold/CliffMass/CarvedCrown/Collision",
+          "normal": "(-0.714578, 0.402245, -0.572343)",
+          "position": "(130.0925, 1152.74, 5327.991)"
+        }
+      ],
+      "simulated_seconds": 2721.32,
+      "stage": "rest_summit_bivouac",
+      "target": "(132.0, 1160.0, 5330.0)",
+      "time_scale": 1.0,
+      "tree_paused": false,
+      "velocity": "(0.0, 0.0, 0.0)",
+      "walk_speed": 5.0,
+      "wall_seconds": 2733.059091,
+      "wanted_dir": "(0.688594, 0.0, 0.725147)",
+      "winner": "EncounterDirector:<Node#22365002211074>"
+    },
+    {
+      "kind": "FAIL",
+      "message": "Walking stalled toward (132.0, 1160.0, 5330.0)",
+      "position": "(130.0925, 1152.74, 5327.991)",
+      "simulated_seconds": 2721.32,
+      "stage": "rest_summit_bivouac",
+      "wall_seconds": 2733.059441
+    }
+  ],
+  "observed_failure": "First summit camp exit waypoint (132,1160,5330) stalled at (130.0925,1152.74,5327.991) against actual static CarvedCrown, after real camp sleep and injured team recovery.",
+  "scope": "Generated Tidewake-settled input. No earned ancestry or continuous fresh route. Earlier completed stages retained in actual log only; failed campaign output is never an accepted boundary.",
+  "original_independent_reviewer": "b_f49_review / Bacon / 01a1165d-ecfb-79d3-9355-1224723cdb53",
+  "original_behavior_verdict": "Original Bacon reviewer: **BEHAVIOR FAIL** `37790337092`; artifact hash matches. Camp/rest/recovery passed, then departure dropped about 7.3m and stalled. No terminal handoff accepted.\n\nThe proposed route through `(129,1160,5342)` \u2192 `(129,1160,5332)`, then the unchanged waypoints, is a **supported candidate** using the authored `x<131` rail gap.\n\nCapsule clearance, floor continuity and sole cause remain unproved. Exact source review and actual traversal are required; no source or runtime approval yet. Router stopped read-only.",
+  "whole_criterion_closed": false,
+  "accepted_output": false,
+  "failed_save_used_as_input": false
+}

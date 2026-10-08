@@ -400,7 +400,9 @@ func _input(action: String, strength: float) -> void:
 ## by the feed road's gap. Witnesses that rest there call this, not
 ## `_navigate`, whose nearest-route snap aims at the loop's east leg.
 func _leave_summit_bivouac() -> bool:
-	for waypoint: Vector3 in [Vector3(132,1160,5330), Vector3(116,1160,5332), Vector3(100,1160,5350)]:
+	# The authored lip rail leaves its west end (x < 131) open. Stay on
+	# the terrace until that gap instead of aiming over its southern bank.
+	for waypoint: Vector3 in [Vector3(129,1160,5342), Vector3(129,1160,5332), Vector3(116,1160,5332), Vector3(100,1160,5350)]:
 		if not await _walk(waypoint):
 			return false
 	return true
