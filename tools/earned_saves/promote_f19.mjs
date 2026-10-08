@@ -56,7 +56,7 @@ export function readCompatibilityManifest(file) {
         const stamp = processReceipt[field];
         assert.equal(typeof stamp, 'string', 'Native supervisor requires UTC timestamps');
         const match = stamp.match(/^([0-9]{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])T(?:[01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9])(?:\.([0-9]{1,9}))?Z$/);
-        assert.ok(match, 'Native supervisor timestamp must be strict UTC');
+        assert.ok(match && match[0] === stamp, 'Native supervisor timestamp must be strict UTC');
         const epoch = Date.parse(match[1] + 'Z');
         assert.ok(Number.isFinite(epoch) && new Date(epoch).toISOString().slice(0, 19) === match[1],
           'Native supervisor timestamp must be a valid calendar date');
