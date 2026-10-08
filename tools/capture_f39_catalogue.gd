@@ -15,6 +15,8 @@ var _shipping := false
 var _weather_name := "clear"
 var _candidate_applied := false
 var _candidate_verified := false
+var _shore_motion_requested := false
+var _shore_motion_saved := false
 var _seed := 2042
 var _save_fixture := ""
 var _explicit_stands := false
@@ -26,6 +28,8 @@ func _run() -> void:
 			_candidate = true
 		elif arg == "--f39-shipping":
 			_shipping = true
+		elif arg == "--shore-motion":
+			_shore_motion_requested = true
 		elif arg.begins_with("--f39-weather="):
 			_weather_name = arg.trim_prefix("--f39-weather=")
 		elif arg.begins_with("--seed="):
@@ -175,25 +179,79 @@ func _capture_row(row: Dictionary) -> void:
 			var expected := {"enabled": shore_enabled, "shader": {}}
 			for key: String in shore_uniforms:
 				expected.shader[key] = shore_settings.get(key)
-			observations.append(_observe_material(surface, [], shore_uniforms, expected))
+			var shore_observed := _observe_material(surface, [], shore_uniforms, expected)
+			var surface_material := surface.material_override as ShaderMaterial
+			var installed := surface_material != null and surface_material.shader != null \
+				and surface_material.shader.code.contains("vec2 shore_foam_uv =") \
+				and surface_material.shader.code.contains("foam *= shore_foam_strength;")
+			shore_observed.gates["shore_foam_installed"] = installed
+			if installed != shore_enabled:
+				shore_observed.matches_requested = false
+				_failures.append("F39 installed shore foam gate differs from shipping config")
+			observations.append(shore_observed)
 		if falls_count == 0 or flow_count == 0:
 			_failures.append("F39 production falls/current materials were not both found")
 		_candidate_verified = not observations.is_empty()
 		for observed: Dictionary in observations:
 			_candidate_verified = _candidate_verified and bool(observed.get("matches_requested", false))
-		_candidate_verified = _candidate_verified and falls_count > 0 and flow_count > 0
+		_candidate_verified = _candidate_verified and falls_count > 0 and flow_count > 0 and surface != null
 		_manifest["f39_material_override_verified"] = _candidate_verified
 	if not _candidate_verified:
 		_write_manifest()
 		return
 	await super._capture_row(row)
+	if _shore_motion_requested and not _shore_motion_saved and _failures.is_empty() \
+			and str(row.time) == "night" and not _records.is_empty() and _records.back().frame_id == row.frame_id:
+		_shore_motion_saved = true
+		await _capture_shore_motion(row)
+
+
+func _finish(complete: bool) -> void:
+	if _shore_motion_requested and not _shore_motion_saved:
+		_failures.append("F39 requested shore motion requires a successfully captured night stand")
+	super._finish(complete)
+
+
+func _capture_shore_motion(row: Dictionary) -> void:
+	# Reuse the first supported night stand; shader TIME stays live. No pose,
+	# camera, input, weather, animation or movement-processing override.
+	var began := Time.get_ticks_msec()
+	var next_sample := began
+	var body_at := _player.global_position
+	var camera_at := _camera.global_transform
+	var samples: Array[Dictionary] = []
+	while Time.get_ticks_msec() - began < 12000:
+		await process_frame
+		if Time.get_ticks_msec() < next_sample:
+			continue
+		await RenderingServer.frame_post_draw
+		var captured := Time.get_ticks_msec()
+		if not _player.is_on_floor() or _player.global_position.distance_to(body_at) > .02 \
+				or _camera.global_position.distance_to(camera_at.origin) > .02 \
+				or _camera.global_basis.get_rotation_quaternion().angle_to(camera_at.basis.get_rotation_quaternion()) > .001:
+			_failures.append("F39 shore motion lost its supported ordinary body/camera pose")
+			break
+		var pixels := root.get_texture().get_image()
+		var path := "%s/%s-motion-%03d.jpg" % [_output_dir, str(row.frame_id), samples.size()]
+		if pixels == null or pixels.is_empty() or pixels.get_size() != root.size or pixels.save_jpg(path, .95) != OK:
+			_failures.append("F39 shore motion native frame is missing, wrong-sized or unsaved")
+			break
+		samples.append({"file": path, "elapsed_ms": captured, "body": _vec3(_player.global_position),
+			"camera": _vec3(_camera.global_position), "on_floor": _player.is_on_floor()})
+		next_sample = captured + 200
+	if samples.size() < 3 or int(samples[-1].elapsed_ms) - int(samples[0].elapsed_ms) < 10000:
+		_failures.append("F39 shore motion requires at least three actual samples spanning ten seconds")
+	_manifest["f39_shore_motion"] = {"frame_id": row.frame_id, "samples": samples,
+		"resolution": [root.size.x, root.size.y], "encoding": "native JPEG95; actual variable sample timestamps; no interpolation",
+		"scope": "Stationary supported production-camera view with live shader TIME only; no movement/earned/fight/frame-time claim"}
+	_write_manifest()
 
 
 func _observe_material(node: MeshInstance3D, gates: Array, uniforms: Array,
 		settings: Dictionary) -> Dictionary:
 	var observed := {"node": str(node.get_path()), "gates": {}, "uniforms": {}, "matches_requested": true}
 	var material := node.material_override as ShaderMaterial
-	if material == null:
+	if material == null or material.shader == null:
 		observed.matches_requested = false
 	else:
 		for key: String in gates:
