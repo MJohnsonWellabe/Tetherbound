@@ -38,5 +38,27 @@
     "agent": "/root/f42_visual_review"
   },
   "flags": "none",
-  "acceptance": "No criterion closure or successful capture claimed"
+  "acceptance": "No criterion closure or successful capture claimed",
+  "affected_logic": {
+    "source": "dd2d557630658cfff43c1c0773fdc349bcc40fca",
+    "run": 37715360775,
+    "artifact": 11523616701,
+    "script": "tests/run_tests.gd",
+    "args": "--only=test_f17_capture_presets",
+    "tests": 1,
+    "assertions": 7,
+    "failed": 0,
+    "exit": 0,
+    "seconds": 5,
+    "scope": "Typed preset branches only; no native window/preflight or visual claim"
+  },
+  "wrong_entrypoint_dispatch": {
+    "run": 37715174842,
+    "artifact": 11523279062,
+    "failed_step": "Check the script exists on that ref",
+    "script": "tests/test_runner.gd",
+    "tests_executed": 0,
+    "engine_executed": false,
+    "correction": "Existing actual entrypoint tests/run_tests.gd, verified by run37715360775"
+  }
 }
