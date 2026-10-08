@@ -1,0 +1,21 @@
+{
+  "reviewer": "review_cloud_startup",
+  "verdict": "APPROVE",
+  "base_commit": "c2a2625bdebc2d387f185bbbd2ca0d34a052695b",
+  "path": "data/config/cloudreach_look.json",
+  "scope": "Working-tree route_verges tuning only: station_spacing_m 48 to 32; near_offset_m 2.1 to 0.85.",
+  "owning_contract": "ART_DIRECTION Cloudreach upland palette, coherent installed nature family and ordinary-camera route readability.",
+  "findings": [
+    "Both tunables remain valid finite positive values. Existing route support, settlement clearance, Fly-only exclusion, deterministic seed and sixteen-station per-route cap are unchanged.",
+    "The unchanged planner yields 182 baseline versus 193 candidate stations across thirteen grounded routes, below the existing 208-station maximum. These are pre-support-rejection counts, not observed runtime placements.",
+    "The unchanged active per-station recipe bounds candidate plants at 1544 and scree at 386, versus baseline 1456 and 364. Installed assets, mesh/material preparation and batched rendering are unchanged; this is not frame-time evidence.",
+    "Worst-case near anchor center is 3.35m from its segment centerline. Accounting for the existing additional 0.65m grass lateral jitter gives 2.70m for individual grass centers, still above the existing 2.35m center-clearance invariant.",
+    "The center-clearance invariant does not measure full mesh envelopes or clearance to other route segments at bends. Actual route readability and visual overlap remain capture/area-proof questions.",
+    "No collision, route geometry, hazard, input, carrier, durable state or authority path changes."
+  ],
+  "existing_named_proofs": [
+    "tests/test_cloudreach_route_verges.gd",
+    "tests/smoke_cloudreach_look.gd"
+  ],
+  "proof_status": "Source only; no native engine execution, visual acceptance or full F40 criterion claim."
+}
