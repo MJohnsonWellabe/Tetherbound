@@ -1,0 +1,32 @@
+{
+  "criterion": "F37#1",
+  "verdict": "PASS; whole criterion under owner6051787387 scope",
+  "source_sha": "0a2c314dc47faf6855b3826657196d218c8c5815",
+  "script": "tests/smoke_f37_ripplet.gd",
+  "args": "--through-dive --functional-offload",
+  "run_id": 37731553596,
+  "artifact_id": 11530780219,
+  "exit_code": 0,
+  "duration_s": 72,
+  "passed_checks": 13,
+  "script_parse_or_engine_errors": 0,
+  "setup": "Existing owned L30/breakthrough and deep-water fixtures, disclosed before admission; no earned feast claim",
+  "observed": {
+    "owned_uid": "creature-793e5f6b209274eade6833e44da469b4",
+    "level": 30,
+    "breakthroughs": [1, 2, 3],
+    "before_unlock": "Level30 without completed L30 breakthrough refused Dive",
+    "after_unlock": "Mapped Jump started actual Dive; production buoyancy submerged the same carrier",
+    "cache": {"site_id": "lantern_arch_cache", "gained_tide_pearl": 3, "flag_commits": 1, "duplicate_refused": true},
+    "node": {"site_id": "lantern_pearl_bed", "gained_tide_pearl": 4, "flag_commits": 1, "duplicate_refused": true},
+    "optional_route": {"id": "lantern_arch_cut", "authored_span": "32m", "from": [-215.9032, -5.699998, 154.6655], "to": [-215.0244, -5.699998, 185.3057], "physics_seconds": 4.28333333333333, "controller_route_speed_m_s": 8.0, "owned_dive_retained": true}
+  },
+  "production_change": "Actual mounted rider sight excludes only its current carrier RID inside the unchanged exact local-viewer position guard. Real wall/floor and unrelated-body occlusion remains.",
+  "logic": {"run_id": 37729891287, "artifact_id": 11529870396, "tests": 77, "assertions": 790519, "failed": 0, "exit_code": 0, "caveat": "27 detached harvest/scatter fixture errors outside the changed LOS path; original reviewer retained scoped logic PASS. See lane-b-units/local-carrier-and-terminal-sample.json."},
+  "visual": {"artifact": "dive-literal-contact.jpg", "verdict_file": "dive-literal-verdict.json", "judge": "b_night_visual, original blind judge", "verdict": "PASS", "source_sha": "220ea0bb0217bd263b232e13d9f259514abb9e2d", "run_id": 37702491315, "artifact_id": 11518351838, "renderer": "gl_compatibility", "resolution": "1280x720", "reuse": "Dive models, poses, camera, water scene/shaders, content dressing and traversal settings unchanged; presentation ON in both cuts. Unrelated shared HUD changes do not change the Dive cue."},
+  "independent_review": {"agent": "b_f37_review, original reviewer", "verdict": "APPROVE whole F37#1 on source_sha; actual behavior, scoped logic and retained literal visual proof verified"},
+  "flags": {"ripplet_traversal.presentation_enabled": true},
+  "preserved_failures": {"37730715117": "Requested guarded native capture failed its unchanged30s observation; combined run remains FAIL. Mechanics passed. No deadline or timer changed.", "surface-dive-r3-scope-verdict.json": "Broader mounted-observation BLOCK retained. New literal PASS uses newest owner criterion-own-text scope."},
+  "exact_source_scope": "F37 endpoint/capture/physical-step extensions through0a and the seven-line Interactable carrier exclusion, plus presentation flag. Subsequent3fb restore-observation additions are separate and unclaimed.",
+  "not_claimed": ["F37#4", "Earned L30 feast", "Earned campaign", "Two-peer rejoin", "Owner device or performance", "Full Visual Bars A/B", "All future content acceptance"]
+}
