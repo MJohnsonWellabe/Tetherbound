@@ -1898,7 +1898,9 @@ func _update_fight_camera_matrix(delta: float, render_tick: bool = false) -> boo
 				selected_pitch = next_pitch
 				selected_visibility_penalty = visibility_penalty
 				admitted = true
-				if manual: break
+				# Penalties are nonnegative; a clear first candidate already wins
+				# every later tie, so keep the ordinary clear-frame early exit.
+				if manual or visibility_penalty<=0.0: break
 		if admitted: motion_blocked = false
 	# The rig's next follow must continue from the pose actually admitted here,
 	# not independently ease toward an endpoint whose intermediate was refused.
