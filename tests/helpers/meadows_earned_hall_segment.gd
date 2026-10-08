@@ -571,6 +571,8 @@ func _gather_first_feast_stock(band2: Array[Vector2], rim: Array[Vector2],
 		"stations_built": false, "feast_cooked": false, "cap_lifted": false})
 	if not await _place_first_home_stations():
 		return false
+	if not await _refine_first_rootiron():
+		return false
 	# Return by the existing earned roads, including the already-open Bridge;
 	# the Home Key never poses the trainer back at the Master or Mill.
 	var first := trail_points(_read(TERRAIN), "bands", "band1_lower_meadows")
@@ -664,6 +666,107 @@ func _place_first_home_stations() -> bool:
 			"actual_node": str(actual.get_path()), "exact_cost": cost,
 			"controller_ghost_and_place": true, "free_build": false})
 	return true
+
+
+## Pay the rack's ingots at the real Forge, using its ordinary tap-start UI.
+## The existing Forge smoke's 900-frame completion bound is shared by the
+## whole amount here; canonical callbacks, not elapsed time, prove payment.
+func _refine_first_rootiron() -> bool:
+	var required := 0
+	for cost: Dictionary in _game.call("build_cost_for", "kitchen_meadows"):
+		if cost.get("id") == "rootiron_ingot": required += int(cost.get("n", 0))
+	var units := maxi(0, required - _count("rootiron_ingot"))
+	if required <= 0:
+		return _fail("The actual Kitchen rack has no Rootiron requirement")
+	if units == 0:
+		return true
+	var forge: Node3D
+	for node: Node in _tree.get_nodes_in_group(&"placed_building"):
+		if str(node.get_meta("building_id", "")) == "forge" and _world.is_ancestor_of(node):
+			if forge != null: return _fail("The earned Forge is ambiguous")
+			forge = node as Node3D
+	var prompt := forge.get_node_or_null(^"StationInteractable") as Node3D if forge != null else null
+	var manual := forge.get_node_or_null(^"ManualForge") if forge != null else null
+	var cfg := _read("res://data/config/stations.json")
+	var recipe: Dictionary = _read("res://data/recipes/recipes_forge.json").get("recipes", {}).get("rootiron_ingot", {})
+	if prompt == null or manual == null or manual.get_script() != preload("res://scripts/build/station_forge.gd") \
+			or units > int(cfg.get("forge", {}).get("maximum_manual_units", 0)) or recipe.is_empty():
+		return _fail("The actual Forge actor, recipe or manual amount is unavailable")
+	var before := {"rootiron_ingot": _count("rootiron_ingot")}
+	for cost: Dictionary in recipe.get("cost", []):
+		before[str(cost.id)] = _count(str(cost.id))
+	var personal: Dictionary = _game.get("local").get("redesign_character")
+	var caps := {}
+	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
+		caps[str(member.get("uid"))] = ESSENCE.creature_cap(personal, str(member.get("uid")))
+	if not await _approach_prompt(prompt):
+		return false
+	var pilot := LIVE.CampaignPilot.new(_tree, _combat, _director, _rig)
+	_activated_id = 0
+	await pilot.press("interact")
+	var panel: Node
+	for frame in 90:
+		var owner := INPUT_OWNER.current(_tree)
+		if owner != null and owner.get_script() == preload("res://scripts/ui/craft_panel.gd"):
+			panel = owner
+			break
+		await _tree.physics_frame
+	if panel == null or panel.get("_station") != forge or panel.get("_producer") != _game.get("session") \
+			or _activated_id != prompt.get_instance_id() or int(panel.get("_refining_amount")) != 1:
+		return _fail("Physical Forge interaction did not open its canonical one-unit panel")
+	for amount in range(1, units):
+		if not await _station_focus(panel, "More refining units", pilot): return false
+		await pilot.press("ui_accept")
+		if int(panel.get("_refining_amount")) != amount + 1:
+			return _fail("Physical Forge amount input did not choose the next unit")
+	if not await _station_focus(panel, "refine:rootiron_ingot", pilot): return false
+	var observed := {"units": [], "stopped": []}
+	var completed := func(id: String, count: int) -> void: observed.units.append([id, count])
+	var stopped := func(code: String, reason: String) -> void: observed.stopped.append([code, reason])
+	manual.connect("unit_completed", completed)
+	manual.connect("channel_stopped", stopped)
+	var started := Engine.get_physics_frames()
+	await pilot.press("ui_accept")
+	while Engine.get_physics_frames() - started < 900:
+		if not observed.stopped.is_empty(): break
+		if observed.units.size() == units and manual.get("_running") != true and manual.get("_pending").is_empty(): break
+		await _tree.physics_frame
+	manual.disconnect("unit_completed", completed)
+	manual.disconnect("channel_stopped", stopped)
+	var expected: Array = []
+	for count in range(1, units + 1): expected.append(["rootiron_ingot", count])
+	if not observed.stopped.is_empty() or observed.units != expected or manual.get("_running") == true \
+			or not manual.get("_pending").is_empty() or panel.call("is_open") or INPUT_OWNER.current(_tree) != null \
+			or _fighting() or not retained_five(_initial_ids, _party_ids()):
+		return _fail("The present Forge lacks exactly its saved units and ordinary world input: " + str(observed))
+	for cost: Dictionary in recipe.get("cost", []):
+		if _count(str(cost.id)) != int(before[str(cost.id)]) - units * int(cost.n):
+			return _fail("Canonical refining did not debit its exact gathered " + str(cost.id))
+	var output: Dictionary = recipe.get("output", {})
+	if output.get("id") != "rootiron_ingot" or _count("rootiron_ingot") != int(before.rootiron_ingot) + units * int(output.get("n", 0)):
+		return _fail("Canonical refining lacks its exact Rootiron output")
+	personal = _game.get("local").get("redesign_character")
+	for member: RefCounted in (_game.get("party") as RefCounted).call("members"):
+		if ESSENCE.creature_cap(personal, str(member.get("uid"))) != caps.get(str(member.get("uid")), -1):
+			return _fail("Refining altered an original creature's cap")
+	_receipt("first_rootiron_refined", {"source": str(forge.get_path()), "units": units,
+		"completed": observed.units, "inventory_before": before, "rootiron_after": _count("rootiron_ingot"),
+		"elapsed_frames": Engine.get_physics_frames() - started, "budget_frames": 900,
+		"controller_tap_start": true, "canonical_saved_callbacks": true, "caps_unchanged": true})
+	return true
+
+
+func _station_focus(panel: Node, key: String, pilot: RefCounted) -> bool:
+	var buttons: Array = panel.get("_station_buttons")
+	var rows: Array = panel.get("_rows")
+	for step in (buttons.size() + rows.size()) * 2:
+		if panel.call("is_open") != true or INPUT_OWNER.current(_tree) != panel:
+			return _fail("Station focus lost its actual panel owner")
+		var focus: Control = panel.get_viewport().gui_get_focus_owner()
+		if focus is Button and buttons.has(focus) and str(focus.get_meta("station_focus_key", "")) == key:
+			return true if not focus.disabled else _fail("The actual station row is disabled: " + key)
+		await pilot.press("ui_down")
+	return _fail("Physical d-pad input did not reach the station row: " + key)
 
 
 func _walk_marker(id: String, budget: int) -> bool:
