@@ -414,7 +414,7 @@ func _check_crafted_command_tiers() -> void:
 	await _press("interact")
 	for i in 600:
 		if equip_reply.result.get("settled") == true or equip_reply.result.get("terminal_refusal") == true: break
-		await process_frame
+		await physics_frame
 	_game.get("session").disconnect("homestead_action_completed", on_equip)
 	menu.call("close")
 	if equip_reply.result.get("settled") != true or equipment.call("equipped_in", "backpack") != "stormglass_command_pouch" \

@@ -544,7 +544,7 @@ func test_pouch_assignment_uses_original_character_journal_and_owner_save_withou
 		match defect:
 			"combat": view.in_combat = true
 			"foreign_owner": view.character_id = "owner_b"
-			"source": view.station_kind = "workbench"
+			"source": view.source_key = "personal_equipment:owner_b"
 			"expected": forged.expected_item = ""
 			"slot": forged.slot = "helmet"
 			"missing": forged.item_id = "tidesteel_command_pouch"

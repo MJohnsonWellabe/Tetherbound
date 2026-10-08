@@ -74,6 +74,7 @@ static func stage(current: Dictionary, revision: int, action: String,
 ## displaced-piece capacity come from the admitted bag; no candidate packet.
 static func _trainer_equip(current: Dictionary, intent: Dictionary, context: Dictionary) -> Dictionary:
 	if context.get("station_kind") != "personal_equipment" or context.get("owns_character") != true \
+		or context.get("source_key") != "personal_equipment:" + str(current.character_id) \
 		or intent.size() != 4 or not ESSENCE._component(intent.get("equip_id")) \
 		or not intent.get("slot") is String or not intent.get("item_id") is String \
 		or not intent.get("expected_item") is String: return deny("equipment_invalid")
