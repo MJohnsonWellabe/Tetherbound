@@ -33,6 +33,18 @@
       "verdict": "SOURCE APPROVE",
       "scope": "Actual Homestead card retained across Home Key return and subsequent gathering reader resets; explicit Help replay uses observed row/CID/orderedUIDs, never inferred from ACK flag alone",
       "behavior": "Actual earned Hall teaching/Help/durable ACK remains OPEN"
+    },
+    {
+      "commit": "bef076b886d0ce872ad1419c9a40f4cbecfe023d",
+      "verdict": "SOURCE APPROVE",
+      "scope": "Existing reload witness reads actual validated saved personal ACK bound to sameCID/orderUIDs within original30s deadline; no save/flush/fallback finalization; flagoff unchanged",
+      "behavior": "Actual new durability behavior OPEN"
+    },
+    {
+      "commit": "43958f19dd0b5004dbea83f1d7382af46216ac05",
+      "verdict": "SOURCE APPROVE",
+      "scope": "Existing paid Masters endpoint extended through savedACK-before-autosave, live-memory reset, mapped production TitleLoad, natural reopen observer, same original7200ready/300settle, declared retained state and actual Help again; default unchanged",
+      "behavior": "Queued after live F20 ending and affected named unit; original ad70 Masters PASS retained separately, no wholeF46 claim"
     }
   ],
   "logic": {

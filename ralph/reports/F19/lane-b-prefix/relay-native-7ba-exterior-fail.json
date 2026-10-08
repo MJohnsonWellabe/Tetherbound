@@ -1,0 +1,105 @@
+{
+  "criterion": "F49#0",
+  "source_commit": "7ba948c5d06b44b97be0e186d0c97e81fc875935",
+  "packet": "D:/CodexTemp/tetherbound-proof/native-b-7ba948c5d0-earned-relay-clock-r1",
+  "process": {
+    "started_utc": "2026-10-08T08:49:51.2414578Z",
+    "pid": 24488,
+    "stop_reason": "",
+    "exit_code": 1,
+    "finished_utc": "2026-10-08T09:00:36.401445Z",
+    "source": "7ba948c5d06b44b97be0e186d0c97e81fc875935"
+  },
+  "source_clean": {
+    "dirty": [],
+    "index_tree": "b16be39d4812e1884fe1ea5a9b9732f181bc1b51",
+    "source": "7ba948c5d06b44b97be0e186d0c97e81fc875935",
+    "head_tree": "b16be39d4812e1884fe1ea5a9b9732f181bc1b51"
+  },
+  "terminal": {
+    "source": "7ba948c5d06b44b97be0e186d0c97e81fc875935",
+    "status": "FAIL",
+    "exit_code": 1,
+    "stop_reason": "",
+    "started_utc": "2026-10-08T08:49:51.2414578Z",
+    "finished_utc": "2026-10-08T09:00:36.401445Z",
+    "failure": [
+      "relay: Riverwatch controller recovery failed: [\"Installed-bed approach lost grounded exterior world input: { \\\"nav_refused\\\": false, \\\"nav_reason\\\": \\\"\\\", \\\"on_floor\\\": true, \\\"paused\\\": false, \\\"fighting\\\": false, \\\"input_owner\\\": \\\"<null>\\\", \\\"inside_bed_exclusion\\\": true, \\\"player\\\": \\\"(214.9855, -4.477181, 3700.039)\\\", \\\"target\\\": \\\"(211.7656, -4.512304, 3704.043)\\\", \\\"solid_bounds\\\": \\\"[P: (210.3223, -4.532207, 3699.155), S: (4.164429, 0.294345, 4.304688)]\\\", \\\"clearance\\\": 0.50100000600796, \\\"waypoint\\\": 0, \\\"frame\\\": 417, \\\"budget\\\": 3600 }\", \"Controller home-bed assignment failed: []\"]"
+    ],
+    "recovery_clock_guard": "NOT REACHED",
+    "save_export": "NONE; no promotion",
+    "script_parse_errors": 0,
+    "native_dirty": []
+  },
+  "helper_wall_seconds": 621.372,
+  "helper_failures": [
+    "relay: Riverwatch controller recovery failed: [\"Installed-bed approach lost grounded exterior world input: { \\\"nav_refused\\\": false, \\\"nav_reason\\\": \\\"\\\", \\\"on_floor\\\": true, \\\"paused\\\": false, \\\"fighting\\\": false, \\\"input_owner\\\": \\\"<null>\\\", \\\"inside_bed_exclusion\\\": true, \\\"player\\\": \\\"(214.9855, -4.477181, 3700.039)\\\", \\\"target\\\": \\\"(211.7656, -4.512304, 3704.043)\\\", \\\"solid_bounds\\\": \\\"[P: (210.3223, -4.532207, 3699.155), S: (4.164429, 0.294345, 4.304688)]\\\", \\\"clearance\\\": 0.50100000600796, \\\"waypoint\\\": 0, \\\"frame\\\": 417, \\\"budget\\\": 3600 }\", \"Controller home-bed assignment failed: []\"]"
+  ],
+  "actual": {
+    "strict_production_load_and_original_warrens_prefix": "Admitted on frozen7ba; original source/save/log bindings retained",
+    "bed_approach": "FAIL waypoint0/frame417 within shared3600budget; grounded/free input but inside exclusion by ~2mm",
+    "player": [
+      214.9855,
+      -4.477181,
+      3700.039
+    ],
+    "excluded_right": 214.9877,
+    "capsule_clearance": 0.50100000600796,
+    "hp_recovery": "NOT REACHED",
+    "natural_clock_guard": "NOT REACHED",
+    "relay_captain": "NOT REACHED",
+    "accepted_export": false,
+    "failed_save_promoted": false,
+    "final_party": [
+      {
+        "hp": 42,
+        "level": 10,
+        "nickname": "Bud",
+        "species": "terrapup",
+        "uid": "creature-cf906fd5504c229a431c3b3202c3c2e2"
+      },
+      {
+        "hp": 27,
+        "level": 10,
+        "nickname": "",
+        "species": "bramblebun",
+        "uid": "creature-83d263c517d32cc6cb7beab6925d80c7"
+      },
+      {
+        "hp": 44,
+        "level": 9,
+        "nickname": "",
+        "species": "bramblebun",
+        "uid": "creature-db1124dc0450464a2bf16ac0f7b6ef17"
+      },
+      {
+        "hp": 32,
+        "level": 8,
+        "nickname": "",
+        "species": "mudsnout",
+        "uid": "creature-afbd0d982b14221393f70c29863586a1"
+      },
+      {
+        "hp": 100,
+        "level": 8,
+        "nickname": "",
+        "species": "bramblebun",
+        "uid": "creature-c576f15db4b7f3ecf487a80de0169177"
+      }
+    ]
+  },
+  "supported_changed_candidate": {
+    "runtime": "OPEN",
+    "manifest_commit": "289ca092745eb3b74011499e917f64194a8691eb",
+    "unit_status": "Queued behind one live B hosted ending run; no22/132repeat",
+    "source": "813dfad49594db865fee9f1828a45ccc6e38443f",
+    "file": "tests/helpers/meadows_earned_team_segment.gd",
+    "source_review": "APPROVE",
+    "affected_existing_case": "test_meadows_earned_team_segment.gd::test_logged_campsite_return_walks_around_exterior_before_crossing_an_open_gate",
+    "compatibility": "Original ad95 Warrens →813 COMPATIBLE",
+    "change": "Initial exterior_path detour receives the same existing capsule reserve as southeast/northeast corners; original exclusion/grounding/input/provider/arrival/sharedbudget guards unchanged",
+    "reviewer": "b_f49_review",
+    "manifest": "ad95-to-813dfad-native-manifest.json"
+  },
+  "whole_ready": false
+}
