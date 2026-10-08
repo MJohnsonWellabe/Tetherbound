@@ -349,7 +349,8 @@ func _boundary(label: String, reload_disk: bool = true) -> bool:
 					and game.local.flags.call("has", "opening:lesson:" + id) == true
 			var service := game.get_node_or_null("OnboardingLessons")
 			retained = retained and service != null and service.get("_identity") == str(game.local.character_id) \
-				and (service.get("_pending") as Dictionary).is_empty() and travel._ready_world(str(game.current_realm))
+				and (service.get("_pending") as Dictionary).is_empty() and not driver.paused \
+				and travel._ready_world(str(game.current_realm))
 			print("F46 EARNED LESSON RELOAD " + JSON.stringify({"boundary":label,"observed":observed,
 				"reopened":reopened,"settle_frames":300,"passed":retained,
 				"scope":"Actual existing disk Load retains only naturally observed personal acknowledgements; teacher return and whole F46 remain open"}))
