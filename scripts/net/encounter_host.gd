@@ -876,6 +876,25 @@ func resolve_self_utility(id: String, peer: int, action: int, current_binding: D
 	return _ok("strike_intent", peer, delta)
 
 
+## Legacy combat still needs the host-observed active UID for motion authority.
+## This changes transient membership only; it cannot create/rebind saved vitals.
+func bind_legacy_actor_deployment(id: String, peer: int, binding: Dictionary) -> bool:
+	var rec: Dictionary = encounters.get(id, {})
+	var participant: Dictionary = rec.get("participants", {}).get(peer, {})
+	var uid := str(binding.get("creature_uid", ""))
+	if rec.get("phase") != "active" or participant.is_empty() \
+		or participant.get("character_id") != binding.get("character_id") \
+		or not UTILITY_EFFECTS._identity(uid) or not UTILITY_EFFECTS._identity(binding.get("character_id")) \
+		or int(binding.get("deployment_generation", 0)) < 1 or int(binding.get("body_instance_id", 0)) < 1 \
+		or int(binding.get("actor_generation", 0)) != 0 \
+		or not participant.get("actor_vitals", {}).is_empty() or not pending_tether_items(id).is_empty(): return false
+	if participant.get("creature_uid") == uid: return true
+	participant["creature_uid"] = uid
+	seq += 1
+	rec["seq"] = seq
+	return true
+
+
 func _self_utility_actor_current(id: String, peer: int, binding: Dictionary) -> bool:
 	var rec: Dictionary = encounters.get(id, {})
 	var participant: Dictionary = rec.get("participants", {}).get(peer, {})

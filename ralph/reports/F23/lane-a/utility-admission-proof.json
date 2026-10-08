@@ -604,6 +604,23 @@
     "candidate": "Consolidation13 f3668748 PR589 CLOSED UNMERGED",
     "proof": "verify-multiplayer-shard(3) shared_boss and shared_wild_fight fail; same original smokes PASS mainfda4",
     "observed": "peer1 quick move_start invalid_actor_move; enemy HP unchanged and friendly_target checks unreachable",
-    "current_disposition": "Original approval/earlier passing pieces retained as history; whole acceptance returned. Inspect bounded shipping admission with SAME original reviewer; no unsupported cause or unchanged rerun."
+    "current_disposition": "Original approval/earlier passing pieces retained as history; whole acceptance returned. Inspect bounded shipping admission with SAME original reviewer; no unsupported cause or unchanged rerun.",
+    "verified_metadata": {
+      "sha": "f3668748a6edcd292e0191110c87b6cbb97edae3",
+      "pr": 589,
+      "merged": false,
+      "shard3_run": 37792546765,
+      "shard3_job": 113363723877,
+      "artifact_id": 11557353642
+    }
+  },
+  "returned_admission_observation": {
+    "source_commit": "1d116c5b426b2c1a08c6e23ff5618c65e80ffea9",
+    "reviewer": "original /root/f25_medium_review 01a1168b-648a-7c33-8810-ae98609b293b",
+    "source_verdict": "SOURCE APPROVE; inputs/fixtures/guards/budgets/hit verdicts preserved",
+    "run_id": 37799961227,
+    "status": "RUNNING one changed shared_wild_fight headless observation",
+    "claim": "detached live post-checkpoint state; observation latency can advance gameplay, not refusal-time receipt or established production cause",
+    "production_change": "none; speculative zero-lunge bypass rejected by original reviewer because failed packet contains successful host zero-strength original"
   }
 }

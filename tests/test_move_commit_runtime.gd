@@ -96,6 +96,34 @@ func test_admission_refuses_unknown_loadout_without_any_mutation() -> void:
 		1, owned, _binding(), _move(), WIND, 1000).ok)
 	assert_eq(host.record(id), before)
 
+
+func test_legacy_join_gets_host_observed_uid_without_creating_saved_vitals() -> void:
+	assert_true(host.join(id, 2, "", "owner_b").ok)
+	var binding := {"character_id":"owner_b", "creature_uid":"creature_b",
+		"deployment_generation":1, "actor_generation":0, "body_instance_id":52}
+	var participant: Dictionary = host.record(id).participants[2]
+	var joined_seq: int = participant.joined_seq
+	assert_false(host._self_utility_actor_current(id, 2, binding))
+	assert_true(host.bind_legacy_actor_deployment(id, 2, binding))
+	assert_true(host._self_utility_actor_current(id, 2, binding))
+	assert_eq(participant.joined_seq, joined_seq, "binding does not re-seat the participant")
+	assert_false(participant.has("actor_vitals"), "legacy metadata does not mount saved HP")
+	var before: Dictionary = host.record(id).duplicate(true)
+	assert_true(host.bind_legacy_actor_deployment(id, 2, binding))
+	assert_eq(host.record(id), before, "same deployment is idempotent")
+	var forged := binding.duplicate(true)
+	forged.character_id = "other_owner"
+	assert_false(host.bind_legacy_actor_deployment(id, 2, forged))
+	assert_eq(host.record(id), before)
+	forged = binding.duplicate(true)
+	forged.deployment_generation = 0
+	assert_false(host.bind_legacy_actor_deployment(id, 2, forged))
+	assert_eq(host.record(id), before)
+	forged = binding.duplicate(true)
+	forged.actor_generation = 1
+	assert_false(host.bind_legacy_actor_deployment(id, 2, forged), "saved generations cannot use legacy adapter")
+	assert_eq(host.record(id), before)
+
 func test_unsaved_mastery_and_resources_survive_peer_replacement_and_close() -> void:
 	assert_true(host.join(id, 2, "creature_b", "owner_b").ok)
 	assert_true(_start(1).ok)

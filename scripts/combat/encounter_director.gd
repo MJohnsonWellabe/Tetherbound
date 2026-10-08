@@ -4374,10 +4374,36 @@ func _ordinary_deployment_pending(peer: int, next_uid: String) -> bool:
 func _ordinary_bind_deployed_peer(peer: int) -> void:
 	if _encounter_host == null: return
 	for id: String in _encounter_host.get("encounters"):
-		if not uses_saved_actor_vitals(id) or ordinary_actor_vitals_pending(id): continue
+		if ordinary_actor_vitals_pending(id): continue
 		var rec: Dictionary = _encounter_host.call("record", id)
 		if rec.get("phase") == "active" and rec.get("participants", {}).has(peer):
-			_ordinary_actor_binding(id, peer, deployed_body_for(peer))
+			if uses_saved_actor_vitals(id):
+				_ordinary_actor_binding(id, peer, deployed_body_for(peer))
+			elif _combat_motion_transport_enabled():
+				_bind_legacy_deployed_actor(id, peer)
+
+
+## Ordinary joins may precede deployment and carry no guest-supplied active UID.
+## Fill that transient identity from the same authenticated host body/loadout
+## used at move admission, without enabling the saved actor-vitals pipeline.
+func _bind_legacy_deployed_actor(id: String, peer: int) -> bool:
+	if not _is_host() or _session == null or not _tournament_combat_identity_valid(id, peer): return false
+	var body := deployed_body_for(peer)
+	var binding := _strike_actor_binding(id, peer, body)
+	var card := _creature_card_for(peer)
+	var admitted: Dictionary = _session.call("admitted_character_state", peer)
+	if not is_instance_valid(body) or binding.is_empty() \
+		or admitted.get("character_id") != binding.get("character_id") \
+		or card.get("creature_uid") != binding.get("creature_uid") or float(card.get("hp", 0.0)) <= 0.0 \
+		or not admitted.get("party") is Array or admitted.party.size() > 5 \
+		or _ordinary_deployment_pending(peer, str(binding.get("creature_uid", ""))): return false
+	var matches := 0
+	for owned: Dictionary in admitted.party:
+		if owned.get("uid") == binding.creature_uid:
+			if float(owned.get("hp", 0.0)) <= 0.0 or owned.get("fainted") == true: return false
+			matches += 1
+	if matches != 1: return false
+	return _encounter_host.call("bind_legacy_actor_deployment", id, peer, binding) == true
 
 
 func _stage_ordinary_enemy_hit(id: String, peer: int, payload: Dictionary) -> void:
