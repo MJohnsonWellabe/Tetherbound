@@ -740,6 +740,12 @@ func _equipment_has_focus() -> bool:
 func _unequip(slot: String) -> void:
 	if _held >= 0 or _targeting >= 0 or _confirming >= 0:
 		return
+	var owner_game := state()
+	var owner_session: Node = owner_game.get("session") as Node if owner_game != null else null
+	if owner_session != null and owner_session.has_method("_owner_training_mutation_blocked") \
+		and owner_session.call("_owner_training_mutation_blocked", owner_game.get("local")) == true:
+		say("Saving your last action. Try again in a moment.")
+		return
 	var equipment := _equipment()
 	if equipment == null:
 		return
@@ -750,6 +756,19 @@ func _unequip(slot: String) -> void:
 		say("Removed %s." % str(_items().call("item_name", id)))
 	else:
 		say("Make room in your Satchel first.")
+
+func _equip(id: String) -> void:
+	var owner_game := state()
+	var owner_session: Node = owner_game.get("session") as Node if owner_game != null else null
+	if owner_session != null and owner_session.has_method("_owner_training_mutation_blocked") \
+		and owner_session.call("_owner_training_mutation_blocked", owner_game.get("local")) == true:
+		say("Saving your last action. Try again in a moment.")
+		return
+	var equipment := _equipment()
+	if equipment != null and bool(equipment.call("equip_from_inventory", id, _inventory())):
+		say("Equipped %s." % str(_items().call("item_name", id)))
+	else:
+		say("Cannot equip that now. Make room for the worn piece in your Satchel.")
 
 
 func _refresh_equipment() -> void:
@@ -1446,11 +1465,7 @@ func _read_use() -> void:
 		if game != null: game.call("use_home_key")
 		return
 	if str(db.call("kind", id)) == "armor":
-		var equipment := _equipment()
-		if equipment != null and bool(equipment.call("equip_from_inventory", id, inventory)):
-			say("Equipped %s." % str(db.call("item_name", id)))
-		else:
-			say("Cannot equip that now. Make room for the worn piece in your Satchel.")
+		_equip(id)
 		return
 
 	if str(db.call("kind", id)) == "tool":

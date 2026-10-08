@@ -145,6 +145,27 @@ func _native_case_backpack_target_guard_precedes_any_care_or_item_write() -> voi
 	assert_eq(menu.messages.size(), 1)
 	assert_eq(tab.get("_targeting"), 0, "blocked choice remains retryable")
 	assert_eq(owner_session.packets, [])
+	tab.set("_targeting", -1)
+	assert_eq(game.inventory.add("travel_pack", 1), 0)
+	var packed := var_to_bytes(RECORD.portable_projection(game.local.save_data()))
+	tab.call("_equip", "travel_pack")
+	assert_eq(var_to_bytes(RECORD.portable_projection(game.local.save_data())), packed,
+		"pending owner decision preserves both the selected bag piece and equipment")
+	assert_eq(menu.messages.size(), 2)
+	owner_session.blocked = false
+	tab.call("_equip", "travel_pack")
+	assert_eq(game.player_equipment.equipped_in("backpack"), "travel_pack", "ordinary wear still works")
+	assert_eq(game.inventory.count("travel_pack"), 0)
+	var worn := var_to_bytes(RECORD.portable_projection(game.local.save_data()))
+	owner_session.blocked = true
+	tab.call("_unequip", "backpack")
+	assert_eq(var_to_bytes(RECORD.portable_projection(game.local.save_data())), worn,
+		"pending owner decision preserves the worn piece and every bag slot")
+	assert_eq(menu.messages.size(), 4)
+	owner_session.blocked = false
+	tab.call("_unequip", "backpack")
+	assert_eq(game.player_equipment.equipped_in("backpack"), "")
+	assert_eq(game.inventory.count("travel_pack"), 1, "ordinary removal returns exactly the original piece")
 	tab.free()
 	menu.free()
 	_native_completed = true
