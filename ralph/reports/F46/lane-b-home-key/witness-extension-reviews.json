@@ -8,7 +8,7 @@
       "verdict": "SOURCE APPROVE",
       "scope": "Existing Altar smoke, unchanged120 essence fixture, paid real first cap then Tam natural Masters Skip/Help; existing dual-clock mappedCancel",
       "behavior_run": 37748475590,
-      "behavior": "LIVE; no runtime or visual verdict"
+      "behavior": "PASS: 37748475590/art11538606744 exit0/1687s; original behavior APPROVE and literal blind PASS; masters-actual-r1.json/contact committed3367dfafd62657fa8d48b3bdb86ba6dd84167c3d. Durable lesson ACK reload remains OPEN."
     },
     {
       "commit": "afd43536493c9ba1a8bcd8cda6086b7d770b72b7",
@@ -21,6 +21,18 @@
       "verdict": "SOURCE APPROVE",
       "scope": "Opt-in completed next-goal HUD frame with same actual character/orderedparty/goal/freeinput; no camera/UI/progression writes or comprehension claim",
       "behavior": "Actual capture and agent next-goal verdict OPEN"
+    },
+    {
+      "commit": "866ecbb7a6e4f7f73fa85563567f5274d739e244",
+      "verdict": "SOURCE APPROVE",
+      "scope": "Opt-in read-only natural-lesson ACK/no-reopen observation across the existing campaign boundary disk Load; same300-process settle, stable CID/orderedUIDs, actual ACK, free unpaused ready input; default unchanged",
+      "behavior": "OPEN until actual earned boundaries; empty history produces no proof"
+    },
+    {
+      "commit": "d1b23448af5d135fd0c509498e38ba386727b825",
+      "verdict": "SOURCE APPROVE",
+      "scope": "Actual Homestead card retained across Home Key return and subsequent gathering reader resets; explicit Help replay uses observed row/CID/orderedUIDs, never inferred from ACK flag alone",
+      "behavior": "Actual earned Hall teaching/Help/durable ACK remains OPEN"
     }
   ],
   "logic": {
@@ -45,9 +57,8 @@
     "supported_homestead_path": "Existing earned Hall hook at51be286103 remains; actual behavior OPEN"
   },
   "remaining_gates": [
-    "Actual Masters runtime and code-blind captures",
-    "Actual earned Homestead, Portals and Shrines Skip/Help",
-    "Named per-card persistence proofs and whole F46#0 verdict",
+    "Actual earned Homestead, Portals and Shrines controller Skip/Help",
+    "Named personal ACK persistence proofs and whole F46#0 verdict",
     "Actual gate HUD frames and independent new-player next-goal answers for F46#1"
   ]
 }
