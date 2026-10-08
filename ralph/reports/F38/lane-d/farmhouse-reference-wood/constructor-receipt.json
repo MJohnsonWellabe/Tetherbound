@@ -19,6 +19,7 @@
   "source": "925fae787c431264ba74cb8b4d0ebafdc4a3bfaa",
   "artifact": 11571886480,
   "args": "--farmhouse-furniture-reference-candidate",
-  "limits": "No mounted wood texture/pixel/native/High/Medium/device/performance/full bar/whole claim; shipping OFF, old lift0.0. Original source APPROVE retained, affected artifact and exact native commands pending original review.",
-  "raw": "run37826494240/artifact.zip and extracted/run.log preserved"
+  "limits": "Original SOURCE and affected ARTIFACT APPROVE; exact two native COMMANDS APPROVE. No mounted wood texture/pixel/native/High/Medium/device/performance/full bar/whole claim; shipping OFF, old lift0.0.",
+  "raw": "run37826494240/artifact.zip and extracted/run.log preserved",
+  "original_affected_artifact_command_review": "original-affected-artifact-command-verdict.txt"
 }

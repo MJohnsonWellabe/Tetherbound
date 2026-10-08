@@ -1,0 +1,11 @@
+Original /root/f42_visual_review 01a1168a-2a2e-7243-aa7d-e655171c70fa, turn 01a11cdd-3b3e-7971-8874-b7ed9090b8a2
+
+**ARTIFACT APPROVE:** frozen `925fae787c431264ba74cb8b4d0ebafdc4a3bfaa`, run `37826494240`.
+
+Checkout and log hash match the receipt. Actual farmhouse→road→nave path passed: exit 0/112s, maximum off-road distance 0, zero script errors and one retained interpolation warning. This proves the bounded headless constructor/path scope, not mounted wood materials or pixels.
+
+**COMMAND APPROVE:** the proposed same-source Low baseline/candidate pair correctly selects farm_to_hall close, day/night and clear/rain—four frames each—with only the furniture switch differing apart from output paths.
+
+The required capture-definition blob matches `c41279e1303c3cee5619dc06dc53ee61646cea8c`; ROOT must hydrate those exact bytes before import/capture. Existing guards and disclosed fixtures remain. Shipping stays OFF; lift and both window candidates stay OFF.
+
+Reference-wood bindings are not measured by this producer. Native completion, eight-original blind judgment and visual/whole acceptance remain pending.
