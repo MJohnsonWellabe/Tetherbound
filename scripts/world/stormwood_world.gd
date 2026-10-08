@@ -329,14 +329,21 @@ func _stand_up_ground_cover() -> void:
 	var cover := GROUND_COVER.new()
 	cover.name = "StormwoodGroundCover"
 	var finish: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/stormwood_ground_finish.json"))
-	if bool(finish.get("enabled", false)):
+	var full_profile := bool(finish.get("enabled", false))
+	var understory: Dictionary = finish.get("understory_readability", {})
+	var low_shrubs := bool(understory.get("enabled", false))
+	if full_profile or low_shrubs:
 		var profile: Dictionary = GROUND_COVER.config().duplicate(true)
-		for key: String in finish.get("grass", {}):
-			profile[key] = finish.grass[key]
+		if full_profile:
+			for key: String in finish.get("grass", {}):
+				profile[key] = finish.grass[key]
 		for tier: Dictionary in profile.get("cover_tiers", []):
-			var overrides: Dictionary = finish.get("tiers", {}).get(str(tier.get("name", "")), {})
-			for key: String in overrides:
-				tier[key] = overrides[key]
+			if full_profile:
+				var overrides: Dictionary = finish.get("tiers", {}).get(str(tier.get("name", "")), {})
+				for key: String in overrides:
+					tier[key] = overrides[key]
+			if low_shrubs and str(tier.get("name", "")) == "bushes":
+				tier["item_size"] = float(understory.get("bush_item_size", 0.42))
 		var textures: Array = []
 		var terrain_config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/terrain_playground.json"))
 		for texture: Dictionary in terrain_config.textures:

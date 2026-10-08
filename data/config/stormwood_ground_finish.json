@@ -2,7 +2,7 @@
   "enabled": false,
   "scope": "client_presentation",
   "leaf_original_alpha": {
-    "enabled": true,
+    "enabled": false,
     "scope": "client_presentation",
     "tint": "#8eaa91",
     "brightness": 1.35,
@@ -103,5 +103,11 @@
         "tint": "#b1b4a2"
       }
     }
+  },
+  "understory_readability": {
+    "enabled": true,
+    "scope": "client_presentation",
+    "bush_item_size": 0.42,
+    "_comment": "F10#4 Low normal-camera fix: cap decorative shrub height below trainer knees across Stormwood. Reuse existing bush mesh, density, lattice, seed and tier jitter; no harvestable plants, collision, terrain or durable state changes. Failed full ground-cover profile stays OFF; installed-leaf experiment remains OFF."
   }
 }

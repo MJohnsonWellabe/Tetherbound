@@ -1,0 +1,571 @@
+{
+  "criterion": "F10#4",
+  "source_commit": "8e772c6ebdf47348689d2a8aef78139ff9ad538b",
+  "terminal": {
+    "image_count": 8,
+    "terminal_exit_code": 0,
+    "source": "8e772c6ebdf47348689d2a8aef78139ff9ad538b",
+    "stop_reason": "",
+    "dirty": [],
+    "frame_ids": [
+      "forest_calm",
+      "forest_building",
+      "forest_break",
+      "forest_fading",
+      "giant_calm",
+      "giant_building",
+      "giant_break",
+      "giant_fading"
+    ],
+    "failures": [],
+    "schema": "F10 matrix failures/frames/graphics_capture/label, no complete field",
+    "graphics_capture": {
+      "adapter": "NVIDIA GeForce GTX 1060 3GB",
+      "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+      "preset": "Low",
+      "renderer": "gl_compatibility",
+      "resolution": [
+        1280,
+        720
+      ],
+      "source_commit": "8e772c6ebdf47348689d2a8aef78139ff9ad538b"
+    },
+    "script_errors": 0
+  },
+  "frames": [
+    {
+      "id": "forest_calm",
+      "ground_materials": {
+        "camera_is_rendering": true,
+        "config_sha256": "a495939f9eb39d000c759ea942e10d23e4030cfb1fdc0cc6e838441ff65afa7f",
+        "cover_enabled": false,
+        "slots": [
+          {
+            "albedo": "res://assets/environment/terrain/stylised/meadow_grass_Color.png",
+            "name": "grass",
+            "normal_depth": 0.340000003576279,
+            "tint": "99a77f",
+            "uv_scale": 0.5
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/verge_grass_Color.png",
+            "name": "soil",
+            "normal_depth": 0.219999998807907,
+            "tint": "b4b497",
+            "uv_scale": 0.449999988079071
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/rock_scree_Color.png",
+            "name": "rock",
+            "normal_depth": 0.550000011920929,
+            "tint": "aaaab3",
+            "uv_scale": 0.239999994635582
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/dirt_path_Color.png",
+            "name": "path",
+            "normal_depth": 0.25,
+            "tint": "bfb49c",
+            "uv_scale": 0.5
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/wet_earth_Color.png",
+            "name": "damp",
+            "normal_depth": 0.180000007152557,
+            "tint": "a6aaa0",
+            "uv_scale": 0.5
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/forest_floor_Color.png",
+            "name": "forest_floor",
+            "normal_depth": 0.300000011920929,
+            "tint": "b1b4a2",
+            "uv_scale": 0.5
+          }
+        ],
+        "terrain_bound": true
+      },
+      "presentation": {
+        "bolt_level": 0.0,
+        "cloud_flash_level": 0.0,
+        "flash_level": 0.0,
+        "phase_progress": 0.011,
+        "presentation_key": "calm",
+        "rain_amount_ratio": 0.300000011920929,
+        "rain_emitting": true,
+        "rain_visible": true,
+        "roofed": false,
+        "steam_level": 0.0
+      }
+    },
+    {
+      "id": "forest_building",
+      "ground_materials": {
+        "camera_is_rendering": true,
+        "config_sha256": "a495939f9eb39d000c759ea942e10d23e4030cfb1fdc0cc6e838441ff65afa7f",
+        "cover_enabled": false,
+        "slots": [
+          {
+            "albedo": "res://assets/environment/terrain/stylised/meadow_grass_Color.png",
+            "name": "grass",
+            "normal_depth": 0.340000003576279,
+            "tint": "99a77f",
+            "uv_scale": 0.5
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/verge_grass_Color.png",
+            "name": "soil",
+            "normal_depth": 0.219999998807907,
+            "tint": "b4b497",
+            "uv_scale": 0.449999988079071
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/rock_scree_Color.png",
+            "name": "rock",
+            "normal_depth": 0.550000011920929,
+            "tint": "aaaab3",
+            "uv_scale": 0.239999994635582
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/dirt_path_Color.png",
+            "name": "path",
+            "normal_depth": 0.25,
+            "tint": "bfb49c",
+            "uv_scale": 0.5
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/wet_earth_Color.png",
+            "name": "damp",
+            "normal_depth": 0.180000007152557,
+            "tint": "a6aaa0",
+            "uv_scale": 0.5
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/forest_floor_Color.png",
+            "name": "forest_floor",
+            "normal_depth": 0.300000011920929,
+            "tint": "b1b4a2",
+            "uv_scale": 0.5
+          }
+        ],
+        "terrain_bound": true
+      },
+      "presentation": {
+        "bolt_level": 0.0,
+        "cloud_flash_level": 0.0,
+        "flash_level": 0.0,
+        "phase_progress": 0.031,
+        "presentation_key": "building",
+        "rain_amount_ratio": 0.819999992847443,
+        "rain_emitting": true,
+        "rain_visible": true,
+        "roofed": false,
+        "steam_level": 0.0
+      }
+    },
+    {
+      "id": "forest_break",
+      "ground_materials": {
+        "camera_is_rendering": true,
+        "config_sha256": "a495939f9eb39d000c759ea942e10d23e4030cfb1fdc0cc6e838441ff65afa7f",
+        "cover_enabled": false,
+        "slots": [
+          {
+            "albedo": "res://assets/environment/terrain/stylised/meadow_grass_Color.png",
+            "name": "grass",
+            "normal_depth": 0.340000003576279,
+            "tint": "99a77f",
+            "uv_scale": 0.5
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/verge_grass_Color.png",
+            "name": "soil",
+            "normal_depth": 0.219999998807907,
+            "tint": "b4b497",
+            "uv_scale": 0.449999988079071
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/rock_scree_Color.png",
+            "name": "rock",
+            "normal_depth": 0.550000011920929,
+            "tint": "aaaab3",
+            "uv_scale": 0.239999994635582
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/dirt_path_Color.png",
+            "name": "path",
+            "normal_depth": 0.25,
+            "tint": "bfb49c",
+            "uv_scale": 0.5
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/wet_earth_Color.png",
+            "name": "damp",
+            "normal_depth": 0.180000007152557,
+            "tint": "a6aaa0",
+            "uv_scale": 0.5
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/forest_floor_Color.png",
+            "name": "forest_floor",
+            "normal_depth": 0.300000011920929,
+            "tint": "b1b4a2",
+            "uv_scale": 0.5
+          }
+        ],
+        "terrain_bound": true
+      },
+      "presentation": {
+        "bolt_level": 0.3,
+        "cloud_flash_level": 0.137,
+        "flash_level": 0.0,
+        "phase_progress": 0.036,
+        "presentation_key": "break",
+        "rain_amount_ratio": 1.0,
+        "rain_emitting": true,
+        "rain_visible": true,
+        "roofed": false,
+        "steam_level": 0.0
+      }
+    },
+    {
+      "id": "forest_fading",
+      "ground_materials": {
+        "camera_is_rendering": true,
+        "config_sha256": "a495939f9eb39d000c759ea942e10d23e4030cfb1fdc0cc6e838441ff65afa7f",
+        "cover_enabled": false,
+        "slots": [
+          {
+            "albedo": "res://assets/environment/terrain/stylised/meadow_grass_Color.png",
+            "name": "grass",
+            "normal_depth": 0.340000003576279,
+            "tint": "99a77f",
+            "uv_scale": 0.5
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/verge_grass_Color.png",
+            "name": "soil",
+            "normal_depth": 0.219999998807907,
+            "tint": "b4b497",
+            "uv_scale": 0.449999988079071
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/rock_scree_Color.png",
+            "name": "rock",
+            "normal_depth": 0.550000011920929,
+            "tint": "aaaab3",
+            "uv_scale": 0.239999994635582
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/dirt_path_Color.png",
+            "name": "path",
+            "normal_depth": 0.25,
+            "tint": "bfb49c",
+            "uv_scale": 0.5
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/wet_earth_Color.png",
+            "name": "damp",
+            "normal_depth": 0.180000007152557,
+            "tint": "a6aaa0",
+            "uv_scale": 0.5
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/forest_floor_Color.png",
+            "name": "forest_floor",
+            "normal_depth": 0.300000011920929,
+            "tint": "b1b4a2",
+            "uv_scale": 0.5
+          }
+        ],
+        "terrain_bound": true
+      },
+      "presentation": {
+        "bolt_level": 0.0,
+        "cloud_flash_level": 0.0,
+        "flash_level": 0.0,
+        "phase_progress": 0.057,
+        "presentation_key": "fading",
+        "rain_amount_ratio": 0.574749171733856,
+        "rain_emitting": true,
+        "rain_visible": true,
+        "roofed": false,
+        "steam_level": 0.968
+      }
+    },
+    {
+      "id": "giant_calm",
+      "ground_materials": {
+        "camera_is_rendering": true,
+        "config_sha256": "a495939f9eb39d000c759ea942e10d23e4030cfb1fdc0cc6e838441ff65afa7f",
+        "cover_enabled": false,
+        "slots": [
+          {
+            "albedo": "res://assets/environment/terrain/stylised/meadow_grass_Color.png",
+            "name": "grass",
+            "normal_depth": 0.340000003576279,
+            "tint": "99a77f",
+            "uv_scale": 0.5
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/verge_grass_Color.png",
+            "name": "soil",
+            "normal_depth": 0.219999998807907,
+            "tint": "b4b497",
+            "uv_scale": 0.449999988079071
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/rock_scree_Color.png",
+            "name": "rock",
+            "normal_depth": 0.550000011920929,
+            "tint": "aaaab3",
+            "uv_scale": 0.239999994635582
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/dirt_path_Color.png",
+            "name": "path",
+            "normal_depth": 0.25,
+            "tint": "bfb49c",
+            "uv_scale": 0.5
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/wet_earth_Color.png",
+            "name": "damp",
+            "normal_depth": 0.180000007152557,
+            "tint": "a6aaa0",
+            "uv_scale": 0.5
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/forest_floor_Color.png",
+            "name": "forest_floor",
+            "normal_depth": 0.300000011920929,
+            "tint": "b1b4a2",
+            "uv_scale": 0.5
+          }
+        ],
+        "terrain_bound": true
+      },
+      "presentation": {
+        "bolt_level": 0.0,
+        "cloud_flash_level": 0.0,
+        "flash_level": 0.0,
+        "phase_progress": 0.011,
+        "presentation_key": "calm",
+        "rain_amount_ratio": 0.300000011920929,
+        "rain_emitting": true,
+        "rain_visible": true,
+        "roofed": false,
+        "steam_level": 0.0
+      }
+    },
+    {
+      "id": "giant_building",
+      "ground_materials": {
+        "camera_is_rendering": true,
+        "config_sha256": "a495939f9eb39d000c759ea942e10d23e4030cfb1fdc0cc6e838441ff65afa7f",
+        "cover_enabled": false,
+        "slots": [
+          {
+            "albedo": "res://assets/environment/terrain/stylised/meadow_grass_Color.png",
+            "name": "grass",
+            "normal_depth": 0.340000003576279,
+            "tint": "99a77f",
+            "uv_scale": 0.5
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/verge_grass_Color.png",
+            "name": "soil",
+            "normal_depth": 0.219999998807907,
+            "tint": "b4b497",
+            "uv_scale": 0.449999988079071
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/rock_scree_Color.png",
+            "name": "rock",
+            "normal_depth": 0.550000011920929,
+            "tint": "aaaab3",
+            "uv_scale": 0.239999994635582
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/dirt_path_Color.png",
+            "name": "path",
+            "normal_depth": 0.25,
+            "tint": "bfb49c",
+            "uv_scale": 0.5
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/wet_earth_Color.png",
+            "name": "damp",
+            "normal_depth": 0.180000007152557,
+            "tint": "a6aaa0",
+            "uv_scale": 0.5
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/forest_floor_Color.png",
+            "name": "forest_floor",
+            "normal_depth": 0.300000011920929,
+            "tint": "b1b4a2",
+            "uv_scale": 0.5
+          }
+        ],
+        "terrain_bound": true
+      },
+      "presentation": {
+        "bolt_level": 0.0,
+        "cloud_flash_level": 0.0,
+        "flash_level": 0.0,
+        "phase_progress": 0.029,
+        "presentation_key": "building",
+        "rain_amount_ratio": 0.819999992847443,
+        "rain_emitting": true,
+        "rain_visible": true,
+        "roofed": false,
+        "steam_level": 0.0
+      }
+    },
+    {
+      "id": "giant_break",
+      "ground_materials": {
+        "camera_is_rendering": true,
+        "config_sha256": "a495939f9eb39d000c759ea942e10d23e4030cfb1fdc0cc6e838441ff65afa7f",
+        "cover_enabled": false,
+        "slots": [
+          {
+            "albedo": "res://assets/environment/terrain/stylised/meadow_grass_Color.png",
+            "name": "grass",
+            "normal_depth": 0.340000003576279,
+            "tint": "99a77f",
+            "uv_scale": 0.5
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/verge_grass_Color.png",
+            "name": "soil",
+            "normal_depth": 0.219999998807907,
+            "tint": "b4b497",
+            "uv_scale": 0.449999988079071
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/rock_scree_Color.png",
+            "name": "rock",
+            "normal_depth": 0.550000011920929,
+            "tint": "aaaab3",
+            "uv_scale": 0.239999994635582
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/dirt_path_Color.png",
+            "name": "path",
+            "normal_depth": 0.25,
+            "tint": "bfb49c",
+            "uv_scale": 0.5
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/wet_earth_Color.png",
+            "name": "damp",
+            "normal_depth": 0.180000007152557,
+            "tint": "a6aaa0",
+            "uv_scale": 0.5
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/forest_floor_Color.png",
+            "name": "forest_floor",
+            "normal_depth": 0.300000011920929,
+            "tint": "b1b4a2",
+            "uv_scale": 0.5
+          }
+        ],
+        "terrain_bound": true
+      },
+      "presentation": {
+        "bolt_level": 0.0,
+        "cloud_flash_level": 0.0,
+        "flash_level": 0.0,
+        "phase_progress": 0.064,
+        "presentation_key": "break",
+        "rain_amount_ratio": 1.0,
+        "rain_emitting": true,
+        "rain_visible": true,
+        "roofed": false,
+        "steam_level": 0.0
+      }
+    },
+    {
+      "id": "giant_fading",
+      "ground_materials": {
+        "camera_is_rendering": true,
+        "config_sha256": "a495939f9eb39d000c759ea942e10d23e4030cfb1fdc0cc6e838441ff65afa7f",
+        "cover_enabled": false,
+        "slots": [
+          {
+            "albedo": "res://assets/environment/terrain/stylised/meadow_grass_Color.png",
+            "name": "grass",
+            "normal_depth": 0.340000003576279,
+            "tint": "99a77f",
+            "uv_scale": 0.5
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/verge_grass_Color.png",
+            "name": "soil",
+            "normal_depth": 0.219999998807907,
+            "tint": "b4b497",
+            "uv_scale": 0.449999988079071
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/rock_scree_Color.png",
+            "name": "rock",
+            "normal_depth": 0.550000011920929,
+            "tint": "aaaab3",
+            "uv_scale": 0.239999994635582
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/dirt_path_Color.png",
+            "name": "path",
+            "normal_depth": 0.25,
+            "tint": "bfb49c",
+            "uv_scale": 0.5
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/wet_earth_Color.png",
+            "name": "damp",
+            "normal_depth": 0.180000007152557,
+            "tint": "a6aaa0",
+            "uv_scale": 0.5
+          },
+          {
+            "albedo": "res://assets/environment/terrain/stylised/forest_floor_Color.png",
+            "name": "forest_floor",
+            "normal_depth": 0.300000011920929,
+            "tint": "b1b4a2",
+            "uv_scale": 0.5
+          }
+        ],
+        "terrain_bound": true
+      },
+      "presentation": {
+        "bolt_level": 0.0,
+        "cloud_flash_level": 0.0,
+        "flash_level": 0.0,
+        "phase_progress": 0.044,
+        "presentation_key": "fading",
+        "rain_amount_ratio": 0.581125020980835,
+        "rain_emitting": true,
+        "rain_visible": true,
+        "roofed": false,
+        "steam_level": 0.976
+      }
+    }
+  ],
+  "judge": {
+    "reviewer": "/root/blind_listener_f10",
+    "whole_verdict": "BLOCK",
+    "forest_four_phases": "PASS: readable plant, trunk and canopy layers; terrain and trainer distinguishable including Break. Prefer B.",
+    "giant_four_phases": "BLOCK: foreground decorative shrub obscures trainer legs and feet in production camera.",
+    "rod_calm_break": "PASS, separate4577source disclosed",
+    "retained_aftermath": "PASS bounded five68c6source views; light rain/purple sky/no visible lightning/glass scars remain. Not new candidate aftermath."
+  },
+  "review": {
+    "reviewer": "/root/review_cloud_startup",
+    "verdict": "APPROVE source and bounded packet completeness, no criterion PASS yet"
+  },
+  "response": "Separate client-presentation understory flag lowers only decorative procedural bushes from0.85 to0.42 in Stormwood; failed fullcover and leaf experiments OFF. Changed eight-view production proof pending. No READY until wholecriterion judgePASS.",
+  "owner_direction": "Issue5726051787387: judge owncriterion Low blind; full art bar does not block; no proof reruns/integration CI is consolidation."
+}

@@ -244,8 +244,18 @@ func _ground_material_receipt(frame_id: String) -> Dictionary:
 	if actual.size() != candidate.textures.size():
 		_failures.append(frame_id + ": production terrain slot count differs from overrides")
 		return {}
+	var shrub_size := -1.0
+	var understory: Dictionary = config.get("understory_readability", {})
+	if bool(understory.get("enabled", false)):
+		var shrub := _world.get_node_or_null("StormwoodGroundCover/Cover_bushes") as MultiMeshInstance3D
+		var material := shrub.material_override as ShaderMaterial if shrub != null else null
+		if material == null or not is_equal_approx(float(material.get_shader_parameter("item_size")), float(understory.bush_item_size)):
+			_failures.append(frame_id + ": production decorative shrub height differs from readability profile")
+			return {}
+		shrub_size = float(material.get_shader_parameter("item_size"))
 	return {"config_sha256": FileAccess.get_file_as_string(path).sha256_text(), "slots": actual,
-		"terrain_bound": terrain.is_inside_tree(), "camera_is_rendering": _camera == root.get_camera_3d(), "cover_enabled": false}
+		"terrain_bound": terrain.is_inside_tree(), "camera_is_rendering": _camera == root.get_camera_3d(), "cover_enabled": false,
+		"decorative_shrub_item_size": shrub_size}
 
 
 func _done() -> void:
