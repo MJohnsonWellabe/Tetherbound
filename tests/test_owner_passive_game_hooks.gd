@@ -260,6 +260,28 @@ func _native_case_backpack_target_guard_precedes_any_care_or_item_write() -> voi
 	assert_eq(game.inventory.count(coin), price + trade.sell_price("mira", "berries"),
 		"ordinary sale pays exactly the configured price")
 	shop.free()
+	var species := preload("res://scripts/creatures/creature_species.gd")
+	var giving: RefCounted = species.spawn("paddlenewt")
+	var incoming: RefCounted = species.spawn("bramblebun")
+	assert_true(game.party.add(giving))
+	var swap := preload("res://scripts/ui/swap_panel.gd").new()
+	swap.game = game
+	swap.set("_offer_creature", incoming)
+	swap.set("_pending_index", 1)
+	packed = var_to_bytes(RECORD.portable_projection(game.local.save_data()))
+	owner_session.blocked = true
+	assert_eq(swap.confirm_swap(), "owner_save_pending")
+	assert_eq(var_to_bytes(RECORD.portable_projection(game.local.save_data())), packed,
+		"pending owner decision cannot replace an owned creature UID through an NPC swap")
+	assert_eq(swap.get("_pending_index"), 1, "blocked swap keeps the exact selected creature retryable")
+	assert_eq(swap.get("_offer_creature"), incoming, "blocked swap keeps the original offer")
+	owner_session.blocked = false
+	assert_eq(swap.confirm_swap(), "")
+	assert_eq(game.party.size(), 2, "ordinary swap remains one-for-one below the five cap")
+	assert_eq(game.party.at(1), incoming, "ordinary retry takes only the original NPC offer")
+	assert_eq(swap.get("_pending_index"), -1)
+	assert_eq(swap.get("_offer_creature"), null)
+	swap.free()
 	tab.free()
 	menu.free()
 	_native_completed = true
