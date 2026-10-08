@@ -88,6 +88,34 @@ func _run() -> void:
 		"cliffside settlement roof colour still matches the Meadows village roof colour", failures)
 	_expect(int(look.call("settlement_guy_rope_count")) > 0, "no settlement guy ropes were added", failures)
 
+	# 6. Route verges must survive production support checks and reach the
+	# committed mesh batches, not just the pure authored-data station plan.
+	var look_config: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(
+		"res://data/config/cloudreach_look.json"))
+	var verge_config: Dictionary = look_config.get("route_verges", {})
+	var grounded_routes := 0
+	for raw: Variant in config_data.get("routes", []):
+		if str((raw as Dictionary).get("traversal_mode", "ground")) == "ground":
+			grounded_routes += 1
+	var verge_stations := int(look.call("route_verge_station_count"))
+	var verge_plants := int(look.call("route_verge_plant_count"))
+	var verge_stones := int(look.call("route_verge_stone_count"))
+	_expect(int(look.call("route_verge_route_count")) == grounded_routes,
+		"route verges did not plan every grounded route", failures)
+	_expect(verge_stations > 0 and verge_stations <= grounded_routes * int(
+		verge_config.get("max_stations_per_route", 16)), "route verge station budget/placement failed", failures)
+	_expect(verge_plants > 0 and verge_stones > 0, "route verges planted no vegetation or scree", failures)
+	var verge_node := look.get_node_or_null("RouteEcologyVerges")
+	var committed_instances := 0
+	if verge_node != null:
+		for child: Node in verge_node.get_children():
+			if child is MultiMeshInstance3D and child.multimesh != null and child.multimesh.mesh != null:
+				committed_instances += child.multimesh.instance_count
+	_expect(committed_instances == verge_plants + verge_stones and committed_instances > 0,
+		"route verge counters do not match committed mesh instances", failures)
+	print("  route verges: %d routes, %d supported stations, %d plants, %d stones, %d committed instances" % [
+		int(look.call("route_verge_route_count")), verge_stations, verge_plants, verge_stones, committed_instances])
+
 	if failures.is_empty():
 		var grid: Dictionary = look.call("cover_fill_grid")
 		print("  turf fill: %d turf surfaces, %d triangles, %d m2 of turf; %d plantable, %d tufts at density x%.2f, %d ms" % [

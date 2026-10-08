@@ -37,5 +37,19 @@
     "config_builder_and_selected_test_match_reviewed_worktree": true,
     "coverage": "Deterministic bounded station plan, all grounded routes and Fly exclusion, center-clearance invariant, collision/gameplay-state source checks. Not full visual-envelope or production-area proof."
   },
-  "proof_status": "Source and selected hosted logic APPROVE; area and changed matched visual proof pending. No local engine execution, performance acceptance or full F40 criterion claim."
+  "area_proof_extension": {
+    "source_verdict": "APPROVE",
+    "base_commit": "e9bc6860f8574605ee7ab6693de3f6cfff75f946",
+    "path": "tests/smoke_cloudreach_look.gd",
+    "scope": "Added existing smoke assertions only; original assertions, world construction and LOOK dressing unchanged.",
+    "findings": [
+      "Existing Cloudreach world config supplies Dictionary route entries; grounded-route counting and cap arithmetic match the production planner.",
+      "MultiMeshInstance3D type narrowing guards access to multimesh; non-null multimesh and mesh are required before counting committed instances.",
+      "RouteEcologyVerges is the existing direct LOOK child. Each nonempty prepared bucket commits its complete transform array into one MultiMesh, so summed instance_count should equal plant_count plus stone_count; failed preparation or missing batches are detected.",
+      "route_count describes planned route identities, while station_count describes stations with an accepted near or outer support anchor. Positive supported stations and positive committed plants/scree are global checks, not proof of supported vegetation on every route.",
+      "No new fixture, class, gameplay mutation, assertion removal or reduced budget introduced."
+    ],
+    "proof_status": "Changed smoke execution pending; earlier unextended smoke does not establish these new assertions."
+  },
+  "proof_status": "Source, proof extension and selected hosted logic APPROVE; changed area and matched visual proof pending. No local engine execution, performance acceptance or full F40 criterion claim."
 }
