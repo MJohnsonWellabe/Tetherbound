@@ -33,6 +33,9 @@ var cue_log: Array[Dictionary] = []
 var _phase := ""
 var _released := false
 var _bed: Node = null
+## A pool node can be reused even for the same cached stream. Retain the exact
+## playback instance, not just its stream, to stop only this realm's voice.
+var _strike_players: Dictionary = {}
 var _warned: Dictionary = {}
 var _impacted: Array[int] = []
 
@@ -157,6 +160,10 @@ func _fire(cue: Dictionary, at: Variant, strike_id: int, phase: String = "") -> 
 				player = bed
 		elif positional:
 			player = AUDIO.play_file_at(path, str(cue.id), at, str(cue.get("bus", "SFX")))
+			var strike_player := player as AudioStreamPlayer3D
+			if strike_player != null and strike_player.has_stream_playback():
+				_strike_players[strike_player.get_instance_id()] = {
+					"player": strike_player, "playback": strike_player.get_stream_playback()}
 		else:
 			player = AUDIO.play_file(path, str(cue.id), str(cue.get("bus", "SFX")))
 	cue_log.append({
@@ -215,6 +222,14 @@ func _caption(text: String, at: Variant) -> String:
 
 func _exit_tree() -> void:
 	_stop_bed()
+	for voice: Dictionary in _strike_players.values():
+		if not is_instance_valid(voice.player):
+			continue
+		var player := voice.player as AudioStreamPlayer3D
+		if player != null and player.has_stream_playback() \
+				and player.get_stream_playback() == voice.playback:
+			player.stop()
+	_strike_players.clear()
 	if session != null and is_instance_valid(session) \
 			and session.stormwood_strike_received.is_connected(_on_strike):
 		session.stormwood_strike_received.disconnect(_on_strike)

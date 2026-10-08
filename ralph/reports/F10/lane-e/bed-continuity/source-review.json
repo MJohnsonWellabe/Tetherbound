@@ -69,7 +69,27 @@
     "receipt": "ralph/reports/F10/lane-e/bed-continuity/area-receipt.json",
     "full_F10_5": "OPEN"
   },
-  "required_runtime_proof": "Named asset logic and changed production continuity smoke verified. Listener, mix, fatigue, multiplayer and hardware gates remain open. No local engine was run by the reviewer.",
+  "positional_tail_candidate": {
+    "source_verdict": "APPROVE corrected bounded positional-tail ownership cleanup",
+    "review_base_commit": "a69d101180a68a9f5859815639a1a3c39e045326",
+    "reviewed_worktree_blobs": {
+      "scripts/world/stormwood_surge_audio.gd": "cf3e68af302740546123f76c6e3c8db514458532",
+      "tests/smoke_stormwood_surge_audio.gd": "2dbf55e4df92bd4c9f3c30be6ff967c0ed4ddf81"
+    },
+    "finding": "_exit_tree casts voice.player before is_instance_valid. A freed pool object raises Trying to cast a freed object in Godot4.7 OPCODE_CAST_TO_NATIVE, bypassing the later validity check. Validate voice.player before the cast and continue invalid entries.",
+    "historical_source_request": "REQUEST_CHANGES on observer blob3e89e87d8886fed94b2ffe024fec01babb6f8a36; retained as corrected finding, not current status.",
+    "correction_verified": "Current observer checks is_instance_valid(voice.player) and continues invalid entries before casting. Non-null/has_stream_playback/exact playback identity then guard stop. This prevents freed-object casts and preserves reclaimed pool playback; pool nodes are not freed.",
+    "lease_design": "Otherwise sound: pinned Godot4.7 play_basic instantiates and appends a new AudioStreamPlayback synchronously; the3D play method calls it immediately and the getter returns latest playback. Per-player exact playback references distinguish same-cached-stream pool reuse. Only matching current leases are stopped; pool nodes are never freed by this cleanup.",
+    "existing_smoke": "Retains prior27 checks. Controlled positional decay probes occur after authoritative cue checks and witness write, and exercise same-cached-clip pool reuse, an owned active tail, ownership-preserving teardown and cleared handles without adding a host strike event.",
+    "named_asset_logic_reuse": "325a test_stormwood_audio_assets2tests48assertions applies: assets/config/all_cues/warning timing and test source unchanged. Does not prove the added cleanup.",
+    "required_changed_proof": "Corrected-source existing audio smoke after source approval; no listener/fullF10#5 claim.",
+    "official_source_references": [
+      "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/scene/audio/audio_stream_player_internal.cpp",
+      "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/scene/3d/audio_stream_player_3d.cpp",
+      "https://raw.githubusercontent.com/godotengine/godot/4.7-stable/modules/gdscript/gdscript_vm.cpp"
+    ]
+  },
+  "required_runtime_proof": "Named asset logic and original bed continuity smoke verified. Corrected positional-tail extension source approved; changed existing smoke remains pending. Listener, mix, fatigue, multiplayer and hardware gates remain open. No local engine was run by the reviewer.",
   "limits": [
     "Source approval does not prove audible phase identity, mix, seamless loops, warning perception, fatigue, co-op listening or hardware behavior.",
     "No full F10#5 acceptance claim; listening evidence remains unavailable."

@@ -26,6 +26,9 @@ extends SceneTree
 ## - The Long Storm's end is committed through the ledger's set_world_flag.
 ## - During Calm, one full pool cycle of ordinary non-positional warning
 ##   samples is injected to exercise voice stealing, without emitting strikes.
+## - After the authoritative timeline is checked/written, presentation-only
+##   decay probes exercise teardown and pool reuse of the same cached clip.
+##   These are not host lightning events or part of the phase timeline.
 const SAVE_GAME := preload("res://scripts/save/save_game.gd")
 const STORMWOOD_SCENE := preload("res://scenes/world/stormwood.tscn")
 const OBSERVER := preload("res://scripts/world/stormwood_surge_audio.gd")
@@ -163,12 +166,38 @@ func _run() -> void:
 
 	_check(cues, draws, telegraph, interval_min, interval_max)
 	_write(cues, draws, telegraph)
+	var decay_cue: Dictionary = OBSERVER.load_config().strike_chain.decay
+	var reclaimed_voice := observer.call("_fire", decay_cue, _spot, -1) as AudioStreamPlayer3D
+	_expect(reclaimed_voice != null and reclaimed_voice.has_stream_playback(),
+		"teardown reuse probe starts a positional playback")
+	if reclaimed_voice == null or not reclaimed_voice.has_stream_playback():
+		_finish()
+		return
+	var previous_playback := reclaimed_voice.get_stream_playback()
+	var same_clip := reclaimed_voice.stream
+	var reused: AudioStreamPlayer3D = null
+	for _i in maxi(4, int(AUDIO.section("sfx").get("pool_size", 16))):
+		reused = AUDIO.play_file_at(str(decay_cue.asset_path), "smoke_reclaimed_voice", _spot, "SFX")
+		if reused == reclaimed_voice:
+			break
+	_expect(reused == reclaimed_voice and reclaimed_voice.stream == same_clip \
+			and reclaimed_voice.get_stream_playback() != previous_playback,
+		"real pool reuse replaces the playback even for the same cached clip")
+	var reclaimed_playback := reclaimed_voice.get_stream_playback()
+	var owned_tail := observer.call("_fire", decay_cue, _spot, -1) as AudioStreamPlayer3D
+	_expect(owned_tail != null and owned_tail.playing, "realm owns an active positional tail before teardown")
 
 	# Teardown: the realm leaves the tree; the observer clears and disconnects.
 	var session: Node = _game.get_node("Session")
 	root.remove_child(_world)
 	_expect(release_bed != null and not release_bed.playing and release_bed.is_queued_for_deletion(),
 		"realm teardown stops and frees the continuous release bed")
+	_expect(owned_tail != null and not owned_tail.playing, "realm teardown stops its own positional tail")
+	_expect(reclaimed_voice.playing and reclaimed_voice.has_stream_playback() \
+			and reclaimed_voice.get_stream_playback() == reclaimed_playback,
+		"realm teardown preserves a reclaimed pool voice using the same clip")
+	_expect((observer.get("_strike_players") as Dictionary).is_empty(), "realm teardown clears positional voice handles")
+	reclaimed_voice.stop()
 	var cleared: bool = (observer.get("cue_log") as Array).is_empty()
 	var disconnected: bool = not session.stormwood_strike_received.is_connected(Callable(observer, "_on_strike"))
 	_expect(cleared, "the cue log is empty after realm teardown")
