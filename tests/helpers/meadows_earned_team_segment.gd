@@ -1332,6 +1332,8 @@ func _walk_to_home_bed(driver: RefCounted, prompt: Node3D, stance: Dictionary) -
 		# An offered bed is usable before reaching any geometric centre. Stop
 		# the actual stick here, and keep this same exterior stance for Wake.
 		if waypoint >= (boundary.points as Array).size() and not _nav.departure_pending(target) \
+				and (not bool(stance.get("remote_north", false)) \
+					or Vector2(_player.velocity.x, _player.velocity.z).length() <= 0.001) \
 				and _arbiter.call("winning_provider") == prompt \
 				and bool((_arbiter.call("winner") as Dictionary).get("actionable", false)):
 			_nav.reset()
@@ -1360,6 +1362,10 @@ func _walk_to_home_bed(driver: RefCounted, prompt: Node3D, stance: Dictionary) -
 			var precision := bool(stance.get("remote_north", false)) and waypoint == points.size() - 1
 			if precision and precision_braking:
 				_nav.reset()
+				# reset queues physical releases; the no-request native tick
+				# returns before its drive-frame flush. Deliver this release now
+				# so the ordinary controller can apply its ground friction.
+				Input.flush_buffered_events()
 				if Vector2(_player.velocity.x, _player.velocity.z).length() > 0.001:
 					await _tree.physics_frame
 					continue
