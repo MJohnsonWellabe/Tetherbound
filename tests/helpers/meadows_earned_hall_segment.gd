@@ -443,6 +443,14 @@ func _earn_master_t1() -> bool:
 	if not str(observed.error).is_empty():
 		return finish.call(str(observed.error))
 	if _activated_id != chest_prompt.get_instance_id() or not observed.has("master_chest"):
+		var winner: Object = _arbiter.call("winning_provider")
+		_receipt("master_chest_refusal", {"expected_provider_id": chest_prompt.get_instance_id(),
+			"activated_id": _activated_id, "durable_completion_seen": observed.has("master_chest"),
+			"observed_error": str(observed.error), "player_position": str(_player.global_position),
+			"target_position": str(chest_prompt.global_position),
+			"target_offer": chest_prompt.call("interaction_offer", _player.global_position),
+			"winning_path": str(winner.get_path()) if is_instance_valid(winner) and winner is Node else "",
+			"winning_offer": _arbiter.call("winner"), "personal_scope": session.call("personal_tm_scope")})
 		return finish.call("Physical chest interaction lacks its durable personal completion")
 	var claim: Dictionary = observed.master_chest
 	personal = _game.get("local").get("redesign_character")
