@@ -239,7 +239,7 @@ func _capture_actual_master_sites() -> void:
 			push_error("Master subset must be one retained blocked-sign set, once")
 			quit(1)
 			return
-		capture_ids = ["master_t1", "master_t4"] if argument == "--master-sites=master_t1,master_t4" else ["master_t1", "master_t3", "master_t4"]
+		capture_ids.assign(["master_t1", "master_t4"] if argument == "--master-sites=master_t1,master_t4" else ["master_t1", "master_t3", "master_t4"])
 		measure_clearance = true
 	var game := root.get_node_or_null(^"Game")
 	if game == null or game.get("local") == null:
