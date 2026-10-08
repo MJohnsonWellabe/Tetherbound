@@ -863,9 +863,95 @@ func _cook_first_ground_feast() -> bool:
 	_receipt("first_ground_feast_cooked", {"source": str(kitchen.get_path()), "completion": claim,
 		"inventory_before": before, "feast_count": _count("feast_t1_ground"), "caps_unchanged": true,
 		"controller_recipe_tap": true, "elapsed_frames": Engine.get_physics_frames() - started})
+	if not await _feed_first_ground_feast(chooser, service, pilot): return false
 	await pilot.press("menu_cancel")
 	return true if not chooser.call("is_open") and INPUT_OWNER.current(_tree) == null \
 		else _fail("The settled Kitchen chooser did not return ordinary world input")
+
+
+## Prefer the first eligible original companion (the starter remains first).
+## When its authored row offers evolution, choose its visible Stay option to
+## preserve this earned team's species. No cap, choice, level or receipt is set.
+func _feed_first_ground_feast(chooser: Node, service: Node, pilot: RefCounted) -> bool:
+	var session: Node = _game.get("session")
+	var scope: Dictionary = session.call("personal_tm_scope")
+	var view: Dictionary = service.call("view")
+	var cards: Array = view.get("party", [])
+	var personal: Dictionary = view.get("redesign_character", {})
+	var definition: Dictionary = BREAKTHROUGH.feasts().get("items", {}).get("feast_t1_ground", {})
+	var chosen := {}
+	var caps := {}
+	if cards.size() != 5 or _count("feast_t1_ground") != 1 or not retained_five(_initial_ids, _party_ids()):
+		return _fail("Feeding requires one actually cooked feast and the original five")
+	for card: Dictionary in cards:
+		var uid := str(card.get("uid", ""))
+		caps[uid] = ESSENCE.creature_cap(personal, uid)
+		var mirror: Dictionary = personal.get("creatures", {}).get(uid, {})
+		if chosen.is_empty() and ESSENCE._species_types(card).has("ground") \
+				and preload("res://scripts/masters/breakthrough_panel.gd").feast_matches_current_cap(card, mirror, definition):
+			chosen = card.duplicate(true)
+	if chosen.is_empty():
+		return _fail("No original Ground companion has actually reached the first locked cap; chosen Altar training is still needed")
+	var uid := str(chosen.uid)
+	var planning := chosen.duplicate(true)
+	planning.evolution_choices = personal.creatures[uid].get("evolution_choices", {}).duplicate(true)
+	var offer := preload("res://scripts/creatures/evolution.gd").feast_offer(planning, 1)
+	if offer.get("ok") != true: return _fail("The chosen companion's actual feast offer is unavailable")
+	var choice := "stay" if offer.get("choice_required", false) else ""
+	var label := "%s · %s · %s" % [str(chosen.get("nickname", chosen.species_id)),
+		BREAKTHROUGH.status(chosen, personal.creatures[uid]), str(definition.name)]
+	if not choice.is_empty(): label += " · Stay (permanent this tier)"
+	if not await _breakthrough_focus(chooser, "Feed creatures", pilot): return false
+	await pilot.press("ui_accept")
+	if chooser.call("is_open") != true or chooser.get("_mode") != "feed" or chooser.get("_service") != service \
+			or chooser.get("_source") != service or INPUT_OWNER.current(_tree) != chooser:
+		return _fail("Physical Feed creatures input did not open the actual personal feast chooser")
+	if not await _breakthrough_focus(chooser, label, pilot): return false
+	var intent := {"creature_uid": uid, "feast_item": "feast_t1_ground", "choice": choice}
+	var observed := {"completed": [], "error": ""}
+	var completed := func(action: String, original: Dictionary, reply: Dictionary) -> void:
+		if action != "feast_feed" or original != intent: return
+		if session.call("personal_tm_scope") != scope:
+			observed.error = "Feast feeding changed its character/session scope"
+		elif reply.get("terminal_refusal") == true:
+			observed.error = str(reply.get("reason", reply.get("code", "Feast feed refused")))
+		elif reply.get("ok") == true and reply.get("resolved") == true and reply.get("settled") == true \
+				and reply.get("durable") == true and reply.get("saved") == true \
+				and reply.get("owner_saved") == true and reply.get("owner_acknowledged") == true:
+			observed.completed.append(reply.duplicate(true))
+	session.connect("homestead_action_completed", completed)
+	var started := Engine.get_physics_frames()
+	await pilot.press("ui_accept")
+	while captain_within_deadline(Engine.get_physics_frames() - started) \
+			and observed.completed.is_empty() and str(observed.error).is_empty():
+		await _tree.physics_frame
+	session.disconnect("homestead_action_completed", completed)
+	if not str(observed.error).is_empty() or observed.completed.size() != 1:
+		return _fail("The chosen feast lacks its exact saved personal completion: " + str(observed))
+	var after: Dictionary = service.call("view")
+	var receipt := "feast_feed:%s:1" % uid
+	var next_cap := int(BREAKTHROUGH.master("master_t1").get("next_cap", -1))
+	var completed_reply: Dictionary = observed.completed[0]
+	personal = after.get("redesign_character", {})
+	if completed_reply.get("receipt") != receipt or personal.get("transaction_receipts", []).count(receipt) != 1 \
+			or _count("feast_t1_ground") != 0 or not retained_five(_initial_ids, _party_ids()) \
+			or after.get("party", []).size() != cards.size() or next_cap <= int(caps[uid]) \
+			or chooser.call("is_open") != true or not str(chooser.get("_pending_action")).is_empty():
+		return _fail("Feeding lacks exact consumption, once-only receipt and its retained settled chooser")
+	for index in cards.size():
+		var before: Dictionary = cards[index]
+		var actual: Dictionary = after.party[index]
+		var member_uid := str(before.uid)
+		var expected_cap: int = next_cap if member_uid == uid else int(caps[member_uid])
+		if actual.get("uid") != member_uid or actual.get("species_id") != before.get("species_id") \
+				or actual.get("level") != before.get("level") or actual.get("xp") != before.get("xp") \
+				or ESSENCE.creature_cap(personal, member_uid) != expected_cap:
+			return _fail("The feast changed identity, species, level or XP, or lifted an unchosen cap")
+	_receipt("first_ground_feast_fed", {"intent": intent, "result": completed_reply,
+		"cap_before": caps[uid], "cap_after": next_cap, "level_before": chosen.level,
+		"no_level_bonus": true, "original_five_retained": true, "other_caps_unchanged": true,
+		"controller_choice": label, "elapsed_frames": Engine.get_physics_frames() - started})
+	return true
 
 
 func _breakthrough_focus(panel: Node, label: String, pilot: RefCounted) -> bool:
