@@ -51,6 +51,12 @@
       "verdict": "SOURCE APPROVE",
       "scope": "Masters production Title Load retains paid transaction receipts as well as stable character/ordered party/levels/XP/moves/inventory/personal ACK; physical Help after actual reload",
       "behavior": "Live37758894767; actual durability remains OPEN"
+    },
+    {
+      "commit": "af08628b4bb0ea4d441a9747c7243fd8fd1de836",
+      "verdict": "SOURCE APPROVE",
+      "scope": "Existing naturally observed Altar card +original paid one-level spend use the same production TitleLoad endpoint; actual observed-ID, saved-ACK prerequisite, deep paid-receipt tuple, reset/reopen/free-grounded-input and Help-again guards retained",
+      "behavior": "OPEN; queued behind actual Masters TitleLoad37758894767, no repeat of unchanged prior Altar component claimed"
     }
   ],
   "logic": {
