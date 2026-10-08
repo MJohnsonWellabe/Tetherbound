@@ -107,6 +107,26 @@ func _capture_row(row: Dictionary) -> void:
 	for node: Node in house.find_children("*", "Node3D", true, false):
 		furniture_surfaces += int(node.get_meta("farmhouse_furniture_dielectric_surfaces", 0))
 	_manifest["f38_furniture_dielectric_surfaces"] = furniture_surfaces
+	var house_recipe: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/config/building_prefabs.json"))["prefabs"]["farmhouse_shell"]
+	var lighting: Dictionary = house_recipe.get("interior_lighting", {})
+	var window_candidate := bool(lighting.get("window_glow_candidate_enabled", false)) or OS.get_cmdline_user_args().has("--farmhouse-window-glow-candidate")
+	var expected_window_energy := float(lighting.get("window_glow_candidate_energy", 0.20)) if window_candidate else float(house_recipe["retint"]["MI_WindowGlass"]["energy"])
+	var window_energies: Array[float] = []
+	var shell := house.get_node_or_null("KitShell")
+	if shell != null:
+		for node: Node in shell.find_children("*", "MeshInstance3D", true, false):
+			var mesh := node as MeshInstance3D
+			if mesh.mesh == null:
+				continue
+			for surface: int in mesh.mesh.get_surface_count():
+				var material := mesh.get_active_material(surface) as BaseMaterial3D
+				if material != null and material.resource_name == "MI_WindowGlass":
+					window_energies.append(material.emission_energy_multiplier)
+	_manifest["f38_window_glow"] = {"candidate": window_candidate, "expected_energy": expected_window_energy, "actual_energies": window_energies}
+	if window_energies.is_empty() or window_energies.any(func(value: float) -> bool: return not is_equal_approx(value, expected_window_energy)):
+		_failures.append("F38 actual farmhouse window emission differs from authored setting")
+		_write_manifest()
+		return
 	var tiled_bindings := 0
 	var seam_bindings := 0
 	for node: Node in house.find_children("*", "MeshInstance3D", true, false):

@@ -397,6 +397,31 @@ func _build_kit_shell() -> void:
 	shell.name = "KitShell"
 	shell.rotation.y = deg_to_rad(90.0)
 	add_child(shell)
+	_apply_window_glow_candidate(shell)
+
+
+func _apply_window_glow_candidate(shell: Node3D) -> void:
+	if not bool(_house_lighting.get("window_glow_candidate_enabled", false)) \
+		and "--farmhouse-window-glow-candidate" not in OS.get_cmdline_user_args():
+		return
+	var raw_energy: Variant = _house_lighting.get("window_glow_candidate_energy", 0.20)
+	if typeof(raw_energy) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(raw_energy)):
+		return
+	var energy := clampf(float(raw_energy), 0.0, 1.0)
+	for found: Node in shell.find_children("*", "MeshInstance3D", true, false):
+		var mesh := found as MeshInstance3D
+		if mesh.mesh == null:
+			continue
+		for surface in mesh.mesh.get_surface_count():
+			var source := mesh.get_active_material(surface) as BaseMaterial3D
+			if source == null or source.resource_name != "MI_WindowGlass":
+				continue
+			var copy := source.duplicate() as BaseMaterial3D
+			copy.emission_energy_multiplier = energy
+			if mesh.material_override != null:
+				mesh.material_override = copy
+				break
+			mesh.set_surface_override_material(surface, copy)
 
 
 var _materials: Dictionary = {}

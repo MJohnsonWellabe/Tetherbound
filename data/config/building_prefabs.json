@@ -4814,6 +4814,9 @@
       "interior_lighting": {
         "scope": "world_presentation",
         "furniture_wood_lift": 0.0,
+        "window_glow_candidate_enabled": false,
+        "window_glow_candidate_energy": 0.20,
+        "_comment_window_glow_candidate": "World-presentation farmhouse-only opt-in --farmhouse-window-glow-candidate targets reviewed flat white panes. Reduces only per-instance MI_WindowGlass emission; keeps albedo, texture, normals, transparency, geometry and lights unchanged. Shipping stays off pending paired review.",
         "room_colour": "#ffd8a5",
         "room_energy": 1.65,
         "room_range_m": 6.0,
