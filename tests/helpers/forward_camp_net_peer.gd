@@ -33,7 +33,7 @@ func _execute_step(msg: Dictionary) -> Dictionary:
 		return await super._execute_step(msg)
 	# The runner forwards only verdict/detail/data: every other key rides in data.
 	var raw: Dictionary = await _camp_dispatch(action, msg.get("args", {}))
-	var data: Dictionary = {}
+	var data: Dictionary = raw.get("data", {}).duplicate(true)
 	for key: Variant in raw:
 		if not str(key) in ["verdict", "detail", "data"]: data[key] = raw[key]
 	return {"verdict": raw.get("verdict", "ERROR"), "detail": raw.get("detail", ""), "data": data}
@@ -176,7 +176,9 @@ func _place(game: Node, away: float, presses: int = 1) -> Dictionary:
 	# The runner's own teleport (teleport_body + owner-passive catch-up), so the
 	# host's view of this trainer follows it.
 	var stood := spot + Vector3(0.0, 0.5, 3.0)
-	await _step_teleport({"at": [stood.x, stood.y, stood.z], "settle": 30})
+	var stood_result: Dictionary = await _step_teleport({"at": [stood.x, stood.y, stood.z], "settle": 30})
+	if stood_result.get("verdict") != "PASS":
+		return stood_result
 	game.set("pending_build", "forward_camp")
 	for _frame in 30:
 		await physics_frame
