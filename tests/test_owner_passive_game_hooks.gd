@@ -146,6 +146,7 @@ func _native_case_backpack_target_guard_precedes_any_care_or_item_write() -> voi
 	assert_eq(tab.get("_targeting"), 0, "blocked choice remains retryable")
 	assert_eq(owner_session.packets, [])
 	tab.set("_targeting", -1)
+	game.items = preload("res://autoload/item_db.gd").new()
 	assert_eq(game.inventory.add("travel_pack", 1), 0)
 	var packed := var_to_bytes(RECORD.portable_projection(game.local.save_data()))
 	tab.call("_equip", "travel_pack")
