@@ -4286,6 +4286,9 @@ func _build_high_perches(root: Node3D) -> void:
 		# lens. They sit at the court's west and north edges now.
 		{"at": Vector2(-9.0, 1.5), "yaw": -10.0},
 		{"at": Vector2(-3.5, 13.5), "yaw": 80.0},
+		# Retain the third installed rack at the NW perimeter, clear of the
+		# central landing/departure axis and every re-spaced needle footing.
+		{"at": Vector2(-9.0, 12.0), "yaw": 80.0},
 	]
 	for i in ground_roosts.size():
 		var spec := ground_roosts[i]
