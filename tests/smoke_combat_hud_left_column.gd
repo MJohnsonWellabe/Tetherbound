@@ -108,10 +108,10 @@ func _run() -> void:
 	var dodge := _hud.get("_cell_switch_content") as RichTextLabel
 	_hud.call("_draw_dodge_cell", false, "gamepad")
 	if dodge.get_parsed_text() != "A\nDodge":
-		_failures.append("unavailable controller Dodge must render its actual A instruction")
+		_failures.append("unavailable controller Dodge must render its actual A instruction; got " + dodge.get_parsed_text())
 	_hud.call("_draw_dodge_cell", true, "keyboard")
 	if dodge.get_parsed_text() != "Space\nDodge" or dodge.get_theme_font_size("normal_font_size") < preload("res://scripts/ui/ui_tokens.gd").FONT_PROMPT:
-		_failures.append("ready keyboard Dodge must render Space at the handheld prompt floor")
+		_failures.append("ready keyboard Dodge must render Space at the handheld prompt floor; got " + dodge.get_parsed_text())
 	ultimate.text = "%s %s · release → move" % [
 		pad_arm,
 		_hud.call("_move_name", "ultimate_terrapup", "Ultimate")]

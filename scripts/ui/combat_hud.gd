@@ -960,7 +960,7 @@ func _draw_ally() -> void:
 	var signature := _move_name(str(creature.get("move_ultimate")), "Ultimate")
 	# The padded RB art remained miniature inside a 40px box in the original
 	# Low handheld pair. Render the live binding at the readout's prompt font.
-	var arm := "[noparse]%s[/noparse]" % _combat_binding_text("combat_ultimate_arm")
+	var arm := _combat_binding_text("combat_ultimate_arm").replace("[", "[lb]")
 	var instruction := "release → move" if ultimate >= 1.0 else "%d%%" % roundi(ultimate * 100.0)
 	if bool(_manager.call("ultimate_armed")): instruction = "tap a move"
 	_ultimate_readout.text = "%s %s · %s" % [arm, signature, instruction]
@@ -1108,7 +1108,7 @@ func _draw_cells(_orbs_count: int) -> void:
 func _draw_dodge_cell(ready: bool, device_override: String = "") -> void:
 	# Jump owns the production Dodge binding; it has no authored glyph entry.
 	# Name its actual button/key rather than exposing the fallback [jump] token.
-	_cell_switch_content.text = "[center][noparse]%s[/noparse]\nDodge[/center]" % _combat_binding_text("jump", device_override)
+	_cell_switch_content.text = "[center]%s\nDodge[/center]" % _combat_binding_text("jump", device_override).replace("[", "[lb]")
 	_cell_switch.modulate = CELL_READY if ready else CELL_DIMMED
 
 
