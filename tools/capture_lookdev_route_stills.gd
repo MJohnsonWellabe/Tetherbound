@@ -85,6 +85,7 @@ func _pin_time(time_name: String) -> Dictionary:
 		_failures.append("Route weather fixture requires production WorldWeather")
 		return {}
 	weather.set("_order", [])
+	weather.set_process(true)
 	weather.call("set_weather", _requested_weather)
 	weather.call("_follow_player")
 	for _frame in LIGHT_SETTLE_FRAMES:

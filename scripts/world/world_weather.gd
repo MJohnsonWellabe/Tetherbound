@@ -135,9 +135,10 @@ func _update_rain_visibility() -> void:
 	if is_inside_tree():
 		var camera := get_viewport().get_camera_3d()
 		if camera != null:
+			var realm := get_parent()
 			for node: Node in get_tree().get_nodes_in_group(RAIN_SHELTER_GROUP):
 				var interior := node as Node3D
-				if interior == null or not interior.is_inside_tree():
+				if interior == null or not interior.is_inside_tree() or realm == null or not realm.is_ancestor_of(interior):
 					continue
 				var local := interior.to_local(camera.global_position)
 				for box: AABB in interior.get_meta(RAIN_SHELTER_BOXES_META, []):
