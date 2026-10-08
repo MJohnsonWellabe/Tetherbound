@@ -517,7 +517,10 @@ func _saved_lesson_ack(id: String, character_id: String, party_uids: Array) -> D
 		and data.get("character_id") == character_id and str(game.local.character_id) == character_id \
 		and saved_uids == party_uids and _uids() == party_uids and ack
 	return {"passed":passed,"character_id":data.get("character_id", ""),"party_uids":saved_uids,
-		"personal_ack":ack,"scope":"Validated production character-bank read only; actual title Load remains separate"}
+		"personal_ack":ack,"saved_personal_flags":raw_flags.duplicate() if raw_flags is Array else [],
+		"last_played":data.get("last_played", ""),
+		"bank_load_result":bank.get("last_load_result").duplicate(true) if bank != null else {},
+		"scope":"Validated production character-bank read only; actual title Load remains separate"}
 
 func _activate_world(prompt: Node3D, approach_headings: Array[Vector3] = []) -> bool:
 	var bounty: Node = game.session.get_node_or_null("FoundationComposition/BountyInteraction")
