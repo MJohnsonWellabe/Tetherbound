@@ -217,6 +217,10 @@ func _open(mode: String, source: Node, master_id: String) -> void:
 	_panel.call("open", self, mode, source, master_id)
 
 func _message(message: String) -> void:
+	message = {
+		"win_your_own_duel_first": "Win your own 1v1 here before opening this recipe chest.",
+		"chest_pending_make_satchel_room": "Make room in your Satchel, then open this recipe chest again."
+	}.get(message, message)
 	var game := get_node_or_null(^"/root/Game")
 	if game != null and not message.is_empty(): game.call("push_world_message", message)
 
