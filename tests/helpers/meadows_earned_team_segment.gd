@@ -1097,16 +1097,21 @@ func _prepare_pilot(training: bool) -> bool:
 ## Grandpa's installed bed is available before a paid camp. Use the existing
 ## controller bed driver, let production recovery tick, then press Wake early.
 ## This provides HP only; it never supplies the tournament's full-rest bonus.
-func _recover_at_home_bed(index: int) -> bool:
-	var bed := _world.find_child("HomeCreatureBed", true, false) as Node3D
+func _recover_at_home_bed(index: int, authored_bed: Node3D = null) -> bool:
+	# A route may supply its actual authored recovery bed. Assignment, real
+	# recovery time and Wake early remain the same production input path.
+	var bed := authored_bed if authored_bed != null else _world.find_child("HomeCreatureBed", true, false) as Node3D
 	if bed == null or int(bed.call("build_index")) > -10 or int(bed.call("occupant_index")) >= 0:
 		return _fail("Depleted carried care needs Grandpa's available installed bed")
+	if authored_bed != null and (not bed.is_inside_tree() or not _world.is_ancestor_of(bed)):
+		return _fail("Authored HP recovery needs a real bed in the current world")
 	var member: RefCounted = _party().call("at", index)
 	var retained := _party_ids()
 	var inventory_before := _inventory_snapshot()
 	var progression: RefCounted = _game.get("progression")
 	var paid_bed_before := bool(progression.call("has", "creature_bed_built"))
 	var before_hp := float(member.get("hp"))
+	var rested_before := bool(member.get("rested"))
 	var driver := BED_INPUT.new()
 	driver._tree = _tree
 	driver._world = _world
@@ -1158,12 +1163,15 @@ func _recover_at_home_bed(index: int) -> bool:
 			or inventory_before != _inventory_snapshot() \
 			or paid_bed_before != bool(progression.call("has", "creature_bed_built")):
 		return _fail("Home-bed early wake changed retained inventory/team or supplied a paid/full-rest credit")
-	_home_bed_departure_pending = true
-	_receipt("home_bed_hp_recovery", {"party_index": index, "uid": member.get("uid"),
+	if authored_bed == null:
+		_home_bed_departure_pending = true
+	_receipt("home_bed_hp_recovery" if authored_bed == null else "authored_bed_hp_recovery", {"party_index": index, "uid": member.get("uid"),
 		"before_hp": before_hp, "after_hp": member.get("hp"), "max_hp": member.get("max_hp"),
 		"elapsed_wall_seconds": float(Time.get_ticks_msec() - started) / 1000.0,
 		"authored_full_heal_seconds": heal_seconds, "bed_index": bed.call("build_index"),
 		"controller_assignment_and_early_wake": true, "full_rest_bonus": false,
+		"rested_before": rested_before, "rested_after": bool(member.get("rested")),
+		"bed_path": str(bed.get_path()),
 		"synthetic_recovery_ticks": false, "party_ids_unchanged": true, "inventory_unchanged": true})
 	return true
 

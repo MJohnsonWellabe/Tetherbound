@@ -103,12 +103,20 @@ func _travel() -> bool:
 		return _fail("The authored Relay arch has no supported route")
 	var outside: Vector2 = _relay.call("world_of", gate[0])
 	var approach := approach_path(terrain, Vector2(_player.global_position.x, _player.global_position.z), outside)
+	var relay_road := trail_points(terrain, "loops", "relay_approach_loop")
 	if approach.is_empty() or not await _prepare():
 		return _fail("The current Warrens-to-Relay trail or actual care is unavailable")
+	var recovered := false
 	for point: Vector2 in approach:
 		if not await _around("overlook_bypass", OVERLOOK_KNOT, OVERLOOK_CLEAR_M, OVERLOOK_BYPASS, _v2p(), point) \
 				or not await _walk_ground(point):
 			return false
+		if not relay_road.is_empty() and point == relay_road[0]:
+			if recovered or not await _recover_at_riverwatch(point):
+				return false
+			recovered = true
+	if not recovered:
+		return _fail("The earned Relay approach missed its authored recovery junction")
 	for point: Vector2 in gate:
 		if not await _walk_ground(_relay.call("world_of", point), 0.6):
 			return false
@@ -178,6 +186,60 @@ func _travel() -> bool:
 		return _fail("The same earned five did not physically complete the Mill crossing")
 	_receipt("mill_crossing_restored", {"gear_before": 1, "gear_after": _count(GEAR), "depth": depth, "party_ids": _party_ids()})
 	return true
+
+
+## Use the advertised bed before the first picket. Recover injured members
+## serially over real time; Wake early supplies no overnight/rested credit.
+func _recover_at_riverwatch(join: Vector2) -> bool:
+	var camp := _world.find_child("riverwatch_rest_Rest", true, false) as Node3D
+	var bed := camp.get_node_or_null("CampCreatureBed") as Node3D if camp != null else null
+	if camp == null or bed == null or int(bed.call("build_index")) != -13 \
+			or Vector2(camp.global_position.x, camp.global_position.z).distance_to(Vector2(211.0, 3700.0)) > 0.01 \
+			or Vector2(bed.global_position.x, bed.global_position.z).distance_to(Vector2(212.4, 3701.3)) > 0.01 \
+			or absf(bed.global_position.y - float(_world.call("ground_height_at", 212.4, 3701.3))) > 0.01 \
+			or int(bed.call("occupant_index")) >= 0 or _fighting() or INPUT_OWNER.current(_tree) != null \
+			or bool(_mill.call("is_open")) or not retained_five(_initial_ids, _party_ids()):
+		return _fail("Ordinary Relay preparation needs the actual grounded, available Riverwatch bed before the closed Mill")
+	var care := CARE.new()
+	care._tree = _tree
+	care._world = _world
+	care._game = _game
+	care._player = _player
+	care._rig = _rig
+	care._combat = _combat
+	care._arbiter = _arbiter
+	care._nav = CARE.NAV.new(_tree, _player, _rig, care._stick, true)
+	var party: RefCounted = _game.get("party")
+	var inventory_before := care._inventory_snapshot()
+	var xp_before := _xp_snapshot()
+	var personal: Dictionary = _game.get("local").get("redesign_character")
+	var caps_before := {}
+	for member: RefCounted in party.call("members"):
+		caps_before[str(member.get("uid"))] = ESSENCE.creature_cap(personal, str(member.get("uid")))
+	var day_before := int(_game.get("day"))
+	var recovered_indices: Array[int] = []
+	for index in int(party.call("size")):
+		var member: RefCounted = party.call("at", index)
+		if not bool(member.get("fainted")) and float(member.get("hp")) >= float(member.get("max_hp")) - 0.01:
+			continue
+		if not await care._recover_at_home_bed(index, bed):
+			return _fail("Riverwatch controller recovery failed: " + str(care.result().failures))
+		recovered_indices.append(index)
+	for member: RefCounted in party.call("members"):
+		if bool(member.get("resting")) or bool(member.get("fainted")) \
+				or float(member.get("hp")) < float(member.get("max_hp")) - 0.01 \
+				or caps_before[str(member.get("uid"))] != ESSENCE.creature_cap(_game.get("local").get("redesign_character"), str(member.get("uid"))):
+			return _fail("Riverwatch recovery did not leave the same capped five awake at full HP")
+	if not retained_five(_initial_ids, _party_ids()) or inventory_before != care._inventory_snapshot() \
+			or xp_before != _xp_snapshot() or int(_game.get("day")) != day_before \
+			or int(bed.call("occupant_index")) >= 0 or _fighting() or INPUT_OWNER.current(_tree) != null:
+		return _fail("Riverwatch HP-only recovery changed earned identity, inventory, XP, day or ordinary input")
+	_receipt("pre_relay_riverwatch_recovery", {"party": _party_hp(), "recovered_indices": recovered_indices,
+		"care_receipts": care.result().receipts, "bed": str(bed.global_position), "join": join,
+		"inventory_unchanged": true, "xp_caps_unchanged": true, "day_unchanged": true,
+		"overnight_rest": false, "full_rest_bonus": false})
+	_nav.reset()
+	return await _walk_ground(join)
 
 
 func _walk(target: Vector3, radius: float = 1.5, budget: int = -1, best_effort := false) -> bool:
