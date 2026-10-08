@@ -1,0 +1,18 @@
+{
+  "criterion": "F37#1",
+  "verdict": "PASS",
+  "judge": "b_night_visual, original code-blind judge",
+  "authority": "Owner issue572 comment6051787387: criterion OWN text only",
+  "criterion_text": "At the L30 breakthrough Ripplet gains Dive, reaching sunken caches, nodes and hidden optional routes.",
+  "artifact": "dive-literal-contact.jpg",
+  "capture_source_sha": "220ea0bb0217bd263b232e13d9f259514abb9e2d",
+  "run_id": 37702491315,
+  "artifact_id": 11518351838,
+  "renderer": "gl_compatibility",
+  "resolution": "1280x720",
+  "frames": ["f37_10_dive.png", "f37_19_active_dive.png"],
+  "exact_verdict": "PASS — dive-literal-contact.jpg retains the literal F37#1 presentation. Ripplet remains recognizable beneath the water surface, and tile F1’s ‘Ripplet is diving. Tap Jump to surface’ is readable.",
+  "method": "Original blind judge inspected only the same full unretouched frames and the existing-tool contact JPG; no source or logs",
+  "preserved_prior_verdict": "surface-dive-r3-scope-verdict.json broader mounted-observation BLOCK remains retained; full Visual Bars A/B remain OPEN",
+  "not_certified": ["Mechanics", "L30 unlock or feast", "Ownership", "Optional-site access", "Device", "Full art bar"]
+}
