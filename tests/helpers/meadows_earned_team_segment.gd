@@ -1298,6 +1298,7 @@ func _walk_to_home_bed(driver: RefCounted, prompt: Node3D, stance: Dictionary) -
 	var budget := maxi(BED_INPUT.MOVE_FRAME_LIMIT,
 		240 + int(_player.global_position.distance_to(prompt.global_position) * 60.0))
 	var waypoint := 0
+	var precision_braking := false
 	# Failure-only reads before reset clears the navigator's actual request.
 	var route_operands := func(current_waypoint: int) -> Dictionary:
 		return {"planned_points": points.duplicate(), "plan_from": from,
@@ -1350,11 +1351,27 @@ func _walk_to_home_bed(driver: RefCounted, prompt: Node3D, stance: Dictionary) -
 			return true
 		if waypoint < points.size():
 			var next: Vector2 = points[waypoint]
-			if here.distance_to(next) <= 0.15:
+			# The remote bed's narrow exterior prompt cannot absorb a full
+			# walk-speed stop. The production trainer normalizes nonzero stick
+			# input, so NAV's analog easing alone cannot slow this final leg.
+			# Brake the corner first, then use one-frame physical requests,
+			# separated by actual ground-friction stops. Every frame still
+			# spends the original budget and passes the same exterior guards.
+			var precision := bool(stance.get("remote_north", false)) and waypoint == points.size() - 1
+			if precision and precision_braking:
+				_nav.reset()
+				if Vector2(_player.velocity.x, _player.velocity.z).length() > 0.001:
+					await _tree.physics_frame
+					continue
+				precision_braking = false
+			if here.distance_to(next) <= (0.05 if precision else 0.15):
 				waypoint += 1
 				_nav.reset()
+				precision_braking = true
 			else:
 				_nav.step(Vector3(next.x, _player.global_position.y, next.y))
+				if precision:
+					precision_braking = true
 		await _tree.physics_frame
 	var exhausted: Dictionary = route_operands.call(waypoint)
 	exhausted["budget"] = budget
