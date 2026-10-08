@@ -42,5 +42,37 @@
     "review": "Original f42 reviewer confirmed applicability after reading exact opacity-only delta and actual197-test log: geometry/input paths unchanged; no additional operation smoke required.",
     "limits": "Does not establish physical Quick Items operation, the visual result or full HUD/F42."
   },
-  "disposition": "Source, named logic and applicable retained area pass; after-capture, blind verdict and final independent approval remain open."
+  "capture": {
+    "source_commit": "3e7341704793ea678e3a9726f2deeca7303b7e23",
+    "run": 37710438732,
+    "artifact": 11522175841,
+    "script": "tools/phase2_capture_ui.gd",
+    "args": "--biome=meadows --paired-720 --tabs=players --output=res://ralph/reports/VISUAL/phase2/lane-d/f42-hotbar-paired",
+    "renderer": "gl_compatibility",
+    "complete": true,
+    "stage": "finished",
+    "failures": [],
+    "exit": 0,
+    "seconds": 408,
+    "all_frames": 4,
+    "component_frames": 2,
+    "raster_pairs": ["1920x1080", "1280x720"],
+    "excluded": "Two incidental Players frames",
+    "baseline": "Retained37705761923/art11519434870@6cb4a73444139fb44da5c1c7b4edf49106f38cfe exploration HUD pair; same fixture/layout, comparison scoped to Quick Items fills."
+  },
+  "blind_review": {
+    "agent": "/root/f26_presets_review",
+    "verdict": "PASS sampled Quick Items fill/readability",
+    "inspected": "All four before/after originals at1080/720",
+    "findings": "Continuous heavy backing removed; floor/stair detail visible through slots. Five key labels, two distinct item icons and both x3 counts readable and unclipped.",
+    "residual": "Icons have softer contrast but remain recognizable on the pictured indoor backgrounds.",
+    "limits": "Outdoor/night/combat backgrounds, physical Quick Items operation, navigation, other HUD, fullP2-004/fullF42#0 and release Bars remain OPEN."
+  },
+  "independent_review": {
+    "agent": "/root/f42_visual_review",
+    "verdict": "APPROVE scoped component READY",
+    "actual_intake": "Exact source scope, actual finished manifest/exit/log, both after rasters, retained197-test result and applicable unchanged shell area inspected; original blind before/after PASS retained.",
+    "integration": "Only9c5663 exploration_hotbar subtree, two fallback fields, two guarded/clamped config reads and two fresh StyleBox alpha assignments. Main dependencies present; every older roster/vitals/text/party_strip and other ancestry hunk excluded."
+  },
+  "disposition": "READY sampled Quick Items opacity component only; fullP2-004/fullF42#0 OPEN,0 new full criteria."
 }
