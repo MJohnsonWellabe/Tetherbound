@@ -415,6 +415,9 @@ func tether_command_snapshot() -> Dictionary:
 		and _encounter_link.has_method("tether_item_command_available") \
 		and _encounter_link.call("tether_item_command_available", _encounter_id) == true:
 		snapshot.unlocked_commands.append("item_throw")
+	if is_instance_valid(_encounter_link) and _encounter_link.has_method("tether_tag_command_available") \
+		and _encounter_link.call("tether_tag_command_available", _encounter_id) == true:
+		snapshot.unlocked_commands.append("tag_combo")
 	var deployment: Dictionary = _encounter_link.call("tether_command_deployment") if is_instance_valid(_encounter_link) \
 		and _encounter_link.has_method("tether_command_deployment") else {}
 	snapshot["generation"] = int(deployment.get("generation", 0))

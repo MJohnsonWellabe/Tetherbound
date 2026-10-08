@@ -1,0 +1,141 @@
+{
+  "scope": "F26#0 four-biome Forward+ mounted-binding census; original reviewer APPROVE literal render/material ask",
+  "source_commit": "6898cccb1ae61d9cca42ae12d395622d46cd31f6",
+  "engine": "Godot4.7.stable.official.5b4e0cb0f",
+  "platform": "Windows/GTX1060 3GB",
+  "raw_dirs": "D:/CodexTemp/tetherbound-native/d-e2d54b40aa/shots/lane-d/f26-census-{meadows,water,cloudreach,stormwood}-medium",
+  "processes": {
+    "meadows": {
+      "receipt": {
+        "source": "6898cccb1ae61d9cca42ae12d395622d46cd31f6",
+        "pid": 24268,
+        "finished_utc": "2026-10-07T23:31:35.1457265Z",
+        "stop_reason": "",
+        "exit_code": 0,
+        "started_utc": "2026-10-07T23:25:26.7112149Z"
+      },
+      "args": [
+        "--path",
+        "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "tools/capture_renderer_material_census.gd",
+        "--",
+        "--biome=meadows",
+        "--preset=Medium",
+        "--source-commit=6898cccb1ae61d9cca42ae12d395622d46cd31f6",
+        "--times=day",
+        "--subset=Village",
+        "--subset=Hall",
+        "--output=res://shots/lane-d/f26-census-meadows-medium"
+      ],
+      "stdout": "D:\\CodexTemp\\tetherbound-proof\\native-d-6898cccb1a-f26-material-census\\census-meadows.stdout.log",
+      "stderr": "D:\\CodexTemp\\tetherbound-proof\\native-d-6898cccb1a-f26-material-census\\census-meadows.stderr.log"
+    },
+    "water": {
+      "receipt": {
+        "source": "6898cccb1ae61d9cca42ae12d395622d46cd31f6",
+        "pid": 16468,
+        "finished_utc": "2026-10-07T23:34:19.0175335Z",
+        "stop_reason": "",
+        "exit_code": 0,
+        "started_utc": "2026-10-07T23:31:37.7028599Z"
+      },
+      "args": [
+        "--path",
+        "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "tools/capture_renderer_material_census.gd",
+        "--",
+        "--biome=water",
+        "--preset=Medium",
+        "--source-commit=6898cccb1ae61d9cca42ae12d395622d46cd31f6",
+        "--times=day",
+        "--subset=Twin",
+        "--subset=Cascade",
+        "--output=res://shots/lane-d/f26-census-water-medium"
+      ],
+      "stdout": "D:\\CodexTemp\\tetherbound-proof\\native-d-6898cccb1a-f26-material-census\\census-water.stdout.log",
+      "stderr": "D:\\CodexTemp\\tetherbound-proof\\native-d-6898cccb1a-f26-material-census\\census-water.stderr.log"
+    },
+    "cloudreach": {
+      "receipt": {
+        "source": "6898cccb1ae61d9cca42ae12d395622d46cd31f6",
+        "pid": 25408,
+        "finished_utc": "2026-10-07T23:44:34.6501512Z",
+        "stop_reason": "",
+        "exit_code": 0,
+        "started_utc": "2026-10-07T23:34:19.7204333Z"
+      },
+      "args": [
+        "--path",
+        "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "tools/capture_renderer_material_census.gd",
+        "--",
+        "--biome=cloudreach",
+        "--preset=Medium",
+        "--source-commit=6898cccb1ae61d9cca42ae12d395622d46cd31f6",
+        "--times=day",
+        "--subset=Galefoot",
+        "--subset=Shrine",
+        "--output=res://shots/lane-d/f26-census-cloudreach-medium"
+      ],
+      "stdout": "D:\\CodexTemp\\tetherbound-proof\\native-d-6898cccb1a-f26-material-census\\census-cloudreach.stdout.log",
+      "stderr": "D:\\CodexTemp\\tetherbound-proof\\native-d-6898cccb1a-f26-material-census\\census-cloudreach.stderr.log"
+    },
+    "stormwood": {
+      "receipt": {
+        "source": "6898cccb1ae61d9cca42ae12d395622d46cd31f6",
+        "pid": 24824,
+        "finished_utc": "2026-10-07T23:57:59.8870510Z",
+        "stop_reason": "",
+        "exit_code": 1,
+        "started_utc": "2026-10-07T23:44:35.4508936Z"
+      },
+      "args": [
+        "--path",
+        "D:/CodexTemp/tetherbound-native/d-e2d54b40aa",
+        "--rendering-method",
+        "forward_plus",
+        "--resolution",
+        "1920x1080",
+        "--script",
+        "tools/capture_renderer_material_census.gd",
+        "--",
+        "--biome=stormwood",
+        "--preset=Medium",
+        "--source-commit=6898cccb1ae61d9cca42ae12d395622d46cd31f6",
+        "--times=day",
+        "--subset=Stormheart",
+        "--output=res://shots/lane-d/f26-census-stormwood-medium"
+      ],
+      "stdout": "D:\\CodexTemp\\tetherbound-proof\\native-d-6898cccb1a-f26-material-census\\census-stormwood.stdout.log",
+      "stderr": "D:\\CodexTemp\\tetherbound-proof\\native-d-6898cccb1a-f26-material-census\\census-stormwood.stderr.log"
+    }
+  },
+  "storm_operator_stop": {
+    "pid": 24824,
+    "source": "6898cccb1ae61d9cca42ae12d395622d46cd31f6",
+    "stopped_utc": "2026-10-07T23:57:55.0991779Z",
+    "reason": "Reclaim native slot after published complete Stormwood capture; process still active long after survey OK",
+    "natural_process_pass": false,
+    "published_capture_complete": true,
+    "published_frames": 1,
+    "failures": []
+  },
+  "summary": "medium-mounted-summary.json generated with existing tools/f26_low_census_summary.py; unbound surfaces and null uniforms are source-review prompts, not automatically missing bindings",
+  "limits": "Rendered named-site inspections and mounted binding graphs only. No fullHigh/Medium visualBar, gameplay matrix, traversal, performance, Ally, earned journey or universal loader-substitution claim. Stormpublishedrendercomplete1/1 butoperator-stoppedactualexit1; never terminalsmokePASS.",
+  "final_review": "final-review.json"
+}

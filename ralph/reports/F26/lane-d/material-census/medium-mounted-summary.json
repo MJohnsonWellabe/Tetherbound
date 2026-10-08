@@ -1,0 +1,379 @@
+{
+ "scenes": [
+  {
+   "biome_id": "meadows",
+   "scene": "res://scenes/world/meadows_playground.tscn",
+   "manifest": "manifest.json",
+   "manifest_sha256": "27996a6bccb55aa3e2ee47ec013a663a64706b63c0847116dc8bd5e12ad9bacc",
+   "complete": true,
+   "failures": [],
+   "graphics_capture": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "Medium",
+    "renderer": "forward_plus",
+    "resolution": [
+     1920,
+     1080
+    ],
+    "source_commit": "6898cccb1ae61d9cca42ae12d395622d46cd31f6"
+   },
+   "rendering_method": "forward_plus",
+   "adapter": "NVIDIA GeForce GTX 1060 3GB",
+   "captured_frame_count": 2,
+   "planned_frame_count": 2,
+   "capture_started_utc": "2026-10-07T23:25:41",
+   "capture_finished_utc": "2026-10-07T23:31:04",
+   "frames": [
+    {
+     "frame_id": "meadows__band1_lower_meadows__01__grandpas_village__day",
+     "destination": "Grandpa's Village",
+     "player_position": [
+      6.0,
+      0.900943577289581,
+      -22.0
+     ]
+    },
+    {
+     "frame_id": "meadows__band5_stronghold_approach__10__meadows_hall__day",
+     "destination": "Meadows Hall",
+     "player_position": [
+      8.0,
+      6.17288398742676,
+      7590.0
+     ]
+    }
+   ],
+   "census": {
+    "frames_with_census": 2,
+    "per_frame": [
+     {
+      "frame_id": "meadows__band1_lower_meadows__01__grandpas_village__day",
+      "binding_count": 56572,
+      "unbound_surfaces": 5
+     },
+     {
+      "frame_id": "meadows__band5_stronghold_approach__10__meadows_hall__day",
+      "binding_count": 56572,
+      "unbound_surfaces": 5
+     }
+    ],
+    "classification_counts": {
+     "unbound_primitive_default_requires_source_review": 8,
+     "bound_material_requires_visual_review": 105022,
+     "untextured_material_may_be_authored_requires_source_review": 7956,
+     "unbound_surface_requires_source_review": 2
+    },
+    "unbound_surface_count": 5,
+    "visible_unbound_surfaces": {
+     "MasterSignpost/@MeshInstance3D@67399#0": {
+      "mesh_class": "BoxMesh",
+      "visible_in_tree": true,
+      "owner_script": "",
+      "classification": "unbound_primitive_default_requires_source_review"
+     },
+     "@Node3D@67409/@MeshInstance3D@67410#0": {
+      "mesh_class": "BoxMesh",
+      "visible_in_tree": true,
+      "owner_script": "",
+      "classification": "unbound_primitive_default_requires_source_review"
+     }
+    },
+    "hidden_unbound_surface_count": 3,
+    "missing_source_resources": {},
+    "empty_shaders": {},
+    "null_texture_uniforms_without_live_binding": {},
+    "scene_node_probes": {
+     "village": {
+      "binding_nodes": 2687,
+      "examples": [
+       "Props/village_lookback_overlook/VillageLookbackApples/FarmCrate_Apple ",
+       "Props/village_lookback_overlook/VillageLookbackBag/Bag ",
+       "Props/village_lookback_overlook/VillageLookbackBench/Bench ",
+       "Village/PrefabTemplates/cottage_a/@Node3D@58887/Wall_Plaster_WoodGrid "
+      ]
+     },
+     "crossing_hall": {
+      "binding_nodes": 724,
+      "examples": [
+       "Village/PrefabTemplates/crossing_hall_shell/@Node3D@59299/Floor_UnevenBrick ",
+       "Village/PrefabTemplates/crossing_hall_shell/@Node3D@59300/Floor_UnevenBrick ",
+       "Village/PrefabTemplates/crossing_hall_shell/@Node3D@59301/Floor_UnevenBrick ",
+       "Village/PrefabTemplates/crossing_hall_shell/@Node3D@59302/Floor_UnevenBrick "
+      ]
+     }
+    }
+   }
+  },
+  {
+   "biome_id": "water",
+   "scene": "res://scenes/world/water_archipelago.tscn",
+   "manifest": "manifest.json",
+   "manifest_sha256": "cf6ce69737328d981c1f7269d7a93ef6df6d0d7e69d1129e15c46658276a24d1",
+   "complete": true,
+   "failures": [],
+   "graphics_capture": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "Medium",
+    "renderer": "forward_plus",
+    "resolution": [
+     1920,
+     1080
+    ],
+    "source_commit": "6898cccb1ae61d9cca42ae12d395622d46cd31f6"
+   },
+   "rendering_method": "forward_plus",
+   "adapter": "NVIDIA GeForce GTX 1060 3GB",
+   "captured_frame_count": 2,
+   "planned_frame_count": 2,
+   "capture_started_utc": "2026-10-07T23:32:13",
+   "capture_finished_utc": "2026-10-07T23:34:10",
+   "frames": [
+    {
+     "frame_id": "water__sluice_isle__13__sluice_isle_twin_pumps__day",
+     "destination": "Sluice Isle Twin Pumps",
+     "player_position": [
+      905.099975585938,
+      34.3079948425293,
+      2864.56396484375
+     ]
+    },
+    {
+     "frame_id": "water__veilfall__15__the_veilfall_cascade__day",
+     "destination": "The Veilfall Cascade",
+     "player_position": [
+      335.2080078125,
+      139.406982421875,
+      3885.7109375
+     ]
+    }
+   ],
+   "census": {
+    "frames_with_census": 2,
+    "per_frame": [
+     {
+      "frame_id": "water__sluice_isle__13__sluice_isle_twin_pumps__day",
+      "binding_count": 4365,
+      "unbound_surfaces": 3
+     },
+     {
+      "frame_id": "water__veilfall__15__the_veilfall_cascade__day",
+      "binding_count": 4415,
+      "unbound_surfaces": 3
+     }
+    ],
+    "classification_counts": {
+     "unbound_primitive_default_requires_source_review": 6,
+     "bound_material_requires_visual_review": 6745,
+     "untextured_material_may_be_authored_requires_source_review": 1847
+    },
+    "unbound_surface_count": 3,
+    "visible_unbound_surfaces": {
+     "MasterSignpost/@MeshInstance3D@2146#0": {
+      "mesh_class": "BoxMesh",
+      "visible_in_tree": true,
+      "owner_script": "",
+      "classification": "unbound_primitive_default_requires_source_review"
+     }
+    },
+    "hidden_unbound_surface_count": 2,
+    "missing_source_resources": {},
+    "empty_shaders": {},
+    "null_texture_uniforms_without_live_binding": {},
+    "scene_node_probes": {
+     "village": {
+      "binding_nodes": 0,
+      "examples": []
+     },
+     "crossing_hall": {
+      "binding_nodes": 0,
+      "examples": []
+     }
+    }
+   }
+  },
+  {
+   "biome_id": "cloudreach",
+   "scene": "res://scenes/world/cloudreach_cliffs.tscn",
+   "manifest": "manifest.json",
+   "manifest_sha256": "b3d739ef1aa909b534e77befdf7ebe538267955f23190f3919eb28fb22e56e84",
+   "complete": true,
+   "failures": [],
+   "graphics_capture": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "Medium",
+    "renderer": "forward_plus",
+    "resolution": [
+     1920,
+     1080
+    ],
+    "source_commit": "6898cccb1ae61d9cca42ae12d395622d46cd31f6"
+   },
+   "rendering_method": "forward_plus",
+   "adapter": "NVIDIA GeForce GTX 1060 3GB",
+   "captured_frame_count": 3,
+   "planned_frame_count": 3,
+   "capture_started_utc": "2026-10-07T23:34:33",
+   "capture_finished_utc": "2026-10-07T23:44:29",
+   "frames": [
+    {
+     "frame_id": "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day",
+     "destination": "Galefoot Waycamp",
+     "player_position": [
+      -286.0,
+      180.000946044922,
+      535.0
+     ]
+    },
+    {
+     "frame_id": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day",
+     "destination": "Sky Shrine",
+     "player_position": [
+      1110.0,
+      1020.03082275391,
+      2885.0
+     ]
+    },
+    {
+     "frame_id": "cloudreach__high_roost_sky_shrine__08__the_high_perches__day",
+     "destination": "The High Perches",
+     "player_position": [
+      900.0,
+      1020.13098144531,
+      2700.0
+     ]
+    }
+   ],
+   "census": {
+    "frames_with_census": 3,
+    "per_frame": [
+     {
+      "frame_id": "cloudreach__gate_lower_cliffs__02__galefoot_waycamp__day",
+      "binding_count": 29753,
+      "unbound_surfaces": 6
+     },
+     {
+      "frame_id": "cloudreach__high_roost_sky_shrine__07__sky_shrine__day",
+      "binding_count": 29753,
+      "unbound_surfaces": 6
+     },
+     {
+      "frame_id": "cloudreach__high_roost_sky_shrine__08__the_high_perches__day",
+      "binding_count": 29753,
+      "unbound_surfaces": 6
+     }
+    ],
+    "classification_counts": {
+     "unbound_primitive_default_requires_source_review": 18,
+     "bound_material_requires_visual_review": 82401,
+     "untextured_material_may_be_authored_requires_source_review": 6813
+    },
+    "unbound_surface_count": 6,
+    "visible_unbound_surfaces": {},
+    "hidden_unbound_surface_count": 6,
+    "missing_source_resources": {},
+    "empty_shaders": {},
+    "null_texture_uniforms_without_live_binding": {
+     "ShaderMaterial::device_tex": "Nil",
+     "ShaderMaterial::grass_texture": "Nil"
+    },
+    "scene_node_probes": {
+     "village": {
+      "binding_nodes": 5,
+      "examples": [
+       "SuspendedBridges/FirstRopeSpan/DeckSection0/VillageTimberDeckModules ",
+       "SuspendedBridges/FirstRopeSpan/DeckSection1/VillageTimberDeckModules ",
+       "SuspendedBridges/FirstRopeSpan/DeckSection2/VillageTimberDeckModules ",
+       "SuspendedBridges/WestWatchRopeway/DeckSection0/VillageTimberDeckModules "
+      ]
+     },
+     "crossing_hall": {
+      "binding_nodes": 0,
+      "examples": []
+     }
+    }
+   }
+  },
+  {
+   "biome_id": "stormwood",
+   "scene": "res://scenes/world/stormwood.tscn",
+   "manifest": "manifest.json",
+   "manifest_sha256": "18b73098a9deb474fb3f543ca5ac90eb6a527403014d0b558ddcdf3f4dae2155",
+   "complete": true,
+   "failures": [],
+   "graphics_capture": {
+    "adapter": "NVIDIA GeForce GTX 1060 3GB",
+    "graphics_config_sha256": "7fe856103179448635896f1ccec7ff24f4b796712b1c0fc3cd941f41163c2f54",
+    "preset": "Medium",
+    "renderer": "forward_plus",
+    "resolution": [
+     1920,
+     1080
+    ],
+    "source_commit": "6898cccb1ae61d9cca42ae12d395622d46cd31f6"
+   },
+   "rendering_method": "forward_plus",
+   "adapter": "NVIDIA GeForce GTX 1060 3GB",
+   "captured_frame_count": 1,
+   "planned_frame_count": 1,
+   "capture_started_utc": "2026-10-07T23:44:48",
+   "capture_finished_utc": "2026-10-07T23:48:32",
+   "frames": [
+    {
+     "frame_id": "stormwood__dynamo__12__the_stormheart_tree__day",
+     "destination": "The Stormheart Tree",
+     "player_position": [
+      -101.559997558594,
+      112.144683837891,
+      5466.8701171875
+     ]
+    }
+   ],
+   "census": {
+    "frames_with_census": 1,
+    "per_frame": [
+     {
+      "frame_id": "stormwood__dynamo__12__the_stormheart_tree__day",
+      "binding_count": 32618,
+      "unbound_surfaces": 3
+     }
+    ],
+    "classification_counts": {
+     "unbound_primitive_default_requires_source_review": 3,
+     "bound_material_requires_visual_review": 29398,
+     "untextured_material_may_be_authored_requires_source_review": 3210
+    },
+    "unbound_surface_count": 3,
+    "visible_unbound_surfaces": {
+     "MasterSignpost/@MeshInstance3D@22559#0": {
+      "mesh_class": "BoxMesh",
+      "visible_in_tree": true,
+      "owner_script": "",
+      "classification": "unbound_primitive_default_requires_source_review"
+     }
+    },
+    "hidden_unbound_surface_count": 2,
+    "missing_source_resources": {},
+    "empty_shaders": {},
+    "null_texture_uniforms_without_live_binding": {},
+    "scene_node_probes": {
+     "village": {
+      "binding_nodes": 33,
+      "examples": [
+       "RodfolkSettlements/well_12/VillageWellPresentation/SingleStoneCurb/CurbCap ",
+       "RodfolkSettlements/well_12/VillageWellPresentation/SingleStoneCurb/CurbWall ",
+       "RodfolkSettlements/well_12/VillageWellPresentation/SingleStoneCurb/WellWater ",
+       "RodfolkSettlements/well_12/VillageWellPresentation/SquarePathLights/SouthStreetLight/InstalledMetalTorch/Torch_Metal "
+      ]
+     },
+     "crossing_hall": {
+      "binding_nodes": 0,
+      "examples": []
+     }
+    }
+   }
+  }
+ ]
+}

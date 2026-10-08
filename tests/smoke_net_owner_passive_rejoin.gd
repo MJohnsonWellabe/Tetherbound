@@ -50,6 +50,16 @@ func _initialize() -> void:
 	# Building the Meadows world blocks a peer's heartbeat for minutes on the
 	# 4-core container (smoke_net_cloudreach_veyra_reconnect.gd's reason).
 	heartbeat_silence_tolerance_s = 420.0
+	for arg: String in OS.get_cmdline_user_args():
+		if not arg.begins_with("--out="): continue
+		var output := arg.trim_prefix("--out=")
+		var absolute := ProjectSettings.globalize_path("res://").path_join(output)
+		if not output.begins_with("ralph/reports/F24/") or ".." in output \
+			or DirAccess.dir_exists_absolute(absolute) or FileAccess.file_exists(absolute):
+			push_error("F24 output must be a fresh reports directory")
+			quit(1)
+			return
+		OS.set_environment("TB_NET_OUT_DIR", absolute)
 	_run()
 
 
