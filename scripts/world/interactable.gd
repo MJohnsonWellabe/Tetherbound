@@ -219,6 +219,13 @@ func _has_line_of_sight(from: Vector3) -> bool:
 		if is_instance_valid(viewer) and viewer.is_inside_tree() \
 				and viewer.global_position.is_equal_approx(from):
 			query.exclude = [viewer.get_rid()]
+			# The mounted local viewer is attached to a separate collision body.
+			# That current carrier is part of the querying rig, not an obstacle.
+			# Keep the exact viewer-position guard; unrelated mounts still block.
+			if viewer.has_method("carrier"):
+				var carrier := viewer.call("carrier") as CollisionObject3D
+				if is_instance_valid(carrier) and carrier.is_inside_tree():
+					query.exclude = [viewer.get_rid(), carrier.get_rid()]
 	query.collision_mask = 0x7FFFFFFF  # every layer except the camera-only occluders (bit 31, camera_rig.OCCLUSION_ONLY_LAYER): they stop the camera arm and nothing else
 	# Co-op: another player's trainer standing at an NPC is not a wall. Their
 	# capsule never hid this prompt from the player behind them (F20: a guest
