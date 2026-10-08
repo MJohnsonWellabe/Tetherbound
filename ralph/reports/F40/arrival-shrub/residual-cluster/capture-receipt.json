@@ -1,0 +1,104 @@
+{
+  "private_mapping": {
+    "M": "cd09de0814e5e0ee33263cb0ed6ac94f8846702d",
+    "L": "60668240c4cf047a2f5ff1dc4c4ad1bdf6908c16"
+  },
+  "frames": [
+    {
+      "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__clear.png",
+      "M": {
+        "source": ".tmp\\e-f40-day-cd09-expanded\\tree\\shots\\lane-e\\f40-shipping-day-cd09\\cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__clear.png",
+        "png_sha256": "a17158cab9ac1b13746fc91bf351eb6f74e603cd285a5efd10569a7fd89ca3c0",
+        "neutral": ".tmp\\e-arrival-five-neutral\\M_approach__day__clear.jpg",
+        "jpg_sha256": "a400c8e6063fd527b1a4540383b30a8db80bc44c6b2ff27ea078688b9fe1ff06"
+      },
+      "L": {
+        "source": ".tmp\\e-arrival-cluster-capture-6066\\expanded\\tree\\shots\\lane-e\\arrival-cluster-6066\\cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__clear.png",
+        "png_sha256": "6a1ea9b8c28acde34aa328f3e609fd87be6ea58893cbdc0e68f3bfcd1df42fc6",
+        "neutral": ".tmp\\e-arrival-five-neutral\\L_approach__day__clear.jpg",
+        "jpg_sha256": "1a1608d77f213221546d557edac9659cd379d023affaa7891f1c5be9f4baee75"
+      }
+    },
+    {
+      "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__rain.png",
+      "M": {
+        "source": ".tmp\\e-f40-day-cd09-expanded\\tree\\shots\\lane-e\\f40-shipping-day-cd09\\cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__rain.png",
+        "png_sha256": "f341d2e1e889e01c03a030623c33e5d65739577ea92382075c222a4d55d135ef",
+        "neutral": ".tmp\\e-arrival-five-neutral\\M_approach__day__rain.jpg",
+        "jpg_sha256": "5345ee79526101537348f27dbea91b0dbe8a59da1d6bc54cf0c10194f4feabc7"
+      },
+      "L": {
+        "source": ".tmp\\e-arrival-cluster-capture-6066\\expanded\\tree\\shots\\lane-e\\arrival-cluster-6066\\cloudreach__gate_lower_cliffs__01__realm_gate_crag__approach__day__rain.png",
+        "png_sha256": "de6b1b1056bc4b84da03fa2cde33d5b7074b5a27a971254fd1374814e2062728",
+        "neutral": ".tmp\\e-arrival-five-neutral\\L_approach__day__rain.jpg",
+        "jpg_sha256": "746e1db9bf1899fb0b9f8f99c8176d2ecc2b444a7f5a0cb077f17c82ee1a0804"
+      }
+    },
+    {
+      "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__clear.png",
+      "M": {
+        "source": ".tmp\\e-f40-day-cd09-expanded\\tree\\shots\\lane-e\\f40-shipping-day-cd09\\cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__clear.png",
+        "png_sha256": "8c78e60e25828ced3b28e9fa6d3a59ed212086466756741080421e059ae18486",
+        "neutral": ".tmp\\e-arrival-five-neutral\\M_detail__day__clear.jpg",
+        "jpg_sha256": "864da9a9e0eaacfb36351d4cbf32c76095995b67d3f53b4c8fcfd8365744b94b"
+      },
+      "L": {
+        "source": ".tmp\\e-arrival-cluster-capture-6066\\expanded\\tree\\shots\\lane-e\\arrival-cluster-6066\\cloudreach__gate_lower_cliffs__01__realm_gate_crag__detail__day__clear.png",
+        "png_sha256": "164274424d3aab2916ad316962fc631acb0c6005a01c2f4d71a53a2cd0793610",
+        "neutral": ".tmp\\e-arrival-five-neutral\\L_detail__day__clear.jpg",
+        "jpg_sha256": "63111cc3aec68c3d566c626fd7ed1bb8bce90ecf5b904c173229043ae812f3aa"
+      }
+    },
+    {
+      "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__clear.png",
+      "M": {
+        "source": ".tmp\\e-f40-day-cd09-expanded\\tree\\shots\\lane-e\\f40-shipping-day-cd09\\cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__clear.png",
+        "png_sha256": "09ea49be8a94ee681f21b8ec9534a3dd088788780f5b6e2da8357adee3efd676",
+        "neutral": ".tmp\\e-arrival-five-neutral\\M_gameplay__day__clear.jpg",
+        "jpg_sha256": "24d3e63286ef9a83792c385db02152c6bfd607add2719c196f6d3bdd8daa641a"
+      },
+      "L": {
+        "source": ".tmp\\e-arrival-cluster-capture-6066\\expanded\\tree\\shots\\lane-e\\arrival-cluster-6066\\cloudreach__gate_lower_cliffs__01__realm_gate_crag__gameplay__day__clear.png",
+        "png_sha256": "e1a6e5605818a93561fc91123c5e8064aa1a8c2943bec62e09666b5859ece437",
+        "neutral": ".tmp\\e-arrival-five-neutral\\L_gameplay__day__clear.jpg",
+        "jpg_sha256": "05026914d963bda7c38925af406e7c8847fa2ae5084a3333159078bf3ac95bcc"
+      }
+    },
+    {
+      "frame": "cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__clear.png",
+      "M": {
+        "source": ".tmp\\e-f40-day-cd09-expanded\\tree\\shots\\lane-e\\f40-shipping-day-cd09\\cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__clear.png",
+        "png_sha256": "1b552472db693de4a6dfacb7c5778258addade4cd0cf565ebfb2f939287c410b",
+        "neutral": ".tmp\\e-arrival-five-neutral\\M_reverse__day__clear.jpg",
+        "jpg_sha256": "9ec6282b23f5f350b032be4926c29d7d32b259f698b9765a2fa64ad72e95a301"
+      },
+      "L": {
+        "source": ".tmp\\e-arrival-cluster-capture-6066\\expanded\\tree\\shots\\lane-e\\arrival-cluster-6066\\cloudreach__gate_lower_cliffs__01__realm_gate_crag__reverse__day__clear.png",
+        "png_sha256": "88ba4a4b4c27d0b4ff2bbf284726f09612e2efa9673c9f22cd93a26387a9bd43",
+        "neutral": ".tmp\\e-arrival-five-neutral\\L_reverse__day__clear.jpg",
+        "jpg_sha256": "4eac75600dbb447f534817b304fc71b391c95cf084f1f9624899f6039eabe4ab"
+      }
+    }
+  ],
+  "scope": "Five matched saved arrival views only; original capture failed and F40 criteria remain open",
+  "run_id": 37763126419,
+  "job_id": 113264169055,
+  "source_commit": "60668240c4cf047a2f5ff1dc4c4ad1bdf6908c16",
+  "baseline_source_commit": "cd09de0814e5e0ee33263cb0ed6ac94f8846702d",
+  "original_capture_result": "FAIL",
+  "exit_code": 124,
+  "saved_frames": 5,
+  "segment_planned_frames": 96,
+  "full_plan": 384,
+  "complete": false,
+  "mapping_revealed_after_original_blind_verdict": true,
+  "original_blind_receipt_sha256": "7e3d8baf35db218ac66e0380d5173dc65eda2d3a8342649e0325e0d8b72b9918",
+  "contact_sheet": "neutral-lm-contact.jpg",
+  "contact_sha256": "0f8f1d089a4094588d14510c529fd3b757a192fcacb783288b49486dd5d5c982",
+  "original_review_receipt": "ralph/reports/F40/route-verge-candidate/source-review.json residual_cluster_candidate.five_saved_comparison_proof",
+  "candidate_original_blind_visible_subset": "PASS",
+  "whole_F40_5": "OPEN: full matrix including other locations, bodies/materials and High/Medium remains unproven.",
+  "decision": "Retain the reviewed three-root support opt-in and reuse the affected production-area and matched five-frame blind PASS; no unchanged proof rerun.",
+  "capture_device": "Hosted llvmpipe software renderer, Low/Compatibility1280x720; these five frames do not count as ROOT-scheduled native GPU evidence for F40#0.",
+  "native_gpu": false
+}

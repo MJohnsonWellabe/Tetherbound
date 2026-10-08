@@ -1,0 +1,73 @@
+{
+  "reviewer": "retained original blind_listener_f10 / Cloudreach visual judge",
+  "scope": "Literal F40#5 visible floating foliage/bodies, clipping, magenta and placeholders in the supplied five matched L/M view pairs only",
+  "inputs": {
+    "root": "D:/tetherbound/codex-e/.tmp/e-arrival-five-neutral/",
+    "contact_inspected_first": "contact.jpg",
+    "full_rasters_inspected": [
+      "L_approach__day__clear.jpg",
+      "L_gameplay__day__clear.jpg",
+      "L_reverse__day__clear.jpg",
+      "L_detail__day__clear.jpg",
+      "L_approach__day__rain.jpg",
+      "M_approach__day__clear.jpg",
+      "M_gameplay__day__clear.jpg",
+      "M_reverse__day__clear.jpg",
+      "M_detail__day__clear.jpg",
+      "M_approach__day__rain.jpg"
+    ],
+    "raster": "1280x720",
+    "setup": "Parent-disclosed anonymous matched Low/Compatibility approach clear, gameplay clear, reverse clear, detail clear and approach rain pairs.",
+    "mapping_withheld": true,
+    "source_private_mapping_receipts_provenance_or_raw_threads_inspected": false
+  },
+  "preference": "L",
+  "packet_visible_literal_verdict": {
+    "L": "PASS",
+    "M": "BLOCK"
+  },
+  "targeted_left_arrival_rock_foliage_contact": {
+    "L": "PASS",
+    "M": "BLOCK"
+  },
+  "reason": "L visibly resolves the supplied arrival foliage contact problem: the rock-side shrub/flower cluster meets the grass in forward approach and the two residual shrubs beside the left rocks meet their ground/shadows in reverse. The isolated approach and reverse shrubs also read planted. M retains conspicuous suspended foliage with separated shadows in clear views. In the five supplied L stills, no obvious flat magenta ring/slab, untextured placeholder, gross floating body or gross clipping is observed. This is a bounded visible-subset PASS, not whole F40#5 or a full biome/matrix assertion.",
+  "frame_specific": [
+    {
+      "frames": [
+        "L_approach__day__clear.jpg",
+        "M_approach__day__clear.jpg"
+      ],
+      "finding": "L's right rock-side shrub and flower cluster sit down onto the grassy surface with joined contact/shadow; M's shrub and flower foliage are raised above their ground shadows. The isolated shrub left of the route also reads planted in L and visibly hovers in M. Route and whole trainer remain clear."
+    },
+    {
+      "frames": [
+        "L_reverse__day__clear.jpg",
+        "M_reverse__day__clear.jpg"
+      ],
+      "finding": "L's two shrubs beside the left rocks have lower outlines meeting the grass/shadows, resolving the prior residual cluster concern. The isolated right shrub is also grounded in L. M retains grass strips between lower foliage and separate shadows at these shrubs, particularly the isolated right shrub."
+    },
+    {
+      "frames": [
+        "L_approach__day__rain.jpg",
+        "M_approach__day__rain.jpg"
+      ],
+      "finding": "L retains the lower planted foliage outlines in the darker rainy approach. Rain reduces shadow evidence, but no conspicuous hovering gap or new route/trainer obstruction is observed in L. M's rock-side foliage remains raised in comparison."
+    },
+    {
+      "frames": [
+        "L_gameplay__day__clear.jpg",
+        "M_gameplay__day__clear.jpg",
+        "L_detail__day__clear.jpg",
+        "M_detail__day__clear.jpg"
+      ],
+      "finding": "Trainer fits the frame and reads grounded on the dirt route in both packets. No new gross trainer clipping or magenta/untextured placeholder is observed. Targeted rock-side foliage is outside these frames. Distant creatures near the gateway differ in pose/composition; their small projected size prevents detailed body-join or companion-contact certification."
+    }
+  ],
+  "new_trainer_or_companion_clipping": "No new gross trainer or companion clipping is established in L from the supplied pixels. Distant creature silhouettes are small and differ between samples; overlap alone does not establish geometric interpenetration. Detailed creature contact remains unassessed.",
+  "introduced_defects": "No introduced literal placeholder, obvious floating prop, route blockage or gross trainer clipping is observed in L across the five supplied views.",
+  "broad_terrain_art_bar": "Sparse broad grass and terrain layering remain separate release-art concerns; they are not used to block the literal contact improvement.",
+  "limits": "Five fixed Low/Compatibility native1280x720 view pairs at one arrival location, including one rain approach. No continuous motion, collision, earned route, full biome, High/Medium, >=200-frame matrix, all foliage/body contact at other stands, full F40#5, full release visual bar or whole-catalogue claim.",
+  "catalogue_updated": false,
+  "whole_F40_5_claim": false,
+  "release_closure": false
+}
