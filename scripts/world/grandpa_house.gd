@@ -405,9 +405,13 @@ func _apply_window_glow_candidate(shell: Node3D) -> void:
 		and "--farmhouse-window-glow-candidate" not in OS.get_cmdline_user_args():
 		return
 	var raw_energy: Variant = _house_lighting.get("window_glow_candidate_energy", 0.20)
+	var raw_alpha: Variant = _house_lighting.get("window_glow_candidate_alpha", 0.09545451402664185)
 	if typeof(raw_energy) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(raw_energy)):
 		return
+	if typeof(raw_alpha) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(raw_alpha)):
+		return
 	var energy := clampf(float(raw_energy), 0.0, 1.0)
+	var alpha := clampf(float(raw_alpha), 0.0, 1.0)
 	for found: Node in shell.find_children("*", "MeshInstance3D", true, false):
 		var mesh := found as MeshInstance3D
 		if mesh.mesh == null:
@@ -418,6 +422,9 @@ func _apply_window_glow_candidate(shell: Node3D) -> void:
 				continue
 			var copy := source.duplicate() as BaseMaterial3D
 			copy.emission_energy_multiplier = energy
+			var pane_colour := copy.albedo_color
+			pane_colour.a = alpha
+			copy.albedo_color = pane_colour
 			if mesh.material_override != null:
 				mesh.material_override = copy
 				break
