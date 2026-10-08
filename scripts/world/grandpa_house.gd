@@ -579,9 +579,9 @@ func _apply_interior_timber_reference_candidate(material: StandardMaterial3D) ->
 	var config := raw as Dictionary
 	if config.get("enabled", false) != true and "--farmhouse-timber-reference-candidate" not in args:
 		return
-	var scale := _furniture_reference_vector(config, "local_scale", Vector3.ZERO)
+	var grain_scale := _furniture_reference_vector(config, "local_scale", Vector3.ZERO)
 	var strength: Variant = config.get("normal_strength", 0.35)
-	if scale.x <= 0.0 or scale.y <= 0.0 or scale.z <= 0.0 \
+	if grain_scale.x <= 0.0 or grain_scale.y <= 0.0 or grain_scale.z <= 0.0 \
 		or typeof(strength) not in [TYPE_INT, TYPE_FLOAT] or not is_finite(float(strength)):
 		return
 	var wood_config: Variant = _house_lighting.get("furniture_reference_wood", {})
@@ -599,7 +599,7 @@ func _apply_interior_timber_reference_candidate(material: StandardMaterial3D) ->
 	material.uv1_triplanar = true
 	# Keep grain attached to a raked rail when the authored box rotates.
 	material.uv1_world_triplanar = false
-	material.uv1_scale = scale
+	material.uv1_scale = grain_scale
 	material.uv1_offset = Vector3.ZERO
 
 
