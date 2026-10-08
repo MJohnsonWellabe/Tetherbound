@@ -164,8 +164,16 @@ func _research_source(game: Node, local: RefCounted, session: Node, species: Str
 	print("DISCLOSED research source: public Session claim of naturally earned %s sight task" % species)
 	var result: Dictionary = session.call("request_research_claim", intent)
 	if result.get("ok") != true:
-		_fail("original research claim refused: " + str(result.get("code", "")))
-		return
+		# Host-local claims may return their retained unsaved decision before
+		# the real owner BOOL/ACK completes. Only that exact original receipt
+		# can enter the existing allowance; the accepted disk oracle below
+		# still decides success, including the original replay checks.
+		if result.get("resolved") != false or result.get("durable") != true \
+			or result.get("saved") != false or result.get("receipt") != receipt \
+			or result.get("code") != "awaiting_saved_decision":
+			_fail("original research claim refused: " + str(result.get("code", "")))
+			return
+		print("DISCLOSED research source: original retained claim awaits owner save within the unchanged 240-frame allowance")
 	for i in SETTLE_AFTER_VICTORY: await physics_frame
 	var after := _essence_counts(local)
 	var character_disk: Dictionary = preload("res://scripts/save/character_save.gd").new().read(str(local.character_id))
