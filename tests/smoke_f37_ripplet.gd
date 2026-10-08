@@ -14,6 +14,8 @@ var finished := false
 # Proof endpoints only; no shipping flag, durable state or schema change.
 var _surface_only := false
 var _surface_capture := false
+var _dive_only := false
+var _dive_capture := false
 var _surface_offload := false
 var _surface_deadline := 0
 var _surface_observed := {"distance_m": 0.0, "physics_s": 0.0, "currents": [], "captures": []}
@@ -53,12 +55,15 @@ func tap(action: String) -> void:
 func run() -> void:
 	_surface_only = OS.get_cmdline_user_args().has("--through-surface")
 	_surface_capture = OS.get_cmdline_user_args().has("--capture-surface")
+	_dive_only = OS.get_cmdline_user_args().has("--through-dive")
+	_dive_capture = OS.get_cmdline_user_args().has("--capture-dive")
 	_surface_offload = OS.get_cmdline_user_args().has("--functional-offload")
-	if (_surface_capture and not _surface_only) or (_surface_offload and not _surface_capture):
-		check(false, "surface capture/offload requires the explicit surface endpoint")
+	if (_surface_only and _dive_only) or (_surface_capture and not _surface_only) \
+		or (_dive_capture and not _dive_only) or (_surface_offload and not (_surface_capture or _dive_capture)):
+		check(false, "capture/offload requires one explicit matching traversal endpoint")
 		finish()
 		return
-	if _surface_offload and not preload("res://tests/helpers/f19_functional_offload.gd").configure("ripplet_surface_driver"):
+	if _surface_offload and not preload("res://tests/helpers/f19_functional_offload.gd").configure("ripplet_dive_driver" if _dive_only else "ripplet_surface_driver"):
 		check(false, "surface offload requires the real Compatibility display")
 		finish()
 		return
@@ -133,6 +138,10 @@ func run() -> void:
 	await frames(30)
 	check(riding.diving,"tap Jump starts unlocked Dive")
 	check(body.global_position.y < -4.5,"production buoyancy submerges carrier")
+	if _dive_only:
+		await _run_dive(player, director, riding, creature, body)
+		finish()
+		return
 	var aquatic: Dictionary = swimming.save_data()
 	check(aquatic.mount.creature_uid == creature.uid,"save binds stable UID")
 	check(aquatic.mount.dive.remaining_s < 20.0,"save captures spent dive timer")
@@ -188,12 +197,12 @@ func _run_surface(player: CharacterBody3D, camera: Node3D, director: Node, ridin
 		"earned_campaign": false, "dive_or_rejoin_proof": false}))
 
 func _surface_bound(player: CharacterBody3D, director: Node, riding: Node, creature: RefCounted,
-		body: CharacterBody3D) -> bool:
+		body: CharacterBody3D, allow_dive: bool = false) -> bool:
 	return not finished and current_scene == world and not paused and is_instance_valid(body) \
 		and game.party.size() == 1 and game.party.at(0) == creature \
 		and director.ally_instance() == creature and director.ally_body() == body \
 		and riding.is_mounted() and riding.mount_body() == body and player.get("_carrier") == body \
-		and not riding.diving and not director.trainer_battle_active() \
+		and (allow_dive or not riding.diving) and not director.trainer_battle_active() \
 		and not world.get_node("CombatManager").is_fighting() \
 		and preload("res://scripts/ui/input_owner.gd").current(self) == null
 
@@ -272,6 +281,85 @@ func _surface_stick(x: float, y: float) -> void:
 		event.axis_value = x if axis == JOY_AXIS_LEFT_X else y
 		Input.parse_input_event(event)
 	Input.flush_buffered_events()
+
+func _run_dive(player: CharacterBody3D, director: Node, riding: Node, creature: RefCounted,
+		body: CharacterBody3D) -> void:
+	var adapter := preload("res://tools/net/proof_steps_f37.gd")
+	check(preload("res://scripts/player/ripplet_traversal.gd").config().presentation_enabled,
+		"literal Dive content proof uses the installed cache and node presentation")
+	if not failures.is_empty(): return
+	for request: Array in [["f37_sunken_claim", {"site_id":"lantern_arch_cache"}],
+		["f37_sunken_claim", {"site_id":"lantern_pearl_bed"}], ["f37_hidden_route", {}]]:
+		var result: Dictionary = await adapter.step(self, str(request[0]), request[1])
+		print("F37 DIVE CONTENT " + JSON.stringify({"action":request[0], "args":request[1], "result":result}))
+		check(result.get("verdict") == "PASS" and _dive_bound(player, director, riding, creature, body),
+			"existing physical claim/optional-route step retains the actual owned Dive")
+		if not failures.is_empty(): return
+	# Complete the three ordinary content actions inside the host's real Dive
+	# allowance before requesting a slow hosted draw. Never refresh that timer.
+	if _dive_capture:
+		var ready := func() -> bool:
+			return _dive_bound(player, director, riding, creature, body) and body.is_visible_in_tree()
+		var drawing_before := RenderingServer.render_loop_enabled
+		RenderingServer.render_loop_enabled = true
+		var captured: bool = await preload("res://tests/helpers/f20_ending_probe.gd").new().capture(self,
+			"ripplet-dive-completed-finds-and-route", ready)
+		RenderingServer.render_loop_enabled = drawing_before
+		check(captured, "actual Low Dive content frame retains the owned mount")
+		if not captured: return
+	print("F37 DIVE ENDPOINT " + JSON.stringify({"passed":failures.is_empty(), "owned_uid":creature.uid,
+		"level":creature.level, "breakthroughs":game.local.redesign_character.creatures[creature.uid].breakthroughs,
+		"setup":"existing owned L30/breakthrough and deep-water fixtures; physical content steps only",
+		"earned_campaign":false, "rejoin_proof":false}))
+
+func _dive_bound(player: CharacterBody3D, director: Node, riding: Node, creature: RefCounted,
+		body: CharacterBody3D) -> bool:
+	return _surface_bound(player, director, riding, creature, body, true) and riding.diving \
+		and world.get_node("MountedSwimming").state.mode == preload("res://scripts/player/swim_state.gd").Mode.MOUNTED \
+		and player.swim_controller.state.mode == preload("res://scripts/player/swim_state.gd").Mode.MOUNTED \
+		and body.global_position.y < -4.0
+
+## Existing physical F37 steps require these two runner hooks. They retain
+## each supplied frame budget/tolerance and never stage position or Dive time.
+func _step_move_to(args: Dictionary) -> Dictionary:
+	var player: CharacterBody3D = world.get_node("Player")
+	var director: Node = world.get_node("EncounterDirector")
+	var riding: Node = world.get_node("RidingController")
+	var creature: RefCounted = director.ally_instance()
+	var body: CharacterBody3D = director.ally_body()
+	var target := Vector3(float(args.get("x", NAN)), 0, float(args.get("z", NAN)))
+	var budget := int(args.get("budget_frames", 0))
+	var tolerance := float(args.get("close_enough", 0))
+	if not target.is_finite() or budget <= 0 or tolerance <= 0:
+		return {"verdict":"FAIL", "detail":"existing Dive step requires finite target and its positive budget/tolerance"}
+	var navigator := preload("res://tests/helpers/stick_navigator.gd").new(self, body, world.get_node("CameraRig"), _surface_stick)
+	for frame in budget:
+		if Time.get_ticks_msec() >= _surface_deadline or not _dive_bound(player, director, riding, creature, body):
+			_surface_stick(0, 0)
+			return {"verdict":"FAIL", "detail":"ordinary content movement lost its owned Dive or original watchdog"}
+		var offset: Vector3 = target - body.global_position
+		offset.y = 0
+		if offset.length() <= tolerance:
+			_surface_stick(0, 0)
+			return {"verdict":"PASS", "detail":"ordinary mapped owned Dive reached the existing content target"}
+		navigator.push_once(offset.normalized())
+		await physics_frame
+		if not _dive_bound(player, director, riding, creature, body):
+			_surface_stick(0, 0)
+			return {"verdict":"FAIL", "detail":"content movement's physics lost the actual owned Dive"}
+	_surface_stick(0, 0)
+	return {"verdict":"FAIL", "detail":"ordinary content movement exhausted its existing step frame budget"}
+
+func _press_edge(action: String, pressed: bool) -> Dictionary:
+	for candidate: InputEvent in InputMap.action_get_events(action):
+		if candidate is InputEventJoypadButton:
+			var event := candidate.duplicate() as InputEventJoypadButton
+			event.device = 0
+			event.pressed = pressed
+			Input.parse_input_event(event)
+			Input.flush_buffered_events()
+			return {"ok":true}
+	return {"ok":false, "reason":"existing physical Dive step lacks mapped controller binding"}
 
 func finish() -> void:
 	if finished: return
