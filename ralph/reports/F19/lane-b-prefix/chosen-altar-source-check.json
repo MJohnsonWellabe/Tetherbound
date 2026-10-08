@@ -1,0 +1,31 @@
+{
+  "scope": "Existing earned Hall helper: real paid Altar, controller-selected Candy, chosen original companion",
+  "disposition": "SOURCE AND NAMED LOGIC PASS; actual route OPEN; no whole-criterion READY",
+  "source_sha": "2409c52064bb0225695a4b93460494723f5c100d",
+  "owning_contracts": ["docs/design/TRAINING.md", "docs/design/HOMESTEAD.md"],
+  "source": "tests/helpers/meadows_earned_hall_segment.gd",
+  "review": {
+    "agent": "b_f49_review",
+    "verdict": "SOURCE APPROVE",
+    "reason": "Observe and freeze the actual submitted five-field intent, retain exact UID/level/payment/scope and independent saved-decision guards, reject later changes, verify receipt using actual submitted revision"
+  },
+  "proof": {
+    "run_id": 37724716831,
+    "artifact_id": 11527093515,
+    "script": "tests/run_tests.gd",
+    "args": "--initialized --only=test_meadows_earned_hall_segment.gd,test_f27_altar_first_send.gd,test_altar_essence_quote_bridge.gd,test_f27_essence_rules.gd",
+    "tests": 30,
+    "assertions": 478,
+    "failures": 0,
+    "exit_code": 0,
+    "runtime_seconds": 27,
+    "script_or_parse_errors": 0,
+    "expected_negative_controls": "EARNED HALL FAIL messages are existing fail-closed unit controls, each reported ok"
+  },
+  "limits": [
+    "No actual Master, gathering, Forge, Kitchen, feast, feeding or Altar route pass follows from unit checks",
+    "Actual earned relay remains parked at failed north-bed navigation",
+    "F19#5 and F49#0 remain open",
+    "The PC ran no native Godot process from Lane B"
+  ]
+}
