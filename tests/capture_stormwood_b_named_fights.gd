@@ -83,6 +83,7 @@ var _tells: Array[Dictionary] = []
 var _hits: Array[String] = []
 var _dodge_until := -1
 var _dodge_dir := Vector3.ZERO
+var _idle_after_engage := false
 
 
 func _initialize() -> void:
@@ -476,7 +477,10 @@ func _capture(id: String) -> Dictionary:
 		_pin_calm()
 		var ally := _director.call("ally_body") as Node3D
 		var foe := _manager.call("enemy_body") as Node3D
-		if ally != null and foe != null:
+		if _idle_after_engage:
+			# Observe ordinary enemy damage/faints without an attacking or evading pilot.
+			_stick(Vector3.ZERO)
+		elif ally != null and foe != null:
 			var offset := foe.global_position - ally.global_position
 			offset.y = 0.0
 			if _phys < _dodge_until and not _tell_open.is_empty() \

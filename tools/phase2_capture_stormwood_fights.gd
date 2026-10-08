@@ -4,6 +4,7 @@ extends "res://tests/capture_stormwood_b_named_fights.gd"
 ## constraining its output to this report and pinning the random seed. Its
 ## declared party/placement/storm-clock fixtures remain disclosed in the log.
 var _capture_party_level := 80
+var _capture_input_policy := "pilot"
 const BOOTSTRAP := preload("res://tools/lookdev_capture_bootstrap.gd")
 var _graphics_capture: Dictionary = {}
 var _capture_failures: Array[String] = []
@@ -22,6 +23,14 @@ func _run() -> void:
 			capture_seed = int(arg.trim_prefix("--seed="))
 		elif arg.begins_with("--party-level="):
 			_capture_party_level = int(arg.trim_prefix("--party-level="))
+		elif arg.begins_with("--input-policy="):
+			_capture_input_policy = arg.trim_prefix("--input-policy=")
+	if _capture_input_policy not in ["pilot", "idle-after-engage"] \
+			or (_capture_input_policy == "idle-after-engage" and _capture_party_level != 42):
+		push_error("Use pilot input, or idle-after-engage with the original level-42 fixture")
+		quit(1)
+		return
+	_idle_after_engage = _capture_input_policy == "idle-after-engage"
 	if _capture_party_level not in [42, 80]:
 		push_error("Use --party-level=42 for the original loss fixture or 80 for the win fixture")
 		quit(1)
@@ -42,6 +51,7 @@ func _run() -> void:
 			return
 	seed(capture_seed)
 	_note("capture seed=%d party_level=%d; original loss fixture=42, win fixture=80" % [capture_seed, _capture_party_level])
+	_note("input_policy=%s; idle mode requests no attacks/evasions, not a forced outcome" % _capture_input_policy)
 	await super._run()
 	if _named_preset:
 		if _native_frames.is_empty():
@@ -52,9 +62,10 @@ func _run() -> void:
 		else:
 			receipt.store_string(JSON.stringify({"graphics_capture": _graphics_capture,
 				"party_level": _capture_party_level, "seed": capture_seed,
+				"input_policy": _capture_input_policy,
 				"frames": _native_frames, "failures": _capture_failures,
 				"complete": _capture_failures.is_empty(),
-				"scope": "Existing production named-wild controller pilot; five directly created creatures, placement/neighbour suppression, Calm clock pin and healing disclosed by capture_log.json. No earned campaign, balance or device claim."}, "\t") + "\n")
+				"scope": "Existing production named-wild recorder with disclosed input_policy; five directly created creatures, placement/neighbour suppression, Calm clock pin and healing disclosed by capture_log.json. Idle input does not force a defeat. No earned campaign, balance or device claim."}, "\t") + "\n")
 			receipt.flush()
 			var error := receipt.get_error()
 			receipt.close()
