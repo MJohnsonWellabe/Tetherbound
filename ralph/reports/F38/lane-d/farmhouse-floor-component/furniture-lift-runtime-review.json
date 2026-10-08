@@ -1,0 +1,16 @@
+{
+  "reviewer": "/root/f42_visual_review",
+  "verdict": "APPROVE",
+  "source": "9f1eddb9b87034b1c2abc1583e2746d033a4f41c",
+  "run": 37739120542,
+  "artifact": 11533978988,
+  "actual": "4of4plannedday/night clear/rain detail, exit0/1659s/complete/failuresempty; decodedall4nativeJPG1280x720LowCompatibilityllvmpipe/realtrainer",
+  "pairs": "All4body/cameraorigins+basisexactlyequal32e37732351160; standXZ5.3,14 offset3/lateral0; floornormalY1,onfloor,deadfalse,norejections; weather/timecategoriesmatch slightwithin-categoryclockdifferences",
+  "bindings": "14tiled/14boarddetailbindings guarddetail_normal==normal_texture and58furniturecorrectionmetadata retained; no independent albedo/woodlift measurement",
+  "checks": "source9fAPPROVE; existing3files13tests156assert0failure construction regression retained",
+  "warnings": [
+    "unsupportedVSync",
+    "physics interpolationdeprecation"
+  ],
+  "scope": "InheritedhiddenCanvasLayers/debugtravel/clock-weatherfixture/catalogueflagfalse; no fullmatrix/motion/earned/device/weathercycle/coop/fullbars; originalblindjudgment decides visiblefurniture outcome"
+}
