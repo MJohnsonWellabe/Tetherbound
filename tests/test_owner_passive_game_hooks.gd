@@ -25,6 +25,7 @@ class MenuFixture extends Node:
 	var game: Node
 	var messages: Array[String] = []
 	func say(message: String) -> void: messages.append(message)
+	func is_open() -> bool: return true
 
 var game: Node
 var owner_session: RecordingSession
@@ -213,6 +214,25 @@ func _native_case_backpack_target_guard_precedes_any_care_or_item_write() -> voi
 	assert_eq(patient.hp, patient.max_hp, "ordinary quick-bar healing still works after settlement")
 	assert_eq(game.inventory.count("potion_small"), 0, "ordinary quick-bar healing spends exactly the original dose")
 	hud.free()
+	assert_eq(game.inventory.add("axe", 1), 0)
+	var tool_slot := int(game.inventory.find_slot("axe"))
+	game.inventory.damage_tool(tool_slot, 5)
+	tab.set("_focused", tool_slot)
+	packed = var_to_bytes(RECORD.portable_projection(game.local.save_data()))
+	owner_session.blocked = true
+	Input.action_press("interact")
+	tab.call("_read_use")
+	Input.action_release("interact")
+	assert_eq(var_to_bytes(RECORD.portable_projection(game.local.save_data())), packed,
+		"pending owner decision preserves original tool wear when Use requests repair")
+	assert_eq(menu.messages.back(), "Saving your last action. Try again in a moment.")
+	owner_session.blocked = false
+	Input.action_press("interact")
+	tab.call("_read_use")
+	Input.action_release("interact")
+	assert_eq(game.inventory.durability_at(tool_slot), game.inventory.max_durability_at(tool_slot),
+		"ordinary Use repairs the same tool after settlement")
+	assert_eq(game.inventory.count("axe"), 1, "repair keeps exactly the original tool")
 	tab.free()
 	menu.free()
 	_native_completed = true

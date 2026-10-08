@@ -1474,6 +1474,12 @@ func _read_use() -> void:
 		_equip(id)
 		return
 
+	var owner_game := state()
+	var owner_session: Node = owner_game.get("session") as Node if owner_game != null else null
+	if owner_session != null and owner_session.has_method("_owner_training_mutation_blocked") \
+		and owner_session.call("_owner_training_mutation_blocked", owner_game.get("local")) == true:
+		say("Saving your last action. Try again in a moment.")
+		return
 	if str(db.call("kind", id)) == "tool":
 		var maximum := int(inventory.call("max_durability_at", _focused))
 		if maximum > 0:
