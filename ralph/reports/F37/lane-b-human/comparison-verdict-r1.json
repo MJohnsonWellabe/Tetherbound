@@ -1,0 +1,22 @@
+{
+  "criterion": "F37#2 human swim visual component; not complete route acceptance",
+  "baseline_run": 37665733016,
+  "baseline_source": "15e059599b25adafe1770c0ff79634cdc88d08b9",
+  "candidate_run": 37660456610,
+  "candidate_source": "d8eb35c826ba3b9451a11caaba74f5563c127939",
+  "profile": "Compatibility1280x720, seed2042, trainer, same authored capture route; two crossings, 237 PNGs and 30.0167 seconds sampled motion in each set",
+  "runtime": "Both PASS, exit0. Diagnostic fixture captures, not earned routes or device evidence.",
+  "reviewer": "b_night_visual (same code-blind reviewer)",
+  "human_component": "BLOCK in both",
+  "preference": "B for swimming intent and visible limb activity; neither reaches the full bar",
+  "identity": "PASS tie: recognizable reference hair, jacket, pack, trousers and boots",
+  "stroke": "BLOCK: A reads as upright standing movement through water; B leans and alternates knees but arms remain raised-V. Matched motion-detail-1 c1 1.12-2.05s, motion-detail-2 c2 19.07-20.00s.",
+  "legs": "Translucent straight submerged legs appear in BOTH sets, including motion-detail-1 c1 0.12/3.92s and motion-detail-2 c2 18.05/19.07s. In B solid posed legs diverge, creating doubled limbs. Comparison proves a shared feature, not its rendering cause or that B introduced it.",
+  "standing_recovery": "PASS at displayed endpoints: transition-2 17.92s and transition-4 35.78s",
+  "entry_exit": "INCOMPLETE: no continuous shoreline interpolation or foot-contact proof; no definite persistent penetration demonstrated",
+  "water_world_whole_frame_bars_A_B": "BLOCK: weak stroke-to-water contact, repeated sand/materials, simplified landforms, flat horizon haze and atmosphere below references. Architecture/props insufficient. Shore creature dominates one sample without proving penetration.",
+  "ui": "Displayed text/values readable, weak health/food contrast and limited coastline context. Keyboard bindings do not certify controller presentation.",
+  "remaining": ["corrected stroke runtime and visual judgment", "ghost-leg diagnosis", "close entry/exit captures", "continuous playback", "other three playable bodies", "High/Medium and night/weather", "required human water routes"],
+  "shipping_pose_enabled": false,
+  "raw_pngs": "Hosted artifacts only; JPG contact sets trainer-A and trainer-B retained."
+}

@@ -1,0 +1,21 @@
+{
+  "criterion": "F37#2",
+  "authority": "Owner6051787387 criterion-own-text Low/Compatibility scope; full release bars separately open",
+  "judge": "b_night_visual, original code-blind judge",
+  "verdict": "PASS whole literal visual evidence set",
+  "criterion_text": "Every required water route stays human-swimmable without Ripplet.",
+  "sheets": [
+    "first-shore-contact.jpg",
+    "reedhaven-contact.jpg",
+    "native-route1-contact.jpg",
+    "native-route2-contact.jpg",
+    "native-route3-contact.jpg",
+    "native-route4-contact.jpg",
+    "native-route5-contact.jpg"
+  ],
+  "exact_verdict": "All seven sheets show recognizable unmounted humans in water and restored human bodies at dry arrivals, with no visible reliance on Ripplet.",
+  "occlusion_limits": "Pier views hide parts of trainer; native-route3F8(04-midwater) is heavily obscured by nearby creature. Source PNG inspection shows human limbs beneath it, not rider atop it. These views do not establish body loss or blocked route usability.",
+  "limits": "Stills do not prove continuous traversal, mechanics, collision or exact route attribution. Independent mechanics review supplies route/guard proof; full Visual Bars A/B remain OPEN.",
+  "unchanged_earlier_sources": "Retained first2 sheets reused with original literal PASS; broader old art/stroke BLOCK preserved",
+  "raw_frames": "Native coordinator packet and untracked local hash-identical copies, plus original two hosted artifacts; no raw PNGs committed"
+}
