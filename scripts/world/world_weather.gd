@@ -22,6 +22,8 @@ const CONFIG_PATH := "res://data/config/weather.json"
 ## world_look.gd's GROUP ("day_cycle") already uses, so encounter_director.gd
 ## can read the active weather without the scene wiring a path to this node.
 const GROUP := "weather"
+const RAIN_SHELTER_GROUP := &"rain_shelter_interiors"
+const RAIN_SHELTER_BOXES_META := &"rain_shelter_interior_boxes"
 
 ## Metres above the player the rain emitter is centred, and its shape: a RING
 ## in the XZ plane, not a box. A first render (R5.2's own required blind pass)
@@ -121,10 +123,32 @@ func set_weather(name: String) -> void:
 	if look != null and look.has_method("set_weather"):
 		look.call("set_weather", preset)
 
-	if _rain != null:
-		var raining := bool(preset.get("rain", false))
-		_rain.emitting = raining
-		_rain.visible = raining
+	_update_rain_visibility()
+
+
+## Peer-local particle presentation only. Weather, spawn conditions and the
+## cycle keep their rain state while the camera is inside an authored shelter.
+func _update_rain_visibility() -> void:
+	if _rain == null:
+		return
+	var sheltered := false
+	if is_inside_tree():
+		var camera := get_viewport().get_camera_3d()
+		if camera != null:
+			for node: Node in get_tree().get_nodes_in_group(RAIN_SHELTER_GROUP):
+				var interior := node as Node3D
+				if interior == null or not interior.is_inside_tree():
+					continue
+				var local := interior.to_local(camera.global_position)
+				for box: AABB in interior.get_meta(RAIN_SHELTER_BOXES_META, []):
+					if box.has_point(local):
+						sheltered = true
+						break
+				if sheltered:
+					break
+	var raining := bool((_presets.get(_weather, {}) as Dictionary).get("rain", false))
+	_rain.emitting = raining and not sheltered
+	_rain.visible = raining and not sheltered
 
 
 ## OP21-21: a weighted roll (weather.json's per-preset `weight`, default 1.0)
@@ -166,6 +190,7 @@ func _queue_next_change() -> void:
 func _follow_player() -> void:
 	if _rain == null:
 		return
+	_update_rain_visibility()
 	var player: Node3D = get_node_or_null(player_path) as Node3D
 	if player == null:
 		return

@@ -15,9 +15,17 @@ const ROUTE_TOOL := preload("res://tools/capture_lookdev_route.gd")
 const ROUTES_PATH := "res://data/config/lookdev_routes.json"
 var _graphics_capture: Dictionary = {}
 var _route: Dictionary = {}
+var _requested_weather := ""
 
 
 func _run() -> void:
+	for argument: String in OS.get_cmdline_user_args():
+		if argument.begins_with("--weather="):
+			_requested_weather = argument.trim_prefix("--weather=")
+			if _requested_weather not in ["clear", "rain"]:
+				push_error("Route still weather must be clear or rain when supplied")
+				quit(1)
+				return
 	_graphics_capture = BOOTSTRAP.prepare(self)
 	if _graphics_capture.is_empty():
 		quit(1)
@@ -64,6 +72,34 @@ func _begin_manifest() -> void:
 	_manifest["route"] = _route
 	_manifest["fixture_disclosure"] = "Production scene, CameraRig and ordinary HUD. Debug travel at each declared route point and audit-only clock pin. Meadows seeds the timed route's declared MEADOWS_OPENING_FLAGS to skip its opening modal; other biomes use the base catalogue character fixture. Not an earned opening, campaign, traversal, save or frame-time proof."
 	_manifest["route_stills_scope"] = "Visual-only stills at declared route points with production camera/HUD. Debug travel and clock pin. No frame time, traversal, collision or performance claim."
+	_manifest["route_weather_fixture"] = _requested_weather
+	_manifest["route_weather_scope"] = "Optional named production weather held for stills by emptying its scheduler order; idle particle follow/visibility stays live. No earned/cycle/save/co-op claim. Omitted option preserves original behavior."
+
+
+func _pin_time(time_name: String) -> Dictionary:
+	var observed: Dictionary = await super._pin_time(time_name)
+	if observed.is_empty() or _requested_weather.is_empty():
+		return observed
+	var weather := _world.get_node_or_null("WorldWeather")
+	if weather == null or not weather.has_method("set_weather"):
+		_failures.append("Route weather fixture requires production WorldWeather")
+		return {}
+	weather.set("_order", [])
+	weather.call("set_weather", _requested_weather)
+	weather.call("_follow_player")
+	for _frame in LIGHT_SETTLE_FRAMES:
+		await process_frame
+	if str(weather.call("weather")) != _requested_weather:
+		_failures.append("Route production weather differs from requested fixture")
+		return {}
+	var rain: GPUParticles3D = weather.get("_rain")
+	if rain == null:
+		_failures.append("Route production rain emitter unavailable")
+		return {}
+	observed["route_weather"] = str(weather.call("weather"))
+	observed["rain_particles_visible"] = rain.visible
+	observed["rain_particles_emitting"] = rain.emitting
+	return observed
 
 
 func _capture_row(row: Dictionary) -> void:

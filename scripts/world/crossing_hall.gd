@@ -9,6 +9,7 @@ const STAND_MODEL := "res://assets/props/quaternius_fantasy/BookStand.gltf"
 const OPEN_MEMBRANE_EMISSION := .25
 const RELIC_POWER_PANEL := preload("res://scripts/ui/relic_power_panel.gd")
 const OBJECTIVE_BEACON := preload("res://scripts/world/objective_beacon.gd")
+const WEATHER_PRESENTATION := preload("res://scripts/world/world_weather.gd")
 const LANTERN_MODEL := "res://assets/props/quaternius_fantasy/Lantern_Wall.gltf"
 const CATALOG_PRESENTATION := preload("res://scripts/world/meadows_catalog_presentation.gd")
 const PORTAL_ACTION := preload("res://scripts/world/portal_arch.gd")
@@ -657,4 +658,6 @@ func _declare_interior_volumes() -> void:
 		return
 	set_meta(OBJECTIVE_BEACON.INTERIOR_BOXES_META, boxes)
 	add_to_group(OBJECTIVE_BEACON.INTERIOR_GROUP)
-
+	if bool(_config.get("rain_shelter_enabled", false)):
+		set_meta(WEATHER_PRESENTATION.RAIN_SHELTER_BOXES_META, boxes.duplicate())
+		add_to_group(WEATHER_PRESENTATION.RAIN_SHELTER_GROUP)
