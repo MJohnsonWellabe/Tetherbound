@@ -633,13 +633,14 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 		var route := preload("res://scripts/build/forward_camp_rules.gd").recipe(str(envelope.intent.get("recipe_id", "")), recipe)
 		if route.get("ok") == true: part = route.part
 	var context: Dictionary = {}
+	var build_observation := {}
 	if envelope.op == "tm_teach": context = _personal_tm_context(peer, envelope.station_key)
 	elif envelope.op == "tether_pouch": context = _personal_pouch_context(peer, envelope.station_key)
 	elif envelope.op == "resource":
 		var resources := get_node_or_null(^"FoundationComposition/Resources")
 		if resources != null: context = resources.call("host_context", peer, envelope.station_key, envelope.intent)
 	elif envelope.op == "groom": context = _foundation_groom_context(peer, envelope.station_key)
-	elif envelope.op == "camp_build": context = _foundation_build_context(peer, envelope.intent)
+	elif envelope.op == "camp_build": context = _foundation_build_context(peer, envelope.intent, build_observation)
 	elif envelope.op == "starter_choice": context = _foundation_starter_context(peer)
 	else: context = _foundation_source(peer, envelope.station_key, part)
 	if envelope.op == "wild_capture": context = _foundation_capture_context(peer, envelope.station_key)
@@ -680,7 +681,14 @@ func _foundation_handle(peer: int, envelope: Dictionary) -> Dictionary:
 			context = {"character_id": character, "expected_revision": int(_character_authority.call("revision", character)),
 				"source_key": envelope.station_key, "in_range": true, "in_combat": false, "release_ceremony": true}
 		if context.is_empty(): return _foundation_refusal("release_ceremony_unavailable") # Terminal: the guest releases unpaid.
-	if context.is_empty() or context.expected_revision != envelope.revision: return _foundation_refusal("source_or_revision_changed")
+	if context.is_empty() or context.expected_revision != envelope.revision:
+		var refusal := _foundation_refusal("source_or_revision_changed")
+		if envelope.op == "camp_build":
+			refusal.context_empty = context.is_empty()
+			refusal.context_expected_revision = context.get("expected_revision", -1)
+			refusal.request_revision = envelope.revision
+			if context.is_empty(): refusal.ground_validation_code = str(build_observation.get("ground_validation_code", ""))
+		return refusal
 	var cfg := STATION_RULES.config()
 	if envelope.op in ["boss_relic", "tether_item", "ledger_inventory"]: return _foundation_refusal("host_outcome_required")
 	if envelope.op == "station_craft" and cfg.get("craft_runtime_enabled") != true: return _foundation_refusal("craft_disabled")
@@ -2392,7 +2400,7 @@ func _retry_foundation_camp() -> Dictionary:
 	if result.get("settled") == true or result.get("terminal_refusal") == true: _foundation_camp_pending.clear()
 	return result
 
-func _foundation_build_context(peer: int, original: Dictionary) -> Dictionary:
+func _foundation_build_context(peer: int, original: Dictionary, observation: Dictionary = {}) -> Dictionary:
 	if preload("res://scripts/build/forward_camp_rules.gd").config().get("runtime_enabled") != true \
 		or not is_host() or _altar_peer_in_combat(peer): return {}
 	var game := _game()
@@ -2404,7 +2412,7 @@ func _foundation_build_context(peer: int, original: Dictionary) -> Dictionary:
 	for placer: Node in get_tree().get_nodes_in_group("build_placer"):
 		if not placer.get_parent().is_ancestor_of(actor): continue
 		if original.get("action") == "place":
-			context = preload("res://scripts/build/forward_camp_host.gd").placement_context(placer, game, actor, character, revision, _local_realm(), false, original)
+			context = preload("res://scripts/build/forward_camp_host.gd").placement_context(placer, game, actor, character, revision, _local_realm(), false, original, observation)
 		elif original.get("action") == "pack":
 			var parties: Array = []
 			var complete := true
