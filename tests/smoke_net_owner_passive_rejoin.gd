@@ -585,10 +585,12 @@ func _prove_tag_combo() -> void:
 		var failed_data: Dictionary = combo.get("data", {})
 		var failed_request: Dictionary = failed_data.get("request", {})
 		print("TAG failed owner observation: ", JSON.stringify(failed_data))
-		if not failed_request.is_empty():
-			var failed_host: Dictionary = await probe(0, "op_tag_state", {"peer":peer,
-				"request":failed_request, "character_id":_guest_character})
-			print("TAG failed host observation: ", JSON.stringify(failed_host))
+		# A timeout has no returned request; keep the already-observed encounter
+		# binding so the existing host probe still retains its live saved proposal.
+		var failed_host: Dictionary = await probe(0, "op_tag_state", {"peer":peer,
+			"request":failed_request, "character_id":_guest_character,
+			"encounter_id":str(host_before.get("encounter_id", ""))})
+		print("TAG failed host observation: ", JSON.stringify(failed_host))
 	if not _ok(combo, "Tag: actual hits earn meter and fresh-hit command switches normally"): return
 	var data: Dictionary = combo.data
 	var request: Dictionary = data.request

@@ -249,14 +249,49 @@ func _tag_state(args: Dictionary) -> Dictionary:
 	var peer := int(args.get("peer", session.local_peer_id()))
 	var request: Dictionary = args.get("request", _tag_request)
 	var body: Node3D = director.deployed_body_for(peer)
-	var id := str(request.get("encounter_id", manager.encounter_id()))
+	var id := str(request.get("encounter_id", args.get("encounter_id", manager.encounter_id())))
 	var original := {}
 	var snare := {}
 	var rally := {}
+	var settlement := {}
 	var record: Dictionary = director.get("_encounter")
 	if session.is_host():
 		var host: RefCounted = director.get("_encounter_host")
 		record = host.record(id)
+		# Detached live host snapshot, not a guest view or a refusal-time claim.
+		# Keep every participant's revision debt and unpresented original visible.
+		var world: RefCounted = game.get("world")
+		var namespace := str(world.get("reward_delivery_namespace"))
+		var deliveries: Dictionary = world.get("reward_deliveries")
+		var bindings: Array[Dictionary] = []
+		for retained: Dictionary in (director.get("_ordinary_actor_vitals_proposals") as Dictionary).values():
+			if retained.get("encounter_id") != id or retained.get("presented") == true: continue
+			var proposal: Dictionary = retained.get("proposal", {})
+			bindings.append({"source":"unpresented_proposal",
+				"character_id":str(retained.get("binding", {}).get("character_id", "")),
+				"creature_uid":str(proposal.get("creature_uid", "")),
+				"settlement_receipt":proposal.get("settlement_receipt", {}).duplicate(true),
+				"committed":retained.get("committed"), "presented":retained.get("presented")})
+		for actor: Dictionary in host.call("pending_actor_vitals", id):
+			bindings.append({"source":"actor_revision_debt", "character_id":str(actor.get("character_id", "")),
+				"creature_uid":str(actor.get("creature_uid", "")),
+				"settlement_receipt":actor.get("settlement_receipt", {}).duplicate(true),
+				"revision":actor.get("revision"), "settled_revision":actor.get("settled_revision")})
+		for binding: Dictionary in bindings:
+			var delivery_id := preload("res://scripts/net/actor_vitals_delivery.gd").delivery_id(
+				namespace, str(binding.character_id), str(binding.creature_uid))
+			var journal: Dictionary = deliveries.get(delivery_id, {})
+			binding["world_namespace"] = namespace
+			binding["delivery_id"] = delivery_id
+			binding["journal_present"] = deliveries.has(delivery_id)
+			binding["journal_status"] = journal.get("status", "absent")
+			binding["journal_receipt"] = journal.get("receipt", {}).duplicate(true)
+			binding["journal_receipt_matches"] = not journal.is_empty() \
+				and journal.get("receipt", {}) == binding.settlement_receipt
+		settlement = {"observed_ms":Time.get_ticks_msec(), "encounter_id":id,
+			"scope":"live_host_snapshot_all_participants", "namespace_source":"current_host_world",
+			"gate_pending":director.call("_host_actor_settlement_pending", id),
+			"pending_item_count":(host.call("pending_tether_items", id) as Array).size(), "bindings":bindings}
 		if args.get("snare") == true:
 			var wild: Node3D = director.get("_engaged_with")
 			var target: RefCounted = wild.get("instance") if is_instance_valid(wild) else null
@@ -299,6 +334,7 @@ func _tag_state(args: Dictionary) -> Dictionary:
 		"party":game.party.members().map(func(c: RefCounted) -> String: return str(c.uid))}
 	if args.get("snare") == true: out["snare"] = snare
 	if args.get("rally") == true: out["rally"] = rally
+	if session.is_host(): out["host_settlement_snapshot"] = settlement
 	return out
 
 
