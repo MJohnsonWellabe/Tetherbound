@@ -1,0 +1,9 @@
+> APPROVE bounded source, area proof, and script-level capture command.
+>
+> `b7a5b2095d8d7d6fa8b3798a9103d0c8f223342a` adds only two installed endwall lantern rows. Existing cage offsets place their warm lights inward at local `[±3,5.22,13.95]`; energy 1.15, range 8.5, flame settings, ambient, collision and shipping flags remain unchanged.
+>
+> Verified exact checkout in `job37775402113.log`, matching supplied run-log hash, and actual Godot 4.7 exit 0/114s farmhouse→road→nave PASS with zero off-road deviation. Retain the interpolation warning. This run does not re-prove 8+8 traversal, recall or lighting appearance.
+>
+> The queued command retains physical/pose/recall guards and bounded disclosure. ROOT must supply native Forward+ at matching 1920×1080; the fresh output path currently does not exist.
+>
+> Native capture and original blind judgment remain pending. No visual PASS, READY or whole-criterion approval.
