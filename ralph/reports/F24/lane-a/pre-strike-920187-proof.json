@@ -447,5 +447,154 @@
     ],
     "interpretation": "Actual mounted Tag path passed. Failed-Engage observer was not exercised; previous native refusal cause remains unproved. No production repair inferred. Rally/Snare optional paths were not selected; no whole F24#0/#5 or shipping flag claim.",
     "review": "APPROVE original f25_medium_review: bounded runtime evidence123PASS0FAIL/ERROR, no whole F24#0/#5; failed-Engage observer unexercised, native a69 cause unknown."
+  },
+  "rally_attempt_common_item_failure": {
+    "source_commit": "b0f02cf272972ad8692b4369dde181fd982e6ed5",
+    "run_id": 37756317831,
+    "artifact_id": 11539754840,
+    "named_proof": "tests/smoke_net_owner_passive_rejoin.gd --prove-tether-rally",
+    "result": "FAIL in common Item prerequisite; Rally unexercised",
+    "passed_checks": 19,
+    "distinct_failures": 1,
+    "script_parse_errors": 0,
+    "command": "item_throw",
+    "cost": 25.0,
+    "attempts": [
+      {
+        "attempt": 1,
+        "meter_before": 0.0,
+        "meter_after": 0.0,
+        "foe_hp_before": 257.21381145525,
+        "foe_hp_after": 257.21381145525,
+        "strike": {
+          "code": "",
+          "reported_ok": true,
+          "submitted_action": 1,
+          "verdict": "PASS"
+        },
+        "refusal_after": {},
+        "local_pending": false,
+        "local_ready": true
+      },
+      {
+        "attempt": 2,
+        "meter_before": 0.0,
+        "meter_after": 0.0,
+        "foe_hp_before": 257.21381145525,
+        "foe_hp_after": 257.21381145525,
+        "strike": {
+          "code": "",
+          "reported_ok": true,
+          "submitted_action": 2,
+          "verdict": "PASS"
+        },
+        "refusal_after": {},
+        "local_pending": false,
+        "local_ready": true
+      },
+      {
+        "attempt": 3,
+        "meter_before": 0.0,
+        "meter_after": 0.0,
+        "foe_hp_before": 257.21381145525,
+        "foe_hp_after": 257.21381145525,
+        "strike": {
+          "code": "",
+          "reported_ok": true,
+          "submitted_action": 3,
+          "verdict": "PASS"
+        },
+        "refusal_after": {},
+        "local_pending": false,
+        "local_ready": true
+      },
+      {
+        "attempt": 4,
+        "meter_before": 0.0,
+        "meter_after": 0.0,
+        "foe_hp_before": 257.21381145525,
+        "foe_hp_after": 257.21381145525,
+        "strike": {
+          "code": "",
+          "reported_ok": true,
+          "submitted_action": 4,
+          "verdict": "PASS"
+        },
+        "refusal_after": {},
+        "local_pending": false,
+        "local_ready": true
+      },
+      {
+        "attempt": 5,
+        "meter_before": 0.0,
+        "meter_after": 0.0,
+        "foe_hp_before": 257.21381145525,
+        "foe_hp_after": 257.21381145525,
+        "strike": {
+          "code": "",
+          "reported_ok": true,
+          "submitted_action": 5,
+          "verdict": "PASS"
+        },
+        "refusal_after": {},
+        "local_pending": false,
+        "local_ready": true
+      },
+      {
+        "attempt": 6,
+        "meter_before": 0.0,
+        "meter_after": 0.0,
+        "foe_hp_before": 257.21381145525,
+        "foe_hp_after": 257.21381145525,
+        "strike": {
+          "code": "",
+          "reported_ok": true,
+          "submitted_action": 6,
+          "verdict": "PASS"
+        },
+        "refusal_after": {},
+        "local_pending": false,
+        "local_ready": true
+      },
+      {
+        "attempt": 7,
+        "meter_before": 0.0,
+        "meter_after": 0.0,
+        "foe_hp_before": 257.21381145525,
+        "foe_hp_after": 257.21381145525,
+        "strike": {
+          "code": "",
+          "reported_ok": true,
+          "submitted_action": 7,
+          "verdict": "PASS"
+        },
+        "refusal_after": {},
+        "local_pending": false,
+        "local_ready": true
+      },
+      {
+        "attempt": 8,
+        "meter_before": 0.0,
+        "meter_after": 0.0,
+        "foe_hp_before": 257.21381145525,
+        "foe_hp_after": 257.21381145525,
+        "strike": {
+          "code": "",
+          "reported_ok": true,
+          "submitted_action": 8,
+          "verdict": "PASS"
+        },
+        "refusal_after": {
+          "code": "pending_vitals",
+          "kind": "strike_intent",
+          "reason": "The original health change is still being saved."
+        },
+        "local_pending": false,
+        "local_ready": true
+      }
+    ],
+    "run_log_sha256": "3e13dbe7bf3e0dcb33f3c24650809a571403ac0a32fdbad6bc67dec979ad38bd",
+    "interpretation": "Local submitted-action increments are not landed or host-accepted hits. Guest readiness exposes no host journal. Late pending_vitals refusal does not correlate original host action/proposal; no production repair or Rally criterion claim.",
+    "next": "Original f25_medium_review APPROVE bounded existing host snapshot at failed common Item return; live return-time evidence, not first-refusal attribution. No actions/budgets/guards/success behavior changed."
   }
 }

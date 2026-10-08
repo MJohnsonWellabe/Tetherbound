@@ -713,7 +713,13 @@ func _tonic_item_original() -> bool:
 	_ok(await step(1, "deploy_creature"), "tonic: guest deploys its same admitted owned creature")
 	if not _ok(await step(1, "join_encounter", {"encounter_id":id}), "tonic: guest joins the host's exact record"): return false
 	var before_mastery: Dictionary = (await _state(1)).get("mastery", {}).get("live", {})
-	if not _ok(await step(1, "op_tonic_hits"), "tonic: normal accepted quick hits earn Item meter"): return false
+	var hits: Dictionary = await step(1, "op_tonic_hits")
+	if hits.get("verdict") != "PASS":
+		# Retain the exact live host proposal/journal bindings at this failed
+		# return; guest readiness does not expose the host settlement gate.
+		print("TONIC failed hits host observation: ", JSON.stringify(await probe(0,
+			"op_tag_state", {"encounter_id":str(encounter.get("id", ""))})))
+	if not _ok(hits, "tonic: normal accepted quick hits earn Item meter"): return false
 	if OS.get_cmdline_user_args().has("--capture-combat-hud"):
 		_ok(await step(1, "op_tonic_hud_capture", {"name":"earned-command"}), "HUD: actual earned command and creature meters before Item")
 	var retained: Array = (await _state(0)).get("mastery", {}).get("retained", {}).get(_guest_character, [])
