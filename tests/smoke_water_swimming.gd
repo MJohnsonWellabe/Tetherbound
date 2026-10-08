@@ -723,21 +723,29 @@ func _capture_water_frame(game: Node, context: Dictionary, phase: String, finish
 	var retained: Array[Image] = []
 	var record: Dictionary = {}
 	var last_blocked_ray: Dictionary = {}
+	var observation: Dictionary = {"draw_callbacks": 0, "stage": "no_completed_draw"}
 	var deadline := Time.get_ticks_msec() + 30000
 	_water_capture_observer = func() -> void:
+		observation["draw_callbacks"] = int(observation.draw_callbacks) + 1
 		if finished or not retained.is_empty() or Time.get_ticks_msec() >= deadline:
+			observation["terminal_gate"] = "deadline_or_finished"
 			return
+		observation["stage"] = "display_scene_input"
 		if DisplayServer.get_name() == "headless" or not RenderingServer.render_loop_enabled \
 			or paused or not bool(world.call("shell_build_complete")) or not player.is_node_ready() \
 			or not bool(player.call("locomotion_enabled")) or INPUT_OWNER.current(self) != null:
 			return
 		var view := root.get_camera_3d()
 		var model := player.get_node_or_null("Model") as Node3D
+		observation["stage"] = "camera_model_skeleton"
 		if view == null or not view.is_current() or not camera.is_ancestor_of(view) \
 			or model == null or not model.is_visible_in_tree() \
 			or model.call("skeleton") == null:
 			return
 		var state: Dictionary = swimming.snapshot()
+		observation.merge({"stage": "swim_readiness", "mode": int(state.mode),
+			"floor": player.is_on_floor(), "forward": Input.is_action_pressed("move_forward"),
+			"actual_swim_m": observed_swim_distance, "player": str(player.global_position)}, true)
 		var ready := int(state.mode) == SWIM_STATE.Mode.HUMAN and not player.is_on_floor() \
 			and Input.is_action_pressed("move_forward") and observed_swim_distance > 1.0
 		if phase == "dry-arrival":
@@ -754,6 +762,7 @@ func _capture_water_frame(game: Node, context: Dictionary, phase: String, finish
 		if phase == "midwater":
 			var rig := model.call("skeleton") as Skeleton3D
 			for bone_name: String in ["Hips", "Spine02"]:
+				observation.merge({"stage": "bone_visibility", "bone": bone_name}, true)
 				var bone := rig.find_bone(bone_name)
 				if bone < 0: return
 				var point := rig.to_global(rig.get_bone_global_pose(bone).origin)
@@ -769,6 +778,7 @@ func _capture_water_frame(game: Node, context: Dictionary, phase: String, finish
 						"collider": str(collider.get_path()) if collider is Node else str(collider)}, true)
 					return
 		var snapshot := _water_capture_snapshot(game)
+		observation["stage"] = "owner_identity"
 		if snapshot.character_id != _water_capture_identity or snapshot.player_instance_id != _water_capture_body_id \
 			or snapshot.party_uids != _water_capture_party_uids or snapshot.mounted or snapshot.mount_body_present \
 			or snapshot.mounted_swim_body_present or snapshot.owns_compatible_swim_mount:
@@ -788,6 +798,8 @@ func _capture_water_frame(game: Node, context: Dictionary, phase: String, finish
 	_stop_water_capture()
 	if finished:
 		return false
+	if retained.is_empty():
+		print("WATER CAPTURE LAST STAGE " + JSON.stringify(observation))
 	if retained.is_empty() and not last_blocked_ray.is_empty():
 		print("WATER CAPTURE LAST BLOCKED RAY " + JSON.stringify(last_blocked_ray))
 	if not _expect(not retained.is_empty(), "route capture %s hop %d %s needs a ready actual frame within 30 seconds" % [context.route_id, context.hop, phase]):
