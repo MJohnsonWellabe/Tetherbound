@@ -354,6 +354,39 @@ func _first_key_lessons() -> bool:
 			return {"disk":disk._state(), "portable":preload("res://scripts/net/character_record_rules.gd").portable_projection(game.local.call("save_data")),
 				"personal_flags":game.local.flags.call("save_data")}.duplicate(true)
 		var before: Dictionary = retained_state.call()
+		var passive_proof := preload("res://tools/net/f48_passive_witness.gd")
+		var record := preload("res://scripts/net/character_record_rules.gd")
+		var condition_config: Dictionary = preload("res://scripts/creatures/creature_condition.gd").config()
+		var care := {"expected":before.portable.party.duplicate(true),"error":"","events":0,"sequence":-1}
+		var matches_retained := func(actual: Dictionary) -> bool:
+			var expected: Dictionary = before.duplicate(true)
+			expected.portable.party = care.expected.duplicate(true)
+			return str(care.error).is_empty() and actual == expected
+		# Replay each observed shipping tick on detached cards. No passive field
+		# is omitted or copied unchecked from the loaded character.
+		var observe_care := func(packet: Dictionary) -> void:
+			if not str(care.error).is_empty(): return
+			if packet.get("character_id") != cid or packet.get("world_namespace") != before.disk.reward_delivery_namespace \
+					or packet.get("session_epoch") != str(game.session.call("_altar_current_epoch")) \
+					or not packet.get("sequence") is int or packet.sequence <= 0 \
+					or (care.sequence >= 0 and packet.sequence != care.sequence + 1) \
+					or not (packet.get("delta") is int or packet.get("delta") is float) \
+					or not is_finite(float(packet.delta)) or float(packet.delta) < 0.0 \
+					or packet.get("condition_config") != condition_config or care.events >= passive_proof.MAX_EVENTS:
+				care.error = "First key loaded passive identity/sequence/configuration discontinuity"
+				return
+			var index := retained.find(str(packet.get("uid", "")))
+			if index < 0 or not packet.get("before") is Dictionary \
+					or record.portable_card(packet.before) != care.expected[index]:
+				care.error = "First key loaded card changed outside observed shipping passive ticks"
+				return
+			var replay: Dictionary = passive_proof.replay_packet(packet, condition_config)
+			if replay.has("error"):
+				care.error = str(replay.error)
+				return
+			care.expected[index] = record.portable_card(replay.after)
+			care.sequence = packet.sequence
+			care.events += 1
 		var saver: RefCounted = game.get("save_system")
 		var slot := int(game.call("autosave_slot"))
 		if not game.call("save_game", slot) or retained_state.call() != before:
@@ -375,6 +408,7 @@ func _first_key_lessons() -> bool:
 			if game.local.flags.call("has", rules.PREFIX + id):
 				_fail("First key lesson Load did not clear the outgoing in-memory ACK")
 				return false
+		game.connect("party_passive_tick", observe_care)
 		var reopened: Array[String] = []
 		var watch := func() -> void:
 			var lessons := game.get_node_or_null("OnboardingLessons")
@@ -402,7 +436,7 @@ func _first_key_lessons() -> bool:
 				await driver.process_frame
 				if not reopened.is_empty(): break
 				if driver.current_scene != title and travel._ready_world("meadows"):
-					loaded = retained_state.call() == before
+					loaded = matches_retained.call(retained_state.call())
 					ready_frames = frame + 1
 					break
 		if loaded:
@@ -412,9 +446,10 @@ func _first_key_lessons() -> bool:
 		service = game.get_node_or_null("OnboardingLessons")
 		player = game.call("find_player") as CharacterBody3D
 		teacher = driver.current_scene.find_child("Tam", true, false) as Node3D
-		var passed: bool = loaded and reopened.is_empty() and before == after and not driver.paused \
+		var passed: bool = loaded and reopened.is_empty() and matches_retained.call(after) and not driver.paused \
 			and game.get("save_system") == saver and str(game.local.character_id) == cid and travel._uids() == retained \
 			and is_instance_valid(player) and player.is_on_floor() and player.call("locomotion_enabled") \
+			and int(player.get("_unstick_count")) == 0 \
 			and is_instance_valid(teacher) and player.global_position.distance_to(teacher.global_position) <= 5.0 \
 			and travel._ready_world("meadows") and game.pending_catch == null \
 			and service != null and service.get("_identity") == cid and (service.get("_pending") as Dictionary).is_empty() \
@@ -426,28 +461,35 @@ func _first_key_lessons() -> bool:
 		print("F46 FIRST KEY LESSON TITLE LOAD " + JSON.stringify({"passed":passed,"save_slot":slot,"ready_frames":ready_frames,
 			"observed":observed,"reopened":reopened,"memory_cleared":true,"physical_title_load":selected,"settle_frames":300,
 			"before":before,"after":after,"input_mode":"generated_fixture" if generated_fixture_input else "earned",
+			"passive_replay":{"events":care.events,"error":care.error,"expected_party":care.expected},
 			"title_transition":"existing test-controlled scene transition; no controller return-to-title gameplay proof",
 			"accepted_world_handoff":false,"whole_f46_proven":false}))
 		if not passed:
+			game.disconnect("party_passive_tick", observe_care)
 			_fail("First key lesson actual Title Load lost state/ACKs, reopened a card or failed settled Tam input")
 			return false
 		if not travel._bind():
+			game.disconnect("party_passive_tick", observe_care)
 			_failures(travel.failures)
 			return false
 		driver.live = {"world":driver.current_scene,"game":game,"player":player,
 			"rig":driver.current_scene.get_node_or_null("CameraRig")}
 		for id: String in ["portals", "shrines"]:
 			if not await travel.replay_observed_lesson(id):
+				game.disconnect("party_passive_tick", observe_care)
 				_failures(travel.failures)
 				return false
-		if retained_state.call() != before or str(game.local.character_id) != cid \
+		game.disconnect("party_passive_tick", observe_care)
+		if not matches_retained.call(retained_state.call()) or str(game.local.character_id) != cid \
 				or travel._uids() != retained or not travel._ready_world("meadows") \
 				or not player.is_on_floor() or not player.call("locomotion_enabled") \
+				or int(player.get("_unstick_count")) != 0 \
 				or player.global_position.distance_to(teacher.global_position) > 5.0:
 			_fail("First key lesson Help after actual Load changed state or settled Tam input")
 			return false
 		print("F46 FIRST KEY LESSON TITLE LOAD HELP " + JSON.stringify({"passed":true,
 			"character_id":cid,"party_uids":retained,"lessons":["portals","shrines"],
+			"passive_replay":{"events":care.events,"error":care.error,"expected_party":care.expected},
 			"accepted_world_handoff":false,"whole_f46_proven":false}))
 	print("F46 FIRST KEY LESSONS " + JSON.stringify({"character_id":cid,"party_uids":retained,
 		"lessons":["portals","shrines"],"earned_warden_key_and_relic":not generated_fixture_input,
